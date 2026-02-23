@@ -1,4 +1,5 @@
 [tool.pytest.ini_options]
 markers = [
     "network: tests that require network access (PubMed, OpenAlex, etc.)",
+    "ollama: tests that require a running Ollama instance with specific models",
 ]

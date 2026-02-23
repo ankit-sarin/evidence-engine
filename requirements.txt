@@ -1,0 +1,11 @@
+pydantic
+ollama
+biopython
+pyalex
+chromadb
+sentence-transformers
+gradio
+pyyaml
+python-docx
+openpyxl
+docling

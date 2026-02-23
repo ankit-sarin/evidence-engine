@@ -1,0 +1,119 @@
+title: "Autonomy in Surgical Robotics: A Systematic Review"
+version: "1.0"
+authors:
+  - "Ankit Sarin, MD"
+date: "2025-06-01"
+prospero_id: null
+
+pico:
+  population: >-
+    Studies involving autonomous or semi-autonomous surgical robotic systems
+    performing physical surgical tasks on tissue, phantoms, or in-vivo models.
+  intervention: >-
+    Any level of surgical autonomy (Levels 1–5 per the Yang et al. taxonomy),
+    ranging from robot assistance under continuous human control to fully
+    autonomous task execution.
+  comparator: >-
+    Human-controlled (teleoperated) surgical systems, manual surgery,
+    or no comparator.
+  outcomes:
+    - Task accuracy or error rate
+    - Task completion time
+    - Safety events (tissue damage, unplanned stops, collisions)
+    - Autonomy level achieved (Yang et al. Level 1–5)
+    - Surgeon workload or cognitive load metrics
+
+search_strategy:
+  databases:
+    - PubMed
+    - OpenAlex
+  query_terms:
+    - '("surgical robot" OR "robotic surgery" OR "surgical automation")'
+    - '("autonomous" OR "autonomy" OR "self-directed" OR "automated")'
+    - '("Level of autonomy" OR "LoA" OR "Yang taxonomy")'
+  date_range: [2010, 2025]
+
+screening_criteria:
+  inclusion:
+    - English language
+    - Peer-reviewed original research (journal article or full conference paper)
+    - Involves a physical surgical task (cadaver, phantom, animal, or human)
+    - Simulation studies included only if validated against a physical platform
+    - Published between 2010 and 2025
+  exclusion:
+    - Systematic reviews, meta-analyses, or scoping reviews
+    - Editorials, commentaries, or letters to the editor
+    - Conference abstracts without full paper
+    - Non-surgical robotics (industrial, warehouse, rehabilitation-only)
+    - Studies with no autonomous or semi-autonomous component
+
+extraction_schema:
+  fields:
+    # ── Tier 1: Required ────────────────────────────────────
+    - name: study_design
+      description: "Study design (e.g., RCT, prospective cohort, bench study, animal study)"
+      type: str
+      tier: 1
+    - name: sample_size
+      description: "Number of trials, subjects, or cases"
+      type: int
+      tier: 1
+    - name: robot_platform
+      description: "Name or type of robotic system (e.g., da Vinci, STAR, SmartTissue)"
+      type: str
+      tier: 1
+    - name: autonomy_level
+      description: "Highest autonomy level demonstrated (Yang et al. Level 1–5)"
+      type: enum
+      tier: 1
+      enum_values: ["1", "2", "3", "4", "5"]
+    - name: task_performed
+      description: "Specific surgical task (e.g., suturing, debridement, tissue retraction)"
+      type: str
+      tier: 1
+    - name: accuracy_metric
+      description: "Primary accuracy or performance metric reported"
+      type: str
+      tier: 1
+    - name: accuracy_value
+      description: "Value of the primary accuracy metric"
+      type: str
+      tier: 1
+
+    # ── Tier 2: Important ───────────────────────────────────
+    - name: completion_time
+      description: "Task completion time (with units)"
+      type: str
+      tier: 2
+    - name: safety_events
+      description: "Safety events reported (tissue damage, collisions, e-stops)"
+      type: str
+      tier: 2
+    - name: comparison_arm
+      description: "What the autonomous system was compared against"
+      type: str
+      tier: 2
+    - name: tissue_type
+      description: "Tissue or model used (human, porcine, phantom, cadaver)"
+      type: enum
+      tier: 2
+      enum_values: ["human", "porcine", "cadaver", "phantom", "other"]
+    - name: fda_status
+      description: "FDA clearance or approval status of the platform"
+      type: str
+      tier: 2
+
+    # ── Tier 3: Optional ────────────────────────────────────
+    - name: cognitive_load
+      description: "Surgeon cognitive load or workload metric (e.g., NASA-TLX)"
+      type: str
+      tier: 3
+    - name: sensor_modality
+      description: "Sensing modality used for autonomy (vision, force, both)"
+      type: enum
+      tier: 3
+      enum_values: ["vision", "force", "both", "other"]
+    - name: learning_method
+      description: "ML/AI method if applicable (reinforcement learning, imitation learning, etc.)"
+      type: str
+      tier: 3

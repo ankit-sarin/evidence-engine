@@ -13,6 +13,6 @@ class ParsedDocument(BaseModel):
     source_pdf_path: str
     pdf_hash: str
     parsed_markdown: str
-    parser_used: Literal["docling", "minicpm-v"]
+    parser_used: Literal["docling", "qwen2.5vl"]
     parsed_at: datetime
     version: int = Field(ge=1, default=1)

@@ -1,4 +1,4 @@
-"""Tests for PDF parser with Docling and MiniCPM-V routing."""
+"""Tests for PDF parser with Docling and Qwen2.5-VL routing."""
 
 from pathlib import Path
 from unittest.mock import patch, MagicMock
@@ -117,7 +117,7 @@ def test_digital_routes_to_docling(digital_pdf, db):
     assert len(result.parsed_markdown) > 0
 
 
-def test_scanned_routes_to_minicpm(scanned_pdf, db):
+def test_scanned_routes_to_vision_model(scanned_pdf, db):
     pid = _add_paper(db, pid_hint="2")
     db.update_status(pid, "SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
@@ -128,7 +128,7 @@ def test_scanned_routes_to_minicpm(scanned_pdf, db):
     with patch("engine.parsers.pdf_parser.ollama.chat", return_value=mock_response):
         result = parse_pdf(str(scanned_pdf), pid, "test_parse", db)
 
-    assert result.parser_used == "minicpm-v"
+    assert result.parser_used == "qwen2.5vl"
     assert "Extracted Text" in result.parsed_markdown
 
 

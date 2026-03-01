@@ -21,7 +21,7 @@ from engine.agents.extractor import (
 )
 from engine.agents.models import ExtractionResult
 from engine.core.review_spec import load_review_spec
-from engine.parsers.pdf_parser import is_scanned_pdf, parse_with_docling, parse_with_minicpm
+from engine.parsers.pdf_parser import is_scanned_pdf, parse_with_docling, parse_with_vision
 
 logging.basicConfig(
     level=logging.INFO,
@@ -105,10 +105,10 @@ def process_paper(pdf_path: str, label: str, spec, paper_id: int) -> dict:
     t0 = time.time()
     try:
         scanned = is_scanned_pdf(pdf_path)
-        result["parser_used"] = "minicpm-v" if scanned else "docling"
+        result["parser_used"] = "qwen2.5vl" if scanned else "docling"
         if scanned:
-            logger.info("[%s] Detected scanned PDF, using MiniCPM-V", label)
-            paper_text = parse_with_minicpm(pdf_path)
+            logger.info("[%s] Detected scanned PDF, using Qwen2.5-VL", label)
+            paper_text = parse_with_vision(pdf_path)
         else:
             logger.info("[%s] Digital PDF, using Docling", label)
             paper_text = parse_with_docling(pdf_path)

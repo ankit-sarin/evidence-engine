@@ -40,7 +40,7 @@ evidence-engine/
 │   ├── parsers/
 │   │   ├── __init__.py
 │   │   ├── models.py           # ParsedDocument model
-│   │   └── pdf_parser.py       # Docling + MiniCPM-V routing
+│   │   └── pdf_parser.py       # Docling + Qwen2.5-VL routing
 │   └── exporters/
 │       ├── __init__.py         # export_all() convenience function
 │       ├── prisma.py           # PRISMA flow data + CSV
@@ -70,7 +70,7 @@ evidence-engine/
 | Agent | Model | Role |
 |-------|-------|------|
 | Screener (S) | qwen3:8b | Dual-pass title/abstract screening |
-| PDF Parser (A) | Docling + MiniCPM-V | Digital + scanned PDF to Markdown |
+| PDF Parser (A) | Docling + Qwen2.5-VL | Digital + scanned PDF to Markdown |
 | Extractor (B) | deepseek-r1:32b | Two-pass structured extraction with reasoning trace |
 | Auditor (C) | qwen3:32b | Cross-model verification of extractions |
 
@@ -85,7 +85,7 @@ INGESTED → SCREENED_IN / SCREENED_OUT / SCREEN_FLAGGED → PDF_ACQUIRED → PA
 ## Pipeline Stages
 1. **SEARCH** — PubMed + OpenAlex → deduplicate → add to DB
 2. **SCREEN** — Dual-pass qwen3:8b with structured output
-3. **PARSE** — Docling (digital) or MiniCPM-V (scanned) → Markdown
+3. **PARSE** — Docling (digital) or Qwen2.5-VL (scanned) → Markdown
 4. **EXTRACT** — Pass 1: DeepSeek-R1 reasoning → Pass 2: structured JSON
 5. **AUDIT** — Grep verify + semantic verify via qwen3:32b
 6. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section

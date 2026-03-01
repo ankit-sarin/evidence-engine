@@ -1,4 +1,4 @@
-"""PDF-to-Markdown parser: Docling for digital PDFs, MiniCPM-V for scanned."""
+"""PDF-to-Markdown parser: Docling for digital PDFs, Qwen2.5-VL for scanned."""
 
 import base64
 import hashlib
@@ -16,7 +16,7 @@ from engine.parsers.models import ParsedDocument
 logger = logging.getLogger(__name__)
 
 _SCANNED_THRESHOLD = 100  # chars per page — below this, assume scanned
-_MINICPM_MODEL = "minicpm-v"
+_VISION_MODEL = "qwen2.5vl:7b"
 
 
 # ── Public API ───────────────────────────────────────────────────────
@@ -52,8 +52,8 @@ def parse_with_docling(pdf_path: str) -> str:
     return result.document.export_to_markdown()
 
 
-def parse_with_minicpm(pdf_path: str) -> str:
-    """Parse a scanned PDF by sending page images to MiniCPM-V via Ollama."""
+def parse_with_vision(pdf_path: str) -> str:
+    """Parse a scanned PDF by sending page images to Qwen2.5-VL via Ollama."""
     doc = fitz.open(pdf_path)
     pages_md: list[str] = []
 
@@ -66,7 +66,7 @@ def parse_with_minicpm(pdf_path: str) -> str:
             img_b64 = base64.b64encode(img_bytes).decode()
 
             response = ollama.chat(
-                model=_MINICPM_MODEL,
+                model=_VISION_MODEL,
                 messages=[
                     {
                         "role": "user",
@@ -81,7 +81,7 @@ def parse_with_minicpm(pdf_path: str) -> str:
             )
             page_text = response.message.content
             pages_md.append(f"<!-- Page {page_num + 1} -->\n{page_text}")
-            logger.info("MiniCPM-V parsed page %d/%d", page_num + 1, len(doc))
+            logger.info("Qwen2.5-VL parsed page %d/%d", page_num + 1, len(doc))
     finally:
         doc.close()
 
@@ -94,7 +94,7 @@ def parse_pdf(
     review_name: str,
     db: ReviewDatabase,
 ) -> ParsedDocument:
-    """Parse a PDF, route between Docling and MiniCPM-V, save and record."""
+    """Parse a PDF, route between Docling and Qwen2.5-VL, save and record."""
     pdf_hash = compute_pdf_hash(pdf_path)
 
     # Check for existing parse with same hash
@@ -127,25 +127,25 @@ def parse_pdf(
     ).fetchone()[0]
     version = (last_version or 0) + 1
 
-    # Route: try Docling first, fall back to MiniCPM-V for scanned PDFs
+    # Route: try Docling first, fall back to Qwen2.5-VL for scanned PDFs
     if is_scanned_pdf(pdf_path):
-        logger.info("Paper %d: scanned PDF detected, using MiniCPM-V", paper_id)
-        markdown = parse_with_minicpm(pdf_path)
-        parser_used = "minicpm-v"
+        logger.info("Paper %d: scanned PDF detected, using Qwen2.5-VL", paper_id)
+        markdown = parse_with_vision(pdf_path)
+        parser_used = "qwen2.5vl"
     else:
         logger.info("Paper %d: digital PDF, using Docling", paper_id)
         markdown = parse_with_docling(pdf_path)
         parser_used = "docling"
 
-        # Double-check: if Docling output is suspiciously sparse, retry with MiniCPM-V
+        # Double-check: if Docling output is suspiciously sparse, retry with Qwen2.5-VL
         if len(markdown.strip()) < _SCANNED_THRESHOLD:
             logger.warning(
-                "Paper %d: Docling output sparse (%d chars), falling back to MiniCPM-V",
+                "Paper %d: Docling output sparse (%d chars), falling back to Qwen2.5-VL",
                 paper_id,
                 len(markdown.strip()),
             )
-            markdown = parse_with_minicpm(pdf_path)
-            parser_used = "minicpm-v"
+            markdown = parse_with_vision(pdf_path)
+            parser_used = "qwen2.5vl"
 
     # Save Markdown file
     review_dir = Path(db.db_path).parent
@@ -181,7 +181,7 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
     total = len(papers)
     logger.info("Starting PDF parsing for %d papers", total)
 
-    stats = {"parsed": 0, "skipped_existing": 0, "failed": 0, "docling": 0, "minicpm": 0}
+    stats = {"parsed": 0, "skipped_existing": 0, "failed": 0, "docling": 0, "qwen2.5vl": 0}
     review_dir = Path(db.db_path).parent
 
     for i, paper in enumerate(papers, 1):
@@ -203,7 +203,7 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
             if result.parser_used == "docling":
                 stats["docling"] += 1
             else:
-                stats["minicpm"] += 1
+                stats["qwen2.5vl"] += 1
 
             db.update_status(pid, "PARSED")
             stats["parsed"] += 1
@@ -215,10 +215,10 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
             logger.info("Parsed %d/%d papers", i, total)
 
     logger.info(
-        "Parsing complete: %d parsed (%d docling, %d minicpm), %d skipped, %d failed",
+        "Parsing complete: %d parsed (%d docling, %d qwen2.5vl), %d skipped, %d failed",
         stats["parsed"],
         stats["docling"],
-        stats["minicpm"],
+        stats["qwen2.5vl"],
         stats["skipped_existing"],
         stats["failed"],
     )

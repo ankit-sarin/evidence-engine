@@ -21,6 +21,7 @@ STATUSES = (
     "SCREEN_FLAGGED",
     "PDF_ACQUIRED",
     "PARSED",
+    "EXTRACT_FAILED",
     "EXTRACTED",
     "AUDITED",
 )
@@ -30,7 +31,8 @@ ALLOWED_TRANSITIONS: dict[str, set[str]] = {
     "SCREENED_IN": {"PDF_ACQUIRED"},
     "SCREEN_FLAGGED": {"SCREENED_IN", "SCREENED_OUT"},
     "PDF_ACQUIRED": {"PARSED"},
-    "PARSED": {"EXTRACTED"},
+    "PARSED": {"EXTRACTED", "EXTRACT_FAILED"},
+    "EXTRACT_FAILED": {"PARSED", "EXTRACTED"},
     "EXTRACTED": {"AUDITED"},
     # Terminal states with no forward transitions
     "SCREENED_OUT": set(),

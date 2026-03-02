@@ -3,6 +3,7 @@
 import json
 import logging
 import re
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -15,6 +16,11 @@ from engine.core.review_spec import ReviewSpec
 logger = logging.getLogger(__name__)
 
 MODEL = "deepseek-r1:32b"
+OLLAMA_TIMEOUT = 900.0  # 15 minutes per API call
+MAX_RETRIES = 2
+RETRY_DELAY = 30  # seconds between retries
+
+_client = ollama.Client(timeout=OLLAMA_TIMEOUT)
 
 
 # ── Prompt Builder ───────────────────────────────────────────────────
@@ -55,12 +61,35 @@ For each field above, extract the value from the paper and provide:
 {paper_text}"""
 
 
+# ── Ollama Retry Wrapper ─────────────────────────────────────────────
+
+
+def _ollama_chat_with_retry(**kwargs):
+    """Call ollama.chat with timeout and retry on transient failures."""
+    for attempt in range(1 + MAX_RETRIES):
+        try:
+            return _client.chat(**kwargs)
+        except Exception as exc:
+            if attempt < MAX_RETRIES:
+                logger.warning(
+                    "Ollama call failed (attempt %d/%d): %s — retrying in %ds",
+                    attempt + 1, 1 + MAX_RETRIES, exc, RETRY_DELAY,
+                )
+                time.sleep(RETRY_DELAY)
+            else:
+                logger.error(
+                    "Ollama call failed after %d attempts: %s",
+                    1 + MAX_RETRIES, exc,
+                )
+                raise
+
+
 # ── Pass 1: Reasoning ────────────────────────────────────────────────
 
 
 def extract_pass1_reasoning(prompt: str) -> str:
     """Run Pass 1: let DeepSeek-R1 reason freely, return the thinking trace."""
-    response = ollama.chat(
+    response = _ollama_chat_with_retry(
         model=MODEL,
         messages=[
             {
@@ -103,7 +132,7 @@ def extract_pass2_structured(
     """Run Pass 2: use reasoning trace as context, force structured JSON output."""
     schema_hash = spec.extraction_hash()
 
-    response = ollama.chat(
+    response = _ollama_chat_with_retry(
         model=MODEL,
         messages=[
             {
@@ -232,6 +261,7 @@ def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
             )
         except Exception as exc:
             logger.error("Paper %d extraction failed: %s", pid, exc)
+            db.update_status(pid, "EXTRACT_FAILED")
             stats["failed"] += 1
 
     logger.info(

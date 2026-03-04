@@ -9,6 +9,11 @@ from engine.exporters.docx_export import export_evidence_docx
 from engine.exporters.evidence_table import export_evidence_csv, export_evidence_excel
 from engine.exporters.methods_section import export_methods_md
 from engine.exporters.prisma import export_prisma_csv
+from engine.exporters.trace_exporter import (
+    export_disagreement_pairs,
+    export_trace_quality_report,
+    export_traces_markdown,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +52,18 @@ def export_all(
     methods_path = str(out / "methods_section.md")
     export_methods_md(db, spec, methods_path)
     paths["methods_md"] = methods_path
+
+    # Trace exports
+    db_path_str = str(db.db_path)
+
+    trace_report_path = str(out / "trace_quality_report.json")
+    export_trace_quality_report(db_path_str, trace_report_path)
+    paths["trace_quality_report"] = trace_report_path
+    paths["trace_quality_report_md"] = trace_report_path.replace(".json", ".md")
+
+    traces_dir = str(out / "traces")
+    export_traces_markdown(db_path_str, traces_dir)
+    paths["traces_dir"] = traces_dir
 
     logger.info("All exports written to %s", output_dir)
     return paths

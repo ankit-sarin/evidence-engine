@@ -49,71 +49,88 @@ screening_criteria:
 
 extraction_schema:
   fields:
-    # ── Tier 1: Required ────────────────────────────────────
-    - name: study_design
-      description: "Study design (e.g., RCT, prospective cohort, bench study, animal study)"
-      type: str
+    # ── Tier 1: Explicit (stated directly in text, expected κ > 0.90) ──
+    - name: study_type
+      description: "The type of study. Look at the methods section for explicit statements like 'prospective,' 'retrospective,' 'randomized.' If unclear, classify based on the overall design."
+      type: categorical
       tier: 1
-    - name: sample_size
-      description: "Number of trials, subjects, or cases"
-      type: int
-      tier: 1
+      enum_values: ["Original Research", "Case Report/Series", "Review", "Systematic Review", "Meta-Analysis", "Commentary/Editorial", "Technical Note", "Conference Abstract", "NR"]
+
     - name: robot_platform
-      description: "Name or type of robotic system (e.g., da Vinci, STAR, SmartTissue)"
-      type: str
+      description: "The specific robotic system(s) used. Record the full commercial name as stated in the paper. If multiple platforms, separate with semicolons. If custom/experimental, record 'Custom' followed by any name given."
+      type: text
       tier: 1
-    - name: autonomy_level
-      description: "Highest autonomy level demonstrated (Yang et al. Level 1–5)"
-      type: enum
-      tier: 1
-      enum_values: ["1", "2", "3", "4", "5"]
+
     - name: task_performed
-      description: "Specific surgical task (e.g., suturing, debridement, tissue retraction)"
-      type: str
-      tier: 1
-    - name: accuracy_metric
-      description: "Primary accuracy or performance metric reported"
-      type: str
-      tier: 1
-    - name: accuracy_value
-      description: "Value of the primary accuracy metric"
-      type: str
+      description: "The specific surgical task or procedure the autonomous/semi-autonomous system performed. Use the paper's own terminology. If multiple tasks, list the primary one first."
+      type: text
       tier: 1
 
-    # ── Tier 2: Important ───────────────────────────────────
-    - name: completion_time
-      description: "Task completion time (with units)"
-      type: str
+    - name: sample_size
+      description: "The number of cases, trials, procedures, or subjects. Record the number with brief context. For animal/phantom studies, record the number of trials or specimens."
+      type: text
+      tier: 1
+
+    - name: country
+      description: "The country where the study was conducted. Look for institutional affiliations in the author list or methods section. If multi-country, list all separated by semicolons. If unclear, record 'NR'."
+      type: text
+      tier: 1
+
+    # ── Tier 2: Interpretive (vocabulary mapping, expected κ 0.70–0.85) ──
+    - name: autonomy_level
+      description: "The highest level of autonomy demonstrated, mapped to the Yang et al. (2017) classification. Level 0 = no autonomy (teleoperation). Level 1 = robot provides assistance. Level 2 = task autonomy. Level 3 = conditional autonomy. Level 4 = high autonomy. Level 5 = full autonomy. If the paper does not use this framework, map their description to the closest level."
+      type: categorical
       tier: 2
-    - name: safety_events
-      description: "Safety events reported (tissue damage, collisions, e-stops)"
-      type: str
+      enum_values: ["Level 0", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "NR"]
+
+    - name: validation_setting
+      description: "The experimental setting in which the system was tested. Choose the most specific applicable option."
+      type: categorical
       tier: 2
-    - name: comparison_arm
-      description: "What the autonomous system was compared against"
-      type: str
+      enum_values: ["Simulation only", "Phantom/bench model", "Ex vivo tissue", "In vivo animal", "Cadaver", "Human clinical trial", "Human clinical (non-trial)", "Multiple settings", "NR"]
+
+    - name: human_oversight_model
+      description: "How human oversight was maintained during autonomous task execution. Focus on what the human could do to intervene, not just whether they were present."
+      type: categorical
       tier: 2
-    - name: tissue_type
-      description: "Tissue or model used (human, porcine, phantom, cadaver)"
-      type: enum
-      tier: 2
-      enum_values: ["human", "porcine", "cadaver", "phantom", "other"]
+      enum_values: ["Direct teleoperation (no autonomy)", "Shared control", "Supervisory with manual override", "Supervisory with emergency stop only", "Monitoring only (no intervention capability)", "No human oversight described", "NR"]
+
     - name: fda_status
-      description: "FDA clearance or approval status of the platform"
-      type: str
+      description: "The FDA regulatory status of the robotic platform or autonomous system. Look for explicit FDA clearance/approval statements. 510(k) is clearance, PMA is approval — they are different regulatory pathways."
+      type: categorical
       tier: 2
+      enum_values: ["FDA 510(k) cleared", "FDA PMA approved", "FDA breakthrough designation", "Investigational/IDE", "CE marked (non-US)", "Not FDA cleared/approved", "Not discussed", "NR"]
 
-    # ── Tier 3: Optional ────────────────────────────────────
-    - name: cognitive_load
-      description: "Surgeon cognitive load or workload metric (e.g., NASA-TLX)"
-      type: str
+    - name: study_design
+      description: "The formal research design or methodological framework. This is about HOW the study was conducted, not WHAT it studied. If the paper describes a machine learning pipeline, classify the validation approach."
+      type: categorical
+      tier: 2
+      enum_values: ["Randomized controlled trial", "Non-randomized comparative", "Prospective cohort", "Retrospective cohort", "Case-control", "Cross-sectional", "Case report/series", "Systematic review", "Algorithm development and validation", "Bench/phantom study", "Simulation study", "Expert opinion/commentary", "NR"]
+
+    # ── Tier 3: Numeric/Tables (from results, variable expected κ) ──
+    - name: primary_outcome_metric
+      description: "The main outcome measure reported. Use the paper's exact terminology for the metric name (e.g., 'task completion time,' 'suture accuracy score,' 'Dice coefficient'). If multiple outcomes, record the one the authors emphasize as primary."
+      type: text
       tier: 3
-    - name: sensor_modality
-      description: "Sensing modality used for autonomy (vision, force, both)"
-      type: enum
+
+    - name: primary_outcome_value
+      description: "The numerical result for the primary outcome metric. Include the value, units, and statistical context (e.g., 'mean 4.2 ± 0.8 mm', '92.3% (95% CI: 88.1–96.5)', 'median 12 min (IQR 8–15)'). Record exactly as reported."
+      type: text
       tier: 3
-      enum_values: ["vision", "force", "both", "other"]
-    - name: learning_method
-      description: "ML/AI method if applicable (reinforcement learning, imitation learning, etc.)"
-      type: str
+
+    - name: comparison_to_human
+      description: "How the autonomous system's performance compared to human/manual performance, if reported. Include the comparison metric and direction (e.g., 'Autonomous 23% faster than manual (p<0.01)', 'No significant difference in accuracy (p=0.34)'). If no comparison was made, record 'No comparison reported'."
+      type: text
       tier: 3
+
+    # ── Tier 4: Judgment (synthesis/inference, expected κ 0.50–0.70) ──
+    - name: key_limitation
+      description: "What is the biggest threat to validity? Summarize in 1-2 sentences in your own words, drawing from the authors' limitations section and your own assessment of the study design."
+      type: text
+      tier: 4
+
+    - name: clinical_readiness_assessment
+      description: "YOUR JUDGMENT: Based on the totality of evidence in this paper, how close is the described technology to clinical use in patients? This field has no right answer in the text — it requires you to synthesize the results, limitations, and setting."
+      type: categorical
+      tier: 4
+      enum_values: ["Ready for clinical use", "Approaching clinical readiness", "Early-stage research", "Proof of concept only", "Not assessable"]

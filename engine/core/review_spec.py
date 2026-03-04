@@ -21,7 +21,7 @@ class ExtractionField(BaseModel):
     type: str = Field(
         description="Data type: str, int, float, bool, list[str], enum, etc."
     )
-    tier: int = Field(ge=1, le=3, description="1=required, 2=important, 3=optional")
+    tier: int = Field(ge=1, le=4, description="1=explicit, 2=interpretive, 3=numeric, 4=judgment")
     enum_values: Optional[list[str]] = Field(
         default=None, description="Allowed values when type is 'enum'"
     )

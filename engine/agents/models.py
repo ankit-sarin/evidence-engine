@@ -15,7 +15,7 @@ class EvidenceSpan(BaseModel):
         description="Verbatim quote from paper supporting this value (1-3 sentences)"
     )
     confidence: float = Field(ge=0.0, le=1.0)
-    tier: int = Field(ge=1, le=3)
+    tier: int = Field(ge=1, le=4)
 
     @field_validator("confidence", mode="before")
     @classmethod

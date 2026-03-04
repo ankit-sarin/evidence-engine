@@ -12,7 +12,7 @@ class EvidenceSpan(BaseModel):
     field_name: str
     value: str
     source_snippet: str = Field(
-        description="Verbatim quote from paper supporting this value (1-3 sentences)"
+        description="Verbatim quote from paper supporting this value (1-3 sentences). Empty string if value is NOT_FOUND."
     )
     confidence: float = Field(ge=0.0, le=1.0)
     tier: int = Field(ge=1, le=4)

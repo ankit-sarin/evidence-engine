@@ -30,8 +30,13 @@ def build_extraction_prompt(paper_text: str, spec: ReviewSpec) -> str:
     """Build the extraction prompt from paper text and review spec schema."""
     field_blocks: list[str] = []
 
-    for tier in (1, 2, 3):
-        tier_label = {1: "Tier 1 — Required", 2: "Tier 2 — Important", 3: "Tier 3 — Optional"}
+    tier_label = {
+        1: "Tier 1 — Required",
+        2: "Tier 2 — Important",
+        3: "Tier 3 — Numeric/Tables",
+        4: "Tier 4 — Judgment",
+    }
+    for tier in (1, 2, 3, 4):
         fields = spec.extraction_schema.fields_by_tier(tier)
         if not fields:
             continue
@@ -52,10 +57,13 @@ def build_extraction_prompt(paper_text: str, spec: ReviewSpec) -> str:
 
 ## Instructions
 For each field above, extract the value from the paper and provide:
+- **field_name**: Exactly as listed above.
 - **value**: The extracted data. If the field is not found in the paper, set to "NOT_FOUND".
-- **source_snippet**: A verbatim quote (1-3 sentences) from the paper that supports your extraction. If NOT_FOUND, set to empty string.
-- **confidence**: How clearly the paper states this information (0.0 to 1.0).
-- **tier**: The tier number of the field (1, 2, or 3).
+- **source_snippet**: A verbatim quote (1-3 sentences) copied character-for-character from the paper that supports your extraction. Do NOT paraphrase, summarize, or rephrase in any way. Do NOT bridge distant passages with "..." or ellipses — quote one continuous passage only. If value is "NOT_FOUND", set source_snippet to "". Never fabricate a snippet — every non-empty snippet must be a real quote from the paper. For Tier 4 judgment fields, quote the passage that most informed your judgment.
+- **confidence**: How clearly the paper states this information (0.0 to 1.0). For Tier 4 judgment fields, this reflects your confidence in your assessment.
+- **tier**: The tier number of the field (1, 2, 3, or 4).
+
+You MUST emit exactly one entry per field listed above ({sum(len(spec.extraction_schema.fields_by_tier(t)) for t in (1,2,3,4))} fields total), including Tier 4 judgment fields.
 
 ## Paper Text
 {paper_text}"""
@@ -190,25 +198,25 @@ def extract_paper(
     # Pass 2: structured output
     result = extract_pass2_structured(prompt, reasoning_trace, spec, paper_id)
 
-    # Store extraction in database
+    # Store extraction + all spans atomically (single transaction)
     extracted_data = [span.model_dump() for span in result.fields]
-    ext_id = db.add_extraction(
+    span_dicts = [
+        {
+            "field_name": s.field_name,
+            "value": s.value,
+            "source_snippet": s.source_snippet,
+            "confidence": s.confidence,
+        }
+        for s in result.fields
+    ]
+    ext_id = db.add_extraction_atomic(
         paper_id=paper_id,
         schema_hash=result.extraction_schema_hash,
         extracted_data=extracted_data,
         reasoning_trace=reasoning_trace,
         model=MODEL,
+        spans=span_dicts,
     )
-
-    # Store each evidence span
-    for span in result.fields:
-        db.add_evidence_span(
-            extraction_id=ext_id,
-            field_name=span.field_name,
-            value=span.value,
-            source_snippet=span.source_snippet,
-            confidence=span.confidence,
-        )
 
     return result
 

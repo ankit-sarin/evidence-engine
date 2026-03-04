@@ -9,3 +9,5 @@ pyyaml
 python-docx
 openpyxl
 docling
+openai
+anthropic

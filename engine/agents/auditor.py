@@ -4,13 +4,14 @@ import logging
 import re
 from difflib import SequenceMatcher
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Optional
 
 import ollama
 from pydantic import BaseModel
 
 from engine.agents.models import EvidenceSpan
 from engine.core.database import ReviewDatabase
+from engine.core.review_spec import ReviewSpec
 
 logger = logging.getLogger(__name__)
 
@@ -79,20 +80,41 @@ def grep_verify(source_snippet: str, paper_text: str) -> bool:
 # ── Semantic Verification ────────────────────────────────────────────
 
 
-def semantic_verify(span: EvidenceSpan, paper_text: str) -> AuditVerdict:
-    """Use Qwen3:32b to verify if extracted value matches the source snippet."""
+def semantic_verify(
+    span: EvidenceSpan, paper_text: str, field_type: str = "text"
+) -> AuditVerdict:
+    """Use Qwen3:32b to verify if extracted value matches the source snippet.
+
+    For categorical fields, the prompt asks whether the source text supports
+    the classification rather than whether it contains the exact phrase.
+    """
+    if field_type == "categorical":
+        verification_question = (
+            f"Does the source snippet provide sufficient evidence to classify "
+            f"this paper as '{span.value}' for the field '{span.field_name}'?\n"
+            f"Note: This is a categorical/classification field. The exact phrase "
+            f"'{span.value}' does NOT need to appear verbatim in the text. "
+            f"The question is whether the described content reasonably supports "
+            f"this classification."
+        )
+    else:
+        verification_question = (
+            f"Does the extracted value accurately represent what the source snippet states?\n"
+            f"Consider:\n"
+            f"- Is the value factually supported by the snippet?\n"
+            f"- Is there any misinterpretation or hallucination?\n"
+            f"- Is the value a reasonable extraction for this field?"
+        )
+
     prompt = f"""/no_think
 You are an audit agent verifying data extraction from a scientific paper.
 
 Field: {span.field_name}
+Field type: {field_type}
 Extracted value: {span.value}
 Source snippet from paper: {span.source_snippet}
 
-Does the extracted value accurately represent what the source snippet states?
-Consider:
-- Is the value factually supported by the snippet?
-- Is there any misinterpretation or hallucination?
-- Is the value a reasonable extraction for this field?
+{verification_question}
 
 Respond with JSON: {{"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}}"""
 
@@ -103,8 +125,11 @@ Respond with JSON: {{"status": "verified" or "flagged", "grep_found": true, "rea
                 "role": "system",
                 "content": (
                     "You are an audit agent verifying data extractions from "
-                    "scientific papers. Be strict: flag anything that is not "
-                    "clearly supported by the source snippet. Respond ONLY with JSON."
+                    "scientific papers. For free-text fields, be strict: flag anything "
+                    "not clearly supported by the source snippet. For categorical fields, "
+                    "verify that the source text reasonably supports the chosen category — "
+                    "the category label does not need to appear verbatim. "
+                    "Respond ONLY with JSON."
                 ),
             },
             {"role": "user", "content": prompt},
@@ -121,17 +146,30 @@ Respond with JSON: {{"status": "verified" or "flagged", "grep_found": true, "rea
 # ── Single Span Audit ────────────────────────────────────────────────
 
 
-def audit_span(span_data: dict, paper_text: str) -> AuditVerdict:
+def audit_span(
+    span_data: dict, paper_text: str, field_type: str = "text"
+) -> AuditVerdict:
     """Audit a single evidence span: grep check, then semantic check."""
     source_snippet = span_data.get("source_snippet", "")
     value = span_data.get("value", "")
 
-    # Skip NOT_FOUND fields — nothing to audit
-    if value == "NOT_FOUND":
+    # Values that indicate the field is absent/not reported — skip audit
+    _ABSENCE_VALUES = {"NOT_FOUND", "Not discussed", "NR", "No comparison reported"}
+
+    if value in _ABSENCE_VALUES:
         return AuditVerdict(
             status="verified",
             grep_found=False,
-            reasoning="Field was NOT_FOUND — no extraction to audit.",
+            reasoning=f"Field value '{value}' indicates absence — no extraction to audit.",
+        )
+
+    # Empty snippet on a non-absence value: the extractor failed to provide
+    # a supporting quote. Flag it rather than silently skipping.
+    if not source_snippet or not source_snippet.strip():
+        return AuditVerdict(
+            status="flagged",
+            grep_found=False,
+            reasoning="Extracted value present but no source snippet provided.",
         )
 
     # Step 1: grep check
@@ -152,7 +190,7 @@ def audit_span(span_data: dict, paper_text: str) -> AuditVerdict:
         confidence=span_data.get("confidence", 0.5),
         tier=span_data.get("tier", 1),
     )
-    verdict = semantic_verify(span, paper_text)
+    verdict = semantic_verify(span, paper_text, field_type=field_type)
     # Ensure grep_found is set correctly from our check
     verdict.grep_found = True
     return verdict
@@ -161,8 +199,20 @@ def audit_span(span_data: dict, paper_text: str) -> AuditVerdict:
 # ── Batch Audit Pipeline ─────────────────────────────────────────────
 
 
-def run_audit(db: ReviewDatabase, review_name: str) -> dict:
-    """Audit all EXTRACTED papers. Returns stats dict."""
+def run_audit(
+    db: ReviewDatabase, review_name: str, spec: Optional[ReviewSpec] = None
+) -> dict:
+    """Audit all EXTRACTED papers. Returns stats dict.
+
+    If spec is provided, field types from the extraction schema are used to
+    route categorical fields to classification-aware verification prompts.
+    """
+    # Build field_name → type lookup from spec
+    field_type_map: dict[str, str] = {}
+    if spec:
+        for field in spec.extraction_schema.fields:
+            field_type_map[field.name] = field.type
+
     papers = db.get_papers_by_status("EXTRACTED")
     total = len(papers)
     logger.info("Starting audit on %d papers", total)
@@ -206,7 +256,8 @@ def run_audit(db: ReviewDatabase, review_name: str) -> dict:
 
         for span_row in spans:
             span_data = dict(span_row)
-            verdict = audit_span(span_data, paper_text)
+            ft = field_type_map.get(span_data.get("field_name", ""), "text")
+            verdict = audit_span(span_data, paper_text, field_type=ft)
 
             db.update_audit(
                 span_id=span_data["id"],

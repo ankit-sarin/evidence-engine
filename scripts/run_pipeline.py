@@ -88,7 +88,7 @@ def run_pipeline(
 
         # ── AUDIT ────────────────────────────────────────────
         if start_idx <= STAGES.index("audit"):
-            results["audit"] = _stage_audit(db, review_name)
+            results["audit"] = _stage_audit(db, review_name, spec)
 
         # ── EXPORT ───────────────────────────────────────────
         if start_idx <= STAGES.index("export"):
@@ -205,7 +205,7 @@ def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
     return {**stats, "elapsed": elapsed}
 
 
-def _stage_audit(db: ReviewDatabase, review_name: str) -> dict:
+def _stage_audit(db: ReviewDatabase, review_name: str, spec: ReviewSpec = None) -> dict:
     t = time.time()
     logger.info("=" * 60)
     logger.info("STAGE: AUDIT")
@@ -215,7 +215,7 @@ def _stage_audit(db: ReviewDatabase, review_name: str) -> dict:
         logger.info("No papers with status EXTRACTED — skipping audit.")
         return {"papers_audited": 0, "elapsed": 0}
 
-    stats = run_audit(db, review_name)
+    stats = run_audit(db, review_name, spec=spec)
     elapsed = time.time() - t
     logger.info("Audit complete in %.1fs — %s", elapsed, json.dumps(stats))
     return {**stats, "elapsed": elapsed}

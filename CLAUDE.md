@@ -49,6 +49,11 @@ evidence-engine/
 │       └── methods_section.py  # Auto-generated PRISMA methods paragraph
 ├── scripts/
 │   ├── run_pipeline.py         # Full pipeline CLI (--spec, --name, --skip-to, --limit)
+│   ├── reextract_failed.py     # Re-extract specific failed papers with extended timeout
+│   ├── advance_to_pdf_acquired.py  # Bulk status transition helper
+│   ├── monitor_extraction.py   # Live extraction progress monitor
+│   ├── prepare_concordance_pdfs.py # EE-XXX renamed PDFs + paper_manifest.csv
+│   ├── pdf_acquisition/        # Multi-step PDF download pipeline (export, unpaywall, OA, manual)
 │   └── test_e2e_search_screen.py  # Live E2E test: search + screen 20 papers
 ├── tests/                      # 103 tests, all passing
 │   ├── test_review_spec.py     # 11 tests — YAML loading, hashing, validation
@@ -80,7 +85,7 @@ evidence-engine/
 - File system: Immutable PDF + parsed Markdown store
 
 ## Paper Lifecycle
-INGESTED → SCREENED_IN / SCREENED_OUT / SCREEN_FLAGGED → PDF_ACQUIRED → PARSED → EXTRACTED → AUDITED
+INGESTED → SCREENED_IN / SCREENED_OUT / SCREEN_FLAGGED → PDF_ACQUIRED → PARSED → EXTRACTED / EXTRACT_FAILED → AUDITED
 
 ## Pipeline Stages
 1. **SEARCH** — PubMed + OpenAlex → deduplicate → add to DB
@@ -113,6 +118,20 @@ python scripts/test_e2e_search_screen.py
 # Test suite
 python -m pytest tests/ -v
 ```
+
+## Current Review Status (surgical_autonomy)
+- **251 total papers** (PubMed + OpenAlex, deduplicated)
+- **155 SCREENED_OUT**, **96 AUDITED**
+- 96 extractions, 1,429 evidence spans (872 verified / 557 flagged)
+- 3 papers excluded post-audit: db_id 37, 149 (HSMR extended abstracts), 225 (SPR pediatric radiology)
+- Concordance PDFs: `data/surgical_autonomy/concordance_pdfs/` with EE-001 to EE-099 (gaps at EE-019, EE-062, EE-094)
+- Exports: `data/surgical_autonomy/exports/` (evidence CSV/Excel/DOCX, PRISMA CSV, methods section)
+
+## Known Issues & Fixes
+- DeepSeek-R1 outputs `confidence: -1` for NOT_FOUND fields → clamped via `@field_validator` in `EvidenceSpan`
+- ~50% of grep audit failures caused by ellipsis in source_snippets (model abbreviates quotes with `...`)
+- ~49% of grep failures caused by paraphrased (non-verbatim) snippets — values typically correct
+- 4 papers have <15 spans (11-14): db_id 94, 102, 145, 221 — model omitted some fields
 
 ## Build Plan
 See Project4_Surgical_Evidence_Engine_Unified_Plan_v5.md

@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class EvidenceSpan(BaseModel):
@@ -16,6 +16,14 @@ class EvidenceSpan(BaseModel):
     )
     confidence: float = Field(ge=0.0, le=1.0)
     tier: int = Field(ge=1, le=3)
+
+    @field_validator("confidence", mode="before")
+    @classmethod
+    def clamp_confidence(cls, v):
+        """Clamp out-of-range confidence values (e.g. -1 from DeepSeek-R1 for NOT_FOUND)."""
+        if isinstance(v, (int, float)):
+            return max(0.0, min(1.0, float(v)))
+        return v
 
 
 class ExtractionResult(BaseModel):

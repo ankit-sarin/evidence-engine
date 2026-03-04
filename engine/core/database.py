@@ -274,6 +274,57 @@ class ReviewDatabase:
         self._conn.commit()
         return cur.lastrowid
 
+    def add_extraction_atomic(
+        self,
+        paper_id: int,
+        schema_hash: str,
+        extracted_data: dict,
+        reasoning_trace: str,
+        model: str,
+        spans: list[dict],
+    ) -> int:
+        """Atomically insert extraction + all evidence spans in one transaction.
+
+        If any insert fails, the entire operation rolls back — no partial
+        extraction records are left in the database.
+
+        Each span dict must have: field_name, value, source_snippet, confidence.
+        Returns the extraction id.
+        """
+        try:
+            self._conn.execute("BEGIN")
+            cur = self._conn.execute(
+                """INSERT INTO extractions
+                   (paper_id, extraction_schema_hash, extracted_data,
+                    reasoning_trace, model, extracted_at)
+                   VALUES (?, ?, ?, ?, ?, ?)""",
+                (
+                    paper_id,
+                    schema_hash,
+                    json.dumps(extracted_data),
+                    reasoning_trace,
+                    model,
+                    _now(),
+                ),
+            )
+            ext_id = cur.lastrowid
+
+            for s in spans:
+                self._conn.execute(
+                    """INSERT INTO evidence_spans
+                       (extraction_id, field_name, value, source_snippet,
+                        confidence, audit_status)
+                       VALUES (?, ?, ?, ?, ?, 'pending')""",
+                    (ext_id, s["field_name"], s["value"],
+                     s["source_snippet"], s["confidence"]),
+                )
+
+            self._conn.execute("COMMIT")
+            return ext_id
+        except Exception:
+            self._conn.execute("ROLLBACK")
+            raise
+
     def get_stale_extractions(self, current_hash: str) -> list[dict]:
         """Return papers whose latest extraction hash differs from current."""
         rows = self._conn.execute(

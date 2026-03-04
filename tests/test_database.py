@@ -229,6 +229,69 @@ def test_evidence_spans_and_audit(db):
     assert span["auditor_model"] == "qwen3:32b"
 
 
+# ── Atomic Extraction ─────────────────────────────────────────────────
+
+
+def test_atomic_extraction_commits_all(db):
+    """All spans and the extraction record land in one transaction."""
+    db.add_papers([_cit(pmid="AT1", title="Atomic OK")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+    db.update_status(pid, "PARSED")
+    db.update_status(pid, "EXTRACTED")
+
+    spans = [
+        {"field_name": f"field_{i}", "value": f"val_{i}",
+         "source_snippet": f"snippet {i}", "confidence": 0.9}
+        for i in range(15)
+    ]
+    ext_id = db.add_extraction_atomic(
+        pid, "hash_ok", {"f": 1}, "trace", "model", spans,
+    )
+
+    # Extraction exists
+    row = db._conn.execute(
+        "SELECT * FROM extractions WHERE id = ?", (ext_id,)
+    ).fetchone()
+    assert row is not None
+    assert row["paper_id"] == pid
+
+    # All 15 spans exist
+    span_rows = db._conn.execute(
+        "SELECT * FROM evidence_spans WHERE extraction_id = ?", (ext_id,)
+    ).fetchall()
+    assert len(span_rows) == 15
+
+
+def test_atomic_extraction_rolls_back_on_failure(db):
+    """If a span insert fails, no extraction or spans are committed."""
+    db.add_papers([_cit(pmid="AT2", title="Atomic Fail")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+    db.update_status(pid, "PARSED")
+    db.update_status(pid, "EXTRACTED")
+
+    # Span #2 has a bad confidence (string instead of float) → will fail SQL
+    spans = [
+        {"field_name": "f1", "value": "v1", "source_snippet": "s1", "confidence": 0.9},
+        {"field_name": "f2", "value": "v2", "source_snippet": "s2", "confidence": 0.8},
+        {"field_name": "f3", "value": None, "source_snippet": "s3", "confidence": 0.7},  # NULL value → NOT NULL constraint
+    ]
+
+    with pytest.raises(Exception):
+        db.add_extraction_atomic(
+            pid, "hash_fail", {"f": 1}, "trace", "model", spans,
+        )
+
+    # Nothing committed
+    ext_count = db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0]
+    span_count = db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0]
+    assert ext_count == 0
+    assert span_count == 0
+
+
 # ── Pipeline Stats ───────────────────────────────────────────────────
 
 

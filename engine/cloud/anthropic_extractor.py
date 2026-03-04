@@ -1,4 +1,4 @@
-"""Anthropic Claude Sonnet 4.5 cloud extraction arm for concordance study."""
+"""Anthropic Claude Sonnet 4.6 cloud extraction arm for concordance study."""
 
 import json
 import logging
@@ -11,17 +11,17 @@ from engine.cloud.base import CloudExtractorBase
 
 logger = logging.getLogger(__name__)
 
-# Claude Sonnet 4.5 pricing (March 2026)
+# Claude Sonnet 4.6 pricing (March 2026)
 COST_INPUT_PER_M = 3.00    # $/1M input tokens
 COST_OUTPUT_PER_M = 15.00  # $/1M output tokens
 
-MODEL_STRING = "claude-sonnet-4-5-20250929"
+MODEL_STRING = "claude-sonnet-4-6"
 
 
 class AnthropicExtractor(CloudExtractorBase):
-    """Cloud extraction using Anthropic Claude Sonnet 4.5 with extended thinking."""
+    """Cloud extraction using Anthropic Claude Sonnet 4.6 with extended thinking."""
 
-    ARM = "anthropic_sonnet_4_5"
+    ARM = "anthropic_sonnet_4_6"
 
     def __init__(
         self,
@@ -39,7 +39,7 @@ class AnthropicExtractor(CloudExtractorBase):
         self.model_string = MODEL_STRING
 
     def extract_paper(self, paper_id: int, parsed_text: str) -> dict:
-        """Extract a single paper via Anthropic Claude Sonnet 4.5."""
+        """Extract a single paper via Anthropic Claude Sonnet 4.6."""
         prompt = self.build_prompt(parsed_text)
 
         response = self.client.messages.create(

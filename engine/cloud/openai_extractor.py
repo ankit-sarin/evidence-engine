@@ -1,4 +1,4 @@
-"""OpenAI o3-mini cloud extraction arm for concordance study."""
+"""OpenAI o4-mini cloud extraction arm for concordance study."""
 
 import json
 import logging
@@ -11,17 +11,17 @@ from engine.cloud.base import CloudExtractorBase
 
 logger = logging.getLogger(__name__)
 
-# o3-mini pricing (March 2026)
+# o4-mini pricing (March 2026)
 COST_INPUT_PER_M = 1.10   # $/1M input tokens
 COST_OUTPUT_PER_M = 4.40  # $/1M output tokens
 
-MODEL_STRING = "o3-mini"
+MODEL_STRING = "o4-mini-2025-04-16"
 
 
 class OpenAIExtractor(CloudExtractorBase):
-    """Cloud extraction using OpenAI o3-mini with reasoning_effort=high."""
+    """Cloud extraction using OpenAI o4-mini with reasoning_effort=high."""
 
-    ARM = "openai_o3_mini_high"
+    ARM = "openai_o4_mini_high"
 
     def __init__(
         self,
@@ -39,7 +39,7 @@ class OpenAIExtractor(CloudExtractorBase):
         self.model_string = MODEL_STRING
 
     def extract_paper(self, paper_id: int, parsed_text: str) -> dict:
-        """Extract a single paper via OpenAI o3-mini."""
+        """Extract a single paper via OpenAI o4-mini."""
         prompt = self.build_prompt(parsed_text)
 
         response = self.client.chat.completions.create(

@@ -29,9 +29,9 @@ def _build_evidence_rows(db: ReviewDatabase, spec: ReviewSpec) -> tuple[list[str
     for fname in field_names:
         headers.extend([fname, f"{fname}_snippet", f"{fname}_confidence", f"{fname}_audit"])
 
-    # Get papers that have extractions (EXTRACTED or AUDITED)
+    # Get papers that have completed AI audit or beyond
     papers = db._conn.execute(
-        "SELECT * FROM papers WHERE status IN ('EXTRACTED', 'AUDITED') ORDER BY id"
+        "SELECT * FROM papers WHERE status IN ('AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE') ORDER BY id"
     ).fetchall()
 
     rows = []

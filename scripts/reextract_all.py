@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Full re-extraction + re-audit of all 96 screened-in papers.
 
-Resets AUDITED papers to PARSED, deletes old extractions/spans,
-runs extraction with the updated prompts, then audits.
+Resets AI_AUDIT_COMPLETE/HUMAN_AUDIT_COMPLETE papers to PARSED, deletes old
+extractions/spans, runs extraction with the updated prompts, then audits.
 
 Usage:
     python scripts/reextract_all.py
@@ -39,17 +39,20 @@ def main():
     schema_hash = spec.extraction_hash()
 
     # ── Step 1: Identify papers to re-extract ──
-    audited = db.get_papers_by_status("AUDITED")
+    ai_complete = db.get_papers_by_status("AI_AUDIT_COMPLETE")
+    human_complete = db.get_papers_by_status("HUMAN_AUDIT_COMPLETE")
     extracted = db.get_papers_by_status("EXTRACTED")
-    targets = audited + extracted
-    logger.info("Papers to re-extract: %d AUDITED + %d EXTRACTED = %d total",
-                len(audited), len(extracted), len(targets))
+    targets = ai_complete + human_complete + extracted
+    logger.info("Papers to re-extract: %d AI_AUDIT_COMPLETE + %d HUMAN_AUDIT_COMPLETE + %d EXTRACTED = %d total",
+                len(ai_complete), len(human_complete), len(extracted), len(targets))
 
     if not targets:
         logger.info("No papers to re-extract.")
         return
 
     # ── Step 2: Reset status to PARSED and clean old data ──
+    # Use reset_for_reaudit() first to handle AI_AUDIT_COMPLETE → EXTRACTED,
+    # then manually step to PARSED and delete extractions
     logger.info("Resetting papers to PARSED and cleaning old extractions...")
     for paper in targets:
         pid = paper["id"]
@@ -64,7 +67,7 @@ def main():
             )
         # Delete old extractions
         db._conn.execute("DELETE FROM extractions WHERE paper_id = ?", (pid,))
-        # Reset status directly (bypass state machine since AUDITED is terminal)
+        # Reset status directly (bypass state machine — administrative override)
         db._conn.execute(
             "UPDATE papers SET status = 'PARSED', updated_at = datetime('now') WHERE id = ?",
             (pid,),
@@ -102,17 +105,25 @@ def main():
     verified = db._conn.execute(
         "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'verified'"
     ).fetchone()[0]
+    contested = db._conn.execute(
+        "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'contested'"
+    ).fetchone()[0]
     flagged = db._conn.execute(
         "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'flagged'"
+    ).fetchone()[0]
+    invalid = db._conn.execute(
+        "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'invalid_snippet'"
     ).fetchone()[0]
     pending = db._conn.execute(
         "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'pending'"
     ).fetchone()[0]
 
     logger.info("Total evidence spans: %d", total_spans)
-    logger.info("  Verified: %d (%.1f%%)", verified, 100 * verified / max(total_spans, 1))
-    logger.info("  Flagged:  %d (%.1f%%)", flagged, 100 * flagged / max(total_spans, 1))
-    logger.info("  Pending:  %d", pending)
+    logger.info("  Verified:        %d (%.1f%%)", verified, 100 * verified / max(total_spans, 1))
+    logger.info("  Contested:       %d (%.1f%%)", contested, 100 * contested / max(total_spans, 1))
+    logger.info("  Flagged:         %d (%.1f%%)", flagged, 100 * flagged / max(total_spans, 1))
+    logger.info("  Invalid snippet: %d (%.1f%%)", invalid, 100 * invalid / max(total_spans, 1))
+    logger.info("  Pending:         %d", pending)
 
     # Field coverage
     field_counts = db._conn.execute(
@@ -138,44 +149,6 @@ def main():
             logger.info("  Paper %-4d (%2d spans): %s", row["paper_id"], row["span_count"], row["title"][:60])
     else:
         logger.info("\nNo papers with < 13 spans.")
-
-    # Paper 123 specifically
-    p123_ext = db._conn.execute(
-        "SELECT id FROM extractions WHERE paper_id = 123 ORDER BY id DESC LIMIT 1"
-    ).fetchone()
-    if p123_ext:
-        p123_spans = db._conn.execute("""
-            SELECT field_name, value, audit_status, audit_rationale,
-                   CASE WHEN source_snippet IS NULL OR source_snippet = '' THEN 'empty' ELSE 'present' END as has_snippet
-            FROM evidence_spans WHERE extraction_id = ?
-            ORDER BY field_name
-        """, (p123_ext["id"],)).fetchall()
-        p123_verified = sum(1 for r in p123_spans if r["audit_status"] == "verified")
-        p123_flagged = sum(1 for r in p123_spans if r["audit_status"] == "flagged")
-        p123_grep = sum(1 for r in p123_spans if r["audit_rationale"] and "not found in paper" in r["audit_rationale"])
-        logger.info("\nPaper 123 (179K chars):")
-        logger.info("  Total spans: %d", len(p123_spans))
-        logger.info("  Verified: %d, Flagged: %d", p123_verified, p123_flagged)
-        logger.info("  Grep failures: %d", p123_grep)
-        logger.info("  Snippet presence: %d with snippets, %d empty",
-                     sum(1 for r in p123_spans if r["has_snippet"] == "present"),
-                     sum(1 for r in p123_spans if r["has_snippet"] == "empty"))
-        for r in p123_spans:
-            logger.info("    %-30s %-10s snippet=%-7s val=%s",
-                         r["field_name"], r["audit_status"], r["has_snippet"], (r["value"] or "")[:60])
-
-    # Grep vs semantic failure breakdown
-    grep_failures = db._conn.execute(
-        "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'flagged' AND audit_rationale = 'Source snippet not found in paper text.'"
-    ).fetchone()[0]
-    no_snippet = db._conn.execute(
-        "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'flagged' AND audit_rationale = 'Extracted value present but no source snippet provided.'"
-    ).fetchone()[0]
-    semantic_flags = flagged - grep_failures - no_snippet
-    logger.info("\nFlag breakdown:")
-    logger.info("  Grep failures (snippet not in paper): %d", grep_failures)
-    logger.info("  Missing snippet (value present):      %d", no_snippet)
-    logger.info("  Semantic flags (LLM disagreement):    %d", semantic_flags)
 
     total_time = (t2 - t0) / 60
     logger.info("\nTotal time: %.1f min (extract: %.1f min, audit: %.1f min)",

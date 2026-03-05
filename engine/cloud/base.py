@@ -41,7 +41,7 @@ class CloudExtractorBase:
         rows = self._conn.execute(
             """SELECT p.id AS paper_id, p.title, p.authors, p.year
                FROM papers p
-               WHERE p.status IN ('EXTRACTED', 'AUDITED')
+               WHERE p.status IN ('EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')
                AND p.id NOT IN (
                    SELECT ce.paper_id FROM cloud_extractions ce WHERE ce.arm = ?
                )
@@ -162,7 +162,7 @@ class CloudExtractorBase:
     def get_progress(self, arm: str) -> dict:
         """Return progress stats for the given arm."""
         total = self._conn.execute(
-            "SELECT COUNT(*) FROM papers WHERE status IN ('EXTRACTED', 'AUDITED')"
+            "SELECT COUNT(*) FROM papers WHERE status IN ('EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')"
         ).fetchone()[0]
 
         completed = self._conn.execute(

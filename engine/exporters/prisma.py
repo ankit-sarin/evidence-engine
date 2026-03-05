@@ -34,7 +34,8 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
 
     # Records that passed screening (anything beyond SCREENED_IN)
     post_screening_statuses = {
-        "SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED", "AUDITED"
+        "SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED",
+        "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE",
     }
     screened_in = sum(status_counts.get(s, 0) for s in post_screening_statuses)
 
@@ -52,12 +53,21 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
     # Full text stages
     full_text_assessed = sum(
         status_counts.get(s, 0)
-        for s in ("PDF_ACQUIRED", "PARSED", "EXTRACTED", "AUDITED")
+        for s in ("PDF_ACQUIRED", "PARSED", "EXTRACTED", "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE")
     )
 
     studies_included = sum(
-        status_counts.get(s, 0) for s in ("EXTRACTED", "AUDITED")
+        status_counts.get(s, 0) for s in ("AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE")
     )
+
+    # Rejected papers
+    rejected = status_counts.get("REJECTED", 0)
+    rejection_reasons = {}
+    for row in conn.execute(
+        "SELECT rejected_reason, COUNT(*) as cnt FROM papers "
+        "WHERE status = 'REJECTED' GROUP BY rejected_reason"
+    ).fetchall():
+        rejection_reasons[row["rejected_reason"] or "No reason given"] = row["cnt"]
 
     # Audit stats
     spans_verified = conn.execute(
@@ -77,6 +87,8 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
         "screen_flagged": screen_flagged,
         "full_text_assessed": full_text_assessed,
         "studies_included": studies_included,
+        "papers_rejected": rejected,
+        "rejection_reasons": rejection_reasons,
         "spans_verified": spans_verified,
         "spans_flagged": spans_flagged,
     }
@@ -104,6 +116,11 @@ def export_prisma_csv(db: ReviewDatabase, output_path: str) -> None:
     rows.extend([
         ("Screen flagged", flow["screen_flagged"], "For human review"),
         ("Full text assessed", flow["full_text_assessed"], ""),
+        ("Papers rejected", flow["papers_rejected"], "Post-extraction exclusion"),
+    ])
+    for reason, count in flow.get("rejection_reasons", {}).items():
+        rows.append(("", count, reason[:80]))
+    rows.extend([
         ("Studies included", flow["studies_included"], ""),
         ("Evidence spans verified", flow["spans_verified"], ""),
         ("Evidence spans flagged", flow["spans_flagged"], ""),

@@ -44,7 +44,7 @@ def export_evidence_docx(
 
     # Create table
     papers = db._conn.execute(
-        "SELECT * FROM papers WHERE status IN ('EXTRACTED', 'AUDITED') ORDER BY id"
+        "SELECT * FROM papers WHERE status IN ('AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE') ORDER BY id"
     ).fetchall()
 
     table = doc.add_table(rows=1 + len(papers), cols=len(all_cols))

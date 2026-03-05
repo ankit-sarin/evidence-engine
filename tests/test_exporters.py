@@ -61,7 +61,7 @@ def populated_db(tmp_path, spec):
         db.add_screening_decision(p["id"], 2, "exclude", "Borderline", "qwen3:8b")
         db.update_status(p["id"], "SCREEN_FLAGGED")
 
-    # Walk 5 screened-in papers to EXTRACTED/AUDITED
+    # Walk 5 screened-in papers to EXTRACTED/AI_AUDIT_COMPLETE
     screened_in = db.get_papers_by_status("SCREENED_IN")
     schema_hash = spec.extraction_hash()
 
@@ -89,7 +89,7 @@ def populated_db(tmp_path, spec):
             ).fetchall()
             for s in spans:
                 db.update_audit(s["id"], "verified", "qwen3:32b", "Confirmed.")
-            db.update_status(pid, "AUDITED")
+            db.update_status(pid, "AI_AUDIT_COMPLETE")
 
     yield db
     db.close()
@@ -105,7 +105,7 @@ def test_prisma_flow_counts(populated_db):
     assert flow["records_by_source"]["openalex"] == 5
     assert flow["records_excluded"] == 4
     assert flow["screen_flagged"] == 3
-    assert flow["studies_included"] >= 3  # EXTRACTED + AUDITED
+    assert flow["studies_included"] == 3  # AI_AUDIT_COMPLETE
 
 
 def test_prisma_csv(populated_db, tmp_path):
@@ -145,8 +145,8 @@ def test_evidence_csv_columns(populated_db, spec, tmp_path):
     assert "study_design_confidence" in headers
     assert "study_design_audit" in headers
 
-    # 5 included papers (EXTRACTED + AUDITED)
-    assert len(rows) - 1 == 5
+    # 3 papers at AI_AUDIT_COMPLETE (exporters no longer include EXTRACTED)
+    assert len(rows) - 1 == 3
 
 
 # ── Evidence Excel ───────────────────────────────────────────────────
@@ -162,7 +162,7 @@ def test_evidence_excel_sheets(populated_db, spec, tmp_path):
 
     # Evidence Table has header + data rows
     ws1 = wb["Evidence Table"]
-    assert ws1.max_row >= 6  # 1 header + 5 papers
+    assert ws1.max_row >= 4  # 1 header + 3 AI_AUDIT_COMPLETE papers
 
     # Screening Log has entries
     ws2 = wb["Screening Log"]
@@ -189,7 +189,7 @@ def test_docx_created(populated_db, spec, tmp_path):
     assert len(doc.tables) >= 1
     # Table should have header + data rows
     table = doc.tables[0]
-    assert len(table.rows) >= 6  # 1 header + 5 papers
+    assert len(table.rows) >= 4  # 1 header + 3 AI_AUDIT_COMPLETE papers
 
 
 # ── Methods Section ──────────────────────────────────────────────────

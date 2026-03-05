@@ -96,9 +96,20 @@ def test_full_lifecycle(db):
     # PARSED → EXTRACTED
     db.update_status(pid, "EXTRACTED")
 
-    # EXTRACTED → AUDITED
-    db.update_status(pid, "AUDITED")
-    assert db.get_papers_by_status("AUDITED")[0]["id"] == pid
+    # EXTRACTED → AI_AUDIT_COMPLETE
+    db.update_status(pid, "AI_AUDIT_COMPLETE")
+    assert db.get_papers_by_status("AI_AUDIT_COMPLETE")[0]["id"] == pid
+
+
+def test_ai_to_human_audit_transition(db):
+    db.add_papers([_cit(pmid="AH1", title="AI to Human")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+
+    for status in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED", "AI_AUDIT_COMPLETE"):
+        db.update_status(pid, status)
+
+    db.update_status(pid, "HUMAN_AUDIT_COMPLETE")
+    assert db.get_papers_by_status("HUMAN_AUDIT_COMPLETE")[0]["id"] == pid
 
 
 def test_screened_out_lifecycle(db):
@@ -229,6 +240,36 @@ def test_evidence_spans_and_audit(db):
     assert span["auditor_model"] == "qwen3:32b"
 
 
+def test_evidence_spans_contested_status(db):
+    """New 'contested' audit status is accepted by the schema."""
+    db.add_papers([_cit(pmid="CS1", title="Contested")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    for s in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+        db.update_status(pid, s)
+
+    ext_id = db.add_extraction(pid, "h1", {}, "t", "m")
+    span_id = db.add_evidence_span(ext_id, "f", "v", "s", 0.9)
+    db.update_audit(span_id, "contested", "qwen3:32b", "Grep fail, semantic pass")
+
+    span = db._conn.execute("SELECT audit_status FROM evidence_spans WHERE id = ?", (span_id,)).fetchone()
+    assert span["audit_status"] == "contested"
+
+
+def test_evidence_spans_invalid_snippet_status(db):
+    """New 'invalid_snippet' audit status is accepted by the schema."""
+    db.add_papers([_cit(pmid="IS2", title="Invalid Snippet")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    for s in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+        db.update_status(pid, s)
+
+    ext_id = db.add_extraction(pid, "h1", {}, "t", "m")
+    span_id = db.add_evidence_span(ext_id, "f", "v", "s", 0.9)
+    db.update_audit(span_id, "invalid_snippet", "qwen3:32b", "Ellipsis bridging")
+
+    span = db._conn.execute("SELECT audit_status FROM evidence_spans WHERE id = ?", (span_id,)).fetchone()
+    assert span["audit_status"] == "invalid_snippet"
+
+
 # ── Atomic Extraction ─────────────────────────────────────────────────
 
 
@@ -290,6 +331,95 @@ def test_atomic_extraction_rolls_back_on_failure(db):
     span_count = db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0]
     assert ext_count == 0
     assert span_count == 0
+
+
+# ── Reset for Re-Audit ──────────────────────────────────────────────
+
+
+def _walk_to_ai_audit(db, pmid):
+    """Helper: add a paper and walk it to AI_AUDIT_COMPLETE with spans."""
+    db.add_papers([_cit(pmid=pmid, title=f"Paper {pmid}")])
+    pid = db.get_papers_by_status("INGESTED")[-1]["id"]
+    for s in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+        db.update_status(pid, s)
+    ext_id = db.add_extraction(pid, "h", {}, "t", "m")
+    s1 = db.add_evidence_span(ext_id, "f1", "v1", "snip1", 0.9)
+    s2 = db.add_evidence_span(ext_id, "f2", "v2", "snip2", 0.8)
+    db.update_audit(s1, "verified", "qwen3:32b", "ok")
+    db.update_audit(s2, "flagged", "qwen3:32b", "bad")
+    db.update_status(pid, "AI_AUDIT_COMPLETE")
+    return pid
+
+
+def test_reset_for_reaudit_atomicity(db):
+    """reset_for_reaudit resets both papers and spans in one transaction."""
+    pid = _walk_to_ai_audit(db, "RA1")
+
+    result = db.reset_for_reaudit()
+    assert result["papers_reset"] == 1
+    assert result["spans_reset"] == 2
+
+    # Paper back to EXTRACTED
+    assert len(db.get_papers_by_status("EXTRACTED")) == 1
+    assert len(db.get_papers_by_status("AI_AUDIT_COMPLETE")) == 0
+
+    # All spans back to pending
+    pending = db._conn.execute(
+        "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'pending'"
+    ).fetchone()[0]
+    assert pending == 2
+
+    # Audit columns cleared
+    span = db._conn.execute("SELECT * FROM evidence_spans LIMIT 1").fetchone()
+    assert span["auditor_model"] is None
+    assert span["audit_rationale"] is None
+    assert span["audited_at"] is None
+
+
+def test_reset_for_reaudit_preserves_extraction_data(db):
+    """Extracted values and snippets are untouched by reset."""
+    pid = _walk_to_ai_audit(db, "RA2")
+    db.reset_for_reaudit()
+
+    spans = db._conn.execute("SELECT * FROM evidence_spans ORDER BY id").fetchall()
+    assert spans[0]["value"] == "v1"
+    assert spans[0]["source_snippet"] == "snip1"
+    assert spans[1]["value"] == "v2"
+
+
+# ── Reject Paper ────────────────────────────────────────────────────
+
+
+def test_reject_paper(db):
+    pid = _walk_to_ai_audit(db, "RJ1")
+    db.reject_paper(pid, "Extended abstract only")
+
+    paper = db._conn.execute("SELECT * FROM papers WHERE id = ?", (pid,)).fetchone()
+    assert paper["status"] == "REJECTED"
+    assert paper["rejected_reason"] == "Extended abstract only"
+
+
+def test_reject_paper_invalid_status(db):
+    db.add_papers([_cit(pmid="RJ2", title="Cannot Reject")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+
+    with pytest.raises(ValueError, match="not allowed"):
+        db.reject_paper(pid, "some reason")
+
+
+# ── Min Status Gate ─────────────────────────────────────────────────
+
+
+def test_min_status_gate(db):
+    pid = _walk_to_ai_audit(db, "MG1")
+
+    assert db.min_status_gate(pid, "EXTRACTED") is True
+    assert db.min_status_gate(pid, "AI_AUDIT_COMPLETE") is True
+    assert db.min_status_gate(pid, "HUMAN_AUDIT_COMPLETE") is False
+
+
+def test_min_status_gate_missing_paper(db):
+    assert db.min_status_gate(9999, "EXTRACTED") is False
 
 
 # ── Pipeline Stats ───────────────────────────────────────────────────

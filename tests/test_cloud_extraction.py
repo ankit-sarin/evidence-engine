@@ -37,6 +37,9 @@ def test_db(tmp_path):
     # Create a fake parsed text for the first paper that has an extraction
     conn = sqlite3.connect(str(db_copy))
     conn.row_factory = sqlite3.Row
+    # Migrate legacy AUDITED status to AI_AUDIT_COMPLETE
+    conn.execute("UPDATE papers SET status = 'AI_AUDIT_COMPLETE' WHERE status = 'AUDITED'")
+    conn.commit()
     row = conn.execute(
         "SELECT paper_id FROM extractions ORDER BY paper_id LIMIT 1"
     ).fetchone()
@@ -134,7 +137,7 @@ class TestCloudExtractorBase:
         base = CloudExtractorBase(test_db, spec_path)
         pending = base.get_pending_papers("openai_o3_mini_high")
 
-        # Should have papers (all EXTRACTED/AUDITED, none with cloud extractions yet)
+        # Should have papers (all EXTRACTED/AI_AUDIT_COMPLETE, none with cloud extractions yet)
         assert len(pending) > 0
         assert all("paper_id" in p for p in pending)
         base.close()

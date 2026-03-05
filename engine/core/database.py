@@ -23,7 +23,9 @@ STATUSES = (
     "PARSED",
     "EXTRACT_FAILED",
     "EXTRACTED",
-    "AUDITED",
+    "AI_AUDIT_COMPLETE",
+    "HUMAN_AUDIT_COMPLETE",
+    "REJECTED",
 )
 
 ALLOWED_TRANSITIONS: dict[str, set[str]] = {
@@ -33,10 +35,21 @@ ALLOWED_TRANSITIONS: dict[str, set[str]] = {
     "PDF_ACQUIRED": {"PARSED"},
     "PARSED": {"EXTRACTED", "EXTRACT_FAILED"},
     "EXTRACT_FAILED": {"PARSED", "EXTRACTED"},
-    "EXTRACTED": {"AUDITED"},
+    "EXTRACTED": {"AI_AUDIT_COMPLETE"},
+    "AI_AUDIT_COMPLETE": {"HUMAN_AUDIT_COMPLETE", "REJECTED"},
     # Terminal states with no forward transitions
     "SCREENED_OUT": set(),
-    "AUDITED": set(),
+    "HUMAN_AUDIT_COMPLETE": set(),
+    "REJECTED": set(),
+}
+
+# Ordered status levels for min_status_gate comparisons
+_STATUS_ORDER = {
+    "PARSED": 0,
+    "SCREENED_OUT": 1,
+    "EXTRACTED": 2,
+    "AI_AUDIT_COMPLETE": 3,
+    "HUMAN_AUDIT_COMPLETE": 4,
 }
 
 # ── Schema DDL ───────────────────────────────────────────────────────
@@ -53,6 +66,7 @@ CREATE TABLE IF NOT EXISTS papers (
     year            INTEGER,
     source          TEXT NOT NULL,
     status          TEXT NOT NULL DEFAULT 'INGESTED',
+    rejected_reason TEXT,
     created_at      TEXT NOT NULL,
     updated_at      TEXT NOT NULL
 );
@@ -101,7 +115,10 @@ CREATE TABLE IF NOT EXISTS evidence_spans (
     source_snippet  TEXT,
     confidence      REAL CHECK (confidence >= 0.0 AND confidence <= 1.0),
     audit_status    TEXT NOT NULL DEFAULT 'pending'
-                    CHECK (audit_status IN ('pending', 'verified', 'flagged')),
+                    CHECK (audit_status IN (
+                        'pending', 'verified', 'contested',
+                        'flagged', 'invalid_snippet'
+                    )),
     auditor_model   TEXT,
     audit_rationale TEXT,
     audited_at      TEXT
@@ -120,6 +137,40 @@ CREATE TABLE IF NOT EXISTS review_runs (
                         CHECK (status IN ('running', 'completed', 'failed')),
     log                 TEXT NOT NULL DEFAULT '[]'  -- JSON array of events
 );
+"""
+
+# Migrations for existing databases
+_SIMPLE_MIGRATIONS = [
+    "ALTER TABLE papers ADD COLUMN rejected_reason TEXT",
+]
+
+_EVIDENCE_SPANS_REBUILD = """
+-- Rebuild evidence_spans to update CHECK constraint for new audit states
+ALTER TABLE evidence_spans RENAME TO _evidence_spans_old;
+
+CREATE TABLE evidence_spans (
+    id              INTEGER PRIMARY KEY,
+    extraction_id   INTEGER NOT NULL REFERENCES extractions(id),
+    field_name      TEXT NOT NULL,
+    value           TEXT NOT NULL,
+    source_snippet  TEXT,
+    confidence      REAL CHECK (confidence >= 0.0 AND confidence <= 1.0),
+    audit_status    TEXT NOT NULL DEFAULT 'pending'
+                    CHECK (audit_status IN (
+                        'pending', 'verified', 'contested',
+                        'flagged', 'invalid_snippet'
+                    )),
+    auditor_model   TEXT,
+    audit_rationale TEXT,
+    audited_at      TEXT
+);
+
+INSERT INTO evidence_spans
+    SELECT * FROM _evidence_spans_old;
+
+DROP TABLE _evidence_spans_old;
+
+CREATE INDEX IF NOT EXISTS idx_spans_extraction ON evidence_spans(extraction_id);
 """
 
 
@@ -143,6 +194,26 @@ class ReviewDatabase:
         self._conn.execute("PRAGMA foreign_keys=ON")
         self._conn.executescript(_SCHEMA)
         self._conn.commit()
+        self._run_migrations()
+
+    def _run_migrations(self) -> None:
+        """Apply schema migrations, skipping those already applied."""
+        for sql in _SIMPLE_MIGRATIONS:
+            try:
+                self._conn.execute(sql)
+                self._conn.commit()
+            except sqlite3.OperationalError:
+                pass  # column/table already exists
+
+        # Rebuild evidence_spans if CHECK constraint is outdated
+        row = self._conn.execute(
+            "SELECT sql FROM sqlite_master "
+            "WHERE type='table' AND name='evidence_spans'"
+        ).fetchone()
+        if row and "contested" not in row[0]:
+            self._conn.executescript(_EVIDENCE_SPANS_REBUILD)
+            self._conn.commit()
+            logger.info("Migrated evidence_spans: added contested/invalid_snippet states")
 
     # ── Papers ───────────────────────────────────────────────
 
@@ -218,6 +289,103 @@ class ReviewDatabase:
             "SELECT * FROM papers WHERE status = ?", (status,)
         ).fetchall()
         return [dict(r) for r in rows]
+
+    def reject_paper(self, paper_id: int, reason: str) -> None:
+        """Reject a paper from the review, preserving its row and identifiers.
+
+        Sets status to REJECTED and records the rejection reason.
+        Wraps in a single transaction.
+        """
+        row = self._conn.execute(
+            "SELECT status FROM papers WHERE id = ?", (paper_id,)
+        ).fetchone()
+        if row is None:
+            raise ValueError(f"Paper {paper_id} not found")
+
+        current = row["status"]
+        allowed = ALLOWED_TRANSITIONS.get(current, set())
+        if "REJECTED" not in allowed:
+            raise ValueError(
+                f"Cannot reject paper {paper_id}: transition {current} → REJECTED "
+                f"not allowed (allowed: {allowed or 'none'})"
+            )
+
+        try:
+            self._conn.execute("BEGIN")
+            self._conn.execute(
+                """UPDATE papers
+                   SET status = 'REJECTED', rejected_reason = ?, updated_at = ?
+                   WHERE id = ?""",
+                (reason, _now(), paper_id),
+            )
+            self._conn.execute("COMMIT")
+        except Exception:
+            self._conn.execute("ROLLBACK")
+            raise
+
+    def reset_for_reaudit(self) -> dict:
+        """Reset all audit state so the auditor can be re-run from scratch.
+
+        Administrative override. Intentional bypass of state machine. Valid use
+        cases: auditor logic changes, schema updates, prompt refinements.
+        Never called during normal pipeline operation.
+
+        Atomic: either both updates succeed or neither does.
+        Returns counts of papers and spans reset.
+        """
+        try:
+            self._conn.execute("BEGIN")
+            span_result = self._conn.execute(
+                """UPDATE evidence_spans
+                   SET audit_status = 'pending',
+                       auditor_model = NULL,
+                       audit_rationale = NULL,
+                       audited_at = NULL
+                   WHERE audit_status != 'pending'"""
+            )
+            spans_reset = span_result.rowcount
+
+            paper_result = self._conn.execute(
+                """UPDATE papers
+                   SET status = 'EXTRACTED', updated_at = ?
+                   WHERE status IN (
+                       'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE',
+                       'AUDITED'
+                   )""",
+                (_now(),),
+            )
+            papers_reset = paper_result.rowcount
+
+            self._conn.execute("COMMIT")
+            logger.info(
+                "Re-audit reset: %d papers → EXTRACTED, %d spans → pending",
+                papers_reset, spans_reset,
+            )
+            return {"papers_reset": papers_reset, "spans_reset": spans_reset}
+        except Exception:
+            self._conn.execute("ROLLBACK")
+            raise
+
+    def min_status_gate(self, paper_id: int, min_status: str) -> bool:
+        """Return True if paper meets or exceeds the minimum status level.
+
+        Order: PARSED < SCREENED_OUT < EXTRACTED < AI_AUDIT_COMPLETE
+               < HUMAN_AUDIT_COMPLETE.
+        """
+        if min_status not in _STATUS_ORDER:
+            raise ValueError(f"Unknown status for gate check: {min_status}")
+
+        row = self._conn.execute(
+            "SELECT status FROM papers WHERE id = ?", (paper_id,)
+        ).fetchone()
+        if row is None:
+            return False
+
+        current = row["status"]
+        if current not in _STATUS_ORDER:
+            return False
+
+        return _STATUS_ORDER[current] >= _STATUS_ORDER[min_status]
 
     # ── Screening ────────────────────────────────────────────
 
@@ -393,6 +561,12 @@ class ReviewDatabase:
         ).fetchone()[0]
         stats["spans_flagged"] = self._conn.execute(
             "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'flagged'"
+        ).fetchone()[0]
+        stats["spans_contested"] = self._conn.execute(
+            "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'contested'"
+        ).fetchone()[0]
+        stats["spans_invalid_snippet"] = self._conn.execute(
+            "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'invalid_snippet'"
         ).fetchone()[0]
         return stats
 

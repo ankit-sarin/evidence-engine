@@ -2,6 +2,7 @@
 
 import logging
 import re
+import unicodedata
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Literal, Optional
@@ -17,6 +18,12 @@ logger = logging.getLogger(__name__)
 
 MODEL = "qwen3:32b"
 
+# Fields at these tiers skip grep and go straight to semantic verification
+SEMANTIC_ONLY_TIERS = {4}
+
+# Pattern detecting invalid snippets: ellipsis bridging or abbreviation
+_INVALID_SNIPPET_RE = re.compile(r"\[\.{3}\]|\[…\]|…|\.{3,}")
+
 
 # ── Audit Output Model ──────────────────────────────────────────────
 
@@ -29,14 +36,27 @@ class AuditVerdict(BaseModel):
     reasoning: str
 
 
-# ── Grep Verification ────────────────────────────────────────────────
+# ── Text Normalization ──────────────────────────────────────────────
 
 _WS_RE = re.compile(r"\s+")
+_PUNCT_GLUED_RE = re.compile(r"(?<=\w)\.(?=\w)")
+_SMART_QUOTES = str.maketrans({
+    "\u2018": "'", "\u2019": "'",   # single curly quotes
+    "\u201c": '"', "\u201d": '"',   # double curly quotes
+    "\u2013": "-", "\u2014": "-",   # en/em dash
+})
 
 
 def _normalize(text: str) -> str:
-    """Lowercase and collapse whitespace."""
+    """Normalize text for comparison: lowercase, collapse whitespace,
+    fix glued punctuation (Table.I → Table I), straighten quotes."""
+    text = text.translate(_SMART_QUOTES)
+    text = unicodedata.normalize("NFKC", text)
+    text = _PUNCT_GLUED_RE.sub(" ", text)
     return _WS_RE.sub(" ", text.lower()).strip()
+
+
+# ── Grep Verification ────────────────────────────────────────────────
 
 
 def grep_verify(source_snippet: str, paper_text: str) -> bool:
@@ -147,53 +167,67 @@ Respond with JSON: {{"status": "verified" or "flagged", "grep_found": true, "rea
 
 
 def audit_span(
-    span_data: dict, paper_text: str, field_type: str = "text"
-) -> AuditVerdict:
-    """Audit a single evidence span: grep check, then semantic check."""
+    span_data: dict, paper_text: str, field_type: str = "text",
+    field_tier: int = 1,
+) -> tuple[str, str]:
+    """Audit a single evidence span. Returns (audit_status, reasoning).
+
+    4-state outcome:
+    - 'invalid_snippet' — snippet contains ellipsis bridging
+    - 'verified' — grep pass AND semantic pass
+    - 'contested' — grep fail AND semantic pass (or Tier 4 semantic pass)
+    - 'flagged' — semantic fail
+    """
     source_snippet = span_data.get("source_snippet", "")
     value = span_data.get("value", "")
 
-    # Values that indicate the field is absent/not reported — skip audit
+    # Values that indicate the field is absent/not reported — auto-verify
     _ABSENCE_VALUES = {"NOT_FOUND", "Not discussed", "NR", "No comparison reported"}
-
     if value in _ABSENCE_VALUES:
-        return AuditVerdict(
-            status="verified",
-            grep_found=False,
-            reasoning=f"Field value '{value}' indicates absence — no extraction to audit.",
-        )
+        return "verified", f"Field value '{value}' indicates absence — no extraction to audit."
 
-    # Empty snippet on a non-absence value: the extractor failed to provide
-    # a supporting quote. Flag it rather than silently skipping.
+    # Fix A: Invalid snippet detection (before any other logic)
+    if source_snippet and source_snippet.strip():
+        if _INVALID_SNIPPET_RE.search(source_snippet):
+            return "invalid_snippet", "Source snippet contains ellipsis bridging — marked invalid."
+
+    # Empty snippet on a non-absence value
     if not source_snippet or not source_snippet.strip():
-        return AuditVerdict(
-            status="flagged",
-            grep_found=False,
-            reasoning="Extracted value present but no source snippet provided.",
-        )
+        return "flagged", "Extracted value present but no source snippet provided."
 
-    # Step 1: grep check
-    grep_found = grep_verify(source_snippet, paper_text)
+    # Fix C: Tier 4 semantic-only routing — skip grep entirely
+    is_semantic_only = field_tier in SEMANTIC_ONLY_TIERS
 
-    if not grep_found:
-        return AuditVerdict(
-            status="flagged",
-            grep_found=False,
-            reasoning="Source snippet not found in paper text.",
-        )
+    # Compute grep result
+    if is_semantic_only:
+        grep_pass = True  # not evaluated, treat as pass for routing
+    else:
+        grep_pass = grep_verify(source_snippet, paper_text)
 
-    # Step 2: semantic check via LLM
+    # Compute semantic result
     span = EvidenceSpan(
         field_name=span_data["field_name"],
         value=value,
         source_snippet=source_snippet,
         confidence=span_data.get("confidence", 0.5),
-        tier=span_data.get("tier", 1),
+        tier=field_tier,
     )
     verdict = semantic_verify(span, paper_text, field_type=field_type)
-    # Ensure grep_found is set correctly from our check
-    verdict.grep_found = True
-    return verdict
+    semantic_pass = verdict.status == "verified"
+
+    # Fix D: 4-state outcome
+    if grep_pass and semantic_pass:
+        status = "verified"
+        reasoning = verdict.reasoning
+    elif not grep_pass and semantic_pass:
+        status = "contested"
+        reasoning = f"Grep failed but semantic verified. {verdict.reasoning}"
+    else:
+        # grep_pass or not, semantic failed → flagged
+        status = "flagged"
+        reasoning = verdict.reasoning
+
+    return status, reasoning
 
 
 # ── Batch Audit Pipeline ─────────────────────────────────────────────
@@ -204,14 +238,16 @@ def run_audit(
 ) -> dict:
     """Audit all EXTRACTED papers. Returns stats dict.
 
-    If spec is provided, field types from the extraction schema are used to
-    route categorical fields to classification-aware verification prompts.
+    If spec is provided, field types and tiers from the extraction schema
+    are used to route categorical fields and Tier 4 fields appropriately.
     """
-    # Build field_name → type lookup from spec
+    # Build field_name → (type, tier) lookup from spec
     field_type_map: dict[str, str] = {}
+    field_tier_map: dict[str, int] = {}
     if spec:
         for field in spec.extraction_schema.fields:
             field_type_map[field.name] = field.type
+            field_tier_map[field.name] = field.tier
 
     papers = db.get_papers_by_status("EXTRACTED")
     total = len(papers)
@@ -220,7 +256,9 @@ def run_audit(
     stats = {
         "papers_audited": 0,
         "spans_verified": 0,
+        "spans_contested": 0,
         "spans_flagged": 0,
+        "spans_invalid_snippet": 0,
         "grep_failures": 0,
     }
     review_dir = Path(db.db_path).parent
@@ -256,38 +294,54 @@ def run_audit(
 
         for span_row in spans:
             span_data = dict(span_row)
-            ft = field_type_map.get(span_data.get("field_name", ""), "text")
-            verdict = audit_span(span_data, paper_text, field_type=ft)
+            fname = span_data.get("field_name", "")
+            ft = field_type_map.get(fname, "text")
+            tier = field_tier_map.get(fname, 1)
+
+            status, reasoning = audit_span(
+                span_data, paper_text, field_type=ft, field_tier=tier,
+            )
 
             db.update_audit(
                 span_id=span_data["id"],
-                status=verdict.status,
+                status=status,
                 model=MODEL,
-                rationale=verdict.reasoning,
+                rationale=reasoning,
             )
 
-            if verdict.status == "verified":
-                stats["spans_verified"] += 1
-            else:
-                stats["spans_flagged"] += 1
-
-            if not verdict.grep_found:
+            stats[f"spans_{status}"] = stats.get(f"spans_{status}", 0) + 1
+            if status in ("flagged", "contested", "invalid_snippet"):
                 stats["grep_failures"] += 1
 
-        db.update_status(pid, "AUDITED")
-        stats["papers_audited"] += 1
+        # Fix E: Assert no pending spans remain before transitioning
+        pending = db._conn.execute(
+            "SELECT COUNT(*) FROM evidence_spans WHERE extraction_id = ? AND audit_status = 'pending'",
+            (ext_id,),
+        ).fetchone()[0]
+
+        if pending > 0:
+            logger.warning(
+                "Paper %d: %d spans still pending after audit — NOT transitioning",
+                pid, pending,
+            )
+        else:
+            db.update_status(pid, "AI_AUDIT_COMPLETE")
+            stats["papers_audited"] += 1
 
         if i % 10 == 0 or i == total:
             logger.info(
-                "Audited %d/%d papers — %d verified, %d flagged",
-                i, total, stats["spans_verified"], stats["spans_flagged"],
+                "Audited %d/%d papers — %d verified, %d contested, %d flagged, %d invalid",
+                i, total,
+                stats["spans_verified"], stats["spans_contested"],
+                stats["spans_flagged"], stats["spans_invalid_snippet"],
             )
 
     logger.info(
-        "Audit complete: %d papers, %d verified, %d flagged (%d grep failures)",
+        "Audit complete: %d papers, %d verified, %d contested, %d flagged, "
+        "%d invalid_snippet (%d grep failures)",
         stats["papers_audited"],
-        stats["spans_verified"],
-        stats["spans_flagged"],
+        stats["spans_verified"], stats["spans_contested"],
+        stats["spans_flagged"], stats["spans_invalid_snippet"],
         stats["grep_failures"],
     )
     return stats

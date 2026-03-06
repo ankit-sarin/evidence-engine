@@ -367,34 +367,26 @@ class ReviewDatabase:
             raise
 
     def reset_for_reextraction(self) -> dict:
-        """Reset all audit and extraction state so the extractor can be re-run.
+        """Reset all audit, extraction, and span state for full re-extraction.
 
-        Administrative override. Steps papers back to PARSED for full
-        re-extraction. Valid use cases: extractor logic changes, schema
-        updates. Never called during normal pipeline operation. SCREENED_OUT
-        and REJECTED papers are unaffected.
+        Administrative override. Steps papers back to PARSED and deletes all
+        extraction records and evidence spans for those papers. Valid use
+        cases: extractor logic changes, schema updates. Never called during
+        normal pipeline operation. SCREENED_OUT and REJECTED papers are
+        unaffected.
 
-        Internally calls reset_for_reaudit() logic first (clears audit state,
-        AI_AUDIT_COMPLETE/HUMAN_AUDIT_COMPLETE → EXTRACTED), then moves
-        EXTRACTED → PARSED. Atomic: all steps succeed or none do.
+        Single transaction — all four phases succeed or none do:
+        1. Audited papers → EXTRACTED (collapses audit states)
+        2. Delete spans for EXTRACTED papers
+        3. Delete extraction records for EXTRACTED papers
+        4. EXTRACTED → PARSED
 
-        Returns counts of papers and spans reset.
+        Returns counts of papers reset, spans deleted, and extractions deleted.
         """
         try:
             self._conn.execute("BEGIN")
 
-            # Phase 1: Clear all audit state on spans
-            span_result = self._conn.execute(
-                """UPDATE evidence_spans
-                   SET audit_status = 'pending',
-                       auditor_model = NULL,
-                       audit_rationale = NULL,
-                       audited_at = NULL
-                   WHERE audit_status != 'pending'"""
-            )
-            spans_reset = span_result.rowcount
-
-            # Phase 2: Audited papers → EXTRACTED
+            # Phase 1: Audited papers → EXTRACTED
             self._conn.execute(
                 """UPDATE papers
                    SET status = 'EXTRACTED', updated_at = ?
@@ -405,7 +397,28 @@ class ReviewDatabase:
                 (_now(),),
             )
 
-            # Phase 3: EXTRACTED → PARSED (administrative override)
+            # Phase 2: Delete spans for papers being reset
+            span_result = self._conn.execute(
+                """DELETE FROM evidence_spans
+                   WHERE extraction_id IN (
+                       SELECT id FROM extractions
+                       WHERE paper_id IN (
+                           SELECT id FROM papers WHERE status = 'EXTRACTED'
+                       )
+                   )"""
+            )
+            spans_deleted = span_result.rowcount
+
+            # Phase 3: Delete extraction records for papers being reset
+            ext_result = self._conn.execute(
+                """DELETE FROM extractions
+                   WHERE paper_id IN (
+                       SELECT id FROM papers WHERE status = 'EXTRACTED'
+                   )"""
+            )
+            extractions_deleted = ext_result.rowcount
+
+            # Phase 4: EXTRACTED → PARSED (administrative override)
             paper_result = self._conn.execute(
                 """UPDATE papers
                    SET status = 'PARSED', updated_at = ?
@@ -416,10 +429,15 @@ class ReviewDatabase:
 
             self._conn.execute("COMMIT")
             logger.info(
-                "Re-extraction reset: %d papers → PARSED, %d spans → pending",
-                papers_reset, spans_reset,
+                "Re-extraction reset: %d papers → PARSED, "
+                "%d spans deleted, %d extractions deleted",
+                papers_reset, spans_deleted, extractions_deleted,
             )
-            return {"papers_reset": papers_reset, "spans_reset": spans_reset}
+            return {
+                "papers_reset": papers_reset,
+                "spans_deleted": spans_deleted,
+                "extractions_deleted": extractions_deleted,
+            }
         except Exception:
             self._conn.execute("ROLLBACK")
             raise
@@ -633,9 +651,13 @@ class ReviewDatabase:
     def cleanup_orphaned_spans(self) -> int:
         """Remove orphaned spans from prior extraction runs.
 
-        Safe to call any time after re-extraction completes. Does not affect
-        the current extraction's spans. Deletes spans whose extraction_id
-        does not correspond to the most recent extraction for that paper.
+        Intended for use after re-extraction completes: deletes spans whose
+        extraction_id is no longer the latest for that paper. Does not affect
+        the current extraction's spans.
+
+        Not intended for pre-extraction cleanup — reset_for_reextraction()
+        handles that case by deleting all extractions and spans for papers
+        being reset as part of its atomic transaction.
 
         Returns the number of deleted rows.
         """

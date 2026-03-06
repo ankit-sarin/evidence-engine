@@ -12,8 +12,8 @@ from engine.agents.auditor import (
     run_audit,
     semantic_verify,
     _normalize,
-    _INVALID_SNIPPET_RE,
 )
+from engine.core.constants import INVALID_SNIPPET_RE as _INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.search.models import Citation
 

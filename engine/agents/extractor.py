@@ -10,6 +10,7 @@ from pathlib import Path
 import ollama
 
 from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
+from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
 
@@ -19,6 +20,7 @@ MODEL = "deepseek-r1:32b"
 OLLAMA_TIMEOUT = 900.0  # 15 minutes per API call
 MAX_RETRIES = 2
 RETRY_DELAY = 30  # seconds between retries
+SNIPPET_MAX_RETRIES = 2
 
 _client = ollama.Client(timeout=OLLAMA_TIMEOUT)
 
@@ -180,6 +182,90 @@ def extract_pass2_structured(
     )
 
 
+# ── Snippet Validation ──────────────────────────────────────────────
+
+
+def _has_invalid_snippet(snippet: str | None) -> bool:
+    """Return True if snippet is non-null and contains ellipsis bridging."""
+    return bool(snippet and INVALID_SNIPPET_RE.search(snippet))
+
+
+def _retry_snippet(
+    field_name: str,
+    value: str,
+    paper_text: str,
+    paper_id: int,
+) -> str | None:
+    """Request a clean verbatim snippet for a single field.
+
+    Returns the new snippet string, or None if the model still produces
+    an invalid snippet or fails.
+    """
+    prompt = (
+        f"You previously extracted the value below from a scientific paper.\n\n"
+        f"Field: {field_name}\n"
+        f"Value: {value}\n\n"
+        f"Provide a single contiguous verbatim sentence copied exactly from "
+        f"the text that supports this value. No ellipsis. No bridging between "
+        f"passages. If no single sentence supports this value, return null "
+        f"for the snippet.\n\n"
+        f"Respond ONLY with JSON: {{\"source_snippet\": \"...\" or null}}\n\n"
+        f"## Paper Text\n{paper_text}"
+    )
+    try:
+        response = _ollama_chat_with_retry(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": "Respond ONLY with JSON."},
+                {"role": "user", "content": prompt},
+            ],
+            options={"temperature": 0},
+            think=False,
+        )
+        raw = response.message.content or ""
+        data = json.loads(raw)
+        new_snippet = data.get("source_snippet")
+        if new_snippet and _has_invalid_snippet(new_snippet):
+            return None
+        return new_snippet
+    except Exception:
+        return None
+
+
+def _validate_and_retry_snippets(
+    fields: list[EvidenceSpan],
+    paper_text: str,
+    paper_id: int,
+) -> list[EvidenceSpan]:
+    """Validate snippets post-extraction; retry invalid ones up to SNIPPET_MAX_RETRIES times."""
+    validated = []
+    for span in fields:
+        if not _has_invalid_snippet(span.source_snippet):
+            validated.append(span)
+            continue
+
+        new_snippet = None
+        for attempt in range(1, SNIPPET_MAX_RETRIES + 1):
+            logger.debug(
+                "Paper %d, field %s: invalid snippet retry %d/%d",
+                paper_id, span.field_name, attempt, SNIPPET_MAX_RETRIES,
+            )
+            new_snippet = _retry_snippet(
+                span.field_name, span.value, paper_text, paper_id,
+            )
+            if new_snippet is not None:
+                break
+
+        validated.append(EvidenceSpan(
+            field_name=span.field_name,
+            value=span.value,
+            source_snippet=new_snippet or "",
+            confidence=span.confidence,
+            tier=span.tier,
+        ))
+    return validated
+
+
 # ── Single-Paper Extraction ──────────────────────────────────────────
 
 
@@ -197,6 +283,19 @@ def extract_paper(
 
     # Pass 2: structured output
     result = extract_pass2_structured(prompt, reasoning_trace, spec, paper_id)
+
+    # Validate snippets and retry invalid ones before storing
+    validated_fields = _validate_and_retry_snippets(
+        result.fields, paper_text, paper_id,
+    )
+    result = ExtractionResult(
+        paper_id=result.paper_id,
+        fields=validated_fields,
+        reasoning_trace=result.reasoning_trace,
+        model=result.model,
+        extraction_schema_hash=result.extraction_schema_hash,
+        extracted_at=result.extracted_at,
+    )
 
     # Store extraction + all spans atomically (single transaction)
     extracted_data = [span.model_dump() for span in result.fields]

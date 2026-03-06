@@ -366,6 +366,64 @@ class ReviewDatabase:
             self._conn.execute("ROLLBACK")
             raise
 
+    def reset_for_reextraction(self) -> dict:
+        """Reset all audit and extraction state so the extractor can be re-run.
+
+        Administrative override. Steps papers back to PARSED for full
+        re-extraction. Valid use cases: extractor logic changes, schema
+        updates. Never called during normal pipeline operation. SCREENED_OUT
+        and REJECTED papers are unaffected.
+
+        Internally calls reset_for_reaudit() logic first (clears audit state,
+        AI_AUDIT_COMPLETE/HUMAN_AUDIT_COMPLETE → EXTRACTED), then moves
+        EXTRACTED → PARSED. Atomic: all steps succeed or none do.
+
+        Returns counts of papers and spans reset.
+        """
+        try:
+            self._conn.execute("BEGIN")
+
+            # Phase 1: Clear all audit state on spans
+            span_result = self._conn.execute(
+                """UPDATE evidence_spans
+                   SET audit_status = 'pending',
+                       auditor_model = NULL,
+                       audit_rationale = NULL,
+                       audited_at = NULL
+                   WHERE audit_status != 'pending'"""
+            )
+            spans_reset = span_result.rowcount
+
+            # Phase 2: Audited papers → EXTRACTED
+            self._conn.execute(
+                """UPDATE papers
+                   SET status = 'EXTRACTED', updated_at = ?
+                   WHERE status IN (
+                       'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE',
+                       'AUDITED'
+                   )""",
+                (_now(),),
+            )
+
+            # Phase 3: EXTRACTED → PARSED (administrative override)
+            paper_result = self._conn.execute(
+                """UPDATE papers
+                   SET status = 'PARSED', updated_at = ?
+                   WHERE status = 'EXTRACTED'""",
+                (_now(),),
+            )
+            papers_reset = paper_result.rowcount
+
+            self._conn.execute("COMMIT")
+            logger.info(
+                "Re-extraction reset: %d papers → PARSED, %d spans → pending",
+                papers_reset, spans_reset,
+            )
+            return {"papers_reset": papers_reset, "spans_reset": spans_reset}
+        except Exception:
+            self._conn.execute("ROLLBACK")
+            raise
+
     def min_status_gate(self, paper_id: int, min_status: str) -> bool:
         """Return True if paper meets or exceeds the minimum status level.
 

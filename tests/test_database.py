@@ -443,3 +443,44 @@ def test_pipeline_stats(db):
     assert stats["INGESTED"] == 5
     assert stats["total_extractions"] == 0
     assert stats["total_evidence_spans"] == 0
+
+
+# ── Reset for Re-Extraction ──────────────────────────────────────────
+
+
+def test_reset_for_reextraction(db):
+    """reset_for_reextraction moves audited papers to PARSED atomically."""
+    # Create two audited papers and one screened-out paper
+    pid1 = _walk_to_ai_audit(db, "RE1")
+    pid2 = _walk_to_ai_audit(db, "RE2")
+
+    db.add_papers([_cit(pmid="RE_SO", title="Screened Out")])
+    so_paper = [p for p in db.get_papers_by_status("INGESTED") if p["pmid"] == "RE_SO"][0]
+    db.update_status(so_paper["id"], "SCREENED_OUT")
+
+    result = db.reset_for_reextraction()
+    assert result["papers_reset"] == 2
+    assert result["spans_reset"] == 4  # 2 spans per paper
+
+    # Both papers are now PARSED
+    parsed = db.get_papers_by_status("PARSED")
+    parsed_ids = {p["id"] for p in parsed}
+    assert pid1 in parsed_ids
+    assert pid2 in parsed_ids
+
+    # No papers left at EXTRACTED or AI_AUDIT_COMPLETE
+    assert len(db.get_papers_by_status("EXTRACTED")) == 0
+    assert len(db.get_papers_by_status("AI_AUDIT_COMPLETE")) == 0
+
+    # SCREENED_OUT paper is untouched
+    so = db.get_papers_by_status("SCREENED_OUT")
+    assert len(so) == 1
+    assert so[0]["pmid"] == "RE_SO"
+
+    # Span audit columns cleared
+    spans = db._conn.execute("SELECT * FROM evidence_spans").fetchall()
+    for s in spans:
+        assert s["audit_status"] == "pending"
+        assert s["auditor_model"] is None
+        assert s["audit_rationale"] is None
+        assert s["audited_at"] is None

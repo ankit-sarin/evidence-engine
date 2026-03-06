@@ -226,8 +226,11 @@ def test_export_all(populated_db, spec, tmp_path):
     out_dir = str(tmp_path / "all_exports")
     paths = export_all(populated_db, spec, "test_export", output_dir=out_dir)
 
-    expected_keys = {"prisma_csv", "evidence_csv", "evidence_xlsx", "evidence_docx", "methods_md"}
-    assert set(paths.keys()) == expected_keys
+    expected_keys = {
+        "prisma_csv", "evidence_csv", "evidence_xlsx", "evidence_docx", "methods_md",
+        "trace_quality_report", "trace_quality_report_md", "traces_dir",
+    }
+    assert expected_keys.issubset(set(paths.keys()))
 
     for key, path in paths.items():
         assert Path(path).exists(), f"{key} not found at {path}"

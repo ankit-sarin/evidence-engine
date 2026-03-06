@@ -11,6 +11,7 @@ import ollama
 from pydantic import BaseModel
 
 from engine.agents.models import EvidenceSpan
+from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
 
@@ -20,9 +21,6 @@ MODEL = "qwen3:32b"
 
 # Fields at these tiers skip grep and go straight to semantic verification
 SEMANTIC_ONLY_TIERS = {4}
-
-# Pattern detecting invalid snippets: ellipsis bridging or abbreviation
-_INVALID_SNIPPET_RE = re.compile(r"\[\.{3}\]|\[…\]|…|\.{3,}")
 
 
 # ── Audit Output Model ──────────────────────────────────────────────
@@ -188,7 +186,7 @@ def audit_span(
 
     # Fix A: Invalid snippet detection (before any other logic)
     if source_snippet and source_snippet.strip():
-        if _INVALID_SNIPPET_RE.search(source_snippet):
+        if INVALID_SNIPPET_RE.search(source_snippet):
             return "invalid_snippet", "Source snippet contains ellipsis bridging — marked invalid."
 
     # Empty snippet on a non-absence value

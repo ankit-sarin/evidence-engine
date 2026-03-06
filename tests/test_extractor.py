@@ -8,6 +8,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from engine.agents.extractor import (
+    _has_invalid_snippet,
+    _validate_and_retry_snippets,
     build_extraction_prompt,
     extract_paper,
     extract_pass1_reasoning,
@@ -16,6 +18,7 @@ from engine.agents.extractor import (
     run_extraction,
 )
 from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
+from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
@@ -87,12 +90,20 @@ def test_evidence_span_validation():
     assert span.confidence == 0.95
 
 
-def test_evidence_span_rejects_invalid_confidence():
-    with pytest.raises(Exception):
-        EvidenceSpan(
-            field_name="x", value="y", source_snippet="z",
-            confidence=1.5, tier=1,
-        )
+def test_evidence_span_clamps_confidence():
+    # Above 1.0 clamps to 1.0
+    span_high = EvidenceSpan(
+        field_name="x", value="y", source_snippet="z",
+        confidence=1.5, tier=1,
+    )
+    assert span_high.confidence == 1.0
+
+    # Below 0.0 clamps to 0.0 (DeepSeek-R1 -1 for NOT_FOUND)
+    span_low = EvidenceSpan(
+        field_name="x", value="y", source_snippet="z",
+        confidence=-1, tier=1,
+    )
+    assert span_low.confidence == 0.0
 
 
 def test_extraction_result_validation():
@@ -254,3 +265,83 @@ def test_run_extraction_no_parsed_text(tmp_path, spec):
     assert stats["extracted"] == 0
 
     db.close()
+
+
+# ── Snippet Validation Tests ──────────────────────────────────────────
+
+
+def test_invalid_snippet_re_imported_from_constants():
+    """INVALID_SNIPPET_RE is defined in engine.core.constants, not locally."""
+    import engine.core.constants as c
+    assert hasattr(c, "INVALID_SNIPPET_RE")
+    assert INVALID_SNIPPET_RE is c.INVALID_SNIPPET_RE
+
+
+def test_ellipsis_snippet_triggers_retry():
+    """Snippet with '...' ellipsis bridging is detected as invalid and retried."""
+    span = EvidenceSpan(
+        field_name="sample_size", value="20",
+        source_snippet="Twenty participants... completed the study.",
+        confidence=0.9, tier=1,
+    )
+    assert _has_invalid_snippet(span.source_snippet)
+
+    with patch("engine.agents.extractor._retry_snippet") as mock_retry:
+        mock_retry.return_value = "Twenty participants completed the study."
+        validated = _validate_and_retry_snippets([span], "paper text", paper_id=1)
+
+    assert len(validated) == 1
+    assert validated[0].source_snippet == "Twenty participants completed the study."
+    assert validated[0].value == "20"
+    mock_retry.assert_called_once()
+
+
+def test_bracket_ellipsis_triggers_retry():
+    """Snippet with '[...]' is detected as invalid and retried."""
+    span = EvidenceSpan(
+        field_name="robot_platform", value="STAR",
+        source_snippet="The STAR robot [...] was used for suturing.",
+        confidence=0.95, tier=1,
+    )
+    assert _has_invalid_snippet(span.source_snippet)
+
+    with patch("engine.agents.extractor._retry_snippet") as mock_retry:
+        mock_retry.return_value = "The STAR robot was used for suturing."
+        validated = _validate_and_retry_snippets([span], "paper text", paper_id=1)
+
+    assert validated[0].source_snippet == "The STAR robot was used for suturing."
+    mock_retry.assert_called_once()
+
+
+def test_retry_exhausted_nulls_snippet_preserves_value():
+    """After 2 failed retries, source_snippet is empty and value is preserved."""
+    span = EvidenceSpan(
+        field_name="study_design", value="RCT",
+        source_snippet="An RCT... was performed... on tissue.",
+        confidence=0.85, tier=1,
+    )
+
+    with patch("engine.agents.extractor._retry_snippet") as mock_retry:
+        mock_retry.return_value = None  # all retries fail
+        validated = _validate_and_retry_snippets([span], "paper text", paper_id=1)
+
+    assert len(validated) == 1
+    assert validated[0].source_snippet == ""
+    assert validated[0].value == "RCT"
+    assert mock_retry.call_count == 2  # SNIPPET_MAX_RETRIES
+
+
+def test_valid_snippet_no_retry():
+    """A clean verbatim snippet passes through without any retry calls."""
+    span = EvidenceSpan(
+        field_name="study_design", value="RCT",
+        source_snippet="A randomized controlled trial was conducted.",
+        confidence=0.95, tier=1,
+    )
+    assert not _has_invalid_snippet(span.source_snippet)
+
+    with patch("engine.agents.extractor._retry_snippet") as mock_retry:
+        validated = _validate_and_retry_snippets([span], "paper text", paper_id=1)
+
+    assert validated[0].source_snippet == "A randomized controlled trial was conducted."
+    mock_retry.assert_not_called()

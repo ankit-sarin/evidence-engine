@@ -630,6 +630,26 @@ class ReviewDatabase:
 
     # ── Cleanup ──────────────────────────────────────────────
 
+    def cleanup_orphaned_spans(self) -> int:
+        """Remove orphaned spans from prior extraction runs.
+
+        Safe to call any time after re-extraction completes. Does not affect
+        the current extraction's spans. Deletes spans whose extraction_id
+        does not correspond to the most recent extraction for that paper.
+
+        Returns the number of deleted rows.
+        """
+        result = self._conn.execute(
+            """DELETE FROM evidence_spans
+               WHERE extraction_id NOT IN (
+                   SELECT MAX(e.id) FROM extractions e GROUP BY e.paper_id
+               )"""
+        )
+        deleted = result.rowcount
+        self._conn.commit()
+        logger.info("Cleaned up %d orphaned spans", deleted)
+        return deleted
+
     def close(self) -> None:
         self._conn.close()
 

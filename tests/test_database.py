@@ -484,3 +484,38 @@ def test_reset_for_reextraction(db):
         assert s["auditor_model"] is None
         assert s["audit_rationale"] is None
         assert s["audited_at"] is None
+
+
+# ── Cleanup Orphaned Spans ────────────────────────────────────────────
+
+
+def test_cleanup_orphaned_spans(db):
+    """cleanup_orphaned_spans deletes spans from older extractions only."""
+    db.add_papers([_cit(pmid="CO1", title="Cleanup")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    for s in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+        db.update_status(pid, s)
+
+    # First extraction (will become orphaned)
+    old_ext_id = db.add_extraction(pid, "h_old", {}, "t1", "m")
+    db.add_evidence_span(old_ext_id, "f1", "old_v1", "old_snip1", 0.9)
+    db.add_evidence_span(old_ext_id, "f2", "old_v2", "old_snip2", 0.8)
+
+    # Second extraction (current — should survive)
+    new_ext_id = db.add_extraction(pid, "h_new", {}, "t2", "m")
+    db.add_evidence_span(new_ext_id, "f1", "new_v1", "new_snip1", 0.95)
+    db.add_evidence_span(new_ext_id, "f2", "new_v2", "new_snip2", 0.85)
+
+    # Before cleanup: 4 spans total
+    total = db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0]
+    assert total == 4
+
+    deleted = db.cleanup_orphaned_spans()
+    assert deleted == 2  # old extraction's spans
+
+    # After cleanup: only 2 spans from the new extraction
+    remaining = db._conn.execute("SELECT * FROM evidence_spans").fetchall()
+    assert len(remaining) == 2
+    for s in remaining:
+        assert s["extraction_id"] == new_ext_id
+        assert s["value"].startswith("new_")

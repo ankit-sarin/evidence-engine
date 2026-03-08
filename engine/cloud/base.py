@@ -86,9 +86,14 @@ class CloudExtractorBase:
         # Handle {"fields": [...]}, {"extractions": [...]}, {"data": [...]}, and bare [...] formats
         if isinstance(response_json, list):
             response_json = {"fields": response_json}
-        elif isinstance(response_json, dict) and "fields" not in response_json:
+        elif isinstance(response_json, dict) and (
+            "fields" not in response_json
+            or (isinstance(response_json.get("fields"), list) and len(response_json["fields"]) == 0)
+        ):
             # Try alternate top-level keys that cloud models use
-            for alt_key in ("extractions", "extracted_fields", "data"):
+            for alt_key in ("extractions", "extracted_fields", "extracted_data",
+                            "data", "extraction", "results", "entries",
+                            "extraction_results"):
                 if alt_key in response_json and isinstance(response_json[alt_key], list):
                     response_json = {"fields": response_json[alt_key]}
                     break
@@ -96,8 +101,18 @@ class CloudExtractorBase:
                 # Single span dict (has field_name key) — wrap in list
                 if "field_name" in response_json:
                     response_json = {"fields": [response_json]}
+                # Flat field dict: keys are field names, values are span dicts
+                elif all(isinstance(v, dict) for v in response_json.values()):
+                    spans = [
+                        {"field_name": k, **v}
+                        for k, v in response_json.items()
+                    ]
+                    response_json = {"fields": spans}
                 else:
-                    logger.warning("Response JSON has no 'fields' key: %s", list(response_json.keys()))
+                    logger.warning(
+                        "Response JSON has no recognized key; keys found: %s",
+                        list(response_json.keys()),
+                    )
                     return []
 
         try:

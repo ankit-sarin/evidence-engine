@@ -2,6 +2,7 @@
 
 import json
 import logging
+import re
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -71,19 +72,33 @@ class CloudExtractorBase:
         Returns list of {field_name, value, source_snippet, confidence, tier}.
         """
         if isinstance(response_json, str):
+            # Strip markdown ```json ... ``` fences (Anthropic wraps output this way)
+            stripped = response_json.strip()
+            if stripped.startswith("```"):
+                stripped = re.sub(r"^```(?:json)?\s*", "", stripped)
+                stripped = re.sub(r"\s*```\s*$", "", stripped)
             try:
-                response_json = json.loads(response_json)
+                response_json = json.loads(stripped)
             except json.JSONDecodeError:
                 logger.warning("Failed to parse response JSON")
                 return []
 
-        # Handle both {"fields": [...]} and bare [...] formats
+        # Handle {"fields": [...]}, {"extractions": [...]}, {"data": [...]}, and bare [...] formats
         if isinstance(response_json, list):
             response_json = {"fields": response_json}
         elif isinstance(response_json, dict) and "fields" not in response_json:
-            # Maybe the model returned a flat dict — can't parse
-            logger.warning("Response JSON has no 'fields' key: %s", list(response_json.keys()))
-            return []
+            # Try alternate top-level keys that cloud models use
+            for alt_key in ("extractions", "data"):
+                if alt_key in response_json and isinstance(response_json[alt_key], list):
+                    response_json = {"fields": response_json[alt_key]}
+                    break
+            else:
+                # Single span dict (has field_name key) — wrap in list
+                if "field_name" in response_json:
+                    response_json = {"fields": [response_json]}
+                else:
+                    logger.warning("Response JSON has no 'fields' key: %s", list(response_json.keys()))
+                    return []
 
         try:
             output = ExtractionOutput.model_validate(response_json)

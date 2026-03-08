@@ -3,6 +3,7 @@
 import json
 import logging
 import os
+import re
 import time
 
 import anthropic
@@ -70,9 +71,15 @@ class AnthropicExtractor(CloudExtractorBase):
 
         reasoning_trace = reasoning_trace.strip()
 
+        # Strip markdown ```json ... ``` fences if present
+        clean_content = text_content.strip()
+        if clean_content.startswith("```"):
+            clean_content = re.sub(r"^```(?:json)?\s*", "", clean_content)
+            clean_content = re.sub(r"\s*```\s*$", "", clean_content)
+
         # Parse JSON
         try:
-            extracted_data = json.loads(text_content)
+            extracted_data = json.loads(clean_content)
         except json.JSONDecodeError:
             logger.error(
                 "Paper %d: failed to parse Anthropic JSON response", paper_id

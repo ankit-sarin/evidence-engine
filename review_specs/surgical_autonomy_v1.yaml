@@ -32,18 +32,25 @@ search_strategy:
     - '("autonomous" OR "autonomy" OR "self-directed" OR "automated")'
   date_range: [2010, 2025]
 
+screening_models:
+  primary: "qwen3:8b"
+  verification: "qwen3:32b"
+
 screening_criteria:
   inclusion:
     - English language
     - Peer-reviewed original research (journal article or full conference paper)
     - Involves a physical surgical task (cadaver, phantom, animal, or human)
+    - Must involve an autonomous or semi-autonomous robotic component (not purely teleoperated or manual)
     - Simulation studies included only if validated against a physical platform
     - Published between 2010 and 2025
   exclusion:
     - Systematic reviews, meta-analyses, or scoping reviews
     - Editorials, commentaries, or letters to the editor
     - Conference abstracts without full paper
-    - Non-surgical robotics (industrial, warehouse, rehabilitation-only)
+    - "Non-surgical robotics (industrial, warehouse, rehabilitation, exoskeletons, prosthetics, assistive devices)"
+    - Purely teleoperated robotic surgery with no autonomous or semi-autonomous component (e.g., standard da Vinci case series)
+    - Machine learning or computer vision methodology papers with no physical robotic surgical application
     - Studies with no autonomous or semi-autonomous component
 
 extraction_schema:

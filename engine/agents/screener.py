@@ -1,4 +1,8 @@
-"""Dual-pass title/abstract screening agent using Ollama structured output."""
+"""Dual-model screening agent using Ollama structured output.
+
+Phase 1 (Primary): Dual-pass screen with a fast model (high recall).
+Phase 2 (Verification): Re-screen includes with a larger model (higher precision).
+"""
 
 import json
 import logging
@@ -13,7 +17,9 @@ from engine.core.review_spec import ReviewSpec
 
 logger = logging.getLogger(__name__)
 
-MODEL = "qwen3:8b"
+# Fallback defaults when no spec.screening_models is available
+DEFAULT_PRIMARY_MODEL = "qwen3:8b"
+DEFAULT_VERIFICATION_MODEL = "qwen3:32b"
 
 # ── Structured Output Model ──────────────────────────────────────────
 
@@ -26,20 +32,21 @@ class ScreeningDecision(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
 
 
-# ── Single-Paper Screening ───────────────────────────────────────────
+# ── Prompt Builder ───────────────────────────────────────────────────
 
 
-def screen_paper(
-    paper: dict,
-    spec: ReviewSpec,
-    pass_number: int,
-) -> ScreeningDecision:
-    """Screen a single paper against the review spec's criteria.
-
-    Calls Ollama with structured JSON output.
-    """
+def _build_prompt(paper: dict, spec: ReviewSpec) -> str:
+    """Build the screening prompt with PICO context and criteria."""
     title = paper.get("title", "")
     abstract = paper.get("abstract") or ""
+
+    outcomes_str = "; ".join(spec.pico.outcomes)
+    pico_block = (
+        f"Population: {spec.pico.population}\n"
+        f"Intervention: {spec.pico.intervention}\n"
+        f"Comparator: {spec.pico.comparator}\n"
+        f"Outcomes: {outcomes_str}"
+    )
 
     inclusion = "\n".join(f"  - {c}" for c in spec.screening_criteria.inclusion)
     exclusion = "\n".join(f"  - {c}" for c in spec.screening_criteria.exclusion)
@@ -53,8 +60,11 @@ def screen_paper(
             "Note lower confidence in your decision.]"
         )
 
-    user_prompt = f"""/no_think
+    return f"""/no_think
 Evaluate the following paper for inclusion in a systematic review.
+
+REVIEW FOCUS (PICO):
+{pico_block}
 
 INCLUSION CRITERIA:
 {inclusion}
@@ -70,8 +80,28 @@ better to include a borderline paper than to miss a relevant one.
 
 Respond with JSON only: {{"decision": "...", "rationale": "...", "confidence": 0.0-1.0}}"""
 
+
+# ── Single-Paper Screening ───────────────────────────────────────────
+
+
+def screen_paper(
+    paper: dict,
+    spec: ReviewSpec,
+    pass_number: int,
+    model: str | None = None,
+) -> ScreeningDecision:
+    """Screen a single paper against the review spec's criteria.
+
+    Calls Ollama with structured JSON output.
+    If model is not specified, uses spec.screening_models.primary.
+    """
+    if model is None:
+        model = spec.screening_models.primary
+
+    user_prompt = _build_prompt(paper, spec)
+
     response = ollama.chat(
-        model=MODEL,
+        model=model,
         messages=[
             {
                 "role": "system",
@@ -94,12 +124,13 @@ Respond with JSON only: {{"decision": "...", "rationale": "...", "confidence": 0
     return ScreeningDecision.model_validate_json(raw)
 
 
-# ── Dual-Pass Screening Pipeline ─────────────────────────────────────
+# ── Checkpoint Helpers ───────────────────────────────────────────────
 
 
-def _checkpoint_path(db: ReviewDatabase) -> Path:
+def _checkpoint_path(db: ReviewDatabase, suffix: str = "") -> Path:
     """Return the screening checkpoint file path for this review."""
-    return db.db_path.parent / "screening_checkpoint.json"
+    name = f"screening_checkpoint{suffix}.json"
+    return db.db_path.parent / name
 
 
 def _load_checkpoint(path: Path) -> set[int]:
@@ -118,14 +149,18 @@ def _save_checkpoint(path: Path, screened_ids: set[int]) -> None:
     path.write_text(json.dumps({"screened_ids": sorted(screened_ids)}))
 
 
+# ── Primary Screening (Dual-Pass) ───────────────────────────────────
+
+
 def run_screening(db: ReviewDatabase, spec: ReviewSpec) -> dict:
-    """Run dual-pass screening on all INGESTED papers.
+    """Run dual-pass primary screening on all INGESTED papers.
 
     Supports checkpoint/resume — if interrupted, re-running will skip
     papers that were already screened and committed to the database.
 
     Returns summary stats dict.
     """
+    primary_model = spec.screening_models.primary
     papers = db.get_papers_by_status("INGESTED")
     total = len(papers)
 
@@ -147,12 +182,12 @@ def run_screening(db: ReviewDatabase, spec: ReviewSpec) -> dict:
         pid = paper["id"]
 
         # Pass 1
-        d1 = screen_paper(paper, spec, pass_number=1)
-        db.add_screening_decision(pid, 1, d1.decision, d1.rationale, MODEL)
+        d1 = screen_paper(paper, spec, pass_number=1, model=primary_model)
+        db.add_screening_decision(pid, 1, d1.decision, d1.rationale, primary_model)
 
         # Pass 2
-        d2 = screen_paper(paper, spec, pass_number=2)
-        db.add_screening_decision(pid, 2, d2.decision, d2.rationale, MODEL)
+        d2 = screen_paper(paper, spec, pass_number=2, model=primary_model)
+        db.add_screening_decision(pid, 2, d2.decision, d2.rationale, primary_model)
 
         # Resolve agreement
         if d1.decision == "include" and d2.decision == "include":
@@ -179,6 +214,76 @@ def run_screening(db: ReviewDatabase, spec: ReviewSpec) -> dict:
         "Screening complete: %d in, %d out, %d flagged",
         stats["screened_in"],
         stats["screened_out"],
+        stats["flagged"],
+    )
+    return stats
+
+
+# ── Verification Screening ───────────────────────────────────────────
+
+
+def run_verification(db: ReviewDatabase, spec: ReviewSpec) -> dict:
+    """Re-screen SCREENED_IN papers with the verification model.
+
+    Consensus logic:
+      - Both models include → stays SCREENED_IN
+      - Primary included, verifier excludes → SCREEN_FLAGGED
+
+    Supports checkpoint/resume.
+    Returns summary stats dict.
+    """
+    verification_model = spec.screening_models.verification
+    papers = db.get_papers_by_status("SCREENED_IN")
+
+    ckpt_path = _checkpoint_path(db, suffix="_verification")
+    verified_ids = _load_checkpoint(ckpt_path)
+
+    if verified_ids:
+        logger.info(
+            "Resuming verification: %d already verified, %d SCREENED_IN total",
+            len(verified_ids), len(papers),
+        )
+
+    pending = [p for p in papers if p["id"] not in verified_ids]
+    logger.info(
+        "Starting verification on %d SCREENED_IN papers (%d pending) with %s",
+        len(papers), len(pending), verification_model,
+    )
+
+    stats = {"confirmed": 0, "flagged": 0, "total": len(pending)}
+
+    for i, paper in enumerate(pending, 1):
+        pid = paper["id"]
+
+        decision = screen_paper(paper, spec, pass_number=1, model=verification_model)
+        db.add_verification_decision(
+            pid, decision.decision, decision.rationale, verification_model,
+        )
+
+        if decision.decision == "include":
+            # Stays SCREENED_IN — no status change needed
+            stats["confirmed"] += 1
+        else:
+            # Verifier disagrees — flag for human review
+            db.update_status(pid, "SCREEN_FLAGGED")
+            stats["flagged"] += 1
+
+        verified_ids.add(pid)
+
+        if i % 10 == 0 or i == len(pending):
+            _save_checkpoint(ckpt_path, verified_ids)
+            logger.info(
+                "Verified %d/%d papers — %d confirmed, %d flagged (checkpoint saved)",
+                i, len(pending), stats["confirmed"], stats["flagged"],
+            )
+
+    # Clean up checkpoint file on successful completion
+    if ckpt_path.exists():
+        ckpt_path.unlink()
+
+    logger.info(
+        "Verification complete: %d confirmed, %d flagged for human review",
+        stats["confirmed"],
         stats["flagged"],
     )
     return stats

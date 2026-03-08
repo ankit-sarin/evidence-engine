@@ -80,6 +80,13 @@ class SearchStrategy(BaseModel):
 # ── Screening Criteria ───────────────────────────────────────────────
 
 
+class ScreeningModels(BaseModel):
+    """Model configuration for dual-model screening."""
+
+    primary: str = Field(default="qwen3:8b", description="Fast high-recall primary screener")
+    verification: str = Field(default="qwen3:32b", description="Larger model for verification of includes")
+
+
 class ScreeningCriteria(BaseModel):
     """Inclusion/exclusion rules for title-abstract screening."""
 
@@ -100,6 +107,7 @@ class ReviewSpec(BaseModel):
     prospero_id: Optional[str] = None
     pico: PICO
     search_strategy: SearchStrategy
+    screening_models: ScreeningModels = Field(default_factory=ScreeningModels)
     screening_criteria: ScreeningCriteria
     extraction_schema: ExtractionSchema
 

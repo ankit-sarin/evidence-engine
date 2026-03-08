@@ -30,7 +30,7 @@ STATUSES = (
 
 ALLOWED_TRANSITIONS: dict[str, set[str]] = {
     "INGESTED": {"SCREENED_IN", "SCREENED_OUT", "SCREEN_FLAGGED"},
-    "SCREENED_IN": {"PDF_ACQUIRED"},
+    "SCREENED_IN": {"PDF_ACQUIRED", "SCREEN_FLAGGED"},
     "SCREEN_FLAGGED": {"SCREENED_IN", "SCREENED_OUT"},
     "PDF_ACQUIRED": {"PARSED"},
     "PARSED": {"EXTRACTED", "EXTRACT_FAILED"},
@@ -86,6 +86,17 @@ CREATE TABLE IF NOT EXISTS screening_decisions (
 
 CREATE INDEX IF NOT EXISTS idx_screening_paper ON screening_decisions(paper_id);
 
+CREATE TABLE IF NOT EXISTS verification_decisions (
+    id              INTEGER PRIMARY KEY,
+    paper_id        INTEGER NOT NULL REFERENCES papers(id),
+    decision        TEXT NOT NULL CHECK (decision IN ('include', 'exclude')),
+    rationale       TEXT,
+    model           TEXT,
+    decided_at      TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_verification_paper ON verification_decisions(paper_id);
+
 CREATE TABLE IF NOT EXISTS full_text_assets (
     id                  INTEGER PRIMARY KEY,
     paper_id            INTEGER NOT NULL REFERENCES papers(id),
@@ -140,6 +151,18 @@ CREATE TABLE IF NOT EXISTS review_runs (
 """
 
 # Migrations for existing databases
+_VERIFICATION_TABLE = """
+CREATE TABLE IF NOT EXISTS verification_decisions (
+    id              INTEGER PRIMARY KEY,
+    paper_id        INTEGER NOT NULL REFERENCES papers(id),
+    decision        TEXT NOT NULL CHECK (decision IN ('include', 'exclude')),
+    rationale       TEXT,
+    model           TEXT,
+    decided_at      TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_verification_paper ON verification_decisions(paper_id);
+"""
+
 _SIMPLE_MIGRATIONS = [
     "ALTER TABLE papers ADD COLUMN rejected_reason TEXT",
 ]
@@ -204,6 +227,10 @@ class ReviewDatabase:
                 self._conn.commit()
             except sqlite3.OperationalError:
                 pass  # column/table already exists
+
+        # Ensure verification_decisions table exists (for pre-existing databases)
+        self._conn.executescript(_VERIFICATION_TABLE)
+        self._conn.commit()
 
         # Rebuild evidence_spans if CHECK constraint is outdated
         row = self._conn.execute(
@@ -479,6 +506,23 @@ class ReviewDatabase:
                (paper_id, pass_number, decision, rationale, model, decided_at)
                VALUES (?, ?, ?, ?, ?, ?)""",
             (paper_id, pass_number, decision, rationale, model, _now()),
+        )
+        self._conn.commit()
+        return cur.lastrowid
+
+    def add_verification_decision(
+        self,
+        paper_id: int,
+        decision: str,
+        rationale: str,
+        model: str,
+    ) -> int:
+        """Record a verification screening decision. Returns the decision id."""
+        cur = self._conn.execute(
+            """INSERT INTO verification_decisions
+               (paper_id, decision, rationale, model, decided_at)
+               VALUES (?, ?, ?, ?, ?)""",
+            (paper_id, decision, rationale, model, _now()),
         )
         self._conn.commit()
         return cur.lastrowid

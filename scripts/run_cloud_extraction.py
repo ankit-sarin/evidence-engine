@@ -88,6 +88,9 @@ def run_arm(
 
 
 def main():
+    from engine.utils.background import maybe_background
+    maybe_background("cloud_extraction", review_name="surgical_autonomy")
+
     parser = argparse.ArgumentParser(
         description="Run cloud extraction arms for concordance study"
     )

@@ -268,6 +268,17 @@ def _finish_review_run(db: ReviewDatabase, run_id: int, status: str) -> None:
 
 
 def main():
+    from engine.utils.background import maybe_background
+
+    # Extract --name early for the log path (before argparse strips it)
+    review_name = "review"
+    for i, arg in enumerate(sys.argv):
+        if arg == "--name" and i + 1 < len(sys.argv):
+            review_name = sys.argv[i + 1]
+            break
+
+    maybe_background("pipeline", review_name=review_name)
+
     parser = argparse.ArgumentParser(description="Run the Surgical Evidence Engine pipeline")
     parser.add_argument("--spec", required=True, help="Path to Review Spec YAML file")
     parser.add_argument("--name", required=True, help="Review name (used for database/directory)")

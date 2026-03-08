@@ -300,6 +300,9 @@ def run_screen_phase():
 
 
 def main():
+    from engine.utils.background import maybe_background
+    maybe_background("screening", review_name="surgical_autonomy")
+
     parser = argparse.ArgumentParser(
         description="Screen expanded search results (two-phase)"
     )

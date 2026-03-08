@@ -2,6 +2,7 @@
 
 import json
 import logging
+from pathlib import Path
 from typing import Literal
 
 import ollama
@@ -96,18 +97,53 @@ Respond with JSON only: {{"decision": "...", "rationale": "...", "confidence": 0
 # ── Dual-Pass Screening Pipeline ─────────────────────────────────────
 
 
+def _checkpoint_path(db: ReviewDatabase) -> Path:
+    """Return the screening checkpoint file path for this review."""
+    return db.db_path.parent / "screening_checkpoint.json"
+
+
+def _load_checkpoint(path: Path) -> set[int]:
+    """Load set of already-screened paper IDs from checkpoint file."""
+    if not path.exists():
+        return set()
+    try:
+        data = json.loads(path.read_text())
+        return set(data.get("screened_ids", []))
+    except (json.JSONDecodeError, KeyError):
+        return set()
+
+
+def _save_checkpoint(path: Path, screened_ids: set[int]) -> None:
+    """Persist screened paper IDs to checkpoint file."""
+    path.write_text(json.dumps({"screened_ids": sorted(screened_ids)}))
+
+
 def run_screening(db: ReviewDatabase, spec: ReviewSpec) -> dict:
     """Run dual-pass screening on all INGESTED papers.
+
+    Supports checkpoint/resume — if interrupted, re-running will skip
+    papers that were already screened and committed to the database.
 
     Returns summary stats dict.
     """
     papers = db.get_papers_by_status("INGESTED")
     total = len(papers)
-    logger.info("Starting dual-pass screening on %d papers", total)
 
-    stats = {"screened_in": 0, "screened_out": 0, "flagged": 0, "total": total}
+    ckpt_path = _checkpoint_path(db)
+    screened_ids = _load_checkpoint(ckpt_path)
 
-    for i, paper in enumerate(papers, 1):
+    if screened_ids:
+        logger.info(
+            "Resuming screening: %d already screened, %d INGESTED remaining",
+            len(screened_ids), total,
+        )
+
+    pending = [p for p in papers if p["id"] not in screened_ids]
+    logger.info("Starting dual-pass screening on %d papers (%d pending)", total, len(pending))
+
+    stats = {"screened_in": 0, "screened_out": 0, "flagged": 0, "total": len(pending)}
+
+    for i, paper in enumerate(pending, 1):
         pid = paper["id"]
 
         # Pass 1
@@ -129,8 +165,15 @@ def run_screening(db: ReviewDatabase, spec: ReviewSpec) -> dict:
             db.update_status(pid, "SCREEN_FLAGGED")
             stats["flagged"] += 1
 
-        if i % 10 == 0 or i == total:
-            logger.info("Screened %d/%d papers", i, total)
+        screened_ids.add(pid)
+
+        if i % 10 == 0 or i == len(pending):
+            _save_checkpoint(ckpt_path, screened_ids)
+            logger.info("Screened %d/%d papers (checkpoint saved)", i, len(pending))
+
+    # Clean up checkpoint file on successful completion
+    if ckpt_path.exists():
+        ckpt_path.unlink()
 
     logger.info(
         "Screening complete: %d in, %d out, %d flagged",

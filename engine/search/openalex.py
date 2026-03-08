@@ -35,7 +35,7 @@ def search_openalex(spec: ReviewSpec) -> list[Citation]:
         .search(query_text)
         .filter(
             publication_year=f"{start_year}-{end_year}",
-            type="article",
+            type="article|review",
         )
     )
 

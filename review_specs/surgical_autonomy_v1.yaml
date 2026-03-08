@@ -28,9 +28,8 @@ search_strategy:
     - PubMed
     - OpenAlex
   query_terms:
-    - '("surgical robot" OR "robotic surgery" OR "surgical automation")'
+    - '("surgical robot" OR "robotic surgery" OR "surgical automation" OR "medical robot" OR "medical robotics" OR "robotic surgical")'
     - '("autonomous" OR "autonomy" OR "self-directed" OR "automated")'
-    - '("Level of autonomy" OR "LoA" OR "Yang taxonomy")'
   date_range: [2010, 2025]
 
 screening_criteria:

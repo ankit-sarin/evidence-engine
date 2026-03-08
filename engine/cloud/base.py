@@ -88,7 +88,7 @@ class CloudExtractorBase:
             response_json = {"fields": response_json}
         elif isinstance(response_json, dict) and "fields" not in response_json:
             # Try alternate top-level keys that cloud models use
-            for alt_key in ("extractions", "data"):
+            for alt_key in ("extractions", "extracted_fields", "data"):
                 if alt_key in response_json and isinstance(response_json[alt_key], list):
                     response_json = {"fields": response_json[alt_key]}
                     break

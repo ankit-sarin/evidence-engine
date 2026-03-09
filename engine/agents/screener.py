@@ -35,8 +35,12 @@ class ScreeningDecision(BaseModel):
 # ── Prompt Builder ───────────────────────────────────────────────────
 
 
-def _build_prompt(paper: dict, spec: ReviewSpec) -> str:
-    """Build the screening prompt with PICO context and criteria."""
+def _build_prompt(paper: dict, spec: ReviewSpec, *, role: str = "primary") -> str:
+    """Build the screening prompt with PICO context and criteria.
+
+    Args:
+        role: "primary" for high-recall first pass, "verifier" for strict second pass.
+    """
     title = paper.get("title", "")
     abstract = paper.get("abstract") or ""
 
@@ -49,7 +53,19 @@ def _build_prompt(paper: dict, spec: ReviewSpec) -> str:
     )
 
     inclusion = "\n".join(f"  - {c}" for c in spec.screening_criteria.inclusion)
-    exclusion = "\n".join(f"  - {c}" for c in spec.screening_criteria.exclusion)
+
+    if role == "verifier":
+        # Verifier sees full exclusion criteria (strict)
+        exclusion = "\n".join(f"  - {c}" for c in spec.screening_criteria.exclusion)
+    else:
+        # Primary sees simplified exclusion criteria (high recall)
+        primary_exclusions = [
+            "Systematic reviews, meta-analyses, or scoping reviews",
+            "Editorials, commentaries, or letters to the editor",
+            "Non-surgical robotics (industrial, rehabilitation, exoskeletons, prosthetics)",
+            "Papers with no abstract available",
+        ]
+        exclusion = "\n".join(f"  - {c}" for c in primary_exclusions)
 
     if abstract:
         paper_text = f"Title: {title}\n\nAbstract: {abstract}"
@@ -59,6 +75,30 @@ def _build_prompt(paper: dict, spec: ReviewSpec) -> str:
             "Abstract: [Not available. Per the exclusion criteria, papers with "
             "no abstract or insufficient information to determine eligibility "
             "should be EXCLUDED.]"
+        )
+
+    if role == "verifier":
+        # Strict verification pass — high precision, catches FPs
+        decision_instruction = (
+            "You are the VERIFICATION pass. This paper was already included by "
+            "a primary screener. Your job is to catch false positives.\n\n"
+            "Apply these tests strictly:\n"
+            "1. Does the abstract describe a robot that EXECUTES a surgical action "
+            "autonomously or semi-autonomously? (Not just analysis/tracking/assessment)\n"
+            "2. Is there an autonomous component — not purely teleoperated/master-slave?\n"
+            "3. Does it involve a physical surgical task — not just a simulation "
+            "framework or pure methodology?\n"
+            "4. Is it original research — not a review, editorial, or commentary?\n\n"
+            "If ANY test fails, EXCLUDE. Only include papers that clearly pass all tests."
+        )
+    else:
+        # Primary pass — high recall, inclusive
+        decision_instruction = (
+            "Decide 'include' or 'exclude'. When uncertain and the paper MIGHT "
+            "involve autonomous surgical robotics, prefer 'include' — a later "
+            "verification pass will catch false positives.\n"
+            "EXCLUDE only if the paper CLEARLY does not involve surgical robotics "
+            "at all, or CLEARLY has no abstract available."
         )
 
     return f"""/no_think
@@ -73,22 +113,10 @@ INCLUSION CRITERIA:
 EXCLUSION CRITERIA:
 {exclusion}
 
-CRITICAL DISTINCTIONS — read carefully before deciding:
-- The autonomous component must CONTROL a robot to execute a physical surgical
-  action (cutting, suturing, grasping, inserting, navigating). Papers that only
-  analyze, classify, segment, or track surgical data do NOT qualify.
-- Purely teleoperated/master-slave systems with no autonomous decision-making
-  do NOT qualify, even if they are surgical robots.
-- If the abstract is missing or provides insufficient information to determine
-  eligibility, EXCLUDE the paper. Do not guess or assume relevance.
-
 PAPER:
 {paper_text}
 
-Decide "include" or "exclude". Only include if the paper CLEARLY meets
-the inclusion criteria. When the evidence is ambiguous or absent, prefer
-"exclude" — it is better to exclude a borderline paper than to include
-an irrelevant one.
+{decision_instruction}
 
 Respond with JSON only: {{"decision": "...", "rationale": "...", "confidence": 0.0-1.0}}"""
 
@@ -101,16 +129,18 @@ def screen_paper(
     spec: ReviewSpec,
     pass_number: int,
     model: str | None = None,
+    role: str = "primary",
 ) -> ScreeningDecision:
     """Screen a single paper against the review spec's criteria.
 
     Calls Ollama with structured JSON output.
     If model is not specified, uses spec.screening_models.primary.
+    role: "primary" for high-recall pass, "verifier" for strict pass.
     """
     if model is None:
         model = spec.screening_models.primary
 
-    user_prompt = _build_prompt(paper, spec)
+    user_prompt = _build_prompt(paper, spec, role=role)
 
     response = ollama.chat(
         model=model,
@@ -118,13 +148,10 @@ def screen_paper(
             {
                 "role": "system",
                 "content": (
-                    "You are a systematic review screening agent. Your job is "
-                    "to decide whether a paper meets the inclusion criteria for "
-                    "this review. Apply the criteria strictly — only include "
-                    "papers that clearly meet ALL inclusion criteria and do not "
-                    "match any exclusion criterion. When uncertain or when "
-                    "information is missing, prefer to exclude. "
-                    "Respond ONLY with the requested JSON."
+                    "You are a systematic review screening agent. Evaluate "
+                    "whether the paper involves autonomous or semi-autonomous "
+                    "surgical robotics. Follow the criteria and instructions "
+                    "in the user message. Respond ONLY with the requested JSON."
                 ),
             },
             {"role": "user", "content": user_prompt},
@@ -269,7 +296,7 @@ def run_verification(db: ReviewDatabase, spec: ReviewSpec) -> dict:
     for i, paper in enumerate(pending, 1):
         pid = paper["id"]
 
-        decision = screen_paper(paper, spec, pass_number=1, model=verification_model)
+        decision = screen_paper(paper, spec, pass_number=1, model=verification_model, role="verifier")
         db.add_verification_decision(
             pid, decision.decision, decision.rationale, verification_model,
         )

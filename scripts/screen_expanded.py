@@ -46,6 +46,8 @@ INPUT_CSV = STAGING_DIR / "net_new_papers.csv"
 ABSTRACTS_JSONL = STAGING_DIR / "abstracts.jsonl"
 OUTPUT_CSV = STAGING_DIR / "screening_results.csv"
 SCREENING_PROGRESS = STAGING_DIR / "screening_progress.json"
+VERIFICATION_CSV = STAGING_DIR / "verification_results.csv"
+VERIFICATION_PROGRESS = STAGING_DIR / "verification_progress.json"
 
 
 # ── Phase 1: Abstract fetching ───────────────────────────────────────
@@ -296,6 +298,142 @@ def run_screen_phase():
     )
 
 
+# ── Phase 3: Verification ─────────────────────────────────────────
+
+
+def run_verify_phase():
+    """Phase 3: re-screen primary includes with verification model."""
+    if not OUTPUT_CSV.exists():
+        logger.error("No screening_results.csv found — run phase 2 first")
+        sys.exit(1)
+
+    spec = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+    verification_model = spec.screening_models.verification
+
+    # Load primary includes from screening_results.csv
+    includes = []
+    with open(OUTPUT_CSV, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if row["screening_decision"] == "include":
+                includes.append(row)
+    logger.info(
+        "Phase 3: %d primary includes to verify with %s",
+        len(includes), verification_model,
+    )
+
+    # Load abstracts for lookup
+    abstracts_map: dict[str, dict] = {}
+    if ABSTRACTS_JSONL.exists():
+        with open(ABSTRACTS_JSONL) as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rec = json.loads(line)
+                    abstracts_map[rec["key"]] = rec
+                except (json.JSONDecodeError, KeyError):
+                    continue
+
+    # Load verification progress
+    completed: dict[str, str] = {}
+    if VERIFICATION_PROGRESS.exists():
+        with open(VERIFICATION_PROGRESS) as f:
+            completed = json.load(f)
+        logger.info("Resuming verification from %d already verified", len(completed))
+
+    # Open output CSV
+    write_header = not VERIFICATION_CSV.exists() or len(completed) == 0
+    outfile = open(VERIFICATION_CSV, "a" if not write_header else "w", newline="")
+    writer = csv.writer(outfile)
+    if write_header:
+        writer.writerow([
+            "title", "doi", "pmid", "year", "journal", "source",
+            "primary_decision", "verification_decision", "final_decision",
+            "verification_rationale", "verification_confidence",
+        ])
+
+    stats = {"confirmed": 0, "flagged": 0, "errors": 0}
+    t_start = time.time()
+    verified_this_run = 0
+    total = len(includes)
+
+    for paper_row in includes:
+        doi = paper_row.get("doi", "")
+        pmid = paper_row.get("pmid", "")
+        key = doi or pmid or paper_row["title"]
+        if key in completed:
+            continue
+
+        # Get abstract from abstracts map
+        abstract = None
+        for lookup_key in [doi, pmid]:
+            if lookup_key and lookup_key in abstracts_map:
+                abstract = abstracts_map[lookup_key].get("abstract")
+                break
+
+        paper_dict = {
+            "title": paper_row["title"],
+            "abstract": abstract,
+        }
+
+        try:
+            decision = screen_paper(paper_dict, spec, pass_number=1, model=verification_model, role="verifier")
+        except Exception as exc:
+            logger.warning("Error verifying '%s': %s", paper_row["title"][:60], exc)
+            stats["errors"] += 1
+            completed[key] = "error"
+            continue
+
+        if decision.decision == "include":
+            final = "include"
+            stats["confirmed"] += 1
+        else:
+            final = "flagged"
+            stats["flagged"] += 1
+
+        writer.writerow([
+            paper_row["title"], doi, pmid,
+            paper_row.get("year", ""), paper_row.get("journal", ""),
+            paper_row.get("source", ""),
+            "include", decision.decision, final,
+            decision.rationale, decision.confidence,
+        ])
+        outfile.flush()
+
+        completed[key] = final
+        verified_this_run += 1
+
+        if verified_this_run % 50 == 0:
+            with open(VERIFICATION_PROGRESS, "w") as pf:
+                json.dump(completed, pf)
+
+            elapsed = time.time() - t_start
+            rate = verified_this_run / elapsed if elapsed > 0 else 0
+            remaining = total - len(completed)
+            eta_min = remaining / rate / 60 if rate > 0 else 0
+            logger.info(
+                "Verified %d/%d (%.1f/s) — %d confirmed, %d flagged, "
+                "%d errors — ETA %.0f min",
+                len(completed), total, rate, stats["confirmed"],
+                stats["flagged"], stats["errors"], eta_min,
+            )
+
+    outfile.close()
+
+    with open(VERIFICATION_PROGRESS, "w") as pf:
+        json.dump(completed, pf)
+
+    elapsed = time.time() - t_start
+    logger.info(
+        "Phase 3 complete in %.1f min: %d confirmed, %d flagged, "
+        "%d errors (of %d primary includes)",
+        elapsed / 60, stats["confirmed"], stats["flagged"],
+        stats["errors"], total,
+    )
+
+
 # ── CLI ──────────────────────────────────────────────────────────────
 
 
@@ -304,7 +442,7 @@ def main():
     maybe_background("screening", review_name="surgical_autonomy")
 
     parser = argparse.ArgumentParser(
-        description="Screen expanded search results (two-phase)"
+        description="Screen expanded search results (three-phase)"
     )
     parser.add_argument(
         "--fetch-only", action="store_true",
@@ -312,17 +450,34 @@ def main():
     )
     parser.add_argument(
         "--screen-only", action="store_true",
-        help="Run phase 2 only (screen from local abstracts)",
+        help="Run phase 2 only (primary dual-pass screening)",
+    )
+    parser.add_argument(
+        "--verify-only", action="store_true",
+        help="Run phase 3 only (verification of primary includes)",
+    )
+    parser.add_argument(
+        "--fresh", action="store_true",
+        help="Clear previous screening/verification results before running",
     )
     args = parser.parse_args()
+
+    if args.fresh:
+        for f in [OUTPUT_CSV, SCREENING_PROGRESS, VERIFICATION_CSV, VERIFICATION_PROGRESS]:
+            if f.exists():
+                logger.info("Removing %s", f)
+                f.unlink()
 
     if args.fetch_only:
         run_fetch_phase()
     elif args.screen_only:
         run_screen_phase()
+    elif args.verify_only:
+        run_verify_phase()
     else:
         run_fetch_phase()
         run_screen_phase()
+        run_verify_phase()
 
 
 if __name__ == "__main__":

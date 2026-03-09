@@ -56,8 +56,9 @@ def _build_prompt(paper: dict, spec: ReviewSpec) -> str:
     else:
         paper_text = (
             f"Title: {title}\n\n"
-            "Abstract: [Not available — screen based on title only. "
-            "Note lower confidence in your decision.]"
+            "Abstract: [Not available. Per the exclusion criteria, papers with "
+            "no abstract or insufficient information to determine eligibility "
+            "should be EXCLUDED.]"
         )
 
     return f"""/no_think
@@ -72,11 +73,22 @@ INCLUSION CRITERIA:
 EXCLUSION CRITERIA:
 {exclusion}
 
+CRITICAL DISTINCTIONS — read carefully before deciding:
+- The autonomous component must CONTROL a robot to execute a physical surgical
+  action (cutting, suturing, grasping, inserting, navigating). Papers that only
+  analyze, classify, segment, or track surgical data do NOT qualify.
+- Purely teleoperated/master-slave systems with no autonomous decision-making
+  do NOT qualify, even if they are surgical robots.
+- If the abstract is missing or provides insufficient information to determine
+  eligibility, EXCLUDE the paper. Do not guess or assume relevance.
+
 PAPER:
 {paper_text}
 
-Decide "include" or "exclude". When uncertain, prefer "include" — it is
-better to include a borderline paper than to miss a relevant one.
+Decide "include" or "exclude". Only include if the paper CLEARLY meets
+the inclusion criteria. When the evidence is ambiguous or absent, prefer
+"exclude" — it is better to exclude a borderline paper than to include
+an irrelevant one.
 
 Respond with JSON only: {{"decision": "...", "rationale": "...", "confidence": 0.0-1.0}}"""
 
@@ -108,8 +120,10 @@ def screen_paper(
                 "content": (
                     "You are a systematic review screening agent. Your job is "
                     "to decide whether a paper meets the inclusion criteria for "
-                    "this review. Be inclusive when uncertain — it's better to "
-                    "include a borderline paper than miss a relevant one. "
+                    "this review. Apply the criteria strictly — only include "
+                    "papers that clearly meet ALL inclusion criteria and do not "
+                    "match any exclusion criterion. When uncertain or when "
+                    "information is missing, prefer to exclude. "
                     "Respond ONLY with the requested JSON."
                 ),
             },

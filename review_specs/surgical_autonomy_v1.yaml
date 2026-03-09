@@ -34,24 +34,25 @@ search_strategy:
 
 screening_models:
   primary: "qwen3:8b"
-  verification: "qwen3:32b"
+  verification: "gemma3:27b"
 
 screening_criteria:
   inclusion:
     - English language
     - Peer-reviewed original research (journal article or full conference paper)
     - Involves a physical surgical task (cadaver, phantom, animal, or human)
-    - Must involve an autonomous or semi-autonomous robotic component (not purely teleoperated or manual)
-    - Simulation studies included only if validated against a physical platform
+    - "Must involve an autonomous or semi-autonomous robotic component that CONTROLS or DIRECTS a physical robot to execute a surgical action (not purely teleoperated or manual)"
+    - "Simulation studies included ONLY IF they demonstrate or evaluate autonomous/semi-autonomous robotic behavior in the simulation (not simulation frameworks, physics engines, or virtual environments described without autonomous robot behavior)"
     - Published between 2010 and 2025
   exclusion:
     - Systematic reviews, meta-analyses, or scoping reviews
     - Editorials, commentaries, or letters to the editor
     - Conference abstracts without full paper
     - "Non-surgical robotics (industrial, warehouse, rehabilitation, exoskeletons, prosthetics, assistive devices)"
-    - Purely teleoperated robotic surgery with no autonomous or semi-autonomous component (e.g., standard da Vinci case series)
-    - Machine learning or computer vision methodology papers with no physical robotic surgical application
+    - "Purely teleoperated/master-slave robotic surgery where the human directly controls all robot movements in real-time (e.g., standard da Vinci case series, joystick-controlled systems). There must be an autonomous or semi-autonomous component where the system makes independent decisions about motion, planning, or execution."
+    - "ML/CV methodology papers that only analyze, classify, segment, track, or predict surgical data (video, images, sensor data) without controlling a robot to execute a surgical action"
     - Studies with no autonomous or semi-autonomous component
+    - "Papers with no abstract or insufficient information to determine eligibility — do not default to inclusion when evidence is absent"
 
 extraction_schema:
   fields:

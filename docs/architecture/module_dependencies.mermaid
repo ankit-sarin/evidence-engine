@@ -1,0 +1,115 @@
+%%{ init: { 'theme': 'base', 'themeVariables': { 'primaryColor': '#0A5E56', 'primaryTextColor': '#fff', 'lineColor': '#2C2C2C', 'secondaryColor': '#EEF5F4' } } }%%
+
+flowchart TB
+    subgraph SCRIPTS["scripts/"]
+        run_pipeline["run_pipeline.py"]
+        run_cloud["run_cloud_extraction.py"]
+        screen_exp["screen_expanded.py"]
+        eval_aud["eval_auditor_models.py"]
+    end
+
+    subgraph AGENTS["engine/agents/"]
+        a_models["models.py"]
+        screener["screener.py"]
+        extractor["extractor.py"]
+        auditor["auditor.py"]
+    end
+
+    subgraph CORE["engine/core/"]
+        constants["constants.py"]
+        review_spec["review_spec.py"]
+        database["database.py"]
+    end
+
+    subgraph SEARCH["engine/search/"]
+        s_models["models.py"]
+        pubmed["pubmed.py"]
+        openalex["openalex.py"]
+        dedup["dedup.py"]
+    end
+
+    subgraph PARSERS["engine/parsers/"]
+        p_models["models.py"]
+        pdf_parser["pdf_parser.py"]
+    end
+
+    subgraph CLOUD["engine/cloud/"]
+        c_schema["schema.py"]
+        c_base["base.py"]
+        c_openai["openai_extractor.py"]
+        c_anthropic["anthropic_extractor.py"]
+    end
+
+    subgraph ADJ["engine/adjudication/"]
+        a_schema["schema.py"]
+        workflow["workflow.py"]
+        categorizer["categorizer.py"]
+        scr_adj["screening_adjudicator.py"]
+        aud_adj["audit_adjudicator.py"]
+        adv_stage["advance_stage.py"]
+    end
+
+    subgraph EXPORTERS["engine/exporters/"]
+        prisma["prisma.py"]
+        ev_table["evidence_table.py"]
+        docx_exp["docx_export.py"]
+        methods["methods_section.py"]
+        trace_exp["trace_exporter.py"]
+    end
+
+    subgraph REVIEW["engine/review/"]
+        human_review["human_review.py"]
+    end
+
+    subgraph UTILS["engine/utils/"]
+        background["background.py"]
+    end
+
+    %% Core dependencies
+    database --> s_models
+    database --> a_schema
+
+    %% Search dependencies
+    pubmed --> review_spec & s_models
+    openalex --> review_spec & s_models
+    dedup --> s_models
+
+    %% Agent dependencies
+    screener --> database & review_spec
+    extractor --> a_models & constants & database & review_spec
+    auditor --> a_models & constants & database & review_spec
+
+    %% Parser dependencies
+    pdf_parser --> database & p_models
+
+    %% Cloud dependencies
+    c_base --> extractor & c_schema & review_spec
+    c_openai --> c_base
+    c_anthropic --> c_base
+
+    %% Adjudication dependencies
+    a_schema --> workflow
+    scr_adj --> categorizer & a_schema & workflow & database
+    aud_adj --> a_schema & workflow & database
+    adv_stage --> workflow & database
+
+    %% Exporter dependencies
+    prisma --> database
+    ev_table --> database & review_spec
+    docx_exp --> database & review_spec
+    methods --> database & review_spec & prisma
+    human_review --> auditor & database
+
+    %% Script dependencies
+    run_pipeline --> workflow & auditor & extractor & screener & database & review_spec
+    run_cloud --> c_openai & c_anthropic
+    eval_aud --> auditor & database
+
+    %% Styling
+    style CORE fill:#0A5E56,stroke:#074540,color:#fff
+    style AGENTS fill:#B85D3A,stroke:#8B3A1F,color:#fff
+    style ADJ fill:#FFF2CC,stroke:#D4A843
+    style SEARCH fill:#EEF5F4,stroke:#0A5E56
+    style EXPORTERS fill:#EEF5F4,stroke:#0A5E56
+    style CLOUD fill:#E8E0F0,stroke:#6B4C8A
+    style SCRIPTS fill:#f0f0f0,stroke:#999

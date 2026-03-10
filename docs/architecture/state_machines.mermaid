@@ -1,0 +1,116 @@
+%% ═══════════════════════════════════════════════════════════════
+%% Paper Lifecycle State Machine
+%% ═══════════════════════════════════════════════════════════════
+
+stateDiagram-v2
+    direction TB
+
+    [*] --> INGESTED : add_papers()
+
+    state "Screening" as screening {
+        INGESTED --> SCREENED_IN : include (both passes agree)
+        INGESTED --> SCREENED_OUT : exclude (both passes agree)
+        INGESTED --> SCREEN_FLAGGED : disagreement between passes
+        SCREEN_FLAGGED --> SCREENED_IN : adjudication → include
+        SCREEN_FLAGGED --> SCREENED_OUT : adjudication → exclude
+        SCREENED_IN --> SCREEN_FLAGGED : verification flags paper
+    }
+
+    SCREENED_OUT --> [*] : terminal
+
+    state "Full-text Processing" as fulltext {
+        SCREENED_IN --> PDF_ACQUIRED : PDF placed + status updated
+        PDF_ACQUIRED --> PARSED : Docling / Qwen2.5-VL
+    }
+
+    state "Extraction" as extraction {
+        PARSED --> EXTRACTED : deepseek-r1:32b two-pass
+        PARSED --> EXTRACT_FAILED : extraction error
+        EXTRACT_FAILED --> PARSED : reset for retry
+        EXTRACT_FAILED --> EXTRACTED : successful retry
+    }
+
+    state "Audit" as audit {
+        EXTRACTED --> AI_AUDIT_COMPLETE : grep + semantic verify (gemma3:27b)
+        AI_AUDIT_COMPLETE --> HUMAN_AUDIT_COMPLETE : human review accepts/corrects
+        AI_AUDIT_COMPLETE --> REJECTED : human review rejects paper
+        HUMAN_AUDIT_COMPLETE --> REJECTED : post-review rejection
+    }
+
+    REJECTED --> [*] : terminal
+
+---
+
+%% ═══════════════════════════════════════════════════════════════
+%% Workflow Stage Progression (9 stages)
+%% ═══════════════════════════════════════════════════════════════
+
+stateDiagram-v2
+    direction LR
+
+    state "Screening Adjudication (stages 1–5)" as screening_adj {
+        S1: 1. SCREENING_COMPLETE
+        S2: 2. DIAGNOSTIC_SAMPLE_COMPLETE
+        S3: 3. CATEGORIES_CONFIGURED
+        S4: 4. QUEUE_EXPORTED
+        S5: 5. ADJUDICATION_COMPLETE
+
+        [*] --> S1 : auto (screening finishes)
+        S1 --> S2 : manual (human confirms FP analysis)
+        S2 --> S3 : auto (YAML exists + validates)
+        S3 --> S4 : auto (export_adjudication_queue)
+        S4 --> S5 : auto (import with 0 unresolved)
+    }
+
+    state "Extraction Audit (stages 6–9)" as extraction_audit {
+        S6: 6. EXTRACTION_COMPLETE
+        S7: 7. AI_AUDIT_COMPLETE_STAGE
+        S8: 8. AUDIT_QUEUE_EXPORTED
+        S9: 9. AUDIT_REVIEW_COMPLETE
+
+        S5 --> S6 : auto (all papers EXTRACTED+)
+        S6 --> S7 : auto (audit run finishes)
+        S7 --> S8 : auto (export_audit_review_queue)
+        S8 --> S9 : auto (import with 0 unresolved)
+    end
+
+    note right of S5
+        Pipeline blocks before
+        parse/extract/audit
+        until this stage completes
+    end note
+
+    note right of S9
+        Pipeline blocks before
+        export until this
+        stage completes
+    end note
+
+---
+
+%% ═══════════════════════════════════════════════════════════════
+%% Evidence Span Audit States
+%% ═══════════════════════════════════════════════════════════════
+
+stateDiagram-v2
+    direction LR
+
+    [*] --> pending : extraction creates span
+
+    pending --> verified : grep ✓ + semantic ✓
+    pending --> contested : grep ✗ + semantic ✓
+    pending --> flagged : grep ✗ + semantic ✗
+    pending --> invalid_snippet : ellipsis detected in snippet
+
+    state "Human Review" as hr {
+        contested --> verified : accept_as_is
+        flagged --> verified : accept_as_is
+        invalid_snippet --> verified : accept_as_is
+        contested --> verified : correction applied
+        flagged --> verified : correction applied
+    }
+
+    note right of flagged
+        Highest priority in
+        audit review queue
+    end note

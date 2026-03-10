@@ -327,4 +327,15 @@ def run_verification(db: ReviewDatabase, spec: ReviewSpec) -> dict:
         stats["confirmed"],
         stats["flagged"],
     )
+
+    # Auto-advance workflow: SCREENING_COMPLETE
+    try:
+        from engine.adjudication.workflow import complete_stage
+        complete_stage(
+            db._conn, "SCREENING_COMPLETE",
+            metadata=f"{stats['confirmed']} confirmed, {stats['flagged']} flagged",
+        )
+    except Exception:
+        pass  # Workflow table may not exist in test DBs
+
     return stats

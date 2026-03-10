@@ -39,7 +39,7 @@ ALLOWED_TRANSITIONS: dict[str, set[str]] = {
     "AI_AUDIT_COMPLETE": {"HUMAN_AUDIT_COMPLETE", "REJECTED"},
     # Terminal states with no forward transitions
     "SCREENED_OUT": set(),
-    "HUMAN_AUDIT_COMPLETE": set(),
+    "HUMAN_AUDIT_COMPLETE": {"REJECTED"},
     "REJECTED": set(),
 }
 
@@ -221,6 +221,10 @@ class ReviewDatabase:
 
     def _run_migrations(self) -> None:
         """Apply schema migrations, skipping those already applied."""
+        # Ensure adjudication table exists
+        from engine.adjudication.schema import ensure_adjudication_table
+        ensure_adjudication_table(self._conn)
+
         for sql in _SIMPLE_MIGRATIONS:
             try:
                 self._conn.execute(sql)

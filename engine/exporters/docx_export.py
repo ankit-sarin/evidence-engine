@@ -14,7 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 def export_evidence_docx(
-    db: ReviewDatabase, spec: ReviewSpec, output_path: str
+    db: ReviewDatabase, spec: ReviewSpec, output_path: str,
+    min_status: str = "AI_AUDIT_COMPLETE",
 ) -> None:
     """Export a professional evidence table as DOCX."""
     doc = Document()
@@ -43,8 +44,13 @@ def export_evidence_docx(
     all_cols = base_cols + field_names
 
     # Create table
+    from engine.core.database import _STATUS_ORDER
+    min_level = _STATUS_ORDER.get(min_status, 0)
+    qualifying = [s for s, lvl in _STATUS_ORDER.items() if lvl >= min_level]
+    placeholders = ", ".join("?" for _ in qualifying)
     papers = db._conn.execute(
-        "SELECT * FROM papers WHERE status IN ('AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE') ORDER BY id"
+        f"SELECT * FROM papers WHERE status IN ({placeholders}) ORDER BY id",
+        qualifying,
     ).fetchall()
 
     table = doc.add_table(rows=1 + len(papers), cols=len(all_cols))

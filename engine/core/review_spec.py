@@ -110,6 +110,10 @@ class ReviewSpec(BaseModel):
     screening_models: ScreeningModels = Field(default_factory=ScreeningModels)
     screening_criteria: ScreeningCriteria
     extraction_schema: ExtractionSchema
+    auditor_model: Optional[str] = Field(
+        default=None,
+        description="Ollama model for extraction audit. Defaults to gemma3:27b if not set.",
+    )
 
     # ── Protocol hashing ─────────────────────────────────────────
 

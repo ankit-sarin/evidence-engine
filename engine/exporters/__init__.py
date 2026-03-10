@@ -23,6 +23,7 @@ def export_all(
     spec: ReviewSpec,
     review_name: str,
     output_dir: str | None = None,
+    min_status: str = "AI_AUDIT_COMPLETE",
 ) -> dict:
     """Run all exports and return dict of file paths created."""
     if output_dir is None:
@@ -38,15 +39,15 @@ def export_all(
     paths["prisma_csv"] = prisma_path
 
     evidence_csv_path = str(out / "evidence_table.csv")
-    export_evidence_csv(db, spec, evidence_csv_path)
+    export_evidence_csv(db, spec, evidence_csv_path, min_status=min_status)
     paths["evidence_csv"] = evidence_csv_path
 
     evidence_xlsx_path = str(out / "evidence_table.xlsx")
-    export_evidence_excel(db, spec, evidence_xlsx_path)
+    export_evidence_excel(db, spec, evidence_xlsx_path, min_status=min_status)
     paths["evidence_xlsx"] = evidence_xlsx_path
 
     docx_path = str(out / "evidence_table.docx")
-    export_evidence_docx(db, spec, docx_path)
+    export_evidence_docx(db, spec, docx_path, min_status=min_status)
     paths["evidence_docx"] = docx_path
 
     methods_path = str(out / "methods_section.md")

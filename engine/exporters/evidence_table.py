@@ -16,11 +16,21 @@ logger = logging.getLogger(__name__)
 # ── Helpers ──────────────────────────────────────────────────────────
 
 
-def _build_evidence_rows(db: ReviewDatabase, spec: ReviewSpec) -> tuple[list[str], list[list]]:
+def _build_evidence_rows(
+    db: ReviewDatabase, spec: ReviewSpec,
+    min_status: str = "AI_AUDIT_COMPLETE",
+) -> tuple[list[str], list[list]]:
     """Build header and data rows for the evidence table.
+
+    Args:
+        min_status: Minimum paper status to include. Papers at or beyond this
+            status are included. Default "AI_AUDIT_COMPLETE" for raw AI output.
+            Use "HUMAN_AUDIT_COMPLETE" for human-verified production exports.
 
     Returns (headers, rows) where each row is one included paper.
     """
+    from engine.core.database import _STATUS_ORDER
+
     field_names = [f.name for f in spec.extraction_schema.fields]
 
     # Base columns
@@ -29,9 +39,13 @@ def _build_evidence_rows(db: ReviewDatabase, spec: ReviewSpec) -> tuple[list[str
     for fname in field_names:
         headers.extend([fname, f"{fname}_snippet", f"{fname}_confidence", f"{fname}_audit"])
 
-    # Get papers that have completed AI audit or beyond
+    # Get papers that meet or exceed min_status
+    min_level = _STATUS_ORDER.get(min_status, 0)
+    qualifying_statuses = [s for s, level in _STATUS_ORDER.items() if level >= min_level]
+    placeholders = ", ".join("?" for _ in qualifying_statuses)
     papers = db._conn.execute(
-        "SELECT * FROM papers WHERE status IN ('AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE') ORDER BY id"
+        f"SELECT * FROM papers WHERE status IN ({placeholders}) ORDER BY id",
+        qualifying_statuses,
     ).fetchall()
 
     rows = []
@@ -83,10 +97,11 @@ def _build_evidence_rows(db: ReviewDatabase, spec: ReviewSpec) -> tuple[list[str
 
 
 def export_evidence_csv(
-    db: ReviewDatabase, spec: ReviewSpec, output_path: str
+    db: ReviewDatabase, spec: ReviewSpec, output_path: str,
+    min_status: str = "AI_AUDIT_COMPLETE",
 ) -> None:
     """Export evidence table as CSV."""
-    headers, rows = _build_evidence_rows(db, spec)
+    headers, rows = _build_evidence_rows(db, spec, min_status=min_status)
 
     with open(output_path, "w", newline="") as f:
         writer = csv.writer(f)
@@ -100,7 +115,8 @@ def export_evidence_csv(
 
 
 def export_evidence_excel(
-    db: ReviewDatabase, spec: ReviewSpec, output_path: str
+    db: ReviewDatabase, spec: ReviewSpec, output_path: str,
+    min_status: str = "AI_AUDIT_COMPLETE",
 ) -> None:
     """Export evidence table as Excel with 3 sheets."""
     wb = openpyxl.Workbook()
@@ -108,7 +124,7 @@ def export_evidence_excel(
     # Sheet 1: Evidence Table
     ws1 = wb.active
     ws1.title = "Evidence Table"
-    headers, rows = _build_evidence_rows(db, spec)
+    headers, rows = _build_evidence_rows(db, spec, min_status=min_status)
     ws1.append(headers)
     for row in rows:
         ws1.append(row)

@@ -1,4 +1,8 @@
-"""Cross-model audit agent using Qwen3:32b to verify extractions."""
+"""Cross-model audit agent to verify extractions.
+
+Default model: qwen3:32b. Override via auditor_model in Review Spec YAML
+or the model parameter on individual functions.
+"""
 
 import logging
 import re
@@ -17,7 +21,7 @@ from engine.core.review_spec import ReviewSpec
 
 logger = logging.getLogger(__name__)
 
-MODEL = "qwen3:32b"
+DEFAULT_AUDITOR_MODEL = "gemma3:27b"
 
 # Fields at these tiers skip grep and go straight to semantic verification
 SEMANTIC_ONLY_TIERS = {4}
@@ -99,13 +103,15 @@ def grep_verify(source_snippet: str, paper_text: str) -> bool:
 
 
 def semantic_verify(
-    span: EvidenceSpan, paper_text: str, field_type: str = "text"
+    span: EvidenceSpan, paper_text: str, field_type: str = "text",
+    model: str | None = None, ollama_options: dict | None = None,
 ) -> AuditVerdict:
-    """Use Qwen3:32b to verify if extracted value matches the source snippet.
+    """Use an LLM to verify if extracted value matches the source snippet.
 
     For categorical fields, the prompt asks whether the source text supports
     the classification rather than whether it contains the exact phrase.
     """
+    model = model or DEFAULT_AUDITOR_MODEL
     if field_type == "categorical":
         verification_question = (
             f"Does the source snippet provide sufficient evidence to classify "
@@ -137,7 +143,7 @@ Source snippet from paper: {span.source_snippet}
 Respond with JSON: {{"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}}"""
 
     response = ollama.chat(
-        model=MODEL,
+        model=model,
         messages=[
             {
                 "role": "system",
@@ -153,7 +159,7 @@ Respond with JSON: {{"status": "verified" or "flagged", "grep_found": true, "rea
             {"role": "user", "content": prompt},
         ],
         format=AuditVerdict.model_json_schema(),
-        options={"temperature": 0},
+        options={**{"temperature": 0}, **(ollama_options or {})},
         think=False,
     )
 
@@ -166,7 +172,8 @@ Respond with JSON: {{"status": "verified" or "flagged", "grep_found": true, "rea
 
 def audit_span(
     span_data: dict, paper_text: str, field_type: str = "text",
-    field_tier: int = 1,
+    field_tier: int = 1, model: str | None = None,
+    ollama_options: dict | None = None,
 ) -> tuple[str, str]:
     """Audit a single evidence span. Returns (audit_status, reasoning).
 
@@ -176,6 +183,7 @@ def audit_span(
     - 'contested' — grep fail AND semantic pass (or Tier 4 semantic pass)
     - 'flagged' — semantic fail
     """
+    model = model or DEFAULT_AUDITOR_MODEL
     source_snippet = span_data.get("source_snippet", "")
     value = span_data.get("value", "")
 
@@ -210,7 +218,7 @@ def audit_span(
         confidence=span_data.get("confidence", 0.5),
         tier=field_tier,
     )
-    verdict = semantic_verify(span, paper_text, field_type=field_type)
+    verdict = semantic_verify(span, paper_text, field_type=field_type, model=model, ollama_options=ollama_options)
     semantic_pass = verdict.status == "verified"
 
     # Fix D: 4-state outcome
@@ -232,13 +240,21 @@ def audit_span(
 
 
 def run_audit(
-    db: ReviewDatabase, review_name: str, spec: Optional[ReviewSpec] = None
+    db: ReviewDatabase, review_name: str, spec: Optional[ReviewSpec] = None,
+    model: str | None = None,
 ) -> dict:
     """Audit all EXTRACTED papers. Returns stats dict.
 
     If spec is provided, field types and tiers from the extraction schema
     are used to route categorical fields and Tier 4 fields appropriately.
+
+    Model resolution: explicit model param > spec.auditor_model > DEFAULT_AUDITOR_MODEL.
     """
+    if model is None and spec and hasattr(spec, "auditor_model") and spec.auditor_model:
+        model = spec.auditor_model
+    model = model or DEFAULT_AUDITOR_MODEL
+    logger.info("Audit model: %s", model)
+
     # Build field_name → (type, tier) lookup from spec
     field_type_map: dict[str, str] = {}
     field_tier_map: dict[str, int] = {}
@@ -298,12 +314,13 @@ def run_audit(
 
             status, reasoning = audit_span(
                 span_data, paper_text, field_type=ft, field_tier=tier,
+                model=model,
             )
 
             db.update_audit(
                 span_id=span_data["id"],
                 status=status,
-                model=MODEL,
+                model=model,
                 rationale=reasoning,
             )
 

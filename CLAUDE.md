@@ -36,7 +36,7 @@ evidence-engine/
 │   │   ├── models.py           # EvidenceSpan, ExtractionResult models
 │   │   ├── screener.py         # Role-aware screening: primary (qwen3:8b) + verifier (gemma3:27b)
 │   │   ├── extractor.py        # Two-pass extraction (deepseek-r1:32b)
-│   │   └── auditor.py          # Cross-model audit (qwen3:32b)
+│   │   └── auditor.py          # Cross-model audit (gemma3:27b), ollama_options pass-through
 │   ├── cloud/
 │   │   ├── __init__.py         # Cloud extraction arm exports
 │   │   ├── base.py             # Shared logic: prompt build, span parsing, DB storage
@@ -47,15 +47,24 @@ evidence-engine/
 │   │   ├── __init__.py
 │   │   ├── models.py           # ParsedDocument model
 │   │   └── pdf_parser.py       # Docling + Qwen2.5-VL routing
+│   ├── adjudication/
+│   │   ├── __init__.py             # Re-exports for screening + audit adjudication
+│   │   ├── advance_stage.py        # CLI to advance workflow stages (9 stages)
+│   │   ├── audit_adjudicator.py    # Export/import audit review queue, spot-check, reject cascade
+│   │   ├── categorizer.py          # FP category config + keyword matching
+│   │   ├── schema.py               # screening_adjudication + audit_adjudication DDL
+│   │   ├── screening_adjudicator.py # Export/import screening adjudication queue
+│   │   └── workflow.py             # 9-stage workflow state machine (5 screening + 4 extraction)
 │   └── exporters/
-│       ├── __init__.py         # export_all() convenience function
+│       ├── __init__.py         # export_all() with min_status threading
 │       ├── prisma.py           # PRISMA flow data + CSV
-│       ├── evidence_table.py   # Evidence CSV + Excel (3-sheet)
-│       ├── docx_export.py      # DOCX formatted evidence table
+│       ├── evidence_table.py   # Evidence CSV + Excel (3-sheet), min_status filtering
+│       ├── docx_export.py      # DOCX formatted evidence table, min_status filtering
 │       ├── methods_section.py  # Auto-generated PRISMA methods paragraph
 │       └── trace_exporter.py   # Per-paper MD traces, quality report, disagreement pairs
 ├── scripts/
-│   ├── run_pipeline.py         # Full pipeline CLI (--spec, --name, --skip-to, --limit)
+│   ├── run_pipeline.py         # Full pipeline CLI with adjudication + audit review gates
+│   ├── eval_auditor_models.py  # Multi-model auditor evaluation (5-paper sample)
 │   ├── run_cloud_extraction.py # Cloud extraction CLI (--arm, --max-papers, --max-cost, --progress)
 │   ├── reextract_failed.py     # Re-extract specific failed papers with extended timeout
 │   ├── screen_expanded.py      # Three-phase expanded search screening (fetch/screen/verify)
@@ -67,18 +76,24 @@ evidence-engine/
 │   ├── run_expanded_screen_and_verify.sh  # Tmux launcher for expanded screening
 │   ├── watch_run4.sh           # Monitor screening progress
 │   └── test_e2e_search_screen.py  # Live E2E test: search + screen 20 papers
-├── tests/                      # 121 tests, all passing
+├── tests/                      # 266 tests (252 offline, 14 network/ollama)
 │   ├── test_review_spec.py     # 11 tests — YAML loading, hashing, validation
 │   ├── test_pubmed.py          #  5 tests — live PubMed queries
 │   ├── test_openalex.py        #  7 tests — live OpenAlex + abstract reconstruction
 │   ├── test_dedup.py           # 15 tests — DOI/PMID/fuzzy match, merge, stats
-│   ├── test_database.py        # 15 tests — tables, lifecycle, transitions, staleness
-│   ├── test_screener.py        #  8 tests — structured output, dual-pass logic (2 live Ollama)
+│   ├── test_database.py        # 27 tests — tables, lifecycle, transitions, staleness, reject, min_status
+│   ├── test_screener.py        # 11 tests — structured output, dual-pass, verification logic
 │   ├── test_pdf_parser.py      #  9 tests — hash, routing, Docling integration, versioning
-│   ├── test_extractor.py       # 12 tests — prompt, thinking trace, two-pass mocked flow
-│   ├── test_auditor.py         # 13 tests — grep verify, semantic verify, full audit mocked
+│   ├── test_extractor.py       # 17 tests — prompt, thinking trace, two-pass, ellipsis retry
+│   ├── test_auditor.py         # 26 tests — grep verify, semantic verify, full audit mocked
 │   ├── test_exporters.py       #  8 tests — PRISMA, CSV, Excel, DOCX, methods, export_all
 │   ├── test_cloud_extraction.py # 18 tests — cloud tables, span parsing, store, CLI
+│   ├── test_adjudication.py    # 37 tests — categorizer, screening export/import, gate checks
+│   ├── test_audit_adjudication.py # 15 tests — audit export/import, spot-check, reject, min_status
+│   ├── test_workflow.py        # 22 tests — 9-stage workflow enforcement, blockers, format
+│   ├── test_human_review.py    #  6 tests — human review queue export/import
+│   ├── test_background.py      #  7 tests — tmux background mode
+│   ├── test_trace_exporter.py  # 11 tests — per-paper traces, quality report, disagreements
 │   ├── e2e_test_log.md         # Test coverage notes
 │   └── e2e_search_screen_log.md  # Latest live E2E results
 └── data/                       # gitignored — per-review databases, PDFs, exports
@@ -91,7 +106,7 @@ evidence-engine/
 | Screener — Verifier | gemma3:27b | Strict verification of primary includes (full exclusion criteria) |
 | PDF Parser (A) | Docling + Qwen2.5-VL | Digital + scanned PDF to Markdown |
 | Extractor (B) | deepseek-r1:32b | Two-pass structured extraction with reasoning trace |
-| Auditor (C) | qwen3:32b | Cross-model verification of extractions |
+| Auditor (C) | gemma3:27b | Cross-model verification of extractions (ollama_options pass-through) |
 | Cloud Extractor (OpenAI) | o4-mini-2025-04-16 | Concordance arm — reasoning_effort=high |
 | Cloud Extractor (Anthropic) | claude-sonnet-4-6 | Concordance arm — extended thinking |
 
@@ -101,15 +116,16 @@ evidence-engine/
 - File system: Immutable PDF + parsed Markdown store
 
 ## Paper Lifecycle
-INGESTED → SCREENED_IN / SCREENED_OUT / SCREEN_FLAGGED → PDF_ACQUIRED → PARSED → EXTRACTED / EXTRACT_FAILED → AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE
+INGESTED → SCREENED_IN / SCREENED_OUT / SCREEN_FLAGGED → PDF_ACQUIRED → PARSED → EXTRACTED / EXTRACT_FAILED → AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE → REJECTED
 
 ## Pipeline Stages
 1. **SEARCH** — PubMed + OpenAlex → deduplicate → add to DB
 2. **SCREEN** — Role-aware dual-model: primary (qwen3:8b, high-recall, simplified exclusions) → verifier (gemma3:27b, strict, full exclusion criteria + 4 FP-catching tests)
 3. **PARSE** — Docling (digital) or Qwen2.5-VL (scanned) → Markdown
 4. **EXTRACT** — Pass 1: DeepSeek-R1 reasoning → Pass 2: structured JSON
-5. **AUDIT** — Grep verify + semantic verify via qwen3:32b
-6. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section
+5. **AUDIT** — Grep verify + semantic verify via gemma3:27b
+6. **ADJUDICATION GATE** — 9-stage workflow: 5 screening + 4 extraction audit (human review required)
+7. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section (min_status filtering)
 
 ## Inference
 - Local models via Ollama at localhost:11434. Temperature 0 for all agents.
@@ -123,6 +139,10 @@ INGESTED → SCREENED_IN / SCREENED_OUT / SCREEN_FLAGGED → PDF_ACQUIRED → PA
 - Evidence spans: source_snippet fields for traceability
 - Grep + semantic audit: check snippet exists in paper, then verify value matches
 - Per-review isolation: each review gets its own SQLite DB and directory tree
+- 9-stage workflow enforcement: SCREENING_COMPLETE → DIAGNOSTIC_SAMPLE_COMPLETE → CATEGORIES_CONFIGURED → QUEUE_EXPORTED → ADJUDICATION_COMPLETE → EXTRACTION_COMPLETE → AI_AUDIT_COMPLETE_STAGE → AUDIT_QUEUE_EXPORTED → AUDIT_REVIEW_COMPLETE
+- Audit adjudication: export contested/flagged spans to Excel, import human decisions (accept/override/reject), spot-check sampling with configurable threshold
+- min_status parameter on exporters: AI_AUDIT_COMPLETE (raw AI) vs HUMAN_AUDIT_COMPLETE (human-verified)
+- ollama_options pass-through: per-model Ollama settings (e.g., num_ctx for memory-constrained models)
 
 ## Running
 ```bash
@@ -141,8 +161,16 @@ PYTHONPATH=. python scripts/run_cloud_extraction.py --progress  # check status
 # Search + screen test (20 papers, live)
 python scripts/test_e2e_search_screen.py
 
+# Workflow status
+python -m engine.adjudication.advance_stage --review surgical_autonomy --status
+
+# Advance a workflow stage
+python -m engine.adjudication.advance_stage --review surgical_autonomy \
+    --stage DIAGNOSTIC_SAMPLE_COMPLETE --note "50-paper sample reviewed"
+
 # Test suite
-python -m pytest tests/ -v
+python -m pytest tests/ -v                           # all tests (266)
+python -m pytest tests/ -v -m "not network and not ollama"  # offline only (252)
 ```
 
 ## Current Review Status (surgical_autonomy)

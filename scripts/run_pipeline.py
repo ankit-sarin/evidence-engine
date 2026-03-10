@@ -13,6 +13,13 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from engine.adjudication.workflow import (
+    complete_stage,
+    format_workflow_status,
+    get_current_blocker,
+    is_adjudication_complete,
+    is_audit_review_complete,
+)
 from engine.agents.auditor import run_audit
 from engine.agents.extractor import run_extraction
 from engine.agents.screener import run_screening
@@ -32,6 +39,9 @@ logging.basicConfig(
 logger = logging.getLogger("pipeline")
 
 STAGES = ("search", "screen", "parse", "extract", "audit", "export")
+
+# Post-screening stages that require adjudication to be complete
+_POST_SCREENING_STAGES = {"parse", "extract", "audit", "export"}
 
 
 # ── Pipeline ─────────────────────────────────────────────────────────
@@ -54,6 +64,9 @@ def run_pipeline(
     # ── Init database ────────────────────────────────────────
     db = ReviewDatabase(review_name)
     logger.info("Database: %s", db.db_path)
+
+    # ── Print workflow status ────────────────────────────────
+    logger.info("\n%s", format_workflow_status(db._conn, review_name=review_name))
 
     # ── Record review run ────────────────────────────────────
     run_id = _start_review_run(db, spec)
@@ -78,6 +91,26 @@ def run_pipeline(
         if start_idx <= STAGES.index("screen"):
             results["screen"] = _stage_screen(db, spec, limit)
 
+        # ── ADJUDICATION GATE ─────────────────────────────────
+        # Check before any post-screening stage
+        target_stage = STAGES[start_idx] if skip_to else "parse"
+        if target_stage in _POST_SCREENING_STAGES:
+            if not is_adjudication_complete(db._conn):
+                blocker = get_current_blocker(db._conn)
+                if blocker:
+                    logger.error("")
+                    logger.error("BLOCKED: Adjudication workflow incomplete.")
+                    logger.error("Current stage: %s", blocker["stage_name"])
+                    logger.error("Next step: %s", blocker["next_step"])
+                    logger.error("")
+                    logger.error(
+                        "Run 'python -m engine.adjudication.advance_stage "
+                        "--review %s --status' for full workflow status.",
+                        review_name,
+                    )
+                    _finish_review_run(db, run_id, "blocked")
+                    return
+
         # ── PARSE ────────────────────────────────────────────
         if start_idx <= STAGES.index("parse"):
             results["parse"] = _stage_parse(db, review_name)
@@ -89,6 +122,51 @@ def run_pipeline(
         # ── AUDIT ────────────────────────────────────────────
         if start_idx <= STAGES.index("audit"):
             results["audit"] = _stage_audit(db, review_name, spec)
+
+            # Auto-advance extraction workflow stages
+            try:
+                # EXTRACTION_COMPLETE: all included papers at EXTRACTED or beyond
+                extracted = db._conn.execute(
+                    "SELECT COUNT(*) FROM papers WHERE status IN "
+                    "('EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')"
+                ).fetchone()[0]
+                if extracted > 0:
+                    complete_stage(
+                        db._conn, "EXTRACTION_COMPLETE",
+                        metadata=f"{extracted} papers extracted",
+                    )
+                # AI_AUDIT_COMPLETE_STAGE: audit run finished
+                audited = db._conn.execute(
+                    "SELECT COUNT(*) FROM papers WHERE status IN "
+                    "('AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')"
+                ).fetchone()[0]
+                if audited > 0:
+                    complete_stage(
+                        db._conn, "AI_AUDIT_COMPLETE_STAGE",
+                        metadata=f"{audited} papers audited",
+                    )
+            except Exception:
+                pass  # workflow table may not exist
+
+        # ── AUDIT REVIEW GATE ──────────────────────────────
+        if start_idx <= STAGES.index("export"):
+            if not is_audit_review_complete(db._conn):
+                blocker = get_current_blocker(db._conn)
+                if blocker and blocker["stage_name"] in (
+                    "AUDIT_QUEUE_EXPORTED", "AUDIT_REVIEW_COMPLETE",
+                ):
+                    logger.error("")
+                    logger.error("BLOCKED: Audit review workflow incomplete.")
+                    logger.error("Current stage: %s", blocker["stage_name"])
+                    logger.error("Next step: %s", blocker["next_step"])
+                    logger.error("")
+                    logger.error(
+                        "Run 'python -m engine.adjudication.advance_stage "
+                        "--review %s --status' for full workflow status.",
+                        review_name,
+                    )
+                    _finish_review_run(db, run_id, "blocked")
+                    return
 
         # ── EXPORT ───────────────────────────────────────────
         if start_idx <= STAGES.index("export"):

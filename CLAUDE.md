@@ -51,7 +51,7 @@ evidence-engine/
 │   │   ├── __init__.py         # Re-exports: check_oa_status, download_papers, generate_manual_list
 │   │   ├── check_oa.py         # Unpaywall API OA status + PDF URL lookup, rate-limited, idempotent
 │   │   ├── download.py         # 5-strategy cascade downloader (Unpaywall → PMC → IEEE → MDPI → DOI redirect)
-│   │   └── manual_list.py      # HTML + CSV manual download list with localStorage progress
+│   │   └── manual_list.py      # HTML + CSV manual download list, multi-link (Scholar/DOI/PubMed/Proxy), localStorage progress
 │   ├── adjudication/
 │   │   ├── __init__.py             # Re-exports for screening + audit adjudication
 │   │   ├── advance_stage.py        # CLI to advance workflow stages (10 stages)
@@ -146,7 +146,7 @@ INGESTED → SCREENED_IN / SCREENED_OUT / SCREEN_FLAGGED → PDF_ACQUIRED → PA
 - Grep + semantic audit: check snippet exists in paper, then verify value matches
 - Per-review isolation: each review gets its own SQLite DB and directory tree
 - 10-stage workflow enforcement: SCREENING_COMPLETE → DIAGNOSTIC_SAMPLE_COMPLETE → CATEGORIES_CONFIGURED → QUEUE_EXPORTED → ADJUDICATION_COMPLETE → PDF_ACQUISITION → EXTRACTION_COMPLETE → AI_AUDIT_COMPLETE_STAGE → AUDIT_QUEUE_EXPORTED → AUDIT_REVIEW_COMPLETE
-- PDF acquisition: 5-strategy cascade (Unpaywall direct → PMC OA package → IEEE stamp scrape → MDPI URL construction → DOI redirect with content negotiation), %PDF magic byte validation, strategy logging, --background tmux support
+- PDF acquisition: 5-strategy cascade (Unpaywall direct → PMC OA package → IEEE stamp scrape → MDPI URL construction → DOI redirect with content negotiation), %PDF magic byte validation, strategy logging, --background tmux support. Manual download list shows multi-link options per paper (Google Scholar, Direct DOI, PubMed, Institutional Proxy) — proxy requires browser-level VPN/SSO
 - Audit adjudication: export contested/flagged spans to Excel, import human decisions (accept/override/reject), spot-check sampling with configurable threshold
 - min_status parameter on exporters: AI_AUDIT_COMPLETE (raw AI) vs HUMAN_AUDIT_COMPLETE (human-verified)
 - ollama_options pass-through: per-model Ollama settings (e.g., num_ctx for memory-constrained models)

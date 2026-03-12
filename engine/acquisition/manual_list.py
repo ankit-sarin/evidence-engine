@@ -26,15 +26,27 @@ logger = logging.getLogger(__name__)
 DEFAULT_PROXY = "https://doi-org.libproxy.ucdavis.edu/{doi}"
 
 
-def _make_link(doi: str | None, pmid: str | None, title: str,
-               proxy_pattern: str) -> tuple[str, str]:
-    """Return (url, label) for the best download link."""
+def _make_links(doi: str | None, pmid: str | None, title: str,
+                proxy_pattern: str) -> list[tuple[str, str]]:
+    """Return list of (url, label) for all available download links.
+
+    Always includes Google Scholar. Adds Direct DOI, PubMed, and
+    Institutional Proxy when identifiers are available.
+    """
+    links = []
+    # Google Scholar — most reliable fallback, always available
+    links.append((
+        f"https://scholar.google.com/scholar?q={quote_plus(title)}",
+        "Google Scholar",
+    ))
+    if doi:
+        links.append((f"https://doi.org/{doi}", "Direct DOI"))
+    if pmid:
+        links.append((f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/", "PubMed"))
     if doi:
         url = proxy_pattern.replace("{doi}", doi)
-        return url, "Institutional Proxy"
-    if pmid:
-        return f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/", "PubMed"
-    return f"https://scholar.google.com/scholar?q={quote_plus(title)}", "Google Scholar"
+        links.append((url, "Proxy"))
+    return links
 
 
 def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict:
@@ -87,12 +99,13 @@ def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict
     # ── CSV ─────────────────────────────────────────────────────
     csv_path = out_dir / "manual_downloads_needed.csv"
     csv_cols = ["ee_id", "paper_id", "title", "doi", "pmid", "oa_status",
-                "download_status", "link", "link_type"]
+                "download_status", "google_scholar", "direct_doi", "pubmed", "proxy"]
     with open(csv_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=csv_cols)
         writer.writeheader()
         for p in missing:
-            url, label = _make_link(p["doi"], p["pmid"], p["title"], proxy_pattern)
+            links = _make_links(p["doi"], p["pmid"], p["title"], proxy_pattern)
+            link_map = {label: url for url, label in links}
             writer.writerow({
                 "ee_id": p["ee_identifier"] or "",
                 "paper_id": p["id"],
@@ -101,8 +114,10 @@ def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict
                 "pmid": p["pmid"] or "",
                 "oa_status": p["oa_status"] or "",
                 "download_status": p["download_status"] or "",
-                "link": url,
-                "link_type": label,
+                "google_scholar": link_map.get("Google Scholar", ""),
+                "direct_doi": link_map.get("Direct DOI", ""),
+                "pubmed": link_map.get("PubMed", ""),
+                "proxy": link_map.get("Proxy", ""),
             })
     print(f"CSV saved → {csv_path}")
 
@@ -111,12 +126,19 @@ def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict
 
     rows_html = []
     for p in missing:
-        url, label = _make_link(p["doi"], p["pmid"], p["title"], proxy_pattern)
+        links = _make_links(p["doi"], p["pmid"], p["title"], proxy_pattern)
         esc_title = html_mod.escape(p["title"])
         title_trunc = esc_title[:80] + ("..." if len(esc_title) > 80 else "")
         doi_display = html_mod.escape(p["doi"]) if p["doi"] else "<em>none</em>"
         ee_display = html_mod.escape(p["ee_identifier"] or "—")
         oa_display = html_mod.escape(p["oa_status"] or "—")
+
+        link_parts = []
+        for url, label in links:
+            link_parts.append(
+                f'<a href="{html_mod.escape(url)}" target="_blank">{label}</a>'
+            )
+        links_cell = " &middot; ".join(link_parts)
 
         rows_html.append(f"""      <tr>
         <td><input type="checkbox" id="cb-{p['id']}" onchange="updateCount()"></td>
@@ -125,7 +147,7 @@ def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict
         <td title="{esc_title}">{title_trunc}</td>
         <td class="doi">{doi_display}</td>
         <td>{oa_display}</td>
-        <td><a href="{html_mod.escape(url)}" target="_blank">{label}</a></td>
+        <td class="links">{links_cell}</td>
         <td class="save-as">{p['id']}.pdf</td>
       </tr>""")
 
@@ -155,6 +177,8 @@ def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict
   .doi {{ font-family: monospace; font-size: 0.8rem; color: #666; }}
   .ee {{ font-family: monospace; font-weight: 600; color: #0A5E56; }}
   .save-as {{ font-family: monospace; font-weight: 600; color: #B85D3A; }}
+  .links {{ white-space: nowrap; }}
+  .links a {{ margin: 0 0.15rem; }}
   a {{ color: #0A5E56; }}
   input[type="checkbox"] {{ transform: scale(1.2); cursor: pointer; }}
   tr:has(input:checked) {{ opacity: 0.5; text-decoration: line-through; }}
@@ -167,8 +191,8 @@ def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict
 <div class="instructions">
   <strong>Instructions:</strong>
   <ol>
-    <li>Connect to <strong>UC Davis VPN</strong> or log into the library proxy first.</li>
-    <li>Click each link to open the publisher page in a new tab.</li>
+    <li>Connect to your <strong>institutional VPN</strong> for best results (enables Direct DOI and Proxy links).</li>
+    <li>Click any link to open the publisher page — try <strong>Google Scholar</strong> first (shows institutional access), then Direct DOI or PubMed.</li>
     <li>Download the PDF and save it as <code>data/{review_name}/pdfs/<strong>{{paper_id}}</strong>.pdf</code></li>
     <li>Check the box when done. Progress is tracked locally in your browser.</li>
   </ol>
@@ -191,7 +215,7 @@ def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict
       <th>Title</th>
       <th>DOI</th>
       <th>OA Status</th>
-      <th>Link</th>
+      <th>Links</th>
       <th>Save As</th>
     </tr>
   </thead>

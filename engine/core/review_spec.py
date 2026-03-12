@@ -120,7 +120,13 @@ class ReviewSpec(BaseModel):
     )
     institutional_proxy_pattern: Optional[str] = Field(
         default=None,
-        description="Institutional proxy URL pattern with {doi} placeholder for manual downloads.",
+        description=(
+            "Institutional proxy URL pattern with {doi} placeholder for manual downloads. "
+            "Proxy URL patterns vary by institution (e.g., libproxy, EZproxy) and typically "
+            "require browser-level VPN or SSO authentication to work. The manual download "
+            "list uses this as one of several link options alongside Google Scholar, Direct "
+            "DOI, and PubMed."
+        ),
     )
 
     # ── Protocol hashing ─────────────────────────────────────────

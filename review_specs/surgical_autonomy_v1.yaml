@@ -33,6 +33,8 @@ search_strategy:
   date_range: [2010, 2025]
 
 unpaywall_email: "axsarin@health.ucdavis.edu"
+# Proxy URL patterns vary by institution. Requires browser-level VPN/SSO to work.
+# The manual download list also generates Google Scholar, Direct DOI, and PubMed links.
 institutional_proxy_pattern: "https://doi-org.libproxy.ucdavis.edu/{doi}"
 
 screening_models:

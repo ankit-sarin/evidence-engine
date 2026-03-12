@@ -1,4 +1,4 @@
-"""Review adjudication workflow — 9-stage sequential enforcement.
+"""Review adjudication workflow — 10-stage sequential enforcement.
 
 Screening stages (1–5):
   1. SCREENING_COMPLETE        — auto: set when screening finishes
@@ -7,11 +7,14 @@ Screening stages (1–5):
   4. QUEUE_EXPORTED            — auto: export_adjudication_queue succeeds
   5. ADJUDICATION_COMPLETE     — auto: import with zero unresolved papers
 
-Extraction stages (6–9):
-  6. EXTRACTION_COMPLETE       — auto: all included papers reach EXTRACTED status
-  7. AI_AUDIT_COMPLETE_STAGE   — auto: audit run finishes (all papers audited)
-  8. AUDIT_QUEUE_EXPORTED      — auto: export_audit_review_queue succeeds
-  9. AUDIT_REVIEW_COMPLETE     — auto: import with zero unresolved spans
+PDF acquisition stage (6):
+  6. PDF_ACQUISITION           — manual: advance after all PDFs acquired
+
+Extraction stages (7–10):
+  7. EXTRACTION_COMPLETE       — auto: all included papers reach EXTRACTED status
+  8. AI_AUDIT_COMPLETE_STAGE   — auto: audit run finishes (all papers audited)
+  9. AUDIT_QUEUE_EXPORTED      — auto: export_audit_review_queue succeeds
+ 10. AUDIT_REVIEW_COMPLETE     — auto: import with zero unresolved spans
 """
 
 import logging
@@ -21,7 +24,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-# Ordered workflow stages — screening (1-5) then extraction (6-9)
+# Ordered workflow stages — screening (1-5), PDF acquisition (6), extraction (7-10)
 WORKFLOW_STAGES = (
     "SCREENING_COMPLETE",
     "DIAGNOSTIC_SAMPLE_COMPLETE",

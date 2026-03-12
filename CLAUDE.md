@@ -47,14 +47,19 @@ evidence-engine/
 │   │   ├── __init__.py
 │   │   ├── models.py           # ParsedDocument model
 │   │   └── pdf_parser.py       # Docling + Qwen2.5-VL routing
+│   ├── acquisition/
+│   │   ├── __init__.py         # Re-exports: check_oa_status, download_papers, generate_manual_list
+│   │   ├── check_oa.py         # Unpaywall API OA status + PDF URL lookup, rate-limited, idempotent
+│   │   ├── download.py         # 5-strategy cascade downloader (Unpaywall → PMC → IEEE → MDPI → DOI redirect)
+│   │   └── manual_list.py      # HTML + CSV manual download list with localStorage progress
 │   ├── adjudication/
 │   │   ├── __init__.py             # Re-exports for screening + audit adjudication
-│   │   ├── advance_stage.py        # CLI to advance workflow stages (9 stages)
+│   │   ├── advance_stage.py        # CLI to advance workflow stages (10 stages)
 │   │   ├── audit_adjudicator.py    # Export/import audit review queue, spot-check, reject cascade
 │   │   ├── categorizer.py          # FP category config + keyword matching
 │   │   ├── schema.py               # screening_adjudication + audit_adjudication DDL
 │   │   ├── screening_adjudicator.py # Export/import screening adjudication queue
-│   │   └── workflow.py             # 9-stage workflow state machine (5 screening + 4 extraction)
+│   │   └── workflow.py             # 10-stage workflow state machine (5 screening + 1 acquisition + 4 extraction)
 │   └── exporters/
 │       ├── __init__.py         # export_all() with min_status threading
 │       ├── prisma.py           # PRISMA flow data + CSV
@@ -76,7 +81,7 @@ evidence-engine/
 │   ├── run_expanded_screen_and_verify.sh  # Tmux launcher for expanded screening
 │   ├── watch_run4.sh           # Monitor screening progress
 │   └── test_e2e_search_screen.py  # Live E2E test: search + screen 20 papers
-├── tests/                      # 266 tests (252 offline, 14 network/ollama)
+├── tests/                      # 256 offline + 10 network/ollama tests
 │   ├── test_review_spec.py     # 11 tests — YAML loading, hashing, validation
 │   ├── test_pubmed.py          #  5 tests — live PubMed queries
 │   ├── test_openalex.py        #  7 tests — live OpenAlex + abstract reconstruction
@@ -90,7 +95,7 @@ evidence-engine/
 │   ├── test_cloud_extraction.py # 18 tests — cloud tables, span parsing, store, CLI
 │   ├── test_adjudication.py    # 37 tests — categorizer, screening export/import, gate checks
 │   ├── test_audit_adjudication.py # 15 tests — audit export/import, spot-check, reject, min_status
-│   ├── test_workflow.py        # 22 tests — 9-stage workflow enforcement, blockers, format
+│   ├── test_workflow.py        # 30 tests — 10-stage workflow enforcement, blockers, format
 │   ├── test_human_review.py    #  6 tests — human review queue export/import
 │   ├── test_background.py      #  7 tests — tmux background mode
 │   ├── test_trace_exporter.py  # 11 tests — per-paper traces, quality report, disagreements
@@ -121,11 +126,12 @@ INGESTED → SCREENED_IN / SCREENED_OUT / SCREEN_FLAGGED → PDF_ACQUIRED → PA
 ## Pipeline Stages
 1. **SEARCH** — PubMed + OpenAlex → deduplicate → add to DB
 2. **SCREEN** — Role-aware dual-model: primary (qwen3:8b, high-recall, simplified exclusions) → verifier (gemma3:27b, strict, full exclusion criteria + 4 FP-catching tests)
-3. **PARSE** — Docling (digital) or Qwen2.5-VL (scanned) → Markdown
-4. **EXTRACT** — Pass 1: DeepSeek-R1 reasoning → Pass 2: structured JSON
-5. **AUDIT** — Grep verify + semantic verify via gemma3:27b
-6. **ADJUDICATION GATE** — 9-stage workflow: 5 screening + 4 extraction audit (human review required)
-7. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section (min_status filtering)
+3. **ACQUIRE** — Unpaywall OA check → 5-strategy cascade download (Unpaywall → PMC OA → IEEE stamp → MDPI → DOI redirect) → manual list for remainder
+4. **PARSE** — Docling (digital) or Qwen2.5-VL (scanned) → Markdown
+5. **EXTRACT** — Pass 1: DeepSeek-R1 reasoning → Pass 2: structured JSON
+6. **AUDIT** — Grep verify + semantic verify via gemma3:27b
+7. **ADJUDICATION GATE** — 10-stage workflow: 5 screening + 1 acquisition + 4 extraction audit (human review required)
+8. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section (min_status filtering)
 
 ## Inference
 - Local models via Ollama at localhost:11434. Temperature 0 for all agents.
@@ -139,7 +145,8 @@ INGESTED → SCREENED_IN / SCREENED_OUT / SCREEN_FLAGGED → PDF_ACQUIRED → PA
 - Evidence spans: source_snippet fields for traceability
 - Grep + semantic audit: check snippet exists in paper, then verify value matches
 - Per-review isolation: each review gets its own SQLite DB and directory tree
-- 9-stage workflow enforcement: SCREENING_COMPLETE → DIAGNOSTIC_SAMPLE_COMPLETE → CATEGORIES_CONFIGURED → QUEUE_EXPORTED → ADJUDICATION_COMPLETE → EXTRACTION_COMPLETE → AI_AUDIT_COMPLETE_STAGE → AUDIT_QUEUE_EXPORTED → AUDIT_REVIEW_COMPLETE
+- 10-stage workflow enforcement: SCREENING_COMPLETE → DIAGNOSTIC_SAMPLE_COMPLETE → CATEGORIES_CONFIGURED → QUEUE_EXPORTED → ADJUDICATION_COMPLETE → PDF_ACQUISITION → EXTRACTION_COMPLETE → AI_AUDIT_COMPLETE_STAGE → AUDIT_QUEUE_EXPORTED → AUDIT_REVIEW_COMPLETE
+- PDF acquisition: 5-strategy cascade (Unpaywall direct → PMC OA package → IEEE stamp scrape → MDPI URL construction → DOI redirect with content negotiation), %PDF magic byte validation, strategy logging, --background tmux support
 - Audit adjudication: export contested/flagged spans to Excel, import human decisions (accept/override/reject), spot-check sampling with configurable threshold
 - min_status parameter on exporters: AI_AUDIT_COMPLETE (raw AI) vs HUMAN_AUDIT_COMPLETE (human-verified)
 - ollama_options pass-through: per-model Ollama settings (e.g., num_ctx for memory-constrained models)
@@ -153,6 +160,11 @@ python scripts/run_pipeline.py --spec review_specs/surgical_autonomy_v1.yaml --n
 python scripts/screen_expanded.py                # all phases
 python scripts/screen_expanded.py --screen-only  # primary dual-pass only
 python scripts/screen_expanded.py --verify-only  # verification pass only
+
+# PDF acquisition (OA check → download → manual list)
+python -m engine.acquisition.check_oa --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
+python -m engine.acquisition.download --review surgical_autonomy [--retry] [--background]
+python -m engine.acquisition.manual_list --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
 
 # Cloud extraction (concordance study)
 PYTHONPATH=. python scripts/run_cloud_extraction.py --arm both --max-cost 25.00
@@ -170,17 +182,19 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy \
 
 # Test suite
 python -m pytest tests/ -v                           # all tests (266)
-python -m pytest tests/ -v -m "not network and not ollama"  # offline only (252)
+python -m pytest tests/ -v -m "not network and not ollama"  # offline only (256)
 ```
 
 ## Current Review Status (surgical_autonomy)
-- **Original corpus: 251 papers** (PubMed + OpenAlex, deduplicated)
-  - 156 SCREENED_OUT, **95 AI_AUDIT_COMPLETE** (active corpus)
+- **Total DB: 804 papers** (251 original + 553 expanded)
+  - 156 SCREENED_OUT, **648 included** (active corpus)
   - 5 excluded in manual review: db_id 37, 149 (HSMR extended abstracts), 225 (SPR pediatric radiology), 229 (assistive not autonomous), 105 (VR sim, no autonomous robot)
-- 95 local extractions, 1,429 evidence spans (872 verified / 557 flagged)
+- **Original corpus (EE-001 to EE-099, id ≤ 251):** 95 included, all PDFs downloaded, 95 local extractions, 1,429 evidence spans (872 verified / 557 flagged)
 - Cloud concordance extraction: 95 papers × 2 arms (OpenAI o4-mini + Anthropic Sonnet 4.6) — complete
 - Concordance PDFs: `data/surgical_autonomy/concordance_pdfs/` with EE-001 to EE-099 (gaps at EE-019, EE-062, EE-094)
-- **Expanded search: ~9,787 net-new papers** — screening in progress (three-phase pipeline)
+- **Expanded corpus (EE-100+, id > 251):** 553 included, 142 PDFs downloaded (25.7%), 411 failed — mostly closed-access 2025 publications
+  - Failed by publisher: IEEE (193), Other (79), Elsevier (56), Springer/Nature (31), Wiley (20), MDPI (11), T&F/SAGE (10), Science (7), WK (4)
+  - Manual download list: `data/surgical_autonomy/pdf_acquisition/manual_download_list.html`
 - Exports: `data/surgical_autonomy/exports/` (evidence CSV/Excel/DOCX, PRISMA CSV, methods section, trace archives)
 
 ## Known Issues & Fixes

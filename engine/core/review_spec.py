@@ -114,6 +114,14 @@ class ReviewSpec(BaseModel):
         default=None,
         description="Ollama model for extraction audit. Defaults to gemma3:27b if not set.",
     )
+    unpaywall_email: Optional[str] = Field(
+        default=None,
+        description="Email for Unpaywall API queries (required for OA checking).",
+    )
+    institutional_proxy_pattern: Optional[str] = Field(
+        default=None,
+        description="Institutional proxy URL pattern with {doi} placeholder for manual downloads.",
+    )
 
     # ── Protocol hashing ─────────────────────────────────────────
 

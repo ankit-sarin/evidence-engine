@@ -165,6 +165,12 @@ CREATE INDEX IF NOT EXISTS idx_verification_paper ON verification_decisions(pape
 
 _SIMPLE_MIGRATIONS = [
     "ALTER TABLE papers ADD COLUMN rejected_reason TEXT",
+    "ALTER TABLE papers ADD COLUMN ee_identifier TEXT",
+    "ALTER TABLE papers ADD COLUMN oa_status TEXT",
+    "ALTER TABLE papers ADD COLUMN pdf_url TEXT",
+    "ALTER TABLE papers ADD COLUMN download_status TEXT DEFAULT 'pending' CHECK (download_status IN ('pending', 'success', 'failed', 'manual'))",
+    "ALTER TABLE papers ADD COLUMN pdf_local_path TEXT",
+    "ALTER TABLE papers ADD COLUMN acquisition_date TEXT",
 ]
 
 _EVIDENCE_SPANS_REBUILD = """

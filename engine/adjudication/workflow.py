@@ -28,6 +28,7 @@ WORKFLOW_STAGES = (
     "CATEGORIES_CONFIGURED",
     "QUEUE_EXPORTED",
     "ADJUDICATION_COMPLETE",
+    "PDF_ACQUISITION",
     "EXTRACTION_COMPLETE",
     "AI_AUDIT_COMPLETE_STAGE",
     "AUDIT_QUEUE_EXPORTED",
@@ -36,7 +37,8 @@ WORKFLOW_STAGES = (
 
 # Subsets for display grouping
 SCREENING_STAGES = WORKFLOW_STAGES[:5]
-EXTRACTION_STAGES = WORKFLOW_STAGES[5:]
+ACQUISITION_STAGES = WORKFLOW_STAGES[5:6]
+EXTRACTION_STAGES = WORKFLOW_STAGES[6:]
 
 # Human-readable next-step guidance per stage
 _NEXT_STEP_GUIDANCE = {
@@ -63,6 +65,13 @@ _NEXT_STEP_GUIDANCE = {
     "ADJUDICATION_COMPLETE": (
         "Complete human review of the exported screening queue, then run:\n"
         "  import_adjudication_decisions(review_db, <path_to_completed_xlsx>)"
+    ),
+    "PDF_ACQUISITION": (
+        "Acquire PDFs for all included papers (OA check + download + manual).\n"
+        "  python -m engine.acquisition.check_oa --review <name>\n"
+        "  python -m engine.acquisition.download --review <name>\n"
+        "  python -m engine.acquisition.manual_list --review <name>\n"
+        "  Then advance manually when all PDFs are acquired."
     ),
     "EXTRACTION_COMPLETE": (
         "Run full-text extraction on all included papers:\n"
@@ -310,6 +319,8 @@ def format_workflow_status(conn: sqlite3.Connection,
         # Section headers
         if i == 0:
             lines.append("  ── Screening Adjudication ──")
+        elif s["stage_name"] == "PDF_ACQUISITION":
+            lines.append("  ── PDF Acquisition ──")
         elif s["stage_name"] == "EXTRACTION_COMPLETE":
             lines.append("  ── Extraction Audit ──")
         if s["status"] == "complete":

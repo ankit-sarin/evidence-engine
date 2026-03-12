@@ -32,6 +32,9 @@ search_strategy:
     - '("autonomous" OR "autonomy" OR "self-directed" OR "automated")'
   date_range: [2010, 2025]
 
+unpaywall_email: "axsarin@health.ucdavis.edu"
+institutional_proxy_pattern: "https://doi-org.libproxy.ucdavis.edu/{doi}"
+
 screening_models:
   primary: "qwen3:8b"
   verification: "gemma3:27b"

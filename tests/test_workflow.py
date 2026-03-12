@@ -44,7 +44,7 @@ def test_workflow_table_seeded(db):
     rows = db._conn.execute(
         "SELECT stage_name, status FROM workflow_state ORDER BY id"
     ).fetchall()
-    assert len(rows) == 9
+    assert len(rows) == 10
     assert [r["stage_name"] for r in rows] == list(WORKFLOW_STAGES)
     assert all(r["status"] == "pending" for r in rows)
 
@@ -53,7 +53,7 @@ def test_ensure_idempotent(db):
     ensure_workflow_table(db._conn)
     ensure_workflow_table(db._conn)
     rows = db._conn.execute("SELECT COUNT(*) FROM workflow_state").fetchone()
-    assert rows[0] == 9
+    assert rows[0] == 10
 
 
 # ── Stage Completion Tests ──────────────────────────────────────────
@@ -215,7 +215,7 @@ def test_format_workflow_status_all_complete(db):
     for stage in WORKFLOW_STAGES:
         complete_stage(db._conn, stage)
     output = format_workflow_status(db._conn)
-    assert output.count("[✓]") == 9
+    assert output.count("[✓]") == 10
     assert "[ ]" not in output
 
 
@@ -224,10 +224,11 @@ def test_format_workflow_status_all_complete(db):
 
 def test_get_workflow_status_returns_all_stages(db):
     statuses = get_workflow_status(db._conn)
-    assert len(statuses) == 9
+    assert len(statuses) == 10
     assert statuses[0]["stage_name"] == "SCREENING_COMPLETE"
     assert statuses[4]["stage_name"] == "ADJUDICATION_COMPLETE"
-    assert statuses[8]["stage_name"] == "AUDIT_REVIEW_COMPLETE"
+    assert statuses[5]["stage_name"] == "PDF_ACQUISITION"
+    assert statuses[9]["stage_name"] == "AUDIT_REVIEW_COMPLETE"
 
 
 def test_get_workflow_status_tracks_metadata(db):

@@ -16,4 +16,9 @@ def generate_manual_list(*args, **kwargs):
     return _fn(*args, **kwargs)
 
 
-__all__ = ["check_oa_status", "download_papers", "generate_manual_list"]
+def verify_downloads(*args, **kwargs):
+    from engine.acquisition.verify_downloads import verify_downloads as _fn
+    return _fn(*args, **kwargs)
+
+
+__all__ = ["check_oa_status", "download_papers", "generate_manual_list", "verify_downloads"]

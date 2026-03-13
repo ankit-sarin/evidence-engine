@@ -49,10 +49,11 @@ evidence-engine/
 │   │   ├── models.py           # ParsedDocument model
 │   │   └── pdf_parser.py       # Docling + Qwen2.5-VL routing
 │   ├── acquisition/
-│   │   ├── __init__.py         # Re-exports: check_oa_status, download_papers, generate_manual_list
+│   │   ├── __init__.py         # Re-exports: check_oa_status, download_papers, generate_manual_list, verify_downloads
 │   │   ├── check_oa.py         # Unpaywall API OA status + PDF URL lookup, rate-limited, idempotent
 │   │   ├── download.py         # 5-strategy cascade downloader (Unpaywall → PMC → IEEE → MDPI → DOI redirect)
-│   │   └── manual_list.py      # HTML + CSV manual download list, multi-link (Scholar/DOI/PubMed/Proxy), localStorage progress
+│   │   ├── manual_list.py      # HTML + CSV manual download list, publisher grouping, naming convention, verify command
+│   │   └── verify_downloads.py # Scan/match/validate/rename PDFs to EE-{nnn}_{Author}_{Year}.pdf, update DB
 │   ├── migrations/
 │   │   ├── __init__.py
 │   │   ├── 002_screening_rename.py     # Rename SCREENED_IN/OUT → ABSTRACT_SCREENED_IN/OUT
@@ -68,6 +69,7 @@ evidence-engine/
 │   │   └── workflow.py             # 12-stage workflow (5 abstract + 1 acquisition + 2 FT + 4 extraction)
 │   └── exporters/
 │       ├── __init__.py         # export_all() with min_status threading
+│       ├── review_workbook.py  # Shared self-documenting Excel workbook builder (DataValidation, conditional formatting)
 │       ├── prisma.py           # PRISMA flow data + CSV
 │       ├── evidence_table.py   # Evidence CSV + Excel (3-sheet), min_status filtering
 │       ├── docx_export.py      # DOCX formatted evidence table, min_status filtering
@@ -89,7 +91,7 @@ evidence-engine/
 │   ├── run_expanded_screen_and_verify.sh  # Tmux launcher for expanded screening
 │   ├── watch_run4.sh           # Monitor screening progress
 │   └── test_e2e_search_screen.py  # Live E2E test: search + screen 20 papers
-├── tests/                      # 332 offline + 10 network/ollama tests
+├── tests/                      # 377 offline + 10 network/ollama tests
 │   ├── test_review_spec.py     # 11 tests — YAML loading, hashing, validation
 │   ├── test_pubmed.py          #  5 tests — live PubMed queries
 │   ├── test_openalex.py        #  7 tests — live OpenAlex + abstract reconstruction
@@ -102,13 +104,14 @@ evidence-engine/
 │   ├── test_exporters.py       #  8 tests — PRISMA, CSV, Excel, DOCX, methods, export_all
 │   ├── test_cloud_extraction.py # 18 tests — cloud tables, span parsing, store, CLI
 │   ├── test_adjudication.py    # 37 tests — categorizer, screening export/import, gate checks
-│   ├── test_audit_adjudication.py # 15 tests — audit export/import, spot-check, reject, min_status
+│   ├── test_audit_adjudication.py # 17 tests — per-span audit export/import, spot-check, reject, flatten
 │   ├── test_workflow.py        # 30 tests — 12-stage workflow enforcement, blockers, format
 │   ├── test_ft_screening.py    # 61 tests — FT screening pipeline, adjudication, prompts, truncation
 │   ├── test_low_yield.py       # 15 tests — LOW_YIELD detection, audit queue, PRISMA
 │   ├── test_human_review.py    #  6 tests — human review queue export/import
 │   ├── test_background.py      #  7 tests — tmux background mode
 │   ├── test_trace_exporter.py  # 11 tests — per-paper traces, quality report, disagreements
+│   ├── test_verify_downloads.py # 40 tests — author cleaning, canonical names, PDF validation, verify/rename integration
 │   ├── e2e_test_log.md         # Test coverage notes
 │   └── e2e_search_screen_log.md  # Latest live E2E results
 └── data/                       # gitignored — per-review databases, PDFs, exports
@@ -163,8 +166,12 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - Full-text screening: dual-model cross-family (Qwen3.5:27b + Gemma3:27b), specialty scope filtering, /no_think mode, text truncation (32K chars), checkpoint/resume, 7 reason codes
 - LOW_YIELD detection: post-audit quality gate — flags papers with fewer than N populated fields (default 4, configurable via low_yield_threshold). Included in audit queue export for PI review. PRISMA reports LOW_YIELD rejections as distinct category.
 - Abstract retention policy: all paper data retained permanently regardless of screening outcome — ABSTRACT_SCREENED_OUT is a label, not a deletion
-- PDF acquisition: 5-strategy cascade (Unpaywall direct → PMC OA package → IEEE stamp scrape → MDPI URL construction → DOI redirect with content negotiation), %PDF magic byte validation, strategy logging, --background tmux support. Manual download list shows multi-link options per paper (Google Scholar, Direct DOI, PubMed, Institutional Proxy) — proxy requires browser-level VPN/SSO
-- Audit adjudication: export contested/flagged spans to Excel, import human decisions (accept/override/reject), spot-check sampling with configurable threshold
+- PDF acquisition: 5-strategy cascade (Unpaywall direct → PMC OA package → IEEE stamp scrape → MDPI URL construction → DOI redirect with content negotiation), %PDF magic byte validation, strategy logging, --background tmux support. Manual download list shows multi-link options per paper (Google Scholar, Direct DOI, PubMed, Institutional Proxy) with publisher grouping and naming convention instructions — proxy requires browser-level VPN/SSO
+- PDF verify/import: `verify_downloads` scans PDF directory, matches filenames to papers (bare integer / EE-prefix / rich name), validates %PDF header + size, renames to canonical `EE-{nnn}_{Author}_{Year}.pdf`, updates both `papers` and `full_text_assets` tables. Supports `--dry-run`
+- DB-driven PDF path resolution: `parse_all_pdfs()` checks `full_text_assets.pdf_path` → `papers.pdf_local_path` → filesystem glob fallback. All engine code uses DB paths, not hardcoded filename construction
+- Publisher classification: 17 DOI prefix rules (IEEE, Elsevier, Springer, Wiley, MDPI, etc.) for manual download list grouping
+- Self-documenting review workbooks: shared `review_workbook.py` builder with DataValidation dropdowns, conditional formatting, frozen headers, Instructions sheet. Used by screening, FT, and audit adjudication exporters
+- Audit adjudication: per-span export with ACCEPT/REJECT/CORRECT decisions, spot-check sampling with configurable threshold. Two-pass validation on import (scan all rows, reject entirely on errors)
 - min_status parameter on exporters: AI_AUDIT_COMPLETE (raw AI) vs HUMAN_AUDIT_COMPLETE (human-verified)
 - ollama_options pass-through: per-model Ollama settings (e.g., num_ctx for memory-constrained models)
 
@@ -182,6 +189,7 @@ python scripts/screen_expanded.py --verify-only  # verification pass only
 python -m engine.acquisition.check_oa --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
 python -m engine.acquisition.download --review surgical_autonomy [--retry] [--background]
 python -m engine.acquisition.manual_list --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
+python -m engine.acquisition.verify_downloads --review surgical_autonomy [--dry-run]
 
 # Cloud extraction (concordance study)
 PYTHONPATH=. python scripts/run_cloud_extraction.py --arm both --max-cost 25.00
@@ -203,8 +211,8 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy \
     --stage ABSTRACT_DIAGNOSTIC_COMPLETE --note "50-paper sample reviewed"
 
 # Test suite
-python -m pytest tests/ -v                           # all tests (342)
-python -m pytest tests/ -v -m "not network and not ollama"  # offline only (332)
+python -m pytest tests/ -v                           # all tests (387)
+python -m pytest tests/ -v -m "not network and not ollama"  # offline only (377)
 ```
 
 ## Current Review Status (surgical_autonomy)

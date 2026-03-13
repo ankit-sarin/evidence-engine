@@ -245,8 +245,8 @@ class TestLowYieldInAuditQueue:
         assert papers[0]["review_reason"] == "low_yield"
         assert papers[0]["low_yield"] is True
 
-    def test_export_includes_low_yield_column(self, tmp_db, tmp_path, spec):
-        """Exported XLSX should have a low_yield column."""
+    def test_export_includes_low_yield_spans(self, tmp_db, tmp_path, spec):
+        """Exported XLSX should show LOW_YIELD audit state for low-yield paper spans."""
         from engine.adjudication.audit_adjudicator import export_audit_review_queue
 
         pid = _add_paper(tmp_db, title="LY XLSX Paper", pmid="60002")
@@ -264,14 +264,17 @@ class TestLowYieldInAuditQueue:
 
         from openpyxl import load_workbook
         wb = load_workbook(out)
-        ws = wb["Audit Review"]
+        ws = wb["Review Queue"]
         headers = [cell.value for cell in ws[1]]
-        assert "low_yield" in headers
+        assert "Audit State" in headers
 
-        # Find the low_yield column index and check value
-        ly_col = headers.index("low_yield")
-        ly_value = ws.cell(row=2, column=ly_col + 1).value
-        assert ly_value == "TRUE"
+        # LOW_YIELD papers have verified spans shown as "LOW_YIELD" audit state
+        audit_col = headers.index("Audit State")
+        audit_values = []
+        for row in ws.iter_rows(min_row=2, values_only=False):
+            if row[0].value is not None:
+                audit_values.append(row[audit_col].value)
+        assert any(v == "LOW_YIELD" for v in audit_values)
 
 
 # ── PRISMA Tests ─────────────────────────────────────────────────

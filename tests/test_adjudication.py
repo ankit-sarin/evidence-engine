@@ -404,10 +404,15 @@ def test_export_xlsx_structure(flagged_db, tmp_path):
     export_adjudication_queue(flagged_db, out)
     wb = load_workbook(out)
     assert "Review Queue" in wb.sheetnames
-    assert "Category Summary" in wb.sheetnames
     assert "Instructions" in wb.sheetnames
+    # Instructions is the first sheet (opens by default)
+    assert wb.sheetnames[0] == "Instructions"
     ws = wb["Review Queue"]
-    assert ws.cell(row=1, column=15).value == "DECISION (INCLUDE/EXCLUDE)"
+    # Decision column header includes valid values
+    assert "PI_decision" in ws.cell(row=1, column=15).value
+    assert "INCLUDE" in ws.cell(row=1, column=15).value
+    # Notes column follows
+    assert "PI_notes" in ws.cell(row=1, column=16).value
 
 
 def test_export_with_review_name_loads_config(flagged_db, tmp_path):
@@ -467,19 +472,47 @@ def test_import_updates_status(flagged_db, tmp_path):
     assert len(screened_out) == 3
 
 
-def test_import_warns_on_missing(flagged_db, tmp_path):
-    """Missing decisions should produce warnings."""
+def test_import_rejects_all_blank(flagged_db, tmp_path):
+    """All-blank decisions should reject the entire file with no DB changes."""
     out = tmp_path / "queue.xlsx"
     export_adjudication_queue(flagged_db, out)
 
-    # Don't fill in any decisions
+    # Don't fill in any decisions — import should reject entirely
     result = import_adjudication_decisions(flagged_db, out)
     assert result["stats"]["missing"] == 3
+    assert result["stats"]["include"] == 0
+    assert result["stats"]["exclude"] == 0
     assert len(result["warnings"]) == 3
+
+    # Verify no DB changes were made
+    flagged = flagged_db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")
+    assert len(flagged) == 3
+
+
+def test_import_rejects_partial_blank(flagged_db, tmp_path):
+    """Even one blank decision cell rejects the entire file."""
+    out = tmp_path / "queue.xlsx"
+    export_adjudication_queue(flagged_db, out)
+
+    from openpyxl import load_workbook
+    wb = load_workbook(out)
+    ws = wb["Review Queue"]
+    ws.cell(row=2, column=15, value="INCLUDE")
+    ws.cell(row=3, column=15, value="EXCLUDE")
+    # Row 4 left blank
+    wb.save(out)
+
+    result = import_adjudication_decisions(flagged_db, out)
+    assert result["stats"]["missing"] == 1
+    assert result["stats"]["include"] == 0  # nothing applied
+
+    # Verify no DB changes were made
+    flagged = flagged_db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")
+    assert len(flagged) == 3
 
 
 def test_import_rejects_invalid(flagged_db, tmp_path):
-    """Invalid decisions should be rejected."""
+    """Invalid decision values reject the entire file with clear error."""
     out = tmp_path / "queue.xlsx"
     export_adjudication_queue(flagged_db, out)
 
@@ -487,10 +520,17 @@ def test_import_rejects_invalid(flagged_db, tmp_path):
     wb = load_workbook(out)
     ws = wb["Review Queue"]
     ws.cell(row=2, column=15, value="MAYBE")
+    ws.cell(row=3, column=15, value="INCLUDE")
+    ws.cell(row=4, column=15, value="EXCLUDE")
     wb.save(out)
 
     result = import_adjudication_decisions(flagged_db, out)
     assert result["stats"]["invalid"] == 1
+    assert result["stats"]["include"] == 0  # nothing applied
+
+    # Verify no DB changes were made
+    flagged = flagged_db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")
+    assert len(flagged) == 3
 
 
 # ── Gate Tests ──────────────────────────────────────────────────────

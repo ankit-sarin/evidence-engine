@@ -68,26 +68,43 @@ def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict
     pdf_dir = DATA_ROOT / review_name / "pdfs"
 
     # Find papers that need manual download:
-    # - included, not successfully downloaded, not already on disk
+    # - included, not successfully downloaded, no valid PDF on record
+    # Uses DB as source of truth: download_status and pdf_local_path
     papers = conn.execute(
-        """SELECT id, doi, pmid, title, ee_identifier, download_status, oa_status
+        """SELECT id, doi, pmid, title, ee_identifier, download_status,
+                  oa_status, pdf_local_path
            FROM papers
            WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
              AND download_status != 'success'
            ORDER BY ee_identifier"""
     ).fetchall()
 
-    # Filter out papers that actually have PDFs on disk
+    # Filter out papers that have a valid PDF on disk (DB path or bare integer name)
     missing = []
     for p in papers:
-        pdf_path = pdf_dir / f"{p['id']}.pdf"
-        if pdf_path.exists():
+        # Check DB-recorded path first (handles renamed files)
+        if p["pdf_local_path"]:
+            candidate = Path(p["pdf_local_path"])
+            if not candidate.is_absolute():
+                candidate = pdf_dir / candidate
+            if candidate.exists():
+                try:
+                    with open(candidate, "rb") as f:
+                        if f.read(4) == b"%PDF":
+                            continue
+                except OSError:
+                    pass
+
+        # Fall back to bare integer filename
+        bare_path = pdf_dir / f"{p['id']}.pdf"
+        if bare_path.exists():
             try:
-                with open(pdf_path, "rb") as f:
+                with open(bare_path, "rb") as f:
                     if f.read(4) == b"%PDF":
                         continue
             except OSError:
                 pass
+
         missing.append(dict(p))
 
     db.close()

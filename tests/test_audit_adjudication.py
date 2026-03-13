@@ -1,4 +1,8 @@
-"""Tests for audit adjudication: export/import round-trip, spot-check, reject cascade, min_status."""
+"""Tests for audit adjudication: export/import round-trip, spot-check, reject, min_status.
+
+Tests cover the per-span export format with PI_decision (ACCEPT/REJECT/CORRECT)
+and the hardened two-pass validation importer.
+"""
 
 import json
 from pathlib import Path
@@ -7,6 +11,7 @@ import pytest
 
 from engine.adjudication.audit_adjudicator import (
     _collect_papers_for_review,
+    _flatten_to_span_rows,
     check_audit_review_gate,
     export_audit_review_queue,
     import_audit_review_decisions,
@@ -86,6 +91,25 @@ def _transition_to(db, pid, target):
             pass  # already at or past this status
 
 
+def _complete_prereq_stages(db):
+    """Complete all workflow stages up to AUDIT_QUEUE_EXPORTED prerequisite."""
+    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
+                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
+                   "ABSTRACT_ADJUDICATION_COMPLETE",
+                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
+                   "EXTRACTION_COMPLETE",
+                   "AI_AUDIT_COMPLETE_STAGE"):
+        complete_stage(db._conn, stage)
+
+
+def _find_header_col(ws, name):
+    """Find 0-indexed column by partial header name match."""
+    for cell in ws[1]:
+        if cell.value and name.lower() in str(cell.value).lower():
+            return cell.column - 1
+    raise ValueError(f"Column '{name}' not found in headers")
+
+
 @pytest.fixture
 def db(tmp_path):
     d = ReviewDatabase("test_audit_adj", data_root=tmp_path)
@@ -124,7 +148,6 @@ def test_collect_contested_paper(db):
 
 def test_collect_spot_check(db):
     """All-verified papers should be spot-checked at configured rate."""
-    # Create 10 all-verified papers
     for i in range(10):
         _add_paper_with_extraction(db, str(20000 + i), spans=[
             {"field_name": "study_design", "value": "RCT", "audit_status": "verified"},
@@ -143,29 +166,50 @@ def test_collect_minimum_one_spot_check(db):
         ])
 
     papers = _collect_papers_for_review(db, spot_check_pct=0)
-    # min 1 spot-check when there are all-verified papers (max(1, int(0)) = 1)
     assert len(papers) == 1
     assert papers[0]["review_reason"] == "spot_check"
+
+
+# ── Flatten Tests ─────────────────────────────────────────────────────
+
+
+def test_flatten_exports_problem_spans_only(db):
+    """For audit_issues papers, only problem spans are exported."""
+    _add_paper_with_extraction(db, "11001", spans=[
+        {"field_name": "study_design", "value": "RCT", "audit_status": "verified"},
+        {"field_name": "sample_size", "value": "50", "audit_status": "flagged"},
+    ])
+
+    papers = _collect_papers_for_review(db, spot_check_pct=0)
+    rows = _flatten_to_span_rows(papers)
+    assert len(rows) == 1
+    assert rows[0]["field_name"] == "sample_size"
+    assert rows[0]["audit_state"] == "flagged"
+
+
+def test_flatten_spot_check_exports_all_spans(db):
+    """For spot-check papers, all spans are exported."""
+    _add_paper_with_extraction(db, "11002", spans=[
+        {"field_name": "study_design", "value": "RCT", "audit_status": "verified"},
+        {"field_name": "sample_size", "value": "50", "audit_status": "verified"},
+    ])
+
+    papers = _collect_papers_for_review(db, spot_check_pct=1.0)
+    rows = _flatten_to_span_rows(papers)
+    assert len(rows) == 2
 
 
 # ── Export Tests ──────────────────────────────────────────────────────
 
 
 def test_export_creates_xlsx(db, tmp_path):
-    """Export should create an Excel file with expected sheets."""
+    """Export should create an Excel file with per-span rows and expected sheets."""
     _add_paper_with_extraction(db, "40001", spans=[
         {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
         {"field_name": "sample_size", "value": "100", "audit_status": "verified"},
     ])
 
-    # Complete prerequisite stages for AUDIT_QUEUE_EXPORTED
-    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
-                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
-                   "ABSTRACT_ADJUDICATION_COMPLETE",
-                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
-                   "EXTRACTION_COMPLETE",
-                   "AI_AUDIT_COMPLETE_STAGE"):
-        complete_stage(db._conn, stage)
+    _complete_prereq_stages(db)
 
     out = tmp_path / "audit_queue.xlsx"
     stats = export_audit_review_queue(db, out, spot_check_pct=0)
@@ -176,17 +220,26 @@ def test_export_creates_xlsx(db, tmp_path):
 
     from openpyxl import load_workbook
     wb = load_workbook(out)
-    assert "Audit Review" in wb.sheetnames
-    assert "Paper Summary" in wb.sheetnames
     assert "Instructions" in wb.sheetnames
+    assert "Review Queue" in wb.sheetnames
+    assert "Audit Reference" in wb.sheetnames
 
-    ws = wb["Audit Review"]
+    ws = wb["Review Queue"]
     headers = [cell.value for cell in ws[1]]
     assert "paper_id" in headers
-    assert "accept_as_is" in headers
-    assert "reject_paper" in headers
-    assert "study_design_value" in headers
-    assert "study_design_correction" in headers
+    assert "Field Name" in headers
+    assert "Extracted Value" in headers
+    assert "Audit State" in headers
+    # Decision column with valid values in header
+    assert any("PI_decision" in str(h) for h in headers if h)
+    # Free text columns
+    assert any("corrected_value" in str(h) for h in headers if h)
+    assert any("PI_notes" in str(h) for h in headers if h)
+
+    # Only the flagged span should appear (not verified)
+    data_rows = list(ws.iter_rows(min_row=2, values_only=True))
+    non_empty = [r for r in data_rows if r[0] is not None]
+    assert len(non_empty) == 1
 
 
 def test_export_sets_workflow_stage(db, tmp_path):
@@ -195,13 +248,7 @@ def test_export_sets_workflow_stage(db, tmp_path):
         {"field_name": "study_design", "value": "RCT", "audit_status": "contested"},
     ])
 
-    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
-                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
-                   "ABSTRACT_ADJUDICATION_COMPLETE",
-                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
-                   "EXTRACTION_COMPLETE",
-                   "AI_AUDIT_COMPLETE_STAGE"):
-        complete_stage(db._conn, stage)
+    _complete_prereq_stages(db)
 
     out = tmp_path / "audit_queue.xlsx"
     export_audit_review_queue(db, out, spot_check_pct=0)
@@ -212,35 +259,30 @@ def test_export_sets_workflow_stage(db, tmp_path):
 # ── Import / Round-Trip Tests ─────────────────────────────────────────
 
 
-def test_import_accept_as_is(db, tmp_path):
-    """accept_as_is=TRUE should mark contested/flagged spans as verified."""
+def test_import_accept_spans(db, tmp_path):
+    """ACCEPT should mark contested/flagged spans as verified."""
     pid = _add_paper_with_extraction(db, "50001", spans=[
         {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
         {"field_name": "sample_size", "value": "100", "audit_status": "contested"},
     ])
 
-    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
-                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
-                   "ABSTRACT_ADJUDICATION_COMPLETE",
-                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
-                   "EXTRACTION_COMPLETE",
-                   "AI_AUDIT_COMPLETE_STAGE"):
-        complete_stage(db._conn, stage)
+    _complete_prereq_stages(db)
 
     out = tmp_path / "queue.xlsx"
     export_audit_review_queue(db, out, spot_check_pct=0)
 
-    # Fill in accept_as_is
+    # Fill in ACCEPT for all span rows
     from openpyxl import load_workbook
     wb = load_workbook(out)
-    ws = wb["Audit Review"]
-    headers = [cell.value for cell in ws[1]]
-    accept_col = headers.index("accept_as_is") + 1
-    ws.cell(row=2, column=accept_col, value="TRUE")
+    ws = wb["Review Queue"]
+    dec_col = _find_header_col(ws, "PI_decision")
+    for row in ws.iter_rows(min_row=2, values_only=False):
+        if row[0].value is not None:
+            row[dec_col].value = "ACCEPT"
     wb.save(out)
 
     result = import_audit_review_decisions(db, out)
-    assert result["stats"]["accepted"] == 1
+    assert result["stats"]["accepted"] == 2
 
     # Verify spans are now "verified"
     ext = db._conn.execute(
@@ -254,34 +296,26 @@ def test_import_accept_as_is(db, tmp_path):
     assert all(s["audit_status"] == "verified" for s in spans)
 
 
-def test_import_correction_records_original(db, tmp_path):
-    """Corrections should update span value and record original in audit_adjudication."""
+def test_import_correct_records_original(db, tmp_path):
+    """CORRECT should update span value and record original in audit_adjudication."""
     pid = _add_paper_with_extraction(db, "50002", spans=[
         {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
-        {"field_name": "sample_size", "value": "100", "audit_status": "verified"},
     ])
 
-    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
-                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
-                   "ABSTRACT_ADJUDICATION_COMPLETE",
-                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
-                   "EXTRACTION_COMPLETE",
-                   "AI_AUDIT_COMPLETE_STAGE"):
-        complete_stage(db._conn, stage)
+    _complete_prereq_stages(db)
 
     out = tmp_path / "queue.xlsx"
     export_audit_review_queue(db, out, spot_check_pct=0)
 
     from openpyxl import load_workbook
     wb = load_workbook(out)
-    ws = wb["Audit Review"]
-    headers = [cell.value for cell in ws[1]]
-
-    # Set accept + correction
-    accept_col = headers.index("accept_as_is") + 1
-    correction_col = headers.index("study_design_correction") + 1
-    ws.cell(row=2, column=accept_col, value="TRUE")
-    ws.cell(row=2, column=correction_col, value="Prospective cohort")
+    ws = wb["Review Queue"]
+    dec_col = _find_header_col(ws, "PI_decision")
+    corrected_col = _find_header_col(ws, "corrected_value")
+    for row in ws.iter_rows(min_row=2, values_only=False):
+        if row[0].value is not None:
+            row[dec_col].value = "CORRECT"
+            row[corrected_col].value = "Prospective cohort"
     wb.save(out)
 
     result = import_audit_review_decisions(db, out)
@@ -314,23 +348,18 @@ def test_import_transitions_to_human_audit_complete(db, tmp_path):
         {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
     ])
 
-    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
-                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
-                   "ABSTRACT_ADJUDICATION_COMPLETE",
-                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
-                   "EXTRACTION_COMPLETE",
-                   "AI_AUDIT_COMPLETE_STAGE"):
-        complete_stage(db._conn, stage)
+    _complete_prereq_stages(db)
 
     out = tmp_path / "queue.xlsx"
     export_audit_review_queue(db, out, spot_check_pct=0)
 
     from openpyxl import load_workbook
     wb = load_workbook(out)
-    ws = wb["Audit Review"]
-    headers = [cell.value for cell in ws[1]]
-    accept_col = headers.index("accept_as_is") + 1
-    ws.cell(row=2, column=accept_col, value="TRUE")
+    ws = wb["Review Queue"]
+    dec_col = _find_header_col(ws, "PI_decision")
+    for row in ws.iter_rows(min_row=2, values_only=False):
+        if row[0].value is not None:
+            row[dec_col].value = "ACCEPT"
     wb.save(out)
 
     import_audit_review_decisions(db, out)
@@ -345,23 +374,18 @@ def test_import_sets_audit_review_complete(db, tmp_path):
         {"field_name": "study_design", "value": "RCT", "audit_status": "contested"},
     ])
 
-    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
-                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
-                   "ABSTRACT_ADJUDICATION_COMPLETE",
-                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
-                   "EXTRACTION_COMPLETE",
-                   "AI_AUDIT_COMPLETE_STAGE"):
-        complete_stage(db._conn, stage)
+    _complete_prereq_stages(db)
 
     out = tmp_path / "queue.xlsx"
     export_audit_review_queue(db, out, spot_check_pct=0)
 
     from openpyxl import load_workbook
     wb = load_workbook(out)
-    ws = wb["Audit Review"]
-    headers = [cell.value for cell in ws[1]]
-    accept_col = headers.index("accept_as_is") + 1
-    ws.cell(row=2, column=accept_col, value="TRUE")
+    ws = wb["Review Queue"]
+    dec_col = _find_header_col(ws, "PI_decision")
+    for row in ws.iter_rows(min_row=2, values_only=False):
+        if row[0].value is not None:
+            row[dec_col].value = "ACCEPT"
     wb.save(out)
 
     import_audit_review_decisions(db, out)
@@ -369,19 +393,13 @@ def test_import_sets_audit_review_complete(db, tmp_path):
     assert is_stage_done(db._conn, "AUDIT_REVIEW_COMPLETE")
 
 
-def test_import_missing_decision_blocks_completion(db, tmp_path):
-    """Papers with no decision should block AUDIT_REVIEW_COMPLETE."""
-    _add_paper_with_extraction(db, "50005", spans=[
+def test_import_rejects_blank_decisions(db, tmp_path):
+    """Blank decision cells cause full import rejection with zero DB changes."""
+    pid = _add_paper_with_extraction(db, "50005", spans=[
         {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
     ])
 
-    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
-                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
-                   "ABSTRACT_ADJUDICATION_COMPLETE",
-                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
-                   "EXTRACTION_COMPLETE",
-                   "AI_AUDIT_COMPLETE_STAGE"):
-        complete_stage(db._conn, stage)
+    _complete_prereq_stages(db)
 
     out = tmp_path / "queue.xlsx"
     export_audit_review_queue(db, out, spot_check_pct=0)
@@ -389,43 +407,107 @@ def test_import_missing_decision_blocks_completion(db, tmp_path):
     # Don't fill in any decisions
     result = import_audit_review_decisions(db, out)
 
-    assert result["stats"]["missing"] == 1
+    assert result["stats"]["missing"] >= 1
     assert not is_stage_done(db._conn, "AUDIT_REVIEW_COMPLETE")
 
+    # Paper status unchanged
+    paper = db._conn.execute("SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()
+    assert paper["status"] == "AI_AUDIT_COMPLETE"
 
-# ── Reject Cascade ────────────────────────────────────────────────────
 
-
-def test_reject_paper_cascade(db, tmp_path):
-    """reject_paper=TRUE should transition paper to REJECTED."""
-    pid = _add_paper_with_extraction(db, "60001", spans=[
+def test_import_rejects_invalid_decision(db, tmp_path):
+    """Invalid decision values cause full import rejection with zero DB changes."""
+    pid = _add_paper_with_extraction(db, "50006", spans=[
         {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
     ])
 
-    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
-                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
-                   "ABSTRACT_ADJUDICATION_COMPLETE",
-                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
-                   "EXTRACTION_COMPLETE",
-                   "AI_AUDIT_COMPLETE_STAGE"):
-        complete_stage(db._conn, stage)
+    _complete_prereq_stages(db)
 
     out = tmp_path / "queue.xlsx"
     export_audit_review_queue(db, out, spot_check_pct=0)
 
     from openpyxl import load_workbook
     wb = load_workbook(out)
-    ws = wb["Audit Review"]
-    headers = [cell.value for cell in ws[1]]
-    reject_col = headers.index("reject_paper") + 1
-    ws.cell(row=2, column=reject_col, value="TRUE")
+    ws = wb["Review Queue"]
+    dec_col = _find_header_col(ws, "PI_decision")
+    for row in ws.iter_rows(min_row=2, values_only=False):
+        if row[0].value is not None:
+            row[dec_col].value = "MAYBE"  # invalid
+    wb.save(out)
+
+    result = import_audit_review_decisions(db, out)
+    assert result["stats"]["invalid"] == 1
+
+    # Paper status unchanged
+    paper = db._conn.execute("SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()
+    assert paper["status"] == "AI_AUDIT_COMPLETE"
+
+
+def test_import_rejects_correct_without_value(db, tmp_path):
+    """CORRECT without corrected_value causes full import rejection."""
+    pid = _add_paper_with_extraction(db, "50007", spans=[
+        {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
+    ])
+
+    _complete_prereq_stages(db)
+
+    out = tmp_path / "queue.xlsx"
+    export_audit_review_queue(db, out, spot_check_pct=0)
+
+    from openpyxl import load_workbook
+    wb = load_workbook(out)
+    ws = wb["Review Queue"]
+    dec_col = _find_header_col(ws, "PI_decision")
+    for row in ws.iter_rows(min_row=2, values_only=False):
+        if row[0].value is not None:
+            row[dec_col].value = "CORRECT"
+            # Don't fill corrected_value
+    wb.save(out)
+
+    result = import_audit_review_decisions(db, out)
+    assert result["stats"]["missing"] >= 1  # CORRECT-without-value counted as missing
+
+    # Paper status unchanged
+    paper = db._conn.execute("SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()
+    assert paper["status"] == "AI_AUDIT_COMPLETE"
+
+
+# ── Reject Span ──────────────────────────────────────────────────────
+
+
+def test_reject_span(db, tmp_path):
+    """REJECT should mark span as rejected and transition paper to HUMAN_AUDIT_COMPLETE."""
+    pid = _add_paper_with_extraction(db, "60001", spans=[
+        {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
+    ])
+
+    _complete_prereq_stages(db)
+
+    out = tmp_path / "queue.xlsx"
+    export_audit_review_queue(db, out, spot_check_pct=0)
+
+    from openpyxl import load_workbook
+    wb = load_workbook(out)
+    ws = wb["Review Queue"]
+    dec_col = _find_header_col(ws, "PI_decision")
+    for row in ws.iter_rows(min_row=2, values_only=False):
+        if row[0].value is not None:
+            row[dec_col].value = "REJECT"
     wb.save(out)
 
     result = import_audit_review_decisions(db, out)
     assert result["stats"]["rejected"] == 1
 
+    # Paper transitions to HUMAN_AUDIT_COMPLETE (all spans resolved)
     paper = db._conn.execute("SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()
-    assert paper["status"] == "REJECTED"
+    assert paper["status"] == "HUMAN_AUDIT_COMPLETE"
+
+    # Audit adjudication record created
+    adj = db._conn.execute(
+        "SELECT * FROM audit_adjudication WHERE paper_id = ?", (pid,)
+    ).fetchone()
+    assert adj is not None
+    assert adj["human_decision"] == "reject_paper"
 
 
 # ── min_status Filtering ──────────────────────────────────────────────

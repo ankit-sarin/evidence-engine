@@ -443,9 +443,9 @@ class TestFTAdjudication:
 
         from openpyxl import load_workbook
         wb = load_workbook(out)
-        assert "FT Review Queue" in wb.sheetnames
-        assert "Reason Summary" in wb.sheetnames
         assert "Instructions" in wb.sheetnames
+        assert "Review Queue" in wb.sheetnames
+        assert "FT Screening Criteria" in wb.sheetnames
 
     def test_import_ft_decisions(self, tmp_db, tmp_path):
         pid1 = _add_paper(tmp_db, title="Import Eligible", pmid="77010")
@@ -458,16 +458,19 @@ class TestFTAdjudication:
         out = tmp_path / "ft_import.xlsx"
         export_ft_adjudication_queue(tmp_db, out)
 
-        # Fill in decisions
+        # Fill in decisions using header-based lookup
         from openpyxl import load_workbook
         wb = load_workbook(out)
-        ws = wb["FT Review Queue"]
+        ws = wb["Review Queue"]
+        headers = {cell.value: cell.column - 1 for cell in ws[1] if cell.value}
+        pid_col = next(i for h, i in headers.items() if "Paper ID" in h)
+        dec_col = next(i for h, i in headers.items() if "PI_decision" in h)
         for row in ws.iter_rows(min_row=2, values_only=False):
-            paper_id_val = row[1].value
+            paper_id_val = row[pid_col].value
             if paper_id_val == pid1:
-                row[13].value = "FT_ELIGIBLE"
+                row[dec_col].value = "FT_ELIGIBLE"
             elif paper_id_val == pid2:
-                row[13].value = "FT_SCREENED_OUT"
+                row[dec_col].value = "FT_SCREENED_OUT"
         wb.save(out)
 
         # Import
@@ -487,7 +490,8 @@ class TestFTAdjudication:
         ).fetchone()
         assert r2["status"] == "FT_SCREENED_OUT"
 
-    def test_import_missing_decisions(self, tmp_db, tmp_path):
+    def test_import_rejects_blank_decisions(self, tmp_db, tmp_path):
+        """Blank decision cells cause full import rejection with zero DB changes."""
         pid = _add_paper(tmp_db, title="Missing Decision", pmid="77020")
         _advance_to_ft_flagged(tmp_db, pid)
 
@@ -499,7 +503,14 @@ class TestFTAdjudication:
         assert result["stats"]["missing"] == 1
         assert result["stats"]["ft_eligible"] == 0
 
-    def test_import_invalid_decision(self, tmp_db, tmp_path):
+        # Verify paper status unchanged
+        row = tmp_db._conn.execute(
+            "SELECT status FROM papers WHERE id = ?", (pid,)
+        ).fetchone()
+        assert row["status"] == "FT_FLAGGED"
+
+    def test_import_rejects_invalid_decision(self, tmp_db, tmp_path):
+        """Invalid decision values cause full import rejection with zero DB changes."""
         pid = _add_paper(tmp_db, title="Invalid Decision", pmid="77021")
         _advance_to_ft_flagged(tmp_db, pid)
 
@@ -508,13 +519,21 @@ class TestFTAdjudication:
 
         from openpyxl import load_workbook
         wb = load_workbook(out)
-        ws = wb["FT Review Queue"]
+        ws = wb["Review Queue"]
+        headers = {cell.value: cell.column - 1 for cell in ws[1] if cell.value}
+        dec_col = next(i for h, i in headers.items() if "PI_decision" in h)
         for row in ws.iter_rows(min_row=2, values_only=False):
-            row[13].value = "INCLUDE"  # wrong value
+            row[dec_col].value = "INCLUDE"  # wrong value
         wb.save(out)
 
         result = import_ft_adjudication_decisions(tmp_db, out)
         assert result["stats"]["invalid"] == 1
+
+        # Verify paper status unchanged
+        row = tmp_db._conn.execute(
+            "SELECT status FROM papers WHERE id = ?", (pid,)
+        ).fetchone()
+        assert row["status"] == "FT_FLAGGED"
 
     def test_import_advances_workflow(self, tmp_db, tmp_path):
         pid = _add_paper(tmp_db, title="Workflow Test", pmid="77030")
@@ -525,10 +544,13 @@ class TestFTAdjudication:
 
         from openpyxl import load_workbook
         wb = load_workbook(out)
-        ws = wb["FT Review Queue"]
+        ws = wb["Review Queue"]
+        headers = {cell.value: cell.column - 1 for cell in ws[1] if cell.value}
+        pid_col = next(i for h, i in headers.items() if "Paper ID" in h)
+        dec_col = next(i for h, i in headers.items() if "PI_decision" in h)
         for row in ws.iter_rows(min_row=2, values_only=False):
-            if row[1].value == pid:
-                row[13].value = "FT_ELIGIBLE"
+            if row[pid_col].value == pid:
+                row[dec_col].value = "FT_ELIGIBLE"
         wb.save(out)
 
         import_ft_adjudication_decisions(tmp_db, out)
@@ -550,11 +572,15 @@ class TestFTAdjudication:
 
         from openpyxl import load_workbook
         wb = load_workbook(out)
-        ws = wb["FT Review Queue"]
+        ws = wb["Review Queue"]
+        headers = {cell.value: cell.column - 1 for cell in ws[1] if cell.value}
+        pid_col = next(i for h, i in headers.items() if "Paper ID" in h)
+        dec_col = next(i for h, i in headers.items() if "PI_decision" in h)
+        notes_col = next(i for h, i in headers.items() if "PI_notes" in h)
         for row in ws.iter_rows(min_row=2, values_only=False):
-            if row[1].value == pid:
-                row[13].value = "FT_ELIGIBLE"
-                row[14].value = "Reviewer confirmed"
+            if row[pid_col].value == pid:
+                row[dec_col].value = "FT_ELIGIBLE"
+                row[notes_col].value = "Reviewer confirmed"
         wb.save(out)
 
         import_ft_adjudication_decisions(tmp_db, out)

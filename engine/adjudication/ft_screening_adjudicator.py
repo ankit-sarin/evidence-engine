@@ -14,6 +14,17 @@ from engine.core.database import ReviewDatabase
 
 logger = logging.getLogger(__name__)
 
+# FT reason code descriptions for reference sheet
+_REASON_CODE_DESCRIPTIONS = {
+    "eligible": "Paper meets all inclusion criteria based on full text",
+    "wrong_specialty": "Paper's specialty falls outside the included specialty scope",
+    "no_autonomy_content": "Full text reveals no autonomous or semi-autonomous robot execution",
+    "wrong_intervention": "Intervention does not involve autonomous surgical robot control",
+    "protocol_only": "Paper describes a study protocol without results",
+    "duplicate_cohort": "Same cohort/data as another included paper",
+    "insufficient_data": "Insufficient methodological detail to assess eligibility",
+}
+
 
 # ── Data Collection ─────────────────────────────────────────────────
 
@@ -48,8 +59,24 @@ def _collect_ft_flagged(db: ReviewDatabase) -> list[dict]:
         verifier_decision = vrow["decision"] if vrow else ""
         verifier_rationale = vrow["rationale"] if vrow else ""
 
+        # Try to get parsed text excerpt (intro/methods)
+        text_excerpt = ""
+        ft_asset = db._conn.execute(
+            "SELECT parsed_text_path FROM full_text_assets WHERE paper_id = ? "
+            "ORDER BY id DESC LIMIT 1",
+            (pid,),
+        ).fetchone()
+        if ft_asset and ft_asset["parsed_text_path"]:
+            try:
+                md_path = Path(ft_asset["parsed_text_path"])
+                if md_path.exists():
+                    text_excerpt = md_path.read_text()[:500]
+            except Exception:
+                pass
+
         results.append({
             "paper_id": pid,
+            "ee_identifier": p.get("ee_identifier") or "",
             "title": p["title"],
             "abstract": p.get("abstract") or "",
             "doi": p.get("doi") or "",
@@ -61,9 +88,89 @@ def _collect_ft_flagged(db: ReviewDatabase) -> list[dict]:
             "primary_rationale": primary_rationale,
             "verifier_decision": verifier_decision,
             "verifier_rationale": verifier_rationale,
+            "text_excerpt": text_excerpt,
         })
 
     return results
+
+
+# ── Reference Content Builder ─────────────────────────────────────
+
+
+def _build_ft_reference_content(spec=None) -> str:
+    """Build reference sheet content for FT screening adjudication."""
+    lines = []
+
+    lines.append("FULL-TEXT SCREENING REASON CODES")
+    lines.append("")
+    for code, desc in _REASON_CODE_DESCRIPTIONS.items():
+        lines.append(f"  {code}: {desc}")
+    lines.append("")
+
+    if spec:
+        if hasattr(spec, "screening_criteria") and spec.screening_criteria:
+            lines.append("INCLUSION CRITERIA:")
+            for criterion in spec.screening_criteria.inclusion:
+                lines.append(f"  + {criterion}")
+            lines.append("")
+            lines.append("EXCLUSION CRITERIA:")
+            for criterion in spec.screening_criteria.exclusion:
+                lines.append(f"  - {criterion}")
+            lines.append("")
+
+        if hasattr(spec, "pico") and spec.pico:
+            lines.append("PICO FRAMEWORK:")
+            lines.append(f"  Population:   {spec.pico.population}")
+            lines.append(f"  Intervention: {spec.pico.intervention}")
+            lines.append(f"  Comparator:   {spec.pico.comparator}")
+            if isinstance(spec.pico.outcomes, list):
+                lines.append(f"  Outcomes:     {'; '.join(spec.pico.outcomes)}")
+            else:
+                lines.append(f"  Outcomes:     {spec.pico.outcomes}")
+            lines.append("")
+
+        if hasattr(spec, "specialty_scope") and spec.specialty_scope:
+            lines.append("SPECIALTY SCOPE:")
+            lines.append("  Included specialties:")
+            for s in spec.specialty_scope.included:
+                lines.append(f"    + {s}")
+            lines.append("  Excluded specialties:")
+            for s in spec.specialty_scope.excluded:
+                lines.append(f"    - {s}")
+            if spec.specialty_scope.notes:
+                lines.append(f"  Notes: {spec.specialty_scope.notes}")
+
+    return "\n".join(lines)
+
+
+def _build_ft_decision_criteria(spec=None) -> list[str]:
+    """Build decision criteria for FT screening adjudication."""
+    criteria = [
+        "FT_ELIGIBLE: The full text confirms the paper describes autonomous or "
+        "semi-autonomous surgical robot execution of a physical task.",
+        "FT_SCREENED_OUT: The full text reveals the paper does not meet inclusion "
+        "criteria (see reason code for likely cause).",
+    ]
+
+    if spec and hasattr(spec, "specialty_scope") and spec.specialty_scope:
+        included = ", ".join(spec.specialty_scope.included)
+        excluded = ", ".join(spec.specialty_scope.excluded)
+        criteria.append(f"SPECIALTY SCOPE — Included: {included}")
+        criteria.append(f"SPECIALTY SCOPE — Excluded: {excluded}")
+
+    return criteria
+
+
+def _build_ft_edge_case_guidance(spec=None) -> str:
+    """Build edge case guidance for FT screening."""
+    parts = []
+    if spec and hasattr(spec, "specialty_scope") and spec.specialty_scope and spec.specialty_scope.notes:
+        parts.append(spec.specialty_scope.notes.strip())
+    parts.append(
+        "These papers were flagged because the primary screener and verifier disagreed. "
+        "Review the full-text reason code and both rationales to make your decision."
+    )
+    return " ".join(parts)
 
 
 # ── Export ──────────────────────────────────────────────────────────
@@ -74,6 +181,8 @@ def export_ft_adjudication_queue(
     output_path: str | Path,
     *,
     format: str = "xlsx",
+    review_name: str | None = None,
+    review_spec=None,
 ) -> dict:
     """Export all FT_FLAGGED papers as a human-review Excel queue.
 
@@ -97,10 +206,15 @@ def export_ft_adjudication_queue(
     # Sort by reason code then title
     all_flagged.sort(key=lambda p: (p["reason_code"] or "zzz", p["title"]))
 
-    if format == "xlsx":
-        _write_ft_xlsx(all_flagged, output_path, reason_counts)
-    else:
+    if format != "xlsx":
         raise ValueError(f"Unsupported format: {format}")
+
+    _write_ft_xlsx(
+        all_flagged, output_path, reason_counts,
+        review_name=review_name or "unknown",
+        review_spec=review_spec,
+        db_path=str(review_db.db_path),
+    )
 
     logger.info(
         "Exported FT adjudication queue: %d papers to %s",
@@ -116,113 +230,122 @@ def export_ft_adjudication_queue(
     }
 
 
-def _write_ft_xlsx(papers: list[dict], output_path: Path,
-                   reason_counts: dict) -> None:
-    """Write the FT adjudication queue as an Excel workbook."""
-    from openpyxl import Workbook
-    from openpyxl.styles import Alignment, Font, PatternFill
+def _write_ft_xlsx(
+    papers: list[dict],
+    output_path: Path,
+    reason_counts: dict,
+    review_name: str = "unknown",
+    review_spec=None,
+    db_path: str = "",
+) -> None:
+    """Write the FT adjudication queue as a self-documenting Excel workbook."""
+    from engine.exporters.review_workbook import (
+        ColumnDef,
+        DecisionColumnDef,
+        FreeTextColumnDef,
+        InstructionsConfig,
+        create_review_workbook,
+    )
 
-    wb = Workbook()
-
-    # ── Sheet 1: Review Queue ──
-    ws = wb.active
-    ws.title = "FT Review Queue"
-
-    headers = [
-        "Row #",
-        "Paper ID",
-        "Reason Code",
-        "Title",
-        "Abstract",
-        "DOI",
-        "PMID",
-        "Year",
-        "Journal",
-        "Primary Decision",
-        "Primary Rationale",
-        "Verifier Decision",
-        "Verifier Rationale",
-        "DECISION (FT_ELIGIBLE/FT_SCREENED_OUT)",
-        "Notes (optional)",
-    ]
-
-    header_font = Font(bold=True, color="FFFFFF")
-    header_fill = PatternFill(start_color="0A5E56", end_color="0A5E56", fill_type="solid")
-    decision_fill = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid")
-    wrap_align = Alignment(wrap_text=True, vertical="top")
-
-    for col, header in enumerate(headers, 1):
-        cell = ws.cell(row=1, column=col, value=header)
-        cell.font = header_font
-        cell.fill = header_fill
-        cell.alignment = Alignment(horizontal="center", wrap_text=True)
-
+    rows = []
     for i, paper in enumerate(papers, 1):
-        row_num = i + 1
+        rows.append({
+            "row_num": i,
+            "paper_id": paper["paper_id"],
+            "ee_identifier": paper["ee_identifier"],
+            "reason_code": paper["reason_code"],
+            "title": paper["title"],
+            "abstract": paper["abstract"][:2000] if paper["abstract"] else "",
+            "doi": paper["doi"],
+            "pmid": paper["pmid"],
+            "year": paper.get("year", ""),
+            "journal": paper["journal"],
+            "primary_decision": paper["primary_decision"],
+            "primary_rationale": paper["primary_rationale"][:1000] if paper["primary_rationale"] else "",
+            "verifier_decision": paper["verifier_decision"],
+            "verifier_rationale": paper["verifier_rationale"][:1000] if paper["verifier_rationale"] else "",
+            "text_excerpt": paper.get("text_excerpt", "")[:500],
+        })
 
-        ws.cell(row=row_num, column=1, value=i)
-        ws.cell(row=row_num, column=2, value=paper["paper_id"])
-        ws.cell(row=row_num, column=3, value=paper["reason_code"])
-        ws.cell(row=row_num, column=4, value=paper["title"])
-        ws.cell(row=row_num, column=5, value=paper["abstract"][:2000] if paper["abstract"] else "")
-        ws.cell(row=row_num, column=6, value=paper["doi"])
-        ws.cell(row=row_num, column=7, value=paper["pmid"])
-        ws.cell(row=row_num, column=8, value=paper.get("year", ""))
-        ws.cell(row=row_num, column=9, value=paper["journal"])
-        ws.cell(row=row_num, column=10, value=paper["primary_decision"])
-        ws.cell(row=row_num, column=11, value=paper["primary_rationale"][:1000] if paper["primary_rationale"] else "")
-        ws.cell(row=row_num, column=12, value=paper["verifier_decision"])
-        ws.cell(row=row_num, column=13, value=paper["verifier_rationale"][:1000] if paper["verifier_rationale"] else "")
-
-        decision_cell = ws.cell(row=row_num, column=14, value="")
-        decision_cell.fill = decision_fill
-
-        ws.cell(row=row_num, column=15, value="")
-
-        for col in [4, 5, 11, 13]:
-            ws.cell(row=row_num, column=col).alignment = wrap_align
-
-    ws.freeze_panes = "A2"
-
-    # ── Sheet 2: Reason Summary ──
-    ws2 = wb.create_sheet("Reason Summary")
-    ws2.cell(row=1, column=1, value="Reason Code").font = Font(bold=True)
-    ws2.cell(row=1, column=2, value="Count").font = Font(bold=True)
-
-    for i, (rc, count) in enumerate(sorted(reason_counts.items()), 2):
-        ws2.cell(row=i, column=1, value=rc)
-        ws2.cell(row=i, column=2, value=count)
-
-    ws2.column_dimensions["A"].width = 30
-    ws2.column_dimensions["B"].width = 10
-
-    # ── Sheet 3: Instructions ──
-    ws3 = wb.create_sheet("Instructions")
-    instructions = [
-        "FULL-TEXT SCREENING ADJUDICATION INSTRUCTIONS",
-        "",
-        "1. Review each paper in the 'FT Review Queue' sheet.",
-        "2. For each paper, enter FT_ELIGIBLE or FT_SCREENED_OUT in the yellow DECISION column (N).",
-        "3. Optionally add notes in the Notes column (O).",
-        "",
-        "CONTEXT:",
-        "- These papers were flagged during full-text screening verification.",
-        "- The primary screener marked them eligible but the verifier disagreed.",
-        "- Your decision resolves the disagreement.",
-        "",
-        "DECISION CRITERIA:",
-        "- FT_ELIGIBLE: The paper meets all inclusion criteria based on full text.",
-        "- FT_SCREENED_OUT: The paper should be excluded (see reason code for likely cause).",
-        "",
-        "After completing all decisions, save the file and run:",
-        "  from engine.adjudication.ft_screening_adjudicator import import_ft_adjudication_decisions",
-        "  import_ft_adjudication_decisions(review_db, 'path/to/this/file.xlsx')",
+    columns = [
+        ColumnDef(key="row_num", header="Row #", width=6),
+        ColumnDef(key="paper_id", header="Paper ID", width=10),
+        ColumnDef(key="ee_identifier", header="EE-ID", width=10),
+        ColumnDef(key="reason_code", header="Reason Code", width=20),
+        ColumnDef(key="title", header="Title", width=60, wrap=True),
+        ColumnDef(key="abstract", header="Abstract", width=80, wrap=True),
+        ColumnDef(key="doi", header="DOI", width=25),
+        ColumnDef(key="pmid", header="PMID", width=12),
+        ColumnDef(key="year", header="Year", width=6),
+        ColumnDef(key="journal", header="Journal", width=30),
+        ColumnDef(key="primary_decision", header="Primary Decision", width=15),
+        ColumnDef(key="primary_rationale", header="Primary Rationale", width=50, wrap=True),
+        ColumnDef(key="verifier_decision", header="Verifier Decision", width=15),
+        ColumnDef(key="verifier_rationale", header="Verifier Rationale", width=50, wrap=True),
+        ColumnDef(key="text_excerpt", header="Text Excerpt (~500 chars)", width=60, wrap=True),
     ]
-    for i, line in enumerate(instructions, 1):
-        ws3.cell(row=i, column=1, value=line)
-    ws3.column_dimensions["A"].width = 90
 
-    wb.save(output_path)
+    decision_columns = [
+        DecisionColumnDef(
+            key="PI_decision",
+            header="PI_decision (FT_ELIGIBLE/FT_SCREENED_OUT)",
+            valid_values=["FT_ELIGIBLE", "FT_SCREENED_OUT"],
+            width=30,
+        ),
+    ]
+
+    free_text_columns = [
+        FreeTextColumnDef(key="PI_notes", header="PI_notes (optional)", width=30),
+    ]
+
+    import_cmd = (
+        f"python -c \"\n"
+        f"from engine.core.database import ReviewDatabase\n"
+        f"from engine.adjudication import import_ft_adjudication_decisions\n"
+        f"db = ReviewDatabase('{review_name}')\n"
+        f"import_ft_adjudication_decisions(db, '{output_path}')\n"
+        f"\""
+    )
+
+    decision_criteria = _build_ft_decision_criteria(review_spec)
+    edge_case = _build_ft_edge_case_guidance(review_spec)
+
+    instr = InstructionsConfig(
+        review_name=review_name,
+        review_spec_id=f"{review_spec.title} v{review_spec.version}" if review_spec else "",
+        db_path=db_path,
+        export_trigger=(
+            f"{len(papers)} papers flagged during full-text screening where "
+            f"primary and verification models disagreed"
+        ),
+        row_count=len(papers),
+        decision_column_name="PI_decision (FT_ELIGIBLE/FT_SCREENED_OUT)",
+        valid_values=["FT_ELIGIBLE", "FT_SCREENED_OUT"],
+        decision_criteria=decision_criteria,
+        edge_case_guidance=edge_case,
+        import_command=import_cmd,
+        columns_importer_reads=[
+            "Paper ID (B)", "Title (E)", "Reason Code (D)",
+            "PI_decision (P)", "PI_notes (Q)",
+        ],
+        columns_importer_ignores=(
+            "All other columns (Row #, EE-ID, Abstract, DOI, PMID, Journal, "
+            "Primary/Verifier Decision/Rationale, Text Excerpt) are read-only context."
+        ),
+    )
+
+    reference_content = _build_ft_reference_content(review_spec)
+
+    create_review_workbook(
+        output_path=output_path,
+        rows=rows,
+        columns=columns,
+        decision_columns=decision_columns,
+        free_text_columns=free_text_columns,
+        instructions=instr,
+        reference_content=reference_content,
+        reference_sheet_title="FT Screening Criteria",
+    )
 
 
 # ── Import ─────────────────────────────────────────────────────────
@@ -233,6 +356,10 @@ def import_ft_adjudication_decisions(
     input_path: str | Path,
 ) -> dict:
     """Read completed FT adjudication Excel, write decisions to database.
+
+    Validates the entire file before making any changes:
+      - Rejects if any decision cell is blank (reports which rows)
+      - Rejects if any decision value is not FT_ELIGIBLE or FT_SCREENED_OUT
 
     For each paper:
       FT_ELIGIBLE → transition to FT_ELIGIBLE
@@ -247,41 +374,146 @@ def import_ft_adjudication_decisions(
 
     input_path = Path(input_path)
     wb = load_workbook(input_path)
-    ws = wb["FT Review Queue"]
 
-    ensure_adjudication_table(review_db._conn)
+    # Find the review queue sheet (support both old and new naming)
+    sheet_name = None
+    for name in ["Review Queue", "FT Review Queue"]:
+        if name in wb.sheetnames:
+            sheet_name = name
+            break
+    if sheet_name is None:
+        error_msg = f"\nIMPORT REJECTED — No 'Review Queue' sheet found in {input_path}\n"
+        print(error_msg)
+        logger.error(error_msg)
+        return {
+            "stats": {"ft_eligible": 0, "ft_screened_out": 0, "missing": 0, "invalid": 0, "total": 0},
+            "warnings": [error_msg],
+        }
 
-    now = datetime.now(timezone.utc).isoformat()
-    stats = {"ft_eligible": 0, "ft_screened_out": 0, "missing": 0, "invalid": 0, "total": 0}
-    warnings = []
+    ws = wb[sheet_name]
+
+    # ── Build header index for robust column lookup ───────────
+    header_row = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
+    col_index = {}
+    for idx, val in enumerate(header_row):
+        if val:
+            col_index[str(val).strip()] = idx
+
+    def _find_col(candidates: list[str]) -> int | None:
+        for c in candidates:
+            for header, idx in col_index.items():
+                if c.lower() in header.lower():
+                    return idx
+        return None
+
+    title_col = _find_col(["Title"])
+    paper_id_col = _find_col(["Paper ID"])
+    reason_code_col = _find_col(["Reason Code", "Reason"])
+    decision_col = _find_col(["PI_decision", "DECISION"])
+    notes_col = _find_col(["PI_notes", "Notes"])
+    row_num_col = _find_col(["Row #", "Row"])
+
+    if title_col is None or decision_col is None:
+        error_msg = (
+            "\nIMPORT REJECTED — Required columns not found.\n"
+            f"  Found headers: {list(col_index.keys())}\n"
+            "  Required: Title, PI_decision (or DECISION)\n"
+        )
+        print(error_msg)
+        logger.error(error_msg)
+        return {
+            "stats": {"ft_eligible": 0, "ft_screened_out": 0, "missing": 0, "invalid": 0, "total": 0},
+            "warnings": [error_msg],
+        }
+
+    # ── Pass 1: Validate all rows before any DB writes ──────────
+    parsed_rows = []
+    blank_rows = []
+    invalid_rows = []
 
     for row in ws.iter_rows(min_row=2, values_only=False):
-        title_val = row[3].value  # column D = title
+        title_val = row[title_col].value
         if not title_val:
             continue
 
-        stats["total"] += 1
+        row_num = row[row_num_col].value if row_num_col is not None else row[0].row - 1
+        paper_id = row[paper_id_col].value if paper_id_col is not None else None
+        reason_code = row[reason_code_col].value if reason_code_col is not None else ""
+        title = row[title_col].value
+        decision_raw = row[decision_col].value
+        notes = (row[notes_col].value or "") if notes_col is not None else ""
 
-        row_num = row[0].value        # column A = Row #
-        paper_id = row[1].value       # column B = Paper ID
-        reason_code = row[2].value    # column C = Reason Code
-        title = row[3].value          # column D
-        decision_raw = row[13].value  # column N = DECISION
-        notes = row[14].value or ""   # column O = Notes
-
-        if not decision_raw:
-            stats["missing"] += 1
-            warnings.append(f"Row {row_num}: '{title[:60]}...' — no decision")
-            continue
-
-        decision = decision_raw.strip().upper()
-        if decision not in ("FT_ELIGIBLE", "FT_SCREENED_OUT"):
-            stats["invalid"] += 1
-            warnings.append(
-                f"Row {row_num}: invalid decision '{decision_raw}' "
-                f"(must be FT_ELIGIBLE or FT_SCREENED_OUT)"
+        if not decision_raw or str(decision_raw).strip() == "":
+            blank_rows.append(
+                f"  Row {row_num}: '{title[:60]}...'" if len(str(title)) > 60
+                else f"  Row {row_num}: '{title}'"
             )
             continue
+
+        decision = str(decision_raw).strip().upper()
+        if decision not in ("FT_ELIGIBLE", "FT_SCREENED_OUT"):
+            invalid_rows.append(
+                f"  Row {row_num}: '{decision_raw}' (must be FT_ELIGIBLE or FT_SCREENED_OUT)"
+            )
+            continue
+
+        parsed_rows.append({
+            "row_num": row_num,
+            "paper_id": paper_id,
+            "reason_code": reason_code,
+            "title": title,
+            "decision": decision,
+            "notes": notes,
+        })
+
+    # ── Reject on validation failure ────────────────────────────
+    if blank_rows or invalid_rows:
+        total_issues = len(blank_rows) + len(invalid_rows)
+        msg_parts = [
+            f"\nIMPORT REJECTED — {total_issues} validation error(s) found.",
+            "No database changes were made.\n",
+        ]
+        if blank_rows:
+            msg_parts.append(f"BLANK DECISION CELLS ({len(blank_rows)} rows):")
+            msg_parts.extend(blank_rows)
+            msg_parts.append("")
+        if invalid_rows:
+            msg_parts.append(f"INVALID DECISION VALUES ({len(invalid_rows)} rows):")
+            msg_parts.extend(invalid_rows)
+            msg_parts.append("")
+        msg_parts.append("Fix the workbook and re-run the import command.")
+
+        error_msg = "\n".join(msg_parts)
+        print(error_msg)
+        logger.error(error_msg)
+
+        return {
+            "stats": {
+                "ft_eligible": 0,
+                "ft_screened_out": 0,
+                "missing": len(blank_rows),
+                "invalid": len(invalid_rows),
+                "total": len(parsed_rows) + len(blank_rows) + len(invalid_rows),
+            },
+            "warnings": blank_rows + invalid_rows,
+        }
+
+    # ── Pass 2: Apply all validated decisions ───────────────────
+    ensure_adjudication_table(review_db._conn)
+
+    now = datetime.now(timezone.utc).isoformat()
+    stats = {
+        "ft_eligible": 0, "ft_screened_out": 0,
+        "missing": 0, "invalid": 0,
+        "total": len(parsed_rows),
+    }
+
+    for pr in parsed_rows:
+        decision = pr["decision"]
+        paper_id = pr["paper_id"]
+        title = pr["title"]
+        reason_code = pr["reason_code"]
+        notes = pr["notes"]
 
         # Record in ft_screening_adjudication table
         review_db._conn.execute(
@@ -297,7 +529,7 @@ def import_ft_adjudication_decisions(
             try:
                 review_db.update_status(int(paper_id), decision)
             except ValueError as e:
-                warnings.append(f"Row {row_num}: status update failed — {e}")
+                logger.warning("Row %s: status update failed — %s", pr["row_num"], e)
 
         if decision == "FT_ELIGIBLE":
             stats["ft_eligible"] += 1
@@ -306,35 +538,29 @@ def import_ft_adjudication_decisions(
 
     review_db._conn.commit()
 
-    if warnings:
-        for w in warnings[:10]:
-            logger.warning(w)
-        if len(warnings) > 10:
-            logger.warning("... and %d more warnings", len(warnings) - 10)
-
-    logger.info(
-        "FT adjudication import: %d eligible, %d screened out, "
-        "%d missing, %d invalid (of %d total)",
-        stats["ft_eligible"], stats["ft_screened_out"],
-        stats["missing"], stats["invalid"], stats["total"],
+    # Success summary
+    print(
+        f"\nIMPORT SUCCESSFUL — {stats['total']} decisions processed.\n"
+        f"  FT_ELIGIBLE:     {stats['ft_eligible']}\n"
+        f"  FT_SCREENED_OUT: {stats['ft_screened_out']}\n"
+        f"  Database updated."
     )
 
-    # Auto-advance workflow: FULL_TEXT_ADJUDICATION_COMPLETE if zero unresolved
-    if stats["missing"] == 0 and stats["invalid"] == 0:
-        complete_stage(
-            review_db._conn, "FULL_TEXT_ADJUDICATION_COMPLETE",
-            metadata=(
-                f"{stats['ft_eligible']} eligible, {stats['ft_screened_out']} screened out "
-                f"(of {stats['total']} total)"
-            ),
-        )
-    else:
-        logger.warning(
-            "FT adjudication not complete: %d missing + %d invalid decisions remain",
-            stats["missing"], stats["invalid"],
-        )
+    logger.info(
+        "FT adjudication import: %d eligible, %d screened out (of %d total)",
+        stats["ft_eligible"], stats["ft_screened_out"], stats["total"],
+    )
 
-    return {"stats": stats, "warnings": warnings}
+    # Auto-advance workflow: FULL_TEXT_ADJUDICATION_COMPLETE
+    complete_stage(
+        review_db._conn, "FULL_TEXT_ADJUDICATION_COMPLETE",
+        metadata=(
+            f"{stats['ft_eligible']} eligible, {stats['ft_screened_out']} screened out "
+            f"(of {stats['total']} total)"
+        ),
+    )
+
+    return {"stats": stats, "warnings": []}
 
 
 # ── Pipeline Gate ──────────────────────────────────────────────────

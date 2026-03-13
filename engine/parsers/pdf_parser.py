@@ -187,16 +187,46 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
     for i, paper in enumerate(papers, 1):
         pid = paper["id"]
         pdf_dir = review_dir / "pdfs"
-        # Find the PDF file for this paper
-        pdf_candidates = list(pdf_dir.glob(f"{pid}_*.pdf")) + list(
-            pdf_dir.glob(f"{pid}.pdf")
-        )
-        if not pdf_candidates:
+
+        # Find the PDF file — prefer DB path (works after rename), fall back to glob
+        pdf_path = None
+
+        # 1. Check full_text_assets.pdf_path (set by parser/verify_downloads)
+        ft_row = db._conn.execute(
+            "SELECT pdf_path FROM full_text_assets WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
+            (pid,),
+        ).fetchone()
+        if ft_row and ft_row["pdf_path"]:
+            candidate = Path(ft_row["pdf_path"])
+            if not candidate.is_absolute():
+                candidate = pdf_dir / candidate
+            if candidate.exists():
+                pdf_path = str(candidate)
+
+        # 2. Check papers.pdf_local_path (set by downloader/verify_downloads)
+        if not pdf_path:
+            lp_row = db._conn.execute(
+                "SELECT pdf_local_path FROM papers WHERE id = ?", (pid,),
+            ).fetchone()
+            if lp_row and lp_row["pdf_local_path"]:
+                candidate = Path(lp_row["pdf_local_path"])
+                if not candidate.is_absolute():
+                    candidate = pdf_dir / candidate
+                if candidate.exists():
+                    pdf_path = str(candidate)
+
+        # 3. Fall back to filesystem glob (handles bare integer and prefixed names)
+        if not pdf_path:
+            pdf_candidates = list(pdf_dir.glob(f"{pid}_*.pdf")) + list(
+                pdf_dir.glob(f"{pid}.pdf")
+            )
+            if pdf_candidates:
+                pdf_path = str(pdf_candidates[0])
+
+        if not pdf_path:
             logger.warning("Paper %d: no PDF found in %s", pid, pdf_dir)
             stats["failed"] += 1
             continue
-
-        pdf_path = str(pdf_candidates[0])
         try:
             result = parse_pdf(pdf_path, pid, review_name, db)
 

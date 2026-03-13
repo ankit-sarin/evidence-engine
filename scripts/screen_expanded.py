@@ -11,6 +11,14 @@ Usage:
     python scripts/screen_expanded.py              # run both phases
     python scripts/screen_expanded.py --fetch-only # phase 1 only
     python scripts/screen_expanded.py --screen-only # phase 2 only
+
+# TODO(retention): This script writes screening results to flat CSV files
+# instead of the review database. Per the retention policy, ALL papers
+# (includes AND excludes) and their screening/verification traces should be
+# written to the DB during screening. The current design required a separate
+# backfill migration (003_backfill_expanded_screening.py) to import the
+# flat-file results. The full-text screening pipeline should write directly
+# to the database for both includes and excludes.
 """
 
 import argparse

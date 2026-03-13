@@ -1,4 +1,10 @@
-"""SQLite database manager — one database per review, full provenance."""
+"""SQLite database manager — one database per review, full provenance.
+
+RETENTION POLICY: All fetched paper data (metadata, abstract, screening
+traces, verification traces) is retained permanently regardless of
+screening outcome. ABSTRACT_SCREENED_OUT is a label, not a deletion.
+The database is the single source of truth for all papers ever evaluated.
+"""
 
 import json
 import logging
@@ -16,11 +22,15 @@ DATA_ROOT = Path("data")
 
 STATUSES = (
     "INGESTED",
-    "SCREENED_IN",
-    "SCREENED_OUT",
-    "SCREEN_FLAGGED",
+    "ABSTRACT_SCREENED_IN",
+    "ABSTRACT_SCREENED_OUT",
+    "ABSTRACT_SCREEN_FLAGGED",
     "PDF_ACQUIRED",
     "PARSED",
+    # Full-text screening statuses
+    "FT_ELIGIBLE",
+    "FT_SCREENED_OUT",
+    "FT_FLAGGED",
     "EXTRACT_FAILED",
     "EXTRACTED",
     "AI_AUDIT_COMPLETE",
@@ -29,16 +39,19 @@ STATUSES = (
 )
 
 ALLOWED_TRANSITIONS: dict[str, set[str]] = {
-    "INGESTED": {"SCREENED_IN", "SCREENED_OUT", "SCREEN_FLAGGED"},
-    "SCREENED_IN": {"PDF_ACQUIRED", "SCREEN_FLAGGED"},
-    "SCREEN_FLAGGED": {"SCREENED_IN", "SCREENED_OUT"},
+    "INGESTED": {"ABSTRACT_SCREENED_IN", "ABSTRACT_SCREENED_OUT", "ABSTRACT_SCREEN_FLAGGED"},
+    "ABSTRACT_SCREENED_IN": {"PDF_ACQUIRED", "ABSTRACT_SCREEN_FLAGGED"},
+    "ABSTRACT_SCREEN_FLAGGED": {"ABSTRACT_SCREENED_IN", "ABSTRACT_SCREENED_OUT"},
     "PDF_ACQUIRED": {"PARSED"},
-    "PARSED": {"EXTRACTED", "EXTRACT_FAILED"},
+    "PARSED": {"FT_ELIGIBLE", "FT_SCREENED_OUT", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED"},
+    "FT_ELIGIBLE": {"EXTRACTED", "EXTRACT_FAILED", "FT_FLAGGED"},
+    "FT_FLAGGED": {"FT_ELIGIBLE", "FT_SCREENED_OUT"},
     "EXTRACT_FAILED": {"PARSED", "EXTRACTED"},
     "EXTRACTED": {"AI_AUDIT_COMPLETE"},
     "AI_AUDIT_COMPLETE": {"HUMAN_AUDIT_COMPLETE", "REJECTED"},
     # Terminal states with no forward transitions
-    "SCREENED_OUT": set(),
+    "ABSTRACT_SCREENED_OUT": set(),
+    "FT_SCREENED_OUT": set(),
     "HUMAN_AUDIT_COMPLETE": {"REJECTED"},
     "REJECTED": set(),
 }
@@ -46,7 +59,7 @@ ALLOWED_TRANSITIONS: dict[str, set[str]] = {
 # Ordered status levels for min_status_gate comparisons
 _STATUS_ORDER = {
     "PARSED": 0,
-    "SCREENED_OUT": 1,
+    "ABSTRACT_SCREENED_OUT": 1,
     "EXTRACTED": 2,
     "AI_AUDIT_COMPLETE": 3,
     "HUMAN_AUDIT_COMPLETE": 4,
@@ -74,7 +87,7 @@ CREATE TABLE IF NOT EXISTS papers (
 CREATE INDEX IF NOT EXISTS idx_papers_status ON papers(status);
 CREATE INDEX IF NOT EXISTS idx_papers_doi    ON papers(doi);
 
-CREATE TABLE IF NOT EXISTS screening_decisions (
+CREATE TABLE IF NOT EXISTS abstract_screening_decisions (
     id              INTEGER PRIMARY KEY,
     paper_id        INTEGER NOT NULL REFERENCES papers(id),
     pass_number     INTEGER NOT NULL CHECK (pass_number IN (1, 2)),
@@ -84,9 +97,9 @@ CREATE TABLE IF NOT EXISTS screening_decisions (
     decided_at      TEXT NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_screening_paper ON screening_decisions(paper_id);
+CREATE INDEX IF NOT EXISTS idx_abstract_screening_paper ON abstract_screening_decisions(paper_id);
 
-CREATE TABLE IF NOT EXISTS verification_decisions (
+CREATE TABLE IF NOT EXISTS abstract_verification_decisions (
     id              INTEGER PRIMARY KEY,
     paper_id        INTEGER NOT NULL REFERENCES papers(id),
     decision        TEXT NOT NULL CHECK (decision IN ('include', 'exclude')),
@@ -95,7 +108,7 @@ CREATE TABLE IF NOT EXISTS verification_decisions (
     decided_at      TEXT NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_verification_paper ON verification_decisions(paper_id);
+CREATE INDEX IF NOT EXISTS idx_abstract_verification_paper ON abstract_verification_decisions(paper_id);
 
 CREATE TABLE IF NOT EXISTS full_text_assets (
     id                  INTEGER PRIMARY KEY,
@@ -115,6 +128,7 @@ CREATE TABLE IF NOT EXISTS extractions (
     extracted_data          TEXT NOT NULL,  -- JSON
     reasoning_trace         TEXT,
     model                   TEXT,
+    low_yield               INTEGER NOT NULL DEFAULT 0,  -- boolean: 1 if below threshold
     extracted_at            TEXT NOT NULL
 );
 
@@ -137,6 +151,31 @@ CREATE TABLE IF NOT EXISTS evidence_spans (
 
 CREATE INDEX IF NOT EXISTS idx_spans_extraction ON evidence_spans(extraction_id);
 
+CREATE TABLE IF NOT EXISTS ft_screening_decisions (
+    id              INTEGER PRIMARY KEY,
+    paper_id        INTEGER NOT NULL REFERENCES papers(id),
+    model           TEXT NOT NULL,
+    decision        TEXT NOT NULL CHECK (decision IN ('FT_ELIGIBLE', 'FT_EXCLUDE')),
+    reason_code     TEXT NOT NULL,
+    rationale       TEXT,
+    confidence      REAL CHECK (confidence >= 0.0 AND confidence <= 1.0),
+    decided_at      TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_ft_screening_paper ON ft_screening_decisions(paper_id);
+
+CREATE TABLE IF NOT EXISTS ft_verification_decisions (
+    id              INTEGER PRIMARY KEY,
+    paper_id        INTEGER NOT NULL REFERENCES papers(id),
+    model           TEXT NOT NULL,
+    decision        TEXT NOT NULL CHECK (decision IN ('FT_ELIGIBLE', 'FT_FLAGGED')),
+    rationale       TEXT,
+    confidence      REAL CHECK (confidence >= 0.0 AND confidence <= 1.0),
+    decided_at      TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_ft_verification_paper ON ft_verification_decisions(paper_id);
+
 CREATE TABLE IF NOT EXISTS review_runs (
     id                  INTEGER PRIMARY KEY,
     review_spec_hash    TEXT NOT NULL,
@@ -152,7 +191,7 @@ CREATE TABLE IF NOT EXISTS review_runs (
 
 # Migrations for existing databases
 _VERIFICATION_TABLE = """
-CREATE TABLE IF NOT EXISTS verification_decisions (
+CREATE TABLE IF NOT EXISTS abstract_verification_decisions (
     id              INTEGER PRIMARY KEY,
     paper_id        INTEGER NOT NULL REFERENCES papers(id),
     decision        TEXT NOT NULL CHECK (decision IN ('include', 'exclude')),
@@ -160,7 +199,7 @@ CREATE TABLE IF NOT EXISTS verification_decisions (
     model           TEXT,
     decided_at      TEXT NOT NULL
 );
-CREATE INDEX IF NOT EXISTS idx_verification_paper ON verification_decisions(paper_id);
+CREATE INDEX IF NOT EXISTS idx_abstract_verification_paper ON abstract_verification_decisions(paper_id);
 """
 
 _SIMPLE_MIGRATIONS = [
@@ -171,6 +210,7 @@ _SIMPLE_MIGRATIONS = [
     "ALTER TABLE papers ADD COLUMN download_status TEXT DEFAULT 'pending' CHECK (download_status IN ('pending', 'success', 'failed', 'manual'))",
     "ALTER TABLE papers ADD COLUMN pdf_local_path TEXT",
     "ALTER TABLE papers ADD COLUMN acquisition_date TEXT",
+    "ALTER TABLE extractions ADD COLUMN low_yield INTEGER NOT NULL DEFAULT 0",
 ]
 
 _EVIDENCE_SPANS_REBUILD = """
@@ -238,7 +278,7 @@ class ReviewDatabase:
             except sqlite3.OperationalError:
                 pass  # column/table already exists
 
-        # Ensure verification_decisions table exists (for pre-existing databases)
+        # Ensure abstract_verification_decisions table exists (for pre-existing databases)
         self._conn.executescript(_VERIFICATION_TABLE)
         self._conn.commit()
 
@@ -482,7 +522,7 @@ class ReviewDatabase:
     def min_status_gate(self, paper_id: int, min_status: str) -> bool:
         """Return True if paper meets or exceeds the minimum status level.
 
-        Order: PARSED < SCREENED_OUT < EXTRACTED < AI_AUDIT_COMPLETE
+        Order: PARSED < ABSTRACT_SCREENED_OUT < EXTRACTED < AI_AUDIT_COMPLETE
                < HUMAN_AUDIT_COMPLETE.
         """
         if min_status not in _STATUS_ORDER:
@@ -512,7 +552,7 @@ class ReviewDatabase:
     ) -> int:
         """Record a screening decision. Returns the decision id."""
         cur = self._conn.execute(
-            """INSERT INTO screening_decisions
+            """INSERT INTO abstract_screening_decisions
                (paper_id, pass_number, decision, rationale, model, decided_at)
                VALUES (?, ?, ?, ?, ?, ?)""",
             (paper_id, pass_number, decision, rationale, model, _now()),
@@ -529,10 +569,47 @@ class ReviewDatabase:
     ) -> int:
         """Record a verification screening decision. Returns the decision id."""
         cur = self._conn.execute(
-            """INSERT INTO verification_decisions
+            """INSERT INTO abstract_verification_decisions
                (paper_id, decision, rationale, model, decided_at)
                VALUES (?, ?, ?, ?, ?)""",
             (paper_id, decision, rationale, model, _now()),
+        )
+        self._conn.commit()
+        return cur.lastrowid
+
+    def add_ft_screening_decision(
+        self,
+        paper_id: int,
+        model: str,
+        decision: str,
+        reason_code: str,
+        rationale: str,
+        confidence: float,
+    ) -> int:
+        """Record a full-text screening decision. Returns the decision id."""
+        cur = self._conn.execute(
+            """INSERT INTO ft_screening_decisions
+               (paper_id, model, decision, reason_code, rationale, confidence, decided_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (paper_id, model, decision, reason_code, rationale, confidence, _now()),
+        )
+        self._conn.commit()
+        return cur.lastrowid
+
+    def add_ft_verification_decision(
+        self,
+        paper_id: int,
+        model: str,
+        decision: str,
+        rationale: str,
+        confidence: float,
+    ) -> int:
+        """Record a full-text verification decision. Returns the decision id."""
+        cur = self._conn.execute(
+            """INSERT INTO ft_verification_decisions
+               (paper_id, model, decision, rationale, confidence, decided_at)
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (paper_id, model, decision, rationale, confidence, _now()),
         )
         self._conn.commit()
         return cur.lastrowid

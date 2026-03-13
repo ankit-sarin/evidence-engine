@@ -74,7 +74,7 @@ def export_review_queue(
 
     # Build EE-XXX mapping (sequential by paper_id order among included papers)
     all_included = db._conn.execute(
-        "SELECT id FROM papers WHERE status NOT IN ('SCREENED_OUT', 'REJECTED') ORDER BY id"
+        "SELECT id FROM papers WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED') ORDER BY id"
     ).fetchall()
     ee_map = {row["id"]: f"EE-{seq:03d}" for seq, row in enumerate(all_included, 1)}
 

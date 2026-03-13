@@ -4,6 +4,7 @@ Default model: qwen3:32b. Override via auditor_model in Review Spec YAML
 or the model parameter on individual functions.
 """
 
+import json
 import logging
 import re
 import unicodedata
@@ -236,6 +237,79 @@ def audit_span(
     return status, reasoning
 
 
+# ── Low-Yield Detection ──────────────────────────────────────────────
+
+# Values that indicate a field is absent/not reported — not counted as populated
+_ABSENCE_VALUES = {"NOT_FOUND", "Not discussed", "NR", "No comparison reported", "Not assessable"}
+
+
+def count_populated_fields(extraction_data: dict) -> int:
+    """Count non-null, non-absence extracted fields in an extraction.
+
+    Examines the extracted_data JSON to count fields that have a real value
+    (not null, empty, or an absence sentinel like NR/NOT_FOUND).
+    """
+    count = 0
+    for key, value in extraction_data.items():
+        if value is None:
+            continue
+        if isinstance(value, str) and (not value.strip() or value.strip() in _ABSENCE_VALUES):
+            continue
+        count += 1
+    return count
+
+
+def check_low_yield(
+    db: ReviewDatabase,
+    threshold: int = 4,
+) -> dict:
+    """Flag AI_AUDIT_COMPLETE papers with fewer than threshold populated fields.
+
+    Sets low_yield=1 on the extraction record. Returns stats dict.
+    """
+    papers = db.get_papers_by_status("AI_AUDIT_COMPLETE")
+    stats = {"checked": 0, "low_yield": 0, "ok": 0}
+
+    for paper in papers:
+        pid = paper["id"]
+        extraction = db._conn.execute(
+            "SELECT id, extracted_data FROM extractions "
+            "WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
+            (pid,),
+        ).fetchone()
+        if not extraction:
+            continue
+
+        stats["checked"] += 1
+        extracted = json.loads(extraction["extracted_data"])
+        populated = count_populated_fields(extracted)
+
+        if populated < threshold:
+            db._conn.execute(
+                "UPDATE extractions SET low_yield = 1 WHERE id = ?",
+                (extraction["id"],),
+            )
+            stats["low_yield"] += 1
+            logger.info(
+                "Paper %d: LOW_YIELD — %d/%d fields populated (threshold: %d)",
+                pid, populated, len(extracted), threshold,
+            )
+        else:
+            # Ensure cleared if re-run after edits
+            db._conn.execute(
+                "UPDATE extractions SET low_yield = 0 WHERE id = ?",
+                (extraction["id"],),
+            )
+            stats["ok"] += 1
+
+    db._conn.commit()
+    logger.info(
+        "Low-yield check: %d checked, %d flagged, %d ok (threshold: %d)",
+        stats["checked"], stats["low_yield"], stats["ok"], threshold,
+    )
+    return stats
+
+
 # ── Batch Audit Pipeline ─────────────────────────────────────────────
 
 
@@ -359,4 +433,10 @@ def run_audit(
         stats["spans_flagged"], stats["spans_invalid_snippet"],
         stats["grep_failures"],
     )
+
+    # Post-audit: low-yield detection
+    threshold = spec.low_yield_threshold if spec else 4
+    ly_stats = check_low_yield(db, threshold=threshold)
+    stats["low_yield"] = ly_stats["low_yield"]
+
     return stats

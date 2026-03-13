@@ -1,20 +1,24 @@
-"""Review adjudication workflow — 10-stage sequential enforcement.
+"""Review adjudication workflow — 12-stage sequential enforcement.
 
-Screening stages (1–5):
-  1. SCREENING_COMPLETE        — auto: set when screening finishes
-  2. DIAGNOSTIC_SAMPLE_COMPLETE — manual: human confirms 50-paper FP analysis
-  3. CATEGORIES_CONFIGURED     — auto: adjudication_categories.yaml exists & validates
-  4. QUEUE_EXPORTED            — auto: export_adjudication_queue succeeds
-  5. ADJUDICATION_COMPLETE     — auto: import with zero unresolved papers
+Abstract screening stages (1–5):
+  1. ABSTRACT_SCREENING_COMPLETE   — auto: set when abstract screening finishes
+  2. ABSTRACT_DIAGNOSTIC_COMPLETE  — manual: human confirms 50-paper FP analysis
+  3. ABSTRACT_CATEGORIES_CONFIGURED — auto: adjudication_categories.yaml exists & validates
+  4. ABSTRACT_QUEUE_EXPORTED       — auto: export_adjudication_queue succeeds
+  5. ABSTRACT_ADJUDICATION_COMPLETE — auto: import with zero unresolved papers
 
 PDF acquisition stage (6):
   6. PDF_ACQUISITION           — manual: advance after all PDFs acquired
 
-Extraction stages (7–10):
-  7. EXTRACTION_COMPLETE       — auto: all included papers reach EXTRACTED status
-  8. AI_AUDIT_COMPLETE_STAGE   — auto: audit run finishes (all papers audited)
-  9. AUDIT_QUEUE_EXPORTED      — auto: export_audit_review_queue succeeds
- 10. AUDIT_REVIEW_COMPLETE     — auto: import with zero unresolved spans
+Full-text screening stages (7–8):
+  7. FULL_TEXT_SCREENING_COMPLETE    — auto: full-text screening finishes
+  8. FULL_TEXT_ADJUDICATION_COMPLETE — auto: full-text adjudication import
+
+Extraction stages (9–12):
+  9. EXTRACTION_COMPLETE       — auto: all included papers reach EXTRACTED status
+ 10. AI_AUDIT_COMPLETE_STAGE   — auto: audit run finishes (all papers audited)
+ 11. AUDIT_QUEUE_EXPORTED      — auto: export_audit_review_queue succeeds
+ 12. AUDIT_REVIEW_COMPLETE     — auto: import with zero unresolved spans
 """
 
 import logging
@@ -24,14 +28,17 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-# Ordered workflow stages — screening (1-5), PDF acquisition (6), extraction (7-10)
+# Ordered workflow stages — abstract screening (1-5), PDF acquisition (6),
+# full-text screening (7-8), extraction (9-12)
 WORKFLOW_STAGES = (
-    "SCREENING_COMPLETE",
-    "DIAGNOSTIC_SAMPLE_COMPLETE",
-    "CATEGORIES_CONFIGURED",
-    "QUEUE_EXPORTED",
-    "ADJUDICATION_COMPLETE",
+    "ABSTRACT_SCREENING_COMPLETE",
+    "ABSTRACT_DIAGNOSTIC_COMPLETE",
+    "ABSTRACT_CATEGORIES_CONFIGURED",
+    "ABSTRACT_QUEUE_EXPORTED",
+    "ABSTRACT_ADJUDICATION_COMPLETE",
     "PDF_ACQUISITION",
+    "FULL_TEXT_SCREENING_COMPLETE",
+    "FULL_TEXT_ADJUDICATION_COMPLETE",
     "EXTRACTION_COMPLETE",
     "AI_AUDIT_COMPLETE_STAGE",
     "AUDIT_QUEUE_EXPORTED",
@@ -41,32 +48,33 @@ WORKFLOW_STAGES = (
 # Subsets for display grouping
 SCREENING_STAGES = WORKFLOW_STAGES[:5]
 ACQUISITION_STAGES = WORKFLOW_STAGES[5:6]
-EXTRACTION_STAGES = WORKFLOW_STAGES[6:]
+FULL_TEXT_STAGES = WORKFLOW_STAGES[6:8]
+EXTRACTION_STAGES = WORKFLOW_STAGES[8:]
 
 # Human-readable next-step guidance per stage
 _NEXT_STEP_GUIDANCE = {
-    "SCREENING_COMPLETE": (
-        "Run screening (run_screening or screen_expanded.py) to complete "
+    "ABSTRACT_SCREENING_COMPLETE": (
+        "Run abstract screening (run_screening or screen_expanded.py) to complete "
         "primary + verification screening."
     ),
-    "DIAGNOSTIC_SAMPLE_COMPLETE": (
+    "ABSTRACT_DIAGNOSTIC_COMPLETE": (
         "Review a 50-paper diagnostic sample of flagged papers to identify "
         "FP patterns, then run:\n"
         "  python -m engine.adjudication.advance_stage "
-        "--review <name> --stage DIAGNOSTIC_SAMPLE_COMPLETE "
+        "--review <name> --stage ABSTRACT_DIAGNOSTIC_COMPLETE "
         '--note "50-paper sample reviewed, N FP categories identified"'
     ),
-    "CATEGORIES_CONFIGURED": (
+    "ABSTRACT_CATEGORIES_CONFIGURED": (
         "Create or update adjudication_categories.yaml for this review.\n"
         "  Location: data/<review>/adjudication_categories.yaml\n"
         "  Generate a starter template with: generate_starter_config()"
     ),
-    "QUEUE_EXPORTED": (
-        "Export the adjudication queue:\n"
+    "ABSTRACT_QUEUE_EXPORTED": (
+        "Export the abstract screening adjudication queue:\n"
         "  export_adjudication_queue(review_db, output_path, review_name=<name>)"
     ),
-    "ADJUDICATION_COMPLETE": (
-        "Complete human review of the exported screening queue, then run:\n"
+    "ABSTRACT_ADJUDICATION_COMPLETE": (
+        "Complete human review of the exported abstract screening queue, then run:\n"
         "  import_adjudication_decisions(review_db, <path_to_completed_xlsx>)"
     ),
     "PDF_ACQUISITION": (
@@ -75,6 +83,15 @@ _NEXT_STEP_GUIDANCE = {
         "  python -m engine.acquisition.download --review <name>\n"
         "  python -m engine.acquisition.manual_list --review <name>\n"
         "  Then advance manually when all PDFs are acquired."
+    ),
+    "FULL_TEXT_SCREENING_COMPLETE": (
+        "Run full-text screening on all parsed papers:\n"
+        "  python -m engine.agents.ft_screener --review <name> --spec <spec>"
+    ),
+    "FULL_TEXT_ADJUDICATION_COMPLETE": (
+        "Export FT_FLAGGED papers, complete human review, then import:\n"
+        "  from engine.adjudication.ft_screening_adjudicator import "
+        "export_ft_adjudication_queue, import_ft_adjudication_decisions"
     ),
     "EXTRACTION_COMPLETE": (
         "Run full-text extraction on all included papers:\n"
@@ -240,8 +257,8 @@ def get_current_blocker(conn: sqlite3.Connection) -> dict | None:
 
 
 def is_adjudication_complete(conn: sqlite3.Connection) -> bool:
-    """Check if the screening adjudication workflow is complete."""
-    return is_stage_done(conn, "ADJUDICATION_COMPLETE")
+    """Check if the abstract screening adjudication workflow is complete."""
+    return is_stage_done(conn, "ABSTRACT_ADJUDICATION_COMPLETE")
 
 
 def is_audit_review_complete(conn: sqlite3.Connection) -> bool:
@@ -321,9 +338,11 @@ def format_workflow_status(conn: sqlite3.Connection,
     for i, s in enumerate(statuses):
         # Section headers
         if i == 0:
-            lines.append("  ── Screening Adjudication ──")
+            lines.append("  ── Abstract Screening Adjudication ──")
         elif s["stage_name"] == "PDF_ACQUISITION":
             lines.append("  ── PDF Acquisition ──")
+        elif s["stage_name"] == "FULL_TEXT_SCREENING_COMPLETE":
+            lines.append("  ── Full-Text Screening ──")
         elif s["stage_name"] == "EXTRACTION_COMPLETE":
             lines.append("  ── Extraction Audit ──")
         if s["status"] == "complete":

@@ -41,6 +41,39 @@ screening_models:
   primary: "qwen3:8b"
   verification: "gemma3:27b"
 
+ft_screening_models:
+  primary: "qwen3.5:27b"
+  verifier: "gemma3:27b"
+  think: false
+  temperature: 0
+
+low_yield_threshold: 4
+
+specialty_scope:
+  included:
+    - abdominal surgery  # colorectal, foregut, HPB, pancreas, general
+    - gynecologic surgery
+    - urologic surgery
+    - thoracic surgery
+    - general surgery
+    - head and neck surgery  # including TORS
+    - bench/preclinical autonomy  # suturing, knot-tying, tissue manipulation, instrument movement, phantom/cadaver
+  excluded:
+    - dental surgery
+    - oral and maxillofacial surgery
+    - ophthalmic surgery  # retinal, cataract
+    - orthopedic surgery  # unless bench autonomy task
+    - dermatologic surgery
+    - neurosurgery  # unless bench autonomy task
+  notes: >
+    Papers describing bench/preclinical autonomous tasks (e.g., suturing,
+    knot-tying on phantoms) are included regardless of the specialty context,
+    as these represent generalizable autonomous capabilities.
+    Orthopedic and neurosurgery papers are excluded only when the autonomous
+    task is specialty-specific (e.g., autonomous bone drilling, stereotactic
+    targeting). If the paper describes a generalizable autonomous task
+    performed in an orthopedic or neurosurgical context, include it.
+
 screening_criteria:
   inclusion:
     - English language

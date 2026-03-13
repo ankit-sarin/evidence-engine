@@ -232,13 +232,13 @@ def run_screening(db: ReviewDatabase, spec: ReviewSpec) -> dict:
 
         # Resolve agreement
         if d1.decision == "include" and d2.decision == "include":
-            db.update_status(pid, "SCREENED_IN")
+            db.update_status(pid, "ABSTRACT_SCREENED_IN")
             stats["screened_in"] += 1
         elif d1.decision == "exclude" and d2.decision == "exclude":
-            db.update_status(pid, "SCREENED_OUT")
+            db.update_status(pid, "ABSTRACT_SCREENED_OUT")
             stats["screened_out"] += 1
         else:
-            db.update_status(pid, "SCREEN_FLAGGED")
+            db.update_status(pid, "ABSTRACT_SCREEN_FLAGGED")
             stats["flagged"] += 1
 
         screened_ids.add(pid)
@@ -264,30 +264,30 @@ def run_screening(db: ReviewDatabase, spec: ReviewSpec) -> dict:
 
 
 def run_verification(db: ReviewDatabase, spec: ReviewSpec) -> dict:
-    """Re-screen SCREENED_IN papers with the verification model.
+    """Re-screen ABSTRACT_SCREENED_IN papers with the verification model.
 
     Consensus logic:
-      - Both models include → stays SCREENED_IN
-      - Primary included, verifier excludes → SCREEN_FLAGGED
+      - Both models include → stays ABSTRACT_SCREENED_IN
+      - Primary included, verifier excludes → ABSTRACT_SCREEN_FLAGGED
 
     Supports checkpoint/resume.
     Returns summary stats dict.
     """
     verification_model = spec.screening_models.verification
-    papers = db.get_papers_by_status("SCREENED_IN")
+    papers = db.get_papers_by_status("ABSTRACT_SCREENED_IN")
 
     ckpt_path = _checkpoint_path(db, suffix="_verification")
     verified_ids = _load_checkpoint(ckpt_path)
 
     if verified_ids:
         logger.info(
-            "Resuming verification: %d already verified, %d SCREENED_IN total",
+            "Resuming verification: %d already verified, %d ABSTRACT_SCREENED_IN total",
             len(verified_ids), len(papers),
         )
 
     pending = [p for p in papers if p["id"] not in verified_ids]
     logger.info(
-        "Starting verification on %d SCREENED_IN papers (%d pending) with %s",
+        "Starting verification on %d ABSTRACT_SCREENED_IN papers (%d pending) with %s",
         len(papers), len(pending), verification_model,
     )
 
@@ -302,11 +302,11 @@ def run_verification(db: ReviewDatabase, spec: ReviewSpec) -> dict:
         )
 
         if decision.decision == "include":
-            # Stays SCREENED_IN — no status change needed
+            # Stays ABSTRACT_SCREENED_IN — no status change needed
             stats["confirmed"] += 1
         else:
             # Verifier disagrees — flag for human review
-            db.update_status(pid, "SCREEN_FLAGGED")
+            db.update_status(pid, "ABSTRACT_SCREEN_FLAGGED")
             stats["flagged"] += 1
 
         verified_ids.add(pid)
@@ -328,11 +328,11 @@ def run_verification(db: ReviewDatabase, spec: ReviewSpec) -> dict:
         stats["flagged"],
     )
 
-    # Auto-advance workflow: SCREENING_COMPLETE
+    # Auto-advance workflow: ABSTRACT_SCREENING_COMPLETE
     try:
         from engine.adjudication.workflow import complete_stage
         complete_stage(
-            db._conn, "SCREENING_COMPLETE",
+            db._conn, "ABSTRACT_SCREENING_COMPLETE",
             metadata=f"{stats['confirmed']} confirmed, {stats['flagged']} flagged",
         )
     except Exception:

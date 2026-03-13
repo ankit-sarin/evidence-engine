@@ -136,7 +136,7 @@ def export_evidence_excel(
     screen_rows = db._conn.execute(
         """SELECT p.id, p.title, sd.pass_number, sd.decision,
                   sd.rationale, sd.model, sd.decided_at
-           FROM screening_decisions sd
+           FROM abstract_screening_decisions sd
            JOIN papers p ON p.id = sd.paper_id
            ORDER BY p.id, sd.pass_number"""
     ).fetchall()

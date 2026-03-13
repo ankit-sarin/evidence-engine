@@ -40,7 +40,7 @@ def tmp_db(tmp_path):
 
 @pytest.fixture
 def flagged_db(tmp_db):
-    """DB with some papers in SCREEN_FLAGGED status."""
+    """DB with some papers in ABSTRACT_SCREEN_FLAGGED status."""
     cits = [
         Citation(
             title="Deep Learning Surgical Tool Segmentation",
@@ -65,7 +65,7 @@ def flagged_db(tmp_db):
     for pid in [1, 2, 3]:
         tmp_db.add_screening_decision(pid, 1, "include", "maybe relevant", "qwen3:8b")
         tmp_db.add_screening_decision(pid, 2, "exclude", "not sure", "qwen3:8b")
-        tmp_db.update_status(pid, "SCREEN_FLAGGED")
+        tmp_db.update_status(pid, "ABSTRACT_SCREEN_FLAGGED")
     return tmp_db
 
 
@@ -322,7 +322,7 @@ def test_generate_starter_config_with_samples(tmp_path):
 def test_adjudication_table_created(tmp_db):
     """The adjudication table should be created by ReviewDatabase init."""
     row = tmp_db._conn.execute(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='screening_adjudication'"
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='abstract_screening_adjudication'"
     ).fetchone()
     assert row is not None
 
@@ -446,7 +446,7 @@ def test_import_decisions(flagged_db, tmp_path):
 
 
 def test_import_updates_status(flagged_db, tmp_path):
-    """Import should transition SCREEN_FLAGGED → SCREENED_IN/OUT."""
+    """Import should transition ABSTRACT_SCREEN_FLAGGED → ABSTRACT_SCREENED_IN/OUT."""
     out = tmp_path / "queue.xlsx"
     export_adjudication_queue(flagged_db, out)
 
@@ -460,10 +460,10 @@ def test_import_updates_status(flagged_db, tmp_path):
 
     import_adjudication_decisions(flagged_db, out)
 
-    # All should now be SCREENED_OUT
-    flagged = flagged_db.get_papers_by_status("SCREEN_FLAGGED")
+    # All should now be ABSTRACT_SCREENED_OUT
+    flagged = flagged_db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")
     assert len(flagged) == 0
-    screened_out = flagged_db.get_papers_by_status("SCREENED_OUT")
+    screened_out = flagged_db.get_papers_by_status("ABSTRACT_SCREENED_OUT")
     assert len(screened_out) == 3
 
 

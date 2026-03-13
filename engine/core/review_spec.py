@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Optional
 
 import yaml
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 # ── Extraction Schema ────────────────────────────────────────────────
@@ -87,11 +87,44 @@ class ScreeningModels(BaseModel):
     verification: str = Field(default="qwen3:32b", description="Larger model for verification of includes")
 
 
+class FTScreeningModels(BaseModel):
+    """Model configuration for full-text screening."""
+
+    primary: str = Field(default="qwen3.5:27b", description="Full-text primary screener")
+    verifier: str = Field(default="gemma3:27b", description="Full-text verification model")
+    think: bool = Field(default=False, description="Enable thinking mode (slow, not recommended)")
+    temperature: float = Field(default=0.0, ge=0.0, le=1.0)
+
+
 class ScreeningCriteria(BaseModel):
     """Inclusion/exclusion rules for title-abstract screening."""
 
     inclusion: list[str]
     exclusion: list[str]
+
+
+# ── Specialty Scope ──────────────────────────────────────────────────
+
+
+class SpecialtyScope(BaseModel):
+    """Surgical specialty inclusion/exclusion scope for screening."""
+
+    included: list[str] = Field(min_length=1)
+    excluded: list[str] = Field(min_length=1)
+    notes: Optional[str] = None
+
+    def format_for_prompt(self) -> str:
+        """Format specialty scope as a string for inclusion in screening prompts."""
+        lines = ["SPECIALTY SCOPE:"]
+        lines.append("  Included specialties:")
+        for s in self.included:
+            lines.append(f"    - {s}")
+        lines.append("  Excluded specialties:")
+        for s in self.excluded:
+            lines.append(f"    - {s}")
+        if self.notes:
+            lines.append(f"  Notes: {self.notes.strip()}")
+        return "\n".join(lines)
 
 
 # ── Review Spec (top-level) ──────────────────────────────────────────
@@ -108,8 +141,21 @@ class ReviewSpec(BaseModel):
     pico: PICO
     search_strategy: SearchStrategy
     screening_models: ScreeningModels = Field(default_factory=ScreeningModels)
+    ft_screening_models: FTScreeningModels = Field(default_factory=FTScreeningModels)
     screening_criteria: ScreeningCriteria
     extraction_schema: ExtractionSchema
+    specialty_scope: Optional[SpecialtyScope] = Field(
+        default=None,
+        description="Surgical specialty inclusion/exclusion scope. If absent, no specialty filtering.",
+    )
+    low_yield_threshold: int = Field(
+        default=4,
+        ge=1,
+        description=(
+            "Minimum number of non-null extracted fields required. Papers below "
+            "this threshold are flagged as LOW_YIELD for PI review."
+        ),
+    )
     auditor_model: Optional[str] = Field(
         default=None,
         description="Ollama model for extraction audit. Defaults to gemma3:27b if not set.",

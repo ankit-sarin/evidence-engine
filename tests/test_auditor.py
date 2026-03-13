@@ -298,7 +298,7 @@ def test_full_audit_flow_mocked(tmp_path):
     db.add_papers([Citation(title="STAR Study", source="pubmed", pmid="A1")])
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
     db.update_status(pid, "EXTRACTED")

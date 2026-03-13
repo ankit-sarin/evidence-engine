@@ -190,7 +190,7 @@ def test_full_two_pass_mocked(tmp_path, spec):
     pid = paper["id"]
 
     # Walk to PARSED
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
 
@@ -229,7 +229,7 @@ def test_staleness_skip(tmp_path, spec):
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
 
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
 
@@ -255,7 +255,7 @@ def test_run_extraction_no_parsed_text(tmp_path, spec):
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
 
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
 

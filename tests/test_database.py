@@ -34,7 +34,7 @@ def test_tables_exist(db):
     }
     expected = {
         "papers",
-        "screening_decisions",
+        "abstract_screening_decisions",
         "full_text_assets",
         "extractions",
         "evidence_spans",
@@ -83,11 +83,11 @@ def test_full_lifecycle(db):
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
 
-    # INGESTED → SCREENED_IN
-    db.update_status(pid, "SCREENED_IN")
-    assert db.get_papers_by_status("SCREENED_IN")[0]["id"] == pid
+    # INGESTED → ABSTRACT_SCREENED_IN
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    assert db.get_papers_by_status("ABSTRACT_SCREENED_IN")[0]["id"] == pid
 
-    # SCREENED_IN → PDF_ACQUIRED
+    # ABSTRACT_SCREENED_IN → PDF_ACQUIRED
     db.update_status(pid, "PDF_ACQUIRED")
 
     # PDF_ACQUIRED → PARSED
@@ -105,7 +105,7 @@ def test_ai_to_human_audit_transition(db):
     db.add_papers([_cit(pmid="AH1", title="AI to Human")])
     pid = db.get_papers_by_status("INGESTED")[0]["id"]
 
-    for status in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED", "AI_AUDIT_COMPLETE"):
+    for status in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED", "AI_AUDIT_COMPLETE"):
         db.update_status(pid, status)
 
     db.update_status(pid, "HUMAN_AUDIT_COMPLETE")
@@ -117,8 +117,8 @@ def test_screened_out_lifecycle(db):
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
 
-    db.update_status(pid, "SCREENED_OUT")
-    assert db.get_papers_by_status("SCREENED_OUT")[0]["id"] == pid
+    db.update_status(pid, "ABSTRACT_SCREENED_OUT")
+    assert db.get_papers_by_status("ABSTRACT_SCREENED_OUT")[0]["id"] == pid
 
 
 def test_flagged_then_resolved(db):
@@ -126,9 +126,9 @@ def test_flagged_then_resolved(db):
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
 
-    db.update_status(pid, "SCREEN_FLAGGED")
-    db.update_status(pid, "SCREENED_IN")
-    assert db.get_papers_by_status("SCREENED_IN")[0]["id"] == pid
+    db.update_status(pid, "ABSTRACT_SCREEN_FLAGGED")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    assert db.get_papers_by_status("ABSTRACT_SCREENED_IN")[0]["id"] == pid
 
 
 # ── Invalid Transitions ─────────────────────────────────────────────
@@ -157,15 +157,15 @@ def test_screened_out_is_terminal(db):
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
 
-    db.update_status(pid, "SCREENED_OUT")
+    db.update_status(pid, "ABSTRACT_SCREENED_OUT")
     with pytest.raises(ValueError, match="Invalid transition"):
-        db.update_status(pid, "SCREENED_IN")
+        db.update_status(pid, "ABSTRACT_SCREENED_IN")
 
 
 # ── Screening Decisions ─────────────────────────────────────────────
 
 
-def test_screening_decisions(db):
+def test_abstract_screening_decisions(db):
     db.add_papers([_cit(pmid="SD1", title="Screen Me")])
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
@@ -176,7 +176,7 @@ def test_screening_decisions(db):
     assert d2 > d1
 
     rows = db._conn.execute(
-        "SELECT * FROM screening_decisions WHERE paper_id = ?", (pid,)
+        "SELECT * FROM abstract_screening_decisions WHERE paper_id = ?", (pid,)
     ).fetchall()
     assert len(rows) == 2
     assert rows[0]["pass_number"] == 1
@@ -192,7 +192,7 @@ def test_staleness_detection(db):
     pid = paper["id"]
 
     # Walk to EXTRACTED
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
     db.update_status(pid, "EXTRACTED")
@@ -217,7 +217,7 @@ def test_evidence_spans_and_audit(db):
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
 
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
     db.update_status(pid, "EXTRACTED")
@@ -244,7 +244,7 @@ def test_evidence_spans_contested_status(db):
     """New 'contested' audit status is accepted by the schema."""
     db.add_papers([_cit(pmid="CS1", title="Contested")])
     pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    for s in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
         db.update_status(pid, s)
 
     ext_id = db.add_extraction(pid, "h1", {}, "t", "m")
@@ -259,7 +259,7 @@ def test_evidence_spans_invalid_snippet_status(db):
     """New 'invalid_snippet' audit status is accepted by the schema."""
     db.add_papers([_cit(pmid="IS2", title="Invalid Snippet")])
     pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    for s in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
         db.update_status(pid, s)
 
     ext_id = db.add_extraction(pid, "h1", {}, "t", "m")
@@ -277,7 +277,7 @@ def test_atomic_extraction_commits_all(db):
     """All spans and the extraction record land in one transaction."""
     db.add_papers([_cit(pmid="AT1", title="Atomic OK")])
     pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
     db.update_status(pid, "EXTRACTED")
@@ -309,7 +309,7 @@ def test_atomic_extraction_rolls_back_on_failure(db):
     """If a span insert fails, no extraction or spans are committed."""
     db.add_papers([_cit(pmid="AT2", title="Atomic Fail")])
     pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
     db.update_status(pid, "EXTRACTED")
@@ -340,7 +340,7 @@ def _walk_to_ai_audit(db, pmid):
     """Helper: add a paper and walk it to AI_AUDIT_COMPLETE with spans."""
     db.add_papers([_cit(pmid=pmid, title=f"Paper {pmid}")])
     pid = db.get_papers_by_status("INGESTED")[-1]["id"]
-    for s in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
         db.update_status(pid, s)
     ext_id = db.add_extraction(pid, "h", {}, "t", "m")
     s1 = db.add_evidence_span(ext_id, "f1", "v1", "snip1", 0.9)
@@ -432,14 +432,14 @@ def test_pipeline_stats(db):
     # Screen 3 in, 2 out
     papers = db.get_papers_by_status("INGESTED")
     for p in papers[:3]:
-        db.update_status(p["id"], "SCREENED_IN")
+        db.update_status(p["id"], "ABSTRACT_SCREENED_IN")
     for p in papers[3:5]:
-        db.update_status(p["id"], "SCREENED_OUT")
+        db.update_status(p["id"], "ABSTRACT_SCREENED_OUT")
 
     stats = db.get_pipeline_stats()
     assert stats["total_papers"] == 10
-    assert stats["SCREENED_IN"] == 3
-    assert stats["SCREENED_OUT"] == 2
+    assert stats["ABSTRACT_SCREENED_IN"] == 3
+    assert stats["ABSTRACT_SCREENED_OUT"] == 2
     assert stats["INGESTED"] == 5
     assert stats["total_extractions"] == 0
     assert stats["total_evidence_spans"] == 0
@@ -457,7 +457,7 @@ def test_reset_for_reextraction(db):
     # Screened-out paper should never be touched
     db.add_papers([_cit(pmid="RE_SO", title="Screened Out")])
     so_paper = [p for p in db.get_papers_by_status("INGESTED") if p["pmid"] == "RE_SO"][0]
-    db.update_status(so_paper["id"], "SCREENED_OUT")
+    db.update_status(so_paper["id"], "ABSTRACT_SCREENED_OUT")
 
     # Record pre-reset counts
     pre_extractions = db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0]
@@ -484,8 +484,8 @@ def test_reset_for_reextraction(db):
     assert db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0] == 0
     assert db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0] == 0
 
-    # SCREENED_OUT paper is untouched
-    so = db.get_papers_by_status("SCREENED_OUT")
+    # ABSTRACT_SCREENED_OUT paper is untouched
+    so = db.get_papers_by_status("ABSTRACT_SCREENED_OUT")
     assert len(so) == 1
     assert so[0]["pmid"] == "RE_SO"
 
@@ -497,7 +497,7 @@ def test_cleanup_orphaned_spans(db):
     """cleanup_orphaned_spans deletes spans from older extractions only."""
     db.add_papers([_cit(pmid="CO1", title="Cleanup")])
     pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    for s in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
         db.update_status(pid, s)
 
     # First extraction (will become orphaned)

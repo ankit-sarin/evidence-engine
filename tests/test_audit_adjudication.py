@@ -71,12 +71,12 @@ def _transition_to(db, pid, target):
     """Walk paper through valid transitions to reach target status."""
     transitions = {
         "INGESTED": [],
-        "SCREENED_IN": ["SCREENED_IN"],
-        "PDF_ACQUIRED": ["SCREENED_IN", "PDF_ACQUIRED"],
-        "PARSED": ["SCREENED_IN", "PDF_ACQUIRED", "PARSED"],
-        "EXTRACTED": ["SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"],
-        "AI_AUDIT_COMPLETE": ["SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED", "AI_AUDIT_COMPLETE"],
-        "HUMAN_AUDIT_COMPLETE": ["SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED",
+        "ABSTRACT_SCREENED_IN": ["ABSTRACT_SCREENED_IN"],
+        "PDF_ACQUIRED": ["ABSTRACT_SCREENED_IN", "PDF_ACQUIRED"],
+        "PARSED": ["ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED"],
+        "EXTRACTED": ["ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"],
+        "AI_AUDIT_COMPLETE": ["ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED", "AI_AUDIT_COMPLETE"],
+        "HUMAN_AUDIT_COMPLETE": ["ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED",
                                  "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE"],
     }
     for step in transitions.get(target, []):
@@ -159,9 +159,11 @@ def test_export_creates_xlsx(db, tmp_path):
     ])
 
     # Complete prerequisite stages for AUDIT_QUEUE_EXPORTED
-    for stage in ("SCREENING_COMPLETE", "DIAGNOSTIC_SAMPLE_COMPLETE",
-                   "CATEGORIES_CONFIGURED", "QUEUE_EXPORTED",
-                   "ADJUDICATION_COMPLETE", "EXTRACTION_COMPLETE",
+    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
+                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
+                   "ABSTRACT_ADJUDICATION_COMPLETE",
+                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
+                   "EXTRACTION_COMPLETE",
                    "AI_AUDIT_COMPLETE_STAGE"):
         complete_stage(db._conn, stage)
 
@@ -193,9 +195,11 @@ def test_export_sets_workflow_stage(db, tmp_path):
         {"field_name": "study_design", "value": "RCT", "audit_status": "contested"},
     ])
 
-    for stage in ("SCREENING_COMPLETE", "DIAGNOSTIC_SAMPLE_COMPLETE",
-                   "CATEGORIES_CONFIGURED", "QUEUE_EXPORTED",
-                   "ADJUDICATION_COMPLETE", "EXTRACTION_COMPLETE",
+    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
+                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
+                   "ABSTRACT_ADJUDICATION_COMPLETE",
+                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
+                   "EXTRACTION_COMPLETE",
                    "AI_AUDIT_COMPLETE_STAGE"):
         complete_stage(db._conn, stage)
 
@@ -215,9 +219,11 @@ def test_import_accept_as_is(db, tmp_path):
         {"field_name": "sample_size", "value": "100", "audit_status": "contested"},
     ])
 
-    for stage in ("SCREENING_COMPLETE", "DIAGNOSTIC_SAMPLE_COMPLETE",
-                   "CATEGORIES_CONFIGURED", "QUEUE_EXPORTED",
-                   "ADJUDICATION_COMPLETE", "EXTRACTION_COMPLETE",
+    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
+                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
+                   "ABSTRACT_ADJUDICATION_COMPLETE",
+                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
+                   "EXTRACTION_COMPLETE",
                    "AI_AUDIT_COMPLETE_STAGE"):
         complete_stage(db._conn, stage)
 
@@ -255,9 +261,11 @@ def test_import_correction_records_original(db, tmp_path):
         {"field_name": "sample_size", "value": "100", "audit_status": "verified"},
     ])
 
-    for stage in ("SCREENING_COMPLETE", "DIAGNOSTIC_SAMPLE_COMPLETE",
-                   "CATEGORIES_CONFIGURED", "QUEUE_EXPORTED",
-                   "ADJUDICATION_COMPLETE", "EXTRACTION_COMPLETE",
+    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
+                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
+                   "ABSTRACT_ADJUDICATION_COMPLETE",
+                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
+                   "EXTRACTION_COMPLETE",
                    "AI_AUDIT_COMPLETE_STAGE"):
         complete_stage(db._conn, stage)
 
@@ -306,9 +314,11 @@ def test_import_transitions_to_human_audit_complete(db, tmp_path):
         {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
     ])
 
-    for stage in ("SCREENING_COMPLETE", "DIAGNOSTIC_SAMPLE_COMPLETE",
-                   "CATEGORIES_CONFIGURED", "QUEUE_EXPORTED",
-                   "ADJUDICATION_COMPLETE", "EXTRACTION_COMPLETE",
+    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
+                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
+                   "ABSTRACT_ADJUDICATION_COMPLETE",
+                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
+                   "EXTRACTION_COMPLETE",
                    "AI_AUDIT_COMPLETE_STAGE"):
         complete_stage(db._conn, stage)
 
@@ -335,9 +345,11 @@ def test_import_sets_audit_review_complete(db, tmp_path):
         {"field_name": "study_design", "value": "RCT", "audit_status": "contested"},
     ])
 
-    for stage in ("SCREENING_COMPLETE", "DIAGNOSTIC_SAMPLE_COMPLETE",
-                   "CATEGORIES_CONFIGURED", "QUEUE_EXPORTED",
-                   "ADJUDICATION_COMPLETE", "EXTRACTION_COMPLETE",
+    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
+                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
+                   "ABSTRACT_ADJUDICATION_COMPLETE",
+                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
+                   "EXTRACTION_COMPLETE",
                    "AI_AUDIT_COMPLETE_STAGE"):
         complete_stage(db._conn, stage)
 
@@ -363,9 +375,11 @@ def test_import_missing_decision_blocks_completion(db, tmp_path):
         {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
     ])
 
-    for stage in ("SCREENING_COMPLETE", "DIAGNOSTIC_SAMPLE_COMPLETE",
-                   "CATEGORIES_CONFIGURED", "QUEUE_EXPORTED",
-                   "ADJUDICATION_COMPLETE", "EXTRACTION_COMPLETE",
+    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
+                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
+                   "ABSTRACT_ADJUDICATION_COMPLETE",
+                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
+                   "EXTRACTION_COMPLETE",
                    "AI_AUDIT_COMPLETE_STAGE"):
         complete_stage(db._conn, stage)
 
@@ -388,9 +402,11 @@ def test_reject_paper_cascade(db, tmp_path):
         {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
     ])
 
-    for stage in ("SCREENING_COMPLETE", "DIAGNOSTIC_SAMPLE_COMPLETE",
-                   "CATEGORIES_CONFIGURED", "QUEUE_EXPORTED",
-                   "ADJUDICATION_COMPLETE", "EXTRACTION_COMPLETE",
+    for stage in ("ABSTRACT_SCREENING_COMPLETE", "ABSTRACT_DIAGNOSTIC_COMPLETE",
+                   "ABSTRACT_CATEGORIES_CONFIGURED", "ABSTRACT_QUEUE_EXPORTED",
+                   "ABSTRACT_ADJUDICATION_COMPLETE",
+                   "FULL_TEXT_SCREENING_COMPLETE", "FULL_TEXT_ADJUDICATION_COMPLETE",
+                   "EXTRACTION_COMPLETE",
                    "AI_AUDIT_COMPLETE_STAGE"):
         complete_stage(db._conn, stage)
 

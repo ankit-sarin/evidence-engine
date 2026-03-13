@@ -2,7 +2,7 @@
 import decisions back into the database.
 
 Works with two data sources:
-  1. review.db SCREEN_FLAGGED papers (standard pipeline)
+  1. review.db ABSTRACT_SCREEN_FLAGGED papers (standard pipeline)
   2. Expanded search CSV files (pre-ingestion screening)
 """
 
@@ -31,8 +31,8 @@ EXPANDED_SEARCH_DIR = Path("data/surgical_autonomy/expanded_search")
 
 
 def _collect_db_flagged(db: ReviewDatabase) -> list[dict]:
-    """Collect SCREEN_FLAGGED papers from review.db with screening rationale."""
-    papers = db.get_papers_by_status("SCREEN_FLAGGED")
+    """Collect ABSTRACT_SCREEN_FLAGGED papers from review.db with screening rationale."""
+    papers = db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")
     results = []
 
     for p in papers:
@@ -41,7 +41,7 @@ def _collect_db_flagged(db: ReviewDatabase) -> list[dict]:
         # Get screening decisions (pass 1 and 2)
         rows = db._conn.execute(
             "SELECT pass_number, decision, rationale, model "
-            "FROM screening_decisions WHERE paper_id = ? ORDER BY pass_number",
+            "FROM abstract_screening_decisions WHERE paper_id = ? ORDER BY pass_number",
             (pid,),
         ).fetchall()
 
@@ -55,7 +55,7 @@ def _collect_db_flagged(db: ReviewDatabase) -> list[dict]:
         # Get verification decision if any
         vrow = db._conn.execute(
             "SELECT decision, rationale, model "
-            "FROM verification_decisions WHERE paper_id = ? "
+            "FROM abstract_verification_decisions WHERE paper_id = ? "
             "ORDER BY id DESC LIMIT 1",
             (pid,),
         ).fetchone()
@@ -198,7 +198,7 @@ def export_adjudication_queue(
 ) -> dict:
     """Export all flagged papers as a human-review Excel queue.
 
-    Pulls SCREEN_FLAGGED from review.db plus flagged papers from
+    Pulls ABSTRACT_SCREEN_FLAGGED from review.db plus flagged papers from
     expanded search CSVs (if expanded_search_dir is provided).
 
     Category config is resolved in priority order:
@@ -225,10 +225,10 @@ def export_adjudication_queue(
         logger.warning("No flagged papers found — nothing to export")
         return {"total": 0, "categories": {}}
 
-    # Auto-advance workflow: CATEGORIES_CONFIGURED if config has categories
+    # Auto-advance workflow: ABSTRACT_CATEGORIES_CONFIGURED if config has categories
     if category_config and category_config.categories:
         complete_stage(
-            review_db._conn, "CATEGORIES_CONFIGURED",
+            review_db._conn, "ABSTRACT_CATEGORIES_CONFIGURED",
             metadata=f"{len(category_config.categories)} categories loaded",
         )
 
@@ -264,9 +264,9 @@ def export_adjudication_queue(
     for cat, count in sorted(cat_counts.items()):
         logger.info("  %s: %d", cat, count)
 
-    # Auto-advance workflow: QUEUE_EXPORTED
+    # Auto-advance workflow: ABSTRACT_QUEUE_EXPORTED
     complete_stage(
-        review_db._conn, "QUEUE_EXPORTED",
+        review_db._conn, "ABSTRACT_QUEUE_EXPORTED",
         metadata=f"{len(all_flagged)} papers exported to {output_path}",
     )
 
@@ -436,11 +436,11 @@ def import_adjudication_decisions(
     """Read completed adjudication Excel, write decisions to database.
 
     For papers in review.db (with paper_id), updates their status:
-      INCLUDE → SCREENED_IN
-      EXCLUDE → SCREENED_OUT
+      INCLUDE → ABSTRACT_SCREENED_IN
+      EXCLUDE → ABSTRACT_SCREENED_OUT
 
     For expanded search papers (no paper_id), records the decision in
-    the screening_adjudication table for later pipeline use.
+    the abstract_screening_adjudication table for later pipeline use.
 
     Returns summary dict.
     """
@@ -491,7 +491,7 @@ def import_adjudication_decisions(
 
         # Write to adjudication table
         review_db._conn.execute(
-            """INSERT INTO screening_adjudication
+            """INSERT INTO abstract_screening_adjudication
                (paper_id, external_key, title, adjudication_decision,
                 adjudication_source, adjudication_reason,
                 adjudication_category, adjudication_timestamp, created_at)
@@ -519,14 +519,14 @@ def import_adjudication_decisions(
                 "SELECT id, status FROM papers WHERE doi = ?", (doi,)
             ).fetchone()
 
-        if paper_row and paper_row["status"] == "SCREEN_FLAGGED":
+        if paper_row and paper_row["status"] == "ABSTRACT_SCREEN_FLAGGED":
             pid = paper_row["id"]
-            new_status = "SCREENED_IN" if decision == "INCLUDE" else "SCREENED_OUT"
+            new_status = "ABSTRACT_SCREENED_IN" if decision == "INCLUDE" else "ABSTRACT_SCREENED_OUT"
             review_db.update_status(pid, new_status)
 
             # Update adjudication record with paper_id
             review_db._conn.execute(
-                """UPDATE screening_adjudication
+                """UPDATE abstract_screening_adjudication
                    SET paper_id = ?
                    WHERE external_key = ? AND adjudication_timestamp = ?""",
                 (pid, ext_key, now),
@@ -551,10 +551,10 @@ def import_adjudication_decisions(
         stats["invalid"], stats["total"],
     )
 
-    # Auto-advance workflow: ADJUDICATION_COMPLETE if zero unresolved
+    # Auto-advance workflow: ABSTRACT_ADJUDICATION_COMPLETE if zero unresolved
     if stats["missing"] == 0 and stats["invalid"] == 0:
         complete_stage(
-            review_db._conn, "ADJUDICATION_COMPLETE",
+            review_db._conn, "ABSTRACT_ADJUDICATION_COMPLETE",
             metadata=(
                 f"{stats['include']} included, {stats['exclude']} excluded "
                 f"(of {stats['total']} total)"
@@ -573,6 +573,6 @@ def import_adjudication_decisions(
 
 
 def check_adjudication_gate(review_db: ReviewDatabase) -> int:
-    """Check for unresolved SCREEN_FLAGGED papers. Returns count."""
-    flagged = review_db.get_papers_by_status("SCREEN_FLAGGED")
+    """Check for unresolved ABSTRACT_SCREEN_FLAGGED papers. Returns count."""
+    flagged = review_db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")
     return len(flagged)

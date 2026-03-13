@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""CLI to advance review workflow stages (screening + extraction audit).
+"""CLI to advance review workflow stages (abstract screening + extraction audit).
 
 Usage:
     python -m engine.adjudication.advance_stage \
         --review surgical_autonomy \
-        --stage DIAGNOSTIC_SAMPLE_COMPLETE \
+        --stage ABSTRACT_DIAGNOSTIC_COMPLETE \
         --note "50-paper sample reviewed, 4 FP categories identified"
 
     # Force-bypass a stage (logs warning to audit trail):
     python -m engine.adjudication.advance_stage \
         --review surgical_autonomy \
-        --stage CATEGORIES_CONFIGURED \
+        --stage ABSTRACT_CATEGORIES_CONFIGURED \
         --note "Using default categories" \
         --force
 
@@ -19,8 +19,10 @@ Usage:
         --review surgical_autonomy \
         --status
 
-Screening stages: SCREENING_COMPLETE, DIAGNOSTIC_SAMPLE_COMPLETE,
-    CATEGORIES_CONFIGURED, QUEUE_EXPORTED, ADJUDICATION_COMPLETE
+Abstract screening stages: ABSTRACT_SCREENING_COMPLETE, ABSTRACT_DIAGNOSTIC_COMPLETE,
+    ABSTRACT_CATEGORIES_CONFIGURED, ABSTRACT_QUEUE_EXPORTED, ABSTRACT_ADJUDICATION_COMPLETE
+
+Full-text screening stages: FULL_TEXT_SCREENING_COMPLETE, FULL_TEXT_ADJUDICATION_COMPLETE
 
 Extraction audit stages: EXTRACTION_COMPLETE, AI_AUDIT_COMPLETE_STAGE,
     AUDIT_QUEUE_EXPORTED, AUDIT_REVIEW_COMPLETE
@@ -44,7 +46,7 @@ from engine.core.database import ReviewDatabase
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Advance screening adjudication workflow stages",
+        description="Advance review workflow stages (abstract screening + extraction audit)",
     )
     parser.add_argument(
         "--review", required=True,

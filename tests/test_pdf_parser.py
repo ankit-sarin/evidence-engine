@@ -108,7 +108,7 @@ def test_parse_with_docling(digital_pdf):
 def test_digital_routes_to_docling(digital_pdf, db):
     pid = _add_paper(db)
     # Walk to PDF_ACQUIRED so parse_pdf works
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
 
     result = parse_pdf(str(digital_pdf), pid, "test_parse", db)
@@ -119,7 +119,7 @@ def test_digital_routes_to_docling(digital_pdf, db):
 
 def test_scanned_routes_to_vision_model(scanned_pdf, db):
     pid = _add_paper(db, pid_hint="2")
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
 
     mock_response = MagicMock()
@@ -138,7 +138,7 @@ def test_scanned_routes_to_vision_model(scanned_pdf, db):
 @pytest.mark.integration
 def test_version_increments_on_reparse(digital_pdf, db):
     pid = _add_paper(db, pid_hint="3")
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
 
     # First parse
@@ -164,7 +164,7 @@ def test_version_increments_on_reparse(digital_pdf, db):
 @pytest.mark.integration
 def test_skip_if_same_hash(digital_pdf, db):
     pid = _add_paper(db, pid_hint="4")
-    db.update_status(pid, "SCREENED_IN")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
 
     # First parse

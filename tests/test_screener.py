@@ -96,7 +96,7 @@ def test_dual_pass_both_include(tmp_path, spec):
     assert stats["screened_in"] == 1
     assert stats["screened_out"] == 0
     assert stats["flagged"] == 0
-    assert db.get_papers_by_status("SCREENED_IN")
+    assert db.get_papers_by_status("ABSTRACT_SCREENED_IN")
     db.close()
 
 
@@ -109,7 +109,7 @@ def test_dual_pass_both_exclude(tmp_path, spec):
 
     assert stats["screened_out"] == 1
     assert stats["screened_in"] == 0
-    assert db.get_papers_by_status("SCREENED_OUT")
+    assert db.get_papers_by_status("ABSTRACT_SCREENED_OUT")
     db.close()
 
 
@@ -123,7 +123,7 @@ def test_dual_pass_disagreement(tmp_path, spec):
         stats = run_screening(db, spec)
 
     assert stats["flagged"] == 1
-    assert db.get_papers_by_status("SCREEN_FLAGGED")
+    assert db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")
     db.close()
 
 
@@ -135,7 +135,7 @@ def test_dual_pass_records_both_decisions(tmp_path, spec):
         run_screening(db, spec)
 
     rows = db._conn.execute(
-        "SELECT * FROM screening_decisions ORDER BY pass_number"
+        "SELECT * FROM abstract_screening_decisions ORDER BY pass_number"
     ).fetchall()
     assert len(rows) == 2
     assert rows[0]["pass_number"] == 1
@@ -155,12 +155,12 @@ def _setup_screened_in(tmp_path, spec, n_papers=3):
     with patch("engine.agents.screener.screen_paper", return_value=_mock_decision("include")):
         run_screening(db, spec)
 
-    assert len(db.get_papers_by_status("SCREENED_IN")) == n_papers
+    assert len(db.get_papers_by_status("ABSTRACT_SCREENED_IN")) == n_papers
     return db
 
 
 def test_verification_all_confirmed(tmp_path, spec):
-    """Verifier includes all → all stay SCREENED_IN."""
+    """Verifier includes all → all stay ABSTRACT_SCREENED_IN."""
     db = _setup_screened_in(tmp_path, spec, n_papers=3)
 
     with patch("engine.agents.screener.screen_paper", return_value=_mock_decision("include")):
@@ -168,13 +168,13 @@ def test_verification_all_confirmed(tmp_path, spec):
 
     assert stats["confirmed"] == 3
     assert stats["flagged"] == 0
-    assert len(db.get_papers_by_status("SCREENED_IN")) == 3
-    assert len(db.get_papers_by_status("SCREEN_FLAGGED")) == 0
+    assert len(db.get_papers_by_status("ABSTRACT_SCREENED_IN")) == 3
+    assert len(db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")) == 0
     db.close()
 
 
 def test_verification_some_flagged(tmp_path, spec):
-    """Verifier excludes some → those move to SCREEN_FLAGGED."""
+    """Verifier excludes some → those move to ABSTRACT_SCREEN_FLAGGED."""
     db = _setup_screened_in(tmp_path, spec, n_papers=3)
 
     # First paper confirmed, second and third excluded by verifier
@@ -188,13 +188,13 @@ def test_verification_some_flagged(tmp_path, spec):
 
     assert stats["confirmed"] == 1
     assert stats["flagged"] == 2
-    assert len(db.get_papers_by_status("SCREENED_IN")) == 1
-    assert len(db.get_papers_by_status("SCREEN_FLAGGED")) == 2
+    assert len(db.get_papers_by_status("ABSTRACT_SCREENED_IN")) == 1
+    assert len(db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")) == 2
     db.close()
 
 
 def test_verification_all_flagged(tmp_path, spec):
-    """Verifier excludes all → all move to SCREEN_FLAGGED."""
+    """Verifier excludes all → all move to ABSTRACT_SCREEN_FLAGGED."""
     db = _setup_screened_in(tmp_path, spec, n_papers=2)
 
     with patch("engine.agents.screener.screen_paper", return_value=_mock_decision("exclude")):
@@ -202,13 +202,13 @@ def test_verification_all_flagged(tmp_path, spec):
 
     assert stats["confirmed"] == 0
     assert stats["flagged"] == 2
-    assert len(db.get_papers_by_status("SCREENED_IN")) == 0
-    assert len(db.get_papers_by_status("SCREEN_FLAGGED")) == 2
+    assert len(db.get_papers_by_status("ABSTRACT_SCREENED_IN")) == 0
+    assert len(db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")) == 2
     db.close()
 
 
 def test_verification_stores_decisions(tmp_path, spec):
-    """Verification decisions are stored in verification_decisions table."""
+    """Verification decisions are stored in abstract_verification_decisions table."""
     db = _setup_screened_in(tmp_path, spec, n_papers=2)
 
     side_effects = [_mock_decision("include"), _mock_decision("exclude")]
@@ -216,7 +216,7 @@ def test_verification_stores_decisions(tmp_path, spec):
         run_verification(db, spec)
 
     rows = db._conn.execute(
-        "SELECT * FROM verification_decisions ORDER BY paper_id"
+        "SELECT * FROM abstract_verification_decisions ORDER BY paper_id"
     ).fetchall()
     assert len(rows) == 2
     assert rows[0]["decision"] == "include"
@@ -225,18 +225,18 @@ def test_verification_stores_decisions(tmp_path, spec):
     db.close()
 
 
-def test_verification_does_not_touch_screening_decisions(tmp_path, spec):
-    """Verification should not add rows to screening_decisions table."""
+def test_verification_does_not_touch_abstract_screening_decisions(tmp_path, spec):
+    """Verification should not add rows to abstract_screening_decisions table."""
     db = _setup_screened_in(tmp_path, spec, n_papers=1)
 
-    # Count screening_decisions before verification
-    pre_count = db._conn.execute("SELECT COUNT(*) FROM screening_decisions").fetchone()[0]
+    # Count abstract_screening_decisions before verification
+    pre_count = db._conn.execute("SELECT COUNT(*) FROM abstract_screening_decisions").fetchone()[0]
 
     with patch("engine.agents.screener.screen_paper", return_value=_mock_decision("exclude")):
         run_verification(db, spec)
 
-    post_count = db._conn.execute("SELECT COUNT(*) FROM screening_decisions").fetchone()[0]
-    assert post_count == pre_count  # No new rows in screening_decisions
+    post_count = db._conn.execute("SELECT COUNT(*) FROM abstract_screening_decisions").fetchone()[0]
+    assert post_count == pre_count  # No new rows in abstract_screening_decisions
     db.close()
 
 

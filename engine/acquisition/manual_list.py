@@ -72,7 +72,7 @@ def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict
     papers = conn.execute(
         """SELECT id, doi, pmid, title, ee_identifier, download_status, oa_status
            FROM papers
-           WHERE status NOT IN ('SCREENED_OUT', 'REJECTED')
+           WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
              AND download_status != 'success'
            ORDER BY ee_identifier"""
     ).fetchall()

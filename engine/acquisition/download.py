@@ -332,7 +332,7 @@ def download_papers(review_name: str, *, retry_failed: bool = False) -> dict:
         papers = conn.execute(
             """SELECT id, doi, title, pdf_url, download_status, pdf_local_path
                FROM papers
-               WHERE status NOT IN ('SCREENED_OUT', 'REJECTED')
+               WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
                  AND download_status = 'failed'
                ORDER BY id"""
         ).fetchall()
@@ -341,7 +341,7 @@ def download_papers(review_name: str, *, retry_failed: bool = False) -> dict:
         papers = conn.execute(
             """SELECT id, doi, title, pdf_url, download_status, pdf_local_path
                FROM papers
-               WHERE status NOT IN ('SCREENED_OUT', 'REJECTED')
+               WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
                  AND download_status != 'success'
                ORDER BY id"""
         ).fetchall()

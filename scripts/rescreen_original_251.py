@@ -2,6 +2,10 @@
 """Re-screen original 251 papers with updated criteria (PICO + tightened rules).
 
 Read-only against review.db — writes results to a staging CSV only.
+
+# TODO(retention): Like screen_expanded.py, this writes to flat CSV rather than
+# the database. Future screening scripts should write all traces directly to DB
+# per the retention policy.
 """
 
 import csv

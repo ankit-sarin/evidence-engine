@@ -49,20 +49,20 @@ def populated_db(tmp_path, spec):
     for p in papers[:8]:
         db.add_screening_decision(p["id"], 1, "include", "Relevant", "qwen3:8b")
         db.add_screening_decision(p["id"], 2, "include", "Confirmed", "qwen3:8b")
-        db.update_status(p["id"], "SCREENED_IN")
+        db.update_status(p["id"], "ABSTRACT_SCREENED_IN")
 
     for p in papers[8:12]:
         db.add_screening_decision(p["id"], 1, "exclude", "Not surgical", "qwen3:8b")
         db.add_screening_decision(p["id"], 2, "exclude", "Confirmed exclude", "qwen3:8b")
-        db.update_status(p["id"], "SCREENED_OUT")
+        db.update_status(p["id"], "ABSTRACT_SCREENED_OUT")
 
     for p in papers[12:15]:
         db.add_screening_decision(p["id"], 1, "include", "Maybe relevant", "qwen3:8b")
         db.add_screening_decision(p["id"], 2, "exclude", "Borderline", "qwen3:8b")
-        db.update_status(p["id"], "SCREEN_FLAGGED")
+        db.update_status(p["id"], "ABSTRACT_SCREEN_FLAGGED")
 
     # Walk 5 screened-in papers to EXTRACTED/AI_AUDIT_COMPLETE
-    screened_in = db.get_papers_by_status("SCREENED_IN")
+    screened_in = db.get_papers_by_status("ABSTRACT_SCREENED_IN")
     schema_hash = spec.extraction_hash()
 
     for j, p in enumerate(screened_in[:5]):

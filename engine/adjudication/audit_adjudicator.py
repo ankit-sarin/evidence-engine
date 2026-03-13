@@ -43,13 +43,15 @@ def _collect_papers_for_review(
     for paper in papers:
         pid = paper["id"]
         extraction = db._conn.execute(
-            "SELECT id FROM extractions WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
+            "SELECT id, low_yield FROM extractions WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
             (pid,),
         ).fetchone()
         if not extraction:
             continue
 
         ext_id = extraction["id"]
+        is_low_yield = bool(extraction["low_yield"])
+
         spans = db._conn.execute(
             "SELECT * FROM evidence_spans WHERE extraction_id = ?",
             (ext_id,),
@@ -70,9 +72,23 @@ def _collect_papers_for_review(
             "spans": spans,
             "problem_spans": problem_spans,
             "audit_states": audit_states,
+            "low_yield": is_low_yield,
         }
 
-        if problem_spans:
+        if is_low_yield:
+            # LOW_YIELD papers always go to review regardless of span states
+            if problem_spans:
+                if any(s["audit_status"] == "flagged" for s in problem_spans):
+                    paper_info["worst_state"] = "flagged"
+                elif any(s["audit_status"] == "invalid_snippet" for s in problem_spans):
+                    paper_info["worst_state"] = "invalid_snippet"
+                else:
+                    paper_info["worst_state"] = "contested"
+            else:
+                paper_info["worst_state"] = "verified"
+            paper_info["review_reason"] = "low_yield"
+            needs_review.append(paper_info)
+        elif problem_spans:
             # Compute worst state: flagged > invalid_snippet > contested
             if any(s["audit_status"] == "flagged" for s in problem_spans):
                 paper_info["worst_state"] = "flagged"
@@ -94,9 +110,13 @@ def _collect_papers_for_review(
         spot_check = random.sample(all_verified, n_spot)
         needs_review.extend(spot_check)
 
-    # Sort: flagged first, then invalid_snippet, then contested, then spot_check
+    # Sort: low_yield first, then flagged, invalid_snippet, contested, spot_check
     state_order = {"flagged": 0, "invalid_snippet": 1, "contested": 2, "verified": 3}
-    needs_review.sort(key=lambda p: (state_order.get(p["worst_state"], 99), p["title"]))
+    def _sort_key(p):
+        # low_yield papers sort before everything else
+        ly = 0 if p.get("low_yield") else 1
+        return (ly, state_order.get(p["worst_state"], 99), p["title"])
+    needs_review.sort(key=_sort_key)
 
     return needs_review
 
@@ -146,6 +166,7 @@ def export_audit_review_queue(
         "flagged": sum(1 for p in papers if p["worst_state"] == "flagged"),
         "contested": sum(1 for p in papers if p["worst_state"] == "contested"),
         "invalid_snippet": sum(1 for p in papers if p["worst_state"] == "invalid_snippet"),
+        "low_yield": sum(1 for p in papers if p.get("review_reason") == "low_yield"),
         "spot_check": sum(1 for p in papers if p["review_reason"] == "spot_check"),
         "output_path": str(output_path),
         "spot_check_failure_threshold": spot_check_failure_threshold,
@@ -190,6 +211,7 @@ def _write_audit_xlsx(
         "title",
         "audit_state",
         "review_reason",
+        "low_yield",
         "audit_reasoning_summary",
     ]
     # Per-field: value, audit_state, evidence_span, correction
@@ -241,6 +263,10 @@ def _write_audit_xlsx(
         ws.cell(row=row_num, column=col, value=paper["title"]); col += 1
         ws.cell(row=row_num, column=col, value=paper["worst_state"]); col += 1
         ws.cell(row=row_num, column=col, value=paper["review_reason"]); col += 1
+        ly_cell = ws.cell(row=row_num, column=col, value="TRUE" if paper.get("low_yield") else "")
+        if paper.get("low_yield"):
+            ly_cell.fill = flagged_fill
+        col += 1
         ws.cell(row=row_num, column=col, value=reasoning_summary[:2000]); col += 1
 
         # Per-field columns
@@ -281,12 +307,13 @@ def _write_audit_xlsx(
     ws.column_dimensions["B"].width = 50
     ws.column_dimensions["C"].width = 14
     ws.column_dimensions["D"].width = 14
-    ws.column_dimensions["E"].width = 60
+    ws.column_dimensions["E"].width = 10
+    ws.column_dimensions["F"].width = 60
     ws.freeze_panes = "A2"
 
     # ── Sheet 2: Paper Summary ──
     ws2 = wb.create_sheet("Paper Summary")
-    ws2.append(["paper_id", "title", "worst_state", "review_reason",
+    ws2.append(["paper_id", "title", "worst_state", "review_reason", "low_yield",
                 "verified", "contested", "flagged", "invalid_snippet", "total_spans"])
     for paper in papers:
         counts = {"verified": 0, "contested": 0, "flagged": 0, "invalid_snippet": 0}
@@ -296,6 +323,7 @@ def _write_audit_xlsx(
         ws2.append([
             paper["paper_id"], paper["title"], paper["worst_state"],
             paper["review_reason"],
+            "TRUE" if paper.get("low_yield") else "",
             counts["verified"], counts["contested"],
             counts["flagged"], counts["invalid_snippet"],
             len(paper["spans"]),

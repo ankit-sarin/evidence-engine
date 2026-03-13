@@ -29,7 +29,7 @@ def _make_audited_paper(db, tmp_path, pmid, span_statuses):
     """
     db.add_papers([_cit(pmid=pmid, title=f"Paper {pmid}")])
     pid = db.get_papers_by_status("INGESTED")[-1]["id"]
-    for s in ("SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
         db.update_status(pid, s)
 
     # Write parsed text

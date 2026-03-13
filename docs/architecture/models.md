@@ -86,4 +86,4 @@ All local models run at **temperature 0** (deterministic output). Set explicitly
 
 ---
 
-*Generated 2026-03-13 from commit `c21ad34`*
+*Generated 2026-03-13 from commit `cd1d2d0`*

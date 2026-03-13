@@ -148,13 +148,17 @@ After all spans are audited, `check_low_yield()` counts non-null, non-absence ex
 
 ### Human Resolution of Audit States
 
-After AI audit, human reviewers resolve `contested`, `flagged`, and `invalid_snippet` spans:
+After AI audit, human reviewers resolve spans via per-span decisions in the audit review workbook:
 
-- `accept_as_is` → all spans marked `verified`
-- Per-field correction → span value overwritten, status → `verified`
-- `reject_paper` → paper status → `REJECTED`
+- `ACCEPT` → span `audit_status` → `verified`, `auditor_model` = `human_review`
+- `CORRECT` → span value overwritten with `corrected_value`, original preserved in `audit_adjudication` table, status → `verified`
+- `REJECT` → span marked verified, recorded in `audit_adjudication` table with `human_decision='reject_paper'`
 
-LOW_YIELD papers are always included in the audit review queue (sorted first) for PI review.
+Export format: one row per problematic span (contested/flagged/invalid_snippet). LOW_YIELD papers export all spans. Spot-check papers (10% of all-verified) export all spans.
+
+Import validation (two-pass): scan all rows for blank decisions, invalid values, or CORRECT without corrected_value. Reject entire import on any error — zero DB changes on failure.
+
+Legacy per-paper format (accept_as_is/reject_paper columns) auto-detected and supported via `_import_legacy_format()`.
 
 When all spans for a paper are resolved (no contested/flagged/invalid_snippet remaining), paper transitions to `HUMAN_AUDIT_COMPLETE`.
 
@@ -186,4 +190,4 @@ These methods intentionally bypass the state machine for maintenance operations:
 
 ---
 
-*Generated 2026-03-13 from commit `c21ad34`*
+*Generated 2026-03-13 from commit `cd1d2d0`*

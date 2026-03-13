@@ -61,10 +61,10 @@ Review Spec YAML
 
 ## Codebase Statistics
 
-- **91 source files** (Python + Shell)
-- **19,968 lines** of code
-- **332 offline tests** passing (10 network/ollama deselected)
+- **94 source files** (Python + Shell)
+- **22,257 lines** of code
+- **377 offline tests** passing (10 network/ollama deselected)
 
 ---
 
-*Generated 2026-03-13 from commit `c21ad34`*
+*Generated 2026-03-13 from commit `cd1d2d0`*

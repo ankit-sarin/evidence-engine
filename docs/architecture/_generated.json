@@ -1,15 +1,16 @@
 {
-  "generated_at": "2026-03-13T01:00:00Z",
-  "git_commit": "c21ad34",
-  "total_source_files": 91,
-  "total_lines_of_code": 19968,
-  "offline_tests_passing": 332,
+  "generated_at": "2026-03-13T06:00:00Z",
+  "git_commit": "cd1d2d0",
+  "total_source_files": 94,
+  "total_lines_of_code": 22257,
+  "offline_tests_passing": 377,
   "files_scanned": [
     "engine/__init__.py",
     "engine/acquisition/__init__.py",
     "engine/acquisition/check_oa.py",
     "engine/acquisition/download.py",
     "engine/acquisition/manual_list.py",
+    "engine/acquisition/verify_downloads.py",
     "engine/adjudication/__init__.py",
     "engine/adjudication/advance_stage.py",
     "engine/adjudication/audit_adjudicator.py",
@@ -38,6 +39,7 @@
     "engine/exporters/evidence_table.py",
     "engine/exporters/methods_section.py",
     "engine/exporters/prisma.py",
+    "engine/exporters/review_workbook.py",
     "engine/exporters/trace_exporter.py",
     "engine/migrations/__init__.py",
     "engine/migrations/002_screening_rename.py",
@@ -95,6 +97,7 @@
     "tests/test_review_spec.py",
     "tests/test_screener.py",
     "tests/test_trace_exporter.py",
+    "tests/test_verify_downloads.py",
     "tests/test_workflow.py"
   ]
 }

@@ -76,6 +76,7 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy \
 python -m engine.acquisition.check_oa --review surgical_autonomy --spec ...
 python -m engine.acquisition.download --review surgical_autonomy --background
 python -m engine.acquisition.manual_list --review surgical_autonomy --spec ...
+python -m engine.acquisition.verify_downloads --review surgical_autonomy [--dry-run]
 
 # Advance when done
 python -m engine.adjudication.advance_stage --review surgical_autonomy \
@@ -110,11 +111,11 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy \
 
 - **Trigger:** Auto — `export_audit_review_queue()` auto-sets after successful export
 - **Prerequisite:** AI_AUDIT_COMPLETE_STAGE
-- **What it means:** Contested/flagged spans + LOW_YIELD papers + spot-check sample exported to Excel
+- **What it means:** Per-span rows (contested/flagged/invalid_snippet) + LOW_YIELD papers (all spans) + spot-check sample (all spans) exported to self-documenting Excel workbook with ACCEPT/REJECT/CORRECT dropdowns
 
 ### Stage 12: AUDIT_REVIEW_COMPLETE
 
-- **Trigger:** Auto — `import_audit_review_decisions()` auto-sets when zero unresolved spans remain
+- **Trigger:** Auto — `import_audit_review_decisions()` auto-sets when all span decisions processed (two-pass validated import)
 - **Prerequisite:** AUDIT_QUEUE_EXPORTED
 - **What it means:** All evidence spans resolved by human reviewer
 
@@ -191,4 +192,4 @@ EXTRACTION_STAGES  = WORKFLOW_STAGES[8:]   # stages 9-12
 
 ---
 
-*Generated 2026-03-13 from commit `c21ad34`*
+*Generated 2026-03-13 from commit `cd1d2d0`*

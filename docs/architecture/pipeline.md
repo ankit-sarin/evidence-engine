@@ -101,7 +101,7 @@ python scripts/screen_expanded.py --verify-only  # phase 3
 - Records in `screening_adjudication` table
 
 **Artifacts:**
-- Excel workbook: Review Queue sheet, Category Summary sheet, Instructions sheet
+- Self-documenting Excel workbook (via `review_workbook.py`): Instructions sheet (opens first), Review Queue sheet (DataValidation dropdowns, conditional formatting, frozen headers), Screening Criteria reference sheet
 
 **CLI:**
 ```bash
@@ -128,7 +128,7 @@ import_adjudication_decisions(db, 'queue_completed.xlsx')
 
 **Trigger:** After `ABSTRACT_ADJUDICATION_COMPLETE` workflow stage.
 
-**Module:** `engine/acquisition/check_oa.py`, `engine/acquisition/download.py`, `engine/acquisition/manual_list.py`
+**Module:** `engine/acquisition/check_oa.py`, `engine/acquisition/download.py`, `engine/acquisition/manual_list.py`, `engine/acquisition/verify_downloads.py`
 
 **Steps:**
 1. **OA Check** — Query Unpaywall API for every DOI (1 req/sec rate limit). Stores `oa_status` and `pdf_url` in DB.
@@ -138,7 +138,8 @@ import_adjudication_decisions(db, 'queue_completed.xlsx')
    - Strategy 3: IEEE stamp page scrape (for `10.1109` DOIs)
    - Strategy 4: MDPI URL construction (for MDPI DOIs)
    - Strategy 5: DOI redirect with `Accept: application/pdf` + `/pdf` suffix
-3. **Manual List** — Generate HTML + CSV for remaining papers
+3. **Manual List** — Generate HTML + CSV for remaining papers, grouped by publisher (17 DOI prefix rules), sorted by EE-ID within each group. Includes naming convention instructions and verify command.
+4. **Verify Downloads** — Scan PDF directory, match files to papers (3 patterns: bare integer, EE-prefix, rich name), validate PDF integrity (%PDF header + minimum 10KB + HTML error page detection), rename to canonical `EE-{nnn}_{Author}_{Year}.pdf`, update both `papers` and `full_text_assets` tables. Supports `--dry-run`.
 
 All downloads validated with `%PDF` magic bytes. Idempotent (skips papers with valid PDFs on disk). 2-second delay between downloads.
 
@@ -146,12 +147,13 @@ All downloads validated with `%PDF` magic bytes. Idempotent (skips papers with v
 - `papers.oa_status` updated (gold/hybrid/bronze/green/closed/not_found/no_doi)
 - `papers.download_status` updated (success/failed/pending/manual)
 - `papers.pdf_local_path` set on success
+- `full_text_assets.pdf_path` set on verify (canonical path)
 - Paper status: `ABSTRACT_SCREENED_IN` → `PDF_ACQUIRED` (via `advance_to_pdf_acquired.py`)
 
 **Artifacts:**
-- PDFs in `data/{review}/pdfs/{paper_id}.pdf`
-- `manual_download_list.html` — interactive checklist with localStorage progress
-- `manual_downloads_needed.csv`
+- PDFs in `data/{review}/pdfs/` (bare integer initially, renamed to `EE-{nnn}_{Author}_{Year}.pdf` by verify)
+- `manual_download_list.html` — interactive checklist with localStorage progress, publisher grouping, naming convention callout
+- `manual_downloads_needed.csv` — with publisher, first_author, year columns and comment header
 
 **CLI:**
 ```bash
@@ -160,6 +162,7 @@ python -m engine.acquisition.check_oa --review surgical_autonomy \
 python -m engine.acquisition.download --review surgical_autonomy [--retry] [--background]
 python -m engine.acquisition.manual_list --review surgical_autonomy \
     --spec review_specs/surgical_autonomy_v1.yaml
+python -m engine.acquisition.verify_downloads --review surgical_autonomy [--dry-run]
 ```
 
 ---
@@ -169,6 +172,11 @@ python -m engine.acquisition.manual_list --review surgical_autonomy \
 **Trigger:** After PDFs acquired; `PDF_ACQUIRED` papers in DB.
 
 **Module:** `engine/parsers/pdf_parser.py`
+
+**PDF path resolution** (DB-driven with glob fallback):
+1. Check `full_text_assets.pdf_path` (set by parser or verify_downloads)
+2. Check `papers.pdf_local_path` (set by downloader or verify_downloads)
+3. Fall back to filesystem glob (`{paper_id}_*.pdf`, `{paper_id}.pdf`)
 
 **Routing logic:**
 - Digital PDFs (> 100 chars/page): Docling `DocumentConverter`
@@ -332,16 +340,21 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to audit
 **Module:** `engine/adjudication/audit_adjudicator.py`, `engine/review/human_review.py`
 
 **Steps:**
-1. Export contested/flagged/invalid_snippet spans to Excel → auto-set `AUDIT_QUEUE_EXPORTED`
+1. Export per-span rows to self-documenting Excel workbook → auto-set `AUDIT_QUEUE_EXPORTED`
+   - Problem spans only for papers with contested/flagged/invalid_snippet spans
+   - All spans for LOW_YIELD papers (reviewer needs full picture)
+   - All spans for spot-check sample (10% of all-verified papers)
 2. LOW_YIELD papers always included with `review_reason="low_yield"`, sorted first
-3. Random spot-check sample (10% of all-verified papers) included for QA
-4. Human reviews: accept_as_is, per-field corrections, or reject_paper
+3. Human reviews each span with ACCEPT/REJECT/CORRECT decisions
+4. Two-pass validation on import: scan all rows first, reject entirely on any error (blank decisions, invalid values, CORRECT without corrected_value) — zero DB changes on failure
 5. Import decisions → auto-set `AUDIT_REVIEW_COMPLETE` (if zero unresolved)
+6. Legacy per-paper format (accept_as_is/reject_paper columns) auto-detected and supported
 
 **Database transitions:**
-- Span corrections: `audit_status` → `verified`, value overwritten if corrected
-- Paper-level: `AI_AUDIT_COMPLETE` → `HUMAN_AUDIT_COMPLETE` (all spans resolved)
-- Paper-level: `AI_AUDIT_COMPLETE` → `REJECTED` (reject_paper decision)
+- ACCEPT: span `audit_status` → `verified`, `auditor_model` = `human_review`
+- REJECT: span marked verified, recorded in `audit_adjudication` table
+- CORRECT: span value overwritten, original preserved in `audit_adjudication` table
+- Paper-level: `AI_AUDIT_COMPLETE` → `HUMAN_AUDIT_COMPLETE` (when all spans resolved)
 - Records in `audit_adjudication` table
 
 **CLI:**
@@ -369,7 +382,7 @@ import_audit_review_decisions(db, 'audit_queue_completed.xlsx')
 
 **Trigger:** After all review stages complete (or with `min_status` filtering).
 
-**Module:** `engine/exporters/`
+**Module:** `engine/exporters/` (includes `review_workbook.py` — shared self-documenting workbook builder used by all adjudication exporters)
 
 **Outputs:**
 | Exporter | File | Description |
@@ -391,4 +404,4 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to export
 
 ---
 
-*Generated 2026-03-13 from commit `c21ad34`*
+*Generated 2026-03-13 from commit `cd1d2d0`*

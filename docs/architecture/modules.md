@@ -56,17 +56,23 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 
 | File | Lines | Purpose | Key Exports | External Deps |
 |------|-------|---------|-------------|---------------|
-| `__init__.py` | 20 | Re-exports public API | `check_oa_status()`, `download_papers()`, `generate_manual_list()` | — |
+| `__init__.py` | 24 | Re-exports public API | `check_oa_status()`, `download_papers()`, `generate_manual_list()`, `verify_downloads()` | — |
 | `check_oa.py` | 198 | Unpaywall API OA status lookup | `check_oa_status()` | `requests` |
 | `download.py` | 458 | 5-strategy cascade PDF downloader | `download_papers()`, `is_valid_pdf()` | `requests`, `tarfile` |
-| `manual_list.py` | 258 | HTML + CSV manual download list | `generate_manual_list()` | — |
+| `manual_list.py` | 440 | HTML + CSV manual download list with publisher grouping | `generate_manual_list()`, `classify_publisher()` | — |
+| `verify_downloads.py` | 379 | Scan/match/validate/rename PDFs, update DB | `verify_downloads()`, `canonical_filename()`, `_validate_pdf()` | — |
 
 **Download strategies:** Direct Unpaywall URL → PMC OA package (Europe PMC + NCBI tar.gz) → IEEE stamp page scrape → MDPI URL construction → DOI redirect with content negotiation
+
+**Publisher classification:** 17 DOI prefix rules (`_DOI_PUBLISHER_RULES`): IEEE, Elsevier, Springer/Nature, Wiley, MDPI, Taylor & Francis, SAGE, Science/AAAS, PLOS, Frontiers, Wolters Kluwer, RSNA, AME, De Gruyter, SPIE, Zenodo
+
+**Verify/rename pipeline:** 3 filename match patterns (bare integer → EE-prefix → rich name), PDF validation (%PDF header, ≥10KB, HTML error page detection), canonical rename (`EE-{nnn}_{Author}_{Year}.pdf`), updates both `papers.pdf_local_path` and `full_text_assets.pdf_path`
 
 **CLI entry points:**
 - `python -m engine.acquisition.check_oa --review NAME [--spec YAML] [--background]`
 - `python -m engine.acquisition.download --review NAME [--retry] [--background]`
 - `python -m engine.acquisition.manual_list --review NAME [--spec YAML] [--background]`
+- `python -m engine.acquisition.verify_downloads --review NAME [--pdf-dir PATH] [--dry-run]`
 
 ---
 
@@ -76,9 +82,11 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 0 | Empty module | — | — |
 | `models.py` | 19 | Parsed document data model | `ParsedDocument` (Pydantic) | `pydantic` |
-| `pdf_parser.py` | 226 | PDF → Markdown with Docling/Qwen2.5-VL routing | `parse_pdf()`, `parse_all_pdfs()`, `is_scanned_pdf()`, `compute_pdf_hash()` | `fitz` (PyMuPDF), `docling`, `ollama` |
+| `pdf_parser.py` | 255 | PDF → Markdown with Docling/Qwen2.5-VL routing, DB-driven PDF path resolution | `parse_pdf()`, `parse_all_pdfs()`, `is_scanned_pdf()`, `compute_pdf_hash()` | `fitz` (PyMuPDF), `docling`, `ollama` |
 
 **Routing:** Digital PDFs (> 100 chars/page) → Docling; Scanned PDFs (< 100 chars/page) → Qwen2.5-VL vision model via Ollama
+
+**PDF path resolution in `parse_all_pdfs()`:** DB-driven with glob fallback — checks `full_text_assets.pdf_path` → `papers.pdf_local_path` → filesystem glob. Handles both absolute and relative paths from DB.
 
 ---
 
@@ -106,9 +114,9 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | `workflow.py` | 364 | 12-stage workflow state machine | `WORKFLOW_STAGES`, `SCREENING_STAGES`, `FULL_TEXT_STAGES`, `EXTRACTION_STAGES`, `advance_stage()`, `complete_stage()`, `format_workflow_status()`, `get_current_blocker()`, `is_adjudication_complete()` | `sqlite3` |
 | `schema.py` | 78 | DDL for adjudication tables | `ensure_adjudication_table()` | `sqlite3` |
 | `categorizer.py` | 260 | FP category config + keyword/regex matching | `CategoryConfig`, `categorize_paper()`, `generate_starter_config()`, `load_config()` | `yaml` |
-| `screening_adjudicator.py` | 578 | Export/import abstract screening adjudication queue | `export_adjudication_queue()`, `import_adjudication_decisions()`, `check_adjudication_gate()` | `openpyxl` |
-| `ft_screening_adjudicator.py` | 346 | Export/import full-text screening adjudication queue | `export_ft_adjudication_queue()`, `import_ft_adjudication_decisions()`, `check_ft_adjudication_gate()` | `openpyxl` |
-| `audit_adjudicator.py` | 621 | Export/import audit review queue (with LOW_YIELD integration) | `export_audit_review_queue()`, `import_audit_review_decisions()`, `check_audit_review_gate()` | `openpyxl` |
+| `screening_adjudicator.py` | 761 | Export/import abstract screening adjudication queue (self-documenting workbook) | `export_adjudication_queue()`, `import_adjudication_decisions()`, `check_adjudication_gate()` | `openpyxl` |
+| `ft_screening_adjudicator.py` | 572 | Export/import FT screening adjudication queue (self-documenting workbook, two-pass validation) | `export_ft_adjudication_queue()`, `import_ft_adjudication_decisions()`, `check_ft_adjudication_gate()` | `openpyxl` |
+| `audit_adjudicator.py` | 926 | Per-span audit export (ACCEPT/REJECT/CORRECT), LOW_YIELD integration, legacy format support | `export_audit_review_queue()`, `import_audit_review_decisions()`, `check_audit_review_gate()`, `_flatten_to_span_rows()` | `openpyxl` |
 | `advance_stage.py` | 100 | CLI for manual workflow advancement | `main()` | — |
 
 **CLI:** `python -m engine.adjudication.advance_stage --review NAME --stage STAGE --note NOTE [--force] [--status]`
@@ -141,6 +149,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | File | Lines | Purpose | Key Exports | External Deps |
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 71 | Master export orchestrator | `export_all()` | — |
+| `review_workbook.py` | 360 | Shared self-documenting Excel workbook builder | `create_review_workbook()`, `ColumnDef`, `DecisionColumnDef`, `FreeTextColumnDef`, `InstructionsConfig` | `openpyxl` |
 | `prisma.py` | 154 | PRISMA flow data + CSV (includes FT exclusions + LOW_YIELD rejections) | `generate_prisma_flow()`, `export_prisma_csv()` | `csv` |
 | `evidence_table.py` | 176 | Evidence CSV + 3-sheet Excel | `export_evidence_csv()`, `export_evidence_excel()` | `openpyxl` |
 | `docx_export.py` | 111 | Formatted DOCX evidence table | `export_evidence_docx()` | `python-docx` |
@@ -210,22 +219,23 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | `test_auditor.py` | 354 | 25 | Grep verify, semantic verify, full audit mocked |
 | `test_exporters.py` | 236 | 8 | PRISMA, CSV, Excel, DOCX, methods, export_all |
 | `test_cloud_extraction.py` | 361 | 18 | Cloud tables, span parsing, store, CLI |
-| `test_adjudication.py` | 504 | 37 | Categorizer, screening export/import, gate checks |
-| `test_audit_adjudication.py` | 492 | 15 | Audit export/import, spot-check, reject, min_status, LOW_YIELD |
+| `test_adjudication.py` | 544 | 37 | Categorizer, screening export/import, gate checks, self-documenting workbook |
+| `test_audit_adjudication.py` | 574 | 17 | Per-span audit export/import, ACCEPT/REJECT/CORRECT, flatten, spot-check |
 | `test_workflow.py` | 318 | 30 | 12-stage workflow enforcement, blockers, format |
-| `test_ft_screening.py` | 647 | 61 | FT screener decisions, truncation, prompts, FT adjudicator |
-| `test_low_yield.py` | 334 | 15 | Populated field counting, threshold flagging, audit queue, PRISMA |
+| `test_ft_screening.py` | 673 | 61 | FT screener decisions, truncation, prompts, FT adjudicator, self-documenting workbook |
+| `test_low_yield.py` | 337 | 15 | Populated field counting, threshold flagging, audit queue, PRISMA |
 | `test_human_review.py` | 121 | 6 | Human review queue export/import |
 | `test_background.py` | 112 | 7 | tmux background mode |
 | `test_trace_exporter.py` | 186 | 11 | Per-paper traces, quality report, disagreements |
+| `test_verify_downloads.py` | 491 | 40 | Author cleaning, canonical names, PDF validation, publisher classification, verify/rename integration |
 
-**Total: 332 offline tests passing** (10 network/ollama tests deselected by default)
+**Total: 377 offline tests passing** (10 network/ollama tests deselected by default)
 
 ```bash
-python -m pytest tests/ -v -m "not network and not ollama"  # 332 passed
-python -m pytest tests/ -v                                   # all 342
+python -m pytest tests/ -v -m "not network and not ollama"  # 377 passed
+python -m pytest tests/ -v                                   # all 387
 ```
 
 ---
 
-*Generated 2026-03-13 from commit `c21ad34`*
+*Generated 2026-03-13 from commit `cd1d2d0`*

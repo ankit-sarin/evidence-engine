@@ -34,7 +34,7 @@ evidence-engine/
 │   ├── agents/
 │   │   ├── __init__.py
 │   │   ├── models.py           # EvidenceSpan, ExtractionResult models
-│   │   ├── screener.py         # Abstract screening: primary (qwen3:8b) + verifier (gemma3:27b)
+│   │   ├── screener.py         # Abstract screening: primary (qwen3:8b) + verifier (gemma3:27b), specialty_scope
 │   │   ├── ft_screener.py      # Full-text screening: primary (qwen3.5:27b) + verifier (gemma3:27b)
 │   │   ├── extractor.py        # Two-pass extraction (deepseek-r1:32b)
 │   │   └── auditor.py          # Cross-model audit (gemma3:27b) + LOW_YIELD detection
@@ -80,6 +80,7 @@ evidence-engine/
 │   ├── reextract_failed.py     # Re-extract specific failed papers with extended timeout
 │   ├── screen_expanded.py      # Three-phase expanded search screening (fetch/screen/verify)
 │   ├── rescreen_original_251.py # Re-screen original 251 papers with updated criteria
+│   ├── rescreen_with_specialty.py  # Re-screen included papers with specialty_scope (dual-pass + verification)
 │   ├── ft_screening_smoke_test.py  # 5-paper FT screening integration test
 │   ├── advance_to_pdf_acquired.py  # Bulk status transition helper
 │   ├── monitor_extraction.py   # Live extraction progress monitor
@@ -93,11 +94,11 @@ evidence-engine/
 │   ├── test_pubmed.py          #  5 tests — live PubMed queries
 │   ├── test_openalex.py        #  7 tests — live OpenAlex + abstract reconstruction
 │   ├── test_dedup.py           # 15 tests — DOI/PMID/fuzzy match, merge, stats
-│   ├── test_database.py        # 27 tests — tables, lifecycle, transitions, staleness, reject, min_status
-│   ├── test_screener.py        # 11 tests — structured output, dual-pass, verification logic
+│   ├── test_database.py        # 28 tests — tables, lifecycle, transitions, staleness, reject, min_status, FT states
+│   ├── test_screener.py        # 14 tests — structured output, dual-pass, verification, specialty scope
 │   ├── test_pdf_parser.py      #  9 tests — hash, routing, Docling integration, versioning
 │   ├── test_extractor.py       # 17 tests — prompt, thinking trace, two-pass, ellipsis retry
-│   ├── test_auditor.py         # 26 tests — grep verify, semantic verify, full audit mocked
+│   ├── test_auditor.py         # 25 tests — grep verify, semantic verify, full audit mocked
 │   ├── test_exporters.py       #  8 tests — PRISMA, CSV, Excel, DOCX, methods, export_all
 │   ├── test_cloud_extraction.py # 18 tests — cloud tables, span parsing, store, CLI
 │   ├── test_adjudication.py    # 37 tests — categorizer, screening export/import, gate checks
@@ -229,6 +230,9 @@ python -m pytest tests/ -v -m "not network and not ollama"  # offline only (332)
 - Cloud parser: Anthropic wraps JSON in ` ```json ``` ` markdown fences — stripped before parsing
 - Cloud parser: o4-mini occasionally returns single flat span dict instead of list — wrapped automatically
 - Screening FP rate: original criteria yielded 38% FP rate. Fixed via role-aware prompts (primary=permissive, verifier=strict) and model swap (gemma3:27b verifier)
+
+## Architecture Docs
+See `docs/architecture/` — 6-file code-audited reference (README, pipeline, models, state-machine, workflow, modules).
 
 ## Build Plan
 See Project4_Surgical_Evidence_Engine_Unified_Plan_v5.md

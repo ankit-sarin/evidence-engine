@@ -29,7 +29,7 @@ python scripts/run_pipeline.py --spec review_specs/surgical_autonomy_v1.yaml \
 
 ---
 
-## 2. SCREEN (Dual-Pass Primary + Verification)
+## 2. ABSTRACT SCREENING (Dual-Pass Primary + Verification)
 
 **Trigger:** After SEARCH, or `--skip-to screen` in pipeline. Expanded search uses `screen_expanded.py` (3-phase).
 
@@ -44,22 +44,25 @@ python scripts/run_pipeline.py --spec review_specs/surgical_autonomy_v1.yaml \
 - Model: `qwen3:8b` (configurable via `spec.screening_models.primary`)
 - Pass 1 (pass_number=1): Simplified exclusion criteria (high recall)
 - Pass 2 (pass_number=2): Full exclusion criteria (high precision)
+- Specialty scope (if configured): included/excluded surgical specialties injected into prompt
 - Decision logic:
-  - Both include → `SCREENED_IN`
-  - Both exclude → `SCREENED_OUT`
-  - Disagree → `SCREEN_FLAGGED`
+  - Both include → `ABSTRACT_SCREENED_IN`
+  - Both exclude → `ABSTRACT_SCREENED_OUT`
+  - Disagree → `ABSTRACT_SCREEN_FLAGGED`
 - Checkpoint/resume via JSON file (every paper saved)
 
 ### Phase 3 — Verification
 - Model: `gemma3:27b` (configurable via `spec.screening_models.verification`)
-- Re-screens all `SCREENED_IN` papers with `role="verifier"` (full strict criteria)
-- Verifier exclude → `SCREEN_FLAGGED`
-- Auto-advances workflow stage `SCREENING_COMPLETE` on success
+- Re-screens all `ABSTRACT_SCREENED_IN` papers with `role="verifier"` (full strict criteria)
+- Verifier exclude → `ABSTRACT_SCREEN_FLAGGED`
+- Auto-advances workflow stage `ABSTRACT_SCREENING_COMPLETE` on success
 
 **Database transitions:**
-- `INGESTED` → `SCREENED_IN` | `SCREENED_OUT` | `SCREEN_FLAGGED`
-- `SCREENED_IN` → `SCREEN_FLAGGED` (if verifier excludes)
-- Records stored in `screening_decisions` (pass 1 + 2) and `verification_decisions` tables
+- `INGESTED` → `ABSTRACT_SCREENED_IN` | `ABSTRACT_SCREENED_OUT` | `ABSTRACT_SCREEN_FLAGGED`
+- `ABSTRACT_SCREENED_IN` → `ABSTRACT_SCREEN_FLAGGED` (if verifier excludes)
+- Records stored in `abstract_screening_decisions` (pass 1 + 2) and `abstract_verification_decisions` tables
+
+**Data Retention:** All paper data (metadata, abstract, screening traces) is retained permanently regardless of outcome. `ABSTRACT_SCREENED_OUT` is a label, not a deletion. The database is the single source of truth for all papers ever evaluated.
 
 **Artifacts:**
 - Screening decisions with rationale in DB
@@ -79,22 +82,22 @@ python scripts/screen_expanded.py --verify-only  # phase 3
 
 ---
 
-## 3. SCREENING ADJUDICATION
+## 3. ABSTRACT SCREENING ADJUDICATION
 
-**Trigger:** Manual — human reviews flagged papers after screening.
+**Trigger:** Manual — human reviews flagged papers after abstract screening.
 
 **Module:** `engine/adjudication/screening_adjudicator.py`, `engine/adjudication/categorizer.py`
 
 **Steps:**
-1. Human reviews 50-paper diagnostic sample → advance `DIAGNOSTIC_SAMPLE_COMPLETE`
-2. Create `adjudication_categories.yaml` → auto-set `CATEGORIES_CONFIGURED`
-3. Export flagged papers to Excel → auto-set `QUEUE_EXPORTED`
+1. Human reviews 50-paper diagnostic sample → advance `ABSTRACT_DIAGNOSTIC_COMPLETE`
+2. Create `adjudication_categories.yaml` → auto-set `ABSTRACT_CATEGORIES_CONFIGURED`
+3. Export flagged papers to Excel → auto-set `ABSTRACT_QUEUE_EXPORTED`
 4. Human fills INCLUDE/EXCLUDE decisions in Excel
-5. Import decisions → auto-set `ADJUDICATION_COMPLETE` (if zero unresolved)
+5. Import decisions → auto-set `ABSTRACT_ADJUDICATION_COMPLETE` (if zero unresolved)
 
 **Database transitions:**
-- `SCREEN_FLAGGED` → `SCREENED_IN` (INCLUDE decision)
-- `SCREEN_FLAGGED` → `SCREENED_OUT` (EXCLUDE decision)
+- `ABSTRACT_SCREEN_FLAGGED` → `ABSTRACT_SCREENED_IN` (INCLUDE decision)
+- `ABSTRACT_SCREEN_FLAGGED` → `ABSTRACT_SCREENED_OUT` (EXCLUDE decision)
 - Records in `screening_adjudication` table
 
 **Artifacts:**
@@ -123,7 +126,7 @@ import_adjudication_decisions(db, 'queue_completed.xlsx')
 
 ## 4. PDF ACQUISITION
 
-**Trigger:** After `ADJUDICATION_COMPLETE` workflow stage.
+**Trigger:** After `ABSTRACT_ADJUDICATION_COMPLETE` workflow stage.
 
 **Module:** `engine/acquisition/check_oa.py`, `engine/acquisition/download.py`, `engine/acquisition/manual_list.py`
 
@@ -143,7 +146,7 @@ All downloads validated with `%PDF` magic bytes. Idempotent (skips papers with v
 - `papers.oa_status` updated (gold/hybrid/bronze/green/closed/not_found/no_doi)
 - `papers.download_status` updated (success/failed/pending/manual)
 - `papers.pdf_local_path` set on success
-- Paper status: `SCREENED_IN` → `PDF_ACQUIRED` (via `advance_to_pdf_acquired.py`)
+- Paper status: `ABSTRACT_SCREENED_IN` → `PDF_ACQUIRED` (via `advance_to_pdf_acquired.py`)
 
 **Artifacts:**
 - PDFs in `data/{review}/pdfs/{paper_id}.pdf`
@@ -186,9 +189,75 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to parse
 
 ---
 
-## 6. EXTRACT
+## 6. FULL-TEXT SCREENING
 
 **Trigger:** After PARSE; `PARSED` papers in DB.
+
+**Module:** `engine/agents/ft_screener.py`
+
+### Primary Screen
+- Model: `qwen3.5:27b` (configurable via `spec.ft_screening_models.primary`)
+- Input: parsed Markdown text, truncated to 32,000 chars (`FT_MAX_TEXT_CHARS`) via section-aware truncation (preserves title, abstract, intro, methods, results, discussion; drops references/appendices first)
+- Output: structured `FTScreeningDecision` with decision (`FT_ELIGIBLE` or `FT_EXCLUDE`), reason code, rationale, confidence
+- Reason codes: `eligible`, `wrong_specialty`, `no_autonomy_content`, `wrong_intervention`, `protocol_only`, `duplicate_cohort`, `insufficient_data`
+- Specialty scope injected from Review Spec
+
+### Verification
+- Model: `gemma3:27b` (configurable via `spec.ft_screening_models.verifier`)
+- Re-screens `FT_ELIGIBLE` papers with strict criteria
+- Output: `FTVerificationDecision` — `FT_ELIGIBLE` (confirmed) or `FT_FLAGGED` (for human review)
+- Auto-advances workflow stage `FULL_TEXT_SCREENING_COMPLETE`
+
+**Database transitions:**
+- `PARSED` → `FT_ELIGIBLE` | `FT_SCREENED_OUT` | `FT_FLAGGED`
+- `FT_ELIGIBLE` → `FT_FLAGGED` (if verifier flags)
+- Records stored in `ft_screening_decisions` and `ft_verification_decisions` tables
+- Skip path: `PARSED` → `EXTRACTED` (for papers already at extraction stage)
+
+**Artifacts:**
+- FT screening decisions with reason codes and rationale in DB
+
+**CLI:**
+```bash
+# FT screening smoke test (5 known papers)
+python scripts/ft_screening_smoke_test.py
+```
+
+---
+
+## 7. FULL-TEXT SCREENING ADJUDICATION
+
+**Trigger:** Manual — human reviews FT_FLAGGED papers after full-text screening.
+
+**Module:** `engine/adjudication/ft_screening_adjudicator.py`
+
+**Steps:**
+1. Export `FT_FLAGGED` papers to Excel with primary/verifier decisions and rationale
+2. Human fills `FT_ELIGIBLE` or `FT_SCREENED_OUT` decisions
+3. Import decisions → auto-set `FULL_TEXT_ADJUDICATION_COMPLETE` (if zero unresolved)
+
+**Database transitions:**
+- `FT_FLAGGED` → `FT_ELIGIBLE` (INCLUDE decision)
+- `FT_FLAGGED` → `FT_SCREENED_OUT` (EXCLUDE decision)
+- Records in `ft_screening_adjudication` table
+
+**CLI:**
+```bash
+python -c "
+from engine.adjudication.ft_screening_adjudicator import (
+    export_ft_adjudication_queue, import_ft_adjudication_decisions
+)
+from engine.core.database import ReviewDatabase
+db = ReviewDatabase('surgical_autonomy')
+export_ft_adjudication_queue(db, 'ft_queue.xlsx')
+"
+```
+
+---
+
+## 8. EXTRACT
+
+**Trigger:** After FT screening; `FT_ELIGIBLE` (or `PARSED` via skip path) papers in DB.
 
 **Module:** `engine/agents/extractor.py`
 
@@ -198,13 +267,13 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to parse
 - Post-processing: snippet validation detects ellipsis bridging (`...`) via regex; invalid snippets retried up to 2 times
 
 **Database transitions:**
-- `PARSED` → `EXTRACTED` (success)
-- `PARSED` → `EXTRACT_FAILED` (exception)
+- `FT_ELIGIBLE` → `EXTRACTED` (success) | `EXTRACT_FAILED` (exception)
+- `PARSED` → `EXTRACTED` (success, skip path) | `EXTRACT_FAILED` (exception)
 - Atomic insert: extraction record + all evidence spans in single transaction
 - Schema hash stored for staleness detection
 
 **Artifacts:**
-- `extractions` table: extracted_data (JSON), reasoning_trace, model, schema_hash
+- `extractions` table: extracted_data (JSON), reasoning_trace, model, schema_hash, low_yield
 - `evidence_spans` table: field_name, value, source_snippet, confidence
 
 **CLI:**
@@ -218,7 +287,7 @@ PYTHONPATH=. python scripts/run_cloud_extraction.py --progress
 
 ---
 
-## 7. AUDIT
+## 9. AUDIT
 
 **Trigger:** After EXTRACT; `EXTRACTED` papers in DB.
 
@@ -238,9 +307,16 @@ PYTHONPATH=. python scripts/run_cloud_extraction.py --progress
 - Tier 4 fields (judgment): skip grep, go straight to semantic verification
 - Categorical fields: auditor checks if source text supports classification (label need not appear verbatim)
 
+**Post-audit: LOW_YIELD detection:**
+- `check_low_yield()` runs automatically after audit completes
+- Counts non-null, non-absence fields per extraction (absence sentinels: `NOT_FOUND`, `NR`, `Not discussed`, `No comparison reported`, `Not assessable`)
+- Papers with fewer than `spec.low_yield_threshold` (default 4) populated fields are flagged `low_yield=1` on the extraction record
+- LOW_YIELD papers are prioritized in the audit review queue for PI review
+
 **Database transitions:**
 - `EXTRACTED` → `AI_AUDIT_COMPLETE` (when all spans audited, no pending remain)
 - Each span's `audit_status`, `auditor_model`, `audit_rationale` updated
+- `extractions.low_yield` set to 1 for papers below threshold
 
 **CLI:**
 ```bash
@@ -249,7 +325,7 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to audit
 
 ---
 
-## 8. HUMAN AUDIT REVIEW
+## 10. HUMAN AUDIT REVIEW
 
 **Trigger:** Manual — after AI audit. Workflow stage `AI_AUDIT_COMPLETE_STAGE`.
 
@@ -257,9 +333,10 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to audit
 
 **Steps:**
 1. Export contested/flagged/invalid_snippet spans to Excel → auto-set `AUDIT_QUEUE_EXPORTED`
-2. Random spot-check sample (10% of all-verified papers) included for QA
-3. Human reviews: accept_as_is, per-field corrections, or reject_paper
-4. Import decisions → auto-set `AUDIT_REVIEW_COMPLETE` (if zero unresolved)
+2. LOW_YIELD papers always included with `review_reason="low_yield"`, sorted first
+3. Random spot-check sample (10% of all-verified papers) included for QA
+4. Human reviews: accept_as_is, per-field corrections, or reject_paper
+5. Import decisions → auto-set `AUDIT_REVIEW_COMPLETE` (if zero unresolved)
 
 **Database transitions:**
 - Span corrections: `audit_status` → `verified`, value overwritten if corrected
@@ -288,7 +365,7 @@ import_audit_review_decisions(db, 'audit_queue_completed.xlsx')
 
 ---
 
-## 9. EXPORT
+## 11. EXPORT
 
 **Trigger:** After all review stages complete (or with `min_status` filtering).
 
@@ -297,7 +374,7 @@ import_audit_review_decisions(db, 'audit_queue_completed.xlsx')
 **Outputs:**
 | Exporter | File | Description |
 |----------|------|-------------|
-| `prisma.py` | `prisma_flow.csv` | PRISMA flow counts by stage |
+| `prisma.py` | `prisma_flow.csv` | PRISMA flow counts by stage (includes FT screening exclusions + LOW_YIELD rejections) |
 | `evidence_table.py` | `evidence_table.csv` | Flat evidence table |
 | `evidence_table.py` | `evidence_table.xlsx` | 3-sheet Excel (evidence, screening log, audit log) |
 | `docx_export.py` | `evidence_table.docx` | Formatted DOCX (landscape, "First Author et al.") |
@@ -314,4 +391,4 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to export
 
 ---
 
-*Generated 2026-03-12 from commit `d65d614`*
+*Generated 2026-03-13 from commit `c21ad34`*

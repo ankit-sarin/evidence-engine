@@ -9,11 +9,15 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | File | Lines | Purpose | Key Exports | External Deps |
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 1 | Empty module | — | — |
-| `constants.py` | 8 | Shared regex for invalid snippet detection | `INVALID_SNIPPET_RE` | `re` |
-| `database.py` | 738 | SQLite state machine — one DB per review | `ReviewDatabase`, `STATUSES`, `ALLOWED_TRANSITIONS`, `DATA_ROOT` | `sqlite3` |
-| `review_spec.py` | 152 | YAML parser, Pydantic models, protocol hashing | `ReviewSpec`, `load_review_spec()`, `ExtractionSchema`, `PICO`, `ScreeningCriteria`, `ScreeningModels` | `pydantic`, `yaml` |
+| `constants.py` | 21 | Shared regex + FT screening constants | `INVALID_SNIPPET_RE`, `FT_REASON_CODES`, `FT_MAX_TEXT_CHARS` | `re` |
+| `database.py` | 814 | SQLite state machine — one DB per review, data retention | `ReviewDatabase`, `STATUSES`, `ALLOWED_TRANSITIONS`, `DATA_ROOT` | `sqlite3` |
+| `review_spec.py` | 203 | YAML parser, Pydantic models, protocol hashing | `ReviewSpec`, `load_review_spec()`, `ExtractionSchema`, `PICO`, `ScreeningCriteria`, `ScreeningModels`, `FTScreeningModels`, `SpecialtyScope` | `pydantic`, `yaml` |
 
-**`ReviewDatabase` key methods:** `add_papers()`, `update_status()`, `reject_paper()`, `add_extraction_atomic()`, `update_audit()`, `min_status_gate()`, `reset_for_reaudit()`, `reset_for_reextraction()`, `get_pipeline_stats()`, `cleanup_orphaned_spans()`
+**`ReviewDatabase` key methods:** `add_papers()`, `update_status()`, `reject_paper()`, `add_extraction_atomic()`, `update_audit()`, `add_ft_screening_decision()`, `add_ft_verification_decision()`, `min_status_gate()`, `reset_for_reaudit()`, `reset_for_reextraction()`, `get_pipeline_stats()`, `cleanup_orphaned_spans()`
+
+**`ReviewSpec` notable fields:** `screening_models` (abstract), `ft_screening_models` (full-text), `specialty_scope` (SpecialtyScope with included/excluded specialties), `low_yield_threshold` (default 4), `auditor_model`, `unpaywall_email`, `institutional_proxy_pattern`
+
+**Database tables:** `papers`, `abstract_screening_decisions` (renamed from `screening_decisions`), `abstract_verification_decisions` (renamed from `verification_decisions`), `full_text_assets`, `extractions` (with `low_yield` column), `evidence_spans`, `ft_screening_decisions`, `ft_verification_decisions`, `review_runs`
 
 ---
 
@@ -35,14 +39,16 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 1 | Empty module | — | — |
 | `models.py` | 44 | Pydantic data models for extraction | `EvidenceSpan`, `ExtractionResult`, `ExtractionOutput` | `pydantic` |
-| `screener.py` | 342 | Role-aware dual-model screening | `screen_paper()`, `run_screening()`, `run_verification()`, `ScreeningDecision` | `ollama` |
+| `screener.py` | 345 | Role-aware dual-model abstract screening with specialty scope | `screen_paper()`, `run_screening()`, `run_verification()`, `ScreeningDecision` | `ollama` |
+| `ft_screener.py` | 538 | Full-text dual-model screening with reason codes | `ft_screen_paper()`, `ft_verify_paper()`, `run_ft_screening()`, `run_ft_verification()`, `truncate_paper_text()`, `FTScreeningDecision`, `FTVerificationDecision` | `ollama` |
 | `extractor.py` | 382 | Two-pass DeepSeek-R1 extraction | `extract_paper()`, `run_extraction()`, `build_extraction_prompt()` | `ollama` |
-| `auditor.py` | 363 | Cross-model grep + semantic audit | `audit_span()`, `run_audit()`, `grep_verify()`, `semantic_verify()`, `AuditVerdict` | `ollama`, `difflib` |
+| `auditor.py` | 442 | Cross-model grep + semantic audit + LOW_YIELD detection | `audit_span()`, `run_audit()`, `grep_verify()`, `semantic_verify()`, `AuditVerdict`, `count_populated_fields()`, `check_low_yield()` | `ollama`, `difflib` |
 
 **Constants:**
 - `screener.py`: `DEFAULT_PRIMARY_MODEL = "qwen3:8b"`, `DEFAULT_VERIFICATION_MODEL = "qwen3:32b"`
+- `ft_screener.py`: Uses `FT_MAX_TEXT_CHARS` (32,000) and `FT_REASON_CODES` from `engine/core/constants.py`
 - `extractor.py`: `MODEL = "deepseek-r1:32b"`, `OLLAMA_TIMEOUT = 900.0`, `MAX_RETRIES = 2`
-- `auditor.py`: `DEFAULT_AUDITOR_MODEL = "gemma3:27b"`, `SEMANTIC_ONLY_TIERS = {4}`
+- `auditor.py`: `DEFAULT_AUDITOR_MODEL = "gemma3:27b"`, `SEMANTIC_ONLY_TIERS = {4}`, `_ABSENCE_VALUES` (NR, NOT_FOUND, etc.)
 
 ---
 
@@ -96,15 +102,26 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 
 | File | Lines | Purpose | Key Exports | External Deps |
 |------|-------|---------|-------------|---------------|
-| `__init__.py` | 44 | Re-exports public API | All major functions from submodules | — |
-| `workflow.py` | 343 | 10-stage workflow state machine | `WORKFLOW_STAGES`, `advance_stage()`, `complete_stage()`, `format_workflow_status()`, `get_current_blocker()`, `is_adjudication_complete()` | `sqlite3` |
-| `schema.py` | 59 | DDL for adjudication tables | `ensure_adjudication_table()` | `sqlite3` |
+| `__init__.py` | 49 | Re-exports public API | All major functions from submodules (including FT adjudication) | — |
+| `workflow.py` | 364 | 12-stage workflow state machine | `WORKFLOW_STAGES`, `SCREENING_STAGES`, `FULL_TEXT_STAGES`, `EXTRACTION_STAGES`, `advance_stage()`, `complete_stage()`, `format_workflow_status()`, `get_current_blocker()`, `is_adjudication_complete()` | `sqlite3` |
+| `schema.py` | 78 | DDL for adjudication tables | `ensure_adjudication_table()` | `sqlite3` |
 | `categorizer.py` | 260 | FP category config + keyword/regex matching | `CategoryConfig`, `categorize_paper()`, `generate_starter_config()`, `load_config()` | `yaml` |
-| `screening_adjudicator.py` | 579 | Export/import screening adjudication queue | `export_adjudication_queue()`, `import_adjudication_decisions()`, `check_adjudication_gate()` | `openpyxl` |
-| `audit_adjudicator.py` | 594 | Export/import audit review queue | `export_audit_review_queue()`, `import_audit_review_decisions()`, `check_audit_review_gate()` | `openpyxl` |
+| `screening_adjudicator.py` | 578 | Export/import abstract screening adjudication queue | `export_adjudication_queue()`, `import_adjudication_decisions()`, `check_adjudication_gate()` | `openpyxl` |
+| `ft_screening_adjudicator.py` | 346 | Export/import full-text screening adjudication queue | `export_ft_adjudication_queue()`, `import_ft_adjudication_decisions()`, `check_ft_adjudication_gate()` | `openpyxl` |
+| `audit_adjudicator.py` | 621 | Export/import audit review queue (with LOW_YIELD integration) | `export_audit_review_queue()`, `import_audit_review_decisions()`, `check_audit_review_gate()` | `openpyxl` |
 | `advance_stage.py` | 100 | CLI for manual workflow advancement | `main()` | — |
 
 **CLI:** `python -m engine.adjudication.advance_stage --review NAME --stage STAGE --note NOTE [--force] [--status]`
+
+---
+
+## engine/migrations/
+
+| File | Lines | Purpose | Key Exports | External Deps |
+|------|-------|---------|-------------|---------------|
+| `__init__.py` | 0 | Empty module | — | — |
+| `002_screening_rename.py` | 207 | "The Great Rename" — screening_decisions → abstract_screening_decisions, SCREENED_IN → ABSTRACT_SCREENED_IN, etc. | — | `sqlite3` |
+| `003_backfill_expanded_screening.py` | 411 | Backfill expanded corpus screening data into renamed tables | — | `sqlite3` |
 
 ---
 
@@ -113,7 +130,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | File | Lines | Purpose | Key Exports | External Deps |
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 0 | Empty module | — | — |
-| `human_review.py` | 350 | CSV-based human review queue (alternative to Excel) | `export_review_queue()`, `import_review_decisions()`, `bulk_accept()` | `csv`, `difflib` |
+| `human_review.py` | 349 | CSV-based human review queue (alternative to Excel) | `export_review_queue()`, `import_review_decisions()`, `bulk_accept()` | `csv`, `difflib` |
 
 **Decisions:** `ACCEPT`, `ACCEPT_CORRECTED` (with snippet validation), `REJECT_VALUE` (set value to "NR"), `REJECT_PAPER`
 
@@ -124,11 +141,13 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | File | Lines | Purpose | Key Exports | External Deps |
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 71 | Master export orchestrator | `export_all()` | — |
-| `prisma.py` | 134 | PRISMA flow data + CSV | `generate_prisma_flow()`, `export_prisma_csv()` | `csv` |
+| `prisma.py` | 154 | PRISMA flow data + CSV (includes FT exclusions + LOW_YIELD rejections) | `generate_prisma_flow()`, `export_prisma_csv()` | `csv` |
 | `evidence_table.py` | 176 | Evidence CSV + 3-sheet Excel | `export_evidence_csv()`, `export_evidence_excel()` | `openpyxl` |
 | `docx_export.py` | 111 | Formatted DOCX evidence table | `export_evidence_docx()` | `python-docx` |
 | `methods_section.py` | 81 | PRISMA methods paragraph | `generate_methods_section()`, `export_methods_md()` | — |
 | `trace_exporter.py` | 549 | Per-paper traces, quality report, disagreement pairs | `export_traces_markdown()`, `export_trace_quality_report()`, `export_disagreement_pairs()` | `statistics` |
+
+**PRISMA additions:** `ft_screened_out`, `ft_flagged`, `low_yield_rejected` fields in flow dict
 
 ---
 
@@ -148,12 +167,14 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | `run_pipeline.py` | 382 | Full pipeline orchestrator (search → screen → parse → extract → audit → export) with adjudication gates and `--background` support |
 | `run_cloud_extraction.py` | 156 | Cloud concordance extraction CLI (`--arm openai/anthropic/both`, `--max-cost`, `--progress`) |
 | `screen_expanded.py` | 485 | Three-phase expanded search screening (fetch abstracts → primary dual-pass → verification) |
-| `rescreen_original_251.py` | 170 | Re-screen original corpus with updated criteria (read-only, writes staging CSV) |
+| `rescreen_original_251.py` | 173 | Re-screen original corpus with updated criteria (read-only, writes staging CSV) |
+| `rescreen_with_specialty.py` | 403 | Re-screen included papers with specialty_scope (dual-pass + verification, checkpoint/resume) |
+| `ft_screening_smoke_test.py` | 243 | Full-text screening smoke test — 5 known papers, primary + verification, timing |
 | `reextract_all.py` | 162 | Full re-extraction + re-audit of all papers (admin override) |
 | `reextract_failed.py` | 161 | Re-extract specific failed papers with extended timeout (up to 25 min) |
 | `reparse_cloud_spans.py` | 105 | Re-parse cloud extractions with 0 spans using stored JSON (no API calls) |
 | `eval_auditor_models.py` | 279 | Multi-model auditor evaluation (5-paper sample, 3 candidate models) |
-| `advance_to_pdf_acquired.py` | 102 | Bulk SCREENED_IN → PDF_ACQUIRED transition for papers with PDFs on disk |
+| `advance_to_pdf_acquired.py` | 102 | Bulk ABSTRACT_SCREENED_IN → PDF_ACQUIRED transition for papers with PDFs on disk |
 | `prepare_concordance_pdfs.py` | 66 | Rename PDFs to EE-XXX format + paper_manifest.csv |
 | `monitor_extraction.py` | 68 | Watchdog: checks extract_log.txt for stalls every 20 min |
 | `test_e2e_search_screen.py` | 162 | Live E2E test: search + screen 20 papers, writes markdown log |
@@ -182,27 +203,29 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | `test_pubmed.py` | 62 | 5 | Live PubMed queries (network) |
 | `test_openalex.py` | 102 | 7 | Live OpenAlex + abstract reconstruction (network) |
 | `test_dedup.py` | 206 | 15 | DOI/PMID/fuzzy match, merge, stats |
-| `test_database.py` | 434 | 27 | Tables, lifecycle, transitions, staleness, reject, min_status |
-| `test_screener.py` | 254 | 11 | Structured output, dual-pass, verification logic |
+| `test_database.py` | 525 | 28 | Tables, lifecycle, transitions, staleness, reject, min_status, FT states |
+| `test_screener.py` | 254 | 14 | Structured output, dual-pass, verification logic, specialty scope |
 | `test_pdf_parser.py` | 175 | 9 | Hash, routing, Docling integration, versioning |
 | `test_extractor.py` | 353 | 17 | Prompt, thinking trace, two-pass, ellipsis retry |
-| `test_auditor.py` | 490 | 26 | Grep verify, semantic verify, full audit mocked |
-| `test_exporters.py` | 268 | 8 | PRISMA, CSV, Excel, DOCX, methods, export_all |
+| `test_auditor.py` | 354 | 25 | Grep verify, semantic verify, full audit mocked |
+| `test_exporters.py` | 236 | 8 | PRISMA, CSV, Excel, DOCX, methods, export_all |
 | `test_cloud_extraction.py` | 361 | 18 | Cloud tables, span parsing, store, CLI |
-| `test_adjudication.py` | 563 | 37 | Categorizer, screening export/import, gate checks |
-| `test_audit_adjudication.py` | 349 | 15 | Audit export/import, spot-check, reject, min_status |
-| `test_workflow.py` | 316 | 30 | 10-stage workflow enforcement, blockers, format |
+| `test_adjudication.py` | 504 | 37 | Categorizer, screening export/import, gate checks |
+| `test_audit_adjudication.py` | 492 | 15 | Audit export/import, spot-check, reject, min_status, LOW_YIELD |
+| `test_workflow.py` | 318 | 30 | 12-stage workflow enforcement, blockers, format |
+| `test_ft_screening.py` | 647 | 61 | FT screener decisions, truncation, prompts, FT adjudicator |
+| `test_low_yield.py` | 334 | 15 | Populated field counting, threshold flagging, audit queue, PRISMA |
 | `test_human_review.py` | 121 | 6 | Human review queue export/import |
 | `test_background.py` | 112 | 7 | tmux background mode |
 | `test_trace_exporter.py` | 186 | 11 | Per-paper traces, quality report, disagreements |
 
-**Total: 256 offline tests passing** (10 network/ollama tests deselected by default)
+**Total: 332 offline tests passing** (10 network/ollama tests deselected by default)
 
 ```bash
-python -m pytest tests/ -v -m "not network and not ollama"  # 256 passed
-python -m pytest tests/ -v                                   # all 266
+python -m pytest tests/ -v -m "not network and not ollama"  # 332 passed
+python -m pytest tests/ -v                                   # all 342
 ```
 
 ---
 
-*Generated 2026-03-12 from commit `d65d614`*
+*Generated 2026-03-13 from commit `c21ad34`*

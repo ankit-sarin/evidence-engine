@@ -1,70 +1,73 @@
 # Workflow Stage Enforcement
 
-The engine enforces a 10-stage sequential workflow via the `workflow_state` table. Each stage must be completed (or bypassed) before the next can begin. This prevents skipping human review gates.
+The engine enforces a 12-stage sequential workflow via the `workflow_state` table. Each stage must be completed (or bypassed) before the next can begin. This prevents skipping human review gates.
 
 Defined in `engine/adjudication/workflow.py`.
 
 ## Workflow Stages
 
 ```
-── Screening Adjudication ──
-  [1] SCREENING_COMPLETE
-  [2] DIAGNOSTIC_SAMPLE_COMPLETE
-  [3] CATEGORIES_CONFIGURED
-  [4] QUEUE_EXPORTED
-  [5] ADJUDICATION_COMPLETE
+── Abstract Screening Adjudication ──
+  [1] ABSTRACT_SCREENING_COMPLETE
+  [2] ABSTRACT_DIAGNOSTIC_COMPLETE
+  [3] ABSTRACT_CATEGORIES_CONFIGURED
+  [4] ABSTRACT_QUEUE_EXPORTED
+  [5] ABSTRACT_ADJUDICATION_COMPLETE
 ── PDF Acquisition ──
   [6] PDF_ACQUISITION
+── Full-Text Screening ──
+  [7] FULL_TEXT_SCREENING_COMPLETE
+  [8] FULL_TEXT_ADJUDICATION_COMPLETE
 ── Extraction Audit ──
-  [7] EXTRACTION_COMPLETE
-  [8] AI_AUDIT_COMPLETE_STAGE
-  [9] AUDIT_QUEUE_EXPORTED
- [10] AUDIT_REVIEW_COMPLETE
+  [9] EXTRACTION_COMPLETE
+ [10] AI_AUDIT_COMPLETE_STAGE
+ [11] AUDIT_QUEUE_EXPORTED
+ [12] AUDIT_REVIEW_COMPLETE
 ```
 
 ## Stage Details
 
-### Stage 1: SCREENING_COMPLETE
+### Stage 1: ABSTRACT_SCREENING_COMPLETE
 
 - **Trigger:** Auto — `screener.run_verification()` calls `complete_stage()` after verification succeeds
 - **Prerequisite:** None (first stage)
-- **What it means:** Primary dual-pass screening + verification pass complete
+- **What it means:** Primary dual-pass abstract screening + verification pass complete
 
-### Stage 2: DIAGNOSTIC_SAMPLE_COMPLETE
+### Stage 2: ABSTRACT_DIAGNOSTIC_COMPLETE
 
 - **Trigger:** Manual — human confirms 50-paper FP analysis
-- **Prerequisite:** SCREENING_COMPLETE
+- **Prerequisite:** ABSTRACT_SCREENING_COMPLETE
 - **What it means:** Human has reviewed a diagnostic sample of flagged papers and identified FP patterns
 
 **CLI:**
 ```bash
 python -m engine.adjudication.advance_stage --review surgical_autonomy \
-    --stage DIAGNOSTIC_SAMPLE_COMPLETE \
+    --stage ABSTRACT_DIAGNOSTIC_COMPLETE \
     --note "50-paper sample reviewed, 8 FP categories identified"
 ```
 
-### Stage 3: CATEGORIES_CONFIGURED
+### Stage 3: ABSTRACT_CATEGORIES_CONFIGURED
 
 - **Trigger:** Auto — `export_adjudication_queue()` auto-sets when `CategoryConfig` loads successfully
-- **Prerequisite:** DIAGNOSTIC_SAMPLE_COMPLETE
+- **Prerequisite:** ABSTRACT_DIAGNOSTIC_COMPLETE
 - **What it means:** `adjudication_categories.yaml` exists and validates (8 default FP categories)
 
-### Stage 4: QUEUE_EXPORTED
+### Stage 4: ABSTRACT_QUEUE_EXPORTED
 
 - **Trigger:** Auto — `export_adjudication_queue()` auto-sets after successful Excel export
-- **Prerequisite:** CATEGORIES_CONFIGURED
+- **Prerequisite:** ABSTRACT_CATEGORIES_CONFIGURED
 - **What it means:** Flagged papers exported to Excel for human review
 
-### Stage 5: ADJUDICATION_COMPLETE
+### Stage 5: ABSTRACT_ADJUDICATION_COMPLETE
 
 - **Trigger:** Auto — `import_adjudication_decisions()` auto-sets when zero unresolved papers remain
-- **Prerequisite:** QUEUE_EXPORTED
+- **Prerequisite:** ABSTRACT_QUEUE_EXPORTED
 - **What it means:** All flagged papers resolved (INCLUDE or EXCLUDE)
 
 ### Stage 6: PDF_ACQUISITION
 
 - **Trigger:** Manual — advance after all PDFs acquired (OA check + download + manual)
-- **Prerequisite:** ADJUDICATION_COMPLETE
+- **Prerequisite:** ABSTRACT_ADJUDICATION_COMPLETE
 - **What it means:** All included papers have full-text PDFs
 
 **CLI:**
@@ -79,25 +82,37 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy \
     --stage PDF_ACQUISITION --note "237 auto + 411 manual downloads complete"
 ```
 
-### Stage 7: EXTRACTION_COMPLETE
+### Stage 7: FULL_TEXT_SCREENING_COMPLETE
+
+- **Trigger:** Auto — `ft_screener.run_ft_verification()` calls `complete_stage()` after FT verification succeeds
+- **Prerequisite:** PDF_ACQUISITION
+- **What it means:** Full-text primary screen + verification complete for all parsed papers
+
+### Stage 8: FULL_TEXT_ADJUDICATION_COMPLETE
+
+- **Trigger:** Auto — `import_ft_adjudication_decisions()` auto-sets when zero unresolved FT_FLAGGED papers remain
+- **Prerequisite:** FULL_TEXT_SCREENING_COMPLETE
+- **What it means:** All FT_FLAGGED papers resolved by human reviewer
+
+### Stage 9: EXTRACTION_COMPLETE
 
 - **Trigger:** Auto — `run_pipeline.py` checks all included papers reach `EXTRACTED` status
-- **Prerequisite:** PDF_ACQUISITION
+- **Prerequisite:** FULL_TEXT_ADJUDICATION_COMPLETE
 - **What it means:** Two-pass extraction completed for all papers
 
-### Stage 8: AI_AUDIT_COMPLETE_STAGE
+### Stage 10: AI_AUDIT_COMPLETE_STAGE
 
 - **Trigger:** Auto — `run_pipeline.py` checks audit run finishes (all papers audited)
 - **Prerequisite:** EXTRACTION_COMPLETE
-- **What it means:** AI grep + semantic verification complete for all evidence spans
+- **What it means:** AI grep + semantic verification complete for all evidence spans; LOW_YIELD papers flagged
 
-### Stage 9: AUDIT_QUEUE_EXPORTED
+### Stage 11: AUDIT_QUEUE_EXPORTED
 
 - **Trigger:** Auto — `export_audit_review_queue()` auto-sets after successful export
 - **Prerequisite:** AI_AUDIT_COMPLETE_STAGE
-- **What it means:** Contested/flagged spans + spot-check sample exported to Excel
+- **What it means:** Contested/flagged spans + LOW_YIELD papers + spot-check sample exported to Excel
 
-### Stage 10: AUDIT_REVIEW_COMPLETE
+### Stage 12: AUDIT_REVIEW_COMPLETE
 
 - **Trigger:** Auto — `import_audit_review_decisions()` auto-sets when zero unresolved spans remain
 - **Prerequisite:** AUDIT_QUEUE_EXPORTED
@@ -106,7 +121,7 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy \
 ## Workflow State Table Schema
 
 ```sql
-CREATE TABLE workflow_state (
+CREATE TABLE IF NOT EXISTS workflow_state (
     id              INTEGER PRIMARY KEY,
     stage_name      TEXT NOT NULL UNIQUE,
     status          TEXT NOT NULL DEFAULT 'pending'
@@ -116,7 +131,7 @@ CREATE TABLE workflow_state (
 );
 ```
 
-Seeded with all 10 stages as `pending` on first access.
+Seeded with all 12 stages as `pending` on first access.
 
 ## Stage States
 
@@ -128,7 +143,7 @@ Seeded with all 10 stages as `pending` on first access.
 
 ```bash
 python -m engine.adjudication.advance_stage --review surgical_autonomy \
-    --stage DIAGNOSTIC_SAMPLE_COMPLETE --note "skipping" --force
+    --stage ABSTRACT_DIAGNOSTIC_COMPLETE --note "skipping" --force
 ```
 
 When `--force` is used:
@@ -147,14 +162,17 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy --status
 Output example:
 ```
 Review Workflow — surgical_autonomy
-  ── Screening Adjudication ──
-  [✓] SCREENING_COMPLETE (2025-09-15 03:42)
-  [✓] DIAGNOSTIC_SAMPLE_COMPLETE (2025-09-16 18:30)
-  [✓] CATEGORIES_CONFIGURED (2025-09-16 18:35)
-  [✓] QUEUE_EXPORTED (2025-09-16 18:35)
-  [✓] ADJUDICATION_COMPLETE (2025-09-17 22:10)
+  ── Abstract Screening Adjudication ──
+  [✓] ABSTRACT_SCREENING_COMPLETE (2025-09-15 03:42)
+  [✓] ABSTRACT_DIAGNOSTIC_COMPLETE (2025-09-16 18:30)
+  [✓] ABSTRACT_CATEGORIES_CONFIGURED (2025-09-16 18:35)
+  [✓] ABSTRACT_QUEUE_EXPORTED (2025-09-16 18:35)
+  [✓] ABSTRACT_ADJUDICATION_COMPLETE (2025-09-17 22:10)
   ── PDF Acquisition ──
   [!] PDF_ACQUISITION (2025-09-18 04:00) — BYPASSED
+  ── Full-Text Screening ──
+  [ ] FULL_TEXT_SCREENING_COMPLETE — Run full-text screening...
+  [ ] FULL_TEXT_ADJUDICATION_COMPLETE
   ── Extraction Audit ──
   [✓] EXTRACTION_COMPLETE (2025-09-20 11:30)
   [✓] AI_AUDIT_COMPLETE_STAGE (2025-09-21 06:15)
@@ -165,11 +183,12 @@ Review Workflow — surgical_autonomy
 ## Grouping Constants
 
 ```python
-SCREENING_STAGES  = WORKFLOW_STAGES[:5]   # stages 1-5
+SCREENING_STAGES   = WORKFLOW_STAGES[:5]   # stages 1-5
 ACQUISITION_STAGES = WORKFLOW_STAGES[5:6]  # stage 6
-EXTRACTION_STAGES = WORKFLOW_STAGES[6:]    # stages 7-10
+FULL_TEXT_STAGES   = WORKFLOW_STAGES[6:8]  # stages 7-8
+EXTRACTION_STAGES  = WORKFLOW_STAGES[8:]   # stages 9-12
 ```
 
 ---
 
-*Generated 2026-03-12 from commit `d65d614`*
+*Generated 2026-03-13 from commit `c21ad34`*

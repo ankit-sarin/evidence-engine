@@ -67,6 +67,10 @@ def _build_prompt(paper: dict, spec: ReviewSpec, *, role: str = "primary") -> st
         ]
         exclusion = "\n".join(f"  - {c}" for c in primary_exclusions)
 
+    specialty_block = ""
+    if spec.specialty_scope:
+        specialty_block = "\n" + spec.specialty_scope.format_for_prompt() + "\n"
+
     if abstract:
         paper_text = f"Title: {title}\n\nAbstract: {abstract}"
     else:
@@ -112,7 +116,7 @@ INCLUSION CRITERIA:
 
 EXCLUSION CRITERIA:
 {exclusion}
-
+{specialty_block}
 PAPER:
 {paper_text}
 

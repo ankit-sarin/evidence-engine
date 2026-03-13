@@ -4,11 +4,13 @@
 
 | Agent | Model | Family | Ollama Tag | Role | VRAM (approx) | Context |
 |-------|-------|--------|------------|------|---------------|---------|
-| Screener — Primary | Qwen3 8B | Qwen (Alibaba) | `qwen3:8b` | High-recall primary screen | ~5 GB | default |
-| Screener — Verifier | Gemma3 27B | Gemma (Google) | `gemma3:27b` | Strict verification of includes | ~17 GB | default |
+| S-abs — Primary | Qwen3 8B | Qwen (Alibaba) | `qwen3:8b` | High-recall abstract screen | ~5 GB | default |
+| S-abs — Verifier | Gemma3 27B | Gemma (Google) | `gemma3:27b` | Strict abstract verification | ~17 GB | default |
+| S-ft — Primary | Qwen3.5 27B | Qwen (Alibaba) | `qwen3.5:27b` | Full-text primary screen | ~17 GB | 256K native, think=False |
+| S-ft — Verifier | Gemma3 27B | Gemma (Google) | `gemma3:27b` | Full-text verification | ~17 GB | default |
 | PDF Parser (scanned) | Qwen2.5-VL 7B | Qwen (Alibaba) | `qwen2.5vl:7b` | Vision OCR for scanned PDFs | ~5 GB | default |
 | Extractor | DeepSeek-R1 32B | DeepSeek | `deepseek-r1:32b` | Two-pass structured extraction | ~20 GB | default |
-| Auditor | Gemma3 27B | Gemma (Google) | `gemma3:27b` | Cross-model verification of extractions | ~17 GB | default (ollama_options pass-through) |
+| Auditor | Gemma3 27B | Gemma (Google) | `gemma3:27b` | Cross-model verification + LOW_YIELD detection | ~17 GB | default (ollama_options pass-through) |
 | Cloud — OpenAI | o4-mini-2025-04-16 | GPT (OpenAI) | N/A (API) | Concordance extraction arm | N/A | reasoning_effort=high |
 | Cloud — Anthropic | claude-sonnet-4-6 | Claude (Anthropic) | N/A (API) | Concordance extraction arm | N/A | extended thinking (budget=10000) |
 
@@ -22,19 +24,26 @@ The engine deliberately uses models from different families at each verification
 - **Cross-family verification (Qwen primary + Gemma verifier) caught 100% of identified FPs** — different model architectures make different errors, so a second model from a different family acts as an effective check.
 - **416/416 human-verifier concordance** — in the original 251-paper corpus, the Gemma verifier's decisions matched human reviewer judgment perfectly.
 
-This principle is applied at three points:
+This principle is applied at four points:
 
-1. **Screening:** Qwen3:8b (primary) → Gemma3:27b (verifier)
-2. **Extraction → Audit:** DeepSeek-R1:32b (extractor) → Gemma3:27b (auditor)
-3. **Cloud concordance:** o4-mini (OpenAI) + Sonnet 4.6 (Anthropic) — independent extraction for cross-model agreement analysis
+1. **Abstract Screening:** Qwen3:8b (primary) → Gemma3:27b (verifier)
+2. **Full-Text Screening:** Qwen3.5:27b (primary) → Gemma3:27b (verifier)
+3. **Extraction → Audit:** DeepSeek-R1:32b (extractor) → Gemma3:27b (auditor)
+4. **Cloud concordance:** o4-mini (OpenAI) + Sonnet 4.6 (Anthropic) — independent extraction for cross-model agreement analysis
 
 ### Per-Agent Model Selection
 
-**Screener — Primary (qwen3:8b):**
-Chosen for speed and high recall. Simplified exclusion criteria to maximize sensitivity. At 8B parameters, fast enough for 10K+ paper screening runs. Configured via `spec.screening_models.primary`.
+**S-abs — Primary (qwen3:8b):**
+Chosen for speed and high recall. Simplified exclusion criteria to maximize sensitivity. At 8B parameters, fast enough for 10K+ paper screening runs. Specialty scope (included/excluded surgical specialties) injected into prompt when configured. Configured via `spec.screening_models.primary`.
 
-**Screener — Verifier (gemma3:27b):**
+**S-abs — Verifier (gemma3:27b):**
 Chosen for precision and cross-family diversity. Sees full strict exclusion criteria plus 4 FP-catching tests. At 27B, slower but more capable at nuanced exclusion decisions. Configured via `spec.screening_models.verification`. Default in code is `qwen3:32b` but overridden to `gemma3:27b` in the YAML spec.
+
+**S-ft — Primary (qwen3.5:27b):**
+Chosen for the full-text screening stage where longer context and deeper reasoning are needed. 256K native context window (text truncated to 32K chars / ~8K tokens via section-aware truncation). Returns structured reason codes (`wrong_specialty`, `no_autonomy_content`, `wrong_intervention`, `protocol_only`, `duplicate_cohort`, `insufficient_data`, `eligible`). Configured via `spec.ft_screening_models.primary`. Think mode disabled for speed (~27s/paper).
+
+**S-ft — Verifier (gemma3:27b):**
+Cross-family verification of full-text primary includes. Returns `FT_ELIGIBLE` or `FT_FLAGGED` for human review. Configured via `spec.ft_screening_models.verifier`.
 
 **PDF Parser — Scanned (qwen2.5vl:7b):**
 Vision-language model for OCR of scanned PDFs. Each page rendered to PNG via PyMuPDF, sent as base64-encoded image. Routing heuristic: < 100 extracted chars/page = scanned.
@@ -47,7 +56,7 @@ Selected for reasoning capability. Two-pass design:
 - Known issue: outputs `confidence: -1` for NOT_FOUND fields; clamped to 0.0 via Pydantic validator
 
 **Auditor (gemma3:27b):**
-Cross-family from the extractor (DeepSeek → Gemma). Performs grep verification (normalized text matching) then semantic LLM verification. Supports `ollama_options` pass-through for per-model settings (e.g., `num_ctx` for memory-constrained models). Configured via `spec.auditor_model` or defaults to `gemma3:27b`.
+Cross-family from the extractor (DeepSeek → Gemma). Performs grep verification (normalized text matching) then semantic LLM verification. Supports `ollama_options` pass-through for per-model settings (e.g., `num_ctx` for memory-constrained models). Post-audit: runs `check_low_yield()` to flag papers with fewer than `low_yield_threshold` (default 4) populated fields. Configured via `spec.auditor_model` or defaults to `gemma3:27b`.
 
 ### Cloud Concordance Arms
 
@@ -72,9 +81,9 @@ All local models run at **temperature 0** (deterministic output). Set explicitly
 ## Inference Infrastructure
 
 - **Host:** DGX Spark (Blackwell GB10, sm_121)
-- **Server:** Ollama at `localhost:11434`
+- **Server:** Ollama 0.17.7 at `localhost:11434`
 - **Cloud APIs:** OpenAI and Anthropic via env vars `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`
 
 ---
 
-*Generated 2026-03-12 from commit `d65d614`*
+*Generated 2026-03-13 from commit `c21ad34`*

@@ -7,11 +7,15 @@ Defined in `engine/core/database.py` as the `STATUSES` tuple:
 ```python
 STATUSES = (
     "INGESTED",
-    "SCREENED_IN",
-    "SCREENED_OUT",
-    "SCREEN_FLAGGED",
+    "ABSTRACT_SCREENED_IN",
+    "ABSTRACT_SCREENED_OUT",
+    "ABSTRACT_SCREEN_FLAGGED",
     "PDF_ACQUIRED",
     "PARSED",
+    # Full-text screening statuses
+    "FT_ELIGIBLE",
+    "FT_SCREENED_OUT",
+    "FT_FLAGGED",
     "EXTRACT_FAILED",
     "EXTRACTED",
     "AI_AUDIT_COMPLETE",
@@ -25,11 +29,14 @@ STATUSES = (
 | Status | Description | Set By |
 |--------|-------------|--------|
 | `INGESTED` | Paper added to DB from search results | `ReviewDatabase.add_papers()` |
-| `SCREENED_IN` | Dual-pass screening: both passes agree to include, or adjudicator includes | `screener.run_screening()`, `screening_adjudicator.import_adjudication_decisions()` |
-| `SCREENED_OUT` | Dual-pass screening: both passes agree to exclude, or adjudicator excludes | `screener.run_screening()`, `screening_adjudicator.import_adjudication_decisions()` |
-| `SCREEN_FLAGGED` | Screening passes disagree, or verifier excludes a primary include | `screener.run_screening()`, `screener.run_verification()` |
+| `ABSTRACT_SCREENED_IN` | Dual-pass abstract screening: both passes agree to include, or adjudicator includes | `screener.run_screening()`, `screening_adjudicator.import_adjudication_decisions()` |
+| `ABSTRACT_SCREENED_OUT` | Dual-pass abstract screening: both passes agree to exclude, or adjudicator excludes | `screener.run_screening()`, `screening_adjudicator.import_adjudication_decisions()` |
+| `ABSTRACT_SCREEN_FLAGGED` | Abstract screening passes disagree, or verifier excludes a primary include | `screener.run_screening()`, `screener.run_verification()` |
 | `PDF_ACQUIRED` | Full-text PDF obtained and registered in `full_text_assets` | `advance_to_pdf_acquired.py` |
 | `PARSED` | PDF converted to Markdown (Docling or Qwen2.5-VL) | `pdf_parser.parse_pdf()` |
+| `FT_ELIGIBLE` | Full-text screening confirms eligibility for extraction | `ft_screener.run_ft_screening()` |
+| `FT_SCREENED_OUT` | Full-text screening excludes paper (with reason code) | `ft_screener.run_ft_screening()`, `ft_screening_adjudicator.import_ft_adjudication_decisions()` |
+| `FT_FLAGGED` | Full-text primary/verifier disagree, or verifier flags for human review | `ft_screener.run_ft_verification()` |
 | `EXTRACT_FAILED` | Extraction threw an exception (timeout, parse error) | `extractor.run_extraction()` |
 | `EXTRACTED` | Two-pass extraction completed, evidence spans stored | `extractor.run_extraction()` |
 | `AI_AUDIT_COMPLETE` | All evidence spans audited by AI (no pending remain) | `auditor.run_audit()` |
@@ -41,20 +48,30 @@ STATUSES = (
 Defined in `engine/core/database.py` as `ALLOWED_TRANSITIONS`:
 
 ```
-INGESTED ──────────> SCREENED_IN
-                  \─> SCREENED_OUT
-                  \─> SCREEN_FLAGGED
+INGESTED ──────────> ABSTRACT_SCREENED_IN
+                  \─> ABSTRACT_SCREENED_OUT
+                  \─> ABSTRACT_SCREEN_FLAGGED
 
-SCREENED_IN ───────> PDF_ACQUIRED
-                  \─> SCREEN_FLAGGED
+ABSTRACT_SCREENED_IN ───> PDF_ACQUIRED
+                       \─> ABSTRACT_SCREEN_FLAGGED
 
-SCREEN_FLAGGED ───> SCREENED_IN
-                 \─> SCREENED_OUT
+ABSTRACT_SCREEN_FLAGGED ──> ABSTRACT_SCREENED_IN
+                         \─> ABSTRACT_SCREENED_OUT
 
 PDF_ACQUIRED ─────> PARSED
 
-PARSED ───────────> EXTRACTED
-                 \─> EXTRACT_FAILED
+PARSED ───────────> FT_ELIGIBLE
+                 \─> FT_SCREENED_OUT
+                 \─> FT_FLAGGED
+                 \─> EXTRACTED          (skip path)
+                 \─> EXTRACT_FAILED     (skip path)
+
+FT_ELIGIBLE ─────> EXTRACTED
+                \─> EXTRACT_FAILED
+                \─> FT_FLAGGED
+
+FT_FLAGGED ──────> FT_ELIGIBLE
+                \─> FT_SCREENED_OUT
 
 EXTRACT_FAILED ──> PARSED          (retry)
                 \─> EXTRACTED       (retry succeeds)
@@ -66,14 +83,20 @@ AI_AUDIT_COMPLETE > HUMAN_AUDIT_COMPLETE
 
 HUMAN_AUDIT_COMPLETE ─> REJECTED
 
-SCREENED_OUT ─────> (terminal, no transitions)
-REJECTED ─────────> (terminal, no transitions)
+ABSTRACT_SCREENED_OUT ─> (terminal, no transitions)
+FT_SCREENED_OUT ──────> (terminal, no transitions)
+REJECTED ─────────────> (terminal, no transitions)
 ```
 
 ## Terminal States
 
-- `SCREENED_OUT` — Paper excluded during screening. No forward transitions.
+- `ABSTRACT_SCREENED_OUT` — Paper excluded during abstract screening. No forward transitions.
+- `FT_SCREENED_OUT` — Paper excluded during full-text screening (with reason code). No forward transitions.
 - `REJECTED` — Paper removed from corpus by human reviewer. No forward transitions. Rejection reason stored in `papers.rejected_reason`.
+
+## Data Retention Policy
+
+All fetched paper data (metadata, abstract, screening traces, verification traces) is retained permanently regardless of screening outcome. `ABSTRACT_SCREENED_OUT` and `FT_SCREENED_OUT` are labels, not deletions. The database is the single source of truth for all papers ever evaluated. This ensures full PRISMA reporting and audit trail.
 
 ## Status Order (for min_status_gate)
 
@@ -82,7 +105,7 @@ Used by exporters to filter papers by minimum completion level:
 ```python
 _STATUS_ORDER = {
     "PARSED": 0,
-    "SCREENED_OUT": 1,
+    "ABSTRACT_SCREENED_OUT": 1,
     "EXTRACTED": 2,
     "AI_AUDIT_COMPLETE": 3,
     "HUMAN_AUDIT_COMPLETE": 4,
@@ -119,6 +142,10 @@ pending ──────────> verified        (grep pass + semantic pa
 3. **Grep verify**: Normalized substring match OR sliding-window fuzzy match (SequenceMatcher > 0.85).
 4. **Semantic verify**: LLM (gemma3:27b) checks if extracted value is supported by the source snippet. Categorical fields use a specialized prompt (category label need not appear verbatim in text).
 
+### LOW_YIELD Detection (Post-Audit)
+
+After all spans are audited, `check_low_yield()` counts non-null, non-absence extracted fields. Papers with fewer than `low_yield_threshold` (default 4) populated fields are flagged with `low_yield=1` on the extraction record. Absence sentinels (`NOT_FOUND`, `NR`, `Not discussed`, `No comparison reported`, `Not assessable`) are not counted as populated.
+
 ### Human Resolution of Audit States
 
 After AI audit, human reviewers resolve `contested`, `flagged`, and `invalid_snippet` spans:
@@ -126,6 +153,8 @@ After AI audit, human reviewers resolve `contested`, `flagged`, and `invalid_sni
 - `accept_as_is` → all spans marked `verified`
 - Per-field correction → span value overwritten, status → `verified`
 - `reject_paper` → paper status → `REJECTED`
+
+LOW_YIELD papers are always included in the audit review queue (sorted first) for PI review.
 
 When all spans for a paper are resolved (no contested/flagged/invalid_snippet remaining), paper transitions to `HUMAN_AUDIT_COMPLETE`.
 
@@ -148,7 +177,7 @@ These methods intentionally bypass the state machine for maintenance operations:
   3. DELETE all extraction records for affected papers
   4. `EXTRACTED` → `PARSED`
 - Use case: extractor logic changes, schema updates
-- `SCREENED_OUT` and `REJECTED` papers unaffected
+- `ABSTRACT_SCREENED_OUT` and `REJECTED` papers unaffected
 
 ### `ReviewDatabase.reject_paper(paper_id, reason)`
 - Validates transition is allowed from current status
@@ -157,4 +186,4 @@ These methods intentionally bypass the state machine for maintenance operations:
 
 ---
 
-*Generated 2026-03-12 from commit `d65d614`*
+*Generated 2026-03-13 from commit `c21ad34`*

@@ -53,7 +53,7 @@ Review Spec YAML
 - **Runtime:** Python 3.12, SQLite (WAL mode), Ollama 0.17.7 (localhost:11434)
 - **LLM Agents:** qwen3:8b, qwen3.5:27b, gemma3:27b, deepseek-r1:32b, qwen2.5vl:7b
 - **Cloud APIs:** OpenAI (o4-mini), Anthropic (Sonnet 4.6)
-- **PDF Processing:** Docling, PyMuPDF (fitz)
+- **PDF Processing:** Docling, PyMuPDF (fitz) — three-tier routing (Docling → PyMuPDF fallback → Qwen2.5-VL vision)
 - **Search APIs:** Biopython Entrez (PubMed), pyalex (OpenAlex), Unpaywall
 - **Data Validation:** Pydantic v2
 - **Export:** openpyxl, python-docx
@@ -61,10 +61,10 @@ Review Spec YAML
 
 ## Codebase Statistics
 
-- **101 source files** (Python + Shell)
-- **24,432 lines** of code
-- **377+ offline tests** passing (10 network/ollama deselected)
+- **110 source files** (Python + Shell)
+- **26,284 lines** of code
+- **443 offline tests** passing (10 network/ollama deselected)
 
 ---
 
-*Generated 2026-03-14 from commit `66563cb`*
+*Generated 2026-03-14 from commit `b24f9e7`*

@@ -1,4 +1,4 @@
-"""PDF-to-Markdown parser: Docling for digital PDFs, Qwen2.5-VL for scanned."""
+"""PDF-to-Markdown parser: Docling → PyMuPDF fallback → Qwen2.5-VL for scanned."""
 
 import base64
 import hashlib
@@ -50,6 +50,19 @@ def parse_with_docling(pdf_path: str) -> str:
     converter = DocumentConverter()
     result = converter.convert(pdf_path)
     return result.document.export_to_markdown()
+
+
+def parse_with_pymupdf(pdf_path: str) -> str:
+    """Extract text from a digital PDF using PyMuPDF as a structural fallback."""
+    doc = fitz.open(pdf_path)
+    pages: list[str] = []
+    try:
+        for i, page in enumerate(doc):
+            text = page.get_text("text")
+            pages.append(f"<!-- Page {i + 1} -->\n{text}")
+    finally:
+        doc.close()
+    return "\n\n---\n\n".join(pages)
 
 
 def parse_with_vision(pdf_path: str) -> str:
@@ -127,22 +140,37 @@ def parse_pdf(
     ).fetchone()[0]
     version = (last_version or 0) + 1
 
-    # Route: try Docling first, fall back to Qwen2.5-VL for scanned PDFs
+    # Route: scanned → vision model; digital → Docling → PyMuPDF fallback
     if is_scanned_pdf(pdf_path):
         logger.info("Paper %d: scanned PDF detected, using Qwen2.5-VL", paper_id)
         markdown = parse_with_vision(pdf_path)
         parser_used = "qwen2.5vl"
     else:
         logger.info("Paper %d: digital PDF, using Docling", paper_id)
-        markdown = parse_with_docling(pdf_path)
-        parser_used = "docling"
+        try:
+            markdown = parse_with_docling(pdf_path)
+            parser_used = "docling"
+        except Exception as exc:
+            logger.warning(
+                "Paper %d: Docling failed (%s), falling back to PyMuPDF",
+                paper_id, exc,
+            )
+            markdown = parse_with_pymupdf(pdf_path)
+            parser_used = "pymupdf"
 
-        # Double-check: if Docling output is suspiciously sparse, retry with Qwen2.5-VL
+        # If output is sparse, try PyMuPDF (if not already), then vision model
+        if len(markdown.strip()) < _SCANNED_THRESHOLD and parser_used == "docling":
+            logger.warning(
+                "Paper %d: Docling output sparse (%d chars), falling back to PyMuPDF",
+                paper_id, len(markdown.strip()),
+            )
+            markdown = parse_with_pymupdf(pdf_path)
+            parser_used = "pymupdf"
+
         if len(markdown.strip()) < _SCANNED_THRESHOLD:
             logger.warning(
-                "Paper %d: Docling output sparse (%d chars), falling back to Qwen2.5-VL",
-                paper_id,
-                len(markdown.strip()),
+                "Paper %d: %s output sparse (%d chars), falling back to Qwen2.5-VL",
+                paper_id, parser_used, len(markdown.strip()),
             )
             markdown = parse_with_vision(pdf_path)
             parser_used = "qwen2.5vl"
@@ -181,7 +209,7 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
     total = len(papers)
     logger.info("Starting PDF parsing for %d papers", total)
 
-    stats = {"parsed": 0, "skipped_existing": 0, "failed": 0, "docling": 0, "qwen2.5vl": 0}
+    stats = {"parsed": 0, "skipped_existing": 0, "failed": 0, "docling": 0, "pymupdf": 0, "qwen2.5vl": 0}
     review_dir = Path(db.db_path).parent
 
     for i, paper in enumerate(papers, 1):
@@ -234,10 +262,7 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
         try:
             result = parse_pdf(pdf_path, pid, review_name, db)
 
-            if result.parser_used == "docling":
-                stats["docling"] += 1
-            else:
-                stats["qwen2.5vl"] += 1
+            stats[result.parser_used] = stats.get(result.parser_used, 0) + 1
 
             db.update_status(pid, "PARSED")
             stats["parsed"] += 1
@@ -249,9 +274,10 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
             logger.info("Parsed %d/%d papers", i, total)
 
     logger.info(
-        "Parsing complete: %d parsed (%d docling, %d qwen2.5vl), %d skipped, %d failed",
+        "Parsing complete: %d parsed (%d docling, %d pymupdf, %d qwen2.5vl), %d skipped, %d failed",
         stats["parsed"],
         stats["docling"],
+        stats["pymupdf"],
         stats["qwen2.5vl"],
         stats["skipped_existing"],
         stats["failed"],

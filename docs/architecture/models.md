@@ -46,8 +46,11 @@ Chosen for the full-text screening stage where longer context and deeper reasoni
 **S-ft — Verifier (gemma3:27b):**
 Cross-family verification of full-text primary includes. Returns `FT_ELIGIBLE` or `FT_FLAGGED` for human review. Configured via `spec.ft_screening_models.verifier`.
 
+**PDF Parser — PyMuPDF fallback:**
+When Docling fails (hyperlink validation errors, malformed PDF structure), PyMuPDF raw text extraction (`fitz.Page.get_text("text")`) is used as a structural fallback. Records `parser_used="pymupdf"`. This is distinct from the scanned-PDF path — PyMuPDF handles digital PDFs that Docling can't process.
+
 **PDF Parser — Scanned (qwen2.5vl:7b):**
-Vision-language model for OCR of scanned PDFs. Each page rendered to PNG via PyMuPDF, sent as base64-encoded image. Routing heuristic: < 100 extracted chars/page = scanned.
+Vision-language model for OCR of scanned PDFs. Each page rendered to PNG via PyMuPDF, sent as base64-encoded image. Routing heuristic: < 100 extracted chars/page = scanned. Also activated if both Docling and PyMuPDF return sparse output (< 100 chars).
 
 **PDF Quality Checker (qwen2.5vl:7b):**
 Same vision model used for post-download PDF quality classification. Renders page 0 to PNG at configurable DPI (default 150), classifies language (English, Chinese, German, etc.) and content type (full_manuscript, abstract_only, trial_registration, editorial_erratum, conference_poster, other). Configured via Review Spec `pdf_quality_check` section (model, DPI, timeout). Results drive the human disposition workflow (PROCEED / EXCLUDE).
@@ -82,6 +85,12 @@ Both arms use the same extraction prompt (built by `engine/agents/extractor.buil
 
 All local models run at **temperature 0** (deterministic output). Set explicitly in every `ollama.chat()` call via `options={"temperature": 0}`.
 
+## Pre-Flight Health Checks
+
+All batch runners (FT screening, extraction, audit) run an Ollama pre-flight check before starting. `engine/utils/ollama_preflight.py` sends a minimal completion to each required model, verifies it loads and responds within the timeout, and reports VRAM usage against the 100 GB budget. If any model fails, the batch aborts with a clear error — no silent failures into broken runs.
+
+**CLI:** `python -m engine.utils.ollama_preflight --models qwen3.5:27b gemma3:27b`
+
 ## Inference Infrastructure
 
 - **Host:** DGX Spark (Blackwell GB10, sm_121)
@@ -90,4 +99,4 @@ All local models run at **temperature 0** (deterministic output). Set explicitly
 
 ---
 
-*Generated 2026-03-14 from commit `66563cb`*
+*Generated 2026-03-14 from commit `b24f9e7`*

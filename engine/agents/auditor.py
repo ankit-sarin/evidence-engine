@@ -329,6 +329,10 @@ def run_audit(
     model = model or DEFAULT_AUDITOR_MODEL
     logger.info("Audit model: %s", model)
 
+    # Pre-flight: verify auditor model is loaded and responsive
+    from engine.utils.ollama_preflight import require_preflight
+    require_preflight([model], runner_name="Audit")
+
     # Build field_name → (type, tier) lookup from spec
     field_type_map: dict[str, str] = {}
     field_tier_map: dict[str, int] = {}

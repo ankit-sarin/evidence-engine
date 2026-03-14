@@ -46,8 +46,8 @@ evidence-engine/
 │   │   └── anthropic_extractor.py # Anthropic Sonnet 4.6 arm (extended thinking)
 │   ├── parsers/
 │   │   ├── __init__.py
-│   │   ├── models.py           # ParsedDocument model
-│   │   └── pdf_parser.py       # Docling + Qwen2.5-VL routing
+│   │   ├── models.py           # ParsedDocument model (docling | pymupdf | qwen2.5vl)
+│   │   └── pdf_parser.py       # Three-tier: Docling → PyMuPDF fallback → Qwen2.5-VL vision
 │   ├── acquisition/
 │   │   ├── __init__.py         # Re-exports: check_oa_status, download_papers, import_dispositions, verify_downloads
 │   │   ├── check_oa.py         # Unpaywall API OA status + PDF URL lookup, rate-limited, idempotent
@@ -71,10 +71,18 @@ evidence-engine/
 │   │   ├── schema.py               # screening + ft_screening + audit adjudication DDL
 │   │   ├── screening_adjudicator.py # Export/import abstract screening adjudication queue
 │   │   └── workflow.py             # 12-stage workflow (5 abstract + 1 acquisition + 2 FT + 4 extraction)
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   ├── background.py       # tmux auto-detach for long-running scripts
+│   │   ├── extraction_cleanup.py # Schema-version extraction cleanup (dry-run default, --confirm)
+│   │   └── ollama_preflight.py # Pre-flight model health check (wired into all batch runners)
+│   ├── validators/
+│   │   ├── __init__.py
+│   │   └── extraction_validator.py # Post-extraction field validation (read-only diagnostic)
 │   └── exporters/
 │       ├── __init__.py         # export_all() with min_status threading
 │       ├── review_workbook.py  # Shared self-documenting Excel workbook builder (DataValidation, conditional formatting)
-│       ├── prisma.py           # PRISMA flow data + CSV
+│       ├── prisma.py           # PRISMA flow data + CSV + automatic reconciliation
 │       ├── evidence_table.py   # Evidence CSV + Excel (3-sheet), min_status filtering
 │       ├── docx_export.py      # DOCX formatted evidence table, min_status filtering
 │       ├── methods_section.py  # Auto-generated PRISMA methods paragraph
@@ -97,14 +105,14 @@ evidence-engine/
 │   ├── run_expanded_screen_and_verify.sh  # Tmux launcher for expanded screening
 │   ├── watch_run4.sh           # Monitor screening progress
 │   └── test_e2e_search_screen.py  # Live E2E test: search + screen 20 papers
-├── tests/                      # 377 offline + 10 network/ollama tests
+├── tests/                      # 443 offline + 10 network/ollama tests
 │   ├── test_review_spec.py     # 11 tests — YAML loading, hashing, validation
 │   ├── test_pubmed.py          #  5 tests — live PubMed queries
 │   ├── test_openalex.py        #  7 tests — live OpenAlex + abstract reconstruction
 │   ├── test_dedup.py           # 15 tests — DOI/PMID/fuzzy match, merge, stats
 │   ├── test_database.py        # 28 tests — tables, lifecycle, transitions, staleness, reject, min_status, FT states
 │   ├── test_screener.py        # 14 tests — structured output, dual-pass, verification, specialty scope
-│   ├── test_pdf_parser.py      #  9 tests — hash, routing, Docling integration, versioning
+│   ├── test_pdf_parser.py      # 14 tests — hash, routing, Docling integration, versioning, PyMuPDF fallback
 │   ├── test_extractor.py       # 17 tests — prompt, thinking trace, two-pass, ellipsis retry
 │   ├── test_auditor.py         # 25 tests — grep verify, semantic verify, full audit mocked
 │   ├── test_exporters.py       #  8 tests — PRISMA, CSV, Excel, DOCX, methods, export_all
@@ -112,13 +120,17 @@ evidence-engine/
 │   ├── test_adjudication.py    # 37 tests — categorizer, screening export/import, gate checks
 │   ├── test_audit_adjudication.py # 17 tests — per-span audit export/import, spot-check, reject, flatten
 │   ├── test_workflow.py        # 30 tests — 12-stage workflow enforcement, blockers, format
-│   ├── test_ft_screening.py    # 61 tests — FT screening pipeline, adjudication, prompts, truncation
+│   ├── test_ft_screening.py    # 62 tests — FT screening pipeline, adjudication, prompts, status-aware updates
 │   ├── test_low_yield.py       # 15 tests — LOW_YIELD detection, audit queue, PRISMA
 │   ├── test_human_review.py    #  6 tests — human review queue export/import
 │   ├── test_background.py      #  7 tests — tmux background mode
 │   ├── test_trace_exporter.py  # 11 tests — per-paper traces, quality report, disagreements
 │   ├── test_pdf_quality_import.py # PDF quality disposition import tests
 │   ├── test_verify_downloads.py # 40 tests — author cleaning, canonical names, PDF validation, verify/rename integration
+│   ├── test_extraction_validator.py # 6 tests — field validation, unknown fields, invalid categorical, closest match
+│   ├── test_extraction_cleanup.py # 14 tests — dry-run, schema cleanup, cascade delete, status reset, dedup
+│   ├── test_ollama_preflight.py # 10 tests — model check, preflight, runner integration
+│   ├── test_prisma_reconciliation.py # 6 tests — reconciliation, sub-counts, no double-counting
 │   ├── e2e_test_log.md         # Test coverage notes
 │   └── e2e_search_screen_log.md  # Latest live E2E results
 └── data/                       # gitignored — per-review databases, PDFs, exports
@@ -131,7 +143,7 @@ evidence-engine/
 | Abstract Screener — Verifier | gemma3:27b | Strict verification of primary includes (full exclusion criteria) |
 | FT Screener — Primary | qwen3.5:27b | Full-text screen with specialty scope (/no_think, ~27s/paper) |
 | FT Screener — Verifier | gemma3:27b | Strict FT verification, 5-test FP catcher (~20s/paper) |
-| PDF Parser (A) | Docling + Qwen2.5-VL | Digital + scanned PDF to Markdown |
+| PDF Parser (A) | Docling → PyMuPDF → Qwen2.5-VL | Three-tier: digital → structural fallback → scanned vision |
 | Extractor (B) | deepseek-r1:32b | Two-pass structured extraction with reasoning trace |
 | Auditor (C) | gemma3:27b | Cross-model verification + LOW_YIELD detection |
 | Cloud Extractor (OpenAI) | o4-mini-2025-04-16 | Concordance arm — reasoning_effort=high |
@@ -151,7 +163,7 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 1. **SEARCH** — PubMed + OpenAlex → deduplicate → add to DB
 2. **ABSTRACT SCREEN** — Dual-model: primary (qwen3:8b, high-recall) → verifier (gemma3:27b, strict + 4 FP tests)
 3. **ACQUIRE** — Unpaywall OA check → 5-strategy cascade download → manual list for remainder
-4. **PARSE** — Docling (digital) or Qwen2.5-VL (scanned) → Markdown
+4. **PARSE** — Docling (digital) → PyMuPDF fallback (Docling errors) → Qwen2.5-VL (scanned) → Markdown
 5. **FT SCREEN** — Dual-model full-text: primary (qwen3.5:27b) → verifier (gemma3:27b, 5-test FP catcher). Specialty scope filtering. Text truncation to 32K chars.
 6. **EXTRACT** — Pass 1: DeepSeek-R1 reasoning → Pass 2: structured JSON
 7. **AUDIT** — Grep verify + semantic verify via gemma3:27b + LOW_YIELD detection (configurable threshold)
@@ -183,6 +195,13 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - min_status parameter on exporters: AI_AUDIT_COMPLETE (raw AI) vs HUMAN_AUDIT_COMPLETE (human-verified)
 - PDF quality check: AI-based first-page classification (qwen2.5vl:7b) detects non-English, non-manuscript, and inaccessible PDFs. Configurable via `pdf_quality_check` section in review spec. Disposition workflow: quality check → HTML review page → JSON export → `import_dispositions` → DB update (PROCEED/EXCLUDE/WILL_ATTEMPT). PDF_EXCLUDED is terminal status with reason tracking. PRISMA reports PDF exclusions as distinct category
 - ollama_options pass-through: per-model Ollama settings (e.g., num_ctx for memory-constrained models)
+- PDF parser three-tier fallback: Docling (primary) → PyMuPDF raw text (structural fallback for Docling errors like hyperlink validation) → Qwen2.5-VL vision (scanned/sparse). Sparse threshold (< 100 chars) applies after both Docling and PyMuPDF
+- Ollama pre-flight health check: `engine/utils/ollama_preflight.py` sends minimal completion to each required model before batch runs. Wired into `run_ft_screening()`, `run_extraction()`, `run_audit()` — all abort on failure. Reports load time + VRAM usage vs 100GB budget
+- Extraction schema cleanup: `engine/utils/extraction_cleanup.py` removes stale extractions from previous schema versions (`extraction_schema_hash != current`). Cascade-deletes spans, resets EXTRACTED/AI_AUDIT_COMPLETE papers to PARSED (protects HUMAN_AUDIT_COMPLETE). Dry-run default, `--confirm` to execute. Auto-discovers spec from `review_specs/{name}*.yaml`
+- Post-extraction field validation: `engine/validators/extraction_validator.py` checks field names against spec, validates categorical values (with closest-match suggestion), flags non-numeric sample_size. Read-only diagnostic
+- FT screening status-aware updates: papers already past FT screening (AI_AUDIT_COMPLETE, EXTRACTED, etc.) have FT decisions recorded in `ft_screening_decisions` but status is NOT changed — prevents backward transitions that would lose extraction/audit data
+- PRISMA reconciliation: `validate_prisma_counts(db)` verifies terminal + in-progress = total DB count, PDF sub-counts sum correctly, no double-counting. Runs automatically before CSV export. Raises ValueError on mismatch
+- Stale extraction pre-flight: `run_extraction()` warns when papers have extractions from a different schema hash, with cleanup command suggestion
 
 ## Running
 ```bash
@@ -218,13 +237,23 @@ python -m engine.agents.ft_screener --review surgical_autonomy --spec review_spe
 python -m engine.agents.ft_screener --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml --screen-only
 python -m engine.agents.ft_screener --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml --verify-only
 
+# Extraction cleanup (schema transition)
+python -m engine.utils.extraction_cleanup --review surgical_autonomy          # dry-run
+python -m engine.utils.extraction_cleanup --review surgical_autonomy --confirm # execute
+
+# Post-extraction validation (read-only diagnostic)
+python -m engine.validators.extraction_validator --review surgical_autonomy
+
+# Ollama pre-flight check
+python -m engine.utils.ollama_preflight --models qwen3.5:27b gemma3:27b deepseek-r1:32b
+
 # Advance a workflow stage
 python -m engine.adjudication.advance_stage --review surgical_autonomy \
     --stage ABSTRACT_DIAGNOSTIC_COMPLETE --note "50-paper sample reviewed"
 
 # Test suite
-python -m pytest tests/ -v                           # all tests (387)
-python -m pytest tests/ -v -m "not network and not ollama"  # offline only (377)
+python -m pytest tests/ -v                           # all tests (453)
+python -m pytest tests/ -v -m "not network and not ollama"  # offline only (443)
 ```
 
 ## Current Review Status (surgical_autonomy)

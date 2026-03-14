@@ -327,8 +327,15 @@ def run_ft_screening(
     """
     primary_model = spec.ft_screening_models.primary
 
-    # Collect eligible papers: PARSED status with parsed text
-    papers = db.get_papers_by_status("PARSED")
+    # Pre-flight: verify models are loaded and responsive
+    from engine.utils.ollama_preflight import require_preflight
+    require_preflight(
+        [spec.ft_screening_models.primary, spec.ft_screening_models.verifier],
+        runner_name="FT screening",
+    )
+
+    # Collect eligible papers: PARSED or AI_AUDIT_COMPLETE with parsed text
+    papers = db.get_papers_by_status("PARSED") + db.get_papers_by_status("AI_AUDIT_COMPLETE")
     total = len(papers)
 
     ckpt_path = _checkpoint_path(db)
@@ -375,8 +382,21 @@ def run_ft_screening(
             decision.reason_code, decision.rationale, decision.confidence,
         )
 
-        # Update paper status
-        if decision.decision == "FT_ELIGIBLE":
+        # Update paper status — skip if already past FT screening
+        current_status = paper.get("status", "")
+        _PAST_FT = {"FT_ELIGIBLE", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED",
+                     "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE", "REJECTED"}
+
+        if current_status in _PAST_FT:
+            logger.info(
+                "Paper %d already at %s, FT decision recorded without status change",
+                pid, current_status,
+            )
+            if decision.decision == "FT_ELIGIBLE":
+                stats["ft_eligible"] += 1
+            else:
+                stats["ft_exclude"] += 1
+        elif decision.decision == "FT_ELIGIBLE":
             db.update_status(pid, "FT_ELIGIBLE")
             stats["ft_eligible"] += 1
         else:

@@ -328,13 +328,14 @@ def test_full_audit_flow_mocked(tmp_path):
 
     # Mock Ollama: call 1 (study_design) → verified, call 2 (sample_size) → flagged,
     # call 3 (robot_platform) → flagged (grep fails, semantic called, returns flagged)
-    with patch("engine.agents.auditor.ollama.chat") as mock_chat:
-        mock_chat.side_effect = [
-            _make_verified_response(),
-            _make_flagged_response(),
-            _make_flagged_response(),
-        ]
-        stats = run_audit(db, "test_audit")
+    with patch("engine.utils.ollama_preflight.require_preflight"):
+        with patch("engine.agents.auditor.ollama.chat") as mock_chat:
+            mock_chat.side_effect = [
+                _make_verified_response(),
+                _make_flagged_response(),
+                _make_flagged_response(),
+            ]
+            stats = run_audit(db, "test_audit")
 
     assert stats["papers_audited"] == 1
     assert stats["spans_verified"] == 1

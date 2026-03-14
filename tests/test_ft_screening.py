@@ -24,6 +24,7 @@ from engine.agents.ft_screener import (
     FTVerificationDecision,
     build_ft_screening_prompt,
     build_ft_verification_prompt,
+    run_ft_screening,
     truncate_paper_text,
 )
 from engine.core.constants import FT_MAX_TEXT_CHARS, FT_REASON_CODES
@@ -671,3 +672,59 @@ class TestSpecialtyScopeInPrompt:
     def test_verification_prompt_includes_specialty_scope(self, spec):
         prompt = build_ft_verification_prompt("Paper text", spec)
         assert "dental" in prompt.lower() or "ophthalmic" in prompt.lower()
+
+
+# ── AI_AUDIT_COMPLETE Status Preservation ────────────────────────
+
+
+class TestFTScreeningSkipsAdvancedStatus:
+
+    def _advance_to_ai_audit(self, db, paper_id):
+        """Move paper through full lifecycle to AI_AUDIT_COMPLETE."""
+        db.update_status(paper_id, "ABSTRACT_SCREENED_IN")
+        db.update_status(paper_id, "PDF_ACQUIRED")
+        db.update_status(paper_id, "PARSED")
+        db.update_status(paper_id, "EXTRACTED")
+        db.update_status(paper_id, "AI_AUDIT_COMPLETE")
+
+    def test_ft_screen_ai_audit_complete_records_decision(self, tmp_db, spec, tmp_path):
+        """FT screening an AI_AUDIT_COMPLETE paper records the decision
+        in ft_screening_decisions but does not change workflow status."""
+        pid = _add_paper(tmp_db, title="Audit Complete Paper", pmid="99001")
+        self._advance_to_ai_audit(tmp_db, pid)
+
+        # Write parsed text so the screener doesn't skip
+        md_path = tmp_path / "test_review" / "parsed_text" / f"{pid}_v1.md"
+        md_path.parent.mkdir(parents=True, exist_ok=True)
+        md_path.write_text("# Full Paper\n\nAutonomous robotic suturing results. " * 50)
+        tmp_db._conn.execute(
+            "INSERT INTO full_text_assets (paper_id, pdf_path, pdf_hash, "
+            "parsed_text_path, parsed_text_version, parser_used, parsed_at) "
+            "VALUES (?, ?, ?, ?, 1, 'docling', '2026-01-01')",
+            (pid, "fake.pdf", "abc123", str(md_path)),
+        )
+        tmp_db._conn.commit()
+
+        mock_decision = FTScreeningDecision(
+            decision="FT_ELIGIBLE", reason_code="eligible",
+            rationale="Paper describes autonomous suturing", confidence=0.95,
+        )
+        with patch("engine.utils.ollama_preflight.require_preflight"):
+            with patch("engine.agents.ft_screener.ft_screen_paper", return_value=mock_decision):
+                stats = run_ft_screening(tmp_db, spec, review_name="test_review")
+
+        # (a) Decision recorded in ft_screening_decisions
+        row = tmp_db._conn.execute(
+            "SELECT * FROM ft_screening_decisions WHERE paper_id = ?", (pid,)
+        ).fetchone()
+        assert row is not None
+        assert row["decision"] == "FT_ELIGIBLE"
+
+        # (b) Status remains AI_AUDIT_COMPLETE
+        status_row = tmp_db._conn.execute(
+            "SELECT status FROM papers WHERE id = ?", (pid,)
+        ).fetchone()
+        assert status_row["status"] == "AI_AUDIT_COMPLETE"
+
+        # (c) No exception raised — stats counted
+        assert stats["ft_eligible"] == 1

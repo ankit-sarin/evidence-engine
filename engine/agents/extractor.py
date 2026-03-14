@@ -383,6 +383,21 @@ def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
     schema_hash = spec.extraction_hash()
     logger.info("Starting extraction on %d papers (schema hash: %s)", total, schema_hash[:12])
 
+    # Pre-flight: verify extraction model is loaded and responsive
+    from engine.utils.ollama_preflight import require_preflight
+    require_preflight([MODEL], runner_name="Extraction")
+
+    # Pre-flight: warn about stale extractions from a different schema version
+    from engine.utils.extraction_cleanup import check_stale_extractions
+    stale_count = check_stale_extractions(db, schema_hash)
+    if stale_count > 0:
+        logger.warning(
+            "Found %d papers with stale schema extractions. Run "
+            "python -m engine.utils.extraction_cleanup --review %s to clean up "
+            "before re-extracting.",
+            stale_count, review_name,
+        )
+
     stats = {"extracted": 0, "skipped": 0, "failed": 0, "total_spans": 0}
     review_dir = Path(db.db_path).parent
 

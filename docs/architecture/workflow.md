@@ -197,4 +197,4 @@ EXTRACTION_STAGES  = WORKFLOW_STAGES[8:]   # stages 9-12
 
 ---
 
-*Generated 2026-03-14 from commit `66563cb`*
+*Generated 2026-03-14 from commit `b24f9e7`*

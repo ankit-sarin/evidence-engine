@@ -196,4 +196,16 @@ These methods intentionally bypass the state machine for maintenance operations:
 
 ---
 
-*Generated 2026-03-14 from commit `66563cb`*
+### `engine/utils/extraction_cleanup.cleanup_stale_extractions()`
+- Remove extractions from a previous schema version (by `extraction_schema_hash`)
+- Delete associated evidence spans (cascade)
+- Reset affected papers to `PARSED` (for re-extraction) — only `EXTRACTED` and `AI_AUDIT_COMPLETE` papers; `HUMAN_AUDIT_COMPLETE` papers are protected
+- Dry-run default; requires `--confirm` to execute
+- Dedup mode (no schema hash): keeps only the latest extraction per paper
+- Use case: extraction schema changes (v1 → v2), clearing stale data before re-extraction
+
+**CLI:** `python -m engine.utils.extraction_cleanup --review NAME [--spec YAML] [--keep-schema HASH] [--confirm]`
+
+---
+
+*Generated 2026-03-14 from commit `b24f9e7`*

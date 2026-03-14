@@ -187,13 +187,15 @@ python -m engine.acquisition.pdf_quality_import --review surgical_autonomy \
 2. Check `papers.pdf_local_path` (set by downloader or verify_downloads)
 3. Fall back to filesystem glob (`{paper_id}_*.pdf`, `{paper_id}.pdf`)
 
-**Routing logic:**
-- Digital PDFs (> 100 chars/page): Docling `DocumentConverter`
-- Scanned PDFs (< 100 chars/page): Qwen2.5-VL via Ollama (renders pages to PNG, sends as base64)
+**Routing logic (three-tier fallback):**
+- Digital PDFs (> 100 chars/page): Docling `DocumentConverter` (primary)
+- Docling failure (hyperlink validation, malformed structure): PyMuPDF raw text extraction (structural fallback)
+- Scanned PDFs (< 100 chars/page) or both Docling + PyMuPDF sparse: Qwen2.5-VL via Ollama (vision fallback, renders pages to PNG, sends as base64)
+- The sparse-output threshold (< 100 chars) applies after both Docling and PyMuPDF — if either returns adequate text, the vision model is not invoked
 
 **Database transitions:**
 - `PDF_ACQUIRED` → `PARSED`
-- Records in `full_text_assets` table (pdf_hash, parser_used, version number)
+- Records in `full_text_assets` table (pdf_hash, parser_used [`docling`, `pymupdf`, or `qwen2.5vl`], version number)
 - Hash-based skip: if PDF hash unchanged, reuses existing parse
 
 **Artifacts:**
@@ -208,9 +210,11 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to parse
 
 ## 6. FULL-TEXT SCREENING
 
-**Trigger:** After PARSE; `PARSED` papers in DB.
+**Trigger:** After PARSE; papers at `PARSED` or `AI_AUDIT_COMPLETE` status in DB.
 
 **Module:** `engine/agents/ft_screener.py`
+
+**Pre-flight:** `require_preflight()` verifies both screening models are loaded and responsive in Ollama before starting the batch. Aborts with clear error on failure.
 
 ### Primary Screen
 - Model: `qwen3.5:27b` (configurable via `spec.ft_screening_models.primary`)
@@ -230,12 +234,23 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to parse
 - `FT_ELIGIBLE` → `FT_FLAGGED` (if verifier flags)
 - Records stored in `ft_screening_decisions` and `ft_verification_decisions` tables
 - Skip path: `PARSED` → `EXTRACTED` (for papers already at extraction stage)
+- **Status-aware screening:** Papers at `AI_AUDIT_COMPLETE` (already extracted/audited) have FT decisions recorded in `ft_screening_decisions` for concordance, but their workflow status is not changed — prevents backward transitions that would lose extraction/audit data
 
 **Artifacts:**
 - FT screening decisions with reason codes and rationale in DB
 
 **CLI:**
 ```bash
+# Full FT screening (primary + verification)
+python -m engine.agents.ft_screener --review surgical_autonomy \
+    --spec review_specs/surgical_autonomy_v1.yaml
+
+# Primary only / verification only
+python -m engine.agents.ft_screener --review surgical_autonomy \
+    --spec review_specs/surgical_autonomy_v1.yaml --screen-only
+python -m engine.agents.ft_screener --review surgical_autonomy \
+    --spec review_specs/surgical_autonomy_v1.yaml --verify-only
+
 # FT screening smoke test (5 known papers)
 python scripts/ft_screening_smoke_test.py
 ```
@@ -278,6 +293,10 @@ export_ft_adjudication_queue(db, 'ft_queue.xlsx')
 
 **Module:** `engine/agents/extractor.py`
 
+**Pre-flight checks:**
+- `require_preflight()` verifies the extraction model (`deepseek-r1:32b`) is loaded and responsive before starting
+- `check_stale_extractions()` warns if papers have extractions from a different schema version (e.g., v1 schema when v2 is current). Non-blocking warning with cleanup command suggestion
+
 **Two-pass extraction (DeepSeek-R1:32b):**
 - Pass 1: Free reasoning — model thinks through each field in `<think>` tags
 - Pass 2: Structured JSON output — reasoning trace provided as context, grammar-constrained output via Ollama `format` parameter
@@ -309,6 +328,8 @@ PYTHONPATH=. python scripts/run_cloud_extraction.py --progress
 **Trigger:** After EXTRACT; `EXTRACTED` papers in DB.
 
 **Module:** `engine/agents/auditor.py`
+
+**Pre-flight:** `require_preflight()` verifies the auditor model is loaded and responsive before starting.
 
 **Two-step audit per evidence span:**
 1. **Grep verify** — Normalized substring match or sliding-window fuzzy match (SequenceMatcher > 0.85) of `source_snippet` against paper text
@@ -396,7 +417,7 @@ import_audit_review_decisions(db, 'audit_queue_completed.xlsx')
 **Outputs:**
 | Exporter | File | Description |
 |----------|------|-------------|
-| `prisma.py` | `prisma_flow.csv` | PRISMA flow counts by stage (includes PDF exclusions, FT screening exclusions, LOW_YIELD rejections) |
+| `prisma.py` | `prisma_flow.csv` | PRISMA flow counts by stage with automatic reconciliation (includes PDF exclusions, FT screening exclusions, LOW_YIELD rejections, in-progress tracking) |
 | `evidence_table.py` | `evidence_table.csv` | Flat evidence table |
 | `evidence_table.py` | `evidence_table.xlsx` | 3-sheet Excel (evidence, screening log, audit log) |
 | `docx_export.py` | `evidence_table.docx` | Formatted DOCX (landscape, "First Author et al.") |
@@ -413,4 +434,4 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to export
 
 ---
 
-*Generated 2026-03-14 from commit `66563cb`*
+*Generated 2026-03-14 from commit `b24f9e7`*

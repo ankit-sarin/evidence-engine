@@ -40,9 +40,9 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | `__init__.py` | 1 | Empty module | — | — |
 | `models.py` | 44 | Pydantic data models for extraction | `EvidenceSpan`, `ExtractionResult`, `ExtractionOutput` | `pydantic` |
 | `screener.py` | 345 | Role-aware dual-model abstract screening with specialty scope | `screen_paper()`, `run_screening()`, `run_verification()`, `ScreeningDecision` | `ollama` |
-| `ft_screener.py` | 538 | Full-text dual-model screening with reason codes | `ft_screen_paper()`, `ft_verify_paper()`, `run_ft_screening()`, `run_ft_verification()`, `truncate_paper_text()`, `FTScreeningDecision`, `FTVerificationDecision` | `ollama` |
-| `extractor.py` | 382 | Two-pass DeepSeek-R1 extraction | `extract_paper()`, `run_extraction()`, `build_extraction_prompt()` | `ollama` |
-| `auditor.py` | 442 | Cross-model grep + semantic audit + LOW_YIELD detection | `audit_span()`, `run_audit()`, `grep_verify()`, `semantic_verify()`, `AuditVerdict`, `count_populated_fields()`, `check_low_yield()` | `ollama`, `difflib` |
+| `ft_screener.py` | 558 | Full-text dual-model screening with reason codes, status-aware updates, Ollama preflight | `ft_screen_paper()`, `ft_verify_paper()`, `run_ft_screening()`, `run_ft_verification()`, `truncate_paper_text()`, `FTScreeningDecision`, `FTVerificationDecision` | `ollama` |
+| `extractor.py` | 449 | Two-pass DeepSeek-R1 extraction with Ollama preflight + stale schema warning | `extract_paper()`, `run_extraction()`, `build_extraction_prompt()` | `ollama` |
+| `auditor.py` | 446 | Cross-model grep + semantic audit + LOW_YIELD detection + Ollama preflight | `audit_span()`, `run_audit()`, `grep_verify()`, `semantic_verify()`, `AuditVerdict`, `count_populated_fields()`, `check_low_yield()` | `ollama`, `difflib` |
 
 **Constants:**
 - `screener.py`: `DEFAULT_PRIMARY_MODEL = "qwen3:8b"`, `DEFAULT_VERIFICATION_MODEL = "qwen3:32b"`
@@ -89,10 +89,10 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | File | Lines | Purpose | Key Exports | External Deps |
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 0 | Empty module | — | — |
-| `models.py` | 19 | Parsed document data model | `ParsedDocument` (Pydantic) | `pydantic` |
-| `pdf_parser.py` | 259 | PDF → Markdown with Docling/Qwen2.5-VL routing, DB-driven PDF path resolution | `parse_pdf()`, `parse_all_pdfs()`, `is_scanned_pdf()`, `compute_pdf_hash()` | `fitz` (PyMuPDF), `docling`, `ollama` |
+| `models.py` | 18 | Parsed document data model | `ParsedDocument` (Pydantic, parser_used: `docling` \| `pymupdf` \| `qwen2.5vl`) | `pydantic` |
+| `pdf_parser.py` | 285 | PDF → Markdown with three-tier fallback routing, DB-driven PDF path resolution | `parse_pdf()`, `parse_all_pdfs()`, `parse_with_docling()`, `parse_with_pymupdf()`, `parse_with_vision()`, `is_scanned_pdf()`, `compute_pdf_hash()` | `fitz` (PyMuPDF), `docling`, `ollama` |
 
-**Routing:** Digital PDFs (> 100 chars/page) → Docling; Scanned PDFs (< 100 chars/page) → Qwen2.5-VL vision model via Ollama
+**Routing (three-tier fallback):** Digital PDFs → Docling (primary) → PyMuPDF fallback (Docling exception) → Qwen2.5-VL vision (scanned/sparse). The sparse-output threshold (< 100 chars) applies after both Docling and PyMuPDF.
 
 **PDF path resolution in `parse_all_pdfs()`:** DB-driven with glob fallback — checks `full_text_assets.pdf_path` → `papers.pdf_local_path` → filesystem glob. Handles both absolute and relative paths from DB.
 
@@ -159,13 +159,26 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 71 | Master export orchestrator | `export_all()` | — |
 | `review_workbook.py` | 360 | Shared self-documenting Excel workbook builder | `create_review_workbook()`, `ColumnDef`, `DecisionColumnDef`, `FreeTextColumnDef`, `InstructionsConfig` | `openpyxl` |
-| `prisma.py` | 172 | PRISMA flow data + CSV (includes PDF exclusions, FT exclusions, LOW_YIELD rejections) | `generate_prisma_flow()`, `export_prisma_csv()` | `csv` |
+| `prisma.py` | 279 | PRISMA flow data + CSV with automatic reconciliation (includes PDF exclusions, FT exclusions, LOW_YIELD rejections, in-progress tracking) | `generate_prisma_flow()`, `export_prisma_csv()`, `validate_prisma_counts()` | `csv` |
 | `evidence_table.py` | 176 | Evidence CSV + 3-sheet Excel | `export_evidence_csv()`, `export_evidence_excel()` | `openpyxl` |
 | `docx_export.py` | 111 | Formatted DOCX evidence table | `export_evidence_docx()` | `python-docx` |
 | `methods_section.py` | 81 | PRISMA methods paragraph | `generate_methods_section()`, `export_methods_md()` | — |
 | `trace_exporter.py` | 549 | Per-paper traces, quality report, disagreement pairs | `export_traces_markdown()`, `export_trace_quality_report()`, `export_disagreement_pairs()` | `statistics` |
 
-**PRISMA additions:** `pdf_excluded`, `pdf_exclusion_reasons`, `ft_screened_out`, `ft_flagged`, `low_yield_rejected` fields in flow dict
+**PRISMA flow dict:** `records_identified`, `records_screened`, `records_excluded`, `screen_flagged`, `pdf_excluded`, `pdf_exclusion_reasons`, `full_text_retrieved`, `full_text_assessed`, `ft_screened_out`, `ft_flagged`, `studies_included`, `papers_rejected`, `low_yield_rejected`, `in_progress`. Automatic `validate_prisma_counts()` runs before CSV export — checks terminal + in-progress = total DB count, PDF sub-counts sum correctly, no double-counting.
+
+---
+
+## engine/validators/
+
+| File | Lines | Purpose | Key Exports | External Deps |
+|------|-------|---------|-------------|---------------|
+| `__init__.py` | 1 | Empty module | — | — |
+| `extraction_validator.py` | 164 | Post-extraction field validation (read-only diagnostic) | `validate_extraction()`, `validate_all()`, `_closest_match()` | `difflib` |
+
+**Checks per span:** unknown field name (with closest-match suggestion), invalid categorical value (with closest valid value), non-numeric sample_size. Returns list of issue dicts: `{paper_id, field_name, value, issue}`.
+
+**CLI:** `python -m engine.validators.extraction_validator --review NAME [--spec YAML]`
 
 ---
 
@@ -175,6 +188,12 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 0 | Empty module | — | — |
 | `background.py` | 67 | tmux auto-detach for long-running scripts | `maybe_background()` | `subprocess` (tmux) |
+| `extraction_cleanup.py` | 268 | Schema-version extraction cleanup (destructive, dry-run default) | `cleanup_stale_extractions()`, `check_stale_extractions()`, `get_current_schema_hash()`, `find_review_spec()` | — |
+| `ollama_preflight.py` | 174 | Ollama model pre-flight health check | `check_model()`, `preflight_check()`, `require_preflight()`, `PreflightResult`, `ModelResult` | `ollama` |
+
+**Extraction cleanup:** Removes extractions where `extraction_schema_hash != target`, cascade-deletes spans, resets `EXTRACTED`/`AI_AUDIT_COMPLETE` papers to `PARSED` (protects `HUMAN_AUDIT_COMPLETE`). Auto-discovers spec from `review_specs/{name}*.yaml`. CLI: `python -m engine.utils.extraction_cleanup --review NAME [--confirm]`
+
+**Ollama preflight:** Sends minimal completion to each model, reports load time + VRAM usage, checks total against 100 GB budget. Wired into `run_ft_screening()`, `run_extraction()`, `run_audit()` — all abort on failure. CLI: `python -m engine.utils.ollama_preflight --models MODEL [MODEL ...]`
 
 ---
 
@@ -225,29 +244,33 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | `test_dedup.py` | 206 | 15 | DOI/PMID/fuzzy match, merge, stats |
 | `test_database.py` | 525 | 28 | Tables, lifecycle, transitions, staleness, reject, min_status, FT states |
 | `test_screener.py` | 254 | 14 | Structured output, dual-pass, verification logic, specialty scope |
-| `test_pdf_parser.py` | 175 | 9 | Hash, routing, Docling integration, versioning |
+| `test_pdf_parser.py` | 251 | 14 | Hash, routing, Docling integration, versioning, PyMuPDF fallback |
 | `test_extractor.py` | 353 | 17 | Prompt, thinking trace, two-pass, ellipsis retry |
-| `test_auditor.py` | 354 | 25 | Grep verify, semantic verify, full audit mocked |
+| `test_auditor.py` | 355 | 25 | Grep verify, semantic verify, full audit mocked |
 | `test_exporters.py` | 236 | 8 | PRISMA, CSV, Excel, DOCX, methods, export_all |
 | `test_cloud_extraction.py` | 361 | 18 | Cloud tables, span parsing, store, CLI |
 | `test_adjudication.py` | 544 | 37 | Categorizer, screening export/import, gate checks, self-documenting workbook |
 | `test_audit_adjudication.py` | 574 | 17 | Per-span audit export/import, ACCEPT/REJECT/CORRECT, flatten, spot-check |
 | `test_workflow.py` | 318 | 30 | 12-stage workflow enforcement, blockers, format |
-| `test_ft_screening.py` | 673 | 61 | FT screener decisions, truncation, prompts, FT adjudicator, self-documenting workbook |
+| `test_ft_screening.py` | 730 | 62 | FT screener decisions, truncation, prompts, FT adjudicator, status-aware updates, self-documenting workbook |
 | `test_low_yield.py` | 337 | 15 | Populated field counting, threshold flagging, audit queue, PRISMA |
 | `test_human_review.py` | 121 | 6 | Human review queue export/import |
 | `test_background.py` | 112 | 7 | tmux background mode |
 | `test_trace_exporter.py` | 186 | 11 | Per-paper traces, quality report, disagreements |
 | `test_pdf_quality_import.py` | 368 | — | PDF quality disposition import: validation, atomic import, PROCEED/EXCLUDE/WILL_ATTEMPT |
 | `test_verify_downloads.py` | 491 | 40 | Author cleaning, canonical names, PDF validation, publisher classification, verify/rename integration |
+| `test_extraction_validator.py` | 103 | 6 | Valid spans, unknown fields, invalid categorical, non-numeric, closest-match |
+| `test_extraction_cleanup.py` | 249 | 14 | Dry-run, schema cleanup, cascade delete, status reset, HUMAN_AUDIT_COMPLETE protection, dedup, auto-discovery, stale check, runner warning |
+| `test_ollama_preflight.py` | 177 | 10 | Model check, aggregate pass/fail, require_preflight, runner integration (FT/extraction/audit) |
+| `test_prisma_reconciliation.py` | 216 | 6 | Reconciliation pass/fail, in-progress counting, PDF_EXCLUDED sub-counts, no double-counting |
 
-**Total: 377 offline tests passing** (10 network/ollama tests deselected by default)
+**Total: 443 offline tests passing** (10 network/ollama tests deselected by default)
 
 ```bash
-python -m pytest tests/ -v -m "not network and not ollama"  # 377 passed
-python -m pytest tests/ -v                                   # all 387
+python -m pytest tests/ -v -m "not network and not ollama"  # 443 passed
+python -m pytest tests/ -v                                   # all 453
 ```
 
 ---
 
-*Generated 2026-03-14 from commit `66563cb`*
+*Generated 2026-03-14 from commit `b24f9e7`*

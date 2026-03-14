@@ -12,6 +12,7 @@ from engine.parsers.pdf_parser import (
     compute_pdf_hash,
     is_scanned_pdf,
     parse_with_docling,
+    parse_with_pymupdf,
     parse_pdf,
 )
 from engine.search.models import Citation
@@ -173,3 +174,78 @@ def test_skip_if_same_hash(digital_pdf, db):
     # Second parse with same file — should return same version
     r2 = parse_pdf(str(digital_pdf), pid, "test_parse", db)
     assert r2.version == r1.version
+
+
+# ── PyMuPDF Fallback ───────────────────────────────────────────────
+
+
+def test_pymupdf_extracts_text(digital_pdf):
+    md = parse_with_pymupdf(str(digital_pdf))
+    assert len(md) > 50
+    assert "Page 1" in md
+
+
+def test_docling_success_uses_docling(digital_pdf, db):
+    """Docling success path is unchanged — parser_used == 'docling'."""
+    pid = _add_paper(db, pid_hint="10")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+
+    with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+        result = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+
+    assert result.parser_used == "docling"
+    row = db._conn.execute(
+        "SELECT parser_used FROM full_text_assets WHERE paper_id = ?", (pid,)
+    ).fetchone()
+    assert row["parser_used"] == "docling"
+
+
+def test_docling_exception_triggers_pymupdf(digital_pdf, db):
+    """When Docling raises, PyMuPDF fallback activates and parser_used == 'pymupdf'."""
+    pid = _add_paper(db, pid_hint="11")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+
+    with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=RuntimeError("hyperlink validation")):
+        result = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+
+    assert result.parser_used == "pymupdf"
+    assert len(result.parsed_markdown) > 50
+    row = db._conn.execute(
+        "SELECT parser_used FROM full_text_assets WHERE paper_id = ?", (pid,)
+    ).fetchone()
+    assert row["parser_used"] == "pymupdf"
+
+
+def test_docling_and_pymupdf_sparse_triggers_vision(scanned_pdf, db):
+    """When both Docling and PyMuPDF return sparse output, vision model activates."""
+    pid = _add_paper(db, pid_hint="12")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+
+    mock_response = MagicMock()
+    mock_response.message.content = "# OCR extracted content from scanned pages"
+
+    with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"):
+        with patch("engine.parsers.pdf_parser.ollama.chat", return_value=mock_response):
+            result = parse_pdf(str(scanned_pdf), pid, "test_parse", db)
+
+    assert result.parser_used == "qwen2.5vl"
+    row = db._conn.execute(
+        "SELECT parser_used FROM full_text_assets WHERE paper_id = ?", (pid,)
+    ).fetchone()
+    assert row["parser_used"] == "qwen2.5vl"
+
+
+def test_docling_sparse_pymupdf_sufficient(digital_pdf, db):
+    """When Docling is sparse but PyMuPDF has enough text, PyMuPDF is used."""
+    pid = _add_paper(db, pid_hint="13")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+
+    with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"):
+        result = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+
+    assert result.parser_used == "pymupdf"
+    assert len(result.parsed_markdown) > 50

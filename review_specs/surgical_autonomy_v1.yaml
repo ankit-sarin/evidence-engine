@@ -42,7 +42,7 @@ screening_models:
   verification: "gemma3:27b"
 
 ft_screening_models:
-  primary: "qwen3.5:27b"
+  primary: "qwen3:32b"
   verifier: "gemma3:27b"
   think: false
   temperature: 0

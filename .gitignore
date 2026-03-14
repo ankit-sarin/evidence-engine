@@ -7,3 +7,4 @@ __pycache__/
 .env
 review_specs/surgical_autonomy_v1_original.yaml
 data/surgical_autonomy/review_backup_v1_schema.db
+primer.md

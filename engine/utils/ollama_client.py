@@ -22,7 +22,9 @@ logger = logging.getLogger(__name__)
 # ── HTTP-level timeouts (Layer 1) ────────────────────────────────────
 
 _HTTP_CONNECT_TIMEOUT = 30.0   # seconds to establish TCP connection
-_HTTP_READ_TIMEOUT = 120.0     # seconds of silence before giving up
+_HTTP_READ_TIMEOUT = 900.0     # permissive — prompt eval on 32K+ chars can take
+                               # several minutes with no bytes; the wall-clock
+                               # watchdog (Layer 2) is the primary timeout guard
 
 _httpx_timeout = httpx.Timeout(
     connect=_HTTP_CONNECT_TIMEOUT,

@@ -107,86 +107,131 @@ extraction_schema:
   fields:
     # ── Tier 1: Explicit (stated directly in text, expected κ > 0.90) ──
     - name: study_type
-      description: "The type of study. Look at the methods section for explicit statements like 'prospective,' 'retrospective,' 'randomized.' If unclear, classify based on the overall design."
+      description: "The type of study as described in the methods section. Look for explicit statements like 'prospective study,' 'case series,' etc."
       type: categorical
       tier: 1
-      enum_values: ["Original Research", "Case Report/Series", "Review", "Systematic Review", "Meta-Analysis", "Commentary/Editorial", "Technical Note", "Conference Abstract", "NR"]
+      enum_values: ["Original Research", "Case Report/Series", "Review", "Systematic Review", "Meta-Analysis", "Conference Abstract", "Technical Report", "Other"]
 
     - name: robot_platform
-      description: "The specific robotic system(s) used. Record the full commercial name as stated in the paper. If multiple platforms, separate with semicolons. If custom/experimental, record 'Custom' followed by any name given."
+      description: "The name/model of the robotic system used, including manufacturer if stated. Record exactly as the paper states it. If multiple robots are compared, list all separated by semicolons. If the paper describes an algorithm without a physical platform, enter 'No physical platform — [brief descriptor]'. If a generic robot arm not designed for surgery (e.g., KUKA LBR iiwa), record as stated."
       type: text
       tier: 1
 
     - name: task_performed
-      description: "The specific surgical task or procedure the autonomous/semi-autonomous system performed. Use the paper's own terminology. If multiple tasks, list the primary one first."
+      description: "The specific surgical task the robot performed autonomously or semi-autonomously. Record the specific autonomous task, not the overall procedure — e.g. 'suturing' not 'colectomy'. Be specific: 'needle driving' not 'surgery'. If multiple autonomous tasks, list all separated by semicolons."
       type: text
       tier: 1
 
     - name: sample_size
-      description: "The number of cases, trials, procedures, or subjects. Record the number with brief context. For animal/phantom studies, record the number of trials or specimens."
+      description: "Total number of cases, experiments, procedures, or subjects. For animal studies, report number of animals. For simulations, report number of trials. For phantom studies, report number of experimental runs. Enter the number only, or NR."
       type: text
       tier: 1
 
-    - name: country
-      description: "The country where the study was conducted. Look for institutional affiliations in the author list or methods section. If multi-country, list all separated by semicolons. If unclear, record 'NR'."
-      type: text
+    - name: surgical_domain
+      description: "The surgical specialty or application area the autonomous task applies to. If testing on a bench model without specific clinical specialty context, use 'Non-clinical Bench / Phantom'. If purely computational with no physical experiment, use 'Computational / Simulation Only'. If explicitly testing across multiple specialties, use 'Multiple'."
+      type: categorical
       tier: 1
+      enum_values: ["General Surgery", "Urology", "Gynecology", "Cardiac/Thoracic", "Head & Neck / ENT", "Vascular", "Non-clinical Bench / Phantom", "Computational / Simulation Only", "Multiple", "Other"]
 
     # ── Tier 2: Interpretive (vocabulary mapping, expected κ 0.70–0.85) ──
     - name: autonomy_level
-      description: "The highest level of autonomy demonstrated, mapped to the Yang et al. (2017) classification. Level 0 = no autonomy (teleoperation). Level 1 = robot provides assistance. Level 2 = task autonomy. Level 3 = conditional autonomy. Level 4 = high autonomy. Level 5 = full autonomy. If the paper does not use this framework, map their description to the closest level."
+      description: "The highest level of autonomy demonstrated, mapped to the Yang et al. (2017) classification. Level 0 = no autonomy (teleoperation). Level 1 = robot assistance (tremor filtration, haptic feedback, virtual fixtures). Level 2 = task autonomy (robot executes specific preprogrammed tasks, surgeon initiates and monitors). Level 3 = conditional autonomy (robot generates strategies for surgeon to select). Level 4 = high autonomy (robot makes decisions and executes independently, surgeon supervises). Level 5 = full autonomy (no human intervention). If the paper does not use this framework, map their description using the decision tree. For algorithms/simulations, classify based on what the system demonstrates. Use 'Mixed/Multiple' only when paper explicitly tests multiple distinct autonomy levels."
       type: categorical
       tier: 2
-      enum_values: ["Level 0", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "NR"]
+      enum_values: ["0 (No autonomy)", "1 (Robot assistance)", "2 (Task autonomy)", "3 (Conditional autonomy)", "4 (High autonomy)", "5 (Full autonomy)", "Mixed/Multiple", "NR"]
 
     - name: validation_setting
-      description: "The experimental setting in which the system was tested. Choose the most specific applicable option."
+      description: "The experimental setting in which the autonomous capability was tested. Select the most advanced setting if multiple were used. Hierarchy: human > animal > cadaver > ex vivo > phantom > simulation > computational."
       type: categorical
       tier: 2
-      enum_values: ["Simulation only", "Phantom/bench model", "Ex vivo tissue", "In vivo animal", "Cadaver", "Human clinical trial", "Human clinical (non-trial)", "Multiple settings", "NR"]
+      enum_values: ["In vivo (human)", "In vivo (animal)", "Ex vivo", "Phantom/Simulation", "Cadaver", "Computational/Virtual", "Mixed", "NR"]
 
-    - name: human_oversight_model
-      description: "How human oversight was maintained during autonomous task execution. Focus on what the human could do to intervene, not just whether they were present."
+    - name: task_monitor
+      description: "Who observes the surgical environment and gathers information during the task? H = surgeon visually observes/interprets (robot has no independent perception). R = robot autonomously senses via cameras/force sensors/imaging without human input. Shared = both independently gather and interpret information. NR = not described."
       type: categorical
       tier: 2
-      enum_values: ["Direct teleoperation (no autonomy)", "Shared control", "Supervisory with manual override", "Supervisory with emergency stop only", "Monitoring only (no intervention capability)", "No human oversight described", "NR"]
+      enum_values: ["H", "R", "Shared", "NR"]
 
-    - name: fda_status
-      description: "The FDA regulatory status of the robotic platform or autonomous system. Look for explicit FDA clearance/approval statements. 510(k) is clearance, PMA is approval — they are different regulatory pathways."
+    - name: task_generate
+      description: "Who creates the plan or strategy for how the task will be performed (trajectory, action sequence, parameters, surgical strategy)? H = surgeon defines all task parameters. R = system computes plan autonomously from data. Shared = both contribute (e.g., surgeon defines target anatomy, robot generates trajectory). NR = not described."
       type: categorical
       tier: 2
-      enum_values: ["FDA 510(k) cleared", "FDA PMA approved", "FDA breakthrough designation", "Investigational/IDE", "CE marked (non-US)", "Not FDA cleared/approved", "Not discussed", "NR"]
+      enum_values: ["H", "R", "Shared", "NR"]
+
+    - name: task_select
+      description: "Who chooses which plan to execute when alternatives exist? H = surgeon reviews options and authorizes a specific plan. R = system autonomously selects from its own generated options (also use R when system generates a single plan and executes it — no selection step). Shared = both have selection authority. NR = not described."
+      type: categorical
+      tier: 2
+      enum_values: ["H", "R", "Shared", "NR"]
+
+    - name: task_execute
+      description: "Who physically carries out the surgical action? H = surgeon directly controls all instrument movements (standard teleoperation). R = system performs the physical action autonomously. Shared = both contribute simultaneously (e.g., cooperative control, active constraints). NR = not described."
+      type: categorical
+      tier: 2
+      enum_values: ["H", "R", "Shared", "NR"]
+
+    - name: system_maturity
+      description: "The technology readiness level of what the paper actually demonstrates."
+      type: categorical
+      tier: 2
+      enum_values:
+        - "Commercial clinical system"
+        - "Commercial system + research autonomy"
+        - "Research prototype (hardware)"
+        - "Algorithm on existing platform"
+        - "Simulation / computational only"
+        - "Conceptual / framework"
 
     - name: study_design
-      description: "The formal research design or methodological framework. This is about HOW the study was conducted, not WHAT it studied. If the paper describes a machine learning pipeline, classify the validation approach."
+      description: "The specific study design, more granular than study_type. This is about HOW the study was conducted, not WHAT it studied. If a paper demonstrates a new algorithm on a phantom, classify based on emphasis (initial technical demonstration vs algorithm development)."
       type: categorical
       tier: 2
-      enum_values: ["Randomized controlled trial", "Non-randomized comparative", "Prospective cohort", "Retrospective cohort", "Case-control", "Cross-sectional", "Case report/series", "Systematic review", "Algorithm development and validation", "Bench/phantom study", "Simulation study", "Expert opinion/commentary", "NR"]
+      enum_values:
+        - "Initial technical demonstration"
+        - "Feasibility study"
+        - "Comparative study (vs. human or alternative)"
+        - "Preclinical validation (animal/cadaver)"
+        - "Clinical pilot / first-in-human"
+        - "Randomized controlled trial"
+        - "Retrospective clinical review"
+        - "Algorithm development and evaluation"
+        - "Systematic review / meta-analysis"
+        - "Other"
+
+    - name: country
+      description: "Country where the study was conducted. Use first author's institution country if not explicitly stated. Metadata-inferred is acceptable. If multi-country, list all separated by semicolons. If unclear, record 'NR'."
+      type: text
+      tier: 2
 
     # ── Tier 3: Numeric/Tables (from results, variable expected κ) ──
     - name: primary_outcome_metric
-      description: "The main outcome measure reported. Use the paper's exact terminology for the metric name (e.g., 'task completion time,' 'suture accuracy score,' 'Dice coefficient'). If multiple outcomes, record the one the authors emphasize as primary."
+      description: "The primary outcome measure reported. Record the first quantitative outcome in the results section related to the autonomous task's performance. Use the paper's exact terminology (e.g., 'task completion time,' 'suture accuracy score,' 'Dice coefficient'). Do not select based on judgment of 'most emphasized' — use positional order."
       type: text
       tier: 3
 
     - name: primary_outcome_value
-      description: "The numerical result for the primary outcome metric. Include the value, units, and statistical context (e.g., 'mean 4.2 ± 0.8 mm', '92.3% (95% CI: 88.1–96.5)', 'median 12 min (IQR 8–15)'). Record exactly as reported."
+      description: "The numeric result for the primary outcome metric. Include units, confidence intervals, or p-values if reported. Copy the exact numeric reporting (e.g., 'mean 4.2 ± 0.8 mm', '92.3% (95% CI: 88.1–96.5)', 'median 12 min (IQR 8–15)')."
       type: text
       tier: 3
 
     - name: comparison_to_human
-      description: "How the autonomous system's performance compared to human/manual performance, if reported. Include the comparison metric and direction (e.g., 'Autonomous 23% faster than manual (p<0.01)', 'No significant difference in accuracy (p=0.34)'). If no comparison was made, record 'No comparison reported'."
+      description: "If the paper compares autonomous performance to human/manual performance, report the comparison result. Include both values if available (e.g., 'Autonomous: 142s vs Manual: 198s (p=0.003)'). If no comparison was made, record 'No comparison reported'."
+      type: text
+      tier: 3
+
+    - name: secondary_outcomes
+      description: "Additional quantitative outcomes reported beyond the primary. Record as semicolon-separated entries in format 'metric: value'. Enter NR if only one outcome reported."
       type: text
       tier: 3
 
     # ── Tier 4: Judgment (synthesis/inference, expected κ 0.50–0.70) ──
     - name: key_limitation
-      description: "What is the biggest threat to validity? Summarize in 1-2 sentences in your own words, drawing from the authors' limitations section and your own assessment of the study design."
+      description: "The most important limitation of the study. In 1-2 sentences, state the key limitation using YOUR judgment. Do not simply copy what the authors wrote in their limitations section. Quote the passage(s) that informed your assessment."
       type: text
       tier: 4
 
     - name: clinical_readiness_assessment
-      description: "YOUR JUDGMENT: Based on the totality of evidence in this paper, how close is the described technology to clinical use in patients? This field has no right answer in the text — it requires you to synthesize the results, limitations, and setting."
+      description: "YOUR JUDGMENT: Based on the totality of evidence in this paper, how close is the described technology to clinical use in patients? This field has no right answer in the text — it requires you to synthesize the results, limitations, and setting. Quote the key evidence behind your judgment."
       type: categorical
       tier: 4
       enum_values: ["Ready for clinical use", "Approaching clinical readiness", "Early-stage research", "Proof of concept only", "Not assessable"]

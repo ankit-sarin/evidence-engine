@@ -33,10 +33,10 @@ def build_extraction_prompt(paper_text: str, spec: ReviewSpec) -> str:
     field_blocks: list[str] = []
 
     tier_label = {
-        1: "Tier 1 — Required",
-        2: "Tier 2 — Important",
-        3: "Tier 3 — Numeric/Tables",
-        4: "Tier 4 — Judgment",
+        1: "Tier 1 — Explicit (expected κ > 0.90)",
+        2: "Tier 2 — Interpretive (expected κ 0.70–0.85)",
+        3: "Tier 3 — Numeric/Tables (variable κ)",
+        4: "Tier 4 — Judgment (expected κ 0.50–0.70)",
     }
     for tier in (1, 2, 3, 4):
         fields = spec.extraction_schema.fields_by_tier(tier)
@@ -48,9 +48,16 @@ def build_extraction_prompt(paper_text: str, spec: ReviewSpec) -> str:
             lines.append(
                 f"- **{f.name}** ({f.type}{enum_note}): {f.description}"
             )
+            # Add supplementary guidance for complex fields
+            guide = _FIELD_GUIDES.get(f.name)
+            if guide:
+                lines.append(guide)
         field_blocks.append("\n".join(lines))
 
     schema_text = "\n".join(field_blocks)
+    total_fields = sum(
+        len(spec.extraction_schema.fields_by_tier(t)) for t in (1, 2, 3, 4)
+    )
 
     return f"""Extract structured data from the following paper for a systematic review.
 
@@ -65,10 +72,56 @@ For each field above, extract the value from the paper and provide:
 - **confidence**: How clearly the paper states this information (0.0 to 1.0). For Tier 4 judgment fields, this reflects your confidence in your assessment.
 - **tier**: The tier number of the field (1, 2, 3, or 4).
 
-You MUST emit exactly one entry per field listed above ({sum(len(spec.extraction_schema.fields_by_tier(t)) for t in (1,2,3,4))} fields total), including Tier 4 judgment fields.
+You MUST emit exactly one entry per field listed above ({total_fields} fields total), including Tier 4 judgment fields.
 
 ## Paper Text
 {paper_text}"""
+
+
+# ── Supplementary field guides (injected after field description) ────
+
+_FIELD_GUIDES: dict[str, str] = {
+    "autonomy_level": """\
+  **Decision tree (when the paper does not explicitly reference Yang levels):**
+  1. Does the robot execute any action without continuous real-time human control? → If no → Level 1
+  2. If yes — does the surgeon define the exact plan and initiate execution? → If yes → Level 2
+  3. Does the robot generate candidate strategies for the surgeon to select from? → If yes → Level 3
+  4. Does the robot independently plan and execute based on patient-specific data, with surgeon monitoring? → If yes → Level 4
+  5. Does the robot operate without any human in the loop? → If yes → Level 5
+  **On algorithms/simulations:** Classify based on what the system demonstrates, not the hardware. A simulated algorithm that autonomously plans and executes is still Level 2+.
+  **On "Mixed/Multiple":** Use ONLY when the paper explicitly tests multiple distinct autonomy levels. Not an escape hatch for uncertainty — pick the best fit for ambiguous cases.""",
+
+    "task_monitor": """\
+  Examples: H = surgeon watches a screen while teleoperating. R = vision system tracks tissue deformation in real time. Shared = robot uses CV to track a needle while surgeon monitors on display.""",
+
+    "task_generate": """\
+  Covers trajectory, action sequence, parameters (speed, force, path), or surgical strategy.
+  Examples: H = surgeon places suture entry/exit points. R = path-planning algorithm generates optimal trajectory from tissue geometry. Shared = surgeon defines target anatomy, robot generates trajectory.""",
+
+    "task_select": """\
+  Examples: H = robot generates three paths, surgeon selects one. R = RL controller evaluates strategies and commits to highest-scored (also use R when system generates a single plan and executes — no selection step). Shared = robot narrows to shortlist, surgeon approves.""",
+
+    "task_execute": """\
+  Examples: H = standard teleoperation. R = robot drives needle autonomously. Shared = cooperative control (surgeon holds instrument, robot applies active constraints).""",
+
+    "system_maturity": """\
+  Value definitions:
+  - Commercial clinical system — FDA-cleared/CE-marked robot in approved capacity (da Vinci teleop, Mako)
+  - Commercial system + research autonomy — Commercial robot modified for autonomous tasks not in cleared indication (dVRK autonomous suturing)
+  - Research prototype (hardware) — Purpose-built physical robot not commercially available (STAR, custom needle-steering robot)
+  - Algorithm on existing platform — New software/algorithm on existing robot, focus is the algorithm
+  - Simulation / computational only — No physical robot, purely in-silico
+  - Conceptual / framework — No experimental demonstration, proposes design or taxonomy""",
+
+    "study_design": """\
+  Select best fit. If a paper demonstrates a new algorithm on a phantom, classify as "Initial technical demonstration" or "Algorithm development and evaluation" depending on emphasis.""",
+
+    "country": """\
+  Use first author's institution country if not explicitly stated. Metadata-inferred is acceptable.""",
+
+    "secondary_outcomes": """\
+  Format: semicolon-separated "metric: value" entries. Example: "Accuracy: 94.2% ± 3.1%; Force: 2.3 ± 0.8 N; Success rate: 18/20". Enter NR if only one outcome reported.""",
+}
 
 
 # ── Ollama Retry Wrapper ─────────────────────────────────────────────

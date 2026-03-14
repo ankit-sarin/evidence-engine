@@ -9,6 +9,7 @@
 | S-ft — Primary | Qwen3.5 27B | Qwen (Alibaba) | `qwen3.5:27b` | Full-text primary screen | ~17 GB | 256K native, think=False |
 | S-ft — Verifier | Gemma3 27B | Gemma (Google) | `gemma3:27b` | Full-text verification | ~17 GB | default |
 | PDF Parser (scanned) | Qwen2.5-VL 7B | Qwen (Alibaba) | `qwen2.5vl:7b` | Vision OCR for scanned PDFs | ~5 GB | default |
+| PDF Quality Checker | Qwen2.5-VL 7B | Qwen (Alibaba) | `qwen2.5vl:7b` | First-page AI classification (language + content type) | ~5 GB | default |
 | Extractor | DeepSeek-R1 32B | DeepSeek | `deepseek-r1:32b` | Two-pass structured extraction | ~20 GB | default |
 | Auditor | Gemma3 27B | Gemma (Google) | `gemma3:27b` | Cross-model verification + LOW_YIELD detection | ~17 GB | default (ollama_options pass-through) |
 | Cloud — OpenAI | o4-mini-2025-04-16 | GPT (OpenAI) | N/A (API) | Concordance extraction arm | N/A | reasoning_effort=high |
@@ -48,6 +49,9 @@ Cross-family verification of full-text primary includes. Returns `FT_ELIGIBLE` o
 **PDF Parser — Scanned (qwen2.5vl:7b):**
 Vision-language model for OCR of scanned PDFs. Each page rendered to PNG via PyMuPDF, sent as base64-encoded image. Routing heuristic: < 100 extracted chars/page = scanned.
 
+**PDF Quality Checker (qwen2.5vl:7b):**
+Same vision model used for post-download PDF quality classification. Renders page 0 to PNG at configurable DPI (default 150), classifies language (English, Chinese, German, etc.) and content type (full_manuscript, abstract_only, trial_registration, editorial_erratum, conference_poster, other). Configured via Review Spec `pdf_quality_check` section (model, DPI, timeout). Results drive the human disposition workflow (PROCEED / EXCLUDE).
+
 **Extractor (deepseek-r1:32b):**
 Selected for reasoning capability. Two-pass design:
 - Pass 1: Free reasoning in `<think>` tags — lets the model work through evidence for each field
@@ -86,4 +90,4 @@ All local models run at **temperature 0** (deterministic output). Set explicitly
 
 ---
 
-*Generated 2026-03-13 from commit `cd1d2d0`*
+*Generated 2026-03-14 from commit `66563cb`*

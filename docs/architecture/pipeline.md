@@ -128,7 +128,7 @@ import_adjudication_decisions(db, 'queue_completed.xlsx')
 
 **Trigger:** After `ABSTRACT_ADJUDICATION_COMPLETE` workflow stage.
 
-**Module:** `engine/acquisition/check_oa.py`, `engine/acquisition/download.py`, `engine/acquisition/manual_list.py`, `engine/acquisition/verify_downloads.py`
+**Module:** `engine/acquisition/check_oa.py`, `engine/acquisition/download.py`, `engine/acquisition/pdf_quality_html.py`, `engine/acquisition/pdf_quality_check.py`, `engine/acquisition/pdf_quality_import.py`, `engine/acquisition/verify_downloads.py`
 
 **Steps:**
 1. **OA Check** — Query Unpaywall API for every DOI (1 req/sec rate limit). Stores `oa_status` and `pdf_url` in DB.
@@ -138,8 +138,10 @@ import_adjudication_decisions(db, 'queue_completed.xlsx')
    - Strategy 3: IEEE stamp page scrape (for `10.1109` DOIs)
    - Strategy 4: MDPI URL construction (for MDPI DOIs)
    - Strategy 5: DOI redirect with `Accept: application/pdf` + `/pdf` suffix
-3. **Manual List** — Generate HTML + CSV for remaining papers, grouped by publisher (17 DOI prefix rules), sorted by EE-ID within each group. Includes naming convention instructions and verify command.
+3. **Acquisition List** — Generate HTML review page for remaining papers (replaces deprecated `manual_list.py`). Disposition workflow: mark each paper as Acquired / Will Reattempt / Exclude. Exports JSON for import.
 4. **Verify Downloads** — Scan PDF directory, match files to papers (3 patterns: bare integer, EE-prefix, rich name), validate PDF integrity (%PDF header + minimum 10KB + HTML error page detection), rename to canonical `EE-{nnn}_{Author}_{Year}.pdf`, update both `papers` and `full_text_assets` tables. Supports `--dry-run`.
+5. **PDF Quality Check** — AI-based first-page classification (qwen2.5vl:7b via Ollama). Renders page 0 to PNG, classifies language + content type (full_manuscript, abstract_only, trial_registration, editorial_erratum, conference_poster, other). Results stored in `papers.pdf_ai_language`, `pdf_ai_content_type`, `pdf_ai_confidence`. Config from Review Spec `pdf_quality_check` section.
+6. **Quality Review + Import** — Generate HTML review page showing AI-flagged papers (non-English or non-manuscript). Human marks each as PROCEED (AI was wrong) or EXCLUDE with reason. JSON export → `import_dispositions()` applies atomic DB updates: PROCEED → `HUMAN_CONFIRMED`, EXCLUDE → `PDF_EXCLUDED` (terminal status).
 
 All downloads validated with `%PDF` magic bytes. Idempotent (skips papers with valid PDFs on disk). 2-second delay between downloads.
 
@@ -149,20 +151,27 @@ All downloads validated with `%PDF` magic bytes. Idempotent (skips papers with v
 - `papers.pdf_local_path` set on success
 - `full_text_assets.pdf_path` set on verify (canonical path)
 - Paper status: `ABSTRACT_SCREENED_IN` → `PDF_ACQUIRED` (via `advance_to_pdf_acquired.py`)
+- Paper status: `PDF_ACQUIRED` → `PDF_EXCLUDED` (via `import_dispositions()`, terminal)
+- `papers.pdf_quality_check_status`: `AI_CHECKED` → `HUMAN_CONFIRMED`
+- `papers.pdf_exclusion_reason`, `papers.pdf_exclusion_detail` set on exclusion
 
 **Artifacts:**
 - PDFs in `data/{review}/pdfs/` (bare integer initially, renamed to `EE-{nnn}_{Author}_{Year}.pdf` by verify)
-- `manual_download_list.html` — interactive checklist with localStorage progress, publisher grouping, naming convention callout
-- `manual_downloads_needed.csv` — with publisher, first_author, year columns and comment header
+- `acquisition_list.html` — interactive disposition-tracking HTML (replaces deprecated `manual_download_list.html`)
+- `pdf_quality_review.html` — AI quality flag review page (post-download)
 
 **CLI:**
 ```bash
 python -m engine.acquisition.check_oa --review surgical_autonomy \
     --spec review_specs/surgical_autonomy_v1.yaml
 python -m engine.acquisition.download --review surgical_autonomy [--retry] [--background]
-python -m engine.acquisition.manual_list --review surgical_autonomy \
-    --spec review_specs/surgical_autonomy_v1.yaml
+python -m engine.acquisition.pdf_quality_html --review surgical_autonomy --mode acquisition
 python -m engine.acquisition.verify_downloads --review surgical_autonomy [--dry-run]
+python -m engine.acquisition.pdf_quality_check --review surgical_autonomy \
+    --spec review_specs/surgical_autonomy_v1.yaml [--dry-run] [--limit N]
+python -m engine.acquisition.pdf_quality_html --review surgical_autonomy --mode quality_check
+python -m engine.acquisition.pdf_quality_import --review surgical_autonomy \
+    --input dispositions.json [--dry-run]
 ```
 
 ---
@@ -387,7 +396,7 @@ import_audit_review_decisions(db, 'audit_queue_completed.xlsx')
 **Outputs:**
 | Exporter | File | Description |
 |----------|------|-------------|
-| `prisma.py` | `prisma_flow.csv` | PRISMA flow counts by stage (includes FT screening exclusions + LOW_YIELD rejections) |
+| `prisma.py` | `prisma_flow.csv` | PRISMA flow counts by stage (includes PDF exclusions, FT screening exclusions, LOW_YIELD rejections) |
 | `evidence_table.py` | `evidence_table.csv` | Flat evidence table |
 | `evidence_table.py` | `evidence_table.xlsx` | 3-sheet Excel (evidence, screening log, audit log) |
 | `docx_export.py` | `evidence_table.docx` | Formatted DOCX (landscape, "First Author et al.") |
@@ -404,4 +413,4 @@ python scripts/run_pipeline.py --spec ... --name ... --skip-to export
 
 ---
 
-*Generated 2026-03-13 from commit `cd1d2d0`*
+*Generated 2026-03-14 from commit `66563cb`*

@@ -11,6 +11,7 @@ STATUSES = (
     "ABSTRACT_SCREENED_OUT",
     "ABSTRACT_SCREEN_FLAGGED",
     "PDF_ACQUIRED",
+    "PDF_EXCLUDED",
     "PARSED",
     # Full-text screening statuses
     "FT_ELIGIBLE",
@@ -33,6 +34,7 @@ STATUSES = (
 | `ABSTRACT_SCREENED_OUT` | Dual-pass abstract screening: both passes agree to exclude, or adjudicator excludes | `screener.run_screening()`, `screening_adjudicator.import_adjudication_decisions()` |
 | `ABSTRACT_SCREEN_FLAGGED` | Abstract screening passes disagree, or verifier excludes a primary include | `screener.run_screening()`, `screener.run_verification()` |
 | `PDF_ACQUIRED` | Full-text PDF obtained and registered in `full_text_assets` | `advance_to_pdf_acquired.py` |
+| `PDF_EXCLUDED` | PDF excluded at quality check (non-English, non-manuscript, inaccessible) — terminal | `pdf_quality_import.import_dispositions()` |
 | `PARSED` | PDF converted to Markdown (Docling or Qwen2.5-VL) | `pdf_parser.parse_pdf()` |
 | `FT_ELIGIBLE` | Full-text screening confirms eligibility for extraction | `ft_screener.run_ft_screening()` |
 | `FT_SCREENED_OUT` | Full-text screening excludes paper (with reason code) | `ft_screener.run_ft_screening()`, `ft_screening_adjudicator.import_ft_adjudication_decisions()` |
@@ -59,6 +61,9 @@ ABSTRACT_SCREEN_FLAGGED ──> ABSTRACT_SCREENED_IN
                          \─> ABSTRACT_SCREENED_OUT
 
 PDF_ACQUIRED ─────> PARSED
+                 \─> PDF_EXCLUDED
+
+PDF_EXCLUDED ─────> (terminal, no transitions)
 
 PARSED ───────────> FT_ELIGIBLE
                  \─> FT_SCREENED_OUT
@@ -91,6 +96,7 @@ REJECTED ─────────────> (terminal, no transitions)
 ## Terminal States
 
 - `ABSTRACT_SCREENED_OUT` — Paper excluded during abstract screening. No forward transitions.
+- `PDF_EXCLUDED` — Paper excluded at PDF quality check (non-English, non-manuscript, inaccessible, or other). No forward transitions. Reason stored in `papers.pdf_exclusion_reason`, detail in `papers.pdf_exclusion_detail`.
 - `FT_SCREENED_OUT` — Paper excluded during full-text screening (with reason code). No forward transitions.
 - `REJECTED` — Paper removed from corpus by human reviewer. No forward transitions. Rejection reason stored in `papers.rejected_reason`.
 
@@ -190,4 +196,4 @@ These methods intentionally bypass the state machine for maintenance operations:
 
 ---
 
-*Generated 2026-03-13 from commit `cd1d2d0`*
+*Generated 2026-03-14 from commit `66563cb`*

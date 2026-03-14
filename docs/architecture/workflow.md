@@ -75,8 +75,13 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy \
 # Run acquisition pipeline
 python -m engine.acquisition.check_oa --review surgical_autonomy --spec ...
 python -m engine.acquisition.download --review surgical_autonomy --background
-python -m engine.acquisition.manual_list --review surgical_autonomy --spec ...
+python -m engine.acquisition.pdf_quality_html --review surgical_autonomy --mode acquisition
 python -m engine.acquisition.verify_downloads --review surgical_autonomy [--dry-run]
+
+# PDF quality check (after downloads)
+python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --spec ...
+python -m engine.acquisition.pdf_quality_html --review surgical_autonomy --mode quality_check
+python -m engine.acquisition.pdf_quality_import --review surgical_autonomy --input dispositions.json
 
 # Advance when done
 python -m engine.adjudication.advance_stage --review surgical_autonomy \
@@ -192,4 +197,4 @@ EXTRACTION_STAGES  = WORKFLOW_STAGES[8:]   # stages 9-12
 
 ---
 
-*Generated 2026-03-13 from commit `cd1d2d0`*
+*Generated 2026-03-14 from commit `66563cb`*

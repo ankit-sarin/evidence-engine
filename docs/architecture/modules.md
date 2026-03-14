@@ -10,12 +10,12 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 1 | Empty module | — | — |
 | `constants.py` | 21 | Shared regex + FT screening constants | `INVALID_SNIPPET_RE`, `FT_REASON_CODES`, `FT_MAX_TEXT_CHARS` | `re` |
-| `database.py` | 814 | SQLite state machine — one DB per review, data retention | `ReviewDatabase`, `STATUSES`, `ALLOWED_TRANSITIONS`, `DATA_ROOT` | `sqlite3` |
-| `review_spec.py` | 203 | YAML parser, Pydantic models, protocol hashing | `ReviewSpec`, `load_review_spec()`, `ExtractionSchema`, `PICO`, `ScreeningCriteria`, `ScreeningModels`, `FTScreeningModels`, `SpecialtyScope` | `pydantic`, `yaml` |
+| `database.py` | 823 | SQLite state machine — one DB per review, data retention | `ReviewDatabase`, `STATUSES`, `ALLOWED_TRANSITIONS`, `DATA_ROOT` | `sqlite3` |
+| `review_spec.py` | 232 | YAML parser, Pydantic models, protocol hashing | `ReviewSpec`, `load_review_spec()`, `ExtractionSchema`, `PICO`, `ScreeningCriteria`, `ScreeningModels`, `FTScreeningModels`, `SpecialtyScope`, `PDFQualityCheck` | `pydantic`, `yaml` |
 
 **`ReviewDatabase` key methods:** `add_papers()`, `update_status()`, `reject_paper()`, `add_extraction_atomic()`, `update_audit()`, `add_ft_screening_decision()`, `add_ft_verification_decision()`, `min_status_gate()`, `reset_for_reaudit()`, `reset_for_reextraction()`, `get_pipeline_stats()`, `cleanup_orphaned_spans()`
 
-**`ReviewSpec` notable fields:** `screening_models` (abstract), `ft_screening_models` (full-text), `specialty_scope` (SpecialtyScope with included/excluded specialties), `low_yield_threshold` (default 4), `auditor_model`, `unpaywall_email`, `institutional_proxy_pattern`
+**`ReviewSpec` notable fields:** `screening_models` (abstract), `ft_screening_models` (full-text), `specialty_scope` (SpecialtyScope with included/excluded specialties), `low_yield_threshold` (default 4), `auditor_model`, `unpaywall_email`, `institutional_proxy_pattern`, `pdf_quality_check` (PDFQualityCheck with ai_model, dpi, timeout, exclude_reasons)
 
 **Database tables:** `papers`, `abstract_screening_decisions` (renamed from `screening_decisions`), `abstract_verification_decisions` (renamed from `verification_decisions`), `full_text_assets`, `extractions` (with `low_yield` column), `evidence_spans`, `ft_screening_decisions`, `ft_verification_decisions`, `review_runs`
 
@@ -56,10 +56,13 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 
 | File | Lines | Purpose | Key Exports | External Deps |
 |------|-------|---------|-------------|---------------|
-| `__init__.py` | 24 | Re-exports public API | `check_oa_status()`, `download_papers()`, `generate_manual_list()`, `verify_downloads()` | — |
+| `__init__.py` | 29 | Re-exports public API | `check_oa_status()`, `download_papers()`, `verify_downloads()`, `import_dispositions()` | — |
 | `check_oa.py` | 198 | Unpaywall API OA status lookup | `check_oa_status()` | `requests` |
 | `download.py` | 458 | 5-strategy cascade PDF downloader | `download_papers()`, `is_valid_pdf()` | `requests`, `tarfile` |
-| `manual_list.py` | 440 | HTML + CSV manual download list with publisher grouping | `generate_manual_list()`, `classify_publisher()` | — |
+| `manual_list.py` | 450 | DEPRECATED — superseded by `pdf_quality_html.py --mode acquisition` | `generate_manual_list()`, `classify_publisher()` | — |
+| `pdf_quality_check.py` | 317 | AI first-page classification via vision model (language + content type) | `run_quality_check()`, `_classify_page()`, `_render_first_page()` | `fitz`, `ollama` |
+| `pdf_quality_html.py` | 743 | HTML review pages: `--mode acquisition` (download list) or `--mode quality_check` (post-download) | `generate_acquisition_html()`, `generate_quality_html()` | — |
+| `pdf_quality_import.py` | 308 | Import disposition JSON → DB (PROCEED/EXCLUDE/WILL_ATTEMPT) | `import_dispositions()`, `validate_disposition_json()` | — |
 | `verify_downloads.py` | 379 | Scan/match/validate/rename PDFs, update DB | `verify_downloads()`, `canonical_filename()`, `_validate_pdf()` | — |
 
 **Download strategies:** Direct Unpaywall URL → PMC OA package (Europe PMC + NCBI tar.gz) → IEEE stamp page scrape → MDPI URL construction → DOI redirect with content negotiation
@@ -68,11 +71,16 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 
 **Verify/rename pipeline:** 3 filename match patterns (bare integer → EE-prefix → rich name), PDF validation (%PDF header, ≥10KB, HTML error page detection), canonical rename (`EE-{nnn}_{Author}_{Year}.pdf`), updates both `papers.pdf_local_path` and `full_text_assets.pdf_path`
 
+**PDF quality check pipeline:** AI classification (qwen2.5vl:7b) → HTML quality review → JSON export → `import_dispositions()` atomic DB update. Disposition values: PROCEED → `HUMAN_CONFIRMED`, EXCLUDE_* → `PDF_EXCLUDED` (terminal), PDF_WILL_ATTEMPT → no change, UNSET → skipped. Two-pass validation (reject all on any error).
+
 **CLI entry points:**
 - `python -m engine.acquisition.check_oa --review NAME [--spec YAML] [--background]`
 - `python -m engine.acquisition.download --review NAME [--retry] [--background]`
-- `python -m engine.acquisition.manual_list --review NAME [--spec YAML] [--background]`
+- `python -m engine.acquisition.pdf_quality_html --review NAME --mode acquisition [--output PATH]`
 - `python -m engine.acquisition.verify_downloads --review NAME [--pdf-dir PATH] [--dry-run]`
+- `python -m engine.acquisition.pdf_quality_check --review NAME [--spec YAML] [--dry-run] [--limit N]`
+- `python -m engine.acquisition.pdf_quality_html --review NAME --mode quality_check [--output PATH]`
+- `python -m engine.acquisition.pdf_quality_import --review NAME --input JSON [--dry-run]`
 
 ---
 
@@ -82,7 +90,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 0 | Empty module | — | — |
 | `models.py` | 19 | Parsed document data model | `ParsedDocument` (Pydantic) | `pydantic` |
-| `pdf_parser.py` | 255 | PDF → Markdown with Docling/Qwen2.5-VL routing, DB-driven PDF path resolution | `parse_pdf()`, `parse_all_pdfs()`, `is_scanned_pdf()`, `compute_pdf_hash()` | `fitz` (PyMuPDF), `docling`, `ollama` |
+| `pdf_parser.py` | 259 | PDF → Markdown with Docling/Qwen2.5-VL routing, DB-driven PDF path resolution | `parse_pdf()`, `parse_all_pdfs()`, `is_scanned_pdf()`, `compute_pdf_hash()` | `fitz` (PyMuPDF), `docling`, `ollama` |
 
 **Routing:** Digital PDFs (> 100 chars/page) → Docling; Scanned PDFs (< 100 chars/page) → Qwen2.5-VL vision model via Ollama
 
@@ -130,6 +138,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | `__init__.py` | 0 | Empty module | — | — |
 | `002_screening_rename.py` | 207 | "The Great Rename" — screening_decisions → abstract_screening_decisions, SCREENED_IN → ABSTRACT_SCREENED_IN, etc. | — | `sqlite3` |
 | `003_backfill_expanded_screening.py` | 411 | Backfill expanded corpus screening data into renamed tables | — | `sqlite3` |
+| `004_pdf_quality_check.py` | 95 | Add PDF quality check columns + PDF_EXCLUDED status to papers table | `run_migration()` | `sqlite3` |
 
 ---
 
@@ -150,13 +159,13 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 |------|-------|---------|-------------|---------------|
 | `__init__.py` | 71 | Master export orchestrator | `export_all()` | — |
 | `review_workbook.py` | 360 | Shared self-documenting Excel workbook builder | `create_review_workbook()`, `ColumnDef`, `DecisionColumnDef`, `FreeTextColumnDef`, `InstructionsConfig` | `openpyxl` |
-| `prisma.py` | 154 | PRISMA flow data + CSV (includes FT exclusions + LOW_YIELD rejections) | `generate_prisma_flow()`, `export_prisma_csv()` | `csv` |
+| `prisma.py` | 172 | PRISMA flow data + CSV (includes PDF exclusions, FT exclusions, LOW_YIELD rejections) | `generate_prisma_flow()`, `export_prisma_csv()` | `csv` |
 | `evidence_table.py` | 176 | Evidence CSV + 3-sheet Excel | `export_evidence_csv()`, `export_evidence_excel()` | `openpyxl` |
 | `docx_export.py` | 111 | Formatted DOCX evidence table | `export_evidence_docx()` | `python-docx` |
 | `methods_section.py` | 81 | PRISMA methods paragraph | `generate_methods_section()`, `export_methods_md()` | — |
 | `trace_exporter.py` | 549 | Per-paper traces, quality report, disagreement pairs | `export_traces_markdown()`, `export_trace_quality_report()`, `export_disagreement_pairs()` | `statistics` |
 
-**PRISMA additions:** `ft_screened_out`, `ft_flagged`, `low_yield_rejected` fields in flow dict
+**PRISMA additions:** `pdf_excluded`, `pdf_exclusion_reasons`, `ft_screened_out`, `ft_flagged`, `low_yield_rejected` fields in flow dict
 
 ---
 
@@ -183,6 +192,8 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | `reextract_failed.py` | 161 | Re-extract specific failed papers with extended timeout (up to 25 min) |
 | `reparse_cloud_spans.py` | 105 | Re-parse cloud extractions with 0 spans using stored JSON (no API calls) |
 | `eval_auditor_models.py` | 279 | Multi-model auditor evaluation (5-paper sample, 3 candidate models) |
+| `backfill_authors.py` | 185 | Backfill missing first_author from title heuristics |
+| `parse_expanded_corpus.py` | 84 | Parse expanded corpus PDFs |
 | `advance_to_pdf_acquired.py` | 102 | Bulk ABSTRACT_SCREENED_IN → PDF_ACQUIRED transition for papers with PDFs on disk |
 | `prepare_concordance_pdfs.py` | 66 | Rename PDFs to EE-XXX format + paper_manifest.csv |
 | `monitor_extraction.py` | 68 | Watchdog: checks extract_log.txt for stalls every 20 min |
@@ -227,6 +238,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, and `tests/
 | `test_human_review.py` | 121 | 6 | Human review queue export/import |
 | `test_background.py` | 112 | 7 | tmux background mode |
 | `test_trace_exporter.py` | 186 | 11 | Per-paper traces, quality report, disagreements |
+| `test_pdf_quality_import.py` | 368 | — | PDF quality disposition import: validation, atomic import, PROCEED/EXCLUDE/WILL_ATTEMPT |
 | `test_verify_downloads.py` | 491 | 40 | Author cleaning, canonical names, PDF validation, publisher classification, verify/rename integration |
 
 **Total: 377 offline tests passing** (10 network/ollama tests deselected by default)
@@ -238,4 +250,4 @@ python -m pytest tests/ -v                                   # all 387
 
 ---
 
-*Generated 2026-03-13 from commit `cd1d2d0`*
+*Generated 2026-03-14 from commit `66563cb`*

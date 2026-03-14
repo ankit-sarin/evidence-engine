@@ -1,6 +1,6 @@
 # Surgical Evidence Engine — Architecture Overview
 
-The Surgical Evidence Engine is a local, end-to-end systematic review pipeline that accepts a Review Spec (YAML), searches PubMed and OpenAlex, screens papers with cross-family dual-model LLM agents at both abstract and full-text stages, acquires PDFs via a 5-strategy cascade, parses full text with Docling/Qwen2.5-VL, applies full-text eligibility screening with structured reason codes, extracts structured evidence with two-pass DeepSeek-R1, audits spans with cross-model verification (gemma3:27b) including LOW_YIELD detection, enforces human adjudication gates at screening, full-text screening, and extraction stages, and exports publication-ready evidence tables. An optional cloud concordance arm (OpenAI o4-mini + Anthropic Sonnet 4.6) provides multi-model extraction for validation. All inference runs locally on a DGX Spark (Blackwell GB10) via Ollama; no patient data leaves the machine.
+The Surgical Evidence Engine is a local, end-to-end systematic review pipeline that accepts a Review Spec (YAML), searches PubMed and OpenAlex, screens papers with cross-family dual-model LLM agents at both abstract and full-text stages, acquires PDFs via a 5-strategy cascade, runs AI-based PDF quality classification (language + content type) with human disposition review, parses full text with Docling/Qwen2.5-VL, applies full-text eligibility screening with structured reason codes, extracts structured evidence with two-pass DeepSeek-R1, audits spans with cross-model verification (gemma3:27b) including LOW_YIELD detection, enforces human adjudication gates at screening, full-text screening, and extraction stages, and exports publication-ready evidence tables. An optional cloud concordance arm (OpenAI o4-mini + Anthropic Sonnet 4.6) provides multi-model extraction for validation. All inference runs locally on a DGX Spark (Blackwell GB10) via Ollama; no patient data leaves the machine.
 
 ## High-Level Pipeline Flow
 
@@ -12,7 +12,7 @@ Review Spec YAML
   | SEARCH  | --> | ABSTRACT | --> | ABSTRACT    | --> | ACQUIRE   |
   | PubMed  |     | SCREEN   |     | ADJUDICATE  |     | OA Check  |
   | OpenAlex|     | Primary  |     | Human FP    |     | Download  |
-  | Dedup   |     | Verifier |     | Review      |     | Manual    |
+  | Dedup   |     | Verifier |     | Review      |     | QC Check  |
   +---------+     +----------+     +-------------+     +-----------+
                                                               |
        +------------------------------------------------------+
@@ -61,10 +61,10 @@ Review Spec YAML
 
 ## Codebase Statistics
 
-- **94 source files** (Python + Shell)
-- **22,257 lines** of code
-- **377 offline tests** passing (10 network/ollama deselected)
+- **101 source files** (Python + Shell)
+- **24,432 lines** of code
+- **377+ offline tests** passing (10 network/ollama deselected)
 
 ---
 
-*Generated 2026-03-13 from commit `cd1d2d0`*
+*Generated 2026-03-14 from commit `66563cb`*

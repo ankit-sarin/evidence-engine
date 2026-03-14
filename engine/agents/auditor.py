@@ -12,13 +12,13 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Literal, Optional
 
-import ollama
 from pydantic import BaseModel
 
 from engine.agents.models import EvidenceSpan
 from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
+from engine.utils.ollama_client import ollama_chat
 
 logger = logging.getLogger(__name__)
 
@@ -143,7 +143,7 @@ Source snippet from paper: {span.source_snippet}
 
 Respond with JSON: {{"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}}"""
 
-    response = ollama.chat(
+    response = ollama_chat(
         model=model,
         messages=[
             {

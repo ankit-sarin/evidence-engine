@@ -196,8 +196,8 @@ def test_full_two_pass_mocked(tmp_path, spec):
 
     paper_text = "This RCT used the STAR robot for autonomous suturing..."
 
-    with patch("engine.agents.extractor._client") as mock_client:
-        mock_client.chat.side_effect = [_mock_pass1_response(), _mock_pass2_response()]
+    with patch("engine.agents.extractor.ollama_chat") as mock_chat:
+        mock_chat.side_effect = [_mock_pass1_response(), _mock_pass2_response()]
         result = extract_paper(pid, paper_text, spec, db)
 
     assert result.paper_id == pid

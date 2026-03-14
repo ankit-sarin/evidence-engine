@@ -26,12 +26,12 @@ import time
 from pathlib import Path
 
 import fitz  # PyMuPDF
-import ollama
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from engine.core.review_spec import PDFQualityCheck
+from engine.utils.ollama_client import ollama_chat
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -85,11 +85,9 @@ def _classify_page(
     timeout: float = 120.0,
 ) -> dict:
     """Send first-page image to vision model and parse JSON classification."""
-    client = ollama.Client(timeout=timeout)
-
     for attempt in range(1 + MAX_RETRIES):
         try:
-            response = client.chat(
+            response = ollama_chat(
                 model=model,
                 messages=[
                     {
@@ -99,6 +97,8 @@ def _classify_page(
                     }
                 ],
                 options={"temperature": 0},
+                max_retries=0,  # retries handled by outer loop
+                wall_timeout=timeout,
             )
             raw = response.message.content or ""
 

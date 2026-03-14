@@ -9,7 +9,7 @@ import logging
 from pathlib import Path
 from typing import Literal
 
-import ollama
+from engine.utils.ollama_client import ollama_chat
 from pydantic import BaseModel, Field
 
 from engine.core.database import ReviewDatabase
@@ -146,7 +146,7 @@ def screen_paper(
 
     user_prompt = _build_prompt(paper, spec, role=role)
 
-    response = ollama.chat(
+    response = ollama_chat(
         model=model,
         messages=[
             {

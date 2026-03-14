@@ -138,7 +138,7 @@ def test_semantic_verify_mocked():
         status="verified", grep_found=True, reasoning="Value matches snippet."
     ).model_dump_json()
 
-    with patch("engine.agents.auditor.ollama.chat", return_value=mock_resp):
+    with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
         verdict = semantic_verify(span, PAPER_TEXT)
 
     assert verdict.status == "verified"
@@ -172,7 +172,7 @@ def test_audit_span_verified():
         status="verified", grep_found=True, reasoning="Confirmed."
     ).model_dump_json()
 
-    with patch("engine.agents.auditor.ollama.chat", return_value=mock_resp):
+    with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
         status, reasoning = audit_span(span_data, PAPER_TEXT)
 
     assert status == "verified"
@@ -191,7 +191,7 @@ def test_audit_span_contested():
         status="verified", grep_found=False, reasoning="Value is reasonable."
     ).model_dump_json()
 
-    with patch("engine.agents.auditor.ollama.chat", return_value=mock_resp):
+    with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
         status, reasoning = audit_span(span_data, PAPER_TEXT)
 
     assert status == "contested"
@@ -211,7 +211,7 @@ def test_audit_span_flagged():
         status="flagged", grep_found=False, reasoning="Value not supported."
     ).model_dump_json()
 
-    with patch("engine.agents.auditor.ollama.chat", return_value=mock_resp):
+    with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
         status, reasoning = audit_span(span_data, PAPER_TEXT)
 
     assert status == "flagged"
@@ -245,7 +245,7 @@ def test_audit_span_tier4_skips_grep():
         status="verified", grep_found=False, reasoning="Assessment is reasonable."
     ).model_dump_json()
 
-    with patch("engine.agents.auditor.ollama.chat", return_value=mock_resp) as mock_chat:
+    with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp) as mock_chat:
         status, reasoning = audit_span(span_data, PAPER_TEXT, field_tier=4)
 
     # LLM was called (grep was skipped)
@@ -266,7 +266,7 @@ def test_audit_span_tier4_semantic_fail():
         status="flagged", grep_found=False, reasoning="Contradicts early-stage evidence."
     ).model_dump_json()
 
-    with patch("engine.agents.auditor.ollama.chat", return_value=mock_resp):
+    with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
         status, reasoning = audit_span(span_data, PAPER_TEXT, field_tier=4)
 
     assert status == "flagged"
@@ -329,7 +329,7 @@ def test_full_audit_flow_mocked(tmp_path):
     # Mock Ollama: call 1 (study_design) → verified, call 2 (sample_size) → flagged,
     # call 3 (robot_platform) → flagged (grep fails, semantic called, returns flagged)
     with patch("engine.utils.ollama_preflight.require_preflight"):
-        with patch("engine.agents.auditor.ollama.chat") as mock_chat:
+        with patch("engine.agents.auditor.ollama_chat") as mock_chat:
             mock_chat.side_effect = [
                 _make_verified_response(),
                 _make_flagged_response(),

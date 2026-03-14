@@ -21,7 +21,7 @@ class TestCheckModel:
     def test_success_returns_ok(self):
         mock_response = MagicMock()
         mock_response.message.content = "OK"
-        with patch("engine.utils.ollama_preflight.ollama.chat", return_value=mock_response):
+        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
             with patch("engine.utils.ollama_preflight._get_model_vram_gb", return_value=12.5):
                 result = check_model("test-model:7b")
 
@@ -32,7 +32,7 @@ class TestCheckModel:
         assert result.error_message == ""
 
     def test_error_returns_error_with_message(self):
-        with patch("engine.utils.ollama_preflight.ollama.chat",
+        with patch("engine.utils.ollama_preflight.ollama_chat",
                    side_effect=ConnectionError("model not found")):
             result = check_model("nonexistent:99b")
 
@@ -46,7 +46,7 @@ class TestPreflightCheck:
     def test_all_ok_returns_success(self):
         mock_response = MagicMock()
         mock_response.message.content = "OK"
-        with patch("engine.utils.ollama_preflight.ollama.chat", return_value=mock_response):
+        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
             with patch("engine.utils.ollama_preflight.ollama.ps",
                        return_value={"models": [{"name": "a", "size": 10 * 1024**3}]}):
                 result = preflight_check(["model-a:7b", "model-b:13b"])
@@ -66,7 +66,7 @@ class TestPreflightCheck:
                 raise ConnectionError("OOM")
             return mock_response
 
-        with patch("engine.utils.ollama_preflight.ollama.chat", side_effect=mock_chat):
+        with patch("engine.utils.ollama_preflight.ollama_chat", side_effect=mock_chat):
             with patch("engine.utils.ollama_preflight.ollama.ps",
                        return_value={"models": []}):
                 result = preflight_check(["good:7b", "bad:99b"])
@@ -80,7 +80,7 @@ class TestPreflightCheck:
 class TestRequirePreflight:
 
     def test_raises_on_failure(self):
-        with patch("engine.utils.ollama_preflight.ollama.chat",
+        with patch("engine.utils.ollama_preflight.ollama_chat",
                    side_effect=ConnectionError("dead")):
             with pytest.raises(RuntimeError, match="pre-flight check failed"):
                 require_preflight(["broken:7b"], runner_name="Test")
@@ -88,7 +88,7 @@ class TestRequirePreflight:
     def test_passes_silently_on_success(self):
         mock_response = MagicMock()
         mock_response.message.content = "OK"
-        with patch("engine.utils.ollama_preflight.ollama.chat", return_value=mock_response):
+        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
             with patch("engine.utils.ollama_preflight.ollama.ps",
                        return_value={"models": []}):
                 # Should not raise
@@ -166,7 +166,7 @@ class TestRunnerIntegration:
 
         mock_response = MagicMock()
         mock_response.message.content = "OK"
-        with patch("engine.utils.ollama_preflight.ollama.chat", return_value=mock_response):
+        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
             with patch("engine.utils.ollama_preflight.ollama.ps",
                        return_value={"models": []}):
                 stats = run_extraction(db, spec, review_name="test_pf4")

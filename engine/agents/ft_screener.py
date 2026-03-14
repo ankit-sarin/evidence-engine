@@ -13,12 +13,12 @@ import re
 from pathlib import Path
 from typing import Literal
 
-import ollama
 from pydantic import BaseModel, Field
 
 from engine.core.constants import FT_MAX_TEXT_CHARS, FT_REASON_CODES
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
+from engine.utils.ollama_client import ollama_chat
 
 logger = logging.getLogger(__name__)
 
@@ -214,7 +214,7 @@ def ft_screen_paper(
 
     prompt = build_ft_screening_prompt(paper_text, spec)
 
-    response = ollama.chat(
+    response = ollama_chat(
         model=model,
         messages=[
             {
@@ -252,7 +252,7 @@ def ft_verify_paper(
 
     prompt = build_ft_verification_prompt(paper_text, spec)
 
-    response = ollama.chat(
+    response = ollama_chat(
         model=model,
         messages=[
             {

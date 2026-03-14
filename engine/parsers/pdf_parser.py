@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import fitz  # PyMuPDF
-import ollama
+from engine.utils.ollama_client import ollama_chat
 from docling.document_converter import DocumentConverter
 
 from engine.core.database import ReviewDatabase
@@ -78,7 +78,7 @@ def parse_with_vision(pdf_path: str) -> str:
             img_bytes = pix.tobytes("png")
             img_b64 = base64.b64encode(img_bytes).decode()
 
-            response = ollama.chat(
+            response = ollama_chat(
                 model=_VISION_MODEL,
                 messages=[
                     {

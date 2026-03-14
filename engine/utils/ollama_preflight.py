@@ -11,6 +11,8 @@ from dataclasses import dataclass, field
 
 import ollama
 
+from engine.utils.ollama_client import ollama_chat
+
 logger = logging.getLogger(__name__)
 
 _VRAM_BUDGET_GB = 100.0  # usable VRAM on DGX Spark
@@ -50,10 +52,12 @@ def check_model(model_name: str, timeout: int = 30) -> ModelResult:
     """Send a minimal completion to verify model loads and responds."""
     start = time.time()
     try:
-        ollama.chat(
+        ollama_chat(
             model=model_name,
             messages=[{"role": "user", "content": "Respond with OK"}],
             options={"temperature": 0, "num_predict": 4},
+            max_retries=0,
+            wall_timeout=60.0,
         )
         elapsed = time.time() - start
         vram = _get_model_vram_gb(model_name)

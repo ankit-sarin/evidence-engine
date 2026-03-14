@@ -7,22 +7,18 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-import ollama
-
 from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
 from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
+from engine.utils.ollama_client import ollama_chat
 
 logger = logging.getLogger(__name__)
 
 MODEL = "deepseek-r1:32b"
-OLLAMA_TIMEOUT = 900.0  # 15 minutes per API call
 MAX_RETRIES = 2
 RETRY_DELAY = 30  # seconds between retries
 SNIPPET_MAX_RETRIES = 2
-
-_client = ollama.Client(timeout=OLLAMA_TIMEOUT)
 
 
 # ── Prompt Builder ───────────────────────────────────────────────────
@@ -125,26 +121,8 @@ _FIELD_GUIDES: dict[str, str] = {
 
 
 # ── Ollama Retry Wrapper ─────────────────────────────────────────────
-
-
-def _ollama_chat_with_retry(**kwargs):
-    """Call ollama.chat with timeout and retry on transient failures."""
-    for attempt in range(1 + MAX_RETRIES):
-        try:
-            return _client.chat(**kwargs)
-        except Exception as exc:
-            if attempt < MAX_RETRIES:
-                logger.warning(
-                    "Ollama call failed (attempt %d/%d): %s — retrying in %ds",
-                    attempt + 1, 1 + MAX_RETRIES, exc, RETRY_DELAY,
-                )
-                time.sleep(RETRY_DELAY)
-            else:
-                logger.error(
-                    "Ollama call failed after %d attempts: %s",
-                    1 + MAX_RETRIES, exc,
-                )
-                raise
+# Retry and timeout logic now lives in engine.utils.ollama_client.ollama_chat.
+# _ollama_chat_with_retry is kept as a thin pass-through for internal callers.
 
 
 # ── Pass 1: Reasoning ────────────────────────────────────────────────
@@ -152,7 +130,7 @@ def _ollama_chat_with_retry(**kwargs):
 
 def extract_pass1_reasoning(prompt: str) -> str:
     """Run Pass 1: let DeepSeek-R1 reason freely, return the thinking trace."""
-    response = _ollama_chat_with_retry(
+    response = ollama_chat(
         model=MODEL,
         messages=[
             {
@@ -195,7 +173,7 @@ def extract_pass2_structured(
     """Run Pass 2: use reasoning trace as context, force structured JSON output."""
     schema_hash = spec.extraction_hash()
 
-    response = _ollama_chat_with_retry(
+    response = ollama_chat(
         model=MODEL,
         messages=[
             {
@@ -266,7 +244,7 @@ def _retry_snippet(
         f"## Paper Text\n{paper_text}"
     )
     try:
-        response = _ollama_chat_with_retry(
+        response = ollama_chat(
             model=MODEL,
             messages=[
                 {"role": "system", "content": "Respond ONLY with JSON."},

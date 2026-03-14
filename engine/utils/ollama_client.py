@@ -11,6 +11,7 @@ This provides:
 
 import logging
 import re
+import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 
@@ -130,8 +131,18 @@ def ollama_chat(
             if attempt < max_retries:
                 time.sleep(retry_delay)
             else:
+                # All retries exhausted — attempt Ollama restart as last resort
+                result = _restart_ollama_and_retry(
+                    model=model, messages=messages,
+                    paper_label=paper_label,
+                    effective_timeout=effective_timeout,
+                    max_retries=max_retries,
+                    **kwargs,
+                )
+                if result is not None:
+                    return result
                 raise TimeoutError(
-                    f"Ollama call timed out after {1 + max_retries} attempts "
+                    f"Ollama call timed out after {1 + max_retries} attempts + restart "
                     f"(model={model}, {paper_label}, limit={effective_timeout}s)"
                 )
 
@@ -162,3 +173,56 @@ def ollama_chat(
                 time.sleep(retry_delay)
             else:
                 raise
+
+
+# ── Ollama restart recovery (Layer 3) ────────────────────────────────
+
+
+def _restart_ollama_and_retry(
+    *, model, messages, paper_label, effective_timeout, max_retries, **kwargs,
+):
+    """Restart the Ollama service and attempt one final call.
+
+    Returns the response on success, or None if the restart or final call fails.
+    """
+    logger.warning(
+        "All %d retries exhausted — restarting Ollama service (model=%s, %s)",
+        1 + max_retries, model, paper_label,
+    )
+    try:
+        subprocess.run(
+            ["sudo", "systemctl", "restart", "ollama"],
+            timeout=30,
+            check=True,
+            capture_output=True,
+        )
+    except Exception as restart_exc:
+        logger.warning(
+            "Ollama restart failed: %s — raising original TimeoutError", restart_exc,
+        )
+        return None
+
+    logger.info("Ollama restarted — waiting 10s for stabilization")
+    time.sleep(10)
+
+    # One final attempt after restart
+    executor = ThreadPoolExecutor(max_workers=1)
+    try:
+        future = executor.submit(
+            _client.chat,
+            model=model,
+            messages=messages,
+            **kwargs,
+        )
+        result = future.result(timeout=effective_timeout)
+        logger.info(
+            "Post-restart call succeeded (model=%s, %s)", model, paper_label,
+        )
+        return result
+    except Exception as post_exc:
+        executor.shutdown(wait=False, cancel_futures=True)
+        logger.warning(
+            "Post-restart call also failed: %s — raising TimeoutError",
+            post_exc,
+        )
+        return None

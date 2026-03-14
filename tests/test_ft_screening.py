@@ -391,7 +391,7 @@ class TestReviewSpecFTModels:
 
     def test_ft_screening_models_loaded(self, spec):
         assert spec.ft_screening_models is not None
-        assert spec.ft_screening_models.primary == "qwen3.5:27b"
+        assert spec.ft_screening_models.primary == "qwen3:32b"
         assert spec.ft_screening_models.verifier == "gemma3:27b"
 
     def test_ft_screening_models_think_false(self, spec):

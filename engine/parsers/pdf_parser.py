@@ -198,10 +198,12 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
         ).fetchone()
         if ft_row and ft_row["pdf_path"]:
             candidate = Path(ft_row["pdf_path"])
-            if not candidate.is_absolute():
-                candidate = pdf_dir / candidate
             if candidate.exists():
                 pdf_path = str(candidate)
+            elif not candidate.is_absolute():
+                joined = pdf_dir / candidate
+                if joined.exists():
+                    pdf_path = str(joined)
 
         # 2. Check papers.pdf_local_path (set by downloader/verify_downloads)
         if not pdf_path:
@@ -210,10 +212,12 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
             ).fetchone()
             if lp_row and lp_row["pdf_local_path"]:
                 candidate = Path(lp_row["pdf_local_path"])
-                if not candidate.is_absolute():
-                    candidate = pdf_dir / candidate
                 if candidate.exists():
                     pdf_path = str(candidate)
+                elif not candidate.is_absolute():
+                    joined = pdf_dir / candidate
+                    if joined.exists():
+                        pdf_path = str(joined)
 
         # 3. Fall back to filesystem glob (handles bare integer and prefixed names)
         if not pdf_path:

@@ -49,6 +49,17 @@ ft_screening_models:
 
 low_yield_threshold: 4
 
+pdf_quality_check:
+  enabled: true
+  ai_model: "qwen2.5vl:7b"
+  dpi: 150
+  timeout: 120
+  exclude_reasons:
+    - NON_ENGLISH
+    - NOT_MANUSCRIPT
+    - INACCESSIBLE
+    - OTHER
+
 specialty_scope:
   included:
     - abdominal surgery  # colorectal, foregut, HPB, pancreas, general

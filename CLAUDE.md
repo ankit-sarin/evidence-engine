@@ -49,15 +49,19 @@ evidence-engine/
 │   │   ├── models.py           # ParsedDocument model
 │   │   └── pdf_parser.py       # Docling + Qwen2.5-VL routing
 │   ├── acquisition/
-│   │   ├── __init__.py         # Re-exports: check_oa_status, download_papers, generate_manual_list, verify_downloads
+│   │   ├── __init__.py         # Re-exports: check_oa_status, download_papers, import_dispositions, verify_downloads
 │   │   ├── check_oa.py         # Unpaywall API OA status + PDF URL lookup, rate-limited, idempotent
 │   │   ├── download.py         # 5-strategy cascade downloader (Unpaywall → PMC → IEEE → MDPI → DOI redirect)
-│   │   ├── manual_list.py      # HTML + CSV manual download list, publisher grouping, naming convention, verify command
+│   │   ├── manual_list.py      # DEPRECATED — use pdf_quality_html.py --mode acquisition
+│   │   ├── pdf_quality_check.py  # AI first-page classification (language, content type) via vision model
+│   │   ├── pdf_quality_html.py   # HTML review pages: --mode acquisition (download list) or --mode quality_check (post-download)
+│   │   ├── pdf_quality_import.py # Import disposition JSON → DB (PROCEED/EXCLUDE/WILL_ATTEMPT)
 │   │   └── verify_downloads.py # Scan/match/validate/rename PDFs to EE-{nnn}_{Author}_{Year}.pdf, update DB
 │   ├── migrations/
 │   │   ├── __init__.py
 │   │   ├── 002_screening_rename.py     # Rename SCREENED_IN/OUT → ABSTRACT_SCREENED_IN/OUT
-│   │   └── 003_backfill_expanded_screening.py  # Backfill 9,235 expanded-corpus screening traces
+│   │   ├── 003_backfill_expanded_screening.py  # Backfill 9,235 expanded-corpus screening traces
+│   │   └── 004_pdf_quality_check.py    # Add PDF quality check columns to papers table
 │   ├── adjudication/
 │   │   ├── __init__.py             # Re-exports for screening + audit adjudication
 │   │   ├── advance_stage.py        # CLI to advance workflow stages (12 stages)
@@ -86,6 +90,8 @@ evidence-engine/
 │   ├── ft_screening_smoke_test.py  # 5-paper FT screening integration test
 │   ├── advance_to_pdf_acquired.py  # Bulk status transition helper
 │   ├── monitor_extraction.py   # Live extraction progress monitor
+│   ├── backfill_authors.py      # Backfill missing first_author from title heuristics
+│   ├── parse_expanded_corpus.py # Parse expanded corpus PDFs
 │   ├── prepare_concordance_pdfs.py # EE-XXX renamed PDFs + paper_manifest.csv
 │   ├── pdf_acquisition/        # Multi-step PDF download pipeline (export, unpaywall, OA, manual)
 │   ├── run_expanded_screen_and_verify.sh  # Tmux launcher for expanded screening
@@ -111,6 +117,7 @@ evidence-engine/
 │   ├── test_human_review.py    #  6 tests — human review queue export/import
 │   ├── test_background.py      #  7 tests — tmux background mode
 │   ├── test_trace_exporter.py  # 11 tests — per-paper traces, quality report, disagreements
+│   ├── test_pdf_quality_import.py # PDF quality disposition import tests
 │   ├── test_verify_downloads.py # 40 tests — author cleaning, canonical names, PDF validation, verify/rename integration
 │   ├── e2e_test_log.md         # Test coverage notes
 │   └── e2e_search_screen_log.md  # Latest live E2E results
@@ -136,8 +143,9 @@ evidence-engine/
 - File system: Immutable PDF + parsed Markdown store
 
 ## Paper Lifecycle
-INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAGGED → PDF_ACQUIRED → PARSED → FT_ELIGIBLE / FT_SCREENED_OUT / FT_FLAGGED → EXTRACTED / EXTRACT_FAILED → AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE → REJECTED
+INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAGGED → PDF_ACQUIRED → PDF_EXCLUDED (terminal) or PARSED → FT_ELIGIBLE / FT_SCREENED_OUT / FT_FLAGGED → EXTRACTED / EXTRACT_FAILED → AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE → REJECTED
 (PARSED can also skip FT screening and go directly to EXTRACTED for reviews without FT screening)
+(PDF_ACQUIRED → PDF_EXCLUDED is terminal — papers excluded at quality check do not advance)
 
 ## Pipeline Stages
 1. **SEARCH** — PubMed + OpenAlex → deduplicate → add to DB
@@ -173,6 +181,7 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - Self-documenting review workbooks: shared `review_workbook.py` builder with DataValidation dropdowns, conditional formatting, frozen headers, Instructions sheet. Used by screening, FT, and audit adjudication exporters
 - Audit adjudication: per-span export with ACCEPT/REJECT/CORRECT decisions, spot-check sampling with configurable threshold. Two-pass validation on import (scan all rows, reject entirely on errors)
 - min_status parameter on exporters: AI_AUDIT_COMPLETE (raw AI) vs HUMAN_AUDIT_COMPLETE (human-verified)
+- PDF quality check: AI-based first-page classification (qwen2.5vl:7b) detects non-English, non-manuscript, and inaccessible PDFs. Configurable via `pdf_quality_check` section in review spec. Disposition workflow: quality check → HTML review page → JSON export → `import_dispositions` → DB update (PROCEED/EXCLUDE/WILL_ATTEMPT). PDF_EXCLUDED is terminal status with reason tracking. PRISMA reports PDF exclusions as distinct category
 - ollama_options pass-through: per-model Ollama settings (e.g., num_ctx for memory-constrained models)
 
 ## Running
@@ -188,8 +197,11 @@ python scripts/screen_expanded.py --verify-only  # verification pass only
 # PDF acquisition (OA check → download → manual list)
 python -m engine.acquisition.check_oa --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
 python -m engine.acquisition.download --review surgical_autonomy [--retry] [--background]
-python -m engine.acquisition.manual_list --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
+python -m engine.acquisition.pdf_quality_html --review surgical_autonomy --mode acquisition
 python -m engine.acquisition.verify_downloads --review surgical_autonomy [--dry-run]
+python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
+python -m engine.acquisition.pdf_quality_html --review surgical_autonomy --mode quality_check
+python -m engine.acquisition.pdf_quality_import --review surgical_autonomy --input dispositions.json
 
 # Cloud extraction (concordance study)
 PYTHONPATH=. python scripts/run_cloud_extraction.py --arm both --max-cost 25.00

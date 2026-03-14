@@ -127,6 +127,31 @@ class SpecialtyScope(BaseModel):
         return "\n".join(lines)
 
 
+# ── PDF Quality Check ───────────────────────────────────────────────
+
+
+class PDFQualityCheck(BaseModel):
+    """Configuration for AI-based PDF quality classification."""
+
+    enabled: bool = Field(default=True, description="Enable PDF quality check")
+    ai_model: str = Field(
+        default="qwen2.5vl:7b",
+        description="Ollama vision model for first-page classification",
+    )
+    dpi: int = Field(
+        default=150, ge=72, le=600,
+        description="Render DPI for first-page image",
+    )
+    timeout: int = Field(
+        default=120, ge=10, le=600,
+        description="Ollama request timeout in seconds",
+    )
+    exclude_reasons: list[str] = Field(
+        default=["NON_ENGLISH", "NOT_MANUSCRIPT", "INACCESSIBLE", "OTHER"],
+        description="Valid exclusion reason codes for disposition",
+    )
+
+
 # ── Review Spec (top-level) ──────────────────────────────────────────
 
 
@@ -173,6 +198,10 @@ class ReviewSpec(BaseModel):
             "list uses this as one of several link options alongside Google Scholar, Direct "
             "DOI, and PubMed."
         ),
+    )
+    pdf_quality_check: PDFQualityCheck = Field(
+        default_factory=PDFQualityCheck,
+        description="Configuration for AI-based PDF quality classification.",
     )
 
     # ── Protocol hashing ─────────────────────────────────────────

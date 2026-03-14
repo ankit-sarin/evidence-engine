@@ -50,6 +50,15 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
     ).fetchall():
         exclusion_reasons[row["rationale"] or "No reason given"] = row["cnt"]
 
+    # PDF exclusions (between abstract screening and full-text screening)
+    pdf_excluded = status_counts.get("PDF_EXCLUDED", 0)
+    pdf_exclusion_reasons = {}
+    for row in conn.execute(
+        "SELECT pdf_exclusion_reason, COUNT(*) as cnt FROM papers "
+        "WHERE status = 'PDF_EXCLUDED' GROUP BY pdf_exclusion_reason"
+    ).fetchall():
+        pdf_exclusion_reasons[row["pdf_exclusion_reason"] or "No reason given"] = row["cnt"]
+
     # Full text stages
     full_text_assessed = sum(
         status_counts.get(s, 0)
@@ -95,6 +104,8 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
         "records_excluded": screened_out,
         "exclusion_reasons": exclusion_reasons,
         "screen_flagged": screen_flagged,
+        "pdf_excluded": pdf_excluded,
+        "pdf_exclusion_reasons": pdf_exclusion_reasons,
         "ft_screened_out": ft_screened_out,
         "ft_flagged": ft_flagged,
         "full_text_assessed": full_text_assessed,
@@ -126,8 +137,15 @@ def export_prisma_csv(db: ReviewDatabase, output_path: str) -> None:
     for reason, count in flow["exclusion_reasons"].items():
         rows.append(("", count, reason[:80]))
 
+    rows.append(("Screen flagged", flow["screen_flagged"], "For human review"))
+
+    # PDF exclusions — between abstract screening and full-text screening
+    if flow.get("pdf_excluded", 0) > 0:
+        rows.append(("PDFs excluded", flow["pdf_excluded"], "Excluded at PDF quality check"))
+        for reason, count in flow.get("pdf_exclusion_reasons", {}).items():
+            rows.append(("", count, reason))
+
     rows.extend([
-        ("Screen flagged", flow["screen_flagged"], "For human review"),
         ("Full text screened out", flow.get("ft_screened_out", 0), "Excluded at full-text screening"),
         ("Full text flagged", flow.get("ft_flagged", 0), "For human review (FT)"),
         ("Full text assessed", flow["full_text_assessed"], ""),

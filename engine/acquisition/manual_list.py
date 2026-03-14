@@ -1,10 +1,20 @@
-"""Generate HTML + CSV manual download list for papers that need manual PDF acquisition.
+"""DEPRECATED — Use pdf_quality_html.py --mode acquisition instead.
 
+This module is superseded by:
+    python -m engine.acquisition.pdf_quality_html --review NAME --mode acquisition
+
+The new module provides structured disposition tracking (ACQUIRED / WILL_REATTEMPT /
+EXCLUDE), JSON export for import into the DB, and integration with the PDF quality
+check pipeline. This file is retained for backward compatibility but will be
+removed in a future version.
+
+Original description:
+Generate HTML + CSV manual download list for papers that need manual PDF acquisition.
 Includes institutional proxy links, PubMed fallback, Google Scholar fallback.
 Grouped by publisher, sorted by EE-ID within each group.
 Progress checkboxes with localStorage persistence.
 
-CLI:
+CLI (deprecated):
     python -m engine.acquisition.manual_list --review surgical_autonomy
 """
 

@@ -26,6 +26,7 @@ STATUSES = (
     "ABSTRACT_SCREENED_OUT",
     "ABSTRACT_SCREEN_FLAGGED",
     "PDF_ACQUIRED",
+    "PDF_EXCLUDED",
     "PARSED",
     # Full-text screening statuses
     "FT_ELIGIBLE",
@@ -42,7 +43,8 @@ ALLOWED_TRANSITIONS: dict[str, set[str]] = {
     "INGESTED": {"ABSTRACT_SCREENED_IN", "ABSTRACT_SCREENED_OUT", "ABSTRACT_SCREEN_FLAGGED"},
     "ABSTRACT_SCREENED_IN": {"PDF_ACQUIRED", "ABSTRACT_SCREEN_FLAGGED"},
     "ABSTRACT_SCREEN_FLAGGED": {"ABSTRACT_SCREENED_IN", "ABSTRACT_SCREENED_OUT"},
-    "PDF_ACQUIRED": {"PARSED"},
+    "PDF_ACQUIRED": {"PARSED", "PDF_EXCLUDED"},
+    "PDF_EXCLUDED": set(),  # Terminal — papers here do not advance
     "PARSED": {"FT_ELIGIBLE", "FT_SCREENED_OUT", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED"},
     "FT_ELIGIBLE": {"EXTRACTED", "EXTRACT_FAILED", "FT_FLAGGED"},
     "FT_FLAGGED": {"FT_ELIGIBLE", "FT_SCREENED_OUT"},
@@ -211,6 +213,13 @@ _SIMPLE_MIGRATIONS = [
     "ALTER TABLE papers ADD COLUMN pdf_local_path TEXT",
     "ALTER TABLE papers ADD COLUMN acquisition_date TEXT",
     "ALTER TABLE extractions ADD COLUMN low_yield INTEGER NOT NULL DEFAULT 0",
+    # Migration 004: PDF quality check columns
+    "ALTER TABLE papers ADD COLUMN pdf_exclusion_reason TEXT",
+    "ALTER TABLE papers ADD COLUMN pdf_exclusion_detail TEXT",
+    "ALTER TABLE papers ADD COLUMN pdf_quality_check_status TEXT",
+    "ALTER TABLE papers ADD COLUMN pdf_ai_language TEXT",
+    "ALTER TABLE papers ADD COLUMN pdf_ai_content_type TEXT",
+    "ALTER TABLE papers ADD COLUMN pdf_ai_confidence REAL",
 ]
 
 _EVIDENCE_SPANS_REBUILD = """

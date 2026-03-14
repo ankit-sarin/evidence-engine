@@ -1,4 +1,4 @@
-"""PDF acquisition module — OA checking, downloading, and manual list generation."""
+"""PDF acquisition module — OA checking, downloading, quality check, and import."""
 
 
 def check_oa_status(*args, **kwargs):
@@ -11,14 +11,19 @@ def download_papers(*args, **kwargs):
     return _fn(*args, **kwargs)
 
 
-def generate_manual_list(*args, **kwargs):
-    from engine.acquisition.manual_list import generate_manual_list as _fn
-    return _fn(*args, **kwargs)
-
-
 def verify_downloads(*args, **kwargs):
     from engine.acquisition.verify_downloads import verify_downloads as _fn
     return _fn(*args, **kwargs)
 
 
-__all__ = ["check_oa_status", "download_papers", "generate_manual_list", "verify_downloads"]
+def import_dispositions(*args, **kwargs):
+    from engine.acquisition.pdf_quality_import import import_dispositions as _fn
+    return _fn(*args, **kwargs)
+
+
+__all__ = [
+    "check_oa_status",
+    "download_papers",
+    "import_dispositions",
+    "verify_downloads",
+]

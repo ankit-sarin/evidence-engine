@@ -59,7 +59,7 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
     ).fetchall():
         exclusion_reasons[row["rationale"] or "No reason given"] = row["cnt"]
 
-    # ── PDF Exclusions ──────────────────────────────────────────────
+    # ── PDF Exclusions (split: not-retrieved vs eligibility) ────────
     pdf_excluded = status_counts.get("PDF_EXCLUDED", 0)
     pdf_exclusion_reasons = {}
     for row in conn.execute(
@@ -68,9 +68,33 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
     ).fetchall():
         pdf_exclusion_reasons[row["pdf_exclusion_reason"] or "No reason given"] = row["cnt"]
 
+    # PRISMA 2020 split: INACCESSIBLE → "Reports not retrieved"
+    # All other PDF reasons → eligibility exclusions (combined with FT below)
+    reports_not_retrieved = pdf_exclusion_reasons.get("INACCESSIBLE", 0)
+    pdf_eligibility_exclusions = {
+        reason: count for reason, count in pdf_exclusion_reasons.items()
+        if reason != "INACCESSIBLE"
+    }
+
     # ── Full-Text Screening ─────────────────────────────────────────
     ft_screened_out = status_counts.get("FT_SCREENED_OUT", 0)
     ft_flagged = status_counts.get("FT_FLAGGED", 0)
+
+    # FT exclusion breakdown: PI-adjudicated vs AI primary
+    ft_pi_adjudicated = conn.execute(
+        """SELECT COUNT(*) FROM ft_screening_adjudication fta
+           JOIN papers p ON p.id = fta.paper_id
+           WHERE p.status = 'FT_SCREENED_OUT'
+           AND fta.adjudication_decision = 'FT_SCREENED_OUT'"""
+    ).fetchone()[0]
+    ft_ai_primary = ft_screened_out - ft_pi_adjudicated
+
+    # Combined eligibility exclusions (PDF non-retrieval + FT screening)
+    eligibility_exclusions = dict(pdf_eligibility_exclusions)
+    eligibility_exclusions["FT screening (AI primary)"] = ft_ai_primary
+    if ft_pi_adjudicated > 0:
+        eligibility_exclusions["FT screening (PI adjudicated)"] = ft_pi_adjudicated
+    eligibility_excluded_total = sum(eligibility_exclusions.values())
 
     # Full text reports retrieved = papers that reached PARSED or beyond
     _pre_fulltext = _pre_screening | {"ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PDF_EXCLUDED"}
@@ -121,9 +145,15 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
         "screen_flagged": screen_flagged,
         "pdf_excluded": pdf_excluded,
         "pdf_exclusion_reasons": pdf_exclusion_reasons,
+        "reports_not_retrieved": reports_not_retrieved,
+        "pdf_eligibility_exclusions": pdf_eligibility_exclusions,
+        "eligibility_exclusions": eligibility_exclusions,
+        "eligibility_excluded_total": eligibility_excluded_total,
         "full_text_retrieved": full_text_retrieved,
         "full_text_assessed": full_text_assessed,
         "ft_screened_out": ft_screened_out,
+        "ft_ai_primary": ft_ai_primary,
+        "ft_pi_adjudicated": ft_pi_adjudicated,
         "ft_flagged": ft_flagged,
         "studies_included": studies_included,
         "papers_rejected": rejected,
@@ -179,6 +209,23 @@ def validate_prisma_counts(db: ReviewDatabase) -> dict:
     if pdf_sub_total != flow["pdf_excluded"]:
         details.append(
             f"PDF_EXCLUDED sub-counts ({pdf_sub_total}) != total ({flow['pdf_excluded']})"
+        )
+
+    # Check 2b: eligibility box sub-counts
+    elig_sub_total = sum(flow["eligibility_exclusions"].values())
+    expected_elig = flow["eligibility_excluded_total"]
+    if elig_sub_total != expected_elig:
+        details.append(
+            f"Eligibility sub-counts ({elig_sub_total}) != total ({expected_elig})"
+        )
+
+    # Check 2c: reports_not_retrieved + pdf_eligibility = pdf_excluded
+    pdf_recon = flow["reports_not_retrieved"] + sum(flow["pdf_eligibility_exclusions"].values())
+    if pdf_recon != flow["pdf_excluded"]:
+        details.append(
+            f"Reports not retrieved ({flow['reports_not_retrieved']}) + "
+            f"PDF eligibility ({sum(flow['pdf_eligibility_exclusions'].values())}) "
+            f"!= PDF_EXCLUDED ({flow['pdf_excluded']})"
         )
 
     # Check 3: no paper in multiple terminal boxes (check DB for duplicates)
@@ -241,17 +288,25 @@ def export_prisma_csv(db: ReviewDatabase, output_path: str) -> None:
 
     rows.append(("Screen flagged", flow["screen_flagged"], "For human review"))
 
-    # PDF exclusions
-    if flow.get("pdf_excluded", 0) > 0:
-        rows.append(("PDFs excluded", flow["pdf_excluded"], "Excluded at PDF quality check"))
-        for reason, count in flow.get("pdf_exclusion_reasons", {}).items():
-            rows.append(("", count, reason))
+    # PRISMA 2020: Reports not retrieved (INACCESSIBLE only)
+    rows.append(("Reports not retrieved", flow["reports_not_retrieved"], "PDF inaccessible"))
 
     rows.extend([
         ("Full text reports retrieved", flow["full_text_retrieved"], ""),
-        ("Full text screened out", flow["ft_screened_out"], "Excluded at full-text screening"),
-        ("Full text flagged", flow["ft_flagged"], "For human review (FT)"),
         ("Full text assessed", flow["full_text_assessed"], ""),
+    ])
+
+    # PRISMA 2020: Combined eligibility exclusion box
+    rows.append((
+        "Excluded",
+        flow["eligibility_excluded_total"],
+        "PDF eligibility + FT screening",
+    ))
+    for reason, count in flow["eligibility_exclusions"].items():
+        rows.append(("", count, reason))
+
+    rows.extend([
+        ("Full text flagged", flow["ft_flagged"], "For human review (FT)"),
         ("Papers rejected", flow["papers_rejected"], "Post-extraction exclusion"),
     ])
     for reason, count in flow.get("rejection_reasons", {}).items():

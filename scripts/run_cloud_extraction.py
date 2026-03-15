@@ -35,7 +35,7 @@ def show_progress(db_path: str, spec_path: str):
     init_cloud_tables(db_path)
     # Use base class just for progress queries
     base = CloudExtractorBase(db_path, spec_path)
-    for arm in ["openai_o3_mini_high", "anthropic_sonnet_4_5"]:
+    for arm in ["openai_o4_mini_high", "anthropic_sonnet_4_6"]:
         progress = base.get_progress(arm)
         print(
             f"{arm}: "
@@ -53,8 +53,8 @@ def dry_run(db_path: str, spec_path: str, arms: list[str]):
 
     for arm_name in arms:
         arm_key = {
-            "openai": "openai_o3_mini_high",
-            "anthropic": "anthropic_sonnet_4_5",
+            "openai": "openai_o4_mini_high",
+            "anthropic": "anthropic_sonnet_4_6",
         }[arm_name]
 
         pending = base.get_pending_papers(arm_key)

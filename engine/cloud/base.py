@@ -32,17 +32,22 @@ class CloudExtractorBase:
         # DB connection (read-write for storing results)
         self._conn = sqlite3.connect(db_path)
         self._conn.row_factory = sqlite3.Row
+        self._conn.execute("PRAGMA busy_timeout=5000")
         self._conn.execute("PRAGMA foreign_keys=ON")
 
     def close(self):
         self._conn.close()
 
     def get_pending_papers(self, arm: str) -> list[dict]:
-        """Get papers that have local extractions but no cloud extraction for this arm."""
+        """Get extraction-eligible papers with no cloud extraction for this arm.
+
+        Includes FT_ELIGIBLE (parsed, not yet locally extracted) so cloud arms
+        can run concurrently with local extraction.
+        """
         rows = self._conn.execute(
             """SELECT p.id AS paper_id, p.title, p.authors, p.year
                FROM papers p
-               WHERE p.status IN ('EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')
+               WHERE p.status IN ('FT_ELIGIBLE', 'EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')
                AND p.id NOT IN (
                    SELECT ce.paper_id FROM cloud_extractions ce WHERE ce.arm = ?
                )
@@ -114,6 +119,12 @@ class CloudExtractorBase:
                         list(response_json.keys()),
                     )
                     return []
+
+        # Cloud models sometimes omit source_snippet (e.g. for synthesized values).
+        # Patch nulls to empty string before Pydantic validation so spans aren't dropped.
+        for span in response_json.get("fields", []):
+            if isinstance(span, dict) and "source_snippet" not in span:
+                span["source_snippet"] = ""
 
         try:
             output = ExtractionOutput.model_validate(response_json)
@@ -192,7 +203,7 @@ class CloudExtractorBase:
     def get_progress(self, arm: str) -> dict:
         """Return progress stats for the given arm."""
         total = self._conn.execute(
-            "SELECT COUNT(*) FROM papers WHERE status IN ('EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')"
+            "SELECT COUNT(*) FROM papers WHERE status IN ('FT_ELIGIBLE', 'EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')"
         ).fetchone()[0]
 
         completed = self._conn.execute(

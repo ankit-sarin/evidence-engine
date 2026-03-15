@@ -338,15 +338,30 @@ def export_adjudication_queue(
         cat = p["auto_category"]
         cat_counts[cat] = cat_counts.get(cat, 0) + 1
 
-    if format != "xlsx":
+    if format == "html":
+        from engine.adjudication.abstract_adjudication_html import (
+            generate_abstract_adjudication_html,
+        )
+        out, html_stats = generate_abstract_adjudication_html(
+            review_name=review_name or "unknown",
+            output_path=str(output_path),
+        )
+        output_path = out
+    elif format == "xlsx":
+        import sys
+        print(
+            "Warning: xlsx export is deprecated for interactive review. "
+            "Use --format html (default). xlsx retained for reference exports.",
+            file=sys.stderr,
+        )
+        _write_xlsx(
+            all_flagged, output_path, cat_counts, category_config,
+            review_name=review_name or "unknown",
+            review_spec=review_spec,
+            db_path=str(review_db.db_path),
+        )
+    else:
         raise ValueError(f"Unsupported format: {format}")
-
-    _write_xlsx(
-        all_flagged, output_path, cat_counts, category_config,
-        review_name=review_name or "unknown",
-        review_spec=review_spec,
-        db_path=str(review_db.db_path),
-    )
 
     logger.info(
         "Exported adjudication queue: %d papers to %s",
@@ -530,24 +545,244 @@ def import_adjudication_decisions(
     review_db: ReviewDatabase,
     input_path: str | Path,
 ) -> dict:
-    """Read completed adjudication Excel, write decisions to database.
+    """Read completed adjudication decisions and write to database.
+
+    Supports two input formats (detected by file extension):
+      - .xlsx  — Excel workbook (from export_adjudication_queue)
+      - .json  — JSON array (from abstract_adjudication_html.py HTML tool)
+
+    JSON schema: [{paper_id: int, decision: "ABSTRACT_SCREENED_IN"|"ABSTRACT_SCREENED_OUT", note: str|null}]
 
     Validates the entire file before making any changes:
-      - Rejects if any decision cell is blank (reports which rows)
-      - Rejects if any decision value is not INCLUDE or EXCLUDE (reports which rows)
+      - Rejects if any decision is missing or invalid
 
     For papers in review.db (with paper_id), updates their status:
-      INCLUDE → ABSTRACT_SCREENED_IN
-      EXCLUDE → ABSTRACT_SCREENED_OUT
+      INCLUDE / ABSTRACT_SCREENED_IN → ABSTRACT_SCREENED_IN
+      EXCLUDE / ABSTRACT_SCREENED_OUT → ABSTRACT_SCREENED_OUT
 
     For expanded search papers (no paper_id), records the decision in
     the abstract_screening_adjudication table for later pipeline use.
 
     Returns summary dict.
     """
+    input_path = Path(input_path)
+
+    if input_path.suffix.lower() == ".json":
+        return _import_abstract_json(review_db, input_path)
+
+    return _import_abstract_xlsx(review_db, input_path)
+
+
+def _import_abstract_json(
+    review_db: ReviewDatabase,
+    input_path: Path,
+) -> dict:
+    """Import abstract adjudication decisions from JSON (HTML tool output).
+
+    Expected schema: [{paper_id: int, decision: "ABSTRACT_SCREENED_IN"|"ABSTRACT_SCREENED_OUT", note: str|null}]
+    """
+    try:
+        with open(input_path) as f:
+            records = json.load(f)
+    except (json.JSONDecodeError, OSError) as e:
+        error_msg = f"\nIMPORT REJECTED — Cannot read JSON file: {e}\n"
+        print(error_msg)
+        logger.error(error_msg)
+        return {
+            "stats": {"include": 0, "exclude": 0, "missing": 0, "invalid": 0, "total": 0},
+            "warnings": [error_msg],
+        }
+
+    if not isinstance(records, list):
+        error_msg = "\nIMPORT REJECTED — JSON must be an array of decision objects.\n"
+        print(error_msg)
+        logger.error(error_msg)
+        return {
+            "stats": {"include": 0, "exclude": 0, "missing": 0, "invalid": 0, "total": 0},
+            "warnings": [error_msg],
+        }
+
+    # Map HTML tool decisions to internal INCLUDE/EXCLUDE
+    decision_map = {
+        "ABSTRACT_SCREENED_IN": "INCLUDE",
+        "ABSTRACT_SCREENED_OUT": "EXCLUDE",
+        "INCLUDE": "INCLUDE",
+        "EXCLUDE": "EXCLUDE",
+    }
+
+    # ── Pass 1: Validate ─────────────────────────────────────────
+    parsed_rows = []
+    invalid_rows = []
+
+    for i, rec in enumerate(records):
+        paper_id = rec.get("paper_id")
+        decision_raw = (rec.get("decision") or "").strip().upper()
+        note = rec.get("note") or ""
+
+        if not paper_id:
+            invalid_rows.append(f"  Record {i}: missing paper_id")
+            continue
+
+        decision = decision_map.get(decision_raw)
+        if not decision:
+            invalid_rows.append(
+                f"  Record {i} (paper {paper_id}): '{decision_raw}' "
+                f"(must be ABSTRACT_SCREENED_IN/ABSTRACT_SCREENED_OUT or INCLUDE/EXCLUDE)"
+            )
+            continue
+
+        # Look up paper info from DB
+        row = review_db._conn.execute(
+            "SELECT title, doi, pmid FROM papers WHERE id = ?", (paper_id,)
+        ).fetchone()
+        title = row["title"] if row else ""
+        doi = row["doi"] if row else ""
+        pmid = row["pmid"] if row else ""
+
+        parsed_rows.append({
+            "paper_id": paper_id,
+            "category": "",
+            "title": title,
+            "doi": doi or "",
+            "pmid": pmid or "",
+            "decision": decision,
+            "notes": note,
+        })
+
+    # ── Reject on validation failure ──────────────────────────────
+    if invalid_rows:
+        msg_parts = [
+            f"\nIMPORT REJECTED — {len(invalid_rows)} validation error(s) found.",
+            "No database changes were made.\n",
+            f"INVALID RECORDS ({len(invalid_rows)}):",
+        ]
+        msg_parts.extend(invalid_rows)
+        msg_parts.append("\nFix the JSON file and re-run.")
+
+        error_msg = "\n".join(msg_parts)
+        print(error_msg)
+        logger.error(error_msg)
+        return {
+            "stats": {
+                "include": 0, "exclude": 0,
+                "missing": 0, "invalid": len(invalid_rows),
+                "total": len(parsed_rows) + len(invalid_rows),
+            },
+            "warnings": invalid_rows,
+        }
+
+    # ── Pass 2: Apply ─────────────────────────────────────────────
+    return _apply_abstract_decisions(review_db, parsed_rows)
+
+
+def _apply_abstract_decisions(
+    review_db: ReviewDatabase,
+    parsed_rows: list[dict],
+) -> dict:
+    """Shared logic: write validated abstract decisions to DB and advance workflow."""
+    ensure_adjudication_table(review_db._conn)
+
+    now = datetime.now(timezone.utc).isoformat()
+    stats = {"include": 0, "exclude": 0, "missing": 0, "invalid": 0, "total": len(parsed_rows)}
+
+    for pr in parsed_rows:
+        decision = pr["decision"]
+        title = pr["title"]
+        doi = pr.get("doi", "")
+        pmid = pr.get("pmid", "")
+        notes = pr.get("notes", "")
+        category = pr.get("category", "")
+        paper_id = pr.get("paper_id")
+
+        ext_key = doi or pmid or title
+
+        # Write to adjudication table
+        review_db._conn.execute(
+            """INSERT INTO abstract_screening_adjudication
+               (paper_id, external_key, title, adjudication_decision,
+                adjudication_source, adjudication_reason,
+                adjudication_category, adjudication_timestamp, created_at)
+               VALUES (?, ?, ?, ?, 'human', ?, ?, ?, ?)""",
+            (
+                paper_id,
+                ext_key,
+                title,
+                decision,
+                notes,
+                category,
+                now,
+                now,
+            ),
+        )
+
+        # Try to find and update paper in review.db
+        paper_row = None
+        if paper_id:
+            paper_row = review_db._conn.execute(
+                "SELECT id, status FROM papers WHERE id = ?", (paper_id,)
+            ).fetchone()
+        if not paper_row and pmid:
+            paper_row = review_db._conn.execute(
+                "SELECT id, status FROM papers WHERE pmid = ?", (str(pmid),)
+            ).fetchone()
+        if not paper_row and doi:
+            paper_row = review_db._conn.execute(
+                "SELECT id, status FROM papers WHERE doi = ?", (doi,)
+            ).fetchone()
+
+        if paper_row and paper_row["status"] == "ABSTRACT_SCREEN_FLAGGED":
+            pid = paper_row["id"]
+            new_status = "ABSTRACT_SCREENED_IN" if decision == "INCLUDE" else "ABSTRACT_SCREENED_OUT"
+            review_db.update_status(pid, new_status)
+
+            # Update adjudication record with paper_id if it wasn't set
+            if not paper_id:
+                review_db._conn.execute(
+                    """UPDATE abstract_screening_adjudication
+                       SET paper_id = ?
+                       WHERE external_key = ? AND adjudication_timestamp = ?""",
+                    (pid, ext_key, now),
+                )
+
+        if decision == "INCLUDE":
+            stats["include"] += 1
+        else:
+            stats["exclude"] += 1
+
+    review_db._conn.commit()
+
+    # Success summary
+    print(
+        f"\nIMPORT SUCCESSFUL — {stats['total']} decisions processed.\n"
+        f"  INCLUDE: {stats['include']}\n"
+        f"  EXCLUDE: {stats['exclude']}\n"
+        f"  Database updated."
+    )
+
+    logger.info(
+        "Import complete: %d include, %d exclude (of %d total)",
+        stats["include"], stats["exclude"], stats["total"],
+    )
+
+    # Auto-advance workflow: ABSTRACT_ADJUDICATION_COMPLETE
+    complete_stage(
+        review_db._conn, "ABSTRACT_ADJUDICATION_COMPLETE",
+        metadata=(
+            f"{stats['include']} included, {stats['exclude']} excluded "
+            f"(of {stats['total']} total)"
+        ),
+    )
+
+    return {"stats": stats, "warnings": []}
+
+
+def _import_abstract_xlsx(
+    review_db: ReviewDatabase,
+    input_path: Path,
+) -> dict:
+    """Import abstract adjudication decisions from Excel workbook."""
     from openpyxl import load_workbook
 
-    input_path = Path(input_path)
     wb = load_workbook(input_path)
     ws = wb["Review Queue"]
 
@@ -662,94 +897,7 @@ def import_adjudication_decisions(
         }
 
     # ── Pass 2: Apply all validated decisions ───────────────────
-    ensure_adjudication_table(review_db._conn)
-
-    now = datetime.now(timezone.utc).isoformat()
-    stats = {"include": 0, "exclude": 0, "missing": 0, "invalid": 0, "total": len(parsed_rows)}
-
-    for pr in parsed_rows:
-        decision = pr["decision"]
-        title = pr["title"]
-        doi = pr["doi"]
-        pmid = pr["pmid"]
-        notes = pr["notes"]
-        category = pr["category"]
-
-        ext_key = doi or pmid or title
-
-        # Write to adjudication table
-        review_db._conn.execute(
-            """INSERT INTO abstract_screening_adjudication
-               (paper_id, external_key, title, adjudication_decision,
-                adjudication_source, adjudication_reason,
-                adjudication_category, adjudication_timestamp, created_at)
-               VALUES (?, ?, ?, ?, 'human', ?, ?, ?, ?)""",
-            (
-                None,  # paper_id filled below if in DB
-                ext_key,
-                title,
-                decision,
-                notes,
-                category,
-                now,
-                now,
-            ),
-        )
-
-        # Try to find and update paper in review.db
-        paper_row = None
-        if pmid:
-            paper_row = review_db._conn.execute(
-                "SELECT id, status FROM papers WHERE pmid = ?", (str(pmid),)
-            ).fetchone()
-        if not paper_row and doi:
-            paper_row = review_db._conn.execute(
-                "SELECT id, status FROM papers WHERE doi = ?", (doi,)
-            ).fetchone()
-
-        if paper_row and paper_row["status"] == "ABSTRACT_SCREEN_FLAGGED":
-            pid = paper_row["id"]
-            new_status = "ABSTRACT_SCREENED_IN" if decision == "INCLUDE" else "ABSTRACT_SCREENED_OUT"
-            review_db.update_status(pid, new_status)
-
-            # Update adjudication record with paper_id
-            review_db._conn.execute(
-                """UPDATE abstract_screening_adjudication
-                   SET paper_id = ?
-                   WHERE external_key = ? AND adjudication_timestamp = ?""",
-                (pid, ext_key, now),
-            )
-
-        if decision == "INCLUDE":
-            stats["include"] += 1
-        else:
-            stats["exclude"] += 1
-
-    review_db._conn.commit()
-
-    # Success summary
-    print(
-        f"\nIMPORT SUCCESSFUL — {stats['total']} decisions processed.\n"
-        f"  INCLUDE: {stats['include']}\n"
-        f"  EXCLUDE: {stats['exclude']}\n"
-        f"  Database updated."
-    )
-
-    logger.info(
-        "Import complete: %d include, %d exclude (of %d total)",
-        stats["include"], stats["exclude"], stats["total"],
-    )
-
-    # Auto-advance workflow: ABSTRACT_ADJUDICATION_COMPLETE
-    complete_stage(
-        review_db._conn, "ABSTRACT_ADJUDICATION_COMPLETE",
-        metadata=(
-            f"{stats['include']} included, {stats['exclude']} excluded "
-            f"(of {stats['total']} total)"
-        ),
-    )
-
-    return {"stats": stats, "warnings": []}
+    return _apply_abstract_decisions(review_db, parsed_rows)
 
 
 # ── Pipeline Gate ──────────────────────────────────────────────────

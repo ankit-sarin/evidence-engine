@@ -103,6 +103,21 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - Ollama pre-flight: model health check + VRAM budget validation. Wired into FT screener, extractor, auditor
 - FT screening: dual-model cross-family, specialty scope, /no_think, 32K truncation, checkpoint/resume, 7 reason codes. Status-aware for papers at any lifecycle stage
 
+## Human-in-the-Loop Review Standard
+
+All human review touchpoints use HTML → JSON → import:
+- Abstract adjudication: engine/adjudication/abstract_adjudication_html.py
+- FT adjudication: engine/adjudication/ft_adjudication_html.py
+- PDF acquisition: engine/acquisition/pdf_quality_html.py (mode=acquisition)
+- PDF quality check: engine/acquisition/pdf_quality_html.py (mode=quality_check)
+- Extraction audit: engine/review/extraction_audit_html.py
+
+Pattern: Python queries DB → generates self-contained HTML with embedded data + JS.
+Human reviews in browser. Save Draft (localStorage). Export Final → JSON.
+Import JSON to DB. All importers auto-detect .json vs .xlsx by file extension.
+xlsx export preserved with --format xlsx flag for reference/archival only.
+Default is always --format html.
+
 ## Running
 ```bash
 # Full pipeline

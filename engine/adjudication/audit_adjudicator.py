@@ -246,16 +246,31 @@ def export_audit_review_queue(
         logger.warning("No papers need audit review — nothing to export")
         return {"total": 0, "flagged": 0, "contested": 0, "spot_check": 0}
 
-    if format != "xlsx":
+    if format == "html":
+        from engine.review.extraction_audit_html import (
+            generate_extraction_audit_html,
+        )
+        out, html_stats = generate_extraction_audit_html(
+            review_name=review_name or "unknown",
+            output_path=str(output_path),
+        )
+        output_path = out
+    elif format == "xlsx":
+        import sys
+        print(
+            "Warning: xlsx export is deprecated for interactive review. "
+            "Use --format html (default). xlsx retained for reference exports.",
+            file=sys.stderr,
+        )
+        _write_audit_xlsx(
+            papers, output_path,
+            spot_check_failure_threshold,
+            review_name=review_name or "unknown",
+            review_spec=review_spec,
+            db_path=str(review_db.db_path),
+        )
+    else:
         raise ValueError(f"Unsupported format: {format}")
-
-    _write_audit_xlsx(
-        papers, output_path,
-        spot_check_failure_threshold,
-        review_name=review_name or "unknown",
-        review_spec=review_spec,
-        db_path=str(review_db.db_path),
-    )
 
     stats = {
         "total": len(papers),

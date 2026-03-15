@@ -208,15 +208,30 @@ def export_ft_adjudication_queue(
     # Sort by reason code then title
     all_flagged.sort(key=lambda p: (p["reason_code"] or "zzz", p["title"]))
 
-    if format != "xlsx":
+    if format == "html":
+        from engine.adjudication.ft_adjudication_html import (
+            generate_ft_adjudication_html,
+        )
+        out, html_stats = generate_ft_adjudication_html(
+            review_name=review_name or "unknown",
+            output_path=str(output_path),
+        )
+        output_path = out
+    elif format == "xlsx":
+        import sys
+        print(
+            "Warning: xlsx export is deprecated for interactive review. "
+            "Use --format html (default). xlsx retained for reference exports.",
+            file=sys.stderr,
+        )
+        _write_ft_xlsx(
+            all_flagged, output_path, reason_counts,
+            review_name=review_name or "unknown",
+            review_spec=review_spec,
+            db_path=str(review_db.db_path),
+        )
+    else:
         raise ValueError(f"Unsupported format: {format}")
-
-    _write_ft_xlsx(
-        all_flagged, output_path, reason_counts,
-        review_name=review_name or "unknown",
-        review_spec=review_spec,
-        db_path=str(review_db.db_path),
-    )
 
     logger.info(
         "Exported FT adjudication queue: %d papers to %s",

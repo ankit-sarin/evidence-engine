@@ -146,11 +146,30 @@ def import_review_decisions(
     csv_path: str,
     dry_run: bool = False,
 ) -> dict:
-    """Import human review decisions from a completed CSV.
+    """Import human review decisions from a completed CSV or JSON file.
+
+    Supports two formats (detected by file extension):
+      - .csv  — CSV with reviewer_decision column (original format)
+      - .json — JSON array from extraction_audit_html.py
+
+    JSON schema: [{span_id, paper_id, field_name, decision, corrected_value, note}]
+    JSON decision mapping: ACCEPT→ACCEPT, REJECT→REJECT_VALUE, CORRECT→ACCEPT_CORRECTED
 
     Validates all rows before writing. Returns stats dict.
     If dry_run=True, validates and reports but makes no writes.
     """
+    input_path = Path(csv_path)
+    if input_path.suffix.lower() == ".json":
+        return _import_review_json(db, input_path, dry_run=dry_run)
+    return _import_review_csv(db, str(csv_path), dry_run=dry_run)
+
+
+def _import_review_csv(
+    db: ReviewDatabase,
+    csv_path: str,
+    dry_run: bool = False,
+) -> dict:
+    """Import human review decisions from CSV (original format)."""
     review_dir = Path(db.db_path).parent
 
     with open(csv_path) as f:
@@ -235,12 +254,121 @@ def import_review_decisions(
         logger.info("Dry run: %d actions would be applied, %d errors", len(actions), len(errors))
         return {"errors": errors, "would_apply": len(actions)}
 
-    # Apply decisions
+    return _apply_audit_decisions(db, actions, errors, source="CSV")
+
+
+def _import_review_json(
+    db: ReviewDatabase,
+    input_path: Path,
+    dry_run: bool = False,
+) -> dict:
+    """Import extraction audit decisions from JSON (HTML tool output).
+
+    Expected schema:
+      [{span_id, paper_id, field_name, decision, corrected_value, note}]
+
+    Decision mapping:
+      ACCEPT  → audit_status='verified'
+      REJECT  → value='NR', audit_status='verified'
+      CORRECT → source_snippet=corrected_value, audit_status='verified'
+    """
+    try:
+        with open(input_path) as f:
+            records = json.load(f)
+    except (json.JSONDecodeError, OSError) as e:
+        msg = f"Cannot read JSON: {e}"
+        logger.error(msg)
+        return {"errors": [msg], "applied": 0}
+
+    if not isinstance(records, list):
+        msg = "JSON must be an array of decision objects."
+        logger.error(msg)
+        return {"errors": [msg], "applied": 0}
+
+    errors = []
+    actions = []  # (span_id, decision, corrected_value, paper_id)
+
+    # Map HTML tool decisions to internal decisions
+    decision_map = {
+        "ACCEPT": "ACCEPT",
+        "REJECT": "REJECT_VALUE",
+        "CORRECT": "ACCEPT_CORRECTED",
+    }
+
+    for i, rec in enumerate(records):
+        span_id = rec.get("span_id")
+        paper_id = rec.get("paper_id")
+        decision_raw = (rec.get("decision") or "").strip().upper()
+
+        if not span_id:
+            errors.append(f"Record {i}: missing span_id")
+            continue
+
+        decision = decision_map.get(decision_raw)
+        if not decision:
+            errors.append(
+                f"Record {i} (span {span_id}): invalid decision '{decision_raw}' "
+                f"(must be ACCEPT, REJECT, or CORRECT)"
+            )
+            continue
+
+        # Verify span exists
+        span = db._conn.execute(
+            "SELECT id FROM evidence_spans WHERE id = ?", (span_id,)
+        ).fetchone()
+        if not span:
+            errors.append(f"Record {i}: span_id {span_id} not found in database")
+            continue
+
+        if decision == "ACCEPT_CORRECTED":
+            corrected = (rec.get("corrected_value") or "").strip()
+            if not corrected:
+                errors.append(
+                    f"Record {i} (span {span_id}): CORRECT requires corrected_value"
+                )
+                continue
+            actions.append((span_id, decision, corrected, paper_id))
+        else:
+            actions.append((span_id, decision, None, paper_id))
+
+    if errors:
+        logger.error("Validation errors (%d):", len(errors))
+        for e in errors:
+            logger.error("  %s", e)
+        if not dry_run:
+            logger.error("Aborting import — fix errors and retry.")
+            return {"errors": errors, "applied": 0}
+
+    if dry_run:
+        logger.info(
+            "Dry run: %d actions would be applied, %d errors",
+            len(actions), len(errors),
+        )
+        return {"errors": errors, "would_apply": len(actions)}
+
+    return _apply_audit_decisions(db, actions, errors, source="JSON")
+
+
+def _apply_audit_decisions(
+    db: ReviewDatabase,
+    actions: list[tuple],
+    errors: list[str],
+    source: str = "import",
+) -> dict:
+    """Apply validated audit decisions to the database.
+
+    Shared by both CSV and JSON import paths. Each action is a tuple of
+    (span_id, decision, corrected_value_or_snippet, paper_id).
+
+    Transitions papers to HUMAN_AUDIT_COMPLETE when all spans are resolved.
+    """
     applied = 0
     papers_touched = set()
+
     for span_id, decision, corrected, pid in actions:
         note = f"Human review: {decision}"
-        papers_touched.add(pid)
+        if pid:
+            papers_touched.add(pid)
 
         if decision == "ACCEPT":
             db._conn.execute(
@@ -255,7 +383,7 @@ def import_review_decisions(
                    SET audit_status = 'verified', source_snippet = ?,
                        audit_rationale = ?, audited_at = ?
                    WHERE id = ?""",
-                (corrected, f"Human review: ACCEPT_CORRECTED", _now(), span_id),
+                (corrected, "Human review: ACCEPT_CORRECTED", _now(), span_id),
             )
         elif decision == "REJECT_VALUE":
             db._conn.execute(
@@ -266,7 +394,7 @@ def import_review_decisions(
                 (note, _now(), span_id),
             )
         elif decision == "REJECT_PAPER":
-            db.reject_paper(pid, f"Human review rejection")
+            db.reject_paper(pid, "Human review rejection")
 
         applied += 1
 
@@ -283,7 +411,8 @@ def import_review_decisions(
         unresolved = db._conn.execute(
             """SELECT COUNT(*) FROM evidence_spans es
                JOIN extractions e ON es.extraction_id = e.id
-               WHERE e.paper_id = ? AND es.audit_status IN ('contested', 'flagged', 'invalid_snippet')""",
+               WHERE e.paper_id = ?
+                 AND es.audit_status IN ('contested', 'flagged', 'invalid_snippet')""",
             (pid,),
         ).fetchone()[0]
 
@@ -291,8 +420,10 @@ def import_review_decisions(
             db.update_status(pid, "HUMAN_AUDIT_COMPLETE")
             logger.info("Paper %d → HUMAN_AUDIT_COMPLETE (all spans resolved)", pid)
 
-    logger.info("Import complete: %d decisions applied across %d papers",
-                applied, len(papers_touched))
+    logger.info(
+        "%s import complete: %d decisions applied across %d papers",
+        source, applied, len(papers_touched),
+    )
     return {"errors": errors, "applied": applied}
 
 

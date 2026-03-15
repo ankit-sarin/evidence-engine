@@ -2,8 +2,10 @@
 human review, import decisions back into the database.
 
 Mirrors the screening_adjudicator pattern but for full-text screening results.
+Supports both xlsx (workbook) and JSON (HTML tool) import formats.
 """
 
+import json
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
@@ -355,24 +357,203 @@ def import_ft_adjudication_decisions(
     review_db: ReviewDatabase,
     input_path: str | Path,
 ) -> dict:
-    """Read completed FT adjudication Excel, write decisions to database.
+    """Read completed FT adjudication decisions and write to database.
+
+    Supports two input formats (detected by file extension):
+      - .xlsx  — Excel workbook (from export_ft_adjudication_queue)
+      - .json  — JSON array (from ft_adjudication_html.py HTML tool)
+
+    JSON schema: [{paper_id: int, decision: "FT_ELIGIBLE"|"FT_SCREENED_OUT", note: str|null}]
 
     Validates the entire file before making any changes:
-      - Rejects if any decision cell is blank (reports which rows)
-      - Rejects if any decision value is not FT_ELIGIBLE or FT_SCREENED_OUT
-
-    For each paper:
-      FT_ELIGIBLE → transition to FT_ELIGIBLE
-      FT_SCREENED_OUT → transition to FT_SCREENED_OUT
+      - Rejects if any decision is missing or invalid
 
     Records decisions in ft_screening_adjudication table.
     Auto-advances FULL_TEXT_ADJUDICATION_COMPLETE if zero unresolved.
 
     Returns summary dict.
     """
+    input_path = Path(input_path)
+
+    if input_path.suffix.lower() == ".json":
+        return _import_ft_json(review_db, input_path)
+
+    return _import_ft_xlsx(review_db, input_path)
+
+
+def _import_ft_json(
+    review_db: ReviewDatabase,
+    input_path: Path,
+) -> dict:
+    """Import FT adjudication decisions from JSON (HTML tool output).
+
+    Expected schema: [{paper_id: int, decision: "FT_ELIGIBLE"|"FT_SCREENED_OUT", note: str|null}]
+    """
+    try:
+        with open(input_path) as f:
+            records = json.load(f)
+    except (json.JSONDecodeError, OSError) as e:
+        error_msg = f"\nIMPORT REJECTED — Cannot read JSON file: {e}\n"
+        print(error_msg)
+        logger.error(error_msg)
+        return {
+            "stats": {"ft_eligible": 0, "ft_screened_out": 0, "missing": 0, "invalid": 0, "total": 0},
+            "warnings": [error_msg],
+        }
+
+    if not isinstance(records, list):
+        error_msg = "\nIMPORT REJECTED — JSON must be an array of decision objects.\n"
+        print(error_msg)
+        logger.error(error_msg)
+        return {
+            "stats": {"ft_eligible": 0, "ft_screened_out": 0, "missing": 0, "invalid": 0, "total": 0},
+            "warnings": [error_msg],
+        }
+
+    # ── Pass 1: Validate ─────────────────────────────────────────
+    parsed_rows = []
+    invalid_rows = []
+
+    for i, rec in enumerate(records):
+        paper_id = rec.get("paper_id")
+        decision_raw = rec.get("decision", "")
+        note = rec.get("note") or ""
+
+        if not paper_id:
+            invalid_rows.append(f"  Record {i}: missing paper_id")
+            continue
+
+        decision = str(decision_raw).strip().upper()
+        if decision not in ("FT_ELIGIBLE", "FT_SCREENED_OUT"):
+            invalid_rows.append(
+                f"  Record {i} (paper {paper_id}): '{decision_raw}' "
+                f"(must be FT_ELIGIBLE or FT_SCREENED_OUT)"
+            )
+            continue
+
+        # Look up title and reason_code from the DB for the adjudication record
+        row = review_db._conn.execute(
+            "SELECT title FROM papers WHERE id = ?", (paper_id,)
+        ).fetchone()
+        title = row["title"] if row else ""
+
+        ft_row = review_db._conn.execute(
+            "SELECT reason_code FROM ft_screening_decisions "
+            "WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
+            (paper_id,),
+        ).fetchone()
+        reason_code = ft_row["reason_code"] if ft_row else ""
+
+        parsed_rows.append({
+            "paper_id": paper_id,
+            "title": title,
+            "reason_code": reason_code,
+            "decision": decision,
+            "notes": note,
+        })
+
+    # ── Reject on validation failure ──────────────────────────────
+    if invalid_rows:
+        msg_parts = [
+            f"\nIMPORT REJECTED — {len(invalid_rows)} validation error(s) found.",
+            "No database changes were made.\n",
+            f"INVALID RECORDS ({len(invalid_rows)}):",
+        ]
+        msg_parts.extend(invalid_rows)
+        msg_parts.append("\nFix the JSON file and re-run.")
+
+        error_msg = "\n".join(msg_parts)
+        print(error_msg)
+        logger.error(error_msg)
+        return {
+            "stats": {
+                "ft_eligible": 0, "ft_screened_out": 0,
+                "missing": 0, "invalid": len(invalid_rows),
+                "total": len(parsed_rows) + len(invalid_rows),
+            },
+            "warnings": invalid_rows,
+        }
+
+    # ── Pass 2: Apply ─────────────────────────────────────────────
+    return _apply_ft_decisions(review_db, parsed_rows)
+
+
+def _apply_ft_decisions(
+    review_db: ReviewDatabase,
+    parsed_rows: list[dict],
+) -> dict:
+    """Shared logic: write validated decisions to DB and advance workflow."""
+    ensure_adjudication_table(review_db._conn)
+
+    now = datetime.now(timezone.utc).isoformat()
+    stats = {
+        "ft_eligible": 0, "ft_screened_out": 0,
+        "missing": 0, "invalid": 0,
+        "total": len(parsed_rows),
+    }
+
+    for pr in parsed_rows:
+        decision = pr["decision"]
+        paper_id = pr["paper_id"]
+        title = pr["title"]
+        reason_code = pr["reason_code"]
+        notes = pr["notes"]
+
+        # Record in ft_screening_adjudication table
+        review_db._conn.execute(
+            """INSERT INTO ft_screening_adjudication
+               (paper_id, title, reason_code, adjudication_decision,
+                adjudication_reason, adjudication_timestamp, created_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (paper_id, title, reason_code, decision, notes, now, now),
+        )
+
+        # Update paper status (FT_FLAGGED → FT_ELIGIBLE or FT_SCREENED_OUT)
+        if paper_id:
+            try:
+                review_db.update_status(int(paper_id), decision)
+            except ValueError as e:
+                logger.warning("Paper %s: status update failed — %s", paper_id, e)
+
+        if decision == "FT_ELIGIBLE":
+            stats["ft_eligible"] += 1
+        else:
+            stats["ft_screened_out"] += 1
+
+    review_db._conn.commit()
+
+    # Success summary
+    print(
+        f"\nIMPORT SUCCESSFUL — {stats['total']} decisions processed.\n"
+        f"  FT_ELIGIBLE:     {stats['ft_eligible']}\n"
+        f"  FT_SCREENED_OUT: {stats['ft_screened_out']}\n"
+        f"  Database updated."
+    )
+
+    logger.info(
+        "FT adjudication import: %d eligible, %d screened out (of %d total)",
+        stats["ft_eligible"], stats["ft_screened_out"], stats["total"],
+    )
+
+    # Auto-advance workflow: FULL_TEXT_ADJUDICATION_COMPLETE
+    complete_stage(
+        review_db._conn, "FULL_TEXT_ADJUDICATION_COMPLETE",
+        metadata=(
+            f"{stats['ft_eligible']} eligible, {stats['ft_screened_out']} screened out "
+            f"(of {stats['total']} total)"
+        ),
+    )
+
+    return {"stats": stats, "warnings": []}
+
+
+def _import_ft_xlsx(
+    review_db: ReviewDatabase,
+    input_path: Path,
+) -> dict:
+    """Import FT adjudication decisions from Excel workbook."""
     from openpyxl import load_workbook
 
-    input_path = Path(input_path)
     wb = load_workbook(input_path)
 
     # Find the review queue sheet (support both old and new naming)
@@ -499,68 +680,7 @@ def import_ft_adjudication_decisions(
         }
 
     # ── Pass 2: Apply all validated decisions ───────────────────
-    ensure_adjudication_table(review_db._conn)
-
-    now = datetime.now(timezone.utc).isoformat()
-    stats = {
-        "ft_eligible": 0, "ft_screened_out": 0,
-        "missing": 0, "invalid": 0,
-        "total": len(parsed_rows),
-    }
-
-    for pr in parsed_rows:
-        decision = pr["decision"]
-        paper_id = pr["paper_id"]
-        title = pr["title"]
-        reason_code = pr["reason_code"]
-        notes = pr["notes"]
-
-        # Record in ft_screening_adjudication table
-        review_db._conn.execute(
-            """INSERT INTO ft_screening_adjudication
-               (paper_id, title, reason_code, adjudication_decision,
-                adjudication_reason, adjudication_timestamp, created_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (paper_id, title, reason_code, decision, notes, now, now),
-        )
-
-        # Update paper status (FT_FLAGGED → FT_ELIGIBLE or FT_SCREENED_OUT)
-        if paper_id:
-            try:
-                review_db.update_status(int(paper_id), decision)
-            except ValueError as e:
-                logger.warning("Row %s: status update failed — %s", pr["row_num"], e)
-
-        if decision == "FT_ELIGIBLE":
-            stats["ft_eligible"] += 1
-        else:
-            stats["ft_screened_out"] += 1
-
-    review_db._conn.commit()
-
-    # Success summary
-    print(
-        f"\nIMPORT SUCCESSFUL — {stats['total']} decisions processed.\n"
-        f"  FT_ELIGIBLE:     {stats['ft_eligible']}\n"
-        f"  FT_SCREENED_OUT: {stats['ft_screened_out']}\n"
-        f"  Database updated."
-    )
-
-    logger.info(
-        "FT adjudication import: %d eligible, %d screened out (of %d total)",
-        stats["ft_eligible"], stats["ft_screened_out"], stats["total"],
-    )
-
-    # Auto-advance workflow: FULL_TEXT_ADJUDICATION_COMPLETE
-    complete_stage(
-        review_db._conn, "FULL_TEXT_ADJUDICATION_COMPLETE",
-        metadata=(
-            f"{stats['ft_eligible']} eligible, {stats['ft_screened_out']} screened out "
-            f"(of {stats['total']} total)"
-        ),
-    )
-
-    return {"stats": stats, "warnings": []}
+    return _apply_ft_decisions(review_db, parsed_rows)
 
 
 # ── Pipeline Gate ──────────────────────────────────────────────────

@@ -71,14 +71,26 @@ def validate_extraction(
             continue
 
         # 2. Categorical field — check enum_values
+        #    Some fields (validation_setting, surgical_domain) allow semicolon-
+        #    separated multi-values; each individual value must be in the enum.
         if field_def.type == "categorical" and field_def.enum_values:
-            if value not in field_def.enum_values:
-                suggestion = _closest_match(value, field_def.enum_values)
+            parts = [v.strip() for v in value.split(";")]
+            for part in parts:
+                if not part:
+                    continue
+                if part in field_def.enum_values:
+                    continue
+                # Check prefix match for autonomy_level shorthand (e.g., "2" → "2 (Task autonomy)")
+                prefix_match = any(ev.startswith(part + " ") for ev in field_def.enum_values)
+                if prefix_match:
+                    continue
+                suggestion = _closest_match(part, field_def.enum_values)
                 msg = f"invalid categorical value"
                 if suggestion:
                     msg += f" (closest: '{suggestion}')"
                 issues.append({"paper_id": paper_id, "field_name": fname,
                                "value": value, "issue": msg})
+                break  # one issue per field is enough
 
         # 3. sample_size — must be integer or "NR"/"NOT_FOUND" (already handled above)
         if fname == "sample_size":

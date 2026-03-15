@@ -243,19 +243,32 @@ def audit_span(
 _ABSENCE_VALUES = {"NOT_FOUND", "Not discussed", "NR", "No comparison reported", "Not assessable"}
 
 
-def count_populated_fields(extraction_data: dict) -> int:
+def count_populated_fields(extraction_data: dict | list) -> int:
     """Count non-null, non-absence extracted fields in an extraction.
 
-    Examines the extracted_data JSON to count fields that have a real value
-    (not null, empty, or an absence sentinel like NR/NOT_FOUND).
+    Handles both v1 format (dict of field_name→value) and v2 format
+    (list of span dicts with 'field_name' and 'value' keys).
     """
     count = 0
-    for key, value in extraction_data.items():
-        if value is None:
-            continue
-        if isinstance(value, str) and (not value.strip() or value.strip() in _ABSENCE_VALUES):
-            continue
-        count += 1
+
+    if isinstance(extraction_data, list):
+        # v2 format: list of span objects [{field_name, value, ...}, ...]
+        for span in extraction_data:
+            value = span.get("value") if isinstance(span, dict) else None
+            if value is None:
+                continue
+            if isinstance(value, str) and (not value.strip() or value.strip() in _ABSENCE_VALUES):
+                continue
+            count += 1
+    elif isinstance(extraction_data, dict):
+        # v1 format: {field_name: value, ...}
+        for key, value in extraction_data.items():
+            if value is None:
+                continue
+            if isinstance(value, str) and (not value.strip() or value.strip() in _ABSENCE_VALUES):
+                continue
+            count += 1
+
     return count
 
 

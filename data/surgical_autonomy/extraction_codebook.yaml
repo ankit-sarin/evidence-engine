@@ -1,0 +1,503 @@
+# Extraction Codebook — Surgical Autonomy Systematic Review
+# Machine-readable authoritative source for all field definitions.
+# Human-readable version: Extraction_Codebook_v2.md (when created).
+# This file is consumed by build_extraction_prompt() to generate
+# the full extraction prompt with codebook content.
+
+version: "2.0"
+review: "surgical_autonomy"
+date: "2026-03-15"
+
+fields:
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Tier 1 — Explicit (expected κ > 0.90)
+  # ═══════════════════════════════════════════════════════════════════
+
+  - name: study_type
+    tier: 1
+    type: categorical
+    definition: >-
+      The type of study as described in the methods section.
+    instruction: >-
+      Look for explicit statements like "prospective study," "case series,"
+      "systematic review," etc. If the paper does not explicitly state
+      the study type, infer from the methods section structure.
+    valid_values:
+      - value: "Original Research"
+        definition: "Primary research reporting new data — experiments, trials, technical evaluations, algorithm development with results."
+      - value: "Case Report/Series"
+        definition: "Report of one or a small number of clinical cases, typically without a formal experimental design."
+      - value: "Review"
+        definition: "Narrative or scoping review summarizing existing literature without systematic search methodology."
+      - value: "Systematic Review"
+        definition: "Review following a pre-specified protocol with systematic search, screening, and synthesis (PRISMA or equivalent)."
+      - value: "Meta-Analysis"
+        definition: "Quantitative synthesis of results from multiple studies using statistical pooling methods."
+      - value: "Conference Abstract"
+        definition: "Short-form publication from a conference proceeding, typically under 500 words without full methods."
+      - value: "Technical Report"
+        definition: "Detailed technical description of a system, algorithm, or method, often without clinical or experimental evaluation."
+      - value: "Other"
+        definition: "Editorials, commentaries, letters, guidelines, or papers that do not fit other categories."
+    decision_criteria: |
+      1. Does the paper report original experimental data or results? → "Original Research"
+      2. Does it follow PRISMA or systematic search methods? → "Systematic Review"
+      3. Does it pool quantitative results across studies? → "Meta-Analysis"
+      4. Does it summarize literature without systematic methodology? → "Review"
+      5. Is it a brief conference proceeding? → "Conference Abstract"
+      6. Does it describe a system in detail without evaluation? → "Technical Report"
+      7. Does it report 1–3 clinical cases narratively? → "Case Report/Series"
+      8. None of the above → "Other"
+
+  - name: robot_platform
+    tier: 1
+    type: free_text
+    definition: >-
+      The name/model of the robotic system used, including manufacturer if stated.
+    instruction: >-
+      Record exactly as the paper states it. If multiple robots are compared,
+      list all separated by semicolons. If the paper describes an algorithm
+      without a physical platform, enter "No physical platform — [brief descriptor]".
+      If a generic robot arm not designed for surgery (e.g., KUKA LBR iiwa),
+      record as stated.
+
+  - name: task_performed
+    tier: 1
+    type: free_text
+    definition: >-
+      The specific surgical task the robot performed autonomously or semi-autonomously.
+    instruction: >-
+      Record the specific autonomous task, not the overall procedure — e.g.
+      "suturing" not "colectomy". Be specific: "needle driving" not "surgery".
+      If multiple autonomous tasks, list all separated by semicolons.
+
+  - name: sample_size
+    tier: 1
+    type: numeric
+    definition: >-
+      Total number of cases, experiments, procedures, or subjects.
+    instruction: >-
+      Report as a single integer representing the total sample. If multiple
+      groups, sum them. Example: if 4 pigs + 5 phantoms = "9". For animal
+      studies, report number of animals. For simulations, report number of
+      trials. For phantom studies, report number of experimental runs.
+      Enter the number only, or NR.
+
+  - name: surgical_domain
+    tier: 1
+    type: categorical
+    definition: >-
+      The surgical specialty or application area the autonomous task applies to.
+    instruction: >-
+      If testing on a bench model without specific clinical specialty context,
+      use "Non-clinical Bench / Phantom". If purely computational with no
+      physical experiment, use "Computational / Simulation Only". If explicitly
+      testing across multiple specialties, use "Multiple".
+    valid_values:
+      - value: "General Surgery"
+        definition: "Abdominal, colorectal, foregut, HPB, or unspecified general surgical procedures."
+      - value: "Urology"
+        definition: "Urologic procedures including prostatectomy, nephrectomy, lithotripsy."
+      - value: "Gynecology"
+        definition: "Gynecologic procedures including hysterectomy, oophorectomy, endometriosis."
+      - value: "Cardiac/Thoracic"
+        definition: "Cardiac surgery, thoracic surgery, TAVR/TAVI, lung resection."
+      - value: "Head & Neck / ENT"
+        definition: "Transoral robotic surgery (TORS), thyroidectomy, otologic procedures."
+      - value: "Vascular"
+        definition: "Vascular surgical procedures, endovascular interventions."
+      - value: "Non-clinical Bench / Phantom"
+        definition: "Autonomous task demonstrated on a bench model, phantom, or tissue surrogate without specific clinical specialty context. Use this for generalizable tasks like suturing or needle driving on phantoms."
+      - value: "Computational / Simulation Only"
+        definition: "Purely computational or simulated work with no physical experiment or hardware in the loop."
+      - value: "Multiple"
+        definition: "Paper explicitly tests across multiple surgical specialties."
+      - value: "Other"
+        definition: "Specialty not listed above, or unclear."
+    decision_criteria: |
+      1. Does the paper describe a task within a specific clinical specialty? → Use that specialty
+      2. Is the task performed on a bench/phantom without specialty context? → "Non-clinical Bench / Phantom"
+      3. Is there no physical experiment at all? → "Computational / Simulation Only"
+      4. Does the paper explicitly test across multiple specialties? → "Multiple"
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Tier 2 — Interpretive (expected κ 0.70–0.85)
+  # ═══════════════════════════════════════════════════════════════════
+
+  - name: autonomy_level
+    tier: 2
+    type: categorical
+    definition: >-
+      The highest level of autonomy demonstrated, mapped to the
+      Yang et al. (2017) classification.
+    instruction: >-
+      If the paper does not explicitly reference Yang levels, map their
+      description using the decision tree below. For algorithms/simulations,
+      classify based on what the system demonstrates, not the hardware.
+      Use "Mixed/Multiple" ONLY when the paper explicitly tests multiple
+      distinct autonomy levels — not as an escape hatch for uncertainty.
+    valid_values:
+      - value: "0 (No autonomy)"
+        definition: "Pure teleoperation. Human directly controls all robot movements in real-time. No autonomous component."
+      - value: "1 (Robot assistance)"
+        definition: "Robot provides assistive features during human-controlled operation: tremor filtration, haptic feedback, virtual fixtures, motion scaling. Human maintains continuous real-time control."
+      - value: "2 (Task autonomy)"
+        definition: "Robot executes specific preprogrammed or learned tasks autonomously. Surgeon initiates the task, defines the plan, and monitors execution but does not control moment-to-moment movements."
+      - value: "3 (Conditional autonomy)"
+        definition: "Robot generates candidate strategies, plans, or action options for the surgeon to select from. Surgeon retains decision authority but robot contributes to planning."
+      - value: "4 (High autonomy)"
+        definition: "Robot independently plans and executes based on patient-specific or task-specific data, with surgeon supervising but not directing. Surgeon can intervene but robot acts independently by default."
+      - value: "5 (Full autonomy)"
+        definition: "Robot operates without any human in the loop. No surgeon monitoring, no override capability exercised during the task."
+      - value: "Mixed/Multiple"
+        definition: "Paper explicitly tests and reports on multiple distinct autonomy levels as separate experimental conditions."
+      - value: "NR"
+        definition: "Autonomy level cannot be determined from the paper content."
+    decision_criteria: |
+      1. Does the robot execute any action without continuous real-time human control? → If NO → Level 1
+      2. If YES — does the surgeon define the exact plan and initiate execution? → If YES → Level 2
+      3. Does the robot generate candidate strategies for the surgeon to select from? → If YES → Level 3
+      4. Does the robot independently plan and execute based on patient-specific data, with surgeon monitoring? → If YES → Level 4
+      5. Does the robot operate without any human in the loop? → If YES → Level 5
+      NOTE on algorithms/simulations: Classify based on what the system demonstrates, not the hardware. A simulated algorithm that autonomously plans and executes is still Level 2+.
+    examples:
+      - scenario: "Surgeon teleoperates da Vinci with tremor filtering active"
+        value: "1 (Robot assistance)"
+      - scenario: "Surgeon marks suture entry/exit points, robot drives needle autonomously"
+        value: "2 (Task autonomy)"
+      - scenario: "Robot generates three trajectory options, surgeon selects one, robot executes"
+        value: "3 (Conditional autonomy)"
+      - scenario: "Robot uses computer vision to detect tissue, plans grasping strategy, and executes without surgeon input while surgeon watches monitor"
+        value: "4 (High autonomy)"
+
+  - name: validation_setting
+    tier: 2
+    type: categorical
+    definition: >-
+      The experimental setting in which the autonomous capability was tested.
+    instruction: >-
+      If multiple settings were used, list all separated by semicolons.
+      Each value must exactly match one allowed value.
+    valid_values:
+      - value: "In vivo (human)"
+        definition: "Tested on living human patients in a clinical or clinical-trial setting."
+      - value: "In vivo (animal)"
+        definition: "Tested on living animals (e.g., porcine, rodent). Includes survival and non-survival animal studies."
+      - value: "Ex vivo"
+        definition: "Tested on excised biological tissue outside a living organism (e.g., excised porcine intestine, bovine liver)."
+      - value: "Phantom/Simulation"
+        definition: "Tested on synthetic phantoms, bench models, or software simulations with hardware in the loop."
+      - value: "Cadaver"
+        definition: "Tested on human cadaveric specimens."
+      - value: "Computational/Virtual"
+        definition: "Purely computational or virtual simulation with no physical hardware or tissue involved."
+      - value: "Mixed"
+        definition: "Multiple validation settings used, none dominant. Prefer listing individual settings with semicolons when identifiable."
+      - value: "NR"
+        definition: "Validation setting not described or cannot be determined."
+    decision_criteria: |
+      1. Was the system tested on living human patients? → "In vivo (human)"
+      2. On living animals? → "In vivo (animal)"
+      3. On human cadavers? → "Cadaver"
+      4. On excised tissue outside a living body? → "Ex vivo"
+      5. On synthetic phantoms or bench models, or simulation with hardware? → "Phantom/Simulation"
+      6. Purely computational, no physical hardware? → "Computational/Virtual"
+      7. Multiple settings and cannot identify individual ones? → "Mixed"
+      If multiple settings are clearly identifiable, list with semicolons (e.g., "In vivo (animal); Phantom/Simulation").
+
+  - name: task_monitor
+    tier: 2
+    type: categorical
+    definition: >-
+      Who observes the surgical environment and gathers information during the task?
+    instruction: >-
+      Determine who has perceptual awareness of the task state.
+    valid_values:
+      - value: "H"
+        definition: "Surgeon visually observes and interprets the environment. Robot has no independent perception capability."
+      - value: "R"
+        definition: "Robot autonomously senses via cameras, force sensors, or imaging without requiring human input for perception."
+      - value: "Shared"
+        definition: "Both independently gather and interpret information. Robot uses sensors AND surgeon independently monitors."
+      - value: "NR"
+        definition: "Monitoring arrangement not described in the paper."
+    examples:
+      - scenario: "Surgeon watches endoscopic video while teleoperating"
+        value: "H"
+      - scenario: "Vision system tracks tissue deformation in real time to guide autonomous cutting"
+        value: "R"
+      - scenario: "Robot uses CV to track a needle while surgeon monitors on display"
+        value: "Shared"
+
+  - name: task_generate
+    tier: 2
+    type: categorical
+    definition: >-
+      Who creates the plan or strategy for how the task will be performed?
+      Covers trajectory, action sequence, parameters (speed, force, path), or surgical strategy.
+    instruction: >-
+      Determine who is responsible for planning the task execution.
+    valid_values:
+      - value: "H"
+        definition: "Surgeon defines all task parameters, trajectories, and action sequences."
+      - value: "R"
+        definition: "System computes the plan autonomously from data (e.g., path planning from tissue geometry)."
+      - value: "Shared"
+        definition: "Both contribute — e.g., surgeon defines target anatomy, robot generates trajectory to reach it."
+      - value: "NR"
+        definition: "Planning arrangement not described."
+    examples:
+      - scenario: "Surgeon places suture entry/exit points on the image, robot follows"
+        value: "H"
+      - scenario: "Path-planning algorithm generates optimal trajectory from tissue geometry"
+        value: "R"
+      - scenario: "Surgeon defines target anatomy on preop scan, robot generates intraop trajectory"
+        value: "Shared"
+
+  - name: task_select
+    tier: 2
+    type: categorical
+    definition: >-
+      Who chooses which plan to execute when alternatives exist?
+    instruction: >-
+      Determine who has selection authority. When the system generates a
+      single plan and executes it (no selection step), classify as R.
+    valid_values:
+      - value: "H"
+        definition: "Surgeon reviews options and authorizes a specific plan before execution."
+      - value: "R"
+        definition: "System autonomously selects from its own generated options. Also use R when the system generates a single plan and executes — no selection step exists."
+      - value: "Shared"
+        definition: "Both have selection authority — e.g., robot narrows to shortlist, surgeon approves."
+      - value: "NR"
+        definition: "Selection arrangement not described."
+    examples:
+      - scenario: "Robot generates three paths, surgeon selects one on screen"
+        value: "H"
+      - scenario: "RL controller evaluates strategies and commits to highest-scored"
+        value: "R"
+      - scenario: "Robot narrows to shortlist of grasping poses, surgeon approves one"
+        value: "Shared"
+
+  - name: task_execute
+    tier: 2
+    type: categorical
+    definition: >-
+      Who physically carries out the surgical action?
+    instruction: >-
+      Determine who controls the physical instrument movements.
+    valid_values:
+      - value: "H"
+        definition: "Surgeon directly controls all instrument movements (standard teleoperation)."
+      - value: "R"
+        definition: "System performs the physical action autonomously without human hand-on-instrument control."
+      - value: "Shared"
+        definition: "Both contribute simultaneously — e.g., cooperative control where surgeon holds instrument while robot applies active constraints."
+      - value: "NR"
+        definition: "Execution arrangement not described."
+    examples:
+      - scenario: "Standard teleoperation with da Vinci"
+        value: "H"
+      - scenario: "Robot drives needle through tissue autonomously"
+        value: "R"
+      - scenario: "Surgeon holds instrument, robot applies force limits and virtual fixtures"
+        value: "Shared"
+
+  - name: system_maturity
+    tier: 2
+    type: categorical
+    definition: >-
+      The technology readiness level of what the paper actually demonstrates.
+    instruction: >-
+      Classify based on the most advanced capability demonstrated in the paper,
+      not what is described as future work. Focus on what was actually built
+      and tested.
+    valid_values:
+      - value: "Commercial clinical system"
+        definition: "FDA-cleared or CE-marked robot used in its approved clinical capacity. Examples: da Vinci in standard teleoperation, Mako for joint replacement."
+      - value: "Commercial system + research autonomy"
+        definition: "Commercial robot modified or programmed for autonomous tasks not in the cleared indication. Examples: dVRK used for autonomous suturing, da Vinci Research Kit experiments."
+      - value: "Research prototype (hardware)"
+        definition: "Purpose-built physical robot not commercially available. Examples: STAR surgical robot, custom needle-steering robots, novel end-effector designs."
+      - value: "Algorithm on existing platform"
+        definition: "New software or algorithm deployed on an existing commercial or research robot. The contribution is the algorithm, not the hardware."
+      - value: "Simulation / computational only"
+        definition: "No physical robot involved. Purely in-silico experiments — simulated environments, computational models, virtual robot control."
+      - value: "Conceptual / framework"
+        definition: "No experimental demonstration. Proposes a design, taxonomy, architecture, or theoretical framework without building or testing it."
+    decision_criteria: |
+      1. Is the paper proposing a design without building/testing it? → "Conceptual / framework"
+      2. Is the work purely in simulation with no physical robot? → "Simulation / computational only"
+      3. Is the contribution primarily a new algorithm tested on an existing robot? → "Algorithm on existing platform"
+      4. Was a custom physical robot built for this work? → "Research prototype (hardware)"
+      5. Was a commercial robot modified for research autonomy? → "Commercial system + research autonomy"
+      6. Was a commercial robot used in its approved capacity? → "Commercial clinical system"
+      Pick the MOST ADVANCED stage demonstrated.
+
+  - name: study_design
+    tier: 2
+    type: categorical
+    definition: >-
+      The specific study design, more granular than study_type. This is about
+      HOW the study was conducted, not WHAT it studied.
+    instruction: >-
+      Select the single best-fit category. If a paper demonstrates a new
+      algorithm on a phantom, classify as "Initial technical demonstration"
+      if the emphasis is on showing the system works, or "Algorithm development
+      and evaluation" if the emphasis is on the algorithm's performance metrics.
+    valid_values:
+      - value: "Initial technical demonstration"
+        definition: "First-time demonstration that a system or method works. Focus is on 'can it do this?' rather than systematic evaluation."
+      - value: "Feasibility study"
+        definition: "Structured evaluation of whether a technique is practical and safe enough to warrant further development. Often includes success/failure criteria."
+      - value: "Comparative study (vs. human or alternative)"
+        definition: "Direct comparison between the autonomous system and a human operator, manual technique, or alternative automated approach."
+      - value: "Preclinical validation (animal/cadaver)"
+        definition: "Validation on biological tissue (animal or cadaver) as a step toward clinical translation."
+      - value: "Clinical pilot / first-in-human"
+        definition: "First use of the autonomous capability on human patients, typically with small sample size and safety focus."
+      - value: "Randomized controlled trial"
+        definition: "Prospective trial with randomization to autonomous vs. control arm."
+      - value: "Retrospective clinical review"
+        definition: "Analysis of previously collected clinical data from cases using the autonomous system."
+      - value: "Algorithm development and evaluation"
+        definition: "Primary contribution is a new algorithm, evaluated with quantitative metrics. May be tested on phantom, simulation, or real tissue, but the paper's focus is the algorithm."
+      - value: "Systematic review / meta-analysis"
+        definition: "Structured review of existing literature with systematic search methodology."
+      - value: "Other"
+        definition: "Study design does not fit any of the above categories."
+    decision_criteria: |
+      1. Is this a literature review with systematic methods? → "Systematic review / meta-analysis"
+      2. Is the primary contribution a new algorithm with quantitative evaluation? → "Algorithm development and evaluation"
+      3. Is it a first demonstration that a system can perform a task? → "Initial technical demonstration"
+      4. Does it systematically evaluate feasibility with success/failure criteria? → "Feasibility study"
+      5. Does it directly compare autonomous vs. human/alternative? → "Comparative study (vs. human or alternative)"
+      6. Is it validated on animal tissue or cadavers for translational purposes? → "Preclinical validation (animal/cadaver)"
+      7. Is it first use on human patients? → "Clinical pilot / first-in-human"
+      8. Is it a prospective randomized trial? → "Randomized controlled trial"
+      9. Is it a retrospective analysis of clinical cases? → "Retrospective clinical review"
+
+  - name: country
+    tier: 2
+    type: free_text
+    definition: >-
+      Country where the study was conducted.
+    instruction: >-
+      Use first author's institution country if not explicitly stated.
+      Metadata-inferred is acceptable. If multi-country, list all separated
+      by semicolons. If unclear, record "NR".
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Tier 3 — Numeric/Tables (variable expected κ)
+  # ═══════════════════════════════════════════════════════════════════
+
+  - name: primary_outcome_metric
+    tier: 3
+    type: free_text
+    definition: >-
+      The primary outcome measure reported, related to the autonomous task's performance.
+    instruction: >-
+      Record the first quantitative outcome in the results section related to
+      the autonomous task's performance. Use the paper's exact terminology
+      (e.g., "task completion time," "suture accuracy score," "Dice coefficient").
+      Do not select based on judgment of "most emphasized" — use positional order.
+
+  - name: primary_outcome_value
+    tier: 3
+    type: free_text
+    definition: >-
+      The numeric result for the primary outcome metric.
+    instruction: >-
+      Include units, confidence intervals, or p-values if reported. Copy the
+      exact numeric reporting (e.g., "mean 4.2 ± 0.8 mm", "92.3% (95% CI:
+      88.1–96.5)", "median 12 min (IQR 8–15)").
+
+  - name: comparison_to_human
+    tier: 3
+    type: free_text
+    definition: >-
+      Comparison of autonomous system performance to human/manual performance.
+    instruction: >-
+      If the paper compares autonomous performance to human/manual performance,
+      report the comparison result. Include both values if available (e.g.,
+      "Autonomous: 142s vs Manual: 198s (p=0.003)"). If no comparison was made,
+      record "No comparison reported".
+
+  - name: secondary_outcomes
+    tier: 3
+    type: free_text
+    definition: >-
+      Additional quantitative outcomes reported beyond the primary.
+    instruction: >-
+      Record as semicolon-separated entries in format "metric: value".
+      Example: "Accuracy: 94.2% ± 3.1%; Force: 2.3 ± 0.8 N; Success rate: 18/20".
+      Enter NR if only one outcome reported.
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Tier 4 — Judgment (expected κ 0.50–0.70)
+  # ═══════════════════════════════════════════════════════════════════
+
+  - name: key_limitation
+    tier: 4
+    type: free_text
+    definition: >-
+      The most important limitation of the study, based on your judgment.
+    instruction: >-
+      In 1–2 sentences, state the key limitation using YOUR judgment.
+      Do not simply copy what the authors wrote in their limitations section.
+      Quote the passage(s) that informed your assessment.
+    source_quote_required: true
+
+  - name: clinical_readiness_assessment
+    tier: 4
+    type: categorical
+    definition: >-
+      Your judgment of how close the described technology is to clinical use
+      in patients. There is no right answer in the text — this requires you
+      to synthesize the results, limitations, and validation setting.
+    instruction: >-
+      Synthesize the results, limitations, and validation setting to make this
+      judgment. Quote the key evidence behind your assessment.
+    valid_values:
+      - value: "Ready for clinical use"
+        definition: >-
+          System is FDA-cleared/CE-marked for the autonomous capability described,
+          with clinical evidence supporting safety and efficacy in patients.
+      - value: "Approaching clinical readiness"
+        definition: >-
+          System has been demonstrated in vivo (human or animal with clinical-grade
+          setup), with a clear regulatory or translational pathway. Not yet cleared
+          for autonomous clinical use.
+      - value: "Early-stage research"
+        definition: >-
+          Foundational algorithmic or computational work. No integrated robotic
+          system demonstrated performing the task. Theoretical frameworks, pure
+          simulations without hardware-in-the-loop, or isolated software components.
+      - value: "Proof of concept only"
+        definition: >-
+          A working system demonstrated performing the task on a phantom, bench
+          model, cadaver, ex vivo tissue, or in a non-clinical animal experiment.
+          Shows technical feasibility but no clinical pathway established.
+      - value: "Not assessable"
+        definition: >-
+          Review articles, editorials, or papers where clinical readiness cannot
+          be determined from the content.
+    decision_criteria: |
+      1. Does the paper demonstrate a working system performing an autonomous task? If NO → "Early-stage research"
+      2. If YES — was it demonstrated on patients (in vivo human)? If YES with regulatory clearance → "Ready for clinical use". If YES without clearance → "Approaching clinical readiness"
+      3. If demonstrated on animals with clinical-grade setup or human cadavers with translational intent → "Approaching clinical readiness"
+      4. If demonstrated on phantom, bench, ex vivo, or non-clinical animal → "Proof of concept only"
+      5. If the paper is a review or cannot be assessed → "Not assessable"
+    examples:
+      - scenario: "Algorithm autonomously sutures on a tissue phantom using dVRK"
+        value: "Proof of concept only"
+      - scenario: "STAR robot performs in vivo bowel anastomosis in pigs"
+        value: "Approaching clinical readiness"
+      - scenario: "Path-planning algorithm tested in simulation only, no robot involved"
+        value: "Early-stage research"
+      - scenario: "FDA-cleared autonomous laser lithotripsy on patients"
+        value: "Ready for clinical use"
+      - scenario: "Scoping review of autonomous surgical robotics literature"
+        value: "Not assessable"
+    source_quote_required: true

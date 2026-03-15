@@ -37,8 +37,8 @@ def spec():
 def test_build_prompt_includes_all_fields(spec):
     prompt = build_extraction_prompt("Some paper text here.", spec)
     for field in spec.extraction_schema.fields:
-        assert field.name in prompt
-        assert field.description in prompt
+        # Field name must appear as bold header in the prompt
+        assert f"**{field.name}**" in prompt
 
 
 def test_build_prompt_includes_tiers(spec):

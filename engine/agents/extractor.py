@@ -5,7 +5,10 @@ import logging
 import re
 import time
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
+
+import yaml
 
 from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
 from engine.core.constants import INVALID_SNIPPET_RE
@@ -21,12 +24,106 @@ RETRY_DELAY = 30  # seconds between retries
 SNIPPET_MAX_RETRIES = 2
 
 
+# ── Codebook Loader ──────────────────────────────────────────────────
+
+
+@lru_cache(maxsize=4)
+def _load_codebook(codebook_path: str) -> dict:
+    """Load extraction codebook YAML, cached per path."""
+    with open(codebook_path) as f:
+        return yaml.safe_load(f)
+
+
+def _find_codebook_path(review_dir: str | Path | None = None) -> Path:
+    """Locate the extraction codebook YAML for a review."""
+    if review_dir:
+        p = Path(review_dir) / "extraction_codebook.yaml"
+        if p.exists():
+            return p
+    # Fallback: search data/ subdirectories
+    for p in Path("data").glob("*/extraction_codebook.yaml"):
+        return p
+    raise FileNotFoundError("No extraction_codebook.yaml found")
+
+
 # ── Prompt Builder ───────────────────────────────────────────────────
 
 
-def build_extraction_prompt(paper_text: str, spec: ReviewSpec) -> str:
-    """Build the extraction prompt from paper text and review spec schema."""
-    field_blocks: list[str] = []
+def _build_field_block(cb_field: dict) -> str:
+    """Build the prompt section for a single field from its codebook entry."""
+    name = cb_field["name"]
+    ftype = cb_field["type"]
+    definition = cb_field.get("definition", "")
+    instruction = cb_field.get("instruction", "")
+
+    lines: list[str] = []
+
+    # Header: field name, type, and allowed values for categorical
+    valid_values = cb_field.get("valid_values", [])
+    if valid_values:
+        value_names = [v["value"] for v in valid_values]
+        enum_note = f" (allowed values: {', '.join(value_names)})"
+    else:
+        enum_note = ""
+
+    lines.append(f"- **{name}** ({ftype}{enum_note}): {definition}")
+
+    # Instruction (extraction guidance)
+    if instruction:
+        lines.append(f"  *Instruction:* {instruction}")
+
+    # Per-value definitions for categorical fields
+    if valid_values:
+        lines.append("  **Value definitions:**")
+        for vv in valid_values:
+            lines.append(f"  - **{vv['value']}** — {vv['definition']}")
+
+    # Decision criteria
+    decision_criteria = cb_field.get("decision_criteria")
+    if decision_criteria:
+        lines.append(f"  **Decision criteria:**")
+        for dc_line in decision_criteria.strip().splitlines():
+            lines.append(f"  {dc_line}")
+
+    # Examples
+    examples = cb_field.get("examples", [])
+    if examples:
+        lines.append("  **Examples:**")
+        for ex in examples:
+            lines.append(f"  - {ex['scenario']} → **{ex['value']}**")
+
+    # Source quote requirement
+    if cb_field.get("source_quote_required"):
+        lines.append("  *Source quote required for this field.*")
+
+    return "\n".join(lines)
+
+
+def build_extraction_prompt(
+    paper_text: str,
+    spec: ReviewSpec,
+    codebook_path: str | Path | None = None,
+) -> str:
+    """Build the extraction prompt from paper text and codebook YAML.
+
+    The codebook provides structured field definitions, per-value descriptions,
+    decision criteria, and examples. All prompt content comes from the codebook —
+    no hand-maintained field guides.
+
+    Args:
+        paper_text: Parsed markdown of the paper.
+        spec: ReviewSpec (used for field ordering and schema hash).
+        codebook_path: Path to extraction_codebook.yaml. If None, auto-discovered.
+    """
+    # Load codebook
+    if codebook_path is None:
+        cb_path = _find_codebook_path()
+    else:
+        cb_path = Path(codebook_path)
+    codebook = _load_codebook(str(cb_path))
+
+    # Index codebook fields by name
+    cb_fields = {f["name"]: f for f in codebook["fields"]}
 
     tier_label = {
         1: "Tier 1 — Explicit (expected κ > 0.90)",
@@ -34,20 +131,22 @@ def build_extraction_prompt(paper_text: str, spec: ReviewSpec) -> str:
         3: "Tier 3 — Numeric/Tables (variable κ)",
         4: "Tier 4 — Judgment (expected κ 0.50–0.70)",
     }
+
+    field_blocks: list[str] = []
     for tier in (1, 2, 3, 4):
         fields = spec.extraction_schema.fields_by_tier(tier)
         if not fields:
             continue
         lines = [f"\n### {tier_label[tier]}"]
         for f in fields:
-            enum_note = f" (allowed values: {', '.join(f.enum_values)})" if f.enum_values else ""
-            lines.append(
-                f"- **{f.name}** ({f.type}{enum_note}): {f.description}"
-            )
-            # Add supplementary guidance for complex fields
-            guide = _FIELD_GUIDES.get(f.name)
-            if guide:
-                lines.append(guide)
+            cb_entry = cb_fields.get(f.name)
+            if cb_entry:
+                lines.append(_build_field_block(cb_entry))
+            else:
+                # Fallback: bare spec definition (should not happen if codebook is complete)
+                enum_note = f" (allowed values: {', '.join(f.enum_values)})" if f.enum_values else ""
+                lines.append(f"- **{f.name}** ({f.type}{enum_note}): {f.description}")
+                logger.warning("Field %s not found in codebook — using bare spec definition", f.name)
         field_blocks.append("\n".join(lines))
 
     schema_text = "\n".join(field_blocks)
@@ -76,52 +175,6 @@ You MUST emit exactly one entry per field listed above ({total_fields} fields to
 
 ## Paper Text
 {paper_text}"""
-
-
-# ── Supplementary field guides (injected after field description) ────
-
-_FIELD_GUIDES: dict[str, str] = {
-    "autonomy_level": """\
-  **Decision tree (when the paper does not explicitly reference Yang levels):**
-  1. Does the robot execute any action without continuous real-time human control? → If no → Level 1
-  2. If yes — does the surgeon define the exact plan and initiate execution? → If yes → Level 2
-  3. Does the robot generate candidate strategies for the surgeon to select from? → If yes → Level 3
-  4. Does the robot independently plan and execute based on patient-specific data, with surgeon monitoring? → If yes → Level 4
-  5. Does the robot operate without any human in the loop? → If yes → Level 5
-  **On algorithms/simulations:** Classify based on what the system demonstrates, not the hardware. A simulated algorithm that autonomously plans and executes is still Level 2+.
-  **On "Mixed/Multiple":** Use ONLY when the paper explicitly tests multiple distinct autonomy levels. Not an escape hatch for uncertainty — pick the best fit for ambiguous cases.""",
-
-    "task_monitor": """\
-  Examples: H = surgeon watches a screen while teleoperating. R = vision system tracks tissue deformation in real time. Shared = robot uses CV to track a needle while surgeon monitors on display.""",
-
-    "task_generate": """\
-  Covers trajectory, action sequence, parameters (speed, force, path), or surgical strategy.
-  Examples: H = surgeon places suture entry/exit points. R = path-planning algorithm generates optimal trajectory from tissue geometry. Shared = surgeon defines target anatomy, robot generates trajectory.""",
-
-    "task_select": """\
-  Examples: H = robot generates three paths, surgeon selects one. R = RL controller evaluates strategies and commits to highest-scored (also use R when system generates a single plan and executes — no selection step). Shared = robot narrows to shortlist, surgeon approves.""",
-
-    "task_execute": """\
-  Examples: H = standard teleoperation. R = robot drives needle autonomously. Shared = cooperative control (surgeon holds instrument, robot applies active constraints).""",
-
-    "system_maturity": """\
-  Value definitions:
-  - Commercial clinical system — FDA-cleared/CE-marked robot in approved capacity (da Vinci teleop, Mako)
-  - Commercial system + research autonomy — Commercial robot modified for autonomous tasks not in cleared indication (dVRK autonomous suturing)
-  - Research prototype (hardware) — Purpose-built physical robot not commercially available (STAR, custom needle-steering robot)
-  - Algorithm on existing platform — New software/algorithm on existing robot, focus is the algorithm
-  - Simulation / computational only — No physical robot, purely in-silico
-  - Conceptual / framework — No experimental demonstration, proposes design or taxonomy""",
-
-    "study_design": """\
-  Select best fit. If a paper demonstrates a new algorithm on a phantom, classify as "Initial technical demonstration" or "Algorithm development and evaluation" depending on emphasis.""",
-
-    "country": """\
-  Use first author's institution country if not explicitly stated. Metadata-inferred is acceptable.""",
-
-    "secondary_outcomes": """\
-  Format: semicolon-separated "metric: value" entries. Example: "Accuracy: 94.2% ± 3.1%; Force: 2.3 ± 0.8 N; Success rate: 18/20". Enter NR if only one outcome reported.""",
-}
 
 
 # ── Ollama Retry Wrapper ─────────────────────────────────────────────

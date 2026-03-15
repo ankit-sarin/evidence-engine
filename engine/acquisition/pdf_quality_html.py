@@ -24,6 +24,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from engine.core.database import DATA_ROOT
+from engine.core.naming import review_artifact_filename, review_artifact_path
 
 logger = logging.getLogger(__name__)
 
@@ -319,8 +320,8 @@ function exportJSON(isFinal) {{
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  const suffix = isFinal ? '_final' : '_draft';
-  a.download = REVIEW + '_' + MODE + suffix + '.json';
+  const stage = MODE === 'acquisition' ? 'pdf_acquisition' : 'pdf_quality';
+  a.download = REVIEW + '_' + stage + '_decisions' + (isFinal ? '' : '_draft') + '.json';
   a.click();
   URL.revokeObjectURL(url);
 }}"""
@@ -454,7 +455,10 @@ highlightIncomplete();
     if output_path:
         out = Path(output_path)
     else:
-        out = DATA_ROOT / review_name / "pdf_acquisition" / "acquisition_list.html"
+        out = review_artifact_path(
+            DATA_ROOT / review_name, review_name,
+            "pdf_acquisition", "queue", "html",
+        )
 
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")
@@ -685,7 +689,10 @@ highlightIncomplete();
     if output_path:
         out = Path(output_path)
     else:
-        out = DATA_ROOT / review_name / "pdf_acquisition" / "pdf_quality_review.html"
+        out = review_artifact_path(
+            DATA_ROOT / review_name, review_name,
+            "pdf_quality", "queue", "html",
+        )
 
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")

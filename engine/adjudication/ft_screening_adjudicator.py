@@ -370,9 +370,12 @@ def _write_ft_xlsx(
 
 def import_ft_adjudication_decisions(
     review_db: ReviewDatabase,
-    input_path: str | Path,
+    input_path: str | Path | None = None,
 ) -> dict:
     """Read completed FT adjudication decisions and write to database.
+
+    If input_path is None, auto-discovers the decisions file using the
+    naming convention: {review}_ft_adjudication_decisions.json
 
     Supports two input formats (detected by file extension):
       - .xlsx  — Excel workbook (from export_ft_adjudication_queue)
@@ -388,6 +391,19 @@ def import_ft_adjudication_decisions(
 
     Returns summary dict.
     """
+    if input_path is None:
+        from engine.core.naming import review_artifact_path
+        review_name = Path(review_db.db_path).parent.name
+        data_dir = Path(review_db.db_path).parent
+        input_path = review_artifact_path(
+            data_dir, review_name, "ft_adjudication", "decisions", "json",
+        )
+        if not input_path.exists():
+            raise FileNotFoundError(
+                f"Expected decisions file at: {input_path}\n"
+                "Export from the HTML review tool first."
+            )
+
     input_path = Path(input_path)
 
     if input_path.suffix.lower() == ".json":

@@ -143,10 +143,13 @@ def export_review_queue(
 
 def import_review_decisions(
     db: ReviewDatabase,
-    csv_path: str,
+    csv_path: str | None = None,
     dry_run: bool = False,
 ) -> dict:
     """Import human review decisions from a completed CSV or JSON file.
+
+    If csv_path is None, auto-discovers the decisions file using the
+    naming convention: {review}_extraction_audit_decisions.json
 
     Supports two formats (detected by file extension):
       - .csv  — CSV with reviewer_decision column (original format)
@@ -158,6 +161,19 @@ def import_review_decisions(
     Validates all rows before writing. Returns stats dict.
     If dry_run=True, validates and reports but makes no writes.
     """
+    if csv_path is None:
+        from engine.core.naming import review_artifact_path
+        review_name = Path(db.db_path).parent.name
+        data_dir = Path(db.db_path).parent
+        csv_path = str(review_artifact_path(
+            data_dir, review_name, "extraction_audit", "decisions", "json",
+        ))
+        if not Path(csv_path).exists():
+            raise FileNotFoundError(
+                f"Expected decisions file at: {csv_path}\n"
+                "Export from the HTML review tool first."
+            )
+
     input_path = Path(csv_path)
     if input_path.suffix.lower() == ".json":
         return _import_review_json(db, input_path, dry_run=dry_run)

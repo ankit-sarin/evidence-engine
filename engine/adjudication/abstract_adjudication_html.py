@@ -26,6 +26,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from engine.adjudication.categorizer import CategoryConfig, categorize_paper, load_config
 from engine.core.database import DATA_ROOT
+from engine.core.naming import review_artifact_filename, review_artifact_path
 
 logger = logging.getLogger(__name__)
 
@@ -670,7 +671,10 @@ updateCounts();
     if output_path:
         out = Path(output_path)
     else:
-        out = DATA_ROOT / review_name / "abstract_adjudication_queue.html"
+        out = review_artifact_path(
+            DATA_ROOT / review_name, review_name,
+            "abstract_adjudication", "queue", "html",
+        )
 
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")

@@ -105,18 +105,19 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 
 ## Human-in-the-Loop Review Standard
 
-All human review touchpoints use HTML → JSON → import:
-- Abstract adjudication: engine/adjudication/abstract_adjudication_html.py
-- FT adjudication: engine/adjudication/ft_adjudication_html.py
-- PDF acquisition: engine/acquisition/pdf_quality_html.py (mode=acquisition)
-- PDF quality check: engine/acquisition/pdf_quality_html.py (mode=quality_check)
-- Extraction audit: engine/review/extraction_audit_html.py
+All human review uses HTML → JSON → import round-trip.
 
-Pattern: Python queries DB → generates self-contained HTML with embedded data + JS.
-Human reviews in browser. Save Draft (localStorage). Export Final → JSON.
-Import JSON to DB. All importers auto-detect .json vs .xlsx by file extension.
-xlsx export preserved with --format xlsx flag for reference/archival only.
-Default is always --format html.
+File naming: `{review}_{stage}_{queue|decisions}.{html|json}`
+Stages: abstract_adjudication, ft_adjudication, pdf_acquisition, pdf_quality, extraction_audit
+
+Generators:
+- engine/adjudication/abstract_adjudication_html.py
+- engine/adjudication/ft_adjudication_html.py
+- engine/acquisition/pdf_quality_html.py (mode=acquisition | quality_check)
+- engine/review/extraction_audit_html.py
+
+Importers auto-detect .json vs .xlsx. Default --file auto-discovers
+from naming convention. xlsx retained with --format xlsx for archival.
 
 ## Running
 ```bash

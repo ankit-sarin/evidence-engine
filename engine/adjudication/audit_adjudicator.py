@@ -415,9 +415,18 @@ def _write_audit_xlsx(
 
 def import_audit_review_decisions(
     review_db: ReviewDatabase,
-    input_path: str | Path,
+    input_path: str | Path | None = None,
 ) -> dict:
-    """Read completed audit review Excel, write decisions to database.
+    """Read completed audit review decisions and write to database.
+
+    If input_path is None, auto-discovers the decisions file using the
+    naming convention: {review}_extraction_audit_decisions.json
+
+    Supports two input formats (detected by file extension):
+      - .xlsx  — Excel workbook (from export_audit_review_queue)
+      - .json  — JSON array (from extraction_audit_html.py via human_review.py)
+
+    For JSON import, delegates to engine.review.human_review.import_review_decisions().
 
     Validates the entire file before making any changes:
       - Rejects if any PI_decision cell is blank
@@ -432,9 +441,26 @@ def import_audit_review_decisions(
 
     Returns summary dict.
     """
-    from openpyxl import load_workbook
+    if input_path is None:
+        from engine.core.naming import review_artifact_path
+        review_name = Path(review_db.db_path).parent.name
+        data_dir = Path(review_db.db_path).parent
+        input_path = review_artifact_path(
+            data_dir, review_name, "extraction_audit", "decisions", "json",
+        )
+        if not input_path.exists():
+            raise FileNotFoundError(
+                f"Expected decisions file at: {input_path}\n"
+                "Export from the HTML review tool first."
+            )
 
     input_path = Path(input_path)
+
+    if input_path.suffix.lower() == ".json":
+        from engine.review.human_review import import_review_decisions
+        return import_review_decisions(review_db, str(input_path))
+
+    from openpyxl import load_workbook
     wb = load_workbook(input_path)
 
     # Find the review queue sheet (support both old and new naming)

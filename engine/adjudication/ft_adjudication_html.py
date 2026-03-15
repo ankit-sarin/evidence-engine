@@ -22,6 +22,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from engine.core.database import DATA_ROOT
+from engine.core.naming import review_artifact_filename, review_artifact_path
 
 logger = logging.getLogger(__name__)
 
@@ -497,7 +498,10 @@ updateCounts();
     if output_path:
         out = Path(output_path)
     else:
-        out = DATA_ROOT / review_name / "ft_adjudication_queue.html"
+        out = review_artifact_path(
+            DATA_ROOT / review_name, review_name,
+            "ft_adjudication", "queue", "html",
+        )
 
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")

@@ -135,16 +135,21 @@ class AnthropicExtractor(CloudExtractorBase):
             total, len(pending),
         )
 
+        from engine.utils.progress import ProgressReporter
+
         stats = {"extracted": 0, "failed": 0, "total_cost": 0.0}
+        progress = ProgressReporter(len(pending), "Cloud Sonnet")
 
         for i, paper in enumerate(pending, 1):
             pid = paper["paper_id"]
+            t_paper = time.time()
 
             try:
                 parsed_text = self.load_parsed_text(pid)
             except FileNotFoundError as exc:
                 logger.warning("Paper %d: %s — skipping", pid, exc)
                 stats["failed"] += 1
+                progress.report(pid, "FAILED", time.time() - t_paper)
                 continue
 
             # Retry logic
@@ -168,6 +173,7 @@ class AnthropicExtractor(CloudExtractorBase):
                         stats["failed"] += 1
 
             if result is None:
+                progress.report(pid, "FAILED", time.time() - t_paper)
                 continue
 
             self.store_result(
@@ -186,20 +192,11 @@ class AnthropicExtractor(CloudExtractorBase):
 
             stats["extracted"] += 1
             stats["total_cost"] += result["cost_usd"]
-
-            print(
-                f"Paper {pid} ({i}/{len(pending)}) — "
-                f"${result['cost_usd']:.4f} — "
-                f"cumulative ${stats['total_cost']:.2f}"
-            )
+            progress.report(pid, "EXTRACTED", time.time() - t_paper)
 
             if max_cost_usd and stats["total_cost"] > max_cost_usd:
                 print(f"Cost ceiling ${max_cost_usd:.2f} exceeded — stopping")
                 break
 
-        print(
-            f"\nAnthropic extraction complete: "
-            f"{stats['extracted']} extracted, {stats['failed']} failed, "
-            f"${stats['total_cost']:.2f} total cost"
-        )
+        progress.summary()
         return stats

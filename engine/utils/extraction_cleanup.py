@@ -13,6 +13,7 @@ from pathlib import Path
 
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
+from engine.utils.db_backup import auto_backup
 
 logger = logging.getLogger(__name__)
 
@@ -165,6 +166,9 @@ def cleanup_stale_extractions(
             len(paper_ids_affected), len(papers_to_reset),
         )
         return summary
+
+    # Back up before destructive operations
+    auto_backup(db.db_path, "pre-cleanup")
 
     # Execute deletions
     ext_ids = [d["extraction_id"] for d in details]

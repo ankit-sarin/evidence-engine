@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from engine.search.models import Citation
+from engine.utils.db_backup import auto_backup
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +49,7 @@ ALLOWED_TRANSITIONS: dict[str, set[str]] = {
     "PARSED": {"FT_ELIGIBLE", "FT_SCREENED_OUT", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED"},
     "FT_ELIGIBLE": {"EXTRACTED", "EXTRACT_FAILED", "FT_FLAGGED"},
     "FT_FLAGGED": {"FT_ELIGIBLE", "FT_SCREENED_OUT"},
-    "EXTRACT_FAILED": {"PARSED", "EXTRACTED"},
+    "EXTRACT_FAILED": {"PARSED", "FT_ELIGIBLE", "EXTRACTED"},
     "EXTRACTED": {"AI_AUDIT_COMPLETE"},
     "AI_AUDIT_COMPLETE": {"HUMAN_AUDIT_COMPLETE", "REJECTED"},
     # Terminal states with no forward transitions
@@ -470,6 +471,8 @@ class ReviewDatabase:
 
         Returns counts of papers reset, spans deleted, and extractions deleted.
         """
+        auto_backup(self.db_path, "pre-reset")
+
         try:
             self._conn.execute("BEGIN")
 
@@ -802,6 +805,8 @@ class ReviewDatabase:
 
         Returns the number of deleted rows.
         """
+        auto_backup(self.db_path, "pre-orphan-cleanup")
+
         result = self._conn.execute(
             """DELETE FROM evidence_spans
                WHERE extraction_id NOT IN (

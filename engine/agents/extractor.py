@@ -440,8 +440,11 @@ def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
             stale_count, review_name,
         )
 
+    from engine.utils.progress import ProgressReporter
+
     stats = {"extracted": 0, "skipped": 0, "failed": 0, "total_spans": 0}
     review_dir = Path(db.db_path).parent
+    progress = ProgressReporter(total, "Local extraction")
 
     for i, paper in enumerate(papers, 1):
         pid = paper["id"]
@@ -455,6 +458,7 @@ def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
         if existing:
             logger.info("Paper %d: already extracted with current schema — skipping", pid)
             stats["skipped"] += 1
+            progress.report(pid, "SKIPPED", 0)
             continue
 
         # Load parsed Markdown
@@ -463,15 +467,19 @@ def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
         if not md_files:
             logger.warning("Paper %d: no parsed text found — skipping", pid)
             stats["failed"] += 1
+            progress.report(pid, "FAILED", 0)
             continue
 
         paper_text = md_files[0].read_text()
+        t_paper = time.time()
 
         try:
             result = extract_paper(pid, paper_text, spec, db)
             db.update_status(pid, "EXTRACTED")
             stats["extracted"] += 1
             stats["total_spans"] += len(result.fields)
+            elapsed = time.time() - t_paper
+            progress.report(pid, "EXTRACTED", elapsed)
             logger.info(
                 "Extracted %d/%d — %d fields from '%s'",
                 i, total, len(result.fields), title[:60],
@@ -480,7 +488,10 @@ def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
             logger.error("Paper %d extraction failed: %s", pid, exc)
             db.update_status(pid, "EXTRACT_FAILED")
             stats["failed"] += 1
+            elapsed = time.time() - t_paper
+            progress.report(pid, "FAILED", elapsed)
 
+    progress.summary()
     logger.info(
         "Extraction complete: %d extracted, %d skipped, %d failed, %d total spans",
         stats["extracted"],

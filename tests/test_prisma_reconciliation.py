@@ -4,7 +4,7 @@ import pytest
 
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
-from engine.exporters.prisma import generate_prisma_flow, validate_prisma_counts
+from engine.exporters.prisma import generate_prisma_flow, validate_prisma_counts, export_prisma_csv
 from engine.search.models import Citation
 
 
@@ -214,3 +214,63 @@ class TestNoDoubleCount:
         result = validate_prisma_counts(db)
         assert result["valid"] is True
         assert result["total_db"] == 2
+
+
+class TestExtractFailed:
+
+    def _advance_to_parsed(self, db, pid):
+        db.update_status(pid, "ABSTRACT_SCREENED_IN")
+        db.update_status(pid, "PDF_ACQUIRED")
+        db.update_status(pid, "PARSED")
+
+    def test_extract_failed_appears_in_flow_and_csv(self, db, tmp_path):
+        """PRISMA output with 2 EXTRACT_FAILED papers shows the line with correct count."""
+        pids = _add_papers(db, 5)
+
+        # 2 EXTRACT_FAILED
+        for pid in pids[:2]:
+            self._advance_to_parsed(db, pid)
+            db.update_status(pid, "EXTRACT_FAILED")
+
+        # 1 AI_AUDIT_COMPLETE (included)
+        self._advance_to_parsed(db, pids[2])
+        db.update_status(pids[2], "EXTRACTED")
+        db.update_status(pids[2], "AI_AUDIT_COMPLETE")
+
+        # 2 ABSTRACT_SCREENED_OUT
+        db.update_status(pids[3], "ABSTRACT_SCREENED_OUT")
+        db.update_status(pids[4], "ABSTRACT_SCREENED_OUT")
+
+        flow = generate_prisma_flow(db)
+        assert flow["extract_failed"] == 2
+        assert flow["studies_included"] == 1  # only successfully extracted
+
+        # Reconciliation still passes
+        result = validate_prisma_counts(db)
+        assert result["valid"] is True
+
+        # CSV contains the line
+        csv_path = str(tmp_path / "prisma.csv")
+        export_prisma_csv(db, csv_path)
+        content = open(csv_path).read()
+        assert "Extraction failed" in content
+        assert "Model timeout/error" in content
+
+    def test_extract_failed_zero_omitted_from_csv(self, db, tmp_path):
+        """PRISMA output with 0 EXTRACT_FAILED omits the line entirely."""
+        pids = _add_papers(db, 3)
+
+        # 1 AI_AUDIT_COMPLETE, 2 ABSTRACT_SCREENED_OUT — no EXTRACT_FAILED
+        self._advance_to_parsed(db, pids[0])
+        db.update_status(pids[0], "EXTRACTED")
+        db.update_status(pids[0], "AI_AUDIT_COMPLETE")
+        db.update_status(pids[1], "ABSTRACT_SCREENED_OUT")
+        db.update_status(pids[2], "ABSTRACT_SCREENED_OUT")
+
+        flow = generate_prisma_flow(db)
+        assert flow["extract_failed"] == 0
+
+        csv_path = str(tmp_path / "prisma.csv")
+        export_prisma_csv(db, csv_path)
+        content = open(csv_path).read()
+        assert "Extraction failed" not in content

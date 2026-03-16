@@ -131,6 +131,8 @@ CREATE TABLE IF NOT EXISTS extractions (
     extracted_data          TEXT NOT NULL,  -- JSON
     reasoning_trace         TEXT,
     model                   TEXT,
+    model_digest            TEXT,
+    auditor_model_digest    TEXT,
     low_yield               INTEGER NOT NULL DEFAULT 0,  -- boolean: 1 if below threshold
     extracted_at            TEXT NOT NULL
 );
@@ -221,6 +223,11 @@ _SIMPLE_MIGRATIONS = [
     "ALTER TABLE papers ADD COLUMN pdf_ai_language TEXT",
     "ALTER TABLE papers ADD COLUMN pdf_ai_content_type TEXT",
     "ALTER TABLE papers ADD COLUMN pdf_ai_confidence REAL",
+    # Migration 005: model digest columns
+    "ALTER TABLE extractions ADD COLUMN model_digest TEXT",
+    "ALTER TABLE extractions ADD COLUMN auditor_model_digest TEXT",
+    # Migration 006: PDF content hash on papers table
+    "ALTER TABLE papers ADD COLUMN pdf_content_hash TEXT",
 ]
 
 _EVIDENCE_SPANS_REBUILD = """
@@ -670,6 +677,8 @@ class ReviewDatabase:
         reasoning_trace: str,
         model: str,
         spans: list[dict],
+        model_digest: str | None = None,
+        auditor_model_digest: str | None = None,
     ) -> int:
         """Atomically insert extraction + all evidence spans in one transaction.
 
@@ -684,14 +693,17 @@ class ReviewDatabase:
             cur = self._conn.execute(
                 """INSERT INTO extractions
                    (paper_id, extraction_schema_hash, extracted_data,
-                    reasoning_trace, model, extracted_at)
-                   VALUES (?, ?, ?, ?, ?, ?)""",
+                    reasoning_trace, model, model_digest,
+                    auditor_model_digest, extracted_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     paper_id,
                     schema_hash,
                     json.dumps(extracted_data),
                     reasoning_trace,
                     model,
+                    model_digest,
+                    auditor_model_digest,
                     _now(),
                 ),
             )

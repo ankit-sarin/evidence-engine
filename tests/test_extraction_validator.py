@@ -12,6 +12,7 @@ from engine.validators.extraction_validator import (
     normalize_categorical_values,
     normalize_prefix,
     validate_extraction,
+    verify_schema_parity,
     _closest_match,
 )
 
@@ -305,3 +306,36 @@ def test_bleed_semicolon_multi_value(spec):
     assert len(bleeds) == 1
     assert bleeds[0]["extracted_value"] == "Feasibility study"
     assert bleeds[0]["belongs_to_field"] == "study_design"
+
+
+# ── schema hash parity tests ────────────────────────────────────────
+
+
+def test_same_spec_same_hash(spec):
+    """Same spec produces the same prompt hash deterministically."""
+    h1 = verify_schema_parity(spec)
+    h2 = verify_schema_parity(spec)
+    assert h1 == h2
+    assert len(h1) == 64  # SHA-256 hex digest
+
+
+def test_modified_spec_different_hash():
+    """Modifying the spec changes the prompt hash."""
+    from copy import deepcopy
+    spec_a = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+    spec_b = deepcopy(spec_a)
+
+    # Add a new field to change the extraction schema
+    from engine.core.review_spec import ExtractionField
+    spec_b.extraction_schema.fields.append(
+        ExtractionField(
+            name="fake_new_field",
+            description="A fake field for testing",
+            type="str",
+            tier=1,
+        )
+    )
+
+    h_a = verify_schema_parity(spec_a)
+    h_b = verify_schema_parity(spec_b)
+    assert h_a != h_b

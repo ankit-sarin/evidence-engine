@@ -126,6 +126,25 @@ class CloudExtractorBase:
             if isinstance(span, dict) and "source_snippet" not in span:
                 span["source_snippet"] = ""
 
+        # Null value → "NR" conversion: Sonnet returns null for absent fields,
+        # but Pydantic requires value: str.  Convert to "NR" (engine convention
+        # for absent values) and clear the snippet.
+        # Also coerce non-string values (int, float) to str — Sonnet sometimes
+        # returns bare numbers for numeric fields like sample_size.
+        for span in response_json.get("fields", []):
+            if isinstance(span, dict) and span.get("value") is None:
+                logger.debug(
+                    "Null value → NR: field '%s'", span.get("field_name"),
+                )
+                span["value"] = "NR"
+                span["source_snippet"] = ""
+            elif isinstance(span, dict) and not isinstance(span.get("value"), str):
+                logger.debug(
+                    "Non-string value → str: field '%s', value=%r",
+                    span.get("field_name"), span.get("value"),
+                )
+                span["value"] = str(span["value"])
+
         try:
             output = ExtractionOutput.model_validate(response_json)
         except Exception as exc:
@@ -181,8 +200,8 @@ class CloudExtractorBase:
                 self._conn.execute(
                     """INSERT INTO cloud_evidence_spans
                        (cloud_extraction_id, field_name, value, source_snippet,
-                        confidence, tier)
-                       VALUES (?, ?, ?, ?, ?, ?)""",
+                        confidence, tier, notes)
+                       VALUES (?, ?, ?, ?, ?, ?, ?)""",
                     (
                         ext_id,
                         span["field_name"],
@@ -190,6 +209,7 @@ class CloudExtractorBase:
                         span.get("source_snippet"),
                         span.get("confidence"),
                         span.get("tier"),
+                        span.get("notes"),
                     ),
                 )
 

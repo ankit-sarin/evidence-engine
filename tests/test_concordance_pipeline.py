@@ -3,11 +3,13 @@
 Uses mock data (in-memory dicts) — no real DB required.
 """
 
+import logging
 import math
+import sqlite3
 
 import pytest
 
-from engine.analysis.concordance import Disagreement, align_arms, ConcordanceReport
+from engine.analysis.concordance import Disagreement, align_arms, check_schema_parity, ConcordanceReport
 from engine.analysis.metrics import (
     KappaResult,
     FieldSummary,
@@ -284,3 +286,71 @@ class TestDisagreementTracking:
         field_names = {d.field_name for d in disagreements}
         assert "task_monitor" in field_names
         assert "autonomy_level" in field_names
+
+
+# ── Schema parity check ────────────────────────────────────────────
+
+
+class TestCheckSchemaParity:
+
+    def _make_db(self, tmp_path):
+        """Create a minimal DB with extractions + cloud_extractions tables."""
+        db_path = str(tmp_path / "test.db")
+        conn = sqlite3.connect(db_path)
+        conn.executescript("""
+            CREATE TABLE papers (
+                id INTEGER PRIMARY KEY,
+                title TEXT, source TEXT, status TEXT,
+                created_at TEXT, updated_at TEXT
+            );
+            CREATE TABLE extractions (
+                id INTEGER PRIMARY KEY,
+                paper_id INTEGER,
+                extraction_schema_hash TEXT
+            );
+            CREATE TABLE cloud_extractions (
+                id INTEGER PRIMARY KEY,
+                paper_id INTEGER,
+                arm TEXT,
+                extraction_schema_hash TEXT
+            );
+        """)
+        return db_path, conn
+
+    def test_matching_hashes_no_warning(self, tmp_path, caplog):
+        db_path, conn = self._make_db(tmp_path)
+        conn.execute(
+            "INSERT INTO extractions (paper_id, extraction_schema_hash) VALUES (1, 'abc123')"
+        )
+        conn.execute(
+            "INSERT INTO cloud_extractions (paper_id, arm, extraction_schema_hash) VALUES (1, 'openai', 'abc123')"
+        )
+        conn.commit()
+        conn.close()
+
+        with caplog.at_level(logging.WARNING, logger="engine.analysis.concordance"):
+            result = check_schema_parity(db_path, ["local", "openai"])
+
+        assert result["local"] == {"abc123"}
+        assert result["openai"] == {"abc123"}
+        assert "Schema hash mismatch" not in caplog.text
+
+    def test_mismatched_hashes_warns(self, tmp_path, caplog):
+        db_path, conn = self._make_db(tmp_path)
+        conn.execute(
+            "INSERT INTO extractions (paper_id, extraction_schema_hash) VALUES (1, 'hash_local')"
+        )
+        conn.execute(
+            "INSERT INTO cloud_extractions (paper_id, arm, extraction_schema_hash) VALUES (1, 'anthropic', 'hash_cloud')"
+        )
+        conn.commit()
+        conn.close()
+
+        with caplog.at_level(logging.WARNING, logger="engine.analysis.concordance"):
+            result = check_schema_parity(db_path, ["local", "anthropic"])
+
+        assert result["local"] == {"hash_local"}
+        assert result["anthropic"] == {"hash_cloud"}
+        assert "Schema hash mismatch" in caplog.text
+        assert "hash_local" in caplog.text
+        assert "hash_cloud" in caplog.text

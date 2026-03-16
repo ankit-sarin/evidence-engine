@@ -107,6 +107,19 @@ class AnthropicExtractor(CloudExtractorBase):
         # Parse into spans
         spans = self.parse_response_to_spans(extracted_data)
 
+        # Normalize empty strings → null with annotation
+        normalized_fields = []
+        for span in spans:
+            if span.get("value") == "":
+                span["value"] = None
+                span["notes"] = "empty_string_to_null"
+                normalized_fields.append(span["field_name"])
+        if normalized_fields:
+            logger.debug(
+                "Paper %d: normalized empty strings to null for fields: %s",
+                paper_id, ", ".join(normalized_fields),
+            )
+
         return {
             "paper_id": paper_id,
             "extracted_data": extracted_data,
@@ -152,12 +165,33 @@ class AnthropicExtractor(CloudExtractorBase):
                 progress.report(pid, "FAILED", time.time() - t_paper)
                 continue
 
-            # Retry logic
+            # Retry logic — rate-limit-aware backoff
             result = None
             for attempt in range(3):
                 try:
                     result = self.extract_paper(pid, parsed_text)
                     break
+                except anthropic.RateLimitError as exc:
+                    # 429: use retry-after header or exponential backoff (30s, 60s, 120s)
+                    retry_after = None
+                    if hasattr(exc, "response") and exc.response is not None:
+                        retry_after = exc.response.headers.get("retry-after")
+                    if retry_after:
+                        wait = int(retry_after)
+                    else:
+                        wait = 30 * (2 ** attempt)
+                    if attempt < 2:
+                        logger.info(
+                            "Paper %d: rate limited (attempt %d/3) — waiting %ds",
+                            pid, attempt + 1, wait,
+                        )
+                        time.sleep(wait)
+                    else:
+                        logger.error(
+                            "Paper %d failed after 3 rate-limited attempts: %s",
+                            pid, exc,
+                        )
+                        stats["failed"] += 1
                 except Exception as exc:
                     if attempt < 2:
                         wait = 2 ** (attempt + 1)

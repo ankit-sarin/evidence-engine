@@ -55,6 +55,33 @@ DEFAULT_MAX_RETRIES = 2
 DEFAULT_RETRY_DELAY = 30  # seconds
 
 
+def get_model_digest(model_name: str) -> str | None:
+    """Return the Ollama model digest (hash) for the given model name.
+
+    Calls POST /api/show to get model metadata.  Returns the digest string
+    on success, or None on failure (logged at WARNING).
+    """
+    try:
+        info = _client.show(model_name)
+        # ollama-python returns a dict-like with 'digest' at the top level
+        # or under modelinfo.  Try the common paths.
+        digest = None
+        if hasattr(info, "digest"):
+            digest = info.digest
+        elif isinstance(info, dict):
+            digest = info.get("digest")
+        # Fallback: modelinfo dict may contain general.file_type etc. but
+        # the top-level 'digest' field is what we want (set by ollama show).
+        if not digest and hasattr(info, "modelinfo"):
+            mi = info.modelinfo if not isinstance(info.modelinfo, dict) else info.modelinfo
+            if isinstance(mi, dict):
+                digest = mi.get("digest")
+        return digest or None
+    except Exception as exc:
+        logger.warning("Failed to get digest for model %s: %s", model_name, exc)
+        return None
+
+
 def _wall_timeout_for_model(model: str) -> float:
     """Return wall-clock timeout in seconds for a given model name."""
     for pattern, timeout in MODEL_TIMEOUTS.items():

@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS cloud_evidence_spans (
     source_snippet          TEXT,
     confidence              REAL,
     tier                    INTEGER,
+    notes                   TEXT,
     UNIQUE(cloud_extraction_id, field_name)
 );
 """
@@ -37,5 +38,9 @@ def init_cloud_tables(db_path: str) -> None:
     """Create cloud extraction tables if they don't exist."""
     conn = sqlite3.connect(db_path)
     conn.executescript(_CLOUD_SCHEMA)
+    # Migrate: add notes column if missing (for pre-existing DBs)
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(cloud_evidence_spans)").fetchall()}
+    if "notes" not in cols:
+        conn.execute("ALTER TABLE cloud_evidence_spans ADD COLUMN notes TEXT")
     conn.commit()
     conn.close()

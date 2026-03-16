@@ -443,3 +443,224 @@ class TestCLI:
         from scripts.run_cloud_extraction import dry_run
         # This should work without API keys
         dry_run(test_db, spec_path, ["openai", "anthropic"])
+
+
+# ── Empty-string normalization (Anthropic) ────────────────────────
+
+
+class TestSonnetEmptyStringNormalization:
+    """Verify Anthropic extractor normalizes empty strings to null with annotation."""
+
+    def _make_mock_response(self, content_json, input_toks=2000, output_toks=1000):
+        thinking_block = SimpleNamespace(
+            type="thinking",
+            thinking="Analyzing the paper...",
+        )
+        text_block = SimpleNamespace(
+            type="text",
+            text=json.dumps(content_json),
+        )
+        usage = SimpleNamespace(
+            input_tokens=input_toks,
+            output_tokens=output_toks,
+        )
+        return SimpleNamespace(content=[thinking_block, text_block], usage=usage)
+
+    @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+    def test_empty_string_normalized_to_null(self, mock_anthropic_cls, test_db, spec_path):
+        """Empty string '' gets normalized to null with 'empty_string_to_null' annotation."""
+        mock_client = MagicMock()
+        mock_anthropic_cls.return_value = mock_client
+
+        fields_with_empty = {"fields": [
+            {"field_name": "study_type", "value": "", "source_snippet": "snippet", "confidence": 0.9, "tier": 1},
+        ]}
+        mock_client.messages.create.return_value = self._make_mock_response(fields_with_empty)
+
+        extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+        pending = extractor.get_pending_papers(extractor.ARM)
+        if not pending:
+            extractor.close()
+            pytest.skip("No pending papers")
+
+        result = extractor.extract_paper(pending[0]["paper_id"], "Test text.")
+        span = result["spans"][0]
+        assert span["value"] is None
+        assert span["notes"] == "empty_string_to_null"
+
+        # Verify it round-trips through store_result
+        ext_id = extractor.store_result(
+            paper_id=pending[0]["paper_id"], arm=extractor.ARM,
+            model_string=extractor.model_string,
+            extracted_data=result["extracted_data"],
+            reasoning_trace=result["reasoning_trace"],
+            prompt_text=result["prompt_text"],
+            input_tokens=result["input_tokens"],
+            output_tokens=result["output_tokens"],
+            reasoning_tokens=result["reasoning_tokens"],
+            cost_usd=result["cost_usd"], spans=result["spans"],
+        )
+        row = extractor._conn.execute(
+            "SELECT value, notes FROM cloud_evidence_spans WHERE cloud_extraction_id = ?",
+            (ext_id,),
+        ).fetchone()
+        assert row["value"] is None
+        assert row["notes"] == "empty_string_to_null"
+        extractor.close()
+
+    @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+    def test_null_converted_to_nr(self, mock_anthropic_cls, test_db, spec_path):
+        """Null value from Sonnet is converted to 'NR' before Pydantic validation.
+
+        After Fix 2, null values are converted to 'NR' in parse_response_to_spans,
+        so they survive Pydantic validation. The empty-string normalization in
+        extract_paper does NOT fire (value is 'NR', not '').
+        """
+        mock_client = MagicMock()
+        mock_anthropic_cls.return_value = mock_client
+
+        fields_with_null = {"fields": [
+            {"field_name": "study_type", "value": None, "source_snippet": "snippet", "confidence": 0.9, "tier": 1},
+            {"field_name": "sample_size", "value": "42", "source_snippet": "n=42", "confidence": 0.8, "tier": 1},
+        ]}
+        mock_client.messages.create.return_value = self._make_mock_response(fields_with_null)
+
+        extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+        pending = extractor.get_pending_papers(extractor.ARM)
+        if not pending:
+            extractor.close()
+            pytest.skip("No pending papers")
+
+        result = extractor.extract_paper(pending[0]["paper_id"], "Test text.")
+        # Both spans survive now — null was converted to "NR"
+        assert len(result["spans"]) == 2
+        nr_span = [s for s in result["spans"] if s["field_name"] == "study_type"][0]
+        assert nr_span["value"] == "NR"
+        assert nr_span["source_snippet"] == ""
+        # No empty_string_to_null annotation (value is "NR", not "")
+        assert nr_span.get("notes") is None
+        # Non-null span unchanged
+        num_span = [s for s in result["spans"] if s["field_name"] == "sample_size"][0]
+        assert num_span["value"] == "42"
+        extractor.close()
+
+    @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+    def test_nonempty_string_unchanged(self, mock_anthropic_cls, test_db, spec_path):
+        """Non-empty string value is left as-is, no annotation."""
+        mock_client = MagicMock()
+        mock_anthropic_cls.return_value = mock_client
+
+        fields_normal = {"fields": [
+            {"field_name": "study_type", "value": "RCT", "source_snippet": "snippet", "confidence": 0.9, "tier": 1},
+        ]}
+        mock_client.messages.create.return_value = self._make_mock_response(fields_normal)
+
+        extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+        pending = extractor.get_pending_papers(extractor.ARM)
+        if not pending:
+            extractor.close()
+            pytest.skip("No pending papers")
+
+        result = extractor.extract_paper(pending[0]["paper_id"], "Test text.")
+        span = result["spans"][0]
+        assert span["value"] == "RCT"
+        assert span.get("notes") is None
+        extractor.close()
+
+
+# ── Rate limit backoff (Anthropic) ────────────────────────────────
+
+
+class TestSonnetRateLimitBackoff:
+    """Verify 429 responses trigger longer backoff than generic errors."""
+
+    @patch("engine.cloud.anthropic_extractor.time.sleep")
+    @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+    def test_429_triggers_30s_plus_backoff(self, mock_anthropic_cls, mock_sleep, test_db, spec_path):
+        """Rate limit error uses 30s+ exponential backoff, not the 2s/4s default."""
+        import anthropic as anthropic_mod
+
+        mock_client = MagicMock()
+        mock_anthropic_cls.return_value = mock_client
+
+        # Build a mock 429 response
+        mock_response = MagicMock()
+        mock_response.status_code = 429
+        mock_response.headers = {}
+
+        rate_err = anthropic_mod.RateLimitError(
+            message="rate limit exceeded",
+            response=mock_response,
+            body={"error": {"type": "rate_limit_error", "message": "rate limit"}},
+        )
+
+        # First two calls raise 429, third succeeds
+        thinking_block = SimpleNamespace(type="thinking", thinking="ok")
+        text_block = SimpleNamespace(type="text", text=json.dumps(SAMPLE_RESPONSE))
+        usage = SimpleNamespace(input_tokens=100, output_tokens=50)
+        success_resp = SimpleNamespace(content=[thinking_block, text_block], usage=usage)
+
+        mock_client.messages.create.side_effect = [rate_err, rate_err, success_resp]
+
+        extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+        pending = extractor.get_pending_papers(extractor.ARM)
+        if not pending:
+            extractor.close()
+            pytest.skip("No pending papers")
+
+        # Create parsed text file
+        parsed_dir = Path(test_db).parent / "parsed_text"
+        pid = pending[0]["paper_id"]
+        (parsed_dir / f"{pid}_v1.md").write_text("Test paper text.")
+
+        extractor.run(max_papers=1)
+
+        # Verify sleep was called with 30s+ values (not 2/4)
+        sleep_calls = [c.args[0] for c in mock_sleep.call_args_list]
+        assert len(sleep_calls) == 2
+        assert sleep_calls[0] >= 30  # first retry: 30s
+        assert sleep_calls[1] >= 60  # second retry: 60s
+        extractor.close()
+
+    @patch("engine.cloud.anthropic_extractor.time.sleep")
+    @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+    def test_429_uses_retry_after_header(self, mock_anthropic_cls, mock_sleep, test_db, spec_path):
+        """If retry-after header is present, use that value."""
+        import anthropic as anthropic_mod
+
+        mock_client = MagicMock()
+        mock_anthropic_cls.return_value = mock_client
+
+        mock_response = MagicMock()
+        mock_response.status_code = 429
+        mock_response.headers = {"retry-after": "45"}
+
+        rate_err = anthropic_mod.RateLimitError(
+            message="rate limit exceeded",
+            response=mock_response,
+            body={"error": {"type": "rate_limit_error", "message": "rate limit"}},
+        )
+
+        thinking_block = SimpleNamespace(type="thinking", thinking="ok")
+        text_block = SimpleNamespace(type="text", text=json.dumps(SAMPLE_RESPONSE))
+        usage = SimpleNamespace(input_tokens=100, output_tokens=50)
+        success_resp = SimpleNamespace(content=[thinking_block, text_block], usage=usage)
+
+        mock_client.messages.create.side_effect = [rate_err, success_resp]
+
+        extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+        pending = extractor.get_pending_papers(extractor.ARM)
+        if not pending:
+            extractor.close()
+            pytest.skip("No pending papers")
+
+        parsed_dir = Path(test_db).parent / "parsed_text"
+        pid = pending[0]["paper_id"]
+        (parsed_dir / f"{pid}_v1.md").write_text("Test paper text.")
+
+        extractor.run(max_papers=1)
+
+        sleep_calls = [c.args[0] for c in mock_sleep.call_args_list]
+        assert len(sleep_calls) == 1
+        assert sleep_calls[0] == 45  # from retry-after header
+        extractor.close()

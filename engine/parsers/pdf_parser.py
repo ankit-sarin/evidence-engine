@@ -1,8 +1,14 @@
-"""PDF-to-Markdown parser: Docling → PyMuPDF fallback → Qwen2.5-VL for scanned."""
+"""PDF-to-Markdown parser: Docling → PyMuPDF fallback → Qwen2.5-VL for scanned.
 
+CLI:
+    python -m engine.parsers.pdf_parser --verify-hashes --review surgical_autonomy
+"""
+
+import argparse
 import base64
 import hashlib
 import logging
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -22,8 +28,11 @@ _VISION_MODEL = "qwen2.5vl:7b"
 # ── Public API ───────────────────────────────────────────────────────
 
 
-def compute_pdf_hash(pdf_path: str) -> str:
-    """SHA-256 hash of the PDF file contents."""
+def compute_pdf_hash(pdf_path: str) -> str | None:
+    """SHA-256 hash of the PDF file contents. Returns None if file doesn't exist."""
+    path = Path(pdf_path)
+    if not path.exists():
+        return None
     h = hashlib.sha256()
     with open(pdf_path, "rb") as f:
         for chunk in iter(lambda: f.read(8192), b""):
@@ -190,6 +199,11 @@ def parse_pdf(
            VALUES (?, ?, ?, ?, ?, ?, ?)""",
         (paper_id, pdf_path, pdf_hash, str(md_path), version, parser_used, now),
     )
+    # Store content hash on the papers row for provenance
+    db._conn.execute(
+        "UPDATE papers SET pdf_content_hash = ? WHERE id = ?",
+        (pdf_hash, paper_id),
+    )
     db._conn.commit()
 
     return ParsedDocument(
@@ -283,3 +297,93 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
         stats["failed"],
     )
     return stats
+
+
+# ── Hash Verification ────────────────────────────────────────────────
+
+
+def verify_hashes(db: ReviewDatabase) -> list[dict]:
+    """Check all papers with stored pdf_content_hash against current PDF files.
+
+    Returns a list of mismatch dicts: {paper_id, stored_hash, current_hash, pdf_path}.
+    """
+    rows = db._conn.execute(
+        """SELECT p.id, p.pdf_content_hash, p.pdf_local_path,
+                  fta.pdf_path AS fta_pdf_path
+           FROM papers p
+           LEFT JOIN full_text_assets fta ON fta.paper_id = p.id
+           WHERE p.pdf_content_hash IS NOT NULL
+           ORDER BY p.id"""
+    ).fetchall()
+
+    # Deduplicate by paper_id (take the first/most recent fta path)
+    seen: set[int] = set()
+    mismatches: list[dict] = []
+
+    for row in rows:
+        pid = row["id"]
+        if pid in seen:
+            continue
+        seen.add(pid)
+
+        stored_hash = row["pdf_content_hash"]
+
+        # Resolve PDF path: prefer fta, then papers.pdf_local_path
+        pdf_path = row["fta_pdf_path"] or row["pdf_local_path"]
+        if not pdf_path:
+            mismatches.append({
+                "paper_id": pid,
+                "stored_hash": stored_hash,
+                "current_hash": None,
+                "pdf_path": None,
+            })
+            continue
+
+        current_hash = compute_pdf_hash(pdf_path)
+        if current_hash != stored_hash:
+            mismatches.append({
+                "paper_id": pid,
+                "stored_hash": stored_hash,
+                "current_hash": current_hash,
+                "pdf_path": pdf_path,
+            })
+
+    return mismatches
+
+
+# ── CLI ──────────────────────────────────────────────────────────────
+
+
+def main():
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    parser = argparse.ArgumentParser(description="PDF parser utilities")
+    parser.add_argument("--verify-hashes", action="store_true",
+                        help="Check stored PDF hashes against current files")
+    parser.add_argument("--review", required=True, help="Review name")
+    args = parser.parse_args()
+
+    if args.verify_hashes:
+        db = ReviewDatabase(args.review)
+        try:
+            mismatches = verify_hashes(db)
+            if not mismatches:
+                print("All PDF content hashes match current files.")
+            else:
+                print(f"\n{len(mismatches)} PDF hash mismatch(es) found:\n")
+                for m in mismatches:
+                    status = "MISSING" if m["current_hash"] is None else "CHANGED"
+                    print(f"  Paper {m['paper_id']:>5d}: {status}")
+                    print(f"    Stored:  {m['stored_hash'][:16]}...")
+                    current = m['current_hash'] or 'N/A'
+                    print(f"    Current: {current[:16] + '...' if m['current_hash'] else current}")
+                    print(f"    Path:    {m['pdf_path'] or 'not found'}")
+                sys.exit(1)
+        finally:
+            db.close()
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()

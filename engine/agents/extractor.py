@@ -3,11 +3,13 @@
 import json
 import logging
 import re
+import subprocess
 import time
 from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 
+import httpx
 import yaml
 
 from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
@@ -22,6 +24,7 @@ MODEL = "deepseek-r1:32b"
 MAX_RETRIES = 2
 RETRY_DELAY = 30  # seconds between retries
 SNIPPET_MAX_RETRIES = 2
+RESTART_EVERY_N = 25  # proactive Ollama restart interval (0 = disabled)
 
 
 # ── Codebook Loader ──────────────────────────────────────────────────
@@ -362,6 +365,8 @@ def extract_paper(
     paper_text: str,
     spec: ReviewSpec,
     db: ReviewDatabase,
+    model_digest: str | None = None,
+    auditor_model_digest: str | None = None,
 ) -> ExtractionResult:
     """Run the full two-pass extraction on a single paper and store results."""
     prompt = build_extraction_prompt(paper_text, spec)
@@ -403,15 +408,54 @@ def extract_paper(
         reasoning_trace=reasoning_trace,
         model=MODEL,
         spans=span_dicts,
+        model_digest=model_digest,
+        auditor_model_digest=auditor_model_digest,
     )
 
     return result
 
 
+# ── Proactive Ollama Restart ──────────────────────────────────────────
+
+
+def restart_ollama(reason: str = "proactive") -> None:
+    """Restart the Ollama service and wait for it to become responsive.
+
+    Raises RuntimeError if Ollama doesn't come back within 60 seconds.
+    """
+    logger.info("Ollama restart (%s) — running sudo systemctl restart ollama", reason)
+    try:
+        subprocess.run(
+            ["sudo", "systemctl", "restart", "ollama"],
+            timeout=30, check=True, capture_output=True,
+        )
+    except Exception as exc:
+        raise RuntimeError(f"Failed to restart Ollama: {exc}") from exc
+
+    # Poll /api/tags until responsive (max 60s)
+    deadline = time.monotonic() + 60
+    while time.monotonic() < deadline:
+        try:
+            resp = httpx.get("http://127.0.0.1:11434/api/tags", timeout=5)
+            if resp.status_code == 200:
+                logger.info("Ollama restart complete — server responsive")
+                return
+        except (httpx.ConnectError, httpx.TimeoutException):
+            pass
+        time.sleep(2)
+
+    raise RuntimeError("Ollama did not become responsive within 60s after restart")
+
+
 # ── Batch Extraction Pipeline ─────────────────────────────────────────
 
 
-def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> dict:
+def run_extraction(
+    db: ReviewDatabase,
+    spec: ReviewSpec,
+    review_name: str,
+    restart_every: int = RESTART_EVERY_N,
+) -> dict:
     """Run extraction on all eligible papers. Skip if already extracted with current hash.
 
     Picks up papers at FT_ELIGIBLE (reviews with FT screening) and PARSED
@@ -429,6 +473,17 @@ def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
     from engine.utils.ollama_preflight import require_preflight
     require_preflight([MODEL], runner_name="Extraction")
 
+    # Capture model digests before extraction loop
+    from engine.utils.ollama_client import get_model_digest
+    from engine.agents.auditor import DEFAULT_AUDITOR_MODEL
+    extractor_digest = get_model_digest(MODEL)
+    auditor_digest = get_model_digest(DEFAULT_AUDITOR_MODEL)
+    logger.info(
+        "Model digests — extractor (%s): %s, auditor (%s): %s",
+        MODEL, extractor_digest or "unavailable",
+        DEFAULT_AUDITOR_MODEL, auditor_digest or "unavailable",
+    )
+
     # Pre-flight: warn about stale extractions from a different schema version
     from engine.utils.extraction_cleanup import check_stale_extractions
     stale_count = check_stale_extractions(db, schema_hash)
@@ -445,6 +500,7 @@ def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
     stats = {"extracted": 0, "skipped": 0, "failed": 0, "total_spans": 0}
     review_dir = Path(db.db_path).parent
     progress = ProgressReporter(total, "Local extraction")
+    papers_since_restart = 0  # counter for proactive restart
 
     for i, paper in enumerate(papers, 1):
         pid = paper["id"]
@@ -474,7 +530,11 @@ def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
         t_paper = time.time()
 
         try:
-            result = extract_paper(pid, paper_text, spec, db)
+            result = extract_paper(
+                pid, paper_text, spec, db,
+                model_digest=extractor_digest,
+                auditor_model_digest=auditor_digest,
+            )
             db.update_status(pid, "EXTRACTED")
             stats["extracted"] += 1
             stats["total_spans"] += len(result.fields)
@@ -490,6 +550,16 @@ def run_extraction(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
             stats["failed"] += 1
             elapsed = time.time() - t_paper
             progress.report(pid, "FAILED", elapsed)
+
+        # Proactive Ollama restart to clear memory fragmentation
+        papers_since_restart += 1
+        if restart_every > 0 and papers_since_restart >= restart_every:
+            logger.info(
+                "Proactive Ollama restart after %d papers to clear memory fragmentation",
+                papers_since_restart,
+            )
+            restart_ollama(reason=f"proactive after {papers_since_restart} papers")
+            papers_since_restart = 0
 
     progress.summary()
     logger.info(

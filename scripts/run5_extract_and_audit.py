@@ -50,6 +50,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         nargs="+",
         help="Extract specific paper IDs only",
     )
+    parser.add_argument(
+        "--restart-every",
+        type=int,
+        default=25,
+        help="Proactive Ollama restart every N papers (0 = disabled, default 25)",
+    )
     return parser.parse_args(argv)
 
 
@@ -97,7 +103,7 @@ def main(argv: list[str] | None = None):
     logger.info("=" * 60)
 
     t0 = time.time()
-    extract_stats = run_extraction(db, spec, REVIEW)
+    extract_stats = run_extraction(db, spec, REVIEW, restart_every=args.restart_every)
     extract_elapsed = time.time() - t0
 
     logger.info(

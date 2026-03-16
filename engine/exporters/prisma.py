@@ -103,6 +103,9 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
     # Full text assessed for eligibility = retrieved (all get screened or are in progress)
     full_text_assessed = full_text_retrieved
 
+    # ── Extraction failures ─────────────────────────────────────────
+    extract_failed = status_counts.get("EXTRACT_FAILED", 0)
+
     # ── Extraction / Audit / Inclusion ──────────────────────────────
     studies_included = sum(
         status_counts.get(s, 0) for s in _TERMINAL_INCLUDED
@@ -160,6 +163,7 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
         "rejection_reasons": rejection_reasons,
         "low_yield_rejected": low_yield_rejected,
         "in_progress": in_progress,
+        "extract_failed": extract_failed,
         "spans_verified": spans_verified,
         "spans_flagged": spans_flagged,
     }
@@ -316,6 +320,13 @@ def export_prisma_csv(db: ReviewDatabase, output_path: str) -> None:
             "  — Excluded after extraction (insufficient data)",
             flow["low_yield_rejected"],
             "LOW_YIELD: too few populated fields",
+        ))
+
+    if flow.get("extract_failed", 0) > 0:
+        rows.append((
+            "Extraction failed",
+            flow["extract_failed"],
+            "Model timeout/error",
         ))
 
     if flow.get("in_progress", 0) > 0:

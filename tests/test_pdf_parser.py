@@ -14,6 +14,7 @@ from engine.parsers.pdf_parser import (
     parse_with_docling,
     parse_with_pymupdf,
     parse_pdf,
+    verify_hashes,
 )
 from engine.search.models import Citation
 
@@ -249,3 +250,82 @@ def test_docling_sparse_pymupdf_sufficient(digital_pdf, db):
 
     assert result.parser_used == "pymupdf"
     assert len(result.parsed_markdown) > 50
+
+
+# ── PDF Content Hash Tests ─────────────────────────────────────────
+
+
+def test_hash_computed_correctly(digital_pdf):
+    """Hash is a valid 64-char SHA-256 hex digest."""
+    h = compute_pdf_hash(str(digital_pdf))
+    assert h is not None
+    assert len(h) == 64
+    assert all(c in "0123456789abcdef" for c in h)
+
+
+def test_same_file_same_hash(digital_pdf):
+    """Same file always produces the same hash."""
+    h1 = compute_pdf_hash(str(digital_pdf))
+    h2 = compute_pdf_hash(str(digital_pdf))
+    assert h1 == h2
+
+
+def test_different_file_different_hash(digital_pdf, scanned_pdf):
+    """Different files produce different hashes."""
+    h1 = compute_pdf_hash(str(digital_pdf))
+    h2 = compute_pdf_hash(str(scanned_pdf))
+    assert h1 != h2
+
+
+def test_missing_file_returns_none(tmp_path):
+    """Non-existent file returns None."""
+    result = compute_pdf_hash(str(tmp_path / "does_not_exist.pdf"))
+    assert result is None
+
+
+def test_hash_stored_in_papers_table(digital_pdf, db):
+    """After parsing, pdf_content_hash is stored on the papers row."""
+    pid = _add_paper(db, pid_hint="20")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+
+    with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+        parse_pdf(str(digital_pdf), pid, "test_parse", db)
+
+    row = db._conn.execute(
+        "SELECT pdf_content_hash FROM papers WHERE id = ?", (pid,)
+    ).fetchone()
+    assert row["pdf_content_hash"] is not None
+    assert row["pdf_content_hash"] == compute_pdf_hash(str(digital_pdf))
+
+
+def test_verify_hashes_no_mismatch(digital_pdf, db):
+    """verify_hashes returns empty list when hashes match."""
+    pid = _add_paper(db, pid_hint="21")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+
+    with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+        parse_pdf(str(digital_pdf), pid, "test_parse", db)
+
+    mismatches = verify_hashes(db)
+    assert mismatches == []
+
+
+def test_verify_hashes_reports_mismatch(digital_pdf, db, tmp_path):
+    """verify_hashes detects when PDF content changes after parsing."""
+    pid = _add_paper(db, pid_hint="22")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+
+    with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+        parse_pdf(str(digital_pdf), pid, "test_parse", db)
+
+    # Modify the PDF file to change its hash
+    with open(str(digital_pdf), "ab") as f:
+        f.write(b"\n%% modified content to change hash")
+
+    mismatches = verify_hashes(db)
+    assert len(mismatches) == 1
+    assert mismatches[0]["paper_id"] == pid
+    assert mismatches[0]["stored_hash"] != mismatches[0]["current_hash"]

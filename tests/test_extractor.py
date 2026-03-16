@@ -15,6 +15,7 @@ from engine.agents.extractor import (
     extract_pass1_reasoning,
     extract_pass2_structured,
     parse_thinking_trace,
+    restart_ollama,
     run_extraction,
 )
 from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
@@ -345,3 +346,125 @@ def test_valid_snippet_no_retry():
 
     assert validated[0].source_snippet == "A randomized controlled trial was conducted."
     mock_retry.assert_not_called()
+
+
+# ── Proactive Ollama Restart Tests ───────────────────────────────────
+
+
+class TestProactiveRestart:
+    """Verify proactive Ollama restart behaviour in run_extraction."""
+
+    @patch("engine.agents.extractor.restart_ollama")
+    @patch("engine.agents.extractor.extract_paper")
+    @patch("engine.utils.ollama_preflight.require_preflight")
+    @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
+    @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
+    def test_restart_triggers_after_n_papers(
+        self, _stale, _digest, _preflight, mock_extract, mock_restart, tmp_path,
+    ):
+        """Proactive restart fires after restart_every papers are processed."""
+        db, spec = self._setup_db(tmp_path, n_papers=5)
+
+        mock_extract.side_effect = self._make_fake_extract(spec)
+
+        run_extraction(db, spec, "test_review", restart_every=3)
+
+        # 5 papers processed, restart_every=3 → should fire once (after paper 3)
+        mock_restart.assert_called_once()
+        assert "3 papers" in mock_restart.call_args.kwargs.get("reason", "")
+        db.close()
+
+    @patch("engine.agents.extractor.restart_ollama")
+    @patch("engine.agents.extractor.extract_paper")
+    @patch("engine.utils.ollama_preflight.require_preflight")
+    @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
+    @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
+    def test_restart_disabled_when_zero(
+        self, _stale, _digest, _preflight, mock_extract, mock_restart, tmp_path,
+    ):
+        """restart_every=0 disables proactive restarts entirely."""
+        db, spec = self._setup_db(tmp_path, n_papers=5)
+        mock_extract.side_effect = self._make_fake_extract(spec)
+
+        run_extraction(db, spec, "test_review", restart_every=0)
+
+        mock_restart.assert_not_called()
+        db.close()
+
+    @patch("engine.agents.extractor.restart_ollama", side_effect=RuntimeError("Failed to restart Ollama: systemctl failed"))
+    @patch("engine.agents.extractor.extract_paper")
+    @patch("engine.utils.ollama_preflight.require_preflight")
+    @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
+    @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
+    def test_restart_failure_raises(
+        self, _stale, _digest, _preflight, mock_extract, _mock_restart, tmp_path,
+    ):
+        """If Ollama restart fails, RuntimeError propagates (no silent continue)."""
+        db, spec = self._setup_db(tmp_path, n_papers=3)
+        mock_extract.side_effect = self._make_fake_extract(spec)
+
+        with pytest.raises(RuntimeError, match="Failed to restart Ollama"):
+            run_extraction(db, spec, "test_review", restart_every=3)
+        db.close()
+
+    # ── helpers ──
+
+    def _setup_db(self, tmp_path, n_papers=5):
+        """Create a minimal in-memory-style DB with N FT_ELIGIBLE papers."""
+        db_path = str(tmp_path / "test.db")
+        db = ReviewDatabase.__new__(ReviewDatabase)
+        import sqlite3
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA foreign_keys=ON")
+        conn.execute("""CREATE TABLE papers (
+            id INTEGER PRIMARY KEY, title TEXT, authors TEXT, year INTEGER,
+            status TEXT, abstract TEXT, doi TEXT, pmid TEXT, source TEXT,
+            pdf_local_path TEXT, added_at TEXT, updated_at TEXT)""")
+        conn.execute("""CREATE TABLE extractions (
+            id INTEGER PRIMARY KEY, paper_id INTEGER, extraction_schema_hash TEXT,
+            extracted_data TEXT, reasoning_trace TEXT, model TEXT,
+            model_digest TEXT, auditor_model_digest TEXT, extracted_at TEXT)""")
+        conn.execute("""CREATE TABLE evidence_spans (
+            id INTEGER PRIMARY KEY, extraction_id INTEGER, field_name TEXT,
+            value TEXT, source_snippet TEXT, confidence REAL)""")
+        for i in range(1, n_papers + 1):
+            conn.execute(
+                "INSERT INTO papers (id, title, status, added_at) VALUES (?, ?, 'FT_ELIGIBLE', '2026-01-01')",
+                (i, f"Test Paper {i}"),
+            )
+            # Create parsed text file
+            parsed_dir = tmp_path / "parsed_text"
+            parsed_dir.mkdir(exist_ok=True)
+            (parsed_dir / f"{i}_v1.md").write_text(f"Paper {i} text content.")
+        conn.commit()
+        db._conn = conn
+        db.db_path = db_path
+        db.review_name = "test_review"
+        spec = load_review_spec(str(SPEC_PATH))
+        return db, spec
+
+    def _make_fake_extract(self, spec):
+        """Return a fake extract_paper function that stores results in DB."""
+        schema_hash = spec.extraction_hash()
+
+        def _fake(paper_id, paper_text, spec_arg, db, **kwargs):
+            from engine.agents.models import ExtractionResult, EvidenceSpan
+            result = ExtractionResult(
+                paper_id=paper_id,
+                fields=[EvidenceSpan(
+                    field_name="study_type", value="RCT",
+                    source_snippet="A randomized trial.", confidence=0.9, tier=1,
+                )],
+                reasoning_trace="test",
+                model="test-model",
+                extraction_schema_hash=schema_hash,
+                extracted_at=datetime.now(timezone.utc),
+            )
+            db._conn.execute(
+                "INSERT INTO extractions (paper_id, extraction_schema_hash, extracted_data, model, extracted_at) VALUES (?, ?, '[]', 'test', '2026-01-01')",
+                (paper_id, schema_hash),
+            )
+            db._conn.commit()
+            return result
+        return _fake

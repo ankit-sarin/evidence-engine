@@ -131,6 +131,52 @@ def align_arms(
     return aligned, a_only, b_only
 
 
+def check_schema_parity(db_path: str, arms: list[str]) -> dict[str, set[str]]:
+    """Verify all arms used the same extraction schema hash.
+
+    Queries distinct extraction_schema_hash values for each arm from the
+    local ``extractions`` and ``cloud_extractions`` tables.
+
+    Returns ``{arm: {hash, ...}}`` mapping.  Logs a WARNING if hashes differ
+    across arms, but does not block execution.
+    """
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+
+    arm_hashes: dict[str, set[str]] = {}
+
+    for arm in arms:
+        if arm == "local":
+            rows = conn.execute(
+                "SELECT DISTINCT extraction_schema_hash FROM extractions"
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT DISTINCT extraction_schema_hash FROM cloud_extractions WHERE arm = ?",
+                (arm,),
+            ).fetchall()
+        hashes = {r[0] for r in rows if r[0]}
+        arm_hashes[arm] = hashes
+
+    conn.close()
+
+    # Check parity across all arms
+    all_hashes = set()
+    for h in arm_hashes.values():
+        all_hashes |= h
+
+    if len(all_hashes) > 1:
+        details = ", ".join(
+            f"{arm}={sorted(h)}" for arm, h in arm_hashes.items() if h
+        )
+        logger.warning(
+            "Schema hash mismatch across arms — results may not be comparable. %s",
+            details,
+        )
+
+    return arm_hashes
+
+
 def run_concordance(
     db_path: str,
     arm_a: str,
@@ -141,6 +187,9 @@ def run_concordance(
     from engine.core.review_spec import ReviewSpec, load_review_spec
 
     spec = load_review_spec(spec_path) if spec_path else None
+
+    # Check schema parity before comparing
+    check_schema_parity(db_path, [arm_a, arm_b])
 
     data_a = load_arm(db_path, arm_a)
     data_b = load_arm(db_path, arm_b)

@@ -418,12 +418,19 @@ def extract_paper(
 # ── Proactive Ollama Restart ──────────────────────────────────────────
 
 
-def restart_ollama(reason: str = "proactive") -> None:
+def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> None:
     """Restart the Ollama service and wait for it to become responsive.
+
+    Uses ``sudo systemctl restart ollama`` to fully clear CUDA context
+    fragmentation (a simple model unload/reload is not sufficient).
 
     Raises RuntimeError if Ollama doesn't come back within 60 seconds.
     """
-    logger.info("Ollama restart (%s) — running sudo systemctl restart ollama", reason)
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    logger.info(
+        "[%s] Ollama restart (%s, %d papers done) — running sudo systemctl restart ollama",
+        ts, reason, papers_done,
+    )
     try:
         subprocess.run(
             ["sudo", "systemctl", "restart", "ollama"],
@@ -438,7 +445,10 @@ def restart_ollama(reason: str = "proactive") -> None:
         try:
             resp = httpx.get("http://127.0.0.1:11434/api/tags", timeout=5)
             if resp.status_code == 200:
-                logger.info("Ollama restart complete — server responsive")
+                elapsed = 60 - (deadline - time.monotonic())
+                logger.info(
+                    "Ollama restart complete — server responsive after %.1fs", elapsed,
+                )
                 return
         except (httpx.ConnectError, httpx.TimeoutException):
             pass
@@ -551,14 +561,13 @@ def run_extraction(
             elapsed = time.time() - t_paper
             progress.report(pid, "FAILED", elapsed)
 
-        # Proactive Ollama restart to clear memory fragmentation
+        # Proactive Ollama restart to clear CUDA context fragmentation
         papers_since_restart += 1
         if restart_every > 0 and papers_since_restart >= restart_every:
-            logger.info(
-                "Proactive Ollama restart after %d papers to clear memory fragmentation",
-                papers_since_restart,
+            restart_ollama(
+                reason=f"proactive after {papers_since_restart} papers",
+                papers_done=stats["extracted"] + stats["skipped"] + stats["failed"],
             )
-            restart_ollama(reason=f"proactive after {papers_since_restart} papers")
             papers_since_restart = 0
 
     progress.summary()

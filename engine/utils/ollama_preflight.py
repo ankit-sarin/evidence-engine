@@ -1,11 +1,13 @@
 """Ollama pre-flight health check — verify models are loaded and responsive.
 
 Sends a minimal completion to each model before committing to a multi-hour
-batch run. Reports load time, VRAM usage, and failures.
+batch run. Reports load time, VRAM usage, and failures.  Also asserts that
+critical Ollama server environment variables are set correctly.
 """
 
 import argparse
 import logging
+import subprocess
 import time
 from dataclasses import dataclass, field
 
@@ -118,11 +120,67 @@ def preflight_check(models: list[str], timeout: int = 30) -> PreflightResult:
     )
 
 
+_REQUIRED_ENV = {
+    "OLLAMA_FLASH_ATTENTION": "true",
+    "OLLAMA_MAX_LOADED_MODELS": "1",
+}
+
+
+def _get_ollama_env() -> dict[str, str]:
+    """Read environment variables from the running Ollama systemd service."""
+    try:
+        cp = subprocess.run(
+            ["systemctl", "show", "ollama", "--property=Environment"],
+            capture_output=True, text=True, timeout=10,
+        )
+        # Output: Environment=KEY=VAL KEY2=VAL2 ...
+        line = cp.stdout.strip()
+        if not line.startswith("Environment="):
+            return {}
+        raw = line[len("Environment="):]
+        env: dict[str, str] = {}
+        for token in raw.split():
+            if "=" in token:
+                k, v = token.split("=", 1)
+                env[k] = v
+        return env
+    except Exception as exc:
+        logger.warning("Could not read Ollama service environment: %s", exc)
+        return {}
+
+
+def check_ollama_env() -> None:
+    """Assert critical Ollama environment variables are set correctly.
+
+    Raises RuntimeError listing expected vs actual for any mismatch.
+    """
+    env = _get_ollama_env()
+    errors: list[str] = []
+    for key, expected in _REQUIRED_ENV.items():
+        actual = env.get(key)
+        if actual is None:
+            errors.append(f"  {key}: expected={expected!r}, actual=<not set>")
+        elif actual != expected:
+            errors.append(f"  {key}: expected={expected!r}, actual={actual!r}")
+
+    if errors:
+        detail = "\n".join(errors)
+        raise RuntimeError(
+            f"Ollama environment check failed:\n{detail}\n"
+            "Fix the Ollama systemd override and restart the service."
+        )
+    logger.info("Ollama environment OK: %s", ", ".join(f"{k}={v}" for k, v in _REQUIRED_ENV.items()))
+
+
 def require_preflight(models: list[str], runner_name: str, timeout: int = 30) -> None:
     """Run preflight check; abort with clear message on failure.
 
     Call this at the top of batch runners before the main loop.
     """
+    # Step 1: verify server environment
+    check_ollama_env()
+
+    # Step 2: verify model availability
     result = preflight_check(models, timeout=timeout)
     if not result.success:
         msg = (

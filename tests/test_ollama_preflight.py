@@ -7,9 +7,11 @@ import pytest
 
 from engine.utils.ollama_preflight import (
     check_model,
+    check_ollama_env,
     preflight_check,
     require_preflight,
     ModelResult,
+    _get_ollama_env,
 )
 
 
@@ -77,22 +79,88 @@ class TestPreflightCheck:
         assert "OOM" in result.error_summary
 
 
+class TestCheckOllamaEnv:
+
+    def test_passes_when_env_correct(self):
+        env = {
+            "OLLAMA_FLASH_ATTENTION": "true",
+            "OLLAMA_MAX_LOADED_MODELS": "1",
+            "OLLAMA_KV_CACHE_TYPE": "f16",
+        }
+        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+            check_ollama_env()  # should not raise
+
+    def test_fails_when_flash_attention_missing(self):
+        env = {"OLLAMA_MAX_LOADED_MODELS": "1"}
+        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+            with pytest.raises(RuntimeError, match="OLLAMA_FLASH_ATTENTION.*not set"):
+                check_ollama_env()
+
+    def test_fails_when_max_loaded_models_wrong(self):
+        env = {"OLLAMA_FLASH_ATTENTION": "true", "OLLAMA_MAX_LOADED_MODELS": "4"}
+        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+            with pytest.raises(RuntimeError, match="OLLAMA_MAX_LOADED_MODELS.*expected='1'.*actual='4'"):
+                check_ollama_env()
+
+    def test_fails_lists_all_errors(self):
+        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value={}):
+            with pytest.raises(RuntimeError, match="OLLAMA_FLASH_ATTENTION") as exc_info:
+                check_ollama_env()
+            assert "OLLAMA_MAX_LOADED_MODELS" in str(exc_info.value)
+
+    def test_does_not_assert_kv_cache_type(self):
+        """KV cache type is deliberately NOT checked — we may change it."""
+        env = {
+            "OLLAMA_FLASH_ATTENTION": "true",
+            "OLLAMA_MAX_LOADED_MODELS": "1",
+            # No OLLAMA_KV_CACHE_TYPE — should still pass
+        }
+        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+            check_ollama_env()  # should not raise
+
+    def test_get_ollama_env_parses_systemctl_output(self):
+        mock_cp = MagicMock()
+        mock_cp.stdout = "Environment=OLLAMA_FLASH_ATTENTION=true OLLAMA_MAX_LOADED_MODELS=1 PATH=/usr/bin\n"
+        with patch("engine.utils.ollama_preflight.subprocess.run", return_value=mock_cp):
+            env = _get_ollama_env()
+        assert env["OLLAMA_FLASH_ATTENTION"] == "true"
+        assert env["OLLAMA_MAX_LOADED_MODELS"] == "1"
+        assert env["PATH"] == "/usr/bin"
+
+    def test_get_ollama_env_returns_empty_on_error(self):
+        with patch("engine.utils.ollama_preflight.subprocess.run",
+                   side_effect=FileNotFoundError("no systemctl")):
+            env = _get_ollama_env()
+        assert env == {}
+
+
 class TestRequirePreflight:
 
     def test_raises_on_failure(self):
-        with patch("engine.utils.ollama_preflight.ollama_chat",
-                   side_effect=ConnectionError("dead")):
-            with pytest.raises(RuntimeError, match="pre-flight check failed"):
-                require_preflight(["broken:7b"], runner_name="Test")
+        with patch("engine.utils.ollama_preflight.check_ollama_env"):
+            with patch("engine.utils.ollama_preflight.ollama_chat",
+                       side_effect=ConnectionError("dead")):
+                with pytest.raises(RuntimeError, match="pre-flight check failed"):
+                    require_preflight(["broken:7b"], runner_name="Test")
 
     def test_passes_silently_on_success(self):
         mock_response = MagicMock()
         mock_response.message.content = "OK"
-        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
-            with patch("engine.utils.ollama_preflight.ollama.ps",
-                       return_value={"models": []}):
-                # Should not raise
-                require_preflight(["good:7b"], runner_name="Test")
+        with patch("engine.utils.ollama_preflight.check_ollama_env"):
+            with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+                with patch("engine.utils.ollama_preflight.ollama.ps",
+                           return_value={"models": []}):
+                    # Should not raise
+                    require_preflight(["good:7b"], runner_name="Test")
+
+    def test_env_check_runs_before_model_check(self):
+        """If env check fails, model check should not run."""
+        with patch("engine.utils.ollama_preflight.check_ollama_env",
+                   side_effect=RuntimeError("env bad")):
+            with patch("engine.utils.ollama_preflight.preflight_check") as mock_pf:
+                with pytest.raises(RuntimeError, match="env bad"):
+                    require_preflight(["model:7b"], runner_name="Test")
+                mock_pf.assert_not_called()
 
 
 # ── Integration with batch runners ───────────────────────────────────

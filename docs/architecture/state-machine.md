@@ -13,7 +13,6 @@ STATUSES = (
     "PDF_ACQUIRED",
     "PDF_EXCLUDED",
     "PARSED",
-    # Full-text screening statuses
     "FT_ELIGIBLE",
     "FT_SCREENED_OUT",
     "FT_FLAGGED",
@@ -30,20 +29,20 @@ STATUSES = (
 | Status | Description | Set By |
 |--------|-------------|--------|
 | `INGESTED` | Paper added to DB from search results | `ReviewDatabase.add_papers()` |
-| `ABSTRACT_SCREENED_IN` | Dual-pass abstract screening: both passes agree to include, or adjudicator includes | `screener.run_screening()`, `screening_adjudicator.import_adjudication_decisions()` |
-| `ABSTRACT_SCREENED_OUT` | Dual-pass abstract screening: both passes agree to exclude, or adjudicator excludes | `screener.run_screening()`, `screening_adjudicator.import_adjudication_decisions()` |
+| `ABSTRACT_SCREENED_IN` | Dual-pass abstract screening: both passes include, or adjudicator includes | `screener.run_screening()`, `screening_adjudicator` |
+| `ABSTRACT_SCREENED_OUT` | Dual-pass abstract screening: both passes exclude, or adjudicator excludes | `screener.run_screening()`, `screening_adjudicator` |
 | `ABSTRACT_SCREEN_FLAGGED` | Abstract screening passes disagree, or verifier excludes a primary include | `screener.run_screening()`, `screener.run_verification()` |
 | `PDF_ACQUIRED` | Full-text PDF obtained and registered in `full_text_assets` | `advance_to_pdf_acquired.py` |
 | `PDF_EXCLUDED` | PDF excluded at quality check (non-English, non-manuscript, inaccessible) — terminal | `pdf_quality_import.import_dispositions()` |
-| `PARSED` | PDF converted to Markdown (Docling or Qwen2.5-VL) | `pdf_parser.parse_pdf()` |
+| `PARSED` | PDF converted to Markdown (Docling, PyMuPDF, or Qwen2.5-VL) | `pdf_parser.parse_pdf()` |
 | `FT_ELIGIBLE` | Full-text screening confirms eligibility for extraction | `ft_screener.run_ft_screening()` |
-| `FT_SCREENED_OUT` | Full-text screening excludes paper (with reason code) | `ft_screener.run_ft_screening()`, `ft_screening_adjudicator.import_ft_adjudication_decisions()` |
-| `FT_FLAGGED` | Full-text primary/verifier disagree, or verifier flags for human review | `ft_screener.run_ft_verification()` |
+| `FT_SCREENED_OUT` | Full-text screening excludes paper (with reason code) | `ft_screener.run_ft_screening()`, `ft_screening_adjudicator` |
+| `FT_FLAGGED` | Full-text primary/verifier disagree, needs human review | `ft_screener.run_ft_verification()` |
 | `EXTRACT_FAILED` | Extraction threw an exception (timeout, parse error) | `extractor.run_extraction()` |
 | `EXTRACTED` | Two-pass extraction completed, evidence spans stored | `extractor.run_extraction()` |
 | `AI_AUDIT_COMPLETE` | All evidence spans audited by AI (no pending remain) | `auditor.run_audit()` |
-| `HUMAN_AUDIT_COMPLETE` | Human reviewer resolved all contested/flagged spans | `audit_adjudicator.import_audit_review_decisions()`, `human_review.import_review_decisions()` |
-| `REJECTED` | Paper excluded from final corpus (with reason) | `ReviewDatabase.reject_paper()` |
+| `HUMAN_AUDIT_COMPLETE` | Human reviewer resolved all contested/flagged spans | `audit_adjudicator`, `human_review` |
+| `REJECTED` | Paper removed from corpus by human reviewer (with reason) | `ReviewDatabase.reject_paper()` |
 
 ## Allowed Transitions
 
@@ -78,8 +77,9 @@ FT_ELIGIBLE ─────> EXTRACTED
 FT_FLAGGED ──────> FT_ELIGIBLE
                 \─> FT_SCREENED_OUT
 
-EXTRACT_FAILED ──> PARSED          (retry)
-                \─> EXTRACTED       (retry succeeds)
+EXTRACT_FAILED ──> PARSED              (retry via --retry-failed)
+                \─> FT_ELIGIBLE         (retry)
+                \─> EXTRACTED           (retry succeeds)
 
 EXTRACTED ────────> AI_AUDIT_COMPLETE
 
@@ -95,10 +95,19 @@ REJECTED ─────────────> (terminal, no transitions)
 
 ## Terminal States
 
-- `ABSTRACT_SCREENED_OUT` — Paper excluded during abstract screening. No forward transitions.
-- `PDF_EXCLUDED` — Paper excluded at PDF quality check (non-English, non-manuscript, inaccessible, or other). No forward transitions. Reason stored in `papers.pdf_exclusion_reason`, detail in `papers.pdf_exclusion_detail`.
-- `FT_SCREENED_OUT` — Paper excluded during full-text screening (with reason code). No forward transitions.
-- `REJECTED` — Paper removed from corpus by human reviewer. No forward transitions. Rejection reason stored in `papers.rejected_reason`.
+| State | What makes it terminal |
+|-------|----------------------|
+| `ABSTRACT_SCREENED_OUT` | Paper excluded during abstract screening. No forward transitions. |
+| `PDF_EXCLUDED` | Paper excluded at PDF quality check (non-English, non-manuscript, inaccessible). Reason in `papers.pdf_exclusion_reason`. |
+| `FT_SCREENED_OUT` | Paper excluded during full-text screening (with reason code). |
+| `REJECTED` | Paper removed from corpus by human reviewer. Reason in `papers.rejected_reason`. |
+
+## Flagged States and Resolution Paths
+
+| Flagged State | Resolution Path | Resolved By |
+|---------------|----------------|-------------|
+| `ABSTRACT_SCREEN_FLAGGED` | → `ABSTRACT_SCREENED_IN` or `ABSTRACT_SCREENED_OUT` | `screening_adjudicator.import_adjudication_decisions()` |
+| `FT_FLAGGED` | → `FT_ELIGIBLE` or `FT_SCREENED_OUT` | `ft_screening_adjudicator.import_ft_adjudication_decisions()` |
 
 ## Data Retention Policy
 
@@ -120,6 +129,13 @@ _STATUS_ORDER = {
 
 `ReviewDatabase.min_status_gate(paper_id, min_status)` returns `True` if the paper's current status meets or exceeds the given level.
 
+## EXTRACT_FAILED Retry Path
+
+Papers at `EXTRACT_FAILED` can be retried via `--retry-failed`:
+- `EXTRACT_FAILED` → `FT_ELIGIBLE` (reset) → re-attempt extraction
+- `EXTRACT_FAILED` → `PARSED` (reset) → re-attempt extraction
+- On success: `EXTRACT_FAILED` → `EXTRACTED` (direct)
+
 ---
 
 ## Evidence Span Audit States
@@ -139,32 +155,33 @@ pending ──────────> verified        (grep pass + semantic pa
 | `verified` | Source snippet found in paper AND value semantically correct | `auditor.audit_span()` — grep pass + semantic pass |
 | `contested` | Source snippet NOT found verbatim, but value semantically supported | `auditor.audit_span()` — grep fail + semantic pass |
 | `flagged` | Value not supported by evidence | `auditor.audit_span()` — semantic fail |
-| `invalid_snippet` | Snippet contains ellipsis bridging (`...`) — model abbreviated the quote | `auditor.audit_span()` — regex match on `INVALID_SNIPPET_RE`, no LLM call |
+| `invalid_snippet` | Snippet contains ellipsis bridging — model abbreviated the quote | `auditor.audit_span()` — regex match on `INVALID_SNIPPET_RE`, no LLM call |
 
 ### Audit Logic Details
 
-1. **Invalid snippet check** (regex): If `source_snippet` matches `INVALID_SNIPPET_RE` (3+ dots, `[...]`, Unicode ellipsis), status = `invalid_snippet`. No further checks.
-2. **Tier 4 exception**: Judgment fields (tier 4) skip grep, go straight to semantic verification.
-3. **Grep verify**: Normalized substring match OR sliding-window fuzzy match (SequenceMatcher > 0.85).
-4. **Semantic verify**: LLM (gemma3:27b) checks if extracted value is supported by the source snippet. Categorical fields use a specialized prompt (category label need not appear verbatim in text).
+1. **Absence value auto-verify**: Fields with absence sentinels (`NOT_FOUND`, `NR`, `Not discussed`, `No comparison reported`, `Not assessable`) are automatically verified without LLM calls.
+2. **Invalid snippet check** (regex): If `source_snippet` matches `INVALID_SNIPPET_RE` (3+ dots, `[...]`, Unicode ellipsis), status = `invalid_snippet`. No further checks.
+3. **Tier 4 exception**: Judgment fields (tier 4) skip grep entirely, go straight to semantic verification.
+4. **Grep verify**: Normalized substring match OR sliding-window fuzzy match (SequenceMatcher > 0.85). Text normalization includes: lowercase, collapse whitespace, fix glued punctuation (e.g., `Table.I` → `Table I`), straighten smart quotes.
+5. **Semantic verify**: gemma3:27b checks if extracted value is supported by the source snippet. Categorical fields use a specialized prompt (category label need not appear verbatim in text).
 
 ### LOW_YIELD Detection (Post-Audit)
 
-After all spans are audited, `check_low_yield()` counts non-null, non-absence extracted fields. Papers with fewer than `low_yield_threshold` (default 4) populated fields are flagged with `low_yield=1` on the extraction record. Absence sentinels (`NOT_FOUND`, `NR`, `Not discussed`, `No comparison reported`, `Not assessable`) are not counted as populated.
+After all spans are audited, `check_low_yield()` counts non-null, non-absence extracted fields. Papers with fewer than `low_yield_threshold` (configurable in Review Spec, default 4) populated fields are flagged with `low_yield=1` on the extraction record. LOW_YIELD papers are prioritized in the audit review queue — all spans exported for PI review (not just problem spans).
 
 ### Human Resolution of Audit States
 
 After AI audit, human reviewers resolve spans via per-span decisions in the audit review workbook:
 
-- `ACCEPT` → span `audit_status` → `verified`, `auditor_model` = `human_review`
-- `CORRECT` → span value overwritten with `corrected_value`, original preserved in `audit_adjudication` table, status → `verified`
-- `REJECT` → span marked verified, recorded in `audit_adjudication` table with `human_decision='reject_paper'`
+- **ACCEPT** → span `audit_status` → `verified`, `auditor_model` = `human_review`
+- **CORRECT** → span value overwritten with `corrected_value`, original preserved in `audit_adjudication` table, status → `verified`
+- **REJECT** → span marked verified, recorded in `audit_adjudication` table with `human_decision='reject_paper'`
 
-Export format: one row per problematic span (contested/flagged/invalid_snippet). LOW_YIELD papers export all spans. Spot-check papers (10% of all-verified) export all spans.
+Export scope: one row per problematic span (contested/flagged/invalid_snippet). LOW_YIELD papers export all spans. Spot-check papers (10% of all-verified) export all spans.
 
-Import validation (two-pass): scan all rows for blank decisions, invalid values, or CORRECT without corrected_value. Reject entire import on any error — zero DB changes on failure.
+**Two-pass import validation**: First pass scans all rows for blank decisions, invalid values, or CORRECT without `corrected_value`. Rejects entire import on any error — zero DB changes on failure. Second pass executes DB updates.
 
-Legacy per-paper format (accept_as_is/reject_paper columns) auto-detected and supported via `_import_legacy_format()`.
+Legacy per-paper format (`accept_as_is`/`reject_paper` columns) auto-detected and supported via `_import_legacy_format()`.
 
 When all spans for a paper are resolved (no contested/flagged/invalid_snippet remaining), paper transitions to `HUMAN_AUDIT_COMPLETE`.
 
@@ -194,18 +211,15 @@ These methods intentionally bypass the state machine for maintenance operations:
 - Atomic transaction (BEGIN/COMMIT/ROLLBACK)
 - Records rejection reason in `papers.rejected_reason`
 
----
-
 ### `engine/utils/extraction_cleanup.cleanup_stale_extractions()`
 - Remove extractions from a previous schema version (by `extraction_schema_hash`)
 - Delete associated evidence spans (cascade)
-- Reset affected papers to `PARSED` (for re-extraction) — only `EXTRACTED` and `AI_AUDIT_COMPLETE` papers; `HUMAN_AUDIT_COMPLETE` papers are protected
+- Reset affected papers to `PARSED` — only `EXTRACTED` and `AI_AUDIT_COMPLETE` papers; `HUMAN_AUDIT_COMPLETE` papers are protected
 - Dry-run default; requires `--confirm` to execute
 - Dedup mode (no schema hash): keeps only the latest extraction per paper
-- Use case: extraction schema changes (v1 → v2), clearing stale data before re-extraction
 
-**CLI:** `python -m engine.utils.extraction_cleanup --review NAME [--spec YAML] [--keep-schema HASH] [--confirm]`
+**CLI:** `python -m engine.utils.extraction_cleanup --review NAME [--spec YAML] [--confirm]`
 
 ---
 
-*Generated 2026-03-14 from commit `b24f9e7`*
+*Generated 2026-03-17 from commit d0bf07c*

@@ -1,70 +1,83 @@
 # Surgical Evidence Engine — Architecture Overview
 
-The Surgical Evidence Engine is a local, end-to-end systematic review pipeline that accepts a Review Spec (YAML), searches PubMed and OpenAlex, screens papers with cross-family dual-model LLM agents at both abstract and full-text stages, acquires PDFs via a 5-strategy cascade, runs AI-based PDF quality classification (language + content type) with human disposition review, parses full text with Docling/Qwen2.5-VL, applies full-text eligibility screening with structured reason codes, extracts structured evidence with two-pass DeepSeek-R1, audits spans with cross-model verification (gemma3:27b) including LOW_YIELD detection, enforces human adjudication gates at screening, full-text screening, and extraction stages, and exports publication-ready evidence tables. An optional cloud concordance arm (OpenAI o4-mini + Anthropic Sonnet 4.6) provides multi-model extraction for validation. All inference runs locally on a DGX Spark (Blackwell GB10) via Ollama; no patient data leaves the machine.
+The Surgical Evidence Engine is a local-first systematic review pipeline that accepts a Review Spec (YAML), runs automated search across PubMed and OpenAlex, dual-model abstract screening with cross-family verification, PDF acquisition via a 6-step iterative human-AI loop, three-tier PDF parsing (Docling → PyMuPDF → Qwen2.5-VL), full-text screening with specialty scope filtering, codebook-driven two-pass extraction (DeepSeek-R1:32b), cross-model audit with LOW_YIELD detection, optional cloud concordance arms (OpenAI o4-mini, Anthropic Sonnet 4.6), distribution collapse monitoring, and human adjudication gates at every stage — then exports publication-ready evidence tables. All inference runs on-device via Ollama with temperature 0; no data leaves the machine. Each review is isolated in its own SQLite database with full provenance retention — every paper ever evaluated is permanently recorded regardless of screening outcome.
 
-## High-Level Pipeline Flow
+## Pipeline Flow
 
 ```
-Review Spec YAML
-       |
-       v
-  +---------+     +----------+     +-------------+     +-----------+
-  | SEARCH  | --> | ABSTRACT | --> | ABSTRACT    | --> | ACQUIRE   |
-  | PubMed  |     | SCREEN   |     | ADJUDICATE  |     | OA Check  |
-  | OpenAlex|     | Primary  |     | Human FP    |     | Download  |
-  | Dedup   |     | Verifier |     | Review      |     | QC Check  |
-  +---------+     +----------+     +-------------+     +-----------+
-                                                              |
-       +------------------------------------------------------+
-       |
-       v
-  +---------+     +----------+     +-------------+
-  | PARSE   | --> | FT       | --> | FT          |
-  | Docling |     | SCREEN   |     | ADJUDICATE  |
-  | Qwen-VL |     | Primary  |     | Human       |
-  +---------+     | Verifier |     | Review      |
-                  +----------+     +-------------+
-                                         |
-       +---------------------------------+
-       |
-       v
-  +-----------+     +---------+     +----------+     +--------+
-  | EXTRACT   | --> | AUDIT   | --> | HUMAN    | --> | EXPORT |
-  | DeepSeek  |     | Grep +  |     | REVIEW   |     | PRISMA |
-  | R1 2-pass |     | Semantic|     | (Excel)  |     | CSV    |
-  +-----------+     | LOW_    |     +----------+     | Excel  |
-                    | YIELD   |                      | DOCX   |
-                    +---------+                      | Traces |
-                                                     +--------+
+Review Spec (YAML)
+       │
+       ▼
+ ┌──────────┐    ┌───────────────┐    ┌──────────────┐    ┌────────────────┐
+ │ SEARCH   │───▶│ ABSTRACT      │───▶│ ABSTRACT     │───▶│ PDF ACQUIRE    │
+ │ PubMed + │    │ SCREEN        │    │ ADJUDICATE   │    │ + QUALITY CHECK│
+ │ OpenAlex │    │ (dual-model)  │    │ (human gate) │    │ (6-step loop)  │
+ │ + Dedup  │    │ qwen3:8b +    │    │              │    │                │
+ └──────────┘    │ gemma3:27b    │    └──────────────┘    └───────┬────────┘
+                 └───────────────┘                                │
+                                                                  ▼
+ ┌──────────┐    ┌───────────────┐    ┌──────────────┐    ┌──────────────┐
+ │ EXPORT   │◀───│ HUMAN REVIEW  │◀───│ AI AUDIT     │◀───│ EXTRACT      │
+ │ PRISMA   │    │ ACCEPT/REJECT │    │ grep +       │    │ DeepSeek-R1  │
+ │ CSV/DOCX │    │ /CORRECT      │    │ semantic     │    │ two-pass     │
+ │ Traces   │    │               │    │ gemma3:27b   │    │              │
+ └──────────┘    └───────────────┘    └──────────────┘    └──────────────┘
+                                                                  ▲
+ ┌──────────────────┐    ┌───────────────┐                        │
+ │ CONCORDANCE      │◀───│ CLOUD EXTRACT │                        │
+ │ ANALYSIS         │    │ o4-mini +     │                 ┌──────┴───────┐
+ │ (multi-arm)      │    │ Sonnet 4.6    │                 │ FT SCREEN    │
+ └──────────────────┘    └───────────────┘                 │ + ADJUDICATE │
+                                                           │ qwen3:32b +  │
+ ┌──────────────────┐                                      │ gemma3:27b   │
+ │ DISTRIBUTION     │                                      └──────────────┘
+ │ MONITOR          │                                             ▲
+ │ (quality gate)   │                                      ┌──────┴───────┐
+ └──────────────────┘                                      │ PARSE        │
+                                                           │ Docling →    │
+                                                           │ PyMuPDF →    │
+                                                           │ Qwen2.5-VL   │
+                                                           └──────────────┘
 ```
 
 ## Companion Documents
 
 | Document | Description |
 |----------|-------------|
-| [pipeline.md](pipeline.md) | Stage-by-stage data flow, triggers, database transitions, CLI commands, and artifacts |
-| [models.md](models.md) | Model roster, agent stack, cross-family verification principle, VRAM and context settings |
-| [state-machine.md](state-machine.md) | Paper lifecycle states, allowed transitions, evidence span audit states, administrative overrides |
-| [workflow.md](workflow.md) | 12-stage workflow enforcement, auto vs manual triggers, prerequisite checks, `--force` audit trail |
-| [modules.md](modules.md) | Complete module inventory — every Python file under `engine/` and `scripts/` with purpose, key functions, and dependencies |
+| [pipeline.md](pipeline.md) | Stage-by-stage data flow, triggers, DB transitions, CLI commands, artifacts |
+| [models.md](models.md) | Model roster, agent stack, Ollama stability architecture, cloud arm settings |
+| [state-machine.md](state-machine.md) | Paper lifecycle statuses, transitions, terminal states, admin overrides |
+| [workflow.md](workflow.md) | 12-stage workflow enforcement with human gates |
+| [modules.md](modules.md) | Complete module inventory — every Python file with purpose, exports, dependencies |
+| [_generated.json](_generated.json) | Machine-readable codebase metadata |
 
 ## Technology Stack
 
-- **Runtime:** Python 3.12, SQLite (WAL mode), Ollama 0.17.7 (localhost:11434)
-- **LLM Agents:** qwen3:8b, qwen3.5:27b, gemma3:27b, deepseek-r1:32b, qwen2.5vl:7b
-- **Cloud APIs:** OpenAI (o4-mini), Anthropic (Sonnet 4.6)
-- **PDF Processing:** Docling, PyMuPDF (fitz) — three-tier routing (Docling → PyMuPDF fallback → Qwen2.5-VL vision)
-- **Search APIs:** Biopython Entrez (PubMed), pyalex (OpenAlex), Unpaywall
-- **Data Validation:** Pydantic v2
-- **Export:** openpyxl, python-docx
-- **Background Jobs:** tmux auto-detach via `engine/utils/background.py`
+| Layer | Components |
+|-------|------------|
+| Language | Python 3.12.3, per-project virtualenv |
+| Database | SQLite (one DB per review), WAL mode, full provenance |
+| Local inference | Ollama (localhost:11434), temperature 0 for all models |
+| Local models | qwen3:8b, qwen3:32b, gemma3:27b, deepseek-r1:32b, qwen2.5vl:7b |
+| Cloud APIs | OpenAI (o4-mini-2025-04-16), Anthropic (claude-sonnet-4-6) |
+| PDF processing | Docling, PyMuPDF (fitz), Qwen2.5-VL via Ollama |
+| Search APIs | Biopython Entrez (PubMed), pyalex (OpenAlex), Unpaywall |
+| Data models | Pydantic v2 (ReviewSpec, ExtractionResult, EvidenceSpan) |
+| Export | openpyxl (Excel), python-docx (DOCX), csv, HTML templates |
+| Background jobs | tmux (detached sessions with logging) |
+| Testing | pytest (706 offline tests, 10 network/integration deselected by default) |
+| Version control | Git + GitHub via SSH |
 
 ## Codebase Statistics
 
-- **110 source files** (Python + Shell)
-- **26,284 lines** of code
-- **443 offline tests** passing (10 network/ollama deselected)
+| Metric | Value |
+|--------|-------|
+| Source files | 146 |
+| Lines of code | 37,443 |
+| Offline tests passing | 706 |
+| Engine modules | 78 `.py` files under `engine/` |
+| Test files | 38 under `tests/` |
+| Scripts | 27 under `scripts/` |
+| Analysis modules | 5 under `analysis/` |
 
----
-
-*Generated 2026-03-14 from commit `b24f9e7`*
+*Generated 2026-03-17 from commit d0bf07c*

@@ -50,7 +50,7 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy \
 
 - **Trigger:** Auto — `export_adjudication_queue()` auto-sets when `CategoryConfig` loads successfully
 - **Prerequisite:** ABSTRACT_DIAGNOSTIC_COMPLETE
-- **What it means:** `adjudication_categories.yaml` exists and validates (8 default FP categories)
+- **What it means:** `adjudication_categories.yaml` exists and validates
 
 ### Stage 4: ABSTRACT_QUEUE_EXPORTED
 
@@ -66,26 +66,14 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy \
 
 ### Stage 6: PDF_ACQUISITION
 
-- **Trigger:** Manual — advance after all PDFs acquired (OA check + download + manual)
+- **Trigger:** Manual — advance after all PDFs acquired (OA check + download + manual + quality check)
 - **Prerequisite:** ABSTRACT_ADJUDICATION_COMPLETE
-- **What it means:** All included papers have full-text PDFs
+- **What it means:** All included papers have full-text PDFs; quality check complete
 
 **CLI:**
 ```bash
-# Run acquisition pipeline
-python -m engine.acquisition.check_oa --review surgical_autonomy --spec ...
-python -m engine.acquisition.download --review surgical_autonomy --background
-python -m engine.acquisition.pdf_quality_html --review surgical_autonomy --mode acquisition
-python -m engine.acquisition.verify_downloads --review surgical_autonomy [--dry-run]
-
-# PDF quality check (after downloads)
-python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --spec ...
-python -m engine.acquisition.pdf_quality_html --review surgical_autonomy --mode quality_check
-python -m engine.acquisition.pdf_quality_import --review surgical_autonomy --input dispositions.json
-
-# Advance when done
 python -m engine.adjudication.advance_stage --review surgical_autonomy \
-    --stage PDF_ACQUISITION --note "237 auto + 411 manual downloads complete"
+    --stage PDF_ACQUISITION --note "All PDFs acquired and quality-checked"
 ```
 
 ### Stage 7: FULL_TEXT_SCREENING_COMPLETE
@@ -116,7 +104,7 @@ python -m engine.adjudication.advance_stage --review surgical_autonomy \
 
 - **Trigger:** Auto — `export_audit_review_queue()` auto-sets after successful export
 - **Prerequisite:** AI_AUDIT_COMPLETE_STAGE
-- **What it means:** Per-span rows (contested/flagged/invalid_snippet) + LOW_YIELD papers (all spans) + spot-check sample (all spans) exported to self-documenting Excel workbook with ACCEPT/REJECT/CORRECT dropdowns
+- **What it means:** Per-span rows (contested/flagged/invalid_snippet) + LOW_YIELD papers (all spans) + spot-check sample (all spans) exported to self-documenting Excel workbook
 
 ### Stage 12: AUDIT_REVIEW_COMPLETE
 
@@ -175,14 +163,14 @@ Review Workflow — surgical_autonomy
   [✓] ABSTRACT_QUEUE_EXPORTED (2025-09-16 18:35)
   [✓] ABSTRACT_ADJUDICATION_COMPLETE (2025-09-17 22:10)
   ── PDF Acquisition ──
-  [!] PDF_ACQUISITION (2025-09-18 04:00) — BYPASSED
+  [✓] PDF_ACQUISITION (2025-09-18 04:00)
   ── Full-Text Screening ──
-  [ ] FULL_TEXT_SCREENING_COMPLETE — Run full-text screening...
-  [ ] FULL_TEXT_ADJUDICATION_COMPLETE
+  [✓] FULL_TEXT_SCREENING_COMPLETE (2025-09-20 11:30)
+  [ ] FULL_TEXT_ADJUDICATION_COMPLETE — Import FT adjudication decisions...
   ── Extraction Audit ──
-  [✓] EXTRACTION_COMPLETE (2025-09-20 11:30)
-  [✓] AI_AUDIT_COMPLETE_STAGE (2025-09-21 06:15)
-  [ ] AUDIT_QUEUE_EXPORTED — Export the audit review queue...
+  [ ] EXTRACTION_COMPLETE
+  [ ] AI_AUDIT_COMPLETE_STAGE
+  [ ] AUDIT_QUEUE_EXPORTED
   [ ] AUDIT_REVIEW_COMPLETE
 ```
 
@@ -197,4 +185,4 @@ EXTRACTION_STAGES  = WORKFLOW_STAGES[8:]   # stages 9-12
 
 ---
 
-*Generated 2026-03-14 from commit `b24f9e7`*
+*Generated 2026-03-17 from commit d0bf07c*

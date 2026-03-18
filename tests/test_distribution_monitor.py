@@ -11,6 +11,7 @@ from engine.validators.distribution_monitor import (
     assert_no_collapse,
     check_distribution,
     print_distribution_report,
+    run_post_extraction_check,
     shannon_entropy,
     _is_null,
     _load_categorical_fields,
@@ -437,3 +438,99 @@ class TestPrintReport:
         print_distribution_report([])
         captured = capsys.readouterr()
         assert "0 OK" in captured.out
+
+
+# ── Tests: run_post_extraction_check ──────────────────────────────────
+
+
+class TestRunPostExtractionCheck:
+
+    def test_called_on_completion(self, tmp_path):
+        """Monitor runs and returns results when extraction completes."""
+        db_path = _make_db(tmp_path)
+        values = (
+            ["Original Research"] * 8
+            + ["Case Report/Series"] * 7
+            + ["Review"] * 5
+        )
+        _insert_local_spans(db_path, "study_type", values)
+        summary = run_post_extraction_check(
+            db_path=db_path,
+            review_name="test",
+            arm="local",
+            codebook_path=CODEBOOK_PATH,
+            extracted_count=20,
+            failed_count=0,
+        )
+        assert summary["skipped"] is False
+        assert summary["ok"] >= 1
+        assert isinstance(summary["collapsed"], int)
+        assert isinstance(summary["low_variance"], int)
+
+    def test_skipped_on_partial_run_too_few(self, tmp_path):
+        """Monitor skipped when fewer than 10 papers extracted."""
+        db_path = _make_db(tmp_path)
+        _insert_local_spans(db_path, "study_type", ["Original Research"] * 5)
+        summary = run_post_extraction_check(
+            db_path=db_path,
+            review_name="test",
+            arm="local",
+            codebook_path=CODEBOOK_PATH,
+            extracted_count=5,
+            failed_count=0,
+        )
+        assert summary["skipped"] is True
+
+    def test_skipped_on_partial_run_failures(self, tmp_path):
+        """Monitor skipped when there are failed papers."""
+        db_path = _make_db(tmp_path)
+        _insert_local_spans(db_path, "study_type", ["Original Research"] * 20)
+        summary = run_post_extraction_check(
+            db_path=db_path,
+            review_name="test",
+            arm="local",
+            codebook_path=CODEBOOK_PATH,
+            extracted_count=20,
+            failed_count=3,
+        )
+        assert summary["skipped"] is True
+
+    def test_collapsed_produces_error_log_no_exception(self, tmp_path, caplog):
+        """COLLAPSED field logs ERROR but does not raise."""
+        db_path = _make_db(tmp_path)
+        _insert_local_spans(db_path, "study_type", ["Original Research"] * 15)
+        import logging
+        with caplog.at_level(logging.ERROR):
+            summary = run_post_extraction_check(
+                db_path=db_path,
+                review_name="test",
+                arm="local",
+                codebook_path=CODEBOOK_PATH,
+                extracted_count=15,
+                failed_count=0,
+            )
+        # No exception raised — function returned normally
+        assert summary["collapsed"] >= 1
+        assert "study_type" in summary["collapsed_fields"]
+        # ERROR log was emitted
+        error_messages = [r.message for r in caplog.records if r.levelno >= logging.ERROR]
+        assert any("COLLAPSED" in m for m in error_messages)
+
+    def test_results_in_summary(self, tmp_path):
+        """Summary includes counts for OK, LOW_VARIANCE, and COLLAPSED."""
+        db_path = _make_db(tmp_path)
+        # study_type: COLLAPSED (all same, >=10)
+        _insert_local_spans(db_path, "study_type", ["Original Research"] * 25)
+        summary = run_post_extraction_check(
+            db_path=db_path,
+            review_name="test",
+            arm="local",
+            codebook_path=CODEBOOK_PATH,
+            extracted_count=25,
+            failed_count=0,
+        )
+        total = summary["ok"] + summary["low_variance"] + summary["collapsed"]
+        assert total > 0
+        assert summary["skipped"] is False
+        assert isinstance(summary["collapsed_fields"], list)
+        assert isinstance(summary["low_variance_fields"], list)

@@ -129,6 +129,19 @@ def main(argv: list[str] | None = None):
         audit_stats,
     )
 
+    # ── Phase 3: Distribution monitor ──
+    from engine.validators.distribution_monitor import run_post_extraction_check
+
+    codebook_path = Path(db.db_path).parent / "extraction_codebook.yaml"
+    monitor_summary = run_post_extraction_check(
+        db_path=Path(db.db_path),
+        review_name=REVIEW,
+        arm="local",
+        codebook_path=codebook_path,
+        extracted_count=extract_stats["extracted"],
+        failed_count=extract_stats["failed"],
+    )
+
     # ── Summary ──
     total_elapsed = time.time() - t0
     logger.info("=" * 60)
@@ -136,6 +149,17 @@ def main(argv: list[str] | None = None):
     logger.info("  Extraction: %.1f min", extract_elapsed / 60)
     logger.info("  Audit:      %.1f min", audit_elapsed / 60)
     logger.info("  Stats:      %s", extract_stats)
+    if not monitor_summary["skipped"]:
+        logger.info(
+            "  Distribution: %d OK, %d LOW_VARIANCE, %d COLLAPSED",
+            monitor_summary["ok"], monitor_summary["low_variance"],
+            monitor_summary["collapsed"],
+        )
+        if monitor_summary["collapsed_fields"]:
+            logger.error(
+                "  ⚠ COLLAPSED FIELDS: %s",
+                ", ".join(monitor_summary["collapsed_fields"]),
+            )
     logger.info("=" * 60)
 
     db.close()

@@ -196,6 +196,52 @@ class TestCloudExtractorBase:
         assert len(spans) == 2
         base.close()
 
+    def test_parse_response_data_extraction_key(self, test_db, spec_path):
+        base = CloudExtractorBase(test_db, spec_path)
+        spans = base.parse_response_to_spans({"data_extraction": SAMPLE_FIELDS})
+        assert len(spans) == 2
+        assert spans[0]["field_name"] == "study_type"
+        base.close()
+
+    def test_parse_response_recovers_from_raw(self, test_db, spec_path):
+        import json
+        base = CloudExtractorBase(test_db, spec_path)
+        raw_json = "```json\n" + json.dumps(SAMPLE_FIELDS) + "\n```"
+        spans = base.parse_response_to_spans({"fields": [], "raw": raw_json})
+        assert len(spans) == 2
+        base.close()
+
+    def test_store_result_rejects_empty_spans(self, test_db, spec_path):
+        base = CloudExtractorBase(test_db, spec_path)
+        pending = base.get_pending_papers("test_arm")
+        if not pending:
+            base.close()
+            pytest.skip("No pending papers")
+
+        pid = pending[0]["paper_id"]
+        with pytest.raises(ValueError, match="0 spans"):
+            base.store_result(
+                paper_id=pid,
+                arm="test_arm",
+                model_string="test-model",
+                extracted_data={"fields": []},
+                reasoning_trace="",
+                prompt_text="",
+                input_tokens=0,
+                output_tokens=0,
+                reasoning_tokens=0,
+                cost_usd=0.0,
+                spans=[],
+            )
+
+        # Verify nothing was written
+        row = base._conn.execute(
+            "SELECT COUNT(*) FROM cloud_extractions WHERE paper_id = ? AND arm = 'test_arm'",
+            (pid,),
+        ).fetchone()
+        assert row[0] == 0
+        base.close()
+
     def test_store_result_atomic(self, test_db, spec_path):
         base = CloudExtractorBase(test_db, spec_path)
         pending = base.get_pending_papers("test_arm")

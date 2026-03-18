@@ -91,14 +91,38 @@ class CloudExtractorBase:
         # Handle {"fields": [...]}, {"extractions": [...]}, {"data": [...]}, and bare [...] formats
         if isinstance(response_json, list):
             response_json = {"fields": response_json}
-        elif isinstance(response_json, dict) and (
+        elif isinstance(response_json, dict):
+            # If fields is empty but raw content exists, try to recover from raw
+            if (
+                isinstance(response_json.get("fields"), list)
+                and len(response_json["fields"]) == 0
+                and "raw" in response_json
+            ):
+                raw = response_json["raw"].strip()
+                if raw.startswith("```"):
+                    raw = re.sub(r"^```(?:json)?\s*", "", raw)
+                    raw = re.sub(r"\s*```\s*$", "", raw)
+                try:
+                    recovered = json.loads(raw)
+                    if isinstance(recovered, list):
+                        response_json = {"fields": recovered}
+                        logger.info("Recovered %d fields from raw content", len(recovered))
+                    elif isinstance(recovered, dict):
+                        response_json = recovered
+                        # Fall through to alt-key search below
+                    else:
+                        logger.warning("Raw content parsed but unrecognized type: %s", type(recovered))
+                except json.JSONDecodeError:
+                    logger.warning("Raw content present but not valid JSON")
+
+        if isinstance(response_json, dict) and (
             "fields" not in response_json
             or (isinstance(response_json.get("fields"), list) and len(response_json["fields"]) == 0)
         ):
             # Try alternate top-level keys that cloud models use
             for alt_key in ("extractions", "extracted_fields", "extracted_data",
                             "data", "extraction", "results", "entries",
-                            "extraction_results"):
+                            "extraction_results", "data_extraction"):
                 if alt_key in response_json and isinstance(response_json[alt_key], list):
                     response_json = {"fields": response_json[alt_key]}
                     break
@@ -176,7 +200,18 @@ class CloudExtractorBase:
         cost_usd: float,
         spans: list[dict],
     ) -> int:
-        """Store extraction result and spans atomically."""
+        """Store extraction result and spans atomically.
+
+        Raises ValueError if spans is empty — this indicates a parse failure
+        that must be investigated, not silently stored without span rows.
+        """
+        if not spans:
+            raise ValueError(
+                f"Paper {paper_id} ({arm}): extraction produced 0 spans — "
+                f"refusing to store without evidence spans. "
+                f"Check parse_response_to_spans() logs for details."
+            )
+
         now = datetime.now(timezone.utc).isoformat()
 
         try:
@@ -242,3 +277,20 @@ class CloudExtractorBase:
             "remaining": total - completed,
             "total_cost_usd": round(total_cost, 4),
         }
+
+    def run_distribution_check(self, stats: dict) -> dict:
+        """Run post-extraction distribution monitor for this arm.
+
+        Returns the monitor summary dict. Safe to call — never raises.
+        """
+        from engine.validators.distribution_monitor import run_post_extraction_check
+
+        codebook_path = self._review_dir / "extraction_codebook.yaml"
+        return run_post_extraction_check(
+            db_path=Path(self.db_path),
+            review_name=self._review_dir.name,
+            arm=self.ARM,
+            codebook_path=codebook_path,
+            extracted_count=stats.get("extracted", 0),
+            failed_count=stats.get("failed", 0),
+        )

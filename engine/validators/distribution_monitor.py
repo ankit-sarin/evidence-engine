@@ -282,6 +282,98 @@ def assert_no_collapse(results: list[dict], strict: bool = False) -> None:
         raise DistributionCollapseError(failures)
 
 
+# ── Automatic post-extraction gate ────────────────────────────────────
+
+
+def run_post_extraction_check(
+    db_path: Path,
+    review_name: str,
+    arm: str,
+    codebook_path: Path,
+    *,
+    extracted_count: int = 0,
+    failed_count: int = 0,
+) -> dict:
+    """Run distribution monitor as an automatic post-extraction quality gate.
+
+    Called at the end of extraction runs. Logs per-field results.
+    Returns a summary dict with keys: ok, low_variance, collapsed, skipped,
+    collapsed_fields.
+
+    If extraction was partial (failed > 0 or extracted < 10), skips the check
+    and logs a reason.
+
+    COLLAPSED fields produce ERROR-level log messages but do NOT raise exceptions
+    — extraction data is already committed per-paper.
+    """
+    summary = {
+        "ok": 0,
+        "low_variance": 0,
+        "collapsed": 0,
+        "skipped": True,
+        "collapsed_fields": [],
+        "low_variance_fields": [],
+    }
+
+    if extracted_count < 10:
+        logger.info(
+            "Distribution monitor skipped: only %d papers extracted "
+            "(minimum 10 required for meaningful analysis)",
+            extracted_count,
+        )
+        return summary
+
+    if failed_count > 0:
+        logger.info(
+            "Distribution monitor skipped: %d papers failed extraction "
+            "(partial run — re-run monitor manually after retry)",
+            failed_count,
+        )
+        return summary
+
+    if not codebook_path.exists():
+        logger.warning(
+            "Distribution monitor skipped: codebook not found at %s",
+            codebook_path,
+        )
+        return summary
+
+    summary["skipped"] = False
+    logger.info("Running distribution monitor for arm '%s'...", arm)
+
+    results = check_distribution(db_path, review_name, arm, codebook_path)
+
+    for r in results:
+        if r["status"] == "COLLAPSED":
+            summary["collapsed"] += 1
+            summary["collapsed_fields"].append(r["field_name"])
+            logger.error(
+                "COLLAPSED: %s — only value '%s' across %d papers (entropy=%.2f). "
+                "This field has zero variance and needs investigation.",
+                r["field_name"], r["top_value"],
+                r["total_non_null"], r["entropy"],
+            )
+        elif r["status"] == "LOW_VARIANCE":
+            summary["low_variance"] += 1
+            summary["low_variance_fields"].append(r["field_name"])
+            logger.warning(
+                "LOW_VARIANCE: %s — '%s' at %.0f%% (%d/%d, entropy=%.2f)",
+                r["field_name"], r["top_value"],
+                r["top_value_pct"] * 100,
+                int(r["top_value_pct"] * r["total_non_null"]),
+                r["total_non_null"], r["entropy"],
+            )
+        else:
+            summary["ok"] += 1
+
+    logger.info(
+        "Distribution monitor complete: %d OK, %d LOW_VARIANCE, %d COLLAPSED",
+        summary["ok"], summary["low_variance"], summary["collapsed"],
+    )
+
+    return summary
+
+
 # ── CLI ──────────────────────────────────────────────────────────────
 
 

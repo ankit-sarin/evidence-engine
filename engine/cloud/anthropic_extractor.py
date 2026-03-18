@@ -233,4 +233,10 @@ class AnthropicExtractor(CloudExtractorBase):
                 break
 
         progress.summary()
+
+        # Post-extraction distribution check
+        monitor = self.run_distribution_check(stats)
+        if not monitor["skipped"]:
+            stats["distribution_monitor"] = monitor
+
         return stats

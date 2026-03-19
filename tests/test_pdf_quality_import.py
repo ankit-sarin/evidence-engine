@@ -366,3 +366,49 @@ class TestImport:
             ).fetchone()
             assert row["status"] == "PDF_EXCLUDED"
             assert row["pdf_exclusion_reason"] == reason
+
+
+class TestTransactionRollback:
+
+    def test_mid_import_failure_rolls_back_all(self, tmp_path):
+        """If an error occurs mid-import, no papers are modified (full rollback)."""
+        import sqlite3
+
+        db, pids = _setup_db(tmp_path, n_papers=3)
+
+        # Create a trigger that blocks the HUMAN_CONFIRMED update for the third paper
+        db._conn.execute(
+            f"""CREATE TRIGGER block_third_confirm
+               BEFORE UPDATE OF pdf_quality_check_status ON papers
+               WHEN NEW.pdf_quality_check_status = 'HUMAN_CONFIRMED'
+                    AND NEW.id = {pids[2]}
+               BEGIN
+                   SELECT RAISE(ABORT, 'simulated disk full');
+               END"""
+        )
+        db._conn.commit()
+
+        json_path = _write_json(tmp_path, [
+            {"paper_id": pids[0], "disposition": "PROCEED"},
+            {"paper_id": pids[1], "disposition": "PROCEED"},
+            {"paper_id": pids[2], "disposition": "PROCEED"},
+        ])
+
+        with pytest.raises(sqlite3.IntegrityError, match="simulated disk full"):
+            import_dispositions(
+                "test_import", str(json_path), data_root=tmp_path,
+            )
+
+        # ALL papers should be unchanged (rolled back)
+        for pid in pids:
+            row = db._conn.execute(
+                "SELECT pdf_quality_check_status FROM papers WHERE id = ?",
+                (pid,),
+            ).fetchone()
+            assert row["pdf_quality_check_status"] is None, (
+                f"Paper {pid} was modified despite rollback"
+            )
+
+        # Clean up trigger
+        db._conn.execute("DROP TRIGGER block_third_confirm")
+        db._conn.commit()

@@ -407,6 +407,44 @@ class TestProactiveRestart:
             run_extraction(db, spec, "test_review", restart_every=3)
         db.close()
 
+    @patch("engine.agents.extractor.restart_ollama")
+    @patch("engine.agents.extractor.ollama_chat")
+    @patch("engine.utils.ollama_preflight.require_preflight")
+    @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
+    @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
+    def test_zero_span_extraction_marks_extract_failed(
+        self, _stale, _digest, _preflight, mock_chat, _restart, tmp_path,
+    ):
+        """LLM returns valid JSON with zero fields → EXTRACT_FAILED, no spans in DB."""
+        db, spec = self._setup_db(tmp_path, n_papers=1)
+
+        # Pass 1 response (reasoning)
+        pass1_resp = MagicMock()
+        pass1_resp.message.content = "<think>Reasoning about the paper.</think>"
+
+        # Pass 2 response (structured JSON with empty fields list)
+        zero_span_output = ExtractionOutput(fields=[])
+        pass2_resp = MagicMock()
+        pass2_resp.message.content = zero_span_output.model_dump_json()
+
+        mock_chat.side_effect = [pass1_resp, pass2_resp]
+
+        stats = run_extraction(db, spec, "test_review", restart_every=0)
+
+        assert stats["failed"] == 1
+        assert stats["extracted"] == 0
+
+        # Verify no extraction or span rows were inserted
+        ext_count = db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0]
+        span_count = db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0]
+        assert ext_count == 0
+        assert span_count == 0
+
+        # Verify paper status is EXTRACT_FAILED (direct SQL — simplified schema)
+        paper = db._conn.execute("SELECT status FROM papers WHERE id = 1").fetchone()
+        assert paper["status"] == "EXTRACT_FAILED"
+        db.close()
+
     # ── helpers ──
 
     def _setup_db(self, tmp_path, n_papers=5):

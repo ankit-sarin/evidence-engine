@@ -542,3 +542,31 @@ def test_adjudication_gate_with_flagged(flagged_db):
 
 def test_adjudication_gate_no_flagged(tmp_db):
     assert check_adjudication_gate(tmp_db) == 0
+
+
+# ── M6: Workflow auto-advance with completion verification ──────────
+
+
+def test_workflow_not_advanced_with_unprocessed_papers(flagged_db, tmp_path):
+    """Workflow stage does NOT advance when flagged papers remain unprocessed."""
+    from engine.adjudication.workflow import is_stage_done
+    from engine.adjudication.screening_adjudicator import import_adjudication_decisions
+
+    # Import decisions for only 1 of 3 flagged papers
+    flagged = flagged_db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")
+    first_pid = flagged[0]["id"]
+
+    decisions = [{
+        "paper_id": first_pid,
+        "title": flagged[0]["title"],
+        "decision": "INCLUDE",
+        "notes": "test",
+    }]
+
+    json_path = tmp_path / "partial_decisions.json"
+    json_path.write_text(json.dumps(decisions))
+
+    import_adjudication_decisions(flagged_db, str(json_path))
+
+    # Workflow should NOT be advanced (2 papers still flagged)
+    assert not is_stage_done(flagged_db._conn, "ABSTRACT_ADJUDICATION_COMPLETE")

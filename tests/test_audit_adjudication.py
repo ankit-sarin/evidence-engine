@@ -572,3 +572,37 @@ def test_check_audit_review_gate_zero_when_clean(db):
 
     count = check_audit_review_gate(db)
     assert count == 0
+
+
+# ── H9: Missing span stats accuracy ─────────────────────────────────
+
+
+def test_missing_span_not_counted_as_success(db, tmp_path):
+    """Adjudication for a nonexistent span is rejected — not counted as success."""
+    pid = _add_paper_with_extraction(db, "90001", spans=[
+        {"field_name": "study_design", "value": "RCT", "audit_status": "contested"},
+    ])
+
+    # Create a decision referencing a span that doesn't exist
+    decisions = [{
+        "span_id": 999999,  # nonexistent
+        "paper_id": pid,
+        "field_name": "nonexistent_field",
+        "decision": "ACCEPT",
+    }]
+
+    json_path = tmp_path / "missing_span_decisions.json"
+    json_path.write_text(json.dumps(decisions))
+
+    # JSON import path validates first: nonexistent span → validation error → no writes
+    result = import_audit_review_decisions(db, str(json_path))
+
+    # Errors reported, nothing applied
+    assert len(result["errors"]) >= 1
+    assert result["applied"] == 0
+
+    # Original span unchanged
+    span = db._conn.execute(
+        "SELECT audit_status FROM evidence_spans WHERE field_name = 'study_design'"
+    ).fetchone()
+    assert span["audit_status"] == "contested"

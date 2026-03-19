@@ -73,8 +73,12 @@ def _collect_ft_flagged(db: ReviewDatabase) -> list[dict]:
                 md_path = Path(ft_asset["parsed_text_path"])
                 if md_path.exists():
                     text_excerpt = md_path.read_text()[:500]
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.warning(
+                    "Paper %d: failed to read parsed text at %s — %s",
+                    pid, ft_asset["parsed_text_path"], exc,
+                )
+                text_excerpt = "[text unavailable — see log for details]"
 
         results.append({
             "paper_id": pid,
@@ -520,6 +524,7 @@ def _apply_ft_decisions(
     stats = {
         "ft_eligible": 0, "ft_screened_out": 0,
         "missing": 0, "invalid": 0,
+        "status_update_failed": 0,
         "total": len(parsed_rows),
     }
 
@@ -540,16 +545,23 @@ def _apply_ft_decisions(
         )
 
         # Update paper status (FT_FLAGGED → FT_ELIGIBLE or FT_SCREENED_OUT)
+        status_updated = False
         if paper_id:
             try:
                 review_db.update_status(int(paper_id), decision)
+                status_updated = True
             except ValueError as e:
-                logger.warning("Paper %s: status update failed — %s", paper_id, e)
+                logger.error(
+                    "Paper %s: status update failed — adjudication recorded but "
+                    "paper will not progress: %s", paper_id, e,
+                )
+                stats["status_update_failed"] += 1
 
-        if decision == "FT_ELIGIBLE":
-            stats["ft_eligible"] += 1
-        else:
-            stats["ft_screened_out"] += 1
+        if status_updated:
+            if decision == "FT_ELIGIBLE":
+                stats["ft_eligible"] += 1
+            else:
+                stats["ft_screened_out"] += 1
 
     review_db._conn.commit()
 

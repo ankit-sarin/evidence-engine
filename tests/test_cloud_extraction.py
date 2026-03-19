@@ -8,6 +8,8 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
+import anthropic
+import openai
 import pytest
 
 from engine.cloud.schema import init_cloud_tables
@@ -709,4 +711,324 @@ class TestSonnetRateLimitBackoff:
         sleep_calls = [c.args[0] for c in mock_sleep.call_args_list]
         assert len(sleep_calls) == 1
         assert sleep_calls[0] == 45  # from retry-after header
+        extractor.close()
+
+
+# ── C2: store_result crash protection ──────────────────────────────
+
+
+class TestStoreResultCrashProtection:
+    """store_result failures are caught per-paper; run continues."""
+
+    @patch("engine.cloud.openai_extractor.openai.OpenAI")
+    def test_openai_store_failure_continues_run(self, mock_openai_cls, test_db, spec_path):
+        """If store_result raises on paper 1, paper 2 is still processed."""
+        mock_client = MagicMock()
+        mock_openai_cls.return_value = mock_client
+
+        # Both papers return valid extraction
+        details = SimpleNamespace(reasoning_tokens=10)
+        usage = SimpleNamespace(
+            prompt_tokens=100, completion_tokens=50,
+            completion_tokens_details=details,
+        )
+        msg = SimpleNamespace(
+            content=json.dumps(SAMPLE_RESPONSE),
+            reasoning_content="trace",
+        )
+        choice = SimpleNamespace(message=msg)
+        resp = SimpleNamespace(choices=[choice], usage=usage)
+        mock_client.chat.completions.create.return_value = resp
+
+        extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+        pending = extractor.get_pending_papers(extractor.ARM)
+        if len(pending) < 2:
+            extractor.close()
+            pytest.skip("Need at least 2 pending papers")
+
+        # Create parsed text for first 2 papers
+        parsed_dir = Path(test_db).parent / "parsed_text"
+        for p in pending[:2]:
+            (parsed_dir / f"{p['paper_id']}_v1.md").write_text("Paper text.")
+
+        # Make store_result fail on first call, succeed on second
+        original_store = extractor.store_result
+        call_count = [0]
+
+        def _failing_store(*args, **kwargs):
+            call_count[0] += 1
+            if call_count[0] == 1:
+                raise sqlite3.IntegrityError("simulated constraint violation")
+            return original_store(*args, **kwargs)
+
+        extractor.store_result = _failing_store
+
+        stats = extractor.run(max_papers=2)
+
+        assert stats["failed"] == 1
+        assert stats["extracted"] == 1
+        extractor.close()
+
+    @patch("engine.cloud.openai_extractor.openai.OpenAI")
+    def test_distribution_collapse_not_caught(self, mock_openai_cls, test_db, spec_path):
+        """DistributionCollapseError propagates — not caught by store_result handler."""
+        from engine.validators.distribution_monitor import DistributionCollapseError
+
+        mock_client = MagicMock()
+        mock_openai_cls.return_value = mock_client
+
+        extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+
+        # Mock run_distribution_check to raise
+        def _raise_collapse(stats):
+            raise DistributionCollapseError([{"field_name": "study_type"}])
+
+        extractor.run_distribution_check = _raise_collapse
+
+        # Need at least one paper to get past the empty-pending check
+        # but the error should fire after the loop, not per-paper
+        with pytest.raises(DistributionCollapseError):
+            extractor.run(max_papers=0)
+
+        extractor.close()
+
+
+# ── H2: Auth error immediate abort ─────────────────────────────────
+
+
+class TestAuthErrorAbort:
+
+    @patch("engine.cloud.openai_extractor.openai.OpenAI")
+    def test_openai_401_aborts_immediately(self, mock_openai_cls, test_db, spec_path):
+        """OpenAI AuthenticationError aborts run — no retries, no subsequent papers."""
+        mock_client = MagicMock()
+        mock_openai_cls.return_value = mock_client
+
+        mock_client.chat.completions.create.side_effect = openai.AuthenticationError(
+            message="Incorrect API key provided",
+            response=MagicMock(status_code=401, headers={}),
+            body={"error": {"message": "Incorrect API key"}},
+        )
+
+        extractor = OpenAIExtractor(test_db, spec_path, api_key="bad-key")
+        pending = extractor.get_pending_papers(extractor.ARM)
+        if not pending:
+            extractor.close()
+            pytest.skip("No pending papers")
+
+        parsed_dir = Path(test_db).parent / "parsed_text"
+        for p in pending[:2]:
+            (parsed_dir / f"{p['paper_id']}_v1.md").write_text("Paper text.")
+
+        with pytest.raises(openai.AuthenticationError):
+            extractor.run(max_papers=2)
+
+        # Should have called API only once (first paper, no retry)
+        assert mock_client.chat.completions.create.call_count == 1
+        extractor.close()
+
+    @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+    def test_anthropic_401_aborts_immediately(self, mock_anthropic_cls, test_db, spec_path):
+        """Anthropic AuthenticationError aborts run immediately."""
+        mock_client = MagicMock()
+        mock_anthropic_cls.return_value = mock_client
+
+        mock_client.messages.create.side_effect = anthropic.AuthenticationError(
+            message="Invalid API key",
+            response=MagicMock(status_code=401, headers={}),
+            body={"error": {"type": "authentication_error", "message": "Invalid API key"}},
+        )
+
+        extractor = AnthropicExtractor(test_db, spec_path, api_key="bad-key")
+        pending = extractor.get_pending_papers(extractor.ARM)
+        if not pending:
+            extractor.close()
+            pytest.skip("No pending papers")
+
+        parsed_dir = Path(test_db).parent / "parsed_text"
+        for p in pending[:2]:
+            (parsed_dir / f"{p['paper_id']}_v1.md").write_text("Paper text.")
+
+        with pytest.raises(anthropic.AuthenticationError):
+            extractor.run(max_papers=2)
+
+        assert mock_client.messages.create.call_count == 1
+        extractor.close()
+
+
+# ── H3: OpenAI 429 rate limit backoff ──────────────────────────────
+
+
+class TestOpenAIRateLimitBackoff:
+
+    @patch("engine.cloud.openai_extractor.time.sleep")
+    @patch("engine.cloud.openai_extractor.openai.OpenAI")
+    def test_429_triggers_30s_plus_backoff(self, mock_openai_cls, mock_sleep, test_db, spec_path):
+        """OpenAI rate limit uses 30s+ exponential backoff, not the 2/4/8s default."""
+        mock_client = MagicMock()
+        mock_openai_cls.return_value = mock_client
+
+        mock_response = MagicMock()
+        mock_response.status_code = 429
+        mock_response.headers = {}
+
+        rate_err = openai.RateLimitError(
+            message="rate limit exceeded",
+            response=mock_response,
+            body={"error": {"message": "rate limit exceeded"}},
+        )
+
+        # Two 429s then success
+        details = SimpleNamespace(reasoning_tokens=10)
+        usage = SimpleNamespace(
+            prompt_tokens=100, completion_tokens=50,
+            completion_tokens_details=details,
+        )
+        msg = SimpleNamespace(
+            content=json.dumps(SAMPLE_RESPONSE),
+            reasoning_content="trace",
+        )
+        choice = SimpleNamespace(message=msg)
+        success_resp = SimpleNamespace(choices=[choice], usage=usage)
+
+        mock_client.chat.completions.create.side_effect = [rate_err, rate_err, success_resp]
+
+        extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+        pending = extractor.get_pending_papers(extractor.ARM)
+        if not pending:
+            extractor.close()
+            pytest.skip("No pending papers")
+
+        parsed_dir = Path(test_db).parent / "parsed_text"
+        pid = pending[0]["paper_id"]
+        (parsed_dir / f"{pid}_v1.md").write_text("Test paper text.")
+
+        extractor.run(max_papers=1)
+
+        sleep_calls = [c.args[0] for c in mock_sleep.call_args_list]
+        assert len(sleep_calls) == 2
+        assert sleep_calls[0] >= 30  # first retry: 30s
+        assert sleep_calls[1] >= 60  # second retry: 60s
+        extractor.close()
+
+    @patch("engine.cloud.openai_extractor.time.sleep")
+    @patch("engine.cloud.openai_extractor.openai.OpenAI")
+    def test_429_uses_retry_after_header(self, mock_openai_cls, mock_sleep, test_db, spec_path):
+        """OpenAI rate limit respects retry-after header."""
+        mock_client = MagicMock()
+        mock_openai_cls.return_value = mock_client
+
+        mock_response = MagicMock()
+        mock_response.status_code = 429
+        mock_response.headers = {"retry-after": "45"}
+
+        rate_err = openai.RateLimitError(
+            message="rate limit exceeded",
+            response=mock_response,
+            body={"error": {"message": "rate limit exceeded"}},
+        )
+
+        details = SimpleNamespace(reasoning_tokens=10)
+        usage = SimpleNamespace(
+            prompt_tokens=100, completion_tokens=50,
+            completion_tokens_details=details,
+        )
+        msg = SimpleNamespace(
+            content=json.dumps(SAMPLE_RESPONSE),
+            reasoning_content="trace",
+        )
+        choice = SimpleNamespace(message=msg)
+        success_resp = SimpleNamespace(choices=[choice], usage=usage)
+
+        mock_client.chat.completions.create.side_effect = [rate_err, success_resp]
+
+        extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+        pending = extractor.get_pending_papers(extractor.ARM)
+        if not pending:
+            extractor.close()
+            pytest.skip("No pending papers")
+
+        parsed_dir = Path(test_db).parent / "parsed_text"
+        pid = pending[0]["paper_id"]
+        (parsed_dir / f"{pid}_v1.md").write_text("Test paper text.")
+
+        extractor.run(max_papers=1)
+
+        sleep_calls = [c.args[0] for c in mock_sleep.call_args_list]
+        assert len(sleep_calls) == 1
+        assert sleep_calls[0] == 45
+        extractor.close()
+
+
+# ── M16: Spec-driven model names and cost rates ───────────────────
+
+
+class TestSpecDrivenConfig:
+
+    @patch("engine.cloud.openai_extractor.openai.OpenAI")
+    def test_openai_reads_from_spec(self, mock_openai_cls, test_db, tmp_path):
+        """OpenAIExtractor uses model/cost from spec when cloud_models is set."""
+        import yaml
+        from engine.core.review_spec import load_review_spec
+
+        # Load existing spec, add cloud_models section, write to temp
+        spec_path = str(SPEC_PATH)
+        with open(spec_path) as f:
+            spec_data = yaml.safe_load(f)
+
+        spec_data["cloud_models"] = {
+            "openai": {
+                "model": "o4-mini-custom",
+                "cost_input_per_m": 2.00,
+                "cost_output_per_m": 8.00,
+            },
+        }
+        custom_spec = tmp_path / "custom_spec.yaml"
+        custom_spec.write_text(yaml.dump(spec_data))
+
+        mock_openai_cls.return_value = MagicMock()
+
+        extractor = OpenAIExtractor(test_db, str(custom_spec), api_key="test-key")
+        assert extractor.model_string == "o4-mini-custom"
+        assert extractor.cost_input_per_m == 2.00
+        assert extractor.cost_output_per_m == 8.00
+        extractor.close()
+
+    @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+    def test_anthropic_reads_from_spec(self, mock_anthropic_cls, test_db, tmp_path):
+        """AnthropicExtractor uses model/cost from spec when cloud_models is set."""
+        import yaml
+
+        spec_path = str(SPEC_PATH)
+        with open(spec_path) as f:
+            spec_data = yaml.safe_load(f)
+
+        spec_data["cloud_models"] = {
+            "anthropic": {
+                "model": "claude-custom-model",
+                "cost_input_per_m": 5.00,
+                "cost_output_per_m": 25.00,
+            },
+        }
+        custom_spec = tmp_path / "custom_spec.yaml"
+        custom_spec.write_text(yaml.dump(spec_data))
+
+        mock_anthropic_cls.return_value = MagicMock()
+
+        extractor = AnthropicExtractor(test_db, str(custom_spec), api_key="test-key")
+        assert extractor.model_string == "claude-custom-model"
+        assert extractor.cost_input_per_m == 5.00
+        assert extractor.cost_output_per_m == 25.00
+        extractor.close()
+
+    @patch("engine.cloud.openai_extractor.openai.OpenAI")
+    def test_openai_falls_back_to_defaults(self, mock_openai_cls, test_db, spec_path):
+        """Without cloud_models in spec, OpenAI uses hardcoded defaults."""
+        mock_openai_cls.return_value = MagicMock()
+
+        from engine.cloud.openai_extractor import _DEFAULT_MODEL, _DEFAULT_COST_INPUT_PER_M, _DEFAULT_COST_OUTPUT_PER_M
+        extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+        assert extractor.model_string == _DEFAULT_MODEL
+        assert extractor.cost_input_per_m == _DEFAULT_COST_INPUT_PER_M
+        assert extractor.cost_output_per_m == _DEFAULT_COST_OUTPUT_PER_M
         extractor.close()

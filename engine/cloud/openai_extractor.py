@@ -11,11 +11,15 @@ from engine.cloud.base import CloudExtractorBase
 
 logger = logging.getLogger(__name__)
 
-# o4-mini pricing (March 2026)
-COST_INPUT_PER_M = 1.10   # $/1M input tokens
-COST_OUTPUT_PER_M = 4.40  # $/1M output tokens
+# o4-mini pricing defaults (March 2026) — used when spec has no cloud_models
+_DEFAULT_MODEL = "o4-mini-2025-04-16"
+_DEFAULT_COST_INPUT_PER_M = 1.10   # $/1M input tokens
+_DEFAULT_COST_OUTPUT_PER_M = 4.40  # $/1M output tokens
 
-MODEL_STRING = "o4-mini-2025-04-16"
+# Module-level aliases for backward compatibility with tests that import these
+COST_INPUT_PER_M = _DEFAULT_COST_INPUT_PER_M
+COST_OUTPUT_PER_M = _DEFAULT_COST_OUTPUT_PER_M
+MODEL_STRING = _DEFAULT_MODEL
 
 
 class OpenAIExtractor(CloudExtractorBase):
@@ -36,7 +40,23 @@ class OpenAIExtractor(CloudExtractorBase):
                 "OpenAI API key required — pass api_key or set OPENAI_API_KEY"
             )
         self.client = openai.OpenAI(api_key=key)
-        self.model_string = MODEL_STRING
+
+        # Read model/cost config from spec; fall back to defaults
+        cloud_cfg = getattr(self.spec, "cloud_models", None)
+        openai_cfg = getattr(cloud_cfg, "openai", None) if cloud_cfg else None
+        if openai_cfg:
+            self.model_string = openai_cfg.model
+            self.cost_input_per_m = openai_cfg.cost_input_per_m
+            self.cost_output_per_m = openai_cfg.cost_output_per_m
+        else:
+            self.model_string = _DEFAULT_MODEL
+            self.cost_input_per_m = _DEFAULT_COST_INPUT_PER_M
+            self.cost_output_per_m = _DEFAULT_COST_OUTPUT_PER_M
+            logger.warning(
+                "No cloud_models.openai in review spec — using defaults: "
+                "model=%s, cost_in=$%.2f/M, cost_out=$%.2f/M",
+                self.model_string, self.cost_input_per_m, self.cost_output_per_m,
+            )
 
     def extract_paper(self, paper_id: int, parsed_text: str) -> dict:
         """Extract a single paper via OpenAI o4-mini."""
@@ -92,8 +112,8 @@ class OpenAIExtractor(CloudExtractorBase):
             reasoning_tokens = getattr(details, "reasoning_tokens", 0) if details else 0
 
         cost_usd = (
-            input_tokens * COST_INPUT_PER_M / 1_000_000
-            + output_tokens * COST_OUTPUT_PER_M / 1_000_000
+            input_tokens * self.cost_input_per_m / 1_000_000
+            + output_tokens * self.cost_output_per_m / 1_000_000
         )
 
         # Parse into spans
@@ -144,12 +164,34 @@ class OpenAIExtractor(CloudExtractorBase):
                 progress.report(pid, "FAILED", time.time() - t_paper)
                 continue
 
-            # Retry logic
+            # Retry logic — auth errors abort immediately, rate limits use long backoff
             result = None
             for attempt in range(3):
                 try:
                     result = self.extract_paper(pid, parsed_text)
                     break
+                except openai.AuthenticationError as exc:
+                    logger.critical(
+                        "OpenAI API key is invalid or expired — aborting run: %s", exc,
+                    )
+                    raise
+                except openai.RateLimitError as exc:
+                    retry_after = None
+                    if hasattr(exc, "response") and exc.response is not None:
+                        retry_after = exc.response.headers.get("retry-after")
+                    wait = int(retry_after) if retry_after else 30 * (2 ** attempt)
+                    if attempt < 2:
+                        logger.info(
+                            "Paper %d: rate limited (attempt %d/3) — waiting %ds",
+                            pid, attempt + 1, wait,
+                        )
+                        time.sleep(wait)
+                    else:
+                        logger.error(
+                            "Paper %d failed after 3 rate-limited attempts: %s",
+                            pid, exc,
+                        )
+                        stats["failed"] += 1
                 except Exception as exc:
                     if attempt < 2:
                         wait = 2 ** (attempt + 1)
@@ -166,19 +208,27 @@ class OpenAIExtractor(CloudExtractorBase):
                 progress.report(pid, "FAILED", time.time() - t_paper)
                 continue
 
-            self.store_result(
-                paper_id=pid,
-                arm=self.ARM,
-                model_string=self.model_string,
-                extracted_data=result["extracted_data"],
-                reasoning_trace=result["reasoning_trace"],
-                prompt_text=result["prompt_text"],
-                input_tokens=result["input_tokens"],
-                output_tokens=result["output_tokens"],
-                reasoning_tokens=result["reasoning_tokens"],
-                cost_usd=result["cost_usd"],
-                spans=result["spans"],
-            )
+            try:
+                self.store_result(
+                    paper_id=pid,
+                    arm=self.ARM,
+                    model_string=self.model_string,
+                    extracted_data=result["extracted_data"],
+                    reasoning_trace=result["reasoning_trace"],
+                    prompt_text=result["prompt_text"],
+                    input_tokens=result["input_tokens"],
+                    output_tokens=result["output_tokens"],
+                    reasoning_tokens=result["reasoning_tokens"],
+                    cost_usd=result["cost_usd"],
+                    spans=result["spans"],
+                )
+            except Exception as exc:
+                logger.error(
+                    "Paper %d: store_result failed: %s", pid, exc,
+                )
+                stats["failed"] += 1
+                progress.report(pid, "FAILED", time.time() - t_paper)
+                continue
 
             stats["extracted"] += 1
             stats["total_cost"] += result["cost_usd"]

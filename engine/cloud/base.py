@@ -281,7 +281,8 @@ class CloudExtractorBase:
     def run_distribution_check(self, stats: dict) -> dict:
         """Run post-extraction distribution monitor for this arm.
 
-        Returns the monitor summary dict. Safe to call — never raises.
+        Returns the monitor summary dict. Raises DistributionCollapseError
+        if any categorical field has zero variance (COLLAPSED).
         """
         from engine.validators.distribution_monitor import run_post_extraction_check
 

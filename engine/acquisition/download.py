@@ -85,7 +85,15 @@ def _download_direct(url: str, dest: Path) -> tuple[str, int]:
     size_kb = len(resp.content) // 1024
 
     if not is_valid_pdf(dest):
-        dest.unlink()
+        # Quarantine invalid file instead of deleting
+        quarantine_dir = dest.parent.parent / "quarantine"
+        quarantine_dir.mkdir(exist_ok=True)
+        quarantine_dest = quarantine_dir / dest.name
+        dest.rename(quarantine_dest)
+        logger.warning(
+            "Quarantined invalid PDF: %s → %s (not %%PDF, %d KB)",
+            dest.name, quarantine_dest, size_kb,
+        )
         return "not_pdf", size_kb
     return "success", size_kb
 
@@ -172,9 +180,20 @@ def _download_via_pmc(doi: str, dest: Path) -> tuple[str, int]:
         pkg_url = match.group(1).replace(
             "ftp://ftp.ncbi.nlm.nih.gov", "https://ftp.ncbi.nlm.nih.gov"
         )
-        resp2 = requests.get(pkg_url, timeout=60, headers={"User-Agent": USER_AGENT})
+        resp2 = requests.get(pkg_url, timeout=60, headers={"User-Agent": USER_AGENT},
+                             stream=True)
         resp2.raise_for_status()
-        tar = tarfile.open(fileobj=io.BytesIO(resp2.content), mode="r:gz")
+        # Check Content-Length before loading into memory (100MB ceiling)
+        content_length = int(resp2.headers.get("Content-Length", 0))
+        if content_length > 100 * 1024 * 1024:
+            resp2.close()
+            logger.warning(
+                "PMC archive too large (%d MB) — skipping",
+                content_length // (1024 * 1024),
+            )
+            return "archive_too_large", 0
+        archive_bytes = resp2.content
+        tar = tarfile.open(fileobj=io.BytesIO(archive_bytes), mode="r:gz")
         pdf_members = [m for m in tar.getnames() if m.endswith(".pdf")]
         if not pdf_members:
             return "no_pdf_in_archive", 0
@@ -326,22 +345,23 @@ def download_papers(review_name: str, *, retry_failed: bool = False) -> dict:
     pdf_dir = DATA_ROOT / review_name / "pdfs"
     pdf_dir.mkdir(parents=True, exist_ok=True)
 
+    _TERMINAL = "('ABSTRACT_SCREENED_OUT', 'REJECTED', 'PDF_EXCLUDED', 'FT_SCREENED_OUT')"
     # Find download targets
     if retry_failed:
         # Retry papers that failed before
         papers = conn.execute(
-            """SELECT id, doi, title, pdf_url, download_status, pdf_local_path
+            f"""SELECT id, doi, title, pdf_url, download_status, pdf_local_path
                FROM papers
-               WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
+               WHERE status NOT IN {_TERMINAL}
                  AND download_status = 'failed'
                ORDER BY id"""
         ).fetchall()
     else:
         # Papers with PDF URL or DOI, not yet successfully downloaded
         papers = conn.execute(
-            """SELECT id, doi, title, pdf_url, download_status, pdf_local_path
+            f"""SELECT id, doi, title, pdf_url, download_status, pdf_local_path
                FROM papers
-               WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
+               WHERE status NOT IN {_TERMINAL}
                  AND download_status != 'success'
                ORDER BY id"""
         ).fetchall()
@@ -374,7 +394,7 @@ def download_papers(review_name: str, *, retry_failed: bool = False) -> dict:
     if total == 0:
         print("Nothing to download.")
         db.close()
-        return {"downloaded": 0, "skipped": skipped, "failed": 0}
+        return {"downloaded": 0, "skipped": skipped, "failed": 0, "quarantined": 0}
 
     now = datetime.now(timezone.utc).isoformat()
     downloaded = 0

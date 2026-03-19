@@ -127,6 +127,40 @@ class SpecialtyScope(BaseModel):
         return "\n".join(lines)
 
 
+# ── PDF Parsing ─────────────────────────────────────────────────────
+
+
+class PDFParsing(BaseModel):
+    """Configuration for PDF parsing thresholds and models."""
+
+    scanned_text_threshold: int = Field(
+        default=100, ge=0,
+        description="Characters per page below which a PDF is considered scanned",
+    )
+    vision_model: str = Field(
+        default="qwen2.5vl:7b",
+        description="Ollama vision model for OCR of scanned PDFs",
+    )
+
+
+# ── Cloud Models ────────────────────────────────────────────────────
+
+
+class CloudModelConfig(BaseModel):
+    """Configuration for a single cloud extraction arm."""
+
+    model: str = Field(description="Model identifier (e.g., 'o4-mini-2025-04-16')")
+    cost_input_per_m: float = Field(description="Cost per 1M input tokens (USD)")
+    cost_output_per_m: float = Field(description="Cost per 1M output tokens (USD)")
+
+
+class CloudModels(BaseModel):
+    """Configuration for cloud extraction arms (optional)."""
+
+    openai: Optional[CloudModelConfig] = None
+    anthropic: Optional[CloudModelConfig] = None
+
+
 # ── PDF Quality Check ───────────────────────────────────────────────
 
 
@@ -202,6 +236,14 @@ class ReviewSpec(BaseModel):
     pdf_quality_check: PDFQualityCheck = Field(
         default_factory=PDFQualityCheck,
         description="Configuration for AI-based PDF quality classification.",
+    )
+    cloud_models: Optional[CloudModels] = Field(
+        default=None,
+        description="Cloud extraction arm configuration (model names and cost rates).",
+    )
+    pdf_parsing: PDFParsing = Field(
+        default_factory=PDFParsing,
+        description="PDF parsing thresholds and vision model configuration.",
     )
 
     # ── Protocol hashing ─────────────────────────────────────────

@@ -293,8 +293,13 @@ class ReviewDatabase:
             try:
                 self._conn.execute(sql)
                 self._conn.commit()
-            except sqlite3.OperationalError:
-                pass  # column/table already exists
+            except sqlite3.OperationalError as exc:
+                msg = str(exc).lower()
+                if "already exists" in msg or "duplicate column" in msg:
+                    pass  # column/table already exists — safe to ignore
+                else:
+                    logger.error("Migration failed — %s: %s", sql.strip()[:60], exc)
+                    raise
 
         # Ensure abstract_verification_decisions table exists (for pre-existing databases)
         self._conn.executescript(_VERIFICATION_TABLE)
@@ -354,29 +359,51 @@ class ReviewDatabase:
         return added
 
     def update_status(self, paper_id: int, new_status: str) -> None:
-        """Transition a paper to a new lifecycle status."""
+        """Transition a paper to a new lifecycle status.
+
+        When called outside a transaction, wraps validation + update in
+        BEGIN IMMEDIATE to prevent races. When called inside an existing
+        transaction (e.g., from reject_paper), participates in that
+        transaction without starting a nested one.
+        """
         if new_status not in STATUSES:
             raise ValueError(f"Invalid status: {new_status}")
 
-        row = self._conn.execute(
-            "SELECT status FROM papers WHERE id = ?", (paper_id,)
-        ).fetchone()
-        if row is None:
-            raise ValueError(f"Paper {paper_id} not found")
+        own_txn = not self._conn.in_transaction
+        try:
+            if own_txn:
+                self._conn.execute("BEGIN IMMEDIATE")
 
-        current = row["status"]
-        allowed = ALLOWED_TRANSITIONS.get(current, set())
-        if new_status not in allowed:
-            raise ValueError(
-                f"Invalid transition: {current} → {new_status} "
-                f"(allowed: {allowed or 'none'})"
+            row = self._conn.execute(
+                "SELECT status FROM papers WHERE id = ?", (paper_id,)
+            ).fetchone()
+            if row is None:
+                if own_txn:
+                    self._conn.execute("ROLLBACK")
+                raise ValueError(f"Paper {paper_id} not found")
+
+            current = row["status"]
+            allowed = ALLOWED_TRANSITIONS.get(current, set())
+            if new_status not in allowed:
+                if own_txn:
+                    self._conn.execute("ROLLBACK")
+                raise ValueError(
+                    f"Invalid transition: {current} → {new_status} "
+                    f"(allowed: {allowed or 'none'})"
+                )
+
+            self._conn.execute(
+                "UPDATE papers SET status = ?, updated_at = ? WHERE id = ?",
+                (new_status, _now(), paper_id),
             )
-
-        self._conn.execute(
-            "UPDATE papers SET status = ?, updated_at = ? WHERE id = ?",
-            (new_status, _now(), paper_id),
-        )
-        self._conn.commit()
+            if own_txn:
+                self._conn.execute("COMMIT")
+        except ValueError:
+            raise
+        except Exception:
+            if own_txn:
+                self._conn.execute("ROLLBACK")
+            raise
 
     def get_papers_by_status(self, status: str) -> list[dict]:
         """Return all papers with the given status."""
@@ -830,8 +857,81 @@ class ReviewDatabase:
         logger.info("Cleaned up %d orphaned spans", deleted)
         return deleted
 
+    # ── Admin Reset ────────────────────────────────────────
+
+    def admin_reset_status(
+        self,
+        paper_id: int,
+        target_status: str,
+        reason: str,
+    ) -> str:
+        """Administrative status reset — bypasses normal state transitions.
+
+        Records the reset in the admin_resets log table for audit trail.
+        Returns the previous status.
+        """
+        if target_status not in STATUSES:
+            raise ValueError(f"Invalid target status: {target_status}")
+
+        row = self._conn.execute(
+            "SELECT status FROM papers WHERE id = ?", (paper_id,)
+        ).fetchone()
+        if row is None:
+            raise ValueError(f"Paper {paper_id} not found")
+
+        previous = row["status"]
+        now = _now()
+
+        try:
+            self._conn.execute("BEGIN")
+            # Ensure log table exists
+            self._conn.execute(
+                """CREATE TABLE IF NOT EXISTS admin_resets (
+                       id          INTEGER PRIMARY KEY,
+                       paper_id    INTEGER NOT NULL,
+                       from_status TEXT NOT NULL,
+                       to_status   TEXT NOT NULL,
+                       reason      TEXT NOT NULL,
+                       reset_at    TEXT NOT NULL
+                   )"""
+            )
+            self._conn.execute(
+                """INSERT INTO admin_resets
+                       (paper_id, from_status, to_status, reason, reset_at)
+                   VALUES (?, ?, ?, ?, ?)""",
+                (paper_id, previous, target_status, reason, now),
+            )
+            self._conn.execute(
+                "UPDATE papers SET status = ?, updated_at = ? WHERE id = ?",
+                (target_status, now, paper_id),
+            )
+            self._conn.execute("COMMIT")
+        except Exception:
+            self._conn.execute("ROLLBACK")
+            raise
+
+        logger.info(
+            "Admin reset: paper %d %s → %s (reason: %s)",
+            paper_id, previous, target_status, reason,
+        )
+        return previous
+
+    # ── Context Manager ─────────────────────────────────────
+
+    def __enter__(self) -> "ReviewDatabase":
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+        self.close()
+        return False
+
     def close(self) -> None:
-        self._conn.close()
+        if self._conn is not None:
+            try:
+                self._conn.close()
+            except Exception:
+                pass
+            self._conn = None
 
 
 # ── Helpers ──────────────────────────────────────────────────────────

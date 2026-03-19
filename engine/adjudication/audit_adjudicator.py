@@ -621,6 +621,7 @@ def import_audit_review_decisions(
         "accepted": 0, "corrected_fields": 0, "rejected": 0,
         "missing": 0, "invalid": 0, "total": len(parsed_rows),
         "papers_transitioned": 0,
+        "span_not_found": 0,
     }
     warnings = []
 
@@ -642,6 +643,7 @@ def import_audit_review_decisions(
         ).fetchone()
         if not extraction:
             warnings.append(f"Paper {pid}: no extraction found")
+            stats["span_not_found"] += 1
             continue
         ext_id = extraction["id"]
 
@@ -651,6 +653,7 @@ def import_audit_review_decisions(
         ).fetchone()
         if not span:
             warnings.append(f"Paper {pid}, field {field_name}: span not found")
+            stats["span_not_found"] += 1
             continue
 
         if decision == "ACCEPT":

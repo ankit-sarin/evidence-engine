@@ -200,55 +200,63 @@ def import_dispositions(
         ).fetchall()
     )
 
-    for entry in data["papers"]:
-        pid = entry["paper_id"]
-        disp = entry["disposition"]
-        detail = entry.get("exclude_detail")
+    try:
+        if not dry_run:
+            conn.execute("BEGIN")
 
-        if disp == "UNSET":
-            stats["skipped_unset"] += 1
-            continue
+        for entry in data["papers"]:
+            pid = entry["paper_id"]
+            disp = entry["disposition"]
+            detail = entry.get("exclude_detail")
 
-        if disp == "PDF_WILL_ATTEMPT":
-            stats["will_attempt"] += 1
-            logger.info("  PDF_WILL_ATTEMPT pid=%d", pid)
-            continue
+            if disp == "UNSET":
+                stats["skipped_unset"] += 1
+                continue
 
-        if pid in already_excluded or pid in already_confirmed:
-            stats["skipped_already"] += 1
-            continue
+            if disp == "PDF_WILL_ATTEMPT":
+                stats["will_attempt"] += 1
+                logger.info("  PDF_WILL_ATTEMPT pid=%d", pid)
+                continue
 
-        if disp == "PROCEED":
-            if not dry_run:
-                conn.execute(
-                    "UPDATE papers SET pdf_quality_check_status = 'HUMAN_CONFIRMED' WHERE id = ?",
-                    (pid,),
+            if pid in already_excluded or pid in already_confirmed:
+                stats["skipped_already"] += 1
+                continue
+
+            if disp == "PROCEED":
+                if not dry_run:
+                    conn.execute(
+                        "UPDATE papers SET pdf_quality_check_status = 'HUMAN_CONFIRMED' WHERE id = ?",
+                        (pid,),
+                    )
+                stats["proceeded"] += 1
+                logger.info("  PROCEED pid=%d → HUMAN_CONFIRMED", pid)
+
+            elif disp in EXCLUDE_DISPOSITIONS:
+                reason = _DISPOSITION_TO_REASON[disp]
+                # Use detail from JSON, or from exclude_reason field as fallback
+                db_detail = detail or entry.get("exclude_detail")
+                if not dry_run:
+                    conn.execute(
+                        """UPDATE papers
+                           SET status = 'PDF_EXCLUDED',
+                               pdf_exclusion_reason = ?,
+                               pdf_exclusion_detail = ?,
+                               updated_at = ?
+                           WHERE id = ?""",
+                        (reason, db_detail, now, pid),
+                    )
+                stats["excluded"] += 1
+                stats["exclude_breakdown"][reason] = (
+                    stats["exclude_breakdown"].get(reason, 0) + 1
                 )
-            stats["proceeded"] += 1
-            logger.info("  PROCEED pid=%d → HUMAN_CONFIRMED", pid)
+                logger.info("  EXCLUDE pid=%d reason=%s", pid, reason)
 
-        elif disp in EXCLUDE_DISPOSITIONS:
-            reason = _DISPOSITION_TO_REASON[disp]
-            # Use detail from JSON, or from exclude_reason field as fallback
-            db_detail = detail or entry.get("exclude_detail")
-            if not dry_run:
-                conn.execute(
-                    """UPDATE papers
-                       SET status = 'PDF_EXCLUDED',
-                           pdf_exclusion_reason = ?,
-                           pdf_exclusion_detail = ?,
-                           updated_at = ?
-                       WHERE id = ?""",
-                    (reason, db_detail, now, pid),
-                )
-            stats["excluded"] += 1
-            stats["exclude_breakdown"][reason] = (
-                stats["exclude_breakdown"].get(reason, 0) + 1
-            )
-            logger.info("  EXCLUDE pid=%d reason=%s", pid, reason)
-
-    if not dry_run:
-        conn.commit()
+        if not dry_run:
+            conn.execute("COMMIT")
+    except Exception:
+        if not dry_run:
+            conn.execute("ROLLBACK")
+        raise
 
     if is_complete:
         logger.info("PDF acquisition finalized (complete=true)")

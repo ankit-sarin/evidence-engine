@@ -12,7 +12,7 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Literal, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from engine.agents.models import EvidenceSpan
 from engine.core.constants import INVALID_SNIPPET_RE
@@ -403,10 +403,18 @@ def run_audit(
             ft = field_type_map.get(fname, "text")
             tier = field_tier_map.get(fname, 1)
 
-            status, reasoning = audit_span(
-                span_data, paper_text, field_type=ft, field_tier=tier,
-                model=model,
-            )
+            try:
+                status, reasoning = audit_span(
+                    span_data, paper_text, field_type=ft, field_tier=tier,
+                    model=model,
+                )
+            except (json.JSONDecodeError, ValidationError) as exc:
+                logger.warning(
+                    "Paper %d, field %s: audit parse error — flagging: %s",
+                    pid, fname, str(exc)[:200],
+                )
+                status = "flagged"
+                reasoning = f"Audit LLM returned unparseable output: {str(exc)[:100]}"
 
             db.update_audit(
                 span_id=span_data["id"],

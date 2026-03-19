@@ -17,10 +17,12 @@ from engine.utils.ollama_client import ollama_chat
 from docling.document_converter import DocumentConverter
 
 from engine.core.database import ReviewDatabase
+from engine.core.review_spec import ReviewSpec
 from engine.parsers.models import ParsedDocument
 
 logger = logging.getLogger(__name__)
 
+# Defaults — overridden by ReviewSpec.pdf_parsing when available
 _SCANNED_THRESHOLD = 100  # chars per page — below this, assume scanned
 _VISION_MODEL = "qwen2.5vl:7b"
 
@@ -40,7 +42,7 @@ def compute_pdf_hash(pdf_path: str) -> str | None:
     return h.hexdigest()
 
 
-def is_scanned_pdf(pdf_path: str) -> bool:
+def is_scanned_pdf(pdf_path: str, threshold: int = _SCANNED_THRESHOLD) -> bool:
     """Heuristic: if extractable text is sparse relative to page count, it's scanned."""
     doc = fitz.open(pdf_path)
     try:
@@ -49,7 +51,7 @@ def is_scanned_pdf(pdf_path: str) -> bool:
             return True
         total_chars = sum(len(page.get_text()) for page in doc)
         chars_per_page = total_chars / num_pages
-        return chars_per_page < _SCANNED_THRESHOLD
+        return chars_per_page < threshold
     finally:
         doc.close()
 
@@ -74,8 +76,8 @@ def parse_with_pymupdf(pdf_path: str) -> str:
     return "\n\n---\n\n".join(pages)
 
 
-def parse_with_vision(pdf_path: str) -> str:
-    """Parse a scanned PDF by sending page images to Qwen2.5-VL via Ollama."""
+def parse_with_vision(pdf_path: str, vision_model: str = _VISION_MODEL) -> str:
+    """Parse a scanned PDF by sending page images to a vision model via Ollama."""
     doc = fitz.open(pdf_path)
     pages_md: list[str] = []
 
@@ -88,7 +90,7 @@ def parse_with_vision(pdf_path: str) -> str:
             img_b64 = base64.b64encode(img_bytes).decode()
 
             response = ollama_chat(
-                model=_VISION_MODEL,
+                model=vision_model,
                 messages=[
                     {
                         "role": "user",
@@ -115,8 +117,16 @@ def parse_pdf(
     paper_id: int,
     review_name: str,
     db: ReviewDatabase,
+    spec: ReviewSpec | None = None,
 ) -> ParsedDocument:
-    """Parse a PDF, route between Docling and Qwen2.5-VL, save and record."""
+    """Parse a PDF, route between Docling and vision model, save and record."""
+    # Read thresholds from spec if available
+    scanned_threshold = _SCANNED_THRESHOLD
+    vision_model = _VISION_MODEL
+    if spec and hasattr(spec, "pdf_parsing"):
+        scanned_threshold = spec.pdf_parsing.scanned_text_threshold
+        vision_model = spec.pdf_parsing.vision_model
+
     pdf_hash = compute_pdf_hash(pdf_path)
 
     # Check for existing parse with same hash
@@ -150,9 +160,9 @@ def parse_pdf(
     version = (last_version or 0) + 1
 
     # Route: scanned → vision model; digital → Docling → PyMuPDF fallback
-    if is_scanned_pdf(pdf_path):
-        logger.info("Paper %d: scanned PDF detected, using Qwen2.5-VL", paper_id)
-        markdown = parse_with_vision(pdf_path)
+    if is_scanned_pdf(pdf_path, threshold=scanned_threshold):
+        logger.info("Paper %d: scanned PDF detected, using %s", paper_id, vision_model)
+        markdown = parse_with_vision(pdf_path, vision_model=vision_model)
         parser_used = "qwen2.5vl"
     else:
         logger.info("Paper %d: digital PDF, using Docling", paper_id)
@@ -168,7 +178,7 @@ def parse_pdf(
             parser_used = "pymupdf"
 
         # If output is sparse, try PyMuPDF (if not already), then vision model
-        if len(markdown.strip()) < _SCANNED_THRESHOLD and parser_used == "docling":
+        if len(markdown.strip()) < scanned_threshold and parser_used == "docling":
             logger.warning(
                 "Paper %d: Docling output sparse (%d chars), falling back to PyMuPDF",
                 paper_id, len(markdown.strip()),
@@ -176,35 +186,53 @@ def parse_pdf(
             markdown = parse_with_pymupdf(pdf_path)
             parser_used = "pymupdf"
 
-        if len(markdown.strip()) < _SCANNED_THRESHOLD:
+        if len(markdown.strip()) < scanned_threshold:
             logger.warning(
-                "Paper %d: %s output sparse (%d chars), falling back to Qwen2.5-VL",
-                paper_id, parser_used, len(markdown.strip()),
+                "Paper %d: %s output sparse (%d chars), falling back to %s",
+                paper_id, parser_used, len(markdown.strip()), vision_model,
             )
-            markdown = parse_with_vision(pdf_path)
+            markdown = parse_with_vision(pdf_path, vision_model=vision_model)
             parser_used = "qwen2.5vl"
 
-    # Save Markdown file
+    # Guard: reject empty parse results before writing anything
+    if not markdown.strip():
+        raise ValueError(
+            f"Paper {paper_id}: all parsers returned empty text — "
+            "no file written, no DB row created"
+        )
+
+    # Atomic write: temp file → DB commit → rename
     review_dir = Path(db.db_path).parent
     md_filename = f"{paper_id}_v{version}.md"
     md_path = review_dir / "parsed_text" / md_filename
-    md_path.write_text(markdown)
+    tmp_path = md_path.with_suffix(".md.tmp")
 
-    # Record in database
-    now = datetime.now(timezone.utc).isoformat()
-    db._conn.execute(
-        """INSERT INTO full_text_assets
-           (paper_id, pdf_path, pdf_hash, parsed_text_path, parsed_text_version,
-            parser_used, parsed_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?)""",
-        (paper_id, pdf_path, pdf_hash, str(md_path), version, parser_used, now),
-    )
-    # Store content hash on the papers row for provenance
-    db._conn.execute(
-        "UPDATE papers SET pdf_content_hash = ? WHERE id = ?",
-        (pdf_hash, paper_id),
-    )
-    db._conn.commit()
+    try:
+        tmp_path.write_text(markdown)
+
+        # Record in database (with final path, not temp)
+        now = datetime.now(timezone.utc).isoformat()
+        db._conn.execute(
+            """INSERT INTO full_text_assets
+               (paper_id, pdf_path, pdf_hash, parsed_text_path, parsed_text_version,
+                parser_used, parsed_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (paper_id, pdf_path, pdf_hash, str(md_path), version, parser_used, now),
+        )
+        db._conn.execute(
+            "UPDATE papers SET pdf_content_hash = ? WHERE id = ?",
+            (pdf_hash, paper_id),
+        )
+        db._conn.commit()
+
+        # DB committed — now rename temp to final (atomic on POSIX)
+        tmp_path.rename(md_path)
+    except Exception:
+        # Clean up temp file on any failure
+        if tmp_path.exists():
+            tmp_path.unlink()
+        db._conn.rollback()
+        raise
 
     return ParsedDocument(
         paper_id=paper_id,

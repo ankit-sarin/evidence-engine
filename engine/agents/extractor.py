@@ -401,6 +401,11 @@ def extract_paper(
         }
         for s in result.fields
     ]
+    if not span_dicts:
+        raise ValueError(
+            f"Paper {paper_id}: extraction produced 0 evidence spans — "
+            "refusing to store empty extraction"
+        )
     ext_id = db.add_extraction_atomic(
         paper_id=paper_id,
         schema_hash=result.extraction_schema_hash,

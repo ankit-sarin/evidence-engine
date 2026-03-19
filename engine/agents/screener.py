@@ -6,11 +6,13 @@ Phase 2 (Verification): Re-screen includes with a larger model (higher precision
 
 import json
 import logging
+import sqlite3
 from pathlib import Path
 from typing import Literal
 
+from pydantic import BaseModel, Field, ValidationError
+
 from engine.utils.ollama_client import ollama_chat
-from pydantic import BaseModel, Field
 
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
@@ -221,18 +223,29 @@ def run_screening(db: ReviewDatabase, spec: ReviewSpec) -> dict:
     pending = [p for p in papers if p["id"] not in screened_ids]
     logger.info("Starting dual-pass screening on %d papers (%d pending)", total, len(pending))
 
-    stats = {"screened_in": 0, "screened_out": 0, "flagged": 0, "total": len(pending)}
+    stats = {"screened_in": 0, "screened_out": 0, "flagged": 0, "parse_errors": 0, "total": len(pending)}
 
     for i, paper in enumerate(pending, 1):
         pid = paper["id"]
 
-        # Pass 1
-        d1 = screen_paper(paper, spec, pass_number=1, model=primary_model)
-        db.add_screening_decision(pid, 1, d1.decision, d1.rationale, primary_model)
+        try:
+            # Pass 1
+            d1 = screen_paper(paper, spec, pass_number=1, model=primary_model)
+            db.add_screening_decision(pid, 1, d1.decision, d1.rationale, primary_model)
 
-        # Pass 2
-        d2 = screen_paper(paper, spec, pass_number=2, model=primary_model)
-        db.add_screening_decision(pid, 2, d2.decision, d2.rationale, primary_model)
+            # Pass 2
+            d2 = screen_paper(paper, spec, pass_number=2, model=primary_model)
+            db.add_screening_decision(pid, 2, d2.decision, d2.rationale, primary_model)
+        except (json.JSONDecodeError, ValidationError) as exc:
+            logger.warning(
+                "Paper %d: malformed LLM output — flagging for review: %s",
+                pid, str(exc)[:200],
+            )
+            db.update_status(pid, "ABSTRACT_SCREEN_FLAGGED")
+            stats["flagged"] += 1
+            stats["parse_errors"] += 1
+            screened_ids.add(pid)
+            continue
 
         # Resolve agreement
         if d1.decision == "include" and d2.decision == "include":
@@ -295,12 +308,24 @@ def run_verification(db: ReviewDatabase, spec: ReviewSpec) -> dict:
         len(papers), len(pending), verification_model,
     )
 
-    stats = {"confirmed": 0, "flagged": 0, "total": len(pending)}
+    stats = {"confirmed": 0, "flagged": 0, "parse_errors": 0, "total": len(pending)}
 
     for i, paper in enumerate(pending, 1):
         pid = paper["id"]
 
-        decision = screen_paper(paper, spec, pass_number=1, model=verification_model, role="verifier")
+        try:
+            decision = screen_paper(paper, spec, pass_number=1, model=verification_model, role="verifier")
+        except (json.JSONDecodeError, ValidationError) as exc:
+            logger.warning(
+                "Paper %d: malformed verifier output — flagging: %s",
+                pid, str(exc)[:200],
+            )
+            db.update_status(pid, "ABSTRACT_SCREEN_FLAGGED")
+            stats["flagged"] += 1
+            stats["parse_errors"] += 1
+            verified_ids.add(pid)
+            continue
+
         db.add_verification_decision(
             pid, decision.decision, decision.rationale, verification_model,
         )
@@ -339,7 +364,10 @@ def run_verification(db: ReviewDatabase, spec: ReviewSpec) -> dict:
             db._conn, "ABSTRACT_SCREENING_COMPLETE",
             metadata=f"{stats['confirmed']} confirmed, {stats['flagged']} flagged",
         )
-    except Exception:
-        pass  # Workflow table may not exist in test DBs
+    except sqlite3.OperationalError as exc:
+        if "no such table" in str(exc).lower():
+            logger.debug("Workflow table not found — skipping stage advance")
+        else:
+            raise
 
     return stats

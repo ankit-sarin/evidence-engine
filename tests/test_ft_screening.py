@@ -593,6 +593,36 @@ class TestFTAdjudication:
         assert row["adjudication_decision"] == "FT_ELIGIBLE"
         assert row["adjudication_reason"] == "Reviewer confirmed"
 
+    def test_status_update_failure_tracked(self, tmp_db, tmp_path):
+        """Status update failure is tracked in stats, not counted as success."""
+        pid = _add_paper(tmp_db, title="Status Fail", pmid="77030")
+        _advance_to_ft_flagged(tmp_db, pid)
+
+        out = tmp_path / "ft_status_fail.xlsx"
+        export_ft_adjudication_queue(tmp_db, out)
+
+        from openpyxl import load_workbook
+        wb = load_workbook(out)
+        ws = wb["Review Queue"]
+        headers = {cell.value: cell.column - 1 for cell in ws[1] if cell.value}
+        dec_col = next(i for h, i in headers.items() if "PI_decision" in h)
+        for row in ws.iter_rows(min_row=2, values_only=False):
+            row[dec_col].value = "FT_ELIGIBLE"
+        wb.save(out)
+
+        # Force the paper to a status where FT_ELIGIBLE is not a valid transition
+        tmp_db._conn.execute(
+            "UPDATE papers SET status = 'INGESTED' WHERE id = ?", (pid,)
+        )
+        tmp_db._conn.commit()
+
+        result = import_ft_adjudication_decisions(tmp_db, out)
+
+        # Decision was recorded but status update failed
+        assert result["stats"]["status_update_failed"] == 1
+        # Should NOT count as successful ft_eligible
+        assert result["stats"]["ft_eligible"] == 0
+
 
 # ── Workflow FT Stage Tests ──────────────────────────────────────
 
@@ -728,3 +758,121 @@ class TestFTScreeningSkipsAdvancedStatus:
 
         # (c) No exception raised — stats counted
         assert stats["ft_eligible"] == 1
+
+
+# ── H10: Missing parsed text → FT_FLAGGED ──────────────────────────
+
+
+class TestMissingParsedText:
+
+    def test_no_parsed_text_marks_ft_flagged(self, tmp_db, spec):
+        """Paper at PARSED with no parsed text file gets marked FT_FLAGGED."""
+        pid = _add_paper(tmp_db, title="No Text Paper", pmid="NT1")
+        _advance_to_parsed(tmp_db, pid)
+        # Do NOT create any parsed text file
+
+        with patch("engine.utils.ollama_preflight.require_preflight"):
+            with patch("engine.agents.ft_screener.ft_screen_paper") as mock_screen:
+                stats = run_ft_screening(tmp_db, spec)
+
+        # Paper should be FT_FLAGGED, not silently left at PARSED
+        paper = tmp_db._conn.execute(
+            "SELECT status FROM papers WHERE id = ?", (pid,)
+        ).fetchone()
+        assert paper["status"] == "FT_FLAGGED"
+        assert stats["skipped_no_text"] == 1
+        # LLM should NOT have been called (no text to screen)
+        mock_screen.assert_not_called()
+
+
+# ── H1: Parse error handling in FT screener ──────────────────────────
+
+
+class TestFTParseError:
+
+    def test_malformed_output_flags_paper(self, tmp_db, spec):
+        """Malformed LLM output flags paper; other papers still process."""
+        from pydantic import ValidationError
+
+        pid1 = _add_paper(tmp_db, title="Good Paper", pmid="FTP1")
+        pid2 = _add_paper(tmp_db, title="Bad Paper", pmid="FTP2")
+        _advance_to_parsed(tmp_db, pid1)
+        _advance_to_parsed(tmp_db, pid2)
+
+        # Create parsed text for both
+        parsed_dir = Path(tmp_db.db_path).parent / "parsed_text"
+        (parsed_dir / f"{pid1}_v1.md").write_text("Good paper content about surgery.")
+        (parsed_dir / f"{pid2}_v1.md").write_text("Bad paper content.")
+
+        call_count = [0]
+
+        def _mock_ft_screen(*args, **kwargs):
+            call_count[0] += 1
+            if call_count[0] == 2:  # Second paper fails
+                raise ValidationError.from_exception_data(
+                    title="FTScreeningDecision",
+                    line_errors=[{"type": "missing", "loc": ("decision",), "msg": "Field required", "input": {}}],
+                )
+            return FTScreeningDecision(
+                decision="FT_ELIGIBLE", reason_code="eligible",
+                rationale="Meets criteria", confidence=0.9,
+            )
+
+        with patch("engine.utils.ollama_preflight.require_preflight"):
+            with patch("engine.agents.ft_screener.ft_screen_paper", side_effect=_mock_ft_screen):
+                stats = run_ft_screening(tmp_db, spec)
+
+        assert stats["parse_errors"] == 1
+        assert stats["ft_eligible"] == 1
+        # Bad paper should be FT_FLAGGED
+        bad = tmp_db._conn.execute(
+            "SELECT status FROM papers WHERE id = ?", (pid2,)
+        ).fetchone()
+        assert bad["status"] == "FT_FLAGGED"
+
+
+# ── C9: FT adjudication text read failure logging ──────────────────
+
+
+class TestFTAdjudicationTextFailure:
+
+    def test_read_failure_logs_warning_and_sets_marker(self, tmp_db, tmp_path, caplog):
+        """When parsed text read fails, warning is logged and marker text set."""
+        import logging
+
+        pid = _add_paper(tmp_db, title="Read Fail Paper", pmid="RF1")
+        _advance_to_ft_flagged(tmp_db, pid)
+
+        # Create a file that exists but will raise on read
+        bad_file = tmp_path / "bad_file.md"
+        bad_file.write_text("some content")
+
+        tmp_db._conn.execute(
+            """INSERT INTO full_text_assets
+               (paper_id, pdf_path, parsed_text_path, parsed_text_version, parser_used)
+               VALUES (?, 'fake.pdf', ?, 1, 'docling')""",
+            (pid, str(bad_file)),
+        )
+        tmp_db._conn.commit()
+
+        from engine.adjudication.ft_screening_adjudicator import _collect_ft_flagged
+
+        # Mock Path.read_text to raise for this specific file
+        original_read_text = Path.read_text
+
+        def _failing_read(self, *args, **kwargs):
+            if str(self) == str(bad_file):
+                raise IOError("Permission denied")
+            return original_read_text(self, *args, **kwargs)
+
+        with caplog.at_level(logging.WARNING):
+            with patch.object(Path, "read_text", _failing_read):
+                results = _collect_ft_flagged(tmp_db)
+
+        paper_result = [r for r in results if r["paper_id"] == pid]
+        assert len(paper_result) == 1
+        assert "[text unavailable" in paper_result[0]["text_excerpt"]
+
+        # Warning should have been logged
+        warn_msgs = [r.message for r in caplog.records if r.levelno >= logging.WARNING]
+        assert any("Permission denied" in m for m in warn_msgs)

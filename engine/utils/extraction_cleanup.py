@@ -170,36 +170,38 @@ def cleanup_stale_extractions(
     # Back up before destructive operations
     auto_backup(db.db_path, "pre-cleanup")
 
-    # Execute deletions
-    ext_ids = [d["extraction_id"] for d in details]
-    if ext_ids:
-        placeholders = ",".join("?" * len(ext_ids))
+    # Execute deletions + status resets in a single atomic transaction
+    try:
+        conn.execute("BEGIN")
 
-        spans_deleted = conn.execute(
-            f"DELETE FROM evidence_spans WHERE extraction_id IN ({placeholders})",
-            ext_ids,
-        ).rowcount
+        ext_ids = [d["extraction_id"] for d in details]
+        if ext_ids:
+            placeholders = ",".join("?" * len(ext_ids))
 
-        extractions_deleted = conn.execute(
-            f"DELETE FROM extractions WHERE id IN ({placeholders})",
-            ext_ids,
-        ).rowcount
+            spans_deleted = conn.execute(
+                f"DELETE FROM evidence_spans WHERE extraction_id IN ({placeholders})",
+                ext_ids,
+            ).rowcount
 
-        summary["spans_deleted"] = spans_deleted
-        summary["extractions_deleted"] = extractions_deleted
+            extractions_deleted = conn.execute(
+                f"DELETE FROM extractions WHERE id IN ({placeholders})",
+                ext_ids,
+            ).rowcount
 
-    # Reset affected papers to PARSED (direct SQL — bypasses state machine
-    # because AI_AUDIT_COMPLETE → PARSED is not a normal transition)
-    if papers_to_reset:
-        from engine.core.database import _now
-        placeholders = ",".join("?" * len(papers_to_reset))
-        conn.execute(
-            f"UPDATE papers SET status = 'PARSED', updated_at = ? "
-            f"WHERE id IN ({placeholders})",
-            [_now()] + papers_to_reset,
+            summary["spans_deleted"] = spans_deleted
+            summary["extractions_deleted"] = extractions_deleted
+
+        conn.execute("COMMIT")
+    except Exception:
+        conn.execute("ROLLBACK")
+        raise
+
+    # Reset affected papers via admin_reset_status (audited, outside the
+    # delete transaction — papers are only reset after deletions succeed)
+    for pid in papers_to_reset:
+        db.admin_reset_status(
+            pid, "PARSED", reason="extraction_cleanup: stale schema removal",
         )
-
-    conn.commit()
 
     logger.info(
         "CLEANUP COMPLETE — deleted %d extractions (%d spans) across %d papers, "

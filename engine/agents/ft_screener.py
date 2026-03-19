@@ -10,10 +10,11 @@ with specialty scope filtering.
 import json
 import logging
 import re
+import sqlite3
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 from engine.core.constants import FT_MAX_TEXT_CHARS, FT_REASON_CODES
 from engine.core.database import ReviewDatabase
@@ -353,7 +354,7 @@ def run_ft_screening(
         total, len(pending), primary_model,
     )
 
-    stats = {"ft_eligible": 0, "ft_exclude": 0, "skipped_no_text": 0, "total": len(pending)}
+    stats = {"ft_eligible": 0, "ft_exclude": 0, "skipped_no_text": 0, "parse_errors": 0, "total": len(pending)}
 
     for i, paper in enumerate(pending, 1):
         pid = paper["id"]
@@ -361,7 +362,16 @@ def run_ft_screening(
         # Load parsed text
         parsed_text = _load_parsed_text(db, pid)
         if not parsed_text:
-            logger.warning("Paper %d has no parsed text — skipping", pid)
+            logger.warning("Paper %d has no parsed text — marking FT_FLAGGED", pid)
+            current_status = paper.get("status", "")
+            _PAST_FT = {"FT_ELIGIBLE", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED",
+                         "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE", "REJECTED"}
+            if current_status not in _PAST_FT:
+                db.add_ft_screening_decision(
+                    pid, primary_model, "FT_EXCLUDE", "no_parsed_text",
+                    "No parsed text available for full-text screening", 0.0,
+                )
+                db.update_status(pid, "FT_FLAGGED")
             stats["skipped_no_text"] += 1
             screened_ids.add(pid)
             continue
@@ -374,7 +384,21 @@ def run_ft_screening(
         )
 
         # Screen
-        decision = ft_screen_paper(truncated, spec, model=primary_model)
+        try:
+            decision = ft_screen_paper(truncated, spec, model=primary_model)
+        except (json.JSONDecodeError, ValidationError) as exc:
+            logger.warning(
+                "Paper %d: malformed FT screening output — flagging: %s",
+                pid, str(exc)[:200],
+            )
+            current_status = paper.get("status", "")
+            _PAST_FT_2 = {"FT_ELIGIBLE", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED",
+                           "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE", "REJECTED"}
+            if current_status not in _PAST_FT_2:
+                db.update_status(pid, "FT_FLAGGED")
+            stats["parse_errors"] += 1
+            screened_ids.add(pid)
+            continue
 
         # Write decision to DB
         db.add_ft_screening_decision(
@@ -452,14 +476,16 @@ def run_ft_verification(
         len(papers), len(pending), verification_model,
     )
 
-    stats = {"confirmed": 0, "flagged": 0, "total": len(pending)}
+    stats = {"confirmed": 0, "flagged": 0, "parse_errors": 0, "total": len(pending)}
 
     for i, paper in enumerate(pending, 1):
         pid = paper["id"]
 
         parsed_text = _load_parsed_text(db, pid)
         if not parsed_text:
-            logger.warning("Paper %d has no parsed text — skipping verification", pid)
+            logger.warning("Paper %d has no parsed text — marking FT_FLAGGED", pid)
+            db.update_status(pid, "FT_FLAGGED")
+            stats["flagged"] += 1
             verified_ids.add(pid)
             continue
 
@@ -469,7 +495,18 @@ def run_ft_verification(
             abstract=paper.get("abstract", ""),
         )
 
-        decision = ft_verify_paper(truncated, spec, model=verification_model)
+        try:
+            decision = ft_verify_paper(truncated, spec, model=verification_model)
+        except (json.JSONDecodeError, ValidationError) as exc:
+            logger.warning(
+                "Paper %d: malformed verifier output — flagging: %s",
+                pid, str(exc)[:200],
+            )
+            db.update_status(pid, "FT_FLAGGED")
+            stats["flagged"] += 1
+            stats["parse_errors"] += 1
+            verified_ids.add(pid)
+            continue
 
         db.add_ft_verification_decision(
             pid, verification_model, decision.decision,
@@ -501,8 +538,11 @@ def run_ft_verification(
             db._conn, "FULL_TEXT_SCREENING_COMPLETE",
             metadata=f"{stats['confirmed']} confirmed, {stats['flagged']} flagged",
         )
-    except Exception:
-        pass
+    except sqlite3.OperationalError as exc:
+        if "no such table" in str(exc).lower():
+            logger.debug("Workflow table not found — skipping stage advance")
+        else:
+            raise
 
     logger.info(
         "FT verification complete: %d confirmed, %d flagged",

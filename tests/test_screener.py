@@ -252,3 +252,75 @@ def test_screening_uses_primary_model(tmp_path, spec):
     for call in mock.call_args_list:
         assert call.kwargs.get("model") == spec.screening_models.primary
     db.close()
+
+
+# ── H1: Parse error handling ─────────────────────────────────────────
+
+
+def test_parse_error_flags_paper_and_continues(tmp_path, spec):
+    """Malformed LLM output on one paper flags it; other papers process normally."""
+    from pydantic import ValidationError
+
+    db = ReviewDatabase("test_parse_err", data_root=tmp_path)
+    for i in range(3):
+        db.add_papers([Citation(title=f"P{i}", source="pubmed", pmid=str(600 + i))])
+
+    call_count = [0]
+
+    def _mock_screen(*args, **kwargs):
+        call_count[0] += 1
+        if call_count[0] <= 2:  # First paper, passes 1 and 2 → raise on pass 1
+            if call_count[0] == 1:
+                raise ValidationError.from_exception_data(
+                    title="ScreeningDecision",
+                    line_errors=[{"type": "missing", "loc": ("decision",), "msg": "Field required", "input": {}}],
+                )
+        return _mock_decision("include")
+
+    with patch("engine.agents.screener.screen_paper", side_effect=_mock_screen):
+        stats = run_screening(db, spec)
+
+    # Paper 1 should be flagged (parse error), papers 2-3 should be screened_in
+    assert stats["parse_errors"] == 1
+    assert stats["flagged"] >= 1
+    assert stats["screened_in"] == 2
+    assert len(db.get_papers_by_status("ABSTRACT_SCREEN_FLAGGED")) == 1
+    db.close()
+
+
+# ── H5: Narrow complete_stage exception ──────────────────────────────
+
+
+def test_complete_stage_real_error_propagates(tmp_path, spec):
+    """An OperationalError that isn't 'no such table' should propagate."""
+    import sqlite3
+
+    db = _setup_screened_in(tmp_path, spec, n_papers=1)
+
+    def _mock_complete_stage(conn, stage, **kwargs):
+        raise sqlite3.OperationalError("database is locked")
+
+    with patch("engine.agents.screener.screen_paper", return_value=_mock_decision("include")):
+        with patch("engine.adjudication.workflow.complete_stage", side_effect=_mock_complete_stage):
+            with pytest.raises(sqlite3.OperationalError, match="database is locked"):
+                run_verification(db, spec)
+
+    db.close()
+
+
+def test_complete_stage_no_such_table_handled(tmp_path, spec):
+    """'no such table' OperationalError is handled gracefully."""
+    import sqlite3
+
+    db = _setup_screened_in(tmp_path, spec, n_papers=1)
+
+    def _mock_complete_stage(conn, stage, **kwargs):
+        raise sqlite3.OperationalError("no such table: workflow_state")
+
+    with patch("engine.agents.screener.screen_paper", return_value=_mock_decision("include")):
+        with patch("engine.adjudication.workflow.complete_stage", side_effect=_mock_complete_stage):
+            stats = run_verification(db, spec)
+
+    # Should complete without error
+    assert stats["confirmed"] == 1
+    db.close()

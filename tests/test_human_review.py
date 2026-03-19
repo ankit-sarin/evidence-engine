@@ -195,6 +195,62 @@ def test_bulk_accept_does_not_transition_to_human(review_db):
     assert pending == 0
 
 
+def test_span_and_status_atomic_on_failure(review_db):
+    """If paper status update fails, span updates are also rolled back."""
+    import json
+    import sqlite3
+
+    db, tmp_path = review_db
+
+    # Create paper with one contested span at AI_AUDIT_COMPLETE
+    pid = _make_audited_paper(db, tmp_path, "AT1", [
+        ("study_design", "RCT", "randomized controlled trial", "contested"),
+    ])
+
+    span_id = db._conn.execute(
+        "SELECT id FROM evidence_spans ORDER BY id DESC LIMIT 1"
+    ).fetchone()["id"]
+
+    # Create a trigger that blocks the HUMAN_AUDIT_COMPLETE transition
+    db._conn.execute(
+        """CREATE TRIGGER block_human_audit
+           BEFORE UPDATE OF status ON papers
+           WHEN NEW.status = 'HUMAN_AUDIT_COMPLETE'
+           BEGIN
+               SELECT RAISE(ABORT, 'simulated status failure');
+           END"""
+    )
+    db._conn.commit()
+
+    decisions = [{
+        "span_id": span_id,
+        "paper_id": pid,
+        "field_name": "study_design",
+        "decision": "ACCEPT",
+    }]
+    json_path = tmp_path / "decisions.json"
+    json_path.write_text(json.dumps(decisions))
+
+    with pytest.raises(sqlite3.IntegrityError, match="simulated status failure"):
+        import_review_decisions(db, str(json_path))
+
+    # Span should NOT be modified (rolled back)
+    span = db._conn.execute(
+        "SELECT audit_status FROM evidence_spans WHERE id = ?", (span_id,)
+    ).fetchone()
+    assert span["audit_status"] == "contested", "Span should be rolled back to contested"
+
+    # Paper should still be at AI_AUDIT_COMPLETE
+    paper = db._conn.execute(
+        "SELECT status FROM papers WHERE id = ?", (pid,)
+    ).fetchone()
+    assert paper["status"] == "AI_AUDIT_COMPLETE"
+
+    # Clean up trigger
+    db._conn.execute("DROP TRIGGER block_human_audit")
+    db._conn.commit()
+
+
 def test_paper_transitions_only_when_all_resolved(review_db):
     """Paper stays at AI_AUDIT_COMPLETE if some spans are still contested."""
     db, tmp_path = review_db

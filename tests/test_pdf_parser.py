@@ -219,6 +219,29 @@ def test_docling_exception_triggers_pymupdf(digital_pdf, db):
     assert row["parser_used"] == "pymupdf"
 
 
+def test_all_parsers_empty_raises_value_error(scanned_pdf, db):
+    """When all three parsers return empty text, ValueError is raised with no side effects."""
+    pid = _add_paper(db, pid_hint="99")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+
+    # Mock the vision parser to return empty (scanned PDF routes directly here)
+    with patch("engine.parsers.pdf_parser.parse_with_vision", return_value=""):
+        with pytest.raises(ValueError, match="all parsers returned empty text"):
+            parse_pdf(str(scanned_pdf), pid, "test_parse", db)
+
+    # No file written to disk
+    parsed_dir = Path(db.db_path).parent / "parsed_text"
+    md_files = list(parsed_dir.glob(f"{pid}_v*.md"))
+    assert len(md_files) == 0
+
+    # No full_text_assets row created
+    row = db._conn.execute(
+        "SELECT COUNT(*) FROM full_text_assets WHERE paper_id = ?", (pid,)
+    ).fetchone()
+    assert row[0] == 0
+
+
 def test_docling_and_pymupdf_sparse_triggers_vision(scanned_pdf, db):
     """When both Docling and PyMuPDF return sparse output, vision model activates."""
     pid = _add_paper(db, pid_hint="12")
@@ -329,3 +352,101 @@ def test_verify_hashes_reports_mismatch(digital_pdf, db, tmp_path):
     assert len(mismatches) == 1
     assert mismatches[0]["paper_id"] == pid
     assert mismatches[0]["stored_hash"] != mismatches[0]["current_hash"]
+
+
+# ── C4: Atomic Write Tests ─────────────────────────────────────────
+
+
+def test_atomic_write_no_temp_on_db_failure(digital_pdf, db):
+    """If DB commit fails after temp file is written, temp file is cleaned up."""
+    pid = _add_paper(db, pid_hint="30")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+
+    # Make the DB commit fail by creating a trigger that blocks the INSERT
+    db._conn.execute(
+        """CREATE TRIGGER block_fta_insert
+           BEFORE INSERT ON full_text_assets
+           BEGIN
+               SELECT RAISE(ABORT, 'simulated commit failure');
+           END"""
+    )
+    db._conn.commit()
+
+    import sqlite3
+    with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong content " * 10):
+        with pytest.raises(sqlite3.IntegrityError, match="simulated commit failure"):
+            parse_pdf(str(digital_pdf), pid, "test_parse", db)
+
+    # No temp file should remain
+    parsed_dir = Path(db.db_path).parent / "parsed_text"
+    tmp_files = list(parsed_dir.glob("*.tmp"))
+    assert len(tmp_files) == 0, f"Temp files remain: {tmp_files}"
+
+    # No final file either
+    md_files = list(parsed_dir.glob(f"{pid}_v*.md"))
+    assert len(md_files) == 0
+
+    # No full_text_assets row
+    row = db._conn.execute(
+        "SELECT COUNT(*) FROM full_text_assets WHERE paper_id = ?", (pid,)
+    ).fetchone()
+    assert row[0] == 0
+
+    # Clean up trigger
+    db._conn.execute("DROP TRIGGER block_fta_insert")
+    db._conn.commit()
+
+
+# ── C7: PDF_EXCLUDED Filter Test ──────────────────────────────────
+
+
+def test_pdf_excluded_not_in_acquisition_queries(tmp_path):
+    """Papers with PDF_EXCLUDED status are excluded from acquisition queries."""
+    from engine.core.database import ReviewDatabase
+    from engine.search.models import Citation
+
+    db = ReviewDatabase("test_acq", data_root=tmp_path)
+    db.add_papers([Citation(title="Excluded Paper", source="pubmed", pmid="EX1", doi="10.1/ex")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+    db.update_status(pid, "PDF_EXCLUDED")
+
+    # Simulate the acquisition query pattern
+    rows = db._conn.execute(
+        """SELECT id FROM papers
+           WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED', 'PDF_EXCLUDED', 'FT_SCREENED_OUT')"""
+    ).fetchall()
+    pids = [r["id"] for r in rows]
+    assert pid not in pids
+    db.close()
+
+
+# ── M12: Spec-driven parser thresholds ────────────────────────────
+
+
+def test_parse_pdf_uses_spec_threshold(digital_pdf, db):
+    """parse_pdf respects custom scanned_text_threshold from spec."""
+    from engine.core.review_spec import load_review_spec
+
+    pid = _add_paper(db, pid_hint="40")
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+    db.update_status(pid, "PDF_ACQUIRED")
+
+    spec = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+
+    # Use a very high threshold that would classify the digital PDF as "scanned"
+    spec.pdf_parsing.scanned_text_threshold = 999999
+    spec.pdf_parsing.vision_model = "custom-vision-model"
+
+    mock_response = MagicMock()
+    mock_response.message.content = "# OCR content from custom model"
+
+    with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response) as mock_chat:
+        result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=spec)
+
+    # Should have used the vision model (because threshold is very high)
+    assert result.parser_used == "qwen2.5vl"
+    # Verify the custom model was passed to ollama_chat
+    assert mock_chat.call_args.kwargs["model"] == "custom-vision-model"

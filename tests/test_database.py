@@ -523,3 +523,176 @@ def test_cleanup_orphaned_spans(db):
     for s in remaining:
         assert s["extraction_id"] == new_ext_id
         assert s["value"].startswith("new_")
+
+
+# ── Context Manager ──────────────────────────────────────────────────
+
+
+def test_context_manager_opens_and_closes(tmp_path):
+    """ReviewDatabase works as a context manager; connection open inside, closed after."""
+    with ReviewDatabase("ctx_test", data_root=tmp_path) as db:
+        # Connection should be live inside the block
+        row = db._conn.execute("SELECT 1").fetchone()
+        assert row[0] == 1
+        # Basic operation works
+        db.add_papers([_cit(pmid="CM1", title="Context Mgr")])
+        assert len(db.get_papers_by_status("INGESTED")) == 1
+
+    # After exiting, _conn should be None (closed)
+    assert db._conn is None
+
+
+def test_context_manager_closes_on_exception(tmp_path):
+    """Connection is closed even when an exception is raised inside the with block."""
+    with pytest.raises(RuntimeError, match="boom"):
+        with ReviewDatabase("ctx_exc", data_root=tmp_path) as db:
+            db.add_papers([_cit(pmid="CE1", title="Exception")])
+            raise RuntimeError("boom")
+
+    assert db._conn is None
+
+
+def test_close_is_idempotent(tmp_path):
+    """Calling .close() twice does not raise."""
+    db = ReviewDatabase("ctx_idem", data_root=tmp_path)
+    db.add_papers([_cit(pmid="CI1", title="Idempotent")])
+    db.close()
+    db.close()  # Second call should be a no-op
+    assert db._conn is None
+
+
+def test_manual_usage_still_works(tmp_path):
+    """Existing non-context-manager usage (db = ...; db.close()) works identically."""
+    db = ReviewDatabase("ctx_manual", data_root=tmp_path)
+    db.add_papers([_cit(pmid="MU1", title="Manual")])
+    papers = db.get_papers_by_status("INGESTED")
+    assert len(papers) == 1
+    assert papers[0]["title"] == "Manual"
+    db.close()
+    assert db._conn is None
+
+
+# ── Migration Error Filtering ───────────────────────────────────────
+
+
+def test_migration_existing_column_succeeds_silently(tmp_path):
+    """Adding an already-existing column is silently ignored (idempotent)."""
+    import sqlite3
+
+    # First creation adds all columns via migrations
+    db1 = ReviewDatabase("mig_test", data_root=tmp_path)
+    db1.close()
+
+    # Second creation re-runs migrations — should not raise
+    db2 = ReviewDatabase("mig_test", data_root=tmp_path)
+    # Verify the DB is functional
+    db2.add_papers([_cit(pmid="M1", title="Migration OK")])
+    assert len(db2.get_papers_by_status("INGESTED")) == 1
+    db2.close()
+
+
+def test_migration_syntax_error_raises(tmp_path):
+    """A migration with a syntax error raises OperationalError instead of being swallowed."""
+    import sqlite3
+    from engine.core import database as db_mod
+
+    # Create a valid DB first
+    db = ReviewDatabase("mig_err", data_root=tmp_path)
+    db.close()
+
+    # Patch _SIMPLE_MIGRATIONS to include a bad SQL statement
+    bad_migrations = ["CREAT TABLE bad_syntax (id INTEGER PRIMARY KEY)"]
+    original = db_mod._SIMPLE_MIGRATIONS
+
+    try:
+        db_mod._SIMPLE_MIGRATIONS = bad_migrations
+        with pytest.raises(sqlite3.OperationalError):
+            ReviewDatabase("mig_err", data_root=tmp_path)
+    finally:
+        db_mod._SIMPLE_MIGRATIONS = original
+
+
+# ── Admin Reset ──────────────────────────────────────────────────────
+
+
+def test_admin_reset_status_succeeds_and_logs(tmp_path):
+    """admin_reset_status bypasses state machine and records audit trail."""
+    db = ReviewDatabase("admin_test", data_root=tmp_path)
+    db.add_papers([_cit(pmid="AR1", title="Admin Reset")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED",
+              "EXTRACTED", "AI_AUDIT_COMPLETE"):
+        db.update_status(pid, s)
+
+    # AI_AUDIT_COMPLETE → PARSED is NOT in ALLOWED_TRANSITIONS
+    prev = db.admin_reset_status(pid, "PARSED", reason="schema cleanup")
+    assert prev == "AI_AUDIT_COMPLETE"
+
+    # Paper is now PARSED
+    assert db.get_papers_by_status("PARSED")[0]["id"] == pid
+
+    # Audit trail recorded
+    row = db._conn.execute(
+        "SELECT * FROM admin_resets WHERE paper_id = ?", (pid,)
+    ).fetchone()
+    assert row is not None
+    assert row["from_status"] == "AI_AUDIT_COMPLETE"
+    assert row["to_status"] == "PARSED"
+    assert row["reason"] == "schema cleanup"
+    db.close()
+
+
+def test_admin_reset_invalid_target_raises(tmp_path):
+    """admin_reset_status rejects an invalid target status."""
+    db = ReviewDatabase("admin_bad", data_root=tmp_path)
+    db.add_papers([_cit(pmid="AB1", title="Bad Target")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+
+    with pytest.raises(ValueError, match="Invalid target status"):
+        db.admin_reset_status(pid, "NONEXISTENT", reason="test")
+    db.close()
+
+
+def test_normal_pipeline_cannot_use_admin_transition(tmp_path):
+    """update_status still rejects AI_AUDIT_COMPLETE → PARSED."""
+    db = ReviewDatabase("admin_guard", data_root=tmp_path)
+    db.add_papers([_cit(pmid="AG1", title="Guard")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED",
+              "EXTRACTED", "AI_AUDIT_COMPLETE"):
+        db.update_status(pid, s)
+
+    with pytest.raises(ValueError, match="Invalid transition"):
+        db.update_status(pid, "PARSED")
+    db.close()
+
+
+# ── Atomic update_status ──────────────────────────────────────────────
+
+
+def test_update_status_atomic_valid_transition(tmp_path):
+    """update_status commits atomically on a valid transition."""
+    db = ReviewDatabase("atomic_ok", data_root=tmp_path)
+    db.add_papers([_cit(pmid="AO1", title="Atomic")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    db.update_status(pid, "ABSTRACT_SCREENED_IN")
+
+    # Verify committed — reopen DB and check
+    db.close()
+    db2 = ReviewDatabase("atomic_ok", data_root=tmp_path)
+    assert db2.get_papers_by_status("ABSTRACT_SCREENED_IN")[0]["id"] == pid
+    db2.close()
+
+
+def test_update_status_invalid_transition_still_raises(tmp_path):
+    """update_status still raises ValueError on invalid transitions (existing behavior)."""
+    db = ReviewDatabase("atomic_err", data_root=tmp_path)
+    db.add_papers([_cit(pmid="AE1", title="Invalid")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+
+    with pytest.raises(ValueError, match="Invalid transition"):
+        db.update_status(pid, "EXTRACTED")
+
+    # Paper should still be INGESTED
+    assert db.get_papers_by_status("INGESTED")[0]["id"] == pid
+    db.close()

@@ -489,3 +489,75 @@ class TestVerifyDownloadsIntegration:
         assert ft is not None
         assert "EE-008_Wang_2024.pdf" in ft["pdf_path"]
         db2.close()
+
+
+# ── M7: Quarantine invalid PDFs ──────────────────────────────────
+
+
+class TestQuarantineInvalidPDF:
+
+    def test_invalid_pdf_moved_to_quarantine(self, tmp_path):
+        """Invalid PDF is moved to quarantine/ directory, not deleted."""
+        from engine.acquisition.download import _download_direct
+        from unittest.mock import patch, MagicMock
+
+        # Create pdfs and quarantine dirs
+        pdf_dir = tmp_path / "pdfs"
+        pdf_dir.mkdir()
+        dest = pdf_dir / "test.pdf"
+
+        # Mock response with HTML (not PDF)
+        mock_resp = MagicMock()
+        mock_resp.content = b"<html>Error: Access Denied</html>"
+        mock_resp.raise_for_status = MagicMock()
+
+        with patch("engine.acquisition.download.requests.get", return_value=mock_resp):
+            status, size_kb = _download_direct("http://example.com/paper.pdf", dest)
+
+        assert status == "not_pdf"
+        # File should NOT be at original location
+        assert not dest.exists()
+        # File should be in quarantine
+        quarantine = tmp_path / "quarantine"
+        assert quarantine.exists()
+        quarantined = quarantine / "test.pdf"
+        assert quarantined.exists()
+        assert quarantined.read_bytes() == b"<html>Error: Access Denied</html>"
+
+
+# ── M8: PMC tar.gz size check ────────────────────────────────────
+
+
+class TestPMCArchiveSizeCheck:
+
+    def test_oversized_archive_skipped(self, tmp_path):
+        """PMC archive exceeding size ceiling is skipped with warning."""
+        from engine.acquisition.download import _download_via_pmc
+        from unittest.mock import patch, MagicMock
+
+        dest = tmp_path / "test.pdf"
+
+        # Mock PMC ID lookup
+        with patch("engine.acquisition.download._lookup_pmcid", return_value="PMC123"):
+            # Mock OA URL response with tar link
+            oa_resp = MagicMock()
+            oa_resp.status_code = 200
+            oa_resp.text = '<link href="ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/test.tar.gz" />'
+            oa_resp.raise_for_status = MagicMock()
+
+            # Mock tar download with huge Content-Length
+            tar_resp = MagicMock()
+            tar_resp.status_code = 200
+            tar_resp.headers = {"Content-Length": str(200 * 1024 * 1024)}  # 200MB
+            tar_resp.raise_for_status = MagicMock()
+
+            def _mock_get(url, **kwargs):
+                if "oa.fcgi" in url:
+                    return oa_resp
+                return tar_resp
+
+            with patch("engine.acquisition.download.requests.get", side_effect=_mock_get):
+                status, size_kb = _download_via_pmc("10.1234/test", dest)
+
+        assert status == "archive_too_large"
+        assert not dest.exists()

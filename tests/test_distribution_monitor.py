@@ -495,32 +495,68 @@ class TestRunPostExtractionCheck:
         )
         assert summary["skipped"] is True
 
-    def test_collapsed_produces_error_log_no_exception(self, tmp_path, caplog):
-        """COLLAPSED field logs ERROR but does not raise."""
+    def test_collapsed_raises_distribution_collapse_error(self, tmp_path, caplog):
+        """COLLAPSED field raises DistributionCollapseError after logging ERROR."""
         db_path = _make_db(tmp_path)
         _insert_local_spans(db_path, "study_type", ["Original Research"] * 15)
         import logging
         with caplog.at_level(logging.ERROR):
-            summary = run_post_extraction_check(
+            with pytest.raises(DistributionCollapseError, match="study_type"):
+                run_post_extraction_check(
+                    db_path=db_path,
+                    review_name="test",
+                    arm="local",
+                    codebook_path=CODEBOOK_PATH,
+                    extracted_count=15,
+                    failed_count=0,
+                )
+        # ERROR log was emitted before the raise
+        error_messages = [r.message for r in caplog.records if r.levelno >= logging.ERROR]
+        assert any("COLLAPSED" in m for m in error_messages)
+
+    def test_low_variance_does_not_raise_by_default(self, tmp_path):
+        """LOW_VARIANCE field does NOT raise without strict mode."""
+        db_path = _make_db(tmp_path)
+        values = ["Original Research"] * 18 + ["Case Report/Series"] * 2
+        _insert_local_spans(db_path, "study_type", values)
+        summary = run_post_extraction_check(
+            db_path=db_path,
+            review_name="test",
+            arm="local",
+            codebook_path=CODEBOOK_PATH,
+            extracted_count=20,
+            failed_count=0,
+        )
+        assert summary["low_variance"] >= 1
+        assert summary["skipped"] is False
+
+    def test_strict_mode_raises_on_low_variance(self, tmp_path):
+        """strict=True causes LOW_VARIANCE to raise DistributionCollapseError."""
+        db_path = _make_db(tmp_path)
+        values = ["Original Research"] * 18 + ["Case Report/Series"] * 2
+        _insert_local_spans(db_path, "study_type", values)
+        with pytest.raises(DistributionCollapseError):
+            run_post_extraction_check(
                 db_path=db_path,
                 review_name="test",
                 arm="local",
                 codebook_path=CODEBOOK_PATH,
-                extracted_count=15,
+                extracted_count=20,
                 failed_count=0,
+                strict=True,
             )
-        # No exception raised — function returned normally
-        assert summary["collapsed"] >= 1
-        assert "study_type" in summary["collapsed_fields"]
-        # ERROR log was emitted
-        error_messages = [r.message for r in caplog.records if r.levelno >= logging.ERROR]
-        assert any("COLLAPSED" in m for m in error_messages)
 
     def test_results_in_summary(self, tmp_path):
-        """Summary includes counts for OK, LOW_VARIANCE, and COLLAPSED."""
+        """Summary includes counts for OK, LOW_VARIANCE — healthy data returns normally."""
         db_path = _make_db(tmp_path)
-        # study_type: COLLAPSED (all same, >=10)
-        _insert_local_spans(db_path, "study_type", ["Original Research"] * 25)
+        # Healthy distribution — no COLLAPSED fields
+        values = (
+            ["Original Research"] * 8
+            + ["Case Report/Series"] * 7
+            + ["Review"] * 5
+            + ["Systematic Review"] * 5
+        )
+        _insert_local_spans(db_path, "study_type", values)
         summary = run_post_extraction_check(
             db_path=db_path,
             review_name="test",

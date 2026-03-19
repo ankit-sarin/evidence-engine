@@ -293,18 +293,19 @@ def run_post_extraction_check(
     *,
     extracted_count: int = 0,
     failed_count: int = 0,
+    strict: bool = False,
 ) -> dict:
     """Run distribution monitor as an automatic post-extraction quality gate.
 
-    Called at the end of extraction runs. Logs per-field results.
+    Called at the end of extraction runs. Logs per-field results, then calls
+    assert_no_collapse() — raises DistributionCollapseError on COLLAPSED fields
+    (or LOW_VARIANCE too when strict=True).
+
     Returns a summary dict with keys: ok, low_variance, collapsed, skipped,
     collapsed_fields.
 
     If extraction was partial (failed > 0 or extracted < 10), skips the check
     and logs a reason.
-
-    COLLAPSED fields produce ERROR-level log messages but do NOT raise exceptions
-    — extraction data is already committed per-paper.
     """
     summary = {
         "ok": 0,
@@ -370,6 +371,9 @@ def run_post_extraction_check(
         "Distribution monitor complete: %d OK, %d LOW_VARIANCE, %d COLLAPSED",
         summary["ok"], summary["low_variance"], summary["collapsed"],
     )
+
+    # Fail-fast: raise on COLLAPSED (or LOW_VARIANCE in strict mode)
+    assert_no_collapse(results, strict=strict)
 
     return summary
 

@@ -52,8 +52,10 @@ def check_oa_status(review_name: str, spec_path: str | None = None) -> dict:
 
     Returns summary stats dict.
     """
-    db = ReviewDatabase(review_name)
+    db = ReviewDatabase(review_name)  # closed at end of function
     conn = db._conn
+    # Note: we use db directly (not context manager) because the function
+    # has multiple early returns that need conn access. try/finally at bottom.
 
     # Get email from spec or default
     email = None
@@ -64,10 +66,11 @@ def check_oa_status(review_name: str, spec_path: str | None = None) -> dict:
         email = "axsarin@health.ucdavis.edu"
 
     # Find papers to check: included, have DOI, not already checked
+    _TERMINAL = "('ABSTRACT_SCREENED_OUT', 'REJECTED', 'PDF_EXCLUDED', 'FT_SCREENED_OUT')"
     papers = conn.execute(
-        """SELECT id, doi, title, oa_status
+        f"""SELECT id, doi, title, oa_status
            FROM papers
-           WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
+           WHERE status NOT IN {_TERMINAL}
              AND doi IS NOT NULL AND doi != ''
              AND oa_status IS NULL
            ORDER BY id"""
@@ -75,14 +78,14 @@ def check_oa_status(review_name: str, spec_path: str | None = None) -> dict:
 
     # Also count already-checked for reporting
     already_checked = conn.execute(
-        """SELECT COUNT(*) FROM papers
-           WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
+        f"""SELECT COUNT(*) FROM papers
+           WHERE status NOT IN {_TERMINAL}
              AND oa_status IS NOT NULL"""
     ).fetchone()[0]
 
     no_doi = conn.execute(
-        """SELECT COUNT(*) FROM papers
-           WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
+        f"""SELECT COUNT(*) FROM papers
+           WHERE status NOT IN {_TERMINAL}
              AND (doi IS NULL OR doi = '')"""
     ).fetchone()[0]
 
@@ -134,16 +137,15 @@ def check_oa_status(review_name: str, spec_path: str | None = None) -> dict:
     db.close()
 
     # Also mark papers without DOI
-    db2 = ReviewDatabase(review_name)
-    db2._conn.execute(
-        """UPDATE papers SET oa_status = 'no_doi', acquisition_date = ?
-           WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
-             AND (doi IS NULL OR doi = '')
-             AND oa_status IS NULL""",
-        (now,),
-    )
-    db2._conn.commit()
-    db2.close()
+    with ReviewDatabase(review_name) as db2:
+        db2._conn.execute(
+            f"""UPDATE papers SET oa_status = 'no_doi', acquisition_date = ?
+               WHERE status NOT IN {_TERMINAL}
+                 AND (doi IS NULL OR doi = '')
+                 AND oa_status IS NULL""",
+            (now,),
+        )
+        db2._conn.commit()
 
     print(f"\n{'='*60}")
     print("OA STATUS SUMMARY")
@@ -156,13 +158,12 @@ def check_oa_status(review_name: str, spec_path: str | None = None) -> dict:
     with_pdf = sum(1 for s in ("gold", "hybrid", "bronze", "green")
                    if stats.get(s, 0) > 0)
     # Count actual PDF URLs from DB
-    db3 = ReviewDatabase(review_name)
-    pdf_count = db3._conn.execute(
-        """SELECT COUNT(*) FROM papers
-           WHERE status NOT IN ('ABSTRACT_SCREENED_OUT', 'REJECTED')
-             AND pdf_url IS NOT NULL AND pdf_url != ''"""
-    ).fetchone()[0]
-    db3.close()
+    with ReviewDatabase(review_name) as db3:
+        pdf_count = db3._conn.execute(
+            f"""SELECT COUNT(*) FROM papers
+               WHERE status NOT IN {_TERMINAL}
+                 AND pdf_url IS NOT NULL AND pdf_url != ''"""
+        ).fetchone()[0]
 
     print(f"\n  Papers with PDF URL: {pdf_count}")
     print(f"  Papers without PDF:  {total + already_checked - pdf_count + no_doi}")

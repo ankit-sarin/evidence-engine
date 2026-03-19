@@ -381,60 +381,77 @@ def _apply_audit_decisions(
     applied = 0
     papers_touched = set()
 
+    try:
+        db._conn.execute("BEGIN")
+
+        for span_id, decision, corrected, pid in actions:
+            note = f"Human review: {decision}"
+            if pid:
+                papers_touched.add(pid)
+
+            if decision == "ACCEPT":
+                db._conn.execute(
+                    """UPDATE evidence_spans
+                       SET audit_status = 'verified', audit_rationale = ?, audited_at = ?
+                       WHERE id = ?""",
+                    (note, _now(), span_id),
+                )
+            elif decision == "ACCEPT_CORRECTED":
+                db._conn.execute(
+                    """UPDATE evidence_spans
+                       SET audit_status = 'verified', source_snippet = ?,
+                           audit_rationale = ?, audited_at = ?
+                       WHERE id = ?""",
+                    (corrected, "Human review: ACCEPT_CORRECTED", _now(), span_id),
+                )
+            elif decision == "REJECT_VALUE":
+                db._conn.execute(
+                    """UPDATE evidence_spans
+                       SET value = 'NR', audit_status = 'verified',
+                           audit_rationale = ?, audited_at = ?
+                       WHERE id = ?""",
+                    (note, _now(), span_id),
+                )
+            elif decision == "REJECT_PAPER":
+                # reject_paper manages its own transaction, so commit
+                # the span updates first, then handle rejection separately.
+                # We handle REJECT_PAPER after the main commit below.
+                pass
+
+            applied += 1
+
+        # Transition papers where all spans are resolved (inside same txn)
+        for pid in papers_touched:
+            status = db._conn.execute(
+                "SELECT status FROM papers WHERE id = ?", (pid,)
+            ).fetchone()
+            if not status or status["status"] != "AI_AUDIT_COMPLETE":
+                continue
+
+            unresolved = db._conn.execute(
+                """SELECT COUNT(*) FROM evidence_spans es
+                   JOIN extractions e ON es.extraction_id = e.id
+                   WHERE e.paper_id = ?
+                     AND es.audit_status IN ('contested', 'flagged', 'invalid_snippet')""",
+                (pid,),
+            ).fetchone()[0]
+
+            if unresolved == 0:
+                db._conn.execute(
+                    "UPDATE papers SET status = 'HUMAN_AUDIT_COMPLETE', updated_at = ? WHERE id = ?",
+                    (_now(), pid),
+                )
+                logger.info("Paper %d → HUMAN_AUDIT_COMPLETE (all spans resolved)", pid)
+
+        db._conn.execute("COMMIT")
+    except Exception:
+        db._conn.execute("ROLLBACK")
+        raise
+
+    # Handle REJECT_PAPER decisions after the main transaction
     for span_id, decision, corrected, pid in actions:
-        note = f"Human review: {decision}"
-        if pid:
-            papers_touched.add(pid)
-
-        if decision == "ACCEPT":
-            db._conn.execute(
-                """UPDATE evidence_spans
-                   SET audit_status = 'verified', audit_rationale = ?, audited_at = ?
-                   WHERE id = ?""",
-                (note, _now(), span_id),
-            )
-        elif decision == "ACCEPT_CORRECTED":
-            db._conn.execute(
-                """UPDATE evidence_spans
-                   SET audit_status = 'verified', source_snippet = ?,
-                       audit_rationale = ?, audited_at = ?
-                   WHERE id = ?""",
-                (corrected, "Human review: ACCEPT_CORRECTED", _now(), span_id),
-            )
-        elif decision == "REJECT_VALUE":
-            db._conn.execute(
-                """UPDATE evidence_spans
-                   SET value = 'NR', audit_status = 'verified',
-                       audit_rationale = ?, audited_at = ?
-                   WHERE id = ?""",
-                (note, _now(), span_id),
-            )
-        elif decision == "REJECT_PAPER":
+        if decision == "REJECT_PAPER" and pid:
             db.reject_paper(pid, "Human review rejection")
-
-        applied += 1
-
-    db._conn.commit()
-
-    # Transition papers where all spans are resolved
-    for pid in papers_touched:
-        status = db._conn.execute(
-            "SELECT status FROM papers WHERE id = ?", (pid,)
-        ).fetchone()
-        if not status or status["status"] != "AI_AUDIT_COMPLETE":
-            continue
-
-        unresolved = db._conn.execute(
-            """SELECT COUNT(*) FROM evidence_spans es
-               JOIN extractions e ON es.extraction_id = e.id
-               WHERE e.paper_id = ?
-                 AND es.audit_status IN ('contested', 'flagged', 'invalid_snippet')""",
-            (pid,),
-        ).fetchone()[0]
-
-        if unresolved == 0:
-            db.update_status(pid, "HUMAN_AUDIT_COMPLETE")
-            logger.info("Paper %d → HUMAN_AUDIT_COMPLETE (all spans resolved)", pid)
 
     logger.info(
         "%s import complete: %d decisions applied across %d papers",

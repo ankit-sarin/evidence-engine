@@ -95,9 +95,10 @@ def _collect_expanded_flagged(expanded_dir: Path) -> list[dict]:
 
     # Load abstracts for lookup
     abstracts_jsonl = expanded_dir / "abstracts.jsonl"
+    malformed_lines = 0
     if abstracts_jsonl.exists():
         with open(abstracts_jsonl) as f:
-            for line in f:
+            for line_num, line in enumerate(f, 1):
                 line = line.strip()
                 if not line:
                     continue
@@ -110,8 +111,17 @@ def _collect_expanded_flagged(expanded_dir: Path) -> list[dict]:
                         abstracts_map[rec["doi"]] = rec.get("abstract") or ""
                     if rec.get("pmid"):
                         abstracts_map[rec["pmid"]] = rec.get("abstract") or ""
-                except (json.JSONDecodeError, KeyError):
+                except (json.JSONDecodeError, KeyError) as exc:
+                    malformed_lines += 1
+                    logger.warning(
+                        "abstracts.jsonl line %d: malformed — %s: %.200s",
+                        line_num, exc, line,
+                    )
                     continue
+    if malformed_lines:
+        logger.warning(
+            "abstracts.jsonl: %d malformed line(s) skipped", malformed_lines,
+        )
 
     # Phase 1: flagged from primary screening (pass1 != pass2)
     screening_csv = expanded_dir / "screening_results.csv"
@@ -780,14 +790,24 @@ def _apply_abstract_decisions(
         stats["include"], stats["exclude"], stats["total"],
     )
 
-    # Auto-advance workflow: ABSTRACT_ADJUDICATION_COMPLETE
-    complete_stage(
-        review_db._conn, "ABSTRACT_ADJUDICATION_COMPLETE",
-        metadata=(
-            f"{stats['include']} included, {stats['exclude']} excluded "
-            f"(of {stats['total']} total)"
-        ),
-    )
+    # Auto-advance workflow — but only if all flagged papers have been adjudicated
+    remaining_flagged = review_db._conn.execute(
+        "SELECT COUNT(*) FROM papers WHERE status = 'ABSTRACT_SCREEN_FLAGGED'"
+    ).fetchone()[0]
+    if remaining_flagged > 0:
+        logger.warning(
+            "Workflow NOT advanced: %d papers still at ABSTRACT_SCREEN_FLAGGED. "
+            "Process all flagged papers before completing this stage.",
+            remaining_flagged,
+        )
+    else:
+        complete_stage(
+            review_db._conn, "ABSTRACT_ADJUDICATION_COMPLETE",
+            metadata=(
+                f"{stats['include']} included, {stats['exclude']} excluded "
+                f"(of {stats['total']} total)"
+            ),
+        )
 
     return {"stats": stats, "warnings": []}
 

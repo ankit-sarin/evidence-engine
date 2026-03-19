@@ -247,3 +247,85 @@ class TestExtractionRunnerWarning:
             run_extraction(db, spec, review_name="test_cleanup")
 
         assert not any("stale schema extractions" in m for m in caplog.messages)
+
+
+class TestAtomicDelete:
+
+    def test_both_deletes_in_single_transaction(self, db):
+        """Span and extraction deletes are both committed atomically."""
+        pid = _add_paper(db, pmid="AD1")
+        _advance_to(db, pid, "EXTRACTED")
+        _add_extraction(db, pid, "old_hash", n_spans=5)
+
+        cleanup_stale_extractions(db, schema_hash="new_hash", dry_run=False)
+
+        # Both spans and extraction are gone
+        span_count = db._conn.execute(
+            "SELECT COUNT(*) FROM evidence_spans"
+        ).fetchone()[0]
+        ext_count = db._conn.execute(
+            "SELECT COUNT(*) FROM extractions"
+        ).fetchone()[0]
+        assert span_count == 0
+        assert ext_count == 0
+
+    def test_delete_failure_preserves_all(self, db):
+        """If delete raises, both spans and extractions survive (rollback)."""
+        import sqlite3
+
+        pid = _add_paper(db, pmid="AD2")
+        _advance_to(db, pid, "EXTRACTED")
+        _add_extraction(db, pid, "old_hash", n_spans=5)
+
+        # Create a trigger that blocks extraction deletion
+        db._conn.execute(
+            """CREATE TRIGGER block_ext_delete
+               BEFORE DELETE ON extractions
+               BEGIN
+                   SELECT RAISE(ABORT, 'simulated delete failure');
+               END"""
+        )
+        db._conn.commit()
+
+        with pytest.raises(sqlite3.IntegrityError, match="simulated delete failure"):
+            cleanup_stale_extractions(db, schema_hash="new_hash", dry_run=False)
+
+        # Both spans and extractions survive the rollback
+        span_count = db._conn.execute(
+            "SELECT COUNT(*) FROM evidence_spans"
+        ).fetchone()[0]
+        ext_count = db._conn.execute(
+            "SELECT COUNT(*) FROM extractions"
+        ).fetchone()[0]
+        assert span_count == 5, "Spans should survive rollback"
+        assert ext_count == 1, "Extraction should survive rollback"
+
+        # Clean up trigger for other tests
+        db._conn.execute("DROP TRIGGER block_ext_delete")
+        db._conn.commit()
+
+
+class TestAdminResetAuditTrail:
+
+    def test_cleanup_uses_admin_reset(self, db):
+        """cleanup_stale_extractions uses admin_reset_status with audit trail."""
+        pid = _add_paper(db, pmid="ART1")
+        _advance_to(db, pid, "AI_AUDIT_COMPLETE")
+        _add_extraction(db, pid, "old_hash")
+
+        cleanup_stale_extractions(db, schema_hash="new_hash", dry_run=False)
+
+        # Paper should be reset to PARSED
+        status = db._conn.execute(
+            "SELECT status FROM papers WHERE id = ?", (pid,)
+        ).fetchone()["status"]
+        assert status == "PARSED"
+
+        # Audit trail should exist
+        reset_row = db._conn.execute(
+            "SELECT * FROM admin_resets WHERE paper_id = ?", (pid,)
+        ).fetchone()
+        assert reset_row is not None
+        assert reset_row["from_status"] == "AI_AUDIT_COMPLETE"
+        assert reset_row["to_status"] == "PARSED"
+        assert "extraction_cleanup" in reset_row["reason"]

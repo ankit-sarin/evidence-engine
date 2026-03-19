@@ -164,6 +164,23 @@ class CloudModels(BaseModel):
 # ── PDF Quality Check ───────────────────────────────────────────────
 
 
+class DistributionMonitorConfig(BaseModel):
+    """Thresholds for post-extraction distribution collapse detection."""
+
+    collapsed_min_papers: int = Field(
+        default=10, ge=1,
+        description="Minimum non-null papers to flag COLLAPSED (single-value field).",
+    )
+    low_variance_threshold: float = Field(
+        default=0.85, gt=0.0, le=1.0,
+        description="Top-value fraction above which a field is LOW_VARIANCE.",
+    )
+    low_variance_min_papers: int = Field(
+        default=20, ge=1,
+        description="Minimum non-null papers to flag LOW_VARIANCE.",
+    )
+
+
 class PDFQualityCheck(BaseModel):
     """Configuration for AI-based PDF quality classification."""
 
@@ -245,6 +262,10 @@ class ReviewSpec(BaseModel):
         default_factory=PDFParsing,
         description="PDF parsing thresholds and vision model configuration.",
     )
+    distribution_monitor: DistributionMonitorConfig = Field(
+        default_factory=DistributionMonitorConfig,
+        description="Thresholds for post-extraction distribution collapse detection.",
+    )
 
     # ── Protocol hashing ─────────────────────────────────────────
 
@@ -266,9 +287,27 @@ def _canonical_hash(data: dict) -> str:
     return hashlib.sha256(blob).hexdigest()
 
 
+class ReviewSpecError(ValueError):
+    """Raised when a review spec cannot be loaded or parsed."""
+
+
 def load_review_spec(path: str | Path) -> ReviewSpec:
-    """Load a YAML Review Spec from disk and return a validated model."""
+    """Load a YAML Review Spec from disk and return a validated model.
+
+    Raises ReviewSpecError with a descriptive message on file-not-found
+    or YAML parse errors.
+    """
     path = Path(path)
-    with open(path) as f:
-        raw = yaml.safe_load(f)
+    try:
+        with open(path) as f:
+            raw = yaml.safe_load(f)
+    except FileNotFoundError:
+        raise ReviewSpecError(
+            f"Review spec not found at {path}. "
+            f"Expected a YAML file (e.g., review_specs/<review_name>_v1.yaml)."
+        )
+    except yaml.YAMLError as exc:
+        raise ReviewSpecError(
+            f"Review spec at {path} contains invalid YAML: {exc}"
+        )
     return ReviewSpec.model_validate(raw)

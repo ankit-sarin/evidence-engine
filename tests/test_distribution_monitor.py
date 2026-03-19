@@ -7,6 +7,9 @@ from pathlib import Path
 import pytest
 
 from engine.validators.distribution_monitor import (
+    DEFAULT_COLLAPSED_MIN_PAPERS,
+    DEFAULT_LOW_VARIANCE_MIN_PAPERS,
+    DEFAULT_LOW_VARIANCE_THRESHOLD,
     DistributionCollapseError,
     assert_no_collapse,
     check_distribution,
@@ -570,3 +573,70 @@ class TestRunPostExtractionCheck:
         assert summary["skipped"] is False
         assert isinstance(summary["collapsed_fields"], list)
         assert isinstance(summary["low_variance_fields"], list)
+
+
+# ── Tests: L1 — configurable thresholds ─────────────────────────────
+
+
+class TestConfigurableThresholds:
+
+    def test_defaults_match_named_constants(self):
+        """Named constants match the original magic numbers."""
+        assert DEFAULT_COLLAPSED_MIN_PAPERS == 10
+        assert DEFAULT_LOW_VARIANCE_THRESHOLD == 0.85
+        assert DEFAULT_LOW_VARIANCE_MIN_PAPERS == 20
+
+    def test_custom_low_variance_threshold_triggers(self, tmp_path):
+        """A stricter threshold flags a distribution that would be OK under defaults."""
+        db_path = _make_db(tmp_path)
+        # 15/20 same value = 75% — OK under default 85%, LOW_VARIANCE under 70%
+        values = ["Original Research"] * 15 + ["Case Report/Series"] * 5
+        _insert_local_spans(db_path, "study_type", values)
+
+        # Default: OK
+        results_default = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+        st_default = [r for r in results_default if r["field_name"] == "study_type"]
+        assert st_default[0]["status"] == "OK"
+
+        # Stricter threshold: LOW_VARIANCE
+        results_strict = check_distribution(
+            db_path, "test", "local", CODEBOOK_PATH,
+            low_variance_threshold=0.70,
+        )
+        st_strict = [r for r in results_strict if r["field_name"] == "study_type"]
+        assert st_strict[0]["status"] == "LOW_VARIANCE"
+
+    def test_custom_collapsed_min_papers(self, tmp_path):
+        """Lower collapsed_min_papers catches smaller collapses."""
+        db_path = _make_db(tmp_path)
+        # 5 papers all same — OK under default min 10, COLLAPSED under min 3
+        _insert_local_spans(db_path, "study_type", ["Original Research"] * 5)
+
+        results_default = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+        st = [r for r in results_default if r["field_name"] == "study_type"]
+        assert st[0]["status"] == "OK"
+
+        results_custom = check_distribution(
+            db_path, "test", "local", CODEBOOK_PATH,
+            collapsed_min_papers=3,
+        )
+        st = [r for r in results_custom if r["field_name"] == "study_type"]
+        assert st[0]["status"] == "COLLAPSED"
+
+    def test_custom_low_variance_min_papers(self, tmp_path):
+        """Lower low_variance_min_papers catches smaller datasets."""
+        db_path = _make_db(tmp_path)
+        # 9/10 same value = 90% — OK under default min 20 papers, LOW_VARIANCE under min 5
+        values = ["Original Research"] * 9 + ["Case Report/Series"] * 1
+        _insert_local_spans(db_path, "study_type", values)
+
+        results_default = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+        st = [r for r in results_default if r["field_name"] == "study_type"]
+        assert st[0]["status"] == "OK"
+
+        results_custom = check_distribution(
+            db_path, "test", "local", CODEBOOK_PATH,
+            low_variance_min_papers=5,
+        )
+        st = [r for r in results_custom if r["field_name"] == "study_type"]
+        assert st[0]["status"] == "LOW_VARIANCE"

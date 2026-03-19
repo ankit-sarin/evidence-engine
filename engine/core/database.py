@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS evidence_spans (
     field_name      TEXT NOT NULL,
     value           TEXT NOT NULL,
     source_snippet  TEXT,
-    confidence      REAL CHECK (confidence >= 0.0 AND confidence <= 1.0),
+    confidence      REAL NOT NULL CHECK (confidence >= 0.0 AND confidence <= 1.0),
     audit_status    TEXT NOT NULL DEFAULT 'pending'
                     CHECK (audit_status IN (
                         'pending', 'verified', 'contested',
@@ -240,7 +240,7 @@ CREATE TABLE evidence_spans (
     field_name      TEXT NOT NULL,
     value           TEXT NOT NULL,
     source_snippet  TEXT,
-    confidence      REAL CHECK (confidence >= 0.0 AND confidence <= 1.0),
+    confidence      REAL NOT NULL CHECK (confidence >= 0.0 AND confidence <= 1.0),
     audit_status    TEXT NOT NULL DEFAULT 'pending'
                     CHECK (audit_status IN (
                         'pending', 'verified', 'contested',
@@ -579,13 +579,24 @@ class ReviewDatabase:
             "SELECT status FROM papers WHERE id = ?", (paper_id,)
         ).fetchone()
         if row is None:
+            logger.warning("min_status_gate: paper_id %d not found in database", paper_id)
             return False
 
         current = row["status"]
         if current not in _STATUS_ORDER:
+            logger.debug(
+                "min_status_gate: paper_id %d at status '%s' (not in gate order) — returning False for min_status '%s'",
+                paper_id, current, min_status,
+            )
             return False
 
-        return _STATUS_ORDER[current] >= _STATUS_ORDER[min_status]
+        meets = _STATUS_ORDER[current] >= _STATUS_ORDER[min_status]
+        if not meets:
+            logger.debug(
+                "min_status_gate: paper_id %d at '%s' does not meet min_status '%s'",
+                paper_id, current, min_status,
+            )
+        return meets
 
     # ── Screening ────────────────────────────────────────────
 

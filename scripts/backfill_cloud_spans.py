@@ -26,16 +26,22 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DB_PATH = "data/surgical_autonomy/review.db"
+DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def main():
     parser = argparse.ArgumentParser(description="Backfill missing cloud evidence spans")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
     parser.add_argument("--confirm", action="store_true", help="Actually write spans (default is dry-run)")
-    parser.add_argument("--db", default=DB_PATH, help=f"Database path (default: {DB_PATH})")
+    parser.add_argument("--db", default=None, help="Database path (default: data/<review>/review.db)")
     args = parser.parse_args()
 
-    conn = sqlite3.connect(args.db)
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    db_path = args.db or f"data/{args.review}/review.db"
+
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys=ON")
     cur = conn.cursor()

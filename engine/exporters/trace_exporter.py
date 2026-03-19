@@ -3,6 +3,7 @@
 import csv
 import json
 import logging
+import os
 import re
 import sqlite3
 import statistics
@@ -211,12 +212,19 @@ def _trace_quality_report(conn: sqlite3.Connection, output_path: str) -> dict:
         "flagged_papers": flagged_papers,
     }
 
-    # Write JSON
+    # Write JSON (atomic)
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w") as f:
-        json.dump(result, f, indent=2)
+    tmp_path = output_path + ".tmp"
+    try:
+        with open(tmp_path, "w") as f:
+            json.dump(result, f, indent=2)
+        os.replace(tmp_path, output_path)
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
 
-    # Write companion Markdown
+    # Write companion Markdown (atomic)
     md_path = output_path.replace(".json", ".md")
     _write_quality_report_md(result, md_path)
 
@@ -290,8 +298,15 @@ def _write_quality_report_md(data: dict, md_path: str) -> None:
         for fp in data["flagged_papers"]:
             lines.append(f"- Paper {fp['paper_id']}: {fp['trace_length']} chars")
 
-    with open(md_path, "w") as f:
-        f.write("\n".join(lines) + "\n")
+    tmp_path = md_path + ".tmp"
+    try:
+        with open(tmp_path, "w") as f:
+            f.write("\n".join(lines) + "\n")
+        os.replace(tmp_path, md_path)
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
 
 
 # ── Function 2: Per-Paper Markdown Traces ────────────────────────────
@@ -395,7 +410,14 @@ def _traces_markdown(conn: sqlite3.Connection, output_dir: str) -> list[str]:
                 "",
             ])
 
-        filepath.write_text("\n".join(lines))
+        tmp_filepath = filepath.with_suffix(".md.tmp")
+        try:
+            tmp_filepath.write_text("\n".join(lines))
+            os.replace(tmp_filepath, filepath)
+        except BaseException:
+            if tmp_filepath.exists():
+                tmp_filepath.unlink()
+            raise
         paths_created.append(str(filepath))
 
     logger.info("Trace markdown files written to %s (%d files)", output_dir, len(paths_created))
@@ -446,15 +468,22 @@ def export_disagreement_pairs(
 
 def _write_template_csv(output_path: str) -> str:
     """Write a template CSV with headers and a comment row."""
-    with open(output_path, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["paper_id", "field_name", "human_value"])
-        # Comment row explaining each column
-        writer.writerow([
-            _TEMPLATE_COMMENTS["paper_id"],
-            _TEMPLATE_COMMENTS["field_name"],
-            _TEMPLATE_COMMENTS["human_value"],
-        ])
+    tmp_path = output_path + ".tmp"
+    try:
+        with open(tmp_path, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["paper_id", "field_name", "human_value"])
+            # Comment row explaining each column
+            writer.writerow([
+                _TEMPLATE_COMMENTS["paper_id"],
+                _TEMPLATE_COMMENTS["field_name"],
+                _TEMPLATE_COMMENTS["human_value"],
+            ])
+        os.replace(tmp_path, output_path)
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
     logger.info("Disagreement template CSV written to %s", output_path)
     return output_path
 
@@ -498,35 +527,42 @@ def _build_disagreement_pairs(
             "reasoning_trace": s["reasoning_trace"] or "",
         }
 
-    # Build output rows
-    with open(output_path, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(_OUTPUT_COLUMNS)
+    # Build output rows (atomic write)
+    tmp_path = output_path + ".tmp"
+    try:
+        with open(tmp_path, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(_OUTPUT_COLUMNS)
 
-        for (pid, fname), human_val in sorted(human_data.items()):
-            if (pid, fname) not in ai_data:
-                continue
+            for (pid, fname), human_val in sorted(human_data.items()):
+                if (pid, fname) not in ai_data:
+                    continue
 
-            ai = ai_data[(pid, fname)]
+                ai = ai_data[(pid, fname)]
 
-            # Extract reasoning excerpt mentioning the field
-            trace = ai["reasoning_trace"]
-            excerpt = _extract_reasoning_excerpt(trace, fname)
+                # Extract reasoning excerpt mentioning the field
+                trace = ai["reasoning_trace"]
+                excerpt = _extract_reasoning_excerpt(trace, fname)
 
-            match = human_val.strip().lower() == (ai["value"] or "").strip().lower()
+                match = human_val.strip().lower() == (ai["value"] or "").strip().lower()
 
-            writer.writerow([
-                pid,
-                fname,
-                tier_map.get(fname, 0),
-                human_val,
-                ai["value"],
-                match,
-                ai["confidence"],
-                ai["source_snippet"] or "",
-                excerpt,
-                "",  # error_type — blank for PLUM Lab coding
-            ])
+                writer.writerow([
+                    pid,
+                    fname,
+                    tier_map.get(fname, 0),
+                    human_val,
+                    ai["value"],
+                    match,
+                    ai["confidence"],
+                    ai["source_snippet"] or "",
+                    excerpt,
+                    "",  # error_type — blank for PLUM Lab coding
+                ])
+        os.replace(tmp_path, output_path)
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
 
     logger.info("Disagreement pairs written to %s", output_path)
     return output_path

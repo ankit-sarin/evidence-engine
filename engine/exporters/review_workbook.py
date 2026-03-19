@@ -34,6 +34,7 @@ Usage:
 """
 
 import logging
+import os
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -137,7 +138,14 @@ def create_review_workbook(
         ws_ref = wb.create_sheet(reference_sheet_title)
         _build_reference_sheet(ws_ref, reference_content)
 
-    wb.save(output_path)
+    tmp_path = str(output_path) + ".tmp"
+    try:
+        wb.save(tmp_path)
+        os.replace(tmp_path, str(output_path))
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
 
     # Terminal summary
     all_decision_cols = ", ".join(dc.header for dc in decision_columns)

@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 
 from docx import Document
 from docx.enum.section import WD_ORIENT
@@ -106,5 +107,13 @@ def export_evidence_docx(
                 for run in paragraph.runs:
                     run.font.size = Pt(9)
 
-    doc.save(output_path)
+    tmp_path = output_path + ".tmp"
+    try:
+        doc.save(tmp_path)
+        os.replace(tmp_path, output_path)
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
+
     logger.info("Evidence DOCX exported to %s (%d studies)", output_path, len(papers))

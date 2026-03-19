@@ -6,18 +6,17 @@ If found, computes the SHA-256 hash, inserts a full_text_assets row, and
 transitions the paper status to PDF_ACQUIRED via the standard state machine.
 """
 
+import argparse
 import hashlib
+import logging
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-# ── Config ──────────────────────────────────────────────────────────
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
 
-REVIEW_NAME = "surgical_autonomy"
-DATA_ROOT = Path("data")
-REVIEW_DIR = DATA_ROOT / REVIEW_NAME
-DB_PATH = REVIEW_DIR / "review.db"
-PDF_DIR = REVIEW_DIR / "pdfs"
+DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def sha256_file(path: Path) -> str:
@@ -30,7 +29,20 @@ def sha256_file(path: Path) -> str:
 
 
 def main() -> None:
-    conn = sqlite3.connect(str(DB_PATH))
+    parser = argparse.ArgumentParser(description="Advance SCREENED_IN papers to PDF_ACQUIRED")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(__import__("sys").argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review_name = args.review
+    data_root = Path("data")
+    review_dir = data_root / review_name
+    db_path = review_dir / "review.db"
+    pdf_dir = review_dir / "pdfs"
+
+    conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys=ON")
 
@@ -48,7 +60,7 @@ def main() -> None:
     for row in rows:
         paper_id = row["id"]
         title = row["title"]
-        pdf_path = PDF_DIR / f"{paper_id}.pdf"
+        pdf_path = pdf_dir / f"{paper_id}.pdf"
 
         if not pdf_path.is_file():
             missing_pdfs.append((paper_id, title))

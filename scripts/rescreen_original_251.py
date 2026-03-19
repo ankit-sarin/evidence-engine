@@ -8,6 +8,7 @@ Read-only against review.db — writes results to a staging CSV only.
 # per the retention policy.
 """
 
+import argparse
 import csv
 import json
 import logging
@@ -27,28 +28,39 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-SPEC_PATH = Path("review_specs/surgical_autonomy_v1.yaml")
-DB_PATH = Path("data/surgical_autonomy/review.db")
-OUTPUT_DIR = Path("data/surgical_autonomy/expanded_search")
-OUTPUT_CSV = OUTPUT_DIR / "rescreen_original_251.csv"
-CHECKPOINT = OUTPUT_DIR / "rescreen_checkpoint.json"
+DEFAULT_REVIEW = "surgical_autonomy"
 
 
-def load_checkpoint() -> dict[int, dict]:
+def load_checkpoint(checkpoint_path: Path) -> dict[int, dict]:
     """Load already-screened results from checkpoint."""
-    if CHECKPOINT.exists():
-        return {r["id"]: r for r in json.loads(CHECKPOINT.read_text())}
+    if checkpoint_path.exists():
+        return {r["id"]: r for r in json.loads(checkpoint_path.read_text())}
     return {}
 
 
-def save_checkpoint(results: list[dict]) -> None:
-    CHECKPOINT.write_text(json.dumps(results, indent=2))
+def save_checkpoint(checkpoint_path: Path, results: list[dict]) -> None:
+    checkpoint_path.write_text(json.dumps(results, indent=2))
 
 
 def main():
-    spec = load_review_spec(SPEC_PATH)
+    parser = argparse.ArgumentParser(description="Re-screen original 251 papers with updated criteria")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    args = parser.parse_args()
 
-    conn = sqlite3.connect(DB_PATH)
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review = args.review
+    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+    db_path = Path(f"data/{review}/review.db")
+    output_dir = Path(f"data/{review}/expanded_search")
+    OUTPUT_CSV = output_dir / "rescreen_original_251.csv"
+    CHECKPOINT = output_dir / "rescreen_checkpoint.json"
+
+    spec = load_review_spec(spec_path)
+
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     papers = conn.execute(
         "SELECT id, title, abstract, status FROM papers ORDER BY id"
@@ -58,7 +70,7 @@ def main():
     logger.info("Loaded %d papers from review.db", len(papers))
 
     # Resume from checkpoint
-    done = load_checkpoint()
+    done = load_checkpoint(CHECKPOINT)
     if done:
         logger.info("Resuming: %d already screened", len(done))
 
@@ -117,7 +129,7 @@ def main():
 
         # Checkpoint every 10 papers
         if i % 10 == 0 or i == total:
-            save_checkpoint(results)
+            save_checkpoint(CHECKPOINT, results)
 
     # Write final CSV
     OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)

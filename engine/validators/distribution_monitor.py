@@ -22,6 +22,11 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
+# ── Default thresholds (overridden by review spec when available) ───
+DEFAULT_COLLAPSED_MIN_PAPERS = 10
+DEFAULT_LOW_VARIANCE_THRESHOLD = 0.85
+DEFAULT_LOW_VARIANCE_MIN_PAPERS = 20
+
 # Values that represent absence — excluded from distribution analysis.
 _NULL_SYNONYMS = {"", "nr", "n/r", "not reported", "not_found", "none", "n/a"}
 
@@ -134,6 +139,10 @@ def check_distribution(
     review_name: str,
     arm: str,
     codebook_path: Path,
+    *,
+    collapsed_min_papers: int = DEFAULT_COLLAPSED_MIN_PAPERS,
+    low_variance_threshold: float = DEFAULT_LOW_VARIANCE_THRESHOLD,
+    low_variance_min_papers: int = DEFAULT_LOW_VARIANCE_MIN_PAPERS,
 ) -> list[dict]:
     """Check distribution of each categorical field for an extraction arm.
 
@@ -169,9 +178,9 @@ def check_distribution(
             top_value_pct = top_count / total_non_null
 
             # Determine status
-            if distinct_count <= 1 and total_non_null >= 10:
+            if distinct_count <= 1 and total_non_null >= collapsed_min_papers:
                 status = "COLLAPSED"
-            elif top_value_pct >= 0.85 and total_non_null >= 20:
+            elif top_value_pct >= low_variance_threshold and total_non_null >= low_variance_min_papers:
                 status = "LOW_VARIANCE"
             else:
                 status = "OK"
@@ -294,6 +303,9 @@ def run_post_extraction_check(
     extracted_count: int = 0,
     failed_count: int = 0,
     strict: bool = False,
+    collapsed_min_papers: int = DEFAULT_COLLAPSED_MIN_PAPERS,
+    low_variance_threshold: float = DEFAULT_LOW_VARIANCE_THRESHOLD,
+    low_variance_min_papers: int = DEFAULT_LOW_VARIANCE_MIN_PAPERS,
 ) -> dict:
     """Run distribution monitor as an automatic post-extraction quality gate.
 
@@ -342,7 +354,12 @@ def run_post_extraction_check(
     summary["skipped"] = False
     logger.info("Running distribution monitor for arm '%s'...", arm)
 
-    results = check_distribution(db_path, review_name, arm, codebook_path)
+    results = check_distribution(
+        db_path, review_name, arm, codebook_path,
+        collapsed_min_papers=collapsed_min_papers,
+        low_variance_threshold=low_variance_threshold,
+        low_variance_min_papers=low_variance_min_papers,
+    )
 
     for r in results:
         if r["status"] == "COLLAPSED":

@@ -6,7 +6,9 @@ runs it through the (fixed) parse_response_to_spans(), and inserts
 the resulting spans into cloud_evidence_spans.
 """
 
+import argparse
 import json
+import logging
 import sqlite3
 import sys
 from pathlib import Path
@@ -16,12 +18,25 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from engine.cloud.base import CloudExtractorBase
 
-DB_PATH = "data/surgical_autonomy/review.db"
-SPEC_PATH = "review_specs/surgical_autonomy_v1.yaml"
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
+DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def main():
-    conn = sqlite3.connect(DB_PATH)
+    parser = argparse.ArgumentParser(description="Re-parse cloud extractions with 0 spans")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review = args.review
+    db_path = f"data/{review}/review.db"
+    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys=ON")
 
@@ -42,7 +57,7 @@ def main():
     print(f"Found {len(rows)} cloud extractions with 0 spans.\n")
 
     # Use the base class just for its parser
-    extractor = CloudExtractorBase(DB_PATH, SPEC_PATH)
+    extractor = CloudExtractorBase(db_path, spec_path)
 
     results = []
     for row in rows:

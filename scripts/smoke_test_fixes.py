@@ -5,6 +5,7 @@ Uses a temporary SQLite DB so the production data is untouched.
 Reports per-paper: field count, verified/flagged/grep-fail breakdown.
 """
 
+import argparse
 import json
 import logging
 import shutil
@@ -25,9 +26,7 @@ from engine.core.review_spec import ReviewSpec, load_review_spec
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
 
-SPEC_PATH = Path("review_specs/surgical_autonomy_v1.yaml")
-REVIEW_DIR = Path("data/surgical_autonomy")
-PROD_DB = REVIEW_DIR / "review.db"
+DEFAULT_REVIEW = "surgical_autonomy"
 
 # Pick 5 papers with varying original span counts
 # paper 82 (13 spans, mix of verified/flagged) — our deep-dive paper
@@ -36,7 +35,20 @@ TEST_PAPER_IDS = [82, 4, 24, 70, 123]
 
 
 def main():
-    spec = load_review_spec(SPEC_PATH)
+    parser = argparse.ArgumentParser(description="Smoke test: extract + audit 5 papers with fixed prompts")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review = args.review
+    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+    review_dir = Path(f"data/{review}")
+    prod_db = review_dir / "review.db"
+
+    spec = load_review_spec(spec_path)
 
     # Build field_type lookup
     field_type_map = {f.name: f.type for f in spec.extraction_schema.fields}
@@ -44,7 +56,7 @@ def main():
     logger.info("Schema has %d fields, types: %s", expected_field_count, json.dumps(field_type_map))
 
     # Read paper metadata from production DB
-    prod_conn = sqlite3.connect(PROD_DB)
+    prod_conn = sqlite3.connect(prod_db)
     prod_conn.row_factory = sqlite3.Row
 
     results = []
@@ -56,7 +68,7 @@ def main():
         logger.info("Paper %d: %s", pid, title[:80])
 
         # Load parsed text
-        parsed_dir = REVIEW_DIR / "parsed_text"
+        parsed_dir = review_dir / "parsed_text"
         md_files = sorted(parsed_dir.glob(f"{pid}_v*.md"), reverse=True)
         if not md_files:
             logger.warning("Paper %d: no parsed text — skipping", pid)

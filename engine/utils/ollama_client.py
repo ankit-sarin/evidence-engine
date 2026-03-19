@@ -159,19 +159,19 @@ def ollama_chat(
                 time.sleep(retry_delay)
             else:
                 # All retries exhausted — attempt Ollama restart as last resort
-                result = _restart_ollama_and_retry(
-                    model=model, messages=messages,
-                    paper_label=paper_label,
-                    effective_timeout=effective_timeout,
-                    max_retries=max_retries,
-                    **kwargs,
-                )
-                if result is not None:
-                    return result
-                raise TimeoutError(
-                    f"Ollama call timed out after {1 + max_retries} attempts + restart "
-                    f"(model={model}, {paper_label}, limit={effective_timeout}s)"
-                )
+                try:
+                    return _restart_ollama_and_retry(
+                        model=model, messages=messages,
+                        paper_label=paper_label,
+                        effective_timeout=effective_timeout,
+                        max_retries=max_retries,
+                        **kwargs,
+                    )
+                except RuntimeError:
+                    raise TimeoutError(
+                        f"Ollama call timed out after {1 + max_retries} attempts + restart "
+                        f"(model={model}, {paper_label}, limit={effective_timeout}s)"
+                    )
 
         except (httpx.TimeoutException, httpx.ConnectError) as exc:
             executor.shutdown(wait=False, cancel_futures=True)
@@ -224,10 +224,9 @@ def _restart_ollama_and_retry(
             capture_output=True,
         )
     except Exception as restart_exc:
-        logger.warning(
-            "Ollama restart failed: %s — raising original TimeoutError", restart_exc,
-        )
-        return None
+        raise RuntimeError(
+            f"Ollama restart failed: {restart_exc} — cannot recover"
+        ) from restart_exc
 
     logger.info("Ollama restarted — waiting 10s for stabilization")
     time.sleep(10)
@@ -248,8 +247,7 @@ def _restart_ollama_and_retry(
         return result
     except Exception as post_exc:
         executor.shutdown(wait=False, cancel_futures=True)
-        logger.warning(
-            "Post-restart call also failed: %s — raising TimeoutError",
-            post_exc,
-        )
-        return None
+        raise RuntimeError(
+            f"Post-restart Ollama call failed: {post_exc} — cannot recover "
+            f"(model={model}, {paper_label})"
+        ) from post_exc

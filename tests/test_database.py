@@ -1,6 +1,7 @@
 """Tests for the SQLite review database."""
 
 import json
+import sqlite3
 
 import pytest
 
@@ -422,6 +423,16 @@ def test_min_status_gate_missing_paper(db):
     assert db.min_status_gate(9999, "EXTRACTED") is False
 
 
+def test_min_status_gate_missing_paper_logs_warning(db, caplog):
+    """M10: min_status_gate logs WARNING for nonexistent paper_id."""
+    import logging
+    with caplog.at_level(logging.WARNING, logger="engine.core.database"):
+        result = db.min_status_gate(9999, "EXTRACTED")
+
+    assert result is False
+    assert "paper_id 9999 not found" in caplog.text
+
+
 # ── Pipeline Stats ───────────────────────────────────────────────────
 
 
@@ -664,6 +675,84 @@ def test_normal_pipeline_cannot_use_admin_transition(tmp_path):
 
     with pytest.raises(ValueError, match="Invalid transition"):
         db.update_status(pid, "PARSED")
+    db.close()
+
+
+# ── L3: NOT NULL constraints ──────────────────────────────────────────
+
+
+def test_null_confidence_raises_integrity_error(db):
+    """L3: Inserting a span with NULL confidence raises IntegrityError."""
+    db.add_papers([_cit(pmid="L3_1", title="Null Conf")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+        db.update_status(pid, s)
+
+    ext_id = db.add_extraction(pid, "h", {}, "t", "m")
+
+    with pytest.raises(sqlite3.IntegrityError):
+        db._conn.execute(
+            """INSERT INTO evidence_spans
+               (extraction_id, field_name, value, source_snippet, confidence)
+               VALUES (?, ?, ?, ?, ?)""",
+            (ext_id, "f", "v", "s", None),
+        )
+
+
+def test_cloud_null_confidence_raises_integrity_error(tmp_path):
+    """L3: cloud_evidence_spans rejects NULL confidence."""
+    from engine.cloud.schema import init_cloud_tables
+
+    db = ReviewDatabase("test_cloud_l3", data_root=tmp_path)
+    init_cloud_tables(str(db.db_path))
+
+    # Need a paper for the FK
+    db.add_papers([_cit(pmid="CL3_1", title="Cloud L3")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+
+    ce_id = db._conn.execute(
+        """INSERT INTO cloud_extractions
+           (paper_id, arm, model_string, extracted_at)
+           VALUES (?, 'test_arm', 'model', '2026-01-01')""",
+        (pid,),
+    ).lastrowid
+    db._conn.commit()
+
+    with pytest.raises(sqlite3.IntegrityError):
+        db._conn.execute(
+            """INSERT INTO cloud_evidence_spans
+               (cloud_extraction_id, field_name, value, confidence, tier)
+               VALUES (?, 'f', 'v', NULL, 1)""",
+            (ce_id,),
+        )
+    db.close()
+
+
+def test_cloud_null_tier_raises_integrity_error(tmp_path):
+    """L3: cloud_evidence_spans rejects NULL tier."""
+    from engine.cloud.schema import init_cloud_tables
+
+    db = ReviewDatabase("test_cloud_l3b", data_root=tmp_path)
+    init_cloud_tables(str(db.db_path))
+
+    db.add_papers([_cit(pmid="CL3_2", title="Cloud L3b")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+
+    ce_id = db._conn.execute(
+        """INSERT INTO cloud_extractions
+           (paper_id, arm, model_string, extracted_at)
+           VALUES (?, 'test_arm', 'model', '2026-01-01')""",
+        (pid,),
+    ).lastrowid
+    db._conn.commit()
+
+    with pytest.raises(sqlite3.IntegrityError):
+        db._conn.execute(
+            """INSERT INTO cloud_evidence_spans
+               (cloud_extraction_id, field_name, value, confidence, tier)
+               VALUES (?, 'f', 'v', 0.9, NULL)""",
+            (ce_id,),
+        )
     db.close()
 
 

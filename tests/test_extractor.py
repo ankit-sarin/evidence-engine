@@ -396,15 +396,16 @@ class TestProactiveRestart:
     @patch("engine.utils.ollama_preflight.require_preflight")
     @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
     @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
-    def test_restart_failure_raises(
+    def test_restart_failure_continues_gracefully(
         self, _stale, _digest, _preflight, mock_extract, _mock_restart, tmp_path,
     ):
-        """If Ollama restart fails, RuntimeError propagates (no silent continue)."""
+        """If Ollama restart fails, extraction continues (H4: graceful degradation)."""
         db, spec = self._setup_db(tmp_path, n_papers=3)
         mock_extract.side_effect = self._make_fake_extract(spec)
 
-        with pytest.raises(RuntimeError, match="Failed to restart Ollama"):
-            run_extraction(db, spec, "test_review", restart_every=3)
+        stats = run_extraction(db, spec, "test_review", restart_every=3)
+        assert stats["extracted"] == 3
+        assert stats["failed"] == 0
         db.close()
 
     @patch("engine.agents.extractor.restart_ollama")
@@ -484,6 +485,94 @@ class TestProactiveRestart:
 
     def _make_fake_extract(self, spec):
         """Return a fake extract_paper function that stores results in DB."""
+        schema_hash = spec.extraction_hash()
+
+        def _fake(paper_id, paper_text, spec_arg, db, **kwargs):
+            from engine.agents.models import ExtractionResult, EvidenceSpan
+            result = ExtractionResult(
+                paper_id=paper_id,
+                fields=[EvidenceSpan(
+                    field_name="study_type", value="RCT",
+                    source_snippet="A randomized trial.", confidence=0.9, tier=1,
+                )],
+                reasoning_trace="test",
+                model="test-model",
+                extraction_schema_hash=schema_hash,
+                extracted_at=datetime.now(timezone.utc),
+            )
+            db._conn.execute(
+                "INSERT INTO extractions (paper_id, extraction_schema_hash, extracted_data, model, extracted_at) VALUES (?, ?, '[]', 'test', '2026-01-01')",
+                (paper_id, schema_hash),
+            )
+            db._conn.commit()
+            return result
+        return _fake
+
+
+# ── H4: Graceful handling of restart_ollama failure ──────────────────
+
+
+class TestRestartOllamaGraceful:
+    """restart_ollama() failure in extraction loop must not crash the run."""
+
+    def test_restart_failure_continues_extraction(self, tmp_path, caplog):
+        """If restart_ollama raises RuntimeError, extraction continues."""
+        db, spec = self._setup_db(tmp_path, n_papers=3)
+        fake_extract = self._make_fake_extract(spec)
+
+        with (
+            patch("engine.utils.ollama_preflight.require_preflight"),
+            patch("engine.utils.ollama_client.get_model_digest", return_value="sha256:test"),
+            patch("engine.agents.extractor.extract_paper", side_effect=fake_extract),
+            patch("engine.agents.extractor.restart_ollama",
+                  side_effect=RuntimeError("Ollama did not respond")),
+        ):
+            with caplog.at_level("ERROR", logger="engine.agents.extractor"):
+                stats = run_extraction(db, spec, "test_review", restart_every=1)
+
+        # All 3 papers should have been extracted despite restart failures
+        assert stats["extracted"] == 3
+        assert stats["failed"] == 0
+
+        # The error should be logged
+        assert "Proactive Ollama restart failed" in caplog.text
+        db._conn.close()
+
+    # Re-use helpers from TestRunExtraction
+    def _setup_db(self, tmp_path, n_papers=3):
+        db_path = str(tmp_path / "test.db")
+        db = ReviewDatabase.__new__(ReviewDatabase)
+        import sqlite3
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA foreign_keys=ON")
+        conn.execute("""CREATE TABLE papers (
+            id INTEGER PRIMARY KEY, title TEXT, authors TEXT, year INTEGER,
+            status TEXT, abstract TEXT, doi TEXT, pmid TEXT, source TEXT,
+            pdf_local_path TEXT, added_at TEXT, updated_at TEXT)""")
+        conn.execute("""CREATE TABLE extractions (
+            id INTEGER PRIMARY KEY, paper_id INTEGER, extraction_schema_hash TEXT,
+            extracted_data TEXT, reasoning_trace TEXT, model TEXT,
+            model_digest TEXT, auditor_model_digest TEXT, extracted_at TEXT)""")
+        conn.execute("""CREATE TABLE evidence_spans (
+            id INTEGER PRIMARY KEY, extraction_id INTEGER, field_name TEXT,
+            value TEXT, source_snippet TEXT, confidence REAL)""")
+        for i in range(1, n_papers + 1):
+            conn.execute(
+                "INSERT INTO papers (id, title, status, added_at) VALUES (?, ?, 'FT_ELIGIBLE', '2026-01-01')",
+                (i, f"Test Paper {i}"),
+            )
+            parsed_dir = tmp_path / "parsed_text"
+            parsed_dir.mkdir(exist_ok=True)
+            (parsed_dir / f"{i}_v1.md").write_text(f"Paper {i} text content.")
+        conn.commit()
+        db._conn = conn
+        db.db_path = db_path
+        db.review_name = "test_review"
+        spec = load_review_spec(str(SPEC_PATH))
+        return db, spec
+
+    def _make_fake_extract(self, spec):
         schema_hash = spec.extraction_hash()
 
         def _fake(paper_id, paper_text, spec_arg, db, **kwargs):

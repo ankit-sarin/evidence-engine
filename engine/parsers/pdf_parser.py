@@ -309,7 +309,7 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
             db.update_status(pid, "PARSED")
             stats["parsed"] += 1
         except Exception as exc:
-            logger.error("Paper %d: parsing failed — %s", pid, exc)
+            logger.exception("Paper %d: parsing failed — %s", pid, exc)
             stats["failed"] += 1
 
         if i % 10 == 0 or i == total:

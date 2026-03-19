@@ -8,6 +8,7 @@ Usage:
     python scripts/reextract_all.py
 """
 
+import argparse
 import json
 import logging
 import sys
@@ -28,14 +29,23 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-SPEC_PATH = Path("review_specs/surgical_autonomy_v1.yaml")
-REVIEW_NAME = "surgical_autonomy"
-DATA_DIR = Path("data") / REVIEW_NAME
+DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def main():
-    spec = load_review_spec(SPEC_PATH)
-    db = ReviewDatabase(REVIEW_NAME, data_root=Path("data"))
+    parser = argparse.ArgumentParser(description="Full re-extraction + re-audit of all screened-in papers")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review_name = args.review
+    spec_path = args.spec or f"review_specs/{review_name}_v1.yaml"
+
+    spec = load_review_spec(spec_path)
+    db = ReviewDatabase(review_name, data_root=Path("data"))
     schema_hash = spec.extraction_hash()
 
     # ── Step 1: Identify papers to re-extract ──
@@ -82,7 +92,7 @@ def main():
     logger.info("=" * 60)
     logger.info("STARTING EXTRACTION (%d papers, schema hash: %s)",
                 parsed_count, schema_hash[:12])
-    extract_stats = run_extraction(db, spec, REVIEW_NAME)
+    extract_stats = run_extraction(db, spec, review_name)
     t1 = time.time()
     logger.info("Extraction complete in %.1f min — %s",
                 (t1 - t0) / 60, json.dumps(extract_stats))
@@ -90,7 +100,7 @@ def main():
     # ── Step 4: Run audit ──
     logger.info("=" * 60)
     logger.info("STARTING AUDIT")
-    audit_stats = run_audit(db, REVIEW_NAME, spec=spec)
+    audit_stats = run_audit(db, review_name, spec=spec)
     t2 = time.time()
     logger.info("Audit complete in %.1f min — %s",
                 (t2 - t1) / 60, json.dumps(audit_stats))

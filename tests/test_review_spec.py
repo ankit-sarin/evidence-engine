@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from engine.core.review_spec import ReviewSpec, load_review_spec
+from engine.core.review_spec import ReviewSpec, ReviewSpecError, load_review_spec
 
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy_v1.yaml"
 
@@ -101,3 +101,25 @@ def test_malformed_yaml_invalid_tier():
     raw["extraction_schema"]["fields"][0]["tier"] = 5
     with pytest.raises(Exception):
         ReviewSpec.model_validate(raw)
+
+
+# ── M11: User-friendly errors ────────────────────────────────────────
+
+
+def test_load_missing_file_raises_review_spec_error():
+    """M11: Missing file produces ReviewSpecError with clear message."""
+    with pytest.raises(ReviewSpecError, match="Review spec not found"):
+        load_review_spec("/nonexistent/path/to/spec.yaml")
+
+
+def test_load_malformed_yaml_raises_review_spec_error(tmp_path):
+    """M11: Invalid YAML produces ReviewSpecError with parse details."""
+    bad_yaml = tmp_path / "bad.yaml"
+    bad_yaml.write_text("title: [\n  broken: yaml:\n")
+    with pytest.raises(ReviewSpecError, match="invalid YAML"):
+        load_review_spec(bad_yaml)
+
+
+def test_review_spec_error_is_value_error():
+    """M11: ReviewSpecError inherits from ValueError."""
+    assert issubclass(ReviewSpecError, ValueError)

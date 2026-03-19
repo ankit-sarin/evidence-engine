@@ -242,7 +242,7 @@ def run_quality_check(
             stats["checked"] += 1
 
         except Exception as exc:
-            logger.error("  %s: FAILED — %s", ee, exc)
+            logger.exception("  %s: FAILED — %s", ee, exc)
             stats["failed"] += 1
 
     conn.close()

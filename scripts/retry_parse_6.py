@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Retry parsing 6 stuck PDF_ACQUIRED papers: Docling first, PyMuPDF fallback."""
 
+import argparse
 import logging
 import sys
 from datetime import datetime, timezone
@@ -18,7 +19,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-REVIEW = "surgical_autonomy"
+DEFAULT_REVIEW = "surgical_autonomy"
 STUCK_IDS = [274, 368, 378, 455, 748, 780]
 
 
@@ -102,7 +103,14 @@ def retry_paper(db: ReviewDatabase, paper_id: int) -> str:
 
 
 def main():
-    db = ReviewDatabase(REVIEW)
+    parser = argparse.ArgumentParser(description="Retry parsing stuck PDF_ACQUIRED papers")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    db = ReviewDatabase(args.review)
     results = {"docling": [], "pymupdf": [], "failed": []}
 
     for pid in STUCK_IDS:

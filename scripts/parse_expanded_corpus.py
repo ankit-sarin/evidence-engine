@@ -7,6 +7,7 @@ Usage:
     python scripts/parse_expanded_corpus.py
 """
 
+import argparse
 import logging
 import sys
 import time
@@ -24,11 +25,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-REVIEW = "surgical_autonomy"
+DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def main():
-    db = ReviewDatabase(REVIEW)
+    parser = argparse.ArgumentParser(description="Parse expanded corpus PDFs")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review = args.review
+    db = ReviewDatabase(review)
 
     # Find ABSTRACT_SCREENED_IN papers with PDFs but no parsed text
     rows = db._conn.execute("""
@@ -65,7 +74,7 @@ def main():
 
     # Step 2: Parse all PDF_ACQUIRED papers
     t0 = time.time()
-    stats = parse_all_pdfs(db, REVIEW)
+    stats = parse_all_pdfs(db, review)
     elapsed = time.time() - t0
 
     print(f"\n{'=' * 60}")

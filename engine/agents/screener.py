@@ -208,6 +208,11 @@ def run_screening(db: ReviewDatabase, spec: ReviewSpec) -> dict:
     Returns summary stats dict.
     """
     primary_model = spec.screening_models.primary
+
+    # Pre-flight: verify screening model is loaded and responsive
+    from engine.utils.ollama_preflight import require_preflight
+    require_preflight([primary_model], runner_name="Abstract screening")
+
     papers = db.get_papers_by_status("INGESTED")
     total = len(papers)
 
@@ -291,6 +296,11 @@ def run_verification(db: ReviewDatabase, spec: ReviewSpec) -> dict:
     Returns summary stats dict.
     """
     verification_model = spec.screening_models.verification
+
+    # Pre-flight: verify verification model is loaded and responsive
+    from engine.utils.ollama_preflight import require_preflight
+    require_preflight([verification_model], runner_name="Abstract verification")
+
     papers = db.get_papers_by_status("ABSTRACT_SCREENED_IN")
 
     ckpt_path = _checkpoint_path(db, suffix="_verification")

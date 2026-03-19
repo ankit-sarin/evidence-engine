@@ -5,6 +5,7 @@ Compares Qwen3:32b (current), Llama4:scout, and Gemma3:27b on the same
 evidence spans, recording per-field audit state and agreement rates.
 """
 
+import argparse
 import json
 import logging
 import sys
@@ -27,8 +28,7 @@ logger = logging.getLogger("eval_auditor")
 
 # ── Config ──────────────────────────────────────────────────────────
 
-REVIEW_NAME = "surgical_autonomy"
-SPEC_PATH = "review_specs/surgical_autonomy_v1.yaml"
+DEFAULT_REVIEW = "surgical_autonomy"
 
 # Papers chosen for diverse audit profiles:
 # pid 17: 11v/1c/3f (mostly verified)
@@ -76,8 +76,19 @@ def load_spans_and_text(db, paper_id, spec, review_dir):
 
 
 def run_eval():
-    spec = load_review_spec(SPEC_PATH)
-    db = ReviewDatabase(REVIEW_NAME)
+    parser = argparse.ArgumentParser(description="Evaluate candidate auditor models")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review_name = args.review
+    spec_path = args.spec or f"review_specs/{review_name}_v1.yaml"
+
+    spec = load_review_spec(spec_path)
+    db = ReviewDatabase(review_name)
     review_dir = Path(db.db_path).parent
 
     # Build field metadata from spec
@@ -259,7 +270,7 @@ def run_eval():
             print(f"  {model_name}: {timings[model_name]:.1f}s total, {per_span:.1f}s/span")
 
     # Save raw results
-    output_path = Path("data/surgical_autonomy/auditor_eval_results.json")
+    output_path = Path(f"data/{review_name}/auditor_eval_results.json")
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
         json.dump({

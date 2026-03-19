@@ -1,5 +1,6 @@
 """q8_0 KV cache validation: re-extract 5 papers and compare against f16 originals."""
 
+import argparse
 import json
 import logging
 import sys
@@ -26,9 +27,7 @@ logger = logging.getLogger(__name__)
 
 # ── Config ───────────────────────────────────────────────────────────
 
-REVIEW = "surgical_autonomy"
-SPEC_PATH = "review_specs/surgical_autonomy_v1.yaml"
-# ReviewDatabase takes review_name, not a path
+DEFAULT_REVIEW = "surgical_autonomy"
 PAPER_IDS = [9, 121, 383, 370, 432]
 OUTPUT_PATH = None  # set in main() after db init
 
@@ -131,8 +130,19 @@ def compare_fields(original: list[dict], reextracted: list[dict]) -> list[dict]:
 
 
 def main():
-    spec = load_review_spec(SPEC_PATH)
-    db = ReviewDatabase(REVIEW)
+    parser = argparse.ArgumentParser(description="q8_0 KV cache validation")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review = args.review
+    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+
+    spec = load_review_spec(spec_path)
+    db = ReviewDatabase(review)
     review_dir = Path(db.db_path).parent
     parsed_dir = review_dir / "parsed_text"
     global OUTPUT_PATH

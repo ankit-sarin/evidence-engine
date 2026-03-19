@@ -201,7 +201,7 @@ class OpenAIExtractor(CloudExtractorBase):
                         )
                         time.sleep(wait)
                     else:
-                        logger.error("Paper %d failed after 3 attempts: %s", pid, exc)
+                        logger.exception("Paper %d failed after 3 attempts: %s", pid, exc)
                         stats["failed"] += 1
 
             if result is None:
@@ -223,7 +223,7 @@ class OpenAIExtractor(CloudExtractorBase):
                     spans=result["spans"],
                 )
             except Exception as exc:
-                logger.error(
+                logger.exception(
                     "Paper %d: store_result failed: %s", pid, exc,
                 )
                 stats["failed"] += 1

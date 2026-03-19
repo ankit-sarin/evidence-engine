@@ -2,6 +2,7 @@
 
 import csv
 import logging
+import os
 
 from engine.core.database import ReviewDatabase
 
@@ -338,8 +339,15 @@ def export_prisma_csv(db: ReviewDatabase, output_path: str) -> None:
         ("Evidence spans flagged", flow["spans_flagged"], ""),
     ])
 
-    with open(output_path, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerows(rows)
+    tmp_path = output_path + ".tmp"
+    try:
+        with open(tmp_path, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerows(rows)
+        os.replace(tmp_path, output_path)
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
 
     logger.info("PRISMA CSV exported to %s", output_path)

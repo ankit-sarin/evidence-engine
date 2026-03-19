@@ -273,6 +273,41 @@ class TestOllamaRestartRecovery:
 
         assert "restarting ollama service" in caplog.text.lower()
 
+    @patch("engine.utils.ollama_client.subprocess.run",
+           side_effect=OSError("systemctl not found"))
+    def test_restart_ollama_and_retry_raises_on_restart_failure(self, mock_subprocess):
+        """M3: _restart_ollama_and_retry raises RuntimeError (not None) on restart failure."""
+        with pytest.raises(RuntimeError, match="Ollama restart failed"):
+            _restart_ollama_and_retry(
+                model="qwen3:8b",
+                messages=[{"role": "user", "content": "hello"}],
+                paper_label="paper_id=1",
+                effective_timeout=30.0,
+                max_retries=1,
+            )
+
+    @patch("engine.utils.ollama_client.subprocess.run")
+    @patch("engine.utils.ollama_client._client")
+    def test_restart_ollama_and_retry_raises_on_post_restart_failure(
+        self, mock_client, mock_subprocess,
+    ):
+        """M3: _restart_ollama_and_retry raises RuntimeError when post-restart call fails."""
+        mock_subprocess.return_value = MagicMock(returncode=0)
+
+        def hang(**kwargs):
+            time.sleep(60)
+
+        mock_client.chat.side_effect = hang
+
+        with pytest.raises(RuntimeError, match="Post-restart Ollama call failed"):
+            _restart_ollama_and_retry(
+                model="qwen3:8b",
+                messages=[{"role": "user", "content": "hello"}],
+                paper_label="paper_id=1",
+                effective_timeout=1.0,
+                max_retries=1,
+            )
+
 
 # ── Model digest ───────────────────────────────────────────────────
 

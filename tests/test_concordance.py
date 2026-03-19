@@ -3,8 +3,12 @@
 Test cases derived from the Run 5 format audit (Item 1 findings).
 """
 
+import sqlite3
+from pathlib import Path
+
 import pytest
 
+from engine.analysis.concordance import load_arm
 from engine.analysis.normalize import normalize_for_concordance
 from engine.analysis.scoring import FieldScore, score_pair
 
@@ -229,3 +233,41 @@ class TestScorePairSystemMaturity:
         """'Research prototype' vs 'Research prototype (hardware)' → MATCH."""
         s = score_pair("system_maturity", "Research prototype", "Research prototype (hardware)")
         assert s.result == "MATCH"
+
+
+# ── M13: load_arm() return value semantics ────────────────────────────
+
+
+class TestLoadArm:
+
+    def test_empty_arm_returns_empty_dict(self, tmp_path):
+        """M13: An arm with no data returns empty dict (valid result)."""
+        db_path = tmp_path / "test.db"
+        conn = sqlite3.connect(str(db_path))
+        conn.executescript("""
+            CREATE TABLE extractions (
+                id INTEGER PRIMARY KEY, paper_id INTEGER NOT NULL,
+                extraction_schema_hash TEXT, extracted_data TEXT,
+                extracted_at TEXT NOT NULL DEFAULT '2026-01-01'
+            );
+            CREATE TABLE evidence_spans (
+                id INTEGER PRIMARY KEY, extraction_id INTEGER NOT NULL,
+                field_name TEXT NOT NULL, value TEXT NOT NULL,
+                source_snippet TEXT, confidence REAL NOT NULL DEFAULT 0.9,
+                audit_status TEXT NOT NULL DEFAULT 'pending'
+            );
+        """)
+        conn.close()
+
+        result = load_arm(str(db_path), "local")
+        assert result == {}
+
+    def test_db_error_raises_not_empty_dict(self, tmp_path):
+        """M13: A corrupted/missing-table DB raises exception, not empty dict."""
+        db_path = tmp_path / "bad.db"
+        conn = sqlite3.connect(str(db_path))
+        conn.execute("CREATE TABLE dummy (id INTEGER)")
+        conn.close()
+
+        with pytest.raises(sqlite3.OperationalError):
+            load_arm(str(db_path), "local")

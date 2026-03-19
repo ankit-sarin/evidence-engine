@@ -1,13 +1,17 @@
 """Watchdog: monitors extract_log.txt for stalls and reports progress."""
 
+import argparse
+import logging
 import os
 import sqlite3
+import sys
 import time
 from datetime import datetime
 from pathlib import Path
 
-LOG_PATH = Path("data/surgical_autonomy/extract_log.txt")
-DB_PATH = Path("data/surgical_autonomy/review.db")
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
+DEFAULT_REVIEW = "surgical_autonomy"
 CHECK_INTERVAL = 20 * 60  # 20 minutes
 
 
@@ -36,6 +40,17 @@ def get_tail(n: int = 5) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Monitor extraction progress")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    global LOG_PATH, DB_PATH
+    LOG_PATH = Path(f"data/{args.review}/extract_log.txt")
+    DB_PATH = Path(f"data/{args.review}/review.db")
+
     print(f"Monitoring {LOG_PATH} every {CHECK_INTERVAL // 60} minutes")
     print("Press Ctrl+C to stop\n")
 

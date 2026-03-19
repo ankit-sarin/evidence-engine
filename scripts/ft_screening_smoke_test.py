@@ -9,7 +9,9 @@ Papers are AI_AUDIT_COMPLETE so we call the single-paper functions directly
 rather than the batch pipeline (which expects PARSED status).
 """
 
+import argparse
 import json
+import logging
 import sys
 import time
 from pathlib import Path
@@ -24,11 +26,12 @@ from engine.agents.ft_screener import (
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
 # ── Config ──────────────────────────────────────────────────────────
 
 PAPER_IDS = [9, 12, 168, 23, 4]
-SPEC_PATH = "review_specs/surgical_autonomy_v1.yaml"
-REVIEW_NAME = "surgical_autonomy"
+DEFAULT_REVIEW = "surgical_autonomy"
 
 LABELS = {
     9: "Abdominal (intestinal anastomosis)",
@@ -41,8 +44,19 @@ LABELS = {
 # ── Main ────────────────────────────────────────────────────────────
 
 def main():
-    spec = load_review_spec(SPEC_PATH)
-    db = ReviewDatabase(REVIEW_NAME)
+    parser = argparse.ArgumentParser(description="Full-text screening smoke test")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review_name = args.review
+    spec_path = args.spec or f"review_specs/{review_name}_v1.yaml"
+
+    spec = load_review_spec(spec_path)
+    db = ReviewDatabase(review_name)
     parsed_dir = db.db_path.parent / "parsed_text"
 
     print("=" * 80)

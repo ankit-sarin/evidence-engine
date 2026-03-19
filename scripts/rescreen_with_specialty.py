@@ -36,8 +36,7 @@ logger = logging.getLogger("rescreen_specialty")
 
 # ── Config ──────────────────────────────────────────────────────────
 
-REVIEW_NAME = "surgical_autonomy"
-SPEC_PATH = "review_specs/surgical_autonomy_v1.yaml"
+DEFAULT_REVIEW = "surgical_autonomy"
 TARGET_STATUSES = ("ABSTRACT_SCREENED_IN", "AI_AUDIT_COMPLETE")
 
 # Use pass_number 1/2 (schema CHECK constraint). Distinguish via RESCREEN_TAG in rationale.
@@ -92,20 +91,28 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Re-screen with specialty scope")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
     parser.add_argument("--background", action="store_true", help="Run in tmux")
     parser.add_argument("--verify-only", action="store_true", help="Run verification pass only")
     parser.add_argument("--report-only", action="store_true", help="Print report from DB, no screening")
     args = parser.parse_args()
 
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review_name = args.review
+    spec_path = args.spec or f"review_specs/{review_name}_v1.yaml"
+
     if args.background:
         try:
             from engine.utils.background import maybe_background
-            maybe_background("specialty_rescreen", review_name=REVIEW_NAME)
+            maybe_background("specialty_rescreen", review_name=review_name)
         except ImportError:
             logger.warning("Background mode not available — running in foreground")
 
-    spec = load_review_spec(SPEC_PATH)
-    db = ReviewDatabase(REVIEW_NAME)
+    spec = load_review_spec(spec_path)
+    db = ReviewDatabase(review_name)
 
     if args.report_only:
         _print_report(db)

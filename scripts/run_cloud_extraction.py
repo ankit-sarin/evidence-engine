@@ -26,8 +26,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DEFAULT_SPEC = "review_specs/surgical_autonomy_v1.yaml"
-DEFAULT_DB = "data/surgical_autonomy/review.db"
+DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def show_progress(db_path: str, spec_path: str):
@@ -88,11 +87,13 @@ def run_arm(
 
 
 def main():
-    from engine.utils.background import maybe_background
-    maybe_background("cloud_extraction", review_name="surgical_autonomy")
-
     parser = argparse.ArgumentParser(
         description="Run cloud extraction arms for concordance study"
+    )
+    parser.add_argument(
+        "--review",
+        default=DEFAULT_REVIEW,
+        help=f"Review name (default: {DEFAULT_REVIEW})",
     )
     parser.add_argument(
         "--arm",
@@ -101,13 +102,13 @@ def main():
     )
     parser.add_argument(
         "--spec",
-        default=DEFAULT_SPEC,
-        help=f"Path to review spec YAML (default: {DEFAULT_SPEC})",
+        default=None,
+        help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)",
     )
     parser.add_argument(
         "--db",
-        default=DEFAULT_DB,
-        help=f"Path to database (default: {DEFAULT_DB})",
+        default=None,
+        help="Path to database (default: data/<review>/review.db)",
     )
     parser.add_argument(
         "--max-papers",
@@ -134,8 +135,18 @@ def main():
 
     args = parser.parse_args()
 
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review = args.review
+    db_path = args.db or f"data/{review}/review.db"
+    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+
+    from engine.utils.background import maybe_background
+    maybe_background("cloud_extraction", review_name=review)
+
     if args.progress:
-        show_progress(args.db, args.spec)
+        show_progress(db_path, spec_path)
         return
 
     if not args.arm:
@@ -144,11 +155,11 @@ def main():
     arms = ["openai", "anthropic"] if args.arm == "both" else [args.arm]
 
     if args.dry_run:
-        dry_run(args.db, args.spec, arms)
+        dry_run(db_path, spec_path, arms)
         return
 
     for arm in arms:
-        run_arm(arm, args.db, args.spec, args.max_papers, args.max_cost)
+        run_arm(arm, db_path, spec_path, args.max_papers, args.max_cost)
 
 
 if __name__ == "__main__":

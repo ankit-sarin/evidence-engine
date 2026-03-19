@@ -5,6 +5,7 @@ Resets EXTRACT_FAILED → PARSED, then runs two-pass DeepSeek-R1 extraction
 with extended timeout. Retries once on failure with even longer timeout.
 """
 
+import argparse
 import logging
 import sys
 import time
@@ -27,13 +28,23 @@ logger = logging.getLogger("reextract")
 PAPER_IDS = [15, 17, 54, 142]
 TIMEOUT_FIRST = 1200.0   # 20 minutes
 TIMEOUT_RETRY = 1500.0   # 25 minutes
-SPEC_PATH = "review_specs/surgical_autonomy_v1.yaml"
-REVIEW_NAME = "surgical_autonomy"
+DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def main():
-    spec = load_review_spec(SPEC_PATH)
-    db = ReviewDatabase(REVIEW_NAME)
+    parser = argparse.ArgumentParser(description="Re-extract papers that failed or were skipped")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    args = parser.parse_args()
+
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review_name = args.review
+    spec_path = args.spec or f"review_specs/{review_name}_v1.yaml"
+
+    spec = load_review_spec(spec_path)
+    db = ReviewDatabase(review_name)
     review_dir = Path(db.db_path).parent
 
     # Step 1: Reset EXTRACT_FAILED → PARSED

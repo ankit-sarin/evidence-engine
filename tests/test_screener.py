@@ -24,6 +24,13 @@ def spec():
     return load_review_spec(SPEC_PATH)
 
 
+@pytest.fixture(autouse=True)
+def _mock_preflight():
+    """Auto-mock preflight for all screener tests (avoids hitting Ollama)."""
+    with patch("engine.utils.ollama_preflight.require_preflight"):
+        yield
+
+
 # ── Structured Output Parsing ────────────────────────────────────────
 
 
@@ -237,6 +244,40 @@ def test_verification_does_not_touch_abstract_screening_decisions(tmp_path, spec
 
     post_count = db._conn.execute("SELECT COUNT(*) FROM abstract_screening_decisions").fetchone()[0]
     assert post_count == pre_count  # No new rows in abstract_screening_decisions
+    db.close()
+
+
+# ── M20: Abstract screener preflight ─────────────────────────────────
+
+
+def test_abstract_screening_calls_preflight(tmp_path, spec):
+    """M20: run_screening calls preflight before processing any papers."""
+    db = ReviewDatabase("test", data_root=tmp_path)
+    db.add_papers([Citation(title="Paper P", source="pubmed", pmid="700")])
+
+    with patch("engine.utils.ollama_preflight.require_preflight",
+               side_effect=RuntimeError("preflight failed")) as mock_pf:
+        with pytest.raises(RuntimeError, match="preflight failed"):
+            run_screening(db, spec)
+
+    mock_pf.assert_called_once_with(
+        [spec.screening_models.primary], runner_name="Abstract screening",
+    )
+    db.close()
+
+
+def test_abstract_verification_calls_preflight(tmp_path, spec):
+    """M20: run_verification calls preflight before processing."""
+    db = _setup_screened_in(tmp_path, spec, n_papers=1)
+
+    with patch("engine.utils.ollama_preflight.require_preflight",
+               side_effect=RuntimeError("preflight failed")) as mock_pf:
+        with pytest.raises(RuntimeError, match="preflight failed"):
+            run_verification(db, spec)
+
+    mock_pf.assert_called_once_with(
+        [spec.screening_models.verification], runner_name="Abstract verification",
+    )
     db.close()
 
 

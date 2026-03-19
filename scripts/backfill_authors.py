@@ -7,8 +7,10 @@ Usage:
     PYTHONPATH=. python scripts/backfill_authors.py [--dry-run]
 """
 
+import argparse
 import json
 import logging
+import os
 import sqlite3
 import sys
 import time
@@ -18,8 +20,19 @@ from Bio import Entrez, Medline
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-DB_PATH = "data/surgical_autonomy/review.db"
-Entrez.email = "ankit.sarin@ucdavis.edu"
+DEFAULT_REVIEW = "surgical_autonomy"
+
+
+def _get_contact_email() -> str:
+    """Return contact email from env var, or raise with a clear message."""
+    email = os.environ.get("EVIDENCE_ENGINE_CONTACT_EMAIL")
+    if not email:
+        raise RuntimeError(
+            "EVIDENCE_ENGINE_CONTACT_EMAIL environment variable not set. "
+            "Required for PubMed/OpenAlex API compliance "
+            "(e.g., export EVIDENCE_ENGINE_CONTACT_EMAIL=you@example.com)."
+        )
+    return email
 
 BATCH_SIZE = 200  # PubMed efetch batch size
 RATE_LIMIT = 0.34  # NCBI rate limit
@@ -54,7 +67,7 @@ def _openalex_author_lookup(doi: str) -> list[str] | None:
     try:
         import pyalex
 
-        pyalex.config.email = "ankit.sarin@ucdavis.edu"
+        pyalex.config.email = _get_contact_email()
         works = pyalex.Works().filter(doi=doi).get()
         if works:
             work = works[0]
@@ -71,9 +84,20 @@ def _openalex_author_lookup(doi: str) -> list[str] | None:
 
 
 def main():
-    dry_run = "--dry-run" in sys.argv
+    parser = argparse.ArgumentParser(description="Backfill missing author metadata")
+    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would be done without writing")
+    args = parser.parse_args()
 
-    conn = sqlite3.connect(DB_PATH)
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    Entrez.email = _get_contact_email()
+
+    dry_run = args.dry_run
+    db_path = f"data/{args.review}/review.db"
+
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
 
     # Find all papers with empty authors that are screened in

@@ -76,6 +76,17 @@ def check_model(model_name: str, timeout: int = 30) -> ModelResult:
         )
 
 
+def _model_name_matches(loaded_name: str, requested: str) -> bool:
+    """Check if a loaded model name matches a requested model name.
+
+    Handles variants like 'qwen3:8b' matching 'qwen3:8b-fp16' prefix.
+    """
+    # Normalize: strip tag if loaded name has extra suffix
+    loaded_base = loaded_name.split(":")[0]
+    requested_base = requested.split(":")[0]
+    return loaded_base == requested_base or loaded_name.startswith(requested)
+
+
 def preflight_check(models: list[str], timeout: int = 30) -> PreflightResult:
     """Check all models and return aggregate result."""
     results = []
@@ -91,15 +102,24 @@ def preflight_check(models: list[str], timeout: int = 30) -> PreflightResult:
             logger.error("  %s: FAILED — %s", name, result.error_message)
         results.append(result)
 
-    # Query total VRAM from ollama ps
-    total_vram = 0.0
+    # Query VRAM from ollama ps — only count models relevant to this operation
+    relevant_vram = 0.0
     try:
         ps = ollama.ps()
         for m in ps.get("models", []):
-            total_vram += m.get("size", 0) / (1024**3)
+            loaded_name = m.get("name", "")
+            size_gb = m.get("size", 0) / (1024**3)
+            if any(_model_name_matches(loaded_name, req) for req in models):
+                relevant_vram += size_gb
+            else:
+                logger.info(
+                    "Model %s is loaded (%.1f GB) but not required for this "
+                    "operation — not included in VRAM calculation",
+                    loaded_name, size_gb,
+                )
     except Exception:
-        total_vram = sum(r.vram_used_gb for r in results)
-    total_vram = round(total_vram, 1)
+        relevant_vram = sum(r.vram_used_gb for r in results)
+    total_vram = round(relevant_vram, 1)
 
     failures = [r for r in results if r.status == "error"]
     success = len(failures) == 0

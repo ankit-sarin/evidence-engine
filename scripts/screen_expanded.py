@@ -25,6 +25,7 @@ import argparse
 import csv
 import json
 import logging
+import os
 import sys
 import time
 from pathlib import Path
@@ -46,16 +47,32 @@ logging.basicConfig(
 )
 logger = logging.getLogger("screen_expanded")
 
-Entrez.email = "ankit.sarin@ucdavis.edu"
-OPENALEX_HEADERS = {"User-Agent": "mailto:ankit.sarin@ucdavis.edu"}
 
-STAGING_DIR = Path("data/surgical_autonomy/expanded_search")
-INPUT_CSV = STAGING_DIR / "net_new_papers.csv"
-ABSTRACTS_JSONL = STAGING_DIR / "abstracts.jsonl"
-OUTPUT_CSV = STAGING_DIR / "screening_results.csv"
-SCREENING_PROGRESS = STAGING_DIR / "screening_progress.json"
-VERIFICATION_CSV = STAGING_DIR / "verification_results.csv"
-VERIFICATION_PROGRESS = STAGING_DIR / "verification_progress.json"
+def _get_contact_email() -> str:
+    """Return contact email from env var, or raise with a clear message."""
+    email = os.environ.get("EVIDENCE_ENGINE_CONTACT_EMAIL")
+    if not email:
+        raise RuntimeError(
+            "EVIDENCE_ENGINE_CONTACT_EMAIL environment variable not set. "
+            "Required for PubMed/OpenAlex API compliance "
+            "(e.g., export EVIDENCE_ENGINE_CONTACT_EMAIL=you@example.com)."
+        )
+    return email
+
+
+# Initialized lazily in main() after env var check
+OPENALEX_HEADERS: dict[str, str] = {}
+
+DEFAULT_REVIEW = "surgical_autonomy"
+
+# Module-level paths — set in main() based on --review
+STAGING_DIR = None
+INPUT_CSV = None
+ABSTRACTS_JSONL = None
+OUTPUT_CSV = None
+SCREENING_PROGRESS = None
+VERIFICATION_CSV = None
+VERIFICATION_PROGRESS = None
 
 
 # ── Phase 1: Abstract fetching ───────────────────────────────────────
@@ -189,13 +206,13 @@ def run_fetch_phase():
 # ── Phase 2: Screening ──────────────────────────────────────────────
 
 
-def run_screen_phase():
+def run_screen_phase(spec_path: str):
     """Phase 2: dual-pass screening from local abstracts.jsonl."""
     if not ABSTRACTS_JSONL.exists():
         logger.error("No abstracts.jsonl found — run phase 1 first")
         sys.exit(1)
 
-    spec = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+    spec = load_review_spec(spec_path)
 
     # Load all abstracts from disk
     papers: list[dict] = []
@@ -309,13 +326,13 @@ def run_screen_phase():
 # ── Phase 3: Verification ─────────────────────────────────────────
 
 
-def run_verify_phase():
+def run_verify_phase(spec_path: str):
     """Phase 3: re-screen primary includes with verification model."""
     if not OUTPUT_CSV.exists():
         logger.error("No screening_results.csv found — run phase 2 first")
         sys.exit(1)
 
-    spec = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+    spec = load_review_spec(spec_path)
     verification_model = spec.screening_models.verification
 
     # Load primary includes from screening_results.csv
@@ -446,11 +463,16 @@ def run_verify_phase():
 
 
 def main():
-    from engine.utils.background import maybe_background
-    maybe_background("screening", review_name="surgical_autonomy")
-
     parser = argparse.ArgumentParser(
         description="Screen expanded search results (three-phase)"
+    )
+    parser.add_argument(
+        "--review", default=DEFAULT_REVIEW,
+        help=f"Review name (default: {DEFAULT_REVIEW})",
+    )
+    parser.add_argument(
+        "--spec", default=None,
+        help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)",
     )
     parser.add_argument(
         "--fetch-only", action="store_true",
@@ -470,6 +492,32 @@ def main():
     )
     args = parser.parse_args()
 
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review = args.review
+    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+
+    # Initialize contact email for API compliance
+    contact_email = _get_contact_email()
+    Entrez.email = contact_email
+    global OPENALEX_HEADERS
+    OPENALEX_HEADERS = {"User-Agent": f"mailto:{contact_email}"}
+
+    # Set module-level paths based on review name
+    global STAGING_DIR, INPUT_CSV, ABSTRACTS_JSONL, OUTPUT_CSV
+    global SCREENING_PROGRESS, VERIFICATION_CSV, VERIFICATION_PROGRESS
+    STAGING_DIR = Path(f"data/{review}/expanded_search")
+    INPUT_CSV = STAGING_DIR / "net_new_papers.csv"
+    ABSTRACTS_JSONL = STAGING_DIR / "abstracts.jsonl"
+    OUTPUT_CSV = STAGING_DIR / "screening_results.csv"
+    SCREENING_PROGRESS = STAGING_DIR / "screening_progress.json"
+    VERIFICATION_CSV = STAGING_DIR / "verification_results.csv"
+    VERIFICATION_PROGRESS = STAGING_DIR / "verification_progress.json"
+
+    from engine.utils.background import maybe_background
+    maybe_background("screening", review_name=review)
+
     if args.fresh:
         for f in [OUTPUT_CSV, SCREENING_PROGRESS, VERIFICATION_CSV, VERIFICATION_PROGRESS]:
             if f.exists():
@@ -479,13 +527,13 @@ def main():
     if args.fetch_only:
         run_fetch_phase()
     elif args.screen_only:
-        run_screen_phase()
+        run_screen_phase(spec_path)
     elif args.verify_only:
-        run_verify_phase()
+        run_verify_phase(spec_path)
     else:
         run_fetch_phase()
-        run_screen_phase()
-        run_verify_phase()
+        run_screen_phase(spec_path)
+        run_verify_phase(spec_path)
 
 
 if __name__ == "__main__":

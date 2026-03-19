@@ -3,6 +3,7 @@
 import csv
 import json
 import logging
+import os
 from pathlib import Path
 
 import openpyxl
@@ -12,6 +13,8 @@ from engine.core.review_spec import ReviewSpec
 
 logger = logging.getLogger(__name__)
 
+NO_EXTRACTION_MARKER = "[NO EXTRACTION DATA]"
+
 
 # ── Helpers ──────────────────────────────────────────────────────────
 
@@ -19,6 +22,7 @@ logger = logging.getLogger(__name__)
 def _build_evidence_rows(
     db: ReviewDatabase, spec: ReviewSpec,
     min_status: str = "AI_AUDIT_COMPLETE",
+    exclude_empty: bool = False,
 ) -> tuple[list[str], list[list]]:
     """Build header and data rows for the evidence table.
 
@@ -26,6 +30,7 @@ def _build_evidence_rows(
         min_status: Minimum paper status to include. Papers at or beyond this
             status are included. Default "AI_AUDIT_COMPLETE" for raw AI output.
             Use "HUMAN_AUDIT_COMPLETE" for human-verified production exports.
+        exclude_empty: If True, omit papers with no extraction data entirely.
 
     Returns (headers, rows) where each row is one included paper.
     """
@@ -76,17 +81,28 @@ def _build_evidence_rows(
             for s in spans:
                 span_map[s["field_name"]] = s
 
-        for fname in field_names:
-            span = span_map.get(fname)
-            if span:
-                row.extend([
-                    span["value"],
-                    span["source_snippet"] or "",
-                    span["confidence"],
-                    span["audit_status"],
-                ])
-            else:
+        has_data = bool(span_map)
+
+        if not has_data:
+            logger.warning("Paper %d has no extraction data", pid)
+            if exclude_empty:
+                continue
+            # Mark first extraction column with NO_EXTRACTION_MARKER
+            row.extend([NO_EXTRACTION_MARKER, "", "", ""])
+            for _ in field_names[1:]:
                 row.extend(["", "", "", ""])
+        else:
+            for fname in field_names:
+                span = span_map.get(fname)
+                if span:
+                    row.extend([
+                        span["value"],
+                        span["source_snippet"] or "",
+                        span["confidence"],
+                        span["audit_status"],
+                    ])
+                else:
+                    row.extend(["", "", "", ""])
 
         rows.append(row)
 
@@ -99,14 +115,23 @@ def _build_evidence_rows(
 def export_evidence_csv(
     db: ReviewDatabase, spec: ReviewSpec, output_path: str,
     min_status: str = "AI_AUDIT_COMPLETE",
+    exclude_empty: bool = False,
 ) -> None:
     """Export evidence table as CSV."""
-    headers, rows = _build_evidence_rows(db, spec, min_status=min_status)
+    headers, rows = _build_evidence_rows(db, spec, min_status=min_status,
+                                          exclude_empty=exclude_empty)
 
-    with open(output_path, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(headers)
-        writer.writerows(rows)
+    tmp_path = output_path + ".tmp"
+    try:
+        with open(tmp_path, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(headers)
+            writer.writerows(rows)
+        os.replace(tmp_path, output_path)
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
 
     logger.info("Evidence CSV exported to %s (%d rows)", output_path, len(rows))
 
@@ -117,6 +142,7 @@ def export_evidence_csv(
 def export_evidence_excel(
     db: ReviewDatabase, spec: ReviewSpec, output_path: str,
     min_status: str = "AI_AUDIT_COMPLETE",
+    exclude_empty: bool = False,
 ) -> None:
     """Export evidence table as Excel with 3 sheets."""
     wb = openpyxl.Workbook()
@@ -124,7 +150,8 @@ def export_evidence_excel(
     # Sheet 1: Evidence Table
     ws1 = wb.active
     ws1.title = "Evidence Table"
-    headers, rows = _build_evidence_rows(db, spec, min_status=min_status)
+    headers, rows = _build_evidence_rows(db, spec, min_status=min_status,
+                                          exclude_empty=exclude_empty)
     ws1.append(headers)
     for row in rows:
         ws1.append(row)
@@ -164,7 +191,15 @@ def export_evidence_excel(
         ws3.append(list(dict(r).values()))
     _style_header(ws3)
 
-    wb.save(output_path)
+    tmp_path = output_path + ".tmp"
+    try:
+        wb.save(tmp_path)
+        os.replace(tmp_path, output_path)
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
+
     logger.info("Evidence Excel exported to %s", output_path)
 
 

@@ -58,42 +58,48 @@ def load_arm(db_path: str, arm: str) -> dict[int, dict[str, str]]:
              (e.g. "openai_o4_mini_high", "anthropic_sonnet_4_6").
 
     Returns:
-        {paper_id: {field_name: value}}
+        {paper_id: {field_name: value}} — empty dict when no data exists
+        for the arm (valid result).
+
+    Raises:
+        sqlite3.OperationalError: If the database is missing or corrupted.
     """
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
 
-    result: dict[int, dict[str, str]] = {}
+    try:
+        result: dict[int, dict[str, str]] = {}
 
-    if arm == "local":
-        rows = conn.execute(
-            """SELECT e.paper_id, es.field_name, es.value
-               FROM evidence_spans es
-               JOIN extractions e ON e.id = es.extraction_id
-               ORDER BY e.paper_id, es.field_name"""
-        ).fetchall()
-        for row in rows:
-            pid = row["paper_id"]
-            if pid not in result:
-                result[pid] = {}
-            result[pid][row["field_name"]] = row["value"]
-    else:
-        rows = conn.execute(
-            """SELECT ce.paper_id, cs.field_name, cs.value
-               FROM cloud_evidence_spans cs
-               JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id
-               WHERE ce.arm = ?
-               ORDER BY ce.paper_id, cs.field_name""",
-            (arm,),
-        ).fetchall()
-        for row in rows:
-            pid = row["paper_id"]
-            if pid not in result:
-                result[pid] = {}
-            result[pid][row["field_name"]] = row["value"]
+        if arm == "local":
+            rows = conn.execute(
+                """SELECT e.paper_id, es.field_name, es.value
+                   FROM evidence_spans es
+                   JOIN extractions e ON e.id = es.extraction_id
+                   ORDER BY e.paper_id, es.field_name"""
+            ).fetchall()
+            for row in rows:
+                pid = row["paper_id"]
+                if pid not in result:
+                    result[pid] = {}
+                result[pid][row["field_name"]] = row["value"]
+        else:
+            rows = conn.execute(
+                """SELECT ce.paper_id, cs.field_name, cs.value
+                   FROM cloud_evidence_spans cs
+                   JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id
+                   WHERE ce.arm = ?
+                   ORDER BY ce.paper_id, cs.field_name""",
+                (arm,),
+            ).fetchall()
+            for row in rows:
+                pid = row["paper_id"]
+                if pid not in result:
+                    result[pid] = {}
+                result[pid][row["field_name"]] = row["value"]
 
-    conn.close()
-    return result
+        return result
+    finally:
+        conn.close()
 
 
 def align_arms(

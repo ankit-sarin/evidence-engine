@@ -250,7 +250,7 @@ class AnthropicExtractor(CloudExtractorBase):
                     spans=result["spans"],
                 )
             except Exception as exc:
-                logger.error(
+                logger.exception(
                     "Paper %d: store_result failed: %s", pid, exc,
                 )
                 stats["failed"] += 1

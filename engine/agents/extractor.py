@@ -560,7 +560,7 @@ def run_extraction(
                 i, total, len(result.fields), title[:60],
             )
         except Exception as exc:
-            logger.error("Paper %d extraction failed: %s", pid, exc)
+            logger.exception("Paper %d extraction failed: %s", pid, exc)
             db.update_status(pid, "EXTRACT_FAILED")
             stats["failed"] += 1
             elapsed = time.time() - t_paper
@@ -569,11 +569,17 @@ def run_extraction(
         # Proactive Ollama restart to clear CUDA context fragmentation
         papers_since_restart += 1
         if restart_every > 0 and papers_since_restart >= restart_every:
-            restart_ollama(
-                reason=f"proactive after {papers_since_restart} papers",
-                papers_done=stats["extracted"] + stats["skipped"] + stats["failed"],
-            )
-            papers_since_restart = 0
+            try:
+                restart_ollama(
+                    reason=f"proactive after {papers_since_restart} papers",
+                    papers_done=stats["extracted"] + stats["skipped"] + stats["failed"],
+                )
+                papers_since_restart = 0
+            except RuntimeError:
+                logger.exception(
+                    "Proactive Ollama restart failed — continuing without restart. "
+                    "Monitor for instability."
+                )
 
     progress.summary()
     logger.info(

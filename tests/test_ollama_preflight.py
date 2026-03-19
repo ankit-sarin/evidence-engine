@@ -57,6 +57,46 @@ class TestPreflightCheck:
         assert len(result.models) == 2
         assert all(m.status == "ok" for m in result.models)
 
+    def test_vram_filters_to_relevant_models(self):
+        """M4: VRAM calculation only counts models relevant to the current operation."""
+        mock_response = MagicMock()
+        mock_response.message.content = "OK"
+
+        ps_data = {"models": [
+            {"name": "qwen3:8b", "size": 8 * 1024**3},       # relevant
+            {"name": "deepseek-r1:32b", "size": 32 * 1024**3},  # unrelated
+        ]}
+
+        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+            with patch("engine.utils.ollama_preflight.ollama.ps", return_value=ps_data):
+                result = preflight_check(["qwen3:8b"])
+
+        # Only qwen3:8b should be counted (8 GB), not deepseek-r1:32b
+        assert result.total_vram_gb == 8.0
+        assert result.success is True
+
+    def test_vram_unrelated_model_does_not_cause_rejection(self, caplog):
+        """M4: Unrelated loaded model does not cause false VRAM rejection."""
+        mock_response = MagicMock()
+        mock_response.message.content = "OK"
+
+        # Budget is 100 GB. Relevant = 8 GB (under budget).
+        # Unrelated = 95 GB (if counted, total would exceed budget).
+        ps_data = {"models": [
+            {"name": "qwen3:8b", "size": 8 * 1024**3},
+            {"name": "llama3:70b", "size": 95 * 1024**3},
+        ]}
+
+        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+            with patch("engine.utils.ollama_preflight.ollama.ps", return_value=ps_data):
+                with caplog.at_level("INFO", logger="engine.utils.ollama_preflight"):
+                    result = preflight_check(["qwen3:8b"])
+
+        assert result.success is True
+        assert result.total_vram_gb == 8.0
+        assert "llama3:70b" in caplog.text
+        assert "not included in VRAM calculation" in caplog.text
+
     def test_one_failure_returns_failure(self):
         call_count = [0]
         mock_response = MagicMock()

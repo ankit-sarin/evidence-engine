@@ -31,13 +31,22 @@ logging.basicConfig(
 )
 logger = logging.getLogger("run5")
 
-REVIEW = "surgical_autonomy"
-SPEC_PATH = "review_specs/surgical_autonomy_v1.yaml"
+DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run extraction + audit pipeline"
+    )
+    parser.add_argument(
+        "--review",
+        default=DEFAULT_REVIEW,
+        help=f"Review name (default: {DEFAULT_REVIEW})",
+    )
+    parser.add_argument(
+        "--spec",
+        default=None,
+        help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)",
     )
     parser.add_argument(
         "--retry-failed",
@@ -83,12 +92,18 @@ def reset_failed_papers(db: ReviewDatabase) -> list[int]:
 def main(argv: list[str] | None = None):
     args = parse_args(argv)
 
+    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
+        logging.warning("No --review specified, using default 'surgical_autonomy'.")
+
+    review = args.review
+    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+
     if args.retry_failed and args.paper_ids:
         logger.error("--retry-failed and --paper-ids are mutually exclusive")
         sys.exit(1)
 
-    db = ReviewDatabase(REVIEW)
-    spec = load_review_spec(SPEC_PATH)
+    db = ReviewDatabase(review)
+    spec = load_review_spec(spec_path)
 
     # ── Retry-failed: reset EXTRACT_FAILED → FT_ELIGIBLE ──
     if args.retry_failed:
@@ -103,7 +118,7 @@ def main(argv: list[str] | None = None):
     logger.info("=" * 60)
 
     t0 = time.time()
-    extract_stats = run_extraction(db, spec, REVIEW, restart_every=args.restart_every)
+    extract_stats = run_extraction(db, spec, review, restart_every=args.restart_every)
     extract_elapsed = time.time() - t0
 
     logger.info(
@@ -120,7 +135,7 @@ def main(argv: list[str] | None = None):
     logger.info("=" * 60)
 
     t1 = time.time()
-    audit_stats = run_audit(db, REVIEW, spec)
+    audit_stats = run_audit(db, review, spec)
     audit_elapsed = time.time() - t1
 
     logger.info(
@@ -135,7 +150,7 @@ def main(argv: list[str] | None = None):
     codebook_path = Path(db.db_path).parent / "extraction_codebook.yaml"
     monitor_summary = run_post_extraction_check(
         db_path=Path(db.db_path),
-        review_name=REVIEW,
+        review_name=review,
         arm="local",
         codebook_path=codebook_path,
         extracted_count=extract_stats["extracted"],

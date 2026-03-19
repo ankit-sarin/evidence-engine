@@ -6,113 +6,31 @@ Defined in `engine/adjudication/workflow.py`.
 
 ## Workflow Stages
 
-```
-── Abstract Screening Adjudication ──
-  [1] ABSTRACT_SCREENING_COMPLETE
-  [2] ABSTRACT_DIAGNOSTIC_COMPLETE
-  [3] ABSTRACT_CATEGORIES_CONFIGURED
-  [4] ABSTRACT_QUEUE_EXPORTED
-  [5] ABSTRACT_ADJUDICATION_COMPLETE
-── PDF Acquisition ──
-  [6] PDF_ACQUISITION
-── Full-Text Screening ──
-  [7] FULL_TEXT_SCREENING_COMPLETE
-  [8] FULL_TEXT_ADJUDICATION_COMPLETE
-── Extraction Audit ──
-  [9] EXTRACTION_COMPLETE
- [10] AI_AUDIT_COMPLETE_STAGE
- [11] AUDIT_QUEUE_EXPORTED
- [12] AUDIT_REVIEW_COMPLETE
-```
+| # | Stage Name | Trigger | Type |
+|---|-----------|---------|------|
+| 1 | `ABSTRACT_SCREENING_COMPLETE` | `screener.run_verification()` auto-completes | Auto |
+| 2 | `ABSTRACT_DIAGNOSTIC_COMPLETE` | Human confirms 50-paper FP analysis | Manual |
+| 3 | `ABSTRACT_CATEGORIES_CONFIGURED` | `export_adjudication_queue()` detects `adjudication_categories.yaml` | Auto |
+| 4 | `ABSTRACT_QUEUE_EXPORTED` | `export_adjudication_queue()` succeeds | Auto |
+| 5 | `ABSTRACT_ADJUDICATION_COMPLETE` | `import_adjudication_decisions()` resolves all ABSTRACT_SCREEN_FLAGGED | Auto |
+| 6 | `PDF_ACQUISITION` | Human confirms all PDFs acquired and quality-checked | Manual |
+| 7 | `FULL_TEXT_SCREENING_COMPLETE` | `ft_screener.run_ft_verification()` auto-completes | Auto |
+| 8 | `FULL_TEXT_ADJUDICATION_COMPLETE` | `import_ft_adjudication_decisions()` resolves all FT_FLAGGED | Auto |
+| 9 | `EXTRACTION_COMPLETE` | `run_pipeline.py` auto-completes after extraction stage | Auto |
+| 10 | `AI_AUDIT_COMPLETE_STAGE` | `run_pipeline.py` auto-completes after audit stage | Auto |
+| 11 | `AUDIT_QUEUE_EXPORTED` | `export_audit_review_queue()` succeeds | Auto |
+| 12 | `AUDIT_REVIEW_COMPLETE` | `import_audit_review_decisions()` validates and imports | Auto |
 
-## Stage Details
+## Stage Groupings
 
-### Stage 1: ABSTRACT_SCREENING_COMPLETE
+| Group | Stages | Purpose |
+|-------|--------|---------|
+| `SCREENING_STAGES` | 1–5 | Abstract screening pipeline + human adjudication |
+| `ACQUISITION_STAGES` | 6 | PDF acquisition + quality check |
+| `FULL_TEXT_STAGES` | 7–8 | Full-text screening + human adjudication |
+| `EXTRACTION_STAGES` | 9–12 | Extraction, audit, human review |
 
-- **Trigger:** Auto — `screener.run_verification()` calls `complete_stage()` after verification succeeds
-- **Prerequisite:** None (first stage)
-- **What it means:** Primary dual-pass abstract screening + verification pass complete
-
-### Stage 2: ABSTRACT_DIAGNOSTIC_COMPLETE
-
-- **Trigger:** Manual — human confirms 50-paper FP analysis
-- **Prerequisite:** ABSTRACT_SCREENING_COMPLETE
-- **What it means:** Human has reviewed a diagnostic sample of flagged papers and identified FP patterns
-
-**CLI:**
-```bash
-python -m engine.adjudication.advance_stage --review surgical_autonomy \
-    --stage ABSTRACT_DIAGNOSTIC_COMPLETE \
-    --note "50-paper sample reviewed, 8 FP categories identified"
-```
-
-### Stage 3: ABSTRACT_CATEGORIES_CONFIGURED
-
-- **Trigger:** Auto — `export_adjudication_queue()` auto-sets when `CategoryConfig` loads successfully
-- **Prerequisite:** ABSTRACT_DIAGNOSTIC_COMPLETE
-- **What it means:** `adjudication_categories.yaml` exists and validates
-
-### Stage 4: ABSTRACT_QUEUE_EXPORTED
-
-- **Trigger:** Auto — `export_adjudication_queue()` auto-sets after successful Excel export
-- **Prerequisite:** ABSTRACT_CATEGORIES_CONFIGURED
-- **What it means:** Flagged papers exported to Excel for human review
-
-### Stage 5: ABSTRACT_ADJUDICATION_COMPLETE
-
-- **Trigger:** Auto — `import_adjudication_decisions()` auto-sets when zero unresolved papers remain
-- **Prerequisite:** ABSTRACT_QUEUE_EXPORTED
-- **What it means:** All flagged papers resolved (INCLUDE or EXCLUDE)
-
-### Stage 6: PDF_ACQUISITION
-
-- **Trigger:** Manual — advance after all PDFs acquired (OA check + download + manual + quality check)
-- **Prerequisite:** ABSTRACT_ADJUDICATION_COMPLETE
-- **What it means:** All included papers have full-text PDFs; quality check complete
-
-**CLI:**
-```bash
-python -m engine.adjudication.advance_stage --review surgical_autonomy \
-    --stage PDF_ACQUISITION --note "All PDFs acquired and quality-checked"
-```
-
-### Stage 7: FULL_TEXT_SCREENING_COMPLETE
-
-- **Trigger:** Auto — `ft_screener.run_ft_verification()` calls `complete_stage()` after FT verification succeeds
-- **Prerequisite:** PDF_ACQUISITION
-- **What it means:** Full-text primary screen + verification complete for all parsed papers
-
-### Stage 8: FULL_TEXT_ADJUDICATION_COMPLETE
-
-- **Trigger:** Auto — `import_ft_adjudication_decisions()` auto-sets when zero unresolved FT_FLAGGED papers remain
-- **Prerequisite:** FULL_TEXT_SCREENING_COMPLETE
-- **What it means:** All FT_FLAGGED papers resolved by human reviewer
-
-### Stage 9: EXTRACTION_COMPLETE
-
-- **Trigger:** Auto — `run_pipeline.py` checks all included papers reach `EXTRACTED` status
-- **Prerequisite:** FULL_TEXT_ADJUDICATION_COMPLETE
-- **What it means:** Two-pass extraction completed for all papers
-
-### Stage 10: AI_AUDIT_COMPLETE_STAGE
-
-- **Trigger:** Auto — `run_pipeline.py` checks audit run finishes (all papers audited)
-- **Prerequisite:** EXTRACTION_COMPLETE
-- **What it means:** AI grep + semantic verification complete for all evidence spans; LOW_YIELD papers flagged
-
-### Stage 11: AUDIT_QUEUE_EXPORTED
-
-- **Trigger:** Auto — `export_audit_review_queue()` auto-sets after successful export
-- **Prerequisite:** AI_AUDIT_COMPLETE_STAGE
-- **What it means:** Per-span rows (contested/flagged/invalid_snippet) + LOW_YIELD papers (all spans) + spot-check sample (all spans) exported to self-documenting Excel workbook
-
-### Stage 12: AUDIT_REVIEW_COMPLETE
-
-- **Trigger:** Auto — `import_audit_review_decisions()` auto-sets when all span decisions processed (two-pass validated import)
-- **Prerequisite:** AUDIT_QUEUE_EXPORTED
-- **What it means:** All evidence spans resolved by human reviewer
-
-## Workflow State Table Schema
+## Workflow State Table
 
 ```sql
 CREATE TABLE IF NOT EXISTS workflow_state (
@@ -125,64 +43,65 @@ CREATE TABLE IF NOT EXISTS workflow_state (
 );
 ```
 
-Seeded with all 12 stages as `pending` on first access.
+## State Values
 
-## Stage States
+| Value | Meaning | Display |
+|-------|---------|---------|
+| `pending` | Not yet completed | `[ ]` |
+| `complete` | Completed normally | `[✓]` |
+| `bypassed` | Force-advanced with `--force` | `[!]` |
 
-- `pending` — Not yet reached
-- `complete` — Legitimately completed (auto or manual)
-- `bypassed` — Force-overridden by operator (logged to audit trail)
+## Key Functions
+
+| Function | Signature | Purpose |
+|----------|-----------|---------|
+| `ensure_workflow_table(conn)` | | Creates table + seeds all 12 stages (only catches "no such table" errors; all other DB errors re-raise) |
+| `get_workflow_status(conn)` | → list[dict] | Returns all stages with status/completed_at/metadata |
+| `complete_stage(conn, stage_name, metadata)` | | Marks stage as `complete` with timestamp |
+| `bypass_stage(conn, stage_name, metadata)` | | Force override, marks `bypassed` with audit warning |
+| `is_stage_done(conn, stage_name)` | → bool | True if `complete` or `bypassed` |
+| `reset_stage(conn, stage_name)` | | Reverts to `pending` |
+| `get_current_blocker(conn)` | → dict or None | Returns first incomplete stage + next_step guidance |
+| `can_advance_to(conn, stage_name)` | → bool | Validates all prerequisites are done |
+| `advance_stage(conn, stage_name, note, *, force)` | → dict | Main advancement with gating (force=True bypasses) |
+| `format_workflow_status(conn, review_name)` | → str | Human-readable multi-line status display |
 
 ## The `--force` Flag
 
+Used via `engine/adjudication/advance_stage.py` CLI:
+
 ```bash
-python -m engine.adjudication.advance_stage --review surgical_autonomy \
-    --stage ABSTRACT_DIAGNOSTIC_COMPLETE --note "skipping" --force
+python -m engine.adjudication.advance_stage \
+  --review surgical_autonomy \
+  --stage PDF_ACQUISITION \
+  --note "All PDFs confirmed acquired" \
+  --force
 ```
 
-When `--force` is used:
-1. Prerequisite checks are skipped
-2. Stage is marked `bypassed` (not `complete`)
-3. A warning is logged: `"AUDIT: Stage X bypassed by operator at <timestamp>. Note: <note>"`
-4. `bypassed` counts as "done" for downstream prerequisite checks
-5. Display shows `[!]` instead of `[✓]` in workflow status
+Behavior:
+1. Skips prerequisite checks (`can_advance_to()` not called)
+2. Marks stage as `bypassed` (not `complete`)
+3. Logs warning to audit trail in metadata
+4. Display shows `[!]` instead of `[✓]`
 
-## CLI: Workflow Status
+## Gate Functions
+
+Each adjudication module provides a gate-check function that returns the count of unresolved items:
+
+| Gate | Function | Counts |
+|------|----------|--------|
+| Abstract adjudication | `check_adjudication_gate(db)` | Unresolved ABSTRACT_SCREEN_FLAGGED papers |
+| FT adjudication | `check_ft_adjudication_gate(db)` | Unresolved FT_FLAGGED papers |
+| Audit review | `check_audit_review_gate(db)` | AI_AUDIT_COMPLETE papers with contested/flagged/invalid_snippet spans |
+
+When gate count reaches 0, the corresponding workflow stage auto-completes on import. Auto-advance is blocked if unprocessed papers remain — the stage stays pending and a WARNING is logged with the remaining count.
+
+## CLI Status Display
 
 ```bash
 python -m engine.adjudication.advance_stage --review surgical_autonomy --status
 ```
 
-Output example:
-```
-Review Workflow — surgical_autonomy
-  ── Abstract Screening Adjudication ──
-  [✓] ABSTRACT_SCREENING_COMPLETE (2025-09-15 03:42)
-  [✓] ABSTRACT_DIAGNOSTIC_COMPLETE (2025-09-16 18:30)
-  [✓] ABSTRACT_CATEGORIES_CONFIGURED (2025-09-16 18:35)
-  [✓] ABSTRACT_QUEUE_EXPORTED (2025-09-16 18:35)
-  [✓] ABSTRACT_ADJUDICATION_COMPLETE (2025-09-17 22:10)
-  ── PDF Acquisition ──
-  [✓] PDF_ACQUISITION (2025-09-18 04:00)
-  ── Full-Text Screening ──
-  [✓] FULL_TEXT_SCREENING_COMPLETE (2025-09-20 11:30)
-  [ ] FULL_TEXT_ADJUDICATION_COMPLETE — Import FT adjudication decisions...
-  ── Extraction Audit ──
-  [ ] EXTRACTION_COMPLETE
-  [ ] AI_AUDIT_COMPLETE_STAGE
-  [ ] AUDIT_QUEUE_EXPORTED
-  [ ] AUDIT_REVIEW_COMPLETE
-```
+Outputs a formatted list of all 12 stages with their current state, completion timestamps, and next-step guidance for the first incomplete stage.
 
-## Grouping Constants
-
-```python
-SCREENING_STAGES   = WORKFLOW_STAGES[:5]   # stages 1-5
-ACQUISITION_STAGES = WORKFLOW_STAGES[5:6]  # stage 6
-FULL_TEXT_STAGES   = WORKFLOW_STAGES[6:8]  # stages 7-8
-EXTRACTION_STAGES  = WORKFLOW_STAGES[8:]   # stages 9-12
-```
-
----
-
-*Generated 2026-03-17 from commit d0bf07c*
+*Generated 2026-03-19 from commit e124b20*

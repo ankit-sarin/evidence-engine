@@ -4,7 +4,7 @@
 
 Defined in `engine/core/database.py` as the `STATUSES` tuple:
 
-```python
+```
 STATUSES = (
     "INGESTED",
     "ABSTRACT_SCREENED_IN",
@@ -24,202 +24,193 @@ STATUSES = (
 )
 ```
 
-## Status Descriptions
+**Total:** 15 statuses, 4 terminal.
 
-| Status | Description | Set By |
-|--------|-------------|--------|
-| `INGESTED` | Paper added to DB from search results | `ReviewDatabase.add_papers()` |
-| `ABSTRACT_SCREENED_IN` | Dual-pass abstract screening: both passes include, or adjudicator includes | `screener.run_screening()`, `screening_adjudicator` |
-| `ABSTRACT_SCREENED_OUT` | Dual-pass abstract screening: both passes exclude, or adjudicator excludes | `screener.run_screening()`, `screening_adjudicator` |
-| `ABSTRACT_SCREEN_FLAGGED` | Abstract screening passes disagree, or verifier excludes a primary include | `screener.run_screening()`, `screener.run_verification()` |
-| `PDF_ACQUIRED` | Full-text PDF obtained and registered in `full_text_assets` | `advance_to_pdf_acquired.py` |
-| `PDF_EXCLUDED` | PDF excluded at quality check (non-English, non-manuscript, inaccessible) — terminal | `pdf_quality_import.import_dispositions()` |
-| `PARSED` | PDF converted to Markdown (Docling, PyMuPDF, or Qwen2.5-VL) | `pdf_parser.parse_pdf()` |
-| `FT_ELIGIBLE` | Full-text screening confirms eligibility for extraction | `ft_screener.run_ft_screening()` |
-| `FT_SCREENED_OUT` | Full-text screening excludes paper (with reason code) | `ft_screener.run_ft_screening()`, `ft_screening_adjudicator` |
-| `FT_FLAGGED` | Full-text primary/verifier disagree, needs human review | `ft_screener.run_ft_verification()` |
-| `EXTRACT_FAILED` | Extraction threw an exception (timeout, parse error) | `extractor.run_extraction()` |
-| `EXTRACTED` | Two-pass extraction completed, evidence spans stored | `extractor.run_extraction()` |
-| `AI_AUDIT_COMPLETE` | All evidence spans audited by AI (no pending remain) | `auditor.run_audit()` |
-| `HUMAN_AUDIT_COMPLETE` | Human reviewer resolved all contested/flagged spans | `audit_adjudicator`, `human_review` |
-| `REJECTED` | Paper removed from corpus by human reviewer (with reason) | `ReviewDatabase.reject_paper()` |
-
-## Allowed Transitions
+## State Transition Map
 
 Defined in `engine/core/database.py` as `ALLOWED_TRANSITIONS`:
 
 ```
-INGESTED ──────────> ABSTRACT_SCREENED_IN
-                  \─> ABSTRACT_SCREENED_OUT
-                  \─> ABSTRACT_SCREEN_FLAGGED
+INGESTED
+├──▶ ABSTRACT_SCREENED_IN
+├──▶ ABSTRACT_SCREENED_OUT          ← terminal
+└──▶ ABSTRACT_SCREEN_FLAGGED
 
-ABSTRACT_SCREENED_IN ───> PDF_ACQUIRED
-                       \─> ABSTRACT_SCREEN_FLAGGED
+ABSTRACT_SCREENED_IN
+├──▶ PDF_ACQUIRED
+└──▶ ABSTRACT_SCREEN_FLAGGED
 
-ABSTRACT_SCREEN_FLAGGED ──> ABSTRACT_SCREENED_IN
-                         \─> ABSTRACT_SCREENED_OUT
+ABSTRACT_SCREEN_FLAGGED
+├──▶ ABSTRACT_SCREENED_IN           ← after adjudication (INCLUDE)
+└──▶ ABSTRACT_SCREENED_OUT          ← after adjudication (EXCLUDE)
 
-PDF_ACQUIRED ─────> PARSED
-                 \─> PDF_EXCLUDED
+PDF_ACQUIRED
+├──▶ PARSED
+└──▶ PDF_EXCLUDED                   ← terminal (quality check)
 
-PDF_EXCLUDED ─────> (terminal, no transitions)
+PDF_EXCLUDED                        ← terminal, no outgoing transitions
 
-PARSED ───────────> FT_ELIGIBLE
-                 \─> FT_SCREENED_OUT
-                 \─> FT_FLAGGED
-                 \─> EXTRACTED          (skip path)
-                 \─> EXTRACT_FAILED     (skip path)
+PARSED
+├──▶ FT_ELIGIBLE
+├──▶ FT_SCREENED_OUT                ← terminal
+├──▶ FT_FLAGGED
+├──▶ EXTRACTED                      ← skip path (reviews without FT screening)
+└──▶ EXTRACT_FAILED                 ← skip path
 
-FT_ELIGIBLE ─────> EXTRACTED
-                \─> EXTRACT_FAILED
-                \─> FT_FLAGGED
+FT_ELIGIBLE
+├──▶ EXTRACTED
+├──▶ EXTRACT_FAILED
+└──▶ FT_FLAGGED
 
-FT_FLAGGED ──────> FT_ELIGIBLE
-                \─> FT_SCREENED_OUT
+FT_FLAGGED
+├──▶ FT_ELIGIBLE                    ← after adjudication
+└──▶ FT_SCREENED_OUT                ← terminal
 
-EXTRACT_FAILED ──> PARSED              (retry via --retry-failed)
-                \─> FT_ELIGIBLE         (retry)
-                \─> EXTRACTED           (retry succeeds)
+EXTRACT_FAILED
+├──▶ PARSED                         ← retry path
+├──▶ FT_ELIGIBLE                    ← retry path
+└──▶ EXTRACTED                      ← retry success
 
-EXTRACTED ────────> AI_AUDIT_COMPLETE
+EXTRACTED
+└──▶ AI_AUDIT_COMPLETE
 
-AI_AUDIT_COMPLETE > HUMAN_AUDIT_COMPLETE
-                 \─> REJECTED
+AI_AUDIT_COMPLETE
+├──▶ HUMAN_AUDIT_COMPLETE
+└──▶ REJECTED                       ← terminal
 
-HUMAN_AUDIT_COMPLETE ─> REJECTED
+HUMAN_AUDIT_COMPLETE
+└──▶ REJECTED                       ← terminal
 
-ABSTRACT_SCREENED_OUT ─> (terminal, no transitions)
-FT_SCREENED_OUT ──────> (terminal, no transitions)
-REJECTED ─────────────> (terminal, no transitions)
+ABSTRACT_SCREENED_OUT               ← terminal
+FT_SCREENED_OUT                     ← terminal
+REJECTED                            ← terminal
 ```
 
 ## Terminal States
 
-| State | What makes it terminal |
-|-------|----------------------|
-| `ABSTRACT_SCREENED_OUT` | Paper excluded during abstract screening. No forward transitions. |
-| `PDF_EXCLUDED` | Paper excluded at PDF quality check (non-English, non-manuscript, inaccessible). Reason in `papers.pdf_exclusion_reason`. |
-| `FT_SCREENED_OUT` | Paper excluded during full-text screening (with reason code). |
-| `REJECTED` | Paper removed from corpus by human reviewer. Reason in `papers.rejected_reason`. |
+| Status | Meaning |
+|--------|---------|
+| `ABSTRACT_SCREENED_OUT` | Excluded at abstract screening (dual-model agreement or adjudication) |
+| `PDF_EXCLUDED` | Excluded at PDF quality check (non-English, not manuscript, inaccessible, other) |
+| `FT_SCREENED_OUT` | Excluded at full-text screening (dual-model agreement or adjudication) |
+| `REJECTED` | Excluded at human audit review |
 
-## Flagged States and Resolution Paths
+**Data retention:** All paper data is retained permanently regardless of terminal status. SCREENED_OUT is a label, not a deletion.
 
-| Flagged State | Resolution Path | Resolved By |
-|---------------|----------------|-------------|
-| `ABSTRACT_SCREEN_FLAGGED` | → `ABSTRACT_SCREENED_IN` or `ABSTRACT_SCREENED_OUT` | `screening_adjudicator.import_adjudication_decisions()` |
-| `FT_FLAGGED` | → `FT_ELIGIBLE` or `FT_SCREENED_OUT` | `ft_screening_adjudicator.import_ft_adjudication_decisions()` |
+**Transaction safety:** `update_status()` uses `BEGIN IMMEDIATE` to acquire a write lock before reading the current status, preventing TOCTOU races in concurrent access.
 
-## Data Retention Policy
+## Status Gate Ordering
 
-All fetched paper data (metadata, abstract, screening traces, verification traces) is retained permanently regardless of screening outcome. `ABSTRACT_SCREENED_OUT` and `FT_SCREENED_OUT` are labels, not deletions. The database is the single source of truth for all papers ever evaluated. This ensures full PRISMA reporting and audit trail.
+Used by `min_status_gate()` to filter exports by minimum quality level:
 
-## Status Order (for min_status_gate)
+| Order | Status | Use Case |
+|-------|--------|----------|
+| 0 | PARSED | Raw parsed papers |
+| 1 | ABSTRACT_SCREENED_OUT | All screened |
+| 2 | EXTRACTED | Raw extraction data |
+| 3 | AI_AUDIT_COMPLETE | AI-verified extractions |
+| 4 | HUMAN_AUDIT_COMPLETE | Human-verified extractions |
 
-Used by exporters to filter papers by minimum completion level:
-
-```python
-_STATUS_ORDER = {
-    "PARSED": 0,
-    "ABSTRACT_SCREENED_OUT": 1,
-    "EXTRACTED": 2,
-    "AI_AUDIT_COMPLETE": 3,
-    "HUMAN_AUDIT_COMPLETE": 4,
-}
-```
-
-`ReviewDatabase.min_status_gate(paper_id, min_status)` returns `True` if the paper's current status meets or exceeds the given level.
-
-## EXTRACT_FAILED Retry Path
-
-Papers at `EXTRACT_FAILED` can be retried via `--retry-failed`:
-- `EXTRACT_FAILED` → `FT_ELIGIBLE` (reset) → re-attempt extraction
-- `EXTRACT_FAILED` → `PARSED` (reset) → re-attempt extraction
-- On success: `EXTRACT_FAILED` → `EXTRACTED` (direct)
-
----
+`min_status_gate()` logs WARNING for missing paper IDs (defensive guard against stale references).
 
 ## Evidence Span Audit States
 
-Each evidence span (in `evidence_spans` table) has an `audit_status`:
+Defined in `evidence_spans.audit_status` CHECK constraint:
 
 ```
-pending ──────────> verified        (grep pass + semantic pass)
-                \─> contested       (grep fail + semantic pass)
-                \─> flagged         (semantic fail)
-                \─> invalid_snippet (ellipsis detected, no LLM call)
+pending → verified        grep pass + semantic pass (or absence value auto-verify)
+pending → contested       grep fail + semantic pass (snippet likely paraphrased)
+pending → flagged         semantic fail (value not supported by source)
+pending → invalid_snippet ellipsis bridging detected (INVALID_SNIPPET_RE match)
 ```
 
-| State | Meaning | Determined By |
-|-------|---------|---------------|
-| `pending` | Not yet audited | Default on creation |
-| `verified` | Source snippet found in paper AND value semantically correct | `auditor.audit_span()` — grep pass + semantic pass |
-| `contested` | Source snippet NOT found verbatim, but value semantically supported | `auditor.audit_span()` — grep fail + semantic pass |
-| `flagged` | Value not supported by evidence | `auditor.audit_span()` — semantic fail |
-| `invalid_snippet` | Snippet contains ellipsis bridging — model abbreviated the quote | `auditor.audit_span()` — regex match on `INVALID_SNIPPET_RE`, no LLM call |
+**Tier-aware routing** (`engine/agents/auditor.py`):
+- Tiers 1–3: grep verify first, then semantic verify
+- Tier 4 (judgment fields): semantic-only (skip grep, set `SEMANTIC_ONLY_TIERS = {4}`)
 
-### Audit Logic Details
-
-1. **Absence value auto-verify**: Fields with absence sentinels (`NOT_FOUND`, `NR`, `Not discussed`, `No comparison reported`, `Not assessable`) are automatically verified without LLM calls.
-2. **Invalid snippet check** (regex): If `source_snippet` matches `INVALID_SNIPPET_RE` (3+ dots, `[...]`, Unicode ellipsis), status = `invalid_snippet`. No further checks.
-3. **Tier 4 exception**: Judgment fields (tier 4) skip grep entirely, go straight to semantic verification.
-4. **Grep verify**: Normalized substring match OR sliding-window fuzzy match (SequenceMatcher > 0.85). Text normalization includes: lowercase, collapse whitespace, fix glued punctuation (e.g., `Table.I` → `Table I`), straighten smart quotes.
-5. **Semantic verify**: gemma3:27b checks if extracted value is supported by the source snippet. Categorical fields use a specialized prompt (category label need not appear verbatim in text).
-
-### LOW_YIELD Detection (Post-Audit)
-
-After all spans are audited, `check_low_yield()` counts non-null, non-absence extracted fields. Papers with fewer than `low_yield_threshold` (configurable in Review Spec, default 4) populated fields are flagged with `low_yield=1` on the extraction record. LOW_YIELD papers are prioritized in the audit review queue — all spans exported for PI review (not just problem spans).
-
-### Human Resolution of Audit States
-
-After AI audit, human reviewers resolve spans via per-span decisions in the audit review workbook:
-
-- **ACCEPT** → span `audit_status` → `verified`, `auditor_model` = `human_review`
-- **CORRECT** → span value overwritten with `corrected_value`, original preserved in `audit_adjudication` table, status → `verified`
-- **REJECT** → span marked verified, recorded in `audit_adjudication` table with `human_decision='reject_paper'`
-
-Export scope: one row per problematic span (contested/flagged/invalid_snippet). LOW_YIELD papers export all spans. Spot-check papers (10% of all-verified) export all spans.
-
-**Two-pass import validation**: First pass scans all rows for blank decisions, invalid values, or CORRECT without `corrected_value`. Rejects entire import on any error — zero DB changes on failure. Second pass executes DB updates.
-
-Legacy per-paper format (`accept_as_is`/`reject_paper` columns) auto-detected and supported via `_import_legacy_format()`.
-
-When all spans for a paper are resolved (no contested/flagged/invalid_snippet remaining), paper transitions to `HUMAN_AUDIT_COMPLETE`.
-
----
+**Absence values** auto-verify without grep or semantic check:
+`{"NOT_FOUND", "Not discussed", "NR", "No comparison reported", "Not assessable"}`
 
 ## Administrative Overrides
 
-These methods intentionally bypass the state machine for maintenance operations:
+### `admin_reset_status(paper_id, target_status, reason)`
 
-### `ReviewDatabase.reset_for_reaudit()`
-- Resets all evidence spans: `audit_status` → `pending`, clears auditor fields
-- Resets papers: `AI_AUDIT_COMPLETE` / `HUMAN_AUDIT_COMPLETE` → `EXTRACTED`
-- Use case: auditor logic changes, prompt refinements
-- Atomic transaction
+Bypasses state machine. Records full audit trail in `admin_resets` table: paper_id, from_status, to_status, reason, reset_at (UTC timestamp). Used by re-screening scripts to force papers back to earlier states (e.g., ABSTRACT_SCREENED_IN → ABSTRACT_SCREENED_OUT).
 
-### `ReviewDatabase.reset_for_reextraction()`
-- Four-phase atomic transaction:
-  1. Collapse audit states → `EXTRACTED`
-  2. DELETE all evidence spans for affected papers
-  3. DELETE all extraction records for affected papers
-  4. `EXTRACTED` → `PARSED`
-- Use case: extractor logic changes, schema updates
-- `ABSTRACT_SCREENED_OUT` and `REJECTED` papers unaffected
+### `reset_for_reaudit()`
 
-### `ReviewDatabase.reject_paper(paper_id, reason)`
-- Validates transition is allowed from current status
-- Atomic transaction (BEGIN/COMMIT/ROLLBACK)
-- Records rejection reason in `papers.rejected_reason`
+Atomic reset of all audit state:
+1. All evidence spans → `audit_status = 'pending'`
+2. Papers at AI_AUDIT_COMPLETE or HUMAN_AUDIT_COMPLETE → EXTRACTED
 
-### `engine/utils/extraction_cleanup.cleanup_stale_extractions()`
-- Remove extractions from a previous schema version (by `extraction_schema_hash`)
-- Delete associated evidence spans (cascade)
-- Reset affected papers to `PARSED` — only `EXTRACTED` and `AI_AUDIT_COMPLETE` papers; `HUMAN_AUDIT_COMPLETE` papers are protected
-- Dry-run default; requires `--confirm` to execute
-- Dedup mode (no schema hash): keeps only the latest extraction per paper
+Returns `{papers_reset, spans_reset}`.
 
-**CLI:** `python -m engine.utils.extraction_cleanup --review NAME [--spec YAML] [--confirm]`
+### `reset_for_reextraction()`
 
----
+Atomic four-phase reset:
+1. Audited papers → EXTRACTED (collapse status)
+2. Delete all evidence spans
+3. Delete all extractions
+4. EXTRACTED → PARSED (ready for re-extraction)
 
-*Generated 2026-03-17 from commit d0bf07c*
+Returns `{papers_reset, spans_deleted, extractions_deleted}`.
+
+### `cleanup_stale_extractions()` (`engine/utils/extraction_cleanup.py`)
+
+Schema-hash-based stale data removal:
+- Deletes extractions where `extraction_schema_hash != current_hash`
+- Cascade deletes associated evidence spans
+- Resets EXTRACTED/AI_AUDIT_COMPLETE papers → PARSED
+- **Protected:** HUMAN_AUDIT_COMPLETE papers are never reset
+- **Dry-run default:** Requires `--confirm` flag for execution
+- Auto-backs up DB before destructive operations
+
+### `reject_paper(paper_id, reason)`
+
+Atomic: sets status to REJECTED with `rejected_reason` recorded in papers table.
+
+## Database Tables
+
+### Core Tables
+
+| Table | Key Columns | Purpose |
+|-------|-------------|---------|
+| `papers` | id, pmid, doi, title, abstract, authors, journal, year, source, status, rejected_reason, ee_identifier, oa_status, pdf_url, download_status, pdf_local_path, pdf_exclusion_reason, pdf_exclusion_detail, pdf_quality_check_status, pdf_ai_language, pdf_ai_content_type, pdf_ai_confidence, pdf_content_hash | Paper metadata + lifecycle state |
+| `abstract_screening_decisions` | paper_id, pass_number (1 or 2), decision, rationale, model | Dual-pass abstract screening trace |
+| `abstract_verification_decisions` | paper_id, decision, rationale, model | Verifier decisions |
+| `ft_screening_decisions` | paper_id, model, decision, reason_code, rationale, confidence | FT primary decisions |
+| `ft_verification_decisions` | paper_id, model, decision, rationale, confidence | FT verifier decisions |
+| `full_text_assets` | paper_id, pdf_path, pdf_hash, parsed_text_path, parsed_text_version, parser_used | PDF → Markdown tracking |
+| `extractions` | paper_id, extraction_schema_hash, extracted_data, reasoning_trace, model, model_digest, auditor_model_digest, low_yield | Extraction results + provenance |
+| `evidence_spans` | extraction_id, field_name, value, source_snippet, confidence, audit_status, auditor_model, audit_rationale | Per-field evidence with audit trail |
+| `review_runs` | review_spec_hash, screening_hash, extraction_hash, status, log | Pipeline run tracking |
+
+### Adjudication Tables (`engine/adjudication/schema.py`)
+
+| Table | Key Columns | Purpose |
+|-------|-------------|---------|
+| `abstract_screening_adjudication` | paper_id, adjudication_decision, adjudication_source, adjudication_reason, adjudication_category | Human abstract screening decisions |
+| `ft_screening_adjudication` | paper_id, reason_code, adjudication_decision, adjudication_reason | Human FT screening decisions |
+| `audit_adjudication` | span_id, paper_id, field_name, original_value, human_decision, override_value, reviewer_notes | Per-span human audit decisions |
+| `workflow_state` | stage_name, status (pending/complete/bypassed), completed_at, metadata | 12-stage workflow enforcement |
+
+### Cloud Tables (`engine/cloud/schema.py`)
+
+| Table | Key Columns | Purpose |
+|-------|-------------|---------|
+| `cloud_extractions` | paper_id, arm, model_string, extracted_data, reasoning_trace, cost_usd, extraction_schema_hash | Cloud extraction results |
+| `cloud_evidence_spans` | cloud_extraction_id, field_name, value, source_snippet, confidence, tier, notes | Cloud per-field evidence |
+
+### Administrative Tables
+
+| Table | Key Columns | Purpose |
+|-------|-------------|---------|
+| `admin_resets` | paper_id, from_status, to_status, reason, reset_at | Audit trail for `admin_reset_status()` bypasses |
+
+### Analysis Tables
+
+| Table | Key Columns | Purpose |
+|-------|-------------|---------|
+| `human_extractions` | paper_id (EE-NNN format), extractor_id (A/B/C/D), field_name, value, source_quote | Human extractor workbook values |
+
+*Generated 2026-03-19 from commit e124b20*

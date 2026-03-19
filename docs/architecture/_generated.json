@@ -1,9 +1,10 @@
 {
-  "generated_at": "2026-03-17T22:00:00Z",
-  "git_commit": "d0bf07c",
-  "total_source_files": 146,
-  "total_lines_of_code": 37443,
-  "offline_tests_passing": 706,
+  "generated_at": "2026-03-19T00:00:00Z",
+  "git_commit": "e124b20",
+  "total_source_files": 145,
+  "total_lines_of_code": 40825,
+  "total_tests_collected": 934,
+  "offline_tests_collected": 920,
   "files_scanned": [
     "analysis/__init__.py",
     "analysis/paper1/__init__.py",
@@ -86,6 +87,7 @@
     "engine/validators/extraction_validator.py",
     "scripts/advance_to_pdf_acquired.py",
     "scripts/backfill_authors.py",
+    "scripts/backfill_cloud_spans.py",
     "scripts/eval_auditor_models.py",
     "scripts/ft_screening_smoke_test.py",
     "scripts/monitor_extraction.py",

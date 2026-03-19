@@ -24,17 +24,16 @@ Review Spec (YAML)
  └──────────┘    └───────────────┘    └──────────────┘    └──────────────┘
                                                                   ▲
  ┌──────────────────┐    ┌───────────────┐                        │
- │ CONCORDANCE      │◀───│ CLOUD EXTRACT │                        │
- │ ANALYSIS         │    │ o4-mini +     │                 ┌──────┴───────┐
- │ (multi-arm)      │    │ Sonnet 4.6    │                 │ FT SCREEN    │
- └──────────────────┘    └───────────────┘                 │ + ADJUDICATE │
-                                                           │ qwen3:32b +  │
- ┌──────────────────┐                                      │ gemma3:27b   │
- │ DISTRIBUTION     │                                      └──────────────┘
- │ MONITOR          │                                             ▲
- │ (quality gate)   │                                      ┌──────┴───────┐
- └──────────────────┘                                      │ PARSE        │
-                                                           │ Docling →    │
+ │ CONCORDANCE      │◀───│ CLOUD EXTRACT │                 ┌──────┴───────┐
+ │ ANALYSIS         │    │ o4-mini +     │                 │ FT SCREEN    │
+ │ (multi-arm)      │    │ Sonnet 4.6    │                 │ + ADJUDICATE │
+ └──────────────────┘    └───────────────┘                 │ qwen3:32b +  │
+                                                           │ gemma3:27b   │
+ ┌──────────────────┐                                      └──────────────┘
+ │ DISTRIBUTION     │                                             ▲
+ │ MONITOR          │                                      ┌──────┴───────┐
+ │ (quality gate)   │                                      │ PARSE        │
+ └──────────────────┘                                      │ Docling →    │
                                                            │ PyMuPDF →    │
                                                            │ Qwen2.5-VL   │
                                                            └──────────────┘
@@ -65,19 +64,19 @@ Review Spec (YAML)
 | Data models | Pydantic v2 (ReviewSpec, ExtractionResult, EvidenceSpan) |
 | Export | openpyxl (Excel), python-docx (DOCX), csv, HTML templates |
 | Background jobs | tmux (detached sessions with logging) |
-| Testing | pytest (706 offline tests, 10 network/integration deselected by default) |
+| Testing | pytest (934 total, 920 offline / 14 network+ollama+integration) |
 | Version control | Git + GitHub via SSH |
 
 ## Codebase Statistics
 
 | Metric | Value |
 |--------|-------|
-| Source files | 146 |
-| Lines of code | 37,443 |
-| Offline tests passing | 706 |
-| Engine modules | 78 `.py` files under `engine/` |
+| Source files | 145 |
+| Lines of code | 40,825 |
+| Total tests | 934 (920 offline, 14 deselected by default) |
+| Engine modules | 74 `.py` files under `engine/` |
 | Test files | 38 under `tests/` |
-| Scripts | 27 under `scripts/` |
-| Analysis modules | 5 under `analysis/` |
+| Scripts | 28 `.py` + 2 `.sh` under `scripts/` |
+| Analysis modules | 11 under `analysis/` |
 
-*Generated 2026-03-17 from commit d0bf07c*
+*Generated 2026-03-19 from commit e124b20*

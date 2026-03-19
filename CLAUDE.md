@@ -17,7 +17,7 @@ Local systematic review engine on DGX Spark. Accepts Review Specs (YAML), runs s
 ```
 evidence-engine/
 ├── CLAUDE.md                   # Static architecture (this file)
-├── primer.md                   # Working state (maintained by Claude Code)
+├── primer.md                   # Working state (maintained by Claude Code, gitignored)
 ├── pyproject.toml              # pytest config (markers: network, ollama, integration)
 ├── requirements.txt
 ├── review_specs/               # Review spec YAML files
@@ -25,14 +25,17 @@ evidence-engine/
 │   ├── core/                   # Pydantic models, YAML loader, SQLite state machine
 │   ├── search/                 # PubMed, OpenAlex, DOI/PMID/fuzzy dedup
 │   ├── agents/                 # Screener, FT screener, extractor, auditor
-│   ├── cloud/                  # Cloud extraction arms (OpenAI, Anthropic)
+│   ├── cloud/                  # Cloud extraction arms (OpenAI, Anthropic) + schema
+│   ├── analysis/               # Concordance analysis (scoring, metrics, normalization, reports)
 │   ├── parsers/                # Three-tier PDF parser (Docling → PyMuPDF → Qwen2.5-VL)
 │   ├── acquisition/            # Unpaywall, download cascade, PDF quality check, verify
 │   ├── migrations/             # DB schema migrations
 │   ├── adjudication/           # Workflow stages, screening/FT/audit adjudication
 │   ├── utils/                  # tmux background, extraction cleanup, ollama preflight
-│   ├── validators/             # Post-extraction field validation
+│   ├── validators/             # Extraction validator + distribution collapse monitor
 │   └── exporters/              # PRISMA, evidence tables, DOCX, methods, traces
+├── analysis/
+│   └── paper1/                 # Human workbook import, consensus derivation, adjudication
 ├── scripts/                    # Pipeline runners, batch scripts, monitors
 ├── tests/                      # 440+ offline + 10 network/ollama tests
 └── data/                       # gitignored — per-review databases, PDFs, exports
@@ -56,6 +59,13 @@ evidence-engine/
 - ChromaDB: Vector embeddings per review (disposable, rebuildable)
 - File system: Immutable PDF + parsed Markdown store
 
+### Database Tables (beyond core papers/extractions/evidence_spans)
+| Table | Purpose |
+|-------|---------|
+| cloud_extractions | Parallel to `extractions` — tracks arm, model, cost, reasoning traces |
+| cloud_evidence_spans | Parallel to `evidence_spans` — cloud-arm field values |
+| human_extractions | Human extractor workbook values (paper_id as "EE-NNN", extractor_id A/B/C/D) |
+
 ## Paper Lifecycle
 INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAGGED → PDF_ACQUIRED → PDF_EXCLUDED (terminal) or PARSED → FT_ELIGIBLE / FT_SCREENED_OUT / FT_FLAGGED → EXTRACTED / EXTRACT_FAILED → AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE → REJECTED
 (PARSED can skip FT screening directly to EXTRACTED for reviews without FT screening)
@@ -69,9 +79,12 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 4. **PARSE** — Docling (digital) → PyMuPDF fallback (Docling errors) → Qwen2.5-VL (scanned) → Markdown
 5. **FT SCREEN** — Dual-model full-text: primary (qwen3.5:27b) → verifier (gemma3:27b, 5-test FP catcher). Specialty scope filtering. Text truncation to 32K chars.
 6. **EXTRACT** — Pass 1: DeepSeek-R1 reasoning → Pass 2: structured JSON
-7. **AUDIT** — Grep verify + semantic verify via gemma3:27b + LOW_YIELD detection (configurable threshold)
-8. **ADJUDICATION GATE** — 12-stage workflow: 5 abstract + 1 acquisition + 2 FT + 4 extraction audit (human review required)
-9. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section (min_status filtering)
+7. **CLOUD EXTRACT** — Parallel concordance arms: OpenAI o4-mini + Anthropic Sonnet 4.6. Same codebook prompt, independent parsing
+8. **DISTRIBUTION CHECK** — Post-extraction quality gate: detect categorical field collapse across any arm
+9. **AUDIT** — Grep verify + semantic verify via gemma3:27b + LOW_YIELD detection (configurable threshold)
+10. **CONCORDANCE** — Multi-arm agreement analysis: scoring, normalization, kappa + percent agreement with 95% CI
+11. **ADJUDICATION GATE** — 12-stage workflow: 5 abstract + 1 acquisition + 2 FT + 4 extraction audit (human review required)
+12. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section (min_status filtering)
 
 ## Inference
 - Local models via Ollama at localhost:11434. Temperature 0 for all agents.
@@ -102,6 +115,27 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - Extraction cleanup: schema-hash-based stale data removal. Dry-run default. Pre-flight warning in extractor
 - Ollama pre-flight: model health check + VRAM budget validation. Wired into FT screener, extractor, auditor
 - FT screening: dual-model cross-family, specialty scope, /no_think, 32K truncation, checkpoint/resume, 7 reason codes. Status-aware for papers at any lifecycle stage
+
+## Cloud Extraction Architecture
+- `CloudExtractorBase` (engine/cloud/base.py): shared logic — pending paper query, codebook-driven prompt building, response JSON parsing (8+ alternate keys + raw content recovery), progress tracking, cost calculation, distribution monitor integration
+- `OpenAIExtractor`: o4-mini-2025-04-16, reasoning_effort=high. Per-paper cost tracking (input/output/reasoning tokens)
+- `AnthropicExtractor`: claude-sonnet-4-6, extended thinking (10K token budget). Streaming response with thinking block capture
+- `store_extraction()` rejects 0-span results with ValueError — prevents silent data loss
+- Cloud schema (engine/cloud/schema.py): creates cloud_extractions + cloud_evidence_spans tables
+- Cost rates: OpenAI $1.10/$4.40 per 1M tokens (in/out); Anthropic $3.00/$15.00 per 1M tokens (in/out)
+
+## Concordance Analysis Architecture
+- Multi-arm alignment: load extractions from local, openai_o4_mini_high, anthropic_sonnet_4_6, human_A/B/C/D arms → align by paper_id
+- Field-pair scoring (engine/analysis/scoring.py): MATCH/MISMATCH/AMBIGUOUS with fuzzy text matching for free-text fields
+- Normalization (engine/analysis/normalize.py): canonical categorical prefix matching, multi-value fields, numeric handling
+- Metrics (engine/analysis/metrics.py): Cohen's kappa, percent agreement, field summary statistics with 95% CI
+- Reports (engine/analysis/report.py): terminal, CSV, and HTML concordance report generators
+- Distribution collapse detection (engine/validators/distribution_monitor.py): post-extraction quality gate, flags COLLAPSED/LOW_VARIANCE categorical fields, minimum 10 papers, runs automatically at end of all extraction pipelines
+
+## Paper 1 Analysis (analysis/paper1/)
+- Human workbook import (human_import.py): parse v2 extraction workbooks (.xlsx), validate against codebook, import to human_extractions table
+- Consensus derivation (consensus.py): identify ~30 shared papers across human extractors, derive majority-vote gold standard
+- Adjudication (adjudication.py): export AMBIGUOUS concordance pairs for human review (HTML/JSON), import decisions
 
 ## Human-in-the-Loop Review Standard
 
@@ -154,6 +188,17 @@ python -m engine.utils.ollama_preflight --models qwen3.5:27b gemma3:27b deepseek
 # Cloud extraction
 PYTHONPATH=. python scripts/run_cloud_extraction.py --arm both --max-cost 25.00
 PYTHONPATH=. python scripts/run_cloud_extraction.py --progress
+
+# Distribution monitor
+python -m engine.validators.distribution_monitor --review surgical_autonomy --arm local
+python -m engine.validators.distribution_monitor --review surgical_autonomy --arm anthropic_sonnet_4_6
+
+# Cloud span backfill (for extractions missing span rows)
+PYTHONPATH=. python scripts/backfill_cloud_spans.py --review surgical_autonomy [--dry-run]
+
+# q8 KV cache validation
+PYTHONPATH=. python scripts/q8_validation.py
+PYTHONPATH=. python scripts/q8_validation_fast.py
 
 # Workflow status
 python -m engine.adjudication.advance_stage --review surgical_autonomy --status

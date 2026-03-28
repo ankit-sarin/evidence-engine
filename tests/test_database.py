@@ -699,6 +699,24 @@ def test_null_confidence_raises_integrity_error(db):
         )
 
 
+def test_null_tier_raises_integrity_error(db):
+    """L3: Inserting a span with NULL tier raises IntegrityError."""
+    db.add_papers([_cit(pmid="L3_tier", title="Null Tier")])
+    pid = db.get_papers_by_status("INGESTED")[0]["id"]
+    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
+        db.update_status(pid, s)
+
+    ext_id = db.add_extraction(pid, "h", {}, "t", "m")
+
+    with pytest.raises(sqlite3.IntegrityError):
+        db._conn.execute(
+            """INSERT INTO evidence_spans
+               (extraction_id, field_name, value, source_snippet, confidence, tier)
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (ext_id, "f", "v", "s", 0.9, None),
+        )
+
+
 def test_cloud_null_confidence_raises_integrity_error(tmp_path):
     """L3: cloud_evidence_spans rejects NULL confidence."""
     from engine.cloud.schema import init_cloud_tables

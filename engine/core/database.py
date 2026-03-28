@@ -144,6 +144,7 @@ CREATE TABLE IF NOT EXISTS evidence_spans (
     value           TEXT NOT NULL,
     source_snippet  TEXT,
     confidence      REAL NOT NULL CHECK (confidence >= 0.0 AND confidence <= 1.0),
+    tier            INTEGER NOT NULL DEFAULT 1 CHECK (tier >= 1 AND tier <= 4),
     audit_status    TEXT NOT NULL DEFAULT 'pending'
                     CHECK (audit_status IN (
                         'pending', 'verified', 'contested',
@@ -241,6 +242,7 @@ CREATE TABLE evidence_spans (
     value           TEXT NOT NULL,
     source_snippet  TEXT,
     confidence      REAL NOT NULL CHECK (confidence >= 0.0 AND confidence <= 1.0),
+    tier            INTEGER NOT NULL DEFAULT 1 CHECK (tier >= 1 AND tier <= 4),
     audit_status    TEXT NOT NULL DEFAULT 'pending'
                     CHECK (audit_status IN (
                         'pending', 'verified', 'contested',
@@ -252,7 +254,13 @@ CREATE TABLE evidence_spans (
 );
 
 INSERT INTO evidence_spans
-    SELECT * FROM _evidence_spans_old;
+    (id, extraction_id, field_name, value, source_snippet,
+     confidence, tier, audit_status, auditor_model,
+     audit_rationale, audited_at)
+    SELECT id, extraction_id, field_name, value, source_snippet,
+           confidence, 1, audit_status, auditor_model,
+           audit_rationale, audited_at
+    FROM _evidence_spans_old;
 
 DROP TABLE _evidence_spans_old;
 
@@ -314,6 +322,34 @@ class ReviewDatabase:
             self._conn.executescript(_EVIDENCE_SPANS_REBUILD)
             self._conn.commit()
             logger.info("Migrated evidence_spans: added contested/invalid_snippet states")
+
+        # Migration 006: add tier column to evidence_spans if missing
+        es_cols = {
+            r[1]
+            for r in self._conn.execute(
+                "PRAGMA table_info(evidence_spans)"
+            ).fetchall()
+        }
+        if "tier" not in es_cols and "evidence_spans" in {
+            r[0]
+            for r in self._conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'"
+            ).fetchall()
+        }:
+            import importlib
+            mod = importlib.import_module(
+                "engine.migrations.006_not_null_confidence_tier"
+            )
+            run_migration = mod.run_migration
+
+            self._conn.close()
+            run_migration(str(self.db_path))
+            self._conn = sqlite3.connect(str(self.db_path))
+            self._conn.row_factory = sqlite3.Row
+            self._conn.execute("PRAGMA journal_mode=WAL")
+            self._conn.execute("PRAGMA busy_timeout = 5000")
+            self._conn.execute("PRAGMA foreign_keys = ON")
+            logger.info("Migrated evidence_spans: added tier column")
 
     # ── Papers ───────────────────────────────────────────────
 
@@ -751,10 +787,11 @@ class ReviewDatabase:
                 self._conn.execute(
                     """INSERT INTO evidence_spans
                        (extraction_id, field_name, value, source_snippet,
-                        confidence, audit_status)
-                       VALUES (?, ?, ?, ?, ?, 'pending')""",
+                        confidence, tier, audit_status)
+                       VALUES (?, ?, ?, ?, ?, ?, 'pending')""",
                     (ext_id, s["field_name"], s["value"],
-                     s["source_snippet"], s["confidence"]),
+                     s["source_snippet"], s["confidence"],
+                     s.get("tier", 1)),
                 )
 
             self._conn.execute("COMMIT")
@@ -787,14 +824,15 @@ class ReviewDatabase:
         value: str,
         source_snippet: str,
         confidence: float,
+        tier: int = 1,
     ) -> int:
         """Record an evidence span. Returns the span id."""
         cur = self._conn.execute(
             """INSERT INTO evidence_spans
                (extraction_id, field_name, value, source_snippet,
-                confidence, audit_status)
-               VALUES (?, ?, ?, ?, ?, 'pending')""",
-            (extraction_id, field_name, value, source_snippet, confidence),
+                confidence, tier, audit_status)
+               VALUES (?, ?, ?, ?, ?, ?, 'pending')""",
+            (extraction_id, field_name, value, source_snippet, confidence, tier),
         )
         self._conn.commit()
         return cur.lastrowid

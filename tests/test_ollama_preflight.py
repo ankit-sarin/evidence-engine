@@ -119,44 +119,85 @@ class TestPreflightCheck:
         assert "OOM" in result.error_summary
 
 
+_ALL_CORRECT_ENV = {
+    "OLLAMA_FLASH_ATTENTION": "true",
+    "OLLAMA_MAX_LOADED_MODELS": "1",
+    "OLLAMA_KV_CACHE_TYPE": "f16",
+    "OLLAMA_NUM_PARALLEL": "1",
+}
+
+
 class TestCheckOllamaEnv:
 
     def test_passes_when_env_correct(self):
-        env = {
-            "OLLAMA_FLASH_ATTENTION": "true",
-            "OLLAMA_MAX_LOADED_MODELS": "1",
-            "OLLAMA_KV_CACHE_TYPE": "f16",
-        }
-        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+        with patch("engine.utils.ollama_preflight._get_ollama_env",
+                   return_value=dict(_ALL_CORRECT_ENV)):
             check_ollama_env()  # should not raise
 
     def test_fails_when_flash_attention_missing(self):
-        env = {"OLLAMA_MAX_LOADED_MODELS": "1"}
+        env = dict(_ALL_CORRECT_ENV)
+        del env["OLLAMA_FLASH_ATTENTION"]
         with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
             with pytest.raises(RuntimeError, match="OLLAMA_FLASH_ATTENTION.*not set"):
                 check_ollama_env()
 
     def test_fails_when_max_loaded_models_wrong(self):
-        env = {"OLLAMA_FLASH_ATTENTION": "true", "OLLAMA_MAX_LOADED_MODELS": "4"}
+        env = dict(_ALL_CORRECT_ENV)
+        env["OLLAMA_MAX_LOADED_MODELS"] = "4"
         with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
             with pytest.raises(RuntimeError, match="OLLAMA_MAX_LOADED_MODELS.*expected='1'.*actual='4'"):
                 check_ollama_env()
 
-    def test_fails_lists_all_errors(self):
-        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value={}):
-            with pytest.raises(RuntimeError, match="OLLAMA_FLASH_ATTENTION") as exc_info:
-                check_ollama_env()
-            assert "OLLAMA_MAX_LOADED_MODELS" in str(exc_info.value)
-
-    def test_does_not_assert_kv_cache_type(self):
-        """KV cache type is deliberately NOT checked — we may change it."""
-        env = {
-            "OLLAMA_FLASH_ATTENTION": "true",
-            "OLLAMA_MAX_LOADED_MODELS": "1",
-            # No OLLAMA_KV_CACHE_TYPE — should still pass
-        }
+    def test_fails_when_kv_cache_type_wrong(self):
+        """q8_0 quantization corrupts structured extraction — must be a hard fail."""
+        env = dict(_ALL_CORRECT_ENV)
+        env["OLLAMA_KV_CACHE_TYPE"] = "q8_0"
         with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
-            check_ollama_env()  # should not raise
+            with pytest.raises(RuntimeError, match="OLLAMA_KV_CACHE_TYPE.*expected='f16'.*actual='q8_0'"):
+                check_ollama_env()
+
+    def test_fails_lists_all_correctness_errors(self):
+        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value={}):
+            with pytest.raises(RuntimeError) as exc_info:
+                check_ollama_env()
+            msg = str(exc_info.value)
+            assert "OLLAMA_FLASH_ATTENTION" in msg
+            assert "OLLAMA_MAX_LOADED_MODELS" in msg
+            assert "OLLAMA_KV_CACHE_TYPE" in msg
+
+    def test_performance_mismatch_warns_not_raises(self, caplog):
+        env = dict(_ALL_CORRECT_ENV)
+        env["OLLAMA_NUM_PARALLEL"] = "4"
+        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+            with caplog.at_level("WARNING", logger="engine.utils.ollama_preflight"):
+                check_ollama_env()  # must not raise
+        assert "OLLAMA_NUM_PARALLEL" in caplog.text
+        assert "actual='4'" in caplog.text
+
+    def test_performance_missing_warns_not_raises(self, caplog):
+        env = dict(_ALL_CORRECT_ENV)
+        del env["OLLAMA_NUM_PARALLEL"]
+        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+            with caplog.at_level("WARNING", logger="engine.utils.ollama_preflight"):
+                check_ollama_env()  # must not raise
+        assert "OLLAMA_NUM_PARALLEL" in caplog.text
+        assert "not set" in caplog.text
+
+    def test_mixed_correctness_fail_and_perf_warn(self, caplog):
+        """Correctness errors raise AND performance warnings are logged."""
+        env = {
+            "OLLAMA_MAX_LOADED_MODELS": "1",
+            "OLLAMA_NUM_PARALLEL": "4",
+        }
+        with caplog.at_level("WARNING", logger="engine.utils.ollama_preflight"):
+            with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+                with pytest.raises(RuntimeError) as exc_info:
+                    check_ollama_env()
+        msg = str(exc_info.value)
+        assert "OLLAMA_FLASH_ATTENTION" in msg
+        assert "OLLAMA_KV_CACHE_TYPE" in msg
+        assert "OLLAMA_NUM_PARALLEL" not in msg  # perf stays out of the raise
+        assert "OLLAMA_NUM_PARALLEL" in caplog.text  # but lands in the log
 
     def test_get_ollama_env_parses_systemctl_output(self):
         mock_cp = MagicMock()

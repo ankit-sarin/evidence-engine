@@ -140,9 +140,23 @@ def preflight_check(models: list[str], timeout: int = 30) -> PreflightResult:
     )
 
 
-_REQUIRED_ENV = {
+# Correctness-tier: mismatch corrupts output or breaks invariants. Must raise.
+#   OLLAMA_FLASH_ATTENTION=true — required for supported runner configuration.
+#   OLLAMA_MAX_LOADED_MODELS=1  — serialize model loads on the shared GPU.
+#   OLLAMA_KV_CACHE_TYPE=f16    — q8_0 quantization degrades structured
+#       extraction (see scripts/q8_validation.py). Silent drift would corrupt
+#       multi-hour batch runs.
+_CORRECTNESS_ENV = {
     "OLLAMA_FLASH_ATTENTION": "true",
     "OLLAMA_MAX_LOADED_MODELS": "1",
+    "OLLAMA_KV_CACHE_TYPE": "f16",
+}
+
+# Performance-tier: mismatch hurts throughput but does not corrupt output.
+# Logged as a warning so operators notice drift without blocking the run.
+#   OLLAMA_NUM_PARALLEL=1 — contention on GB10 unified memory.
+_PERFORMANCE_ENV = {
+    "OLLAMA_NUM_PARALLEL": "1",
 }
 
 
@@ -169,27 +183,43 @@ def _get_ollama_env() -> dict[str, str]:
         return {}
 
 
+def _diff_env(
+    env: dict[str, str], expected: dict[str, str]
+) -> list[str]:
+    """Return formatted mismatch lines for any key in `expected` that drifts."""
+    mismatches: list[str] = []
+    for key, want in expected.items():
+        actual = env.get(key)
+        if actual is None:
+            mismatches.append(f"  {key}: expected={want!r}, actual=<not set>")
+        elif actual != want:
+            mismatches.append(f"  {key}: expected={want!r}, actual={actual!r}")
+    return mismatches
+
+
 def check_ollama_env() -> None:
     """Assert critical Ollama environment variables are set correctly.
 
-    Raises RuntimeError listing expected vs actual for any mismatch.
+    Correctness-tier mismatches raise RuntimeError. Performance-tier
+    mismatches emit logger.warning but do not raise.
     """
     env = _get_ollama_env()
-    errors: list[str] = []
-    for key, expected in _REQUIRED_ENV.items():
-        actual = env.get(key)
-        if actual is None:
-            errors.append(f"  {key}: expected={expected!r}, actual=<not set>")
-        elif actual != expected:
-            errors.append(f"  {key}: expected={expected!r}, actual={actual!r}")
+    correctness_errors = _diff_env(env, _CORRECTNESS_ENV)
+    performance_warnings = _diff_env(env, _PERFORMANCE_ENV)
 
-    if errors:
-        detail = "\n".join(errors)
+    for line in performance_warnings:
+        logger.warning("Ollama performance env drift:%s", line)
+
+    if correctness_errors:
+        detail = "\n".join(correctness_errors)
         raise RuntimeError(
             f"Ollama environment check failed:\n{detail}\n"
             "Fix the Ollama systemd override and restart the service."
         )
-    logger.info("Ollama environment OK: %s", ", ".join(f"{k}={v}" for k, v in _REQUIRED_ENV.items()))
+    logger.info(
+        "Ollama environment OK: %s",
+        ", ".join(f"{k}={v}" for k, v in _CORRECTNESS_ENV.items()),
+    )
 
 
 def require_preflight(models: list[str], runner_name: str, timeout: int = 30) -> None:

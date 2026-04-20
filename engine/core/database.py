@@ -351,6 +351,14 @@ class ReviewDatabase:
             self._conn.execute("PRAGMA foreign_keys = ON")
             logger.info("Migrated evidence_spans: added tier column")
 
+        # Migration 007: add judge_runs / judge_ratings / judge_pair_ratings
+        # tables for Paper 1 LLM-as-judge pipeline. Idempotent (IF NOT EXISTS).
+        import importlib
+        mod_007 = importlib.import_module(
+            "engine.migrations.007_add_judge_tables"
+        )
+        mod_007.run_migration(str(self.db_path))
+
     # ── Papers ───────────────────────────────────────────────
 
     def add_papers(self, citations: list[Citation]) -> int:

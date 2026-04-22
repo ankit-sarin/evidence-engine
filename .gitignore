@@ -10,3 +10,10 @@ data/surgical_autonomy/review_backup_v1_schema.db
 primer.md
 .claude/
 logs/
+
+# PI audit workbook v1 — superseded by v2 (2026-04-22T19-05-36Z) due to
+# source_text hard-truncation bug. Kept on disk as provenance of the fix;
+# never committed. See pass2_preliminary_report_*.md and the migration 009
+# commit for the full history.
+artifacts/paper1/pi_audit/pi_audit_workbook_2026-04-22T18-35-42Z.xlsx
+artifacts/paper1/pi_audit/pi_audit_key_2026-04-22T18-35-42Z.xlsx

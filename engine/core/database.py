@@ -359,6 +359,12 @@ class ReviewDatabase:
         )
         mod_007.run_migration(str(self.db_path))
 
+        # Migration 008: add fabrication_verifications (Pass 2 per-arm verdicts).
+        mod_008 = importlib.import_module(
+            "engine.migrations.008_add_fabrication_verifications"
+        )
+        mod_008.run_migration(str(self.db_path))
+
     # ── Papers ───────────────────────────────────────────────
 
     def add_papers(self, citations: list[Citation]) -> int:

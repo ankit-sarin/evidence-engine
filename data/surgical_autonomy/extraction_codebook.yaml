@@ -8,6 +8,19 @@ version: "2.0"
 review: "surgical_autonomy"
 date: "2026-03-15"
 
+# Canonical absence sentinels. Values in this set (case-insensitive,
+# whitespace-trimmed) and empty/null values are interpreted by Pass 2
+# as "the arm claims this field is NOT reported in the paper" rather
+# than a positive value claim. Authoritative Python mirror:
+# analysis/paper1/judge_prompts.ABSENCE_SENTINELS.
+absence_sentinels:
+  - "NR"
+  - "N/A"
+  - "NA"
+  - "NOT_FOUND"
+  - "NOT FOUND"
+  - "NOT REPORTED"
+
 fields:
 
   # ═══════════════════════════════════════════════════════════════════

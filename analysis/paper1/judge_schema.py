@@ -1,14 +1,19 @@
 """Pydantic + dataclass schemas for the Paper 1 LLM-as-judge pipeline.
 
-Pass 1 only. Pass 2 (fabrication verification) will ship separately.
+Pass 1 (pairwise rating) and Pass 2 (per-arm fabrication verification).
 
-PairwiseRating is a Pydantic v2 discriminated union on `rating`:
+PairwiseRating (Pass 1) is a Pydantic v2 discriminated union on `rating`:
   - EquivalentPair has no disagreement_type field at all.
   - DisagreementPair requires disagreement_type.
-The discriminator lets Ollama's grammar-constrained generation
-force the correct shape per branch (fixing the smoke-1 failure
-where disagreement_type defaulted to null under the optional
-schema).
+
+Pass2ArmVerdict (Pass 2) is a discriminated union on `verdict`:
+  - SupportedVerdict     — reasoning optional.
+  - PartiallySupported   — reasoning required.
+  - UnsupportedVerdict   — reasoning AND fabrication_hypothesis required.
+
+The discriminator lets Ollama's grammar-constrained generation force
+the correct shape per branch (fixes the smoke-1-style failure where
+optional fields default to null under a permissive schema).
 """
 
 from __future__ import annotations
@@ -130,6 +135,87 @@ def pair_disagreement_type(pair) -> Optional[Level2Type]:
     return None
 
 
+# ═════════════════════════════════════════════════════════════════════
+# Pass 2 — per-arm fabrication verification
+# ═════════════════════════════════════════════════════════════════════
+
+
+Verdict = Literal["SUPPORTED", "PARTIALLY_SUPPORTED", "UNSUPPORTED"]
+
+
+class _BaseVerdict(BaseModel):
+    """Shared fields across all three verdict shapes."""
+
+    arm_slot: int = Field(ge=1)
+    verification_span: Optional[str] = Field(default=None, max_length=2000)
+
+
+class SupportedVerdict(_BaseVerdict):
+    """Source grounds the arm's value — reasoning optional."""
+
+    verdict: Literal["SUPPORTED"]
+    reasoning: Optional[str] = Field(default=None, max_length=1000)
+
+
+class PartiallySupportedVerdict(_BaseVerdict):
+    """Source partially grounds the value — reasoning required."""
+
+    verdict: Literal["PARTIALLY_SUPPORTED"]
+    reasoning: str = Field(min_length=1, max_length=1000)
+
+
+class UnsupportedVerdict(_BaseVerdict):
+    """Source does not ground the value — reasoning AND hypothesis required."""
+
+    verdict: Literal["UNSUPPORTED"]
+    reasoning: str = Field(min_length=1, max_length=1000)
+    fabrication_hypothesis: str = Field(min_length=1, max_length=1000)
+
+
+Pass2ArmVerdict = Annotated[
+    Union[SupportedVerdict, PartiallySupportedVerdict, UnsupportedVerdict],
+    Field(discriminator="verdict"),
+]
+
+
+class Pass2Output(BaseModel):
+    """Full Pass 2 judge output for one triple."""
+
+    paper_id: str = Field(min_length=1)
+    field_name: str = Field(min_length=1)
+    arm_verdicts: list[Pass2ArmVerdict] = Field(min_length=2)
+    overall_fabrication_detected: bool
+
+
+@dataclass(frozen=True)
+class Pass2Result:
+    """Wrapper combining de-randomized Pass 2 output + audit trail."""
+
+    paper_id: str
+    field_name: str
+    arm_permutation: list[str]
+    pass2: Pass2Output
+    pre_check_short_circuit_by_arm: dict[str, bool]
+    prompt_hash: str
+    judge_model_digest: str
+    judge_model_name: str
+    raw_response: str
+    seed: int
+    timestamp_iso: str
+    source_text_windowed: bool
+    source_text_tokens: int
+
+
+def verdict_requires_reasoning(verdict: Verdict) -> bool:
+    """PARTIALLY_SUPPORTED and UNSUPPORTED must carry reasoning."""
+    return verdict != "SUPPORTED"
+
+
+def verdict_requires_hypothesis(verdict: Verdict) -> bool:
+    """Only UNSUPPORTED requires fabrication_hypothesis."""
+    return verdict == "UNSUPPORTED"
+
+
 __all__ = [
     "ArmOutput",
     "DisagreementPair",
@@ -141,5 +227,14 @@ __all__ = [
     "Level2Type",
     "PairwiseRating",
     "Pass1Output",
+    "PartiallySupportedVerdict",
+    "Pass2ArmVerdict",
+    "Pass2Output",
+    "Pass2Result",
+    "SupportedVerdict",
+    "UnsupportedVerdict",
+    "Verdict",
     "pair_disagreement_type",
+    "verdict_requires_hypothesis",
+    "verdict_requires_reasoning",
 ]

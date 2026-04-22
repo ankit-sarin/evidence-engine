@@ -16,6 +16,10 @@ from typing import Optional
 from analysis.paper1.judge_schema import (
     FieldType,
     JudgeResult,
+    Pass2Result,
+    PartiallySupportedVerdict,
+    SupportedVerdict,
+    UnsupportedVerdict,
     pair_disagreement_type,
 )
 from engine.core.database import ReviewDatabase
@@ -223,9 +227,96 @@ def insert_judge_result(
         raise JudgeStorageError(f"insert_judge_result failed: {exc}") from exc
 
 
+def _verdict_payload(verdict) -> tuple:
+    """Extract (verification_span, reasoning, fabrication_hypothesis) for DB."""
+    vs = verdict.verification_span
+    if isinstance(verdict, SupportedVerdict):
+        return vs, verdict.reasoning, None
+    if isinstance(verdict, PartiallySupportedVerdict):
+        return vs, verdict.reasoning, None
+    if isinstance(verdict, UnsupportedVerdict):
+        return vs, verdict.reasoning, verdict.fabrication_hypothesis
+    raise JudgeStorageError(
+        f"unknown verdict type {type(verdict).__name__}"
+    )
+
+
+def insert_pass2_verifications(
+    db: ReviewDatabase,
+    run_id: str,
+    result: Pass2Result,
+) -> int:
+    """Atomic: insert N rows into fabrication_verifications (one per arm).
+
+    Returns the number of rows inserted. Verifies the run exists and is
+    still open (mirror of insert_judge_result).
+    """
+    n_arms = len(result.arm_permutation)
+    n_verdicts = len(result.pass2.arm_verdicts)
+    if n_verdicts != n_arms:
+        raise JudgeStorageError(
+            f"arm_verdicts count {n_verdicts} != arm_permutation count {n_arms}"
+        )
+
+    # Build all de-randomized rows before touching the DB so validation
+    # errors do not leave a half-written row set.
+    now = _now_iso()
+    rows: list[tuple] = []
+    seen_arms: set[str] = set()
+    for v in result.pass2.arm_verdicts:
+        if not 1 <= v.arm_slot <= n_arms:
+            raise JudgeStorageError(
+                f"arm_slot={v.arm_slot} out of range [1, {n_arms}]"
+            )
+        arm_name = result.arm_permutation[v.arm_slot - 1]
+        if arm_name in seen_arms:
+            raise JudgeStorageError(
+                f"duplicate arm_name after de-randomization: {arm_name}"
+            )
+        seen_arms.add(arm_name)
+
+        short_circuit = result.pre_check_short_circuit_by_arm.get(arm_name, False)
+        vs, reasoning, fab_hyp = _verdict_payload(v)
+        rows.append(
+            (
+                run_id,
+                result.paper_id,
+                result.field_name,
+                arm_name,
+                1 if short_circuit else 0,
+                v.verdict,
+                vs,
+                reasoning,
+                fab_hyp,
+                now,
+            )
+        )
+
+    try:
+        db._conn.execute("BEGIN")
+        for row in rows:
+            db._conn.execute(
+                """INSERT INTO fabrication_verifications
+                   (judge_run_id, paper_id, field_name, arm_name,
+                    pre_check_short_circuit, verdict,
+                    verification_span, reasoning,
+                    fabrication_hypothesis, verified_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                row,
+            )
+        db._conn.execute("COMMIT")
+        return len(rows)
+    except sqlite3.Error as exc:
+        db._conn.execute("ROLLBACK")
+        raise JudgeStorageError(
+            f"insert_pass2_verifications failed: {exc}"
+        ) from exc
+
+
 __all__ = [
     "JudgeStorageError",
     "complete_judge_run",
     "create_judge_run",
     "insert_judge_result",
+    "insert_pass2_verifications",
 ]

@@ -11,3 +11,4 @@ openpyxl
 docling
 openai
 anthropic
+tiktoken

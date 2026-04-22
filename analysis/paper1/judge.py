@@ -1,7 +1,7 @@
-"""LLM-as-judge orchestrator (Pass 1) for Paper 1 concordance pairs.
+"""LLM-as-judge orchestrator (Pass 1 + Pass 2) for Paper 1.
 
 No DB writes. No CLI. Pure orchestration: prompt build → Ollama
-chat → Pydantic validation → JudgeResult wrapper.
+chat → Pydantic validation → JudgeResult / Pass2Result wrapper.
 """
 
 from __future__ import annotations
@@ -15,15 +15,22 @@ from typing import Optional
 from pydantic import ValidationError
 
 from analysis.paper1.judge_prompts import (
+    arm_short_circuit_eligible,
     build_pass1_prompt,
+    build_pass2_prompt,
     compute_seed,
+    compute_seed_pass2,
     randomize_arm_assignment,
+    window_source_text,
 )
 from analysis.paper1.judge_schema import (
     JudgeInput,
     JudgeResult,
     PairwiseRating,
     Pass1Output,
+    Pass2ArmVerdict,
+    Pass2Output,
+    Pass2Result,
 )
 from engine.utils.ollama_client import get_model_digest, ollama_chat
 
@@ -151,6 +158,126 @@ def run_pass1(
     )
 
 
+def run_pass2(
+    input: JudgeInput,
+    run_id: str,
+    source_text: str,
+    model: str = DEFAULT_MODEL,
+    num_ctx: int = 24576,
+) -> Pass2Result:
+    """Run Pass 2 fabrication verification for one triple.
+
+    Produces a per-arm verdict (SUPPORTED / PARTIALLY_SUPPORTED /
+    UNSUPPORTED) grounded against the paper source text. Source text
+    is windowed to the PASS2 budget when the full paper exceeds it.
+
+    num_ctx default (24576) leaves headroom above the 20K windowing
+    budget for prompt scaffolding and response generation.
+    """
+    _validate_invariants(input)
+
+    if not source_text:
+        raise JudgeInvariantError(
+            f"run_pass2 requires source_text for {input.paper_id}/{input.field_name}"
+        )
+
+    seed = compute_seed_pass2(input.paper_id, input.field_name, run_id)
+    shuffled_arms, arm_permutation = randomize_arm_assignment(input.arms, seed)
+    windowed_text, was_windowed, src_tokens = window_source_text(
+        source_text, [a.span for a in shuffled_arms]
+    )
+    prompt = build_pass2_prompt(input, shuffled_arms, windowed_text, was_windowed)
+    prompt_hash = _hash_prompt(prompt)
+
+    short_circuit_by_arm: dict[str, bool] = {
+        arm.arm_name: arm_short_circuit_eligible(arm) for arm in input.arms
+    }
+
+    try:
+        response = ollama_chat(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            format=Pass2Output.model_json_schema(),
+            options={
+                "temperature": DEFAULT_TEMPERATURE,
+                "seed": seed,
+                "num_ctx": num_ctx,
+            },
+            think=False,
+        )
+    except Exception as exc:
+        raise JudgeCallError(f"Ollama call failed: {exc}") from exc
+
+    raw_response = _extract_response_text(response)
+
+    try:
+        pass2 = Pass2Output.model_validate_json(raw_response)
+    except ValidationError as exc:
+        raise JudgeParseError(
+            f"Pass2Output validation failed: {exc}",
+            raw_response=raw_response,
+        ) from exc
+    except ValueError as exc:
+        raise JudgeParseError(
+            f"Pass2Output parse failed: {exc}",
+            raw_response=raw_response,
+        ) from exc
+
+    _validate_pass2_coverage(pass2, arm_permutation)
+
+    digest = get_model_digest(model) or model
+    timestamp_iso = datetime.now(timezone.utc).isoformat()
+
+    return Pass2Result(
+        paper_id=input.paper_id,
+        field_name=input.field_name,
+        arm_permutation=arm_permutation,
+        pass2=pass2,
+        pre_check_short_circuit_by_arm=short_circuit_by_arm,
+        prompt_hash=prompt_hash,
+        judge_model_digest=digest,
+        judge_model_name=model,
+        raw_response=raw_response,
+        seed=seed,
+        timestamp_iso=timestamp_iso,
+        source_text_windowed=was_windowed,
+        source_text_tokens=src_tokens,
+    )
+
+
+def _validate_pass2_coverage(pass2: Pass2Output, arm_permutation: list[str]) -> None:
+    """Ensure the LLM returned exactly one verdict per slot, no duplicates."""
+    expected_slots = set(range(1, len(arm_permutation) + 1))
+    seen: set[int] = set()
+    for v in pass2.arm_verdicts:
+        if v.arm_slot not in expected_slots:
+            raise JudgeParseError(
+                f"arm_slot={v.arm_slot} out of range [1, {len(arm_permutation)}]",
+                raw_response=None,
+            )
+        if v.arm_slot in seen:
+            raise JudgeParseError(
+                f"duplicate arm_slot={v.arm_slot} in arm_verdicts",
+                raw_response=None,
+            )
+        seen.add(v.arm_slot)
+    missing = expected_slots - seen
+    if missing:
+        raise JudgeParseError(
+            f"arm_verdicts missing slots {sorted(missing)}",
+            raw_response=None,
+        )
+
+
+def de_randomize_verdicts(result: Pass2Result) -> dict[str, Pass2ArmVerdict]:
+    """Return {arm_name: verdict} from a Pass2Result."""
+    out: dict[str, Pass2ArmVerdict] = {}
+    for v in result.pass2.arm_verdicts:
+        arm_name = result.arm_permutation[v.arm_slot - 1]
+        out[arm_name] = v
+    return out
+
+
 def de_randomize_pairs(
     output: Pass1Output,
     arm_permutation: list[str],
@@ -187,5 +314,7 @@ __all__ = [
     "JudgeInvariantError",
     "JudgeParseError",
     "de_randomize_pairs",
+    "de_randomize_verdicts",
     "run_pass1",
+    "run_pass2",
 ]

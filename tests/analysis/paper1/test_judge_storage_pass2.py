@@ -166,20 +166,51 @@ class TestInsertPass2Verifications:
         assert n == 3
 
     def test_rejects_mismatched_verdict_count(self, db):
-        # Only two verdicts but 3 arms.
+        # Pass2Output's schema now pins arm_verdicts cardinality to 3; this
+        # storage-layer check is belt-and-suspenders for callers that
+        # bypass Pydantic (e.g., via model_construct or a downgraded
+        # Pass2Output instance). Use model_construct here to exercise it.
+        bad_output = Pass2Output.model_construct(
+            paper_id="EE-1", field_name="study_design",
+            arm_verdicts=[
+                SupportedVerdict(arm_slot=1, verdict="SUPPORTED"),
+                SupportedVerdict(arm_slot=2, verdict="SUPPORTED"),
+            ],
+            overall_fabrication_detected=False,
+        )
         result = _result([
             SupportedVerdict(arm_slot=1, verdict="SUPPORTED"),
             SupportedVerdict(arm_slot=2, verdict="SUPPORTED"),
+            SupportedVerdict(arm_slot=3, verdict="SUPPORTED"),
         ])
+        # Swap in the model_construct-built 2-element output
+        object.__setattr__(result, "pass2", bad_output)
         with pytest.raises(JudgeStorageError):
             insert_pass2_verifications(db, "r2", result)
 
     def test_rejects_out_of_range_slot(self, db):
+        # arm_slot is now Literal[1,2,3]; a 99 is rejected at Pydantic
+        # construction. Exercise the storage-layer bounds check via
+        # model_construct (bypasses Pydantic) to keep the invariant
+        # enforced at both layers.
+        bad_verdict = SupportedVerdict.model_construct(
+            arm_slot=99, verdict="SUPPORTED"
+        )
+        bad_output = Pass2Output.model_construct(
+            paper_id="EE-1", field_name="study_design",
+            arm_verdicts=[
+                SupportedVerdict(arm_slot=1, verdict="SUPPORTED"),
+                SupportedVerdict(arm_slot=2, verdict="SUPPORTED"),
+                bad_verdict,
+            ],
+            overall_fabrication_detected=False,
+        )
         result = _result([
             SupportedVerdict(arm_slot=1, verdict="SUPPORTED"),
             SupportedVerdict(arm_slot=2, verdict="SUPPORTED"),
-            SupportedVerdict(arm_slot=99, verdict="SUPPORTED"),
+            SupportedVerdict(arm_slot=3, verdict="SUPPORTED"),
         ])
+        object.__setattr__(result, "pass2", bad_output)
         with pytest.raises(JudgeStorageError):
             insert_pass2_verifications(db, "r2", result)
 

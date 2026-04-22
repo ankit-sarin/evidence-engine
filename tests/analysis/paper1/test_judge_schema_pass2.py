@@ -160,10 +160,11 @@ def test_round_trip_json_validate():
         "arm_verdicts": [
             {"arm_slot": 1, "verdict": "SUPPORTED"},
             {"arm_slot": 2, "verdict": "SUPPORTED"},
+            {"arm_slot": 3, "verdict": "SUPPORTED"},
         ],
         "overall_fabrication_detected": False,
     }
     raw = json.dumps(data)
     out = Pass2Output.model_validate_json(raw)
     assert out.field_name == "primary_outcome"
-    assert len(out.arm_verdicts) == 2
+    assert len(out.arm_verdicts) == 3

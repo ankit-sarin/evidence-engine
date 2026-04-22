@@ -25,6 +25,7 @@ from analysis.paper1.judge_schema import (
     SupportedVerdict,
     UnsupportedVerdict,
 )
+from analysis.paper1.judge import _validate_pass2_coverage
 from analysis.paper1.precheck import PreCheckFlags
 
 
@@ -257,3 +258,222 @@ class TestRunPass2Errors:
              patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             with pytest.raises(JudgeParseError):
                 run_pass2(_input(), run_id="r1", source_text="src")
+
+
+# ── Grammar-tightening regressions (arm_verdicts cardinality / slot enum) ──
+
+
+class TestArmVerdictsGrammarRegression:
+    """Post-fix guard: cardinality=3 + arm_slot Literal[1,2,3] in the Pydantic
+    schema are the grammar-visible invariants. Slot uniqueness remains a
+    post-validator responsibility.
+
+    Failure mode captured on paper 366 / primary_outcome_value (Pass 2 run
+    surgical_autonomy_pass2_full_20260421T174729Z, seed=1770411156):
+    Gemma emitted 4 arm_verdicts entries with slots [1, 2, 3, 3]. The
+    duplicate-slot post-validator caught it; the permissive Pydantic
+    schema did not prevent it. These tests lock in both layers.
+    """
+
+    def test_four_element_payload_rejected_by_pydantic_maxitems(self):
+        """With maxItems=3 in the generated JSON Schema, a 4-element
+        response is rejected at Pydantic parse time — the same raw
+        Gemma output that failed on paper 366 is now caught before the
+        post-validator even runs."""
+        captured = json.dumps({
+            "paper_id": "366",
+            "field_name": "primary_outcome_value",
+            "arm_verdicts": [
+                {"arm_slot": 1, "verdict": "SUPPORTED",
+                 "verification_span": "accuracy 77.9%"},
+                {"arm_slot": 2, "verdict": "PARTIALLY_SUPPORTED",
+                 "reasoning": "r",
+                 "verification_span": "sensitivity 72.3%"},
+                {"arm_slot": 3, "verdict": "SUPPORTED",
+                 "verification_span": "NN Accuracy 77.9% ± 5.9%"},
+                {"arm_slot": 3, "verdict": "SUPPORTED",
+                 "verification_span": "NN Accuracy 77.9% ± 5.9%"},
+            ],
+            "overall_fabrication_detected": False,
+        })
+        with patch.object(judge_module, "ollama_chat",
+                          lambda **kw: _mock_resp(captured)), \
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+            with pytest.raises(JudgeParseError):
+                run_pass2(_input(), run_id="r1", source_text="src")
+
+    def test_post_validator_still_rejects_duplicate_slot_on_four_elements(self):
+        """Belt-and-suspenders: if someone later bypasses Pydantic
+        (e.g., via model_construct or a downgraded schema), the
+        post-validator must still raise on [1,2,3,3].
+
+        Guards against future code that removes the duplicate-slot check
+        on the false assumption that grammar alone is sufficient."""
+        v1 = SupportedVerdict.model_construct(
+            arm_slot=1, verdict="SUPPORTED", verification_span="q1"
+        )
+        v2 = SupportedVerdict.model_construct(
+            arm_slot=2, verdict="SUPPORTED", verification_span="q2"
+        )
+        v3a = SupportedVerdict.model_construct(
+            arm_slot=3, verdict="SUPPORTED", verification_span="q3a"
+        )
+        v3b = SupportedVerdict.model_construct(
+            arm_slot=3, verdict="SUPPORTED", verification_span="q3b"
+        )
+        # model_construct skips Pydantic validation → 4-element list
+        # reaches the post-validator.
+        pass2 = Pass2Output.model_construct(
+            paper_id="366",
+            field_name="primary_outcome_value",
+            arm_verdicts=[v1, v2, v3a, v3b],
+            overall_fabrication_detected=False,
+        )
+        with pytest.raises(JudgeParseError, match="duplicate arm_slot=3"):
+            _validate_pass2_coverage(
+                pass2,
+                ["local", "openai_o4_mini_high", "anthropic_sonnet_4_6"],
+            )
+
+    def test_json_schema_emits_cardinality_and_slot_enum(self):
+        """Static check: what Ollama receives via `format=` carries both
+        grammar-enforceable invariants. If Pydantic ever stops emitting
+        these, llama.cpp's grammar backend will silently go back to
+        permissive decoding."""
+        s = Pass2Output.model_json_schema()
+        av = s["properties"]["arm_verdicts"]
+        assert av["type"] == "array"
+        assert av["minItems"] == 3
+        assert av["maxItems"] == 3
+        # arm_slot enum on each discriminator branch.
+        items = av["items"]
+        assert "oneOf" in items and "discriminator" in items
+        defs = s["$defs"]
+        for branch in items["oneOf"]:
+            name = branch["$ref"].rsplit("/", 1)[-1]
+            slot = defs[name]["properties"]["arm_slot"]
+            assert slot["enum"] == [1, 2, 3], (
+                f"variant {name} arm_slot enum={slot.get('enum')}"
+            )
+            assert slot["type"] == "integer"
+
+    def test_discriminator_still_routes_unsupported_verdict(self):
+        """Confirm the discriminated union (verdict=SUPPORTED /
+        PARTIALLY_SUPPORTED / UNSUPPORTED) still routes correctly after
+        the arm_verdicts container edit. UNSUPPORTED must still require
+        reasoning + fabrication_hypothesis."""
+        good = json.dumps({
+            "paper_id": "p1", "field_name": "study_design",
+            "arm_verdicts": [
+                {"arm_slot": 1, "verdict": "SUPPORTED",
+                 "verification_span": "q1"},
+                {"arm_slot": 2, "verdict": "PARTIALLY_SUPPORTED",
+                 "reasoning": "partial match",
+                 "verification_span": "q2"},
+                {"arm_slot": 3, "verdict": "UNSUPPORTED",
+                 "reasoning": "no evidence",
+                 "fabrication_hypothesis": "plausible-sounding default",
+                 "verification_span": "q3"},
+            ],
+            "overall_fabrication_detected": True,
+        })
+        with patch.object(judge_module, "ollama_chat",
+                          lambda **kw: _mock_resp(good)), \
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+            res = run_pass2(_input(), run_id="r1", source_text="src")
+        kinds = {type(v).__name__ for v in res.pass2.arm_verdicts}
+        assert kinds == {
+            "SupportedVerdict",
+            "PartiallySupportedVerdict",
+            "UnsupportedVerdict",
+        }
+
+    def test_unsupported_without_hypothesis_still_rejected(self):
+        """UNSUPPORTED without fabrication_hypothesis must still fail
+        — the container edit must not loosen per-variant required
+        fields."""
+        bad = json.dumps({
+            "paper_id": "p1", "field_name": "study_design",
+            "arm_verdicts": [
+                {"arm_slot": 1, "verdict": "SUPPORTED",
+                 "verification_span": "q1"},
+                {"arm_slot": 2, "verdict": "SUPPORTED",
+                 "verification_span": "q2"},
+                {"arm_slot": 3, "verdict": "UNSUPPORTED",
+                 "reasoning": "no evidence",
+                 "verification_span": "q3"},  # missing fabrication_hypothesis
+            ],
+            "overall_fabrication_detected": True,
+        })
+        with patch.object(judge_module, "ollama_chat",
+                          lambda **kw: _mock_resp(bad)), \
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+            with pytest.raises(JudgeParseError):
+                run_pass2(_input(), run_id="r1", source_text="src")
+
+
+# ── Live-Gemma regression for the paper-366 pathology ──────────────
+
+
+@pytest.mark.ollama
+@pytest.mark.integration
+def test_paper_366_grammar_prevents_four_element_emission():
+    """Replay the exact prompt that previously induced [1,2,3,3] on
+    paper 366 / primary_outcome_value and confirm that the tightened
+    schema produces exactly 3 elements with slots as a permutation of
+    {1, 2, 3}.
+
+    Requires a running Ollama with gemma3:27b. Skipped in the default
+    offline suite (markers: ollama, integration). Produces no DB
+    writes.
+    """
+    from pathlib import Path
+
+    from analysis.paper1.judge_loader import load_ai_triples_csv, load_codebook
+    from analysis.paper1.judge_prompts import compute_seed_pass2
+    from engine.core.database import ReviewDatabase
+
+    review_dir = Path("data/surgical_autonomy")
+    pairs_csv = review_dir / "exports/disagreement_pairs_3arm.csv"
+    codebook_path = review_dir / "extraction_codebook.yaml"
+    if not (pairs_csv.exists() and codebook_path.exists()):
+        pytest.skip("surgical_autonomy artifacts not available in this env")
+
+    db = ReviewDatabase("surgical_autonomy")
+    try:
+        codebook = load_codebook(codebook_path)
+        inputs = load_ai_triples_csv(pairs_csv, db, codebook, limit=None)
+        match = [
+            i for i in inputs
+            if i.paper_id == "366" and i.field_name == "primary_outcome_value"
+        ]
+        if not match:
+            pytest.skip("pairs CSV missing paper 366 / primary_outcome_value")
+        inp = match[0]
+        parsed = sorted(
+            (review_dir / "parsed_text").glob("366_v*.md"), reverse=True
+        )
+        if not parsed:
+            pytest.skip("parsed text for paper 366 not on disk")
+        source_text = parsed[0].read_text()
+    finally:
+        db.close()
+
+    run_id = "surgical_autonomy_pass2_full_20260421T174729Z"
+    # Deterministic check: the seed under which the failure occurred.
+    assert compute_seed_pass2(
+        "366", "primary_outcome_value", run_id
+    ) == 1770411156, "seed drift — paper 366 no longer hashes to 1770411156"
+
+    result = run_pass2(inp, run_id=run_id, source_text=source_text)
+
+    assert len(result.pass2.arm_verdicts) == 3, (
+        f"expected 3 arm_verdicts, got {len(result.pass2.arm_verdicts)} — "
+        f"grammar-enforced maxItems=3 was not respected by llama.cpp on "
+        f"this model; raw={result.raw_response!r}"
+    )
+    slots = sorted(v.arm_slot for v in result.pass2.arm_verdicts)
+    assert slots == [1, 2, 3], (
+        f"expected slot permutation of [1,2,3], got {slots} — "
+        f"raw={result.raw_response!r}"
+    )

@@ -144,9 +144,18 @@ Verdict = Literal["SUPPORTED", "PARTIALLY_SUPPORTED", "UNSUPPORTED"]
 
 
 class _BaseVerdict(BaseModel):
-    """Shared fields across all three verdict shapes."""
+    """Shared fields across all three verdict shapes.
 
-    arm_slot: int = Field(ge=1)
+    arm_slot is a Literal over {1, 2, 3} so the JSON Schema emitted to
+    Ollama carries ``"enum": [1, 2, 3]`` on each variant. llama.cpp's
+    grammar backend respects this and prevents the model from producing
+    slot indices outside the expected domain. Cross-element uniqueness
+    (each slot appears at most once across the three array elements)
+    cannot be reliably enforced by grammar — that remains the
+    post-validator's job; see ``_validate_pass2_coverage``.
+    """
+
+    arm_slot: Literal[1, 2, 3]
     verification_span: Optional[str] = Field(default=None, max_length=2000)
 
 
@@ -179,11 +188,20 @@ Pass2ArmVerdict = Annotated[
 
 
 class Pass2Output(BaseModel):
-    """Full Pass 2 judge output for one triple."""
+    """Full Pass 2 judge output for one triple.
+
+    arm_verdicts is pinned to exactly 3 elements — one per arm (local,
+    openai_o4_mini_high, anthropic_sonnet_4_6). The emitted JSON Schema
+    carries ``minItems: 3`` and ``maxItems: 3`` so llama.cpp's grammar
+    backend prevents the model from producing 2-element or 4-element
+    arrays (the specific pathology observed on paper 366 /
+    primary_outcome_value, which emitted ``[slot=1, slot=2, slot=3,
+    slot=3]`` twice with the same deterministic seed).
+    """
 
     paper_id: str = Field(min_length=1)
     field_name: str = Field(min_length=1)
-    arm_verdicts: list[Pass2ArmVerdict] = Field(min_length=2)
+    arm_verdicts: list[Pass2ArmVerdict] = Field(min_length=3, max_length=3)
     overall_fabrication_detected: bool
 
 

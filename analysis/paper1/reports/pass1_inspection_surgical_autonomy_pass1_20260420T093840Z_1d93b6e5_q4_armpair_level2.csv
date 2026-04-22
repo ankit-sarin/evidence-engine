@@ -1,0 +1,4 @@
+arm_pair,GRANULARITY,SELECTION,OMISSION,CONTRADICTION,FABRICATION,noneq_total
+anthropic_sonnet_4_6 × local,1139,515,187,142,26,2009
+local × openai_o4_mini_high,774,494,460,133,14,1875
+anthropic_sonnet_4_6 × openai_o4_mini_high,991,295,462,81,17,1846

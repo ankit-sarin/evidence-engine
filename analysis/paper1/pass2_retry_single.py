@@ -52,7 +52,7 @@ from analysis.paper1.judge_storage import (
     insert_pass2_verifications,
 )
 from engine.core.database import ReviewDatabase
-from engine.utils.ollama_client import get_model_digest, ollama_chat
+from engine.utils.ollama_client import fetch_model_digest, ollama_chat
 
 DEFAULT_MODEL = "gemma3:27b"
 DEFAULT_NUM_CTX = 24576
@@ -260,7 +260,7 @@ def main() -> int:
         pass2=pass2,
         pre_check_short_circuit_by_arm=short_circuit_by_arm,
         prompt_hash=prompt_hash,
-        judge_model_digest=get_model_digest(args.model) or args.model,
+        judge_model_digest=fetch_model_digest(args.model),
         judge_model_name=args.model,
         raw_response=raw_response,
         seed=seed,

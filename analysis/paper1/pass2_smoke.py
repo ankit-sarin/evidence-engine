@@ -50,7 +50,7 @@ from analysis.paper1.judge_storage import (
     insert_pass2_verifications,
 )
 from engine.core.database import ReviewDatabase
-from engine.utils.ollama_client import get_model_digest
+from engine.utils.ollama_client import fetch_model_digest
 
 logger = logging.getLogger(__name__)
 
@@ -280,7 +280,7 @@ def run_smoke(
     run_tag: str = "",
 ) -> tuple[str, list[TripleExec]]:
     run_id = _new_run_id(review, tag=run_tag)
-    model_digest = get_model_digest(model) or model
+    model_digest = fetch_model_digest(model)
 
     if not dry_run:
         create_judge_run(

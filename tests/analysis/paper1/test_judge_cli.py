@@ -241,9 +241,9 @@ class TestDryRun:
             called["n"] += 1
             return _fake_judge_result(inp.paper_id, inp.field_name)
 
-        with patch.object(judge_module, "get_model_digest", lambda m: "d"), \
+        with patch.object(judge_module, "fetch_model_digest", lambda m: "d"), \
              patch.object(judge_cli, "run_pass1", fake), \
-             patch.object(judge_cli, "get_model_digest", lambda m: "d"):
+             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
             code = judge_cli.run([
                 "--review", "cli_test",
                 "--input", "AI_TRIPLES",
@@ -280,7 +280,7 @@ class TestFullFlow:
             return _fake_judge_result(inp.paper_id, inp.field_name)
 
         with patch.object(judge_cli, "run_pass1", fake), \
-             patch.object(judge_cli, "get_model_digest", lambda m: "sha256:z"):
+             patch.object(judge_cli, "fetch_model_digest", lambda m: "sha256:z"):
             code = judge_cli.run([
                 "--review", "cli_test",
                 "--input", "AI_TRIPLES",
@@ -319,7 +319,7 @@ class TestFullFlow:
             return _fake_judge_result(inp.paper_id, inp.field_name)
 
         with patch.object(judge_cli, "run_pass1", sometimes_fail), \
-             patch.object(judge_cli, "get_model_digest", lambda m: "d"):
+             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
             code = judge_cli.run([
                 "--review", "cli_test",
                 "--input", "AI_TRIPLES",
@@ -346,7 +346,7 @@ class TestFullFlow:
             raise JudgeCallError("boom")
 
         with patch.object(judge_cli, "run_pass1", always_fail), \
-             patch.object(judge_cli, "get_model_digest", lambda m: "d"):
+             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
             code = judge_cli.run([
                 "--review", "cli_test",
                 "--input", "AI_TRIPLES",
@@ -388,7 +388,7 @@ class TestFullFlow:
                 })
 
         with patch.object(judge_cli, "run_pass1", one_fail), \
-             patch.object(judge_cli, "get_model_digest", lambda m: "d"):
+             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
             code = judge_cli.run([
                 "--review", "cli_test",
                 "--input", "AI_TRIPLES",

@@ -46,7 +46,7 @@ from analysis.paper1.judge_storage import (
     insert_judge_result,
 )
 from engine.core.database import ReviewDatabase
-from engine.utils.ollama_client import get_model_digest
+from engine.utils.ollama_client import fetch_model_digest
 
 logger = logging.getLogger(__name__)
 
@@ -233,7 +233,7 @@ def run(argv: Optional[list[str]] = None) -> int:
         return 1
 
     run_id = _new_run_id(args.review, args.pass_number)
-    model_digest = get_model_digest(args.model) or args.model
+    model_digest = fetch_model_digest(args.model)
 
     if not args.dry_run:
         try:

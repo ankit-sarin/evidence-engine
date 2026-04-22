@@ -8,8 +8,10 @@ import pytest
 from engine.utils.ollama_client import (
     DEFAULT_MAX_RETRIES,
     MODEL_TIMEOUTS,
+    ModelDigestError,
     _restart_ollama_and_retry,
     _wall_timeout_for_model,
+    fetch_model_digest,
     get_model_digest,
     ollama_chat,
 )
@@ -335,6 +337,89 @@ class TestGetModelDigest:
         assert result is None
         assert "Failed to get digest" in caplog.text
         assert "deepseek-r1:32b" in caplog.text
+
+
+# ── Strict digest fetch (judge orchestrator) ─────────────────────────
+
+
+VALID_DIGEST = "a" * 64  # 64 lowercase hex chars
+
+
+def _tags_response(models, status=200):
+    """Build a minimal httpx.Response stand-in for /api/tags."""
+    resp = MagicMock()
+    resp.status_code = status
+    resp.text = "(body)"
+    if isinstance(models, Exception):
+        resp.json.side_effect = models
+    else:
+        resp.json.return_value = {"models": models}
+    return resp
+
+
+class TestFetchModelDigest:
+    def test_well_formed_returns_digest(self):
+        models = [
+            {"name": "gemma3:27b", "digest": VALID_DIGEST,
+             "modified_at": "2026-03-09T01:01:47Z"},
+            {"name": "deepseek-r1:32b", "digest": "b" * 64,
+             "modified_at": "2026-01-01T00:00:00Z"},
+        ]
+        with patch("engine.utils.ollama_client.httpx.get",
+                   return_value=_tags_response(models)) as mock_get:
+            digest = fetch_model_digest("gemma3:27b")
+
+        assert digest == VALID_DIGEST
+        assert len(digest) == 64 and all(c in "0123456789abcdef" for c in digest)
+        # Asserts the canonical endpoint was hit
+        called_url = mock_get.call_args.args[0]
+        assert called_url.endswith("/api/tags")
+
+    def test_malformed_digest_raises(self):
+        # Truncated to 32 chars — fails ^[0-9a-f]{64}$
+        bad = "a" * 32
+        models = [{"name": "gemma3:27b", "digest": bad,
+                   "modified_at": "2026-03-09T01:01:47Z"}]
+        with patch("engine.utils.ollama_client.httpx.get",
+                   return_value=_tags_response(models)):
+            with pytest.raises(ModelDigestError, match="malformed digest"):
+                fetch_model_digest("gemma3:27b")
+
+    def test_non_hex_digest_raises(self):
+        # Uppercase hex is not accepted (regex requires lowercase)
+        bad = "A" * 64
+        models = [{"name": "gemma3:27b", "digest": bad,
+                   "modified_at": "2026-03-09T01:01:47Z"}]
+        with patch("engine.utils.ollama_client.httpx.get",
+                   return_value=_tags_response(models)):
+            with pytest.raises(ModelDigestError, match="malformed digest"):
+                fetch_model_digest("gemma3:27b")
+
+    def test_missing_model_raises(self):
+        models = [{"name": "deepseek-r1:32b", "digest": VALID_DIGEST,
+                   "modified_at": "2026-01-01T00:00:00Z"}]
+        with patch("engine.utils.ollama_client.httpx.get",
+                   return_value=_tags_response(models)):
+            with pytest.raises(ModelDigestError, match="no entry for model_name"):
+                fetch_model_digest("gemma3:27b")
+
+    def test_ambiguous_multiple_matches_raises(self):
+        models = [
+            {"name": "gemma3:27b", "digest": "a" * 64,
+             "modified_at": "2026-03-09T01:01:47Z"},
+            {"name": "gemma3:27b", "digest": "b" * 64,
+             "modified_at": "2026-04-01T00:00:00Z"},
+        ]
+        with patch("engine.utils.ollama_client.httpx.get",
+                   return_value=_tags_response(models)):
+            with pytest.raises(ModelDigestError, match="ambiguous"):
+                fetch_model_digest("gemma3:27b")
+
+    def test_non_200_status_raises(self):
+        resp = _tags_response([], status=503)
+        with patch("engine.utils.ollama_client.httpx.get", return_value=resp):
+            with pytest.raises(ModelDigestError, match="non-200"):
+                fetch_model_digest("gemma3:27b")
 
 
 class TestDigestInExtraction:

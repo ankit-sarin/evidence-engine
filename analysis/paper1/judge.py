@@ -32,7 +32,7 @@ from analysis.paper1.judge_schema import (
     Pass2Output,
     Pass2Result,
 )
-from engine.utils.ollama_client import get_model_digest, ollama_chat
+from engine.utils.ollama_client import fetch_model_digest, ollama_chat
 
 logger = logging.getLogger(__name__)
 
@@ -141,7 +141,7 @@ def run_pass1(
             raw_response=raw_response,
         ) from exc
 
-    digest = get_model_digest(model) or model
+    digest = fetch_model_digest(model)
     timestamp_iso = datetime.now(timezone.utc).isoformat()
 
     return JudgeResult(
@@ -225,7 +225,7 @@ def run_pass2(
 
     _validate_pass2_coverage(pass2, arm_permutation)
 
-    digest = get_model_digest(model) or model
+    digest = fetch_model_digest(model)
     timestamp_iso = datetime.now(timezone.utc).isoformat()
 
     return Pass2Result(

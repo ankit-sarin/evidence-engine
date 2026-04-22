@@ -365,6 +365,12 @@ class ReviewDatabase:
         )
         mod_008.run_migration(str(self.db_path))
 
+        # Migration 009: add judge_run_audit (post-hoc correction trail).
+        mod_009 = importlib.import_module(
+            "engine.migrations.009_add_backfill_audit_log"
+        )
+        mod_009.run_migration(str(self.db_path))
+
     # ── Papers ───────────────────────────────────────────────
 
     def add_papers(self, citations: list[Citation]) -> int:

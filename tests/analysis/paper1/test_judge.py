@@ -102,7 +102,7 @@ class TestRunPass1Happy:
         inp = _input()
         mock = _MockChatFactory(_pass1_response_json(3))
         with patch.object(judge_module, "ollama_chat", mock), \
-             patch.object(judge_module, "get_model_digest",
+             patch.object(judge_module, "fetch_model_digest",
                           lambda m: "sha256:abc"):
             result = run_pass1(inp, run_id="r1")
 
@@ -119,7 +119,7 @@ class TestRunPass1Happy:
         inp = _input()
         with patch.object(judge_module, "ollama_chat",
                           _MockChatFactory(_pass1_response_json(3))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             result = run_pass1(inp, run_id="r1")
         assert len(result.prompt_hash) == 64
         assert all(c in "0123456789abcdef" for c in result.prompt_hash)
@@ -128,7 +128,7 @@ class TestRunPass1Happy:
         inp = _input()
         with patch.object(judge_module, "ollama_chat",
                           _MockChatFactory(_pass1_response_json(3))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             r1 = run_pass1(inp, run_id="r1")
             r2 = run_pass1(inp, run_id="r1")
         assert r1.prompt_hash == r2.prompt_hash
@@ -142,7 +142,7 @@ class TestRunPass1Happy:
         )
         with patch.object(judge_module, "ollama_chat",
                           _MockChatFactory(_pass1_response_json(3))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             r1 = run_pass1(inp_a, run_id="r1")
             r2 = run_pass1(inp_b, run_id="r1")
         assert r1.prompt_hash != r2.prompt_hash
@@ -151,7 +151,7 @@ class TestRunPass1Happy:
         inp = _input()
         with patch.object(judge_module, "ollama_chat",
                           _MockChatFactory(_pass1_response_json(3))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             result = run_pass1(inp, run_id="r1")
         # Python 3.11+ parses trailing +00:00 natively.
         parsed = datetime.fromisoformat(result.timestamp_iso)
@@ -166,7 +166,7 @@ class TestRunPass1Happy:
             return _mock_chat_response(_pass1_response_json(3))
 
         with patch.object(judge_module, "ollama_chat", capture), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             result = run_pass1(inp, run_id="r1")
 
         prompt = captured["prompt"]
@@ -180,7 +180,7 @@ class TestRunPass1Happy:
         inp = _input()
         mock = _MockChatFactory(_pass1_response_json(3))
         with patch.object(judge_module, "ollama_chat", mock), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             result = run_pass1(inp, run_id="r1")
         opts = mock.calls[0]["options"]
         assert opts["seed"] == result.seed
@@ -191,7 +191,7 @@ class TestRunPass1Happy:
         inp = _input(arms=arms)
         with patch.object(judge_module, "ollama_chat",
                           _MockChatFactory(_pass1_response_json(5))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             result = run_pass1(inp, run_id="r1")
         assert len(result.pass1.pairwise_ratings) == 10
 
@@ -231,7 +231,7 @@ class TestRunPass1Errors:
             raise TimeoutError("upstream timeout")
 
         with patch.object(judge_module, "ollama_chat", boom), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             with pytest.raises(JudgeCallError):
                 run_pass1(inp, run_id="r1")
 
@@ -239,7 +239,7 @@ class TestRunPass1Errors:
         inp = _input()
         mock = _MockChatFactory("not json at all { ")
         with patch.object(judge_module, "ollama_chat", mock), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             with pytest.raises(JudgeParseError) as exc_info:
                 run_pass1(inp, run_id="r1")
         assert exc_info.value.raw_response == "not json at all { "
@@ -261,7 +261,7 @@ class TestRunPass1Errors:
         )
         mock = _MockChatFactory(bad)
         with patch.object(judge_module, "ollama_chat", mock), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             with pytest.raises(JudgeParseError) as exc_info:
                 run_pass1(inp, run_id="r1")
         assert exc_info.value.raw_response == bad

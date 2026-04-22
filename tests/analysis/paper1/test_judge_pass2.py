@@ -82,7 +82,7 @@ class TestRunPass2Happy:
         inp = _input()
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(_happy_payload(3))), \
-             patch.object(judge_module, "get_model_digest",
+             patch.object(judge_module, "fetch_model_digest",
                           lambda m: "sha256:abc"):
             res = run_pass2(inp, run_id="r1", source_text="some source.")
         assert isinstance(res, Pass2Result)
@@ -96,7 +96,7 @@ class TestRunPass2Happy:
         inp = _input()
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(_happy_payload(3))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             res = run_pass2(inp, run_id="r1", source_text="src")
         # local + anthropic clean, openai dirty.
         assert res.pre_check_short_circuit_by_arm["local"] is True
@@ -107,7 +107,7 @@ class TestRunPass2Happy:
         inp = _input()
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(_happy_payload(3))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             res = run_pass2(inp, run_id="r1", source_text="src")
         assert set(res.arm_permutation) == {
             "local", "openai_o4_mini_high", "anthropic_sonnet_4_6"
@@ -122,7 +122,7 @@ class TestRunPass2Happy:
             return _mock_resp(_happy_payload(3))
 
         with patch.object(judge_module, "ollama_chat", capture), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             res = run_pass2(inp, run_id="r1", source_text="src")
         assert calls["options"]["temperature"] == 0.0
         assert calls["options"]["seed"] == res.seed
@@ -131,7 +131,7 @@ class TestRunPass2Happy:
         inp = _input()
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(_happy_payload(3))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             res = run_pass2(inp, run_id="r1", source_text="src")
         mapping = de_randomize_verdicts(res)
         assert set(mapping.keys()) == {
@@ -143,7 +143,7 @@ class TestRunPass2Happy:
         inp = _input()
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(_happy_payload(3))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             res = run_pass2(inp, run_id="r1", source_text="short source.")
         assert res.source_text_windowed is False
         assert res.source_text_tokens > 0
@@ -152,7 +152,7 @@ class TestRunPass2Happy:
         inp = _input()
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(_happy_payload(3))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             res = run_pass2(inp, run_id="r1", source_text="src")
         assert len(res.prompt_hash) == 64
         assert all(c in "0123456789abcdef" for c in res.prompt_hash)
@@ -161,7 +161,7 @@ class TestRunPass2Happy:
         inp = _input()
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(_happy_payload(3))), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             r1 = run_pass2(inp, run_id="r1", source_text="src")
             r2 = run_pass2(inp, run_id="r1", source_text="src")
         assert r1.seed == r2.seed
@@ -185,14 +185,14 @@ class TestRunPass2Errors:
         def boom(**kwargs):
             raise TimeoutError("upstream timeout")
         with patch.object(judge_module, "ollama_chat", boom), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             with pytest.raises(JudgeCallError):
                 run_pass2(_input(), run_id="r1", source_text="src")
 
     def test_malformed_json_raises_parse_error(self):
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp("not json {")), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             with pytest.raises(JudgeParseError) as exc_info:
                 run_pass2(_input(), run_id="r1", source_text="src")
         assert "not json {" == exc_info.value.raw_response
@@ -207,7 +207,7 @@ class TestRunPass2Errors:
         })
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(bad)), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             with pytest.raises(JudgeParseError):
                 run_pass2(_input(), run_id="r1", source_text="src")
 
@@ -223,7 +223,7 @@ class TestRunPass2Errors:
         })
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(bad)), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             with pytest.raises(JudgeParseError):
                 run_pass2(_input(), run_id="r1", source_text="src")
 
@@ -238,7 +238,7 @@ class TestRunPass2Errors:
         })
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(bad)), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             with pytest.raises(JudgeParseError):
                 run_pass2(_input(), run_id="r1", source_text="src")
 
@@ -254,6 +254,6 @@ class TestRunPass2Errors:
         })
         with patch.object(judge_module, "ollama_chat",
                           lambda **kw: _mock_resp(bad)), \
-             patch.object(judge_module, "get_model_digest", lambda m: "d"):
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
             with pytest.raises(JudgeParseError):
                 run_pass2(_input(), run_id="r1", source_text="src")

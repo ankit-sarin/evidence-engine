@@ -82,6 +82,92 @@ def get_model_digest(model_name: str) -> str | None:
         return None
 
 
+# ── Strict digest fetch for judge runs ───────────────────────────────
+
+OLLAMA_BASE_URL = "http://localhost:11434"
+_DIGEST_RE = re.compile(r"^[0-9a-f]{64}$")
+
+
+class ModelDigestError(RuntimeError):
+    """Raised by fetch_model_digest when the digest cannot be verified.
+
+    No silent fallback to the model-name string — callers should treat this
+    as a hard failure. Used by the Paper 1 judge orchestrator so every
+    judge_runs row stores a verifiable content digest, not a tag.
+    """
+
+
+def fetch_model_digest(
+    model_name: str,
+    *,
+    base_url: str = OLLAMA_BASE_URL,
+    timeout: float = 5.0,
+) -> str:
+    """Return the SHA-256 manifest digest for `model_name` via /api/tags.
+
+    The digest is not exposed on /api/show in current Ollama versions; the
+    canonical structured field is models[].digest on /api/tags. This
+    function performs the HTTP GET, filters by exact name match, and
+    asserts the result is a 64-char lowercase hex string.
+
+    Raises
+    ------
+    ModelDigestError
+        On any of: non-200 response, unparseable JSON, missing models key,
+        zero or multiple entries matching model_name, or a digest that
+        does not match ^[0-9a-f]{64}$.
+    """
+    url = f"{base_url.rstrip('/')}/api/tags"
+    try:
+        resp = httpx.get(url, timeout=timeout)
+    except httpx.HTTPError as exc:
+        raise ModelDigestError(
+            f"fetch_model_digest: HTTP error calling {url}: {exc}"
+        ) from exc
+
+    if resp.status_code != 200:
+        raise ModelDigestError(
+            f"fetch_model_digest: non-200 from {url}: "
+            f"status={resp.status_code} body={resp.text[:200]!r}"
+        )
+
+    try:
+        payload = resp.json()
+    except ValueError as exc:
+        raise ModelDigestError(
+            f"fetch_model_digest: response not JSON: {exc}"
+        ) from exc
+
+    models = payload.get("models") if isinstance(payload, dict) else None
+    if not isinstance(models, list):
+        raise ModelDigestError(
+            f"fetch_model_digest: 'models' key missing or not a list in "
+            f"response: keys={sorted(payload.keys()) if isinstance(payload, dict) else type(payload).__name__}"
+        )
+
+    matches = [m for m in models if isinstance(m, dict) and m.get("name") == model_name]
+    if len(matches) == 0:
+        available = [m.get("name") for m in models if isinstance(m, dict)]
+        raise ModelDigestError(
+            f"fetch_model_digest: no entry for model_name={model_name!r} "
+            f"in /api/tags; available={available}"
+        )
+    if len(matches) > 1:
+        raise ModelDigestError(
+            f"fetch_model_digest: ambiguous — {len(matches)} entries "
+            f"match model_name={model_name!r} in /api/tags"
+        )
+
+    digest = matches[0].get("digest")
+    if not isinstance(digest, str) or not _DIGEST_RE.fullmatch(digest):
+        raise ModelDigestError(
+            f"fetch_model_digest: malformed digest for {model_name!r}: "
+            f"{digest!r} (expected 64 lowercase hex chars)"
+        )
+
+    return digest
+
+
 def _wall_timeout_for_model(model: str) -> float:
     """Return wall-clock timeout in seconds for a given model name."""
     for pattern, timeout in MODEL_TIMEOUTS.items():

@@ -28,6 +28,7 @@ fields:
   # ═══════════════════════════════════════════════════════════════════
 
   - name: study_type
+    judge_rubric_family: nominal_categorical
     tier: 1
     type: categorical
     definition: >-
@@ -64,6 +65,7 @@ fields:
       8. None of the above → "Other"
 
   - name: robot_platform
+    judge_rubric_family: numeric_verbatim
     tier: 1
     type: free_text
     definition: >-
@@ -76,6 +78,7 @@ fields:
       record as stated.
 
   - name: task_performed
+    judge_rubric_family: numeric_verbatim
     tier: 1
     type: free_text
     definition: >-
@@ -86,6 +89,7 @@ fields:
       If multiple autonomous tasks, list all separated by semicolons.
 
   - name: sample_size
+    judge_rubric_family: numeric_verbatim
     tier: 1
     type: numeric
     definition: >-
@@ -98,6 +102,7 @@ fields:
       Enter the number only, or NR.
 
   - name: surgical_domain
+    judge_rubric_family: nominal_categorical
     tier: 1
     type: categorical
     definition: >-
@@ -139,6 +144,17 @@ fields:
   # ═══════════════════════════════════════════════════════════════════
 
   - name: autonomy_level
+    judge_rubric_family: ordinal
+    dimension: "autonomy"
+    ordered_values:
+      - "0 (No autonomy)"
+      - "1 (Robot assistance)"
+      - "2 (Task autonomy)"
+      - "3 (Conditional autonomy)"
+      - "4 (High autonomy)"
+      - "5 (Full autonomy)"
+      - "Mixed/Multiple"
+      - "NR"
     tier: 2
     type: categorical
     definition: >-
@@ -185,6 +201,17 @@ fields:
         value: "4 (High autonomy)"
 
   - name: validation_setting
+    judge_rubric_family: ordinal
+    dimension: "validation fidelity"
+    ordered_values:
+      - "In vivo (human)"
+      - "In vivo (animal)"
+      - "Ex vivo"
+      - "Phantom/Simulation"
+      - "Cadaver"
+      - "Computational/Virtual"
+      - "Mixed"
+      - "NR"
     tier: 2
     type: categorical
     definition: >-
@@ -220,6 +247,7 @@ fields:
       If multiple settings are clearly identifiable, list with semicolons (e.g., "In vivo (animal); Phantom/Simulation").
 
   - name: task_monitor
+    judge_rubric_family: nominal_categorical
     tier: 2
     type: categorical
     definition: >-
@@ -244,6 +272,7 @@ fields:
         value: "Shared"
 
   - name: task_generate
+    judge_rubric_family: nominal_categorical
     tier: 2
     type: categorical
     definition: >-
@@ -269,6 +298,7 @@ fields:
         value: "Shared"
 
   - name: task_select
+    judge_rubric_family: nominal_categorical
     tier: 2
     type: categorical
     definition: >-
@@ -294,6 +324,7 @@ fields:
         value: "Shared"
 
   - name: task_execute
+    judge_rubric_family: nominal_categorical
     tier: 2
     type: categorical
     definition: >-
@@ -318,6 +349,15 @@ fields:
         value: "Shared"
 
   - name: system_maturity
+    judge_rubric_family: ordinal
+    dimension: "technology readiness"
+    ordered_values:
+      - "Commercial clinical system"
+      - "Commercial system + research autonomy"
+      - "Research prototype (hardware)"
+      - "Algorithm on existing platform"
+      - "Simulation / computational only"
+      - "Conceptual / framework"
     tier: 2
     type: categorical
     definition: >-
@@ -349,6 +389,7 @@ fields:
       Pick the MOST ADVANCED stage demonstrated.
 
   - name: study_design
+    judge_rubric_family: nominal_categorical
     tier: 2
     type: categorical
     definition: >-
@@ -392,6 +433,7 @@ fields:
       9. Is it a retrospective analysis of clinical cases? → "Retrospective clinical review"
 
   - name: country
+    judge_rubric_family: free_text
     tier: 2
     type: free_text
     definition: >-
@@ -406,6 +448,7 @@ fields:
   # ═══════════════════════════════════════════════════════════════════
 
   - name: primary_outcome_metric
+    judge_rubric_family: free_text
     tier: 3
     type: free_text
     definition: >-
@@ -417,6 +460,7 @@ fields:
       Do not select based on judgment of "most emphasized" — use positional order.
 
   - name: primary_outcome_value
+    judge_rubric_family: free_text
     tier: 3
     type: free_text
     definition: >-
@@ -427,6 +471,7 @@ fields:
       88.1–96.5)", "median 12 min (IQR 8–15)").
 
   - name: comparison_to_human
+    judge_rubric_family: free_text
     tier: 3
     type: free_text
     definition: >-
@@ -438,6 +483,7 @@ fields:
       record "No comparison reported".
 
   - name: secondary_outcomes
+    judge_rubric_family: free_text
     tier: 3
     type: free_text
     definition: >-
@@ -452,6 +498,7 @@ fields:
   # ═══════════════════════════════════════════════════════════════════
 
   - name: key_limitation
+    judge_rubric_family: free_text
     tier: 4
     type: free_text
     definition: >-
@@ -463,6 +510,14 @@ fields:
     source_quote_required: true
 
   - name: clinical_readiness_assessment
+    judge_rubric_family: ordinal
+    dimension: "clinical readiness"
+    ordered_values:
+      - "Ready for clinical use"
+      - "Approaching clinical readiness"
+      - "Early-stage research"
+      - "Proof of concept only"
+      - "Not assessable"
     tier: 4
     type: categorical
     definition: >-

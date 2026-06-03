@@ -563,6 +563,264 @@ def build_pass2_prompt(
     return "\n\n".join(sections)
 
 
+# ═════════════════════════════════════════════════════════════════════
+# Production codebook-aware Pass 2 prompt — build_judge_prompt()
+#
+# Dispatches the field-specific scoring rubric on the codebook's
+# `judge_rubric_family`. The four rubric-family texts are lifted VERBATIM
+# from the validated v2 prototype (analysis/paper1/judge_codebook_smoke.py).
+# Every other section (system role, field block, slots, source, base task
+# block, absence branch, output format, arm-slot handling) is identical to
+# build_pass2_prompt — the family rubric is the only addition, inserted
+# immediately before the OUTPUT FORMAT block (matching the v2 splice).
+# ═════════════════════════════════════════════════════════════════════
+
+
+_RUBRIC_HEADER = "=== FIELD-SPECIFIC SCORING RUBRIC (codebook-aware) ==="
+
+_GUARD_CATEGORICAL = (
+    "GUARDRAIL: this classification latitude exists to reward a FAITHFUL "
+    "classification of what the paper describes — it is NOT license to "
+    "accept an incorrect code. A wrong classification is UNSUPPORTED even "
+    "when the assigned label is itself a valid vocabulary value."
+)
+_GUARD_FREETEXT = (
+    "GUARDRAIL: semantic latitude is for faithful paraphrase / "
+    "entity-normalization only — it is NOT license to accept a value the "
+    "source does not support. An incorrect or invented value is UNSUPPORTED."
+)
+_GUARD_VERBATIM = (
+    "GUARDRAIL: equivalence covers correct figures/entities and correct "
+    "derivations only — it is NOT license to accept a wrong number or a "
+    "different entity. A materially wrong figure/entity is UNSUPPORTED."
+)
+
+_SCOPE_NOTE = (
+    "Apply this field-specific rubric to slots tagged \"CLEAN PRE-CHECK\" "
+    "or \"NEEDS FULL VERIFICATION\". For slots tagged \"ABSENCE CLAIM\", "
+    "use the absence-claim rubric."
+)
+
+
+def _instruction_line(raw_entry: dict) -> str:
+    instr = str(raw_entry.get("instruction", "") or "").strip()
+    if not instr:
+        return ""
+    instr = " ".join(instr.split())
+    return (f"Codebook extraction instruction (what a correct value looks "
+            f"like): {instr}\n")
+
+
+def _categorical_rubric(field_name: str, raw_entry: dict) -> str:
+    vvs = raw_entry.get("valid_values") or []
+    vv_lines = []
+    for item in vvs:
+        if isinstance(item, dict):
+            val = item.get("value", "")
+            defn = " ".join(str(item.get("definition", "")).split())
+            vv_lines.append(f"  - {val}: {defn}")
+        else:
+            vv_lines.append(f"  - {item}")
+    crit = str(raw_entry.get("decision_criteria", "") or "").strip()
+    crit_block = f"Decision criteria:\n{crit}\n\n" if crit else ""
+    return (
+        f"{_RUBRIC_HEADER}\n"
+        f"Field '{field_name}' is a CONTROLLED-VOCABULARY CLASSIFICATION. "
+        "The arm assigns one code from a fixed value set; the code label "
+        "will USUALLY NOT appear verbatim in the paper — the paper "
+        "describes the underlying concept in prose and the arm classifies "
+        "it.\n\n"
+        "Valid values and their definitions:\n"
+        + "\n".join(vv_lines) + "\n\n"
+        + crit_block
+        + _instruction_line(raw_entry)
+        + "\nScoring:\n"
+        "  SUPPORTED            — the content the paper describes maps to "
+        "the assigned code under the definitions/criteria above. Judge "
+        "whether the CODE IS THE CORRECT CLASSIFICATION of what the paper "
+        "describes; do NOT require the label to appear verbatim.\n"
+        "  PARTIALLY_SUPPORTED  — the code is defensible but the paper is "
+        "ambiguous between this and another code, or under-determined.\n"
+        "  UNSUPPORTED          — misclassification: the paper describes "
+        "content that maps to a DIFFERENT code (e.g., the paper describes "
+        "urology but the value is \"Cardiac/Thoracic\"), or no code is "
+        "supportable from the source.\n\n"
+        f"{_GUARD_CATEGORICAL}\n\n{_SCOPE_NOTE}"
+    )
+
+
+def _freetext_rubric(field_name: str, raw_entry: dict) -> str:
+    return (
+        f"{_RUBRIC_HEADER}\n"
+        f"Field '{field_name}' is FREE TEXT. Score by SEMANTIC "
+        "EQUIVALENCE, not string match.\n\n"
+        + _instruction_line(raw_entry)
+        + "\nScoring:\n"
+        "  SUPPORTED            — the value is a faithful representation of "
+        "what the source states: exact match OR faithful paraphrase / "
+        "entity-form normalization.\n"
+        "  PARTIALLY_SUPPORTED  — overlapping but less complete or less "
+        "specific than the source, or a defensible-but-partial reading.\n"
+        "  UNSUPPORTED          — the value is not grounded in the source: "
+        "it contradicts, materially distorts, or invents content.\n\n"
+        f"{_GUARD_FREETEXT}\n\n{_SCOPE_NOTE}"
+    )
+
+
+def _verbatim_rubric(field_name: str, raw_entry: dict) -> str:
+    return (
+        f"{_RUBRIC_HEADER}\n"
+        f"Field '{field_name}' records a SPECIFIC FIGURE OR NAMED ENTITY. "
+        "Verify the figure/entity is present in the source OR correctly "
+        "DERIVED from it (e.g., a summed sample size).\n\n"
+        + _instruction_line(raw_entry)
+        + "\nScoring:\n"
+        "  SUPPORTED            — the figure/entity appears in the source "
+        "or is a correct derivation (e.g., 4 pigs + 5 phantoms = 9). "
+        "Formatting/unit differences that are numerically or semantically "
+        "equal are SUPPORTED.\n"
+        "  PARTIALLY_SUPPORTED  — the figure/entity is in the right area "
+        "but differs in detail, or the derivation is defensible yet "
+        "uncertain.\n"
+        "  UNSUPPORTED          — the figure/entity is absent from the "
+        "source or materially wrong.\n\n"
+        f"{_GUARD_VERBATIM}\n\n{_SCOPE_NOTE}"
+    )
+
+
+def _ordinal_rubric(field_name: str, raw_entry: dict) -> str:
+    """v2 ordinal/graded rubric — scores the assigned level against the
+    level the paper's described evidence actually demonstrates.
+
+    Data-driven: the ordered scale comes from the codebook's
+    `ordered_values` and the [DIMENSION] from its `dimension` label (added
+    by the codebook enrichment). Falls back to valid_values order / the
+    field name if those keys are absent, preserving the v2 prototype's
+    output byte-for-byte.
+    """
+    vvs = raw_entry.get("valid_values") or []
+    vv_lines: list[str] = []
+    for item in vvs:
+        if isinstance(item, dict):
+            val = item.get("value", "")
+            defn = " ".join(str(item.get("definition", "")).split())
+            vv_lines.append(f"  - {val}: {defn}")
+        else:
+            vv_lines.append(f"  - {item}")
+    ordered_values = raw_entry.get("ordered_values")
+    if ordered_values:
+        names = [str(v) for v in ordered_values]
+    else:
+        names = [
+            str(item.get("value", "")) if isinstance(item, dict) else str(item)
+            for item in vvs
+        ]
+    ordered = " → ".join(names)
+    crit = str(raw_entry.get("decision_criteria", "") or "").strip()
+    dim = raw_entry.get("dimension") or field_name
+    return (
+        f"{_RUBRIC_HEADER}\n"
+        f"Field '{field_name}' is an ORDERED SCALE; its values represent "
+        f"increasing levels of {dim}, in order: {ordered}.\n\n"
+        "Level definitions:\n" + "\n".join(vv_lines) + "\n\n"
+        f"Decision rules: {crit}\n\n"
+        + _instruction_line(raw_entry)
+        + "\nScore the assigned level against the level the paper's "
+        "described evidence ACTUALLY demonstrates.\n"
+        "  SUPPORTED            — only if the evidence EARNS the assigned "
+        "level: it must be demonstrated by described capability or results, "
+        "not merely implied.\n"
+        "  UNSUPPORTED          — if the assigned level is HIGHER than the "
+        f"evidence supports. Crediting a higher level because the system "
+        f"shows some {dim} is the PRIMARY FABRICATION MODE for this field "
+        "and must be flagged.\n"
+        "  PARTIALLY_SUPPORTED  — if the evidence is consistent with the "
+        "level but does not pin it down, or supports an adjacent level — "
+        "withhold full support rather than credit an unproven level.\n\n"
+        f"{_SCOPE_NOTE}"
+    )
+
+
+_RUBRIC_FAMILY_DISPATCH = {
+    "nominal_categorical": _categorical_rubric,
+    "ordinal": _ordinal_rubric,
+    "free_text": _freetext_rubric,
+    "numeric_verbatim": _verbatim_rubric,
+}
+
+
+def build_family_rubric(
+    field_name: str, judge_rubric_family: Optional[str], codebook_entry: dict,
+) -> str:
+    """Return the field-specific rubric block for the declared family."""
+    fn = _RUBRIC_FAMILY_DISPATCH.get(judge_rubric_family or "")
+    if fn is None:
+        raise ValueError(
+            f"unknown judge_rubric_family {judge_rubric_family!r} for field "
+            f"{field_name!r}; expected one of {sorted(_RUBRIC_FAMILY_DISPATCH)}"
+        )
+    return fn(field_name, codebook_entry)
+
+
+def build_judge_prompt(
+    input: JudgeInput,
+    shuffled_arms: List[ArmOutput],
+    source_text: str,
+    source_text_windowed: bool,
+    codebook_entry: dict,
+) -> str:
+    """Render the production codebook-aware Pass 2 prompt. Deterministic.
+
+    Identical to build_pass2_prompt except for the field-specific rubric
+    block (dispatched on codebook_entry['judge_rubric_family']) inserted
+    immediately before the OUTPUT FORMAT block.
+    """
+    field_lines = [
+        "=== FIELD UNDER REVIEW ===",
+        f"Paper id: {input.paper_id}",
+        f"Field name: {input.field_name}",
+        f"Field type: {input.field_type}",
+        f"Definition: {input.field_definition}",
+    ]
+    if input.field_type == "categorical" and input.field_valid_values:
+        field_lines.append(
+            f"Valid values: {', '.join(input.field_valid_values)}"
+        )
+    field_block = "\n".join(field_lines)
+
+    slots_rendered = "\n\n".join(
+        _render_pass2_slot(i + 1, arm) for i, arm in enumerate(shuffled_arms)
+    )
+    extracted_block = "=== EXTRACTED OUTPUTS ===\n" + slots_rendered
+
+    source_header = (
+        "=== SOURCE EXCERPT (windowed) ==="
+        if source_text_windowed
+        else "=== SOURCE TEXT (full) ==="
+    )
+    source_block = f"{source_header}\n{source_text}"
+
+    sections = [
+        _PASS2_SYSTEM_ROLE,
+        field_block,
+        extracted_block,
+        source_block,
+        _PASS2_TASK_BLOCK,
+    ]
+    if any(is_absence_claim(arm.value) for arm in shuffled_arms):
+        sections.append(
+            _PASS2_ABSENCE_RUBRIC_TEMPLATE.format(field_name=input.field_name)
+        )
+    sections.append(
+        build_family_rubric(
+            input.field_name, codebook_entry.get("judge_rubric_family"),
+            codebook_entry,
+        )
+    )
+    sections.append(_PASS2_OUTPUT_FORMAT_BLOCK)
+    return "\n\n".join(sections)
+
+
 __all__ = [
     "ABSENCE_SENTINELS",
     "PASS2_CHARS_PER_TOKEN_APPROX",
@@ -571,6 +829,8 @@ __all__ = [
     "PASS2_WINDOW_RADIUS_TOKENS",
     "SPAN_TRUNCATE_CHARS",
     "arm_short_circuit_eligible",
+    "build_family_rubric",
+    "build_judge_prompt",
     "build_pass1_prompt",
     "build_pass2_prompt",
     "compute_seed",

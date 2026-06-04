@@ -36,6 +36,7 @@ from analysis.paper1.judge_loader import (
     load_codebook,
     load_raw_codebook,
 )
+from analysis.paper1.judge_prompts import compute_seed_pass2
 from analysis.paper1.judge_schema import (
     JudgeInput,
     PartiallySupportedVerdict,
@@ -49,6 +50,7 @@ from analysis.paper1.judge_storage import (
     create_judge_run,
     insert_pass2_verifications,
 )
+from engine.agents.extractor import restart_ollama
 from engine.core.database import ReviewDatabase
 from engine.utils.ollama_client import fetch_model_digest
 
@@ -177,44 +179,84 @@ def run_full(
     run_tag: str,
     dry_run: bool,
     t_start: float,
+    seed_run_id: Optional[str] = None,
+    resume_run_id: Optional[str] = None,
+    restart_every: int = 0,
 ) -> tuple[str, list[TripleResult]]:
-    """Execute Pass 2 verification for every candidate. Incremental DB writes."""
-    run_id = _new_run_id(review, tag=run_tag)
-    model_digest = fetch_model_digest(model)
+    """Execute Pass 2 verification for every candidate. Incremental DB writes.
 
-    if not dry_run:
-        create_judge_run(
-            db,
-            run_id=run_id,
-            judge_model_name=model,
-            judge_model_digest=model_digest,
-            codebook_sha256=codebook_sha,
-            pass_number=2,
-            input_scope="AI_TRIPLES",
-            run_config={
-                "pass1_run_id": pass1_run_id,
-                "codebook_path": str(codebook_path),
-                "model": model,
-                "n_selected": len(candidates),
-                "checkpoint_every": CHECKPOINT_EVERY,
-                "stall_threshold_sec": STALL_THRESHOLD_SEC,
-                "fail_rate_threshold": FAIL_RATE_THRESHOLD,
-                "abort_projection_hours": ABORT_PROJECTION_HOURS,
-            },
-            notes=f"pass2 full run linked to {pass1_run_id}",
-        )
-        logger.info("Created judge_run %s", run_id)
+    seed_run_id: reuse this run's per-triple seeds / arm-slot assignments
+        (passed to run_pass2) so this run differs from a prior one ONLY by the
+        prompt. None → self-seed on the new run_id.
+    resume_run_id: continue an existing judge_run instead of minting a new one —
+        triples already present in fabrication_verifications for that run_id are
+        skipped (crash-safe resume). None → fresh run.
+    restart_every: proactively restart Ollama every N processed triples to clear
+        CUDA/KV drift over a long run. 0 → disabled.
+    """
+    resuming = resume_run_id is not None
+    if resuming:
+        run_id = resume_run_id
+        model_digest = fetch_model_digest(model)
+        done = _done_triples(db, run_id)
+        logger.info("RESUME run %s — %d triples already done, skipping those",
+                    run_id, len(done))
+    else:
+        run_id = _new_run_id(review, tag=run_tag)
+        model_digest = fetch_model_digest(model)
+        done = set()
+        if not dry_run:
+            create_judge_run(
+                db,
+                run_id=run_id,
+                judge_model_name=model,
+                judge_model_digest=model_digest,
+                codebook_sha256=codebook_sha,
+                pass_number=2,
+                input_scope="AI_TRIPLES",
+                run_config={
+                    "pass1_run_id": pass1_run_id,
+                    "codebook_path": str(codebook_path),
+                    "model": model,
+                    "n_selected": len(candidates),
+                    "checkpoint_every": CHECKPOINT_EVERY,
+                    "stall_threshold_sec": STALL_THRESHOLD_SEC,
+                    "fail_rate_threshold": FAIL_RATE_THRESHOLD,
+                    "abort_projection_hours": ABORT_PROJECTION_HOURS,
+                    "seed_run_id": seed_run_id,
+                    "restart_every": restart_every,
+                },
+                notes=f"pass2 full run linked to {pass1_run_id}"
+                      + (f"; seeds reused from {seed_run_id}" if seed_run_id else ""),
+            )
+            logger.info("Created judge_run %s", run_id)
+    if seed_run_id:
+        logger.info("Reusing per-triple seeds/arm-slots from run %s", seed_run_id)
 
     review_dir = db.db_path.parent
     raw_codebook = load_raw_codebook(codebook_path)
     results: list[TripleResult] = []
     total = len(candidates)
     failures = 0
+    processed = 0  # triples actually run this session (drives restart cadence)
+    seed_checks = 0
     running = {"SUPPORTED": 0, "PARTIALLY_SUPPORTED": 0, "UNSUPPORTED": 0}
 
     for i, cand in enumerate(candidates, 1):
         t_triple = time.time()
         key = (cand.paper_id, cand.field_name)
+
+        if key in done:
+            continue
+
+        # Proactive Ollama restart on the per-unit cadence (matches the
+        # extractor's RESTART_EVERY_N pattern) to clear CUDA/KV drift.
+        if restart_every and processed > 0 and processed % restart_every == 0:
+            try:
+                restart_ollama(reason="proactive", papers_done=processed)
+            except Exception as exc:  # pragma: no cover - best effort
+                logger.error("proactive restart failed (continuing): %s", exc)
+        processed += 1
         inp = judge_inputs.get(key)
 
         if inp is None:
@@ -250,6 +292,7 @@ def run_full(
             result: Pass2Result = run_pass2(
                 inp, run_id=run_id, source_text=source, model=model,
                 codebook_entry=raw_codebook.get(cand.field_name),
+                seed_run_id=seed_run_id,
             )
         except JudgeError as exc:
             elapsed = time.time() - t_triple
@@ -309,23 +352,56 @@ def run_full(
             elapsed, result.source_text_windowed,
         )
 
+        # Confirm seed reuse on the first few triples (mirrors the 2a smoke):
+        # the seed actually used must equal the prior run's seed for this triple.
+        if seed_run_id and seed_checks < 5:
+            seed_checks += 1
+            expected = compute_seed_pass2(
+                cand.paper_id, cand.field_name, seed_run_id
+            )
+            match = result.seed == expected
+            logger.info(
+                "SEED_CHECK %s/%s used=%d prior(%s)=%d match=%s",
+                cand.paper_id, cand.field_name, result.seed,
+                seed_run_id, expected, match,
+            )
+            if not match:
+                raise AbortError(
+                    f"seed reuse broken for {cand.paper_id}/{cand.field_name}: "
+                    f"used {result.seed} != prior {expected}"
+                )
+
         if i % CHECKPOINT_EVERY == 0 and not dry_run:
             _log_checkpoint(i, total, failures, running, t_start)
             _check_abort_conditions(i, total, failures, t_start)
 
     if not dry_run:
-        successes = len(results) - failures
+        # Count from the DB so counters are correct across resume sessions:
+        # succeeded = distinct triples with rows; failed = universe - succeeded.
+        succeeded = len(_done_triples(db, run_id))
+        attempted = len(candidates)
+        failed = attempted - succeeded
         try:
             complete_judge_run(
                 db, run_id,
-                n_triples_attempted=len(results),
-                n_triples_succeeded=successes,
-                n_triples_failed=failures,
+                n_triples_attempted=attempted,
+                n_triples_succeeded=succeeded,
+                n_triples_failed=failed,
             )
         except JudgeStorageError as exc:
             logger.error("complete_judge_run failed: %s", exc)
 
     return run_id, results
+
+
+def _done_triples(db: ReviewDatabase, run_id: str) -> set[tuple[str, str]]:
+    """Distinct (paper_id, field_name) already written for this run_id."""
+    rows = db._conn.execute(
+        """SELECT DISTINCT paper_id, field_name
+           FROM fabrication_verifications WHERE judge_run_id = ?""",
+        (run_id,),
+    ).fetchall()
+    return {(r["paper_id"], r["field_name"]) for r in rows}
 
 
 def _log_checkpoint(
@@ -626,6 +702,15 @@ def _build_arg_parser() -> argparse.ArgumentParser:
                    help="Inserted into run_id: <review>_pass2_<tag>_<ts>")
     p.add_argument("--limit", type=int, default=None,
                    help="Cap triple count (sanity/smoke use only)")
+    p.add_argument("--seed-run-id", default=None,
+                   help="Reuse this run's per-triple seeds/arm-slots so this "
+                        "run differs from it ONLY by the prompt")
+    p.add_argument("--resume-run-id", default=None,
+                   help="Continue an existing judge_run; skip triples already "
+                        "written for it (crash-safe resume)")
+    p.add_argument("--restart-every", type=int, default=0,
+                   help="Proactively restart Ollama every N processed triples "
+                        "(0=disabled); clears CUDA/KV drift on long runs")
     p.add_argument("--dry-run", action="store_true",
                    help="No DB writes / no Ollama call (plan-only)")
     p.add_argument("--data-root", type=Path, default=None)
@@ -678,6 +763,9 @@ def run(argv: Optional[list[str]] = None) -> int:
             review=args.review, model=args.model,
             codebook_path=args.codebook, codebook_sha=codebook_sha,
             run_tag=args.run_tag, dry_run=False, t_start=t_start,
+            seed_run_id=args.seed_run_id,
+            resume_run_id=args.resume_run_id,
+            restart_every=args.restart_every,
         )
     except AbortError as exc:
         logger.error("ABORT: %s", exc)

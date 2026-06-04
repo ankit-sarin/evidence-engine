@@ -166,6 +166,7 @@ def run_pass2(
     model: str = DEFAULT_MODEL,
     num_ctx: int = 24576,
     codebook_entry: Optional[dict] = None,
+    seed_run_id: Optional[str] = None,
 ) -> Pass2Result:
     """Run Pass 2 fabrication verification for one triple.
 
@@ -185,6 +186,12 @@ def run_pass2(
     None the builder falls back to the legacy family-agnostic
     ``build_pass2_prompt`` (used by unit tests and the A/B smoke harness,
     which injects its own builder by monkeypatching ``build_pass2_prompt``).
+
+    Seed: ``seed_run_id`` (when given) replaces ``run_id`` in the deterministic
+    per-triple seed and arm-slot assignment, so a new storage run can reproduce
+    a prior run's seeds/shuffles exactly — making the two runs differ ONLY by
+    the prompt — while still writing under the new ``run_id``. Defaults to
+    ``run_id`` (self-consistent, no reuse).
     """
     _validate_invariants(input)
 
@@ -193,7 +200,9 @@ def run_pass2(
             f"run_pass2 requires source_text for {input.paper_id}/{input.field_name}"
         )
 
-    seed = compute_seed_pass2(input.paper_id, input.field_name, run_id)
+    seed = compute_seed_pass2(
+        input.paper_id, input.field_name, seed_run_id or run_id
+    )
     shuffled_arms, arm_permutation = randomize_arm_assignment(input.arms, seed)
     windowed_text, was_windowed, src_tokens = window_source_text(
         source_text, [a.span for a in shuffled_arms]

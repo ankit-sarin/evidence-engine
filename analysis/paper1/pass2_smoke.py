@@ -34,6 +34,7 @@ from analysis.paper1.judge_loader import (
     compute_codebook_sha256,
     load_ai_triples_csv,
     load_codebook,
+    load_raw_codebook,
 )
 from analysis.paper1.judge_prompts import arm_short_circuit_eligible
 from analysis.paper1.judge_schema import (
@@ -302,6 +303,7 @@ def run_smoke(
         logger.info("Created judge_run %s", run_id)
 
     review_dir = db.db_path.parent
+    raw_codebook = load_raw_codebook(codebook_path)
     execs: list[TripleExec] = []
     attempted = succeeded = failed = 0
 
@@ -341,7 +343,8 @@ def run_smoke(
         t0 = time.time()
         try:
             result: Pass2Result = run_pass2(
-                inp, run_id=run_id, source_text=source, model=model
+                inp, run_id=run_id, source_text=source, model=model,
+                codebook_entry=raw_codebook.get(candidate.field_name),
             )
             elapsed = time.time() - t0
         except JudgeError as exc:

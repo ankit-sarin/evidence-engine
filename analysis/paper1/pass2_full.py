@@ -34,6 +34,7 @@ from analysis.paper1.judge_loader import (
     compute_codebook_sha256,
     load_ai_triples_csv,
     load_codebook,
+    load_raw_codebook,
 )
 from analysis.paper1.judge_schema import (
     JudgeInput,
@@ -205,6 +206,7 @@ def run_full(
         logger.info("Created judge_run %s", run_id)
 
     review_dir = db.db_path.parent
+    raw_codebook = load_raw_codebook(codebook_path)
     results: list[TripleResult] = []
     total = len(candidates)
     failures = 0
@@ -246,7 +248,8 @@ def run_full(
 
         try:
             result: Pass2Result = run_pass2(
-                inp, run_id=run_id, source_text=source, model=model
+                inp, run_id=run_id, source_text=source, model=model,
+                codebook_entry=raw_codebook.get(cand.field_name),
             )
         except JudgeError as exc:
             elapsed = time.time() - t_triple

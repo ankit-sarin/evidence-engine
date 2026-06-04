@@ -138,6 +138,28 @@ def load_codebook(path: Path) -> dict[str, CodebookEntry]:
     return entries
 
 
+def load_raw_codebook(path: Path) -> dict[str, dict]:
+    """Return the raw YAML field dicts keyed by field_name.
+
+    Unlike :func:`load_codebook`, this preserves the full codebook entry —
+    including ``judge_rubric_family``, ``ordered_values``, ``dimension`` and
+    the verbatim ``valid_values``/``decision_criteria`` — which the
+    production Pass 2 prompt builder (``build_judge_prompt``) dispatches on.
+    """
+    path = Path(path)
+    try:
+        doc = yaml.safe_load(path.read_text())
+    except yaml.YAMLError as exc:
+        raise LoaderError(f"codebook YAML parse failed: {exc}") from exc
+    if not isinstance(doc, dict) or "fields" not in doc:
+        raise LoaderError("codebook missing top-level 'fields' list")
+    return {
+        f["name"]: f
+        for f in (doc.get("fields") or [])
+        if isinstance(f, dict) and "name" in f
+    }
+
+
 # ── Paper text + span lookups ───────────────────────────────────────
 
 

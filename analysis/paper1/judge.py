@@ -16,6 +16,7 @@ from pydantic import ValidationError
 
 from analysis.paper1.judge_prompts import (
     arm_short_circuit_eligible,
+    build_judge_prompt,
     build_pass1_prompt,
     build_pass2_prompt,
     compute_seed,
@@ -164,6 +165,7 @@ def run_pass2(
     source_text: str,
     model: str = DEFAULT_MODEL,
     num_ctx: int = 24576,
+    codebook_entry: Optional[dict] = None,
 ) -> Pass2Result:
     """Run Pass 2 fabrication verification for one triple.
 
@@ -173,6 +175,16 @@ def run_pass2(
 
     num_ctx default (24576) leaves headroom above the 20K windowing
     budget for prompt scaffolding and response generation.
+
+    Prompt construction: when ``codebook_entry`` (the raw codebook field
+    dict, e.g. from :func:`judge_loader.load_raw_codebook`) is supplied,
+    the production codebook-aware builder ``build_judge_prompt`` is used —
+    it dispatches the field-specific scoring rubric on
+    ``judge_rubric_family``. This is the production default for all
+    orchestrators (pass2_full, pass2_smoke). When ``codebook_entry`` is
+    None the builder falls back to the legacy family-agnostic
+    ``build_pass2_prompt`` (used by unit tests and the A/B smoke harness,
+    which injects its own builder by monkeypatching ``build_pass2_prompt``).
     """
     _validate_invariants(input)
 
@@ -186,7 +198,14 @@ def run_pass2(
     windowed_text, was_windowed, src_tokens = window_source_text(
         source_text, [a.span for a in shuffled_arms]
     )
-    prompt = build_pass2_prompt(input, shuffled_arms, windowed_text, was_windowed)
+    if codebook_entry is not None:
+        prompt = build_judge_prompt(
+            input, shuffled_arms, windowed_text, was_windowed, codebook_entry
+        )
+    else:
+        prompt = build_pass2_prompt(
+            input, shuffled_arms, windowed_text, was_windowed
+        )
     prompt_hash = _hash_prompt(prompt)
 
     short_circuit_by_arm: dict[str, bool] = {

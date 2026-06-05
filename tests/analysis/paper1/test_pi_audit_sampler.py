@@ -380,10 +380,14 @@ def test_row_id_pairing_between_blinded_and_key(fixture_db, tmp_path):
     assert blinded_ids == key_ids == set(range(1, SMALL_TOTAL + 1))
 
 
-def test_stub_raises_not_implemented():
+def test_unblind_wilson_interval_bounds():
+    # pi_audit_unblind is now implemented (was a stub). Smoke-test its pure
+    # Wilson-interval helper: degenerate all-success and empty-n cases.
     from analysis.paper1 import pi_audit_unblind
-    with pytest.raises(NotImplementedError):
-        pi_audit_unblind.unblind_and_compute_precision("a", "b", "c")
+    full = pi_audit_unblind.wilson(10, 10)
+    assert full["p"] == 1.0 and full["hi"] == 1.0 and full["lo"] < 1.0
+    empty = pi_audit_unblind.wilson(0, 0)
+    assert empty["p"] is None and empty["lo"] is None and empty["hi"] is None
 
 
 # ── v2 windowing regression ─────────────────────────────────────────

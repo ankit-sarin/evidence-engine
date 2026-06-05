@@ -65,6 +65,11 @@ evidence-engine/
 | cloud_extractions | Parallel to `extractions` — tracks arm, model, cost, reasoning traces |
 | cloud_evidence_spans | Parallel to `evidence_spans` — cloud-arm field values |
 | human_extractions | Human extractor workbook values (paper_id as "EE-NNN", extractor_id A/B/C/D) |
+| judge_runs | Paper 1 LLM-as-judge runs (Pass 1 pairwise rating + Pass 2 fabrication verification). PK `run_id TEXT`. Stores `judge_model_digest` (canonical SHA-256 from Ollama `/api/tags`) and `codebook_sha256`. Migration 007. |
+| judge_ratings | Per-triple Pass 1 output. One row per (run_id, paper_id, field_name). Stores `pass1_fabrication_risk`, arm permutation, seed, prompt hash, raw response. Migration 007. |
+| judge_pair_ratings | C(N,2) rows per `judge_ratings` row — Level 1 (EQUIVALENT / PARTIAL / DIVERGENT) and Level 2 (GRANULARITY / SELECTION / FABRICATION / …) per arm pair. Migration 007. |
+| fabrication_verifications | Pass 2 per-arm verdicts. UNIQUE (judge_run_id, paper_id, field_name, arm_name). verdict ∈ {SUPPORTED, PARTIALLY_SUPPORTED, UNSUPPORTED}. CHECK: UNSUPPORTED requires non-empty reasoning + fabrication_hypothesis. CASCADE FK to judge_runs. Migration 008. |
+| judge_run_audit | Post-hoc corrections / annotations on judge_runs (open-vocabulary `event_type`, NOT NULL `rationale`, CASCADE FK). First user: the `backfill_judge_model_digest` event (commit 8fefa66). Migration 009. |
 
 ## Paper Lifecycle
 INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAGGED → PDF_ACQUIRED → PDF_EXCLUDED (terminal) or PARSED → FT_ELIGIBLE / FT_SCREENED_OUT / FT_FLAGGED → EXTRACTED / EXTRACT_FAILED → AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE → REJECTED
@@ -136,6 +141,20 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - Human workbook import (human_import.py): parse v2 extraction workbooks (.xlsx), validate against codebook, import to human_extractions table
 - Consensus derivation (consensus.py): identify ~30 shared papers across human extractors, derive majority-vote gold standard
 - Adjudication (adjudication.py): export AMBIGUOUS concordance pairs for human review (HTML/JSON), import decisions
+- LLM-as-judge pipeline (judge.py + judge_prompts.py + judge_schema.py + judge_storage.py + judge_loader.py + judge_cli.py)
+  - Pass 1: pairwise rating of arm outputs per triple. Gemma3:27b judges each pair (EQUIVALENT / PARTIAL / DIVERGENT) and assigns fabrication risk (low / medium / high). Deterministic per-triple seed = SHA-256(paper_id, field_name, run_id) first 4 bytes mod 2^31.
+  - Pass 2: per-arm fabrication verification on medium+high risk triples. Grammar-tightened Pydantic schema enforces `arm_verdicts` cardinality (exactly 3) and `arm_slot: Literal[1, 2, 3]` at generation time via Ollama's `format` parameter. Slot uniqueness remains a post-validator check (grammar cannot express `uniqueItems`). Seed = SHA-256(..., "p2") — distinct from Pass 1.
+  - Pass 2 orchestrators: `pass2_smoke.py` (24-triple calibration), `pass2_full.py` (all medium+high risk triples, checkpoint every 100), `pass2_retry_single.py` (diagnostic single-triple retry with raw-capture-before-validation).
+  - Reports: `pass1_inspection.py` (Pass 1 cross-tabs), `pass2_branchB_report.py` (descriptive preliminary report — 11 sections, uninterpreted, PI decision gate before audit sampling).
+- PI audit v1 — single-run (pi_audit_sampler.py + pi_audit_unblind.py)
+  - Balanced-within-stratum sampler: 40 UNSUPPORTED / 40 PARTIALLY_SUPPORTED / 20 SUPPORTED arm-rows; per-arm allocation 13/13/14 (40-row strata) and 7/7/6 (20-row stratum). Deterministic master_seed + SHA-256 per-cell seeds.
+  - Fully blinded output: two xlsx workbooks (blinded adjudication + separate unblinding key — hidden sheets would break the blind). Row order randomized (master_seed + 1). Forbidden-string scanner guards against leakage in all columns except `source_text`.
+  - Source-text windowing, 5 strategies: `full_text` (paper ≤ 32,767 chars), `pass2_window` (paper > 20K tokens — reproduce Pass 2's window), `arm_span_window` (±500 tokens around arm evidence span), `absence_fallback_head` (absence sentinel — no span), `missing_span_fallback_head` (arm snippet not locatable — degraded context). Strategy surfaced in the Adjudication sheet.
+  - `pi_audit_unblind.py`: joins the completed blinded adjudication against the key on `row_id`, fail-fast integrity gate, computes judge-reliability metrics with the PI adjudication as gold standard — confusion matrix (4×3, PI×Gemma), per-class precision (conditional + strict), fabrication-flag PPV, weighted Cohen's kappa (bootstrap CI), per-arm agreement, and `source_window_strategy` correlation. Pure-Python stats (Wilson interval, weighted kappa, seeded bootstrap). Writes branded results xlsx + JSON sidecar; no DB access.
+- PI audit v2 — verdict-transition + intra-rater (pi_audit_sampler_v2.py)
+  - Audits the *delta* between two Pass 2 runs (old `…20260421T174729Z` vs codebook-aware `…codebook_v2_20260604T042317Z`), joined at arm-row level over the 1,211 shared triples. 200 rows, 4 strata: all 97 UNSUPPORTED→SUPPORTED, 60 seeded-random of 100 UNSUPPORTED→PARTIALLY, all 27 SUPPORTED→UNSUPPORTED, and 16 intra-rater overlap re-drawn from the v1 audit (ordinal-first, dedup vs strata 1–3, carrying the original PI adjudication into the key).
+  - Arm values sourced from the disagreement-pairs CSV (exactly what Pass 2 saw — empty cell → `NOT REPORTED` absence claim). Source windowing: full text under a 30,000-char safe cap, else a ±8,000-char window; `source_truncated` is an explicit visible flag (never silent — the v1 lesson). Window anchor precedence: verbatim arm_value → this arm's span → co-field arm span → head; spans position only, never shown as evidence. Neutral `»…«` locator marks a verbatim arm_value occurrence as a finding aid only.
+  - Same two-file blinded design as v1; blinded sheet shows only field_name + codebook definition, arm_value, source_text, 4-state adjudication, notes. Structural header allow-list + forbidden-string scan guarantee no arm/verdict/stratum/reasoning/span leakage. Provenance (both run_ids, master_seed, per-stratum SHA-256 seeds, input SHA-256s) in the Metadata sheet.
 
 ## Human-in-the-Loop Review Standard
 
@@ -203,9 +222,43 @@ PYTHONPATH=. python scripts/q8_validation_fast.py
 # Workflow status
 python -m engine.adjudication.advance_stage --review surgical_autonomy --status
 
+# LLM-as-judge (Pass 1 / Pass 2 — Paper 1 concordance validation)
+PYTHONPATH=. python -m analysis.paper1.judge_cli --review surgical_autonomy --input AI_TRIPLES \
+    --pairs-csv data/surgical_autonomy/exports/disagreement_pairs_3arm.csv \
+    --codebook data/surgical_autonomy/extraction_codebook.yaml
+PYTHONPATH=. python -m analysis.paper1.pass2_full --review surgical_autonomy \
+    --pass1-run-id <pass1_run_id> \
+    --pairs-csv data/surgical_autonomy/exports/disagreement_pairs_3arm.csv \
+    --codebook data/surgical_autonomy/extraction_codebook.yaml
+PYTHONPATH=. python -m analysis.paper1.pass2_retry_single --review surgical_autonomy \
+    --run-id <run_id> --paper-id <pid> --field-name <field> \
+    --pairs-csv ... --codebook ...
+PYTHONPATH=. python -m analysis.paper1.pass2_branchB_report --review surgical_autonomy \
+    --run-id <run_id> --pairs-csv ... --codebook ... \
+    --run-log analysis/paper1/logs/<log> --out-dir artifacts/paper1
+
+# PI audit sampler (balanced, fully blinded, n=100)
+PYTHONPATH=. python -m analysis.paper1.pi_audit_sampler --review surgical_autonomy \
+    --out-dir artifacts/paper1/pi_audit
+# Regeneration with provenance metadata:
+PYTHONPATH=. python -m analysis.paper1.pi_audit_sampler --review surgical_autonomy \
+    --supersedes <prior-filename> --regeneration-reason "<why>"
+
+# PI audit unblinding + judge-reliability scoring (post-adjudication)
+PYTHONPATH=. python -m analysis.paper1.pi_audit_unblind \
+    --completed artifacts/paper1/pi_audit/<workbook>_COMPLETED.xlsx \
+    --key       artifacts/paper1/pi_audit/pi_audit_key_<ts>.xlsx \
+    --out-dir   artifacts/paper1/pi_audit
+
+# PI audit v2 sampler (verdict-transition + intra-rater, n=200, fully blinded)
+PYTHONPATH=. python -m analysis.paper1.pi_audit_sampler_v2 --review surgical_autonomy \
+    --codebook data/surgical_autonomy/extraction_codebook.yaml \
+    --out-dir artifacts/paper1/pi_audit_v2
+
 # Test suite
 python -m pytest tests/ -v                                        # all tests
 python -m pytest tests/ -v -m "not network and not ollama"        # offline only
+python -m pytest tests/ -v -m "not network and not ollama and not integration"  # offline-offline (excludes live-Ollama grammar regression)
 ```
 
 ## Architecture Docs

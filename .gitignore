@@ -17,3 +17,16 @@ logs/
 # commit for the full history.
 artifacts/paper1/pi_audit/pi_audit_workbook_2026-04-22T18-35-42Z.xlsx
 artifacts/paper1/pi_audit/pi_audit_key_2026-04-22T18-35-42Z.xlsx
+
+# Generated PI audit artifacts (large/regenerable + blinding keys). The code
+# that produces them is versioned; the workbooks/keys/results are not.
+artifacts/paper1/pi_audit/pi_audit_workbook_*.xlsx
+artifacts/paper1/pi_audit/pi_audit_key_*.xlsx
+artifacts/paper1/pi_audit/pi_audit_results_*.xlsx
+artifacts/paper1/pi_audit/pi_audit_results_*.json
+artifacts/paper1/pi_audit/*COMPLETED*.xlsx
+artifacts/paper1/pi_audit_v2/
+
+# Throwaway Pass 2 smoke diagnostics + ad-hoc runner (uncommitted by design)
+analysis/paper1/reports/judge_codebook_smoke_*
+analysis/paper1/runner_smoke_phase2a.py

@@ -17,6 +17,7 @@ from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
 from engine.utils.ollama_client import ollama_chat
+from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
 
 logger = logging.getLogger(__name__)
 
@@ -432,6 +433,23 @@ def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> None:
     Raises RuntimeError if Ollama doesn't come back within 60 seconds.
     """
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # OPS-GUARD-01 (C): never restart Ollama out from under someone else's
+    # experiment. `foreign_lock_held()` is deliberately narrower than
+    # `check_experiment_lock()`: this process holding the lock (run_extraction
+    # wraps its loop in it) must still be able to restart, because the periodic
+    # restart is how a long extraction clears CUDA context fragmentation.
+    # Skipping is always safe — the restart is a mitigation, not a correctness
+    # requirement, and extraction continues either way.
+    if foreign_lock_held():
+        logger.warning(
+            "[%s] RESTART SKIPPED — experiment lock held (%s, %d papers done). "
+            "Another process is running an Ollama experiment; continuing without "
+            "restarting.",
+            ts, reason, papers_done,
+        )
+        return
+
     logger.info(
         "[%s] Ollama restart (%s, %d papers done) — running sudo systemctl restart ollama",
         ts, reason, papers_done,
@@ -470,8 +488,33 @@ def run_extraction(
     spec: ReviewSpec,
     review_name: str,
     restart_every: int = RESTART_EVERY_N,
+    experiment_lock: bool = True,
 ) -> dict:
-    """Run extraction on all eligible papers. Skip if already extracted with current hash.
+    """Run extraction on all eligible papers, holding the experiment lock.
+
+    OPS-GUARD-01 (part 5): the whole run is wrapped in
+    `hold_experiment_lock()` so the health cron (and any other lock-aware
+    tooling) stands down for its duration, and so `restart_ollama()` can tell
+    "the lock is mine" from "the lock is someone else's". The acquire is
+    blocking: waiting for another experiment to finish is safe; running
+    unguarded is what OPS-OLLAMA-02 was about.
+
+    Pass experiment_lock=False to opt out (tests, or a deliberate concurrent
+    run). Everything else is unchanged.
+    """
+    if not experiment_lock:
+        return _run_extraction_unlocked(db, spec, review_name, restart_every)
+    with hold_experiment_lock():
+        return _run_extraction_unlocked(db, spec, review_name, restart_every)
+
+
+def _run_extraction_unlocked(
+    db: ReviewDatabase,
+    spec: ReviewSpec,
+    review_name: str,
+    restart_every: int = RESTART_EVERY_N,
+) -> dict:
+    """Extraction loop proper. Callers should prefer run_extraction().
 
     Picks up papers at FT_ELIGIBLE (reviews with FT screening) and PARSED
     (reviews without FT screening). A paper cannot be at both statuses

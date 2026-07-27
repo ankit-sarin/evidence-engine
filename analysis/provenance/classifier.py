@@ -11,6 +11,7 @@ Implements the four-way taxonomy pinned in DEFINITIONS.md:
 plus three classes outside the taxonomy proper, so that a census covers 100%
 of spans rather than 100% of spans-that-happen-to-have-a-snippet:
 
+    ABSENCE_CLAIM          snippet asserts the paper does not report the item
     ABSENCE_DECLARED       empty snippet, value is a codebook absence sentinel
     MISSING_SNIPPET        empty snippet, value asserts something
     UNCLASSIFIABLE_SHORT   every sentence below MIN_SENTENCE_TOKENS
@@ -28,6 +29,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 
+from analysis.provenance.absence import is_absence_claim
 from analysis.provenance.normalize import normalize
 from analysis.provenance.segment import MIN_SENTENCE_TOKENS, sentences
 
@@ -42,12 +44,15 @@ STITCHED = "STITCHED"
 DRIFTED = "DRIFTED"
 UNTRACEABLE_PARTIAL = "UNTRACEABLE_PARTIAL"
 UNTRACEABLE_NO_BASIS = "UNTRACEABLE_NO_BASIS"
+ABSENCE_CLAIM = "ABSENCE_CLAIM"
 ABSENCE_DECLARED = "ABSENCE_DECLARED"
 MISSING_SNIPPET = "MISSING_SNIPPET"
 UNCLASSIFIABLE_SHORT = "UNCLASSIFIABLE_SHORT"
 
 TAXONOMY_CLASSES = (ANCHORED, STITCHED, DRIFTED, UNTRACEABLE_PARTIAL, UNTRACEABLE_NO_BASIS)
-NON_TAXONOMY_CLASSES = (ABSENCE_DECLARED, MISSING_SNIPPET, UNCLASSIFIABLE_SHORT)
+NON_TAXONOMY_CLASSES = (
+    ABSENCE_CLAIM, ABSENCE_DECLARED, MISSING_SNIPPET, UNCLASSIFIABLE_SHORT,
+)
 ALL_CLASSES = TAXONOMY_CLASSES + NON_TAXONOMY_CLASSES
 
 # Mirrors extraction_codebook.yaml `absence_sentinels` plus the empty string.
@@ -92,6 +97,7 @@ class SpanClassification:
     sentence_ratios: list[float]
     min_ratio: float | None
     strict_variant_class: str | None = None
+    absence_pattern: str | None = None
     terminal: bool = False
     """True when the class was decided before the sentence stage (ANCHORED, the
     empty-snippet classes, UNCLASSIFIABLE_SHORT) and so cannot depend on the
@@ -164,10 +170,20 @@ def classify_span(
         return SpanClassification(cls, 0, 0, 0, [], None, terminal=True)
 
     norm_snippet = normalize(snippet)
+    anchored = bool(norm_snippet) and norm_snippet in paper.norm_text
+
+    # Step 0d — absence claim, assessed before the ladder (DEFINITIONS v1.1 §A3).
+    absent, pattern = is_absence_claim(snippet, anchored)
+    if absent:
+        return SpanClassification(
+            ABSENCE_CLAIM, 1, 0, 0, [], None, absence_pattern=pattern, terminal=True
+        )
 
     # Step 1 — contiguity. One passage, verbatim, in order.
-    if norm_snippet and norm_snippet in paper.norm_text:
-        return SpanClassification(ANCHORED, 1, 1, 1, [1.0], 1.0, terminal=True)
+    if anchored:
+        return SpanClassification(
+            ANCHORED, 1, 1, 1, [1.0], 1.0, absence_pattern=pattern, terminal=True
+        )
 
     # Step 2 — sentence decomposition.
     raw_sents = sentences(snippet)
@@ -200,6 +216,7 @@ def classify_span(
         sentence_ratios=ratios,
         min_ratio=min(ratios) if ratios else None,
         strict_variant_class=strict_cls,
+        absence_pattern=pattern,
     )
     result.taxonomy_class = result.classes_at(threshold)
     return result

@@ -1,7 +1,7 @@
 # Evidence-Provenance Taxonomy — Pinned Definitions
 
 **Status:** pre-registration artifact for Paper 1/1b. Wording is manuscript-grade.
-**Version:** `prov-def-1` · **Normalization version:** `prov-norm-1`
+**Version:** `prov-def-1.1` · **Normalization version:** `prov-norm-1` · **Absence patterns:** `prov-absence-1`
 **Implementation:** `analysis/provenance/` (`normalize.py`, `segment.py`, `classifier.py`)
 
 This document is the authority. The code implements it; where they disagree, the
@@ -201,3 +201,125 @@ the manuscript's revision-history disclosure. It is not silently replaced.
 - It does not adjudicate the extractive/interpretive field split, which is
   **PROPOSED** in `field_class.py` and requires architect ratification before any
   downstream use.
+
+
+---
+
+# Amendment v1.1 — ABSENCE_CLAIM (2026-07-27)
+
+Ratified follow-up to TAXONOMY-CENSUS-01. This amendment adds one class and one
+precedence rule. Nothing in §§1–7 above is retracted; §4's ladder is unchanged,
+and every constant pinned in §5 keeps its value.
+
+## A1. Rationale
+
+The v1.0 census put 1,037 spans in `UNTRACEABLE_NO_BASIS`, of which 162 carried a
+value that was itself an absence sentinel (`NR` ×82, `No comparison reported`
+×80). Inspection showed a recurring, coherent behaviour: the arm correctly
+determined that the paper does not report the item, and then wrote a sentence
+*saying so* into the column reserved for copied text —
+`"The paper does not explicitly state the sample size."`
+
+Scoring that as no-textual-basis is defensible under a literal reading of the
+extraction contract (it is not a quotation) but it is misleading as a research
+finding, because it bundles two behaviours with opposite implications:
+
+  - an **invented quotation** — the arm asserts the paper says something it does
+    not say; the value may be wrong and the evidence is fictitious;
+  - an **absence claim** — the arm asserts the paper says *nothing*; the value is
+    frequently right, and the defect is that an absence was recorded in an
+    evidence field that has no vocabulary for absence.
+
+Only the first is a provenance failure in the sense the taxonomy exists to
+measure. Separating them is therefore a measurement correction, not a
+reclassification of severity: an absence claim is still non-compliant with the
+prompt's "every non-empty snippet must be a real quote" instruction, and
+`ABSENCE_CLAIM` remains outside the four-way traceability ladder.
+
+## A2. Definition
+
+**`ABSENCE_CLAIM`** — a span whose snippet asserts that the paper does not report
+the item, rather than quoting paper text.
+
+Detection is an **enumerated set of six anchored regular expressions** over the
+normalized snippet (§2 normalization applies unchanged). There is no fuzzy
+matching, no similarity threshold, and no unlogged heuristic. The name of the
+matching pattern is persisted on every classified span
+(`provenance_classifications.absence_pattern`), so any verdict is traceable to
+the rule that produced it. Implementation: `analysis/provenance/absence.py`,
+version `prov-absence-1`.
+
+The governing distinction, applied to every pattern below: **a claim about the
+_reporting_ is an absence claim; a claim about the world or about the results is
+not.** "The paper does not report a comparison" qualifies. "There was no
+significant difference between groups" does not — that is a finding.
+
+### The six pinned patterns
+
+| id | rule | example | corpus matches |
+|---|---|---|---:|
+| `P1_referent_negation` | Snippet opens by naming the source document (`the/this paper\|study\|article\|manuscript\|authors\|text\|work\|document\|source`), then within 60 non-terminal characters a negation (`does/do/did/is/are/was/were not`, the `n't` contractions, `fails to`, `never`), then within 45 more a **reporting verb** from the pinned list. | "The paper does not explicitly state the sample size." | 91 |
+| `P2_bare_no_np` | Snippet opens with `no <noun phrase>` and carries an absence predicate from the pinned list within 80 characters. | "No comparison reported."; "No explicit selection process described." | 45 |
+| `P3_not_explicitly` | Elliptical assertion with the subject dropped: `not` + optional `explicitly\|clearly\|directly\|specifically` + a reporting participle. | "Not explicitly stated." | 6 |
+| `P5_referent_without_report` | Positively-phrased absence: a paper-referent subject, then `without` + a reporting verb. Bound to the referent subject deliberately — see A4. | "The paper focuses on autonomous performance without comparing to human operators." | 2 |
+| `P6_only_x_reported` | Exhaustiveness assertion implying the remainder is absent: `only …` + a reporting participle. | "Only one primary outcome was reported." | 5 |
+| `P4_bare_sentinel` | The entire snippet is an absence sentinel: `nr\|n/a\|na\|not_found\|not found\|not reported\|none\|none reported\|not applicable\|no comparison reported`, optional trailing period. | "NR" | 1 |
+
+**Pinned reporting verbs (P1):** report, state, mention, specify, describe,
+provide, compare, discuss, present, give, include, indicate, define, quantify,
+list, address, detail, name, identify, explicitly — with their regular inflections.
+
+**Pinned absence predicates (P2):** reported, mentioned, described, provided,
+stated, specified, given, listed, presented, discussed, indicated, available,
+explicit/explicitly, made, performed, conducted, found, mention — with inflections.
+
+**Pinned `without`-objects (P5):** comparing, reporting, specifying, mentioning,
+describing, providing, stating, discussing — matched as `compar\w+` etc.
+
+## A3. Precedence
+
+`ABSENCE_CLAIM` is assessed **before** the anchored/stitched/drifted/untraceable
+ladder, with exactly one exception in each direction:
+
+1. **ANCHORED beats P1, P2, P3, P5, P6.** If a paper itself contains the sentence
+   "no comparison to a human operator was performed", an arm that quotes it
+   verbatim has produced a genuine quotation. The taxonomy must say `ANCHORED`.
+   The absence-pattern name is still recorded on the span, so these cases remain
+   countable.
+2. **P4 beats ANCHORED.** A bare sentinel is an absence claim unconditionally.
+   The v1.0 `ANCHORED` rule is plain substring containment, and a two-character
+   string such as `nr` occurs inside some word of nearly every paper by accident;
+   treating that coincidence as a quotation would be a false `ANCHORED` verdict.
+   A bare sentinel cannot be evidence for anything under any reading. Exactly one
+   corpus span is affected, and it was `ANCHORED` in v1.0 for precisely this
+   accidental reason.
+
+## A4. Rejected candidate patterns
+
+Recorded so the exclusions are as auditable as the inclusions. Both were measured
+against the 1,037 v1.0 no-basis spans before being rejected.
+
+| candidate | matches | verdict |
+|---|---:|---|
+| `^there (is\|are\|was\|were) no\b` | 1 | **Rejected outright.** Its only corpus match was a false positive — "There was no statistically significant difference (all p > 0.05) between the targeting accuracy…", a reported result, not a statement about reporting. Zero true positives. |
+| bare `without <reporting verb>`, unbound subject | 6 | **Rejected in that form**, 3 of 6 matches false positives on a real results passage. Re-admitted as `P5` only when bound to a paper-referent subject, which scores 2/2. |
+
+## A5. Known false negatives (deliberate)
+
+The definition is **snippet-based**: it asks what the snippet asserts, not what
+the value says. 22 spans carry an absence *value* while their snippet is a
+rationale rather than an absence assertion, and these correctly remain
+`UNTRACEABLE_NO_BASIS`:
+
+  - "The study focuses on the system's performance without direct comparison to
+    human operators." — subject is not a paper-referent, so P5 does not fire.
+  - "Only one outcome metric is mentioned." — matched by P6; but
+    "The paper focuses on the primary outcome metric." is not, and is a rationale.
+  - "The exact numeric results are not provided in the snippet." — a negation
+    whose subject is the result, not the paper.
+
+A value-based detector would capture these. It was not adopted, because the
+question the taxonomy asks is what the *evidence field* contains, and a
+value-based rule would relabel spans whose snippet is an ordinary invented
+sentence purely because the value happened to be `NR`. The residual is reported
+rather than engineered away.

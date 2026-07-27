@@ -30,6 +30,7 @@ from multiprocessing import Pool
 from pathlib import Path
 
 from analysis.provenance import classifier as C
+from analysis.provenance.absence import ABSENCE_PATTERN_VERSION
 from analysis.provenance.field_class import FIELD_CLASS, STATUS, field_class
 from analysis.provenance.legacy import grep_verify_fast
 from analysis.provenance.normalize import NORMALIZATION_VERSION
@@ -158,6 +159,7 @@ def _classify_paper(item: tuple[int, list[dict]]) -> list[dict]:
                 "sentence_ratios": json.dumps([round(r, 4) for r in res.sentence_ratios]),
                 "min_ratio": res.min_ratio,
                 "strict_variant_class": res.strict_variant_class,
+                "absence_pattern": res.absence_pattern,
                 "has_ellipsis": int(any(e in snippet for e in _ELLIPSIS_CHARS)),
                 "legacy_grep_verify": legacy_ok,
             }
@@ -177,11 +179,11 @@ def persist(db_path: Path, run: dict, rows: list[dict]) -> None:
                  (census_run_id, review_name, created_at, definitions_sha256,
                   normalization_version, tokenizer, tokenizer_version,
                   threshold_primary, threshold_band, min_sentence_tokens,
-                  ratio_ceiling, spans_total, notes)
+                  ratio_ceiling, spans_total, notes, absence_pattern_version)
                VALUES (:census_run_id, :review_name, :created_at, :definitions_sha256,
                        :normalization_version, :tokenizer, :tokenizer_version,
                        :threshold_primary, :threshold_band, :min_sentence_tokens,
-                       :ratio_ceiling, :spans_total, :notes)""",
+                       :ratio_ceiling, :spans_total, :notes, :absence_pattern_version)""",
             run,
         )
         now = run["created_at"]
@@ -190,15 +192,17 @@ def persist(db_path: Path, run: dict, rows: list[dict]) -> None:
                  (census_run_id, arm, paper_id, field_name, span_table, span_row_id,
                   value, snippet_chars, taxonomy_class, field_class, n_sentences,
                   n_evaluated, n_exact, sentence_ratios, min_ratio,
-                  strict_variant_class, has_ellipsis, parser_tier, classified_at)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                  strict_variant_class, has_ellipsis, parser_tier,
+                  absence_pattern, classified_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             [
                 (
                     run["census_run_id"], r["arm"], r["paper_id"], r["field_name"],
                     r["span_table"], r["span_row_id"], r["value"], r["snippet_chars"],
                     r["taxonomy_class"], r["field_class"], r["n_sentences"],
                     r["n_evaluated"], r["n_exact"], r["sentence_ratios"], r["min_ratio"],
-                    r["strict_variant_class"], r["has_ellipsis"], r.get("parser_tier"), now,
+                    r["strict_variant_class"], r["has_ellipsis"], r.get("parser_tier"),
+                    r.get("absence_pattern"), now,
                 )
                 for r in rows
             ],
@@ -388,6 +392,7 @@ def main(argv: list[str] | None = None) -> int:
         "ratio_ceiling": C.RATIO_CEILING,
         "spans_total": len(rows),
         "notes": args.notes,
+        "absence_pattern_version": ABSENCE_PATTERN_VERSION,
     }
 
     if not args.no_persist:

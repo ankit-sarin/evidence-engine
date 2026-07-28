@@ -7,6 +7,8 @@ import time
 
 import openai
 
+from engine.core.completeness import IncompleteExtractionError
+
 from engine.cloud.base import CloudExtractorBase
 
 logger = logging.getLogger(__name__)
@@ -79,8 +81,12 @@ class OpenAIExtractor(CloudExtractorBase):
             response_format={"type": "json_object"},
         )
 
-        # Extract content
-        content = response.choices[0].message.content or ""
+        # Extract content. finish_reason is read here and nowhere else in the
+        # request path — INSTRUMENT-01 captures it because SPANLOSS-01 could not
+        # tell truncation from a short response without it.
+        choice = response.choices[0]
+        content = choice.message.content or ""
+        finish_reason = getattr(choice, "finish_reason", None)
 
         # Extract reasoning trace
         reasoning_trace = ""
@@ -121,6 +127,8 @@ class OpenAIExtractor(CloudExtractorBase):
 
         return {
             "paper_id": paper_id,
+            "finish_reason": finish_reason,
+            "raw_content": content,
             "extracted_data": extracted_data,
             "reasoning_trace": reasoning_trace,
             "prompt_text": prompt,
@@ -168,7 +176,14 @@ class OpenAIExtractor(CloudExtractorBase):
             result = None
             for attempt in range(3):
                 try:
-                    result = self.extract_paper(pid, parsed_text)
+                    result = self.extract_with_completeness(pid, parsed_text)
+                    break
+                except IncompleteExtractionError as exc:
+                    # Already retried the identical request to exhaustion inside
+                    # extract_with_completeness. Retrying again here would only
+                    # multiply cost; fail the paper loudly and move on.
+                    logger.error("Paper %d: %s — marking FAILED, nothing stored", pid, exc)
+                    stats["failed"] += 1
                     break
                 except openai.AuthenticationError as exc:
                     logger.critical(

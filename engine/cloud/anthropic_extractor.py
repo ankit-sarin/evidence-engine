@@ -8,6 +8,8 @@ import time
 
 import anthropic
 
+from engine.core.completeness import IncompleteExtractionError
+
 from engine.cloud.base import CloudExtractorBase
 
 logger = logging.getLogger(__name__)
@@ -80,6 +82,10 @@ class AnthropicExtractor(CloudExtractorBase):
             ],
         )
 
+        # Anthropic's equivalent of finish_reason. Read from the response only —
+        # the request above is untouched (INSTRUMENT-01).
+        stop_reason = getattr(response, "stop_reason", None)
+
         # Extract thinking trace and text content from response blocks
         reasoning_trace = ""
         text_content = ""
@@ -142,6 +148,8 @@ class AnthropicExtractor(CloudExtractorBase):
 
         return {
             "paper_id": paper_id,
+            "finish_reason": stop_reason,
+            "raw_content": text_content,
             "extracted_data": extracted_data,
             "reasoning_trace": reasoning_trace,
             "prompt_text": prompt,
@@ -189,7 +197,13 @@ class AnthropicExtractor(CloudExtractorBase):
             result = None
             for attempt in range(3):
                 try:
-                    result = self.extract_paper(pid, parsed_text)
+                    result = self.extract_with_completeness(pid, parsed_text)
+                    break
+                except IncompleteExtractionError as exc:
+                    # The identical request was already re-issued to exhaustion
+                    # inside extract_with_completeness. Fail the paper loudly.
+                    logger.error("Paper %d: %s — marking FAILED, nothing stored", pid, exc)
+                    stats["failed"] += 1
                     break
                 except anthropic.AuthenticationError as exc:
                     logger.critical(

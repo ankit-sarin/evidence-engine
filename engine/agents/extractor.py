@@ -16,6 +16,14 @@ from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResul
 from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
+from engine.core.completeness import (
+    MAX_COMPLETENESS_ATTEMPTS,
+    IncompleteExtractionError,
+    check_completeness,
+    enforce_completeness,
+    expected_field_names,
+)
+from engine.core.extraction_telemetry import record_call
 from engine.utils.ollama_client import ollama_chat
 from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
 
@@ -224,6 +232,11 @@ def parse_thinking_trace(content: str) -> str:
 
 # ── Pass 2: Structured Output ────────────────────────────────────────
 
+# Populated by extract_pass2_structured() on every call; read by the completeness
+# retry driver when it writes a telemetry row. Not thread-safe by design — the
+# local arm runs one paper at a time.
+_LAST_PASS2_TELEMETRY: dict = {}
+
 
 def extract_pass2_structured(
     prompt: str,
@@ -262,6 +275,14 @@ def extract_pass2_structured(
     )
 
     raw = response.message.content or ""
+    # INSTRUMENT-01: stash the pre-parse response and Ollama's own done_reason
+    # (its finish_reason equivalent) for the telemetry writer. Module-level
+    # rather than threaded through the signature so no caller changes.
+    _LAST_PASS2_TELEMETRY.update(
+        raw_content=raw,
+        finish_reason=getattr(response, "done_reason", None),
+        model=MODEL,
+    )
     output = ExtractionOutput.model_validate_json(raw)
 
     return ExtractionResult(
@@ -407,6 +428,19 @@ def extract_paper(
             f"Paper {paper_id}: extraction produced 0 evidence spans — "
             "refusing to store empty extraction"
         )
+
+    # INSTRUMENT-01: completeness, not merely non-emptiness. The local arm's two
+    # collapsed Run 6 extractions (papers 415, 719) each stored a single span
+    # with a non-codebook field name and passed the check above.
+    # The guard sits here rather than in ReviewDatabase.add_extraction_atomic
+    # because the database layer is generic — it serves migrations and tests and
+    # has no ReviewSpec to derive an expected field set from.
+    enforce_completeness(
+        span_dicts,
+        expected_field_names(spec, Path(db.db_path).parent / "extraction_codebook.yaml"),
+        paper_id=paper_id,
+        arm=MODEL,
+    )
     ext_id = db.add_extraction_atomic(
         paper_id=paper_id,
         schema_hash=result.extraction_schema_hash,
@@ -478,6 +512,81 @@ def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> None:
         time.sleep(2)
 
     raise RuntimeError("Ollama did not become responsive within 60s after restart")
+
+
+def extract_paper_with_completeness(
+    paper_id: int,
+    paper_text: str,
+    spec: ReviewSpec,
+    db: ReviewDatabase,
+    model_digest: str | None = None,
+    auditor_model_digest: str | None = None,
+    max_attempts: int = MAX_COMPLETENESS_ATTEMPTS,
+) -> ExtractionResult:
+    """Extract one paper, re-running the identical two-pass request until complete.
+
+    Mirrors CloudExtractorBase.extract_with_completeness so the retry policy is
+    the same on every arm. The prompt is rebuilt identically on each attempt —
+    same paper text, same spec, same codebook — because the failure being
+    guarded against is response shape, not prompt content.
+
+    extract_paper() raises IncompleteExtractionError *before* its write, so an
+    exhausted paper leaves nothing behind.
+    """
+    review_dir = Path(db.db_path).parent
+    expected = expected_field_names(spec, review_dir / "extraction_codebook.yaml")
+    last_error: IncompleteExtractionError | None = None
+
+    for attempt in range(1, max_attempts + 1):
+        _LAST_PASS2_TELEMETRY.clear()
+        try:
+            result = extract_paper(
+                paper_id, paper_text, spec, db,
+                model_digest=model_digest,
+                auditor_model_digest=auditor_model_digest,
+            )
+        except IncompleteExtractionError as exc:
+            last_error = exc
+            record_call(
+                review_dir, arm=MODEL, paper_id=paper_id, attempt=attempt,
+                outcome="incomplete_retry" if attempt < max_attempts else "incomplete_exhausted",
+                model=_LAST_PASS2_TELEMETRY.get("model", MODEL),
+                finish_reason=_LAST_PASS2_TELEMETRY.get("finish_reason"),
+                raw_content=_LAST_PASS2_TELEMETRY.get("raw_content"),
+                spans_parsed=exc.n_stored,
+                fields_expected=exc.n_expected,
+                missing_fields=exc.missing,
+            )
+            logger.warning(
+                "Paper %d (%s): INCOMPLETE attempt %d/%d — %d/%d fields. "
+                "Re-issuing identical request.",
+                paper_id, MODEL, attempt, max_attempts, exc.n_stored, exc.n_expected,
+            )
+            continue
+
+        check = check_completeness(result.fields, expected)
+        record_call(
+            review_dir, arm=MODEL, paper_id=paper_id, attempt=attempt, outcome="stored",
+            model=_LAST_PASS2_TELEMETRY.get("model", MODEL),
+            finish_reason=_LAST_PASS2_TELEMETRY.get("finish_reason"),
+            raw_content=_LAST_PASS2_TELEMETRY.get("raw_content"),
+            spans_parsed=check.n_produced,
+            fields_expected=check.n_expected,
+            missing_fields=check.missing,
+        )
+        if attempt > 1:
+            logger.info(
+                "Paper %d (%s): complete on attempt %d/%d",
+                paper_id, MODEL, attempt, max_attempts,
+            )
+        return result
+
+    logger.error(
+        "Paper %d (%s): INCOMPLETE after %d attempts — failing the paper, "
+        "NOT storing a partial extraction. %s",
+        paper_id, MODEL, max_attempts, last_error,
+    )
+    raise last_error
 
 
 # ── Batch Extraction Pipeline ─────────────────────────────────────────
@@ -588,7 +697,7 @@ def _run_extraction_unlocked(
         t_paper = time.time()
 
         try:
-            result = extract_paper(
+            result = extract_paper_with_completeness(
                 pid, paper_text, spec, db,
                 model_digest=extractor_digest,
                 auditor_model_digest=auditor_digest,

@@ -10,6 +10,14 @@ from pathlib import Path
 from engine.agents.extractor import build_extraction_prompt
 from engine.agents.models import ExtractionOutput
 from engine.cloud.schema import init_cloud_tables
+from engine.core.completeness import (
+    MAX_COMPLETENESS_ATTEMPTS,
+    IncompleteExtractionError,
+    check_completeness,
+    enforce_completeness,
+    expected_field_names,
+)
+from engine.core.extraction_telemetry import record_call
 from engine.core.review_spec import ReviewSpec, load_review_spec
 
 logger = logging.getLogger(__name__)
@@ -25,6 +33,15 @@ class CloudExtractorBase:
         self.spec = load_review_spec(review_spec_path)
         self.schema_hash = self.spec.extraction_hash()
         self._review_dir = Path(db_path).parent
+
+        # Field set the prompt asks for — the completeness guard's reference.
+        # Derived once per run from the spec, cross-checked against the codebook.
+        self.expected_fields = expected_field_names(
+            self.spec, self._review_dir / "extraction_codebook.yaml"
+        )
+        # Set by parse_response_to_spans() when a salvage branch fires, so the
+        # guard and the telemetry can both say which repair was attempted.
+        self._last_salvage: str | None = None
 
         # Initialize cloud tables
         init_cloud_tables(db_path)
@@ -75,7 +92,11 @@ class CloudExtractorBase:
 
         Validates against ExtractionOutput Pydantic model (same as local).
         Returns list of {field_name, value, source_snippet, confidence, tier}.
+
+        Sets `self._last_salvage` when a shape-repair branch fires, so the caller
+        can record it and the completeness guard can report it.
         """
+        self._last_salvage = None
         if isinstance(response_json, str):
             # Strip markdown ```json ... ``` fences (Anthropic wraps output this way)
             stripped = response_json.strip()
@@ -127,11 +148,26 @@ class CloudExtractorBase:
                     response_json = {"fields": response_json[alt_key]}
                     break
             else:
-                # Single span dict (has field_name key) — wrap in list
+                # Single span dict (has field_name key) — wrap in list.
+                # SPANLOSS-01: this is the branch that turned 17 bare single-span
+                # responses into valid-looking one-span extractions. It stays as a
+                # parse aid, but it is now recorded and its output is subject to
+                # the completeness guard like any other result.
                 if "field_name" in response_json:
+                    self._last_salvage = "single_span_dict"
+                    logger.warning(
+                        "SALVAGE single_span_dict: response was a bare span object, "
+                        "not a wrapped list — wrapping for parse. This is NOT a "
+                        "complete extraction and must pass the completeness guard."
+                    )
                     response_json = {"fields": [response_json]}
                 # Flat field dict: keys are field names, values are span dicts
                 elif all(isinstance(v, dict) for v in response_json.values()):
+                    self._last_salvage = "flat_field_dict"
+                    logger.warning(
+                        "SALVAGE flat_field_dict: response keyed fields at top level "
+                        "instead of a wrapped list — reshaping for parse."
+                    )
                     spans = [
                         {"field_name": k, **v}
                         for k, v in response_json.items()
@@ -212,6 +248,17 @@ class CloudExtractorBase:
                 f"Check parse_response_to_spans() logs for details."
             )
 
+        # INSTRUMENT-01: the write boundary now checks completeness, not merely
+        # non-emptiness. SPANLOSS-01's 17 collapsed openai extractions each had
+        # exactly one span and passed the check above; they do not pass this one.
+        enforce_completeness(
+            spans,
+            self.expected_fields,
+            paper_id=paper_id,
+            arm=arm,
+            salvage=self._last_salvage,
+        )
+
         now = datetime.now(timezone.utc).isoformat()
 
         try:
@@ -254,6 +301,78 @@ class CloudExtractorBase:
         except Exception:
             self._conn.rollback()
             raise
+
+    def extract_with_completeness(
+        self,
+        paper_id: int,
+        parsed_text: str,
+        max_attempts: int = MAX_COMPLETENESS_ATTEMPTS,
+    ) -> dict:
+        """Extract, and re-issue the identical request until the result is complete.
+
+        The request is unchanged between attempts — same prompt, same
+        `response_format`, same parameters — because the failure this guards
+        against is stochastic response *shape*, not a prompt defect. Re-asking
+        the same question is the correct remedy; changing the question would
+        change the extraction contract mid-run.
+
+        Every attempt writes a telemetry row before its result is accepted or
+        rejected, so an exhausted paper leaves a full record of what each attempt
+        returned. On exhaustion the error propagates: the caller must fail the
+        paper, never store the partial result.
+        """
+        last_error: IncompleteExtractionError | None = None
+        for attempt in range(1, max_attempts + 1):
+            result = self.extract_paper(paper_id, parsed_text)
+            spans = result.get("spans", [])
+            check = check_completeness(spans, self.expected_fields)
+            salvage = self._last_salvage
+
+            record_call(
+                self._review_dir,
+                arm=self.ARM,
+                paper_id=paper_id,
+                attempt=attempt,
+                outcome="stored" if check.complete else (
+                    "incomplete_retry" if attempt < max_attempts else "incomplete_exhausted"
+                ),
+                model=getattr(self, "model_string", None),
+                finish_reason=result.get("finish_reason"),
+                raw_content=result.get("raw_content"),
+                spans_parsed=len(spans),
+                fields_expected=len(self.expected_fields),
+                missing_fields=check.missing,
+                salvage=salvage,
+                input_tokens=result.get("input_tokens"),
+                output_tokens=result.get("output_tokens"),
+                reasoning_tokens=result.get("reasoning_tokens"),
+            )
+
+            if check.complete:
+                if attempt > 1:
+                    logger.info(
+                        "Paper %d (%s): complete on attempt %d/%d",
+                        paper_id, self.ARM, attempt, max_attempts,
+                    )
+                return result
+
+            last_error = IncompleteExtractionError(
+                paper_id=paper_id, arm=self.ARM, missing=check.missing,
+                n_stored=check.n_produced, n_expected=check.n_expected,
+                salvage=salvage, attempt=attempt,
+            )
+            logger.warning(
+                "Paper %d (%s): INCOMPLETE attempt %d/%d — %s%s. Re-issuing identical request.",
+                paper_id, self.ARM, attempt, max_attempts, check.summary(),
+                f" (salvage={salvage})" if salvage else "",
+            )
+
+        logger.error(
+            "Paper %d (%s): INCOMPLETE after %d attempts — failing the paper, "
+            "NOT storing a partial extraction. %s",
+            paper_id, self.ARM, max_attempts, last_error,
+        )
+        raise last_error
 
     def get_progress(self, arm: str) -> dict:
         """Return progress stats for the given arm."""

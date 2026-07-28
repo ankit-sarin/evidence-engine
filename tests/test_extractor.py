@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+from types import SimpleNamespace
+
 import pytest
 
 from engine.agents.extractor import (
@@ -139,6 +141,31 @@ def _mock_pass1_response():
     return resp
 
 
+def _complete_pass2_fields(spec):
+    """One span per prompted field, so the INSTRUMENT-01 completeness guard passes.
+
+    Built from the spec so it tracks the codebook instead of pinning a count.
+    """
+    fields = []
+    for tier in (1, 2, 3, 4):
+        for f in spec.extraction_schema.fields_by_tier(tier):
+            fields.append(
+                EvidenceSpan(
+                    field_name=f.name, value="NR",
+                    source_snippet=f"Snippet for {f.name}.",
+                    confidence=0.9, tier=f.tier,
+                )
+            )
+    return fields
+
+
+def _mock_pass2_complete(spec):
+    output = ExtractionOutput(fields=_complete_pass2_fields(spec))
+    return SimpleNamespace(
+        message=SimpleNamespace(content=output.model_dump_json()),
+    )
+
+
 def _mock_pass2_response():
     output = ExtractionOutput(
         fields=[
@@ -197,12 +224,13 @@ def test_full_two_pass_mocked(tmp_path, spec):
 
     paper_text = "This RCT used the STAR robot for autonomous suturing..."
 
+    n_expected = sum(len(spec.extraction_schema.fields_by_tier(t)) for t in (1, 2, 3, 4))
     with patch("engine.agents.extractor.ollama_chat") as mock_chat:
-        mock_chat.side_effect = [_mock_pass1_response(), _mock_pass2_response()]
+        mock_chat.side_effect = [_mock_pass1_response(), _mock_pass2_complete(spec)]
         result = extract_paper(pid, paper_text, spec, db)
 
     assert result.paper_id == pid
-    assert len(result.fields) == 7
+    assert len(result.fields) == n_expected
     assert "STAR robot" in result.reasoning_trace
 
     # Check database records
@@ -215,7 +243,7 @@ def test_full_two_pass_mocked(tmp_path, spec):
         "SELECT * FROM evidence_spans WHERE extraction_id = ?",
         (extractions[0]["id"],),
     ).fetchall()
-    assert len(spans) == 7
+    assert len(spans) == n_expected
     assert all(s["audit_status"] == "pending" for s in spans)
 
     db.close()

@@ -79,6 +79,33 @@ SAMPLE_FIELDS = [
 SAMPLE_RESPONSE = {"fields": SAMPLE_FIELDS}
 
 
+def _complete_fields():
+    """Every field the prompt asks for, so store-path tests clear the
+    INSTRUMENT-01 completeness guard.
+
+    Derived from the spec rather than hardcoded: a codebook that gains a field
+    moves these fixtures with it, exactly as it moves the guard.
+    """
+    from engine.core.review_spec import load_review_spec
+
+    spec = load_review_spec(str(SPEC_PATH))
+    out = []
+    for tier in (1, 2, 3, 4):
+        for f in spec.extraction_schema.fields_by_tier(tier):
+            out.append({
+                "field_name": f.name,
+                "value": "Original Research" if f.name == "study_type" else "NR",
+                "source_snippet": f"Snippet for {f.name}.",
+                "confidence": 0.9,
+                "tier": f.tier,
+            })
+    return out
+
+
+COMPLETE_FIELDS = _complete_fields()
+COMPLETE_RESPONSE = {"fields": COMPLETE_FIELDS}
+
+
 # ── init_cloud_tables ────────────────────────────────────────────────
 
 
@@ -155,14 +182,14 @@ class TestCloudExtractorBase:
                 paper_id=pid,
                 arm="openai_o3_mini_high",
                 model_string="o3-mini",
-                extracted_data=SAMPLE_RESPONSE,
+                extracted_data=COMPLETE_RESPONSE,
                 reasoning_trace="test trace",
                 prompt_text="test prompt",
                 input_tokens=100,
                 output_tokens=200,
                 reasoning_tokens=50,
                 cost_usd=0.001,
-                spans=SAMPLE_FIELDS,
+                spans=COMPLETE_FIELDS,
             )
             pending_after = base.get_pending_papers("openai_o3_mini_high")
             assert len(pending_after) == len(pending_before) - 1
@@ -256,14 +283,14 @@ class TestCloudExtractorBase:
             paper_id=pid,
             arm="test_arm",
             model_string="test-model",
-            extracted_data=SAMPLE_RESPONSE,
+            extracted_data=COMPLETE_RESPONSE,
             reasoning_trace="test trace",
             prompt_text="test prompt",
             input_tokens=100,
             output_tokens=200,
             reasoning_tokens=50,
             cost_usd=0.001,
-            spans=SAMPLE_FIELDS,
+            spans=COMPLETE_FIELDS,
         )
 
         # Verify extraction row
@@ -279,7 +306,7 @@ class TestCloudExtractorBase:
             "SELECT * FROM cloud_evidence_spans WHERE cloud_extraction_id = ?",
             (ext_id,),
         ).fetchall()
-        assert len(span_rows) == 2
+        assert len(span_rows) == len(COMPLETE_FIELDS)
         base.close()
 
     def test_get_progress(self, test_db, spec_path):
@@ -319,7 +346,7 @@ class TestOpenAIExtractor:
         mock_client = MagicMock()
         mock_openai_cls.return_value = mock_client
         mock_client.chat.completions.create.return_value = self._make_mock_response(
-            SAMPLE_RESPONSE
+            COMPLETE_RESPONSE
         )
 
         extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
@@ -334,7 +361,7 @@ class TestOpenAIExtractor:
         result = extractor.extract_paper(pid, "Test paper text about surgery.")
 
         assert result["paper_id"] == pid
-        assert len(result["spans"]) == 2
+        assert len(result["spans"]) == len(COMPLETE_FIELDS)
         assert result["input_tokens"] == 1000
         assert result["output_tokens"] == 500
         assert result["reasoning_tokens"] == 200
@@ -346,7 +373,7 @@ class TestOpenAIExtractor:
         mock_client = MagicMock()
         mock_openai_cls.return_value = mock_client
         mock_client.chat.completions.create.return_value = self._make_mock_response(
-            SAMPLE_RESPONSE, input_toks=1_000_000, output_toks=1_000_000,
+            COMPLETE_RESPONSE, input_toks=1_000_000, output_toks=1_000_000,
         )
 
         extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
@@ -389,7 +416,7 @@ class TestAnthropicExtractor:
         mock_client = MagicMock()
         mock_anthropic_cls.return_value = mock_client
         mock_client.messages.create.return_value = self._make_mock_response(
-            SAMPLE_RESPONSE
+            COMPLETE_RESPONSE
         )
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
@@ -402,7 +429,7 @@ class TestAnthropicExtractor:
         result = extractor.extract_paper(pid, "Test paper text about surgery.")
 
         assert result["paper_id"] == pid
-        assert len(result["spans"]) == 2
+        assert len(result["spans"]) == len(COMPLETE_FIELDS)
         assert result["input_tokens"] == 2000
         assert result["output_tokens"] == 1000
         extractor.close()
@@ -412,7 +439,7 @@ class TestAnthropicExtractor:
         mock_client = MagicMock()
         mock_anthropic_cls.return_value = mock_client
         mock_client.messages.create.return_value = self._make_mock_response(
-            SAMPLE_RESPONSE
+            COMPLETE_RESPONSE
         )
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
@@ -433,7 +460,7 @@ class TestAnthropicExtractor:
         mock_client = MagicMock()
         mock_anthropic_cls.return_value = mock_client
         mock_client.messages.create.return_value = self._make_mock_response(
-            SAMPLE_RESPONSE
+            COMPLETE_RESPONSE
         )
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
@@ -447,7 +474,7 @@ class TestAnthropicExtractor:
         )
 
         assert "fields" in result["extracted_data"]
-        assert len(result["extracted_data"]["fields"]) == 2
+        assert len(result["extracted_data"]["fields"]) == len(COMPLETE_FIELDS)
         extractor.close()
 
     @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
@@ -458,7 +485,7 @@ class TestAnthropicExtractor:
         from engine.cloud.anthropic_extractor import COST_INPUT_PER_M as A_IN, COST_OUTPUT_PER_M as A_OUT
 
         mock_client.messages.create.return_value = self._make_mock_response(
-            SAMPLE_RESPONSE, input_toks=1_000_000, output_toks=1_000_000,
+            COMPLETE_RESPONSE, input_toks=1_000_000, output_toks=1_000_000,
         )
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
@@ -520,9 +547,14 @@ class TestSonnetEmptyStringNormalization:
         mock_client = MagicMock()
         mock_anthropic_cls.return_value = mock_client
 
-        fields_with_empty = {"fields": [
-            {"field_name": "study_type", "value": "", "source_snippet": "snippet", "confidence": 0.9, "tier": 1},
-        ]}
+        # study_type carries the empty string under test; the remaining fields are
+        # present so the extraction clears the completeness guard and the
+        # normalization can be observed round-tripping through store_result.
+        fields_with_empty = {"fields": (
+            [{"field_name": "study_type", "value": "", "source_snippet": "snippet",
+              "confidence": 0.9, "tier": 1}]
+            + [f for f in COMPLETE_FIELDS if f["field_name"] != "study_type"]
+        )}
         mock_client.messages.create.return_value = self._make_mock_response(fields_with_empty)
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
@@ -532,7 +564,7 @@ class TestSonnetEmptyStringNormalization:
             pytest.skip("No pending papers")
 
         result = extractor.extract_paper(pending[0]["paper_id"], "Test text.")
-        span = result["spans"][0]
+        span = [s for s in result["spans"] if s["field_name"] == "study_type"][0]
         assert span["value"] is None
         assert span["notes"] == "empty_string_to_null"
 
@@ -549,7 +581,8 @@ class TestSonnetEmptyStringNormalization:
             cost_usd=result["cost_usd"], spans=result["spans"],
         )
         row = extractor._conn.execute(
-            "SELECT value, notes FROM cloud_evidence_spans WHERE cloud_extraction_id = ?",
+            "SELECT value, notes FROM cloud_evidence_spans "
+            " WHERE cloud_extraction_id = ? AND field_name = 'study_type'",
             (ext_id,),
         ).fetchone()
         assert row["value"] is None
@@ -580,7 +613,9 @@ class TestSonnetEmptyStringNormalization:
             pytest.skip("No pending papers")
 
         result = extractor.extract_paper(pending[0]["paper_id"], "Test text.")
-        # Both spans survive now — null was converted to "NR"
+        # Both spans survive now — null was converted to "NR". This test never
+        # stores, so the completeness guard is not in play and a 2-field payload
+        # is the right fixture.
         assert len(result["spans"]) == 2
         nr_span = [s for s in result["spans"] if s["field_name"] == "study_type"][0]
         assert nr_span["value"] == "NR"
@@ -644,7 +679,7 @@ class TestSonnetRateLimitBackoff:
 
         # First two calls raise 429, third succeeds
         thinking_block = SimpleNamespace(type="thinking", thinking="ok")
-        text_block = SimpleNamespace(type="text", text=json.dumps(SAMPLE_RESPONSE))
+        text_block = SimpleNamespace(type="text", text=json.dumps(COMPLETE_RESPONSE))
         usage = SimpleNamespace(input_tokens=100, output_tokens=50)
         success_resp = SimpleNamespace(content=[thinking_block, text_block], usage=usage)
 
@@ -690,7 +725,7 @@ class TestSonnetRateLimitBackoff:
         )
 
         thinking_block = SimpleNamespace(type="thinking", thinking="ok")
-        text_block = SimpleNamespace(type="text", text=json.dumps(SAMPLE_RESPONSE))
+        text_block = SimpleNamespace(type="text", text=json.dumps(COMPLETE_RESPONSE))
         usage = SimpleNamespace(input_tokens=100, output_tokens=50)
         success_resp = SimpleNamespace(content=[thinking_block, text_block], usage=usage)
 
@@ -733,7 +768,7 @@ class TestStoreResultCrashProtection:
             completion_tokens_details=details,
         )
         msg = SimpleNamespace(
-            content=json.dumps(SAMPLE_RESPONSE),
+            content=json.dumps(COMPLETE_RESPONSE),
             reasoning_content="trace",
         )
         choice = SimpleNamespace(message=msg)
@@ -885,7 +920,7 @@ class TestOpenAIRateLimitBackoff:
             completion_tokens_details=details,
         )
         msg = SimpleNamespace(
-            content=json.dumps(SAMPLE_RESPONSE),
+            content=json.dumps(COMPLETE_RESPONSE),
             reasoning_content="trace",
         )
         choice = SimpleNamespace(message=msg)
@@ -934,7 +969,7 @@ class TestOpenAIRateLimitBackoff:
             completion_tokens_details=details,
         )
         msg = SimpleNamespace(
-            content=json.dumps(SAMPLE_RESPONSE),
+            content=json.dumps(COMPLETE_RESPONSE),
             reasoning_content="trace",
         )
         choice = SimpleNamespace(message=msg)

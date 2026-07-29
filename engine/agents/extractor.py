@@ -197,8 +197,20 @@ You MUST emit exactly one entry per field listed above ({total_fields} fields to
 # ── Pass 1: Reasoning ────────────────────────────────────────────────
 
 
-def extract_pass1_reasoning(prompt: str) -> str:
-    """Run Pass 1: let DeepSeek-R1 reason freely, return the thinking trace."""
+# Populated by extract_pass1_reasoning(); read by the retry driver's telemetry
+# row. Module-level rather than threaded through the signature, matching
+# _LAST_PASS2_TELEMETRY.
+_LAST_PASS1_TELEMETRY: dict = {}
+
+
+def extract_pass1_reasoning(prompt: str, think: bool = True) -> str:
+    """Run Pass 1: let DeepSeek-R1 reason freely, return the thinking trace.
+
+    `think` is passed explicitly and never left to the Ollama default —
+    REGRESSION-01: 0.21.0 auto-enables thinking for deepseek-r1, and relying on
+    a version-dependent default is what let the interface change go unnoticed.
+    """
+    _LAST_PASS1_TELEMETRY.clear()
     response = ollama_chat(
         model=MODEL,
         messages=[
@@ -213,21 +225,64 @@ def extract_pass1_reasoning(prompt: str) -> str:
             {"role": "user", "content": prompt},
         ],
         options={"temperature": 0},
+        think=think,
     )
 
     content = response.message.content or ""
-    return parse_thinking_trace(content)
+    thinking = getattr(response.message, "thinking", None)
+    trace, branch = parse_thinking_trace(content, thinking)
+    _LAST_PASS1_TELEMETRY.update(
+        thinking_present=True,
+        thinking_chars=len(trace),
+        parse_branch=branch,
+        finish_reason=getattr(response, "done_reason", None),
+    )
+    return trace
 
 
-def parse_thinking_trace(content: str) -> str:
-    """Extract content between <think> and </think> tags.
+class MissingThinkingChannelError(RuntimeError):
+    """A think-enabled call returned no reasoning channel.
 
-    If no tags found, return the full content as the reasoning trace.
+    REGRESSION-01: this used to be a silent fallback that returned the whole
+    response content as the "reasoning trace". On Ollama 0.21.0 that fallback
+    fired on *every* Pass 1 call — deepseek-r1 stopped emitting inline `<think>`
+    tags and moved thinking to `message.thinking`, so the regex never matched.
+    Pass 2 was then primed with the model's first-draft *answer* instead of its
+    reasoning, and paraphrased it rather than quoting the paper: local anchored
+    rate fell from 54.3% to 10.5% on identical papers.
+
+    Substituting an answer for a reasoning trace is never safe, so absence is now
+    an error rather than a fallback.
     """
-    match = re.search(r"<think>(.*?)</think>", content, re.DOTALL)
+
+
+def parse_thinking_trace(content: str, thinking: str | None = None) -> tuple[str, str]:
+    """Return (reasoning_trace, parse_branch).
+
+    Sources, in order:
+      1. `native`      — Ollama >= 0.12 puts thinking in `message.thinking`.
+      2. `legacy-tags` — older builds emitted inline `<think>…</think>` in content.
+
+    There is deliberately no third branch. If a think-enabled call yields neither,
+    that is a runtime-contract change and must surface as an error.
+    """
+    if thinking and thinking.strip():
+        return thinking.strip(), "native"
+
+    match = re.search(r"<think>(.*?)</think>", content or "", re.DOTALL)
     if match:
-        return match.group(1).strip()
-    return content.strip()
+        logger.warning(
+            "Thinking arrived as inline <think> tags (legacy shape) — Ollama "
+            "runtime is older than 0.12 or the model template changed."
+        )
+        return match.group(1).strip(), "legacy-tags"
+
+    raise MissingThinkingChannelError(
+        "Think-enabled call returned no reasoning channel: message.thinking was "
+        "empty and no <think> tags were present. Refusing to substitute the "
+        "response content as a reasoning trace (see REGRESSION-01). "
+        f"content[:200]={(content or '')[:200]!r}"
+    )
 
 
 # ── Pass 2: Structured Output ────────────────────────────────────────
@@ -243,6 +298,7 @@ def extract_pass2_structured(
     reasoning_trace: str,
     spec: ReviewSpec,
     paper_id: int,
+    think: bool = False,
 ) -> ExtractionResult:
     """Run Pass 2: use reasoning trace as context, force structured JSON output."""
     schema_hash = spec.extraction_hash()
@@ -271,7 +327,7 @@ def extract_pass2_structured(
         ],
         format=ExtractionOutput.model_json_schema(),
         options={"temperature": 0},
-        think=False,
+        think=think,
     )
 
     raw = response.message.content or ""
@@ -393,11 +449,19 @@ def extract_paper(
     """Run the full two-pass extraction on a single paper and store results."""
     prompt = build_extraction_prompt(paper_text, spec)
 
+    # Think policy is declared per pass in the Review Spec
+    # (`extraction_models.pass1_think` / `.pass2_think`) and passed explicitly on
+    # every call. See REGRESSION-01.
+    models = getattr(spec, "extraction_models", None)
+    pass1_think = getattr(models, "pass1_think", True)
+    pass2_think = getattr(models, "pass2_think", False)
+
     # Pass 1: reasoning
-    reasoning_trace = extract_pass1_reasoning(prompt)
+    reasoning_trace = extract_pass1_reasoning(prompt, think=pass1_think)
 
     # Pass 2: structured output
-    result = extract_pass2_structured(prompt, reasoning_trace, spec, paper_id)
+    result = extract_pass2_structured(prompt, reasoning_trace, spec, paper_id,
+                                      think=pass2_think)
 
     # Validate snippets and retry invalid ones before storing
     validated_fields = _validate_and_retry_snippets(
@@ -539,6 +603,7 @@ def extract_paper_with_completeness(
 
     for attempt in range(1, max_attempts + 1):
         _LAST_PASS2_TELEMETRY.clear()
+        _LAST_PASS1_TELEMETRY.clear()
         try:
             result = extract_paper(
                 paper_id, paper_text, spec, db,
@@ -556,6 +621,9 @@ def extract_paper_with_completeness(
                 spans_parsed=exc.n_stored,
                 fields_expected=exc.n_expected,
                 missing_fields=exc.missing,
+                thinking_present=_LAST_PASS1_TELEMETRY.get("thinking_present"),
+                thinking_chars=_LAST_PASS1_TELEMETRY.get("thinking_chars"),
+                parse_branch=_LAST_PASS1_TELEMETRY.get("parse_branch"),
             )
             logger.warning(
                 "Paper %d (%s): INCOMPLETE attempt %d/%d — %d/%d fields. "
@@ -573,6 +641,9 @@ def extract_paper_with_completeness(
             spans_parsed=check.n_produced,
             fields_expected=check.n_expected,
             missing_fields=check.missing,
+            thinking_present=_LAST_PASS1_TELEMETRY.get("thinking_present"),
+            thinking_chars=_LAST_PASS1_TELEMETRY.get("thinking_chars"),
+            parse_branch=_LAST_PASS1_TELEMETRY.get("parse_branch"),
         )
         if attempt > 1:
             logger.info(

@@ -96,6 +96,25 @@ class FTScreeningModels(BaseModel):
     temperature: float = Field(default=0.0, ge=0.0, le=1.0)
 
 
+class ExtractionModels(BaseModel):
+    """Model configuration for the two-pass local extractor.
+
+    `think` is declared per pass and always passed explicitly to Ollama.
+    REGRESSION-01: relying on the Ollama default is unsafe — 0.21.0 auto-enables
+    thinking for deepseek-r1 and moves it from inline `<think>` tags in content
+    to a separate `message.thinking` field, which silently changed what Pass 1
+    returned as its "reasoning trace".
+
+    Pass 1 exists to produce a reasoning trace, so thinking must be ON.
+    Pass 2 emits schema-constrained JSON, so thinking must be OFF.
+    """
+
+    extractor: str = Field(default="deepseek-r1:32b", description="Two-pass extraction model")
+    pass1_think: bool = Field(default=True, description="Pass 1 is the reasoning pass — thinking ON")
+    pass2_think: bool = Field(default=False, description="Pass 2 emits structured JSON — thinking OFF")
+    temperature: float = Field(default=0.0, ge=0.0, le=1.0)
+
+
 class ScreeningCriteria(BaseModel):
     """Inclusion/exclusion rules for title-abstract screening."""
 
@@ -218,6 +237,7 @@ class ReviewSpec(BaseModel):
     search_strategy: SearchStrategy
     screening_models: ScreeningModels = Field(default_factory=ScreeningModels)
     ft_screening_models: FTScreeningModels = Field(default_factory=FTScreeningModels)
+    extraction_models: ExtractionModels = Field(default_factory=ExtractionModels)
     screening_criteria: ScreeningCriteria
     extraction_schema: ExtractionSchema
     specialty_scope: Optional[SpecialtyScope] = Field(

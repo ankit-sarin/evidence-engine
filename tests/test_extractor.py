@@ -60,22 +60,30 @@ def test_build_prompt_includes_paper_text(spec):
 
 
 def test_parse_thinking_trace_with_tags():
+    """Legacy inline-tag shape (Ollama < 0.12) still parses."""
     content = "prefix <think>This is the reasoning about the paper.</think> suffix"
-    trace = parse_thinking_trace(content)
+    trace, branch = parse_thinking_trace(content)
     assert trace == "This is the reasoning about the paper."
+    assert branch == "legacy-tags"
 
 
 def test_parse_thinking_trace_multiline():
     content = "<think>\nLine 1\nLine 2\nLine 3\n</think>"
-    trace = parse_thinking_trace(content)
+    trace, branch = parse_thinking_trace(content)
     assert "Line 1" in trace
     assert "Line 3" in trace
+    assert branch == "legacy-tags"
 
 
-def test_parse_thinking_trace_no_tags():
-    content = "Just some reasoning without tags."
-    trace = parse_thinking_trace(content)
-    assert trace == "Just some reasoning without tags."
+def test_parse_thinking_trace_no_tags_raises():
+    """REGRESSION-01: this test previously asserted the silent fallback —
+    that the whole response content be returned as the reasoning trace. That
+    fallback is what broke Pass 1 on Ollama 0.21.0, so it is gone and absence is
+    now an error. Full coverage lives in tests/test_thinking_channel.py."""
+    from engine.agents.extractor import MissingThinkingChannelError
+
+    with pytest.raises(MissingThinkingChannelError):
+        parse_thinking_trace("Just some reasoning without tags.")
 
 
 # ── Pydantic Validation ─────────────────────────────────────────────
@@ -131,14 +139,18 @@ def test_extraction_result_validation():
 
 
 def _mock_pass1_response():
-    resp = MagicMock()
-    resp.message.content = (
-        "<think>The paper describes an RCT using the STAR robot for "
-        "autonomous suturing on porcine tissue. Sample size was 20 trials. "
-        "Autonomy level is 3. Accuracy was 95%.</think>\n"
-        "Based on my analysis..."
+    """Ollama >= 0.12 shape: reasoning in message.thinking, answer in content."""
+    return SimpleNamespace(
+        message=SimpleNamespace(
+            content="Based on my analysis...",
+            thinking=(
+                "The paper describes an RCT using the STAR robot for "
+                "autonomous suturing on porcine tissue. Sample size was 20 trials. "
+                "Autonomy level is 3. Accuracy was 95%."
+            ),
+        ),
+        done_reason="stop",
     )
-    return resp
 
 
 def _complete_pass2_fields(spec):

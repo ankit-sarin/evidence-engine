@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 TELEMETRY_DIRNAME = "telemetry"
 TELEMETRY_FILENAME = "extraction_calls.jsonl"
-SCHEMA_VERSION = "extraction-telemetry-1"
+SCHEMA_VERSION = "extraction-telemetry-2"
 
 # Raw responses are the point of this file, but a runaway response should not be
 # able to blow up the log. Truncation is recorded explicitly when it happens.
@@ -58,6 +58,9 @@ def record_call(
     output_tokens: int | None = None,
     reasoning_tokens: int | None = None,
     error: str | None = None,
+    thinking_present: bool | None = None,
+    thinking_chars: int | None = None,
+    parse_branch: str | None = None,
     extra: dict | None = None,
 ) -> Path | None:
     """Append one telemetry record. Never raises — telemetry must not break a run.
@@ -89,6 +92,13 @@ def record_call(
         "input_tokens": input_tokens,
         "output_tokens": output_tokens,
         "reasoning_tokens": reasoning_tokens,
+        # REGRESSION-01 (schema -2): the reasoning channel is now observable.
+        # `parse_branch` is 'native' (message.thinking), 'legacy-tags' (inline
+        # <think>), or 'error'; a run that silently switches branch is a runtime
+        # interface change and must be visible in the telemetry.
+        "thinking_present": thinking_present,
+        "thinking_chars": thinking_chars,
+        "parse_branch": parse_branch,
         "error": error,
     }
     if extra:

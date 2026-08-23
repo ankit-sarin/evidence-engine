@@ -16,10 +16,13 @@ Two safety rails, both deliberate:
     so an env var set in the wrong order would silently send all 80 calls to the
     0.21.0 production server and answer the wrong question. The server version is
     then asserted against /api/version before any spend.
-  * **The restart-on-timeout branch is disarmed.** `ollama_chat`'s last-resort
+  * **The restart-on-timeout branch is disarmed**, via the supported opt-out
+    `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` (OPSFIX-01). `ollama_chat`'s last-resort
     recovery runs `sudo systemctl restart ollama`, which would restart the
     *production* service — irrelevant to this run (we are not talking to it) and
-    out of bounds for this task. It is replaced with a raise.
+    out of bounds for this task. This originally monkeypatched the private
+    `_restart_ollama_and_retry`; the env switch replaced that, and the branch is
+    additionally flock-gated now, so a foreign experiment is safe regardless.
 
 Writes to the eval store only; never to review.db.
 
@@ -33,6 +36,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import sys
 import time
 from dataclasses import asdict
@@ -68,22 +72,19 @@ logger = logging.getLogger(__name__)
 # ── rails ────────────────────────────────────────────────────────────────
 
 
-def _disarmed_restart(**kwargs):
-    raise RuntimeError(
-        "QUALGAP-01: Ollama restart recovery is disarmed. This run talks to a "
-        "user-space 0.17.7 server; restarting the production systemd service "
-        "would neither help nor be in scope."
-    )
-
-
 def bind_runtime(host: str) -> str:
     """Point the shared client at `host`, disarm the restart branch, return version.
 
     Raises RuntimeError if the server is not the expected version — a run that
     silently lands on 0.21.0 would look like a finding and be a fabrication.
+
+    Disarming used to mean monkeypatching the private
+    `oc._restart_ollama_and_retry`; OPSFIX-01 replaced that with the supported
+    `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` switch, and additionally flock-gated the
+    branch so a foreign experiment is protected whether or not this is set.
     """
     oc._client = ollama.Client(host=host, timeout=oc._httpx_timeout)
-    oc._restart_ollama_and_retry = _disarmed_restart
+    os.environ[oc.RESTART_OPT_OUT_ENV] = "1"
 
     resp = httpx.get(f"{host.rstrip('/')}/api/version", timeout=10.0)
     resp.raise_for_status()

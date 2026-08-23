@@ -25,11 +25,12 @@ from analysis.eval import run_qualgap01 as R
 
 
 @pytest.fixture(autouse=True)
-def _restore_client_module():
+def _restore_client_module(monkeypatch):
     """`bind_runtime` rebinds module globals; never let that leak into the suite."""
-    client, restart = R.oc._client, R.oc._restart_ollama_and_retry
+    monkeypatch.delenv(R.oc.RESTART_OPT_OUT_ENV, raising=False)
+    client = R.oc._client
     yield
-    R.oc._client, R.oc._restart_ollama_and_retry = client, restart
+    R.oc._client = client
 
 
 class _Msg:
@@ -94,9 +95,15 @@ def test_bind_runtime_refuses_a_server_of_the_wrong_version():
 def test_bind_runtime_accepts_the_expected_version_and_disarms_restart():
     with patch.object(R.httpx, "get", return_value=_version_response(EXPECTED_SERVER_VERSION)):
         assert R.bind_runtime("http://127.0.0.1:11435") == EXPECTED_SERVER_VERSION
-    # The production systemd service must be unreachable from this run.
-    with pytest.raises(RuntimeError, match="disarmed"):
-        R.oc._restart_ollama_and_retry(model="m", messages=[])
+    # The production systemd service must be unreachable from this run. Since
+    # OPSFIX-01 this goes through the supported opt-out rather than a
+    # monkeypatch of the private recovery function.
+    assert R.oc.restart_disabled() is True
+    with pytest.raises(RuntimeError, match=R.oc.RESTART_OPT_OUT_ENV):
+        R.oc._restart_ollama_and_retry(
+            model="m", messages=[], paper_label="paper_id=1",
+            effective_timeout=1.0, max_retries=0,
+        )
 
 
 # ── pinned reads ─────────────────────────────────────────────────────────

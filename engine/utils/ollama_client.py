@@ -10,6 +10,7 @@ This provides:
 """
 
 import logging
+import os
 import re
 import subprocess
 import time
@@ -18,7 +19,21 @@ from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeou
 import httpx
 import ollama
 
+from engine.utils.ollama_lock import foreign_lock_held
+
 logger = logging.getLogger(__name__)
+
+# Opt-out for harnesses that must never restart the service — a runtime-version
+# A/B talking to a second Ollama on another port, say, where restarting the
+# systemd unit would neither help nor be in scope. QUALGAP-01 achieved this by
+# monkeypatching `_restart_ollama_and_retry` from the outside; this is the
+# supported switch that replaces that.
+RESTART_OPT_OUT_ENV = "EVIDENCE_ENGINE_NO_OLLAMA_RESTART"
+
+
+def restart_disabled() -> bool:
+    """True if the last-resort service restart has been switched off explicitly."""
+    return os.environ.get(RESTART_OPT_OUT_ENV, "").strip().lower() not in ("", "0", "false", "no")
 
 # ── HTTP-level timeouts (Layer 1) ────────────────────────────────────
 
@@ -296,8 +311,38 @@ def _restart_ollama_and_retry(
 ):
     """Restart the Ollama service and attempt one final call.
 
-    Returns the response on success, or None if the restart or final call fails.
+    Returns the response on success; raises RuntimeError if recovery is refused
+    or fails, which `ollama_chat` converts to TimeoutError.
+
+    Two gates run before the restart, both of which make this branch refuse
+    rather than proceed (OPSFIX-01):
+
+    * **The experiment flock (OPS-GUARD-01).** This is the same predicate
+      `extractor.restart_ollama` uses, and deliberately the narrower
+      `foreign_lock_held()` rather than `check_experiment_lock()`: a process
+      holding the lock for its own long run must still be able to recover, but
+      restarting the service out from under *someone else's* multi-hour
+      experiment destroys it. That is not hypothetical — an unguarded restart on
+      this box killed the inference-determinism Arm P rerun.
+    * **An explicit opt-out env var**, for harnesses pointed at a different
+      server entirely.
+
+    Refusing is always safe. The restart is a last-resort mitigation for a hung
+    server, not a correctness requirement; the caller has already exhausted its
+    retries and will surface a TimeoutError either way.
     """
+    if restart_disabled():
+        raise RuntimeError(
+            f"Ollama restart refused: {RESTART_OPT_OUT_ENV} is set "
+            f"(model={model}, {paper_label}). Recovery is disabled for this process."
+        )
+    if foreign_lock_held():
+        raise RuntimeError(
+            f"Ollama restart refused: another process holds the experiment lock "
+            f"(model={model}, {paper_label}). Restarting would destroy its run; "
+            f"see OPS-GUARD-01."
+        )
+
     logger.warning(
         "All %d retries exhausted — restarting Ollama service (model=%s, %s)",
         1 + max_retries, model, paper_label,

@@ -18,7 +18,7 @@ Local systematic review engine on DGX Spark. Accepts Review Specs (YAML), runs s
 evidence-engine/
 ├── CLAUDE.md                   # Static architecture (this file)
 ├── primer.md                   # Working state (maintained by Claude Code, gitignored)
-├── pyproject.toml              # pytest config (markers: network, ollama, integration)
+├── pyproject.toml              # pytest config (markers: network, ollama, integration, fence_selftest)
 ├── requirements.txt
 ├── review_specs/               # Review spec YAML files
 ├── engine/
@@ -35,10 +35,14 @@ evidence-engine/
 │   ├── validators/             # Extraction validator + distribution collapse monitor
 │   └── exporters/              # PRISMA, evidence tables, DOCX, methods, traces
 ├── analysis/
-│   └── paper1/                 # Human workbook import, consensus derivation, adjudication
+│   ├── paper1/                 # Human workbook import, consensus derivation, adjudication
+│   ├── provenance/             # Frozen v1.1 evidence-provenance taxonomy + classifier
+│   └── eval/                   # Response-contract, runtime and priming evaluations
 ├── scripts/                    # Pipeline runners, batch scripts, monitors
-├── tests/                      # 440+ offline + 10 network/ollama tests
-└── data/                       # gitignored — per-review databases, PDFs, exports
+├── tests/                      # ~1,530 offline + 15 network/ollama/integration
+│   └── conftest.py             # Suite-wide service-call fence (see Ops Invariants)
+└── data/                       # gitignored — per-review databases, PDFs, exports,
+                                #   eval stores, telemetry
 ```
 
 ## Agent Architecture
@@ -120,6 +124,37 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - Extraction cleanup: schema-hash-based stale data removal. Dry-run default. Pre-flight warning in extractor
 - Ollama pre-flight: model health check + VRAM budget validation. Wired into FT screener, extractor, auditor
 - FT screening: dual-model cross-family, specialty scope, /no_think, 32K truncation, checkpoint/resume, 7 reason codes. Status-aware for papers at any lifecycle stage
+- Pass-1 think policy is declared per pass in the Review Spec (`extraction_models.pass1_think` / `.pass2_think`) and passed explicitly on every call — never left to a version-dependent Ollama default (REGRESSION-01)
+
+## Ops Invariants — Ollama service safety
+
+Two independent code paths can run `sudo systemctl restart ollama`, and a
+`NOPASSWD` sudoers rule for exactly that command means both really fire. Both are
+now gated, and the suite is fenced. Do not add a third ungated path.
+
+- **Experiment flock** (`engine/utils/ollama_lock.py`, OPS-GUARD-01): `flock(2)` on
+  `~/.ollama_experiment.lock`, never an existence check, so a dead holder releases
+  automatically. Long runs wrap themselves in `hold_experiment_lock()`.
+- **Both restart paths gate on `foreign_lock_held()`**, deliberately narrower than
+  `check_experiment_lock()` — a process holding the lock for its own run must still
+  be able to restart, but restarting under *someone else's* experiment destroys it.
+  - `extractor.restart_ollama()` — proactive CUDA-defrag restart (`RESTART_EVERY_N`).
+  - `ollama_client._restart_ollama_and_retry()` — last-resort recovery after the
+    wall-clock watchdog exhausts retries (OPSFIX-01).
+- **Opt-out:** `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` disarms the recovery branch for
+  harnesses pointed at a different server. Refusal raises `RuntimeError`, which
+  `ollama_chat` surfaces as `TimeoutError` — never a silent success.
+- **Suite fence** (`tests/conftest.py`, OPSFIX-01): an autouse fixture wraps
+  `subprocess.run/Popen/call/check_call/check_output` and `os.system` and refuses any
+  argv naming a service manager or privilege escalation, matched on command basename.
+  `ServiceCallBlocked` derives from **`BaseException`** — load-bearing, because
+  application code catches `Exception` around restarts and would otherwise swallow it.
+  No tier is exempt, including the nightly full-suite run. Tests that exercise the
+  fence carry `@pytest.mark.fence_selftest`.
+  - Tests must never reach a live service. Patch the boundary:
+    `@patch("engine.utils.ollama_client.subprocess.run")`, or
+    `@patch("engine.utils.ollama_preflight.require_preflight")` for anything calling
+    `run_extraction` (preflight shells out to `systemctl show` *and* loads a 20 GB model).
 
 ## Cloud Extraction Architecture
 - `CloudExtractorBase` (engine/cloud/base.py): shared logic — pending paper query, codebook-driven prompt building, response JSON parsing (8+ alternate keys + raw content recovery), progress tracking, cost calculation, distribution monitor integration
@@ -171,6 +206,39 @@ Generators:
 
 Importers auto-detect .json vs .xlsx. Default --file auto-discovers
 from naming convention. xlsx retained with --format xlsx for archival.
+
+## Extraction Quality Investigation (analysis/eval/)
+
+A chain of evaluations diagnosing why local extraction quality fell after Run 6.
+Each writes a JSONL store under gitignored `data/{review}/eval/{study}/` and a
+report under `docs/session-reports/`. **Runners deliberately avoid
+`extract_paper()` because it stores** — no eval writes to `review.db`.
+
+| study | question | outcome |
+|---|---|---|
+| SCHEMA-EVAL-01 | constrained vs unconstrained decoding | found the REGRESSION-01 defect incidentally |
+| REGRESSION-01 | Pass 1 returned the answer, not the reasoning | fixed (`9190e41`); anchoring 10.5% → ~38% |
+| SCHEMA-EVAL-02 | A/B/C response contract, n=40 | RETAIN_B by the pinned rule; **19.4pp still missing vs Run 6** |
+| ADJUD-01 | was the deciding clause meant to catch wording variance? | adjudicated |
+| QUALGAP-01 | is the 0.17.7 → 0.21.0 runtime change the cause? | **no** — `HYPOTHESIS_DEAD`, +4.3pp pooled / 0.0pp paired |
+| PRIME-01 | how quote-rich is each Pass-1 channel? | drafts ~38–43%, thinking 0.4%; Run 6 draft→anchored rho +0.576 |
+
+**The standing finding.** Run 6 primed Pass 2 from the **content** channel (a
+first-draft answer dense with verbatim quotes) because the pre-fix parser's
+whole-content fallback was active. Post-fix runs prime from the **thinking**
+channel, which quotes the paper almost never. Run 6's 58.3% anchoring was an
+artifact of that bug, not a level the pipeline earned. Ollama 0.17.7 already used
+the native thinking channel, so the interface never moved at the upgrade — the
+account in REGRESSION-01 and SCHEMA-EVAL-02 is wrong about *when*.
+
+**Provenance measure.** The frozen v1.1 ladder (`analysis/provenance/`) classifies
+each span ANCHORED / STITCHED / DRIFTED / UNTRACEABLE_* / ABSENCE_*. PRIME-01 adds
+a coarser verbatim-8-word-window rate for measuring whole channels; it is pinned by
+test against QUALGAP-01's published figures and must not be "tidied".
+
+**Known data gap:** eval runners store `raw_content` = the **Pass-2** response and
+`think_chars` = an integer length. Pass-1 text is captured only by QUALGAP-01
+(`pass1_content` + `pass1_trace`). No 0.21.0 Pass-1 draft text exists on disk.
 
 ## Running
 ```bash
@@ -255,10 +323,33 @@ PYTHONPATH=. python -m analysis.paper1.pi_audit_sampler_v2 --review surgical_aut
     --codebook data/surgical_autonomy/extraction_codebook.yaml \
     --out-dir artifacts/paper1/pi_audit_v2
 
+# Extraction-quality evaluations (analysis/eval/) — all write to gitignored eval stores
+PYTHONPATH=. python -m analysis.eval.run_local_abc --review surgical_autonomy [--resume]
+PYTHONPATH=. python -m analysis.eval.analyze_schema_eval2 --review surgical_autonomy
+
+# QUALGAP-01 runtime A/B (needs a second Ollama on :11435; --probe does pre-flight only)
+PYTHONPATH=. python -m analysis.eval.run_qualgap01 --review surgical_autonomy --probe
+PYTHONPATH=. python -m analysis.eval.run_qualgap01 --review surgical_autonomy [--resume]
+PYTHONPATH=. python -m analysis.eval.analyze_qualgap01 --review surgical_autonomy
+
+# PRIME-01 Pass-1 channel quote-richness (offline, zero model calls; ~15 min)
+PYTHONPATH=. python -m analysis.eval.analyze_prime01 --review surgical_autonomy
+
+# Disarm the last-resort Ollama restart for a harness on another server
+EVIDENCE_ENGINE_NO_OLLAMA_RESTART=1 PYTHONPATH=. python -m <harness>
+
 # Test suite
-python -m pytest tests/ -v                                        # all tests
+python -m pytest tests/ -v                                        # all tests (nightly)
 python -m pytest tests/ -v -m "not network and not ollama"        # offline only
-python -m pytest tests/ -v -m "not network and not ollama and not integration"  # offline-offline (excludes live-Ollama grammar regression)
+python -m pytest tests/ -v -m "not network and not ollama and not integration"  # standard gate (~3m25s)
+```
+
+The standard gate is the third form. All tiers run under the `tests/conftest.py`
+service-call fence — see Ops Invariants. Verify a suite run touched nothing:
+
+```bash
+systemctl show ollama --property=ExecMainStartTimestamp --property=NRestarts
+journalctl -u ollama --since "<window start>" | grep -E "Started|Stopping|Stopped"
 ```
 
 ## Architecture Docs

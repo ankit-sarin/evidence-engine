@@ -282,8 +282,11 @@ def test_staleness_skip(tmp_path, spec):
     schema_hash = spec.extraction_hash()
     db.add_extraction(pid, schema_hash, {"fields": []}, "trace", "deepseek-r1:32b")
 
-    # run_extraction should skip this paper
-    stats = run_extraction(db, spec, "test_stale")
+    # run_extraction should skip this paper. Preflight is patched out: it shells
+    # out to `systemctl show ollama` and loads deepseek-r1:32b against the live
+    # server, neither of which this test is about (OPSFIX-01).
+    with patch("engine.utils.ollama_preflight.require_preflight"):
+        stats = run_extraction(db, spec, "test_stale")
     assert stats["skipped"] == 1
     assert stats["extracted"] == 0
 
@@ -300,8 +303,10 @@ def test_run_extraction_no_parsed_text(tmp_path, spec):
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
 
-    # Don't write any parsed text file — should fail gracefully
-    stats = run_extraction(db, spec, "test_notext")
+    # Don't write any parsed text file — should fail gracefully. Preflight is
+    # patched out for the same reason as test_staleness_skip (OPSFIX-01).
+    with patch("engine.utils.ollama_preflight.require_preflight"):
+        stats = run_extraction(db, spec, "test_notext")
     assert stats["failed"] == 1
     assert stats["extracted"] == 0
 

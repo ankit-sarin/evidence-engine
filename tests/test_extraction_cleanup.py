@@ -224,15 +224,21 @@ class TestExtractionRunnerWarning:
         _advance_to(db, pid, "EXTRACTED")
         _add_extraction(db, pid, "stale_hash_abc")
 
-        # Mock to avoid actually running extraction (no parsed text, etc.)
+        # Mock to avoid actually running extraction (no parsed text, etc.).
+        # require_preflight is patched because it shells out to `systemctl show
+        # ollama` and loads deepseek-r1:32b against the live server — neither of
+        # which this test is about, and the first of which the conftest fence
+        # now refuses outright (OPSFIX-01).
         with caplog.at_level(logging.WARNING):
             from engine.agents.extractor import run_extraction
-            run_extraction(db, spec, review_name="test_cleanup")
+            with patch("engine.utils.ollama_preflight.require_preflight"):
+                run_extraction(db, spec, review_name="test_cleanup")
 
         assert any("stale schema extractions" in m for m in caplog.messages)
 
     def test_silent_when_no_stale(self, db, caplog):
         """run_extraction does not warn when all extractions match current schema."""
+        from unittest.mock import patch
         from engine.core.review_spec import load_review_spec
         from engine.agents.extractor import run_extraction
 
@@ -244,7 +250,8 @@ class TestExtractionRunnerWarning:
         _add_extraction(db, pid, current_hash)
 
         with caplog.at_level(logging.WARNING):
-            run_extraction(db, spec, review_name="test_cleanup")
+            with patch("engine.utils.ollama_preflight.require_preflight"):
+                run_extraction(db, spec, review_name="test_cleanup")
 
         assert not any("stale schema extractions" in m for m in caplog.messages)
 

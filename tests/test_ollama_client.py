@@ -129,13 +129,23 @@ class TestWatchdogTimeout:
 
 
 class TestTimeoutLogging:
+    @patch("engine.utils.ollama_client.subprocess.run")
     @patch("engine.utils.ollama_client._client")
-    def test_timeout_logs_warning(self, mock_client, caplog):
-        """Timeout events should log at WARNING with model, paper_id, elapsed."""
+    def test_timeout_logs_warning(self, mock_client, mock_subprocess, caplog):
+        """Timeout events should log at WARNING with model, paper_id, elapsed.
+
+        `subprocess.run` must be patched as well as the client: exhausting the
+        retries drops into `_restart_ollama_and_retry`, and without this patch
+        the assertion below was being satisfied by a **real** `sudo systemctl
+        restart ollama` against the production service (OPSFIX-01). The suite
+        fence in conftest.py now blocks that outright; this patch is what makes
+        the test exercise the intended path instead of relying on the fence.
+        """
         def hang(**kwargs):
             time.sleep(60)
 
         mock_client.chat.side_effect = hang
+        mock_subprocess.return_value = MagicMock(returncode=0)
 
         with pytest.raises(TimeoutError):
             with caplog.at_level("WARNING", logger="engine.utils.ollama_client"):

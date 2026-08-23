@@ -315,10 +315,20 @@ class TestRunnerIntegration:
 
         mock_response = MagicMock()
         mock_response.message.content = "OK"
-        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
-            with patch("engine.utils.ollama_preflight.ollama.ps",
-                       return_value={"models": []}):
-                stats = run_extraction(db, spec, review_name="test_pf4")
+        # `_get_ollama_env` shells out to `systemctl show ollama`, which the
+        # conftest fence refuses (OPSFIX-01) and which would make this test
+        # depend on the host's systemd state. Patched to the expected values so
+        # the rest of the real preflight path still runs, which is the point of
+        # this test.
+        with patch("engine.utils.ollama_preflight._get_ollama_env",
+                   return_value={"OLLAMA_FLASH_ATTENTION": "true",
+                                 "OLLAMA_MAX_LOADED_MODELS": "1",
+                                 "OLLAMA_KV_CACHE_TYPE": "f16",
+                                 "OLLAMA_NUM_PARALLEL": "1"}):
+            with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+                with patch("engine.utils.ollama_preflight.ollama.ps",
+                           return_value={"models": []}):
+                    stats = run_extraction(db, spec, review_name="test_pf4")
 
         # No papers to extract, but runner completed without error
         assert stats["extracted"] == 0

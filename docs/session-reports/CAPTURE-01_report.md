@@ -209,3 +209,50 @@ change to production extraction code, any re-analysis of Run 6, determinism re-r
 **See also:** `PRIME-01_report.md` (the 0.17.7 measurement this extends),
 `QUALGAP-01_report.md` (the runtime acquittal that pinned 0.21.0), and `CLAUDE.md`
 "Extraction Quality Investigation".
+
+---
+
+## Addendum (2026-08-30): input truncation, per PARSE-01
+
+Two claims in this report are corrected below. The measurements were made by task PARSE-01,
+which swept all 190 EXTRACTED corpus papers for parse defects and input-limit saturation.
+
+**1. The completeness claim is wrong.** §3 states *"`done_reason` = `stop` on all 40 — no
+truncation"*. `done_reason` describes how **generation** terminated; it carries no information
+about whether the **input** was truncated, so it was never evidence for that conclusion. Two of
+the 40 papers — **415 and 719** — saturated the local context ceiling exactly
+(`prompt_eval_count` = **131,072**, the model's `n_ctx_train`) and had their prompts truncated
+on input. p415's full prompt is ~416,000 tokens, so roughly 31% of the document reached the
+model; p719's roughly 74%. Both still returned `done_reason=stop`, which is precisely why that
+field could not detect this.
+
+**2. The "9 zero-rate documents are unexplained" bullet is partly wrong.** §5 lists nine
+documents scoring 0.0% verbatim as unexplained. **Two of the nine are explained**: 415 and 719
+are the truncated pair. Their drafts were measured against the *full* parsed text, including
+the portion the model never received, so a 0.0% rate was partly an artifact of the measurement
+frame rather than a property of the draft. The remaining seven are still unexplained.
+
+**Corrected figures**, recomputed on the 38 untruncated papers with the metric unchanged:
+
+| metric | as published | corrected (n=38) |
+|---|---|---|
+| 0.21.0 draft pooled richness | 26.6% (n=40) | **27.4%** |
+| paired median delta vs 0.17.7 (V2) | −14.0 pp (n=39) | **−14.1 pp** |
+| paired rho (0.177 vs 0.210) | +0.081 | **+0.020** |
+
+**The headline conclusions are unchanged, and here is why.** The draft channel is still far
+richer than thinking (0.2%) and still materially thinner than the 0.17.7 draft (37.9–42.9%).
+The paired comparison in §4.4 is unaffected because **0.17.7 hit the same ceiling on the same
+paper**: QUALGAP-01 §1.2 records that both runtimes derive `default_num_ctx=262144` "clamped
+identically against `n_ctx_train=131072`", so p719 was truncated identically in both arms and
+the pairing compares like with like. p415 was never in the paired set at all.
+
+**Paper-set composition, for completeness.** §2 states the full 40 "is the right set". PARSE-01
+found the 40 also contains **547, 629 and 799**, which are `FT_SCREENED_OUT` with zero
+extractions and are therefore not members of the 190-paper corpus. This does not affect any
+figure in this report — CAPTURE-01 captures Pass-1 drafts and needs no corpus membership — but a
+reader should not infer corpus membership from inclusion in this sample. Root cause is recorded
+in `PARSE-01_report.md`.
+
+**See:** `docs/session-reports/PARSE-01_report.md`. Appended by task PARSE-01; all text above
+this heading is unchanged.

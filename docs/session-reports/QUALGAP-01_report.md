@@ -263,3 +263,35 @@ even the accident was leaky.
 **Out of scope and not done:** contract C cutover with NOT_FOUND escape values; downgrading the
 production service; determinism re-runs; Run 7; and any second diagnosis of the residual gap —
 which, per the brief, is a new task with fresh reasoning.
+
+---
+
+## Addendum (2026-08-30): p719 input truncation, per PARSE-01
+
+**Nothing in this report is withdrawn.** This addendum records a fact discovered later that a
+reader of §2 should have, and explains why it leaves the verdict intact.
+
+Task PARSE-01 swept all 190 EXTRACTED corpus papers for parse defects and input-limit
+saturation. It found that **paper 719 saturates the local context ceiling**: its prompt reaches
+`prompt_eval_count` = **131,072** exactly — `n_ctx_train` for `deepseek-r1:32b` — so roughly a
+quarter of that document never reached the model. PARSE-01 also classified 719's parsed text as
+an **extraction failure**: the PDF text is font-glyph encoded (5,472 `GLYPH<c=..,font=..>`
+tokens, 8.84× inflation against `pdftext`), so what the model did receive is largely glyph noise
+rather than prose. p719 is one of the **36 matched papers** every measure in §2 is computed over.
+
+**The verdict is unaffected, for a reason this report already established.** §1.2 records that
+both instances derive the same `default_num_ctx=262144`, "clamped identically against
+`n_ctx_train=131072`". The ceiling is therefore a property of the model, not of the runtime, and
+0.17.7 and 0.21.0 truncated p719 at exactly the same point. Every cell in the A/B saw the same
+truncated text, so the comparison remains like-for-like and `HYPOTHESIS_DEAD` stands, as do the
++4.3 pp pooled / 0.0 pp median paired figures.
+
+**§2's handling of the other affected papers was already correct** and needs no correction:
+restricting every arm to the 36 papers all four arms have, noting that 415 failed both cells,
+and noting that 547, 629 and 799 have no Run 6 counterpart. PARSE-01 adds only the reasons —
+415's PDF is a 728-page conference proceedings volume acquired in place of one article, and
+547/629/799 are `FT_SCREENED_OUT` papers that entered the sample through a filter gap in
+`select_sample()`. Both are documented in `PARSE-01_report.md`.
+
+**See:** `docs/session-reports/PARSE-01_report.md`. Appended by task PARSE-01; all text above
+this heading is unchanged.

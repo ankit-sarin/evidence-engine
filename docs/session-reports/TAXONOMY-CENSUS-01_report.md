@@ -291,3 +291,23 @@ actually saw.
 
 **Out of scope and not done:** per-field evidence-policy fix design, judge restatement of
 the 33.7% figure, prompt/codebook changes, Arm P analysis, primer.md edits.
+
+---
+
+## Addendum (2026-08-30): parse-defective source papers, per PARSE-01
+
+Task PARSE-01 swept all 190 EXTRACTED corpus papers for parse defects and input-limit
+saturation and classified **four** as severely defective at source: **415** (a 728-page
+conference proceedings volume acquired in place of one article), **719** and **586**
+(font-glyph-encoded PDF text) and **455** (character-shattered extraction, one character per
+line). Spans derived from these papers are present in the provenance census this report draws
+on.
+
+**Exposure is small and the headline distributions are unaffected.** The four contribute
+**364 of 22,034** census classification rows — **1.65%**. Papers 415 and 719 carry only **one**
+local evidence span each, so their weight in any local-arm rate is negligible. No figure in this
+report is re-scored, and no claim it made is withdrawn; this is a pointer so that a reader
+auditing individual spans knows which source documents are unsound.
+
+**See:** `docs/session-reports/PARSE-01_report.md`. Appended by task PARSE-01; all text above
+this heading is unchanged.

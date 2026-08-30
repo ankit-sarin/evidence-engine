@@ -261,3 +261,37 @@ the A/B/C comparison never depended on the Run 6 baseline.
 `docs/session-reports/PRIME-01_report.md` quantifies why the swap mattered: the Run 6 draft
 channel repeats the paper in 42.9% of its 8-word windows, the thinking channel in 0.4%.
 Appended by task EXIT-REMED-01; all text above this heading is unchanged.
+
+---
+
+## Addendum (2026-08-30): sample composition, per PARSE-01
+
+**No figure in this report is re-scored, and no claim it made is withdrawn.** §1 states the
+sample's construction accurately — 10 carried forward plus 30 drawn, seed 20260729, strata long
+13 / medium 12 / short 15 — and it lists all 40 paper IDs explicitly. It also states that the
+sample *deliberately* includes papers **415 and 719**, the two local single-span collapses from
+SPANLOSS-01. This addendum records what task PARSE-01 later established about those and three
+other members, because a reader inspecting this sample should have it.
+
+**415 and 719 are parse-defective, and both were truncated on input.** PARSE-01 swept all 190
+EXTRACTED corpus papers and classified these two as its most severe cases. **p415** is a
+`MERGED_DOCUMENT`: its PDF is a 728-page conference proceedings volume acquired in place of a
+single article; the parse is faithful to that PDF (ratio 1.04), so the defect is the acquired
+document, not the parser. **p719** is an `EXTRACTION_FAILURE`: font-glyph encoded, 5,472
+`GLYPH<c=..,font=..>` tokens, 8.84× inflation against `pdftext`. Both saturate the local context
+ceiling exactly (`prompt_eval_count` = 131,072 = `n_ctx_train`), so in every local arm — this
+study's included — a substantial part of each was never seen by the model. This is consistent
+with, and a plausible contributor to, the single-span collapses that motivated including them.
+
+**547, 629 and 799 are not corpus members.** All three are `FT_SCREENED_OUT` with **zero**
+extractions, so they are outside the 190-paper EXTRACTED corpus. This report never asserted
+otherwise — it reports them among the 40 and its own analyses handle their missing Run 6
+counterparts — but inclusion in this sample should not be read as corpus membership. The cause
+is a filter gap in `select_sample()`: the eligibility filter
+(`FT_ELIGIBLE`/`EXTRACTED`/`AI_AUDIT_COMPLETE`/`HUMAN_AUDIT_COMPLETE`) is applied to the 30
+newly drawn papers but **not** to the 10 `CARRIED` papers, which are filtered only on having
+parsed text. All three are in `CARRIED`. Recorded in `PARSE-01_report.md`; not fixed by that
+task.
+
+**See:** `docs/session-reports/PARSE-01_report.md`. Appended by task PARSE-01; all text above
+this heading is unchanged.

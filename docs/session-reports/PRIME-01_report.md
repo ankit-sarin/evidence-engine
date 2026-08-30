@@ -184,3 +184,34 @@ the residual question cannot be answered at all.
 this question), `CLAUDE.md` "Extraction Quality Investigation → The standing finding", and the
 2026-08-29 addenda appended to `REGRESSION-01_report.md`, `SCHEMA-EVAL-01_report.md` and
 `SCHEMA-EVAL-02_report.md`.
+
+---
+
+## Addendum (2026-08-30): p719 input truncation, per PARSE-01
+
+Task PARSE-01 swept all 190 EXTRACTED corpus papers for parse defects and input-limit
+saturation, and found two papers whose prompts exceed the local context ceiling
+(`prompt_eval_count` = **131,072**, `n_ctx_train` for `deepseek-r1:32b`). One of them, **paper
+719, is inside this report's 36-paper matched set**; the other, 415, was already excluded from
+it for lack of a Run 6 `reasoning_trace`.
+
+**What this means for the figures here.** p719 was truncated on input in Run 6 as well —
+QUALGAP-01 §1.2 records that the clamp is against the model's `n_ctx_train`, not the runtime, so
+it applies to every study in this chain regardless of Ollama version. Roughly a quarter of that
+document never reached the model in any arm. PARSE-01 further classifies 719's parsed text as an
+**extraction failure**: font-glyph encoded, 5,472 `GLYPH<c=..,font=..>` tokens, 8.84× inflation
+against `pdftext`, so the portion the model did receive is largely glyph noise. Its channel
+richness and anchored rate are therefore measured against text that was partly unavailable and
+partly unreadable, and every per-paper figure involving 719 — its row in `anchored_by_paper`,
+its contribution to the pooled rates in §4, and its rank in the §5 quartiles — carries that
+caveat.
+
+**The conclusions are unchanged.** The categorical channel split (drafts 37.9–42.9% verbatim
+versus thinking 0.4%, snippet enumeration in ~35/36 documents versus 0/36) is a difference of
+two orders of magnitude across 36 papers; one truncated paper cannot account for it. The
+richness→anchoring relationships (+0.576 causal, +0.347 counterfactual, −0.121 thinking-primed)
+are rank correlations over 36 pairs, and 719 is a single pair affected identically on both sides
+of each comparison.
+
+**See:** `docs/session-reports/PARSE-01_report.md`. Appended by task PARSE-01; all text above
+this heading is unchanged.

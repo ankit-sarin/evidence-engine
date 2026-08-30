@@ -26,9 +26,12 @@ from analysis.eval.capture01 import LABEL, read_results, store_dir
 from analysis.eval.prime01 import (
     WINDOW_WORDS,
     load_papers,
+    load_qualgap,
     load_schema_eval1_draft_lengths,
     measure,
+    spearman,
 )
+from analysis.eval.qualgap01 import CELL_V1, CELL_V2
 
 CHANNELS = (("draft_0210", "pass1_content"), ("thinking_0210", "pass1_thinking"))
 
@@ -130,6 +133,48 @@ def main(argv: list[str] | None = None) -> int:
         "prime01_v2_thinking_0177": col(prior.get("v2_thinking_0177", {})),
     }
 
+    # ── paired like-for-like vs 0.17.7, same paper and same prompt ────────
+    # The pooled side-by-side compares 40 papers against PRIME-01's 36, so a
+    # paper-set confound is possible in principle. This block removes it: the
+    # same paper's 0.17.7 draft (QUALGAP-01) against its 0.21.0 draft, paired.
+    qg_path = review_dir / "eval" / "qualgap01" / "runtime_v12.jsonl"
+    paired: dict = {}
+    if qg_path.exists():
+        qg = load_qualgap(qg_path)
+        captured = {r["paper_id"]: r for r in ok_rows}
+        for cell in (CELL_V1, CELL_V2):
+            prior_rows = {r["paper_id"]: r for r in qg
+                          if r.get("condition") == cell and r.get("ok") and r.get("pass1_content")}
+            shared = sorted(set(prior_rows) & set(captured) & set(papers))
+            if not shared:
+                continue
+            a = [measure(p, "0177", prior_rows[p]["pass1_content"], papers[p]) for p in shared]
+            b = [measure(p, "0210", captured[p]["pass1_content"], papers[p]) for p in shared]
+            ra, rb = [x.rate for x in a], [x.rate for x in b]
+            deltas = [y - x for x, y in zip(ra, rb)]
+            paired[cell] = {
+                "papers": len(shared),
+                "pooled_0177_pct": round(100.0 * sum(x.hits for x in a) / sum(x.windows for x in a), 1),
+                "pooled_0210_pct": round(100.0 * sum(x.hits for x in b) / sum(x.windows for x in b), 1),
+                "median_paired_delta_pp": round(st.median(deltas), 1),
+                "papers_0210_higher": sum(1 for d in deltas if d > 0),
+                "spearman_rho_0177_vs_0210": (
+                    round(spearman(ra, rb), 3) if spearman(ra, rb) is not None else None),
+                "median_chars_0177": int(st.median([x.chars for x in a])),
+                "median_chars_0210": int(st.median([x.chars for x in b])),
+                "snippet_docs_0177": sum(1 for x in a if x.snippet_labels > 0),
+                "snippet_docs_0210": sum(1 for x in b if x.snippet_labels > 0),
+            }
+
+    # Restricted to PRIME-01's own 36 matched papers, for a same-denominator read.
+    prime_subset = {}
+    if prime.exists():
+        matched = set(json.loads(prime.read_text()).get("matched_papers", []))
+        sub = [s for s in per_channel["draft_0210"] if s.paper_id in matched]
+        if sub:
+            prime_subset = summarize(sub) | {
+                "note": "0.21.0 draft restricted to PRIME-01's 36 matched papers"}
+
     summary = {
         "study": "CAPTURE-01",
         "question": "Does the 0.21.0 Pass-1 draft channel share the 0.17.7 draft's quote-richness?",
@@ -157,6 +202,8 @@ def main(argv: list[str] | None = None) -> int:
         "channel_richness": {n: summarize(per_channel[n]) for n, _ in CHANNELS},
         "draft_length_check": length_check,
         "side_by_side_vs_0177": side_by_side,
+        "paired_vs_0177_same_paper": paired,
+        "draft_0210_on_prime01_36_subset": prime_subset,
         "per_document": per_document,
     }
 

@@ -234,3 +234,30 @@ The overrun was uneventful because the run held the experiment lock, so OPS-GUAR
 
 **Out of scope and not done:** production cutover, enum constraints, NOT_FOUND escape values,
 field reordering / evidence-first span shape, OpenAI strict cutover, determinism re-runs, Run 7.
+
+---
+
+## Addendum (2026-08-29): corrected account per QUALGAP-01
+
+**Superseded:** the §4 residual hypothesis — *"What remains: something in the **Ollama 0.17.7 →
+0.21.0 runtime change beyond the thinking-channel** [interface]"* — and, with it, the
+interpretation of M6's headline **−19.4 pp** (Run 6 58.2% vs condition B 38.8% anchored) as a
+gap the pipeline still owes. QUALGAP-01 tested that hypothesis directly by standing up 0.17.7
+on a second port and re-running the same papers, and killed it: outcome **`HYPOTHESIS_DEAD`**,
+V1 landing **+4.3pp** from 0.21.0 condition B and **−14.8pp** from Run 6, with the 4.3pp not
+surviving pairing (**0.0pp median paired**). There is no residual runtime effect to find. The
+raw 0.17.7 probes also showed `message.thinking` already in use on 0.17.7 — installed
+2026-03-12, before Run 6 — so this report's premise that the interface moved at the upgrade is
+wrong. **The corrected account:** Run 6's 58.2% was produced with the pre-fix whole-content
+fallback active, meaning Pass 2 was primed with a quote-rich first-draft *answer* instead of a
+reasoning trace. The 19.4 pp is therefore measured against an artifact, not an earned ceiling;
+the honest baseline is **~39–43% anchored**, and condition B's 38.8% sits at its lower edge
+rather than 19 points below par. The RETAIN_B decision and the M1–M5 condition contrast are
+unaffected — all three arms ran on the same runtime under the same post-fix Pass-1 regime, so
+the A/B/C comparison never depended on the Run 6 baseline.
+
+**See:** `docs/session-reports/QUALGAP-01_report.md` (§ decision rule and paired analysis) and
+`CLAUDE.md` as of commit `e54c07e`, "Extraction Quality Investigation → The standing finding".
+`docs/session-reports/PRIME-01_report.md` quantifies why the swap mattered: the Run 6 draft
+channel repeats the paper in 42.9% of its 8-word windows, the thinking channel in 0.4%.
+Appended by task EXIT-REMED-01; all text above this heading is unchanged.

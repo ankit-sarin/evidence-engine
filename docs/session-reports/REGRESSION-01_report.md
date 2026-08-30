@@ -195,3 +195,33 @@ Review Spec, resolve it at the call site, never inherit a runtime default.
 named-property restructure candidate), OpenAI strict production cutover, a version-pin ops
 protocol, Run 7 — and the fix to `~/projects/inference-determinism`, which I recommend be
 raised as its own task since its Pass-2 inputs are contaminated the same way.
+
+---
+
+## Addendum (2026-08-29): corrected account per QUALGAP-01
+
+**Superseded:** §1's framing that "the regression window opens 2026-04-19T04:48:14 UTC,
+when Ollama went 0.17.7 → 0.21.0", and the artifact table's verdict on the 190 Run 6 local
+extractions — *"PRE-upgrade, on 0.17.7 — unaffected ✓"*. Both rest on the premise that the
+0.21.0 upgrade is what moved `deepseek-r1`'s reasoning out of inline `<think>` tags and into
+`message.thinking`. That premise is wrong. QUALGAP-01 ran raw HTTP probes against 0.17.7 —
+no Python client in the path — and found `message.thinking` present and `<think>` absent
+under `think` omitted and under `think=true` alike: **0.17.7 already used the native thinking
+channel**, and 0.17.7 was installed 2026-03-12, three days before Run 6. **The corrected
+account:** the silent whole-content fallback this report fixed was firing during Run 6 itself,
+so Run 6 was contaminated, not a clean pre-upgrade control. Its stored `reasoning_trace` rows
+confirm it directly — they are first-draft *answers* enumerating fields with
+`**source_snippet**` labels, not reasoning. The upgrade date remains correct as a *fact about
+the machine*; what is withdrawn is its role as the causal boundary. The defect's window opens
+at the code, not at the upgrade. Consequently Run 6's ~54–58% anchored rate is an artifact of
+Pass 2 being primed with a quote-rich answer, and the honest post-fix baseline is **~39–43%
+anchored** — a target to beat, not a level to restore. The §2 consumer inventory, the §3 fix
+contract, and the §4 smoke recovery are unaffected: they concern which code paths parse a
+thinking channel and whether the fallback was removed, neither of which depends on when the
+interface moved.
+
+**See:** `docs/session-reports/QUALGAP-01_report.md` (§ raw 0.17.7 probes; outcome
+`HYPOTHESIS_DEAD`, +4.3pp pooled and 0.0pp median paired, so the runtime is acquitted) and
+`CLAUDE.md` as of commit `e54c07e`, "Extraction Quality Investigation → The standing finding".
+`docs/session-reports/PRIME-01_report.md` measures the two channels' quote-richness directly.
+Appended by task EXIT-REMED-01; all text above this heading is unchanged.

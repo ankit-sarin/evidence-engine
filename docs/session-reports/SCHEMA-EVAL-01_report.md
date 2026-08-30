@@ -247,3 +247,31 @@ write boundary without giving up thinking, which is the cheaper and more honest 
 **Out of scope and not done:** enum constraints, field reordering / evidence-first structure,
 `NOT_FOUND` escape values, production cutover, Run 7, and any fix to the Pass-1 regression in
 §4.1 — which I recommend be raised as its own task immediately.
+
+---
+
+## Addendum (2026-08-29): corrected account per QUALGAP-01
+
+**Superseded:** §4.1's dating of the Pass-1 defect — *"On Ollama 0.21.0 `deepseek-r1` no
+longer emits `<think>` in content"*, and the scope claim that follows it, *"a live production
+defect affecting every local extraction **since the Ollama upgrade**"*. The defect is real and
+this report found it; its **start date is wrong**. QUALGAP-01 probed 0.17.7 over raw HTTP and
+found `message.thinking` already populated with `<think>` absent from content, and 0.17.7 was
+installed 2026-03-12 — before Run 6. **The corrected account:** the whole-content fallback was
+firing on 0.17.7 too, so the defect affects every local extraction produced by that code path,
+Run 6 included, not only those after 2026-04-19. This propagates to every Run 6 comparison in
+this report: the §3 control figures — Run 6 scoring local ANCHORED **54.3%** on the same 10
+papers, and the 51.4% / 50.0% "vs Run 6 stored" disagreement rates — are measured against a
+contaminated ceiling, because Run 6's Pass 2 was primed with a quote-rich first-draft answer
+rather than reasoning. The honest post-fix baseline is **~39–43% anchored**, so the drop this
+report reads against Run 6 is largely the removal of that artifact. The A-vs-B *delta* and the
+REJECT verdict stand: §4.1 already flagged that both conditions ran under the broken Pass-1
+regime, which makes them equally affected and the within-eval contrast internally valid. What
+does not stand is any absolute reading against Run 6.
+
+**See:** `docs/session-reports/QUALGAP-01_report.md` (raw 0.17.7 probes; `HYPOTHESIS_DEAD` —
++4.3pp pooled, 0.0pp median paired, runtime acquitted) and `CLAUDE.md` as of commit `e54c07e`,
+"Extraction Quality Investigation → The standing finding". Note that this report's
+`think_chars` retains independent value precisely because it predates the fix: PRIME-01 uses
+it as the only surviving measurement of 0.21.0 draft *length*. Appended by task EXIT-REMED-01;
+all text above this heading is unchanged.

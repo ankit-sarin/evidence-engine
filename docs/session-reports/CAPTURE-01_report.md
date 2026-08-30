@@ -137,6 +137,31 @@ The two agree within ~5%. That is a **sanity check on the capture** — it is ev
 was captured here is the same channel that measurement was of — and it is not a richness
 result, because length is not richness.
 
+### 4.4 Paired against 0.17.7, same paper and same prompt
+
+§4.2's side-by-side puts 40 papers next to PRIME-01's 36, and §5 notes that the 0.17.7
+comparison is across studies. This block narrows that: for each paper, its stored 0.17.7 draft
+(QUALGAP-01's V1/V2 `pass1_content`) against its 0.21.0 draft captured here — same paper, same
+prompt path, same measure, paired.
+
+| prior cell | n | 0.17.7 pooled | 0.21.0 pooled | median paired delta | 0.21.0 higher on | rho (0.177 vs 0.210) | median chars | snippet docs |
+|---|---:|---:|---:|---:|---:|---:|---|---|
+| V2 (`think=True`) | 39 | 37.6% | 27.1% | **−14.0 pp** | **12/39** | +0.081 | 5,189 → 4,014 | 37/39 → 28/39 |
+| V1 (`think` omitted) | 39 | 37.7% | 27.1% | **−14.0 pp** | **12/39** | +0.085 | 5,094 → 4,014 | 37/39 → 28/39 |
+
+The paired reading agrees with the pooled one and is the stronger of the two: the 0.21.0 draft
+is less quote-rich on **27 of 39** papers, median drop 14 points. Together with the 36-paper
+subset in §4.2, neither set composition nor denominator explains the gap.
+
+One further measurement, recorded without explanation: the rank correlation between a paper's
+0.17.7 draft richness and its **own** 0.21.0 draft richness is **rho ≈ +0.08** — essentially
+zero. On 0.17.7 the two cells agree with each other almost exactly (V1 and V2 differ by 0.1 pp
+pooled and rank together), so this is not measurement noise in the metric. Which papers yield
+quote-rich drafts does not carry across the two capture regimes. PRIME-01's counterfactual arm
+found the opposite pattern within a single regime — draft richness there tracked anchoring at
++0.347 even when the draft was discarded, which it read as paper quotability. These two facts
+are in tension and this task does not resolve them.
+
 ## 5. What these artifacts do not establish
 
 - **Not a cause.** This is a measurement of two channels on one runtime. Nothing here explains
@@ -149,11 +174,15 @@ result, because length is not richness.
 - **No intervention was tested.** Nothing here primes Pass 2 from a draft, so nothing here
   says what such a design would recover. PRIME-01's counterfactual arm remains the only
   evidence bearing on that, and it bounds the priming share below the raw correlation.
-- **The 0.17.7 comparison is across studies, not a paired re-run.** PRIME-01's V1/V2 rows come
-  from QUALGAP-01's second-server A/B on 36 of these papers; this capture is a fresh run on 40.
-  Same sample family, same prompt path, same measure — but different runs, so run-to-run
-  variance is not bounded here. QUALGAP-01's same-condition replication band is the nearest
+- **The 0.17.7 comparison is across studies, and run-to-run variance is still unbounded.**
+  §4.4 pairs the two at the paper level, which removes set composition and denominator as
+  explanations, but it does not make this a paired *re-run*: the 0.17.7 side is stored output
+  from QUALGAP-01's second-server A/B, the 0.21.0 side a fresh capture months later. Only one
+  draw per paper per regime was taken, so nothing here separates a stable regime difference
+  from run-to-run variance. QUALGAP-01's same-condition replication band is the nearest
   available reference and was not re-measured.
+- **The near-zero cross-regime rank correlation (§4.4) is unexplained.** It sits awkwardly
+  beside PRIME-01's +0.347 counterfactual, and no analysis here reconciles them.
 - **n = 40 papers**, one review, one model, one seed. No confidence intervals are computed and
   none should be read in.
 - **The 9 zero-rate documents are unexplained.** Whether they are short papers, unusual study

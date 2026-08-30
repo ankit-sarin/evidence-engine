@@ -178,7 +178,60 @@ Recorded, not fixed — no change was made to `select_sample()`.
 | SCHEMA-EVAL-02 | 40 | contains 415/719 (deliberately, as collapse cases) and 547/629/799 (non-members); no figure re-scored |
 | Census reports (×5) | 11,017 spans | 4 severe papers contribute **364 / 22,034** rows = **1.65%**; 415 and 719 carry **1** local span each |
 
-## 7. What this audit does not establish
+## 7. Findings for the fix-phase queue
+
+Recorded here so the fix phase does not have to rediscover them. **Nothing below is
+implemented by this task**, and none of it is a corpus decision.
+
+### F1 — `select_sample()` bypasses the eligibility filter on the carried path
+
+The sample builder assembles its 40 from two paths and filters only one:
+
+```python
+picked = [make(p, "carried") for p in CARRIED if p in sizes]                  # NOT filtered
+pool   = sorted(p for p in sizes if p not in set(CARRIED) and p in eligible)  # filtered
+```
+
+`eligible` is `status IN ('FT_ELIGIBLE','EXTRACTED','AI_AUDIT_COMPLETE','HUMAN_AUDIT_COMPLETE')`.
+The 30 pool draws honour it; the 10 `CARRIED` papers are filtered only on **having parsed text**.
+`CARRIED = (39, 386, 466, 498, 547, 629, 691, 694, 708, 799)`, and 547, 629 and 799 are exactly
+the three `FT_SCREENED_OUT` non-members in the sample. Every affected paper entered through the
+carried path; **not one entered through the filtered pool.**
+
+The consequence is silent: a carried paper that later leaves the corpus stays in the sample
+forever, and nothing in the draw reports it. Any fix should also decide what happens to a
+carried paper whose status changes *after* it was carried — the current code cannot express that
+question.
+
+### F2 — the effective context ceiling is `clamp(num_ctx, n_ctx_train)`, not `num_ctx`
+
+Design constraint for the input-fit guard. QUALGAP-01 §1.2 records both Ollama 0.17.7 and 0.21.0
+deriving `default_num_ctx=262144` and clamping it "identically against `n_ctx_train=131072`".
+The number that governs truncation is therefore **the minimum of the configured context and the
+model's trained context** — a property of the model, not of the runtime or the environment.
+
+Three implications for a guard:
+
+1. **Reading the configured value alone is wrong by a factor of two here.** A guard that trusted
+   `default_num_ctx=262144`, or `OLLAMA_CONTEXT_LENGTH` (which is `0` on this host), would have
+   passed both p415 and p719 as fitting.
+2. **`done_reason` cannot detect input truncation.** Both truncated papers returned
+   `done_reason=stop`. The pre-flight signal is *estimated prompt tokens vs the clamped ceiling*;
+   the post-hoc signature is `prompt_eval_count` landing **exactly** on the ceiling.
+3. **A length-only gate is insufficient for parse quality**, which is a different question the
+   same guard will be tempted to answer. p455 (§3) has a character ratio of 1.00 and is
+   catastrophically malformed; it fits the context window comfortably.
+
+### F3 — `cloud_extractions` records no request configuration
+
+The table stores `model_string`, token counts, cost and the prompt text, but **no context-window
+setting, API version, request headers or beta flags**, and `model_string` is the identical
+`claude-sonnet-4-6` across all 190 Sonnet rows. The concrete cost: the p415 row records 481,357
+input tokens accepted and billed — a figure that requires some long-context configuration — and
+**the stored record cannot say which** (§4b). Cost auditing and reproducibility both depend on
+information that is currently not captured anywhere.
+
+## 8. What this audit does not establish
 
 - **It does not diagnose the MODERATE and LAYOUT_SHATTER papers' impact on any figure.** They
   were classified from the parsed text and PDF; no per-span or per-field consequence was traced.
@@ -194,7 +247,7 @@ Recorded, not fixed — no change was made to `select_sample()`.
 - **No re-parsing was attempted**, so the recoverability of 719, 455 and 586 under a vision
   fallback is untested and unknown.
 
-## 8. Acceptance gates
+## 9. Acceptance gates
 
 | gate | status |
 |---|---|
@@ -203,9 +256,9 @@ Recorded, not fixed — no change was made to `select_sample()`.
 | 3. Every flagged paper classified against its source PDF | ✅ §3 — all 18 opened; `parse01/classified.json` |
 | 4. Stop-and-report between Phase 2 and Phase 3 honored | ✅ addendum scope signed off before any addendum was written |
 | 5. Addenda strictly append-only | ✅ 9 files, prefix byte-identical to pre-edit snapshots, **zero** deletions |
-| 6. Report committed and pushed; `review.db` and `parsed_text` untouched | ✅ §9 |
+| 6. Report committed and pushed; `review.db` and `parsed_text` untouched | ✅ §10 |
 
-## 9. Invariants
+## 10. Invariants
 
 `review.db` mtime **2026-07-27T19:47** and the newest `parsed_text` file **2026-03-14T03:34**,
 both predating this session — neither was written. No model calls, no Ollama interaction, no

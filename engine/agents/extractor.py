@@ -23,6 +23,7 @@ from engine.core.completeness import (
     enforce_completeness,
     expected_field_names,
 )
+from engine.core.citation_guard import LEGACY, UncitedValueError, enforce_citations
 from engine.core.extraction_telemetry import record_call
 from engine.utils.ollama_client import ollama_chat
 from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
@@ -432,6 +433,25 @@ def _validate_and_retry_snippets(
     return validated
 
 
+def _absence_tokens(codebook_path: Path) -> tuple[str | None, frozenset[str]]:
+    """(escape token or None, absence sentinels) read from the codebook.
+
+    Read here with yaml rather than via `engine.elicitation.classes` to avoid an
+    import cycle: that module imports this one for the codebook loader and the
+    field-block builder. A codebook with no `escape_token` predates the
+    elicitation design and correctly yields None.
+    """
+    try:
+        cb = _load_codebook(str(codebook_path))
+    except Exception:
+        return None, frozenset()
+    tok = cb.get("escape_token")
+    return (
+        str(tok).strip() if tok and str(tok).strip() else None,
+        frozenset(str(s).strip().upper() for s in cb.get("absence_sentinels", ())),
+    )
+
+
 # ── Single-Paper Extraction ──────────────────────────────────────────
 
 
@@ -496,12 +516,26 @@ def extract_paper(
     # The guard sits here rather than in ReviewDatabase.add_extraction_atomic
     # because the database layer is generic — it serves migrations and tests and
     # has no ReviewSpec to derive an expected field set from.
+    cb_path = Path(db.db_path).parent / "extraction_codebook.yaml"
     enforce_completeness(
         span_dicts,
-        expected_field_names(spec, Path(db.db_path).parent / "extraction_codebook.yaml"),
+        expected_field_names(spec, cb_path),
         paper_id=paper_id,
         arm=MODEL,
     )
+
+    # ELICIT-DESIGN-01 (section 4.6(c)): no value is stored with nothing behind it.
+    # LEGACY mode, because this prompt explicitly tells the model to emit an empty
+    # source_snippet for an absence value — failing those would punish the model
+    # for obeying the prompt it was given. Every other value still needs a quote.
+    # The elicitation path runs the same predicate in STRICT mode, where a
+    # sentinel is a value like any other and owes a citation.
+    escape, sentinels = _absence_tokens(cb_path)
+    enforce_citations(
+        span_dicts, paper_id=paper_id, arm=MODEL, mode=LEGACY,
+        escape_token=escape, absence_sentinels=sentinels,
+    )
+
     ext_id = db.add_extraction_atomic(
         paper_id=paper_id,
         schema_hash=result.extraction_schema_hash,

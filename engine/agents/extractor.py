@@ -175,9 +175,6 @@ def build_extraction_prompt(
 For each field above, extract the value from the paper and provide:
 - **field_name**: Exactly as listed above.
 - **value**: The extracted data. If the field is not found in the paper, set to "NOT_FOUND".
-  - For **sample_size**: report as a single integer representing the total sample. If multiple groups, sum them. Example: if 4 pigs + 5 phantoms = "9".
-  - For **validation_setting** and **surgical_domain**: if multiple categories apply, list all separated by semicolons (e.g., "In vivo (animal); Phantom/Simulation"). Each value must exactly match one allowed value.
-  - For **system_maturity** and **study_design**: select the single best-fit category. For system_maturity, pick the most advanced stage demonstrated. For study_design, pick the primary design.
   - For all categorical fields: use ONLY the exact allowed values listed. Do not paraphrase, abbreviate, or combine them.
 - **source_snippet**: A verbatim quote (1-3 sentences) copied character-for-character from the paper that supports your extraction. Do NOT paraphrase, summarize, or rephrase in any way. Do NOT bridge distant passages with "..." or ellipses — quote one continuous passage only. If value is "NOT_FOUND", set source_snippet to "". Never fabricate a snippet — every non-empty snippet must be a real quote from the paper. For Tier 4 judgment fields, quote the passage that most informed your judgment.
 - **confidence**: How clearly the paper states this information (0.0 to 1.0). For Tier 4 judgment fields, this reflects your confidence in your assessment.

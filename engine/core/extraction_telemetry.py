@@ -66,7 +66,10 @@ def record_call(
     """Append one telemetry record. Never raises — telemetry must not break a run.
 
     `outcome` is one of: 'stored', 'incomplete_retry', 'incomplete_exhausted',
-    'error'. `finish_reason` carries the provider's own field verbatim
+    'contract_retry', 'contract_exhausted', 'error'. The 'contract_*' pair covers
+    every pre-write refusal that is not a missing field — a Pass-1 evidence
+    contract violation or an uncited value at the write boundary
+    (ELICIT-DESIGN-01) — and shares the incomplete pair's bounded retry budget. `finish_reason` carries the provider's own field verbatim
     (`finish_reason` for OpenAI, `stop_reason` for Anthropic, `done_reason` for
     Ollama) so the values stay traceable to their source rather than being
     normalized into a lossy common vocabulary.

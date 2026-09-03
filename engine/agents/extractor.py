@@ -455,6 +455,12 @@ def _absence_tokens(codebook_path: Path) -> tuple[str | None, frozenset[str]]:
 # ── Single-Paper Extraction ──────────────────────────────────────────
 
 
+@lru_cache(maxsize=1)
+def _default_run_id() -> str:
+    """One run id per process, for the per-run unit-map directory."""
+    return datetime.now(timezone.utc).strftime("run_%Y%m%dT%H%M%SZ")
+
+
 def extract_paper(
     paper_id: int,
     paper_text: str,
@@ -462,8 +468,27 @@ def extract_paper(
     db: ReviewDatabase,
     model_digest: str | None = None,
     auditor_model_digest: str | None = None,
+    run_id: str | None = None,
+    attempt: int | None = None,
 ) -> ExtractionResult:
-    """Run the full two-pass extraction on a single paper and store results."""
+    """Run the full two-pass extraction on a single paper and store results.
+
+    Dispatches to the elicited pipeline when the ReviewSpec asks for it
+    (`extraction_models.elicitation`). The flag defaults OFF so that upgrading
+    the engine changes no existing review's behaviour; Run 7 turns it on
+    deliberately, after the ELICIT-DESIGN-01 smoke.
+    """
+    if getattr(getattr(spec, "extraction_models", None), "elicitation", False):
+        from engine.elicitation.pipeline import extract_paper_elicited
+
+        return extract_paper_elicited(
+            paper_id, paper_text, spec, db,
+            run_id=run_id or _default_run_id(),
+            model_digest=model_digest,
+            auditor_model_digest=auditor_model_digest,
+            attempt=attempt,
+        )
+
     prompt = build_extraction_prompt(paper_text, spec)
 
     # Think policy is declared per pass in the Review Spec
@@ -628,9 +653,19 @@ def extract_paper_with_completeness(
     extract_paper() raises IncompleteExtractionError *before* its write, so an
     exhausted paper leaves nothing behind.
     """
+    from engine.elicitation.pipeline import Pass1ContractError
+
     review_dir = Path(db.db_path).parent
     expected = expected_field_names(spec, review_dir / "extraction_codebook.yaml")
-    last_error: IncompleteExtractionError | None = None
+    run_id = _default_run_id()
+    last_error: Exception | None = None
+
+    # One bounded retry budget covers every pre-write refusal: an incomplete
+    # Pass 2, a Pass-1 contract violation, and an uncited value at the write
+    # boundary. They are the same kind of event — the request was answered in a
+    # way that cannot be stored — and giving them separate budgets would let a
+    # paper alternate between them indefinitely.
+    RETRYABLE = (IncompleteExtractionError, Pass1ContractError, UncitedValueError)
 
     for attempt in range(1, max_attempts + 1):
         _LAST_PASS2_TELEMETRY.clear()
@@ -640,26 +675,30 @@ def extract_paper_with_completeness(
                 paper_id, paper_text, spec, db,
                 model_digest=model_digest,
                 auditor_model_digest=auditor_model_digest,
+                run_id=run_id, attempt=attempt,
             )
-        except IncompleteExtractionError as exc:
+        except RETRYABLE as exc:
             last_error = exc
+            incomplete = isinstance(exc, IncompleteExtractionError)
+            kind = "incomplete" if incomplete else "contract"
             record_call(
                 review_dir, arm=MODEL, paper_id=paper_id, attempt=attempt,
-                outcome="incomplete_retry" if attempt < max_attempts else "incomplete_exhausted",
+                outcome=f"{kind}_retry" if attempt < max_attempts else f"{kind}_exhausted",
                 model=_LAST_PASS2_TELEMETRY.get("model", MODEL),
                 finish_reason=_LAST_PASS2_TELEMETRY.get("finish_reason"),
                 raw_content=_LAST_PASS2_TELEMETRY.get("raw_content"),
-                spans_parsed=exc.n_stored,
-                fields_expected=exc.n_expected,
-                missing_fields=exc.missing,
+                spans_parsed=exc.n_stored if incomplete else None,
+                fields_expected=exc.n_expected if incomplete else len(expected),
+                missing_fields=exc.missing if incomplete else None,
                 thinking_present=_LAST_PASS1_TELEMETRY.get("thinking_present"),
                 thinking_chars=_LAST_PASS1_TELEMETRY.get("thinking_chars"),
                 parse_branch=_LAST_PASS1_TELEMETRY.get("parse_branch"),
+                error=None if incomplete else str(exc),
+                extra=_LAST_PASS1_TELEMETRY.get("elicitation"),
             )
             logger.warning(
-                "Paper %d (%s): INCOMPLETE attempt %d/%d — %d/%d fields. "
-                "Re-issuing identical request.",
-                paper_id, MODEL, attempt, max_attempts, exc.n_stored, exc.n_expected,
+                "Paper %d (%s): %s attempt %d/%d — %s. Re-issuing identical request.",
+                paper_id, MODEL, kind.upper(), attempt, max_attempts, exc,
             )
             continue
 
@@ -675,6 +714,7 @@ def extract_paper_with_completeness(
             thinking_present=_LAST_PASS1_TELEMETRY.get("thinking_present"),
             thinking_chars=_LAST_PASS1_TELEMETRY.get("thinking_chars"),
             parse_branch=_LAST_PASS1_TELEMETRY.get("parse_branch"),
+            extra=_LAST_PASS1_TELEMETRY.get("elicitation"),
         )
         if attempt > 1:
             logger.info(
@@ -684,7 +724,7 @@ def extract_paper_with_completeness(
         return result
 
     logger.error(
-        "Paper %d (%s): INCOMPLETE after %d attempts — failing the paper, "
+        "Paper %d (%s): UNSTORABLE after %d attempts — failing the paper, "
         "NOT storing a partial extraction. %s",
         paper_id, MODEL, max_attempts, last_error,
     )

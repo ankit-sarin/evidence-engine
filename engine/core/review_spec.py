@@ -113,6 +113,15 @@ class ExtractionModels(BaseModel):
     pass1_think: bool = Field(default=True, description="Pass 1 is the reasoning pass — thinking ON")
     pass2_think: bool = Field(default=False, description="Pass 2 emits structured JSON — thinking OFF")
     temperature: float = Field(default=0.0, ge=0.0, le=1.0)
+    elicitation: bool = Field(
+        default=False,
+        description=(
+            "Pass 1 elicits sentence-unit citations under per-class contracts and "
+            "Pass 2 is primed with the materialized evidence (ELICIT-DESIGN-01). "
+            "Defaults OFF: the design is smoke-gated and Run 7 flips it "
+            "deliberately, so no existing review changes behaviour by upgrading."
+        ),
+    )
 
 
 class ScreeningCriteria(BaseModel):

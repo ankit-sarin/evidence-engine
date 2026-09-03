@@ -352,3 +352,424 @@ No file under `engine/`, `data/` or the codebook has been modified. Nothing comm
 rulings on **§4.1 (NOT_FOUND token)**, **C1 (class authority)**, **C2 (paper-variable fields)**,
 **C3 (gate-2 clause deletion)**, **C4 (sizing multiplier)**, **C5 (index persistence)** and
 **C6 Q4/Q5**, plus the §7 smoke sample.
+
+---
+---
+
+# END OF TASK — STEP 1 implementation + STEP 2 smoke
+
+**Appended, not edited.** Section 8 above ("STOP") recorded the state at STEP 0 hand-off and
+stands as written; everything below is what happened after sign-off.
+
+**HEAD:** `336bd76` + this report. **Smoke:** `smoke_20260903T155654Z`, **0/3 papers stored.**
+**Ollama:** 0.21.0, digest `edba8017331d`, `NRestarts=0`, `ExecMainStartTimestamp` unchanged
+(2026-08-31 00:41:59 UTC) across both smoke runs. Flock acquired and released by the run itself.
+
+---
+
+## 9. Acceptance gates
+
+| # | gate | status |
+|---|---|---|
+| 1 | STEP 0 report delivered; sign-off before STEP 1 | ✅ committed `b05380e` before any implementation (D1) |
+| 2 | Codebook is the sole source of field classes; zero hand-curated field lists, grep-provable | ✅ `tests/test_elicitation_codebook.py` asserts no prompt builder names a codebook field, and that adding a field to the codebook reaches its class's contract with no code change. `tests/test_prompt_no_hardcoded_fields.py` pins the same for the legacy builder |
+| 3 | Contract shapes enforced by parsing — a violating response is detected, not absorbed | ✅ 33 tests in `tests/test_elicitation_contracts.py`. Demonstrated live: **9/9 smoke attempts** surfaced their violations by code and refused the write |
+| 4 | Fail-fast demonstrably fires: an uncited-value write is impossible | ✅ `tests/test_citation_guard.py` (12) + pipeline tests. Demonstrated live: 0/3 papers stored, `review.db` untouched |
+| 5 | Smoke 3/3 papers complete; report delivered; STOP | ❌ **0/3 stored.** Every paper exhausted its 3-attempt budget on Pass-1 contract violations. Report delivered; stopping |
+
+Gate 5 fails. Gates 1–4 pass, and gate 5 fails **because** gates 3 and 4 work: nothing was
+stored, and the reason each paper was refused is recorded per field.
+
+---
+
+## 10. Smoke — per paper
+
+| paper | chars | units | attempts | wall | outcome | final violation set |
+|---|---:|---:|---:|---:|---|---|
+| 121 | 21,348 | 152 | 3/3 | 581 s | `contract_exhausted` | 6 × `VALUE_WITHOUT_CITATION`, 1 × `STEPS_MISSING` |
+| 604 | 38,794 | 304 | 3/3 | 665 s | `contract_exhausted` | 1 × `VALUE_WITHOUT_CITATION`, 3 × `STEP_WITHOUT_BASIS`, 1 × `STEPS_MISSING` |
+| 498 | 148,805 | 1,064 | 3/3 | 837 s | `contract_exhausted` | 11 × `VALUE_WITHOUT_CITATION`, 1 × `INFERENCE_MISSING`, 1 × `STEPS_MISSING` |
+
+Total 2,083 s (34.7 min), 9 Pass-1 calls, **zero Pass-2 calls** — every paper failed before Pass 2,
+which is the design working: a doomed extraction does not spend a second 32B call.
+
+### 10.1 Per field, final attempt
+
+Legend: cites = valid citations · bad = invalid indices · esc = escape token used ·
+inf = declared inference present · stp = reasoning steps.
+
+**p121** — 13/20 fields met their contract.
+
+| field | class | cites | bad | esc | inf | stp | result |
+|---|---|---:|---:|:-:|:-:|---:|---|
+| study_type | stated | 1 | 0 | · | · | 0 | ok |
+| robot_platform | stated | 3 | 0 | · | · | 0 | ok |
+| task_performed | stated | 3 | 0 | · | · | 0 | ok |
+| **sample_size** | stated | **0** | 0 | · | · | 0 | `VALUE_WITHOUT_CITATION` |
+| validation_setting | stated | 2 | 0 | · | · | 0 | ok |
+| **primary_outcome_metric** | stated | **0** | 0 | · | · | 0 | `VALUE_WITHOUT_CITATION` |
+| **primary_outcome_value** | stated | **0** | 0 | · | · | 0 | `VALUE_WITHOUT_CITATION` |
+| **comparison_to_human** | stated | **0** | 0 | · | · | 0 | `VALUE_WITHOUT_CITATION` |
+| **secondary_outcomes** | stated | **0** | 0 | · | · | 0 | `VALUE_WITHOUT_CITATION` |
+| surgical_domain | inferable | 2 | 0 | · | Y | 0 | ok |
+| task_monitor | inferable | 1 | 0 | · | Y | 0 | ok |
+| task_generate | inferable | 1 | 0 | · | Y | 0 | ok |
+| task_select | inferable | 1 | 0 | · | Y | 0 | ok |
+| task_execute | inferable | 1 | 0 | · | Y | 0 | ok |
+| **country** | inferable | **0** | 0 | · | Y | 0 | `VALUE_WITHOUT_CITATION` |
+| autonomy_level | judgment | 1 | 0 | · | · | 2 | ok |
+| system_maturity | judgment | 1 | 0 | · | · | 2 | ok |
+| study_design | judgment | 1 | 0 | · | · | 2 | ok |
+| **key_limitation** | judgment | 1 | 0 | · | · | **0** | `STEPS_MISSING` |
+| clinical_readiness_assessment | judgment | 2 | 0 | · | · | 2 | ok |
+
+**p604** — 15/20 fields met their contract.
+
+| field | class | cites | bad | esc | inf | stp | result |
+|---|---|---:|---:|:-:|:-:|---:|---|
+| study_type | stated | 1 | 0 | · | · | 0 | ok |
+| robot_platform | stated | 2 | 0 | · | · | 0 | ok |
+| task_performed | stated | 2 | 0 | · | · | 0 | ok |
+| sample_size | stated | 3 | 0 | · | · | 0 | ok |
+| validation_setting | stated | 2 | 0 | · | · | 0 | ok |
+| primary_outcome_metric | stated | 2 | 0 | · | · | 0 | ok |
+| primary_outcome_value | stated | 3 | 0 | · | · | 0 | ok |
+| **comparison_to_human** | stated | **0** | 0 | · | · | 0 | `VALUE_WITHOUT_CITATION` |
+| secondary_outcomes | stated | 2 | 0 | · | · | 0 | ok |
+| surgical_domain | inferable | 2 | 0 | · | Y | 0 | ok |
+| task_monitor | inferable | 2 | 0 | · | Y | 0 | ok |
+| task_generate | inferable | 2 | 0 | · | Y | 0 | ok |
+| task_select | inferable | 2 | 0 | · | Y | 0 | ok |
+| task_execute | inferable | 2 | 0 | · | Y | 0 | ok |
+| country | inferable | 1 | 0 | · | Y | 0 | ok |
+| autonomy_level | judgment | 1 | 0 | · | · | 2 | ok |
+| **system_maturity** | judgment | 2 | 0 | · | · | 2 | `STEP_WITHOUT_BASIS` |
+| **study_design** | judgment | 2 | 0 | · | · | 2 | `STEP_WITHOUT_BASIS` |
+| **key_limitation** | judgment | 1 | 0 | · | · | **0** | `STEPS_MISSING` |
+| **clinical_readiness_assessment** | judgment | 1 | 0 | · | · | 2 | `STEP_WITHOUT_BASIS` |
+
+**p498** — 7/20 fields met their contract. The long paper degrades hard, and specifically:
+**every citation it does produce is valid, and it simply stops citing** on 11 of 20 fields.
+
+| field | class | cites | bad | esc | inf | stp | result |
+|---|---|---:|---:|:-:|:-:|---:|---|
+| study_type | stated | 1 | 0 | · | · | 0 | ok |
+| robot_platform | stated | 2 | 0 | · | · | 0 | ok |
+| task_performed | stated | 2 | 0 | · | · | 0 | ok |
+| **sample_size** | stated | **0** | 0 | · | · | 0 | `VALUE_WITHOUT_CITATION` |
+| validation_setting | stated | 2 | 0 | · | · | 0 | ok |
+| primary_outcome_metric | stated | 1 | 0 | · | · | 0 | ok |
+| primary_outcome_value | stated | 2 | 0 | · | · | 0 | ok |
+| **comparison_to_human** | stated | **0** | 0 | · | · | 0 | `VALUE_WITHOUT_CITATION` |
+| secondary_outcomes | stated | 2 | 0 | · | · | 0 | ok |
+| **surgical_domain** | inferable | **0** | 0 | · | Y | 0 | `VALUE_WITHOUT_CITATION` |
+| **task_monitor** | inferable | **0** | 0 | · | Y | 0 | `VALUE_WITHOUT_CITATION` |
+| **task_generate** | inferable | **0** | 0 | · | Y | 0 | `VALUE_WITHOUT_CITATION` |
+| **task_select** | inferable | **0** | 0 | · | Y | 0 | `VALUE_WITHOUT_CITATION` |
+| **task_execute** | inferable | **0** | 0 | · | Y | 0 | `VALUE_WITHOUT_CITATION` |
+| **country** | inferable | 1 | 0 | · | **·** | 0 | `INFERENCE_MISSING` |
+| **autonomy_level** | judgment | **0** | 0 | · | · | 1 | `VALUE_WITHOUT_CITATION` |
+| **system_maturity** | judgment | **0** | 0 | · | · | 1 | `VALUE_WITHOUT_CITATION` |
+| **study_design** | judgment | **0** | 0 | · | · | 1 | `VALUE_WITHOUT_CITATION` |
+| **key_limitation** | judgment | 1 | 0 | · | · | **0** | `STEPS_MISSING` |
+| **clinical_readiness_assessment** | judgment | **0** | 0 | · | · | 1 | `VALUE_WITHOUT_CITATION` |
+
+### 10.2 Violation totals, all 9 attempts (180 field entries)
+
+| code | severity | n | by class |
+|---|---|---:|---|
+| `VALUE_WITHOUT_CITATION` | fatal | **54** | stated 24 · inferable 21 · judgment 26 (fatals overall) |
+| `STEPS_MISSING` | fatal | 8 | judgment |
+| `STEP_WITHOUT_BASIS` | fatal | 6 | judgment |
+| `INFERENCE_MISSING` | fatal | 3 | inferable |
+| `INDEX_MALFORMED` | fatal | **0** | — |
+| `INDEX_OUT_OF_RANGE` | fatal | **0** | — |
+| `ESCAPE_WITH_CITATION` | fatal | **0** | — |
+| `FIELD_MISSING` | fatal | **0** | — |
+| `DUPLICATE_INDICES` | advisory | **0** | — |
+| `VALUE_BEFORE_EVIDENCE` | advisory | **0** | — |
+
+**Index validity was perfect.** Zero malformed, zero out-of-range, zero duplicates across every
+index in nine responses — consistent with ELICIT-01's 505/505 (M1). Parse path was `direct` on
+**9/9**; the marker-token backstop never fired. Ordering was honoured on every entry.
+
+**The whole failure is the accompaniment, not the citation mechanism.** The mechanism the
+architect ratified works. What the model will not reliably do is cite for *every* field, supply an
+inference for every INFERABLE, and decompose every JUDGMENT into based steps.
+
+---
+
+## 11. Nine verbatim materialized evidence samples (one per class per paper)
+
+These are engine-materialized unit text, resolved from the persisted unit map — not model output.
+
+### p121
+
+**`robot_platform` [STATED]** — value `"da Vinci Surgical System; sentire surgical system; SurRoL simulator"` → **ok**
+```
+[S37] "The system autonomously completed all 17 required tasks, achieving a 100 % success
+       rate across eight different ex vivo gallbladders without any human intervention."
+[S69] "The power of modern AI, particularly foundation models, is derived from training on
+       massive, diverse datasets."
+[S87] "The power of this approach was demonstrated through extensive validation across seven
+       skill training tasks on the da Vinci Research Kit (dVRK) and five surgical assistive
+       tasks for the commercial sentire surgical system in ex vivo settings."
+```
+⚠ Contract-valid, evidentially mixed: S87 supports the value, **S69 is about foundation-model
+training data and supports nothing**. This is R2's ruling biting exactly where it was expected —
+a valid citation is not necessarily good evidence, and judge-scored supportedness is the follow-on
+task, not this one.
+
+**`task_monitor` [INFERABLE]** — value `"R"` → **ok**
+```
+[S58] "The HL policy can recognize when the LL policy has entered a suboptimal or failure
+       state and generate corrective language instructions, such as 'move left' or 'grab top'."
+INFERENCE: The robot uses language commands and visual inputs to self-correct, indicating
+           independent sensing.
+```
+This is the INFERABLE contract doing precisely what it was designed for: no paper writes "R", and
+the inference names the step from the architecture description to the code.
+
+**`clinical_readiness_assessment` [JUDGMENT]** — value `"Proof of concept only"` → **ok**
+```
+STEP 1 (cites S37, S87): Demonstrations are on ex vivo and animal models.
+STEP 2 (criteria application, no textual basis claimed): No clinical deployment or regulatory
+                                                          clearance mentioned.
+```
+The mixed-basis JUDGMENT shape working as specified — one cited step, one honest criteria step.
+
+### p604
+
+**`primary_outcome_value` [STATED]** — value `"Sphere Task: ~80%; Cutting Task: ~76-80%; Physical trials: 5/7"` → **ok**
+```
+[S198] "For Sphere Task, Fig. 6 shows that our method achieves close to 80 percent task success
+        rate, upper-bounded by the 85 percent task success rate achieved by the policy trained
+        on the ground-truth (GT) reward."
+[S199] "For Cutting Task, Fig. 6 shows that our method achieves 80 percent task success rate,
+        upperbounded by the almost 90 percent task success rate achieved by the policy trained
+        on GT reward."
+[S225] "The robot successfully accomplished both reaching the attachment points and executing
+        the cutting task in 5 of the 7 trials."
+```
+Three citations, each supporting a distinct clause of the value. The best evidence in the run.
+
+**`country` [INFERABLE]** — value `"USA"` → **ok**
+```
+[S22] "Robotics Center and the Kahlert School of Computing at the University of Utah, Salt Lake
+       City, UT 84112, USA; (email: {...}@utah.edu)."
+INFERENCE: Authors' affiliation is University of Utah, Salt Lake City, UT, USA.
+```
+Exactly the paratext case FIELD_CLASSES.md §1.2 describes and measured `country` on (19 of 20).
+
+**`autonomy_level` [JUDGMENT]** — value `"2 (Task autonomy)"` → **ok**
+```
+STEP 1 (cites S175): Robot executes tasks without continuous human control.
+STEP 2 (criteria application): Uses learned reward function for task execution.
+[S175] "Our action space is the space of end-effector position so that RL can be more sample
+        efficient and"
+```
+⚠ Contract-valid, weak: S175 is a **truncated sentence about action-space design** and does not
+establish "without continuous human control". Same R2 caveat as p121's S69.
+
+### p498
+
+**`validation_setting` [STATED]** — value `"Phantom/Simulation; Ex vivo"` → **ok**
+```
+[S739] "Figure 26 illustrates the frames of task execution process on both the artificial and
+        porcine tissue viewing from the sensing (left) camera."
+[S750] "Suturing the porcine tissue owns lower success rate, as the tissue surface might
+        encounter irreversible deformation after many stitches."
+```
+
+**`country` [INFERABLE]** — value `"Hong Kong, China"` → **`INFERENCE_MISSING`**
+```
+[S32] "AB1, CUHK, Shatin, N.T., HKSAR, Hong Kong, China."
+```
+The citation is perfect and the value is right. The contract still fails, because the INFERABLE
+class requires the inference to be *declared* and the model declared none. Reasonable people will
+read this two ways, and it is the sharpest single illustration of §13's question.
+
+**`key_limitation` [JUDGMENT]** — value `"Reliance on pre-calibrated transformations without online updates."` → **`STEPS_MISSING`**
+```
+[S826] "Once it could be updated to minimize the residual positioning error, the motion accuracy
+        apart from the planning and control framework could be further improved, which is
+        currently our ongoing work."
+```
+A well-chosen citation and a defensible limitation, refused for having no reasoning steps.
+`key_limitation` failed this way on **5 of 6** attempts where it was reached — the single most
+consistent failure in the run.
+
+---
+
+## 12. The findings
+
+### F1 — The escape token was never used. Not once.
+
+**`NO_EVIDENCE_LOCATABLE`: 0 uses in 180 field entries.** `NR` was used 23 times. The model has a
+sentinel habit and the new token has no purchase against it.
+
+This matters more than it looks. Under the §4.1 ruling a sentinel is a *value* that owes a
+citation, so a model that reaches for `NR` instead of the escape token converts "I found nothing"
+into a claim it must then evidence — and fails. **19 of the 54 `VALUE_WITHOUT_CITATION` firings
+are uncited `NR`.** The escape hatch the design built for exactly this case was never taken.
+
+Reported as a measurement, not fixed (ruling §3 / FINAL REPORT).
+
+### F2 — 35 of the 54 uncited values are REAL values, not sentinels.
+
+This is R1's failure mode, alive and being caught. Examples, verbatim:
+
+| paper | field | class | value asserted with zero citations |
+|---|---|---|---|
+| p121, p604 (×5) | comparison_to_human | stated | `"No comparison reported"` |
+| p498 | surgical_domain | inferable | `"General Surgery"` |
+| p498 | autonomy_level | judgment | `"Task autonomy"` |
+| p498 | task_monitor | inferable | `"R"` |
+
+`"No comparison reported"` is the striking one: it is an absence claim written as free text, so it
+is neither a sentinel nor an evidenced value — exactly the class `analysis/provenance/absence.py`
+enumerates as `P2_bare_no_np`. The guard refuses it. **Before this design it would have been
+stored**, and the ELICIT-01 report says such cases were *concealed* in the ladder as
+`MISSING_SNIPPET`. The engine now refuses to store what it previously mislabelled.
+
+### F3 — The failure concentrates on the fields ELICIT-01 already named.
+
+ELICIT-01 §5.4's uncited-assertion table listed `comparison_to_human` (20), `sample_size` (14),
+`secondary_outcomes` (6), `primary_outcome_value` (2). The smoke's top offenders are
+`comparison_to_human` (9 firings, the maximum possible — every attempt of every paper),
+`sample_size` (6), then a long flat tail. **This is not a new failure. It is the same failure,
+now fatal instead of silent**, and its rank order reproduces.
+
+### F4 — C2's paper-variable prediction landed, and split by paper as predicted.
+
+`sample_size` (STATED, basis "measured (weak)") was uncited on **p121 and p498** and cleanly cited
+with three units on **p604**. `surgical_domain` (INFERABLE) was fine on p121/p604 and uncited on
+p498. That is precisely what "paper-variable" means, observed rather than argued: the same field,
+the same contract, different papers, different outcomes. FIELD_CLASSES.md §1.5's warning that a
+declare-once design must treat these as hard cases is now a measurement.
+
+### F5 — `key_limitation` cannot satisfy the JUDGMENT contract.
+
+`STEPS_MISSING` on 5 of 6 attempts, on all three papers. The model returns a limitation with a
+citation and no steps. Note `key_limitation` is the one field whose codebook instruction says
+*"state the key limitation using YOUR judgment. Do not simply copy what the authors say"* and which
+carries `source_quote_required: true` — the codebook asks for a quote, and the class contract asks
+for steps, and the model does the first.
+
+### F6 — Long papers degrade by ceasing to cite, not by citing badly.
+
+p498 (1,064 units) produced **11 uncited fields and zero invalid indices**. It did not hallucinate
+unit numbers, did not drift out of range, did not stitch. It stopped citing. Whatever the
+mechanism, the failure is abstention under length, not fabrication under length — which is the
+better of the two failure modes and is worth knowing before Run 7 sizing.
+
+### F7 — Retrying an identical request does not help, and sometimes hurts.
+
+| paper | failures per attempt |
+|---|---|
+| 121 | 6 → 7 → 7 |
+| 604 | **2 → 5 → 5** |
+| 498 | 13 → 13 → 13 |
+
+p604's first attempt was two fields short of a complete extraction and its second was five. The
+retry policy — inherited unchanged from the completeness guard, where "re-issue the identical
+request" is right because the failure is response *shape* — is a poor fit for a contract failure,
+where the failure is response *content* at temperature 0. Nine calls bought nothing over three.
+**Not changed in this task** (out of scope: retry harmonization is queued separately), but it is a
+real finding and Run 7 should not inherit it unexamined.
+
+### F8 — Index validity and parse reliability are not the problem.
+
+0 malformed, 0 out-of-range, 0 duplicates, 0 ordering violations, `direct` parse 9/9, tripwire 0.
+The unit-index mechanism the architect ratified is doing its job. Every failure in this smoke is
+about what accompanies a citation, or about a field that produced none.
+
+---
+
+## 13. What this leaves for the architect
+
+The design works and the corpus does not meet it. **0/3 is not evidence the mechanism is broken —
+gates 3 and 4 are exactly why nothing was stored.** The open question is a policy one and it is
+not mine to settle:
+
+- **Is a per-field contract the right granularity for a write-boundary refusal?** Today one
+  uncited field out of twenty fails the whole paper. p604 lost a 15/20-clean extraction over
+  `comparison_to_human` and `key_limitation`. The alternative — store the contract-meeting fields
+  and refuse only the offenders — collides with the completeness guard, which requires all twenty.
+  These two guards now disagree about what a paper is, and something has to give.
+- **Should the escape token be taught, not just offered?** F1 says the model does not reach for
+  it. Prompt-salience work was explicitly out of scope for this task.
+- **`key_limitation` (F5) and `country`-without-inference (p498) look like contract/codebook
+  mismatches**, not model failures. Both are arguably the contract asking for the wrong thing.
+
+## 14. Corrections carried forward (append-only, per D-directive 6)
+
+**(a) The estimator claim in commit `bbfd7f7` is wrong as written.** It says the C4 estimator
+"OVER-predicts by roughly 4%". The ~4% figure describes the marker-inflation term alone;
+`WORST_RATIO = 0.4288` dominates it, and the real over-prediction is about **2×**. Measured across
+all nine attempts, estimate vs. the runtime's own `prompt_eval_count`:
+
+| paper | prompt chars | estimated | actual | over-prediction |
+|---|---:|---:|---:|---:|
+| 121 | 56,308 | 24,145 | 11,440 | **2.11×** |
+| 604 | 77,102 | 33,061 | 16,798 | **1.97×** |
+| 498 | 206,819 | 88,682 | 46,855 | **1.89×** |
+
+Direction is safe (a hard-fail guard must over-predict) and the guard never wrongly refused a
+paper. But **the magnitude was misstated by roughly fiftyfold**, and the ratio drifts downward
+with length, so headroom on the largest papers is understated most. The commit message stands in
+history; this is the correction of record, and the future cross-arm input-fit guard should inherit
+**~2×, not ~4%**. Tripwire fired **0/9**; the largest real prompt used 46,855 of 131,072 tokens
+(36%), so p498 is nowhere near the ceiling — the earlier worry about it was unfounded.
+
+**(b) The aborted first smoke** (`smoke_20260903T153852Z`, artifacts preserved unmodified at
+`eval/elicit_design01/aborted_smoke_20260903T153852Z/`). Killed by architect ruling after p121 and
+one p604 attempt; **not run to exhaustion**. p121 failed 3/3 with `parse=unparseable` — the model
+emitted bare `[S1]` markers in index lists, which is invalid JSON, so all 20 fields surfaced as
+`FIELD_MISSING`. Cause: the three-class prompt rewrite dropped ELICIT-01's load-bearing line *"Use
+the integer only, not the '[S12]' marker."* Fixed in `1ba2d58`, with a backstop that turns a
+regression into `INDEX_MALFORMED` rather than a lost response. The defect was **not universal** —
+p604's one attempt parsed `direct` — which is why the backstop earns its place. The re-run shows
+the fix held: `direct` on 9/9, marker backstop never fired.
+
+**(c) `_validate_and_retry_snippets` is structurally dead on the elicited path** (C6-Q5 note). A
+materialized unit quote cannot contain ellipsis bridging, so the function's retry branch is
+unreachable for cited fields. Left untouched per ruling; retirement is a later cleanup task.
+
+**(d) One deviation from "port unchanged"** in `units.py`: `resolve()`'s guard was
+`not isinstance(index, int)`, which accepts `True` (bool subclasses int) and would resolve it to
+unit 1. ELICIT-01 never hit it because its analyzer rejected bools before calling resolve; here
+resolve is the only gate, so it reaches the same verdict one layer earlier.
+
+**(e) `MIN_UNIT_TOKENS = 3` is an ELICIT-01 study artifact adopted provisionally**, per the PORT
+ruling — recorded in the module docstring and pinned by test. Re-derivation belongs to the queued
+parse-quality-gate task.
+
+**(f) Anchored rates from this path will not be comparable to Run 6's.** The stored snippet is
+engine-materialized and therefore ANCHORED by construction — ELICIT-01's own caution about
+reporting "100% ANCHORED", now structural. Citation validity, contract-violation counts and
+judge-scored supportedness are the measures that carry information.
+
+**(g) One unplanned harness fix.** `build_scratch` cleared a single shared `scratch/` at startup,
+so the re-run would have destroyed the aborted run's telemetry — the evidence for its own finding —
+before anyone read it twice. Scratch is now keyed by run id and refuses to reuse one (`336bd76`).
+
+---
+
+## 15. Tests and invariants
+
+| | |
+|---|---|
+| baseline (M5) | 1,556 offline passed, 15 deselected |
+| new this task | **80** |
+| final offline gate | **1,636 passed, 15 deselected** (206 s) — 1,556 + 80, exact |
+| `review.db` | **not written** — read-only `immutable=1` for three papers' metadata; smoke wrote only its own gitignored scratch DB |
+| `parsed_text` | read-only |
+| Ollama | 0.21.0 throughout, `NRestarts=0`, `ExecMainStartTimestamp` unchanged; config, unit and version untouched |
+| experiment flock | acquired and released by each run; released after the abort (verified with `fuser`) |
+| eval store `eval/elicit01/` | read only; never written |
+
+New tests by file: `test_codebook_field_class.py` 6 · `test_units_and_sizing.py` 8 ·
+`test_elicitation_contracts.py` 33 · `test_elicitation_codebook.py` 8 ·
+`test_citation_guard.py` 12 · `test_elicitation_pipeline.py` 11 ·
+`test_prompt_no_hardcoded_fields.py` 2.

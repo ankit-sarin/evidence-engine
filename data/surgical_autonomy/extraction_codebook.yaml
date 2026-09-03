@@ -13,6 +13,13 @@ date: "2026-03-15"
 # as "the arm claims this field is NOT reported in the paper" rather
 # than a positive value claim. Authoritative Python mirror:
 # analysis/paper1/judge_prompts.ABSENCE_SENTINELS.
+#
+# An absence sentinel is a VALUE. The paper was read, and the reading is that
+# the paper does not report this item. That is a checkable claim about the body
+# text, so it is evidenced like any other value: it REQUIRES at least one
+# citation. A sentinel emitted with zero citations fails the write contract and
+# enters bounded retry (ELICIT-DESIGN-01 §4.1) -- intended behaviour, not an
+# edge case to soften.
 absence_sentinels:
   - "NR"
   - "N/A"
@@ -21,6 +28,45 @@ absence_sentinels:
   - "NOT FOUND"
   - "NOT REPORTED"
 
+# The escape token, DISTINCT from every absence sentinel above.
+#
+# Semantics: "no evidence locatable for this field in this paper." It is not a
+# claim about what the paper reports -- it is a declaration that the extractor
+# could not locate anything to cite. It therefore carries ZERO citations by
+# definition, and a citation accompanying it is itself a contract violation.
+#
+# Why a new token rather than reusing NOT_FOUND: NOT_FOUND is already an absence
+# sentinel (above) and was already the token the production prompt used for "not
+# found", so it meant both things at once. ELICIT-DESIGN-01 found the split
+# inexpressible with the existing token set. Removing NOT_FOUND from
+# absence_sentinels was rejected: it would change the meaning of values already
+# stored, break the mirror this file asserts with judge_prompts, and edit an
+# input to a taxonomy frozen at v1.1. Coining a token is additive.
+#
+# Consequence to keep in mind when reading pre-Run-7 artifacts: no extraction
+# made before this token existed can carry it, and the frozen v1.1 classifier
+# does not know it -- an empty snippet carrying this value classifies as
+# MISSING_SNIPPET, not ABSENCE_DECLARED.
+escape_token: "NO_EVIDENCE_LOCATABLE"
+
+# Per-field evidence class (ELICIT-DESIGN-01 C1). One of: stated | inferable |
+# judgment. This file is the authoritative source consulted by prompt
+# construction, which derives the per-class Pass-1 contracts programmatically
+# and hand-lists no field anywhere.
+#
+# The assignments themselves are NOT authored here. They are reproduced from
+# analysis/provenance/FIELD_CLASSES.md section 2 (version prov-fieldclass-1), a
+# pre-registration artifact for Paper 1/1b whose criteria were written and
+# hashed BEFORE any field was examined, and from its machine-readable mirror
+# analysis/provenance/field_class3.py. A three-way pin test asserts this file,
+# that module and that document agree; if they ever disagree, this file is the
+# copy that is wrong.
+#
+# Two fields are flagged paper-variable in FIELD_CLASSES.md section 1.5 --
+# sample_size (stated) and surgical_domain (inferable). Their class genuinely
+# varies by paper, and this design declares a class once, at setup time. That is
+# a known cost, measured rather than designed around.
+
 fields:
 
   # ═══════════════════════════════════════════════════════════════════
@@ -28,6 +74,7 @@ fields:
   # ═══════════════════════════════════════════════════════════════════
 
   - name: study_type
+    field_class: stated
     judge_rubric_family: nominal_categorical
     tier: 1
     type: categorical
@@ -65,6 +112,7 @@ fields:
       8. None of the above → "Other"
 
   - name: robot_platform
+    field_class: stated
     judge_rubric_family: numeric_verbatim
     tier: 1
     type: free_text
@@ -78,6 +126,7 @@ fields:
       record as stated.
 
   - name: task_performed
+    field_class: stated
     judge_rubric_family: numeric_verbatim
     tier: 1
     type: free_text
@@ -89,6 +138,7 @@ fields:
       If multiple autonomous tasks, list all separated by semicolons.
 
   - name: sample_size
+    field_class: stated
     judge_rubric_family: numeric_verbatim
     tier: 1
     type: numeric
@@ -102,6 +152,7 @@ fields:
       Enter the number only, or NR.
 
   - name: surgical_domain
+    field_class: inferable
     judge_rubric_family: nominal_categorical
     tier: 1
     type: categorical
@@ -144,6 +195,7 @@ fields:
   # ═══════════════════════════════════════════════════════════════════
 
   - name: autonomy_level
+    field_class: judgment
     judge_rubric_family: ordinal
     dimension: "autonomy"
     ordered_values:
@@ -201,6 +253,7 @@ fields:
         value: "4 (High autonomy)"
 
   - name: validation_setting
+    field_class: stated
     judge_rubric_family: ordinal
     dimension: "validation fidelity"
     ordered_values:
@@ -247,6 +300,7 @@ fields:
       If multiple settings are clearly identifiable, list with semicolons (e.g., "In vivo (animal); Phantom/Simulation").
 
   - name: task_monitor
+    field_class: inferable
     judge_rubric_family: nominal_categorical
     tier: 2
     type: categorical
@@ -272,6 +326,7 @@ fields:
         value: "Shared"
 
   - name: task_generate
+    field_class: inferable
     judge_rubric_family: nominal_categorical
     tier: 2
     type: categorical
@@ -298,6 +353,7 @@ fields:
         value: "Shared"
 
   - name: task_select
+    field_class: inferable
     judge_rubric_family: nominal_categorical
     tier: 2
     type: categorical
@@ -324,6 +380,7 @@ fields:
         value: "Shared"
 
   - name: task_execute
+    field_class: inferable
     judge_rubric_family: nominal_categorical
     tier: 2
     type: categorical
@@ -349,6 +406,7 @@ fields:
         value: "Shared"
 
   - name: system_maturity
+    field_class: judgment
     judge_rubric_family: ordinal
     dimension: "technology readiness"
     ordered_values:
@@ -389,6 +447,7 @@ fields:
       Pick the MOST ADVANCED stage demonstrated.
 
   - name: study_design
+    field_class: judgment
     judge_rubric_family: nominal_categorical
     tier: 2
     type: categorical
@@ -433,6 +492,7 @@ fields:
       9. Is it a retrospective analysis of clinical cases? → "Retrospective clinical review"
 
   - name: country
+    field_class: inferable
     judge_rubric_family: free_text
     tier: 2
     type: free_text
@@ -448,6 +508,7 @@ fields:
   # ═══════════════════════════════════════════════════════════════════
 
   - name: primary_outcome_metric
+    field_class: stated
     judge_rubric_family: free_text
     tier: 3
     type: free_text
@@ -460,6 +521,7 @@ fields:
       Do not select based on judgment of "most emphasized" — use positional order.
 
   - name: primary_outcome_value
+    field_class: stated
     judge_rubric_family: free_text
     tier: 3
     type: free_text
@@ -471,6 +533,7 @@ fields:
       88.1–96.5)", "median 12 min (IQR 8–15)").
 
   - name: comparison_to_human
+    field_class: stated
     judge_rubric_family: free_text
     tier: 3
     type: free_text
@@ -483,6 +546,7 @@ fields:
       record "No comparison reported".
 
   - name: secondary_outcomes
+    field_class: stated
     judge_rubric_family: free_text
     tier: 3
     type: free_text
@@ -498,6 +562,7 @@ fields:
   # ═══════════════════════════════════════════════════════════════════
 
   - name: key_limitation
+    field_class: judgment
     judge_rubric_family: free_text
     tier: 4
     type: free_text
@@ -510,6 +575,7 @@ fields:
     source_quote_required: true
 
   - name: clinical_readiness_assessment
+    field_class: judgment
     judge_rubric_family: ordinal
     dimension: "clinical readiness"
     ordered_values:

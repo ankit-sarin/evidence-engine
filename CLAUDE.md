@@ -33,13 +33,15 @@ evidence-engine/
 │   ├── adjudication/           # Workflow stages, screening/FT/audit adjudication
 │   ├── utils/                  # tmux background, extraction cleanup, ollama preflight
 │   ├── validators/             # Extraction validator + distribution collapse monitor
+│   ├── elicitation/            # Per-class evidence elicitation (units, classes, contracts,
+│   │                           #   prompts, materialize, sizing, pipeline)
 │   └── exporters/              # PRISMA, evidence tables, DOCX, methods, traces
 ├── analysis/
 │   ├── paper1/                 # Human workbook import, consensus derivation, adjudication
 │   ├── provenance/             # Frozen v1.1 evidence-provenance taxonomy + classifier
 │   └── eval/                   # Response-contract, runtime and priming evaluations
 ├── scripts/                    # Pipeline runners, batch scripts, monitors
-├── tests/                      # ~1,530 offline + 15 network/ollama/integration
+├── tests/                      # ~1,636 offline + 15 network/ollama/integration
 │   └── conftest.py             # Suite-wide service-call fence (see Ops Invariants)
 └── data/                       # gitignored — per-review databases, PDFs, exports,
                                 #   eval stores, telemetry
@@ -191,6 +193,76 @@ now gated, and the suite is fenced. Do not add a third ungated path.
   - Arm values sourced from the disagreement-pairs CSV (exactly what Pass 2 saw — empty cell → `NOT REPORTED` absence claim). Source windowing: full text under a 30,000-char safe cap, else a ±8,000-char window; `source_truncated` is an explicit visible flag (never silent — the v1 lesson). Window anchor precedence: verbatim arm_value → this arm's span → co-field arm span → head; spans position only, never shown as evidence. Neutral `»…«` locator marks a verbatim arm_value occurrence as a finding aid only.
   - Same two-file blinded design as v1; blinded sheet shows only field_name + codebook definition, arm_value, source_text, 4-state adjudication, notes. Structural header allow-list + forbidden-string scan guarantee no arm/verdict/stratum/reasoning/span leakage. Provenance (both run_ids, master_seed, per-stratum SHA-256 seeds, input SHA-256s) in the Metadata sheet.
 
+## Per-Class Evidence Elicitation (engine/elicitation/) — ELICIT-DESIGN-01
+
+The Run 7 extraction design. **Off by default** (`extraction_models.elicitation`, ReviewSpec);
+`extract_paper()` dispatches to it when set, so upgrading the engine changes no existing review.
+
+**Mechanism.** Pass 1 sees the paper as numbered sentence units and cites `[Sn]` indices; it never
+copies text. The engine materializes verbatim text from the persisted unit map and primes Pass 2
+with it. One citation mechanism for all three field classes — the classes differ in what must
+ACCOMPANY the citations, not in how evidence is cited.
+
+| class | Pass-1 contract |
+|---|---|
+| STATED (9) | cite ≥1 unit, then the value |
+| INFERABLE (6) | cite ≥1 unit, then a declared inference (1–3 sentences), then the value |
+| JUDGMENT (5) | stepwise reasoning where EVERY step cites ≥1 unit or is marked criteria application, then the value |
+
+Any class may instead return the escape token with zero citations.
+
+**Two value tokens, and the distinction is load-bearing.** `escape_token`
+(`NO_EVIDENCE_LOCATABLE`) = "no evidence locatable for this field in this paper" — a statement
+about the extractor's search, zero citations *by definition*, and a citation alongside it is
+itself a violation. `absence_sentinels` (six, incl. `NOT_FOUND`) = "the paper does not report
+this" — a claim about the body text, therefore a VALUE, therefore it REQUIRES a citation. A
+sentinel with no citation fails the write and enters bounded retry. Intended, not an edge case.
+
+**The codebook is the sole source of field classes** (`field_class` per field), reproduced from
+`analysis/provenance/FIELD_CLASSES.md` §2 (`prov-fieldclass-1`) and mirrored in `field_class3.py`.
+A three-way pin test asserts codebook == module == document; on disagreement **the codebook is the
+copy that is wrong**. Prompt construction hand-lists no field — grep-provable, pinned by test.
+
+**Modules.** `units.py` (ELICIT-01 index space, ported; `MIN_UNIT_TOKENS=3` is a study artifact
+adopted provisionally — re-derivation belongs to the parse-quality-gate task) · `classes.py` ·
+`contracts.py` (parse-time contract enforcement; closed violation vocabulary, FATAL vs ADVISORY) ·
+`materialize.py` · `prompts.py` · `sizing.py` · `pipeline.py`.
+
+**Invariants that must not be quietly relaxed:**
+- **No silent repair.** An out-of-range or malformed index is recorded verbatim and FAILS the
+  field; it is never dropped so the surviving indices can carry the field.
+- **The stored snippet is the engine's, not the model's.** Pass 2's `source_snippet` is
+  overwritten with materialized unit text. ⚠ A materialized quote is ANCHORED by construction, so
+  **anchored rates from this path are NOT comparable to Run 6's 58.3% or the ~39–43% corrected
+  baseline**. Citation validity, contract-violation counts and judge-scored supportedness are the
+  measures that carry information.
+- **First contiguous run only.** The span carries the first run of consecutive cited units, never
+  a join of disjoint ones — joining would manufacture a quote appearing nowhere in the paper.
+  Full citation set lives in `record_call(extra=…)` and the per-run unit-map file (no migration).
+- **Index lists take bare integers.** The prompt must keep "Use the integer only, not the `[S12]`
+  marker" for both field-level and step-level `unit_indices`; dropping it cost a whole smoke run.
+  `parse_container`'s `recovered_marker_tokens` branch is the backstop and turns a regression into
+  `INDEX_MALFORMED`, never into a valid index.
+- **Sizing:** `WORST_RATIO=0.4288` × `INDEX_MARKER_INFLATION=1.141` against the 131,072 ceiling.
+  Measured over-prediction is **~2×**, not the ~4% an early commit message claimed. Hard-fail
+  before the call; `prompt_eval_count == ceiling` is the only post-hoc truncation tripwire.
+
+## Write-Boundary Fail-Fast (engine/core/citation_guard.py)
+
+Sits beside `completeness.py`. Completeness answers "did we get every field"; this answers "does
+each field carry evidence". Mechanism-independent — it reads spans, not prompts.
+
+- **`strict`** (elicited path): every non-escape value needs ≥1 validated citation, sentinels
+  included.
+- **`legacy`** (pre-elicitation prompt): sentinels exempt, because that prompt explicitly
+  instructs an empty `source_snippet` for an absence value. The exemption is a property of that
+  prompt and disappears with it. Every other value still needs a quote.
+
+Raises `UncitedValueError` before any INSERT. `extract_paper_with_completeness` runs **one**
+bounded retry budget across every pre-write refusal (`IncompleteExtractionError`,
+`Pass1ContractError`, `UncitedValueError`) — separate budgets would let a paper alternate between
+them indefinitely. Telemetry outcomes: `contract_retry` / `contract_exhausted`.
+
 ## Human-in-the-Loop Review Standard
 
 All human review uses HTML → JSON → import round-trip.
@@ -261,6 +333,9 @@ python -m engine.acquisition.pdf_quality_import --review surgical_autonomy --inp
 python -m engine.agents.ft_screener --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
 python -m engine.agents.ft_screener ... --screen-only
 python -m engine.agents.ft_screener ... --verify-only
+
+# Per-class elicitation smoke (ELICIT-DESIGN-01; writes only its own gitignored scratch DB)
+PYTHONPATH=. python -m analysis.eval.elicit_design01.smoke --review surgical_autonomy
 
 # Extraction cleanup (schema transition)
 python -m engine.utils.extraction_cleanup --review surgical_autonomy          # dry-run

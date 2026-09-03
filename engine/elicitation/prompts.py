@@ -70,7 +70,9 @@ _CLASS_CONTRACT = {
         "These values are syntheses that no single passage states. For each "
         "field below: reason in steps, where EVERY step either cites at least "
         "one unit or is explicitly marked as applying the codebook criteria with "
-        "no textual basis claimed; then state the value.\n"
+        "no textual basis claimed; then state the value. A step's "
+        f"`{KEY_INDICES}` takes bare integers, exactly like a field's — "
+        "`[7]`, never `[S7]`.\n"
         f'  {{"{KEY_FIELD}": "...", "{KEY_STEPS}": ['
         f'{{"{KEY_STEP_TEXT}": "...", "{KEY_INDICES}": [7]}}, '
         f'{{"{KEY_STEP_TEXT}": "...", "{KEY_STEP_CRITERIA}": true}}], '
@@ -131,8 +133,14 @@ def build_pass1_prompt(unit_map: UnitMap, codebook: dict,
 The paper text below is split into numbered sentence units, each prefixed with a
 marker of the form [S1], [S2], ... [S{unit_map.n}]. You cite evidence by unit
 number. Do not quote or copy any text: name the unit numbers and nothing else.
-Every index must be an integer between 1 and {unit_map.n}. Section headings are
-numbered units too and may be cited.
+
+Every index must be a bare JSON integer between 1 and {unit_map.n}. **Use the
+integer only, not the "[S12]" marker** — write `[12, 13]`, never `[S12, S13]`.
+This applies to every `{KEY_INDICES}` list in your response, including the ones
+nested inside reasoning steps. A marker written into an index list is not valid
+JSON and the whole response is discarded.
+
+Section headings are numbered units too and may be cited.
 
 The fields are grouped into three classes. Each class states what must accompany
 its citations. Read the contract at the top of a class block before its fields.

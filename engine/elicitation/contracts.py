@@ -44,6 +44,7 @@ reason to expect them to be rare, not a reason to handle them loosely.
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field as dc_field
 
 from analysis.provenance.segment import sentences
@@ -180,12 +181,33 @@ class Pass1Result:
 # ── Container recovery ───────────────────────────────────────────────
 
 
+# A bare [Sn] marker written into an index list, e.g. `"unit_indices": [S12]`.
+# Anchored to list context so prose containing "S12" cannot match.
+BARE_MARKER_RE = re.compile(r"(?<=[\[,])(\s*)(S\d+)(?=\s*[,\]])")
+
+
 def parse_container(raw: str | None) -> tuple[list[dict], str]:
     """Recover the JSON array of field entries. Returns (entries, parse_path).
 
     Ported from ELICIT-01's `parse_fields`, which measured a `direct` parse on
-    every INDEX call. Recovery is limited to locating the container; it never
-    invents or edits an entry.
+    every INDEX call. Recovery locates and repairs the CONTAINER only; it never
+    invents or edits an entry, and it never makes a bad index good.
+
+    The third branch exists because of a measured failure. In the aborted
+    ELICIT-DESIGN-01 smoke the model returned a contract-shaped answer whose
+    index lists held bare `[S1]` markers instead of `[1]` — the prompt had lost
+    ELICIT-01's load-bearing "Use the integer only, not the '[S12]' marker" line.
+    That is invalid JSON, so the entire 20-field response was discarded as
+    unparseable and every field surfaced as FIELD_MISSING: a serialization slip
+    read as total non-compliance, hiding an answer that was otherwise correct.
+
+    The prompt line is restored, and this branch is the backstop. It quotes the
+    bare markers so the container parses, which turns each one into the STRING
+    `"S1"` — and a string is not an integer, so `_resolve_indices` records it as
+    INDEX_MALFORMED and the field fails its contract. Nothing is repaired
+    semantically: the marker is still refused, with a precise violation code
+    instead of the loss of nineteen innocent fields. The parse path is named so
+    the recovery is visible in telemetry rather than silent.
     """
     text = (raw or "").strip()
     if "```" in text:
@@ -203,8 +225,16 @@ def parse_container(raw: str | None) -> tuple[list[dict], str]:
     start, end = text.find("{"), text.rfind("}")
     if start < 0 or end <= start:
         return [], "unparseable"
+    body = text[start:end + 1]
     try:
-        return _entries(json.loads(text[start:end + 1])), "recovered_braces"
+        return _entries(json.loads(body)), "recovered_braces"
+    except Exception:
+        pass
+    quoted, n = BARE_MARKER_RE.subn(r'\1"\2"', body)
+    if not n:
+        return [], "unparseable"
+    try:
+        return _entries(json.loads(quoted)), "recovered_marker_tokens"
     except Exception:
         return [], "unparseable"
 

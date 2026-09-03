@@ -275,3 +275,82 @@ def test_escape_field_materializes_no_snippet(unit_map):
     r = check(wrap({"field_name": "robot_platform", "unit_indices": [],
                     "value": "NO_EVIDENCE_LOCATABLE"}), unit_map, ("robot_platform",))
     assert M.source_snippet(r.records["robot_platform"], unit_map) == ""
+
+
+# ══ Regression — the aborted-smoke serialization failure ══════════════
+#
+# Measured in the aborted ELICIT-DESIGN-01 smoke: the model returned a
+# contract-shaped answer whose index lists held bare [Sn] markers instead of
+# integers, because the prompt had lost ELICIT-01's "Use the integer only, not
+# the '[S12]' marker" line. Invalid JSON, so all 20 fields surfaced as
+# FIELD_MISSING — a serialization slip read as total non-compliance. The prompt
+# line is restored; these pin the backstop.
+
+
+BARE_MARKER_RESPONSE = """```json
+{
+  "fields": [
+    {"field_name": "robot_platform", "unit_indices": [S1], "value": "dVRK"},
+    {"field_name": "country", "unit_indices": [S2, S3],
+     "inference": "The affiliation fixes the country.", "value": "Canada"},
+    {"field_name": "study_design",
+     "reasoning_steps": [{"step": "Animals were used.", "unit_indices": [S3]}],
+     "value": "Preclinical validation (animal/cadaver)"}
+  ]
+}
+```"""
+
+
+def test_bare_marker_response_is_a_detected_violation_not_an_unparseable_loss(unit_map):
+    r = check(BARE_MARKER_RESPONSE, unit_map)
+    assert r.parse_path == "recovered_marker_tokens"
+    assert not r.records["robot_platform"].ok
+    for name in ALL_FIELDS:
+        rec = r.records[name]
+        assert K.INDEX_MALFORMED in rec.fatal, name
+        assert K.FIELD_MISSING not in rec.fatal, (
+            f"{name}: a serialization slip must not read as a missing field"
+        )
+
+
+def test_bare_markers_are_refused_never_translated(unit_map):
+    """The backstop repairs the CONTAINER, never the index."""
+    r = check(BARE_MARKER_RESPONSE, unit_map)
+    rec = r.records["robot_platform"]
+    assert rec.indices == (), "S1 must not become index 1"
+    assert "S1" in [str(b) for b in rec.bad_indices]
+    assert M.source_snippet(rec, unit_map) == ""
+
+
+def test_a_marker_inside_a_judgment_step_is_caught_too(unit_map):
+    r = check(BARE_MARKER_RESPONSE, unit_map)
+    rec = r.records["study_design"]
+    assert K.INDEX_MALFORMED in rec.fatal
+    assert rec.steps and rec.steps[0].indices == ()
+
+
+def test_recovery_does_not_fire_on_a_valid_response(unit_map):
+    r = check(wrap({"field_name": "robot_platform", "unit_indices": [1], "value": "dVRK"}),
+              unit_map, ("robot_platform",))
+    assert r.parse_path == "direct"
+
+
+def test_prose_containing_an_s_number_is_not_rewritten(unit_map):
+    """The marker pattern is anchored to list context, not to the word 'S12'."""
+    r = check(wrap({"field_name": "robot_platform", "unit_indices": [1],
+                    "value": "Model S12 arm"}), unit_map, ("robot_platform",))
+    assert r.parse_path == "direct"
+    assert r.records["robot_platform"].value == "Model S12 arm"
+
+
+def test_the_prompt_carries_the_integer_only_instruction():
+    """The line whose absence caused the aborted smoke."""
+    from engine.elicitation import classes as CB
+    from engine.elicitation import prompts as P
+
+    cb = CB.load("data/surgical_autonomy/extraction_codebook.yaml")
+    names = tuple(f["name"] for f in cb["fields"])
+    prompt = P.build_pass1_prompt(build_unit_map(1, TEXT), cb, names)
+    assert "Use the\ninteger only" in prompt or "Use the integer only" in prompt
+    assert "never `[S12, S13]`" in prompt
+    assert "never `[S7]`" in prompt, "the JUDGMENT step contract needs it too"

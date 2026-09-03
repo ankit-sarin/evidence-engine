@@ -85,18 +85,27 @@ def preflight(oc) -> tuple[str, str | None]:
     return version, digest
 
 
-def build_scratch(review_dir: Path, store: Path, papers: tuple[int, ...]):
+def build_scratch(review_dir: Path, store: Path, papers: tuple[int, ...], run_id: str):
     """A throwaway ReviewDatabase carrying only the smoke's three papers.
 
     Papers rows are copied because `extractions.paper_id` is a real foreign key
     and `PRAGMA foreign_keys=ON`; nothing else is copied, and nothing is written
     back.
+
+    The scratch tree is keyed by run id and REFUSES to reuse an existing one. An
+    earlier version cleared a single shared `scratch/` at startup, which would
+    have destroyed the aborted first run's telemetry -- the evidence for its own
+    finding -- on the very next invocation. A smoke that erases the record of
+    the last smoke is not a gate, it is a shredder.
     """
     from engine.core.database import ReviewDatabase
 
-    scratch_root = store / "scratch"
+    scratch_root = store / "scratch" / run_id
     if scratch_root.exists():
-        shutil.rmtree(scratch_root)
+        raise SystemExit(
+            f"ABORT: {scratch_root} already exists. Runs are keyed by run id and "
+            "never overwrite one another; pick a new run or move the old one."
+        )
     scratch_root.mkdir(parents=True)
     db = ReviewDatabase(LABEL, data_root=scratch_root)
     scratch_dir = Path(db.db_path).parent
@@ -182,11 +191,9 @@ def main(argv: list[str] | None = None) -> int:
                 spec.extraction_models.pass1_think,
                 spec.extraction_models.pass2_think)
 
-    db, scratch_dir = build_scratch(review_dir, store, papers)
-    codebook = C.load(scratch_dir / "extraction_codebook.yaml")
-    tel_path = scratch_dir / "telemetry" / "extraction_calls.jsonl"
-
     run_id = datetime.now(timezone.utc).strftime("smoke_%Y%m%dT%H%M%SZ")
+    db, scratch_dir = build_scratch(review_dir, store, papers, run_id)
+    tel_path = scratch_dir / "telemetry" / "extraction_calls.jsonl"
     out = store / f"{LABEL}_{run_id}.jsonl"
     logger.info("ELICIT-DESIGN-01 SMOKE | Ollama %s | %s (%s) | papers %s | -> %s",
                 version, MODEL, (digest or "?")[:12], list(papers), out)
@@ -239,8 +246,8 @@ def main(argv: list[str] | None = None) -> int:
 
     n_ok = sum(1 for r in rows if r.ok)
     logger.info("SMOKE COMPLETE: %d/%d papers stored -> %s", n_ok, len(rows), out)
-    print(json.dumps({"papers": len(rows), "ok": n_ok, "out": str(out),
-                      "scratch": str(scratch_dir)}, indent=1))
+    print(json.dumps({"run_id": run_id, "papers": len(rows), "ok": n_ok,
+                      "out": str(out), "scratch": str(scratch_dir)}, indent=1))
     return 0 if n_ok == len(rows) else 1
 
 

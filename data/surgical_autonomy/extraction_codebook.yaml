@@ -49,6 +49,28 @@ absence_sentinels:
 # MISSING_SNIPPET, not ABSENCE_DECLARED.
 escape_token: "NO_EVIDENCE_LOCATABLE"
 
+# The contract-unmet terminal state, DISTINCT from both the escape token above
+# and every absence sentinel.
+#
+# Semantics: "this field's Pass-1 evidence contract was not met, so the engine
+# refused to store a value for it." It is not a claim about the paper and it is
+# not a claim about the extractor's search -- it is the ENGINE's record that it
+# declined to write. It therefore carries no value, no citation and no snippet.
+#
+# Why it exists (ELICIT-DESIGN-02 Ruling 1). Before it, one uncited field out of
+# twenty failed the WHOLE paper: the ELICIT-DESIGN-01 smoke lost a 15/20-clean
+# extraction of p604 over two fields. The unit of refusal moves from the paper to
+# the field. What does NOT change is the strictness: an uncited value is still
+# never stored AS A VALUE -- it is stored as this state instead, which is a
+# refusal on the record rather than a value nobody evidenced.
+#
+# It is a NON-VALUE TOKEN, like the escape token and unlike a sentinel. Both
+# non-value tokens are read from this file by engine.elicitation.classes
+# .non_value_tokens() and every consumer that scores, audits, normalises or
+# counts field values excludes them through that one helper. Nothing hand-lists
+# either token.
+contract_unmet_token: "CONTRACT_UNMET"
+
 # Per-field evidence class (ELICIT-DESIGN-01 C1). One of: stated | inferable |
 # judgment. This file is the authoritative source consulted by prompt
 # construction, which derives the per-class Pass-1 contracts programmatically
@@ -569,10 +591,11 @@ fields:
     definition: >-
       The most important limitation of the study, based on your judgment.
     instruction: >-
-      In 1–2 sentences, state the key limitation using YOUR judgment.
-      Do not simply copy what the authors wrote in their limitations section.
-      Quote the passage(s) that informed your assessment.
-    source_quote_required: true
+      Reason to the key limitation in steps, and state it in 1–2 sentences.
+      Each step must either cite the unit(s) that support it or be marked as
+      applying these criteria with no textual basis claimed. Do not simply
+      restate what the authors wrote in their limitations section: the steps
+      are how you got to YOUR judgment, not a quotation of theirs.
 
   - name: clinical_readiness_assessment
     field_class: judgment
@@ -634,4 +657,3 @@ fields:
         value: "Ready for clinical use"
       - scenario: "Scoping review of autonomous surgical robotics literature"
         value: "Not assessable"
-    source_quote_required: true

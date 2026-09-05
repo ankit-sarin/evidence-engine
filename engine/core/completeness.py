@@ -206,3 +206,68 @@ def enforce_completeness(
             paper_id, arm, result.summary(),
         )
     return result
+
+
+# ── Terminal-state completeness (ELICIT-DESIGN-02 Ruling 1) ──────────
+
+
+class TerminalStateError(IncompleteExtractionError):
+    """A paper reached the write boundary without one terminal state per field.
+
+    A subclass of `IncompleteExtractionError` on purpose. The elicited path's
+    completeness predicate is no longer "did every field produce a span" but
+    "does every field carry exactly one terminal state" — and those are the same
+    question asked of a different record. Making it a subclass keeps the one
+    bounded retry budget in `extract_paper_with_completeness` covering it
+    without that function learning a new exception.
+    """
+
+
+def enforce_terminal_states(
+    states: dict[str, str],
+    expected: tuple[str, ...],
+    vocabulary: frozenset[str],
+    *,
+    paper_id: int,
+    arm: str,
+    attempt: int | None = None,
+) -> dict[str, str]:
+    """Every expected field carries exactly one state from the closed set.
+
+    Ruling 1's redefinition of the completeness predicate. Three ways to fail,
+    and all three are the same defect seen from different sides:
+
+      * a field with no state — the old `missing` case, unchanged in meaning;
+      * a state outside the vocabulary — a terminal state nobody ratified, which
+        would reach `evidence_spans.value` as an unrecognised token and be
+        scored as a value by everything downstream;
+      * a state for a field nobody asked for — the response inventing a field.
+
+    `expected` and `vocabulary` are both derived, never listed: the field set is
+    the same tuple the per-class contracts were built from, and the vocabulary
+    comes from the codebook (`terminal.state_vocabulary`). A guard that
+    hand-listed either could disagree with the prompt about what a paper is,
+    which is the disagreement Ruling 1 exists to end.
+    """
+    missing = tuple(n for n in expected if n not in states)
+    unexpected = tuple(sorted(n for n in states if n not in set(expected)))
+    illegal = tuple(sorted(
+        f"{n}={states[n]!r}" for n in states if states[n] not in vocabulary
+    ))
+
+    if missing or unexpected or illegal:
+        detail = []
+        if unexpected:
+            detail.append(f"unexpected={list(unexpected)}")
+        if illegal:
+            detail.append(f"illegal states={list(illegal)}")
+        raise TerminalStateError(
+            paper_id=paper_id,
+            arm=arm,
+            missing=missing or unexpected or illegal,
+            n_stored=len(states) - len(unexpected) - len(illegal),
+            n_expected=len(expected),
+            salvage="; ".join(detail) or None,
+            attempt=attempt,
+        )
+    return states

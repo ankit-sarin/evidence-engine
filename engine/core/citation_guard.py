@@ -32,6 +32,22 @@ other way is governed by the same rule. Nothing about it lives in prompt code.
 Both modes refuse to store a positive claim with nothing behind it. They differ
 only on what an absence value owes, because the two prompts asked for different
 things.
+
+**The contract-unmet token** (ELICIT-DESIGN-02 Ruling 1) joins the escape token
+as the second NON-VALUE token, and is governed identically here: it owes no
+citation, and a citation alongside it is a violation. The asymmetry is worth
+naming — an escape with a citation is the MODEL contradicting itself, while a
+contract-unmet with a citation is the ENGINE contradicting itself, because the
+engine writes that token and writes it only where it refused to store evidence.
+Hence a distinct code: the two failures have different culprits and the log
+should not blur them.
+
+Note what did NOT change. This guard's strictness is untouched: an uncited value
+is still refused. Ruling 1 moved where the refusal LANDS — the offending field
+becomes CONTRACT_UNMET rather than the whole paper being dropped — and by the
+time spans reach here that substitution has already happened upstream. A span
+still carrying an uncited value at this boundary is a pipeline defect, and this
+guard is what catches it.
 """
 
 from __future__ import annotations
@@ -47,6 +63,7 @@ MODES = (STRICT, LEGACY)
 
 VALUE_WITHOUT_CITATION = "VALUE_WITHOUT_CITATION"
 ESCAPE_WITH_CITATION = "ESCAPE_WITH_CITATION"
+CONTRACT_UNMET_WITH_CITATION = "CONTRACT_UNMET_WITH_CITATION"
 
 
 class UncitedValueError(RuntimeError):
@@ -83,6 +100,7 @@ class CitationResult:
     offenders: tuple[tuple[str, str], ...] = ()
     n_escape: int = 0
     n_sentinel: int = 0
+    n_contract_unmet: int = 0
 
 
 def _text(span, key: str) -> str:
@@ -97,6 +115,7 @@ def check_citations(
     absence_sentinels: frozenset[str] = frozenset(),
     mode: str = STRICT,
     citation_counts: dict[str, int] | None = None,
+    contract_unmet_token: str | None = None,
 ) -> CitationResult:
     """Check every span carries evidence proportionate to its value.
 
@@ -112,8 +131,9 @@ def check_citations(
     if mode not in MODES:
         raise ValueError(f"unknown mode {mode!r}")
     escape_u = escape_token.strip().upper() if escape_token else None
+    unmet_u = contract_unmet_token.strip().upper() if contract_unmet_token else None
     offenders: list[tuple[str, str]] = []
-    n_escape = n_sentinel = 0
+    n_escape = n_sentinel = n_unmet = 0
     n = 0
 
     for span in spans or []:
@@ -134,6 +154,15 @@ def check_citations(
                 offenders.append((name, ESCAPE_WITH_CITATION))
             continue
 
+        if unmet_u is not None and value_u == unmet_u:
+            n_unmet += 1
+            # The engine writes this token only where it refused to store
+            # evidence, so evidence alongside it is the engine contradicting
+            # itself -- see the module docstring on why the code differs.
+            if has_evidence:
+                offenders.append((name, CONTRACT_UNMET_WITH_CITATION))
+            continue
+
         is_sentinel = bool(value_u) and value_u in absence_sentinels
         if is_sentinel:
             n_sentinel += 1
@@ -145,7 +174,7 @@ def check_citations(
 
     return CitationResult(
         ok=not offenders, n_checked=n, offenders=tuple(offenders),
-        n_escape=n_escape, n_sentinel=n_sentinel,
+        n_escape=n_escape, n_sentinel=n_sentinel, n_contract_unmet=n_unmet,
     )
 
 
@@ -158,6 +187,7 @@ def enforce_citations(
     absence_sentinels: frozenset[str] = frozenset(),
     mode: str = STRICT,
     citation_counts: dict[str, int] | None = None,
+    contract_unmet_token: str | None = None,
     attempt: int | None = None,
 ) -> CitationResult:
     """Raise `UncitedValueError` unless every value carries evidence.
@@ -167,6 +197,7 @@ def enforce_citations(
     result = check_citations(
         spans, escape_token=escape_token, absence_sentinels=absence_sentinels,
         mode=mode, citation_counts=citation_counts,
+        contract_unmet_token=contract_unmet_token,
     )
     if not result.ok:
         raise UncitedValueError(

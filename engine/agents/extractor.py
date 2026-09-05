@@ -653,19 +653,26 @@ def extract_paper_with_completeness(
     extract_paper() raises IncompleteExtractionError *before* its write, so an
     exhausted paper leaves nothing behind.
     """
-    from engine.elicitation.pipeline import Pass1ContractError
-
     review_dir = Path(db.db_path).parent
     expected = expected_field_names(spec, review_dir / "extraction_codebook.yaml")
     run_id = _default_run_id()
     last_error: Exception | None = None
 
     # One bounded retry budget covers every pre-write refusal: an incomplete
-    # Pass 2, a Pass-1 contract violation, and an uncited value at the write
-    # boundary. They are the same kind of event — the request was answered in a
-    # way that cannot be stored — and giving them separate budgets would let a
-    # paper alternate between them indefinitely.
-    RETRYABLE = (IncompleteExtractionError, Pass1ContractError, UncitedValueError)
+    # Pass 2, a missing or illegal terminal state, and an uncited value at the
+    # write boundary. They are the same kind of event — the request was answered
+    # in a way that cannot be stored — and giving them separate budgets would let
+    # a paper alternate between them indefinitely.
+    #
+    # `Pass1ContractError` was the fourth member and is gone: ELICIT-DESIGN-02
+    # Ruling 1 retired the paper-level contract refusal it expressed. A field
+    # that fails its contract now takes the CONTRACT_UNMET terminal state instead
+    # of dropping the paper, and `TerminalStateError` — a subclass of
+    # `IncompleteExtractionError`, so already covered here — is what fires if a
+    # field reaches the boundary with no state at all. The elicited path's own
+    # bounded Pass-1 retry (Ruling 4, two attempts with typed feedback) sits
+    # inside `extract_paper_elicited` and is a different loop from this one.
+    RETRYABLE = (IncompleteExtractionError, UncitedValueError)
 
     for attempt in range(1, max_attempts + 1):
         _LAST_PASS2_TELEMETRY.clear()

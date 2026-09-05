@@ -252,16 +252,38 @@ adopted provisionally — re-derivation belongs to the parse-quality-gate task) 
 Sits beside `completeness.py`. Completeness answers "did we get every field"; this answers "does
 each field carry evidence". Mechanism-independent — it reads spans, not prompts.
 
-- **`strict`** (elicited path): every non-escape value needs ≥1 validated citation, sentinels
-  included.
+- **`strict`** (elicited path): every value needs ≥1 validated citation, **sentinels included**.
+  Only the two NON-VALUE TOKENS are exempt, and they must carry no evidence at all:
+  `escape_token` (`NO_EVIDENCE_LOCATABLE`) and `contract_unmet_token` (`CONTRACT_UNMET`).
+  Evidence alongside either is itself a violation, with distinct codes — `ESCAPE_WITH_CITATION`
+  is the MODEL contradicting itself, `CONTRACT_UNMET_WITH_CITATION` is the ENGINE contradicting
+  itself, and the log must not blur two failures with different culprits.
 - **`legacy`** (pre-elicitation prompt): sentinels exempt, because that prompt explicitly
   instructs an empty `source_snippet` for an absence value. The exemption is a property of that
   prompt and disappears with it. Every other value still needs a quote.
 
-Raises `UncitedValueError` before any INSERT. `extract_paper_with_completeness` runs **one**
-bounded retry budget across every pre-write refusal (`IncompleteExtractionError`,
-`Pass1ContractError`, `UncitedValueError`) — separate budgets would let a paper alternate between
-them indefinitely. Telemetry outcomes: `contract_retry` / `contract_exhausted`.
+Raises `UncitedValueError` before any INSERT. **Two loops, and they answer different questions.**
+
+**Inner — the Pass-1 elicitation loop** (ELICIT-DESIGN-02 Ruling 4, inside
+`extract_paper_elicited`): at most **2 attempts**. Attempt 2 re-issues the full elicitation with
+an appended typed feedback block naming, per failing field, the violation code, the offending
+output (echo capped at 200 chars with a visible `…[truncated]` marker) and what its class
+contract requires. Acceptance is **strict inequality on CONTRACT_UNMET counts** — attempt 2
+replaces attempt 1 only if strictly fewer fields are unmet; a tie keeps attempt 1. No per-field
+mixing across attempts: a composite is an extraction no single response produced, whose evidence
+set is internally inconsistent. Both attempts reach telemetry whichever wins, because a retry
+that regressed is a measurement. F7 is why the identical-retry policy was wrong here: the failure
+is response **content** at temperature 0, not response **shape**.
+
+**Outer — the completeness retry driver** (`extract_paper_with_completeness`, untouched by that
+ruling): **one** bounded budget across every pre-write refusal — `IncompleteExtractionError`,
+`TerminalStateError` (a subclass of it) and `UncitedValueError` — because separate budgets would
+let a paper alternate between them indefinitely. Telemetry outcomes: `contract_retry` /
+`contract_exhausted`.
+
+**`Pass1ContractError` no longer exists.** It expressed the paper-level contract refusal that
+Ruling 1 replaced with per-field terminal states; an exception nothing can raise is a claim about
+the code that is not true, so it was deleted rather than left in the tuple.
 
 ## Human-in-the-Loop Review Standard
 

@@ -213,3 +213,44 @@ case. Headroom is not close.
   `Pass1ContractError` (§2).
 - **N5 (new, this task)** — unit text collapses source newlines to spaces, so a materialized
   span crossing a line break is not a byte-exact substring of the paper (§3.5).
+
+---
+
+## Addendum (2026-09-05): the four `task_*` citations on p498, verbatim
+
+Read-only, from `smoke_20260905T011330Z`'s persisted unit map
+(`elicitation/run_20260905T011330Z/unit_maps/498.json`, 1,064 units,
+`elicit01-units-1`, `MIN_UNIT_TOKENS=3`) and that run's Pass-1 telemetry. **Zero inference,
+zero re-run.** Requested so the four `R` values the D2 probe replaced with the escape token can
+be eyeballed against what they actually cited.
+
+**All four fields cited the same single unit, [S524]:**
+
+```
+[S524]  "## 7.4. Scene III: Perturbed interaction"
+```
+
+| field | class | cited | declared inference (verbatim) | value | violations |
+|---|---|---|---|---|---|
+| `task_monitor` | inferable | [524] | *"The system uses visual feedback and dynamical systems for monitoring."* | `R` | none |
+| `task_generate` | inferable | [524] | *"The system generates plans using goal-varying manipulation (GVM)."* | `R` | none |
+| `task_select` | inferable | [524] | *"The system autonomously selects the best plan based on GVM."* | `R` | none |
+| `task_execute` | inferable | [524] | *"The system executes tasks using dynamical systems and SMA."* | `R` | none |
+
+Stored rows, all four identical in shape:
+
+```
+value='R'   confidence=0.8   source_snippet='## 7.4. Scene III: Perturbed interaction'
+```
+
+Two facts recorded so the dump is not read as an accusation:
+
+- **Citing a heading is legal by the prompt**, which states verbatim: *"Section headings are
+  numbered units too and may be cited."* [S524] is a heading and the citation is well-formed.
+- **All four fields met their INFERABLE contract** — one valid citation, one declared inference
+  within the sentence bound, a value. Zero violations, which is why all four stored as
+  `EVIDENCED_VALUE` rather than being refused.
+
+No analysis and no verdict. Whether `## 7.4. Scene III: Perturbed interaction` is material that
+fixes the four Yang-framework task-autonomy values, and whether the four declared inferences
+name a step from that heading to `R`, is the architect's call.

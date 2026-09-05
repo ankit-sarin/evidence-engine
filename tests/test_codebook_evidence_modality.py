@@ -20,6 +20,7 @@ reconstruction of the pre-fix one is caught.
 from __future__ import annotations
 
 import copy
+import re
 from pathlib import Path
 
 import pytest
@@ -88,11 +89,49 @@ def test_the_rule_is_derived_from_the_class_not_from_a_field_list():
         assert name not in body, f"{name} is hand-listed in the lint rule"
 
 
-def test_key_limitation_now_asks_for_steps(cb):
-    """Ruling 3(a): the instruction was rewritten, not merely de-flagged."""
-    kl = next(f for f in cb["fields"] if f["name"] == "key_limitation")
-    assert "source_quote_required" not in kl
-    assert kl["field_class"] == C.JUDGMENT
-    instruction = kl["instruction"].lower()
-    assert "step" in instruction
-    assert "quote the passage" not in instruction
+def test_the_rewritten_judgment_fields_ask_for_steps(cb):
+    """Ruling 3(a) and the A3 follow-on: the instructions were rewritten, not
+    merely de-flagged. Removing the flag while the prose still says "quote the
+    evidence" would leave the F5 collision intact one layer down."""
+    for name in ("key_limitation", "clinical_readiness_assessment"):
+        f = next(x for x in cb["fields"] if x["name"] == name)
+        assert "source_quote_required" not in f
+        assert f["field_class"] == C.JUDGMENT
+        instruction = f["instruction"].lower()
+        assert "step" in instruction, name
+        assert "cite the unit" in instruction, name
+
+
+def test_no_judgment_instruction_demands_a_quote(cb):
+    """The prose-level analogue of the flag-level lint, pinning the A3 audit.
+
+    `check_evidence_modality` reads FLAGS. An instruction that says "Quote the key
+    evidence" is the same contradiction in prose, and the A3 audit found exactly
+    one such field left after Ruling 3(a) -- `clinical_readiness_assessment`,
+    since rewritten. This test is what stops a third one appearing unnoticed.
+
+    Matched on the IMPERATIVE verb only. `key_limitation` legitimately contains
+    the noun "quotation" inside a negation -- "the steps are how you got to YOUR
+    judgment, not a quotation of theirs" -- and a lint that could not tell a
+    demand from its refusal would force the negation out of a sentence whose whole
+    job is to make it.
+    """
+    imperative = re.compile(r"\b(quote|copy|reproduce|transcribe)\b", re.I)
+    for f in cb["fields"]:
+        if f["field_class"] != C.JUDGMENT:
+            continue
+        hits = imperative.findall(f.get("instruction", ""))
+        assert not hits, f"{f['name']}: instruction demands {hits} on a JUDGMENT field"
+
+
+def test_the_stated_copy_instruction_is_left_alone(cb):
+    """The rule is class-scoped, not a global ban on the word.
+
+    `primary_outcome_value` is STATED and says "Copy the exact numeric reported",
+    which is correct for a field whose value the paper asserts verbatim. A lint
+    that fired here would be enforcing a style, not catching an incoherence.
+    """
+    f = next(x for x in cb["fields"] if x["name"] == "primary_outcome_value")
+    assert f["field_class"] == C.STATED
+    assert "copy" in f["instruction"].lower()
+    assert C.check_evidence_modality(cb) == []

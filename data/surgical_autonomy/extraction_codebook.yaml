@@ -614,8 +614,11 @@ fields:
       in patients. There is no right answer in the text — this requires you
       to synthesize the results, limitations, and validation setting.
     instruction: >-
-      Synthesize the results, limitations, and validation setting to make this
-      judgment. Quote the key evidence behind your assessment.
+      Reason to this judgment in steps, then select the category. Each step must
+      either cite the unit(s) that support it or be marked as applying these
+      criteria with no textual basis claimed. Synthesize the results, the
+      limitations and the validation setting: the steps ARE that synthesis, not
+      a quotation of what the authors claim about readiness.
     valid_values:
       - value: "Ready for clinical use"
         definition: >-

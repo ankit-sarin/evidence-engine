@@ -42,6 +42,27 @@ def verify_schema_parity(spec: ReviewSpec) -> str:
 # ── Prefix Normalization ─────────────────────────────────────────────
 
 
+def _non_value_tokens(db: "ReviewDatabase | None" = None) -> frozenset[str]:
+    """The review's non-value tokens (ELICIT-DESIGN-02 D1, site 3).
+
+    A terminal state is not a categorical value. The rewrite path below is the
+    urgent one — `normalize_prefix` UPDATEs `evidence_spans.value` whenever a
+    value is an unambiguous prefix of exactly one enum member, so an unrecognised
+    token there is a silent write. The two read-only checks skip the tokens for
+    the same reason one rung down: reporting a terminal state as an "invalid
+    categorical value" is a false positive that would grow with every field the
+    engine correctly refused.
+
+    The `("NOT_FOUND", "NR")` literals at each site are the pre-existing
+    hand-list, recorded as fix-phase item N2 and deliberately left alone.
+    """
+    from engine.elicitation.classes import non_value_tokens_for
+
+    if db is None:
+        return frozenset()
+    return non_value_tokens_for(Path(db.db_path).parent / "extraction_codebook.yaml")
+
+
 def normalize_prefix(value: str, valid_values: list[str]) -> str:
     """If *value* is an unambiguous case-insensitive prefix of exactly one
     valid value, return the canonical form.  Otherwise return *value* unchanged.
@@ -80,6 +101,7 @@ def normalize_categorical_values(
     field_map: dict[str, ExtractionField] = {
         f.name: f for f in spec.extraction_schema.fields
     }
+    non_value = _non_value_tokens(db)
 
     rows = db._conn.execute(
         """SELECT es.id, es.field_name, es.value
@@ -103,6 +125,9 @@ def normalize_categorical_values(
             continue
 
         if value in ("NOT_FOUND", "NR"):
+            continue
+
+        if str(value).strip().upper() in non_value:
             continue
 
         # Handle semicolon-separated multi-values
@@ -147,6 +172,7 @@ def normalize_categorical_values(
 def detect_cross_field_bleed(
     spec: ReviewSpec,
     extraction_data: list[dict],
+    non_value: frozenset[str] = frozenset(),
 ) -> list[dict]:
     """Detect categorical values that belong to a different field's vocabulary.
 
@@ -187,6 +213,9 @@ def detect_cross_field_bleed(
             continue
 
         if value in ("NOT_FOUND", "NR"):
+            continue
+
+        if str(value).strip().upper() in non_value:
             continue
 
         own_valid_lower = {v.lower() for v in field_def.enum_values}
@@ -240,6 +269,7 @@ def validate_extraction(
     # Build lookup from spec
     field_map: dict[str, ExtractionField] = {f.name: f for f in spec.extraction_schema.fields}
     valid_field_names = set(field_map)
+    non_value = _non_value_tokens(db)
 
     # Fetch spans
     rows = db._conn.execute(
@@ -270,6 +300,9 @@ def validate_extraction(
 
         # Skip NOT_FOUND values — they're valid for any field
         if value in ("NOT_FOUND", "NR"):
+            continue
+
+        if str(value).strip().upper() in non_value:
             continue
 
         # 2. Categorical field — check enum_values
@@ -339,7 +372,7 @@ def validate_all(
             (pid,),
         ).fetchall()
         spans = [{"field_name": r["field_name"], "value": r["value"]} for r in rows]
-        bleeds = detect_cross_field_bleed(spec, spans)
+        bleeds = detect_cross_field_bleed(spec, spans, _non_value_tokens(db))
         for b in bleeds:
             b["paper_id"] = pid
         all_bleeds.extend(bleeds)

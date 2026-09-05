@@ -64,6 +64,20 @@ def load_arm(db_path: str, arm: str) -> dict[int, dict[str, str]]:
     Raises:
         sqlite3.OperationalError: If the database is missing or corrupted.
     """
+    from engine.elicitation.classes import non_value_tokens_for
+
+    # ELICIT-DESIGN-02 D1, site 5. A terminal state is not a value to score.
+    # NO_EVIDENCE_LOCATABLE and CONTRACT_UNMET reach `evidence_spans.value`
+    # because that column is where a span's state has to live, but scoring one
+    # against another arm's real value produces a MISMATCH that means nothing —
+    # and those MISMATCHes flow into the disagreement CSV and from there into
+    # both judge passes. Dropping the field from the arm is the honest
+    # representation: this arm recorded no value here, which `align_arms`
+    # already models as an absent key.
+    non_value = non_value_tokens_for(
+        Path(db_path).parent / "extraction_codebook.yaml"
+    )
+
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
 
@@ -81,6 +95,8 @@ def load_arm(db_path: str, arm: str) -> dict[int, dict[str, str]]:
                 pid = row["paper_id"]
                 if pid not in result:
                     result[pid] = {}
+                if str(row["value"] or "").strip().upper() in non_value:
+                    continue
                 result[pid][row["field_name"]] = row["value"]
         else:
             rows = conn.execute(
@@ -95,6 +111,8 @@ def load_arm(db_path: str, arm: str) -> dict[int, dict[str, str]]:
                 pid = row["paper_id"]
                 if pid not in result:
                     result[pid] = {}
+                if str(row["value"] or "").strip().upper() in non_value:
+                    continue
                 result[pid][row["field_name"]] = row["value"]
 
         return result

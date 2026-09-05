@@ -175,6 +175,7 @@ def audit_span(
     span_data: dict, paper_text: str, field_type: str = "text",
     field_tier: int = 1, model: str | None = None,
     ollama_options: dict | None = None,
+    non_value_tokens: frozenset[str] = frozenset(),
 ) -> tuple[str, str]:
     """Audit a single evidence span. Returns (audit_status, reasoning).
 
@@ -183,10 +184,26 @@ def audit_span(
     - 'verified' — grep pass AND semantic pass
     - 'contested' — grep fail AND semantic pass (or Tier 4 semantic pass)
     - 'flagged' — semantic fail
+
+    `non_value_tokens` (ELICIT-DESIGN-02 D1/D2) comes from the codebook via
+    `classes.non_value_tokens_for`, never from a list here.
     """
     model = model or DEFAULT_AUDITOR_MODEL
     source_snippet = span_data.get("source_snippet", "")
     value = span_data.get("value", "")
+
+    # A terminal state is not an auditable claim (ELICIT-DESIGN-02 D1, site 1).
+    # NO_EVIDENCE_LOCATABLE says the extractor found nothing to cite;
+    # CONTRACT_UNMET says the engine refused to store a value. Neither asserts
+    # anything about the paper, so there is nothing to grep for and nothing for a
+    # semantic check to agree or disagree with. Before this branch both fell
+    # through to the empty-snippet rule below and came back 'flagged' — a 27B
+    # call per field, spent to mislabel a correct refusal as an audit failure.
+    if str(value).strip().upper() in non_value_tokens:
+        return "verified", (
+            f"'{value}' is a terminal state, not a value claim — no evidence to "
+            f"audit (ELICIT-DESIGN-02 Ruling 1)."
+        )
 
     # Values that indicate the field is absent/not reported — auto-verify
     _ABSENCE_VALUES = {"NOT_FOUND", "Not discussed", "NR", "No comparison reported"}
@@ -243,31 +260,51 @@ def audit_span(
 _ABSENCE_VALUES = {"NOT_FOUND", "Not discussed", "NR", "No comparison reported", "Not assessable"}
 
 
-def count_populated_fields(extraction_data: dict | list) -> int:
+def _tokens_for_db(db) -> frozenset[str]:
+    """The review's non-value tokens, read from its own codebook (D1/D2).
+
+    One accessor for both auditor sites, so neither can drift from the other the
+    way the two `_ABSENCE_VALUES` hand-lists in this file already have (that
+    divergence is recorded fix-phase item N2 and is deliberately untouched).
+    """
+    from engine.elicitation.classes import non_value_tokens_for
+
+    return non_value_tokens_for(Path(db.db_path).parent / "extraction_codebook.yaml")
+
+
+def count_populated_fields(extraction_data: dict | list,
+                           non_value_tokens: frozenset[str] = frozenset()) -> int:
     """Count non-null, non-absence extracted fields in an extraction.
 
     Handles both v1 format (dict of field_name→value) and v2 format
     (list of span dicts with 'field_name' and 'value' keys).
+
+    `non_value_tokens` (ELICIT-DESIGN-02 D1, site 2) excludes terminal states
+    from the LOW_YIELD numerator. A CONTRACT_UNMET field is precisely a field
+    that yielded nothing, so counting it as populated would make the guard read
+    a refusal as a result — and the more fields an extraction refused, the
+    healthier it would look.
     """
     count = 0
+
+    def _populated(value) -> bool:
+        if value is None:
+            return False
+        if not isinstance(value, str):
+            return True
+        v = value.strip()
+        return bool(v) and v not in _ABSENCE_VALUES and v.upper() not in non_value_tokens
 
     if isinstance(extraction_data, list):
         # v2 format: list of span objects [{field_name, value, ...}, ...]
         for span in extraction_data:
-            value = span.get("value") if isinstance(span, dict) else None
-            if value is None:
-                continue
-            if isinstance(value, str) and (not value.strip() or value.strip() in _ABSENCE_VALUES):
-                continue
-            count += 1
+            if _populated(span.get("value") if isinstance(span, dict) else None):
+                count += 1
     elif isinstance(extraction_data, dict):
         # v1 format: {field_name: value, ...}
-        for key, value in extraction_data.items():
-            if value is None:
-                continue
-            if isinstance(value, str) and (not value.strip() or value.strip() in _ABSENCE_VALUES):
-                continue
-            count += 1
+        for _key, value in extraction_data.items():
+            if _populated(value):
+                count += 1
 
     return count
 
@@ -295,7 +332,7 @@ def check_low_yield(
 
         stats["checked"] += 1
         extracted = json.loads(extraction["extracted_data"])
-        populated = count_populated_fields(extracted)
+        populated = count_populated_fields(extracted, _tokens_for_db(db))
 
         if populated < threshold:
             db._conn.execute(
@@ -367,6 +404,7 @@ def run_audit(
         "grep_failures": 0,
     }
     review_dir = Path(db.db_path).parent
+    _non_value_tokens = _tokens_for_db(db)
 
     for i, paper in enumerate(papers, 1):
         pid = paper["id"]
@@ -406,7 +444,7 @@ def run_audit(
             try:
                 status, reasoning = audit_span(
                     span_data, paper_text, field_type=ft, field_tier=tier,
-                    model=model,
+                    model=model, non_value_tokens=_non_value_tokens,
                 )
             except (json.JSONDecodeError, ValidationError) as exc:
                 logger.warning(

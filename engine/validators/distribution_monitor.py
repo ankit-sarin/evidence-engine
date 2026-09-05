@@ -46,6 +46,9 @@ class DistributionCollapseError(Exception):
 # ── Codebook loading ────────────────────────────────────────────────
 
 
+from engine.elicitation.classes import non_value_tokens_for
+
+
 def _load_categorical_fields(codebook_path: Path) -> list[str]:
     """Return names of categorical fields from codebook YAML."""
     with open(codebook_path) as f:
@@ -60,14 +63,32 @@ def _load_categorical_fields(codebook_path: Path) -> list[str]:
 # ── Value queries by arm type ────────────────────────────────────────
 
 
-def _is_null(value: str | None) -> bool:
-    """Check if a value represents absence."""
+def _is_null(value: str | None, non_value: frozenset[str] = frozenset()) -> bool:
+    """Should this value be excluded from the observation set?
+
+    Two reasons, different in kind. `_NULL_SYNONYMS` is ABSENCE: the paper does
+    not report the item, which is a reading of the paper and simply not a
+    categorical observation. `non_value` (ELICIT-DESIGN-02 D1, site 4) is a
+    TERMINAL STATE: no reading was recorded at all.
+
+    Counting either as a level would put mass on a category the codebook does
+    not define, and for a collapse check that is the dangerous direction —
+    manufactured variance is exactly what stops COLLAPSED from firing on a field
+    that really did collapse. The more fields the engine correctly refused, the
+    healthier the distribution would look.
+
+    (`_NULL_SYNONYMS` diverging from the codebook's own `absence_sentinels` is
+    recorded fix-phase item N2 and is not touched here.)
+    """
     if value is None:
+        return True
+    if str(value).strip().upper() in non_value:
         return True
     return value.strip().lower() in _NULL_SYNONYMS
 
 
-def _query_local_values(conn: sqlite3.Connection, field_name: str) -> list[str]:
+def _query_local_values(conn: sqlite3.Connection, field_name: str,
+                        non_value: frozenset[str] = frozenset()) -> list[str]:
     """Get all values for a field from local evidence_spans."""
     rows = conn.execute(
         """SELECT es.value
@@ -76,10 +97,11 @@ def _query_local_values(conn: sqlite3.Connection, field_name: str) -> list[str]:
            WHERE es.field_name = ?""",
         (field_name,),
     ).fetchall()
-    return [r[0] for r in rows if not _is_null(r[0])]
+    return [r[0] for r in rows if not _is_null(r[0], non_value)]
 
 
-def _query_cloud_values(conn: sqlite3.Connection, field_name: str, arm: str) -> list[str]:
+def _query_cloud_values(conn: sqlite3.Connection, field_name: str, arm: str,
+                        non_value: frozenset[str] = frozenset()) -> list[str]:
     """Get all values for a field from cloud_evidence_spans for a specific arm."""
     rows = conn.execute(
         """SELECT cs.value
@@ -88,27 +110,29 @@ def _query_cloud_values(conn: sqlite3.Connection, field_name: str, arm: str) -> 
            WHERE cs.field_name = ? AND ce.arm = ?""",
         (field_name, arm),
     ).fetchall()
-    return [r[0] for r in rows if not _is_null(r[0])]
+    return [r[0] for r in rows if not _is_null(r[0], non_value)]
 
 
-def _query_human_values(conn: sqlite3.Connection, field_name: str, extractor_id: str) -> list[str]:
+def _query_human_values(conn: sqlite3.Connection, field_name: str, extractor_id: str,
+                        non_value: frozenset[str] = frozenset()) -> list[str]:
     """Get all values for a field from human_extractions for a specific extractor."""
     rows = conn.execute(
         """SELECT value FROM human_extractions
            WHERE field_name = ? AND extractor_id = ?""",
         (field_name, extractor_id),
     ).fetchall()
-    return [r[0] for r in rows if not _is_null(r[0])]
+    return [r[0] for r in rows if not _is_null(r[0], non_value)]
 
 
-def _query_values(conn: sqlite3.Connection, field_name: str, arm: str) -> list[str]:
+def _query_values(conn: sqlite3.Connection, field_name: str, arm: str,
+                  non_value: frozenset[str] = frozenset()) -> list[str]:
     """Route value query to the right table based on arm name."""
     if arm == "local":
-        return _query_local_values(conn, field_name)
+        return _query_local_values(conn, field_name, non_value)
     if arm.startswith("human_"):
         extractor_id = arm.split("_", 1)[1]
-        return _query_human_values(conn, field_name, extractor_id)
-    return _query_cloud_values(conn, field_name, arm)
+        return _query_human_values(conn, field_name, extractor_id, non_value)
+    return _query_cloud_values(conn, field_name, arm, non_value)
 
 
 # ── Shannon entropy ─────────────────────────────────────────────────
@@ -150,12 +174,13 @@ def check_distribution(
     top_value, top_value_pct, entropy, status.
     """
     categorical_fields = _load_categorical_fields(codebook_path)
+    non_value = non_value_tokens_for(codebook_path)
 
     conn = sqlite3.connect(str(db_path))
     try:
         results: list[dict] = []
         for field_name in categorical_fields:
-            values = _query_values(conn, field_name, arm)
+            values = _query_values(conn, field_name, arm, non_value)
             total_non_null = len(values)
 
             if total_non_null == 0:

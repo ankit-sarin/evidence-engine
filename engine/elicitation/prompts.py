@@ -27,8 +27,12 @@ from __future__ import annotations
 from engine.agents.extractor import _build_field_block
 from engine.elicitation import classes as C
 from engine.elicitation.contracts import (
-    KEY_FIELD, KEY_INDICES, KEY_INFERENCE, KEY_STEPS, KEY_STEP_CRITERIA,
-    KEY_STEP_TEXT, KEY_VALUE, INFERENCE_MAX_SENTENCES, INFERENCE_MIN_SENTENCES,
+    DIRECTLY_STATED, FIELD_MISSING, INDEX_MALFORMED, INDEX_OUT_OF_RANGE,
+    INFERENCE_MALFORMED, INFERENCE_MISSING, KEY_FIELD, KEY_INDICES,
+    KEY_INFERENCE, KEY_STEPS, KEY_STEP_CRITERIA, KEY_STEP_TEXT, KEY_VALUE,
+    ESCAPE_WITH_CITATION, INFERENCE_MAX_SENTENCES, INFERENCE_MIN_SENTENCES,
+    STEPS_MISSING, STEP_WITHOUT_BASIS, VALUE_MISSING, VALUE_WITHOUT_CITATION,
+    Pass1Result,
 )
 from engine.elicitation.units import UnitMap
 
@@ -64,7 +68,13 @@ _CLASS_CONTRACT = {
         "the step from the cited evidence to the value, then state the value.\n"
         f'  {{"{KEY_FIELD}": "...", "{KEY_INDICES}": [4], '
         f'"{KEY_INFERENCE}": "The affiliation names a Vancouver institution, so the '
-        f'country is Canada.", "{KEY_VALUE}": "..."}}'
+        f'country is Canada.", "{KEY_VALUE}": "..."}}\n'
+        f"If a cited unit states the value OUTRIGHT and you made no inferential "
+        f"step, put the literal `{DIRECTLY_STATED}` in `{KEY_INFERENCE}` instead "
+        f"of inventing one. The citation is still required — only the "
+        f"declaration changes.\n"
+        f'  {{"{KEY_FIELD}": "...", "{KEY_INDICES}": [4], '
+        f'"{KEY_INFERENCE}": "{DIRECTLY_STATED}", "{KEY_VALUE}": "..."}}'
     ),
     C.JUDGMENT: (
         "These values are syntheses that no single passage states. For each "
@@ -108,6 +118,63 @@ def prompt_field_order(codebook: dict, field_names: tuple[str, ...]) -> tuple[st
     return tuple(f["name"] for c in C.CLASSES for f in grouped[c])
 
 
+def _escape_line(escape: str) -> str:
+    """The escape alternative, restated on EVERY field block (Ruling 2(a)).
+
+    ELICIT-DESIGN-01's F1 is the reason: `NO_EVIDENCE_LOCATABLE` was used 0 times
+    in 180 field entries while `NR` was used 23 times, 19 of them uncited. The
+    token existed only in a preamble two hundred lines above the field the model
+    was answering, and the sentinel habit won. A response-format line is where
+    the model is deciding what to emit, so that is where the alternative has to
+    be. Uniform across classes on purpose: the escape shape is the same for all
+    three, and that sameness is itself the teaching.
+    """
+    return (f'\n  *Nothing citable for this field?* '
+            f'{{"{KEY_FIELD}": "...", "{KEY_INDICES}": [], "{KEY_VALUE}": "{escape}"}}')
+
+
+def _worked_example(escape: str) -> str:
+    """One compact worked example of correct escape use (Ruling 2(b)).
+
+    Deliberately built on `funding_source`, which is NOT a field in this or any
+    review's codebook, and on invented sentences. An example drawn from a corpus
+    paper would be a demonstration answer for a field the model is about to be
+    asked, and the three-case contrast — nothing citable, the paper reports it,
+    the paper reports its absence — is exactly the distinction F1 says is not
+    landing.
+    """
+    return f"""## Worked example — the three cases, on a field that is not in this schema
+
+Say the field were `funding_source`.
+
+1. You read every unit and find no sentence naming a funder, and no sentence
+   saying funding was not received. Nothing to cite either way — this is the
+   escape, and it takes an EMPTY citation list:
+
+     {{"{KEY_FIELD}": "funding_source", "{KEY_INDICES}": [], "{KEY_VALUE}": "{escape}"}}
+
+2. Unit [S88] reads "The authors received no external funding." The paper DOES
+   report the item, so this is an ordinary value and it cites the unit:
+
+     {{"{KEY_FIELD}": "funding_source", "{KEY_INDICES}": [88], "{KEY_VALUE}": "None"}}
+
+3. Unit [S88] instead reads "Funding information was not available." The paper is
+   reporting the ABSENCE, so a sentinel is right — and it cites the unit that
+   reports that absence:
+
+     {{"{KEY_FIELD}": "funding_source", "{KEY_INDICES}": [88], "{KEY_VALUE}": "NR"}}
+
+Case 1 is the one that gets missed. If you find yourself about to write a
+sentinel with an empty citation list, the answer you want is case 1."""
+
+
+def _sentinel_rule(escape: str, sentinels: str) -> str:
+    """The explicit sentinel rule (Ruling 2(c)), at the ruling's stated intent."""
+    return (f"**The sentinel rule.** A sentinel such as NR is a claim about the "
+            f"paper and must cite the sentence stating that absence. If no such "
+            f"sentence exists, output {escape}.")
+
+
 def build_pass1_prompt(unit_map: UnitMap, codebook: dict,
                        field_names: tuple[str, ...]) -> str:
     """The elicitation prompt: numbered paper text plus per-class contracts."""
@@ -120,7 +187,9 @@ def build_pass1_prompt(unit_map: UnitMap, codebook: dict,
         entries = grouped[cls]
         if not entries:
             continue
-        blocks = "\n".join(_build_field_block(f) for f in entries)
+        blocks = "\n".join(
+            _build_field_block(f) + _escape_line(escape) for f in entries
+        )
         sections.append(
             f"### {_CLASS_TITLE[cls]}  ({len(entries)} fields)\n\n"
             f"{_CLASS_CONTRACT[cls]}\n\n{blocks}"
@@ -156,7 +225,11 @@ its citations. Read the contract at the top of a class block before its fields.
   about the paper's text, so it is a value like any other and REQUIRES at least
   one citation showing where the paper would have reported it and does not.
 
+{_sentinel_rule(escape, sentinels)}
+
 Never return a value of any other kind without at least one citation.
+
+{_worked_example(escape)}
 
 ## Output
 Emit exactly one entry per field ({n_fields} total), in the order the fields are
@@ -185,4 +258,124 @@ def build_pass2_priming_message(priming: str) -> str:
         "all fields from the extraction schema. For each field, use the cited "
         "evidence above as your source_snippet wherever it supports the value, and "
         "keep the value consistent with the evidence you cited."
+    )
+
+
+# ── Ruling 4: the typed feedback block that makes attempt 2 not-identical ──
+
+FEEDBACK_ECHO_CAP = 200
+FEEDBACK_TRUNCATION_MARKER = "…[truncated]"
+
+
+def _echo(text: str, cap: int = FEEDBACK_ECHO_CAP) -> str:
+    """Quote back what the model emitted, bounded and VISIBLY bounded.
+
+    The cap exists so one pathological Pass-1 value cannot make attempt 2
+    unsizable. The marker exists because a silently shortened echo would show
+    the model a doctored artifact of its own output and invite it to "fix"
+    wording it never wrote (ELICIT-DESIGN-02 D5).
+    """
+    text = str(text or "")
+    return text if len(text) <= cap else text[:cap] + FEEDBACK_TRUNCATION_MARKER
+
+
+def _requirement(code: str, cls: str, escape: str, n_units: int) -> str:
+    """What the contract requires, for one violation code on one field class.
+
+    Keyed by the closed violation vocabulary and the class, never by field name:
+    the builder stays field-agnostic exactly like the prompt builder, and gate 2
+    holds for the retry path too.
+    """
+    accompaniment = {
+        C.STATED: "cite at least one unit that asserts the value, before the value",
+        C.INFERABLE: (
+            f"cite at least one unit, then declare the inference in "
+            f"{INFERENCE_MIN_SENTENCES}–{INFERENCE_MAX_SENTENCES} sentences "
+            f"(or the literal {DIRECTLY_STATED} if a cited unit states it "
+            f"outright), then the value"
+        ),
+        C.JUDGMENT: (
+            "reason in steps where EVERY step either cites at least one unit or "
+            "sets criteria_application: true, then the value"
+        ),
+    }[cls]
+    return {
+        FIELD_MISSING:
+            "no entry for this field appeared in your response. Every field in "
+            "the schema needs exactly one entry.",
+        VALUE_MISSING:
+            "the entry carried no value. State one, or emit "
+            f"{escape} with an empty citation list.",
+        VALUE_WITHOUT_CITATION:
+            f"a value was asserted with nothing cited behind it. The contract is: "
+            f"{accompaniment}. If nothing in this paper can be cited for it, the "
+            f"value must be {escape} with an EMPTY citation list.",
+        ESCAPE_WITH_CITATION:
+            f"{escape} is a statement about your search, not about the paper, so "
+            f"it takes an EMPTY citation list. If you can cite something, the "
+            f"field has a value and is not an escape.",
+        INDEX_MALFORMED:
+            "an index was not a bare JSON integer. Write `[12]`, never `[S12]` "
+            "and never `\"S12\"`. Nothing was dropped to rescue the rest — the "
+            "whole field failed.",
+        INDEX_OUT_OF_RANGE:
+            f"an index named a unit that does not exist. Valid indices for this "
+            f"paper are 1 to {n_units}.",
+        INFERENCE_MISSING:
+            f"an INFERABLE field needs a declared inference: {accompaniment}.",
+        INFERENCE_MALFORMED:
+            f"the declared inference must be "
+            f"{INFERENCE_MIN_SENTENCES}–{INFERENCE_MAX_SENTENCES} sentences, or "
+            f"the literal {DIRECTLY_STATED}.",
+        STEPS_MISSING:
+            f"a JUDGMENT field needs `{KEY_STEPS}`, not a bare value with a "
+            f"citation. The contract is: {accompaniment}.",
+        STEP_WITHOUT_BASIS:
+            "at least one reasoning step neither cited a unit nor set "
+            f"`{KEY_STEP_CRITERIA}`: true. Every step needs one or the other.",
+    }.get(code, f"the field did not satisfy its {cls.upper()} contract.")
+
+
+def build_feedback_block(result: Pass1Result, codebook: dict,
+                         cap: int = FEEDBACK_ECHO_CAP) -> str:
+    """Attempt 2's appended feedback, listing every field that failed.
+
+    ELICIT-DESIGN-01's F7 measured that re-issuing the identical request bought
+    nothing over three attempts and cost p604 three clean fields. The failure it
+    was retrying is response CONTENT at temperature 0, not response SHAPE, and an
+    identical request is the right instrument only for shape. This block is what
+    makes attempt 2 a different request.
+
+    Deterministic by construction: fields in the response's own order, codes in
+    the order the checker recorded them, echoes bounded and marked.
+    """
+    escape = C.escape_token(codebook)
+    lines: list[str] = []
+    for name, rec in result.records.items():
+        if rec.ok:
+            continue
+        lines.append(f"- **{name}** [{rec.field_class.upper()}]")
+        lines.append(f"    you returned value: {_echo(rec.value, cap)!r}")
+        lines.append(f"    with {KEY_INDICES}: {list(rec.indices)}")
+        if rec.bad_indices:
+            lines.append(f"    indices that did not resolve: "
+                         f"{[repr(b) for b in rec.bad_indices]}")
+        if rec.field_class == C.INFERABLE:
+            lines.append(f"    with {KEY_INFERENCE}: {_echo(rec.inference, cap)!r}")
+        if rec.field_class == C.JUDGMENT:
+            lines.append(f"    with {len(rec.steps)} reasoning step(s)")
+        for code in rec.fatal:
+            lines.append(f"    ✗ {code} — "
+                         f"{_requirement(code, rec.field_class, escape, result.n_units)}")
+
+    if not lines:
+        return ""
+
+    n = len(result.failed_fields)
+    return (
+        f"\n\n## Your previous response did not meet the contract on {n} field(s)\n\n"
+        "Each one below shows what you returned and what its contract requires. "
+        "Fix these, and re-emit EVERY field in the schema — this is a full "
+        "replacement response, not a patch.\n\n"
+        + "\n".join(lines)
     )

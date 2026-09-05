@@ -7,7 +7,8 @@ differ only in what must ACCOMPANY the citations:
 
   STATED     cite >=1 unit, then state the value.
   INFERABLE  cite >=1 unit, then a declared inference (1-3 sentences naming the
-             step from cited evidence to value), then the value.
+             step from cited evidence to value) OR the literal DIRECTLY_STATED
+             when a cited unit states the value outright, then the value.
   JUDGMENT   stepwise reasoning where EACH step either cites >=1 unit or is
              explicitly marked as criteria application (no textual basis
              claimed); then the value.
@@ -79,6 +80,21 @@ FATAL: frozenset[str] = frozenset({
 # three it is reasoning, which is the JUDGMENT contract, not this one.
 INFERENCE_MIN_SENTENCES = 1
 INFERENCE_MAX_SENTENCES = 3
+
+# The INFERABLE declaration slot's second legal filling (ELICIT-DESIGN-02
+# Ruling 3(c)). An INFERABLE field is one the paper FIXES without asserting --
+# but whether a given paper asserts it is a property of that paper, not of the
+# field. ELICIT-DESIGN-01's F4 measured exactly this: `surgical_domain` needed an
+# inference on two papers and was stated outright on a third. Before this token
+# the model's only compliant move on such a paper was to invent an inference for
+# a value it had simply read, which is a worse record than the truth.
+#
+# The citation requirement does NOT relax: a DIRECTLY_STATED field still cites
+# the unit that states it. Only the declaration changes, from "here is my step"
+# to "there was no step". Recorded as a coded declaration rather than an empty
+# one so the two cases stay distinguishable in telemetry -- an absent inference
+# is a contract violation, and this is not.
+DIRECTLY_STATED = "DIRECTLY_STATED"
 
 # Response keys, in the order the contract asks for them.
 KEY_FIELD = "field_name"
@@ -169,6 +185,7 @@ class Pass1Result:
                     "escape": r.is_escape,
                     "n_steps": len(r.steps),
                     "has_inference": bool(r.inference),
+                    "directly_stated": r.inference.strip().upper() == DIRECTLY_STATED,
                     "violations": list(r.violations),
                     "bad_indices": [repr(b) for b in r.bad_indices],
                     "duplicate_indices": list(r.duplicate_indices),
@@ -365,6 +382,8 @@ def check_entry(entry: dict, cb_field: dict, cls: str, unit_map: UnitMap,
         if cls == C.INFERABLE:
             if not inference:
                 violations.append(INFERENCE_MISSING)
+            elif inference.strip().upper() == DIRECTLY_STATED:
+                pass          # a declared non-inference; the citation still stands
             elif not (INFERENCE_MIN_SENTENCES
                       <= len(sentences(inference)) <= INFERENCE_MAX_SENTENCES):
                 violations.append(INFERENCE_MALFORMED)

@@ -19,6 +19,7 @@ from engine.elicitation.units import build_unit_map
 
 CODEBOOK = {
     "escape_token": "NO_EVIDENCE_LOCATABLE",
+    "contract_unmet_token": "CONTRACT_UNMET",
     "absence_sentinels": ["NR", "NOT_FOUND", "NOT REPORTED"],
     "fields": [
         {"name": "robot_platform", "type": "free_text", "field_class": "stated",
@@ -93,6 +94,76 @@ def test_inferable_inference_longer_than_three_sentences_is_detected(unit_map):
     r = check(wrap({"field_name": "country", "unit_indices": [2],
                     "inference": long, "value": "Canada"}), unit_map, ("country",))
     assert K.INFERENCE_MALFORMED in r.records["country"].fatal
+
+
+# ══ Ruling 3(c) — the DIRECTLY_STATED declaration branch ═════════════
+#
+# An INFERABLE field is one the paper FIXES without asserting, but whether a
+# GIVEN paper asserts it is a property of that paper. ELICIT-DESIGN-01's F4
+# measured this directly: `surgical_domain` needed an inference on p121 and p604
+# and was uncited on p498; `sample_size` was cleanly cited on p604 and uncited on
+# the other two. Before this branch, a model that had simply READ an INFERABLE
+# value had no compliant move except to invent an inference for it.
+#
+# What does NOT relax is the citation. Only the declaration slot changes.
+
+
+def test_directly_stated_is_accepted_with_a_citation(unit_map):
+    r = check(wrap({"field_name": "country", "unit_indices": [2],
+                    "inference": K.DIRECTLY_STATED, "value": "Canada"}),
+              unit_map, ("country",))
+    rec = r.records["country"]
+    assert rec.ok
+    assert rec.indices == (2,), "the citation requirement is unchanged"
+
+
+def test_directly_stated_is_rejected_without_a_citation(unit_map):
+    """The declaration is not a second escape hatch."""
+    r = check(wrap({"field_name": "country", "unit_indices": [],
+                    "inference": K.DIRECTLY_STATED, "value": "Canada"}),
+              unit_map, ("country",))
+    rec = r.records["country"]
+    assert not rec.ok
+    assert K.VALUE_WITHOUT_CITATION in rec.fatal
+
+
+def test_directly_stated_skips_the_sentence_count(unit_map):
+    """One token is not 1-3 sentences of declared reasoning, and must not be
+    measured as though it were."""
+    r = check(wrap({"field_name": "country", "unit_indices": [2],
+                    "inference": K.DIRECTLY_STATED, "value": "Canada"}),
+              unit_map, ("country",))
+    assert K.INFERENCE_MALFORMED not in r.records["country"].violations
+
+
+def test_directly_stated_is_case_insensitive(unit_map):
+    r = check(wrap({"field_name": "country", "unit_indices": [2],
+                    "inference": "directly_stated", "value": "Canada"}),
+              unit_map, ("country",))
+    assert r.records["country"].ok
+
+
+def test_directly_stated_is_distinguishable_from_a_real_inference(unit_map):
+    """An absent inference is a violation and this is not, so telemetry must be
+    able to tell a declared non-inference from a declared one."""
+    declared = check(wrap({"field_name": "country", "unit_indices": [2],
+                           "inference": "Vancouver is in Canada.", "value": "Canada"}),
+                     unit_map, ("country",))
+    direct = check(wrap({"field_name": "country", "unit_indices": [2],
+                         "inference": K.DIRECTLY_STATED, "value": "Canada"}),
+                   unit_map, ("country",))
+    assert declared.telemetry()["fields"]["country"]["directly_stated"] is False
+    assert direct.telemetry()["fields"]["country"]["directly_stated"] is True
+    assert direct.telemetry()["fields"]["country"]["has_inference"] is True
+
+
+def test_directly_stated_does_not_apply_to_other_classes(unit_map):
+    """It fills the INFERABLE declaration slot. A JUDGMENT field still needs
+    steps, and a bare value with this token is not one."""
+    r = check(wrap({"field_name": "study_design", "unit_indices": [3],
+                    "inference": K.DIRECTLY_STATED, "value": "Cohort"}),
+              unit_map, ("study_design",))
+    assert K.STEPS_MISSING in r.records["study_design"].fatal
 
 
 def test_judgment_valid_mixed_steps(unit_map):

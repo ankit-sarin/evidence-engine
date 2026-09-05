@@ -773,3 +773,43 @@ New tests by file: `test_codebook_field_class.py` 6 · `test_units_and_sizing.py
 `test_elicitation_contracts.py` 33 · `test_elicitation_codebook.py` 8 ·
 `test_citation_guard.py` 12 · `test_elicitation_pipeline.py` 11 ·
 `test_prompt_no_hardcoded_fields.py` 2.
+
+---
+
+## Addendum (2026-09-05): the status header is stale, per ELICIT-DESIGN-02
+
+**Superseded:** the header at line 5 — *"**Status:** STEP 0 delivered. **STOPPED for
+architect sign-off.** No implementation performed."*
+
+That line was true when it was written and stopped being true 80 minutes later, inside the
+same session. It was never revised, and line 5 is not edited now: this report is append-only,
+and rewriting a header to match the body would erase the fact that the session ran past its
+own stopping point. The correction belongs here, where it is dated.
+
+**What the report actually contains.** §§0–8 are STEP 0 as the header describes. From line 359
+— *"# END OF TASK — STEP 1 implementation + STEP 2 smoke"* — the report continues into the
+delivered implementation and the three-paper smoke: acceptance gates (§9), per-paper and
+per-field smoke results (§§10–11), findings F1–F8 (§12), the architect's open questions (§13),
+carried-forward corrections (§14) and the test ledger (§15). The task shipped 80 new tests,
+moved the offline gate 1,556 → 1,636, and was committed and pushed. A reader who stops at
+line 5 concludes the opposite of all of it.
+
+**Verified independently.** VERIFY-EXIT-01 (2026-09-04) re-derived the smoke numbers from
+telemetry rather than from this report: 3 papers × 3 attempts = 9, 0 stored, 180 field
+entries, violation totals 54 / 8 / 6 / 3 exactly as §10.2 states, index mechanics zero-defect,
+escape-token uses 0 as F1 states. The body's measurements survive contact with disk. Only the
+header does not.
+
+**Two framing notes for anyone citing this report.**
+
+- §13 frames **three** open questions, not four. The retry-policy question is raised in **F7**
+  and explicitly deferred there — *"Not changed in this task (out of scope: retry harmonization
+  is queued separately)"* — rather than put to the architect in §13.
+- The findings run **F1–F8**. F8 (index validity and parse reliability are not the problem) is
+  easy to miss in a list described elsewhere as F1–F7, and it is the finding that says the
+  ratified citation mechanism works.
+
+**Disposition of the findings.** ELICIT-DESIGN-02 implements architect rulings against F1
+(escape-token teaching), F5 (the `key_limitation` codebook/contract collision), F7 (the retry
+policy) and §13's first question (refusal granularity). F2, F3, F4 and F6 are measurements
+carried forward unchanged; F8 remains the reason the mechanism was kept.

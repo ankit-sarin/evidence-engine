@@ -124,6 +124,25 @@ CREATE TABLE IF NOT EXISTS full_text_assets (
     parsed_at           TEXT
 );
 
+CREATE TABLE IF NOT EXISTS parse_attempts (
+    id                  INTEGER PRIMARY KEY,
+    paper_id            INTEGER NOT NULL REFERENCES papers(id),
+    pdf_hash            TEXT,
+    parsed_text_version INTEGER NOT NULL,
+    attempt_index       INTEGER NOT NULL,
+    parser_used         TEXT NOT NULL,
+    passed              INTEGER NOT NULL DEFAULT 0,
+    failures            TEXT,           -- JSON array of [criterion, value, threshold]
+    metrics             TEXT,           -- JSON object, the full metric mapping
+    elapsed_s           REAL,
+    accepted            INTEGER NOT NULL DEFAULT 0,
+    skipped_reason      TEXT,           -- non-NULL => parser was never run
+    created_at          TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_parse_attempts_paper
+    ON parse_attempts(paper_id, parsed_text_version);
+
 CREATE TABLE IF NOT EXISTS extractions (
     id                      INTEGER PRIMARY KEY,
     paper_id                INTEGER NOT NULL REFERENCES papers(id),

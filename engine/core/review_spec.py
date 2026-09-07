@@ -158,6 +158,33 @@ class SpecialtyScope(BaseModel):
 # ── PDF Parsing ─────────────────────────────────────────────────────
 
 
+class ParseQuality(BaseModel):
+    """Absolute thresholds for the parse-quality gate.
+
+    Defaults mirror `engine.parsers.parse_quality.Thresholds` exactly; a test
+    pins the two together, because a spec default that silently disagreed with
+    the engine default would make the gate behave differently depending on
+    whether a review happened to declare the section.
+    """
+
+    short_unit_share_pct_max: float = Field(
+        default=50.0, ge=0.0,
+        description="Max share of sentence units under 3 tokens (half of SHATTERED)",
+    )
+    chars_per_unit_min: float = Field(
+        default=20.0, ge=0.0,
+        description="Min characters per sentence unit (other half of SHATTERED)",
+    )
+    glyph_density_per_kchar_max: float = Field(
+        default=5.0, ge=0.0,
+        description="Max GLYPH<...> artifacts per 1000 characters",
+    )
+    replacement_density_per_kchar_max: float = Field(
+        default=1.0, ge=0.0,
+        description="Max U+FFFD replacement characters per 1000 characters",
+    )
+
+
 class PDFParsing(BaseModel):
     """Configuration for PDF parsing thresholds and models."""
 
@@ -168,6 +195,19 @@ class PDFParsing(BaseModel):
     vision_model: str = Field(
         default="qwen2.5vl:7b",
         description="Ollama vision model for OCR of scanned PDFs",
+    )
+    vision_max_pages: int = Field(
+        default=60, ge=1,
+        description=(
+            "Page cap for the vision fallback. Above this the attempt is recorded "
+            "as SKIPPED rather than run: vision renders and sends every page, so "
+            "a 728-page proceedings volume would be a very long, very expensive "
+            "call to recover a document whose problem is not its parse."
+        ),
+    )
+    parse_quality: ParseQuality = Field(
+        default_factory=ParseQuality,
+        description="Absolute thresholds for the parse-quality gate.",
     )
 
 

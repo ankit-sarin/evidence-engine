@@ -18,11 +18,14 @@ Offsets are `len(raw) // 2` of the source file. Excerpts are 1,000 **characters*
 sliced from that offset; the byte counts above differ from 1,000 where the slice
 contains non-ASCII.
 
-## Verdicts under the provisional defaults
+## Verdicts under the current defaults
+
+Criteria as ruled in PARSE-GATE-01b: `SHATTERED` is the **conjunction** of a high
+short-unit share and a low chars-per-unit, so neither half alone fails a document.
 
 | fixture | verdict |
 |---|---|
-| `p455_shattered.md` | FAIL: SHORT_UNIT_SHARE=94.8 (limit 50.0); CHARS_PER_UNIT=7.5 (limit 20.0) |
+| `p455_shattered.md` | FAIL: SHATTERED=(94.8, 7.5) (limit (50.0, 20.0)) |
 | `p561_clean.md` | PASS |
 
 Regenerating these requires the gitignored corpus under `data/`. The sha256 above

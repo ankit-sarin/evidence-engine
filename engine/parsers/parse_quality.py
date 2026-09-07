@@ -48,6 +48,16 @@ RE_GLYPH = re.compile(r"GLYPH<[^>]*>|GLYPH&lt;[^&]*&gt;")
 RE_IMAGE = re.compile(r"<!--\s*image\s*-->")
 RE_FORMULA = re.compile(r"<!--\s*formula-not-decoded\s*-->")
 
+# PDF ligature/glyph escapes: "/uni" plus exactly four hex digits. Surveyed
+# across the corpus (PARSE-GATE-01b I1): 2,546 occurrences in 32 files, every
+# one four UPPERCASE hex digits, no other arity. The six other "/uni" hits are
+# ordinary prose and URLs -- "academic/university-affiliated", "non/uniform",
+# "https://unity.com", "/unionsq" -- none of which match, because the four
+# characters after "/uni" are not all hex. Case-insensitive here anyway: the
+# PDF convention is uppercase and nothing on disk is not, but a lowercase
+# producer should not read as zero ligature damage.
+RE_UNI_ESCAPE = re.compile(r"/uni[0-9A-Fa-f]{4}")
+
 # A unit shorter than this many whitespace tokens is "short". Phase 1's `t < 3`.
 SHORT_UNIT_TOKENS = 3
 
@@ -62,43 +72,58 @@ PHASE1_METRIC_NAMES = frozenset({
     "short_unit_share_pct",
 })
 
-#: Added here, not present in Phase 1. `glyph_density_per_kchar` makes the glyph
-#: count comparable across document lengths (p586's 542 artifacts in 69K chars is
-#: a worse document than p699's 419 in 48K only once both are per-kchar).
+#: Added here, not present in Phase 1.
+#:
+#: `glyph_density_per_kchar` / `replacement_density_per_kchar` make artifact
+#: counts comparable across document lengths: p586's 542 glyphs in 69K chars is
+#: a worse document than p699's 419 in 48K only once both are per-kchar, and
+#: p262's 6 replacement characters in 31K is not the same event as six in 600.
 #: `is_empty` is the raw input for the EMPTY_TEXT criterion, which cannot be
 #: derived from the others: whitespace-only text has chars > 0 yet zero units.
-ADDED_METRIC_NAMES = frozenset({"glyph_density_per_kchar", "is_empty"})
+#: `uni_escape_count` is TELEMETRY ONLY and is never judged -- see below.
+ADDED_METRIC_NAMES = frozenset({
+    "glyph_density_per_kchar", "replacement_density_per_kchar",
+    "uni_escape_count", "is_empty",
+})
 
 METRIC_NAMES = PHASE1_METRIC_NAMES | ADDED_METRIC_NAMES
 
 # ── Criteria — a closed vocabulary ───────────────────────────────────
 
 EMPTY_TEXT = "EMPTY_TEXT"
-SHORT_UNIT_SHARE = "SHORT_UNIT_SHARE"
-CHARS_PER_UNIT = "CHARS_PER_UNIT"
+SHATTERED = "SHATTERED"
 GLYPH_DENSITY = "GLYPH_DENSITY"
-REPLACEMENT_CHARS = "REPLACEMENT_CHARS"
+REPLACEMENT_DENSITY = "REPLACEMENT_DENSITY"
 
-CRITERIA = (EMPTY_TEXT, SHORT_UNIT_SHARE, CHARS_PER_UNIT, GLYPH_DENSITY,
-            REPLACEMENT_CHARS)
+CRITERIA = (EMPTY_TEXT, SHATTERED, GLYPH_DENSITY, REPLACEMENT_DENSITY)
 
 
 @dataclass(frozen=True)
 class Thresholds:
     """Absolute gate thresholds. PROVISIONAL — for calibration, not final.
 
-    Only these four properties are judged. Length, reference-section count,
-    image/formula comment counts and non-ASCII density are computed and returned
-    but never gate a document: p415 (a whole 728-page proceedings volume) and
-    p498 (148,805 clean chars) are both long, and only one of them is broken.
-    Length is the fit guard's question, and the fit guard is a separate
-    instrument that must not be merged with this one.
+    Length, reference-section count, image/formula comment counts, non-ASCII
+    density and `uni_escape_count` are computed and returned but never gate a
+    document: p415 (a whole 728-page proceedings volume) and p498 (148,805 clean
+    chars) are both long, and only one of them is broken. Length is the fit
+    guard's question, and the fit guard is a separate instrument that must not
+    be merged with this one.
+
+    **`short_unit_share_pct_max` and `chars_per_unit_min` are the two halves of
+    ONE criterion, not two.** Either alone is a false positive. p562 has 61.9%
+    short units and reads perfectly: PyMuPDF preserves the PDF's visual line
+    breaks, so hard wraps at column width inflate the share without destroying
+    anything, and its 46.8 chars/unit says the units are still sentences. p719
+    runs the other way -- 1,447.6 chars/unit, because glyph corruption has
+    destroyed the sentence boundaries that would divide it. Shattering is the
+    conjunction: many tiny units AND little text in each. That is p455, and on
+    this corpus it is only p455.
     """
 
     short_unit_share_pct_max: float = 50.0
     chars_per_unit_min: float = 20.0
     glyph_density_per_kchar_max: float = 5.0
-    replacement_chars_max: int = 0
+    replacement_density_per_kchar_max: float = 1.0
 
     @classmethod
     def from_mapping(cls, mapping: Mapping[str, Any] | None) -> "Thresholds":
@@ -156,6 +181,7 @@ def compute_metrics(text: str) -> dict[str, Any]:
     unit_tokens = [len(u.split()) for u in units]
     nonascii = sum(1 for ch in raw if ord(ch) > 127)
     glyph = len(RE_GLYPH.findall(raw))
+    replacements = raw.count("�")
 
     return {
         "chars": len(raw),
@@ -171,7 +197,7 @@ def compute_metrics(text: str) -> dict[str, Any]:
         "glyph_artifacts": glyph,
         "image_comments": len(RE_IMAGE.findall(raw)),
         "formula_comments": len(RE_FORMULA.findall(raw)),
-        "replacement_chars": raw.count("�"),
+        "replacement_chars": replacements,
         "nonascii_density_pct": (
             round(100.0 * nonascii / len(raw), 3) if raw else 0.0
         ),
@@ -189,6 +215,15 @@ def compute_metrics(text: str) -> dict[str, Any]:
         "glyph_density_per_kchar": (
             round(1000.0 * glyph / len(raw), 3) if raw else 0.0
         ),
+        "replacement_density_per_kchar": (
+            round(1000.0 * replacements / len(raw), 3) if raw else 0.0
+        ),
+        # Telemetry only, never judged. p562 carries 98 of these and is a clean
+        # read; the escapes mark where a ligature was lost, which inflates the
+        # short-unit share without touching whether the prose is recoverable.
+        # Recorded so the ligature question can be answered later from data
+        # rather than re-derived.
+        "uni_escape_count": len(RE_UNI_ESCAPE.findall(raw)),
         "is_empty": not raw.strip(),
     }
 
@@ -197,9 +232,14 @@ def assess(text: str, thresholds: Thresholds | None = None) -> Verdict:
     """Judge `text` against `thresholds`. Pure; no I/O.
 
     Empty text short-circuits to a single `EMPTY_TEXT` failure rather than
-    cascading: whitespace-only input would otherwise fail `CHARS_PER_UNIT` with
-    a value of 0.0, sending a reader to look for a segmentation defect in a
-    document that has no text at all.
+    cascading: whitespace-only input would otherwise report a segmentation
+    defect, sending a reader to look for shattering in a document that has no
+    text at all.
+
+    Replacement characters are judged by DENSITY, not by count. A zero-count
+    limit cannot distinguish p262 (6 U+FFFD in 31,228 characters of otherwise
+    clean prose, which PARSE-01 classed MINOR) from a genuinely mojibaked
+    document, and a gate that fails both equally teaches its reader to ignore it.
     """
     th = thresholds or Thresholds()
     m = compute_metrics(text)
@@ -208,17 +248,22 @@ def assess(text: str, thresholds: Thresholds | None = None) -> Verdict:
         return Verdict(False, ((EMPTY_TEXT, m["chars"], None),), m)
 
     failures: list[tuple[str, Any, Any]] = []
-    if m["short_unit_share_pct"] > th.short_unit_share_pct_max:
-        failures.append((SHORT_UNIT_SHARE, m["short_unit_share_pct"],
-                         th.short_unit_share_pct_max))
-    if m["chars_per_unit"] < th.chars_per_unit_min:
-        failures.append((CHARS_PER_UNIT, m["chars_per_unit"],
-                         th.chars_per_unit_min))
+
+    # Conjunction, deliberately: see Thresholds.__doc__. Both halves are
+    # reported either way, because "which half was closer" is the first thing
+    # anyone asks of a shattering verdict.
+    if (m["short_unit_share_pct"] > th.short_unit_share_pct_max
+            and m["chars_per_unit"] < th.chars_per_unit_min):
+        failures.append((
+            SHATTERED,
+            (m["short_unit_share_pct"], m["chars_per_unit"]),
+            (th.short_unit_share_pct_max, th.chars_per_unit_min),
+        ))
     if m["glyph_density_per_kchar"] > th.glyph_density_per_kchar_max:
         failures.append((GLYPH_DENSITY, m["glyph_density_per_kchar"],
                          th.glyph_density_per_kchar_max))
-    if m["replacement_chars"] > th.replacement_chars_max:
-        failures.append((REPLACEMENT_CHARS, m["replacement_chars"],
-                         th.replacement_chars_max))
+    if m["replacement_density_per_kchar"] > th.replacement_density_per_kchar_max:
+        failures.append((REPLACEMENT_DENSITY, m["replacement_density_per_kchar"],
+                         th.replacement_density_per_kchar_max))
 
     return Verdict(not failures, tuple(failures), m)

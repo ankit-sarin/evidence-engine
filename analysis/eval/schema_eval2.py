@@ -35,6 +35,8 @@ import sqlite3
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from engine.core.corpus import corpus_status_sql, is_corpus_member
+
 logger = logging.getLogger(__name__)
 
 SEED = 20260729
@@ -48,6 +50,41 @@ CONDITIONS = (COND_A, COND_B, COND_C)
 # Carried forward from SCHEMA-EVAL-01 (which itself contains the three
 # REGRESSION-01 smoke papers 39, 466, 629).
 CARRIED = (39, 386, 466, 498, 547, 629, 691, 694, 708, 799)
+
+# Three of the ten are NOT corpus papers: FT_SCREENED_OUT with zero extractions,
+# admitted by the carried path (which filters only on having parsed text) and then
+# retained deliberately for CAPTURE-01 comparability — ELICIT-01 §7, PARSE-01 F1.
+# They stay in the sample. This set exists so the exception is DECLARED rather than
+# rediscovered, and so any drift in either direction fails loudly: a fourth
+# non-corpus carried paper, or one of these three silently becoming eligible.
+CARRIED_NON_CORPUS = frozenset({547, 629, 799})
+
+
+class CarriedCorpusDeclarationError(RuntimeError):
+    """The carried papers failing the corpus predicate are not CARRIED_NON_CORPUS."""
+
+
+def _assert_carried_declaration(statuses: dict[int, str | None]) -> None:
+    """Check the declared non-corpus carried set against the database, exactly.
+
+    Called on every `select_sample()` draw, once the statuses are already in hand.
+    Superset or subset both raise: this is a declaration, not a filter.
+    """
+    actual = {pid for pid in CARRIED if not is_corpus_member(statuses.get(pid))}
+    if actual == set(CARRIED_NON_CORPUS):
+        return
+    unexpected = sorted(actual - set(CARRIED_NON_CORPUS))
+    missing = sorted(set(CARRIED_NON_CORPUS) - actual)
+    parts = []
+    if unexpected:
+        parts.append("carried papers failing the corpus predicate but not declared: "
+                     + ", ".join(f"{pid} ({statuses.get(pid)})" for pid in unexpected))
+    if missing:
+        parts.append("declared non-corpus carried papers that now pass it: "
+                     + ", ".join(f"{pid} ({statuses.get(pid)})" for pid in missing))
+    raise CarriedCorpusDeclarationError(
+        "CARRIED_NON_CORPUS no longer describes the carried set — " + "; ".join(parts)
+    )
 
 
 @dataclass(frozen=True)
@@ -93,10 +130,16 @@ def select_sample(review_dir: Path, n_total: int = N_TOTAL, seed: int = SEED) ->
                 "WHERE s.field_name = 'study_type'"
             )
         }
+        corpus_sql, corpus_params = corpus_status_sql()
         eligible = {
             r[0] for r in conn.execute(
-                "SELECT id FROM papers WHERE status IN "
-                "('FT_ELIGIBLE','EXTRACTED','AI_AUDIT_COMPLETE','HUMAN_AUDIT_COMPLETE')"
+                f"SELECT id FROM papers WHERE {corpus_sql}", corpus_params
+            )
+        }
+        carried_statuses = {
+            r[0]: r[1] for r in conn.execute(
+                "SELECT id, status FROM papers WHERE id IN "
+                f"({', '.join('?' * len(CARRIED))})", CARRIED
             )
         }
     finally:
@@ -108,6 +151,8 @@ def select_sample(review_dir: Path, n_total: int = N_TOTAL, seed: int = SEED) ->
     def make(pid: int, source: str) -> Paper:
         return Paper(pid, sizes[pid], _length_stratum(sizes[pid], cuts),
                      study_types.get(pid, "unknown"), source)
+
+    _assert_carried_declaration(carried_statuses)
 
     picked = [make(p, "carried") for p in CARRIED if p in sizes]
 

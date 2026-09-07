@@ -17,6 +17,7 @@ from engine.core.completeness import (
     enforce_completeness,
     expected_field_names,
 )
+from engine.core.corpus import corpus_status_sql
 from engine.core.extraction_telemetry import record_call
 from engine.core.review_spec import ReviewSpec, load_review_spec
 
@@ -61,15 +62,16 @@ class CloudExtractorBase:
         Includes FT_ELIGIBLE (parsed, not yet locally extracted) so cloud arms
         can run concurrently with local extraction.
         """
+        corpus_sql, corpus_params = corpus_status_sql("p.status")
         rows = self._conn.execute(
-            """SELECT p.id AS paper_id, p.title, p.authors, p.year
+            f"""SELECT p.id AS paper_id, p.title, p.authors, p.year
                FROM papers p
-               WHERE p.status IN ('FT_ELIGIBLE', 'EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')
+               WHERE {corpus_sql}
                AND p.id NOT IN (
                    SELECT ce.paper_id FROM cloud_extractions ce WHERE ce.arm = ?
                )
                ORDER BY p.id""",
-            (arm,),
+            (*corpus_params, arm),
         ).fetchall()
         return [dict(r) for r in rows]
 
@@ -376,8 +378,9 @@ class CloudExtractorBase:
 
     def get_progress(self, arm: str) -> dict:
         """Return progress stats for the given arm."""
+        corpus_sql, corpus_params = corpus_status_sql()
         total = self._conn.execute(
-            "SELECT COUNT(*) FROM papers WHERE status IN ('FT_ELIGIBLE', 'EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')"
+            f"SELECT COUNT(*) FROM papers WHERE {corpus_sql}", corpus_params
         ).fetchone()[0]
 
         completed = self._conn.execute(

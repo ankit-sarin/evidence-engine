@@ -38,30 +38,37 @@ logger = logging.getLogger(__name__)
 _SCANNED_THRESHOLD = 100  # chars per page — below this, assume scanned
 _VISION_MODEL = "qwen2.5vl:7b"
 _VISION_MAX_PAGES = 60
-_MAX_ATTEMPTS = 4  # 3 before PARSE-GATE-06a; the sanitized docling retry is the 4th,
-                   # so the post-gate cascade depth of PARSE-GATE-02 is preserved.
+_OCR_ENGINE = "rapidocr"
+_OCR_MAX_PAGES = 100
+_MAX_ATTEMPTS = 5  # longest path: docling, docling_sanitized, pymupdf,
+                   # docling_ocr, qwen2.5vl.
 _ERROR_MSG_CHARS = 300
 
 # Which parser to try next, by the defect that failed the current one. Ordered,
 # and the order is a claim about causes rather than a preference.
 #
-# GLYPH_DENSITY / REPLACEMENT_DENSITY -> PyMuPDF first. Docling emits
-# `GLYPH<...>` when an embedded font carries no ToUnicode map (docling #3081);
-# the text layer itself may be perfectly readable by another extractor, so the
-# cheap, deterministic, local one is tried before rendering pages to a model.
-# Every glyph-damaged paper in this corpus (586, 699, 719) was Docling output.
+# The deterministic OCR tier comes FIRST on every criterion. Every defect this
+# gate can name -- glyph encoding, replacement characters, shattering, emptiness
+# -- is a property of a text layer that is present but unusable, and re-OCR-ing
+# the page image is the remedy that does not consult that layer at all. It is
+# also ~6 s/page, byte-reproducible, and needs no model server, where the vision
+# tier is a per-page model call that PARSE-GATE-03 watched run for 30 minutes on
+# one page. Vision stays as the last resort behind it.
 #
-# SHATTERED -> vision only. Shattering means the text layer's character
-# positions no longer reconstruct words; p455 is PyMuPDF output already, and a
-# second character-level extractor has nothing new to read. Only re-OCR does.
+# EMPTY_TEXT keeps PyMuPDF in front: an empty Docling result is often a
+# structural extraction failure over a perfectly good text layer, which PyMuPDF
+# reads directly and instantly.
 #
-# EMPTY_TEXT -> PyMuPDF then vision, matching the pre-existing sparse-output
-# cascade this gate sits behind.
+# The orders are deliberately kept as a TABLE rather than collapsed into one
+# list, because they are expected to diverge: a hybrid page/region remedy for
+# glyph-encoded HEADINGS over an intact body (p586's shape) belongs on
+# GLYPH_DENSITY alone, and that distinction has nowhere to live in a single
+# shared order.
 _REROUTE: dict[str, tuple[str, ...]] = {
-    GLYPH_DENSITY: ("pymupdf", "qwen2.5vl"),
-    REPLACEMENT_DENSITY: ("pymupdf", "qwen2.5vl"),
-    SHATTERED: ("qwen2.5vl",),
-    EMPTY_TEXT: ("pymupdf", "qwen2.5vl"),
+    GLYPH_DENSITY: ("docling_ocr", "qwen2.5vl"),
+    REPLACEMENT_DENSITY: ("docling_ocr", "qwen2.5vl"),
+    SHATTERED: ("docling_ocr", "qwen2.5vl"),
+    EMPTY_TEXT: ("pymupdf", "docling_ocr", "qwen2.5vl"),
 }
 
 
@@ -94,10 +101,53 @@ def is_scanned_pdf(pdf_path: str, threshold: int = _SCANNED_THRESHOLD) -> bool:
         doc.close()
 
 
+def _docling_converter(pipeline_options=None) -> DocumentConverter:
+    """The single Docling converter construction site.
+
+    Both Docling tiers differ only in their pipeline options, so they share this
+    rather than each building their own -- a second construction would drift.
+    """
+    if pipeline_options is None:
+        return DocumentConverter()
+    from docling.datamodel.base_models import InputFormat
+    from docling.document_converter import PdfFormatOption
+    return DocumentConverter(
+        format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
+    )
+
+
 def parse_with_docling(pdf_path: str) -> str:
-    """Parse a digital PDF to Markdown using Docling."""
-    converter = DocumentConverter()
-    result = converter.convert(pdf_path)
+    """Parse a digital PDF to Markdown using Docling's text layer."""
+    result = _docling_converter().convert(pdf_path)
+    return result.document.export_to_markdown()
+
+
+def parse_with_docling_ocr(pdf_path: str, ocr_engine: str = _OCR_ENGINE) -> str:
+    """Parse a PDF by OCR-ing every page, ignoring its text layer entirely.
+
+    The remedy for a text layer that is present but WRONG -- glyph-encoded
+    (p719: 5,472 GLYPH tokens over Caesar-shifted gibberish) or otherwise
+    undecodable. Forcing full-page OCR is what makes it a remedy rather than a
+    fallback: the corrupt layer is not consulted at all.
+
+    Deterministic, unlike the vision tier: PARSE-GATE-05 measured byte-identical
+    output across repeated runs, ~5.7-6.3 s/page on CPU. Its known cost is
+    word-gluing (`long_token_share_pct`), which the gate does not judge.
+    """
+    if ocr_engine != "rapidocr":
+        raise ValueError(
+            f"unsupported ocr_engine {ocr_engine!r}: only 'rapidocr' is wired. "
+            "It ships with docling and its models are already on disk; adding an "
+            "engine means wiring it here, not just naming it in the spec."
+        )
+    from docling.datamodel.pipeline_options import PdfPipelineOptions, RapidOcrOptions
+
+    po = PdfPipelineOptions()
+    po.do_ocr = True
+    # `force_full_page_ocr` is the 2.74.0 field; `OcrMode` does not exist here.
+    po.ocr_options = RapidOcrOptions(force_full_page_ocr=True)
+    po.generate_page_images = False
+    result = _docling_converter(po).convert(pdf_path)
     return result.document.export_to_markdown()
 
 
@@ -270,9 +320,49 @@ def format_exclusion_detail(attempt: ParseAttempt) -> str:
     return "parse_quality: " + "; ".join(parts)
 
 
-def _run_parser(name: str, pdf_path: str, vision_model: str) -> str:
+def _insert_attempts(db, paper_id, pdf_hash, version, attempts, now) -> None:
+    """INSERT the attempt rows. Does NOT commit -- the caller owns the transaction."""
+    for att in attempts:
+        db._conn.execute(
+            """INSERT INTO parse_attempts
+               (paper_id, pdf_hash, parsed_text_version, attempt_index,
+                parser_used, passed, failures, metrics, elapsed_s,
+                accepted, skipped_reason, created_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (paper_id, pdf_hash, version, att.attempt_index,
+             att.parser_used, int(att.passed),
+             json.dumps(att.failures), json.dumps(att.metrics),
+             att.elapsed_s, int(att.accepted), att.skipped_reason, now),
+        )
+
+
+def _commit_attempts(db, paper_id, pdf_hash, version, attempts) -> None:
+    """Commit attempt rows with no asset row, for a parse that produced nothing.
+
+    Never raises: a bookkeeping failure must not mask the parse failure the
+    caller is about to report.
+    """
+    if not attempts:
+        return
+    try:
+        _insert_attempts(db, paper_id, pdf_hash, version, attempts,
+                         datetime.now(timezone.utc).isoformat())
+        db._conn.commit()
+    except Exception:
+        logger.exception("Paper %d: could not record attempts for a failed parse",
+                         paper_id)
+        try:
+            db._conn.rollback()
+        except Exception:
+            pass
+
+
+def _run_parser(name: str, pdf_path: str, vision_model: str,
+                ocr_engine: str = _OCR_ENGINE) -> str:
     if name == "docling":
         return parse_with_docling(pdf_path)
+    if name in ("docling_ocr", "docling_ocr_sanitized"):
+        return parse_with_docling_ocr(pdf_path, ocr_engine=ocr_engine)
     if name == "pymupdf":
         return parse_with_pymupdf(pdf_path)
     if name == "qwen2.5vl":
@@ -280,11 +370,19 @@ def _run_parser(name: str, pdf_path: str, vision_model: str) -> str:
     raise ValueError(f"unknown parser: {name}")
 
 
+#: `docling_ocr_sanitized` is the same TIER as `docling_ocr`, run against the
+#: link-stripped copy; it is a provenance label, not a second parser, so trying
+#: either marks both as tried.
+_TIER_ALIASES = {"docling_ocr_sanitized": "docling_ocr",
+                 "docling_sanitized": "docling"}
+
+
 def _next_parser(failures, tried: set[str]) -> str | None:
     """First untried parser named by any failed criterion, in criterion order."""
+    seen = {_TIER_ALIASES.get(t, t) for t in tried}
     for criterion, _, _ in failures:
         for candidate in _REROUTE.get(criterion, ()):
-            if candidate not in tried:
+            if _TIER_ALIASES.get(candidate, candidate) not in seen:
                 return candidate
     return None
 
@@ -307,11 +405,15 @@ def parse_pdf(
     scanned_threshold = _SCANNED_THRESHOLD
     vision_model = _VISION_MODEL
     vision_max_pages = _VISION_MAX_PAGES
+    ocr_engine = _OCR_ENGINE
+    ocr_max_pages = _OCR_MAX_PAGES
     thresholds = Thresholds()
     if spec and hasattr(spec, "pdf_parsing"):
         scanned_threshold = spec.pdf_parsing.scanned_text_threshold
         vision_model = spec.pdf_parsing.vision_model
         vision_max_pages = getattr(spec.pdf_parsing, "vision_max_pages", _VISION_MAX_PAGES)
+        ocr_engine = getattr(spec.pdf_parsing, "ocr_engine", _OCR_ENGINE)
+        ocr_max_pages = getattr(spec.pdf_parsing, "ocr_max_pages", _OCR_MAX_PAGES)
         # The only construction path: engine defaults and spec defaults are pinned
         # equal by test, so this cannot silently diverge from Thresholds().
         thresholds = Thresholds.from_mapping(
@@ -354,249 +456,309 @@ def parse_pdf(
     ).fetchone()[0]
     version = (last_version or 0) + 1
 
-    # ── Attempt 1: the original route, unchanged ────────────────────
-    # The sparse-output length cascade below is deliberately left in front of
-    # the quality gate. It answers "did this parser return anything at all",
-    # which is cheaper than segmentation and is the question that must be
-    # settled first; the gate then asks whether what came back has structure.
     attempts: list[ParseAttempt] = []
-    tried: set[str] = set()
+    sanitized_path: str | None = None
 
-    def _record_error(name: str, exc: BaseException, t0: float) -> None:
-        """A parser that raised is an attempt, not a silence."""
-        attempts.append(ParseAttempt(
-            attempt_index=len(attempts) + 1,
-            parser_used=name,
-            skipped_reason=error_reason(exc),
-            elapsed_s=round(time.monotonic() - t0, 3),
-        ))
-        logger.warning("Paper %d attempt %d: parser=%s RAISED %s",
-                       paper_id, attempts[-1].attempt_index, name, error_reason(exc))
+    # Contract 2: the sanitized copy may be read by more than one attempt, so
+    # its lifetime is the CALL, not the attempt -- and it must never outlive
+    # the call, on any exit path.
+    try:
+        # ── Attempt 1: the original route, unchanged ────────────────────
+        # The sparse-output length cascade below is deliberately left in front of
+        # the quality gate. It answers "did this parser return anything at all",
+        # which is cheaper than segmentation and is the question that must be
+        # settled first; the gate then asks whether what came back has structure.
+        tried: set[str] = set()
 
-    def _record_skip(name: str, reason: str) -> None:
-        attempts.append(ParseAttempt(
-            attempt_index=len(attempts) + 1, parser_used=name, skipped_reason=reason))
-        logger.warning("Paper %d attempt %d: %s",
-                       paper_id, attempts[-1].attempt_index, reason)
+        def _record_error(name: str, exc: BaseException, t0: float) -> None:
+            """A parser that raised is an attempt, not a silence."""
+            attempts.append(ParseAttempt(
+                attempt_index=len(attempts) + 1,
+                parser_used=name,
+                skipped_reason=error_reason(exc),
+                elapsed_s=round(time.monotonic() - t0, 3),
+            ))
+            logger.warning("Paper %d attempt %d: parser=%s RAISED %s",
+                           paper_id, attempts[-1].attempt_index, name, error_reason(exc))
 
-    if is_scanned_pdf(pdf_path, threshold=scanned_threshold):
-        logger.info("Paper %d: scanned PDF detected, using %s", paper_id, vision_model)
-        started = time.monotonic()
-        try:
-            markdown = parse_with_vision(pdf_path, vision_model=vision_model)
-            parser_used = "qwen2.5vl"
-        except Exception as exc:
-            _record_error("qwen2.5vl", exc, started)
-            raise
-    else:
-        logger.info("Paper %d: digital PDF, using Docling", paper_id)
-        started = time.monotonic()
-        markdown = None
-        try:
-            markdown = parse_with_docling(pdf_path)
-            parser_used = "docling"
-        except Exception as exc:
-            # PARSE-GATE-06a: a Docling crash used to be swallowed by this
-            # `except` and answered with PyMuPDF, whose naive extraction shattered
-            # p455 into 8,394 units of 7.1 chars. The crash is now recorded, and
-            # the FIRST response is to retry Docling on a copy with the offending
-            # link annotations removed -- which recovers that paper completely
-            # (52,403 chars, gate PASS) rather than degrading it.
-            _record_error("docling", exc, started)
-            tmp, why = strip_links_to_temp(pdf_path)
-            if tmp is None:
-                _record_skip("docling_sanitized", why)
+        def _record_skip(name: str, reason: str) -> None:
+            attempts.append(ParseAttempt(
+                attempt_index=len(attempts) + 1, parser_used=name, skipped_reason=reason))
+            logger.warning("Paper %d attempt %d: %s",
+                           paper_id, attempts[-1].attempt_index, reason)
+
+        if is_scanned_pdf(pdf_path, threshold=scanned_threshold):
+            # PARSE-GATE-06b: a scanned page goes to the DETERMINISTIC OCR tier
+            # first. It was the vision model, which is a per-page model call with a
+            # 30-minute observed worst case; docling_ocr is ~6 s/page, reproducible,
+            # and needs no model server. Vision remains available as a re-route.
+            logger.info("Paper %d: scanned PDF detected, using docling_ocr", paper_id)
+            started = time.monotonic()
+            markdown = None
+            pages = page_count(pdf_path)
+            if pages > ocr_max_pages:
+                _record_skip("docling_ocr",
+                             f"ocr skipped: {pages} pages exceeds ocr_max_pages={ocr_max_pages}")
             else:
-                started = time.monotonic()
                 try:
-                    markdown = parse_with_docling(tmp)
-                    parser_used = "docling_sanitized"
-                    logger.info("Paper %d: sanitized Docling retry succeeded", paper_id)
-                except Exception as exc2:
-                    _record_error("docling_sanitized", exc2, started)
-                finally:
-                    Path(tmp).unlink(missing_ok=True)
+                    markdown = parse_with_docling_ocr(pdf_path, ocr_engine=ocr_engine)
+                    parser_used = "docling_ocr"
+                    if len(markdown.strip()) < scanned_threshold:
+                        # OCR ran and found (almost) nothing. On a scanned page
+                        # that is a failure of the tier, not a property of the
+                        # document, so fall through to vision exactly as the
+                        # digital branch falls through on sparse output.
+                        _record_skip(
+                            "docling_ocr",
+                            f"ocr output sparse: {len(markdown.strip())} chars "
+                            f"below scanned_text_threshold={scanned_threshold}")
+                        markdown = None
+                except Exception as exc:
+                    _record_error("docling_ocr", exc, started)
 
             if markdown is None:
                 started = time.monotonic()
                 try:
+                    markdown = parse_with_vision(pdf_path, vision_model=vision_model)
+                    parser_used = "qwen2.5vl"
+                except Exception as exc:
+                    _record_error("qwen2.5vl", exc, started)
+                    raise
+        else:
+            logger.info("Paper %d: digital PDF, using Docling", paper_id)
+            started = time.monotonic()
+            markdown = None
+            try:
+                markdown = parse_with_docling(pdf_path)
+                parser_used = "docling"
+            except Exception as exc:
+                # PARSE-GATE-06a: a Docling crash used to be swallowed by this
+                # `except` and answered with PyMuPDF, whose naive extraction shattered
+                # p455 into 8,394 units of 7.1 chars. The crash is now recorded, and
+                # the FIRST response is to retry Docling on a copy with the offending
+                # link annotations removed -- which recovers that paper completely
+                # (52,403 chars, gate PASS) rather than degrading it.
+                _record_error("docling", exc, started)
+                tmp, why = strip_links_to_temp(pdf_path)
+                if tmp is None:
+                    _record_skip("docling_sanitized", why)
+                else:
+                    # Contract 2: the copy outlives this attempt. A later Docling
+                    # tier (docling_ocr) in the SAME call must read the sanitized
+                    # copy too -- re-running the OCR pipeline against the original
+                    # would just hit the same crash. parse_pdf's outer `finally`
+                    # unlinks it; it never outlives the call.
+                    sanitized_path = tmp
+                    started = time.monotonic()
+                    try:
+                        markdown = parse_with_docling(tmp)
+                        parser_used = "docling_sanitized"
+                        logger.info("Paper %d: sanitized Docling retry succeeded", paper_id)
+                    except Exception as exc2:
+                        _record_error("docling_sanitized", exc2, started)
+
+                if markdown is None:
+                    started = time.monotonic()
+                    try:
+                        markdown = parse_with_pymupdf(pdf_path)
+                        parser_used = "pymupdf"
+                    except Exception as exc3:
+                        _record_error("pymupdf", exc3, started)
+                        raise
+
+            # If output is sparse, try PyMuPDF (if not already), then vision model
+            if (len(markdown.strip()) < scanned_threshold
+                    and parser_used in ("docling", "docling_sanitized")):
+                logger.warning(
+                    "Paper %d: %s output sparse (%d chars), falling back to PyMuPDF",
+                    paper_id, parser_used, len(markdown.strip()),
+                )
+                started = time.monotonic()
+                try:
                     markdown = parse_with_pymupdf(pdf_path)
                     parser_used = "pymupdf"
-                except Exception as exc3:
-                    _record_error("pymupdf", exc3, started)
+                except Exception as exc:
+                    _record_error("pymupdf", exc, started)
                     raise
 
-        # If output is sparse, try PyMuPDF (if not already), then vision model
-        if (len(markdown.strip()) < scanned_threshold
-                and parser_used in ("docling", "docling_sanitized")):
-            logger.warning(
-                "Paper %d: %s output sparse (%d chars), falling back to PyMuPDF",
-                paper_id, parser_used, len(markdown.strip()),
+            if len(markdown.strip()) < scanned_threshold:
+                logger.warning(
+                    "Paper %d: %s output sparse (%d chars), falling back to %s",
+                    paper_id, parser_used, len(markdown.strip()), vision_model,
+                )
+                started = time.monotonic()
+                try:
+                    markdown = parse_with_vision(pdf_path, vision_model=vision_model)
+                    parser_used = "qwen2.5vl"
+                except Exception as exc:
+                    _record_error("qwen2.5vl", exc, started)
+                    raise
+
+        # ── Judge, and re-route while it fails ──────────────────────────
+        texts: dict[str, str] = {}
+        # An attempt that produced nothing usable can be judged and recorded -- it is
+        # evidence the parser was tried -- but must never be SELECTED.
+        #
+        # Empty output is unusable always. Sparse output is unusable only on a
+        # GATE-DRIVEN re-route, never on the initial route: the pre-existing cascade
+        # deliberately accepts whatever vision returns as the last resort, and
+        # narrowing that would change behaviour this task is not asked to change.
+        # The re-route case is real -- on a scanned PDF, PyMuPDF returns nothing but
+        # its `<!-- Page N -->` markers, non-empty and worthless, and storing page
+        # markers as a paper is worse than refusing the parse.
+        unusable: set[str] = set()
+        judged = 0
+        while True:
+            # A re-route is a JUDGED attempt that failed the gate and sent us
+            # round again -- not merely "some row exists". Error and skip rows
+            # (PARSE-GATE-06a/06b) carry no verdict and now precede the first
+            # judged attempt on the scanned branch, so counting rows here would
+            # apply re-route sparse semantics to the INITIAL route.
+            is_reroute = judged > 0
+            tried.add(parser_used)
+            texts[parser_used] = markdown
+            stripped = markdown.strip()
+            if not stripped or (is_reroute and len(stripped) < scanned_threshold):
+                unusable.add(parser_used)
+            verdict = assess(markdown, thresholds)
+            judged += 1
+            attempts.append(ParseAttempt(
+                attempt_index=len(attempts) + 1,
+                parser_used=parser_used,
+                passed=verdict.passed,
+                failures=list(verdict.failures),
+                metrics=dict(verdict.metrics),
+                elapsed_s=round(time.monotonic() - started, 3),
+            ))
+            logger.info(
+                "Paper %d attempt %d: parser=%s verdict=%s elapsed=%.2fs",
+                paper_id, attempts[-1].attempt_index, parser_used,
+                verdict.describe(), attempts[-1].elapsed_s,
             )
-            started = time.monotonic()
-            try:
-                markdown = parse_with_pymupdf(pdf_path)
-                parser_used = "pymupdf"
-            except Exception as exc:
-                _record_error("pymupdf", exc, started)
-                raise
-
-        if len(markdown.strip()) < scanned_threshold:
-            logger.warning(
-                "Paper %d: %s output sparse (%d chars), falling back to %s",
-                paper_id, parser_used, len(markdown.strip()), vision_model,
-            )
-            started = time.monotonic()
-            try:
-                markdown = parse_with_vision(pdf_path, vision_model=vision_model)
-                parser_used = "qwen2.5vl"
-            except Exception as exc:
-                _record_error("qwen2.5vl", exc, started)
-                raise
-
-    # ── Judge, and re-route while it fails ──────────────────────────
-    texts: dict[str, str] = {}
-    # An attempt that produced nothing usable can be judged and recorded -- it is
-    # evidence the parser was tried -- but must never be SELECTED.
-    #
-    # Empty output is unusable always. Sparse output is unusable only on a
-    # GATE-DRIVEN re-route, never on the initial route: the pre-existing cascade
-    # deliberately accepts whatever vision returns as the last resort, and
-    # narrowing that would change behaviour this task is not asked to change.
-    # The re-route case is real -- on a scanned PDF, PyMuPDF returns nothing but
-    # its `<!-- Page N -->` markers, non-empty and worthless, and storing page
-    # markers as a paper is worse than refusing the parse.
-    unusable: set[str] = set()
-    while True:
-        is_reroute = bool(attempts)
-        tried.add(parser_used)
-        texts[parser_used] = markdown
-        stripped = markdown.strip()
-        if not stripped or (is_reroute and len(stripped) < scanned_threshold):
-            unusable.add(parser_used)
-        verdict = assess(markdown, thresholds)
-        attempts.append(ParseAttempt(
-            attempt_index=len(attempts) + 1,
-            parser_used=parser_used,
-            passed=verdict.passed,
-            failures=list(verdict.failures),
-            metrics=dict(verdict.metrics),
-            elapsed_s=round(time.monotonic() - started, 3),
-        ))
-        logger.info(
-            "Paper %d attempt %d: parser=%s verdict=%s elapsed=%.2fs",
-            paper_id, attempts[-1].attempt_index, parser_used,
-            verdict.describe(), attempts[-1].elapsed_s,
-        )
-        if verdict.passed or len(attempts) >= _MAX_ATTEMPTS:
-            break
-
-        nxt = _next_parser(verdict.failures, tried)
-        if nxt is None:
-            break
-        if nxt == "qwen2.5vl":
-            pages = page_count(pdf_path)
-            if pages > vision_max_pages:
-                reason = (f"vision skipped: {pages} pages exceeds "
-                          f"vision_max_pages={vision_max_pages}")
-                attempts.append(ParseAttempt(
-                    attempt_index=len(attempts) + 1,
-                    parser_used="qwen2.5vl",
-                    skipped_reason=reason,
-                ))
-                logger.warning("Paper %d attempt %d: %s",
-                               paper_id, attempts[-1].attempt_index, reason)
+            if verdict.passed or len(attempts) >= _MAX_ATTEMPTS:
                 break
 
-        started = time.monotonic()
-        try:
-            markdown = _run_parser(nxt, pdf_path, vision_model)
-        except Exception as exc:
-            _record_error(nxt, exc, started)
-            break
-        parser_used = nxt
+            # Choose the next parser, stepping over any that a page cap rules
+            # out. A cap is not a dead end -- it removes ONE candidate, and the
+            # criterion's remaining order still applies. This is a selection
+            # loop, not a re-entry of the judge loop: re-entering would re-assess
+            # the same text and append a duplicate verdict row.
+            nxt = None
+            target_path = pdf_path
+            while True:
+                cand = _next_parser(verdict.failures, tried)
+                if cand is None:
+                    break
+                if cand in ("qwen2.5vl", "docling_ocr"):
+                    cap = vision_max_pages if cand == "qwen2.5vl" else ocr_max_pages
+                    label = "vision" if cand == "qwen2.5vl" else "ocr"
+                    setting = ("vision_max_pages" if cand == "qwen2.5vl"
+                               else "ocr_max_pages")
+                    pages = page_count(pdf_path)
+                    if pages > cap:
+                        _record_skip(cand, f"{label} skipped: {pages} pages exceeds "
+                                           f"{setting}={cap}")
+                        tried.add(cand)
+                        continue
+                if cand == "docling_ocr" and sanitized_path is not None:
+                    # The original crashed Docling; the OCR pipeline is the same
+                    # Docling. Feed it the copy that got past the crash.
+                    target_path = sanitized_path
+                    cand = "docling_ocr_sanitized"
+                nxt = cand
+                break
 
-    # ── Accept: first pass, else least-bad ──────────────────────────
-    accepted = select_attempt(
-        [a for a in attempts if a.parser_used not in unusable])
-    if accepted is None:
-        raise ValueError(
-            f"Paper {paper_id}: all parsers returned empty text — "
-            "no file written, no DB row created"
-        )
-    accepted.accepted = True
-    markdown = texts[accepted.parser_used]
-    parser_used = accepted.parser_used
+            if nxt is None:
+                break
 
-    # Belt and braces: selection already refuses sparse output, so reaching this
-    # means the accepted text changed under us.
-    if not markdown.strip():
-        raise ValueError(
-            f"Paper {paper_id}: all parsers returned empty text — "
-            "no file written, no DB row created"
-        )
+            started = time.monotonic()
+            try:
+                markdown = _run_parser(nxt, target_path, vision_model, ocr_engine=ocr_engine)
+            except Exception as exc:
+                _record_error(nxt, exc, started)
+                break
+            parser_used = nxt
 
-    # Atomic write: temp file → DB commit → rename
-    review_dir = Path(db.db_path).parent
-    md_filename = f"{paper_id}_v{version}.md"
-    md_path = review_dir / "parsed_text" / md_filename
-    tmp_path = md_path.with_suffix(".md.tmp")
-
-    try:
-        tmp_path.write_text(markdown)
-
-        # Record in database (with final path, not temp)
-        now = datetime.now(timezone.utc).isoformat()
-        db._conn.execute(
-            """INSERT INTO full_text_assets
-               (paper_id, pdf_path, pdf_hash, parsed_text_path, parsed_text_version,
-                parser_used, parsed_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (paper_id, pdf_path, pdf_hash, str(md_path), version, parser_used, now),
-        )
-        db._conn.execute(
-            "UPDATE papers SET pdf_content_hash = ? WHERE id = ?",
-            (pdf_hash, paper_id),
-        )
-        # The attempt ledger goes in BEFORE the one commit that already covers
-        # the asset row and the hash update, so a crash anywhere in here leaves
-        # neither the asset nor its attempts -- and never an asset whose
-        # provenance is missing.
-        for att in attempts:
-            db._conn.execute(
-                """INSERT INTO parse_attempts
-                   (paper_id, pdf_hash, parsed_text_version, attempt_index,
-                    parser_used, passed, failures, metrics, elapsed_s,
-                    accepted, skipped_reason, created_at)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (paper_id, pdf_hash, version, att.attempt_index,
-                 att.parser_used, int(att.passed),
-                 json.dumps(att.failures), json.dumps(att.metrics),
-                 att.elapsed_s, int(att.accepted), att.skipped_reason, now),
+        # ── Accept: first pass, else least-bad ──────────────────────────
+        accepted = select_attempt(
+            [a for a in attempts if a.parser_used not in unusable])
+        if accepted is None:
+            # Contract 7: a parse that fails ENTIRELY is the one most worth a record,
+            # and until now it was the only outcome that left none -- the rows were
+            # written inside the asset transaction, which never ran. Commit them on
+            # their own, against the version this attempt would have taken, with no
+            # asset row (parse_attempts has no FK to full_text_assets), then fail.
+            _commit_attempts(db, paper_id, pdf_hash, version, attempts)
+            raise ValueError(
+                f"Paper {paper_id}: all parsers returned empty text — "
+                f"{len(attempts)} attempt(s) recorded, no file written, "
+                "no asset row created"
             )
-        db._conn.commit()
+        accepted.accepted = True
+        markdown = texts[accepted.parser_used]
+        parser_used = accepted.parser_used
 
-        # DB committed — now rename temp to final (atomic on POSIX)
-        tmp_path.rename(md_path)
-    except Exception:
-        # Clean up temp file on any failure
-        if tmp_path.exists():
-            tmp_path.unlink()
-        db._conn.rollback()
-        raise
+        # Belt and braces: selection already refuses sparse output, so reaching this
+        # means the accepted text changed under us.
+        if not markdown.strip():
+            raise ValueError(
+                f"Paper {paper_id}: all parsers returned empty text — "
+                "no file written, no DB row created"
+            )
 
-    return ParsedDocument(
-        paper_id=paper_id,
-        source_pdf_path=pdf_path,
-        pdf_hash=pdf_hash,
-        parsed_markdown=markdown,
-        parser_used=parser_used,
-        parsed_at=datetime.now(timezone.utc),
-        version=version,
-        verdict={"passed": accepted.passed, "failures": accepted.failures},
-        attempts=attempts,
-        accepted_parser=parser_used,
-    )
+        # Atomic write: temp file → DB commit → rename
+        review_dir = Path(db.db_path).parent
+        md_filename = f"{paper_id}_v{version}.md"
+        md_path = review_dir / "parsed_text" / md_filename
+        tmp_path = md_path.with_suffix(".md.tmp")
+
+        try:
+            tmp_path.write_text(markdown)
+
+            # Record in database (with final path, not temp)
+            now = datetime.now(timezone.utc).isoformat()
+            db._conn.execute(
+                """INSERT INTO full_text_assets
+                   (paper_id, pdf_path, pdf_hash, parsed_text_path, parsed_text_version,
+                    parser_used, parsed_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                (paper_id, pdf_path, pdf_hash, str(md_path), version, parser_used, now),
+            )
+            db._conn.execute(
+                "UPDATE papers SET pdf_content_hash = ? WHERE id = ?",
+                (pdf_hash, paper_id),
+            )
+            # The attempt ledger goes in BEFORE the one commit that already covers
+            # the asset row and the hash update, so a crash anywhere in here leaves
+            # neither the asset nor its attempts -- and never an asset whose
+            # provenance is missing.
+            _insert_attempts(db, paper_id, pdf_hash, version, attempts, now)
+            db._conn.commit()
+
+            # DB committed — now rename temp to final (atomic on POSIX)
+            tmp_path.rename(md_path)
+        except Exception:
+            # Clean up temp file on any failure
+            if tmp_path.exists():
+                tmp_path.unlink()
+            db._conn.rollback()
+            raise
+
+        return ParsedDocument(
+            paper_id=paper_id,
+            source_pdf_path=pdf_path,
+            pdf_hash=pdf_hash,
+            parsed_markdown=markdown,
+            parser_used=parser_used,
+            parsed_at=datetime.now(timezone.utc),
+            version=version,
+            verdict={"passed": accepted.passed, "failures": accepted.failures},
+            attempts=attempts,
+            accepted_parser=parser_used,
+        )
+    finally:
+        if sanitized_path is not None:
+            Path(sanitized_path).unlink(missing_ok=True)
 
 
 def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:

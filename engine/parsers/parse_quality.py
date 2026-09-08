@@ -61,6 +61,11 @@ RE_UNI_ESCAPE = re.compile(r"/uni[0-9A-Fa-f]{4}")
 # A unit shorter than this many whitespace tokens is "short". Phase 1's `t < 3`.
 SHORT_UNIT_TOKENS = 3
 
+#: A token whose longest run of consecutive alphabetic characters exceeds this
+#: is a glued run: no English word is this long, so it is two or more words that
+#: lost the space between them.
+LONG_TOKEN_ALPHA_RUN = 22
+
 #: The 17 Phase 1 metric names. `paper_id` and `parsed_file` are deliberately
 #: absent: they identify a file, and `compute_metrics` is a function of text.
 PHASE1_METRIC_NAMES = frozenset({
@@ -81,9 +86,19 @@ PHASE1_METRIC_NAMES = frozenset({
 #: `is_empty` is the raw input for the EMPTY_TEXT criterion, which cannot be
 #: derived from the others: whitespace-only text has chars > 0 yet zero units.
 #: `uni_escape_count` is TELEMETRY ONLY and is never judged -- see below.
+#: `long_token_share_pct` is TELEMETRY ONLY and is never judged. It measures
+#: word-gluing, the characteristic defect of the OCR tier: RapidOCR drops
+#: inter-word spaces, producing runs like
+#: "itscapabilityofreducingthenumberofincisionsthatarepracticed". Measured on
+#: p455 (PARSE-GATE-05): 80 such tokens from full-page OCR against 0 from the
+#: docling text layer. It is deliberately UNJUDGED because gluing moves
+#: `chars_per_unit` the WRONG WAY -- the OCR output scored 128.0 against the
+#: text layer's 113.2 while being 30% shorter and dropping a clause -- so the
+#: gate cannot currently see its own worst failure mode on that route, and this
+#: is the measurement a future criterion would be built from.
 ADDED_METRIC_NAMES = frozenset({
     "glyph_density_per_kchar", "replacement_density_per_kchar",
-    "uni_escape_count", "is_empty",
+    "uni_escape_count", "long_token_share_pct", "is_empty",
 })
 
 METRIC_NAMES = PHASE1_METRIC_NAMES | ADDED_METRIC_NAMES
@@ -183,6 +198,26 @@ def compute_metrics(text: str) -> dict[str, Any]:
     glyph = len(RE_GLYPH.findall(raw))
     replacements = raw.count("�")
 
+    # Word-gluing: longest alphabetic run per whitespace token, over tokens that
+    # carry any letter at all (numbers and punctuation are not words).
+    alpha_tokens = 0
+    glued_tokens = 0
+    for tok in raw.split():
+        run = best = 0
+        has_alpha = False
+        for ch in tok:
+            if ch.isalpha():
+                has_alpha = True
+                run += 1
+                if run > best:
+                    best = run
+            else:
+                run = 0
+        if has_alpha:
+            alpha_tokens += 1
+            if best > LONG_TOKEN_ALPHA_RUN:
+                glued_tokens += 1
+
     return {
         "chars": len(raw),
         "lines": len(lines),
@@ -224,6 +259,10 @@ def compute_metrics(text: str) -> dict[str, Any]:
         # Recorded so the ligature question can be answered later from data
         # rather than re-derived.
         "uni_escape_count": len(RE_UNI_ESCAPE.findall(raw)),
+        # Telemetry only, never judged -- see ADDED_METRIC_NAMES.
+        "long_token_share_pct": (
+            round(100.0 * glued_tokens / alpha_tokens, 3) if alpha_tokens else 0.0
+        ),
         "is_empty": not raw.strip(),
     }
 

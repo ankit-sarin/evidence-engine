@@ -22,6 +22,19 @@ from engine.search.models import Citation
 # ── Fixtures ─────────────────────────────────────────────────────────
 
 
+@pytest.fixture(autouse=True)
+def _no_unstubbed_ocr():
+    """PARSE-GATE-06b: keep real docling+rapidocr out of the standard gate.
+
+    The scanned route now tries `docling_ocr` before vision. These tests stub
+    only the parsers they name, so without this the gate would execute real OCR.
+    Additive only -- no assertion in this file changed.
+    """
+    with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+               side_effect=RuntimeError("docling_ocr not stubbed in this test")):
+        yield
+
+
 @pytest.fixture()
 def digital_pdf(tmp_path) -> Path:
     """Create a minimal digital PDF with extractable text."""

@@ -205,6 +205,24 @@ class PDFParsing(BaseModel):
             "call to recover a document whose problem is not its parse."
         ),
     )
+    ocr_engine: str = Field(
+        default="rapidocr",
+        description=(
+            "OCR engine for the deterministic docling_ocr tier. Only 'rapidocr' "
+            "is wired; it ships with docling and its PP-OCRv4 ONNX models are "
+            "already on disk, so the tier needs no install. Any other value "
+            "raises rather than silently falling back."
+        ),
+    )
+    ocr_max_pages: int = Field(
+        default=100, ge=1,
+        description=(
+            "Page cap for the docling_ocr tier. Higher than the vision cap "
+            "because OCR is ~6 s/page on CPU and deterministic, where vision is "
+            "a per-page model call; over the cap the attempt is recorded as "
+            "SKIPPED rather than run."
+        ),
+    )
     parse_quality: ParseQuality = Field(
         default_factory=ParseQuality,
         description="Absolute thresholds for the parse-quality gate.",

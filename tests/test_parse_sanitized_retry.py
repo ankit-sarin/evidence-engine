@@ -40,6 +40,21 @@ def _boom(msg="1 validation error for PdfHyperlink\nuri\n  Input should be a val
     return RuntimeError(msg)
 
 
+@pytest.fixture(autouse=True)
+def _no_unstubbed_ocr():
+    """PARSE-GATE-06b: `docling_ocr` is now in every re-route order.
+
+    These tests predate the tier and stub only the parsers they name, so an
+    unstubbed re-route would run REAL docling+rapidocr inside the standard gate
+    -- slow, and a service the gate must never touch. Default it to a loud, fast
+    failure; tests that mean to exercise the tier override this patch with their
+    own return value.
+    """
+    with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+               side_effect=RuntimeError("docling_ocr not stubbed in this test")):
+        yield
+
+
 @pytest.fixture()
 def linked_pdf(tmp_path):
     """A digital PDF carrying a scheme-less URI link annotation."""
@@ -248,26 +263,29 @@ def test_a_raising_pymupdf_is_recorded_then_reraised(linked_pdf, db):
         "SELECT COUNT(*) FROM full_text_assets WHERE paper_id=?", (pid,)).fetchone()[0] == 0
 
 
-def test_a_raising_vision_reroute_is_recorded_and_ends_the_loop(linked_pdf, db):
-    """Gate-driven re-route that raises: recorded, loop ends, least-bad accepted."""
+def test_a_raising_reroute_is_recorded_and_ends_the_loop(linked_pdf, db):
+    """Gate-driven re-route that raises: recorded, loop ends, least-bad accepted.
+
+    SHATTERED re-routes to the deterministic OCR tier first (PARSE-GATE-06b);
+    the autouse guard makes it raise, which is the condition under test.
+    """
     shattered = "\n".join(list("computerassistedsurgicalnavigation" * 40))
     pid = _paper(db)
-    with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=shattered), \
-         patch("engine.parsers.pdf_parser.parse_with_vision",
-               side_effect=RuntimeError("ollama down")):
+    with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=shattered):
         parse_pdf(str(linked_pdf), pid, "test_sanitized", db)
 
     rows = _rows(db, pid)
-    assert [r["parser_used"] for r in rows] == ["docling", "qwen2.5vl"]
-    assert rows[1]["skipped_reason"].startswith("error: RuntimeError: ollama down")
-    assert rows[0]["accepted"] == 1          # least-bad, since vision never returned
+    assert [r["parser_used"] for r in rows] == ["docling", "docling_ocr"]
+    assert rows[1]["skipped_reason"].startswith("error: RuntimeError: docling_ocr")
+    assert rows[0]["accepted"] == 1          # least-bad, since the retry never returned
 
 
 # ── T6 — attempt cap ──────────────────────────────────────────────────
 
-def test_attempt_cap_is_four():
+def test_attempt_cap_is_five():
+    """PARSE-GATE-06b: docling, docling_sanitized, pymupdf, docling_ocr, vision."""
     from engine.parsers.pdf_parser import _MAX_ATTEMPTS
-    assert _MAX_ATTEMPTS == 4
+    assert _MAX_ATTEMPTS == 5
 
 
 # ── T7 — the real crash, on the real document (integration) ───────────

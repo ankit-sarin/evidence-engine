@@ -16,7 +16,8 @@ class ParseAttempt(BaseModel):
     """
 
     attempt_index: int = Field(ge=1)
-    parser_used: Literal["docling", "docling_sanitized", "pymupdf", "qwen2.5vl"]
+    parser_used: Literal["docling", "docling_sanitized", "docling_ocr",
+                         "docling_ocr_sanitized", "pymupdf", "qwen2.5vl"]
     passed: bool = False
     failures: list[tuple[str, Any, Any]] = Field(default_factory=list)
     metrics: dict[str, Any] = Field(default_factory=dict)
@@ -32,7 +33,8 @@ class ParsedDocument(BaseModel):
     source_pdf_path: str
     pdf_hash: str
     parsed_markdown: str
-    parser_used: Literal["docling", "docling_sanitized", "pymupdf", "qwen2.5vl"]
+    parser_used: Literal["docling", "docling_sanitized", "docling_ocr",
+                         "docling_ocr_sanitized", "pymupdf", "qwen2.5vl"]
     parsed_at: datetime
     version: int = Field(ge=1, default=1)
 

@@ -278,13 +278,13 @@ def test_uni_escape_count_is_telemetry_and_never_judged():
 
 # ── T5 — the metric name set ──────────────────────────────────────────
 
-def test_metric_names_are_phase1_plus_exactly_two_additions():
+def test_metric_names_are_phase1_plus_the_declared_additions():
     got = set(compute_metrics(GOOD_PROSE))
     assert got == METRIC_NAMES
     assert got == PHASE1_METRIC_NAMES | ADDED_METRIC_NAMES
     assert ADDED_METRIC_NAMES == {
         "glyph_density_per_kchar", "replacement_density_per_kchar",
-        "uni_escape_count", "is_empty",
+        "uni_escape_count", "long_token_share_pct", "is_empty",
     }
     assert len(PHASE1_METRIC_NAMES) == 17
 

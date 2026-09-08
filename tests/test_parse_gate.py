@@ -44,6 +44,21 @@ GLYPHY = CLEAN + " " + " ".join(["GLYPH<c=1,font=/AOIIJB+MinionPro>"] * 90)
 SHATTERED_TEXT = "\n".join(list("computerassistedsurgicalnavigation" * 40))
 
 
+@pytest.fixture(autouse=True)
+def _no_unstubbed_ocr():
+    """PARSE-GATE-06b: `docling_ocr` is now in every re-route order.
+
+    These tests predate the tier and stub only the parsers they name, so an
+    unstubbed re-route would run REAL docling+rapidocr inside the standard gate
+    -- slow, and a service the gate must never touch. Default it to a loud, fast
+    failure; tests that mean to exercise the tier override this patch with their
+    own return value.
+    """
+    with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+               side_effect=RuntimeError("docling_ocr not stubbed in this test")):
+        yield
+
+
 @pytest.fixture()
 def digital_pdf(tmp_path):
     pdf = FPDF()
@@ -146,17 +161,24 @@ def test_clean_parse_reaches_parsed_status(digital_pdf, db):
 
 # ── T2 — glyph failure re-routes to PyMuPDF, which passes ─────────────
 
-def test_glyph_failure_reroutes_to_pymupdf_and_stops(digital_pdf, db):
+def test_glyph_failure_reroutes_to_the_ocr_tier_and_stops(digital_pdf, db):
+    """PARSE-GATE-06b: GLYPH_DENSITY now re-routes to docling_ocr, not PyMuPDF.
+
+    Glyph corruption is a text layer that is present and wrong; PyMuPDF reads
+    the SAME layer, so it was never a remedy. Re-OCR-ing the page image is.
+    """
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
-         patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN), \
+         patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN), \
+         patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf, \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
         result = parse_pdf(str(digital_pdf), pid, "test_gate", db)
 
-    vision.assert_not_called()          # docling #3081: another extractor first
-    assert result.accepted_parser == "pymupdf"
+    vision.assert_not_called()          # deterministic tier before the model
+    pymupdf.assert_not_called()
+    assert result.accepted_parser == "docling_ocr"
     rows = _attempts(db, pid)
-    assert [r["parser_used"] for r in rows] == ["docling", "pymupdf"]
+    assert [r["parser_used"] for r in rows] == ["docling", "docling_ocr"]
     assert rows[0]["passed"] == 0 and rows[0]["accepted"] == 0
     assert rows[1]["passed"] == 1 and rows[1]["accepted"] == 1
     assert json.loads(rows[0]["failures"])[0][0] == GLYPH_DENSITY
@@ -166,7 +188,7 @@ def test_rerouted_pass_still_reaches_parsed(digital_pdf, db):
     pid = _paper(db)
     _staged(db, pid, digital_pdf)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
-         patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+         patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN):
         parse_all_pdfs(db, "test_gate")
     assert db._conn.execute(
         "SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()[0] == "PARSED"
@@ -177,12 +199,13 @@ def test_rerouted_pass_still_reaches_parsed(digital_pdf, db):
 def test_glyph_then_shattered_then_vision_passes(digital_pdf, db):
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
-         patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=SHATTERED_TEXT), \
+         patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+               return_value=SHATTERED_TEXT), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
         result = parse_pdf(str(digital_pdf), pid, "test_gate", db)
 
     rows = _attempts(db, pid)
-    assert [r["parser_used"] for r in rows] == ["docling", "pymupdf", "qwen2.5vl"]
+    assert [r["parser_used"] for r in rows] == ["docling", "docling_ocr", "qwen2.5vl"]
     assert [r["accepted"] for r in rows] == [0, 0, 1]
     assert result.accepted_parser == "qwen2.5vl"
     assert json.loads(rows[1]["failures"])[0][0] == SHATTERED
@@ -190,21 +213,21 @@ def test_glyph_then_shattered_then_vision_passes(digital_pdf, db):
 
 # ── T4 — PyMuPDF-first path: SHATTERED goes straight to vision ────────
 
-def test_pymupdf_first_shattered_goes_to_vision_not_back_to_pymupdf(digital_pdf, db):
+def test_pymupdf_first_shattered_reroutes_without_retrying_pymupdf(digital_pdf, db):
     """Docling raises, so PyMuPDF is attempt 1. SHATTERED must not retry it."""
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling",
                side_effect=RuntimeError("hyperlink validation")), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf",
                return_value=SHATTERED_TEXT) as pymupdf, \
-         patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+         patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN):
         result = parse_pdf(str(digital_pdf), pid, "test_gate", db)
 
     assert pymupdf.call_count == 1                  # tried once, never retried
-    # PARSE-GATE-06a: the docling raise and the skipped sanitized retry are now
-    # recorded in front of these. The parsers that PRODUCED TEXT are unchanged.
-    assert [r["parser_used"] for r in _ran(db, pid)] == ["pymupdf", "qwen2.5vl"]
-    assert result.accepted_parser == "qwen2.5vl"
+    # PARSE-GATE-06a records the docling raise and the skipped sanitized retry;
+    # 06b puts the deterministic OCR tier ahead of vision on SHATTERED.
+    assert [r["parser_used"] for r in _ran(db, pid)] == ["pymupdf", "docling_ocr"]
+    assert result.accepted_parser == "docling_ocr"
 
 
 # ── T5 — nothing passes: least-bad selection, then PDF_EXCLUDED ───────
@@ -253,7 +276,7 @@ def test_all_fail_selects_least_bad_and_excludes_with_reason(digital_pdf, db):
     _staged(db, pid, digital_pdf)
     worst = CLEAN + " " + " ".join(["GLYPH<c=1,font=/X>"] * 400)   # highest ratio
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=worst), \
-         patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=GLYPHY), \
+         patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
         parse_all_pdfs(db, "test_gate")
 
@@ -261,7 +284,7 @@ def test_all_fail_selects_least_bad_and_excludes_with_reason(digital_pdf, db):
     assert len(rows) == 3
     accepted = [r for r in rows if r["accepted"]]
     assert len(accepted) == 1
-    assert accepted[0]["parser_used"] == "pymupdf"      # lower glyph ratio wins
+    assert accepted[0]["parser_used"] == "docling_ocr"  # lower glyph ratio wins
     assert accepted[0]["passed"] == 0
 
     paper = db._conn.execute(
@@ -279,7 +302,7 @@ def test_excluded_paper_still_has_its_text_stored(digital_pdf, db):
     pid = _paper(db)
     _staged(db, pid, digital_pdf)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
-         patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=GLYPHY), \
+         patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
         parse_all_pdfs(db, "test_gate")
 
@@ -300,19 +323,22 @@ def test_exclusion_detail_lists_every_failed_criterion():
 # ── T6 — vision page cap ──────────────────────────────────────────────
 
 def test_vision_skipped_above_page_cap_and_never_called(big_pdf, db):
+    """61 pages: under ocr_max_pages=100, over vision_max_pages=60."""
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=SHATTERED_TEXT), \
+         patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+               return_value=SHATTERED_TEXT), \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
         parse_pdf(str(big_pdf), pid, "test_gate", db)
 
     vision.assert_not_called()
     rows = _attempts(db, pid)
-    assert [r["parser_used"] for r in rows] == ["docling", "qwen2.5vl"]
-    assert rows[1]["skipped_reason"] is not None
-    assert "61 pages" in rows[1]["skipped_reason"]
-    assert "vision_max_pages=60" in rows[1]["skipped_reason"]
-    assert rows[1]["accepted"] == 0
-    assert rows[0]["accepted"] == 1          # the skipped one is not selectable
+    assert [r["parser_used"] for r in rows] == ["docling", "docling_ocr", "qwen2.5vl"]
+    assert rows[2]["skipped_reason"] is not None
+    assert "61 pages" in rows[2]["skipped_reason"]
+    assert "vision_max_pages=60" in rows[2]["skipped_reason"]
+    assert rows[2]["accepted"] == 0
+    assert sum(r["accepted"] for r in rows) == 1     # a skipped row is not selectable
 
 
 # ── T7 — ordering pin: length cascade runs before the gate ────────────
@@ -479,10 +505,13 @@ def test_spec_vision_cap_override_is_honoured(digital_pdf, db):
 
 # ── attempt-cap pin ───────────────────────────────────────────────────
 
-def test_at_most_three_attempts_are_ever_made(digital_pdf, db):
+def test_the_reroute_chain_is_bounded(digital_pdf, db):
+    """GLYPH_DENSITY names two parsers, so the chain is docling + those two."""
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
-         patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=GLYPHY), \
+         patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
         parse_pdf(str(digital_pdf), pid, "test_gate", db)
-    assert len(_attempts(db, pid)) == 3
+    rows = _attempts(db, pid)
+    assert [r["parser_used"] for r in rows] == ["docling", "docling_ocr", "qwen2.5vl"]
+    assert len(rows) <= 5

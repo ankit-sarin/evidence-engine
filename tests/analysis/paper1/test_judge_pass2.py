@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import csv
 import json
+import os
+import shutil
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -413,33 +417,104 @@ class TestArmVerdictsGrammarRegression:
 
 
 # ── Live-Gemma regression for the paper-366 pathology ──────────────
+#
+# This test needs real corpus rows, and it used to get them by constructing
+# ReviewDatabase("surgical_autonomy") — the production database, read-write,
+# from a test that the unmarked nightly run executes every night
+# (JUDGE-DBGUARD-01). It now runs against a temp copy. The fence in
+# tests/conftest.py refuses the old form outright, so this cannot regress
+# quietly.
+
+LIVE_REVIEW = Path(__file__).resolve().parents[3] / "data" / "surgical_autonomy"
+
+
+def _live_db_holder(db_path: Path) -> str | None:
+    """Return a pid holding db_path open, or None. Reads /proc only."""
+    target = str(db_path.resolve())
+    for fd_dir in Path("/proc").glob("[0-9]*/fd"):
+        try:
+            for fd in fd_dir.iterdir():
+                try:
+                    if os.readlink(fd) == target:
+                        return fd_dir.parent.name
+                except OSError:
+                    continue
+        except OSError:
+            continue
+    return None
+
+
+@pytest.fixture()
+def live_review_copy(tmp_path):
+    """A temp review root holding a copy of the live corpus database.
+
+    Returns a `data_root` suitable for `ReviewDatabase(name, data_root=...)`.
+    The loader resolves parsed text from `db.db_path.parent`, so the parsed-text
+    files the pairs CSV names are copied in beside the database — copied, not
+    symlinked, so nothing under the temp root can reach back into `data/`.
+
+    Refuses to copy unless the source is quiescent: a non-empty WAL or any
+    process holding the file open means the bytes on disk are not a consistent
+    database, and a test must not paper over that.
+    """
+    src_db = LIVE_REVIEW / "review.db"
+    pairs_csv = LIVE_REVIEW / "exports/disagreement_pairs_3arm.csv"
+    codebook_path = LIVE_REVIEW / "extraction_codebook.yaml"
+    if not (src_db.exists() and pairs_csv.exists() and codebook_path.exists()):
+        pytest.skip("surgical_autonomy artifacts not available in this env")
+
+    wal = src_db.with_name(src_db.name + "-wal")
+    if wal.exists() and wal.stat().st_size:
+        pytest.skip(
+            f"live review.db has a non-empty WAL ({wal.stat().st_size} B); "
+            f"copying it would capture an inconsistent database"
+        )
+    holder = _live_db_holder(src_db)
+    if holder is not None:
+        pytest.skip(f"live review.db is held open by pid {holder}; refusing to copy")
+
+    dest = tmp_path / "surgical_autonomy"
+    (dest / "parsed_text").mkdir(parents=True)
+    shutil.copy2(src_db, dest / "review.db")
+
+    with pairs_csv.open(newline="") as fh:
+        paper_ids = {row["paper_id"] for row in csv.DictReader(fh)}
+    for pid in paper_ids:
+        for md in (LIVE_REVIEW / "parsed_text").glob(f"{pid}_v*.md"):
+            shutil.copy2(md, dest / "parsed_text" / md.name)
+
+    return tmp_path
 
 
 @pytest.mark.ollama
 @pytest.mark.integration
-def test_paper_366_grammar_prevents_four_element_emission():
+def test_paper_366_grammar_prevents_four_element_emission(live_review_copy):
     """Replay the exact prompt that previously induced [1,2,3,3] on
     paper 366 / primary_outcome_value and confirm that the tightened
     schema produces exactly 3 elements with slots as a permutation of
     {1, 2, 3}.
 
     Requires a running Ollama with gemma3:27b. Skipped in the default
-    offline suite (markers: ollama, integration). Produces no DB
-    writes.
-    """
-    from pathlib import Path
+    offline suite (markers: ollama, integration).
 
+    Data. The database it opens is a **temp copy** of the live corpus database,
+    and the parsed text it reads are copies, both made by `live_review_copy`.
+    It does read three things under `data/surgical_autonomy` in order to build
+    that copy — the disagreement-pairs CSV, the extraction codebook, and the
+    parsed-text files the CSV names — and those are reads of ordinary files.
+    **It opens no database under `data/` and writes nothing there.** The
+    earlier wording, "Produces no DB writes", was a claim about rows being read
+    as a claim about the file; see JUDGE-DBGUARD-01.
+    """
     from analysis.paper1.judge_loader import load_ai_triples_csv, load_codebook
     from analysis.paper1.judge_prompts import compute_seed_pass2
     from engine.core.database import ReviewDatabase
 
-    review_dir = Path("data/surgical_autonomy")
-    pairs_csv = review_dir / "exports/disagreement_pairs_3arm.csv"
-    codebook_path = review_dir / "extraction_codebook.yaml"
-    if not (pairs_csv.exists() and codebook_path.exists()):
-        pytest.skip("surgical_autonomy artifacts not available in this env")
+    pairs_csv = LIVE_REVIEW / "exports/disagreement_pairs_3arm.csv"
+    codebook_path = LIVE_REVIEW / "extraction_codebook.yaml"
+    copied_review = live_review_copy / "surgical_autonomy"
 
-    db = ReviewDatabase("surgical_autonomy")
+    db = ReviewDatabase("surgical_autonomy", data_root=live_review_copy)
     try:
         codebook = load_codebook(codebook_path)
         inputs = load_ai_triples_csv(pairs_csv, db, codebook, limit=None)
@@ -451,7 +526,7 @@ def test_paper_366_grammar_prevents_four_element_emission():
             pytest.skip("pairs CSV missing paper 366 / primary_outcome_value")
         inp = match[0]
         parsed = sorted(
-            (review_dir / "parsed_text").glob("366_v*.md"), reverse=True
+            (copied_review / "parsed_text").glob("366_v*.md"), reverse=True
         )
         if not parsed:
             pytest.skip("parsed text for paper 366 not on disk")

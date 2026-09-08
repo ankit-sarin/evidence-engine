@@ -182,3 +182,108 @@ def block_service_calls(monkeypatch, request):
     expected = request.node.get_closest_marker("fence_selftest") is not None
     if new and not expected and not request.node.stash.get(_PHASE_FAILED, False):
         pytest.fail("service-manager call was blocked during this test:\n" + "\n".join(new))
+
+
+# ── Live-data fence: no test may open a real review database ─────────
+#
+# Root cause this exists for (JUDGE-DBGUARD-01). `test_paper_366_grammar_
+# prevents_four_element_emission` constructed `ReviewDatabase("surgical_
+# autonomy")` with no `data_root`, which resolves to the production corpus
+# database, read-write. It is marked `ollama` + `integration`, and
+# `scripts/nightly_tests.sh` runs `pytest tests/ -v` with no marker
+# expression, so it executed unattended every night at 09:00 UTC. It ran on
+# 2026-09-08 and it ran during the PARSE-GATE-06c deviation, where the live
+# file's size and mtime moved.
+#
+# What the open actually does, measured on copies rather than argued
+# (JUDGE-DBGUARD-01 Phase 1, runs A/A2/B/C/D):
+#
+#   * On a database whose schema is already current, `ReviewDatabase.__init__`
+#     is a **file no-op** — size and mtime unchanged, `-wal`/`-shm` created for
+#     the session and removed at clean close. Measured twice.
+#   * On a database missing any schema object, the same constructor **writes**:
+#     dropping one table and reopening grew the file 99,770,368 -> 99,774,464
+#     and moved its mtime, silently recreating the table.
+#
+# So the danger is not what an open does today; it is that `__init__` runs
+# `executescript(_SCHEMA)`, `ensure_adjudication_table`, fifteen ALTERs, and
+# migrations 006-009 unconditionally on every construction. **The live corpus
+# database is one engine migration away from the nightly test run applying a
+# schema change to production data with no migration step and no operator
+# present.** That is not hypothetical: PARSE-GATE-03's run created
+# `parse_attempts` on the live database exactly this way.
+#
+# Design, pinned — deliberately the same shape as the service fence above:
+#
+#   * **Fence the boundary, not the caller.** `ReviewDatabase.__init__` is
+#     wrapped once on the class, so every construction is covered no matter
+#     which module it lives in or how the name was imported.
+#
+#   * **Refuse by resolved ancestry, never by review name.** `DATA_ROOT` is the
+#     relative `Path("data")` and resolves against the process CWD, so a string
+#     match on "surgical_autonomy" would miss both a CWD change and the next
+#     live review. Both sides are `Path.resolve()`d and compared with
+#     `is_relative_to`.
+#
+#   * **The guard never opens a database.** It resolves paths and nothing else,
+#     so it cannot itself become the thing it exists to prevent.
+#
+#   * **Refuse reads too.** A read-only open of the live file is still an open:
+#     it creates `-wal`/`-shm` sidecars, and `ReviewDatabase` has no read-only
+#     mode to ask for. Tests that need real corpus rows copy the database to
+#     `tmp_path` first — see `test_judge_pass2.py::live_review_copy`.
+#
+#   * **Raise a `BaseException`.** Same reasoning as `ServiceCallBlocked`:
+#     application code that catches `Exception` around a database open must not
+#     be able to swallow the refusal and go green.
+#
+# `@pytest.mark.dbguard_selftest` exempts the guard's own tests, which assert
+# the raise with `pytest.raises` and would otherwise be failed by the teardown
+# re-assert.
+
+from _live_db_guard import (  # noqa: E402
+    LiveDatabaseBlocked,
+    is_live_data_path,
+    refuse as _refuse_live_db,
+    resolved_review_db_path,
+    violations as _db_violations,
+)
+
+__all__ = ["ServiceCallBlocked", "LiveDatabaseBlocked"]
+
+
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "dbguard_selftest: exercises the live-data fence and expects it to fire",
+    )
+
+
+@pytest.fixture(autouse=True, scope="function")
+def block_live_database(monkeypatch, request):
+    """Refuse any ReviewDatabase construction under the real data/ tree."""
+    from engine.core import database as db_module
+
+    original_init = db_module.ReviewDatabase.__init__
+
+    def guarded_init(self, review_name, data_root=None, *args, **kwargs):
+        candidate = resolved_review_db_path(
+            review_name, data_root, db_module.DATA_ROOT
+        )
+        if is_live_data_path(candidate):
+            _refuse_live_db(candidate, request.node.nodeid)
+        return original_init(self, review_name, data_root, *args, **kwargs)
+
+    monkeypatch.setattr(db_module.ReviewDatabase, "__init__", guarded_init)
+
+    before = len(_db_violations)
+    yield
+    # Safety net for a test that catches BaseException and passes anyway, with
+    # the same quiet-on-failure rule as the service fence.
+    new = _db_violations[before:]
+    expected = request.node.get_closest_marker("dbguard_selftest") is not None
+    if new and not expected and not request.node.stash.get(_PHASE_FAILED, False):
+        pytest.fail(
+            "a live review database was opened during this test:\n"
+            + "\n".join(new)
+        )

@@ -103,6 +103,12 @@ def _attempts(db, pid) -> list[sqlite3.Row]:
     ).fetchall()
 
 
+def _ran(db, pid) -> list[sqlite3.Row]:
+    """Attempts that produced text. Excludes error and skip rows, which carry
+    `skipped_reason` and are never selectable."""
+    return [r for r in _attempts(db, pid) if r["skipped_reason"] is None]
+
+
 def _vision(text: str):
     m = MagicMock()
     m.message.content = text
@@ -195,8 +201,9 @@ def test_pymupdf_first_shattered_goes_to_vision_not_back_to_pymupdf(digital_pdf,
         result = parse_pdf(str(digital_pdf), pid, "test_gate", db)
 
     assert pymupdf.call_count == 1                  # tried once, never retried
-    rows = _attempts(db, pid)
-    assert [r["parser_used"] for r in rows] == ["pymupdf", "qwen2.5vl"]
+    # PARSE-GATE-06a: the docling raise and the skipped sanitized retry are now
+    # recorded in front of these. The parsers that PRODUCED TEXT are unchanged.
+    assert [r["parser_used"] for r in _ran(db, pid)] == ["pymupdf", "qwen2.5vl"]
     assert result.accepted_parser == "qwen2.5vl"
 
 

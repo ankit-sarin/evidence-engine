@@ -8,7 +8,10 @@ gradio
 pyyaml
 python-docx
 openpyxl
-docling
+docling==2.74.0  # pinned PARSE-GATE-06a: 2.74.0 + pydantic 2.12.5 is the
+                 # combination whose PdfHyperlink URL validation the
+                 # sanitized retry works around; docling-core is
+                 # transitive (2.65.1 installed) and not listed here.
 openai
 anthropic
 tiktoken

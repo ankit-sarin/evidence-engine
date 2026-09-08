@@ -9,7 +9,9 @@ import base64
 import hashlib
 import json
 import logging
+import os
 import sys
+import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -36,7 +38,9 @@ logger = logging.getLogger(__name__)
 _SCANNED_THRESHOLD = 100  # chars per page — below this, assume scanned
 _VISION_MODEL = "qwen2.5vl:7b"
 _VISION_MAX_PAGES = 60
-_MAX_ATTEMPTS = 3
+_MAX_ATTEMPTS = 4  # 3 before PARSE-GATE-06a; the sanitized docling retry is the 4th,
+                   # so the post-gate cascade depth of PARSE-GATE-02 is preserved.
+_ERROR_MSG_CHARS = 300
 
 # Which parser to try next, by the defect that failed the current one. Ordered,
 # and the order is a claim about causes rather than a preference.
@@ -144,6 +148,72 @@ def parse_with_vision(pdf_path: str, vision_model: str = _VISION_MODEL) -> str:
         doc.close()
 
     return "\n\n---\n\n".join(pages_md)
+
+
+def error_reason(exc: BaseException) -> str:
+    """The `skipped_reason` text for a parser that RAISED rather than returned.
+
+    A raising parser produces a row like any other attempt, because "docling was
+    tried and blew up" and "docling was never tried" are different facts and the
+    ledger must be able to tell them apart. It goes in `skipped_reason` because
+    the row carries no text and must never be selectable.
+    """
+    return f"error: {type(exc).__name__}: {str(exc)[:_ERROR_MSG_CHARS]}"
+
+
+def strip_links_to_temp(pdf_path: str) -> tuple[str | None, str | None]:
+    """Write a link-annotation-free copy of `pdf_path`. Returns (path, reason).
+
+    Exactly one of the two is None. The copy exists to get PAST a parser that
+    chokes on a malformed link while leaving the text layer untouched, so the
+    text layer is VERIFIED rather than assumed: every page's `get_text()` must
+    be byte-identical to the original, and if any page differs the copy is
+    discarded and the reason returned. A "fix" that silently altered the text
+    would be worse than the crash it works around.
+
+    Why link stripping helps at all: docling validates a PDF's URI actions
+    through `PdfHyperlink.uri: AnyUrl`, and a scheme-less URI -- a bare
+    `dx.doi.org/10.1016/...`, which real publisher PDFs do carry -- fails
+    pydantic validation and fails the WHOLE conversion, every page of it.
+    PyMuPDF surfaces such a link with `uri=None` (which is why it is easy to
+    miss when enumerating), but `delete_link` removes it regardless.
+    """
+    src = fitz.open(pdf_path)
+    try:
+        before = [pg.get_text("text") for pg in src]
+    finally:
+        src.close()
+
+    fd, tmp = tempfile.mkstemp(prefix="parse_sanitized_", suffix=".pdf")
+    os.close(fd)
+    doc = fitz.open(pdf_path)
+    try:
+        removed = 0
+        for pg in doc:
+            for _ in range(len(pg.get_links())):
+                pg.delete_link(pg.get_links()[0])
+                removed += 1
+        doc.save(tmp, garbage=3, deflate=True)
+    finally:
+        doc.close()
+
+    chk = fitz.open(tmp)
+    try:
+        after = [pg.get_text("text") for pg in chk]
+    finally:
+        chk.close()
+
+    if after != before:
+        Path(tmp).unlink(missing_ok=True)
+        differing = [i + 1 for i, (a, b) in enumerate(zip(before, after)) if a != b]
+        return None, (
+            "sanitized retry skipped: link stripping changed the text layer on "
+            f"page(s) {differing or 'unknown'}"
+        )
+    if removed == 0:
+        Path(tmp).unlink(missing_ok=True)
+        return None, "sanitized retry skipped: the PDF carries no link annotations"
+    return tmp, None
 
 
 def page_count(pdf_path: str) -> int:
@@ -292,41 +362,97 @@ def parse_pdf(
     attempts: list[ParseAttempt] = []
     tried: set[str] = set()
 
+    def _record_error(name: str, exc: BaseException, t0: float) -> None:
+        """A parser that raised is an attempt, not a silence."""
+        attempts.append(ParseAttempt(
+            attempt_index=len(attempts) + 1,
+            parser_used=name,
+            skipped_reason=error_reason(exc),
+            elapsed_s=round(time.monotonic() - t0, 3),
+        ))
+        logger.warning("Paper %d attempt %d: parser=%s RAISED %s",
+                       paper_id, attempts[-1].attempt_index, name, error_reason(exc))
+
+    def _record_skip(name: str, reason: str) -> None:
+        attempts.append(ParseAttempt(
+            attempt_index=len(attempts) + 1, parser_used=name, skipped_reason=reason))
+        logger.warning("Paper %d attempt %d: %s",
+                       paper_id, attempts[-1].attempt_index, reason)
+
     if is_scanned_pdf(pdf_path, threshold=scanned_threshold):
         logger.info("Paper %d: scanned PDF detected, using %s", paper_id, vision_model)
         started = time.monotonic()
-        markdown = parse_with_vision(pdf_path, vision_model=vision_model)
-        parser_used = "qwen2.5vl"
+        try:
+            markdown = parse_with_vision(pdf_path, vision_model=vision_model)
+            parser_used = "qwen2.5vl"
+        except Exception as exc:
+            _record_error("qwen2.5vl", exc, started)
+            raise
     else:
         logger.info("Paper %d: digital PDF, using Docling", paper_id)
         started = time.monotonic()
+        markdown = None
         try:
             markdown = parse_with_docling(pdf_path)
             parser_used = "docling"
         except Exception as exc:
-            logger.warning(
-                "Paper %d: Docling failed (%s), falling back to PyMuPDF",
-                paper_id, exc,
-            )
-            markdown = parse_with_pymupdf(pdf_path)
-            parser_used = "pymupdf"
+            # PARSE-GATE-06a: a Docling crash used to be swallowed by this
+            # `except` and answered with PyMuPDF, whose naive extraction shattered
+            # p455 into 8,394 units of 7.1 chars. The crash is now recorded, and
+            # the FIRST response is to retry Docling on a copy with the offending
+            # link annotations removed -- which recovers that paper completely
+            # (52,403 chars, gate PASS) rather than degrading it.
+            _record_error("docling", exc, started)
+            tmp, why = strip_links_to_temp(pdf_path)
+            if tmp is None:
+                _record_skip("docling_sanitized", why)
+            else:
+                started = time.monotonic()
+                try:
+                    markdown = parse_with_docling(tmp)
+                    parser_used = "docling_sanitized"
+                    logger.info("Paper %d: sanitized Docling retry succeeded", paper_id)
+                except Exception as exc2:
+                    _record_error("docling_sanitized", exc2, started)
+                finally:
+                    Path(tmp).unlink(missing_ok=True)
+
+            if markdown is None:
+                started = time.monotonic()
+                try:
+                    markdown = parse_with_pymupdf(pdf_path)
+                    parser_used = "pymupdf"
+                except Exception as exc3:
+                    _record_error("pymupdf", exc3, started)
+                    raise
 
         # If output is sparse, try PyMuPDF (if not already), then vision model
-        if len(markdown.strip()) < scanned_threshold and parser_used == "docling":
+        if (len(markdown.strip()) < scanned_threshold
+                and parser_used in ("docling", "docling_sanitized")):
             logger.warning(
-                "Paper %d: Docling output sparse (%d chars), falling back to PyMuPDF",
-                paper_id, len(markdown.strip()),
+                "Paper %d: %s output sparse (%d chars), falling back to PyMuPDF",
+                paper_id, parser_used, len(markdown.strip()),
             )
-            markdown = parse_with_pymupdf(pdf_path)
-            parser_used = "pymupdf"
+            started = time.monotonic()
+            try:
+                markdown = parse_with_pymupdf(pdf_path)
+                parser_used = "pymupdf"
+            except Exception as exc:
+                _record_error("pymupdf", exc, started)
+                raise
 
         if len(markdown.strip()) < scanned_threshold:
             logger.warning(
                 "Paper %d: %s output sparse (%d chars), falling back to %s",
                 paper_id, parser_used, len(markdown.strip()), vision_model,
             )
-            markdown = parse_with_vision(pdf_path, vision_model=vision_model)
-            parser_used = "qwen2.5vl"
+            started = time.monotonic()
+            try:
+                markdown = parse_with_vision(pdf_path, vision_model=vision_model)
+                parser_used = "qwen2.5vl"
+            except Exception as exc:
+                _record_error("qwen2.5vl", exc, started)
+                raise
 
     # ── Judge, and re-route while it fails ──────────────────────────
     texts: dict[str, str] = {}
@@ -383,7 +509,11 @@ def parse_pdf(
                 break
 
         started = time.monotonic()
-        markdown = _run_parser(nxt, pdf_path, vision_model)
+        try:
+            markdown = _run_parser(nxt, pdf_path, vision_model)
+        except Exception as exc:
+            _record_error(nxt, exc, started)
+            break
         parser_used = nxt
 
     # ── Accept: first pass, else least-bad ──────────────────────────
@@ -476,7 +606,7 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
     logger.info("Starting PDF parsing for %d papers", total)
 
     stats = {"parsed": 0, "skipped_existing": 0, "failed": 0, "quality_excluded": 0,
-             "docling": 0, "pymupdf": 0, "qwen2.5vl": 0}
+             "docling": 0, "docling_sanitized": 0, "pymupdf": 0, "qwen2.5vl": 0}
     review_dir = Path(db.db_path).parent
 
     for i, paper in enumerate(papers, 1):
@@ -561,9 +691,11 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
             logger.info("Parsed %d/%d papers", i, total)
 
     logger.info(
-        "Parsing complete: %d parsed (%d docling, %d pymupdf, %d qwen2.5vl), %d skipped, %d failed",
+        "Parsing complete: %d parsed (%d docling, %d docling_sanitized, %d pymupdf, "
+        "%d qwen2.5vl), %d skipped, %d failed",
         stats["parsed"],
         stats["docling"],
+        stats["docling_sanitized"],
         stats["pymupdf"],
         stats["qwen2.5vl"],
         stats["skipped_existing"],

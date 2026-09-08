@@ -304,6 +304,28 @@ def test_total_failure_still_writes_the_attempt_rows(digital_pdf, db):
     assert not list(parsed_dir.glob(f"{pid}_v*.md"))
 
 
+def test_the_ledger_survives_a_raise_out_of_parse_pdf(digital_pdf, db):
+    """PARSE-GATE-06c: the paths that re-raise the real cause used to lose rows.
+
+    A parser that blows up on the initial route propagates its own exception
+    rather than a generic message -- and must still leave behind what was tried.
+    """
+    pid = _paper(db)
+    with patch("engine.parsers.pdf_parser.parse_with_docling",
+               side_effect=RuntimeError("docling exploded")), \
+         patch("engine.parsers.pdf_parser.parse_with_pymupdf",
+               side_effect=OSError("disk gone")):
+        with pytest.raises(OSError, match="disk gone"):
+            parse_pdf(str(digital_pdf), pid, "test_ocr", db)
+
+    rows = _rows(db, pid)
+    assert [r["parser_used"] for r in rows] == [
+        "docling", "docling_sanitized", "pymupdf"]
+    assert all(r["accepted"] == 0 for r in rows)
+    assert db._conn.execute(
+        "SELECT COUNT(*) FROM full_text_assets WHERE paper_id=?", (pid,)).fetchone()[0] == 0
+
+
 def test_reparse_reports_a_total_failure_with_rows_written(digital_pdf, db):
     pid = _paper(db)
     pdfs = Path(db.db_path).parent / "pdfs"; pdfs.mkdir(parents=True, exist_ok=True)

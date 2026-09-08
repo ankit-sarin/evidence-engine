@@ -38,6 +38,41 @@ logger = logging.getLogger(__name__)
 _SCANNED_THRESHOLD = 100  # chars per page — below this, assume scanned
 _VISION_MODEL = "qwen2.5vl:7b"
 _VISION_MAX_PAGES = 60
+_VISION_NUM_PREDICT = 2048
+_VISION_NUM_CTX = 8192
+_VISION_PAGE_TIMEOUT_S = 240
+
+#: The transcription prompt. Pinned by test, and the pin is load-bearing.
+#:
+#: Its predecessor -- "Extract all text from this page. Preserve tables,
+#: headings, and formatting. Output as Markdown." -- made the model loop.
+#: PARSE-GATE-04 probe D changed ONLY this string, at temperature 0 with the
+#: same cap, and the page that had run to the token limit terminated normally.
+#: The old prompt asked for REFORMATTING on a page of plain two-column prose
+#: with no tables and no figures: a formatting instruction with nothing to
+#: format. Asking for transcription instead is the fix.
+#:
+#: "no LaTeX, no Markdown markup" is there because probe D, given a bare
+#: transcription instruction, emitted LaTeX sectioning anyway.
+VISION_PROMPT = (
+    "Transcribe all text on this page verbatim, in reading order. "
+    "Output plain text only — no LaTeX, no Markdown markup. "
+    "Keep each heading on its own line. "
+    "Keep table rows as lines with cells separated by ' | '."
+)
+
+
+class VisionTruncatedError(RuntimeError):
+    """A page hit `num_predict`, so the model was still generating when cut off.
+
+    Raised rather than returned, and raised on the FIRST such page: a truncated
+    page is almost always a repetition loop (PARSE-GATE-04 probe A), and its
+    text is a good prefix followed by a cycle. Storing that would be worse than
+    storing nothing, because the prefix looks correct. The cascade records the
+    raise as an unselectable error row and moves to the next parser.
+    """
+
+
 _OCR_ENGINE = "rapidocr"
 _OCR_MAX_PAGES = 100
 _MAX_ATTEMPTS = 5  # longest path: docling, docling_sanitized, pymupdf,
@@ -164,8 +199,21 @@ def parse_with_pymupdf(pdf_path: str) -> str:
     return "\n\n---\n\n".join(pages)
 
 
-def parse_with_vision(pdf_path: str, vision_model: str = _VISION_MODEL) -> str:
-    """Parse a scanned PDF by sending page images to a vision model via Ollama."""
+def parse_with_vision(
+    pdf_path: str,
+    vision_model: str = _VISION_MODEL,
+    num_predict: int = _VISION_NUM_PREDICT,
+    num_ctx: int = _VISION_NUM_CTX,
+    page_timeout_s: int = _VISION_PAGE_TIMEOUT_S,
+    paper_id: int | None = None,
+) -> str:
+    """Parse a scanned PDF by sending page images to a vision model via Ollama.
+
+    Bounded on three axes (PARSE-GATE-06c): output tokens, context, and
+    wall-clock per page. Unbounded, one page of p455 generated a 211-character
+    cycle at 42.6 tok/s for ~50 minutes and would have restarted the Ollama
+    service on the third retry.
+    """
     doc = fitz.open(pdf_path)
     pages_md: list[str] = []
 
@@ -177,23 +225,48 @@ def parse_with_vision(pdf_path: str, vision_model: str = _VISION_MODEL) -> str:
             img_bytes = pix.tobytes("png")
             img_b64 = base64.b64encode(img_bytes).decode()
 
+            started = time.monotonic()
             response = ollama_chat(
                 model=vision_model,
+                paper_id=paper_id,
+                wall_timeout=page_timeout_s,
                 messages=[
                     {
                         "role": "user",
-                        "content": (
-                            "Extract all text from this page. Preserve tables, "
-                            "headings, and formatting. Output as Markdown."
-                        ),
+                        "content": VISION_PROMPT,
                         "images": [img_b64],
                     }
                 ],
-                options={"temperature": 0},
+                options={
+                    "temperature": 0,
+                    "num_predict": num_predict,
+                    "num_ctx": num_ctx,
+                },
             )
+            elapsed = time.monotonic() - started
+            done_reason = getattr(response, "done_reason", None)
+            logger.info(
+                "Vision page %d/%d: done_reason=%s eval_count=%s "
+                "prompt_eval_count=%s elapsed=%.1fs (paper_id=%s)",
+                page_num + 1, len(doc), done_reason,
+                getattr(response, "eval_count", None),
+                getattr(response, "prompt_eval_count", None),
+                elapsed, paper_id if paper_id is not None else "unknown",
+            )
+
+            if done_reason == "length":
+                # Fail the whole attempt on the FIRST truncated page. Every page
+                # already rendered is discarded: a document assembled from a good
+                # prefix plus a repetition cycle is worse than no document,
+                # because the prefix reads as correct.
+                raise VisionTruncatedError(
+                    f"page {page_num + 1} hit num_predict={num_predict} "
+                    f"(done_reason='length') — still generating when cut off, "
+                    "almost certainly a repetition loop; attempt discarded"
+                )
+
             page_text = response.message.content
             pages_md.append(f"<!-- Page {page_num + 1} -->\n{page_text}")
-            logger.info("Qwen2.5-VL parsed page %d/%d", page_num + 1, len(doc))
     finally:
         doc.close()
 
@@ -358,7 +431,7 @@ def _commit_attempts(db, paper_id, pdf_hash, version, attempts) -> None:
 
 
 def _run_parser(name: str, pdf_path: str, vision_model: str,
-                ocr_engine: str = _OCR_ENGINE) -> str:
+                ocr_engine: str = _OCR_ENGINE, vision_opts: dict | None = None) -> str:
     if name == "docling":
         return parse_with_docling(pdf_path)
     if name in ("docling_ocr", "docling_ocr_sanitized"):
@@ -366,7 +439,8 @@ def _run_parser(name: str, pdf_path: str, vision_model: str,
     if name == "pymupdf":
         return parse_with_pymupdf(pdf_path)
     if name == "qwen2.5vl":
-        return parse_with_vision(pdf_path, vision_model=vision_model)
+        return parse_with_vision(pdf_path, vision_model=vision_model,
+                                 **(vision_opts or {}))
     raise ValueError(f"unknown parser: {name}")
 
 
@@ -407,6 +481,9 @@ def parse_pdf(
     vision_max_pages = _VISION_MAX_PAGES
     ocr_engine = _OCR_ENGINE
     ocr_max_pages = _OCR_MAX_PAGES
+    vision_num_predict = _VISION_NUM_PREDICT
+    vision_num_ctx = _VISION_NUM_CTX
+    vision_page_timeout_s = _VISION_PAGE_TIMEOUT_S
     thresholds = Thresholds()
     if spec and hasattr(spec, "pdf_parsing"):
         scanned_threshold = spec.pdf_parsing.scanned_text_threshold
@@ -414,10 +491,22 @@ def parse_pdf(
         vision_max_pages = getattr(spec.pdf_parsing, "vision_max_pages", _VISION_MAX_PAGES)
         ocr_engine = getattr(spec.pdf_parsing, "ocr_engine", _OCR_ENGINE)
         ocr_max_pages = getattr(spec.pdf_parsing, "ocr_max_pages", _OCR_MAX_PAGES)
+        vision_num_predict = getattr(spec.pdf_parsing, "vision_num_predict",
+                                     _VISION_NUM_PREDICT)
+        vision_num_ctx = getattr(spec.pdf_parsing, "vision_num_ctx", _VISION_NUM_CTX)
+        vision_page_timeout_s = getattr(spec.pdf_parsing, "vision_page_timeout_s",
+                                        _VISION_PAGE_TIMEOUT_S)
         # The only construction path: engine defaults and spec defaults are pinned
         # equal by test, so this cannot silently diverge from Thresholds().
         thresholds = Thresholds.from_mapping(
             getattr(spec.pdf_parsing, "parse_quality", None))
+
+    vision_opts = {
+        "num_predict": vision_num_predict,
+        "num_ctx": vision_num_ctx,
+        "page_timeout_s": vision_page_timeout_s,
+        "paper_id": paper_id,
+    }
 
     pdf_hash = compute_pdf_hash(pdf_path)
 
@@ -458,6 +547,7 @@ def parse_pdf(
 
     attempts: list[ParseAttempt] = []
     sanitized_path: str | None = None
+    attempts_committed = False
 
     # Contract 2: the sanitized copy may be read by more than one attempt, so
     # its lifetime is the CALL, not the attempt -- and it must never outlive
@@ -519,7 +609,8 @@ def parse_pdf(
             if markdown is None:
                 started = time.monotonic()
                 try:
-                    markdown = parse_with_vision(pdf_path, vision_model=vision_model)
+                    markdown = parse_with_vision(pdf_path, vision_model=vision_model,
+                                                 **vision_opts)
                     parser_used = "qwen2.5vl"
                 except Exception as exc:
                     _record_error("qwen2.5vl", exc, started)
@@ -588,7 +679,8 @@ def parse_pdf(
                 )
                 started = time.monotonic()
                 try:
-                    markdown = parse_with_vision(pdf_path, vision_model=vision_model)
+                    markdown = parse_with_vision(pdf_path, vision_model=vision_model,
+                                                 **vision_opts)
                     parser_used = "qwen2.5vl"
                 except Exception as exc:
                     _record_error("qwen2.5vl", exc, started)
@@ -673,7 +765,8 @@ def parse_pdf(
 
             started = time.monotonic()
             try:
-                markdown = _run_parser(nxt, target_path, vision_model, ocr_engine=ocr_engine)
+                markdown = _run_parser(nxt, target_path, vision_model,
+                                       ocr_engine=ocr_engine, vision_opts=vision_opts)
             except Exception as exc:
                 _record_error(nxt, exc, started)
                 break
@@ -689,6 +782,7 @@ def parse_pdf(
             # their own, against the version this attempt would have taken, with no
             # asset row (parse_attempts has no FK to full_text_assets), then fail.
             _commit_attempts(db, paper_id, pdf_hash, version, attempts)
+            attempts_committed = True
             raise ValueError(
                 f"Paper {paper_id}: all parsers returned empty text — "
                 f"{len(attempts)} attempt(s) recorded, no file written, "
@@ -734,6 +828,7 @@ def parse_pdf(
             # provenance is missing.
             _insert_attempts(db, paper_id, pdf_hash, version, attempts, now)
             db._conn.commit()
+            attempts_committed = True
 
             # DB committed — now rename temp to final (atomic on POSIX)
             tmp_path.rename(md_path)
@@ -756,6 +851,15 @@ def parse_pdf(
             attempts=attempts,
             accepted_parser=parser_used,
         )
+    except BaseException:
+        # Any raise out of parse_pdf -- a parser that blew up on the initial
+        # route, a truncated vision attempt, an injected failure -- must still
+        # leave the ledger behind. Without this, the paths that re-raise the
+        # real cause (which is more useful than a generic message) were exactly
+        # the paths that lost their rows.
+        if attempts and not attempts_committed:
+            _commit_attempts(db, paper_id, pdf_hash, version, attempts)
+        raise
     finally:
         if sanitized_path is not None:
             Path(sanitized_path).unlink(missing_ok=True)

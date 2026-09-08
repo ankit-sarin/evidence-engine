@@ -127,6 +127,7 @@ def _ran(db, pid) -> list[sqlite3.Row]:
 def _vision(text: str):
     m = MagicMock()
     m.message.content = text
+    m.done_reason = "stop"      # PARSE-GATE-06c: "length" aborts the attempt
     return m
 
 

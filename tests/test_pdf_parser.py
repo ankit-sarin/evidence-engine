@@ -139,6 +139,7 @@ def test_scanned_routes_to_vision_model(scanned_pdf, db):
 
     mock_response = MagicMock()
     mock_response.message.content = "# Extracted Text\n\nSome scanned content here."
+    mock_response.done_reason = "stop"   # PARSE-GATE-06c
 
     with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response):
         result = parse_pdf(str(scanned_pdf), pid, "test_parse", db)
@@ -263,6 +264,7 @@ def test_docling_and_pymupdf_sparse_triggers_vision(scanned_pdf, db):
 
     mock_response = MagicMock()
     mock_response.message.content = "# OCR extracted content from scanned pages"
+    mock_response.done_reason = "stop"   # PARSE-GATE-06c
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"):
         with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response):
@@ -455,6 +457,7 @@ def test_parse_pdf_uses_spec_threshold(digital_pdf, db):
 
     mock_response = MagicMock()
     mock_response.message.content = "# OCR content from custom model"
+    mock_response.done_reason = "stop"   # PARSE-GATE-06c
 
     with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response) as mock_chat:
         result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=spec)

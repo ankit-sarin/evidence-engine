@@ -205,6 +205,32 @@ class PDFParsing(BaseModel):
             "call to recover a document whose problem is not its parse."
         ),
     )
+    vision_num_predict: int = Field(
+        default=2048, ge=1,
+        description=(
+            "Output-token cap per page for the vision model. Without it the "
+            "model can generate to the 128k context: PARSE-GATE-04 measured a "
+            "211-character loop running at 42.6 tok/s, ~50 minutes for one page. "
+            "A good page stops well under this (page 1 of p455: 724 tokens)."
+        ),
+    )
+    vision_num_ctx: int = Field(
+        default=8192, ge=512,
+        description=(
+            "Context window for the vision model. A page image costs ~2,630 "
+            "prompt tokens, so 8k is ample; the model's 128k default inflates "
+            "the KV cache to 6.8 GiB for no benefit."
+        ),
+    )
+    vision_page_timeout_s: int = Field(
+        default=240, ge=1,
+        description=(
+            "Wall-clock budget for one page's vision call. A healthy page takes "
+            "~33 s. NOTE: this bounds the CALLER, not the request -- the HTTP "
+            "read timeout still runs to 900 s and the abandoned generation keeps "
+            "the runner slot (OLLAMA-CLIENT-01)."
+        ),
+    )
     ocr_engine: str = Field(
         default="rapidocr",
         description=(

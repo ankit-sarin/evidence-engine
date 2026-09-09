@@ -41,10 +41,16 @@ from typing import Any, Mapping
 
 from analysis.provenance.segment import sentences
 
+from engine.parsers.markers import RE_GLYPH
+
 # ── Phase 1 patterns, character-for-character from sweep.py ──────────
 
 RE_REFERENCES = re.compile(r"^#{1,6}\s*references\b", re.IGNORECASE | re.MULTILINE)
-RE_GLYPH = re.compile(r"GLYPH<[^>]*>|GLYPH&lt;[^&]*&gt;")
+# RE_GLYPH now lives in `engine/parsers/markers.py` and is imported above, so a
+# module that needs the pattern alone need not import this one and its segmenter
+# (FONT-AUDIT-01). It is re-exported here unchanged: `from
+# engine.parsers.parse_quality import RE_GLYPH` keeps working, and the pattern is
+# still one object with one definition.
 RE_IMAGE = re.compile(r"<!--\s*image\s*-->")
 RE_FORMULA = re.compile(r"<!--\s*formula-not-decoded\s*-->")
 

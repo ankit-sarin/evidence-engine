@@ -24,6 +24,11 @@ class ParseAttempt(BaseModel):
     elapsed_s: float = 0.0
     accepted: bool = False
     skipped_reason: str | None = None
+    #: `engine.parsers.font_audit` summary for this attempt, or None when the
+    #: attempt was not audited. **None is not "clean"** -- a document nobody
+    #: measured and a document measured clean are different facts, and the
+    #: FONT_EXPOSURE criterion is left unevaluated in the first case.
+    font_audit: dict[str, Any] | None = None
 
 
 class ParsedDocument(BaseModel):

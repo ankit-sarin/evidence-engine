@@ -183,6 +183,16 @@ class ParseQuality(BaseModel):
         default=1.0, ge=0.0,
         description="Max U+FFFD replacement characters per 1000 characters",
     )
+    font_exposure_per_kchar_max: float = Field(
+        default=5.0, ge=0.0,
+        description=(
+            "Max font-damaged characters per 1000 exported characters — markers "
+            "plus silent wrong characters placed in the text. Equal to "
+            "glyph_density_per_kchar_max by design, and note the two are COUPLED: "
+            "this criterion counts the same markers, so relaxing the glyph limit "
+            "alone does not relax the gate."
+        ),
+    )
 
 
 class PDFParsing(BaseModel):

@@ -23,6 +23,7 @@ from docling.document_converter import DocumentConverter
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
 from engine.parsers.models import ParseAttempt, ParsedDocument
+from engine.parsers import font_audit as _font_audit
 from engine.parsers.parse_quality import (
     EMPTY_TEXT,
     GLYPH_DENSITY,
@@ -76,6 +77,14 @@ class VisionTruncatedError(RuntimeError):
 _OCR_ENGINE = "rapidocr"
 _OCR_MAX_PAGES = 100
 _MAX_ATTEMPTS = 5  # longest path: docling, docling_sanitized, pymupdf,
+
+#: Wall-clock bound on the FONT_EXPOSURE alignment for one attempt. Checked
+#: BEFORE each page, never during one -- `difflib` cannot be interrupted -- so
+#: the real bound is this plus one page's alignment, about 70 s on the worst
+#: document in this corpus. On expiry the attempt records what it measured, says
+#: so in `reason`, and the verdict falls back to the four text criteria.
+_FONT_AUDIT_DEADLINE_S = 300.0
+
                    # docling_ocr, qwen2.5vl.
 _ERROR_MSG_CHARS = 300
 
@@ -393,6 +402,62 @@ def format_exclusion_detail(attempt: ParseAttempt) -> str:
     return "parse_quality: " + "; ".join(parts)
 
 
+def _audit_for_attempt(pdf_path, markdown, paper_id):
+    """(font_exposure_per_kchar or None, ledger JSON or None) for one attempt.
+
+    Never raises. A font audit is a measurement of the parse, not part of it: a
+    malformed font table must not turn a successful parse into a failed one. On
+    any error the criterion is left UNEVALUATED -- `None`, never 0.0 -- and the
+    reason is recorded on the row, so a reader can tell "no font damage" from
+    "nobody looked".
+
+    Blank output takes the structure path rather than the alignment path. An
+    audit of empty text is arithmetically valid and reports an exposure of 0.0,
+    which is the one number this design refuses to write for a document nobody
+    could measure: `EMPTY_TEXT` already decides the verdict, and the row should
+    say the text was absent, not that it was clean.
+    """
+    if not markdown or not markdown.strip():
+        try:
+            rows = _font_audit.font_structure(pdf_path)
+        except Exception:  # noqa: BLE001
+            return None, None
+        return None, _font_audit.structure_ledger_json(rows, "no_text_produced")
+    try:
+        result = _font_audit.audit(pdf_path, markdown,
+                                   deadline_s=_FONT_AUDIT_DEADLINE_S)
+    except Exception as exc:  # noqa: BLE001 - see docstring
+        logger.warning("Paper %s: font audit failed (%s); FONT_EXPOSURE not evaluated",
+                       paper_id, error_reason(exc))
+        try:
+            rows = _font_audit.font_structure(pdf_path)
+        except Exception:  # noqa: BLE001
+            return None, None
+        return None, _font_audit.structure_ledger_json(
+            rows, f"audit_error: {error_reason(exc)}")
+    exposure = None if result.reason else result.font_exposure_per_kchar
+    return exposure, _font_audit.as_ledger_json(result)
+
+
+def _attach_structure(pdf_path, attempts, paper_id) -> None:
+    """Record the font inventory on the attempts of a parse that produced nothing.
+
+    A parse that fails entirely is the one most worth a record (Contract 7), and
+    the fonts are the half of the audit that does not need text. Sub-second even
+    on a 728-page volume. Attempts that already carry an audit keep it.
+    """
+    try:
+        rows = _font_audit.font_structure(pdf_path)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Paper %s: font structure unreadable (%s)",
+                       paper_id, error_reason(exc))
+        return
+    payload = _font_audit.structure_ledger_json(rows, "no_text_produced")
+    for att in attempts:
+        if att.font_audit is None:
+            att.font_audit = payload
+
+
 def _insert_attempts(db, paper_id, pdf_hash, version, attempts, now) -> None:
     """INSERT the attempt rows. Does NOT commit -- the caller owns the transaction."""
     for att in attempts:
@@ -400,12 +465,13 @@ def _insert_attempts(db, paper_id, pdf_hash, version, attempts, now) -> None:
             """INSERT INTO parse_attempts
                (paper_id, pdf_hash, parsed_text_version, attempt_index,
                 parser_used, passed, failures, metrics, elapsed_s,
-                accepted, skipped_reason, created_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                accepted, skipped_reason, created_at, font_audit)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (paper_id, pdf_hash, version, att.attempt_index,
              att.parser_used, int(att.passed),
              json.dumps(att.failures), json.dumps(att.metrics),
-             att.elapsed_s, int(att.accepted), att.skipped_reason, now),
+             att.elapsed_s, int(att.accepted), att.skipped_reason, now,
+             json.dumps(att.font_audit) if att.font_audit is not None else None),
         )
 
 
@@ -712,7 +778,9 @@ def parse_pdf(
             stripped = markdown.strip()
             if not stripped or (is_reroute and len(stripped) < scanned_threshold):
                 unusable.add(parser_used)
-            verdict = assess(markdown, thresholds)
+            exposure, audit_json = _audit_for_attempt(pdf_path, markdown, paper_id)
+            verdict = assess(markdown, thresholds,
+                             font_exposure_per_kchar=exposure)
             judged += 1
             attempts.append(ParseAttempt(
                 attempt_index=len(attempts) + 1,
@@ -721,6 +789,7 @@ def parse_pdf(
                 failures=list(verdict.failures),
                 metrics=dict(verdict.metrics),
                 elapsed_s=round(time.monotonic() - started, 3),
+                font_audit=audit_json,
             ))
             logger.info(
                 "Paper %d attempt %d: parser=%s verdict=%s elapsed=%.2fs",
@@ -781,6 +850,7 @@ def parse_pdf(
             # written inside the asset transaction, which never ran. Commit them on
             # their own, against the version this attempt would have taken, with no
             # asset row (parse_attempts has no FK to full_text_assets), then fail.
+            _attach_structure(pdf_path, attempts, paper_id)
             _commit_attempts(db, paper_id, pdf_hash, version, attempts)
             attempts_committed = True
             raise ValueError(

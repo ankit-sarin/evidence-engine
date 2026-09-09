@@ -476,10 +476,19 @@ def test_ondisk_yaml_yields_engine_defaults():
 
 
 def test_spec_override_reaches_assess(digital_pdf, db):
-    """Relaxing the glyph limit turns a would-be failure into a pass."""
+    """Relaxing the glyph limits turns a would-be failure into a pass.
+
+    BOTH limits, since FONT-AUDIT-02: `FONT_EXPOSURE` is
+    `(marked_in_text + silent_in_text_lo) / kchar` and `marked_in_text` is the
+    same marker count `GLYPH_DENSITY` uses, so the fifth criterion **strictly
+    dominates the third** and relaxing one alone no longer relaxes the gate.
+    That coupling is the brief's formula, not an accident, and it is pinned by
+    `test_font_exposure_dominates_glyph_density` below.
+    """
     pid = _paper(db)
     spec = load_review_spec(SPEC)
     spec.pdf_parsing.parse_quality.glyph_density_per_kchar_max = 10_000.0
+    spec.pdf_parsing.parse_quality.font_exposure_per_kchar_max = 10_000.0
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf:

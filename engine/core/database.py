@@ -137,7 +137,8 @@ CREATE TABLE IF NOT EXISTS parse_attempts (
     elapsed_s           REAL,
     accepted            INTEGER NOT NULL DEFAULT 0,
     skipped_reason      TEXT,           -- non-NULL => parser was never run
-    created_at          TEXT NOT NULL
+    created_at          TEXT NOT NULL,
+    font_audit          TEXT            -- JSON object, engine.parsers.font_audit
 );
 
 CREATE INDEX IF NOT EXISTS idx_parse_attempts_paper
@@ -248,6 +249,10 @@ _SIMPLE_MIGRATIONS = [
     "ALTER TABLE extractions ADD COLUMN auditor_model_digest TEXT",
     # Migration 006: PDF content hash on papers table
     "ALTER TABLE papers ADD COLUMN pdf_content_hash TEXT",
+    # FONT-AUDIT-02: per-attempt font-exposure audit summary, JSON. NULL means
+    # the attempt was not audited (it produced no text, or predates the column);
+    # it never means "audited and clean" -- see engine/parsers/font_audit.py.
+    "ALTER TABLE parse_attempts ADD COLUMN font_audit TEXT",
 ]
 
 _EVIDENCE_SPANS_REBUILD = """

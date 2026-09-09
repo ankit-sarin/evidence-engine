@@ -49,6 +49,7 @@ import difflib
 import html
 import io
 import re
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable, Sequence
@@ -63,7 +64,7 @@ from engine.parsers.markers import RE_GLYPH, RE_GLYPH_ATTRIBUTED
 __all__ = [
     "SIGNATURE", "UNRESOLVING", "ESTIMATOR",
     "ALIGN_BLOCK_MIN", "MUPDF_BASEFONT_MAX", "FontRow", "PaperAudit",
-    "audit", "font_structure",
+    "audit", "font_structure", "as_ledger_json", "structure_ledger_json",
 ]
 
 #: Type0 + Identity-* encoding + no `/ToUnicode`. The structural signature
@@ -194,7 +195,28 @@ class PaperAudit:
     exposure_lo: float
     exposure_hi: float
     estimator: str
+    #: The alignment parameter this result was produced with, carried so a stored
+    #: row can be compared with a later one rather than assumed comparable.
+    block_min: int = ALIGN_BLOCK_MIN
+    #: `None` when every page was measured. Otherwise why the measurement is
+    #: incomplete -- currently only `alignment_timeout`, whose text names how
+    #: many pages were reached. **When it is set, `silent_in_text_lo` and
+    #: `_hi` are floors over the pages that WERE aligned and the identity
+    #: `hi + dropped == silent total` does not hold**, because the remaining
+    #: pages were neither placed nor dropped: nobody looked.
+    reason: str | None = None
     fonts: tuple[FontRow, ...] = field(default_factory=tuple)
+
+    @property
+    def font_exposure_per_kchar(self) -> float:
+        """Marked plus placed-silent characters per thousand exported characters.
+
+        The FLOOR, deliberately: `_lo` and not `_hi`, because a gate criterion
+        that can fail a document on an upper bound fails it on characters nobody
+        located. `_hi` is telemetry and stays telemetry.
+        """
+        total = self.marked_in_text + self.silent_in_text_lo
+        return round(1000.0 * total / self.exported_chars, 3) if self.exported_chars else 0.0
 
 
 # ── normalisation ────────────────────────────────────────────────────
@@ -418,6 +440,7 @@ def audit(
     exported_text: str,
     *,
     block_min: int = ALIGN_BLOCK_MIN,
+    deadline_s: float | None = None,
 ) -> PaperAudit:
     """Audit one PDF against the markdown that was exported from it.
 
@@ -426,6 +449,15 @@ def audit(
     contributes nothing to `_lo`, `_hi` or `_dropped` by definition -- and it is
     what keeps paper 415 (728 pages, 1.44M characters, seven signature
     characters) from costing a full-document alignment per page.
+
+    `deadline_s` bounds the alignment phase. **It is checked BEFORE each page,
+    never during one**, because `difflib.SequenceMatcher.get_matching_blocks` is
+    a single uninterruptible call -- so the real bound is the deadline plus one
+    page's alignment, which on the worst document in this corpus (415) is about
+    70 s. On expiry the remaining pages are left unmeasured, `reason` is set, and
+    the caller is expected to treat the exposure as unknown rather than as low.
+    The pages already aligned keep their counts; they are a floor, and the reason
+    string says how many pages produced it.
     """
     md_norm = normalise_exported_text(exported_text)
     doc = fitz.open(str(pdf_path))
@@ -482,9 +514,19 @@ def audit(
 
         # Pass 2 — align only the pages that carry silent signature characters.
         lo = hi = dropped = 0
-        for row in page_rows:
-            if not row["silent"]:
-                continue
+        reason: str | None = None
+        started = time.monotonic()
+        aligned_pages = 0
+        to_align = [r for r in page_rows if r["silent"]]
+        for row in to_align:
+            if deadline_s is not None and time.monotonic() - started > deadline_s:
+                reason = (
+                    f"alignment_timeout: {aligned_pages} of {len(to_align)} "
+                    f"pages with silent characters aligned in {deadline_s:g}s; "
+                    "the remainder were neither placed nor dropped"
+                )
+                break
+            aligned_pages += 1
             page_norm, idx = _normalise(row["raw"])
             inverse: dict[int, int] = {}
             for norm_i, src_i in enumerate(idx):
@@ -520,6 +562,8 @@ def audit(
             exposure_lo=_ratio(len(marked) + lo, exported_chars),
             exposure_hi=_ratio(len(marked) + hi, exported_chars),
             estimator=ESTIMATOR,
+            block_min=block_min,
+            reason=reason,
             fonts=fonts,
         )
     finally:
@@ -556,6 +600,77 @@ def font_structure(pdf_path: str | Path) -> tuple[FontRow, ...]:
         return _font_rows(objs, set(), set(), programs, {})
     finally:
         doc.close()
+
+
+def as_ledger_json(result: PaperAudit) -> dict[str, Any]:
+    """The `parse_attempts.font_audit` payload for an audited attempt.
+
+    `fonts` is filtered to classified rows. Unfiltered it would store **1,647
+    font objects for paper 415**, almost all of them irrelevant Type1 subsets, to
+    describe seven damaged characters; `total_fonts` carries the full count so
+    nothing is lost but the noise.
+    """
+    return {
+        "estimator": result.estimator,
+        "block_min": result.block_min,
+        "reason": result.reason,
+        "font_exposure_per_kchar": result.font_exposure_per_kchar,
+        "signature_fonts": result.signature_fonts,
+        "unresolving_fonts": result.unresolving_fonts,
+        "total_fonts": result.total_fonts,
+        "sig_chars_pdf": result.sig_chars_pdf,
+        "marked_in_text": result.marked_in_text,
+        "marked_unattributed": result.marked_unattributed,
+        "silent_in_text_lo": result.silent_in_text_lo,
+        "silent_in_text_hi": result.silent_in_text_hi,
+        "silent_on_dropped_pages": result.silent_on_dropped_pages,
+        "space_recoverable": result.space_recoverable,
+        "exported_chars": result.exported_chars,
+        "exposure_lo": result.exposure_lo,
+        "exposure_hi": result.exposure_hi,
+        "fonts": [_font_json(f) for f in result.fonts if f.klass],
+    }
+
+
+def structure_ledger_json(rows: Sequence[FontRow], reason: str) -> dict[str, Any]:
+    """The payload for an attempt that produced no text to measure.
+
+    Every count is 0 and `font_exposure_per_kchar` is **absent, not zero**: this
+    row records which fonts the PDF declares, and says in `reason` why that is
+    all it records.
+    """
+    return {
+        "estimator": ESTIMATOR,
+        "block_min": None,
+        "reason": reason,
+        "font_exposure_per_kchar": None,
+        "signature_fonts": sum(1 for r in rows if r.klass == SIGNATURE),
+        "unresolving_fonts": 0,
+        "total_fonts": len(rows),
+        "sig_chars_pdf": 0,
+        "marked_in_text": 0,
+        "marked_unattributed": 0,
+        "silent_in_text_lo": 0,
+        "silent_in_text_hi": 0,
+        "silent_on_dropped_pages": 0,
+        "space_recoverable": 0,
+        "exported_chars": 0,
+        "exposure_lo": None,
+        "exposure_hi": None,
+        "fonts": [_font_json(f) for f in rows if f.klass],
+    }
+
+
+def _font_json(f: FontRow) -> dict[str, Any]:
+    return {
+        "name": f.name, "basefont": f.basefont, "klass": f.klass,
+        "subtype": f.subtype, "encoding": f.encoding,
+        "embedded": f.embedded, "program": f.program,
+        "has_cmap": f.has_cmap, "has_post": f.has_post,
+        "pages": list(f.pages), "chars_pdf": f.chars_pdf,
+        "codes_lt32": f.codes_lt32, "codes_ge32": f.codes_ge32,
+        "space_recoverable": f.space_recoverable,
+    }
 
 
 def _ratio(n: int, d: int) -> float:

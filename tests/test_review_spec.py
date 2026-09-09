@@ -123,3 +123,84 @@ def test_load_malformed_yaml_raises_review_spec_error(tmp_path):
 def test_review_spec_error_is_value_error():
     """M11: ReviewSpecError inherits from ValueError."""
     assert issubclass(ReviewSpecError, ValueError)
+
+
+# ── SPEC-AUTH-01 T1: strictness — unknown keys are rejected ──────────
+#
+# The spec is the review's configuration authority. Under the previous
+# `extra='ignore'` a misspelled key was dropped with no error and no
+# warning, so a review could declare configuration that never took effect
+# and read as if it had.
+
+
+def _write(tmp_path, raw):
+    p = tmp_path / "spec.yaml"
+    p.write_text(yaml.dump(raw))
+    return p
+
+
+def test_every_spec_model_forbids_extra_keys():
+    """Structural pin: no model in review_spec.py may be lenient.
+
+    Iterating the module rather than listing names is deliberate — a model
+    added later inherits the guarantee or turns this test red.
+    """
+    import inspect
+
+    from pydantic import BaseModel
+
+    from engine.core import review_spec as rs
+
+    models = [
+        obj for obj in vars(rs).values()
+        if inspect.isclass(obj)
+        and issubclass(obj, BaseModel)
+        and obj.__module__ == rs.__name__
+    ]
+    assert len(models) >= 17, f"expected the full model set, found {len(models)}"
+    lenient = [m.__name__ for m in models if m.model_config.get("extra") != "forbid"]
+    assert lenient == [], f"models not forbidding extra keys: {lenient}"
+
+
+def test_unknown_top_level_key_rejected_and_named(tmp_path):
+    raw = yaml.safe_load(SPEC_PATH.read_text())
+    raw["reviw_id"] = "typo"
+    with pytest.raises(ReviewSpecError) as exc:
+        load_review_spec(_write(tmp_path, raw))
+    assert "reviw_id" in str(exc.value)
+    assert "unknown key" in str(exc.value)
+
+
+# One case per nested model. `path` is where the bogus key is planted;
+# `expected` is the dotted path the error message must name.
+NESTED_CASES = [
+    (["pico"], "pico.bogus_key"),
+    (["search_strategy"], "search_strategy.bogus_key"),
+    (["screening_models"], "screening_models.bogus_key"),
+    (["ft_screening_models"], "ft_screening_models.bogus_key"),
+    (["screening_criteria"], "screening_criteria.bogus_key"),
+    (["extraction_schema"], "extraction_schema.bogus_key"),
+    (["extraction_schema", "fields", 0], "extraction_schema.fields.0.bogus_key"),
+    (["specialty_scope"], "specialty_scope.bogus_key"),
+    (["pdf_quality_check"], "pdf_quality_check.bogus_key"),
+    (["extraction_models"], "extraction_models.bogus_key"),
+    (["pdf_parsing"], "pdf_parsing.bogus_key"),
+    (["pdf_parsing", "parse_quality"], "pdf_parsing.parse_quality.bogus_key"),
+    (["cloud_models"], "cloud_models.bogus_key"),
+    (["cloud_models", "openai"], "cloud_models.openai.bogus_key"),
+    (["distribution_monitor"], "distribution_monitor.bogus_key"),
+]
+
+
+@pytest.mark.parametrize("path,expected", NESTED_CASES, ids=[c[1] for c in NESTED_CASES])
+def test_unknown_nested_key_rejected_and_named(tmp_path, path, expected):
+    raw = yaml.safe_load(SPEC_PATH.read_text())
+    node = raw
+    for step in path:
+        if isinstance(node, dict) and step not in node:
+            node[step] = {}
+        node = node[step]
+    node["bogus_key"] = "x"
+    with pytest.raises(ReviewSpecError) as exc:
+        load_review_spec(_write(tmp_path, raw))
+    assert expected in str(exc.value), str(exc.value)

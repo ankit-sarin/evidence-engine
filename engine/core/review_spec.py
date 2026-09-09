@@ -7,13 +7,30 @@ from pathlib import Path
 from typing import Optional
 
 import yaml
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
+
+
+# ── Strictness ───────────────────────────────────────────────────────
+
+
+class _SpecModel(BaseModel):
+    """Base for every Review Spec model.
+
+    `extra='forbid'` at every level, deliberately. Under the previous
+    `extra='ignore'` a misspelled key was dropped with no error and no
+    warning, so a review could declare configuration that never took
+    effect and read as if it had. A spec is the review's configuration
+    authority; a key it does not recognise is a defect in the spec, not
+    a comment.
+    """
+
+    model_config = ConfigDict(extra="forbid")
 
 
 # ── Extraction Schema ────────────────────────────────────────────────
 
 
-class ExtractionField(BaseModel):
+class ExtractionField(_SpecModel):
     """Single field to extract from a study's full text."""
 
     name: str
@@ -27,7 +44,7 @@ class ExtractionField(BaseModel):
     )
 
 
-class ExtractionSchema(BaseModel):
+class ExtractionSchema(_SpecModel):
     """Full extraction schema organized by tier."""
 
     fields: list[ExtractionField]
@@ -46,7 +63,7 @@ class ExtractionSchema(BaseModel):
 # ── PICO ─────────────────────────────────────────────────────────────
 
 
-class PICO(BaseModel):
+class PICO(_SpecModel):
     """Population, Intervention, Comparator, Outcomes."""
 
     population: str
@@ -58,7 +75,7 @@ class PICO(BaseModel):
 # ── Search Strategy ──────────────────────────────────────────────────
 
 
-class SearchStrategy(BaseModel):
+class SearchStrategy(_SpecModel):
     """Databases and query parameters for literature search."""
 
     databases: list[str]
@@ -80,14 +97,14 @@ class SearchStrategy(BaseModel):
 # ── Screening Criteria ───────────────────────────────────────────────
 
 
-class ScreeningModels(BaseModel):
+class ScreeningModels(_SpecModel):
     """Model configuration for dual-model screening."""
 
     primary: str = Field(default="qwen3:8b", description="Fast high-recall primary screener")
     verification: str = Field(default="qwen3:32b", description="Larger model for verification of includes")
 
 
-class FTScreeningModels(BaseModel):
+class FTScreeningModels(_SpecModel):
     """Model configuration for full-text screening."""
 
     primary: str = Field(default="qwen3.5:27b", description="Full-text primary screener")
@@ -96,7 +113,7 @@ class FTScreeningModels(BaseModel):
     temperature: float = Field(default=0.0, ge=0.0, le=1.0)
 
 
-class ExtractionModels(BaseModel):
+class ExtractionModels(_SpecModel):
     """Model configuration for the two-pass local extractor.
 
     `think` is declared per pass and always passed explicitly to Ollama.
@@ -124,7 +141,7 @@ class ExtractionModels(BaseModel):
     )
 
 
-class ScreeningCriteria(BaseModel):
+class ScreeningCriteria(_SpecModel):
     """Inclusion/exclusion rules for title-abstract screening."""
 
     inclusion: list[str]
@@ -134,7 +151,7 @@ class ScreeningCriteria(BaseModel):
 # ── Specialty Scope ──────────────────────────────────────────────────
 
 
-class SpecialtyScope(BaseModel):
+class SpecialtyScope(_SpecModel):
     """Surgical specialty inclusion/exclusion scope for screening."""
 
     included: list[str] = Field(min_length=1)
@@ -158,7 +175,7 @@ class SpecialtyScope(BaseModel):
 # ── PDF Parsing ─────────────────────────────────────────────────────
 
 
-class ParseQuality(BaseModel):
+class ParseQuality(_SpecModel):
     """Absolute thresholds for the parse-quality gate.
 
     Defaults mirror `engine.parsers.parse_quality.Thresholds` exactly; a test
@@ -195,7 +212,7 @@ class ParseQuality(BaseModel):
     )
 
 
-class PDFParsing(BaseModel):
+class PDFParsing(_SpecModel):
     """Configuration for PDF parsing thresholds and models."""
 
     scanned_text_threshold: int = Field(
@@ -268,7 +285,7 @@ class PDFParsing(BaseModel):
 # ── Cloud Models ────────────────────────────────────────────────────
 
 
-class CloudModelConfig(BaseModel):
+class CloudModelConfig(_SpecModel):
     """Configuration for a single cloud extraction arm."""
 
     model: str = Field(description="Model identifier (e.g., 'o4-mini-2025-04-16')")
@@ -276,7 +293,7 @@ class CloudModelConfig(BaseModel):
     cost_output_per_m: float = Field(description="Cost per 1M output tokens (USD)")
 
 
-class CloudModels(BaseModel):
+class CloudModels(_SpecModel):
     """Configuration for cloud extraction arms (optional)."""
 
     openai: Optional[CloudModelConfig] = None
@@ -286,7 +303,7 @@ class CloudModels(BaseModel):
 # ── PDF Quality Check ───────────────────────────────────────────────
 
 
-class DistributionMonitorConfig(BaseModel):
+class DistributionMonitorConfig(_SpecModel):
     """Thresholds for post-extraction distribution collapse detection."""
 
     collapsed_min_papers: int = Field(
@@ -303,7 +320,7 @@ class DistributionMonitorConfig(BaseModel):
     )
 
 
-class PDFQualityCheck(BaseModel):
+class PDFQualityCheck(_SpecModel):
     """Configuration for AI-based PDF quality classification."""
 
     enabled: bool = Field(default=True, description="Enable PDF quality check")
@@ -328,7 +345,7 @@ class PDFQualityCheck(BaseModel):
 # ── Review Spec (top-level) ──────────────────────────────────────────
 
 
-class ReviewSpec(BaseModel):
+class ReviewSpec(_SpecModel):
     """Top-level model for a systematic review specification."""
 
     title: str
@@ -414,11 +431,33 @@ class ReviewSpecError(ValueError):
     """Raised when a review spec cannot be loaded or parsed."""
 
 
+def _format_validation_error(path: Path, exc: ValidationError) -> str:
+    """Render a Pydantic ValidationError naming the offending key path.
+
+    Every model is `extra='forbid'`, so the commonest failure is a key the
+    spec does not declare. A reader needs the dotted path to it, not a
+    traceback: `pdf_parsing.vision_modle` says where to look, `ReviewSpec`
+    does not.
+    """
+    lines = [f"Review spec at {path} is invalid ({exc.error_count()} error(s)):"]
+    for err in exc.errors():
+        loc = ".".join(str(part) for part in err["loc"]) or "<root>"
+        if err["type"] == "extra_forbidden":
+            lines.append(
+                f"  {loc}: unknown key — the Review Spec declares no such field. "
+                f"Remove it or correct the spelling."
+            )
+        else:
+            lines.append(f"  {loc}: {err['msg']}")
+    return "\n".join(lines)
+
+
 def load_review_spec(path: str | Path) -> ReviewSpec:
     """Load a YAML Review Spec from disk and return a validated model.
 
-    Raises ReviewSpecError with a descriptive message on file-not-found
-    or YAML parse errors.
+    Raises ReviewSpecError with a descriptive message on file-not-found,
+    YAML parse errors, or schema validation failure (including an unknown
+    key, which every model rejects — see `_SpecModel`).
     """
     path = Path(path)
     try:
@@ -427,10 +466,13 @@ def load_review_spec(path: str | Path) -> ReviewSpec:
     except FileNotFoundError:
         raise ReviewSpecError(
             f"Review spec not found at {path}. "
-            f"Expected a YAML file (e.g., review_specs/<review_name>_v1.yaml)."
+            f"Expected a YAML file (e.g., review_specs/<review_id>.yaml)."
         )
     except yaml.YAMLError as exc:
         raise ReviewSpecError(
             f"Review spec at {path} contains invalid YAML: {exc}"
         )
-    return ReviewSpec.model_validate(raw)
+    try:
+        return ReviewSpec.model_validate(raw)
+    except ValidationError as exc:
+        raise ReviewSpecError(_format_validation_error(path, exc)) from exc

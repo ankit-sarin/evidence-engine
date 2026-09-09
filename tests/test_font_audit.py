@@ -42,6 +42,7 @@ from engine.parsers.font_audit import (
     MUPDF_BASEFONT_MAX,
     UNRESOLVING,
     audit,
+    font_structure,
     normalise_exported_text,
 )
 
@@ -414,3 +415,56 @@ def test_a_basefont_past_mupdfs_buffer_still_joins(tmp_path):
     assert row.chars_pdf > 0, "a clipped span name lost the font's characters"
     assert result.sig_chars_pdf == row.chars_pdf
     assert result.space_recoverable > 0
+
+
+# ── font_structure: the inventory without the scan (FONT-AUDIT-02) ───
+
+
+def test_font_structure_classifies_the_signature_without_touching_the_text(
+    tmp_path, monkeypatch
+):
+    """No character scan at all -- asserted by making one fatal.
+
+    `get_texttrace` is the module's only route to a character, so a version of
+    it that raises turns "does not scan" from a claim about the code into a
+    property the test enforces. Reading the source instead would pass against a
+    scan added tomorrow.
+    """
+    path, _ = _make_pdf(tmp_path, "an ordinary sentence of prose", broken=True,
+                        clean_too=True)
+
+    def explode(self, *a, **kw):
+        raise AssertionError("font_structure must not read characters")
+
+    monkeypatch.setattr(fitz.Page, "get_texttrace", explode)
+
+    rows = font_structure(path)
+    assert len(rows) >= 2, "the clean font must be inventoried too"
+    signature = [r for r in rows if r.klass == SIGNATURE]
+    assert len(signature) == 1
+    row = signature[0]
+    assert row.has_tounicode is False
+    assert row.embedded is True
+    assert row.has_cmap is False and row.has_post is False
+    assert row.pages == (1,)
+
+
+def test_font_structure_counts_nothing_because_it_counted_nothing(signature_pdf):
+    """Every character field is 0 -- not "unknown", not carried over from audit."""
+    path, _ = signature_pdf
+    rows = font_structure(path)
+    assert all(
+        (r.chars_pdf, r.codes_lt32, r.codes_ge32, r.space_recoverable) == (0, 0, 0, 0)
+        for r in rows
+    )
+    full = audit(path, "irrelevant")
+    assert {r.basefont for r in rows} == {r.basefont for r in full.fonts}
+    assert sum(r.chars_pdf for r in full.fonts) > 0, (
+        "the audited run must count something, or this test compares two zeroes"
+    )
+
+
+def test_font_structure_never_reports_the_unresolving_class(tmp_path):
+    """UNRESOLVING is a fact about rendering; structure alone cannot see it."""
+    path, _ = _make_pdf(tmp_path, "prose that resolves normally", broken=False)
+    assert all(r.klass != UNRESOLVING for r in font_structure(path))

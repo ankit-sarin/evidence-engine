@@ -29,7 +29,16 @@ are not interchangeable and the fence values are not the defaults below.
 PARSE-GATE-01 report's calibration section.
 
 Pure: no I/O, no database, no model calls. `compute_metrics` and `assess` are
-functions of their text argument alone.
+pure functions of their arguments; no I/O.
+
+**One criterion is not computed here, and that is deliberate.** `FONT_EXPOSURE`
+is judged from a number the caller measures against the PDF
+(`engine.parsers.font_audit.audit`), because seeing a wrong-but-valid character
+requires the font programs and this module must not open a file. It is judged
+here so that all five criteria share one threshold vocabulary and
+`Verdict.failures` stays the single source the cascade, the ledger and
+`format_exclusion_detail` all read. Passing nothing leaves it unevaluated -- see
+`assess`.
 """
 
 from __future__ import annotations
@@ -115,8 +124,18 @@ EMPTY_TEXT = "EMPTY_TEXT"
 SHATTERED = "SHATTERED"
 GLYPH_DENSITY = "GLYPH_DENSITY"
 REPLACEMENT_DENSITY = "REPLACEMENT_DENSITY"
+#: Damage the other four cannot see: characters a broken font made WRONG rather
+#: than absent. `GLYPH_DENSITY` counts the markers Docling writes for a CID below
+#: 32 and `REPLACEMENT_DENSITY` the U+FFFD another parser writes; a CID at or
+#: above 32 comes through as ordinary-looking prose and neither can count it.
+#: 586 carries 542 marked characters and 492 silent ones; 719 carries 5,472 and
+#: 22,057 (PARSE-GATE-09 §4). Same unit and same limit as `GLYPH_DENSITY`,
+#: because a reader should not have to hold two threshold semantics for two
+#: halves of one defect.
+FONT_EXPOSURE = "FONT_EXPOSURE"
 
-CRITERIA = (EMPTY_TEXT, SHATTERED, GLYPH_DENSITY, REPLACEMENT_DENSITY)
+CRITERIA = (EMPTY_TEXT, SHATTERED, GLYPH_DENSITY, REPLACEMENT_DENSITY,
+            FONT_EXPOSURE)
 
 
 @dataclass(frozen=True)
@@ -145,6 +164,14 @@ class Thresholds:
     chars_per_unit_min: float = 20.0
     glyph_density_per_kchar_max: float = 5.0
     replacement_density_per_kchar_max: float = 1.0
+    #: Deliberately EQUAL to `glyph_density_per_kchar_max`, and set by
+    #: consistency rather than by calibration: marked and silent corruption are
+    #: two halves of one defect measured in the same unit, so a document that
+    #: fails at 5 markers per kchar should fail at 5 wrong characters per kchar.
+    #: On the 2026-09 corpus this changes no verdict -- the three papers it fails
+    #: (719, 586, 699) already fail `GLYPH_DENSITY`. Its value is the next
+    #: corpus, not this one.
+    font_exposure_per_kchar_max: float = 5.0
 
     @classmethod
     def from_mapping(cls, mapping: Mapping[str, Any] | None) -> "Thresholds":
@@ -273,8 +300,22 @@ def compute_metrics(text: str) -> dict[str, Any]:
     }
 
 
-def assess(text: str, thresholds: Thresholds | None = None) -> Verdict:
+def assess(
+    text: str,
+    thresholds: Thresholds | None = None,
+    *,
+    font_exposure_per_kchar: float | None = None,
+) -> Verdict:
     """Judge `text` against `thresholds`. Pure; no I/O.
+
+    `font_exposure_per_kchar` is the caller's measurement of wrong-but-valid
+    characters per thousand exported characters, from
+    `engine.parsers.font_audit`. **`None` means the criterion was not evaluated
+    and is never read as zero** -- a document nobody measured and a document
+    measured clean are different facts, and collapsing them would let an
+    un-audited parse report a clean bill. When it is `None` the verdict is the
+    other four criteria and `FONT_EXPOSURE` appears in neither `failures` nor
+    `metrics`.
 
     Empty text short-circuits to a single `EMPTY_TEXT` failure rather than
     cascading: whitespace-only input would otherwise report a segmentation
@@ -310,5 +351,14 @@ def assess(text: str, thresholds: Thresholds | None = None) -> Verdict:
     if m["replacement_density_per_kchar"] > th.replacement_density_per_kchar_max:
         failures.append((REPLACEMENT_DENSITY, m["replacement_density_per_kchar"],
                          th.replacement_density_per_kchar_max))
+    # Strictly greater, exactly as the three above compare. A value of 5.0 is
+    # NOT a failure here for the same reason 5.0 is not a `GLYPH_DENSITY`
+    # failure: one limit, one comparison, or a reader has to remember which
+    # criterion is inclusive.
+    if font_exposure_per_kchar is not None:
+        m["font_exposure_per_kchar"] = font_exposure_per_kchar
+        if font_exposure_per_kchar > th.font_exposure_per_kchar_max:
+            failures.append((FONT_EXPOSURE, font_exposure_per_kchar,
+                             th.font_exposure_per_kchar_max))
 
     return Verdict(not failures, tuple(failures), m)

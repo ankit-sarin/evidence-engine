@@ -62,7 +62,8 @@ from engine.parsers.markers import RE_GLYPH, RE_GLYPH_ATTRIBUTED
 
 __all__ = [
     "SIGNATURE", "UNRESOLVING", "ESTIMATOR",
-    "ALIGN_BLOCK_MIN", "MUPDF_BASEFONT_MAX", "FontRow", "PaperAudit", "audit",
+    "ALIGN_BLOCK_MIN", "MUPDF_BASEFONT_MAX", "FontRow", "PaperAudit",
+    "audit", "font_structure",
 ]
 
 #: Type0 + Identity-* encoding + no `/ToUnicode`. The structural signature
@@ -525,6 +526,38 @@ def audit(
         doc.close()
 
 
+def font_structure(pdf_path: str | Path) -> tuple[FontRow, ...]:
+    """The font inventory alone -- no character scan, no alignment, no text.
+
+    This is what can be known about a PDF whose parse produced nothing to
+    measure: which fonts it declares, whether each is embedded and subset,
+    whether its program still carries a `cmap` or a `post`, and whether it
+    matches the signature. Every character count on the returned rows is 0,
+    because none was counted.
+
+    **`UNRESOLVING` can never appear here, and that is a property of the class,
+    not a gap in this function.** A font is UNRESOLVING only once one of its
+    characters has actually failed to resolve despite a `/ToUnicode` being
+    present, which is a fact about rendering and not about the dictionary. Rows
+    that would qualify carry `klass == ""` here; `audit()` is what can promote
+    them.
+
+    Cost is sub-second even on the worst document in the corpus: 0.17 s for
+    paper 415's 1,647 font objects across 728 pages, against 212 s for a full
+    `audit()` of the same file, essentially all of which is alignment.
+    """
+    doc = fitz.open(str(pdf_path))
+    try:
+        objs = _font_objects(doc)
+        programs: dict[str, dict[str, Any]] = {}
+        for o in objs.values():
+            if _is_signature(o) and o["name"] not in programs:
+                programs[o["name"]] = _program_facts(doc, o["xref"])
+        return _font_rows(objs, set(), set(), programs, {})
+    finally:
+        doc.close()
+
+
 def _ratio(n: int, d: int) -> float:
     return round(100.0 * n / d, 4) if d else 0.0
 
@@ -537,6 +570,7 @@ def _font_rows(
     per_font: dict[str, dict[str, int]],
 ) -> tuple[FontRow, ...]:
     rows: list[FontRow] = []
+    counted: set[str] = set()
     for o in sorted(objs.values(), key=lambda d: (d["name"], d["xref"])):
         name = o["name"]
         is_sig = _is_signature(o)
@@ -547,8 +581,9 @@ def _font_rows(
         # total to every object would multiply it, so the first row for a name
         # carries the count and the rest carry zero; the paper-level totals are
         # summed per name, never per row.
-        counted = any(r.name == name and r.chars_pdf for r in rows)
-        acc = per_font.get(name, {}) if (is_sig and not counted) else {}
+        acc = per_font.get(name, {}) if (is_sig and name not in counted) else {}
+        if acc:
+            counted.add(name)
         rows.append(FontRow(
             name=name,
             basefont=o["basefont"],

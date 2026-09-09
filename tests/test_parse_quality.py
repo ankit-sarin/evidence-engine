@@ -17,6 +17,7 @@ from engine.parsers.parse_quality import (
     ADDED_METRIC_NAMES,
     CRITERIA,
     EMPTY_TEXT,
+    FONT_EXPOSURE,
     GLYPH_DENSITY,
     METRIC_NAMES,
     PHASE1_METRIC_NAMES,
@@ -303,9 +304,17 @@ def test_phase1_names_match_the_sweep_definition_verbatim():
     assert keys - {"paper_id", "parsed_file"} == PHASE1_METRIC_NAMES
 
 
-def test_criterion_vocabulary_is_the_four_ruled_names():
-    assert set(CRITERIA) == {EMPTY_TEXT, SHATTERED, GLYPH_DENSITY, REPLACEMENT_DENSITY}
-    assert len(CRITERIA) == 4
+def test_criterion_vocabulary_is_the_five_ruled_names():
+    """Updated from four to five by FONT-AUDIT-02, deliberately.
+
+    This pin exists so a criterion cannot be added or dropped without someone
+    saying so in a commit. FONT_EXPOSURE is that someone: it is the fifth, it is
+    absolute like the other four, and it is judged in `assess` from a number the
+    caller measures.
+    """
+    assert set(CRITERIA) == {EMPTY_TEXT, SHATTERED, GLYPH_DENSITY,
+                             REPLACEMENT_DENSITY, FONT_EXPOSURE}
+    assert len(CRITERIA) == 5
 
 
 def test_retired_criterion_names_never_appear_in_any_failure():
@@ -395,3 +404,62 @@ def test_whitespace_only_fails_as_empty_not_as_segmentation():
 def test_empty_text_returns_a_verdict_not_an_exception():
     assert isinstance(assess(""), Verdict)
     assert compute_metrics("")["is_empty"] is True
+
+
+# ── FONT_EXPOSURE (FONT-AUDIT-02) ────────────────────────────────────
+
+
+def test_font_exposure_fires_above_the_limit_and_not_at_or_below_it():
+    """Strictly greater, exactly as the other three density criteria compare.
+
+    5.0 is NOT a failure, for the same reason 5.0 is not a `GLYPH_DENSITY`
+    failure: one limit, one comparison. The brief's G4 asked for "fires at
+    >= 5.0"; that is the one place this implementation deviates from it, and
+    the boundary is pinned here rather than left to a reader's assumption.
+    """
+    text = GOOD_PROSE
+    assert Thresholds().font_exposure_per_kchar_max == 5.0
+    assert FONT_EXPOSURE not in assess(text, font_exposure_per_kchar=4.99).criteria
+    assert FONT_EXPOSURE not in assess(text, font_exposure_per_kchar=5.0).criteria
+    assert FONT_EXPOSURE in assess(text, font_exposure_per_kchar=5.01).criteria
+    v = assess(text, font_exposure_per_kchar=37.281)
+    assert v.passed is False
+    assert (FONT_EXPOSURE, 37.281, 5.0) in v.failures
+
+
+def test_font_exposure_none_is_not_evaluated_and_never_reads_as_zero():
+    """A document nobody measured and a document measured clean are different."""
+    v = assess(GOOD_PROSE)
+    assert FONT_EXPOSURE not in v.criteria
+    assert "font_exposure_per_kchar" not in v.metrics
+    measured = assess(GOOD_PROSE, font_exposure_per_kchar=0.0)
+    assert measured.metrics["font_exposure_per_kchar"] == 0.0
+    assert measured.passed is True
+
+
+def test_font_exposure_does_not_disturb_the_other_criteria():
+    """The three text criteria must judge the same text the same way.
+
+    Run every fixture both ways -- unmeasured, and measured at a value far above
+    the limit -- and assert the OTHER criteria are identical in both. A fourth
+    criterion that perturbed the third would be a regression no verdict count
+    could reveal.
+    """
+    for text in (SHATTERED_FIXTURE.read_text(), CLEAN_FIXTURE.read_text(),
+                 _text_of(600, 6), _wrapped(), GOOD_PROSE, _with_glyphs(6.0)):
+        plain = set(assess(text).criteria)
+        loaded = set(assess(text, font_exposure_per_kchar=99.0).criteria)
+        assert loaded - {FONT_EXPOSURE} == plain
+        assert plain == set(assess(text, font_exposure_per_kchar=0.0).criteria)
+
+
+def test_empty_text_still_short_circuits_before_font_exposure():
+    """EMPTY_TEXT is the whole verdict; a fifth criterion must not append to it."""
+    v = assess("   \n\t ", font_exposure_per_kchar=99.0)
+    assert v.criteria == (EMPTY_TEXT,)
+
+
+def test_font_exposure_threshold_equals_the_glyph_density_threshold():
+    """Consistency, not calibration -- and the equality is the whole argument."""
+    th = Thresholds()
+    assert th.font_exposure_per_kchar_max == th.glyph_density_per_kchar_max

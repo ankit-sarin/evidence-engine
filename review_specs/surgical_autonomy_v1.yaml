@@ -1,3 +1,7 @@
+# The review's identity. The spec file is review_specs/<review_id>.yaml
+# and the data root is data/<review_id>; neither is configured separately.
+review_id: surgical_autonomy
+
 title: "Autonomy in Surgical Robotics: A Systematic Review"
 version: "1.0"
 authors:

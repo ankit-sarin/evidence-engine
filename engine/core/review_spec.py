@@ -348,6 +348,17 @@ class PDFQualityCheck(_SpecModel):
 class ReviewSpec(_SpecModel):
     """Top-level model for a systematic review specification."""
 
+    review_id: str = Field(
+        pattern=r"^[a-z][a-z0-9_]*$",
+        max_length=64,
+        description=(
+            "The review's identity, and the single one. The spec file is "
+            "review_specs/<review_id>.yaml and the data root is "
+            "data/<review_id>; neither is passed independently. Lowercase "
+            "slug so it is safe as both a filename and a directory name on "
+            "every filesystem this runs on."
+        ),
+    )
     title: str
     version: str
     authors: list[str]

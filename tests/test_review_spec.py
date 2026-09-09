@@ -204,3 +204,84 @@ def test_unknown_nested_key_rejected_and_named(tmp_path, path, expected):
     with pytest.raises(ReviewSpecError) as exc:
         load_review_spec(_write(tmp_path, raw))
     assert expected in str(exc.value), str(exc.value)
+
+
+# ── SPEC-AUTH-01 T2/T6: review identity ──────────────────────────────
+#
+# The review names itself. Before this the name lived only on the command
+# line, and nothing checked it against the spec.
+
+# T6 — measured against the live spec BEFORE review_id existed. Pinned as
+# literals on purpose: the claim is that adding a top-level field cannot
+# move a stored provenance value, and a computed expectation would move
+# with the code it is meant to hold still.
+BASELINE_EXTRACTION_HASH = "d311eb20d1f8c9ea47ef8038a18924198348efce49037292723b2c408b9a6790"
+BASELINE_SCREENING_HASH = "0d97b9d61161eeca6c81dd82f895bfb8c6f933b8e8ea23f79056a69f0cf98b90"
+
+
+def _spec_with_review_id(tmp_path, value, *, drop=False):
+    raw = yaml.safe_load(SPEC_PATH.read_text())
+    if drop:
+        del raw["review_id"]
+    else:
+        raw["review_id"] = value
+    p = tmp_path / "spec.yaml"
+    p.write_text(yaml.dump(raw))
+    return p
+
+
+def test_live_spec_declares_its_review_id():
+    assert load_review_spec(SPEC_PATH).review_id == "surgical_autonomy"
+
+
+@pytest.mark.parametrize("value", ["surgical_autonomy", "a", "r2", "a_b_c", "x" * 64])
+def test_valid_review_id_accepted(tmp_path, value):
+    assert load_review_spec(_spec_with_review_id(tmp_path, value)).review_id == value
+
+
+@pytest.mark.parametrize(
+    "value,why",
+    [
+        ("Surgical_Autonomy", "uppercase"),
+        ("SURGICAL", "all caps"),
+        ("1review", "leading digit"),
+        ("_review", "leading underscore"),
+        ("has-hyphen", "hyphen"),
+        ("has space", "space"),
+        ("has.dot", "dot"),
+        ("has/slash", "path separator"),
+        ("", "empty"),
+        ("x" * 65, "over max length"),
+    ],
+)
+def test_invalid_review_id_rejected(tmp_path, value, why):
+    with pytest.raises(ReviewSpecError) as exc:
+        load_review_spec(_spec_with_review_id(tmp_path, value))
+    assert "review_id" in str(exc.value), f"{why}: {exc.value}"
+
+
+def test_missing_review_id_rejected(tmp_path):
+    with pytest.raises(ReviewSpecError) as exc:
+        load_review_spec(_spec_with_review_id(tmp_path, None, drop=True))
+    assert "review_id" in str(exc.value)
+
+
+def test_live_spec_hashes_equal_the_pre_review_id_baselines():
+    """T6 — guards I2 in perpetuity.
+
+    `review_runs.review_spec_hash` is the concatenation of these two, and
+    each hashes only its own section, so a top-level field added to the
+    spec cannot invalidate an existing extraction's provenance. If this
+    goes red, either a section's content changed (a real protocol change,
+    and staleness detection is doing its job) or the hashing was widened
+    to cover the whole spec — which would silently break every stored hash.
+    """
+    spec = load_review_spec(SPEC_PATH)
+    assert spec.extraction_hash() == BASELINE_EXTRACTION_HASH
+    assert spec.screening_hash() == BASELINE_SCREENING_HASH
+
+
+def test_review_id_is_in_neither_hashed_section():
+    spec = load_review_spec(SPEC_PATH)
+    assert "review_id" not in spec.screening_criteria.model_dump()
+    assert "review_id" not in spec.extraction_schema.model_dump()

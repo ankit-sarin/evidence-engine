@@ -165,7 +165,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Cloud strict-schema condition")
     p.add_argument("--review", required=True)
     p.add_argument("--data-root", default="data")
-    p.add_argument("--spec", default="review_specs/surgical_autonomy_v1.yaml")
+    p.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
     p.add_argument("--n-papers", type=int, default=5)
     p.add_argument("--arms", default="openai,anthropic")
     args = p.parse_args(argv)

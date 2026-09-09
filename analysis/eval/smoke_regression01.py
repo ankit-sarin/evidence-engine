@@ -44,7 +44,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="REGRESSION-01 post-fix smoke")
     p.add_argument("--review", required=True)
     p.add_argument("--data-root", default="data")
-    p.add_argument("--spec", default="review_specs/surgical_autonomy_v1.yaml")
+    p.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
     args = p.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")

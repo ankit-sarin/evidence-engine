@@ -8,7 +8,7 @@ from engine.exporters.prisma import generate_prisma_flow, validate_prisma_counts
 from engine.search.models import Citation
 
 
-SPEC_PATH = "review_specs/surgical_autonomy_v1.yaml"
+SPEC_PATH = "review_specs/surgical_autonomy.yaml"
 
 
 @pytest.fixture

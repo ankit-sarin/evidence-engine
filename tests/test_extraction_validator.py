@@ -19,7 +19,7 @@ from engine.validators.extraction_validator import (
 
 @pytest.fixture
 def spec():
-    return load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+    return load_review_spec("review_specs/surgical_autonomy.yaml")
 
 
 @pytest.fixture
@@ -322,7 +322,7 @@ def test_same_spec_same_hash(spec):
 def test_modified_spec_different_hash():
     """Modifying the spec changes the prompt hash."""
     from copy import deepcopy
-    spec_a = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+    spec_a = load_review_spec("review_specs/surgical_autonomy.yaml")
     spec_b = deepcopy(spec_a)
 
     # Add a new field to change the extraction schema

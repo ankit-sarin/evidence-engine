@@ -34,7 +34,7 @@ from engine.parsers.pdf_parser import (
 )
 from engine.search.models import Citation
 
-SPEC = "review_specs/surgical_autonomy_v1.yaml"
+SPEC = "review_specs/surgical_autonomy.yaml"
 REPO = Path(__file__).resolve().parents[1]
 P719_PDF = REPO / "data" / "surgical_autonomy" / "pdfs" / "EE-567_Bauzano_2010.pdf"
 FIXTURES = REPO / "tests" / "fixtures" / "parse_quality"

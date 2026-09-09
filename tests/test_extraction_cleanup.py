@@ -14,7 +14,7 @@ from engine.utils.extraction_cleanup import (
 )
 
 
-SPEC_PATH = "review_specs/surgical_autonomy_v1.yaml"
+SPEC_PATH = "review_specs/surgical_autonomy.yaml"
 
 
 @pytest.fixture
@@ -181,7 +181,7 @@ class TestSchemaHashResolution:
 
     def test_get_current_schema_hash_auto_discovers_spec(self):
         """Auto-discovery finds the spec from review_specs/{name}*.yaml."""
-        # surgical_autonomy_v1.yaml exists in review_specs/
+        # surgical_autonomy.yaml exists in review_specs/
         h = get_current_schema_hash("surgical_autonomy")
         assert len(h) == 64  # SHA-256 hex
 

@@ -26,7 +26,7 @@ from engine.parsers.pdf_parser import (
 )
 from engine.search.models import Citation
 
-SPEC = "review_specs/surgical_autonomy_v1.yaml"
+SPEC = "review_specs/surgical_autonomy.yaml"
 CLEAN = (
     "The robotic assistant was evaluated in a porcine model over twelve "
     "procedures. Task completion time fell by nineteen percent against the "

@@ -186,7 +186,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="SCHEMA-EVAL-02: A/B/C local contract eval")
     p.add_argument("--review", required=True)
     p.add_argument("--data-root", default="data")
-    p.add_argument("--spec", default="review_specs/surgical_autonomy_v1.yaml")
+    p.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
     p.add_argument("--label", default="local_abc")
     p.add_argument("--resume", action="store_true",
                    help="skip (condition, paper) pairs already present in the output")

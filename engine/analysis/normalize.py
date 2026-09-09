@@ -3,7 +3,8 @@
 import re
 from functools import lru_cache
 
-from engine.core.review_spec import ExtractionField, ReviewSpec, load_review_spec
+from engine.core.review_paths import load_spec_for
+from engine.core.review_spec import ExtractionField, ReviewSpec
 
 # Fields that allow semicolon-separated multi-values (per extraction prompt).
 _MULTI_VALUE_FIELDS = {"validation_setting", "surgical_domain", "secondary_outcomes"}
@@ -39,9 +40,17 @@ def _build_prefix_map(enum_values: list[str]) -> dict[str, str]:
     return prefix_map
 
 
+#: GENERALIZE B2, still open. Concordance normalisation falls back to ONE
+#: review's enum set when no spec is passed, which resolves another review's
+#: categorical values against the wrong vocabulary — silently, with no
+#: exception, just mismatches. SPEC-AUTH-01 only stops this module building
+#: the path itself; the hardcoded review is PATH-AUTH-01's to remove.
+_FALLBACK_REVIEW_ID = "surgical_autonomy"
+
+
 @lru_cache(maxsize=1)
 def _default_spec() -> ReviewSpec:
-    return load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+    return load_spec_for(_FALLBACK_REVIEW_ID)
 
 
 def _get_field_def(field_name: str, spec: ReviewSpec | None = None) -> ExtractionField | None:

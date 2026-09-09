@@ -388,7 +388,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="Post-extraction field validation (read-only)")
     parser.add_argument("--review", required=True, help="Review name")
-    parser.add_argument("--spec", default="review_specs/surgical_autonomy_v1.yaml",
+    parser.add_argument("--spec", default="review_specs/surgical_autonomy.yaml",
                         help="Path to review spec YAML")
     args = parser.parse_args()
 

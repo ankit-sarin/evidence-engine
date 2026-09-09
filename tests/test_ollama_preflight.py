@@ -256,7 +256,7 @@ class TestRunnerIntegration:
         from engine.agents.ft_screener import run_ft_screening
 
         db = ReviewDatabase("test_pf", data_root=tmp_path)
-        spec = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+        spec = load_review_spec("review_specs/surgical_autonomy.yaml")
 
         # Mock preflight to track it was called, then fail to avoid actual screening
         with patch("engine.utils.ollama_preflight.require_preflight",
@@ -277,7 +277,7 @@ class TestRunnerIntegration:
         from engine.agents.extractor import run_extraction, MODEL
 
         db = ReviewDatabase("test_pf2", data_root=tmp_path)
-        spec = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+        spec = load_review_spec("review_specs/surgical_autonomy.yaml")
 
         with patch("engine.utils.ollama_preflight.require_preflight",
                    side_effect=RuntimeError("preflight failed")) as mock_pf:
@@ -311,7 +311,7 @@ class TestRunnerIntegration:
         from engine.agents.extractor import run_extraction
 
         db = ReviewDatabase("test_pf4", data_root=tmp_path)
-        spec = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+        spec = load_review_spec("review_specs/surgical_autonomy.yaml")
 
         mock_response = MagicMock()
         mock_response.message.content = "OK"

@@ -449,7 +449,7 @@ def test_parse_pdf_uses_spec_threshold(digital_pdf, db):
     db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
 
-    spec = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+    spec = load_review_spec("review_specs/surgical_autonomy.yaml")
 
     # Use a very high threshold that would classify the digital PDF as "scanned"
     spec.pdf_parsing.scanned_text_threshold = 999999

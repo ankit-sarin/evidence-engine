@@ -28,7 +28,7 @@ from engine.parsers.pdf_parser import (
 from engine.parsers.parse_quality import GLYPH_DENSITY, SHATTERED
 from engine.search.models import Citation
 
-SPEC = "review_specs/surgical_autonomy_v1.yaml"
+SPEC = "review_specs/surgical_autonomy.yaml"
 
 # ── synthetic parser outputs, each engineered to a known verdict ──────
 

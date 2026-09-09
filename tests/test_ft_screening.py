@@ -47,7 +47,7 @@ def tmp_db(tmp_path):
 @pytest.fixture
 def spec():
     """Load the surgical autonomy review spec."""
-    return load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+    return load_review_spec("review_specs/surgical_autonomy.yaml")
 
 
 def _add_paper(db, title="Test Paper", pmid=None, doi=None, abstract="Test abstract"):

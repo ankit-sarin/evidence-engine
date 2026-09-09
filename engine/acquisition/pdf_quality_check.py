@@ -11,7 +11,7 @@ Results are stored in the papers table columns:
   pdf_quality_check_status = 'AI_CHECKED'
 
 CLI:
-    python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
+    python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --spec review_specs/surgical_autonomy.yaml
     python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --dry-run
     python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --limit 5
 """

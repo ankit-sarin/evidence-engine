@@ -170,7 +170,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="CAPTURE-01: 0.21.0 Pass-1 draft capture")
     p.add_argument("--review", required=True)
     p.add_argument("--data-root", default="data")
-    p.add_argument("--spec", default="review_specs/surgical_autonomy_v1.yaml")
+    p.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
     p.add_argument("--label", default=LABEL)
     p.add_argument("--smoke", type=int, default=0,
                    help="capture only the first N papers (the mandatory 3-paper gate)")

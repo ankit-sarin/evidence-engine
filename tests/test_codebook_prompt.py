@@ -13,7 +13,7 @@ from engine.core.review_spec import load_review_spec
 
 @pytest.fixture
 def spec():
-    return load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+    return load_review_spec("review_specs/surgical_autonomy.yaml")
 
 
 @pytest.fixture

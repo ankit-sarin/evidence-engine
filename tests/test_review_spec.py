@@ -8,7 +8,7 @@ import yaml
 
 from engine.core.review_spec import ReviewSpec, ReviewSpecError, load_review_spec
 
-SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy_v1.yaml"
+SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
 
 # ── Loading & Validation ─────────────────────────────────────────────

@@ -30,7 +30,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("extraction_test")
 
-SPEC_PATH = PROJECT_ROOT / "review_specs" / "surgical_autonomy_v1.yaml"
+SPEC_PATH = PROJECT_ROOT / "review_specs" / "surgical_autonomy.yaml"
 PDF_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdfs"
 ARTIFACT_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "extraction_test_artifacts"
 LOG_PATH = PROJECT_ROOT / "tests" / "extraction_test_log.md"

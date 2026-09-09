@@ -2,8 +2,8 @@
 """CLI for running cloud extraction arms (OpenAI o3-mini, Anthropic Sonnet 4.5).
 
 Usage:
-    python scripts/run_cloud_extraction.py --arm openai --spec review_specs/surgical_autonomy_v1.yaml
-    python scripts/run_cloud_extraction.py --arm anthropic --spec review_specs/surgical_autonomy_v1.yaml
+    python scripts/run_cloud_extraction.py --arm openai --spec review_specs/surgical_autonomy.yaml
+    python scripts/run_cloud_extraction.py --arm anthropic --spec review_specs/surgical_autonomy.yaml
     python scripts/run_cloud_extraction.py --arm openai --max-papers 5 --max-cost 10.00
     python scripts/run_cloud_extraction.py --arm both
     python scripts/run_cloud_extraction.py --progress

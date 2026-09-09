@@ -18,7 +18,7 @@ from engine.cloud.openai_extractor import OpenAIExtractor, COST_INPUT_PER_M, COS
 from engine.cloud.anthropic_extractor import AnthropicExtractor
 
 BACKUP_DB = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy" / "review_backup_v1_schema.db"
-SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy_v1.yaml"
+SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
 pytestmark = pytest.mark.skipif(
     not BACKUP_DB.exists() or not SPEC_PATH.exists(),

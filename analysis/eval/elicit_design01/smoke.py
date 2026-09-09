@@ -163,7 +163,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="ELICIT-DESIGN-01 smoke")
     ap.add_argument("--review", default="surgical_autonomy")
     ap.add_argument("--data-root", default="data")
-    ap.add_argument("--spec", default="review_specs/surgical_autonomy_v1.yaml")
+    ap.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
     ap.add_argument("--papers", default=",".join(str(p) for p in SMOKE_PAPERS))
     args = ap.parse_args(argv)
 

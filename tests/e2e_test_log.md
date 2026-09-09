@@ -15,7 +15,7 @@
 ## Running the Full Pipeline
 
 ```bash
-python scripts/run_pipeline.py --spec review_specs/surgical_autonomy_v1.yaml --name surgical_autonomy
+python scripts/run_pipeline.py --spec review_specs/surgical_autonomy.yaml --name surgical_autonomy
 ```
 
 The pipeline will stop at the PARSE stage because PDF acquisition is manual in v1.

@@ -16,7 +16,7 @@ from engine.exporters.prisma import generate_prisma_flow
 from engine.search.models import Citation
 
 
-SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy_v1.yaml"
+SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
 
 @pytest.fixture

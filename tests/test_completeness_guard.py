@@ -24,7 +24,7 @@ from engine.core.completeness import (
 from engine.core.extraction_telemetry import read_calls, record_call, telemetry_path
 from engine.core.review_spec import load_review_spec
 
-SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy_v1.yaml"
+SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 CODEBOOK = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
 
 pytestmark = pytest.mark.skipif(not SPEC_PATH.exists(), reason="Spec not available")

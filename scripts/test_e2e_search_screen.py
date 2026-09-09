@@ -26,7 +26,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("e2e_test")
 
-SPEC_PATH = PROJECT_ROOT / "review_specs" / "surgical_autonomy_v1.yaml"
+SPEC_PATH = PROJECT_ROOT / "review_specs" / "surgical_autonomy.yaml"
 LIMIT = 20
 LOG_PATH = PROJECT_ROOT / "tests" / "e2e_search_screen_log.md"
 

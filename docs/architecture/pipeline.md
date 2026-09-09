@@ -23,7 +23,7 @@ Each stage of the pipeline is described below with its trigger, handler module, 
 
 **CLI:**
 ```bash
-python scripts/run_pipeline.py --spec review_specs/surgical_autonomy_v1.yaml --name surgical_autonomy
+python scripts/run_pipeline.py --spec review_specs/surgical_autonomy.yaml --name surgical_autonomy
 ```
 
 ---

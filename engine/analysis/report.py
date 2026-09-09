@@ -21,8 +21,11 @@ def _get_tier_map() -> dict[str, int]:
     global _TIER_CACHE
     if _TIER_CACHE is None:
         try:
-            from engine.core.review_spec import load_review_spec
-            spec = load_review_spec("review_specs/surgical_autonomy_v1.yaml")
+            # GENERALIZE B3, still open: the tier map falls back to ONE
+            # review's schema. SPEC-AUTH-01 only stops this module building
+            # the path; the hardcoded review is PATH-AUTH-01's to remove.
+            from engine.core.review_paths import load_spec_for
+            spec = load_spec_for("surgical_autonomy")
             _TIER_CACHE = {f.name: f.tier for f in spec.extraction_schema.fields}
         except Exception:
             _TIER_CACHE = {}

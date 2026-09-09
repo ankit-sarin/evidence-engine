@@ -35,7 +35,7 @@ def main():
     if total == 0:
         print("No papers found in the database.")
         print("Run the search pipeline first:")
-        print("  python scripts/run_pipeline.py --spec review_specs/surgical_autonomy_v1.yaml --name surgical_autonomy")
+        print("  python scripts/run_pipeline.py --spec review_specs/surgical_autonomy.yaml --name surgical_autonomy")
         sys.exit(0)
 
     # Write CSV

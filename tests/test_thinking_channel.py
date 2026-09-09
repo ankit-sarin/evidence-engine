@@ -157,7 +157,7 @@ def test_spec_policy_is_reachable_from_a_loaded_spec():
 
     from engine.core.review_spec import load_review_spec
 
-    spec_path = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy_v1.yaml"
+    spec_path = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
     if not spec_path.exists():
         pytest.skip("spec not available")
     spec = load_review_spec(str(spec_path))

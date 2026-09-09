@@ -152,7 +152,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Local A/B: unconstrained vs constrained")
     p.add_argument("--review", required=True)
     p.add_argument("--data-root", default="data")
-    p.add_argument("--spec", default="review_specs/surgical_autonomy_v1.yaml")
+    p.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
     p.add_argument("--n-papers", type=int, default=10)
     args = p.parse_args(argv)
 

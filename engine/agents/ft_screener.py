@@ -571,7 +571,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Full-text screening pipeline")
     parser.add_argument("--review", required=True, help="Review name")
     parser.add_argument(
-        "--spec", default="review_specs/surgical_autonomy_v1.yaml",
+        "--spec", default="review_specs/surgical_autonomy.yaml",
         help="Path to review spec YAML",
     )
     parser.add_argument("--screen-only", action="store_true", help="Primary screen only")

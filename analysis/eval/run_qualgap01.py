@@ -254,7 +254,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="QUALGAP-01: Ollama 0.17.7 runtime A/B")
     p.add_argument("--review", required=True)
     p.add_argument("--data-root", default="data")
-    p.add_argument("--spec", default="review_specs/surgical_autonomy_v1.yaml")
+    p.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
     p.add_argument("--host", default=DEFAULT_HOST)
     p.add_argument("--label", default="runtime_v12")
     p.add_argument("--probe", action="store_true", help="pre-flight probes only, no batch")

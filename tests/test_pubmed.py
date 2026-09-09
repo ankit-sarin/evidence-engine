@@ -8,7 +8,7 @@ from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
 from engine.search.pubmed import search_pubmed, _build_query
 
-SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy_v1.yaml"
+SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
 
 @pytest.fixture(scope="module")

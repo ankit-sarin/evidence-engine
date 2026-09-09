@@ -542,3 +542,56 @@ Docling drops 8% of 586's and gains none of 719's. The 699 difference is entirel
 All PDF and parsed-text reads were read-only. All scratch output is under `/tmp/pg10/`
 (`sweep.py`, `other.py`, `ids.json`, `sweep.json`, `rows.json`, the two table fragments);
 nothing was written under `data/`.
+
+---
+
+## Addendum — 2026-09-09 (FONT-AUDIT-01/02)
+
+*Appended, not merged. Nothing above this line has been edited: the read-out is a
+record of what was measured on 2026-09-09 with the method it describes, and a
+correction that silently rewrote it would destroy the evidence that the method
+had a defect.*
+
+**MuPDF clips `/BaseFont` to 31 characters before `get_texttrace` reports it, and
+the sweep above joined font dictionaries to rendered characters on exact name
+equality.** Where a basefont exceeds the budget the join finds no match and the
+font's characters are dropped **silently** — the inventory still lists the font
+and reports none of its damage.
+
+The rule is `strip_tag(basefont[:31])`. Established by measurement on paper 670,
+where it reproduces **59 of 59** reported names; 30 reproduces 53 and 32
+reproduces 56. The visible length depends on the subset tag, because the tag is
+inside the budget: `CFDIMI+RpsvssMicrosoftYaHei-Bold-GBK-EUC-H` (42 characters)
+is reported as `RpsvssMicrosoftYaHei-Bol` (24).
+
+**What changes above.**
+
+| claim | as published | corrected |
+|---|---:|---:|
+| 670 signature characters | 907 | **1,032** |
+| 670 signature coverage (§5, §6) | 3.051% | **3.47%** |
+| 670 `codes < 32` / `codes ≥ 32` | 308 / 599 | **316 / 716** |
+| 670 `space_recoverable` | 20 | **28** |
+| §8.1 residual, `Type0 \| Identity-H \| has ToUnicode \| not embedded`, 125 chars | a false negative of the signature | **not a false negative — see below** |
+
+**The UNRESOLVING reclassification.** §8.1 recorded 125 characters as evidence
+that the signature has a false-negative class: a Type0/Identity-H font carrying a
+`/ToUnicode` that nonetheless fails to resolve. Read directly, that font's
+dictionary has **no `/ToUnicode`** and **has `/FontFile2`**. It is a **SIGNATURE**
+font, and it was classified as it was because the join failed, not because of
+anything in the font. **`unresolving_fonts` is 0 across all twelve papers
+FONT-AUDIT-01 audited**, and the class — which remains named and flagged in
+`engine/parsers/font_audit.py`, because it is a real shape a PDF can take — has
+**no known instance in this corpus**.
+
+**What does not change.** The corpus conclusion is unaffected: 11 of 190 papers
+carry the signature, 4 exceed 1% coverage, and one of those four passed the gate
+on the text Run 6 read. 670's text-level exposure is still ~0 — FONT-AUDIT-01 §6.1
+measured 3 of 308 markable codes reaching `670_v2.md` and zero silent mojibake
+clusters — so the corrected coverage does not change what 670 *is*, only how much
+of it the PDF holds. §8.3's arithmetic shifts by 125 characters and 719 remains
+90% of all signature characters.
+
+**Where the current numbers live:** `docs/session-reports/FONT-AUDIT-01_readout.md`
+§3, whose E3 table is produced by `engine/parsers/font_audit.py` with the
+corrected join and is the value of record for all twelve papers.

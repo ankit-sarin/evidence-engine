@@ -355,3 +355,65 @@ def test_the_codebook_file_is_read_never_written():
                     raise AssertionError(
                         f"{path.relative_to(REPO_ROOT)}:{i} writes a codebook"
                     )
+
+
+# ── T1: the accessors that replace ExtractionSchema / ExtractionField ─
+
+
+def test_fields_by_tier_covers_every_field_exactly_once():
+    cb = load_codebook_for("surgical_autonomy")
+    seen = [f["name"] for t in (1, 2, 3, 4) for f in cb.fields_by_tier(t)]
+    assert sorted(seen) == sorted(cb.field_names)
+    assert len(seen) == 20
+
+
+def test_fields_by_tier_preserves_codebook_order():
+    """The prompt renders in this order, so it must not move."""
+    cb = load_codebook_for("surgical_autonomy")
+    for tier in (1, 2, 3, 4):
+        got = [f["name"] for f in cb.fields_by_tier(tier)]
+        expected = [n for n in cb.field_names if cb.field(n)["tier"] == tier]
+        assert got == expected
+
+
+def test_fields_by_tier_is_empty_for_an_unused_tier():
+    cb = load_codebook_for("surgical_autonomy")
+    assert cb.fields_by_tier(9) == ()
+
+
+def test_enum_values_for_every_categorical_and_none_otherwise():
+    cb = load_codebook_for("surgical_autonomy")
+    categorical = [n for n in cb.field_names if cb.field(n)["type"] == "categorical"]
+    # ELEVEN, not the eight the Phase 2b brief carried — eight is study_type's
+    # VALUE count, not the number of categorical fields.
+    assert len(categorical) == 11, categorical
+    for n in categorical:
+        vals = cb.enum_values(n)
+        assert vals and all(isinstance(v, str) for v in vals)
+        assert vals == [v["value"] for v in cb.field(n)["valid_values"]]
+    for n in cb.field_names:
+        if n not in categorical:
+            assert cb.enum_values(n) is None, n
+
+
+def test_enum_values_is_none_not_empty_for_a_field_without_a_list():
+    """None and [] mean different things to a caller: 'no value list' is not
+    'an empty value list'."""
+    cb = load_codebook_for("surgical_autonomy")
+    assert cb.enum_values("country") is None
+
+
+def test_view_exposes_name_type_tier_and_values():
+    cb = load_codebook_for("surgical_autonomy")
+    v = cb.view("sample_size")
+    assert (v.name, v.type, v.tier, v.enum_values) == ("sample_size", "numeric", 1, None)
+    v = cb.view("study_type")
+    assert v.type == "categorical" and v.enum_values[0] == "Original Research"
+    assert len(cb.views) == 20
+
+
+def test_view_and_enum_values_reject_an_unknown_field():
+    cb = load_codebook_for("surgical_autonomy")
+    for call in (cb.view, cb.enum_values, cb.field):
+        with pytest.raises(CodebookError):
+            call("no_such_field")

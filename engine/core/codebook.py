@@ -91,6 +91,22 @@ class CodebookIdentityError(CodebookError):
 
 
 @dataclass(frozen=True)
+class FieldView:
+    """The three attributes consumers used to read off `ExtractionField`.
+
+    A view, not a second authority: it is built from the codebook entry on
+    demand and holds no state of its own. It exists so a consumer that wants
+    `f.name` / `f.type` / `f.tier` does not have to index a dict, and so the
+    annotations that named `ExtractionField` have something to name.
+    """
+
+    name: str
+    type: str
+    tier: int
+    enum_values: list[str] | None = None
+
+
+@dataclass(frozen=True)
 class Codebook:
     """A validated codebook, with the two hashes that identify its content."""
 
@@ -132,6 +148,41 @@ class Codebook:
     @property
     def field_names(self) -> tuple[str, ...]:
         return tuple(f["name"] for f in self.fields)
+
+    def fields_by_tier(self, tier: int) -> tuple[dict[str, Any], ...]:
+        """The tier's fields, in CODEBOOK order.
+
+        Replaces `ExtractionSchema.fields_by_tier`. Order is the codebook's
+        file order, which was already the spec's order — the parity test held
+        them equal before the spec's copy was removed — so the prompt's field
+        sequence does not move.
+        """
+        return tuple(f for f in self.fields if f["tier"] == tier)
+
+    def enum_values(self, name: str) -> list[str] | None:
+        """Allowed values for a categorical field, else None.
+
+        Replaces `ExtractionField.enum_values`. None rather than [] for a
+        non-categorical field, because the two mean different things to a
+        caller: "this field has no value list" is not "this field's value
+        list is empty".
+        """
+        vv = self.field(name).get("valid_values")
+        if not vv:
+            return None
+        return [v["value"] for v in vv]
+
+    def view(self, name: str) -> "FieldView":
+        """A small typed view for consumers that annotated `ExtractionField`."""
+        f = self.field(name)
+        return FieldView(
+            name=f["name"], type=f["type"], tier=f["tier"],
+            enum_values=self.enum_values(name),
+        )
+
+    @property
+    def views(self) -> tuple["FieldView", ...]:
+        return tuple(self.view(n) for n in self.field_names)
 
 
 # ── Hashing ──────────────────────────────────────────────────────────

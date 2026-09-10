@@ -37,7 +37,7 @@ from engine.agents.extractor import (
 )
 from engine.agents.models import ExtractionOutput
 from engine.core.completeness import check_completeness, expected_field_names
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import load_spec_for
 from engine.utils.ollama_client import ollama_chat
 from engine.utils.ollama_lock import hold_experiment_lock
 
@@ -152,13 +152,13 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Local A/B: unconstrained vs constrained")
     p.add_argument("--review", required=True)
     p.add_argument("--data-root", default="data")
-    p.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
+    p.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     p.add_argument("--n-papers", type=int, default=10)
     args = p.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     review_dir = Path(args.data_root) / args.review
-    spec = load_review_spec(args.spec)
+    spec = load_spec_for(args.review, args.spec)
     expected = expected_field_names(spec, review_dir / "extraction_codebook.yaml")
 
     local_sample, _ = select_sample(review_dir, n_local=args.n_papers)

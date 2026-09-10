@@ -16,25 +16,25 @@ from pathlib import Path
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from engine.core.review_paths import load_spec_for, spec_path_for
 from engine.cloud.base import CloudExtractorBase
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
-DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def main():
     parser = argparse.ArgumentParser(description="Re-parse cloud extractions with 0 spans")
-    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
-    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
+    parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     args = parser.parse_args()
-
-    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
-        logging.warning("No --review specified, using default 'surgical_autonomy'.")
 
     review = args.review
     db_path = f"data/{review}/review.db"
-    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+    # Identity gate. load_spec_for refuses a spec naming a different review,
+    # and it runs before anything opens a database (SPEC-AUTH-01).
+    spec = load_spec_for(review, args.spec)
+    spec_path = str(args.spec or spec_path_for(review))
 
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row

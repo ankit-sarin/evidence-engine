@@ -24,14 +24,13 @@ from engine.agents.ft_screener import (
     truncate_paper_text,
 )
 from engine.core.database import ReviewDatabase
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import load_spec_for, spec_path_for
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 # ── Config ──────────────────────────────────────────────────────────
 
 PAPER_IDS = [9, 12, 168, 23, 4]
-DEFAULT_REVIEW = "surgical_autonomy"
 
 LABELS = {
     9: "Abdominal (intestinal anastomosis)",
@@ -45,17 +44,14 @@ LABELS = {
 
 def main():
     parser = argparse.ArgumentParser(description="Full-text screening smoke test")
-    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
-    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
+    parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     args = parser.parse_args()
 
-    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
-        logging.warning("No --review specified, using default 'surgical_autonomy'.")
-
     review_name = args.review
-    spec_path = args.spec or f"review_specs/{review_name}_v1.yaml"
+    spec_path = str(args.spec or spec_path_for(review_name))
 
-    spec = load_review_spec(spec_path)
+    spec = load_spec_for(review_name, args.spec)
     db = ReviewDatabase(review_name)
     parsed_dir = db.db_path.parent / "parsed_text"
 

@@ -22,7 +22,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from engine.agents.auditor import run_audit
 from engine.agents.extractor import run_extraction
 from engine.core.database import ReviewDatabase
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import load_spec_for, spec_path_for
 
 logging.basicConfig(
     level=logging.INFO,
@@ -31,7 +31,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger("run5")
 
-DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -40,13 +39,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--review",
-        default=DEFAULT_REVIEW,
-        help=f"Review name (default: {DEFAULT_REVIEW})",
+        required=True,
+        help="Review id. The review's identity — the spec file and the data root both derive from it.",
     )
     parser.add_argument(
         "--spec",
         default=None,
-        help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)",
+        help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.",
     )
     parser.add_argument(
         "--retry-failed",
@@ -92,18 +91,18 @@ def reset_failed_papers(db: ReviewDatabase) -> list[int]:
 def main(argv: list[str] | None = None):
     args = parse_args(argv)
 
-    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
-        logging.warning("No --review specified, using default 'surgical_autonomy'.")
-
     review = args.review
-    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+    spec_path = str(args.spec or spec_path_for(review))
 
     if args.retry_failed and args.paper_ids:
         logger.error("--retry-failed and --paper-ids are mutually exclusive")
         sys.exit(1)
 
+    # Spec first, database second: load_spec_for refuses a spec that names a
+    # different review, and the refusal is only worth anything if it happens
+    # before a database is opened (SPEC-AUTH-01 R2).
+    spec = load_spec_for(review, args.spec)
     db = ReviewDatabase(review)
-    spec = load_review_spec(spec_path)
 
     # ── Retry-failed: reset EXTRACT_FAILED → FT_ELIGIBLE ──
     if args.retry_failed:

@@ -21,7 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from engine.core.database import ReviewDatabase
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import load_spec_for
 
 logger = logging.getLogger(__name__)
 
@@ -52,18 +52,17 @@ def check_oa_status(review_name: str, spec_path: str | None = None) -> dict:
 
     Returns summary stats dict.
     """
+    # Spec first, database second (SPEC-AUTH-01 R2). The spec is the review's
+    # configuration authority, so it is read whether or not an override was
+    # passed — and load_spec_for refuses one that names a different review,
+    # which is only worth anything before a database is opened.
+    spec = load_spec_for(review_name, spec_path)
+    email = spec.unpaywall_email or "axsarin@health.ucdavis.edu"
+
     db = ReviewDatabase(review_name)  # closed at end of function
     conn = db._conn
     # Note: we use db directly (not context manager) because the function
     # has multiple early returns that need conn access. try/finally at bottom.
-
-    # Get email from spec or default
-    email = None
-    if spec_path:
-        spec = load_review_spec(spec_path)
-        email = spec.unpaywall_email
-    if not email:
-        email = "axsarin@health.ucdavis.edu"
 
     # Find papers to check: included, have DOI, not already checked
     _TERMINAL = "('ABSTRACT_SCREENED_OUT', 'REJECTED', 'PDF_EXCLUDED', 'FT_SCREENED_OUT')"
@@ -181,8 +180,8 @@ def main():
     from engine.utils.background import maybe_background
 
     parser = argparse.ArgumentParser(description="Check OA status via Unpaywall")
-    parser.add_argument("--review", required=True, help="Review name")
-    parser.add_argument("--spec", help="Path to review spec YAML (for email)")
+    parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
+    parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     parser.add_argument("--background", action="store_true",
                         help="Run in detached tmux session")
 

@@ -16,7 +16,8 @@ import sys
 from pathlib import Path
 
 from engine.core.database import ReviewDatabase
-from engine.core.review_spec import ExtractionField, ReviewSpec, load_review_spec
+from engine.core.review_paths import load_spec_for
+from engine.core.review_spec import ExtractionField, ReviewSpec
 
 logger = logging.getLogger(__name__)
 
@@ -387,12 +388,12 @@ def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
     parser = argparse.ArgumentParser(description="Post-extraction field validation (read-only)")
-    parser.add_argument("--review", required=True, help="Review name")
-    parser.add_argument("--spec", default="review_specs/surgical_autonomy.yaml",
-                        help="Path to review spec YAML")
+    parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
+    parser.add_argument("--spec", default=None,
+                        help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     args = parser.parse_args()
 
-    spec = load_review_spec(args.spec)
+    spec = load_spec_for(args.review, args.spec)
     db = ReviewDatabase(args.review)
 
     try:

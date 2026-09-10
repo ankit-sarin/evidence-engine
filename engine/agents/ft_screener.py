@@ -560,7 +560,7 @@ if __name__ == "__main__":
 
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-    from engine.core.review_spec import load_review_spec
+    from engine.core.review_paths import load_spec_for
 
     logging.basicConfig(
         level=logging.INFO,
@@ -569,10 +569,10 @@ if __name__ == "__main__":
     )
 
     parser = argparse.ArgumentParser(description="Full-text screening pipeline")
-    parser.add_argument("--review", required=True, help="Review name")
+    parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
     parser.add_argument(
-        "--spec", default="review_specs/surgical_autonomy.yaml",
-        help="Path to review spec YAML",
+        "--spec", default=None,
+        help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.",
     )
     parser.add_argument("--screen-only", action="store_true", help="Primary screen only")
     parser.add_argument("--verify-only", action="store_true", help="Verification only")
@@ -583,7 +583,7 @@ if __name__ == "__main__":
         from engine.utils.background import maybe_background
         maybe_background("ft_screening", review_name=args.review)
 
-    spec = load_review_spec(args.spec)
+    spec = load_spec_for(args.review, args.spec)
     db = ReviewDatabase(args.review)
 
     try:

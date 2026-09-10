@@ -15,7 +15,8 @@ from engine.agents.extractor import (
     extract_pass2_structured,
 )
 from engine.core.database import ReviewDatabase
-from engine.core.review_spec import ReviewSpec, load_review_spec
+from engine.core.review_paths import load_spec_for, spec_path_for
+from engine.core.review_spec import ReviewSpec
 
 logging.basicConfig(
     level=logging.INFO,
@@ -23,7 +24,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def load_original(db, paper_id):
@@ -84,19 +84,16 @@ def compare_fields(original, reextracted):
 
 def main():
     parser = argparse.ArgumentParser(description="q8_0 KV cache validation (fast, no snippet retries)")
-    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
-    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
+    parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     parser.add_argument("paper_ids", nargs="*", type=int, default=[370, 432], help="Paper IDs to validate (default: 370 432)")
     args = parser.parse_args()
 
-    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
-        logging.warning("No --review specified, using default 'surgical_autonomy'.")
-
     review = args.review
-    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+    spec_path = str(args.spec or spec_path_for(review))
     PAPER_IDS = args.paper_ids
 
-    spec = load_review_spec(spec_path)
+    spec = load_spec_for(review, args.spec)
     db = ReviewDatabase(review)
     review_dir = Path(db.db_path).parent
     parsed_dir = review_dir / "parsed_text"

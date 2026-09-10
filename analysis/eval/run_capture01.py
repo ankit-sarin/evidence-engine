@@ -53,7 +53,7 @@ from analysis.eval.capture01 import (
 )
 from analysis.eval.schema_eval2 import select_sample
 from engine.agents.extractor import MODEL, RESTART_EVERY_N, build_extraction_prompt, restart_ollama
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import load_spec_for
 from engine.utils import ollama_client as oc
 from engine.utils.ollama_lock import hold_experiment_lock
 
@@ -170,7 +170,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="CAPTURE-01: 0.21.0 Pass-1 draft capture")
     p.add_argument("--review", required=True)
     p.add_argument("--data-root", default="data")
-    p.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
+    p.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     p.add_argument("--label", default=LABEL)
     p.add_argument("--smoke", type=int, default=0,
                    help="capture only the first N papers (the mandatory 3-paper gate)")
@@ -184,7 +184,7 @@ def main(argv: list[str] | None = None) -> int:
 
     version = preflight_version()
     digest = model_digest()
-    spec = load_review_spec(args.spec)
+    spec = load_spec_for(args.review, args.spec)
     sample = select_sample(review_dir)
 
     done = {r["paper_id"] for r in read_results(review_dir, args.label)} if args.resume else set()

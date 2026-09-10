@@ -12,7 +12,8 @@ import sys
 from pathlib import Path
 
 from engine.core.database import ReviewDatabase
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import load_spec_for
+from engine.core.review_spec import ReviewSpecError
 from engine.utils.db_backup import auto_backup
 
 logger = logging.getLogger(__name__)
@@ -21,36 +22,20 @@ logger = logging.getLogger(__name__)
 # HUMAN_AUDIT_COMPLETE is excluded — those have human-verified data.
 _RESETTABLE_STATUSES = {"EXTRACTED", "AI_AUDIT_COMPLETE"}
 
-# Convention: review_specs/{review_name}*.yaml
-_SPECS_DIR = Path(__file__).resolve().parent.parent.parent / "review_specs"
-
-
-def find_review_spec(review_name: str) -> Path | None:
-    """Auto-discover the review spec YAML for a given review name.
-
-    Searches review_specs/ for files matching {review_name}*.yaml,
-    returning the first match (lexicographic). Returns None if not found.
-    """
-    candidates = sorted(_SPECS_DIR.glob(f"{review_name}*.yaml"))
-    return candidates[0] if candidates else None
+# The spec path is derived, never searched. The glob this replaced
+# ("{review_name}*.yaml", first lexicographic match) was a second path
+# authority and an ambiguous one: after the SPEC-AUTH-01 rename it matched
+# both surgical_autonomy.yaml and surgical_autonomy_v1_original.yaml, and
+# would have picked whichever sorted first.
 
 
 def get_current_schema_hash(review_name: str, spec_path: str | Path | None = None) -> str:
     """Compute the current extraction schema hash for a review.
 
-    If spec_path is provided, loads that file. Otherwise, auto-discovers
-    the spec from review_specs/{review_name}*.yaml.
+    If spec_path is provided, loads that file — and refuses it if it names
+    a different review. Otherwise the path is derived from the review id.
     """
-    if spec_path is None:
-        found = find_review_spec(review_name)
-        if found is None:
-            raise FileNotFoundError(
-                f"No review spec found for '{review_name}' in {_SPECS_DIR}"
-            )
-        spec_path = found
-
-    spec = load_review_spec(spec_path)
-    return spec.extraction_hash()
+    return load_spec_for(review_name, spec_path).extraction_hash()
 
 
 def check_stale_extractions(db: ReviewDatabase, current_hash: str) -> int:
@@ -231,7 +216,7 @@ def main():
         help="Keep only extractions matching this schema hash (delete all others)",
     )
     parser.add_argument(
-        "--spec", help="Path to review spec YAML (overrides auto-discovery)",
+        "--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.",
     )
     parser.add_argument(
         "--confirm", action="store_true",
@@ -239,13 +224,13 @@ def main():
     )
     args = parser.parse_args()
 
-    # Resolve schema hash: explicit > --spec > auto-discover
+    # Resolve schema hash: explicit > --spec > derived from the review id
     schema_hash = args.keep_schema
     if not schema_hash:
         try:
             schema_hash = get_current_schema_hash(args.review, spec_path=args.spec)
             logger.info("Current extraction schema hash: %s", schema_hash[:12])
-        except FileNotFoundError as e:
+        except ReviewSpecError as e:
             logger.error(str(e))
             logger.error("Provide --spec or --keep-schema explicitly.")
             sys.exit(1)

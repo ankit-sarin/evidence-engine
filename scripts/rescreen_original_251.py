@@ -19,7 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from engine.agents.screener import screen_paper, ScreeningDecision
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import load_spec_for, spec_path_for
 
 logging.basicConfig(
     level=logging.INFO,
@@ -28,7 +28,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def load_checkpoint(checkpoint_path: Path) -> dict[int, dict]:
@@ -44,21 +43,18 @@ def save_checkpoint(checkpoint_path: Path, results: list[dict]) -> None:
 
 def main():
     parser = argparse.ArgumentParser(description="Re-screen original 251 papers with updated criteria")
-    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
-    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
+    parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     args = parser.parse_args()
 
-    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
-        logging.warning("No --review specified, using default 'surgical_autonomy'.")
-
     review = args.review
-    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+    spec_path = str(args.spec or spec_path_for(review))
     db_path = Path(f"data/{review}/review.db")
     output_dir = Path(f"data/{review}/expanded_search")
     OUTPUT_CSV = output_dir / "rescreen_original_251.csv"
     CHECKPOINT = output_dir / "rescreen_checkpoint.json"
 
-    spec = load_review_spec(spec_path)
+    spec = load_spec_for(review, args.spec)
 
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row

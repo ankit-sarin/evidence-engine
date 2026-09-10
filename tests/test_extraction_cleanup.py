@@ -5,7 +5,8 @@ import logging
 import pytest
 
 from engine.core.database import ReviewDatabase
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import ReviewIdMismatchError
+from engine.core.review_spec import ReviewSpecError, load_review_spec
 from engine.search.models import Citation
 from engine.utils.extraction_cleanup import (
     check_stale_extractions,
@@ -179,15 +180,23 @@ class TestSchemaHashResolution:
         actual = get_current_schema_hash("surgical_autonomy", spec_path=SPEC_PATH)
         assert actual == expected
 
-    def test_get_current_schema_hash_auto_discovers_spec(self):
-        """Auto-discovery finds the spec from review_specs/{name}*.yaml."""
-        # surgical_autonomy.yaml exists in review_specs/
+    def test_get_current_schema_hash_derives_the_spec_path(self):
+        """The spec path is derived from the review id, not searched for.
+
+        It replaced a glob ({name}*.yaml, first lexicographic match) that
+        after the SPEC-AUTH-01 rename matched two files.
+        """
         h = get_current_schema_hash("surgical_autonomy")
         assert len(h) == 64  # SHA-256 hex
 
     def test_get_current_schema_hash_missing_review_raises(self):
-        with pytest.raises(FileNotFoundError, match="No review spec found"):
+        with pytest.raises(ReviewSpecError, match="Review spec not found"):
             get_current_schema_hash("nonexistent_review_xyz")
+
+    def test_get_current_schema_hash_refuses_a_spec_for_another_review(self):
+        """An override naming a different review is refused, not used."""
+        with pytest.raises(ReviewIdMismatchError):
+            get_current_schema_hash("some_other_review", spec_path=SPEC_PATH)
 
 
 class TestStaleExtractionCheck:

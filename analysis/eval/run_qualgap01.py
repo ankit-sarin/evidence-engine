@@ -62,7 +62,7 @@ from analysis.eval.schema_eval2 import select_sample
 from engine.agents.extractor import MODEL, build_extraction_prompt, parse_thinking_trace
 from engine.agents.models import ExtractionOutput
 from engine.core.completeness import check_completeness, expected_field_names
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import load_spec_for
 from engine.utils import ollama_client as oc
 from engine.utils.ollama_lock import hold_experiment_lock
 
@@ -254,7 +254,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="QUALGAP-01: Ollama 0.17.7 runtime A/B")
     p.add_argument("--review", required=True)
     p.add_argument("--data-root", default="data")
-    p.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
+    p.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     p.add_argument("--host", default=DEFAULT_HOST)
     p.add_argument("--label", default="runtime_v12")
     p.add_argument("--probe", action="store_true", help="pre-flight probes only, no batch")
@@ -278,7 +278,7 @@ def main(argv: list[str] | None = None) -> int:
         logger.info("wrote %s", out)
         return 0
 
-    spec = load_review_spec(args.spec)
+    spec = load_spec_for(args.review, args.spec)
     expected = expected_field_names(spec, review_dir / "extraction_codebook.yaml")
     sample = select_sample(review_dir)
 

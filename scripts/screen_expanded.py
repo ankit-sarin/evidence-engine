@@ -38,6 +38,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from engine.agents.screener import screen_paper
+from engine.core.review_paths import load_spec_for, spec_path_for
 from engine.core.review_spec import load_review_spec
 
 logging.basicConfig(
@@ -63,7 +64,6 @@ def _get_contact_email() -> str:
 # Initialized lazily in main() after env var check
 OPENALEX_HEADERS: dict[str, str] = {}
 
-DEFAULT_REVIEW = "surgical_autonomy"
 
 # Module-level paths — set in main() based on --review
 STAGING_DIR = None
@@ -467,12 +467,12 @@ def main():
         description="Screen expanded search results (three-phase)"
     )
     parser.add_argument(
-        "--review", default=DEFAULT_REVIEW,
-        help=f"Review name (default: {DEFAULT_REVIEW})",
+        "--review", required=True,
+        help="Review id. The review's identity — the spec file and the data root both derive from it.",
     )
     parser.add_argument(
         "--spec", default=None,
-        help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)",
+        help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.",
     )
     parser.add_argument(
         "--fetch-only", action="store_true",
@@ -492,11 +492,11 @@ def main():
     )
     args = parser.parse_args()
 
-    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
-        logging.warning("No --review specified, using default 'surgical_autonomy'.")
-
     review = args.review
-    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+    # Identity gate. load_spec_for refuses a spec naming a different review,
+    # and it runs before anything opens a database (SPEC-AUTH-01).
+    spec = load_spec_for(review, args.spec)
+    spec_path = str(args.spec or spec_path_for(review))
 
     # Initialize contact email for API compliance
     contact_email = _get_contact_email()

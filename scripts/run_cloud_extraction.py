@@ -2,8 +2,8 @@
 """CLI for running cloud extraction arms (OpenAI o3-mini, Anthropic Sonnet 4.5).
 
 Usage:
-    python scripts/run_cloud_extraction.py --arm openai --spec review_specs/surgical_autonomy.yaml
-    python scripts/run_cloud_extraction.py --arm anthropic --spec review_specs/surgical_autonomy.yaml
+    python scripts/run_cloud_extraction.py --review surgical_autonomy --arm openai
+    python scripts/run_cloud_extraction.py --review surgical_autonomy --arm anthropic
     python scripts/run_cloud_extraction.py --arm openai --max-papers 5 --max-cost 10.00
     python scripts/run_cloud_extraction.py --arm both
     python scripts/run_cloud_extraction.py --progress
@@ -14,6 +14,7 @@ import argparse
 import logging
 import sys
 
+from engine.core.review_paths import data_root_for, load_spec_for, spec_path_for
 from engine.cloud.anthropic_extractor import AnthropicExtractor
 from engine.cloud.base import CloudExtractorBase
 from engine.cloud.openai_extractor import OpenAIExtractor
@@ -26,7 +27,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DEFAULT_REVIEW = "surgical_autonomy"
 
 
 def show_progress(db_path: str, spec_path: str):
@@ -92,8 +92,8 @@ def main():
     )
     parser.add_argument(
         "--review",
-        default=DEFAULT_REVIEW,
-        help=f"Review name (default: {DEFAULT_REVIEW})",
+        required=True,
+        help="Review id. The review's identity — the spec file and the data root both derive from it.",
     )
     parser.add_argument(
         "--arm",
@@ -103,7 +103,7 @@ def main():
     parser.add_argument(
         "--spec",
         default=None,
-        help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)",
+        help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.",
     )
     parser.add_argument(
         "--db",
@@ -135,12 +135,12 @@ def main():
 
     args = parser.parse_args()
 
-    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
-        logging.warning("No --review specified, using default 'surgical_autonomy'.")
-
     review = args.review
-    db_path = args.db or f"data/{review}/review.db"
-    spec_path = args.spec or f"review_specs/{review}_v1.yaml"
+    # Identity gate. load_spec_for refuses a spec naming a different review,
+    # and it runs before anything opens a database (SPEC-AUTH-01).
+    spec = load_spec_for(review, args.spec)
+    db_path = args.db or str(data_root_for(review) / "review.db")
+    spec_path = str(args.spec or spec_path_for(review))
 
     from engine.utils.background import maybe_background
     maybe_background("cloud_extraction", review_name=review)

@@ -121,8 +121,13 @@ def export_ambiguous_pairs(
 
     db_str = str(db_path)
 
-    # Load spec for scoring
-    spec_path = Path(f"review_specs/{review_name}_v1.yaml")
+    # Load spec for scoring. The path is derived, not hand-built: the
+    # SPEC-AUTH-01 rename made the old f-string name a file that no longer
+    # exists, and the .exists() guard would have degraded to spec=None
+    # silently. Still name-driven — generalising this is PATH-AUTH-01's.
+    from engine.core.review_paths import spec_path_for
+
+    spec_path = spec_path_for(review_name)
     spec = load_review_spec(str(spec_path)) if spec_path.exists() else None
 
     # Load field types from codebook

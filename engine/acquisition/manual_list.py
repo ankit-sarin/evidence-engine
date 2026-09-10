@@ -31,7 +31,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from engine.core.database import DATA_ROOT, ReviewDatabase
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import load_spec_for
 
 logger = logging.getLogger(__name__)
 
@@ -121,14 +121,12 @@ def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict
 
     Returns summary stats.
     """
+    # Spec first, database second (SPEC-AUTH-01 R2).
+    spec = load_spec_for(review_name, spec_path)
+    proxy_pattern = spec.institutional_proxy_pattern or DEFAULT_PROXY
+
     db = ReviewDatabase(review_name)
     conn = db._conn
-
-    proxy_pattern = DEFAULT_PROXY
-    if spec_path:
-        spec = load_review_spec(spec_path)
-        if spec.institutional_proxy_pattern:
-            proxy_pattern = spec.institutional_proxy_pattern
 
     out_dir = DATA_ROOT / review_name / "pdf_acquisition"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -433,8 +431,8 @@ def main():
     from engine.utils.background import maybe_background
 
     parser = argparse.ArgumentParser(description="Generate manual download list")
-    parser.add_argument("--review", required=True, help="Review name")
-    parser.add_argument("--spec", help="Path to review spec YAML (for proxy pattern)")
+    parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
+    parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     parser.add_argument("--background", action="store_true",
                         help="Run in detached tmux session")
 

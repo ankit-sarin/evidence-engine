@@ -48,7 +48,7 @@ from engine.agents.extractor import (
 )
 from engine.agents.models import ExtractionOutput
 from engine.core.completeness import check_completeness, expected_field_names
-from engine.core.review_spec import load_review_spec
+from engine.core.review_paths import load_spec_for
 from engine.utils.ollama_client import ollama_chat
 from engine.utils.ollama_lock import hold_experiment_lock
 
@@ -186,7 +186,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="SCHEMA-EVAL-02: A/B/C local contract eval")
     p.add_argument("--review", required=True)
     p.add_argument("--data-root", default="data")
-    p.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
+    p.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     p.add_argument("--label", default="local_abc")
     p.add_argument("--resume", action="store_true",
                    help="skip (condition, paper) pairs already present in the output")
@@ -194,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     review_dir = Path(args.data_root) / args.review
-    spec = load_review_spec(args.spec)
+    spec = load_spec_for(args.review, args.spec)
     expected = expected_field_names(spec, review_dir / "extraction_codebook.yaml")
     slot_schema = required_slot_schema(expected)
     sample = select_sample(review_dir)

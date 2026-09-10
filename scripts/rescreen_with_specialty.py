@@ -25,7 +25,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from engine.agents.screener import ScreeningDecision, screen_paper
 from engine.core.database import ReviewDatabase
-from engine.core.review_spec import ReviewSpec, load_review_spec
+from engine.core.review_paths import load_spec_for, spec_path_for
+from engine.core.review_spec import ReviewSpec
 
 logging.basicConfig(
     level=logging.INFO,
@@ -36,7 +37,6 @@ logger = logging.getLogger("rescreen_specialty")
 
 # ── Config ──────────────────────────────────────────────────────────
 
-DEFAULT_REVIEW = "surgical_autonomy"
 TARGET_STATUSES = ("ABSTRACT_SCREENED_IN", "AI_AUDIT_COMPLETE")
 
 # Use pass_number 1/2 (schema CHECK constraint). Distinguish via RESCREEN_TAG in rationale.
@@ -91,18 +91,15 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Re-screen with specialty scope")
-    parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
-    parser.add_argument("--spec", default=None, help="Path to review spec YAML (default: review_specs/<review>_v1.yaml)")
+    parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
+    parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     parser.add_argument("--background", action="store_true", help="Run in tmux")
     parser.add_argument("--verify-only", action="store_true", help="Run verification pass only")
     parser.add_argument("--report-only", action="store_true", help="Print report from DB, no screening")
     args = parser.parse_args()
 
-    if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
-        logging.warning("No --review specified, using default 'surgical_autonomy'.")
-
     review_name = args.review
-    spec_path = args.spec or f"review_specs/{review_name}_v1.yaml"
+    spec_path = str(args.spec or spec_path_for(review_name))
 
     if args.background:
         try:
@@ -111,7 +108,7 @@ def main():
         except ImportError:
             logger.warning("Background mode not available — running in foreground")
 
-    spec = load_review_spec(spec_path)
+    spec = load_spec_for(review_name, args.spec)
     db = ReviewDatabase(review_name)
 
     if args.report_only:

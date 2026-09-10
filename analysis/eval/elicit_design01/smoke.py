@@ -161,9 +161,9 @@ def field_report(unit_map, p1_extra: dict | None, spans: list[dict]) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="ELICIT-DESIGN-01 smoke")
-    ap.add_argument("--review", default="surgical_autonomy")
+    ap.add_argument("--review", required=True)
     ap.add_argument("--data-root", default="data")
-    ap.add_argument("--spec", default="review_specs/surgical_autonomy.yaml")
+    ap.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     ap.add_argument("--papers", default=",".join(str(p) for p in SMOKE_PAPERS))
     args = ap.parse_args(argv)
 
@@ -171,7 +171,7 @@ def main(argv: list[str] | None = None) -> int:
                         format="%(asctime)s %(levelname)s %(message)s")
 
     from engine.agents.extractor import MODEL, extract_paper_with_completeness
-    from engine.core.review_spec import load_review_spec
+    from engine.core.review_paths import load_spec_for
     from engine.elicitation import classes as C
     from engine.elicitation.units import build_unit_map
     from engine.utils import ollama_client as oc
@@ -184,7 +184,7 @@ def main(argv: list[str] | None = None) -> int:
 
     version, digest = preflight(oc)
 
-    spec = load_review_spec(args.spec)
+    spec = load_spec_for(args.review, args.spec)
     spec.extraction_models.elicitation = True
     logger.info("elicitation=%s pass1_think=%s pass2_think=%s",
                 spec.extraction_models.elicitation,

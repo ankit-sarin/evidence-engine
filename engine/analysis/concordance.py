@@ -353,20 +353,20 @@ def main():
         required=True,
         help="Comma-separated arm names (e.g. local,openai_o4_mini_high,anthropic_sonnet_4_6)",
     )
-    parser.add_argument("--spec", default=None, help="Path to review spec YAML (optional)")
+    parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
 
     args = parser.parse_args()
     arms = [a.strip() for a in args.arms.split(",")]
 
-    from engine.core.database import DATA_ROOT
-    db_path = str(DATA_ROOT / args.review / "review.db")
-    output_dir = DATA_ROOT / args.review / "analysis"
+    from engine.core.review_paths import data_root_for, load_spec_for, spec_path_for
 
-    spec_path = args.spec
-    if not spec_path:
-        default = Path(f"review_specs/{args.review}_v1.yaml")
-        if default.exists():
-            spec_path = str(default)
+    # Identity gate before any path is built from the review name.
+    load_spec_for(args.review, args.spec)
+    spec_path = str(args.spec or spec_path_for(args.review))
+
+    review_root = data_root_for(args.review)
+    db_path = str(review_root / "review.db")
+    output_dir = review_root / "analysis"
 
     reports = run_all_pairs(db_path, arms, spec_path)
 

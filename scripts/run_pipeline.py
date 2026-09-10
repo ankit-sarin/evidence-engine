@@ -24,7 +24,8 @@ from engine.agents.auditor import run_audit
 from engine.agents.extractor import run_extraction
 from engine.agents.screener import run_screening
 from engine.core.database import ReviewDatabase
-from engine.core.review_spec import ReviewSpec, load_review_spec
+from engine.core.review_paths import load_spec_for
+from engine.core.review_spec import ReviewSpec
 from engine.exporters import export_all
 from engine.parsers.pdf_parser import parse_all_pdfs
 from engine.search.dedup import deduplicate
@@ -48,18 +49,25 @@ _POST_SCREENING_STAGES = {"parse", "extract", "audit", "export"}
 
 
 def run_pipeline(
-    spec_path: str,
     review_name: str,
+    spec_path: str | None = None,
     skip_to: str | None = None,
     limit: int | None = None,
 ) -> None:
-    """Run the full evidence engine pipeline."""
+    """Run the full evidence engine pipeline.
+
+    `review_name` is the review's identity: the spec file and the data root
+    are both derived from it. `spec_path` is an optional override and must
+    carry the same review_id.
+    """
     t_start = time.time()
 
     # ── Load spec ────────────────────────────────────────────
-    logger.info("Loading review spec: %s", spec_path)
-    spec = load_review_spec(spec_path)
-    logger.info("Review: %s (v%s)", spec.title, spec.version)
+    # Before the database, always: load_spec_for refuses a spec that names a
+    # different review, and a refusal after the database is opened is a
+    # refusal that has already written a directory tree.
+    spec = load_spec_for(review_name, spec_path)
+    logger.info("Review: %s — %s (v%s)", spec.review_id, spec.title, spec.version)
 
     # ── Init database ────────────────────────────────────────
     db = ReviewDatabase(review_name)
@@ -348,18 +356,28 @@ def _finish_review_run(db: ReviewDatabase, run_id: int, status: str) -> None:
 def main():
     from engine.utils.background import maybe_background
 
-    # Extract --name early for the log path (before argparse strips it)
+    # Extract the review id early for the log path (before argparse strips it)
     review_name = "review"
     for i, arg in enumerate(sys.argv):
-        if arg == "--name" and i + 1 < len(sys.argv):
+        if arg in ("--review", "--name") and i + 1 < len(sys.argv):
             review_name = sys.argv[i + 1]
             break
 
     maybe_background("pipeline", review_name=review_name)
 
     parser = argparse.ArgumentParser(description="Run the Surgical Evidence Engine pipeline")
-    parser.add_argument("--spec", required=True, help="Path to Review Spec YAML file")
-    parser.add_argument("--name", required=True, help="Review name (used for database/directory)")
+    parser.add_argument(
+        "--review", "--name", dest="review", required=True,
+        help=("Review id. The review's identity — the spec file "
+              "(review_specs/<review>.yaml) and the data root (data/<review>) "
+              "both derive from it. --name is a deprecated alias."),
+    )
+    parser.add_argument(
+        "--spec", default=None,
+        help=("Override the Review Spec path. Defaults to "
+              "review_specs/<review>.yaml; an override must carry the same "
+              "review_id."),
+    )
     parser.add_argument(
         "--skip-to",
         choices=STAGES,
@@ -374,7 +392,12 @@ def main():
     )
     args = parser.parse_args()
 
-    run_pipeline(args.spec, args.name, skip_to=args.skip_to, limit=args.limit)
+    if "--name" in sys.argv:
+        logger.warning(
+            "--name is deprecated and will be removed; use --review %s.", args.review
+        )
+
+    run_pipeline(args.review, args.spec, skip_to=args.skip_to, limit=args.limit)
 
 
 if __name__ == "__main__":

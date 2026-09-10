@@ -23,6 +23,7 @@ from engine.analysis.concordance import load_arm
 from engine.analysis.metrics import FieldSummary, field_summary
 from engine.analysis.scoring import FieldScore, score_pair
 from engine.core.database import DATA_ROOT
+from engine.core.review_paths import load_spec_for, spec_path_for
 from engine.core.review_spec import load_review_spec
 
 # ── Constants ────────────────────────────────────────────────────────
@@ -619,13 +620,15 @@ def main():
     parser = argparse.ArgumentParser(
         description="Export 3-arm AI disagreement pairs for PLUM Lab"
     )
-    parser.add_argument("--review", default="surgical_autonomy",
+    parser.add_argument("--review", required=True,
                         help="Review name (default: surgical_autonomy)")
-    parser.add_argument("--spec", default=None, help="Path to review spec YAML")
+    parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     args = parser.parse_args()
 
     db_path = str(DATA_ROOT / args.review / "review.db")
-    spec_path = args.spec or f"review_specs/{args.review}_v1.yaml"
+    # Identity gate before anything reads the review (SPEC-AUTH-01).
+    load_spec_for(args.review, args.spec)
+    spec_path = str(args.spec or spec_path_for(args.review))
     output_dir = DATA_ROOT / args.review / "exports"
     output_dir.mkdir(parents=True, exist_ok=True)
 

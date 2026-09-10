@@ -11,7 +11,7 @@ Results are stored in the papers table columns:
   pdf_quality_check_status = 'AI_CHECKED'
 
 CLI:
-    python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --spec review_specs/surgical_autonomy.yaml
+    python -m engine.acquisition.pdf_quality_check --review surgical_autonomy
     python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --dry-run
     python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --limit 5
 """
@@ -253,17 +253,17 @@ def main():
     parser = argparse.ArgumentParser(
         description="PDF quality check — first-page AI classification"
     )
-    parser.add_argument("--review", required=True, help="Review name")
-    parser.add_argument("--spec", default=None, help="Path to Review Spec YAML")
+    parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
+    parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
     parser.add_argument("--dry-run", action="store_true", help="Report only, no DB writes")
     parser.add_argument("--limit", type=int, default=None, help="Process only N papers")
     args = parser.parse_args()
 
-    config = None
-    if args.spec:
-        from engine.core.review_spec import load_review_spec
-        spec = load_review_spec(args.spec)
-        config = spec.pdf_quality_check
+    # The spec is the review's configuration authority, so it is read
+    # whether or not an override was passed (SPEC-AUTH-01). Previously the
+    # thresholds applied only when someone remembered to pass --spec.
+    from engine.core.review_paths import load_spec_for
+    config = load_spec_for(args.review, args.spec).pdf_quality_check
 
     stats = run_quality_check(
         review_name=args.review,

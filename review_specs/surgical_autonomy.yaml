@@ -118,17 +118,17 @@ extraction_schema:
 
     - name: robot_platform
       description: "The name/model of the robotic system used, including manufacturer if stated. Record exactly as the paper states it. If multiple robots are compared, list all separated by semicolons. If the paper describes an algorithm without a physical platform, enter 'No physical platform — [brief descriptor]'. If a generic robot arm not designed for surgery (e.g., KUKA LBR iiwa), record as stated."
-      type: text
+      type: free_text
       tier: 1
 
     - name: task_performed
       description: "The specific surgical task the robot performed autonomously or semi-autonomously. Record the specific autonomous task, not the overall procedure — e.g. 'suturing' not 'colectomy'. Be specific: 'needle driving' not 'surgery'. If multiple autonomous tasks, list all separated by semicolons."
-      type: text
+      type: free_text
       tier: 1
 
     - name: sample_size
       description: "Total number of cases, experiments, procedures, or subjects. For animal studies, report number of animals. For simulations, report number of trials. For phantom studies, report number of experimental runs. Enter the number only, or NR."
-      type: text
+      type: numeric
       tier: 1
 
     - name: surgical_domain
@@ -204,34 +204,34 @@ extraction_schema:
 
     - name: country
       description: "Country where the study was conducted. Use first author's institution country if not explicitly stated. Metadata-inferred is acceptable. If multi-country, list all separated by semicolons. If unclear, record 'NR'."
-      type: text
+      type: free_text
       tier: 2
 
     # ── Tier 3: Numeric/Tables (from results, variable expected κ) ──
     - name: primary_outcome_metric
       description: "The primary outcome measure reported. Record the first quantitative outcome in the results section related to the autonomous task's performance. Use the paper's exact terminology (e.g., 'task completion time,' 'suture accuracy score,' 'Dice coefficient'). Do not select based on judgment of 'most emphasized' — use positional order."
-      type: text
+      type: free_text
       tier: 3
 
     - name: primary_outcome_value
       description: "The numeric result for the primary outcome metric. Include units, confidence intervals, or p-values if reported. Copy the exact numeric reporting (e.g., 'mean 4.2 ± 0.8 mm', '92.3% (95% CI: 88.1–96.5)', 'median 12 min (IQR 8–15)')."
-      type: text
+      type: free_text
       tier: 3
 
     - name: comparison_to_human
       description: "If the paper compares autonomous performance to human/manual performance, report the comparison result. Include both values if available (e.g., 'Autonomous: 142s vs Manual: 198s (p=0.003)'). If no comparison was made, record 'No comparison reported'."
-      type: text
+      type: free_text
       tier: 3
 
     - name: secondary_outcomes
       description: "Additional quantitative outcomes reported beyond the primary. Record as semicolon-separated entries in format 'metric: value'. Enter NR if only one outcome reported."
-      type: text
+      type: free_text
       tier: 3
 
     # ── Tier 4: Judgment (synthesis/inference, expected κ 0.50–0.70) ──
     - name: key_limitation
       description: "The most important limitation of the study. In 1-2 sentences, state the key limitation using YOUR judgment. Do not simply copy what the authors wrote in their limitations section. Quote the passage(s) that informed your assessment."
-      type: text
+      type: free_text
       tier: 4
 
     - name: clinical_readiness_assessment

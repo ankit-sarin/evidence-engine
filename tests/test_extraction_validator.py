@@ -331,7 +331,9 @@ def test_modified_spec_different_hash():
         ExtractionField(
             name="fake_new_field",
             description="A fake field for testing",
-            type="str",
+            # `str` was accepted until CODEBOOK-AUTH-01 gave the spec the
+            # codebook's vocabulary; the point of the test is the extra FIELD.
+            type="free_text",
             tier=1,
         )
     )

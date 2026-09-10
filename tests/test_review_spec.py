@@ -211,11 +211,21 @@ def test_unknown_nested_key_rejected_and_named(tmp_path, path, expected):
 # The review names itself. Before this the name lived only on the command
 # line, and nothing checked it against the spec.
 
-# T6 — measured against the live spec BEFORE review_id existed. Pinned as
-# literals on purpose: the claim is that adding a top-level field cannot
-# move a stored provenance value, and a computed expectation would move
-# with the code it is meant to hold still.
-BASELINE_EXTRACTION_HASH = "d311eb20d1f8c9ea47ef8038a18924198348efce49037292723b2c408b9a6790"
+# Pinned as literals on purpose: a computed expectation would move with the
+# code it is meant to hold still.
+#
+# SCREENING is still the value measured before SPEC-AUTH-01 — nothing has
+# touched that section.
+#
+# EXTRACTION moved once, deliberately, in CODEBOOK-AUTH-01 Phase 2 C9:
+#     d311eb20d1f8c9ea47ef8038a18924198348efce49037292723b2c408b9a6790  (before)
+#     fc40fe1340fdc49256efac9bebf23b21aa98692495cd9d599c8dd799e40b8307  (now)
+# The spec's `type` attribute adopted the codebook's vocabulary on nine of
+# twenty fields, so the hashed section genuinely changed and existing
+# extractions correctly read as stale against it. What did NOT change is the
+# prompt: it renders the CODEBOOK's type, so it is byte-identical across the
+# edit. Any further movement is a real protocol change or a defect.
+BASELINE_EXTRACTION_HASH = "fc40fe1340fdc49256efac9bebf23b21aa98692495cd9d599c8dd799e40b8307"
 BASELINE_SCREENING_HASH = "0d97b9d61161eeca6c81dd82f895bfb8c6f933b8e8ea23f79056a69f0cf98b90"
 
 

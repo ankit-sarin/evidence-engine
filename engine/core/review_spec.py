@@ -36,8 +36,28 @@ class ExtractionField(_SpecModel):
     name: str
     description: str
     type: str = Field(
-        description="Data type: str, int, float, bool, list[str], enum, etc."
+        description=(
+            "Field type, from the codebook's vocabulary. The two files carry "
+            "this attribute independently and disagreed on nine of twenty "
+            "fields before CODEBOOK-AUTH-01 — eight a spelling split "
+            "(text/free_text) and one substantive: sample_size was `text` here "
+            "and `numeric` in the codebook. The prompt renders the CODEBOOK's "
+            "value, so the codebook was right and this file was the copy that "
+            "was wrong."
+        ),
     )
+
+    @field_validator("type")
+    @classmethod
+    def known_field_type(cls, v: str) -> str:
+        from engine.core.codebook import VALID_FIELD_TYPES
+
+        if v not in VALID_FIELD_TYPES:
+            raise ValueError(
+                f"unknown field type {v!r}; expected one of "
+                f"{', '.join(VALID_FIELD_TYPES)}"
+            )
+        return v
     tier: int = Field(ge=1, le=4, description="1=explicit, 2=interpretive, 3=numeric, 4=judgment")
     enum_values: Optional[list[str]] = Field(
         default=None, description="Allowed values when type is 'enum'"

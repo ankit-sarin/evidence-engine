@@ -31,8 +31,6 @@ from typing import Any
 
 import yaml
 
-from engine.core.review_paths import data_root_for
-
 logger = logging.getLogger(__name__)
 
 CODEBOOK_FILENAME = "extraction_codebook.yaml"
@@ -288,6 +286,11 @@ def _validate_valid_values(f: dict, path: Path, where: str) -> None:
 
 def codebook_path_for(review_id: str) -> Path:
     """The codebook for a review: `data/<review_id>/extraction_codebook.yaml`."""
+    # Deferred: review_paths imports review_spec, and review_spec imports
+    # VALID_FIELD_TYPES from here. Importing it at module scope would close
+    # that loop; nothing else in this module needs engine imports at all.
+    from engine.core.review_paths import data_root_for
+
     return data_root_for(review_id) / CODEBOOK_FILENAME
 
 

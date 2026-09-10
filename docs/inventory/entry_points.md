@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `87093a3d1cfab5300ed982ac99d520499aca210a` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `cc7a65f36c8601e6ca5ea6c88b4236ec8b5b7c07` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -172,8 +172,8 @@ Two figures deliberately have no baseline row. **entry points** (98) counts anyt
 | `analysis/paper1/judge_loader.py` | 156 | `safe_load` | `path.read_text()` |
 | `analysis/paper1/pi_audit_sampler_v2.py` | 217 | `safe_load` | `codebook_path.read_text()` |
 | `engine/adjudication/categorizer.py` | 45 | `safe_load` | `f` |
-| `engine/core/codebook.py` | 344 | `safe_load` | `text` |
-| `engine/core/review_spec.py` | 476 | `safe_load` | `f` |
+| `engine/core/codebook.py` | 347 | `safe_load` | `text` |
+| `engine/core/review_spec.py` | 496 | `safe_load` | `f` |
 | `engine/validators/distribution_monitor.py` | 55 | `safe_load` | `f` |
 
 ## Path construction in code
@@ -210,7 +210,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/agents/extractor.py` | 651 | literal | `extraction_codebook.yaml` |
 | `engine/analysis/concordance.py` | 78 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 421 | literal | `extraction_codebook.yaml` |
-| `engine/core/codebook.py` | 38 | literal | `extraction_codebook.yaml` |
+| `engine/core/codebook.py` | 36 | literal | `extraction_codebook.yaml` |
 | `engine/core/review_paths.py` | 28 | literal | `review_specs` |
 | `engine/core/review_paths.py` | 59 | f-string | `f'{review_id}.yaml'` |
 | `engine/tools/inventory.py` | 34 | literal | `review_specs` |

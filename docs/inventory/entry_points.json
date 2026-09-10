@@ -4411,19 +4411,19 @@
           },
           {
             "kind": "literal",
-            "line": 38,
+            "line": 36,
             "role": "code",
             "text": "extraction_codebook.yaml"
           },
           {
             "kind": "literal",
-            "line": 290,
+            "line": 288,
             "role": "docstring",
             "text": "The codebook for a review: `data/<review_id>/extraction_codebook.yaml`."
           },
           {
             "kind": "f-string",
-            "line": 340,
+            "line": 343,
             "role": "message",
             "text": "f'Codebook not found at {path}. Every review carries one at data/<review_id>/{CODEBOOK_FILENAME}.'"
           }
@@ -4433,7 +4433,7 @@
         "spec_access": [
           {
             "func": "data_root_for",
-            "line": 291,
+            "line": 294,
             "scope": "codebook_path_for"
           }
         ],
@@ -4441,7 +4441,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 344,
+            "line": 347,
             "scope": "_parse",
             "target": "text"
           }
@@ -4610,13 +4610,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 355,
+            "line": 375,
             "role": "help_text",
             "text": "The review's identity, and the single one. The spec file is review_specs/<review_id>.yaml and the data root is data/<review_id>; neither is passed independen..."
           },
           {
             "kind": "f-string",
-            "line": 479,
+            "line": 499,
             "role": "message",
             "text": "f'Review spec not found at {path}. Expected a YAML file (e.g., review_specs/<review_id>.yaml).'"
           }
@@ -4628,7 +4628,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 476,
+            "line": 496,
             "scope": "load_review_spec",
             "target": "f"
           }
@@ -7518,7 +7518,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "87093a3d1cfab5300ed982ac99d520499aca210a",
+    "generated_at_commit": "cc7a65f36c8601e6ca5ea6c88b4236ec8b5b7c07",
     "scan_roots": [
       "engine",
       "scripts",

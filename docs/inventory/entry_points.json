@@ -1,11 +1,11 @@
 {
   "data": {
     "data_dirs_excluded": {
-      "backups": "no review.db (holds: debris_2026-09-09, review_pre_FONT-AUDIT-02_20260909T194840Z.db, review_pre_PARSE-GATE-03_20260907T230211Z.db)",
-      "my_review": "no review.db (holds: logs)",
-      "myreview": "no review.db (holds: logs)",
-      "review": "no review.db (holds: logs)",
-      "test_review": "no review.db (holds: logs)"
+      "backups": "no review.db",
+      "my_review": "no review.db",
+      "myreview": "no review.db",
+      "review": "no review.db",
+      "test_review": "no review.db"
     },
     "files": {
       "analysis/__init__.py": {
@@ -5290,7 +5290,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 699,
+            "line": 705,
             "names": [
               "--write"
             ],
@@ -5299,7 +5299,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 701,
+            "line": 707,
             "names": [
               "--check"
             ],
@@ -5355,39 +5355,39 @@
           },
           {
             "kind": "literal",
-            "line": 119,
+            "line": 122,
             "role": "docstring",
             "text": "String Constants that are PIECES of an f-string, not strings in their own right.\n\n    Without this the f-string `f\"review_specs/{review}_v1.yaml\"` is reporte..."
           },
           {
             "kind": "literal",
-            "line": 155,
+            "line": 158,
             "role": "docstring",
             "text": "String nodes passed to an exception constructor or a logging call.\n\n    `raise ReviewSpecError(f\"... e.g. review_specs/<review_id>.yaml\")` mentions\n    a pat..."
           },
           {
             "kind": "literal",
-            "line": 428,
+            "line": 431,
             "role": "code",
             "text": "review_specs"
           },
           {
             "kind": "literal",
-            "line": 495,
+            "line": 498,
             "role": "code",
             "text": "`data/` subdirectories NOT counted as reviews (no `review.db`):"
           },
           {
             "kind": "literal",
-            "line": 530,
+            "line": 533,
             "role": "code",
             "text": "Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse prose, and messages passed to an exception or a logger. This is the class a ..."
           },
           {
             "kind": "literal",
-            "line": 674,
+            "line": 682,
             "role": "code",
-            "text": "data/ subdirectories changed: committed %s, on disk %s"
+            "text": "data/ subdirectories changed: "
           }
         ],
         "review_database": [],
@@ -7455,7 +7455,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "02452eec6e4934f0093ffb0988f104fd3712c9f7",
+    "generated_at_commit": "13b16a41d519c80959ab3f048ba64d751a51c26b",
     "scan_roots": [
       "engine",
       "scripts",

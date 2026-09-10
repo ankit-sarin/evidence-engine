@@ -35,11 +35,16 @@ def db_copy(tmp_path):
 
 
 def test_migration_adds_both_columns_to_all_three_tables(db_copy):
+    """Asserts the OUTCOME, not the delta.
+
+    The delta depends on whether the live database has already been migrated —
+    it has, since MIGRATE-012 — so a test that asserted `added` was the full
+    set passed only until the migration it describes was actually applied.
+    """
     result = MIG.run_migration(str(db_copy))
     assert result["table_absent"] == []
-    assert set(result["added"]) == {
-        f"{t}.{c}" for t in MIG.TARGETS for c in MIG.COLUMNS
-    }
+    every = {f"{t}.{c}" for t in MIG.TARGETS for c in MIG.COLUMNS}
+    assert set(result["added"]) | set(result["already_present"]) == every
     conn = sqlite3.connect(str(db_copy))
     try:
         for table in MIG.TARGETS:
@@ -64,10 +69,38 @@ def test_existing_rows_are_null_not_backfilled(db_copy):
 
 
 def test_migration_is_idempotent(db_copy):
+    """A second run adds nothing, whatever the first one found."""
     first = MIG.run_migration(str(db_copy))
     second = MIG.run_migration(str(db_copy))
-    assert first["added"] and second["added"] == []
-    assert set(second["already_present"]) == set(first["added"])
+    assert second["added"] == []
+    every = {f"{t}.{c}" for t in MIG.TARGETS for c in MIG.COLUMNS}
+    assert set(second["already_present"]) == every
+    assert set(first["added"]) | set(first["already_present"]) == every
+
+
+def test_migration_adds_the_full_set_to_a_database_that_lacks_them(tmp_path):
+    """The delta assertion, on a database built without the columns.
+
+    Keeps the 'it really does add six' claim under test now that the live
+    database — and therefore every copy of it — already has them.
+    """
+    import sqlite3
+
+    p = tmp_path / "pre.db"
+    conn = sqlite3.connect(str(p))
+    conn.executescript("""
+        CREATE TABLE extractions (id INTEGER PRIMARY KEY, extraction_schema_hash TEXT);
+        CREATE TABLE cloud_extractions (id INTEGER PRIMARY KEY, arm TEXT);
+        CREATE TABLE review_runs (id INTEGER PRIMARY KEY, started_at TEXT);
+    """)
+    conn.commit()
+    conn.close()
+
+    result = MIG.run_migration(str(p))
+    assert set(result["added"]) == {
+        f"{t}.{c}" for t in MIG.TARGETS for c in MIG.COLUMNS
+    }
+    assert result["already_present"] == [] and result["table_absent"] == []
 
 
 def test_missing_target_table_is_skipped_not_created(tmp_path):

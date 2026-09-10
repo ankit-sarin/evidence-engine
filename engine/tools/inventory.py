@@ -76,10 +76,13 @@ def review_ids(repo_root: Path) -> tuple[list[str], dict[str, str]]:
             if (child / "review.db").exists():
                 ids.add(child.name)
             else:
-                contents = sorted(p.name for p in child.iterdir())[:3]
-                excluded[child.name] = "no review.db (holds: %s)" % (
-                    ", ".join(contents) or "empty"
-                )
+                # The REASON only, never the contents. It used to name the
+                # first three files in the directory, which made the committed
+                # inventory a function of what happened to be sitting in
+                # data/backups — so writing one backup file turned the drift
+                # test red, with a message that printed two identical key
+                # lists and no way to see what had moved.
+                excluded[child.name] = "no review.db"
     return sorted(ids), excluded
 
 
@@ -671,9 +674,12 @@ def drift(repo_root: Path = REPO_ROOT) -> str | None:
         return ("review ids changed: committed %s, on disk %s"
                 % (committed.get("review_ids"), fresh["review_ids"]))
     if committed.get("data_dirs_excluded") != fresh["data_dirs_excluded"]:
-        return ("data/ subdirectories changed: committed %s, on disk %s"
-                % (sorted(committed.get("data_dirs_excluded", {})),
-                   sorted(fresh["data_dirs_excluded"])))
+        was, now = committed.get("data_dirs_excluded", {}), fresh["data_dirs_excluded"]
+        detail = [
+            "%s: committed %r, on disk %r" % (k, was.get(k), now.get(k))
+            for k in sorted(set(was) | set(now)) if was.get(k) != now.get(k)
+        ]
+        return "data/ subdirectories changed: " + "; ".join(detail)
 
     cf, ff = committed.get("files", {}), fresh["files"]
     for rel in sorted(set(cf) | set(ff)):

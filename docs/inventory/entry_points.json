@@ -1,8 +1,7 @@
 {
   "data": {
     "data_dirs_excluded": {
-      "backups": "no review.db (holds: review_pre_FONT-AUDIT-02_20260909T194840Z.db, review_pre_PARSE-GATE-03_20260907T230211Z.db, review_pre_PARSE-GATE-03_20260907T230211Z.db-shm)",
-      "data": "no review.db (holds: surgical_autonomy)",
+      "backups": "no review.db (holds: debris_2026-09-09, review_pre_FONT-AUDIT-02_20260909T194840Z.db, review_pre_PARSE-GATE-03_20260907T230211Z.db)",
       "my_review": "no review.db (holds: logs)",
       "myreview": "no review.db (holds: logs)",
       "review": "no review.db (holds: logs)",
@@ -7460,8 +7459,7 @@
       }
     },
     "review_ids": [
-      "surgical_autonomy",
-      "test_verify"
+      "surgical_autonomy"
     ],
     "summary": {
       "db_before_spec_scopes": 0,
@@ -7485,7 +7483,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "5f4de81ea469e1e8c896aee18642e93f947d9f89",
+    "generated_at_commit": "3ab8cff965554f763816c680d2c9a06875e15c55",
     "scan_roots": [
       "engine",
       "scripts",

@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `5f4de81ea469e1e8c896aee18642e93f947d9f89` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `3ab8cff965554f763816c680d2c9a06875e15c55` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -27,14 +27,13 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | default review named constants | 7 |
 | unparsed sites | 0 |
 
-Review ids on disk: `surgical_autonomy`, `test_verify`
+Review ids on disk: `surgical_autonomy`
 
 `data/` subdirectories NOT counted as reviews (no `review.db`):
 
 | directory | why |
 |---|---|
-| `backups` | no review.db (holds: review_pre_FONT-AUDIT-02_20260909T194840Z.db, review_pre_PARSE-GATE-03_20260907T230211Z.db, review_pre_PARSE-GATE-03_20260907T230211Z.db-shm) |
-| `data` | no review.db (holds: surgical_autonomy) |
+| `backups` | no review.db (holds: debris_2026-09-09, review_pre_FONT-AUDIT-02_20260909T194840Z.db, review_pre_PARSE-GATE-03_20260907T230211Z.db) |
 | `my_review` | no review.db (holds: logs) |
 | `myreview` | no review.db (holds: logs) |
 | `review` | no review.db (holds: logs) |

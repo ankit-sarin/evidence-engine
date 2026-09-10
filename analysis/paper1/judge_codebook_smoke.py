@@ -77,6 +77,7 @@ from typing import Optional
 
 import yaml
 from openpyxl import load_workbook
+from engine.core.codebook import load_codebook
 
 import analysis.paper1.judge as judge_mod
 from analysis.paper1.judge import JudgeError, de_randomize_verdicts, run_pass2
@@ -220,7 +221,7 @@ def load_audit_rows(
 
 
 def load_raw_codebook(path: Path) -> dict[str, dict]:
-    doc = yaml.safe_load(Path(path).read_text())
+    doc = load_codebook(path).raw
     return {f["name"]: f for f in (doc.get("fields") or []) if "name" in f}
 
 

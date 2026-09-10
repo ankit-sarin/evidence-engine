@@ -301,3 +301,57 @@ def test_lint_findings_are_attached_not_raised(tmp_path):
     cb = load_codebook(_write(tmp_path, doc))       # loads, does not raise
     assert cb.lint_findings
     assert "robot_platform" in cb.lint_findings[0]
+
+
+# ── C8: one reader ───────────────────────────────────────────────────
+
+
+def test_only_the_two_loaders_parse_yaml_directly():
+    """Eleven readers opened the codebook with a bare yaml.safe_load and none
+    of them validated anything. Each reached for the keys it happened to need,
+    so a codebook missing one of them failed at a different place in each.
+
+    Three raw-YAML sites survive, and each is the sole authority for its own
+    file type: this loader, the Review Spec loader, and the adjudication
+    category config.
+    """
+    import re
+
+    allowed = {
+        "engine/core/codebook.py",
+        "engine/core/review_spec.py",
+        "engine/adjudication/categorizer.py",
+    }
+    offenders = []
+    for root in ("engine", "scripts", "analysis"):
+        for path in sorted((REPO_ROOT / root).rglob("*.py")):
+            if "__pycache__" in path.parts:
+                continue
+            rel = path.relative_to(REPO_ROOT).as_posix()
+            if rel in allowed or rel == "engine/tools/inventory.py":
+                continue
+            for i, line in enumerate(path.read_text().split("\n"), 1):
+                if re.search(r"\byaml\.(safe_)?load\s*\(", line):
+                    offenders.append(f"{rel}:{i}")
+    assert offenders == [], (
+        "these parse YAML directly instead of going through a loader: "
+        + ", ".join(offenders)
+    )
+
+
+def test_the_codebook_file_is_read_never_written():
+    """Nothing in the engine writes a codebook."""
+    import re
+
+    for root in ("engine", "scripts"):
+        for path in sorted((REPO_ROOT / root).rglob("*.py")):
+            if "__pycache__" in path.parts:
+                continue
+            src = path.read_text()
+            for i, line in enumerate(src.split("\n"), 1):
+                if "extraction_codebook" in line and re.search(
+                    r"write_text|yaml\.(safe_)?dump|open\([^)]*[\"']w", line
+                ):
+                    raise AssertionError(
+                        f"{path.relative_to(REPO_ROOT)}:{i} writes a codebook"
+                    )

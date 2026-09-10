@@ -16,11 +16,26 @@ from analysis.paper1.judge_loader import (
 from engine.cloud.schema import init_cloud_tables
 from engine.core.database import ReviewDatabase
 
-CODEBOOK_YAML = """
+# A COMPLETE codebook: since CODEBOOK-AUTH-01 C8 this module obtains its
+# document from engine.core.codebook, which validates eagerly. A fixture
+# missing the keys a real codebook always carries was testing the judge loader
+# against a document that cannot exist.
+_TOP = """version: '2.0'
+review: test_review
+date: '2026-01-01'
+escape_token: NO_EVIDENCE_LOCATABLE
+contract_unmet_token: CONTRACT_UNMET
+absence_sentinels: [NR, NOT_FOUND]
+"""
+
+CODEBOOK_YAML = _TOP + """
 fields:
   - name: study_type
     tier: 1
     type: categorical
+    instruction: Classify it.
+    field_class: stated
+    judge_rubric_family: categorical
     definition: |-
       Type of study as described in the methods.
     valid_values:
@@ -33,27 +48,33 @@ fields:
   - name: sample_size
     tier: 1
     type: numeric
+    instruction: Count them.
+    field_class: stated
+    judge_rubric_family: numeric
     definition: Number of cases or subjects.
     tolerance: 2
   - name: robot_platform
     tier: 1
     type: free_text
+    instruction: Name it.
+    field_class: stated
+    judge_rubric_family: free_text
     definition: Name of the robot.
 """
 
-INVALID_YAML_MISSING_TYPE = """
+INVALID_YAML_MISSING_TYPE = _TOP + """
 fields:
   - name: study_type
     definition: T
 """
 
-INVALID_YAML_MISSING_DEF = """
+INVALID_YAML_MISSING_DEF = _TOP + """
 fields:
   - name: study_type
     type: categorical
 """
 
-INVALID_YAML_UNKNOWN_TYPE = """
+INVALID_YAML_UNKNOWN_TYPE = _TOP + """
 fields:
   - name: study_type
     type: blob
@@ -114,19 +135,20 @@ class TestLoadCodebook:
         with pytest.raises(LoaderError):
             load_codebook(p)
 
-    def test_valid_values_plain_strings_supported(self, tmp_path):
-        yml = (
-            "fields:\n"
-            "  - name: study_type\n"
-            "    type: categorical\n"
-            "    definition: T\n"
-            "    valid_values: [RCT, Cohort]\n"
-        )
-        p = self._write(tmp_path, yml)
-        cb = load_codebook(p)
-        assert cb["study_type"].valid_values == ["RCT", "Cohort"]
+    def test_valid_values_plain_strings_supported(self):
+        """`_parse_valid_values` still accepts bare strings — but a codebook
+        written that way no longer loads.
 
+        `extractor._build_field_block` renders `v["value"]` and
+        `v["definition"]` for every entry, so a bare-string codebook does not
+        degrade gracefully in the prompt path; it raises while building the
+        prompt. The loader refuses it at the document level instead
+        (CODEBOOK-AUTH-01). This still pins the parser, which is what the test
+        was named for.
+        """
+        from analysis.paper1.judge_loader import _parse_valid_values
 
+        assert _parse_valid_values(["RCT", "Cohort"], "study_type") == ["RCT", "Cohort"]
 class TestCodebookSha:
     def test_deterministic(self, tmp_path):
         p = tmp_path / "c.yaml"

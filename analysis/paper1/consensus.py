@@ -17,6 +17,7 @@ from pathlib import Path
 import yaml
 
 from engine.analysis.normalize import normalize_for_concordance
+from engine.core.codebook import load_codebook
 
 logger = logging.getLogger(__name__)
 
@@ -50,9 +51,8 @@ def identify_shared_papers(db_path: Path, min_extractors: int = 3) -> list[str]:
 
 def _load_field_types(codebook_path: Path) -> dict[str, str]:
     """Return {field_name: type} from codebook YAML."""
-    with open(codebook_path) as f:
-        cb = yaml.safe_load(f)
-    return {fd["name"]: fd["type"] for fd in cb.get("fields", [])}
+    cb = load_codebook(codebook_path).raw
+    return {fd["name"]: fd["type"] for fd in cb["fields"]}
 
 
 # ── Normalization helpers ────────────────────────────────────────────

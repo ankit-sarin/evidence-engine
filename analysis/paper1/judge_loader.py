@@ -97,16 +97,25 @@ def _parse_valid_values(raw, field_name: str) -> Optional[list[str]]:
     return out
 
 
+def _document(path: Path) -> dict:
+    """The codebook document, from the one loader (CODEBOOK-AUTH-01 C8).
+
+    Its CodebookError is re-raised as LoaderError so this module's callers
+    keep the single error type they already catch; what changes is that the
+    document is now validated once, in one place, rather than by whichever of
+    eleven readers happened to open the file.
+    """
+    from engine.core.codebook import CodebookError, load_codebook as _load
+
+    try:
+        return _load(path).raw
+    except CodebookError as exc:
+        raise LoaderError(str(exc)) from exc
+
+
 def load_codebook(path: Path) -> dict[str, CodebookEntry]:
     """Parse extraction_codebook.yaml into CodebookEntry objects keyed by field_name."""
-    path = Path(path)
-    try:
-        doc = yaml.safe_load(path.read_text())
-    except yaml.YAMLError as exc:
-        raise LoaderError(f"codebook YAML parse failed: {exc}") from exc
-
-    if not isinstance(doc, dict) or "fields" not in doc:
-        raise LoaderError("codebook missing top-level 'fields' list")
+    doc = _document(path)
 
     entries: dict[str, CodebookEntry] = {}
     for field in doc["fields"] or []:
@@ -151,13 +160,7 @@ def load_raw_codebook(path: Path) -> dict[str, dict]:
     the verbatim ``valid_values``/``decision_criteria`` — which the
     production Pass 2 prompt builder (``build_judge_prompt``) dispatches on.
     """
-    path = Path(path)
-    try:
-        doc = yaml.safe_load(path.read_text())
-    except yaml.YAMLError as exc:
-        raise LoaderError(f"codebook YAML parse failed: {exc}") from exc
-    if not isinstance(doc, dict) or "fields" not in doc:
-        raise LoaderError("codebook missing top-level 'fields' list")
+    doc = _document(path)
     return {
         f["name"]: f
         for f in (doc.get("fields") or [])

@@ -23,14 +23,36 @@ from engine.cloud.schema import init_cloud_tables
 from engine.core.database import ReviewDatabase
 
 
+# A COMPLETE codebook. The judge loader obtains its document from
+# engine.core.codebook since CODEBOOK-AUTH-01 C8, and that validates eagerly;
+# `valid_values` entries are mappings because the extraction prompt renders
+# both `value` and `definition` for every one of them.
 CODEBOOK_YAML = """
+version: '2.0'
+review: cli_test
+date: '2026-01-01'
+escape_token: NO_EVIDENCE_LOCATABLE
+contract_unmet_token: CONTRACT_UNMET
+absence_sentinels: [NR, NOT_FOUND]
 fields:
   - name: study_type
+    tier: 1
     type: categorical
+    instruction: Classify it.
+    field_class: stated
+    judge_rubric_family: categorical
     definition: Type of study.
-    valid_values: [Review, Original Research]
+    valid_values:
+      - value: Review
+        definition: A narrative review.
+      - value: Original Research
+        definition: Primary data.
   - name: robot_platform
+    tier: 1
     type: free_text
+    instruction: Name it.
+    field_class: stated
+    judge_rubric_family: free_text
     definition: Name of robot.
 """
 

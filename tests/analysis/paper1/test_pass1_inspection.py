@@ -29,23 +29,42 @@ from analysis.paper1.judge_storage import (
 from engine.core.database import ReviewDatabase
 
 
+# Complete, and with mapping-shaped valid_values: the judge loader obtains its
+# document from engine.core.codebook since CODEBOOK-AUTH-01 C8.
 CODEBOOK_YAML = """
+version: '2.0'
+review: test_review
+date: '2026-01-01'
+escape_token: NO_EVIDENCE_LOCATABLE
+contract_unmet_token: CONTRACT_UNMET
+absence_sentinels: [NR, NOT_FOUND]
 fields:
   - name: study_type
     tier: 1
     type: categorical
+    instruction: Classify it.
+    field_class: stated
+    judge_rubric_family: categorical
     definition: Type of study.
     valid_values:
-      - "RCT"
-      - "Cohort"
+      - value: "RCT"
+        definition: Randomised.
+      - value: "Cohort"
+        definition: Not randomised.
   - name: sample_size
     tier: 1
     type: numeric
+    instruction: Count them.
+    field_class: stated
+    judge_rubric_family: numeric
     definition: N subjects.
     tolerance: 2
   - name: robot_platform
     tier: 1
     type: free_text
+    instruction: Name it.
+    field_class: stated
+    judge_rubric_family: free_text
     definition: Robot name.
 """
 

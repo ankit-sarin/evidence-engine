@@ -34,6 +34,7 @@ import yaml
 
 from analysis.eval.analyze_schema_eval2 import _norm
 from analysis.eval.schema_eval2 import COND_B, COND_C, read_results
+from engine.core.codebook import load_codebook
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ LABELS_PATH = Path(__file__).with_name("adjud01_labels.json")
 
 def field_types(codebook_path: Path) -> dict[str, str]:
     """field_name -> codebook `type` (categorical / free_text / numeric)."""
-    cb = yaml.safe_load(codebook_path.read_text())
+    cb = load_codebook(codebook_path).raw
     return {f["name"]: f.get("type", "unknown") for f in cb["fields"]}
 
 

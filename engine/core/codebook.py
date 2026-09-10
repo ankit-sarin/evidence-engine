@@ -61,6 +61,11 @@ REQUIRED_FIELD_KEYS = (
 OPTIONAL_FIELD_KEYS = (
     "valid_values", "decision_criteria", "examples",
     "ordered_values", "dimension", "source_quote_required",
+    # Numeric agreement tolerance, read by the judge loader
+    # (`field.get("tolerance", 0.0)`). Absent from the live codebook, which is
+    # why it defaults there — but it is a real key of this document type and
+    # rejecting it would refuse a codebook the judge lane can already read.
+    "tolerance",
 )
 
 ALLOWED_FIELD_KEYS = frozenset(REQUIRED_FIELD_KEYS) | frozenset(OPTIONAL_FIELD_KEYS)
@@ -265,7 +270,11 @@ def _validate_valid_values(f: dict, path: Path, where: str) -> None:
         if not isinstance(item, dict) or "value" not in item:
             raise CodebookError(
                 f"Codebook at {path}: {where} has a `valid_values` entry that is "
-                f"not a mapping with a `value`: {item!r}."
+                f"not a mapping with a `value`: {item!r}. A bare string is "
+                f"refused deliberately: `extractor._build_field_block` renders "
+                f"`v[\"value\"]` and `v[\"definition\"]` for every entry, so a "
+                f"codebook written that way does not degrade — it raises while "
+                f"building the prompt."
             )
         unknown = sorted(set(item) - {"value", "definition"})
         if unknown:

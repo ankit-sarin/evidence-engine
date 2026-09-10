@@ -42,7 +42,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 149,
+            "line": 150,
             "names": [
               "--review"
             ],
@@ -51,7 +51,7 @@
           {
             "default": "'data'",
             "dest": null,
-            "line": 150,
+            "line": 151,
             "names": [
               "--data-root"
             ],
@@ -60,7 +60,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 151,
+            "line": 152,
             "names": [
               "--score"
             ],
@@ -80,7 +80,7 @@
           },
           {
             "kind": "literal",
-            "line": 161,
+            "line": 162,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -89,14 +89,7 @@
         "review_id_constants": [],
         "spec_access": [],
         "unparsed": [],
-        "yaml_loads": [
-          {
-            "call": "safe_load",
-            "line": 52,
-            "scope": "field_types",
-            "target": "codebook_path.read_text()"
-          }
-        ]
+        "yaml_loads": []
       },
       "analysis/eval/analyze_capture01.py": {
         "entry_point": true,
@@ -1323,14 +1316,7 @@
           }
         ],
         "unparsed": [],
-        "yaml_loads": [
-          {
-            "call": "safe_load",
-            "line": 37,
-            "scope": "_load_field_types",
-            "target": "f"
-          }
-        ]
+        "yaml_loads": []
       },
       "analysis/paper1/consensus.py": {
         "entry_point": true,
@@ -1394,14 +1380,7 @@
         "review_id_constants": [],
         "spec_access": [],
         "unparsed": [],
-        "yaml_loads": [
-          {
-            "call": "safe_load",
-            "line": 54,
-            "scope": "_load_field_types",
-            "target": "f"
-          }
-        ]
+        "yaml_loads": []
       },
       "analysis/paper1/export_disagreement_pairs.py": {
         "entry_point": true,
@@ -1537,14 +1516,7 @@
         "review_id_constants": [],
         "spec_access": [],
         "unparsed": [],
-        "yaml_loads": [
-          {
-            "call": "safe_load",
-            "line": 137,
-            "scope": "_load_codebook_valid_values",
-            "target": "f"
-          }
-        ]
+        "yaml_loads": []
       },
       "analysis/paper1/judge.py": {
         "entry_point": false,
@@ -1695,7 +1667,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1081,
+            "line": 1082,
             "names": [
               "--review"
             ],
@@ -1704,7 +1676,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1082,
+            "line": 1083,
             "names": [
               "--pairs-csv"
             ],
@@ -1713,7 +1685,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1083,
+            "line": 1084,
             "names": [
               "--codebook"
             ],
@@ -1722,7 +1694,7 @@
           {
             "default": "dynamic: Path('artifacts/paper1/pi_audit')",
             "dest": null,
-            "line": 1084,
+            "line": 1085,
             "names": [
               "--audit-dir"
             ],
@@ -1731,7 +1703,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 1086,
+            "line": 1087,
             "names": [
               "--completed"
             ],
@@ -1740,7 +1712,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 1087,
+            "line": 1088,
             "names": [
               "--key"
             ],
@@ -1749,7 +1721,7 @@
           {
             "default": "dynamic: Path('analysis/paper1/reports')",
             "dest": null,
-            "line": 1088,
+            "line": 1089,
             "names": [
               "--out-dir"
             ],
@@ -1758,7 +1730,7 @@
           {
             "default": "dynamic: Path('analysis/paper1/logs')",
             "dest": null,
-            "line": 1089,
+            "line": 1090,
             "names": [
               "--log-dir"
             ],
@@ -1767,7 +1739,7 @@
           {
             "default": "dynamic: DEFAULT_MODEL",
             "dest": null,
-            "line": 1090,
+            "line": 1091,
             "names": [
               "--model"
             ],
@@ -1776,7 +1748,7 @@
           {
             "default": "dynamic: RECORDED_RUN_ID",
             "dest": null,
-            "line": 1091,
+            "line": 1092,
             "names": [
               "--run-id"
             ],
@@ -1785,7 +1757,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 1094,
+            "line": 1095,
             "names": [
               "--limit"
             ],
@@ -1794,7 +1766,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 1096,
+            "line": 1097,
             "names": [
               "--data-root"
             ],
@@ -1803,7 +1775,7 @@
           {
             "default": "'production'",
             "dest": null,
-            "line": 1097,
+            "line": 1098,
             "names": [
               "--builder"
             ],
@@ -1812,7 +1784,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 1102,
+            "line": 1103,
             "names": [
               "--assert-v2"
             ],
@@ -1821,7 +1793,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1105,
+            "line": 1106,
             "names": [
               "--background"
             ],
@@ -1831,7 +1803,7 @@
         "has_main_guard": true,
         "literal_review_ids": [
           {
-            "line": 1166,
+            "line": 1167,
             "role": "code",
             "value": "surgical_autonomy"
           }
@@ -1849,26 +1821,19 @@
         "review_database": [
           {
             "data_root_passed": true,
-            "line": 1185,
+            "line": 1186,
             "scope": "run"
           },
           {
             "data_root_passed": false,
-            "line": 1186,
+            "line": 1187,
             "scope": "run"
           }
         ],
         "review_id_constants": [],
         "spec_access": [],
         "unparsed": [],
-        "yaml_loads": [
-          {
-            "call": "safe_load",
-            "line": 223,
-            "scope": "load_raw_codebook",
-            "target": "Path(path).read_text()"
-          }
-        ]
+        "yaml_loads": []
       },
       "analysis/paper1/judge_loader.py": {
         "entry_point": false,
@@ -1880,13 +1845,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 101,
+            "line": 117,
             "role": "docstring",
             "text": "Parse extraction_codebook.yaml into CodebookEntry objects keyed by field_name."
           },
           {
             "kind": "literal",
-            "line": 172,
+            "line": 175,
             "role": "docstring",
             "text": "Return parsed markdown text for a paper, or None if not available.\n\n    Matches engine/agents/auditor.py pattern: data/<review>/parsed_text/{pid}_v*.md,\n    ..."
           }
@@ -1895,20 +1860,7 @@
         "review_id_constants": [],
         "spec_access": [],
         "unparsed": [],
-        "yaml_loads": [
-          {
-            "call": "safe_load",
-            "line": 104,
-            "scope": "load_codebook",
-            "target": "path.read_text()"
-          },
-          {
-            "call": "safe_load",
-            "line": 156,
-            "scope": "load_raw_codebook",
-            "target": "path.read_text()"
-          }
-        ]
+        "yaml_loads": []
       },
       "analysis/paper1/judge_prompts.py": {
         "entry_point": false,
@@ -2677,7 +2629,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1151,
+            "line": 1152,
             "names": [
               "--review"
             ],
@@ -2686,7 +2638,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1152,
+            "line": 1153,
             "names": [
               "--codebook"
             ],
@@ -2695,7 +2647,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 1153,
+            "line": 1154,
             "names": [
               "--pairs-csv"
             ],
@@ -2704,7 +2656,7 @@
           {
             "default": "dynamic: Path('artifacts/paper1/pi_audit_v2')",
             "dest": null,
-            "line": 1156,
+            "line": 1157,
             "names": [
               "--out-dir"
             ],
@@ -2713,7 +2665,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 1158,
+            "line": 1159,
             "names": [
               "--data-root"
             ],
@@ -2733,7 +2685,7 @@
           },
           {
             "kind": "literal",
-            "line": 123,
+            "line": 124,
             "role": "code",
             "text": "data/surgical_autonomy/exports/disagreement_pairs_3arm.csv"
           }
@@ -2741,26 +2693,19 @@
         "review_database": [
           {
             "data_root_passed": true,
-            "line": 1204,
+            "line": 1205,
             "scope": "run"
           },
           {
             "data_root_passed": false,
-            "line": 1205,
+            "line": 1206,
             "scope": "run"
           }
         ],
         "review_id_constants": [],
         "spec_access": [],
         "unparsed": [],
-        "yaml_loads": [
-          {
-            "call": "safe_load",
-            "line": 217,
-            "scope": "load_codebook_fields",
-            "target": "codebook_path.read_text()"
-          }
-        ]
+        "yaml_loads": []
       },
       "analysis/paper1/pi_audit_unblind.py": {
         "entry_point": true,
@@ -4417,13 +4362,13 @@
           },
           {
             "kind": "literal",
-            "line": 288,
+            "line": 297,
             "role": "docstring",
             "text": "The codebook for a review: `data/<review_id>/extraction_codebook.yaml`."
           },
           {
             "kind": "f-string",
-            "line": 343,
+            "line": 352,
             "role": "message",
             "text": "f'Codebook not found at {path}. Every review carries one at data/<review_id>/{CODEBOOK_FILENAME}.'"
           }
@@ -4433,7 +4378,7 @@
         "spec_access": [
           {
             "func": "data_root_for",
-            "line": 294,
+            "line": 303,
             "scope": "codebook_path_for"
           }
         ],
@@ -4441,7 +4386,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 347,
+            "line": 356,
             "scope": "_parse",
             "target": "text"
           }
@@ -5665,7 +5610,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 436,
+            "line": 432,
             "names": [
               "--review"
             ],
@@ -5674,7 +5619,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 437,
+            "line": 433,
             "names": [
               "--arm"
             ],
@@ -5683,7 +5628,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 438,
+            "line": 434,
             "names": [
               "--codebook"
             ],
@@ -5692,7 +5637,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 439,
+            "line": 435,
             "names": [
               "--strict"
             ],
@@ -5706,7 +5651,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 450,
+            "line": 446,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -5714,21 +5659,14 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 445,
+            "line": 441,
             "scope": "main"
           }
         ],
         "review_id_constants": [],
         "spec_access": [],
         "unparsed": [],
-        "yaml_loads": [
-          {
-            "call": "safe_load",
-            "line": 55,
-            "scope": "_load_categorical_fields",
-            "target": "f"
-          }
-        ]
+        "yaml_loads": []
       },
       "engine/validators/extraction_validator.py": {
         "entry_point": true,
@@ -5850,7 +5788,12 @@
         "has_main_guard": true,
         "literal_review_ids": [
           {
-            "line": 60,
+            "line": 29,
+            "role": "code",
+            "value": "surgical_autonomy"
+          },
+          {
+            "line": 62,
             "role": "code",
             "value": "surgical_autonomy"
           }
@@ -5860,27 +5803,21 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 24,
+            "line": 25,
             "role": "code",
             "text": "data/surgical_autonomy/review.db"
           },
           {
             "kind": "literal",
-            "line": 26,
-            "role": "code",
-            "text": "data/surgical_autonomy/exports/disagreement_pairs_3arm.csv"
-          },
-          {
-            "kind": "literal",
             "line": 27,
             "role": "code",
-            "text": "data/surgical_autonomy/extraction_codebook.yaml"
+            "text": "data/surgical_autonomy/exports/disagreement_pairs_3arm.csv"
           }
         ],
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 60,
+            "line": 62,
             "scope": "main"
           }
         ],
@@ -7507,18 +7444,18 @@
       "files_calling_load_review_spec_directly": 8,
       "files_calling_resolver": 34,
       "files_scanned": 197,
-      "files_with_raw_yaml_loads": 11,
+      "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
-      "literal_review_id_sites_in_code": 33,
+      "literal_review_id_sites_in_code": 34,
       "name_only_constructing_reviewdatabase": 20,
-      "path_construction_sites_in_code": 63,
-      "raw_yaml_load_sites": 12,
+      "path_construction_sites_in_code": 62,
+      "raw_yaml_load_sites": 3,
       "review_id_constants": 8,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "cc7a65f36c8601e6ca5ea6c88b4236ec8b5b7c07",
+    "generated_at_commit": "02452eec6e4934f0093ffb0988f104fd3712c9f7",
     "scan_roots": [
       "engine",
       "scripts",

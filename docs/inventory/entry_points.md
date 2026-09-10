@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `cc7a65f36c8601e6ca5ea6c88b4236ec8b5b7c07` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `02452eec6e4934f0093ffb0988f104fd3712c9f7` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -17,11 +17,11 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | name only constructing reviewdatabase | 20 |
 | files calling resolver | 34 |
 | files calling load review spec directly | 8 |
-| raw yaml load sites | 12 |
-| files with raw yaml loads | 11 |
+| raw yaml load sites | 3 |
+| files with raw yaml loads | 3 |
 | review id constants | 8 |
-| literal review id sites in code | 33 |
-| path construction sites in code | 63 |
+| literal review id sites in code | 34 |
+| path construction sites in code | 62 |
 | db before spec scopes | 0 |
 | fstring spec path sites | 0 |
 | default review named constants | 7 |
@@ -50,7 +50,7 @@ Baselines are the figures measured by hand in GENERALIZE-READOUT-01 and SPEC-AUT
 | of those, name-only | 45 | 45 | matches |
 | entry points constructing ReviewDatabase | 35 | 37 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
 | name-only, constructing ReviewDatabase | 20 | 20 | matches |
-| raw yaml load sites | 13 | 12 | differs — unexplained, investigate |
+| raw yaml load sites | 13 | 3 | differs — unexplained, investigate |
 | f-string spec-path builders | 19 | 0 | SPEC-AUTH-01 moved every one of these onto the resolver; a non-zero value here means a hand-built spec path has come back |
 | DEFAULT_REVIEW constants | 7 | 7 | matches |
 
@@ -83,7 +83,7 @@ Two figures deliberately have no baseline row. **entry points** (98) counts anyt
 | `analysis/paper1/export_disagreement_pairs.py` | `--review` required; `--spec`=None | load_review_spec, load_spec_for, spec_path_for | — | — |
 | `analysis/paper1/human_import.py` | `--workbook` required; `--review` required; `--codebook`=None; `--dry-run` | — | 302 | — |
 | `analysis/paper1/judge_cli.py` | `--review` required; `--input` required; `--pairs-csv`; `--codebook` required; `--pass`=1; `--limit`=0; `--dry-run`; `--model`=dynamic: DEFAULT_MODEL; `--run-note`=None; `--data-root`=None | — | 191, 192 | — |
-| `analysis/paper1/judge_codebook_smoke.py` | `--review` required; `--pairs-csv` required; `--codebook` required; `--audit-dir`=dynamic: Path('artifacts/paper1/pi_audit'); `--completed`=None; `--key`=None; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--model`=dynamic: DEFAULT_MODEL; `--run-id`=dynamic: RECORDED_RUN_ID; `--limit`=None; `--data-root`=None; `--builder`='production'; `--assert-v2`=None; `--background` | — | 1185, 1186 | — |
+| `analysis/paper1/judge_codebook_smoke.py` | `--review` required; `--pairs-csv` required; `--codebook` required; `--audit-dir`=dynamic: Path('artifacts/paper1/pi_audit'); `--completed`=None; `--key`=None; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--model`=dynamic: DEFAULT_MODEL; `--run-id`=dynamic: RECORDED_RUN_ID; `--limit`=None; `--data-root`=None; `--builder`='production'; `--assert-v2`=None; `--background` | — | 1186, 1187 | — |
 | `analysis/paper1/judge_provenance.py` | `--review` required; `--data-root`='data'; `--judge-run-id`=None; `--census-run-id`=None; `--legacy-csv`=None; `--out-dir`=None | — | — | — |
 | `analysis/paper1/pass1_inspection.py` | `--review` required; `--run-id` required; `--pairs-csv` required; `--codebook` required; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--data-root`=None | — | 554, 555 | — |
 | `analysis/paper1/pass2_branchB_report.py` | `--review` required; `--run-id` required; `--pairs-csv` required; `--codebook` required; `--run-log` required; `--out-dir`=dynamic: Path('artifacts/paper1'); `--data-root`=None | — | 541, 542 | — |
@@ -91,7 +91,7 @@ Two figures deliberately have no baseline row. **entry points** (98) counts anyt
 | `analysis/paper1/pass2_retry_single.py` | `--review` required; `--run-id` required; `--paper-id` required; `--field-name` required; `--pairs-csv` required; `--codebook` required; `--model`=dynamic: DEFAULT_MODEL; `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--data-root`=None | — | 137, 139 | — |
 | `analysis/paper1/pass2_smoke.py` | `--review` required; `--pass1-run-id` required; `--pairs-csv` required; `--codebook` required; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--model`=dynamic: DEFAULT_MODEL; `--dry-run`; `--data-root`=None; `--run-tag`='' | — | 797, 798 | — |
 | `analysis/paper1/pi_audit_sampler.py` | `--review` required; `--out-dir`=dynamic: Path('artifacts/paper1/pi_audit'); `--data-root`=None; `--supersedes`=None; `--regeneration-reason`=None | — | 1340, 1341 | — |
-| `analysis/paper1/pi_audit_sampler_v2.py` | `--review` required; `--codebook` required; `--pairs-csv`=None; `--out-dir`=dynamic: Path('artifacts/paper1/pi_audit_v2'); `--data-root`=None | — | 1204, 1205 | — |
+| `analysis/paper1/pi_audit_sampler_v2.py` | `--review` required; `--codebook` required; `--pairs-csv`=None; `--out-dir`=dynamic: Path('artifacts/paper1/pi_audit_v2'); `--data-root`=None | — | 1205, 1206 | — |
 | `analysis/paper1/pi_audit_unblind.py` | `--completed`=None; `--key`=None; `--audit-dir`=dynamic: Path('artifacts/paper1/pi_audit'); `--out-dir`=None | — | — | — |
 | `analysis/paper1/runner_smoke_phase2a.py` | `--review` required; `--pass1-run-id` required; `--pairs-csv` required; `--codebook` required; `--prior-run-id` required; `--limit`=3; `--model`=dynamic: DEFAULT_MODEL | — | 87 | — |
 | `analysis/paper1/spanloss_autopsy.py` | `--review` required; `--data-root`='data'; `--out-dir`=None | — | — | — |
@@ -125,11 +125,11 @@ Two figures deliberately have no baseline row. **entry points** (98) counts anyt
 | `engine/tools/inventory.py` | `--write`; `--check` | — | — | — |
 | `engine/utils/extraction_cleanup.py` | `--review` required; `--keep-schema`; `--spec`=None; `--confirm` | load_spec_for | 238 | — |
 | `engine/utils/ollama_preflight.py` | `--models` required; `--timeout`=30 | — | — | — |
-| `engine/validators/distribution_monitor.py` | `--review` required; `--arm` required; `--codebook`=None; `--strict` | — | 445 | — |
+| `engine/validators/distribution_monitor.py` | `--review` required; `--arm` required; `--codebook`=None; `--strict` | — | 441 | — |
 | `engine/validators/extraction_validator.py` | `--review` required; `--spec`=None | load_spec_for | 397 | main:spec_first |
 | `scripts/_pass2_delta.py` | — | — | — | — |
 | `scripts/_pass2_eyeball.py` | — | — | — | — |
-| `scripts/_pass2_stability.py` | — | — | 60 | — |
+| `scripts/_pass2_stability.py` | — | — | 62 | — |
 | `scripts/advance_to_pdf_acquired.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
 | `scripts/backfill_authors.py` | `--review`=dynamic: DEFAULT_REVIEW; `--dry-run` | — | — | — |
 | `scripts/backfill_cloud_spans.py` | `--review`=dynamic: DEFAULT_REVIEW; `--confirm`; `--db`=None | — | — | — |
@@ -163,18 +163,9 @@ Two figures deliberately have no baseline row. **entry points** (98) counts anyt
 
 | file | line | call | target |
 |---|---:|---|---|
-| `analysis/eval/adjud01_pairs.py` | 52 | `safe_load` | `codebook_path.read_text()` |
-| `analysis/paper1/adjudication.py` | 37 | `safe_load` | `f` |
-| `analysis/paper1/consensus.py` | 54 | `safe_load` | `f` |
-| `analysis/paper1/human_import.py` | 137 | `safe_load` | `f` |
-| `analysis/paper1/judge_codebook_smoke.py` | 223 | `safe_load` | `Path(path).read_text()` |
-| `analysis/paper1/judge_loader.py` | 104 | `safe_load` | `path.read_text()` |
-| `analysis/paper1/judge_loader.py` | 156 | `safe_load` | `path.read_text()` |
-| `analysis/paper1/pi_audit_sampler_v2.py` | 217 | `safe_load` | `codebook_path.read_text()` |
 | `engine/adjudication/categorizer.py` | 45 | `safe_load` | `f` |
-| `engine/core/codebook.py` | 347 | `safe_load` | `text` |
+| `engine/core/codebook.py` | 356 | `safe_load` | `text` |
 | `engine/core/review_spec.py` | 496 | `safe_load` | `f` |
-| `engine/validators/distribution_monitor.py` | 55 | `safe_load` | `f` |
 
 ## Path construction in code
 
@@ -182,7 +173,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 
 | file | line | kind | text |
 |---|---:|---|---|
-| `analysis/eval/adjud01_pairs.py` | 161 | literal | `extraction_codebook.yaml` |
+| `analysis/eval/adjud01_pairs.py` | 162 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/analyze_capture01.py` | 185 | literal | `data/{review}/parsed_text/{pid}_v*.md, newest version` |
 | `analysis/eval/elicit01/analyze.py` | 67 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/elicit01/manifest.py` | 104 | literal | `data/surgical_autonomy` |
@@ -199,7 +190,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/paper1/adjudication.py` | 603 | literal | `extraction_codebook.yaml` |
 | `analysis/paper1/consensus.py` | 433 | literal | `extraction_codebook.yaml` |
 | `analysis/paper1/human_import.py` | 307 | literal | `extraction_codebook.yaml` |
-| `analysis/paper1/pi_audit_sampler_v2.py` | 123 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
+| `analysis/paper1/pi_audit_sampler_v2.py` | 124 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
 | `engine/acquisition/pdf_quality_html.py` | 378 | f-string | `f'''<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>PDF Acqui...` |
 | `engine/adjudication/categorizer.py` | 19 | literal | `adjudication_categories.yaml` |
 | `engine/adjudication/screening_adjudicator.py` | 27 | literal | `data/surgical_autonomy/expanded_search` |
@@ -222,15 +213,14 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/tools/inventory.py` | 495 | literal | ``data/` subdirectories NOT counted as reviews (no `review.db`):` |
 | `engine/tools/inventory.py` | 530 | literal | `Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse prose, and messages passed to an exception or a logger. This is the class a ...` |
 | `engine/tools/inventory.py` | 674 | literal | `data/ subdirectories changed: committed %s, on disk %s` |
-| `engine/validators/distribution_monitor.py` | 450 | literal | `extraction_codebook.yaml` |
+| `engine/validators/distribution_monitor.py` | 446 | literal | `extraction_codebook.yaml` |
 | `engine/validators/extraction_validator.py` | 64 | literal | `extraction_codebook.yaml` |
 | `scripts/_pass2_delta.py` | 13 | literal | `data/surgical_autonomy/review.db` |
 | `scripts/_pass2_delta.py` | 16 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
 | `scripts/_pass2_eyeball.py` | 15 | literal | `data/surgical_autonomy/review.db` |
 | `scripts/_pass2_eyeball.py` | 17 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
-| `scripts/_pass2_stability.py` | 24 | literal | `data/surgical_autonomy/review.db` |
-| `scripts/_pass2_stability.py` | 26 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
-| `scripts/_pass2_stability.py` | 27 | literal | `data/surgical_autonomy/extraction_codebook.yaml` |
+| `scripts/_pass2_stability.py` | 25 | literal | `data/surgical_autonomy/review.db` |
+| `scripts/_pass2_stability.py` | 27 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
 | `scripts/backfill_authors.py` | 98 | f-string | `f'data/{args.review}/review.db'` |
 | `scripts/backfill_cloud_spans.py` | 42 | f-string | `f'data/{args.review}/review.db'` |
 | `scripts/eval_auditor_models.py` | 269 | f-string | `f'data/{review_name}/auditor_eval_results.json'` |
@@ -255,13 +245,14 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/eval/elicit01/analyze.py` | 54 | `surgical_autonomy` |
 | `analysis/eval/elicit01/prompts.py` | 54 | `surgical_autonomy` |
 | `analysis/eval/elicit01/runner.py` | 139 | `surgical_autonomy` |
-| `analysis/paper1/judge_codebook_smoke.py` | 1166 | `surgical_autonomy` |
+| `analysis/paper1/judge_codebook_smoke.py` | 1167 | `surgical_autonomy` |
 | `engine/analysis/normalize.py` | 48 | `surgical_autonomy` |
 | `engine/analysis/report.py` | 28 | `surgical_autonomy` |
 | `engine/migrations/003_backfill_expanded_screening.py` | 19 | `surgical_autonomy` |
 | `engine/migrations/004_pdf_quality_check.py` | 77 | `surgical_autonomy` |
 | `engine/migrations/005_model_digest.py` | 66 | `surgical_autonomy` |
-| `scripts/_pass2_stability.py` | 60 | `surgical_autonomy` |
+| `scripts/_pass2_stability.py` | 29 | `surgical_autonomy` |
+| `scripts/_pass2_stability.py` | 62 | `surgical_autonomy` |
 | `scripts/advance_to_pdf_acquired.py` | 19 | `surgical_autonomy` |
 | `scripts/backfill_authors.py` | 23 | `surgical_autonomy` |
 | `scripts/backfill_cloud_spans.py` | 29 | `surgical_autonomy` |

@@ -24,6 +24,7 @@ from itertools import combinations
 from pathlib import Path
 
 import yaml
+from engine.core.codebook import load_codebook
 
 logger = logging.getLogger(__name__)
 
@@ -33,9 +34,8 @@ logger = logging.getLogger(__name__)
 
 def _load_field_types(codebook_path: Path) -> dict[str, str]:
     """Return {field_name: type} from codebook (categorical, free_text, numeric)."""
-    with open(codebook_path) as f:
-        cb = yaml.safe_load(f)
-    return {fd["name"]: fd["type"] for fd in cb.get("fields", [])}
+    cb = load_codebook(codebook_path).raw
+    return {fd["name"]: fd["type"] for fd in cb["fields"]}
 
 
 # ── Source snippet queries ───────────────────────────────────────────

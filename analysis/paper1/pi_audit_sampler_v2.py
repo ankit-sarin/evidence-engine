@@ -85,6 +85,7 @@ from analysis.paper1.pi_audit_sampler import (
     _wrap_align,
     _write_header,
 )
+from engine.core.codebook import load_codebook
 from engine.core.database import ReviewDatabase
 
 logger = logging.getLogger(__name__)
@@ -214,7 +215,7 @@ def load_codebook_fields(codebook_path: Path) -> tuple[dict, dict]:
     definition_by_field maps field name -> a human-readable rubric block
     (definition + instruction + value enumeration) for the blinded sheet.
     """
-    cb = yaml.safe_load(codebook_path.read_text())
+    cb = load_codebook(codebook_path).raw
     family: dict[str, str] = {}
     definition: dict[str, str] = {}
     for node in cb.get("fields", []):

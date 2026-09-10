@@ -47,17 +47,13 @@ class DistributionCollapseError(Exception):
 
 
 from engine.elicitation.classes import non_value_tokens_for
+from engine.core.codebook import load_codebook
 
 
 def _load_categorical_fields(codebook_path: Path) -> list[str]:
     """Return names of categorical fields from codebook YAML."""
-    with open(codebook_path) as f:
-        cb = yaml.safe_load(f)
-    return [
-        fd["name"]
-        for fd in cb.get("fields", [])
-        if fd.get("type") == "categorical"
-    ]
+    cb = load_codebook(codebook_path).raw
+    return [fd["name"] for fd in cb["fields"] if fd["type"] == "categorical"]
 
 
 # ── Value queries by arm type ────────────────────────────────────────

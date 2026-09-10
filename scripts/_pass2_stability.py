@@ -20,11 +20,13 @@ from analysis.paper1.judge_loader import (
     load_codebook,
 )
 from engine.core.database import ReviewDatabase
+from engine.core.codebook import codebook_path_for
 
 DB_PATH = Path("data/surgical_autonomy/review.db")
 POST_RUN = "surgical_autonomy_pass2_smoke_fixed_20260421T165202Z"
 PAIRS_CSV = Path("data/surgical_autonomy/exports/disagreement_pairs_3arm.csv")
-CODEBOOK = Path("data/surgical_autonomy/extraction_codebook.yaml")
+# Derived, not hand-built. The review id stays hardcoded (PATH-AUTH-01).
+CODEBOOK = codebook_path_for("surgical_autonomy")
 
 # (paper_id, field_name, arm_name, expected_verdict_from_post_fix_run)
 TARGETS: list[tuple[str, str, str]] = [

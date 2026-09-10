@@ -13,6 +13,7 @@ from pathlib import Path
 
 import openpyxl
 import yaml
+from engine.core.codebook import load_codebook
 
 logger = logging.getLogger(__name__)
 
@@ -133,11 +134,10 @@ def parse_workbook(filepath: Path) -> list[dict]:
 
 def _load_codebook_valid_values(codebook_path: Path) -> dict[str, list[str]]:
     """Load categorical field -> list of valid values (lowercased) from codebook."""
-    with open(codebook_path) as f:
-        cb = yaml.safe_load(f)
+    cb = load_codebook(codebook_path).raw
 
     valid: dict[str, list[str]] = {}
-    for field_def in cb.get("fields", []):
+    for field_def in cb["fields"]:
         if field_def.get("type") == "categorical" and "valid_values" in field_def:
             name = field_def["name"]
             valid[name] = [v["value"].lower() for v in field_def["valid_values"]]

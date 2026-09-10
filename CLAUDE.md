@@ -337,22 +337,22 @@ test against QUALGAP-01's published figures and must not be "tidied".
 ## Running
 ```bash
 # Full pipeline
-python scripts/run_pipeline.py --spec review_specs/surgical_autonomy_v1.yaml --name surgical_autonomy
+python scripts/run_pipeline.py --review surgical_autonomy
 
 # Expanded search screening
-python scripts/screen_expanded.py                # all phases
-python scripts/screen_expanded.py --screen-only  # primary dual-pass only
-python scripts/screen_expanded.py --verify-only  # verification pass only
+python scripts/screen_expanded.py --review surgical_autonomy                # all phases
+python scripts/screen_expanded.py --review surgical_autonomy --screen-only  # primary dual-pass only
+python scripts/screen_expanded.py --review surgical_autonomy --verify-only  # verification pass only
 
 # PDF acquisition
-python -m engine.acquisition.check_oa --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
+python -m engine.acquisition.check_oa --review surgical_autonomy
 python -m engine.acquisition.download --review surgical_autonomy [--retry] [--background]
 python -m engine.acquisition.verify_downloads --review surgical_autonomy [--dry-run]
-python -m engine.acquisition.pdf_quality_check --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
+python -m engine.acquisition.pdf_quality_check --review surgical_autonomy
 python -m engine.acquisition.pdf_quality_import --review surgical_autonomy --input dispositions.json
 
 # Full-text screening
-python -m engine.agents.ft_screener --review surgical_autonomy --spec review_specs/surgical_autonomy_v1.yaml
+python -m engine.agents.ft_screener --review surgical_autonomy
 python -m engine.agents.ft_screener ... --screen-only
 python -m engine.agents.ft_screener ... --verify-only
 
@@ -370,8 +370,8 @@ python -m engine.validators.extraction_validator --review surgical_autonomy
 python -m engine.utils.ollama_preflight --models qwen3.5:27b gemma3:27b deepseek-r1:32b
 
 # Cloud extraction
-PYTHONPATH=. python scripts/run_cloud_extraction.py --arm both --max-cost 25.00
-PYTHONPATH=. python scripts/run_cloud_extraction.py --progress
+PYTHONPATH=. python scripts/run_cloud_extraction.py --review surgical_autonomy --arm both --max-cost 25.00
+PYTHONPATH=. python scripts/run_cloud_extraction.py --review surgical_autonomy --progress
 
 # Distribution monitor
 python -m engine.validators.distribution_monitor --review surgical_autonomy --arm local
@@ -381,8 +381,8 @@ python -m engine.validators.distribution_monitor --review surgical_autonomy --ar
 PYTHONPATH=. python scripts/backfill_cloud_spans.py --review surgical_autonomy [--dry-run]
 
 # q8 KV cache validation
-PYTHONPATH=. python scripts/q8_validation.py
-PYTHONPATH=. python scripts/q8_validation_fast.py
+PYTHONPATH=. python scripts/q8_validation.py --review surgical_autonomy
+PYTHONPATH=. python scripts/q8_validation_fast.py --review surgical_autonomy
 
 # Workflow status
 python -m engine.adjudication.advance_stage --review surgical_autonomy --status

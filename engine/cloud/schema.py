@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS cloud_extractions (
     cost_usd                REAL,
     extraction_schema_hash  TEXT,
     extracted_at            TEXT NOT NULL,
+    codebook_hash           TEXT,
+    codebook_sha256         TEXT,
     UNIQUE(paper_id, arm)
 );
 
@@ -42,6 +44,15 @@ def init_cloud_tables(db_path: str) -> None:
     cols = {r[1] for r in conn.execute("PRAGMA table_info(cloud_evidence_spans)").fetchall()}
     if "notes" not in cols:
         conn.execute("ALTER TABLE cloud_evidence_spans ADD COLUMN notes TEXT")
+    # Codebook provenance on a table that already existed. The columns are in
+    # the CREATE above for a fresh one, but CREATE TABLE IF NOT EXISTS adds
+    # nothing to a table that is already there, and this table is created
+    # outside ReviewDatabase's migration path (CODEBOOK-AUTH-01).
+    cloud_cols = {r[1] for r in conn.execute(
+        "PRAGMA table_info(cloud_extractions)").fetchall()}
+    for column in ("codebook_hash", "codebook_sha256"):
+        if column not in cloud_cols:
+            conn.execute(f"ALTER TABLE cloud_extractions ADD COLUMN {column} TEXT")
 
     # Migrate: add NOT NULL to confidence and tier if missing (pre-existing DBs)
     col_info = conn.execute("PRAGMA table_info(cloud_evidence_spans)").fetchall()

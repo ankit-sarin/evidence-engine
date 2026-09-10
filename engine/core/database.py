@@ -395,6 +395,15 @@ class ReviewDatabase:
         )
         mod_009.run_migration(str(self.db_path))
 
+        # Migration 012: codebook provenance columns (CODEBOOK-AUTH-01 R2).
+        # Wired here rather than hand-run, unlike 010 and 011: an extraction
+        # written into a database that lacks these columns records no codebook
+        # at all, and the gap is indistinguishable from an unedited codebook.
+        mod_012 = importlib.import_module(
+            "engine.migrations.012_codebook_provenance"
+        )
+        mod_012.run_migration(str(self.db_path))
+
     # ── Papers ───────────────────────────────────────────────
 
     def add_papers(self, citations: list[Citation]) -> int:
@@ -797,6 +806,8 @@ class ReviewDatabase:
         spans: list[dict],
         model_digest: str | None = None,
         auditor_model_digest: str | None = None,
+        codebook_hash: str | None = None,
+        codebook_sha256: str | None = None,
     ) -> int:
         """Atomically insert extraction + all evidence spans in one transaction.
 
@@ -812,8 +823,9 @@ class ReviewDatabase:
                 """INSERT INTO extractions
                    (paper_id, extraction_schema_hash, extracted_data,
                     reasoning_trace, model, model_digest,
-                    auditor_model_digest, extracted_at)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                    auditor_model_digest, extracted_at,
+                    codebook_hash, codebook_sha256)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     paper_id,
                     schema_hash,
@@ -823,6 +835,8 @@ class ReviewDatabase:
                     model_digest,
                     auditor_model_digest,
                     _now(),
+                    codebook_hash,
+                    codebook_sha256,
                 ),
             )
             ext_id = cur.lastrowid

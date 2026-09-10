@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from engine.agents.extractor import build_extraction_prompt
+from engine.core.codebook import CODEBOOK_FILENAME, load_codebook
 from engine.agents.models import ExtractionOutput
 from engine.cloud.schema import init_cloud_tables
 from engine.core.completeness import (
@@ -35,10 +36,17 @@ class CloudExtractorBase:
         self.schema_hash = self.spec.extraction_hash()
         self._review_dir = Path(db_path).parent
 
+        # The prompt is built from the codebook, so its content is recorded
+        # beside the spec-derived schema hash (CODEBOOK-AUTH-01). Loaded from
+        # the DATABASE's own directory, which is this review's root.
+        self._codebook = load_codebook(self._review_dir / CODEBOOK_FILENAME)
+        self.codebook_hash = self._codebook.semantic_hash
+        self.codebook_sha256 = self._codebook.sha256
+
         # Field set the prompt asks for — the completeness guard's reference.
         # Derived once per run from the spec, cross-checked against the codebook.
         self.expected_fields = expected_field_names(
-            self.spec, self._review_dir / "extraction_codebook.yaml"
+            self.spec, self._review_dir / CODEBOOK_FILENAME
         )
         # Set by parse_response_to_spans() when a salvage branch fires, so the
         # guard and the telemetry can both say which repair was attempted.
@@ -268,14 +276,16 @@ class CloudExtractorBase:
                 """INSERT INTO cloud_extractions
                    (paper_id, arm, model_string, extracted_data, reasoning_trace,
                     prompt_text, input_tokens, output_tokens, reasoning_tokens,
-                    cost_usd, extraction_schema_hash, extracted_at)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    cost_usd, extraction_schema_hash, extracted_at,
+                    codebook_hash, codebook_sha256)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     paper_id, arm, model_string,
                     json.dumps(extracted_data),
                     reasoning_trace, prompt_text,
                     input_tokens, output_tokens, reasoning_tokens,
                     cost_usd, self.schema_hash, now,
+                    self.codebook_hash, self.codebook_sha256,
                 ),
             )
             ext_id = cur.lastrowid

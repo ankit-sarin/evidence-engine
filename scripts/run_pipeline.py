@@ -24,6 +24,7 @@ from engine.agents.auditor import run_audit
 from engine.agents.extractor import run_extraction
 from engine.agents.screener import run_screening
 from engine.core.database import ReviewDatabase
+from engine.core.codebook import load_codebook_for
 from engine.core.review_paths import load_spec_for
 from engine.core.review_spec import ReviewSpec
 from engine.exporters import export_all
@@ -325,16 +326,33 @@ def _stage_export(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> dic
 
 def _start_review_run(db: ReviewDatabase, spec: ReviewSpec) -> int:
     now = datetime.now(timezone.utc).isoformat()
+    # The codebook the prompts will be built from, recorded beside the
+    # spec-derived hashes, with its lint findings in the run's log: the lint is
+    # advisory and had no production consumer at all before this
+    # (CODEBOOK-AUTH-01 C7). A finding here says the codebook will elicit worse
+    # answers, which is worth knowing at the top of a run rather than never.
+    cb = load_codebook_for(spec.review_id)
+    log = json.dumps(
+        [{"event": "codebook_lint", "finding": f} for f in cb.lint_findings]
+    )
+    if cb.lint_findings:
+        logger.warning(
+            "Codebook lint raised %d finding(s) for this run: %s",
+            len(cb.lint_findings), "; ".join(cb.lint_findings),
+        )
     cur = db._conn.execute(
         """INSERT INTO review_runs
            (review_spec_hash, screening_hash, extraction_hash,
-            started_at, status, log)
-           VALUES (?, ?, ?, ?, 'running', '[]')""",
+            started_at, status, log, codebook_hash, codebook_sha256)
+           VALUES (?, ?, ?, ?, 'running', ?, ?, ?)""",
         (
             spec.screening_hash() + spec.extraction_hash(),
             spec.screening_hash(),
             spec.extraction_hash(),
             now,
+            log,
+            cb.semantic_hash,
+            cb.sha256,
         ),
     )
     db._conn.commit()

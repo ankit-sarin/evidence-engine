@@ -549,6 +549,10 @@ def extract_paper(
         escape_token=escape, absence_sentinels=sentinels,
     )
 
+    # The schema hash comes from the SPEC; the prompt came from the CODEBOOK.
+    # Recording only the first meant a codebook edit moved nothing in
+    # provenance and staleness detection could not see it (CODEBOOK-AUTH-01).
+    cb = load_codebook(cb_path)
     ext_id = db.add_extraction_atomic(
         paper_id=paper_id,
         schema_hash=result.extraction_schema_hash,
@@ -558,6 +562,8 @@ def extract_paper(
         spans=span_dicts,
         model_digest=model_digest,
         auditor_model_digest=auditor_model_digest,
+        codebook_hash=cb.semantic_hash,
+        codebook_sha256=cb.sha256,
     )
 
     return result

@@ -3982,7 +3982,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 641,
+            "line": 425,
+            "role": "docstring",
+            "text": "(escape token, absence sentinels) from the codebook beside the database.\n\n    Located from the DATABASE's own directory, not from `data/<review_id>`: the\n   ..."
+          },
+          {
+            "kind": "literal",
+            "line": 645,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4459,14 +4465,7 @@
         "review_id_constants": [],
         "spec_access": [],
         "unparsed": [],
-        "yaml_loads": [
-          {
-            "call": "safe_load",
-            "line": 135,
-            "scope": "_codebook_field_names",
-            "target": "path.read_text()"
-          }
-        ]
+        "yaml_loads": []
       },
       "engine/core/constants.py": {
         "entry_point": false,
@@ -7500,18 +7499,18 @@
       "files_calling_load_review_spec_directly": 8,
       "files_calling_resolver": 34,
       "files_scanned": 196,
-      "files_with_raw_yaml_loads": 12,
+      "files_with_raw_yaml_loads": 11,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 33,
       "name_only_constructing_reviewdatabase": 20,
       "path_construction_sites_in_code": 64,
-      "raw_yaml_load_sites": 13,
+      "raw_yaml_load_sites": 12,
       "review_id_constants": 8,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "04a4c641dae1930bacca86a5d7e98f708e583714",
+    "generated_at_commit": "962e2a1d0e6acde9e8a50d89c4d6e30517a6dc4c",
     "scan_roots": [
       "engine",
       "scripts",

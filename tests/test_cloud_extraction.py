@@ -19,6 +19,8 @@ from engine.cloud.anthropic_extractor import AnthropicExtractor
 
 BACKUP_DB = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy" / "review_backup_v1_schema.db"
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
+LIVE_CODEBOOK = (Path(__file__).resolve().parent.parent
+                 / "data" / "surgical_autonomy" / "extraction_codebook.yaml")
 
 pytestmark = pytest.mark.skipif(
     not BACKUP_DB.exists() or not SPEC_PATH.exists(),
@@ -33,6 +35,9 @@ def test_db(tmp_path):
     """Copy backup DB to temp dir so tests don't modify the original."""
     db_copy = tmp_path / "review.db"
     shutil.copy2(BACKUP_DB, db_copy)
+    # A review directory carries a codebook. The real one, because these tests
+    # exercise the real schema (CODEBOOK-AUTH-01: it is read, never written).
+    shutil.copy2(LIVE_CODEBOOK, tmp_path / "extraction_codebook.yaml")
     # Also copy parsed_text dir structure with a minimal test file
     parsed_dir = tmp_path / "parsed_text"
     parsed_dir.mkdir()

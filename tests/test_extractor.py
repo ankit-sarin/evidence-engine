@@ -29,6 +29,22 @@ from engine.search.models import Citation
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
 
+def _write_codebook(review_dir):
+    """A review directory carries a codebook (CODEBOOK-AUTH-01).
+
+    These fixtures build a ReviewDatabase with __new__, so conftest's
+    review-directory invariant does not fire for them.
+    """
+    import shutil
+
+    shutil.copy2(
+        Path(__file__).resolve().parent.parent
+        / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+        Path(review_dir) / "extraction_codebook.yaml",
+    )
+
+
+
 @pytest.fixture(scope="module")
 def spec():
     return load_review_spec(SPEC_PATH)
@@ -496,6 +512,7 @@ class TestProactiveRestart:
     def _setup_db(self, tmp_path, n_papers=5):
         """Create a minimal in-memory-style DB with N FT_ELIGIBLE papers."""
         db_path = str(tmp_path / "test.db")
+        _write_codebook(tmp_path)
         db = ReviewDatabase.__new__(ReviewDatabase)
         import sqlite3
         conn = sqlite3.connect(db_path)
@@ -586,6 +603,7 @@ class TestRestartOllamaGraceful:
     # Re-use helpers from TestRunExtraction
     def _setup_db(self, tmp_path, n_papers=3):
         db_path = str(tmp_path / "test.db")
+        _write_codebook(tmp_path)
         db = ReviewDatabase.__new__(ReviewDatabase)
         import sqlite3
         conn = sqlite3.connect(db_path)

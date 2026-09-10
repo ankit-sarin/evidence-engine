@@ -112,31 +112,29 @@ def expected_field_names(
 
     if codebook_path is not None:
         cb_names = _codebook_field_names(codebook_path)
-        if cb_names is not None:
-            only_spec = [n for n in names if n not in cb_names]
-            only_cb = [n for n in cb_names if n not in names]
-            if only_spec or only_cb:
-                logger.warning(
-                    "Spec/codebook field divergence — spec-only=%s codebook-only=%s. "
-                    "Guard follows the spec because that is what the prompt asks for.",
-                    only_spec, only_cb,
-                )
+        only_spec = [n for n in names if n not in cb_names]
+        only_cb = [n for n in cb_names if n not in names]
+        if only_spec or only_cb:
+            logger.warning(
+                "Spec/codebook field divergence — spec-only=%s codebook-only=%s. "
+                "Guard follows the spec because that is what the prompt asks for.",
+                only_spec, only_cb,
+            )
     return tuple(names)
 
 
-def _codebook_field_names(codebook_path: str | Path) -> tuple[str, ...] | None:
-    path = Path(codebook_path)
-    if not path.exists():
-        logger.debug("Codebook not found for cross-check: %s", path)
-        return None
-    try:
-        import yaml
+def _codebook_field_names(codebook_path: str | Path) -> tuple[str, ...]:
+    """The codebook's field names, via the one loader.
 
-        data = yaml.safe_load(path.read_text()) or {}
-        return tuple(f["name"] for f in data.get("fields", []) if "name" in f)
-    except Exception as exc:  # pragma: no cover - defensive
-        logger.warning("Could not read codebook for cross-check (%s): %s", path, exc)
-        return None
+    No swallow. This used to catch every exception and return None, which the
+    caller read as "no cross-check available" — so a codebook that had gone
+    missing, or stopped parsing, disabled the spec/codebook divergence warning
+    silently, at exactly the moment that warning was most worth having
+    (CODEBOOK-AUTH-01 R4).
+    """
+    from engine.core.codebook import load_codebook
+
+    return load_codebook(codebook_path).field_names
 
 
 def check_completeness(spans, expected: tuple[str, ...]) -> CompletenessResult:

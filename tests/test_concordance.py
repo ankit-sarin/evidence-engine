@@ -238,11 +238,29 @@ class TestScorePairSystemMaturity:
 # ── M13: load_arm() return value semantics ────────────────────────────
 
 
+
+def _write_codebook(review_dir):
+    """A review directory carries a codebook (CODEBOOK-AUTH-01).
+
+    `load_arm` reads the non-value tokens from it, and since R4 a missing one
+    raises instead of yielding an empty token set — which was never inert: it
+    made every terminal state score as a real extracted value.
+    """
+    import shutil
+
+    shutil.copy2(
+        Path(__file__).resolve().parent.parent
+        / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+        Path(review_dir) / "extraction_codebook.yaml",
+    )
+
+
 class TestLoadArm:
 
     def test_empty_arm_returns_empty_dict(self, tmp_path):
         """M13: An arm with no data returns empty dict (valid result)."""
         db_path = tmp_path / "test.db"
+        _write_codebook(tmp_path)
         conn = sqlite3.connect(str(db_path))
         conn.executescript("""
             CREATE TABLE extractions (
@@ -265,6 +283,7 @@ class TestLoadArm:
     def test_db_error_raises_not_empty_dict(self, tmp_path):
         """M13: A corrupted/missing-table DB raises exception, not empty dict."""
         db_path = tmp_path / "bad.db"
+        _write_codebook(tmp_path)
         conn = sqlite3.connect(str(db_path))
         conn.execute("CREATE TABLE dummy (id INTEGER)")
         conn.close()

@@ -103,8 +103,22 @@ def escape_token(codebook: dict) -> str:
 
 
 def absence_sentinels(codebook: dict) -> frozenset[str]:
-    """Sentinels, upper-cased and stripped for comparison."""
-    return frozenset(str(s).strip().upper() for s in codebook.get("absence_sentinels", ()))
+    """Sentinels, upper-cased and stripped for comparison.
+
+    Required, not defaulted. The `.get(..., ())` this replaced returned an
+    empty set for a codebook that declared none, and an empty sentinel set does
+    not mean "this review has no absences" — it means every absence claim in it
+    is scored, audited, normalised and counted as an ordinary extracted value.
+    The loader now refuses such a codebook; this refuses one that reached here
+    another way.
+    """
+    raw = codebook.get("absence_sentinels")
+    if not raw:
+        raise CodebookContractError(
+            "codebook declares no `absence_sentinels`; every absence claim would "
+            "be indistinguishable from an extracted value downstream"
+        )
+    return frozenset(str(s).strip().upper() for s in raw)
 
 
 def contract_unmet_token(codebook: dict) -> str:
@@ -191,24 +205,25 @@ def fields_by_class(cls: str, codebook: dict) -> list[dict]:
     return [f for f in codebook["fields"] if known.get(f["name"]) == cls]
 
 
-def non_value_tokens_for(codebook_path: str | Path | None) -> frozenset[str]:
-    """`non_value_tokens()` for a consumer that only has a path, never raising.
+def non_value_tokens_for(codebook_path: str | Path) -> frozenset[str]:
+    """`non_value_tokens()` for a consumer that only has a path.
 
-    The five downstream consumers (D1) run against reviews whose codebooks may
-    predate either token — the whole surgical_autonomy corpus before Run 7 does.
-    A hard failure there would take out the auditor, the validators and
-    concordance on every legacy review to protect a token those reviews cannot
-    contain. An empty set restores the exact pre-ELICIT-DESIGN-02 behaviour,
-    which is the correct behaviour for data that has no terminal states in it.
+    This used to swallow every exception and return an empty set, so that
+    legacy reviews whose codebooks predate the tokens kept working. The
+    reasoning was sound and the mechanism was not: a MISSING FILE, a PARSE
+    ERROR and a legitimately tokenless codebook all produced the same empty
+    set, and an empty set is not inert. The five D1 consumers — the auditor's
+    audit call and its LOW_YIELD count, the categorical normaliser, the
+    distribution monitor's observation set and cross-arm concordance scoring —
+    each take `evidence_spans.value` at face value, so an empty token set means
+    every terminal state is scored, audited, rewritten or counted as if it were
+    a real extracted value. That is the exact defect the tokens exist to
+    prevent, reached by the code meant to supply them.
 
-    This tolerance is for the READ side only. `extract_paper_elicited` calls
-    `contract_unmet_token()` directly and still refuses to run without it: a
-    pipeline that can refuse a field must be able to name the refusal.
+    Both tokens are now required at load, so a codebook that reaches here is
+    one that declares them (CODEBOOK-AUTH-01 R4).
     """
-    try:
-        return non_value_tokens(load(codebook_path))
-    except Exception:                       # missing file, missing key, bad YAML
-        return frozenset()
+    return non_value_tokens(load(codebook_path))
 
 
 # ── Evidence-modality lint (ELICIT-DESIGN-02 Ruling 3(b)) ────────────

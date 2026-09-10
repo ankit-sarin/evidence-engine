@@ -259,6 +259,56 @@ def pytest_configure(config):
     )
 
 
+# ── Every review directory carries a codebook ────────────────────────
+#
+# CODEBOOK-AUTH-01 R4 closed the read-side tolerance: the five D1 consumers
+# (the auditor's audit call and its LOW_YIELD count, the categorical
+# normaliser, the distribution monitor's observation set and cross-arm
+# concordance scoring) now propagate a CodebookError instead of quietly
+# treating a missing codebook as "this review declares no terminal-state
+# tokens" — which is not inert, it makes every terminal state score, audit and
+# count as a real extracted value.
+#
+# In production that condition cannot arise: a review directory always holds a
+# codebook. In tests it arose in sixty-five places, because a temp
+# ReviewDatabase created the directory tree and nothing put one in it. Writing
+# it here models the production invariant once rather than in fifteen
+# fixtures. A test that means to exercise a MISSING codebook builds its review
+# directory directly instead of through ReviewDatabase.
+#
+# Only ever inside a test's own tree: the live-DB guard above has already
+# refused anything under data/ by the time this runs.
+
+_TEST_CODEBOOK = {
+    "version": "1.0",
+    "date": "2026-01-01",
+    "escape_token": "NO_EVIDENCE_LOCATABLE",
+    "contract_unmet_token": "CONTRACT_UNMET",
+    "absence_sentinels": ["NR", "N/A", "NA", "NOT_FOUND", "NOT FOUND", "NOT REPORTED"],
+    "fields": [
+        {"name": "study_type", "type": "categorical", "tier": 1,
+         "definition": "The study design.", "instruction": "Classify it.",
+         "field_class": "stated", "judge_rubric_family": "categorical",
+         "valid_values": [{"value": "RCT", "definition": "Randomised."},
+                          {"value": "Cohort", "definition": "Not randomised."}]},
+    ],
+}
+
+
+def _ensure_test_codebook(review_dir, review_id: str) -> None:
+    from pathlib import Path as _Path
+
+    path = _Path(review_dir) / "extraction_codebook.yaml"
+    if path.exists():
+        return
+    import yaml
+
+    try:
+        path.write_text(yaml.safe_dump(dict(_TEST_CODEBOOK, review=review_id)))
+    except OSError:  # pragma: no cover - a read-only tmp tree
+        pass
+
+
 @pytest.fixture(autouse=True, scope="function")
 def block_live_database(monkeypatch, request):
     """Refuse any ReviewDatabase construction under the real data/ tree."""
@@ -272,7 +322,9 @@ def block_live_database(monkeypatch, request):
         )
         if is_live_data_path(candidate):
             _refuse_live_db(candidate, request.node.nodeid)
-        return original_init(self, review_name, data_root, *args, **kwargs)
+        result = original_init(self, review_name, data_root, *args, **kwargs)
+        _ensure_test_codebook(self.db_path.parent, review_name)
+        return result
 
     monkeypatch.setattr(db_module.ReviewDatabase, "__init__", guarded_init)
 

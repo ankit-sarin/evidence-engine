@@ -348,7 +348,7 @@ def test_retry_is_bounded_and_the_paper_is_failed(tmp_path, monkeypatch):
                                 mode=STRICT, attempt=calls["n"])
 
     db = _DB(tmp_path)
-    (tmp_path / "extraction_codebook.yaml").write_text("fields: []\n")
+    (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
 
     class _Schema:
         def fields_by_tier(self, tier):

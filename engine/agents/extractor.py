@@ -16,7 +16,7 @@ from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResul
 from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.codebook import (
-    codebook_path_for, load_codebook, load_codebook_for,
+    CODEBOOK_FILENAME, load_codebook, load_codebook_for,
 )
 from engine.core.review_spec import ReviewSpec
 from engine.core.completeness import (
@@ -421,18 +421,20 @@ def _validate_and_retry_snippets(
     return validated
 
 
-def _absence_tokens(review_id: str) -> tuple[str, frozenset[str]]:
-    """(escape token, absence sentinels) read from the review's codebook.
+def _absence_tokens(codebook_path: Path) -> tuple[str, frozenset[str]]:
+    """(escape token, absence sentinels) from the codebook beside the database.
 
-    Both are now required at load, so neither can be absent: a codebook with no
-    `escape_token` cannot state the elicitation contract, and one with no
-    `absence_sentinels` turns every absence claim into an ordinary value for
-    every downstream consumer. The old signature returned `None` for the first
-    and an empty set for the second, and did so behind a bare `except` that
+    Located from the DATABASE's own directory, not from `data/<review_id>`: the
+    review root is wherever this review's database is, and a run under a
+    `data_root` override would otherwise read a different review's codebook —
+    or none at all — while writing to the right database.
+
+    Both values are required at load now, so neither can be absent. The old
+    version returned `None` and an empty set from behind a bare `except`, which
     made a missing file, a parse error and a legitimately tokenless codebook
-    indistinguishable.
+    indistinguishable — and an empty sentinel set is not inert downstream.
     """
-    cb = load_codebook_for(review_id)
+    cb = load_codebook(codebook_path)
     return cb.escape_token, frozenset(s.strip().upper() for s in cb.absence_sentinels)
 
 
@@ -525,7 +527,9 @@ def extract_paper(
     # The guard sits here rather than in ReviewDatabase.add_extraction_atomic
     # because the database layer is generic — it serves migrations and tests and
     # has no ReviewSpec to derive an expected field set from.
-    cb_path = codebook_path_for(spec.review_id)
+    # The review root is where this review's database is (a data_root override
+    # must not send the codebook lookup somewhere else).
+    cb_path = Path(db.db_path).parent / CODEBOOK_FILENAME
     enforce_completeness(
         span_dicts,
         expected_field_names(spec, cb_path),
@@ -539,7 +543,7 @@ def extract_paper(
     # for obeying the prompt it was given. Every other value still needs a quote.
     # The elicitation path runs the same predicate in STRICT mode, where a
     # sentinel is a value like any other and owes a citation.
-    escape, sentinels = _absence_tokens(spec.review_id)
+    escape, sentinels = _absence_tokens(cb_path)
     enforce_citations(
         span_dicts, paper_id=paper_id, arm=MODEL, mode=LEGACY,
         escape_token=escape, absence_sentinels=sentinels,

@@ -27,6 +27,13 @@ def _make_review_db(tmp_path: Path) -> Path:
     """Create a minimal review DB with papers, extractions, evidence_spans,
     cloud_extractions, and cloud_evidence_spans tables."""
     db_path = tmp_path / "review.db"
+    # A review directory carries a codebook (CODEBOOK-AUTH-01).
+    import shutil as _shutil
+    _shutil.copy2(
+        Path(__file__).resolve().parent.parent
+        / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+        tmp_path / "extraction_codebook.yaml",
+    )
     conn = sqlite3.connect(str(db_path))
     conn.executescript("""
         CREATE TABLE papers (id INTEGER PRIMARY KEY, title TEXT);

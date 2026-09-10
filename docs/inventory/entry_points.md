@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `04a4c641dae1930bacca86a5d7e98f708e583714` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `962e2a1d0e6acde9e8a50d89c4d6e30517a6dc4c` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -17,8 +17,8 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | name only constructing reviewdatabase | 20 |
 | files calling resolver | 34 |
 | files calling load review spec directly | 8 |
-| raw yaml load sites | 13 |
-| files with raw yaml loads | 12 |
+| raw yaml load sites | 12 |
+| files with raw yaml loads | 11 |
 | review id constants | 8 |
 | literal review id sites in code | 33 |
 | path construction sites in code | 64 |
@@ -50,7 +50,7 @@ Baselines are the figures measured by hand in GENERALIZE-READOUT-01 and SPEC-AUT
 | of those, name-only | 45 | 45 | matches |
 | entry points constructing ReviewDatabase | 35 | 37 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
 | name-only, constructing ReviewDatabase | 20 | 20 | matches |
-| raw yaml load sites | 13 | 13 | matches |
+| raw yaml load sites | 13 | 12 | differs — unexplained, investigate |
 | f-string spec-path builders | 19 | 0 | SPEC-AUTH-01 moved every one of these onto the resolver; a non-zero value here means a hand-built spec path has come back |
 | DEFAULT_REVIEW constants | 7 | 7 | matches |
 
@@ -172,7 +172,6 @@ Two figures deliberately have no baseline row. **entry points** (97) counts anyt
 | `analysis/paper1/pi_audit_sampler_v2.py` | 217 | `safe_load` | `codebook_path.read_text()` |
 | `engine/adjudication/categorizer.py` | 45 | `safe_load` | `f` |
 | `engine/core/codebook.py` | 344 | `safe_load` | `text` |
-| `engine/core/completeness.py` | 135 | `safe_load` | `path.read_text()` |
 | `engine/core/review_spec.py` | 476 | `safe_load` | `f` |
 | `engine/validators/distribution_monitor.py` | 55 | `safe_load` | `f` |
 
@@ -207,7 +206,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
   Location: data/<review>/adjudication_categories.yaml
   Generate a starter template with: gen...` |
 | `engine/agents/auditor.py` | 272 | literal | `extraction_codebook.yaml` |
-| `engine/agents/extractor.py` | 641 | literal | `extraction_codebook.yaml` |
+| `engine/agents/extractor.py` | 645 | literal | `extraction_codebook.yaml` |
 | `engine/analysis/concordance.py` | 78 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 41 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 411 | literal | `extraction_codebook.yaml` |

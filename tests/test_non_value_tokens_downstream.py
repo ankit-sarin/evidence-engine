@@ -58,15 +58,35 @@ def test_the_tokens_come_from_the_codebook(codebook_dir):
         codebook_dir / "extraction_codebook.yaml") == TOKENS
 
 
-def test_a_legacy_review_without_the_tokens_behaves_exactly_as_before(tmp_path):
-    """The read side is tolerant on purpose. Every pre-Run-7 review's codebook
-    predates both tokens, and hard-failing there would take out the auditor, the
-    validators and concordance on all of them to protect a token those reviews
-    cannot contain."""
+def test_an_incomplete_codebook_fails_the_reader_instead_of_emptying_it(tmp_path):
+    """CODEBOOK-AUTH-01 R4 closed the read-side tolerance.
+
+    This asserted the opposite until now, and the reasoning held while it did:
+    hard-failing would have taken out the auditor, the validators and
+    concordance on every pre-Run-7 review to protect a token those reviews
+    could not contain. What the bare `except` actually did was make a MISSING
+    FILE, a PARSE ERROR and a legitimately tokenless codebook indistinguishable
+    — all three returned an empty set, and an empty set is not inert: it means
+    every terminal state downstream is scored, audited and counted as a real
+    extracted value. The failure it was protecting against was quieter than the
+    one it created.
+    """
+    from engine.core.codebook import CodebookError
+
     (tmp_path / "extraction_codebook.yaml").write_text(
         yaml.safe_dump({"fields": [], "escape_token": "NO_EVIDENCE_LOCATABLE"}))
-    assert non_value_tokens_for(tmp_path / "extraction_codebook.yaml") == frozenset()
-    assert non_value_tokens_for(tmp_path / "nope.yaml") == frozenset()
+    with pytest.raises(CodebookError):
+        non_value_tokens_for(tmp_path / "extraction_codebook.yaml")
+    with pytest.raises(CodebookError):
+        non_value_tokens_for(tmp_path / "nope.yaml")
+
+
+def test_absence_sentinels_are_required_not_defaulted():
+    """T6 — no silent path left in the accessors."""
+    from engine.elicitation import classes as C
+
+    with pytest.raises(C.CodebookContractError, match="absence_sentinels"):
+        C.absence_sentinels({"fields": []})
 
 
 def test_the_write_side_still_refuses_a_codebook_without_the_token():

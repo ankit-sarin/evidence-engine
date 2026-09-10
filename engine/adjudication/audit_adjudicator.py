@@ -168,8 +168,19 @@ def _flatten_to_span_rows(papers: list[dict]) -> list[dict]:
 # ── Reference Content Builder ─────────────────────────────────────
 
 
-def _build_audit_reference_content(spec=None) -> str:
-    """Build reference sheet content for extraction audit review."""
+def _build_audit_reference_content(spec=None, codebook=None) -> str:
+    """Build reference sheet content for extraction audit review.
+
+    The field contract is rendered by `_build_field_block` — the SAME function
+    that builds the model's prompt. One renderer, two readers
+    (SCHEMA-DERIVE-01 R5).
+
+    It used to render `spec.extraction_schema.fields[].description`, which is
+    not what the model was shown: the prompt's field content has always come
+    from the codebook, and the two texts differ on 19 of 20 fields
+    (SCHEMA-DERIVE-01 Phase 2a). The adjudicator was judging an extraction
+    against a rubric the extractor never saw.
+    """
     lines = []
 
     lines.append("AUDIT STATES")
@@ -199,17 +210,29 @@ def _build_audit_reference_content(spec=None) -> str:
     lines.append("    the audit trail.")
     lines.append("")
 
-    if spec and hasattr(spec, "extraction_schema") and spec.extraction_schema:
-        lines.append("EXTRACTION SCHEMA FIELDS")
+    if codebook is None and spec is not None:
+        from engine.core.codebook import load_codebook_for
+
+        codebook = load_codebook_for(spec.review_id)
+
+    if codebook is not None:
+        from engine.agents.extractor import _build_field_block
+
+        lines.append("EXTRACTION FIELD CONTRACTS")
         lines.append("")
-        for field in spec.extraction_schema.fields:
-            tier = f"Tier {field.tier}" if hasattr(field, "tier") else ""
-            ftype = field.type if hasattr(field, "type") else ""
-            lines.append(f"  {field.name} ({ftype}, {tier}):")
-            lines.append(f"    {field.description}")
-            if hasattr(field, "enum_values") and field.enum_values:
-                lines.append(f"    Valid values: {', '.join(field.enum_values)}")
+        lines.append("Verbatim, as the extractor was given them. Judge the extracted")
+        lines.append("value against THIS text — it is the instruction the model followed.")
+        lines.append("")
+        for tier in (1, 2, 3, 4):
+            entries = codebook.fields_by_tier(tier)
+            if not entries:
+                continue
+            lines.append(f"  --- Tier {tier} ---")
             lines.append("")
+            for entry in entries:
+                for line in _build_field_block(entry).split("\n"):
+                    lines.append(f"  {line}" if line else "")
+                lines.append("")
 
     return "\n".join(lines)
 

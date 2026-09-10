@@ -124,7 +124,6 @@ def build_extraction_prompt(
     # different review is refused rather than silently prompting for it.
     cb = (load_codebook(codebook_path) if codebook_path
           else load_codebook_for(spec.review_id))
-    cb_fields = {f["name"]: f for f in cb.fields}
 
     tier_label = {
         1: "Tier 1 — Explicit (expected κ > 0.90)",
@@ -135,25 +134,16 @@ def build_extraction_prompt(
 
     field_blocks: list[str] = []
     for tier in (1, 2, 3, 4):
-        fields = spec.extraction_schema.fields_by_tier(tier)
+        fields = cb.fields_by_tier(tier)
         if not fields:
             continue
         lines = [f"\n### {tier_label[tier]}"]
-        for f in fields:
-            cb_entry = cb_fields.get(f.name)
-            if cb_entry:
-                lines.append(_build_field_block(cb_entry))
-            else:
-                # Fallback: bare spec definition (should not happen if codebook is complete)
-                enum_note = f" (allowed values: {', '.join(f.enum_values)})" if f.enum_values else ""
-                lines.append(f"- **{f.name}** ({f.type}{enum_note}): {f.description}")
-                logger.warning("Field %s not found in codebook — using bare spec definition", f.name)
+        for cb_entry in fields:
+            lines.append(_build_field_block(cb_entry))
         field_blocks.append("\n".join(lines))
 
     schema_text = "\n".join(field_blocks)
-    total_fields = sum(
-        len(spec.extraction_schema.fields_by_tier(t)) for t in (1, 2, 3, 4)
-    )
+    total_fields = len(cb.fields)
 
     return f"""Extract structured data from the following paper for a systematic review.
 

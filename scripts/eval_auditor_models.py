@@ -18,6 +18,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from engine.agents.auditor import audit_span, DEFAULT_AUDITOR_MODEL
 from engine.core.database import ReviewDatabase
 from engine.core.review_paths import load_spec_for, spec_path_for
+from engine.core.codebook import load_codebook_beside
 
 logging.basicConfig(
     level=logging.INFO,
@@ -87,9 +88,10 @@ def run_eval():
     db = ReviewDatabase(review_name)
     review_dir = Path(db.db_path).parent
 
-    # Build field metadata from spec
-    field_type_map = {f.name: f.type for f in spec.extraction_schema.fields}
-    field_tier_map = {f.name: f.tier for f in spec.extraction_schema.fields}
+    # Build field metadata from the codebook
+    _cb = load_codebook_beside(db.db_path)
+    field_type_map = {f["name"]: f["type"] for f in _cb.fields}
+    field_tier_map = {f["name"]: f["tier"] for f in _cb.fields}
 
     # Collect existing Qwen3:32b results from DB
     existing_results: dict[int, dict[str, str]] = {}  # paper_id -> {field_name: status}

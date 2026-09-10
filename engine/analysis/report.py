@@ -22,11 +22,10 @@ def _get_tier_map() -> dict[str, int]:
     if _TIER_CACHE is None:
         try:
             # GENERALIZE B3, still open: the tier map falls back to ONE
-            # review's schema. SPEC-AUTH-01 only stops this module building
-            # the path; the hardcoded review is PATH-AUTH-01's to remove.
-            from engine.core.review_paths import load_spec_for
-            spec = load_spec_for("surgical_autonomy")
-            _TIER_CACHE = {f.name: f.tier for f in spec.extraction_schema.fields}
+            # review's codebook. The hardcoded review is PATH-AUTH-01's.
+            from engine.core.codebook import load_codebook_for
+            cb = load_codebook_for("surgical_autonomy")
+            _TIER_CACHE = {f["name"]: f["tier"] for f in cb.fields}
         except Exception:
             _TIER_CACHE = {}
     return _TIER_CACHE

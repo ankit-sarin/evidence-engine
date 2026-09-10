@@ -5,6 +5,7 @@ from functools import lru_cache
 
 from engine.core.review_paths import load_spec_for
 from engine.core.review_spec import ExtractionField, ReviewSpec
+from engine.core.codebook import load_codebook_for
 
 # Fields that allow semicolon-separated multi-values (per extraction prompt).
 _MULTI_VALUE_FIELDS = {"validation_setting", "surgical_domain", "secondary_outcomes"}
@@ -49,16 +50,21 @@ _FALLBACK_REVIEW_ID = "surgical_autonomy"
 
 
 @lru_cache(maxsize=1)
-def _default_spec() -> ReviewSpec:
-    return load_spec_for(_FALLBACK_REVIEW_ID)
+def _default_codebook():
+    return load_codebook_for(_FALLBACK_REVIEW_ID)
 
 
-def _get_field_def(field_name: str, spec: ReviewSpec | None = None) -> ExtractionField | None:
-    s = spec or _default_spec()
-    for f in s.extraction_schema.fields:
-        if f.name == field_name:
-            return f
-    return None
+def _get_field_def(field_name: str, spec=None):
+    """The field's type and allowed values, from the codebook.
+
+    `spec` is accepted and ignored: callers pass one, and the schema it used
+    to carry is gone (SCHEMA-DERIVE-01).
+    """
+    cb = _default_codebook()
+    try:
+        return cb.view(field_name)
+    except Exception:
+        return None
 
 
 def _normalize_null(raw: str | None) -> str | None:

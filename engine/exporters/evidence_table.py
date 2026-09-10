@@ -10,6 +10,7 @@ import openpyxl
 
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
+from engine.core.codebook import load_codebook_beside
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ def _build_evidence_rows(
     """
     from engine.core.database import _STATUS_ORDER
 
-    field_names = [f.name for f in spec.extraction_schema.fields]
+    field_names = list(load_codebook_beside(db.db_path).field_names)
 
     # Base columns
     headers = ["paper_id", "pmid", "doi", "title", "authors", "year", "journal"]

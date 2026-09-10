@@ -23,8 +23,25 @@ def spec():
 
 
 @pytest.fixture
+def codebook():
+    from engine.core.codebook import load_codebook_for
+
+    return load_codebook_for("surgical_autonomy")
+
+
+@pytest.fixture
 def db(tmp_path):
     rdb = ReviewDatabase("test_val", data_root=tmp_path)
+    # The validator reads the codebook beside the database, not the spec
+    # (SCHEMA-DERIVE-01). These tests validate against the real 20-field
+    # schema, so the real codebook belongs in this review's directory —
+    # conftest's one-field placeholder would validate a different review.
+    import shutil
+    shutil.copy2(
+        Path(__file__).resolve().parent.parent
+        / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+        Path(rdb.db_path).parent / "extraction_codebook.yaml",
+    )
     yield rdb
     rdb.close()
 
@@ -263,46 +280,46 @@ def test_semicolon_all_invalid(db, spec):
 # ── cross-field bleed detection tests ────────────────────────────────
 
 
-def test_bleed_no_bleed(spec):
+def test_bleed_no_bleed(codebook):
     """All values in their correct fields — no bleed detected."""
     data = [
         {"field_name": "study_type", "value": "Original Research"},
         {"field_name": "autonomy_level", "value": "3 (Conditional autonomy)"},
         {"field_name": "validation_setting", "value": "In vivo (human)"},
     ]
-    bleeds = detect_cross_field_bleed(spec, data)
+    bleeds = detect_cross_field_bleed(codebook, data)
     assert bleeds == []
 
 
-def test_bleed_detected(spec):
+def test_bleed_detected(codebook):
     """Value from validation_setting placed in study_type → bleed flagged."""
     # "Cadaver" is valid for validation_setting but not study_type
     data = [
         {"field_name": "study_type", "value": "Cadaver"},
     ]
-    bleeds = detect_cross_field_bleed(spec, data)
+    bleeds = detect_cross_field_bleed(codebook, data)
     assert len(bleeds) == 1
     assert bleeds[0]["field_name"] == "study_type"
     assert bleeds[0]["extracted_value"] == "Cadaver"
     assert bleeds[0]["belongs_to_field"] == "validation_setting"
 
 
-def test_bleed_invalid_for_all_fields(spec):
+def test_bleed_invalid_for_all_fields(codebook):
     """Value that doesn't match ANY field's vocabulary — not bleed, just wrong."""
     data = [
         {"field_name": "study_type", "value": "Quantum Teleportation"},
     ]
-    bleeds = detect_cross_field_bleed(spec, data)
+    bleeds = detect_cross_field_bleed(codebook, data)
     assert bleeds == []
 
 
-def test_bleed_semicolon_multi_value(spec):
+def test_bleed_semicolon_multi_value(codebook):
     """One element of a semicolon-separated value bleeds."""
     # "Feasibility study" is valid for study_design but not study_type
     data = [
         {"field_name": "study_type", "value": "Original Research; Feasibility study"},
     ]
-    bleeds = detect_cross_field_bleed(spec, data)
+    bleeds = detect_cross_field_bleed(codebook, data)
     assert len(bleeds) == 1
     assert bleeds[0]["extracted_value"] == "Feasibility study"
     assert bleeds[0]["belongs_to_field"] == "study_design"
@@ -319,25 +336,44 @@ def test_same_spec_same_hash(spec):
     assert len(h1) == 64  # SHA-256 hex digest
 
 
-def test_modified_spec_different_hash():
-    """Modifying the spec changes the prompt hash."""
-    from copy import deepcopy
-    spec_a = load_review_spec("review_specs/surgical_autonomy.yaml")
-    spec_b = deepcopy(spec_a)
+def test_modified_codebook_different_hash(tmp_path, spec):
+    """Adding a field changes the prompt hash — from the CODEBOOK now.
 
-    # Add a new field to change the extraction schema
-    from engine.core.review_spec import ExtractionField
-    spec_b.extraction_schema.fields.append(
-        ExtractionField(
-            name="fake_new_field",
-            description="A fake field for testing",
-            # `str` was accepted until CODEBOOK-AUTH-01 gave the spec the
-            # codebook's vocabulary; the point of the test is the extra FIELD.
-            type="free_text",
-            tier=1,
-        )
-    )
+    This used to append an ExtractionField to spec.extraction_schema. The
+    prompt never read the spec's field list for its CONTENT and, since
+    SCHEMA-DERIVE-01, does not read it for the field SET either — so
+    mutating the spec changed nothing and the test compared a hash with
+    itself. The field set is the codebook's.
+    """
+    import yaml
 
-    h_a = verify_schema_parity(spec_a)
-    h_b = verify_schema_parity(spec_b)
+    from engine.core.codebook import clear_cache
+
+    live = (Path(__file__).resolve().parent.parent
+            / "data" / "surgical_autonomy" / "extraction_codebook.yaml")
+    h_a = verify_schema_parity(spec)
+
+    # data_root_for resolves against the cwd, so mirror data/<review_id>
+    review_dir = tmp_path / "data" / "surgical_autonomy"
+    review_dir.mkdir(parents=True)
+    doc = yaml.safe_load(live.read_text())
+    doc["fields"].append({
+        "name": "fake_new_field", "type": "free_text", "tier": 1,
+        "definition": "A fake field for testing.", "instruction": "Extract it.",
+        "field_class": "stated", "judge_rubric_family": "free_text",
+    })
+    (review_dir / "extraction_codebook.yaml").write_text(yaml.safe_dump(doc))
+
+    clear_cache()
+    try:
+        import os
+        cwd = os.getcwd()
+        os.chdir(tmp_path)
+        try:
+            h_b = verify_schema_parity(spec)
+        finally:
+            os.chdir(cwd)
+    finally:
+        clear_cache()
+
     assert h_a != h_b

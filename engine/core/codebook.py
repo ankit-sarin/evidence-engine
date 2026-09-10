@@ -373,6 +373,17 @@ def load_codebook(path: str | Path) -> Codebook:
     return cached
 
 
+def load_codebook_beside(db_path: str | Path) -> Codebook:
+    """The codebook in the same review directory as this database.
+
+    The review root is wherever the review's database is — not
+    `data/<review_id>` — so a run under a `data_root` override reads its own
+    review's codebook rather than another's (MIGRATE rulings R1). No identity
+    check: the path came from the database's own location, which IS the review.
+    """
+    return load_codebook(Path(db_path).parent / CODEBOOK_FILENAME)
+
+
 def load_codebook_for(
     review_id: str, override: str | Path | None = None
 ) -> Codebook:

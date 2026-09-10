@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `caaac9372dbb79a1dc169572c81a5224d27e08b4` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `9b3f170e4cda612665391d33cf142b36a7e79c93` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -15,7 +15,7 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | entry points name only | 45 |
 | entry points constructing reviewdatabase | 37 |
 | name only constructing reviewdatabase | 20 |
-| files calling resolver | 34 |
+| files calling resolver | 32 |
 | files calling load review spec directly | 8 |
 | raw yaml load sites | 3 |
 | files with raw yaml loads | 3 |
@@ -126,14 +126,14 @@ Two figures deliberately have no baseline row. **entry points** (98) counts anyt
 | `engine/utils/extraction_cleanup.py` | `--review` required; `--keep-schema`; `--spec`=None; `--confirm` | load_spec_for | 238 | — |
 | `engine/utils/ollama_preflight.py` | `--models` required; `--timeout`=30 | — | — | — |
 | `engine/validators/distribution_monitor.py` | `--review` required; `--arm` required; `--codebook`=None; `--strict` | — | 441 | — |
-| `engine/validators/extraction_validator.py` | `--review` required; `--spec`=None | load_spec_for | 397 | main:spec_first |
+| `engine/validators/extraction_validator.py` | `--review` required; `--spec`=None | load_spec_for | 395 | main:spec_first |
 | `scripts/_pass2_delta.py` | — | — | — | — |
 | `scripts/_pass2_eyeball.py` | — | — | — | — |
 | `scripts/_pass2_stability.py` | — | — | 62 | — |
 | `scripts/advance_to_pdf_acquired.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
 | `scripts/backfill_authors.py` | `--review`=dynamic: DEFAULT_REVIEW; `--dry-run` | — | — | — |
 | `scripts/backfill_cloud_spans.py` | `--review`=dynamic: DEFAULT_REVIEW; `--confirm`; `--db`=None | — | — | — |
-| `scripts/eval_auditor_models.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 87 | run_eval:spec_first |
+| `scripts/eval_auditor_models.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 88 | run_eval:spec_first |
 | `scripts/ft_screening_smoke_test.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 55 | main:spec_first |
 | `scripts/monitor_extraction.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
 | `scripts/parse_expanded_corpus.py` | `--review`=dynamic: DEFAULT_REVIEW | — | 40 | — |
@@ -164,7 +164,7 @@ Two figures deliberately have no baseline row. **entry points** (98) counts anyt
 | file | line | call | target |
 |---|---:|---|---|
 | `engine/adjudication/categorizer.py` | 45 | `safe_load` | `f` |
-| `engine/core/codebook.py` | 407 | `safe_load` | `text` |
+| `engine/core/codebook.py` | 418 | `safe_load` | `text` |
 | `engine/core/review_spec.py` | 496 | `safe_load` | `f` |
 
 ## Path construction in code
@@ -197,8 +197,8 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/adjudication/workflow.py` | 68 | literal | `Create or update adjudication_categories.yaml for this review.
   Location: data/<review>/adjudication_categories.yaml
   Generate a starter template with: gen...` |
-| `engine/agents/auditor.py` | 272 | literal | `extraction_codebook.yaml` |
-| `engine/agents/extractor.py` | 651 | literal | `extraction_codebook.yaml` |
+| `engine/agents/auditor.py` | 273 | literal | `extraction_codebook.yaml` |
+| `engine/agents/extractor.py` | 641 | literal | `extraction_codebook.yaml` |
 | `engine/analysis/concordance.py` | 78 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 421 | literal | `extraction_codebook.yaml` |
 | `engine/core/codebook.py` | 36 | literal | `extraction_codebook.yaml` |
@@ -214,7 +214,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/tools/inventory.py` | 533 | literal | `Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse prose, and messages passed to an exception or a logger. This is the class a ...` |
 | `engine/tools/inventory.py` | 682 | literal | `data/ subdirectories changed: ` |
 | `engine/validators/distribution_monitor.py` | 446 | literal | `extraction_codebook.yaml` |
-| `engine/validators/extraction_validator.py` | 64 | literal | `extraction_codebook.yaml` |
+| `engine/validators/extraction_validator.py` | 65 | literal | `extraction_codebook.yaml` |
 | `scripts/_pass2_delta.py` | 13 | literal | `data/surgical_autonomy/review.db` |
 | `scripts/_pass2_delta.py` | 16 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
 | `scripts/_pass2_eyeball.py` | 15 | literal | `data/surgical_autonomy/review.db` |
@@ -223,7 +223,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `scripts/_pass2_stability.py` | 27 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
 | `scripts/backfill_authors.py` | 98 | f-string | `f'data/{args.review}/review.db'` |
 | `scripts/backfill_cloud_spans.py` | 42 | f-string | `f'data/{args.review}/review.db'` |
-| `scripts/eval_auditor_models.py` | 269 | f-string | `f'data/{review_name}/auditor_eval_results.json'` |
+| `scripts/eval_auditor_models.py` | 271 | f-string | `f'data/{review_name}/auditor_eval_results.json'` |
 | `scripts/monitor_extraction.py` | 51 | f-string | `f'data/{args.review}/extract_log.txt'` |
 | `scripts/monitor_extraction.py` | 52 | f-string | `f'data/{args.review}/review.db'` |
 | `scripts/pdf_acquisition/step4_manual_download_list.py` | 121 | f-string | `f"""<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Manual PD...` |
@@ -232,7 +232,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `scripts/rescreen_original_251.py` | 53 | f-string | `f'data/{review}/expanded_search'` |
 | `scripts/run5_extract_and_audit.py` | 149 | literal | `extraction_codebook.yaml` |
 | `scripts/screen_expanded.py` | 510 | f-string | `f'data/{review}/expanded_search'` |
-| `scripts/smoke_test_fixes.py` | 45 | f-string | `f'data/{review}'` |
+| `scripts/smoke_test_fixes.py` | 46 | f-string | `f'data/{review}'` |
 | `scripts/test_e2e_search_screen.py` | 29 | literal | `review_specs` |
 | `scripts/test_e2e_search_screen.py` | 29 | literal | `surgical_autonomy.yaml` |
 | `scripts/test_extraction_validation.py` | 33 | literal | `review_specs` |
@@ -246,8 +246,8 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/eval/elicit01/prompts.py` | 54 | `surgical_autonomy` |
 | `analysis/eval/elicit01/runner.py` | 139 | `surgical_autonomy` |
 | `analysis/paper1/judge_codebook_smoke.py` | 1167 | `surgical_autonomy` |
-| `engine/analysis/normalize.py` | 48 | `surgical_autonomy` |
-| `engine/analysis/report.py` | 28 | `surgical_autonomy` |
+| `engine/analysis/normalize.py` | 49 | `surgical_autonomy` |
+| `engine/analysis/report.py` | 27 | `surgical_autonomy` |
 | `engine/migrations/003_backfill_expanded_screening.py` | 19 | `surgical_autonomy` |
 | `engine/migrations/004_pdf_quality_check.py` | 77 | `surgical_autonomy` |
 | `engine/migrations/005_model_digest.py` | 66 | `surgical_autonomy` |
@@ -281,7 +281,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 
 | file | line | name | value |
 |---|---:|---|---|
-| `engine/analysis/normalize.py` | 48 | `_FALLBACK_REVIEW_ID` | `surgical_autonomy` |
+| `engine/analysis/normalize.py` | 49 | `_FALLBACK_REVIEW_ID` | `surgical_autonomy` |
 | `scripts/advance_to_pdf_acquired.py` | 19 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/backfill_authors.py` | 23 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/backfill_cloud_spans.py` | 29 | `DEFAULT_REVIEW` | `surgical_autonomy` |

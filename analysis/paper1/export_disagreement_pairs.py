@@ -23,6 +23,7 @@ from engine.analysis.concordance import load_arm
 from engine.analysis.metrics import FieldSummary, field_summary
 from engine.analysis.scoring import FieldScore, score_pair
 from engine.core.database import DATA_ROOT
+from engine.core.codebook import load_codebook_for
 from engine.core.review_paths import load_spec_for, spec_path_for
 from engine.core.review_spec import load_review_spec
 
@@ -43,23 +44,25 @@ FREE_TEXT_FIELDS = {
 }
 
 
-def _field_type(field_name: str, spec) -> str:
-    """Return 'categorical', 'free_text', or 'numeric'."""
-    for f in spec.extraction_schema.fields:
-        if f.name == field_name:
-            if f.type == "categorical":
-                return "categorical"
-            if field_name in ("sample_size",):
-                return "numeric"
-            return "free_text"
-    return "free_text"
+def _field_type(field_name: str, cb) -> str:
+    """The field's type, straight from the codebook.
+
+    The `if field_name in ("sample_size",): return "numeric"` branch this
+    replaces existed only because the spec said `text` where the codebook said
+    `numeric`. CODEBOOK-AUTH-01 made both say `numeric`, so the literal was
+    already redundant (SCHEMA-DERIVE-01 R5).
+    """
+    try:
+        return cb.field(field_name)["type"]
+    except Exception:
+        return "free_text"
 
 
-def _field_tier(field_name: str, spec) -> int:
-    for f in spec.extraction_schema.fields:
-        if f.name == field_name:
-            return f.tier
-    return 0
+def _field_tier(field_name: str, cb) -> int:
+    try:
+        return cb.field(field_name)["tier"]
+    except Exception:
+        return 0
 
 
 def _load_paper_info(db_path: str) -> dict[int, dict]:
@@ -113,6 +116,7 @@ def build_disagreement_rows(
         and summaries_by_pair maps pair_key → {field_name: FieldSummary}.
     """
     spec = load_review_spec(spec_path)
+    cb = load_codebook_for(spec.review_id)
 
     # Load arms
     arm_data = {arm: load_arm(db_path, arm) for arm in ARMS}
@@ -132,7 +136,7 @@ def build_disagreement_rows(
     # Sort: free-text first, then by tier + alpha
     sorted_fields = sorted(
         all_fields,
-        key=lambda f: (0 if f in FREE_TEXT_FIELDS else 1, _field_tier(f, spec), f),
+        key=lambda f: (0 if f in FREE_TEXT_FIELDS else 1, _field_tier(f, cb), f),
     )
 
     paper_info = _load_paper_info(db_path)
@@ -162,8 +166,8 @@ def build_disagreement_rows(
                 continue
 
             pinfo = paper_info.get(pid, {"title": "", "label": str(pid)})
-            ft = _field_type(fname, spec)
-            tier = _field_tier(fname, spec)
+            ft = _field_type(fname, cb)
+            tier = _field_tier(fname, cb)
 
             row = {
                 "paper_id": pid,
@@ -223,6 +227,7 @@ def write_xlsx(
     from openpyxl.utils import get_column_letter
 
     spec = load_review_spec(spec_path)
+    cb = load_codebook_for(spec.review_id)
 
     wb = Workbook()
 
@@ -290,14 +295,14 @@ def write_xlsx(
     sum_row = 2
     for fname in sorted(
         {f for sums in summaries_by_pair.values() for f in sums},
-        key=lambda f: (0 if f in FREE_TEXT_FIELDS else 1, _field_tier(f, spec), f),
+        key=lambda f: (0 if f in FREE_TEXT_FIELDS else 1, _field_tier(f, cb), f),
     ):
         for pk, sums in summaries_by_pair.items():
             fs = sums.get(fname)
             if not fs:
                 continue
-            ft = _field_type(fname, spec)
-            tier = _field_tier(fname, spec)
+            ft = _field_type(fname, cb)
+            tier = _field_tier(fname, cb)
             is_nan = lambda v: isinstance(v, float) and math.isnan(v)
             ws_sum.cell(row=sum_row, column=1, value=fname)
             ws_sum.cell(row=sum_row, column=2, value=pk)
@@ -356,6 +361,7 @@ def write_html(
     path: Path,
 ) -> None:
     spec = load_review_spec(spec_path)
+    cb = load_codebook_for(spec.review_id)
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     # Compute summary stats
@@ -370,7 +376,7 @@ def write_html(
 
     all_fields_sorted = sorted(
         by_field.keys(),
-        key=lambda f: (0 if f in FREE_TEXT_FIELDS else 1, _field_tier(f, spec), f),
+        key=lambda f: (0 if f in FREE_TEXT_FIELDS else 1, _field_tier(f, cb), f),
     )
     unique_fields = list(by_field.keys())
 
@@ -463,8 +469,8 @@ def write_html(
     parts.append('</tr>')
 
     for fname in all_fields_sorted:
-        ft = _field_type(fname, spec)
-        tier = _field_tier(fname, spec)
+        ft = _field_type(fname, cb)
+        tier = _field_tier(fname, cb)
         parts.append(f'<tr><td>{_esc(fname)}</td><td>{_esc(ft)}</td><td>{tier}</td>')
         for pk in sorted(summaries_by_pair.keys()):
             fs = summaries_by_pair[pk].get(fname)

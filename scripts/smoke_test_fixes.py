@@ -23,6 +23,7 @@ from engine.agents.extractor import build_extraction_prompt, extract_pass1_reaso
 from engine.core.database import ReviewDatabase
 from engine.core.review_paths import load_spec_for, spec_path_for
 from engine.core.review_spec import ReviewSpec
+from engine.core.codebook import load_codebook_for
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
@@ -48,8 +49,9 @@ def main():
     spec = load_spec_for(review, args.spec)
 
     # Build field_type lookup
-    field_type_map = {f.name: f.type for f in spec.extraction_schema.fields}
-    expected_field_count = len(spec.extraction_schema.fields)
+    _cb = load_codebook_for(review, args.spec and None)
+    field_type_map = {f["name"]: f["type"] for f in _cb.fields}
+    expected_field_count = len(_cb.fields)
     logger.info("Schema has %d fields, types: %s", expected_field_count, json.dumps(field_type_map))
 
     # Read paper metadata from production DB

@@ -10,6 +10,7 @@ from docx.shared import Inches, Pt
 
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
+from engine.core.codebook import load_codebook_beside
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ def export_evidence_docx(
     doc.add_paragraph("")  # spacer
 
     # Build table columns: fixed columns + extraction field columns
-    field_names = [f.name for f in spec.extraction_schema.fields]
+    field_names = list(load_codebook_beside(db.db_path).field_names)
     base_cols = ["Study", "Year", "Journal"]
     all_cols = base_cols + field_names
 

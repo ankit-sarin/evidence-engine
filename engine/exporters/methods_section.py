@@ -6,6 +6,7 @@ import os
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
 from engine.exporters.prisma import generate_prisma_flow
+from engine.core.codebook import load_codebook_beside
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +55,7 @@ def generate_methods_section(db: ReviewDatabase, spec: ReviewSpec) -> str:
     queries = "; ".join(spec.search_strategy.query_terms)
 
     # Count extraction fields
-    n_fields = len(spec.extraction_schema.fields)
+    n_fields = len(load_codebook_beside(db.db_path).fields)
 
     source_parts = []
     for src, cnt in flow["records_by_source"].items():

@@ -18,6 +18,7 @@ from pathlib import Path
 from engine.core.database import ReviewDatabase
 from engine.core.review_paths import load_spec_for
 from engine.core.review_spec import ExtractionField, ReviewSpec
+from engine.core.codebook import load_codebook_beside
 
 logger = logging.getLogger(__name__)
 
@@ -99,9 +100,7 @@ def normalize_categorical_values(
     Returns a list of dicts describing each normalization applied:
     ``{paper_id, field_name, original, canonical}``.
     """
-    field_map: dict[str, ExtractionField] = {
-        f.name: f for f in spec.extraction_schema.fields
-    }
+    field_map = {v.name: v for v in load_codebook_beside(db.db_path).views}
     non_value = _non_value_tokens(db)
 
     rows = db._conn.execute(
@@ -171,7 +170,7 @@ def normalize_categorical_values(
 
 
 def detect_cross_field_bleed(
-    spec: ReviewSpec,
+    codebook,
     extraction_data: list[dict],
     non_value: frozenset[str] = frozenset(),
 ) -> list[dict]:
@@ -182,19 +181,17 @@ def detect_cross_field_bleed(
     valid_values, flag it as cross-field bleed.
 
     Args:
-        spec: Review spec with extraction_schema.
+        codebook: the review's Codebook — the field vocabulary authority.
         extraction_data: List of ``{"field_name": str, "value": str}`` dicts.
 
     Returns:
         List of ``{field_name, extracted_value, belongs_to_field}`` records.
     """
-    field_map: dict[str, ExtractionField] = {
-        f.name: f for f in spec.extraction_schema.fields
-    }
+    field_map = {v.name: v for v in codebook.views}
 
     # Build reverse lookup: lowered value → list of field names that accept it
     value_to_fields: dict[str, list[str]] = {}
-    for f in spec.extraction_schema.fields:
+    for f in codebook.views:
         if f.type != "categorical" or not f.enum_values:
             continue
         for v in f.enum_values:
@@ -268,7 +265,7 @@ def validate_extraction(
     Read-only — does not modify the DB.
     """
     # Build lookup from spec
-    field_map: dict[str, ExtractionField] = {f.name: f for f in spec.extraction_schema.fields}
+    field_map = {v.name: v for v in load_codebook_beside(db.db_path).views}
     valid_field_names = set(field_map)
     non_value = _non_value_tokens(db)
 
@@ -373,7 +370,8 @@ def validate_all(
             (pid,),
         ).fetchall()
         spans = [{"field_name": r["field_name"], "value": r["value"]} for r in rows]
-        bleeds = detect_cross_field_bleed(spec, spans, _non_value_tokens(db))
+        bleeds = detect_cross_field_bleed(
+            load_codebook_beside(db.db_path), spans, _non_value_tokens(db))
         for b in bleeds:
             b["paper_id"] = pid
         all_bleeds.extend(bleeds)

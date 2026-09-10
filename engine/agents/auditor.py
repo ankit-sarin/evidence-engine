@@ -19,6 +19,7 @@ from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
 from engine.utils.ollama_client import ollama_chat
+from engine.core.codebook import load_codebook_beside
 
 logger = logging.getLogger(__name__)
 
@@ -386,10 +387,9 @@ def run_audit(
     # Build field_name → (type, tier) lookup from spec
     field_type_map: dict[str, str] = {}
     field_tier_map: dict[str, int] = {}
-    if spec:
-        for field in spec.extraction_schema.fields:
-            field_type_map[field.name] = field.type
-            field_tier_map[field.name] = field.tier
+    for field in load_codebook_beside(db.db_path).fields:
+        field_type_map[field["name"]] = field["type"]
+        field_tier_map[field["name"]] = field["tier"]
 
     papers = db.get_papers_by_status("EXTRACTED")
     total = len(papers)

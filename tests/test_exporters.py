@@ -25,6 +25,22 @@ from engine.search.models import Citation
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
 
+def _real_codebook(db):
+    """Exporters read the codebook beside the database (SCHEMA-DERIVE-01).
+
+    These tests assert against the real 20-field schema, so the real codebook
+    belongs in their review directory — conftest's one-field placeholder
+    describes a different review.
+    """
+    import shutil
+
+    shutil.copy2(
+        Path(__file__).resolve().parent.parent
+        / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+        Path(db.db_path).parent / "extraction_codebook.yaml",
+    )
+
+
 @pytest.fixture(scope="module")
 def spec():
     return load_review_spec(SPEC_PATH)
@@ -34,6 +50,7 @@ def spec():
 def populated_db(tmp_path, spec):
     """Create a DB with papers at various pipeline stages and extraction data."""
     db = ReviewDatabase("test_export", data_root=tmp_path)
+    _real_codebook(db)
 
     # 10 PubMed + 5 OpenAlex papers
     pm_cits = [
@@ -325,6 +342,7 @@ def test_atomic_methods_md_no_partial_on_error(populated_db, spec, tmp_path):
 def db_with_empty_extractions(tmp_path, spec):
     """DB with one paper that has extractions and one that doesn't."""
     db = ReviewDatabase("test_empty", data_root=tmp_path)
+    _real_codebook(db)
 
     # Two papers
     cits = [
@@ -439,6 +457,7 @@ def test_methods_uses_db_audit_model(populated_db, spec):
 def test_methods_multi_model_ft_screening(tmp_path, spec):
     """Methods section reports multiple FT screening models with counts."""
     db = ReviewDatabase("test_ft_models", data_root=tmp_path)
+    _real_codebook(db)
 
     cits = [
         Citation(title=f"Study {i}", source="pubmed", pmid=str(i),
@@ -495,6 +514,7 @@ def test_methods_multi_model_ft_screening(tmp_path, spec):
 def test_methods_placeholder_when_no_data(tmp_path, spec):
     """Methods section uses [MODEL NOT SPECIFIED] when DB has no extraction data."""
     db = ReviewDatabase("test_placeholder", data_root=tmp_path)
+    _real_codebook(db)
 
     cits = [
         Citation(title="Study 1", source="pubmed", pmid="1",

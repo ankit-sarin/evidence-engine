@@ -99,27 +99,22 @@ def expected_field_names(
 ) -> tuple[str, ...]:
     """The field set the extraction prompt asked for, in prompt order.
 
-    Source of truth is `spec.extraction_schema`, traversed tier 1→4 exactly as
-    `build_extraction_prompt` traverses it, so the guard cannot diverge from the
-    request. When a codebook path is supplied its field list is compared and any
-    divergence is logged — the codebook supplies the *content* of each field
-    block, the spec decides *which* fields are asked for, and the two agreeing is
-    an invariant worth surfacing rather than assuming.
+    The codebook, traversed tier 1→4 exactly as `build_extraction_prompt`
+    traverses it, so the guard cannot diverge from the request. It used to
+    traverse `spec.extraction_schema` and compare the codebook against it,
+    logging a divergence — there is one authority now, so there is nothing
+    left to diverge (SCHEMA-DERIVE-01).
+
+    `spec` is retained in the signature and unused: every caller has one, and
+    the review it names is how the codebook is found when no path is given.
     """
+    from engine.core.codebook import load_codebook, load_codebook_for
+
+    cb = (load_codebook(codebook_path) if codebook_path is not None
+          else load_codebook_for(spec.review_id))
     names: list[str] = []
     for tier in (1, 2, 3, 4):
-        names.extend(f.name for f in spec.extraction_schema.fields_by_tier(tier))
-
-    if codebook_path is not None:
-        cb_names = _codebook_field_names(codebook_path)
-        only_spec = [n for n in names if n not in cb_names]
-        only_cb = [n for n in cb_names if n not in names]
-        if only_spec or only_cb:
-            logger.warning(
-                "Spec/codebook field divergence — spec-only=%s codebook-only=%s. "
-                "Guard follows the spec because that is what the prompt asks for.",
-                only_spec, only_cb,
-            )
+        names.extend(f["name"] for f in cb.fields_by_tier(tier))
     return tuple(names)
 
 

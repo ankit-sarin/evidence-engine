@@ -1,27 +1,27 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `3ab8cff965554f763816c680d2c9a06875e15c55` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `04a4c641dae1930bacca86a5d7e98f708e583714` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 195 |
+| files scanned | 196 |
 | entry points | 97 |
 | entry points with spec flag | 29 |
 | entry points with review name flag | 74 |
 | entry points name only | 45 |
 | entry points constructing reviewdatabase | 37 |
 | name only constructing reviewdatabase | 20 |
-| files calling resolver | 33 |
+| files calling resolver | 34 |
 | files calling load review spec directly | 8 |
 | raw yaml load sites | 13 |
 | files with raw yaml loads | 12 |
 | review id constants | 8 |
-| literal review id sites in code | 32 |
-| path construction sites in code | 67 |
+| literal review id sites in code | 33 |
+| path construction sites in code | 64 |
 | db before spec scopes | 0 |
 | fstring spec path sites | 0 |
 | default review named constants | 7 |
@@ -167,11 +167,11 @@ Two figures deliberately have no baseline row. **entry points** (97) counts anyt
 | `analysis/paper1/consensus.py` | 54 | `safe_load` | `f` |
 | `analysis/paper1/human_import.py` | 137 | `safe_load` | `f` |
 | `analysis/paper1/judge_codebook_smoke.py` | 223 | `safe_load` | `Path(path).read_text()` |
-| `analysis/paper1/judge_loader.py` | 99 | `safe_load` | `path.read_text()` |
-| `analysis/paper1/judge_loader.py` | 151 | `safe_load` | `path.read_text()` |
+| `analysis/paper1/judge_loader.py` | 104 | `safe_load` | `path.read_text()` |
+| `analysis/paper1/judge_loader.py` | 156 | `safe_load` | `path.read_text()` |
 | `analysis/paper1/pi_audit_sampler_v2.py` | 217 | `safe_load` | `codebook_path.read_text()` |
 | `engine/adjudication/categorizer.py` | 45 | `safe_load` | `f` |
-| `engine/agents/extractor.py` | 47 | `safe_load` | `f` |
+| `engine/core/codebook.py` | 344 | `safe_load` | `text` |
 | `engine/core/completeness.py` | 135 | `safe_load` | `path.read_text()` |
 | `engine/core/review_spec.py` | 476 | `safe_load` | `f` |
 | `engine/validators/distribution_monitor.py` | 55 | `safe_load` | `f` |
@@ -207,16 +207,13 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
   Location: data/<review>/adjudication_categories.yaml
   Generate a starter template with: gen...` |
 | `engine/agents/auditor.py` | 272 | literal | `extraction_codebook.yaml` |
-| `engine/agents/extractor.py` | 53 | literal | `extraction_codebook.yaml` |
-| `engine/agents/extractor.py` | 57 | literal | `*/extraction_codebook.yaml` |
-| `engine/agents/extractor.py` | 544 | literal | `extraction_codebook.yaml` |
-| `engine/agents/extractor.py` | 657 | literal | `extraction_codebook.yaml` |
+| `engine/agents/extractor.py` | 641 | literal | `extraction_codebook.yaml` |
 | `engine/analysis/concordance.py` | 78 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 41 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 411 | literal | `extraction_codebook.yaml` |
+| `engine/core/codebook.py` | 38 | literal | `extraction_codebook.yaml` |
 | `engine/core/review_paths.py` | 28 | literal | `review_specs` |
 | `engine/core/review_paths.py` | 59 | f-string | `f'{review_id}.yaml'` |
-| `engine/elicitation/pipeline.py` | 79 | literal | `extraction_codebook.yaml` |
 | `engine/tools/inventory.py` | 34 | literal | `review_specs` |
 | `engine/tools/inventory.py` | 47 | literal | `.yaml` |
 | `engine/tools/inventory.py` | 47 | literal | `data/` |
@@ -257,6 +254,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | file | line | value |
 |---|---:|---|
 | `analysis/eval/elicit01/analyze.py` | 54 | `surgical_autonomy` |
+| `analysis/eval/elicit01/prompts.py` | 54 | `surgical_autonomy` |
 | `analysis/eval/elicit01/runner.py` | 139 | `surgical_autonomy` |
 | `analysis/paper1/judge_codebook_smoke.py` | 1166 | `surgical_autonomy` |
 | `engine/analysis/normalize.py` | 48 | `surgical_autonomy` |

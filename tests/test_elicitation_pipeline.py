@@ -36,15 +36,23 @@ PAPER = (
     "The trajectory planner computed paths without operator input."
 )
 
+# A COMPLETE codebook, because the loader validates eagerly (CODEBOOK-AUTH-01).
+# A fixture that omits keys the real file always carries tests the engine
+# against a document that cannot exist.
 CODEBOOK = {
+    "version": "1.0",
+    "review": "test_review",
+    "date": "2026-01-01",
     "escape_token": "NO_EVIDENCE_LOCATABLE",
     "contract_unmet_token": "CONTRACT_UNMET",
     "absence_sentinels": ["NR", "NOT_FOUND"],
     "fields": [
         {"name": "robot_platform", "type": "free_text", "field_class": "stated",
-         "definition": "The robot.", "tier": 1},
+         "definition": "The robot.", "instruction": "Name it.",
+         "judge_rubric_family": "free_text", "tier": 1},
         {"name": "country", "type": "free_text", "field_class": "inferable",
-         "definition": "Where.", "tier": 2},
+         "definition": "Where.", "instruction": "Infer it.",
+         "judge_rubric_family": "free_text", "tier": 2},
     ],
 }
 
@@ -103,6 +111,7 @@ class _Models:
 
 
 class _Spec:
+    review_id = "test_review"
     extraction_schema = _Schema()
     extraction_models = _Models()
 
@@ -346,6 +355,7 @@ def test_retry_is_bounded_and_the_paper_is_failed(tmp_path, monkeypatch):
             return []
 
     class _Spec:
+        review_id = "test_review"
         extraction_schema = _Schema()
 
     monkeypatch.setattr(E, "extract_paper", always_uncited)

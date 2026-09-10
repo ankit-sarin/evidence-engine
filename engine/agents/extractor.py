@@ -15,6 +15,9 @@ import yaml
 from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
 from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
+from engine.core.codebook import (
+    codebook_path_for, load_codebook, load_codebook_for,
+)
 from engine.core.review_spec import ReviewSpec
 from engine.core.completeness import (
     MAX_COMPLETENESS_ATTEMPTS,
@@ -40,23 +43,11 @@ RESTART_EVERY_N = 25  # proactive Ollama restart interval (0 = disabled)
 # ── Codebook Loader ──────────────────────────────────────────────────
 
 
-@lru_cache(maxsize=4)
-def _load_codebook(codebook_path: str) -> dict:
-    """Load extraction codebook YAML, cached per path."""
-    with open(codebook_path) as f:
-        return yaml.safe_load(f)
-
-
-def _find_codebook_path(review_dir: str | Path | None = None) -> Path:
-    """Locate the extraction codebook YAML for a review."""
-    if review_dir:
-        p = Path(review_dir) / "extraction_codebook.yaml"
-        if p.exists():
-            return p
-    # Fallback: search data/ subdirectories
-    for p in Path("data").glob("*/extraction_codebook.yaml"):
-        return p
-    raise FileNotFoundError("No extraction_codebook.yaml found")
+# The codebook is located, validated, identity-checked and hashed by
+# engine.core.codebook. What stood here was a `data/*/extraction_codebook.yaml`
+# glob returning the first hit with no identity check — on a two-review box it
+# could hand one review's codebook to another review's extraction, and nothing
+# raised (CODEBOOK-AUTH-01).
 
 
 # ── Prompt Builder ───────────────────────────────────────────────────
@@ -126,17 +117,14 @@ def build_extraction_prompt(
     Args:
         paper_text: Parsed markdown of the paper.
         spec: ReviewSpec (used for field ordering and schema hash).
-        codebook_path: Path to extraction_codebook.yaml. If None, auto-discovered.
+        codebook_path: Optional override. Defaults to the review's own
+            codebook; an override must declare the same review.
     """
-    # Load codebook
-    if codebook_path is None:
-        cb_path = _find_codebook_path()
-    else:
-        cb_path = Path(codebook_path)
-    codebook = _load_codebook(str(cb_path))
-
-    # Index codebook fields by name
-    cb_fields = {f["name"]: f for f in codebook["fields"]}
+    # Load codebook. The review is the spec's, so an override naming a
+    # different review is refused rather than silently prompting for it.
+    cb = (load_codebook(codebook_path) if codebook_path
+          else load_codebook_for(spec.review_id))
+    cb_fields = {f["name"]: f for f in cb.fields}
 
     tier_label = {
         1: "Tier 1 — Explicit (expected κ > 0.90)",
@@ -433,23 +421,19 @@ def _validate_and_retry_snippets(
     return validated
 
 
-def _absence_tokens(codebook_path: Path) -> tuple[str | None, frozenset[str]]:
-    """(escape token or None, absence sentinels) read from the codebook.
+def _absence_tokens(review_id: str) -> tuple[str, frozenset[str]]:
+    """(escape token, absence sentinels) read from the review's codebook.
 
-    Read here with yaml rather than via `engine.elicitation.classes` to avoid an
-    import cycle: that module imports this one for the codebook loader and the
-    field-block builder. A codebook with no `escape_token` predates the
-    elicitation design and correctly yields None.
+    Both are now required at load, so neither can be absent: a codebook with no
+    `escape_token` cannot state the elicitation contract, and one with no
+    `absence_sentinels` turns every absence claim into an ordinary value for
+    every downstream consumer. The old signature returned `None` for the first
+    and an empty set for the second, and did so behind a bare `except` that
+    made a missing file, a parse error and a legitimately tokenless codebook
+    indistinguishable.
     """
-    try:
-        cb = _load_codebook(str(codebook_path))
-    except Exception:
-        return None, frozenset()
-    tok = cb.get("escape_token")
-    return (
-        str(tok).strip() if tok and str(tok).strip() else None,
-        frozenset(str(s).strip().upper() for s in cb.get("absence_sentinels", ())),
-    )
+    cb = load_codebook_for(review_id)
+    return cb.escape_token, frozenset(s.strip().upper() for s in cb.absence_sentinels)
 
 
 # ── Single-Paper Extraction ──────────────────────────────────────────
@@ -541,7 +525,7 @@ def extract_paper(
     # The guard sits here rather than in ReviewDatabase.add_extraction_atomic
     # because the database layer is generic — it serves migrations and tests and
     # has no ReviewSpec to derive an expected field set from.
-    cb_path = Path(db.db_path).parent / "extraction_codebook.yaml"
+    cb_path = codebook_path_for(spec.review_id)
     enforce_completeness(
         span_dicts,
         expected_field_names(spec, cb_path),
@@ -555,7 +539,7 @@ def extract_paper(
     # for obeying the prompt it was given. Every other value still needs a quote.
     # The elicitation path runs the same predicate in STRICT mode, where a
     # sentinel is a value like any other and owes a citation.
-    escape, sentinels = _absence_tokens(cb_path)
+    escape, sentinels = _absence_tokens(spec.review_id)
     enforce_citations(
         span_dicts, paper_id=paper_id, arm=MODEL, mode=LEGACY,
         escape_token=escape, absence_sentinels=sentinels,

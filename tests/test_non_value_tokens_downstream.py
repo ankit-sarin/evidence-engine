@@ -30,11 +30,17 @@ import yaml
 from engine.elicitation.classes import non_value_tokens_for
 
 TOKENS = frozenset({"NO_EVIDENCE_LOCATABLE", "CONTRACT_UNMET"})
+# Complete, because the loader validates eagerly (CODEBOOK-AUTH-01).
 CODEBOOK = {
+    "version": "1.0",
+    "review": "test_review",
+    "date": "2026-01-01",
     "escape_token": "NO_EVIDENCE_LOCATABLE",
     "contract_unmet_token": "CONTRACT_UNMET",
     "absence_sentinels": ["NR", "NOT_FOUND"],
-    "fields": [{"name": "a", "field_class": "stated", "type": "free_text"}],
+    "fields": [{"name": "a", "field_class": "stated", "type": "free_text",
+                "tier": 1, "definition": "A field.", "instruction": "Extract it.",
+                "judge_rubric_family": "free_text"}],
 }
 
 

@@ -402,7 +402,13 @@
         "entry_point": false,
         "flags": [],
         "has_main_guard": false,
-        "literal_review_ids": [],
+        "literal_review_ids": [
+          {
+            "line": 54,
+            "role": "code",
+            "value": "surgical_autonomy"
+          }
+        ],
         "order": {},
         "path": "analysis/eval/elicit01/prompts.py",
         "path_construction": [],
@@ -1874,13 +1880,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 96,
+            "line": 101,
             "role": "docstring",
             "text": "Parse extraction_codebook.yaml into CodebookEntry objects keyed by field_name."
           },
           {
             "kind": "literal",
-            "line": 167,
+            "line": 172,
             "role": "docstring",
             "text": "Return parsed markdown text for a paper, or None if not available.\n\n    Matches engine/agents/auditor.py pattern: data/<review>/parsed_text/{pid}_v*.md,\n    ..."
           }
@@ -1892,13 +1898,13 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 99,
+            "line": 104,
             "scope": "load_codebook",
             "target": "path.read_text()"
           },
           {
             "call": "safe_load",
-            "line": 151,
+            "line": 156,
             "scope": "load_raw_codebook",
             "target": "path.read_text()"
           }
@@ -3976,37 +3982,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 53,
-            "role": "code",
-            "text": "extraction_codebook.yaml"
-          },
-          {
-            "kind": "literal",
-            "line": 57,
-            "role": "code",
-            "text": "*/extraction_codebook.yaml"
-          },
-          {
-            "kind": "literal",
-            "line": 59,
-            "role": "message",
-            "text": "No extraction_codebook.yaml found"
-          },
-          {
-            "kind": "literal",
-            "line": 120,
-            "role": "docstring",
-            "text": "Build the extraction prompt from paper text and codebook YAML.\n\n    The codebook provides structured field definitions, per-value descriptions,\n    decision ..."
-          },
-          {
-            "kind": "literal",
-            "line": 544,
-            "role": "code",
-            "text": "extraction_codebook.yaml"
-          },
-          {
-            "kind": "literal",
-            "line": 657,
+            "line": 641,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4015,14 +3991,7 @@
         "review_id_constants": [],
         "spec_access": [],
         "unparsed": [],
-        "yaml_loads": [
-          {
-            "call": "safe_load",
-            "line": 47,
-            "scope": "_load_codebook",
-            "target": "f"
-          }
-        ]
+        "yaml_loads": []
       },
       "engine/agents/ft_screener.py": {
         "entry_point": true,
@@ -4426,6 +4395,58 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/core/codebook.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/codebook.py",
+        "path_construction": [
+          {
+            "kind": "literal",
+            "line": 1,
+            "role": "docstring",
+            "text": "The extraction codebook: located, validated, identified and hashed.\n\nCODEBOOK-AUTH-01. The codebook is the field authority \u2014 it is what the prompt\nis actuall..."
+          },
+          {
+            "kind": "literal",
+            "line": 38,
+            "role": "code",
+            "text": "extraction_codebook.yaml"
+          },
+          {
+            "kind": "literal",
+            "line": 290,
+            "role": "docstring",
+            "text": "The codebook for a review: `data/<review_id>/extraction_codebook.yaml`."
+          },
+          {
+            "kind": "f-string",
+            "line": 340,
+            "role": "message",
+            "text": "f'Codebook not found at {path}. Every review carries one at data/<review_id>/{CODEBOOK_FILENAME}.'"
+          }
+        ],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [
+          {
+            "func": "data_root_for",
+            "line": 291,
+            "scope": "codebook_path_for"
+          }
+        ],
+        "unparsed": [],
+        "yaml_loads": [
+          {
+            "call": "safe_load",
+            "line": 344,
+            "scope": "_parse",
+            "target": "text"
+          }
+        ]
+      },
       "engine/core/completeness.py": {
         "entry_point": false,
         "flags": [],
@@ -4641,7 +4662,14 @@
         "literal_review_ids": [],
         "order": {},
         "path": "engine/elicitation/classes.py",
-        "path_construction": [],
+        "path_construction": [
+          {
+            "kind": "literal",
+            "line": 85,
+            "role": "docstring",
+            "text": "The validated codebook at `codebook_path`, as a plain dict.\n\n    The path is now REQUIRED. It used to default to a `data/` glob, which\n    returned the first..."
+          }
+        ],
         "review_database": [],
         "review_id_constants": [],
         "spec_access": [],
@@ -4687,8 +4715,8 @@
           {
             "kind": "literal",
             "line": 79,
-            "role": "code",
-            "text": "extraction_codebook.yaml"
+            "role": "docstring",
+            "text": "Derived from the review directory, never searched (CODEBOOK-AUTH-01).\n\n    `review_dir` is `data/<review_id>`, so this is `codebook_path_for` with the\n    id..."
           }
         ],
         "review_database": [],
@@ -7470,20 +7498,20 @@
       "entry_points_with_review_name_flag": 74,
       "entry_points_with_spec_flag": 29,
       "files_calling_load_review_spec_directly": 8,
-      "files_calling_resolver": 33,
-      "files_scanned": 195,
+      "files_calling_resolver": 34,
+      "files_scanned": 196,
       "files_with_raw_yaml_loads": 12,
       "fstring_spec_path_sites": 0,
-      "literal_review_id_sites_in_code": 32,
+      "literal_review_id_sites_in_code": 33,
       "name_only_constructing_reviewdatabase": 20,
-      "path_construction_sites_in_code": 67,
+      "path_construction_sites_in_code": 64,
       "raw_yaml_load_sites": 13,
       "review_id_constants": 8,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "3ab8cff965554f763816c680d2c9a06875e15c55",
+    "generated_at_commit": "04a4c641dae1930bacca86a5d7e98f708e583714",
     "scan_roots": [
       "engine",
       "scripts",

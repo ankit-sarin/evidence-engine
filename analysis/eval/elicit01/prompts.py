@@ -28,7 +28,8 @@ import json
 from pathlib import Path
 
 from analysis.provenance.field_class3 import STATED, fields_by_class
-from engine.agents.extractor import _build_field_block, _find_codebook_path, _load_codebook
+from engine.agents.extractor import _build_field_block
+from engine.core.codebook import load_codebook, load_codebook_for
 
 CONDITION_COPY = "COPY"
 CONDITION_INDEX = "INDEX"
@@ -44,10 +45,15 @@ SYSTEM_PASS1 = (
 
 
 def stated_fields(codebook_path: str | Path | None = None) -> list[dict]:
-    """The 9 STATED codebook entries, in codebook order. Derived, not listed."""
-    cb = _load_codebook(str(Path(codebook_path) if codebook_path else _find_codebook_path()))
+    """The 9 STATED codebook entries, in codebook order. Derived, not listed.
+
+    ELICIT-01 is a frozen study against one review; the id stays hardcoded
+    (PATH-AUTH-01), but the path is derived, never searched.
+    """
+    cb = (load_codebook(codebook_path) if codebook_path
+          else load_codebook_for("surgical_autonomy"))
     wanted = set(fields_by_class(STATED))
-    out = [f for f in cb["fields"] if f["name"] in wanted]
+    out = [f for f in cb.fields if f["name"] in wanted]
     missing = wanted - {f["name"] for f in out}
     if missing:
         raise RuntimeError(f"STATED fields absent from codebook: {sorted(missing)}")

@@ -56,7 +56,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from engine.agents.extractor import _find_codebook_path, _load_codebook
+from engine.core.codebook import load_codebook
 
 STATED = "stated"
 INFERABLE = "inferable"
@@ -81,10 +81,15 @@ class CodebookContractError(RuntimeError):
     """
 
 
-def load(codebook_path: str | Path | None = None) -> dict:
-    """Load the codebook. Shares `extractor`'s cache, so one parse per path."""
-    path = Path(codebook_path) if codebook_path else _find_codebook_path()
-    return _load_codebook(str(path))
+def load(codebook_path: str | Path) -> dict:
+    """The validated codebook at `codebook_path`, as a plain dict.
+
+    The path is now REQUIRED. It used to default to a `data/` glob, which
+    returned the first codebook on the box regardless of which review was
+    being run (CODEBOOK-AUTH-01). The accessors below all take a dict, which
+    is what every caller already had.
+    """
+    return load_codebook(codebook_path).raw
 
 
 def escape_token(codebook: dict) -> str:

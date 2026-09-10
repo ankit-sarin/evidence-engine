@@ -46,13 +46,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from engine.agents.extractor import (
-    MODEL, _find_codebook_path, build_extraction_prompt, extract_pass2_structured,
+    MODEL, build_extraction_prompt, extract_pass2_structured,
     _LAST_PASS1_TELEMETRY, _LAST_PASS2_TELEMETRY,
 )
 from engine.core.citation_guard import STRICT, enforce_citations
 from engine.core.completeness import (
     enforce_completeness, enforce_terminal_states, expected_field_names,
 )
+from engine.core.codebook import CODEBOOK_FILENAME
 from engine.elicitation import classes as C
 from engine.elicitation import materialize as M
 from engine.elicitation import sizing as S
@@ -74,12 +75,14 @@ PASS2_LABEL = "pass2_primed"
 MAX_PASS1_ATTEMPTS = 2          # Ruling 4
 
 
-def _codebook_path(db_path: str | Path | None, review_dir: Path | None) -> Path:
-    if review_dir is not None:
-        p = review_dir / "extraction_codebook.yaml"
-        if p.exists():
-            return p
-    return _find_codebook_path()
+def _codebook_path(review_dir: Path) -> Path:
+    """Derived from the review directory, never searched (CODEBOOK-AUTH-01).
+
+    `review_dir` is `data/<review_id>`, so this is `codebook_path_for` with the
+    id already resolved to a directory. The glob that stood here returned the
+    first codebook on the box when the join missed.
+    """
+    return review_dir / CODEBOOK_FILENAME
 
 
 def persist_unit_map(unit_map: UnitMap, review_dir: Path, run_id: str) -> Path:
@@ -214,7 +217,7 @@ def extract_paper_elicited(
     from engine.agents.models import EvidenceSpan, ExtractionResult
 
     review_dir = Path(db.db_path).parent
-    cb_path = _codebook_path(db.db_path, review_dir)
+    cb_path = _codebook_path(review_dir)
     codebook = C.load(cb_path)
     field_names = expected_field_names(spec, cb_path)
     tiers = {f["name"]: int(f.get("tier", 1)) for f in codebook["fields"]}

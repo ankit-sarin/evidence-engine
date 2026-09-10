@@ -25,6 +25,10 @@ import yaml
 
 from analysis.paper1.judge_schema import ArmOutput, FieldType, JudgeInput
 from analysis.paper1.precheck import PreCheckFlags, compute_precheck_flags
+from engine.core.codebook import (
+    VALID_FIELD_TYPES,
+    compute_codebook_sha256,
+)
 from engine.core.database import ReviewDatabase
 
 logger = logging.getLogger(__name__)
@@ -40,7 +44,11 @@ CSV_VALUE_COLS = (
     ("sonnet_value", "anthropic_sonnet_4_6"),
 )
 
-_VALID_FIELD_TYPES = ("categorical", "numeric", "free_text")
+#: Relocated to engine/core/codebook.py so that engine code does not import
+#: from analysis/ to learn what a field type is. Aliased, not copied: the
+#: judge loader, the codebook loader and ReviewSpec.ExtractionField all
+#: validate against one tuple.
+_VALID_FIELD_TYPES = VALID_FIELD_TYPES
 
 
 class LoaderError(Exception):
@@ -56,9 +64,6 @@ class CodebookEntry:
     numeric_tolerance: float
 
 
-def compute_codebook_sha256(path: Path) -> str:
-    """SHA-256 hex digest of the codebook file bytes (no normalization)."""
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def _parse_field_type(raw: object, field_name: str) -> FieldType:

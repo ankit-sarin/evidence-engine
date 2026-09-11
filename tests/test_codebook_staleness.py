@@ -182,17 +182,65 @@ def _content(path):
 
 
 def test_013_lifts_not_null_preserving_every_row(db_copy):
+    """Asserts the OUTCOME, not the delta.
+
+    The delta depends on whether the live database has already been migrated —
+    it has, since MIGRATE-013 — so a test that asserted `rebuilt` held the two
+    constrained columns passed only until the migration it describes was
+    applied. Same lesson as 012's.
+    """
     before = _content(db_copy)
     result = MIG013.run_migration(str(db_copy))
     after = _content(db_copy)
 
-    assert set(result["rebuilt"]) == {
-        "extractions.extraction_schema_hash", "review_runs.extraction_hash"}
-    # cloud_extractions was NEVER constrained, so it is not rebuilt — a table
+    every = {f"{t}.{c}" for t, c in MIG013.TARGETS}
+    assert set(result["rebuilt"]) | set(result["already_nullable"]) == every
+    # cloud_extractions was NEVER constrained, so it is never rebuilt — a table
     # rebuild to remove a constraint it does not have is risk with no benefit.
-    assert result["already_nullable"] == ["cloud_extractions.extraction_schema_hash"]
+    assert "cloud_extractions.extraction_schema_hash" in result["already_nullable"]
+    assert "cloud_extractions.extraction_schema_hash" not in result["rebuilt"]
     assert before == after, "row content changed"
     assert before["extractions"][0] == 190
+
+
+def test_013_rebuilds_a_database_that_still_has_the_constraint(tmp_path):
+    """The delta assertion, on a database built WITH the NOT NULL.
+
+    Keeps the "it really does lift two" claim under test now that the live
+    database — and every copy of it — is already migrated.
+    """
+    p = tmp_path / "pre.db"
+    conn = sqlite3.connect(str(p))
+    conn.executescript("""
+        CREATE TABLE extractions (
+            id INTEGER PRIMARY KEY,
+            extraction_schema_hash TEXT NOT NULL,
+            extracted_data TEXT);
+        CREATE TABLE review_runs (
+            id INTEGER PRIMARY KEY,
+            extraction_hash TEXT NOT NULL,
+            started_at TEXT);
+        INSERT INTO extractions (extraction_schema_hash, extracted_data)
+            VALUES ('h', '{}');
+        INSERT INTO review_runs (extraction_hash, started_at) VALUES ('h', 'now');
+    """)
+    conn.commit()
+    conn.close()
+
+    result = MIG013.run_migration(str(p))
+    assert set(result["rebuilt"]) == {
+        "extractions.extraction_schema_hash", "review_runs.extraction_hash"}
+    assert result["absent"] == ["cloud_extractions"]
+
+    conn = sqlite3.connect(f"file:{p}?mode=ro", uri=True)
+    try:
+        for table, column in (("extractions", "extraction_schema_hash"),
+                              ("review_runs", "extraction_hash")):
+            info = {r[1]: r[3] for r in conn.execute(f"PRAGMA table_info({table})")}
+            assert info[column] == 0
+        assert conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0] == 1
+    finally:
+        conn.close()
 
 
 def test_013_leaves_the_columns_in_place(db_copy):

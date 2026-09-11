@@ -281,9 +281,9 @@ fields:
     ordered_values:
       - "In vivo (human)"
       - "In vivo (animal)"
+      - "Cadaver"
       - "Ex vivo"
       - "Phantom/Simulation"
-      - "Cadaver"
       - "Computational/Virtual"
       - "Mixed"
       - "NR"

@@ -4,7 +4,7 @@ import re
 from functools import lru_cache
 
 from engine.core.review_paths import load_spec_for
-from engine.core.review_spec import ExtractionField, ReviewSpec
+from engine.core.review_spec import ReviewSpec
 from engine.core.codebook import load_codebook_for
 
 # Fields that allow semicolon-separated multi-values (per extraction prompt).
@@ -76,7 +76,7 @@ def _normalize_null(raw: str | None) -> str | None:
     return raw
 
 
-def _normalize_categorical(raw: str, field_def: ExtractionField) -> str:
+def _normalize_categorical(raw: str, field_def) -> str:
     """Normalize a single categorical value against enum_values."""
     stripped = raw.strip()
     if not field_def.enum_values:

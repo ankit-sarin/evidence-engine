@@ -17,7 +17,7 @@ from pathlib import Path
 
 from engine.core.database import ReviewDatabase
 from engine.core.review_paths import load_spec_for
-from engine.core.review_spec import ExtractionField, ReviewSpec
+from engine.core.review_spec import ReviewSpec
 from engine.core.codebook import load_codebook_beside
 
 logger = logging.getLogger(__name__)

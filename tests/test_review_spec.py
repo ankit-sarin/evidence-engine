@@ -19,13 +19,7 @@ def test_load_surgical_autonomy_spec():
     assert isinstance(spec, ReviewSpec)
     assert "Autonomy" in spec.title
     assert len(spec.pico.outcomes) >= 3
-    assert len(spec.extraction_schema.fields) >= 15
 
-
-def test_spec_has_tier1_fields():
-    spec = load_review_spec(SPEC_PATH)
-    tier1 = spec.extraction_schema.fields_by_tier(1)
-    assert len(tier1) >= 5
 
 
 def test_spec_search_strategy():
@@ -41,7 +35,6 @@ def test_hash_deterministic():
     spec1 = load_review_spec(SPEC_PATH)
     spec2 = load_review_spec(SPEC_PATH)
     assert spec1.screening_hash() == spec2.screening_hash()
-    assert spec1.extraction_hash() == spec2.extraction_hash()
 
 
 def test_screening_hash_changes_on_modification():
@@ -53,22 +46,6 @@ def test_screening_hash_changes_on_modification():
     assert modified.screening_hash() != original_hash
 
 
-def test_extraction_hash_changes_on_modification():
-    spec = load_review_spec(SPEC_PATH)
-    original_hash = spec.extraction_hash()
-
-    modified = spec.model_copy(deep=True)
-    modified.extraction_schema.fields.pop()
-    assert modified.extraction_hash() != original_hash
-
-
-def test_screening_change_does_not_affect_extraction_hash():
-    spec = load_review_spec(SPEC_PATH)
-    original_extraction_hash = spec.extraction_hash()
-
-    modified = spec.model_copy(deep=True)
-    modified.screening_criteria.exclusion.append("Exclude all RCTs")
-    assert modified.extraction_hash() == original_extraction_hash
 
 
 # ── Validation Errors ────────────────────────────────────────────────
@@ -88,19 +65,6 @@ def test_malformed_yaml_invalid_date_range():
         ReviewSpec.model_validate(raw)
 
 
-def test_malformed_yaml_no_tier1_fields():
-    raw = yaml.safe_load(SPEC_PATH.read_text())
-    for field in raw["extraction_schema"]["fields"]:
-        field["tier"] = 2
-    with pytest.raises(Exception):
-        ReviewSpec.model_validate(raw)
-
-
-def test_malformed_yaml_invalid_tier():
-    raw = yaml.safe_load(SPEC_PATH.read_text())
-    raw["extraction_schema"]["fields"][0]["tier"] = 5
-    with pytest.raises(Exception):
-        ReviewSpec.model_validate(raw)
 
 
 # ── M11: User-friendly errors ────────────────────────────────────────
@@ -157,7 +121,8 @@ def test_every_spec_model_forbids_extra_keys():
         and issubclass(obj, BaseModel)
         and obj.__module__ == rs.__name__
     ]
-    assert len(models) >= 17, f"expected the full model set, found {len(models)}"
+    # 15 since SCHEMA-DERIVE-01 removed ExtractionSchema and ExtractionField.
+    assert len(models) >= 15, f"expected the full model set, found {len(models)}"
     lenient = [m.__name__ for m in models if m.model_config.get("extra") != "forbid"]
     assert lenient == [], f"models not forbidding extra keys: {lenient}"
 
@@ -179,8 +144,6 @@ NESTED_CASES = [
     (["screening_models"], "screening_models.bogus_key"),
     (["ft_screening_models"], "ft_screening_models.bogus_key"),
     (["screening_criteria"], "screening_criteria.bogus_key"),
-    (["extraction_schema"], "extraction_schema.bogus_key"),
-    (["extraction_schema", "fields", 0], "extraction_schema.fields.0.bogus_key"),
     (["specialty_scope"], "specialty_scope.bogus_key"),
     (["pdf_quality_check"], "pdf_quality_check.bogus_key"),
     (["extraction_models"], "extraction_models.bogus_key"),
@@ -217,15 +180,9 @@ def test_unknown_nested_key_rejected_and_named(tmp_path, path, expected):
 # SCREENING is still the value measured before SPEC-AUTH-01 — nothing has
 # touched that section.
 #
-# EXTRACTION moved once, deliberately, in CODEBOOK-AUTH-01 Phase 2 C9:
-#     d311eb20d1f8c9ea47ef8038a18924198348efce49037292723b2c408b9a6790  (before)
-#     fc40fe1340fdc49256efac9bebf23b21aa98692495cd9d599c8dd799e40b8307  (now)
-# The spec's `type` attribute adopted the codebook's vocabulary on nine of
-# twenty fields, so the hashed section genuinely changed and existing
-# extractions correctly read as stale against it. What did NOT change is the
-# prompt: it renders the CODEBOOK's type, so it is byte-identical across the
-# edit. Any further movement is a real protocol change or a defect.
-BASELINE_EXTRACTION_HASH = "fc40fe1340fdc49256efac9bebf23b21aa98692495cd9d599c8dd799e40b8307"
+# There is no extraction baseline any more: SCHEMA-DERIVE-01 removed the
+# section and its hash. An extraction's provenance is the codebook's hash,
+# pinned in test_codebook_staleness.py.
 BASELINE_SCREENING_HASH = "0d97b9d61161eeca6c81dd82f895bfb8c6f933b8e8ea23f79056a69f0cf98b90"
 
 
@@ -276,22 +233,42 @@ def test_missing_review_id_rejected(tmp_path):
     assert "review_id" in str(exc.value)
 
 
-def test_live_spec_hashes_equal_the_pre_review_id_baselines():
-    """T6 — guards I2 in perpetuity.
 
-    `review_runs.review_spec_hash` is the concatenation of these two, and
-    each hashes only its own section, so a top-level field added to the
-    spec cannot invalidate an existing extraction's provenance. If this
-    goes red, either a section's content changed (a real protocol change,
-    and staleness detection is doing its job) or the hashing was widened
-    to cover the whole spec — which would silently break every stored hash.
+
+# ── SCHEMA-DERIVE-01 T2: the section is gone ─────────────────────────
+
+
+def test_the_spec_declares_no_extraction_schema():
+    spec = load_review_spec(SPEC_PATH)
+    assert not hasattr(spec, "extraction_schema")
+    assert not hasattr(spec, "extraction_hash")
+
+
+def test_an_extraction_schema_key_is_now_rejected(tmp_path):
+    """Strictness turns the removal into a refusal.
+
+    A spec still carrying the section is not silently ignored — it names a
+    field authority that is no longer read, and running it would extract
+    against the codebook while its author believed otherwise.
     """
-    spec = load_review_spec(SPEC_PATH)
-    assert spec.extraction_hash() == BASELINE_EXTRACTION_HASH
-    assert spec.screening_hash() == BASELINE_SCREENING_HASH
+    raw = yaml.safe_load(SPEC_PATH.read_text())
+    raw["extraction_schema"] = {"fields": [
+        {"name": "x", "description": "d", "type": "free_text", "tier": 1}]}
+    p = tmp_path / "spec.yaml"
+    p.write_text(yaml.dump(raw))
+    with pytest.raises(ReviewSpecError) as exc:
+        load_review_spec(p)
+    assert "extraction_schema" in str(exc.value)
+    assert "unknown key" in str(exc.value)
 
 
-def test_review_id_is_in_neither_hashed_section():
-    spec = load_review_spec(SPEC_PATH)
-    assert "review_id" not in spec.screening_criteria.model_dump()
-    assert "review_id" not in spec.extraction_schema.model_dump()
+def test_the_models_are_gone():
+    import engine.core.review_spec as rs
+
+    assert not hasattr(rs, "ExtractionSchema")
+    assert not hasattr(rs, "ExtractionField")
+
+
+def test_screening_hash_is_unmoved():
+    """T2 — the section's removal must not disturb the other hash."""
+    assert load_review_spec(SPEC_PATH).screening_hash() == BASELINE_SCREENING_HASH

@@ -22,6 +22,7 @@ from engine.agents.auditor import run_audit
 from engine.agents.extractor import run_extraction
 from engine.core.database import ReviewDatabase
 from engine.core.review_paths import load_spec_for, spec_path_for
+from engine.core.codebook import load_codebook_beside
 
 logging.basicConfig(
     level=logging.INFO,
@@ -42,7 +43,7 @@ def main():
 
     spec = load_spec_for(review_name, args.spec)
     db = ReviewDatabase(review_name, data_root=Path("data"))
-    schema_hash = spec.extraction_hash()
+    schema_hash = load_codebook_beside(db.db_path).semantic_hash
 
     # ── Step 1: Identify papers to re-extract ──
     ai_complete = db.get_papers_by_status("AI_AUDIT_COMPLETE")

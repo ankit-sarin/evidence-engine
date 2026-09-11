@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `9de8249602faa83b39d78f7675cdb56e5ea28091` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `dfde7338e58fe8ef80889dde951e6fd3e84174ac` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -146,7 +146,7 @@ Two figures deliberately have no baseline row. **entry points** (99) counts anyt
 | `scripts/prepare_concordance_pdfs.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
 | `scripts/q8_validation.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 142 | main:spec_first |
 | `scripts/q8_validation_fast.py` | `--review` required; `--spec`=None; `paper_ids`=dynamic: [370, 432] | load_spec_for, spec_path_for | 97 | main:spec_first |
-| `scripts/reextract_all.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 44 | main:spec_first |
+| `scripts/reextract_all.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 45 | main:spec_first |
 | `scripts/reextract_failed.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 43 | main:spec_first |
 | `scripts/reparse_cloud_spans.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/rescreen_original_251.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
@@ -166,7 +166,7 @@ Two figures deliberately have no baseline row. **entry points** (99) counts anyt
 |---|---:|---|---|
 | `engine/adjudication/categorizer.py` | 45 | `safe_load` | `f` |
 | `engine/core/codebook.py` | 418 | `safe_load` | `text` |
-| `engine/core/review_spec.py` | 496 | `safe_load` | `f` |
+| `engine/core/review_spec.py` | 445 | `safe_load` | `f` |
 
 ## Path construction in code
 

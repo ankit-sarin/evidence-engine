@@ -16,6 +16,9 @@ from engine.cloud.schema import init_cloud_tables
 from engine.cloud.base import CloudExtractorBase
 from engine.cloud.openai_extractor import OpenAIExtractor, COST_INPUT_PER_M, COST_OUTPUT_PER_M
 from engine.cloud.anthropic_extractor import AnthropicExtractor
+from engine.core.codebook import load_codebook_for
+
+CBK = load_codebook_for("surgical_autonomy")
 
 BACKUP_DB = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy" / "review_backup_v1_schema.db"
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
@@ -96,13 +99,13 @@ def _complete_fields():
     spec = load_review_spec(str(SPEC_PATH))
     out = []
     for tier in (1, 2, 3, 4):
-        for f in spec.extraction_schema.fields_by_tier(tier):
+        for f in CBK.fields_by_tier(tier):
             out.append({
-                "field_name": f.name,
-                "value": "Original Research" if f.name == "study_type" else "NR",
-                "source_snippet": f"Snippet for {f.name}.",
+                "field_name": f["name"],
+                "value": "Original Research" if f["name"] == "study_type" else "NR",
+                "source_snippet": f"Snippet for {f['name']}.",
                 "confidence": 0.9,
-                "tier": f.tier,
+                "tier": f["tier"],
             })
     return out
 

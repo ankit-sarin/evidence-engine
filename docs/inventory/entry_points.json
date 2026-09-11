@@ -4549,13 +4549,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 375,
+            "line": 322,
             "role": "help_text",
             "text": "The review's identity, and the single one. The spec file is review_specs/<review_id>.yaml and the data root is data/<review_id>; neither is passed independen..."
           },
           {
             "kind": "f-string",
-            "line": 499,
+            "line": 448,
             "role": "message",
             "text": "f'Review spec not found at {path}. Expected a YAML file (e.g., review_specs/<review_id>.yaml).'"
           }
@@ -4567,7 +4567,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 496,
+            "line": 445,
             "scope": "load_review_spec",
             "target": "f"
           }
@@ -6533,7 +6533,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 36,
+            "line": 37,
             "names": [
               "--review"
             ],
@@ -6542,7 +6542,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 37,
+            "line": 38,
             "names": [
               "--spec"
             ],
@@ -6558,7 +6558,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 37,
+            "line": 38,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -6566,7 +6566,7 @@
         "review_database": [
           {
             "data_root_passed": true,
-            "line": 44,
+            "line": 45,
             "scope": "main"
           }
         ],
@@ -6574,12 +6574,12 @@
         "spec_access": [
           {
             "func": "spec_path_for",
-            "line": 41,
+            "line": 42,
             "scope": "main"
           },
           {
             "func": "load_spec_for",
-            "line": 43,
+            "line": 44,
             "scope": "main"
           }
         ],
@@ -7457,7 +7457,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "9de8249602faa83b39d78f7675cdb56e5ea28091",
+    "generated_at_commit": "dfde7338e58fe8ef80889dde951e6fd3e84174ac",
     "scan_roots": [
       "engine",
       "scripts",

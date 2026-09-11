@@ -14,6 +14,7 @@ from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.exporters.prisma import generate_prisma_flow
 from engine.search.models import Citation
+from engine.core.codebook import load_codebook_beside
 
 
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
@@ -52,7 +53,7 @@ def _advance_to_ai_audit(db, pid, extracted_data, spec):
     db.update_status(pid, "EXTRACTED")
 
     ext_id = db.add_extraction(
-        pid, spec.extraction_hash(), extracted_data,
+        pid, load_codebook_beside(db.db_path).semantic_hash, extracted_data,
         "reasoning trace", "deepseek-r1:32b",
     )
 
@@ -328,8 +329,8 @@ class TestLowYieldSchema:
         tmp_db.update_status(pid, "EXTRACTED")
 
         ext_id = tmp_db.add_extraction(
-            pid, spec.extraction_hash(),
-            {"study_type": "RCT"}, "trace", "model",
+            pid, None, {"study_type": "RCT"}, "trace", "model",
+            codebook_hash=load_codebook_beside(tmp_db.db_path).semantic_hash,
         )
         row = tmp_db._conn.execute(
             "SELECT low_yield FROM extractions WHERE id = ?", (ext_id,)

@@ -21,6 +21,7 @@ from engine.exporters.evidence_table import (
 from engine.exporters.methods_section import generate_methods_section, export_methods_md
 from engine.exporters.prisma import generate_prisma_flow, export_prisma_csv
 from engine.search.models import Citation
+from engine.core.codebook import load_codebook_beside
 
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
@@ -86,7 +87,7 @@ def populated_db(tmp_path, spec):
 
     # Walk 5 screened-in papers to EXTRACTED/AI_AUDIT_COMPLETE
     screened_in = db.get_papers_by_status("ABSTRACT_SCREENED_IN")
-    schema_hash = spec.extraction_hash()
+    schema_hash = load_codebook_beside(db.db_path).semantic_hash
 
     for j, p in enumerate(screened_in[:5]):
         pid = p["id"]
@@ -352,7 +353,7 @@ def db_with_empty_extractions(tmp_path, spec):
     ]
     db.add_papers(cits)
     papers = db.get_papers_by_status("INGESTED")
-    schema_hash = spec.extraction_hash()
+    schema_hash = load_codebook_beside(db.db_path).semantic_hash
 
     for p in papers:
         db.add_screening_decision(p["id"], 1, "include", "Relevant", "qwen3:8b")
@@ -487,7 +488,7 @@ def test_methods_multi_model_ft_screening(tmp_path, spec):
         )
         db.update_status(p["id"], "FT_ELIGIBLE")
 
-    schema_hash = spec.extraction_hash()
+    schema_hash = load_codebook_beside(db.db_path).semantic_hash
     for p in papers:
         pid = p["id"]
         db.update_status(pid, "EXTRACTED")

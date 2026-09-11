@@ -27,59 +27,6 @@ class _SpecModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
-# ── Extraction Schema ────────────────────────────────────────────────
-
-
-class ExtractionField(_SpecModel):
-    """Single field to extract from a study's full text."""
-
-    name: str
-    description: str
-    type: str = Field(
-        description=(
-            "Field type, from the codebook's vocabulary. The two files carry "
-            "this attribute independently and disagreed on nine of twenty "
-            "fields before CODEBOOK-AUTH-01 — eight a spelling split "
-            "(text/free_text) and one substantive: sample_size was `text` here "
-            "and `numeric` in the codebook. The prompt renders the CODEBOOK's "
-            "value, so the codebook was right and this file was the copy that "
-            "was wrong."
-        ),
-    )
-
-    @field_validator("type")
-    @classmethod
-    def known_field_type(cls, v: str) -> str:
-        from engine.core.codebook import VALID_FIELD_TYPES
-
-        if v not in VALID_FIELD_TYPES:
-            raise ValueError(
-                f"unknown field type {v!r}; expected one of "
-                f"{', '.join(VALID_FIELD_TYPES)}"
-            )
-        return v
-    tier: int = Field(ge=1, le=4, description="1=explicit, 2=interpretive, 3=numeric, 4=judgment")
-    enum_values: Optional[list[str]] = Field(
-        default=None, description="Allowed values when type is 'enum'"
-    )
-
-
-class ExtractionSchema(_SpecModel):
-    """Full extraction schema organized by tier."""
-
-    fields: list[ExtractionField]
-
-    @field_validator("fields")
-    @classmethod
-    def at_least_one_tier1(cls, v: list[ExtractionField]) -> list[ExtractionField]:
-        if not any(f.tier == 1 for f in v):
-            raise ValueError("Extraction schema must have at least one tier-1 field")
-        return v
-
-    def fields_by_tier(self, tier: int) -> list[ExtractionField]:
-        return [f for f in self.fields if f.tier == tier]
-
-
 # ── PICO ─────────────────────────────────────────────────────────────
 
 
@@ -390,7 +337,6 @@ class ReviewSpec(_SpecModel):
     ft_screening_models: FTScreeningModels = Field(default_factory=FTScreeningModels)
     extraction_models: ExtractionModels = Field(default_factory=ExtractionModels)
     screening_criteria: ScreeningCriteria
-    extraction_schema: ExtractionSchema
     specialty_scope: Optional[SpecialtyScope] = Field(
         default=None,
         description="Surgical specialty inclusion/exclusion scope. If absent, no specialty filtering.",
@@ -440,13 +386,16 @@ class ReviewSpec(_SpecModel):
 
     # ── Protocol hashing ─────────────────────────────────────────
 
+    #: There is no `extraction_hash`. The extraction schema left this file in
+    #: SCHEMA-DERIVE-01: the codebook is the field authority and always was the
+    #: one the prompt was built from, so an extraction's provenance is the
+    #: codebook's hash (`extractions.codebook_hash`), not a hash of a parallel
+    #: copy that could — and did — disagree with it.
+
     def screening_hash(self) -> str:
         """SHA-256 of the screening criteria section (canonical JSON)."""
         return _canonical_hash(self.screening_criteria.model_dump())
 
-    def extraction_hash(self) -> str:
-        """SHA-256 of the extraction schema section (canonical JSON)."""
-        return _canonical_hash(self.extraction_schema.model_dump())
 
 
 # ── Helpers ──────────────────────────────────────────────────────────

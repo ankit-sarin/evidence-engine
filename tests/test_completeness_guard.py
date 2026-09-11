@@ -24,6 +24,10 @@ from engine.core.completeness import (
 from engine.core.extraction_telemetry import read_calls, record_call, telemetry_path
 from engine.core.review_spec import load_review_spec
 
+from engine.core.codebook import load_codebook_for
+
+CB = load_codebook_for("surgical_autonomy")
+
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 CODEBOOK = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
 
@@ -64,7 +68,7 @@ def _complete(expected):
 
 
 def test_expected_set_is_derived_not_hardcoded(spec, expected):
-    n_spec = sum(len(spec.extraction_schema.fields_by_tier(t)) for t in (1, 2, 3, 4))
+    n_spec = sum(len(CB.fields_by_tier(t)) for t in (1, 2, 3, 4))
     assert len(expected) == n_spec
     assert len(set(expected)) == len(expected), "no duplicates"
     assert "study_type" in expected and "clinical_readiness_assessment" in expected
@@ -82,7 +86,7 @@ def test_expected_set_matches_the_codebook(spec):
 
 def test_expected_set_is_in_prompt_order(spec, expected):
     """Tier 1 fields first — the same traversal build_extraction_prompt uses."""
-    tier1 = [f.name for f in spec.extraction_schema.fields_by_tier(1)]
+    tier1 = [f["name"] for f in CB.fields_by_tier(1)]
     assert list(expected[:len(tier1)]) == tier1
 
 

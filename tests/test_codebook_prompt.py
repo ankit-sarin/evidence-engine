@@ -9,6 +9,9 @@ import pytest
 
 from engine.agents.extractor import build_extraction_prompt
 from engine.core.review_spec import load_review_spec
+from engine.core.codebook import load_codebook_for
+
+CBK = load_codebook_for("surgical_autonomy")
 
 
 @pytest.fixture
@@ -37,8 +40,8 @@ class TestCodebookFieldCoverage:
             )
 
     def test_all_spec_fields_in_prompt(self, spec, prompt):
-        for field in spec.extraction_schema.fields:
-            assert f"**{field.name}**" in prompt
+        for field in CBK.fields:
+            assert f"**{field['name']}**" in prompt
 
 
 class TestCRACodebookContent:

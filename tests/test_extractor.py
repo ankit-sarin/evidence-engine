@@ -25,6 +25,10 @@ from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
+from engine.core.codebook import load_codebook_beside
+from engine.core.codebook import load_codebook_for
+
+CBK = load_codebook_for("surgical_autonomy")
 
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
@@ -55,9 +59,9 @@ def spec():
 
 def test_build_prompt_includes_all_fields(spec):
     prompt = build_extraction_prompt("Some paper text here.", spec)
-    for field in spec.extraction_schema.fields:
+    for field in CBK.fields:
         # Field name must appear as bold header in the prompt
-        assert f"**{field.name}**" in prompt
+        assert f"**{field['name']}**" in prompt
 
 
 def test_build_prompt_includes_tiers(spec):
@@ -176,12 +180,12 @@ def _complete_pass2_fields(spec):
     """
     fields = []
     for tier in (1, 2, 3, 4):
-        for f in spec.extraction_schema.fields_by_tier(tier):
+        for f in CBK.fields_by_tier(tier):
             fields.append(
                 EvidenceSpan(
-                    field_name=f.name, value="NR",
-                    source_snippet=f"Snippet for {f.name}.",
-                    confidence=0.9, tier=f.tier,
+                    field_name=f["name"], value="NR",
+                    source_snippet=f"Snippet for {f['name']}.",
+                    confidence=0.9, tier=f["tier"],
                 )
             )
     return fields
@@ -252,7 +256,7 @@ def test_full_two_pass_mocked(tmp_path, spec):
 
     paper_text = "This RCT used the STAR robot for autonomous suturing..."
 
-    n_expected = sum(len(spec.extraction_schema.fields_by_tier(t)) for t in (1, 2, 3, 4))
+    n_expected = len(CBK.fields)
     with patch("engine.agents.extractor.ollama_chat") as mock_chat:
         mock_chat.side_effect = [_mock_pass1_response(), _mock_pass2_complete(spec)]
         result = extract_paper(pid, paper_text, spec, db)
@@ -554,9 +558,9 @@ class TestProactiveRestart:
 
     def _make_fake_extract(self, spec):
         """Return a fake extract_paper function that stores results in DB."""
-        schema_hash = spec.extraction_hash()
 
         def _fake(paper_id, paper_text, spec_arg, db, **kwargs):
+            schema_hash = load_codebook_beside(db.db_path).semantic_hash
             from engine.agents.models import ExtractionResult, EvidenceSpan
             result = ExtractionResult(
                 paper_id=paper_id,
@@ -644,9 +648,8 @@ class TestRestartOllamaGraceful:
         return db, spec
 
     def _make_fake_extract(self, spec):
-        schema_hash = spec.extraction_hash()
-
         def _fake(paper_id, paper_text, spec_arg, db, **kwargs):
+            schema_hash = load_codebook_beside(db.db_path).semantic_hash
             from engine.agents.models import ExtractionResult, EvidenceSpan
             result = ExtractionResult(
                 paper_id=paper_id,

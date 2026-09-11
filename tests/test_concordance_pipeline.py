@@ -306,13 +306,13 @@ class TestCheckSchemaParity:
             CREATE TABLE extractions (
                 id INTEGER PRIMARY KEY,
                 paper_id INTEGER,
-                extraction_schema_hash TEXT
+                codebook_hash TEXT
             );
             CREATE TABLE cloud_extractions (
                 id INTEGER PRIMARY KEY,
                 paper_id INTEGER,
                 arm TEXT,
-                extraction_schema_hash TEXT
+                codebook_hash TEXT
             );
         """)
         return db_path, conn
@@ -320,10 +320,10 @@ class TestCheckSchemaParity:
     def test_matching_hashes_no_warning(self, tmp_path, caplog):
         db_path, conn = self._make_db(tmp_path)
         conn.execute(
-            "INSERT INTO extractions (paper_id, extraction_schema_hash) VALUES (1, 'abc123')"
+            "INSERT INTO extractions (paper_id, codebook_hash) VALUES (1, 'abc123')"
         )
         conn.execute(
-            "INSERT INTO cloud_extractions (paper_id, arm, extraction_schema_hash) VALUES (1, 'openai', 'abc123')"
+            "INSERT INTO cloud_extractions (paper_id, arm, codebook_hash) VALUES (1, 'openai', 'abc123')"
         )
         conn.commit()
         conn.close()
@@ -338,10 +338,10 @@ class TestCheckSchemaParity:
     def test_mismatched_hashes_warns(self, tmp_path, caplog):
         db_path, conn = self._make_db(tmp_path)
         conn.execute(
-            "INSERT INTO extractions (paper_id, extraction_schema_hash) VALUES (1, 'hash_local')"
+            "INSERT INTO extractions (paper_id, codebook_hash) VALUES (1, 'hash_local')"
         )
         conn.execute(
-            "INSERT INTO cloud_extractions (paper_id, arm, extraction_schema_hash) VALUES (1, 'anthropic', 'hash_cloud')"
+            "INSERT INTO cloud_extractions (paper_id, arm, codebook_hash) VALUES (1, 'anthropic', 'hash_cloud')"
         )
         conn.commit()
         conn.close()

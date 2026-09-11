@@ -404,6 +404,14 @@ class ReviewDatabase:
         )
         mod_012.run_migration(str(self.db_path))
 
+        # Migration 013: extraction_schema_hash / extraction_hash lose NOT NULL
+        # (SCHEMA-DERIVE-01). The columns stay as the historical record; the
+        # constraint would require a value nothing computes any more.
+        mod_013 = importlib.import_module(
+            "engine.migrations.013_drop_schema_hash_not_null"
+        )
+        mod_013.run_migration(str(self.db_path))
+
     # ── Papers ───────────────────────────────────────────────
 
     def add_papers(self, citations: list[Citation]) -> int:
@@ -773,17 +781,20 @@ class ReviewDatabase:
     def add_extraction(
         self,
         paper_id: int,
-        schema_hash: str,
+        schema_hash: str | None,
         extracted_data: dict,
         reasoning_trace: str,
         model: str,
+        codebook_hash: str | None = None,
+        codebook_sha256: str | None = None,
     ) -> int:
         """Record an extraction. Returns the extraction id."""
         cur = self._conn.execute(
             """INSERT INTO extractions
                (paper_id, extraction_schema_hash, extracted_data,
-                reasoning_trace, model, extracted_at)
-               VALUES (?, ?, ?, ?, ?, ?)""",
+                reasoning_trace, model, extracted_at,
+                codebook_hash, codebook_sha256)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 paper_id,
                 schema_hash,
@@ -791,6 +802,8 @@ class ReviewDatabase:
                 reasoning_trace,
                 model,
                 _now(),
+                codebook_hash,
+                codebook_sha256,
             ),
         )
         self._conn.commit()
@@ -799,7 +812,7 @@ class ReviewDatabase:
     def add_extraction_atomic(
         self,
         paper_id: int,
-        schema_hash: str,
+        schema_hash: str | None,
         extracted_data: dict,
         reasoning_trace: str,
         model: str,
@@ -859,12 +872,18 @@ class ReviewDatabase:
             raise
 
     def get_stale_extractions(self, current_hash: str) -> list[dict]:
-        """Return papers whose latest extraction hash differs from current."""
+        """Papers whose latest extraction was made under a different codebook.
+
+        NULL counts as stale (SCHEMA-DERIVE-01 R3). Every extraction predating
+        migration 012 has no codebook_hash, and "nobody recorded it" is not
+        "it matches" — a bare `!= ?` would silently treat all 190 of them as
+        current, which is the opposite of the truth.
+        """
         rows = self._conn.execute(
-            """SELECT p.*, e.extraction_schema_hash
+            """SELECT p.*, e.codebook_hash
                FROM papers p
                JOIN extractions e ON e.paper_id = p.id
-               WHERE e.extraction_schema_hash != ?
+               WHERE (e.codebook_hash IS NULL OR e.codebook_hash != ?)
                AND e.id = (
                    SELECT MAX(e2.id) FROM extractions e2
                    WHERE e2.paper_id = p.id

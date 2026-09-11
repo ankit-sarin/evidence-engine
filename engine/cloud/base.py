@@ -33,7 +33,6 @@ class CloudExtractorBase:
     def __init__(self, db_path: str, review_spec_path: str):
         self.db_path = db_path
         self.spec = load_review_spec(review_spec_path)
-        self.schema_hash = self.spec.extraction_hash()
         self._review_dir = Path(db_path).parent
 
         # The prompt is built from the codebook, so its content is recorded
@@ -276,15 +275,15 @@ class CloudExtractorBase:
                 """INSERT INTO cloud_extractions
                    (paper_id, arm, model_string, extracted_data, reasoning_trace,
                     prompt_text, input_tokens, output_tokens, reasoning_tokens,
-                    cost_usd, extraction_schema_hash, extracted_at,
+                    cost_usd, extracted_at,
                     codebook_hash, codebook_sha256)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     paper_id, arm, model_string,
                     json.dumps(extracted_data),
                     reasoning_trace, prompt_text,
                     input_tokens, output_tokens, reasoning_tokens,
-                    cost_usd, self.schema_hash, now,
+                    cost_usd, now,
                     self.codebook_hash, self.codebook_sha256,
                 ),
             )

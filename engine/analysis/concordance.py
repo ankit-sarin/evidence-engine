@@ -156,10 +156,17 @@ def align_arms(
 
 
 def check_schema_parity(db_path: str, arms: list[str]) -> dict[str, set[str]]:
-    """Verify all arms used the same extraction schema hash.
+    """Verify all arms were extracted under the same codebook.
 
-    Queries distinct extraction_schema_hash values for each arm from the
-    local ``extractions`` and ``cloud_extractions`` tables.
+    Queries distinct ``codebook_hash`` values for each arm from the local
+    ``extractions`` and ``cloud_extractions`` tables. It used to compare
+    ``extraction_schema_hash``, a hash of a spec section that no longer
+    exists; the codebook is what the prompt was built from
+    (SCHEMA-DERIVE-01).
+
+    A NULL is reported as the string ``"none-recorded"`` rather than dropped,
+    so an arm extracted before migration 012 shows up as differing instead of
+    silently agreeing with everything.
 
     Returns ``{arm: {hash, ...}}`` mapping.  Logs a WARNING if hashes differ
     across arms, but does not block execution.
@@ -172,14 +179,14 @@ def check_schema_parity(db_path: str, arms: list[str]) -> dict[str, set[str]]:
     for arm in arms:
         if arm == "local":
             rows = conn.execute(
-                "SELECT DISTINCT extraction_schema_hash FROM extractions"
+                "SELECT DISTINCT codebook_hash FROM extractions"
             ).fetchall()
         else:
             rows = conn.execute(
-                "SELECT DISTINCT extraction_schema_hash FROM cloud_extractions WHERE arm = ?",
+                "SELECT DISTINCT codebook_hash FROM cloud_extractions WHERE arm = ?",
                 (arm,),
             ).fetchall()
-        hashes = {r[0] for r in rows if r[0]}
+        hashes = {r[0] if r[0] else "none-recorded" for r in rows}
         arm_hashes[arm] = hashes
 
     conn.close()

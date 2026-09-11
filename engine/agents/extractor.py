@@ -16,7 +16,7 @@ from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResul
 from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.codebook import (
-    CODEBOOK_FILENAME, load_codebook, load_codebook_for,
+    CODEBOOK_FILENAME, load_codebook, load_codebook_beside, load_codebook_for,
 )
 from engine.core.review_spec import ReviewSpec
 from engine.core.completeness import (
@@ -275,9 +275,20 @@ def extract_pass2_structured(
     spec: ReviewSpec,
     paper_id: int,
     think: bool = False,
+    codebook_hash: str | None = None,
 ) -> ExtractionResult:
-    """Run Pass 2: use reasoning trace as context, force structured JSON output."""
-    schema_hash = spec.extraction_hash()
+    """Run Pass 2: use reasoning trace as context, force structured JSON output.
+
+    `codebook_hash` is the provenance stamp for the result. A caller that
+    already holds the codebook passes its hash — the elicitation pipeline does,
+    and it must, because its review lives under a temp data root that
+    `spec.review_id` cannot find. Callers that do not hold one fall back to the
+    review's own codebook.
+    """
+    schema_hash = (
+        codebook_hash if codebook_hash is not None
+        else load_codebook_for(spec.review_id).semantic_hash
+    )
 
     response = ollama_chat(
         model=MODEL,
@@ -322,7 +333,7 @@ def extract_pass2_structured(
         fields=output.fields,
         reasoning_trace=reasoning_trace,
         model=MODEL,
-        extraction_schema_hash=schema_hash,
+        codebook_hash=schema_hash,
         extracted_at=datetime.now(timezone.utc),
     )
 
@@ -465,7 +476,14 @@ def extract_paper(
             attempt=attempt,
         )
 
-    prompt = build_extraction_prompt(paper_text, spec)
+    # The review root is where this review's database is, so a run under a
+    # data_root override reads its own codebook (MIGRATE R1). Loaded once here
+    # and used for the prompt's provenance stamp, the absence tokens and the
+    # stored hashes — one read, one answer.
+    cb_path = Path(db.db_path).parent / CODEBOOK_FILENAME
+    cb = load_codebook(cb_path)
+
+    prompt = build_extraction_prompt(paper_text, spec, cb_path)
 
     # Think policy is declared per pass in the Review Spec
     # (`extraction_models.pass1_think` / `.pass2_think`) and passed explicitly on
@@ -479,7 +497,8 @@ def extract_paper(
 
     # Pass 2: structured output
     result = extract_pass2_structured(prompt, reasoning_trace, spec, paper_id,
-                                      think=pass2_think)
+                                      think=pass2_think,
+                                      codebook_hash=cb.semantic_hash)
 
     # Validate snippets and retry invalid ones before storing
     validated_fields = _validate_and_retry_snippets(
@@ -490,7 +509,7 @@ def extract_paper(
         fields=validated_fields,
         reasoning_trace=result.reasoning_trace,
         model=result.model,
-        extraction_schema_hash=result.extraction_schema_hash,
+        codebook_hash=result.codebook_hash,
         extracted_at=result.extracted_at,
     )
 
@@ -517,9 +536,6 @@ def extract_paper(
     # The guard sits here rather than in ReviewDatabase.add_extraction_atomic
     # because the database layer is generic — it serves migrations and tests and
     # has no ReviewSpec to derive an expected field set from.
-    # The review root is where this review's database is (a data_root override
-    # must not send the codebook lookup somewhere else).
-    cb_path = Path(db.db_path).parent / CODEBOOK_FILENAME
     enforce_completeness(
         span_dicts,
         expected_field_names(spec, cb_path),
@@ -539,13 +555,15 @@ def extract_paper(
         escape_token=escape, absence_sentinels=sentinels,
     )
 
-    # The schema hash comes from the SPEC; the prompt came from the CODEBOOK.
-    # Recording only the first meant a codebook edit moved nothing in
+    # The codebook the prompt was built from travels with the extraction.
+    # Recording only the spec's hash meant a codebook edit moved nothing in
     # provenance and staleness detection could not see it (CODEBOOK-AUTH-01).
-    cb = load_codebook(cb_path)
     ext_id = db.add_extraction_atomic(
         paper_id=paper_id,
-        schema_hash=result.extraction_schema_hash,
+        # extraction_schema_hash is no longer written: it hashed a spec section
+        # that no longer exists. The column stays as the historical record of
+        # the runs made while it was the authority (SCHEMA-DERIVE-01).
+        schema_hash=None,
         extracted_data=extracted_data,
         reasoning_trace=reasoning_trace,
         model=MODEL,
@@ -766,7 +784,9 @@ def _run_extraction_unlocked(
     parsed_papers = db.get_papers_by_status("PARSED")
     papers = ft_papers + parsed_papers
     total = len(papers)
-    schema_hash = spec.extraction_hash()
+    # The codebook beside THIS database — a run under a data_root
+    # override must compare against its own review (MIGRATE R1).
+    schema_hash = load_codebook_beside(db.db_path).semantic_hash
     logger.info("Starting extraction on %d papers (schema hash: %s)", total, schema_hash[:12])
 
     # Pre-flight: verify extraction model is loaded and responsive
@@ -808,7 +828,7 @@ def _run_extraction_unlocked(
 
         # Check staleness: skip if already extracted with current schema hash
         existing = db._conn.execute(
-            "SELECT id FROM extractions WHERE paper_id = ? AND extraction_schema_hash = ?",
+            "SELECT id FROM extractions WHERE paper_id = ? AND codebook_hash = ?",
             (pid, schema_hash),
         ).fetchone()
         if existing:

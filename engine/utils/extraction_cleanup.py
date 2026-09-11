@@ -12,8 +12,7 @@ import sys
 from pathlib import Path
 
 from engine.core.database import ReviewDatabase
-from engine.core.review_paths import load_spec_for
-from engine.core.review_spec import ReviewSpecError
+from engine.core.codebook import CodebookError, load_codebook_for
 from engine.utils.db_backup import auto_backup
 
 logger = logging.getLogger(__name__)
@@ -29,13 +28,18 @@ _RESETTABLE_STATUSES = {"EXTRACTED", "AI_AUDIT_COMPLETE"}
 # would have picked whichever sorted first.
 
 
-def get_current_schema_hash(review_name: str, spec_path: str | Path | None = None) -> str:
-    """Compute the current extraction schema hash for a review.
+def get_current_schema_hash(
+    review_name: str, codebook_path: str | Path | None = None
+) -> str:
+    """The current CODEBOOK hash for a review — what staleness compares against.
 
-    If spec_path is provided, loads that file — and refuses it if it names
-    a different review. Otherwise the path is derived from the review id.
+    It used to return `spec.extraction_hash()`, a hash of a spec section that
+    no longer exists. The prompt is built from the codebook, so the codebook's
+    semantic hash is what an extraction is stale against (SCHEMA-DERIVE-01).
+
+    An override path is refused if it names a different review.
     """
-    return load_spec_for(review_name, spec_path).extraction_hash()
+    return load_codebook_for(review_name, codebook_path).semantic_hash
 
 
 def check_stale_extractions(db: ReviewDatabase, current_hash: str) -> int:
@@ -46,7 +50,7 @@ def check_stale_extractions(db: ReviewDatabase, current_hash: str) -> int:
     """
     row = db._conn.execute(
         """SELECT COUNT(DISTINCT paper_id) FROM extractions
-           WHERE extraction_schema_hash != ?""",
+           WHERE (codebook_hash IS NULL OR codebook_hash != ?)""",
         (current_hash,),
     ).fetchone()
     return row[0]
@@ -73,17 +77,17 @@ def cleanup_stale_extractions(
     if schema_hash:
         # Find all extractions NOT matching the target hash
         stale = conn.execute(
-            """SELECT e.id AS ext_id, e.paper_id, e.extraction_schema_hash,
+            """SELECT e.id AS ext_id, e.paper_id, e.codebook_hash,
                       (SELECT COUNT(*) FROM evidence_spans WHERE extraction_id = e.id) AS span_count
                FROM extractions e
-               WHERE e.extraction_schema_hash != ?
+               WHERE (e.codebook_hash IS NULL OR e.codebook_hash != ?)
                ORDER BY e.paper_id""",
             (schema_hash,),
         ).fetchall()
     else:
         # Dedup: for papers with multiple extractions, mark all but the latest
         stale = conn.execute(
-            """SELECT e.id AS ext_id, e.paper_id, e.extraction_schema_hash,
+            """SELECT e.id AS ext_id, e.paper_id, e.codebook_hash,
                       (SELECT COUNT(*) FROM evidence_spans WHERE extraction_id = e.id) AS span_count
                FROM extractions e
                WHERE e.id NOT IN (
@@ -100,13 +104,13 @@ def cleanup_stale_extractions(
         details.append({
             "paper_id": row["paper_id"],
             "extraction_id": row["ext_id"],
-            "schema_hash": row["extraction_schema_hash"],
+            "codebook_hash": row["codebook_hash"],
             "span_count": row["span_count"],
         })
         logger.info(
             "Paper %d: extraction %d (hash=%s, %d spans) — %s",
             row["paper_id"], row["ext_id"],
-            row["extraction_schema_hash"][:12],
+            (row["codebook_hash"] or "none-recorded")[:12],
             row["span_count"],
             "would delete" if dry_run else "deleting",
         )
@@ -216,7 +220,10 @@ def main():
         help="Keep only extractions matching this schema hash (delete all others)",
     )
     parser.add_argument(
-        "--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.",
+        "--codebook", default=None,
+        help=("Override the codebook path. Defaults to "
+              "data/<review>/extraction_codebook.yaml; an override must "
+              "declare the same review."),
     )
     parser.add_argument(
         "--confirm", action="store_true",
@@ -224,15 +231,17 @@ def main():
     )
     args = parser.parse_args()
 
-    # Resolve schema hash: explicit > --spec > derived from the review id
+    # Resolve the current hash: explicit > --codebook > derived from the review
+    # id. It is the CODEBOOK's hash now: the spec section it used to come from
+    # no longer exists (SCHEMA-DERIVE-01), so this entry point takes no --spec.
     schema_hash = args.keep_schema
     if not schema_hash:
         try:
-            schema_hash = get_current_schema_hash(args.review, spec_path=args.spec)
-            logger.info("Current extraction schema hash: %s", schema_hash[:12])
-        except ReviewSpecError as e:
+            schema_hash = get_current_schema_hash(args.review, args.codebook)
+            logger.info("Current codebook hash: %s", schema_hash[:12])
+        except CodebookError as e:
             logger.error(str(e))
-            logger.error("Provide --spec or --keep-schema explicitly.")
+            logger.error("Provide --codebook or --keep-schema explicitly.")
             sys.exit(1)
 
     db = ReviewDatabase(args.review)

@@ -166,7 +166,9 @@ SPEC_BEARING_ENTRY_POINTS = [
     "engine/acquisition/pdf_quality_check.py",
     "engine/agents/ft_screener.py",
     "engine/analysis/concordance.py",
-    "engine/utils/extraction_cleanup.py",
+    # engine/utils/extraction_cleanup.py is NOT here: SCHEMA-DERIVE-01 removed
+    # its --spec flag. The hash it compares comes from the codebook now, so the
+    # entry point reads no spec at all and has nothing to identity-check.
     "engine/validators/extraction_validator.py",
     "scripts/eval_auditor_models.py",
     "scripts/ft_screening_smoke_test.py",

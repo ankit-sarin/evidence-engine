@@ -53,7 +53,7 @@ from engine.core.citation_guard import STRICT, enforce_citations
 from engine.core.completeness import (
     enforce_completeness, enforce_terminal_states, expected_field_names,
 )
-from engine.core.codebook import CODEBOOK_FILENAME
+from engine.core.codebook import CODEBOOK_FILENAME, load_codebook
 from engine.elicitation import classes as C
 from engine.elicitation import materialize as M
 from engine.elicitation import sizing as S
@@ -218,7 +218,9 @@ def extract_paper_elicited(
 
     review_dir = Path(db.db_path).parent
     cb_path = _codebook_path(review_dir)
-    codebook = C.load(cb_path)
+    _cb = load_codebook(cb_path)
+    codebook = _cb.raw
+    codebook_hash, codebook_sha256 = _cb.semantic_hash, _cb.sha256
     field_names = expected_field_names(spec, cb_path)
     tiers = {f["name"]: int(f.get("tier", 1)) for f in codebook["fields"]}
 
@@ -281,15 +283,16 @@ def extract_paper_elicited(
     # make one -- the terminal states are already complete without it.
     divergent: list[str] = []
     pass2_values: dict[str, EvidenceSpan] = {}
-    schema_hash = spec.extraction_hash()
+    schema_hash = codebook_hash
     if n_evidenced:
         pass2_prompt = build_extraction_prompt(paper_text, spec, cb_path)
         priming_msg = build_pass2_priming_message(priming)
         S.enforce_fit(pass2_prompt + priming_msg, label=PASS2_LABEL, paper_id=paper_id)
         result = extract_pass2_structured(
             pass2_prompt, priming_msg, spec, paper_id, think=pass2_think,
+            codebook_hash=codebook_hash,
         )
-        schema_hash = result.extraction_schema_hash
+        schema_hash = result.codebook_hash
         for span in result.fields:
             pass2_values[span.field_name] = span
     else:
@@ -369,12 +372,15 @@ def extract_paper_elicited(
         paper_id=paper_id, fields=spans,
         reasoning_trace=priming,          # the materialized evidence IS the trace
         model=MODEL,
-        extraction_schema_hash=schema_hash,
+        codebook_hash=schema_hash,
         extracted_at=datetime.now(timezone.utc),
     )
     db.add_extraction_atomic(
         paper_id=paper_id,
-        schema_hash=schema_hash,
+        # The retired column; the codebook is what this run was built from.
+        schema_hash=None,
+        codebook_hash=codebook_hash,
+        codebook_sha256=codebook_sha256,
         extracted_data=extracted_data,
         reasoning_trace=priming,
         model=MODEL,

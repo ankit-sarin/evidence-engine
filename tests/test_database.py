@@ -199,7 +199,9 @@ def test_staleness_detection(db):
     db.update_status(pid, "EXTRACTED")
 
     old_hash = "abc123"
-    db.add_extraction(pid, old_hash, {"study_design": "RCT"}, "thinking...", "deepseek-r1:32b")
+    # Staleness compares codebook_hash now (SCHEMA-DERIVE-01 R3).
+    db.add_extraction(pid, None, {"study_design": "RCT"}, "thinking...",
+                      "deepseek-r1:32b", codebook_hash=old_hash)
 
     # Same hash → not stale
     assert len(db.get_stale_extractions(old_hash)) == 0

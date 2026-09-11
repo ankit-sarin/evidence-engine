@@ -144,7 +144,7 @@ def test_extraction_result_validation():
         ],
         reasoning_trace="The paper describes an RCT...",
         model="deepseek-r1:32b",
-        extraction_schema_hash="abc123",
+        codebook_hash="abc123",
         extracted_at=datetime.now(timezone.utc),
     )
     assert result.paper_id == 1
@@ -294,9 +294,15 @@ def test_staleness_skip(tmp_path, spec):
     parsed_dir = Path(db.db_path).parent / "parsed_text"
     (parsed_dir / f"{pid}_v1.md").write_text("Paper content here.")
 
-    # Pre-insert an extraction with the current schema hash
-    schema_hash = spec.extraction_hash()
-    db.add_extraction(pid, schema_hash, {"fields": []}, "trace", "deepseek-r1:32b")
+    # Pre-insert an extraction stamped with the CURRENT codebook. The
+    # idempotence lookup keys on codebook_hash now (SCHEMA-DERIVE-01); an
+    # extraction carrying only the retired extraction_schema_hash reads as
+    # stale, and this paper would be re-extracted for real.
+    from engine.core.codebook import load_codebook_beside
+
+    schema_hash = load_codebook_beside(db.db_path).semantic_hash
+    db.add_extraction(pid, None, {"fields": []}, "trace", "deepseek-r1:32b",
+                      codebook_hash=schema_hash)
 
     # run_extraction should skip this paper. Preflight is patched out: it shells
     # out to `systemctl show ollama` and loads deepseek-r1:32b against the live
@@ -525,7 +531,8 @@ class TestProactiveRestart:
         conn.execute("""CREATE TABLE extractions (
             id INTEGER PRIMARY KEY, paper_id INTEGER, extraction_schema_hash TEXT,
             extracted_data TEXT, reasoning_trace TEXT, model TEXT,
-            model_digest TEXT, auditor_model_digest TEXT, extracted_at TEXT)""")
+            model_digest TEXT, auditor_model_digest TEXT, extracted_at TEXT,
+            codebook_hash TEXT, codebook_sha256 TEXT)""")
         conn.execute("""CREATE TABLE evidence_spans (
             id INTEGER PRIMARY KEY, extraction_id INTEGER, field_name TEXT,
             value TEXT, source_snippet TEXT, confidence REAL)""")
@@ -559,7 +566,7 @@ class TestProactiveRestart:
                 )],
                 reasoning_trace="test",
                 model="test-model",
-                extraction_schema_hash=schema_hash,
+                codebook_hash=schema_hash,
                 extracted_at=datetime.now(timezone.utc),
             )
             db._conn.execute(
@@ -616,7 +623,8 @@ class TestRestartOllamaGraceful:
         conn.execute("""CREATE TABLE extractions (
             id INTEGER PRIMARY KEY, paper_id INTEGER, extraction_schema_hash TEXT,
             extracted_data TEXT, reasoning_trace TEXT, model TEXT,
-            model_digest TEXT, auditor_model_digest TEXT, extracted_at TEXT)""")
+            model_digest TEXT, auditor_model_digest TEXT, extracted_at TEXT,
+            codebook_hash TEXT, codebook_sha256 TEXT)""")
         conn.execute("""CREATE TABLE evidence_spans (
             id INTEGER PRIMARY KEY, extraction_id INTEGER, field_name TEXT,
             value TEXT, source_snippet TEXT, confidence REAL)""")
@@ -648,7 +656,7 @@ class TestRestartOllamaGraceful:
                 )],
                 reasoning_trace="test",
                 model="test-model",
-                extraction_schema_hash=schema_hash,
+                codebook_hash=schema_hash,
                 extracted_at=datetime.now(timezone.utc),
             )
             db._conn.execute(

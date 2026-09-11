@@ -340,15 +340,18 @@ def _start_review_run(db: ReviewDatabase, spec: ReviewSpec) -> int:
             "Codebook lint raised %d finding(s) for this run: %s",
             len(cb.lint_findings), "; ".join(cb.lint_findings),
         )
+    # review_spec_hash is NOT NULL and read by nothing; it now composes the
+    # screening hash with the CODEBOOK hash and is deprecated. extraction_hash
+    # is no longer written — the spec section it hashed is gone
+    # (SCHEMA-DERIVE-01; migration 013 lifts its NOT NULL).
     cur = db._conn.execute(
         """INSERT INTO review_runs
-           (review_spec_hash, screening_hash, extraction_hash,
+           (review_spec_hash, screening_hash,
             started_at, status, log, codebook_hash, codebook_sha256)
-           VALUES (?, ?, ?, ?, 'running', ?, ?, ?)""",
+           VALUES (?, ?, ?, 'running', ?, ?, ?)""",
         (
-            spec.screening_hash() + spec.extraction_hash(),
+            spec.screening_hash() + cb.semantic_hash,
             spec.screening_hash(),
-            spec.extraction_hash(),
             now,
             log,
             cb.semantic_hash,

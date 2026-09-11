@@ -16,6 +16,7 @@ from engine.utils.extraction_cleanup import (
 
 
 SPEC_PATH = "review_specs/surgical_autonomy.yaml"
+CODEBOOK_PATH = "data/surgical_autonomy/extraction_codebook.yaml"
 
 
 @pytest.fixture
@@ -30,12 +31,17 @@ def _add_paper(db, pmid="1"):
     return db._conn.execute("SELECT id FROM papers WHERE pmid = ?", (pmid,)).fetchone()["id"]
 
 
-def _add_extraction(db, paper_id, schema_hash="hash_v1", n_spans=3):
-    """Insert an extraction with n evidence spans. Returns extraction id."""
+def _add_extraction(db, paper_id, codebook_hash="hash_v1", n_spans=3):
+    """Insert an extraction with n evidence spans. Returns extraction id.
+
+    Writes `codebook_hash`, which is what staleness compares now — the old
+    `extraction_schema_hash` hashed a spec section that no longer exists
+    (SCHEMA-DERIVE-01).
+    """
     db._conn.execute(
-        "INSERT INTO extractions (paper_id, extraction_schema_hash, extracted_data, "
+        "INSERT INTO extractions (paper_id, codebook_hash, extracted_data, "
         "model, extracted_at) VALUES (?, ?, '{}', 'test', '2026-01-01')",
-        (paper_id, schema_hash),
+        (paper_id, codebook_hash),
     )
     ext_id = db._conn.execute("SELECT last_insert_rowid()").fetchone()[0]
     for i in range(n_spans):
@@ -95,9 +101,9 @@ class TestSchemaCleanup:
         assert result["spans_deleted"] == 5
 
         # Only current-hash extraction remains
-        rows = db._conn.execute("SELECT extraction_schema_hash FROM extractions").fetchall()
+        rows = db._conn.execute("SELECT codebook_hash FROM extractions").fetchall()
         assert len(rows) == 1
-        assert rows[0]["extraction_schema_hash"] == "current_hash"
+        assert rows[0]["codebook_hash"] == "current_hash"
 
     def test_spans_cascade_deleted(self, db):
         pid = _add_paper(db, pmid="2")
@@ -173,12 +179,16 @@ class TestDedup:
 
 class TestSchemaHashResolution:
 
-    def test_get_current_schema_hash_matches_extractor(self):
-        """get_current_schema_hash returns the same hash the extractor uses."""
-        spec = load_review_spec(SPEC_PATH)
-        expected = spec.extraction_hash()
-        actual = get_current_schema_hash("surgical_autonomy", spec_path=SPEC_PATH)
-        assert actual == expected
+    def test_get_current_schema_hash_is_the_codebook_hash(self):
+        """It returns what an extraction is stale AGAINST.
+
+        Was `spec.extraction_hash()`; the spec section it hashed is gone and
+        the prompt is built from the codebook (SCHEMA-DERIVE-01).
+        """
+        from engine.core.codebook import load_codebook_for
+
+        expected = load_codebook_for("surgical_autonomy").semantic_hash
+        assert get_current_schema_hash("surgical_autonomy") == expected
 
     def test_get_current_schema_hash_derives_the_spec_path(self):
         """The spec path is derived from the review id, not searched for.
@@ -190,13 +200,17 @@ class TestSchemaHashResolution:
         assert len(h) == 64  # SHA-256 hex
 
     def test_get_current_schema_hash_missing_review_raises(self):
-        with pytest.raises(ReviewSpecError, match="Review spec not found"):
+        from engine.core.codebook import CodebookError
+
+        with pytest.raises(CodebookError, match="Codebook not found"):
             get_current_schema_hash("nonexistent_review_xyz")
 
-    def test_get_current_schema_hash_refuses_a_spec_for_another_review(self):
+    def test_get_current_schema_hash_refuses_a_codebook_for_another_review(self):
         """An override naming a different review is refused, not used."""
-        with pytest.raises(ReviewIdMismatchError):
-            get_current_schema_hash("some_other_review", spec_path=SPEC_PATH)
+        from engine.core.codebook import CodebookIdentityError
+
+        with pytest.raises(CodebookIdentityError):
+            get_current_schema_hash("some_other_review", codebook_path=CODEBOOK_PATH)
 
 
 class TestStaleExtractionCheck:
@@ -251,8 +265,12 @@ class TestExtractionRunnerWarning:
         from engine.core.review_spec import load_review_spec
         from engine.agents.extractor import run_extraction
 
+        from engine.core.codebook import load_codebook_beside
+
         spec = load_review_spec(SPEC_PATH)
-        current_hash = spec.extraction_hash()
+        # What the runner compares against: the codebook beside THIS database,
+        # not the spec (SCHEMA-DERIVE-01).
+        current_hash = load_codebook_beside(db.db_path).semantic_hash
 
         pid = _add_paper(db, pmid="21")
         _advance_to(db, pid, "EXTRACTED")

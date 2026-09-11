@@ -328,10 +328,18 @@ def _traces_markdown(conn: sqlite3.Connection, output_dir: str) -> list[str]:
 
     tier_map = _build_tier_map(conn)
 
-    # Get all papers with extractions
+    # Get all papers with extractions.
+    #
+    # `codebook_hash` is selected only when the database has it. This exporter
+    # is pointed at old backups — a read-only report on a database that
+    # predates migration 012 should say the hash is absent, not refuse to run.
+    has_codebook_hash = "codebook_hash" in {
+        r[1] for r in conn.execute("PRAGMA table_info(extractions)").fetchall()
+    }
+    hash_select = "e.codebook_hash" if has_codebook_hash else "NULL AS codebook_hash"
     papers = conn.execute(
-        """SELECT p.*, e.id AS ext_id, e.reasoning_trace, e.model AS ext_model,
-                  e.extracted_at, e.extraction_schema_hash
+        f"""SELECT p.*, e.id AS ext_id, e.reasoning_trace, e.model AS ext_model,
+                   e.extracted_at, {hash_select}
            FROM papers p
            JOIN extractions e ON e.paper_id = p.id
            WHERE e.id = (SELECT MAX(e2.id) FROM extractions e2 WHERE e2.paper_id = p.id)
@@ -377,7 +385,7 @@ def _traces_markdown(conn: sqlite3.Connection, output_dir: str) -> list[str]:
             f"doi: {paper['doi'] or ''}",
             f"extraction_model: {paper['ext_model'] or ''}",
             f"extracted_at: {paper['extracted_at'] or ''}",
-            f"schema_hash: {paper['extraction_schema_hash'] or ''}",
+            f"codebook_hash: {paper['codebook_hash'] or ''}",
             "---",
             "",
             "# Reasoning Trace",

@@ -33,7 +33,11 @@ class ExtractionResult(BaseModel):
     fields: list[EvidenceSpan]
     reasoning_trace: str
     model: str
-    extraction_schema_hash: str
+    #: The codebook the prompt was built from (SCHEMA-DERIVE-01). Was
+    #: `extraction_schema_hash`, a hash of a spec section that no longer
+    #: exists; renamed rather than repointed so no reader can mistake one
+    #: for the other.
+    codebook_hash: str
     extracted_at: datetime
 
 

@@ -198,17 +198,7 @@ def ft_screen_paper(
 
     response = ollama_chat(
         model=model,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a systematic review full-text screening agent. "
-                    "Evaluate eligibility based on the full paper text. "
-                    "Respond ONLY with the requested JSON."
-                ),
-            },
-            {"role": "user", "content": prompt},
-        ],
+        messages=render.messages(spec.eligibility, "ft_primary", prompt),
         format=FTScreeningDecision.model_json_schema(),
         options={"temperature": temperature},
         think=think,
@@ -236,17 +226,7 @@ def ft_verify_paper(
 
     response = ollama_chat(
         model=model,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a systematic review full-text verification agent. "
-                    "Your job is to catch false positives. Be strict. "
-                    "Respond ONLY with the requested JSON."
-                ),
-            },
-            {"role": "user", "content": prompt},
-        ],
+        messages=render.messages(spec.eligibility, "ft_verifier", prompt),
         format=FTVerificationDecision.model_json_schema(),
         options={"temperature": temperature},
         think=think,

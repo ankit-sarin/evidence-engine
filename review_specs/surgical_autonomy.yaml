@@ -66,8 +66,9 @@ pdf_quality_check:
 
 # ── Eligibility (SCREEN-AUTH-01 Phase 2b) ──────────────────────────
 # Replaces the former `specialty_scope` and `screening_criteria` sections.
-# `transitional_text`, `reason_code_*_text` and `rubric_text` record the wording a
-# stage renders TODAY where it differs from canonical; deleted at the fold (2c/2f).
+# `transitional_text`, `reason_code_*_text`, `rubric_text` and `system_text` record
+# the wording a stage renders TODAY where it differs from canonical; deleted at the
+# fold (2c/2f).
 eligibility:
   criteria:
   - id: inc-english
@@ -306,6 +307,7 @@ eligibility:
         Decide 'include' or 'exclude'. When uncertain and the paper MIGHT involve autonomous surgical robotics, prefer 'include' — a later verification pass will catch false positives.
         EXCLUDE only if the paper CLEARLY does not involve surgical robotics at all, or CLEARLY has no abstract available.
       absent_abstract_text: 'Abstract: [Not available. Per the exclusion criteria, papers with no abstract or insufficient information to determine eligibility should be EXCLUDED.]'
+      system_text: Evaluate whether the paper involves autonomous or semi-autonomous surgical robotics.
     abstract_verifier:
       instruction_text: |-
         You are the VERIFICATION pass. This paper was already included by a primary screener. Your job is to catch false positives.
@@ -314,6 +316,7 @@ eligibility:
         {tests}
 
         If ANY test fails, EXCLUDE. Only include papers that clearly pass all tests.
+      system_text: Evaluate whether the paper involves autonomous or semi-autonomous surgical robotics.
     ft_verifier:
       instruction_text: |-
         Apply these tests strictly:

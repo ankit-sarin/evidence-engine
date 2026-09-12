@@ -54,6 +54,35 @@ FT_FLAGGED_WORKFLOW_NOTE = (
 )
 
 _TESTS_PLACEHOLDER = "{tests}"
+_TOPIC_PLACEHOLDER = "{topic}"
+
+#: The system message each screening stage sends, minus its topic sentence.
+#: This is engine text — it describes the agent's role and its output contract,
+#: which are properties of the pipeline, not of any review. A stage whose
+#: template carries `{topic}` takes that sentence from `StagePolicy.system_text`;
+#: a stage without the placeholder says nothing about the review at all.
+SYSTEM_TEMPLATES: dict[str, str] = {
+    "abstract_primary": (
+        "You are a systematic review screening agent. {topic} Follow the "
+        "criteria and instructions in the user message. Respond ONLY with the "
+        "requested JSON."
+    ),
+    "abstract_verifier": (
+        "You are a systematic review screening agent. {topic} Follow the "
+        "criteria and instructions in the user message. Respond ONLY with the "
+        "requested JSON."
+    ),
+    "ft_primary": (
+        "You are a systematic review full-text screening agent. Evaluate "
+        "eligibility based on the full paper text. Respond ONLY with the "
+        "requested JSON."
+    ),
+    "ft_verifier": (
+        "You are a systematic review full-text verification agent. Your job is "
+        "to catch false positives. Be strict. Respond ONLY with the requested "
+        "JSON."
+    ),
+}
 
 
 # ── Prompt blocks ────────────────────────────────────────────────────
@@ -230,3 +259,43 @@ def edge_case_guidance(elig: Eligibility, stage: str, trailing: str | None = Non
     if trailing:
         parts.append(trailing)
     return " ".join(parts)
+
+
+# ── The model request ────────────────────────────────────────────────
+
+
+def system_message(elig: Eligibility, stage: str) -> str:
+    """The stage's system message: engine template, review topic substituted in.
+
+    A stage whose template has no `{topic}` slot renders unchanged, and its
+    `system_text` must be None — there would be nowhere to put it.
+    """
+    template = SYSTEM_TEMPLATES[stage]
+    topic = elig.policy_for(stage).system_text
+    if _TOPIC_PLACEHOLDER not in template:
+        if topic:
+            raise ValueError(
+                f"stage {stage!r} declares system_text but its system template "
+                "has no topic slot, so the text would never be sent."
+            )
+        return template
+    if not topic:
+        raise ValueError(
+            f"stage {stage!r} has a topic slot in its system message and no "
+            "system_text to fill it. Rendering an empty slot would silently "
+            "drop the review's subject from the request."
+        )
+    return template.replace(_TOPIC_PLACEHOLDER, topic)
+
+
+def messages(elig: Eligibility, stage: str, user_prompt: str) -> list[dict[str, str]]:
+    """The full message list as sent for `stage`.
+
+    Both messages in one place, because the review's topic content reaches the
+    model through both of them and a gate that hashes only the user prompt
+    cannot see half of what was asked.
+    """
+    return [
+        {"role": "system", "content": system_message(elig, stage)},
+        {"role": "user", "content": user_prompt},
+    ]

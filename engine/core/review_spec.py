@@ -213,6 +213,12 @@ class StagePolicy(_SpecModel):
     when_evidence_absent: Optional[Literal["include", "exclude"]] = None
     instruction_text: Optional[str] = None
     absent_abstract_text: Optional[str] = None
+    #: TRANSITIONAL. The topic sentence this stage's SYSTEM message carries. The
+    #: rest of that message is structural engine text and stays in the renderer's
+    #: per-stage template. It is here because the system message is review content
+    #: that no user-message hash could see: the surface gates added in Phase 2b
+    #: covered the user prompt only, and this sentence sat outside all of them.
+    system_text: Optional[str] = None
     #: TRANSITIONAL. The INCLUDE/EXCLUDE rubric sentences an adjudication sheet
     #: states today. They are a third paraphrase of the criteria — held here so the
     #: relocation is byte-identical, and deleted at the fold when the rubric is

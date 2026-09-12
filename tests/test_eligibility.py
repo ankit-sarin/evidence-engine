@@ -13,6 +13,8 @@ how it gets approved, not a chore on the way past.
 """
 
 import hashlib
+import json
+from unittest import mock
 
 import pytest
 import yaml
@@ -27,6 +29,7 @@ from engine.core.review_spec import (
     Eligibility,
     ReviewSpecError,
     SpecialtyScope,
+    StagePolicy,
     VerifierTest,
     load_review_spec,
 )
@@ -257,3 +260,102 @@ def test_the_export_rubric_has_no_spec_less_fallback(tmp_path):
     db.update_status(1, "ABSTRACT_SCREEN_FLAGGED")
     with pytest.raises(ValueError, match="requires a Review Spec"):
         sa.export_adjudication_queue(db, tmp_path / "o.xlsx", review_spec=None)
+
+
+# ── T1 — the FULL model request, not just the user message ───────────
+#
+# Phase 2b's ten surface hashes covered the user prompt only. The abstract
+# screener's SYSTEM message carried a sentence of review topic content that sat
+# outside all of them — it could have been rewritten with every gate green.
+# These four hash the whole message list as sent.
+
+REQUEST_BASELINE = {
+    "R1": "be5a2c417dc3a6ab829a88db6a8b8e083e419ca96192a9a2313b3683d4335b83",
+    "R2": "5b9b7201507a81cba477a109180147f5b880e84619c5d22307b660587085498e",
+    "R3": "ac4a0b0a36eef747ab8aec136a1379d8a5179df0f3895f4a2a3ccd7509e6489e",
+    "R4": "41161ecb4ee4ac8f742e066c2c0c0bb0dc683c472505112a71e08c5c51fb989b",
+}
+
+
+class _Captured(Exception):
+    """Raised to unwind once the request is in hand, so nothing is ever sent."""
+
+
+def _capture(module, fn, *args, **kwargs):
+    """The message list `fn` would send. No model call: the client is replaced."""
+    box = {}
+
+    def recorder(*_a, **_kw):
+        box["messages"] = _kw.get("messages")
+        raise _Captured()
+
+    with mock.patch.object(module, "ollama_chat", recorder):
+        with pytest.raises(_Captured):
+            fn(*args, **kwargs)
+    return box["messages"]
+
+
+def _requests(spec):
+    paper = {"title": "T", "abstract": "A", "id": 1}
+    ft = "Title: T\n\nAbstract: A"
+    return {
+        "R1": _capture(screener, screener.screen_paper, paper, spec, 1, role="primary"),
+        "R2": _capture(screener, screener.screen_paper, paper, spec, 2, role="verifier"),
+        "R3": _capture(ft_screener, ft_screener.ft_screen_paper, ft, spec),
+        "R4": _capture(ft_screener, ft_screener.ft_verify_paper, ft, spec),
+    }
+
+
+@pytest.mark.parametrize("key", sorted(REQUEST_BASELINE))
+def test_the_full_request_is_byte_identical_to_the_pre_relocation_literals(spec, key):
+    messages = _requests(spec)[key]
+    blob = json.dumps(messages, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    assert hashlib.sha256(blob).hexdigest() == REQUEST_BASELINE[key], (
+        f"{key} changed. Both messages carry review content; if this is the fold "
+        f"step, update the baseline deliberately.\n---\n{blob.decode()}\n---"
+    )
+
+
+def test_every_screening_request_sends_exactly_a_system_and_a_user_message(spec):
+    for key, messages in _requests(spec).items():
+        assert [m["role"] for m in messages] == ["system", "user"], key
+
+
+# ── T2 — the system-message contract ─────────────────────────────────
+
+
+def test_the_abstract_stages_carry_their_topic_sentence_in_the_spec(elig):
+    for stage in ("abstract_primary", "abstract_verifier"):
+        topic = elig.policy_for(stage).system_text
+        assert topic and "autonomous" in topic
+        assert topic in render.system_message(elig, stage)
+
+
+def test_the_ft_stages_declare_no_topic_sentence(elig):
+    for stage in ("ft_primary", "ft_verifier"):
+        assert elig.policy_for(stage).system_text is None
+        assert "{topic}" not in render.system_message(elig, stage)
+
+
+def test_a_topic_slot_with_no_system_text_is_refused(elig):
+    stripped = elig.model_copy(deep=True)
+    stripped.stage_policies["abstract_primary"].system_text = None
+    with pytest.raises(ValueError, match="no system_text to fill it"):
+        render.system_message(stripped, "abstract_primary")
+
+
+def test_system_text_for_a_stage_with_no_topic_slot_is_refused(elig):
+    extra = elig.model_copy(deep=True)
+    extra.stage_policies["ft_primary"] = StagePolicy(system_text="topic content")
+    with pytest.raises(ValueError, match="no topic slot"):
+        render.system_message(extra, "ft_primary")
+
+
+def test_stage_policies_reject_a_stage_name_that_is_not_a_stage():
+    with pytest.raises(ValueError):
+        Eligibility(
+            criteria=[Criterion(id="inc-a", kind="inclusion", text="t",
+                                stages=["ft_primary"])],
+            specialty_scope=_scope(),
+            stage_policies={"not_a_stage": StagePolicy()},
+        )

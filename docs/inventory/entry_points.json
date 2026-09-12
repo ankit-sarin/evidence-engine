@@ -3844,7 +3844,7 @@
           },
           {
             "kind": "literal",
-            "line": 247,
+            "line": 246,
             "role": "docstring",
             "text": "Export all flagged papers as a human-review Excel queue.\n\n    Pulls ABSTRACT_SCREEN_FLAGGED from review.db plus flagged papers from\n    expanded search CSVs ..."
           }
@@ -3950,7 +3950,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 553,
+            "line": 533,
             "names": [
               "--review"
             ],
@@ -3959,7 +3959,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 554,
+            "line": 534,
             "names": [
               "--spec"
             ],
@@ -3968,7 +3968,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 558,
+            "line": 538,
             "names": [
               "--screen-only"
             ],
@@ -3977,7 +3977,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 559,
+            "line": 539,
             "names": [
               "--verify-only"
             ],
@@ -3986,7 +3986,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 560,
+            "line": 540,
             "names": [
               "--background"
             ],
@@ -4002,7 +4002,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 556,
+            "line": 536,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -4010,7 +4010,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 568,
+            "line": 548,
             "scope": "<module>"
           }
         ],
@@ -4018,7 +4018,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 567,
+            "line": 547,
             "scope": "<module>"
           }
         ],
@@ -4563,13 +4563,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 509,
+            "line": 515,
             "role": "help_text",
             "text": "The review's identity, and the single one. The spec file is review_specs/<review_id>.yaml and the data root is data/<review_id>; neither is passed independen..."
           },
           {
             "kind": "f-string",
-            "line": 644,
+            "line": 650,
             "role": "message",
             "text": "f'Review spec not found at {path}. Expected a YAML file (e.g., review_specs/<review_id>.yaml).'"
           }
@@ -4581,7 +4581,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 641,
+            "line": 647,
             "scope": "load_review_spec",
             "target": "f"
           }
@@ -7471,7 +7471,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "fefd1125a357f75b84404fe4972fe97246199387",
+    "generated_at_commit": "95ddc3fb530ce9ad813cdb18517649f05940cb16",
     "scan_roots": [
       "engine",
       "scripts",

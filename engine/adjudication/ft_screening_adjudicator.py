@@ -107,16 +107,15 @@ def _build_ft_reference_content(spec=None) -> str:
     if spec:
         lines.extend(render.criteria_reference_block(spec.eligibility, "ft_adjudication"))
 
-        if hasattr(spec, "pico") and spec.pico:
-            lines.append("PICO FRAMEWORK:")
-            lines.append(f"  Population:   {spec.pico.population}")
-            lines.append(f"  Intervention: {spec.pico.intervention}")
-            lines.append(f"  Comparator:   {spec.pico.comparator}")
-            if isinstance(spec.pico.outcomes, list):
-                lines.append(f"  Outcomes:     {'; '.join(spec.pico.outcomes)}")
-            else:
-                lines.append(f"  Outcomes:     {spec.pico.outcomes}")
-            lines.append("")
+        lines.append("PICO FRAMEWORK:")
+        lines.append(f"  Population:   {spec.pico.population}")
+        lines.append(f"  Intervention: {spec.pico.intervention}")
+        lines.append(f"  Comparator:   {spec.pico.comparator}")
+        if isinstance(spec.pico.outcomes, list):
+            lines.append(f"  Outcomes:     {'; '.join(spec.pico.outcomes)}")
+        else:
+            lines.append(f"  Outcomes:     {spec.pico.outcomes}")
+        lines.append("")
 
         lines.extend(render.specialty_reference_block(spec.eligibility))
 

@@ -110,22 +110,12 @@ def screen_paper(
     if model is None:
         model = spec.screening_models.primary
 
+    stage = "abstract_verifier" if role == "verifier" else "abstract_primary"
     user_prompt = _build_prompt(paper, spec, role=role)
 
     response = ollama_chat(
         model=model,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a systematic review screening agent. Evaluate "
-                    "whether the paper involves autonomous or semi-autonomous "
-                    "surgical robotics. Follow the criteria and instructions "
-                    "in the user message. Respond ONLY with the requested JSON."
-                ),
-            },
-            {"role": "user", "content": user_prompt},
-        ],
+        messages=render.messages(spec.eligibility, stage, user_prompt),
         format=ScreeningDecision.model_json_schema(),
         options={"temperature": 0},
         think=False,

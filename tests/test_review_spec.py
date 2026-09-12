@@ -184,10 +184,11 @@ def test_unknown_nested_key_rejected_and_named(tmp_path, path, expected):
 # section and its hash. An extraction's provenance is the codebook's hash,
 # pinned in test_codebook_staleness.py.
 #: SCREEN-AUTH-01 Phase 2b moved this hash: it covers `eligibility` now, not the
-#: retired `screening_criteria` section. It will move again at the fold (2c/2f)
+#: retired `screening_criteria` section, and again in the 2b addendum when the
+#: system message's topic sentence joined it. It will move again at the fold (2c/2f)
 #: when the transitional fields are deleted — deliberately, and that change is a
 #: content decision, not a refactor.
-BASELINE_SCREENING_HASH = "4a30960fe685b251f6fe1067bcdb3c0e70c6f35de767adf3b1a733a1fdd4653f"
+BASELINE_SCREENING_HASH = "d804ced7bd4c45e872524ebfd4d55f3d093ff9d18db28cfee8e2f67f4c571ae9"
 
 
 def _spec_with_review_id(tmp_path, value, *, drop=False):

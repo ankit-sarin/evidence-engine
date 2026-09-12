@@ -127,3 +127,98 @@ anti-default clause are 2c/2f. Provenance columns are 2d. The categorizer is 2e.
 `FT_FLAGGED` / `FT_EXCLUDE` / `FT_SCREENED_OUT` naming is read out in 2c. The eleven remaining
 `hasattr`/`getattr` guards on spec-typed objects are queued as SPEC-GUARD-01; an attribute-read
 category for the inventory tool is queued as INVENTORY-02.
+
+---
+
+# Addendum — 2026-09-12: full-request identity gate, the system message, two guards
+
+**Commit:** `e9c4aa0`, on `main`, pushed. **Parent:** `95ddc3f`.
+**Gate at close:** 2,190 passed / 17 deselected, five chunks.
+**Append-only:** nothing above this line was rewritten.
+
+## Why
+
+Section 6 of the report above recorded an eighth topic-bearing literal that the ten hashes
+could not see. This addendum closes that hole. The finding generalises, and it is the reason
+the addendum exists rather than a follow-up ticket: **the ten surface hashes proved something
+narrower than they appeared to prove.** They covered what `_build_prompt` and the rubric
+builders return — the *user* message. The screening call sites also send a *system* message,
+assembled inline at the call site, and the abstract screener's carried a sentence of review
+topic content. A gate that hashes half a request certifies half a relocation.
+
+## What the four stages actually send
+
+| stage | system message | topic content? |
+|---|---|---|
+| `abstract_primary` | `You are a systematic review screening agent. Evaluate whether the paper involves autonomous or semi-autonomous surgical robotics. Follow the criteria and instructions in the user message. Respond ONLY with the requested JSON.` | **yes** |
+| `abstract_verifier` | identical to `abstract_primary` — one literal served both roles | **yes** |
+| `ft_primary` | `You are a systematic review full-text screening agent. Evaluate eligibility based on the full paper text. Respond ONLY with the requested JSON.` | no |
+| `ft_verifier` | `You are a systematic review full-text verification agent. Your job is to catch false positives. Be strict. Respond ONLY with the requested JSON.` | no |
+
+Every stage sends exactly `[system, user]`.
+
+## The split, and where each half lives
+
+`StagePolicy.system_text` carries **only the topic sentence**, and only for the two abstract
+stages. The rest of each system message is structural — it describes the agent's role and its
+output contract, which are properties of the pipeline, not of any review — and lives in
+`eligibility_render.SYSTEM_TEMPLATES`, one per stage, with a `{topic}` slot where review
+content belongs.
+
+Both halves could have rendered byte-identically from either home. The split was chosen so
+that what is in the spec is exactly what is about *this review*, and what is in code is what
+would be true of any review. A stage whose template has a slot and no `system_text` **raises**;
+so does a stage that declares `system_text` for a template with no slot. Rendering an empty
+slot would drop the review's subject from the request silently, which is the failure mode this
+lane exists to prevent.
+
+## The gate is now fourteen
+
+Four full-request hashes join the ten surfaces. All were measured at `95ddc3f` before any edit
+and matched byte for byte afterwards.
+
+| # | request | bytes | verdict |
+|---|---|---:|---|
+| R1 | abstract primary | 3,315 | MATCH |
+| R2 | abstract verifier | 4,404 | MATCH |
+| R3 | FT primary | 4,612 | MATCH |
+| R4 | FT verifier | 3,868 | MATCH |
+
+Hashed as key-sorted JSON of the message list, UTF-8. Captured by replacing `ollama_chat` with
+a recorder that raises once it has the arguments, so **the test never sends a request**. The
+ten surface hashes (P1–P4, H1, H3–H7) are unchanged and still pinned.
+
+## Two more guards gone
+
+`hasattr(spec, "pico")` removed from `_build_reference_content` and
+`_build_ft_reference_content` — the last spec guards in those two files, and the same defect as
+the four removed in `521b92a`. H4 and H5 still match. Nine guards remain elsewhere under
+SPEC-GUARD-01; none were touched.
+
+## `screening_hash`
+
+Moves again, because the topic sentence is now part of the object it hashes:
+
+```
+4a30960fe685b251f6fe1067bcdb3c0e70c6f35de767adf3b1a733a1fdd4653f   after 521b92a
+d804ced7bd4c45e872524ebfd4d55f3d093ff9d18db28cfee8e2f67f4c571ae9   after e9c4aa0
+```
+
+## Ops finding — qwen3:8b resident forever
+
+Not a defect, and nothing loaded it from this lane. **The Ollama service's own default is
+infinite keep-alive:** `OLLAMA_KEEP_ALIVE:2562047h47m16.854775807s` in its systemd environment
+— `MaxInt64` nanoseconds. With `OLLAMA_MAX_LOADED_MODELS:1`, every load evicts the previous one
+and **the last model loaded stays resident indefinitely**.
+
+What loaded it: the **07:00 UTC `ollama_health_check.sh` cron**, which runs
+`ollama run "$model" "Reply OK"` over every model `ollama list` returns. The journal shows that
+sequence on 2026-09-12 from `07:00:02`; whichever model it exercised last is the one left in
+VRAM. No process asked for `keep_alive: forever` — the service grants it by default.
+
+Ollama state was not changed: `ollama ps` is identical before and after this task.
+
+**Incidental, and checked because it looked worse than it was:** `/api/show` calls appear in the
+journal during this session's gate runs. They are **not** from the suite — a control run of one
+chunk produced a delta of **zero**. A VS Code server with an Ollama-aware extension is running
+on this host and is the likely source. The test fence holds.

@@ -15,6 +15,7 @@ from pydantic import BaseModel, Field, ValidationError
 from engine.utils.ollama_client import ollama_chat
 
 from engine.core.database import ReviewDatabase
+from engine.core import eligibility_render as render
 from engine.core.review_spec import ReviewSpec
 
 logger = logging.getLogger(__name__)
@@ -43,6 +44,7 @@ def _build_prompt(paper: dict, spec: ReviewSpec, *, role: str = "primary") -> st
     Args:
         role: "primary" for high-recall first pass, "verifier" for strict second pass.
     """
+    stage = "abstract_verifier" if role == "verifier" else "abstract_primary"
     title = paper.get("title", "")
     abstract = paper.get("abstract") or ""
 
@@ -54,58 +56,20 @@ def _build_prompt(paper: dict, spec: ReviewSpec, *, role: str = "primary") -> st
         f"Outcomes: {outcomes_str}"
     )
 
-    inclusion = "\n".join(f"  - {c}" for c in spec.screening_criteria.inclusion)
-
-    if role == "verifier":
-        # Verifier sees full exclusion criteria (strict)
-        exclusion = "\n".join(f"  - {c}" for c in spec.screening_criteria.exclusion)
-    else:
-        # Primary sees simplified exclusion criteria (high recall)
-        primary_exclusions = [
-            "Systematic reviews, meta-analyses, or scoping reviews",
-            "Editorials, commentaries, or letters to the editor",
-            "Non-surgical robotics (industrial, rehabilitation, exoskeletons, prosthetics)",
-            "Papers with no abstract available",
-        ]
-        exclusion = "\n".join(f"  - {c}" for c in primary_exclusions)
-
-    specialty_block = ""
-    if spec.specialty_scope:
-        specialty_block = "\n" + spec.specialty_scope.format_for_prompt() + "\n"
+    elig = spec.eligibility
+    inclusion = render.inclusion_block(elig, stage)
+    # Which exclusions this pass sees is declared per criterion in the spec: the
+    # primary pass is shown a deliberately shorter list for recall, the verifier
+    # the full set for precision.
+    exclusion = render.exclusion_block(elig, stage)
+    specialty_block = render.specialty_prompt_block(elig)
 
     if abstract:
         paper_text = f"Title: {title}\n\nAbstract: {abstract}"
     else:
-        paper_text = (
-            f"Title: {title}\n\n"
-            "Abstract: [Not available. Per the exclusion criteria, papers with "
-            "no abstract or insufficient information to determine eligibility "
-            "should be EXCLUDED.]"
-        )
+        paper_text = f"Title: {title}\n\n" + render.absent_abstract_text(elig, stage)
 
-    if role == "verifier":
-        # Strict verification pass — high precision, catches FPs
-        decision_instruction = (
-            "You are the VERIFICATION pass. This paper was already included by "
-            "a primary screener. Your job is to catch false positives.\n\n"
-            "Apply these tests strictly:\n"
-            "1. Does the abstract describe a robot that EXECUTES a surgical action "
-            "autonomously or semi-autonomously? (Not just analysis/tracking/assessment)\n"
-            "2. Is there an autonomous component — not purely teleoperated/master-slave?\n"
-            "3. Does it involve a physical surgical task — not just a simulation "
-            "framework or pure methodology?\n"
-            "4. Is it original research — not a review, editorial, or commentary?\n\n"
-            "If ANY test fails, EXCLUDE. Only include papers that clearly pass all tests."
-        )
-    else:
-        # Primary pass — high recall, inclusive
-        decision_instruction = (
-            "Decide 'include' or 'exclude'. When uncertain and the paper MIGHT "
-            "involve autonomous surgical robotics, prefer 'include' — a later "
-            "verification pass will catch false positives.\n"
-            "EXCLUDE only if the paper CLEARLY does not involve surgical robotics "
-            "at all, or CLEARLY has no abstract available."
-        )
+    decision_instruction = render.decision_instruction(elig, stage)
 
     return f"""/no_think
 Evaluate the following paper for inclusion in a systematic review.

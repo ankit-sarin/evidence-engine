@@ -32,6 +32,13 @@ from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
 
+from engine.core.review_paths import load_spec_for as _load_spec_for
+
+#: The adjudication rubric is rendered from the spec's eligibility and has
+#: no spec-less default, so every export test supplies one.
+_SPEC_FOR_EXPORT = _load_spec_for("surgical_autonomy")
+
+
 
 # ── Fixtures ────────────────────────────────────────────────────────
 
@@ -423,7 +430,7 @@ class TestFTAdjudication:
 
     def test_export_empty_queue(self, tmp_db, tmp_path):
         out = tmp_path / "empty.xlsx"
-        result = export_ft_adjudication_queue(tmp_db, out)
+        result = export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
         assert result["total"] == 0
 
     def test_export_ft_queue(self, tmp_db, tmp_path):
@@ -431,7 +438,7 @@ class TestFTAdjudication:
         _advance_to_ft_flagged(tmp_db, pid)
 
         out = tmp_path / "ft_queue.xlsx"
-        result = export_ft_adjudication_queue(tmp_db, out)
+        result = export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
         assert result["total"] == 1
         assert out.exists()
 
@@ -440,7 +447,7 @@ class TestFTAdjudication:
         _advance_to_ft_flagged(tmp_db, pid)
 
         out = tmp_path / "ft_sheets.xlsx"
-        export_ft_adjudication_queue(tmp_db, out)
+        export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
 
         from openpyxl import load_workbook
         wb = load_workbook(out)
@@ -457,7 +464,7 @@ class TestFTAdjudication:
 
         # Export
         out = tmp_path / "ft_import.xlsx"
-        export_ft_adjudication_queue(tmp_db, out)
+        export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
 
         # Fill in decisions using header-based lookup
         from openpyxl import load_workbook
@@ -497,7 +504,7 @@ class TestFTAdjudication:
         _advance_to_ft_flagged(tmp_db, pid)
 
         out = tmp_path / "ft_missing.xlsx"
-        export_ft_adjudication_queue(tmp_db, out)
+        export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
 
         # Don't fill in any decisions — import as-is
         result = import_ft_adjudication_decisions(tmp_db, out)
@@ -516,7 +523,7 @@ class TestFTAdjudication:
         _advance_to_ft_flagged(tmp_db, pid)
 
         out = tmp_path / "ft_invalid.xlsx"
-        export_ft_adjudication_queue(tmp_db, out)
+        export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
 
         from openpyxl import load_workbook
         wb = load_workbook(out)
@@ -541,7 +548,7 @@ class TestFTAdjudication:
         _advance_to_ft_flagged(tmp_db, pid)
 
         out = tmp_path / "ft_workflow.xlsx"
-        export_ft_adjudication_queue(tmp_db, out)
+        export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
 
         from openpyxl import load_workbook
         wb = load_workbook(out)
@@ -569,7 +576,7 @@ class TestFTAdjudication:
         _advance_to_ft_flagged(tmp_db, pid)
 
         out = tmp_path / "ft_record.xlsx"
-        export_ft_adjudication_queue(tmp_db, out)
+        export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
 
         from openpyxl import load_workbook
         wb = load_workbook(out)
@@ -599,7 +606,7 @@ class TestFTAdjudication:
         _advance_to_ft_flagged(tmp_db, pid)
 
         out = tmp_path / "ft_status_fail.xlsx"
-        export_ft_adjudication_queue(tmp_db, out)
+        export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
 
         from openpyxl import load_workbook
         wb = load_workbook(out)
@@ -683,12 +690,12 @@ class TestWorkflowFTStages:
 class TestSpecialtyScopeInPrompt:
 
     def test_specialty_scope_loaded(self, spec):
-        assert spec.specialty_scope is not None
-        assert "abdominal surgery" in spec.specialty_scope.included
-        assert "dental surgery" in spec.specialty_scope.excluded
+        assert spec.eligibility.specialty_scope is not None
+        assert "abdominal surgery" in spec.eligibility.specialty_scope.included
+        assert "dental surgery" in spec.eligibility.specialty_scope.excluded
 
     def test_specialty_format_for_prompt(self, spec):
-        formatted = spec.specialty_scope.format_for_prompt()
+        formatted = spec.eligibility.specialty_scope.format_for_prompt()
         assert "Included" in formatted or "included" in formatted
         assert "Excluded" in formatted or "excluded" in formatted
         assert "abdominal surgery" in formatted.lower()

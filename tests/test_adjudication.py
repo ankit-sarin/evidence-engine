@@ -26,6 +26,13 @@ from engine.adjudication.screening_adjudicator import (
 from engine.core.database import ReviewDatabase
 from engine.search.models import Citation
 
+from engine.core.review_paths import load_spec_for as _load_spec_for
+
+#: The adjudication rubric is rendered from the spec's eligibility and has
+#: no spec-less default, so every export test supplies one.
+_SPEC_FOR_EXPORT = _load_spec_for("surgical_autonomy")
+
+
 
 # ── Fixtures ────────────────────────────────────────────────────────
 
@@ -367,7 +374,7 @@ def test_expanded_flagged_has_abstracts(expanded_dir):
 
 def test_export_db_only(flagged_db, tmp_path):
     out = tmp_path / "queue.xlsx"
-    result = export_adjudication_queue(flagged_db, out)
+    result = export_adjudication_queue(flagged_db, out, review_spec=_SPEC_FOR_EXPORT)
     assert result["total"] == 3
     assert out.exists()
     assert "categories" in result
@@ -376,8 +383,7 @@ def test_export_db_only(flagged_db, tmp_path):
 def test_export_with_expanded(flagged_db, expanded_dir, tmp_path):
     out = tmp_path / "queue.xlsx"
     result = export_adjudication_queue(
-        flagged_db, out, expanded_search_dir=expanded_dir,
-    )
+        flagged_db, out, expanded_search_dir=expanded_dir, review_spec=_SPEC_FOR_EXPORT)
     assert result["total"] == 5  # 3 from DB + 2 from expanded
     assert out.exists()
 
@@ -385,8 +391,7 @@ def test_export_with_expanded(flagged_db, expanded_dir, tmp_path):
 def test_export_categorization(flagged_db, tmp_path, surgical_autonomy_config):
     out = tmp_path / "queue.xlsx"
     result = export_adjudication_queue(
-        flagged_db, out, category_config=surgical_autonomy_config,
-    )
+        flagged_db, out, category_config=surgical_autonomy_config, review_spec=_SPEC_FOR_EXPORT)
     cats = result["categories"]
     # At least some papers should be categorized
     assert sum(cats.values()) == 3
@@ -394,14 +399,14 @@ def test_export_categorization(flagged_db, tmp_path, surgical_autonomy_config):
 
 def test_export_empty_db(tmp_db, tmp_path):
     out = tmp_path / "queue.xlsx"
-    result = export_adjudication_queue(tmp_db, out)
+    result = export_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
     assert result["total"] == 0
 
 
 def test_export_xlsx_structure(flagged_db, tmp_path):
     from openpyxl import load_workbook
     out = tmp_path / "queue.xlsx"
-    export_adjudication_queue(flagged_db, out)
+    export_adjudication_queue(flagged_db, out, review_spec=_SPEC_FOR_EXPORT)
     wb = load_workbook(out)
     assert "Review Queue" in wb.sheetnames
     assert "Instructions" in wb.sheetnames
@@ -419,8 +424,7 @@ def test_export_with_review_name_loads_config(flagged_db, tmp_path):
     """Passing review_name should load categories from YAML config."""
     out = tmp_path / "queue.xlsx"
     result = export_adjudication_queue(
-        flagged_db, out, review_name="surgical_autonomy",
-    )
+        flagged_db, out, review_name="surgical_autonomy", review_spec=_SPEC_FOR_EXPORT)
     cats = result["categories"]
     # With the surgical_autonomy config, the CV paper should NOT be ambiguous
     assert "cv_perception" in cats or "review_editorial" in cats
@@ -432,7 +436,7 @@ def test_export_with_review_name_loads_config(flagged_db, tmp_path):
 def test_import_decisions(flagged_db, tmp_path):
     """Export, fill in decisions, import back."""
     out = tmp_path / "queue.xlsx"
-    export_adjudication_queue(flagged_db, out)
+    export_adjudication_queue(flagged_db, out, review_spec=_SPEC_FOR_EXPORT)
 
     # Fill in decisions
     from openpyxl import load_workbook
@@ -453,7 +457,7 @@ def test_import_decisions(flagged_db, tmp_path):
 def test_import_updates_status(flagged_db, tmp_path):
     """Import should transition ABSTRACT_SCREEN_FLAGGED → ABSTRACT_SCREENED_IN/OUT."""
     out = tmp_path / "queue.xlsx"
-    export_adjudication_queue(flagged_db, out)
+    export_adjudication_queue(flagged_db, out, review_spec=_SPEC_FOR_EXPORT)
 
     from openpyxl import load_workbook
     wb = load_workbook(out)
@@ -475,7 +479,7 @@ def test_import_updates_status(flagged_db, tmp_path):
 def test_import_rejects_all_blank(flagged_db, tmp_path):
     """All-blank decisions should reject the entire file with no DB changes."""
     out = tmp_path / "queue.xlsx"
-    export_adjudication_queue(flagged_db, out)
+    export_adjudication_queue(flagged_db, out, review_spec=_SPEC_FOR_EXPORT)
 
     # Don't fill in any decisions — import should reject entirely
     result = import_adjudication_decisions(flagged_db, out)
@@ -492,7 +496,7 @@ def test_import_rejects_all_blank(flagged_db, tmp_path):
 def test_import_rejects_partial_blank(flagged_db, tmp_path):
     """Even one blank decision cell rejects the entire file."""
     out = tmp_path / "queue.xlsx"
-    export_adjudication_queue(flagged_db, out)
+    export_adjudication_queue(flagged_db, out, review_spec=_SPEC_FOR_EXPORT)
 
     from openpyxl import load_workbook
     wb = load_workbook(out)
@@ -514,7 +518,7 @@ def test_import_rejects_partial_blank(flagged_db, tmp_path):
 def test_import_rejects_invalid(flagged_db, tmp_path):
     """Invalid decision values reject the entire file with clear error."""
     out = tmp_path / "queue.xlsx"
-    export_adjudication_queue(flagged_db, out)
+    export_adjudication_queue(flagged_db, out, review_spec=_SPEC_FOR_EXPORT)
 
     from openpyxl import load_workbook
     wb = load_workbook(out)

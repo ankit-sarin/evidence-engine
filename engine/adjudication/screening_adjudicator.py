@@ -20,6 +20,7 @@ from engine.adjudication.categorizer import (
 )
 from engine.adjudication.schema import ensure_adjudication_table
 from engine.adjudication.workflow import complete_stage, is_adjudication_complete
+from engine.core import eligibility_render as render
 from engine.core.database import ReviewDatabase
 
 logger = logging.getLogger(__name__)
@@ -204,15 +205,7 @@ def _build_reference_content(spec) -> str:
     lines.append("SCREENING ELIGIBILITY CRITERIA")
     lines.append("")
 
-    if hasattr(spec, "screening_criteria") and spec.screening_criteria:
-        lines.append("INCLUSION CRITERIA:")
-        for criterion in spec.screening_criteria.inclusion:
-            lines.append(f"  + {criterion}")
-        lines.append("")
-        lines.append("EXCLUSION CRITERIA:")
-        for criterion in spec.screening_criteria.exclusion:
-            lines.append(f"  - {criterion}")
-        lines.append("")
+    lines.extend(render.criteria_reference_block(spec.eligibility, "abstract_adjudication"))
 
     if hasattr(spec, "pico") and spec.pico:
         lines.append("PICO FRAMEWORK:")
@@ -225,56 +218,18 @@ def _build_reference_content(spec) -> str:
             lines.append(f"  Outcomes:     {spec.pico.outcomes}")
         lines.append("")
 
-    if hasattr(spec, "specialty_scope") and spec.specialty_scope:
-        lines.append("SPECIALTY SCOPE:")
-        lines.append("  Included specialties:")
-        for s in spec.specialty_scope.included:
-            lines.append(f"    + {s}")
-        lines.append("  Excluded specialties:")
-        for s in spec.specialty_scope.excluded:
-            lines.append(f"    - {s}")
-        if spec.specialty_scope.notes:
-            lines.append(f"  Notes: {spec.specialty_scope.notes}")
+    lines.extend(render.specialty_reference_block(spec.eligibility))
 
     return "\n".join(lines)
 
 
 def _build_decision_criteria(spec) -> list[str]:
-    """Extract decision criteria from a ReviewSpec for the Instructions sheet."""
-    criteria = []
-    criteria.append(
-        "INCLUDE: The paper describes autonomous or semi-autonomous surgical robot "
-        "execution of a physical task. The robot must CONTROL or DIRECT physical "
-        "motion — not just perception, planning, or teleoperation."
-    )
-    criteria.append(
-        "EXCLUDE: The paper is about perception-only (CV/ML without robot control), "
-        "planning-only, teleoperation-only, reviews/editorials, hardware/sensors, "
-        "rehabilitation/exoskeletons, or non-medical robotics."
-    )
-
-    if hasattr(spec, "specialty_scope") and spec.specialty_scope:
-        included = ", ".join(spec.specialty_scope.included)
-        excluded = ", ".join(spec.specialty_scope.excluded)
-        criteria.append(f"SPECIALTY SCOPE — Included: {included}")
-        criteria.append(f"SPECIALTY SCOPE — Excluded: {excluded}")
-        if spec.specialty_scope.notes:
-            criteria.append(f"EDGE CASE: {spec.specialty_scope.notes.strip()}")
-
-    return criteria
-
+    """The adjudication sheet's decision rubric, from the spec's eligibility."""
+    return render.decision_criteria(spec.eligibility, "abstract_adjudication")
 
 def _build_edge_case_guidance(spec) -> str:
-    """Build edge case guidance string from a ReviewSpec."""
-    parts = []
-    if hasattr(spec, "specialty_scope") and spec.specialty_scope and spec.specialty_scope.notes:
-        parts.append(spec.specialty_scope.notes.strip())
-    parts.append(
-        "When in doubt between INCLUDE and EXCLUDE, lean toward INCLUDE — "
-        "downstream full-text screening will catch false positives."
-    )
-    return " ".join(parts)
-
+    """Scope notes plus the stage's uncertainty guidance, from the spec."""
+    return render.edge_case_guidance(spec.eligibility, "abstract_adjudication")
 
 # ── Export ──────────────────────────────────────────────────────────
 
@@ -483,16 +438,16 @@ def _write_xlsx(
         f"\""
     )
 
-    # Build decision criteria and edge case guidance from spec if available
-    decision_criteria = [
-        "INCLUDE: The paper describes autonomous or semi-autonomous surgical robot execution.",
-        "EXCLUDE: The paper is about perception-only, planning-only, teleoperation-only, "
-        "reviews/editorials, hardware/sensors, rehabilitation, or non-medical robotics.",
-    ]
-    edge_case = ""
-    if review_spec:
-        decision_criteria = _build_decision_criteria(review_spec)
-        edge_case = _build_edge_case_guidance(review_spec)
+    # The rubric comes from the spec's eligibility, always. There is no
+    # spec-less fallback: one existed, it was a fifth divergent copy of the
+    # criteria, and no live path with a spec could ever reach it.
+    if review_spec is None:
+        raise ValueError(
+            "export requires a Review Spec: the adjudication rubric is rendered "
+            "from spec.eligibility and has no default."
+        )
+    decision_criteria = _build_decision_criteria(review_spec)
+    edge_case = _build_edge_case_guidance(review_spec)
 
     instr = InstructionsConfig(
         review_name=review_name,

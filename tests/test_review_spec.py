@@ -42,7 +42,7 @@ def test_screening_hash_changes_on_modification():
     original_hash = spec.screening_hash()
 
     modified = spec.model_copy(deep=True)
-    modified.screening_criteria.inclusion.append("Must involve humans")
+    modified.eligibility.criteria[0].text = "Must involve humans"
     assert modified.screening_hash() != original_hash
 
 
@@ -143,8 +143,8 @@ NESTED_CASES = [
     (["search_strategy"], "search_strategy.bogus_key"),
     (["screening_models"], "screening_models.bogus_key"),
     (["ft_screening_models"], "ft_screening_models.bogus_key"),
-    (["screening_criteria"], "screening_criteria.bogus_key"),
-    (["specialty_scope"], "specialty_scope.bogus_key"),
+    (["eligibility"], "eligibility.bogus_key"),
+    (["eligibility", "specialty_scope"], "eligibility.specialty_scope.bogus_key"),
     (["pdf_quality_check"], "pdf_quality_check.bogus_key"),
     (["extraction_models"], "extraction_models.bogus_key"),
     (["pdf_parsing"], "pdf_parsing.bogus_key"),
@@ -183,7 +183,11 @@ def test_unknown_nested_key_rejected_and_named(tmp_path, path, expected):
 # There is no extraction baseline any more: SCHEMA-DERIVE-01 removed the
 # section and its hash. An extraction's provenance is the codebook's hash,
 # pinned in test_codebook_staleness.py.
-BASELINE_SCREENING_HASH = "0d97b9d61161eeca6c81dd82f895bfb8c6f933b8e8ea23f79056a69f0cf98b90"
+#: SCREEN-AUTH-01 Phase 2b moved this hash: it covers `eligibility` now, not the
+#: retired `screening_criteria` section. It will move again at the fold (2c/2f)
+#: when the transitional fields are deleted — deliberately, and that change is a
+#: content decision, not a refactor.
+BASELINE_SCREENING_HASH = "4a30960fe685b251f6fe1067bcdb3c0e70c6f35de767adf3b1a733a1fdd4653f"
 
 
 def _spec_with_review_id(tmp_path, value, *, drop=False):

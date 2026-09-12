@@ -3838,13 +3838,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 27,
+            "line": 28,
             "role": "code",
             "text": "data/surgical_autonomy/expanded_search"
           },
           {
             "kind": "literal",
-            "line": 292,
+            "line": 247,
             "role": "docstring",
             "text": "Export all flagged papers as a human-review Excel queue.\n\n    Pulls ABSTRACT_SCREEN_FLAGGED from review.db plus flagged papers from\n    expanded search CSVs ..."
           }
@@ -3950,7 +3950,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 572,
+            "line": 553,
             "names": [
               "--review"
             ],
@@ -3959,7 +3959,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 573,
+            "line": 554,
             "names": [
               "--spec"
             ],
@@ -3968,7 +3968,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 577,
+            "line": 558,
             "names": [
               "--screen-only"
             ],
@@ -3977,7 +3977,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 578,
+            "line": 559,
             "names": [
               "--verify-only"
             ],
@@ -3986,7 +3986,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 579,
+            "line": 560,
             "names": [
               "--background"
             ],
@@ -4002,7 +4002,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 575,
+            "line": 556,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -4010,7 +4010,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 587,
+            "line": 568,
             "scope": "<module>"
           }
         ],
@@ -4018,7 +4018,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 586,
+            "line": 567,
             "scope": "<module>"
           }
         ],
@@ -4442,6 +4442,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/core/eligibility_render.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/eligibility_render.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/core/extraction_telemetry.py": {
         "entry_point": false,
         "flags": [],
@@ -4549,13 +4563,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 322,
+            "line": 509,
             "role": "help_text",
             "text": "The review's identity, and the single one. The spec file is review_specs/<review_id>.yaml and the data root is data/<review_id>; neither is passed independen..."
           },
           {
             "kind": "f-string",
-            "line": 448,
+            "line": 644,
             "role": "message",
             "text": "f'Review spec not found at {path}. Expected a YAML file (e.g., review_specs/<review_id>.yaml).'"
           }
@@ -4567,7 +4581,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 445,
+            "line": 641,
             "scope": "load_review_spec",
             "target": "f"
           }
@@ -7445,7 +7459,7 @@
       "entry_points_with_spec_flag": 28,
       "files_calling_load_review_spec_directly": 8,
       "files_calling_resolver": 31,
-      "files_scanned": 198,
+      "files_scanned": 199,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 34,
@@ -7457,7 +7471,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "a8ede6d18a16140637c94f6c77b5453c1aed30db",
+    "generated_at_commit": "fefd1125a357f75b84404fe4972fe97246199387",
     "scan_roots": [
       "engine",
       "scripts",

@@ -131,7 +131,7 @@ def run_primary_rescreen(db: ReviewDatabase, spec: ReviewSpec) -> dict:
     """Run dual-pass primary re-screen on all target papers."""
     primary_model = spec.screening_models.primary
     logger.info("Primary model: %s", primary_model)
-    logger.info("Specialty scope included: %s", spec.specialty_scope is not None)
+    logger.info("Specialty scope included: %s", spec.eligibility.specialty_scope is not None)
 
     # Collect target papers
     papers = []

@@ -21,6 +21,13 @@ from engine.adjudication.workflow import (
 )
 from engine.core.database import ReviewDatabase
 
+from engine.core.review_paths import load_spec_for as _load_spec_for
+
+#: The adjudication rubric is rendered from the spec's eligibility and has
+#: no spec-less default, so every export test supplies one.
+_SPEC_FOR_EXPORT = _load_spec_for("surgical_autonomy")
+
+
 
 @pytest.fixture
 def db(tmp_path):
@@ -258,7 +265,7 @@ def test_export_sets_queue_exported(db, tmp_path):
     db.update_status(1, "ABSTRACT_SCREEN_FLAGGED")
 
     out = tmp_path / "queue.xlsx"
-    export_adjudication_queue(db, out)
+    export_adjudication_queue(db, out, review_spec=_SPEC_FOR_EXPORT)
 
     assert is_stage_done(db._conn, "ABSTRACT_QUEUE_EXPORTED")
 
@@ -280,7 +287,7 @@ def test_import_sets_adjudication_complete(db, tmp_path):
     db.update_status(1, "ABSTRACT_SCREEN_FLAGGED")
 
     out = tmp_path / "queue.xlsx"
-    export_adjudication_queue(db, out)
+    export_adjudication_queue(db, out, review_spec=_SPEC_FOR_EXPORT)
 
     from openpyxl import load_workbook
     wb = load_workbook(out)
@@ -310,7 +317,7 @@ def test_import_does_not_set_complete_with_missing(db, tmp_path):
     db.update_status(1, "ABSTRACT_SCREEN_FLAGGED")
 
     out = tmp_path / "queue.xlsx"
-    export_adjudication_queue(db, out)
+    export_adjudication_queue(db, out, review_spec=_SPEC_FOR_EXPORT)
 
     # Don't fill in any decisions
     import_adjudication_decisions(db, out)

@@ -18,6 +18,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 from engine.core.constants import FT_MAX_TEXT_CHARS, FT_REASON_CODES
 from engine.core.database import ReviewDatabase
+from engine.core import eligibility_render as render
 from engine.core.review_spec import ReviewSpec
 from engine.utils.ollama_client import ollama_chat
 
@@ -110,12 +111,11 @@ def build_ft_screening_prompt(paper_text: str, spec: ReviewSpec) -> str:
         f"Outcomes: {outcomes_str}"
     )
 
-    inclusion = "\n".join(f"  - {c}" for c in spec.screening_criteria.inclusion)
-    exclusion = "\n".join(f"  - {c}" for c in spec.screening_criteria.exclusion)
-
-    specialty_block = ""
-    if spec.specialty_scope:
-        specialty_block = "\n" + spec.specialty_scope.format_for_prompt() + "\n"
+    elig = spec.eligibility
+    inclusion = render.inclusion_block(elig, "ft_primary")
+    exclusion = render.exclusion_block(elig, "ft_primary")
+    specialty_block = render.specialty_prompt_block(elig)
+    reason_code_block = render.reason_code_prompt_block(elig)
 
     reason_codes_str = ", ".join(FT_REASON_CODES)
 
@@ -134,13 +134,7 @@ EXCLUSION CRITERIA:
 {exclusion}
 {specialty_block}
 REASON CODES (use exactly one):
-  - eligible: Paper passes all criteria
-  - wrong_specialty: Autonomous task is in an excluded surgical specialty
-  - no_autonomy_content: Abstract suggested autonomy but full text reveals no autonomous component
-  - wrong_intervention: Not surgical robotics (e.g., industrial, rehabilitation)
-  - protocol_only: Study protocol without results
-  - duplicate_cohort: Overlapping dataset with another included paper
-  - insufficient_data: Commentary, letter, or editorial with no extractable data
+{reason_code_block}
 
 PAPER FULL TEXT:
 {paper_text}
@@ -159,11 +153,10 @@ def build_ft_verification_prompt(paper_text: str, spec: ReviewSpec) -> str:
         f"Outcomes: {outcomes_str}"
     )
 
-    exclusion = "\n".join(f"  - {c}" for c in spec.screening_criteria.exclusion)
-
-    specialty_block = ""
-    if spec.specialty_scope:
-        specialty_block = "\n" + spec.specialty_scope.format_for_prompt() + "\n"
+    elig = spec.eligibility
+    exclusion = render.exclusion_block(elig, "ft_verifier")
+    specialty_block = render.specialty_prompt_block(elig)
+    decision_instruction = render.decision_instruction(elig, "ft_verifier")
 
     return f"""/no_think
 You are the VERIFICATION pass for full-text screening. This paper was already
@@ -175,19 +168,7 @@ REVIEW FOCUS (PICO):
 EXCLUSION CRITERIA:
 {exclusion}
 {specialty_block}
-Apply these tests strictly:
-1. Does the full text describe a robot that EXECUTES a surgical action
-   autonomously or semi-autonomously? (Not just analysis/tracking/assessment)
-2. Is there an autonomous component — not purely teleoperated/master-slave?
-3. Does it involve a physical surgical task — not just a simulation
-   framework or pure methodology?
-4. Is the surgical specialty within scope (not dental, ophthalmic, etc.
-   unless the task is a generalizable bench/preclinical autonomy task)?
-5. Is it original research with extractable data — not a protocol, review,
-   or commentary?
-
-If ANY test fails, mark as FT_FLAGGED. Only mark FT_ELIGIBLE if the paper
-clearly passes all tests.
+{decision_instruction}
 
 PAPER FULL TEXT:
 {paper_text}

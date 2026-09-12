@@ -12,20 +12,11 @@ from pathlib import Path
 
 from engine.adjudication.schema import ensure_adjudication_table
 from engine.adjudication.workflow import complete_stage
+from engine.core import eligibility_render as render
 from engine.core.database import ReviewDatabase
 
 logger = logging.getLogger(__name__)
 
-# FT reason code descriptions for reference sheet
-_REASON_CODE_DESCRIPTIONS = {
-    "eligible": "Paper meets all inclusion criteria based on full text",
-    "wrong_specialty": "Paper's specialty falls outside the included specialty scope",
-    "no_autonomy_content": "Full text reveals no autonomous or semi-autonomous robot execution",
-    "wrong_intervention": "Intervention does not involve autonomous surgical robot control",
-    "protocol_only": "Paper describes a study protocol without results",
-    "duplicate_cohort": "Same cohort/data as another included paper",
-    "insufficient_data": "Insufficient methodological detail to assess eligibility",
-}
 
 
 # ── Data Collection ─────────────────────────────────────────────────
@@ -109,20 +100,12 @@ def _build_ft_reference_content(spec=None) -> str:
 
     lines.append("FULL-TEXT SCREENING REASON CODES")
     lines.append("")
-    for code, desc in _REASON_CODE_DESCRIPTIONS.items():
+    for code, desc in render.reason_code_descriptions(spec.eligibility, "sheet").items():
         lines.append(f"  {code}: {desc}")
     lines.append("")
 
     if spec:
-        if hasattr(spec, "screening_criteria") and spec.screening_criteria:
-            lines.append("INCLUSION CRITERIA:")
-            for criterion in spec.screening_criteria.inclusion:
-                lines.append(f"  + {criterion}")
-            lines.append("")
-            lines.append("EXCLUSION CRITERIA:")
-            for criterion in spec.screening_criteria.exclusion:
-                lines.append(f"  - {criterion}")
-            lines.append("")
+        lines.extend(render.criteria_reference_block(spec.eligibility, "ft_adjudication"))
 
         if hasattr(spec, "pico") and spec.pico:
             lines.append("PICO FRAMEWORK:")
@@ -135,49 +118,20 @@ def _build_ft_reference_content(spec=None) -> str:
                 lines.append(f"  Outcomes:     {spec.pico.outcomes}")
             lines.append("")
 
-        if hasattr(spec, "specialty_scope") and spec.specialty_scope:
-            lines.append("SPECIALTY SCOPE:")
-            lines.append("  Included specialties:")
-            for s in spec.specialty_scope.included:
-                lines.append(f"    + {s}")
-            lines.append("  Excluded specialties:")
-            for s in spec.specialty_scope.excluded:
-                lines.append(f"    - {s}")
-            if spec.specialty_scope.notes:
-                lines.append(f"  Notes: {spec.specialty_scope.notes}")
+        lines.extend(render.specialty_reference_block(spec.eligibility))
 
     return "\n".join(lines)
 
 
-def _build_ft_decision_criteria(spec=None) -> list[str]:
-    """Build decision criteria for FT screening adjudication."""
-    criteria = [
-        "FT_ELIGIBLE: The full text confirms the paper describes autonomous or "
-        "semi-autonomous surgical robot execution of a physical task.",
-        "FT_SCREENED_OUT: The full text reveals the paper does not meet inclusion "
-        "criteria (see reason code for likely cause).",
-    ]
+def _build_ft_decision_criteria(spec) -> list[str]:
+    """The FT adjudication sheet's decision rubric, from the spec's eligibility."""
+    return render.decision_criteria(spec.eligibility, "ft_adjudication")
 
-    if spec and hasattr(spec, "specialty_scope") and spec.specialty_scope:
-        included = ", ".join(spec.specialty_scope.included)
-        excluded = ", ".join(spec.specialty_scope.excluded)
-        criteria.append(f"SPECIALTY SCOPE — Included: {included}")
-        criteria.append(f"SPECIALTY SCOPE — Excluded: {excluded}")
-
-    return criteria
-
-
-def _build_ft_edge_case_guidance(spec=None) -> str:
-    """Build edge case guidance for FT screening."""
-    parts = []
-    if spec and hasattr(spec, "specialty_scope") and spec.specialty_scope and spec.specialty_scope.notes:
-        parts.append(spec.specialty_scope.notes.strip())
-    parts.append(
-        "These papers were flagged because the primary screener and verifier disagreed. "
-        "Review the full-text reason code and both rationales to make your decision."
+def _build_ft_edge_case_guidance(spec) -> str:
+    """Scope notes, plus the engine's note on why these papers are in the queue."""
+    return render.edge_case_guidance(
+        spec.eligibility, "ft_adjudication", render.FT_FLAGGED_WORKFLOW_NOTE
     )
-    return " ".join(parts)
-
 
 # ── Export ──────────────────────────────────────────────────────────
 

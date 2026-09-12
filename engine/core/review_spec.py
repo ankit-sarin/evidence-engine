@@ -4,7 +4,7 @@ import hashlib
 import json
 from datetime import date
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
@@ -108,19 +108,135 @@ class ExtractionModels(_SpecModel):
     )
 
 
-class ScreeningCriteria(_SpecModel):
-    """Inclusion/exclusion rules for title-abstract screening."""
+#: Every surface at which eligibility content is rendered. The four model
+#: stages are prompts; the two adjudication stages are the human reference
+#: sheets, which render the same criteria under different markers. A stage is
+#: named here rather than inferred so a criterion can declare where it applies.
+Stage = Literal[
+    "abstract_primary",
+    "abstract_verifier",
+    "ft_primary",
+    "ft_verifier",
+    "abstract_adjudication",
+    "ft_adjudication",
+]
 
-    inclusion: list[str]
-    exclusion: list[str]
+
+class Criterion(_SpecModel):
+    """One eligibility rule, and the single authority for its wording.
+
+    `text` is canonical. `transitional_text` carries, per stage, the wording a
+    stage renders *today* where it differs from canonical — a paraphrase that
+    narrows or widens the rule. It exists so the relocation can be proved
+    byte-identical before any content changes, and it is deleted at the fold
+    step; a criterion whose stages all agree with `text` carries none.
+    """
+
+    id: str = Field(pattern=r"^[a-z][a-z0-9-]*$", max_length=64)
+    kind: Literal["inclusion", "exclusion"]
+    text: str = Field(min_length=1)
+    stages: list[Stage] = Field(min_length=1)
+    reason_code: Optional[str] = None
+    transitional_text: Optional[dict[Stage, str]] = None
+    #: TRANSITIONAL. The two wordings this criterion's reason code carries today —
+    #: one in the FT prompt, one in the adjudication reference sheet. They disagree
+    #: for every code in the vocabulary, which is why both must be carried until 2c
+    #: rules on a single description.
+    reason_code_prompt_text: Optional[str] = None
+    reason_code_sheet_text: Optional[str] = None
+
+    @model_validator(mode="after")
+    def _check(self) -> "Criterion":
+        if self.kind == "inclusion" and self.reason_code is not None:
+            raise ValueError(
+                f"criterion {self.id!r}: reason_code is for exclusions only. "
+                "An inclusion criterion is not a reason to exclude a paper, and "
+                "a code on one would have no emitter."
+            )
+        if self.transitional_text:
+            stray = sorted(set(self.transitional_text) - set(self.stages))
+            if stray:
+                raise ValueError(
+                    f"criterion {self.id!r}: transitional_text names stage(s) "
+                    f"{stray} the criterion is not rendered at. Transitional text "
+                    "for a stage that never renders the criterion is dead wording "
+                    "that no gate would catch."
+                )
+        if self.reason_code is None and (
+            self.reason_code_prompt_text or self.reason_code_sheet_text
+        ):
+            raise ValueError(
+                f"criterion {self.id!r}: carries a reason-code description but no "
+                "reason_code. A description for a code this criterion never emits "
+                "would be rendered by nothing."
+            )
+        return self
+
+
+class VerifierTest(_SpecModel):
+    """A numbered test a verification pass applies, and what it derives from.
+
+    `derives_from` is the audit trail from a test back to the rules it enforces.
+    It may name criterion ids or the specialty scope's id; it may not be empty,
+    because a test that enforces nothing declared is topic content smuggled in
+    through the back door.
+    """
+
+    id: str = Field(pattern=r"^[a-z][a-z0-9-]*$", max_length=64)
+    text: str = Field(min_length=1)
+    stages: list[Stage] = Field(min_length=1)
+    derives_from: list[str] = Field(min_length=1)
+    transitional_text: Optional[dict[Stage, str]] = None
+
+    @model_validator(mode="after")
+    def _check(self) -> "VerifierTest":
+        if self.transitional_text:
+            stray = sorted(set(self.transitional_text) - set(self.stages))
+            if stray:
+                raise ValueError(
+                    f"verifier test {self.id!r}: transitional_text names stage(s) "
+                    f"{stray} the test is not rendered at."
+                )
+        return self
+
+
+class StagePolicy(_SpecModel):
+    """How one stage resolves uncertainty, plus its transitional prose.
+
+    `instruction_text` and `absent_abstract_text` are TRANSITIONAL: they hold
+    today's hand-written decision instruction and absent-abstract fallback so
+    the rendering can be reproduced byte for byte. At the fold step they are
+    deleted and the renderer derives that prose from the two policy fields.
+    """
+
+    when_uncertain: Optional[Literal["include", "exclude"]] = None
+    when_evidence_absent: Optional[Literal["include", "exclude"]] = None
+    instruction_text: Optional[str] = None
+    absent_abstract_text: Optional[str] = None
+    #: TRANSITIONAL. The INCLUDE/EXCLUDE rubric sentences an adjudication sheet
+    #: states today. They are a third paraphrase of the criteria — held here so the
+    #: relocation is byte-identical, and deleted at the fold when the rubric is
+    #: derived from the criteria themselves.
+    rubric_text: Optional[list[str]] = None
 
 
 # ── Specialty Scope ──────────────────────────────────────────────────
 
 
 class SpecialtyScope(_SpecModel):
-    """Surgical specialty inclusion/exclusion scope for screening."""
+    """Surgical specialty inclusion/exclusion scope for screening.
 
+    It carries an `id` so a VerifierTest can cite it in `derives_from` the way
+    it cites a criterion. The scope is the authority behind the single largest
+    exclusion category, and a test that enforces it needs to be able to say so.
+    """
+
+    id: str = Field(pattern=r"^[a-z][a-z0-9-]*$", max_length=64)
+    reason_code: str = Field(min_length=1)
+    #: TRANSITIONAL, as on Criterion — the prompt and sheet wordings of this
+    #: scope's reason code, which disagree today.
+    reason_code_prompt_text: Optional[str] = None
+    reason_code_sheet_text: Optional[str] = None
     included: list[str] = Field(min_length=1)
     excluded: list[str] = Field(min_length=1)
     notes: Optional[str] = None
@@ -137,6 +253,77 @@ class SpecialtyScope(_SpecModel):
         if self.notes:
             lines.append(f"  Notes: {self.notes.strip()}")
         return "\n".join(lines)
+
+
+# ── Eligibility ──────────────────────────────────────────────────────
+
+
+class Eligibility(_SpecModel):
+    """The review's eligibility authority: what makes a paper in or out.
+
+    Every surface that screens a paper — four model prompts and two human
+    adjudication sheets — renders from here. Before this model the same rules
+    existed as prose in seven literal sites that had quietly drifted apart:
+    paraphrases that narrowed a criterion, four divergent descriptions of one
+    reason code, and a fifth copy no live path could reach. The spec already
+    held the content; what it lacked was a slot for the wording each stage
+    actually used, which is why `transitional_text` exists and why it is
+    temporary.
+    """
+
+    criteria: list[Criterion] = Field(min_length=1)
+    specialty_scope: SpecialtyScope
+    verifier_tests: list[VerifierTest] = Field(default_factory=list)
+    stage_policies: dict[Stage, StagePolicy] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def _check(self) -> "Eligibility":
+        ids = [c.id for c in self.criteria]
+        dupes = sorted({i for i in ids if ids.count(i) > 1})
+        if dupes:
+            raise ValueError(
+                f"duplicate criterion id(s) {dupes}. An id is how a verifier "
+                "test and a stored decision name a rule; two rules answering to "
+                "one id make that reference ambiguous."
+            )
+        known = set(ids) | {self.specialty_scope.id}
+        for t in self.verifier_tests:
+            unknown = sorted(set(t.derives_from) - known)
+            if unknown:
+                raise ValueError(
+                    f"verifier test {t.id!r}: derives_from names unknown id(s) "
+                    f"{unknown}. A test may cite a criterion id or the specialty "
+                    "scope id; anything else is a reference to a rule that does "
+                    "not exist."
+                )
+        return self
+
+    def criteria_for(self, stage: str, kind: Optional[str] = None) -> list[Criterion]:
+        """Criteria rendered at `stage`, in declaration order."""
+        return [
+            c for c in self.criteria
+            if stage in c.stages and (kind is None or c.kind == kind)
+        ]
+
+    def tests_for(self, stage: str) -> list[VerifierTest]:
+        """Verifier tests rendered at `stage`, in declaration order."""
+        return [t for t in self.verifier_tests if stage in t.stages]
+
+    @staticmethod
+    def text_at(item: "Criterion | VerifierTest", stage: str) -> str:
+        """The wording `stage` renders for `item` — transitional or canonical.
+
+        Serves criteria and verifier tests alike: both carry a canonical `text`
+        and an optional per-stage override, and the renderer must not care
+        which kind it is holding.
+        """
+        if item.transitional_text:
+            return item.transitional_text.get(stage, item.text)
+        return item.text
+
+    def policy_for(self, stage: str) -> StagePolicy:
+        """The stage's policy, or an empty one if the spec declares none."""
+        return self.stage_policies.get(stage) or StagePolicy()
 
 
 # ── PDF Parsing ─────────────────────────────────────────────────────
@@ -336,10 +523,13 @@ class ReviewSpec(_SpecModel):
     screening_models: ScreeningModels = Field(default_factory=ScreeningModels)
     ft_screening_models: FTScreeningModels = Field(default_factory=FTScreeningModels)
     extraction_models: ExtractionModels = Field(default_factory=ExtractionModels)
-    screening_criteria: ScreeningCriteria
-    specialty_scope: Optional[SpecialtyScope] = Field(
-        default=None,
-        description="Surgical specialty inclusion/exclusion scope. If absent, no specialty filtering.",
+    eligibility: Eligibility = Field(
+        description=(
+            "The eligibility authority: criteria, specialty scope, verifier "
+            "tests and per-stage policy. Replaces the former "
+            "`screening_criteria` and top-level `specialty_scope` sections, "
+            "which are refused by `extra='forbid'` rather than ignored."
+        ),
     )
     low_yield_threshold: int = Field(
         default=4,
@@ -393,8 +583,14 @@ class ReviewSpec(_SpecModel):
     #: copy that could — and did — disagree with it.
 
     def screening_hash(self) -> str:
-        """SHA-256 of the screening criteria section (canonical JSON)."""
-        return _canonical_hash(self.screening_criteria.model_dump())
+        """SHA-256 of the eligibility section (canonical JSON).
+
+        The hash covers the transitional fields too, because until they are
+        folded away they are part of what a stage actually renders, and a
+        provenance record that ignored them would call two different renderings
+        the same protocol.
+        """
+        return _canonical_hash(self.eligibility.model_dump())
 
 
 

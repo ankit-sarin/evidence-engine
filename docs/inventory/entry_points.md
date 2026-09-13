@@ -1,15 +1,15 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `61326fac2f35159bbec7dd83725ae5ed69e0b91a` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `e2adff3d1d2e6ec27d1066764125d2b60aec9866` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 203 |
-| entry points | 102 |
+| files scanned | 204 |
+| entry points | 103 |
 | entry points with spec flag | 29 |
 | entry points with review name flag | 74 |
 | entry points name only | 46 |
@@ -21,7 +21,7 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | files with raw yaml loads | 3 |
 | review id constants | 9 |
 | literal review id sites in code | 35 |
-| path construction sites in code | 66 |
+| path construction sites in code | 67 |
 | db before spec scopes | 0 |
 | fstring spec path sites | 0 |
 | default review named constants | 7 |
@@ -54,7 +54,7 @@ Baselines are the figures measured by hand in GENERALIZE-READOUT-01 and SPEC-AUT
 | f-string spec-path builders | 19 | 0 | SPEC-AUTH-01 moved every one of these onto the resolver; a non-zero value here means a hand-built spec path has come back |
 | DEFAULT_REVIEW constants | 7 | 7 | matches |
 
-Two figures deliberately have no baseline row. **entry points** (102) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
+Two figures deliberately have no baseline row. **entry points** (103) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
 
 ## Entry points
 
@@ -78,6 +78,7 @@ Two figures deliberately have no baseline row. **entry points** (102) counts any
 | `analysis/eval/run_local_abc.py` | `--review` required; `--data-root`='data'; `--spec`=None; `--label`='local_abc'; `--resume` | load_spec_for | — | — |
 | `analysis/eval/run_qualgap01.py` | `--review` required; `--data-root`='data'; `--spec`=None; `--host`=dynamic: DEFAULT_HOST; `--label`='runtime_v12'; `--probe`; `--cells`=dynamic: list(CELLS); `--resume` | load_spec_for | — | — |
 | `analysis/eval/run_screen2f.py` | `--out-dir` required; `--arm-a-root` required; `--papers`=dynamic: DEFAULT_PAPERS; `--ids`=''; `--forced-verifier-ids`=''; `--watch-file`=None; `--lead-minutes`=dynamic: lib.DEFAULT_LEAD_MINUTES; `--max-resume-wait-min`=240; `--phases`='primary,verifier' | spec_path_for | — | — |
+| `analysis/eval/score_screen2f.py` | `--run-dir` required; `--workbook`=dynamic: DEFAULT_WORKBOOK; `--out-dir` required | — | — | — |
 | `analysis/eval/screen2f_export.py` | `--db`=dynamic: DEFAULT_DB; `--workbook`=dynamic: DEFAULT_WORKBOOK; `--abstracts-jsonl`=dynamic: DEFAULT_JSONL; `--out-dir`=dynamic: DEFAULT_OUT | — | — | — |
 | `analysis/eval/screen2f_worker.py` | `--arm` required; `--root` required; `--spec` required; `--phase` required; `--papers`; `--ids`=''; `--forced-verifier-ids`=''; `--out-dir` required; `--lead-minutes`=None | load_review_spec | — | — |
 | `analysis/eval/smoke_regression01.py` | `--review` required; `--data-root`='data'; `--spec`=None | load_spec_for | — | — |
@@ -191,6 +192,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/eval/run_local_abc.py` | 198 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/run_qualgap01.py` | 282 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/run_screen2f.py` | 213 | literal | `armC_spec.yaml` |
+| `analysis/eval/score_screen2f.py` | 41 | literal | `data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx` |
 | `analysis/eval/screen2f_export.py` | 36 | literal | `data/surgical_autonomy/review.db` |
 | `analysis/eval/screen2f_export.py` | 37 | literal | `data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx` |
 | `analysis/eval/screen2f_export.py` | 38 | literal | `data/surgical_autonomy/expanded_search/abstracts.jsonl` |

@@ -1,0 +1,202 @@
+{
+  "argv": [
+    "/home/ankitsarin/projects/evidence-engine/analysis/eval/run_screen2f.py",
+    "--out-dir",
+    "docs/session-reports/screen-auth-2f-smoke/preflight",
+    "--arm-a-root",
+    "/home/ankitsarin/worktrees/evidence-engine-83defc5",
+    "--ids",
+    "18,290,579",
+    "--forced-verifier-ids",
+    "579",
+    "--watch-file",
+    "data/surgical_autonomy/review.db"
+  ],
+  "started_utc": "2026-09-13T04:12:15.652617Z",
+  "events": [
+    {
+      "at": "2026-09-13T04:12:15.693969Z",
+      "event": "flock_acquired"
+    },
+    {
+      "at": "2026-09-13T04:12:16.366706Z",
+      "event": "identity_gate",
+      "ok": true
+    },
+    {
+      "at": "2026-09-13T04:12:16.381211Z",
+      "event": "phase_start",
+      "phase": "primary",
+      "ollama_ps": [
+        {
+          "name": "qwen3:8b",
+          "size": 11454255232,
+          "size_vram": 11454255232,
+          "expires_at": "2318-12-23T08:56:13.223207413Z",
+          "context_length": 40960
+        }
+      ]
+    },
+    {
+      "at": "2026-09-13T04:12:35.878293Z",
+      "event": "worker_exit",
+      "phase": "primary",
+      "arm": "A",
+      "rc": 0,
+      "started": "2026-09-13T04:12:16.381269Z"
+    },
+    {
+      "at": "2026-09-13T04:12:55.783751Z",
+      "event": "worker_exit",
+      "phase": "primary",
+      "arm": "B",
+      "rc": 0,
+      "started": "2026-09-13T04:12:35.878438Z"
+    },
+    {
+      "at": "2026-09-13T04:13:17.218230Z",
+      "event": "worker_exit",
+      "phase": "primary",
+      "arm": "C",
+      "rc": 0,
+      "started": "2026-09-13T04:12:55.783911Z"
+    },
+    {
+      "at": "2026-09-13T04:13:17.233087Z",
+      "event": "phase_end",
+      "phase": "primary",
+      "ollama_ps": [
+        {
+          "name": "qwen3:8b",
+          "size": 11454255232,
+          "size_vram": 11454255232,
+          "expires_at": "2318-12-24T04:00:34.014874241Z",
+          "context_length": 40960
+        }
+      ]
+    },
+    {
+      "at": "2026-09-13T04:13:17.257765Z",
+      "event": "phase_start",
+      "phase": "verifier",
+      "ollama_ps": [
+        {
+          "name": "qwen3:8b",
+          "size": 11454255232,
+          "size_vram": 11454255232,
+          "expires_at": "2318-12-24T04:00:34.014874241Z",
+          "context_length": 40960
+        }
+      ]
+    },
+    {
+      "at": "2026-09-13T04:13:50.585862Z",
+      "event": "worker_exit",
+      "phase": "verifier",
+      "arm": "A",
+      "rc": 0,
+      "started": "2026-09-13T04:13:17.257882Z"
+    },
+    {
+      "at": "2026-09-13T04:14:00.338686Z",
+      "event": "worker_exit",
+      "phase": "verifier",
+      "arm": "B",
+      "rc": 0,
+      "started": "2026-09-13T04:13:50.586075Z"
+    },
+    {
+      "at": "2026-09-13T04:14:10.022584Z",
+      "event": "worker_exit",
+      "phase": "verifier",
+      "arm": "C",
+      "rc": 0,
+      "started": "2026-09-13T04:14:00.338882Z"
+    },
+    {
+      "at": "2026-09-13T04:14:10.049899Z",
+      "event": "phase_end",
+      "phase": "verifier",
+      "ollama_ps": [
+        {
+          "name": "gemma3:27b",
+          "size": 30459802624,
+          "size_vram": 30459802624,
+          "expires_at": "2318-12-24T04:01:26.776637677Z",
+          "context_length": 131072
+        }
+      ]
+    },
+    {
+      "at": "2026-09-13T04:14:10.050065Z",
+      "event": "flock_released"
+    }
+  ],
+  "trees": {
+    "A": {
+      "root": "/home/ankitsarin/worktrees/evidence-engine-83defc5",
+      "head": "83defc554069c56516faa7093088bd633500216b"
+    },
+    "B": {
+      "root": "/home/ankitsarin/projects/evidence-engine",
+      "head": "e2adff3d1d2e6ec27d1066764125d2b60aec9866",
+      "inputs_equal_to": "61326fa"
+    },
+    "C": {
+      "root": "/home/ankitsarin/projects/evidence-engine",
+      "head": "e2adff3d1d2e6ec27d1066764125d2b60aec9866",
+      "spec": "/home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/preflight/armC_spec.yaml",
+      "spec_sha256": "50b178a62771990e071bb7c022318db828e1f7e3817db689cdce0981ed00efc7"
+    }
+  },
+  "papers": {
+    "path": "/home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/papers_86.jsonl",
+    "sha256": "8217b887e1c49aa7036a350694e25665d498f0c15a40b797e472125a5db09115"
+  },
+  "ollama_version": "0.21.0",
+  "watch_file": {
+    "path": "data/surgical_autonomy/review.db",
+    "before": {
+      "size": 101978112,
+      "mtime_ns": 1789092052636956943
+    },
+    "after": {
+      "size": 101978112,
+      "mtime_ns": 1789092052636956943
+    }
+  },
+  "identity": {
+    "A": {
+      "primary": "33bdeea91007fb81f2401566f01bc05b6a3c0315db003f41c6dcd4c8808abee3",
+      "verifier": "2c89ef61c690d0c544408f34ee6ea80702520f8cd5a9b1b61da93b6223c4d5f8",
+      "screening_hash": "d804ced7bd4c45e872524ebfd4d55f3d093ff9d18db28cfee8e2f67f4c571ae9",
+      "engine_file": "/home/ankitsarin/worktrees/evidence-engine-83defc5/engine/__init__.py",
+      "models": {
+        "primary": "qwen3:8b",
+        "verification": "gemma3:27b"
+      }
+    },
+    "B": {
+      "primary": "e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649",
+      "verifier": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+      "screening_hash": "d563134ed6a92a8d0ee3e877574fcf844f7094889ec411f88e3285bb58a06a29",
+      "engine_file": "/home/ankitsarin/projects/evidence-engine/engine/__init__.py",
+      "models": {
+        "primary": "qwen3:8b",
+        "verification": "gemma3:27b"
+      }
+    },
+    "C": {
+      "primary": "0af23cef16b4a862aed6a2f0316251f707af20ab09e2c4f3052c694323b9aeb9",
+      "verifier": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+      "screening_hash": "e23b74de9275df8655d3efeacc2ca769542ac41c325d9691c1b2fac11b0f0120",
+      "engine_file": "/home/ankitsarin/projects/evidence-engine/engine/__init__.py",
+      "models": {
+        "primary": "qwen3:8b",
+        "verification": "gemma3:27b"
+      }
+    }
+  },
+  "ended_utc": "2026-09-13T04:14:10.050182Z",
+  "status": "COMPLETE"
+}

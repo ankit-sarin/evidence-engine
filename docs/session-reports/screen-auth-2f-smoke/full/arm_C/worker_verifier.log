@@ -1,0 +1,72 @@
+==== 2026-09-13T05:14:57.315196Z /home/ankitsarin/projects/evidence-engine/.venv/bin/python -P /home/ankitsarin/projects/evidence-engine/analysis/eval/screen2f_worker.py --arm C --root /home/ankitsarin/projects/evidence-engine --spec /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/full/armC_spec.yaml --phase verifier --out-dir /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/full/arm_C --papers /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/papers_86.jsonl --ids  --lead-minutes 10 --forced-verifier-ids 
+2026-09-13 05:15:05,494 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:15:05,509 INFO screen2f.worker.C: verifier paper 306: exclude -> FLAGGED
+2026-09-13 05:15:17,175 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:15:17,189 INFO screen2f.worker.C: verifier paper 356: exclude -> FLAGGED
+2026-09-13 05:15:26,491 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:15:26,505 INFO screen2f.worker.C: verifier paper 600: exclude -> FLAGGED
+2026-09-13 05:15:33,110 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:15:33,125 INFO screen2f.worker.C: verifier paper 258: exclude -> FLAGGED
+2026-09-13 05:15:39,988 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:15:40,002 INFO screen2f.worker.C: verifier paper 354: exclude -> FLAGGED
+2026-09-13 05:15:47,897 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:15:47,913 INFO screen2f.worker.C: verifier paper 360: exclude -> FLAGGED
+2026-09-13 05:15:55,522 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:15:55,537 INFO screen2f.worker.C: verifier paper 302: exclude -> FLAGGED
+2026-09-13 05:16:05,363 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:16:05,377 INFO screen2f.worker.C: verifier paper 603: exclude -> FLAGGED
+2026-09-13 05:16:13,849 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:16:13,863 INFO screen2f.worker.C: verifier paper 413: exclude -> FLAGGED
+2026-09-13 05:16:27,689 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:16:27,703 INFO screen2f.worker.C: verifier paper 435: exclude -> FLAGGED
+2026-09-13 05:16:34,409 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:16:34,424 INFO screen2f.worker.C: verifier paper 280: exclude -> FLAGGED
+2026-09-13 05:16:40,948 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:16:40,963 INFO screen2f.worker.C: verifier paper 333: exclude -> FLAGGED
+2026-09-13 05:16:52,999 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:16:53,014 INFO screen2f.worker.C: verifier paper 650: exclude -> FLAGGED
+2026-09-13 05:16:59,319 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:16:59,333 INFO screen2f.worker.C: verifier paper 426: exclude -> FLAGGED
+2026-09-13 05:17:05,485 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:17:05,500 INFO screen2f.worker.C: verifier paper 596: exclude -> FLAGGED
+2026-09-13 05:17:13,816 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:17:13,831 INFO screen2f.worker.C: verifier paper 341: exclude -> FLAGGED
+2026-09-13 05:17:20,255 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:17:20,269 INFO screen2f.worker.C: verifier paper 309: exclude -> FLAGGED
+2026-09-13 05:17:27,121 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:17:27,138 INFO screen2f.worker.C: verifier paper 730: exclude -> FLAGGED
+2026-09-13 05:17:36,094 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:17:36,109 INFO screen2f.worker.C: verifier paper 785: exclude -> FLAGGED
+2026-09-13 05:17:43,519 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:17:43,533 INFO screen2f.worker.C: verifier paper 684: exclude -> FLAGGED
+2026-09-13 05:17:52,124 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:17:52,139 INFO screen2f.worker.C: verifier paper 782: exclude -> FLAGGED
+2026-09-13 05:18:01,627 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:18:01,642 INFO screen2f.worker.C: verifier paper 403: exclude -> FLAGGED
+2026-09-13 05:18:13,613 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:18:13,627 INFO screen2f.worker.C: verifier paper 795: exclude -> FLAGGED
+2026-09-13 05:18:21,690 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:18:21,705 INFO screen2f.worker.C: verifier paper 641: exclude -> FLAGGED
+2026-09-13 05:18:30,305 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:18:30,319 INFO screen2f.worker.C: verifier paper 270: exclude -> FLAGGED
+2026-09-13 05:18:39,777 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:18:39,791 INFO screen2f.worker.C: verifier paper 579: exclude -> FLAGGED
+2026-09-13 05:18:52,916 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:18:52,931 INFO screen2f.worker.C: verifier paper 425: exclude -> FLAGGED
+2026-09-13 05:19:05,517 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:19:05,532 INFO screen2f.worker.C: verifier paper 387: exclude -> FLAGGED
+2026-09-13 05:19:19,370 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:19:19,385 INFO screen2f.worker.C: verifier paper 103: exclude -> FLAGGED
+2026-09-13 05:19:32,491 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:19:32,505 INFO screen2f.worker.C: verifier paper 385: exclude -> FLAGGED
+2026-09-13 05:19:43,501 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:19:43,516 INFO screen2f.worker.C: verifier paper 71: exclude -> FLAGGED
+2026-09-13 05:19:53,867 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:19:53,882 INFO screen2f.worker.C: verifier paper 588: exclude -> FLAGGED
+2026-09-13 05:20:10,488 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:20:10,503 INFO screen2f.worker.C: verifier paper 379: exclude -> FLAGGED
+2026-09-13 05:20:22,780 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:20:22,795 INFO screen2f.worker.C: verifier paper 722: exclude -> FLAGGED
+2026-09-13 05:20:34,825 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:20:34,832 INFO screen2f.worker.C: verifier paper 657: exclude -> FLAGGED
+2026-09-13 05:20:34,833 INFO screen2f.worker.C: phase verifier status done

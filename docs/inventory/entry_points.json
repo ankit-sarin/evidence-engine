@@ -1277,6 +1277,55 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "analysis/eval/score_screen2f.py": {
+        "entry_point": true,
+        "flags": [
+          {
+            "default": "unset",
+            "dest": null,
+            "line": 469,
+            "names": [
+              "--run-dir"
+            ],
+            "required": true
+          },
+          {
+            "default": "dynamic: DEFAULT_WORKBOOK",
+            "dest": null,
+            "line": 470,
+            "names": [
+              "--workbook"
+            ],
+            "required": false
+          },
+          {
+            "default": "unset",
+            "dest": null,
+            "line": 471,
+            "names": [
+              "--out-dir"
+            ],
+            "required": true
+          }
+        ],
+        "has_main_guard": true,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "analysis/eval/score_screen2f.py",
+        "path_construction": [
+          {
+            "kind": "literal",
+            "line": 41,
+            "role": "code",
+            "text": "data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx"
+          }
+        ],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "analysis/eval/screen2f.py": {
         "entry_point": false,
         "flags": [],
@@ -7765,26 +7814,26 @@
     "summary": {
       "db_before_spec_scopes": 0,
       "default_review_named_constants": 7,
-      "entry_points": 102,
+      "entry_points": 103,
       "entry_points_constructing_reviewdatabase": 37,
       "entry_points_name_only": 46,
       "entry_points_with_review_name_flag": 74,
       "entry_points_with_spec_flag": 29,
       "files_calling_load_review_spec_directly": 9,
       "files_calling_resolver": 32,
-      "files_scanned": 203,
+      "files_scanned": 204,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 35,
       "name_only_constructing_reviewdatabase": 21,
-      "path_construction_sites_in_code": 66,
+      "path_construction_sites_in_code": 67,
       "raw_yaml_load_sites": 3,
       "review_id_constants": 9,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "61326fac2f35159bbec7dd83725ae5ed69e0b91a",
+    "generated_at_commit": "e2adff3d1d2e6ec27d1066764125d2b60aec9866",
     "scan_roots": [
       "engine",
       "scripts",

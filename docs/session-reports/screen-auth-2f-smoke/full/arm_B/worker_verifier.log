@@ -1,0 +1,80 @@
+==== 2026-09-13T05:08:28.686866Z /home/ankitsarin/projects/evidence-engine/.venv/bin/python -P /home/ankitsarin/projects/evidence-engine/analysis/eval/screen2f_worker.py --arm B --root /home/ankitsarin/projects/evidence-engine --spec /home/ankitsarin/projects/evidence-engine/review_specs/surgical_autonomy.yaml --phase verifier --out-dir /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/full/arm_B --papers /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/papers_86.jsonl --ids  --lead-minutes 10 --forced-verifier-ids 
+2026-09-13 05:08:36,788 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:08:36,803 INFO screen2f.worker.B: verifier paper 306: exclude -> FLAGGED
+2026-09-13 05:08:48,483 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:08:48,499 INFO screen2f.worker.B: verifier paper 356: exclude -> FLAGGED
+2026-09-13 05:08:57,763 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:08:57,777 INFO screen2f.worker.B: verifier paper 600: exclude -> FLAGGED
+2026-09-13 05:09:04,402 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:09:04,416 INFO screen2f.worker.B: verifier paper 258: exclude -> FLAGGED
+2026-09-13 05:09:11,240 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:09:11,255 INFO screen2f.worker.B: verifier paper 354: exclude -> FLAGGED
+2026-09-13 05:09:19,175 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:09:19,189 INFO screen2f.worker.B: verifier paper 360: exclude -> FLAGGED
+2026-09-13 05:09:26,857 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:09:26,870 INFO screen2f.worker.B: verifier paper 302: exclude -> FLAGGED
+2026-09-13 05:09:36,884 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:09:36,898 INFO screen2f.worker.B: verifier paper 603: exclude -> FLAGGED
+2026-09-13 05:09:50,669 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:09:50,683 INFO screen2f.worker.B: verifier paper 264: exclude -> FLAGGED
+2026-09-13 05:09:59,287 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:09:59,302 INFO screen2f.worker.B: verifier paper 413: exclude -> FLAGGED
+2026-09-13 05:10:13,347 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:10:13,361 INFO screen2f.worker.B: verifier paper 435: exclude -> FLAGGED
+2026-09-13 05:10:20,065 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:10:20,080 INFO screen2f.worker.B: verifier paper 280: exclude -> FLAGGED
+2026-09-13 05:10:26,699 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:10:26,712 INFO screen2f.worker.B: verifier paper 333: exclude -> FLAGGED
+2026-09-13 05:10:38,944 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:10:38,959 INFO screen2f.worker.B: verifier paper 650: exclude -> FLAGGED
+2026-09-13 05:10:45,249 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:10:45,264 INFO screen2f.worker.B: verifier paper 426: exclude -> FLAGGED
+2026-09-13 05:10:51,425 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:10:51,440 INFO screen2f.worker.B: verifier paper 596: exclude -> FLAGGED
+2026-09-13 05:10:57,865 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:10:57,880 INFO screen2f.worker.B: verifier paper 309: exclude -> FLAGGED
+2026-09-13 05:11:04,737 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:11:04,751 INFO screen2f.worker.B: verifier paper 730: exclude -> FLAGGED
+2026-09-13 05:11:13,740 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:11:13,754 INFO screen2f.worker.B: verifier paper 785: exclude -> FLAGGED
+2026-09-13 05:11:21,192 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:11:21,207 INFO screen2f.worker.B: verifier paper 684: exclude -> FLAGGED
+2026-09-13 05:11:29,855 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:11:29,870 INFO screen2f.worker.B: verifier paper 782: exclude -> FLAGGED
+2026-09-13 05:11:39,341 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:11:39,355 INFO screen2f.worker.B: verifier paper 403: exclude -> FLAGGED
+2026-09-13 05:11:51,271 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:11:51,286 INFO screen2f.worker.B: verifier paper 795: exclude -> FLAGGED
+2026-09-13 05:12:03,113 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:12:03,127 INFO screen2f.worker.B: verifier paper 736: exclude -> FLAGGED
+2026-09-13 05:12:11,244 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:12:11,258 INFO screen2f.worker.B: verifier paper 641: exclude -> FLAGGED
+2026-09-13 05:12:19,853 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:12:19,867 INFO screen2f.worker.B: verifier paper 270: exclude -> FLAGGED
+2026-09-13 05:12:29,349 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:12:29,365 INFO screen2f.worker.B: verifier paper 579: exclude -> FLAGGED
+2026-09-13 05:12:42,477 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:12:42,491 INFO screen2f.worker.B: verifier paper 425: exclude -> FLAGGED
+2026-09-13 05:12:55,074 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:12:55,088 INFO screen2f.worker.B: verifier paper 387: exclude -> FLAGGED
+2026-09-13 05:13:04,747 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:13:04,762 INFO screen2f.worker.B: verifier paper 728: exclude -> FLAGGED
+2026-09-13 05:13:18,584 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:13:18,599 INFO screen2f.worker.B: verifier paper 103: exclude -> FLAGGED
+2026-09-13 05:13:31,717 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:13:31,731 INFO screen2f.worker.B: verifier paper 385: exclude -> FLAGGED
+2026-09-13 05:13:42,576 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:13:42,591 INFO screen2f.worker.B: verifier paper 190: exclude -> FLAGGED
+2026-09-13 05:13:53,565 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:13:53,580 INFO screen2f.worker.B: verifier paper 71: exclude -> FLAGGED
+2026-09-13 05:14:03,908 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:14:03,923 INFO screen2f.worker.B: verifier paper 588: exclude -> FLAGGED
+2026-09-13 05:14:20,477 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:14:20,491 INFO screen2f.worker.B: verifier paper 379: exclude -> FLAGGED
+2026-09-13 05:14:32,740 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:14:32,755 INFO screen2f.worker.B: verifier paper 722: exclude -> FLAGGED
+2026-09-13 05:14:44,776 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:14:44,791 INFO screen2f.worker.B: verifier paper 657: exclude -> FLAGGED
+2026-09-13 05:14:57,207 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13 05:14:57,221 INFO screen2f.worker.B: verifier paper 469: include -> IN
+2026-09-13 05:14:57,221 INFO screen2f.worker.B: phase verifier status done

@@ -1,0 +1,14 @@
+2026-09-13 04:24:43,924Z INFO flock_acquired {}
+2026-09-13 04:24:44,613Z INFO identity_gate {"ok": true}
+2026-09-13 04:24:44,628Z INFO phase_start {"phase": "primary", "ollama_ps": [{"name": "gemma3:27b", "size": 30459802624, "size_vram": 30459802624, "expires_at": "2318-12-24T04:01:26.776637677Z", "context_length": 131072}]}
+2026-09-13 04:33:12,708Z INFO worker_exit {"phase": "primary", "arm": "A", "rc": 0, "started": "2026-09-13T04:24:44.628455Z"}
+2026-09-13 04:43:31,027Z INFO worker_exit {"phase": "primary", "arm": "B", "rc": 0, "started": "2026-09-13T04:33:12.708220Z"}
+2026-09-13 04:54:40,888Z INFO worker_exit {"phase": "primary", "arm": "C", "rc": 0, "started": "2026-09-13T04:43:31.027596Z"}
+2026-09-13 04:54:40,902Z INFO phase_end {"phase": "primary", "ollama_ps": [{"name": "qwen3:8b", "size": 11454255232, "size_vram": 11454255232, "expires_at": "2318-12-24T04:41:57.662809464Z", "context_length": 40960}]}
+2026-09-13 04:54:40,916Z INFO phase_start {"phase": "verifier", "ollama_ps": [{"name": "qwen3:8b", "size": 11454255232, "size_vram": 11454255232, "expires_at": "2318-12-24T04:41:57.662809464Z", "context_length": 40960}]}
+2026-09-13 05:08:28,686Z INFO worker_exit {"phase": "verifier", "arm": "A", "rc": 0, "started": "2026-09-13T04:54:40.916669Z"}
+2026-09-13 05:14:57,314Z INFO worker_exit {"phase": "verifier", "arm": "B", "rc": 0, "started": "2026-09-13T05:08:28.686695Z"}
+2026-09-13 05:20:34,930Z INFO worker_exit {"phase": "verifier", "arm": "C", "rc": 0, "started": "2026-09-13T05:14:57.315021Z"}
+2026-09-13 05:20:34,946Z INFO phase_end {"phase": "verifier", "ollama_ps": [{"name": "gemma3:27b", "size": 30459802624, "size_vram": 30459802624, "expires_at": "2318-12-24T05:07:51.679886314Z", "context_length": 131072}]}
+2026-09-13 05:20:34,946Z INFO flock_released {}
+2026-09-13 05:20:34,946Z INFO run status COMPLETE

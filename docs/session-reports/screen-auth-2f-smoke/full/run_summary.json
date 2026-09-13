@@ -1,0 +1,198 @@
+{
+  "argv": [
+    "/home/ankitsarin/projects/evidence-engine/analysis/eval/run_screen2f.py",
+    "--out-dir",
+    "docs/session-reports/screen-auth-2f-smoke/full",
+    "--arm-a-root",
+    "/home/ankitsarin/worktrees/evidence-engine-83defc5",
+    "--watch-file",
+    "data/surgical_autonomy/review.db"
+  ],
+  "started_utc": "2026-09-13T04:24:43.884793Z",
+  "events": [
+    {
+      "at": "2026-09-13T04:24:43.924103Z",
+      "event": "flock_acquired"
+    },
+    {
+      "at": "2026-09-13T04:24:44.613751Z",
+      "event": "identity_gate",
+      "ok": true
+    },
+    {
+      "at": "2026-09-13T04:24:44.628378Z",
+      "event": "phase_start",
+      "phase": "primary",
+      "ollama_ps": [
+        {
+          "name": "gemma3:27b",
+          "size": 30459802624,
+          "size_vram": 30459802624,
+          "expires_at": "2318-12-24T04:01:26.776637677Z",
+          "context_length": 131072
+        }
+      ]
+    },
+    {
+      "at": "2026-09-13T04:33:12.708066Z",
+      "event": "worker_exit",
+      "phase": "primary",
+      "arm": "A",
+      "rc": 0,
+      "started": "2026-09-13T04:24:44.628455Z"
+    },
+    {
+      "at": "2026-09-13T04:43:31.027434Z",
+      "event": "worker_exit",
+      "phase": "primary",
+      "arm": "B",
+      "rc": 0,
+      "started": "2026-09-13T04:33:12.708220Z"
+    },
+    {
+      "at": "2026-09-13T04:54:40.887991Z",
+      "event": "worker_exit",
+      "phase": "primary",
+      "arm": "C",
+      "rc": 0,
+      "started": "2026-09-13T04:43:31.027596Z"
+    },
+    {
+      "at": "2026-09-13T04:54:40.902585Z",
+      "event": "phase_end",
+      "phase": "primary",
+      "ollama_ps": [
+        {
+          "name": "qwen3:8b",
+          "size": 11454255232,
+          "size_vram": 11454255232,
+          "expires_at": "2318-12-24T04:41:57.662809464Z",
+          "context_length": 40960
+        }
+      ]
+    },
+    {
+      "at": "2026-09-13T04:54:40.916615Z",
+      "event": "phase_start",
+      "phase": "verifier",
+      "ollama_ps": [
+        {
+          "name": "qwen3:8b",
+          "size": 11454255232,
+          "size_vram": 11454255232,
+          "expires_at": "2318-12-24T04:41:57.662809464Z",
+          "context_length": 40960
+        }
+      ]
+    },
+    {
+      "at": "2026-09-13T05:08:28.686551Z",
+      "event": "worker_exit",
+      "phase": "verifier",
+      "arm": "A",
+      "rc": 0,
+      "started": "2026-09-13T04:54:40.916669Z"
+    },
+    {
+      "at": "2026-09-13T05:14:57.314871Z",
+      "event": "worker_exit",
+      "phase": "verifier",
+      "arm": "B",
+      "rc": 0,
+      "started": "2026-09-13T05:08:28.686695Z"
+    },
+    {
+      "at": "2026-09-13T05:20:34.930015Z",
+      "event": "worker_exit",
+      "phase": "verifier",
+      "arm": "C",
+      "rc": 0,
+      "started": "2026-09-13T05:14:57.315021Z"
+    },
+    {
+      "at": "2026-09-13T05:20:34.946388Z",
+      "event": "phase_end",
+      "phase": "verifier",
+      "ollama_ps": [
+        {
+          "name": "gemma3:27b",
+          "size": 30459802624,
+          "size_vram": 30459802624,
+          "expires_at": "2318-12-24T05:07:51.679886314Z",
+          "context_length": 131072
+        }
+      ]
+    },
+    {
+      "at": "2026-09-13T05:20:34.946491Z",
+      "event": "flock_released"
+    }
+  ],
+  "trees": {
+    "A": {
+      "root": "/home/ankitsarin/worktrees/evidence-engine-83defc5",
+      "head": "83defc554069c56516faa7093088bd633500216b"
+    },
+    "B": {
+      "root": "/home/ankitsarin/projects/evidence-engine",
+      "head": "e2adff3d1d2e6ec27d1066764125d2b60aec9866",
+      "inputs_equal_to": "61326fa"
+    },
+    "C": {
+      "root": "/home/ankitsarin/projects/evidence-engine",
+      "head": "e2adff3d1d2e6ec27d1066764125d2b60aec9866",
+      "spec": "/home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/full/armC_spec.yaml",
+      "spec_sha256": "50b178a62771990e071bb7c022318db828e1f7e3817db689cdce0981ed00efc7"
+    }
+  },
+  "papers": {
+    "path": "/home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/papers_86.jsonl",
+    "sha256": "8217b887e1c49aa7036a350694e25665d498f0c15a40b797e472125a5db09115"
+  },
+  "ollama_version": "0.21.0",
+  "watch_file": {
+    "path": "data/surgical_autonomy/review.db",
+    "before": {
+      "size": 101978112,
+      "mtime_ns": 1789092052636956943
+    },
+    "after": {
+      "size": 101978112,
+      "mtime_ns": 1789092052636956943
+    }
+  },
+  "identity": {
+    "A": {
+      "primary": "33bdeea91007fb81f2401566f01bc05b6a3c0315db003f41c6dcd4c8808abee3",
+      "verifier": "2c89ef61c690d0c544408f34ee6ea80702520f8cd5a9b1b61da93b6223c4d5f8",
+      "screening_hash": "d804ced7bd4c45e872524ebfd4d55f3d093ff9d18db28cfee8e2f67f4c571ae9",
+      "engine_file": "/home/ankitsarin/worktrees/evidence-engine-83defc5/engine/__init__.py",
+      "models": {
+        "primary": "qwen3:8b",
+        "verification": "gemma3:27b"
+      }
+    },
+    "B": {
+      "primary": "e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649",
+      "verifier": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+      "screening_hash": "d563134ed6a92a8d0ee3e877574fcf844f7094889ec411f88e3285bb58a06a29",
+      "engine_file": "/home/ankitsarin/projects/evidence-engine/engine/__init__.py",
+      "models": {
+        "primary": "qwen3:8b",
+        "verification": "gemma3:27b"
+      }
+    },
+    "C": {
+      "primary": "0af23cef16b4a862aed6a2f0316251f707af20ab09e2c4f3052c694323b9aeb9",
+      "verifier": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+      "screening_hash": "e23b74de9275df8655d3efeacc2ca769542ac41c325d9691c1b2fac11b0f0120",
+      "engine_file": "/home/ankitsarin/projects/evidence-engine/engine/__init__.py",
+      "models": {
+        "primary": "qwen3:8b",
+        "verification": "gemma3:27b"
+      }
+    }
+  },
+  "ended_utc": "2026-09-13T05:20:34.946565Z",
+  "status": "COMPLETE"
+}

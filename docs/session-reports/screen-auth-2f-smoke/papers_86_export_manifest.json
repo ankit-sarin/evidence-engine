@@ -1,0 +1,107 @@
+{
+  "task": "SCREEN-AUTH-01 Phase 2f export (R3)",
+  "db_path": "data/surgical_autonomy/review.db",
+  "db_stats": {
+    "before": {
+      "file": {
+        "size": 101978112,
+        "mtime_ns": 1789092052636956943
+      },
+      "-shm": {
+        "size": 32768,
+        "mtime_ns": 1789209078001084099
+      },
+      "-wal": {
+        "size": 0,
+        "mtime_ns": 1789096599905622841
+      }
+    },
+    "after": {
+      "file": {
+        "size": 101978112,
+        "mtime_ns": 1789092052636956943
+      },
+      "-shm": {
+        "size": 32768,
+        "mtime_ns": 1789271407043952116
+      },
+      "-wal": {
+        "size": 0,
+        "mtime_ns": 1789096599905622841
+      }
+    }
+  },
+  "db_file_unchanged": true,
+  "fields": [
+    "id",
+    "title",
+    "abstract"
+  ],
+  "papers_file": "papers_86.jsonl",
+  "papers_sha256": "8217b887e1c49aa7036a350694e25665d498f0c15a40b797e472125a5db09115",
+  "n": 86,
+  "abstract_len": {
+    "min": 19,
+    "median": 1338,
+    "max": 15770
+  },
+  "workbook": "data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx",
+  "workbook_prefix_mismatch": [],
+  "abstracts_jsonl": "data/surgical_autonomy/expanded_search/abstracts.jsonl",
+  "jsonl_equal": 73,
+  "jsonl_mismatch": [],
+  "jsonl_unmatched": [
+    {
+      "paper_id": 57,
+      "ee": "EE-026"
+    },
+    {
+      "paper_id": 18,
+      "ee": "EE-010"
+    },
+    {
+      "paper_id": 222,
+      "ee": "EE-092"
+    },
+    {
+      "paper_id": 139,
+      "ee": "EE-057"
+    },
+    {
+      "paper_id": 134,
+      "ee": "EE-055"
+    },
+    {
+      "paper_id": 103,
+      "ee": "EE-046"
+    },
+    {
+      "paper_id": 190,
+      "ee": "EE-080"
+    },
+    {
+      "paper_id": 100,
+      "ee": "EE-044"
+    },
+    {
+      "paper_id": 71,
+      "ee": "EE-031"
+    },
+    {
+      "paper_id": 238,
+      "ee": "EE-097"
+    },
+    {
+      "paper_id": 161,
+      "ee": "EE-065"
+    },
+    {
+      "paper_id": 112,
+      "ee": "EE-048"
+    },
+    {
+      "paper_id": 170,
+      "ee": "EE-070"
+    }
+  ]
+}

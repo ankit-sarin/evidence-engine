@@ -1,0 +1,123 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "check": "A.primary placeholder hash",
+      "ok": true,
+      "detail": {
+        "got": "33bdeea91007fb81f2401566f01bc05b6a3c0315db003f41c6dcd4c8808abee3",
+        "want": "33bdeea91007fb81f2401566f01bc05b6a3c0315db003f41c6dcd4c8808abee3"
+      }
+    },
+    {
+      "check": "A.verifier placeholder hash",
+      "ok": true,
+      "detail": {
+        "got": "2c89ef61c690d0c544408f34ee6ea80702520f8cd5a9b1b61da93b6223c4d5f8",
+        "want": "2c89ef61c690d0c544408f34ee6ea80702520f8cd5a9b1b61da93b6223c4d5f8"
+      }
+    },
+    {
+      "check": "B.primary placeholder hash",
+      "ok": true,
+      "detail": {
+        "got": "e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649",
+        "want": "e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649"
+      }
+    },
+    {
+      "check": "B.verifier placeholder hash",
+      "ok": true,
+      "detail": {
+        "got": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+        "want": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3"
+      }
+    },
+    {
+      "check": "C.verifier == B.verifier",
+      "ok": true,
+      "detail": {
+        "C": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+        "B": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3"
+      }
+    },
+    {
+      "check": "C.primary format == B.primary format",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "C.primary system == B.primary system",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "C.primary differs from B only inside the exclusion block",
+      "ok": true,
+      "detail": {
+        "B_block_lines": 4,
+        "C_block_lines": 8
+      }
+    },
+    {
+      "check": "C.primary exclusion block only gains lines",
+      "ok": true,
+      "detail": {
+        "diff": [
+          "+   - Conference abstracts without full paper",
+          "+   - Purely teleoperated/master-slave robotic surgery where the human directly controls all robot movements in real-time (e.g., standard da Vinci case series, joystick-controlled systems). There must be an autonomous or semi-autonomous component where the system makes independent decisions about motion, planning, or execution.",
+          "+   - ML/CV methodology papers that only analyze, classify, segment, track, or predict surgical data (video, images, sensor data) without controlling a robot to execute a surgical action (e.g., planning-only papers — surgical motion, path, or task planning computed from data without controlling a robot to execute it)",
+          "+   - Studies with no autonomous or semi-autonomous component (e.g., hardware, sensor, or instrument papers that describe a robot or device without autonomous control)"
+        ]
+      }
+    },
+    {
+      "check": "primary call options identical across arms",
+      "ok": true,
+      "detail": {
+        "A": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        },
+        "B": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        },
+        "C": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        }
+      }
+    },
+    {
+      "check": "verifier call options identical across arms",
+      "ok": true,
+      "detail": {
+        "A": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        },
+        "B": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        },
+        "C": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "arm": "C",
+  "engine_file": "/home/ankitsarin/projects/evidence-engine/engine/__init__.py",
+  "models": {
+    "primary": "qwen3:8b",
+    "verification": "gemma3:27b"
+  },
+  "primary": {
+    "call_kwargs": {
+      "options": {
+        "temperature": 0
+      },
+      "think": false
+    },
+    "format": {
+      "description": "Structured output from the screening agent.",
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "decision": {
+          "enum": [
+            "include",
+            "exclude"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "rationale": {
+          "description": "1-2 sentence explanation",
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision",
+        "rationale",
+        "confidence"
+      ],
+      "title": "ScreeningDecision",
+      "type": "object"
+    },
+    "hash": "0af23cef16b4a862aed6a2f0316251f707af20ab09e2c4f3052c694323b9aeb9",
+    "messages": [
+      {
+        "content": "You are a systematic review screening agent. Screen the paper for the review titled \"Autonomy in Surgical Robotics: A Systematic Review\". Follow the criteria and instructions in the user message. Respond ONLY with the requested JSON.",
+        "role": "system"
+      },
+      {
+        "content": "/no_think\nEvaluate the following paper for inclusion in a systematic review.\n\nREVIEW FOCUS (PICO):\nPopulation: Studies involving autonomous or semi-autonomous surgical robotic systems performing physical surgical tasks on tissue, phantoms, or in-vivo models.\nIntervention: Any level of surgical autonomy (Levels 1–5 per the Yang et al. taxonomy), ranging from robot assistance under continuous human control to fully autonomous task execution.\nComparator: Human-controlled (teleoperated) surgical systems, manual surgery, or no comparator.\nOutcomes: Task accuracy or error rate; Task completion time; Safety events (tissue damage, unplanned stops, collisions); Autonomy level achieved (Yang et al. Level 1–5); Surgeon workload or cognitive load metrics\n\nINCLUSION CRITERIA:\n  - English language\n  - Peer-reviewed original research (journal article or full conference paper)\n  - Involves a physical surgical task (cadaver, phantom, animal, or human)\n  - Must involve an autonomous or semi-autonomous robotic component that CONTROLS or DIRECTS a physical robot to execute a surgical action (not purely teleoperated or manual)\n  - Simulation studies included ONLY IF they demonstrate or evaluate autonomous/semi-autonomous robotic behavior in the simulation (not simulation frameworks, physics engines, or virtual environments described without autonomous robot behavior)\n  - Published between 2010 and 2025\n\nEXCLUSION CRITERIA:\n  - Systematic reviews, meta-analyses, or scoping reviews\n  - Editorials, commentaries, or letters to the editor\n  - Conference abstracts without full paper\n  - Non-surgical robotics (industrial, warehouse, rehabilitation, exoskeletons, prosthetics, assistive devices)\n  - Purely teleoperated/master-slave robotic surgery where the human directly controls all robot movements in real-time (e.g., standard da Vinci case series, joystick-controlled systems). There must be an autonomous or semi-autonomous component where the system makes independent decisions about motion, planning, or execution.\n  - ML/CV methodology papers that only analyze, classify, segment, track, or predict surgical data (video, images, sensor data) without controlling a robot to execute a surgical action (e.g., planning-only papers — surgical motion, path, or task planning computed from data without controlling a robot to execute it)\n  - Studies with no autonomous or semi-autonomous component (e.g., hardware, sensor, or instrument papers that describe a robot or device without autonomous control)\n  - Papers with no abstract or insufficient information to determine eligibility — do not default to inclusion when evidence is absent\n\nSPECIALTY SCOPE:\n  Included specialties:\n    - abdominal surgery\n    - gynecologic surgery\n    - urologic surgery\n    - thoracic surgery\n    - general surgery\n    - head and neck surgery\n    - bench/preclinical autonomy\n  Excluded specialties:\n    - dental surgery\n    - oral and maxillofacial surgery\n    - ophthalmic surgery\n    - orthopedic surgery\n    - dermatologic surgery\n    - neurosurgery\n  Notes: Papers describing bench/preclinical autonomous tasks (e.g., suturing, knot-tying on phantoms) are included regardless of the specialty context, as these represent generalizable autonomous capabilities. Orthopedic and neurosurgery papers are excluded only when the autonomous task is specialty-specific (e.g., autonomous bone drilling, stereotactic targeting). If the paper describes a generalizable autonomous task performed in an orthopedic or neurosurgical context, include it.\n\nPAPER:\nTitle: T\n\nAbstract: A\n\nDecide 'include' or 'exclude'.\nIf the abstract gives partial evidence that the paper might meet the criteria, include it — a later verification pass will catch false positives.\nIf there is no abstract, or it gives too little information to determine eligibility, exclude it — do not default to inclusion when evidence is absent.\nExclude when the paper clearly meets an exclusion criterion listed above.\n\nRespond with JSON only: {\"decision\": \"...\", \"rationale\": \"...\", \"confidence\": 0.0-1.0}",
+        "role": "user"
+      }
+    ]
+  },
+  "screening_hash": "e23b74de9275df8655d3efeacc2ca769542ac41c325d9691c1b2fac11b0f0120",
+  "spec": "/home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/preflight/armC_spec.yaml",
+  "spec_sha256": "50b178a62771990e071bb7c022318db828e1f7e3817db689cdce0981ed00efc7",
+  "verifier": {
+    "call_kwargs": {
+      "options": {
+        "temperature": 0
+      },
+      "think": false
+    },
+    "format": {
+      "description": "Structured output from the screening agent.",
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "decision": {
+          "enum": [
+            "include",
+            "exclude"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "rationale": {
+          "description": "1-2 sentence explanation",
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision",
+        "rationale",
+        "confidence"
+      ],
+      "title": "ScreeningDecision",
+      "type": "object"
+    },
+    "hash": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+    "messages": [
+      {
+        "content": "You are a systematic review abstract verification agent. Your job is to catch false positives. Be strict. Respond ONLY with the requested JSON.",
+        "role": "system"
+      },
+      {
+        "content": "/no_think\nEvaluate the following paper for inclusion in a systematic review.\n\nREVIEW FOCUS (PICO):\nPopulation: Studies involving autonomous or semi-autonomous surgical robotic systems performing physical surgical tasks on tissue, phantoms, or in-vivo models.\nIntervention: Any level of surgical autonomy (Levels 1–5 per the Yang et al. taxonomy), ranging from robot assistance under continuous human control to fully autonomous task execution.\nComparator: Human-controlled (teleoperated) surgical systems, manual surgery, or no comparator.\nOutcomes: Task accuracy or error rate; Task completion time; Safety events (tissue damage, unplanned stops, collisions); Autonomy level achieved (Yang et al. Level 1–5); Surgeon workload or cognitive load metrics\n\nINCLUSION CRITERIA:\n  - English language\n  - Peer-reviewed original research (journal article or full conference paper)\n  - Involves a physical surgical task (cadaver, phantom, animal, or human)\n  - Must involve an autonomous or semi-autonomous robotic component that CONTROLS or DIRECTS a physical robot to execute a surgical action (not purely teleoperated or manual)\n  - Simulation studies included ONLY IF they demonstrate or evaluate autonomous/semi-autonomous robotic behavior in the simulation (not simulation frameworks, physics engines, or virtual environments described without autonomous robot behavior)\n  - Published between 2010 and 2025\n\nEXCLUSION CRITERIA:\n  - Systematic reviews, meta-analyses, or scoping reviews\n  - Editorials, commentaries, or letters to the editor\n  - Conference abstracts without full paper\n  - Non-surgical robotics (industrial, warehouse, rehabilitation, exoskeletons, prosthetics, assistive devices)\n  - Purely teleoperated/master-slave robotic surgery where the human directly controls all robot movements in real-time (e.g., standard da Vinci case series, joystick-controlled systems). There must be an autonomous or semi-autonomous component where the system makes independent decisions about motion, planning, or execution.\n  - ML/CV methodology papers that only analyze, classify, segment, track, or predict surgical data (video, images, sensor data) without controlling a robot to execute a surgical action (e.g., planning-only papers — surgical motion, path, or task planning computed from data without controlling a robot to execute it)\n  - Studies with no autonomous or semi-autonomous component (e.g., hardware, sensor, or instrument papers that describe a robot or device without autonomous control)\n  - Papers with no abstract or insufficient information to determine eligibility — do not default to inclusion when evidence is absent\n\nSPECIALTY SCOPE:\n  Included specialties:\n    - abdominal surgery\n    - gynecologic surgery\n    - urologic surgery\n    - thoracic surgery\n    - general surgery\n    - head and neck surgery\n    - bench/preclinical autonomy\n  Excluded specialties:\n    - dental surgery\n    - oral and maxillofacial surgery\n    - ophthalmic surgery\n    - orthopedic surgery\n    - dermatologic surgery\n    - neurosurgery\n  Notes: Papers describing bench/preclinical autonomous tasks (e.g., suturing, knot-tying on phantoms) are included regardless of the specialty context, as these represent generalizable autonomous capabilities. Orthopedic and neurosurgery papers are excluded only when the autonomous task is specialty-specific (e.g., autonomous bone drilling, stereotactic targeting). If the paper describes a generalizable autonomous task performed in an orthopedic or neurosurgical context, include it.\n\nPAPER:\nTitle: T\n\nAbstract: A\n\nYou are the VERIFICATION pass. This paper was already included by a primary screener. Your job is to catch false positives.\n\nApply these tests strictly:\n1. Does the abstract describe a robot that EXECUTES a surgical action autonomously or semi-autonomously? (Not just analysis/tracking/assessment)\n2. Is there an autonomous component — not purely teleoperated/master-slave?\n3. Does it involve a physical surgical task — not just a simulation framework or pure methodology?\n4. Is it original research — not a review, editorial, or commentary?\n\nIf ANY test fails, EXCLUDE. Only include papers that clearly pass all tests.\n\nRespond with JSON only: {\"decision\": \"...\", \"rationale\": \"...\", \"confidence\": 0.0-1.0}",
+        "role": "user"
+      }
+    ]
+  }
+}

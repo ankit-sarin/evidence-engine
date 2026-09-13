@@ -273,17 +273,20 @@ def _option(options, name: str) -> int | None:
 def effective_ceiling(model: str, options=None) -> int:
     """The token count at which the runtime starts cutting this call's input.
 
-    min(n_ctx_train, SERVER_DEFAULT_CTX, OLLAMA_CONTEXT_LENGTH if the local
-    service sets it, options.num_ctx if the caller sets it) — INPUT-FIT-01
-    ruling R-D, reproduced against every load line in the journal on this host.
+    An explicit options.num_ctx is what the runtime loads, clamped only by the
+    model's trained context: min(n_ctx_train, num_ctx). Without one, the
+    runtime's default applies: min(n_ctx_train, OLLAMA_CONTEXT_LENGTH if the
+    local service sets it, SERVER_DEFAULT_CTX). INPUT-FIT-01 rulings R-D and R-3;
+    reproduced against every load line in the journal on this host.
     """
-    terms = [n_ctx_train(model), SERVER_DEFAULT_CTX]
+    trained = n_ctx_train(model)
+    num_ctx = _option(options, "num_ctx")
+    if num_ctx is not None:
+        return min(trained, num_ctx)
+    terms = [trained, SERVER_DEFAULT_CTX]
     env = server_context_length()
     if env is not None:
         terms.append(env)
-    num_ctx = _option(options, "num_ctx")
-    if num_ctx is not None:
-        terms.append(num_ctx)
     return min(terms)
 
 

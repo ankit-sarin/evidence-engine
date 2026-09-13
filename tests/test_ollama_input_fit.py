@@ -106,12 +106,27 @@ def test_num_ctx_lowers_the_ceiling(monkeypatch):
     assert oc.effective_ceiling("m", {"num_ctx": 4096}) == 4096
 
 
-def test_the_ceiling_is_the_minimum_of_all_terms(monkeypatch, service):
+def test_without_num_ctx_the_ceiling_is_the_minimum_of_the_default_terms(monkeypatch, service):
+    _use(monkeypatch, n_ctx_train=40_960)
+    _dropin(service, '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=32768"\n')
+    assert oc.effective_ceiling("m") == 32_768
+
+
+def test_an_explicit_num_ctx_is_clamped_only_by_the_trained_context(monkeypatch, service):
+    """Ruling R-3: the service environment does not lower an explicit num_ctx."""
     _use(monkeypatch, n_ctx_train=40_960)
     _dropin(service, '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=32768"\n')
     assert oc.effective_ceiling("m", {"num_ctx": 16_384}) == 16_384
-    assert oc.effective_ceiling("m", {"num_ctx": 36_000}) == 32_768
-    assert oc.effective_ceiling("m") == 32_768
+    assert oc.effective_ceiling("m", {"num_ctx": 36_000}) == 36_000
+    assert oc.effective_ceiling("m", {"num_ctx": 50_000}) == 40_960
+
+
+def test_num_ctx_above_the_server_default_wins_clamped_by_the_trained_context(monkeypatch):
+    """T1, amended by ruling R-3: the server default applies only when no num_ctx is set."""
+    _use(monkeypatch, n_ctx_train=1_048_576)
+    assert oc.effective_ceiling("m") == oc.SERVER_DEFAULT_CTX
+    assert oc.effective_ceiling("m", {"num_ctx": 500_000}) == 500_000
+    assert oc.effective_ceiling("m", {"num_ctx": 2_000_000}) == 1_048_576
 
 
 def test_the_service_environment_is_ignored_for_a_rebound_client(monkeypatch, service):

@@ -65,7 +65,7 @@ Three-layer timeout and recovery system (`engine/utils/ollama_client.py`):
 
 **Proactive restart:** Extractor restarts Ollama every `RESTART_EVERY_N` papers (default 25, configurable via `--restart-every 0` to disable). Restart failure is graceful — logged via `logger.exception` and the run continues (does not crash the pipeline).
 
-**Input-fit guard (INPUT-FIT-01):** every `ollama_chat` call is checked against the effective ceiling, `min(n_ctx_train, SERVER_DEFAULT_CTX = 262144, OLLAMA_CONTEXT_LENGTH if the local service sets it, options.num_ctx if the caller sets it)`, with `n_ctx_train` read once per model through `ollama show`. Ollama truncates an over-long prompt from the front and still returns HTTP 200 with `done_reason=stop`, so the guard does not rely on either.
+**Input-fit guard (INPUT-FIT-01):** every `ollama_chat` call is checked against the effective ceiling — `min(n_ctx_train, options.num_ctx)` when the caller sets `num_ctx`, otherwise `min(n_ctx_train, OLLAMA_CONTEXT_LENGTH if the local service sets it, SERVER_DEFAULT_CTX = 262144)` — with `n_ctx_train` read once per model through `ollama show`. Ollama truncates an over-long prompt from the front and still returns HTTP 200 with `done_reason=stop`, so the guard does not rely on either.
 
 | Check | Rule | On failure |
 |-------|------|------------|

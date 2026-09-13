@@ -56,7 +56,6 @@ from engine.core.completeness import (
 from engine.core.codebook import CODEBOOK_FILENAME, load_codebook
 from engine.elicitation import classes as C
 from engine.elicitation import materialize as M
-from engine.elicitation import sizing as S
 from engine.elicitation import terminal as T
 from engine.elicitation.contracts import Pass1Result, check_response
 from engine.elicitation.prompts import (
@@ -67,9 +66,6 @@ from engine.elicitation.units import UnitMap, build_unit_map
 from engine.utils.ollama_client import ollama_chat
 
 logger = logging.getLogger(__name__)
-
-PASS1_LABEL = "pass1_elicitation"
-PASS2_LABEL = "pass2_primed"
 
 
 MAX_PASS1_ATTEMPTS = 2          # Ruling 4
@@ -105,12 +101,11 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     """Elicit citations. Returns (checked result, call telemetry).
 
     `feedback` is appended to the prompt STRING, not sent as a separate message,
-    so `enforce_fit` counts it: a retry that overflowed the context while the
-    guard measured only the base prompt would be a silent truncation of the
-    correction itself.
+    so the input-fit guard in `ollama_chat` measures it with the rest of the
+    request: a correction that would overflow the context is refused or reported
+    like any other input (INPUT-FIT-01), never truncated silently.
     """
     prompt = build_pass1_prompt(unit_map, codebook, field_names) + feedback
-    est = S.enforce_fit(prompt, label=PASS1_LABEL, paper_id=paper_id)
 
     response = ollama_chat(
         model=MODEL, paper_id=paper_id,
@@ -126,21 +121,13 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     telemetry = {
         "pass1_prompt_chars": len(prompt),
         "pass1_feedback_chars": len(feedback),
-        "pass1_estimated_tokens": est,
         "pass1_prompt_eval_count": pec,
-        "pass1_truncation_tripwire": S.truncation_tripwire(pec),
         "pass1_content_chars": len(raw),
         "pass1_thinking_chars": len(thinking),
         "pass1_done_reason": getattr(response, "done_reason", None),
         "pass1_raw_content": raw,
         **result.telemetry(),
     }
-    if telemetry["pass1_truncation_tripwire"]:
-        logger.error(
-            "TRIPWIRE paper %d: Pass-1 prompt_eval_count %s is at the enforced "
-            "ceiling %d — the input was truncated and done_reason cannot say so.",
-            paper_id, pec, S.CEILING_TOKENS,
-        )
     return result, telemetry
 
 
@@ -208,8 +195,9 @@ def extract_paper_elicited(
     Under Ruling 1 a Pass-1 contract failure no longer refuses the PAPER. Each
     failing field takes the CONTRACT_UNMET terminal state and stores no value;
     the fields that met their contracts are stored normally. What still raises
-    before any INSERT: a projected context overflow (`PromptTooLargeError`), a
-    missing or illegal terminal state (`TerminalStateError`), an incomplete
+    before any INSERT: an input that does not fit the model's context
+    (`InputOverflow` / `InputTruncated` / `InputDropped`, from the input-fit guard
+    in `ollama_chat`), a missing or illegal terminal state (`TerminalStateError`), an incomplete
     Pass-2 result (`IncompleteExtractionError`) and an uncited value at the write
     boundary (`UncitedValueError`). All twenty states are written in one
     transaction or none are.
@@ -287,7 +275,6 @@ def extract_paper_elicited(
     if n_evidenced:
         pass2_prompt = build_extraction_prompt(paper_text, spec, cb_path)
         priming_msg = build_pass2_priming_message(priming)
-        S.enforce_fit(pass2_prompt + priming_msg, label=PASS2_LABEL, paper_id=paper_id)
         result = extract_pass2_structured(
             pass2_prompt, priming_msg, spec, paper_id, think=pass2_think,
             codebook_hash=codebook_hash,

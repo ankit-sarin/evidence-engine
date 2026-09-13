@@ -293,3 +293,69 @@ def test_the_judges_full_text_path_at_its_budget_is_never_refused(monkeypatch):
     assert sent["options"]["num_ctx"] == 24_576
     assert oc.message_chars(sent["messages"]) * oc.RATIO_MIN < 24_576
     assert result.paper_id == "p1"
+
+
+# ── Migrated from the elicitation pipeline's private guard (C6) · T7 ──
+#
+# `engine/elicitation/sizing.py` and its tests in tests/test_units_and_sizing.py
+# were removed in INPUT-FIT-01 Phase 2; the wrapper is the one authority now. Each
+# test below carries the intent of the one it replaces.
+
+
+def test_migrated_an_oversized_prompt_fails_hard_before_any_call(monkeypatch):
+    """Was test_overflow_fails_hard_before_any_call: refused before the call, and the
+    message names the ceiling."""
+    client = _use(monkeypatch, n_ctx_train=131_072)
+    over = int(131_072 / oc.RATIO_MIN) + 10
+    with pytest.raises(oc.InputOverflow) as exc:
+        oc.ollama_chat(model="deepseek-r1:32b", messages=_user(over), paper_id=498,
+                       max_retries=0, retry_delay=0)
+    assert client.chats == []
+    assert exc.value.ceiling == 131_072
+    assert "ceiling of 131,072" in str(exc.value)
+
+
+def test_migrated_a_fitting_prompt_is_sent_with_its_estimate_logged(monkeypatch, caplog):
+    """Was test_a_fitting_prompt_returns_its_estimate."""
+    client = _use(monkeypatch, count=250)
+    with caplog.at_level("INFO", logger="engine.utils.ollama_client"):
+        _chat(_user(1000))
+    assert len(client.chats) == 1
+    line = next(r.getMessage() for r in caplog.records if r.getMessage().startswith("input_fit "))
+    assert json.loads(line.split(" ", 2)[2])["estimate_low"] == round(1000 * oc.RATIO_MIN)
+
+
+@pytest.mark.parametrize("count,raises", [(1000, True), (1001, True), (999, False)])
+def test_migrated_truncation_is_reported_only_at_or_above_the_ceiling(monkeypatch, count, raises):
+    """Was test_tripwire_fires_only_at_the_ceiling. The tripwire only logged; this raises.
+    The no-count case is test_a_missing_count_is_logged_unverified_not_raised."""
+    _use(monkeypatch, count=count)
+    if raises:
+        with pytest.raises(oc.InputTruncated):
+            _chat(_user(3000), options={"num_ctx": 1000})
+    else:
+        assert _chat(_user(3000), options={"num_ctx": 1000}).prompt_eval_count == count
+
+
+def test_the_elicitation_pipeline_keeps_no_private_guard():
+    """T7: no private pre-call or post-call check remains in the elicitation pipeline."""
+    import ast
+    from pathlib import Path
+
+    import engine.elicitation.pipeline as pipeline
+
+    source = Path(pipeline.__file__)
+    tree = ast.parse(source.read_text())
+    names = ({n.id for n in ast.walk(tree) if isinstance(n, ast.Name)}
+             | {n.attr for n in ast.walk(tree) if isinstance(n, ast.Attribute)})
+    imported = ({a.name for n in ast.walk(tree) if isinstance(n, (ast.Import, ast.ImportFrom)) for a in n.names}
+                | {n.module or "" for n in ast.walk(tree) if isinstance(n, ast.ImportFrom)})
+    constants = {n.value for n in ast.walk(tree) if isinstance(n, ast.Constant)}
+
+    private = {"enforce_fit", "truncation_tripwire", "estimate_tokens", "PromptTooLargeError",
+               "CEILING_TOKENS", "WORST_RATIO", "INDEX_MARKER_INFLATION"}
+    assert not names & private
+    assert "sizing" not in imported and "engine.elicitation.sizing" not in imported
+    assert 131_072 not in constants
+    assert not (source.parent / "sizing.py").exists()
+    assert "ollama_chat" in names  # it still calls the guarded wrapper

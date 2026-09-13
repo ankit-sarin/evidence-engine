@@ -281,7 +281,10 @@ def test_telemetry_carries_the_per_field_citation_record(review, monkeypatch):
     assert tel["fields"]["robot_platform"]["indices"] == [1]
     assert tel["fields"]["country"]["class"] == "inferable"
     assert tel["fields"]["country"]["has_inference"] is True
-    assert tel["pass1_truncation_tripwire"] is False
+    # INPUT-FIT-01: the private estimate and tripwire keys went with the pipeline's
+    # own guard; the count itself is still recorded.
+    assert "pass1_truncation_tripwire" not in tel and "pass1_estimated_tokens" not in tel
+    assert "pass1_prompt_eval_count" in tel
 
 
 def test_elicitation_is_off_by_default(review, monkeypatch):

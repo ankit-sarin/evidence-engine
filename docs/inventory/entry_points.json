@@ -5022,7 +5022,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 79,
+            "line": 75,
             "role": "docstring",
             "text": "Derived from the review directory, never searched (CODEBOOK-AUTH-01).\n\n    `review_dir` is `data/<review_id>`, so this is `codebook_path_for` with the\n    id..."
           }
@@ -5040,20 +5040,6 @@
         "literal_review_ids": [],
         "order": {},
         "path": "engine/elicitation/prompts.py",
-        "path_construction": [],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "engine/elicitation/sizing.py": {
-        "entry_point": false,
-        "flags": [],
-        "has_main_guard": false,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "engine/elicitation/sizing.py",
         "path_construction": [],
         "review_database": [],
         "review_id_constants": [],
@@ -7821,7 +7807,7 @@
       "entry_points_with_spec_flag": 29,
       "files_calling_load_review_spec_directly": 9,
       "files_calling_resolver": 32,
-      "files_scanned": 204,
+      "files_scanned": 203,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 35,
@@ -7833,7 +7819,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "e2adff3d1d2e6ec27d1066764125d2b60aec9866",
+    "generated_at_commit": "d770244136af78c3cb1bce4ef7e0b9f960bedef4",
     "scan_roots": [
       "engine",
       "scripts",

@@ -1,8 +1,10 @@
-"""ELICIT-DESIGN-01 — per-class Pass-1 contracts, tokens, indices and sizing.
+"""ELICIT-DESIGN-01 — per-class Pass-1 contracts, tokens and indices.
 
-Covers required tests 1, 2, 3 and 5. The write-boundary fail-fast (test 4) is in
+Covers required tests 1, 2 and 3. The write-boundary fail-fast (test 4) is in
 `tests/test_citation_guard.py`, which exercises it as the mechanism-independent
-predicate it is meant to be rather than through the prompt path.
+predicate it is meant to be rather than through the prompt path. Test 5, the size
+check, moved with the guard itself to `tests/test_ollama_input_fit.py`
+(INPUT-FIT-01 Phase 2).
 """
 
 from __future__ import annotations
@@ -14,7 +16,6 @@ import pytest
 from engine.elicitation import classes as C
 from engine.elicitation import contracts as K
 from engine.elicitation import materialize as M
-from engine.elicitation import sizing as S
 from engine.elicitation.units import build_unit_map
 
 CODEBOOK = {

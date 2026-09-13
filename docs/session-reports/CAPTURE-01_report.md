@@ -256,3 +256,31 @@ in `PARSE-01_report.md`.
 
 **See:** `docs/session-reports/PARSE-01_report.md`. Appended by task PARSE-01; all text above
 this heading is unchanged.
+
+---
+
+## Addendum (2026-09-13): p719's local cut was 0.9%, not "~74% seen", per INPUT-FIT-01
+
+**Nothing above this heading is edited.** The 2026-08-30 addendum says "p415's full prompt is
+~416,000 tokens, so roughly 31% of the document reached the model; p719's roughly 74%." The Ollama
+journal records the local truncation itself for this run:
+
+- 2026-08-30 07:33:15, paper 719: `limit=131072 prompt=132206 keep=5 new=131072` — **1,134 tokens
+  (0.9%)** discarded from the front of the prompt, so about 99% of it was evaluated;
+- 2026-08-30 05:42:44, paper 415: `limit=131072 prompt=441524 keep=5 new=131072` — **310,452 tokens
+  (70.3%)** discarded, about 30% evaluated, in line with the earlier ~31%.
+
+The journal carries token counts, not paper ids, so the two lines are paired to 719 and 415 by
+elimination, not by per-call timestamp: exactly two papers in this run reached the ceiling (the
+addendum above), the journal holds exactly two truncation events inside this run's `full.log`
+span, and 441,524 tokens is consistent only with p415's 1,771,635 characters. Source:
+`docs/session-reports/INPUT-FIT-01_phase-1_readout.md` (commit `e1c5a38`), §P3 and "Found, not
+asked" 2. The earlier ~74% equals 131,072 ÷ 176,990, the Sonnet arm's input-token count for p719
+recorded in PARSE-01 — a different tokenizer and prompt.
+
+**What this changes here.** The corrected figures (n=38) excluded both truncated papers, and that
+exclusion is still correct. But truncation now accounts for at most 0.9% of p719's prompt, so it
+does not explain p719's 0.0% verbatim rate; p719's glyph-encoded parse (PARSE-01) remains the
+documented defect. p415's explanation is unchanged.
+
+Appended by task INPUT-FIT-01 Phase 2; all text above this heading is unchanged.

@@ -295,3 +295,29 @@ and noting that 547, 629 and 799 have no Run 6 counterpart. PARSE-01 adds only t
 
 **See:** `docs/session-reports/PARSE-01_report.md`. Appended by task PARSE-01; all text above
 this heading is unchanged.
+
+---
+
+## Addendum (2026-09-13): p719's local cut was 0.9%, not "a quarter", per INPUT-FIT-01
+
+**Nothing above this heading is edited.** The 2026-08-30 addendum says "roughly a quarter of that
+document never reached the model". The Ollama journal records the local truncation itself, and
+it does not support that figure:
+
+- paper 719: `limit=131072 prompt=132206 keep=5 new=131072` — **1,134 tokens (0.9%)** discarded
+  from the front of the prompt;
+- paper 415: `limit=131072 prompt=441524 keep=5 new=131072` — **310,452 tokens (70.3%)** discarded.
+
+The journal carries token counts, not paper ids, so those lines are paired to papers 719 and 415
+by elimination, not by per-call timestamp: CAPTURE-01's measured `prompt_eval_count` put exactly
+two corpus papers at the ceiling (PARSE-01 §4(a)), the journal holds exactly two truncation events
+inside CAPTURE-01's run, and 441,524 tokens is consistent only with p415's 1,771,635 characters.
+Source: `docs/session-reports/INPUT-FIT-01_phase-1_readout.md` (commit `e1c5a38`), §P3 and
+"Found, not asked" 2.
+
+**What this changes here: nothing in the verdict.** §1.2's clamp still means 0.17.7 and 0.21.0 cut
+p719 at the same point, so every cell saw the same text and `HYPOTHESIS_DEAD` stands. Only the size
+of the local loss on p719 is corrected: about 99% of its prompt tokens were evaluated. What reached
+the model was still largely glyph noise, as PARSE-01 records.
+
+Appended by task INPUT-FIT-01 Phase 2; all text above this heading is unchanged.

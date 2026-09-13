@@ -345,8 +345,11 @@ All acquisition modules use `ReviewDatabase` as a context manager. Terminal stat
 - `cleanup_stale_extractions(db, schema_hash, dry_run)` — Deletes mismatched extractions, cascade spans, resets EXTRACTED/AI_AUDIT_COMPLETE → PARSED. HUMAN_AUDIT_COMPLETE protected
 
 ### `ollama_client.py`
-**Purpose:** Three-layer Ollama timeout wrapper.
-- `ollama_chat(model, messages, ...)` — HTTP timeout + wall-clock timeout + restart recovery. Model-aware timeouts (8b:300s, 27b:600s, 32b:900s, 70b:1200s). Default 2 retries + 30s delay
+**Purpose:** Three-layer Ollama timeout wrapper, and the single input-fit guard for every model call.
+- `ollama_chat(model, messages, ...)` — HTTP timeout + wall-clock timeout + restart recovery. Model-aware timeouts (8b:300s, 27b:600s, 32b:900s, 70b:1200s). Default 2 retries + 30s delay. Checks input fit before and after every call (INPUT-FIT-01); request fields are never changed
+- `effective_ceiling(model, options)` — `min(n_ctx_train, SERVER_DEFAULT_CTX, service OLLAMA_CONTEXT_LENGTH, options.num_ctx)`
+- `n_ctx_train(model)` — trained context via `_client.show`, cached per model per server; `server_context_length()` reads the local systemd unit files
+- `InputOverflow` / `InputTruncated` / `InputDropped` / `CeilingUnavailable` — `InputFitError` subclasses; not retried, fields on the exception. Tested in `tests/test_ollama_input_fit.py`
 - `get_model_digest(model_name)` — Exact model hash via `ollama.show()`
 
 ### `ollama_preflight.py`

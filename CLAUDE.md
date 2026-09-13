@@ -52,7 +52,7 @@ evidence-engine/
 |-------|-------|------|
 | Abstract Screener — Primary | qwen3:8b | High-recall abstract screen (simplified exclusion criteria) |
 | Abstract Screener — Verifier | gemma3:27b | Strict verification of primary includes (full exclusion criteria) |
-| FT Screener — Primary | qwen3.5:27b | Full-text screen with specialty scope (/no_think, ~27s/paper) |
+| FT Screener — Primary | qwen3:32b | Full-text screen with specialty scope (/no_think, ~27s/paper) |
 | FT Screener — Verifier | gemma3:27b | Strict FT verification, 5-test FP catcher (~20s/paper) |
 | PDF Parser | Docling → PyMuPDF → Qwen2.5-VL:7b | Three-tier: digital → structural fallback → scanned vision |
 | Extractor | deepseek-r1:32b | Two-pass structured extraction with reasoning trace |
@@ -88,7 +88,7 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 2. **ABSTRACT SCREEN** — Dual-model: primary (qwen3:8b, high-recall) → verifier (gemma3:27b, strict + 4 FP tests)
 3. **ACQUIRE** — Unpaywall OA check → 5-strategy cascade download → manual list for remainder
 4. **PARSE** — Docling (digital) → PyMuPDF fallback (Docling errors) → Qwen2.5-VL (scanned) → Markdown
-5. **FT SCREEN** — Dual-model full-text: primary (qwen3.5:27b) → verifier (gemma3:27b, 5-test FP catcher). Specialty scope filtering. Text truncation to 32K chars.
+5. **FT SCREEN** — Dual-model full-text: primary (qwen3:32b) → verifier (gemma3:27b, 5-test FP catcher). Specialty scope filtering. Text truncation to 32K chars.
 6. **EXTRACT** — Pass 1: DeepSeek-R1 reasoning → Pass 2: structured JSON
 7. **CLOUD EXTRACT** — Parallel concordance arms: OpenAI o4-mini + Anthropic Sonnet 4.6. Same codebook prompt, independent parsing
 8. **DISTRIBUTION CHECK** — Post-extraction quality gate: detect categorical field collapse across any arm
@@ -243,9 +243,7 @@ adopted provisionally — re-derivation belongs to the parse-quality-gate task) 
   marker" for both field-level and step-level `unit_indices`; dropping it cost a whole smoke run.
   `parse_container`'s `recovered_marker_tokens` branch is the backstop and turns a regression into
   `INDEX_MALFORMED`, never into a valid index.
-- **Sizing:** `WORST_RATIO=0.4288` × `INDEX_MARKER_INFLATION=1.141` against the 131,072 ceiling.
-  Measured over-prediction is **~2×**, not the ~4% an early commit message claimed. Hard-fail
-  before the call; `prompt_eval_count == ceiling` is the only post-hoc truncation tripwire.
+- **Sizing:** no private estimator — every model call is checked by the input-fit guard in `engine/utils/ollama_client.py` (INPUT-FIT-01; ratios provisional under CONST-PROV-01).
 
 ## Write-Boundary Fail-Fast (engine/core/citation_guard.py)
 

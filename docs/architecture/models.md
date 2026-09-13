@@ -65,6 +65,16 @@ Three-layer timeout and recovery system (`engine/utils/ollama_client.py`):
 
 **Proactive restart:** Extractor restarts Ollama every `RESTART_EVERY_N` papers (default 25, configurable via `--restart-every 0` to disable). Restart failure is graceful — logged via `logger.exception` and the run continues (does not crash the pipeline).
 
+**Input-fit guard (INPUT-FIT-01):** every `ollama_chat` call is checked against the effective ceiling, `min(n_ctx_train, SERVER_DEFAULT_CTX = 262144, OLLAMA_CONTEXT_LENGTH if the local service sets it, options.num_ctx if the caller sets it)`, with `n_ctx_train` read once per model through `ollama show`. Ollama truncates an over-long prompt from the front and still returns HTTP 200 with `done_reason=stop`, so the guard does not rely on either.
+
+| Check | Rule | On failure |
+|-------|------|------------|
+| Before the call | `chars × RATIO_MIN (0.19) >= ceiling` | `InputOverflow`; nothing is sent |
+| After the call | `prompt_eval_count >= ceiling` | `InputTruncated` |
+| After the call | `prompt_eval_count < chars × RATIO_DROP (0.10)` | `InputDropped` (part of the request never reached the model) |
+
+Both ratios are provisional under CONST-PROV-01 and derived from measured SCREEN-AUTH-01 2f counts. Only text content is counted, so image-bearing calls rely on the post-call check. Every call logs one structured `input_fit` line. The exceptions are never retried; the extractor records them as `EXTRACT_FAILED` with their fields in the failure log entry.
+
 ### Required Ollama Environment
 
 Validated by `engine/utils/ollama_preflight.py`:

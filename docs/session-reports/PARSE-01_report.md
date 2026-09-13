@@ -267,3 +267,33 @@ service touched. New artifacts are confined to `data/surgical_autonomy/eval/pars
 
 **Out of scope and not done:** re-parsing, corpus membership decisions, the `select_sample()`
 fix, the input-fit guard, ELICIT-01, any model call.
+
+---
+
+## Addendum (2026-09-13): the local cuts on p415 and p719, per INPUT-FIT-01
+
+**Nothing above this heading is edited.** §4(b) gives p719's local arm as "truncated at 131,072 (~74%
+seen)" and p415's as "~31% (131,072 of ~416,000 tokens)". The Ollama journal records the local
+truncation itself:
+
+- paper 719: `limit=131072 prompt=132206 keep=5 new=131072` — **1,134 tokens (0.9%)** discarded
+  from the front of the prompt; about 99% was evaluated, not ~74%;
+- paper 415: `limit=131072 prompt=441524 keep=5 new=131072` — **310,452 tokens (70.3%)** discarded;
+  about 30% was evaluated, consistent with the ~31% above.
+
+The ~74% equals 131,072 ÷ 176,990, the Sonnet arm's input-token count for p719 in §4(b) — a
+different tokenizer and prompt from the local arm's.
+
+The journal carries token counts, not paper ids, so those lines are paired to 719 and 415 by
+elimination, not by per-call timestamp: §4(a)'s measured `prompt_eval_count` put exactly these two
+papers at the ceiling, the journal's CAPTURE-01 run holds exactly two truncation events, and
+441,524 tokens is consistent only with p415's 1,771,635 characters. Source:
+`docs/session-reports/INPUT-FIT-01_phase-1_readout.md` (commit `e1c5a38`), §P3 and "Found, not
+asked" 1–2. That read-out also records that the 0.4289 tokens/char in §1 was computed from the
+capped count (131,072 ÷ 305,628 characters), so it is a floor for p719, not its full ratio.
+
+**What this changes here.** §4(a)'s answer — exactly p415 and p719 at the ceiling — stands. §4(b)'s
+per-arm picture for p719 changes: the local arm saw about 99% of the prompt, not ~74%. The input-fit
+guard this report deferred now exists in the Ollama client wrapper (INPUT-FIT-01 Phase 2).
+
+Appended by task INPUT-FIT-01 Phase 2; all text above this heading is unchanged.

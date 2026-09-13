@@ -217,7 +217,7 @@ def _build_reference_content(spec) -> str:
         lines.append(f"  Outcomes:     {spec.pico.outcomes}")
     lines.append("")
 
-    lines.extend(render.specialty_reference_block(spec.eligibility))
+    lines.extend(render.specialty_block_lines(spec.eligibility, "abstract_adjudication"))
 
     return "\n".join(lines)
 

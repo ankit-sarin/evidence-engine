@@ -1,76 +1,109 @@
 """Rendering of the eligibility authority into prompts and adjudication sheets.
 
-One authority, one renderer. Before this module the same eligibility rules were
-written out at seven literal sites — four prompt templates and three rubric
-builders — which had drifted apart: paraphrases that narrowed a criterion,
-seven reason codes described one way to the model and another way to the human,
-and a fifth copy no live path could reach.
+One authority, one renderer. Every screening surface — four model requests and
+two adjudication sheets — is rendered here from `spec.eligibility`, and nothing
+in this module holds review content. What it holds is engine text: the role an
+agent plays, the verdict vocabulary a stage speaks, and the sentence shapes that
+turn a stage policy into an instruction.
 
-Every function here is pure: it takes an `Eligibility` (and a stage) and returns
-a string. None of them reads a file, a database, or a clock, so a prompt can be
-rendered and hashed in a test without a review on disk.
+Every function is pure: it takes an `Eligibility` (and a stage) and returns a
+string or a list of lines. None reads a file, a database, or a clock, so any
+surface can be rendered and hashed in a test without a review on disk.
 
-**The transitional fields are load-bearing until the fold.** A stage renders
-`transitional_text[stage]` where it has one and `text` otherwise; the reason-code
-block renders the prompt wording and the reference sheet renders the sheet
-wording. That is not an endorsement of the divergence — it is what makes the
-relocation provable, because every rendered byte can be compared against what the
-literals produced. The fold step (2c/2f) deletes those fields, and the identity
-tests pinned against today's hashes are expected to go red then, deliberately.
+The fold (SCREEN-AUTH-01 Phase 2c) removed every per-stage wording override. A
+criterion renders its canonical text wherever it renders. The differences that
+remain between stages are stated here, each with its reason: what the stage is
+reading (abstract or full text), which verdict names it speaks, and whether it
+records a reason code.
 """
 
-from engine.core.constants import FT_REASON_CODES
-from engine.core.review_spec import Criterion, Eligibility, SpecialtyScope
+import copy
 
-#: Reason codes whose description says nothing about *this* review's topic — they
-#: apply to any systematic review, so they belong to the engine rather than to a
-#: spec. Each carries both of today's wordings for the same reason the spec's
-#: topic codes do; 2c collapses each pair to one.
-STRUCTURAL_REASON_CODES: dict[str, dict[str, str]] = {
-    "eligible": {
-        "prompt": "Paper passes all criteria",
-        "sheet": "Paper meets all inclusion criteria based on full text",
-    },
-    "protocol_only": {
-        "prompt": "Study protocol without results",
-        "sheet": "Paper describes a study protocol without results",
-    },
-    "duplicate_cohort": {
-        "prompt": "Overlapping dataset with another included paper",
-        "sheet": "Same cohort/data as another included paper",
-    },
-    "insufficient_data": {
-        "prompt": "Commentary, letter, or editorial with no extractable data",
-        "sheet": "Insufficient methodological detail to assess eligibility",
-    },
+from engine.core.review_spec import (
+    STRUCTURAL_REASON_CODES,
+    VERIFIER_STAGES,
+    EVIDENCE_PLACEHOLDER,
+    Criterion,
+    Eligibility,
+)
+
+#: What each stage is reading. Fills `{evidence}` in verifier tests and names the
+#: object in policy prose.
+EVIDENCE_OBJECT: dict[str, str] = {
+    "abstract_primary": "abstract",
+    "abstract_verifier": "abstract",
+    "abstract_adjudication": "abstract",
+    "ft_primary": "full text",
+    "ft_verifier": "full text",
+    "ft_adjudication": "full text",
 }
 
-#: Engine text, not review text: it describes why a paper reached the FT
-#: adjudication queue, which is a property of the pipeline and not of any review.
+#: Full-text decisions record a reason code, so full-text surfaces show each
+#: exclusion's code beside it. Abstract decisions record none, so abstract
+#: surfaces show none — a code a stage cannot record is noise to it.
+CODED_STAGES = frozenset({"ft_primary", "ft_verifier", "ft_adjudication"})
+
+#: The model stage each human adjudication stage resolves. The adjudication
+#: stage's policy IS that stage's policy; a spec cannot declare a separate one.
+ADJUDICATES: dict[str, str] = {
+    "abstract_adjudication": "abstract_primary",
+    "ft_adjudication": "ft_primary",
+}
+
+#: The verdict names each adjudication sheet accepts (positive, negative). These
+#: are the values the importers and the database already validate against.
+_ADJUDICATION_LABELS: dict[str, tuple[str, str]] = {
+    "abstract_adjudication": ("INCLUDE", "EXCLUDE"),
+    "ft_adjudication": ("FT_ELIGIBLE", "FT_SCREENED_OUT"),
+}
+
+#: What catches a false positive after an adjudicator leans toward inclusion.
+_DOWNSTREAM_CHECK: dict[str, str] = {
+    "abstract_adjudication": "downstream full-text screening will catch false positives",
+}
+
+#: Verification framing that sits inside a stage's decision instruction. The FT
+#: verifier's equivalent opens its prompt above the PICO block and stays there.
+_VERIFIER_FRAMING: dict[str, str] = {
+    "abstract_verifier": (
+        "You are the VERIFICATION pass. This paper was already included by a "
+        "primary screener. Your job is to catch false positives."
+    ),
+}
+
+#: The closing rule of each verification pass, in that stage's verdict names.
+_VERIFIER_CLOSER: dict[str, str] = {
+    "abstract_verifier": (
+        "If ANY test fails, EXCLUDE. Only include papers that clearly pass all tests."
+    ),
+    "ft_verifier": (
+        "If ANY test fails, mark as FT_FLAGGED. Only mark FT_ELIGIBLE if the paper "
+        "clearly passes all tests."
+    ),
+}
+
+#: Engine text, not review text: why a paper reached the FT adjudication queue.
 FT_FLAGGED_WORKFLOW_NOTE = (
     "These papers were flagged because the primary screener and verifier "
     "disagreed. Review the full-text reason code and both rationales to make "
     "your decision."
 )
 
-_TESTS_PLACEHOLDER = "{tests}"
 _TOPIC_PLACEHOLDER = "{topic}"
 
-#: The system message each screening stage sends, minus its topic sentence.
-#: This is engine text — it describes the agent's role and its output contract,
-#: which are properties of the pipeline, not of any review. A stage whose
-#: template carries `{topic}` takes that sentence from `StagePolicy.system_text`;
-#: a stage without the placeholder says nothing about the review at all.
+#: The system message each screening stage sends. Engine text: the agent's role
+#: and its output contract. Only the abstract primary pass names the review, via
+#: `{topic}`; the verifiers are told what they are for, not what the review is.
 SYSTEM_TEMPLATES: dict[str, str] = {
     "abstract_primary": (
-        "You are a systematic review screening agent. {topic} Follow the "
-        "criteria and instructions in the user message. Respond ONLY with the "
-        "requested JSON."
+        "You are a systematic review screening agent. Screen the paper for the "
+        'review titled "{topic}". Follow the criteria and instructions in the '
+        "user message. Respond ONLY with the requested JSON."
     ),
     "abstract_verifier": (
-        "You are a systematic review screening agent. {topic} Follow the "
-        "criteria and instructions in the user message. Respond ONLY with the "
-        "requested JSON."
+        "You are a systematic review abstract verification agent. Your job is "
+        "to catch false positives. Be strict. Respond ONLY with the requested "
+        "JSON."
     ),
     "ft_primary": (
         "You are a systematic review full-text screening agent. Evaluate "
@@ -85,177 +118,246 @@ SYSTEM_TEMPLATES: dict[str, str] = {
 }
 
 
-# ── Prompt blocks ────────────────────────────────────────────────────
+# ── Criteria ─────────────────────────────────────────────────────────
+
+
+def criterion_line(c: Criterion, stage: str) -> str:
+    """One criterion exactly as every surface at `stage` renders it."""
+    line = c.text
+    if c.examples:
+        line += f" (e.g., {'; '.join(c.examples)})"
+    if stage in CODED_STAGES and c.reason_code:
+        line = f"[{c.reason_code}] {line}"
+    return line
+
+
+def _criteria_lines(elig: Eligibility, stage: str, kind: str) -> list[str]:
+    return [f"  - {criterion_line(c, stage)}" for c in elig.criteria_for(stage, kind)]
 
 
 def inclusion_block(elig: Eligibility, stage: str) -> str:
-    """Inclusion criteria as the prompts list them, one `  - ` line each."""
-    return "\n".join(
-        f"  - {elig.text_at(c, stage)}"
-        for c in elig.criteria_for(stage, "inclusion")
-    )
+    """Inclusion criteria for `stage`, one `  - ` line each."""
+    return "\n".join(_criteria_lines(elig, stage, "inclusion"))
 
 
 def exclusion_block(elig: Eligibility, stage: str) -> str:
-    """Exclusion criteria for `stage`, honouring that stage's transitional text.
+    """Exclusion criteria for `stage`, one `  - ` line each.
 
-    The abstract primary pass sees a deliberately shorter list than the verifier:
-    high recall first, precision second. That subset is declared per criterion in
-    `stages`, not hardcoded here, so which pass sees what is a spec decision.
+    Which exclusions a stage sees is declared per criterion in `stages`: the
+    abstract primary pass is deliberately shown fewer, for recall.
     """
-    return "\n".join(
-        f"  - {elig.text_at(c, stage)}"
-        for c in elig.criteria_for(stage, "exclusion")
-    )
+    return "\n".join(_criteria_lines(elig, stage, "exclusion"))
 
 
-def specialty_prompt_block(elig: Eligibility) -> str:
-    """The specialty scope as the prompts embed it, with its surrounding blanks."""
-    return "\n" + elig.specialty_scope.format_for_prompt() + "\n"
+def specialty_block_lines(elig: Eligibility, stage: str) -> list[str]:
+    """The specialty scope as every surface renders it; coded at FT stages."""
+    lines = elig.specialty_scope.format_for_prompt().split("\n")
+    if lines[0] != "SPECIALTY SCOPE:":
+        raise ValueError("format_for_prompt changed its heading; the code tag has nowhere to go")
+    if stage in CODED_STAGES:
+        lines[0] = f"SPECIALTY SCOPE [{elig.specialty_scope.reason_code}]:"
+    return lines
+
+
+def specialty_prompt_block(elig: Eligibility, stage: str) -> str:
+    """The specialty scope as a prompt embeds it, with its surrounding blanks."""
+    return "\n" + "\n".join(specialty_block_lines(elig, stage)) + "\n"
+
+
+# ── Verifier tests and policy prose ──────────────────────────────────
 
 
 def verifier_tests_block(elig: Eligibility, stage: str) -> str:
-    """The stage's verifier tests, numbered from one in declaration order."""
+    """The stage's verifier tests, numbered from one, evidence object filled in."""
+    token = "{" + EVIDENCE_PLACEHOLDER + "}"
     return "\n".join(
-        f"{n}. {elig.text_at(t, stage)}"
+        f"{n}. {t.text.replace(token, EVIDENCE_OBJECT[stage])}"
         for n, t in enumerate(elig.tests_for(stage), start=1)
     )
 
 
+def _uncertain_sentence(value: str | None, stage: str) -> str | None:
+    evidence = EVIDENCE_OBJECT[stage]
+    if value == "include":
+        return (
+            f"If the {evidence} gives partial evidence that the paper might meet "
+            "the criteria, include it — a later verification pass will catch "
+            "false positives."
+        )
+    if value == "exclude":
+        return f"If the {evidence} leaves eligibility uncertain, exclude it."
+    return None
+
+
+def _absent_sentence(value: str | None, stage: str) -> str | None:
+    evidence = EVIDENCE_OBJECT[stage]
+    if value == "exclude":
+        return (
+            f"If there is no {evidence}, or it gives too little information to "
+            "determine eligibility, exclude it — do not default to inclusion when "
+            "evidence is absent."
+        )
+    if value == "include":
+        return (
+            f"If there is no {evidence}, or it gives too little information to "
+            "determine eligibility, include it for a later pass to resolve."
+        )
+    return None
+
+
 def decision_instruction(elig: Eligibility, stage: str) -> str:
-    """The stage's decision instruction, with its test block substituted in.
+    """The instruction that closes a stage's prompt, derived from its policy.
 
-    A verifier stage stores its instruction as a template carrying `{tests}` so
-    the numbered block and the prose around it stay one unit; a stage with no
-    tests stores plain prose and the substitution is a no-op.
+    A verification pass gets its framing, its numbered tests and its closing
+    rule; its policy is fixed by being a verifier. The abstract primary pass
+    gets one sentence per declared policy value, and nothing else — in
+    particular no free-standing bar of its own on top of the criteria.
     """
-    text = elig.policy_for(stage).instruction_text or ""
-    if _TESTS_PLACEHOLDER in text:
-        text = text.replace(_TESTS_PLACEHOLDER, verifier_tests_block(elig, stage))
-    return text
+    if stage in VERIFIER_STAGES:
+        parts = []
+        if stage in _VERIFIER_FRAMING:
+            parts.append(_VERIFIER_FRAMING[stage])
+        parts.append("Apply these tests strictly:\n" + verifier_tests_block(elig, stage))
+        parts.append(_VERIFIER_CLOSER[stage])
+        return "\n\n".join(parts)
+    if stage != "abstract_primary":
+        raise ValueError(f"stage {stage!r} renders no decision instruction")
+    policy = elig.policy_for(stage)
+    lines = ["Decide 'include' or 'exclude'."]
+    for sentence in (
+        _uncertain_sentence(policy.when_uncertain, stage),
+        _absent_sentence(policy.when_evidence_absent, stage),
+    ):
+        if sentence:
+            lines.append(sentence)
+    lines.append("Exclude when the paper clearly meets an exclusion criterion listed above.")
+    return "\n".join(lines)
 
 
-def absent_abstract_text(elig: Eligibility, stage: str) -> str:
-    """What the prompt says in place of an abstract that does not exist."""
-    return elig.policy_for(stage).absent_abstract_text or ""
+def absent_abstract_fallback(elig: Eligibility, stage: str) -> str:
+    """What a prompt says in place of an abstract that does not exist.
+
+    It states the evidence-sufficiency criterion itself, so the fallback can
+    never say something the criterion does not.
+    """
+    c = elig.evidence_criterion()
+    if c is None or stage not in c.stages:
+        raise ValueError(
+            f"stage {stage!r} can render a paper with no abstract, but no "
+            "evidence-sufficiency criterion (reason_code 'insufficient_data') "
+            "applies there, so there is no rule to state in its place."
+        )
+    return f"Abstract: [Not available. Exclusion criterion: {criterion_line(c, stage)}]"
 
 
 # ── Reason codes ─────────────────────────────────────────────────────
 
 
-def _declarers(elig: Eligibility) -> dict[str, Criterion | SpecialtyScope]:
-    """Reason code → the criterion or scope that declares it."""
-    found: dict[str, Criterion | SpecialtyScope] = {}
-    for c in elig.criteria:
-        if c.reason_code and (c.reason_code_prompt_text or c.reason_code_sheet_text):
-            found[c.reason_code] = c
-    ss = elig.specialty_scope
-    if ss.reason_code_prompt_text or ss.reason_code_sheet_text:
-        found[ss.reason_code] = ss
-    return found
+def reason_code_block_lines(elig: Eligibility) -> list[str]:
+    """The reason-code menu: how to pick a code, then the structural codes.
 
-
-def reason_code_descriptions(elig: Eligibility, surface: str) -> dict[str, str]:
-    """Every reason code's description for `surface` ("prompt" or "sheet").
-
-    A code described by the spec (its meaning depends on this review's topic)
-    wins; otherwise the structural description in this module is used. Order is
-    `FT_REASON_CODES`, which is what both surfaces render today and what the
-    stored `reason_code` column is checked against.
+    Topic codes are not repeated here — each is shown in brackets beside the
+    criterion or scope that declares it, which is the one place its meaning
+    lives. The structural codes name no criterion, so they are listed with the
+    engine's description.
     """
-    declared = _declarers(elig)
-    out: dict[str, str] = {}
-    for code in FT_REASON_CODES:
-        owner = declared.get(code)
-        if owner is not None:
-            text = (
-                owner.reason_code_prompt_text if surface == "prompt"
-                else owner.reason_code_sheet_text
-            )
-            if text:
-                out[code] = text
-                continue
-        out[code] = STRUCTURAL_REASON_CODES[code][surface]
-    return out
+    lines = [
+        "REASON CODES (use exactly one): the bracketed code of the exclusion "
+        "criterion or specialty scope that applies, or one of:"
+    ]
+    lines += [f"  - {code}: {desc}" for code, desc in STRUCTURAL_REASON_CODES.items()]
+    return lines
 
 
 def reason_code_prompt_block(elig: Eligibility) -> str:
-    """The FT prompt's reason-code menu, one `  - code: description` line each."""
-    return "\n".join(
-        f"  - {code}: {desc}"
-        for code, desc in reason_code_descriptions(elig, "prompt").items()
+    """The reason-code menu as the FT prompt embeds it."""
+    return "\n".join(reason_code_block_lines(elig))
+
+
+def with_reason_code_vocabulary(schema: dict, elig: Eligibility) -> dict:
+    """A copy of a decision schema whose reason_code field names the vocabulary.
+
+    The structured-output schema is part of the request too. A hardcoded list in
+    the model class would be a fourth vocabulary copy the prompt could disagree
+    with.
+    """
+    out = copy.deepcopy(schema)
+    out["properties"]["reason_code"]["description"] = (
+        "One of: " + ", ".join(elig.reason_codes())
     )
+    return out
 
 
-# ── Adjudication rubrics ─────────────────────────────────────────────
-
-
-def _specialty_summary_lines(elig: Eligibility) -> list[str]:
-    ss = elig.specialty_scope
-    return [
-        f"SPECIALTY SCOPE — Included: {', '.join(ss.included)}",
-        f"SPECIALTY SCOPE — Excluded: {', '.join(ss.excluded)}",
-    ]
-
-
-#: TRANSITIONAL. The abstract sheet repeats the scope notes as a trailing
-#: "EDGE CASE:" rubric line; the FT sheet does not, though both render the notes
-#: again in their edge-case guidance. Which sheet says it twice is an accident of
-#: two builders written months apart, recorded here so the relocation is
-#: byte-identical and the divergence is visible rather than inherited.
-_EDGE_CASE_RUBRIC_STAGES = frozenset({"abstract_adjudication"})
+# ── Adjudication sheets ──────────────────────────────────────────────
 
 
 def decision_criteria(elig: Eligibility, stage: str) -> list[str]:
-    """The adjudication sheet's decision rubric for `stage`."""
-    lines = list(elig.policy_for(stage).rubric_text or []) + _specialty_summary_lines(elig)
-    notes = elig.specialty_scope.notes
-    if stage in _EDGE_CASE_RUBRIC_STAGES and notes:
-        lines.append(f"EDGE CASE: {notes.strip()}")
+    """The adjudication rubric for `stage`, derived from the criteria themselves."""
+    positive, negative = _ADJUDICATION_LABELS[stage]
+    lines = [f"{positive} only if every inclusion criterion holds:"]
+    lines += _criteria_lines(elig, stage, "inclusion")
+    reason = " (the bracketed code names the reason)" if stage in CODED_STAGES else ""
+    lines.append(f"{negative} if any exclusion criterion applies{reason}:")
+    lines += _criteria_lines(elig, stage, "exclusion")
+    ss = elig.specialty_scope
+    tag = f" [{ss.reason_code}]" if stage in CODED_STAGES else ""
+    lines.append(f"SPECIALTY SCOPE{tag} — Included: {', '.join(ss.included)}")
+    lines.append(f"SPECIALTY SCOPE{tag} — Excluded: {', '.join(ss.excluded)}")
     return lines
 
 
 def criteria_reference_block(elig: Eligibility, stage: str) -> list[str]:
     """Inclusion and exclusion criteria as the reference sheet lists them.
 
-    The sheet marks inclusions `+` and exclusions `-`; the prompts mark both
-    `-`. Two markers for one set of rules is a formatting divergence, carried
-    here so the relocation changes no byte, and a candidate for the fold.
+    Identical to the prompt at the stage adjudicated: same markers, same
+    examples, same codes. The sheet a human decides from shows the rules the
+    model decided from.
     """
-    lines = ["INCLUSION CRITERIA:"]
-    lines += [f"  + {elig.text_at(c, stage)}" for c in elig.criteria_for(stage, "inclusion")]
-    lines += ["", "EXCLUSION CRITERIA:"]
-    lines += [f"  - {elig.text_at(c, stage)}" for c in elig.criteria_for(stage, "exclusion")]
+    lines = ["INCLUSION CRITERIA:"] + _criteria_lines(elig, stage, "inclusion")
+    lines += ["", "EXCLUSION CRITERIA:"] + _criteria_lines(elig, stage, "exclusion")
     lines.append("")
     return lines
 
 
-def specialty_reference_block(elig: Eligibility) -> list[str]:
-    """The reference sheet's specialty block — `+`/`-` per specialty.
+def _adjudication_uncertain(value: str | None, stage: str) -> str | None:
+    if value is None:
+        return None
+    positive, negative = _ADJUDICATION_LABELS[stage]
+    if value == "include":
+        tail = f" — {_DOWNSTREAM_CHECK[stage]}" if stage in _DOWNSTREAM_CHECK else ""
+        return f"When in doubt between {positive} and {negative}, lean toward {positive}{tail}."
+    return f"When in doubt between {positive} and {negative}, lean toward {negative}."
 
-    A third rendering of the same scope, distinct from `format_for_prompt`. It
-    exists as its own function so the identity gate can pin it; it folds into
-    `format_for_prompt` when the markers are unified.
-    """
-    ss = elig.specialty_scope
-    lines = ["SPECIALTY SCOPE:", "  Included specialties:"]
-    lines += [f"    + {s}" for s in ss.included]
-    lines.append("  Excluded specialties:")
-    lines += [f"    - {s}" for s in ss.excluded]
-    if ss.notes:
-        lines.append(f"  Notes: {ss.notes}")
-    return lines
+
+def _adjudication_absent(value: str | None, stage: str) -> str | None:
+    if value is None:
+        return None
+    positive, negative = _ADJUDICATION_LABELS[stage]
+    evidence = EVIDENCE_OBJECT[stage]
+    if value == "exclude":
+        return (
+            f"If the {evidence} gives too little information to decide, choose "
+            f"{negative} — do not default to inclusion when evidence is absent."
+        )
+    return f"If the {evidence} gives too little information to decide, choose {positive}."
 
 
 def edge_case_guidance(elig: Eligibility, stage: str, trailing: str | None = None) -> str:
-    """Scope notes, the stage's guidance, and any engine-owned trailing note."""
+    """Scope notes, then the adjudicated stage's policy, then any engine note.
+
+    The notes appear here and not in the rubric: one place per sheet.
+    """
     parts: list[str] = []
-    ss = elig.specialty_scope
-    if ss.notes:
-        parts.append(ss.notes.strip())
-    instruction = elig.policy_for(stage).instruction_text
-    if instruction:
-        parts.append(instruction)
+    notes = elig.specialty_scope.notes
+    if notes:
+        parts.append(notes.strip())
+    policy = elig.policy_for(ADJUDICATES[stage])
+    for sentence in (
+        _adjudication_uncertain(policy.when_uncertain, stage),
+        _adjudication_absent(policy.when_evidence_absent, stage),
+    ):
+        if sentence:
+            parts.append(sentence)
     if trailing:
         parts.append(trailing)
     return " ".join(parts)
@@ -264,38 +366,27 @@ def edge_case_guidance(elig: Eligibility, stage: str, trailing: str | None = Non
 # ── The model request ────────────────────────────────────────────────
 
 
-def system_message(elig: Eligibility, stage: str) -> str:
-    """The stage's system message: engine template, review topic substituted in.
-
-    A stage whose template has no `{topic}` slot renders unchanged, and its
-    `system_text` must be None — there would be nowhere to put it.
-    """
+def system_message(stage: str, review_title: str) -> str:
+    """The stage's system message, the review title substituted where it has a slot."""
     template = SYSTEM_TEMPLATES[stage]
-    topic = elig.policy_for(stage).system_text
     if _TOPIC_PLACEHOLDER not in template:
-        if topic:
-            raise ValueError(
-                f"stage {stage!r} declares system_text but its system template "
-                "has no topic slot, so the text would never be sent."
-            )
         return template
-    if not topic:
+    if not review_title or not review_title.strip():
         raise ValueError(
-            f"stage {stage!r} has a topic slot in its system message and no "
-            "system_text to fill it. Rendering an empty slot would silently "
-            "drop the review's subject from the request."
+            f"stage {stage!r} names the review in its system message and no "
+            "review title was given. Rendering an empty slot would silently drop "
+            "the review's subject from the request."
         )
-    return template.replace(_TOPIC_PLACEHOLDER, topic)
+    return template.replace(_TOPIC_PLACEHOLDER, review_title.strip())
 
 
-def messages(elig: Eligibility, stage: str, user_prompt: str) -> list[dict[str, str]]:
+def messages(stage: str, user_prompt: str, *, review_title: str) -> list[dict[str, str]]:
     """The full message list as sent for `stage`.
 
-    Both messages in one place, because the review's topic content reaches the
-    model through both of them and a gate that hashes only the user prompt
-    cannot see half of what was asked.
+    Both messages in one place, because review content reaches the model through
+    both, and a gate that hashes only the user prompt cannot see half of it.
     """
     return [
-        {"role": "system", "content": system_message(elig, stage)},
+        {"role": "system", "content": system_message(stage, review_title)},
         {"role": "user", "content": user_prompt},
     ]

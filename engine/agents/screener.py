@@ -62,12 +62,12 @@ def _build_prompt(paper: dict, spec: ReviewSpec, *, role: str = "primary") -> st
     # primary pass is shown a deliberately shorter list for recall, the verifier
     # the full set for precision.
     exclusion = render.exclusion_block(elig, stage)
-    specialty_block = render.specialty_prompt_block(elig)
+    specialty_block = render.specialty_prompt_block(elig, stage)
 
     if abstract:
         paper_text = f"Title: {title}\n\nAbstract: {abstract}"
     else:
-        paper_text = f"Title: {title}\n\n" + render.absent_abstract_text(elig, stage)
+        paper_text = f"Title: {title}\n\n" + render.absent_abstract_fallback(elig, stage)
 
     decision_instruction = render.decision_instruction(elig, stage)
 
@@ -115,7 +115,7 @@ def screen_paper(
 
     response = ollama_chat(
         model=model,
-        messages=render.messages(spec.eligibility, stage, user_prompt),
+        messages=render.messages(stage, user_prompt, review_title=spec.title),
         format=ScreeningDecision.model_json_schema(),
         options={"temperature": 0},
         think=False,

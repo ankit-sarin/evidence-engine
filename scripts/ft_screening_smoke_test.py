@@ -118,6 +118,7 @@ def main():
             decision.reason_code,
             decision.rationale,
             decision.confidence,
+            reason_codes=spec.eligibility.reason_codes(),
         )
 
         print(f"  Decision: {decision.decision}")

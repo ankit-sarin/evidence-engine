@@ -27,7 +27,7 @@ from engine.agents.ft_screener import (
     run_ft_screening,
     truncate_paper_text,
 )
-from engine.core.constants import FT_MAX_TEXT_CHARS, FT_REASON_CODES
+from engine.core.constants import FT_MAX_TEXT_CHARS
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
@@ -85,6 +85,7 @@ def _advance_to_ft_flagged(db, paper_id):
     db.add_ft_screening_decision(
         paper_id, "qwen3.5:27b", "FT_ELIGIBLE", "eligible",
         "Paper describes autonomous suturing", 0.9,
+        reason_codes=_SPEC_FOR_EXPORT.eligibility.reason_codes(),
     )
     db.add_ft_verification_decision(
         paper_id, "gemma3:27b", "FT_FLAGGED",
@@ -182,13 +183,19 @@ class TestDecisionModels:
 # ── Constants Tests ───────────────────────────────────────────────
 
 
-class TestConstants:
+class TestReasonCodeVocabulary:
+    """The vocabulary is the spec's eligibility, not an engine tuple (SCREEN-AUTH-01 2c)."""
 
-    def test_reason_codes_tuple(self):
-        assert "eligible" in FT_REASON_CODES
-        assert "wrong_specialty" in FT_REASON_CODES
-        assert "no_autonomy_content" in FT_REASON_CODES
-        assert len(FT_REASON_CODES) == 7
+    def test_reason_codes_come_from_the_eligibility_vocabulary(self, spec):
+        codes = spec.eligibility.reason_codes()
+        assert "eligible" in codes
+        assert "wrong_specialty" in codes
+        assert "no_autonomy_content" in codes
+        assert len(codes) == 12
+
+    def test_the_engine_tuple_is_gone(self):
+        import engine.core.constants as constants
+        assert not hasattr(constants, "FT_REASON_CODES")
 
 
 # ── Database FT Decision Tests ────────────────────────────────────
@@ -213,6 +220,7 @@ class TestFTDecisionDB:
         dec_id = tmp_db.add_ft_screening_decision(
             pid, "qwen3.5:27b", "FT_ELIGIBLE", "eligible",
             "Paper qualifies", 0.95,
+            reason_codes=_SPEC_FOR_EXPORT.eligibility.reason_codes(),
         )
         assert dec_id > 0
 
@@ -362,9 +370,12 @@ class TestPromptBuilders:
 
     def test_ft_screening_prompt_contains_reason_codes(self, spec):
         prompt = build_ft_screening_prompt("Paper text here", spec)
-        assert "eligible" in prompt
-        assert "wrong_specialty" in prompt
-        assert "no_autonomy_content" in prompt
+        # Every code the review can record is named to the model, and each topic
+        # code sits in brackets beside the rule that declares it.
+        for code in spec.eligibility.reason_codes():
+            assert code in prompt, code
+        assert "[no_autonomy_content] " in prompt
+        assert "SPECIALTY SCOPE [wrong_specialty]:" in prompt
 
     def test_ft_screening_prompt_contains_paper_text(self, spec):
         prompt = build_ft_screening_prompt("MY UNIQUE PAPER CONTENT", spec)
@@ -773,7 +784,11 @@ class TestFTScreeningSkipsAdvancedStatus:
 class TestMissingParsedText:
 
     def test_no_parsed_text_marks_ft_flagged(self, tmp_db, spec):
-        """Paper at PARSED with no parsed text file gets marked FT_FLAGGED."""
+        """Paper at PARSED with no parsed text is parked at FT_FLAGGED with NO decision row.
+
+        Nothing was screened, so there is no decision and no reason code that would
+        be true of one (SCREEN-AUTH-01 2c, ruling R27).
+        """
         pid = _add_paper(tmp_db, title="No Text Paper", pmid="NT1")
         _advance_to_parsed(tmp_db, pid)
         # Do NOT create any parsed text file
@@ -788,6 +803,10 @@ class TestMissingParsedText:
         ).fetchone()
         assert paper["status"] == "FT_FLAGGED"
         assert stats["skipped_no_text"] == 1
+        rows = tmp_db._conn.execute(
+            "SELECT COUNT(*) FROM ft_screening_decisions WHERE paper_id = ?", (pid,)
+        ).fetchone()[0]
+        assert rows == 0
         # LLM should NOT have been called (no text to screen)
         mock_screen.assert_not_called()
 

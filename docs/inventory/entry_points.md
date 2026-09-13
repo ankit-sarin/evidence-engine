@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `95ddc3fb530ce9ad813cdb18517649f05940cb16` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `83defc554069c56516faa7093088bd633500216b` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -166,7 +166,7 @@ Two figures deliberately have no baseline row. **entry points** (99) counts anyt
 |---|---:|---|---|
 | `engine/adjudication/categorizer.py` | 45 | `safe_load` | `f` |
 | `engine/core/codebook.py` | 418 | `safe_load` | `text` |
-| `engine/core/review_spec.py` | 647 | `safe_load` | `f` |
+| `engine/core/review_spec.py` | 710 | `safe_load` | `f` |
 
 ## Path construction in code
 

@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import re
 from datetime import date
 from pathlib import Path
 from typing import Literal, Optional
@@ -122,28 +123,59 @@ Stage = Literal[
 ]
 
 
+#: Reason codes that apply to ANY systematic review. They belong to the engine,
+#: not to a spec, and each has exactly one description here. A spec may point a
+#: criterion at one of them — the evidence-sufficiency criterion points at
+#: `insufficient_data` — but the engine's description is the authority for it.
+STRUCTURAL_REASON_CODES: dict[str, str] = {
+    "eligible": "Meets all inclusion criteria and no exclusion criterion applies.",
+    "protocol_only": "Study protocol without results.",
+    "duplicate_cohort": "Reports the same cohort or dataset as another included paper.",
+    "insufficient_data": (
+        "The full text does not contain enough information to determine "
+        "eligibility against the criteria."
+    ),
+}
+
+#: The code a paper that passes carries. It names no rule, so nothing may declare it.
+ELIGIBLE_CODE = "eligible"
+
+#: The evidence-sufficiency code. The criterion that declares it is the rule a
+#: prompt states when there is nothing to judge.
+EVIDENCE_CODE = "insufficient_data"
+
+#: Stages at which a model decides. The two adjudication stages are human
+#: surfaces; their policy is derived from the model stage they resolve.
+MODEL_STAGES: tuple[str, ...] = (
+    "abstract_primary", "abstract_verifier", "ft_primary", "ft_verifier",
+)
+VERIFIER_STAGES: tuple[str, ...] = ("abstract_verifier", "ft_verifier")
+
+#: The one placeholder a verifier test may carry. The renderer fills it with what
+#: the stage is reading, so one wording serves the abstract and full-text passes.
+EVIDENCE_PLACEHOLDER = "evidence"
+
+_REASON_CODE_PATTERN = r"^[a-z][a-z0-9_]*$"
+_PLACEHOLDER_RE = re.compile(r"\{([^{}]*)\}")
+
+
 class Criterion(_SpecModel):
     """One eligibility rule, and the single authority for its wording.
 
-    `text` is canonical. `transitional_text` carries, per stage, the wording a
-    stage renders *today* where it differs from canonical — a paraphrase that
-    narrows or widens the rule. It exists so the relocation can be proved
-    byte-identical before any content changes, and it is deleted at the fold
-    step; a criterion whose stages all agree with `text` carries none.
+    `text` renders verbatim at every stage in `stages`; there is no per-stage
+    wording. `examples` render after it as "e.g., …" wherever it renders — they
+    illustrate the rule and never widen it. An exclusion declares the
+    `reason_code` a full-text decision records when this rule is the reason.
     """
 
     id: str = Field(pattern=r"^[a-z][a-z0-9-]*$", max_length=64)
     kind: Literal["inclusion", "exclusion"]
     text: str = Field(min_length=1)
     stages: list[Stage] = Field(min_length=1)
-    reason_code: Optional[str] = None
-    transitional_text: Optional[dict[Stage, str]] = None
-    #: TRANSITIONAL. The two wordings this criterion's reason code carries today —
-    #: one in the FT prompt, one in the adjudication reference sheet. They disagree
-    #: for every code in the vocabulary, which is why both must be carried until 2c
-    #: rules on a single description.
-    reason_code_prompt_text: Optional[str] = None
-    reason_code_sheet_text: Optional[str] = None
+    reason_code: Optional[str] = Field(
+        default=None, pattern=_REASON_CODE_PATTERN, max_length=64
+    )
+    examples: Optional[list[str]] = None
 
     @model_validator(mode="after")
     def _check(self) -> "Criterion":
@@ -153,22 +185,24 @@ class Criterion(_SpecModel):
                 "An inclusion criterion is not a reason to exclude a paper, and "
                 "a code on one would have no emitter."
             )
-        if self.transitional_text:
-            stray = sorted(set(self.transitional_text) - set(self.stages))
-            if stray:
-                raise ValueError(
-                    f"criterion {self.id!r}: transitional_text names stage(s) "
-                    f"{stray} the criterion is not rendered at. Transitional text "
-                    "for a stage that never renders the criterion is dead wording "
-                    "that no gate would catch."
-                )
-        if self.reason_code is None and (
-            self.reason_code_prompt_text or self.reason_code_sheet_text
+        if self.kind == "exclusion" and self.reason_code is None:
+            raise ValueError(
+                f"criterion {self.id!r}: an exclusion criterion must declare a "
+                "reason_code. Without one, a paper excluded under this rule cannot "
+                "record why, and the stored decision names no rule."
+            )
+        if self.reason_code == ELIGIBLE_CODE:
+            raise ValueError(
+                f"criterion {self.id!r}: {ELIGIBLE_CODE!r} is the code a paper that "
+                "passes carries; it cannot be the reason a rule excludes one."
+            )
+        if self.examples is not None and (
+            not self.examples or any(not e.strip() for e in self.examples)
         ):
             raise ValueError(
-                f"criterion {self.id!r}: carries a reason-code description but no "
-                "reason_code. A description for a code this criterion never emits "
-                "would be rendered by nothing."
+                f"criterion {self.id!r}: examples, when present, must be a "
+                "non-empty list of non-empty strings. An empty example renders as "
+                "'e.g., ' with nothing after it."
             )
         return self
 
@@ -180,50 +214,43 @@ class VerifierTest(_SpecModel):
     It may name criterion ids or the specialty scope's id; it may not be empty,
     because a test that enforces nothing declared is topic content smuggled in
     through the back door.
+
+    `text` may carry one placeholder, `{evidence}`, which the renderer fills with
+    what the stage is reading — "abstract" or "full text" — so a test applied at
+    both verifier stages has one wording, not two.
     """
 
     id: str = Field(pattern=r"^[a-z][a-z0-9-]*$", max_length=64)
     text: str = Field(min_length=1)
     stages: list[Stage] = Field(min_length=1)
     derives_from: list[str] = Field(min_length=1)
-    transitional_text: Optional[dict[Stage, str]] = None
 
     @model_validator(mode="after")
     def _check(self) -> "VerifierTest":
-        if self.transitional_text:
-            stray = sorted(set(self.transitional_text) - set(self.stages))
-            if stray:
-                raise ValueError(
-                    f"verifier test {self.id!r}: transitional_text names stage(s) "
-                    f"{stray} the test is not rendered at."
-                )
+        unknown = sorted(
+            {p for p in _PLACEHOLDER_RE.findall(self.text) if p != EVIDENCE_PLACEHOLDER}
+        )
+        if unknown:
+            raise ValueError(
+                f"verifier test {self.id!r}: unknown placeholder(s) {unknown}. Only "
+                "{evidence} is filled by the renderer; anything else would reach "
+                "the model as literal braces."
+            )
         return self
 
 
 class StagePolicy(_SpecModel):
-    """How one stage resolves uncertainty, plus its transitional prose.
+    """How a model stage resolves the two cases its criteria cannot settle.
 
-    `instruction_text` and `absent_abstract_text` are TRANSITIONAL: they hold
-    today's hand-written decision instruction and absent-abstract fallback so
-    the rendering can be reproduced byte for byte. At the fold step they are
-    deleted and the renderer derives that prose from the two policy fields.
+    `when_uncertain`: the evidence is partial. `when_evidence_absent`: there is
+    nothing to judge. The prose a stage receives is derived from these two values
+    by the renderer. There is deliberately no free-text instruction field: free
+    text is how the recall-first rule and the evidence-sufficiency criterion came
+    to contradict each other inside a single prompt.
     """
 
     when_uncertain: Optional[Literal["include", "exclude"]] = None
     when_evidence_absent: Optional[Literal["include", "exclude"]] = None
-    instruction_text: Optional[str] = None
-    absent_abstract_text: Optional[str] = None
-    #: TRANSITIONAL. The topic sentence this stage's SYSTEM message carries. The
-    #: rest of that message is structural engine text and stays in the renderer's
-    #: per-stage template. It is here because the system message is review content
-    #: that no user-message hash could see: the surface gates added in Phase 2b
-    #: covered the user prompt only, and this sentence sat outside all of them.
-    system_text: Optional[str] = None
-    #: TRANSITIONAL. The INCLUDE/EXCLUDE rubric sentences an adjudication sheet
-    #: states today. They are a third paraphrase of the criteria — held here so the
-    #: relocation is byte-identical, and deleted at the fold when the rubric is
-    #: derived from the criteria themselves.
-    rubric_text: Optional[list[str]] = None
 
 
 # ── Specialty Scope ──────────────────────────────────────────────────
@@ -233,16 +260,12 @@ class SpecialtyScope(_SpecModel):
     """Surgical specialty inclusion/exclusion scope for screening.
 
     It carries an `id` so a VerifierTest can cite it in `derives_from` the way
-    it cites a criterion. The scope is the authority behind the single largest
-    exclusion category, and a test that enforces it needs to be able to say so.
+    it cites a criterion, and a `reason_code` because it is the authority behind
+    the single largest exclusion category.
     """
 
     id: str = Field(pattern=r"^[a-z][a-z0-9-]*$", max_length=64)
-    reason_code: str = Field(min_length=1)
-    #: TRANSITIONAL, as on Criterion — the prompt and sheet wordings of this
-    #: scope's reason code, which disagree today.
-    reason_code_prompt_text: Optional[str] = None
-    reason_code_sheet_text: Optional[str] = None
+    reason_code: str = Field(pattern=_REASON_CODE_PATTERN, max_length=64)
     included: list[str] = Field(min_length=1)
     excluded: list[str] = Field(min_length=1)
     notes: Optional[str] = None
@@ -267,14 +290,13 @@ class SpecialtyScope(_SpecModel):
 class Eligibility(_SpecModel):
     """The review's eligibility authority: what makes a paper in or out.
 
-    Every surface that screens a paper — four model prompts and two human
-    adjudication sheets — renders from here. Before this model the same rules
-    existed as prose in seven literal sites that had quietly drifted apart:
-    paraphrases that narrowed a criterion, four divergent descriptions of one
-    reason code, and a fifth copy no live path could reach. The spec already
-    held the content; what it lacked was a slot for the wording each stage
-    actually used, which is why `transitional_text` exists and why it is
-    temporary.
+    Every surface that screens a paper — four model requests and two human
+    adjudication sheets — renders from here through `eligibility_render`, and
+    none of them carries wording of its own. Before SCREEN-AUTH-01 the same rules
+    lived as prose at seven literal sites that had drifted apart. Phase 2b moved
+    them here behind per-stage overrides so the move could be proved
+    byte-identical; Phase 2c removed the overrides. A criterion now says one
+    thing everywhere it renders.
     """
 
     criteria: list[Criterion] = Field(min_length=1)
@@ -302,7 +324,60 @@ class Eligibility(_SpecModel):
                     "scope id; anything else is a reference to a rule that does "
                     "not exist."
                 )
+        owners: dict[str, str] = {}
+        declared = [(c.id, c.reason_code) for c in self.criteria if c.reason_code]
+        declared.append((self.specialty_scope.id, self.specialty_scope.reason_code))
+        for owner, code in declared:
+            if code in owners:
+                raise ValueError(
+                    f"reason_code {code!r} is declared by both {owners[code]!r} and "
+                    f"{owner!r}. A decision records one code; if two rules share it, "
+                    "the record cannot say which rule excluded the paper."
+                )
+            owners[code] = owner
+        if self.specialty_scope.reason_code == ELIGIBLE_CODE:
+            raise ValueError(
+                f"specialty_scope: {ELIGIBLE_CODE!r} is the code a paper that passes "
+                "carries; it cannot be the reason the scope excludes one."
+            )
+        declared_derived = sorted(set(self.stage_policies) - set(MODEL_STAGES))
+        if declared_derived:
+            raise ValueError(
+                f"stage_policies declares {declared_derived}. An adjudication "
+                "stage's policy is derived from the model stage it resolves, so a "
+                "declared one would be silently ignored."
+            )
+        for stage in VERIFIER_STAGES:
+            policy = self.stage_policies.get(stage)
+            if policy is not None and policy.when_uncertain == "include":
+                raise ValueError(
+                    f"stage_policies[{stage!r}].when_uncertain is 'include'. A "
+                    "verification pass exists to catch false positives; one that "
+                    "includes on uncertainty cannot."
+                )
         return self
+
+    def reason_codes(self) -> tuple[str, ...]:
+        """The effective reason-code vocabulary: structural ∪ spec-declared.
+
+        Order: `eligible`; each exclusion criterion's code in declaration order;
+        the specialty scope's code; then any structural code not already named.
+        Prompts list codes in this order, so it is part of what they render.
+        """
+        out = [ELIGIBLE_CODE]
+        for c in self.criteria:
+            if c.reason_code and c.reason_code not in out:
+                out.append(c.reason_code)
+        if self.specialty_scope.reason_code not in out:
+            out.append(self.specialty_scope.reason_code)
+        for code in STRUCTURAL_REASON_CODES:
+            if code not in out:
+                out.append(code)
+        return tuple(out)
+
+    def evidence_criterion(self) -> Optional[Criterion]:
+        """The criterion declaring the evidence-sufficiency code, if any."""
+        return next((c for c in self.criteria if c.reason_code == EVIDENCE_CODE), None)
 
     def criteria_for(self, stage: str, kind: Optional[str] = None) -> list[Criterion]:
         """Criteria rendered at `stage`, in declaration order."""
@@ -314,18 +389,6 @@ class Eligibility(_SpecModel):
     def tests_for(self, stage: str) -> list[VerifierTest]:
         """Verifier tests rendered at `stage`, in declaration order."""
         return [t for t in self.verifier_tests if stage in t.stages]
-
-    @staticmethod
-    def text_at(item: "Criterion | VerifierTest", stage: str) -> str:
-        """The wording `stage` renders for `item` — transitional or canonical.
-
-        Serves criteria and verifier tests alike: both carry a canonical `text`
-        and an optional per-stage override, and the renderer must not care
-        which kind it is holding.
-        """
-        if item.transitional_text:
-            return item.transitional_text.get(stage, item.text)
-        return item.text
 
     def policy_for(self, stage: str) -> StagePolicy:
         """The stage's policy, or an empty one if the spec declares none."""
@@ -591,10 +654,10 @@ class ReviewSpec(_SpecModel):
     def screening_hash(self) -> str:
         """SHA-256 of the eligibility section (canonical JSON).
 
-        The hash covers the transitional fields too, because until they are
-        folded away they are part of what a stage actually renders, and a
-        provenance record that ignored them would call two different renderings
-        the same protocol.
+        Everything a screening surface renders from the spec is inside this
+        object — criteria and their examples and codes, the specialty scope,
+        verifier tests, and stage policy — so two specs with the same hash render
+        the same prompts and sheets.
         """
         return _canonical_hash(self.eligibility.model_dump())
 

@@ -6,6 +6,7 @@ screening outcome. ABSTRACT_SCREENED_OUT is a label, not a deletion.
 The database is the single source of truth for all papers ever evaluated.
 """
 
+from collections.abc import Collection
 import json
 import logging
 import sqlite3
@@ -740,8 +741,24 @@ class ReviewDatabase:
         reason_code: str,
         rationale: str,
         confidence: float,
+        *,
+        reason_codes: Collection[str],
     ) -> int:
-        """Record a full-text screening decision. Returns the decision id."""
+        """Record a full-text screening decision. Returns the decision id.
+
+        `reason_codes` is the review's effective vocabulary
+        (`spec.eligibility.reason_codes()`); a code outside it is refused before
+        anything is written. The column carries no CHECK constraint because the
+        vocabulary belongs to the spec, not the schema, so this is where it is
+        enforced. Rows already stored are not re-validated.
+        """
+        if reason_code not in reason_codes:
+            raise ValueError(
+                f"reason_code {reason_code!r} is not in this review's reason-code "
+                f"vocabulary {sorted(reason_codes)}. A code outside it names no rule "
+                "the review declares, so the stored decision could not be traced to "
+                "a criterion."
+            )
         cur = self._conn.execute(
             """INSERT INTO ft_screening_decisions
                (paper_id, model, decision, reason_code, rationale, confidence, decided_at)

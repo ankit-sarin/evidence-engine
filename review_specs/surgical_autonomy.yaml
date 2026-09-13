@@ -64,11 +64,11 @@ pdf_quality_check:
     - INACCESSIBLE
     - OTHER
 
-# ── Eligibility (SCREEN-AUTH-01 Phase 2b) ──────────────────────────
-# Replaces the former `specialty_scope` and `screening_criteria` sections.
-# `transitional_text`, `reason_code_*_text`, `rubric_text` and `system_text` record
-# the wording a stage renders TODAY where it differs from canonical; deleted at the
-# fold (2c/2f).
+# ── Eligibility (SCREEN-AUTH-01) ───────────────────────────────────
+# Criteria, specialty scope, verifier tests and per-stage policy. Every screening
+# prompt and adjudication sheet is rendered from this section by
+# engine/core/eligibility_render.py. An exclusion's reason_code is the code a
+# full-text decision records when that rule is the reason.
 eligibility:
   criteria:
   - id: inc-english
@@ -134,6 +134,7 @@ eligibility:
   - id: exc-review-article
     kind: exclusion
     text: Systematic reviews, meta-analyses, or scoping reviews
+    reason_code: review_article
     stages:
     - abstract_primary
     - abstract_verifier
@@ -144,6 +145,7 @@ eligibility:
   - id: exc-editorial
     kind: exclusion
     text: Editorials, commentaries, or letters to the editor
+    reason_code: editorial_commentary
     stages:
     - abstract_primary
     - abstract_verifier
@@ -151,10 +153,10 @@ eligibility:
     - ft_verifier
     - abstract_adjudication
     - ft_adjudication
-    reason_code: insufficient_data
   - id: exc-abstract-only
     kind: exclusion
     text: Conference abstracts without full paper
+    reason_code: abstract_only
     stages:
     - abstract_verifier
     - ft_primary
@@ -164,6 +166,7 @@ eligibility:
   - id: exc-non-surgical-robotics
     kind: exclusion
     text: Non-surgical robotics (industrial, warehouse, rehabilitation, exoskeletons, prosthetics, assistive devices)
+    reason_code: wrong_intervention
     stages:
     - abstract_primary
     - abstract_verifier
@@ -171,14 +174,10 @@ eligibility:
     - ft_verifier
     - abstract_adjudication
     - ft_adjudication
-    reason_code: wrong_intervention
-    transitional_text:
-      abstract_primary: Non-surgical robotics (industrial, rehabilitation, exoskeletons, prosthetics)
-    reason_code_prompt_text: Not surgical robotics (e.g., industrial, rehabilitation)
-    reason_code_sheet_text: Intervention does not involve autonomous surgical robot control
   - id: exc-teleoperation-only
     kind: exclusion
     text: Purely teleoperated/master-slave robotic surgery where the human directly controls all robot movements in real-time (e.g., standard da Vinci case series, joystick-controlled systems). There must be an autonomous or semi-autonomous component where the system makes independent decisions about motion, planning, or execution.
+    reason_code: teleoperation_only
     stages:
     - abstract_verifier
     - ft_primary
@@ -188,6 +187,9 @@ eligibility:
   - id: exc-analysis-only
     kind: exclusion
     text: ML/CV methodology papers that only analyze, classify, segment, track, or predict surgical data (video, images, sensor data) without controlling a robot to execute a surgical action
+    examples:
+    - 'planning-only papers — surgical motion, path, or task planning computed from data without controlling a robot to execute it'
+    reason_code: analysis_only
     stages:
     - abstract_verifier
     - ft_primary
@@ -197,18 +199,19 @@ eligibility:
   - id: exc-no-autonomy
     kind: exclusion
     text: Studies with no autonomous or semi-autonomous component
+    examples:
+    - hardware, sensor, or instrument papers that describe a robot or device without autonomous control
+    reason_code: no_autonomy_content
     stages:
     - abstract_verifier
     - ft_primary
     - ft_verifier
     - abstract_adjudication
     - ft_adjudication
-    reason_code: no_autonomy_content
-    reason_code_prompt_text: Abstract suggested autonomy but full text reveals no autonomous component
-    reason_code_sheet_text: Full text reveals no autonomous or semi-autonomous robot execution
   - id: exc-insufficient-evidence
     kind: exclusion
     text: Papers with no abstract or insufficient information to determine eligibility — do not default to inclusion when evidence is absent
+    reason_code: insufficient_data
     stages:
     - abstract_primary
     - abstract_verifier
@@ -216,8 +219,6 @@ eligibility:
     - ft_verifier
     - abstract_adjudication
     - ft_adjudication
-    transitional_text:
-      abstract_primary: Papers with no abstract available
   specialty_scope:
     id: specialty-scope
     reason_code: wrong_specialty
@@ -238,21 +239,15 @@ eligibility:
     - neurosurgery
     notes: |
       Papers describing bench/preclinical autonomous tasks (e.g., suturing, knot-tying on phantoms) are included regardless of the specialty context, as these represent generalizable autonomous capabilities. Orthopedic and neurosurgery papers are excluded only when the autonomous task is specialty-specific (e.g., autonomous bone drilling, stereotactic targeting). If the paper describes a generalizable autonomous task performed in an orthopedic or neurosurgical context, include it.
-    reason_code_prompt_text: Autonomous task is in an excluded surgical specialty
-    reason_code_sheet_text: Paper's specialty falls outside the included specialty scope
   verifier_tests:
   - id: vt-executes-action
-    text: Does the abstract describe a robot that EXECUTES a surgical action autonomously or semi-autonomously? (Not just analysis/tracking/assessment)
+    text: Does the {evidence} describe a robot that EXECUTES a surgical action autonomously or semi-autonomously? (Not just analysis/tracking/assessment)
     stages:
     - abstract_verifier
     - ft_verifier
     derives_from:
     - inc-autonomous-control
     - exc-analysis-only
-    transitional_text:
-      ft_verifier: |-
-        Does the full text describe a robot that EXECUTES a surgical action
-           autonomously or semi-autonomously? (Not just analysis/tracking/assessment)
   - id: vt-autonomous-component
     text: Is there an autonomous component — not purely teleoperated/master-slave?
     stages:
@@ -269,10 +264,6 @@ eligibility:
     derives_from:
     - inc-physical-task
     - inc-simulation-conditional
-    transitional_text:
-      ft_verifier: |-
-        Does it involve a physical surgical task — not just a simulation
-           framework or pure methodology?
   - id: vt-original-research
     text: Is it original research — not a review, editorial, or commentary?
     stages:
@@ -282,17 +273,13 @@ eligibility:
     - exc-review-article
     - exc-editorial
   - id: vt-specialty-in-scope
-    text: |-
-      Is the surgical specialty within scope (not dental, ophthalmic, etc.
-         unless the task is a generalizable bench/preclinical autonomy task)?
+    text: Is the surgical specialty within scope (not dental, ophthalmic, etc. unless the task is a generalizable bench/preclinical autonomy task)?
     stages:
     - ft_verifier
     derives_from:
     - specialty-scope
   - id: vt-original-research-ft
-    text: |-
-      Is it original research with extractable data — not a protocol, review,
-         or commentary?
+    text: Is it original research with extractable data — not a protocol, review, or commentary?
     stages:
     - ft_verifier
     derives_from:
@@ -303,33 +290,7 @@ eligibility:
     abstract_primary:
       when_uncertain: include
       when_evidence_absent: exclude
-      instruction_text: |-
-        Decide 'include' or 'exclude'. When uncertain and the paper MIGHT involve autonomous surgical robotics, prefer 'include' — a later verification pass will catch false positives.
-        EXCLUDE only if the paper CLEARLY does not involve surgical robotics at all, or CLEARLY has no abstract available.
-      absent_abstract_text: 'Abstract: [Not available. Per the exclusion criteria, papers with no abstract or insufficient information to determine eligibility should be EXCLUDED.]'
-      system_text: Evaluate whether the paper involves autonomous or semi-autonomous surgical robotics.
     abstract_verifier:
-      instruction_text: |-
-        You are the VERIFICATION pass. This paper was already included by a primary screener. Your job is to catch false positives.
-
-        Apply these tests strictly:
-        {tests}
-
-        If ANY test fails, EXCLUDE. Only include papers that clearly pass all tests.
-      system_text: Evaluate whether the paper involves autonomous or semi-autonomous surgical robotics.
+      when_uncertain: exclude
     ft_verifier:
-      instruction_text: |-
-        Apply these tests strictly:
-        {tests}
-
-        If ANY test fails, mark as FT_FLAGGED. Only mark FT_ELIGIBLE if the paper
-        clearly passes all tests.
-    abstract_adjudication:
-      instruction_text: When in doubt between INCLUDE and EXCLUDE, lean toward INCLUDE — downstream full-text screening will catch false positives.
-      rubric_text:
-      - 'INCLUDE: The paper describes autonomous or semi-autonomous surgical robot execution of a physical task. The robot must CONTROL or DIRECT physical motion — not just perception, planning, or teleoperation.'
-      - 'EXCLUDE: The paper is about perception-only (CV/ML without robot control), planning-only, teleoperation-only, reviews/editorials, hardware/sensors, rehabilitation/exoskeletons, or non-medical robotics.'
-    ft_adjudication:
-      rubric_text:
-      - 'FT_ELIGIBLE: The full text confirms the paper describes autonomous or semi-autonomous surgical robot execution of a physical task.'
-      - 'FT_SCREENED_OUT: The full text reveals the paper does not meet inclusion criteria (see reason code for likely cause).'
+      when_uncertain: exclude

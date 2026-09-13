@@ -100,8 +100,7 @@ def _build_ft_reference_content(spec=None) -> str:
 
     lines.append("FULL-TEXT SCREENING REASON CODES")
     lines.append("")
-    for code, desc in render.reason_code_descriptions(spec.eligibility, "sheet").items():
-        lines.append(f"  {code}: {desc}")
+    lines.extend(render.reason_code_block_lines(spec.eligibility))
     lines.append("")
 
     if spec:
@@ -117,7 +116,7 @@ def _build_ft_reference_content(spec=None) -> str:
             lines.append(f"  Outcomes:     {spec.pico.outcomes}")
         lines.append("")
 
-        lines.extend(render.specialty_reference_block(spec.eligibility))
+        lines.extend(render.specialty_block_lines(spec.eligibility, "ft_adjudication"))
 
     return "\n".join(lines)
 

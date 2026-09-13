@@ -183,12 +183,14 @@ def test_unknown_nested_key_rejected_and_named(tmp_path, path, expected):
 # There is no extraction baseline any more: SCHEMA-DERIVE-01 removed the
 # section and its hash. An extraction's provenance is the codebook's hash,
 # pinned in test_codebook_staleness.py.
-#: SCREEN-AUTH-01 Phase 2b moved this hash: it covers `eligibility` now, not the
-#: retired `screening_criteria` section, and again in the 2b addendum when the
-#: system message's topic sentence joined it. It will move again at the fold (2c/2f)
-#: when the transitional fields are deleted — deliberately, and that change is a
-#: content decision, not a refactor.
-BASELINE_SCREENING_HASH = "d804ced7bd4c45e872524ebfd4d55f3d093ff9d18db28cfee8e2f67f4c571ae9"
+#: SCREEN-AUTH-01 moved this hash three times, each deliberately: Phase 2b, when it
+#: began covering `eligibility` instead of the retired `screening_criteria`; the 2b
+#: addendum, when the system message's topic sentence joined it; and Phase 2c, when
+#: the transitional fields were folded away and exclusions gained reason codes and
+#: examples. The 2c value is frozen with the fourteen renderings pinned in
+#: test_eligibility.py: it moves only with a content change that a measured smoke
+#: (2f) and an architect ruling have justified.
+BASELINE_SCREENING_HASH = "d563134ed6a92a8d0ee3e877574fcf844f7094889ec411f88e3285bb58a06a29"
 
 
 def _spec_with_review_id(tmp_path, value, *, drop=False):

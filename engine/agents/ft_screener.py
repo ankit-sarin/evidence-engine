@@ -16,7 +16,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, ValidationError
 
-from engine.core.constants import FT_MAX_TEXT_CHARS, FT_REASON_CODES
+from engine.core.constants import FT_MAX_TEXT_CHARS
 from engine.core.database import ReviewDatabase
 from engine.core import eligibility_render as render
 from engine.core.review_spec import ReviewSpec
@@ -32,7 +32,7 @@ class FTScreeningDecision(BaseModel):
     """Structured output from the full-text primary screener."""
 
     decision: Literal["FT_ELIGIBLE", "FT_EXCLUDE"]
-    reason_code: str = Field(description="One of: eligible, wrong_specialty, no_autonomy_content, wrong_intervention, protocol_only, duplicate_cohort, insufficient_data")
+    reason_code: str = Field(description="A reason code from the review's eligibility vocabulary")
     rationale: str = Field(description="1-3 sentence explanation")
     confidence: float = Field(ge=0.0, le=1.0)
 
@@ -114,10 +114,9 @@ def build_ft_screening_prompt(paper_text: str, spec: ReviewSpec) -> str:
     elig = spec.eligibility
     inclusion = render.inclusion_block(elig, "ft_primary")
     exclusion = render.exclusion_block(elig, "ft_primary")
-    specialty_block = render.specialty_prompt_block(elig)
+    specialty_block = render.specialty_prompt_block(elig, "ft_primary")
     reason_code_block = render.reason_code_prompt_block(elig)
-
-    reason_codes_str = ", ".join(FT_REASON_CODES)
+    reason_codes_str = ", ".join(elig.reason_codes())
 
     return f"""/no_think
 You are performing FULL-TEXT screening for a systematic review. You have access to
@@ -133,7 +132,6 @@ INCLUSION CRITERIA:
 EXCLUSION CRITERIA:
 {exclusion}
 {specialty_block}
-REASON CODES (use exactly one):
 {reason_code_block}
 
 PAPER FULL TEXT:
@@ -155,7 +153,7 @@ def build_ft_verification_prompt(paper_text: str, spec: ReviewSpec) -> str:
 
     elig = spec.eligibility
     exclusion = render.exclusion_block(elig, "ft_verifier")
-    specialty_block = render.specialty_prompt_block(elig)
+    specialty_block = render.specialty_prompt_block(elig, "ft_verifier")
     decision_instruction = render.decision_instruction(elig, "ft_verifier")
 
     return f"""/no_think
@@ -198,8 +196,10 @@ def ft_screen_paper(
 
     response = ollama_chat(
         model=model,
-        messages=render.messages(spec.eligibility, "ft_primary", prompt),
-        format=FTScreeningDecision.model_json_schema(),
+        messages=render.messages("ft_primary", prompt, review_title=spec.title),
+        format=render.with_reason_code_vocabulary(
+            FTScreeningDecision.model_json_schema(), spec.eligibility
+        ),
         options={"temperature": temperature},
         think=think,
     )
@@ -226,7 +226,7 @@ def ft_verify_paper(
 
     response = ollama_chat(
         model=model,
-        messages=render.messages(spec.eligibility, "ft_verifier", prompt),
+        messages=render.messages("ft_verifier", prompt, review_title=spec.title),
         format=FTVerificationDecision.model_json_schema(),
         options={"temperature": temperature},
         think=think,
@@ -328,10 +328,9 @@ def run_ft_screening(
             _PAST_FT = {"FT_ELIGIBLE", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED",
                          "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE", "REJECTED"}
             if current_status not in _PAST_FT:
-                db.add_ft_screening_decision(
-                    pid, primary_model, "FT_EXCLUDE", "no_parsed_text",
-                    "No parsed text available for full-text screening", 0.0,
-                )
+                # No decision row. Nothing was screened, so there is no decision to
+                # record and no reason code that would be true of it; the status
+                # alone parks the paper for a human.
                 db.update_status(pid, "FT_FLAGGED")
             stats["skipped_no_text"] += 1
             screened_ids.add(pid)
@@ -365,6 +364,7 @@ def run_ft_screening(
         db.add_ft_screening_decision(
             pid, primary_model, decision.decision,
             decision.reason_code, decision.rationale, decision.confidence,
+            reason_codes=spec.eligibility.reason_codes(),
         )
 
         # Update paper status — skip if already past FT screening

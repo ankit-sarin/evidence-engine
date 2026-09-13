@@ -1,0 +1,33 @@
+--- /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2c-render/R1_abstract_primary_request.before.txt	2026-09-12 23:45:16.122079188 +0000
++++ /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2c-render/R1_abstract_primary_request.after.txt	2026-09-12 23:45:16.529295967 +0000
+@@ -1,5 +1,5 @@
+ ===== SYSTEM =====
+-You are a systematic review screening agent. Evaluate whether the paper involves autonomous or semi-autonomous surgical robotics. Follow the criteria and instructions in the user message. Respond ONLY with the requested JSON.
++You are a systematic review screening agent. Screen the paper for the review titled "Autonomy in Surgical Robotics: A Systematic Review". Follow the criteria and instructions in the user message. Respond ONLY with the requested JSON.
+ ===== USER =====
+ /no_think
+ Evaluate the following paper for inclusion in a systematic review.
+@@ -21,8 +21,8 @@
+ EXCLUSION CRITERIA:
+   - Systematic reviews, meta-analyses, or scoping reviews
+   - Editorials, commentaries, or letters to the editor
+-  - Non-surgical robotics (industrial, rehabilitation, exoskeletons, prosthetics)
+-  - Papers with no abstract available
++  - Non-surgical robotics (industrial, warehouse, rehabilitation, exoskeletons, prosthetics, assistive devices)
++  - Papers with no abstract or insufficient information to determine eligibility — do not default to inclusion when evidence is absent
+ 
+ SPECIALTY SCOPE:
+   Included specialties:
+@@ -47,8 +47,10 @@
+ 
+ Abstract: A
+ 
+-Decide 'include' or 'exclude'. When uncertain and the paper MIGHT involve autonomous surgical robotics, prefer 'include' — a later verification pass will catch false positives.
+-EXCLUDE only if the paper CLEARLY does not involve surgical robotics at all, or CLEARLY has no abstract available.
++Decide 'include' or 'exclude'.
++If the abstract gives partial evidence that the paper might meet the criteria, include it — a later verification pass will catch false positives.
++If there is no abstract, or it gives too little information to determine eligibility, exclude it — do not default to inclusion when evidence is absent.
++Exclude when the paper clearly meets an exclusion criterion listed above.
+ 
+ Respond with JSON only: {"decision": "...", "rationale": "...", "confidence": 0.0-1.0}
+ ===== FORMAT =====

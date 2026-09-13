@@ -1,0 +1,5 @@
+{
+  "description": "One of: eligible, wrong_specialty, no_autonomy_content, wrong_intervention, protocol_only, duplicate_cohort, insufficient_data",
+  "title": "Reason Code",
+  "type": "string"
+}

@@ -1,0 +1,20 @@
+--- /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2c-render/R2_abstract_verifier_request.before.txt	2026-09-12 23:45:16.122221428 +0000
++++ /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2c-render/R2_abstract_verifier_request.after.txt	2026-09-12 23:45:16.529441071 +0000
+@@ -1,5 +1,5 @@
+ ===== SYSTEM =====
+-You are a systematic review screening agent. Evaluate whether the paper involves autonomous or semi-autonomous surgical robotics. Follow the criteria and instructions in the user message. Respond ONLY with the requested JSON.
++You are a systematic review abstract verification agent. Your job is to catch false positives. Be strict. Respond ONLY with the requested JSON.
+ ===== USER =====
+ /no_think
+ Evaluate the following paper for inclusion in a systematic review.
+@@ -24,8 +24,8 @@
+   - Conference abstracts without full paper
+   - Non-surgical robotics (industrial, warehouse, rehabilitation, exoskeletons, prosthetics, assistive devices)
+   - Purely teleoperated/master-slave robotic surgery where the human directly controls all robot movements in real-time (e.g., standard da Vinci case series, joystick-controlled systems). There must be an autonomous or semi-autonomous component where the system makes independent decisions about motion, planning, or execution.
+-  - ML/CV methodology papers that only analyze, classify, segment, track, or predict surgical data (video, images, sensor data) without controlling a robot to execute a surgical action
+-  - Studies with no autonomous or semi-autonomous component
++  - ML/CV methodology papers that only analyze, classify, segment, track, or predict surgical data (video, images, sensor data) without controlling a robot to execute a surgical action (e.g., planning-only papers — surgical motion, path, or task planning computed from data without controlling a robot to execute it)
++  - Studies with no autonomous or semi-autonomous component (e.g., hardware, sensor, or instrument papers that describe a robot or device without autonomous control)
+   - Papers with no abstract or insufficient information to determine eligibility — do not default to inclusion when evidence is absent
+ 
+ SPECIALTY SCOPE:

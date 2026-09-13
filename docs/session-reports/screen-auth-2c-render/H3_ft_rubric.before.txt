@@ -1,0 +1,4 @@
+FT_ELIGIBLE: The full text confirms the paper describes autonomous or semi-autonomous surgical robot execution of a physical task.
+FT_SCREENED_OUT: The full text reveals the paper does not meet inclusion criteria (see reason code for likely cause).
+SPECIALTY SCOPE — Included: abdominal surgery, gynecologic surgery, urologic surgery, thoracic surgery, general surgery, head and neck surgery, bench/preclinical autonomy
+SPECIALTY SCOPE — Excluded: dental surgery, oral and maxillofacial surgery, ophthalmic surgery, orthopedic surgery, dermatologic surgery, neurosurgery

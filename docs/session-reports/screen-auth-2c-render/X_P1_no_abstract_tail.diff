@@ -1,0 +1,17 @@
+--- /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2c-render/X_P1_no_abstract_tail.before.txt	2026-09-12 23:45:16.327650392 +0000
++++ /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2c-render/X_P1_no_abstract_tail.after.txt	2026-09-12 23:45:16.726098707 +0000
+@@ -1,9 +1,11 @@
+ PAPER:
+ Title: T
+ 
+-Abstract: [Not available. Per the exclusion criteria, papers with no abstract or insufficient information to determine eligibility should be EXCLUDED.]
++Abstract: [Not available. Exclusion criterion: Papers with no abstract or insufficient information to determine eligibility — do not default to inclusion when evidence is absent]
+ 
+-Decide 'include' or 'exclude'. When uncertain and the paper MIGHT involve autonomous surgical robotics, prefer 'include' — a later verification pass will catch false positives.
+-EXCLUDE only if the paper CLEARLY does not involve surgical robotics at all, or CLEARLY has no abstract available.
++Decide 'include' or 'exclude'.
++If the abstract gives partial evidence that the paper might meet the criteria, include it — a later verification pass will catch false positives.
++If there is no abstract, or it gives too little information to determine eligibility, exclude it — do not default to inclusion when evidence is absent.
++Exclude when the paper clearly meets an exclusion criterion listed above.
+ 
+ Respond with JSON only: {"decision": "...", "rationale": "...", "confidence": 0.0-1.0}

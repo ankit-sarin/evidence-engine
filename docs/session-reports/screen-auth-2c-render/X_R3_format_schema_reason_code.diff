@@ -1,0 +1,9 @@
+--- /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2c-render/X_R3_format_schema_reason_code.before.txt	2026-09-12 23:45:16.131618982 +0000
++++ /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2c-render/X_R3_format_schema_reason_code.after.txt	2026-09-12 23:45:16.530021777 +0000
+@@ -1,5 +1,5 @@
+ {
+-  "description": "One of: eligible, wrong_specialty, no_autonomy_content, wrong_intervention, protocol_only, duplicate_cohort, insufficient_data",
++  "description": "One of: eligible, review_article, editorial_commentary, abstract_only, wrong_intervention, teleoperation_only, analysis_only, no_autonomy_content, insufficient_data, wrong_specialty, protocol_only, duplicate_cohort",
+   "title": "Reason Code",
+   "type": "string"
+ }

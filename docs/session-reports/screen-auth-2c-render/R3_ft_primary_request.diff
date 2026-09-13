@@ -1,0 +1,66 @@
+--- /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2c-render/R3_ft_primary_request.before.txt	2026-09-12 23:45:16.122312021 +0000
++++ /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2c-render/R3_ft_primary_request.after.txt	2026-09-12 23:45:16.529561232 +0000
+@@ -21,16 +21,16 @@
+   - Published between 2010 and 2025
+ 
+ EXCLUSION CRITERIA:
+-  - Systematic reviews, meta-analyses, or scoping reviews
+-  - Editorials, commentaries, or letters to the editor
+-  - Conference abstracts without full paper
+-  - Non-surgical robotics (industrial, warehouse, rehabilitation, exoskeletons, prosthetics, assistive devices)
+-  - Purely teleoperated/master-slave robotic surgery where the human directly controls all robot movements in real-time (e.g., standard da Vinci case series, joystick-controlled systems). There must be an autonomous or semi-autonomous component where the system makes independent decisions about motion, planning, or execution.
+-  - ML/CV methodology papers that only analyze, classify, segment, track, or predict surgical data (video, images, sensor data) without controlling a robot to execute a surgical action
+-  - Studies with no autonomous or semi-autonomous component
+-  - Papers with no abstract or insufficient information to determine eligibility — do not default to inclusion when evidence is absent
++  - [review_article] Systematic reviews, meta-analyses, or scoping reviews
++  - [editorial_commentary] Editorials, commentaries, or letters to the editor
++  - [abstract_only] Conference abstracts without full paper
++  - [wrong_intervention] Non-surgical robotics (industrial, warehouse, rehabilitation, exoskeletons, prosthetics, assistive devices)
++  - [teleoperation_only] Purely teleoperated/master-slave robotic surgery where the human directly controls all robot movements in real-time (e.g., standard da Vinci case series, joystick-controlled systems). There must be an autonomous or semi-autonomous component where the system makes independent decisions about motion, planning, or execution.
++  - [analysis_only] ML/CV methodology papers that only analyze, classify, segment, track, or predict surgical data (video, images, sensor data) without controlling a robot to execute a surgical action (e.g., planning-only papers — surgical motion, path, or task planning computed from data without controlling a robot to execute it)
++  - [no_autonomy_content] Studies with no autonomous or semi-autonomous component (e.g., hardware, sensor, or instrument papers that describe a robot or device without autonomous control)
++  - [insufficient_data] Papers with no abstract or insufficient information to determine eligibility — do not default to inclusion when evidence is absent
+ 
+-SPECIALTY SCOPE:
++SPECIALTY SCOPE [wrong_specialty]:
+   Included specialties:
+     - abdominal surgery
+     - gynecologic surgery
+@@ -48,14 +48,11 @@
+     - neurosurgery
+   Notes: Papers describing bench/preclinical autonomous tasks (e.g., suturing, knot-tying on phantoms) are included regardless of the specialty context, as these represent generalizable autonomous capabilities. Orthopedic and neurosurgery papers are excluded only when the autonomous task is specialty-specific (e.g., autonomous bone drilling, stereotactic targeting). If the paper describes a generalizable autonomous task performed in an orthopedic or neurosurgical context, include it.
+ 
+-REASON CODES (use exactly one):
+-  - eligible: Paper passes all criteria
+-  - wrong_specialty: Autonomous task is in an excluded surgical specialty
+-  - no_autonomy_content: Abstract suggested autonomy but full text reveals no autonomous component
+-  - wrong_intervention: Not surgical robotics (e.g., industrial, rehabilitation)
+-  - protocol_only: Study protocol without results
+-  - duplicate_cohort: Overlapping dataset with another included paper
+-  - insufficient_data: Commentary, letter, or editorial with no extractable data
++REASON CODES (use exactly one): the bracketed code of the exclusion criterion or specialty scope that applies, or one of:
++  - eligible: Meets all inclusion criteria and no exclusion criterion applies.
++  - protocol_only: Study protocol without results.
++  - duplicate_cohort: Reports the same cohort or dataset as another included paper.
++  - insufficient_data: The full text does not contain enough information to determine eligibility against the criteria.
+ 
+ PAPER FULL TEXT:
+ Title: T
+@@ -63,7 +60,7 @@
+ Abstract: A
+ 
+ Based on the full text, classify this paper as FT_ELIGIBLE or FT_EXCLUDE.
+-Respond with JSON only: {"decision": "FT_ELIGIBLE" or "FT_EXCLUDE", "reason_code": "<one of: eligible, wrong_specialty, no_autonomy_content, wrong_intervention, protocol_only, duplicate_cohort, insufficient_data>", "rationale": "...", "confidence": 0.0-1.0}
++Respond with JSON only: {"decision": "FT_ELIGIBLE" or "FT_EXCLUDE", "reason_code": "<one of: eligible, review_article, editorial_commentary, abstract_only, wrong_intervention, teleoperation_only, analysis_only, no_autonomy_content, insufficient_data, wrong_specialty, protocol_only, duplicate_cohort>", "rationale": "...", "confidence": 0.0-1.0}
+ ===== FORMAT =====
+ {
+   "description": "Structured output from the full-text primary screener.",
+@@ -88,7 +85,7 @@
+       "type": "string"
+     },
+     "reason_code": {
+-      "description": "One of: eligible, wrong_specialty, no_autonomy_content, wrong_intervention, protocol_only, duplicate_cohort, insufficient_data",
++      "description": "One of: eligible, review_article, editorial_commentary, abstract_only, wrong_intervention, teleoperation_only, analysis_only, no_autonomy_content, insufficient_data, wrong_specialty, protocol_only, duplicate_cohort",
+       "title": "Reason Code",
+       "type": "string"
+     }

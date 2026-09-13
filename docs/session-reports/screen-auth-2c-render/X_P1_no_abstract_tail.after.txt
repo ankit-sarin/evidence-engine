@@ -1,0 +1,11 @@
+PAPER:
+Title: T
+
+Abstract: [Not available. Exclusion criterion: Papers with no abstract or insufficient information to determine eligibility — do not default to inclusion when evidence is absent]
+
+Decide 'include' or 'exclude'.
+If the abstract gives partial evidence that the paper might meet the criteria, include it — a later verification pass will catch false positives.
+If there is no abstract, or it gives too little information to determine eligibility, exclude it — do not default to inclusion when evidence is absent.
+Exclude when the paper clearly meets an exclusion criterion listed above.
+
+Respond with JSON only: {"decision": "...", "rationale": "...", "confidence": 0.0-1.0}

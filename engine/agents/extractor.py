@@ -28,7 +28,7 @@ from engine.core.completeness import (
 )
 from engine.core.citation_guard import LEGACY, UncitedValueError, enforce_citations
 from engine.core.extraction_telemetry import record_call
-from engine.utils.ollama_client import ollama_chat
+from engine.utils.ollama_client import InputFitError, ollama_chat
 from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
 
 logger = logging.getLogger(__name__)
@@ -865,7 +865,13 @@ def _run_extraction_unlocked(
                 i, total, len(result.fields), title[:60],
             )
         except Exception as exc:
-            logger.exception("Paper %d extraction failed: %s", pid, exc)
+            # INPUT-FIT-01: an input-fit refusal carries the numbers that explain
+            # it (model, ceiling, characters, count); they go in this same entry.
+            fit_fields = exc.fields if isinstance(exc, InputFitError) else None
+            logger.exception(
+                "Paper %d extraction failed: %s%s", pid, exc,
+                f" | input_fit={fit_fields}" if fit_fields else "",
+            )
             db.update_status(pid, "EXTRACT_FAILED")
             stats["failed"] += 1
             elapsed = time.time() - t_paper

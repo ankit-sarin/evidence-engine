@@ -15,6 +15,17 @@ from engine.utils.ollama_client import (
     get_model_digest,
     ollama_chat,
 )
+from engine.utils import ollama_client as _oc
+
+
+@pytest.fixture(autouse=True)
+def _fixed_input_fit_ceiling(monkeypatch):
+    """These tests exercise the watchdog, retries and restart path, not the
+    input-fit guard (tests/test_ollama_input_fit.py). The guard reads the model's
+    trained context through `_client.show`, which a MagicMock client cannot
+    answer, so the ceiling is fixed here. A MagicMock response carries no integer
+    prompt_eval_count, so the post-call check logs UNVERIFIED and returns it."""
+    monkeypatch.setattr(_oc, "effective_ceiling", lambda model, options=None: 131_072)
 
 
 # ── Timeout tier resolution ─────────────────────────────────────────

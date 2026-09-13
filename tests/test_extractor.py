@@ -517,6 +517,50 @@ class TestProactiveRestart:
         assert paper["status"] == "EXTRACT_FAILED"
         db.close()
 
+    @pytest.mark.parametrize("kind", ["overflow", "truncated", "dropped"])
+    @patch("engine.agents.extractor.restart_ollama")
+    @patch("engine.agents.extractor.extract_paper")
+    @patch("engine.utils.ollama_preflight.require_preflight")
+    @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
+    @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
+    def test_input_fit_failure_fails_the_paper_and_the_run_continues(
+        self, _stale, _digest, _preflight, mock_extract, _restart, kind, tmp_path, caplog,
+    ):
+        """T6 (INPUT-FIT-01): each input-fit exception lands in EXTRACT_FAILED with its
+        fields in the failure log entry, is not retried, and the next paper runs."""
+        from engine.utils.ollama_client import InputDropped, InputOverflow, InputTruncated
+
+        exc = {
+            "overflow": InputOverflow(model="deepseek-r1:32b", chars=800_000,
+                                      estimate_low=152_000.0, ceiling=131_072),
+            "truncated": InputTruncated(model="deepseek-r1:32b", count=131_072,
+                                        ceiling=131_072, chars=305_628),
+            "dropped": InputDropped(model="deepseek-r1:32b", count=900, chars=400_000,
+                                    floor=40_000.0, ceiling=131_072),
+        }[kind]
+        db, spec = self._setup_db(tmp_path, n_papers=2)
+        fake = self._make_fake_extract(spec)
+
+        def extract(paper_id, *args, **kwargs):
+            if paper_id == 1:
+                raise exc
+            return fake(paper_id, *args, **kwargs)
+
+        mock_extract.side_effect = extract
+        with caplog.at_level("ERROR", logger="engine.agents.extractor"):
+            stats = run_extraction(db, spec, "test_review", restart_every=0)
+
+        assert stats["failed"] == 1 and stats["extracted"] == 1
+        assert mock_extract.call_count == 2  # paper 1 not retried; paper 2 ran
+        status = db._conn.execute("SELECT status FROM papers WHERE id = 1").fetchone()["status"]
+        assert status == "EXTRACT_FAILED"
+        entry = next(r.getMessage() for r in caplog.records
+                     if r.getMessage().startswith("Paper 1 extraction failed"))
+        assert "input_fit=" in entry
+        for name, value in exc.fields.items():
+            assert f"'{name}': {value!r}" in entry
+        db.close()
+
     # ── helpers ──
 
     def _setup_db(self, tmp_path, n_papers=5):

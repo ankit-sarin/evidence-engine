@@ -36,6 +36,14 @@ def isolated_lock(tmp_path, monkeypatch):
     L._SELF_FD = None
 
 
+@pytest.fixture(autouse=True)
+def fixed_input_fit_ceiling(monkeypatch):
+    """The restart gate is under test here, not the input-fit guard. The guard's
+    ceiling read goes through `_client.show`, which a MagicMock client cannot
+    answer, so the ceiling is fixed (tests/test_ollama_input_fit.py covers it)."""
+    monkeypatch.setattr(oc, "effective_ceiling", lambda model, options=None: 131_072)
+
+
 def _spawn_holder(tmp_path):
     """A foreign process holding the flock, as a real second process."""
     lock = os.environ["OLLAMA_EXPERIMENT_LOCK"]

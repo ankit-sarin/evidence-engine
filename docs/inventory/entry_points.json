@@ -1128,25 +1128,43 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 146,
+            "line": 149,
             "names": [
               "--out-dir"
             ],
             "required": true
           },
           {
+            "default": "'2f'",
+            "dest": null,
+            "line": 150,
+            "names": [
+              "--arm-set"
+            ],
+            "required": false
+          },
+          {
+            "default": "dynamic: []",
+            "dest": null,
+            "line": 151,
+            "names": [
+              "--arm-root"
+            ],
+            "required": false
+          },
+          {
             "default": "unset",
             "dest": null,
-            "line": 147,
+            "line": 153,
             "names": [
               "--arm-a-root"
             ],
-            "required": true
+            "required": false
           },
           {
             "default": "dynamic: DEFAULT_PAPERS",
             "dest": null,
-            "line": 148,
+            "line": 154,
             "names": [
               "--papers"
             ],
@@ -1155,7 +1173,7 @@
           {
             "default": "''",
             "dest": null,
-            "line": 149,
+            "line": 155,
             "names": [
               "--ids"
             ],
@@ -1164,7 +1182,7 @@
           {
             "default": "''",
             "dest": null,
-            "line": 150,
+            "line": 156,
             "names": [
               "--forced-verifier-ids"
             ],
@@ -1173,7 +1191,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 151,
+            "line": 157,
             "names": [
               "--watch-file"
             ],
@@ -1182,7 +1200,7 @@
           {
             "default": "dynamic: lib.DEFAULT_LEAD_MINUTES",
             "dest": null,
-            "line": 152,
+            "line": 158,
             "names": [
               "--lead-minutes"
             ],
@@ -1191,7 +1209,7 @@
           {
             "default": "240",
             "dest": null,
-            "line": 153,
+            "line": 159,
             "names": [
               "--max-resume-wait-min"
             ],
@@ -1200,7 +1218,7 @@
           {
             "default": "'primary,verifier'",
             "dest": null,
-            "line": 154,
+            "line": 160,
             "names": [
               "--phases"
             ],
@@ -1210,7 +1228,7 @@
         "has_main_guard": true,
         "literal_review_ids": [
           {
-            "line": 53,
+            "line": 57,
             "role": "code",
             "value": "surgical_autonomy"
           }
@@ -1226,7 +1244,7 @@
           },
           {
             "kind": "literal",
-            "line": 213,
+            "line": 219,
             "role": "code",
             "text": "armC_spec.yaml"
           }
@@ -1234,7 +1252,7 @@
         "review_database": [],
         "review_id_constants": [
           {
-            "line": 53,
+            "line": 57,
             "name": "REVIEW",
             "value": "surgical_autonomy"
           }
@@ -1242,7 +1260,7 @@
         "spec_access": [
           {
             "func": "spec_path_for",
-            "line": 212,
+            "line": 216,
             "scope": "_run"
           }
         ],
@@ -1283,7 +1301,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 469,
+            "line": 598,
             "names": [
               "--run-dir"
             ],
@@ -1292,7 +1310,7 @@
           {
             "default": "dynamic: DEFAULT_WORKBOOK",
             "dest": null,
-            "line": 470,
+            "line": 599,
             "names": [
               "--workbook"
             ],
@@ -1301,11 +1319,47 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 471,
+            "line": 600,
             "names": [
               "--out-dir"
             ],
             "required": true
+          },
+          {
+            "default": "'2f'",
+            "dest": null,
+            "line": 601,
+            "names": [
+              "--arm-set"
+            ],
+            "required": false
+          },
+          {
+            "default": "None",
+            "dest": null,
+            "line": 602,
+            "names": [
+              "--corrections"
+            ],
+            "required": false
+          },
+          {
+            "default": "None",
+            "dest": null,
+            "line": 604,
+            "names": [
+              "--verdicts"
+            ],
+            "required": false
+          },
+          {
+            "default": "None",
+            "dest": null,
+            "line": 606,
+            "names": [
+              "--stability-baseline"
+            ],
+            "required": false
           }
         ],
         "has_main_guard": true,
@@ -1315,7 +1369,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 41,
+            "line": 40,
             "role": "code",
             "text": "data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx"
           }
@@ -1333,7 +1387,14 @@
         "literal_review_ids": [],
         "order": {},
         "path": "analysis/eval/screen2f.py",
-        "path_construction": [],
+        "path_construction": [
+          {
+            "kind": "literal",
+            "line": 60,
+            "role": "code",
+            "text": "review_specs"
+          }
+        ],
         "review_database": [],
         "review_id_constants": [],
         "spec_access": [],
@@ -7812,14 +7873,14 @@
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 35,
       "name_only_constructing_reviewdatabase": 21,
-      "path_construction_sites_in_code": 67,
+      "path_construction_sites_in_code": 68,
       "raw_yaml_load_sites": 3,
       "review_id_constants": 9,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "c600e8d2230c5ee7dd92e83943870d0c877c981e",
+    "generated_at_commit": "56c5c5744f5ab6a2f21e47b66674dad233212e6b",
     "scan_roots": [
       "engine",
       "scripts",

@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `c600e8d2230c5ee7dd92e83943870d0c877c981e` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `56c5c5744f5ab6a2f21e47b66674dad233212e6b` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -21,7 +21,7 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | files with raw yaml loads | 3 |
 | review id constants | 9 |
 | literal review id sites in code | 35 |
-| path construction sites in code | 67 |
+| path construction sites in code | 68 |
 | db before spec scopes | 0 |
 | fstring spec path sites | 0 |
 | default review named constants | 7 |
@@ -77,8 +77,8 @@ Two figures deliberately have no baseline row. **entry points** (103) counts any
 | `analysis/eval/run_local_ab.py` | `--review` required; `--data-root`='data'; `--spec`=None; `--n-papers`=10 | load_spec_for | — | — |
 | `analysis/eval/run_local_abc.py` | `--review` required; `--data-root`='data'; `--spec`=None; `--label`='local_abc'; `--resume` | load_spec_for | — | — |
 | `analysis/eval/run_qualgap01.py` | `--review` required; `--data-root`='data'; `--spec`=None; `--host`=dynamic: DEFAULT_HOST; `--label`='runtime_v12'; `--probe`; `--cells`=dynamic: list(CELLS); `--resume` | load_spec_for | — | — |
-| `analysis/eval/run_screen2f.py` | `--out-dir` required; `--arm-a-root` required; `--papers`=dynamic: DEFAULT_PAPERS; `--ids`=''; `--forced-verifier-ids`=''; `--watch-file`=None; `--lead-minutes`=dynamic: lib.DEFAULT_LEAD_MINUTES; `--max-resume-wait-min`=240; `--phases`='primary,verifier' | spec_path_for | — | — |
-| `analysis/eval/score_screen2f.py` | `--run-dir` required; `--workbook`=dynamic: DEFAULT_WORKBOOK; `--out-dir` required | — | — | — |
+| `analysis/eval/run_screen2f.py` | `--out-dir` required; `--arm-set`='2f'; `--arm-root`=dynamic: []; `--arm-a-root`; `--papers`=dynamic: DEFAULT_PAPERS; `--ids`=''; `--forced-verifier-ids`=''; `--watch-file`=None; `--lead-minutes`=dynamic: lib.DEFAULT_LEAD_MINUTES; `--max-resume-wait-min`=240; `--phases`='primary,verifier' | spec_path_for | — | — |
+| `analysis/eval/score_screen2f.py` | `--run-dir` required; `--workbook`=dynamic: DEFAULT_WORKBOOK; `--out-dir` required; `--arm-set`='2f'; `--corrections`=None; `--verdicts`=None; `--stability-baseline`=None | — | — | — |
 | `analysis/eval/screen2f_export.py` | `--db`=dynamic: DEFAULT_DB; `--workbook`=dynamic: DEFAULT_WORKBOOK; `--abstracts-jsonl`=dynamic: DEFAULT_JSONL; `--out-dir`=dynamic: DEFAULT_OUT | — | — | — |
 | `analysis/eval/screen2f_worker.py` | `--arm` required; `--root` required; `--spec` required; `--phase` required; `--papers`; `--ids`=''; `--forced-verifier-ids`=''; `--out-dir` required; `--lead-minutes`=None | load_review_spec | — | — |
 | `analysis/eval/smoke_regression01.py` | `--review` required; `--data-root`='data'; `--spec`=None | load_spec_for | — | — |
@@ -191,8 +191,9 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/eval/run_local_ab.py` | 162 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/run_local_abc.py` | 198 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/run_qualgap01.py` | 282 | literal | `extraction_codebook.yaml` |
-| `analysis/eval/run_screen2f.py` | 213 | literal | `armC_spec.yaml` |
-| `analysis/eval/score_screen2f.py` | 41 | literal | `data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx` |
+| `analysis/eval/run_screen2f.py` | 219 | literal | `armC_spec.yaml` |
+| `analysis/eval/score_screen2f.py` | 40 | literal | `data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx` |
+| `analysis/eval/screen2f.py` | 60 | literal | `review_specs` |
 | `analysis/eval/screen2f_export.py` | 36 | literal | `data/surgical_autonomy/review.db` |
 | `analysis/eval/screen2f_export.py` | 37 | literal | `data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx` |
 | `analysis/eval/screen2f_export.py` | 38 | literal | `data/surgical_autonomy/expanded_search/abstracts.jsonl` |
@@ -255,7 +256,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/eval/elicit01/analyze.py` | 54 | `surgical_autonomy` |
 | `analysis/eval/elicit01/prompts.py` | 54 | `surgical_autonomy` |
 | `analysis/eval/elicit01/runner.py` | 139 | `surgical_autonomy` |
-| `analysis/eval/run_screen2f.py` | 53 | `surgical_autonomy` |
+| `analysis/eval/run_screen2f.py` | 57 | `surgical_autonomy` |
 | `analysis/paper1/judge_codebook_smoke.py` | 1167 | `surgical_autonomy` |
 | `engine/analysis/normalize.py` | 49 | `surgical_autonomy` |
 | `engine/analysis/report.py` | 27 | `surgical_autonomy` |
@@ -292,7 +293,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 
 | file | line | name | value |
 |---|---:|---|---|
-| `analysis/eval/run_screen2f.py` | 53 | `REVIEW` | `surgical_autonomy` |
+| `analysis/eval/run_screen2f.py` | 57 | `REVIEW` | `surgical_autonomy` |
 | `engine/analysis/normalize.py` | 49 | `_FALLBACK_REVIEW_ID` | `surgical_autonomy` |
 | `scripts/advance_to_pdf_acquired.py` | 19 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/backfill_authors.py` | 23 | `DEFAULT_REVIEW` | `surgical_autonomy` |

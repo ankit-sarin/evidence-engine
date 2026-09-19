@@ -37,15 +37,8 @@ HARNESS_SOURCES = [
 # ── arm construction ─────────────────────────────────────────────────
 
 
-def test_arms_root_each_arm_in_its_own_tree(tmp_path):
-    from engine.core.review_paths import spec_path_for
-
-    a = lib.arms(REPO, tmp_path / "wt", spec_path_for("surgical_autonomy"), tmp_path / "c.yaml")
-    assert a["A"].root == (tmp_path / "wt").resolve()
-    assert a["A"].spec == (tmp_path / "wt").resolve() / "review_specs" / "surgical_autonomy.yaml"
-    assert a["B"].root == a["C"].root == REPO
-    assert a["B"].spec == LIVE_SPEC
-    assert a["C"].spec == (tmp_path / "c.yaml").resolve()
+# Arm construction moved to tests/test_screen2f_armsets.py when arms became data
+# (2g P3, H1): it covers the 2f set and the 2g set through one signature.
 
 
 def test_arm_c_spec_adds_exactly_four_stage_lines(tmp_path):

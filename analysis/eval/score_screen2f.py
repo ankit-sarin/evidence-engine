@@ -36,7 +36,6 @@ from pathlib import Path
 
 from analysis.eval import screen2f as lib
 
-PAIRS = (("A", "B"), ("B", "C"), ("A", "C"))
 OUTCOME_ROWS = (lib.IN, lib.OUT, lib.FLAGGED, lib.ERROR)
 DEFAULT_WORKBOOK = Path("data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx")
 
@@ -267,22 +266,26 @@ def pi_consistent(r: dict | None, pi: str) -> bool:
     return r is not None and r["final"] == (lib.IN if pi == "include" else lib.OUT)
 
 
-def disagreement_lists(labels: dict[int, dict], recs: dict[str, dict[int, dict]]) -> dict[str, list[int]]:
+def disagreement_lists(labels: dict[int, dict], recs: dict[str, dict[int, dict]],
+                       arm_set: str = "2f") -> dict[str, list[int]]:
     ids = list(labels)
-    return {
-        "any_arm_vs_PI": [p for p in ids if any(not pi_consistent(recs[a][p], labels[p]["pi"]) for a in lib.ARMS)],
-        "A_vs_B": [p for p in ids if (recs["A"][p] or {}).get("final") != (recs["B"][p] or {}).get("final")],
-        "B_vs_C": [p for p in ids if (recs["B"][p] or {}).get("final") != (recs["C"][p] or {}).get("final")],
-    }
+    names = lib.arm_names(arm_set)
+    out = {"any_arm_vs_PI": [p for p in ids
+                             if any(not pi_consistent(recs[a][p], labels[p]["pi"]) for a in names)]}
+    for x, y in lib.list_pairs_for(arm_set):
+        out[f"{x}_vs_{y}"] = [p for p in ids
+                              if (recs[x][p] or {}).get("final") != (recs[y][p] or {}).get("final")]
+    return out
 
 
-def disagreement_rows(pids: list[int], labels: dict[int, dict], recs: dict[str, dict[int, dict]]) -> list[dict]:
+def disagreement_rows(pids: list[int], labels: dict[int, dict], recs: dict[str, dict[int, dict]],
+                      arm_set: str = "2f") -> list[dict]:
     rows = []
     for p in pids:
         lab = labels[p]
         row = {"paper_id": p, "ee_identifier": lab["ee"], "title": lab["title"], "PI_decision": lab["pi"],
                "PI_notes": one_line(lab["pi_notes"], 400)}
-        for a in lib.ARMS:
+        for a in lib.arm_names(arm_set):
             r = recs[a][p]
             row[f"{a}_primary"] = None if r is None else r["primary_outcome"]
             row[f"{a}_final"] = None if r is None else r["final"]
@@ -376,6 +379,100 @@ def workbook_vs_arm_a(labels: dict[int, dict], rec_a: dict[int, dict]) -> dict:
             "workbook_primary_reasoning_length_top": wb_len.most_common(3)}
 
 
+# ── PI reference corrections (R7) ─────────────────────────────────────
+
+
+def load_corrections(path: Path) -> list[dict]:
+    """Rows of paper_id, label_after_full and, when present, source and date."""
+    with open(path, newline="", encoding="utf-8") as f:
+        rows = [r for r in csv.DictReader(f) if (r.get("label_after_full") or "").strip()]
+    return [{"paper_id": int(r["paper_id"]), "label_after_full": r["label_after_full"].strip().lower(),
+             "source": r.get("source") or Path(path).name, "date": r.get("date") or ""} for r in rows]
+
+
+def apply_corrections(labels: dict[int, dict], rows: list[dict]) -> tuple[dict[int, dict], list[dict]]:
+    """Labels with `pi` replaced where a correction differs; the changes applied."""
+    out = {p: dict(v) for p, v in labels.items()}
+    applied = []
+    for r in rows:
+        pid = r["paper_id"]
+        if pid not in out:
+            continue
+        before = out[pid]["pi"]
+        if before != r["label_after_full"]:
+            out[pid]["pi"] = r["label_after_full"]
+            applied.append({**r, "was": before, "now": r["label_after_full"], "ee": labels[pid]["ee"]})
+    return out, applied
+
+
+# ── stability control ─────────────────────────────────────────────────
+
+
+def stability(baseline_dir: Path, recs: dict[str, dict[int, dict]], arms_to_check) -> dict:
+    """Per-arm paper-level agreement of this run against a committed baseline run."""
+    out = {}
+    for a in arms_to_check:
+        path = Path(baseline_dir) / f"arm_{a}_papers.csv"
+        if not path.exists():
+            out[a] = {"baseline": str(path), "error": "baseline file not found"}
+            continue
+        with open(path, newline="", encoding="utf-8") as f:
+            base = {int(r["paper_id"]): r["final_outcome"] for r in csv.DictReader(f)}
+        rows, agree = [], 0
+        for pid, r in recs[a].items():
+            mine = None if r is None else r["final"]
+            theirs = base.get(pid)
+            if mine == theirs:
+                agree += 1
+            else:
+                rows.append({"arm": a, "paper_id": pid, "baseline_final": theirs, "rerun_final": mine})
+        n = len(recs[a])
+        out[a] = {"baseline": str(path), "n": n, "agree": agree,
+                  "pct": round(agree / n, 4) if n else None, "disagreements": rows}
+    return out
+
+
+# ── the pre-registered arm-D rule (O2-O4) ─────────────────────────────
+
+
+def rule_section(verdicts_path: Path, recs: dict[str, dict[int, dict]],
+                 subject: str = "D", control: str = "A") -> dict:
+    """O2, O3 and O4 with raw counts, each PASS/FAIL, and the overall verdict."""
+    with open(verdicts_path, newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    final = {a: {p: (None if r is None else r["final"]) for p, r in recs[a].items()} for a in recs}
+    silent = [r for r in rows if r["verdict"] == "SILENT"]
+    evidenced = [r for r in rows if r["verdict"] == "EVIDENCED"]
+
+    o2_hits = [r for r in silent if final[subject].get(int(r["paper_id"])) in (lib.IN, lib.FLAGGED)]
+    o2 = {"clause": "O2 - SILENT papers back at IN or FLAGGED", "of": len(silent),
+          "count": len(o2_hits), "threshold": ">= 10",
+          "papers": {int(r["paper_id"]): final[subject].get(int(r["paper_id"])) for r in silent},
+          "pass": len(o2_hits) >= 10}
+    o3_in = [int(r["paper_id"]) for r in evidenced if final[subject].get(int(r["paper_id"])) == lib.IN]
+    o3_flagged = [int(r["paper_id"]) for r in evidenced
+                  if final[subject].get(int(r["paper_id"])) == lib.FLAGGED]
+    o3 = {"clause": "O3 - EVIDENCED papers must not reach IN", "of": len(evidenced),
+          "count_IN": len(o3_in), "threshold": "== 0", "papers_IN": o3_in,
+          "papers_FLAGGED_reported_only": o3_flagged,
+          "papers": {int(r["paper_id"]): final[subject].get(int(r["paper_id"])) for r in evidenced},
+          "pass": not o3_in}
+
+    def flag_rate(arm):
+        present = [v for v in final[arm].values() if v is not None]
+        return round(sum(v == lib.FLAGGED for v in present) / len(present), 4) if present else None
+
+    d_rate, a_rate = flag_rate(subject), flag_rate(control)
+    o4 = {"clause": "O4 - flag rate materially below the control",
+          f"{subject}_flag_rate": d_rate, f"{control}_flag_rate": a_rate,
+          "threshold": f"{subject} <= {control} - 0.15",
+          "margin": None if None in (d_rate, a_rate) else round(a_rate - d_rate, 4),
+          "pass": None if None in (d_rate, a_rate) else d_rate <= a_rate - 0.15}
+    return {"subject": subject, "control": control, "verdicts_file": str(verdicts_path),
+            "O2": o2, "O3": o3, "O4": o4,
+            "verdict": "GO" if (o2["pass"] and o3["pass"] and o4["pass"]) else "NO-GO"}
+
+
 # ── timing ────────────────────────────────────────────────────────────
 
 
@@ -410,18 +507,34 @@ def timing(run_dir: Path, recs: dict[str, dict[int, dict]]) -> dict:
 # ── main ──────────────────────────────────────────────────────────────
 
 
-def score(run_dir: Path, workbook: Path, out_dir: Path) -> dict:
-    labels = load_labels(workbook)
-    raw = {a: load_arm(run_dir, a) for a in lib.ARMS}
-    recs = {a: arm_records(labels, *raw[a]) for a in lib.ARMS}
+def score(run_dir: Path, workbook: Path, out_dir: Path, arm_set: str = "2f",
+          corrections: Path | None = None, verdicts: Path | None = None,
+          stability_baseline: Path | None = None) -> dict:
+    names = lib.arm_names(arm_set)
+    uncorrected = load_labels(workbook)
+    labels, applied = uncorrected, []
+    if corrections is not None:
+        labels, applied = apply_corrections(uncorrected, load_corrections(corrections))
+    reference = "corrected" if corrections is not None else "uncorrected"
+    raw = {a: load_arm(run_dir, a) for a in names}
+    recs = {a: arm_records(labels, *raw[a]) for a in names}
     result = {
         "definitions": __doc__.split("Definitions, fixed here so the report can cite them:")[1].strip(),
         "n": len(labels), "pi_counts": dict(Counter(l["pi"] for l in labels.values())),
-        "call_pattern_problems": {a: check_call_pattern(labels, *raw[a]) for a in lib.ARMS},
+        "call_pattern_problems": {a: check_call_pattern(labels, *raw[a]) for a in names},
         "arms": {},
         "agreement": {},
     }
-    for a in lib.ARMS:
+    if corrections is not None:
+        result["arm_set"] = arm_set
+        result["pi_reference"] = {
+            "used_for_every_PI_metric": reference, "workbook": str(workbook),
+            "corrections_file": str(corrections),
+            "uncorrected_tally": dict(Counter(l["pi"] for l in uncorrected.values())),
+            "corrected_tally": dict(Counter(l["pi"] for l in labels.values())),
+            "applied": applied,
+        }
+    for a in names:
         result["arms"][a] = {
             "confusion_final_x_PI": confusion(recs[a], labels),
             "flagged_as_include": binary_metrics(recs[a], labels, "include"),
@@ -429,19 +542,24 @@ def score(run_dir: Path, workbook: Path, out_dir: Path) -> dict:
             "decided_only": binary_metrics(recs[a], labels, None),
             "rates": rates(recs[a]),
         }
-    for x, y in PAIRS:
+    for x, y in lib.pairs_for(arm_set):
         result["agreement"][f"{x}-{y}"] = {"final": agreement(recs[x], recs[y], "final"),
                                           "primary": agreement(recs[x], recs[y], "primary_outcome")}
-    lists = disagreement_lists(labels, recs)
+    lists = disagreement_lists(labels, recs, arm_set)
     result["disagreement_counts"] = {k: len(v) for k, v in lists.items()}
     result["workbook_vs_arm_A"] = workbook_vs_arm_a(labels, recs["A"])
     result["timing"] = timing(run_dir, recs)
+    if stability_baseline is not None:
+        result["stability_control"] = stability(stability_baseline, recs,
+                                                [a for a in names if a in ("A", "B")])
+    if verdicts is not None:
+        result["pre_registered_rule"] = rule_section(verdicts, recs, names[-1], names[0])
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    for a in lib.ARMS:
+    for a in names:
         write_csv(out_dir / f"arm_{a}_papers.csv", per_arm_rows(labels, recs[a]))
     score_rows = []
-    for a in lib.ARMS:
+    for a in names:
         for key in ("flagged_as_include", "flagged_as_exclude", "decided_only"):
             m = result["arms"][a][key]
             score_rows.append({"arm": a, "treatment": m["flagged_as"], **{k: m[k] for k in (
@@ -449,17 +567,28 @@ def score(run_dir: Path, workbook: Path, out_dir: Path) -> dict:
                 "sensitivity", "specificity", "balanced_accuracy")},
                 "sensitivity_ci95": m["sensitivity_ci95"], "specificity_ci95": m["specificity_ci95"]})
     write_csv(out_dir / "scoring.csv", score_rows)
-    cols = ["paper_id", "ee_identifier", "title", "PI_decision", "PI_notes",
-            "A_final", "A_rationale", "B_final", "B_rationale", "C_final", "C_rationale"]
-    for name, pids in lists.items():
-        rows = disagreement_rows(pids, labels, recs)
-        write_csv(out_dir / f"disagreements_{name}.csv", rows)
-        md_rows = [{**r, "title": one_line(r["title"], 90), "PI_notes": one_line(r["PI_notes"], 160),
-                    **{f"{a}_rationale": one_line(r[f"{a}_rationale"], 180) for a in lib.ARMS}} for r in rows]
-        (out_dir / f"disagreements_{name}.md").write_text(
-            f"# 2f disagreement list — {name}\n\n{len(rows)} papers. Final outcome per arm; rationale is the "
-            f"call that decided it. See scoring.json `definitions`.\n\n" + md_table(md_rows, cols) + "\n",
-            encoding="utf-8")
+    cols = ["paper_id", "ee_identifier", "title", "PI_decision", "PI_notes"]
+    for a in names:
+        cols += [f"{a}_final", f"{a}_rationale"]
+
+    def write_lists(lists_, labels_, suffix, note):
+        for name, pids in lists_.items():
+            rows = disagreement_rows(pids, labels_, recs, arm_set)
+            write_csv(out_dir / f"disagreements_{name}{suffix}.csv", rows)
+            md_rows = [{**r, "title": one_line(r["title"], 90), "PI_notes": one_line(r["PI_notes"], 160),
+                        **{f"{a}_rationale": one_line(r[f"{a}_rationale"], 180) for a in names}} for r in rows]
+            (out_dir / f"disagreements_{name}{suffix}.md").write_text(
+                f"# {arm_set} disagreement list — {name}{note}\n\n{len(rows)} papers. Final outcome per arm; "
+                f"rationale is the call that decided it. See scoring.json `definitions`.\n\n"
+                + md_table(md_rows, cols) + "\n", encoding="utf-8")
+
+    write_lists(lists, labels, "", f" (PI reference: {reference})" if corrections is not None else "")
+    if corrections is not None:
+        write_lists({"any_arm_vs_PI": disagreement_lists(uncorrected, recs, arm_set)["any_arm_vs_PI"]},
+                    uncorrected, "_uncorrected", " (PI reference: uncorrected April workbook)")
+        if "stability_control" in result:
+            write_csv(out_dir / "stability_disagreements.csv",
+                      [d for a in result["stability_control"].values() for d in a.get("disagreements", [])])
     (out_dir / "scoring.json").write_text(json.dumps(result, indent=2, ensure_ascii=False, default=str) + "\n")
     return result
 
@@ -469,13 +598,22 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--run-dir", required=True, type=Path)
     ap.add_argument("--workbook", type=Path, default=DEFAULT_WORKBOOK)
     ap.add_argument("--out-dir", required=True, type=Path)
+    ap.add_argument("--arm-set", default="2f", choices=sorted(lib.ARM_SETS))
+    ap.add_argument("--corrections", type=Path, default=None,
+                    help="CSV of paper_id,label_after_full[,source,date] applied after the workbook")
+    ap.add_argument("--verdicts", type=Path, default=None,
+                    help="pi_verdicts CSV; adds the pre-registered rule section (O2-O4)")
+    ap.add_argument("--stability-baseline", type=Path, default=None,
+                    help="a committed run's output directory, for the A/B rerun control")
     args = ap.parse_args(argv)
-    result = score(args.run_dir, args.workbook, args.out_dir)
+    result = score(args.run_dir, args.workbook, args.out_dir, args.arm_set,
+                   args.corrections, args.verdicts, args.stability_baseline)
     brief = {a: {"rates": result["arms"][a]["rates"],
                  **{k: {m: result["arms"][a][k][m] for m in ("tp", "fn", "tn", "fp", "sensitivity", "specificity")}
                     for k in ("flagged_as_include", "flagged_as_exclude", "decided_only")}}
-             for a in lib.ARMS}
-    print(json.dumps({"call_pattern_problems": result["call_pattern_problems"], "arms": brief,
+             for a in lib.arm_names(args.arm_set)}
+    extra = {k: result[k] for k in ("pre_registered_rule", "stability_control") if k in result}
+    print(json.dumps({"call_pattern_problems": result["call_pattern_problems"], "arms": brief, **extra,
                       "agreement": {k: {kk: {"pct": vv["pct"], "kappa": vv["kappa"], "n": vv["n"]}
                                         for kk, vv in v.items()} for k, v in result["agreement"].items()},
                       "disagreement_counts": result["disagreement_counts"]}, indent=1))

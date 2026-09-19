@@ -39,3 +39,29 @@ PI note on 261: "if picked correctly ENT speciality would still have been exclud
   outcome-neutral).
 - **R4.** Other five stages declare absence_is_evidence; nothing new is rendered for them in the
   fold commit. FT wording and the abstract verifier's basis are separate items after D is ruled.
+
+## Operational reading of the rule (architect, 2026-09-19, verbatim)
+
+Appended before any arm-D model call, in the Phase 2g P3 pre-flight commit.
+
+> O1. A paper's outcome in an arm = its final abstract-stage decision after the verifier, exactly
+>     as 2f scored it: IN, FLAGGED, or OUT.
+> O2. Clause 1: count of the 12 SILENT papers (pi_verdicts_2f_part1.csv, verdict=SILENT) whose
+>     arm-D outcome ∈ {IN, FLAGGED}; GO requires ≥ 10.
+> O3. Clause 2: count of the 5 EVIDENCED papers whose arm-D outcome = IN; GO requires 0.
+>     FLAGGED among the five is reported separately and does not fail the clause.
+> O4. Clause 3: flag rate = FLAGGED / 86 per arm, from this run's A and D. "Materially below" =
+>     D's flag rate ≤ A's flag rate − 15 percentage points.
+> O5. All three clauses are reported with raw counts whether or not they pass. Nothing in O1–O4
+>     changes after the run starts.
+
+## Arms for the 2g re-smoke
+
+| arm | tree | what it is |
+|---|---|---|
+| A | worktree at `83defc5` | pre-fold engine and spec, as in 2f |
+| B | worktree at `61326fa` | the exact 2f arm-B tree, so the stability control is a pure rerun |
+| D | repo tree at `56c5c57` | the exclusion-basis fold |
+
+Arm C (eight exclusions at abstract primary) is retired by the 2f four-vs-eight ruling and is
+not part of this set.

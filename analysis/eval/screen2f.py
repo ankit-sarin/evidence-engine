@@ -1,11 +1,18 @@
 """SCREEN-AUTH-01 Phase 2f smoke — the shared core. Standard library only.
 
-Three arms screen the same 86 papers at the abstract stage:
+Three arms screen the same 86 papers at the abstract stage. Which three is an
+ARM SET, declared as data in `ARM_SETS`:
 
-  A  pre-fold engine and spec (83defc5, run from a git worktree)
-  B  HEAD engine, live spec
-  C  HEAD engine, a spec variant in which the four exclusions absent from
-     abstract_primary are added to it — nothing else differs
+  2f  A  pre-fold engine and spec (83defc5, from a git worktree)
+      B  the repo tree, pinned to 61326fa
+      C  that tree with a spec variant adding the four exclusions absent from
+         abstract_primary — nothing else differs
+  2g  A  the same 83defc5 worktree
+      B  a worktree at 61326fa — the exact 2f arm-B tree, so a rerun of it is a
+         pure stability control
+      D  the repo tree at 56c5c57, the exclusion-basis fold
+
+The 2f set is frozen: the scorer reproduces the committed 2f outputs from it.
 
 Why this module imports nothing from `engine` or `analysis`: the worker runs one
 arm inside ONE engine tree (arm A's tree is a worktree of 83defc5), and imports
@@ -44,6 +51,14 @@ IN, OUT, FLAGGED, ERROR = "IN", "OUT", "FLAGGED", "ERROR"
 
 ARMS = ("A", "B", "C")
 
+#: Commits the arms run from.
+ARM_A_COMMIT = "83defc5"
+ARM_B_COMMIT = "61326fa"
+ARM_D_COMMIT = "56c5c57"
+
+#: What must be byte-identical to an arm's commit for the repo tree to be that arm.
+INPUT_PATHS = ("engine", "review_specs")
+
 #: The criteria arm C adds to abstract_primary: the four exclusions the live
 #: spec leaves off that stage (2f Part 1a, I7).
 ARM_C_ADDED_CRITERIA = (
@@ -53,9 +68,6 @@ ARM_C_ADDED_CRITERIA = (
     "exc-no-autonomy",
 )
 ARM_C_STAGE = "abstract_primary"
-
-#: Commit arm A runs from.
-ARM_A_COMMIT = "83defc5"
 
 #: Placeholder-paper request hashes: SHA-256 of {format, messages}, key-sorted,
 #: ensure_ascii=False — the R1–R4 definition in tests/test_eligibility.py.
@@ -70,6 +82,12 @@ EXPECTED_PLACEHOLDER_HASHES = {
     },
     "B": {
         PRIMARY: "e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649",
+        VERIFIER: "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+    },
+    # D: the frozen P1/R1 and R2 pins at 56c5c57 (SCREEN-AUTH-01 2g Part 2, the
+    # exclusion-basis fold). R2 did not move: the fold touched abstract primary.
+    "D": {
+        PRIMARY: "a84e1a72adc8bc2143c4f3daa4c95af7a518814d61dc2a0bef9f744f80da8642",
         VERIFIER: "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
     },
 }
@@ -106,7 +124,7 @@ def exclusion_block_span(user_prompt: str) -> tuple[int, int]:
     return start, end
 
 
-def check_identity(identities: dict[str, dict]) -> dict:
+def check_identity(identities: dict[str, dict], arm_set: str = "2f") -> dict:
     """Gate 1 (ruling R4) over the per-arm placeholder captures.
 
     `identities[arm][role]` carries `hash`, `messages`, `format` and `call_kwargs`
@@ -114,15 +132,25 @@ def check_identity(identities: dict[str, dict]) -> dict:
     Returns {"ok": bool, "checks": [...]}; never raises on a failed check.
     """
     checks: list[dict] = []
+    specs = arm_specs(arm_set)
 
     def check(name: str, ok: bool, detail=None):
         checks.append({"check": name, "ok": bool(ok), "detail": detail})
 
-    for arm in ("A", "B"):
+    for spec in specs:
+        if spec.identity != "pins":
+            continue
         for role in (PRIMARY, VERIFIER):
-            got = identities[arm][role]["hash"]
-            want = EXPECTED_PLACEHOLDER_HASHES[arm][role]
-            check(f"{arm}.{role} placeholder hash", got == want, {"got": got, "want": want})
+            got = identities[spec.name][role]["hash"]
+            want = EXPECTED_PLACEHOLDER_HASHES[spec.name][role]
+            check(f"{spec.name}.{role} placeholder hash", got == want, {"got": got, "want": want})
+
+    if not any(s.identity == "arm_c_derived" for s in specs):
+        for role in (PRIMARY, VERIFIER):
+            kw = {s.name: identities[s.name][role]["call_kwargs"] for s in specs}
+            one = next(iter(kw.values()))
+            check(f"{role} call options identical across arms", all(v == one for v in kw.values()), kw)
+        return {"ok": all(c["ok"] for c in checks), "checks": checks}
 
     check("C.verifier == B.verifier", identities["C"][VERIFIER]["hash"] == identities["B"][VERIFIER]["hash"],
           {"C": identities["C"][VERIFIER]["hash"], "B": identities["B"][VERIFIER]["hash"]})
@@ -175,24 +203,129 @@ def make_arm_c_spec_text(live_spec_text: str) -> str:
 
 
 @dataclass(frozen=True)
+class ArmSpec:
+    """One arm as data: where its tree comes from, and what proves it is that arm.
+
+    `rule` is how the tree is checked before any model call:
+      worktree_at_commit      — a worktree whose HEAD is `commit`, clean
+      repo_inputs_equal_commit— the repo tree, INPUT_PATHS byte-identical to `commit`
+                                and carrying no uncommitted change there (2f's arm B)
+      repo_head_equals_commit — the repo tree at exactly `commit`, INPUT_PATHS clean
+      shares_previous_tree    — no check of its own (2f's arm C rides arm B's tree)
+    `identity` is how its placeholder request is checked: `pins` against
+    EXPECTED_PLACEHOLDER_HASHES, or `arm_c_derived` against arm B's.
+    """
+
+    name: str
+    commit: str
+    source: str   # "worktree" | "repo"
+    rule: str
+    spec_kind: str = "live"   # "live" | "arm_c_variant"
+    identity: str = "pins"
+
+
+#: The arm sets. "2f" is the smoke as it ran and must not change: the scorer
+#: reproduces its committed outputs from it. "2g" is the exclusion-basis
+#: re-smoke — arm D at the fold, against the same A and the same pre-fold B.
+ARM_SETS: dict[str, tuple[ArmSpec, ...]] = {
+    "2f": (
+        ArmSpec("A", ARM_A_COMMIT, "worktree", "worktree_at_commit"),
+        ArmSpec("B", ARM_B_COMMIT, "repo", "repo_inputs_equal_commit"),
+        ArmSpec("C", ARM_B_COMMIT, "repo", "shares_previous_tree",
+                spec_kind="arm_c_variant", identity="arm_c_derived"),
+    ),
+    "2g": (
+        ArmSpec("A", ARM_A_COMMIT, "worktree", "worktree_at_commit"),
+        ArmSpec("B", ARM_B_COMMIT, "worktree", "worktree_at_commit"),
+        ArmSpec("D", ARM_D_COMMIT, "repo", "repo_head_equals_commit"),
+    ),
+}
+
+
+def arm_specs(arm_set: str = "2f") -> tuple[ArmSpec, ...]:
+    try:
+        return ARM_SETS[arm_set]
+    except KeyError:
+        raise ValueError(f"unknown arm set {arm_set!r}; known: {sorted(ARM_SETS)}") from None
+
+
+def arm_names(arm_set: str = "2f") -> tuple[str, ...]:
+    return tuple(a.name for a in arm_specs(arm_set))
+
+
+def pairs_for(arm_set: str = "2f") -> tuple[tuple[str, str], ...]:
+    """Ordered comparison pairs: neighbours first, then the outer pair."""
+    n = arm_names(arm_set)
+    return ((n[0], n[1]), (n[1], n[2]), (n[0], n[2]))
+
+
+#: Which pairs get a written disagreement list, per set. 2f's two are what its
+#: committed outputs hold; 2g lists all three so D is compared with both baselines.
+LIST_PAIRS: dict[str, tuple[tuple[str, str], ...]] = {
+    "2f": (("A", "B"), ("B", "C")),
+    "2g": (("A", "B"), ("B", "D"), ("A", "D")),
+}
+
+
+def list_pairs_for(arm_set: str = "2f") -> tuple[tuple[str, str], ...]:
+    return LIST_PAIRS[arm_set]
+
+
+def tree_problem(spec: ArmSpec, facts: dict) -> str | None:
+    """Why `spec`'s tree is not that arm, or None. Pure: the caller measures.
+
+    facts: head, dirty, inputs_differ_from_commit, inputs_uncommitted.
+    """
+    if spec.rule == "shares_previous_tree":
+        return None
+    if spec.rule == "worktree_at_commit":
+        if facts["head"] != facts["commit_sha"]:
+            return (f"arm {spec.name} tree is at {facts['head']}, expected "
+                    f"{facts['commit_sha']} ({spec.commit})")
+        if facts["dirty"]:
+            return f"arm {spec.name} tree is not clean"
+        return None
+    if spec.rule == "repo_head_equals_commit":
+        if facts["head"] != facts["commit_sha"]:
+            return (f"arm {spec.name} repo tree is at {facts['head']}, expected "
+                    f"{facts['commit_sha']} ({spec.commit})")
+        if facts["inputs_uncommitted"]:
+            return f"arm {spec.name} has uncommitted changes in {', '.join(INPUT_PATHS)}"
+        return None
+    if spec.rule == "repo_inputs_equal_commit":
+        if facts["inputs_differ_from_commit"]:
+            return f"arm {spec.name} inputs ({', '.join(INPUT_PATHS)}) differ from {spec.commit}"
+        if facts["inputs_uncommitted"]:
+            return f"arm {spec.name} inputs ({', '.join(INPUT_PATHS)}) have uncommitted changes"
+        return None
+    raise ValueError(f"arm {spec.name}: unknown tree rule {spec.rule!r}")
+
+
+@dataclass(frozen=True)
 class Arm:
     name: str
     root: Path
     spec: Path
 
 
-def arms(repo_root: Path, arm_a_root: Path, spec_rel: Path, arm_c_spec: Path) -> dict[str, Arm]:
-    """The three arms: which tree each imports from and which spec it loads.
+def arms(repo_root: Path, spec_rel: Path, roots: dict[str, Path],
+         arm_c_spec: Path | None = None, arm_set: str = "2f") -> dict[str, Arm]:
+    """The arm set: which tree each arm imports from and which spec it loads.
 
     `spec_rel` is the review's spec path relative to a tree root, as the
-    resolver returns it; arms A and B each root it in their own tree.
+    resolver returns it, so every arm loads the spec of its own tree. `roots`
+    gives the worktree path of each worktree-sourced arm.
     """
-    repo_root, arm_a_root = Path(repo_root).resolve(), Path(arm_a_root).resolve()
-    return {
-        "A": Arm("A", arm_a_root, arm_a_root / spec_rel),
-        "B": Arm("B", repo_root, repo_root / spec_rel),
-        "C": Arm("C", repo_root, Path(arm_c_spec).resolve()),
-    }
+    repo_root = Path(repo_root).resolve()
+    out: dict[str, Arm] = {}
+    for spec in arm_specs(arm_set):
+        if spec.source == "worktree":
+            root = Path(roots[spec.name]).expanduser().resolve()
+        else:
+            root = repo_root
+        path = Path(arm_c_spec).resolve() if spec.spec_kind == "arm_c_variant" else root / spec_rel
+        out[spec.name] = Arm(spec.name, root, path)
+    return out
 
 
 # ── combination rules ─────────────────────────────────────────────────

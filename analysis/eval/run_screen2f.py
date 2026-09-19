@@ -4,9 +4,13 @@ Phase-batched (ruling R1): every arm's primary phase on qwen3:8b, then every
 arm's verifier phase on gemma3:27b — two model swaps, not one per paper. Each
 arm-phase is a separate `screen2f_worker.py` process rooted in that arm's tree.
 
+Which three arms run is an ARM SET (--arm-set, screen2f.ARM_SETS): "2f" as the
+smoke ran, "2g" for the exclusion-basis re-smoke (A, B, D).
+
 Rails, in order:
-  * arm A's tree must be a clean checkout of 83defc5; arm B's engine/ and
-    review_specs/ must be byte-identical to 61326fa;
+  * every arm's tree is measured and judged by its declared rule — a worktree at
+    its commit and clean, or the repo tree at that commit with no uncommitted
+    change under engine/ and review_specs/;
   * the experiment flock is taken non-blocking and held for the whole run, so
     the 07:00 health check stands down and no foreign restart path fires;
   * every worker runs with the restart opt-out set;
@@ -24,7 +28,7 @@ Writes only under --out-dir, plus the --background log.
 Usage:
     PYTHONPATH=. python -m analysis.eval.run_screen2f \\
         --out-dir docs/session-reports/screen-auth-2f-smoke/preflight \\
-        --arm-a-root ~/worktrees/evidence-engine-83defc5 \\
+        --arm-set 2g --arm-root A=~/worktrees/ee-83defc5 --arm-root B=~/worktrees/ee-61326fa \\
         --ids 290,57,222 --forced-verifier-ids 222 \\
         --watch-file <path> [--background]
 """
@@ -43,7 +47,7 @@ from pathlib import Path
 import httpx
 
 from analysis.eval import screen2f as lib
-from engine.core.review_paths import SPEC_ROOT, spec_path_for
+from engine.core.review_paths import spec_path_for
 from engine.utils.background import maybe_background
 from engine.utils.ollama_lock import hold_experiment_lock
 
@@ -51,9 +55,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 WORKER = Path(__file__).resolve().parent / "screen2f_worker.py"
 DEFAULT_PAPERS = REPO_ROOT / "docs/session-reports/screen-auth-2f-smoke/papers_86.jsonl"
 REVIEW = "surgical_autonomy"
-ARM_B_BASE_COMMIT = "61326fa"
-#: What arm B must share byte-for-byte with ARM_B_BASE_COMMIT.
-ARM_B_INPUTS = ("engine", str(SPEC_ROOT))
+#: Each arm's tree rule and expected placeholder hashes live in screen2f.ARM_SETS;
+#: this module measures the git facts and lets lib.tree_problem judge them.
 OLLAMA = "http://localhost:11434"
 HARNESS_MODELS = {"qwen3:8b", "gemma3:27b"}
 POLL_SECONDS = 60
@@ -144,7 +147,10 @@ def main(argv: list[str] | None = None) -> int:
     maybe_background("screen2f", review_name=REVIEW)
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--out-dir", required=True, type=Path)
-    ap.add_argument("--arm-a-root", required=True, type=Path)
+    ap.add_argument("--arm-set", default="2f", choices=sorted(lib.ARM_SETS))
+    ap.add_argument("--arm-root", action="append", default=[], metavar="NAME=PATH",
+                    help="worktree path for a worktree-sourced arm; repeatable")
+    ap.add_argument("--arm-a-root", type=Path, help="alias for --arm-root A=PATH")
     ap.add_argument("--papers", type=Path, default=DEFAULT_PAPERS)
     ap.add_argument("--ids", default="", help="comma-separated paper ids; empty = all")
     ap.add_argument("--forced-verifier-ids", default="", help="pre-flight only")
@@ -193,31 +199,49 @@ def _run(args, out_dir: Path, summary: dict) -> str:
         summary["events"].append(rec)
         logger.info("%s %s", kind, json.dumps(kw, ensure_ascii=False))
 
-    # Trees.
-    a_root = args.arm_a_root.expanduser().resolve()
-    a_head = _git(a_root, "rev-parse", "HEAD")
-    want = _git(REPO_ROOT, "rev-parse", f"{lib.ARM_A_COMMIT}^{{commit}}")
-    if a_head != want:
-        raise Abort(f"arm A tree {a_root} is at {a_head}, expected {want}")
-    if _git(a_root, "status", "--porcelain"):
-        raise Abort(f"arm A tree {a_root} is not clean")
-    b_head = _git(REPO_ROOT, "rev-parse", "HEAD")
-    inputs = ", ".join(ARM_B_INPUTS)
-    if subprocess.run(["git", "-C", str(REPO_ROOT), "diff", "--quiet", ARM_B_BASE_COMMIT, "--",
-                       *ARM_B_INPUTS]).returncode:
-        raise Abort("arm B inputs (%s) differ from %s" % (inputs, ARM_B_BASE_COMMIT))
-    if subprocess.run(["git", "-C", str(REPO_ROOT), "diff", "--quiet", "HEAD", "--", *ARM_B_INPUTS]).returncode:
-        raise Abort("arm B inputs (%s) have uncommitted changes" % inputs)
+    # Trees: every arm's tree is measured, then judged by lib.tree_problem.
+    specs = lib.arm_specs(args.arm_set)
+    roots = {}
+    for item in args.arm_root:
+        name, _, path = item.partition("=")
+        if not path:
+            raise Abort(f"--arm-root expects NAME=PATH, got {item!r}")
+        roots[name] = Path(path)
+    if args.arm_a_root:
+        roots.setdefault("A", args.arm_a_root)
+    missing = [s.name for s in specs if s.source == "worktree" and s.name not in roots]
+    if missing:
+        raise Abort(f"arm set {args.arm_set!r} needs --arm-root for {missing}")
 
     spec_rel = spec_path_for(REVIEW)
-    arm_c_spec = out_dir / "armC_spec.yaml"
-    arm_c_spec.write_text(lib.make_arm_c_spec_text((REPO_ROOT / spec_rel).read_text(encoding="utf-8")),
-                          encoding="utf-8")
-    arms = lib.arms(REPO_ROOT, a_root, spec_rel, arm_c_spec)
-    summary["trees"] = {"A": {"root": str(a_root), "head": a_head},
-                        "B": {"root": str(REPO_ROOT), "head": b_head, "inputs_equal_to": ARM_B_BASE_COMMIT},
-                        "C": {"root": str(REPO_ROOT), "head": b_head, "spec": str(arm_c_spec),
-                              "spec_sha256": lib.sha256_file(arm_c_spec)}}
+    arm_c_spec = None
+    if any(s.spec_kind == "arm_c_variant" for s in specs):
+        arm_c_spec = out_dir / "armC_spec.yaml"
+        arm_c_spec.write_text(lib.make_arm_c_spec_text((REPO_ROOT / spec_rel).read_text(encoding="utf-8")),
+                              encoding="utf-8")
+    arms = lib.arms(REPO_ROOT, spec_rel, roots, arm_c_spec, args.arm_set)
+
+    trees = {}
+    for spec in specs:
+        root = arms[spec.name].root
+        facts = {
+            "head": _git(root, "rev-parse", "HEAD"),
+            "commit_sha": _git(REPO_ROOT, "rev-parse", f"{spec.commit}^{{commit}}"),
+            "dirty": bool(_git(root, "status", "--porcelain")),
+            "inputs_differ_from_commit": bool(subprocess.run(
+                ["git", "-C", str(root), "diff", "--quiet", spec.commit, "--", *lib.INPUT_PATHS]).returncode),
+            "inputs_uncommitted": bool(subprocess.run(
+                ["git", "-C", str(root), "diff", "--quiet", "HEAD", "--", *lib.INPUT_PATHS]).returncode),
+        }
+        problem = lib.tree_problem(spec, facts)
+        if problem:
+            raise Abort(problem)
+        trees[spec.name] = {"root": str(root), "head": facts["head"], "commit": spec.commit,
+                            "rule": spec.rule, "spec": str(arms[spec.name].spec)}
+        if spec.spec_kind == "arm_c_variant":
+            trees[spec.name]["spec_sha256"] = lib.sha256_file(arms[spec.name].spec)
+    summary["arm_set"] = args.arm_set
+    summary["trees"] = trees
     summary["papers"] = {"path": str(args.papers.resolve()), "sha256": lib.sha256_file(args.papers)}
     summary["ollama_version"] = httpx.get(f"{OLLAMA}/api/version", timeout=10).json().get("version")
     summary["watch_file"] = {"path": str(args.watch_file) if args.watch_file else None,
@@ -233,7 +257,7 @@ def _run(args, out_dir: Path, summary: dict) -> str:
             if rc != 0:
                 raise Abort(f"identity worker for arm {name} exited {rc}")
             identities[name] = json.loads((out_dir / f"arm_{name}" / "identity.json").read_text())
-        gate = lib.check_identity(identities)
+        gate = lib.check_identity(identities, args.arm_set)
         (out_dir / "identity_check.json").write_text(json.dumps(gate, indent=2, ensure_ascii=False) + "\n")
         summary["identity"] = {n: {"primary": i["primary"]["hash"], "verifier": i["verifier"]["hash"],
                                    "screening_hash": i["screening_hash"], "engine_file": i["engine_file"],

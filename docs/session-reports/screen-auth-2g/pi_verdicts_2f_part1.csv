@@ -1,0 +1,19 @@
+order,paper_id,ee_id,group,verdict,detail,april_label,label_after_full,note
+1,693,EE-541,G1,SILENT,S-AUTONOMY,include,include,
+2,261,EE-109,G2,MISREAD,M-SPECIALTY,exclude,exclude,"correct specialty (ENT) still excluded"
+3,325,EE-173,G2,SILENT,S-AUTONOMY,exclude,exclude,
+4,774,EE-622,G2,SILENT,S-AUTONOMY,exclude,exclude,
+5,429,EE-277,G2,SILENT,S-AUTONOMY,exclude,exclude,
+6,583,EE-431,G3,SILENT,S-AUTONOMY,include,include,
+7,222,EE-092,G3,SILENT,S-AUTONOMY,include,include,
+8,569,EE-417,G3,EVIDENCED,E-SPECIALTY,include,exclude,"FLIP: retinal = ophthalmic"
+9,786,EE-634,G3,SILENT,S-PHYSICAL-TASK,include,include,
+10,170,EE-070,G3,EVIDENCED,E-TELEOPERATED,include,exclude,"FLIP: surgeon has full control"
+11,702,EE-550,G3,EVIDENCED,E-NO-PHYSICAL-TASK,include,exclude,"FLIP: pose estimation only"
+12,655,EE-503,G4,SILENT,S-AUTONOMY,exclude,exclude,
+13,139,EE-057,G4,SILENT,S-AUTONOMY,exclude,exclude,
+14,344,EE-192,G4,SILENT,S-INSUFFICIENT,exclude,exclude,
+15,112,EE-048,G4,SILENT,S-SPECIALTY,exclude,exclude,
+16,765,EE-613,G4,SILENT,S-AUTONOMY,exclude,exclude,
+17,737,EE-585,G4,EVIDENCED,E-SPECIALTY,exclude,exclude,"19-char abstract; specialty from title"
+18,598,EE-446,G4,EVIDENCED,E-SPECIALTY,exclude,exclude,"250-char abstract; specialty from title"

@@ -205,13 +205,26 @@ def _absent_sentence(value: str | None, stage: str) -> str | None:
     return None
 
 
+def _exclusion_basis_sentence(basis: str, stage: str) -> str:
+    """The sentence that says what the stage may exclude on, from its declared basis."""
+    evidence = EVIDENCE_OBJECT[stage]
+    if basis == "evidenced_exclusion_only":
+        return (
+            f"EXCLUDE only when the title or {evidence} states something that meets an "
+            f"exclusion criterion listed above. That the {evidence} does not state, "
+            "mention, or confirm an inclusion criterion is not a ground to exclude. "
+            f"When the {evidence} is silent on a point, do not exclude on that silence."
+        )
+    return "Exclude when the paper clearly meets an exclusion criterion listed above."
+
+
 def decision_instruction(elig: Eligibility, stage: str) -> str:
     """The instruction that closes a stage's prompt, derived from its policy.
 
     A verification pass gets its framing, its numbered tests and its closing
     rule; its policy is fixed by being a verifier. The abstract primary pass
-    gets one sentence per declared policy value, and nothing else — in
-    particular no free-standing bar of its own on top of the criteria.
+    gets one sentence per declared policy value, and a closing sentence chosen
+    by its declared `exclusion_basis` — never a bar written as free prose.
     """
     if stage in VERIFIER_STAGES:
         parts = []
@@ -230,7 +243,7 @@ def decision_instruction(elig: Eligibility, stage: str) -> str:
     ):
         if sentence:
             lines.append(sentence)
-    lines.append("Exclude when the paper clearly meets an exclusion criterion listed above.")
+    lines.append(_exclusion_basis_sentence(policy.exclusion_basis, stage))
     return "\n".join(lines)
 
 
@@ -342,6 +355,24 @@ def _adjudication_absent(value: str | None, stage: str) -> str | None:
     return f"If the {evidence} gives too little information to decide, choose {positive}."
 
 
+def _adjudication_basis(basis: str, stage: str) -> str | None:
+    """What the adjudicated stage may exclude on, in the sheet's verdict names.
+
+    Only `evidenced_exclusion_only` speaks; `absence_is_evidence` adds nothing.
+    """
+    if basis != "evidenced_exclusion_only":
+        return None
+    _, negative = _ADJUDICATION_LABELS[stage]
+    evidence = EVIDENCE_OBJECT[stage]
+    return (
+        f"Choose {negative} only when the title or {evidence} states something that "
+        f"meets an exclusion criterion. That the {evidence} does not state, mention, "
+        f"or confirm an inclusion criterion is not a ground to choose {negative}. "
+        f"When the {evidence} is silent on a point, do not choose {negative} on that "
+        "silence."
+    )
+
+
 def edge_case_guidance(elig: Eligibility, stage: str, trailing: str | None = None) -> str:
     """Scope notes, then the adjudicated stage's policy, then any engine note.
 
@@ -355,6 +386,7 @@ def edge_case_guidance(elig: Eligibility, stage: str, trailing: str | None = Non
     for sentence in (
         _adjudication_uncertain(policy.when_uncertain, stage),
         _adjudication_absent(policy.when_evidence_absent, stage),
+        _adjudication_basis(policy.exclusion_basis, stage),
     ):
         if sentence:
             parts.append(sentence)

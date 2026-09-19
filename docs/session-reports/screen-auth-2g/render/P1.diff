@@ -1,0 +1,11 @@
+--- P1.before.txt
++++ P1.after.txt
+@@ -46,7 +46,6 @@
+ 
+ Decide 'include' or 'exclude'.
+ If the abstract gives partial evidence that the paper might meet the criteria, include it — a later verification pass will catch false positives.
+-If there is no abstract, or it gives too little information to determine eligibility, exclude it — do not default to inclusion when evidence is absent.
+-Exclude when the paper clearly meets an exclusion criterion listed above.
++EXCLUDE only when the title or abstract states something that meets an exclusion criterion listed above. That the abstract does not state, mention, or confirm an inclusion criterion is not a ground to exclude. When the abstract is silent on a point, do not exclude on that silence.
+ 
+ Respond with JSON only: {"decision": "...", "rationale": "...", "confidence": 0.0-1.0}

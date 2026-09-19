@@ -4925,13 +4925,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 578,
+            "line": 616,
             "role": "help_text",
             "text": "The review's identity, and the single one. The spec file is review_specs/<review_id>.yaml and the data root is data/<review_id>; neither is passed independen..."
           },
           {
             "kind": "f-string",
-            "line": 713,
+            "line": 751,
             "role": "message",
             "text": "f'Review spec not found at {path}. Expected a YAML file (e.g., review_specs/<review_id>.yaml).'"
           }
@@ -4943,7 +4943,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 710,
+            "line": 748,
             "scope": "load_review_spec",
             "target": "f"
           }
@@ -7819,7 +7819,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "d770244136af78c3cb1bce4ef7e0b9f960bedef4",
+    "generated_at_commit": "c600e8d2230c5ee7dd92e83943870d0c877c981e",
     "scan_roots": [
       "engine",
       "scripts",

@@ -189,8 +189,10 @@ def test_unknown_nested_key_rejected_and_named(tmp_path, path, expected):
 #: the transitional fields were folded away and exclusions gained reason codes and
 #: examples. The 2c value is frozen with the fourteen renderings pinned in
 #: test_eligibility.py: it moves only with a content change that a measured smoke
-#: (2f) and an architect ruling have justified.
-BASELINE_SCREENING_HASH = "d563134ed6a92a8d0ee3e877574fcf844f7094889ec411f88e3285bb58a06a29"
+#: (2f) and an architect ruling have justified. SCREEN-AUTH-01 2g Part 2 moved it a
+#: fourth time: stage policies gained a required exclusion_basis, ft_primary gained a
+#: policy, and abstract_primary dropped when_evidence_absent (2c value d563134e…6a29).
+BASELINE_SCREENING_HASH = "e8fa9719b1028ac16f9af72996bc807c8ad8b1071d2420fc5d98ed826f043596"
 
 
 def _spec_with_review_id(tmp_path, value, *, drop=False):

@@ -15,6 +15,7 @@ architect ruling — not a baseline refresh.
 
 import hashlib
 import json
+import re
 from unittest import mock
 
 import pytest
@@ -27,6 +28,7 @@ from engine.core import eligibility_render as render
 from engine.core.database import ReviewDatabase
 from engine.core.review_paths import load_spec_for
 from engine.core.review_spec import (
+    MODEL_STAGES,
     STRUCTURAL_REASON_CODES,
     Criterion,
     Eligibility,
@@ -65,6 +67,13 @@ def _inc(id="inc-a", **kw):
 def _exc(id="exc-a", code="code_a", **kw):
     return Criterion(id=id, kind="exclusion", text="t", stages=["ft_primary"],
                      reason_code=code, **kw)
+
+
+def _policies(**overrides):
+    """All four model stages declared, absence_is_evidence, with per-stage overrides."""
+    base = {s: StagePolicy(exclusion_basis="absence_is_evidence") for s in MODEL_STAGES}
+    base.update(overrides)
+    return base
 
 
 # ── T1 — reason codes ────────────────────────────────────────────────
@@ -155,6 +164,7 @@ def test_a_verifier_test_may_cite_the_specialty_scope():
         specialty_scope=_scope(),
         verifier_tests=[VerifierTest(id="vt-x", text="t", stages=["ft_verifier"],
                                      derives_from=["specialty-scope"])],
+        stage_policies=_policies(),
     )
     assert e.verifier_tests[0].derives_from == ["specialty-scope"]
 
@@ -210,13 +220,16 @@ def test_codes_are_shown_at_full_text_stages_and_nowhere_else(elig):
 def test_the_abstract_primary_instruction_is_derived_from_its_policy(elig):
     text = render.decision_instruction(elig, "abstract_primary")
     assert "partial evidence that the paper might meet the criteria, include it" in text
-    assert "do not default to inclusion when evidence is absent" in text
+    # 2g: abstract_primary declares evidenced_exclusion_only and no when_evidence_absent.
+    assert "do not default to inclusion when evidence is absent" not in text
+    assert "Exclude when the paper clearly meets" not in text
+    assert text.endswith("When the abstract is silent on a point, do not exclude on that silence.")
     assert "surgical robotics at all" not in text
 
 
 def test_the_abstract_primary_instruction_follows_a_changed_policy(elig):
     flipped = elig.model_copy(deep=True)
-    flipped.stage_policies["abstract_primary"] = StagePolicy(when_uncertain="exclude")
+    flipped.stage_policies["abstract_primary"] = StagePolicy(when_uncertain="exclude", exclusion_basis="absence_is_evidence")
     text = render.decision_instruction(flipped, "abstract_primary")
     assert "leaves eligibility uncertain, exclude it" in text
     assert "do not default to inclusion" not in text
@@ -240,29 +253,116 @@ def test_a_stage_with_no_instruction_refuses_to_render_one(elig):
 def test_an_adjudication_stage_policy_cannot_be_declared():
     with pytest.raises(ValueError, match="derived from the model stage"):
         Eligibility(criteria=[_inc()], specialty_scope=_scope(),
-                    stage_policies={"abstract_adjudication": StagePolicy(when_uncertain="include")})
+                    stage_policies={"abstract_adjudication": StagePolicy(when_uncertain="include", exclusion_basis="absence_is_evidence")})
 
 
 def test_a_verifier_that_includes_on_uncertainty_is_refused():
     with pytest.raises(ValueError, match="includes on uncertainty"):
         Eligibility(criteria=[_inc()], specialty_scope=_scope(),
-                    stage_policies={"ft_verifier": StagePolicy(when_uncertain="include")})
+                    stage_policies={"ft_verifier": StagePolicy(when_uncertain="include", exclusion_basis="absence_is_evidence")})
 
 
 def test_stage_policies_reject_a_stage_name_that_is_not_a_stage():
     with pytest.raises(ValueError):
         Eligibility(criteria=[_inc()], specialty_scope=_scope(),
-                    stage_policies={"not_a_stage": StagePolicy()})
+                    stage_policies={"not_a_stage": StagePolicy(exclusion_basis="absence_is_evidence")})
 
 
 def test_adjudication_guidance_is_derived_from_the_stage_it_adjudicates(spec, elig):
     abstract = sa._build_edge_case_guidance(spec)
-    assert "lean toward INCLUDE" in abstract and "choose EXCLUDE" in abstract
+    assert "lean toward INCLUDE" in abstract and "Choose EXCLUDE only when the title or abstract states" in abstract
+    assert "too little information to decide" not in abstract  # when_evidence_absent unset (2g)
     ft = fsa._build_ft_edge_case_guidance(spec)
-    assert "lean toward" not in ft and "choose" not in ft  # ft_primary declares no policy
+    # ft_primary declares only absence_is_evidence, which renders nothing
+    assert "lean toward" not in ft and "choose" not in ft.lower()
     flipped = elig.model_copy(deep=True)
-    flipped.stage_policies["abstract_primary"] = StagePolicy(when_uncertain="exclude")
+    flipped.stage_policies["abstract_primary"] = StagePolicy(when_uncertain="exclude", exclusion_basis="absence_is_evidence")
     assert "lean toward EXCLUDE" in render.edge_case_guidance(flipped, "abstract_adjudication")
+
+
+# ── T3b — exclusion basis (SCREEN-AUTH-01 2g) ────────────────────────
+
+
+@pytest.mark.parametrize("basis", ["evidenced_exclusion_only", "absence_is_evidence"])
+def test_both_exclusion_bases_are_accepted(basis):
+    assert StagePolicy(exclusion_basis=basis).exclusion_basis == basis
+
+
+@pytest.mark.parametrize("bad", ["evidenced", "EVIDENCED_EXCLUSION_ONLY", "", None])
+def test_any_other_exclusion_basis_is_refused(bad):
+    with pytest.raises(ValueError):
+        StagePolicy(exclusion_basis=bad)
+
+
+def test_exclusion_basis_has_no_default():
+    with pytest.raises(ValueError, match="exclusion_basis"):
+        StagePolicy(when_uncertain="include")
+
+
+@pytest.mark.parametrize("stage", list(MODEL_STAGES))
+def test_a_spec_missing_exclusion_basis_on_a_stage_fails_and_names_it(tmp_path, stage):
+    raw = yaml.safe_load(open(SPEC_PATH).read())
+    raw["eligibility"]["stage_policies"][stage].pop("exclusion_basis")
+    p = tmp_path / "missing.yaml"
+    p.write_text(yaml.dump(raw, allow_unicode=True))
+    with pytest.raises(ReviewSpecError) as exc:
+        load_review_spec(p)
+    assert stage in str(exc.value) and "exclusion_basis" in str(exc.value)
+
+
+@pytest.mark.parametrize("stage", list(MODEL_STAGES))
+def test_every_model_stage_must_be_declared(stage):
+    policies = _policies()
+    policies.pop(stage)
+    with pytest.raises(ValueError, match=re.escape(f"does not declare {[stage]}")):
+        Eligibility(criteria=[_inc()], specialty_scope=_scope(), stage_policies=policies)
+
+
+def test_evidenced_exclusion_only_contradicts_excluding_on_absence():
+    bad = StagePolicy(exclusion_basis="evidenced_exclusion_only", when_evidence_absent="exclude")
+    with pytest.raises(ValueError, match="contradict"):
+        Eligibility(criteria=[_inc()], specialty_scope=_scope(),
+                    stage_policies=_policies(abstract_primary=bad))
+
+
+@pytest.mark.parametrize("stage", ["abstract_verifier", "ft_verifier"])
+def test_an_evidenced_basis_on_a_verifier_is_refused_while_it_would_render_nothing(stage):
+    policies = _policies(**{stage: StagePolicy(when_uncertain="exclude",
+                                               exclusion_basis="evidenced_exclusion_only")})
+    with pytest.raises(ValueError, match="verifier stage does not yet render an exclusion basis"):
+        Eligibility(criteria=[_inc()], specialty_scope=_scope(), stage_policies=policies)
+
+
+def test_policy_for_refuses_a_stage_that_declares_none(elig):
+    with pytest.raises(ValueError, match="only the model stages"):
+        elig.policy_for("abstract_adjudication")
+
+
+_PROMPT_BAR = "When the abstract is silent on a point, do not exclude on that silence."
+_SHEET_BAR = "Choose EXCLUDE only when the title or abstract states"
+_OLD_CLOSER = "Exclude when the paper clearly meets an exclusion criterion listed above."
+
+
+@pytest.mark.parametrize("basis,speaks", [("evidenced_exclusion_only", True), ("absence_is_evidence", False)])
+def test_the_bar_renders_iff_the_basis_is_evidenced_exclusion_only(elig, basis, speaks):
+    e = elig.model_copy(deep=True)
+    e.stage_policies["abstract_primary"] = StagePolicy(when_uncertain="include", exclusion_basis=basis)
+    prompt = render.decision_instruction(e, "abstract_primary")
+    sheet = render.edge_case_guidance(e, "abstract_adjudication")
+    assert (_PROMPT_BAR in prompt) is speaks
+    assert (_OLD_CLOSER in prompt) is (not speaks)
+    assert (_SHEET_BAR in sheet) is speaks
+
+
+def test_the_bar_renders_at_the_declared_stage_only(spec):
+    paper = {"title": "T", "abstract": "A"}
+    for text in (screener._build_prompt(paper, spec, role="verifier"),
+                 ft_screener.build_ft_screening_prompt("x", spec),
+                 ft_screener.build_ft_verification_prompt("x", spec),
+                 fsa._build_ft_edge_case_guidance(spec)):
+        assert "silent on a point" not in text
+    assert _PROMPT_BAR in screener._build_prompt(paper, spec, role="primary")
+    assert _SHEET_BAR in sa._build_edge_case_guidance(spec)
 
 
 def test_scope_notes_appear_once_on_the_abstract_instructions_sheet(spec, elig):
@@ -482,8 +582,14 @@ def test_the_export_rubric_has_no_spec_less_fallback(tmp_path):
 #   R4  2b 41161ecb4ee4ac8f742e066c2c0c0bb0dc683c472505112a71e08c5c51fb989b  (messages only)
 #       83defc5 under R31  e6e7bb27bbff9e4b9d9a4fa22401fbabfe38010d50799079efcfe4a658cc1c1f
 
+# Re-frozen once in SCREEN-AUTH-01 2g Part 2 (exclusion_basis), from the renders the PI approved
+# in docs/session-reports/screen-auth-2g/render/: P1, R1 and H6 moved, the other eleven did not.
+# Their 2c values: P1 c2c60b16f7f554d3b25093e4bfed6bd91434950f876a86e5208589b061f342dd,
+# R1 e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649,
+# H6 4e9a62d128c64a8c55ad136e54e1925b1eaf60d2ffe2baf12d9496ded4bba380.
+
 FROZEN = {
-    "P1": "c2c60b16f7f554d3b25093e4bfed6bd91434950f876a86e5208589b061f342dd",
+    "P1": "5f96f61c7eb23f974074377b3f83390159166ef57e22c4a7cf88b076d7a13f22",
     "P2": "a5f8b253e7b4a2daa4e4f7ee278bac94de9be88a0b3cf84617b708ce9afac388",
     "P3": "ed7dd6742b01da7b38ec5b78d584c4f7a7880e1b12606172c823dac75a8c4c46",
     "P4": "e05cb95fd481e8bcc0310f8feea4a5e8858a2533d642e9865514e95a79535dc2",
@@ -491,9 +597,9 @@ FROZEN = {
     "H3": "fc06eb3acd607bdbfe0669343bfc1fb679b289ff9556c7f209f70a526fd99677",
     "H4": "ec9f0a44ec039857f3eaeb11aee2a15e3263c4ba24ef196352279692729b0e9f",
     "H5": "b45a69ad098f0e062bb58149467d7be23525c9e56ab9bf51d0ada2a4a5d16505",
-    "H6": "4e9a62d128c64a8c55ad136e54e1925b1eaf60d2ffe2baf12d9496ded4bba380",
+    "H6": "09bccf46f2335e78097f84cd888a9a3f233a7bee9ec25fb3a9b696f562d0ed15",
     "H7": "404cbc8f6176af6950c435a353f311a3937a5917e5e2724a101a1181a227a413",
-    "R1": "e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649",
+    "R1": "a84e1a72adc8bc2143c4f3daa4c95af7a518814d61dc2a0bef9f744f80da8642",
     "R2": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
     "R3": "c5cfdac02ce72b107d5a6738c199e27c4a25e42a738621d3a8edfc183511cf93",
     "R4": "bd7adb8f11795d0fbc47ff7665975a78aa95a807181541f57b04b122683892b4",

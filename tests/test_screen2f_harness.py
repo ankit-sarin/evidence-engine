@@ -29,7 +29,9 @@ HARNESS_SOURCES = [
     REPO / "analysis" / "eval" / "screen2f_worker.py",
     REPO / "analysis" / "eval" / "run_screen2f.py",
 ]
-ARM_C_SCREENING_HASH = "e23b74de9275df8655d3efeacc2ca769542ac41c325d9691c1b2fac11b0f0120"
+# Arm C is retired (2f four-vs-eight ruling). Its screening_hash in the 2f run, built from the
+# 61326fa live spec, was e23b74de9275df8655d3efeacc2ca769542ac41c325d9691c1b2fac11b0f0120 — a
+# historical value, no longer pinned: the variant follows whatever live spec it is built from.
 
 
 # ── arm construction ─────────────────────────────────────────────────
@@ -59,7 +61,6 @@ def test_arm_c_spec_adds_exactly_four_stage_lines(tmp_path):
     path = tmp_path / "armC.yaml"
     path.write_text(variant)
     c, b = load_review_spec(path), load_review_spec(LIVE_SPEC)
-    assert c.screening_hash() == ARM_C_SCREENING_HASH
     changed = [x.id for x, y in zip(b.eligibility.criteria, c.eligibility.criteria) if x != y]
     assert changed == list(lib.ARM_C_ADDED_CRITERIA)
     assert {k: v for k, v in b.model_dump().items() if k != "eligibility"} == \
@@ -260,28 +261,23 @@ def test_identity_gate_fails_on_a_drifted_hash_or_option():
     assert "verifier call options identical across arms" in failed
 
 
-def test_the_real_head_placeholder_requests_match_frozen_r1_r2():
-    """The capture definition reproduces the frozen pins from HEAD's own screener."""
-    from unittest import mock
+def test_arm_b_placeholder_constants_match_the_committed_pre_fold_renders():
+    """Arm B's R1/R2 constants are the committed pre-fold renders, not HEAD.
 
-    from engine.agents import screener
+    The before-renders in docs/session-reports/screen-auth-2g/render/ were captured at
+    7e3ebc1, whose fourteen screening surfaces are byte-identical to 61326fa, arm B's
+    tree. From SCREEN-AUTH-01 2g Part 2 on, HEAD renders the exclusion-basis fold, so
+    HEAD is not arm B by design; arm B lives in these files and in 61326fa.
+    """
+    import hashlib
 
-    spec = load_review_spec(LIVE_SPEC)
-    got = {}
-    for role, pn in ((lib.PRIMARY, 1), (lib.VERIFIER, 2)):
-        box = {}
-
-        class Cap(Exception):
-            pass
-
-        def rec(**kw):
-            box.update(kw)
-            raise Cap()
-
-        with mock.patch.object(screener, "ollama_chat", rec), pytest.raises(Cap):
-            screener.screen_paper(dict(lib.PLACEHOLDER_PAPER), spec, pn, role=role)
-        got[role] = lib.request_hash(box["format"], box["messages"])
-    assert got == lib.EXPECTED_PLACEHOLDER_HASHES["B"]
+    render_dir = REPO / "docs" / "session-reports" / "screen-auth-2g" / "render"
+    for key, role in (("R1", lib.PRIMARY), ("R2", lib.VERIFIER)):
+        text = (render_dir / f"{key}.before.txt").read_text(encoding="utf-8")
+        want = lib.EXPECTED_PLACEHOLDER_HASHES["B"][role]
+        assert hashlib.sha256(text.encode("utf-8")).hexdigest() == want
+        req = json.loads(text)
+        assert lib.request_hash(req["format"], req["messages"]) == want
 
 
 # ── the harness never names the database ─────────────────────────────

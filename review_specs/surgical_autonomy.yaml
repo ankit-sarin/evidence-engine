@@ -289,8 +289,12 @@ eligibility:
   stage_policies:
     abstract_primary:
       when_uncertain: include
-      when_evidence_absent: exclude
+      exclusion_basis: evidenced_exclusion_only
     abstract_verifier:
       when_uncertain: exclude
+      exclusion_basis: absence_is_evidence
+    ft_primary:
+      exclusion_basis: absence_is_evidence
     ft_verifier:
       when_uncertain: exclude
+      exclusion_basis: absence_is_evidence

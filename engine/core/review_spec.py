@@ -247,10 +247,17 @@ class StagePolicy(_SpecModel):
     by the renderer. There is deliberately no free-text instruction field: free
     text is how the recall-first rule and the evidence-sufficiency criterion came
     to contradict each other inside a single prompt.
+
+    `exclusion_basis`: what the stage may exclude on. `evidenced_exclusion_only`
+    — only on something the text states that meets an exclusion criterion; an
+    inclusion criterion the text does not confirm, or silence, is not a ground.
+    `absence_is_evidence` — what the text does not establish may count against
+    the paper. Required, with no default: a spec cannot be silent about it.
     """
 
     when_uncertain: Optional[Literal["include", "exclude"]] = None
     when_evidence_absent: Optional[Literal["include", "exclude"]] = None
+    exclusion_basis: Literal["evidenced_exclusion_only", "absence_is_evidence"]
 
 
 # ── Specialty Scope ──────────────────────────────────────────────────
@@ -355,6 +362,31 @@ class Eligibility(_SpecModel):
                     "verification pass exists to catch false positives; one that "
                     "includes on uncertainty cannot."
                 )
+        for stage in VERIFIER_STAGES:
+            policy = self.stage_policies.get(stage)
+            if policy is not None and policy.exclusion_basis == "evidenced_exclusion_only":
+                raise ValueError(
+                    f"stage_policies[{stage!r}].exclusion_basis is "
+                    "'evidenced_exclusion_only', but the verifier stage does not yet "
+                    "render an exclusion basis: the declaration would be silently "
+                    "ignored."
+                )
+        for stage, policy in self.stage_policies.items():
+            if (policy.exclusion_basis == "evidenced_exclusion_only"
+                    and policy.when_evidence_absent == "exclude"):
+                raise ValueError(
+                    f"stage_policies[{stage!r}]: exclusion_basis "
+                    "'evidenced_exclusion_only' and when_evidence_absent 'exclude' "
+                    "contradict. The first lets the stage exclude only on what the "
+                    "text states; the second excludes on what it does not state."
+                )
+        missing = [s for s in MODEL_STAGES if s not in self.stage_policies]
+        if missing:
+            raise ValueError(
+                f"stage_policies does not declare {missing}. Every model stage must "
+                "declare its policy, exclusion_basis included; an undeclared stage "
+                "would be silent about what it may exclude on."
+            )
         return self
 
     def reason_codes(self) -> tuple[str, ...]:
@@ -391,8 +423,14 @@ class Eligibility(_SpecModel):
         return [t for t in self.verifier_tests if stage in t.stages]
 
     def policy_for(self, stage: str) -> StagePolicy:
-        """The stage's policy, or an empty one if the spec declares none."""
-        return self.stage_policies.get(stage) or StagePolicy()
+        """The declared policy of a model stage. Every model stage declares one."""
+        try:
+            return self.stage_policies[stage]
+        except KeyError:
+            raise ValueError(
+                f"no stage policy for {stage!r}: only the model stages "
+                f"{list(MODEL_STAGES)} declare one."
+            ) from None
 
 
 # ── PDF Parsing ─────────────────────────────────────────────────────

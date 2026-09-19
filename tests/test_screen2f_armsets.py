@@ -43,7 +43,8 @@ def test_the_2g_set_is_a_b_d_with_two_worktrees_and_the_fold_in_the_repo():
     a, b, d = lib.arm_specs("2g")
     assert (a.commit, a.rule) == ("83defc5", "worktree_at_commit")
     assert (b.commit, b.rule) == ("61326fa", "worktree_at_commit")   # the exact 2f arm-B tree
-    assert (d.commit, d.source, d.rule) == ("56c5c57", "repo", "repo_head_equals_commit")
+    # D is its inputs, not a commit id: the pre-flight commit moves HEAD (H2 corrected).
+    assert (d.commit, d.source, d.rule) == ("56c5c57", "repo", "repo_inputs_equal_commit")
     assert all(s.spec_kind == "live" and s.identity == "pins" for s in (a, b, d))
 
 
@@ -84,8 +85,16 @@ def test_a_worktree_arm_must_be_at_its_commit_and_clean():
     assert "not clean" in lib.tree_problem(spec, _facts(dirty=True))
 
 
-def test_the_repo_arm_must_be_at_head_of_its_commit_with_nothing_uncommitted():
+def test_arm_d_is_judged_on_its_inputs_and_survives_a_later_commit():
     spec = lib.arm_specs("2g")[2]
+    # A commit that touches neither engine/ nor review_specs/ leaves D intact.
+    assert lib.tree_problem(spec, _facts(head="a-later-commit")) is None
+    assert "differ from 56c5c57" in lib.tree_problem(spec, _facts(inputs_differ_from_commit=True))
+    assert "uncommitted" in lib.tree_problem(spec, _facts(inputs_uncommitted=True))
+
+
+def test_the_head_equals_commit_rule_still_holds_where_a_set_declares_it():
+    spec = lib.ArmSpec("X", "deadbee", "repo", "repo_head_equals_commit")
     assert lib.tree_problem(spec, _facts()) is None
     assert "repo tree is at" in lib.tree_problem(spec, _facts(head="other"))
     assert "uncommitted" in lib.tree_problem(spec, _facts(inputs_uncommitted=True))

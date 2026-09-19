@@ -237,7 +237,10 @@ ARM_SETS: dict[str, tuple[ArmSpec, ...]] = {
     "2g": (
         ArmSpec("A", ARM_A_COMMIT, "worktree", "worktree_at_commit"),
         ArmSpec("B", ARM_B_COMMIT, "worktree", "worktree_at_commit"),
-        ArmSpec("D", ARM_D_COMMIT, "repo", "repo_head_equals_commit"),
+        # An arm is its inputs, not the commit id of the tree they sit in: the
+        # pre-flight commit moves HEAD by design, and engine/ and review_specs/
+        # are what make D the fold (2g P3, H2 corrected).
+        ArmSpec("D", ARM_D_COMMIT, "repo", "repo_inputs_equal_commit"),
     ),
 }
 

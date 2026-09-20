@@ -603,7 +603,11 @@ class ReviewDatabase:
 
         Returns counts of papers reset, spans deleted, and extractions deleted.
         """
-        auto_backup(self.db_path, "pre-reset")
+        backup = auto_backup(self._conn, "pre-reset")
+        logger.info(
+            "Pre-reset backup verified: %s (%d tables, overall=%s)",
+            backup.path.name, backup.table_count, backup.overall_sha256[:16],
+        )
 
         try:
             self._conn.execute("BEGIN")
@@ -987,7 +991,14 @@ class ReviewDatabase:
 
         Returns the number of deleted rows.
         """
-        auto_backup(self.db_path, "pre-orphan-cleanup")
+        # Through this connection, not the path: the backup then captures what
+        # this connection can see, rather than depending on the fact that no
+        # write has been issued yet (SAFE-GROUND-01).
+        backup = auto_backup(self._conn, "pre-orphan-cleanup")
+        logger.info(
+            "Pre-cleanup backup verified: %s (%d tables, overall=%s)",
+            backup.path.name, backup.table_count, backup.overall_sha256[:16],
+        )
 
         result = self._conn.execute(
             """DELETE FROM evidence_spans

@@ -156,8 +156,13 @@ def cleanup_stale_extractions(
         )
         return summary
 
-    # Back up before destructive operations
-    auto_backup(db.db_path, "pre-cleanup")
+    # Back up before destructive operations. Through the connection the
+    # deletions below run on, so the backup is of what that connection sees.
+    backup = auto_backup(conn, "pre-cleanup")
+    logger.info(
+        "Pre-cleanup backup verified: %s (%d tables, overall=%s)",
+        backup.path.name, backup.table_count, backup.overall_sha256[:16],
+    )
 
     # Execute deletions + status resets in a single atomic transaction
     try:

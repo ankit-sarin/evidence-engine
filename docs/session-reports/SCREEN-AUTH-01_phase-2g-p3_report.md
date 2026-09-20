@@ -212,3 +212,35 @@ byte, as a check and as a test.
 No ruling on D. The arm-D re-smoke is measured and reported; what follows from it is the
 architect's. Untouched: the verifier and FT exclusion-basis rendering, SCREEN-INPUT-01, 2d
 provenance, 2e categorizer, and Part 2 of the reading sheet.
+
+## 10. Ruling (architect, 2026-09-20)
+
+**D: NO-GO under the pre-registered rule.** HEAD `1ec513c` stands; nothing is reverted.
+
+The rendered exclusion-basis bar is an **inert surface**: declared in the spec, rendered in the
+prompt and hash-enforced on three frozen surfaces, and **not obeyed by qwen3:8b at abstract
+primary**. Abstract-stage output under D is OUT or FLAGGED only — the verifier overturned 37 of
+37 primary INs.
+
+**No further wording changes to the abstract-primary prompt.** Rewording is not the lever; the
+2f fold and this re-smoke have now tested both directions of it.
+
+Next attempts are **separate items, not queued here** — the architect's big-picture review
+prioritises them:
+
+- a **code-enforced** exclusion basis: a criterion id plus an evidence quote, verified against
+  the abstract before the decision is accepted;
+- a **C1-only ablation** (system-message framing alone);
+- a **primary-model change**, after the Ollama reliability section;
+- or **accept triage** as the abstract stage's job and measure recall at full text against the
+  corpus statuses.
+
+### Failed premises from this lane (Appendix A rows)
+
+| premise | what disk showed |
+|---|---|
+| "rendering the bar restores recall" (2g Part 1) | 1 of 12 SILENT papers returned; D reaches IN 0 times in 86 |
+| "C5 removal is the mechanism" | insufficient: restoring the bar did not restore the decisions |
+| "the 2f harness runs any arm from a named tree" | only arm A; arm B was the repo tree pinned to `61326fa` |
+| "arm D = HEAD at a commit id" | an arm is its inputs; the mandatory pre-flight commit moves HEAD |
+| "qwen3:8b at num_ctx 4,096" | no `num_ctx` is sent; the server default context is 40,960 |

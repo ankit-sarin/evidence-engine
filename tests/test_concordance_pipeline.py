@@ -24,58 +24,86 @@ from engine.analysis.scoring import FieldScore, score_pair
 
 
 class TestCohensKappa:
+    """Kappa over LABEL SEQUENCES (INSTRUMENTS-01).
+
+    Every test in this class used to pass the scorer's collapsed verdicts and
+    assert a RANGE — `== 1.0`, `== 0.0`, `0 < k < 1`, `isnan`. Not one asserted
+    a value against a reference, which is exactly why a kappa that was really
+    `1 - 1/(2*p_o)` survived here for sixty-three published figures. The
+    reference checks live in tests/test_kappa.py; what remains here is the
+    shape of the result on the simple cases, now stated as exact values.
+    """
+
     def test_perfect_agreement(self):
-        scores = [FieldScore("MATCH", "")] * 10
-        kr = cohens_kappa(scores)
+        """OLD: ten MATCH verdicts -> kappa 1.0.
+
+        NEW: ten identical labels from ONE category is the undefined case —
+        p_e is 1 and kappa is 0/0. sklearn returns nan here too. Two labels in
+        perfect agreement is the case that gives 1.0.
+        """
+        degenerate = cohens_kappa(["a"] * 10, ["a"] * 10)
+        assert math.isnan(degenerate.kappa)
+        assert degenerate.undefined_reason is not None
+
+        kr = cohens_kappa(["a"] * 5 + ["b"] * 5, ["a"] * 5 + ["b"] * 5)
         assert kr.kappa == 1.0
         assert kr.n == 10
         assert kr.n_agree == 10
         assert kr.n_disagree == 0
 
     def test_no_agreement(self):
-        scores = [FieldScore("MISMATCH", "")] * 10
-        kr = cohens_kappa(scores)
-        # With binary agree/disagree kappa and 100% disagree,
-        # p_e = 0^2 + 1^2 = 1.0, so kappa is degenerate (0/0 → 0.0)
-        assert kr.kappa == 0.0
+        """OLD: ten MISMATCH verdicts -> 0.0 via a p_e of 1 on the verdicts.
+
+        NEW: total disagreement on two labels is kappa -1.0, the floor.
+        """
+        kr = cohens_kappa(["a"] * 5 + ["b"] * 5, ["b"] * 5 + ["a"] * 5)
+        assert kr.kappa == -1.0
         assert kr.n_disagree == 10
 
     def test_mixed_agreement(self):
-        scores = [FieldScore("MATCH", "")] * 7 + [FieldScore("MISMATCH", "")] * 3
-        kr = cohens_kappa(scores)
-        assert 0 < kr.kappa < 1.0
+        """OLD: `assert 0 < kr.kappa < 1.0` — a range, satisfied by anything."""
+        kr = cohens_kappa(["a"] * 7 + ["b"] * 3, ["a"] * 8 + ["b"] * 2)
+        assert kr.kappa == 0.7368          # exact, = sklearn
         assert kr.n == 10
-        assert kr.n_agree == 7
-        assert kr.n_disagree == 3
-
-    def test_ambiguous_excluded_from_n(self):
-        scores = [
-            FieldScore("MATCH", ""),
-            FieldScore("MATCH", ""),
-            FieldScore("AMBIGUOUS", ""),
-            FieldScore("MISMATCH", ""),
-        ]
-        kr = cohens_kappa(scores)
-        assert kr.n == 3  # AMBIGUOUS excluded
-        assert kr.n_ambiguous == 1
-        assert kr.n_agree == 2
+        assert kr.n_agree == 9
         assert kr.n_disagree == 1
+        assert kr.n_categories == 2
+
+    def test_every_pair_counts_including_scorer_ambiguity(self):
+        """OLD: AMBIGUOUS verdicts were dropped from kappa's denominator.
+
+        An ambiguous verdict is a statement about the SCORER's confidence, not
+        about what the two raters wrote — and their labels are known either
+        way, so the pair belongs in the marginals.
+        """
+        scores = [
+            FieldScore("MATCH", "", "a", "a"),
+            FieldScore("MATCH", "", "a", "a"),
+            FieldScore("AMBIGUOUS", "", "a", "b"),
+            FieldScore("MISMATCH", "", "b", "a"),
+        ]
+        fs = field_summary("f", scores)
+        assert fs.kappa_n == 4, "kappa sees all four"
+        assert fs.n == 3, "the scorer's decisive denominator still excludes AMBIGUOUS"
+        assert fs.n_ambiguous == 1
 
     def test_empty_scores(self):
-        kr = cohens_kappa([])
+        kr = cohens_kappa([], [])
         assert math.isnan(kr.kappa)
         assert kr.n == 0
+        assert kr.undefined_reason == "no aligned pairs"
 
     def test_all_ambiguous(self):
-        scores = [FieldScore("AMBIGUOUS", "")] * 5
-        kr = cohens_kappa(scores)
-        assert math.isnan(kr.kappa)
-        assert kr.n == 0
-        assert kr.n_ambiguous == 5
+        """Scorer-ambiguous throughout still has labels, so kappa is defined."""
+        scores = [FieldScore("AMBIGUOUS", "", "a", "b")] * 3 + \
+                 [FieldScore("AMBIGUOUS", "", "b", "a")] * 2
+        fs = field_summary("f", scores)
+        assert fs.kappa_n == 5
+        assert math.isnan(fs.percent_agreement), "no decisive verdicts"
+        assert not math.isnan(fs.kappa)
 
     def test_ci_bounds(self):
-        scores = [FieldScore("MATCH", "")] * 8 + [FieldScore("MISMATCH", "")] * 2
-        kr = cohens_kappa(scores)
+        kr = cohens_kappa(["a"] * 8 + ["b"] * 2, ["a"] * 7 + ["b"] * 3)
         assert kr.ci_lower <= kr.kappa <= kr.ci_upper
 
 
@@ -181,16 +209,21 @@ class TestPipelineWithMockData:
         a = {1: "H", 2: "R", 3: "Shared"}
         b = {1: "H", 2: "R", 3: "Shared"}
         scores = self._build_scores(a, b, "task_monitor")
-        kr = cohens_kappa(scores)
-        assert kr.kappa == 1.0
-        assert kr.n == 3
+        fs = field_summary("task_monitor", scores)
+        assert fs.kappa == 1.0
+        assert fs.kappa_n == 3
+        assert fs.n_categories == 3
 
     def test_all_mismatch_categorical(self):
         a = {1: "H", 2: "R", 3: "Shared"}
         b = {1: "R", 2: "Shared", 3: "H"}
         scores = self._build_scores(a, b, "task_monitor")
-        kr = cohens_kappa(scores)
-        assert kr.kappa == 0.0  # degenerate: p_e = 1.0
+        fs = field_summary("task_monitor", scores)
+        # OLD: 0.0, because collapsing to three MISMATCH verdicts made p_e 1.0.
+        # NEW: three labels, identical marginals, zero agreement -> p_e = 1/3
+        # and kappa = -0.5. Systematic disagreement is worse than chance, and
+        # the old collapse could not express that.
+        assert fs.kappa == -0.5
 
     def test_nr_handling_both_absent(self):
         """NR vs NOT_FOUND → MATCH across pipeline."""
@@ -228,9 +261,10 @@ class TestPipelineWithMockData:
         assert scores[1].result == "MATCH"  # exact single value
         assert scores[2].result == "AMBIGUOUS"  # subset
 
-        kr = cohens_kappa(scores)
-        assert kr.n == 2  # 2 decisive (AMBIGUOUS excluded)
-        assert kr.n_ambiguous == 1
+        fs = field_summary("validation_setting", scores)
+        assert fs.n == 2, "the scorer's decisive denominator still excludes AMBIGUOUS"
+        assert fs.n_ambiguous == 1
+        assert fs.kappa_n == 3, "kappa sees every pair; the labels are known"
 
     def test_free_text_substring_through_pipeline(self):
         a = {1: "da Vinci Xi", 2: "KUKA iiwa"}

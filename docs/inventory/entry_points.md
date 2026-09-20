@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `b8a83b17d6dd1a76e82ec375bffd64cfb08eca13` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `ed0d92ad844526b5c763d294efe1f0596a07abcd` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -259,7 +259,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/eval/elicit01/runner.py` | 139 | `surgical_autonomy` |
 | `analysis/eval/run_screen2f.py` | 57 | `surgical_autonomy` |
 | `analysis/paper1/judge_codebook_smoke.py` | 1167 | `surgical_autonomy` |
-| `engine/analysis/normalize.py` | 49 | `surgical_autonomy` |
+| `engine/analysis/normalize.py` | 60 | `surgical_autonomy` |
 | `engine/analysis/report.py` | 27 | `surgical_autonomy` |
 | `engine/migrations/003_backfill_expanded_screening.py` | 19 | `surgical_autonomy` |
 | `engine/migrations/004_pdf_quality_check.py` | 77 | `surgical_autonomy` |
@@ -295,7 +295,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | file | line | name | value |
 |---|---:|---|---|
 | `analysis/eval/run_screen2f.py` | 57 | `REVIEW` | `surgical_autonomy` |
-| `engine/analysis/normalize.py` | 49 | `_FALLBACK_REVIEW_ID` | `surgical_autonomy` |
+| `engine/analysis/normalize.py` | 60 | `_FALLBACK_REVIEW_ID` | `surgical_autonomy` |
 | `scripts/advance_to_pdf_acquired.py` | 19 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/backfill_authors.py` | 23 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/backfill_cloud_spans.py` | 29 | `DEFAULT_REVIEW` | `surgical_autonomy` |

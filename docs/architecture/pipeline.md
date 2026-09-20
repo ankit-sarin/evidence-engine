@@ -360,8 +360,10 @@ python -m engine.validators.distribution_monitor --review surgical_autonomy --ar
    - Both None → MATCH; one None → MISMATCH
    - Sets: identical → MATCH; disjoint → MISMATCH; partial overlap → AMBIGUOUS (with Jaccard)
    - Categorical: exact → MATCH; else MISMATCH (no fuzzy)
-   - Free-text: exact → MATCH; substring containment → MATCH; Jaccard > 0.7 → AMBIGUOUS; else MISMATCH
-6. **Metrics:** `cohens_kappa()` — binary (MATCH/MISMATCH), AMBIGUOUS excluded from denominator but counted. Analytical SE (Fleiss, 1981) with 95% CI
+   - Numeric: both parsed as numbers → exact equality decides; differing `%` markers or only one parsable → AMBIGUOUS
+   - Free-text: exact → MATCH; both numeric → the numeric rule; whole-token containment → MATCH; Jaccard > 0.7 → AMBIGUOUS; else MISMATCH
+   - Polarity: a negation cue on exactly one side can never be MATCH
+6. **Metrics:** `cohens_kappa(labels_a, labels_b)` — Cohen's kappa from each rater's own label marginals over every aligned pair, scorer-ambiguous included; `percent_agreement` remains the scorer's verdict rate over decisive pairs, so the two are reported as separate columns. Analytical SE (Fleiss, 1981) with 95% CI; `nan` with an `undefined_reason` when kappa is 0/0
 7. **Reports:** Terminal summary table, `concordance_summary.csv`, `disagreements.csv`, `concordance_report.html` (branded, color-coded kappa, expandable disagreement sections)
 
 **CLI:**

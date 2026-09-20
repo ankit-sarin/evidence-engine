@@ -19,9 +19,29 @@ from engine.analysis.scoring import FieldScore, score_pair
 class TestNullHandling:
     """NR / null synonyms all normalize to None."""
 
-    @pytest.mark.parametrize("raw", [None, "", "NR", "N/R", "Not reported", "NOT_FOUND", "none", "N/A"])
+    @pytest.mark.parametrize("raw", [
+        None, "", "NR", "Not reported", "NOT_FOUND", "N/A",
+        "NA", "not found",  # codebook sentinels the old hardcoded set LACKED
+    ])
     def test_null_synonyms(self, raw):
+        """Absence comes from the codebook's `absence_sentinels` now.
+
+        OLD: a hardcoded `_NULL_SYNONYMS` that lacked `NA` and `NOT FOUND` —
+        both declared absence sentinels — and carried `N/R` and `none`, neither
+        of which the codebook declares.
+        """
         assert normalize_for_concordance("autonomy_level", raw) is None
+
+    def test_none_is_a_value_not_an_absence(self):
+        """OLD: 'none' normalized to None, so 'none' meant 'not reported'.
+
+        It is a value: "none" can mean no complications, and reading it as a
+        gap turns a finding into a missing datum (INSTRUMENTS-01).
+        """
+        assert normalize_for_concordance("key_limitation", "none") == "none"
+
+    def test_a_sentinel_the_codebook_does_not_declare_is_a_value(self):
+        assert normalize_for_concordance("key_limitation", "N/R") == "n/r"
 
     def test_whitespace_only_is_null(self):
         assert normalize_for_concordance("autonomy_level", "   ") is None
@@ -95,14 +115,28 @@ class TestSurgicalDomainMultiValue:
 
 
 class TestNumericFields:
-    def test_sample_size_strips_nonnumeric(self):
-        assert normalize_for_concordance("sample_size", "n=42") == "42"
+    def test_numeric_normalization_no_longer_deletes_characters(self):
+        r"""OLD: `re.sub(r"[^\d]", "", raw)` — every non-digit deleted.
+
+        That made "2.5" into "25", "-5" into "5" and "50-60" into "5060", and
+        returned a string, so "2.5" and "25" compared EQUAL. Normalization now
+        canonicalizes the text and leaves interpreting the number to
+        `scoring.parse_number` (INSTRUMENTS-01).
+        """
+        assert normalize_for_concordance("sample_size", "n=42") == "n=42"
+        assert normalize_for_concordance("sample_size", " 100 patients ") == "100 patients"
+        assert normalize_for_concordance("sample_size", "2.5") == "2.5"
+        assert normalize_for_concordance("sample_size", "-5") == "-5"
 
     def test_sample_size_pure_integer(self):
         assert normalize_for_concordance("sample_size", "10") == "10"
 
-    def test_sample_size_with_spaces(self):
-        assert normalize_for_concordance("sample_size", " 100 patients ") == "100"
+    def test_the_numbers_still_compare_equal_through_score_pair(self):
+        """What the old normalization was FOR still works — one layer down."""
+        assert score_pair("sample_size", "n=42", "42 patients").result == "MATCH"
+        assert score_pair("sample_size", " 100 patients ", "100").result == "MATCH"
+        assert score_pair("sample_size", "2.5", "25").result == "MISMATCH"
+        assert score_pair("sample_size", "-5", "5").result == "MISMATCH"
 
     def test_primary_outcome_value_passthrough(self):
         result = normalize_for_concordance("primary_outcome_value", "  0.95 mm  ")
@@ -200,10 +234,30 @@ class TestScorePairFreeText:
         assert s.result == "MATCH"
 
     def test_substring_containment(self):
-        """'da Vinci Xi' vs 'da Vinci Xi (Intuitive Surgical)' → MATCH."""
+        """'da Vinci Xi' vs 'da Vinci Xi (Intuitive Surgical)' → MATCH.
+
+        The case the containment rule was written for, and the one it must keep
+        (INSTRUMENTS-01). What changed is that containment is now measured in
+        whole tokens; this pair still contains one inside the other.
+        """
         s = score_pair("robot_platform", "da Vinci Xi", "da Vinci Xi (Intuitive Surgical)")
         assert s.result == "MATCH"
-        assert "substring" in s.detail
+        assert "containment" in s.detail
+
+    def test_containment_does_not_cross_word_boundaries(self):
+        """The negatives the old raw-substring rule matched (INSTRUMENTS-01).
+
+        OLD: `if a in b` on the raw string, so 'cid' matched 'acidosis' and
+        '5' matched '50'. NEW: containment counts only as a run of whole tokens.
+        """
+        assert score_pair("robot_platform", "cid", "acidosis").result != "MATCH"
+        assert score_pair("robot_platform", "Raven", "Ravensbourne").result != "MATCH"
+
+    def test_containment_cannot_match_across_a_negation(self):
+        """OLD: 'benefit' is a substring of 'no benefit', so they matched."""
+        s = score_pair("key_limitation", "benefit", "no benefit")
+        assert s.result != "MATCH"
+        assert "negation" in s.detail
 
     def test_no_overlap_mismatch(self):
         s = score_pair("robot_platform", "KUKA iiwa", "Raven II")

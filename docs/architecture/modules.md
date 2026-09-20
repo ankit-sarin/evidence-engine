@@ -247,11 +247,11 @@ All acquisition modules use `ReviewDatabase` as a context manager. Terminal stat
 
 ### `scoring.py`
 **Purpose:** Field-pair scoring.
-- `score_pair(field_name, value_a, value_b, spec)` — MATCH/MISMATCH/AMBIGUOUS. Categorical: exact only. Free-text: substring + Jaccard > 0.7. Sets: identical/disjoint/partial
+- `score_pair(field_name, value_a, value_b, spec)` — MATCH/MISMATCH/AMBIGUOUS, carrying the normalized labels it judged (`norm_a`/`norm_b`). Categorical: exact only. Numeric: parsed and compared as numbers, exact equality, differing `%` markers → AMBIGUOUS. Free-text: numbers first, then whole-token containment, then Jaccard > 0.7; a negation cue on one side only can never be MATCH (`NEGATION_CUES`). Sets: identical/disjoint/partial
 
 ### `metrics.py`
 **Purpose:** Agreement statistics.
-- `cohens_kappa(scores)` — Binary (MATCH/MISMATCH), AMBIGUOUS excluded from denominator. Fleiss 1981 SE with 95% CI
+- `cohens_kappa(labels_a, labels_b)` — Cohen's kappa over two aligned label sequences; `p_e` from each rater's own marginals. Every pair counts, scorer-ambiguous included. Fleiss 1981 SE with 95% CI. Returns `nan` with an `undefined_reason` when both raters used one identical label (0/0). Checked against `sklearn.metrics.cohen_kappa_score`
 - `percent_agreement(scores)` — p(MATCH) among decisive pairs
 - `field_summary(field_name, scores)` — Combined metrics
 

@@ -4586,7 +4586,7 @@
         "has_main_guard": false,
         "literal_review_ids": [
           {
-            "line": 49,
+            "line": 60,
             "role": "code",
             "value": "surgical_autonomy"
           }
@@ -4597,7 +4597,7 @@
         "review_database": [],
         "review_id_constants": [
           {
-            "line": 49,
+            "line": 60,
             "name": "_FALLBACK_REVIEW_ID",
             "value": "surgical_autonomy"
           }
@@ -7922,7 +7922,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "b8a83b17d6dd1a76e82ec375bffd64cfb08eca13",
+    "generated_at_commit": "ed0d92ad844526b5c763d294efe1f0596a07abcd",
     "scan_roots": [
       "engine",
       "scripts",

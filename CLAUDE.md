@@ -364,6 +364,9 @@ python -m engine.utils.extraction_cleanup --review surgical_autonomy --confirm #
 # Post-extraction validation
 python -m engine.validators.extraction_validator --review surgical_autonomy
 
+# Database content fingerprint (read-only; the open/close integrity check)
+python -m engine.tools.db_fingerprint data/surgical_autonomy/review.db [--out fp.json] [--compare fp.json]
+
 # Ollama pre-flight
 python -m engine.utils.ollama_preflight --models qwen3.5:27b gemma3:27b deepseek-r1:32b
 

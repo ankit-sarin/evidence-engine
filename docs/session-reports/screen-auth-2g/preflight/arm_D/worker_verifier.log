@@ -1,0 +1,6 @@
+==== 2026-09-19T23:24:54.996292Z /home/ankitsarin/projects/evidence-engine/.venv/bin/python -P /home/ankitsarin/projects/evidence-engine/analysis/eval/screen2f_worker.py --arm D --root /home/ankitsarin/projects/evidence-engine --spec /home/ankitsarin/projects/evidence-engine/review_specs/surgical_autonomy.yaml --phase verifier --out-dir /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2g/preflight/arm_D --papers /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/papers_86.jsonl --ids 18,290,579 --lead-minutes 10 --forced-verifier-ids 579
+2026-09-19 23:24:55,397 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/show "HTTP/1.1 200 OK"
+2026-09-19 23:25:05,012 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:25:05,013 INFO engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 131072, "chars": 5869, "count": 1216, "done_reason": "stop", "estimate_low": 1115, "model": "gemma3:27b", "ratio": 0.2072}
+2026-09-19 23:25:05,027 INFO screen2f.worker.D: verifier paper 579: exclude -> FLAGGED
+2026-09-19 23:25:05,027 INFO screen2f.worker.D: phase verifier status done

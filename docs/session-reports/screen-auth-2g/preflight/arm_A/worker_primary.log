@@ -1,0 +1,11 @@
+==== 2026-09-19T23:23:20.410060Z /home/ankitsarin/projects/evidence-engine/.venv/bin/python -P /home/ankitsarin/projects/evidence-engine/analysis/eval/screen2f_worker.py --arm A --root /home/ankitsarin/worktrees/evidence-engine-83defc5 --spec /home/ankitsarin/worktrees/evidence-engine-83defc5/review_specs/surgical_autonomy.yaml --phase primary --out-dir /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2g/preflight/arm_A --papers /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/papers_86.jsonl --ids 18,290,579 --lead-minutes 10
+2026-09-19 23:23:24,444 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:23:26,884 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:23:26,898 INFO screen2f.worker.A: primary paper 18: d1=include d2=exclude -> FLAGGED
+2026-09-19 23:23:28,989 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:23:31,030 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:23:31,044 INFO screen2f.worker.A: primary paper 290: d1=include d2=include -> IN
+2026-09-19 23:23:34,406 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:23:38,304 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:23:38,319 INFO screen2f.worker.A: primary paper 579: d1=include d2=include -> IN
+2026-09-19 23:23:38,319 INFO screen2f.worker.A: phase primary status done

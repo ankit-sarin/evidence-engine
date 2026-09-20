@@ -1,0 +1,101 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "check": "A.primary placeholder hash",
+      "ok": true,
+      "detail": {
+        "got": "33bdeea91007fb81f2401566f01bc05b6a3c0315db003f41c6dcd4c8808abee3",
+        "want": "33bdeea91007fb81f2401566f01bc05b6a3c0315db003f41c6dcd4c8808abee3"
+      }
+    },
+    {
+      "check": "A.verifier placeholder hash",
+      "ok": true,
+      "detail": {
+        "got": "2c89ef61c690d0c544408f34ee6ea80702520f8cd5a9b1b61da93b6223c4d5f8",
+        "want": "2c89ef61c690d0c544408f34ee6ea80702520f8cd5a9b1b61da93b6223c4d5f8"
+      }
+    },
+    {
+      "check": "B.primary placeholder hash",
+      "ok": true,
+      "detail": {
+        "got": "e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649",
+        "want": "e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649"
+      }
+    },
+    {
+      "check": "B.verifier placeholder hash",
+      "ok": true,
+      "detail": {
+        "got": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+        "want": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3"
+      }
+    },
+    {
+      "check": "D.primary placeholder hash",
+      "ok": true,
+      "detail": {
+        "got": "a84e1a72adc8bc2143c4f3daa4c95af7a518814d61dc2a0bef9f744f80da8642",
+        "want": "a84e1a72adc8bc2143c4f3daa4c95af7a518814d61dc2a0bef9f744f80da8642"
+      }
+    },
+    {
+      "check": "D.verifier placeholder hash",
+      "ok": true,
+      "detail": {
+        "got": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+        "want": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3"
+      }
+    },
+    {
+      "check": "primary call options identical across arms",
+      "ok": true,
+      "detail": {
+        "A": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        },
+        "B": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        },
+        "D": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        }
+      }
+    },
+    {
+      "check": "verifier call options identical across arms",
+      "ok": true,
+      "detail": {
+        "A": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        },
+        "B": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        },
+        "D": {
+          "options": {
+            "temperature": 0
+          },
+          "think": false
+        }
+      }
+    }
+  ]
+}

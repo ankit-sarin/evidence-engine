@@ -1,0 +1,18 @@
+==== 2026-09-19T23:23:58.912094Z /home/ankitsarin/projects/evidence-engine/.venv/bin/python -P /home/ankitsarin/projects/evidence-engine/analysis/eval/screen2f_worker.py --arm D --root /home/ankitsarin/projects/evidence-engine --spec /home/ankitsarin/projects/evidence-engine/review_specs/surgical_autonomy.yaml --phase primary --out-dir /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2g/preflight/arm_D --papers /home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/papers_86.jsonl --ids 18,290,579 --lead-minutes 10
+2026-09-19 23:23:59,191 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/show "HTTP/1.1 200 OK"
+2026-09-19 23:24:02,519 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:24:02,520 INFO engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 40960, "chars": 4823, "count": 1043, "done_reason": "stop", "estimate_low": 916, "model": "qwen3:8b", "ratio": 0.2163}
+2026-09-19 23:24:05,896 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:24:05,897 INFO engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 40960, "chars": 4823, "count": 1043, "done_reason": "stop", "estimate_low": 916, "model": "qwen3:8b", "ratio": 0.2163}
+2026-09-19 23:24:05,911 INFO screen2f.worker.D: primary paper 18: d1=exclude d2=exclude -> OUT
+2026-09-19 23:24:09,037 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:24:09,038 INFO engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 40960, "chars": 3938, "count": 838, "done_reason": "stop", "estimate_low": 748, "model": "qwen3:8b", "ratio": 0.2128}
+2026-09-19 23:24:12,071 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:24:12,071 INFO engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 40960, "chars": 3938, "count": 838, "done_reason": "stop", "estimate_low": 748, "model": "qwen3:8b", "ratio": 0.2128}
+2026-09-19 23:24:12,085 INFO screen2f.worker.D: primary paper 290: d1=exclude d2=exclude -> OUT
+2026-09-19 23:24:15,616 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:24:15,617 INFO engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 40960, "chars": 4943, "count": 1037, "done_reason": "stop", "estimate_low": 939, "model": "qwen3:8b", "ratio": 0.2098}
+2026-09-19 23:24:19,473 INFO httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-19 23:24:19,474 INFO engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 40960, "chars": 4943, "count": 1037, "done_reason": "stop", "estimate_low": 939, "model": "qwen3:8b", "ratio": 0.2098}
+2026-09-19 23:24:19,488 INFO screen2f.worker.D: primary paper 579: d1=include d2=include -> IN
+2026-09-19 23:24:19,488 INFO screen2f.worker.D: phase primary status done

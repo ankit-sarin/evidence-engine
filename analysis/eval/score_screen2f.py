@@ -476,9 +476,9 @@ def rule_section(verdicts_path: Path, recs: dict[str, dict[int, dict]],
 # ── timing ────────────────────────────────────────────────────────────
 
 
-def timing(run_dir: Path, recs: dict[str, dict[int, dict]]) -> dict:
+def timing(run_dir: Path, recs: dict[str, dict[int, dict]], arm_set: str = "2f") -> dict:
     by_model: dict[str, list[dict]] = {}
-    for arm in lib.ARMS:
+    for arm in lib.arm_names(arm_set):
         for r in recs[arm].values():
             for c in (r or {}).get("calls", []):
                 by_model.setdefault(c["call"].get("model"), []).append(c["call"])
@@ -548,7 +548,7 @@ def score(run_dir: Path, workbook: Path, out_dir: Path, arm_set: str = "2f",
     lists = disagreement_lists(labels, recs, arm_set)
     result["disagreement_counts"] = {k: len(v) for k, v in lists.items()}
     result["workbook_vs_arm_A"] = workbook_vs_arm_a(labels, recs["A"])
-    result["timing"] = timing(run_dir, recs)
+    result["timing"] = timing(run_dir, recs, arm_set)
     if stability_baseline is not None:
         result["stability_control"] = stability(stability_baseline, recs,
                                                 [a for a in names if a in ("A", "B")])

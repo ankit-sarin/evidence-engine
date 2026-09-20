@@ -1,0 +1,730 @@
+{
+  "definitions": "* final outcome: primary OUT or FLAGGED stands; primary IN takes the\n    verifier's outcome (IN if it includes, FLAGGED otherwise). ERROR is a call\n    that failed after the client's own retries.\n  * PI-consistent final: IN for a PI include, OUT for a PI exclude. FLAGGED is\n    never PI-consistent; it is a deferral to a human.\n  * sensitivity is over PI includes, specificity over PI excludes, each under\n    three treatments of FLAGGED: counted as include, counted as exclude, and\n    dropped (decided papers only). ERROR papers are dropped from all three and\n    counted.\n  * d1≠d2 rate: papers whose two primary passes both parsed and disagreed,\n    over papers whose two passes both parsed.\n  * verifier overturn rate: primary-IN papers the verifier did not keep IN,\n    over primary-IN papers with a verifier result.\n  * agreement between arms: exact match on the three-valued outcome, with\n    Cohen's kappa over the categories observed.",
+  "n": 86,
+  "pi_counts": {
+    "exclude": 79,
+    "include": 7
+  },
+  "call_pattern_problems": {
+    "A": [],
+    "B": [],
+    "D": []
+  },
+  "arms": {
+    "A": {
+      "confusion_final_x_PI": {
+        "IN": {
+          "include": 2,
+          "exclude": 2
+        },
+        "OUT": {
+          "include": 0,
+          "exclude": 5
+        },
+        "FLAGGED": {
+          "include": 5,
+          "exclude": 72
+        },
+        "ERROR": {
+          "include": 0,
+          "exclude": 0
+        },
+        "MISSING": {
+          "include": 0,
+          "exclude": 0
+        }
+      },
+      "flagged_as_include": {
+        "flagged_as": "include",
+        "tp": 7,
+        "fn": 0,
+        "tn": 5,
+        "fp": 74,
+        "dropped_flagged": 0,
+        "dropped_error_or_missing": 0,
+        "sensitivity": 1.0,
+        "sensitivity_ci95": [
+          0.6457,
+          1.0
+        ],
+        "specificity": 0.0633,
+        "specificity_ci95": [
+          0.0273,
+          0.1398
+        ],
+        "balanced_accuracy": 0.5316
+      },
+      "flagged_as_exclude": {
+        "flagged_as": "exclude",
+        "tp": 2,
+        "fn": 5,
+        "tn": 77,
+        "fp": 2,
+        "dropped_flagged": 0,
+        "dropped_error_or_missing": 0,
+        "sensitivity": 0.2857,
+        "sensitivity_ci95": [
+          0.0822,
+          0.6411
+        ],
+        "specificity": 0.9747,
+        "specificity_ci95": [
+          0.9123,
+          0.993
+        ],
+        "balanced_accuracy": 0.6302
+      },
+      "decided_only": {
+        "flagged_as": "dropped",
+        "tp": 2,
+        "fn": 0,
+        "tn": 5,
+        "fp": 2,
+        "dropped_flagged": 77,
+        "dropped_error_or_missing": 0,
+        "sensitivity": 1.0,
+        "sensitivity_ci95": [
+          0.3424,
+          1.0
+        ],
+        "specificity": 0.7143,
+        "specificity_ci95": [
+          0.3589,
+          0.9178
+        ],
+        "balanced_accuracy": 0.8571
+      },
+      "rates": {
+        "papers": 86,
+        "final_counts": {
+          "FLAGGED": 77,
+          "IN": 4,
+          "OUT": 5
+        },
+        "primary_counts": {
+          "IN": 81,
+          "OUT": 5
+        },
+        "flag_rate": 0.8953,
+        "d1_ne_d2": 0,
+        "d1_ne_d2_of": 86,
+        "d1_ne_d2_rate": 0.0,
+        "verifier_overturned": 77,
+        "verifier_ran": 81,
+        "verifier_overturn_rate": 0.9506,
+        "calls": 253,
+        "parse_error_calls": 0,
+        "parse_error_call_rate": 0.0,
+        "papers_with_parse_error": 0,
+        "error_calls": 0,
+        "reprocessed_after_interrupt": 0
+      }
+    },
+    "B": {
+      "confusion_final_x_PI": {
+        "IN": {
+          "include": 1,
+          "exclude": 0
+        },
+        "OUT": {
+          "include": 4,
+          "exclude": 43
+        },
+        "FLAGGED": {
+          "include": 2,
+          "exclude": 36
+        },
+        "ERROR": {
+          "include": 0,
+          "exclude": 0
+        },
+        "MISSING": {
+          "include": 0,
+          "exclude": 0
+        }
+      },
+      "flagged_as_include": {
+        "flagged_as": "include",
+        "tp": 3,
+        "fn": 4,
+        "tn": 43,
+        "fp": 36,
+        "dropped_flagged": 0,
+        "dropped_error_or_missing": 0,
+        "sensitivity": 0.4286,
+        "sensitivity_ci95": [
+          0.1582,
+          0.7495
+        ],
+        "specificity": 0.5443,
+        "specificity_ci95": [
+          0.435,
+          0.6495
+        ],
+        "balanced_accuracy": 0.4864
+      },
+      "flagged_as_exclude": {
+        "flagged_as": "exclude",
+        "tp": 1,
+        "fn": 6,
+        "tn": 79,
+        "fp": 0,
+        "dropped_flagged": 0,
+        "dropped_error_or_missing": 0,
+        "sensitivity": 0.1429,
+        "sensitivity_ci95": [
+          0.0257,
+          0.5131
+        ],
+        "specificity": 1.0,
+        "specificity_ci95": [
+          0.9536,
+          1.0
+        ],
+        "balanced_accuracy": 0.5714
+      },
+      "decided_only": {
+        "flagged_as": "dropped",
+        "tp": 1,
+        "fn": 4,
+        "tn": 43,
+        "fp": 0,
+        "dropped_flagged": 38,
+        "dropped_error_or_missing": 0,
+        "sensitivity": 0.2,
+        "sensitivity_ci95": [
+          0.0362,
+          0.6245
+        ],
+        "specificity": 1.0,
+        "specificity_ci95": [
+          0.918,
+          1.0
+        ],
+        "balanced_accuracy": 0.6
+      },
+      "rates": {
+        "papers": 86,
+        "final_counts": {
+          "OUT": 47,
+          "FLAGGED": 38,
+          "IN": 1
+        },
+        "primary_counts": {
+          "OUT": 47,
+          "IN": 39
+        },
+        "flag_rate": 0.4419,
+        "d1_ne_d2": 0,
+        "d1_ne_d2_of": 86,
+        "d1_ne_d2_rate": 0.0,
+        "verifier_overturned": 38,
+        "verifier_ran": 39,
+        "verifier_overturn_rate": 0.9744,
+        "calls": 211,
+        "parse_error_calls": 0,
+        "parse_error_call_rate": 0.0,
+        "papers_with_parse_error": 0,
+        "error_calls": 0,
+        "reprocessed_after_interrupt": 0
+      }
+    },
+    "D": {
+      "confusion_final_x_PI": {
+        "IN": {
+          "include": 0,
+          "exclude": 0
+        },
+        "OUT": {
+          "include": 4,
+          "exclude": 44
+        },
+        "FLAGGED": {
+          "include": 3,
+          "exclude": 35
+        },
+        "ERROR": {
+          "include": 0,
+          "exclude": 0
+        },
+        "MISSING": {
+          "include": 0,
+          "exclude": 0
+        }
+      },
+      "flagged_as_include": {
+        "flagged_as": "include",
+        "tp": 3,
+        "fn": 4,
+        "tn": 44,
+        "fp": 35,
+        "dropped_flagged": 0,
+        "dropped_error_or_missing": 0,
+        "sensitivity": 0.4286,
+        "sensitivity_ci95": [
+          0.1582,
+          0.7495
+        ],
+        "specificity": 0.557,
+        "specificity_ci95": [
+          0.4473,
+          0.6613
+        ],
+        "balanced_accuracy": 0.4928
+      },
+      "flagged_as_exclude": {
+        "flagged_as": "exclude",
+        "tp": 0,
+        "fn": 7,
+        "tn": 79,
+        "fp": 0,
+        "dropped_flagged": 0,
+        "dropped_error_or_missing": 0,
+        "sensitivity": 0.0,
+        "sensitivity_ci95": [
+          0.0,
+          0.3543
+        ],
+        "specificity": 1.0,
+        "specificity_ci95": [
+          0.9536,
+          1.0
+        ],
+        "balanced_accuracy": 0.5
+      },
+      "decided_only": {
+        "flagged_as": "dropped",
+        "tp": 0,
+        "fn": 4,
+        "tn": 44,
+        "fp": 0,
+        "dropped_flagged": 38,
+        "dropped_error_or_missing": 0,
+        "sensitivity": 0.0,
+        "sensitivity_ci95": [
+          0.0,
+          0.4899
+        ],
+        "specificity": 1.0,
+        "specificity_ci95": [
+          0.9197,
+          1.0
+        ],
+        "balanced_accuracy": 0.5
+      },
+      "rates": {
+        "papers": 86,
+        "final_counts": {
+          "OUT": 48,
+          "FLAGGED": 38
+        },
+        "primary_counts": {
+          "OUT": 48,
+          "IN": 37,
+          "FLAGGED": 1
+        },
+        "flag_rate": 0.4419,
+        "d1_ne_d2": 1,
+        "d1_ne_d2_of": 86,
+        "d1_ne_d2_rate": 0.0116,
+        "verifier_overturned": 37,
+        "verifier_ran": 37,
+        "verifier_overturn_rate": 1.0,
+        "calls": 209,
+        "parse_error_calls": 0,
+        "parse_error_call_rate": 0.0,
+        "papers_with_parse_error": 0,
+        "error_calls": 0,
+        "reprocessed_after_interrupt": 0
+      }
+    }
+  },
+  "agreement": {
+    "A-B": {
+      "final": {
+        "n": 86,
+        "agree": 43,
+        "pct": 0.5,
+        "kappa": 0.126,
+        "table": {
+          "FLAGGED->FLAGGED": 37,
+          "FLAGGED->OUT": 40,
+          "IN->FLAGGED": 1,
+          "IN->IN": 1,
+          "IN->OUT": 2,
+          "OUT->OUT": 5
+        }
+      },
+      "primary": {
+        "n": 86,
+        "agree": 44,
+        "pct": 0.5116,
+        "kappa": 0.0975,
+        "table": {
+          "IN->IN": 39,
+          "IN->OUT": 42,
+          "OUT->OUT": 5
+        }
+      }
+    },
+    "B-D": {
+      "final": {
+        "n": 86,
+        "agree": 73,
+        "pct": 0.8488,
+        "kappa": 0.6975,
+        "table": {
+          "FLAGGED->FLAGGED": 32,
+          "FLAGGED->OUT": 6,
+          "IN->OUT": 1,
+          "OUT->FLAGGED": 6,
+          "OUT->OUT": 41
+        }
+      },
+      "primary": {
+        "n": 86,
+        "agree": 73,
+        "pct": 0.8488,
+        "kappa": 0.6976,
+        "table": {
+          "IN->IN": 32,
+          "IN->OUT": 7,
+          "OUT->FLAGGED": 1,
+          "OUT->IN": 5,
+          "OUT->OUT": 41
+        }
+      }
+    },
+    "A-D": {
+      "final": {
+        "n": 86,
+        "agree": 43,
+        "pct": 0.5,
+        "kappa": 0.1258,
+        "table": {
+          "FLAGGED->FLAGGED": 38,
+          "FLAGGED->OUT": 39,
+          "IN->OUT": 4,
+          "OUT->OUT": 5
+        }
+      },
+      "primary": {
+        "n": 86,
+        "agree": 42,
+        "pct": 0.4884,
+        "kappa": 0.0902,
+        "table": {
+          "IN->FLAGGED": 1,
+          "IN->IN": 37,
+          "IN->OUT": 43,
+          "OUT->OUT": 5
+        }
+      }
+    }
+  },
+  "arm_set": "2g",
+  "pi_reference": {
+    "used_for_every_PI_metric": "corrected",
+    "workbook": "data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx",
+    "corrections_file": "docs/session-reports/screen-auth-2g/pi_verdicts_2f_part1.csv",
+    "uncorrected_tally": {
+      "exclude": 76,
+      "include": 10
+    },
+    "corrected_tally": {
+      "exclude": 79,
+      "include": 7
+    },
+    "applied": [
+      {
+        "paper_id": 569,
+        "label_after_full": "exclude",
+        "source": "pi_verdicts_2f_part1.csv",
+        "date": "",
+        "was": "include",
+        "now": "exclude",
+        "ee": "EE-417"
+      },
+      {
+        "paper_id": 170,
+        "label_after_full": "exclude",
+        "source": "pi_verdicts_2f_part1.csv",
+        "date": "",
+        "was": "include",
+        "now": "exclude",
+        "ee": "EE-070"
+      },
+      {
+        "paper_id": 702,
+        "label_after_full": "exclude",
+        "source": "pi_verdicts_2f_part1.csv",
+        "date": "",
+        "was": "include",
+        "now": "exclude",
+        "ee": "EE-550"
+      }
+    ]
+  },
+  "disagreement_counts": {
+    "any_arm_vs_PI": 81,
+    "A_vs_B": 43,
+    "B_vs_D": 13,
+    "A_vs_D": 43
+  },
+  "workbook_vs_arm_A": {
+    "primary_crosstab": {
+      "wb exclude / A d1 include / A d2 include": 3,
+      "wb include / A d1 exclude / A d2 exclude": 5,
+      "wb include / A d1 include / A d2 include": 78
+    },
+    "verifier_crosstab": {
+      "wb exclude / A verifier exclude": 76,
+      "wb exclude / A verifier include": 1,
+      "wb exclude / A verifier not called (primary OUT)": 3,
+      "wb include / A verifier exclude": 1,
+      "wb include / A verifier include": 3,
+      "wb include / A verifier not called (primary OUT)": 2
+    },
+    "rationale_text_comparison": {
+      "primary_vs_d1: different": 8,
+      "primary_vs_d1: first 40 chars equal only": 42,
+      "primary_vs_d1: workbook text is a prefix of arm A": 36,
+      "primary_vs_d2: different": 7,
+      "primary_vs_d2: first 40 chars equal only": 41,
+      "primary_vs_d2: workbook text is a prefix of arm A": 38,
+      "verifier: different": 4,
+      "verifier: first 40 chars equal only": 3,
+      "verifier: identical": 17,
+      "verifier: not comparable": 5,
+      "verifier: workbook text is a prefix of arm A": 57
+    },
+    "workbook_primary_reasoning_length_top": [
+      [
+        300,
+        75
+      ],
+      [
+        299,
+        11
+      ]
+    ]
+  },
+  "timing": {
+    "per_model": {
+      "qwen3:8b": {
+        "calls": 516,
+        "wall_mean_s": 3.453,
+        "wall_median_s": 3.335,
+        "wall_max_s": 7.117,
+        "wall_total_s": 1781.9,
+        "load_max_s": 2.395,
+        "calls_with_load_over_1s": 1
+      },
+      "gemma3:27b": {
+        "calls": 157,
+        "wall_mean_s": 10.278,
+        "wall_median_s": 10.197,
+        "wall_max_s": 17.033,
+        "wall_total_s": 1613.7,
+        "load_max_s": 4.728,
+        "calls_with_load_over_1s": 1
+      }
+    },
+    "started_utc": "2026-09-19T23:34:07.191502Z",
+    "ended_utc": "2026-09-20T00:30:52.325554Z",
+    "status": "COMPLETE",
+    "watch_file": {
+      "path": "data/surgical_autonomy/review.db",
+      "before": {
+        "size": 101978112,
+        "mtime_ns": 1789092052636956943
+      },
+      "after": {
+        "size": 101978112,
+        "mtime_ns": 1789092052636956943
+      }
+    },
+    "ollama_ps_at_boundaries": [
+      {
+        "at": "2026-09-19T23:34:07.928119Z",
+        "event": "phase_start",
+        "phase": "primary",
+        "arm": null,
+        "ollama_ps": [
+          [
+            "gemma3:27b",
+            30459802624,
+            131072
+          ]
+        ]
+      },
+      {
+        "at": "2026-09-20T00:03:54.970523Z",
+        "event": "phase_end",
+        "phase": "primary",
+        "arm": null,
+        "ollama_ps": [
+          [
+            "qwen3:8b",
+            11454255232,
+            40960
+          ]
+        ]
+      },
+      {
+        "at": "2026-09-20T00:03:54.984378Z",
+        "event": "phase_start",
+        "phase": "verifier",
+        "arm": null,
+        "ollama_ps": [
+          [
+            "qwen3:8b",
+            11454255232,
+            40960
+          ]
+        ]
+      },
+      {
+        "at": "2026-09-20T00:30:52.325389Z",
+        "event": "phase_end",
+        "phase": "verifier",
+        "arm": null,
+        "ollama_ps": [
+          [
+            "gemma3:27b",
+            30459802624,
+            131072
+          ]
+        ]
+      }
+    ],
+    "pauses": [],
+    "trees": {
+      "A": {
+        "root": "/home/ankitsarin/worktrees/evidence-engine-83defc5",
+        "head": "83defc554069c56516faa7093088bd633500216b",
+        "commit": "83defc5",
+        "rule": "worktree_at_commit",
+        "spec": "/home/ankitsarin/worktrees/evidence-engine-83defc5/review_specs/surgical_autonomy.yaml"
+      },
+      "B": {
+        "root": "/home/ankitsarin/worktrees/evidence-engine-61326fa",
+        "head": "61326fac2f35159bbec7dd83725ae5ed69e0b91a",
+        "commit": "61326fa",
+        "rule": "worktree_at_commit",
+        "spec": "/home/ankitsarin/worktrees/evidence-engine-61326fa/review_specs/surgical_autonomy.yaml"
+      },
+      "D": {
+        "root": "/home/ankitsarin/projects/evidence-engine",
+        "head": "19241b9b33dda6fdcc18f31c08ba94facbb40034",
+        "commit": "56c5c57",
+        "rule": "repo_inputs_equal_commit",
+        "spec": "/home/ankitsarin/projects/evidence-engine/review_specs/surgical_autonomy.yaml"
+      }
+    },
+    "papers": {
+      "path": "/home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/papers_86.jsonl",
+      "sha256": "8217b887e1c49aa7036a350694e25665d498f0c15a40b797e472125a5db09115"
+    },
+    "identity": {
+      "A": {
+        "primary": "33bdeea91007fb81f2401566f01bc05b6a3c0315db003f41c6dcd4c8808abee3",
+        "verifier": "2c89ef61c690d0c544408f34ee6ea80702520f8cd5a9b1b61da93b6223c4d5f8",
+        "screening_hash": "d804ced7bd4c45e872524ebfd4d55f3d093ff9d18db28cfee8e2f67f4c571ae9",
+        "engine_file": "/home/ankitsarin/worktrees/evidence-engine-83defc5/engine/__init__.py",
+        "models": {
+          "primary": "qwen3:8b",
+          "verification": "gemma3:27b"
+        }
+      },
+      "B": {
+        "primary": "e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649",
+        "verifier": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+        "screening_hash": "d563134ed6a92a8d0ee3e877574fcf844f7094889ec411f88e3285bb58a06a29",
+        "engine_file": "/home/ankitsarin/worktrees/evidence-engine-61326fa/engine/__init__.py",
+        "models": {
+          "primary": "qwen3:8b",
+          "verification": "gemma3:27b"
+        }
+      },
+      "D": {
+        "primary": "a84e1a72adc8bc2143c4f3daa4c95af7a518814d61dc2a0bef9f744f80da8642",
+        "verifier": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+        "screening_hash": "e8fa9719b1028ac16f9af72996bc807c8ad8b1071d2420fc5d98ed826f043596",
+        "engine_file": "/home/ankitsarin/projects/evidence-engine/engine/__init__.py",
+        "models": {
+          "primary": "qwen3:8b",
+          "verification": "gemma3:27b"
+        }
+      }
+    },
+    "ollama_version": "0.21.0"
+  },
+  "stability_control": {
+    "A": {
+      "baseline": "docs/session-reports/screen-auth-2f-smoke/arm_A_papers.csv",
+      "n": 86,
+      "agree": 86,
+      "pct": 1.0,
+      "disagreements": []
+    },
+    "B": {
+      "baseline": "docs/session-reports/screen-auth-2f-smoke/arm_B_papers.csv",
+      "n": 86,
+      "agree": 86,
+      "pct": 1.0,
+      "disagreements": []
+    }
+  },
+  "pre_registered_rule": {
+    "subject": "D",
+    "control": "A",
+    "verdicts_file": "docs/session-reports/screen-auth-2g/pi_verdicts_2f_part1.csv",
+    "O2": {
+      "clause": "O2 - SILENT papers back at IN or FLAGGED",
+      "of": 12,
+      "count": 1,
+      "threshold": ">= 10",
+      "papers": {
+        "693": "OUT",
+        "325": "OUT",
+        "774": "OUT",
+        "429": "OUT",
+        "583": "OUT",
+        "222": "OUT",
+        "786": "FLAGGED",
+        "655": "OUT",
+        "139": "OUT",
+        "344": "OUT",
+        "112": "OUT",
+        "765": "OUT"
+      },
+      "pass": false
+    },
+    "O3": {
+      "clause": "O3 - EVIDENCED papers must not reach IN",
+      "of": 5,
+      "count_IN": 0,
+      "threshold": "== 0",
+      "papers_IN": [],
+      "papers_FLAGGED_reported_only": [],
+      "papers": {
+        "569": "OUT",
+        "170": "OUT",
+        "702": "OUT",
+        "737": "OUT",
+        "598": "OUT"
+      },
+      "pass": true
+    },
+    "O4": {
+      "clause": "O4 - flag rate materially below the control",
+      "D_flag_rate": 0.4419,
+      "A_flag_rate": 0.8953,
+      "threshold": "D <= A - 0.15",
+      "margin": 0.4534,
+      "pass": true
+    },
+    "verdict": "NO-GO"
+  }
+}

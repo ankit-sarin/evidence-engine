@@ -1,0 +1,209 @@
+{
+  "argv": [
+    "/home/ankitsarin/projects/evidence-engine/analysis/eval/run_screen2f.py",
+    "--out-dir",
+    "docs/session-reports/screen-auth-2g/full",
+    "--arm-set",
+    "2g",
+    "--arm-root",
+    "A=/home/ankitsarin/worktrees/evidence-engine-83defc5",
+    "--arm-root",
+    "B=/home/ankitsarin/worktrees/evidence-engine-61326fa",
+    "--watch-file",
+    "data/surgical_autonomy/review.db"
+  ],
+  "started_utc": "2026-09-19T23:34:07.191502Z",
+  "events": [
+    {
+      "at": "2026-09-19T23:34:07.247180Z",
+      "event": "flock_acquired"
+    },
+    {
+      "at": "2026-09-19T23:34:07.913564Z",
+      "event": "identity_gate",
+      "ok": true
+    },
+    {
+      "at": "2026-09-19T23:34:07.928119Z",
+      "event": "phase_start",
+      "phase": "primary",
+      "ollama_ps": [
+        {
+          "name": "gemma3:27b",
+          "size": 30459802624,
+          "size_vram": 30459802624,
+          "expires_at": "2318-12-30T23:12:21.866652241Z",
+          "context_length": 131072
+        }
+      ]
+    },
+    {
+      "at": "2026-09-19T23:42:52.298053Z",
+      "event": "worker_exit",
+      "phase": "primary",
+      "arm": "A",
+      "rc": 0,
+      "started": "2026-09-19T23:34:07.928192Z"
+    },
+    {
+      "at": "2026-09-19T23:53:32.095449Z",
+      "event": "worker_exit",
+      "phase": "primary",
+      "arm": "B",
+      "rc": 0,
+      "started": "2026-09-19T23:42:52.298214Z"
+    },
+    {
+      "at": "2026-09-20T00:03:54.955821Z",
+      "event": "worker_exit",
+      "phase": "primary",
+      "arm": "D",
+      "rc": 0,
+      "started": "2026-09-19T23:53:32.095612Z"
+    },
+    {
+      "at": "2026-09-20T00:03:54.970523Z",
+      "event": "phase_end",
+      "phase": "primary",
+      "ollama_ps": [
+        {
+          "name": "qwen3:8b",
+          "size": 11454255232,
+          "size_vram": 11454255232,
+          "expires_at": "2318-12-30T23:51:11.742163872Z",
+          "context_length": 40960
+        }
+      ]
+    },
+    {
+      "at": "2026-09-20T00:03:54.984378Z",
+      "event": "phase_start",
+      "phase": "verifier",
+      "ollama_ps": [
+        {
+          "name": "qwen3:8b",
+          "size": 11454255232,
+          "size_vram": 11454255232,
+          "expires_at": "2318-12-30T23:51:11.742163872Z",
+          "context_length": 40960
+        }
+      ]
+    },
+    {
+      "at": "2026-09-20T00:17:56.413185Z",
+      "event": "worker_exit",
+      "phase": "verifier",
+      "arm": "A",
+      "rc": 0,
+      "started": "2026-09-20T00:03:54.984432Z"
+    },
+    {
+      "at": "2026-09-20T00:24:29.364595Z",
+      "event": "worker_exit",
+      "phase": "verifier",
+      "arm": "B",
+      "rc": 0,
+      "started": "2026-09-20T00:17:56.413339Z"
+    },
+    {
+      "at": "2026-09-20T00:30:52.308963Z",
+      "event": "worker_exit",
+      "phase": "verifier",
+      "arm": "D",
+      "rc": 0,
+      "started": "2026-09-20T00:24:29.364769Z"
+    },
+    {
+      "at": "2026-09-20T00:30:52.325389Z",
+      "event": "phase_end",
+      "phase": "verifier",
+      "ollama_ps": [
+        {
+          "name": "gemma3:27b",
+          "size": 30459802624,
+          "size_vram": 30459802624,
+          "expires_at": "2318-12-31T00:18:09.062100495Z",
+          "context_length": 131072
+        }
+      ]
+    },
+    {
+      "at": "2026-09-20T00:30:52.325488Z",
+      "event": "flock_released"
+    }
+  ],
+  "arm_set": "2g",
+  "trees": {
+    "A": {
+      "root": "/home/ankitsarin/worktrees/evidence-engine-83defc5",
+      "head": "83defc554069c56516faa7093088bd633500216b",
+      "commit": "83defc5",
+      "rule": "worktree_at_commit",
+      "spec": "/home/ankitsarin/worktrees/evidence-engine-83defc5/review_specs/surgical_autonomy.yaml"
+    },
+    "B": {
+      "root": "/home/ankitsarin/worktrees/evidence-engine-61326fa",
+      "head": "61326fac2f35159bbec7dd83725ae5ed69e0b91a",
+      "commit": "61326fa",
+      "rule": "worktree_at_commit",
+      "spec": "/home/ankitsarin/worktrees/evidence-engine-61326fa/review_specs/surgical_autonomy.yaml"
+    },
+    "D": {
+      "root": "/home/ankitsarin/projects/evidence-engine",
+      "head": "19241b9b33dda6fdcc18f31c08ba94facbb40034",
+      "commit": "56c5c57",
+      "rule": "repo_inputs_equal_commit",
+      "spec": "/home/ankitsarin/projects/evidence-engine/review_specs/surgical_autonomy.yaml"
+    }
+  },
+  "papers": {
+    "path": "/home/ankitsarin/projects/evidence-engine/docs/session-reports/screen-auth-2f-smoke/papers_86.jsonl",
+    "sha256": "8217b887e1c49aa7036a350694e25665d498f0c15a40b797e472125a5db09115"
+  },
+  "ollama_version": "0.21.0",
+  "watch_file": {
+    "path": "data/surgical_autonomy/review.db",
+    "before": {
+      "size": 101978112,
+      "mtime_ns": 1789092052636956943
+    },
+    "after": {
+      "size": 101978112,
+      "mtime_ns": 1789092052636956943
+    }
+  },
+  "identity": {
+    "A": {
+      "primary": "33bdeea91007fb81f2401566f01bc05b6a3c0315db003f41c6dcd4c8808abee3",
+      "verifier": "2c89ef61c690d0c544408f34ee6ea80702520f8cd5a9b1b61da93b6223c4d5f8",
+      "screening_hash": "d804ced7bd4c45e872524ebfd4d55f3d093ff9d18db28cfee8e2f67f4c571ae9",
+      "engine_file": "/home/ankitsarin/worktrees/evidence-engine-83defc5/engine/__init__.py",
+      "models": {
+        "primary": "qwen3:8b",
+        "verification": "gemma3:27b"
+      }
+    },
+    "B": {
+      "primary": "e02ce2c9a77ab578415bb6ca32477a952bd2727de19558d80fd19fd5ddf84649",
+      "verifier": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+      "screening_hash": "d563134ed6a92a8d0ee3e877574fcf844f7094889ec411f88e3285bb58a06a29",
+      "engine_file": "/home/ankitsarin/worktrees/evidence-engine-61326fa/engine/__init__.py",
+      "models": {
+        "primary": "qwen3:8b",
+        "verification": "gemma3:27b"
+      }
+    },
+    "D": {
+      "primary": "a84e1a72adc8bc2143c4f3daa4c95af7a518814d61dc2a0bef9f744f80da8642",
+      "verifier": "bc36e29191d4a61ce1049634d39adabcd58e52fdd177d1665453ac370f071ff3",
+      "screening_hash": "e8fa9719b1028ac16f9af72996bc807c8ad8b1071d2420fc5d98ed826f043596",
+      "engine_file": "/home/ankitsarin/projects/evidence-engine/engine/__init__.py",
+      "models": {
+        "primary": "qwen3:8b",
+        "verification": "gemma3:27b"
+      }
+    }
+  },
+  "ended_utc": "2026-09-20T00:30:52.325554Z",
+  "status": "COMPLETE"
+}

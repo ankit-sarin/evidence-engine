@@ -5715,6 +5715,48 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/tools/db_fingerprint.py": {
+        "entry_point": true,
+        "flags": [
+          {
+            "default": "unset",
+            "dest": null,
+            "line": 314,
+            "names": [
+              "database"
+            ],
+            "required": false
+          },
+          {
+            "default": "unset",
+            "dest": null,
+            "line": 315,
+            "names": [
+              "--out"
+            ],
+            "required": false
+          },
+          {
+            "default": "unset",
+            "dest": null,
+            "line": 317,
+            "names": [
+              "--compare"
+            ],
+            "required": false
+          }
+        ],
+        "has_main_guard": true,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/tools/db_fingerprint.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/tools/inventory.py": {
         "entry_point": true,
         "flags": [
@@ -5882,7 +5924,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 217,
+            "line": 222,
             "names": [
               "--review"
             ],
@@ -5891,7 +5933,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 218,
+            "line": 223,
             "names": [
               "--keep-schema"
             ],
@@ -5900,7 +5942,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 222,
+            "line": 227,
             "names": [
               "--codebook"
             ],
@@ -5909,7 +5951,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 228,
+            "line": 233,
             "names": [
               "--confirm"
             ],
@@ -5923,7 +5965,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 224,
+            "line": 229,
             "role": "help_text",
             "text": "Override the codebook path. Defaults to data/<review>/extraction_codebook.yaml; an override must declare the same review."
           }
@@ -5931,7 +5973,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 247,
+            "line": 252,
             "scope": "main"
           }
         ],
@@ -7861,14 +7903,14 @@
     "summary": {
       "db_before_spec_scopes": 0,
       "default_review_named_constants": 7,
-      "entry_points": 103,
+      "entry_points": 104,
       "entry_points_constructing_reviewdatabase": 37,
       "entry_points_name_only": 46,
       "entry_points_with_review_name_flag": 74,
       "entry_points_with_spec_flag": 29,
       "files_calling_load_review_spec_directly": 9,
       "files_calling_resolver": 32,
-      "files_scanned": 203,
+      "files_scanned": 204,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 35,
@@ -7880,7 +7922,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "56c5c5744f5ab6a2f21e47b66674dad233212e6b",
+    "generated_at_commit": "b8a83b17d6dd1a76e82ec375bffd64cfb08eca13",
     "scan_roots": [
       "engine",
       "scripts",

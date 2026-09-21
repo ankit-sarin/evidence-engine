@@ -436,11 +436,38 @@ def _write_audit_xlsx(
 # ── Import ─────────────────────────────────────────────────────────
 
 
+class AuditAdjudicationDeprecated(RuntimeError):
+    """`audit_adjudication` is no longer written (R18, A11 Option B).
+
+    Session 5 (EFFECTIVE-RESULT-02) stopped writing to this table; session 12
+    drops it. The refusal sits at the single entry point rather than at the
+    three INSERT statements below it, because three guards is the shape that
+    gets re-derived correctly at every future site or not at all.
+    """
+
+
+DEPRECATION_MESSAGE = (
+    "audit_adjudication is deprecated and no longer written (R18, A11 Option B: "
+    "session 5 stops writing, session 12 drops). The table's span_id references "
+    "the phantom _evidence_spans_old, so under PRAGMA foreign_keys=ON this path "
+    "has never been writable on this database \u2014 which is why the table holds 0 "
+    "rows. Human audit decisions become field_events (human_accepted / "
+    "human_corrected / human_withdrew) through the importer built in session 12; "
+    "until then there is no supported route and none is improvised here."
+)
+
+
 def import_audit_review_decisions(
     review_db: ReviewDatabase,
     input_path: str | Path | None = None,
 ) -> dict:
     """Read completed audit review decisions and write to database.
+
+    **REFUSES.** See `AuditAdjudicationDeprecated` — this path writes
+    `audit_adjudication`, which R18 retired in session 5. The body below is kept
+    intact, unrun, because session 12's importer is specified against it and a
+    deleted path cannot be read for what it used to mean.
+
 
     If input_path is None, auto-discovers the decisions file using the
     naming convention: {review}_extraction_audit_decisions.json
@@ -464,6 +491,8 @@ def import_audit_review_decisions(
 
     Returns summary dict.
     """
+    raise AuditAdjudicationDeprecated(DEPRECATION_MESSAGE)
+
     if input_path is None:
         from engine.core.naming import review_artifact_path
         review_name = Path(review_db.db_path).parent.name

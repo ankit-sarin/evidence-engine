@@ -4865,6 +4865,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/core/effective.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/effective.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/core/eligibility_render.py": {
         "entry_point": false,
         "flags": [],
@@ -4872,6 +4886,20 @@
         "literal_review_ids": [],
         "order": {},
         "path": "engine/core/eligibility_render.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
+      "engine/core/events.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/events.py",
         "path_construction": [],
         "review_database": [],
         "review_id_constants": [],
@@ -5472,6 +5500,59 @@
         "review_database": [],
         "review_id_constants": [],
         "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
+      "engine/migrations/016_event_store.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/migrations/016_event_store.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
+      "engine/migrations/017_seed_event_store.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/migrations/017_seed_event_store.py",
+        "path_construction": [
+          {
+            "kind": "f-string",
+            "line": 175,
+            "role": "code",
+            "text": "f'{review_id}.yaml'"
+          },
+          {
+            "kind": "literal",
+            "line": 175,
+            "role": "code",
+            "text": "review_specs"
+          },
+          {
+            "kind": "literal",
+            "line": 177,
+            "role": "code",
+            "text": "extraction_codebook.yaml"
+          }
+        ],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [
+          {
+            "func": "load_review_spec",
+            "line": 184,
+            "scope": "run_migration"
+          }
+        ],
         "unparsed": [],
         "yaml_loads": []
       },
@@ -7950,21 +8031,21 @@
       "entry_points_name_only": 46,
       "entry_points_with_review_name_flag": 74,
       "entry_points_with_spec_flag": 29,
-      "files_calling_load_review_spec_directly": 9,
+      "files_calling_load_review_spec_directly": 10,
       "files_calling_resolver": 32,
-      "files_scanned": 207,
+      "files_scanned": 211,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 35,
       "name_only_constructing_reviewdatabase": 21,
-      "path_construction_sites_in_code": 68,
+      "path_construction_sites_in_code": 71,
       "raw_yaml_load_sites": 3,
       "review_id_constants": 9,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "62d3a0b2988a907ec59049c0f0f4b7eeaf978def",
+    "generated_at_commit": "d028c7ab77eb3ff2663aba95d111c31371dffacb",
     "scan_roots": [
       "engine",
       "scripts",

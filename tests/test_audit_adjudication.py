@@ -14,6 +14,7 @@ from engine.adjudication.audit_adjudicator import (
     _flatten_to_span_rows,
     check_audit_review_gate,
     export_audit_review_queue,
+    AuditAdjudicationDeprecated,
     import_audit_review_decisions,
 )
 from engine.adjudication.workflow import (
@@ -259,255 +260,23 @@ def test_export_sets_workflow_stage(db, tmp_path):
 # ── Import / Round-Trip Tests ─────────────────────────────────────────
 
 
-def test_import_accept_spans(db, tmp_path):
-    """ACCEPT should mark contested/flagged spans as verified."""
-    pid = _add_paper_with_extraction(db, "50001", spans=[
-        {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
-        {"field_name": "sample_size", "value": "100", "audit_status": "contested"},
-    ])
-
-    _complete_prereq_stages(db)
-
-    out = tmp_path / "queue.xlsx"
-    export_audit_review_queue(db, out, spot_check_pct=0)
-
-    # Fill in ACCEPT for all span rows
-    from openpyxl import load_workbook
-    wb = load_workbook(out)
-    ws = wb["Review Queue"]
-    dec_col = _find_header_col(ws, "PI_decision")
-    for row in ws.iter_rows(min_row=2, values_only=False):
-        if row[0].value is not None:
-            row[dec_col].value = "ACCEPT"
-    wb.save(out)
-
-    result = import_audit_review_decisions(db, out)
-    assert result["stats"]["accepted"] == 2
-
-    # Verify spans are now "verified"
-    ext = db._conn.execute(
-        "SELECT id FROM extractions WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
-        (pid,),
-    ).fetchone()
-    spans = db._conn.execute(
-        "SELECT audit_status FROM evidence_spans WHERE extraction_id = ?",
-        (ext["id"],),
-    ).fetchall()
-    assert all(s["audit_status"] == "verified" for s in spans)
 
 
-def test_import_correct_records_original(db, tmp_path):
-    """CORRECT should update span value and record original in audit_adjudication."""
-    pid = _add_paper_with_extraction(db, "50002", spans=[
-        {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
-    ])
-
-    _complete_prereq_stages(db)
-
-    out = tmp_path / "queue.xlsx"
-    export_audit_review_queue(db, out, spot_check_pct=0)
-
-    from openpyxl import load_workbook
-    wb = load_workbook(out)
-    ws = wb["Review Queue"]
-    dec_col = _find_header_col(ws, "PI_decision")
-    corrected_col = _find_header_col(ws, "corrected_value")
-    for row in ws.iter_rows(min_row=2, values_only=False):
-        if row[0].value is not None:
-            row[dec_col].value = "CORRECT"
-            row[corrected_col].value = "Prospective cohort"
-    wb.save(out)
-
-    result = import_audit_review_decisions(db, out)
-    assert result["stats"]["corrected_fields"] == 1
-
-    # Check span value was updated
-    ext = db._conn.execute(
-        "SELECT id FROM extractions WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
-        (pid,),
-    ).fetchone()
-    span = db._conn.execute(
-        "SELECT value FROM evidence_spans WHERE extraction_id = ? AND field_name = 'study_design'",
-        (ext["id"],),
-    ).fetchone()
-    assert span["value"] == "Prospective cohort"
-
-    # Check audit_adjudication table recorded the original
-    adj = db._conn.execute(
-        "SELECT * FROM audit_adjudication WHERE paper_id = ? AND field_name = 'study_design'",
-        (pid,),
-    ).fetchone()
-    assert adj["original_value"] == "RCT"
-    assert adj["override_value"] == "Prospective cohort"
-    assert adj["human_decision"] == "override"
 
 
-def test_import_transitions_to_human_audit_complete(db, tmp_path):
-    """Paper should transition to HUMAN_AUDIT_COMPLETE when all spans resolved."""
-    pid = _add_paper_with_extraction(db, "50003", spans=[
-        {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
-    ])
-
-    _complete_prereq_stages(db)
-
-    out = tmp_path / "queue.xlsx"
-    export_audit_review_queue(db, out, spot_check_pct=0)
-
-    from openpyxl import load_workbook
-    wb = load_workbook(out)
-    ws = wb["Review Queue"]
-    dec_col = _find_header_col(ws, "PI_decision")
-    for row in ws.iter_rows(min_row=2, values_only=False):
-        if row[0].value is not None:
-            row[dec_col].value = "ACCEPT"
-    wb.save(out)
-
-    import_audit_review_decisions(db, out)
-
-    paper = db._conn.execute("SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()
-    assert paper["status"] == "HUMAN_AUDIT_COMPLETE"
 
 
-def test_import_sets_audit_review_complete(db, tmp_path):
-    """When all papers resolved, AUDIT_REVIEW_COMPLETE should be set."""
-    _add_paper_with_extraction(db, "50004", spans=[
-        {"field_name": "study_design", "value": "RCT", "audit_status": "contested"},
-    ])
-
-    _complete_prereq_stages(db)
-
-    out = tmp_path / "queue.xlsx"
-    export_audit_review_queue(db, out, spot_check_pct=0)
-
-    from openpyxl import load_workbook
-    wb = load_workbook(out)
-    ws = wb["Review Queue"]
-    dec_col = _find_header_col(ws, "PI_decision")
-    for row in ws.iter_rows(min_row=2, values_only=False):
-        if row[0].value is not None:
-            row[dec_col].value = "ACCEPT"
-    wb.save(out)
-
-    import_audit_review_decisions(db, out)
-
-    assert is_stage_done(db._conn, "AUDIT_REVIEW_COMPLETE")
 
 
-def test_import_rejects_blank_decisions(db, tmp_path):
-    """Blank decision cells cause full import rejection with zero DB changes."""
-    pid = _add_paper_with_extraction(db, "50005", spans=[
-        {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
-    ])
-
-    _complete_prereq_stages(db)
-
-    out = tmp_path / "queue.xlsx"
-    export_audit_review_queue(db, out, spot_check_pct=0)
-
-    # Don't fill in any decisions
-    result = import_audit_review_decisions(db, out)
-
-    assert result["stats"]["missing"] >= 1
-    assert not is_stage_done(db._conn, "AUDIT_REVIEW_COMPLETE")
-
-    # Paper status unchanged
-    paper = db._conn.execute("SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()
-    assert paper["status"] == "AI_AUDIT_COMPLETE"
 
 
-def test_import_rejects_invalid_decision(db, tmp_path):
-    """Invalid decision values cause full import rejection with zero DB changes."""
-    pid = _add_paper_with_extraction(db, "50006", spans=[
-        {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
-    ])
-
-    _complete_prereq_stages(db)
-
-    out = tmp_path / "queue.xlsx"
-    export_audit_review_queue(db, out, spot_check_pct=0)
-
-    from openpyxl import load_workbook
-    wb = load_workbook(out)
-    ws = wb["Review Queue"]
-    dec_col = _find_header_col(ws, "PI_decision")
-    for row in ws.iter_rows(min_row=2, values_only=False):
-        if row[0].value is not None:
-            row[dec_col].value = "MAYBE"  # invalid
-    wb.save(out)
-
-    result = import_audit_review_decisions(db, out)
-    assert result["stats"]["invalid"] == 1
-
-    # Paper status unchanged
-    paper = db._conn.execute("SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()
-    assert paper["status"] == "AI_AUDIT_COMPLETE"
 
 
-def test_import_rejects_correct_without_value(db, tmp_path):
-    """CORRECT without corrected_value causes full import rejection."""
-    pid = _add_paper_with_extraction(db, "50007", spans=[
-        {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
-    ])
-
-    _complete_prereq_stages(db)
-
-    out = tmp_path / "queue.xlsx"
-    export_audit_review_queue(db, out, spot_check_pct=0)
-
-    from openpyxl import load_workbook
-    wb = load_workbook(out)
-    ws = wb["Review Queue"]
-    dec_col = _find_header_col(ws, "PI_decision")
-    for row in ws.iter_rows(min_row=2, values_only=False):
-        if row[0].value is not None:
-            row[dec_col].value = "CORRECT"
-            # Don't fill corrected_value
-    wb.save(out)
-
-    result = import_audit_review_decisions(db, out)
-    assert result["stats"]["missing"] >= 1  # CORRECT-without-value counted as missing
-
-    # Paper status unchanged
-    paper = db._conn.execute("SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()
-    assert paper["status"] == "AI_AUDIT_COMPLETE"
 
 
 # ── Reject Span ──────────────────────────────────────────────────────
 
 
-def test_reject_span(db, tmp_path):
-    """REJECT should mark span as rejected and transition paper to HUMAN_AUDIT_COMPLETE."""
-    pid = _add_paper_with_extraction(db, "60001", spans=[
-        {"field_name": "study_design", "value": "RCT", "audit_status": "flagged"},
-    ])
-
-    _complete_prereq_stages(db)
-
-    out = tmp_path / "queue.xlsx"
-    export_audit_review_queue(db, out, spot_check_pct=0)
-
-    from openpyxl import load_workbook
-    wb = load_workbook(out)
-    ws = wb["Review Queue"]
-    dec_col = _find_header_col(ws, "PI_decision")
-    for row in ws.iter_rows(min_row=2, values_only=False):
-        if row[0].value is not None:
-            row[dec_col].value = "REJECT"
-    wb.save(out)
-
-    result = import_audit_review_decisions(db, out)
-    assert result["stats"]["rejected"] == 1
-
-    # Paper transitions to HUMAN_AUDIT_COMPLETE (all spans resolved)
-    paper = db._conn.execute("SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()
-    assert paper["status"] == "HUMAN_AUDIT_COMPLETE"
-
-    # Audit adjudication record created
-    adj = db._conn.execute(
-        "SELECT * FROM audit_adjudication WHERE paper_id = ?", (pid,)
-    ).fetchone()
-    assert adj is not None
-    assert adj["human_decision"] == "reject_paper"
 
 
 # ── min_status Filtering ──────────────────────────────────────────────
@@ -594,15 +363,55 @@ def test_missing_span_not_counted_as_success(db, tmp_path):
     json_path = tmp_path / "missing_span_decisions.json"
     json_path.write_text(json.dumps(decisions))
 
-    # JSON import path validates first: nonexistent span → validation error → no writes
-    result = import_audit_review_decisions(db, str(json_path))
+    # R18, A11 Option B: the path refuses before it validates anything, so the
+    # "nothing applied" guarantee this test pinned now holds by construction
+    # rather than by the validator getting it right.
+    with pytest.raises(AuditAdjudicationDeprecated):
+        import_audit_review_decisions(db, str(json_path))
 
-    # Errors reported, nothing applied
-    assert len(result["errors"]) >= 1
-    assert result["applied"] == 0
-
-    # Original span unchanged
+    # Original span unchanged — the property this test exists to protect
     span = db._conn.execute(
         "SELECT audit_status FROM evidence_spans WHERE field_name = 'study_design'"
     ).fetchone()
     assert span["audit_status"] == "contested"
+
+
+# ── R18, A11 Option B: this path no longer writes ─────────────────────
+#
+# EFFECTIVE-RESULT-02 (session 5) stopped writing `audit_adjudication`; session
+# 12 drops it. The eight tests that used to drive `import_audit_review_decisions`
+# — ACCEPT, CORRECT, REJECT, the stage transitions and the three validation
+# refusals — are rewritten here as one pinned refusal rather than deleted: a test
+# that pinned a behaviour is rewritten to the corrected behaviour (B5), and the
+# behaviour they pinned is exactly what R18 retired.
+#
+# They were never a guarantee in any case. `audit_adjudication.span_id`
+# references the phantom `_evidence_spans_old`, so under the
+# `PRAGMA foreign_keys=ON` that `ReviewDatabase.__init__` sets, the INSERT this
+# path performs fails on the live database — which is why the table holds 0 rows
+# there (A11).
+
+def test_the_audit_import_path_refuses_and_names_its_successor(db, tmp_path):
+    out = tmp_path / "decisions.json"
+    out.write_text("[]")
+    with pytest.raises(AuditAdjudicationDeprecated) as exc:
+        import_audit_review_decisions(db, out)
+    msg = str(exc.value)
+    assert "R18, A11 Option B" in msg
+    assert "session 12" in msg
+    assert "field_events" in msg
+
+
+def test_the_audit_import_path_refuses_before_it_reads_anything(db):
+    """No file, no arguments beyond the database: it still refuses."""
+    with pytest.raises(AuditAdjudicationDeprecated):
+        import_audit_review_decisions(db)
+
+
+def test_audit_adjudication_is_left_on_disk_untouched_session_12_drops_it(db):
+    """R18 stops the writer; it does not drop the table."""
+    assert db._conn.execute(
+        "SELECT COUNT(*) FROM sqlite_master WHERE type='table' "
+        "AND name='audit_adjudication'").fetchone()[0] == 1
+    assert db._conn.execute(
+        "SELECT COUNT(*) FROM audit_adjudication").fetchone()[0] == 0

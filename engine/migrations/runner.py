@@ -71,6 +71,12 @@ KINDS: dict[str, str] = {
     "013": "schema",
     "014": "schema",
     "015": "schema",
+    "016": "schema",   # the S2 event store: seven new tables, no existing one
+                       # touched. A fresh database needs the structure.
+    "017": "data",     # seeds the event store from THIS database's corpus,
+                       # parsed texts, spec and codebook (R25). A fresh database
+                       # has no corpus to seed from and no review directory
+                       # beside it, so it must never run there.
 }
 
 _RECEIPTS_DDL = """

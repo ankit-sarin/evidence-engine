@@ -1,14 +1,14 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `62d3a0b2988a907ec59049c0f0f4b7eeaf978def` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `d028c7ab77eb3ff2663aba95d111c31371dffacb` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 207 |
+| files scanned | 211 |
 | entry points | 104 |
 | entry points with spec flag | 29 |
 | entry points with review name flag | 74 |
@@ -16,12 +16,12 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | entry points constructing reviewdatabase | 37 |
 | name only constructing reviewdatabase | 21 |
 | files calling resolver | 32 |
-| files calling load review spec directly | 9 |
+| files calling load review spec directly | 10 |
 | raw yaml load sites | 3 |
 | files with raw yaml loads | 3 |
 | review id constants | 9 |
 | literal review id sites in code | 35 |
-| path construction sites in code | 68 |
+| path construction sites in code | 71 |
 | db before spec scopes | 0 |
 | fstring spec path sites | 0 |
 | default review named constants | 7 |
@@ -216,6 +216,9 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/core/codebook.py` | 36 | literal | `extraction_codebook.yaml` |
 | `engine/core/review_paths.py` | 28 | literal | `review_specs` |
 | `engine/core/review_paths.py` | 59 | f-string | `f'{review_id}.yaml'` |
+| `engine/migrations/017_seed_event_store.py` | 175 | f-string | `f'{review_id}.yaml'` |
+| `engine/migrations/017_seed_event_store.py` | 175 | literal | `review_specs` |
+| `engine/migrations/017_seed_event_store.py` | 177 | literal | `extraction_codebook.yaml` |
 | `engine/tools/inventory.py` | 34 | literal | `review_specs` |
 | `engine/tools/inventory.py` | 47 | literal | `.yaml` |
 | `engine/tools/inventory.py` | 47 | literal | `data/` |

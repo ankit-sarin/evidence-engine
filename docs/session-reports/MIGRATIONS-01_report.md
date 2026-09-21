@@ -291,3 +291,78 @@ naming one review* (S9).
 * **The stale foreign key was not fixed**, by ruling. Nothing writes to `audit_adjudication`
   before session 12.
 * `PRAGMA user_version` is still **0**, deliberately.
+
+---
+
+# ADDENDUM — 2026-09-21: the `cloud_evidence_spans` NOT NULL gap, measured
+
+Issued on ruling, after the report above was committed. **Read-only** (`mode=ro`, one read
+transaction); no change to the database or to any code.
+
+## The NULL count
+
+| column | rows | `IS NULL` |
+|---|---:|---:|
+| `cloud_evidence_spans.confidence` | 7,257 | **0** |
+| `cloud_evidence_spans.tier` | 7,257 | **0** |
+| either | 7,257 | **0** |
+
+`confidence` spans 0.0–1.0 across 37 distinct values; `tier` is 1 (1,832), 2 (3,253), 3 (1,448),
+4 (724). For comparison, `evidence_spans` — which *does* carry the constraint — also has zero
+NULLs in both.
+
+**The data is already conformant.** The gap is the constraint alone, so executing `014` on the
+live database would rebuild the table without changing one value. That is a fact about today's
+rows, not a licence: a constraint's job is the row nobody has written yet.
+
+## Readers that treat either column as NOT NULL
+
+**None — no code selects either column from this table at all.** MEASURED across `engine/`,
+`scripts/`, `analysis/` and `tests/`: twenty-five modules mention `cloud_evidence_spans`, and
+every `SELECT` against it names `value`, `source_snippet`, `field_name`, `arm` or a `COUNT(*)`.
+`confidence` and `tier` are written and never read back.
+
+Three things sit near the question and are worth naming precisely:
+
+1. **🔴 `engine/migrations/006_not_null_confidence_tier.py` asserts the constraint exists**, in
+   its own docstring — READ:
+
+   > 2. `cloud_evidence_spans` already has NOT NULL on both columns via
+   >    `engine/cloud/schema.py` — no changes needed there.
+
+   **That claim is false on the live database.** It is true of a database built by
+   `init_cloud_tables`'s `CREATE TABLE` and false of one whose table predates the constraint —
+   which is this one. Migration 006 did nothing wrong; it recorded an assumption about a sibling
+   module's output and the assumption did not survive. It is the closest thing to a "reader" of
+   the constraint in the codebase, and it is a comment, not code.
+
+2. **The three writers would pass `NULL` if given the chance.** `engine/cloud/base.py`
+   (`store_result`), `scripts/backfill_cloud_spans.py` and `scripts/reparse_cloud_spans.py` all
+   insert `span.get("confidence")` and `span.get("tier")`, and `dict.get` yields `None` for an
+   absent key.
+
+3. **But the only producer cannot omit them.** Every span reaching those INSERTs comes from
+   `CloudExtractorBase.parse_response_to_spans`, which returns only what
+   `ExtractionOutput.model_validate` accepted, and `EvidenceSpan` declares
+
+   ```python
+       confidence: float = Field(ge=0.0, le=1.0)
+       tier: int = Field(ge=1, le=4)
+   ```
+
+   — both **required**, both range-checked. A span missing either is rejected before it can be
+   stored. So the `.get()` calls are defensive, not load-bearing, and a NULL cannot arise from
+   the supported path. That is why the count above is zero.
+
+## What this means for C10
+
+The gap is **latent, not active**: no reader depends on the constraint, no writer can currently
+violate it, and no row does. Its cost is the one already recorded — a fresh database and the live
+one are not structurally identical, so **G3 stays NOT MET** until `014` is executed there. Its
+risk is the ordinary one: the guarantee is absent, so the next writer added to this table (or a
+change that makes `EvidenceSpan` tolerant of a missing field) would be caught on a fresh database
+and silently accepted on the live one — the same code, two behaviours, which is exactly the
+condition the migration runner exists to end.
+
+Deferred to session 5's migration batch per ruling; inventory row **C10**. The receipt on `014`
+carries the gap in its `note` column, in the database, so a reader of the receipts is told.

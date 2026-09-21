@@ -29,7 +29,8 @@ evidence-engine/
 │   ├── analysis/               # Concordance analysis (scoring, metrics, normalization, reports)
 │   ├── parsers/                # Three-tier PDF parser (Docling → PyMuPDF → Qwen2.5-VL)
 │   ├── acquisition/            # Unpaywall, download cascade, PDF quality check, verify
-│   ├── migrations/             # DB schema migrations
+│   ├── migrations/             # Numbered migrations 002-015 + runner.py (receipts). See its README
+│   ├── tools/                  # inventory.py (AST entry-point census), db_fingerprint.py
 │   ├── adjudication/           # Workflow stages, screening/FT/audit adjudication
 │   ├── utils/                  # tmux background, extraction cleanup, ollama preflight
 │   ├── validators/             # Extraction validator + distribution collapse monitor
@@ -76,6 +77,7 @@ evidence-engine/
 | judge_pair_ratings | C(N,2) rows per `judge_ratings` row — Level 1 (EQUIVALENT / PARTIAL / DIVERGENT) and Level 2 (GRANULARITY / SELECTION / FABRICATION / …) per arm pair. Migration 007. |
 | fabrication_verifications | Pass 2 per-arm verdicts. UNIQUE (judge_run_id, paper_id, field_name, arm_name). verdict ∈ {SUPPORTED, PARTIALLY_SUPPORTED, UNSUPPORTED}. CHECK: UNSUPPORTED requires non-empty reasoning + fabrication_hypothesis. CASCADE FK to judge_runs. Migration 008. |
 | judge_run_audit | Post-hoc corrections / annotations on judge_runs (open-vocabulary `event_type`, NOT NULL `rationale`, CASCADE FK). First user: the `backfill_judge_model_digest` event (commit 8fefa66). Migration 009. |
+| schema_migrations | Migration receipts — `migration_id` PK, `file_sha256`, `applied_at`, `mode` ∈ {executed, registered_preapplied}, `runner_version`, `note`. Written by `engine/migrations/runner.py`. `PRAGMA user_version` is deliberately left at 0. |
 
 ## Paper Lifecycle
 INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAGGED → PDF_ACQUIRED → PDF_EXCLUDED (terminal) or PARSED → FT_ELIGIBLE / FT_SCREENED_OUT / FT_FLAGGED → EXTRACTED / EXTRACT_FAILED → AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE → REJECTED
@@ -158,6 +160,31 @@ now gated, and the suite is fenced. Do not add a third ungated path.
     `@patch("engine.utils.ollama_preflight.require_preflight")` for anything calling
     `run_extraction` (preflight shells out to `systemctl show` *and* loads a 20 GB model).
 
+## Ops Invariants — the database
+
+**Size and mtime cannot see a committed write.** Under WAL the main file is
+untouched until a checkpoint runs, so a database can gain rows while both are
+unchanged. The integrity check is the content fingerprint
+(`engine/tools/db_fingerprint.py`), run at session open **and** close against the
+committed record. A session that intends to change the database writes a new
+record with `--out`, commits it, and quotes the new `overall_sha256` in its
+closeout; **the old record is superseded, never edited.**
+
+- **Read-only means `mode=ro`, never `immutable=1`.** `immutable` promises SQLite
+  the file cannot change while open; `review.db` is live, so the promise would be
+  a lie and the reader could see a torn page.
+- **Backups go through the online backup API, never `shutil.copy2`.**
+  `auto_backup` returns a frozen `BackupResult` carrying the fingerprint that
+  proves the copy; a mismatch deletes the file and raises. The copy is switched
+  to a rollback journal so a `.bak` never creates `-wal`/`-shm` beside the live
+  database. `restore()` refuses an open target by exclusive lock and has **no
+  CLI**, deliberately.
+- **Schema changes are numbered migrations with receipts.** The runner applies
+  `engine/migrations/NNN_*.py` in order, one transaction each, and refuses to
+  start if a file changed after its receipt — a migration whose text changed is a
+  different migration. Data migrations are **never** executed on a fresh
+  database. See `engine/migrations/README.md` before adding one.
+
 ## Cloud Extraction Architecture
 - `CloudExtractorBase` (engine/cloud/base.py): shared logic — pending paper query, codebook-driven prompt building, response JSON parsing (8+ alternate keys + raw content recovery), progress tracking, cost calculation, distribution monitor integration
 - `OpenAIExtractor`: o4-mini-2025-04-16, reasoning_effort=high. Per-paper cost tracking (input/output/reasoning tokens)
@@ -168,9 +195,9 @@ now gated, and the suite is fenced. Do not add a third ungated path.
 
 ## Concordance Analysis Architecture
 - Multi-arm alignment: load extractions from local, openai_o4_mini_high, anthropic_sonnet_4_6, human_A/B/C/D arms → align by paper_id
-- Field-pair scoring (engine/analysis/scoring.py): MATCH/MISMATCH/AMBIGUOUS with fuzzy text matching for free-text fields
-- Normalization (engine/analysis/normalize.py): canonical categorical prefix matching, multi-value fields, numeric handling
-- Metrics (engine/analysis/metrics.py): Cohen's kappa, percent agreement, field summary statistics with 95% CI
+- Field-pair scoring (engine/analysis/scoring.py): MATCH/MISMATCH/AMBIGUOUS, carrying the normalized labels it judged (`norm_a`/`norm_b`). Numbers are parsed and compared as numbers (exact equality, no tolerance; a differing `%` marker is AMBIGUOUS). Containment counts only at whole-token boundaries. A negation cue on exactly one side can never be MATCH — one declared `NEGATION_CUES` frozenset
+- Normalization (engine/analysis/normalize.py): canonical categorical prefix matching, multi-value fields. Absence comes from the codebook's `absence_sentinels`; numeric dispatch from the codebook's `type`. It no longer interprets numbers — `scoring.parse_number` is the one place that knows what a number is
+- Metrics (engine/analysis/metrics.py): `cohens_kappa(labels_a, labels_b)` over two aligned label sequences, `p_e` from each rater's own marginals, checked against sklearn. Returns `nan` with an `undefined_reason` when kappa is 0/0 — never 1.0. `percent_agreement` remains the scorer's verdict rate, so the two are separate columns. Fleiss-1981 SE with 95% CI
 - Reports (engine/analysis/report.py): terminal, CSV, and HTML concordance report generators
 - Distribution collapse detection (engine/validators/distribution_monitor.py): post-extraction quality gate, flags COLLAPSED/LOW_VARIANCE categorical fields, minimum 10 papers, runs automatically at end of all extraction pipelines
 
@@ -365,7 +392,11 @@ python -m engine.utils.extraction_cleanup --review surgical_autonomy --confirm #
 python -m engine.validators.extraction_validator --review surgical_autonomy
 
 # Database content fingerprint (read-only; the open/close integrity check)
+# Exit 0 identical, 1 differences printed by table, 2 a file is missing.
 python -m engine.tools.db_fingerprint data/surgical_autonomy/review.db [--out fp.json] [--compare fp.json]
+
+# Entry-point / config-authority inventory (AST only; --check exits 1 on drift)
+python -m engine.tools.inventory --check | --write
 
 # Ollama pre-flight
 python -m engine.utils.ollama_preflight --models qwen3.5:27b gemma3:27b deepseek-r1:32b

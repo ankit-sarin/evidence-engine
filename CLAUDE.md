@@ -1,5 +1,11 @@
 Read primer.md for current project state before starting work.
 
+Read `docs/plan/ENGINE_REFACTOR_PLAN.md` at session start. It is the standing engineering
+record for the engine refactor: the plan of record, its findings, and its rulings. Claude Code
+appends a closure paragraph to it at each closeout. The claude.ai unified plan is the short
+operational record, not this one; a copy of `ENGINE_REFACTOR_PLAN.md` is uploaded to project
+knowledge at each wrap.
+
 # Surgical Evidence Engine (Project 4)
 
 ## Location

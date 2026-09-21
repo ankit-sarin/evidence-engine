@@ -77,7 +77,7 @@ evidence-engine/
 |-------|---------|
 | cloud_extractions | Parallel to `extractions` — tracks arm, model, cost, reasoning traces |
 | cloud_evidence_spans | Parallel to `evidence_spans` — cloud-arm field values |
-| human_extractions | Human extractor workbook values (paper_id as "EE-NNN", extractor_id A/B/C/D) |
+| human_extractions | Human extractor workbook values (paper_id as "EE-NNN", extractor_id A/B/C/D). **Does not exist on `surgical_autonomy`'s database.** It is created by `human_import.py`'s own `CREATE TABLE IF NOT EXISTS` on first import, which has never been run — so it carries no migration receipt. Moves to a numbered migration in session 12 (R14), where the TEXT "EE-NNN" key is also reconciled to `papers.id`. |
 | judge_runs | Paper 1 LLM-as-judge runs (Pass 1 pairwise rating + Pass 2 fabrication verification). PK `run_id TEXT`. Stores `judge_model_digest` (canonical SHA-256 from Ollama `/api/tags`) and `codebook_sha256`. Migration 007. |
 | judge_ratings | Per-triple Pass 1 output. One row per (run_id, paper_id, field_name). Stores `pass1_fabrication_risk`, arm permutation, seed, prompt hash, raw response. Migration 007. |
 | judge_pair_ratings | C(N,2) rows per `judge_ratings` row — Level 1 (EQUIVALENT / PARTIAL / DIVERGENT) and Level 2 (GRANULARITY / SELECTION / FABRICATION / …) per arm pair. Migration 007. |
@@ -195,7 +195,7 @@ closeout; **the old record is superseded, never edited.**
 - `CloudExtractorBase` (engine/cloud/base.py): shared logic — pending paper query, codebook-driven prompt building, response JSON parsing (8+ alternate keys + raw content recovery), progress tracking, cost calculation, distribution monitor integration
 - `OpenAIExtractor`: o4-mini-2025-04-16, reasoning_effort=high. Per-paper cost tracking (input/output/reasoning tokens)
 - `AnthropicExtractor`: claude-sonnet-4-6, extended thinking (10K token budget). Streaming response with thinking block capture
-- `store_extraction()` rejects 0-span results with ValueError — prevents silent data loss
+- `store_result()` rejects 0-span results with ValueError — prevents silent data loss
 - Cloud schema (engine/cloud/schema.py): creates cloud_extractions + cloud_evidence_spans tables
 - Cost rates: OpenAI $1.10/$4.40 per 1M tokens (in/out); Anthropic $3.00/$15.00 per 1M tokens (in/out)
 

@@ -317,9 +317,24 @@ class ReviewDatabase:
         self._run_migrations()
 
     def _run_migrations(self) -> None:
-        """Apply schema migrations, skipping those already applied."""
-        # Ensure adjudication table exists
+        """Bring this database up to date, recording what ran.
+
+        MIGRATIONS-01. This used to be eighteen inline `ALTER TABLE` statements
+        that duplicated migrations 004 and 005, five unconditional `importlib`
+        imports, two ad-hoc rebuilds, and no record of any of it — while 002,
+        003, 010 and 011 were never run here at all. A database could not say
+        which migrations it had, and a second review could not reach the same
+        schema.
+
+        The inline base stays: `_SCHEMA` (run by `__init__`), the adjudication
+        tables, the verification table and the `evidence_spans` CHECK rebuild
+        are the floor the numbered migrations start from, and several of them
+        assume it. What moved is everything numbered — the runner applies those
+        in order and writes a receipt for each.
+        """
         from engine.adjudication.schema import ensure_adjudication_table
+        from engine.migrations import runner
+
         ensure_adjudication_table(self._conn)
 
         for sql in _SIMPLE_MIGRATIONS:
@@ -348,70 +363,21 @@ class ReviewDatabase:
             self._conn.commit()
             logger.info("Migrated evidence_spans: added contested/invalid_snippet states")
 
-        # Migration 006: add tier column to evidence_spans if missing
-        es_cols = {
-            r[1]
-            for r in self._conn.execute(
-                "PRAGMA table_info(evidence_spans)"
-            ).fetchall()
-        }
-        if "tier" not in es_cols and "evidence_spans" in {
-            r[0]
-            for r in self._conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table'"
-            ).fetchall()
-        }:
-            import importlib
-            mod = importlib.import_module(
-                "engine.migrations.006_not_null_confidence_tier"
-            )
-            run_migration = mod.run_migration
-
-            self._conn.close()
-            run_migration(str(self.db_path))
+        # The numbered migrations, in order, each with a receipt. Data
+        # migrations are skipped: 003 would import one review's corpus into
+        # another review's database, and 002 renames labels a fresh database
+        # has no rows to carry.
+        self._conn.close()
+        try:
+            result = runner.run(self.db_path)
+        finally:
             self._conn = sqlite3.connect(str(self.db_path))
             self._conn.row_factory = sqlite3.Row
             self._conn.execute("PRAGMA journal_mode=WAL")
-            self._conn.execute("PRAGMA busy_timeout = 5000")
-            self._conn.execute("PRAGMA foreign_keys = ON")
-            logger.info("Migrated evidence_spans: added tier column")
-
-        # Migration 007: add judge_runs / judge_ratings / judge_pair_ratings
-        # tables for Paper 1 LLM-as-judge pipeline. Idempotent (IF NOT EXISTS).
-        import importlib
-        mod_007 = importlib.import_module(
-            "engine.migrations.007_add_judge_tables"
-        )
-        mod_007.run_migration(str(self.db_path))
-
-        # Migration 008: add fabrication_verifications (Pass 2 per-arm verdicts).
-        mod_008 = importlib.import_module(
-            "engine.migrations.008_add_fabrication_verifications"
-        )
-        mod_008.run_migration(str(self.db_path))
-
-        # Migration 009: add judge_run_audit (post-hoc correction trail).
-        mod_009 = importlib.import_module(
-            "engine.migrations.009_add_backfill_audit_log"
-        )
-        mod_009.run_migration(str(self.db_path))
-
-        # Migration 012: codebook provenance columns (CODEBOOK-AUTH-01 R2).
-        # Wired here rather than hand-run, unlike 010 and 011: an extraction
-        # written into a database that lacks these columns records no codebook
-        # at all, and the gap is indistinguishable from an unedited codebook.
-        mod_012 = importlib.import_module(
-            "engine.migrations.012_codebook_provenance"
-        )
-        mod_012.run_migration(str(self.db_path))
-
-        # Migration 013: extraction_schema_hash / extraction_hash lose NOT NULL
-        # (SCHEMA-DERIVE-01). The columns stay as the historical record; the
-        # constraint would require a value nothing computes any more.
-        mod_013 = importlib.import_module(
-            "engine.migrations.013_drop_schema_hash_not_null"
-        )
-        mod_013.run_migration(str(self.db_path))
+            self._conn.execute("PRAGMA busy_timeout=5000")
+            self._conn.execute("PRAGMA foreign_keys=ON")
+        if result["executed"]:
+            logger.info("Migrations executed: %s", ", ".join(result["executed"]))
 
     # ── Papers ───────────────────────────────────────────────
 

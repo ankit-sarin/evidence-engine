@@ -128,14 +128,34 @@ def test_migration_requires_a_path():
         MIG.run_migration(None)
 
 
-def test_the_migration_is_wired_not_hand_run():
-    """010 and 011 are hand-run; this one is not.
+def test_the_migration_is_wired_not_hand_run(tmp_path):
+    """An extraction written without these columns records no codebook at all,
+    and that gap is indistinguishable from an unedited one — so this migration
+    must run by itself.
 
-    An extraction written into a database without these columns records no
-    codebook at all, and that gap is indistinguishable from an unedited one.
+    OLD (MIGRATIONS-01): this asserted the string "012_codebook_provenance"
+    appeared in `engine/core/database.py`, which pinned the WIRING MECHANISM —
+    one hand-written `importlib` line per migration. The runner discovers
+    migrations now, so the literal is gone and the property it stood for is
+    stronger: build a database and check the receipt says it ran.
     """
-    src = (REPO_ROOT / "engine/core/database.py").read_text()
-    assert "012_codebook_provenance" in src
+    from engine.core.database import ReviewDatabase
+    import sqlite3
+
+    db = ReviewDatabase("prov_wiring", data_root=tmp_path)
+    path = db.db_path
+    db.close()
+
+    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    try:
+        row = conn.execute(
+            "SELECT mode FROM schema_migrations WHERE migration_id = ?",
+            ("012_codebook_provenance",),
+        ).fetchone()
+    finally:
+        conn.close()
+    assert row is not None, "012 did not run on a fresh database"
+    assert row[0] == "executed"
 
 
 # ── The write sites ──────────────────────────────────────────────────

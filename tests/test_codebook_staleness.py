@@ -264,6 +264,29 @@ def test_013_is_idempotent(db_copy):
     assert len(second["already_nullable"]) == len(MIG013.TARGETS)
 
 
-def test_013_is_wired():
-    src = (REPO_ROOT / "engine/core/database.py").read_text()
-    assert "013_drop_schema_hash_not_null" in src
+def test_013_is_wired(tmp_path):
+    """OLD (MIGRATIONS-01): asserted the literal "013_drop_schema_hash_not_null"
+    appeared in `engine/core/database.py` — the wiring MECHANISM, which the
+    runner replaced. NEW: the migration's receipt says it ran, and its effect
+    is present."""
+    import sqlite3
+    from engine.core.database import ReviewDatabase
+
+    db = ReviewDatabase("staleness_wiring", data_root=tmp_path)
+    path = db.db_path
+    db.close()
+
+    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    try:
+        row = conn.execute(
+            "SELECT mode FROM schema_migrations WHERE migration_id = ?",
+            ("013_drop_schema_hash_not_null",),
+        ).fetchone()
+        notnull = {
+            r[1]: r[3]
+            for r in conn.execute("PRAGMA table_info(extractions)")
+        }
+    finally:
+        conn.close()
+    assert row is not None and row[0] == "executed"
+    assert notnull["extraction_schema_hash"] == 0, "NOT NULL was not lifted"

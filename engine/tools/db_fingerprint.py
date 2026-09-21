@@ -59,12 +59,27 @@ Canonical serialization (the definition the hashes below are taken under):
   - Overall hash: SHA-256 over RS.join(name + US + per_table_hash)
     for user tables in name order."""
 
+STRUCTURE_DEFINITION = """\
+Structural facts (the definition `schema_structure_hash` is taken over):
+  - Tables: every name in sqlite_master, sorted, excluding sqlite_ internals.
+  - Columns: PRAGMA table_info, as (name, type-uppercased, notnull, default,
+    pk-ordinal), sorted BY COLUMN NAME — so a column appended by ALTER TABLE and
+    the same column declared in a fresh CREATE compare equal.
+  - Indices: PRAGMA index_list and index_info, as (name, unique, partial,
+    columns-in-index-order), sorted by name.
+  - Foreign keys: PRAGMA foreign_key_list, as (from, to-table, to-column,
+    on_update, on_delete), sorted.
+Column ORDER, quoting of the table name, comments and whitespace are excluded:
+they are what ALTER TABLE and a rename leave behind, and two schemas that differ
+only in those are the same schema. The textual `schema_hash_sha256` keeps them,
+and it stays the live integrity check."""
+
 #: Fields a comparison ignores: they describe the reading, not the content, and
 #: a backup legitimately differs from its source in every one of them.
 _VOLATILE_KEYS = (
     "tool", "task", "generated_utc", "connection_uri", "read_transaction",
     "db_file", "wal_file", "shm_file", "wall_time_seconds", "immutable_flag_used",
-    "canonical_serialization", "E5_comparison",
+    "canonical_serialization", "structure_definition", "E5_comparison",
 )
 
 
@@ -145,6 +160,70 @@ def _main_db_path(conn: sqlite3.Connection) -> Path:
     raise ValueError("connection reports no main schema")
 
 
+def structure(conn: sqlite3.Connection) -> dict:
+    """PRAGMA-derived structural facts. See STRUCTURE_DEFINITION."""
+    tables = sorted(
+        r[0] for r in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' "
+            "AND name NOT LIKE 'sqlite\\_%' ESCAPE '\\'"
+        )
+    )
+    out: dict[str, dict] = {}
+    for t in tables:
+        cols = sorted(
+            (c[1], (c[2] or "").upper(), int(c[3]), c[4], int(c[5]))
+            for c in conn.execute(f'PRAGMA table_info("{t}")')
+        )
+        idx = []
+        for row in conn.execute(f'PRAGMA index_list("{t}")'):
+            name, unique, origin, partial = row[1], int(row[2]), row[3], int(row[4])
+            cols_in = [c[2] for c in conn.execute(f'PRAGMA index_info("{name}")')]
+            idx.append((name, unique, origin, partial, cols_in))
+        fks = sorted(
+            (f[3], f[2], f[4], f[5], f[6])  # from, to-table, to-column, on_update, on_delete
+            for f in conn.execute(f'PRAGMA foreign_key_list("{t}")')
+        )
+        out[t] = {
+            "columns": [list(c) for c in cols],
+            "indices": [list(i) for i in sorted(idx)],
+            "foreign_keys": [list(f) for f in fks],
+        }
+    return out
+
+
+def structure_hash(struct: dict) -> str:
+    """SHA-256 over the structural facts, serialized canonically."""
+    payload = json.dumps(struct, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(payload.encode()).hexdigest()
+
+
+def structure_differences(left: dict, right: dict, *,
+                          left_label: str = "left",
+                          right_label: str = "right") -> list[str]:
+    """Every structural fact that differs, named."""
+    diffs: list[str] = []
+    for name in sorted(set(left) | set(right)):
+        l, r = left.get(name), right.get(name)
+        if l is None:
+            diffs.append(f"table {name!r}: absent in {left_label}")
+            continue
+        if r is None:
+            diffs.append(f"table {name!r}: absent in {right_label}")
+            continue
+        for facet in ("columns", "indices", "foreign_keys"):
+            lv = {tuple(map(_freeze, x)) for x in l[facet]}
+            rv = {tuple(map(_freeze, x)) for x in r[facet]}
+            for missing in sorted(rv - lv, key=str):
+                diffs.append(f"{name}.{facet}: only in {right_label}: {list(missing)}")
+            for extra in sorted(lv - rv, key=str):
+                diffs.append(f"{name}.{facet}: only in {left_label}: {list(extra)}")
+    return diffs
+
+
+def _freeze(v):
+    return tuple(v) if isinstance(v, list) else v
+
+
 def fingerprint_within(conn: sqlite3.Connection, *, uri: str, db_path: Path) -> dict:
     """Fingerprint through an already-open snapshot. See `fingerprint`."""
     t0 = time.time()
@@ -201,6 +280,8 @@ def fingerprint_within(conn: sqlite3.Connection, *, uri: str, db_path: Path) -> 
         _RS.join(f"{t}{_US}{per_table[t]['sha256']}" for t in tables).encode()
     ).hexdigest()
 
+    struct = structure(conn)
+
     wal = db_path.parent / (db_path.name + "-wal")
     shm = db_path.parent / (db_path.name + "-shm")
     stat = db_path.stat()
@@ -229,6 +310,9 @@ def fingerprint_within(conn: sqlite3.Connection, *, uri: str, db_path: Path) -> 
             "size_bytes": shm.stat().st_size if shm.exists() else None,
         },
         "schema_hash_sha256": schema_hash,
+        "structure_definition": STRUCTURE_DEFINITION,
+        "schema_structure_hash": structure_hash(struct),
+        "structure": struct,
         "table_count": len(tables),
         "tables": per_table,
         "overall_sha256": overall,
@@ -260,8 +344,14 @@ def compare(left: dict, right: dict, *,
     """
     diffs: list[str] = []
 
-    for key in ("schema_hash_sha256", "table_count", "overall_sha256"):
-        lv, rv = left.get(key), right.get(key)
+    for key in ("schema_hash_sha256", "schema_structure_hash",
+                "table_count", "overall_sha256"):
+        # Only when BOTH carry the key. A record written before a field existed
+        # is not evidence that the field changed, and treating its absence as a
+        # difference would make every older record compare dirty forever.
+        if key not in left or key not in right:
+            continue
+        lv, rv = left[key], right[key]
         if lv != rv:
             diffs.append(f"{key}: {left_label}={lv!r} {right_label}={rv!r}")
 
@@ -286,6 +376,11 @@ def compare(left: dict, right: dict, *,
         if lrow.get("columns") != rrow.get("columns"):
             diffs.append(f"table {name!r}: columns {left_label}={lrow.get('columns')} "
                          f"{right_label}={rrow.get('columns')}")
+
+    ls, rs = left.get("structure"), right.get("structure")
+    if ls is not None and rs is not None:
+        diffs.extend(structure_differences(ls, rs, left_label=left_label,
+                                           right_label=right_label))
     return diffs
 
 
@@ -300,7 +395,8 @@ def _summary(fp: dict) -> str:
         f"-wal     : {fp['wal_file']['size_bytes']} B at read "
         f"(non-empty={fp['wal_file']['non_empty_at_read']})",
         f"tables   : {fp['table_count']}",
-        f"schema   : {fp['schema_hash_sha256']}",
+        f"schema   : {fp['schema_hash_sha256']}  (textual)",
+        f"structure: {fp['schema_structure_hash']}  (PRAGMA-derived)",
         f"overall  : {fp['overall_sha256']}",
         f"wall     : {fp['wall_time_seconds']} s",
     ]

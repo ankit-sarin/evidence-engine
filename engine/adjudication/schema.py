@@ -18,11 +18,16 @@ CREATE TABLE IF NOT EXISTS abstract_screening_adjudication (
     created_at              TEXT NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_adjudication_paper
+-- The post-002 names. This file used to carry the PRE-rename names
+-- (idx_adjudication_*), and ReviewDatabase calls it on every construction, so
+-- the names migration 002 had renamed away were recreated every time and the
+-- live database accumulated six indices on three columns (MIGRATIONS-01).
+-- Migration 015 drops the duplicates; this is what stops them coming back.
+CREATE INDEX IF NOT EXISTS idx_abstract_adjudication_paper
     ON abstract_screening_adjudication(paper_id);
-CREATE INDEX IF NOT EXISTS idx_adjudication_ext_key
+CREATE INDEX IF NOT EXISTS idx_abstract_adjudication_ext_key
     ON abstract_screening_adjudication(external_key);
-CREATE INDEX IF NOT EXISTS idx_adjudication_decision
+CREATE INDEX IF NOT EXISTS idx_abstract_adjudication_decision
     ON abstract_screening_adjudication(adjudication_decision);
 """
 

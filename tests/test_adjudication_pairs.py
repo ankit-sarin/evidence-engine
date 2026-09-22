@@ -92,7 +92,59 @@ def _make_review_db(tmp_path: Path) -> Path:
     """)
     conn.commit()
     conn.close()
+    # B5 (READERS-01 Phase 2a): `load_arm` reads through `effective_value` now,
+    # so the fixture's declarations are mirrored into the event store. What the
+    # fixture SAYS is unchanged; where the reader LOOKS is what moved.
+    _mirror(db_path)
     return db_path
+
+
+def _mirror(db_path) -> None:
+    from engine.core import events
+    from tests._event_store_fixture import ensure_event_store
+
+    ensure_event_store(db_path)
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("PRAGMA foreign_keys = ON")
+    try:
+        rows = [("local", r[0], r[1], r[2], r[3]) for r in conn.execute(
+            "SELECT e.paper_id, es.field_name, es.value, es.source_snippet "
+            "FROM evidence_spans es JOIN extractions e ON e.id = es.extraction_id")]
+        rows += [(r[0], r[1], r[2], r[3], r[4]) for r in conn.execute(
+            "SELECT ce.arm, ce.paper_id, cs.field_name, cs.value, cs.source_snippet "
+            "FROM cloud_evidence_spans cs "
+            "JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id")]
+
+        seen_arms, seen_papers = set(), set()
+        for arm, pid, field, value, snippet in rows:
+            if arm not in seen_arms:
+                if not conn.execute("SELECT COUNT(*) FROM arms WHERE arm_name = ?",
+                                    (arm,)).fetchone()[0]:
+                    events.register_arm(conn, arm, "model")
+                seen_arms.add(arm)
+            if pid not in seen_papers:
+                conn.execute("INSERT OR IGNORE INTO papers (id) VALUES (?)", (pid,))
+                if not conn.execute(
+                    "SELECT COUNT(*) FROM paper_events WHERE paper_id = ?", (pid,)
+                ).fetchone()[0]:
+                    events.write_paper_event(
+                        conn, event_type="state_at_migration", paper_id=pid,
+                        to_state="eligible", actor_kind="engine",
+                        actor_role="system", actor_name="fixture")
+                seen_papers.add(pid)
+            uid = events.mint_extraction_uid()
+            events.write_field_event(
+                conn, event_type="asserted", paper_id=pid, field_name=field,
+                arm=arm, value=value, extraction_uid=uid, source_snippet=snippet,
+                actor_kind="model", actor_role="extractor", actor_name="fixture")
+            events.write_field_event(
+                conn, event_type="citation_located", paper_id=pid,
+                field_name=field, arm=arm, extraction_uid=uid,
+                actor_kind="engine", actor_role="system", actor_name="locator",
+                payload={"located": True, "snippet": snippet or ""})
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def _make_pair(overrides: dict | None = None) -> dict:
@@ -223,12 +275,43 @@ class TestExportAmbiguousPairs:
         for p in pairs:
             assert p["field_type"] in ("categorical", "free_text", "numeric", "unknown")
 
-    def test_empty_arm_raises(self, tmp_path):
+    def test_an_arm_that_is_not_in_the_registry_raises(self, tmp_path):
+        """B5 rewrite (A12, R12).
+
+        This pinned `RuntimeError("No extraction data")` — the old `load_arm`
+        returned `{}` for a name nobody had declared, and the caller turned that
+        silence into a message about missing DATA. The name was the problem, not
+        the data, and the two are now different errors: routing is the registry,
+        so an unregistered arm raises `UnknownArm` before any query runs.
+        """
+        from engine.core.effective import UnknownArm
+
         db_path = _make_review_db(tmp_path)
-        with pytest.raises(RuntimeError, match="No extraction data"):
+        with pytest.raises(UnknownArm, match="not in this review's registry"):
             export_ambiguous_pairs(
                 db_path, "test_review",
                 arms=["local", "nonexistent_arm"],
+                codebook_path=CODEBOOK_PATH,
+            )
+
+    def test_a_registered_arm_holding_nothing_still_raises_no_extraction_data(
+            self, tmp_path):
+        """The other half: an arm that exists and is empty is a DATA problem,
+        and keeps the message it always had."""
+        from engine.core import events
+        from tests._event_store_fixture import ensure_event_store
+
+        db_path = _make_review_db(tmp_path)
+        ensure_event_store(db_path)
+        conn = sqlite3.connect(str(db_path))
+        events.register_arm(conn, "empty_arm", "model")
+        conn.commit()
+        conn.close()
+
+        with pytest.raises(RuntimeError, match="No extraction data"):
+            export_ambiguous_pairs(
+                db_path, "test_review",
+                arms=["local", "empty_arm"],
                 codebook_path=CODEBOOK_PATH,
             )
 
@@ -247,6 +330,7 @@ class TestExportAmbiguousPairs:
         """)
         conn.commit()
         conn.close()
+        _mirror(db_path)     # B5: the third arm reaches the reader, not a table
 
         pairs = export_ambiguous_pairs(
             db_path, "test_review",

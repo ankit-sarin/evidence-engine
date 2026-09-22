@@ -83,52 +83,73 @@ def _is_null(value: str | None, non_value: frozenset[str] = frozenset()) -> bool
     return value.strip().lower() in _NULL_SYNONYMS
 
 
-def _query_local_values(conn: sqlite3.Connection, field_name: str,
-                        non_value: frozenset[str] = frozenset()) -> list[str]:
-    """Get all values for a field from local evidence_spans."""
-    rows = conn.execute(
-        """SELECT es.value
-           FROM evidence_spans es
-           JOIN extractions e ON e.id = es.extraction_id
-           WHERE es.field_name = ?""",
-        (field_name,),
-    ).fetchall()
-    return [r[0] for r in rows if not _is_null(r[0], non_value)]
-
-
-def _query_cloud_values(conn: sqlite3.Connection, field_name: str, arm: str,
-                        non_value: frozenset[str] = frozenset()) -> list[str]:
-    """Get all values for a field from cloud_evidence_spans for a specific arm."""
-    rows = conn.execute(
-        """SELECT cs.value
-           FROM cloud_evidence_spans cs
-           JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id
-           WHERE cs.field_name = ? AND ce.arm = ?""",
-        (field_name, arm),
-    ).fetchall()
-    return [r[0] for r in rows if not _is_null(r[0], non_value)]
-
-
-def _query_human_values(conn: sqlite3.Connection, field_name: str, extractor_id: str,
-                        non_value: frozenset[str] = frozenset()) -> list[str]:
-    """Get all values for a field from human_extractions for a specific extractor."""
-    rows = conn.execute(
-        """SELECT value FROM human_extractions
-           WHERE field_name = ? AND extractor_id = ?""",
-        (field_name, extractor_id),
-    ).fetchall()
-    return [r[0] for r in rows if not _is_null(r[0], non_value)]
-
-
 def _query_values(conn: sqlite3.Connection, field_name: str, arm: str,
-                  non_value: frozenset[str] = frozenset()) -> list[str]:
-    """Route value query to the right table based on arm name."""
-    if arm == "local":
-        return _query_local_values(conn, field_name, non_value)
-    if arm.startswith("human_"):
-        extractor_id = arm.split("_", 1)[1]
-        return _query_human_values(conn, field_name, extractor_id, non_value)
-    return _query_cloud_values(conn, field_name, arm, non_value)
+                  non_value: frozenset[str] = frozenset(), *,
+                  codebook=None) -> list[str]:
+    """Every value this arm holds for `field_name`, THROUGH THE READER.
+
+    READERS-01 Phase 2a (A12, R12, R30). What was here were three branches —
+    `if arm == "local"`, `if arm.startswith("human_")`, else cloud — each hitting
+    a different table, and each a private copy of a routing rule. Two things were
+    wrong with that beyond the duplication:
+
+    * `concordance.load_arm` had only TWO of the three, so the two files
+      disagreed about where a `human_*` arm's values live (A12);
+    * the `human_` branch read `human_extractions`, a table that does not exist
+      on this review's database at all, so the branch was not merely divergent,
+      it was unreachable.
+
+    Routing is now the `arms` registry (R12) and there is no name test left. An
+    arm not in the registry raises `UnknownArm` rather than returning `{}`.
+    """
+    from engine.core.codebook import load_codebook_beside
+    from engine.core.effective import UnknownArm, iter_grid, registered_arms
+
+    if arm not in registered_arms(conn, include_retired=True):
+        raise UnknownArm(
+            f"arm {arm!r} is not in this review's registry — registered arms are "
+            f"{registered_arms(conn, include_retired=True)}."
+        )
+
+    if codebook is None:
+        codebook = load_codebook_beside(_db_path_of(conn))
+
+    return _query_all_fields(conn, arm, non_value, codebook=codebook).get(
+        field_name, [])
+
+
+def _query_all_fields(conn: sqlite3.Connection, arm: str,
+                      non_value: frozenset[str] = frozenset(), *,
+                      codebook=None) -> dict[str, list[str]]:
+    """`{field_name: [value, ...]}` for one arm, in ONE pass over the grid.
+
+    `_query_values` is per-field, and `check_distribution` loops over every
+    categorical field — so a per-field implementation that enumerated the whole
+    grid each time did |fields| times the work it needed. The caller uses this;
+    `_query_values` keeps its signature for the tests and the two external
+    callers, and delegates.
+    """
+    from engine.core.codebook import load_codebook_beside
+    from engine.core.effective import UnknownArm, iter_grid, registered_arms
+
+    if arm not in registered_arms(conn, include_retired=True):
+        raise UnknownArm(
+            f"arm {arm!r} is not in this review's registry — registered arms are "
+            f"{registered_arms(conn, include_retired=True)}."
+        )
+    if codebook is None:
+        codebook = load_codebook_beside(_db_path_of(conn))
+
+    out: dict[str, list[str]] = {}
+    for _pid, fname, _arm, ev in iter_grid(conn, codebook=codebook, arms=(arm,)):
+        if not _is_null(ev.value, non_value):
+            out.setdefault(fname, []).append(ev.value)
+    return out
+
+
+def _db_path_of(conn: sqlite3.Connection) -> str:
+    row = conn.execute("PRAGMA database_list").fetchone()
+    return row[2]
 
 
 # ── Shannon entropy ─────────────────────────────────────────────────
@@ -172,11 +193,16 @@ def check_distribution(
     categorical_fields = _load_categorical_fields(codebook_path)
     non_value = non_value_tokens_for(codebook_path)
 
-    conn = sqlite3.connect(str(db_path))
+    from engine.core.codebook import load_codebook_beside
+
+    # mode=ro (I5's family): this validator only ever reads.
+    conn = sqlite3.connect(f"file:{Path(db_path).resolve()}?mode=ro", uri=True)
     try:
+        codebook = load_codebook_beside(db_path)
+        by_field = _query_all_fields(conn, arm, non_value, codebook=codebook)
         results: list[dict] = []
         for field_name in categorical_fields:
-            values = _query_values(conn, field_name, arm, non_value)
+            values = by_field.get(field_name, [])
             total_non_null = len(values)
 
             if total_non_null == 0:

@@ -224,24 +224,84 @@ def test_site5_terminal_states_are_dropped_from_the_arm(tmp_path):
 
     from engine.analysis.concordance import load_arm
 
+    from tests._event_store_fixture import add_values
+
     db = tmp_path / "review.db"
-    (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
-    conn = sqlite3.connect(db)
-    conn.executescript(
-        "CREATE TABLE extractions (id INTEGER PRIMARY KEY, paper_id INTEGER);"
-        "CREATE TABLE evidence_spans (id INTEGER PRIMARY KEY, extraction_id INTEGER,"
-        " field_name TEXT, value TEXT);"
-        "INSERT INTO extractions VALUES (1, 7);"
-        "INSERT INTO evidence_spans VALUES"
-        " (1,1,'a','General Surgery'),"
-        " (2,1,'b','CONTRACT_UNMET'),"
-        " (3,1,'c','NO_EVIDENCE_LOCATABLE'),"
-        " (4,1,'d','NR');"
-    )
+    # Four fields, because the reader's field set IS the codebook's (R18/Q6) and
+    # a one-field codebook would make this test pass for the wrong reason. The
+    # filtering itself is asserted separately below — it is also what removes the
+    # `field_1` parse artefact that reached every published figure since March
+    # (A10).
+    cb = dict(CODEBOOK)
+    proto = CODEBOOK["fields"][0]
+    cb["fields"] = [dict(proto, name=n) for n in ("a", "b", "c", "d")]
+    (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(cb))
+
+    # B5 rewrite (R30). The values used to be INSERTed into `evidence_spans`,
+    # which `load_arm` no longer reads. The CONTRACT is unchanged and is what
+    # this test is about: a terminal state is not a value to score.
+    #
+    # What produces the drop is now different, and better. It used to be a
+    # string test against the codebook's non-value tokens, applied at the
+    # boundary. It is now the READER'S OWN STATE: `contract_unmet` is v2.1 row
+    # 15 and `declined` is row 14, both of which return `value=None`, so there
+    # is nothing to drop — the cell simply carries no value. A cited sentinel
+    # (`NR`) is an ordinary value under R22 and stays.
+    for pid, field, value in (
+        (7, "a", "General Surgery"),
+        (7, "d", "NR"),
+    ):
+        add_values(db, "local", field, [None] * (pid - 1) + [value])
+
+    import sqlite3 as _s
+    from engine.core import events
+
+    conn = _s.connect(db)
+    conn.execute("PRAGMA foreign_keys = ON")
+    events.write_field_event(
+        conn, event_type="contract_unmet", paper_id=7, field_name="b",
+        arm="local", extraction_uid=events.mint_extraction_uid(),
+        actor_kind="model", actor_role="extractor", actor_name="m",
+        payload={"violation_codes": ["X"], "attempts": 2})
+    events.write_field_event(
+        conn, event_type="declined", paper_id=7, field_name="c", arm="local",
+        extraction_uid=events.mint_extraction_uid(),
+        actor_kind="model", actor_role="extractor", actor_name="m")
     conn.commit()
     conn.close()
 
     got = load_arm(str(db), "local")
     assert got == {7: {"a": "General Surgery", "d": "NR"}}, (
-        "terminal states dropped; a cited sentinel is a VALUE and stays"
+        "terminal states carry no value; a cited sentinel is a VALUE and stays"
     )
+
+
+def test_site5_a_field_the_codebook_does_not_declare_is_ignored(tmp_path):
+    """R18/Q6, and the mechanism that removes A10.
+
+    `field_1` — a model preamble stored as a span on paper 719 — was carried into
+    every published figure since March because `load_arm` read whatever rows were
+    in `evidence_spans`. The reader enumerates the CODEBOOK's fields, so a field
+    nobody declared cannot reach an arm at all.
+    """
+    import sqlite3 as _s
+
+    from engine.analysis.concordance import load_arm
+    from engine.core import events
+    from tests._event_store_fixture import add_values
+
+    db = tmp_path / "review.db"
+    (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
+    add_values(db, "local", "a", [None] * 6 + ["General Surgery"])
+
+    conn = _s.connect(db)
+    conn.execute("PRAGMA foreign_keys = ON")
+    events.write_field_event(
+        conn, event_type="asserted", paper_id=7, field_name="field_1",
+        arm="local", value="The paper presents a dynamic potential field method",
+        extraction_uid=events.mint_extraction_uid(),
+        actor_kind="model", actor_role="extractor", actor_name="m")
+    conn.commit()
+    conn.close()
+
+    assert load_arm(str(db), "local") == {7: {"a": "General Surgery"}}

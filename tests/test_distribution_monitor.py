@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from tests._event_store_fixture import add_values, ensure_event_store
 from engine.validators.distribution_monitor import (
     DEFAULT_COLLAPSED_MIN_PAPERS,
     DEFAULT_LOW_VARIANCE_MIN_PAPERS,
@@ -75,61 +76,47 @@ def _make_db(tmp_path: Path) -> Path:
     """)
     conn.commit()
     conn.close()
+    # The reader takes its field set from the codebook beside the database
+    # (R26: the codebook is the sole source of field names), so the fixture
+    # carries one — the review's own, not a hand-typed copy.
+    import shutil
+    shutil.copy(CODEBOOK_PATH, tmp_path / "extraction_codebook.yaml")
+    ensure_event_store(db_path)
     return db_path
 
 
+# B5 rewrite (READERS-01 Phase 2a, R30). These helpers declared values by
+# INSERTing into `evidence_spans` / `cloud_evidence_spans` / `human_extractions`.
+# `_query_values` no longer reads any of those — it reads `effective_value`
+# through the arm registry, which is what closes A12 — so the declarations move
+# to the event store. The tests below are unchanged: they pin distributions,
+# and a distribution is still what they pin.
+
 def _insert_local_spans(db_path: Path, field_name: str, values: list[str | None]) -> None:
-    """Insert local extraction spans for a field with given values."""
-    conn = sqlite3.connect(str(db_path))
-    for i, val in enumerate(values):
-        # Create a unique extraction per paper
-        ext_id = conn.execute(
-            "INSERT INTO extractions (paper_id, extracted_data, extracted_at) "
-            "VALUES (?, '{}', '2026-01-01')",
-            (i + 1,),
-        ).lastrowid
-        if val is not None:
-            conn.execute(
-                "INSERT INTO evidence_spans (extraction_id, field_name, value, confidence) "
-                "VALUES (?, ?, ?, 0.9)",
-                (ext_id, field_name, val),
-            )
-    conn.commit()
-    conn.close()
+    add_values(db_path, "local", field_name, values)
 
 
-def _insert_cloud_spans(db_path: Path, arm: str, field_name: str, values: list[str | None]) -> None:
-    """Insert cloud extraction spans for a field with given values."""
-    conn = sqlite3.connect(str(db_path))
-    for i, val in enumerate(values):
-        ce_id = conn.execute(
-            "INSERT INTO cloud_extractions (paper_id, arm, model_string, extracted_at) "
-            "VALUES (?, ?, 'test-model', '2026-01-01')",
-            (i + 1, arm),
-        ).lastrowid
-        if val is not None:
-            conn.execute(
-                "INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value) "
-                "VALUES (?, ?, ?)",
-                (ce_id, field_name, val),
-            )
-    conn.commit()
-    conn.close()
+def _insert_cloud_spans(db_path: Path, arm: str, field_name: str,
+                        values: list[str | None]) -> None:
+    add_values(db_path, arm, field_name, values)
 
 
 def _insert_human_spans(db_path: Path, extractor_id: str, field_name: str,
-                         values: list[tuple[str, str | None]]) -> None:
-    """Insert human extraction rows: values is [(paper_id, value), ...]."""
-    conn = sqlite3.connect(str(db_path))
-    for paper_id, val in values:
-        conn.execute(
-            "INSERT INTO human_extractions "
-            "(paper_id, extractor_id, field_name, value, imported_at) "
-            "VALUES (?, ?, ?, ?, '2026-01-01')",
-            (paper_id, extractor_id, field_name, val),
-        )
-    conn.commit()
-    conn.close()
+                        values: list[tuple[str, str | None]]) -> None:
+    """R13: a `human_extractor` arm is assigned nothing until session 12, so its
+    cells read OUT OF SCOPE. The rows are declared anyway, because the point of
+    `TestArmRouting::test_human_arm` is that the arm RESOLVES — before Phase 2a
+    it fell into the cloud branch and returned `{}` with no error (A12)."""
+    def _pid(raw: str) -> int:
+        # `human_extractions.paper_id` is TEXT "EE-NNN"; R14 reconciles it to
+        # `papers.id` in session 12. Until then the fixture does the obvious
+        # thing and records why it is obvious.
+        return int(str(raw).split("-")[-1])
+
+    arm = f"human_{extractor_id}"
+    ordered = sorted(values, key=lambda pv: _pid(pv[0]))
+    add_values(db_path, arm, field_name, [v for _pid_, v in ordered],
+               arm_kind="human_extractor", start_paper=_pid(ordered[0][0]))
 
 
 # ── Tests: _is_null ──────────────────────────────────────────────────
@@ -311,14 +298,31 @@ class TestCheckEdgeCases:
         assert st[0]["total_non_null"] == 12
         assert st[0]["status"] == "COLLAPSED"  # 12 same, >= 10
 
-    def test_no_extractions_empty(self, tmp_path):
-        """Empty DB → all fields get 0 non-null, OK."""
+    def test_an_arm_with_no_values_is_all_zero_and_OK(self, tmp_path):
+        """B5 rewrite (A12). This was `test_no_extractions_empty` and it called
+        `check_distribution` for `"local"` on a database where no arm had been
+        registered, expecting zeros. That is exactly the conflation A12 names: a
+        name nobody declared and an arm that happens to hold nothing gave the
+        same answer, so a typo in an arm name read as a clean result.
+
+        The zeros are still the contract — for a REGISTERED arm that holds
+        nothing. The other half is the test below."""
         db_path = _make_db(tmp_path)
+        add_values(db_path, "local", "study_type", [])   # registered, no claims
         results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
         assert len(results) > 0
         for r in results:
             assert r["total_non_null"] == 0
             assert r["status"] == "OK"
+
+    def test_an_unregistered_arm_raises_rather_than_reading_as_empty(self, tmp_path):
+        """The other half of A12, and the reason the rewrite above was needed."""
+        from engine.core.effective import UnknownArm
+
+        db_path = _make_db(tmp_path)
+        add_values(db_path, "local", "study_type", ["RCT"])
+        with pytest.raises(UnknownArm):
+            check_distribution(db_path, "test", "locl", CODEBOOK_PATH)
 
     def test_only_categorical_fields_checked(self, tmp_path):
         """Free-text fields are not included in results."""
@@ -345,14 +349,41 @@ class TestArmRouting:
         assert st[0]["total_non_null"] == 15
         assert st[0]["status"] == "COLLAPSED"
 
-    def test_human_arm(self, tmp_path):
-        """Human arm queries human_extractions for specific extractor."""
+    def test_human_arm_resolves_and_reads_out_of_scope_under_R13(self, tmp_path):
+        """B5 rewrite (A12, R13).
+
+        This pinned "a human arm queries `human_extractions`", asserting 15
+        values. Two things were wrong with the world it pinned, and the ruling
+        changed both:
+
+        * `concordance.load_arm` had no such branch, so the two files disagreed
+          about where a `human_*` arm's values live — and `human_extractions`
+          does not exist on this review's database at all, so the branch was
+          unreachable, not merely divergent (A12).
+        * R13 says a `human_extractor` arm is assigned nothing until the
+          assignment table arrives with human arm loading in session 12, so its
+          cells are OUT OF SCOPE — excluded from every denominator, which is why
+          the count is 0 and not 15.
+
+        What is asserted now is what A12 was opened for: the arm RESOLVES, the
+        answer is a defined one, and no error and no silent `{}` is produced."""
+        from engine.core.effective import effective_value
+
         db_path = _make_db(tmp_path)
         papers = [(f"EE-{i:03d}", "Original Research") for i in range(1, 16)]
         _insert_human_spans(db_path, "A", "study_type", papers)
+
         results = check_distribution(db_path, "test", "human_A", CODEBOOK_PATH)
         st = [r for r in results if r["field_name"] == "study_type"]
-        assert st[0]["total_non_null"] == 15
+        assert st[0]["total_non_null"] == 0
+
+        conn = sqlite3.connect(str(db_path))
+        try:
+            ev = effective_value(conn, 1, "study_type", "human_A",
+                                 sentinels=frozenset())
+            assert (ev.rule_row, ev.state) == (0, "out of scope")
+        finally:
+            conn.close()
 
     def test_cloud_arm_filters_by_arm_name(self, tmp_path):
         """Only values from the specified cloud arm are included."""

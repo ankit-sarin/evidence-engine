@@ -311,28 +311,34 @@ def _write_codebook(review_dir):
 
 class TestLoadArm:
 
-    def test_empty_arm_returns_empty_dict(self, tmp_path):
-        """M13: An arm with no data returns empty dict (valid result)."""
+    def test_registered_arm_with_no_data_returns_empty_dict(self, tmp_path):
+        """M13, B5-rewritten for R30/A12.
+
+        Still "an arm with no data returns an empty dict" — but the arm must be
+        REGISTERED for that to be the answer. Before Phase 2a, `load_arm` gave
+        `{}` both for an arm that held nothing and for a name nobody had
+        declared, so a typo read as a clean result (A12). The second case is now
+        `UnknownArm`, below.
+        """
+        from tests._event_store_fixture import add_values
+
         db_path = tmp_path / "test.db"
         _write_codebook(tmp_path)
-        conn = sqlite3.connect(str(db_path))
-        conn.executescript("""
-            CREATE TABLE extractions (
-                id INTEGER PRIMARY KEY, paper_id INTEGER NOT NULL,
-                extraction_schema_hash TEXT, extracted_data TEXT,
-                extracted_at TEXT NOT NULL DEFAULT '2026-01-01'
-            );
-            CREATE TABLE evidence_spans (
-                id INTEGER PRIMARY KEY, extraction_id INTEGER NOT NULL,
-                field_name TEXT NOT NULL, value TEXT NOT NULL,
-                source_snippet TEXT, confidence REAL NOT NULL DEFAULT 0.9,
-                audit_status TEXT NOT NULL DEFAULT 'pending'
-            );
-        """)
-        conn.close()
+        add_values(db_path, "local", "study_type", [])
 
-        result = load_arm(str(db_path), "local")
-        assert result == {}
+        assert load_arm(str(db_path), "local") == {}
+
+    def test_an_arm_that_is_not_registered_raises(self, tmp_path):
+        """The other half of A12: silence is not an answer."""
+        from engine.core.effective import UnknownArm
+        from tests._event_store_fixture import add_values
+
+        db_path = tmp_path / "test.db"
+        _write_codebook(tmp_path)
+        add_values(db_path, "local", "study_type", ["RCT"])
+
+        with pytest.raises(UnknownArm, match="not in this review's registry"):
+            load_arm(str(db_path), "locl")
 
     def test_db_error_raises_not_empty_dict(self, tmp_path):
         """M13: A corrupted/missing-table DB raises exception, not empty dict."""

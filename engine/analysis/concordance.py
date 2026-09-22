@@ -50,74 +50,72 @@ class ConcordanceReport:
 
 
 def load_arm(db_path: str, arm: str) -> dict[int, dict[str, str]]:
-    """Load extracted values for an arm.
+    """Load extracted values for an arm, THROUGH THE READER.
+
+    READERS-01 Phase 2a (R30, R12, A12, A7, I5). What was here was two SQL
+    branches — `if arm == "local": ... else: <cloud>` — and three defects with
+    them:
+
+    * **A7**: the local branch had no run selection at all, so it folded every
+      extraction a paper ever had and the last row in `ORDER BY paper_id,
+      field_name` won, which is neither newest nor oldest by design.
+    * **A12**: a `human_*` arm fell into the cloud branch, matched no `ce.arm`,
+      and returned `{}` with no error.
+    * **I5**: it opened the live database read-write.
+
+    All three are properties of routing by name over tables. The arm registry is
+    now the single routing predicate (R12), resolution is rule v2.1, and an arm
+    that does not resolve raises `UnknownArm` instead of returning silence.
 
     Args:
-        db_path: Path to review.db
-        arm: "local" for the local extraction arm, or a cloud arm name
-             (e.g. "openai_o4_mini_high", "anthropic_sonnet_4_6").
+        db_path: Path to review.db. Opened `mode=ro` — never `immutable=1`,
+            which would promise SQLite a live file cannot change.
+        arm: an arm name in the review's registry.
 
     Returns:
-        {paper_id: {field_name: value}} — empty dict when no data exists
-        for the arm (valid result).
+        `{paper_id: {field_name: value}}`. A cell is present only when the reader
+        returns a VALUE; `missing`, `declined`, `contract unmet`, `withdrawn` and
+        `out of scope` leave the key absent, which is how `align_arms` already
+        models "this arm recorded no value here" — the representation the old
+        non-value guard chose, now derived rather than pattern-matched.
 
     Raises:
-        sqlite3.OperationalError: If the database is missing or corrupted.
+        UnknownArm: `arm` is not in the registry.
+        sqlite3.OperationalError: the database is missing or corrupted.
     """
-    from engine.elicitation.classes import non_value_tokens_for
+    from engine.core.codebook import load_codebook_beside
+    from engine.core.effective import UnknownArm, iter_grid, registered_arms
 
-    # ELICIT-DESIGN-02 D1, site 5. A terminal state is not a value to score.
-    # NO_EVIDENCE_LOCATABLE and CONTRACT_UNMET reach `evidence_spans.value`
-    # because that column is where a span's state has to live, but scoring one
-    # against another arm's real value produces a MISMATCH that means nothing —
-    # and those MISMATCHes flow into the disagreement CSV and from there into
-    # both judge passes. Dropping the field from the arm is the honest
-    # representation: this arm recorded no value here, which `align_arms`
-    # already models as an absent key.
-    non_value = non_value_tokens_for(
-        Path(db_path).parent / "extraction_codebook.yaml"
-    )
+    codebook = load_codebook_beside(db_path)
 
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(_ro_uri(db_path), uri=True)
     conn.row_factory = sqlite3.Row
-
     try:
+        if arm not in registered_arms(conn, include_retired=True):
+            raise UnknownArm(
+                f"arm {arm!r} is not in this review's registry — registered arms "
+                f"are {registered_arms(conn, include_retired=True)}. Routing is "
+                f"the registry (R12); there is no name test to fall through."
+            )
+
         result: dict[int, dict[str, str]] = {}
-
-        if arm == "local":
-            rows = conn.execute(
-                """SELECT e.paper_id, es.field_name, es.value
-                   FROM evidence_spans es
-                   JOIN extractions e ON e.id = es.extraction_id
-                   ORDER BY e.paper_id, es.field_name"""
-            ).fetchall()
-            for row in rows:
-                pid = row["paper_id"]
-                if pid not in result:
-                    result[pid] = {}
-                if str(row["value"] or "").strip().upper() in non_value:
-                    continue
-                result[pid][row["field_name"]] = row["value"]
-        else:
-            rows = conn.execute(
-                """SELECT ce.paper_id, cs.field_name, cs.value
-                   FROM cloud_evidence_spans cs
-                   JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id
-                   WHERE ce.arm = ?
-                   ORDER BY ce.paper_id, cs.field_name""",
-                (arm,),
-            ).fetchall()
-            for row in rows:
-                pid = row["paper_id"]
-                if pid not in result:
-                    result[pid] = {}
-                if str(row["value"] or "").strip().upper() in non_value:
-                    continue
-                result[pid][row["field_name"]] = row["value"]
-
+        for paper_id, field_name, _arm, ev in iter_grid(
+                conn, codebook=codebook, arms=(arm,)):
+            if ev.value is None:
+                continue
+            result.setdefault(paper_id, {})[field_name] = ev.value
         return result
     finally:
         conn.close()
+
+
+def _ro_uri(db_path: str) -> str:
+    """`mode=ro`, never `immutable=1` (I5).
+
+    `immutable` promises SQLite the file cannot change while open; `review.db` is
+    live, so the promise would be a lie and the reader could see a torn page.
+    """
+    return f"file:{Path(db_path).resolve()}?mode=ro"
 
 
 def align_arms(
@@ -171,7 +169,15 @@ def check_schema_parity(db_path: str, arms: list[str]) -> dict[str, set[str]]:
     Returns ``{arm: {hash, ...}}`` mapping.  Logs a WARNING if hashes differ
     across arms, but does not block execution.
     """
-    conn = sqlite3.connect(db_path)
+    # R31: this KEEPS its legacy read, deliberately. It compares
+    # `extractions.codebook_hash` / `cloud_extractions.codebook_hash`, which is
+    # pre-manifest provenance the event store does not carry and will not carry —
+    # R10 registered the three existing arms as "not recorded (pre-manifest)"
+    # precisely because no configuration was recorded on those rows. It serves the
+    # engine forward as the input to session 8's reuse-key work (S3d), which is
+    # what R31 asks of a legacy artifact. What it does NOT keep is the read-write
+    # connection (I5).
+    conn = sqlite3.connect(_ro_uri(db_path), uri=True)
     conn.row_factory = sqlite3.Row
 
     arm_hashes: dict[str, set[str]] = {}

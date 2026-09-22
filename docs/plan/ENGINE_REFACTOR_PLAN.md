@@ -12,7 +12,7 @@ This is the standing engineering record for the multi-session refactor of the Su
 | 1 | Discovery from the current checkout via Claude Code | Closed: DISCOVERY-01 Parts A and B (7e09de3, b8a83b1); nine of nine findings reproduce; four v49 counts contradicted |
 | 2 | Problem inventory | Closed: 53 rows in 10 classes at consolidation; rows added in sessions 2–3 (I5, A10, C9, A11, C10) and session 4 (A12, B6, D7, H2), all tabulated 2026-09-21 (EFFECTIVE-RESULT-02 Part 0) |
 | 3 | Solutions | Closed: S0–S11 under nine PI rulings; six architect's assumptions kept as written |
-| 4 | Order of sessions and steps, with gates | Active: four named states; sessions 1–5 closed; session 6 (READERS-01, S2 readers · S1c · S3h) in progress |
+| 4 | Order of sessions and steps, with gates | Active: four named states; sessions 1–5 closed; session 6 (READERS-01) Part 0 and Phases 1 and 2a closed; Phase 2b and Phase 3 pending |
 
 Evidence tags used throughout: MEASURED (a tool result at a named HEAD), READ (a file read this session — plan v49 and the review), INFERRED (another lane's report, including every code finding in the external review). The review's code findings come from a source archive dated Sep 19 whose relation to HEAD `4e2a66c` is unstated; they are INFERRED here until Step 1 re-measures them.
 
@@ -211,7 +211,12 @@ Provenance of human decisions: every human decision on disk (36 full-text adjudi
 | C8 | The auditor's `options={**{"temperature": 0}, **ollama_options}` is the engine's only options merge point; every other site is a literal | D2-1 | design |
 | C9 | *Two hardcoded dispatch lists that are not the codebook's*: `_PASSTHROUGH_NUMERIC_FIELDS` (names a `free_text` field and skips lowercasing) and `_MULTI_VALUE_FIELDS` (no codebook source; its `secondary_outcomes` entry is dead code) | INSTRUMENTS-01 report, §“Inventory rows this session adds” item 3 | not stated at source |
 | C10 | *`cloud_evidence_spans.confidence` and `.tier` are NOT NULL on a fresh database and nullable on live.* `init_cloud_tables`'s rebuild branch has never run on the live database. Closing it means executing `014` there, rebuilding a 7,257-row table. No reader depends on the constraint, no writer can currently violate it, and no row does; G3 stays NOT MET until `014` is executed there | MIGRATIONS-01 report, §“Inventory rows” (New, from R4) and §“What this means for C10” | LATENT (“latent, not active”) |
+
+*Addendum, 2026-09-22 (READERS-01 Phase 1 and R32):* the C10 row above says "G3 stays NOT MET until `014` is executed there", which reads as though C10 were the only blocker. **It was not.** `structure_differences(fresh, live)` returned **six** entries in **two** groups — C10's two notnull flips, and **A11**, `audit_adjudication.span_id` pointing at the phantom `_evidence_spans_old` on live and at `evidence_spans` on a fresh database. 014 is also not the route: its receipt exists, so the runner skips it, and editing it raises `MigrationDrift` for every migration (R27). **Under R32 migration 018 closes both groups**, so G3 becomes an acceptance gate of the Phase 3 live write rather than a session-12 item. The session-3 gate wording "a fresh database's schema hash equals the live one" is met at that write and not before.
+
 | C11 | *The migration runner's docstring asserts transaction behaviour that is true of the **receipt** write, not of the migration.* `run()` says "One transaction per migration, committed before the next begins"; the runner in fact closes its own connection (`conn.close()  # migrations open their own connection`) and calls `module.run_migration(db_path)`, so **each module owns its transaction**. The 017 pattern — one `BEGIN`, the marker row written last, `ROLLBACK` on any exception — is the template for any seed under the append-only triggers. Severity: **docstring WRONG, behaviour correct** | EFFECTIVE-RESULT-02 closure, §"Findings" (I12) | docstring WRONG |
+| C12 | *`engine/adjudication/schema.py::ensure_adjudication_table` executes `CREATE TABLE IF NOT EXISTS` for the adjudication tables on **every** `ReviewDatabase` construction, outside the receipted runner* — the self-provisioning pattern R14 retired for `human_extractions`. Measured consequence: migration 018's `DROP TABLE audit_adjudication` did **not** survive the next open (present 1 → 0 → 1), which is why R32 removes the DDL as well as the table. Session 6 removes **only** the `audit_adjudication` DDL; the other three tables stay | READERS-01 Phase 2a census | ARMED (a schema no receipt describes) |
+| C13 | *`017_seed_event_store.py` imports `corpus_status_sql` from `engine/core/corpus.py`* — a migration depending on engine code that can change under it. 017's receipt checksums 017's text only, not the imported module, so an edit to `corpus.py` would silently change what an applied migration meant, with no drift signal. R35 forbids it from 018 onward and freezes `corpus.py`; 017 itself cannot be fixed (editing it makes the runner refuse to start for every migration) | READERS-01 Phase 2a | LATENT (the module is frozen and guarded by test) |
 
 ### D. Input identity
 
@@ -271,6 +276,7 @@ Provenance of human decisions: every human decision on disk (36 full-text adjudi
 | I3 | The nightly cron loads models without the experiment lock | v49 NIGHTLY-LOCK-01 | ARMED |
 | I4 | The session-archive tool leaves `tool-results/` undetected | v49 ARCHIVE-FIX-01 | — |
 | I5 | *Analysis readers open the live database read-write*: `engine/analysis/concordance.py` (×2) and `analysis/paper1/export_disagreement_pairs.py` (×1) call `sqlite3.connect(db_path)` with no `mode=ro`. Not changed in INSTRUMENTS-01 by ruling; the regeneration went through a scratch copy instead. Closes in session 6 | INSTRUMENTS-01 report, §“Inventory rows this session adds” item 1 | ARMED |
+| I13 | *An analysis reader reaches the live database read-write through a **private attribute***: `analysis/paper1/judge_loader.py` used `db._conn` on an open `ReviewDatabase`. Not a `sqlite3.connect` call, so the I5 grep could not see it — the same exposure by a different route. Closed in READERS-01 Phase 2a: the loader now receives a `mode=ro` connection and opens nothing | READERS-01 Phase 1 read-out, contradiction 6 (R38) | closed 2026-09-22 |
 
 ### J. Operator and human-in-the-loop
 
@@ -446,7 +452,7 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | A8 | S5a |
 | A9 | S3h |
 | A10 | S5a · S2 |
-| A11 | S2 core (session 5) · S2 remaining (session 12) |
+| A11 | S2 core (session 5) · **018 (session 6, R32)** |
 | A12 | S2 readers · S1c · S3h (session 6) |
 | B1 B4 | S1a |
 | B2 | S1b |
@@ -460,7 +466,9 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | C7 | S4a |
 | C9 | S5b |
 | C10 | 018 (session 6, R27) |
-| C11 | S3c hygiene (session 6, Phase 2) |
+| C11 | S3c hygiene (session 6, Phase 2a — **closed**) |
+| C12 | S3c (a later session: all schema into numbered migrations) |
+| C13 | S3c · R35 (session 6, Phase 2a — frozen and guarded) |
 | D1 D3 D4 | S3e |
 | D2 D3 | S3d |
 | D5 D6 | S3f |
@@ -478,6 +486,7 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | I1 I2 | S0 |
 | I3 I4 | S10 |
 | I5 | S2 readers · S1c · S3h (session 6) |
+| I13 | S2 readers (session 6, Phase 2a — closed) |
 | J1 J2 | S7 · S6 |
 | J5 | S2 · S7 |
 
@@ -551,6 +560,7 @@ The engine's hot path is frozen. Sessions in this window touch only documents, s
 7. Claims about the plan's own counts are re-measured before they are relied on; four were wrong in v49.
 8. The project primer (`primer.md`, gitignored) is updated at every closeout under the brief, from measured values, with the diff shown — never by the wrap (closes `WRAP-FIX-01`).
 9. R31's retention test: a legacy artifact this session touches is retained only if it serves the engine going forward, and serving a publication is not a reason to retain (see R31 in the decision log).
+10. **A migration module is self-contained** (R35). From 018 onward it imports nothing from `engine/` that can change: the DDL, token lists and constants it needs are declared in the module, so editing a constant can never change what an already-applied migration meant. Where a token list is needed in both a migration and a reader, the reader imports it from a constants module, the migration re-declares it, and a test asserts the two agree.
 
 ### The first brief
 
@@ -613,3 +623,12 @@ Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in 
 | 2026-09-21 | R29 — `effective_state` returns TWO axes — eligibility and processing — as separate values. The corpus predicate reads the eligibility axis only. Exports read both and report failures by reason from S3h's closed vocabulary. The `to_state` vocabulary change lands this session (in 018 if Phase 1 shows that is clean, otherwise as 019). Ruling 4 is thereby made structural | PI, on architect recommendation |
 | 2026-09-21 | R30 — Clean cut-over. Readers migrated onto `effective_value` / `effective_state` have their direct-table paths removed, not retained beside the reader. Legacy concordance figures are not regenerable from the engine; frozen scripts are telemetry | PI, on architect recommendation |
 | 2026-09-21 | R31 — Standing rule. While the engine is settling into *freshman*, a legacy artifact — file, script, path, table, or committed output — is retained only if it serves the engine going forward. Serving a publication is not a reason to retain. Legacy tables under R25 stay because they serve the engine (regression fixture; session-8 reuse-key and input-identity tests). The rule is applied to what a session touches, not to the whole tree; retirement is recorded in a ledger and executed in the session that owns the artifact | PI |
+| 2026-09-22 | R27 **amended** — the `UNIQUE(paper_id, arm)` drop lands in BOTH migration 018 (live) and `engine/cloud/schema.py::_CLOUD_SCHEMA` (fresh), in the same commit. Live and fresh are structurally identical on that table today, so dropping it on one side only would create the divergence 018 exists to remove | PI, on architect recommendation |
+| 2026-09-22 | R32 — Migration 018 also **DROPs `audit_adjudication`**, closing A11, and G3 (`structure_differences(fresh, live) == 0`) becomes an acceptance gate of the Phase 3 live write. The Phase 2a census found no production reader and three INSERT sites all unreachable behind an unconditional `raise`. A DROP alone was **not enough** — `ensure_adjudication_table` recreated the table on every `ReviewDatabase` construction (measured: present 1 → 0 → 1) — so the same commit removes the DDL from it. **Reverses the SEQUENCING half of R18's A11 Option B; the route half stands** (human audit decisions become `field_events`, importer in session 12). Session 12's scope loses the drop and keeps the importer | PI; reverses R18 A11 Option B sequencing under R31 |
+| 2026-09-22 | R33 — All three `engine/exporters` migrate in session 6: Phase 2a takes `evidence_table.py`, Phase 2b takes `docx_export.py` and `trace_exporter.py`. No exporter keeps a direct-table path after its phase (R30) | PI, on architect recommendation |
+| 2026-09-22 | R34 — The state-vocabulary change is migration **019**, separate from 018. Two receipts, two rehearsals, one Phase 3 live write of both | PI, on architect recommendation |
+| 2026-09-22 | R35 — `engine/core/corpus.py` is **frozen**: its docstring says so, and a test fails if any module outside `engine/migrations/` and `tests/` imports or calls it. It cannot be deleted because applied migration 017 imports it and 017's text is checksummed. **From 018 onward a migration module imports nothing from `engine/` that can change**; the DDL, token lists and constants it needs are declared in the module | PI, on architect recommendation |
+| 2026-09-22 | R36 — `{field}_confidence` is dropped from the evidence-table export; `{field}_state` and `{field}_rule_row` are emitted. No NULL placeholder column | PI, on architect recommendation |
+| 2026-09-22 | R37 — The CLAUDE.md placement of the Part 0 lines is accepted. Phase 2a strikes the pre-existing "one transaction each" clause and fixes `run()`'s docstring (class C row C11) in the same commit | PI, on architect recommendation |
+| 2026-09-22 | R38 — `judge_loader`'s `db._conn` path is inventory row **I13** (class I, "an analysis reader reaches the live database read-write through a private attribute"); it closes in Phase 2a's rewrite | PI, on architect recommendation |
+| 2026-09-22 | R39 — Correction to R29 from I6. Eligibility axis tokens: `eligible` · `abstract_out` · `full_text_out`. `full_text_not_obtainable` and `audited_ai` are **processing** facts and move to the processing axis in 019; the seeded 190 `eligible` events stay on the eligibility axis. Processing axis tokens: `parsed` · `extracted` · `extraction_failed` · `full_text_not_obtainable` · `parse_failed` · `input_exceeds_context` · `audited_ai`, with a reason column NOT NULL for the failure tokens and NULL otherwise, enforced by CHECK. `analysis_ready` is **DERIVED** by the reader (eligible AND processing in a completed set declared once in `effective.py`), never stored | PI, on architect recommendation |

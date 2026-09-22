@@ -1961,7 +1961,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 62,
+            "line": 63,
             "names": [
               "--review"
             ],
@@ -1970,7 +1970,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 64,
+            "line": 65,
             "names": [
               "--input"
             ],
@@ -1979,7 +1979,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 65,
+            "line": 66,
             "names": [
               "--pairs-csv"
             ],
@@ -1988,7 +1988,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 67,
+            "line": 70,
             "names": [
               "--codebook"
             ],
@@ -1997,7 +1997,7 @@
           {
             "default": "1",
             "dest": "pass_number",
-            "line": 69,
+            "line": 72,
             "names": [
               "--pass"
             ],
@@ -2006,7 +2006,7 @@
           {
             "default": "0",
             "dest": null,
-            "line": 71,
+            "line": 74,
             "names": [
               "--limit"
             ],
@@ -2015,7 +2015,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 73,
+            "line": 76,
             "names": [
               "--dry-run"
             ],
@@ -2024,7 +2024,7 @@
           {
             "default": "dynamic: DEFAULT_MODEL",
             "dest": null,
-            "line": 75,
+            "line": 78,
             "names": [
               "--model"
             ],
@@ -2033,7 +2033,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 77,
+            "line": 80,
             "names": [
               "--run-note"
             ],
@@ -2042,7 +2042,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 79,
+            "line": 82,
             "names": [
               "--data-root"
             ],
@@ -2062,7 +2062,7 @@
           },
           {
             "kind": "literal",
-            "line": 68,
+            "line": 71,
             "role": "help_text",
             "text": "Path to extraction_codebook.yaml"
           }
@@ -2070,12 +2070,12 @@
         "review_database": [
           {
             "data_root_passed": true,
-            "line": 191,
+            "line": 194,
             "scope": "_resolve_db"
           },
           {
             "data_root_passed": false,
-            "line": 192,
+            "line": 195,
             "scope": "_resolve_db"
           }
         ],
@@ -2268,15 +2268,21 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 117,
+            "line": 116,
             "role": "docstring",
             "text": "Parse extraction_codebook.yaml into CodebookEntry objects keyed by field_name."
           },
           {
             "kind": "literal",
-            "line": 175,
+            "line": 174,
             "role": "docstring",
             "text": "Return parsed markdown text for a paper, or None if not available.\n\n    Matches engine/agents/auditor.py pattern: data/<review>/parsed_text/{pid}_v*.md,\n    ..."
+          },
+          {
+            "kind": "literal",
+            "line": 338,
+            "role": "code",
+            "text": "extraction_codebook.yaml"
           }
         ],
         "review_database": [],
@@ -4496,7 +4502,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 357,
+            "line": 363,
             "names": [
               "--review"
             ],
@@ -4505,7 +4511,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 358,
+            "line": 364,
             "names": [
               "--arms"
             ],
@@ -4514,7 +4520,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 363,
+            "line": 369,
             "names": [
               "--spec"
             ],
@@ -4528,13 +4534,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 78,
-            "role": "code",
-            "text": "extraction_codebook.yaml"
-          },
-          {
-            "kind": "literal",
-            "line": 363,
+            "line": 369,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -4544,22 +4544,22 @@
         "spec_access": [
           {
             "func": "load_review_spec",
-            "line": 220,
+            "line": 226,
             "scope": "run_concordance"
           },
           {
             "func": "load_spec_for",
-            "line": 371,
+            "line": 377,
             "scope": "main"
           },
           {
             "func": "spec_path_for",
-            "line": 372,
+            "line": 378,
             "scope": "main"
           },
           {
             "func": "data_root_for",
-            "line": 374,
+            "line": 380,
             "scope": "main"
           }
         ],
@@ -4936,6 +4936,20 @@
             "text": "Return the full path for a review artifact.\n\n    Example: review_artifact_path(Path(\"data/surgical_autonomy\"), \"surgical_autonomy\",\n                         ..."
           }
         ],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
+      "engine/core/paper_state.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/paper_state.py",
+        "path_construction": [],
         "review_database": [],
         "review_id_constants": [],
         "spec_access": [],
@@ -5553,6 +5567,34 @@
             "scope": "run_migration"
           }
         ],
+        "unparsed": [],
+        "yaml_loads": []
+      },
+      "engine/migrations/018_cloud_shape_and_audit_adjudication.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/migrations/018_cloud_shape_and_audit_adjudication.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
+      "engine/migrations/019_paper_state_axes.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/migrations/019_paper_state_axes.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
         "unparsed": [],
         "yaml_loads": []
       },
@@ -6200,7 +6242,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 432,
+            "line": 458,
             "names": [
               "--review"
             ],
@@ -6209,7 +6251,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 433,
+            "line": 459,
             "names": [
               "--arm"
             ],
@@ -6218,7 +6260,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 434,
+            "line": 460,
             "names": [
               "--codebook"
             ],
@@ -6227,7 +6269,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 435,
+            "line": 461,
             "names": [
               "--strict"
             ],
@@ -6241,7 +6283,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 446,
+            "line": 472,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -6249,7 +6291,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 441,
+            "line": 467,
             "scope": "main"
           }
         ],
@@ -8033,7 +8075,7 @@
       "entry_points_with_spec_flag": 29,
       "files_calling_load_review_spec_directly": 10,
       "files_calling_resolver": 32,
-      "files_scanned": 211,
+      "files_scanned": 214,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 35,
@@ -8045,7 +8087,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "d028c7ab77eb3ff2663aba95d111c31371dffacb",
+    "generated_at_commit": "ab5193f73d5bbe0cdd69cc1add2269659253abbe",
     "scan_roots": [
       "engine",
       "scripts",

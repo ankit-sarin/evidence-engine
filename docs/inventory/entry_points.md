@@ -1,14 +1,14 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `d028c7ab77eb3ff2663aba95d111c31371dffacb` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `ab5193f73d5bbe0cdd69cc1add2269659253abbe` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 211 |
+| files scanned | 214 |
 | entry points | 104 |
 | entry points with spec flag | 29 |
 | entry points with review name flag | 74 |
@@ -86,7 +86,7 @@ Two figures deliberately have no baseline row. **entry points** (104) counts any
 | `analysis/paper1/consensus.py` | `--review` required; `--codebook`=None; `--dry-run`; `--review` required | — | 427 | — |
 | `analysis/paper1/export_disagreement_pairs.py` | `--review` required; `--spec`=None | load_review_spec, load_spec_for, spec_path_for | — | — |
 | `analysis/paper1/human_import.py` | `--workbook` required; `--review` required; `--codebook`=None; `--dry-run` | — | 302 | — |
-| `analysis/paper1/judge_cli.py` | `--review` required; `--input` required; `--pairs-csv`; `--codebook` required; `--pass`=1; `--limit`=0; `--dry-run`; `--model`=dynamic: DEFAULT_MODEL; `--run-note`=None; `--data-root`=None | — | 191, 192 | — |
+| `analysis/paper1/judge_cli.py` | `--review` required; `--input` required; `--pairs-csv`; `--codebook` required; `--pass`=1; `--limit`=0; `--dry-run`; `--model`=dynamic: DEFAULT_MODEL; `--run-note`=None; `--data-root`=None | — | 194, 195 | — |
 | `analysis/paper1/judge_codebook_smoke.py` | `--review` required; `--pairs-csv` required; `--codebook` required; `--audit-dir`=dynamic: Path('artifacts/paper1/pi_audit'); `--completed`=None; `--key`=None; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--model`=dynamic: DEFAULT_MODEL; `--run-id`=dynamic: RECORDED_RUN_ID; `--limit`=None; `--data-root`=None; `--builder`='production'; `--assert-v2`=None; `--background` | — | 1186, 1187 | — |
 | `analysis/paper1/judge_provenance.py` | `--review` required; `--data-root`='data'; `--judge-run-id`=None; `--census-run-id`=None; `--legacy-csv`=None; `--out-dir`=None | — | — | — |
 | `analysis/paper1/pass1_inspection.py` | `--review` required; `--run-id` required; `--pairs-csv` required; `--codebook` required; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--data-root`=None | — | 554, 555 | — |
@@ -131,7 +131,7 @@ Two figures deliberately have no baseline row. **entry points** (104) counts any
 | `engine/tools/inventory.py` | `--write`; `--check` | — | — | — |
 | `engine/utils/extraction_cleanup.py` | `--review` required; `--keep-schema`; `--codebook`=None; `--confirm` | — | 252 | — |
 | `engine/utils/ollama_preflight.py` | `--models` required; `--timeout`=30 | — | — | — |
-| `engine/validators/distribution_monitor.py` | `--review` required; `--arm` required; `--codebook`=None; `--strict` | — | 441 | — |
+| `engine/validators/distribution_monitor.py` | `--review` required; `--arm` required; `--codebook`=None; `--strict` | — | 467 | — |
 | `engine/validators/extraction_validator.py` | `--review` required; `--spec`=None | load_spec_for | 395 | main:spec_first |
 | `scripts/_pass2_delta.py` | — | — | — | — |
 | `scripts/_pass2_eyeball.py` | — | — | — | — |
@@ -202,6 +202,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/paper1/adjudication.py` | 603 | literal | `extraction_codebook.yaml` |
 | `analysis/paper1/consensus.py` | 433 | literal | `extraction_codebook.yaml` |
 | `analysis/paper1/human_import.py` | 307 | literal | `extraction_codebook.yaml` |
+| `analysis/paper1/judge_loader.py` | 338 | literal | `extraction_codebook.yaml` |
 | `analysis/paper1/pi_audit_sampler_v2.py` | 124 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
 | `engine/acquisition/pdf_quality_html.py` | 378 | f-string | `f'''<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>PDF Acqui...` |
 | `engine/adjudication/categorizer.py` | 19 | literal | `adjudication_categories.yaml` |
@@ -211,7 +212,6 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
   Generate a starter template with: gen...` |
 | `engine/agents/auditor.py` | 273 | literal | `extraction_codebook.yaml` |
 | `engine/agents/extractor.py` | 659 | literal | `extraction_codebook.yaml` |
-| `engine/analysis/concordance.py` | 78 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 420 | literal | `extraction_codebook.yaml` |
 | `engine/core/codebook.py` | 36 | literal | `extraction_codebook.yaml` |
 | `engine/core/review_paths.py` | 28 | literal | `review_specs` |
@@ -228,7 +228,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/tools/inventory.py` | 498 | literal | ``data/` subdirectories NOT counted as reviews (no `review.db`):` |
 | `engine/tools/inventory.py` | 533 | literal | `Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse prose, and messages passed to an exception or a logger. This is the class a ...` |
 | `engine/tools/inventory.py` | 682 | literal | `data/ subdirectories changed: ` |
-| `engine/validators/distribution_monitor.py` | 446 | literal | `extraction_codebook.yaml` |
+| `engine/validators/distribution_monitor.py` | 472 | literal | `extraction_codebook.yaml` |
 | `engine/validators/extraction_validator.py` | 65 | literal | `extraction_codebook.yaml` |
 | `scripts/_pass2_delta.py` | 13 | literal | `data/surgical_autonomy/review.db` |
 | `scripts/_pass2_delta.py` | 16 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |

@@ -84,6 +84,8 @@ evidence-engine/
 | fabrication_verifications | Pass 2 per-arm verdicts. UNIQUE (judge_run_id, paper_id, field_name, arm_name). verdict ∈ {SUPPORTED, PARTIALLY_SUPPORTED, UNSUPPORTED}. CHECK: UNSUPPORTED requires non-empty reasoning + fabrication_hypothesis. CASCADE FK to judge_runs. Migration 008. |
 | judge_run_audit | Post-hoc corrections / annotations on judge_runs (open-vocabulary `event_type`, NOT NULL `rationale`, CASCADE FK). First user: the `backfill_judge_model_digest` event (commit 8fefa66). Migration 009. |
 | schema_migrations | Migration receipts — `migration_id` PK, `file_sha256`, `applied_at`, `mode` ∈ {executed, registered_preapplied}, `runner_version`, `note`. Written by `engine/migrations/runner.py`. `PRAGMA user_version` is deliberately left at 0. |
+| paper_events · field_events · arms · parsed_text_refs · review_identities · field_event_against(_decisions) | The S2 event store (migration 016), **append-only by trigger**. `paper_events.to_state` carries a **two-axis** vocabulary since migration 019 (R29/R39): eligibility (`eligible` · `abstract_out` · `full_text_out`) and processing (`parsed` · `extracted` · `extraction_failed` · `full_text_not_obtainable` · `parse_failed` · `input_exceeds_context` · `audited_ai`), the sets disjoint, an `event_type`→axis CHECK pairing them, and `reason_code` NOT NULL for exactly the four failure tokens. `analysis_ready` is derived by the reader, never stored |
+| ~~audit_adjudication~~ | **DROPPED by migration 018** (R32). 0 rows; its `span_id` referenced the phantom `_evidence_spans_old`, so the path was never writable (A11). `engine/adjudication/schema.py` no longer creates it — a DROP alone did not survive the next `ReviewDatabase` construction. Human audit decisions become `field_events`; the importer is session 12's |
 
 ## Paper Lifecycle
 INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAGGED → PDF_ACQUIRED → PDF_EXCLUDED (terminal) or PARSED → FT_ELIGIBLE / FT_SCREENED_OUT / FT_FLAGGED → EXTRACTED / EXTRACT_FAILED → AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE → REJECTED
@@ -186,20 +188,25 @@ closeout; **the old record is superseded, never edited.**
   database. `restore()` refuses an open target by exclusive lock and has **no
   CLI**, deliberately.
 - **Schema changes are numbered migrations with receipts.** The runner applies
-  `engine/migrations/NNN_*.py` in order, one transaction each, and refuses to
-  start if a file changed after its receipt — a migration whose text changed is a
-  different migration. Data migrations are **never** executed on a fresh
-  database. See `engine/migrations/README.md` before adding one.
+  `engine/migrations/NNN_*.py` in order, **one transaction per receipt**, and
+  refuses to start if a file changed after its receipt — a migration whose text
+  changed is a different migration. Data migrations are **never** executed on a
+  fresh database. See `engine/migrations/README.md` before adding one.
 - **A ruling about a table is made against the table, not the log entry that
   summarises it.** Two architect rulings in session 5 were reversed by measurement
   before any code was written, and the cause was the same in both: each was made
   from decision-log text without the resolution-rule table beside it.
 - **The migration runner does not wrap a migration in a transaction; each module
-  owns its own.** This **corrects "one transaction each" in the bullet above**:
-  the runner closes its connection and calls `module.run_migration(db_path)`, so
-  the only thing it holds a transaction around is the **receipt** write. The 017
-  pattern — one `BEGIN`, the marker row written **last**, `ROLLBACK` on any
-  exception — is the template for any seed under the append-only triggers.
+  owns its own.** The runner closes its connection and calls
+  `module.run_migration(db_path)`, so the only thing it holds a transaction
+  around is the **receipt** write. The 017 pattern — one `BEGIN`, the marker
+  written **last**, `ROLLBACK` on any exception — is the template. Two rules a
+  module-owned transaction must follow, both found by rehearsal and not by
+  reading: **never `executescript` inside the transaction** (it issues an
+  implicit COMMIT and silently ends it), and **build a rebuilt table under a
+  temporary name rather than renaming the original away** — renaming a
+  *referenced* table rewrites its referrers' `REFERENCES` clauses, which is
+  exactly how A11's phantom `_evidence_spans_old` was created.
 - **R31 — a legacy artifact is retained only if it serves the engine going
   forward.** While the engine is settling into *freshman*, a legacy file, script,
   path, table or committed output that this session touches is kept only on that
@@ -207,12 +214,48 @@ closeout; **the old record is superseded, never edited.**
   under R25 because they serve the engine as a regression fixture. Retirement is
   recorded in a ledger and executed by the session that owns the artifact.
 
+## The one reader (engine/core/effective.py)
+
+Inventory row A1 is that there was no reader of "the current value": thirteen
+stores, fifteen readers, each with its own rule. This module is the one rule.
+
+- **`effective_value(conn, paper_id, field_name, arm, *, sentinels)`** — resolution
+  rule v2.1, rows 0–17, first match wins, **the row number returned in the
+  provenance**. `arm` is required (R18/Q4). Arms are **data** (R12): there is no
+  per-arm branch anywhere below it.
+- **`effective_state(conn, paper_id)`** — **two axes** (R29/R39): `.eligibility`
+  and `.processing`, each derived from the last event whose token belongs to
+  *that* axis, plus `.processing_reason`, `.analysis_ready` and `.in_corpus`.
+  Not "the last row wins" — that is what made one axis impossible. **`papers.status`
+  is never read.**
+- **`registered_arms(conn, *, kind, include_retired)`** — the single routing
+  predicate A12 asks for. `concordance.load_arm`'s two branches and
+  `distribution_monitor._query_values`'s three were each a private copy of it.
+- **`eligible_paper_ids(conn)` / `corpus_id_sql(conn, column)`** — corpus
+  membership from the **eligibility axis** (S3h). This is where A9 is fixed: a
+  paper whose extraction failed stays in the corpus and is reported by its reason.
+  `engine/core/corpus.py` is **FROZEN** (R35) — it survives only because applied
+  migration 017 imports it and 017's text is checksummed; a test fails if anything
+  outside `engine/migrations/` or `tests/` calls it.
+- **`grid_cells` / `iter_grid`** — the closed universe: corpus papers × codebook
+  fields × registered arms. **The scorer's verdict is a feature, not a filter**
+  (R28): a cell with no claim is still a cell. B3 is what the filter cost —
+  1,535 of 3,802 cells never judged, one-directionally. Measured: 11,400 cells at
+  ~5 µs/call, ~0.1 s for the grid, so **no batch form** (re-measure once the
+  field-event store is non-empty; the measurement was taken on an empty one).
+
+Readers behind it since READERS-01 Phase 2a: `engine/analysis/concordance.py`,
+`engine/exporters/evidence_table.py`, `analysis/paper1/judge_loader.py`,
+`engine/validators/distribution_monitor.py`. Under **R30** each had its
+direct-table path **removed**, not retained beside the reader.
+`docx_export.py` and `trace_exporter.py` are Phase 2b.
+
 ## Cloud Extraction Architecture
 - `CloudExtractorBase` (engine/cloud/base.py): shared logic — pending paper query, codebook-driven prompt building, response JSON parsing (8+ alternate keys + raw content recovery), progress tracking, cost calculation, distribution monitor integration
 - `OpenAIExtractor`: o4-mini-2025-04-16, reasoning_effort=high. Per-paper cost tracking (input/output/reasoning tokens)
 - `AnthropicExtractor`: claude-sonnet-4-6, extended thinking (10K token budget). Streaming response with thinking block capture
 - `store_result()` rejects 0-span results with ValueError — prevents silent data loss
-- Cloud schema (engine/cloud/schema.py): creates cloud_extractions + cloud_evidence_spans tables
+- Cloud schema (engine/cloud/schema.py): creates cloud_extractions + cloud_evidence_spans tables. **No `UNIQUE(paper_id, arm)`** since R16/R27 — an arm may hold more than one claim on a paper, because supersession within an arm has to be representable. Dropped here and on the live database by migration 018, in one change
 - Cost rates: OpenAI $1.10/$4.40 per 1M tokens (in/out); Anthropic $3.00/$15.00 per 1M tokens (in/out)
 
 ## Concordance Analysis Architecture

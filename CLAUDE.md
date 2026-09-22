@@ -35,7 +35,7 @@ evidence-engine/
 │   ├── analysis/               # Concordance analysis (scoring, metrics, normalization, reports)
 │   ├── parsers/                # Three-tier PDF parser (Docling → PyMuPDF → Qwen2.5-VL)
 │   ├── acquisition/            # Unpaywall, download cascade, PDF quality check, verify
-│   ├── migrations/             # Numbered migrations 002-015 + runner.py (receipts). See its README
+│   ├── migrations/             # Numbered migrations 002-019 + runner.py (receipts). See its README
 │   ├── tools/                  # inventory.py (AST entry-point census), db_fingerprint.py
 │   ├── adjudication/           # Workflow stages, screening/FT/audit adjudication
 │   ├── utils/                  # tmux background, extraction cleanup, ollama preflight

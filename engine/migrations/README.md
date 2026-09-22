@@ -31,9 +31,13 @@ database's `schema_migrations` table. **The series begins at 002** — there is 
 
 ## What the runner guarantees
 
-* **Numeric order**, one transaction per migration, committed before the next
-  begins — a failure leaves the earlier receipts intact and the failing one
-  absent, so the database says how far it got.
+* **Numeric order**, one transaction per **receipt**, committed before the next
+  migration begins — a failure leaves the earlier receipts intact and the failing
+  one absent, so the database says how far it got. The runner does **not** wrap a
+  migration in a transaction: it closes its own connection and calls
+  `module.run_migration(db_path)`, so **each module owns its transaction** (class
+  C row C11; corrected here 2026-09-22 to match `run()`'s docstring, which said
+  "one transaction per migration" until R37).
 * **Fail-fast**, with the migration id in the message.
 * **Refusal on drift.** If any receipt's `file_sha256` no longer matches the
   file, the runner refuses to start and names every drifted id. A migration
@@ -44,9 +48,11 @@ database's `schema_migrations` table. **The series begins at 002** — there is 
 
 ## What it deliberately does not do
 
-* **No `PRAGMA user_version`.** One integer cannot say which of fourteen
+* **No `PRAGMA user_version`.** One integer cannot say which of the numbered
   migrations ran, cannot carry a checksum, and would be a second source of truth
   that drifts the first time something is registered out of order. It stays 0.
+  (It said "fourteen" until 2026-09-22; a count of the set is a measurement of a
+  day, and the set grows.)
 * **No rollback.** Only `009` has one, from before this runner existed. Recovery
   is `engine.utils.db_backup.restore` from the backup taken before the run.
 * **No schema verification on registration.** `register_preapplied` records an
@@ -62,3 +68,14 @@ database's `schema_migrations` table. **The series begins at 002** — there is 
 | 004–013 | schema | columns, judge tables, provenance census, codebook provenance, NOT NULL relaxation |
 | 014 | schema | cloud tables — calls `engine.cloud.schema.init_cloud_tables` rather than re-declaring the DDL |
 | 015 | schema | drops the three pre-rename adjudication index duplicates |
+| 016 | schema | the S2 event store — seven tables, no existing one touched |
+| 017 | data | seeds the event store from THIS database's corpus, parsed texts, spec and codebook (R25); imports the frozen `engine/core/corpus.py`, which is row C13 and why R35 forbids it from 018 on |
+| 018 | schema | `cloud_evidence_spans` to the fresh NOT NULL shape, `UNIQUE(paper_id, arm)` dropped from `cloud_extractions`, `audit_adjudication` dropped (C10 · R16 · R32) |
+| 019 | schema | `paper_events` rebuilt with the two-axis state vocabulary (R29/R39) |
+
+018 and 019 were applied to the live `surgical_autonomy` database on 2026-09-22
+(READERS-01 Phase 3). From 018 onward a migration module is **self-contained**
+(R35) and declares its own DDL, token lists and constants; 018 and 019 also
+demonstrate the two rules a module-owned transaction must follow — never
+`executescript` inside the transaction, and build a rebuilt table under a
+temporary name rather than renaming the original away.

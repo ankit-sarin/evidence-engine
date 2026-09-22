@@ -191,7 +191,7 @@ Atomic: sets status to REJECTED with `rejected_reason` recorded in papers table.
 |-------|-------------|---------|
 | `abstract_screening_adjudication` | paper_id, adjudication_decision, adjudication_source, adjudication_reason, adjudication_category | Human abstract screening decisions |
 | `ft_screening_adjudication` | paper_id, reason_code, adjudication_decision, adjudication_reason | Human FT screening decisions |
-| `audit_adjudication` | span_id, paper_id, field_name, original_value, human_decision, override_value, reviewer_notes | Per-span human audit decisions |
+| ~~`audit_adjudication`~~ | — | *Corrected 2026-09-22:* this row used to read "span_id, paper_id, field_name, original_value, human_decision, override_value, reviewer_notes — Per-span human audit decisions". The table was **dropped by migration 018** (R32) and `ensure_adjudication_table` no longer creates it, so it is neither on the live database nor on a fresh one. Its `span_id` referenced the phantom `_evidence_spans_old`, so no INSERT could ever succeed (A11). Human audit decisions become `field_events`; the importer is session 12's |
 | `workflow_state` | stage_name, status (pending/complete/bypassed), completed_at, metadata | 12-stage workflow enforcement |
 
 ### Cloud Tables (`engine/cloud/schema.py`)

@@ -1,4 +1,27 @@
-"""Corpus membership — the single authority on "is this paper in the review".
+"""Corpus membership from `papers.status` — **FROZEN (R35). Do not call.**
+
+🔴 **This module has exactly one permitted consumer, and it is a migration.**
+`engine/migrations/017_seed_event_store.py` imports `corpus_status_sql` to build
+the seed, and 017 is applied: its receipt checksums its text
+(`efcc3a06...d3b8aff`), so it cannot be edited — a migration whose text changed is
+a different migration, and the runner refuses to start for *every* migration when
+one has drifted. The predicate therefore cannot be deleted. It is frozen instead,
+and `tests/test_corpus_authority.py` fails if any module outside
+`engine/migrations/` or `tests/` imports or calls it.
+
+**The live question moved to `engine/core/effective.py`** in READERS-01 Phase 2a:
+`eligible_paper_ids(conn)` and `corpus_id_sql(conn, column)` answer it from the
+ELIGIBILITY axis of `effective_state`, which is what R29/R39 and S3h mean by
+corpus membership. The difference is A9: the allowlist below excludes
+`EXTRACT_FAILED` by omission, conflating scientific eligibility with processing
+success, and the axis does not — a paper whose extraction failed stays in the
+corpus and is reported by its reason.
+
+Everything below this line is the pre-Phase-2a text, kept because 017 reads it.
+
+---
+
+Corpus membership — the single authority on "is this paper in the review".
 
 Before CORPUS-PRED-01 this question was answered by an inline SQL status literal
 copied into three modules (`analysis/eval/schema_eval2.py`, and twice in

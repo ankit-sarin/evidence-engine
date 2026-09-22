@@ -49,6 +49,18 @@ from pathlib import Path
 
 RULE_VERSION = "v2.1"
 
+# The paper-state vocabulary lives in one module and is imported, never
+# re-spelled here (R35 binds migrations, not the reader: the reader is the
+# consumer of the constants, migration 019 is the re-declaration a test pins
+# against them).
+from engine.core.paper_state import (  # noqa: E402
+    COMPLETED_PROCESSING_STATES,
+    ELIGIBILITY_STATES,
+    NO_RECORDED_STATE as _NO_RECORDED_STATE,
+    PROCESSING_STATES,
+    is_failure,
+)
+
 #: The marker R10 requires on an arm registered before manifests existed. It
 #: lives here, in the lowest module of the three, so the writer, migration 016
 #: and this reader share one spelling rather than three copies of a string whose
@@ -66,7 +78,7 @@ ASSERTED_WITH_EVIDENCE = "asserted with evidence"       # rows 10, 12
 ASSERTED_WITHOUT_EVIDENCE = "asserted without locatable evidence"  # rows 11, 13
 DECLINED = "declined"                     # row 14
 CONTRACT_UNMET = "contract unmet"         # row 15
-NO_RECORDED_STATE = "no_recorded_state"   # effective_state, no paper_events
+NO_RECORDED_STATE = _NO_RECORDED_STATE    # effective_state, no event on that axis
 
 CLAIM_EVENT_TYPES = ("asserted", "declined", "contract_unmet")
 REVIEWER_EVENT_TYPES = ("human_accepted", "human_corrected", "human_withdrew")
@@ -82,8 +94,36 @@ class EffectiveValue:
 
 @dataclass(frozen=True)
 class EffectiveState:
-    state: str
-    provenance: dict = _dc_field(default_factory=dict)
+    """A paper's lifecycle on TWO axes (R29, corrected by R39).
+
+    Eligibility answers *should this paper be in the review*; processing answers
+    *how far did the machinery get, and why did it stop*. They are separate
+    values because they are separate facts: a paper whose extraction failed is
+    still eligible, which is the whole of ruling 4 and what row 6's gate means by
+    "`EXTRACT_FAILED` papers stay eligible with a reason".
+
+    `analysis_ready` is DERIVED here and stored nowhere (R39): eligibility is
+    `eligible` and processing is in `COMPLETED_PROCESSING_STATES`.
+
+    No caller receives a bare token. There was a single `state` field until
+    Phase 2a; it is gone rather than kept beside the axes (R30), because a reader
+    that can still ask the old question will.
+    """
+    eligibility: str
+    processing: str
+    processing_reason: str | None = None
+    eligibility_provenance: dict = _dc_field(default_factory=dict)
+    processing_provenance: dict = _dc_field(default_factory=dict)
+
+    @property
+    def analysis_ready(self) -> bool:
+        return (self.eligibility == "eligible"
+                and self.processing in COMPLETED_PROCESSING_STATES)
+
+    @property
+    def in_corpus(self) -> bool:
+        """S3h/A9: corpus membership is the ELIGIBILITY axis and nothing else."""
+        return self.eligibility == "eligible"
 
 
 def load_absence_sentinels(codebook_path: str | Path) -> frozenset[str]:
@@ -369,19 +409,157 @@ def _classify_claim(evs, ev, sentinels) -> EffectiveValue:
 
 
 def effective_state(conn, paper_id) -> EffectiveState:
-    """The paper's lifecycle state, from `paper_events` and nothing else."""
+    """The paper's lifecycle on two axes, from `paper_events` and nothing else.
+
+    **Not "the last row wins".** That is what made one axis impossible: a
+    processing event would have erased the eligibility fact and vice versa. Each
+    axis independently takes the last event whose `to_state` belongs to *that*
+    axis's closed token set, the two sets being disjoint by construction
+    (`engine/core/paper_state.py`).
+
+    An axis with no event reads `no_recorded_state`, which is distinct from every
+    token on it: "we have no record" is not "we recorded that nothing happened",
+    and an export that cannot tell them apart will report the first as the
+    second.
+
+    `papers.status` is never read, not even into provenance.
+    """
     rows = conn.execute(
         "SELECT event_id, event_type, to_state, from_state, actor_name, "
-        "occurred_at, payload_json FROM paper_events "
+        "occurred_at, payload_json, reason_code, stage_name FROM paper_events "
         "WHERE paper_id = ? ORDER BY event_id", (paper_id,)).fetchall()
-    if not rows:
-        return EffectiveState(NO_RECORDED_STATE, {})
-    eid, etype, to_state, from_state, actor, at, payload_json = rows[-1]
-    payload = json.loads(payload_json or "{}")
-    prov = {"event_id": eid, "event_type": etype, "from_state": from_state,
-            "by": actor, "at": at}
-    if etype == "state_at_migration":                              # row 17
-        prov.update({"source": payload.get("source"),
-                     "migrated_at": at, "note": payload.get("note"),
-                     "rule_row": 17})
-    return EffectiveState(to_state, prov)
+
+    eligibility, processing = NO_RECORDED_STATE, NO_RECORDED_STATE
+    reason = None
+    elig_prov: dict = {}
+    proc_prov: dict = {}
+
+    for (eid, etype, to_state, from_state, actor, at,
+         payload_json, reason_code, stage_name) in rows:
+        payload = json.loads(payload_json or "{}")
+        prov = {"event_id": eid, "event_type": etype, "from_state": from_state,
+                "by": actor, "at": at, "stage_name": stage_name}
+        if etype == "state_at_migration":                          # row 17
+            prov.update({"source": payload.get("source"), "migrated_at": at,
+                         "note": payload.get("note"), "rule_row": 17})
+        if to_state in ELIGIBILITY_STATES:
+            eligibility, elig_prov = to_state, prov
+        elif to_state in PROCESSING_STATES:
+            processing, proc_prov = to_state, prov
+            reason = reason_code if is_failure(to_state) else None
+        else:  # pragma: no cover - the CHECK in 019 makes this unreachable
+            raise ValueError(
+                f"paper_events.event_id={eid} carries to_state={to_state!r}, "
+                f"which is on neither axis. The 019 CHECK should have refused "
+                f"it; the vocabulary and the database have diverged."
+            )
+
+    return EffectiveState(eligibility, processing, reason, elig_prov, proc_prov)
+
+
+# ── the registry, and the grid every migrated reader enumerates ───────
+def registered_arms(conn, *, kind: str | None = None,
+                    include_retired: bool = False) -> tuple[str, ...]:
+    """Every arm in the review's registry, in `arm_name` order.
+
+    R12: arms are data. This is the single routing predicate A12 asks for — the
+    thing `concordance.load_arm`'s `if arm == "local"` and
+    `distribution_monitor._query_values`'s `arm.startswith("human_")` were each
+    a private, divergent copy of. Ordered so a report built from it is
+    reproducible.
+
+    A retired arm is excluded by default and its claims still resolve through
+    `effective_value` (R21: "it accepts no new claims; its claims and decisions
+    stand").
+    """
+    sql = "SELECT arm_name FROM arms WHERE 1=1"
+    params: list = []
+    if kind is not None:
+        sql += " AND arm_kind = ?"
+        params.append(kind)
+    if not include_retired:
+        sql += " AND retired_at IS NULL"
+    sql += " ORDER BY arm_name"
+    return tuple(r[0] for r in conn.execute(sql, params))
+
+
+def eligible_paper_ids(conn) -> tuple[int, ...]:
+    """The corpus: every paper whose ELIGIBILITY axis reads `eligible` (S3h/A9).
+
+    This replaces `engine.core.corpus.corpus_status_sql`, which returned SQL over
+    a `papers.status` column the event store is replacing. Processing outcome is
+    deliberately not consulted: a paper whose extraction failed is in the corpus
+    and is reported by its reason, which is what A9 said the status allowlist got
+    wrong by excluding `EXTRACT_FAILED`.
+    """
+    placeholders = ", ".join("?" * len(ELIGIBILITY_STATES))
+    rows = conn.execute(
+        f"""SELECT paper_id, to_state FROM paper_events
+            WHERE to_state IN ({placeholders})
+              AND event_id = (
+                  SELECT MAX(e2.event_id) FROM paper_events e2
+                  WHERE e2.paper_id = paper_events.paper_id
+                    AND e2.to_state IN ({placeholders}))
+            ORDER BY paper_id""",
+        ELIGIBILITY_STATES + ELIGIBILITY_STATES,
+    ).fetchall()
+    return tuple(pid for pid, state in rows if state == "eligible")
+
+
+def corpus_id_sql(conn, column: str = "paper_id") -> tuple[str, tuple[int, ...]]:
+    """An ``<column> IN (?, ?, ...)`` fragment over the corpus, and its params.
+
+    The shape `engine.core.corpus.corpus_status_sql` had, so a call site swaps
+    one import for another and nothing else moves. What changed underneath is
+    the question being asked: that function spliced a `papers.status` allowlist,
+    and this one names the papers whose ELIGIBILITY axis reads `eligible` — so a
+    paper whose extraction failed is included, which is A9.
+
+    The id list is materialised rather than expressed as a sub-select because the
+    axis derivation is Python, not SQL. That bounds the caller by SQLite's
+    variable limit; at 190 corpus papers against a limit of 32,766 there is room,
+    and a review large enough to matter should be joining against a temp table,
+    which is a change to make when a review needs it rather than now.
+    """
+    ids = eligible_paper_ids(conn)
+    placeholders = ", ".join("?" * len(ids)) if ids else "NULL"
+    return f"{column} IN ({placeholders})", ids
+
+
+def grid_cells(conn, *, codebook, papers=None, arms=None) -> tuple[tuple, ...]:
+    """Every (paper_id, field_name, arm) the review has, as a closed set.
+
+    The universe R28 requires: paper set x codebook fields x registered arms,
+    enumerated once rather than rebuilt from a different source by each consumer
+    (a table scan in concordance, `_STATUS_ORDER` in the exporter, a CSV in the
+    judge loader, a per-field query in the distribution monitor).
+
+    `papers` defaults to the corpus, `arms` to the registry, fields always to the
+    codebook — which is their sole source (R26).
+    """
+    paper_ids = tuple(papers) if papers is not None else eligible_paper_ids(conn)
+    arm_names = tuple(arms) if arms is not None else registered_arms(conn)
+    fields = codebook.field_names
+    return tuple((p, f, a) for p in paper_ids for f in fields for a in arm_names)
+
+
+def iter_grid(conn, *, codebook, sentinels=None, papers=None, arms=None):
+    """`(paper_id, field_name, arm, EffectiveValue)` for every cell in the grid.
+
+    Yields the `missing` cells too — the scorer's verdict is a FEATURE of a cell,
+    never the thing that decides whether the cell exists (R28). That distinction
+    is B3: the judge's universe was the scorer's disagreement set, so 1,535 of
+    3,802 cells were never judged, one-directionally.
+
+    No batch form. Measured 2026-09-22 on the live database: 11,400 cells at
+    about 5 microseconds a call, ~0.1 s for the whole grid — an optimisation
+    without a measured problem. The measurement was taken on an EMPTY field-event
+    store, where every cell resolves at rule row 1, the cheapest path, so it is
+    an upper bound on speed and must be re-measured after the freshman smoke run.
+    """
+    if sentinels is None:
+        sentinels = frozenset(codebook.absence_sentinels)
+    for paper_id, field_name, arm in grid_cells(
+            conn, codebook=codebook, papers=papers, arms=arms):
+        yield paper_id, field_name, arm, effective_value(
+            conn, paper_id, field_name, arm, sentinels=sentinels)

@@ -314,22 +314,36 @@ def test_row17_state_at_migration_is_effective_states_row_not_a_fields(db):
         payload={"source": "state at migration",
                  "note": "history not reconstructable from the record"})
     s = effective_state(db, 3)
-    assert s.state == "eligible"
-    assert s.provenance["rule_row"] == 17
-    assert s.provenance["from_state"] is None
-    assert s.provenance["source"] == "state at migration"
+    # B5 rewrite (R29/R39): `state` became two axes. A `state_at_migration` event
+    # carrying an eligibility token lands on the ELIGIBILITY axis and says
+    # nothing about processing — which is the whole point of the split, and is
+    # why the seed could record eligibility with processing empty (R25).
+    assert s.eligibility == "eligible"
+    assert s.processing == NO_RECORDED_STATE
+    assert s.processing_reason is None
+    assert s.analysis_ready is False
+    assert s.in_corpus is True
+    assert s.eligibility_provenance["rule_row"] == 17
+    assert s.eligibility_provenance["from_state"] is None
+    assert s.eligibility_provenance["source"] == "state at migration"
+    assert s.processing_provenance == {}
 
 
 def test_q2_a_paper_with_no_paper_events_has_no_recorded_state(db):
     s = effective_state(db, 9)
-    assert s.state == NO_RECORDED_STATE and s.provenance == {}
+    # B5 rewrite (R29/R39): no events means no record on EITHER axis.
+    assert s.eligibility == NO_RECORDED_STATE
+    assert s.processing == NO_RECORDED_STATE
+    assert s.eligibility_provenance == {} and s.processing_provenance == {}
+    assert s.analysis_ready is False and s.in_corpus is False
 
 
 def test_q2_the_reader_never_reads_papers_status(db):
     """A paper whose status says AI_AUDIT_COMPLETE still has no recorded state."""
     assert db.execute("SELECT status FROM papers WHERE id = 9").fetchone()[0] \
         == "AI_AUDIT_COMPLETE"
-    assert effective_state(db, 9).state == NO_RECORDED_STATE
+    s = effective_state(db, 9)
+    assert s.eligibility == NO_RECORDED_STATE and s.processing == NO_RECORDED_STATE
 
 
 # ── D1-1 … D1-4, as constructed event histories ───────────────────────

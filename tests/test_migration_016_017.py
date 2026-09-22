@@ -200,8 +200,15 @@ def test_017_seeded_papers_read_back_through_effective_state(seeded):
     conn, _, ids = seeded
     for pid in ids:
         s = effective_state(conn, pid)
-        assert s.state == "eligible" and s.provenance["rule_row"] == 17
-    assert effective_state(conn, 4).state == "no_recorded_state"
+        # B5 rewrite (R29/R39): the seed writes ELIGIBILITY only, and after the
+        # split that is now visible in the return value rather than implied.
+        assert s.eligibility == "eligible"
+        assert s.processing == "no_recorded_state"
+        assert s.in_corpus and not s.analysis_ready
+        assert s.eligibility_provenance["rule_row"] == 17
+    unseeded = effective_state(conn, 4)
+    assert unseeded.eligibility == "no_recorded_state"
+    assert unseeded.processing == "no_recorded_state"
 
 
 def test_017_derives_its_paths_from_the_db_path_with_no_review_literal(fresh):

@@ -24,86 +24,113 @@ def _build_evidence_rows(
     db: ReviewDatabase, spec: ReviewSpec,
     min_status: str = "AI_AUDIT_COMPLETE",
     exclude_empty: bool = False,
+    arm: str = "local",
 ) -> tuple[list[str], list[list]]:
-    """Build header and data rows for the evidence table.
+    """Build header and data rows for the evidence table, THROUGH THE READER.
+
+    READERS-01 Phase 2a (R30, R33, R36, R18/Q4, A1).
+
+    What was here was `"SELECT id FROM extractions WHERE paper_id = ? ORDER BY id
+    DESC LIMIT 1"` and that extraction's spans — one of three copies of a
+    resolution rule in this repository, and the "exporter (latest extraction)"
+    half of A1's first disagreeing reader pair. It is gone, not kept beside the
+    reader (R30). Resolution is rule v2.1, and the numbered row that produced
+    each value is exported beside it.
+
+    **`arm` is now a parameter (R18/Q4)** and defaults to `"local"`, which is
+    what every caller silently meant.
+
+    **Columns changed (R36).** Per field the export emitted
+    `value, snippet, confidence, audit_status`. `confidence` was a per-span
+    scalar the event store does not model, and carrying it forward as NULL would
+    publish a column that means nothing — the shape of C7. It is dropped, and
+    two columns that carry more replace it: `{field}_state`, the reader's field
+    state, and `{field}_rule_row`, the v2.1 row that produced it. A disagreement
+    about a value is then a disagreement about a numbered row.
 
     Args:
-        min_status: Minimum paper status to include. Papers at or beyond this
-            status are included. Default "AI_AUDIT_COMPLETE" for raw AI output.
-            Use "HUMAN_AUDIT_COMPLETE" for human-verified production exports.
-        exclude_empty: If True, omit papers with no extraction data entirely.
-
-    Returns (headers, rows) where each row is one included paper.
+        min_status: kept for call compatibility and **no longer selects papers**.
+            The paper set is the corpus — the ELIGIBILITY axis of
+            `effective_state` (S3h) — and `HUMAN_AUDIT_COMPLETE` as a
+            paper-level gate is a per-FIELD question under the event model, which
+            the `{field}_state` column now answers per cell.
+        exclude_empty: omit papers for which no field carries a value.
+        arm: which arm to export. Required knowledge, defaulted for compatibility.
     """
-    from engine.core.database import _STATUS_ORDER
+    from engine.core.effective import (
+        effective_state, eligible_paper_ids, iter_grid, registered_arms,
+    )
 
-    field_names = list(load_codebook_beside(db.db_path).field_names)
+    codebook = load_codebook_beside(db.db_path)
+    field_names = list(codebook.field_names)
 
-    # Base columns
-    headers = ["paper_id", "pmid", "doi", "title", "authors", "year", "journal"]
-    # Per extraction field: value, source_snippet, confidence, audit_status
+    headers = ["paper_id", "pmid", "doi", "title", "authors", "year", "journal",
+               "eligibility", "processing", "processing_reason", "analysis_ready"]
     for fname in field_names:
-        headers.extend([fname, f"{fname}_snippet", f"{fname}_confidence", f"{fname}_audit"])
+        headers.extend([fname, f"{fname}_snippet", f"{fname}_state",
+                        f"{fname}_rule_row"])
 
-    # Get papers that meet or exceed min_status
-    min_level = _STATUS_ORDER.get(min_status, 0)
-    qualifying_statuses = [s for s, level in _STATUS_ORDER.items() if level >= min_level]
-    placeholders = ", ".join("?" for _ in qualifying_statuses)
-    papers = db._conn.execute(
-        f"SELECT * FROM papers WHERE status IN ({placeholders}) ORDER BY id",
-        qualifying_statuses,
+    conn = db._conn
+    if arm not in registered_arms(conn, include_retired=True):
+        from engine.core.effective import UnknownArm
+        raise UnknownArm(
+            f"arm {arm!r} is not in this review's registry — registered arms are "
+            f"{registered_arms(conn, include_retired=True)}."
+        )
+
+    paper_ids = eligible_paper_ids(conn)
+    if not paper_ids:
+        return headers, []
+
+    cells: dict[int, dict[str, object]] = {}
+    for paper_id, field_name, _arm, ev in iter_grid(
+            conn, codebook=codebook, papers=paper_ids, arms=(arm,)):
+        cells.setdefault(paper_id, {})[field_name] = ev
+
+    marks = ", ".join("?" * len(paper_ids))
+    papers = conn.execute(
+        f"SELECT * FROM papers WHERE id IN ({marks}) ORDER BY id", paper_ids
     ).fetchall()
 
     rows = []
     for paper in papers:
         pid = paper["id"]
-        row = [
-            pid,
-            paper["pmid"],
-            paper["doi"],
-            paper["title"],
-            paper["authors"],
-            paper["year"],
-            paper["journal"],
-        ]
+        state = effective_state(conn, pid)
+        by_field = cells.get(pid, {})
+        # "Has data" is a cell the store has a RECORD for — not a cell with a
+        # non-null value. A paper whose every field was withdrawn or declined has
+        # data, and saying [NO EXTRACTION DATA] about it would throw away exactly
+        # the states R1 and the field-state work exist to make visible. The
+        # marker now means what it says: nothing was ever recorded for this arm.
+        has_data = any(ev.state != "missing" for ev in by_field.values())
 
-        # Get latest extraction's spans
-        extraction = db._conn.execute(
-            "SELECT id FROM extractions WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
-            (pid,),
-        ).fetchone()
+        if not has_data and exclude_empty:
+            logger.warning("Paper %d has no value on any field for arm %s", pid, arm)
+            continue
 
-        span_map = {}
-        if extraction:
-            spans = db._conn.execute(
-                "SELECT * FROM evidence_spans WHERE extraction_id = ?",
-                (extraction["id"],),
-            ).fetchall()
-            for s in spans:
-                span_map[s["field_name"]] = s
-
-        has_data = bool(span_map)
+        row = [pid, paper["pmid"], paper["doi"], paper["title"], paper["authors"],
+               paper["year"], paper["journal"],
+               state.eligibility, state.processing, state.processing_reason,
+               state.analysis_ready]
 
         if not has_data:
-            logger.warning("Paper %d has no extraction data", pid)
-            if exclude_empty:
-                continue
-            # Mark first extraction column with NO_EXTRACTION_MARKER
+            logger.warning("Paper %d has no value on any field for arm %s", pid, arm)
             row.extend([NO_EXTRACTION_MARKER, "", "", ""])
             for _ in field_names[1:]:
                 row.extend(["", "", "", ""])
         else:
             for fname in field_names:
-                span = span_map.get(fname)
-                if span:
-                    row.extend([
-                        span["value"],
-                        span["source_snippet"] or "",
-                        span["confidence"],
-                        span["audit_status"],
-                    ])
-                else:
+                ev = by_field.get(fname)
+                if ev is None:
                     row.extend(["", "", "", ""])
+                else:
+                    row.extend([
+                        ev.value if ev.value is not None else "",
+                        (ev.provenance.get("located") or {}).get("snippet", "")
+                        if isinstance(ev.provenance.get("located"), dict) else "",
+                        ev.state,
+                        ev.rule_row,
+                    ])
 
         rows.append(row)
 
@@ -117,10 +144,11 @@ def export_evidence_csv(
     db: ReviewDatabase, spec: ReviewSpec, output_path: str,
     min_status: str = "AI_AUDIT_COMPLETE",
     exclude_empty: bool = False,
+    arm: str = "local",
 ) -> None:
-    """Export evidence table as CSV."""
+    """Export evidence table as CSV. `arm` per R18/Q4."""
     headers, rows = _build_evidence_rows(db, spec, min_status=min_status,
-                                          exclude_empty=exclude_empty)
+                                          exclude_empty=exclude_empty, arm=arm)
 
     tmp_path = output_path + ".tmp"
     try:
@@ -144,15 +172,20 @@ def export_evidence_excel(
     db: ReviewDatabase, spec: ReviewSpec, output_path: str,
     min_status: str = "AI_AUDIT_COMPLETE",
     exclude_empty: bool = False,
+    arm: str = "local",
 ) -> None:
-    """Export evidence table as Excel with 3 sheets."""
+    """Export evidence table as Excel with 3 sheets. `arm` per R18/Q4."""
+    from engine.core.effective import eligible_paper_ids
+
+    codebook = load_codebook_beside(db.db_path)
+    paper_ids = eligible_paper_ids(db._conn)
     wb = openpyxl.Workbook()
 
     # Sheet 1: Evidence Table
     ws1 = wb.active
     ws1.title = "Evidence Table"
     headers, rows = _build_evidence_rows(db, spec, min_status=min_status,
-                                          exclude_empty=exclude_empty)
+                                          exclude_empty=exclude_empty, arm=arm)
     ws1.append(headers)
     for row in rows:
         ws1.append(row)
@@ -172,24 +205,31 @@ def export_evidence_excel(
         ws2.append(list(dict(r).values()))
     _style_header(ws2)
 
-    # Sheet 3: Audit Log
-    ws3 = wb.create_sheet("Audit Log")
-    ws3.append([
-        "paper_id", "title", "field_name", "value",
-        "source_snippet", "confidence", "audit_status",
-        "auditor_model", "audit_rationale",
-    ])
-    audit_rows = db._conn.execute(
-        """SELECT p.id, p.title, es.field_name, es.value,
-                  es.source_snippet, es.confidence, es.audit_status,
-                  es.auditor_model, es.audit_rationale
-           FROM evidence_spans es
-           JOIN extractions e ON e.id = es.extraction_id
-           JOIN papers p ON p.id = e.paper_id
-           ORDER BY p.id, es.id"""
-    ).fetchall()
-    for r in audit_rows:
-        ws3.append(list(dict(r).values()))
+    # Sheet 3: Field states.
+    #
+    # This sheet used to be an "Audit Log" read straight off `evidence_spans`
+    # joined to every extraction with NO latest-extraction filter — so ONE FILE
+    # DISAGREED WITH ITSELF: sheet 1 showed the newest extraction's value and
+    # sheet 3 showed every value the paper ever had, side by side in one
+    # workbook. That is A1 inside a single exporter, and R30 removes it rather
+    # than keeping it beside the reader.
+    #
+    # What replaces it answers the question the audit log was read for — "which
+    # values are backed by evidence, and which are not" — from the reader, per
+    # cell, with the numbered v2.1 row that decided it.
+    ws3 = wb.create_sheet("Field States")
+    ws3.append(["paper_id", "title", "arm", "field_name", "value",
+                "state", "rule_row", "located"])
+    from engine.core.effective import iter_grid
+    titles = {r[0]: r[1] for r in db._conn.execute("SELECT id, title FROM papers")}
+    for paper_id, field_name, arm_name, ev in iter_grid(
+            db._conn, codebook=codebook, papers=paper_ids, arms=(arm,)):
+        located = ev.provenance.get("located")
+        ws3.append([
+            paper_id, titles.get(paper_id), arm_name, field_name,
+            ev.value, ev.state, ev.rule_row,
+            bool(located.get("located")) if isinstance(located, dict) else False,
+        ])
     _style_header(ws3)
 
     tmp_path = output_path + ".tmp"

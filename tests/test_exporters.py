@@ -22,6 +22,7 @@ from engine.exporters.methods_section import generate_methods_section, export_me
 from engine.exporters.prisma import generate_prisma_flow, export_prisma_csv
 from engine.search.models import Citation
 from engine.core.codebook import load_codebook_beside
+from tests._event_store_fixture import mirror_legacy_into_events
 
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
@@ -115,6 +116,12 @@ def populated_db(tmp_path, spec):
                 db.update_audit(s["id"], "verified", "qwen3:32b", "Confirmed.")
             db.update_status(pid, "AI_AUDIT_COMPLETE")
 
+    # B5 (READERS-01 Phase 2a): the evidence-table exporter reads through
+    # `effective_value` now, so the fixture's declarations are mirrored into the
+    # event store. What the fixture SAYS is unchanged; where the exporter LOOKS
+    # is what moved.
+    mirror_legacy_into_events(db)
+
     yield db
     db.close()
 
@@ -166,11 +173,28 @@ def test_evidence_csv_columns(populated_db, spec, tmp_path):
     # Extraction field columns present
     assert "study_design" in headers
     assert "study_design_snippet" in headers
-    assert "study_design_confidence" in headers
-    assert "study_design_audit" in headers
+    # B5 (R36): `{field}_confidence` is gone. It was a per-span scalar the event
+    # store does not model, and carrying it forward as NULL would publish a
+    # column that means nothing — the shape of C7. Two columns that carry more
+    # replace it.
+    assert "study_design_confidence" not in headers
+    assert "study_design_state" in headers
+    assert "study_design_rule_row" in headers
+    # R29/R39: the paper's two axes are columns of their own.
+    for col in ("eligibility", "processing", "processing_reason", "analysis_ready"):
+        assert col in headers
+    # `{field}_audit` carried `evidence_spans.audit_status`. Auditor verdicts are
+    # PROVENANCE, not a field state (R18/Q7), and the field's state is what the
+    # export now carries — asserted with/without evidence, declined, withdrawn,
+    # corrected by human, or one of the two unresolved rows.
+    assert "study_design_audit" not in headers
 
-    # 3 papers at AI_AUDIT_COMPLETE (exporters no longer include EXTRACTED)
-    assert len(rows) - 1 == 3
+    # B5 (S3h/A9). The count was "3 papers at AI_AUDIT_COMPLETE", a
+    # `papers.status` gate. The paper set is now the corpus — the ELIGIBILITY
+    # axis — so it is asserted as a DERIVATION against the reader rather than as
+    # a literal that decays the first time the fixture gains a paper.
+    from engine.core.effective import eligible_paper_ids
+    assert len(rows) - 1 == len(eligible_paper_ids(populated_db._conn))
 
 
 # ── Evidence Excel ───────────────────────────────────────────────────
@@ -182,7 +206,12 @@ def test_evidence_excel_sheets(populated_db, spec, tmp_path):
     assert Path(out).exists()
 
     wb = openpyxl.load_workbook(out)
-    assert wb.sheetnames == ["Evidence Table", "Screening Log", "Audit Log"]
+    # B5 (R30). Sheet 3 was an "Audit Log" read straight off `evidence_spans`
+    # joined to EVERY extraction with no latest-extraction filter, while sheet 1
+    # showed only the newest — so one workbook disagreed with itself. That is A1
+    # inside a single file. "Field States" answers the question the audit log was
+    # read for, per cell, from the reader.
+    assert wb.sheetnames == ["Evidence Table", "Screening Log", "Field States"]
 
     # Evidence Table has header + data rows
     ws1 = wb["Evidence Table"]
@@ -192,9 +221,13 @@ def test_evidence_excel_sheets(populated_db, spec, tmp_path):
     ws2 = wb["Screening Log"]
     assert ws2.max_row > 1
 
-    # Audit Log has entries
-    ws3 = wb["Audit Log"]
-    assert ws3.max_row > 1
+    # Field States has one row per (paper, field) in the corpus grid for the arm
+    ws3 = wb["Field States"]
+    from engine.core.codebook import load_codebook_beside
+    from engine.core.effective import eligible_paper_ids
+    n_papers = len(eligible_paper_ids(populated_db._conn))
+    n_fields = len(load_codebook_beside(populated_db.db_path).field_names)
+    assert ws3.max_row == 1 + n_papers * n_fields     # a derivation, not a literal
     wb.close()
 
 
@@ -383,6 +416,8 @@ def db_with_empty_extractions(tmp_path, spec):
         p2, schema_hash, {}, "empty trace", "deepseek-r1:32b",
     )
     db.update_status(p2, "AI_AUDIT_COMPLETE")
+
+    mirror_legacy_into_events(db)   # B5, as above
 
     yield db
     db.close()

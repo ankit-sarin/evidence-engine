@@ -57,6 +57,13 @@ class JudgeInput:
     field_valid_values: Optional[list[str]]
     arms: list[ArmOutput]
 
+    #: The scorer's verdict for this cell, when one is known — a FEATURE, never
+    #: a filter (R28). B3 is what it looked like as a filter: the judge's
+    #: universe WAS the disagreement set, so 2,266 of 3,802 cells were judged
+    #: and 1,535 never were, one-directionally. Optional because the grid
+    #: enumerates cells the scorer never saw.
+    scorer_verdict: Optional[str] = None
+
 
 class _BasePair(BaseModel):
     """Shared fields for both pair variants."""

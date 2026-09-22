@@ -269,8 +269,57 @@ def seeded_db(tmp_path):
     ])
 
     c.commit()
+
+    # B5 (READERS-01 Phase 2a, R30/R38). `_fetch_spans_for_paper` read the
+    # latest extraction's spans off `evidence_spans` / `cloud_evidence_spans`
+    # through `db._conn`; it reads `effective_value` through a `mode=ro`
+    # connection now. The fixture's declarations are mirrored into the event
+    # store — what it SAYS is unchanged, where the loader LOOKS is what moved.
+    _mirror_spans_into_events(rdb)
+
     yield rdb
     rdb.close()
+
+
+def _mirror_spans_into_events(rdb) -> None:
+    from engine.core import events
+    from tests._event_store_fixture import ensure_event_store
+
+    conn = rdb._conn
+    ensure_event_store(rdb.db_path)
+
+    rows = [("local", r[0], r[1], r[2], r[3]) for r in conn.execute(
+        "SELECT e.paper_id, es.field_name, es.value, es.source_snippet "
+        "FROM evidence_spans es JOIN extractions e ON e.id = es.extraction_id")]
+    rows += [(r[0], r[1], r[2], r[3], r[4]) for r in conn.execute(
+        "SELECT ce.arm, ce.paper_id, cs.field_name, cs.value, cs.source_snippet "
+        "FROM cloud_evidence_spans cs "
+        "JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id")]
+
+    for arm, pid, field, value, snippet in rows:
+        if not conn.execute("SELECT COUNT(*) FROM arms WHERE arm_name = ?",
+                            (arm,)).fetchone()[0]:
+            events.register_arm(conn, arm, "model")
+        if not conn.execute(
+            "SELECT COUNT(*) FROM paper_events WHERE paper_id = ?", (pid,)
+        ).fetchone()[0]:
+            events.write_paper_event(
+                conn, event_type="state_at_migration", paper_id=pid,
+                to_state="eligible", actor_kind="engine", actor_role="system",
+                actor_name="fixture")
+        if value is None:
+            continue
+        uid = events.mint_extraction_uid()
+        events.write_field_event(
+            conn, event_type="asserted", paper_id=pid, field_name=field,
+            arm=arm, value=value, extraction_uid=uid, source_snippet=snippet,
+            actor_kind="model", actor_role="extractor", actor_name="fixture")
+        events.write_field_event(
+            conn, event_type="citation_located", paper_id=pid, field_name=field,
+            arm=arm, extraction_uid=uid, actor_kind="engine",
+            actor_role="system", actor_name="locator",
+            payload={"located": bool(snippet), "snippet": snippet or ""})
+    conn.commit()
 
 
 def _write_csv(path, rows):

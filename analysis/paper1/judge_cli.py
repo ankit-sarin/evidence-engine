@@ -28,6 +28,7 @@ from analysis.paper1.judge import (
     run_pass1,
 )
 from analysis.paper1.judge_loader import (
+    load_grid,
     CodebookEntry,
     LoaderError,
     compute_codebook_sha256,
@@ -63,7 +64,9 @@ def _build_arg_parser() -> argparse.ArgumentParser:
                    help="Review name, e.g. surgical_autonomy")
     p.add_argument("--input", required=True, choices=INPUT_CHOICES)
     p.add_argument("--pairs-csv", type=Path,
-                   help="Disagreement-pairs CSV (required for AI_TRIPLES)")
+                   help="LEGACY (R28): judge only the scorer's disagreement set. "
+                        "Omit it to judge the full cell grid, which is the "
+                        "supported universe.")
     p.add_argument("--codebook", required=True, type=Path,
                    help="Path to extraction_codebook.yaml")
     p.add_argument("--pass", dest="pass_number", type=int, default=1,
@@ -195,14 +198,32 @@ def _resolve_db(args) -> ReviewDatabase:
 def _load_inputs(
     args, db: ReviewDatabase, codebook: dict[str, CodebookEntry]
 ) -> list[JudgeInput]:
-    if args.input == "AI_TRIPLES":
-        if not args.pairs_csv:
-            raise LoaderError("--pairs-csv is required for --input=AI_TRIPLES")
-        limit = args.limit if args.limit and args.limit > 0 else None
-        return load_ai_triples_csv(args.pairs_csv, db, codebook, limit=limit)
-    raise NotImplementedError(
-        f"--input={args.input} is not implemented in this task; AI_TRIPLES only"
-    )
+    """The universe is the GRID (R28). `--pairs-csv` is a legacy escape hatch.
+
+    It used to be the only source, and it is the scorer's disagreement set — so
+    the judge could only ever see cells the scorer had already called wrong. That
+    is B3: 1,535 of 3,802 cells were never judged, one-directionally. Passing it
+    now warns and is not the default.
+    """
+    if args.input != "AI_TRIPLES":
+        raise NotImplementedError(
+            f"--input={args.input} is not implemented in this task; AI_TRIPLES only"
+        )
+    limit = args.limit if args.limit and args.limit > 0 else None
+
+    if args.pairs_csv:
+        logger.warning(
+            "--pairs-csv is a LEGACY flag (R28). Its rows are the scorer's "
+            "disagreement set, so this run's universe is filtered by a verdict "
+            "rather than informed by one, which is inventory row B3. Drop the "
+            "flag to judge the full cell grid."
+        )
+        return load_ai_triples_csv(
+            args.pairs_csv, db, codebook, limit=limit,
+            codebook_path=args.codebook)
+
+    review_dir = Path(db.db_path).parent
+    return load_grid(db._conn, review_dir, codebook, args.codebook, limit=limit)
 
 
 def run(argv: Optional[list[str]] = None) -> int:

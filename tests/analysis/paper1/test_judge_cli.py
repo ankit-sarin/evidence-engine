@@ -129,6 +129,13 @@ def setup_review(tmp_path):
         _add_cloud(pid, "anthropic_sonnet_4_6",
                    [("study_type", "Z", "span")])
     c.commit()
+
+    # B5 (READERS-01 Phase 2a, R28/R30). The loader reads the grid through
+    # `effective_value` now. The fixture's declarations are mirrored into the
+    # event store; what it SAYS is unchanged.
+    from tests.analysis.paper1.test_judge_loader import _mirror_spans_into_events
+    _mirror_spans_into_events(rdb)
+
     rdb.close()
 
     codebook_path = tmp_path / "codebook.yaml"
@@ -220,14 +227,70 @@ class TestArgParsing:
             ])
         assert exc.value.code == 2
 
-    def test_pairs_csv_missing_for_ai_triples_returns_2(self, setup_review):
-        code = judge_cli.run([
-            "--review", "cli_test",
-            "--input", "AI_TRIPLES",
-            "--codebook", str(setup_review.codebook),
-            "--data-root", str(setup_review.data_root),
-        ])
-        assert code == 2
+    def test_no_pairs_csv_judges_the_full_grid(self, setup_review, caplog):
+        """B5 rewrite (R28).
+
+        This pinned `--pairs-csv is required for --input=AI_TRIPLES` → exit 2.
+        The flag WAS the universe, and its universe is the scorer's disagreement
+        set — which is B3: the judge could only ever see cells the scorer had
+        already called wrong, so 1,535 of 3,802 cells were never judged, one
+        directionally. R28 makes the grid the universe and the verdict a feature,
+        so omitting the flag is now the supported path, not an error.
+
+        The judge is mocked: without a mock this test reached a live Ollama
+        server, which is how the rewrite was caught.
+        """
+        import analysis.paper1.judge as judge_module
+
+        seen = []
+
+        def fake(inp, **kw):
+            seen.append((inp.paper_id, inp.field_name))
+            return _fake_judge_result(inp.paper_id, inp.field_name)
+
+        with patch.object(judge_module, "fetch_model_digest", lambda m: "d"), \
+             patch.object(judge_cli, "run_pass1", fake), \
+             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
+            code = judge_cli.run([
+                "--review", "cli_test",
+                "--input", "AI_TRIPLES",
+                "--codebook", str(setup_review.codebook),
+                "--data-root", str(setup_review.data_root),
+            ])
+        assert code == 0
+        # every (paper, field) in the grid, not the CSV's three rows
+        assert len(seen) == len(set(seen))
+        assert len(seen) > 3
+        assert len({pid for pid, _ in seen}) == 3
+
+    def test_pairs_csv_still_works_and_warns_that_it_is_legacy(self, setup_review, caplog):
+        """The escape hatch stays, because the committed Run 6 judge runs were
+        produced through it and a frozen study whose loader has been deleted
+        cannot be read for what it measured."""
+        import logging
+
+        import analysis.paper1.judge as judge_module
+
+        seen = []
+
+        def fake(inp, **kw):
+            seen.append((inp.paper_id, inp.field_name))
+            return _fake_judge_result(inp.paper_id, inp.field_name)
+
+        with caplog.at_level(logging.WARNING), \
+             patch.object(judge_module, "fetch_model_digest", lambda m: "d"), \
+             patch.object(judge_cli, "run_pass1", fake), \
+             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
+            code = judge_cli.run([
+                "--review", "cli_test",
+                "--input", "AI_TRIPLES",
+                "--pairs-csv", str(setup_review.csv),
+                "--codebook", str(setup_review.codebook),
+                "--data-root", str(setup_review.data_root),
+            ])
+        assert code == 0
+        assert len(seen) == 3                      # the CSV's three rows
+        assert "LEGACY" in caplog.text and "B3" in caplog.text
 
     def test_pass_2_raises_not_implemented(self, setup_review):
         with pytest.raises(NotImplementedError):

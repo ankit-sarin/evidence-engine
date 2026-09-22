@@ -29,7 +29,6 @@ from engine.core.codebook import (
     VALID_FIELD_TYPES,
     compute_codebook_sha256,
 )
-from engine.core.database import ReviewDatabase
 
 logger = logging.getLogger(__name__)
 
@@ -187,49 +186,114 @@ def _paper_text(review_dir: Path, paper_id: int | str) -> Optional[str]:
         return None
 
 
-def _fetch_spans_for_paper(
-    db: ReviewDatabase, paper_id: int
-) -> dict[tuple[str, str], str]:
-    """Return {(arm_name, field_name): source_snippet} for one paper.
+def _fetch_spans_for_paper(conn, paper_id: int, codebook_path, arms):
+    """`{(arm_name, field_name): source_snippet}` for one paper, VIA THE READER.
 
-    Joins the latest extraction for the local arm and all cloud arms.
-    Missing snippets are absent from the dict (caller treats as None).
+    READERS-01 Phase 2a (R30, R38). Two queries lived here, each a copy of the
+    latest-extraction rule — `AND e.id = (SELECT MAX(e2.id) ...)` for local and
+    `AND ce.id = (SELECT MAX(ce2.id) ...)` per cloud arm — making this the
+    FOURTH copy of a resolution rule in the repository (A1). They are gone.
+
+    They also reached the live database through `db._conn`, a private attribute
+    of an open read-write `ReviewDatabase`: inventory row I13, which the I5 grep
+    could not see because it is not a `sqlite3.connect` call. The loader now
+    receives a `mode=ro` connection and opens nothing.
     """
+    from engine.core.codebook import load_codebook
+    from engine.core.effective import iter_grid
+
+    codebook = load_codebook(codebook_path)
     spans: dict[tuple[str, str], str] = {}
-
-    # Local arm — latest extraction wins.
-    local_rows = db._conn.execute(
-        """SELECT es.field_name, es.source_snippet
-           FROM evidence_spans es
-           JOIN extractions e ON e.id = es.extraction_id
-           WHERE e.paper_id = ?
-           AND e.id = (
-               SELECT MAX(e2.id) FROM extractions e2
-               WHERE e2.paper_id = e.paper_id
-           )""",
-        (paper_id,),
-    ).fetchall()
-    for r in local_rows:
-        if r["source_snippet"] is not None:
-            spans[("local", r["field_name"])] = r["source_snippet"]
-
-    # Cloud arms — latest per (paper_id, arm).
-    cloud_rows = db._conn.execute(
-        """SELECT ce.arm, cs.field_name, cs.source_snippet
-           FROM cloud_evidence_spans cs
-           JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id
-           WHERE ce.paper_id = ?
-           AND ce.id = (
-               SELECT MAX(ce2.id) FROM cloud_extractions ce2
-               WHERE ce2.paper_id = ce.paper_id AND ce2.arm = ce.arm
-           )""",
-        (paper_id,),
-    ).fetchall()
-    for r in cloud_rows:
-        if r["source_snippet"] is not None:
-            spans[(r["arm"], r["field_name"])] = r["source_snippet"]
-
+    for _pid, field_name, arm_name, ev in iter_grid(
+            conn, codebook=codebook, papers=(paper_id,), arms=arms):
+        located = ev.provenance.get("located")
+        snippet = located.get("snippet") if isinstance(located, dict) else None
+        if snippet:
+            spans[(arm_name, field_name)] = snippet
     return spans
+
+
+def load_grid(
+    conn,
+    review_dir: Path,
+    codebook: dict[str, CodebookEntry],
+    codebook_path: Path,
+    *,
+    verdicts: Optional[dict] = None,
+    limit: Optional[int] = None,
+) -> list[JudgeInput]:
+    """The FULL cell grid as `list[JudgeInput]` — R28.
+
+    **The scorer's verdict is a feature, not a filter.** `load_ai_triples_csv`
+    took its universe from the disagreement CSV, which holds only the
+    `(paper, field)` rows where at least one arm pair disagreed. B3 is the
+    consequence: 2,266 of 3,802 cells were judged and 1,535 (40.4%) never were,
+    one-directionally — false matches were removed from the judge's view and
+    fabrications in agreeing cells were not. Every rate derived from that pass
+    inherits the bias.
+
+    Here the universe is the grid — corpus papers x codebook fields x registered
+    arms — and every cell is emitted whatever the scorer said about it. A verdict,
+    when one is supplied through `verdicts`, is attached to the record as a
+    feature the judge prompt may use.
+
+    Arms come from the registry (R12). `CSV_VALUE_COLS`, which hard-listed three
+    of them, is retained only for reading legacy CSVs.
+    """
+    from engine.core.effective import iter_grid, registered_arms
+
+    arms = registered_arms(conn)
+    cb = None
+    from engine.core.codebook import load_codebook as _load_cb
+    cb = _load_cb(codebook_path)
+
+    by_cell: dict[tuple[int, str], dict[str, "object"]] = {}
+    for paper_id, field_name, arm_name, ev in iter_grid(
+            conn, codebook=cb, arms=arms):
+        by_cell.setdefault((paper_id, field_name), {})[arm_name] = ev
+
+    inputs: list[JudgeInput] = []
+    text_cache: dict[int, Optional[str]] = {}
+
+    for (paper_id, field_name) in sorted(by_cell):
+        if limit is not None and len(inputs) >= limit:
+            break
+        entry = codebook.get(field_name)
+        if entry is None:
+            logger.warning("skip: field %r not in codebook (paper_id=%s)",
+                           field_name, paper_id)
+            continue
+        if paper_id not in text_cache:
+            text_cache[paper_id] = _paper_text(review_dir, paper_id)
+        paper_text = text_cache[paper_id]
+        if paper_text is None:
+            logger.warning("skip: no parsed text for paper_id=%s field=%s",
+                           paper_id, field_name)
+            continue
+
+        cell = by_cell[(paper_id, field_name)]
+        arm_outputs: list[ArmOutput] = []
+        for arm_name in arms:
+            ev = cell.get(arm_name)
+            value = _coerce_value(ev.value if ev is not None else None)
+            located = ev.provenance.get("located") if ev is not None else None
+            span = located.get("snippet") if isinstance(located, dict) else None
+            flags: PreCheckFlags = compute_precheck_flags(
+                value=value, span=span, source_text=paper_text,
+                field_type=entry.field_type,
+                numeric_tolerance=entry.numeric_tolerance,
+            )
+            arm_outputs.append(ArmOutput(arm_name=arm_name, value=value,
+                                         span=span, precheck_flags=flags))
+
+        inputs.append(JudgeInput(
+            paper_id=str(paper_id), field_name=field_name,
+            field_type=entry.field_type, field_definition=entry.definition,
+            field_valid_values=entry.valid_values, arms=arm_outputs,
+            scorer_verdict=(verdicts or {}).get((paper_id, field_name)),
+        ))
+
+    return inputs
 
 
 # ── CSV loader ──────────────────────────────────────────────────────
@@ -246,18 +310,32 @@ def _coerce_value(raw: Optional[str]) -> Optional[str]:
 
 def load_ai_triples_csv(
     csv_path: Path,
-    db: ReviewDatabase,
+    db,
     codebook: dict[str, CodebookEntry],
     limit: Optional[int] = None,
+    *,
+    codebook_path: Optional[Path] = None,
 ) -> list[JudgeInput]:
-    """Read a 3-arm disagreement CSV and produce list[JudgeInput].
+    """LEGACY. Read a 3-arm disagreement CSV and produce list[JudgeInput].
+
+    **Superseded by `load_grid` (R28).** This reads the SCORER'S DISAGREEMENT
+    SET, not the review's cells: its universe is whatever rows
+    `export_disagreement_pairs.py` wrote, which is exactly B3. It is kept
+    because the committed Run 6 judge runs were produced through it and a
+    frozen study whose loader has been deleted cannot be read for what it
+    measured — telemetry under R30/R31, not a supported path.
+
+    `db` may be a `ReviewDatabase` or a bare `mode=ro` connection.
 
     Rows are skipped (with WARNING logs, not exceptions) when:
       - field_name is not in the codebook,
       - paper text is missing on disk.
     """
     csv_path = Path(csv_path)
-    review_dir = db.db_path.parent
+    conn = getattr(db, "_conn", db)
+    review_dir = Path(
+        conn.execute("PRAGMA database_list").fetchone()[2]).parent
+    codebook_path = Path(codebook_path or (review_dir / "extraction_codebook.yaml"))
 
     with csv_path.open(newline="") as f:
         rows = list(csv.DictReader(f))
@@ -298,7 +376,9 @@ def load_ai_triples_csv(
             continue
 
         if paper_id_int not in span_cache:
-            span_cache[paper_id_int] = _fetch_spans_for_paper(db, paper_id_int)
+            span_cache[paper_id_int] = _fetch_spans_for_paper(
+                conn, paper_id_int, codebook_path,
+                tuple(a for _c, a in CSV_VALUE_COLS))
         spans = span_cache[paper_id_int]
 
         arms: list[ArmOutput] = []
@@ -337,6 +417,7 @@ def load_ai_triples_csv(
 
 __all__ = [
     "CSV_VALUE_COLS",
+    "load_grid",
     "CodebookEntry",
     "InputScope",
     "LoaderError",

@@ -72,6 +72,7 @@ database's `schema_migrations` table. **The series begins at 002** — there is 
 | 017 | data | seeds the event store from THIS database's corpus, parsed texts, spec and codebook (R25); imports the frozen `engine/core/corpus.py`, which is row C13 and why R35 forbids it from 018 on |
 | 018 | schema | `cloud_evidence_spans` to the fresh NOT NULL shape, `UNIQUE(paper_id, arm)` dropped from `cloud_extractions`, `audit_adjudication` dropped (C10 · R16 · R32) |
 | 019 | schema | `paper_events` rebuilt with the two-axis state vocabulary (R29/R39) |
+| 020 | schema | `run_manifests`, `run_stage_configs`, `run_calls`; `field_events` and `paper_events` rebuilt with `run_id REFERENCES run_manifests` and R77's run-link CHECK; `arms` pin columns and the widened freeze trigger (S3a/S3b, R59, R68). Every CHECK NULL-safe (R78) |
 
 018 and 019 were applied to the live `surgical_autonomy` database on 2026-09-22
 (READERS-01 Phase 3). From 018 onward a migration module is **self-contained**

@@ -156,7 +156,7 @@ SPEC_BEARING_ENTRY_POINTS = [
     "analysis/eval/elicit_design01/smoke.py",
     "analysis/eval/run_capture01.py",
     # analysis/eval/run_cloud_strict.py retired 2026-09-22 under R72 (R31): an
-    # ungated off-box path, edited after its last run. Its two parametrized
+    # ungated off-box path, edited after its last run. Its three parametrized
     # cases retire with it (R47).
     "analysis/eval/run_local_ab.py",
     "analysis/eval/run_local_abc.py",

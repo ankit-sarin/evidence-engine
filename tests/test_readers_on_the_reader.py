@@ -294,7 +294,9 @@ def test_the_scorer_verdict_rides_as_a_feature(review):
 
 @pytest.mark.parametrize("rel", [
     "engine/analysis/concordance.py",
+    "engine/exporters/docx_export.py",
     "analysis/paper1/judge_loader.py",
+    "analysis/paper1/export_disagreement_pairs.py",
 ])
 def test_no_bare_sqlite3_connect_survives(rel):
     """I5. `mode=ro`, never `immutable=1` — `review.db` is live, so `immutable`
@@ -327,7 +329,9 @@ def test_no_migrated_reader_still_selects_the_latest_extraction():
     migrated = [
         "engine/analysis/concordance.py",
         "engine/exporters/evidence_table.py",
+        "engine/exporters/docx_export.py",
         "analysis/paper1/judge_loader.py",
+        "analysis/paper1/export_disagreement_pairs.py",
         "engine/validators/distribution_monitor.py",
     ]
     # CODE, not prose: three of the four files explain in a docstring what they
@@ -363,12 +367,201 @@ def test_no_migrated_reader_still_selects_the_latest_extraction():
         "R30 removes the direct-table path rather than keeping it beside the "
         "reader.")
 
-    # Phase 2b's two remaining copies, named so they are scheduled not forgotten.
-    out2 = subprocess.run(
-        ["git", "grep", "-l", "-E", r"ORDER BY id DESC LIMIT 1|MAX\(e2\.id\)",
-         "--", "engine/exporters/"],
-        cwd=REPO, capture_output=True, text=True)
-    assert {ln for ln in out2.stdout.split() if ln} == {
-        "engine/exporters/docx_export.py",
-        "engine/exporters/trace_exporter.py",
-    }, "Phase 2b's scope moved; update this pin with the ruling that moved it"
+    # Phase 2b closed the last two: `docx_export.py` migrated, `trace_exporter.py`
+    # RETIRED (R46) rather than migrated — it reported on reasoning traces and
+    # auditor verdicts, none of which the event store carries.
+    # Same code-only rule: `docx_export.py`'s docstring quotes the query it no
+    # longer runs, and a guard that counted that is a guard nobody can document
+    # past.
+    latest = re.compile(r"ORDER BY id DESC LIMIT 1|MAX\(e2\.id\)")
+    exporters = sorted((REPO / "engine/exporters").glob("*.py"))
+    still = [f.relative_to(REPO).as_posix() for f in exporters
+             if latest.search(_code_only(f))]
+    assert not still, f"an exporter still selects the latest extraction (R33): {still}"
+    assert not (REPO / "engine/exporters/trace_exporter.py").exists()
+    assert not (REPO / "tests/test_trace_exporter.py").exists()
+
+
+# ── Phase 2b: the DOCX exporter ──────────────────────────────────────
+
+def _docx_cells(path):
+    """Every cell of the first table, as a list of rows."""
+    from docx import Document
+
+    doc = Document(str(path))
+    return [[c.text for c in row.cells] for row in doc.tables[0].rows]
+
+
+def _docx_paragraphs(path):
+    from docx import Document
+
+    return [p.text for p in Document(str(path)).paragraphs]
+
+
+def test_the_docx_reports_declined_and_shows_no_value_for_withdrawn(review, tmp_path):
+    """G3 / D1-4 through the DOCX exporter.
+
+    R1 makes a withdrawal "no value in the current result", so a withdrawn field
+    renders EMPTY. A declined field is a different fact — the model was asked and
+    abstained — and an empty cell there would make a submission table say "not
+    reported" where the record says "declined".
+    """
+    from engine.core.review_spec import load_review_spec
+    from engine.exporters.docx_export import export_evidence_docx
+
+    db, root = review
+    spec = load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+
+    _assert_value(db._conn, 1, "study_type", "local", "RCT")
+    _decline(db._conn, 1, "sample_size", "local")
+    claim = _assert_value(db._conn, 1, "country", "local", "USA")
+    events.write_field_event(
+        db._conn, event_type="human_withdrew", paper_id=1, field_name="country",
+        arm="local", against_claims=[claim],
+        actor_kind="human", actor_role="reviewer", actor_name="PI")
+    db._conn.commit()
+
+    out = tmp_path / "evidence.docx"
+    export_evidence_docx(db, spec, str(out), arm="local")
+
+    rows = _docx_cells(out)
+    header = rows[0]
+    body = {r[0]: r for r in rows[1:]}
+    row = next(iter(body.values()))
+    col = {name: i for i, name in enumerate(header)}
+
+    assert row[col["Study Type"]] == "RCT"
+    assert row[col["Sample Size"]] == "[declined]"
+    assert row[col["Country"]] == "", "a withdrawal is no value (R1)"
+
+
+def test_the_docx_refuses_an_unregistered_arm(review, tmp_path):
+    from engine.core.review_spec import load_review_spec
+    from engine.exporters.docx_export import export_evidence_docx
+
+    db, root = review
+    spec = load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+    with pytest.raises(UnknownArm):
+        export_evidence_docx(db, spec, str(tmp_path / "x.docx"), arm="not_an_arm")
+
+
+def test_the_docx_keeps_a_failed_paper_and_reports_it_by_reason(review, tmp_path):
+    """S3h through a submission artifact: the paper is not silently dropped, and
+    the reason is stated rather than left to be inferred from an empty row."""
+    from engine.core.review_spec import load_review_spec
+    from engine.exporters.docx_export import export_evidence_docx
+
+    db, root = review
+    spec = load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+    _assert_value(db._conn, 1, "study_type", "local", "RCT")
+    events.write_paper_event(
+        db._conn, event_type="extraction_failed", paper_id=2,
+        to_state="extraction_failed", reason_code="extraction failed after retries",
+        actor_kind="engine", actor_role="system", actor_name="fixture")
+    db._conn.commit()
+
+    out = tmp_path / "evidence.docx"
+    export_evidence_docx(db, spec, str(out), arm="local")
+
+    assert len(_docx_cells(out)) == 1 + 3      # header + the three corpus papers
+    note = " ".join(_docx_paragraphs(out))
+    assert "extraction failed after retries" in note
+    assert "1 paper(s)" in note
+
+
+def test_the_docx_has_no_note_when_nothing_failed(review, tmp_path):
+    from engine.core.review_spec import load_review_spec
+    from engine.exporters.docx_export import export_evidence_docx
+
+    db, root = review
+    spec = load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+    _assert_value(db._conn, 1, "study_type", "local", "RCT")
+    out = tmp_path / "evidence.docx"
+    export_evidence_docx(db, spec, str(out), arm="local")
+    assert "Processing outcomes" not in " ".join(_docx_paragraphs(out))
+
+
+# ── Phase 2b: the disagreement-pairs universe (R48) ──────────────────
+
+def test_disagreement_pairs_emits_every_grid_cell_none_filtered(review, tmp_path):
+    """G4 / R48. `if not any_disagree: continue` was THE universe role, and it is
+    B3 itself: this file's output WAS the judge's input, so a cell every arm
+    agreed on could never be judged. A MATCH is now a row with MATCH in it."""
+    from analysis.paper1.export_disagreement_pairs import build_disagreement_rows
+    from engine.core.codebook import load_codebook
+    from engine.core.effective import eligible_paper_ids, registered_arms
+
+    db, root = review
+    # one cell where the two model arms AGREE, one where they DISAGREE,
+    # and every other cell empty
+    _assert_value(db._conn, 1, "study_type", "local", "RCT")
+    _assert_value(db._conn, 1, "study_type", "openai_o4_mini_high", "RCT")
+    _assert_value(db._conn, 1, "sample_size", "local", "51")
+    _assert_value(db._conn, 1, "sample_size", "openai_o4_mini_high", "150")
+
+    rows, summaries = build_disagreement_rows(
+        str(db.db_path), str(REPO / "review_specs" / "surgical_autonomy.yaml"))
+
+    n_papers = len(eligible_paper_ids(db._conn))
+    n_fields = len(load_codebook(root / "extraction_codebook.yaml").field_names)
+    # a DERIVATION, never a literal
+    assert len(rows) == n_papers * n_fields
+
+    by_cell = {(r["paper_id"], r["field_name"]): r for r in rows}
+    agree = by_cell[(1, "study_type")]
+    assert agree["local_vs_o4mini_score"] == "MATCH", "an agreeing cell is a ROW now"
+    assert agree["local_value"] == "RCT" and agree["o4mini_value"] == "RCT"
+    disagree = by_cell[(1, "sample_size")]
+    assert disagree["local_vs_o4mini_score"] != "MATCH"
+    # a cell nobody claimed is present too
+    empty = by_cell[(3, "country")]
+    assert empty["local_value"] is None and empty["o4mini_value"] is None
+
+
+def test_disagreement_pairs_row_format_is_unchanged(review, tmp_path):
+    """R48: the row builder and row format are unchanged — the CSV writer's
+    header is the contract, and every key it names must still be produced."""
+    from analysis.paper1.export_disagreement_pairs import (
+        build_disagreement_rows, write_csv,
+    )
+
+    db, root = review
+    _assert_value(db._conn, 1, "study_type", "local", "RCT")
+    rows, _ = build_disagreement_rows(
+        str(db.db_path), str(REPO / "review_specs" / "surgical_autonomy.yaml"))
+
+    for key in ("paper_id", "paper_label", "paper_title", "field_name",
+                "field_tier", "field_type", "local_value", "o4mini_value",
+                "sonnet_value", "local_vs_o4mini_score", "local_vs_sonnet_score",
+                "o4mini_vs_sonnet_score"):
+        assert key in rows[0], f"{key} left the row format"
+
+    out = tmp_path / "pairs.csv"
+    write_csv(rows, out)
+    header = out.read_text().splitlines()[0].split(",")
+    assert header == [
+        "paper_id", "paper_label", "paper_title", "field_name", "field_tier",
+        "field_type", "local_value", "o4mini_value", "sonnet_value",
+        "local_vs_o4mini_score", "local_vs_sonnet_score", "o4mini_vs_sonnet_score",
+    ]
+
+
+def test_an_arm_the_row_format_cannot_name_is_refused(review):
+    """The registry is the universe now, so a fourth arm is a FORMAT decision —
+    and a silent omission is the failure this refusal exists to prevent."""
+    from analysis.paper1.export_disagreement_pairs import arms_in_scope
+
+    db, root = review
+    events.register_arm(db._conn, "some_new_model_arm", "model")
+    db._conn.commit()
+    with pytest.raises(RuntimeError, match="no column for"):
+        arms_in_scope(db._conn)
+
+
+def test_arms_in_scope_reads_the_registry_not_a_literal(review):
+    """R12/R48: a human arm is not a column here, and the model arms come from
+    the registry rather than from a module list."""
+    from analysis.paper1.export_disagreement_pairs import arms_in_scope
+
+    db, root = review
+    assert arms_in_scope(db._conn) == ["local", "openai_o4_mini_high"]

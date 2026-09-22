@@ -284,11 +284,17 @@ def test_export_all(populated_db, spec, tmp_path):
     out_dir = str(tmp_path / "all_exports")
     paths = export_all(populated_db, spec, "test_export", output_dir=out_dir)
 
+    # The three trace keys went with `trace_exporter.py` (R46): it reported on
+    # reasoning traces and auditor verdicts, and the event store carries neither,
+    # so it was retired rather than migrated. Their ABSENCE is asserted, because
+    # a caller that still reads `paths["traces_dir"]` should fail here and not in
+    # production.
     expected_keys = {
         "prisma_csv", "evidence_csv", "evidence_xlsx", "evidence_docx", "methods_md",
-        "trace_quality_report", "trace_quality_report_md", "traces_dir",
     }
     assert expected_keys.issubset(set(paths.keys()))
+    assert not {"trace_quality_report", "trace_quality_report_md",
+                "traces_dir"} & set(paths)
 
     for key, path in paths.items():
         assert Path(path).exists(), f"{key} not found at {path}"

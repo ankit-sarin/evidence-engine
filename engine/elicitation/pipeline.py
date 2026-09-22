@@ -346,8 +346,8 @@ def extract_paper_elicited(
     # D6: the terminal state rides on ALL twenty entries, not only the unmet
     # ones. A reader must be able to tell "evidenced" from "not asked" without
     # inferring it from the absence of a marker. The list SHAPE is unchanged --
-    # `auditor.count_populated_fields` and `trace_exporter._build_tier_map` both
-    # branch on `isinstance(..., list)` and key-access their fields, so an extra
+    # `auditor.count_populated_fields` branches on `isinstance(..., list)` and
+    # key-accesses its fields, so an extra
     # key rides along and a wrapper dict would silently break LOW_YIELD's
     # denominator.
     extracted_data = [

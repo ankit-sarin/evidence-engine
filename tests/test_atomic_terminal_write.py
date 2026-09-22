@@ -98,7 +98,8 @@ def test_the_terminal_state_rides_on_every_entry_not_only_the_unmet_ones(db):
 
 def test_extracted_data_keeps_the_list_shape_downstream_readers_expect(db):
     """A wrapper dict would silently break LOW_YIELD's denominator, which is
-    `len(extracted)`, and trace_exporter's tier map, which branches on `list`."""
+    `len(extracted)`. (`trace_exporter`'s tier map branched on `list` too; that
+    module was retired under R46 and is not a reason for this shape any more.)"""
     spans, states = _spans(2, 1)
     db.add_extraction_atomic(
         paper_id=1, schema_hash="h", model="m", reasoning_trace="t", spans=spans,

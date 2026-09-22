@@ -9,11 +9,6 @@ from engine.exporters.docx_export import export_evidence_docx
 from engine.exporters.evidence_table import export_evidence_csv, export_evidence_excel
 from engine.exporters.methods_section import export_methods_md
 from engine.exporters.prisma import export_prisma_csv
-from engine.exporters.trace_exporter import (
-    export_disagreement_pairs,
-    export_trace_quality_report,
-    export_traces_markdown,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -54,17 +49,17 @@ def export_all(
     export_methods_md(db, spec, methods_path)
     paths["methods_md"] = methods_path
 
-    # Trace exports
-    db_path_str = str(db.db_path)
-
-    trace_report_path = str(out / "trace_quality_report.json")
-    export_trace_quality_report(db_path_str, trace_report_path)
-    paths["trace_quality_report"] = trace_report_path
-    paths["trace_quality_report_md"] = trace_report_path.replace(".json", ".md")
-
-    traces_dir = str(out / "traces")
-    export_traces_markdown(db_path_str, traces_dir)
-    paths["traces_dir"] = traces_dir
+    # The trace exports were RETIRED, not migrated (R46, READERS-01 Phase 2b).
+    #
+    # `trace_exporter.py` reported on `extractions.reasoning_trace` and on
+    # `evidence_spans.audit_status` / `.confidence` / `.audit_rationale`, and not
+    # one of those has a counterpart in the event store — so "migrating" it would
+    # have left the file standing while every number it produced went empty. It
+    # served the reading of Run 6, not the engine going forward, which is R31's
+    # test. Trace quality (truncation detection, length distribution, flagged
+    # papers) is rebuilt over TRACE EVENTS at session 9 (S5d); the prior design
+    # is recoverable at 443e3d8968bf5bcee9679102dcb798bf4f40bdcf:engine/exporters/trace_exporter.py, recorded
+    # in the plan's retention ledger.
 
     logger.info("All exports written to %s", output_dir)
     return paths

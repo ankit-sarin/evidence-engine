@@ -1,14 +1,14 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `ab5193f73d5bbe0cdd69cc1add2269659253abbe` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `443e3d8968bf5bcee9679102dcb798bf4f40bdcf` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 214 |
+| files scanned | 213 |
 | entry points | 104 |
 | entry points with spec flag | 29 |
 | entry points with review name flag | 74 |

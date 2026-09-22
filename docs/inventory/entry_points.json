@@ -1811,7 +1811,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 629,
+            "line": 687,
             "names": [
               "--review"
             ],
@@ -1820,7 +1820,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 631,
+            "line": 689,
             "names": [
               "--spec"
             ],
@@ -1834,7 +1834,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 631,
+            "line": 689,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -1844,27 +1844,27 @@
         "spec_access": [
           {
             "func": "load_review_spec",
-            "line": 118,
+            "line": 158,
             "scope": "build_disagreement_rows"
           },
           {
             "func": "load_review_spec",
-            "line": 229,
+            "line": 287,
             "scope": "write_xlsx"
           },
           {
             "func": "load_review_spec",
-            "line": 363,
+            "line": 421,
             "scope": "write_html"
           },
           {
             "func": "load_spec_for",
-            "line": 636,
+            "line": 694,
             "scope": "main"
           },
           {
             "func": "spec_path_for",
-            "line": 637,
+            "line": 695,
             "scope": "main"
           }
         ],
@@ -5262,20 +5262,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "engine/exporters/trace_exporter.py": {
-        "entry_point": false,
-        "flags": [],
-        "has_main_guard": false,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "engine/exporters/trace_exporter.py",
-        "path_construction": [],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "engine/migrations/002_screening_rename.py": {
         "entry_point": true,
         "flags": [],
@@ -8075,7 +8061,7 @@
       "entry_points_with_spec_flag": 29,
       "files_calling_load_review_spec_directly": 10,
       "files_calling_resolver": 32,
-      "files_scanned": 214,
+      "files_scanned": 213,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 35,
@@ -8087,7 +8073,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "ab5193f73d5bbe0cdd69cc1add2269659253abbe",
+    "generated_at_commit": "443e3d8968bf5bcee9679102dcb798bf4f40bdcf",
     "scan_roots": [
       "engine",
       "scripts",

@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 from itertools import combinations
 from pathlib import Path
 
-from engine.analysis.concordance import load_arm
+from engine.core.effective import iter_grid
 from engine.analysis.metrics import FieldSummary, field_summary
 from engine.analysis.scoring import FieldScore, score_pair
 from engine.core.database import DATA_ROOT
@@ -29,13 +29,53 @@ from engine.core.review_spec import load_review_spec
 
 # ── Constants ────────────────────────────────────────────────────────
 
-ARMS = ["local", "openai_o4_mini_high", "anthropic_sonnet_4_6"]
+#: The row FORMAT's three value columns, by arm name. This is a property of the
+#: output — `local_value` / `o4mini_value` / `sonnet_value` are literal CSV,
+#: XLSX and HTML column names — and NOT the universe. R48 removed the universe
+#: role: which arms exist is the registry's answer, and `arms_in_scope()` below
+#: reads it. If the registry ever holds an arm this format cannot name, the
+#: export refuses rather than dropping it silently.
+ARM_VALUE_COLUMN = {
+    "local": "local_value",
+    "openai_o4_mini_high": "o4mini_value",
+    "anthropic_sonnet_4_6": "sonnet_value",
+}
 ARM_LABELS = {
     "local": "Local (DeepSeek-R1:32b)",
     "openai_o4_mini_high": "o4-mini",
     "anthropic_sonnet_4_6": "Sonnet 4.6",
 }
+
+#: Kept so the frozen March artifact's own module still names what it produced.
+ARMS = list(ARM_VALUE_COLUMN)
 ARM_PAIRS = list(combinations(ARMS, 2))
+
+
+def _ro_uri(db_path) -> str:
+    """`mode=ro`, never `immutable=1` — `review.db` is live (I5)."""
+    return f"file:{Path(db_path).resolve()}?mode=ro"
+
+
+def arms_in_scope(conn) -> list[str]:
+    """The arms this export covers: the REGISTRY's model arms, in its order.
+
+    R12/R48. `ARMS` was a module literal that decided both which arms were read
+    and which papers survived the `shared_ids` intersection — so adding an arm
+    to a review changed nothing here, and a registry arm this format cannot name
+    was invisible. Now the registry answers, and an arm without a column is a
+    refusal with its name in the message.
+    """
+    from engine.core.effective import registered_arms
+
+    arms = [a for a in registered_arms(conn, kind="model")]
+    unnameable = [a for a in arms if a not in ARM_VALUE_COLUMN]
+    if unnameable:
+        raise RuntimeError(
+            f"the disagreement-pairs row format has no column for {unnameable}. "
+            f"Its three value columns are {sorted(ARM_VALUE_COLUMN.values())}; a "
+            f"fourth arm needs a format decision, not a silent omission."
+        )
+    return arms
 
 FREE_TEXT_FIELDS = {
     "robot_platform", "task_performed", "primary_outcome_metric",
@@ -67,7 +107,7 @@ def _field_tier(field_name: str, cb) -> int:
 
 def _load_paper_info(db_path: str) -> dict[int, dict]:
     """Load paper_id → {title, first_author, year} from papers table."""
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(_ro_uri(db_path), uri=True)
     conn.row_factory = sqlite3.Row
     rows = conn.execute("SELECT id, title, authors, year FROM papers").fetchall()
     conn.close()
@@ -118,52 +158,62 @@ def build_disagreement_rows(
     spec = load_review_spec(spec_path)
     cb = load_codebook_for(spec.review_id)
 
-    # Load arms
-    arm_data = {arm: load_arm(db_path, arm) for arm in ARMS}
+    conn = sqlite3.connect(_ro_uri(db_path), uri=True)
+    try:
+        arms = arms_in_scope(conn)
+        arm_pairs = list(combinations(arms, 2))
 
-    # Papers present in all 3 arms
-    shared_ids = set(arm_data[ARMS[0]].keys())
-    for arm in ARMS[1:]:
-        shared_ids &= set(arm_data[arm].keys())
-    shared_ids = sorted(shared_ids)
-    print(f"Papers shared across all 3 arms: {len(shared_ids)}")
+        # THE UNIVERSE IS THE GRID (R48). Four things used to narrow it, and all
+        # four are gone:
+        #
+        #   ARMS         a module literal, not the registry (R12);
+        #   shared_ids   papers present in ALL arms, so one arm's gap removed the
+        #                paper from every pair;
+        #   all_fields   the union of fields that happened to carry a value,
+        #                rather than the codebook's declared set (R26);
+        #   any_disagree `if not any_disagree: continue` — THE scorer-verdict
+        #                filter, and B3 itself: the judge's universe was this
+        #                file's output, so 1,535 of 3,802 cells were never
+        #                judged, one-directionally. A MATCH is now a row with
+        #                MATCH in it.
+        #
+        # The row builder and the row format below are unchanged.
+        cells: dict[tuple[int, str], dict[str, object]] = {}
+        for paper_id, field_name, arm_name, ev in iter_grid(
+                conn, codebook=cb, arms=tuple(arms)):
+            cells.setdefault((paper_id, field_name), {})[arm_name] = ev
+    finally:
+        conn.close()
 
-    # All field names across all arms/papers
-    all_fields: set[str] = set()
-    for arm in ARMS:
-        for pid in shared_ids:
-            all_fields.update(arm_data[arm].get(pid, {}).keys())
-    # Sort: free-text first, then by tier + alpha
-    sorted_fields = sorted(
-        all_fields,
+    paper_ids = sorted({pid for pid, _ in cells})
+    field_names = sorted(
+        {fname for _, fname in cells},
         key=lambda f: (0 if f in FREE_TEXT_FIELDS else 1, _field_tier(f, cb), f),
     )
+    print(f"Papers in the corpus: {len(paper_ids)}; "
+          f"fields: {len(field_names)}; arms: {len(arms)}")
 
     paper_info = _load_paper_info(db_path)
 
     # Score all pairs for metrics
     scores_by_pair_field: dict[str, dict[str, list[FieldScore]]] = {
-        _pair_key(a, b): defaultdict(list) for a, b in ARM_PAIRS
+        _pair_key(a, b): defaultdict(list) for a, b in arm_pairs
     }
 
     rows = []
-    for pid in shared_ids:
-        for fname in sorted_fields:
-            values = {arm: arm_data[arm].get(pid, {}).get(fname) for arm in ARMS}
+    for pid in paper_ids:
+        for fname in field_names:
+            cell = cells.get((pid, fname), {})
+            values = {
+                arm: (cell[arm].value if arm in cell else None) for arm in arms
+            }
 
-            # Score all 3 pairs
             pair_scores = {}
-            any_disagree = False
-            for arm_a, arm_b in ARM_PAIRS:
+            for arm_a, arm_b in arm_pairs:
                 fs = score_pair(fname, values[arm_a], values[arm_b], spec)
                 pk = _pair_key(arm_a, arm_b)
                 pair_scores[pk] = fs
                 scores_by_pair_field[pk][fname].append(fs)
-                if fs.result != "MATCH":
-                    any_disagree = True
-
-            if not any_disagree:
-                continue
 
             pinfo = paper_info.get(pid, {"title": "", "label": str(pid)})
             ft = _field_type(fname, cb)
@@ -176,10 +226,18 @@ def build_disagreement_rows(
                 "field_name": fname,
                 "field_tier": tier,
                 "field_type": ft,
-                "local_value": values["local"],
-                "o4mini_value": values["openai_o4_mini_high"],
-                "sonnet_value": values["anthropic_sonnet_4_6"],
             }
+            # The FORMAT's columns always exist, whatever the registry holds:
+            # a reader of this CSV should not have to discover that a column
+            # vanished because an arm was retired. An arm out of scope is None,
+            # which is what "this arm said nothing here" already looks like.
+            for column in ARM_VALUE_COLUMN.values():
+                row[column] = None
+            for arm_a, arm_b in ARM_PAIRS:
+                row[f"{_pair_key(arm_a, arm_b)}_score"] = None
+
+            for arm in arms:
+                row[ARM_VALUE_COLUMN[arm]] = values[arm]
             for pk, fs in pair_scores.items():
                 row[f"{pk}_score"] = fs.result
             rows.append(row)

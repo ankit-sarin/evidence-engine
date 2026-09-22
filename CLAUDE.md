@@ -35,7 +35,7 @@ evidence-engine/
 │   ├── analysis/               # Concordance analysis (scoring, metrics, normalization, reports)
 │   ├── parsers/                # Three-tier PDF parser (Docling → PyMuPDF → Qwen2.5-VL)
 │   ├── acquisition/            # Unpaywall, download cascade, PDF quality check, verify
-│   ├── migrations/             # Numbered migrations 002-019 + runner.py (receipts). See its README
+│   ├── migrations/             # Numbered migrations 002-020 + runner.py (receipts). See its README
 │   ├── tools/                  # inventory.py (AST entry-point census), db_fingerprint.py
 │   ├── adjudication/           # Workflow stages, screening/FT/audit adjudication
 │   ├── utils/                  # tmux background, extraction cleanup, ollama preflight
@@ -67,6 +67,10 @@ evidence-engine/
 | Cloud Extractor (OpenAI) | o4-mini-2025-04-16 | Concordance arm — reasoning_effort=high |
 | Cloud Extractor (Anthropic) | claude-sonnet-4-6 | Concordance arm — extended thinking |
 
+The models above are the **live spec's values**, not constants: every model, option, `think`,
+`format` and `keep_alive` a call sends comes from the resolver (see "Configuration, the run
+manifest and cloud opt-in" below). No site names a model or builds an options dict.
+
 ## Data Architecture
 - SQLite: One database per review (state machine, provenance)
 - ChromaDB: Vector embeddings per review (disposable, rebuildable)
@@ -83,6 +87,7 @@ evidence-engine/
 | judge_pair_ratings | C(N,2) rows per `judge_ratings` row — Level 1 (EQUIVALENT / PARTIAL / DIVERGENT) and Level 2 (GRANULARITY / SELECTION / FABRICATION / …) per arm pair. Migration 007. |
 | fabrication_verifications | Pass 2 per-arm verdicts. UNIQUE (judge_run_id, paper_id, field_name, arm_name). verdict ∈ {SUPPORTED, PARTIALLY_SUPPORTED, UNSUPPORTED}. CHECK: UNSUPPORTED requires non-empty reasoning + fabrication_hypothesis. CASCADE FK to judge_runs. Migration 008. |
 | judge_run_audit | Post-hoc corrections / annotations on judge_runs (open-vocabulary `event_type`, NOT NULL `rationale`, CASCADE FK). First user: the `backfill_judge_model_digest` event (commit 8fefa66). Migration 009. |
+| run_manifests · run_stage_configs · run_calls | Migration 020 (S3a/S3b). One `run_manifests` row per run, written **before its first model call** — git commit (`git_dirty` CHECKed to 0), whole-spec hash, codebook hashes, library versions, cloud arms and payload description; the body is immutable and only its end is written, once. One `run_stage_configs` row per stage: model, digest, options and their hash, sent keys, per-option sources, keep_alive, format-schema and prompt hashes. One `run_calls` row per model call (request hash over the kwargs as sent, response digest); its `(run_id, stage)` must name a declared stage. `field_events` / `paper_events` carry `run_id REFERENCES run_manifests` under R77's CHECK. **In the tree; applied to live in session 7b** |
 | schema_migrations | Migration receipts — `migration_id` PK, `file_sha256`, `applied_at`, `mode` ∈ {executed, registered_preapplied}, `runner_version`, `note`. Written by `engine/migrations/runner.py`. `PRAGMA user_version` is deliberately left at 0. |
 | paper_events · field_events · arms · parsed_text_refs · review_identities · field_event_against(_decisions) | The S2 event store (migration 016), **append-only by trigger**. `paper_events.to_state` carries a **two-axis** vocabulary since migration 019 (R29/R39): eligibility (`eligible` · `abstract_out` · `full_text_out`) and processing (`parsed` · `extracted` · `extraction_failed` · `full_text_not_obtainable` · `parse_failed` · `input_exceeds_context` · `audited_ai`), the sets disjoint, an `event_type`→axis CHECK pairing them, and `reason_code` NOT NULL for exactly the four failure tokens. `analysis_ready` is derived by the reader, never stored |
 | ~~audit_adjudication~~ | **DROPPED by migration 018** (R32). 0 rows; its `span_id` referenced the phantom `_evidence_spans_old`, so the path was never writable (A11). `engine/adjudication/schema.py` no longer creates it — a DROP alone did not survive the next `ReviewDatabase` construction. Human audit decisions become `field_events`; the importer is session 12's |
@@ -108,8 +113,9 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 12. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section (min_status filtering)
 
 ## Inference
-- Local models via Ollama at localhost:11434. Temperature 0 for all agents.
-- Cloud models via OpenAI and Anthropic APIs (env vars OPENAI_API_KEY, ANTHROPIC_API_KEY).
+- Local models via Ollama at localhost:11434, every call through `engine/utils/ollama_client.ollama_chat` with its settings from the resolver. Temperatures are 0 (the integer at most sites, `0.0` at the FT sites — the literal each has always sent).
+- Cloud models via OpenAI and Anthropic APIs (env vars OPENAI_API_KEY, ANTHROPIC_API_KEY) — **opt-in per run and off by default** (S3g).
+- Client libraries pinned: ollama 0.6.1, openai 2.24.0, anthropic 0.84.0 (R75); every manifest records the installed versions.
 
 ## Key Patterns
 - Review Spec (YAML) defines the entire review contract
@@ -207,6 +213,16 @@ closeout; **the old record is superseded, never edited.**
   temporary name rather than renaming the original away** — renaming a
   *referenced* table rewrites its referrers' `REFERENCES` clauses, which is
   exactly how A11's phantom `_evidence_spans_old` was created.
+- **A CHECK constraint is written as the states it permits, never as the state it
+  excludes, and is tested with a NULL in every column it names** (R79, Step 4 rule 11).
+  SQLite passes a CHECK that evaluates to NULL: MANIFEST-01's first run-link CHECK,
+  `(run_id IS NOT NULL OR run_marker = 'pre-manifest')`, admitted a row with both
+  columns NULL, and `(provider <> 'ollama' OR length(model_digest) = 64)` admitted an
+  Ollama stage with no digest. Use `IS` / `IS NOT`, or declare the column NOT NULL.
+- **Runs refuse on a database without migration 020.** `run_pipeline` and
+  `scripts/run_cloud_extraction.py` open a run manifest before their first call, so
+  against a database that lacks `run_manifests` — live, until session 7b applies 020 —
+  they fail at run open, by design. Nothing opens a run against live before then.
 - **R31 — a legacy artifact is retained only if it serves the engine going
   forward.** While the engine is settling into *freshman*, a legacy file, script,
   path, table or committed output that this session touches is kept only on that
@@ -275,13 +291,61 @@ judge's input, so a cell every arm agreed on could never be judged. Every grid
 cell is a row now, with the scorer's verdict in it. The row format is unchanged
 and its three value columns always exist, whatever the registry holds.
 
-## Cloud Extraction Architecture
-- `CloudExtractorBase` (engine/cloud/base.py): shared logic — pending paper query, codebook-driven prompt building, response JSON parsing (8+ alternate keys + raw content recovery), progress tracking, cost calculation, distribution monitor integration
-- `OpenAIExtractor`: o4-mini-2025-04-16, reasoning_effort=high. Per-paper cost tracking (input/output/reasoning tokens)
-- `AnthropicExtractor`: claude-sonnet-4-6, extended thinking (10K token budget). Streaming response with thinking block capture
-- `store_result()` rejects 0-span results with ValueError — prevents silent data loss
-- Cloud schema (engine/cloud/schema.py): creates cloud_extractions + cloud_evidence_spans tables. **No `UNIQUE(paper_id, arm)`** since R16/R27 — an arm may hold more than one claim on a paper, because supersession within an arm has to be representable. Dropped here and on the live database by migration 018, in one change
-- Cost rates: OpenAI $1.10/$4.40 per 1M tokens (in/out); Anthropic $3.00/$15.00 per 1M tokens (in/out)
+## Configuration, the run manifest and cloud opt-in (S3a · S3b · S3g, session 7)
+
+**One resolver** (`engine/core/effective_config.py`). `stage_config(stage, spec)` returns the
+`EffectiveConfig` of one stage — model, options, `think`, `format`, `keep_alive`, the exact
+`sent_keys`, and a source per option (`spec` · `declared_default` · `modelfile_or_server` ·
+`caller`). It reads **only the validated spec model**: every default is declared in
+`engine/core/review_spec.py`, none in a module constant (`extractor.MODEL`,
+`DEFAULT_AUDITOR_MODEL`, the `_VISION_*` and cloud `_DEFAULT_*` constants are gone — C1, C8, C19).
+Sites call `ollama_chat(messages=…, **cfg.kwargs())` and build messages through one builder each,
+which the prompt hash also uses. `resolve_run` adds the digest (`fetch_model_digest`, `/api/tags`;
+`get_model_digest` is retired — C15), `prompt_hash` (the rendered request per stage, never a spec
+sub-block — C17) and the sources. `canonical_json` / `sha256_canonical` are the one serialisation.
+
+- **Stages:** `abstract_screen_primary`, `abstract_screen_verifier`, `ft_screen_primary`,
+  `ft_screen_verifier`, `audit`, `extract_pass1`, `extract_pass2`, `extract_retry_snippet`,
+  `elicitation_pass1`, `vision_parse`, `pdf_quality`, `preflight`, and `cloud:<arm>` per spec arm.
+- **R66 — session 7 changed what is recorded, not what is sent.** The only addition on the wire is
+  `keep_alive=-1` (the service's value). `seed` and `num_ctx` are recorded as `"unset"` /
+  `modelfile_or_server` wherever not sent; declaring one in the spec makes the site send it.
+- **Temperatures keep their wire literal** (`Temperature = StrictInt | float`); the FT fields stay
+  `float`. A plain `float` field would turn YAML `0` into `0.0` on the wire.
+- **The gate instrument** is `tests/test_request_capture.py`: a fake client at `_client.chat` that
+  answers `_client.show` (so both input-fit guards run for real), driven through every site,
+  asserting per site the key set and every TYPED value against Phase 1's measured request and the
+  resolver. A new stage without a capture case fails it.
+
+**The run manifest** (`engine/core/run_manifest.py`, migration 020). `open_run` writes
+`run_manifests` + `run_stage_configs` and pins every named arm **before the first call**, or
+refuses: `DirtyTree`, `PreManifestArm` (R59), `RetiredArm` (R21), `ArmPinMismatch` (R10, naming the
+differing keys), `CloudArmNotEnabled` (S3g), or a digest failure. An untagged HEAD is allowed with
+`engine_state` NULL until the freshman tag. `active_run(conn, run_id)` makes `ollama_chat` record
+each call in `run_calls`. A human review session is a run of kind `review_session` with zero stage
+rows (R68). `run_pipeline` opens a manifest instead of writing `review_runs` (R73).
+
+**Arms** (R10, R12, R21, R59, R64). The spec's `arms` block declares every arm — name, kind, provider,
+model, options. An arm is **pinned** at its first manifest (`arms.configuration_json` = the resolved
+tuple, `configuration_marker = 'pinned'`, `pinned_run_id`, `pinned_sha256`); a later run resolving
+differently refuses, and a changed configuration is a new arm name. The freeze trigger fires once an
+arm holds a claim, is pinned, or is pre-manifest. The three Run-6 arms (`local`,
+`openai_o4_mini_high`, `anthropic_sonnet_4_6`) are pre-manifest: they never pin and accept no new
+claims. The live spec's arms are `local_deepseek_r1_32b`, `openai_o4_mini_2025_04_16_high` and
+`anthropic_claude_sonnet_4_6`; `extraction_models.arm` names the local one.
+
+**The event writer** (`engine/core/events.py`) requires `run_id` (R68), accepts `run_marker` only
+from a migration (017 is recognised by its file — row C22), and refuses a claim on a pre-manifest,
+retired or run-unpinned model arm. Reviewer events on pre-manifest claims stay allowed, carrying
+their review session's `run_id`, so rule row 7 is reachable.
+
+**Cloud extraction.**
+- `CloudExtractorBase` (engine/cloud/base.py): shared logic — pending paper query (eligibility axis), codebook-driven prompt building, response JSON parsing (8+ alternate keys + raw content recovery), progress tracking, cost calculation, distribution monitor integration. The arm is the **spec-declared name** (`arm_name`; the class-constant `ARM` is retired — C20); model and parameters come from `cloud_stage_config`, the price from `cloud.prices` — **there is no default model and no default price**.
+- `OpenAIExtractor` / `AnthropicExtractor` are transports (`PROVIDER`). `request_payload(prompt)` is the complete outbound request — model, the shared `SYSTEM_MESSAGE`, the user turn, the arm's parameters — and `send()` hashes it into `last_request_hash` and, inside a run, into `run_calls.request_hash` (C16). `cloud_extractions.prompt_text` still stores the user turn only.
+- **Opt-in (S3g, R6):** `cloud.enabled_arms` defaults to empty. `scripts/run_cloud_extraction.py --arm <name>…` must name a non-empty subset of it or the run refuses **before any extractor or client exists**; with no `--arm`, nothing runs and nothing leaves the machine. Each cloud run writes a manifest with its arms and `PAYLOAD_DESCRIPTION`. **R71: no cloud extraction until sessions 8 and 9 both land**; the live spec keeps `enabled_arms` empty.
+- `store_result()` rejects 0-span results with ValueError — prevents silent data loss.
+- Cloud schema (engine/cloud/schema.py): creates cloud_extractions + cloud_evidence_spans tables. **No `UNIQUE(paper_id, arm)`** since R16/R27 — an arm may hold more than one claim on a paper, because supersession within an arm has to be representable. Dropped here and on the live database by migration 018, in one change.
+- Prices, declared in the live spec's `cloud.prices`: OpenAI $1.10/$4.40 per 1M tokens (in/out); Anthropic $3.00/$15.00.
 
 ## Concordance Analysis Architecture
 - Multi-arm alignment: load extractions from local, openai_o4_mini_high, anthropic_sonnet_4_6, human_A/B/C/D arms → align by paper_id
@@ -492,7 +556,8 @@ python -m engine.tools.inventory --check | --write
 python -m engine.utils.ollama_preflight --models qwen3.5:27b gemma3:27b deepseek-r1:32b
 
 # Cloud extraction
-PYTHONPATH=. python scripts/run_cloud_extraction.py --review surgical_autonomy --arm both --max-cost 25.00
+# --arm names spec arms and must be a subset of cloud.enabled_arms (empty on live — R71)
+PYTHONPATH=. python scripts/run_cloud_extraction.py --review surgical_autonomy --arm <arm_name> [<arm_name>] --max-cost 25.00
 PYTHONPATH=. python scripts/run_cloud_extraction.py --review surgical_autonomy --progress
 
 # Distribution monitor

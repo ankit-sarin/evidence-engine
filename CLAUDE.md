@@ -190,6 +190,22 @@ closeout; **the old record is superseded, never edited.**
   start if a file changed after its receipt — a migration whose text changed is a
   different migration. Data migrations are **never** executed on a fresh
   database. See `engine/migrations/README.md` before adding one.
+- **A ruling about a table is made against the table, not the log entry that
+  summarises it.** Two architect rulings in session 5 were reversed by measurement
+  before any code was written, and the cause was the same in both: each was made
+  from decision-log text without the resolution-rule table beside it.
+- **The migration runner does not wrap a migration in a transaction; each module
+  owns its own.** This **corrects "one transaction each" in the bullet above**:
+  the runner closes its connection and calls `module.run_migration(db_path)`, so
+  the only thing it holds a transaction around is the **receipt** write. The 017
+  pattern — one `BEGIN`, the marker row written **last**, `ROLLBACK` on any
+  exception — is the template for any seed under the append-only triggers.
+- **R31 — a legacy artifact is retained only if it serves the engine going
+  forward.** While the engine is settling into *freshman*, a legacy file, script,
+  path, table or committed output that this session touches is kept only on that
+  test; serving a publication is not a reason to retain. Legacy result tables stay
+  under R25 because they serve the engine as a regression fixture. Retirement is
+  recorded in a ledger and executed by the session that owns the artifact.
 
 ## Cloud Extraction Architecture
 - `CloudExtractorBase` (engine/cloud/base.py): shared logic — pending paper query, codebook-driven prompt building, response JSON parsing (8+ alternate keys + raw content recovery), progress tracking, cost calculation, distribution monitor integration

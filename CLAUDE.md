@@ -214,6 +214,15 @@ closeout; **the old record is superseded, never edited.**
   under R25 because they serve the engine as a regression fixture. Retirement is
   recorded in a ledger and executed by the session that owns the artifact.
 
+## Ops Invariants — commits
+
+**A commit is a green tree** (R40). A `git add` that aborts on an already-removed
+path leaves a **partial index and a red tree** — it stages what it reached and
+stops, so the commit that follows carries part of the change and the add's own
+error message does not say which part. **R52:** the guard is `git diff --cached
+--stat` before the commit and `git show --stat` before the push. Read the stat;
+do not infer the index from the add's exit.
+
 ## The one reader (engine/core/effective.py)
 
 Inventory row A1 is that there was no reader of "the current value": thirteen

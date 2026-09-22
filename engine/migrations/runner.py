@@ -77,6 +77,12 @@ KINDS: dict[str, str] = {
                        # parsed texts, spec and codebook (R25). A fresh database
                        # has no corpus to seed from and no review directory
                        # beside it, so it must never run there.
+    "018": "schema",   # C10 + R16 + R32: cloud_evidence_spans to the fresh
+                       # NOT NULL shape, UNIQUE(paper_id, arm) dropped, and
+                       # audit_adjudication dropped. Structure only.
+    "019": "schema",   # R29/R39: paper_events rebuilt with the two-axis state
+                       # vocabulary. Rebuilds an existing table; a fresh database
+                       # needs the shape as much as the live one does.
 }
 
 _RECEIPTS_DDL = """
@@ -177,9 +183,23 @@ def _write_receipt(conn, migration_id, path, mode, note=None) -> None:
 def run(db_path: str | Path, *, include_data: bool = False) -> dict:
     """Apply every pending migration to `db_path`, newest last.
 
-    One transaction per migration, committed before the next begins, so a
-    failure leaves the earlier receipts intact and the failing one absent —
-    the database then says exactly how far it got.
+    One transaction per RECEIPT, committed before the next migration begins.
+    The migration itself runs in its own connection and owns its own
+    transaction: this function closes its handle (`conn.close()  # migrations
+    open their own connection`) before calling `run_migration(db_path)`, so a
+    module that needs atomicity writes its own `BEGIN`/`ROLLBACK`, as 017, 018
+    and 019 do. A failure leaves the earlier receipts intact and the failing one
+    absent — the database then says exactly how far it got. (Class C row C11:
+    this docstring previously said "one transaction per migration", which was
+    true of the receipt and not of the migration.)
+
+    Two things a module-owned transaction must get right, both found by
+    rehearsal rather than by reading: `executescript` issues an implicit COMMIT
+    before it runs, so every statement goes through `execute`; and a table
+    rebuild creates the replacement under a temporary name rather than renaming
+    the original away, because renaming a REFERENCED table rewrites its
+    referrers' `REFERENCES` clauses — which is how A11's phantom
+    `_evidence_spans_old` came to exist.
 
     `include_data` is False by default: data migrations are never executed on a
     fresh database. It exists so an operator can run one deliberately, naming it.

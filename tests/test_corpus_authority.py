@@ -146,28 +146,79 @@ def _detached_extractor(review_dir):
     return ext
 
 
-def test_site_cloud_get_pending_papers_unchanged(review_dir):
+def test_cloud_get_pending_papers_now_reads_the_eligibility_axis(review_dir):
+    """B5 rewrite (R30, R39, A9).
+
+    This pinned `PREPATCH_CLOUD_PENDING`, a literal list produced by the
+    `papers.status` allowlist. R30 removed that path, so the list it pinned is
+    exactly what the ruling changed. It is rewritten as a DERIVATION against the
+    reader — a count written down as a rule decays from the moment it is taken —
+    and the pre-patch literal is kept below as the thing the change is measured
+    AGAINST, which is the one use it still has.
+    """
+    from engine.core.effective import eligible_paper_ids
+
     ext = _detached_extractor(review_dir)
     try:
-        assert [r["paper_id"] for r in ext.get_pending_papers("openai")] == \
-            PREPATCH_CLOUD_PENDING
+        got = [r["paper_id"] for r in ext.get_pending_papers("openai")]
+        already = {r[0] for r in ext._conn.execute(
+            "SELECT paper_id FROM cloud_extractions WHERE arm = 'openai'")}
+        expected = [p for p in eligible_paper_ids(ext._conn) if p not in already]
+        assert got == expected
+
+        # A9, measured rather than asserted: every paper the old allowlist
+        # dropped for having FAILED, not for being ineligible, is now included.
+        gained = set(got) - set(PREPATCH_CLOUD_PENDING)
+        assert gained, "the A9 papers should now be in the corpus"
+        statuses = {r[0]: r[1] for r in ext._conn.execute(
+            f"SELECT id, status FROM papers WHERE id IN "
+            f"({', '.join('?' * len(gained))})", sorted(gained))}
+        assert set(statuses.values()) == {"EXTRACT_FAILED"}
+        assert not set(PREPATCH_CLOUD_PENDING) - set(got), (
+            "no paper the allowlist admitted may be lost")
     finally:
         ext._conn.close()
 
 
-def test_site_cloud_get_progress_unchanged(review_dir):
+def test_a_failed_paper_is_in_the_corpus_and_carries_its_reason(review_dir):
+    """G3's shape on the shared fixture: eligible, failed, reported, not ready."""
+    from engine.core.effective import effective_state
+
     ext = _detached_extractor(review_dir)
     try:
-        assert ext.get_progress("openai") == PREPATCH_CLOUD_PROGRESS
+        pid = STATUS_PROBE_IDS["EXTRACT_FAILED"]
+        s = effective_state(ext._conn, pid)
+        assert s.eligibility == "eligible" and s.in_corpus is True
+        assert s.processing == "extraction_failed"
+        assert s.processing_reason == "extraction failed after retries"
+        assert s.analysis_ready is False
+    finally:
+        ext._conn.close()
+
+
+def test_cloud_get_progress_counts_the_corpus_from_the_axis(review_dir):
+    """B5 rewrite of `test_site_cloud_get_progress_unchanged`, same reason."""
+    from engine.core.effective import eligible_paper_ids
+
+    ext = _detached_extractor(review_dir)
+    try:
+        progress = ext.get_progress("openai")
+        assert progress["total_papers"] == len(eligible_paper_ids(ext._conn))
+        assert progress["completed"] == PREPATCH_CLOUD_PROGRESS["completed"]
+        assert progress["total_cost_usd"] == PREPATCH_CLOUD_PROGRESS["total_cost_usd"]
+        assert progress["remaining"] == progress["total_papers"] - progress["completed"]
+        assert progress["total_papers"] > PREPATCH_CLOUD_PROGRESS["total_papers"], (
+            "A9: the failed papers are corpus members now")
     finally:
         ext._conn.close()
 
 
 def test_cloud_pending_excludes_papers_already_extracted_for_the_arm(review_dir):
-    """Guards the parameter ORDER in the rewritten f-string query.
+    """Guards the parameter ORDER in the f-string query.
 
-    The status binds now precede the arm bind; getting that order wrong would
-    still return rows, just the wrong ones.
+    The corpus binds precede the arm bind; getting that order wrong would still
+    return rows, just the wrong ones. Still true after R30 — only the binds
+    changed, from statuses to paper ids.
     """
     ext = _detached_extractor(review_dir)
     try:
@@ -288,8 +339,71 @@ def test_no_inline_four_status_literal_outside_the_authority():
     assert hits <= allowed, f"inline corpus-status literal survives in: {sorted(hits - allowed)}"
 
 
-def test_the_three_adopting_sites_carry_no_status_literal():
-    for rel in ("engine/cloud/base.py", "analysis/eval/schema_eval2.py"):
-        text = (REPO / rel).read_text()
-        assert "AI_AUDIT_COMPLETE" not in text, f"{rel} still names a status inline"
-        assert "corpus_status_sql" in text, f"{rel} does not use the authority"
+def test_the_adopting_sites_carry_no_status_literal():
+    """B5 rewrite (R30, R35).
+
+    This test used to assert `"corpus_status_sql" in text` — that each adopting
+    site reached the corpus question through the status allowlist. R30's clean
+    cut-over removes that path, so the assertion it made is exactly what the
+    ruling changed; it is rewritten to the corrected contract, not deleted.
+
+    `engine/cloud/base.py` now reaches the question through the ELIGIBILITY axis.
+    `analysis/eval/schema_eval2.py` is a FROZEN study harness with a committed
+    report and is pinned below, awaiting a ruling, rather than migrated here.
+    """
+    text = (REPO / "engine/cloud/base.py").read_text()
+    assert "AI_AUDIT_COMPLETE" not in text, "engine/cloud/base.py names a status inline"
+    assert "corpus_status_sql" not in text, (
+        "engine/cloud/base.py still reads papers.status through the frozen "
+        "predicate; R30 removes the direct-table path rather than keeping it "
+        "beside the reader")
+    assert "corpus_id_sql" in text
+
+
+def test_engine_core_corpus_is_frozen_and_only_a_migration_reads_it():
+    """R35's guard.
+
+    `engine/core/corpus.py` cannot be deleted: applied migration 017 imports it
+    and 017's text is checksummed, so editing 017 makes the runner refuse to
+    start. It is frozen instead, and this is what turns "please don't call it"
+    into a red suite.
+
+    The one pending exception is pinned by name, not excused: it is a frozen
+    `analysis/eval/` study harness whose committed report depends on the draw it
+    makes, and migrating it is a call-site semantic change that belongs to a
+    ruling, not to this commit.
+    """
+    # IMPORTS AND CALLS, not prose. `engine/core/effective.py` names the frozen
+    # module in a docstring to say where the question moved FROM; a guard that
+    # counted that would be a guard nobody could write documentation past.
+    out = subprocess.run(
+        ["git", "grep", "-l", "-E",
+         r"(^|[^.\w])(import +engine\.core\.corpus"
+         r"|from +engine\.core\.corpus +import"
+         r"|corpus_status_sql *\("
+         r"|is_corpus_member *\("
+         r"|CORPUS_STATUSES)",
+         "--", "*.py"],
+        cwd=REPO, capture_output=True, text=True,
+    )
+    hits = {line for line in out.stdout.split() if line}
+    allowed = {
+        "engine/core/corpus.py",                      # the module itself
+        "engine/migrations/017_seed_event_store.py",  # applied, checksummed, frozen
+        "tests/test_corpus_authority.py",             # this file
+        "tests/_corpus_fixture.py",                   # pins the literal on purpose
+        # PENDING A RULING — READERS-01 Phase 2a reported this site rather than
+        # changing it. A frozen SCHEMA-EVAL-02 harness; its CARRIED_NON_CORPUS
+        # declaration is pinned against a March measurement of papers.status.
+        "analysis/eval/schema_eval2.py",
+    }
+    extra = sorted(hits - allowed)
+    assert not extra, (
+        "engine/core/corpus.py is FROZEN (R35): these modules still reach it — "
+        f"{extra}. The corpus question is `effective.eligible_paper_ids` / "
+        "`effective.corpus_id_sql`, from the eligibility axis."
+    )
+    assert "analysis/eval/schema_eval2.py" in hits, (
+        "the pending exception is gone — good. Remove it from `allowed` so the "
+        "guard stops advertising a site that no longer exists."
+    )

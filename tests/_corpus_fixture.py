@@ -127,4 +127,65 @@ def build_fixture(root: Path) -> Path:
 
     conn.commit()
     conn.close()
+
+    _seed_event_store(root / "review.db")
     return root
+
+
+# ── the event store, mirroring what 017 seeds on live ─────────────────
+#
+# READERS-01 Phase 2a. The corpus question moved from the `papers.status`
+# allowlist to the ELIGIBILITY axis of `effective_state`, so a fixture that
+# carries only statuses now answers "no paper is in the corpus" — correctly, and
+# uselessly. The events below are what 017 wrote on the live database, plus the
+# one thing 017 could not write and R39 now can: a paper that is ELIGIBLE and
+# whose PROCESSING failed. That pair is A9, and it is the reason the expected
+# pending set is larger than the pre-Phase-2a one.
+
+#: Statuses that seed an `eligible` event — the four the frozen allowlist named,
+#: PLUS `EXTRACT_FAILED`, which the allowlist excluded by omission (A9). A
+#: processing failure is not an eligibility fact.
+_ELIGIBLE_FROM_STATUS = (
+    "FT_ELIGIBLE", "EXTRACTED", "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE",
+    "EXTRACT_FAILED",
+)
+
+
+def _seed_event_store(db_path: Path) -> None:
+    import importlib
+
+    m016 = importlib.import_module("engine.migrations.016_event_store")
+    m019 = importlib.import_module("engine.migrations.019_paper_state_axes")
+
+    conn = sqlite3.connect(db_path)
+    m016.create_schema(conn)
+    conn.commit()
+    conn.close()
+    m019.run_migration(str(db_path))
+
+    conn = sqlite3.connect(db_path)
+    rows = conn.execute("SELECT id, status FROM papers ORDER BY id").fetchall()
+    n = 0
+    for pid, status in rows:
+        if status not in _ELIGIBLE_FROM_STATUS:
+            continue
+        n += 1
+        conn.execute(
+            "INSERT INTO paper_events (event_uid, event_type, occurred_at, "
+            "recorded_at, actor_kind, actor_role, actor_name, paper_id, to_state) "
+            "VALUES (?, 'state_at_migration', '2026-01-01', '2026-01-01', "
+            "'engine', 'system', 'fixture', ?, 'eligible')",
+            (f"elig-{pid}", pid),
+        )
+        if status == "EXTRACT_FAILED":
+            n += 1
+            conn.execute(
+                "INSERT INTO paper_events (event_uid, event_type, occurred_at, "
+                "recorded_at, actor_kind, actor_role, actor_name, paper_id, "
+                "to_state, reason_code) VALUES (?, 'extraction_failed', "
+                "'2026-01-02', '2026-01-02', 'engine', 'system', 'fixture', ?, "
+                "'extraction_failed', 'extraction failed after retries')",
+                (f"proc-{pid}", pid),
+            )
+    conn.commit()
+    conn.close()

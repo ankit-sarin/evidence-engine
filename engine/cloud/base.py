@@ -18,7 +18,7 @@ from engine.core.completeness import (
     enforce_completeness,
     expected_field_names,
 )
-from engine.core.corpus import corpus_status_sql
+from engine.core.effective import corpus_id_sql
 from engine.core.extraction_telemetry import record_call
 from engine.core.review_spec import ReviewSpec, load_review_spec
 
@@ -69,7 +69,7 @@ class CloudExtractorBase:
         Includes FT_ELIGIBLE (parsed, not yet locally extracted) so cloud arms
         can run concurrently with local extraction.
         """
-        corpus_sql, corpus_params = corpus_status_sql("p.status")
+        corpus_sql, corpus_params = corpus_id_sql(self._conn, "p.id")
         rows = self._conn.execute(
             f"""SELECT p.id AS paper_id, p.title, p.authors, p.year
                FROM papers p
@@ -387,7 +387,7 @@ class CloudExtractorBase:
 
     def get_progress(self, arm: str) -> dict:
         """Return progress stats for the given arm."""
-        corpus_sql, corpus_params = corpus_status_sql()
+        corpus_sql, corpus_params = corpus_id_sql(self._conn, "id")
         total = self._conn.execute(
             f"SELECT COUNT(*) FROM papers WHERE {corpus_sql}", corpus_params
         ).fetchone()[0]

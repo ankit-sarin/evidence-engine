@@ -58,7 +58,35 @@ def test_db(tmp_path):
     (parsed_dir / f"{first_pid}_v1.md").write_text(
         "# Test Paper\n\nThis is a test paper about surgical robotics."
     )
+    # B5 (READERS-01 Phase 2a). `CloudExtractorBase.get_pending_papers` and
+    # `.get_progress` read the corpus from the ELIGIBILITY axis now, not from a
+    # `papers.status` allowlist (A9, S3h). The backup this fixture copies
+    # predates the event store, so the store is created and seeded from the same
+    # statuses — which is what migration 017 did on live.
+    _seed_corpus_events(db_copy)
     return str(db_copy)
+
+
+def _seed_corpus_events(db_path) -> None:
+    from engine.core import events
+    from tests._event_store_fixture import ensure_event_store
+
+    ensure_event_store(db_path)
+    conn = sqlite3.connect(str(db_path))
+    try:
+        corpus = ("FT_ELIGIBLE", "EXTRACTED", "AI_AUDIT_COMPLETE",
+                  "HUMAN_AUDIT_COMPLETE")
+        for (pid,) in conn.execute(
+            f"SELECT id FROM papers WHERE status IN "
+            f"({', '.join('?' * len(corpus))}) ORDER BY id", corpus
+        ).fetchall():
+            events.write_paper_event(
+                conn, event_type="state_at_migration", paper_id=pid,
+                to_state="eligible", actor_kind="engine", actor_role="system",
+                actor_name="fixture", commit=False)
+        conn.commit()
+    finally:
+        conn.close()
 
 
 @pytest.fixture()

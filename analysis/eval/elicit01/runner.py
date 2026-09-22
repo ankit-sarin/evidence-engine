@@ -32,7 +32,12 @@ from analysis.eval.elicit01.prompts import (
 )
 from analysis.eval.elicit01.units import build_unit_map
 from analysis.eval.schema_eval2 import select_sample
-from engine.agents.extractor import MODEL, RESTART_EVERY_N, restart_ollama
+from engine.agents.extractor import RESTART_EVERY_N, restart_ollama
+
+#: The model this frozen study ran with. MANIFEST-01 Phase 2a removed
+#: `engine.agents.extractor.MODEL` (C19): the engine's model comes from the
+#: resolver now, and a frozen study keeps the value it used, not a live one.
+MODEL = "deepseek-r1:32b"
 from engine.utils import ollama_client as oc
 from engine.utils.ollama_lock import hold_experiment_lock
 

@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from engine.core import events
+from tests._event_store_fixture import run_for
 from engine.core.effective import UnknownArm
 
 REPO = Path(__file__).resolve().parent.parent
@@ -46,7 +47,7 @@ def review(tmp_path):
     events.register_arm(conn, "human_A", "human_extractor")
     for pid in (1, 2, 3):
         events.write_paper_event(
-            conn, event_type="adjudicated", paper_id=pid, to_state="eligible",
+        conn, run_id=run_for(conn), event_type="adjudicated", paper_id=pid, to_state="eligible",
             actor_kind="engine", actor_role="system", actor_name="fixture")
     conn.commit()
     yield db, root
@@ -59,12 +60,12 @@ def _assert_value(conn, paper_id, field, arm, value, *, located=True):
     that does not exist, which v2.1 resolves as "needs re-review"."""
     uid = events.mint_extraction_uid()
     events.write_field_event(
-        conn, event_type="asserted", paper_id=paper_id, field_name=field,
+        conn, run_id=run_for(conn), event_type="asserted", paper_id=paper_id, field_name=field,
         arm=arm, value=value, extraction_uid=uid, source_snippet=value,
         actor_kind="model", actor_role="extractor", actor_name="m")
     if located:
         events.write_field_event(
-            conn, event_type="citation_located", paper_id=paper_id,
+        conn, run_id=run_for(conn), event_type="citation_located", paper_id=paper_id,
             field_name=field, arm=arm, extraction_uid=uid,
             actor_kind="engine", actor_role="system", actor_name="locator",
             payload={"located": True, "snippet": value})
@@ -74,7 +75,7 @@ def _assert_value(conn, paper_id, field, arm, value, *, located=True):
 
 def _decline(conn, paper_id, field, arm):
     events.write_field_event(
-        conn, event_type="declined", paper_id=paper_id, field_name=field,
+        conn, run_id=run_for(conn), event_type="declined", paper_id=paper_id, field_name=field,
         arm=arm, extraction_uid=events.mint_extraction_uid(),
         actor_kind="model", actor_role="extractor", actor_name="m")
     conn.commit()
@@ -173,7 +174,7 @@ def test_a_withdrawn_value_is_no_value_in_the_evidence_table(review):
     db, root = review
     claim = _assert_value(db._conn, 1, "study_type", "local", "RCT")
     events.write_field_event(
-        db._conn, event_type="human_withdrew", paper_id=1,
+        db._conn, run_id=run_for(db._conn), event_type="human_withdrew", paper_id=1,
         field_name="study_type", arm="local", against_claims=[claim],
         actor_kind="human", actor_role="reviewer", actor_name="PI")
     db._conn.commit()
@@ -207,7 +208,7 @@ def test_a_failed_paper_is_exported_with_its_reason_and_is_not_analysis_ready(re
     db, root = review
     _assert_value(db._conn, 2, "study_type", "local", "RCT")
     events.write_paper_event(
-        db._conn, event_type="extraction_failed", paper_id=2,
+        db._conn, run_id=run_for(db._conn), event_type="extraction_failed", paper_id=2,
         to_state="extraction_failed", reason_code="extraction failed after retries",
         actor_kind="engine", actor_role="system", actor_name="fixture")
     db._conn.commit()
@@ -416,7 +417,7 @@ def test_the_docx_reports_declined_and_shows_no_value_for_withdrawn(review, tmp_
     _decline(db._conn, 1, "sample_size", "local")
     claim = _assert_value(db._conn, 1, "country", "local", "USA")
     events.write_field_event(
-        db._conn, event_type="human_withdrew", paper_id=1, field_name="country",
+        db._conn, run_id=run_for(db._conn), event_type="human_withdrew", paper_id=1, field_name="country",
         arm="local", against_claims=[claim],
         actor_kind="human", actor_role="reviewer", actor_name="PI")
     db._conn.commit()
@@ -455,7 +456,7 @@ def test_the_docx_keeps_a_failed_paper_and_reports_it_by_reason(review, tmp_path
     spec = load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
     _assert_value(db._conn, 1, "study_type", "local", "RCT")
     events.write_paper_event(
-        db._conn, event_type="extraction_failed", paper_id=2,
+        db._conn, run_id=run_for(db._conn), event_type="extraction_failed", paper_id=2,
         to_state="extraction_failed", reason_code="extraction failed after retries",
         actor_kind="engine", actor_role="system", actor_name="fixture")
     db._conn.commit()

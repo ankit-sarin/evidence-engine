@@ -41,12 +41,16 @@ from analysis.eval.schema_eval2 import (
     slots_to_spans,
 )
 from engine.agents.extractor import (
-    MODEL,
     _LAST_PASS1_TELEMETRY,
     build_extraction_prompt,
     extract_pass1_reasoning,
 )
 from engine.agents.models import ExtractionOutput
+
+#: The model this frozen study ran with. MANIFEST-01 Phase 2a removed
+#: `engine.agents.extractor.MODEL` (C19): the engine's model comes from the
+#: resolver now, and a frozen study keeps the value it used, not a live one.
+MODEL = "deepseek-r1:32b"
 from engine.core.completeness import check_completeness, expected_field_names
 from engine.core.review_paths import load_spec_for
 from engine.utils.ollama_client import ollama_chat

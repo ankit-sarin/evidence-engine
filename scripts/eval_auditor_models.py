@@ -15,7 +15,10 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from engine.agents.auditor import audit_span, DEFAULT_AUDITOR_MODEL
+from engine.agents.auditor import audit_span
+from engine.core.effective_config import stage_config
+
+DEFAULT_AUDITOR_MODEL = stage_config("audit").model  # the resolver's declared default
 from engine.core.database import ReviewDatabase
 from engine.core.review_paths import load_spec_for, spec_path_for
 from engine.core.codebook import load_codebook_beside

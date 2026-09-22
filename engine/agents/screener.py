@@ -12,6 +12,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, ValidationError
 
+from engine.core.effective_config import stage_config
 from engine.utils.ollama_client import ollama_chat
 
 from engine.core.database import ReviewDatabase
@@ -19,10 +20,6 @@ from engine.core import eligibility_render as render
 from engine.core.review_spec import ReviewSpec
 
 logger = logging.getLogger(__name__)
-
-# Fallback defaults when no spec.screening_models is available
-DEFAULT_PRIMARY_MODEL = "qwen3:8b"
-DEFAULT_VERIFICATION_MODEL = "qwen3:32b"
 
 # ── Structured Output Model ──────────────────────────────────────────
 
@@ -94,6 +91,17 @@ Respond with JSON only: {{"decision": "...", "rationale": "...", "confidence": 0
 # ── Single-Paper Screening ───────────────────────────────────────────
 
 
+def build_messages(paper: dict, spec: ReviewSpec, *, role: str = "primary") -> list[dict]:
+    """The message list `screen_paper` sends — system and user — for `role`.
+
+    One builder, used by the call and by the resolver's prompt hash (R60), so the
+    hash identifies exactly what is sent.
+    """
+    stage = "abstract_verifier" if role == "verifier" else "abstract_primary"
+    return render.messages(stage, _build_prompt(paper, spec, role=role),
+                           review_title=spec.title)
+
+
 def screen_paper(
     paper: dict,
     spec: ReviewSpec,
@@ -107,19 +115,14 @@ def screen_paper(
     If model is not specified, uses spec.screening_models.primary.
     role: "primary" for high-recall pass, "verifier" for strict pass.
     """
-    if model is None:
-        model = spec.screening_models.primary
+    stage = "abstract_screen_verifier" if role == "verifier" else "abstract_screen_primary"
+    # Model, options, think, format and keep_alive come from the one resolver
+    # (S3a). A `model=` argument is the caller override this signature has
+    # always accepted; with none, the model is the spec's PRIMARY for either
+    # role, exactly as before (callers pass the verifier model explicitly).
+    cfg = stage_config(stage, spec, model=model or spec.screening_models.primary)
 
-    stage = "abstract_verifier" if role == "verifier" else "abstract_primary"
-    user_prompt = _build_prompt(paper, spec, role=role)
-
-    response = ollama_chat(
-        model=model,
-        messages=render.messages(stage, user_prompt, review_title=spec.title),
-        format=ScreeningDecision.model_json_schema(),
-        options={"temperature": 0},
-        think=False,
-    )
+    response = ollama_chat(messages=build_messages(paper, spec, role=role), **cfg.kwargs())
 
     raw = response.message.content
     return ScreeningDecision.model_validate_json(raw)

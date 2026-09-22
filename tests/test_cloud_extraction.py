@@ -14,7 +14,7 @@ import pytest
 
 from engine.cloud.schema import init_cloud_tables
 from engine.cloud.base import CloudExtractorBase
-from engine.cloud.openai_extractor import OpenAIExtractor, COST_INPUT_PER_M, COST_OUTPUT_PER_M
+from engine.cloud.openai_extractor import OpenAIExtractor
 from engine.cloud.anthropic_extractor import AnthropicExtractor
 from engine.core.codebook import load_codebook_for
 
@@ -24,6 +24,15 @@ BACKUP_DB = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 LIVE_CODEBOOK = (Path(__file__).resolve().parent.parent
                  / "data" / "surgical_autonomy" / "extraction_codebook.yaml")
+
+def _price(provider: str):
+    """The spec's declared price for its one arm of `provider` (C20: prices are
+    spec data, never module constants)."""
+    from engine.core.review_spec import load_review_spec
+    spec = load_review_spec(SPEC_PATH)
+    (name,) = [a.name for a in spec.arms if a.provider == provider]
+    return spec.cloud.prices[name]
+
 
 pytestmark = pytest.mark.skipif(
     not BACKUP_DB.exists() or not SPEC_PATH.exists(),
@@ -68,8 +77,7 @@ def test_db(tmp_path):
 
 
 def _seed_corpus_events(db_path) -> None:
-    from engine.core import events
-    from tests._event_store_fixture import ensure_event_store
+    from tests._event_store_fixture import ensure_event_store, seed_pre_manifest_paper_event
 
     ensure_event_store(db_path)
     conn = sqlite3.connect(str(db_path))
@@ -80,10 +88,7 @@ def _seed_corpus_events(db_path) -> None:
             f"SELECT id FROM papers WHERE status IN "
             f"({', '.join('?' * len(corpus))}) ORDER BY id", corpus
         ).fetchall():
-            events.write_paper_event(
-                conn, event_type="state_at_migration", paper_id=pid,
-                to_state="eligible", actor_kind="engine", actor_role="system",
-                actor_name="fixture", commit=False)
+            seed_pre_manifest_paper_event(conn, pid)
         conn.commit()
     finally:
         conn.close()
@@ -388,7 +393,7 @@ class TestOpenAIExtractor:
         extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
 
         # Get a real paper ID
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -413,7 +418,7 @@ class TestOpenAIExtractor:
         )
 
         extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -422,7 +427,8 @@ class TestOpenAIExtractor:
             pending[0]["paper_id"], "Test paper text."
         )
 
-        expected_cost = COST_INPUT_PER_M + COST_OUTPUT_PER_M  # 1M each
+        price = _price("openai")
+        expected_cost = price.input_per_m + price.output_per_m  # 1M each
         assert abs(result["cost_usd"] - expected_cost) < 0.01
         extractor.close()
 
@@ -456,7 +462,7 @@ class TestAnthropicExtractor:
         )
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -479,7 +485,7 @@ class TestAnthropicExtractor:
         )
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -500,7 +506,7 @@ class TestAnthropicExtractor:
         )
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -518,14 +524,15 @@ class TestAnthropicExtractor:
         mock_client = MagicMock()
         mock_anthropic_cls.return_value = mock_client
 
-        from engine.cloud.anthropic_extractor import COST_INPUT_PER_M as A_IN, COST_OUTPUT_PER_M as A_OUT
+        price = _price("anthropic")
+        A_IN, A_OUT = price.input_per_m, price.output_per_m
 
         mock_client.messages.create.return_value = self._make_mock_response(
             COMPLETE_RESPONSE, input_toks=1_000_000, output_toks=1_000_000,
         )
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -553,7 +560,8 @@ class TestCLI:
         """--dry-run should not instantiate any API client."""
         from scripts.run_cloud_extraction import dry_run
         # This should work without API keys
-        dry_run(test_db, spec_path, ["openai", "anthropic"])
+        dry_run(test_db, spec_path, ["openai_o4_mini_2025_04_16_high",
+                                     "anthropic_claude_sonnet_4_6"])
 
 
 # ── Empty-string normalization (Anthropic) ────────────────────────
@@ -594,7 +602,7 @@ class TestSonnetEmptyStringNormalization:
         mock_client.messages.create.return_value = self._make_mock_response(fields_with_empty)
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -606,7 +614,7 @@ class TestSonnetEmptyStringNormalization:
 
         # Verify it round-trips through store_result
         ext_id = extractor.store_result(
-            paper_id=pending[0]["paper_id"], arm=extractor.ARM,
+            paper_id=pending[0]["paper_id"], arm=extractor.arm_name,
             model_string=extractor.model_string,
             extracted_data=result["extracted_data"],
             reasoning_trace=result["reasoning_trace"],
@@ -643,7 +651,7 @@ class TestSonnetEmptyStringNormalization:
         mock_client.messages.create.return_value = self._make_mock_response(fields_with_null)
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -675,7 +683,7 @@ class TestSonnetEmptyStringNormalization:
         mock_client.messages.create.return_value = self._make_mock_response(fields_normal)
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -722,7 +730,7 @@ class TestSonnetRateLimitBackoff:
         mock_client.messages.create.side_effect = [rate_err, rate_err, success_resp]
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -768,7 +776,7 @@ class TestSonnetRateLimitBackoff:
         mock_client.messages.create.side_effect = [rate_err, success_resp]
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -812,7 +820,7 @@ class TestStoreResultCrashProtection:
         mock_client.chat.completions.create.return_value = resp
 
         extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if len(pending) < 2:
             extractor.close()
             pytest.skip("Need at least 2 pending papers")
@@ -882,7 +890,7 @@ class TestAuthErrorAbort:
         )
 
         extractor = OpenAIExtractor(test_db, spec_path, api_key="bad-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -911,7 +919,7 @@ class TestAuthErrorAbort:
         )
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="bad-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -965,7 +973,7 @@ class TestOpenAIRateLimitBackoff:
         mock_client.chat.completions.create.side_effect = [rate_err, rate_err, success_resp]
 
         extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -1014,7 +1022,7 @@ class TestOpenAIRateLimitBackoff:
         mock_client.chat.completions.create.side_effect = [rate_err, success_resp]
 
         extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
-        pending = extractor.get_pending_papers(extractor.ARM)
+        pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
             pytest.skip("No pending papers")
@@ -1035,71 +1043,63 @@ class TestOpenAIRateLimitBackoff:
 
 
 class TestSpecDrivenConfig:
+    """B5 rewrite (MANIFEST-01 Phase 2a, C20/S3g). These pinned the retired
+    `cloud_models` block and a module-constant fallback model and price. The arm,
+    its model and its price are spec data now; there is no fallback."""
+
+    @staticmethod
+    def _custom_spec(tmp_path, mutate):
+        import yaml
+        with open(SPEC_PATH) as f:
+            data = yaml.safe_load(f)
+        mutate(data)
+        path = tmp_path / "custom_spec.yaml"
+        path.write_text(yaml.dump(data))
+        return str(path)
 
     @patch("engine.cloud.openai_extractor.openai.OpenAI")
     def test_openai_reads_from_spec(self, mock_openai_cls, test_db, tmp_path):
-        """OpenAIExtractor uses model/cost from spec when cloud_models is set."""
-        import yaml
-        from engine.core.review_spec import load_review_spec
-
-        # Load existing spec, add cloud_models section, write to temp
-        spec_path = str(SPEC_PATH)
-        with open(spec_path) as f:
-            spec_data = yaml.safe_load(f)
-
-        spec_data["cloud_models"] = {
-            "openai": {
-                "model": "o4-mini-custom",
-                "cost_input_per_m": 2.00,
-                "cost_output_per_m": 8.00,
-            },
-        }
-        custom_spec = tmp_path / "custom_spec.yaml"
-        custom_spec.write_text(yaml.dump(spec_data))
-
+        def mutate(d):
+            for a in d["arms"]:
+                if a["provider"] == "openai":
+                    a["name"], a["model"] = "openai_custom", "o4-mini-custom"
+            d["cloud"]["prices"] = {"openai_custom": {"input_per_m": 2.0, "output_per_m": 8.0}}
         mock_openai_cls.return_value = MagicMock()
-
-        extractor = OpenAIExtractor(test_db, str(custom_spec), api_key="test-key")
+        extractor = OpenAIExtractor(test_db, self._custom_spec(tmp_path, mutate), api_key="k")
+        assert extractor.arm_name == "openai_custom"
         assert extractor.model_string == "o4-mini-custom"
-        assert extractor.cost_input_per_m == 2.00
-        assert extractor.cost_output_per_m == 8.00
+        assert (extractor.cost_input_per_m, extractor.cost_output_per_m) == (2.0, 8.0)
         extractor.close()
 
     @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
     def test_anthropic_reads_from_spec(self, mock_anthropic_cls, test_db, tmp_path):
-        """AnthropicExtractor uses model/cost from spec when cloud_models is set."""
-        import yaml
-
-        spec_path = str(SPEC_PATH)
-        with open(spec_path) as f:
-            spec_data = yaml.safe_load(f)
-
-        spec_data["cloud_models"] = {
-            "anthropic": {
-                "model": "claude-custom-model",
-                "cost_input_per_m": 5.00,
-                "cost_output_per_m": 25.00,
-            },
-        }
-        custom_spec = tmp_path / "custom_spec.yaml"
-        custom_spec.write_text(yaml.dump(spec_data))
-
+        def mutate(d):
+            for a in d["arms"]:
+                if a["provider"] == "anthropic":
+                    a["name"], a["model"] = "anthropic_custom", "claude-custom-model"
+            d["cloud"]["prices"] = {"anthropic_custom": {"input_per_m": 5.0, "output_per_m": 25.0}}
         mock_anthropic_cls.return_value = MagicMock()
-
-        extractor = AnthropicExtractor(test_db, str(custom_spec), api_key="test-key")
+        extractor = AnthropicExtractor(test_db, self._custom_spec(tmp_path, mutate), api_key="k")
+        assert extractor.arm_name == "anthropic_custom"
         assert extractor.model_string == "claude-custom-model"
-        assert extractor.cost_input_per_m == 5.00
-        assert extractor.cost_output_per_m == 25.00
+        assert (extractor.cost_input_per_m, extractor.cost_output_per_m) == (5.0, 25.0)
         extractor.close()
 
     @patch("engine.cloud.openai_extractor.openai.OpenAI")
-    def test_openai_falls_back_to_defaults(self, mock_openai_cls, test_db, spec_path):
-        """Without cloud_models in spec, OpenAI uses hardcoded defaults."""
+    def test_no_default_price(self, mock_openai_cls, test_db, tmp_path):
+        """An arm with no declared price is refused — there is no fallback price."""
         mock_openai_cls.return_value = MagicMock()
+        path = self._custom_spec(tmp_path, lambda d: d["cloud"].update(prices={}))
+        with pytest.raises(ValueError, match="no price"):
+            OpenAIExtractor(test_db, path, api_key="k")
 
-        from engine.cloud.openai_extractor import _DEFAULT_MODEL, _DEFAULT_COST_INPUT_PER_M, _DEFAULT_COST_OUTPUT_PER_M
-        extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
-        assert extractor.model_string == _DEFAULT_MODEL
-        assert extractor.cost_input_per_m == _DEFAULT_COST_INPUT_PER_M
-        assert extractor.cost_output_per_m == _DEFAULT_COST_OUTPUT_PER_M
-        extractor.close()
+    @patch("engine.cloud.openai_extractor.openai.OpenAI")
+    def test_no_default_arm(self, mock_openai_cls, test_db, tmp_path):
+        """With no openai arm declared there is no class-constant arm to fall back on."""
+        mock_openai_cls.return_value = MagicMock()
+        def mutate(d):
+            d["arms"] = [a for a in d["arms"] if a["provider"] != "openai"]
+            d["cloud"]["prices"] = {k: v for k, v in d["cloud"]["prices"].items()
+                                    if not k.startswith("openai")}
+        with pytest.raises(ValueError, match="name the openai arm"):
+            OpenAIExtractor(test_db, self._custom_spec(tmp_path, mutate), api_key="k")

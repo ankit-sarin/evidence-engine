@@ -46,9 +46,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from engine.agents.extractor import (
-    MODEL, build_extraction_prompt, extract_pass2_structured,
+    _with_think, build_extraction_prompt, extract_pass2_structured,
     _LAST_PASS1_TELEMETRY, _LAST_PASS2_TELEMETRY,
 )
+from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.core.citation_guard import STRICT, enforce_citations
 from engine.core.completeness import (
     enforce_completeness, enforce_terminal_states, expected_field_names,
@@ -95,9 +96,26 @@ def persist_unit_map(unit_map: UnitMap, review_dir: Path, run_id: str) -> Path:
     return path
 
 
+def pass1_messages(prompt: str) -> list[dict]:
+    """Pass 1's message list — one builder for the call and the prompt hash (R60)."""
+    return [{"role": "system", "content": SYSTEM_PASS1},
+            {"role": "user", "content": prompt}]
+
+
+def sentinel_pass1_prompt(spec, codebook_path=None) -> str:
+    """The Pass-1 prompt over the resolver's sentinel text, for the prompt hash."""
+    from engine.core.codebook import load_codebook_for
+    from engine.core.effective_config import SENTINEL_TEXT
+    cb = load_codebook(codebook_path) if codebook_path else load_codebook_for(spec.review_id)
+    cb_path = codebook_path or cb.path
+    return build_pass1_prompt(build_unit_map(0, SENTINEL_TEXT), cb.raw,
+                              expected_field_names(spec, cb_path))
+
+
 def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
-              paper_id: int, think: bool = True,
-              feedback: str = "") -> tuple[Pass1Result, dict]:
+              paper_id: int, think: bool | None = None,
+              feedback: str = "", *, cfg: EffectiveConfig | None = None,
+              ) -> tuple[Pass1Result, dict]:
     """Elicit citations. Returns (checked result, call telemetry).
 
     `feedback` is appended to the prompt STRING, not sent as a separate message,
@@ -106,13 +124,9 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     like any other input (INPUT-FIT-01), never truncated silently.
     """
     prompt = build_pass1_prompt(unit_map, codebook, field_names) + feedback
+    cfg = _with_think(cfg or stage_config("elicitation_pass1"), think)
 
-    response = ollama_chat(
-        model=MODEL, paper_id=paper_id,
-        messages=[{"role": "system", "content": SYSTEM_PASS1},
-                  {"role": "user", "content": prompt}],
-        options={"temperature": 0}, think=think,
-    )
+    response = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt), **cfg.kwargs())
     raw = response.message.content or ""
     thinking = getattr(response.message, "thinking", None) or ""
     pec = getattr(response, "prompt_eval_count", None)
@@ -132,7 +146,8 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
 
 
 def elicit(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
-           paper_id: int, think: bool = True
+           paper_id: int, think: bool | None = None, *,
+           cfg: EffectiveConfig | None = None,
            ) -> tuple[Pass1Result, int, list[dict]]:
     """Ruling 4's bounded, feedback-carrying Pass-1 loop.
 
@@ -146,7 +161,7 @@ def elicit(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     regressed is a measurement, and discarding the losing attempt would delete
     the only evidence that the feedback did not land.
     """
-    first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, think=think)
+    first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, think=think, cfg=cfg)
     tels = [tel_first]
     second = None
 
@@ -154,6 +169,7 @@ def elicit(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
         feedback = build_feedback_block(first, codebook)
         second, tel_second = run_pass1(
             unit_map, codebook, field_names, paper_id, think=think, feedback=feedback,
+            cfg=cfg,
         )
         tels.append(tel_second)
 
@@ -212,15 +228,16 @@ def extract_paper_elicited(
     field_names = expected_field_names(spec, cb_path)
     tiers = {f["name"]: int(f.get("tier", 1)) for f in codebook["fields"]}
 
-    models = getattr(spec, "extraction_models", None)
-    pass1_think = getattr(models, "pass1_think", True)
-    pass2_think = getattr(models, "pass2_think", False)
+    # Model, options and the per-pass think policy come from the one resolver.
+    cfg_p1 = stage_config("elicitation_pass1", spec)
+    cfg_p2 = stage_config("extract_pass2", spec)
+    model_name = cfg_p1.model
 
     unit_map = build_unit_map(paper_id, paper_text)
     persist_unit_map(unit_map, review_dir, run_id)
 
     p1, accepted_attempt, pass1_tels = elicit(
-        unit_map, codebook, field_names, paper_id, think=pass1_think,
+        unit_map, codebook, field_names, paper_id, cfg=cfg_p1,
     )
     p1_tel = pass1_tels[accepted_attempt - 1]
     states = T.terminal_states(p1, codebook)
@@ -276,7 +293,7 @@ def extract_paper_elicited(
         pass2_prompt = build_extraction_prompt(paper_text, spec, cb_path)
         priming_msg = build_pass2_priming_message(priming)
         result = extract_pass2_structured(
-            pass2_prompt, priming_msg, spec, paper_id, think=pass2_think,
+            pass2_prompt, priming_msg, spec, paper_id, cfg=cfg_p2,
             codebook_hash=codebook_hash,
         )
         schema_hash = result.codebook_hash
@@ -324,19 +341,19 @@ def extract_paper_elicited(
 
     enforce_terminal_states(
         states, field_names, T.state_vocabulary(codebook),
-        paper_id=paper_id, arm=MODEL, attempt=attempt,
+        paper_id=paper_id, arm=model_name, attempt=attempt,
     )
-    enforce_completeness(span_dicts, field_names, paper_id=paper_id, arm=MODEL,
+    enforce_completeness(span_dicts, field_names, paper_id=paper_id, arm=model_name,
                          attempt=attempt)
     enforce_citations(
-        span_dicts, paper_id=paper_id, arm=MODEL, mode=STRICT,
+        span_dicts, paper_id=paper_id, arm=model_name, mode=STRICT,
         escape_token=escape_tok,
         absence_sentinels=C.absence_sentinels(codebook),
         citation_counts=citation_counts, contract_unmet_token=unmet_tok,
         attempt=attempt,
     )
 
-    _LAST_PASS2_TELEMETRY.setdefault("model", MODEL)
+    _LAST_PASS2_TELEMETRY.setdefault("model", model_name)
     _LAST_PASS2_TELEMETRY["elicitation_run_id"] = run_id
     _LAST_PASS2_TELEMETRY["value_divergence"] = divergent
     _LAST_PASS2_TELEMETRY["n_value_divergence"] = len(divergent)
@@ -358,7 +375,7 @@ def extract_paper_elicited(
     stored = ExtractionResult(
         paper_id=paper_id, fields=spans,
         reasoning_trace=priming,          # the materialized evidence IS the trace
-        model=MODEL,
+        model=model_name,
         codebook_hash=schema_hash,
         extracted_at=datetime.now(timezone.utc),
     )
@@ -370,7 +387,7 @@ def extract_paper_elicited(
         codebook_sha256=codebook_sha256,
         extracted_data=extracted_data,
         reasoning_trace=priming,
-        model=MODEL,
+        model=model_name,
         spans=span_dicts,
         model_digest=model_digest,
         auditor_model_digest=auditor_model_digest,

@@ -255,16 +255,17 @@ def test_site5_terminal_states_are_dropped_from_the_arm(tmp_path):
 
     import sqlite3 as _s
     from engine.core import events
+    from tests._event_store_fixture import run_for
 
     conn = _s.connect(db)
     conn.execute("PRAGMA foreign_keys = ON")
     events.write_field_event(
-        conn, event_type="contract_unmet", paper_id=7, field_name="b",
+        conn, run_id=run_for(conn), event_type="contract_unmet", paper_id=7, field_name="b",
         arm="local", extraction_uid=events.mint_extraction_uid(),
         actor_kind="model", actor_role="extractor", actor_name="m",
         payload={"violation_codes": ["X"], "attempts": 2})
     events.write_field_event(
-        conn, event_type="declined", paper_id=7, field_name="c", arm="local",
+        conn, run_id=run_for(conn), event_type="declined", paper_id=7, field_name="c", arm="local",
         extraction_uid=events.mint_extraction_uid(),
         actor_kind="model", actor_role="extractor", actor_name="m")
     conn.commit()
@@ -288,7 +289,7 @@ def test_site5_a_field_the_codebook_does_not_declare_is_ignored(tmp_path):
 
     from engine.analysis.concordance import load_arm
     from engine.core import events
-    from tests._event_store_fixture import add_values
+    from tests._event_store_fixture import add_values, run_for
 
     db = tmp_path / "review.db"
     (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
@@ -297,7 +298,7 @@ def test_site5_a_field_the_codebook_does_not_declare_is_ignored(tmp_path):
     conn = _s.connect(db)
     conn.execute("PRAGMA foreign_keys = ON")
     events.write_field_event(
-        conn, event_type="asserted", paper_id=7, field_name="field_1",
+        conn, run_id=run_for(conn), event_type="asserted", paper_id=7, field_name="field_1",
         arm="local", value="The paper presents a dynamic potential field method",
         extraction_uid=events.mint_extraction_uid(),
         actor_kind="model", actor_role="extractor", actor_name="m")

@@ -214,7 +214,7 @@ def test_read_calls_skips_malformed_lines(tmp_path):
 class _FakeCloud:
     """Minimal stand-in exercising CloudExtractorBase.extract_with_completeness."""
 
-    ARM = "openai_o4_mini_high"
+    arm_name = "openai_o4_mini_high"   # B5: the class-constant ARM is retired (C20)
     model_string = "o4-mini-2025-04-16"
 
     def __init__(self, results, review_dir):

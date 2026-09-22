@@ -20,6 +20,7 @@ from engine.core.constants import FT_MAX_TEXT_CHARS
 from engine.core.database import ReviewDatabase
 from engine.core import eligibility_render as render
 from engine.core.review_spec import ReviewSpec
+from engine.core.effective_config import stage_config
 from engine.utils.ollama_client import ollama_chat
 
 logger = logging.getLogger(__name__)
@@ -177,6 +178,34 @@ Respond with JSON only: {{"decision": "FT_ELIGIBLE" or "FT_FLAGGED", "rationale"
 # ── Single-Paper Screening ───────────────────────────────────────────
 
 
+def build_ft_messages(paper_text: str, spec: ReviewSpec, which: str = "primary") -> list[dict]:
+    """The message list the FT primary (`which="primary"`) or verifier sends.
+
+    One builder for the call and for the resolver's prompt hash (R60).
+    """
+    if which == "primary":
+        return render.messages("ft_primary", build_ft_screening_prompt(paper_text, spec),
+                               review_title=spec.title)
+    return render.messages("ft_verifier", build_ft_verification_prompt(paper_text, spec),
+                           review_title=spec.title)
+
+
+def _ft_config(stage: str, spec: ReviewSpec, model, think, temperature):
+    """The resolver's config, with this signature's historical overrides applied.
+
+    `model`, `think` and `temperature` have always been accepted as arguments;
+    `None` means the spec's value, as before. A non-None argument is a caller
+    override and is recorded as one.
+    """
+    cfg = stage_config(stage, spec, model=model)
+    if think is not None and think != cfg.think:
+        from engine.core.effective_config import _replace
+        cfg = _replace(cfg, think=think, sources={**cfg.sources, "think": "caller"})
+    if temperature is not None and temperature != cfg.options.get("temperature"):
+        cfg = cfg.with_options({"temperature": temperature})
+    return cfg
+
+
 def ft_screen_paper(
     paper_text: str,
     spec: ReviewSpec,
@@ -185,25 +214,9 @@ def ft_screen_paper(
     temperature: float | None = None,
 ) -> FTScreeningDecision:
     """Screen a single paper's full text. Returns structured decision."""
-    if model is None:
-        model = spec.ft_screening_models.primary
-    if think is None:
-        think = spec.ft_screening_models.think
-    if temperature is None:
-        temperature = spec.ft_screening_models.temperature
-
-    prompt = build_ft_screening_prompt(paper_text, spec)
-
+    cfg = _ft_config("ft_screen_primary", spec, model, think, temperature)
     response = ollama_chat(
-        model=model,
-        messages=render.messages("ft_primary", prompt, review_title=spec.title),
-        format=render.with_reason_code_vocabulary(
-            FTScreeningDecision.model_json_schema(), spec.eligibility
-        ),
-        options={"temperature": temperature},
-        think=think,
-    )
-
+        messages=build_ft_messages(paper_text, spec, "primary"), **cfg.kwargs())
     return FTScreeningDecision.model_validate_json(response.message.content)
 
 
@@ -215,23 +228,9 @@ def ft_verify_paper(
     temperature: float | None = None,
 ) -> FTVerificationDecision:
     """Verify a single paper's full text (strict, FP-catching). Returns structured decision."""
-    if model is None:
-        model = spec.ft_screening_models.verifier
-    if think is None:
-        think = spec.ft_screening_models.think
-    if temperature is None:
-        temperature = spec.ft_screening_models.temperature
-
-    prompt = build_ft_verification_prompt(paper_text, spec)
-
+    cfg = _ft_config("ft_screen_verifier", spec, model, think, temperature)
     response = ollama_chat(
-        model=model,
-        messages=render.messages("ft_verifier", prompt, review_title=spec.title),
-        format=FTVerificationDecision.model_json_schema(),
-        options={"temperature": temperature},
-        think=think,
-    )
-
+        messages=build_ft_messages(paper_text, spec, "verifier"), **cfg.kwargs())
     return FTVerificationDecision.model_validate_json(response.message.content)
 
 

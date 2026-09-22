@@ -28,12 +28,12 @@ from engine.core.completeness import (
 )
 from engine.core.citation_guard import LEGACY, UncitedValueError, enforce_citations
 from engine.core.extraction_telemetry import record_call
+from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.utils.ollama_client import InputFitError, ollama_chat
 from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
 
 logger = logging.getLogger(__name__)
 
-MODEL = "deepseek-r1:32b"
 MAX_RETRIES = 2
 RETRY_DELAY = 30  # seconds between retries
 SNIPPET_MAX_RETRIES = 2
@@ -179,30 +179,42 @@ You MUST emit exactly one entry per field listed above ({total_fields} fields to
 _LAST_PASS1_TELEMETRY: dict = {}
 
 
-def extract_pass1_reasoning(prompt: str, think: bool = True) -> str:
+def _with_think(cfg: EffectiveConfig, think: bool | None) -> EffectiveConfig:
+    """A `think=` argument these signatures have always accepted, as an override."""
+    if think is None or think == cfg.think:
+        return cfg
+    from engine.core.effective_config import _replace
+    return _replace(cfg, think=think, sources={**cfg.sources, "think": "caller"})
+
+
+def pass1_messages(prompt: str) -> list[dict]:
+    """Pass 1's message list — one builder for the call and the prompt hash (R60)."""
+    return [
+        {
+            "role": "system",
+            "content": (
+                "You are a systematic review data extractor. Read the paper "
+                "carefully and reason through each extraction field step by step. "
+                "Think about what the paper says for each field before extracting."
+            ),
+        },
+        {"role": "user", "content": prompt},
+    ]
+
+
+def extract_pass1_reasoning(prompt: str, think: bool | None = None, *,
+                            cfg: EffectiveConfig | None = None) -> str:
     """Run Pass 1: let DeepSeek-R1 reason freely, return the thinking trace.
 
     `think` is passed explicitly and never left to the Ollama default —
     REGRESSION-01: 0.21.0 auto-enables thinking for deepseek-r1, and relying on
     a version-dependent default is what let the interface change go unnoticed.
+    It comes from the resolver (stage `extract_pass1`); a `think=` argument is a
+    caller override.
     """
+    cfg = _with_think(cfg or stage_config("extract_pass1"), think)
     _LAST_PASS1_TELEMETRY.clear()
-    response = ollama_chat(
-        model=MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a systematic review data extractor. Read the paper "
-                    "carefully and reason through each extraction field step by step. "
-                    "Think about what the paper says for each field before extracting."
-                ),
-            },
-            {"role": "user", "content": prompt},
-        ],
-        options={"temperature": 0},
-        think=think,
-    )
+    response = ollama_chat(messages=pass1_messages(prompt), **cfg.kwargs())
 
     content = response.message.content or ""
     thinking = getattr(response.message, "thinking", None)
@@ -269,13 +281,38 @@ def parse_thinking_trace(content: str, thinking: str | None = None) -> tuple[str
 _LAST_PASS2_TELEMETRY: dict = {}
 
 
+def pass2_messages(prompt: str, reasoning_trace: str) -> list[dict]:
+    """Pass 2's message list — one builder for the call and the prompt hash (R60)."""
+    return [
+        {
+            "role": "system",
+            "content": (
+                "You are a systematic review data extractor. "
+                "Use your prior reasoning to produce accurate structured output. "
+                "Respond ONLY with the requested JSON."
+            ),
+        },
+        {"role": "user", "content": prompt},
+        {
+            "role": "user",
+            "content": (
+                f"Here is your prior analysis of this paper:\n\n"
+                f"{reasoning_trace}\n\n"
+                f"Now output the structured extraction as JSON matching the schema. "
+                f"Include all fields from the extraction schema."
+            ),
+        },
+    ]
+
+
 def extract_pass2_structured(
     prompt: str,
     reasoning_trace: str,
     spec: ReviewSpec,
     paper_id: int,
-    think: bool = False,
+    think: bool | None = None,
     codebook_hash: str | None = None,
+    *, cfg: EffectiveConfig | None = None,
 ) -> ExtractionResult:
     """Run Pass 2: use reasoning trace as context, force structured JSON output.
 
@@ -289,33 +326,9 @@ def extract_pass2_structured(
         codebook_hash if codebook_hash is not None
         else load_codebook_for(spec.review_id).semantic_hash
     )
+    cfg = _with_think(cfg or stage_config("extract_pass2", spec), think)
 
-    response = ollama_chat(
-        model=MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a systematic review data extractor. "
-                    "Use your prior reasoning to produce accurate structured output. "
-                    "Respond ONLY with the requested JSON."
-                ),
-            },
-            {"role": "user", "content": prompt},
-            {
-                "role": "user",
-                "content": (
-                    f"Here is your prior analysis of this paper:\n\n"
-                    f"{reasoning_trace}\n\n"
-                    f"Now output the structured extraction as JSON matching the schema. "
-                    f"Include all fields from the extraction schema."
-                ),
-            },
-        ],
-        format=ExtractionOutput.model_json_schema(),
-        options={"temperature": 0},
-        think=think,
-    )
+    response = ollama_chat(messages=pass2_messages(prompt, reasoning_trace), **cfg.kwargs())
 
     raw = response.message.content or ""
     # INSTRUMENT-01: stash the pre-parse response and Ollama's own done_reason
@@ -324,7 +337,7 @@ def extract_pass2_structured(
     _LAST_PASS2_TELEMETRY.update(
         raw_content=raw,
         finish_reason=getattr(response, "done_reason", None),
-        model=MODEL,
+        model=cfg.model,
     )
     output = ExtractionOutput.model_validate_json(raw)
 
@@ -332,7 +345,7 @@ def extract_pass2_structured(
         paper_id=paper_id,
         fields=output.fields,
         reasoning_trace=reasoning_trace,
-        model=MODEL,
+        model=cfg.model,
         codebook_hash=schema_hash,
         extracted_at=datetime.now(timezone.utc),
     )
@@ -346,17 +359,9 @@ def _has_invalid_snippet(snippet: str | None) -> bool:
     return bool(snippet and INVALID_SNIPPET_RE.search(snippet))
 
 
-def _retry_snippet(
-    field_name: str,
-    value: str,
-    paper_text: str,
-    paper_id: int,
-) -> str | None:
-    """Request a clean verbatim snippet for a single field.
-
-    Returns the new snippet string, or None if the model still produces
-    an invalid snippet or fails.
-    """
+def retry_snippet_messages(field_name: str, value: str, paper_text: str) -> list[dict]:
+    """The snippet retry's message list — one builder for the call and the
+    prompt hash (R60)."""
     prompt = (
         f"You previously extracted the value below from a scientific paper.\n\n"
         f"Field: {field_name}\n"
@@ -368,15 +373,29 @@ def _retry_snippet(
         f"Respond ONLY with JSON: {{\"source_snippet\": \"...\" or null}}\n\n"
         f"## Paper Text\n{paper_text}"
     )
+    return [
+        {"role": "system", "content": "Respond ONLY with JSON."},
+        {"role": "user", "content": prompt},
+    ]
+
+
+def _retry_snippet(
+    field_name: str,
+    value: str,
+    paper_text: str,
+    paper_id: int,
+    *, cfg: EffectiveConfig | None = None,
+) -> str | None:
+    """Request a clean verbatim snippet for a single field.
+
+    Returns the new snippet string, or None if the model still produces
+    an invalid snippet or fails.
+    """
+    cfg = cfg or stage_config("extract_retry_snippet")
     try:
         response = ollama_chat(
-            model=MODEL,
-            messages=[
-                {"role": "system", "content": "Respond ONLY with JSON."},
-                {"role": "user", "content": prompt},
-            ],
-            options={"temperature": 0},
-            think=False,
+            messages=retry_snippet_messages(field_name, value, paper_text),
+            **cfg.kwargs(),
         )
         raw = response.message.content or ""
         data = json.loads(raw)
@@ -392,6 +411,7 @@ def _validate_and_retry_snippets(
     fields: list[EvidenceSpan],
     paper_text: str,
     paper_id: int,
+    *, cfg: EffectiveConfig | None = None,
 ) -> list[EvidenceSpan]:
     """Validate snippets post-extraction; retry invalid ones up to SNIPPET_MAX_RETRIES times."""
     validated = []
@@ -407,7 +427,7 @@ def _validate_and_retry_snippets(
                 paper_id, span.field_name, attempt, SNIPPET_MAX_RETRIES,
             )
             new_snippet = _retry_snippet(
-                span.field_name, span.value, paper_text, paper_id,
+                span.field_name, span.value, paper_text, paper_id, cfg=cfg,
             )
             if new_snippet is not None:
                 break
@@ -485,24 +505,23 @@ def extract_paper(
 
     prompt = build_extraction_prompt(paper_text, spec, cb_path)
 
-    # Think policy is declared per pass in the Review Spec
-    # (`extraction_models.pass1_think` / `.pass2_think`) and passed explicitly on
-    # every call. See REGRESSION-01.
-    models = getattr(spec, "extraction_models", None)
-    pass1_think = getattr(models, "pass1_think", True)
-    pass2_think = getattr(models, "pass2_think", False)
+    # Model, options and the per-pass think policy (`extraction_models.pass1_think`
+    # / `.pass2_think`, REGRESSION-01) come from the one resolver and are passed
+    # explicitly on every call (S3a).
+    cfg1 = stage_config("extract_pass1", spec)
+    cfg2 = stage_config("extract_pass2", spec)
+    cfg_retry = stage_config("extract_retry_snippet", spec)
 
     # Pass 1: reasoning
-    reasoning_trace = extract_pass1_reasoning(prompt, think=pass1_think)
+    reasoning_trace = extract_pass1_reasoning(prompt, cfg=cfg1)
 
     # Pass 2: structured output
     result = extract_pass2_structured(prompt, reasoning_trace, spec, paper_id,
-                                      think=pass2_think,
-                                      codebook_hash=cb.semantic_hash)
+                                      codebook_hash=cb.semantic_hash, cfg=cfg2)
 
     # Validate snippets and retry invalid ones before storing
     validated_fields = _validate_and_retry_snippets(
-        result.fields, paper_text, paper_id,
+        result.fields, paper_text, paper_id, cfg=cfg_retry,
     )
     result = ExtractionResult(
         paper_id=result.paper_id,
@@ -540,7 +559,7 @@ def extract_paper(
         span_dicts,
         expected_field_names(spec, cb_path),
         paper_id=paper_id,
-        arm=MODEL,
+        arm=cfg1.model,
     )
 
     # ELICIT-DESIGN-01 (section 4.6(c)): no value is stored with nothing behind it.
@@ -551,7 +570,7 @@ def extract_paper(
     # sentinel is a value like any other and owes a citation.
     escape, sentinels = _absence_tokens(cb_path)
     enforce_citations(
-        span_dicts, paper_id=paper_id, arm=MODEL, mode=LEGACY,
+        span_dicts, paper_id=paper_id, arm=cfg1.model, mode=LEGACY,
         escape_token=escape, absence_sentinels=sentinels,
     )
 
@@ -566,7 +585,7 @@ def extract_paper(
         schema_hash=None,
         extracted_data=extracted_data,
         reasoning_trace=reasoning_trace,
-        model=MODEL,
+        model=cfg1.model,
         spans=span_dicts,
         model_digest=model_digest,
         auditor_model_digest=auditor_model_digest,
@@ -658,6 +677,8 @@ def extract_paper_with_completeness(
     review_dir = Path(db.db_path).parent
     expected = expected_field_names(spec, review_dir / "extraction_codebook.yaml")
     run_id = _default_run_id()
+    # The telemetry `arm` label has always been the extraction model's name.
+    model_name = stage_config("extract_pass1", spec).model
     last_error: Exception | None = None
 
     # One bounded retry budget covers every pre-write refusal: an incomplete
@@ -691,9 +712,9 @@ def extract_paper_with_completeness(
             incomplete = isinstance(exc, IncompleteExtractionError)
             kind = "incomplete" if incomplete else "contract"
             record_call(
-                review_dir, arm=MODEL, paper_id=paper_id, attempt=attempt,
+                review_dir, arm=model_name, paper_id=paper_id, attempt=attempt,
                 outcome=f"{kind}_retry" if attempt < max_attempts else f"{kind}_exhausted",
-                model=_LAST_PASS2_TELEMETRY.get("model", MODEL),
+                model=_LAST_PASS2_TELEMETRY.get("model", model_name),
                 finish_reason=_LAST_PASS2_TELEMETRY.get("finish_reason"),
                 raw_content=_LAST_PASS2_TELEMETRY.get("raw_content"),
                 spans_parsed=exc.n_stored if incomplete else None,
@@ -707,14 +728,14 @@ def extract_paper_with_completeness(
             )
             logger.warning(
                 "Paper %d (%s): %s attempt %d/%d — %s. Re-issuing identical request.",
-                paper_id, MODEL, kind.upper(), attempt, max_attempts, exc,
+                paper_id, model_name, kind.upper(), attempt, max_attempts, exc,
             )
             continue
 
         check = check_completeness(result.fields, expected)
         record_call(
-            review_dir, arm=MODEL, paper_id=paper_id, attempt=attempt, outcome="stored",
-            model=_LAST_PASS2_TELEMETRY.get("model", MODEL),
+            review_dir, arm=model_name, paper_id=paper_id, attempt=attempt, outcome="stored",
+            model=_LAST_PASS2_TELEMETRY.get("model", model_name),
             finish_reason=_LAST_PASS2_TELEMETRY.get("finish_reason"),
             raw_content=_LAST_PASS2_TELEMETRY.get("raw_content"),
             spans_parsed=check.n_produced,
@@ -728,14 +749,14 @@ def extract_paper_with_completeness(
         if attempt > 1:
             logger.info(
                 "Paper %d (%s): complete on attempt %d/%d",
-                paper_id, MODEL, attempt, max_attempts,
+                paper_id, model_name, attempt, max_attempts,
             )
         return result
 
     logger.error(
         "Paper %d (%s): UNSTORABLE after %d attempts — failing the paper, "
         "NOT storing a partial extraction. %s",
-        paper_id, MODEL, max_attempts, last_error,
+        paper_id, model_name, max_attempts, last_error,
     )
     raise last_error
 
@@ -791,17 +812,20 @@ def _run_extraction_unlocked(
 
     # Pre-flight: verify extraction model is loaded and responsive
     from engine.utils.ollama_preflight import require_preflight
-    require_preflight([MODEL], runner_name="Extraction")
+    extractor_model = stage_config("extract_pass1", spec).model
+    auditor_model = stage_config("audit", spec).model
+    require_preflight([extractor_model], runner_name="Extraction", spec=spec)
 
-    # Capture model digests before extraction loop
-    from engine.utils.ollama_client import get_model_digest
-    from engine.agents.auditor import DEFAULT_AUDITOR_MODEL
-    extractor_digest = get_model_digest(MODEL)
-    auditor_digest = get_model_digest(DEFAULT_AUDITOR_MODEL)
+    # Capture model digests before extraction loop. C15/R57: /api/tags is the
+    # route that exposes the digest; `get_model_digest` read /api/show, which
+    # does not, and left `extractions.model_digest` NULL on every row. This one
+    # raises rather than returning None, so a run never stores a missing digest.
+    from engine.utils.ollama_client import fetch_model_digest
+    extractor_digest = fetch_model_digest(extractor_model)
+    auditor_digest = fetch_model_digest(auditor_model)
     logger.info(
         "Model digests — extractor (%s): %s, auditor (%s): %s",
-        MODEL, extractor_digest or "unavailable",
-        DEFAULT_AUDITOR_MODEL, auditor_digest or "unavailable",
+        extractor_model, extractor_digest, auditor_model, auditor_digest,
     )
 
     # Pre-flight: warn about stale extractions from a different schema version

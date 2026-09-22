@@ -23,6 +23,7 @@ from engine.adjudication.workflow import (
 from engine.agents.auditor import run_audit
 from engine.agents.extractor import run_extraction
 from engine.agents.screener import run_screening
+from engine.core import run_manifest as rm
 from engine.core.database import ReviewDatabase
 from engine.core.codebook import load_codebook_for
 from engine.core.review_paths import load_spec_for
@@ -77,9 +78,6 @@ def run_pipeline(
     # ── Print workflow status ────────────────────────────────
     logger.info("\n%s", format_workflow_status(db._conn, review_name=review_name))
 
-    # ── Record review run ────────────────────────────────────
-    run_id = _start_review_run(db, spec)
-
     # ── Determine start stage ────────────────────────────────
     start_idx = 0
     if skip_to:
@@ -88,6 +86,13 @@ def run_pipeline(
             sys.exit(1)
         start_idx = STAGES.index(skip_to)
         logger.info("Skipping to stage: %s", skip_to)
+
+    # ── Open the run manifest (R73) ──────────────────────────
+    # Before the first model call, and instead of a review_runs row: the
+    # manifest records the resolved configuration of every stage this run can
+    # call, and refuses a dirty tree or a pre-manifest arm before anything runs.
+    run_id = _open_run_manifest(db, spec, start_idx)
+    run_token = rm.activate(db._conn, run_id)
 
     results = {}
 
@@ -117,7 +122,7 @@ def run_pipeline(
                         "--review %s --status' for full workflow status.",
                         review_name,
                     )
-                    _finish_review_run(db, run_id, "blocked")
+                    _finish_review_run(db, run_id, "interrupted")
                     return
 
         # ── PARSE ────────────────────────────────────────────
@@ -174,7 +179,7 @@ def run_pipeline(
                         "--review %s --status' for full workflow status.",
                         review_name,
                     )
-                    _finish_review_run(db, run_id, "blocked")
+                    _finish_review_run(db, run_id, "interrupted")
                     return
 
         # ── EXPORT ───────────────────────────────────────────
@@ -188,6 +193,7 @@ def run_pipeline(
         _finish_review_run(db, run_id, "failed")
         raise
     finally:
+        rm.deactivate(run_token)
         # ── Final summary ────────────────────────────────────
         elapsed = time.time() - t_start
         stats = db.get_pipeline_stats()
@@ -324,51 +330,54 @@ def _stage_export(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> dic
 # ── Review Run Tracking ──────────────────────────────────────────────
 
 
-def _start_review_run(db: ReviewDatabase, spec: ReviewSpec) -> int:
-    now = datetime.now(timezone.utc).isoformat()
-    # The codebook the prompts will be built from, recorded beside the
-    # spec-derived hashes, with its lint findings in the run's log: the lint is
-    # advisory and had no production consumer at all before this
-    # (CODEBOOK-AUTH-01 C7). A finding here says the codebook will elicit worse
-    # answers, which is worth knowing at the top of a run rather than never.
-    cb = load_codebook_for(spec.review_id)
-    log = json.dumps(
-        [{"event": "codebook_lint", "finding": f} for f in cb.lint_findings]
-    )
-    if cb.lint_findings:
-        logger.warning(
-            "Codebook lint raised %d finding(s) for this run: %s",
-            len(cb.lint_findings), "; ".join(cb.lint_findings),
-        )
-    # review_spec_hash is NOT NULL and read by nothing; it now composes the
-    # screening hash with the CODEBOOK hash and is deprecated. extraction_hash
-    # is no longer written — the spec section it hashed is gone
-    # (SCHEMA-DERIVE-01; migration 013 lifts its NOT NULL).
-    cur = db._conn.execute(
-        """INSERT INTO review_runs
-           (review_spec_hash, screening_hash,
-            started_at, status, log, codebook_hash, codebook_sha256)
-           VALUES (?, ?, ?, 'running', ?, ?, ?)""",
-        (
-            spec.screening_hash() + cb.semantic_hash,
-            spec.screening_hash(),
-            now,
-            log,
-            cb.semantic_hash,
-            cb.sha256,
-        ),
-    )
-    db._conn.commit()
-    return cur.lastrowid
+#: Resolver stages each pipeline stage can call. Preflight rows are added per
+#: probed model.
+_PIPELINE_STAGE_CONFIGS = {
+    "screen": ("abstract_screen_primary", "abstract_screen_verifier"),
+    "parse": ("vision_parse",),
+    "extract": ("extract_pass1", "extract_pass2", "extract_retry_snippet"),
+    "audit": ("audit",),
+}
+
+
+def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int) -> int:
+    """Write this run's manifest before its first call (S3a, R73).
+
+    `review_runs` is no longer written: it linked to nothing, recorded no
+    configuration, and one row has read 'running' since 2026-03-01. It stays as
+    read-only telemetry and retires at session 10 (retention ledger).
+    """
+    from engine.core.codebook import load_codebook_beside
+    from engine.core.effective_config import stage_config
+
+    stages: list[str] = []
+    preflight: list[str] = []
+    for name in STAGES[start_idx:]:
+        stages.extend(_PIPELINE_STAGE_CONFIGS.get(name, ()))
+    if spec.extraction_models.elicitation and "extract_pass1" in stages:
+        stages[stages.index("extract_pass1")] = "elicitation_pass1"
+    if any(s.startswith("extract") or s == "elicitation_pass1" for s in stages):
+        preflight.append(stage_config("extract_pass1", spec).model)
+    if "audit" in stages:
+        preflight.append(stage_config("audit", spec).model)
+    if preflight:
+        stages.append("preflight")
+
+    codebook = load_codebook_beside(db.db_path)
+    for finding in codebook.lint_findings:
+        logger.warning("Codebook lint: %s", finding)
+    kind = "extraction" if any(s.startswith(("extract", "elicitation", "audit"))
+                               for s in stages) else "screening"
+    handle = rm.open_run(db._conn, spec, kind=kind, stages=stages, codebook=codebook,
+                         preflight_models=sorted(set(preflight)))
+    logger.info("Run manifest %d (%s) written: %d stage rows", handle.run_id,
+                handle.run_uid, len(handle.stages))
+    return handle.run_id
 
 
 def _finish_review_run(db: ReviewDatabase, run_id: int, status: str) -> None:
-    now = datetime.now(timezone.utc).isoformat()
-    db._conn.execute(
-        "UPDATE review_runs SET status = ?, completed_at = ? WHERE id = ?",
-        (status, now, run_id),
-    )
-    db._conn.commit()
+    """Record the run's end on its manifest, once."""
+    rm.close_run(db._conn, run_id, status)
 
 
 # ── CLI ──────────────────────────────────────────────────────────────

@@ -155,7 +155,9 @@ def test_run_pipeline_takes_the_review_first_and_the_spec_as_override():
 SPEC_BEARING_ENTRY_POINTS = [
     "analysis/eval/elicit_design01/smoke.py",
     "analysis/eval/run_capture01.py",
-    "analysis/eval/run_cloud_strict.py",
+    # analysis/eval/run_cloud_strict.py retired 2026-09-22 under R72 (R31): an
+    # ungated off-box path, edited after its last run. Its two parametrized
+    # cases retire with it (R47).
     "analysis/eval/run_local_ab.py",
     "analysis/eval/run_local_abc.py",
     "analysis/eval/run_qualgap01.py",

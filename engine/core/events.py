@@ -17,20 +17,36 @@ one transaction, so a crash leaves neither. If a partial set ever did become
 visible it would read as a proper subset, which addendum 3 §A calls "inert by
 construction" — the safe direction to fail in.
 
-**No refusal on a pre-manifest arm.** An earlier draft of this session refused
-`asserted` on an arm marked `not recorded (pre-manifest)`. That was reversed:
-v2.1 row 7 *is* two claims on such an arm, and addendum 2 §C.4 registers the
-three existing arms pre-manifest precisely "to make row 7 reachable", so the
-refusal would have deleted the row it was meant to protect. R19 and R22-U4 are
-the operational control until session 7 builds R10's configuration-mismatch
-refusal with the spec arms block.
+**The refusals, in full** (R74 — this list replaces the session-5 claim that
+no refusal applies to a pre-manifest arm; R59 reinstated one, for *claims*):
+
+* **R20** `ReviewerDecisionAmbiguous` — a reviewer decision naming nothing.
+* **R20** `AcceptAgainstMultipleClaims` — ACCEPT with more than one live claim.
+* **R24** `AgainstReferenceIncomplete` — a proper-subset against-reference.
+* **R22-U2** `CellNotAssigned` — a reviewer decision outside the arm's assignment.
+* **R21** `ArmConfigurationFrozen` — re-pinning a claimed, pinned or pre-manifest arm.
+* **R68** `RunLinkRefused` — an event with no `run_id`, or a `run_marker` from a
+  caller that is not a migration. Only a migration writes `'pre-manifest'`.
+* **R59** `ClaimOnPreManifestArm` — a claim on an arm registered pre-manifest.
+* **R21** `ClaimOnRetiredArm` — a claim on a retired arm ("accepts no new claims").
+* **R10** `ArmNotInRun` — a claim on a model arm the run's manifest did not pin.
+
+**Row 7 stays reachable.** v2.1 row 7 is two live claims on a pre-manifest
+arm. After R59 no new claim can land on such an arm, so on live data row 7 is
+reachable only through claims seeded by a migration — there are none, and R25
+seeded no field history. Its *exits* are reviewer events (R20), and reviewer
+events on pre-manifest claims stay allowed, each carrying its reviewer session's
+`run_id` (R68). Fixtures construct row 7 the way a migration would, below the
+writer.
 """
 
 from __future__ import annotations
 
 import json
 import sqlite3
+import sys
 import uuid
+from pathlib import Path
 from datetime import datetime, timezone
 
 from engine.core.effective import (
@@ -41,7 +57,8 @@ from engine.core.effective import (
 __all__ = [
     "EventRefused", "ReviewerDecisionAmbiguous", "AgainstReferenceIncomplete",
     "AcceptAgainstMultipleClaims", "CellNotAssigned", "ArmConfigurationFrozen",
-    "UnknownArm", "PRE_MANIFEST",
+    "RunLinkRefused", "ClaimOnPreManifestArm", "ClaimOnRetiredArm", "ArmNotInRun",
+    "UnknownArm", "PRE_MANIFEST", "PRE_MANIFEST_MARKER",
     "mint_extraction_uid", "make_claim_id", "register_arm", "retire_arm",
     "write_field_event", "write_paper_event",
 ]
@@ -68,7 +85,89 @@ class CellNotAssigned(EventRefused):
 
 
 class ArmConfigurationFrozen(EventRefused):
-    """R21: an arm holding a claim cannot be re-pinned; a new configuration is a new arm."""
+    """R21/R59: a claimed, pinned or pre-manifest arm cannot be re-pinned; a new
+    configuration is a new arm."""
+
+
+class RunLinkRefused(EventRefused):
+    """R68: every event carries a run; only a migration writes 'pre-manifest'."""
+
+
+class ClaimOnPreManifestArm(EventRefused):
+    """R59: a pre-manifest arm never pins and accepts no new claims."""
+
+
+class ClaimOnRetiredArm(EventRefused):
+    """R21: a retired arm accepts no new claims; its claims stand."""
+
+
+class ArmNotInRun(EventRefused):
+    """R10: a claim on a model arm whose configuration the run did not pin."""
+
+
+#: The event-row marker for seeded, pre-manifest rows (R68). Migration 020
+#: re-declares it; a test asserts the two agree.
+PRE_MANIFEST_MARKER = "pre-manifest"
+
+_MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
+_MISSING = object()
+
+
+def _called_from_migration(depth: int = 3) -> bool:
+    """True when the writer's caller is a numbered migration module.
+
+    Applied migration 017 calls `write_paper_event(..., run_marker="pre-manifest")`
+    and its text is checksummed, so it cannot be changed to pass anything else.
+    The caller's FILE is the only identity it has; a keyword a migration would
+    have to pass would be one 017 does not pass.
+    """
+    frame = sys._getframe(depth)
+    try:
+        return Path(frame.f_code.co_filename).resolve().parent == _MIGRATIONS_DIR
+    finally:
+        del frame
+
+
+def _run_link(conn, run_id, run_marker, *, migration: bool) -> tuple:
+    """R68: resolve (run_id, run_marker) or refuse."""
+    if run_marker is not None and not migration:
+        raise RunLinkRefused(
+            f"event refused: run_marker={run_marker!r} may be written only by a "
+            "migration (R68). A new event carries its run's run_id instead.")
+    if run_id is _MISSING or run_id is None:
+        if migration and run_marker == PRE_MANIFEST_MARKER:
+            return None, run_marker
+        raise RunLinkRefused(
+            "event refused: run_id is required (R68). Every event a run writes "
+            "carries that run's manifest id; a reviewer's session is a run of kind "
+            "'review_session'. Only seeded rows carry no run, marked 'pre-manifest'.")
+    if not conn.execute("SELECT 1 FROM run_manifests WHERE run_id = ?", (run_id,)).fetchone():
+        raise RunLinkRefused(f"event refused: run_id {run_id} names no run manifest (R68)")
+    return run_id, None
+
+
+def _refuse_claim_on_arm(conn, arm: str, run_id) -> None:
+    """R59, R21, R10 — a claim may land only on a live arm its run pinned."""
+    row = conn.execute(
+        "SELECT arm_kind, configuration_marker, retired_at FROM arms WHERE arm_name = ?",
+        (arm,)).fetchone()
+    if row is None:
+        return  # the FK refuses an unknown arm, naming it
+    kind, marker, retired = row
+    if marker == PRE_MANIFEST:
+        raise ClaimOnPreManifestArm(
+            f"claim refused: arm {arm!r} was registered pre-manifest; it never pins "
+            "and accepts no new claims (R59). A new configuration is a new arm (R10).")
+    if retired is not None:
+        raise ClaimOnRetiredArm(
+            f"claim refused: arm {arm!r} was retired at {retired}; a retired arm "
+            "accepts no new claims, its existing claims stand (R21).")
+    if kind == "model" and run_id is not None and not conn.execute(
+            "SELECT 1 FROM run_stage_configs WHERE run_id = ? AND arm_name = ?",
+            (run_id, arm)).fetchone():
+        raise ArmNotInRun(
+            f"claim refused: run {run_id} did not pin arm {arm!r}, so this write's "
+            "configuration is not its declared arm's (R10).")
 
 
 def _now() -> str:
@@ -115,15 +214,23 @@ def repin_arm_configuration(conn, arm_name, configuration) -> None:
 def write_field_event(conn, *, event_type, paper_id, field_name, arm,
                       claim_id=None, extraction_uid=None, value=None,
                       source_snippet=None, actor_kind, actor_role, actor_name,
-                      actor_digest=None, occurred_at=None, run_id=None,
-                      run_marker="pre-manifest", prior_event_id=None,
+                      actor_digest=None, occurred_at=None, run_id=_MISSING,
+                      run_marker=None, prior_event_id=None,
                       presented_context_sha256=None, reason=None, payload=None,
                       against_claims=(), against_decisions=(), sentinels=frozenset(),
                       commit=True) -> int:
-    """Append one `field_events` row and its against-set, or refuse."""
+    """Append one `field_events` row and its against-set, or refuse.
+
+    `run_id` is required (R68). `run_marker` is accepted only from a migration.
+    """
+    run_id, run_marker = _run_link(conn, run_id, run_marker,
+                                   migration=_called_from_migration(2))
     against_claims = set(against_claims)
     against_decisions = set(against_decisions)
     is_reviewer = event_type in REVIEWER_EVENT_TYPES and actor_role == "reviewer"
+
+    if not is_reviewer and event_type != "state_at_migration":
+        _refuse_claim_on_arm(conn, arm, run_id)
 
     if is_reviewer:
         if not is_assigned(conn, arm, paper_id):
@@ -193,10 +300,14 @@ def write_field_event(conn, *, event_type, paper_id, field_name, arm,
 
 def write_paper_event(conn, *, event_type, paper_id, to_state, from_state=None,
                       actor_kind, actor_role, actor_name, actor_digest=None,
-                      occurred_at=None, run_id=None, run_marker="pre-manifest",
+                      occurred_at=None, run_id=_MISSING, run_marker=None,
                       prior_event_id=None, presented_context_sha256=None,
                       reason=None, reason_code=None, stage_name=None,
                       payload=None, commit=True) -> int:
+    """Append one `paper_events` row. `run_id` is required (R68); `run_marker`
+    is accepted only from a migration (017's seed is the one caller that passes it)."""
+    run_id, run_marker = _run_link(conn, run_id, run_marker,
+                                   migration=_called_from_migration(2))
     cur = conn.execute(
         "INSERT INTO paper_events (event_uid, event_type, occurred_at, recorded_at, "
         "actor_kind, actor_role, actor_name, actor_digest, run_id, run_marker, "

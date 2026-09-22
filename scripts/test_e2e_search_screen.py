@@ -12,7 +12,10 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from engine.agents.screener import run_screening, DEFAULT_PRIMARY_MODEL as SCREENER_MODEL
+from engine.agents.screener import run_screening
+from engine.core.effective_config import stage_config
+
+SCREENER_MODEL = stage_config("abstract_screen_primary").model  # the resolver's declared default
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.search.dedup import deduplicate

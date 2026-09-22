@@ -1,7 +1,8 @@
 """Cross-model audit agent to verify extractions.
 
-Default model: qwen3:32b. Override via auditor_model in Review Spec YAML
-or the model parameter on individual functions.
+Model and options come from the one resolver (`engine/core/effective_config.py`,
+stage `audit`): `auditor_model` in the Review Spec if set, else the spec model's
+declared `audit.model`, or the `model` parameter on individual functions.
 """
 
 import json
@@ -18,12 +19,11 @@ from engine.agents.models import EvidenceSpan
 from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
+from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.utils.ollama_client import ollama_chat
 from engine.core.codebook import load_codebook_beside
 
 logger = logging.getLogger(__name__)
-
-DEFAULT_AUDITOR_MODEL = "gemma3:27b"
 
 # Fields at these tiers skip grep and go straight to semantic verification
 SEMANTIC_ONLY_TIERS = {4}
@@ -107,13 +107,31 @@ def grep_verify(source_snippet: str, paper_text: str) -> bool:
 def semantic_verify(
     span: EvidenceSpan, paper_text: str, field_type: str = "text",
     model: str | None = None, ollama_options: dict | None = None,
+    *, cfg: EffectiveConfig | None = None,
 ) -> AuditVerdict:
     """Use an LLM to verify if extracted value matches the source snippet.
 
     For categorical fields, the prompt asks whether the source text supports
     the classification rather than whether it contains the exact phrase.
+
+    `cfg` is the resolved `audit` stage; without one the spec model's declared
+    defaults apply. `ollama_options` is a caller override merged over the
+    resolved options (only `scripts/eval_auditor_models.py` passes one).
     """
-    model = model or DEFAULT_AUDITOR_MODEL
+    cfg = (cfg or stage_config("audit", None, model=model))
+    if model is not None and model != cfg.model:
+        cfg = cfg.with_model(model)
+    cfg = cfg.with_options(ollama_options)
+    response = ollama_chat(
+        messages=build_audit_messages(span, field_type=field_type), **cfg.kwargs())
+
+    raw = response.message.content or ""
+    return AuditVerdict.model_validate_json(raw)
+
+
+def build_audit_messages(span: EvidenceSpan, field_type: str = "text") -> list[dict]:
+    """The message list `semantic_verify` sends. One builder for the call and
+    for the resolver's prompt hash (R60)."""
     if field_type == "categorical":
         verification_question = (
             f"Does the source snippet provide sufficient evidence to classify "
@@ -144,29 +162,20 @@ Source snippet from paper: {span.source_snippet}
 
 Respond with JSON: {{"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}}"""
 
-    response = ollama_chat(
-        model=model,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are an audit agent verifying data extractions from "
-                    "scientific papers. For free-text fields, be strict: flag anything "
-                    "not clearly supported by the source snippet. For categorical fields, "
-                    "verify that the source text reasonably supports the chosen category — "
-                    "the category label does not need to appear verbatim. "
-                    "Respond ONLY with JSON."
-                ),
-            },
-            {"role": "user", "content": prompt},
-        ],
-        format=AuditVerdict.model_json_schema(),
-        options={**{"temperature": 0}, **(ollama_options or {})},
-        think=False,
-    )
-
-    raw = response.message.content or ""
-    return AuditVerdict.model_validate_json(raw)
+    return [
+        {
+            "role": "system",
+            "content": (
+                "You are an audit agent verifying data extractions from "
+                "scientific papers. For free-text fields, be strict: flag anything "
+                "not clearly supported by the source snippet. For categorical fields, "
+                "verify that the source text reasonably supports the chosen category — "
+                "the category label does not need to appear verbatim. "
+                "Respond ONLY with JSON."
+            ),
+        },
+        {"role": "user", "content": prompt},
+    ]
 
 
 # ── Single Span Audit ────────────────────────────────────────────────
@@ -177,6 +186,7 @@ def audit_span(
     field_tier: int = 1, model: str | None = None,
     ollama_options: dict | None = None,
     non_value_tokens: frozenset[str] = frozenset(),
+    *, cfg: EffectiveConfig | None = None,
 ) -> tuple[str, str]:
     """Audit a single evidence span. Returns (audit_status, reasoning).
 
@@ -189,7 +199,6 @@ def audit_span(
     `non_value_tokens` (ELICIT-DESIGN-02 D1/D2) comes from the codebook via
     `classes.non_value_tokens_for`, never from a list here.
     """
-    model = model or DEFAULT_AUDITOR_MODEL
     source_snippet = span_data.get("source_snippet", "")
     value = span_data.get("value", "")
 
@@ -237,7 +246,8 @@ def audit_span(
         confidence=span_data.get("confidence", 0.5),
         tier=field_tier,
     )
-    verdict = semantic_verify(span, paper_text, field_type=field_type, model=model, ollama_options=ollama_options)
+    verdict = semantic_verify(span, paper_text, field_type=field_type, model=model,
+                              ollama_options=ollama_options, cfg=cfg)
     semantic_pass = verdict.status == "verified"
 
     # Fix D: 4-state outcome
@@ -373,16 +383,16 @@ def run_audit(
     If spec is provided, field types and tiers from the extraction schema
     are used to route categorical fields and Tier 4 fields appropriately.
 
-    Model resolution: explicit model param > spec.auditor_model > DEFAULT_AUDITOR_MODEL.
+    Model resolution: explicit model param > spec.auditor_model > the spec
+    model's declared `audit.model` (the resolver, stage `audit`).
     """
-    if model is None and spec and hasattr(spec, "auditor_model") and spec.auditor_model:
-        model = spec.auditor_model
-    model = model or DEFAULT_AUDITOR_MODEL
+    cfg = stage_config("audit", spec, model=model)
+    model = cfg.model
     logger.info("Audit model: %s", model)
 
     # Pre-flight: verify auditor model is loaded and responsive
     from engine.utils.ollama_preflight import require_preflight
-    require_preflight([model], runner_name="Audit")
+    require_preflight([model], runner_name="Audit", spec=spec)
 
     # Build field_name → (type, tier) lookup from spec
     field_type_map: dict[str, str] = {}
@@ -444,7 +454,7 @@ def run_audit(
             try:
                 status, reasoning = audit_span(
                     span_data, paper_text, field_type=ft, field_tier=tier,
-                    model=model, non_value_tokens=_non_value_tokens,
+                    model=model, non_value_tokens=_non_value_tokens, cfg=cfg,
                 )
             except (json.JSONDecodeError, ValidationError) as exc:
                 logger.warning(

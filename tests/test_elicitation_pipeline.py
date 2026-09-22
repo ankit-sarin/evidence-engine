@@ -346,7 +346,7 @@ def test_retry_is_bounded_and_the_paper_is_failed(tmp_path, monkeypatch):
 
     def always_uncited(*a, **kw):
         calls["n"] += 1
-        raise UncitedValueError(paper_id=1, arm=E.MODEL,
+        raise UncitedValueError(paper_id=1, arm="deepseek-r1:32b",
                                 offenders=(("robot_platform", VALUE_WITHOUT_CITATION),),
                                 mode=STRICT, attempt=calls["n"])
 

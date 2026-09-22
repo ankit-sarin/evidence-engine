@@ -9,33 +9,25 @@ import openai
 
 from engine.core.completeness import IncompleteExtractionError
 
-from engine.cloud.base import CloudExtractorBase
+from engine.cloud.base import CloudExtractorBase, outbound_messages
 
 logger = logging.getLogger(__name__)
 
-# o4-mini pricing defaults (March 2026) — used when spec has no cloud_models
-_DEFAULT_MODEL = "o4-mini-2025-04-16"
-_DEFAULT_COST_INPUT_PER_M = 1.10   # $/1M input tokens
-_DEFAULT_COST_OUTPUT_PER_M = 4.40  # $/1M output tokens
-
-# Module-level aliases for backward compatibility with tests that import these
-COST_INPUT_PER_M = _DEFAULT_COST_INPUT_PER_M
-COST_OUTPUT_PER_M = _DEFAULT_COST_OUTPUT_PER_M
-MODEL_STRING = _DEFAULT_MODEL
 
 
 class OpenAIExtractor(CloudExtractorBase):
     """Cloud extraction using OpenAI o4-mini with reasoning_effort=high."""
 
-    ARM = "openai_o4_mini_high"
+    PROVIDER = "openai"
 
     def __init__(
         self,
         db_path: str,
         review_spec_path: str,
         api_key: str | None = None,
+        arm_name: str | None = None,
     ):
-        super().__init__(db_path, review_spec_path)
+        super().__init__(db_path, review_spec_path, arm_name=arm_name)
         key = api_key or os.environ.get("OPENAI_API_KEY")
         if not key:
             raise ValueError(
@@ -43,43 +35,20 @@ class OpenAIExtractor(CloudExtractorBase):
             )
         self.client = openai.OpenAI(api_key=key)
 
-        # Read model/cost config from spec; fall back to defaults
-        cloud_cfg = getattr(self.spec, "cloud_models", None)
-        openai_cfg = getattr(cloud_cfg, "openai", None) if cloud_cfg else None
-        if openai_cfg:
-            self.model_string = openai_cfg.model
-            self.cost_input_per_m = openai_cfg.cost_input_per_m
-            self.cost_output_per_m = openai_cfg.cost_output_per_m
-        else:
-            self.model_string = _DEFAULT_MODEL
-            self.cost_input_per_m = _DEFAULT_COST_INPUT_PER_M
-            self.cost_output_per_m = _DEFAULT_COST_OUTPUT_PER_M
-            logger.warning(
-                "No cloud_models.openai in review spec — using defaults: "
-                "model=%s, cost_in=$%.2f/M, cost_out=$%.2f/M",
-                self.model_string, self.cost_input_per_m, self.cost_output_per_m,
-            )
+    def request_payload(self, prompt: str) -> dict:
+        """The complete outbound request: model, system + user messages, and the
+        arm's declared parameters (C16). Hashed into `run_calls.request_hash`."""
+        return {"model": self.model_string,
+                "messages": outbound_messages(prompt),
+                **dict(self.stage_cfg.options)}
+
+    def _create(self, **payload):
+        return self.client.chat.completions.create(**payload)
 
     def extract_paper(self, paper_id: int, parsed_text: str) -> dict:
         """Extract a single paper via OpenAI o4-mini."""
         prompt = self.build_prompt(parsed_text)
-
-        response = self.client.chat.completions.create(
-            model=self.model_string,
-            reasoning_effort="high",
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a systematic review data extractor. "
-                        "Output valid JSON matching the requested schema. "
-                        "Be thorough and cite source text for every extracted value."
-                    ),
-                },
-                {"role": "user", "content": prompt},
-            ],
-            response_format={"type": "json_object"},
-        )
+        response = self.send(paper_id, prompt)
 
         # Extract content. finish_reason is read here and nowhere else in the
         # request path — INSTRUMENT-01 captures it because SPANLOSS-01 could not
@@ -145,7 +114,7 @@ class OpenAIExtractor(CloudExtractorBase):
         max_cost_usd: float | None = None,
     ) -> dict:
         """Run extraction on pending papers."""
-        pending = self.get_pending_papers(self.ARM)
+        pending = self.get_pending_papers(self.arm_name)
         total = len(pending)
         if max_papers:
             pending = pending[:max_papers]
@@ -226,7 +195,7 @@ class OpenAIExtractor(CloudExtractorBase):
             try:
                 self.store_result(
                     paper_id=pid,
-                    arm=self.ARM,
+                    arm=self.arm_name,
                     model_string=self.model_string,
                     extracted_data=result["extracted_data"],
                     reasoning_trace=result["reasoning_trace"],

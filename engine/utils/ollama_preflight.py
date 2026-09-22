@@ -15,6 +15,9 @@ import ollama
 
 from engine.utils.ollama_client import ollama_chat
 
+#: The probe's message list — one builder for the call and the prompt hash (R60).
+PREFLIGHT_MESSAGES = ({"role": "user", "content": "Respond with OK"},)
+
 logger = logging.getLogger(__name__)
 
 _VRAM_BUDGET_GB = 100.0  # usable VRAM on DGX Spark
@@ -50,16 +53,21 @@ def _get_model_vram_gb(model_name: str) -> float:
     return 0.0
 
 
-def check_model(model_name: str, timeout: int = 30) -> ModelResult:
-    """Send a minimal completion to verify model loads and responds."""
+def check_model(model_name: str, timeout: int = 30, *, spec=None) -> ModelResult:
+    """Send a minimal completion to verify model loads and responds.
+
+    A generation call (R63): its options come from the resolver's `preflight`
+    stage — the spec's `preflight` block, or the spec model's declared defaults.
+    """
+    from engine.core.effective_config import stage_config
+    cfg = stage_config("preflight", spec, model=model_name)
     start = time.time()
     try:
         ollama_chat(
-            model=model_name,
-            messages=[{"role": "user", "content": "Respond with OK"}],
-            options={"temperature": 0, "num_predict": 4},
+            messages=[dict(m) for m in PREFLIGHT_MESSAGES],
             max_retries=0,
             wall_timeout=60.0,
+            **cfg.kwargs(),
         )
         elapsed = time.time() - start
         vram = _get_model_vram_gb(model_name)
@@ -87,12 +95,12 @@ def _model_name_matches(loaded_name: str, requested: str) -> bool:
     return loaded_base == requested_base or loaded_name.startswith(requested)
 
 
-def preflight_check(models: list[str], timeout: int = 30) -> PreflightResult:
+def preflight_check(models: list[str], timeout: int = 30, *, spec=None) -> PreflightResult:
     """Check all models and return aggregate result."""
     results = []
     for name in models:
         logger.info("Checking model: %s", name)
-        result = check_model(name, timeout=timeout)
+        result = check_model(name, timeout=timeout, spec=spec)
         if result.status == "ok":
             logger.info(
                 "  %s: OK (%.1fs, %.1f GB VRAM)", name,
@@ -222,7 +230,8 @@ def check_ollama_env() -> None:
     )
 
 
-def require_preflight(models: list[str], runner_name: str, timeout: int = 30) -> None:
+def require_preflight(models: list[str], runner_name: str, timeout: int = 30,
+                      *, spec=None) -> None:
     """Run preflight check; abort with clear message on failure.
 
     Call this at the top of batch runners before the main loop.
@@ -231,7 +240,7 @@ def require_preflight(models: list[str], runner_name: str, timeout: int = 30) ->
     check_ollama_env()
 
     # Step 2: verify model availability
-    result = preflight_check(models, timeout=timeout)
+    result = preflight_check(models, timeout=timeout, spec=spec)
     if not result.success:
         msg = (
             f"{runner_name} pre-flight check failed: {result.error_summary}. "

@@ -25,7 +25,9 @@ from engine.core.effective import (
     effective_state, effective_value, live_claims,
 )
 
-_016 = importlib.import_module("engine.migrations.016_event_store")
+from tests._event_store_fixture import (
+    fixture_run, seed_claim, seed_pre_manifest_paper_event, upgrade_event_store,
+)
 
 #: The six the codebook declares. Passed in, never imported into the reader:
 #: the codebook is the only source, and a copy inside the reader would be the
@@ -36,12 +38,19 @@ FIELD = "primary_outcome_value"
 
 
 @pytest.fixture
-def db():
-    conn = sqlite3.connect(":memory:")
+def db(tmp_path):
+    # MANIFEST-01 Phase 2a (R68): a file, not :memory:, because the event store
+    # is now brought to the post-020 shape by the migrations themselves, and
+    # every event is written under a run.
+    path = tmp_path / "reader.db"
+    conn = sqlite3.connect(path)
     conn.execute("CREATE TABLE papers (id INTEGER PRIMARY KEY, status TEXT)")
     conn.executemany("INSERT INTO papers (id, status) VALUES (?, 'AI_AUDIT_COMPLETE')",
                      [(i,) for i in range(1, 11)])
-    _016.create_schema(conn)
+    conn.commit()
+    conn.close()
+    upgrade_event_store(path)
+    conn = sqlite3.connect(path)
     events.register_arm(conn, "local", "model",
                         configuration={"model": "deepseek-r1:32b", "temperature": 0})
     events.register_arm(conn, "cloud", "model", configuration={"model": "o4-mini"})
@@ -49,19 +58,33 @@ def db():
                         configuration_marker=PRE_MANIFEST)
     events.register_arm(conn, "human_A", "human_extractor",
                         configuration={"extractor": "A"})
+    fixture_run(conn, "local")
+    fixture_run(conn, "cloud")
     conn.commit()
     yield conn
     conn.close()
 
 
 # ── helpers ───────────────────────────────────────────────────────────
+def _run(db):
+    """R68: every event carries a run. One fixture run pins both model arms."""
+    return fixture_run(db)
+
+
 def assert_claim(db, paper, value, *, arm="local", claim_id=None, uid=None,
                  snippet="a quote", etype="asserted"):
+    if arm == "premanifest_a":
+        # R59: no new claim lands on a pre-manifest arm. Row 7's claims are the
+        # ones a migration seeded, so they are built the way a migration builds
+        # them — below the writer (MANIFEST-01 Phase 2a, B5).
+        return seed_claim(db, arm=arm, paper_id=paper, field_name=FIELD, value=value,
+                          claim_id=claim_id, extraction_uid=uid, source_snippet=snippet,
+                          event_type=etype)
     return events.write_field_event(
         db, event_type=etype, paper_id=paper, field_name=FIELD, arm=arm,
         claim_id=claim_id, extraction_uid=uid, value=value, source_snippet=snippet,
         actor_kind="model", actor_role="extractor", actor_name="deepseek-r1:32b",
-        sentinels=SENTINELS)
+        sentinels=SENTINELS, run_id=_run(db))
 
 
 def locate(db, paper, claim_id, located, *, arm="local"):
@@ -70,7 +93,7 @@ def locate(db, paper, claim_id, located, *, arm="local"):
         claim_id=claim_id, actor_kind="engine", actor_role="system",
         actor_name="locator", payload={"located": located, "parsed_text_id": "pt-1",
                                        "threshold": 0.85, "locator_version": "0"},
-        sentinels=SENTINELS)
+        sentinels=SENTINELS, run_id=_run(db))
 
 
 def supersede(db, paper, superseded_claim_ids, *, arm="local"):
@@ -78,7 +101,7 @@ def supersede(db, paper, superseded_claim_ids, *, arm="local"):
         db, event_type="superseded", paper_id=paper, field_name=FIELD, arm=arm,
         claim_id=sorted(superseded_claim_ids)[0], actor_kind="engine",
         actor_role="system", actor_name="write-path",
-        against_claims=superseded_claim_ids, sentinels=SENTINELS)
+        against_claims=superseded_claim_ids, sentinels=SENTINELS, run_id=_run(db))
 
 
 def review(db, paper, etype, *, against=(), against_decisions=(), value=None,
@@ -88,7 +111,7 @@ def review(db, paper, etype, *, against=(), against_decisions=(), value=None,
         claim_id=sorted(against)[0] if against else "n/a", value=value,
         actor_kind="human", actor_role="reviewer", actor_name=who,
         against_claims=against, against_decisions=against_decisions,
-        presented_context_sha256="ctx-" + etype, sentinels=SENTINELS)
+        presented_context_sha256="ctx-" + etype, sentinels=SENTINELS, run_id=_run(db))
 
 
 def read(db, paper, *, arm="local"):
@@ -289,7 +312,7 @@ def test_row15_contract_unmet_is_the_engines_failure(db):
         db, event_type="contract_unmet", paper_id=1, field_name=FIELD, arm="local",
         claim_id=cid, actor_kind="engine", actor_role="system", actor_name="pipeline",
         payload={"violation_codes": ["INDEX_MALFORMED"], "attempts": 2},
-        sentinels=SENTINELS)
+        sentinels=SENTINELS, run_id=_run(db))
     r = read(db, 1)
     assert r.state == CONTRACT_UNMET and r.rule_row == 15
     assert r.provenance["violation_codes"] == ["INDEX_MALFORMED"]
@@ -308,9 +331,10 @@ def test_row16_arms_are_compared_never_merged_the_reader_is_per_arm(db):
 
 
 def test_row17_state_at_migration_is_effective_states_row_not_a_fields(db):
-    events.write_paper_event(
-        db, event_type="state_at_migration", paper_id=3, to_state="eligible",
-        actor_kind="engine", actor_role="system", actor_name="017_seed_event_store",
+    # B5 (R68): only a migration writes a pre-manifest row, so the seed row is
+    # built the way 017 built it, below the writer.
+    seed_pre_manifest_paper_event(
+        db, 3, actor_name="017_seed_event_store",
         payload={"source": "state at migration",
                  "note": "history not reconstructable from the record"})
     s = effective_state(db, 3)
@@ -375,7 +399,7 @@ def test_d1_3_an_auditor_verdict_is_provenance_never_a_field_state(db):
         db, event_type="asserted", paper_id=1, field_name=FIELD, arm="local",
         claim_id=cid, value="5", source_snippet="q", actor_kind="model",
         actor_role="extractor", actor_name="deepseek-r1:32b",
-        payload={"auditor_verdict": "flagged"}, sentinels=SENTINELS)
+        payload={"auditor_verdict": "flagged"}, sentinels=SENTINELS, run_id=_run(db))
     r = read(db, 1)
     assert r.state == ASSERTED_WITHOUT_EVIDENCE      # R18/Q7: not a field state
     assert "endorsed" not in r.provenance            # so the work is still owed

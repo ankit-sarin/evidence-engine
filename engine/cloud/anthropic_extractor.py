@@ -10,33 +10,25 @@ import anthropic
 
 from engine.core.completeness import IncompleteExtractionError
 
-from engine.cloud.base import CloudExtractorBase
+from engine.cloud.base import CloudExtractorBase, outbound_messages
 
 logger = logging.getLogger(__name__)
 
-# Sonnet 4.6 pricing defaults (March 2026) — used when spec has no cloud_models
-_DEFAULT_MODEL = "claude-sonnet-4-6"
-_DEFAULT_COST_INPUT_PER_M = 3.00    # $/1M input tokens
-_DEFAULT_COST_OUTPUT_PER_M = 15.00  # $/1M output tokens
-
-# Module-level aliases for backward compatibility with tests that import these
-COST_INPUT_PER_M = _DEFAULT_COST_INPUT_PER_M
-COST_OUTPUT_PER_M = _DEFAULT_COST_OUTPUT_PER_M
-MODEL_STRING = _DEFAULT_MODEL
 
 
 class AnthropicExtractor(CloudExtractorBase):
     """Cloud extraction using Anthropic Claude Sonnet 4.6 with extended thinking."""
 
-    ARM = "anthropic_sonnet_4_6"
+    PROVIDER = "anthropic"
 
     def __init__(
         self,
         db_path: str,
         review_spec_path: str,
         api_key: str | None = None,
+        arm_name: str | None = None,
     ):
-        super().__init__(db_path, review_spec_path)
+        super().__init__(db_path, review_spec_path, arm_name=arm_name)
         key = api_key or os.environ.get("ANTHROPIC_API_KEY")
         if not key:
             raise ValueError(
@@ -44,43 +36,22 @@ class AnthropicExtractor(CloudExtractorBase):
             )
         self.client = anthropic.Anthropic(api_key=key)
 
-        # Read model/cost config from spec; fall back to defaults
-        cloud_cfg = getattr(self.spec, "cloud_models", None)
-        anth_cfg = getattr(cloud_cfg, "anthropic", None) if cloud_cfg else None
-        if anth_cfg:
-            self.model_string = anth_cfg.model
-            self.cost_input_per_m = anth_cfg.cost_input_per_m
-            self.cost_output_per_m = anth_cfg.cost_output_per_m
-        else:
-            self.model_string = _DEFAULT_MODEL
-            self.cost_input_per_m = _DEFAULT_COST_INPUT_PER_M
-            self.cost_output_per_m = _DEFAULT_COST_OUTPUT_PER_M
-            logger.warning(
-                "No cloud_models.anthropic in review spec — using defaults: "
-                "model=%s, cost_in=$%.2f/M, cost_out=$%.2f/M",
-                self.model_string, self.cost_input_per_m, self.cost_output_per_m,
-            )
+    def request_payload(self, prompt: str) -> dict:
+        """The complete outbound request: model, parameters, the system
+        instruction and the user turn (C16). Hashed into `run_calls.request_hash`."""
+        system, user = outbound_messages(prompt)
+        return {"model": self.model_string,
+                **dict(self.stage_cfg.options),
+                "system": system["content"],
+                "messages": [user]}
+
+    def _create(self, **payload):
+        return self.client.messages.create(**payload)
 
     def extract_paper(self, paper_id: int, parsed_text: str) -> dict:
         """Extract a single paper via Anthropic Claude Sonnet 4.6."""
         prompt = self.build_prompt(parsed_text)
-
-        response = self.client.messages.create(
-            model=self.model_string,
-            max_tokens=16000,
-            thinking={
-                "type": "enabled",
-                "budget_tokens": 10000,
-            },
-            system=(
-                "You are a systematic review data extractor. "
-                "Output valid JSON matching the requested schema. "
-                "Be thorough and cite source text for every extracted value."
-            ),
-            messages=[
-                {"role": "user", "content": prompt},
-            ],
-        )
+        response = self.send(paper_id, prompt)
 
         # Anthropic's equivalent of finish_reason. Read from the response only —
         # the request above is untouched (INSTRUMENT-01).
@@ -166,7 +137,7 @@ class AnthropicExtractor(CloudExtractorBase):
         max_cost_usd: float | None = None,
     ) -> dict:
         """Run extraction on pending papers."""
-        pending = self.get_pending_papers(self.ARM)
+        pending = self.get_pending_papers(self.arm_name)
         total = len(pending)
         if max_papers:
             pending = pending[:max_papers]
@@ -252,7 +223,7 @@ class AnthropicExtractor(CloudExtractorBase):
             try:
                 self.store_result(
                     paper_id=pid,
-                    arm=self.ARM,
+                    arm=self.arm_name,
                     model_string=self.model_string,
                     extracted_data=result["extracted_data"],
                     reasoning_trace=result["reasoning_trace"],

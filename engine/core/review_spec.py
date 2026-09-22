@@ -5,10 +5,13 @@ import json
 import re
 from datetime import date
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Annotated, Any, Literal, Optional, Union
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
+from pydantic import (
+    BaseModel, ConfigDict, Field, StrictInt, ValidationError, field_validator,
+    model_validator,
+)
 
 
 # ── Strictness ───────────────────────────────────────────────────────
@@ -26,6 +29,28 @@ class _SpecModel(BaseModel):
     """
 
     model_config = ConfigDict(extra="forbid")
+
+
+#: A sampling temperature, typed so the literal the spec (or a declared default)
+#: carries is the literal SENT: `0` stays the JSON integer `0` and `0.0` stays
+#: `0.0`. R66 — session 7 changes what is recorded, not what is sent — and a plain
+#: `float` field would turn every YAML `0` into `0.0` on the wire at the sites
+#: that have always sent the integer.
+Temperature = Annotated[Union[StrictInt, float], Field(ge=0, le=1)]
+
+
+class _UnsentOptions(_SpecModel):
+    """`seed` and `num_ctx`, declared so the manifest can say where they come from.
+
+    R66/R69: `None` means **not sent** — the model's Modelfile or the server
+    decides, and the manifest records the option with source
+    `modelfile_or_server`. That is the effective value measured at every
+    non-judge site in MANIFEST-01 Phase 1 P1. Setting one here makes the site
+    send it; doing that everywhere is session-9 work measured by a smoke run.
+    """
+
+    seed: Optional[int] = Field(default=None, description="None = not sent (R66)")
+    num_ctx: Optional[int] = Field(default=None, ge=512, description="None = not sent (R66)")
 
 
 # ── PICO ─────────────────────────────────────────────────────────────
@@ -65,23 +90,28 @@ class SearchStrategy(_SpecModel):
 # ── Screening Criteria ───────────────────────────────────────────────
 
 
-class ScreeningModels(_SpecModel):
+class ScreeningModels(_UnsentOptions):
     """Model configuration for dual-model screening."""
 
     primary: str = Field(default="qwen3:8b", description="Fast high-recall primary screener")
     verification: str = Field(default="qwen3:32b", description="Larger model for verification of includes")
+    temperature: Temperature = Field(default=0, description="Sent as the integer 0 since the first run")
+    think: bool = Field(default=False, description="Abstract screening never thinks")
 
 
-class FTScreeningModels(_SpecModel):
+class FTScreeningModels(_UnsentOptions):
     """Model configuration for full-text screening."""
 
     primary: str = Field(default="qwen3.5:27b", description="Full-text primary screener")
     verifier: str = Field(default="gemma3:27b", description="Full-text verification model")
     think: bool = Field(default=False, description="Enable thinking mode (slow, not recommended)")
+    # A plain float, unlike the other stages: the FT sites have always sent
+    # the spec's value through this float field, so YAML `0` goes out as `0.0`
+    # and must keep doing so (R66).
     temperature: float = Field(default=0.0, ge=0.0, le=1.0)
 
 
-class ExtractionModels(_SpecModel):
+class ExtractionModels(_UnsentOptions):
     """Model configuration for the two-pass local extractor.
 
     `think` is declared per pass and always passed explicitly to Ollama.
@@ -97,7 +127,25 @@ class ExtractionModels(_SpecModel):
     extractor: str = Field(default="deepseek-r1:32b", description="Two-pass extraction model")
     pass1_think: bool = Field(default=True, description="Pass 1 is the reasoning pass — thinking ON")
     pass2_think: bool = Field(default=False, description="Pass 2 emits structured JSON — thinking OFF")
-    temperature: float = Field(default=0.0, ge=0.0, le=1.0)
+    temperature: Temperature = Field(
+        default=0,
+        description=(
+            "Every extraction call (both passes, the snippet retry, elicitation "
+            "Pass 1). Declared 0 because 0 is what the sites have always sent; "
+            "until session 7 this field reached no call at all (row C1)."
+        ),
+    )
+    retry_think: bool = Field(
+        default=False, description="The single-field snippet retry never thinks",
+    )
+    arm: Optional[str] = Field(
+        default=None,
+        description=(
+            "The spec-declared arm local extraction writes to (R10, R64). Must name "
+            "an `arms` entry with provider `ollama` and model == `extractor`. None: "
+            "no extraction run can open a manifest."
+        ),
+    )
     elicitation: bool = Field(
         default=False,
         description=(
@@ -484,6 +532,9 @@ class PDFParsing(_SpecModel):
         default="qwen2.5vl:7b",
         description="Ollama vision model for OCR of scanned PDFs",
     )
+    vision_temperature: Temperature = Field(
+        default=0, description="Sent by the vision fallback on every page",
+    )
     vision_max_pages: int = Field(
         default=60, ge=1,
         description=(
@@ -543,22 +594,98 @@ class PDFParsing(_SpecModel):
     )
 
 
-# ── Cloud Models ────────────────────────────────────────────────────
+# ── Arms and cloud opt-in (S3g, R10, R12, R64) ──────────────────────
+
+#: Provider request parameters a model arm sends when its entry declares none.
+#: Declared here, in the spec model, because S3a puts every default in the spec
+#: model and none in module constants. The two cloud entries are what
+#: `OpenAIExtractor` and `AnthropicExtractor` have sent on every call to date.
+PROVIDER_DEFAULT_OPTIONS: dict[str, dict[str, Any]] = {
+    "ollama": {},
+    "openai": {"reasoning_effort": "high", "response_format": {"type": "json_object"}},
+    "anthropic": {"max_tokens": 16000,
+                  "thinking": {"type": "enabled", "budget_tokens": 10000}},
+}
+
+CLOUD_PROVIDERS = ("openai", "anthropic")
 
 
-class CloudModelConfig(_SpecModel):
-    """Configuration for a single cloud extraction arm."""
+class ArmSpec(_SpecModel):
+    """One arm of the review (R10, R12): a name, a kind and one configuration.
 
-    model: str = Field(description="Model identifier (e.g., 'o4-mini-2025-04-16')")
-    cost_input_per_m: float = Field(description="Cost per 1M input tokens (USD)")
-    cost_output_per_m: float = Field(description="Cost per 1M output tokens (USD)")
+    A changed model or options is a new arm, never a newer claim in the old one;
+    the registry pins the resolved configuration at the arm's first manifest and
+    a later run that resolves differently refuses (R59).
+    """
+
+    name: str = Field(pattern=r"^[a-z][a-z0-9_]*$", max_length=64)
+    kind: Literal["model", "human"]
+    provider: Optional[Literal["ollama", "openai", "anthropic"]] = None
+    model: Optional[str] = None
+    options: Optional[dict[str, Any]] = Field(
+        default=None,
+        description="Provider request parameters; None takes PROVIDER_DEFAULT_OPTIONS",
+    )
+
+    @model_validator(mode="after")
+    def _kind_shape(self):
+        if self.kind == "model" and (self.provider is None or not self.model):
+            raise ValueError(f"arm {self.name!r}: a model arm declares provider and model")
+        if self.kind == "human" and (self.provider or self.model or self.options):
+            raise ValueError(f"arm {self.name!r}: a human arm declares no provider, model or options")
+        return self
+
+    def effective_options(self) -> dict[str, Any]:
+        if self.options is not None:
+            return dict(self.options)
+        return dict(PROVIDER_DEFAULT_OPTIONS.get(self.provider or "", {}))
 
 
-class CloudModels(_SpecModel):
-    """Configuration for cloud extraction arms (optional)."""
+class CloudPrice(_SpecModel):
+    input_per_m: float = Field(ge=0, description="USD per 1M input tokens")
+    output_per_m: float = Field(ge=0, description="USD per 1M output tokens")
 
-    openai: Optional[CloudModelConfig] = None
-    anthropic: Optional[CloudModelConfig] = None
+
+class CloudConfig(_SpecModel):
+    """Cloud arms are opt-in per run, declared here, off by default (R6, S3g).
+
+    `enabled_arms` empty means nothing leaves the machine. A run's `--arm` must
+    name a non-empty subset of it or the run refuses before any request.
+    """
+
+    enabled_arms: list[str] = Field(default_factory=list)
+    prices: dict[str, CloudPrice] = Field(
+        default_factory=dict,
+        description="Required for every enabled arm; there is no default price",
+    )
+
+
+class OllamaRuntime(_SpecModel):
+    """Request-level settings sent on every Ollama call."""
+
+    keep_alive: Union[StrictInt, str] = Field(
+        default=-1,
+        description=(
+            "Sent per request so the manifest's value is the one in force (the "
+            "service's OLLAMA_KEEP_ALIVE lives in a systemd drop-in the manifest "
+            "cannot see). -1 equals the service value, so behaviour is unchanged."
+        ),
+    )
+
+
+class AuditModels(_UnsentOptions):
+    """The semantic auditor's declared defaults (C19: formerly module constants)."""
+
+    model: str = Field(default="gemma3:27b", description="Used when `auditor_model` is unset")
+    temperature: Temperature = Field(default=0)
+    think: bool = Field(default=False)
+
+
+class PreflightConfig(_SpecModel):
+    """The model-health probe `check_model` sends (R63)."""
+
+    temperature: Temperature = Field(default=0)
+    num_predict: int = Field(default=4, ge=1)
 
 
 # ── PDF Quality Check ───────────────────────────────────────────────
@@ -581,7 +708,7 @@ class DistributionMonitorConfig(_SpecModel):
     )
 
 
-class PDFQualityCheck(_SpecModel):
+class PDFQualityCheck(_UnsentOptions):
     """Configuration for AI-based PDF quality classification."""
 
     enabled: bool = Field(default=True, description="Enable PDF quality check")
@@ -589,6 +716,7 @@ class PDFQualityCheck(_SpecModel):
         default="qwen2.5vl:7b",
         description="Ollama vision model for first-page classification",
     )
+    temperature: Temperature = Field(default=0)
     dpi: int = Field(
         default=150, ge=72, le=600,
         description="Render DPI for first-page image",
@@ -668,10 +796,17 @@ class ReviewSpec(_SpecModel):
         default_factory=PDFQualityCheck,
         description="Configuration for AI-based PDF quality classification.",
     )
-    cloud_models: Optional[CloudModels] = Field(
-        default=None,
-        description="Cloud extraction arm configuration (model names and cost rates).",
+    arms: list[ArmSpec] = Field(
+        default_factory=list,
+        description="Every arm of this review, local and cloud (R10, R12, R64).",
     )
+    cloud: CloudConfig = Field(
+        default_factory=CloudConfig,
+        description="Cloud opt-in; empty `enabled_arms` = nothing leaves the machine.",
+    )
+    ollama: OllamaRuntime = Field(default_factory=OllamaRuntime)
+    audit: AuditModels = Field(default_factory=AuditModels)
+    preflight: PreflightConfig = Field(default_factory=PreflightConfig)
     pdf_parsing: PDFParsing = Field(
         default_factory=PDFParsing,
         description="PDF parsing thresholds and vision model configuration.",
@@ -680,6 +815,42 @@ class ReviewSpec(_SpecModel):
         default_factory=DistributionMonitorConfig,
         description="Thresholds for post-extraction distribution collapse detection.",
     )
+
+    @model_validator(mode="after")
+    def _arms_consistent(self):
+        names = [a.name for a in self.arms]
+        dupes = sorted({n for n in names if names.count(n) > 1})
+        if dupes:
+            raise ValueError(f"arms: duplicate name(s) {dupes}")
+        by_name = {a.name: a for a in self.arms}
+        for name in self.cloud.enabled_arms:
+            arm = by_name.get(name)
+            if arm is None or arm.provider not in CLOUD_PROVIDERS:
+                raise ValueError(
+                    f"cloud.enabled_arms names {name!r}, which is not a declared cloud arm")
+            if name not in self.cloud.prices:
+                raise ValueError(f"cloud.prices: enabled arm {name!r} has no price")
+        for name in self.cloud.prices:
+            arm = by_name.get(name)
+            if arm is None or arm.provider not in CLOUD_PROVIDERS:
+                raise ValueError(f"cloud.prices names {name!r}, which is not a declared cloud arm")
+        local = self.extraction_models.arm
+        if local is not None:
+            arm = by_name.get(local)
+            if arm is None or arm.provider != "ollama":
+                raise ValueError(
+                    f"extraction_models.arm {local!r} is not a declared ollama arm")
+            if arm.model != self.extraction_models.extractor:
+                raise ValueError(
+                    f"extraction_models.arm {local!r} declares model {arm.model!r} but "
+                    f"extraction_models.extractor is {self.extraction_models.extractor!r}")
+        return self
+
+    def arm(self, name: str) -> ArmSpec:
+        for a in self.arms:
+            if a.name == name:
+                return a
+        raise KeyError(f"no arm {name!r} declared in the spec")
 
     # ── Protocol hashing ─────────────────────────────────────────
 

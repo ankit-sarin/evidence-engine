@@ -1,5 +1,5 @@
 pydantic
-ollama
+ollama==0.6.1  # R75: pinned to the installed version the engine runs under; every run manifest records it
 biopython
 pyalex
 chromadb
@@ -12,7 +12,7 @@ docling==2.74.0  # pinned PARSE-GATE-06a: 2.74.0 + pydantic 2.12.5 is the
                  # combination whose PdfHyperlink URL validation the
                  # sanitized retry works around; docling-core is
                  # transitive (2.65.1 installed) and not listed here.
-openai
-anthropic
+openai==2.24.0  # R75
+anthropic==0.84.0  # R75
 tiktoken
 pysbd==0.3.4

@@ -99,13 +99,13 @@ def generate_methods_section(db: ReviewDatabase, spec: ReviewSpec) -> str:
     else:
         audit_model_str = _format_model_counts(audit_model_counts)
 
-    # Cloud models from spec
-    cloud_parts = []
-    if spec.cloud_models:
-        if spec.cloud_models.openai:
-            cloud_parts.append(f"OpenAI {spec.cloud_models.openai.model}")
-        if spec.cloud_models.anthropic:
-            cloud_parts.append(f"Anthropic {spec.cloud_models.anthropic.model}")
+    # Cloud arms the spec ENABLES (S3g). `cloud_models` was retired with the
+    # class-constant arm names (C20); an enabled arm is what a run could send.
+    _PROVIDER_LABEL = {"openai": "OpenAI", "anthropic": "Anthropic"}
+    cloud_parts = [
+        f"{_PROVIDER_LABEL[spec.arm(name).provider]} {spec.arm(name).model}"
+        for name in spec.cloud.enabled_arms
+    ]
 
     # ── Build methods text ───────────────────────────────────────
     methods = (

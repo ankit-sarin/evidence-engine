@@ -113,7 +113,8 @@ class _FakeDB:
 
 def test_uncited_value_never_reaches_the_database(tmp_path):
     """The guard raises before add_extraction_atomic, so nothing is stored."""
-    from engine.agents.extractor import MODEL
+    from engine.core.effective_config import stage_config
+    MODEL = stage_config("extract_pass1").model   # B5: extractor.MODEL retired (C19)
     db = _FakeDB(tmp_path)
     with pytest.raises(UncitedValueError):
         enforce_citations([span("robot_platform", "da Vinci")],

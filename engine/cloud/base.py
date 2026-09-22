@@ -19,21 +19,70 @@ from engine.core.completeness import (
     expected_field_names,
 )
 from engine.core.effective import corpus_id_sql
+from engine.core.effective_config import cloud_stage_config, sha256_canonical
 from engine.core.extraction_telemetry import record_call
 from engine.core.review_spec import ReviewSpec, load_review_spec
 
 logger = logging.getLogger(__name__)
 
 
+#: The system instruction every cloud arm sends. One literal, shared by both
+#: providers and by the resolver's prompt hash, so the hash covers what is sent.
+SYSTEM_MESSAGE = (
+    "You are a systematic review data extractor. "
+    "Output valid JSON matching the requested schema. "
+    "Be thorough and cite source text for every extracted value."
+)
+
+#: What leaves the machine, as a run manifest records it (S3g, C16). Every
+#: component of the outbound request is enumerated in MANIFEST-01 Phase 1 P7.
+PAYLOAD_DESCRIPTION = (
+    "Per enabled cloud arm, per corpus paper: one HTTPS request to the provider's "
+    "public API containing a fixed system instruction, the review's extraction "
+    "codebook rendered as a prompt, the paper's complete parsed full text, and the "
+    "arm's declared request parameters. No database content other than the paper "
+    "text, no identifiers beyond what the paper itself contains, and no PDF bytes "
+    "leave the machine."
+)
+
+
+def outbound_messages(prompt: str) -> list[dict]:
+    """The provider-neutral message list a cloud arm sends (system + user)."""
+    return [{"role": "system", "content": SYSTEM_MESSAGE},
+            {"role": "user", "content": prompt}]
+
+
 class CloudExtractorBase:
-    """Base class for cloud API extraction arms."""
+    """Base class for cloud API extraction arms.
 
-    ARM: str = ""  # Override in subclasses
+    The arm an extraction writes to is the spec-declared arm (C20, R64): its
+    name, model and request parameters come from the spec's `arms` block through
+    the resolver, and its price from `cloud.prices`. There is no class-constant
+    arm name, no default model and no default price.
+    """
 
-    def __init__(self, db_path: str, review_spec_path: str):
+    PROVIDER: str = ""  # "openai" | "anthropic" — the transport, not the arm
+
+    def __init__(self, db_path: str, review_spec_path: str, arm_name: str | None = None):
         self.db_path = db_path
         self.spec = load_review_spec(review_spec_path)
         self._review_dir = Path(db_path).parent
+        if self.PROVIDER:
+            self.arm_name = self._resolve_arm(arm_name)
+            self.stage_cfg = cloud_stage_config(self.spec, self.arm_name)
+            self.model_string = self.stage_cfg.model
+            price = self.spec.cloud.prices.get(self.arm_name)
+            if price is None:
+                raise ValueError(
+                    f"arm {self.arm_name!r} has no price in the spec's cloud.prices; "
+                    "there is no default price (S3g, C5)")
+            self.cost_input_per_m = price.input_per_m
+            self.cost_output_per_m = price.output_per_m
+        else:
+            self.arm_name = arm_name or ""
+        #: Set by the runner to record each call in `run_calls` (S3b).
+        self.run_id: int | None = None
+        self.last_request_hash: str | None = None
 
         # The prompt is built from the codebook, so its content is recorded
         # beside the spec-derived schema hash (CODEBOOK-AUTH-01). Loaded from
@@ -62,6 +111,36 @@ class CloudExtractorBase:
 
     def close(self):
         self._conn.close()
+
+    def _resolve_arm(self, arm_name: str | None) -> str:
+        if arm_name is not None:
+            arm = self.spec.arm(arm_name)
+            if arm.provider != self.PROVIDER:
+                raise ValueError(
+                    f"arm {arm_name!r} is a {arm.provider!r} arm, not {self.PROVIDER!r}")
+            return arm_name
+        candidates = [a.name for a in self.spec.arms if a.provider == self.PROVIDER]
+        if len(candidates) != 1:
+            raise ValueError(
+                f"name the {self.PROVIDER} arm: the spec declares {candidates or 'none'}")
+        return candidates[0]
+
+    def request_payload(self, prompt: str) -> dict:
+        """Every keyword the provider call receives — the complete outbound
+        request (C16). Overridden per provider."""
+        raise NotImplementedError
+
+    def send(self, paper_id: int, prompt: str):
+        """Build the payload, hash it, make the call, record it if in a run."""
+        from engine.core import run_manifest as rm
+        payload = self.request_payload(prompt)
+        self.last_request_hash = sha256_canonical(payload)
+        started = datetime.now(timezone.utc).isoformat()
+        response = self._create(**payload)
+        if self.run_id is not None:
+            rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+                           payload, None, started, datetime.now(timezone.utc).isoformat())
+        return response
 
     def get_pending_papers(self, arm: str) -> list[dict]:
         """Get extraction-eligible papers with no cloud extraction for this arm.
@@ -341,7 +420,7 @@ class CloudExtractorBase:
 
             record_call(
                 self._review_dir,
-                arm=self.ARM,
+                arm=self.arm_name,
                 paper_id=paper_id,
                 attempt=attempt,
                 outcome="stored" if check.complete else (
@@ -363,25 +442,25 @@ class CloudExtractorBase:
                 if attempt > 1:
                     logger.info(
                         "Paper %d (%s): complete on attempt %d/%d",
-                        paper_id, self.ARM, attempt, max_attempts,
+                        paper_id, self.arm_name, attempt, max_attempts,
                     )
                 return result
 
             last_error = IncompleteExtractionError(
-                paper_id=paper_id, arm=self.ARM, missing=check.missing,
+                paper_id=paper_id, arm=self.arm_name, missing=check.missing,
                 n_stored=check.n_produced, n_expected=check.n_expected,
                 salvage=salvage, attempt=attempt,
             )
             logger.warning(
                 "Paper %d (%s): INCOMPLETE attempt %d/%d — %s%s. Re-issuing identical request.",
-                paper_id, self.ARM, attempt, max_attempts, check.summary(),
+                paper_id, self.arm_name, attempt, max_attempts, check.summary(),
                 f" (salvage={salvage})" if salvage else "",
             )
 
         logger.error(
             "Paper %d (%s): INCOMPLETE after %d attempts — failing the paper, "
             "NOT storing a partial extraction. %s",
-            paper_id, self.ARM, max_attempts, last_error,
+            paper_id, self.arm_name, max_attempts, last_error,
         )
         raise last_error
 
@@ -421,7 +500,7 @@ class CloudExtractorBase:
         return run_post_extraction_check(
             db_path=Path(self.db_path),
             review_name=self._review_dir.name,
-            arm=self.ARM,
+            arm=self.arm_name,
             codebook_path=codebook_path,
             extracted_count=stats.get("extracted", 0),
             failed_count=stats.get("failed", 0),

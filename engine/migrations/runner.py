@@ -83,6 +83,9 @@ KINDS: dict[str, str] = {
     "019": "schema",   # R29/R39: paper_events rebuilt with the two-axis state
                        # vocabulary. Rebuilds an existing table; a fresh database
                        # needs the shape as much as the live one does.
+    "020": "schema",   # S3a/S3b/R59/R68: run_manifests, run_stage_configs,
+                       # run_calls; both event tables rebuilt with the run
+                       # link; arms pin columns and the widened freeze trigger.
 }
 
 _RECEIPTS_DDL = """

@@ -31,6 +31,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from engine.core.review_spec import PDFQualityCheck
+from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.utils.ollama_client import ollama_chat
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s: %(message)s")
@@ -79,26 +80,33 @@ def _render_first_page(pdf_path: str, dpi: int = 150) -> str:
         doc.close()
 
 
+def classification_messages(img_b64: str) -> list[dict]:
+    """The classifier's message list — one builder for the call and the prompt
+    hash (R60)."""
+    return [{"role": "user", "content": _CLASSIFICATION_PROMPT, "images": [img_b64]}]
+
+
 def _classify_page(
     img_b64: str,
-    model: str = "qwen2.5vl:7b",
-    timeout: float = 120.0,
+    model: str | None = None,
+    timeout: float = _DEFAULTS.timeout,
+    *, cfg: EffectiveConfig | None = None,
 ) -> dict:
-    """Send first-page image to vision model and parse JSON classification."""
+    """Send first-page image to vision model and parse JSON classification.
+
+    Model and options come from the resolver's `pdf_quality` stage; a `model=`
+    argument that differs is a caller override.
+    """
+    cfg = cfg or stage_config("pdf_quality")
+    if model is not None and model != cfg.model:
+        cfg = cfg.with_model(model)
     for attempt in range(1 + MAX_RETRIES):
         try:
             response = ollama_chat(
-                model=model,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": _CLASSIFICATION_PROMPT,
-                        "images": [img_b64],
-                    }
-                ],
-                options={"temperature": 0},
+                messages=classification_messages(img_b64),
                 max_retries=0,  # retries handled by outer loop
                 wall_timeout=timeout,
+                **cfg.kwargs(),
             )
             raw = response.message.content or ""
 
@@ -166,6 +174,8 @@ def run_quality_check(
 ) -> dict:
     """Run PDF quality check on papers needing classification."""
     cfg = config or _DEFAULTS
+    from types import SimpleNamespace
+    stage_cfg = stage_config("pdf_quality", SimpleNamespace(pdf_quality_check=config))
     logger.info(
         "Using model=%s, dpi=%d, timeout=%ds",
         cfg.ai_model, cfg.dpi, cfg.timeout,
@@ -205,7 +215,7 @@ def run_quality_check(
 
         try:
             img_b64 = _render_first_page(pdf_path, dpi=cfg.dpi)
-            result = _classify_page(img_b64, model=cfg.ai_model, timeout=cfg.timeout)
+            result = _classify_page(img_b64, timeout=cfg.timeout, cfg=stage_cfg)
 
             lang = result.get("language", "unknown")
             ctype = result.get("content_type", "other")

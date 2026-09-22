@@ -12,7 +12,6 @@ from engine.utils.ollama_client import (
     _restart_ollama_and_retry,
     _wall_timeout_for_model,
     fetch_model_digest,
-    get_model_digest,
     ollama_chat,
 )
 from engine.utils import ollama_client as _oc
@@ -335,29 +334,34 @@ class TestOllamaRestartRecovery:
 # ── Model digest ───────────────────────────────────────────────────
 
 
-class TestGetModelDigest:
-    @patch("engine.utils.ollama_client._client")
-    def test_digest_returned_from_api(self, mock_client):
-        """Digest from mock API is returned correctly."""
-        mock_info = MagicMock()
-        mock_info.digest = "sha256:abc123def456"
-        mock_client.show.return_value = mock_info
-
-        result = get_model_digest("deepseek-r1:32b")
-        assert result == "sha256:abc123def456"
-        mock_client.show.assert_called_once_with("deepseek-r1:32b")
+class TestTheDigestRoute:
+    """B5 rewrite (MANIFEST-01 Phase 2a, C15/R57). These two tests pinned
+    `get_model_digest`: a digest read from /api/show, and None on failure. The
+    first behaviour never held against the real server — /api/show does not
+    expose the digest, so every stored `model_digest` is NULL — and the second
+    is the silent fallback R57 retires. They now pin the working route."""
 
     @patch("engine.utils.ollama_client._client")
-    def test_api_failure_returns_none(self, mock_client, caplog):
-        """API failure returns None without raising, logs WARNING."""
-        mock_client.show.side_effect = ConnectionError("ollama down")
+    def test_digest_comes_from_api_tags_not_api_show(self, mock_client):
+        models = [{"name": "deepseek-r1:32b", "digest": "c" * 64,
+                   "modified_at": "2026-03-09T01:01:47Z"}]
+        with patch("engine.utils.ollama_client.httpx.get",
+                   return_value=_tags_response(models)) as mock_get:
+            assert fetch_model_digest("deepseek-r1:32b") == "c" * 64
+        assert mock_get.call_args.args[0].endswith("/api/tags")
+        mock_client.show.assert_not_called()
 
-        with caplog.at_level("WARNING", logger="engine.utils.ollama_client"):
-            result = get_model_digest("deepseek-r1:32b")
+    def test_api_failure_raises_never_returns_none(self):
+        # httpx's own transport error, as the real client raises it — a fake
+        # must speak the tool's vocabulary, not one invented for the test.
+        import httpx
+        with patch("engine.utils.ollama_client.httpx.get",
+                   side_effect=httpx.ConnectError("connection refused")):
+            with pytest.raises(ModelDigestError):
+                fetch_model_digest("deepseek-r1:32b")
 
-        assert result is None
-        assert "Failed to get digest" in caplog.text
-        assert "deepseek-r1:32b" in caplog.text
+    def test_get_model_digest_is_gone(self):
+        assert not hasattr(_oc, "get_model_digest")
 
 
 # ── Strict digest fetch (judge orchestrator) ─────────────────────────

@@ -21,7 +21,8 @@ from engine.utils.ollama_client import ollama_chat
 from docling.document_converter import DocumentConverter
 
 from engine.core.database import ReviewDatabase
-from engine.core.review_spec import ReviewSpec
+from engine.core.effective_config import EffectiveConfig, stage_config
+from engine.core.review_spec import PDFParsing, ReviewSpec
 from engine.parsers.models import ParseAttempt, ParsedDocument
 from engine.parsers import font_audit as _font_audit
 from engine.parsers.parse_quality import (
@@ -35,13 +36,13 @@ from engine.parsers.parse_quality import (
 
 logger = logging.getLogger(__name__)
 
-# Defaults — overridden by ReviewSpec.pdf_parsing when available
-_SCANNED_THRESHOLD = 100  # chars per page — below this, assume scanned
-_VISION_MODEL = "qwen2.5vl:7b"
-_VISION_MAX_PAGES = 60
-_VISION_NUM_PREDICT = 2048
-_VISION_NUM_CTX = 8192
-_VISION_PAGE_TIMEOUT_S = 240
+# Defaults — the spec model's declared defaults, overridden by
+# ReviewSpec.pdf_parsing when available. C19: these were module constants that
+# repeated the spec model's values; there is now one declaration, in the spec model.
+_PDF_DEFAULTS = PDFParsing()
+_SCANNED_THRESHOLD = _PDF_DEFAULTS.scanned_text_threshold
+_VISION_MAX_PAGES = _PDF_DEFAULTS.vision_max_pages
+_VISION_PAGE_TIMEOUT_S = _PDF_DEFAULTS.vision_page_timeout_s
 
 #: The transcription prompt. Pinned by test, and the pin is load-bearing.
 #:
@@ -74,8 +75,8 @@ class VisionTruncatedError(RuntimeError):
     """
 
 
-_OCR_ENGINE = "rapidocr"
-_OCR_MAX_PAGES = 100
+_OCR_ENGINE = _PDF_DEFAULTS.ocr_engine
+_OCR_MAX_PAGES = _PDF_DEFAULTS.ocr_max_pages
 _MAX_ATTEMPTS = 5  # longest path: docling, docling_sanitized, pymupdf,
 
 #: Wall-clock bound on the FONT_EXPOSURE alignment for one attempt. Checked
@@ -208,13 +209,19 @@ def parse_with_pymupdf(pdf_path: str) -> str:
     return "\n\n---\n\n".join(pages)
 
 
+def vision_messages(img_b64: str) -> list[dict]:
+    """One page's message list — one builder for the call and the prompt hash (R60)."""
+    return [{"role": "user", "content": VISION_PROMPT, "images": [img_b64]}]
+
+
 def parse_with_vision(
     pdf_path: str,
-    vision_model: str = _VISION_MODEL,
-    num_predict: int = _VISION_NUM_PREDICT,
-    num_ctx: int = _VISION_NUM_CTX,
+    vision_model: str | None = None,
+    num_predict: int | None = None,
+    num_ctx: int | None = None,
     page_timeout_s: int = _VISION_PAGE_TIMEOUT_S,
     paper_id: int | None = None,
+    *, cfg: EffectiveConfig | None = None,
 ) -> str:
     """Parse a scanned PDF by sending page images to a vision model via Ollama.
 
@@ -223,6 +230,16 @@ def parse_with_vision(
     cycle at 42.6 tok/s for ~50 minutes and would have restarted the Ollama
     service on the third retry.
     """
+    # The resolver's `vision_parse` stage; an explicit argument that differs is a
+    # caller override, recorded as one.
+    cfg = cfg or stage_config("vision_parse")
+    if vision_model is not None and vision_model != cfg.model:
+        cfg = cfg.with_model(vision_model)
+    override = {k: v for k, v in (("num_predict", num_predict), ("num_ctx", num_ctx))
+                if v is not None and v != cfg.options.get(k)}
+    cfg = cfg.with_options(override)
+    num_predict = cfg.options["num_predict"]
+
     doc = fitz.open(pdf_path)
     pages_md: list[str] = []
 
@@ -236,21 +253,10 @@ def parse_with_vision(
 
             started = time.monotonic()
             response = ollama_chat(
-                model=vision_model,
                 paper_id=paper_id,
                 wall_timeout=page_timeout_s,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": VISION_PROMPT,
-                        "images": [img_b64],
-                    }
-                ],
-                options={
-                    "temperature": 0,
-                    "num_predict": num_predict,
-                    "num_ctx": num_ctx,
-                },
+                messages=vision_messages(img_b64),
+                **cfg.kwargs(),
             )
             elapsed = time.monotonic() - started
             done_reason = getattr(response, "done_reason", None)
@@ -543,35 +549,28 @@ def parse_pdf(
     """
     # Read thresholds from spec if available
     scanned_threshold = _SCANNED_THRESHOLD
-    vision_model = _VISION_MODEL
     vision_max_pages = _VISION_MAX_PAGES
     ocr_engine = _OCR_ENGINE
     ocr_max_pages = _OCR_MAX_PAGES
-    vision_num_predict = _VISION_NUM_PREDICT
-    vision_num_ctx = _VISION_NUM_CTX
     vision_page_timeout_s = _VISION_PAGE_TIMEOUT_S
     thresholds = Thresholds()
+    vision_cfg = stage_config("vision_parse", spec if spec and hasattr(spec, "pdf_parsing") else None)
+    vision_model = vision_cfg.model
     if spec and hasattr(spec, "pdf_parsing"):
         scanned_threshold = spec.pdf_parsing.scanned_text_threshold
-        vision_model = spec.pdf_parsing.vision_model
-        vision_max_pages = getattr(spec.pdf_parsing, "vision_max_pages", _VISION_MAX_PAGES)
-        ocr_engine = getattr(spec.pdf_parsing, "ocr_engine", _OCR_ENGINE)
-        ocr_max_pages = getattr(spec.pdf_parsing, "ocr_max_pages", _OCR_MAX_PAGES)
-        vision_num_predict = getattr(spec.pdf_parsing, "vision_num_predict",
-                                     _VISION_NUM_PREDICT)
-        vision_num_ctx = getattr(spec.pdf_parsing, "vision_num_ctx", _VISION_NUM_CTX)
-        vision_page_timeout_s = getattr(spec.pdf_parsing, "vision_page_timeout_s",
-                                        _VISION_PAGE_TIMEOUT_S)
+        vision_max_pages = spec.pdf_parsing.vision_max_pages
+        ocr_engine = spec.pdf_parsing.ocr_engine
+        ocr_max_pages = spec.pdf_parsing.ocr_max_pages
+        vision_page_timeout_s = spec.pdf_parsing.vision_page_timeout_s
         # The only construction path: engine defaults and spec defaults are pinned
         # equal by test, so this cannot silently diverge from Thresholds().
         thresholds = Thresholds.from_mapping(
             getattr(spec.pdf_parsing, "parse_quality", None))
 
     vision_opts = {
-        "num_predict": vision_num_predict,
-        "num_ctx": vision_num_ctx,
         "page_timeout_s": vision_page_timeout_s,
         "paper_id": paper_id,
+        "cfg": vision_cfg,
     }
 
     pdf_hash = compute_pdf_hash(pdf_path)

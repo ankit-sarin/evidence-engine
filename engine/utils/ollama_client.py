@@ -342,34 +342,13 @@ def _check_input_was_read(response, fit: dict, paper_label: str):
     return response
 
 
-def get_model_digest(model_name: str) -> str | None:
-    """Return the Ollama model digest (hash) for the given model name.
-
-    Calls POST /api/show to get model metadata.  Returns the digest string
-    on success, or None on failure (logged at WARNING).
-    """
-    try:
-        info = _client.show(model_name)
-        # ollama-python returns a dict-like with 'digest' at the top level
-        # or under modelinfo.  Try the common paths.
-        digest = None
-        if hasattr(info, "digest"):
-            digest = info.digest
-        elif isinstance(info, dict):
-            digest = info.get("digest")
-        # Fallback: modelinfo dict may contain general.file_type etc. but
-        # the top-level 'digest' field is what we want (set by ollama show).
-        if not digest and hasattr(info, "modelinfo"):
-            mi = info.modelinfo if not isinstance(info.modelinfo, dict) else info.modelinfo
-            if isinstance(mi, dict):
-                digest = mi.get("digest")
-        return digest or None
-    except Exception as exc:
-        logger.warning("Failed to get digest for model %s: %s", model_name, exc)
-        return None
+# `get_model_digest` was retired in MANIFEST-01 Phase 2a (row C15, R57): it read
+# /api/show, which does not expose the digest, and returned None on every call —
+# which is why `extractions.model_digest` is NULL on all 190 rows. The digest is
+# `fetch_model_digest` below (/api/tags), which raises rather than returning None.
 
 
-# ── Strict digest fetch for judge runs ───────────────────────────────
+# ── Strict digest fetch (every run manifest; the judge)  ───────────────────────────────
 
 OLLAMA_BASE_URL = "http://localhost:11434"
 _DIGEST_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -455,6 +434,11 @@ def fetch_model_digest(
     return digest
 
 
+def _utcnow() -> str:
+    from datetime import datetime, timezone
+    return datetime.now(timezone.utc).isoformat()
+
+
 def _wall_timeout_for_model(model: str) -> float:
     """Return wall-clock timeout in seconds for a given model name."""
     for pattern, timeout in MODEL_TIMEOUTS.items():
@@ -471,6 +455,7 @@ def ollama_chat(
     max_retries: int = DEFAULT_MAX_RETRIES,
     retry_delay: float = DEFAULT_RETRY_DELAY,
     wall_timeout: float | None = None,
+    stage: str | None = None,
     **kwargs,
 ):
     """Call Ollama chat with HTTP timeouts, wall-clock watchdog, and retries.
@@ -489,6 +474,10 @@ def ollama_chat(
         Seconds to wait between retries.
     wall_timeout : float | None
         Override wall-clock timeout. If None, auto-detected from model name.
+    stage : str | None
+        The resolver stage this call serves (`EffectiveConfig.kwargs()` passes
+        it). Consumed here, never sent. Inside `run_manifest.active_run` the call
+        is recorded in `run_calls` against it (S3b).
     **kwargs
         Passed through to ollama.Client.chat() (format, options, think, etc.).
 
@@ -524,6 +513,15 @@ def ollama_chat(
     """
     effective_timeout = wall_timeout or _wall_timeout_for_model(model)
     paper_label = f"paper_id={paper_id}" if paper_id is not None else "paper_id=unknown"
+    started_at = _utcnow()
+
+    def _done(response):
+        if stage is not None:
+            from engine.core.run_manifest import record_active_ollama_call
+            record_active_ollama_call(
+                stage, {"model": model, "messages": messages, **kwargs},
+                paper_id, response, started_at)
+        return response
     fit = _check_input_fits(model, messages, kwargs.get("options"), paper_label)
 
     for attempt in range(1 + max_retries):
@@ -565,7 +563,7 @@ def ollama_chat(
                         f"Ollama call timed out after {1 + max_retries} attempts + restart "
                         f"(model={model}, {paper_label}, limit={effective_timeout}s)"
                     )
-                return _check_input_was_read(response, fit, paper_label)
+                return _done(_check_input_was_read(response, fit, paper_label))
 
         except (httpx.TimeoutException, httpx.ConnectError) as exc:
             executor.shutdown(wait=False, cancel_futures=True)
@@ -598,7 +596,7 @@ def ollama_chat(
         else:
             # Outside the handlers above on purpose: an input-fit failure is
             # neither retried nor converted into a timeout.
-            return _check_input_was_read(response, fit, paper_label)
+            return _done(_check_input_was_read(response, fit, paper_label))
 
 
 # ── Ollama restart recovery (Layer 3) ────────────────────────────────

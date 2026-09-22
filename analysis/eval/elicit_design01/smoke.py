@@ -76,7 +76,8 @@ def preflight(oc) -> tuple[str, str | None]:
             "The smoke pins the runtime because a version change is exactly the "
             "confound QUALGAP-01 spent a batch ruling out."
         )
-    from engine.agents.extractor import MODEL
+    from engine.core.effective_config import stage_config
+    MODEL = stage_config("elicitation_pass1").model  # the resolver's, not a constant
 
     digest = None
     for m in oc._client.list().get("models", []):
@@ -170,7 +171,8 @@ def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO,
                         format="%(asctime)s %(levelname)s %(message)s")
 
-    from engine.agents.extractor import MODEL, extract_paper_with_completeness
+    from engine.agents.extractor import extract_paper_with_completeness
+    from engine.core.effective_config import stage_config
     from engine.core.review_paths import load_spec_for
     from engine.elicitation import classes as C
     from engine.elicitation.units import build_unit_map
@@ -186,6 +188,7 @@ def main(argv: list[str] | None = None) -> int:
 
     spec = load_spec_for(args.review, args.spec)
     spec.extraction_models.elicitation = True
+    MODEL = stage_config("elicitation_pass1", spec).model
     logger.info("elicitation=%s pass1_think=%s pass2_think=%s",
                 spec.extraction_models.elicitation,
                 spec.extraction_models.pass1_think,

@@ -16,23 +16,35 @@ import pytest
 from engine.core import events
 from engine.core.effective import PRE_MANIFEST, effective_value
 
-_016 = importlib.import_module("engine.migrations.016_event_store")
+from tests._event_store_fixture import (
+    fixture_run, seed_claim, seed_pre_manifest_paper_event, upgrade_event_store,
+)
 SENTINELS = frozenset({"NR", "NOT_FOUND"})
 FIELD = "primary_outcome_value"
 
 
 @pytest.fixture
-def db():
-    conn = sqlite3.connect(":memory:")
+def db(tmp_path):
+    # MANIFEST-01 Phase 2a: a file at the post-020 shape, events under a run (R68).
+    path = tmp_path / "writer.db"
+    conn = sqlite3.connect(path)
     conn.execute("CREATE TABLE papers (id INTEGER PRIMARY KEY, status TEXT)")
     conn.executemany("INSERT INTO papers (id, status) VALUES (?, 'FT_ELIGIBLE')",
                      [(i,) for i in range(1, 5)])
-    _016.create_schema(conn)
+    conn.commit()
+    conn.close()
+    upgrade_event_store(path)
+    conn = sqlite3.connect(path)
     events.register_arm(conn, "local", "model", configuration={"model": "m"})
     events.register_arm(conn, "human_A", "human_extractor", configuration={"x": 1})
+    fixture_run(conn, "local")
     conn.commit()
     yield conn
     conn.close()
+
+
+def _run(db):
+    return fixture_run(db)
 
 
 def claim(db, paper, value, *, arm="local"):
@@ -41,11 +53,12 @@ def claim(db, paper, value, *, arm="local"):
     events.write_field_event(
         db, event_type="asserted", paper_id=paper, field_name=FIELD, arm=arm,
         claim_id=cid, value=value, source_snippet="q", actor_kind="model",
-        actor_role="extractor", actor_name="m", sentinels=SENTINELS)
+        actor_role="extractor", actor_name="m", sentinels=SENTINELS, run_id=_run(db))
     return cid
 
 
 def reviewer(db, paper, etype, *, against=(), against_decisions=(), **kw):
+    kw.setdefault("run_id", _run(db))
     return events.write_field_event(
         db, event_type=etype, paper_id=paper, field_name=FIELD,
         arm=kw.pop("arm", "local"), claim_id="c", actor_kind="human",
@@ -101,7 +114,7 @@ def test_r24_naming_a_claim_outside_live_is_row_3_not_a_refusal(db):
     events.write_field_event(
         db, event_type="superseded", paper_id=1, field_name=FIELD, arm="local",
         claim_id=a, actor_kind="engine", actor_role="system", actor_name="w",
-        against_claims={a}, sentinels=SENTINELS)
+        against_claims={a}, sentinels=SENTINELS, run_id=_run(db))
     reviewer(db, 1, "human_corrected", against={a}, value="9")   # accepted
     assert effective_value(db, 1, FIELD, "local", sentinels=SENTINELS).rule_row == 3
 
@@ -152,7 +165,7 @@ def test_actor_role_system_is_refused_unless_actor_kind_is_engine(db):
             events.write_field_event(
                 db, event_type="asserted", paper_id=1, field_name=FIELD, arm="local",
                 value="5", actor_kind=kind, actor_role="system", actor_name="x",
-                sentinels=SENTINELS)
+                sentinels=SENTINELS, run_id=_run(db))
 
 
 def test_a_system_event_never_triggers_an_override_row(db):
@@ -161,7 +174,7 @@ def test_a_system_event_never_triggers_an_override_row(db):
     events.write_field_event(
         db, event_type="human_withdrew", paper_id=1, field_name=FIELD, arm="local",
         claim_id=c, actor_kind="engine", actor_role="system", actor_name="engine",
-        against_claims={c}, sentinels=SENTINELS)
+        against_claims={c}, sentinels=SENTINELS, run_id=_run(db))
     r = effective_value(db, 1, FIELD, "local", sentinels=SENTINELS)
     assert r.rule_row == 11 and r.value == "5"     # not row 4
 
@@ -184,9 +197,7 @@ def test_every_event_table_is_append_only_by_trigger(db, table):
                "parsed_text_path, parsed_text_version, recorded_at) "
                "VALUES ('u', 1, 'p.md', 1, 'now')")
     db.execute("INSERT INTO review_identities VALUES ('k', 'v', '{}', 'now')")
-    events.write_paper_event(db, event_type="state_at_migration", paper_id=1,
-                             to_state="eligible", actor_kind="engine",
-                             actor_role="system", actor_name="s")
+    seed_pre_manifest_paper_event(db, 1)
     for stmt in (f"DELETE FROM {table}", f"UPDATE {table} SET rowid = rowid"):
         with pytest.raises(sqlite3.IntegrityError) as e:
             db.execute(stmt)
@@ -245,3 +256,119 @@ def test_the_writer_uses_the_readers_live_predicate_not_its_own_query(db, monkey
     with pytest.raises(events.AgainstReferenceIncomplete):
         reviewer(db, 1, "human_corrected", against={a}, value="9")
     assert seen["called"] == (1, FIELD, "local")
+
+
+
+# ── R68 — every event carries a run; only a migration writes 'pre-manifest' ──
+def test_r68_an_event_without_a_run_id_is_refused(db):
+    with pytest.raises(events.RunLinkRefused, match="run_id is required"):
+        events.write_field_event(
+            db, event_type="asserted", paper_id=1, field_name=FIELD, arm="local",
+            value="5", source_snippet="q", actor_kind="model", actor_role="extractor",
+            actor_name="m", sentinels=SENTINELS)
+    with pytest.raises(events.RunLinkRefused, match="run_id is required"):
+        events.write_paper_event(db, event_type="extracted", paper_id=1,
+                                 to_state="extracted", actor_kind="engine",
+                                 actor_role="system", actor_name="m")
+
+
+def test_r68_run_marker_from_a_caller_that_is_not_a_migration_is_refused(db):
+    with pytest.raises(events.RunLinkRefused, match="only by a migration"):
+        events.write_paper_event(db, event_type="state_at_migration", paper_id=1,
+                                 to_state="eligible", actor_kind="engine",
+                                 actor_role="system", actor_name="s",
+                                 run_marker="pre-manifest")
+
+
+def test_r68_a_run_id_that_names_no_manifest_is_refused(db):
+    with pytest.raises(events.RunLinkRefused, match="names no run manifest"):
+        events.write_paper_event(db, event_type="extracted", paper_id=1,
+                                 to_state="extracted", actor_kind="engine",
+                                 actor_role="system", actor_name="m", run_id=999)
+
+
+def test_r68_the_check_refuses_a_runless_row_that_is_not_pre_manifest(db):
+    """The CHECK holds below the writer too — the database, not the code, is
+    where the invariant lives after 020."""
+    with pytest.raises(sqlite3.IntegrityError, match="CHECK"):
+        db.execute(
+            "INSERT INTO paper_events (event_uid, event_type, occurred_at, recorded_at, "
+            "actor_kind, actor_role, actor_name, run_id, run_marker, paper_id, to_state) "
+            "VALUES ('u', 'extracted', 'n', 'n', 'engine', 'system', 'x', NULL, NULL, 1, "
+            "'extracted')")
+
+
+def test_r68_migration_017_may_still_write_its_pre_manifest_seed(db, tmp_path):
+    """017 is checksummed and passes run_marker='pre-manifest' with no run_id;
+    the writer recognises it by its file, so the applied migration still means
+    what it meant."""
+    m017 = importlib.import_module("engine.migrations.017_seed_event_store")
+    db.commit()
+    m017.build_seed(db, corpus_ids=[3], parsed_rows=[], spec_identity={"s": 1},
+                    codebook_identity={"c": 1}, arms=("seeded_arm",))
+    row = db.execute("SELECT run_id, run_marker FROM paper_events WHERE paper_id = 3"
+                     ).fetchone()
+    assert row == (None, "pre-manifest")
+
+
+# ── R59 / R21 / R10 — which arms accept a claim ──────────────────────
+def test_r59_a_claim_on_a_pre_manifest_arm_is_refused(db):
+    events.register_arm(db, "old_arm", "model", configuration_marker=PRE_MANIFEST)
+    with pytest.raises(events.ClaimOnPreManifestArm, match="R59"):
+        events.write_field_event(
+            db, event_type="asserted", paper_id=1, field_name=FIELD, arm="old_arm",
+            value="5", source_snippet="q", actor_kind="model", actor_role="extractor",
+            actor_name="m", sentinels=SENTINELS, run_id=_run(db))
+
+
+def test_r21_a_claim_on_a_retired_arm_is_refused(db):
+    events.retire_arm(db, "local")
+    with pytest.raises(events.ClaimOnRetiredArm, match="R21"):
+        claim(db, 1, "5")
+
+
+def test_r10_a_claim_on_a_model_arm_the_run_did_not_pin_is_refused(db):
+    events.register_arm(db, "other_arm", "model")
+    with pytest.raises(events.ArmNotInRun, match="R10"):
+        events.write_field_event(
+            db, event_type="asserted", paper_id=1, field_name=FIELD, arm="other_arm",
+            value="5", source_snippet="q", actor_kind="model", actor_role="extractor",
+            actor_name="m", sentinels=SENTINELS, run_id=_run(db))
+
+
+def test_r68_a_reviewer_event_on_a_pre_manifest_claim_is_allowed_under_a_review_session(db):
+    """Row 7's exit. The claims were seeded; the reviewer's decision is new and
+    carries its review session's run_id."""
+    events.register_arm(db, "old_arm", "model", configuration_marker=PRE_MANIFEST)
+    a = seed_claim(db, arm="old_arm", paper_id=1, field_name=FIELD, value="5",
+                   source_snippet="q")
+    b = seed_claim(db, arm="old_arm", paper_id=1, field_name=FIELD, value="6",
+                   source_snippet="q")
+    session = db.execute(
+        "INSERT INTO run_manifests (run_uid, review_id, run_kind, git_commit, git_dirty, "
+        "spec_hash, codebook_hash, codebook_sha256, library_versions_json, host, "
+        "started_at, manifest_json, manifest_sha256) VALUES ('rs', 'r', 'review_session', "
+        "?, 0, 'h', 'h', 'h', '{}', 'h', 'n', '{}', 'h')", ("1" * 40,)).lastrowid
+    assert effective_value(db, 1, FIELD, "old_arm", sentinels=SENTINELS).rule_row == 7
+    events.write_field_event(
+        db, event_type="human_withdrew", paper_id=1, field_name=FIELD, arm="old_arm",
+        claim_id=a, actor_kind="human", actor_role="reviewer", actor_name="PI",
+        against_claims={a, b}, sentinels=SENTINELS, run_id=session)
+    r = effective_value(db, 1, FIELD, "old_arm", sentinels=SENTINELS)
+    assert r.rule_row != 7 and r.value is None
+
+
+# ── R59 — the widened freeze trigger ─────────────────────────────────
+def test_r59_a_pre_manifest_arm_can_never_be_pinned(db):
+    events.register_arm(db, "old_arm", "model", configuration_marker=PRE_MANIFEST)
+    with pytest.raises(sqlite3.IntegrityError, match="R59"):
+        db.execute("UPDATE arms SET configuration_json = '{}', configuration_marker = "
+                   "'pinned' WHERE arm_name = 'old_arm'")
+
+
+def test_r59_a_pinned_arm_is_frozen_before_it_holds_any_claim(db):
+    db.execute("UPDATE arms SET configuration_marker = 'pinned', pinned_run_id = ?, "
+               "pinned_sha256 = 'x' WHERE arm_name = 'local'", (_run(db),))
+    with pytest.raises(sqlite3.IntegrityError, match="pinned by a manifest"):
+        db.execute("UPDATE arms SET configuration_json = '{\"model\":\"other\"}' "
+                   "WHERE arm_name = 'local'")

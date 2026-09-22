@@ -428,7 +428,7 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.restart_ollama")
     @patch("engine.agents.extractor.extract_paper")
     @patch("engine.utils.ollama_preflight.require_preflight")
-    @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
+    @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
     @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
     def test_restart_triggers_after_n_papers(
         self, _stale, _digest, _preflight, mock_extract, mock_restart, tmp_path,
@@ -448,7 +448,7 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.restart_ollama")
     @patch("engine.agents.extractor.extract_paper")
     @patch("engine.utils.ollama_preflight.require_preflight")
-    @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
+    @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
     @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
     def test_restart_disabled_when_zero(
         self, _stale, _digest, _preflight, mock_extract, mock_restart, tmp_path,
@@ -465,7 +465,7 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.restart_ollama", side_effect=RuntimeError("Failed to restart Ollama: systemctl failed"))
     @patch("engine.agents.extractor.extract_paper")
     @patch("engine.utils.ollama_preflight.require_preflight")
-    @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
+    @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
     @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
     def test_restart_failure_continues_gracefully(
         self, _stale, _digest, _preflight, mock_extract, _mock_restart, tmp_path,
@@ -482,7 +482,7 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.restart_ollama")
     @patch("engine.agents.extractor.ollama_chat")
     @patch("engine.utils.ollama_preflight.require_preflight")
-    @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
+    @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
     @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
     def test_zero_span_extraction_marks_extract_failed(
         self, _stale, _digest, _preflight, mock_chat, _restart, tmp_path,
@@ -521,7 +521,7 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.restart_ollama")
     @patch("engine.agents.extractor.extract_paper")
     @patch("engine.utils.ollama_preflight.require_preflight")
-    @patch("engine.utils.ollama_client.get_model_digest", return_value="abc123")
+    @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
     @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
     def test_input_fit_failure_fails_the_paper_and_the_run_continues(
         self, _stale, _digest, _preflight, mock_extract, _restart, kind, tmp_path, caplog,
@@ -639,7 +639,7 @@ class TestRestartOllamaGraceful:
 
         with (
             patch("engine.utils.ollama_preflight.require_preflight"),
-            patch("engine.utils.ollama_client.get_model_digest", return_value="sha256:test"),
+            patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64),
             patch("engine.agents.extractor.extract_paper", side_effect=fake_extract),
             patch("engine.agents.extractor.restart_ollama",
                   side_effect=RuntimeError("Ollama did not respond")),

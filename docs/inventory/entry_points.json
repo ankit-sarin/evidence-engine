@@ -417,7 +417,7 @@
           {
             "default": "'surgical_autonomy'",
             "dest": null,
-            "line": 139,
+            "line": 144,
             "names": [
               "--review"
             ],
@@ -426,7 +426,7 @@
           {
             "default": "'data'",
             "dest": null,
-            "line": 140,
+            "line": 145,
             "names": [
               "--data-root"
             ],
@@ -435,7 +435,7 @@
           {
             "default": "0",
             "dest": null,
-            "line": 141,
+            "line": 146,
             "names": [
               "--smoke"
             ],
@@ -444,7 +444,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 142,
+            "line": 147,
             "names": [
               "--resume"
             ],
@@ -453,7 +453,7 @@
           {
             "default": "dynamic: RESTART_EVERY_N",
             "dest": null,
-            "line": 143,
+            "line": 148,
             "names": [
               "--restart-every"
             ],
@@ -463,7 +463,7 @@
         "has_main_guard": true,
         "literal_review_ids": [
           {
-            "line": 139,
+            "line": 144,
             "role": "code",
             "value": "surgical_autonomy"
           }
@@ -473,7 +473,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 148,
+            "line": 153,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -518,7 +518,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 164,
+            "line": 165,
             "names": [
               "--review"
             ],
@@ -527,7 +527,7 @@
           {
             "default": "'data'",
             "dest": null,
-            "line": 165,
+            "line": 166,
             "names": [
               "--data-root"
             ],
@@ -536,7 +536,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 166,
+            "line": 167,
             "names": [
               "--spec"
             ],
@@ -545,7 +545,7 @@
           {
             "default": "dynamic: ','.join((str(p) for p in SMOKE_PAPERS))",
             "dest": null,
-            "line": 167,
+            "line": 168,
             "names": [
               "--papers"
             ],
@@ -559,19 +559,19 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 112,
-            "role": "code",
-            "text": "extraction_codebook.yaml"
-          },
-          {
-            "kind": "literal",
             "line": 113,
             "role": "code",
             "text": "extraction_codebook.yaml"
           },
           {
             "kind": "literal",
-            "line": 166,
+            "line": 114,
+            "role": "code",
+            "text": "extraction_codebook.yaml"
+          },
+          {
+            "kind": "literal",
+            "line": 167,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -579,7 +579,7 @@
         "review_database": [
           {
             "data_root_passed": true,
-            "line": 110,
+            "line": 111,
             "scope": "build_scratch"
           }
         ],
@@ -587,7 +587,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 187,
+            "line": 189,
             "scope": "main"
           }
         ],
@@ -703,7 +703,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 171,
+            "line": 176,
             "names": [
               "--review"
             ],
@@ -712,7 +712,7 @@
           {
             "default": "'data'",
             "dest": null,
-            "line": 172,
+            "line": 177,
             "names": [
               "--data-root"
             ],
@@ -721,7 +721,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 173,
+            "line": 178,
             "names": [
               "--spec"
             ],
@@ -730,7 +730,7 @@
           {
             "default": "dynamic: LABEL",
             "dest": null,
-            "line": 174,
+            "line": 179,
             "names": [
               "--label"
             ],
@@ -739,7 +739,7 @@
           {
             "default": "0",
             "dest": null,
-            "line": 175,
+            "line": 180,
             "names": [
               "--smoke"
             ],
@@ -748,7 +748,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 177,
+            "line": 182,
             "names": [
               "--resume"
             ],
@@ -757,7 +757,7 @@
           {
             "default": "dynamic: RESTART_EVERY_N",
             "dest": null,
-            "line": 179,
+            "line": 184,
             "names": [
               "--restart-every"
             ],
@@ -771,7 +771,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 173,
+            "line": 178,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -781,86 +781,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 187,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "analysis/eval/run_cloud_strict.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 166,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "'data'",
-            "dest": null,
-            "line": 167,
-            "names": [
-              "--data-root"
-            ],
-            "required": false
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 168,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          },
-          {
-            "default": "5",
-            "dest": null,
-            "line": 169,
-            "names": [
-              "--n-papers"
-            ],
-            "required": false
-          },
-          {
-            "default": "'openai,anthropic'",
-            "dest": null,
-            "line": 170,
-            "names": [
-              "--arms"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "analysis/eval/run_cloud_strict.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 168,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          },
-          {
-            "kind": "literal",
-            "line": 176,
-            "role": "code",
-            "text": "extraction_codebook.yaml"
-          }
-        ],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "load_spec_for",
-            "line": 175,
+            "line": 192,
             "scope": "main"
           }
         ],
@@ -943,7 +864,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 187,
+            "line": 191,
             "names": [
               "--review"
             ],
@@ -952,7 +873,7 @@
           {
             "default": "'data'",
             "dest": null,
-            "line": 188,
+            "line": 192,
             "names": [
               "--data-root"
             ],
@@ -961,7 +882,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 189,
+            "line": 193,
             "names": [
               "--spec"
             ],
@@ -970,7 +891,7 @@
           {
             "default": "'local_abc'",
             "dest": null,
-            "line": 190,
+            "line": 194,
             "names": [
               "--label"
             ],
@@ -979,7 +900,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 191,
+            "line": 195,
             "names": [
               "--resume"
             ],
@@ -993,13 +914,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 189,
+            "line": 193,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           },
           {
             "kind": "literal",
-            "line": 198,
+            "line": 202,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -1009,7 +930,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 197,
+            "line": 201,
             "scope": "main"
           }
         ],
@@ -1022,7 +943,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 255,
+            "line": 260,
             "names": [
               "--review"
             ],
@@ -1031,7 +952,7 @@
           {
             "default": "'data'",
             "dest": null,
-            "line": 256,
+            "line": 261,
             "names": [
               "--data-root"
             ],
@@ -1040,7 +961,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 257,
+            "line": 262,
             "names": [
               "--spec"
             ],
@@ -1049,7 +970,7 @@
           {
             "default": "dynamic: DEFAULT_HOST",
             "dest": null,
-            "line": 258,
+            "line": 263,
             "names": [
               "--host"
             ],
@@ -1058,7 +979,7 @@
           {
             "default": "'runtime_v12'",
             "dest": null,
-            "line": 259,
+            "line": 264,
             "names": [
               "--label"
             ],
@@ -1067,7 +988,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 260,
+            "line": 265,
             "names": [
               "--probe"
             ],
@@ -1076,7 +997,7 @@
           {
             "default": "dynamic: list(CELLS)",
             "dest": null,
-            "line": 261,
+            "line": 266,
             "names": [
               "--cells"
             ],
@@ -1085,7 +1006,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 263,
+            "line": 268,
             "names": [
               "--resume"
             ],
@@ -1099,13 +1020,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 257,
+            "line": 262,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           },
           {
             "kind": "literal",
-            "line": 282,
+            "line": 287,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -1115,7 +1036,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 281,
+            "line": 286,
             "scope": "main"
           }
         ],
@@ -3818,7 +3739,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 256,
+            "line": 266,
             "names": [
               "--review"
             ],
@@ -3827,7 +3748,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 257,
+            "line": 267,
             "names": [
               "--spec"
             ],
@@ -3836,7 +3757,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 258,
+            "line": 268,
             "names": [
               "--dry-run"
             ],
@@ -3845,7 +3766,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 259,
+            "line": 269,
             "names": [
               "--limit"
             ],
@@ -3859,7 +3780,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 257,
+            "line": 267,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -3869,7 +3790,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 266,
+            "line": 276,
             "scope": "main"
           }
         ],
@@ -4335,7 +4256,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 273,
+            "line": 283,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4356,13 +4277,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 426,
+            "line": 446,
             "role": "docstring",
             "text": "(escape token, absence sentinels) from the codebook beside the database.\n\n    Located from the DATABASE's own directory, not from `data/<review_id>`: the\n   ..."
           },
           {
             "kind": "literal",
-            "line": 659,
+            "line": 678,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4379,7 +4300,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 533,
+            "line": 532,
             "names": [
               "--review"
             ],
@@ -4388,7 +4309,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 534,
+            "line": 533,
             "names": [
               "--spec"
             ],
@@ -4397,7 +4318,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 538,
+            "line": 537,
             "names": [
               "--screen-only"
             ],
@@ -4406,7 +4327,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 539,
+            "line": 538,
             "names": [
               "--verify-only"
             ],
@@ -4415,7 +4336,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 540,
+            "line": 539,
             "names": [
               "--background"
             ],
@@ -4431,7 +4352,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 536,
+            "line": 535,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -4439,7 +4360,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 548,
+            "line": 547,
             "scope": "<module>"
           }
         ],
@@ -4447,7 +4368,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 547,
+            "line": 546,
             "scope": "<module>"
           }
         ],
@@ -4678,7 +4599,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 420,
+            "line": 499,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4688,7 +4609,7 @@
         "spec_access": [
           {
             "func": "load_review_spec",
-            "line": 35,
+            "line": 68,
             "scope": "CloudExtractorBase.__init__"
           }
         ],
@@ -4879,6 +4800,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/core/effective_config.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/effective_config.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/core/eligibility_render.py": {
         "entry_point": false,
         "flags": [],
@@ -5028,13 +4963,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 616,
+            "line": 744,
             "role": "help_text",
             "text": "The review's identity, and the single one. The spec file is review_specs/<review_id>.yaml and the data root is data/<review_id>; neither is passed independen..."
           },
           {
             "kind": "f-string",
-            "line": 751,
+            "line": 922,
             "role": "message",
             "text": "f'Review spec not found at {path}. Expected a YAML file (e.g., review_specs/<review_id>.yaml).'"
           }
@@ -5046,11 +4981,25 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 748,
+            "line": 919,
             "scope": "load_review_spec",
             "target": "f"
           }
         ]
+      },
+      "engine/core/run_manifest.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/run_manifest.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
       },
       "engine/elicitation/__init__.py": {
         "entry_point": false,
@@ -5125,7 +5074,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 75,
+            "line": 76,
             "role": "docstring",
             "text": "Derived from the review directory, never searched (CODEBOOK-AUTH-01).\n\n    `review_dir` is `data/<review_id>`, so this is `codebook_path_for` with the\n    id..."
           }
@@ -5584,6 +5533,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/migrations/020_run_manifest.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/migrations/020_run_manifest.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/migrations/__init__.py": {
         "entry_point": false,
         "flags": [],
@@ -5688,7 +5651,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1162,
+            "line": 1161,
             "names": [
               "--verify-hashes"
             ],
@@ -5697,7 +5660,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1164,
+            "line": 1163,
             "names": [
               "--review"
             ],
@@ -5712,7 +5675,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 1168,
+            "line": 1167,
             "scope": "main"
           }
         ],
@@ -6167,7 +6130,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 259,
+            "line": 268,
             "names": [
               "--models"
             ],
@@ -6176,7 +6139,7 @@
           {
             "default": "30",
             "dest": null,
-            "line": 260,
+            "line": 269,
             "names": [
               "--timeout"
             ],
@@ -6612,7 +6575,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 80,
+            "line": 83,
             "names": [
               "--review"
             ],
@@ -6621,7 +6584,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 81,
+            "line": 84,
             "names": [
               "--spec"
             ],
@@ -6637,13 +6600,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 81,
+            "line": 84,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           },
           {
             "kind": "f-string",
-            "line": 271,
+            "line": 274,
             "role": "code",
             "text": "f'data/{review_name}/auditor_eval_results.json'"
           }
@@ -6651,7 +6614,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 88,
+            "line": 91,
             "scope": "run_eval"
           }
         ],
@@ -6659,12 +6622,12 @@
         "spec_access": [
           {
             "func": "spec_path_for",
-            "line": 85,
+            "line": 88,
             "scope": "run_eval"
           },
           {
             "func": "load_spec_for",
-            "line": 87,
+            "line": 90,
             "scope": "run_eval"
           }
         ],
@@ -7607,16 +7570,16 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 93,
+            "line": 132,
             "names": [
               "--review"
             ],
             "required": true
           },
           {
-            "default": "unset",
+            "default": "None",
             "dest": null,
-            "line": 98,
+            "line": 137,
             "names": [
               "--arm"
             ],
@@ -7625,7 +7588,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 103,
+            "line": 143,
             "names": [
               "--spec"
             ],
@@ -7634,7 +7597,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 108,
+            "line": 148,
             "names": [
               "--db"
             ],
@@ -7643,7 +7606,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 113,
+            "line": 153,
             "names": [
               "--max-papers"
             ],
@@ -7652,7 +7615,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 119,
+            "line": 159,
             "names": [
               "--max-cost"
             ],
@@ -7661,7 +7624,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 125,
+            "line": 165,
             "names": [
               "--progress"
             ],
@@ -7670,7 +7633,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 130,
+            "line": 170,
             "names": [
               "--dry-run"
             ],
@@ -7684,13 +7647,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 106,
+            "line": 146,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           },
           {
             "kind": "literal",
-            "line": 111,
+            "line": 151,
             "role": "help_text",
             "text": "Path to database (default: data/<review>/review.db)"
           }
@@ -7699,18 +7662,23 @@
         "review_id_constants": [],
         "spec_access": [
           {
+            "func": "load_review_spec",
+            "line": 109,
+            "scope": "run_arm"
+          },
+          {
             "func": "load_spec_for",
-            "line": 141,
+            "line": 181,
             "scope": "main"
           },
           {
             "func": "data_root_for",
-            "line": 142,
+            "line": 182,
             "scope": "main"
           },
           {
             "func": "spec_path_for",
-            "line": 143,
+            "line": 183,
             "scope": "main"
           }
         ],
@@ -7723,7 +7691,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 390,
+            "line": 399,
             "names": [
               "--review",
               "--name"
@@ -7733,7 +7701,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 396,
+            "line": 405,
             "names": [
               "--spec"
             ],
@@ -7742,7 +7710,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 402,
+            "line": 411,
             "names": [
               "--skip-to"
             ],
@@ -7751,7 +7719,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 408,
+            "line": 417,
             "names": [
               "--limit"
             ],
@@ -7767,19 +7735,19 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 266,
+            "line": 272,
             "role": "message",
             "text": "No papers with status PDF_ACQUIRED. PDF acquisition is manual for v1. Place PDFs in data/%s/pdfs/ named as {paper_id}.pdf, then set status to PDF_ACQUIRED."
           },
           {
             "kind": "literal",
-            "line": 392,
+            "line": 401,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 398,
+            "line": 407,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7787,7 +7755,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 74,
+            "line": 75,
             "scope": "run_pipeline"
           }
         ],
@@ -7795,7 +7763,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 70,
+            "line": 71,
             "scope": "run_pipeline"
           }
         ],
@@ -7974,13 +7942,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 29,
+            "line": 32,
             "role": "code",
             "text": "review_specs"
           },
           {
             "kind": "literal",
-            "line": 29,
+            "line": 32,
             "role": "code",
             "text": "surgical_autonomy.yaml"
           }
@@ -7988,7 +7956,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 63,
+            "line": 66,
             "scope": "main"
           }
         ],
@@ -7996,7 +7964,7 @@
         "spec_access": [
           {
             "func": "load_review_spec",
-            "line": 40,
+            "line": 43,
             "scope": "main"
           }
         ],
@@ -8009,12 +7977,12 @@
         "has_main_guard": true,
         "literal_review_ids": [
           {
-            "line": 34,
+            "line": 36,
             "role": "code",
             "value": "surgical_autonomy"
           },
           {
-            "line": 35,
+            "line": 37,
             "role": "code",
             "value": "surgical_autonomy"
           }
@@ -8024,13 +7992,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 33,
+            "line": 35,
             "role": "code",
             "text": "review_specs"
           },
           {
             "kind": "literal",
-            "line": 33,
+            "line": 35,
             "role": "code",
             "text": "surgical_autonomy.yaml"
           }
@@ -8040,7 +8008,7 @@
         "spec_access": [
           {
             "func": "load_review_spec",
-            "line": 310,
+            "line": 312,
             "scope": "main"
           }
         ],
@@ -8054,26 +8022,26 @@
     "summary": {
       "db_before_spec_scopes": 0,
       "default_review_named_constants": 7,
-      "entry_points": 104,
+      "entry_points": 103,
       "entry_points_constructing_reviewdatabase": 37,
       "entry_points_name_only": 46,
-      "entry_points_with_review_name_flag": 74,
-      "entry_points_with_spec_flag": 29,
-      "files_calling_load_review_spec_directly": 10,
-      "files_calling_resolver": 32,
-      "files_scanned": 213,
+      "entry_points_with_review_name_flag": 73,
+      "entry_points_with_spec_flag": 28,
+      "files_calling_load_review_spec_directly": 11,
+      "files_calling_resolver": 31,
+      "files_scanned": 215,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 35,
       "name_only_constructing_reviewdatabase": 21,
-      "path_construction_sites_in_code": 71,
+      "path_construction_sites_in_code": 70,
       "raw_yaml_load_sites": 3,
       "review_id_constants": 9,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "443e3d8968bf5bcee9679102dcb798bf4f40bdcf",
+    "generated_at_commit": "b1429ce1c97ce834799b3313780af5d76135874a",
     "scan_roots": [
       "engine",
       "scripts",

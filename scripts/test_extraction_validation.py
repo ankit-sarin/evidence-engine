@@ -14,11 +14,13 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from engine.agents.extractor import (
-    MODEL as EXTRACTOR_MODEL,
     build_extraction_prompt,
     extract_pass1_reasoning,
     extract_pass2_structured,
 )
+from engine.core.effective_config import stage_config
+
+EXTRACTOR_MODEL = stage_config("extract_pass1").model  # the resolver's declared default
 from engine.agents.models import ExtractionResult
 from engine.core.review_spec import load_review_spec
 from engine.parsers.pdf_parser import is_scanned_pdf, parse_with_docling, parse_with_vision

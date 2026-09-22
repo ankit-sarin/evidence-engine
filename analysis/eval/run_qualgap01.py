@@ -59,7 +59,12 @@ from analysis.eval.qualgap01 import (
 )
 from analysis.eval.run_local_abc import pass2_messages, parse_unconstrained
 from analysis.eval.schema_eval2 import select_sample
-from engine.agents.extractor import MODEL, build_extraction_prompt, parse_thinking_trace
+from engine.agents.extractor import build_extraction_prompt, parse_thinking_trace
+
+#: The model this frozen study ran with. MANIFEST-01 Phase 2a removed
+#: `engine.agents.extractor.MODEL` (C19): the engine's model comes from the
+#: resolver now, and a frozen study keeps the value it used, not a live one.
+MODEL = "deepseek-r1:32b"
 from engine.agents.models import ExtractionOutput
 from engine.core.completeness import check_completeness, expected_field_names
 from engine.core.review_paths import load_spec_for

@@ -149,8 +149,12 @@ NESTED_CASES = [
     (["extraction_models"], "extraction_models.bogus_key"),
     (["pdf_parsing"], "pdf_parsing.bogus_key"),
     (["pdf_parsing", "parse_quality"], "pdf_parsing.parse_quality.bogus_key"),
-    (["cloud_models"], "cloud_models.bogus_key"),
-    (["cloud_models", "openai"], "cloud_models.openai.bogus_key"),
+    # cloud_models retired in MANIFEST-01 Phase 2a (C20, S3g); its two cases
+    # retire with it (R47) and the blocks that replaced it take their place.
+    (["cloud"], "cloud.bogus_key"),
+    (["ollama"], "ollama.bogus_key"),
+    (["audit"], "audit.bogus_key"),
+    (["preflight"], "preflight.bogus_key"),
     (["distribution_monitor"], "distribution_monitor.bogus_key"),
 ]
 

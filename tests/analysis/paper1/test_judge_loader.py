@@ -283,6 +283,7 @@ def seeded_db(tmp_path):
 
 def _mirror_spans_into_events(rdb) -> None:
     from engine.core import events
+    from tests._event_store_fixture import run_for
     from tests._event_store_fixture import ensure_event_store
 
     conn = rdb._conn
@@ -304,18 +305,18 @@ def _mirror_spans_into_events(rdb) -> None:
             "SELECT COUNT(*) FROM paper_events WHERE paper_id = ?", (pid,)
         ).fetchone()[0]:
             events.write_paper_event(
-                conn, event_type="state_at_migration", paper_id=pid,
+        conn, run_id=run_for(conn), event_type="state_at_migration", paper_id=pid,
                 to_state="eligible", actor_kind="engine", actor_role="system",
                 actor_name="fixture")
         if value is None:
             continue
         uid = events.mint_extraction_uid()
         events.write_field_event(
-            conn, event_type="asserted", paper_id=pid, field_name=field,
+        conn, run_id=run_for(conn), event_type="asserted", paper_id=pid, field_name=field,
             arm=arm, value=value, extraction_uid=uid, source_snippet=snippet,
             actor_kind="model", actor_role="extractor", actor_name="fixture")
         events.write_field_event(
-            conn, event_type="citation_located", paper_id=pid, field_name=field,
+        conn, run_id=run_for(conn), event_type="citation_located", paper_id=pid, field_name=field,
             arm=arm, extraction_uid=uid, actor_kind="engine",
             actor_role="system", actor_name="locator",
             payload={"located": bool(snippet), "snippet": snippet or ""})

@@ -23,9 +23,11 @@ from engine.core.effective import (
 
 m016 = importlib.import_module("engine.migrations.016_event_store")
 m019 = importlib.import_module("engine.migrations.019_paper_state_axes")
+m020 = importlib.import_module("engine.migrations.020_run_manifest")
+from tests._event_store_fixture import run_for  # noqa: E402  (R68: events carry a run)
 
 
-# ── fixture: an event store at the post-019 shape ────────────────────
+# ── fixture: an event store at the post-020 shape ────────────────────
 
 @pytest.fixture
 def db(tmp_path):
@@ -47,6 +49,7 @@ def db(tmp_path):
     conn.commit()
     conn.close()
     m019.run_migration(str(tmp_path / "t.db"))
+    m020.run_migration(str(tmp_path / "t.db"))
     conn = sqlite3.connect(tmp_path / "t.db")
     conn.execute("PRAGMA foreign_keys = ON")
     yield conn
@@ -55,7 +58,7 @@ def db(tmp_path):
 
 def _paper_event(conn, paper_id, event_type, to_state, reason=None):
     events.write_paper_event(
-        conn, event_type=event_type, paper_id=paper_id, to_state=to_state,
+        conn, run_id=run_for(conn), event_type=event_type, paper_id=paper_id, to_state=to_state,
         actor_kind="engine", actor_role="system", actor_name="test",
         reason_code=reason)
 
@@ -238,7 +241,7 @@ def test_a_populated_cell_and_an_empty_one_are_both_yielded(db):
     db.commit()
     uid = events.mint_extraction_uid()
     events.write_field_event(
-        db, event_type="asserted", paper_id=1, field_name="study_type",
+        db, run_id=run_for(db), event_type="asserted", paper_id=1, field_name="study_type",
         arm="local", value="RCT", extraction_uid=uid,
         actor_kind="model", actor_role="extractor", actor_name="deepseek-r1:32b")
     db.commit()

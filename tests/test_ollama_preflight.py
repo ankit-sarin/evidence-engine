@@ -274,7 +274,8 @@ class TestRunnerIntegration:
         """run_extraction calls preflight before processing."""
         from engine.core.database import ReviewDatabase
         from engine.core.review_spec import load_review_spec
-        from engine.agents.extractor import run_extraction, MODEL
+        from engine.agents.extractor import run_extraction
+        from engine.core.effective_config import stage_config
 
         db = ReviewDatabase("test_pf2", data_root=tmp_path)
         spec = load_review_spec("review_specs/surgical_autonomy.yaml")
@@ -284,13 +285,18 @@ class TestRunnerIntegration:
             with pytest.raises(RuntimeError, match="preflight failed"):
                 run_extraction(db, spec, review_name="test_pf2")
 
-            mock_pf.assert_called_once_with([MODEL], runner_name="Extraction")
+            # B5 (MANIFEST-01 Phase 2a): the model is the resolver's, and the
+            # spec travels with it so the probe's own options are the spec's (R63).
+            mock_pf.assert_called_once_with(
+                [stage_config("extract_pass1", spec).model], runner_name="Extraction",
+                spec=spec)
         db.close()
 
     def test_audit_calls_preflight(self, tmp_path):
         """run_audit calls preflight before processing."""
         from engine.core.database import ReviewDatabase
-        from engine.agents.auditor import run_audit, DEFAULT_AUDITOR_MODEL
+        from engine.agents.auditor import run_audit
+        from engine.core.effective_config import stage_config
 
         db = ReviewDatabase("test_pf3", data_root=tmp_path)
 
@@ -299,8 +305,9 @@ class TestRunnerIntegration:
             with pytest.raises(RuntimeError, match="preflight failed"):
                 run_audit(db, review_name="test_pf3")
 
+            # B5: the audit model is the spec model's declared default (C19).
             mock_pf.assert_called_once_with(
-                [DEFAULT_AUDITOR_MODEL], runner_name="Audit",
+                [stage_config("audit").model], runner_name="Audit", spec=None,
             )
         db.close()
 

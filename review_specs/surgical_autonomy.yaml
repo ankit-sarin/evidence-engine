@@ -51,6 +51,52 @@ ft_screening_models:
   think: false
   temperature: 0
 
+# MANIFEST-01 Phase 2a (S3a). The values every extraction call has actually
+# sent (MANIFEST-01 Phase 1 P1) — until session 7 `extractor` and `temperature`
+# here reached no call (row C1). `arm` names the arm local extraction writes to.
+extraction_models:
+  extractor: "deepseek-r1:32b"
+  pass1_think: true
+  pass2_think: false
+  temperature: 0
+  elicitation: false
+  arm: local_deepseek_r1_32b
+
+# Every arm of this review (R10, R12, R64). An arm is pinned to its resolved
+# configuration at its first run manifest; a changed model or options is a new
+# arm name, never a newer claim in the old one. The three arms of Run 6
+# (local, openai_o4_mini_high, anthropic_sonnet_4_6) are registered
+# pre-manifest in the database, never pin and accept no new claims (R59), so
+# the arms below carry new names.
+arms:
+  - name: local_deepseek_r1_32b
+    kind: model
+    provider: ollama
+    model: "deepseek-r1:32b"
+  - name: openai_o4_mini_2025_04_16_high
+    kind: model
+    provider: openai
+    model: "o4-mini-2025-04-16"
+    options:
+      reasoning_effort: high
+      response_format: {type: json_object}
+  - name: anthropic_claude_sonnet_4_6
+    kind: model
+    provider: anthropic
+    model: "claude-sonnet-4-6"
+    options:
+      max_tokens: 16000
+      thinking: {type: enabled, budget_tokens: 10000}
+
+# Cloud arms are opt-in per run and OFF: nothing leaves the machine unless an arm
+# is listed here AND named by --arm (S3g, R6). R71: no cloud extraction until
+# sessions 8 and 9 land. Prices are what the cost tracker has used since March.
+cloud:
+  enabled_arms: []
+  prices:
+    openai_o4_mini_2025_04_16_high: {input_per_m: 1.10, output_per_m: 4.40}
+    anthropic_claude_sonnet_4_6: {input_per_m: 3.00, output_per_m: 15.00}
+
 low_yield_threshold: 4
 
 pdf_quality_check:

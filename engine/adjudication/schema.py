@@ -31,25 +31,21 @@ CREATE INDEX IF NOT EXISTS idx_abstract_adjudication_decision
     ON abstract_screening_adjudication(adjudication_decision);
 """
 
-_AUDIT_ADJUDICATION_TABLE = """
-CREATE TABLE IF NOT EXISTS audit_adjudication (
-    id                      INTEGER PRIMARY KEY,
-    span_id                 INTEGER REFERENCES evidence_spans(id),
-    paper_id                INTEGER REFERENCES papers(id),
-    field_name              TEXT NOT NULL,
-    original_value          TEXT,
-    human_decision          TEXT CHECK (human_decision IN ('accept', 'override', 'reject_paper')),
-    override_value          TEXT,
-    reviewer_notes          TEXT,
-    adjudication_timestamp  TEXT,
-    created_at              TEXT NOT NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_audit_adj_span
-    ON audit_adjudication(span_id);
-CREATE INDEX IF NOT EXISTS idx_audit_adj_paper
-    ON audit_adjudication(paper_id);
-"""
+# The `audit_adjudication` DDL was removed by R32 (READERS-01 Phase 2a).
+#
+# It created the table on EVERY `ReviewDatabase` construction, which is why the
+# table could not simply be dropped: migration 018's DROP was undone by the next
+# open (measured: present 1 -> 0 -> 1). The R32 census found no production
+# reader and three unreachable INSERT sites, so the table goes and its
+# provisioning goes with it. Human audit decisions become `field_events`
+# (`human_accepted` / `human_corrected` / `human_withdrew`) through the importer
+# built in session 12 — R32 reverses only the SEQUENCING half of R18's A11
+# Option B, not the route.
+#
+# Inventory row C12: the three surviving tables here are still created outside
+# the receipted runner — the self-provisioning pattern R14 retired for
+# `human_extractions`. Moving them into numbered migrations is S3c work for a
+# later session; 018 deliberately did not widen to them.
 
 
 _FT_ADJUDICATION_TABLE = """
@@ -74,7 +70,6 @@ CREATE INDEX IF NOT EXISTS idx_ft_adj_paper
 def ensure_adjudication_table(conn: sqlite3.Connection) -> None:
     """Create all adjudication tables if they don't exist."""
     conn.executescript(_ADJUDICATION_TABLE)
-    conn.executescript(_AUDIT_ADJUDICATION_TABLE)
     conn.executescript(_FT_ADJUDICATION_TABLE)
     conn.commit()
 

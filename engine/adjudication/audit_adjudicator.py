@@ -437,23 +437,30 @@ def _write_audit_xlsx(
 
 
 class AuditAdjudicationDeprecated(RuntimeError):
-    """`audit_adjudication` is no longer written (R18, A11 Option B).
+    """`audit_adjudication` is gone (R18 A11 Option B, sequencing reversed by R32).
 
-    Session 5 (EFFECTIVE-RESULT-02) stopped writing to this table; session 12
-    drops it. The refusal sits at the single entry point rather than at the
-    three INSERT statements below it, because three guards is the shape that
-    gets re-derived correctly at every future site or not at all.
+    Session 5 (EFFECTIVE-RESULT-02) stopped writing to this table. **Migration
+    018 dropped it** — R32 brought the drop forward from session 12 after the
+    Phase 2a census found no production reader and three INSERT sites all
+    unreachable behind this refusal. The route is unchanged: human audit
+    decisions become `field_events`, through the importer built in session 12.
+
+    The refusal sits at the single entry point rather than at the three INSERT
+    statements below it, because three guards is the shape that gets re-derived
+    correctly at every future site or not at all.
     """
 
 
 DEPRECATION_MESSAGE = (
-    "audit_adjudication is deprecated and no longer written (R18, A11 Option B: "
-    "session 5 stops writing, session 12 drops). The table's span_id references "
-    "the phantom _evidence_spans_old, so under PRAGMA foreign_keys=ON this path "
-    "has never been writable on this database \u2014 which is why the table holds 0 "
-    "rows. Human audit decisions become field_events (human_accepted / "
-    "human_corrected / human_withdrew) through the importer built in session 12; "
-    "until then there is no supported route and none is improvised here."
+    "audit_adjudication is deprecated and no longer written (R18, A11 Option B; "
+    "sequencing reversed by R32). Session 5 stopped writing; MIGRATION 018 "
+    "DROPPED THE TABLE, and engine/adjudication/schema.py no longer creates it. "
+    "Its span_id referenced the phantom _evidence_spans_old, so under PRAGMA "
+    "foreign_keys=ON this path was never writable on this database \u2014 which is "
+    "why the table held 0 rows. Human audit decisions become field_events "
+    "(human_accepted / human_corrected / human_withdrew) through the importer "
+    "built in session 12; until then there is no supported route and none is "
+    "improvised here."
 )
 
 
@@ -464,9 +471,10 @@ def import_audit_review_decisions(
     """Read completed audit review decisions and write to database.
 
     **REFUSES.** See `AuditAdjudicationDeprecated` — this path writes
-    `audit_adjudication`, which R18 retired in session 5. The body below is kept
-    intact, unrun, because session 12's importer is specified against it and a
-    deleted path cannot be read for what it used to mean.
+    `audit_adjudication`, which R18 retired in session 5 and migration 018
+    dropped. The body below is kept intact, unrun, because session 12's importer
+    is specified against it and a deleted path cannot be read for what it used to
+    mean. It is now unrunnable as well as unreached: the table does not exist.
 
 
     If input_path is None, auto-discovers the decisions file using the

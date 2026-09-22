@@ -18,8 +18,13 @@ CREATE TABLE IF NOT EXISTS cloud_extractions (
     extraction_schema_hash  TEXT,
     extracted_at            TEXT NOT NULL,
     codebook_hash           TEXT,
-    codebook_sha256         TEXT,
-    UNIQUE(paper_id, arm)
+    codebook_sha256         TEXT
+    -- R16: NO UNIQUE(paper_id, arm). An arm may hold more than one claim on a
+    -- paper, because supersession within an arm is a thing the event store has
+    -- to be able to represent (S3d, session 8). Dropped here and on the live
+    -- database by migration 018, in one change: this file is what a FRESH
+    -- database gets, and a constraint dropped on one side only is the schema
+    -- divergence C10 already is.
 );
 
 CREATE TABLE IF NOT EXISTS cloud_evidence_spans (

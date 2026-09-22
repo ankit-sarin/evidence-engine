@@ -398,7 +398,8 @@ def test_the_audit_import_path_refuses_and_names_its_successor(db, tmp_path):
         import_audit_review_decisions(db, out)
     msg = str(exc.value)
     assert "R18, A11 Option B" in msg
-    assert "session 12" in msg
+    assert "MIGRATION 018 DROPPED THE TABLE" in msg
+    assert "session 12" in msg   # the importer route is unchanged
     assert "field_events" in msg
 
 
@@ -408,10 +409,21 @@ def test_the_audit_import_path_refuses_before_it_reads_anything(db):
         import_audit_review_decisions(db)
 
 
-def test_audit_adjudication_is_left_on_disk_untouched_session_12_drops_it(db):
-    """R18 stops the writer; it does not drop the table."""
+def test_audit_adjudication_is_gone_and_does_not_come_back(db):
+    """B5 rewrite. This test pinned "R18 stops the writer; it does not drop the
+    table" — which was true until R32 reversed the sequencing half of A11 Option
+    B and migration 018 dropped it. The behaviour it pinned is exactly what the
+    ruling changed, so it is rewritten to the corrected behaviour, not deleted.
+
+    Three things are asserted, because dropping the table was not enough on its
+    own: `ensure_adjudication_table` used to recreate it on every construction
+    (census reproducer: present 1 -> 0 -> 1). The across-constructions half lives
+    in `tests/test_migration_018_cloud_shape.py`.
+    """
     assert db._conn.execute(
         "SELECT COUNT(*) FROM sqlite_master WHERE type='table' "
-        "AND name='audit_adjudication'").fetchone()[0] == 1
-    assert db._conn.execute(
-        "SELECT COUNT(*) FROM audit_adjudication").fetchone()[0] == 0
+        "AND name='audit_adjudication'").fetchone()[0] == 0
+    # nothing anywhere still names the phantom the table's FK pointed at (A11)
+    assert not [s for (s,) in db._conn.execute(
+        "SELECT sql FROM sqlite_master WHERE sql IS NOT NULL")
+        if "_evidence_spans_old" in s]

@@ -1,5 +1,8 @@
 # Module Inventory
 
+> **Corrected 2026-09-22 (READERS-01 Phase 2a/2b).** The entries below were written against the pre-event-store engine. Where a reader now goes through `engine/core/effective.py`, the text says so and names the ruling.
+
+
 Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`, and `tests/` with purpose, key functions/classes, and dependencies.
 
 ---
@@ -163,7 +166,7 @@ All acquisition modules use `ReviewDatabase` as a context manager. Terminal stat
 
 ### `schema.py`
 **Purpose:** DDL for 3 adjudication tables + workflow_state.
-- `abstract_screening_adjudication`, `ft_screening_adjudication`, `audit_adjudication`
+- `abstract_screening_adjudication`, `ft_screening_adjudication` — *corrected 2026-09-22:* `audit_adjudication` was dropped by migration 018 (R32) and is no longer created here
 
 ### `categorizer.py`
 **Purpose:** Rule-based FP pattern categorization.
@@ -257,7 +260,7 @@ All acquisition modules use `ReviewDatabase` as a context manager. Terminal stat
 
 ### `concordance.py`
 **Purpose:** Multi-arm concordance pipeline.
-- `load_arm(db_path, arm)` — Load from evidence_spans (local) or cloud_evidence_spans (cloud) or human_extractions (human_*). Raises `sqlite3.OperationalError` on DB errors (never returns empty dict on failure)
+- `load_arm(db_path, arm)` — Reads `effective_value` for every grid cell of ONE REGISTERED ARM, `mode=ro`. Routing is the `arms` registry (R12); raises `UnknownArm` on a name not in it, and `sqlite3.OperationalError` on DB errors (never an empty dict on failure). *Corrected 2026-09-22:* this previously read "Load from evidence_spans (local) or cloud_evidence_spans (cloud) **or human_extractions (human_\*)**" — the third branch never existed here (A12), and `human_extractions` does not exist on this review's database
 - `align_arms(arm_a, arm_b)` — Align by paper_id and field_name
 - `run_concordance(db_path, arm_a, arm_b, spec_path)` — Full pipeline for one pair
 - `run_all_pairs(db_path, arms, spec_path)` — All unique pairs
@@ -299,21 +302,20 @@ All acquisition modules use `ReviewDatabase` as a context manager. Terminal stat
 
 ### `evidence_table.py`
 **Purpose:** Evidence table exports.
-- `NO_EXTRACTION_MARKER = "[NO EXTRACTION DATA]"` — marks papers with missing extractions; `exclude_empty` flag omits them
-- `export_evidence_csv(db, spec, output_path, min_status, exclude_empty)` — One row per paper with per-field value/snippet/confidence/audit_status. Atomic temp-file-then-rename
-- `export_evidence_excel(db, spec, output_path, min_status, exclude_empty)` — 3-sheet: Evidence Table, Extraction Summary, Field Stats. Atomic temp-file-then-rename
+- `NO_EXTRACTION_MARKER = "[NO EXTRACTION DATA]"` — marks papers for which the store holds **no record at all** on this arm. *Corrected 2026-09-22:* it used to mean "no non-null value", which threw away the declined and withdrawn states this work exists to make visible
+- `export_evidence_csv(db, spec, output_path, min_status, exclude_empty, arm)` — One row per CORPUS paper with the two state axes and per-field value/snippet/**state**/**rule_row**, read through `effective_value`. `confidence` and `audit_status` are gone (R36, R18/Q7). Atomic temp-file-then-rename
+- `export_evidence_excel(db, spec, output_path, min_status, exclude_empty, arm)` — 3-sheet: Evidence Table, Screening Log, **Field States**. *Corrected 2026-09-22:* sheet 3 was an "Audit Log" with no latest-extraction filter while sheet 1 had one — A1 inside one file. Atomic temp-file-then-rename
 
 ### `docx_export.py`
 **Purpose:** Publication-ready DOCX.
-- `export_evidence_docx(db, spec, output_path, min_status)` — Landscape, 0.5" margins, Study + Year + Journal + extraction fields
+- `export_evidence_docx(db, spec, output_path, min_status, arm)` — Landscape, 0.5" margins, Study + Year + Journal + extraction fields, read through `effective_value`. `[declined]` for an abstention; **empty** for a withdrawal (R1); a note under the table reports processing failures by reason (S3h)
 
 ### `methods_section.py`
 **Purpose:** Auto-generated PRISMA methods paragraph.
 - `generate_methods_section(db, spec)` — Queries actual DB models (not spec defaults). Covers search, screening, exclusion, extraction, audit
 
-### `trace_exporter.py`
-**Purpose:** Extraction reasoning trace analysis.
-- `export_trace_quality_report(db_path, output_path)` — Trace length stats (min/max/mean/median/stdev), under-500, truncated detection
+### `trace_exporter.py` — **RETIRED 2026-09-22 (R46)**
+Deleted. It read `extractions.reasoning_trace` and `evidence_spans.audit_status` / `.confidence` / `.audit_rationale`, none of which has an event-store counterpart, so it served the reading of Run 6 rather than the engine going forward (R31). Prior design recoverable at `443e3d8968bf5bcee9679102dcb798bf4f40bdcf:engine/exporters/trace_exporter.py`; trace quality is rebuilt over trace events at session 9 (S5d)
 
 ---
 
@@ -467,7 +469,7 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 | `test_adjudication.py` | Abstract screening adjudication export/import |
 | `test_adjudication_pairs.py` | Concordance AMBIGUOUS pair export |
 | `test_api_parity.py` | Cloud extractor API compatibility |
-| `test_audit_adjudication.py` | Audit review export/import |
+| `test_audit_adjudication.py` | Audit review export; the import path's refusal, and the dropped table's absence (R32) |
 | `test_auditor.py` | Grep verify, semantic verify, audit_span, LOW_YIELD |
 | `test_background.py` | tmux background launcher |
 | `test_cloud_extraction.py` | Cloud extractor base, store_result, parse_response |
@@ -499,7 +501,7 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 | `test_retry_failed.py` | Download retry strategies |
 | `test_review_spec.py` | ReviewSpec loading, validation, hashing |
 | `test_screener.py` | Abstract screening dual-pass + verification |
-| `test_trace_exporter.py` | Trace quality report |
+| *(`test_trace_exporter.py` — retired with its module, R46/R47)* | — |
 | `test_verify_downloads.py` | PDF verify/rename/match |
 | `test_workflow.py` | 12-stage workflow enforcement |
 

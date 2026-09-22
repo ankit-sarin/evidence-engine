@@ -42,7 +42,7 @@ evidence-engine/
 │   ├── validators/             # Extraction validator + distribution collapse monitor
 │   ├── elicitation/            # Per-class evidence elicitation (units, classes, contracts,
 │   │                           #   prompts, materialize, sizing, pipeline)
-│   └── exporters/              # PRISMA, evidence tables, DOCX, methods, traces
+│   └── exporters/              # PRISMA, evidence tables, DOCX, methods
 ├── analysis/
 │   ├── paper1/                 # Human workbook import, consensus derivation, adjudication
 │   ├── provenance/             # Frozen v1.1 evidence-provenance taxonomy + classifier
@@ -244,11 +244,27 @@ stores, fifteen readers, each with its own rule. This module is the one rule.
   ~5 µs/call, ~0.1 s for the grid, so **no batch form** (re-measure once the
   field-event store is non-empty; the measurement was taken on an empty one).
 
-Readers behind it since READERS-01 Phase 2a: `engine/analysis/concordance.py`,
-`engine/exporters/evidence_table.py`, `analysis/paper1/judge_loader.py`,
+Readers behind it, all of session 6: `engine/analysis/concordance.py`,
+`engine/exporters/evidence_table.py`, `engine/exporters/docx_export.py`,
+`analysis/paper1/judge_loader.py`, `analysis/paper1/export_disagreement_pairs.py`,
 `engine/validators/distribution_monitor.py`. Under **R30** each had its
 direct-table path **removed**, not retained beside the reader.
-`docx_export.py` and `trace_exporter.py` are Phase 2b.
+
+**`engine/exporters/trace_exporter.py` was RETIRED, not migrated** (R46). It
+reported on `extractions.reasoning_trace` and on `evidence_spans.audit_status` /
+`.confidence` / `.audit_rationale`, and the event store carries none of them — so
+migrating it would have left the module standing while every number it produced
+went empty. It served the reading of Run 6, not the engine going forward, which
+is R31's test. Trace quality is rebuilt over **trace events** at session 9 (S5d);
+the prior design is recoverable at
+`443e3d8968bf5bcee9679102dcb798bf4f40bdcf:engine/exporters/trace_exporter.py`, and its committed outputs under
+`data/surgical_autonomy/exports/` stay on disk as legacy telemetry.
+
+**`export_disagreement_pairs.py` no longer decides the universe** (R48). Its
+`if not any_disagree: continue` WAS inventory row B3 — this file's output was the
+judge's input, so a cell every arm agreed on could never be judged. Every grid
+cell is a row now, with the scorer's verdict in it. The row format is unchanged
+and its three value columns always exist, whatever the registry holds.
 
 ## Cloud Extraction Architecture
 - `CloudExtractorBase` (engine/cloud/base.py): shared logic — pending paper query, codebook-driven prompt building, response JSON parsing (8+ alternate keys + raw content recovery), progress tracking, cost calculation, distribution monitor integration

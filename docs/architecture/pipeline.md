@@ -1,5 +1,8 @@
 # Pipeline Data Flow
 
+> **Corrected 2026-09-22 (READERS-01 Phase 2a/2b).** The passages below were written against the pre-event-store engine. Where a reader now goes through `engine/core/effective.py`, the text says so and names the ruling.
+
+
 Each stage of the pipeline is described below with its trigger, handler module, database transitions, artifacts, and CLI commands.
 
 ---
@@ -243,7 +246,7 @@ python scripts/run5_extract_and_audit.py ... --paper-ids 82 4 24
 
 **Flow:**
 1. Both arms share the same codebook prompt (via `CloudExtractorBase.build_prompt()`)
-2. Each arm processes papers with status IN (FT_ELIGIBLE, EXTRACTED, AI_AUDIT_COMPLETE, HUMAN_AUDIT_COMPLETE) missing a cloud extraction for that arm
+2. Each arm processes the CORPUS — the papers whose **eligibility axis** of `effective_state` reads `eligible` (S3h) — missing a cloud extraction for that arm. *Corrected 2026-09-22:* this previously read "papers with status IN (FT_ELIGIBLE, EXTRACTED, AI_AUDIT_COMPLETE, HUMAN_AUDIT_COMPLETE)", a `papers.status` allowlist that excluded `EXTRACT_FAILED` by omission and so conflated scientific eligibility with processing success (A9). A paper whose extraction failed is in the corpus and is reported by its reason
 3. **OpenAI arm:** `chat.completions.create()` with reasoning_effort=high, json_object format. Reasoning trace from `message.reasoning_content`
 4. **Anthropic arm:** `messages.create()` with extended thinking (budget_tokens=10000), max_tokens=16000. Thinking blocks separated from text blocks. Markdown fence stripping
 5. Response JSON parsed via `parse_response_to_spans()` (8+ alternate key names, flat dict restructuring, null → "NR")
@@ -329,8 +332,7 @@ python -m engine.validators.distribution_monitor --review surgical_autonomy --ar
 3. **Export:** HTML (self-contained, per-span ACCEPT/REJECT/CORRECT interface with localStorage, JSON export) or xlsx (per-span rows with DataValidation dropdowns)
 4. **Human review:** Per-span decisions (stats increment only after confirmed DB update):
    - ACCEPT → span verified
-   - REJECT → `audit_adjudication` record with `human_decision='reject_paper'`
-   - CORRECT → `audit_adjudication` record with `human_decision='override'`, span value updated
+   - REJECT / CORRECT → *Corrected 2026-09-22:* this path is **gone**. `audit_adjudication` was dropped by migration 018 (R32) and `import_audit_review_decisions` refuses at its entry point — the table's `span_id` referenced a phantom, so it was never writable and held 0 rows (A11). Human audit decisions become `field_events` (`human_accepted` / `human_corrected` / `human_withdrew`) through the importer built in session 12
 5. **Import decisions:** Two-pass validation (reject entire import on any error)
    - Auto-discovers: `{review}_extraction_audit_decisions.json`
    - Supports .json (from HTML tool) and .xlsx (from workbook)
@@ -347,7 +349,7 @@ python -m engine.validators.distribution_monitor --review surgical_autonomy --ar
 **Modules:** `engine/analysis/concordance.py`, `engine/analysis/scoring.py`, `engine/analysis/normalize.py`, `engine/analysis/metrics.py`, `engine/analysis/report.py`
 
 **Flow:**
-1. **Load arms:** `load_arm()` — queries evidence_spans (local) or cloud_evidence_spans (cloud arms) or human_extractions (human_A/B/C/D). Returns `{paper_id: {field_name: value}}`
+1. **Load arms:** `load_arm()` — reads `effective_value` for every cell in the grid for ONE REGISTERED ARM, and routes on the `arms` registry's `arm_kind`, never on the arm's name (R12). Returns `{paper_id: {field_name: value}}`, a key present only where the reader returns a value. *Corrected 2026-09-22:* this previously read "queries evidence_spans (local) or cloud_evidence_spans (cloud arms) **or human_extractions (human_A/B/C/D)**" — the third branch never existed in `concordance.py`, which is inventory row A12; `human_extractions` does not exist on this review's database at all
 2. **Schema parity check:** `check_schema_parity()` warns if extraction schema hashes differ across arms
 3. **Align:** `align_arms()` — align by paper_id and field_name. Track a-only and b-only papers
 4. **Normalize:** `normalize_for_concordance()` per field:
@@ -375,7 +377,7 @@ python -m engine.analysis.concordance --review surgical_autonomy --arms local,op
 
 ## 14. EXPORT
 
-**Modules:** `engine/exporters/prisma.py`, `engine/exporters/evidence_table.py`, `engine/exporters/docx_export.py`, `engine/exporters/methods_section.py`, `engine/exporters/trace_exporter.py`
+**Modules:** `engine/exporters/prisma.py`, `engine/exporters/evidence_table.py`, `engine/exporters/docx_export.py`, `engine/exporters/methods_section.py`. *Corrected 2026-09-22:* `trace_exporter.py` was **retired** under R46, not migrated — it reported on `extractions.reasoning_trace` and on `evidence_spans.audit_status` / `.confidence` / `.audit_rationale`, none of which the event store carries. Trace quality is rebuilt over trace events at session 9 (S5d)
 
 ### PRISMA Flow (`prisma.py`)
 
@@ -385,23 +387,23 @@ python -m engine.analysis.concordance --review surgical_autonomy --arms local,op
 
 ### Evidence Table (`evidence_table.py`)
 
-- `export_evidence_csv()` — one row per paper, columns: paper metadata + per-field (value, source_snippet, confidence, audit_status)
-- `export_evidence_excel()` — three-sheet workbook: Evidence Table, Extraction Summary, Field Stats
+- `export_evidence_csv(db, spec, path, min_status, exclude_empty, arm)` — one row per CORPUS paper, columns: paper metadata + the two state axes (`eligibility`, `processing`, `processing_reason`, `analysis_ready`) + per-field (value, source_snippet, **state, rule_row**). *Corrected 2026-09-22:* `confidence` and `audit_status` are gone (R36) — the first has no counterpart in the event store and the second is provenance, not a field state (R18/Q7); `{field}_state` and `{field}_rule_row` carry more and are auditable. `arm` is a required piece of knowledge, defaulted to `local` (R18/Q4)
+- `export_evidence_excel()` — three-sheet workbook: Evidence Table, Screening Log, **Field States**. *Corrected 2026-09-22:* sheet 3 was an "Audit Log" read off `evidence_spans` joined to EVERY extraction with no latest-extraction filter, while sheet 1 showed only the newest — one workbook disagreeing with itself, which is A1 inside a single file
 - Papers with no extraction data marked `[NO EXTRACTION DATA]`; `--exclude-empty` flag omits them entirely
 
-Both accept `min_status` parameter: `AI_AUDIT_COMPLETE` (raw AI) or `HUMAN_AUDIT_COMPLETE` (human-verified)
+*Corrected 2026-09-22:* `min_status` no longer selects papers. The set is the corpus (the eligibility axis), and `HUMAN_AUDIT_COMPLETE` as a paper-level gate is a **per-field** question under the event model, which the `{field}_state` column answers per cell.
 
 ### DOCX (`docx_export.py`)
 
-`export_evidence_docx()` — landscape orientation, 0.5" margins, Study (first author et al.) + Year + Journal + extraction fields. python-docx
+`export_evidence_docx(db, spec, path, min_status, arm)` — landscape orientation, 0.5" margins, Study (first author et al.) + Year + Journal + extraction fields, read through `effective_value`. python-docx. A declined field renders `[declined]`; a withdrawn one renders **empty**, because R1 makes a withdrawal "no value in the current result". A note under the table reports processing failures by reason (S3h) rather than dropping those papers silently
 
 ### Methods Section (`methods_section.py`)
 
 `generate_methods_section()` — auto-generated PRISMA methods paragraph. Reads model names dynamically from the review spec and DB metadata (actual models used per extraction/audit, not hardcoded). Covers: search strategy, screening process, exclusion criteria, extraction, audit
 
-### Trace Export (`trace_exporter.py`)
+### Trace Export — **RETIRED 2026-09-22 (R46)**
 
-`export_trace_quality_report()` — reasoning trace analysis: min/max/mean/median/stdev chars, under-500 count, truncated count. Outputs JSON + Markdown
+`trace_exporter.py` is deleted. It reported reasoning-trace statistics (min/max/mean/median/stdev chars, under-500 count, truncated count) and per-field auditor verdicts, and the event store carries neither, so migrating it would have left the module standing while every number went empty. Prior design recoverable at `443e3d8968bf5bcee9679102dcb798bf4f40bdcf:engine/exporters/trace_exporter.py`. Trace quality is rebuilt over trace events at session 9 (S5d). Its committed outputs under `data/surgical_autonomy/exports/` stay on disk as legacy telemetry
 
 ### Self-Documenting Workbooks (`review_workbook.py`)
 
@@ -428,7 +430,7 @@ These cross-cutting patterns are enforced throughout the codebase.
 - **Zero-span rejection:** Both local (`engine/agents/extractor.py`) and cloud (`engine/cloud/base.py`) extractors raise `ValueError` if an extraction produces 0 evidence spans. Empty extractions are never stored
 - **Empty parsed text guard:** `parse_pdf()` raises `ValueError` if all three parser tiers return empty text — no file written, no DB row created
 - **Missing parsed text → FT_FLAGGED:** Papers without parsed text at FT screening time are marked FT_FLAGGED with reason_code `no_parsed_text`, not silently skipped
-- **`load_arm()` raises on DB error:** `engine/analysis/concordance.py` propagates `sqlite3.OperationalError` on missing or corrupted databases instead of returning an empty dict
+- **`load_arm()` raises on an unknown arm and on DB error:** `engine/analysis/concordance.py` raises `UnknownArm` for a name that is not in the review's registry — before Phase 2a it returned `{}`, so a typo read as "this arm has no data" (A12) — and still propagates `sqlite3.OperationalError` on a missing or corrupted database instead of returning an empty dict
 - **FT adjudication read failures logged:** If parsed text cannot be loaded for FT adjudication export, the paper is included with `[text unavailable]` marker rather than silently skipped
 
 ### Atomic Writes with Full Rollback

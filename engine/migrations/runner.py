@@ -86,6 +86,11 @@ KINDS: dict[str, str] = {
     "020": "schema",   # S3a/S3b/R59/R68: run_manifests, run_stage_configs,
                        # run_calls; both event tables rebuilt with the run
                        # link; arms pin columns and the widened freeze trigger.
+    "021": "schema",   # S3e/R93: parsed_text_refs rebuilt with parsed_text_sha256
+                       # and UNIQUE(paper_id, version). A fresh database needs the
+                       # shape; its table is empty, so the backfill reads no file.
+                       # On a database with rows it recomputes and checks every
+                       # hash against the committed baseline or refuses (R101).
 }
 
 _RECEIPTS_DDL = """

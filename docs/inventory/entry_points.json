@@ -5547,6 +5547,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/migrations/021_parsed_text_sha256.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/migrations/021_parsed_text_sha256.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/migrations/__init__.py": {
         "entry_point": false,
         "flags": [],
@@ -7928,7 +7942,7 @@
       "entry_points_with_spec_flag": 27,
       "files_calling_load_review_spec_directly": 11,
       "files_calling_resolver": 30,
-      "files_scanned": 213,
+      "files_scanned": 214,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 34,
@@ -7940,7 +7954,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "e40387de64a53da50727709ef6a660e1f03934ac",
+    "generated_at_commit": "d261003193a059b6469d3d4f88d3e745d2d80bd4",
     "scan_roots": [
       "engine",
       "scripts",

@@ -88,8 +88,18 @@ def test_017_is_declared_a_data_migration_with_its_reason(fresh):
 # ── 017 — the seed itself, on a synthetic database ────────────────────
 @pytest.fixture
 def seeded(fresh):
-    """A fresh database with three corpus papers and two parsed texts."""
+    """A fresh database with three corpus papers and two parsed texts.
+
+    017 ran against the 016 shape of `parsed_text_refs`. A fresh database now
+    carries 021's (with a NOT NULL `parsed_text_sha256`), and 017's
+    `INSERT OR IGNORE` would silently drop every reference into it — so the
+    table is put back to the shape 017 actually wrote, from 016's own DDL.
+    """
     conn = sqlite3.connect(str(fresh))
+    conn.execute("DROP TABLE parsed_text_refs")
+    create = next(s for s in _016.schema_sql().split(";")
+                  if "CREATE TABLE IF NOT EXISTS parsed_text_refs" in s)
+    conn.execute(create)
     conn.executemany(
         "INSERT INTO papers (id, title, source, status, created_at, updated_at) "
         "VALUES (?, ?, 't', ?, 'now', 'now')",

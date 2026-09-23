@@ -229,6 +229,11 @@ closeout; **the old record is superseded, never edited.**
   test; serving a publication is not a reason to retain. Legacy result tables stay
   under R25 because they serve the engine as a regression fixture. Retirement is
   recorded in a ledger and executed by the session that owns the artifact.
+- **No live write to review.db between 07:00 and 10:35 UTC** (R86: 07:00 Ollama health
+  check, 09:00 nightly suite, 10:30 dgx-snapshot-user timer +0–2 min, all read-only);
+  before any live write, exclusivity is checked against scheduled jobs that read or write
+  review.db or the evidence-engine tree — not every timer on the box (R85) — plus
+  lsof/fuser empty on review.db.
 
 ## Ops Invariants — commits
 

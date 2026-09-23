@@ -6038,7 +6038,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 222,
+            "line": 192,
             "names": [
               "--review"
             ],
@@ -6047,7 +6047,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 223,
+            "line": 193,
             "names": [
               "--keep-schema"
             ],
@@ -6056,7 +6056,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 227,
+            "line": 197,
             "names": [
               "--codebook"
             ],
@@ -6065,7 +6065,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 233,
+            "line": 203,
             "names": [
               "--confirm"
             ],
@@ -6079,7 +6079,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 229,
+            "line": 199,
             "role": "help_text",
             "text": "Override the codebook path. Defaults to data/<review>/extraction_codebook.yaml; an override must declare the same review."
           }
@@ -6087,7 +6087,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 252,
+            "line": 229,
             "scope": "main"
           }
         ],
@@ -7106,65 +7106,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "scripts/reextract_all.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 37,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 38,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {
-          "main": "spec_first"
-        },
-        "path": "scripts/reextract_all.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 38,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": true,
-            "line": 45,
-            "scope": "main"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "spec_path_for",
-            "line": 42,
-            "scope": "main"
-          },
-          {
-            "func": "load_spec_for",
-            "line": 44,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "scripts/reextract_failed.py": {
         "entry_point": true,
         "flags": [
@@ -7427,48 +7368,6 @@
             "scope": "main"
           }
         ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "scripts/retry_parse_6.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "dynamic: DEFAULT_REVIEW",
-            "dest": null,
-            "line": 107,
-            "names": [
-              "--review"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [
-          {
-            "line": 22,
-            "role": "code",
-            "value": "surgical_autonomy"
-          }
-        ],
-        "order": {},
-        "path": "scripts/retry_parse_6.py",
-        "path_construction": [],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 113,
-            "scope": "main"
-          }
-        ],
-        "review_id_constants": [
-          {
-            "line": 22,
-            "name": "DEFAULT_REVIEW",
-            "value": "surgical_autonomy"
-          }
-        ],
-        "spec_access": [],
         "unparsed": [],
         "yaml_loads": []
       },
@@ -8021,27 +7920,27 @@
     ],
     "summary": {
       "db_before_spec_scopes": 0,
-      "default_review_named_constants": 7,
-      "entry_points": 103,
-      "entry_points_constructing_reviewdatabase": 37,
-      "entry_points_name_only": 46,
-      "entry_points_with_review_name_flag": 73,
-      "entry_points_with_spec_flag": 28,
+      "default_review_named_constants": 6,
+      "entry_points": 101,
+      "entry_points_constructing_reviewdatabase": 35,
+      "entry_points_name_only": 45,
+      "entry_points_with_review_name_flag": 71,
+      "entry_points_with_spec_flag": 27,
       "files_calling_load_review_spec_directly": 11,
-      "files_calling_resolver": 31,
-      "files_scanned": 215,
+      "files_calling_resolver": 30,
+      "files_scanned": 213,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
-      "literal_review_id_sites_in_code": 35,
-      "name_only_constructing_reviewdatabase": 21,
+      "literal_review_id_sites_in_code": 34,
+      "name_only_constructing_reviewdatabase": 20,
       "path_construction_sites_in_code": 70,
       "raw_yaml_load_sites": 3,
-      "review_id_constants": 9,
+      "review_id_constants": 8,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "b1429ce1c97ce834799b3313780af5d76135874a",
+    "generated_at_commit": "e40387de64a53da50727709ef6a660e1f03934ac",
     "scan_roots": [
       "engine",
       "scripts",

@@ -1,9 +1,12 @@
-"""Extraction cleanup utility for schema version transitions.
+"""Extraction staleness report for codebook transitions — read-only.
 
-Removes stale extractions and associated evidence spans, then resets
-affected papers to PARSED so they're eligible for re-extraction.
-
-Destructive operation — dry-run is the default. Requires --confirm to execute.
+It used to remove stale extractions and their evidence spans, then reset the
+affected papers to PARSED. **That delete branch is retired (R25, R94; row
+D10).** Extractions are superseded by event, never deleted: on the live
+database the NULL-inclusive staleness predicate matched every one of the 190
+extractions, so `--confirm` would have deleted the whole local arm and put
+every corpus paper back in the extractor's pickup set. `--confirm` now refuses
+unconditionally, before any database is opened; the dry-run report remains.
 """
 
 import argparse
@@ -13,11 +16,11 @@ from pathlib import Path
 
 from engine.core.database import ReviewDatabase
 from engine.core.codebook import CodebookError, load_codebook_for
-from engine.utils.db_backup import auto_backup
 
 logger = logging.getLogger(__name__)
 
-# Papers at these statuses will be reset to PARSED after cleanup.
+# Papers at these statuses would have been reset to PARSED by the retired
+# delete branch; the dry-run report still counts them.
 # HUMAN_AUDIT_COMPLETE is excluded — those have human-verified data.
 _RESETTABLE_STATUSES = {"EXTRACTED", "AI_AUDIT_COMPLETE"}
 
@@ -26,6 +29,18 @@ _RESETTABLE_STATUSES = {"EXTRACTED", "AI_AUDIT_COMPLETE"}
 # authority and an ambiguous one: after the SPEC-AUTH-01 rename it matched
 # both surgical_autonomy.yaml and surgical_autonomy_v1_original.yaml, and
 # would have picked whichever sorted first.
+
+
+REFUSAL = (
+    "extraction_cleanup's delete branch is retired (R25, R94; row D10): "
+    "extractions are superseded by event, never deleted. The staleness report "
+    "(no --confirm) is read-only and remains. Re-extraction under a changed "
+    "input is decided at selection by the reuse key from session 9."
+)
+
+
+class DeletionRetired(RuntimeError):
+    """The delete branch was asked for. It no longer exists (R94)."""
 
 
 def get_current_schema_hash(
@@ -61,17 +76,22 @@ def cleanup_stale_extractions(
     schema_hash: str | None = None,
     dry_run: bool = True,
 ) -> dict:
-    """Remove stale extractions and their evidence spans.
+    """Report what the retired delete branch WOULD have removed. Read-only.
 
-    If schema_hash is provided: remove extractions where
-    extraction_schema_hash != schema_hash (keeps only current schema).
+    If schema_hash is provided: extractions whose codebook_hash is NULL or
+    differs from it. If no schema_hash: every extraction but the most recent
+    (highest id) per paper.
 
-    If no schema_hash: for papers with multiple extraction rows, keep
-    only the most recent (highest id) and delete the rest.
+    `dry_run=False` asks for the deletion, which is retired (R25, R94): it
+    raises `DeletionRetired` before any query runs. The keys keep their old
+    names (`extractions_deleted`, ...) and mean "would delete".
 
     Returns summary: {papers_affected, extractions_deleted, spans_deleted,
                       papers_reset, details: [...]}.
     """
+    if not dry_run:
+        raise DeletionRetired(REFUSAL)
+
     conn = db._conn
 
     if schema_hash:
@@ -112,7 +132,7 @@ def cleanup_stale_extractions(
             row["paper_id"], row["ext_id"],
             (row["codebook_hash"] or "none-recorded")[:12],
             row["span_count"],
-            "would delete" if dry_run else "deleting",
+            "would delete",
         )
 
     total_extractions = len(stale)
@@ -147,61 +167,11 @@ def cleanup_stale_extractions(
         "dry_run": dry_run,
     }
 
-    if dry_run:
-        logger.info(
-            "DRY RUN — would delete %d extractions (%d spans) across %d papers, "
-            "reset %d papers to PARSED",
-            total_extractions, total_spans,
-            len(paper_ids_affected), len(papers_to_reset),
-        )
-        return summary
-
-    # Back up before destructive operations. Through the connection the
-    # deletions below run on, so the backup is of what that connection sees.
-    backup = auto_backup(conn, "pre-cleanup")
     logger.info(
-        "Pre-cleanup backup verified: %s (%d tables, overall=%s)",
-        backup.path.name, backup.table_count, backup.overall_sha256[:16],
-    )
-
-    # Execute deletions + status resets in a single atomic transaction
-    try:
-        conn.execute("BEGIN")
-
-        ext_ids = [d["extraction_id"] for d in details]
-        if ext_ids:
-            placeholders = ",".join("?" * len(ext_ids))
-
-            spans_deleted = conn.execute(
-                f"DELETE FROM evidence_spans WHERE extraction_id IN ({placeholders})",
-                ext_ids,
-            ).rowcount
-
-            extractions_deleted = conn.execute(
-                f"DELETE FROM extractions WHERE id IN ({placeholders})",
-                ext_ids,
-            ).rowcount
-
-            summary["spans_deleted"] = spans_deleted
-            summary["extractions_deleted"] = extractions_deleted
-
-        conn.execute("COMMIT")
-    except Exception:
-        conn.execute("ROLLBACK")
-        raise
-
-    # Reset affected papers via admin_reset_status (audited, outside the
-    # delete transaction — papers are only reset after deletions succeed)
-    for pid in papers_to_reset:
-        db.admin_reset_status(
-            pid, "PARSED", reason="extraction_cleanup: stale schema removal",
-        )
-
-    logger.info(
-        "CLEANUP COMPLETE — deleted %d extractions (%d spans) across %d papers, "
+        "DRY RUN — would delete %d extractions (%d spans) across %d papers, "
         "reset %d papers to PARSED",
-        summary["extractions_deleted"], summary["spans_deleted"],
-        summary["papers_affected"], summary["papers_reset"],
+        total_extractions, total_spans,
+        len(paper_ids_affected), len(papers_to_reset),
     )
     return summary
 
@@ -217,12 +187,12 @@ def main():
     )
 
     parser = argparse.ArgumentParser(
-        description="Remove stale extractions from a previous schema version (destructive)"
+        description="Report extractions stale against the current codebook (read-only; the delete branch is retired, R94)"
     )
     parser.add_argument("--review", required=True, help="Review name")
     parser.add_argument(
         "--keep-schema", metavar="HASH",
-        help="Keep only extractions matching this schema hash (delete all others)",
+        help="Report extractions not matching this codebook hash",
     )
     parser.add_argument(
         "--codebook", default=None,
@@ -232,9 +202,16 @@ def main():
     )
     parser.add_argument(
         "--confirm", action="store_true",
-        help="Actually execute deletions (default is dry-run)",
+        help="RETIRED (R94): refuses. Extractions are superseded by event, never deleted",
     )
     args = parser.parse_args()
+
+    # R94: refuse before anything is opened. Constructing ReviewDatabase runs
+    # the migration runner, so a refusal that came after it would not be a
+    # refusal that touched nothing.
+    if args.confirm:
+        print(f"REFUSED: {REFUSAL}", file=sys.stderr)
+        sys.exit(2)
 
     # Resolve the current hash: explicit > --codebook > derived from the review
     # id. It is the CODEBOOK's hash now: the spec section it used to come from
@@ -251,20 +228,15 @@ def main():
 
     db = ReviewDatabase(args.review)
     try:
-        dry_run = not args.confirm
-        if dry_run:
-            print("\n*** DRY RUN — no changes will be made. Add --confirm to execute. ***\n")
+        print("\n*** STALENESS REPORT — read-only. Nothing is deleted (R94). ***\n")
 
-        summary = cleanup_stale_extractions(db, schema_hash=schema_hash, dry_run=dry_run)
+        summary = cleanup_stale_extractions(db, schema_hash=schema_hash, dry_run=True)
 
-        print(f"\n{'PLAN' if dry_run else 'RESULT'}:")
-        print(f"  Papers affected:       {summary['papers_affected']}")
-        print(f"  Extractions to delete: {summary['extractions_deleted']}")
-        print(f"  Spans to delete:       {summary['spans_deleted']}")
-        print(f"  Papers to reset:       {summary['papers_reset']}")
-
-        if dry_run and summary["extractions_deleted"] > 0:
-            print(f"\nRe-run with --confirm to execute.")
+        print("\nREPORT:")
+        print(f"  Papers affected:            {summary['papers_affected']}")
+        print(f"  Extractions stale by hash:  {summary['extractions_deleted']}")
+        print(f"  Their spans:                {summary['spans_deleted']}")
+        print(f"  Papers at a resettable status: {summary['papers_reset']}")
     finally:
         db.close()
 

@@ -1,4 +1,10 @@
-"""Tests for extraction cleanup utility."""
+"""Tests for the extraction staleness report.
+
+The delete branch is retired (R25, R94; row D10). Every test that pinned a
+deletion, a status reset or the delete transaction is REWRITTEN to pin the
+refusal (B5): each keeps its subject and says in its docstring which retired
+behaviour it used to pin.
+"""
 
 import logging
 
@@ -9,6 +15,7 @@ from engine.core.review_paths import ReviewIdMismatchError
 from engine.core.review_spec import ReviewSpecError, load_review_spec
 from engine.search.models import Citation
 from engine.utils.extraction_cleanup import (
+    DeletionRetired,
     check_stale_extractions,
     cleanup_stale_extractions,
     get_current_schema_hash,
@@ -87,94 +94,105 @@ class TestDryRun:
         assert span_count == 5
 
 
+def _counts(db):
+    ext = db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0]
+    spans = db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0]
+    return ext, spans
+
+
+def _status(db, pid):
+    return db._conn.execute(
+        "SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()["status"]
+
+
 class TestSchemaCleanup:
 
-    def test_removes_non_matching_schema_only(self, db):
+    def test_confirm_refuses_and_keeps_every_extraction(self, db):
+        """Was test_removes_non_matching_schema_only, which pinned the delete."""
         pid = _add_paper(db)
         _advance_to(db, pid, "EXTRACTED")
         _add_extraction(db, pid, "old_hash", n_spans=5)
         _add_extraction(db, pid, "current_hash", n_spans=3)
 
-        result = cleanup_stale_extractions(db, schema_hash="current_hash", dry_run=False)
+        with pytest.raises(DeletionRetired, match="R94"):
+            cleanup_stale_extractions(db, schema_hash="current_hash", dry_run=False)
 
-        assert result["extractions_deleted"] == 1
-        assert result["spans_deleted"] == 5
+        assert _counts(db) == (2, 8)
 
-        # Only current-hash extraction remains
-        rows = db._conn.execute("SELECT codebook_hash FROM extractions").fetchall()
-        assert len(rows) == 1
-        assert rows[0]["codebook_hash"] == "current_hash"
-
-    def test_spans_cascade_deleted(self, db):
+    def test_confirm_refuses_and_keeps_every_span(self, db):
+        """Was test_spans_cascade_deleted, which pinned the span delete."""
         pid = _add_paper(db, pmid="2")
         _advance_to(db, pid, "EXTRACTED")
         _add_extraction(db, pid, "stale", n_spans=10)
 
-        result = cleanup_stale_extractions(db, schema_hash="fresh", dry_run=False)
+        with pytest.raises(DeletionRetired):
+            cleanup_stale_extractions(db, schema_hash="fresh", dry_run=False)
 
-        assert result["spans_deleted"] == 10
-        span_count = db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0]
-        assert span_count == 0
+        assert _counts(db) == (1, 10)
+
+    def test_the_refusal_names_the_event_route(self, db):
+        with pytest.raises(DeletionRetired) as exc:
+            cleanup_stale_extractions(db, schema_hash="x", dry_run=False)
+        msg = str(exc.value)
+        assert "R25" in msg and "R94" in msg
+        assert "superseded by event, never deleted" in msg
 
 
 class TestStatusReset:
 
-    def test_extracted_papers_reset_to_parsed(self, db):
+    def test_extracted_paper_is_not_reset(self, db):
+        """Was test_extracted_papers_reset_to_parsed, which pinned the reset."""
         pid = _add_paper(db)
         _advance_to(db, pid, "EXTRACTED")
         _add_extraction(db, pid, "old")
 
-        cleanup_stale_extractions(db, schema_hash="new", dry_run=False)
+        with pytest.raises(DeletionRetired):
+            cleanup_stale_extractions(db, schema_hash="new", dry_run=False)
 
-        status = db._conn.execute(
-            "SELECT status FROM papers WHERE id = ?", (pid,)
-        ).fetchone()["status"]
-        assert status == "PARSED"
+        assert _status(db, pid) == "EXTRACTED"
 
-    def test_ai_audit_complete_papers_reset_to_parsed(self, db):
+    def test_ai_audit_complete_paper_is_not_reset(self, db):
+        """Was test_ai_audit_complete_papers_reset_to_parsed — the path that
+        put every live corpus paper back in the extractor's pickup set."""
         pid = _add_paper(db, pmid="3")
         _advance_to(db, pid, "AI_AUDIT_COMPLETE")
         _add_extraction(db, pid, "old")
 
-        cleanup_stale_extractions(db, schema_hash="new", dry_run=False)
+        with pytest.raises(DeletionRetired):
+            cleanup_stale_extractions(db, schema_hash="new", dry_run=False)
 
-        status = db._conn.execute(
-            "SELECT status FROM papers WHERE id = ?", (pid,)
-        ).fetchone()["status"]
-        assert status == "PARSED"
+        assert _status(db, pid) == "AI_AUDIT_COMPLETE"
 
-    def test_human_audit_complete_papers_untouched(self, db):
+    def test_report_does_not_count_human_audit_complete_as_resettable(self, db):
+        """Was test_human_audit_complete_papers_untouched (which ran the delete);
+        the protection survives as a property of the read-only report."""
         pid = _add_paper(db, pmid="4")
         _advance_to(db, pid, "HUMAN_AUDIT_COMPLETE")
         _add_extraction(db, pid, "old", n_spans=5)
 
-        result = cleanup_stale_extractions(db, schema_hash="new", dry_run=False)
+        result = cleanup_stale_extractions(db, schema_hash="new", dry_run=True)
 
-        # Extraction and spans are deleted
-        assert result["extractions_deleted"] == 1
-
-        # But status is NOT reset
-        status = db._conn.execute(
-            "SELECT status FROM papers WHERE id = ?", (pid,)
-        ).fetchone()["status"]
-        assert status == "HUMAN_AUDIT_COMPLETE"
+        assert result["extractions_deleted"] == 1  # "would delete"
         assert result["papers_reset"] == 0
+        assert _status(db, pid) == "HUMAN_AUDIT_COMPLETE"
+        assert _counts(db) == (1, 5)
 
 
 class TestDedup:
 
-    def test_dedup_keeps_latest_extraction(self, db):
+    def test_dedup_is_reported_not_performed(self, db):
+        """Was test_dedup_keeps_latest_extraction, which pinned the delete."""
         pid = _add_paper(db, pmid="5")
         _advance_to(db, pid, "EXTRACTED")
         ext1 = _add_extraction(db, pid, "v1", n_spans=3)
-        ext2 = _add_extraction(db, pid, "v2", n_spans=5)
+        _add_extraction(db, pid, "v2", n_spans=5)
 
-        result = cleanup_stale_extractions(db, schema_hash=None, dry_run=False)
+        report = cleanup_stale_extractions(db, schema_hash=None, dry_run=True)
+        assert [d["extraction_id"] for d in report["details"]] == [ext1]
 
-        assert result["extractions_deleted"] == 1
-        # Only the latest (ext2) remains
-        remaining = db._conn.execute("SELECT id FROM extractions").fetchone()
-        assert remaining["id"] == ext2
+        with pytest.raises(DeletionRetired):
+            cleanup_stale_extractions(db, schema_hash=None, dry_run=False)
+        assert _counts(db) == (2, 8)
 
 
 class TestSchemaHashResolution:
@@ -237,9 +255,10 @@ class TestStaleExtractionCheck:
 
 class TestExtractionRunnerWarning:
 
-    def test_warns_when_stale_exist(self, db, caplog):
-        """run_extraction logs warning when stale extractions exist."""
-        from unittest.mock import patch, MagicMock
+    def test_informs_when_stale_exist_and_names_no_deletion(self, db, caplog):
+        """Was test_warns_when_stale_exist, which pinned a WARNING telling the
+        operator to run extraction_cleanup (R94: its delete is retired)."""
+        from unittest.mock import patch
         from engine.core.review_spec import load_review_spec
 
         spec = load_review_spec(SPEC_PATH)
@@ -247,20 +266,21 @@ class TestExtractionRunnerWarning:
         _advance_to(db, pid, "EXTRACTED")
         _add_extraction(db, pid, "stale_hash_abc")
 
-        # Mock to avoid actually running extraction (no parsed text, etc.).
-        # require_preflight is patched because it shells out to `systemctl show
-        # ollama` and loads deepseek-r1:32b against the live server — neither of
-        # which this test is about, and the first of which the conftest fence
-        # now refuses outright (OPSFIX-01).
-        with caplog.at_level(logging.WARNING):
+        with caplog.at_level(logging.INFO):
             from engine.agents.extractor import run_extraction
             with patch("engine.utils.ollama_preflight.require_preflight"):
                 run_extraction(db, spec, review_name="test_cleanup")
 
-        assert any("stale schema extractions" in m for m in caplog.messages)
+        msgs = [r for r in caplog.records if "without the current codebook hash" in r.getMessage()]
+        assert len(msgs) == 1
+        assert msgs[0].levelno == logging.INFO
+        text = msgs[0].getMessage()
+        assert "extraction_cleanup" not in text
+        assert "delet" not in text.lower() and "clean up" not in text.lower()
+        assert "session 9" in text
 
     def test_silent_when_no_stale(self, db, caplog):
-        """run_extraction does not warn when all extractions match current schema."""
+        """run_extraction says nothing when all extractions match current schema."""
         from unittest.mock import patch
         from engine.core.review_spec import load_review_spec
         from engine.agents.extractor import run_extraction
@@ -268,98 +288,84 @@ class TestExtractionRunnerWarning:
         from engine.core.codebook import load_codebook_beside
 
         spec = load_review_spec(SPEC_PATH)
-        # What the runner compares against: the codebook beside THIS database,
-        # not the spec (SCHEMA-DERIVE-01).
         current_hash = load_codebook_beside(db.db_path).semantic_hash
 
         pid = _add_paper(db, pmid="21")
         _advance_to(db, pid, "EXTRACTED")
         _add_extraction(db, pid, current_hash)
 
-        with caplog.at_level(logging.WARNING):
+        with caplog.at_level(logging.INFO):
             with patch("engine.utils.ollama_preflight.require_preflight"):
                 run_extraction(db, spec, review_name="test_cleanup")
 
-        assert not any("stale schema extractions" in m for m in caplog.messages)
+        assert not any("without the current codebook hash" in m for m in caplog.messages)
 
 
 class TestAtomicDelete:
 
-    def test_both_deletes_in_single_transaction(self, db):
-        """Span and extraction deletes are both committed atomically."""
-        pid = _add_paper(db, pmid="AD1")
-        _advance_to(db, pid, "EXTRACTED")
-        _add_extraction(db, pid, "old_hash", n_spans=5)
+    def test_refusal_precedes_any_query(self):
+        """Was test_both_deletes_in_single_transaction. The refusal comes before
+        the database is touched at all: an object with no connection is enough."""
+        class NoDb:
+            @property
+            def _conn(self):
+                raise AssertionError("the refusal must not reach the database")
 
-        cleanup_stale_extractions(db, schema_hash="new_hash", dry_run=False)
+        with pytest.raises(DeletionRetired):
+            cleanup_stale_extractions(NoDb(), schema_hash="new_hash", dry_run=False)
 
-        # Both spans and extraction are gone
-        span_count = db._conn.execute(
-            "SELECT COUNT(*) FROM evidence_spans"
-        ).fetchone()[0]
-        ext_count = db._conn.execute(
-            "SELECT COUNT(*) FROM extractions"
-        ).fetchone()[0]
-        assert span_count == 0
-        assert ext_count == 0
-
-    def test_delete_failure_preserves_all(self, db):
-        """If delete raises, both spans and extractions survive (rollback)."""
-        import sqlite3
-
+    def test_refusal_leaves_everything_under_a_blocking_trigger(self, db):
+        """Was test_delete_failure_preserves_all (rollback of a failed delete).
+        No delete is attempted, so the blocking trigger never fires."""
         pid = _add_paper(db, pmid="AD2")
         _advance_to(db, pid, "EXTRACTED")
         _add_extraction(db, pid, "old_hash", n_spans=5)
-
-        # Create a trigger that blocks extraction deletion
         db._conn.execute(
-            """CREATE TRIGGER block_ext_delete
-               BEFORE DELETE ON extractions
-               BEGIN
-                   SELECT RAISE(ABORT, 'simulated delete failure');
-               END"""
-        )
+            """CREATE TRIGGER block_ext_delete BEFORE DELETE ON extractions
+               BEGIN SELECT RAISE(ABORT, 'simulated delete failure'); END""")
         db._conn.commit()
 
-        with pytest.raises(sqlite3.IntegrityError, match="simulated delete failure"):
+        with pytest.raises(DeletionRetired):
             cleanup_stale_extractions(db, schema_hash="new_hash", dry_run=False)
-
-        # Both spans and extractions survive the rollback
-        span_count = db._conn.execute(
-            "SELECT COUNT(*) FROM evidence_spans"
-        ).fetchone()[0]
-        ext_count = db._conn.execute(
-            "SELECT COUNT(*) FROM extractions"
-        ).fetchone()[0]
-        assert span_count == 5, "Spans should survive rollback"
-        assert ext_count == 1, "Extraction should survive rollback"
-
-        # Clean up trigger for other tests
-        db._conn.execute("DROP TRIGGER block_ext_delete")
-        db._conn.commit()
+        assert _counts(db) == (1, 5)
 
 
 class TestAdminResetAuditTrail:
 
-    def test_cleanup_uses_admin_reset(self, db):
-        """cleanup_stale_extractions uses admin_reset_status with audit trail."""
+    def test_refusal_writes_no_admin_reset(self, db):
+        """Was test_cleanup_uses_admin_reset, which pinned the audited reset."""
         pid = _add_paper(db, pmid="ART1")
         _advance_to(db, pid, "AI_AUDIT_COMPLETE")
         _add_extraction(db, pid, "old_hash")
 
-        cleanup_stale_extractions(db, schema_hash="new_hash", dry_run=False)
+        with pytest.raises(DeletionRetired):
+            cleanup_stale_extractions(db, schema_hash="new_hash", dry_run=False)
 
-        # Paper should be reset to PARSED
-        status = db._conn.execute(
-            "SELECT status FROM papers WHERE id = ?", (pid,)
-        ).fetchone()["status"]
-        assert status == "PARSED"
+        assert _status(db, pid) == "AI_AUDIT_COMPLETE"
+        # admin_reset_status creates its log table on first use, so no table
+        # at all is the strongest form of "no reset was recorded".
+        has_table = db._conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE name = 'admin_resets'").fetchone()
+        assert not has_table or db._conn.execute(
+            "SELECT COUNT(*) FROM admin_resets WHERE paper_id = ?", (pid,)
+        ).fetchone()[0] == 0
 
-        # Audit trail should exist
-        reset_row = db._conn.execute(
-            "SELECT * FROM admin_resets WHERE paper_id = ?", (pid,)
-        ).fetchone()
-        assert reset_row is not None
-        assert reset_row["from_status"] == "AI_AUDIT_COMPLETE"
-        assert reset_row["to_status"] == "PARSED"
-        assert "extraction_cleanup" in reset_row["reason"]
+
+class TestCli:
+
+    def test_confirm_refuses_before_any_database_is_constructed(self, monkeypatch, capsys):
+        """G4: `--confirm` exits 2 without ever constructing ReviewDatabase,
+        whose __init__ runs the migration runner."""
+        import sys
+        import engine.utils.extraction_cleanup as ec
+
+        def boom(*a, **k):
+            raise AssertionError("ReviewDatabase must not be constructed")
+
+        monkeypatch.setattr(ec, "ReviewDatabase", boom)
+        monkeypatch.setattr(sys, "argv", ["extraction_cleanup", "--review",
+                                          "surgical_autonomy", "--confirm"])
+        with pytest.raises(SystemExit) as exc:
+            ec.main()
+        assert exc.value.code == 2
+        assert "R94" in capsys.readouterr().err

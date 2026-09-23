@@ -543,11 +543,10 @@ python -m engine.agents.ft_screener ... --verify-only
 # Per-class elicitation smoke (ELICIT-DESIGN-01; writes only its own gitignored scratch DB)
 PYTHONPATH=. python -m analysis.eval.elicit_design01.smoke --review surgical_autonomy
 
-# Extraction cleanup (schema transition)
-python -m engine.utils.extraction_cleanup --review surgical_autonomy          # dry-run
-# extraction_cleanup --confirm — DO NOT RUN on data/surgical_autonomy/review.db: it deletes every
-# extraction with a NULL codebook_hash (all 190 today) and resets the papers to PARSED (row D10,
-# R94). Retired in INPUT-IDENTITY-01 Phase 2a.
+# Extraction staleness report (deletes nothing; like every ReviewDatabase construction it runs pending migrations)
+python -m engine.utils.extraction_cleanup --review surgical_autonomy          # report
+# extraction_cleanup --confirm — retired (R94): refuses before opening any database. Extractions
+# are superseded by event, never deleted (row D10). The command above only reports.
 
 # Post-extraction validation
 python -m engine.validators.extraction_validator --review surgical_autonomy

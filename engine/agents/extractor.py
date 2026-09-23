@@ -828,15 +828,19 @@ def _run_extraction_unlocked(
         extractor_model, extractor_digest, auditor_model, auditor_digest,
     )
 
-    # Pre-flight: warn about stale extractions from a different schema version
+    # Pre-flight: an informational count of extractions that do not carry the
+    # current codebook hash. It used to tell the operator to run the cleanup
+    # utility, whose delete branch is retired (R94, row D10); nothing is ever
+    # deleted to make room for a re-extraction.
     from engine.utils.extraction_cleanup import check_stale_extractions
     stale_count = check_stale_extractions(db, schema_hash)
     if stale_count > 0:
-        logger.warning(
-            "Found %d papers with stale schema extractions. Run "
-            "python -m engine.utils.extraction_cleanup --review %s to clean up "
-            "before re-extracting.",
-            stale_count, review_name,
+        logger.info(
+            "Informational: %d papers hold extractions without the current "
+            "codebook hash. Whether a paper is re-extracted is decided at "
+            "selection by the reuse key from session 9; earlier extractions "
+            "are superseded by event, never removed.",
+            stale_count,
         )
 
     from engine.utils.progress import ProgressReporter

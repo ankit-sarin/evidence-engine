@@ -176,7 +176,8 @@ SPEC_BEARING_ENTRY_POINTS = [
     "scripts/ft_screening_smoke_test.py",
     "scripts/q8_validation.py",
     "scripts/q8_validation_fast.py",
-    "scripts/reextract_all.py",
+    # scripts/reextract_all.py retired 2026-09-23 under R94/R98 (R47): it deleted
+    # extractions and forced papers to PARSED. Its parametrized case retires with it.
     "scripts/reextract_failed.py",
     "scripts/reparse_cloud_spans.py",
     "scripts/rescreen_original_251.py",

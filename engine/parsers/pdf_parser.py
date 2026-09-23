@@ -23,6 +23,7 @@ from docling.document_converter import DocumentConverter
 from engine.core.database import ReviewDatabase
 from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.core.review_spec import PDFParsing, ReviewSpec
+from engine.core.parsed_text import next_version, record_parsed_text
 from engine.parsers.models import ParseAttempt, ParsedDocument
 from engine.parsers import font_audit as _font_audit
 from engine.parsers.parse_quality import (
@@ -603,12 +604,18 @@ def parse_pdf(
             accepted_parser=stored_parser,
         )
 
-    # Determine version number
-    last_version = db._conn.execute(
-        "SELECT MAX(parsed_text_version) FROM full_text_assets WHERE paper_id = ?",
-        (paper_id,),
-    ).fetchone()[0]
-    version = (last_version or 0) + 1
+    # Determine version number (R99): from parsed_text_refs, the store the
+    # resolver reads. full_text_assets.parsed_text_version is no longer read to
+    # choose a version — its 350 version-1 rows with no path (row D12) are why
+    # most of this corpus's parses were numbered from 2 (row D13).
+    version = next_version(db._conn, paper_id)
+    target = Path(db.db_path).parent / "parsed_text" / f"{paper_id}_v{version}.md"
+    if target.exists():
+        raise FileExistsError(
+            f"Paper {paper_id}: refusing to parse as v{version} — {target} already "
+            "exists but no parsed_text_refs row records it (R99). A parse never "
+            "overwrites a file; record or retire the existing file first."
+        )
 
     attempts: list[ParseAttempt] = []
     sanitized_path: str | None = None
@@ -880,13 +887,18 @@ def parse_pdf(
 
             # Record in database (with final path, not temp)
             now = datetime.now(timezone.utc).isoformat()
-            db._conn.execute(
+            asset_id = db._conn.execute(
                 """INSERT INTO full_text_assets
                    (paper_id, pdf_path, pdf_hash, parsed_text_path, parsed_text_version,
                     parser_used, parsed_at)
                    VALUES (?, ?, ?, ?, ?, ?, ?)""",
                 (paper_id, pdf_path, pdf_hash, str(md_path), version, parser_used, now),
-            )
+            ).lastrowid
+            # D8: the reference the resolver reads, in the same unit of work as
+            # the asset row, hashed from the bytes actually written.
+            record_parsed_text(db._conn, paper_id=paper_id, path=md_path,
+                               version=version, data=tmp_path.read_bytes(),
+                               source_asset_id=asset_id, recorded_at=now)
             db._conn.execute(
                 "UPDATE papers SET pdf_content_hash = ? WHERE id = ?",
                 (pdf_hash, paper_id),

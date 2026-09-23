@@ -5679,7 +5679,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1161,
+            "line": 1173,
             "names": [
               "--verify-hashes"
             ],
@@ -5688,7 +5688,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1163,
+            "line": 1175,
             "names": [
               "--review"
             ],
@@ -5703,7 +5703,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 1167,
+            "line": 1179,
             "scope": "main"
           }
         ],
@@ -7968,7 +7968,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "47fb81a8f15d269b8b4339ffa8dc46759ad1878d",
+    "generated_at_commit": "f596c23b3b75f56f4ee7557dc9abd72feecb5a72",
     "scan_roots": [
       "engine",
       "scripts",

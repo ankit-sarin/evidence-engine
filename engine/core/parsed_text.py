@@ -157,7 +157,9 @@ def record_parsed_text(conn: sqlite3.Connection, *, paper_id: int, path: str | o
     """Insert one reference for text already written (or about to be renamed) to
     `path`. Does NOT commit — it belongs to the caller's unit of work (D8)."""
     uid = str(uuid.uuid4())
-    stored = canonical_path(path)
+    # A filesystem path (relative to the working directory, as ReviewDatabase's
+    # default data root is) — made absolute before it is canonicalised.
+    stored = canonical_path(os.path.abspath(path))
     sha = hashlib.sha256(data).hexdigest()
     conn.execute(
         "INSERT INTO parsed_text_refs (parsed_text_uid, paper_id, parsed_text_path, "

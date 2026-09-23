@@ -1,0 +1,1561 @@
+{
+  "measured_at_utc": "20260923T214241Z",
+  "source": "parsed_text_refs on data/surgical_autonomy/review.db (mode=ro), files hashed as on disk",
+  "algorithm": "sha256 over raw file bytes",
+  "count": 194,
+  "unreadable": [],
+  "entries": [
+    {
+      "parsed_text_uid": "83b55978-c693-4b27-a932-43dba2af3a79",
+      "paper_id": 9,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/9_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 78332,
+      "sha256": "356d9dbe3e840f4a8a01915e5162f550cfcccd96816c8c56ad6957d978b3d7f3"
+    },
+    {
+      "parsed_text_uid": "6fe88f5e-ad4d-4588-aa13-412cd6ce74ae",
+      "paper_id": 11,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/11_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 164723,
+      "sha256": "8e01895288b44a947ffb646509e713104de8df277108b9cc0efd9aa186d6f8b5"
+    },
+    {
+      "parsed_text_uid": "8fc6a4f2-2281-461b-b10f-119d948a0bbc",
+      "paper_id": 12,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/12_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 38377,
+      "sha256": "420de05443b3cdf693474f2425426d1855436b61f4a31ba59aa4188d59928a2e"
+    },
+    {
+      "parsed_text_uid": "2ffa645c-f6ef-406b-b54f-c2b86359adf9",
+      "paper_id": 14,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/14_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 25315,
+      "sha256": "3381b90a24da12a632241912c020150cb66cabb381252b0eeae9efc0e9af31ad"
+    },
+    {
+      "parsed_text_uid": "78f1769d-ec0f-4245-99c5-8ed02d395202",
+      "paper_id": 15,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/15_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 85532,
+      "sha256": "2092160edeadc49838593fd73937531725bd2641c4d09cd56bf8b19569850152"
+    },
+    {
+      "parsed_text_uid": "73ef6a6c-1c23-4cc8-8802-b310ce619115",
+      "paper_id": 17,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/17_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 33633,
+      "sha256": "be97c1f85106011930bc5a175e25a718ad9e1b8a8589db14f7e6be947358698e"
+    },
+    {
+      "parsed_text_uid": "2b617935-a192-4231-8019-5015964845a9",
+      "paper_id": 22,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/22_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 71382,
+      "sha256": "7736ec74eea307591e2f17e80fdd0180777ae72339527b55ed055389a0056dda"
+    },
+    {
+      "parsed_text_uid": "6bac6c89-8b72-472f-bdcf-89f7d79d4e15",
+      "paper_id": 24,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/24_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 20994,
+      "sha256": "5daff1c83ab16e11a194c2f4ba3e9e83e49109fbe144d0e00f4afee458e23550"
+    },
+    {
+      "parsed_text_uid": "867035d9-52fa-4d42-95a6-2e7a9c3a7692",
+      "paper_id": 39,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/39_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 86441,
+      "sha256": "f3638a40ad25483ecf19e60d07182efff8336bde772980a8c4797ed5b621a5d2"
+    },
+    {
+      "parsed_text_uid": "6d2b80fd-5b03-466f-956d-df4f141bedc8",
+      "paper_id": 67,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/67_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 49212,
+      "sha256": "db1d83c0935392ba796234e9f2e42e3133b5ba029edd94ac3390ceb2571c2080"
+    },
+    {
+      "parsed_text_uid": "c331c61a-5996-4d0f-bfdf-ba8116609f22",
+      "paper_id": 78,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/78_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 57641,
+      "sha256": "9d04c4a30f4d5b480e5a27cba2fb126a9a75418527be75494af64ca0a92d7bdf"
+    },
+    {
+      "parsed_text_uid": "964b9625-be9e-48c9-8328-6902e308dadd",
+      "paper_id": 81,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/81_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 48032,
+      "sha256": "91c6f8a19996a76c99baef5d0fbbcf0d1ad6de30a43a1e66817890d5ea0e5d87"
+    },
+    {
+      "parsed_text_uid": "182ec809-645a-41e5-b200-34044e73e540",
+      "paper_id": 82,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/82_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 53379,
+      "sha256": "1f73cd74dde3069608be3250e70ae85559f38db2db8add072bbd84315a0dfe03"
+    },
+    {
+      "parsed_text_uid": "f660837d-1b9a-43d1-9a71-92b799bf491b",
+      "paper_id": 102,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/102_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 35194,
+      "sha256": "45531b960920667b0eebc23918e6687facfe59143f811216163301b30d797f98"
+    },
+    {
+      "parsed_text_uid": "c6e4fde3-7ec6-4cc9-a529-4d231cab461d",
+      "paper_id": 121,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/121_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 21352,
+      "sha256": "2eff45aa80e1eee6eff579d8fdfb42cf317d386aff871c72801734314391ca13"
+    },
+    {
+      "parsed_text_uid": "66fa401b-3483-45f4-8831-200c4c12793a",
+      "paper_id": 132,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/132_v1.md",
+      "parsed_text_version": 1,
+      "size_bytes": 43216,
+      "sha256": "b93ea60743af03ee75c45d168107afdb10586895b754ec6199e5ab78bdd82946"
+    },
+    {
+      "parsed_text_uid": "16ae4f74-18bf-4784-8f2c-e46104c1151d",
+      "paper_id": 252,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/252_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 58825,
+      "sha256": "8fb6d7d7ed8e4f64324213ad27b3efd7dd7228330c54b2d9e731678f50cc5bf5"
+    },
+    {
+      "parsed_text_uid": "5cb8cf19-444e-463e-b412-8d6da0faf07a",
+      "paper_id": 262,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/262_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 31244,
+      "sha256": "357a26033954aa85540d4d036a4088fcd9c1c94c2355c87afb7223375d5b21d2"
+    },
+    {
+      "parsed_text_uid": "b612ff04-309b-4608-86b1-2414b82fb16d",
+      "paper_id": 268,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/268_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 22745,
+      "sha256": "fe2a3a26f74f9db1a3022ebce294c8e542443d6f16b14f5f2fc90105e8c17fee"
+    },
+    {
+      "parsed_text_uid": "c5691c30-cdaf-494a-a1e3-f3a71960328c",
+      "paper_id": 277,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/277_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 86568,
+      "sha256": "a0d803027cc02aedfacdc46511ce662c11a0fe18442cbcbe2f67116b4a7b385b"
+    },
+    {
+      "parsed_text_uid": "73a84396-1ccb-4083-83c9-021e64b7a070",
+      "paper_id": 281,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/281_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 82954,
+      "sha256": "402b9fba5108e8b2b1ee8c3e3c6ef6bcb9fb860c0f52d17d1faeca9c38f03ca0"
+    },
+    {
+      "parsed_text_uid": "417092c5-8154-464d-8d7e-5f12a4c3b14f",
+      "paper_id": 286,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/286_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 59202,
+      "sha256": "5a2e3a37359a49a064e148db84f6b48257626c5fa632791776b8fbeaab8b692f"
+    },
+    {
+      "parsed_text_uid": "d7a583f6-1a19-4bfc-891a-75a36fe8ed3c",
+      "paper_id": 292,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/292_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 60872,
+      "sha256": "384086766a85ea6f6bce6e638cc82b5f16b240952ea1333a3a4c16402b44f5d5"
+    },
+    {
+      "parsed_text_uid": "d30b2e69-b2a8-4767-bc87-7ac0ebdd41bc",
+      "paper_id": 295,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/295_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 51838,
+      "sha256": "8b5e6aad703cc6022b5b43f761e9ca5834c3ca2da2bcc5f7038d72c912e23149"
+    },
+    {
+      "parsed_text_uid": "3ef08a3f-cbf5-4c83-9369-3d8b496058f2",
+      "paper_id": 296,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/296_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 79098,
+      "sha256": "e9b1b9484689314655d836d7a7038cd1c9df9a931cfbc33f88a178a4f3497ba4"
+    },
+    {
+      "parsed_text_uid": "d82dd7ac-0f68-4ac6-9355-bf3755d65572",
+      "paper_id": 297,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/297_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 56579,
+      "sha256": "4acbd31bbdd0bb571313d4af01f841fed21e54acfd68a50a3dc50ced49e8a962"
+    },
+    {
+      "parsed_text_uid": "3455b255-cd8a-4204-be9a-96d761bf1c93",
+      "paper_id": 318,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/318_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 32679,
+      "sha256": "0d13f6b626ac4a8af5e1f6f21234da7b0c1a031f24b8aeb3c5d7aa711e5b4428"
+    },
+    {
+      "parsed_text_uid": "30e8ea7e-97e9-4c9d-8acd-e39170b47596",
+      "paper_id": 323,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/323_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 32185,
+      "sha256": "e1a00c460248242a0ee6adbec2c7c9a31e4dde875e8d13addb6f546b8e423c47"
+    },
+    {
+      "parsed_text_uid": "2f88b9ab-286c-4b37-aff1-e00268ce451b",
+      "paper_id": 346,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/346_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 39268,
+      "sha256": "dbbda92b3381242a716389a8a96c16d3453fc42047a7a94c6c6daaa702f0912b"
+    },
+    {
+      "parsed_text_uid": "925ccc61-2cad-4ab0-9c60-0496c017dd70",
+      "paper_id": 347,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/347_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 72556,
+      "sha256": "2e5c5248ca3d257f3ad9c3add2cd55d7d173b5f91c2579a54dc9e778116dc3e8"
+    },
+    {
+      "parsed_text_uid": "8d8bbab0-ec74-4654-8bc2-6f4c0eb19b8e",
+      "paper_id": 364,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/364_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 38123,
+      "sha256": "cb60602428968343c7a9eed14f82281738f9c4d38d19f76a3ba263de6f018acf"
+    },
+    {
+      "parsed_text_uid": "1409926e-56ee-40f6-8356-03adcb1c0208",
+      "paper_id": 366,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/366_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 77786,
+      "sha256": "09a1ebaa2bb5388b30de14f8876980b0214602fc1278eed823a694f51af052ec"
+    },
+    {
+      "parsed_text_uid": "6b051d44-f86f-425f-837a-f1ad470e2b90",
+      "paper_id": 368,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/368_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 56161,
+      "sha256": "dc407b8314caab8617642bf5948f8add6073c00a52e3b93e575b714c01328742"
+    },
+    {
+      "parsed_text_uid": "5019d6dd-bf2e-47b6-979d-65e0d6c24db2",
+      "paper_id": 370,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/370_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 48231,
+      "sha256": "7c9405aea62f2165f69ed2a8129c9fb1154d6d397733e55e3321ea546710a4ef"
+    },
+    {
+      "parsed_text_uid": "dcd9caa9-6d6a-4c87-96b4-ed6a97fee66a",
+      "paper_id": 376,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/376_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 45704,
+      "sha256": "0c8db4d20df179123bd396108ab980c3e7021150402bfaa6b24755dbd87ffc65"
+    },
+    {
+      "parsed_text_uid": "aeb06672-ff2d-4dc4-8a00-8b9228c05ccd",
+      "paper_id": 378,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/378_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 44794,
+      "sha256": "5ec78fed5d94051d27429eb14a008333ecd77914906a5c4276e5059fd35d0f86"
+    },
+    {
+      "parsed_text_uid": "fec59903-c32f-4b63-bd2c-3fa6486fddea",
+      "paper_id": 380,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/380_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 38367,
+      "sha256": "3d666cb1cb8578e8043a308c181152fd1df4d52961c357641a74a07d9c69e0c5"
+    },
+    {
+      "parsed_text_uid": "b67b420d-2aaa-48b9-9054-2338faa92b25",
+      "paper_id": 383,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/383_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 54906,
+      "sha256": "4b4517ea410d8d3bfc0944e140d23cbb9d74c9f730e2d79fff4c75b187791bd6"
+    },
+    {
+      "parsed_text_uid": "90b6f798-33ee-46ad-b3a3-4fb297853bca",
+      "paper_id": 386,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/386_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 35337,
+      "sha256": "f18a35937321ed6a2b8d51bdb397612f8824033e933893f6b3d8d1653036a0de"
+    },
+    {
+      "parsed_text_uid": "8f66bc5e-1c7f-441d-bc5c-5563dc7582ad",
+      "paper_id": 388,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/388_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 48543,
+      "sha256": "7b5e495e6df685080aa401a30af38f257e412f66b94a85a87a92ab10d03d4575"
+    },
+    {
+      "parsed_text_uid": "d4d000a5-2044-4f37-ad1d-c6f47dc7a86e",
+      "paper_id": 392,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/392_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 33785,
+      "sha256": "0adf652d16eed304df79bcef969291f85008e48c720b37552a0e9af760ecbd79"
+    },
+    {
+      "parsed_text_uid": "38cc29ac-2416-4cf1-acf3-d020cea9c9c5",
+      "paper_id": 395,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/395_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 60209,
+      "sha256": "83caeb0e2205545839dce2a8544126f4f9178d0b9e648d063c94df243650dc32"
+    },
+    {
+      "parsed_text_uid": "1ca7f31b-8d38-423e-bf24-4b8529a09235",
+      "paper_id": 400,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/400_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 48532,
+      "sha256": "87da91786e6b793f25d3504059a05918849b9cadaf42350423a7a9d65151c686"
+    },
+    {
+      "parsed_text_uid": "20ef5d09-8004-408f-8c02-80987f7be985",
+      "paper_id": 402,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/402_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 60135,
+      "sha256": "ac5777bc43b480e9800272a498d1224b659814ef3dff4a7d6148beb0d0611d63"
+    },
+    {
+      "parsed_text_uid": "28ea2835-9023-4408-b20b-d6b32f438c37",
+      "paper_id": 405,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/405_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 43150,
+      "sha256": "a6d7863ec94bf9b3d9cd5b4603ab56d841137aefda57530f0b0f9f7be1732493"
+    },
+    {
+      "parsed_text_uid": "802f7195-5f32-4d8d-adad-4daa391e3fc3",
+      "paper_id": 406,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/406_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 42772,
+      "sha256": "c03950c0e2b6284b4fc0964d59122db2a1b88631635e82d66cbebd91725195d6"
+    },
+    {
+      "parsed_text_uid": "02f7d640-bcba-4cdc-8b61-66d4a16fa9c8",
+      "paper_id": 407,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/407_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 35210,
+      "sha256": "60747a2bff16de4d6a767a962b0de3a5f1314f04b8c9d2568f75b34fadb534fa"
+    },
+    {
+      "parsed_text_uid": "de3bf0c1-b13d-4647-9aed-71aff68825a8",
+      "paper_id": 409,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/409_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 45755,
+      "sha256": "e3d30eaeac3e7c43ca8c97b204f4ecb44992256a4f26004479453d87464cd0ad"
+    },
+    {
+      "parsed_text_uid": "cd827364-5b9f-4dc2-abea-bdaee83c8b1e",
+      "paper_id": 411,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/411_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 49965,
+      "sha256": "4e3b19733b26b61b16b62539bbd8bc80a02de972f11294b65c6782d300595b34"
+    },
+    {
+      "parsed_text_uid": "44757e4b-9811-47b1-b554-dafcae7807d7",
+      "paper_id": 415,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/415_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 1776058,
+      "sha256": "09933a869b91a816776452152ea70d244a334b72f626ce0a7a9b3e42f176af8a"
+    },
+    {
+      "parsed_text_uid": "4996d748-1163-4ecc-adb8-053f14fd17d2",
+      "paper_id": 431,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/431_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 38318,
+      "sha256": "3c9924328f81971c44086e3aa42ea6f3db819ecf5962b79b381c27ceb33597f4"
+    },
+    {
+      "parsed_text_uid": "2ecb7e35-7e3c-452d-b1b1-9235fe2b9370",
+      "paper_id": 432,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/432_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 50795,
+      "sha256": "a9e1b21a0291bc62da786e8879a6baedff23acdb93876a83f8a3ccdc58a26440"
+    },
+    {
+      "parsed_text_uid": "f7e10973-7a8c-4f14-808e-9692e1c76356",
+      "paper_id": 433,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/433_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 48747,
+      "sha256": "ee8118c6a89dc109e878f259cf72ecdcec1a8aa162d62ef078e6740386a2b8fe"
+    },
+    {
+      "parsed_text_uid": "7aca9685-333c-4281-8cb1-c8f3c74873bd",
+      "paper_id": 434,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/434_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 45871,
+      "sha256": "98c92c17392a9c0c0d10bb0d6a17bd761eba15d06f083ad67b0974ccbbf8d149"
+    },
+    {
+      "parsed_text_uid": "cf82f6b2-eaeb-4cde-8e06-0f717f8e6c0d",
+      "paper_id": 439,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/439_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 51268,
+      "sha256": "29fd244ac192bb63885e78e9fdbad793e8d32d6a2b2460005a60514c9dca4da7"
+    },
+    {
+      "parsed_text_uid": "97d471f6-7e04-4290-a710-474771804379",
+      "paper_id": 442,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/442_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 50653,
+      "sha256": "b2b4929b10d3e0dfd6e83cce436ef2819edb191a72dbd72a046fee0bf58cbcfa"
+    },
+    {
+      "parsed_text_uid": "b867222a-c6c6-46f2-9b84-39680b465e71",
+      "paper_id": 445,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/445_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 54470,
+      "sha256": "5513ca3a17d05f098a71b510c889c6928746feee177dd08c8a771e0c6953de89"
+    },
+    {
+      "parsed_text_uid": "7dc60786-c256-4640-8b49-cb99bbbcb784",
+      "paper_id": 449,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/449_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 34264,
+      "sha256": "5c2034be534ebe7b7b73c3482335b61c3b89d8235496484b21e792f15108615c"
+    },
+    {
+      "parsed_text_uid": "6229addd-f9c3-480c-8726-ff92fb0b70dc",
+      "paper_id": 453,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/453_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 31406,
+      "sha256": "86966f6e558dec379f37d9eb53fe3754f036dce14c9e6893c94f61629777b8c7"
+    },
+    {
+      "parsed_text_uid": "a7c4129d-5157-41e6-9600-0ed694e2d5f0",
+      "paper_id": 455,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/455_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 60537,
+      "sha256": "1e459a15005549fc89250a34c3d35b417045d56c13893d36276e1836eb616e24"
+    },
+    {
+      "parsed_text_uid": "d69538ed-738d-4036-bb8b-5144cb3fad55",
+      "paper_id": 455,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/455_v3.md",
+      "parsed_text_version": 3,
+      "size_bytes": 52503,
+      "sha256": "71d3448949a0952d4c08dd0b5ada3b6889115b534b5993d16636ce94916c6e51"
+    },
+    {
+      "parsed_text_uid": "25367a77-2f0e-4aa0-b1b1-920e17d400d3",
+      "paper_id": 457,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/457_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 26685,
+      "sha256": "edcea3adbaa570ed2f170049874cedfe890ebfa7f133350f4c4515d86d321547"
+    },
+    {
+      "parsed_text_uid": "83438399-0e3e-4917-a95c-11a006248c2e",
+      "paper_id": 458,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/458_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 61322,
+      "sha256": "f410f35b1c36d6531749c6b29448b1b16a7d5ca519059d35c54a2fca348c5749"
+    },
+    {
+      "parsed_text_uid": "281ee7e7-2784-49b2-9c67-850578d807c0",
+      "paper_id": 459,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/459_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 83105,
+      "sha256": "54ae8ab0ca332e0f79ac3a9cfda6cf4e37f85187e25e689546d33b3088fc0ce9"
+    },
+    {
+      "parsed_text_uid": "cee99674-0e51-4949-8bca-34a7b9b25d16",
+      "paper_id": 460,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/460_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 44719,
+      "sha256": "15631d1b26336674bebdfe3edebc97485bd814c18e7998497a161a00505c0503"
+    },
+    {
+      "parsed_text_uid": "438beb6d-b934-4102-bc48-de8a0d087a0e",
+      "paper_id": 461,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/461_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 37382,
+      "sha256": "6cb4cb5d4af06a4170e4b6d02b092ca8155008aa31df727f1867132acce52bef"
+    },
+    {
+      "parsed_text_uid": "998846e4-bf98-4b92-97a9-c66e09c13e55",
+      "paper_id": 462,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/462_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 35399,
+      "sha256": "f57e9a77c6d24271e63f1f627b85078b5fcc9a3329108177101026b74315c146"
+    },
+    {
+      "parsed_text_uid": "577054a5-bfd3-464d-b95b-8329af1264fa",
+      "paper_id": 463,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/463_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 34376,
+      "sha256": "4515c71c7ae455f27b6243154d096653e9bcd5d525074c4731cd80808790dc7e"
+    },
+    {
+      "parsed_text_uid": "681ed493-714b-4f5a-b255-73036b55ec48",
+      "paper_id": 464,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/464_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 42861,
+      "sha256": "5eca2899363938ec7cfec0a2f175dba13bf877477505e92fe6d62de27bc2837d"
+    },
+    {
+      "parsed_text_uid": "db1a5a65-510f-49f0-b238-f12b0d6b00de",
+      "paper_id": 466,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/466_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 44361,
+      "sha256": "907c362c40085363e1124fdcb7c5c44617f0769fceb6eafc445c2b3d8ed744db"
+    },
+    {
+      "parsed_text_uid": "b1e079a0-fb81-4b90-807b-72888134e9e0",
+      "paper_id": 467,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/467_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 61693,
+      "sha256": "c303ab36c36ddc6b07649d38da8c144b5afcaa21b9f8bb5d51bd111c0dfa67ce"
+    },
+    {
+      "parsed_text_uid": "f0c96ef1-fde1-465c-84fb-ff06431878ee",
+      "paper_id": 470,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/470_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 34918,
+      "sha256": "19f4394f77505a1db0508b57811dacc12f387ce18c695cf16dc27e642eeac436"
+    },
+    {
+      "parsed_text_uid": "08006983-6b38-4fd4-9541-7f6f69e7e987",
+      "paper_id": 472,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/472_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 38283,
+      "sha256": "96e8cdf7a7fb8e49a55f5da33f14a8bf4a7080c60a6d99ed0f7e918a7f05f560"
+    },
+    {
+      "parsed_text_uid": "1f35d33a-57a0-4ecf-81b5-610e9fd75369",
+      "paper_id": 473,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/473_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 25071,
+      "sha256": "205315041b78c0d7f65cbe6575db30c670752f214be53aa5599f1cacb382f4d8"
+    },
+    {
+      "parsed_text_uid": "c73e4178-511f-4604-b6b4-cf65b6b29c45",
+      "paper_id": 474,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/474_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 46124,
+      "sha256": "738ca1531cbb791d696d42ae4b6dd9089d34703d730d58fd3d21bb62edcf5860"
+    },
+    {
+      "parsed_text_uid": "3494141d-d0a2-4c89-bc61-2f64058121b1",
+      "paper_id": 475,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/475_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 32217,
+      "sha256": "b72433061c6dd0deb413e4851ab319c02177bb7393e544ad776ed530a5c7de67"
+    },
+    {
+      "parsed_text_uid": "3d762e65-3296-487d-87ed-a0c32c3f81b9",
+      "paper_id": 476,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/476_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 43511,
+      "sha256": "6bc33f7cedb583b7b94f3642b5e376a60d825941334428162823c5f2a16eea38"
+    },
+    {
+      "parsed_text_uid": "6763d983-30a8-45cd-84d6-82b55556b08f",
+      "paper_id": 477,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/477_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 46222,
+      "sha256": "ae0a5c90c6a271a8ac5009d34328b2c7b52f29487693cb692b5231c41a8cc404"
+    },
+    {
+      "parsed_text_uid": "4ac035d5-9871-464f-a464-9d4bc6880c54",
+      "paper_id": 478,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/478_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 45851,
+      "sha256": "4e3ed0c822789f8a978a689fab75c2ffe0327a20e715b65643b6f5fb62152b55"
+    },
+    {
+      "parsed_text_uid": "2d9558e5-b2aa-4e9c-8499-ce693496a1df",
+      "paper_id": 480,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/480_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 54955,
+      "sha256": "1fee86d57b5a6f0b050cae1fe80d299bc5f35568c49299ce9a5c8dd7898225ee"
+    },
+    {
+      "parsed_text_uid": "7429fdce-568f-4018-86a1-1e91b6297690",
+      "paper_id": 485,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/485_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 37647,
+      "sha256": "51566b8aa105b90556dcbd15cb8632e181530f9c869835725ccd3fc96a09dc0f"
+    },
+    {
+      "parsed_text_uid": "11654d44-7f16-4f54-8161-e71607d836fb",
+      "paper_id": 486,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/486_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 42572,
+      "sha256": "a7c35df36e7bbfc6a8582871032a5e86dc4ef2f8d100b9266c64c37e5cc3840a"
+    },
+    {
+      "parsed_text_uid": "f1c836b3-3df8-4ec4-8e76-67285cc0d4e7",
+      "paper_id": 487,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/487_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 78193,
+      "sha256": "27c703f0bb81c63a560106b001fe0c5bab11ab5585111ec8f4d593a4f90880d8"
+    },
+    {
+      "parsed_text_uid": "30ea97e8-e925-48ca-bc4d-03d9ad549d88",
+      "paper_id": 488,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/488_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 32835,
+      "sha256": "554b73271c66b50c18e6c3232fd425b613c0f0627d6fb8870ff0b714490d2121"
+    },
+    {
+      "parsed_text_uid": "2c78285c-b0b3-4922-aed6-472179b40fd6",
+      "paper_id": 489,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/489_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 50087,
+      "sha256": "1a13678a1249d3a580883e05adce447c34889064aa82a26dfc9da4dd986a24ad"
+    },
+    {
+      "parsed_text_uid": "8de76ede-cc5f-47f6-a1d5-2843d8f81f6d",
+      "paper_id": 491,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/491_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 10377,
+      "sha256": "c95e7f4f558ae7e409c70243b6fa349b33fd6fe66dd321e2eac39f4810db7dfd"
+    },
+    {
+      "parsed_text_uid": "61301e41-fdd4-490b-bc5e-7743b6087b4e",
+      "paper_id": 492,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/492_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 47757,
+      "sha256": "f82be48301e99a2037542e85bc9d8a125f55420767d5c146b8d137d2ed0fc6c8"
+    },
+    {
+      "parsed_text_uid": "5a337160-325c-4d23-9695-6c74703110d6",
+      "paper_id": 493,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/493_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 71902,
+      "sha256": "a781ae4250abb528cfb838dadc4945dbfcd976db875f7b799ee8c87af6ea9444"
+    },
+    {
+      "parsed_text_uid": "987e7438-97ba-4706-b759-fa4102cb493d",
+      "paper_id": 497,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/497_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 32234,
+      "sha256": "05282ea8398b83715e44a79154339add2e55427bdaa8cb0b77e6b2b651d16d31"
+    },
+    {
+      "parsed_text_uid": "08b1d45b-bb8d-4efb-8bec-2b079ceaa8ca",
+      "paper_id": 498,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/498_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 149281,
+      "sha256": "3ff539a382b63237b0e3f5facc9fbfbc64a15572b78835c7c724b12101d51dcd"
+    },
+    {
+      "parsed_text_uid": "8188d0eb-4ea8-4b4b-9fe3-af19b80ed282",
+      "paper_id": 502,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/502_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 42229,
+      "sha256": "3a0265832d3e79979720d2641860a17841ba23fd5e49591fb127f39abdcec952"
+    },
+    {
+      "parsed_text_uid": "0ac7cc1b-bb79-4323-bdb9-58c40b9d110c",
+      "paper_id": 504,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/504_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 40977,
+      "sha256": "bf855a045bb9f29ccfa70517a746b81fda19121a09ea5c0c6c03748ceec048a5"
+    },
+    {
+      "parsed_text_uid": "6e1f4cbc-4ab7-480d-a085-ee1949d051af",
+      "paper_id": 507,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/507_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 32109,
+      "sha256": "78e17f6fb93bb5e531ae6379af37bef025f93fbbcd984d45a6886281f738dc13"
+    },
+    {
+      "parsed_text_uid": "8bb680a2-23e7-487b-b4ef-993505efd4ff",
+      "paper_id": 509,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/509_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 40382,
+      "sha256": "9e4cece9712c3b01cd856ddc17ffa3005f3aa75d33d26104b31be4f8ceba1dd5"
+    },
+    {
+      "parsed_text_uid": "b3f4e738-63f6-434b-aed0-a39ca1504732",
+      "paper_id": 511,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/511_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 82632,
+      "sha256": "65fb1f9bf5f93c62b1265c25a55f043e0e85e7aa0fba4039cfb927065a0ec0f5"
+    },
+    {
+      "parsed_text_uid": "754a142e-3e51-417a-a5ac-01d365ac12eb",
+      "paper_id": 513,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/513_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 34174,
+      "sha256": "36aee5e8b28cb1c0187bd742eb52edaf29383c004082675bcd65eb06b53c9a50"
+    },
+    {
+      "parsed_text_uid": "08cd8682-6c66-4af9-98a5-f658b2546f1c",
+      "paper_id": 514,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/514_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 47756,
+      "sha256": "d578b4be0c250712e4e8e986fe06144c6b9d861c3911691a33020da10874183e"
+    },
+    {
+      "parsed_text_uid": "7569ed7c-9beb-40ba-bc28-0702d165e876",
+      "paper_id": 515,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/515_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 37971,
+      "sha256": "70b0f4af57e97e1f623e85c9f85292a9cbd59a6444eb03006ccdf98e9c7eb5a9"
+    },
+    {
+      "parsed_text_uid": "c0d056a7-913f-4b24-bce3-089fa6ae0ba9",
+      "paper_id": 516,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/516_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 40880,
+      "sha256": "26f9dc02d5adac5cd578c01f3de1afda5ea24114254f373aaf1ed670cec55660"
+    },
+    {
+      "parsed_text_uid": "09b18d96-fd26-45e7-94c7-9105a59d5af1",
+      "paper_id": 517,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/517_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 31758,
+      "sha256": "89214af45c1889a5ac9c660d2d8f5c5a68548df815224baca097fc3775de1335"
+    },
+    {
+      "parsed_text_uid": "8ba92b07-d744-44b0-bb6a-dea5d4a57044",
+      "paper_id": 519,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/519_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 30834,
+      "sha256": "3a3504f1682667f2b5e28ad0df4a27802f99df64b1e4ba56ede013cd34f47803"
+    },
+    {
+      "parsed_text_uid": "60182f8a-1d2d-497e-89d2-c2844a44c989",
+      "paper_id": 522,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/522_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 65233,
+      "sha256": "65b253ac58f761c631122285aeafaa48c51ee82625fa85038ad301d5444186d6"
+    },
+    {
+      "parsed_text_uid": "90a95596-0b4a-4526-ad25-547a56b5b178",
+      "paper_id": 526,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/526_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 75909,
+      "sha256": "e757d97a1472fbc2ac8b9968e9004a16bb5681d3f129e9c21902619d975e8e88"
+    },
+    {
+      "parsed_text_uid": "04e8ef4f-7fbe-4df7-99ac-44f66967c376",
+      "paper_id": 528,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/528_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 30271,
+      "sha256": "2583e8268cdc02a50992cc923575db64cd271cef1c792f166f0381955ac5be67"
+    },
+    {
+      "parsed_text_uid": "2881b331-5aa2-4d22-9fe3-aa5fa7a87787",
+      "paper_id": 532,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/532_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 57286,
+      "sha256": "33a1542415b7cde98c936dc742077c4568e13be8dfd17268071db9bcca1d99a7"
+    },
+    {
+      "parsed_text_uid": "bba8cbe0-26cf-47d5-9eeb-672fb53a398b",
+      "paper_id": 534,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/534_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 43903,
+      "sha256": "73cfbabe5fcfc56f704364392228120c5037f7fcee2002919e4288af28edb215"
+    },
+    {
+      "parsed_text_uid": "f4c46e16-269c-4b52-bf3a-ee8ea9c41f0b",
+      "paper_id": 536,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/536_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 56367,
+      "sha256": "11530ddfb95956fb70298edeff19e47b0812d777551c650ebf0c5448e9852e42"
+    },
+    {
+      "parsed_text_uid": "a41e176f-8dc3-404c-9843-f4d53cad32d0",
+      "paper_id": 537,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/537_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 36218,
+      "sha256": "9543cf54358a01282fe3d05fbf99e4fde58a0de4ca25ef542d08bd00e53fef9d"
+    },
+    {
+      "parsed_text_uid": "3369ee3f-b4fd-46a2-a8ed-fbf0235c9da7",
+      "paper_id": 538,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/538_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 45450,
+      "sha256": "f5e17c17ff812cb6cbdcbe64d8ea566e3958c9aafa819315db4fff667d5c2855"
+    },
+    {
+      "parsed_text_uid": "579a0498-aec6-4901-9692-08528f480a97",
+      "paper_id": 541,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/541_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 36678,
+      "sha256": "fd0c196fe262bccc740a029327b65564d98d631e7ed94760db4ead9204417dd0"
+    },
+    {
+      "parsed_text_uid": "7772f14b-862a-4885-a24f-40bd5bc8b59b",
+      "paper_id": 542,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/542_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 40139,
+      "sha256": "87695dd8c9fcce3ad76d1edefb1bc61ea6dec1c50adcf1cefe77b566cd877ee6"
+    },
+    {
+      "parsed_text_uid": "aac227da-363b-406e-a72d-dbbc68e36a9c",
+      "paper_id": 543,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/543_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 66073,
+      "sha256": "bace20391971885901e18069337d1f981f44585c2dae73e2cbe56d23ebbfc68f"
+    },
+    {
+      "parsed_text_uid": "4b9a3efe-e8cd-44cf-a02d-792dc5c000e9",
+      "paper_id": 546,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/546_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 64350,
+      "sha256": "ec506ac2d5960b77abe4d7ab8ef013054da31bf9a4ae1e8375a8baa4676c9061"
+    },
+    {
+      "parsed_text_uid": "7f30d98d-597e-4d9c-bd36-528ec33ed6e8",
+      "paper_id": 548,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/548_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 36841,
+      "sha256": "40e601eb33dc291011f89e3df7321097de47e342d57b57f0db72d201f191b545"
+    },
+    {
+      "parsed_text_uid": "7d914c01-541c-4cc3-b402-324314122f5c",
+      "paper_id": 549,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/549_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 35272,
+      "sha256": "8f0cde03cc434afd16303a5a075aba49ff6e2e6ebcd195cc0dd4f4dda5c3d374"
+    },
+    {
+      "parsed_text_uid": "f95fda79-e01c-4333-a593-6bc165428dc6",
+      "paper_id": 550,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/550_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 45064,
+      "sha256": "ec3ee40fe72c9216f7a73720edd578a048c2370c5e77fef27f7d6f34d8483f7a"
+    },
+    {
+      "parsed_text_uid": "0200820b-c535-44be-a311-a13b9c7bc70c",
+      "paper_id": 553,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/553_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 32530,
+      "sha256": "f2640acd15307d5543c5d638a7ad5ad7252609d34e90984c806791e209041e33"
+    },
+    {
+      "parsed_text_uid": "b319e4f4-5277-46d9-85dd-3e31535dd4fe",
+      "paper_id": 554,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/554_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 31745,
+      "sha256": "268490da67f612a49a8be73ccde2fb02455e719747b2752792ec237b900cd200"
+    },
+    {
+      "parsed_text_uid": "56597c2a-90e2-40e3-83c8-e89590965898",
+      "paper_id": 556,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/556_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 21042,
+      "sha256": "58f6ecde131ef148a909ad495b8763d340c246cf3069ae7787b1ef187f14708b"
+    },
+    {
+      "parsed_text_uid": "26cf4455-8905-423f-a524-314df18c80ca",
+      "paper_id": 557,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/557_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 49926,
+      "sha256": "1651c3c4089e2a9e4d253976fda08e8d84322424fbf96c50ca7efa6ebc015618"
+    },
+    {
+      "parsed_text_uid": "47b640a1-c5f4-46ad-a104-57ef8a7079bb",
+      "paper_id": 562,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/562_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 39844,
+      "sha256": "6560b30bc1ff34c79024d61466bc8af5b2e39e361e670fbccb97861e8b73cfaf"
+    },
+    {
+      "parsed_text_uid": "ecfc4bd2-7bd2-4ad4-851f-3e319d838f52",
+      "paper_id": 566,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/566_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 32106,
+      "sha256": "827ed6690b8061ec7c96b09d67a772466836e60943f577360f796d321d1953d3"
+    },
+    {
+      "parsed_text_uid": "88430158-e681-4649-8024-1a3e523ad553",
+      "paper_id": 568,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/568_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 48984,
+      "sha256": "898060ff741ad57cd4f55c8751387eb53a065ab71e4ae1c802e6fe275a2dd0a3"
+    },
+    {
+      "parsed_text_uid": "1ffbdad4-cd04-4513-ad95-2354f8676f38",
+      "paper_id": 570,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/570_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 39403,
+      "sha256": "ea9de45bfefe02f881c7eac109a0ac899f8de01ed0f9fe446ba75f686bbeb065"
+    },
+    {
+      "parsed_text_uid": "c411191c-17a6-4af0-b4bc-db29ae64ea75",
+      "paper_id": 572,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/572_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 36390,
+      "sha256": "ef9fa9d0ebaadd9bf08f354aaa90507c3d5663449cc830687a0bb605555b37e8"
+    },
+    {
+      "parsed_text_uid": "828b9c7a-96c3-477a-b57a-2dad89d6ecc0",
+      "paper_id": 574,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/574_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 39667,
+      "sha256": "5ad1a0a9fc320e9420683fad7e66b33adb39347fe63d6a8642f253350eeaefbe"
+    },
+    {
+      "parsed_text_uid": "2036dc94-d081-4f47-a66e-9a41348883e8",
+      "paper_id": 576,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/576_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 20504,
+      "sha256": "90e61bcd2e6151e7f410ea6b4820dade40660b5cbc6f01da30e6b7c3737f134b"
+    },
+    {
+      "parsed_text_uid": "f11866e9-8dd3-473a-8956-2f57ea0c82ed",
+      "paper_id": 577,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/577_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 30959,
+      "sha256": "a91d877503b23b615e46db56ff4208d7cb5746463196c91ad76f5074978c267d"
+    },
+    {
+      "parsed_text_uid": "079b0630-d3e9-4ed8-abd3-58cbaa664923",
+      "paper_id": 580,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/580_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 52623,
+      "sha256": "68be48e2d60f3f73f1841dcc5d66dff79c6d9fdf07b458f3afdd964fcb0bb26b"
+    },
+    {
+      "parsed_text_uid": "925230ee-875f-45ec-a201-781951b4c856",
+      "paper_id": 581,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/581_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 75577,
+      "sha256": "f63bf2e57978381c34379f71ce863f2dd3f85fa014f1554022c21b183953e942"
+    },
+    {
+      "parsed_text_uid": "98c4d3eb-b1bc-4243-bbe9-6c04826c6302",
+      "paper_id": 586,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/586_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 69223,
+      "sha256": "dd8935f5f746e1febe213223040c77b75e1684e3e40f4f8097efd9bd096856fa"
+    },
+    {
+      "parsed_text_uid": "369cfd02-ca48-4f77-9eca-62fe330d9b81",
+      "paper_id": 586,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/586_v3.md",
+      "parsed_text_version": 3,
+      "size_bytes": 40548,
+      "sha256": "29eb250acb1db6c2e5bea63d1fd48fa5873581d3aa5285e2a1934e66dede2866"
+    },
+    {
+      "parsed_text_uid": "2258a242-d265-42d3-b946-e237455f93c3",
+      "paper_id": 589,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/589_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 33637,
+      "sha256": "2719c5f87b8556e847a1c9fec35cbdf1e83bd362104be143f783733555be582e"
+    },
+    {
+      "parsed_text_uid": "0b646afc-1634-4c81-ae2e-db86bb379762",
+      "paper_id": 590,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/590_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 22251,
+      "sha256": "22abc08bd6f0b3ea76edabd6109de57b01c54cf0899dd7df296b19ed9b64048f"
+    },
+    {
+      "parsed_text_uid": "72800663-e358-4650-b13c-e3434dd941f7",
+      "paper_id": 602,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/602_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 34475,
+      "sha256": "c37a78e5bdca33ba17e95c6699f75e12463c185591726c7b11f7ea29e9070b6e"
+    },
+    {
+      "parsed_text_uid": "85750955-2656-4272-bd24-6a2bbb79f7e0",
+      "paper_id": 604,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/604_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 38947,
+      "sha256": "50b6346a59007286b58b69f04655c19f0af73d8f3055056297c0b90050a35e5d"
+    },
+    {
+      "parsed_text_uid": "d9ba28aa-18a3-4247-9a56-a2049531b302",
+      "paper_id": 607,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/607_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 131347,
+      "sha256": "86261a1fa24d72ce163fbb1465524a7c52dd0934b4a34202de258a39b8cd4863"
+    },
+    {
+      "parsed_text_uid": "e3d108df-797e-4b10-84af-9be494b1fd0b",
+      "paper_id": 608,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/608_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 32699,
+      "sha256": "ea7c5adcf400447a83aaf77dc29862874e9869c65d0d99435b21611d864f56e3"
+    },
+    {
+      "parsed_text_uid": "7ec8195b-7975-4d76-a65f-0cc6057f7e17",
+      "paper_id": 610,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/610_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 49499,
+      "sha256": "078f2dd4c7fe17e8369dbb8756cf571a7ffe299733006e7fbd572cf17e792d74"
+    },
+    {
+      "parsed_text_uid": "c2decf95-9846-4d90-8f65-4df87ef9586a",
+      "paper_id": 614,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/614_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 82164,
+      "sha256": "4d2a282eafd8a264da7943d35910c7cbd82a6f6519049272d05e4343c965a865"
+    },
+    {
+      "parsed_text_uid": "1f7a767d-1e4a-4ad4-868e-f4ce1bb3b0f8",
+      "paper_id": 617,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/617_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 75496,
+      "sha256": "aadb957ae3774bab8bff45119dba7765c4418b2768619fa992de55377c151f69"
+    },
+    {
+      "parsed_text_uid": "b77ba07f-f339-4950-b381-284f314f68ce",
+      "paper_id": 618,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/618_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 59113,
+      "sha256": "6c7e1975330ef98124ee1cd3aa9eb02370d84b36b8d8d0668fd3b5fa855187ef"
+    },
+    {
+      "parsed_text_uid": "2efe43f6-fa6c-4f1a-a1f3-305c6273f4aa",
+      "paper_id": 622,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/622_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 85701,
+      "sha256": "b61fcd88422b09aaffd2c868dfc72ade58419f9d95fa467ba4f82506fc4d4816"
+    },
+    {
+      "parsed_text_uid": "29e7c88e-3210-4258-8e00-9135bc1470bd",
+      "paper_id": 623,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/623_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 24786,
+      "sha256": "3c9011caec8e4dfa09e2670b309bef9e8d3edd95c0327ccd4089c83f7de6d61e"
+    },
+    {
+      "parsed_text_uid": "53be19ba-8960-4241-b333-302fcb3bd62f",
+      "paper_id": 626,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/626_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 64896,
+      "sha256": "ad8a8885d58dc2056d873afb478dd4320b8b25a04c9f8cf91d22b38feacb3fd1"
+    },
+    {
+      "parsed_text_uid": "2876dfea-647f-4328-9965-91d8f26bb1ba",
+      "paper_id": 628,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/628_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 30219,
+      "sha256": "b6f42b68a2be1ede944fb157f2024df1ee5820eead7e9a6888f446f3105a7589"
+    },
+    {
+      "parsed_text_uid": "55793bdd-ba8e-4acd-819a-90fcdd5ab2a1",
+      "paper_id": 635,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/635_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 38053,
+      "sha256": "e4b4d07622a9631805c3bb400cb0779373babc8793b9d20b2e181768f57d562e"
+    },
+    {
+      "parsed_text_uid": "a7884ae8-3bb8-47cb-bd89-a909b0cc1a4d",
+      "paper_id": 637,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/637_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 33057,
+      "sha256": "edbd8f19dcec9ff65a0dcb826d0d034cd2c6cf5403e87faa2a05e3bd3c0dd623"
+    },
+    {
+      "parsed_text_uid": "edef0715-d3c3-4a05-a1bc-796b118411bf",
+      "paper_id": 639,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/639_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 47917,
+      "sha256": "7726a2f0f9dfd08831310cf2780b19bbd587f5917d8cc29c32cf89d58bf73582"
+    },
+    {
+      "parsed_text_uid": "544ea536-e25a-4c7d-bcab-f5049804d7f0",
+      "paper_id": 640,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/640_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 37157,
+      "sha256": "2b43b7916b4c4be16c1626cbfa5add81b266050915e5d8041614765a043a7c1a"
+    },
+    {
+      "parsed_text_uid": "c1d0edad-02ff-46db-aa30-80c2de7554eb",
+      "paper_id": 643,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/643_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 42731,
+      "sha256": "081fadc0e1482c286bda517719bf3ee5b63fc89626a336840033d0ea1d670ce8"
+    },
+    {
+      "parsed_text_uid": "35cf5666-9fc6-4d32-9d9d-601adfe49cc6",
+      "paper_id": 644,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/644_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 34980,
+      "sha256": "851789dc732f99587bdb06b88556f35af05bc51068ca6b0e046c4e7162cdc33f"
+    },
+    {
+      "parsed_text_uid": "21bc4c7f-d3f8-4cb6-9e00-c6bb17d092a1",
+      "paper_id": 645,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/645_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 44705,
+      "sha256": "773a305241126a6290bf173534bd1584d23fd159e5dab629146f7b2356f57265"
+    },
+    {
+      "parsed_text_uid": "28710f68-3b85-403a-bff5-c704c0ca59b9",
+      "paper_id": 653,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/653_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 36282,
+      "sha256": "019dcaff983119ba7f6f9b5e36ee904bea6a593d3a62934ebae2b104764ac1fa"
+    },
+    {
+      "parsed_text_uid": "dc5ae3ac-d67a-48f7-92d6-773382178679",
+      "paper_id": 654,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/654_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 33593,
+      "sha256": "c94174233bc3acc8772b99dbde646af4fec1b6e85adfee243f6846b50f8f02fb"
+    },
+    {
+      "parsed_text_uid": "e513d449-5f9f-4177-8d7e-d75aafff720e",
+      "paper_id": 659,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/659_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 61513,
+      "sha256": "3802c4a7070abf5521d361b68cb434d089b1df0cc60ba6c99ac79c09225d4c53"
+    },
+    {
+      "parsed_text_uid": "8b02a4ed-206e-4688-8d97-700854675c19",
+      "paper_id": 660,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/660_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 67326,
+      "sha256": "659ce3c663af4dd4d2ea8b5cdde9095276bf56b277e99106cf79a37ed2f0431d"
+    },
+    {
+      "parsed_text_uid": "cc2ba0a0-85a1-496f-82c6-046a7e49b3dc",
+      "paper_id": 661,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/661_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 52725,
+      "sha256": "127094901b828698c50c571fd9865d32e0d342fb4a44f17b7492d139f141c3d8"
+    },
+    {
+      "parsed_text_uid": "13583e1a-c111-46e2-94c2-6a62a0dedf86",
+      "paper_id": 663,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/663_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 58740,
+      "sha256": "349bbc96201e88d8248101078b097331e99f2ff1210916bf7286b9819fcc2f7c"
+    },
+    {
+      "parsed_text_uid": "6506b8db-8d85-4fc3-a009-bb0be96f2198",
+      "paper_id": 668,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/668_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 17758,
+      "sha256": "bbe5ae38cca2ed2719f133cd42914ea219c9c242905a4951f4c998f513493ba4"
+    },
+    {
+      "parsed_text_uid": "5ff5a4ba-3525-4761-8f31-fd775741466c",
+      "paper_id": 670,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/670_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 36768,
+      "sha256": "d9aa427416e923e1e255e3e7a201359983f162fde93a4a6ff626531ef8794299"
+    },
+    {
+      "parsed_text_uid": "f9f9f7ce-641e-4fdb-bcb1-1e59c9c80a01",
+      "paper_id": 676,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/676_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 28112,
+      "sha256": "cd61a4a12d1634bb864b738d367700d19667ec0dd3cff12aee6b27ab787bdf89"
+    },
+    {
+      "parsed_text_uid": "1f89e277-f612-4e62-95c0-3d1f3a9e1d6b",
+      "paper_id": 679,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/679_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 12317,
+      "sha256": "1c96977ad82d9a2680d2a32445ba7c5869b3da939c712ecd821dc57b2621d841"
+    },
+    {
+      "parsed_text_uid": "8461d25d-b11a-47d0-8b9f-ca6737a6f23d",
+      "paper_id": 683,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/683_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 43031,
+      "sha256": "ac4c541dd36ac8d84c302300ec0c4013d0576cf2a45db810bc5d37761a6d0df7"
+    },
+    {
+      "parsed_text_uid": "6a98eb9a-993e-4479-a807-20d1aeacf1e6",
+      "paper_id": 687,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/687_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 34038,
+      "sha256": "e017789f932a463317752a9c9bb41a0edb852584f1b070a10e565ffba2bafd37"
+    },
+    {
+      "parsed_text_uid": "9c6a7cb1-0241-400c-b0f1-bd46920639b2",
+      "paper_id": 689,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/689_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 60358,
+      "sha256": "9aecfa4a6fcd24e871801711649aa575d4e7ab9ac8bf9327f7772db382f1cbb6"
+    },
+    {
+      "parsed_text_uid": "c3c69ca7-1812-4d44-b9a9-a8a3c57fcfe6",
+      "paper_id": 690,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/690_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 83981,
+      "sha256": "bc0a19f9f349d794f565a0c70e54e5e5c45fa6f6fa9f8c06cd60673f5161d594"
+    },
+    {
+      "parsed_text_uid": "6f3fb598-2c8b-485f-9235-811d7b1cdf8e",
+      "paper_id": 691,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/691_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 40804,
+      "sha256": "4caa45417411eb3f32a45207ac515973b3a78f95a642a53bd76ea61a173c3dea"
+    },
+    {
+      "parsed_text_uid": "a5cea7de-7419-422c-b087-3ef4c2373405",
+      "paper_id": 693,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/693_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 29482,
+      "sha256": "4c9f5fc9cfcfbe202ac671591300770e587ffa9b18c2bd5e68ad2137aff54ec5"
+    },
+    {
+      "parsed_text_uid": "97f22d85-bf3e-4228-bba2-d6af76a52bf6",
+      "paper_id": 694,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/694_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 39337,
+      "sha256": "009a4e9f763e5d7aef2b013d0f7a33eabbf41ce40618499473d02742b5fd1497"
+    },
+    {
+      "parsed_text_uid": "cda42ab4-581a-4795-b8c5-e40d1ec853da",
+      "paper_id": 699,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/699_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 48568,
+      "sha256": "a83f443fb1e6b9ee2520007058837a75aa3c5ddf8aaff2ee25c4291f51fe9b8b"
+    },
+    {
+      "parsed_text_uid": "024d405b-e1f3-4539-b630-ebfdf5287a6c",
+      "paper_id": 699,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/699_v3.md",
+      "parsed_text_version": 3,
+      "size_bytes": 27069,
+      "sha256": "5313b9e201163cf5a79345a7a6a3325ab14c265c2f568501983c39be7ef54de7"
+    },
+    {
+      "parsed_text_uid": "7c20480d-5703-4800-b672-8be95e08aa0f",
+      "paper_id": 700,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/700_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 36440,
+      "sha256": "2efaaf756edd811cc6e2b6d58125e9b5d4a5de7e59e2d23edd2de0c2c007e351"
+    },
+    {
+      "parsed_text_uid": "870f96c2-2aa1-47bd-8acb-75d85c72733b",
+      "paper_id": 708,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/708_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 85756,
+      "sha256": "049324b5594b41e3c899aa85b9422ab9c454a5176c3969fde290f5c920a4393c"
+    },
+    {
+      "parsed_text_uid": "d10ec42c-3ed4-4f9d-ac03-b3eefa60508d",
+      "paper_id": 719,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/719_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 279426,
+      "sha256": "4cbc3557ff5ef4b0d562f06eb01c23a7ab4536021f35021d13988056edc7cff3"
+    },
+    {
+      "parsed_text_uid": "f677fa0f-5c9c-4609-a997-d56ee564185c",
+      "paper_id": 719,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/719_v3.md",
+      "parsed_text_version": 3,
+      "size_bytes": 28867,
+      "sha256": "37bfcdf8094609ff9397e8059b73f40588cd51214164c4d4cd40ee4b42f1500f"
+    },
+    {
+      "parsed_text_uid": "8ce8d3e4-795f-434e-882f-970a12efccc7",
+      "paper_id": 720,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/720_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 68703,
+      "sha256": "eea4294ce229fc9d26e862ad962cd07e5620569a081654837e90d9c78a1a1edb"
+    },
+    {
+      "parsed_text_uid": "467f6bc3-5f84-4e78-b3a1-d495da3f3bfd",
+      "paper_id": 738,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/738_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 38564,
+      "sha256": "ccf5d36646a9678ff6456631da7d898b600482de9d08b32c1dcc797cdfa517ce"
+    },
+    {
+      "parsed_text_uid": "2bc31e02-20ad-4b1e-a9fb-534326df1dce",
+      "paper_id": 741,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/741_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 59122,
+      "sha256": "c96947ab01b96d53489979e2708e3cd33e15457f1391e002feaf903a54dc876e"
+    },
+    {
+      "parsed_text_uid": "e6e9689b-0b49-4d87-8663-d11462658b0a",
+      "paper_id": 742,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/742_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 68952,
+      "sha256": "ce31c94acd5ab4b40f10d69df189d9cb3c223f0cc160afda802497e1105cdb69"
+    },
+    {
+      "parsed_text_uid": "c3454dbf-84e5-4457-8fa8-e376096e9651",
+      "paper_id": 744,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/744_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 32513,
+      "sha256": "b2e7c1c4d2868d8325cf4ffdc7639ae3338b416dd2ed5f0fbb22645ace3fc1e0"
+    },
+    {
+      "parsed_text_uid": "6f101c5f-2863-4670-98f4-2d6cbf8b378f",
+      "paper_id": 748,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/748_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 56411,
+      "sha256": "79e2ac16a33519a74af81fc6f130d03342e4d5e62a79a880fabcba1b069091da"
+    },
+    {
+      "parsed_text_uid": "2b3c6743-12c9-4cac-90cc-c824b7b3b495",
+      "paper_id": 750,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/750_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 37723,
+      "sha256": "7e9641c9a22b1531733cfeb7654f90345ce0afa97ea9b2987b4594840d7834fb"
+    },
+    {
+      "parsed_text_uid": "155be2f8-5cc1-4f60-bb4f-038e7ea0b167",
+      "paper_id": 752,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/752_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 31265,
+      "sha256": "16513ff0c26de9f683a58b75b738309c54000496ef79a7f834ca4ce9acd8e5fd"
+    },
+    {
+      "parsed_text_uid": "3b7611e2-bfa6-4062-8800-ae0b1885791f",
+      "paper_id": 755,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/755_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 54738,
+      "sha256": "138fa78001ef733b1f82d379a44c81c4192d8931b987cc4848fbf9e7fb64b2cd"
+    },
+    {
+      "parsed_text_uid": "f91ae0f0-32bd-4246-a226-899a569f5601",
+      "paper_id": 758,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/758_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 26183,
+      "sha256": "bd269c76d1c9bf7ac2b6076eeef4aa4ad2be9ae219a166b6a28663278b1fb86e"
+    },
+    {
+      "parsed_text_uid": "163f1126-d9c8-41f1-a108-0d9fa2e13255",
+      "paper_id": 763,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/763_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 21685,
+      "sha256": "57458edce5be14488337ae93f29f2c89243c012d47a32932ec91208b7fbed6fb"
+    },
+    {
+      "parsed_text_uid": "0dff67f7-4ffd-4910-9b8d-43c89849b03c",
+      "paper_id": 764,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/764_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 34611,
+      "sha256": "e2eb782a8e3d639c3f3eb4d1432b56e5e8ad6e3c3b22e064eaf62ea8e9af5f8c"
+    },
+    {
+      "parsed_text_uid": "840fc9b8-9cfa-41a2-850d-5f04e90f2a0e",
+      "paper_id": 769,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/769_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 44105,
+      "sha256": "6821397f0547f1eb9a7adf290e2f6d0f1fc0d402bae5dd4f3b37eac7160f759f"
+    },
+    {
+      "parsed_text_uid": "3fddc1b2-5bf9-453a-80e6-c202b47137c8",
+      "paper_id": 779,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/779_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 35466,
+      "sha256": "69a048d422dca3e2a1edbf85b3143cd71011ae10e02345ea3b5b9dc23c6ce49c"
+    },
+    {
+      "parsed_text_uid": "7c7e2a34-46bd-4a9d-bfa9-5a6576285bf0",
+      "paper_id": 780,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/780_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 60225,
+      "sha256": "a83fab0da0d34525aa2e12ff94b82a76b6547b31cb63c076cf4cc9ceac18cd38"
+    },
+    {
+      "parsed_text_uid": "6827965f-3370-40b6-9649-c00c0bcff831",
+      "paper_id": 783,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/783_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 7987,
+      "sha256": "709549ee800d9e5924cd1b30fc9238c1bb0560a95d3f97daff5155c1c7b2ff67"
+    },
+    {
+      "parsed_text_uid": "10378ed3-86ef-4812-be85-483a9169fea6",
+      "paper_id": 796,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/796_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 36861,
+      "sha256": "150ae77d895fbe5bb89bae198a0cdae4589644e61fb382adec1b708d0149e418"
+    },
+    {
+      "parsed_text_uid": "12a77ad2-dfc5-4447-80e4-a02a3e5cddb5",
+      "paper_id": 801,
+      "parsed_text_path": "data/surgical_autonomy/parsed_text/801_v2.md",
+      "parsed_text_version": 2,
+      "size_bytes": 23047,
+      "sha256": "ef0c0d206972edd1c6a245606f62f669ceac0df2cffa73eb239e6d6c45af0986"
+    }
+  ]
+}

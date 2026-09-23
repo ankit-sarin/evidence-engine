@@ -545,7 +545,9 @@ PYTHONPATH=. python -m analysis.eval.elicit_design01.smoke --review surgical_aut
 
 # Extraction cleanup (schema transition)
 python -m engine.utils.extraction_cleanup --review surgical_autonomy          # dry-run
-python -m engine.utils.extraction_cleanup --review surgical_autonomy --confirm # execute
+# extraction_cleanup --confirm — DO NOT RUN on data/surgical_autonomy/review.db: it deletes every
+# extraction with a NULL codebook_hash (all 190 today) and resets the papers to PARSED (row D10,
+# R94). Retired in INPUT-IDENTITY-01 Phase 2a.
 
 # Post-extraction validation
 python -m engine.validators.extraction_validator --review surgical_autonomy

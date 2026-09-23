@@ -33,6 +33,16 @@ from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
 
 from engine.core.review_paths import load_spec_for as _load_spec_for
+from engine.core.parsed_text import record_parsed_text as _rpt
+from _parsed_text_fixture import write_parsed
+
+
+def _record(db, pid, path):
+    """Record an already-written fixture text through the engine writer (S3e)."""
+    _rpt(db._conn, paper_id=pid, path=path, version=1, data=path.read_bytes(),
+         source_asset_id=None)
+    db._conn.commit()
+
 
 #: The adjudication rubric is rendered from the spec's eligibility and has
 #: no spec-less default, so every export test supplies one.
@@ -745,6 +755,7 @@ class TestFTScreeningSkipsAdvancedStatus:
         md_path = tmp_path / "test_review" / "parsed_text" / f"{pid}_v1.md"
         md_path.parent.mkdir(parents=True, exist_ok=True)
         md_path.write_text("# Full Paper\n\nAutonomous robotic suturing results. " * 50)
+        _record(tmp_db, pid, md_path)
         tmp_db._conn.execute(
             "INSERT INTO full_text_assets (paper_id, pdf_path, pdf_hash, "
             "parsed_text_path, parsed_text_version, parser_used, parsed_at) "
@@ -825,10 +836,9 @@ class TestFTParseError:
         _advance_to_parsed(tmp_db, pid1)
         _advance_to_parsed(tmp_db, pid2)
 
-        # Create parsed text for both
-        parsed_dir = Path(tmp_db.db_path).parent / "parsed_text"
-        (parsed_dir / f"{pid1}_v1.md").write_text("Good paper content about surgery.")
-        (parsed_dir / f"{pid2}_v1.md").write_text("Bad paper content.")
+        # Create and record parsed text for both (S3e)
+        write_parsed(tmp_db, pid1, "Good paper content about surgery.")
+        write_parsed(tmp_db, pid2, "Bad paper content.")
 
         call_count = [0]
 

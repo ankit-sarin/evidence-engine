@@ -21,6 +21,7 @@ from engine.core.database import ReviewDatabase
 from engine.core import eligibility_render as render
 from engine.core.review_spec import ReviewSpec
 from engine.core.effective_config import stage_config
+from engine.core.parsed_text import NoParsedText, load_parsed_text
 from engine.utils.ollama_client import ollama_chat
 
 logger = logging.getLogger(__name__)
@@ -260,17 +261,16 @@ def _save_checkpoint(path: Path, screened_ids: set[int]) -> None:
 
 
 def _load_parsed_text(db: ReviewDatabase, paper_id: int) -> str | None:
-    """Load the latest parsed text for a paper from the parsed_text directory."""
-    parsed_dir = db.db_path.parent / "parsed_text"
-    if not parsed_dir.exists():
+    """The paper's current parsed text through the one resolver (S3e), or None.
+
+    None means "no parsed text is recorded", as it meant "no file" before. A
+    recorded text that is missing or modified raises (R95) — it is never
+    screened as though it were the text that was recorded.
+    """
+    try:
+        return load_parsed_text(db._conn, paper_id)
+    except NoParsedText:
         return None
-
-    # Find latest version: {paper_id}_v{N}.md
-    candidates = sorted(parsed_dir.glob(f"{paper_id}_v*.md"), reverse=True)
-    if candidates:
-        return candidates[0].read_text()
-
-    return None
 
 
 # ── Pipeline: Primary Screening ─────────────────────────────────────

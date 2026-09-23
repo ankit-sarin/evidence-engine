@@ -25,6 +25,7 @@ from engine.core import events
 m016 = importlib.import_module("engine.migrations.016_event_store")
 m019 = importlib.import_module("engine.migrations.019_paper_state_axes")
 m020 = importlib.import_module("engine.migrations.020_run_manifest")
+m021 = importlib.import_module("engine.migrations.021_parsed_text_sha256")
 
 _PAPERS_DDL = """
 CREATE TABLE IF NOT EXISTS papers (
@@ -60,6 +61,10 @@ def ensure_event_store(db_path: str | Path) -> None:
     conn.close()
     m019.run_migration(db_path)
     m020.run_migration(db_path)
+    # INPUT-IDENTITY-01: parsed_text_refs at 021's shape, so the resolver can
+    # read references a fixture records. The table is empty here, so 021 reads
+    # no file and needs no baseline.
+    m021.run_migration(db_path)
     _DONE.add(db_path)
 
 

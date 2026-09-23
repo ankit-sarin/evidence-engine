@@ -27,6 +27,9 @@ from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
 from engine.core.codebook import load_codebook_beside
 from engine.core.codebook import load_codebook_for
+from _parsed_text_fixture import write_parsed
+import importlib as _importlib
+_M021 = _importlib.import_module("engine.migrations.021_parsed_text_sha256")
 
 CBK = load_codebook_for("surgical_autonomy")
 
@@ -294,9 +297,8 @@ def test_staleness_skip(tmp_path, spec):
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
 
-    # Write a parsed text file
-    parsed_dir = Path(db.db_path).parent / "parsed_text"
-    (parsed_dir / f"{pid}_v1.md").write_text("Paper content here.")
+    # Write and record a parsed text (S3e: the resolver reads references)
+    write_parsed(db, pid, "Paper content here.")
 
     # Pre-insert an extraction stamped with the CURRENT codebook. The
     # idempotence lookup keys on codebook_hash now (SCHEMA-DERIVE-01); an
@@ -584,15 +586,14 @@ class TestProactiveRestart:
         conn.execute("""CREATE TABLE evidence_spans (
             id INTEGER PRIMARY KEY, extraction_id INTEGER, field_name TEXT,
             value TEXT, source_snippet TEXT, confidence REAL)""")
+        conn.execute(_M021.table_sql())
         for i in range(1, n_papers + 1):
             conn.execute(
                 "INSERT INTO papers (id, title, status, added_at) VALUES (?, ?, 'FT_ELIGIBLE', '2026-01-01')",
                 (i, f"Test Paper {i}"),
             )
-            # Create parsed text file
-            parsed_dir = tmp_path / "parsed_text"
-            parsed_dir.mkdir(exist_ok=True)
-            (parsed_dir / f"{i}_v1.md").write_text(f"Paper {i} text content.")
+            # Create and record parsed text (S3e: the resolver reads references)
+            write_parsed(conn, i, f"Paper {i} text content.", version=1)
         conn.commit()
         db._conn = conn
         db.db_path = db_path
@@ -676,14 +677,13 @@ class TestRestartOllamaGraceful:
         conn.execute("""CREATE TABLE evidence_spans (
             id INTEGER PRIMARY KEY, extraction_id INTEGER, field_name TEXT,
             value TEXT, source_snippet TEXT, confidence REAL)""")
+        conn.execute(_M021.table_sql())
         for i in range(1, n_papers + 1):
             conn.execute(
                 "INSERT INTO papers (id, title, status, added_at) VALUES (?, ?, 'FT_ELIGIBLE', '2026-01-01')",
                 (i, f"Test Paper {i}"),
             )
-            parsed_dir = tmp_path / "parsed_text"
-            parsed_dir.mkdir(exist_ok=True)
-            (parsed_dir / f"{i}_v1.md").write_text(f"Paper {i} text content.")
+            write_parsed(conn, i, f"Paper {i} text content.", version=1)
         conn.commit()
         db._conn = conn
         db.db_path = db_path

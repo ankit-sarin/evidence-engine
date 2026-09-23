@@ -20,6 +20,7 @@ from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
 from engine.core.effective_config import EffectiveConfig, stage_config
+from engine.core.parsed_text import NoParsedText, ParsedTextError, load_parsed_text
 from engine.utils.ollama_client import ollama_chat
 from engine.core.codebook import load_codebook_beside
 
@@ -419,14 +420,15 @@ def run_audit(
     for i, paper in enumerate(papers, 1):
         pid = paper["id"]
 
-        # Load parsed text
-        parsed_dir = review_dir / "parsed_text"
-        md_files = sorted(parsed_dir.glob(f"{pid}_v*.md"), reverse=True)
-        if not md_files:
+        # Load parsed text through the one resolver (S3e, R95)
+        try:
+            paper_text = load_parsed_text(db._conn, pid)
+        except NoParsedText:
             logger.warning("Paper %d: no parsed text found — skipping audit", pid)
             continue
-
-        paper_text = md_files[0].read_text()
+        except ParsedTextError as exc:
+            logger.error("Paper %d: parsed text refused — %s — skipping audit", pid, exc)
+            continue
 
         # Get the latest extraction for this paper
         extraction = db._conn.execute(

@@ -21,6 +21,7 @@ from engine.core.completeness import (
 from engine.core.effective import corpus_id_sql
 from engine.core.effective_config import cloud_stage_config, sha256_canonical
 from engine.core.extraction_telemetry import record_call
+from engine.core.parsed_text import NoParsedText, load_parsed_text
 from engine.core.review_spec import ReviewSpec, load_review_spec
 
 logger = logging.getLogger(__name__)
@@ -162,14 +163,16 @@ class CloudExtractorBase:
         return [dict(r) for r in rows]
 
     def load_parsed_text(self, paper_id: int) -> str:
-        """Load the most recent parsed markdown for a paper."""
-        parsed_dir = self._review_dir / "parsed_text"
-        md_files = sorted(parsed_dir.glob(f"{paper_id}_v*.md"), reverse=True)
-        if not md_files:
-            raise FileNotFoundError(
-                f"No parsed text found for paper {paper_id} in {parsed_dir}"
-            )
-        return md_files[0].read_text()
+        """The paper's current parsed text through the one resolver (S3e, R95).
+
+        No recorded text still raises `FileNotFoundError`, which `run` already
+        handles; a missing or modified recorded file raises its own
+        `ParsedTextError`.
+        """
+        try:
+            return load_parsed_text(self._conn, paper_id)
+        except NoParsedText as exc:
+            raise FileNotFoundError(str(exc)) from exc
 
     def build_prompt(self, parsed_text: str) -> str:
         """Build the extraction prompt — identical to the local extractor."""

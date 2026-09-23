@@ -4256,7 +4256,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 283,
+            "line": 284,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4277,13 +4277,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 446,
+            "line": 447,
             "role": "docstring",
             "text": "(escape token, absence sentinels) from the codebook beside the database.\n\n    Located from the DATABASE's own directory, not from `data/<review_id>`: the\n   ..."
           },
           {
             "kind": "literal",
-            "line": 678,
+            "line": 679,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4599,7 +4599,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 499,
+            "line": 502,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4609,7 +4609,7 @@
         "spec_access": [
           {
             "func": "load_review_spec",
-            "line": 68,
+            "line": 69,
             "scope": "CloudExtractorBase.__init__"
           }
         ],
@@ -4884,6 +4884,20 @@
         "literal_review_ids": [],
         "order": {},
         "path": "engine/core/paper_state.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
+      "engine/core/parsed_text.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/parsed_text.py",
         "path_construction": [],
         "review_database": [],
         "review_id_constants": [],
@@ -7942,7 +7956,7 @@
       "entry_points_with_spec_flag": 27,
       "files_calling_load_review_spec_directly": 11,
       "files_calling_resolver": 30,
-      "files_scanned": 214,
+      "files_scanned": 215,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 34,
@@ -7954,7 +7968,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "d261003193a059b6469d3d4f88d3e745d2d80bd4",
+    "generated_at_commit": "47fb81a8f15d269b8b4339ffa8dc46759ad1878d",
     "scan_roots": [
       "engine",
       "scripts",

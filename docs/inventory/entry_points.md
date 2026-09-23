@@ -1,14 +1,14 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `d261003193a059b6469d3d4f88d3e745d2d80bd4` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `47fb81a8f15d269b8b4339ffa8dc46759ad1878d` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 214 |
+| files scanned | 215 |
 | entry points | 101 |
 | entry points with spec flag | 27 |
 | entry points with review name flag | 71 |
@@ -206,9 +206,9 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/adjudication/workflow.py` | 68 | literal | `Create or update adjudication_categories.yaml for this review.
   Location: data/<review>/adjudication_categories.yaml
   Generate a starter template with: gen...` |
-| `engine/agents/auditor.py` | 283 | literal | `extraction_codebook.yaml` |
-| `engine/agents/extractor.py` | 678 | literal | `extraction_codebook.yaml` |
-| `engine/cloud/base.py` | 499 | literal | `extraction_codebook.yaml` |
+| `engine/agents/auditor.py` | 284 | literal | `extraction_codebook.yaml` |
+| `engine/agents/extractor.py` | 679 | literal | `extraction_codebook.yaml` |
+| `engine/cloud/base.py` | 502 | literal | `extraction_codebook.yaml` |
 | `engine/core/codebook.py` | 36 | literal | `extraction_codebook.yaml` |
 | `engine/core/review_paths.py` | 28 | literal | `review_specs` |
 | `engine/core/review_paths.py` | 59 | f-string | `f'{review_id}.yaml'` |

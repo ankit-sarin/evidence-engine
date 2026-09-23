@@ -16,6 +16,7 @@ from engine.agents.auditor import (
 from engine.core.constants import INVALID_SNIPPET_RE as _INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.search.models import Citation
+from _parsed_text_fixture import write_parsed
 
 
 PAPER_TEXT = (
@@ -303,9 +304,8 @@ def test_full_audit_flow_mocked(tmp_path):
     db.update_status(pid, "PARSED")
     db.update_status(pid, "EXTRACTED")
 
-    # Write parsed text
-    parsed_dir = Path(db.db_path).parent / "parsed_text"
-    (parsed_dir / f"{pid}_v1.md").write_text(PAPER_TEXT)
+    # Write and record parsed text (S3e: the resolver reads references)
+    write_parsed(db, pid, PAPER_TEXT)
 
     # Add an extraction with spans
     ext_id = db.add_extraction(pid, "hash1", {}, "trace", "deepseek-r1:32b")

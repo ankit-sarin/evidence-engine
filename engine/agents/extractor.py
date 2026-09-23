@@ -29,6 +29,7 @@ from engine.core.completeness import (
 from engine.core.citation_guard import LEGACY, UncitedValueError, enforce_citations
 from engine.core.extraction_telemetry import record_call
 from engine.core.effective_config import EffectiveConfig, stage_config
+from engine.core.parsed_text import NoParsedText, ParsedTextError, load_parsed_text
 from engine.utils.ollama_client import InputFitError, ollama_chat
 from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
 
@@ -865,16 +866,20 @@ def _run_extraction_unlocked(
             progress.report(pid, "SKIPPED", 0)
             continue
 
-        # Load parsed Markdown
-        parsed_dir = review_dir / "parsed_text"
-        md_files = sorted(parsed_dir.glob(f"{pid}_v*.md"), reverse=True)
-        if not md_files:
+        # Load parsed Markdown through the one resolver (S3e): greatest recorded
+        # version, hash verified on read (R95).
+        try:
+            paper_text = load_parsed_text(db._conn, pid)
+        except NoParsedText:
             logger.warning("Paper %d: no parsed text found — skipping", pid)
             stats["failed"] += 1
             progress.report(pid, "FAILED", 0)
             continue
-
-        paper_text = md_files[0].read_text()
+        except ParsedTextError as exc:
+            logger.error("Paper %d: parsed text refused — %s", pid, exc)
+            stats["failed"] += 1
+            progress.report(pid, "FAILED", 0)
+            continue
         t_paper = time.time()
 
         try:

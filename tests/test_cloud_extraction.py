@@ -17,6 +17,7 @@ from engine.cloud.base import CloudExtractorBase
 from engine.cloud.openai_extractor import OpenAIExtractor
 from engine.cloud.anthropic_extractor import AnthropicExtractor
 from engine.core.codebook import load_codebook_for
+from _parsed_text_fixture import write_parsed
 
 CBK = load_codebook_for("surgical_autonomy")
 
@@ -64,15 +65,14 @@ def test_db(tmp_path):
     ).fetchone()
     first_pid = row[0] if row else 1
     conn.close()
-    (parsed_dir / f"{first_pid}_v1.md").write_text(
-        "# Test Paper\n\nThis is a test paper about surgical robotics."
-    )
+    _first_text = "# Test Paper\n\nThis is a test paper about surgical robotics."
     # B5 (READERS-01 Phase 2a). `CloudExtractorBase.get_pending_papers` and
     # `.get_progress` read the corpus from the ELIGIBILITY axis now, not from a
     # `papers.status` allowlist (A9, S3h). The backup this fixture copies
     # predates the event store, so the store is created and seeded from the same
     # statuses — which is what migration 017 did on live.
     _seed_corpus_events(db_copy)
+    write_parsed(db_copy, first_pid, _first_text, version=1)
     return str(db_copy)
 
 
@@ -738,7 +738,7 @@ class TestSonnetRateLimitBackoff:
         # Create parsed text file
         parsed_dir = Path(test_db).parent / "parsed_text"
         pid = pending[0]["paper_id"]
-        (parsed_dir / f"{pid}_v1.md").write_text("Test paper text.")
+        write_parsed(test_db, pid, "Test paper text.")
 
         extractor.run(max_papers=1)
 
@@ -783,7 +783,7 @@ class TestSonnetRateLimitBackoff:
 
         parsed_dir = Path(test_db).parent / "parsed_text"
         pid = pending[0]["paper_id"]
-        (parsed_dir / f"{pid}_v1.md").write_text("Test paper text.")
+        write_parsed(test_db, pid, "Test paper text.")
 
         extractor.run(max_papers=1)
 
@@ -828,7 +828,7 @@ class TestStoreResultCrashProtection:
         # Create parsed text for first 2 papers
         parsed_dir = Path(test_db).parent / "parsed_text"
         for p in pending[:2]:
-            (parsed_dir / f"{p['paper_id']}_v1.md").write_text("Paper text.")
+            write_parsed(test_db, p["paper_id"], "Paper text.")
 
         # Make store_result fail on first call, succeed on second
         original_store = extractor.store_result
@@ -897,7 +897,7 @@ class TestAuthErrorAbort:
 
         parsed_dir = Path(test_db).parent / "parsed_text"
         for p in pending[:2]:
-            (parsed_dir / f"{p['paper_id']}_v1.md").write_text("Paper text.")
+            write_parsed(test_db, p["paper_id"], "Paper text.")
 
         with pytest.raises(openai.AuthenticationError):
             extractor.run(max_papers=2)
@@ -926,7 +926,7 @@ class TestAuthErrorAbort:
 
         parsed_dir = Path(test_db).parent / "parsed_text"
         for p in pending[:2]:
-            (parsed_dir / f"{p['paper_id']}_v1.md").write_text("Paper text.")
+            write_parsed(test_db, p["paper_id"], "Paper text.")
 
         with pytest.raises(anthropic.AuthenticationError):
             extractor.run(max_papers=2)
@@ -980,7 +980,7 @@ class TestOpenAIRateLimitBackoff:
 
         parsed_dir = Path(test_db).parent / "parsed_text"
         pid = pending[0]["paper_id"]
-        (parsed_dir / f"{pid}_v1.md").write_text("Test paper text.")
+        write_parsed(test_db, pid, "Test paper text.")
 
         extractor.run(max_papers=1)
 
@@ -1029,7 +1029,7 @@ class TestOpenAIRateLimitBackoff:
 
         parsed_dir = Path(test_db).parent / "parsed_text"
         pid = pending[0]["paper_id"]
-        (parsed_dir / f"{pid}_v1.md").write_text("Test paper text.")
+        write_parsed(test_db, pid, "Test paper text.")
 
         extractor.run(max_papers=1)
 

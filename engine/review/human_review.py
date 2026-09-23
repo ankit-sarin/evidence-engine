@@ -7,6 +7,7 @@ from pathlib import Path
 
 from engine.agents.auditor import grep_verify
 from engine.core.database import ReviewDatabase
+from engine.core.parsed_text import NoParsedText, load_parsed_text
 
 logger = logging.getLogger(__name__)
 
@@ -85,10 +86,11 @@ def export_review_queue(
         for paper in papers:
             pid = paper["id"]
 
-            # Load parsed text
-            parsed_dir = review_dir / "parsed_text"
-            md_files = sorted(parsed_dir.glob(f"{pid}_v*.md"), reverse=True)
-            paper_text = md_files[0].read_text() if md_files else ""
+            # Load parsed text through the one resolver (S3e, R95)
+            try:
+                paper_text = load_parsed_text(db._conn, pid)
+            except NoParsedText:
+                paper_text = ""
 
             extraction = db._conn.execute(
                 "SELECT id FROM extractions WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
@@ -227,11 +229,11 @@ def _import_review_csv(
                 continue
 
             # Verify corrected snippet exists in paper text
-            md_files = sorted(
-                (review_dir / "parsed_text").glob(f"{pid}_v*.md"), reverse=True
-            )
-            if md_files:
-                paper_text = md_files[0].read_text()
+            try:
+                paper_text = load_parsed_text(db._conn, pid)
+            except NoParsedText:
+                paper_text = None
+            if paper_text is not None:
                 from difflib import SequenceMatcher
                 from engine.agents.auditor import _normalize
                 norm_corrected = _normalize(corrected)

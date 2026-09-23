@@ -13,6 +13,7 @@ from engine.review.human_review import (
     REVIEW_COLUMNS,
 )
 from engine.search.models import Citation
+from _parsed_text_fixture import write_parsed
 
 
 def _cit(**kw):
@@ -32,10 +33,8 @@ def _make_audited_paper(db, tmp_path, pmid, span_statuses):
     for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
         db.update_status(pid, s)
 
-    # Write parsed text
-    parsed_dir = Path(db.db_path).parent / "parsed_text"
-    parsed_dir.mkdir(exist_ok=True)
-    (parsed_dir / f"{pid}_v1.md").write_text(
+    # Write and record parsed text (S3e: the resolver reads references)
+    write_parsed(db, pid, 
         "This is a randomized controlled trial with 20 patients. "
         "The STAR robot was used for autonomous suturing. "
         "Results showed 95% accuracy."

@@ -186,6 +186,7 @@ Provenance of human decisions: every human decision on disk (36 full-text adjudi
 | A11 | *`audit_adjudication` is unwritable — FK to a phantom table left by the `evidence_spans` rebuild; the human-audit import path is broken, not defective.* Measured on a scratch copy: `INSERT` fails with `no such table: main._evidence_spans_old` under `PRAGMA foreign_keys=ON`, which `ReviewDatabase.__init__` sets. Explains `audit_adjudication`'s 0 rows and supersedes DISCOVERY-01 Part A's “exposure entirely prospective” | MIGRATIONS-01 report, §“Inventory rows” (A11); DISCOVERY-01 Part A addendum 2026-09-21 | not stated at source |
 | A12 | `engine/analysis/concordance.py::load_arm` has two branches (`local` / else-cloud); `engine/validators/distribution_monitor.py::_query_values` has three and routes `arm.startswith("human_")`. A `human_*` arm therefore queries `cloud_extractions` and returns `{}` with no error. `docs/architecture/pipeline.md` and `modules.md` document the branch that does not exist. Closes session 6, when the arm registry becomes the single routing predicate; doc corrections are session-6 hygiene | `S2_phase1_readout_addendum4_20260921.md` §D (A12) | LATENT (no human arm loaded) |
 | A13 | *Five adjudication/auditor modules select the latest **screening decision** by `ORDER BY id DESC LIMIT 1`*: `abstract_adjudication_html.py`, `audit_adjudicator.py` (×4), `ft_adjudication_html.py` (×2), `ft_screening_adjudicator.py` (×4), `screening_adjudicator.py`. Same family as A1 — a resolution rule copied per reader — but a **different question** (which screening decision is current, not which extraction), so outside R33 and not closed by the reader migration. Surfaced when Phase 2b widened the latest-extraction guard beyond `engine/exporters/` | READERS-01 Phase 2b report, contradiction 4 (R50) | ARMED |
+| A14 | *The resolver's refusals are handled differently by site*: `engine/agents/extractor.py` and `engine/agents/auditor.py` log a `ParsedTextMissing` / `ParsedTextModified` and skip the paper; `engine/agents/ft_screener.py::_load_parsed_text` and `engine/cloud/base.py::load_parsed_text` let it propagate. One refusal, two outcomes, so a modified text fails a screening run and only skips a paper in an extraction run | INPUT-IDENTITY-01 Phase 2a report (HEAD `fd2ca03`) | ARMED (no parsed text is modified today; the 194 hashes match the baseline) |
 
 ### B. Measurement instruments
 
@@ -246,6 +247,8 @@ Provenance of human decisions: every human decision on disk (36 full-text adjudi
 | D11 | Four corpus papers (455, 586, 699, 719) have a v2 and a v3 parse of the same PDF bytes; v3 (2026-09-08, the parse-quality gate) is what every resolver picks, while every screening, extraction, judge and audit record on them predates v3 (by timestamp) | `docs/session-reports/input-identity-01/INPUT-IDENTITY-01_phase1_readout_20260923.md` P3'; `docs/session-reports/input-identity-01/INPUT-IDENTITY-01_phase1_addendum1_D11_20260923.md` | MEASURED (addendum 1); no ruling on the intended input |
 | D12 | 350 `full_text_assets` rows carry a shape no in-tree writer produces (`parser_used = 'docling'`, version 1, with `parsed_text_path`, `pdf_hash` and `parsed_at` all NULL); a reader that picks "a row" rather than "the parsed row" can land on one | `docs/session-reports/input-identity-01/INPUT-IDENTITY-01_phase1_readout_20260923.md` P4'(b)(c) | LATENT (0 corpus NULL resolutions; 15 `PDF_EXCLUDED` papers have only such a row) |
 | D13 | `parse_pdf` chose the next parsed-text version as `MAX(full_text_assets.parsed_text_version) + 1`, which counts the 350 D12 rows (version 1, no path) — why most of this corpus's parses are numbered from v2. **Closed in INPUT-IDENTITY-01 2a (Step 4, R99):** the version now comes from `parsed_text_refs` | INPUT-IDENTITY-01 Phase 2a Step 0 report (commit `e40387d`) | CLOSED (2a) |
+| D14 | *250 non-corpus parsed files have no reference.* 017 seeded `parsed_text_refs` for corpus papers only, so 250 papers with a non-NULL `full_text_assets.parsed_text_path` — 171 `FT_SCREENED_OUT`, 76 `ABSTRACT_SCREENED_OUT`, 3 `PDF_EXCLUDED` — resolve to `NoParsedText`; a re-parse of one would number from v1 and refuse if that file exists (R99) | INPUT-IDENTITY-01 Phase 2a report (HEAD `fd2ca03`) | LATENT (no corpus paper affected) |
+| D15 | *`parse_pdf`'s same-hash short-circuit reads without verification.* When a PDF's hash matches a stored parse it builds `{paper_id}_v{version}.md` from the `full_text_assets` row and returns `md_path.read_text()` unchecked — a seventh read of a parsed text outside the resolver (not a glob, so G5 does not count it) | INPUT-IDENTITY-01 Phase 2a report (HEAD `fd2ca03`) | LATENT |
 
 *Addendum, 2026-09-22 (R62, MANIFEST-01):* row **D6** says the Ollama client "does not send `truncate: false`". Measured in MANIFEST-01 Phase 1 P2: the pinned client library, ollama-python 0.6.1, **exposes no `truncate` field** — `ChatRequest.model_fields` is `model, stream, options, format, keep_alive, messages, tools, think, logprobs, top_logprobs`, and `Client.chat` has no `truncate` parameter, so passing one through `ollama_chat` would raise. Whether the server honours a top-level `truncate` on `/api/chat` at all is **I13**, unmeasured, and is session 9's first measurement before S3f-min is designed. The input-fit guard (`prompt_eval_count` at the ceiling) remains the detection instrument; nothing in session 7 claims to prevent truncation.
 
@@ -305,6 +308,7 @@ Provenance of human decisions: every human decision on disk (36 full-text adjudi
 | I13 | *An analysis reader reaches the live database read-write through a **private attribute***: `analysis/paper1/judge_loader.py` used `db._conn` on an open `ReviewDatabase`. Not a `sqlite3.connect` call, so the I5 grep could not see it — the same exposure by a different route. Closed in READERS-01 Phase 2a: the loader now receives a `mode=ro` connection and opens nothing | READERS-01 Phase 1 read-out, contradiction 6 (R38) | closed 2026-09-22 |
 | I14 | *The test suite has no default barrier between a test and the model server.* Measured: demoting `--pairs-csv` (R28) turned a path that used to refuse into one that runs, and the test pinning the refusal — which therefore carried no judge mock — **reached a live Ollama server** and hung. `tests/conftest.py`'s fence covers `subprocess` and `os.system` (service managers, privilege escalation) and nothing at the HTTP boundary, so a guard that stops guarding is silently a live call | READERS-01 Phase 2a, contradiction 6 (R45) | ARMED |
 | I15 | *A scheduled reader of `review.db` outside the plan's schedule.* `dgx-snapshot-user.timer` (dgx-infra, `OnCalendar=*-*-* 10:30:00 UTC`, `RandomizedDelaySec=120`) runs `bin/dgx-snapshot-user` → `snapshot/user_tier.py` → `snapshot/artifacts.py::capture_sqlite`, which reads `data/surgical_autonomy/review.db` daily at 10:30 UTC +0–2 min by `VACUUM INTO` from a `mode=ro` connection; the unit's `ReadWritePaths=` on `data/surgical_autonomy` exists for the WAL `-shm` only. It was not in the plan's schedule, which listed only the 07:00 and 09:00 cron jobs. **No write hazard**; its daily `-shm` touch is what 7b saw at 10:31 UTC. Disposition: the no-live-write window widened to 07:00–10:35 UTC (R86) | MANIFEST-01 P3i report F2 (live `-shm` mtime 10:31 UTC; timer and code read) | — (reader only) |
+| I16 | *Migration 021 is reachable through any live `ReviewDatabase` construction.* `ReviewDatabase.__init__` → `_run_migrations` → `runner.run(self.db_path)`, so once 021 is in the tree any CLI that opens `ReviewDatabase("surgical_autonomy")` (the staleness report, `advance_stage --status`, …) applies it to live — it passes its baseline check and succeeds, with no pre-write backup and no embargo check. The suite cannot (the conftest live-database fence). 7a carried the same exposure with 020. **Interim control:** no live-opening command until 2b | INPUT-IDENTITY-01 Phase 2a report (HEAD `fd2ca03`) | ARMED until INPUT-IDENTITY-01 Phase 2b |
 
 ### J. Operator and human-in-the-loop
 
@@ -485,6 +489,7 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | A11 | S2 core (session 5) · **018 (session 6, R32)** |
 | A12 | S2 readers · S1c · S3h (session 6) |
 | A13 | S2 remaining (session 12) · S4c |
+| A14 | S5b · S3h (session 9: one handling for the resolver's refusals) |
 | B1 B4 | S1a |
 | B2 | S1b |
 | B3 | S1c (instrument) · S5c (judge) |
@@ -515,6 +520,8 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | D11 | S3e (closed by R95; R96) |
 | D12 | no unit — legacy row shape; retires with the legacy tables at session 10 (R96) |
 | D13 | S3e (closed 2a; R99) |
+| D14 | decision at the session-10 freeze against Run 7's scope; remedy if needed is a seed migration from files + hashes |
+| D15 | S3e follow-up (session 9: route the short-circuit through the resolver) |
 | E1 E2 | S4a · S4b |
 | E3 | S4d |
 | E4 | S4c |
@@ -532,6 +539,7 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | I13 | S2 readers (session 6, Phase 2a — closed) |
 | I14 | S10 (a later session) |
 | I15 | S10 (embargo widened by R86) |
+| I16 | S3c (session 10: the runner refuses pending migrations on a non-empty database unless invoked explicitly); interim control until INPUT-IDENTITY-01 Phase 2b |
 | J1 J2 | S7 · S6 |
 | J5 | S2 · S7 |
 
@@ -633,6 +641,8 @@ against a matching fingerprint taken immediately beforehand.
 | `data/surgical_autonomy/review.db.bak-manifest-01-phase3-rehearsal-20260923-154127` | R88 (R31, R55) | **Retired 2026-09-23**, MANIFEST-01 closeout (session 7b). Fingerprinted immediately before deletion: 34 tables, overall `10325ff5e2db082a29321e007e352df1a28dc3ed66f9cd80b810a1d5431ee2e0` — equal to the P3i rehearsal record. Source overall `e564f250afe40af7eb9a6bc07596a3c795972f7ef3b653c37599e8bc18285b63`. A rehearsal checkpoint serves the write it rehearses; the write is done and every number it produced is in the P3i report and `rehearsal_db_fingerprint_20260923T155530Z.json`. Its P3ii scratch companion, the fresh reference database (34 tables, overall `35911201d8de4adaa1ff92a65d7d2ed914590bc1d2cc40a4b50a6a9b5b36f218`), was deleted with it — rebuildable in a second, its hashes in the P3ii report |
 | `data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020` | R88 (R31, R55) | **RETAINED through sessions 8–9; retire at the freshman freeze (session 10)**, alongside the readers-01 restore point. 31 tables, overall `e564f250afe40af7eb9a6bc07596a3c795972f7ef3b653c37599e8bc18285b63` — the only copy of the database as it stood before 020 |
 
+*Note, 2026-09-24 (INPUT-IDENTITY-01 session 8a):* no change — no backup was taken and none retired. Session 8b takes a pre-write backup of live before 021 and a rehearsal copy; both enter this ledger then.
+
 ### The first brief
 
 Session 1 (S0, `SAFE-GROUND-01`) closed 2026-09-20: commits 11dd9dd, fa32025, ed0d92a; gates G1–G6 met; live fingerprint unchanged. Lesson: `Connection.backup()` copies the WAL journal mode into the backup, so a backup litters sidecars on first read — the documented cause of open item #9; the destination is now switched to DELETE mode before close.
@@ -718,6 +728,78 @@ Session 7b (S3a S3b S3g, `MANIFEST-01-P3i`, `-P3ii` and this closeout) closed 20
 **Retention (R88):** the rehearsal copy was fingerprinted immediately before deletion (34 tables, `10325ff5e2db082a29321e007e352df1a28dc3ed66f9cd80b810a1d5431ee2e0`, equal to its record) and **retired**, with the P3ii scratch fresh database; the **MANIFEST-01 pre-write backup is retained through sessions 8–9** and retires at the freshman freeze with the readers-01 restore point. **The CLAUDE.md reconciliation was NOT made.** The brief's premise (I13) was that CLAUDE.md carries the "a brief may not instruct its own close" sentence and an ops-invariants window; the project `CLAUDE.md` carries neither. The sentence is in the **global** `~/.claude/CLAUDE.md` ("**A BRIEF MAY NOT INSTRUCT ITS OWN CLOSE.**"), a symlink into the separate `~/claude-config` repository, and no 07:00–10:00 window is written in the project file. Step 5 stopped under I13 as scoped; the wording item stays open for a ruling on which file it belongs to.
 
 Next: **session 8** (S3d S3e) — reuse key and input identity, whose gate is that a one-character change to a parsed text re-extracts and supersedes, `_v10` beats `_v9`, and the 350 NULL rows are explained. Expected values at open, as measured 2026-09-23 at this closeout: HEAD **as pushed by this commit**, clean and level with origin; claude-config at `4625e6f` or its successor; gate **2,714 / 17** (deselects 0/0/10/6/1; per-chunk counts informational); `db_fingerprint --compare` against `docs/session-reports/manifest-01/review_db_fingerprint_20260923T162059Z.json` **exit 0**, **34 tables**, `-wal` 0 B or absent, overall `bb39ba81170c4f11d59954b9e70837afc427c66da710bde30881aad570d16c40`; event store **3 arms · 190 paper events · 194 parsed-text refs · 3 identity rows · 0 field events**, and `run_manifests`, `run_stage_configs`, `run_calls` empty; restore points `data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020` (31 tables, `e564f250afe40af7eb9a6bc07596a3c795972f7ef3b653c37599e8bc18285b63`) and `data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453` (32 tables, `62f3912813b6e9efa3a651ee4c4ebcd611adf89c989f240a58e83dcf6759b79a`) present, both retained to session 10; the four older backups unopened. **Embargo 07:00–10:35 UTC** for any live write (R86). **R19 and R71 remain in force:** `run_pipeline` can now open a manifest against live, but no local extraction on corpus papers until S3d (session 8), and no cloud extraction until sessions 8 and 9 both land.
+
+Session 8a (S3d S3e, `INPUT-IDENTITY-01` Part 0, Phase 1, the interim task, Phase 2a and this closeout) closed 2026-09-24. It opened 2026-09-23 21:11 UTC on HEAD `3c85d478deb5655ba451e54a629137f0b7440538`; every startup value matched the 7b closeout, gate **2,714 / 17**. **`review.db` was not written.** Only raw `mode=ro` connections were used, never a `ReviewDatabase` on live. `db_fingerprint --compare` against `docs/session-reports/manifest-01/review_db_fingerprint_20260923T162059Z.json` returned exit 0 at every check: overall `bb39ba81170c4f11d59954b9e70837afc427c66da710bde30881aad570d16c40` unchanged, 34 tables, `-wal` 0 B. Live carries no 021 receipt.
+
+**Commits.**
+- Part 0 `b512e31`: R89, and the R85/R86 sentence in CLAUDE.md.
+- Phase 1 `8b14b28`: the P1–P8 read-out and the 194-entry parsed-text hash baseline (sha256 `67754a477be575d285654b44cbf025d3ae17db1567b04970c0b6409bab6cb2e7`).
+- Interim `7a9f73a`: R90–R94 provisional, rows D9–D12, the D11 addendum, the `extraction_cleanup` do-not-run note.
+- Phase 2a, six commits:
+  - `e40387de64a53da50727709ef6a660e1f03934ac` (Step 0): R90–R94 confirmed, R95–R97 added, coverage lines.
+  - `d261003193a059b6469d3d4f88d3e745d2d80bd4` (Step 1): the delete paths retired.
+  - `47fb81a8f15d269b8b4339ffa8dc46759ad1878d` (Step 2): migration 021.
+  - `f596c23b3b75f56f4ee7557dc9abd72feecb5a72` (Step 3): the resolver; the six engine sites moved onto it.
+  - `476ac4d408172131395a05e734f9016523a3c48b` (Step 4): `parse_pdf` records its reference; the version comes from `parsed_text_refs`.
+  - `fd2ca034ed86895b6b42fac306893de2eb9a4324` (Step 5): `reuse_key`, the R97 pair, R98–R102, row D13.
+- This closeout.
+
+**Gate progression, reconciled by collected test id.** 2,714 at open and after Step 0. **2,704** after Step 1: 22 ids removed and 12 added, meaning 10 rewrites and 2 new refusal tests, with 12 parametrized cases retired alongside the two scripts. **2,729** after Step 2 (+25, `tests/test_migration_021_parsed_text_sha256.py`). **2,749** after Step 3 (+20, `tests/test_parsed_text_resolver.py`). **2,754** after Step 4 (+5, `tests/test_parse_writer_refs.py`). **2,770** after Step 5 (+14 in `tests/test_reuse_key.py`, +2 for R97). Deselects stayed 0/0/10/6/1 = 17 throughout.
+
+**Three stops, all ruled.**
+- *Phase 1, P4.* The 350 NULL `parsed_text_path` rows are on `full_text_assets`, not `papers`, and 169 of their papers are eligible. I3 was replaced by J1: all 169 also carry a parsed row, so DISCOVERY-01's "0 NULL resolutions" holds. I4 came back PARTLY TRUE: `parsed_text_refs` had no hash column. P1's expected outcome was wrong. A local run through `run_pipeline` or `run_extraction` extracts **0** papers, because pickup is by `papers.status`; all 190 come back into scope only through the delete paths (R90).
+- *Interim.* D11's four two-version papers are two parses of the same PDF bytes, and no v3 is truncated. Paper 719's v2 holds no decoded English. **R95** disposes of it: the highest numeric version is the intended input, and legacy records made on earlier versions are telemetry.
+- *Phase 2a Step 0.* L2 found a second parsed-text writer, `scripts/retry_parse_6.py`. **R98** retired it; R99–R101 set the version source, the canonical path form and the baseline mechanism.
+
+**What 2a built.**
+- *Retirements (R47).* `scripts/reextract_all.py` (R94) and `scripts/retry_parse_6.py` (R98), with 12 parametrized cases: 9 `tests/test_api_parity.py::test_engine_import_resolves[...]` cases generated from their imports, and 3 `tests/test_review_paths.py` cases for `reextract_all.py`. `extraction_cleanup`'s delete branch refuses (`DeletionRetired`) before any query, its CLI refuses `--confirm` before opening a database, and the extractor's pre-flight count is informational.
+- *B5 rewrites, each now pinning the refusal.* `test_removes_non_matching_schema_only`, `test_spans_cascade_deleted`, `test_extracted_papers_reset_to_parsed`, `test_ai_audit_complete_papers_reset_to_parsed`, `test_human_audit_complete_papers_untouched`, `test_dedup_keeps_latest_extraction`, `test_both_deletes_in_single_transaction`, `test_delete_failure_preserves_all`, `test_cleanup_uses_admin_reset`, `test_warns_when_stale_exist`.
+- *Migration 021* (schema kind). `parsed_text_refs` is rebuilt on the 019 template with `parsed_text_sha256 TEXT NOT NULL` and `UNIQUE (paper_id, parsed_text_version)`. Paths are canonicalised (R100). Rows are backfilled by recomputation and refused on any disagreement with the committed baseline (R101). 016's triggers are restored verbatim.
+  - **Departure from the brief.** The hash CHECK is `IS NOT NULL AND length = 64 AND NOT GLOB '*[^0-9a-f]*'`, not the brief's `GLOB '[0-9a-f]*'`. The brief's form tests only the first character. `test_021_hash_check_permits_only_64_lowercase_hex` pins the case it would have admitted, `'a'` followed by 63 `'z'`.
+  - A read-only dry run of 021's row checker on live matched 194/194 rows, with 0 paths to change (N2).
+- *The resolver* (`engine/core/parsed_text.py`). It returns the greatest integer version from `parsed_text_refs`, re-verifies the hash on every read, and has three distinct refusals. The six engine glob sites read through it. G5: 0 remaining; the 8 `scripts/` sites are out of scope and `analysis/` is frozen.
+- *D8.* `parse_pdf` records its reference inside the asset row's transaction. **The brief's D12 clause is moot for `parse_pdf`:** its failure path already writes attempts only, with no asset row.
+- *S3d.* `engine/core/reuse_key.py` returns `rk1:` plus the sha256 of the canonical JSON of (arm, paper_id, parsed_text_sha256). Nothing calls it until session 9.
+
+**Session 8's re-scoped gate (R92) is met on fixtures.** A one-character change is refused, and once recorded as a new version it resolves to a new hash and a new key (G1). `_v10` beats `_v9` (G2). A new parse writes its reference. The 350 NULL rows are explained (Phase 1 P4, row D12).
+
+**Rulings, one sentence each.**
+- **R89:** a closeout brief ends at stop-and-report; the wrap is a separate ruling.
+- **R90:** the Phase 1 stop dispositions: I3 → J1; I4 PARTLY; P1 corrected; R19 stays in force.
+- **R91:** the reuse key is (arm, paper_id, parsed_text_hash); the arm carries the rest.
+- **R92:** session 8 delivers input identity; the key's use at selection belongs to session 9.
+- **R93:** `parsed_text_sha256` arrives by migration 021, backfilled and checked against the baseline; session 8 splits into 8a and 8b.
+- **R94:** the two delete paths are retired from live use.
+- **R95:** the highest numeric version is the intended input, and its hash is verified on every read.
+- **R96:** the addenda placements are accepted, and D9–D12 get their coverage lines.
+- **R97:** named pin-mismatch tests for `prompt_hash` and `codebook_hash`.
+- **R98:** `retry_parse_6.py` is retired; Step 4 covers `parse_pdf` only.
+- **R99:** the next version comes from `parsed_text_refs`.
+- **R100:** stored paths are canonical: repo-relative under the root, absolute otherwise.
+- **R101:** 021's baseline is a module default that tests override.
+- **R102:** the one-time in-place confirmation of R90–R94.
+
+**Inputs for 8b.**
+- 021's receipt checksum: `1c076888ccd57862ad22f574315aee38b1212397344539f79497780958012024`.
+- A fresh database after 021: 34 tables, `schema_structure_hash` `96f05996cccc350f0b6697bc31471da0a824657f72ec3eae2fcf28c4ccea74ab`, textual `f19274f0b891e4581b5fdfef0545819f6390b79774833f60cdcf0ab74e4c3ea8`.
+
+New rows at this closeout: A14, I16, D14, D15; D13 was closed in 2a. The retention ledger is unchanged. Stale lines reported and not fixed at this closeout:
+- CLAUDE.md's "Key Patterns" still describes extraction cleanup as a removal utility, and its test count (~1,636) predates several sessions.
+- `docs/architecture/modules.md`'s `extraction_cleanup.py` entry still describes the retired delete, and its `engine/core/` section omits the modules that sessions 5–7 added.
+
+Next: **session 8b.** A fresh CC session, opened outside the 07:00–10:35 UTC embargo (R86). It rehearses 021 on a verified `auto_backup` copy of live, performs the live write through the runner, and commits the new fingerprint record.
+
+Expected values at open, as measured 2026-09-24 at this closeout:
+- HEAD **as pushed by this commit**, clean and level with origin; claude-config `18d4a2b` or its successor.
+- Gate **2,770 / 17** (deselects 0/0/10/6/1; per-chunk counts informational).
+- `db_fingerprint --compare` against `docs/session-reports/manifest-01/review_db_fingerprint_20260923T162059Z.json`: **exit 0**, **34 tables**, `-wal` 0 B or absent, overall `bb39ba81170c4f11d59954b9e70837afc427c66da710bde30881aad570d16c40`.
+- Event store: **3 arms · 190 paper events · 194 parsed-text refs (no hash column yet) · 3 identity rows · 0 field events**; `run_manifests`, `run_stage_configs` and `run_calls` empty.
+- Restore points present: `data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020` (31 tables, `e564f250afe40af7eb9a6bc07596a3c795972f7ef3b653c37599e8bc18285b63`) and `data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453` (32 tables, `62f3912813b6e9efa3a651ee4c4ebcd611adf89c989f240a58e83dcf6759b79a`). The four older backups unopened.
+- 021's checksum `1c076888ccd57862ad22f574315aee38b1212397344539f79497780958012024` is **re-read on a fresh database before the rehearsal**.
+
+Expected after the write: **34 tables**, `schema_structure_hash` `96f05996cccc350f0b6697bc31471da0a824657f72ec3eae2fcf28c4ccea74ab`, textual live-after equal to rehearsal-after (expected `f19274f0b891e4581b5fdfef0545819f6390b79774833f60cdcf0ab74e4c3ea8`), and the `parsed_text_refs` triggers read back per R87.
+
+**Embargo 07:00–10:35 UTC; exclusivity per R85. The I16 control (no live-opening command) is in force until the write. R19 and R71 remain in force.**
 
 ## Decision log
 

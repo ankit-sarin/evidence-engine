@@ -40,6 +40,12 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 
 ---
 
+### `parsed_text.py`
+**Purpose:** The one parsed-text resolver and reference writer (S3e, D8; INPUT-IDENTITY-01). `resolve_parsed_text` returns the paper's greatest recorded `parsed_text_version` from `parsed_text_refs` (no glob), every read re-verifies the recorded sha256 and refuses a missing or modified file, and `record_parsed_text` writes the reference `parse_pdf` inserts with each new parse.
+
+### `reuse_key.py`
+**Purpose:** S3d's extraction reuse key (R91): `reuse_key(arm_id, paper_id, parsed_text_sha256)` → `rk1:<sha256>`, pure; its consumer is session 9's extractor cut-over.
+
 ## engine/search/ — Literature Search
 
 ### `models.py`
@@ -418,7 +424,6 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 
 | Script | Purpose | Key CLI Args |
 |--------|---------|--------------|
-| `reextract_all.py` | Full re-extraction (wipe + redo) | `--review`, `--spec` |
 | `reextract_failed.py` | Retry EXTRACT_FAILED papers | `--review`, `--spec` |
 | `rescreen_original_251.py` | Re-screen with updated criteria | `--review`, `--spec` |
 | `rescreen_with_specialty.py` | Re-screen with specialty_scope | `--background`, `--force` |
@@ -430,7 +435,6 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 | `parse_expanded_corpus.py` | Advance SCREENED_IN → PARSED | `--review` |
 | `advance_to_pdf_acquired.py` | Bulk status advancement for PDFs on disk | `--review` |
 | `backfill_authors.py` | Backfill missing author metadata | `--review`, `--dry-run` |
-| `retry_parse_6.py` | Retry stuck paper parsing | `--review`, `--spec` |
 | `reparse_cloud_spans.py` | Re-parse 0-span cloud extractions from stored JSON | `--review` |
 | `backfill_cloud_spans.py` | Backfill cloud extractions missing span rows | `--review`, `--dry-run` |
 | `prepare_concordance_pdfs.py` | Copy + rename PDFs for concordance | `--review` |

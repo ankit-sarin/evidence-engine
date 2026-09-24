@@ -231,6 +231,39 @@ def test_a_changed_model_digest_is_a_pin_mismatch(review, spec):
         _open(db, spec, cb, digest_fn=lambda m: "e" * 64)
 
 
+def test_a_changed_prompt_hash_is_a_pin_mismatch(review, spec):
+    """R97: the prompt template is pinned — a changed rendering refuses, named."""
+    from engine.core import effective_config as ec
+    db, cb = review
+    _open(db, spec, cb)
+    original = ec.render_messages
+
+    def reworded(stage, s, **kw):
+        msgs = original(stage, s, **kw)
+        if stage == "extract_pass1":
+            msgs = [dict(m) for m in msgs]
+            msgs[-1]["content"] += " (reworded)"
+        return msgs
+
+    with patch.object(ec, "render_messages", reworded):
+        with pytest.raises(rm.ArmPinMismatch, match="prompt_hash") as exc:
+            _open(db, spec, cb)
+    assert "options_hash" not in str(exc.value) and "model_digest" not in str(exc.value)
+    assert _count(db._conn, "run_manifests") == 1
+
+
+def test_a_changed_codebook_hash_is_a_pin_mismatch(review, spec):
+    """R97: the codebook the arm extracts under is pinned (its semantic hash)."""
+    import dataclasses
+    db, cb = review
+    _open(db, spec, cb)
+    other = dataclasses.replace(cb, semantic_hash="f" * 64)
+    with pytest.raises(rm.ArmPinMismatch, match="codebook_hash") as exc:
+        _open(db, spec, other)
+    assert "prompt_hash" not in str(exc.value)
+    assert _count(db._conn, "run_manifests") == 1
+
+
 def test_a_digest_failure_refuses_the_run(review, spec):
     db, cb = review
     from engine.utils.ollama_client import ModelDigestError

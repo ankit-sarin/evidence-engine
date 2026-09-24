@@ -250,6 +250,7 @@ def extract_paper_elicited(
         thinking_chars=p1_tel["pass1_thinking_chars"],
         parse_branch=f"elicitation:{p1.parse_path}",
         finish_reason=p1_tel["pass1_done_reason"],
+        prompt_eval_count=p1_tel["pass1_prompt_eval_count"],
         elicitation={
             **p1_tel,
             "accepted_attempt": accepted_attempt,

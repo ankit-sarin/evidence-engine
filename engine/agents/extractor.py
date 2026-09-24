@@ -225,6 +225,7 @@ def extract_pass1_reasoning(prompt: str, think: bool | None = None, *,
         thinking_chars=len(trace),
         parse_branch=branch,
         finish_reason=getattr(response, "done_reason", None),
+        prompt_eval_count=getattr(response, "prompt_eval_count", None),
     )
     return trace
 
@@ -338,6 +339,7 @@ def extract_pass2_structured(
     _LAST_PASS2_TELEMETRY.update(
         raw_content=raw,
         finish_reason=getattr(response, "done_reason", None),
+        prompt_eval_count=getattr(response, "prompt_eval_count", None),
         model=cfg.model,
     )
     output = ExtractionOutput.model_validate_json(raw)
@@ -724,6 +726,9 @@ def extract_paper_with_completeness(
                 thinking_present=_LAST_PASS1_TELEMETRY.get("thinking_present"),
                 thinking_chars=_LAST_PASS1_TELEMETRY.get("thinking_chars"),
                 parse_branch=_LAST_PASS1_TELEMETRY.get("parse_branch"),
+                pass1_done_reason=_LAST_PASS1_TELEMETRY.get("finish_reason"),
+                pass1_prompt_eval_count=_LAST_PASS1_TELEMETRY.get("prompt_eval_count"),
+                pass2_prompt_eval_count=_LAST_PASS2_TELEMETRY.get("prompt_eval_count"),
                 error=None if incomplete else str(exc),
                 extra=_LAST_PASS1_TELEMETRY.get("elicitation"),
             )
@@ -745,6 +750,9 @@ def extract_paper_with_completeness(
             thinking_present=_LAST_PASS1_TELEMETRY.get("thinking_present"),
             thinking_chars=_LAST_PASS1_TELEMETRY.get("thinking_chars"),
             parse_branch=_LAST_PASS1_TELEMETRY.get("parse_branch"),
+            pass1_done_reason=_LAST_PASS1_TELEMETRY.get("finish_reason"),
+            pass1_prompt_eval_count=_LAST_PASS1_TELEMETRY.get("prompt_eval_count"),
+            pass2_prompt_eval_count=_LAST_PASS2_TELEMETRY.get("prompt_eval_count"),
             extra=_LAST_PASS1_TELEMETRY.get("elicitation"),
         )
         if attempt > 1:

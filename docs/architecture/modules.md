@@ -80,7 +80,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 **Purpose:** Renders the eligibility authority (`spec.eligibility`) into every screening surface — four model requests and two adjudication sheets. Pure functions holding engine text only, no review content; no per-stage wording overrides (SCREEN-AUTH-01 Phase 2c).
 
 ### `extraction_telemetry.py`
-**Purpose:** Per-call extraction telemetry (INSTRUMENT-01): one JSON line per API call, appended to a gitignored file under the review directory and written before the result is accepted or rejected, so a failed attempt leaves a trace. File-based by design, no schema change.
+**Purpose:** Per-attempt extraction telemetry (INSTRUMENT-01; schema `extraction-telemetry-3`, R126): one JSON line per extraction attempt, carrying Pass 1's `done_reason` and each pass's `prompt_eval_count`, appended to a gitignored file under the review directory and written before the result is accepted or rejected, so a failed attempt leaves a trace. File-based by design, no schema change.
 
 ## engine/search/ — Literature Search
 

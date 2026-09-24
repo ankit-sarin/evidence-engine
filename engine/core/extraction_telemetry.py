@@ -1,4 +1,4 @@
-"""Per-call extraction telemetry (INSTRUMENT-01).
+"""Per-attempt extraction telemetry (INSTRUMENT-01).
 
 SPANLOSS-01 could not close its own diagnosis: seven of the 17 collapsed openai
 calls report 600–2,000 visible tokens while the stored response held ~45, and
@@ -6,7 +6,8 @@ the question "was the response truncated?" was unanswerable because
 `finish_reason` was read from no provider and the pre-parse `content` string was
 never persisted — only `json.loads`'s output was.
 
-This module records what would have answered it. One JSON line per API call,
+This module records what would have answered it. One JSON line per extraction
+attempt (R126 — not per API call: a local attempt makes two or more calls),
 appended to a gitignored file under the review directory, written *before* the
 result is accepted or rejected so a failed attempt leaves a trace too.
 
@@ -27,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 TELEMETRY_DIRNAME = "telemetry"
 TELEMETRY_FILENAME = "extraction_calls.jsonl"
-SCHEMA_VERSION = "extraction-telemetry-2"
+SCHEMA_VERSION = "extraction-telemetry-3"
 
 # Raw responses are the point of this file, but a runaway response should not be
 # able to blow up the log. Truncation is recorded explicitly when it happens.
@@ -61,6 +62,9 @@ def record_call(
     thinking_present: bool | None = None,
     thinking_chars: int | None = None,
     parse_branch: str | None = None,
+    pass1_done_reason: str | None = None,
+    pass1_prompt_eval_count: int | None = None,
+    pass2_prompt_eval_count: int | None = None,
     extra: dict | None = None,
 ) -> Path | None:
     """Append one telemetry record. Never raises — telemetry must not break a run.
@@ -102,6 +106,13 @@ def record_call(
         "thinking_present": thinking_present,
         "thinking_chars": thinking_chars,
         "parse_branch": parse_branch,
+        # R126 (schema -3, additive): Pass 1's own done_reason (`finish_reason`
+        # above is Pass 2's) and each pass's prompt_eval_count — the count the
+        # input-fit guard compares against the ceiling. Recorded on attempts that
+        # returned a response; a truncated attempt raises before one exists (R130).
+        "pass1_done_reason": pass1_done_reason,
+        "pass1_prompt_eval_count": pass1_prompt_eval_count,
+        "pass2_prompt_eval_count": pass2_prompt_eval_count,
         "error": error,
     }
     if extra:

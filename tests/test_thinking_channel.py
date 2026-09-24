@@ -11,6 +11,7 @@ These tests pin both response shapes and, most importantly, assert that the
 silent fallback is gone.
 """
 
+import json
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -165,15 +166,17 @@ def test_spec_policy_is_reachable_from_a_loaded_spec():
     assert spec.extraction_models.pass2_think is False
 
 
-# ── telemetry v2 ─────────────────────────────────────────────────────────
+# ── telemetry v3 ─────────────────────────────────────────────────────────
 
 
-def test_telemetry_schema_is_v2_and_carries_the_thinking_fields(tmp_path):
+def test_telemetry_schema_is_v3_and_carries_the_thinking_fields(tmp_path):
+    # Rewritten under B5 (R126): the schema moved -2 -> -3 when Pass 1's
+    # done_reason and the prompt_eval_counts were added; the thinking fields stand.
     record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1,
                 outcome="stored", thinking_present=True, thinking_chars=1744,
                 parse_branch="native")
     row = read_calls(tmp_path)[0]
-    assert row["schema"] == SCHEMA_VERSION == "extraction-telemetry-2"
+    assert row["schema"] == SCHEMA_VERSION == "extraction-telemetry-3"
     assert row["thinking_present"] is True
     assert row["thinking_chars"] == 1744
     assert row["parse_branch"] == "native"
@@ -184,3 +187,36 @@ def test_telemetry_thinking_fields_default_to_none_for_cloud_arms(tmp_path):
     row = read_calls(tmp_path)[0]
     assert row["parse_branch"] is None
     assert row["thinking_present"] is None
+
+
+# ── R126 / R130: Pass 1 done_reason and prompt_eval_count ─────────────────
+
+
+def test_telemetry_records_pass1_done_reason_and_prompt_eval_counts(tmp_path):
+    """A returned attempt whose Pass 1 stopped on length is recorded as such.
+
+    R130: a response truncated at the input ceiling never returns (the input-fit
+    guard raises first), so the row shape is constructed directly; the truncated
+    attempt's row is slice 2's, where InputTruncated becomes a paper event.
+    """
+    record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2,
+                outcome="stored", finish_reason="stop",
+                pass1_done_reason="length", pass1_prompt_eval_count=31_998,
+                pass2_prompt_eval_count=33_412)
+    row = read_calls(tmp_path)[0]
+    assert row["pass1_done_reason"] == "length"
+    assert row["pass1_prompt_eval_count"] == 31_998
+    assert row["pass2_prompt_eval_count"] == 33_412
+    assert row["finish_reason"] == "stop"        # Pass 2's, unchanged in meaning
+
+
+def test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable(tmp_path):
+    record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored")
+    v2 = {"schema": "extraction-telemetry-2", "arm": "deepseek-r1:32b", "paper_id": 2,
+          "attempt": 1, "outcome": "stored", "thinking_chars": 10}
+    path = tmp_path / "telemetry" / "extraction_calls.jsonl"
+    with path.open("a") as fh:
+        fh.write(json.dumps(v2) + "\n")
+    new, old = read_calls(tmp_path)
+    assert new["pass1_done_reason"] is None and new["pass1_prompt_eval_count"] is None
+    assert old == v2                             # additive: an older row reads back as written

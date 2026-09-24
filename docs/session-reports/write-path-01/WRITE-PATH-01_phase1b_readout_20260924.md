@@ -313,3 +313,95 @@ prompt. It is **not** in `absence_sentinels`. That accounts for Phase 1a P10's 1
   is not installed, and `qwen3:32b` is described as "current" auditor. The live spec sets no
   `auditor_model` or `audit` block, so the resolver's `audit` stage is the declared default
   `AuditModels.model = "gemma3:27b"`.
+
+---
+
+## Addendum 2026-09-24 (WRITE-PATH-01 Phase 1c) — client transport for a top-level key; `run_calls` outcome columns
+
+*Appended; the read-out above is unedited.* Read-only. One wheel was downloaded into the session
+scratchpad with `pip download --no-deps --only-binary=:all:` and unpacked with `python3 -m zipfile`;
+nothing was installed. `.venv` `pip freeze` is byte-identical before and after (sha256 `be60485a…20ac`
+both times; `ollama==0.6.1`). HEAD `99934ca` at 22:17:41Z.
+
+### A — Can the pinned client (ollama-python 0.6.1) send a top-level `truncate`? **(iii) Yes, only via a private method.**
+
+* **No public parameter.** `ollama/_client.py` `Client.chat(self, model='', messages=None, *,
+  tools=None, stream=False, think=None, logprobs=None, top_logprobs=None, format=None, options=None,
+  keep_alive=None)` has no `truncate` and no `**kwargs`. It builds the body as
+  `json=ChatRequest(model=model, messages=…, tools=…, stream=stream, think=think, logprobs=…,
+  top_logprobs=…, format=format, options=options, keep_alive=keep_alive).model_dump(exclude_none=True)`.
+* **The request model drops unknown keys.** `ollama/_types.py` `class ChatRequest(BaseGenerateRequest):`
+  sets no `model_config` of its own (MEASURED: `ChatRequest.model_config` → `{}`, i.e. pydantic's
+  default `extra='ignore'`). MEASURED: `ChatRequest.model_validate({'model':'m','messages':[],
+  'truncate':False}).model_dump(exclude_none=True)` → `{'model': 'm', 'messages': []}`, so the key
+  is silently discarded. Fields: `model, stream, options, format, keep_alive, messages, tools, think,
+  logprobs, top_logprobs`.
+* **The call path to the HTTP send:** `Client.chat` → `self._request(ChatResponse, 'POST', '/api/chat',
+  json=<dict>, stream=stream)` → (non-stream) `cls(**self._request_raw(*args, **kwargs).json())` →
+  `Client._request_raw`: `r = self._client.request(*args, **kwargs); r.raise_for_status()`, where
+  `self._client` is the `httpx.Client` built in `BaseClient.__init__` (`self._client = client(base_url=…,
+  follow_redirects=…, timeout=timeout, headers=headers, **kwargs)`). The JSON body is formed at the
+  `json=ChatRequest(...).model_dump(exclude_none=True)` line inside `chat`.
+* **The seam that accepts a prepared body dict is private:** `Client._request(cls, *args, stream=False,
+  **kwargs)`, e.g. `_client._request(ChatResponse, 'POST', '/api/chat', json=<body with truncate>)`. It
+  bypasses `Client.chat`'s own body construction: `ChatRequest` validation and serialization,
+  `_copy_messages`, and `_copy_tools`. **It also bypasses the R56 capture.** `tests/test_request_capture.py`
+  replaces the whole module client (`monkeypatch.setattr(oc, "_client", fake)`), and the fake defines
+  only `show`, `chat(self, **kwargs)` and `_client = SimpleNamespace(base_url=…)`. A `_request` call
+  would not be seen by `chat`, and against the fake it would raise `AttributeError`. `ollama_client`'s
+  run-call `request_hash` is taken over the kwargs it builds, not the HTTP body, so it would not
+  include `truncate` unless the caller put it there. Errors keep their shape: `_request_raw` maps HTTP errors
+  to `ResponseError(e.response.text, e.response.status_code)`.
+* **Not counted as the client's own transport:** `BaseClient.__init__` documents `"kwargs are passed to the
+  httpx client"`, so `ollama.Client(transport=<custom httpx transport>)` could rewrite the body on
+  the way out. That *replaces* the transport rather than using it, and it is equally invisible to
+  the capture at `_client.chat`.
+
+### B — The latest released client
+
+`pip index versions ollama` → `ollama (0.6.2)`, with 0.6.1 the previous release. Wheel
+`ollama-0.6.2-py3-none-any.whl` inspected unpacked (imported from scratch via `sys.path`, never
+installed). **0.6.2 `ChatRequest` fields: `model, stream, options, format, keep_alive, messages,
+tools, think, logprobs, top_logprobs`, with `model_config` `{}`. No `truncate`.** 0.6.2
+`Client.chat` parameters: `self, model, messages, tools, stream, think, logprobs, top_logprobs, format,
+options, keep_alive`. **No `truncate`.** The `def chat(` … `def embed` source block is byte-identical to
+0.6.1. In both versions the only `truncate` is on embeddings: 0.6.2 `class EmbedRequest(BaseRequest):`
+`truncate: Optional[bool] = None` and `def embed(… truncate: Optional[bool] = None …)`; 0.6.1's
+`_client.py` `embed` carries the same parameter.
+
+### C — `run_calls` columns
+
+Fresh-database `sqlite_master` (identical to `engine/migrations/020_run_manifest.py` `RUN_CALLS_SQL`):
+
+```sql
+CREATE TABLE run_calls (
+    call_id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id          INTEGER NOT NULL REFERENCES run_manifests(run_id),
+    stage           TEXT    NOT NULL,
+    paper_id        INTEGER REFERENCES papers(id),
+    request_hash    TEXT    NOT NULL,
+    response_digest TEXT,
+    started_at      TEXT    NOT NULL,
+    ended_at        TEXT    NOT NULL,
+    FOREIGN KEY (run_id, stage) REFERENCES run_stage_configs(run_id, stage)
+)
+```
+
+plus `idx_run_calls_run` and the append-only triggers `run_calls_no_update` / `run_calls_no_delete`
+(`'run_calls is a record: one row per call, never edited'`).
+
+**No outcome or status column exists. A refused call cannot be recorded *distinguishably* with the existing
+columns.** `response_digest` is nullable, and a refused call could be written with it NULL. But
+NULL is already the value **every cloud call** records: `engine/cloud/base.py` `rm.record_call(self._conn,
+self.run_id, self.stage_cfg.stage, paper_id, payload, None, started, …)`. So a NULL digest cannot mean
+"refused". A pre-call refusal (`InputOverflow`, "Nothing was sent") would have a request hash but no
+send. A post-call refusal (`InputTruncated` / `InputDropped`) raises before `_done(...)`, so today it
+writes no row at all (Q1). Recording the outcome therefore needs a new column or table (a migration)
+or an overloaded existing field.
+
+### Ledger (Phase 1c)
+
+* **I1 — TRUE**, with the answer (iii): `ChatRequest` ignores extra keys (`model_config` `{}`), and the
+  only seam taking a prepared body is the private `Client._request`.
+* **I2 — TRUE**: 0.6.2 (latest) has no `truncate` on `ChatRequest` or `Client.chat`, only on `embed`.
+* **I3 — TRUE**: no outcome or status column; the nullable `response_digest` is already NULL on every cloud call.

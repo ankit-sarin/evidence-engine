@@ -28,6 +28,7 @@ CB = {
     "escape_token": "NO_EVIDENCE_LOCATABLE",
     "contract_unmet_token": "CONTRACT_UNMET",
     "absence_sentinels": ["NR", "NOT_FOUND", "NOT REPORTED"],
+    "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
     "fields": [
         {"name": "a", "field_class": "stated", "type": "free_text"},
         {"name": "b", "field_class": "inferable", "type": "free_text"},

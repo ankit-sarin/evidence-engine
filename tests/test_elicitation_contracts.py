@@ -22,6 +22,7 @@ CODEBOOK = {
     "escape_token": "NO_EVIDENCE_LOCATABLE",
     "contract_unmet_token": "CONTRACT_UNMET",
     "absence_sentinels": ["NR", "NOT_FOUND", "NOT REPORTED"],
+    "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
     "fields": [
         {"name": "robot_platform", "type": "free_text", "field_class": "stated",
          "definition": "The robot."},

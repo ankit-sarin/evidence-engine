@@ -4256,7 +4256,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 282,
+            "line": 278,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4599,7 +4599,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 502,
+            "line": 504,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4694,19 +4694,19 @@
           },
           {
             "kind": "literal",
-            "line": 348,
+            "line": 373,
             "role": "docstring",
             "text": "The codebook for a review: `data/<review_id>/extraction_codebook.yaml`."
           },
           {
             "kind": "literal",
-            "line": 377,
+            "line": 402,
             "role": "docstring",
             "text": "The codebook in the same review directory as this database.\n\n    The review root is wherever the review's database is \u2014 not\n    `data/<review_id>` \u2014 so a run..."
           },
           {
             "kind": "f-string",
-            "line": 414,
+            "line": 439,
             "role": "message",
             "text": "f'Codebook not found at {path}. Every review carries one at data/<review_id>/{CODEBOOK_FILENAME}.'"
           }
@@ -4716,7 +4716,7 @@
         "spec_access": [
           {
             "func": "data_root_for",
-            "line": 354,
+            "line": 379,
             "scope": "codebook_path_for"
           }
         ],
@@ -4724,7 +4724,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 418,
+            "line": 443,
             "scope": "_parse",
             "target": "text"
           }
@@ -6233,7 +6233,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 458,
+            "line": 465,
             "names": [
               "--review"
             ],
@@ -6242,7 +6242,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 459,
+            "line": 466,
             "names": [
               "--arm"
             ],
@@ -6251,7 +6251,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 460,
+            "line": 467,
             "names": [
               "--codebook"
             ],
@@ -6260,7 +6260,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 461,
+            "line": 468,
             "names": [
               "--strict"
             ],
@@ -6274,7 +6274,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 472,
+            "line": 479,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -6282,7 +6282,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 467,
+            "line": 474,
             "scope": "main"
           }
         ],
@@ -6297,7 +6297,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 389,
+            "line": 391,
             "names": [
               "--review"
             ],
@@ -6306,7 +6306,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 390,
+            "line": 392,
             "names": [
               "--spec"
             ],
@@ -6328,7 +6328,7 @@
           },
           {
             "kind": "literal",
-            "line": 391,
+            "line": 393,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -6336,7 +6336,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 395,
+            "line": 397,
             "scope": "main"
           }
         ],
@@ -6344,7 +6344,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 394,
+            "line": 396,
             "scope": "main"
           }
         ],
@@ -7917,7 +7917,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "bc6df610200f3f3175dea8ea1a8a5cc97797b84e",
+    "generated_at_commit": "a1de184ae88bf04ef2c88024c314a8295b23c0f4",
     "scan_roots": [
       "engine",
       "scripts",

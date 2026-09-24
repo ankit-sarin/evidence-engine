@@ -277,17 +277,19 @@ class CloudExtractorBase:
             if isinstance(span, dict) and "source_snippet" not in span:
                 span["source_snippet"] = ""
 
-        # Null value → "NR" conversion: Sonnet returns null for absent fields,
-        # but Pydantic requires value: str.  Convert to "NR" (engine convention
-        # for absent values) and clear the snippet.
+        # Null value → the codebook's canonical absence sentinel: Sonnet returns
+        # null for absent fields, but Pydantic requires value: str. The engine
+        # writes the sentinel the codebook declares for this (R132), never a
+        # literal of its own, and clears the snippet.
         # Also coerce non-string values (int, float) to str — Sonnet sometimes
         # returns bare numbers for numeric fields like sample_size.
         for span in response_json.get("fields", []):
             if isinstance(span, dict) and span.get("value") is None:
                 logger.debug(
-                    "Null value → NR: field '%s'", span.get("field_name"),
+                    "Null value → %s: field '%s'",
+                    self._codebook.canonical_absence_sentinel, span.get("field_name"),
                 )
-                span["value"] = "NR"
+                span["value"] = self._codebook.canonical_absence_sentinel
                 span["source_snippet"] = ""
             elif isinstance(span, dict) and not isinstance(span.get("value"), str):
                 logger.debug(

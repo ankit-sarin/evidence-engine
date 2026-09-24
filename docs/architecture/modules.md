@@ -71,7 +71,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 **Purpose:** Write-boundary fail-fast: a value may not be stored without evidence. Mechanism-independent (it reads spans, not prompts); `strict` mode (elicitation) requires a validated citation for every value including absence sentinels, `legacy` mode exempts sentinels only; the escape and contract-unmet tokens owe no citation and a citation alongside either is a violation, with distinct codes.
 
 ### `codebook.py`
-**Purpose:** The extraction codebook — the field authority — located, validated, identified and hashed by one loader (CODEBOOK-AUTH-01). The path derives from the review id (no glob), the document is validated eagerly, its `review` key is checked against the requested review, and a semantic hash and a byte hash travel with it.
+**Purpose:** The extraction codebook — the field authority — located, validated, identified and hashed by one loader (CODEBOOK-AUTH-01). The path derives from the review id (no glob), the document is validated eagerly, its `review` key is checked against the requested review, and a semantic hash and a byte hash travel with it. The codebook declares `canonical_absence_sentinel` (a member of `absence_sentinels`, R132), the one sentinel the engine writes; `absence_sentinel_set` / `is_absence_sentinel()` are the one absence predicate LOW_YIELD, the validator and the distribution monitor read (R124).
 
 ### `completeness.py`
 **Purpose:** Extraction completeness guard (INSTRUMENT-01; SPANLOSS-01): compares the field set the prompt asked for, derived from the ReviewSpec's extraction schema and cross-checked against the codebook, with the field set the arm produced. Arm-agnostic; an incomplete result raises before any INSERT.
@@ -151,7 +151,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 - `grep_verify(source_snippet, paper_text)` — Normalized exact + fuzzy (>0.85) substring match
 - `semantic_verify(span, paper_text, field_type, model, *, cfg)` — LLM verification. Categorical: "Does source support this classification?" Text: "Does value match snippet?"
 - `audit_span(span_data, paper_text, field_type, field_tier, model, non_value_tokens, *, cfg)` — 4-state audit: absence → auto-verify; invalid snippet → invalid_snippet; tier 4 → semantic-only; others → grep then semantic
-- `check_low_yield(db, threshold)` — Flags papers with < threshold populated fields
+- `check_low_yield(db, threshold)` — Flags papers with < threshold populated fields; absence is the codebook's `absence_sentinels` plus the non-value tokens (R136) — any other declared value, e.g. "Not assessable", counts as populated
 - `run_audit(db, review_name, spec, model)` — Batch audit. Builds field type/tier lookup. Post-audit LOW_YIELD detection
 
 ---

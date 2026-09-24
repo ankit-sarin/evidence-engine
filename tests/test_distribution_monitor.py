@@ -123,26 +123,38 @@ def _insert_human_spans(db_path: Path, extractor_id: str, field_name: str,
 
 
 class TestIsNull:
+    """R133: absence is the codebook's `absence_sentinels`; "", "n/r" and "none"
+    are the monitor's named malformed-output forms. Rewritten under B5 when
+    `_NULL_SYNONYMS` was split (every call now passes the codebook's set)."""
+
+    @pytest.fixture(autouse=True)
+    def _sentinels(self):
+        from engine.core.codebook import load_codebook
+        self.absence = load_codebook(CODEBOOK_PATH).absence_sentinel_set
+
+    def null(self, value):
+        return _is_null(value, absence_sentinels=self.absence)
 
     def test_none_is_null(self):
-        assert _is_null(None) is True
+        assert self.null(None) is True
 
-    def test_empty_is_null(self):
-        assert _is_null("") is True
+    @pytest.mark.parametrize("form", ["", "  ", "n/r", "N/R", "none", "None"])
+    def test_malformed_output_forms_are_null(self, form):
+        assert self.null(form) is True
 
-    def test_nr_is_null(self):
-        assert _is_null("NR") is True
-        assert _is_null("nr") is True
-        assert _is_null(" NR ") is True
-
-    def test_not_reported_is_null(self):
-        assert _is_null("Not Reported") is True
+    @pytest.mark.parametrize("sentinel", ["NR", "N/A", "NA", "NOT_FOUND",
+                                          "NOT FOUND", "NOT REPORTED"])
+    def test_every_codebook_sentinel_is_null_in_any_case(self, sentinel):
+        assert self.null(sentinel) is True
+        assert self.null(f" {sentinel.lower()} ") is True
 
     def test_real_value_not_null(self):
-        assert _is_null("Original Research") is False
+        assert self.null("Original Research") is False
 
-    def test_n_a_is_null(self):
-        assert _is_null("N/A") is True
+    def test_absence_comes_from_the_argument_not_a_module_list(self):
+        # A form no codebook declares and the monitor does not normalise is a value.
+        assert _is_null("NR", absence_sentinels=frozenset()) is False
+        assert _is_null("Not discussed", absence_sentinels=self.absence) is False
 
 
 # ── Tests: _load_categorical_fields ──────────────────────────────────

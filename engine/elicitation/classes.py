@@ -46,10 +46,10 @@ added a second token.
 
 `non_value_tokens()` is the single authority those consumers read. It is derived
 from the codebook, so a sixth consumer inherits it and no site grows a hand-list
-of its own (ELICIT-DESIGN-02 D1/D2). The hand-lists that already exist -- two
-divergent `_ABSENCE_VALUES` in `auditor.py`, the normaliser's
-`("NOT_FOUND", "NR")`, the monitor's `_NULL_SYNONYMS` -- are a recorded
-fix-phase item (N2) and are deliberately NOT touched here.
+of its own (ELICIT-DESIGN-02 D1/D2). Absence sentinels have the same shape of
+authority: `Codebook.absence_sentinel_set` / `is_absence_sentinel` (R124), read
+by LOW_YIELD, the validator and the distribution monitor. The one hand-list
+left is `auditor.audit_span`'s, rewritten with the locator in slice 2.
 """
 
 from __future__ import annotations

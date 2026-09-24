@@ -31,6 +31,7 @@ VALID = {
     "escape_token": "NO_EVIDENCE_LOCATABLE",
     "contract_unmet_token": "CONTRACT_UNMET",
     "absence_sentinels": ["NR", "NOT_FOUND"],
+    "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
     "fields": [
         {"name": "robot_platform", "type": "free_text", "tier": 1,
          "definition": "The robot.", "instruction": "Name it.",
@@ -183,6 +184,30 @@ def test_empty_absence_sentinels_rejected(tmp_path):
     doc["absence_sentinels"] = []
     with pytest.raises(CodebookError, match="absence_sentinels"):
         load_codebook(_write(tmp_path, doc))
+
+
+def test_missing_canonical_absence_sentinel_rejected(tmp_path):
+    """R132/R137: the sentinel the engine writes is declared, never positional."""
+    doc = copy.deepcopy(VALID)
+    del doc["canonical_absence_sentinel"]
+    with pytest.raises(CodebookError, match="canonical_absence_sentinel"):
+        load_codebook(_write(tmp_path, doc))
+
+
+def test_canonical_absence_sentinel_must_be_a_declared_sentinel(tmp_path):
+    doc = copy.deepcopy(VALID)
+    doc["canonical_absence_sentinel"] = "No comparison reported"
+    with pytest.raises(CodebookError, match="canonical_absence_sentinel"):
+        load_codebook(_write(tmp_path, doc))
+
+
+def test_canonical_sentinel_and_the_absence_predicate_are_exposed(tmp_path):
+    cb = load_codebook(_write(tmp_path, copy.deepcopy(VALID)))
+    assert cb.canonical_absence_sentinel == "NR"
+    assert cb.absence_sentinel_set == frozenset({"NR", "NOT_FOUND"})
+    assert cb.is_absence_sentinel(" not_found ") and cb.is_absence_sentinel("nr")
+    assert not cb.is_absence_sentinel("Not assessable")
+    assert not cb.is_absence_sentinel(None)
 
 
 def test_categorical_without_valid_values_rejected(tmp_path):

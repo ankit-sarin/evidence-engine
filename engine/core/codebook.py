@@ -45,7 +45,8 @@ VALID_FIELD_TYPES = ("categorical", "numeric", "free_text")
 #: Top-level keys. Every one is required; nothing else is allowed.
 REQUIRED_TOP_LEVEL = (
     "version", "review", "date",
-    "absence_sentinels", "escape_token", "contract_unmet_token",
+    "absence_sentinels", "canonical_absence_sentinel",
+    "escape_token", "contract_unmet_token",
     "fields",
 )
 
@@ -117,6 +118,9 @@ class Codebook:
     escape_token: str
     absence_sentinels: tuple[str, ...]
     contract_unmet_token: str
+    #: The one sentinel the engine itself WRITES when it records an absence (R132):
+    #: declared, never positional. A member of `absence_sentinels`.
+    canonical_absence_sentinel: str
     path: Path
     semantic_hash: str
     sha256: str
@@ -144,6 +148,19 @@ class Codebook:
             if f["name"] == name:
                 return f
         raise CodebookError(f"{name!r} is not a field in {self.path}")
+
+    @property
+    def absence_sentinel_set(self) -> frozenset[str]:
+        """The absence sentinels, stripped and upper-cased for comparison."""
+        return frozenset(str(v).strip().upper() for v in self.absence_sentinels)
+
+    def is_absence_sentinel(self, value: object) -> bool:
+        """True when `value` is one of this codebook's absence sentinels.
+
+        The one predicate every consumer that skips or discounts an absence reads
+        (R124): case- and whitespace-insensitive, and the codebook its only source.
+        """
+        return value is not None and str(value).strip().upper() in self.absence_sentinel_set
 
     @property
     def field_names(self) -> tuple[str, ...]:
@@ -242,6 +259,14 @@ def _validate_top_level(doc: dict, path: Path) -> None:
             f"Codebook at {path}: `absence_sentinels` must be a non-empty list. "
             f"An empty one silently turns every absence claim into an ordinary "
             f"value for the auditor, the validators and concordance."
+        )
+    canonical = doc["canonical_absence_sentinel"]
+    if not isinstance(canonical, str) or canonical not in doc["absence_sentinels"]:
+        raise CodebookError(
+            f"Codebook at {path}: `canonical_absence_sentinel` must be one of "
+            f"`absence_sentinels` {doc['absence_sentinels']}, got {canonical!r}. It is "
+            f"the sentinel the engine writes for an absence (R132), so it must be a "
+            f"value every reader already recognises as one."
         )
     for key in ("escape_token", "contract_unmet_token", "review", "version"):
         if not str(doc[key] or "").strip():
@@ -435,6 +460,7 @@ def _parse(path: Path) -> Codebook:
         escape_token=str(doc["escape_token"]).strip(),
         absence_sentinels=tuple(str(s) for s in doc["absence_sentinels"]),
         contract_unmet_token=str(doc["contract_unmet_token"]).strip(),
+        canonical_absence_sentinel=str(doc["canonical_absence_sentinel"]),
         path=path,
         semantic_hash=compute_semantic_hash(doc),
         sha256=hashlib.sha256(text.encode()).hexdigest(),

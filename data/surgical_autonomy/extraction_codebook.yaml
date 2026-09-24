@@ -28,6 +28,12 @@ absence_sentinels:
   - "NOT FOUND"
   - "NOT REPORTED"
 
+# The sentinel the ENGINE writes when it records an absence itself -- a null
+# value from a cloud arm, a reviewer's REJECT_VALUE (R132). Declared, never the
+# list's first element by convention; the loader refuses a value that is not
+# one of absence_sentinels above.
+canonical_absence_sentinel: "NR"
+
 # The escape token, DISTINCT from every absence sentinel above.
 #
 # Semantics: "no evidence locatable for this field in this paper." It is not a
@@ -565,7 +571,7 @@ fields:
       If the paper compares autonomous performance to human/manual performance,
       report the comparison result. Include both values if available (e.g.,
       "Autonomous: 142s vs Manual: 198s (p=0.003)"). If no comparison was made,
-      record "No comparison reported".
+      record "NR".
 
   - name: secondary_outcomes
     field_class: stated

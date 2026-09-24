@@ -266,16 +266,12 @@ def audit_span(
 
 # ── Low-Yield Detection ──────────────────────────────────────────────
 
-# Values that indicate a field is absent/not reported — not counted as populated
-_ABSENCE_VALUES = {"NOT_FOUND", "Not discussed", "NR", "No comparison reported", "Not assessable"}
-
-
 def _tokens_for_db(db) -> frozenset[str]:
     """The review's non-value tokens, read from its own codebook (D1/D2).
 
-    One accessor for both auditor sites, so neither can drift from the other the
-    way the two `_ABSENCE_VALUES` hand-lists in this file already have (that
-    divergence is recorded fix-phase item N2 and is deliberately untouched).
+    One accessor for both auditor sites. LOW_YIELD's absence set is the
+    codebook's too (R124/R136); `audit_span` keeps its own hand-list until slice 2
+    rewrites it with the locator.
     """
     from engine.elicitation.classes import non_value_tokens_for
 
@@ -283,7 +279,8 @@ def _tokens_for_db(db) -> frozenset[str]:
 
 
 def count_populated_fields(extraction_data: dict | list,
-                           non_value_tokens: frozenset[str] = frozenset()) -> int:
+                           non_value_tokens: frozenset[str] = frozenset(), *,
+                           absence_sentinels: frozenset[str]) -> int:
     """Count non-null, non-absence extracted fields in an extraction.
 
     Handles both v1 format (dict of field_name→value) and v2 format
@@ -294,6 +291,12 @@ def count_populated_fields(extraction_data: dict | list,
     that yielded nothing, so counting it as populated would make the guard read
     a refusal as a result — and the more fields an extraction refused, the
     healthier it would look.
+
+    `absence_sentinels` (R124/R136) is the codebook's set, upper-cased
+    (`Codebook.absence_sentinel_set`) and required: an empty set is not inert —
+    it would count every absence as populated. Every other value counts, a
+    declared categorical such as "Not assessable" included, and so does an
+    undeclared legacy form such as "Not discussed".
     """
     count = 0
 
@@ -303,7 +306,8 @@ def count_populated_fields(extraction_data: dict | list,
         if not isinstance(value, str):
             return True
         v = value.strip()
-        return bool(v) and v not in _ABSENCE_VALUES and v.upper() not in non_value_tokens
+        return (bool(v) and v.upper() not in absence_sentinels
+                and v.upper() not in non_value_tokens)
 
     if isinstance(extraction_data, list):
         # v2 format: list of span objects [{field_name, value, ...}, ...]
@@ -329,6 +333,7 @@ def check_low_yield(
     """
     papers = db.get_papers_by_status("AI_AUDIT_COMPLETE")
     stats = {"checked": 0, "low_yield": 0, "ok": 0}
+    sentinels = load_codebook_beside(db.db_path).absence_sentinel_set
 
     for paper in papers:
         pid = paper["id"]
@@ -342,7 +347,8 @@ def check_low_yield(
 
         stats["checked"] += 1
         extracted = json.loads(extraction["extracted_data"])
-        populated = count_populated_fields(extracted, _tokens_for_db(db))
+        populated = count_populated_fields(extracted, _tokens_for_db(db),
+                                           absence_sentinels=sentinels)
 
         if populated < threshold:
             db._conn.execute(

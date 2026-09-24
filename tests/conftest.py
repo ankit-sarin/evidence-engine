@@ -285,6 +285,7 @@ _TEST_CODEBOOK = {
     "escape_token": "NO_EVIDENCE_LOCATABLE",
     "contract_unmet_token": "CONTRACT_UNMET",
     "absence_sentinels": ["NR", "N/A", "NA", "NOT_FOUND", "NOT FOUND", "NOT REPORTED"],
+    "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
     "fields": [
         {"name": "study_type", "type": "categorical", "tier": 1,
          "definition": "The study design.", "instruction": "Classify it.",

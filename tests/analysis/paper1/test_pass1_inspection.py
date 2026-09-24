@@ -38,6 +38,7 @@ date: '2026-01-01'
 escape_token: NO_EVIDENCE_LOCATABLE
 contract_unmet_token: CONTRACT_UNMET
 absence_sentinels: [NR, NOT_FOUND]
+canonical_absence_sentinel: NR  # R137: required by the loader since R132
 fields:
   - name: study_type
     tier: 1

@@ -112,7 +112,8 @@ def test_extracted_data_keeps_the_list_shape_downstream_readers_expect(db):
 
     from engine.agents.auditor import count_populated_fields
     assert count_populated_fields(
-        stored, frozenset({"CONTRACT_UNMET", "NO_EVIDENCE_LOCATABLE"})) == 2
+        stored, frozenset({"CONTRACT_UNMET", "NO_EVIDENCE_LOCATABLE"}),
+        absence_sentinels=frozenset({"NR", "NOT_FOUND"})) == 2
 
 
 def test_a_failing_span_rolls_the_whole_paper_back(db):

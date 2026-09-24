@@ -6,6 +6,7 @@ import logging
 from pathlib import Path
 
 from engine.agents.auditor import grep_verify
+from engine.core.codebook import load_codebook_beside
 from engine.core.database import ReviewDatabase
 from engine.core.parsed_text import NoParsedText, load_parsed_text
 
@@ -287,7 +288,7 @@ def _import_review_json(
 
     Decision mapping:
       ACCEPT  → audit_status='verified'
-      REJECT  → value='NR', audit_status='verified'
+      REJECT  → value=<codebook canonical_absence_sentinel>, audit_status='verified'
       CORRECT → source_snippet=corrected_value, audit_status='verified'
     """
     try:
@@ -382,6 +383,8 @@ def _apply_audit_decisions(
     """
     applied = 0
     papers_touched = set()
+    # REJECT_VALUE writes the codebook's declared absence sentinel (R132).
+    absence = load_codebook_beside(db.db_path).canonical_absence_sentinel
 
     try:
         db._conn.execute("BEGIN")
@@ -409,10 +412,10 @@ def _apply_audit_decisions(
             elif decision == "REJECT_VALUE":
                 db._conn.execute(
                     """UPDATE evidence_spans
-                       SET value = 'NR', audit_status = 'verified',
+                       SET value = ?, audit_status = 'verified',
                            audit_rationale = ?, audited_at = ?
                        WHERE id = ?""",
-                    (note, _now(), span_id),
+                    (absence, note, _now(), span_id),
                 )
             elif decision == "REJECT_PAPER":
                 # reject_paper manages its own transaction, so commit

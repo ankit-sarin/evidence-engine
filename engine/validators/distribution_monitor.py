@@ -27,8 +27,13 @@ DEFAULT_COLLAPSED_MIN_PAPERS = 10
 DEFAULT_LOW_VARIANCE_THRESHOLD = 0.85
 DEFAULT_LOW_VARIANCE_MIN_PAPERS = 20
 
-# Values that represent absence — excluded from distribution analysis.
-_NULL_SYNONYMS = {"", "nr", "n/r", "not reported", "not_found", "none", "n/a"}
+# Malformed-output forms, NOT absence sentinels (R133): an empty string, "n/r"
+# and "none" are shapes a model's output takes when it emits nothing usable. They
+# are excluded from the observation set for the same reason an absence is, but
+# they are this monitor's normalisation, not the codebook's vocabulary. The
+# sentinel half of the old `_NULL_SYNONYMS` comes from the codebook
+# (`Codebook.absence_sentinel_set`) and is never listed here.
+_MALFORMED_NULL_FORMS = frozenset({"", "n/r", "none"})
 
 
 class DistributionCollapseError(Exception):
@@ -59,28 +64,29 @@ def _load_categorical_fields(codebook_path: Path) -> list[str]:
 # ── Value queries by arm type ────────────────────────────────────────
 
 
-def _is_null(value: str | None, non_value: frozenset[str] = frozenset()) -> bool:
+def _is_null(value: str | None, non_value: frozenset[str] = frozenset(), *,
+             absence_sentinels: frozenset[str]) -> bool:
     """Should this value be excluded from the observation set?
 
-    Two reasons, different in kind. `_NULL_SYNONYMS` is ABSENCE: the paper does
-    not report the item, which is a reading of the paper and simply not a
-    categorical observation. `non_value` (ELICIT-DESIGN-02 D1, site 4) is a
-    TERMINAL STATE: no reading was recorded at all.
+    Three reasons, different in kind. `absence_sentinels` (the codebook's,
+    upper-cased; R133) is ABSENCE: the paper does not report the item, which is
+    a reading of the paper and simply not a categorical observation.
+    `_MALFORMED_NULL_FORMS` is output that carries no reading. `non_value`
+    (ELICIT-DESIGN-02 D1, site 4) is a TERMINAL STATE: no reading was recorded
+    at all.
 
     Counting either as a level would put mass on a category the codebook does
     not define, and for a collapse check that is the dangerous direction —
     manufactured variance is exactly what stops COLLAPSED from firing on a field
     that really did collapse. The more fields the engine correctly refused, the
     healthier the distribution would look.
-
-    (`_NULL_SYNONYMS` diverging from the codebook's own `absence_sentinels` is
-    recorded fix-phase item N2 and is not touched here.)
     """
     if value is None:
         return True
-    if str(value).strip().upper() in non_value:
+    v = str(value).strip()
+    if v.upper() in non_value or v.upper() in absence_sentinels:
         return True
-    return value.strip().lower() in _NULL_SYNONYMS
+    return v.lower() in _MALFORMED_NULL_FORMS
 
 
 def _query_values(conn: sqlite3.Connection, field_name: str, arm: str,
@@ -142,7 +148,8 @@ def _query_all_fields(conn: sqlite3.Connection, arm: str,
 
     out: dict[str, list[str]] = {}
     for _pid, fname, _arm, ev in iter_grid(conn, codebook=codebook, arms=(arm,)):
-        if not _is_null(ev.value, non_value):
+        if not _is_null(ev.value, non_value,
+                        absence_sentinels=codebook.absence_sentinel_set):
             out.setdefault(fname, []).append(ev.value)
     return out
 

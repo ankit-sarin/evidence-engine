@@ -14,10 +14,13 @@ from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.exporters.prisma import generate_prisma_flow
 from engine.search.models import Citation
-from engine.core.codebook import load_codebook_beside
+from engine.core.codebook import load_codebook, load_codebook_beside
 
 
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
+LIVE_CODEBOOK = SPEC_PATH.parent.parent / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+#: LOW_YIELD's absence set is the codebook's (R136), passed in by check_low_yield.
+ABSENCE = load_codebook(LIVE_CODEBOOK).absence_sentinel_set
 
 
 @pytest.fixture
@@ -59,7 +62,7 @@ def _advance_to_ai_audit(db, pid, extracted_data, spec):
 
     # Add evidence spans for populated fields
     for fname, value in extracted_data.items():
-        if value and value not in ("NOT_FOUND", "NR", "Not discussed"):
+        if value and not load_codebook_beside(db.db_path).is_absence_sentinel(value):
             db.add_evidence_span(ext_id, fname, value, "Source text here.", 0.9)
 
     # Audit all spans as verified
@@ -86,17 +89,17 @@ class TestCountPopulatedFields:
             "sample_size": "20 trials",
             "country": "USA",
         }
-        assert count_populated_fields(data) == 5
+        assert count_populated_fields(data, absence_sentinels=ABSENCE) == 5
 
     def test_with_absence_values(self):
         data = {
             "study_type": "Original Research",
             "robot_platform": "STAR",
             "fda_status": "NR",
-            "comparison_to_human": "No comparison reported",
+            "comparison_to_human": "NR",  # R128: the codebook now directs NR here
             "key_limitation": "NOT_FOUND",
         }
-        assert count_populated_fields(data) == 2  # only study_type and robot_platform
+        assert count_populated_fields(data, absence_sentinels=ABSENCE) == 2  # only study_type and robot_platform
 
     def test_with_null_and_empty(self):
         data = {
@@ -105,19 +108,25 @@ class TestCountPopulatedFields:
             "task_performed": "",
             "sample_size": "   ",
         }
-        assert count_populated_fields(data) == 1  # only study_type
+        assert count_populated_fields(data, absence_sentinels=ABSENCE) == 1  # only study_type
 
     def test_empty_dict(self):
-        assert count_populated_fields({}) == 0
+        assert count_populated_fields({}, absence_sentinels=ABSENCE) == 0
 
-    def test_all_absence(self):
-        data = {
-            "f1": "NR",
-            "f2": "NOT_FOUND",
-            "f3": "Not discussed",
-            "f4": "Not assessable",
-        }
-        assert count_populated_fields(data) == 0
+    def test_the_absence_set_is_the_codebooks(self):
+        """R136 (rewritten under B5 from test_all_absence): every codebook
+        sentinel is absence, in any case; nothing else is."""
+        sentinels = {f"f{i}": v for i, v in enumerate(
+            ["NR", "N/A", "NA", "NOT_FOUND", "NOT FOUND", "NOT REPORTED", " nr "])}
+        assert count_populated_fields(sentinels, absence_sentinels=ABSENCE) == 0
+
+    def test_a_declared_value_and_an_undeclared_legacy_form_both_count(self):
+        """R136: "Not assessable" is a declared ordinal value of
+        clinical_readiness_assessment, and "Not discussed" is declared nowhere.
+        Neither is an absence sentinel, so both count as populated."""
+        data = {"clinical_readiness_assessment": "Not assessable",
+                "f": "Not discussed"}
+        assert count_populated_fields(data, absence_sentinels=ABSENCE) == 2
 
 
 # ── check_low_yield Tests ────────────────────────────────────────
@@ -142,9 +151,11 @@ class TestCheckLowYield:
             "study_design": "NR",
             "primary_outcome_metric": "NOT_FOUND",
             "primary_outcome_value": "NOT_FOUND",
-            "comparison_to_human": "No comparison reported",
+            "comparison_to_human": "NR",  # R128: the codebook now directs NR here
             "key_limitation": "NOT_FOUND",
-            "clinical_readiness_assessment": "Not assessable",
+            # R136: "Not assessable" is a declared value and would count as
+            # populated; this fixture tests a paper with three, so it is absent.
+            "clinical_readiness_assessment": "NR",
         }
         ext_id = _advance_to_ai_audit(tmp_db, pid, sparse_data, spec)
 
@@ -159,7 +170,8 @@ class TestCheckLowYield:
         assert row["low_yield"] == 1
 
     def test_paper_above_threshold_not_flagged(self, tmp_db, spec):
-        """Paper with 5/15 fields populated → NOT flagged."""
+        """Paper with 7/15 fields populated → NOT flagged (six values, plus the
+        declared "Not assessable", which counts under R136)."""
         pid = _add_paper(tmp_db, title="Rich Paper", pmid="50002")
         rich_data = {
             "study_type": "Original Research",
@@ -175,9 +187,9 @@ class TestCheckLowYield:
             "study_design": "NR",
             "primary_outcome_metric": "NOT_FOUND",
             "primary_outcome_value": "NOT_FOUND",
-            "comparison_to_human": "No comparison reported",
+            "comparison_to_human": "NR",  # R128: the codebook now directs NR here
             "key_limitation": "NOT_FOUND",
-            "clinical_readiness_assessment": "Not assessable",
+            "clinical_readiness_assessment": "Not assessable",  # populated (R136)
         }
         ext_id = _advance_to_ai_audit(tmp_db, pid, rich_data, spec)
 

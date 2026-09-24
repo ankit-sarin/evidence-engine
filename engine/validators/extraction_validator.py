@@ -55,8 +55,8 @@ def _non_value_tokens(db: "ReviewDatabase | None" = None) -> frozenset[str]:
     categorical value" is a false positive that would grow with every field the
     engine correctly refused.
 
-    The `("NOT_FOUND", "NR")` literals at each site are the pre-existing
-    hand-list, recorded as fix-phase item N2 and deliberately left alone.
+    Absence sentinels are skipped at each site through the codebook
+    (`Codebook.is_absence_sentinel`, R124); there is no hand-list here.
     """
     from engine.elicitation.classes import non_value_tokens_for
 
@@ -100,7 +100,8 @@ def normalize_categorical_values(
     Returns a list of dicts describing each normalization applied:
     ``{paper_id, field_name, original, canonical}``.
     """
-    field_map = {v.name: v for v in load_codebook_beside(db.db_path).views}
+    codebook = load_codebook_beside(db.db_path)
+    field_map = {v.name: v for v in codebook.views}
     non_value = _non_value_tokens(db)
 
     rows = db._conn.execute(
@@ -124,7 +125,7 @@ def normalize_categorical_values(
         if field_def.type != "categorical" or not field_def.enum_values:
             continue
 
-        if value in ("NOT_FOUND", "NR"):
+        if codebook.is_absence_sentinel(value):
             continue
 
         if str(value).strip().upper() in non_value:
@@ -210,7 +211,7 @@ def detect_cross_field_bleed(
         if field_def.type != "categorical" or not field_def.enum_values:
             continue
 
-        if value in ("NOT_FOUND", "NR"):
+        if codebook.is_absence_sentinel(value):
             continue
 
         if str(value).strip().upper() in non_value:
@@ -265,7 +266,8 @@ def validate_extraction(
     Read-only — does not modify the DB.
     """
     # Build lookup from spec
-    field_map = {v.name: v for v in load_codebook_beside(db.db_path).views}
+    codebook = load_codebook_beside(db.db_path)
+    field_map = {v.name: v for v in codebook.views}
     valid_field_names = set(field_map)
     non_value = _non_value_tokens(db)
 
@@ -296,8 +298,8 @@ def validate_extraction(
 
         field_def = field_map[fname]
 
-        # Skip NOT_FOUND values — they're valid for any field
-        if value in ("NOT_FOUND", "NR"):
+        # Skip absence sentinels — they're valid for any field (R124: the codebook's)
+        if codebook.is_absence_sentinel(value):
             continue
 
         if str(value).strip().upper() in non_value:
@@ -328,7 +330,7 @@ def validate_extraction(
                 issues.append({"paper_id": paper_id, "field_name": fname,
                                "value": bad, "issue": msg})
 
-        # 3. sample_size — must be integer or "NR"/"NOT_FOUND" (already handled above)
+        # 3. sample_size — must be integer or an absence sentinel (already handled above)
         if fname == "sample_size":
             stripped = value.strip()
             try:

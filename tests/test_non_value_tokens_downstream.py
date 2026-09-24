@@ -15,9 +15,9 @@ Every test here asserts BOTH directions: the pre-fix confusion (call the site
 with no tokens, which is exactly how it behaved before) and the post-fix
 behaviour. A one-directional test would pass against a fix that did nothing.
 
-The hand-lists these sites already carry (`_ABSENCE_VALUES` twice in auditor.py,
-`("NOT_FOUND", "NR")` in the validator, `_NULL_SYNONYMS` in the monitor) are
-recorded fix-phase item N2 and are deliberately untouched.
+Absence sentinels at these sites come from the codebook too (R124/R136:
+`Codebook.absence_sentinel_set`, passed in as `absence_sentinels`). The one
+remaining hand-list is `auditor.audit_span`'s, which slice 2 rewrites.
 """
 
 from __future__ import annotations
@@ -30,6 +30,8 @@ import yaml
 from engine.elicitation.classes import non_value_tokens_for
 
 TOKENS = frozenset({"NO_EVIDENCE_LOCATABLE", "CONTRACT_UNMET"})
+#: The fixture codebook's absence sentinels, upper-cased as the loader hands them out.
+ABSENCE = frozenset({"NR", "NOT_FOUND"})
 # Complete, because the loader validates eagerly (CODEBOOK-AUTH-01).
 CODEBOOK = {
     "version": "1.0",
@@ -38,6 +40,7 @@ CODEBOOK = {
     "escape_token": "NO_EVIDENCE_LOCATABLE",
     "contract_unmet_token": "CONTRACT_UNMET",
     "absence_sentinels": ["NR", "NOT_FOUND"],
+    "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
     "fields": [{"name": "a", "field_class": "stated", "type": "free_text",
                 "tier": 1, "definition": "A field.", "instruction": "Extract it.",
                 "judge_rubric_family": "free_text"}],
@@ -137,22 +140,22 @@ def test_site2_terminal_states_do_not_count_as_populated():
             {"field_name": "c", "value": "NO_EVIDENCE_LOCATABLE"},
             {"field_name": "d", "value": "NR"}]
 
-    assert count_populated_fields(data) == 3          # pre-fix
-    assert count_populated_fields(data, TOKENS) == 1  # post-fix
+    assert count_populated_fields(data, absence_sentinels=ABSENCE) == 3          # pre-fix
+    assert count_populated_fields(data, TOKENS, absence_sentinels=ABSENCE) == 1  # post-fix
 
     # The direction matters: the more fields the engine refused, the healthier
     # the extraction would have looked to the LOW_YIELD guard.
     all_unmet = [{"field_name": n, "value": "CONTRACT_UNMET"} for n in "abcdefgh"]
-    assert count_populated_fields(all_unmet) == 8
-    assert count_populated_fields(all_unmet, TOKENS) == 0
+    assert count_populated_fields(all_unmet, absence_sentinels=ABSENCE) == 8
+    assert count_populated_fields(all_unmet, TOKENS, absence_sentinels=ABSENCE) == 0
 
 
 def test_site2_handles_the_v1_dict_shape_too():
     from engine.agents.auditor import count_populated_fields
 
     data = {"a": "General Surgery", "b": "CONTRACT_UNMET"}
-    assert count_populated_fields(data) == 2
-    assert count_populated_fields(data, TOKENS) == 1
+    assert count_populated_fields(data, absence_sentinels=ABSENCE) == 2
+    assert count_populated_fields(data, TOKENS, absence_sentinels=ABSENCE) == 1
 
 
 # ══ Site 3 — the categorical normaliser's REWRITE path ════════════════
@@ -189,16 +192,16 @@ def test_site3_the_skip_is_wired_into_all_three_check_points():
 def test_site4_terminal_states_are_not_categorical_observations(token):
     from engine.validators.distribution_monitor import _is_null
 
-    assert _is_null(token) is False        # pre-fix: counted as a real level
-    assert _is_null(token, TOKENS) is True  # post-fix: excluded
+    assert _is_null(token, absence_sentinels=ABSENCE) is False        # pre-fix: counted as a real level
+    assert _is_null(token, TOKENS, absence_sentinels=ABSENCE) is True  # post-fix: excluded
 
 
 def test_site4_real_values_and_absences_are_unaffected():
     from engine.validators.distribution_monitor import _is_null
 
-    assert _is_null("General Surgery", TOKENS) is False
-    assert _is_null("NR", TOKENS) is True          # an absence, as before
-    assert _is_null(None, TOKENS) is True
+    assert _is_null("General Surgery", TOKENS, absence_sentinels=ABSENCE) is False
+    assert _is_null("NR", TOKENS, absence_sentinels=ABSENCE) is True          # an absence, as before
+    assert _is_null(None, TOKENS, absence_sentinels=ABSENCE) is True
 
 
 def test_site4_manufactured_variance_would_have_masked_a_collapse():
@@ -207,8 +210,8 @@ def test_site4_manufactured_variance_would_have_masked_a_collapse():
     from engine.validators.distribution_monitor import _is_null, shannon_entropy
 
     rows = ["Cohort"] * 8 + ["CONTRACT_UNMET"] * 8
-    pre = [v for v in rows if not _is_null(v)]
-    post = [v for v in rows if not _is_null(v, TOKENS)]
+    pre = [v for v in rows if not _is_null(v, absence_sentinels=ABSENCE)]
+    post = [v for v in rows if not _is_null(v, TOKENS, absence_sentinels=ABSENCE)]
     assert shannon_entropy(pre) == pytest.approx(1.0)   # looks like variance
     assert shannon_entropy(post) == 0.0                 # the truth: collapsed
 

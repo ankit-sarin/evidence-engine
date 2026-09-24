@@ -466,6 +466,34 @@ def test_short_circuit_returns_the_stored_parser_used(digital_pdf, db):
     assert again.version == first.version
 
 
+def test_short_circuit_does_not_read_the_parsed_text_file(digital_pdf, db):
+    """D15 / R123: the same-hash branch reads no parsed-text file.
+
+    It used to build `{paper_id}_v{version}.md` from the `full_text_assets` row
+    and return `md_path.read_text()` unverified (and "" when the file was gone).
+    Parsed text is handed out only by the resolver, which verifies its hash.
+    """
+    pid = _paper(db)
+    with patch("engine.parsers.pdf_parser.parse_with_docling",
+               side_effect=RuntimeError("boom")), \
+         patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+        first = parse_pdf(str(digital_pdf), pid, "test_gate", db)
+    md_name = f"{pid}_v{first.version}.md"
+
+    reads: list[str] = []
+    real_read_text = Path.read_text
+
+    def spy(self, *a, **kw):
+        reads.append(self.name)
+        return real_read_text(self, *a, **kw)
+
+    with patch.object(Path, "read_text", spy):
+        again = parse_pdf(str(digital_pdf), pid, "test_gate", db)   # same hash
+    assert again.version == first.version
+    assert md_name not in reads
+    assert again.parsed_markdown is None
+
+
 # ── T11 — spec thresholds ─────────────────────────────────────────────
 
 def test_ondisk_yaml_yields_engine_defaults():

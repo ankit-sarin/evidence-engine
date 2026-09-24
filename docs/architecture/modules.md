@@ -258,7 +258,7 @@ All acquisition modules use `ReviewDatabase` as a context manager. Terminal stat
 - `parse_with_docling(pdf_path)` — DocumentConverter → Markdown
 - `parse_with_pymupdf(pdf_path)` — PyMuPDF page.get_text("text") + `<!-- Page N -->` separators
 - `parse_with_vision(pdf_path, vision_model)` — 200 DPI page rendering → base64 → vision model OCR
-- `parse_pdf(pdf_path, paper_id, review_name, db, spec)` — Three-tier routing with hash caching + atomic temp-file-then-rename write. Raises `ValueError` if all parsers return empty text
+- `parse_pdf(pdf_path, paper_id, review_name, db, spec)` — Three-tier routing with hash caching (a same-hash short-circuit returns `parsed_markdown=None` and reads no file — R123) + atomic temp-file-then-rename write. Raises `ValueError` if all parsers return empty text
 - `parse_all_pdfs(db, review_name)` — Batch processing. DB-driven path resolution with glob fallback
 - `verify_hashes(db)` — Check stored hashes vs current files
 

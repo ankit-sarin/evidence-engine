@@ -37,7 +37,8 @@ class ParsedDocument(BaseModel):
     paper_id: int
     source_pdf_path: str
     pdf_hash: str
-    parsed_markdown: str
+    #: None on the same-hash short-circuit (R123): that branch reads no text.
+    parsed_markdown: str | None
     parser_used: Literal["docling", "docling_sanitized", "docling_ocr",
                          "docling_ocr_sanitized", "pymupdf", "qwen2.5vl"]
     parsed_at: datetime

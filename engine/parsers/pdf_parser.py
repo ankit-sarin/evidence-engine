@@ -589,15 +589,15 @@ def parse_pdf(
         # corpus are PyMuPDF output, and reporting them as docling would
         # misattribute the very parser identity a re-parse decision turns on.
         stored_parser = existing[1] or "docling"
-        md_path = (
-            Path(db.db_path).parent / "parsed_text" / f"{paper_id}_v{version}.md"
-        )
         logger.info("Paper %d already parsed (v%d, same hash) — skipping", paper_id, version)
         return ParsedDocument(
             paper_id=paper_id,
             source_pdf_path=pdf_path,
             pdf_hash=pdf_hash,
-            parsed_markdown=md_path.read_text() if md_path.exists() else "",
+            # R123 (row D15): no text. This branch read `{paper_id}_v{version}.md`
+            # unverified and returned "" when it was gone; no caller used it.
+            # Parsed text is handed out only by the resolver, which checks its hash.
+            parsed_markdown=None,
             parser_used=stored_parser,
             parsed_at=datetime.now(timezone.utc),
             version=version,

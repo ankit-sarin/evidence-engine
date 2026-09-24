@@ -46,6 +46,27 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 ### `reuse_key.py`
 **Purpose:** S3d's extraction reuse key (R91): `reuse_key(arm_id, paper_id, parsed_text_sha256)` → `rk1:<sha256>`, pure; its consumer is session 9's extractor cut-over.
 
+### `effective.py`
+**Purpose:** One reader of "the current value" — resolution rule v2.1 (R23; EFFECTIVE-RESULT-02, session 5). `effective_value(paper, field, arm)` → `(value, state, provenance)`, first matching row 0–17 wins and the row number is returned; `effective_state(paper)` derives the paper's state and never reads a stored one. `arm` is required; arms are data.
+
+### `events.py`
+**Purpose:** The event writer (session 5): append-only, the only supported way to add to the history `effective.py` reads, with every refusal v2.1 needs enforced before the row is written; an event and its against-set are written in one transaction.
+
+### `paper_state.py`
+**Purpose:** The paper-level state vocabulary on two axes, eligibility and processing (R29 as corrected by R39; migration 019, session 6). The token sets are disjoint, so an event's axis is a function of its token and no axis column is stored.
+
+### `effective_config.py`
+**Purpose:** The one resolver of every model call's effective configuration (S3a; MANIFEST-01, session 7): model, options, `think`, `format`, `keep_alive`, read only from the validated spec model, with every default declared in `review_spec.py`. R66: it changes what is recorded, not what is sent.
+
+### `run_manifest.py`
+**Purpose:** Run open, arm pinning and call recording (S3a, S3b, S3g; session 7). A run writes `run_manifests` and its `run_stage_configs` rows before its first model call, in one transaction with its arm pins, or refuses first (`DirtyTree`, `PreManifestArm`, `RetiredArm`, `ArmPinMismatch`, `CloudArmNotEnabled`).
+
+### `corpus.py`
+**Purpose:** Corpus membership from `papers.status` — **FROZEN (R35), do not call.** Its one permitted consumer is applied migration 017; live corpus membership is `effective.eligible_paper_ids` / `corpus_id_sql`, from the eligibility axis.
+
+### `review_paths.py`
+**Purpose:** The review's identity and everything derived from it (SPEC-AUTH-01): `review_specs/<review_id>.yaml` and `data/<review_id>/` both derive from `review_id`; a `--spec` override carrying a different `review_id` is refused before any database is opened.
+
 ## engine/search/ — Literature Search
 
 ### `models.py`
@@ -349,8 +370,10 @@ Deleted. It read `extractions.reasoning_trace` and `evidence_spans.audit_status`
 - `auto_backup(db_path, reason)` — Timestamped backup: `{db_name}.bak-{reason}-{YYYYMMDD-HHMMSS}`
 
 ### `extraction_cleanup.py`
-**Purpose:** Schema-hash-based stale extraction removal (dry-run default).
-- `cleanup_stale_extractions(db, schema_hash, dry_run)` — Deletes mismatched extractions, cascade spans, resets EXTRACTED/AI_AUDIT_COMPLETE → PARSED. HUMAN_AUDIT_COMPLETE protected
+**Purpose:** Extraction staleness report for codebook transitions — read-only. The delete branch is retired (R25, R94; row D10): extractions are superseded by event, never deleted.
+- `check_stale_extractions(...)` — the dry-run staleness report
+- `cleanup_stale_extractions(db, schema_hash, dry_run)` — with `dry_run=False` raises `DeletionRetired` before any query runs
+- CLI `--confirm` refuses unconditionally, before any database is opened; the extractor's pre-flight stale count is informational
 
 ### `ollama_client.py`
 **Purpose:** Three-layer Ollama timeout wrapper, and the single input-fit guard for every model call.

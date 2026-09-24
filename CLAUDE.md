@@ -48,7 +48,7 @@ evidence-engine/
 │   ├── provenance/             # Frozen v1.1 evidence-provenance taxonomy + classifier
 │   └── eval/                   # Response-contract, runtime and priming evaluations
 ├── scripts/                    # Pipeline runners, batch scripts, monitors
-├── tests/                      # ~1,636 offline + 15 network/ollama/integration
+├── tests/                      # 2,770 in the standard gate + 17 network/ollama/integration (deselected)
 │   └── conftest.py             # Suite-wide service-call fence (see Ops Invariants)
 └── data/                       # gitignored — per-review databases, PDFs, exports,
                                 #   eval stores, telemetry
@@ -139,7 +139,7 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - Self-documenting review workbooks: shared builder with DataValidation dropdowns, conditional formatting, Instructions sheet. Used by all 3 adjudication exporters
 - PDF quality check: AI classification (vision model) + HTML disposition + JSON import. PDF_EXCLUDED is terminal
 - Extraction validator: schema-driven field name + categorical value check. Read-only diagnostic
-- Extraction cleanup: schema-hash-based stale data removal. Dry-run default. Pre-flight warning in extractor
+- Extraction cleanup: read-only staleness report. The delete branch refuses (`DeletionRetired`, R94) and `--confirm` refuses before opening any database; the extractor's pre-flight stale count is informational
 - Ollama pre-flight: model health check + VRAM budget validation. Wired into FT screener, extractor, auditor
 - FT screening: dual-model cross-family, specialty scope, /no_think, 32K truncation, checkpoint/resume, 7 reason codes. Status-aware for papers at any lifecycle stage
 - Pass-1 think policy is declared per pass in the Review Spec (`extraction_models.pass1_think` / `.pass2_think`) and passed explicitly on every call — never left to a version-dependent Ollama default (REGRESSION-01)

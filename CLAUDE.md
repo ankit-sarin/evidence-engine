@@ -35,7 +35,7 @@ evidence-engine/
 │   ├── analysis/               # Concordance analysis (scoring, metrics, normalization, reports)
 │   ├── parsers/                # Three-tier PDF parser (Docling → PyMuPDF → Qwen2.5-VL)
 │   ├── acquisition/            # Unpaywall, download cascade, PDF quality check, verify
-│   ├── migrations/             # Numbered migrations 002–021 (021 in the tree, unapplied to live until INPUT-IDENTITY-01 Phase 2b) + runner.py (receipts). See its README
+│   ├── migrations/             # Numbered migrations 002–021 (021 applied to live 2026-09-24 20:41:47 UTC, INPUT-IDENTITY-01 P3ii, receipt 1c076888…2024) + runner.py (receipts). See its README
 │   ├── tools/                  # inventory.py (AST entry-point census), db_fingerprint.py
 │   ├── adjudication/           # Workflow stages, screening/FT/audit adjudication
 │   ├── utils/                  # tmux background, extraction cleanup, ollama preflight
@@ -87,7 +87,7 @@ manifest and cloud opt-in" below). No site names a model or builds an options di
 | judge_pair_ratings | C(N,2) rows per `judge_ratings` row — Level 1 (EQUIVALENT / PARTIAL / DIVERGENT) and Level 2 (GRANULARITY / SELECTION / FABRICATION / …) per arm pair. Migration 007. |
 | fabrication_verifications | Pass 2 per-arm verdicts. UNIQUE (judge_run_id, paper_id, field_name, arm_name). verdict ∈ {SUPPORTED, PARTIALLY_SUPPORTED, UNSUPPORTED}. CHECK: UNSUPPORTED requires non-empty reasoning + fabrication_hypothesis. CASCADE FK to judge_runs. Migration 008. |
 | judge_run_audit | Post-hoc corrections / annotations on judge_runs (open-vocabulary `event_type`, NOT NULL `rationale`, CASCADE FK). First user: the `backfill_judge_model_digest` event (commit 8fefa66). Migration 009. |
-| run_manifests · run_stage_configs · run_calls | Migration 020 (S3a/S3b). One `run_manifests` row per run, written **before its first model call** — git commit (`git_dirty` CHECKed to 0), whole-spec hash, codebook hashes, library versions, cloud arms and payload description; the body is immutable and only its end is written, once. One `run_stage_configs` row per stage: model, digest, options and their hash, sent keys, per-option sources, keep_alive, format-schema and prompt hashes. One `run_calls` row per model call (request hash over the kwargs as sent, response digest); its `(run_id, stage)` must name a declared stage. `field_events` / `paper_events` carry `run_id REFERENCES run_manifests` under R77's CHECK. **In the tree; applied to live in session 7b** |
+| run_manifests · run_stage_configs · run_calls | Migration 020 (S3a/S3b). One `run_manifests` row per run, written **before its first model call** — git commit (`git_dirty` CHECKed to 0), whole-spec hash, codebook hashes, library versions, cloud arms and payload description; the body is immutable and only its end is written, once. One `run_stage_configs` row per stage: model, digest, options and their hash, sent keys, per-option sources, keep_alive, format-schema and prompt hashes. One `run_calls` row per model call (request hash over the kwargs as sent, response digest); its `(run_id, stage)` must name a declared stage. `field_events` / `paper_events` carry `run_id REFERENCES run_manifests` under R77's CHECK. **Applied to live 2026-09-23 16:10:31 UTC (MANIFEST-01 P3ii)** |
 | schema_migrations | Migration receipts — `migration_id` PK, `file_sha256`, `applied_at`, `mode` ∈ {executed, registered_preapplied}, `runner_version`, `note`. Written by `engine/migrations/runner.py`. `PRAGMA user_version` is deliberately left at 0. |
 | paper_events · field_events · arms · parsed_text_refs · review_identities · field_event_against(_decisions) | The S2 event store (migration 016), **append-only by trigger**. `paper_events.to_state` carries a **two-axis** vocabulary since migration 019 (R29/R39): eligibility (`eligible` · `abstract_out` · `full_text_out`) and processing (`parsed` · `extracted` · `extraction_failed` · `full_text_not_obtainable` · `parse_failed` · `input_exceeds_context` · `audited_ai`), the sets disjoint, an `event_type`→axis CHECK pairing them, and `reason_code` NOT NULL for exactly the four failure tokens. `analysis_ready` is derived by the reader, never stored |
 | ~~audit_adjudication~~ | **DROPPED by migration 018** (R32). 0 rows; its `span_id` referenced the phantom `_evidence_spans_old`, so the path was never writable (A11). `engine/adjudication/schema.py` no longer creates it — a DROP alone did not survive the next `ReviewDatabase` construction. Human audit decisions become `field_events`; the importer is session 12's |
@@ -221,8 +221,8 @@ closeout; **the old record is superseded, never edited.**
   Ollama stage with no digest. Use `IS` / `IS NOT`, or declare the column NOT NULL.
 - **Runs refuse on a database without migration 020.** `run_pipeline` and
   `scripts/run_cloud_extraction.py` open a run manifest before their first call, so
-  against a database that lacks `run_manifests` — live, until session 7b applies 020 —
-  they fail at run open, by design. Nothing opens a run against live before then.
+  against a database that lacks `run_manifests` they fail at run open, by design. Live has
+  020 since 2026-09-23 16:10:31 UTC (MANIFEST-01 P3ii).
 - **R31 — a legacy artifact is retained only if it serves the engine going
   forward.** While the engine is settling into *freshman*, a legacy file, script,
   path, table or committed output that this session touches is kept only on that

@@ -129,8 +129,10 @@ class EffectiveConfig:
         return _replace(self, model=model, sources={**self.sources, "model": source})
 
     def with_options(self, extra: Mapping[str, Any] | None) -> "EffectiveConfig":
-        """A caller's option override — today only `scripts/eval_auditor_models.py`.
-        Recorded as source `caller`; a run manifest never uses one."""
+        """A caller's option override, recorded as source `caller`. Live callers:
+        the FT screener (`temperature`) and the vision parser (`num_predict`,
+        `num_ctx`). The auditor's `ollama_options` override retired with
+        `scripts/eval_auditor_models.py` (R125)."""
         if not extra:
             return self
         opts = {**self.options, **extra}

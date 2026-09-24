@@ -4256,7 +4256,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 284,
+            "line": 282,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -6611,71 +6611,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "scripts/eval_auditor_models.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 83,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 84,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {
-          "run_eval": "spec_first"
-        },
-        "path": "scripts/eval_auditor_models.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 84,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          },
-          {
-            "kind": "f-string",
-            "line": 274,
-            "role": "code",
-            "text": "f'data/{review_name}/auditor_eval_results.json'"
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 91,
-            "scope": "run_eval"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "spec_path_for",
-            "line": 88,
-            "scope": "run_eval"
-          },
-          {
-            "func": "load_spec_for",
-            "line": 90,
-            "scope": "run_eval"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "scripts/ft_screening_smoke_test.py": {
         "entry_point": true,
         "flags": [
@@ -7963,26 +7898,26 @@
     "summary": {
       "db_before_spec_scopes": 0,
       "default_review_named_constants": 6,
-      "entry_points": 101,
-      "entry_points_constructing_reviewdatabase": 35,
+      "entry_points": 100,
+      "entry_points_constructing_reviewdatabase": 34,
       "entry_points_name_only": 45,
-      "entry_points_with_review_name_flag": 71,
-      "entry_points_with_spec_flag": 27,
+      "entry_points_with_review_name_flag": 70,
+      "entry_points_with_spec_flag": 26,
       "files_calling_load_review_spec_directly": 11,
-      "files_calling_resolver": 30,
-      "files_scanned": 216,
+      "files_calling_resolver": 29,
+      "files_scanned": 215,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 34,
       "name_only_constructing_reviewdatabase": 20,
-      "path_construction_sites_in_code": 70,
+      "path_construction_sites_in_code": 69,
       "raw_yaml_load_sites": 3,
       "review_id_constants": 8,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "476ac4d408172131395a05e734f9016523a3c48b",
+    "generated_at_commit": "2b2ce918f9d06c05c1457427f83462f3d965ba19",
     "scan_roots": [
       "engine",
       "scripts",

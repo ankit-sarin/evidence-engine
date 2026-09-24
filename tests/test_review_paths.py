@@ -172,7 +172,9 @@ SPEC_BEARING_ENTRY_POINTS = [
     # its --spec flag. The hash it compares comes from the codebook now, so the
     # entry point reads no spec at all and has nothing to identity-check.
     "engine/validators/extraction_validator.py",
-    "scripts/eval_auditor_models.py",
+    # scripts/eval_auditor_models.py retired 2026-09-24 under R125 (R31): the only
+    # caller of the auditor's ollama_options override; it read the legacy tables and
+    # named an uninstalled model. Its parametrized case retires with it (R47).
     "scripts/ft_screening_smoke_test.py",
     "scripts/q8_validation.py",
     "scripts/q8_validation_fast.py",

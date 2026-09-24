@@ -149,8 +149,8 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 - `DEFAULT_AUDITOR_MODEL = "gemma3:27b"`, `SEMANTIC_ONLY_TIERS = {4}`
 - `_ABSENCE_VALUES = {"NOT_FOUND", "Not discussed", "NR", "No comparison reported", "Not assessable"}`
 - `grep_verify(source_snippet, paper_text)` — Normalized exact + fuzzy (>0.85) substring match
-- `semantic_verify(span, paper_text, field_type, model, ollama_options)` — LLM verification. Categorical: "Does source support this classification?" Text: "Does value match snippet?"
-- `audit_span(span_data, paper_text, field_type, field_tier, model, ollama_options)` — 4-state audit: absence → auto-verify; invalid snippet → invalid_snippet; tier 4 → semantic-only; others → grep then semantic
+- `semantic_verify(span, paper_text, field_type, model, *, cfg)` — LLM verification. Categorical: "Does source support this classification?" Text: "Does value match snippet?"
+- `audit_span(span_data, paper_text, field_type, field_tier, model, non_value_tokens, *, cfg)` — 4-state audit: absence → auto-verify; invalid snippet → invalid_snippet; tier 4 → semantic-only; others → grep then semantic
 - `check_low_yield(db, threshold)` — Flags papers with < threshold populated fields
 - `run_audit(db, review_name, spec, model)` — Batch audit. Builds field type/tier lookup. Post-audit LOW_YIELD detection
 
@@ -485,7 +485,6 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 | `smoke_test_fixes.py` | Extract + audit 5 papers with temp DB |
 | `test_e2e_search_screen.py` | Live end-to-end search + screening on 20 papers |
 | `test_extraction_validation.py` | Parse 3 PDFs + validate extraction quality |
-| `eval_auditor_models.py` | Compare auditor model performance |
 | `ft_screening_smoke_test.py` | FT screening on 5 known papers |
 | `q8_validation.py` | q8_0 KV cache validation (full) |
 | `q8_validation_fast.py` | q8_0 KV cache validation (fast, no snippet retries) |

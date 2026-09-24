@@ -107,7 +107,7 @@ def grep_verify(source_snippet: str, paper_text: str) -> bool:
 
 def semantic_verify(
     span: EvidenceSpan, paper_text: str, field_type: str = "text",
-    model: str | None = None, ollama_options: dict | None = None,
+    model: str | None = None,
     *, cfg: EffectiveConfig | None = None,
 ) -> AuditVerdict:
     """Use an LLM to verify if extracted value matches the source snippet.
@@ -116,13 +116,12 @@ def semantic_verify(
     the classification rather than whether it contains the exact phrase.
 
     `cfg` is the resolved `audit` stage; without one the spec model's declared
-    defaults apply. `ollama_options` is a caller override merged over the
-    resolved options (only `scripts/eval_auditor_models.py` passes one).
+    defaults apply. The `ollama_options` override retired with its only caller,
+    `scripts/eval_auditor_models.py` (R125).
     """
     cfg = (cfg or stage_config("audit", None, model=model))
     if model is not None and model != cfg.model:
         cfg = cfg.with_model(model)
-    cfg = cfg.with_options(ollama_options)
     response = ollama_chat(
         messages=build_audit_messages(span, field_type=field_type), **cfg.kwargs())
 
@@ -185,7 +184,6 @@ Respond with JSON: {{"status": "verified" or "flagged", "grep_found": true, "rea
 def audit_span(
     span_data: dict, paper_text: str, field_type: str = "text",
     field_tier: int = 1, model: str | None = None,
-    ollama_options: dict | None = None,
     non_value_tokens: frozenset[str] = frozenset(),
     *, cfg: EffectiveConfig | None = None,
 ) -> tuple[str, str]:
@@ -248,7 +246,7 @@ def audit_span(
         tier=field_tier,
     )
     verdict = semantic_verify(span, paper_text, field_type=field_type, model=model,
-                              ollama_options=ollama_options, cfg=cfg)
+                              cfg=cfg)
     semantic_pass = verdict.status == "verified"
 
     # Fix D: 4-state outcome

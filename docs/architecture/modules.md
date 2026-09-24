@@ -67,6 +67,21 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 ### `review_paths.py`
 **Purpose:** The review's identity and everything derived from it (SPEC-AUTH-01): `review_specs/<review_id>.yaml` and `data/<review_id>/` both derive from `review_id`; a `--spec` override carrying a different `review_id` is refused before any database is opened.
 
+### `citation_guard.py`
+**Purpose:** Write-boundary fail-fast: a value may not be stored without evidence. Mechanism-independent (it reads spans, not prompts); `strict` mode (elicitation) requires a validated citation for every value including absence sentinels, `legacy` mode exempts sentinels only; the escape and contract-unmet tokens owe no citation and a citation alongside either is a violation, with distinct codes.
+
+### `codebook.py`
+**Purpose:** The extraction codebook — the field authority — located, validated, identified and hashed by one loader (CODEBOOK-AUTH-01). The path derives from the review id (no glob), the document is validated eagerly, its `review` key is checked against the requested review, and a semantic hash and a byte hash travel with it.
+
+### `completeness.py`
+**Purpose:** Extraction completeness guard (INSTRUMENT-01; SPANLOSS-01): compares the field set the prompt asked for, derived from the ReviewSpec's extraction schema and cross-checked against the codebook, with the field set the arm produced. Arm-agnostic; an incomplete result raises before any INSERT.
+
+### `eligibility_render.py`
+**Purpose:** Renders the eligibility authority (`spec.eligibility`) into every screening surface — four model requests and two adjudication sheets. Pure functions holding engine text only, no review content; no per-stage wording overrides (SCREEN-AUTH-01 Phase 2c).
+
+### `extraction_telemetry.py`
+**Purpose:** Per-call extraction telemetry (INSTRUMENT-01): one JSON line per API call, appended to a gitignored file under the review directory and written before the result is accepted or rejected, so a failed attempt leaves a trace. File-based by design, no schema change.
+
 ## engine/search/ — Literature Search
 
 ### `models.py`
@@ -366,8 +381,9 @@ Deleted. It read `extractions.reasoning_trace` and `evidence_spans.audit_status`
 - `maybe_background(stage, review_name)` — Re-launches in tmux if `--background` flag present. Session name: `ee_{stage}_{timestamp}`. Tees output to log file
 
 ### `db_backup.py`
-**Purpose:** Auto-backup before destructive operations.
-- `auto_backup(db_path, reason)` — Timestamped backup: `{db_name}.bak-{reason}-{YYYYMMDD-HHMMSS}`
+**Purpose:** WAL-aware backup and restore for the review database (SAFE-GROUND-01).
+- `auto_backup(db_path_or_connection, reason)` — Reads the source through `db_fingerprint.read_snapshot` (`mode=ro`), copies with SQLite's online backup API (the copy switched to a rollback journal, so no `-wal`/`-shm` sidecar), fingerprints the copy against the source, deletes the copy and raises `BackupVerificationError` on mismatch, and returns `BackupResult(path, fingerprint)`. File name: `{db_name}.bak-{reason}-{YYYYMMDD-HHMMSS}`
+- `restore(...)` — Deliberately has no CLI; refuses an open target.
 
 ### `extraction_cleanup.py`
 **Purpose:** Extraction staleness report for codebook transitions — read-only. The delete branch is retired (R25, R94; row D10): extractions are superseded by event, never deleted.

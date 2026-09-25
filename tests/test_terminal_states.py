@@ -130,10 +130,14 @@ def test_a_state_outside_the_vocabulary_fails():
     assert "PROBABLY_FINE" in str(exc.value)
 
 
-def test_a_state_for_an_unrequested_field_fails():
-    with pytest.raises(TerminalStateError):
-        enforce_terminal_states({"a": "EVIDENCED_VALUE", "zz": "CONTRACT_UNMET"},
-                                ("a",), VOCAB, paper_id=1, arm="test")
+def test_a_state_for_an_unrequested_field_is_dropped_and_logged(caplog):
+    """9b-2c R2 (R118): an unexpected field no longer refuses the paper."""
+    with caplog.at_level("WARNING", logger="engine.core.completeness"):
+        out = enforce_terminal_states({"a": "EVIDENCED_VALUE", "zz": "CONTRACT_UNMET"},
+                                      ("a",), VOCAB, paper_id=1, arm="test")
+    assert out == {"a": "EVIDENCED_VALUE"}
+    assert any("zz" in r.getMessage() and "dropped" in r.getMessage()
+               for r in caplog.records)
 
 
 def test_terminal_state_error_shares_the_completeness_retry_budget():

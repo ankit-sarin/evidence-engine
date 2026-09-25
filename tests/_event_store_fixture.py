@@ -154,7 +154,7 @@ def add_values(db_path: str | Path, arm: str, field_name: str,
                 conn, event_type="asserted", paper_id=pid, field_name=field_name,
                 arm=arm, value=value, extraction_uid=uid, source_snippet=value,
                 actor_kind="model", actor_role="extractor", actor_name="fixture",
-                run_id=run_id)
+                payload=claim_identity(arm, pid), run_id=run_id)
             if located:
                 events.write_field_event(
                     conn, event_type="citation_located", paper_id=pid,
@@ -220,7 +220,7 @@ def mirror_legacy_into_events(db, *, arm: str = "local") -> int:
             field_name=field_name, arm=arm, value=value,
             extraction_uid=uid, source_snippet=snippet,
             actor_kind="model", actor_role="extractor", actor_name="fixture",
-            run_id=run_id)
+            payload=claim_identity(arm, paper_id), run_id=run_id)
         events.write_field_event(
             conn, event_type="citation_located", paper_id=paper_id,
             field_name=field_name, arm=arm, extraction_uid=uid,
@@ -316,3 +316,23 @@ def open_extraction_run(db, spec, *, digest: str = FIXTURE_DIGEST) -> int:
         codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: digest,
         git=rm.GitState(commit="0" * 40, dirty=False, tag=None), host="fixture")
     return handle.run_id
+
+
+#: The parsed-text hash a fixture claim names when its test is not about input
+#: identity (9b-2c R1).
+FIXTURE_TEXT_SHA = "f" * 64
+
+
+def claim_identity(arm: str, paper_id: int, *, sha: str = FIXTURE_TEXT_SHA,
+                   uid: str | None = None) -> dict:
+    """The three input-identity payload keys an extractor's claim must carry
+    (9b-2c R1, `events.ClaimWithoutInputIdentity`), for a fixture that writes a
+    claim through the writer. `sha` is the parsed text's hash; pass the real one
+    when the test is about selection or supersession."""
+    from engine.core.events import (
+        PAYLOAD_PARSED_TEXT_SHA256, PAYLOAD_PARSED_TEXT_UID, PAYLOAD_REUSE_KEY,
+    )
+    from engine.core.reuse_key import reuse_key
+    return {PAYLOAD_REUSE_KEY: reuse_key(arm, paper_id, sha),
+            PAYLOAD_PARSED_TEXT_SHA256: sha,
+            PAYLOAD_PARSED_TEXT_UID: uid or f"fixture-text-{paper_id}"}

@@ -7,6 +7,8 @@ import logging
 
 import pytest
 
+from _event_store_fixture import claim_identity  # 9b-2c R1
+
 from analysis.paper1.judge_loader import (
     LoaderError,
     compute_codebook_sha256,
@@ -315,7 +317,8 @@ def _mirror_spans_into_events(rdb) -> None:
         events.write_field_event(
         conn, run_id=run_for(conn), event_type="asserted", paper_id=pid, field_name=field,
             arm=arm, value=value, extraction_uid=uid, source_snippet=snippet,
-            actor_kind="model", actor_role="extractor", actor_name="fixture")
+            actor_kind="model", actor_role="extractor", actor_name="fixture",
+            payload=claim_identity(arm, pid))
         events.write_field_event(
         conn, run_id=run_for(conn), event_type="citation_located", paper_id=pid, field_name=field,
             arm=arm, extraction_uid=uid, actor_kind="engine",

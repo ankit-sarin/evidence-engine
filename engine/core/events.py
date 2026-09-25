@@ -30,6 +30,8 @@ no refusal applies to a pre-manifest arm; R59 reinstated one, for *claims*):
 * **R59** `ClaimOnPreManifestArm` — a claim on an arm registered pre-manifest.
 * **R21** `ClaimOnRetiredArm` — a claim on a retired arm ("accepts no new claims").
 * **R10** `ArmNotInRun` — a claim on a model arm the run's manifest did not pin.
+* **9b-2c R1** `ClaimWithoutInputIdentity` — an extractor's claim-bearing event
+  without the three input-identity payload keys.
 
 **Row 7 stays reachable.** v2.1 row 7 is two live claims on a pre-manifest
 arm. After R59 no new claim can land on such an arm, so on live data row 7 is
@@ -50,7 +52,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 from engine.core.effective import (
-    PRE_MANIFEST, RULE_VERSION, REVIEWER_EVENT_TYPES,
+    CLAIM_EVENT_TYPES, PRE_MANIFEST, RULE_VERSION, REVIEWER_EVENT_TYPES,
     classify_field_state, is_assigned, live_claims, UnknownArm,
 )
 
@@ -58,6 +60,7 @@ __all__ = [
     "EventRefused", "ReviewerDecisionAmbiguous", "AgainstReferenceIncomplete",
     "AcceptAgainstMultipleClaims", "CellNotAssigned", "ArmConfigurationFrozen",
     "RunLinkRefused", "ClaimOnPreManifestArm", "ClaimOnRetiredArm", "ArmNotInRun",
+    "ClaimWithoutInputIdentity",
     "UnknownArm", "PRE_MANIFEST", "PRE_MANIFEST_MARKER",
     "mint_extraction_uid", "make_claim_id", "register_arm", "retire_arm",
     "write_field_event", "write_paper_event",
@@ -103,6 +106,12 @@ class ClaimOnRetiredArm(EventRefused):
 
 class ArmNotInRun(EventRefused):
     """R10: a claim on a model arm whose configuration the run did not pin."""
+
+
+class ClaimWithoutInputIdentity(EventRefused):
+    """9b-2c R1: an extractor's claim must say which input it was made from —
+    the reuse key, the parsed-text hash and uid — or selection could never skip
+    it and a new text version could never supersede it (F2, R96)."""
 
 
 #: The event-row marker for seeded, pre-manifest rows (R68). Migration 020
@@ -267,6 +276,14 @@ def write_field_event(conn, *, event_type, paper_id, field_name, arm,
                 f"reference cannot say which value it endorses or replaces.")
 
     payload = dict(payload or {})
+    if actor_role == "extractor" and event_type in CLAIM_EVENT_TYPES:
+        absent = [k for k in (PAYLOAD_REUSE_KEY, PAYLOAD_PARSED_TEXT_SHA256,
+                              PAYLOAD_PARSED_TEXT_UID) if not payload.get(k)]
+        if absent:
+            raise ClaimWithoutInputIdentity(
+                f"{event_type} refused: paper {paper_id} field {field_name!r} arm {arm!r} "
+                f"carries no {', '.join(absent)} in its payload. An extractor's claim "
+                "names the input it was made from (F2, 9b-2c R1).")
     payload.setdefault("state_at_write",
                        classify_field_state(value, [], event_type, sentinels=sentinels))
     payload.setdefault("rule_version", RULE_VERSION)

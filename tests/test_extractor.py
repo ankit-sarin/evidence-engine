@@ -28,7 +28,7 @@ from engine.search.models import Citation
 from engine.core.codebook import load_codebook_beside
 from engine.core.codebook import load_codebook_for
 from _parsed_text_fixture import write_parsed
-from _event_store_fixture import (open_extraction_run, seed_eligibility,
+from _event_store_fixture import (claim_identity, open_extraction_run, seed_eligibility,
                                   upgrade_event_store)
 import importlib as _importlib
 _M021 = _importlib.import_module("engine.migrations.021_parsed_text_sha256")
@@ -250,6 +250,10 @@ def _mock_pass2_response():
 
 def test_full_two_pass_mocked(tmp_path, spec):
     db = ReviewDatabase("test_ext", data_root=tmp_path)
+    # 9b-2c (R118): the mocked Pass 2 answers the live codebook's fields, so the
+    # review carries that codebook — against conftest's one-field test codebook
+    # the other fields are now dropped as unexpected rather than stored.
+    _write_codebook(Path(db.db_path).parent)
     db.add_papers([Citation(title="STAR Suturing", source="pubmed", pmid="E1")])
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
@@ -317,7 +321,9 @@ def test_staleness_skip(tmp_path, spec):
     events.write_field_event(
         db._conn, event_type="asserted", paper_id=pid, field_name="study_design",
         arm=arm, value="RCT", source_snippet="RCT", actor_kind="model",
-        actor_role="extractor", actor_name="m", payload={PAYLOAD_REUSE_KEY: key},
+        actor_role="extractor", actor_name="m",
+        payload={**claim_identity(arm, pid, sha=resolve_parsed_text(db._conn, pid).sha256),
+                 PAYLOAD_REUSE_KEY: key},
         run_id=run_id)
 
     # run_extraction should skip this paper. Preflight is patched out: it shells

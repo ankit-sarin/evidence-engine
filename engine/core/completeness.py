@@ -53,6 +53,7 @@ class IncompleteExtractionError(RuntimeError):
         n_expected: int,
         salvage: str | None = None,
         attempt: int | None = None,
+        record=None,
     ):
         self.paper_id = paper_id
         self.arm = arm
@@ -61,6 +62,10 @@ class IncompleteExtractionError(RuntimeError):
         self.n_expected = n_expected
         self.salvage = salvage
         self.attempt = attempt
+        #: 9b-2c R3: the attempt's `extraction_events.ExtractionRecord` as built so
+        #: far, attached at the raising site, so an exhausted budget can store
+        #: what the arm did produce (R139/R140). None until a site attaches it.
+        self.record = record
         shown = ", ".join(missing[:8]) + ("…" if len(missing) > 8 else "")
         super().__init__(
             f"Paper {paper_id} ({arm}): incomplete extraction — "
@@ -193,12 +198,50 @@ def enforce_completeness(
             salvage=salvage,
             attempt=attempt,
         )
-    if result.unexpected or result.duplicated:
+    if result.duplicated:
+        raise DuplicateFieldError(
+            paper_id=paper_id, arm=arm, duplicated=result.duplicated,
+            n_expected=result.n_expected, attempt=attempt,
+        )
+    if result.unexpected:
         logger.warning(
-            "Paper %d (%s): extraction complete but irregular — %s",
-            paper_id, arm, result.summary(),
+            "Paper %d (%s): unexpected field(s) %s dropped (R118) — %s",
+            paper_id, arm, list(result.unexpected), result.summary(),
         )
     return result
+
+
+def drop_unexpected(spans, expected: tuple[str, ...]) -> list:
+    """R118: the spans whose field was asked for. An unexpected field is the
+    response inventing a field; it is dropped before any write, and
+    `enforce_completeness` has already logged it."""
+    keep = set(expected)
+    return [s for s in spans or []
+            if (s.get("field_name") if isinstance(s, dict)
+                else getattr(s, "field_name", None)) in keep]
+
+
+class DuplicateFieldError(IncompleteExtractionError):
+    """R118: a field arrived more than once in one response.
+
+    A subclass of `IncompleteExtractionError` so it shares the one outer retry
+    budget without `RETRYABLE` changing. Keeping either copy silently would be a
+    choice nobody made; on exhaustion the field becomes `contract_unmet` with
+    violation `DUPLICATE_FIELD` and the rest of the paper stores.
+    """
+
+    def __init__(self, paper_id: int, arm: str, duplicated: tuple[str, ...],
+                 n_expected: int, attempt: int | None = None, record=None):
+        super().__init__(
+            paper_id=paper_id, arm=arm, missing=(), n_stored=n_expected - len(duplicated),
+            n_expected=n_expected, salvage=f"duplicated={list(duplicated)}",
+            attempt=attempt, record=record,
+        )
+        self.duplicated = tuple(duplicated)
+
+
+#: The violation code a field takes when its duplicate survives the budget.
+DUPLICATE_FIELD = "DUPLICATE_FIELD"
 
 
 # ── Terminal-state completeness (ELICIT-DESIGN-02 Ruling 1) ──────────
@@ -244,21 +287,25 @@ def enforce_terminal_states(
     """
     missing = tuple(n for n in expected if n not in states)
     unexpected = tuple(sorted(n for n in states if n not in set(expected)))
+    if unexpected:
+        # R118: a state for a field nobody asked for is dropped and logged, not
+        # a refusal of the paper.
+        logger.warning("Paper %d (%s): unexpected terminal state(s) for %s dropped "
+                       "(R118)", paper_id, arm, list(unexpected))
+        states = {n: s for n, s in states.items() if n in set(expected)}
     illegal = tuple(sorted(
         f"{n}={states[n]!r}" for n in states if states[n] not in vocabulary
     ))
 
-    if missing or unexpected or illegal:
+    if missing or illegal:
         detail = []
-        if unexpected:
-            detail.append(f"unexpected={list(unexpected)}")
         if illegal:
             detail.append(f"illegal states={list(illegal)}")
         raise TerminalStateError(
             paper_id=paper_id,
             arm=arm,
-            missing=missing or unexpected or illegal,
-            n_stored=len(states) - len(unexpected) - len(illegal),
+            missing=missing or illegal,
+            n_stored=len(states) - len(illegal),
             n_expected=len(expected),
             salvage="; ".join(detail) or None,
             attempt=attempt,

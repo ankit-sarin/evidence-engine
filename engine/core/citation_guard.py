@@ -76,12 +76,15 @@ class UncitedValueError(RuntimeError):
     """
 
     def __init__(self, paper_id: int, arm: str, offenders: tuple[tuple[str, str], ...],
-                 mode: str, attempt: int | None = None):
+                 mode: str, attempt: int | None = None, record=None):
         self.paper_id = paper_id
         self.arm = arm
         self.offenders = offenders
         self.mode = mode
         self.attempt = attempt
+        #: 9b-2c R3: the attempt's `extraction_events.ExtractionRecord`, attached
+        #: at the raising site so an exhausted budget can store per field (R139).
+        self.record = record
         shown = ", ".join(f"{f} ({why})" for f, why in offenders[:8])
         if len(offenders) > 8:
             shown += "…"

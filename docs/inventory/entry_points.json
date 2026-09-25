@@ -4277,13 +4277,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 455,
+            "line": 461,
             "role": "docstring",
             "text": "(escape token, absence sentinels) from the codebook beside the database.\n\n    Located from the DATABASE's own directory, not from `data/<review_id>`: the\n   ..."
           },
           {
             "kind": "literal",
-            "line": 701,
+            "line": 725,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4842,6 +4842,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/core/extraction_events.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/extraction_events.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/core/extraction_telemetry.py": {
         "entry_point": false,
         "flags": [],
@@ -5116,7 +5130,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 76,
+            "line": 81,
             "role": "docstring",
             "text": "Derived from the review directory, never searched (CODEBOOK-AUTH-01).\n\n    `review_dir` is `data/<review_id>`, so this is `codebook_path_for` with the\n    id..."
           }
@@ -7919,7 +7933,7 @@
       "entry_points_with_spec_flag": 26,
       "files_calling_load_review_spec_directly": 11,
       "files_calling_resolver": 29,
-      "files_scanned": 216,
+      "files_scanned": 217,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 34,
@@ -7931,7 +7945,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "15c0ae1a7c7b32641ee6a8ffcaf9f36137c38ffa",
+    "generated_at_commit": "f9e18ad18ace0e340dcaa552dc59b47114f131ee",
     "scan_roots": [
       "engine",
       "scripts",

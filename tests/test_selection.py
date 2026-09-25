@@ -29,7 +29,8 @@ from engine.core.parsed_text import (
 )
 from engine.core.reuse_key import reuse_key
 from engine.core.selection import SelectionResult, select_for_extraction
-from _event_store_fixture import fixture_run, open_extraction_run, seed_eligibility
+from _event_store_fixture import (claim_identity, fixture_run, open_extraction_run,
+                                  seed_eligibility)
 from _parsed_text_fixture import write_parsed
 
 ARM = "local_test_arm"
@@ -59,7 +60,11 @@ def _key(conn, pid, arm=ARM):
 def _claim(conn, pid, *, arm=ARM, key=None, event_type="asserted", payload=None):
     """One claim-bearing event on (pid, FIELD, arm) carrying `key`; its claim id."""
     uid = events.mint_extraction_uid()
-    body = dict(payload or {})
+    # 9b-2c R1: an extractor's claim names its input; `key` overrides the reuse
+    # key so a test can place a claim under another text or arm.
+    ref = resolve_parsed_text(conn, pid)
+    body = {**claim_identity(arm, pid, sha=ref.sha256, uid=ref.parsed_text_uid),
+            **(payload or {})}
     if key is not None:
         body[PAYLOAD_REUSE_KEY] = key
     events.write_field_event(

@@ -17,6 +17,8 @@ from unittest.mock import patch
 
 import pytest
 
+from _event_store_fixture import claim_identity  # 9b-2c R1
+
 from engine.core import events
 from engine.core import run_manifest as rm
 from engine.core.codebook import load_codebook
@@ -133,7 +135,8 @@ def test_run_id_is_on_every_event_row_a_run_writes(review, spec):
                              run_id=h.run_id)
     events.write_field_event(db._conn, event_type="asserted", paper_id=1, field_name="f",
                              arm=LOCAL_ARM, value="v", source_snippet="v", actor_kind="model",
-                             actor_role="extractor", actor_name="m", run_id=h.run_id)
+                             actor_role="extractor", actor_name="m",
+                             payload=claim_identity(LOCAL_ARM, 1), run_id=h.run_id)
     for table in ("paper_events", "field_events"):
         assert db._conn.execute(f"SELECT COUNT(*) FROM {table} WHERE run_id IS NOT ? ",
                                 (h.run_id,)).fetchone()[0] == 0, table

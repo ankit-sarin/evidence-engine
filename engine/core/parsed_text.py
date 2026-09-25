@@ -36,6 +36,12 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
+from engine.core.paper_state import (
+    REASON_PARSED_TEXT_MISSING,
+    REASON_PARSED_TEXT_MODIFIED,
+    REASON_PARSED_TEXT_NOT_RECORDED,
+)
+
 #: N1: the engine had nine private copies of this anchor and no shared one.
 #: This is the one the parsed-text store resolves against, derived from this
 #: file's own location (engine/core/parsed_text.py → three parents up).
@@ -45,9 +51,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 class ParsedTextError(RuntimeError):
     """Base: the current parsed text for a paper cannot be handed out.
 
-    Each refusal carries its `reason_code`, spelled here once (R122 as widened
-    by 9b-2a R2). The enumerable closed set lands with the paper-event mapping
-    (F9, slice 2(c)) and must contain all three.
+    Each refusal carries its `reason_code` (R122 as widened by 9b-2a R2), from
+    the closed set `engine.core.paper_state.EXTRACTION_REASON_CODES` (F9).
     """
 
     reason_code: str
@@ -56,7 +61,7 @@ class ParsedTextError(RuntimeError):
 class NoParsedText(ParsedTextError):
     """The paper has no `parsed_text_refs` row at all."""
 
-    reason_code = "parsed_text_not_recorded"
+    reason_code = REASON_PARSED_TEXT_NOT_RECORDED
 
     def __init__(self, paper_id: int):
         self.paper_id = paper_id
@@ -67,7 +72,7 @@ class NoParsedText(ParsedTextError):
 class ParsedTextMissing(ParsedTextError):
     """The recorded file is not on disk."""
 
-    reason_code = "parsed_text_missing"
+    reason_code = REASON_PARSED_TEXT_MISSING
 
     def __init__(self, uid: str, path: Path):
         self.uid, self.path = uid, path
@@ -77,7 +82,7 @@ class ParsedTextMissing(ParsedTextError):
 class ParsedTextModified(ParsedTextError):
     """The file's bytes no longer hash to what was recorded (R95)."""
 
-    reason_code = "parsed_text_modified"
+    reason_code = REASON_PARSED_TEXT_MODIFIED
 
     def __init__(self, uid: str, path: Path, recorded: str, observed: str):
         self.uid, self.path = uid, path

@@ -122,3 +122,56 @@ def axis_of(to_state: str) -> str | None:
 def is_failure(to_state: str) -> bool:
     """True if `to_state` is a processing failure and therefore needs a reason."""
     return to_state in FAILURE_STATES
+
+
+# ── F9: the closed reason vocabulary for extraction outcomes (9b-2c R7) ──
+#
+# `reason_code` on a processing-axis failure. Every code the extractor's event
+# mapping can emit is here and spelled nowhere else in the engine (T12's pin).
+# The exhaustion outcomes — an incomplete, uncited or duplicated field after the
+# retry budget — are deliberately ABSENT: they store (R139 contract_unmet, R140
+# incomplete_fields), so they are not failures. `extraction_failed` is reserved
+# for "the arm produced nothing usable; select the paper again next run".
+
+#: A14 (R122): the parsed text cannot be handed out. `engine.core.parsed_text`'s
+#: refusals carry these as their `reason_code`.
+REASON_PARSED_TEXT_NOT_RECORDED = "parsed_text_not_recorded"
+REASON_PARSED_TEXT_MISSING = "parsed_text_missing"
+REASON_PARSED_TEXT_MODIFIED = "parsed_text_modified"
+#: R120: the input does not fit the model's context — one code per cause.
+REASON_INPUT_OVERFLOW_ESTIMATED = "input_overflow_estimated"
+REASON_INPUT_TRUNCATED_AT_CEILING = "input_truncated_at_ceiling"
+REASON_INPUT_DROPPED_BELOW_FLOOR = "input_dropped_below_floor"
+#: The model's context ceiling could not be read (`/api/show` failed).
+REASON_CONTEXT_CEILING_UNAVAILABLE = "context_ceiling_unavailable"
+#: Timeout, transport or server error after the client's retries and restart.
+REASON_MODEL_CALL_FAILED = "model_call_failed"
+#: A think-enabled Pass 1 returned no reasoning channel (REGRESSION-01).
+REASON_THINKING_CHANNEL_MISSING = "thinking_channel_missing"
+#: Pass 2 could not be parsed after the outer budget (9b-2c R4).
+REASON_RESPONSE_UNPARSEABLE = "response_unparseable"
+#: The arm returned no field with any outcome.
+REASON_NO_FIELDS_RETURNED = "no_fields_returned"
+#: The run stopped mid-paper.
+REASON_RUN_INTERRUPTED = "run_interrupted"
+#: Anything else; the exception's type and message ride in the payload (R5).
+REASON_UNCLASSIFIED_ERROR = "unclassified_error"
+
+#: Each reason code -> the processing token it is recorded under.
+EXTRACTION_REASONS: dict[str, str] = {
+    REASON_PARSED_TEXT_NOT_RECORDED: "extraction_failed",
+    REASON_PARSED_TEXT_MISSING: "extraction_failed",
+    REASON_PARSED_TEXT_MODIFIED: "extraction_failed",
+    REASON_INPUT_OVERFLOW_ESTIMATED: "input_exceeds_context",
+    REASON_INPUT_TRUNCATED_AT_CEILING: "input_exceeds_context",
+    REASON_INPUT_DROPPED_BELOW_FLOOR: "input_exceeds_context",
+    REASON_CONTEXT_CEILING_UNAVAILABLE: "extraction_failed",
+    REASON_MODEL_CALL_FAILED: "extraction_failed",
+    REASON_THINKING_CHANNEL_MISSING: "extraction_failed",
+    REASON_RESPONSE_UNPARSEABLE: "extraction_failed",
+    REASON_NO_FIELDS_RETURNED: "extraction_failed",
+    REASON_RUN_INTERRUPTED: "extraction_failed",
+    REASON_UNCLASSIFIED_ERROR: "extraction_failed",
+}
+
+EXTRACTION_REASON_CODES: frozenset[str] = frozenset(EXTRACTION_REASONS)

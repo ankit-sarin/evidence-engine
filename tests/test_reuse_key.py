@@ -47,14 +47,16 @@ def test_a_malformed_component_is_refused_not_hashed(bad):
         reuse_key(*bad)
 
 
-def test_selection_is_the_one_caller_of_the_key():
-    """R92 held the key uncalled through session 8; 9b-2a gives it exactly one
-    caller, extraction selection (9b-2a R5)."""
+def test_selection_and_the_event_mapping_are_the_callers_of_the_key():
+    """R92 held the key uncalled through session 8; 9b-2a gave it one caller,
+    extraction selection (9b-2a R5). 9b-2c adds the second the 2(a) ruling R3
+    anticipated: the event mapping stamps it on every claim it writes. Both call
+    the one function — shared, never copied."""
     from pathlib import Path
     repo = Path(__file__).resolve().parent.parent
     callers = [f.relative_to(repo).as_posix() for f in (repo / "engine").rglob("*.py")
                if "reuse_key(" in f.read_text() and f.name != "reuse_key.py"]
-    assert callers == ["engine/core/selection.py"]
+    assert sorted(callers) == ["engine/core/extraction_events.py", "engine/core/selection.py"]
 
 
 # ── G1 ────────────────────────────────────────────────────────────────

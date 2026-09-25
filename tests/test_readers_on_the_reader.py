@@ -16,6 +16,8 @@ from pathlib import Path
 
 import pytest
 
+from _event_store_fixture import claim_identity  # 9b-2c R1
+
 from engine.core import events
 from tests._event_store_fixture import run_for
 from engine.core.effective import UnknownArm
@@ -62,7 +64,8 @@ def _assert_value(conn, paper_id, field, arm, value, *, located=True):
     events.write_field_event(
         conn, run_id=run_for(conn), event_type="asserted", paper_id=paper_id, field_name=field,
         arm=arm, value=value, extraction_uid=uid, source_snippet=value,
-        actor_kind="model", actor_role="extractor", actor_name="m")
+        actor_kind="model", actor_role="extractor", actor_name="m",
+        payload=claim_identity(arm, paper_id))
     if located:
         events.write_field_event(
         conn, run_id=run_for(conn), event_type="citation_located", paper_id=paper_id,
@@ -77,7 +80,8 @@ def _decline(conn, paper_id, field, arm):
     events.write_field_event(
         conn, run_id=run_for(conn), event_type="declined", paper_id=paper_id, field_name=field,
         arm=arm, extraction_uid=events.mint_extraction_uid(),
-        actor_kind="model", actor_role="extractor", actor_name="m")
+        actor_kind="model", actor_role="extractor", actor_name="m",
+        payload=claim_identity(arm, paper_id))
     conn.commit()
 
 

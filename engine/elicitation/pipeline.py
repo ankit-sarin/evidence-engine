@@ -50,10 +50,15 @@ from engine.agents.extractor import (
     _LAST_PASS1_TELEMETRY, _LAST_PASS2_TELEMETRY,
 )
 from engine.core.effective_config import EffectiveConfig, stage_config
-from engine.core.citation_guard import STRICT, enforce_citations
-from engine.core.completeness import (
-    enforce_completeness, enforce_terminal_states, expected_field_names,
+from engine.core.citation_guard import (
+    STRICT, UncitedValueError, check_citations, enforce_citations,
 )
+from engine.core.completeness import (
+    DuplicateFieldError, IncompleteExtractionError, enforce_completeness,
+    enforce_terminal_states, expected_field_names,
+)
+from engine.core.events import mint_extraction_uid
+from engine.core.extraction_events import elicited_record
 from engine.core.codebook import CODEBOOK_FILENAME, load_codebook
 from engine.elicitation import classes as C
 from engine.elicitation import materialize as M
@@ -205,8 +210,14 @@ def extract_paper_elicited(
     model_digest: str | None = None,
     auditor_model_digest: str | None = None,
     attempt: int | None = None,
+    run_id: int | None = None,
+    parsed_text_ref=None,
 ):
     """Full elicited two-pass extraction for one paper, storing the result.
+
+    `run_id` and `parsed_text_ref` go only into the record a refusal carries
+    (9b-2c R3), so an exhausted budget can store per field; nothing else reads
+    them until the flip.
 
     Under Ruling 1 a Pass-1 contract failure no longer refuses the PAPER. Each
     failing field takes the CONTRACT_UNMET terminal state and stores no value;
@@ -236,9 +247,30 @@ def extract_paper_elicited(
     unit_map = build_unit_map(paper_id, paper_text)
     persist_unit_map(unit_map, review_dir, unit_map_dir_name)
 
-    p1, accepted_attempt, pass1_tels = elicit(
-        unit_map, codebook, field_names, paper_id, cfg=cfg_p1,
-    )
+    escape_tok = C.escape_token(codebook)
+    unmet_tok = C.contract_unmet_token(codebook)
+
+    def _record(states, spans=(), violations=None, offenders=(), duplicated=()):
+        """9b-2c R3: this attempt's record as built so far, for a refusal."""
+        return elicited_record(
+            paper_id=paper_id, arm=getattr(getattr(spec, "extraction_models", None),
+                                           "arm", None) or model_name,
+            run_id=run_id, extraction_uid=mint_extraction_uid(),
+            parsed_text=parsed_text_ref, model=model_name, model_digest=model_digest,
+            expected=field_names, states=states, spans=spans,
+            violations=violations or {}, unmet_token=unmet_tok, escape_token=escape_tok,
+            evidenced_token=C.EVIDENCED_VALUE, offenders=offenders,
+            duplicated=duplicated, attempts=attempt or 1)
+
+    try:
+        p1, accepted_attempt, pass1_tels = elicit(
+            unit_map, codebook, field_names, paper_id, cfg=cfg_p1,
+        )
+    except DuplicateFieldError as exc:
+        # R118: a field answered twice in Pass 1. Nothing else is built yet.
+        exc.arm = model_name
+        exc.record = _record({}, duplicated=exc.duplicated)
+        raise
     p1_tel = pass1_tels[accepted_attempt - 1]
     states = T.terminal_states(p1, codebook)
     n_unmet = T.n_contract_unmet(states, codebook)
@@ -274,9 +306,6 @@ def extract_paper_elicited(
         },
     )
 
-    escape_tok = C.escape_token(codebook)
-    unmet_tok = C.contract_unmet_token(codebook)
-
     order = prompt_field_order(codebook, field_names)
     evidenced = {n for n, s in states.items() if s == C.EVIDENCED_VALUE}
     priming = M.priming_block(
@@ -298,6 +327,15 @@ def extract_paper_elicited(
             codebook_hash=codebook_hash,
         )
         schema_hash = result.codebook_hash
+        names = [s.field_name for s in result.fields]
+        duplicated = tuple(sorted({n for n in names if names.count(n) > 1
+                                   and n in field_names}))
+        if duplicated:
+            # R118: Pass 2 answered a field twice; neither copy is chosen.
+            raise DuplicateFieldError(
+                paper_id=paper_id, arm=model_name, duplicated=duplicated,
+                n_expected=len(field_names), attempt=attempt,
+                record=_record(states, duplicated=duplicated))
         for span in result.fields:
             pass2_values[span.field_name] = span
     else:
@@ -340,19 +378,31 @@ def extract_paper_elicited(
         for s in spans
     ]
 
-    enforce_terminal_states(
-        states, field_names, T.state_vocabulary(codebook),
-        paper_id=paper_id, arm=model_name, attempt=attempt,
-    )
-    enforce_completeness(span_dicts, field_names, paper_id=paper_id, arm=model_name,
-                         attempt=attempt)
-    enforce_citations(
-        span_dicts, paper_id=paper_id, arm=model_name, mode=STRICT,
-        escape_token=escape_tok,
-        absence_sentinels=C.absence_sentinels(codebook),
-        citation_counts=citation_counts, contract_unmet_token=unmet_tok,
-        attempt=attempt,
-    )
+    violations = {n: (r.fatal or r.violations) for n, r in p1.records.items()}
+    try:
+        enforce_terminal_states(
+            states, field_names, T.state_vocabulary(codebook),
+            paper_id=paper_id, arm=model_name, attempt=attempt,
+        )
+        enforce_completeness(span_dicts, field_names, paper_id=paper_id, arm=model_name,
+                             attempt=attempt)
+        enforce_citations(
+            span_dicts, paper_id=paper_id, arm=model_name, mode=STRICT,
+            escape_token=escape_tok,
+            absence_sentinels=C.absence_sentinels(codebook),
+            citation_counts=citation_counts, contract_unmet_token=unmet_tok,
+            attempt=attempt,
+        )
+    except (IncompleteExtractionError, UncitedValueError) as exc:
+        # 9b-2c R3: the refusal carries this attempt's record.
+        exc.record = _record(
+            states, span_dicts, violations,
+            offenders=check_citations(
+                span_dicts, escape_token=escape_tok,
+                absence_sentinels=C.absence_sentinels(codebook), mode=STRICT,
+                citation_counts=citation_counts, contract_unmet_token=unmet_tok,
+            ).offenders)
+        raise
 
     _LAST_PASS2_TELEMETRY.setdefault("model", model_name)
     _LAST_PASS2_TELEMETRY["elicitation_run_id"] = unit_map_dir_name

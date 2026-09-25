@@ -11,6 +11,7 @@ from pathlib import Path
 
 import httpx
 import yaml
+from pydantic import ValidationError
 
 from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
 from engine.core.constants import INVALID_SNIPPET_RE
@@ -23,10 +24,15 @@ from engine.core.completeness import (
     MAX_COMPLETENESS_ATTEMPTS,
     IncompleteExtractionError,
     check_completeness,
+    drop_unexpected,
     enforce_completeness,
     expected_field_names,
 )
-from engine.core.citation_guard import LEGACY, UncitedValueError, enforce_citations
+from engine.core.citation_guard import (
+    LEGACY, UncitedValueError, check_citations, enforce_citations,
+)
+from engine.core.events import mint_extraction_uid
+from engine.core.extraction_events import legacy_record
 from engine.core.extraction_telemetry import record_call
 from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.core.parsed_text import ParsedTextError, ParsedTextRef, read_parsed_text
@@ -514,6 +520,8 @@ def extract_paper(
             model_digest=model_digest,
             auditor_model_digest=auditor_model_digest,
             attempt=attempt,
+            run_id=run_id,
+            parsed_text_ref=parsed_text_ref,
         )
 
     # The review root is where this review's database is, so a run under a
@@ -575,24 +583,40 @@ def extract_paper(
     # The guard sits here rather than in ReviewDatabase.add_extraction_atomic
     # because the database layer is generic — it serves migrations and tests and
     # has no ReviewSpec to derive an expected field set from.
-    enforce_completeness(
-        span_dicts,
-        expected_field_names(spec, cb_path),
-        paper_id=paper_id,
-        arm=cfg1.model,
-    )
-
-    # ELICIT-DESIGN-01 (section 4.6(c)): no value is stored with nothing behind it.
-    # LEGACY mode, because this prompt explicitly tells the model to emit an empty
-    # source_snippet for an absence value — failing those would punish the model
-    # for obeying the prompt it was given. Every other value still needs a quote.
-    # The elicitation path runs the same predicate in STRICT mode, where a
-    # sentinel is a value like any other and owes a citation.
+    expected = expected_field_names(spec, cb_path)
     escape, sentinels = _absence_tokens(cb_path)
-    enforce_citations(
-        span_dicts, paper_id=paper_id, arm=cfg1.model, mode=LEGACY,
-        escape_token=escape, absence_sentinels=sentinels,
-    )
+    try:
+        # R118: a missing or duplicated field refuses (retryable); an unexpected
+        # one is logged here and dropped below, before anything else sees it.
+        enforce_completeness(span_dicts, expected, paper_id=paper_id, arm=cfg1.model)
+        span_dicts = drop_unexpected(span_dicts, expected)
+
+        # ELICIT-DESIGN-01 (section 4.6(c)): no value is stored with nothing behind
+        # it. LEGACY mode, because this prompt explicitly tells the model to emit
+        # an empty source_snippet for an absence value — failing those would
+        # punish the model for obeying the prompt it was given. Every other value
+        # still needs a quote. The elicitation path runs the same predicate in
+        # STRICT mode, where a sentinel is a value like any other and owes a
+        # citation.
+        enforce_citations(
+            span_dicts, paper_id=paper_id, arm=cfg1.model, mode=LEGACY,
+            escape_token=escape, absence_sentinels=sentinels,
+        )
+    except (IncompleteExtractionError, UncitedValueError) as exc:
+        # 9b-2c R3: the refusal carries this attempt's record, so an exhausted
+        # budget stores what the arm produced (R139/R140), never nothing.
+        kept = drop_unexpected(span_dicts, expected)
+        exc.record = legacy_record(
+            paper_id=paper_id, arm=spec.extraction_models.arm, run_id=run_id,
+            extraction_uid=mint_extraction_uid(), parsed_text=parsed_text_ref,
+            model=cfg1.model, model_digest=model_digest, expected=expected, spans=kept,
+            offenders=check_citations(kept, escape_token=escape, absence_sentinels=sentinels,
+                                      mode=LEGACY).offenders,
+            duplicated=check_completeness(span_dicts, expected).duplicated,
+            attempts=attempt or 1)
+        raise
+    extracted_data = drop_unexpected(extracted_data, expected)
+    result = result.model_copy(update={"fields": drop_unexpected(result.fields, expected)})
 
     # The codebook the prompt was built from travels with the extraction.
     # Recording only the spec's hash meant a codebook edit moved nothing in
@@ -718,7 +742,9 @@ def extract_paper_with_completeness(
     # field reaches the boundary with no state at all. The elicited path's own
     # bounded Pass-1 retry (Ruling 4, two attempts with typed feedback) sits
     # inside `extract_paper_elicited` and is a different loop from this one.
-    RETRYABLE = (IncompleteExtractionError, UncitedValueError)
+    # 9b-2c R4: a Pass-2 response that does not parse joins the same budget;
+    # exhausted, it is `response_unparseable` (F9), not a stored paper.
+    RETRYABLE = (IncompleteExtractionError, UncitedValueError, ValidationError)
 
     for attempt in range(1, max_attempts + 1):
         _LAST_PASS2_TELEMETRY.clear()
@@ -734,7 +760,8 @@ def extract_paper_with_completeness(
         except RETRYABLE as exc:
             last_error = exc
             incomplete = isinstance(exc, IncompleteExtractionError)
-            kind = "incomplete" if incomplete else "contract"
+            kind = ("incomplete" if incomplete else
+                    "unparseable" if isinstance(exc, ValidationError) else "contract")
             record_call(
                 review_dir, arm=model_name, paper_id=paper_id, attempt=attempt,
                 outcome=f"{kind}_retry" if attempt < max_attempts else f"{kind}_exhausted",

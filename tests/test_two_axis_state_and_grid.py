@@ -15,6 +15,8 @@ import sqlite3
 
 import pytest
 
+from _event_store_fixture import claim_identity  # 9b-2c R1
+
 from engine.core import events, paper_state
 from engine.core.effective import (
     NO_RECORDED_STATE, EffectiveState, effective_state, eligible_paper_ids,
@@ -243,7 +245,8 @@ def test_a_populated_cell_and_an_empty_one_are_both_yielded(db):
     events.write_field_event(
         db, run_id=run_for(db), event_type="asserted", paper_id=1, field_name="study_type",
         arm="local", value="RCT", extraction_uid=uid,
-        actor_kind="model", actor_role="extractor", actor_name="deepseek-r1:32b")
+        actor_kind="model", actor_role="extractor", actor_name="deepseek-r1:32b",
+        payload=claim_identity("local", 1))
     db.commit()
 
     by_field = {f: ev for _, f, _, ev in iter_grid(db, codebook=_CB)}

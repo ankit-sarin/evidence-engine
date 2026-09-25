@@ -229,7 +229,8 @@ def test_t6_extract_paper_hands_the_unit_map_dir_name_to_the_elicited_path(
     elicited = SimpleNamespace(extraction_models=SimpleNamespace(elicitation=True))
     E.extract_paper(PID, "text", elicited, db, unit_map_dir_name="run_X", run_id=1)
     assert seen["unit_map_dir_name"] == "run_X"
-    assert "run_id" not in seen
+    # 9b-2c R3: the manifest run_id also goes down, for the record a refusal carries.
+    assert seen["run_id"] == 1
 
 
 # ── R5: idempotence, narrowed for 2(b) ───────────────────────────────
@@ -250,3 +251,15 @@ def test_a_second_run_with_the_same_run_id_selects_the_same_set(db, spec, fake_o
         _run(db, spec, run_id)
     assert len(chosen) == 2 and chosen[0] == chosen[1]
     assert [pid for pid, _ in chosen[0].to_extract] == [PID]
+
+
+# ── T13 (9b-2c): the full idempotence property, owed by the flip ─────
+@pytest.mark.xfail(strict=True, reason="9b-2c T13: the legacy write stamps no reuse key; "
+                   "the flip (after 2(d)) wires write_extraction_events and makes this pass")
+def test_t13_a_second_run_under_the_same_input_selects_nothing(db, spec, fake_ollama):
+    run_id = open_extraction_run(db, spec)
+    with patch.object(db, "update_status"):
+        _run(db, spec, run_id)
+    again = E.select_for_extraction(db._conn, arm=spec.extraction_models.arm)
+    assert again.to_extract == ()
+    assert again.skipped_asserted == (PID,)

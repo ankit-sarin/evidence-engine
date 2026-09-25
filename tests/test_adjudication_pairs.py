@@ -7,6 +7,8 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
+from _event_store_fixture import claim_identity  # 9b-2c R1
+
 from analysis.paper1.adjudication import (
     _load_field_types,
     _get_snippet,
@@ -137,7 +139,8 @@ def _mirror(db_path) -> None:
             events.write_field_event(
         conn, run_id=run_for(conn), event_type="asserted", paper_id=pid, field_name=field,
                 arm=arm, value=value, extraction_uid=uid, source_snippet=snippet,
-                actor_kind="model", actor_role="extractor", actor_name="fixture")
+                actor_kind="model", actor_role="extractor", actor_name="fixture",
+                payload=claim_identity(arm, pid))
             events.write_field_event(
         conn, run_id=run_for(conn), event_type="citation_located", paper_id=pid,
                 field_name=field, arm=arm, extraction_uid=uid,

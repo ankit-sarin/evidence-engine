@@ -49,6 +49,7 @@ import re
 from dataclasses import dataclass, field as dc_field
 
 from analysis.provenance.segment import sentences
+from engine.core.completeness import DuplicateFieldError
 from engine.elicitation import classes as C
 from engine.elicitation.units import UnitMap
 
@@ -424,6 +425,13 @@ def check_response(raw: str | None, unit_map: UnitMap,
                    codebook: dict, expected: tuple[str, ...]) -> Pass1Result:
     """Parse and check a whole Pass-1 response against every expected field."""
     entries, path = parse_container(raw)
+    names = [str(e.get(KEY_FIELD)) for e in entries if e.get(KEY_FIELD)]
+    duplicated = tuple(sorted({n for n in names if names.count(n) > 1 and n in expected}))
+    if duplicated:
+        # R118: an asked-for field answered twice is not collapsed last-wins.
+        # The caller attaches the arm and the attempt's record (9b-2c R3).
+        raise DuplicateFieldError(paper_id=unit_map.paper_id, arm="",
+                                  duplicated=duplicated, n_expected=len(expected))
     by_name = {str(e.get(KEY_FIELD)): e for e in entries if e.get(KEY_FIELD)}
     cb_by_name = {f["name"]: f for f in codebook["fields"]}
     known = C.classes_by_field(codebook)

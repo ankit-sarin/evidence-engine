@@ -119,16 +119,30 @@ def test_empty_is_incomplete(expected):
     assert check_completeness(None, expected).complete is False
 
 
-def test_unexpected_and_duplicate_fields_reported_but_not_fatal(expected):
-    """'Title' and 'field_1' — the local arm's junk field names — must surface."""
-    spans = _complete(expected) + [
-        {"field_name": "Title", "value": "x", "source_snippet": "", "confidence": 1.0, "tier": 1},
-        {"field_name": "country", "value": "dup", "source_snippet": "", "confidence": 1.0, "tier": 2},
-    ]
-    r = check_completeness(spans, expected)
+def test_unexpected_fields_are_dropped_and_duplicates_are_retryable(expected, caplog):
+    """R118 (9b-2c R2). 'Title' and 'field_1' — the local arm's junk field names —
+    still surface in the report; at the write boundary an unexpected field is
+    logged and dropped, and a duplicated one refuses retryably."""
+    from engine.core.completeness import DuplicateFieldError, drop_unexpected
+    junk = {"field_name": "Title", "value": "x", "source_snippet": "", "confidence": 1.0,
+            "tier": 1}
+    dup = {"field_name": "country", "value": "dup", "source_snippet": "", "confidence": 1.0,
+           "tier": 2}
+    r = check_completeness(_complete(expected) + [junk, dup], expected)
     assert r.complete is True
     assert r.unexpected == ("Title",)
     assert r.duplicated == ("country",)
+
+    with pytest.raises(DuplicateFieldError) as err:
+        enforce_completeness(_complete(expected) + [junk, dup], expected, paper_id=1, arm="a")
+    assert err.value.duplicated == ("country",)
+    assert isinstance(err.value, IncompleteExtractionError)   # the one outer budget
+
+    with caplog.at_level("WARNING", logger="engine.core.completeness"):
+        enforce_completeness(_complete(expected) + [junk], expected, paper_id=1, arm="a")
+    assert any("Title" in m and "dropped" in m for m in caplog.messages)
+    kept = drop_unexpected(_complete(expected) + [junk], expected)
+    assert "Title" not in {s["field_name"] for s in kept}
 
 
 def test_accepts_objects_as_well_as_dicts(expected):

@@ -23,6 +23,8 @@ from engine.adjudication.workflow import (
 from engine.agents.auditor import run_audit
 from engine.agents.extractor import run_extraction, verify_extraction_run
 from engine.core.selection import select_for_extraction
+from engine.core.effective import effective_state, eligible_paper_ids
+from engine.core.paper_state import COMPLETED_PROCESSING_STATES
 from engine.agents.screener import run_screening
 from engine.core import run_manifest as rm
 from engine.core.database import ReviewDatabase
@@ -140,26 +142,7 @@ def run_pipeline(
 
             # Auto-advance extraction workflow stages
             try:
-                # EXTRACTION_COMPLETE: all included papers at EXTRACTED or beyond
-                extracted = db._conn.execute(
-                    "SELECT COUNT(*) FROM papers WHERE status IN "
-                    "('EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')"
-                ).fetchone()[0]
-                if extracted > 0:
-                    complete_stage(
-                        db._conn, "EXTRACTION_COMPLETE",
-                        metadata=f"{extracted} papers extracted",
-                    )
-                # AI_AUDIT_COMPLETE_STAGE: audit run finished
-                audited = db._conn.execute(
-                    "SELECT COUNT(*) FROM papers WHERE status IN "
-                    "('AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')"
-                ).fetchone()[0]
-                if audited > 0:
-                    complete_stage(
-                        db._conn, "AI_AUDIT_COMPLETE_STAGE",
-                        metadata=f"{audited} papers audited",
-                    )
+                _advance_extraction_workflow(db._conn)
             except Exception:
                 pass  # workflow table may not exist
 
@@ -202,6 +185,35 @@ def run_pipeline(
         logger.info("PIPELINE COMPLETE in %.1fs", elapsed)
         logger.info("Pipeline stats: %s", json.dumps(stats, indent=2))
         db.close()
+
+
+# ── Stage completion, from the event store (R112) ───────────────────
+
+
+def _processing_states(conn) -> dict[int, str]:
+    """Each corpus paper's processing-axis token, through the one reader.
+
+    One `effective_state` per eligible paper: the axis derivation is Python in
+    `engine.core.effective`, and a second SQL copy of it is the defect A1 names.
+    `papers.status` is not read.
+    """
+    return {pid: effective_state(conn, pid).processing for pid in eligible_paper_ids(conn)}
+
+
+def _advance_extraction_workflow(conn) -> dict[str, int]:
+    """Reader 8 on the reader (9b-FLIP 1/2): EXTRACTION_COMPLETE once any corpus
+    paper's processing state is completed (extracted or audited_ai), and
+    AI_AUDIT_COMPLETE_STAGE once any is audited_ai. Returns the two counts."""
+    states = _processing_states(conn)
+    extracted = sum(1 for s in states.values() if s in COMPLETED_PROCESSING_STATES)
+    audited = sum(1 for s in states.values() if s == "audited_ai")
+    if extracted > 0:
+        complete_stage(conn, "EXTRACTION_COMPLETE",
+                       metadata=f"{extracted} papers extracted")
+    if audited > 0:
+        complete_stage(conn, "AI_AUDIT_COMPLETE_STAGE",
+                       metadata=f"{audited} papers audited")
+    return {"extracted": extracted, "audited": audited}
 
 
 # ── Stage Implementations ────────────────────────────────────────────

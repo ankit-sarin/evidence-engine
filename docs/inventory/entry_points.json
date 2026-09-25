@@ -7637,7 +7637,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 411,
+            "line": 423,
             "names": [
               "--review",
               "--name"
@@ -7647,7 +7647,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 417,
+            "line": 429,
             "names": [
               "--spec"
             ],
@@ -7656,7 +7656,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 423,
+            "line": 435,
             "names": [
               "--skip-to"
             ],
@@ -7665,7 +7665,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 429,
+            "line": 441,
             "names": [
               "--limit"
             ],
@@ -7681,19 +7681,19 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 273,
+            "line": 285,
             "role": "message",
             "text": "No papers with status PDF_ACQUIRED. PDF acquisition is manual for v1. Place PDFs in data/%s/pdfs/ named as {paper_id}.pdf, then set status to PDF_ACQUIRED."
           },
           {
             "kind": "literal",
-            "line": 413,
+            "line": 425,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 419,
+            "line": 431,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7701,7 +7701,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 76,
+            "line": 78,
             "scope": "run_pipeline"
           }
         ],
@@ -7709,7 +7709,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 72,
+            "line": 74,
             "scope": "run_pipeline"
           }
         ],
@@ -7987,7 +7987,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "ca9355896230e309c3ca4f0f454a403e5bffa106",
+    "generated_at_commit": "49e4cd6c79ad78e4145998cf4e8b9f30b8e339c8",
     "scan_roots": [
       "engine",
       "scripts",

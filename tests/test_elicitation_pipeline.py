@@ -121,13 +121,25 @@ class _Spec:
 
 
 class _DB:
+    """A review with no database. 9b-FLIP: the elicited path writes events through
+    `write_extraction_events(db._conn, record, ...)`, which the autouse fixture
+    below replaces with a capture — `stored` is the ExtractionRecord written."""
+
     def __init__(self, path):
         self.db_path = str(path / "review.db")
         self.stored = None
+        self._conn = self
 
-    def add_extraction_atomic(self, **kw):
-        self.stored = kw
-        return 1
+
+@pytest.fixture(autouse=True)
+def _capture_the_record(monkeypatch):
+    import engine.elicitation.pipeline as PL
+    monkeypatch.setattr(PL, "write_extraction_events",
+                        lambda conn, record, **kw: setattr(conn, "stored", record))
+
+
+def _fields(db):
+    return {f.field_name: f for f in db.stored.fields}
 
 
 @pytest.fixture
@@ -149,7 +161,7 @@ def _run(review, monkeypatch, pass1_content, unit_map_dir_name="run_TEST"):
 
 def test_stored_snippet_is_the_engines_materialized_text_not_pass2s(review, monkeypatch):
     db, result = _run(review, monkeypatch, PASS1_GOOD)
-    snippets = {s["field_name"]: s["source_snippet"] for s in db.stored["spans"]}
+    snippets = {n: f.source_snippet for n, f in _fields(db).items()}
     assert snippets["robot_platform"] == "The system used a da Vinci Research Kit."
     assert snippets["country"] == "All experiments ran at Vancouver General Hospital."
     for s in snippets.values():
@@ -159,13 +171,13 @@ def test_stored_snippet_is_the_engines_materialized_text_not_pass2s(review, monk
 
 def test_values_come_from_pass2(review, monkeypatch):
     db, _ = _run(review, monkeypatch, PASS1_GOOD)
-    values = {s["field_name"]: s["value"] for s in db.stored["spans"]}
+    values = {n: f.value for n, f in _fields(db).items()}
     assert values == {"robot_platform": "da Vinci Research Kit", "country": "Canada"}
 
 
 def test_reasoning_trace_is_the_materialized_evidence(review, monkeypatch):
-    db, _ = _run(review, monkeypatch, PASS1_GOOD)
-    trace = db.stored["reasoning_trace"]
+    _, result = _run(review, monkeypatch, PASS1_GOOD)
+    trace = result.reasoning_trace          # 9b-FLIP: the trace is the result's, not a row
     assert "[S1]" in trace and "[S2]" in trace
     assert "Declared inference:" in trace
     assert "The system used a da Vinci Research Kit." in trace
@@ -181,9 +193,9 @@ def test_pass1_is_read_from_the_content_channel(review, monkeypatch):
                         lambda **kw: _response(PASS1_GOOD, thinking="unrelated musing"))
     monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
     db = _DB(review)
-    PL.extract_paper_elicited(7, PAPER, _Spec(), db, unit_map_dir_name="run_TEST")
+    result = PL.extract_paper_elicited(7, PAPER, _Spec(), db, unit_map_dir_name="run_TEST")
     assert db.stored is not None
-    assert "unrelated musing" not in db.stored["reasoning_trace"]
+    assert "unrelated musing" not in result.reasoning_trace
 
 
 def test_unit_map_is_persisted_per_paper_per_run(review, monkeypatch):
@@ -212,15 +224,17 @@ def test_a_failing_field_is_refused_and_the_rest_of_the_paper_is_stored(
     db = _DB(review)
     PL.extract_paper_elicited(7, PAPER, _Spec(), db, unit_map_dir_name="run_TEST")
 
-    spans = {s["field_name"]: s for s in db.stored["spans"]}
-    assert len(spans) == 2, "all fields written, or none"
-    assert spans["robot_platform"]["value"] == "da Vinci Research Kit"
-    assert spans["country"]["value"] == "CONTRACT_UNMET"
-    assert spans["country"]["source_snippet"] == ""
-    assert spans["country"]["confidence"] == 0.0
+    # 9b-FLIP: one record, every field in it — a value, and a contract_unmet
+    # claim carrying no value and no snippet (R139).
+    fields = _fields(db)
+    assert len(fields) == 2, "all fields written, or none"
+    assert fields["robot_platform"].value == "da Vinci Research Kit"
+    assert fields["country"].kind == "contract_unmet"
+    assert fields["country"].value is None and fields["country"].source_snippet is None
+    assert fields["country"].violation_codes
 
-    states = {e["field_name"]: e["terminal_state"] for e in db.stored["extracted_data"]}
-    assert states == {"robot_platform": "EVIDENCED_VALUE", "country": "CONTRACT_UNMET"}
+    assert {n: f.kind for n, f in fields.items()} == \
+        {"robot_platform": "value", "country": "contract_unmet"}
 
 
 def test_an_uncited_value_is_never_stored_as_a_value(review, monkeypatch):
@@ -237,9 +251,9 @@ def test_an_uncited_value_is_never_stored_as_a_value(review, monkeypatch):
     db = _DB(review)
     PL.extract_paper_elicited(7, PAPER, _Spec(), db, unit_map_dir_name="run_TEST")
 
-    country = next(s for s in db.stored["spans"] if s["field_name"] == "country")
-    assert "Canada" not in country["value"]
-    assert "Canada" not in (country["source_snippet"] or "")
+    country = _fields(db)["country"]
+    assert "Canada" not in (country.value or "")
+    assert "Canada" not in (country.source_snippet or "")
 
 
 def test_pass_2_is_skipped_when_no_field_survived(review, monkeypatch):
@@ -271,7 +285,7 @@ def test_pass_2_is_skipped_when_no_field_survived(review, monkeypatch):
 
     assert pass2_calls["n"] == 0, "nothing for Pass 2 to answer"
     assert pass1_calls["n"] == 2, "Ruling 4: one retry, with feedback"
-    assert {s["value"] for s in db.stored["spans"]} == {"CONTRACT_UNMET"}
+    assert {f.kind for f in db.stored.fields} == {"contract_unmet"}
 
 
 def test_telemetry_carries_the_per_field_citation_record(review, monkeypatch):

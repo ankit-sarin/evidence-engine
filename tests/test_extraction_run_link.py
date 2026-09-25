@@ -198,22 +198,18 @@ def test_t5_the_stored_digests_are_the_manifests(db, spec, fake_ollama):
         digest_fn=lambda m: "e" * 64 if m == extractor_model else "d" * 64,
         git=rm.GitState(commit="0" * 40, dirty=False, tag=None), host="fixture")
     _run(db, spec, handle.run_id)
-    row = db._conn.execute("SELECT model_digest, auditor_model_digest FROM extractions "
-                           "WHERE paper_id = ?", (PID,)).fetchone()
-    assert tuple(row) == (rm.stage_digest(db._conn, handle.run_id, "extract_pass1"),
-                          rm.stage_digest(db._conn, handle.run_id, "audit"))
-    assert tuple(row) == ("e" * 64, "d" * 64)
+    # 9b-FLIP: the digest rides on the claims (actor_digest), not on a legacy row.
+    digests = {r[0] for r in db._conn.execute(
+        "SELECT actor_digest FROM field_events WHERE paper_id = ? AND event_type = "
+        "'asserted'", (PID,))}
+    assert digests == {rm.stage_digest(db._conn, handle.run_id, "extract_pass1")} \
+        == {"e" * 64}
+    assert _count(db, "extractions") == 0
 
 
-def test_t5_no_audit_stage_means_no_auditor_digest(db, spec, fake_ollama):
-    handle = rm.open_run(
-        db._conn, spec, kind="extraction", stages=list(E.extraction_stages(spec)),
-        codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: FIXTURE_DIGEST,
-        git=rm.GitState(commit="0" * 40, dirty=False, tag=None), host="fixture")
-    _run(db, spec, handle.run_id)
-    row = db._conn.execute("SELECT model_digest, auditor_model_digest FROM extractions"
-                           ).fetchone()
-    assert tuple(row) == (FIXTURE_DIGEST, None)
+# test_t5_no_audit_stage_means_no_auditor_digest retired 2026-09-25 (9b-FLIP, R47):
+# the auditor digest was stored only on the legacy extractions row, which the
+# cut-over no longer writes; an audit's digest is its run's audit stage.
 
 
 def test_t5_the_extractor_names_no_digest_fetch():
@@ -233,33 +229,20 @@ def test_t6_extract_paper_hands_the_unit_map_dir_name_to_the_elicited_path(
     assert seen["run_id"] == 1
 
 
-# ── R5: idempotence, narrowed for 2(b) ───────────────────────────────
-def test_a_second_run_with_the_same_run_id_selects_the_same_set(db, spec, fake_ollama):
-    run_id = open_extraction_run(db, spec)
-    chosen = []
-    real = E.select_for_extraction
-
-    def spy(conn, *, arm):
-        sel = real(conn, arm=arm)
-        chosen.append(sel)
-        return sel
-    # The legacy status write refuses EXTRACTED -> EXTRACTED on the second pass;
-    # it retires with the event writer (2(c)) and is not what this measures.
-    with patch.object(E, "select_for_extraction", side_effect=spy), \
-         patch.object(db, "update_status"):
-        _run(db, spec, run_id)
-        _run(db, spec, run_id)
-    assert len(chosen) == 2 and chosen[0] == chosen[1]
-    assert [pid for pid, _ in chosen[0].to_extract] == [PID]
+# test_a_second_run_with_the_same_run_id_selects_the_same_set retired 2026-09-25
+# (9b-FLIP R8, R47): 2(b)'s narrowed idempotence, superseded by T13's full property.
 
 
 # ── T13 (9b-2c): the full idempotence property, owed by the flip ─────
-@pytest.mark.xfail(strict=True, reason="9b-2c T13: the legacy write stamps no reuse key; "
-                   "the flip (after 2(d)) wires write_extraction_events and makes this pass")
 def test_t13_a_second_run_under_the_same_input_selects_nothing(db, spec, fake_ollama):
+    """9b-2c T13, un-xfailed by the cut-over (G4): the first run stamped the reuse
+    key on its claims, so a second run under the same arm selects nothing and
+    writes no field event."""
     run_id = open_extraction_run(db, spec)
-    with patch.object(db, "update_status"):
-        _run(db, spec, run_id)
+    _run(db, spec, run_id)
+    n = _count(db, "field_events")
     again = E.select_for_extraction(db._conn, arm=spec.extraction_models.arm)
     assert again.to_extract == ()
     assert again.skipped_asserted == (PID,)
+    assert _run(db, spec, run_id)["extracted"] == 0
+    assert _count(db, "field_events") == n

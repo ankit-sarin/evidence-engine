@@ -34,7 +34,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from engine.agents.auditor import semantic_verify
+from engine.agents.auditor import count_populated_fields, is_populated, semantic_verify
 from engine.agents.models import EvidenceSpan
 from engine.core import run_manifest as rm
 from engine.core.codebook import CODEBOOK_FILENAME, Codebook, load_codebook
@@ -71,24 +71,18 @@ def _non_value_tokens(codebook: Codebook) -> frozenset[str]:
     return non_value_tokens_for(codebook.path)
 
 
-def _is_value(value, sentinels: frozenset[str], tokens: frozenset[str]) -> bool:
-    if value is None:
-        return False
-    v = str(value).strip().upper()
-    return bool(v) and v not in sentinels and v not in tokens
-
-
 def low_yield(conn, paper_id: int, arm: str, *, codebook: Codebook, threshold: int) -> bool:
     """R136 on the reader: fewer than `threshold` codebook fields whose effective
     value is a value — not None, not one of the codebook's absence sentinels, not
     a non-value token. Every other declared value ("Not assessable") counts."""
-    sentinels = codebook.absence_sentinel_set
-    tokens = _non_value_tokens(codebook)
     declared = frozenset(codebook.absence_sentinels)
-    populated = sum(
-        1 for f in codebook.fields
-        if _is_value(effective_value(conn, paper_id, f["name"], arm,
-                                     sentinels=declared).value, sentinels, tokens))
+    values = [{"field_name": f["name"],
+               "value": effective_value(conn, paper_id, f["name"], arm,
+                                        sentinels=declared).value}
+              for f in codebook.fields]
+    # 9b-FLIP R4: one R136 predicate — `auditor.count_populated_fields`.
+    populated = count_populated_fields(values, _non_value_tokens(codebook),
+                                       absence_sentinels=codebook.absence_sentinel_set)
     return populated < threshold
 
 
@@ -134,7 +128,7 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
         for c in todo:
             res = locate(text, c.source_snippet)
             results.append((c, res))
-            if res.located or not _is_value(c.value, sentinels, tokens):
+            if res.located or not is_populated(c.value, tokens, absence_sentinels=sentinels):
                 continue
             if not res.snippet_supplied:
                 verdicts.append((c, VERDICT_FLAGGED, NO_SNIPPET_RATIONALE))

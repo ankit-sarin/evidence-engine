@@ -5,21 +5,15 @@ stage `audit`): `auditor_model` in the Review Spec if set, else the spec model's
 declared `audit.model`, or the `model` parameter on individual functions.
 """
 
-import json
 import logging
-from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel
 
 from engine.agents.models import EvidenceSpan
 from engine.core.constants import INVALID_SNIPPET_RE
-from engine.core.database import ReviewDatabase
-from engine.core.review_spec import ReviewSpec
 from engine.core.effective_config import EffectiveConfig, stage_config
-from engine.core.parsed_text import NoParsedText, ParsedTextError, load_parsed_text
 from engine.utils.ollama_client import ollama_chat
-from engine.core.codebook import load_codebook_beside
 from engine.core.locator import locate
 # Re-exported under its old name: human_review.py and the frozen provenance
 # ladder (analysis/provenance/legacy.py) import it from here (9b-2d R6).
@@ -208,17 +202,23 @@ def audit_span(
 
 
 # ── Low-Yield Detection ──────────────────────────────────────────────
+#
+# `check_low_yield` and `run_audit` retired at the cut-over (9b-FLIP, R111):
+# recoverable at 49e4cd6:engine/agents/auditor.py. The event-side auditor is
+# `engine.agents.audit_events`; LOW_YIELD is computed on read there.
 
-def _tokens_for_db(db) -> frozenset[str]:
-    """The review's non-value tokens, read from its own codebook (D1/D2).
-
-    One accessor for both auditor sites. LOW_YIELD's absence set is the
-    codebook's too (R124/R136); `audit_span`'s hand-list retired with the locator
-    (9b-2d).
-    """
-    from engine.elicitation.classes import non_value_tokens_for
-
-    return non_value_tokens_for(Path(db.db_path).parent / "extraction_codebook.yaml")
+def is_populated(value, non_value_tokens: frozenset[str] = frozenset(), *,
+                 absence_sentinels: frozenset[str]) -> bool:
+    """R136, the one predicate: a value that is not None, not blank, not one of
+    the codebook's absence sentinels (upper-cased) and not a non-value token.
+    Every other value counts, "Not assessable" included. `count_populated_fields`
+    and the event-side `audit_events.low_yield` both decide through it."""
+    if value is None:
+        return False
+    if not isinstance(value, str):
+        return True
+    v = value.strip()
+    return bool(v) and v.upper() not in absence_sentinels and v.upper() not in non_value_tokens
 
 
 def count_populated_fields(extraction_data: dict | list,
@@ -242,15 +242,8 @@ def count_populated_fields(extraction_data: dict | list,
     undeclared legacy form such as "Not discussed".
     """
     count = 0
-
-    def _populated(value) -> bool:
-        if value is None:
-            return False
-        if not isinstance(value, str):
-            return True
-        v = value.strip()
-        return (bool(v) and v.upper() not in absence_sentinels
-                and v.upper() not in non_value_tokens)
+    _populated = lambda value: is_populated(  # noqa: E731
+        value, non_value_tokens, absence_sentinels=absence_sentinels)
 
     if isinstance(extraction_data, list):
         # v2 format: list of span objects [{field_name, value, ...}, ...]
@@ -264,201 +257,3 @@ def count_populated_fields(extraction_data: dict | list,
                 count += 1
 
     return count
-
-
-def check_low_yield(
-    db: ReviewDatabase,
-    threshold: int = 4,
-) -> dict:
-    """Flag AI_AUDIT_COMPLETE papers with fewer than threshold populated fields.
-
-    Sets low_yield=1 on the extraction record. Returns stats dict.
-    """
-    papers = db.get_papers_by_status("AI_AUDIT_COMPLETE")
-    stats = {"checked": 0, "low_yield": 0, "ok": 0}
-    sentinels = load_codebook_beside(db.db_path).absence_sentinel_set
-
-    for paper in papers:
-        pid = paper["id"]
-        extraction = db._conn.execute(
-            "SELECT id, extracted_data FROM extractions "
-            "WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
-            (pid,),
-        ).fetchone()
-        if not extraction:
-            continue
-
-        stats["checked"] += 1
-        extracted = json.loads(extraction["extracted_data"])
-        populated = count_populated_fields(extracted, _tokens_for_db(db),
-                                           absence_sentinels=sentinels)
-
-        if populated < threshold:
-            db._conn.execute(
-                "UPDATE extractions SET low_yield = 1 WHERE id = ?",
-                (extraction["id"],),
-            )
-            stats["low_yield"] += 1
-            logger.info(
-                "Paper %d: LOW_YIELD — %d/%d fields populated (threshold: %d)",
-                pid, populated, len(extracted), threshold,
-            )
-        else:
-            # Ensure cleared if re-run after edits
-            db._conn.execute(
-                "UPDATE extractions SET low_yield = 0 WHERE id = ?",
-                (extraction["id"],),
-            )
-            stats["ok"] += 1
-
-    db._conn.commit()
-    logger.info(
-        "Low-yield check: %d checked, %d flagged, %d ok (threshold: %d)",
-        stats["checked"], stats["low_yield"], stats["ok"], threshold,
-    )
-    return stats
-
-
-# ── Batch Audit Pipeline ─────────────────────────────────────────────
-
-
-def run_audit(
-    db: ReviewDatabase, review_name: str, spec: Optional[ReviewSpec] = None,
-    model: str | None = None,
-) -> dict:
-    """Audit all EXTRACTED papers. Returns stats dict.
-
-    If spec is provided, field types and tiers from the extraction schema
-    are used to route categorical fields and Tier 4 fields appropriately.
-
-    Model resolution: explicit model param > spec.auditor_model > the spec
-    model's declared `audit.model` (the resolver, stage `audit`).
-    """
-    cfg = stage_config("audit", spec, model=model)
-    model = cfg.model
-    logger.info("Audit model: %s", model)
-
-    # Pre-flight: verify auditor model is loaded and responsive
-    from engine.utils.ollama_preflight import require_preflight
-    require_preflight([model], runner_name="Audit", spec=spec)
-
-    # Build field_name → (type, tier) lookup from spec
-    field_type_map: dict[str, str] = {}
-    field_tier_map: dict[str, int] = {}
-    for field in load_codebook_beside(db.db_path).fields:
-        field_type_map[field["name"]] = field["type"]
-        field_tier_map[field["name"]] = field["tier"]
-
-    papers = db.get_papers_by_status("EXTRACTED")
-    total = len(papers)
-    logger.info("Starting audit on %d papers", total)
-
-    stats = {
-        "papers_audited": 0,
-        "spans_verified": 0,
-        "spans_contested": 0,
-        "spans_flagged": 0,
-        "spans_invalid_snippet": 0,
-        "grep_failures": 0,
-    }
-    review_dir = Path(db.db_path).parent
-    _non_value_tokens = _tokens_for_db(db)
-
-    for i, paper in enumerate(papers, 1):
-        pid = paper["id"]
-
-        # Load parsed text through the one resolver (S3e, R95)
-        try:
-            paper_text = load_parsed_text(db._conn, pid)
-        except NoParsedText:
-            logger.warning("Paper %d: no parsed text found — skipping audit", pid)
-            continue
-        except ParsedTextError as exc:
-            logger.error("Paper %d: parsed text refused — %s — skipping audit", pid, exc)
-            continue
-
-        # Get the latest extraction for this paper
-        extraction = db._conn.execute(
-            "SELECT id FROM extractions WHERE paper_id = ? ORDER BY id DESC LIMIT 1",
-            (pid,),
-        ).fetchone()
-        if not extraction:
-            logger.warning("Paper %d: no extraction found — skipping audit", pid)
-            continue
-
-        ext_id = extraction["id"]
-
-        # Get all pending evidence spans
-        spans = db._conn.execute(
-            "SELECT * FROM evidence_spans WHERE extraction_id = ? AND audit_status = 'pending'",
-            (ext_id,),
-        ).fetchall()
-
-        for span_row in spans:
-            span_data = dict(span_row)
-            fname = span_data.get("field_name", "")
-            ft = field_type_map.get(fname, "text")
-            tier = field_tier_map.get(fname, 1)
-
-            try:
-                status, reasoning = audit_span(
-                    span_data, paper_text, field_type=ft, field_tier=tier,
-                    model=model, non_value_tokens=_non_value_tokens, cfg=cfg,
-                )
-            except (json.JSONDecodeError, ValidationError) as exc:
-                logger.warning(
-                    "Paper %d, field %s: audit parse error — flagging: %s",
-                    pid, fname, str(exc)[:200],
-                )
-                status = "flagged"
-                reasoning = f"Audit LLM returned unparseable output: {str(exc)[:100]}"
-
-            db.update_audit(
-                span_id=span_data["id"],
-                status=status,
-                model=model,
-                rationale=reasoning,
-            )
-
-            stats[f"spans_{status}"] = stats.get(f"spans_{status}", 0) + 1
-            if status in ("flagged", "contested", "invalid_snippet"):
-                stats["grep_failures"] += 1
-
-        # Fix E: Assert no pending spans remain before transitioning
-        pending = db._conn.execute(
-            "SELECT COUNT(*) FROM evidence_spans WHERE extraction_id = ? AND audit_status = 'pending'",
-            (ext_id,),
-        ).fetchone()[0]
-
-        if pending > 0:
-            logger.warning(
-                "Paper %d: %d spans still pending after audit — NOT transitioning",
-                pid, pending,
-            )
-        else:
-            db.update_status(pid, "AI_AUDIT_COMPLETE")
-            stats["papers_audited"] += 1
-
-        if i % 10 == 0 or i == total:
-            logger.info(
-                "Audited %d/%d papers — %d verified, %d contested, %d flagged, %d invalid",
-                i, total,
-                stats["spans_verified"], stats["spans_contested"],
-                stats["spans_flagged"], stats["spans_invalid_snippet"],
-            )
-
-    logger.info(
-        "Audit complete: %d papers, %d verified, %d contested, %d flagged, "
-        "%d invalid_snippet (%d grep failures)",
-        stats["papers_audited"],
-        stats["spans_verified"], stats["spans_contested"],
-        stats["spans_flagged"], stats["spans_invalid_snippet"],
-        stats["grep_failures"],
-    )
-
-    # Post-audit: low-yield detection
-    threshold = spec.low_yield_threshold if spec else 4
-    ly_stats = check_low_yield(db, threshold=threshold)
-    stats["low_yield"] = ly_stats["low_yield"]
-
-    return stats

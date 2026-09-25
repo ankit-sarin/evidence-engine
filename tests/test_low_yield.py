@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from engine.agents.auditor import check_low_yield, count_populated_fields
+from engine.agents.auditor import count_populated_fields
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.exporters.prisma import generate_prisma_flow
@@ -132,95 +132,19 @@ class TestCountPopulatedFields:
 # ── check_low_yield Tests ────────────────────────────────────────
 
 
+def _seed_low_yield(db, pid):
+    """The legacy low_yield flag readers 10–14 still read, set directly: its writer
+    (check_low_yield) retired at the cut-over, and these readers move in slice 3."""
+    db._conn.execute("UPDATE extractions SET low_yield = 1 WHERE id = (SELECT MAX(id) "
+                     "FROM extractions WHERE paper_id = ?)", (pid,))
+    db._conn.commit()
+
+
 class TestCheckLowYield:
 
-    def test_paper_below_threshold_flagged(self, tmp_db, spec):
-        """Paper with 3/15 fields populated → flagged as LOW_YIELD."""
-        pid = _add_paper(tmp_db, title="Sparse Paper", pmid="50001")
-        sparse_data = {
-            "study_type": "Original Research",
-            "robot_platform": "STAR",
-            "task_performed": "suturing",
-            # Remaining 12 fields are absent
-            "sample_size": "NR",
-            "country": "NR",
-            "autonomy_level": "NR",
-            "validation_setting": "NR",
-            "human_oversight_model": "NR",
-            "fda_status": "NR",
-            "study_design": "NR",
-            "primary_outcome_metric": "NOT_FOUND",
-            "primary_outcome_value": "NOT_FOUND",
-            "comparison_to_human": "NR",  # R128: the codebook now directs NR here
-            "key_limitation": "NOT_FOUND",
-            # R136: "Not assessable" is a declared value and would count as
-            # populated; this fixture tests a paper with three, so it is absent.
-            "clinical_readiness_assessment": "NR",
-        }
-        ext_id = _advance_to_ai_audit(tmp_db, pid, sparse_data, spec)
-
-        stats = check_low_yield(tmp_db, threshold=4)
-        assert stats["low_yield"] == 1
-        assert stats["ok"] == 0
-
-        # Verify column set in DB
-        row = tmp_db._conn.execute(
-            "SELECT low_yield FROM extractions WHERE id = ?", (ext_id,)
-        ).fetchone()
-        assert row["low_yield"] == 1
-
-    def test_paper_above_threshold_not_flagged(self, tmp_db, spec):
-        """Paper with 7/15 fields populated → NOT flagged (six values, plus the
-        declared "Not assessable", which counts under R136)."""
-        pid = _add_paper(tmp_db, title="Rich Paper", pmid="50002")
-        rich_data = {
-            "study_type": "Original Research",
-            "robot_platform": "STAR",
-            "task_performed": "suturing",
-            "sample_size": "20 trials",
-            "country": "USA",
-            "autonomy_level": "Level 3",
-            # Rest absent
-            "validation_setting": "NR",
-            "human_oversight_model": "NR",
-            "fda_status": "NR",
-            "study_design": "NR",
-            "primary_outcome_metric": "NOT_FOUND",
-            "primary_outcome_value": "NOT_FOUND",
-            "comparison_to_human": "NR",  # R128: the codebook now directs NR here
-            "key_limitation": "NOT_FOUND",
-            "clinical_readiness_assessment": "Not assessable",  # populated (R136)
-        }
-        ext_id = _advance_to_ai_audit(tmp_db, pid, rich_data, spec)
-
-        stats = check_low_yield(tmp_db, threshold=4)
-        assert stats["low_yield"] == 0
-        assert stats["ok"] == 1
-
-        row = tmp_db._conn.execute(
-            "SELECT low_yield FROM extractions WHERE id = ?", (ext_id,)
-        ).fetchone()
-        assert row["low_yield"] == 0
-
-    def test_threshold_configurable(self, tmp_db, spec):
-        """Same paper flagged at threshold=6, not flagged at threshold=3."""
-        pid = _add_paper(tmp_db, title="Border Paper", pmid="50003")
-        data = {
-            "study_type": "Original Research",
-            "robot_platform": "STAR",
-            "task_performed": "suturing",
-            "sample_size": "20",
-            "country": "NR",
-        }
-        _advance_to_ai_audit(tmp_db, pid, data, spec)
-
-        # With threshold=6, paper has 4 populated → flagged
-        stats = check_low_yield(tmp_db, threshold=6)
-        assert stats["low_yield"] == 1
-
-        # With threshold=3, paper has 4 populated → OK
-        stats = check_low_yield(tmp_db, threshold=3)
-        assert stats["low_yield"] == 0
+    # test_paper_below_threshold_flagged, test_paper_above_threshold_not_flagged and
+    # test_threshold_configurable retired 2026-09-25 with check_low_yield (9b-FLIP,
+    # R111; R47). LOW_YIELD is computed on read now: tests/test_audit_events.py T10.
 
     def test_threshold_from_review_spec(self, spec):
         """Verify spec loads the threshold correctly."""
@@ -249,7 +173,7 @@ class TestLowYieldInAuditQueue:
         _advance_to_ai_audit(tmp_db, pid, sparse_data, spec)
 
         # Flag as low_yield
-        check_low_yield(tmp_db, threshold=4)
+        _seed_low_yield(tmp_db, pid)
 
         # Collect papers for review
         papers = _collect_papers_for_review(tmp_db, spot_check_pct=0)
@@ -269,7 +193,7 @@ class TestLowYieldInAuditQueue:
             "task_performed": "NR",
         }
         _advance_to_ai_audit(tmp_db, pid, sparse_data, spec)
-        check_low_yield(tmp_db, threshold=4)
+        _seed_low_yield(tmp_db, pid)
 
         out = tmp_path / "audit_queue.xlsx"
         result = export_audit_review_queue(tmp_db, out, spot_check_pct=0)
@@ -303,7 +227,7 @@ class TestPrismaLowYield:
             "robot_platform": "NR",
         }
         _advance_to_ai_audit(tmp_db, pid, sparse_data, spec)
-        check_low_yield(tmp_db, threshold=4)
+        _seed_low_yield(tmp_db, pid)
 
         # Reject the paper with low_yield reason
         tmp_db.reject_paper(pid, "low_yield_excluded: too few populated fields")

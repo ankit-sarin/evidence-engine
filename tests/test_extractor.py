@@ -264,28 +264,31 @@ def test_full_two_pass_mocked(tmp_path, spec):
     db.update_status(pid, "PARSED")
 
     paper_text = "This RCT used the STAR robot for autonomous suturing..."
+    # 9b-FLIP: the write is events now — it needs a run and the text's identity.
+    write_parsed(db, pid, paper_text)
+    run_id = open_extraction_run(db, spec)
+    from engine.core.parsed_text import resolve_parsed_text
 
     n_expected = len(CBK.fields)
     with patch("engine.agents.extractor.ollama_chat") as mock_chat:
         mock_chat.side_effect = [_mock_pass1_response(), _mock_pass2_complete(spec)]
-        result = extract_paper(pid, paper_text, spec, db, run_id=1)  # 9b-2b: required
+        result = extract_paper(pid, paper_text, spec, db, run_id=run_id,
+                               parsed_text_ref=resolve_parsed_text(db._conn, pid))
 
     assert result.paper_id == pid
     assert len(result.fields) == n_expected
     assert "STAR robot" in result.reasoning_trace
 
-    # Check database records
-    extractions = db._conn.execute(
-        "SELECT * FROM extractions WHERE paper_id = ?", (pid,)
-    ).fetchall()
-    assert len(extractions) == 1
-
-    spans = db._conn.execute(
-        "SELECT * FROM evidence_spans WHERE extraction_id = ?",
-        (extractions[0]["id"],),
-    ).fetchall()
-    assert len(spans) == n_expected
-    assert all(s["audit_status"] == "pending" for s in spans)
+    # 9b-FLIP (R111): one asserted claim per field under the run, one
+    # `extracted` paper event, and nothing in the legacy tables.
+    claims = db._conn.execute(
+        "SELECT run_id FROM field_events WHERE paper_id = ? AND event_type = 'asserted'",
+        (pid,)).fetchall()
+    assert len(claims) == n_expected and {r[0] for r in claims} == {run_id}
+    from engine.core.effective import effective_state
+    assert effective_state(db._conn, pid).processing == "extracted"
+    assert db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0] == 0
+    assert db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0] == 0
 
     db.close()
 
@@ -508,19 +511,24 @@ class TestProactiveRestart:
     def test_zero_span_extraction_marks_extract_failed(
         self, _stale, _digest, _preflight, mock_chat, _restart, tmp_path,
     ):
-        """LLM returns valid JSON with zero fields → EXTRACT_FAILED, no spans in DB."""
+        """LLM returns valid JSON with zero fields → retried under the budget, then
+        a paper event extraction_failed / no_fields_returned (9b-FLIP T5); no rows."""
         db, spec = self._setup_db(tmp_path, n_papers=1)
 
         # Pass 1 response (reasoning)
         pass1_resp = MagicMock()
         pass1_resp.message.content = "<think>Reasoning about the paper.</think>"
+        # 9b-FLIP: a real thinking channel. With a MagicMock here the attempt died
+        # on ExtractionResult's reasoning_trace (a ValidationError) and never
+        # reached the zero-span path this test is named for.
+        pass1_resp.message.thinking = "Reasoning about the paper."
 
         # Pass 2 response (structured JSON with empty fields list)
         zero_span_output = ExtractionOutput(fields=[])
         pass2_resp = MagicMock()
         pass2_resp.message.content = zero_span_output.model_dump_json()
 
-        mock_chat.side_effect = [pass1_resp, pass2_resp]
+        mock_chat.side_effect = [pass1_resp, pass2_resp] * 3   # the budget of 3
 
         stats = run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
 
@@ -533,9 +541,14 @@ class TestProactiveRestart:
         assert ext_count == 0
         assert span_count == 0
 
-        # Verify paper status is EXTRACT_FAILED (direct SQL — simplified schema)
+        # 9b-FLIP: the outcome is a paper event, never a status write.
         paper = db._conn.execute("SELECT status FROM papers WHERE id = 1").fetchone()
-        assert paper["status"] == "EXTRACT_FAILED"
+        assert paper["status"] == "FT_ELIGIBLE"
+        ev = db._conn.execute(
+            "SELECT to_state, reason_code FROM paper_events WHERE paper_id = 1 "
+            "AND event_type = 'extraction_failed'").fetchall()
+        assert [tuple(r) for r in ev] == [("extraction_failed", "no_fields_returned")]
+        assert mock_chat.call_count == 6
         db.close()
 
     @pytest.mark.parametrize("kind", ["overflow", "truncated", "dropped"])
@@ -573,8 +586,15 @@ class TestProactiveRestart:
 
         assert stats["failed"] == 1 and stats["extracted"] == 1
         assert mock_extract.call_count == 2  # paper 1 not retried; paper 2 ran
+        # 9b-FLIP: an input-fit refusal is a paper event (R120), not a status write.
         status = db._conn.execute("SELECT status FROM papers WHERE id = 1").fetchone()["status"]
-        assert status == "EXTRACT_FAILED"
+        assert status == "FT_ELIGIBLE"
+        ev = db._conn.execute(
+            "SELECT to_state, reason_code FROM paper_events WHERE paper_id = 1 "
+            "AND event_type = 'extraction_failed'").fetchone()
+        assert tuple(ev) == ("input_exceeds_context", {
+            "overflow": "input_overflow_estimated", "truncated": "input_truncated_at_ceiling",
+            "dropped": "input_dropped_below_floor"}[kind])
         entry = next(r.getMessage() for r in caplog.records
                      if r.getMessage().startswith("Paper 1 extraction failed"))
         assert "input_fit=" in entry

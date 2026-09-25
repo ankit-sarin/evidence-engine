@@ -32,11 +32,15 @@ from engine.core.citation_guard import (
     LEGACY, UncitedValueError, check_citations, enforce_citations,
 )
 from engine.core.events import mint_extraction_uid
-from engine.core.extraction_events import legacy_record
+from engine.core.extraction_events import (  # noqa: F401 — re-exported (T7)
+    CONSECUTIVE_FAILURE_ABORT, MissingThinkingChannelError, RunAborted,
+    counts_toward_abort, legacy_record, outcome_for_exception, write_extraction_events,
+)
 from engine.core.extraction_telemetry import record_call
 from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.core.parsed_text import ParsedTextError, ParsedTextRef, read_parsed_text
 from engine.core.selection import SelectionResult, select_for_extraction
+from engine.core.paper_state import REASON_NO_FIELDS_RETURNED
 from engine.core import run_manifest as rm
 from engine.utils.ollama_client import InputFitError, ollama_chat
 from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
@@ -238,22 +242,6 @@ def extract_pass1_reasoning(prompt: str, think: bool | None = None, *,
         prompt_eval_count=getattr(response, "prompt_eval_count", None),
     )
     return trace
-
-
-class MissingThinkingChannelError(RuntimeError):
-    """A think-enabled call returned no reasoning channel.
-
-    REGRESSION-01: this used to be a silent fallback that returned the whole
-    response content as the "reasoning trace". On Ollama 0.21.0 that fallback
-    fired on *every* Pass 1 call — deepseek-r1 stopped emitting inline `<think>`
-    tags and moved thinking to `message.thinking`, so the regex never matched.
-    Pass 2 was then primed with the model's first-draft *answer* instead of its
-    reasoning, and paraphrased it rather than quoting the paper: local anchored
-    rate fell from 54.3% to 10.5% on identical papers.
-
-    Substituting an answer for a reasoning trace is never safe, so absence is now
-    an error rather than a fallback.
-    """
 
 
 def parse_thinking_trace(content: str, thinking: str | None = None) -> tuple[str, str]:
@@ -560,8 +548,6 @@ def extract_paper(
         extracted_at=result.extracted_at,
     )
 
-    # Store extraction + all spans atomically (single transaction)
-    extracted_data = [span.model_dump() for span in result.fields]
     span_dicts = [
         {
             "field_name": s.field_name,
@@ -571,18 +557,13 @@ def extract_paper(
         }
         for s in result.fields
     ]
-    if not span_dicts:
-        raise ValueError(
-            f"Paper {paper_id}: extraction produced 0 evidence spans — "
-            "refusing to store empty extraction"
-        )
+    # 9b-FLIP: a response with no spans is no longer refused here. It fails
+    # completeness like any other missing field, is retried under the one budget,
+    # and at exhaustion its empty record becomes `no_fields_returned` (F9).
 
     # INSTRUMENT-01: completeness, not merely non-emptiness. The local arm's two
     # collapsed Run 6 extractions (papers 415, 719) each stored a single span
-    # with a non-codebook field name and passed the check above.
-    # The guard sits here rather than in ReviewDatabase.add_extraction_atomic
-    # because the database layer is generic — it serves migrations and tests and
-    # has no ReviewSpec to derive an expected field set from.
+    # with a non-codebook field name and passed a non-emptiness check.
     expected = expected_field_names(spec, cb_path)
     escape, sentinels = _absence_tokens(cb_path)
     try:
@@ -615,28 +596,19 @@ def extract_paper(
             duplicated=check_completeness(span_dicts, expected).duplicated,
             attempts=attempt or 1)
         raise
-    extracted_data = drop_unexpected(extracted_data, expected)
     result = result.model_copy(update={"fields": drop_unexpected(result.fields, expected)})
 
-    # The codebook the prompt was built from travels with the extraction.
-    # Recording only the spec's hash meant a codebook edit moved nothing in
-    # provenance and staleness detection could not see it (CODEBOOK-AUTH-01).
-    ext_id = db.add_extraction_atomic(
-        paper_id=paper_id,
-        # extraction_schema_hash is no longer written: it hashed a spec section
-        # that no longer exists. The column stays as the historical record of
-        # the runs made while it was the authority (SCHEMA-DERIVE-01).
-        schema_hash=None,
-        extracted_data=extracted_data,
-        reasoning_trace=reasoning_trace,
-        model=cfg1.model,
-        spans=span_dicts,
-        model_digest=model_digest,
-        auditor_model_digest=auditor_model_digest,
-        codebook_hash=cb.semantic_hash,
-        codebook_sha256=cb.sha256,
-    )
-
+    # 9b-FLIP (R111): the attempt is written as events — one claim per field,
+    # carrying the input it was made from, and one `extracted` paper event, in
+    # one transaction. Nothing is written to the legacy extraction tables.
+    write_extraction_events(
+        db._conn,
+        legacy_record(
+            paper_id=paper_id, arm=spec.extraction_models.arm, run_id=run_id,
+            extraction_uid=mint_extraction_uid(), parsed_text=parsed_text_ref,
+            model=cfg1.model, model_digest=model_digest, expected=expected,
+            spans=span_dicts, attempts=attempt or 1),
+        sentinels=frozenset(cb.absence_sentinels), review_dir=Path(db.db_path).parent)
     return result
 
 
@@ -949,6 +921,30 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
     review_dir = Path(db.db_path).parent
     progress = ProgressReporter(total, "Local extraction")
     papers_since_restart = 0  # counter for proactive restart
+    consecutive_failures = 0  # 9b-FLIP: the abort counter (counts_toward_abort)
+    arm = spec.extraction_models.arm
+
+    def record_failure(pid: int, exc: BaseException, stage: str) -> None:
+        """Write the paper's failure event; abort after the Nth in a row.
+
+        Run faults (an EventRefused, a record-less exhaustion, a codebook that
+        cannot support the contract) are re-raised by `outcome_for_exception`
+        and never counted: they are not the paper's outcome."""
+        nonlocal consecutive_failures
+        outcome = outcome_for_exception(exc, paper_id=pid, arm=arm, run_id=run_id,
+                                        stage_name=stage)
+        write_extraction_events(db._conn, outcome, review_dir=review_dir)
+        if counts_toward_abort(outcome):
+            consecutive_failures += 1
+        elif not hasattr(outcome, "reason_code"):
+            consecutive_failures = 0        # an exhausted record with fields stored
+        if consecutive_failures >= CONSECUTIVE_FAILURE_ABORT:
+            raise RunAborted(
+                f"run {run_id} aborted: {consecutive_failures} consecutive papers "
+                f"produced nothing usable (last: paper {pid}, "
+                f"{getattr(outcome, 'reason_code', REASON_NO_FIELDS_RETURNED)}). Every "
+                "paper's event is "
+                "written; the run closes as 'failed'.")
 
     for i, (pid, ref) in enumerate(papers, 1):
         row = db._conn.execute("SELECT title FROM papers WHERE id = ?", (pid,)).fetchone()
@@ -961,6 +957,7 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
         except ParsedTextError as exc:
             logger.error("Paper %d: parsed text refused — %s (%s)",
                          pid, exc.reason_code, exc)
+            record_failure(pid, exc, "extract_pass1")        # R122: event, no abort count
             stats["skipped_refused"] += 1
             progress.report(pid, "FAILED", 0)
             continue
@@ -974,7 +971,7 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
                 parsed_text_ref=ref,
                 run_id=run_id,
             )
-            db.update_status(pid, "EXTRACTED")
+            consecutive_failures = 0
             stats["extracted"] += 1
             stats["total_spans"] += len(result.fields)
             elapsed = time.time() - t_paper
@@ -991,10 +988,13 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
                 "Paper %d extraction failed: %s%s", pid, exc,
                 f" | input_fit={fit_fields}" if fit_fields else "",
             )
-            db.update_status(pid, "EXTRACT_FAILED")
             stats["failed"] += 1
             elapsed = time.time() - t_paper
             progress.report(pid, "FAILED", elapsed)
+            # 9b-FLIP: the outcome is written as events (an exhausted refusal
+            # stores its record, R139/R140; anything else is a paper event with
+            # its F9 reason) — never a papers.status write (finding 1, D17).
+            record_failure(pid, exc, "extract_pass2")
 
         # Proactive Ollama restart to clear CUDA context fragmentation
         papers_since_restart += 1

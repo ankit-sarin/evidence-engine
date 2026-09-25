@@ -9,7 +9,6 @@ from engine.agents.auditor import (
     AuditVerdict,
     audit_span,
     grep_verify,
-    run_audit,
     semantic_verify,
     _normalize,
 )
@@ -296,64 +295,6 @@ def _make_flagged_response():
     return resp
 
 
-def test_full_audit_flow_mocked(tmp_path):
-    db = ReviewDatabase("test_audit", data_root=tmp_path)
-
-    # Add a paper and walk to EXTRACTED
-    db.add_papers([Citation(title="STAR Study", source="pubmed", pmid="A1")])
-    paper = db.get_papers_by_status("INGESTED")[0]
-    pid = paper["id"]
-    db.update_status(pid, "ABSTRACT_SCREENED_IN")
-    db.update_status(pid, "PDF_ACQUIRED")
-    db.update_status(pid, "PARSED")
-    db.update_status(pid, "EXTRACTED")
-
-    # Write and record parsed text (S3e: the resolver reads references)
-    write_parsed(db, pid, PAPER_TEXT)
-
-    # Add an extraction with spans
-    ext_id = db.add_extraction(pid, "hash1", {}, "trace", "deepseek-r1:32b")
-
-    # Span 1: good snippet (will be found by grep, verified by LLM)
-    db.add_evidence_span(
-        ext_id, "study_design", "RCT",
-        "A randomized controlled trial was conducted", 0.95,
-    )
-    # Span 2: good snippet (will be found by grep, but LLM flags)
-    db.add_evidence_span(
-        ext_id, "sample_size", "200",  # wrong value (paper says 20)
-        "20 trials on porcine tissue", 0.8,
-    )
-    # Span 3: fabricated snippet (grep will fail → goes to semantic → flagged)
-    db.add_evidence_span(
-        ext_id, "robot_platform", "da Vinci",
-        "The da Vinci Xi system was the primary platform", 0.7,
-    )
-
-    # Mock Ollama: call 1 (study_design) → verified, call 2 (sample_size) → flagged,
-    # call 3 (robot_platform) → flagged (grep fails, semantic called, returns flagged)
-    with patch("engine.utils.ollama_preflight.require_preflight"):
-        with patch("engine.agents.auditor.ollama_chat") as mock_chat:
-            mock_chat.side_effect = [
-                _make_verified_response(),
-                _make_flagged_response(),
-                _make_flagged_response(),
-            ]
-            stats = run_audit(db, "test_audit")
-
-    assert stats["papers_audited"] == 1
-    assert stats["spans_verified"] == 1
-    assert stats["spans_flagged"] == 2
-
-    # Verify paper reached AI_AUDIT_COMPLETE
-    assert len(db.get_papers_by_status("AI_AUDIT_COMPLETE")) == 1
-
-    # Verify span statuses in DB
-    spans = db._conn.execute(
-        "SELECT field_name, audit_status FROM evidence_spans ORDER BY id"
-    ).fetchall()
-    assert dict(spans[0])["audit_status"] == "verified"
-    assert dict(spans[1])["audit_status"] == "flagged"
-    assert dict(spans[2])["audit_status"] == "flagged"
-
-    db.close()
+# test_full_audit_flow_mocked retired 2026-09-25 with run_audit (9b-FLIP, R111;
+# R47): it drove the legacy evidence_spans audit. The event-side auditor is
+# tests/test_audit_events.py; run_audit is recoverable at 49e4cd6:engine/agents/auditor.py.

@@ -138,13 +138,14 @@ def test_extractor_site_hands_on_the_file(db, tmp_path):
 
 
 @pytest.mark.parametrize("module", [
-    "engine.agents.extractor", "engine.agents.auditor", "engine.agents.ft_screener",
+    "engine.agents.extractor", "engine.agents.audit_events", "engine.agents.ft_screener",
     "engine.cloud.base", "engine.review.human_review"])
 def test_each_former_glob_site_reads_through_the_resolver(module):
     mod = importlib.import_module(module)
-    if module == "engine.agents.extractor":
+    if module in ("engine.agents.extractor", "engine.agents.audit_events"):
         # 9b-2a: selection resolves the reference; the loop reads it through
-        # the resolver's verified read (R95).
+        # the resolver's verified read (R95). 9b-FLIP R8: the auditor's site moved
+        # to the event-side auditor with run_audit's retirement.
         assert mod.read_parsed_text is pt.read_parsed_text
     else:
         assert mod.load_parsed_text is pt.load_parsed_text

@@ -297,22 +297,26 @@ class TestRunnerIntegration:
         db.close()
 
     def test_audit_calls_preflight(self, tmp_path):
-        """run_audit calls preflight before processing."""
+        """The audit stage calls preflight before auditing (9b-FLIP R2: re-pointed
+        from the retired run_audit to run_pipeline._stage_audit)."""
+        import scripts.run_pipeline as rp
         from engine.core.database import ReviewDatabase
-        from engine.agents.auditor import run_audit
         from engine.core.effective_config import stage_config
+        from engine.core.review_spec import load_review_spec
 
         db = ReviewDatabase("test_pf3", data_root=tmp_path)
+        spec = load_review_spec("review_specs/surgical_autonomy.yaml")
 
         with patch("engine.utils.ollama_preflight.require_preflight",
-                   side_effect=RuntimeError("preflight failed")) as mock_pf:
+                   side_effect=RuntimeError("preflight failed")) as mock_pf, \
+             patch.object(rp, "audit_run") as audit:
             with pytest.raises(RuntimeError, match="preflight failed"):
-                run_audit(db, review_name="test_pf3")
+                rp._stage_audit(db, "test_pf3", spec, run_id=1)
 
-            # B5: the audit model is the spec model's declared default (C19).
             mock_pf.assert_called_once_with(
-                [stage_config("audit").model], runner_name="Audit", spec=None,
+                [stage_config("audit", spec).model], runner_name="Audit", spec=spec,
             )
+            audit.assert_not_called()
         db.close()
 
     def test_runner_proceeds_on_preflight_success(self, tmp_path):

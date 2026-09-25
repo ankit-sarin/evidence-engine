@@ -20,7 +20,8 @@ from engine.adjudication.workflow import (
     is_adjudication_complete,
     is_audit_review_complete,
 )
-from engine.agents.auditor import run_audit
+from engine.agents.audit_events import audit_run
+from engine.core.extraction_events import RunAborted
 from engine.agents.extractor import run_extraction, verify_extraction_run
 from engine.core.selection import select_for_extraction
 from engine.core.effective import effective_state, eligible_paper_ids
@@ -138,7 +139,7 @@ def run_pipeline(
 
         # ── AUDIT ────────────────────────────────────────────
         if start_idx <= STAGES.index("audit"):
-            results["audit"] = _stage_audit(db, review_name, spec)
+            results["audit"] = _stage_audit(db, review_name, spec, run_id=run_id)
 
             # Auto-advance extraction workflow stages
             try:
@@ -172,6 +173,13 @@ def run_pipeline(
 
         _finish_review_run(db, run_id, "completed")
 
+    except RunAborted as exc:
+        # 9b-FLIP: the consecutive-failure abort. Every aborted paper's event is
+        # written; the manifest records 'failed' (020's closed end_status set),
+        # and the reason is here and in the exception (row C26).
+        logger.error("RUN ABORTED: %s", exc)
+        _finish_review_run(db, run_id, "failed")
+        raise
     except Exception as exc:
         logger.error("Pipeline failed: %s", exc, exc_info=True)
         _finish_review_run(db, run_id, "failed")
@@ -322,19 +330,26 @@ def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
     return {**stats, "elapsed": elapsed}
 
 
-def _stage_audit(db: ReviewDatabase, review_name: str, spec: ReviewSpec = None) -> dict:
+def _stage_audit(db: ReviewDatabase, review_name: str, spec: ReviewSpec = None, *,
+                 run_id: int) -> dict:
+    """The event-side audit (9b-FLIP, R111): locate every live claim of the
+    spec's arm, verify the unlocated values cross-family, write `audited_ai`.
+    No `papers.status` gate — `audit_run` passes over a paper with nothing left
+    to locate (R119's pattern)."""
+    from dataclasses import asdict
+
+    from engine.core.effective_config import stage_config
+    from engine.utils.ollama_preflight import require_preflight
+
     t = time.time()
     logger.info("=" * 60)
     logger.info("STAGE: AUDIT")
-
-    extracted = db.get_papers_by_status("EXTRACTED")
-    if not extracted:
-        logger.info("No papers with status EXTRACTED — skipping audit.")
-        return {"papers_audited": 0, "elapsed": 0}
-
-    stats = run_audit(db, review_name, spec=spec)
+    require_preflight([stage_config("audit", spec).model], runner_name="Audit", spec=spec)
+    report = audit_run(db._conn, spec, run_id=run_id, arm=spec.extraction_models.arm,
+                       review_dir=Path(db.db_path).parent)
+    stats = asdict(report)
     elapsed = time.time() - t
-    logger.info("Audit complete in %.1fs — %s", elapsed, json.dumps(stats))
+    logger.info("Audit complete in %.1fs — %s", elapsed, json.dumps(stats, default=list))
     return {**stats, "elapsed": elapsed}
 
 

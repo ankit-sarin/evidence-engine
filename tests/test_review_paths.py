@@ -185,7 +185,9 @@ SPEC_BEARING_ENTRY_POINTS = [
     "scripts/reparse_cloud_spans.py",
     "scripts/rescreen_original_251.py",
     "scripts/rescreen_with_specialty.py",
-    "scripts/run5_extract_and_audit.py",
+    # scripts/run5_extract_and_audit.py retired 2026-09-25 under R113 (R47),
+    # brought forward by the cut-over (9b-FLIP R7): it imported the retired
+    # run_audit. Its parametrized cases retire with it.
     "scripts/run_cloud_extraction.py",
     "scripts/run_pipeline.py",
     "scripts/screen_expanded.py",

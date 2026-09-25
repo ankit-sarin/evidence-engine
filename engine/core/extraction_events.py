@@ -82,6 +82,47 @@ class ExhaustedWithoutRecord(RuntimeError):
     invariant, not a paper outcome: the run stops rather than guess."""
 
 
+class RunAborted(RuntimeError):
+    """9b-FLIP (2(c) R5): the run stopped itself after `CONSECUTIVE_FAILURE_ABORT`
+    papers in a row produced nothing usable. Each of those papers' events is
+    written before this is raised; the run closes with end_status 'failed'."""
+
+
+#: Consecutive `extraction_failed` papers after which a run aborts. A14 refusals
+#: and `input_exceeds_context` neither count nor reset: they are properties of
+#: the paper's input, not evidence that the model or the machine is failing.
+CONSECUTIVE_FAILURE_ABORT = 3
+
+#: The A14 codes (R122), which do not count toward the abort.
+A14_REASONS = frozenset({PS.REASON_PARSED_TEXT_NOT_RECORDED, PS.REASON_PARSED_TEXT_MISSING,
+                         PS.REASON_PARSED_TEXT_MODIFIED})
+
+
+def counts_toward_abort(outcome) -> bool:
+    """A paper recorded as extraction_failed, other than an A14 refusal — which
+    includes an exhausted record with no field, planned as no_fields_returned."""
+    if isinstance(outcome, ExtractionRecord):
+        return not outcome.fields
+    return (isinstance(outcome, PaperFailure) and outcome.to_state == "extraction_failed"
+            and outcome.reason_code not in A14_REASONS)
+
+
+class MissingThinkingChannelError(RuntimeError):
+    """A think-enabled call returned no reasoning channel.
+
+    REGRESSION-01: this used to be a silent fallback that returned the whole
+    response content as the "reasoning trace". On Ollama 0.21.0 that fallback
+    fired on *every* Pass 1 call — deepseek-r1 stopped emitting inline `<think>`
+    tags and moved thinking to `message.thinking`, so the regex never matched.
+    Pass 2 was then primed with the model's first-draft *answer* instead of its
+    reasoning, and paraphrased it rather than quoting the paper: local anchored
+    rate fell from 54.3% to 10.5% on identical papers.
+
+    Substituting an answer for a reasoning trace is never safe, so absence is now
+    an error rather than a fallback.
+    """
+
+
 @dataclass(frozen=True)
 class FieldOutcome:
     field_name: str
@@ -224,8 +265,9 @@ def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id
     """What the extractor's failure branch records for `exc`: the exhausted
     attempt's `ExtractionRecord`, or a `PaperFailure` with its F9 code.
 
-    Propagated as run faults, never mapped (R5): `CodebookContractError` and
-    `ExhaustedWithoutRecord`.
+    Propagated as run faults, never mapped (R5): `CodebookContractError`,
+    `ExhaustedWithoutRecord`, an `EventRefused` (a write the store forbids) and
+    `RunAborted`.
     """
     import httpx
     from pydantic import ValidationError
@@ -234,10 +276,8 @@ def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id
     from engine.utils.ollama_client import (
         CeilingUnavailable, InputDropped, InputOverflow, InputTruncated,
     )
-    # A late import: the error class lives with the Pass-1 reader.
-    from engine.agents.extractor import MissingThinkingChannelError
-
-    if isinstance(exc, (CodebookContractError, ExhaustedWithoutRecord)):
+    if isinstance(exc, (CodebookContractError, ExhaustedWithoutRecord, EventRefused,
+                        RunAborted)):
         raise exc
     if isinstance(exc, (IncompleteExtractionError, UncitedValueError)):
         if exc.record is None:

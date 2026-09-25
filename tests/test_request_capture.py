@@ -253,8 +253,15 @@ def test_extraction_pass1_pass2_and_snippet_retry(capture, spec, tmp_path):
             return ExtractionOutput(fields=fields).model_dump_json(), None
         return json.dumps({"source_snippet": "A clean sentence."}), None
     fake = capture(respond)
-    extract_paper(pid, "The paper reports a trial. A clean sentence.", spec, db,
-                  run_id=1)  # 9b-2b: required; read by nothing below the run loop yet
+    # 9b-FLIP: the write is events now — a run and the text's identity. Neither
+    # makes a model call, so the three captured calls are unchanged.
+    from _event_store_fixture import open_extraction_run
+    from _parsed_text_fixture import write_parsed
+    from engine.core.parsed_text import resolve_parsed_text
+    text = "The paper reports a trial. A clean sentence."
+    write_parsed(db, pid, text)
+    extract_paper(pid, text, spec, db, run_id=open_extraction_run(db, spec),
+                  parsed_text_ref=resolve_parsed_text(db._conn, pid))
     db.close()
 
     assert len(fake.calls) == 3

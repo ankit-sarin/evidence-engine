@@ -58,7 +58,7 @@ from engine.core.completeness import (
     enforce_terminal_states, expected_field_names,
 )
 from engine.core.events import mint_extraction_uid
-from engine.core.extraction_events import elicited_record
+from engine.core.extraction_events import elicited_record, write_extraction_events
 from engine.core.codebook import CODEBOOK_FILENAME, load_codebook
 from engine.elicitation import classes as C
 from engine.elicitation import materialize as M
@@ -235,7 +235,7 @@ def extract_paper_elicited(
     cb_path = _codebook_path(review_dir)
     _cb = load_codebook(cb_path)
     codebook = _cb.raw
-    codebook_hash, codebook_sha256 = _cb.semantic_hash, _cb.sha256
+    codebook_hash = _cb.semantic_hash
     field_names = expected_field_names(spec, cb_path)
     tiers = {f["name"]: int(f.get("tier", 1)) for f in codebook["fields"]}
 
@@ -411,18 +411,6 @@ def extract_paper_elicited(
     _LAST_PASS2_TELEMETRY["n_contract_unmet"] = n_unmet
     _LAST_PASS2_TELEMETRY["accepted_pass1_attempt"] = accepted_attempt
 
-    # D6: the terminal state rides on ALL twenty entries, not only the unmet
-    # ones. A reader must be able to tell "evidenced" from "not asked" without
-    # inferring it from the absence of a marker. The list SHAPE is unchanged --
-    # `auditor.count_populated_fields` branches on `isinstance(..., list)` and
-    # key-accesses its fields, so an extra
-    # key rides along and a wrapper dict would silently break LOW_YIELD's
-    # denominator.
-    extracted_data = [
-        {**s.model_dump(), "terminal_state": states.get(s.field_name)}
-        for s in spans
-    ]
-
     stored = ExtractionResult(
         paper_id=paper_id, fields=spans,
         reasoning_trace=priming,          # the materialized evidence IS the trace
@@ -430,17 +418,12 @@ def extract_paper_elicited(
         codebook_hash=schema_hash,
         extracted_at=datetime.now(timezone.utc),
     )
-    db.add_extraction_atomic(
-        paper_id=paper_id,
-        # The retired column; the codebook is what this run was built from.
-        schema_hash=None,
-        codebook_hash=codebook_hash,
-        codebook_sha256=codebook_sha256,
-        extracted_data=extracted_data,
-        reasoning_trace=priming,
-        model=model_name,
-        spans=span_dicts,
-        model_digest=model_digest,
-        auditor_model_digest=auditor_model_digest,
-    )
+    # 9b-FLIP (R111): every field's terminal state becomes its event — a value
+    # asserted, CONTRACT_UNMET as contract_unmet with its class-contract
+    # violations, the escape token as declined — in one transaction with the
+    # `extracted` paper event. Nothing is written to the legacy extraction tables.
+    write_extraction_events(
+        db._conn,
+        _record(states, span_dicts, violations),
+        sentinels=frozenset(_cb.absence_sentinels), review_dir=review_dir)
     return stored

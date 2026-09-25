@@ -461,48 +461,6 @@ def test_pipeline_stats(db):
 # ── Reset for Re-Extraction ──────────────────────────────────────────
 
 
-def test_reset_for_reextraction(db):
-    """reset_for_reextraction deletes extractions/spans and moves papers to PARSED."""
-    # Create two audited papers and one screened-out paper with its own extraction
-    pid1 = _walk_to_ai_audit(db, "RE1")
-    pid2 = _walk_to_ai_audit(db, "RE2")
-
-    # Screened-out paper should never be touched
-    db.add_papers([_cit(pmid="RE_SO", title="Screened Out")])
-    so_paper = [p for p in db.get_papers_by_status("INGESTED") if p["pmid"] == "RE_SO"][0]
-    db.update_status(so_paper["id"], "ABSTRACT_SCREENED_OUT")
-
-    # Record pre-reset counts
-    pre_extractions = db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0]
-    pre_spans = db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0]
-    assert pre_extractions == 2  # one per audited paper
-    assert pre_spans == 4  # two spans per paper
-
-    result = db.reset_for_reextraction()
-    assert result["papers_reset"] == 2
-    assert result["spans_deleted"] == 4
-    assert result["extractions_deleted"] == 2
-
-    # Both papers are now PARSED
-    parsed = db.get_papers_by_status("PARSED")
-    parsed_ids = {p["id"] for p in parsed}
-    assert pid1 in parsed_ids
-    assert pid2 in parsed_ids
-
-    # No papers left at EXTRACTED or AI_AUDIT_COMPLETE
-    assert len(db.get_papers_by_status("EXTRACTED")) == 0
-    assert len(db.get_papers_by_status("AI_AUDIT_COMPLETE")) == 0
-
-    # Extraction records and spans are gone
-    assert db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0] == 0
-    assert db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0] == 0
-
-    # ABSTRACT_SCREENED_OUT paper is untouched
-    so = db.get_papers_by_status("ABSTRACT_SCREENED_OUT")
-    assert len(so) == 1
-    assert so[0]["pmid"] == "RE_SO"
-
-
 # ── Cleanup Orphaned Spans ────────────────────────────────────────────
 
 

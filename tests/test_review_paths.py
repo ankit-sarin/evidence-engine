@@ -154,7 +154,8 @@ def test_run_pipeline_takes_the_review_first_and_the_spec_as_override():
 # len(SPEC_BEARING_ENTRY_POINTS) and by collection, R135). Pinned as a list so
 # a new one cannot join them quietly on a hand-built path.
 SPEC_BEARING_ENTRY_POINTS = [
-    "analysis/eval/elicit_design01/smoke.py",
+    # The ELICIT-DESIGN-01 smoke retired 2026-09-25 (I18, 9b-2e/f): no run manifest.
+    # Its parametrized cases retire with it (R47); see the retention ledger.
     "analysis/eval/run_capture01.py",
     # analysis/eval/run_cloud_strict.py retired 2026-09-22 under R72 (R31): an
     # ungated off-box path, edited after its last run. Its three parametrized
@@ -181,7 +182,8 @@ SPEC_BEARING_ENTRY_POINTS = [
     "scripts/q8_validation_fast.py",
     # scripts/reextract_all.py retired 2026-09-23 under R94/R98 (R47): it deleted
     # extractions and forced papers to PARSED. Its parametrized case retires with it.
-    "scripts/reextract_failed.py",
+    # The failed-paper re-extraction side runner retired 2026-09-25 (R113, 9b-2e/f).
+    # Its parametrized cases retire with it (R47); see the retention ledger.
     "scripts/reparse_cloud_spans.py",
     "scripts/rescreen_original_251.py",
     "scripts/rescreen_with_specialty.py",

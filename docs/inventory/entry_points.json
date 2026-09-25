@@ -498,102 +498,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "analysis/eval/elicit_design01/__init__.py": {
-        "entry_point": false,
-        "flags": [],
-        "has_main_guard": false,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "analysis/eval/elicit_design01/__init__.py",
-        "path_construction": [],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "analysis/eval/elicit_design01/smoke.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 165,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "'data'",
-            "dest": null,
-            "line": 166,
-            "names": [
-              "--data-root"
-            ],
-            "required": false
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 167,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          },
-          {
-            "default": "dynamic: ','.join((str(p) for p in SMOKE_PAPERS))",
-            "dest": null,
-            "line": 168,
-            "names": [
-              "--papers"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "analysis/eval/elicit_design01/smoke.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 113,
-            "role": "code",
-            "text": "extraction_codebook.yaml"
-          },
-          {
-            "kind": "literal",
-            "line": 114,
-            "role": "code",
-            "text": "extraction_codebook.yaml"
-          },
-          {
-            "kind": "literal",
-            "line": 167,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": true,
-            "line": 111,
-            "scope": "build_scratch"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "load_spec_for",
-            "line": 189,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "analysis/eval/parse01/__init__.py": {
         "entry_point": false,
         "flags": [],
@@ -7146,65 +7050,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "scripts/reextract_failed.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 35,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 36,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {
-          "main": "spec_first"
-        },
-        "path": "scripts/reextract_failed.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 36,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 43,
-            "scope": "main"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "spec_path_for",
-            "line": 40,
-            "scope": "main"
-          },
-          {
-            "func": "load_spec_for",
-            "line": 42,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "scripts/reparse_cloud_spans.py": {
         "entry_point": true,
         "flags": [
@@ -7869,26 +7714,26 @@
     "summary": {
       "db_before_spec_scopes": 0,
       "default_review_named_constants": 6,
-      "entry_points": 99,
-      "entry_points_constructing_reviewdatabase": 33,
+      "entry_points": 97,
+      "entry_points_constructing_reviewdatabase": 31,
       "entry_points_name_only": 45,
-      "entry_points_with_review_name_flag": 69,
-      "entry_points_with_spec_flag": 25,
+      "entry_points_with_review_name_flag": 67,
+      "entry_points_with_spec_flag": 23,
       "files_calling_load_review_spec_directly": 11,
-      "files_calling_resolver": 28,
-      "files_scanned": 219,
+      "files_calling_resolver": 26,
+      "files_scanned": 216,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 34,
       "name_only_constructing_reviewdatabase": 20,
-      "path_construction_sites_in_code": 67,
+      "path_construction_sites_in_code": 65,
       "raw_yaml_load_sites": 3,
       "review_id_constants": 8,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "4756bd276745f04111155362c8c42b011484ae05",
+    "generated_at_commit": "6e09166d6e44b2c400ad1c40754f024e6e32db6e",
     "scan_roots": [
       "engine",
       "scripts",

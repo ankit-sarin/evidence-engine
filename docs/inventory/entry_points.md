@@ -1,27 +1,27 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `4756bd276745f04111155362c8c42b011484ae05` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `6e09166d6e44b2c400ad1c40754f024e6e32db6e` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 219 |
-| entry points | 99 |
-| entry points with spec flag | 25 |
-| entry points with review name flag | 69 |
+| files scanned | 216 |
+| entry points | 97 |
+| entry points with spec flag | 23 |
+| entry points with review name flag | 67 |
 | entry points name only | 45 |
-| entry points constructing reviewdatabase | 33 |
+| entry points constructing reviewdatabase | 31 |
 | name only constructing reviewdatabase | 20 |
-| files calling resolver | 28 |
+| files calling resolver | 26 |
 | files calling load review spec directly | 11 |
 | raw yaml load sites | 3 |
 | files with raw yaml loads | 3 |
 | review id constants | 8 |
 | literal review id sites in code | 34 |
-| path construction sites in code | 67 |
+| path construction sites in code | 65 |
 | db before spec scopes | 0 |
 | fstring spec path sites | 0 |
 | default review named constants | 6 |
@@ -45,16 +45,16 @@ Baselines are the figures measured by hand in GENERALIZE-READOUT-01 and SPEC-AUT
 
 | figure | hand-built | measured now | |
 |---|---:|---:|---|
-| argparse entry points naming a review | 74 | 69 | the hand scan keyed on --review/--name, which is what this counts |
-| of those, spec-bearing | 29 | 25 | differs — unexplained, investigate |
+| argparse entry points naming a review | 74 | 67 | the hand scan keyed on --review/--name, which is what this counts |
+| of those, spec-bearing | 29 | 23 | differs — unexplained, investigate |
 | of those, name-only | 45 | 45 | matches |
-| entry points constructing ReviewDatabase | 35 | 33 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
+| entry points constructing ReviewDatabase | 35 | 31 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
 | name-only, constructing ReviewDatabase | 20 | 20 | matches |
 | raw yaml load sites | 13 | 3 | differs — unexplained, investigate |
 | f-string spec-path builders | 19 | 0 | SPEC-AUTH-01 moved every one of these onto the resolver; a non-zero value here means a hand-built spec path has come back |
 | DEFAULT_REVIEW constants | 7 | 6 | differs — unexplained, investigate |
 
-Two figures deliberately have no baseline row. **entry points** (99) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
+Two figures deliberately have no baseline row. **entry points** (97) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
 
 ## Entry points
 
@@ -69,7 +69,6 @@ Two figures deliberately have no baseline row. **entry points** (99) counts anyt
 | `analysis/eval/elicit01/analyze.py` | `--review`='surgical_autonomy'; `--data-root`='data'; `--out`='analysis_summary.json' | — | — | — |
 | `analysis/eval/elicit01/manifest.py` | — | — | — | — |
 | `analysis/eval/elicit01/runner.py` | `--review`='surgical_autonomy'; `--data-root`='data'; `--smoke`=0; `--resume`; `--restart-every`=dynamic: RESTART_EVERY_N | — | — | — |
-| `analysis/eval/elicit_design01/smoke.py` | `--review` required; `--data-root`='data'; `--spec`=None; `--papers`=dynamic: ','.join((str(p) for p in SMOKE_PAPERS)) | load_spec_for | 111 | — |
 | `analysis/eval/parse01/flag.py` | — | — | — | — |
 | `analysis/eval/parse01/sweep.py` | `--review` required; `--data-root`='data' | — | — | — |
 | `analysis/eval/run_capture01.py` | `--review` required; `--data-root`='data'; `--spec`=None; `--label`=dynamic: LABEL; `--smoke`=0; `--resume`; `--restart-every`=dynamic: RESTART_EVERY_N | load_spec_for | — | — |
@@ -149,7 +148,6 @@ Two figures deliberately have no baseline row. **entry points** (99) counts anyt
 | `scripts/prepare_concordance_pdfs.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
 | `scripts/q8_validation.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 142 | main:spec_first |
 | `scripts/q8_validation_fast.py` | `--review` required; `--spec`=None; `paper_ids`=dynamic: [370, 432] | load_spec_for, spec_path_for | 97 | main:spec_first |
-| `scripts/reextract_failed.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 43 | main:spec_first |
 | `scripts/reparse_cloud_spans.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/rescreen_original_251.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/rescreen_with_specialty.py` | `--review` required; `--spec`=None; `--background`; `--verify-only`; `--report-only` | load_spec_for, spec_path_for | 112 | main:spec_first |
@@ -180,8 +178,6 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/eval/elicit01/manifest.py` | 104 | literal | `data/surgical_autonomy` |
 | `analysis/eval/elicit01/manifest.py` | 105 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/elicit01/runner.py` | 153 | literal | `extraction_codebook.yaml` |
-| `analysis/eval/elicit_design01/smoke.py` | 113 | literal | `extraction_codebook.yaml` |
-| `analysis/eval/elicit_design01/smoke.py` | 114 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/parse01/flag.py` | 63 | literal | `data/surgical_autonomy/eval/parse01/sweep.jsonl` |
 | `analysis/eval/run_local_ab.py` | 162 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/run_local_abc.py` | 202 | literal | `extraction_codebook.yaml` |

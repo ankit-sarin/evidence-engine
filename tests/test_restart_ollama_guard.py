@@ -101,23 +101,24 @@ def test_run_extraction_holds_the_lock():
     """run_extraction() must own the lock while it runs (OPS-GUARD-01 part 5)."""
     observed = {}
 
-    def fake_inner(db, spec, review_name, restart_every, selection=None):
+    def fake_inner(db, spec, review_name, restart_every, *, run_id, selection=None):
         observed["held"] = L.check_experiment_lock()
         observed["self"] = L.self_holds_lock()
         observed["foreign"] = L.foreign_lock_held()
         return {"extracted": 0}
 
     with patch("engine.agents.extractor._run_extraction_unlocked", side_effect=fake_inner):
-        extractor.run_extraction(db=None, spec=None, review_name="r")
+        extractor.run_extraction(db=None, spec=None, review_name="r", run_id=1)
 
     assert observed == {"held": True, "self": True, "foreign": False}
     assert L.check_experiment_lock() is False  # released afterwards
 
 
 def test_run_extraction_can_opt_out():
-    def fake_inner(db, spec, review_name, restart_every, selection=None):
+    def fake_inner(db, spec, review_name, restart_every, *, run_id, selection=None):
         assert L.self_holds_lock() is False
         return {"extracted": 0}
 
     with patch("engine.agents.extractor._run_extraction_unlocked", side_effect=fake_inner):
-        extractor.run_extraction(db=None, spec=None, review_name="r", experiment_lock=False)
+        extractor.run_extraction(db=None, spec=None, review_name="r", experiment_lock=False,
+                                 run_id=1)

@@ -136,14 +136,15 @@ def review(tmp_path):
     return tmp_path
 
 
-def _run(review, monkeypatch, pass1_content, run_id="run_TEST"):
+def _run(review, monkeypatch, pass1_content, unit_map_dir_name="run_TEST"):
     import engine.agents.extractor as E
     import engine.elicitation.pipeline as PL
 
     monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(pass1_content))
     monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
     db = _DB(review)
-    return db, PL.extract_paper_elicited(7, PAPER, _Spec(), db, run_id=run_id)
+    return db, PL.extract_paper_elicited(7, PAPER, _Spec(), db,
+                                         unit_map_dir_name=unit_map_dir_name)
 
 
 def test_stored_snippet_is_the_engines_materialized_text_not_pass2s(review, monkeypatch):
@@ -180,13 +181,13 @@ def test_pass1_is_read_from_the_content_channel(review, monkeypatch):
                         lambda **kw: _response(PASS1_GOOD, thinking="unrelated musing"))
     monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
     db = _DB(review)
-    PL.extract_paper_elicited(7, PAPER, _Spec(), db, run_id="run_TEST")
+    PL.extract_paper_elicited(7, PAPER, _Spec(), db, unit_map_dir_name="run_TEST")
     assert db.stored is not None
     assert "unrelated musing" not in db.stored["reasoning_trace"]
 
 
 def test_unit_map_is_persisted_per_paper_per_run(review, monkeypatch):
-    _run(review, monkeypatch, PASS1_GOOD, run_id="run_20260903T000000Z")
+    _run(review, monkeypatch, PASS1_GOOD, unit_map_dir_name="run_20260903T000000Z")
     path = review / "elicitation" / "run_20260903T000000Z" / "unit_maps" / "7.json"
     assert path.exists()
     data = json.loads(path.read_text())
@@ -209,7 +210,7 @@ def test_a_failing_field_is_refused_and_the_rest_of_the_paper_is_stored(
     monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_HALF))
     monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
     db = _DB(review)
-    PL.extract_paper_elicited(7, PAPER, _Spec(), db, run_id="run_TEST")
+    PL.extract_paper_elicited(7, PAPER, _Spec(), db, unit_map_dir_name="run_TEST")
 
     spans = {s["field_name"]: s for s in db.stored["spans"]}
     assert len(spans) == 2, "all fields written, or none"
@@ -234,7 +235,7 @@ def test_an_uncited_value_is_never_stored_as_a_value(review, monkeypatch):
     monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_HALF))
     monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
     db = _DB(review)
-    PL.extract_paper_elicited(7, PAPER, _Spec(), db, run_id="run_TEST")
+    PL.extract_paper_elicited(7, PAPER, _Spec(), db, unit_map_dir_name="run_TEST")
 
     country = next(s for s in db.stored["spans"] if s["field_name"] == "country")
     assert "Canada" not in country["value"]
@@ -266,7 +267,7 @@ def test_pass_2_is_skipped_when_no_field_survived(review, monkeypatch):
     monkeypatch.setattr(PL, "ollama_chat", count_pass1)
     monkeypatch.setattr(E, "ollama_chat", count_pass2)
     db = _DB(review)
-    PL.extract_paper_elicited(7, PAPER, _Spec(), db, run_id="run_TEST")
+    PL.extract_paper_elicited(7, PAPER, _Spec(), db, unit_map_dir_name="run_TEST")
 
     assert pass2_calls["n"] == 0, "nothing for Pass 2 to answer"
     assert pass1_calls["n"] == 2, "Ruling 4: one retry, with feedback"
@@ -305,7 +306,7 @@ def test_dispatch_follows_the_spec_flag(review, monkeypatch):
     )
     monkeypatch.setattr(E, "build_extraction_prompt",
                         lambda *a, **kw: seen.setdefault("legacy", True) or "p")
-    E.extract_paper(7, PAPER, _Spec(), _DB(review))
+    E.extract_paper(7, PAPER, _Spec(), _DB(review), run_id=1)  # 9b-2b: required
     assert seen == {"elicited": True}
 
 
@@ -320,7 +321,7 @@ def test_write_guard_also_fires_on_the_elicited_path(review, monkeypatch):
     monkeypatch.setattr(PL, "enforce_citations", _uncited_stub)
     db = _DB(review)
     with pytest.raises(UncitedValueError):
-        PL.extract_paper_elicited(7, PAPER, _Spec(), db, run_id="run_TEST")
+        PL.extract_paper_elicited(7, PAPER, _Spec(), db, unit_map_dir_name="run_TEST")
     assert db.stored is None
 
 
@@ -366,7 +367,7 @@ def test_retry_is_bounded_and_the_paper_is_failed(tmp_path, monkeypatch):
     with patch.object(E, "record_call"):
         with pytest.raises(UncitedValueError):
             E.extract_paper_with_completeness(
-                1, "text", _Spec(), db, max_attempts=3,
+                1, "text", _Spec(), db, max_attempts=3, run_id=1,  # 9b-2b
             )
     assert calls["n"] == 3, "exactly the bounded budget, no more"
     assert db.stored is None
@@ -403,7 +404,7 @@ def test_the_completeness_predicate_and_the_contracts_share_one_field_set(
     monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_GOOD))
     monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
 
-    PL.extract_paper_elicited(7, PAPER, _Spec(), _DB(review), run_id="run_TEST")
+    PL.extract_paper_elicited(7, PAPER, _Spec(), _DB(review), unit_map_dir_name="run_TEST")
 
     assert seen["contracts"] == seen["completeness"] == ("robot_platform", "country")
 
@@ -416,7 +417,7 @@ def test_the_accepted_attempt_and_both_attempts_reach_telemetry(review, monkeypa
 
     monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_HALF))
     monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
-    PL.extract_paper_elicited(7, PAPER, _Spec(), _DB(review), run_id="run_TEST")
+    PL.extract_paper_elicited(7, PAPER, _Spec(), _DB(review), unit_map_dir_name="run_TEST")
 
     tel = E._LAST_PASS1_TELEMETRY["elicitation"]
     assert tel["n_pass1_attempts"] == 2

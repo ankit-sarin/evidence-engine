@@ -10,6 +10,8 @@ import logging
 
 import pytest
 
+from _event_store_fixture import open_extraction_run
+
 from engine.core.database import ReviewDatabase
 from engine.core.review_paths import ReviewIdMismatchError
 from engine.core.review_spec import ReviewSpecError, load_review_spec
@@ -269,7 +271,8 @@ class TestExtractionRunnerWarning:
         with caplog.at_level(logging.INFO):
             from engine.agents.extractor import run_extraction
             with patch("engine.utils.ollama_preflight.require_preflight"):
-                run_extraction(db, spec, review_name="test_cleanup")
+                run_extraction(db, spec, review_name="test_cleanup",
+                               run_id=open_extraction_run(db, spec))  # 9b-2b
 
         msgs = [r for r in caplog.records if "without the current codebook hash" in r.getMessage()]
         assert len(msgs) == 1
@@ -296,7 +299,8 @@ class TestExtractionRunnerWarning:
 
         with caplog.at_level(logging.INFO):
             with patch("engine.utils.ollama_preflight.require_preflight"):
-                run_extraction(db, spec, review_name="test_cleanup")
+                run_extraction(db, spec, review_name="test_cleanup",
+                               run_id=open_extraction_run(db, spec))  # 9b-2b
 
         assert not any("without the current codebook hash" in m for m in caplog.messages)
 

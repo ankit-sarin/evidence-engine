@@ -253,7 +253,8 @@ def test_extraction_pass1_pass2_and_snippet_retry(capture, spec, tmp_path):
             return ExtractionOutput(fields=fields).model_dump_json(), None
         return json.dumps({"source_snippet": "A clean sentence."}), None
     fake = capture(respond)
-    extract_paper(pid, "The paper reports a trial. A clean sentence.", spec, db)
+    extract_paper(pid, "The paper reports a trial. A clean sentence.", spec, db,
+                  run_id=1)  # 9b-2b: required; read by nothing below the run loop yet
     db.close()
 
     assert len(fake.calls) == 3

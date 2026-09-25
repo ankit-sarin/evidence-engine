@@ -292,3 +292,27 @@ def seed_eligibility(conn, paper_id: int, *, to_state: str = "eligible") -> int:
         conn, event_type="screened", paper_id=paper_id, to_state=to_state,
         actor_kind="engine", actor_role="system", actor_name="fixture",
         run_id=fixture_run(conn))
+
+
+#: The digest every fixture extraction run resolves (9b-2b R117 fixtures).
+FIXTURE_DIGEST = "a" * 64
+
+
+def open_extraction_run(db, spec, *, digest: str = FIXTURE_DIGEST) -> int:
+    """A real run manifest on a scratch database, through `run_manifest.open_run`
+    (WRITE-PATH-01 9b-2b): the spec's extraction stages plus `audit`, every
+    digest `digest`, a clean tree. It pins the spec's arm exactly as a
+    production run would, so `extraction_digest` agrees. Returns the run_id.
+
+    Open it BEFORE writing any claim on the arm: once the arm holds a claim the
+    freeze trigger refuses the pin (R21)."""
+    from engine.agents.extractor import extraction_stages
+    from engine.core import run_manifest as rm
+    from engine.core.codebook import load_codebook_beside
+
+    handle = rm.open_run(
+        db._conn, spec, kind="extraction",
+        stages=[*extraction_stages(spec), "audit"],
+        codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: digest,
+        git=rm.GitState(commit="0" * 40, dirty=False, tag=None), host="fixture")
+    return handle.run_id

@@ -4277,13 +4277,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 450,
+            "line": 455,
             "role": "docstring",
             "text": "(escape token, absence sentinels) from the codebook beside the database.\n\n    Located from the DATABASE's own directory, not from `data/<review_id>`: the\n   ..."
           },
           {
             "kind": "literal",
-            "line": 688,
+            "line": 701,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -7581,7 +7581,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 407,
+            "line": 411,
             "names": [
               "--review",
               "--name"
@@ -7591,7 +7591,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 413,
+            "line": 417,
             "names": [
               "--spec"
             ],
@@ -7600,7 +7600,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 419,
+            "line": 423,
             "names": [
               "--skip-to"
             ],
@@ -7609,7 +7609,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 425,
+            "line": 429,
             "names": [
               "--limit"
             ],
@@ -7631,13 +7631,13 @@
           },
           {
             "kind": "literal",
-            "line": 409,
+            "line": 413,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 415,
+            "line": 419,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7931,7 +7931,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "06aab85ffe3fa299f7fd4a8acb0332289c0b1509",
+    "generated_at_commit": "15c0ae1a7c7b32641ee6a8ffcaf9f36137c38ffa",
     "scan_roots": [
       "engine",
       "scripts",

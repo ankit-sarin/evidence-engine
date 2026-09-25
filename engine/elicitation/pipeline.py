@@ -82,14 +82,14 @@ def _codebook_path(review_dir: Path) -> Path:
     return review_dir / CODEBOOK_FILENAME
 
 
-def persist_unit_map(unit_map: UnitMap, review_dir: Path, run_id: str) -> Path:
+def persist_unit_map(unit_map: UnitMap, review_dir: Path, unit_map_dir_name: str) -> Path:
     """Write the paper's unit map for this run, so every cited index is auditable.
 
     Per paper per run, the shape ELICIT-01 persisted. Kept on the filesystem
     rather than in `review.db`: `evidence_spans` has no column for a citation
     set and no migration is in scope (ELICIT-DESIGN-01 C5).
     """
-    out = review_dir / "elicitation" / run_id / "unit_maps"
+    out = review_dir / "elicitation" / unit_map_dir_name / "unit_maps"
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"{unit_map.paper_id}.json"
     path.write_text(json.dumps(unit_map.to_json()))
@@ -201,7 +201,7 @@ def extract_paper_elicited(
     paper_text: str,
     spec,
     db,
-    run_id: str,
+    unit_map_dir_name: str,
     model_digest: str | None = None,
     auditor_model_digest: str | None = None,
     attempt: int | None = None,
@@ -234,7 +234,7 @@ def extract_paper_elicited(
     model_name = cfg_p1.model
 
     unit_map = build_unit_map(paper_id, paper_text)
-    persist_unit_map(unit_map, review_dir, run_id)
+    persist_unit_map(unit_map, review_dir, unit_map_dir_name)
 
     p1, accepted_attempt, pass1_tels = elicit(
         unit_map, codebook, field_names, paper_id, cfg=cfg_p1,
@@ -355,7 +355,7 @@ def extract_paper_elicited(
     )
 
     _LAST_PASS2_TELEMETRY.setdefault("model", model_name)
-    _LAST_PASS2_TELEMETRY["elicitation_run_id"] = run_id
+    _LAST_PASS2_TELEMETRY["elicitation_run_id"] = unit_map_dir_name
     _LAST_PASS2_TELEMETRY["value_divergence"] = divergent
     _LAST_PASS2_TELEMETRY["n_value_divergence"] = len(divergent)
     _LAST_PASS2_TELEMETRY["n_contract_unmet"] = n_unmet

@@ -17,6 +17,12 @@ no model), injectable as `digest_fn`.
 * `CloudArmNotEnabled` — a cloud arm is requested that `cloud.enabled_arms`
   does not enable (S3g).
 
+**At extraction time** (R116/R117, WRITE-PATH-01 9b-2b), `extraction_digest`
+refuses before anything is selected: `StageNotInRun` when the run did not declare
+the extraction stage (or does not exist), and `ArmPinMismatch` — the same refusal
+`open_run` raises — when a stage's digest disagrees with the arm's pin, naming
+the stage and both digests.
+
 An arm that is unregistered, or registered but unpinned, is **pinned at this
 manifest**: its resolved configuration tuple goes into `arms.configuration_json`
 with `configuration_marker = 'pinned'`, `pinned_run_id` and `pinned_sha256`.
@@ -87,6 +93,10 @@ class ArmPinMismatch(RunRefused):
 
 class CloudArmNotEnabled(RunRefused):
     pass
+
+
+class StageNotInRun(RunRefused):
+    """The run named does not exist or did not declare the stage a caller needs."""
 
 
 # ── Inputs a manifest records ────────────────────────────────────────
@@ -331,6 +341,48 @@ def _stage_row(key: str, r: ResolvedStage) -> dict:
         "keep_alive": str(cfg.keep_alive) if "keep_alive" in cfg.sent_keys else "unset",
         "format_schema_hash": r.format_schema_hash, "prompt_hash": r.prompt_hash,
     }
+
+
+def stage_digest(conn, run_id: int, stage: str) -> str | None:
+    """The digest this run resolved for `stage`, or None if it did not declare it."""
+    row = conn.execute("SELECT model_digest FROM run_stage_configs "
+                       "WHERE run_id = ? AND stage = ?", (run_id, stage)).fetchone()
+    return None if row is None else row[0]
+
+
+def extraction_digest(conn, run_id: int, *, arm: str, stages: Iterable[str]) -> str:
+    """The run's one extraction digest (R117), checked against `arm`'s pin.
+
+    `stages` are the run's local extraction stages, the pass-1 stage first. The
+    pass-1 stage must be declared; every declared one must carry the digest the
+    arm was pinned to. Reads only — a refusal here writes nothing.
+    """
+    stages = list(stages)
+    first = stage_digest(conn, run_id, stages[0])
+    if first is None:
+        raise StageNotInRun(
+            f"run refused: run {run_id} has no {stages[0]!r} stage — either no such "
+            "run was opened or it did not declare extraction. Open the run with the "
+            "extraction stages before extracting (R116).")
+    row = conn.execute("SELECT configuration_json, configuration_marker FROM arms "
+                       "WHERE arm_name = ?", (arm,)).fetchone()
+    pinned = (json.loads(row[0]).get("stages", {})
+              if row and row[1] == ARM_PINNED and row[0] else None)
+    if pinned is None:
+        raise ArmPinMismatch(
+            f"run refused: arm {arm!r} is not pinned, so run {run_id}'s digest {first} "
+            "has no pin to agree with (R10, R117).")
+    for stage in stages:
+        digest = stage_digest(conn, run_id, stage)
+        if digest is None:
+            continue
+        pin = (pinned.get(stage) or {}).get("model_digest")
+        if digest != pin:
+            raise ArmPinMismatch(
+                f"run refused: stage {stage!r} of run {run_id} resolved digest {digest}, "
+                f"but arm {arm!r} is pinned to {pin}. A changed model is a new arm "
+                "(R10); declare one in the spec.")
+    return first
 
 
 def open_review_session(conn, spec, *, codebook, git: GitState | None = None,

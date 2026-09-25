@@ -15,7 +15,7 @@ import pytest
 from engine.core import parsed_text as pt
 from engine.core.database import ReviewDatabase
 from _parsed_text_fixture import write_parsed
-from _event_store_fixture import seed_eligibility
+from _event_store_fixture import open_extraction_run, seed_eligibility
 
 REPO = Path(__file__).resolve().parent.parent
 m021 = importlib.import_module("engine.migrations.021_parsed_text_sha256")
@@ -128,10 +128,12 @@ def test_extractor_site_hands_on_the_file(db, tmp_path):
         raise RuntimeError("captured")
 
     spec = load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+    run_id = open_extraction_run(db, spec)   # 9b-2b: run_id is required (R116)
     with patch("engine.utils.ollama_preflight.require_preflight"), \
          patch("engine.utils.ollama_client.fetch_model_digest", return_value="d" * 64), \
          patch("engine.agents.extractor.extract_paper_with_completeness", side_effect=capture):
-        run_extraction(db, spec, "resolver", experiment_lock=False, restart_every=0)
+        run_extraction(db, spec, "resolver", experiment_lock=False, restart_every=0,
+                       run_id=run_id)
     assert [s.encode("utf-8") for s in seen] == [path.read_bytes()]
 
 

@@ -29,7 +29,7 @@ from engine.core.parsed_text import (
 )
 from engine.core.reuse_key import reuse_key
 from engine.core.selection import SelectionResult, select_for_extraction
-from _event_store_fixture import fixture_run, seed_eligibility
+from _event_store_fixture import fixture_run, open_extraction_run, seed_eligibility
 from _parsed_text_fixture import write_parsed
 
 ARM = "local_test_arm"
@@ -198,8 +198,9 @@ def test_t8_extract_stage_with_nothing_selected_reports_and_runs_nothing(tmp_pat
     spec = load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
     rdb = ReviewDatabase("sel_empty", data_root=tmp_path)
     try:
+        run_id = open_extraction_run(rdb, spec)
         with patch.object(rp, "run_extraction") as run:
-            out = rp._stage_extract(rdb, spec, "sel_empty")
+            out = rp._stage_extract(rdb, spec, "sel_empty", run_id=run_id)
         run.assert_not_called()
         assert set(out) == {"extracted", "skipped_asserted", "skipped_refused", "elapsed"}
         assert (out["extracted"], out["skipped_asserted"], out["skipped_refused"]) == (0, 0, 0)
@@ -211,8 +212,10 @@ def test_extract_stage_hands_its_selection_to_the_run(db):
     import scripts.run_pipeline as rp
     from engine.core.review_spec import load_review_spec
     spec = load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+    run_id = open_extraction_run(db, spec)
     with patch.object(rp, "run_extraction", return_value={"extracted": 3}) as run:
-        rp._stage_extract(db, spec, "sel")
+        rp._stage_extract(db, spec, "sel", run_id=run_id)
+    assert run.call_args.kwargs["run_id"] == run_id
     sel = run.call_args.kwargs["selection"]
     assert sel.arm == spec.extraction_models.arm and _ids(sel) == [1, 2, 3]
 

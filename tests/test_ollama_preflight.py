@@ -5,6 +5,8 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
+from _event_store_fixture import open_extraction_run
+
 from engine.utils.ollama_preflight import (
     check_model,
     check_ollama_env,
@@ -283,7 +285,9 @@ class TestRunnerIntegration:
         with patch("engine.utils.ollama_preflight.require_preflight",
                    side_effect=RuntimeError("preflight failed")) as mock_pf:
             with pytest.raises(RuntimeError, match="preflight failed"):
-                run_extraction(db, spec, review_name="test_pf2")
+                # 9b-2b: run_id is required and checked before preflight (R116/R117)
+                run_extraction(db, spec, review_name="test_pf2",
+                               run_id=open_extraction_run(db, spec))
 
             # B5 (MANIFEST-01 Phase 2a): the model is the resolver's, and the
             # spec travels with it so the probe's own options are the spec's (R63).
@@ -335,7 +339,8 @@ class TestRunnerIntegration:
             with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
                 with patch("engine.utils.ollama_preflight.ollama.ps",
                            return_value={"models": []}):
-                    stats = run_extraction(db, spec, review_name="test_pf4")
+                    stats = run_extraction(db, spec, review_name="test_pf4",
+                                           run_id=open_extraction_run(db, spec))
 
         # No papers to extract, but runner completed without error
         assert stats["extracted"] == 0

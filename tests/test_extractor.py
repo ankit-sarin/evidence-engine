@@ -28,7 +28,8 @@ from engine.search.models import Citation
 from engine.core.codebook import load_codebook_beside
 from engine.core.codebook import load_codebook_for
 from _parsed_text_fixture import write_parsed
-from _event_store_fixture import fixture_run, seed_eligibility, upgrade_event_store
+from _event_store_fixture import (open_extraction_run, seed_eligibility,
+                                  upgrade_event_store)
 import importlib as _importlib
 _M021 = _importlib.import_module("engine.migrations.021_parsed_text_sha256")
 
@@ -263,7 +264,7 @@ def test_full_two_pass_mocked(tmp_path, spec):
     n_expected = len(CBK.fields)
     with patch("engine.agents.extractor.ollama_chat") as mock_chat:
         mock_chat.side_effect = [_mock_pass1_response(), _mock_pass2_complete(spec)]
-        result = extract_paper(pid, paper_text, spec, db)
+        result = extract_paper(pid, paper_text, spec, db, run_id=1)  # 9b-2b: required
 
     assert result.paper_id == pid
     assert len(result.fields) == n_expected
@@ -311,18 +312,19 @@ def test_staleness_skip(tmp_path, spec):
     from engine.core.reuse_key import reuse_key
 
     arm = spec.extraction_models.arm
+    run_id = open_extraction_run(db, spec)   # 9b-2b: before the claim (R21 freeze)
     key = reuse_key(arm, pid, resolve_parsed_text(db._conn, pid).sha256)
     events.write_field_event(
         db._conn, event_type="asserted", paper_id=pid, field_name="study_design",
         arm=arm, value="RCT", source_snippet="RCT", actor_kind="model",
         actor_role="extractor", actor_name="m", payload={PAYLOAD_REUSE_KEY: key},
-        run_id=fixture_run(db._conn, arm))
+        run_id=run_id)
 
     # run_extraction should skip this paper. Preflight is patched out: it shells
     # out to `systemctl show ollama` and loads deepseek-r1:32b against the live
     # server, neither of which this test is about (OPSFIX-01).
     with patch("engine.utils.ollama_preflight.require_preflight"):
-        stats = run_extraction(db, spec, "test_stale")
+        stats = run_extraction(db, spec, "test_stale", run_id=run_id)
     assert stats["skipped_asserted"] == 1
     assert stats["extracted"] == 0
 
@@ -344,7 +346,8 @@ def test_run_extraction_no_parsed_text(tmp_path, spec):
     # patched out for the same reason as test_staleness_skip (OPSFIX-01).
     # 9b-2a (R122): a refused text is reported at selection, not as a failure.
     with patch("engine.utils.ollama_preflight.require_preflight"):
-        stats = run_extraction(db, spec, "test_notext")
+        stats = run_extraction(db, spec, "test_notext",
+                               run_id=open_extraction_run(db, spec))  # 9b-2b
     assert stats["skipped_refused"] == 1
     assert stats["extracted"] == 0
 
@@ -450,7 +453,7 @@ class TestProactiveRestart:
 
         mock_extract.side_effect = self._make_fake_extract(spec)
 
-        run_extraction(db, spec, "test_review", restart_every=3)
+        run_extraction(db, spec, "test_review", restart_every=3, run_id=self.run_id)
 
         # 5 papers processed, restart_every=3 → should fire once (after paper 3)
         mock_restart.assert_called_once()
@@ -469,7 +472,7 @@ class TestProactiveRestart:
         db, spec = self._setup_db(tmp_path, n_papers=5)
         mock_extract.side_effect = self._make_fake_extract(spec)
 
-        run_extraction(db, spec, "test_review", restart_every=0)
+        run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
 
         mock_restart.assert_not_called()
         db.close()
@@ -486,7 +489,7 @@ class TestProactiveRestart:
         db, spec = self._setup_db(tmp_path, n_papers=3)
         mock_extract.side_effect = self._make_fake_extract(spec)
 
-        stats = run_extraction(db, spec, "test_review", restart_every=3)
+        stats = run_extraction(db, spec, "test_review", restart_every=3, run_id=self.run_id)
         assert stats["extracted"] == 3
         assert stats["failed"] == 0
         db.close()
@@ -513,7 +516,7 @@ class TestProactiveRestart:
 
         mock_chat.side_effect = [pass1_resp, pass2_resp]
 
-        stats = run_extraction(db, spec, "test_review", restart_every=0)
+        stats = run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
 
         assert stats["failed"] == 1
         assert stats["extracted"] == 0
@@ -560,7 +563,7 @@ class TestProactiveRestart:
 
         mock_extract.side_effect = extract
         with caplog.at_level("ERROR", logger="engine.agents.extractor"):
-            stats = run_extraction(db, spec, "test_review", restart_every=0)
+            stats = run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
 
         assert stats["failed"] == 1 and stats["extracted"] == 1
         assert mock_extract.call_count == 2  # paper 1 not retried; paper 2 ran
@@ -612,6 +615,7 @@ class TestProactiveRestart:
         db.db_path = db_path
         db.review_name = "test_review"
         spec = load_review_spec(str(SPEC_PATH))
+        self.run_id = open_extraction_run(db, spec)   # 9b-2b: run_id is required
         return db, spec
 
     def _make_fake_extract(self, spec):
@@ -659,7 +663,7 @@ class TestRestartOllamaGraceful:
                   side_effect=RuntimeError("Ollama did not respond")),
         ):
             with caplog.at_level("ERROR", logger="engine.agents.extractor"):
-                stats = run_extraction(db, spec, "test_review", restart_every=1)
+                stats = run_extraction(db, spec, "test_review", restart_every=1, run_id=self.run_id)
 
         # All 3 papers should have been extracted despite restart failures
         assert stats["extracted"] == 3
@@ -705,6 +709,7 @@ class TestRestartOllamaGraceful:
         db.db_path = db_path
         db.review_name = "test_review"
         spec = load_review_spec(str(SPEC_PATH))
+        self.run_id = open_extraction_run(db, spec)   # 9b-2b: run_id is required
         return db, spec
 
     def _make_fake_extract(self, spec):

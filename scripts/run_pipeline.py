@@ -21,7 +21,7 @@ from engine.adjudication.workflow import (
     is_audit_review_complete,
 )
 from engine.agents.auditor import run_audit
-from engine.agents.extractor import run_extraction
+from engine.agents.extractor import run_extraction, verify_extraction_run
 from engine.core.selection import select_for_extraction
 from engine.agents.screener import run_screening
 from engine.core import run_manifest as rm
@@ -132,7 +132,7 @@ def run_pipeline(
 
         # ── EXTRACT ──────────────────────────────────────────
         if start_idx <= STAGES.index("extract"):
-            results["extract"] = _stage_extract(db, spec, review_name)
+            results["extract"] = _stage_extract(db, spec, review_name, run_id=run_id)
 
         # ── AUDIT ────────────────────────────────────────────
         if start_idx <= STAGES.index("audit"):
@@ -283,11 +283,15 @@ def _stage_parse(db: ReviewDatabase, review_name: str) -> dict:
     return {**stats, "elapsed": elapsed}
 
 
-def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> dict:
+def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
+                   run_id: int) -> dict:
     t = time.time()
     logger.info("=" * 60)
     logger.info("STAGE: EXTRACT")
 
+    # R117: the manifest's digest agrees with the arm's pin, or the run refuses
+    # here — before anything is selected.
+    verify_extraction_run(db._conn, spec, run_id)
     # Selection is the corpus predicate with the reuse key (D9, R96, R119), made
     # once here and handed to the run, not a papers.status gate.
     selection = select_for_extraction(db._conn, arm=spec.extraction_models.arm)
@@ -300,7 +304,7 @@ def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
                 "skipped_refused": len(selection.skipped_refused),
                 "elapsed": time.time() - t}
 
-    stats = run_extraction(db, spec, review_name, selection=selection)
+    stats = run_extraction(db, spec, review_name, selection=selection, run_id=run_id)
     elapsed = time.time() - t
     logger.info("Extraction complete in %.1fs — %s", elapsed, json.dumps(stats))
     return {**stats, "elapsed": elapsed}

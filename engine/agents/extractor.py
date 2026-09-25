@@ -31,6 +31,7 @@ from engine.core.extraction_telemetry import record_call
 from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.core.parsed_text import ParsedTextError, ParsedTextRef, read_parsed_text
 from engine.core.selection import SelectionResult, select_for_extraction
+from engine.core import run_manifest as rm
 from engine.utils.ollama_client import InputFitError, ollama_chat
 from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
 
@@ -205,7 +206,8 @@ def pass1_messages(prompt: str) -> list[dict]:
 
 
 def extract_pass1_reasoning(prompt: str, think: bool | None = None, *,
-                            cfg: EffectiveConfig | None = None) -> str:
+                            cfg: EffectiveConfig | None = None,
+                            paper_id: int | None = None) -> str:
     """Run Pass 1: let DeepSeek-R1 reason freely, return the thinking trace.
 
     `think` is passed explicitly and never left to the Ollama default —
@@ -216,7 +218,8 @@ def extract_pass1_reasoning(prompt: str, think: bool | None = None, *,
     """
     cfg = _with_think(cfg or stage_config("extract_pass1"), think)
     _LAST_PASS1_TELEMETRY.clear()
-    response = ollama_chat(messages=pass1_messages(prompt), **cfg.kwargs())
+    response = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+                           **cfg.kwargs())
 
     content = response.message.content or ""
     thinking = getattr(response.message, "thinking", None)
@@ -331,7 +334,8 @@ def extract_pass2_structured(
     )
     cfg = _with_think(cfg or stage_config("extract_pass2", spec), think)
 
-    response = ollama_chat(messages=pass2_messages(prompt, reasoning_trace), **cfg.kwargs())
+    response = ollama_chat(paper_id=paper_id,
+                           messages=pass2_messages(prompt, reasoning_trace), **cfg.kwargs())
 
     raw = response.message.content or ""
     # INSTRUMENT-01: stash the pre-parse response and Ollama's own done_reason
@@ -398,6 +402,7 @@ def _retry_snippet(
     cfg = cfg or stage_config("extract_retry_snippet")
     try:
         response = ollama_chat(
+            paper_id=paper_id,
             messages=retry_snippet_messages(field_name, value, paper_text),
             **cfg.kwargs(),
         )
@@ -479,11 +484,17 @@ def extract_paper(
     db: ReviewDatabase,
     model_digest: str | None = None,
     auditor_model_digest: str | None = None,
-    run_id: str | None = None,
+    unit_map_dir_name: str | None = None,
     attempt: int | None = None,
     parsed_text_ref: ParsedTextRef | None = None,
+    *,
+    run_id: int,
 ) -> ExtractionResult:
     """Run the full two-pass extraction on a single paper and store results.
+
+    `run_id` is the run manifest's id (R116), required and never read from the
+    active-run contextvar. `unit_map_dir_name` is the elicited path's per-run
+    unit-map directory, a different thing that used to share the name.
 
     `parsed_text_ref` is the text identity selection resolved (9b-2a). It is
     accepted now so the call shape does not change when the event writer that
@@ -499,7 +510,7 @@ def extract_paper(
 
         return extract_paper_elicited(
             paper_id, paper_text, spec, db,
-            run_id=run_id or _default_run_id(),
+            unit_map_dir_name=unit_map_dir_name or _default_run_id(),
             model_digest=model_digest,
             auditor_model_digest=auditor_model_digest,
             attempt=attempt,
@@ -522,7 +533,7 @@ def extract_paper(
     cfg_retry = stage_config("extract_retry_snippet", spec)
 
     # Pass 1: reasoning
-    reasoning_trace = extract_pass1_reasoning(prompt, cfg=cfg1)
+    reasoning_trace = extract_pass1_reasoning(prompt, cfg=cfg1, paper_id=paper_id)
 
     # Pass 2: structured output
     result = extract_pass2_structured(prompt, reasoning_trace, spec, paper_id,
@@ -673,6 +684,8 @@ def extract_paper_with_completeness(
     auditor_model_digest: str | None = None,
     max_attempts: int = MAX_COMPLETENESS_ATTEMPTS,
     parsed_text_ref: ParsedTextRef | None = None,
+    *,
+    run_id: int,
 ) -> ExtractionResult:
     """Extract one paper, re-running the identical two-pass request until complete.
 
@@ -686,7 +699,7 @@ def extract_paper_with_completeness(
     """
     review_dir = Path(db.db_path).parent
     expected = expected_field_names(spec, review_dir / "extraction_codebook.yaml")
-    run_id = _default_run_id()
+    unit_map_dir_name = _default_run_id()
     # The telemetry `arm` label has always been the extraction model's name.
     model_name = stage_config("extract_pass1", spec).model
     last_error: Exception | None = None
@@ -715,8 +728,8 @@ def extract_paper_with_completeness(
                 paper_id, paper_text, spec, db,
                 model_digest=model_digest,
                 auditor_model_digest=auditor_model_digest,
-                run_id=run_id, attempt=attempt,
-                parsed_text_ref=parsed_text_ref,
+                unit_map_dir_name=unit_map_dir_name, attempt=attempt,
+                parsed_text_ref=parsed_text_ref, run_id=run_id,
             )
         except RETRYABLE as exc:
             last_error = exc
@@ -788,6 +801,8 @@ def run_extraction(
     restart_every: int = RESTART_EVERY_N,
     experiment_lock: bool = True,
     selection: SelectionResult | None = None,
+    *,
+    run_id: int,
 ) -> dict:
     """Run extraction on all eligible papers, holding the experiment lock.
 
@@ -804,13 +819,31 @@ def run_extraction(
     `selection` is a `select_for_extraction` result the caller already holds
     (`run_pipeline`'s extract stage), so the corpus is selected once per run;
     without it the run selects for itself.
+
+    `run_id` is the open run manifest's id (R116): required, never taken from
+    the active-run contextvar. Every call the run makes is recorded against it.
     """
     if not experiment_lock:
         return _run_extraction_unlocked(db, spec, review_name, restart_every,
-                                        selection=selection)
+                                        run_id=run_id, selection=selection)
     with hold_experiment_lock():
         return _run_extraction_unlocked(db, spec, review_name, restart_every,
-                                        selection=selection)
+                                        run_id=run_id, selection=selection)
+
+
+def extraction_stages(spec: ReviewSpec) -> tuple[str, ...]:
+    """The local extraction stages a run declares for this spec, pass 1 first —
+    the same renaming `run_pipeline._open_run_manifest` applies."""
+    first = ("elicitation_pass1" if spec.extraction_models.elicitation
+             else "extract_pass1")
+    return (first, "extract_pass2", "extract_retry_snippet")
+
+
+def verify_extraction_run(conn, spec: ReviewSpec, run_id: int) -> str:
+    """R117: the run's one extraction digest, checked against the arm's pin.
+    Raises `StageNotInRun` / `ArmPinMismatch` before anything is selected."""
+    return rm.extraction_digest(conn, run_id, arm=spec.extraction_models.arm,
+                                stages=extraction_stages(spec))
 
 
 def _run_extraction_unlocked(
@@ -819,17 +852,35 @@ def _run_extraction_unlocked(
     review_name: str,
     restart_every: int = RESTART_EVERY_N,
     *,
+    run_id: int,
     selection: SelectionResult | None = None,
 ) -> dict:
     """Extraction loop proper. Callers should prefer run_extraction().
+
+    First, before anything is selected, the run's digest is checked against the
+    arm's pin (R117); a refusal writes nothing and makes no call. That digest is
+    the one this run records — there is no second fetch (F12). The auditor
+    digest is the run's `audit` stage digest if it declared one, else NULL.
 
     Takes the papers `select_for_extraction` chose for the spec's arm: the
     corpus by eligibility axis, less papers this arm already holds a live claim
     on under the current parsed text (reuse key), less papers whose text is
     refused (R122). `papers.status` is not read (D9, R119).
     """
+    extractor_digest = verify_extraction_run(db._conn, spec, run_id)
+    auditor_digest = rm.stage_digest(db._conn, run_id, "audit")
     if selection is None:
         selection = select_for_extraction(db._conn, arm=spec.extraction_models.arm)
+    with rm.active_run(db._conn, run_id):
+        return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+                                 extractor_digest=extractor_digest,
+                                 auditor_digest=auditor_digest)
+
+
+def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: SelectionResult,
+                      restart_every: int, *, run_id: int, extractor_digest: str,
+                      auditor_digest: str | None) -> dict:
+    """The per-paper loop over a selection, inside the run's active_run."""
     papers = selection.to_extract
     total = len(papers)
     # The codebook beside THIS database — a run under a data_root
@@ -840,20 +891,13 @@ def _run_extraction_unlocked(
     # Pre-flight: verify extraction model is loaded and responsive
     from engine.utils.ollama_preflight import require_preflight
     extractor_model = stage_config("extract_pass1", spec).model
-    auditor_model = stage_config("audit", spec).model
     require_preflight([extractor_model], runner_name="Extraction", spec=spec)
 
-    # Capture model digests before extraction loop. C15/R57: /api/tags is the
-    # route that exposes the digest; `get_model_digest` read /api/show, which
-    # does not, and left `extractions.model_digest` NULL on every row. This one
-    # raises rather than returning None, so a run never stores a missing digest.
-    from engine.utils.ollama_client import fetch_model_digest
-    extractor_digest = fetch_model_digest(extractor_model)
-    auditor_digest = fetch_model_digest(auditor_model)
-    logger.info(
-        "Model digests — extractor (%s): %s, auditor (%s): %s",
-        extractor_model, extractor_digest, auditor_model, auditor_digest,
-    )
+    # The digests are the run manifest's (R117): resolved once at run open,
+    # checked against the arm's pin above. No second fetch, so the value stored
+    # can never disagree with the one the manifest recorded (F12).
+    logger.info("Model digests (run %d) — extractor (%s): %s, auditor: %s",
+                run_id, extractor_model, extractor_digest, auditor_digest)
 
     # Pre-flight: an informational count of extractions that do not carry the
     # current codebook hash. It used to tell the operator to run the cleanup
@@ -901,6 +945,7 @@ def _run_extraction_unlocked(
                 model_digest=extractor_digest,
                 auditor_model_digest=auditor_digest,
                 parsed_text_ref=ref,
+                run_id=run_id,
             )
             db.update_status(pid, "EXTRACTED")
             stats["extracted"] += 1

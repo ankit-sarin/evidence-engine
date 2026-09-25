@@ -936,6 +936,8 @@ Expected values at open, as measured at this closeout:
 
 **Embargo 07:00–10:35 UTC** for any live write (R86). **R19 and R71 remain in force**: R19 until the freshman smoke run (R114); R71 until sessions 8 and 9 both land.
 
+*Addendum 2026-09-25 (9b Part 0):* F7 ruled at R139; the open-forks list above is now F2, F4, F8, F15, F16.
+
 ## Decision log
 
 Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in order. The architect's four provisional rulings of 2026-09-19 (recall-bounded filter with code-enforced basis; SYNERGY as reference; a tiered lane with 2d first; a 50 KB plan) were withdrawn after the external review and replaced by R1–R9 below.
@@ -1086,6 +1088,7 @@ Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in 
 | 2026-09-24 | R136 — LOW_YIELD's absence set is the codebook's: absence_sentinels, plus the codebook's non-value token set if one is declared (I6). Every other declared value, "Not assessable" included unless I6 finds it declared a non-value token, counts as populated. "Not discussed" is an undeclared legacy form: it counts as populated in LOW_YIELD's legacy read, and on the event path it is refused by completeness before storage (S5a), so the question does not recur. test_all_absence is rewritten (B5) to pin the codebook rule with both cases named; the helper's inline tuple goes; the "Not assessable" sparse fixtures are re-labelled to say what they now test. Sentinels are passed into count_populated_fields by check_low_yield (plumbing as CC proposed). | PI, on architect recommendation |
 | 2026-09-24 | R137 — The ~9 fixture codebooks gain the R132 key as deliberate B5 updates, each with a one-line note; the loader's validation error on a codebook missing the key is pinned by one test. | PI, on architect recommendation |
 | 2026-09-24 | R138 — The docstrings of engine/elicitation/classes.py and tests/test_non_value_tokens_downstream.py that name the hand-lists are updated in item 4's commit. | PI, on architect recommendation |
+| 2026-09-25 | R139 — F7 ruled (b), one contract-unmet policy. On every site that writes field events, an uncited non-sentinel value whose completeness retry budget (MAX_COMPLETENESS_ATTEMPTS = 3) is exhausted becomes a per-field contract_unmet event (reader row 15; payload violation_codes and attempts) and the paper stores with its other fields; exhaustion no longer fails the paper on the local path. extraction_failed is reserved for outcomes in which no field can be trusted, from F9's reason vocabulary. A site that does not yet write field events (the cloud arms until their own cut-over, F15) keeps its current behaviour and logs the same reason code. The elicited path's CONTRACT_UNMET token maps to the same event. Fixtures that pin the paper-level failure rewrite in slice 3 (R129). Lands in slice 2(c). | PI, on architect recommendation |
 
 *Addendum 2026-09-23 (INPUT-IDENTITY-01 Part 0), to the R86 row:* the CLAUDE.md half of R86 is applied in this commit; the I13 wording item is closed by R89. *(Placed after the table rather than directly under the R86 row: a non-table line inside the table would end it at R86 and un-table R87–R89.)*
 

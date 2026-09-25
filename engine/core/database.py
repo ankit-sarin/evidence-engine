@@ -835,30 +835,46 @@ class ReviewDatabase:
     # ── Pipeline Stats ───────────────────────────────────────
 
     def get_pipeline_stats(self) -> dict:
-        """Full pipeline counts: papers by status + extraction/span totals."""
-        stats = dict(self.get_screening_summary())
-        stats["total_papers"] = self._conn.execute(
-            "SELECT COUNT(*) FROM papers"
-        ).fetchone()[0]
-        stats["total_extractions"] = self._conn.execute(
-            "SELECT COUNT(*) FROM extractions"
-        ).fetchone()[0]
-        stats["total_evidence_spans"] = self._conn.execute(
-            "SELECT COUNT(*) FROM evidence_spans"
-        ).fetchone()[0]
-        stats["spans_verified"] = self._conn.execute(
-            "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'verified'"
-        ).fetchone()[0]
-        stats["spans_flagged"] = self._conn.execute(
-            "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'flagged'"
-        ).fetchone()[0]
-        stats["spans_contested"] = self._conn.execute(
-            "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'contested'"
-        ).fetchone()[0]
-        stats["spans_invalid_snippet"] = self._conn.execute(
-            "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'invalid_snippet'"
-        ).fetchone()[0]
-        return stats
+        """End-of-run counts, from the event reader beside the screening summary.
+
+        R165 (9c-C4): the extraction and span totals and the four audit_status
+        buckets are gone — no run writes those tables after the cut-over. Both
+        axes come from `effective_state`, one call per paper; `no_recorded_state`
+        is reported as it is (the screeners write no events yet), not filtered.
+
+        - `screening`: `get_screening_summary()`, `papers.status` counts (the
+          screeners are not cut over).
+        - `eligibility`: every paper's eligibility token.
+        - `processing`: the processing token of each ELIGIBLE paper.
+        - `processing_failures`: the reason code of each eligible paper whose
+          processing token is a failure.
+        - `analysis_ready`: eligible papers whose processing completed.
+        """
+        from collections import Counter
+        from engine.core.effective import effective_state
+
+        eligibility: Counter = Counter()
+        processing: Counter = Counter()
+        failures: Counter = Counter()
+        analysis_ready = 0
+        paper_ids = [r[0] for r in self._conn.execute("SELECT id FROM papers ORDER BY id")]
+        for pid in paper_ids:
+            state = effective_state(self._conn, pid)
+            eligibility[state.eligibility] += 1
+            if state.eligibility != "eligible":
+                continue
+            processing[state.processing] += 1
+            if state.processing_reason is not None:
+                failures[state.processing_reason] += 1
+            analysis_ready += state.analysis_ready
+        return {
+            "total_papers": len(paper_ids),
+            "screening": self.get_screening_summary(),
+            "eligibility": dict(eligibility),
+            "processing": dict(processing),
+            "processing_failures": dict(failures),
+            "analysis_ready": analysis_ready,
+        }
 
     # ── Cleanup ──────────────────────────────────────────────
 

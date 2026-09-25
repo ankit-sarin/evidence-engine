@@ -354,12 +354,6 @@ Deleted. It read `extractions.reasoning_trace` and `evidence_spans.audit_status`
 
 ---
 
-## engine/review/ — Human Review Interface
-
-Empty since 2026-09-25: the human-audit tooling on legacy verdicts retired (R162). Stages 11–12 are manual `advance_stage` until the session-12 importer.
-
----
-
 ## engine/utils/ — Utilities
 
 ### `background.py`
@@ -437,7 +431,6 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 | `run5_extract_and_audit.py` | **Retired 2026-09-25** (R113, 9b cut-over) — recoverable at `4756bd2` | — |
 | `screen_expanded.py` | Three-phase expanded screening | `--fetch-only`, `--screen-only`, `--verify-only` |
 | `run_cloud_extraction.py` | Cloud concordance arms | `--arm`, `--max-cost`, `--progress`, `--dry-run` |
-| `monitor_extraction.py` | Extraction watchdog (20 min poll) | `--review` |
 
 ### Re-screening / Remediation
 

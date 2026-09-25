@@ -5679,20 +5679,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "engine/review/__init__.py": {
-        "entry_point": false,
-        "flags": [],
-        "has_main_guard": false,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "engine/review/__init__.py",
-        "path_construction": [],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "engine/search/__init__.py": {
         "entry_point": false,
         "flags": [],
@@ -6509,55 +6495,6 @@
             "scope": "main"
           }
         ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "scripts/monitor_extraction.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "dynamic: DEFAULT_REVIEW",
-            "dest": null,
-            "line": 44,
-            "names": [
-              "--review"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [
-          {
-            "line": 14,
-            "role": "code",
-            "value": "surgical_autonomy"
-          }
-        ],
-        "order": {},
-        "path": "scripts/monitor_extraction.py",
-        "path_construction": [
-          {
-            "kind": "f-string",
-            "line": 51,
-            "role": "code",
-            "text": "f'data/{args.review}/extract_log.txt'"
-          },
-          {
-            "kind": "f-string",
-            "line": 52,
-            "role": "code",
-            "text": "f'data/{args.review}/review.db'"
-          }
-        ],
-        "review_database": [],
-        "review_id_constants": [
-          {
-            "line": 14,
-            "name": "DEFAULT_REVIEW",
-            "value": "surgical_autonomy"
-          }
-        ],
-        "spec_access": [],
         "unparsed": [],
         "yaml_loads": []
       },
@@ -7588,27 +7525,27 @@
     ],
     "summary": {
       "db_before_spec_scopes": 0,
-      "default_review_named_constants": 6,
-      "entry_points": 95,
+      "default_review_named_constants": 5,
+      "entry_points": 94,
       "entry_points_constructing_reviewdatabase": 30,
-      "entry_points_name_only": 43,
-      "entry_points_with_review_name_flag": 65,
+      "entry_points_name_only": 42,
+      "entry_points_with_review_name_flag": 64,
       "entry_points_with_spec_flag": 23,
       "files_calling_load_review_spec_directly": 11,
       "files_calling_resolver": 26,
-      "files_scanned": 212,
+      "files_scanned": 210,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
-      "literal_review_id_sites_in_code": 34,
+      "literal_review_id_sites_in_code": 33,
       "name_only_constructing_reviewdatabase": 19,
-      "path_construction_sites_in_code": 65,
+      "path_construction_sites_in_code": 63,
       "raw_yaml_load_sites": 3,
-      "review_id_constants": 8,
+      "review_id_constants": 7,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "9d5fccfd362dda62bf298231452afb12f52cd626",
+    "generated_at_commit": "4c5310c4f3c1e3e85367ee514ecf65a4f00dc7ed",
     "scan_roots": [
       "engine",
       "scripts",

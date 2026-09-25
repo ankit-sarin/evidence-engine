@@ -439,23 +439,53 @@ def test_min_status_gate_missing_paper_logs_warning(db, caplog):
 
 
 def test_pipeline_stats(db):
+    """R165 (9c-C4, B5): the end-of-run counts come from the event reader.
+
+    Both axes through `effective_state`; processing counted over ELIGIBLE papers
+    only; the screening summary as a sub-dict; no extraction or span totals."""
+    from engine.core import events
+    from _event_store_fixture import fixture_run, seed_eligibility
+
     cits = [_cit(pmid=str(i), title=f"Stat {i}") for i in range(10)]
     db.add_papers(cits)
-
-    # Screen 3 in, 2 out
     papers = db.get_papers_by_status("INGESTED")
     for p in papers[:3]:
         db.update_status(p["id"], "ABSTRACT_SCREENED_IN")
     for p in papers[3:5]:
         db.update_status(p["id"], "ABSTRACT_SCREENED_OUT")
 
+    conn = db._conn
+    ids = [p["id"] for p in papers]
+    run_id = fixture_run(conn)
+
+    def processing(pid, event_type, to_state, reason_code=None):
+        events.write_paper_event(
+            conn, event_type=event_type, paper_id=pid, to_state=to_state,
+            actor_kind="engine", actor_role="system", actor_name="fixture",
+            reason_code=reason_code, run_id=run_id)
+
+    for pid in ids[:4]:
+        seed_eligibility(conn, pid)                               # 4 eligible
+    seed_eligibility(conn, ids[4], to_state="abstract_out")       # 1 out
+    processing(ids[0], "extracted", "extracted")
+    processing(ids[1], "audited", "audited_ai")
+    processing(ids[2], "extraction_failed", "extraction_failed", "no_fields_returned")
+    # ids[3] eligible with no processing event; ids[5] processed but NOT eligible
+    processing(ids[5], "extracted", "extracted")
+
     stats = db.get_pipeline_stats()
+    assert set(stats) == {"total_papers", "screening", "eligibility", "processing",
+                          "processing_failures", "analysis_ready"}
     assert stats["total_papers"] == 10
-    assert stats["ABSTRACT_SCREENED_IN"] == 3
-    assert stats["ABSTRACT_SCREENED_OUT"] == 2
-    assert stats["INGESTED"] == 5
-    assert stats["total_extractions"] == 0
-    assert stats["total_evidence_spans"] == 0
+    assert stats["screening"] == {"ABSTRACT_SCREENED_IN": 3, "ABSTRACT_SCREENED_OUT": 2,
+                                  "INGESTED": 5}
+    assert stats["eligibility"] == {"eligible": 4, "abstract_out": 1,
+                                    "no_recorded_state": 5}
+    # ids[5]'s `extracted` is not counted: it is not in the corpus.
+    assert stats["processing"] == {"extracted": 1, "audited_ai": 1,
+                                   "extraction_failed": 1, "no_recorded_state": 1}
+    assert stats["processing_failures"] == {"no_fields_returned": 1}
+    assert stats["analysis_ready"] == 2
 
 
 # ── Reset for Re-Extraction ──────────────────────────────────────────

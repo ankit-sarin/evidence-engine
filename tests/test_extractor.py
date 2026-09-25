@@ -28,6 +28,7 @@ from engine.search.models import Citation
 from engine.core.codebook import load_codebook_beside
 from engine.core.codebook import load_codebook_for
 from _parsed_text_fixture import write_parsed
+from _event_store_fixture import fixture_run, seed_eligibility, upgrade_event_store
 import importlib as _importlib
 _M021 = _importlib.import_module("engine.migrations.021_parsed_text_sha256")
 
@@ -299,23 +300,30 @@ def test_staleness_skip(tmp_path, spec):
 
     # Write and record a parsed text (S3e: the resolver reads references)
     write_parsed(db, pid, "Paper content here.")
+    seed_eligibility(db._conn, pid)
 
-    # Pre-insert an extraction stamped with the CURRENT codebook. The
-    # idempotence lookup keys on codebook_hash now (SCHEMA-DERIVE-01); an
-    # extraction carrying only the retired extraction_schema_hash reads as
-    # stale, and this paper would be re-extracted for real.
-    from engine.core.codebook import load_codebook_beside
+    # 9b-2a: the extractions/codebook_hash skip is gone. A paper is skipped when
+    # the spec's arm holds a live claim carrying the reuse key of this paper's
+    # current text (R96) — the replacement for "already extracted".
+    from engine.core import events
+    from engine.core.events import PAYLOAD_REUSE_KEY
+    from engine.core.parsed_text import resolve_parsed_text
+    from engine.core.reuse_key import reuse_key
 
-    schema_hash = load_codebook_beside(db.db_path).semantic_hash
-    db.add_extraction(pid, None, {"fields": []}, "trace", "deepseek-r1:32b",
-                      codebook_hash=schema_hash)
+    arm = spec.extraction_models.arm
+    key = reuse_key(arm, pid, resolve_parsed_text(db._conn, pid).sha256)
+    events.write_field_event(
+        db._conn, event_type="asserted", paper_id=pid, field_name="study_design",
+        arm=arm, value="RCT", source_snippet="RCT", actor_kind="model",
+        actor_role="extractor", actor_name="m", payload={PAYLOAD_REUSE_KEY: key},
+        run_id=fixture_run(db._conn, arm))
 
     # run_extraction should skip this paper. Preflight is patched out: it shells
     # out to `systemctl show ollama` and loads deepseek-r1:32b against the live
     # server, neither of which this test is about (OPSFIX-01).
     with patch("engine.utils.ollama_preflight.require_preflight"):
         stats = run_extraction(db, spec, "test_stale")
-    assert stats["skipped"] == 1
+    assert stats["skipped_asserted"] == 1
     assert stats["extracted"] == 0
 
     db.close()
@@ -330,12 +338,14 @@ def test_run_extraction_no_parsed_text(tmp_path, spec):
     db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
     db.update_status(pid, "PARSED")
+    seed_eligibility(db._conn, pid)   # 9b-2a: selection reads the eligibility axis
 
     # Don't write any parsed text file — should fail gracefully. Preflight is
     # patched out for the same reason as test_staleness_skip (OPSFIX-01).
+    # 9b-2a (R122): a refused text is reported at selection, not as a failure.
     with patch("engine.utils.ollama_preflight.require_preflight"):
         stats = run_extraction(db, spec, "test_notext")
-    assert stats["failed"] == 1
+    assert stats["skipped_refused"] == 1
     assert stats["extracted"] == 0
 
     db.close()
@@ -587,11 +597,14 @@ class TestProactiveRestart:
             id INTEGER PRIMARY KEY, extraction_id INTEGER, field_name TEXT,
             value TEXT, source_snippet TEXT, confidence REAL)""")
         conn.execute(_M021.table_sql())
+        conn.commit()
+        upgrade_event_store(db_path)  # 9b-2a: selection reads the eligibility axis
         for i in range(1, n_papers + 1):
             conn.execute(
                 "INSERT INTO papers (id, title, status, added_at) VALUES (?, ?, 'FT_ELIGIBLE', '2026-01-01')",
                 (i, f"Test Paper {i}"),
             )
+            seed_eligibility(conn, i)
             # Create and record parsed text (S3e: the resolver reads references)
             write_parsed(conn, i, f"Paper {i} text content.", version=1)
         conn.commit()
@@ -678,11 +691,14 @@ class TestRestartOllamaGraceful:
             id INTEGER PRIMARY KEY, extraction_id INTEGER, field_name TEXT,
             value TEXT, source_snippet TEXT, confidence REAL)""")
         conn.execute(_M021.table_sql())
+        conn.commit()
+        upgrade_event_store(db_path)  # 9b-2a: selection reads the eligibility axis
         for i in range(1, n_papers + 1):
             conn.execute(
                 "INSERT INTO papers (id, title, status, added_at) VALUES (?, ?, 'FT_ELIGIBLE', '2026-01-01')",
                 (i, f"Test Paper {i}"),
             )
+            seed_eligibility(conn, i)
             write_parsed(conn, i, f"Paper {i} text content.", version=1)
         conn.commit()
         db._conn = conn

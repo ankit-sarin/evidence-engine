@@ -43,11 +43,20 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 class ParsedTextError(RuntimeError):
-    """Base: the current parsed text for a paper cannot be handed out."""
+    """Base: the current parsed text for a paper cannot be handed out.
+
+    Each refusal carries its `reason_code`, spelled here once (R122 as widened
+    by 9b-2a R2). The enumerable closed set lands with the paper-event mapping
+    (F9, slice 2(c)) and must contain all three.
+    """
+
+    reason_code: str
 
 
 class NoParsedText(ParsedTextError):
     """The paper has no `parsed_text_refs` row at all."""
+
+    reason_code = "parsed_text_not_recorded"
 
     def __init__(self, paper_id: int):
         self.paper_id = paper_id
@@ -58,6 +67,8 @@ class NoParsedText(ParsedTextError):
 class ParsedTextMissing(ParsedTextError):
     """The recorded file is not on disk."""
 
+    reason_code = "parsed_text_missing"
+
     def __init__(self, uid: str, path: Path):
         self.uid, self.path = uid, path
         super().__init__(f"parsed text {uid}: the recorded file is missing at {path}")
@@ -65,6 +76,8 @@ class ParsedTextMissing(ParsedTextError):
 
 class ParsedTextModified(ParsedTextError):
     """The file's bytes no longer hash to what was recorded (R95)."""
+
+    reason_code = "parsed_text_modified"
 
     def __init__(self, uid: str, path: Path, recorded: str, observed: str):
         self.uid, self.path = uid, path

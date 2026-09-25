@@ -227,6 +227,36 @@ def live_claims(conn, paper_id, field_name, arm) -> list[str]:
     return _live(_cell_events(conn, paper_id, field_name, arm))
 
 
+@dataclass(frozen=True)
+class LiveClaimEvent:
+    """One claim-bearing event of a claim that is live on its cell."""
+    field_name: str
+    claim_id: str
+    event_type: str
+    payload: dict
+
+
+def live_claim_events(conn, paper_id, arm, *,
+                      event_types: tuple[str, ...] = CLAIM_EVENT_TYPES
+                      ) -> tuple[LiveClaimEvent, ...]:
+    """Every claim-bearing event of every claim live on (paper_id, *, arm).
+
+    Per field, the same `_cell_events` + `_live` that `live_claims` and the rule
+    use — one definition of live, not a second. No rule row is evaluated, and
+    `is_assigned` is not called: an arm with no registry row simply has no events.
+    """
+    fields = [r[0] for r in conn.execute(
+        "SELECT DISTINCT field_name FROM field_events WHERE paper_id = ? AND arm = ? "
+        "ORDER BY field_name", (paper_id, arm))]
+    out = []
+    for field_name in fields:
+        evs = _cell_events(conn, paper_id, field_name, arm)
+        live = set(_live(evs))
+        out.extend(LiveClaimEvent(field_name, e.claim_id, e.event_type, e.payload)
+                   for e in evs if e.event_type in event_types and e.claim_id in live)
+    return tuple(out)
+
+
 def _live(evs) -> list[str]:
     order, seen = [], set()
     for e in evs:

@@ -22,6 +22,7 @@ from engine.adjudication.workflow import (
 )
 from engine.agents.auditor import run_audit
 from engine.agents.extractor import run_extraction
+from engine.core.selection import select_for_extraction
 from engine.agents.screener import run_screening
 from engine.core import run_manifest as rm
 from engine.core.database import ReviewDatabase
@@ -287,12 +288,19 @@ def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> di
     logger.info("=" * 60)
     logger.info("STAGE: EXTRACT")
 
-    parsed = db.get_papers_by_status("PARSED")
-    if not parsed:
-        logger.info("No papers with status PARSED — skipping extraction.")
-        return {"extracted": 0, "elapsed": 0}
+    # Selection is the corpus predicate with the reuse key (D9, R96, R119), made
+    # once here and handed to the run, not a papers.status gate.
+    selection = select_for_extraction(db._conn, arm=spec.extraction_models.arm)
+    if not selection.to_extract:
+        logger.info("Nothing to extract for arm %s — %d skipped (asserted), "
+                    "%d skipped (refused).", selection.arm,
+                    len(selection.skipped_asserted), len(selection.skipped_refused))
+        return {"extracted": 0,
+                "skipped_asserted": len(selection.skipped_asserted),
+                "skipped_refused": len(selection.skipped_refused),
+                "elapsed": time.time() - t}
 
-    stats = run_extraction(db, spec, review_name)
+    stats = run_extraction(db, spec, review_name, selection=selection)
     elapsed = time.time() - t
     logger.info("Extraction complete in %.1fs — %s", elapsed, json.dumps(stats))
     return {**stats, "elapsed": elapsed}

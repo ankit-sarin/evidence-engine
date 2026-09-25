@@ -281,3 +281,14 @@ def run_for(conn) -> int:
             (events.PRE_MANIFEST,)).fetchall():
         fixture_run(conn, arm)
     return run_id
+
+
+def seed_eligibility(conn, paper_id: int, *, to_state: str = "eligible") -> int:
+    """One eligibility-axis paper event, through the engine's writer, under the
+    fixture run (R68). WRITE-PATH-01 9b-2a R5: extraction selects on the
+    eligibility axis now, so a fixture that seeded only `papers.status` selects
+    nothing; this is the one place such fixtures get their corpus membership."""
+    return events.write_paper_event(
+        conn, event_type="screened", paper_id=paper_id, to_state=to_state,
+        actor_kind="engine", actor_role="system", actor_name="fixture",
+        run_id=fixture_run(conn))

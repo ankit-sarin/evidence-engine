@@ -47,13 +47,14 @@ def test_a_malformed_component_is_refused_not_hashed(bad):
         reuse_key(*bad)
 
 
-def test_nothing_calls_the_key_in_session_8():
-    """R92: its use at selection lands with session 9's extractor cut-over."""
+def test_selection_is_the_one_caller_of_the_key():
+    """R92 held the key uncalled through session 8; 9b-2a gives it exactly one
+    caller, extraction selection (9b-2a R5)."""
     from pathlib import Path
     repo = Path(__file__).resolve().parent.parent
     callers = [f.relative_to(repo).as_posix() for f in (repo / "engine").rglob("*.py")
                if "reuse_key(" in f.read_text() and f.name != "reuse_key.py"]
-    assert callers == []
+    assert callers == ["engine/core/selection.py"]
 
 
 # ── G1 ────────────────────────────────────────────────────────────────

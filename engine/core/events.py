@@ -109,6 +109,14 @@ class ArmNotInRun(EventRefused):
 #: re-declares it; a test asserts the two agree.
 PRE_MANIFEST_MARKER = "pre-manifest"
 
+#: F2 (9b-2a): the claim's input identity rides in `payload_json`, no migration.
+#: Every claim-bearing event the extractor writes carries all three from slice
+#: 2(c) (R139, 9b-2a R3); selection (`engine.core.selection`) reads the first.
+#: These names are spelled here and nowhere else a payload is read.
+PAYLOAD_REUSE_KEY = "reuse_key"
+PAYLOAD_PARSED_TEXT_SHA256 = "parsed_text_sha256"
+PAYLOAD_PARSED_TEXT_UID = "parsed_text_uid"
+
 _MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
 _MISSING = object()
 

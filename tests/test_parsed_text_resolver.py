@@ -15,6 +15,7 @@ import pytest
 from engine.core import parsed_text as pt
 from engine.core.database import ReviewDatabase
 from _parsed_text_fixture import write_parsed
+from _event_store_fixture import seed_eligibility
 
 REPO = Path(__file__).resolve().parent.parent
 m021 = importlib.import_module("engine.migrations.021_parsed_text_sha256")
@@ -119,6 +120,7 @@ def test_extractor_site_hands_on_the_file(db, tmp_path):
     from engine.agents.extractor import run_extraction
     from engine.core.review_spec import load_review_spec
     path = write_parsed(db, 7, TEXT)
+    seed_eligibility(db._conn, 7)   # 9b-2a: selection reads the eligibility axis
     seen = []
 
     def capture(pid, paper_text, *a, **k):
@@ -138,7 +140,12 @@ def test_extractor_site_hands_on_the_file(db, tmp_path):
     "engine.cloud.base", "engine.review.human_review"])
 def test_each_former_glob_site_reads_through_the_resolver(module):
     mod = importlib.import_module(module)
-    assert mod.load_parsed_text is pt.load_parsed_text
+    if module == "engine.agents.extractor":
+        # 9b-2a: selection resolves the reference; the loop reads it through
+        # the resolver's verified read (R95).
+        assert mod.read_parsed_text is pt.read_parsed_text
+    else:
+        assert mod.load_parsed_text is pt.load_parsed_text
 
 
 # ── G5: no engine module resolves a parsed text by glob ───────────────

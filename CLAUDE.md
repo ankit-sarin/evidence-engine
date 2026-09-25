@@ -234,6 +234,7 @@ closeout; **the old record is superseded, never edited.**
   before any live write, exclusivity is checked against scheduled jobs that read or write
   review.db or the evidence-engine tree — not every timer on the box (R85) — plus
   lsof/fuser empty on review.db.
+- Interim control (R114): no extraction command is run against live review.db in session 9; selection now takes every eligible paper with no field events, so a run would extract all 190. Retired at the freshman smoke run (session 10).
 
 ## Ops Invariants — commits
 

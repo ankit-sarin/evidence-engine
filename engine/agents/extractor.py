@@ -29,7 +29,8 @@ from engine.core.completeness import (
 from engine.core.citation_guard import LEGACY, UncitedValueError, enforce_citations
 from engine.core.extraction_telemetry import record_call
 from engine.core.effective_config import EffectiveConfig, stage_config
-from engine.core.parsed_text import NoParsedText, ParsedTextError, load_parsed_text
+from engine.core.parsed_text import ParsedTextError, ParsedTextRef, read_parsed_text
+from engine.core.selection import SelectionResult, select_for_extraction
 from engine.utils.ollama_client import InputFitError, ollama_chat
 from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
 
@@ -480,8 +481,13 @@ def extract_paper(
     auditor_model_digest: str | None = None,
     run_id: str | None = None,
     attempt: int | None = None,
+    parsed_text_ref: ParsedTextRef | None = None,
 ) -> ExtractionResult:
     """Run the full two-pass extraction on a single paper and store results.
+
+    `parsed_text_ref` is the text identity selection resolved (9b-2a). It is
+    accepted now so the call shape does not change when the event writer that
+    stamps it on every claim lands (slice 2(c)); nothing reads it yet.
 
     Dispatches to the elicited pipeline when the ReviewSpec asks for it
     (`extraction_models.elicitation`). The flag defaults OFF so that upgrading
@@ -666,6 +672,7 @@ def extract_paper_with_completeness(
     model_digest: str | None = None,
     auditor_model_digest: str | None = None,
     max_attempts: int = MAX_COMPLETENESS_ATTEMPTS,
+    parsed_text_ref: ParsedTextRef | None = None,
 ) -> ExtractionResult:
     """Extract one paper, re-running the identical two-pass request until complete.
 
@@ -709,6 +716,7 @@ def extract_paper_with_completeness(
                 model_digest=model_digest,
                 auditor_model_digest=auditor_model_digest,
                 run_id=run_id, attempt=attempt,
+                parsed_text_ref=parsed_text_ref,
             )
         except RETRYABLE as exc:
             last_error = exc
@@ -779,6 +787,7 @@ def run_extraction(
     review_name: str,
     restart_every: int = RESTART_EVERY_N,
     experiment_lock: bool = True,
+    selection: SelectionResult | None = None,
 ) -> dict:
     """Run extraction on all eligible papers, holding the experiment lock.
 
@@ -791,11 +800,17 @@ def run_extraction(
 
     Pass experiment_lock=False to opt out (tests, or a deliberate concurrent
     run). Everything else is unchanged.
+
+    `selection` is a `select_for_extraction` result the caller already holds
+    (`run_pipeline`'s extract stage), so the corpus is selected once per run;
+    without it the run selects for itself.
     """
     if not experiment_lock:
-        return _run_extraction_unlocked(db, spec, review_name, restart_every)
+        return _run_extraction_unlocked(db, spec, review_name, restart_every,
+                                        selection=selection)
     with hold_experiment_lock():
-        return _run_extraction_unlocked(db, spec, review_name, restart_every)
+        return _run_extraction_unlocked(db, spec, review_name, restart_every,
+                                        selection=selection)
 
 
 def _run_extraction_unlocked(
@@ -803,16 +818,19 @@ def _run_extraction_unlocked(
     spec: ReviewSpec,
     review_name: str,
     restart_every: int = RESTART_EVERY_N,
+    *,
+    selection: SelectionResult | None = None,
 ) -> dict:
     """Extraction loop proper. Callers should prefer run_extraction().
 
-    Picks up papers at FT_ELIGIBLE (reviews with FT screening) and PARSED
-    (reviews without FT screening). A paper cannot be at both statuses
-    simultaneously, so querying both is safe.
+    Takes the papers `select_for_extraction` chose for the spec's arm: the
+    corpus by eligibility axis, less papers this arm already holds a live claim
+    on under the current parsed text (reuse key), less papers whose text is
+    refused (R122). `papers.status` is not read (D9, R119).
     """
-    ft_papers = db.get_papers_by_status("FT_ELIGIBLE")
-    parsed_papers = db.get_papers_by_status("PARSED")
-    papers = ft_papers + parsed_papers
+    if selection is None:
+        selection = select_for_extraction(db._conn, arm=spec.extraction_models.arm)
+    papers = selection.to_extract
     total = len(papers)
     # The codebook beside THIS database — a run under a data_root
     # override must compare against its own review (MIGRATE R1).
@@ -854,38 +872,25 @@ def _run_extraction_unlocked(
 
     from engine.utils.progress import ProgressReporter
 
-    stats = {"extracted": 0, "skipped": 0, "failed": 0, "total_spans": 0}
+    stats = {"extracted": 0, "failed": 0, "total_spans": 0,
+             "skipped_asserted": len(selection.skipped_asserted),
+             "skipped_refused": len(selection.skipped_refused)}
     review_dir = Path(db.db_path).parent
     progress = ProgressReporter(total, "Local extraction")
     papers_since_restart = 0  # counter for proactive restart
 
-    for i, paper in enumerate(papers, 1):
-        pid = paper["id"]
-        title = paper["title"]
+    for i, (pid, ref) in enumerate(papers, 1):
+        row = db._conn.execute("SELECT title FROM papers WHERE id = ?", (pid,)).fetchone()
+        title = (row[0] if row else None) or ""
 
-        # Check staleness: skip if already extracted with current schema hash
-        existing = db._conn.execute(
-            "SELECT id FROM extractions WHERE paper_id = ? AND codebook_hash = ?",
-            (pid, schema_hash),
-        ).fetchone()
-        if existing:
-            logger.info("Paper %d: already extracted with current schema — skipping", pid)
-            stats["skipped"] += 1
-            progress.report(pid, "SKIPPED", 0)
-            continue
-
-        # Load parsed Markdown through the one resolver (S3e): greatest recorded
-        # version, hash verified on read (R95).
+        # The text selection resolved, re-verified on this read (R95): a file
+        # changed since selection is refused here rather than consumed.
         try:
-            paper_text = load_parsed_text(db._conn, pid)
-        except NoParsedText:
-            logger.warning("Paper %d: no parsed text found — skipping", pid)
-            stats["failed"] += 1
-            progress.report(pid, "FAILED", 0)
-            continue
+            paper_text = read_parsed_text(ref)
         except ParsedTextError as exc:
-            logger.error("Paper %d: parsed text refused — %s", pid, exc)
-            stats["failed"] += 1
+            logger.error("Paper %d: parsed text refused — %s (%s)",
+                         pid, exc.reason_code, exc)
+            stats["skipped_refused"] += 1
             progress.report(pid, "FAILED", 0)
             continue
         t_paper = time.time()
@@ -895,6 +900,7 @@ def _run_extraction_unlocked(
                 pid, paper_text, spec, db,
                 model_digest=extractor_digest,
                 auditor_model_digest=auditor_digest,
+                parsed_text_ref=ref,
             )
             db.update_status(pid, "EXTRACTED")
             stats["extracted"] += 1
@@ -924,7 +930,7 @@ def _run_extraction_unlocked(
             try:
                 restart_ollama(
                     reason=f"proactive after {papers_since_restart} papers",
-                    papers_done=stats["extracted"] + stats["skipped"] + stats["failed"],
+                    papers_done=stats["extracted"] + stats["failed"],
                 )
                 papers_since_restart = 0
             except RuntimeError:
@@ -935,9 +941,11 @@ def _run_extraction_unlocked(
 
     progress.summary()
     logger.info(
-        "Extraction complete: %d extracted, %d skipped, %d failed, %d total spans",
+        "Extraction complete: %d extracted, %d skipped (asserted), %d skipped "
+        "(refused), %d failed, %d total spans",
         stats["extracted"],
-        stats["skipped"],
+        stats["skipped_asserted"],
+        stats["skipped_refused"],
         stats["failed"],
         stats["total_spans"],
     )

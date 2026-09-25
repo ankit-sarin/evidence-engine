@@ -454,7 +454,7 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 | Script | Purpose | Key CLI Args |
 |--------|---------|--------------|
 | `run_pipeline.py` | Full pipeline orchestrator (search → export) | `--spec`, `--name`, `--skip-to` |
-| `run5_extract_and_audit.py` | Extraction + audit for tmux | `--retry-failed`, `--restart-every`, `--paper-ids` |
+| `run5_extract_and_audit.py` | **Retired 2026-09-25** (R113, 9b cut-over) — recoverable at `4756bd2` | — |
 | `screen_expanded.py` | Three-phase expanded screening | `--fetch-only`, `--screen-only`, `--verify-only` |
 | `run_cloud_extraction.py` | Cloud concordance arms | `--arm`, `--max-cost`, `--progress`, `--dry-run` |
 | `monitor_extraction.py` | Extraction watchdog (20 min poll) | `--review` |
@@ -463,7 +463,7 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 
 | Script | Purpose | Key CLI Args |
 |--------|---------|--------------|
-| `reextract_failed.py` | Retry EXTRACT_FAILED papers | `--review`, `--spec` |
+| `reextract_failed.py` | **Retired 2026-09-25** (R113, 9b-2e/f) — recoverable at `6e09166` | — |
 | `rescreen_original_251.py` | Re-screen with updated criteria | `--review`, `--spec` |
 | `rescreen_with_specialty.py` | Re-screen with specialty_scope | `--background`, `--force` |
 

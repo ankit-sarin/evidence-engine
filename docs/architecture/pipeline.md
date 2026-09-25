@@ -226,17 +226,12 @@ python -m engine.agents.ft_screener ... --verify-only
 
 **Model digest tracking:** Captures extractor + auditor model digests via `get_model_digest()` at run start. Stored per extraction for reproducibility
 
-**Post-extraction:** Distribution monitor runs automatically at the end of the local extraction path (`run5_extract_and_audit.py` calls `run_post_extraction_check()` with arm="local")
+**Post-extraction:** Distribution monitor ran at the end of the local extraction path only through `run5_extract_and_audit.py`, **retired 2026-09-25** (9b cut-over); the local path currently runs no collapse check (plan row B9)
 
 **Constants:** `MODEL = "deepseek-r1:32b"`, `MAX_RETRIES = 2`, `RETRY_DELAY = 30`, `SNIPPET_MAX_RETRIES = 2`, `RESTART_EVERY_N = 25`
 
 **CLI:**
-```bash
-python scripts/run5_extract_and_audit.py --review surgical_autonomy --spec ...
-python scripts/run5_extract_and_audit.py ... --retry-failed
-python scripts/run5_extract_and_audit.py ... --restart-every 0  # disable proactive restart
-python scripts/run5_extract_and_audit.py ... --paper-ids 82 4 24
-```
+`scripts/run5_extract_and_audit.py` **retired 2026-09-25** (R113, 9b cut-over); extraction runs through `scripts/run_pipeline.py` under a run manifest. Recoverable at `4756bd2`.
 
 ---
 
@@ -471,7 +466,7 @@ Structural errors that indicate a broken pipeline are raised, not logged and swa
 ### Distribution Monitor Integration
 
 The distribution monitor (`engine/validators/distribution_monitor.py`) is wired into the automatic extraction completion path:
-- **Local extraction:** `run5_extract_and_audit.py` calls `run_post_extraction_check()` after extraction completes
+- **Local extraction:** none since `run5_extract_and_audit.py` retired (2026-09-25); plan row B9
 - **Cloud extraction:** Both `OpenAIExtractor.run()` and `AnthropicExtractor.run()` call `run_distribution_check()` post-extraction
 - COLLAPSED fields are hard failures; LOW_VARIANCE fields are warnings (hard failures with `--strict`)
 

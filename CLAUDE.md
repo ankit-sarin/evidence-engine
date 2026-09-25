@@ -541,9 +541,6 @@ python -m engine.agents.ft_screener --review surgical_autonomy
 python -m engine.agents.ft_screener ... --screen-only
 python -m engine.agents.ft_screener ... --verify-only
 
-# Per-class elicitation smoke (ELICIT-DESIGN-01; writes only its own gitignored scratch DB)
-PYTHONPATH=. python -m analysis.eval.elicit_design01.smoke --review surgical_autonomy
-
 # Extraction staleness report (deletes nothing; like every ReviewDatabase construction it runs pending migrations)
 python -m engine.utils.extraction_cleanup --review surgical_autonomy          # report
 # extraction_cleanup --confirm — retired (R94): refuses before opening any database. Extractions

@@ -198,6 +198,11 @@ Provenance of human decisions: every human decision on disk (36 full-text adjudi
 | B4 | Three kappa implementations in one repo: `metrics.py` (wrong), `score_screen2f` (correct), `pi_audit_unblind.weighted_kappa` (correct, independent). Recorded so B1 is not over-applied | D1-6b | — |
 | B5 | The suite pins three defects green by name (substring MATCH, permissive completeness, a backup fixture that closes the connection and never enables WAL) and asserts only ranges for kappa; 2,329 passing tests could not see any of the nine | D1-5, D1-6, D1-7, D1-8 | structural |
 | B6 | `engine/agents/auditor.py::audit_span` returns `"verified"` before `grep_verify` runs, for any value in a four-item hand-list divergent from the codebook's six sentinels. Measured: 313 of the 2,159 `verified` spans (14.5%) were never text-checked — `NR` 176, `NOT_FOUND` 6, and 131 `'No comparison reported'`, an ordinary value under v2.1 (R22). `SEMANTIC_ONLY_TIERS = {4}` forces `grep_pass = True`, with zero live rows. Closes session 9, and must land before Run 7's audit pass | `S2_phase1_readout_addendum4_20260921.md` §D (B6); WRITE-PATH-01 Phase 1b Q4 | **IN PROGRESS** — sentinel authority in the codebook and non-auditor sites (`36bb312`, R124/R128/R132–R138); `audit_span` hand-list and tier-4 pass retire in slice 2 with the locator |
+| B7 | *Extraction-time location on the elicited path is deferred.* R17 locates every claim with the one locator; the event-side auditor (`audit_events.audit_run`) does so at the audit stage, and the elicited path does not locate at extraction time — a deviation from R17 recorded rather than built (9b-2d OUT OF SCOPE) | WRITE-PATH-01 9b-2d; R149 | LATENT — same event, same run; owner S5a |
+| B8 | *The semantic auditor's verdict has no table.* Each `semantic_verify` verdict is run-linked telemetry (`audit-telemetry-1`, `telemetry/audit_calls.jsonl`), joinable to the manifest by `run_id` but not queryable beside the events (R147) | WRITE-PATH-01 9b-2d; R147 | LATENT — owner S3c, session-10 migration (with C24–C27, D16) |
+| B9 | *The local extraction path runs no distribution-collapse check.* `run_post_extraction_check` was called on the local path only by `scripts/run5_extract_and_audit.py`, retired at `6e09166`; `run_pipeline` never called it, and `engine/cloud/base.py` is now its only caller. CLAUDE.md's "runs automatically at end of all extraction pipelines" is false for the local path | WRITE-PATH-01 9b closeout (grep, `4756bd2:scripts/run5_extract_and_audit.py`) | ARMED at the next local run (the session-10 smoke); no local run in session 9 (R114) |
+
+*Addendum 2026-09-25 (9b closeout, to row B6):* `audit_span`'s hand-list and the tier-4 unchecked pass retired at `49e4cd6` (R124, R149); the event-side auditor locates every claim. Measured read-only on live (9b-2d R10, `mode=ro`): of **2,159** legacy `verified` spans, **117** carry an empty snippet — values `NR` 75, `No comparison reported` 36, `NOT_FOUND` 6, by field comparison_to_human 40, sample_size 38, secondary_outcomes 16, primary_outcome_value 10, task_select 8, country 3, primary_outcome_metric 2 — all within B6's 313 never-checked rows; **0** carry a whitespace-only snippet (the case R8 corrects). The legacy rows stay as legacy telemetry.
 
 ### C. Configuration and execution provenance
 
@@ -533,6 +538,7 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | D13 | S3e (closed 2a; R99) |
 | D14 | decision at the session-10 freeze against Run 7's scope; remedy if needed is a seed migration from files + hashes |
 | D15 | S3e follow-up (session 9: route the short-circuit through the resolver) |
+| D16 | S3c (session-10 migration: a side table keyed by `extraction_uid`, with I16's guard — R142) |
 | E1 E2 | S4a · S4b |
 | E3 | S4d |
 | E4 | S4c |
@@ -951,6 +957,64 @@ Expected values at open, as measured at this closeout:
 
 *Addendum 2026-09-25 (9b Part 0):* F7 ruled at R139; the open-forks list above is now F2, F4, F8, F15, F16.
 
+Session 9b (S5a S5b S5d S3f-min, `WRITE-PATH-01` Part 0 and Phase 2 slice 2 — the cut-over — and this closeout) closed 2026-09-25; opened 2026-09-25 03:14 UTC. Eight commits before this one, by sub-brief:
+- `06aab85` Part 0: R139 (F7 ruled (b)) into this log.
+- `15c0ae1` 2(a): selection on the eligibility axis with the reuse key (`engine/core/selection.py`, R96, R119, R141); the reuse-key payload constants (F2, R142); A14 reason codes on the parsed-text exceptions (R143); R114's CLAUDE.md sentence; row D16.
+- `f9e18ad` 2(b): the manifest `run_id` required down to `extract_paper`, the unit-map parameter renamed (R116); one digest per run, verified against the arm's pin before selection (R117); `run_calls.paper_id` on every extractor call; row I18 (R144).
+- `ca93558` 2(c): the extraction event mapping (`engine/core/extraction_events.py`), the F9 reason set (R146), R118's duplicate and unexpected-field policy (R145), the writer invariant `ClaimWithoutInputIdentity` (R142); row C25 — built and tested, not wired.
+- `49e4cd6` 2(d): the shared locator (`engine/core/locator.py`, R17, R149), the event-side auditor (`engine/agents/audit_events.py`), audit telemetry (R147), `audit_span`'s hand-list and tier-4 pass retired (R124), the arm refusals narrowed to claims (R150), the prompt sites read the codebook (R131) — not wired.
+- `4756bd2` FLIP 1/2: reader 8's stage-completion counts through the reader (R112).
+- `6e09166` FLIP 2/2: **the cut-over** (R111, R151) — the extractor and the audit stage write events only; `run_audit`, `check_low_yield` and `scripts/run5_extract_and_audit.py` retired; the consecutive-failure abort (R152); the 0-span change (R153); rows D17, C26.
+- `0fade3d` 2(e)/(f): `scripts/reextract_failed.py`, `ReviewDatabase.reset_for_reextraction` and the ELICIT-DESIGN-01 smoke retired (R154); I17 superseded by C27 (R155).
+- This closeout: R140–R156 into this log; rows B7, B8, B9 and the B6 addendum; D16's coverage-map line; CLAUDE.md's smoke entry and the `docs/architecture` run5 / `reextract_failed` mentions.
+
+**Closed or ruled this session.** Closed: D17 (the status-write crash, by the cut-over), I18 (the smoke retired). I17 superseded by C27. Forks ruled: F2 (R142), F4 (moot, R145), F7 (R139), F9 (R146), F12 (R117), F14 (moot, R119); F8 landed (R149). Open: F15 (cloud arms), F16 (the legacy-fixture slicing). New LATENT rows for session 10: C25, C26, C27, D16, B7, B8. **B9 is ARMED**: the local extraction path has run no distribution-collapse check since run5 retired, and CLAUDE.md still says it runs on every path.
+
+**The codebook is unchanged this session** (semantic hash `1e67684b…9172` as at 9a). The legacy prompt now asks for the canonical sentinel, `NR`, where it asked for `NOT_FOUND` (R131), which changes the extract stages' prompt hash; no arm is pinned, so nothing refuses.
+
+**Gate progression**, each on its commit's tree with the delta explained by test id in the sub-brief reports:
+- 2,778 / 17 at Part 0 open (9m38s)
+- 2,796 / 17 (+18) `15c0ae1` (9m34s)
+- 2,809 / 17 (+13) `f9e18ad` (9m41s)
+- 2,827 / 1 xfail / 17 (+18) `ca93558` (10m00s)
+- 2,868 / 2 xfail / 17 (+41) `49e4cd6` (10m13s)
+- 2,874 / 2 xfail / 17 (+6) `4756bd2` (10m43s)
+- 2,869 / 1 xfail / 17 (−5; T13 xfail → pass) `6e09166` (16m05s)
+- **2,858 / 1 xfail / 17** (−11) `0fade3d` (10m00s); this closeout is docs-only
+
+**Live unchanged.** `db_fingerprint --compare` exited 0 at every open and after every push this session, overall `ea05912d67f0b841bf003a7a941f6505e2c57140b5c2f62e1ff446ea16b9ce01`; no live write and no run (R114). One read-only measurement (9b-2d R10, `mode=ro`) is in the B6 addendum.
+
+**Lessons.**
+- The zero-span test had been passing on an unrelated `ValidationError` (a `MagicMock` thinking channel) — a test named for a path it never reached. Found only because the flip changed its failure's classification.
+- A read-out is current as of its commit, not the session that reads it: Q4's second `_ABSENCE_VALUES` list had been removed at `36bb312` before 9b-2d quoted it.
+- Gate wall time this session ran 9m34s–16m05s against CLAUDE.md's ~3m25s, disk-bound at the peak (`jbd2_log_wait_commit`); unresolved — session 10 measures it before its smoke run.
+- R156: a claim about the box's state is reported only after the command that makes it true has run.
+
+**Session 9b closed; slice 3 is 9c.**
+
+Next: **session 9c** (slice 3, R129), in a fresh session:
+- The R129 fixture rewrites, from the 18 legacy-fixture files P8 counted less what the flip already took.
+- Readers 10–14 to the reader or retired: the audit HTML export and the human-audit tools, PRISMA's `low_yield` count, `get_pipeline_stats`.
+- `ReviewDatabase`'s legacy write methods (`add_extraction_atomic`, `update_audit`, the status writes on the extraction path); `count_populated_fields`' dict shape.
+- B9: wire the distribution-collapse check onto the local path or rule it retired, and correct CLAUDE.md's claim.
+
+Then **session 10**: the migration (C24, C25, C26, C27, D16, B8's audit-verdict table) with I16's guard; the freshman smoke run on 5 papers; retire R114's CLAUDE.md sentence; measure the gate's wall time.
+
+Expected values at open, as measured at this closeout:
+- HEAD **as pushed by this closeout**, clean and level with origin; claude-config at its current successor, with `PROJECT_LEDGER.md` committed at the wrap.
+- Gate **2,858 / 1 xfail / 17** (the xfail is `test_legacy_equivalence.py::test_fast_matches_legacy[   ]`, ruled R8/R149).
+- `db_fingerprint --compare` against `docs/session-reports/input-identity-01/review_db_fingerprint_20260924T205225Z.json`: **exit 0**, **34 tables**, `-wal` 0 B or absent, overall `ea05912d67f0b841bf003a7a941f6505e2c57140b5c2f62e1ff446ea16b9ce01`.
+- Event store unchanged (the fingerprint is identical): **3 arms · 190 paper events · 194 parsed-text refs (all with `parsed_text_sha256`) · 3 identity rows · 0 field events**; `run_manifests`, `run_stage_configs`, `run_calls` empty; **20 receipts**, last `021_parsed_text_sha256`; no migration pending.
+- Restore points present with the fingerprints measured at 9a Part 0:
+  - `…input-identity-01-phase3-pre-write-20260924-204138`: 34 tables, `bb39ba81…6c40`.
+  - `…manifest-01-phase3-pre-write-20260923-161020`: 31 tables, `e564f250…5b63`.
+  - `…readers-01-phase3-pre-write-20260922-165453`: 32 tables, `62f39128…b79a`.
+
+  All three are retained to session 10. The four older backups stay unopened (R88).
+- Decision log ends at **R156**.
+
+**Embargo 07:00–10:35 UTC** for any live write (R86). **R19, R71 and R114 remain in force**: R19 and R114 until the freshman smoke run (session 10); R71 until sessions 8 and 9 both land.
+
 ## Decision log
 
 Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in order. The architect's four provisional rulings of 2026-09-19 (recall-bounded filter with code-enforced basis; SYNERGY as reference; a tiered lane with 2d first; a 50 KB plan) were withdrawn after the external review and replaced by R1–R9 below.
@@ -1102,6 +1166,23 @@ Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in 
 | 2026-09-24 | R137 — The ~9 fixture codebooks gain the R132 key as deliberate B5 updates, each with a one-line note; the loader's validation error on a codebook missing the key is pinned by one test. | PI, on architect recommendation |
 | 2026-09-24 | R138 — The docstrings of engine/elicitation/classes.py and tests/test_non_value_tokens_downstream.py that name the hand-lists are updated in item 4's commit. | PI, on architect recommendation |
 | 2026-09-25 | R139 — F7 ruled (b), one contract-unmet policy. On every site that writes field events, an uncited non-sentinel value whose completeness retry budget (MAX_COMPLETENESS_ATTEMPTS = 3) is exhausted becomes a per-field contract_unmet event (reader row 15; payload violation_codes and attempts) and the paper stores with its other fields; exhaustion no longer fails the paper on the local path. extraction_failed is reserved for outcomes in which no field can be trusted, from F9's reason vocabulary. A site that does not yet write field events (the cloud arms until their own cut-over, F15) keeps its current behaviour and logs the same reason code. The elicited path's CONTRACT_UNMET token maps to the same event. Fixtures that pin the paper-level failure rewrite in slice 3 (R129). Lands in slice 2(c). | PI, on architect recommendation |
+| 2026-09-25 | R140 — A paper stores what the arm produced. extraction_failed is reserved for outcomes where the arm produced nothing usable and the paper should be retried next run (F9 set). Fields missing after the completeness budget get no field event and are listed in the extracted paper event's payload.incomplete_fields (reader row 1); the paper is not failed. Exhausted response_unparseable and no_fields_returned are extraction_failed. | PI, on architect recommendation |
+| 2026-09-25 | R141 — Selection skips a paper for an arm when any LIVE claim-bearing event (asserted, declined, contract_unmet) for (arm, paper) carries payload.reuse_key == reuse_key(arm, paper_id, parsed_text_sha256). Superseded claims never block. The key marks an attempt under a text, not a happy outcome. (2a R3) | PI, on architect recommendation |
+| 2026-09-25 | R142 — F2: the reuse key and parsed-text identity ride in field_events.payload_json (reuse_key, parsed_text_sha256, parsed_text_uid), named once in events.py; the writer refuses an extractor claim-bearing event lacking them (ClaimWithoutInputIdentity). Promoted to a side table keyed by extraction_uid in the session-10 migration (D16). | PI, on architect recommendation |
+| 2026-09-25 | R143 — A14 reason codes live on the parsed-text exceptions: parsed_text_not_recorded, parsed_text_missing, parsed_text_modified. R122's vocabulary is widened by the first. Selection catches all three by resolving and reading each candidate; the extraction loop re-reads under R95. | PI, on architect recommendation |
+| 2026-09-25 | R144 — R116 landed: run_id is a keyword-only required argument down to extract_paper; the unit-map directory parameter is unit_map_dir_name in extractor.py and elicitation/pipeline.py (the stored telemetry key is unchanged). R117 landed: one digest per model per run from resolve_run; extraction_digest verifies run_stage_configs against the arm's pin before selection (StageNotInRun / ArmPinMismatch naming both digests). auditor_model_digest is the audit stage's row or NULL, never fetched (after the flip the auditor digest is computed but stored nowhere, since the legacy extractions write is gone). | PI, on architect recommendation |
+| 2026-09-25 | R145 — F4 is moot on the extractor path: R118 makes a duplicated field a contract failure under the budget (DuplicateFieldError, sharing RETRYABLE) and R139 makes exhaustion contract_unmet with violation DUPLICATE_FIELD; the writer never receives two values for one field. duplicate_detected stays for the reviewer path. | PI, on architect recommendation |
+| 2026-09-25 | R146 — F9: EXTRACTION_REASONS is the closed set committed at ca93558 (parsed_text_* ×3, context_ceiling_unavailable, model_call_failed, thinking_channel_missing, response_unparseable, no_fields_returned, run_interrupted, unclassified_error → extraction_failed; input_overflow_estimated, input_truncated_at_ceiling, input_dropped_below_floor → input_exceeds_context). Pass-2 ValidationError joins RETRYABLE. CodebookContractError, ExhaustedWithoutRecord, EventRefused and RunAborted are run faults, never paper outcomes and never counted toward the abort. The refusal exceptions carry the attempt's record (record attribute) so exhaustion can store. | PI, on architect recommendation |
+| 2026-09-25 | R147 — The semantic (cross-family) auditor verdict has no event kind: it is run-linked telemetry (audit-telemetry-1, telemetry/audit_calls.jsonl, one row per verdict) — a feature for the session-12 human queue, never a filter — promoted to a table in the session-10 migration. semantic_verify runs only on claims located False with a non-sentinel value and a snippet; a snippet-less value is flagged without a model call. | PI, on architect recommendation |
+| 2026-09-25 | R148 — low_yield is not stored: it is a function over the reader (count_populated_fields, the single R136 predicate, with spec.low_yield_threshold). extractions.low_yield receives no write; readers of it re-point in slice 3. | PI, on architect recommendation |
+| 2026-09-25 | R149 — R17 landed as engine/core/locator.py (LOCATOR_VERSION locator-1, threshold 0.85 strict, score = max window ratio, exact/fuzzy/none, snippet_supplied, bridged, parsed-text identity in the payload; actor engine/system/locator@locator-1). The locator runs at the audit stage for the spec's extraction arm; audit_run accepts any arm, and no caller yet runs it for another (the cloud and pre-manifest arms wait on R17's dated locatability measurement); extraction-time location on the elicited path is deferred (deviation from R17, same event, same run). A snippet that normalises to nothing is not located (the pre-R17 grep_verify said found; test_legacy_equivalence's "   " case is a ruled xfail). | PI, on architect recommendation |
+| 2026-09-25 | R150 — The arm refusals (ArmNotInRun, ClaimOnPreManifestArm, ClaimOnRetiredArm) apply to CLAIM_EVENT_TYPES only; citation_located, superseded and other system events about an existing claim are exempt, as reviewer and state_at_migration are. This is what lets R17's dated locatability measurement write located events on pre-manifest and retired arms. | PI, on architect recommendation |
+| 2026-09-25 | R151 — R111 landed at 6e09166 in two commits (reader 8 to the reader at 4756bd2 first, R112; reader 9 already read only workflow_state and needed no change): the local extraction path writes field_events, paper_events, run_calls and telemetry only; the extractor's and auditor's legacy writes are gone; run_audit and check_low_yield are retired (R47, retention ledger); ReviewDatabase's legacy write methods and readers 10–14 remain as legacy telemetry until slice 3. D17 (the status-write crash) closed by the cut-over. | PI, on architect recommendation |
+| 2026-09-25 | R152 — Consecutive-failure abort: three consecutive extraction_failed outcomes (A14 codes, input_exceeds_context and run faults do not count; an ExtractionRecord with at least one field, or a successful extraction, resets; an empty record (no_fields_returned) counts, consistent with R140 and R153) raise RunAborted after the third paper's event; the run closes with end_status "failed" (C26 records the missing end reason for session 10). | PI, on architect recommendation |
+| 2026-09-25 | R153 — A 0-span Pass 2 is retried under the outer budget and exhausts to no_fields_returned (was fail-on-first). | PI, on architect recommendation |
+| 2026-09-25 | R154 — R113 landed: run5_extract_and_audit.py (brought forward into the flip), reextract_failed.py, reset_for_reextraction and the ELICIT-DESIGN-01 smoke (I18) are retired, recoverable per the retention ledger; the session-10 freshman smoke run is the smoke's successor. | PI, on architect recommendation |
+| 2026-09-25 | R155 — I17 is superseded by C27: a with_options caller override cannot be captured by the manifest as built; architect lean for session 10 is to refuse an undeclared override. | PI, on architect recommendation |
+| 2026-09-25 | R156 — Process: a CC status claim that was not true (the "parked in a named stash" statement, corrected by CC before commit 2) is recorded here in the same voice as the architect's recorded errors; the check is the same — a claim about the box's state is reported only after the command that makes it true has run. | PI, on architect recommendation |
 
 *Addendum 2026-09-23 (INPUT-IDENTITY-01 Part 0), to the R86 row:* the CLAUDE.md half of R86 is applied in this commit; the I13 wording item is closed by R89. *(Placed after the table rather than directly under the R86 row: a non-table line inside the table would end it at R86 and un-table R87–R89.)*
 

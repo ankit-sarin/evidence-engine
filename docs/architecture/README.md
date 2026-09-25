@@ -48,7 +48,6 @@ Review Spec (YAML)
 | [state-machine.md](state-machine.md) | Paper lifecycle statuses, transitions, terminal states, admin overrides |
 | [workflow.md](workflow.md) | 12-stage workflow enforcement with human gates |
 | [modules.md](modules.md) | Complete module inventory — every Python file with purpose, exports, dependencies |
-| [_generated.json](_generated.json) | Machine-readable codebase metadata |
 
 ## Technology Stack
 

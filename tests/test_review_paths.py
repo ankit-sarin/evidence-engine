@@ -149,9 +149,10 @@ def test_run_pipeline_takes_the_review_first_and_the_spec_as_override():
     assert inspect.signature(run_pipeline).parameters["spec_path"].default is None
 
 
-# The 29 spec-bearing entry points, as enumerated in the SPEC-AUTH-01 Phase 1
-# read-out. Pinned as a list so a new one cannot join them quietly on a
-# hand-built path.
+# The spec-bearing entry points: 29 as enumerated in the SPEC-AUTH-01 Phase 1
+# read-out, 25 after the retirements noted inline (measured 2026-09-24 by
+# len(SPEC_BEARING_ENTRY_POINTS) and by collection, R135). Pinned as a list so
+# a new one cannot join them quietly on a hand-built path.
 SPEC_BEARING_ENTRY_POINTS = [
     "analysis/eval/elicit_design01/smoke.py",
     "analysis/eval/run_capture01.py",

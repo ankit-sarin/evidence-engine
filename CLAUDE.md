@@ -48,7 +48,7 @@ evidence-engine/
 │   ├── provenance/             # Frozen v1.1 evidence-provenance taxonomy + classifier
 │   └── eval/                   # Response-contract, runtime and priming evaluations
 ├── scripts/                    # Pipeline runners, batch scripts, monitors
-├── tests/                      # 2,770 in the standard gate + 17 network/ollama/integration (deselected)
+├── tests/                      # 2,778 in the standard gate + 17 network/ollama/integration (deselected)
 │   └── conftest.py             # Suite-wide service-call fence (see Ops Invariants)
 └── data/                       # gitignored — per-review databases, PDFs, exports,
                                 #   eval stores, telemetry
@@ -128,12 +128,12 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - 12-stage workflow enforcement with human gates between phases
 - Abstract retention policy: all paper data retained permanently — SCREENED_OUT is a label, not a deletion
 - LOW_YIELD detection: post-audit quality gate, configurable threshold, PRISMA-reported
+- Absence sentinels come from the codebook only: `absence_sentinels` plus a declared `canonical_absence_sentinel` ("NR", R132) — the one sentinel the engine itself writes — read through `Codebook.is_absence_sentinel`; LOW_YIELD counts a field absent only for a sentinel or a non-value token, so any other declared value (e.g. "Not assessable") counts as populated (R136)
 - PDF acquisition: 5-strategy cascade, %PDF validation, publisher grouping, --background tmux support
 - PDF verify/import: filename matching, canonical rename to `EE-{nnn}_{Author}_{Year}.pdf`, DB update
 - DB-driven PDF path resolution: `full_text_assets.pdf_path` → `papers.pdf_local_path` → glob fallback
 - Audit adjudication: per-span ACCEPT/REJECT/CORRECT, spot-check sampling, two-pass import validation
 - min_status parameter on exporters: AI_AUDIT_COMPLETE (raw AI) vs HUMAN_AUDIT_COMPLETE (human-verified)
-- ollama_options pass-through: per-model Ollama settings (e.g., num_ctx)
 - PRISMA reconciliation: validates terminal + in-progress = total, no double-counting
 - Three-tier PDF parsing: Docling → PyMuPDF fallback (hyperlink/structure errors) → Qwen2.5-VL:7b (scanned). Sparse threshold <100 chars after both text parsers
 - Self-documenting review workbooks: shared builder with DataValidation dropdowns, conditional formatting, Instructions sheet. Used by all 3 adjudication exporters

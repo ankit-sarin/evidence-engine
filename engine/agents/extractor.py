@@ -477,7 +477,6 @@ def extract_paper(
     spec: ReviewSpec,
     db: ReviewDatabase,
     model_digest: str | None = None,
-    auditor_model_digest: str | None = None,
     unit_map_dir_name: str | None = None,
     attempt: int | None = None,
     parsed_text_ref: ParsedTextRef | None = None,
@@ -506,7 +505,6 @@ def extract_paper(
             paper_id, paper_text, spec, db,
             unit_map_dir_name=unit_map_dir_name or _default_run_id(),
             model_digest=model_digest,
-            auditor_model_digest=auditor_model_digest,
             attempt=attempt,
             run_id=run_id,
             parsed_text_ref=parsed_text_ref,
@@ -677,7 +675,6 @@ def extract_paper_with_completeness(
     spec: ReviewSpec,
     db: ReviewDatabase,
     model_digest: str | None = None,
-    auditor_model_digest: str | None = None,
     max_attempts: int = MAX_COMPLETENESS_ATTEMPTS,
     parsed_text_ref: ParsedTextRef | None = None,
     *,
@@ -725,8 +722,7 @@ def extract_paper_with_completeness(
             result = extract_paper(
                 paper_id, paper_text, spec, db,
                 model_digest=model_digest,
-                auditor_model_digest=auditor_model_digest,
-                unit_map_dir_name=unit_map_dir_name, attempt=attempt,
+                    unit_map_dir_name=unit_map_dir_name, attempt=attempt,
                 parsed_text_ref=parsed_text_ref, run_id=run_id,
             )
         except RETRYABLE as exc:
@@ -952,7 +948,6 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
             result = extract_paper_with_completeness(
                 pid, paper_text, spec, db,
                 model_digest=extractor_digest,
-                auditor_model_digest=auditor_digest,
                 parsed_text_ref=ref,
                 run_id=run_id,
             )

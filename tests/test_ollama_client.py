@@ -446,38 +446,3 @@ class TestFetchModelDigest:
             with pytest.raises(ModelDigestError, match="non-200"):
                 fetch_model_digest("gemma3:27b")
 
-
-class TestDigestInExtraction:
-    def test_digest_columns_in_extraction_record(self, tmp_path):
-        """model_digest and auditor_model_digest columns are stored in extraction record."""
-        from engine.core.database import ReviewDatabase
-        from engine.search.models import Citation
-
-        db = ReviewDatabase("test_digest", data_root=tmp_path)
-        try:
-            db.add_papers([Citation(title="Test", source="pubmed", pmid="999")])
-            pid = db._conn.execute("SELECT id FROM papers WHERE pmid = '999'").fetchone()["id"]
-            db.update_status(pid, "ABSTRACT_SCREENED_IN")
-            db.update_status(pid, "PDF_ACQUIRED")
-            db.update_status(pid, "PARSED")
-
-            ext_id = db.add_extraction_atomic(
-                paper_id=pid,
-                schema_hash="test_hash",
-                extracted_data=[{"field_name": "study_type", "value": "RCT"}],
-                reasoning_trace="trace",
-                model="deepseek-r1:32b",
-                spans=[{"field_name": "study_type", "value": "RCT",
-                        "source_snippet": "...", "confidence": 0.9}],
-                model_digest="sha256:extractor_digest_abc",
-                auditor_model_digest="sha256:auditor_digest_xyz",
-            )
-
-            row = db._conn.execute(
-                "SELECT model_digest, auditor_model_digest FROM extractions WHERE id = ?",
-                (ext_id,),
-            ).fetchone()
-            assert row["model_digest"] == "sha256:extractor_digest_abc"
-            assert row["auditor_model_digest"] == "sha256:auditor_digest_xyz"
-        finally:
-            db.close()

@@ -14,7 +14,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from engine.search.models import Citation
-from engine.utils.db_backup import auto_backup
 
 logger = logging.getLogger(__name__)
 
@@ -60,14 +59,6 @@ ALLOWED_TRANSITIONS: dict[str, set[str]] = {
     "REJECTED": set(),
 }
 
-# Ordered status levels for min_status_gate comparisons
-_STATUS_ORDER = {
-    "PARSED": 0,
-    "ABSTRACT_SCREENED_OUT": 1,
-    "EXTRACTED": 2,
-    "AI_AUDIT_COMPLETE": 3,
-    "HUMAN_AUDIT_COMPLETE": 4,
-}
 
 # ── Schema DDL ───────────────────────────────────────────────────────
 
@@ -509,81 +500,6 @@ class ReviewDatabase:
             self._conn.execute("ROLLBACK")
             raise
 
-    def reset_for_reaudit(self) -> dict:
-        """Reset all audit state so the auditor can be re-run from scratch.
-
-        Administrative override. Intentional bypass of state machine. Valid use
-        cases: auditor logic changes, schema updates, prompt refinements.
-        Never called during normal pipeline operation.
-
-        Atomic: either both updates succeed or neither does.
-        Returns counts of papers and spans reset.
-        """
-        try:
-            self._conn.execute("BEGIN")
-            span_result = self._conn.execute(
-                """UPDATE evidence_spans
-                   SET audit_status = 'pending',
-                       auditor_model = NULL,
-                       audit_rationale = NULL,
-                       audited_at = NULL
-                   WHERE audit_status != 'pending'"""
-            )
-            spans_reset = span_result.rowcount
-
-            paper_result = self._conn.execute(
-                """UPDATE papers
-                   SET status = 'EXTRACTED', updated_at = ?
-                   WHERE status IN (
-                       'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE',
-                       'AUDITED'
-                   )""",
-                (_now(),),
-            )
-            papers_reset = paper_result.rowcount
-
-            self._conn.execute("COMMIT")
-            logger.info(
-                "Re-audit reset: %d papers → EXTRACTED, %d spans → pending",
-                papers_reset, spans_reset,
-            )
-            return {"papers_reset": papers_reset, "spans_reset": spans_reset}
-        except Exception:
-            self._conn.execute("ROLLBACK")
-            raise
-
-    def min_status_gate(self, paper_id: int, min_status: str) -> bool:
-        """Return True if paper meets or exceeds the minimum status level.
-
-        Order: PARSED < ABSTRACT_SCREENED_OUT < EXTRACTED < AI_AUDIT_COMPLETE
-               < HUMAN_AUDIT_COMPLETE.
-        """
-        if min_status not in _STATUS_ORDER:
-            raise ValueError(f"Unknown status for gate check: {min_status}")
-
-        row = self._conn.execute(
-            "SELECT status FROM papers WHERE id = ?", (paper_id,)
-        ).fetchone()
-        if row is None:
-            logger.warning("min_status_gate: paper_id %d not found in database", paper_id)
-            return False
-
-        current = row["status"]
-        if current not in _STATUS_ORDER:
-            logger.debug(
-                "min_status_gate: paper_id %d at status '%s' (not in gate order) — returning False for min_status '%s'",
-                paper_id, current, min_status,
-            )
-            return False
-
-        meets = _STATUS_ORDER[current] >= _STATUS_ORDER[min_status]
-        if not meets:
-            logger.debug(
-                "min_status_gate: paper_id %d at '%s' does not meet min_status '%s'",
-                paper_id, current, min_status,
-            )
-        return meets
-
     # ── Screening ────────────────────────────────────────────
 
     def add_screening_decision(
@@ -714,89 +630,6 @@ class ReviewDatabase:
         self._conn.commit()
         return cur.lastrowid
 
-    def add_extraction_atomic(
-        self,
-        paper_id: int,
-        schema_hash: str | None,
-        extracted_data: dict,
-        reasoning_trace: str,
-        model: str,
-        spans: list[dict],
-        model_digest: str | None = None,
-        auditor_model_digest: str | None = None,
-        codebook_hash: str | None = None,
-        codebook_sha256: str | None = None,
-    ) -> int:
-        """Atomically insert extraction + all evidence spans in one transaction.
-
-        If any insert fails, the entire operation rolls back — no partial
-        extraction records are left in the database.
-
-        Each span dict must have: field_name, value, source_snippet, confidence.
-        Returns the extraction id.
-        """
-        try:
-            self._conn.execute("BEGIN")
-            cur = self._conn.execute(
-                """INSERT INTO extractions
-                   (paper_id, extraction_schema_hash, extracted_data,
-                    reasoning_trace, model, model_digest,
-                    auditor_model_digest, extracted_at,
-                    codebook_hash, codebook_sha256)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (
-                    paper_id,
-                    schema_hash,
-                    json.dumps(extracted_data),
-                    reasoning_trace,
-                    model,
-                    model_digest,
-                    auditor_model_digest,
-                    _now(),
-                    codebook_hash,
-                    codebook_sha256,
-                ),
-            )
-            ext_id = cur.lastrowid
-
-            for s in spans:
-                self._conn.execute(
-                    """INSERT INTO evidence_spans
-                       (extraction_id, field_name, value, source_snippet,
-                        confidence, tier, audit_status)
-                       VALUES (?, ?, ?, ?, ?, ?, 'pending')""",
-                    (ext_id, s["field_name"], s["value"],
-                     s["source_snippet"], s["confidence"],
-                     s.get("tier", 1)),
-                )
-
-            self._conn.execute("COMMIT")
-            return ext_id
-        except Exception:
-            self._conn.execute("ROLLBACK")
-            raise
-
-    def get_stale_extractions(self, current_hash: str) -> list[dict]:
-        """Papers whose latest extraction was made under a different codebook.
-
-        NULL counts as stale (SCHEMA-DERIVE-01 R3). Every extraction predating
-        migration 012 has no codebook_hash, and "nobody recorded it" is not
-        "it matches" — a bare `!= ?` would silently treat all 190 of them as
-        current, which is the opposite of the truth.
-        """
-        rows = self._conn.execute(
-            """SELECT p.*, e.codebook_hash
-               FROM papers p
-               JOIN extractions e ON e.paper_id = p.id
-               WHERE (e.codebook_hash IS NULL OR e.codebook_hash != ?)
-               AND e.id = (
-                   SELECT MAX(e2.id) FROM extractions e2
-                   WHERE e2.paper_id = p.id
-               )""",
-            (current_hash,),
-        ).fetchall()
-        return [dict(r) for r in rows]
-
     # ── Evidence Spans ───────────────────────────────────────
 
     def add_evidence_span(
@@ -875,96 +708,6 @@ class ReviewDatabase:
             "processing_failures": dict(failures),
             "analysis_ready": analysis_ready,
         }
-
-    # ── Cleanup ──────────────────────────────────────────────
-
-    def cleanup_orphaned_spans(self) -> int:
-        """Remove orphaned spans from prior extraction runs.
-
-        Intended for use after re-extraction completes: deletes spans whose
-        extraction_id is no longer the latest for that paper. Does not affect
-        the current extraction's spans.
-
-        Returns the number of deleted rows.
-        """
-        # Through this connection, not the path: the backup then captures what
-        # this connection can see, rather than depending on the fact that no
-        # write has been issued yet (SAFE-GROUND-01).
-        backup = auto_backup(self._conn, "pre-orphan-cleanup")
-        logger.info(
-            "Pre-cleanup backup verified: %s (%d tables, overall=%s)",
-            backup.path.name, backup.table_count, backup.overall_sha256[:16],
-        )
-
-        result = self._conn.execute(
-            """DELETE FROM evidence_spans
-               WHERE extraction_id NOT IN (
-                   SELECT MAX(e.id) FROM extractions e GROUP BY e.paper_id
-               )"""
-        )
-        deleted = result.rowcount
-        self._conn.commit()
-        logger.info("Cleaned up %d orphaned spans", deleted)
-        return deleted
-
-    # ── Admin Reset ────────────────────────────────────────
-
-    def admin_reset_status(
-        self,
-        paper_id: int,
-        target_status: str,
-        reason: str,
-    ) -> str:
-        """Administrative status reset — bypasses normal state transitions.
-
-        Records the reset in the admin_resets log table for audit trail.
-        Returns the previous status.
-        """
-        if target_status not in STATUSES:
-            raise ValueError(f"Invalid target status: {target_status}")
-
-        row = self._conn.execute(
-            "SELECT status FROM papers WHERE id = ?", (paper_id,)
-        ).fetchone()
-        if row is None:
-            raise ValueError(f"Paper {paper_id} not found")
-
-        previous = row["status"]
-        now = _now()
-
-        try:
-            self._conn.execute("BEGIN")
-            # Ensure log table exists
-            self._conn.execute(
-                """CREATE TABLE IF NOT EXISTS admin_resets (
-                       id          INTEGER PRIMARY KEY,
-                       paper_id    INTEGER NOT NULL,
-                       from_status TEXT NOT NULL,
-                       to_status   TEXT NOT NULL,
-                       reason      TEXT NOT NULL,
-                       reset_at    TEXT NOT NULL
-                   )"""
-            )
-            self._conn.execute(
-                """INSERT INTO admin_resets
-                       (paper_id, from_status, to_status, reason, reset_at)
-                   VALUES (?, ?, ?, ?, ?)""",
-                (paper_id, previous, target_status, reason, now),
-            )
-            self._conn.execute(
-                "UPDATE papers SET status = ?, updated_at = ? WHERE id = ?",
-                (target_status, now, paper_id),
-            )
-            self._conn.execute("COMMIT")
-        except Exception:
-            self._conn.execute("ROLLBACK")
-            raise
-
-        logger.info(
-            "Admin reset: paper %d %s → %s (reason: %s)",
-            paper_id, previous, target_status, reason,
-        )
-        return previous
 
     # ── Context Manager ─────────────────────────────────────
 

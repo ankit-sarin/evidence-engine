@@ -3,11 +3,10 @@
 Two properties, against a REAL SQLite database rather than a recording stub,
 because the claim is about what survives a transaction:
 
-  1. All twenty terminal states land in one transaction, or none do. Ruling 1
-     moved the unit of REFUSAL to the field; it did not make the WRITE partial.
-     A short span list is exactly the shape SPANLOSS-01 was built to detect —
-     21 Run 6 extractions stored one span instead of ~20 and nothing noticed —
-     so every field gets a row whatever its state.
+  1. (Retired 2026-09-25 with the legacy atomic writer it tested — 9c-C5,
+     R160a. The event writer's one-transaction property,
+     `engine/core/extraction_events.write_extraction_events`, has no test yet:
+     an open finding, not a covered case.)
 
   2. A refusal before the write leaves nothing behind. There is no "store what
      we got" path, because storing what we got is what produced those 21.
@@ -54,81 +53,6 @@ def _spans(n_evidenced: int, n_unmet: int, n_escape: int = 0):
                     "source_snippet": "", "confidence": 0.0})
         states[f"f{i}"] = "NO_EVIDENCE_LOCATABLE"
     return out, states
-
-
-def test_all_twenty_states_land_in_one_transaction(db):
-    spans, states = _spans(13, 5, 2)
-    assert len(spans) == 20
-
-    db.add_extraction_atomic(
-        paper_id=1, schema_hash="h", model="m", reasoning_trace="t", spans=spans,
-        extracted_data=[{**s, "terminal_state": states[s["field_name"]]} for s in spans],
-    )
-
-    rows = db._conn.execute(
-        "SELECT field_name, value, source_snippet, confidence FROM evidence_spans"
-    ).fetchall()
-    assert len(rows) == 20, "span count equals field count whatever the states"
-
-    by_value = {}
-    for r in rows:
-        by_value.setdefault(r["value"], []).append(r)
-    assert len(by_value["CONTRACT_UNMET"]) == 5
-    assert len(by_value["NO_EVIDENCE_LOCATABLE"]) == 2
-    for token in ("CONTRACT_UNMET", "NO_EVIDENCE_LOCATABLE"):
-        for r in by_value[token]:
-            assert r["source_snippet"] == ""
-            assert r["confidence"] == 0.0
-
-
-def test_the_terminal_state_rides_on_every_entry_not_only_the_unmet_ones(db):
-    """D6. A reader must be able to tell 'evidenced' from 'not asked' without
-    inferring it from the absence of a marker."""
-    spans, states = _spans(13, 5, 2)
-    db.add_extraction_atomic(
-        paper_id=1, schema_hash="h", model="m", reasoning_trace="t", spans=spans,
-        extracted_data=[{**s, "terminal_state": states[s["field_name"]]} for s in spans],
-    )
-    stored = json.loads(db._conn.execute(
-        "SELECT extracted_data FROM extractions").fetchone()["extracted_data"])
-    assert len(stored) == 20
-    assert all("terminal_state" in e for e in stored)
-    assert sum(1 for e in stored if e["terminal_state"] == "EVIDENCED_VALUE") == 13
-
-
-def test_extracted_data_keeps_the_list_shape_downstream_readers_expect(db):
-    """A wrapper dict would silently break LOW_YIELD's denominator, which is
-    `len(extracted)`. (`trace_exporter`'s tier map branched on `list` too; that
-    module was retired under R46 and is not a reason for this shape any more.)"""
-    spans, states = _spans(2, 1)
-    db.add_extraction_atomic(
-        paper_id=1, schema_hash="h", model="m", reasoning_trace="t", spans=spans,
-        extracted_data=[{**s, "terminal_state": states[s["field_name"]]} for s in spans],
-    )
-    stored = json.loads(db._conn.execute(
-        "SELECT extracted_data FROM extractions").fetchone()["extracted_data"])
-    assert isinstance(stored, list)
-    assert len(stored) == 3, "the LOW_YIELD denominator is the field count"
-
-    from engine.agents.auditor import count_populated_fields
-    assert count_populated_fields(
-        stored, frozenset({"CONTRACT_UNMET", "NO_EVIDENCE_LOCATABLE"}),
-        absence_sentinels=frozenset({"NR", "NOT_FOUND"})) == 2
-
-
-def test_a_failing_span_rolls_the_whole_paper_back(db):
-    """One bad row and the extraction row goes too — no 19-of-20 write."""
-    spans, states = _spans(19, 0)
-    spans.append({"field_name": "f20", "value": None,       # NOT NULL violation
-                  "source_snippet": "", "confidence": 0.0})
-
-    with pytest.raises(sqlite3.IntegrityError):
-        db.add_extraction_atomic(
-            paper_id=1, schema_hash="h", model="m", reasoning_trace="t",
-            spans=spans, extracted_data=spans)
-
-    assert db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0] == 0
-    assert db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0] == 0
 
 
 def test_a_pre_write_refusal_stores_nothing(db, tmp_path, monkeypatch):

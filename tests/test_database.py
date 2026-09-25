@@ -187,31 +187,6 @@ def test_abstract_screening_decisions(db):
 # ── Staleness Detection ─────────────────────────────────────────────
 
 
-def test_staleness_detection(db):
-    db.add_papers([_cit(pmid="ST1", title="Stale")])
-    paper = db.get_papers_by_status("INGESTED")[0]
-    pid = paper["id"]
-
-    # Walk to EXTRACTED
-    db.update_status(pid, "ABSTRACT_SCREENED_IN")
-    db.update_status(pid, "PDF_ACQUIRED")
-    db.update_status(pid, "PARSED")
-    db.update_status(pid, "EXTRACTED")
-
-    old_hash = "abc123"
-    # Staleness compares codebook_hash now (SCHEMA-DERIVE-01 R3).
-    db.add_extraction(pid, None, {"study_design": "RCT"}, "thinking...",
-                      "deepseek-r1:32b", codebook_hash=old_hash)
-
-    # Same hash → not stale
-    assert len(db.get_stale_extractions(old_hash)) == 0
-
-    # Different hash → stale
-    stale = db.get_stale_extractions("new_hash_456")
-    assert len(stale) == 1
-    assert stale[0]["id"] == pid
-
-
 # ── Evidence Spans & Audit ───────────────────────────────────────────
 
 
@@ -276,66 +251,6 @@ def test_evidence_spans_invalid_snippet_status(db):
 # ── Atomic Extraction ─────────────────────────────────────────────────
 
 
-def test_atomic_extraction_commits_all(db):
-    """All spans and the extraction record land in one transaction."""
-    db.add_papers([_cit(pmid="AT1", title="Atomic OK")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    db.update_status(pid, "ABSTRACT_SCREENED_IN")
-    db.update_status(pid, "PDF_ACQUIRED")
-    db.update_status(pid, "PARSED")
-    db.update_status(pid, "EXTRACTED")
-
-    spans = [
-        {"field_name": f"field_{i}", "value": f"val_{i}",
-         "source_snippet": f"snippet {i}", "confidence": 0.9}
-        for i in range(15)
-    ]
-    ext_id = db.add_extraction_atomic(
-        pid, "hash_ok", {"f": 1}, "trace", "model", spans,
-    )
-
-    # Extraction exists
-    row = db._conn.execute(
-        "SELECT * FROM extractions WHERE id = ?", (ext_id,)
-    ).fetchone()
-    assert row is not None
-    assert row["paper_id"] == pid
-
-    # All 15 spans exist
-    span_rows = db._conn.execute(
-        "SELECT * FROM evidence_spans WHERE extraction_id = ?", (ext_id,)
-    ).fetchall()
-    assert len(span_rows) == 15
-
-
-def test_atomic_extraction_rolls_back_on_failure(db):
-    """If a span insert fails, no extraction or spans are committed."""
-    db.add_papers([_cit(pmid="AT2", title="Atomic Fail")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    db.update_status(pid, "ABSTRACT_SCREENED_IN")
-    db.update_status(pid, "PDF_ACQUIRED")
-    db.update_status(pid, "PARSED")
-    db.update_status(pid, "EXTRACTED")
-
-    # Span #2 has a bad confidence (string instead of float) → will fail SQL
-    spans = [
-        {"field_name": "f1", "value": "v1", "source_snippet": "s1", "confidence": 0.9},
-        {"field_name": "f2", "value": "v2", "source_snippet": "s2", "confidence": 0.8},
-        {"field_name": "f3", "value": None, "source_snippet": "s3", "confidence": 0.7},  # NULL value → NOT NULL constraint
-    ]
-
-    with pytest.raises(Exception):
-        db.add_extraction_atomic(
-            pid, "hash_fail", {"f": 1}, "trace", "model", spans,
-        )
-
-    # Nothing committed
-    ext_count = db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0]
-    span_count = db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0]
-    assert ext_count == 0
-    assert span_count == 0
-
-
 # ── Reset for Re-Audit ──────────────────────────────────────────────
 
 
@@ -352,42 +267,6 @@ def _walk_to_ai_audit(db, pmid):
     db.update_audit(s2, "flagged", "qwen3:32b", "bad")
     db.update_status(pid, "AI_AUDIT_COMPLETE")
     return pid
-
-
-def test_reset_for_reaudit_atomicity(db):
-    """reset_for_reaudit resets both papers and spans in one transaction."""
-    pid = _walk_to_ai_audit(db, "RA1")
-
-    result = db.reset_for_reaudit()
-    assert result["papers_reset"] == 1
-    assert result["spans_reset"] == 2
-
-    # Paper back to EXTRACTED
-    assert len(db.get_papers_by_status("EXTRACTED")) == 1
-    assert len(db.get_papers_by_status("AI_AUDIT_COMPLETE")) == 0
-
-    # All spans back to pending
-    pending = db._conn.execute(
-        "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'pending'"
-    ).fetchone()[0]
-    assert pending == 2
-
-    # Audit columns cleared
-    span = db._conn.execute("SELECT * FROM evidence_spans LIMIT 1").fetchone()
-    assert span["auditor_model"] is None
-    assert span["audit_rationale"] is None
-    assert span["audited_at"] is None
-
-
-def test_reset_for_reaudit_preserves_extraction_data(db):
-    """Extracted values and snippets are untouched by reset."""
-    pid = _walk_to_ai_audit(db, "RA2")
-    db.reset_for_reaudit()
-
-    spans = db._conn.execute("SELECT * FROM evidence_spans ORDER BY id").fetchall()
-    assert spans[0]["value"] == "v1"
-    assert spans[0]["source_snippet"] == "snip1"
-    assert spans[1]["value"] == "v2"
 
 
 # ── Reject Paper ────────────────────────────────────────────────────
@@ -411,28 +290,6 @@ def test_reject_paper_invalid_status(db):
 
 
 # ── Min Status Gate ─────────────────────────────────────────────────
-
-
-def test_min_status_gate(db):
-    pid = _walk_to_ai_audit(db, "MG1")
-
-    assert db.min_status_gate(pid, "EXTRACTED") is True
-    assert db.min_status_gate(pid, "AI_AUDIT_COMPLETE") is True
-    assert db.min_status_gate(pid, "HUMAN_AUDIT_COMPLETE") is False
-
-
-def test_min_status_gate_missing_paper(db):
-    assert db.min_status_gate(9999, "EXTRACTED") is False
-
-
-def test_min_status_gate_missing_paper_logs_warning(db, caplog):
-    """M10: min_status_gate logs WARNING for nonexistent paper_id."""
-    import logging
-    with caplog.at_level(logging.WARNING, logger="engine.core.database"):
-        result = db.min_status_gate(9999, "EXTRACTED")
-
-    assert result is False
-    assert "paper_id 9999 not found" in caplog.text
 
 
 # ── Pipeline Stats ───────────────────────────────────────────────────
@@ -492,38 +349,6 @@ def test_pipeline_stats(db):
 
 
 # ── Cleanup Orphaned Spans ────────────────────────────────────────────
-
-
-def test_cleanup_orphaned_spans(db):
-    """cleanup_orphaned_spans deletes spans from older extractions only."""
-    db.add_papers([_cit(pmid="CO1", title="Cleanup")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
-        db.update_status(pid, s)
-
-    # First extraction (will become orphaned)
-    old_ext_id = db.add_extraction(pid, "h_old", {}, "t1", "m")
-    db.add_evidence_span(old_ext_id, "f1", "old_v1", "old_snip1", 0.9)
-    db.add_evidence_span(old_ext_id, "f2", "old_v2", "old_snip2", 0.8)
-
-    # Second extraction (current — should survive)
-    new_ext_id = db.add_extraction(pid, "h_new", {}, "t2", "m")
-    db.add_evidence_span(new_ext_id, "f1", "new_v1", "new_snip1", 0.95)
-    db.add_evidence_span(new_ext_id, "f2", "new_v2", "new_snip2", 0.85)
-
-    # Before cleanup: 4 spans total
-    total = db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0]
-    assert total == 4
-
-    deleted = db.cleanup_orphaned_spans()
-    assert deleted == 2  # old extraction's spans
-
-    # After cleanup: only 2 spans from the new extraction
-    remaining = db._conn.execute("SELECT * FROM evidence_spans").fetchall()
-    assert len(remaining) == 2
-    for s in remaining:
-        assert s["extraction_id"] == new_ext_id
-        assert s["value"].startswith("new_")
 
 
 # ── Context Manager ──────────────────────────────────────────────────
@@ -614,44 +439,6 @@ def test_migration_syntax_error_raises(tmp_path):
 
 
 # ── Admin Reset ──────────────────────────────────────────────────────
-
-
-def test_admin_reset_status_succeeds_and_logs(tmp_path):
-    """admin_reset_status bypasses state machine and records audit trail."""
-    db = ReviewDatabase("admin_test", data_root=tmp_path)
-    db.add_papers([_cit(pmid="AR1", title="Admin Reset")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED",
-              "EXTRACTED", "AI_AUDIT_COMPLETE"):
-        db.update_status(pid, s)
-
-    # AI_AUDIT_COMPLETE → PARSED is NOT in ALLOWED_TRANSITIONS
-    prev = db.admin_reset_status(pid, "PARSED", reason="schema cleanup")
-    assert prev == "AI_AUDIT_COMPLETE"
-
-    # Paper is now PARSED
-    assert db.get_papers_by_status("PARSED")[0]["id"] == pid
-
-    # Audit trail recorded
-    row = db._conn.execute(
-        "SELECT * FROM admin_resets WHERE paper_id = ?", (pid,)
-    ).fetchone()
-    assert row is not None
-    assert row["from_status"] == "AI_AUDIT_COMPLETE"
-    assert row["to_status"] == "PARSED"
-    assert row["reason"] == "schema cleanup"
-    db.close()
-
-
-def test_admin_reset_invalid_target_raises(tmp_path):
-    """admin_reset_status rejects an invalid target status."""
-    db = ReviewDatabase("admin_bad", data_root=tmp_path)
-    db.add_papers([_cit(pmid="AB1", title="Bad Target")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-
-    with pytest.raises(ValueError, match="Invalid target status"):
-        db.admin_reset_status(pid, "NONEXISTENT", reason="test")
-    db.close()
 
 
 def test_normal_pipeline_cannot_use_admin_transition(tmp_path):

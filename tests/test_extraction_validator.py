@@ -9,7 +9,6 @@ from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
 from engine.validators.extraction_validator import (
     detect_cross_field_bleed,
-    normalize_categorical_values,
     normalize_prefix,
     validate_extraction,
     verify_schema_parity,
@@ -167,68 +166,8 @@ def test_normalize_prefix_no_match():
     assert normalize_prefix("Randomized Trial", SAMPLE_VALID) == "Randomized Trial"
 
 
-# ── normalize_categorical_values integration tests ───────────────────
-
-
-def test_normalize_categorical_db_unambiguous(db, spec):
-    """Unambiguous prefix in DB span is updated to canonical value."""
-    pid = _add_paper_and_extraction(db, [
-        {"field_name": "study_type", "value": "Case Rep"},
-    ], pmid="norm1")
-
-    changes = normalize_categorical_values(spec, pid, db)
-    assert len(changes) == 1
-    assert changes[0]["original"] == "Case Rep"
-    assert changes[0]["canonical"] == "Case Report/Series"
-
-    # Verify the DB was actually updated
-    val = db._conn.execute(
-        """SELECT es.value FROM evidence_spans es
-           JOIN extractions e ON es.extraction_id = e.id
-           WHERE e.paper_id = ?""",
-        (pid,),
-    ).fetchone()["value"]
-    assert val == "Case Report/Series"
-
-
-def test_normalize_categorical_db_exact(db, spec):
-    """Exact match produces no changes."""
-    pid = _add_paper_and_extraction(db, [
-        {"field_name": "study_type", "value": "Original Research"},
-    ], pmid="norm2")
-
-    changes = normalize_categorical_values(spec, pid, db)
-    assert changes == []
-
-
-def test_normalize_categorical_db_ambiguous(db, spec):
-    """Ambiguous prefix produces no changes and leaves DB untouched."""
-    # autonomy_level has "0 (No autonomy)" and could be ambiguous with short prefixes
-    # but a truly ambiguous case: validation_setting has "In vivo (human)" and "In vivo (animal)"
-    pid = _add_paper_and_extraction(db, [
-        {"field_name": "validation_setting", "value": "In vivo"},
-    ], pmid="norm3")
-
-    changes = normalize_categorical_values(spec, pid, db)
-    assert changes == []
-
-    val = db._conn.execute(
-        """SELECT es.value FROM evidence_spans es
-           JOIN extractions e ON es.extraction_id = e.id
-           WHERE e.paper_id = ?""",
-        (pid,),
-    ).fetchone()["value"]
-    assert val == "In vivo"
-
-
-def test_normalize_categorical_db_no_match(db, spec):
-    """Non-matching value produces no changes."""
-    pid = _add_paper_and_extraction(db, [
-        {"field_name": "study_type", "value": "Randomized Controlled Trial"},
-    ], pmid="norm4")
-
-    changes = normalize_categorical_values(spec, pid, db)
-    assert changes == []
+# The four in-place categorical normalisation tests retired 2026-09-25 with their
+# subject (9c-C5, R160a; R47).
 
 
 # ── element-wise semicolon validation tests ──────────────────────────

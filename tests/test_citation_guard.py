@@ -108,7 +108,7 @@ def test_uncited_value_never_reaches_the_database(tmp_path):
     `_legacy` pattern), returns one real value with no quote. It must raise
     `UncitedValueError` and `write_extraction_events` must never be called, so no
     claim or paper event reaches the store. 9c-C1 (R158, K2): this replaced a
-    fake `add_extraction_atomic` that no engine code was ever handed."""
+    fake legacy writer that no engine code was ever handed."""
     import shutil
     from pathlib import Path
     from unittest.mock import patch

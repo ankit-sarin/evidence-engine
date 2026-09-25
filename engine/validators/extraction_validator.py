@@ -47,13 +47,10 @@ def verify_schema_parity(spec: ReviewSpec) -> str:
 def _non_value_tokens(db: "ReviewDatabase | None" = None) -> frozenset[str]:
     """The review's non-value tokens (ELICIT-DESIGN-02 D1, site 3).
 
-    A terminal state is not a categorical value. The rewrite path below is the
-    urgent one — `normalize_prefix` UPDATEs `evidence_spans.value` whenever a
-    value is an unambiguous prefix of exactly one enum member, so an unrecognised
-    token there is a silent write. The two read-only checks skip the tokens for
-    the same reason one rung down: reporting a terminal state as an "invalid
-    categorical value" is a false positive that would grow with every field the
-    engine correctly refused.
+    A terminal state is not a categorical value. The two read-only checks skip
+    the tokens: reporting a terminal state as an "invalid categorical value" is a
+    false positive that would grow with every field the engine correctly refused.
+    (The in-place rewrite path that also skipped them retired 9c-C5, R160a.)
 
     Absence sentinels are skipped at each site through the codebook
     (`Codebook.is_absence_sentinel`, R124); there is no hand-list here.
@@ -87,87 +84,6 @@ def normalize_prefix(value: str, valid_values: list[str]) -> str:
         return matches[0]
 
     return value
-
-
-def normalize_categorical_values(
-    spec: ReviewSpec, paper_id: int, db: ReviewDatabase,
-) -> list[dict]:
-    """Normalize categorical span values in-place using prefix matching.
-
-    For each categorical field with enum_values, if the stored value is an
-    unambiguous prefix of a valid value, update the DB to the canonical form.
-
-    Returns a list of dicts describing each normalization applied:
-    ``{paper_id, field_name, original, canonical}``.
-    """
-    codebook = load_codebook_beside(db.db_path)
-    field_map = {v.name: v for v in codebook.views}
-    non_value = _non_value_tokens(db)
-
-    rows = db._conn.execute(
-        """SELECT es.id, es.field_name, es.value
-           FROM evidence_spans es
-           JOIN extractions e ON es.extraction_id = e.id
-           WHERE e.paper_id = ?""",
-        (paper_id,),
-    ).fetchall()
-
-    changes: list[dict] = []
-
-    for row in rows:
-        fname = row["field_name"]
-        value = row["value"]
-
-        if fname not in field_map:
-            continue
-
-        field_def = field_map[fname]
-        if field_def.type != "categorical" or not field_def.enum_values:
-            continue
-
-        if codebook.is_absence_sentinel(value):
-            continue
-
-        if str(value).strip().upper() in non_value:
-            continue
-
-        # Handle semicolon-separated multi-values
-        parts = [v.strip() for v in value.split(";")]
-        normalized_parts: list[str] = []
-        any_changed = False
-        for part in parts:
-            if not part:
-                normalized_parts.append(part)
-                continue
-            canonical = normalize_prefix(part, field_def.enum_values)
-            if canonical != part:
-                any_changed = True
-            normalized_parts.append(canonical)
-
-        if any_changed:
-            new_value = "; ".join(normalized_parts)
-            db._conn.execute(
-                "UPDATE evidence_spans SET value = ? WHERE id = ?",
-                (new_value, row["id"]),
-            )
-            changes.append({
-                "paper_id": paper_id,
-                "field_name": fname,
-                "original": value,
-                "canonical": new_value,
-            })
-            logger.debug(
-                "paper %d field '%s': '%s' → '%s'",
-                paper_id, fname, value, new_value,
-            )
-
-    if changes:
-        db._conn.commit()
-
-    return changes
-
-
-# ── Cross-field Bleed Detection ───────────────────────────────────────
 
 
 def detect_cross_field_bleed(

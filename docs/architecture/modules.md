@@ -20,7 +20,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 - `ReviewDatabase` — Main class. Creates `data/{review}/` with subdirs: pdfs/, parsed_text/, vector_store/. WAL mode, 5s busy timeout, foreign keys
 - `STATUSES` — 15 paper lifecycle states (see state-machine.md)
 - `ALLOWED_TRANSITIONS` — State machine transition rules
-- **Key methods:** `add_papers()`, `update_status()`, `reject_paper()`, `admin_reset_status()`, `add_screening_decision()`, `add_verification_decision()`, `add_ft_screening_decision()`, `add_ft_verification_decision()`, `add_extraction()`, `add_extraction_atomic()`, `add_evidence_span()`, `update_audit()`, `get_stale_extractions()`, `get_pipeline_stats()`, `cleanup_orphaned_spans()`, `reset_for_reaudit()`, `reset_for_reextraction()`, `min_status_gate()`
+- **Key methods:** `add_papers()`, `update_status()`, `get_papers_by_status()`, `reject_paper()`, `add_screening_decision()`, `add_verification_decision()`, `add_ft_screening_decision()`, `add_ft_verification_decision()`, `get_screening_summary()`, `add_extraction()`, `add_evidence_span()`, `update_audit()`, `get_pipeline_stats()`
 - **Tables:** papers (24 columns), abstract_screening_decisions, abstract_verification_decisions, ft_screening_decisions, ft_verification_decisions, full_text_assets, extractions (with model_digest, auditor_model_digest, low_yield), evidence_spans, review_runs
 
 ### `naming.py`
@@ -314,7 +314,6 @@ All acquisition modules use `ReviewDatabase` as a context manager. Terminal stat
 - `validate_extraction(spec, paper_id, db)` — Checks unknown field names, invalid categorical values, non-numeric sample_size. Prefix shorthand supported
 - `validate_all(spec, db, statuses)` — All eligible papers
 - `detect_cross_field_bleed(spec, extraction_data)` — Flags values valid for wrong field
-- `normalize_categorical_values(spec, paper_id, db)` — In-place canonical normalization
 
 ### `distribution_monitor.py`
 **Purpose:** Post-extraction categorical field collapse detection.

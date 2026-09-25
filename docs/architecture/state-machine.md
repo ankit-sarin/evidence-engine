@@ -99,20 +99,6 @@ REJECTED                            ← terminal
 
 **Transaction safety:** `update_status()` uses `BEGIN IMMEDIATE` to acquire a write lock before reading the current status, preventing TOCTOU races in concurrent access.
 
-## Status Gate Ordering
-
-Used by `min_status_gate()` to filter exports by minimum quality level:
-
-| Order | Status | Use Case |
-|-------|--------|----------|
-| 0 | PARSED | Raw parsed papers |
-| 1 | ABSTRACT_SCREENED_OUT | All screened |
-| 2 | EXTRACTED | Raw extraction data |
-| 3 | AI_AUDIT_COMPLETE | AI-verified extractions |
-| 4 | HUMAN_AUDIT_COMPLETE | Human-verified extractions |
-
-`min_status_gate()` logs WARNING for missing paper IDs (defensive guard against stale references).
-
 ## Evidence Span Audit States
 
 Defined in `evidence_spans.audit_status` CHECK constraint:
@@ -132,28 +118,6 @@ pending → invalid_snippet ellipsis bridging detected (INVALID_SNIPPET_RE match
 `{"NOT_FOUND", "Not discussed", "NR", "No comparison reported", "Not assessable"}`
 
 ## Administrative Overrides
-
-### `admin_reset_status(paper_id, target_status, reason)`
-
-Bypasses state machine. Records full audit trail in `admin_resets` table: paper_id, from_status, to_status, reason, reset_at (UTC timestamp). Used by re-screening scripts to force papers back to earlier states (e.g., ABSTRACT_SCREENED_IN → ABSTRACT_SCREENED_OUT).
-
-### `reset_for_reaudit()`
-
-Atomic reset of all audit state:
-1. All evidence spans → `audit_status = 'pending'`
-2. Papers at AI_AUDIT_COMPLETE or HUMAN_AUDIT_COMPLETE → EXTRACTED
-
-Returns `{papers_reset, spans_reset}`.
-
-### `reset_for_reextraction()`
-
-Atomic four-phase reset:
-1. Audited papers → EXTRACTED (collapse status)
-2. Delete all evidence spans
-3. Delete all extractions
-4. EXTRACTED → PARSED (ready for re-extraction)
-
-Returns `{papers_reset, spans_deleted, extractions_deleted}`.
 
 ### `reject_paper(paper_id, reason)`
 
@@ -195,7 +159,6 @@ Atomic: sets status to REJECTED with `rejected_reason` recorded in papers table.
 
 | Table | Key Columns | Purpose |
 |-------|-------------|---------|
-| `admin_resets` | paper_id, from_status, to_status, reason, reset_at | Audit trail for `admin_reset_status()` bypasses |
 
 ### Analysis Tables
 

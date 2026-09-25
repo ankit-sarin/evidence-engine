@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `4c5310c4f3c1e3e85367ee514ecf65a4f00dc7ed` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `16b380084f1ec94a7fed804ca2a4b5303344ef0e` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -128,7 +128,7 @@ Two figures deliberately have no baseline row. **entry points** (94) counts anyt
 | `engine/tools/inventory.py` | `--write`; `--check` | — | — | — |
 | `engine/utils/ollama_preflight.py` | `--models` required; `--timeout`=30 | — | — | — |
 | `engine/validators/distribution_monitor.py` | `--review` required; `--arm` required; `--codebook`=None; `--strict` | — | 474 | — |
-| `engine/validators/extraction_validator.py` | `--review` required; `--spec`=None | load_spec_for | 397 | main:spec_first |
+| `engine/validators/extraction_validator.py` | `--review` required; `--spec`=None | load_spec_for | 313 | main:spec_first |
 | `scripts/_pass2_delta.py` | — | — | — | — |
 | `scripts/_pass2_eyeball.py` | — | — | — | — |
 | `scripts/_pass2_stability.py` | — | — | 62 | — |
@@ -197,7 +197,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/adjudication/workflow.py` | 69 | literal | `Create or update adjudication_categories.yaml for this review.
   Location: data/<review>/adjudication_categories.yaml
   Generate a starter template with: gen...` |
-| `engine/agents/extractor.py` | 697 | literal | `extraction_codebook.yaml` |
+| `engine/agents/extractor.py` | 694 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 504 | literal | `extraction_codebook.yaml` |
 | `engine/core/codebook.py` | 36 | literal | `extraction_codebook.yaml` |
 | `engine/core/review_paths.py` | 28 | literal | `review_specs` |
@@ -215,7 +215,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/tools/inventory.py` | 533 | literal | `Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse prose, and messages passed to an exception or a logger. This is the class a ...` |
 | `engine/tools/inventory.py` | 682 | literal | `data/ subdirectories changed: ` |
 | `engine/validators/distribution_monitor.py` | 479 | literal | `extraction_codebook.yaml` |
-| `engine/validators/extraction_validator.py` | 65 | literal | `extraction_codebook.yaml` |
+| `engine/validators/extraction_validator.py` | 62 | literal | `extraction_codebook.yaml` |
 | `scripts/_pass2_delta.py` | 13 | literal | `data/surgical_autonomy/review.db` |
 | `scripts/_pass2_delta.py` | 16 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
 | `scripts/_pass2_eyeball.py` | 15 | literal | `data/surgical_autonomy/review.db` |

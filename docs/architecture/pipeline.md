@@ -213,13 +213,13 @@ python -m engine.agents.ft_screener ... --verify-only
 **Module:** `engine/agents/extractor.py`
 
 **Flow:**
-1. **Pre-flight:** `require_preflight()` + stale extraction check (`get_stale_extractions()`)
+1. **Pre-flight:** `require_preflight()`
 2. **Candidate selection:** Papers at FT_ELIGIBLE or PARSED (skip path). Skip if already extracted with current `extraction_schema_hash`
 3. **Prompt building:** `build_extraction_prompt()` — codebook-driven from `extraction_codebook.yaml`. Fields organized by tier (1=explicit, 2=interpretive, 3=numeric, 4=judgment). Includes per-field: name, type, definition, instruction, valid_values, decision_criteria, examples, source_quote_required flag
 4. **Pass 1 — reasoning:** `extract_pass1_reasoning()` with deepseek-r1:32b, temperature=0. Extracts `<think>...</think>` reasoning trace
 5. **Pass 2 — structured:** `extract_pass2_structured()` with deepseek-r1:32b, temperature=0, think=False. Grammar-constrained JSON via `ExtractionOutput.model_json_schema()`. Reasoning trace from Pass 1 injected as context
 6. **Snippet validation:** `_validate_and_retry_snippets()` — checks each `source_snippet` against `INVALID_SNIPPET_RE` (ellipsis bridging). Invalid snippets retried up to 2 times via targeted re-prompt. Unrepairable snippets set to empty string
-7. **Atomic storage:** `db.add_extraction_atomic()` — single transaction inserts extraction + all evidence spans. Raises `ValueError` if 0 spans (prevents silent data loss)
+7. **Event write:** `write_extraction_events()` — one claim per field, carrying the input it was made from, and one `extracted` paper event, in one transaction (9b-FLIP, R111). Nothing is written to the legacy extraction tables
 8. **Proactive restart:** `restart_ollama()` every `RESTART_EVERY_N` papers (default 25). Polls `/api/tags` for up to 60s
 
 **DB transitions:** FT_ELIGIBLE → {EXTRACTED, EXTRACT_FAILED}; PARSED → {EXTRACTED, EXTRACT_FAILED} (skip path)
@@ -413,13 +413,8 @@ These cross-cutting patterns are enforced throughout the codebase.
 
 All multi-step database writes use explicit `BEGIN`/`COMMIT`/`ROLLBACK` transactions:
 - `update_status()` — uses `BEGIN IMMEDIATE` (write lock acquired before validation read, preventing TOCTOU races)
-- `add_extraction_atomic()` — extraction + all spans in one transaction
 - `store_result()` (cloud) — cloud_extraction + all cloud_evidence_spans in one transaction
-- `admin_reset_status()` — table creation + audit log + status update in one transaction
-- `reset_for_reaudit()` / `reset_for_reextraction()` — multi-phase resets are fully atomic
 - `import_dispositions()` (PDF quality) — full rollback on any failure
-- Human review span updates — span audit_status + paper status transition in one transaction
-- Extraction cleanup — evidence_spans delete + extractions delete + status reset in one transaction
 - Import functions (adjudication, audit review) — validate 100% of input before any write; reject entire batch on any error
 - All 6 exporters (CSV, Excel, DOCX, JSON, Markdown, PRISMA) — atomic temp-file-then-rename write
 

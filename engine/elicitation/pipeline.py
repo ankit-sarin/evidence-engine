@@ -208,7 +208,6 @@ def extract_paper_elicited(
     db,
     unit_map_dir_name: str,
     model_digest: str | None = None,
-    auditor_model_digest: str | None = None,
     attempt: int | None = None,
     run_id: int | None = None,
     parsed_text_ref=None,

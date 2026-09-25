@@ -565,7 +565,7 @@ def grid_cells(conn, *, codebook, papers=None, arms=None) -> tuple[tuple, ...]:
 
     The universe R28 requires: paper set x codebook fields x registered arms,
     enumerated once rather than rebuilt from a different source by each consumer
-    (a table scan in concordance, `_STATUS_ORDER` in the exporter, a CSV in the
+    (a table scan in concordance, a status-order map in the exporter, a CSV in the
     judge loader, a per-field query in the distribution monitor).
 
     `papers` defaults to the corpus, `arms` to the registry, fields always to the

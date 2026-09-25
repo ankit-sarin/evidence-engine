@@ -182,8 +182,8 @@ def test_site3_the_skip_is_wired_into_all_three_check_points():
 
     from engine.validators import extraction_validator as V
 
-    for fn in (V.normalize_categorical_values, V.detect_cross_field_bleed,
-               V.validate_extraction):
+    # 9c-C5 (R160a, B5): the in-place rewrite path retired; two check points remain.
+    for fn in (V.detect_cross_field_bleed, V.validate_extraction):
         assert "non_value" in inspect.getsource(fn), fn.__name__
 
 

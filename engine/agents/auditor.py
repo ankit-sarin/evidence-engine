@@ -6,6 +6,7 @@ declared `audit.model`, or the `model` parameter on individual functions.
 """
 
 import logging
+from collections.abc import Iterable, Mapping
 from typing import Literal
 
 from pydantic import BaseModel
@@ -221,13 +222,16 @@ def is_populated(value, non_value_tokens: frozenset[str] = frozenset(), *,
     return bool(v) and v.upper() not in absence_sentinels and v.upper() not in non_value_tokens
 
 
-def count_populated_fields(extraction_data: dict | list,
+def count_populated_fields(extraction_data: Iterable[Mapping],
                            non_value_tokens: frozenset[str] = frozenset(), *,
                            absence_sentinels: frozenset[str]) -> int:
-    """Count non-null, non-absence extracted fields in an extraction.
+    """Count the populated fields in a sequence of reader rows.
 
-    Handles both v1 format (dict of field_name→value) and v2 format
-    (list of span dicts with 'field_name' and 'value' keys).
+    `extraction_data` is an iterable of mappings with `field_name` and `value`
+    keys, one per codebook field — the shape `audit_events.low_yield` builds from
+    `effective_value`, so the denominator is the codebook, not what an extractor
+    emitted. A dict (the retired v1 `{field_name: value}` blob of the legacy
+    `extracted_data` column) is refused with TypeError (R166, 9c-C6).
 
     `non_value_tokens` (ELICIT-DESIGN-02 D1, site 2) excludes terminal states
     from the LOW_YIELD numerator. A CONTRACT_UNMET field is precisely a field
@@ -241,19 +245,10 @@ def count_populated_fields(extraction_data: dict | list,
     declared categorical such as "Not assessable" included, and so does an
     undeclared legacy form such as "Not discussed".
     """
-    count = 0
-    _populated = lambda value: is_populated(  # noqa: E731
-        value, non_value_tokens, absence_sentinels=absence_sentinels)
-
-    if isinstance(extraction_data, list):
-        # v2 format: list of span objects [{field_name, value, ...}, ...]
-        for span in extraction_data:
-            if _populated(span.get("value") if isinstance(span, dict) else None):
-                count += 1
-    elif isinstance(extraction_data, dict):
-        # v1 format: {field_name: value, ...}
-        for _key, value in extraction_data.items():
-            if _populated(value):
-                count += 1
-
-    return count
+    if isinstance(extraction_data, dict):
+        raise TypeError(
+            "count_populated_fields takes reader rows ({field_name, value} per "
+            "field); the v1 {field_name: value} dict shape retired (R166)")
+    return sum(1 for row in extraction_data
+               if is_populated(row.get("value") if isinstance(row, Mapping) else None,
+                               non_value_tokens, absence_sentinels=absence_sentinels))

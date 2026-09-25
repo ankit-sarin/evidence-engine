@@ -152,12 +152,15 @@ def test_site2_terminal_states_do_not_count_as_populated():
     assert count_populated_fields(all_unmet, TOKENS, absence_sentinels=ABSENCE) == 0
 
 
-def test_site2_handles_the_v1_dict_shape_too():
+def test_site2_refuses_the_retired_v1_dict_shape():
+    """9c-C6 (R166, B5; renamed from test_site2_handles_the_v1_dict_shape_too):
+    the v1 {field_name: value} shape retired; passing it refuses rather than
+    being counted by a second branch."""
     from engine.agents.auditor import count_populated_fields
 
     data = {"a": "General Surgery", "b": "CONTRACT_UNMET"}
-    assert count_populated_fields(data, absence_sentinels=ABSENCE) == 2
-    assert count_populated_fields(data, TOKENS, absence_sentinels=ABSENCE) == 1
+    with pytest.raises(TypeError, match="v1"):
+        count_populated_fields(data, TOKENS, absence_sentinels=ABSENCE)
 
 
 # ══ Site 3 — the categorical normaliser's REWRITE path ════════════════

@@ -302,9 +302,9 @@ PYTHONPATH=. python scripts/run_cloud_extraction.py --dry-run
    - **OK:** all other fields
 5. `assert_no_collapse()` raises `DistributionCollapseError` on COLLAPSED fields; `--strict` also fails on LOW_VARIANCE
 
-**Skip conditions:** `run_post_extraction_check()` skips if extracted_count < 10, failed_count > 0, or codebook missing
+**Skip conditions:** `run_post_extraction_check()` skips if the codebook is missing, and by its population rule: `min_population="run"` (cloud default) when the run extracted fewer than 10 papers, `"arm"` (local) when fewer than 10 eligible papers hold a live claim for the arm; with `skip_on_failures=True` (cloud default) also when any paper in the run failed
 
-**Integrated into:** Cloud extractors (`run()` method calls `run_distribution_check()` post-extraction) and local pipeline
+**Integrated into:** Cloud extractors (`run()` calls `run_distribution_check()`; COLLAPSED raises) and the local extract stage (`run_pipeline._distribution_check`, R167: `raise_on_collapse=False`, `skip_on_failures=False`, `min_population="arm"`; the result is written to `<review>/telemetry/run_events.jsonl` as a `distribution_check` row, skips included)
 
 **CLI:**
 ```bash
@@ -442,9 +442,9 @@ Structural errors that indicate a broken pipeline are raised, not logged and swa
 ### Distribution Monitor Integration
 
 The distribution monitor (`engine/validators/distribution_monitor.py`) is wired into the automatic extraction completion path:
-- **Local extraction:** none since `run5_extract_and_audit.py` retired (2026-09-25); plan row B9
+- **Local extraction:** `run_pipeline._stage_extract` calls it at the end of the stage in both branches (R167, B9 closed 9c-C7); non-raising, recorded to run telemetry
 - **Cloud extraction:** Both `OpenAIExtractor.run()` and `AnthropicExtractor.run()` call `run_distribution_check()` post-extraction
-- COLLAPSED fields are hard failures; LOW_VARIANCE fields are warnings (hard failures with `--strict`)
+- COLLAPSED fields are hard failures on the cloud path and recorded, non-aborting results on the local path; LOW_VARIANCE fields are warnings (hard failures with `--strict`)
 
 ### Defensive Logging
 

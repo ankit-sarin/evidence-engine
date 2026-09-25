@@ -23,6 +23,9 @@ from engine.adjudication.workflow import (
 from engine.agents.audit_events import audit_run
 from engine.core.extraction_events import RunAborted
 from engine.agents.extractor import run_extraction, verify_extraction_run
+from engine.core.codebook import CODEBOOK_FILENAME
+from engine.core.run_telemetry import record_run_event
+from engine.validators.distribution_monitor import run_post_extraction_check
 from engine.core.selection import select_for_extraction
 from engine.core.effective import effective_state, eligible_paper_ids
 from engine.core.paper_state import COMPLETED_PROCESSING_STATES
@@ -319,15 +322,60 @@ def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
         logger.info("Nothing to extract for arm %s — %d skipped (asserted), "
                     "%d skipped (refused).", selection.arm,
                     len(selection.skipped_asserted), len(selection.skipped_refused))
-        return {"extracted": 0,
-                "skipped_asserted": len(selection.skipped_asserted),
-                "skipped_refused": len(selection.skipped_refused),
-                "elapsed": time.time() - t}
+        stats = {"extracted": 0,
+                 "skipped_asserted": len(selection.skipped_asserted),
+                 "skipped_refused": len(selection.skipped_refused)}
+        stats["distribution_check"] = _distribution_check(
+            db, spec, review_name, run_id=run_id, stats=stats)
+        return {**stats, "elapsed": time.time() - t}
 
     stats = run_extraction(db, spec, review_name, selection=selection, run_id=run_id)
+    stats["distribution_check"] = _distribution_check(
+        db, spec, review_name, run_id=run_id, stats=stats)
     elapsed = time.time() - t
     logger.info("Extraction complete in %.1fs — %s", elapsed, json.dumps(stats))
     return {**stats, "elapsed": elapsed}
+
+
+def _distribution_check(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
+                        run_id: int, stats: dict) -> dict:
+    """B9 (R167): the distribution-collapse check on the local path.
+
+    Non-strict and non-raising. The population rule is the arm's (>= 10 eligible
+    papers holding a live claim for it), and a failed paper in this run is
+    recorded, not a veto. A COLLAPSED result is logged and written to run
+    telemetry (`engine/core/run_telemetry.py`); it never becomes a paper outcome
+    and never aborts the run. A skip writes a row too, so every extract stage
+    leaves evidence that the check ran.
+    """
+    arm = spec.extraction_models.arm
+    review_dir = Path(db.db_path).parent
+    summary = run_post_extraction_check(
+        Path(db.db_path), review_name, arm, review_dir / CODEBOOK_FILENAME,
+        extracted_count=stats.get("extracted", 0), failed_count=stats.get("failed", 0),
+        strict=False, raise_on_collapse=False, skip_on_failures=False,
+        min_population="arm")
+    record_run_event(review_dir, run_id=run_id, kind="distribution_check", payload={
+        "run_id": run_id, "arm": arm,
+        "extracted_count": summary["extracted_count"],
+        "failed_count": summary["failed_count"],
+        "arm_population": summary["arm_population"], "strict": False,
+        "skipped": summary["skipped"], "skip_reason": summary["skip_reason"],
+        "ok": summary["ok"], "low_variance": summary["low_variance"],
+        "collapsed": summary["collapsed"],
+        "collapsed_fields": summary["collapsed_fields"],
+        "low_variance_fields": summary["low_variance_fields"],
+        "results": summary["results"]})
+    if summary["skipped"]:
+        logger.info("Distribution check (run %d, arm %s): skipped — %s",
+                    run_id, arm, summary["skip_reason"])
+    elif summary["collapsed"]:
+        logger.error("DISTRIBUTION CHECK (run %d, arm %s): COLLAPSED %s — recorded to "
+                     "run telemetry; the run continues (R167)",
+                     run_id, arm, ", ".join(summary["collapsed_fields"]))
+    return {k: summary[k] for k in ("skipped", "skip_reason", "arm_population",
+                                    "ok", "low_variance", "collapsed",
+                                    "collapsed_fields", "low_variance_fields")}
 
 
 def _stage_audit(db: ReviewDatabase, review_name: str, spec: ReviewSpec = None, *,

@@ -618,6 +618,67 @@ class TestRunPostExtractionCheck:
         assert isinstance(summary["low_variance_fields"], list)
 
 
+class TestRunPostExtractionCheckLocalFlags:
+    """B9 (R167, 9c-C7): the local path's flags. The cloud defaults
+    (raise_on_collapse=True, skip_on_failures=True, min_population="run") are the
+    seven tests above, unchanged."""
+
+    def test_t3_raise_on_collapse_true_still_raises_the_cloud_contract(self, tmp_path):
+        db_path = _make_db(tmp_path)
+        _insert_local_spans(db_path, "study_type", ["Original Research"] * 12)
+        with pytest.raises(DistributionCollapseError):
+            run_post_extraction_check(
+                db_path=db_path, review_name="test", arm="local",
+                codebook_path=CODEBOOK_PATH, extracted_count=12, failed_count=0,
+                raise_on_collapse=True)
+
+    def test_t3_raise_on_collapse_false_returns_the_collapse(self, tmp_path):
+        db_path = _make_db(tmp_path)
+        _insert_local_spans(db_path, "study_type", ["Original Research"] * 12)
+        summary = run_post_extraction_check(
+            db_path=db_path, review_name="test", arm="local",
+            codebook_path=CODEBOOK_PATH, extracted_count=12, failed_count=0,
+            raise_on_collapse=False)
+        assert summary["skipped"] is False and "study_type" in summary["collapsed_fields"]
+        assert any(r["field_name"] == "study_type" and r["status"] == "COLLAPSED"
+                   for r in summary["results"])
+
+    def test_t4_arm_population_runs_despite_failures_and_a_small_run(self, tmp_path):
+        db_path = _make_db(tmp_path)
+        values = ["Original Research"] * 8 + ["Case Report/Series"] * 7 + ["Review"] * 5
+        _insert_local_spans(db_path, "study_type", values)
+        summary = run_post_extraction_check(
+            db_path=db_path, review_name="test", arm="local",
+            codebook_path=CODEBOOK_PATH, extracted_count=3, failed_count=2,
+            raise_on_collapse=False, skip_on_failures=False, min_population="arm")
+        assert summary["skipped"] is False
+        assert summary["arm_population"] == 20
+        assert (summary["extracted_count"], summary["failed_count"]) == (3, 2)
+        assert summary["ok"] >= 1
+
+    def test_t4_the_run_population_rule_skips_the_same_inputs(self, tmp_path):
+        db_path = _make_db(tmp_path)
+        values = ["Original Research"] * 8 + ["Case Report/Series"] * 7 + ["Review"] * 5
+        _insert_local_spans(db_path, "study_type", values)
+        summary = run_post_extraction_check(
+            db_path=db_path, review_name="test", arm="local",
+            codebook_path=CODEBOOK_PATH, extracted_count=3, failed_count=2,
+            raise_on_collapse=False, skip_on_failures=False, min_population="run")
+        assert summary["skipped"] is True
+        assert "only 3 papers extracted" in summary["skip_reason"]
+
+    def test_t4_skip_on_failures_still_vetoes_under_the_arm_rule(self, tmp_path):
+        db_path = _make_db(tmp_path)
+        values = ["Original Research"] * 8 + ["Case Report/Series"] * 7 + ["Review"] * 5
+        _insert_local_spans(db_path, "study_type", values)
+        summary = run_post_extraction_check(
+            db_path=db_path, review_name="test", arm="local",
+            codebook_path=CODEBOOK_PATH, extracted_count=3, failed_count=2,
+            raise_on_collapse=False, skip_on_failures=True, min_population="arm")
+        assert summary["skipped"] is True
+        assert "failed extraction" in summary["skip_reason"]
+
+
 # ── Tests: L1 — configurable thresholds ─────────────────────────────
 
 

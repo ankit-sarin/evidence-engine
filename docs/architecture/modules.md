@@ -82,6 +82,9 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 ### `extraction_telemetry.py`
 **Purpose:** Per-attempt extraction telemetry (INSTRUMENT-01; schema `extraction-telemetry-3`, R126): one JSON line per extraction attempt, carrying Pass 1's `done_reason` and each pass's `prompt_eval_count`, appended to a gitignored file under the review directory and written before the result is accepted or rejected, so a failed attempt leaves a trace. File-based by design, no schema change.
 
+### `run_telemetry.py`
+**Purpose:** Per-run telemetry (R167, 9c-C7; schema `run-telemetry-1`): `record_run_event(review_dir, *, run_id, kind, payload)` appends one JSON line to `<review>/telemetry/run_events.jsonl` and never raises. First kind: `distribution_check`, written by the local extract stage.
+
 ## engine/search/ — Literature Search
 
 ### `models.py`

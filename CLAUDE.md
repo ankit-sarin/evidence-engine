@@ -106,7 +106,7 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 5. **FT SCREEN** — Dual-model full-text: primary (qwen3:32b) → verifier (gemma3:27b, 5-test FP catcher). Specialty scope filtering. Text truncation to 32K chars.
 6. **EXTRACT** — Pass 1: DeepSeek-R1 reasoning → Pass 2: structured JSON
 7. **CLOUD EXTRACT** — Parallel concordance arms: OpenAI o4-mini + Anthropic Sonnet 4.6. Same codebook prompt, independent parsing
-8. **DISTRIBUTION CHECK** — Post-extraction quality gate: detect categorical field collapse across any arm
+8. **DISTRIBUTION CHECK** — Post-extraction quality gate on the local extract stage and on each cloud arm run: detect categorical field collapse for the arm just extracted. Local: skipped when the arm has fewer than 10 papers with live claims; COLLAPSED is recorded to run telemetry and the run continues. Cloud: skipped under 10 extracted papers or on a partial run; COLLAPSED raises
 9. **AUDIT** — Grep verify + semantic verify via gemma3:27b + LOW_YIELD detection (configurable threshold)
 10. **CONCORDANCE** — Multi-arm agreement analysis: scoring, normalization, kappa + percent agreement with 95% CI
 11. **ADJUDICATION GATE** — 12-stage workflow: 5 abstract + 1 acquisition + 2 FT + 4 extraction audit (human review required)
@@ -357,7 +357,7 @@ their review session's `run_id`, so rule row 7 is reachable.
 - Normalization (engine/analysis/normalize.py): canonical categorical prefix matching, multi-value fields. Absence comes from the codebook's `absence_sentinels`; numeric dispatch from the codebook's `type`. It no longer interprets numbers — `scoring.parse_number` is the one place that knows what a number is
 - Metrics (engine/analysis/metrics.py): `cohens_kappa(labels_a, labels_b)` over two aligned label sequences, `p_e` from each rater's own marginals, checked against sklearn. Returns `nan` with an `undefined_reason` when kappa is 0/0 — never 1.0. `percent_agreement` remains the scorer's verdict rate, so the two are separate columns. Fleiss-1981 SE with 95% CI
 - Reports (engine/analysis/report.py): terminal, CSV, and HTML concordance report generators
-- Distribution collapse detection (engine/validators/distribution_monitor.py): post-extraction quality gate, flags COLLAPSED/LOW_VARIANCE categorical fields, minimum 10 papers, runs automatically at end of all extraction pipelines
+- Distribution collapse detection (engine/validators/distribution_monitor.py): post-extraction quality gate, flags COLLAPSED/LOW_VARIANCE categorical fields for the arm just extracted. Runs at the end of `run_pipeline`'s local extract stage (non-strict; COLLAPSED is recorded to run telemetry, `engine/core/run_telemetry.py`, and the run continues; skipped when the arm has fewer than 10 papers with live claims — a failed paper is recorded, not a veto) and at the end of each cloud arm run (`CloudExtractorBase.run_distribution_check`, which raises on COLLAPSED; skipped when that run extracted fewer than 10 papers or any failed)
 
 ## Paper 1 Analysis (analysis/paper1/)
 - Human workbook import (human_import.py): parse v2 extraction workbooks (.xlsx), validate against codebook, import to human_extractions table

@@ -1,14 +1,14 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `16b380084f1ec94a7fed804ca2a4b5303344ef0e` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `2259bb66e6fee4819354da5ea6c443fed4eccb73` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 210 |
+| files scanned | 211 |
 | entry points | 94 |
 | entry points with spec flag | 23 |
 | entry points with review name flag | 64 |
@@ -127,7 +127,7 @@ Two figures deliberately have no baseline row. **entry points** (94) counts anyt
 | `engine/tools/db_fingerprint.py` | `database`; `--out`; `--compare` | — | — | — |
 | `engine/tools/inventory.py` | `--write`; `--check` | — | — | — |
 | `engine/utils/ollama_preflight.py` | `--models` required; `--timeout`=30 | — | — | — |
-| `engine/validators/distribution_monitor.py` | `--review` required; `--arm` required; `--codebook`=None; `--strict` | — | 474 | — |
+| `engine/validators/distribution_monitor.py` | `--review` required; `--arm` required; `--codebook`=None; `--strict` | — | 526 | — |
 | `engine/validators/extraction_validator.py` | `--review` required; `--spec`=None | load_spec_for | 313 | main:spec_first |
 | `scripts/_pass2_delta.py` | — | — | — | — |
 | `scripts/_pass2_eyeball.py` | — | — | — | — |
@@ -149,7 +149,7 @@ Two figures deliberately have no baseline row. **entry points** (94) counts anyt
 | `scripts/rescreen_original_251.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/rescreen_with_specialty.py` | `--review` required; `--spec`=None; `--background`; `--verify-only`; `--report-only` | load_spec_for, spec_path_for | 112 | main:spec_first |
 | `scripts/run_cloud_extraction.py` | `--review` required; `--arm`=None; `--spec`=None; `--db`=None; `--max-papers`=None; `--max-cost`=None; `--progress`; `--dry-run` | data_root_for, load_review_spec, load_spec_for, spec_path_for | — | — |
-| `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None | load_spec_for | 79 | run_pipeline:spec_first |
+| `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None | load_spec_for | 82 | run_pipeline:spec_first |
 | `scripts/screen_expanded.py` | `--review` required; `--spec`=None; `--fetch-only`; `--screen-only`; `--verify-only`; `--fresh` | load_review_spec, load_spec_for, spec_path_for | — | — |
 | `scripts/smoke_test_fixes.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/test_e2e_search_screen.py` | — | load_review_spec | 66 | main:spec_first |
@@ -214,7 +214,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/tools/inventory.py` | 498 | literal | ``data/` subdirectories NOT counted as reviews (no `review.db`):` |
 | `engine/tools/inventory.py` | 533 | literal | `Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse prose, and messages passed to an exception or a logger. This is the class a ...` |
 | `engine/tools/inventory.py` | 682 | literal | `data/ subdirectories changed: ` |
-| `engine/validators/distribution_monitor.py` | 479 | literal | `extraction_codebook.yaml` |
+| `engine/validators/distribution_monitor.py` | 531 | literal | `extraction_codebook.yaml` |
 | `engine/validators/extraction_validator.py` | 62 | literal | `extraction_codebook.yaml` |
 | `scripts/_pass2_delta.py` | 13 | literal | `data/surgical_autonomy/review.db` |
 | `scripts/_pass2_delta.py` | 16 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |

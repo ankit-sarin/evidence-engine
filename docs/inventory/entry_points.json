@@ -4968,6 +4968,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/core/run_telemetry.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/run_telemetry.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/core/selection.py": {
         "entry_point": false,
         "flags": [],
@@ -6061,7 +6075,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 465,
+            "line": 517,
             "names": [
               "--review"
             ],
@@ -6070,7 +6084,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 466,
+            "line": 518,
             "names": [
               "--arm"
             ],
@@ -6079,7 +6093,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 467,
+            "line": 519,
             "names": [
               "--codebook"
             ],
@@ -6088,7 +6102,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 468,
+            "line": 520,
             "names": [
               "--strict"
             ],
@@ -6102,7 +6116,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 479,
+            "line": 531,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -6110,7 +6124,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 474,
+            "line": 526,
             "scope": "main"
           }
         ],
@@ -7195,7 +7209,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 438,
+            "line": 486,
             "names": [
               "--review",
               "--name"
@@ -7205,7 +7219,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 444,
+            "line": 492,
             "names": [
               "--spec"
             ],
@@ -7214,7 +7228,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 450,
+            "line": 498,
             "names": [
               "--skip-to"
             ],
@@ -7223,7 +7237,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 456,
+            "line": 504,
             "names": [
               "--limit"
             ],
@@ -7239,19 +7253,19 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 293,
+            "line": 296,
             "role": "message",
             "text": "No papers with status PDF_ACQUIRED. PDF acquisition is manual for v1. Place PDFs in data/%s/pdfs/ named as {paper_id}.pdf, then set status to PDF_ACQUIRED."
           },
           {
             "kind": "literal",
-            "line": 440,
+            "line": 488,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 446,
+            "line": 494,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7259,7 +7273,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 79,
+            "line": 82,
             "scope": "run_pipeline"
           }
         ],
@@ -7267,7 +7281,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 75,
+            "line": 78,
             "scope": "run_pipeline"
           }
         ],
@@ -7533,7 +7547,7 @@
       "entry_points_with_spec_flag": 23,
       "files_calling_load_review_spec_directly": 11,
       "files_calling_resolver": 26,
-      "files_scanned": 210,
+      "files_scanned": 211,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 33,
@@ -7545,7 +7559,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "16b380084f1ec94a7fed804ca2a4b5303344ef0e",
+    "generated_at_commit": "2259bb66e6fee4819354da5ea6c443fed4eccb73",
     "scan_roots": [
       "engine",
       "scripts",

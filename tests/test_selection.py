@@ -207,8 +207,12 @@ def test_t8_extract_stage_with_nothing_selected_reports_and_runs_nothing(tmp_pat
         with patch.object(rp, "run_extraction") as run:
             out = rp._stage_extract(rdb, spec, "sel_empty", run_id=run_id)
         run.assert_not_called()
-        assert set(out) == {"extracted", "skipped_asserted", "skipped_refused", "elapsed"}
+        # 9c-C7 (R167, B5): the stage's distribution check runs in this branch too
+        # and reports its skip.
+        assert set(out) == {"extracted", "skipped_asserted", "skipped_refused", "elapsed",
+                            "distribution_check"}
         assert (out["extracted"], out["skipped_asserted"], out["skipped_refused"]) == (0, 0, 0)
+        assert out["distribution_check"]["skipped"] is True
     finally:
         rdb.close()
 

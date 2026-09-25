@@ -348,6 +348,22 @@ def assert_no_collapse(results: list[dict], strict: bool = False) -> None:
 # ── Automatic post-extraction gate ────────────────────────────────────
 
 
+def arm_population(db_path: Path, arm: str) -> int:
+    """Eligible papers on which `arm` holds at least one live claim.
+
+    Through the reader's own definitions (`eligible_paper_ids`,
+    `live_claim_events`), never a second SQL copy of "live" (R167, 9c-C7).
+    """
+    from engine.core.effective import eligible_paper_ids, live_claim_events
+
+    conn = sqlite3.connect(f"file:{Path(db_path).resolve()}?mode=ro", uri=True)
+    try:
+        return sum(1 for pid in eligible_paper_ids(conn)
+                   if live_claim_events(conn, pid, arm))
+    finally:
+        conn.close()
+
+
 def run_post_extraction_check(
     db_path: Path,
     review_name: str,
@@ -357,32 +373,50 @@ def run_post_extraction_check(
     extracted_count: int = 0,
     failed_count: int = 0,
     strict: bool = False,
+    raise_on_collapse: bool = True,
+    skip_on_failures: bool = True,
+    min_population: str = "run",
     collapsed_min_papers: int = DEFAULT_COLLAPSED_MIN_PAPERS,
     low_variance_threshold: float = DEFAULT_LOW_VARIANCE_THRESHOLD,
     low_variance_min_papers: int = DEFAULT_LOW_VARIANCE_MIN_PAPERS,
 ) -> dict:
     """Run distribution monitor as an automatic post-extraction quality gate.
 
-    Called at the end of extraction runs. Logs per-field results, then calls
-    assert_no_collapse() — raises DistributionCollapseError on COLLAPSED fields
-    (or LOW_VARIANCE too when strict=True).
+    Called at the end of extraction runs. Logs per-field results, then — with
+    `raise_on_collapse` (the default, the cloud contract) — calls
+    assert_no_collapse(), which raises DistributionCollapseError on COLLAPSED
+    fields (or LOW_VARIANCE too when strict=True). With
+    `raise_on_collapse=False` (the local extract stage, R167) the result is
+    returned, never raised.
+
+    Skip rules. `min_population="run"` (default): skip when this run extracted
+    fewer than 10 papers. `min_population="arm"`: skip when fewer than 10
+    eligible papers hold a live claim for the arm, whatever this run did.
+    `skip_on_failures=True` (default): skip when any paper in the run failed;
+    False records `failed_count` without vetoing the check.
 
     Returns a summary dict with keys: ok, low_variance, collapsed, skipped,
-    collapsed_fields.
-
-    If extraction was partial (failed > 0 or extracted < 10), skips the check
-    and logs a reason.
+    skip_reason, collapsed_fields, low_variance_fields, results (per field),
+    extracted_count, failed_count, arm_population (None unless counted).
     """
+    if min_population not in ("run", "arm"):
+        raise ValueError(f"min_population must be 'run' or 'arm', not {min_population!r}")
     summary = {
         "ok": 0,
         "low_variance": 0,
         "collapsed": 0,
         "skipped": True,
+        "skip_reason": None,
         "collapsed_fields": [],
         "low_variance_fields": [],
+        "results": [],
+        "extracted_count": extracted_count,
+        "failed_count": failed_count,
+        "arm_population": None,
     }
 
-    if extracted_count < 10:
+    if min_population == "run" and extracted_count < 10:
+        summary["skip_reason"] = f"only {extracted_count} papers extracted in this run (minimum 10)"
         logger.info(
             "Distribution monitor skipped: only %d papers extracted "
             "(minimum 10 required for meaningful analysis)",
@@ -390,7 +424,17 @@ def run_post_extraction_check(
         )
         return summary
 
-    if failed_count > 0:
+    if min_population == "arm":
+        population = arm_population(db_path, arm)
+        summary["arm_population"] = population
+        if population < 10:
+            summary["skip_reason"] = (f"only {population} eligible papers hold a live "
+                                      f"claim for arm {arm} (minimum 10)")
+            logger.info("Distribution monitor skipped: %s", summary["skip_reason"])
+            return summary
+
+    if skip_on_failures and failed_count > 0:
+        summary["skip_reason"] = f"{failed_count} papers failed extraction (partial run)"
         logger.info(
             "Distribution monitor skipped: %d papers failed extraction "
             "(partial run — re-run monitor manually after retry)",
@@ -399,6 +443,7 @@ def run_post_extraction_check(
         return summary
 
     if not codebook_path.exists():
+        summary["skip_reason"] = f"codebook not found at {codebook_path}"
         logger.warning(
             "Distribution monitor skipped: codebook not found at %s",
             codebook_path,
@@ -443,8 +488,15 @@ def run_post_extraction_check(
         summary["ok"], summary["low_variance"], summary["collapsed"],
     )
 
-    # Fail-fast: raise on COLLAPSED (or LOW_VARIANCE in strict mode)
-    assert_no_collapse(results, strict=strict)
+    summary["results"] = [
+        {k: r.get(k) for k in ("field_name", "status", "top_value", "top_value_pct",
+                               "entropy", "total_non_null")}
+        for r in results]
+
+    # Fail-fast: raise on COLLAPSED (or LOW_VARIANCE in strict mode) — the cloud
+    # contract. The local extract stage reads the result instead (R167).
+    if raise_on_collapse:
+        assert_no_collapse(results, strict=strict)
 
     return summary
 

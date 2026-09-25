@@ -452,9 +452,8 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.extract_paper")
     @patch("engine.utils.ollama_preflight.require_preflight")
     @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
-    @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
     def test_restart_triggers_after_n_papers(
-        self, _stale, _digest, _preflight, mock_extract, mock_restart, tmp_path,
+        self, _digest, _preflight, mock_extract, mock_restart, tmp_path,
     ):
         """Proactive restart fires after restart_every papers are processed."""
         db, spec = self._setup_db(tmp_path, n_papers=5)
@@ -472,9 +471,8 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.extract_paper")
     @patch("engine.utils.ollama_preflight.require_preflight")
     @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
-    @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
     def test_restart_disabled_when_zero(
-        self, _stale, _digest, _preflight, mock_extract, mock_restart, tmp_path,
+        self, _digest, _preflight, mock_extract, mock_restart, tmp_path,
     ):
         """restart_every=0 disables proactive restarts entirely."""
         db, spec = self._setup_db(tmp_path, n_papers=5)
@@ -489,9 +487,8 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.extract_paper")
     @patch("engine.utils.ollama_preflight.require_preflight")
     @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
-    @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
     def test_restart_failure_continues_gracefully(
-        self, _stale, _digest, _preflight, mock_extract, _mock_restart, tmp_path,
+        self, _digest, _preflight, mock_extract, _mock_restart, tmp_path,
     ):
         """If Ollama restart fails, extraction continues (H4: graceful degradation)."""
         db, spec = self._setup_db(tmp_path, n_papers=3)
@@ -506,9 +503,8 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.ollama_chat")
     @patch("engine.utils.ollama_preflight.require_preflight")
     @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
-    @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
     def test_zero_span_extraction_marks_extract_failed(
-        self, _stale, _digest, _preflight, mock_chat, _restart, tmp_path,
+        self, _digest, _preflight, mock_chat, _restart, tmp_path,
     ):
         """LLM returns valid JSON with zero fields → retried under the budget, then
         a paper event extraction_failed / no_fields_returned (9b-FLIP T5); no rows."""
@@ -549,9 +545,8 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.extract_paper")
     @patch("engine.utils.ollama_preflight.require_preflight")
     @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
-    @patch("engine.utils.extraction_cleanup.check_stale_extractions", return_value=0)
     def test_input_fit_failure_fails_the_paper_and_the_run_continues(
-        self, _stale, _digest, _preflight, mock_extract, _restart, kind, tmp_path, caplog,
+        self, _digest, _preflight, mock_extract, _restart, kind, tmp_path, caplog,
     ):
         """T6 (INPUT-FIT-01): each input-fit exception lands in EXTRACT_FAILED with its
         fields in the failure log entry, is not retried, and the next paper runs."""
@@ -610,11 +605,6 @@ class TestProactiveRestart:
             id INTEGER PRIMARY KEY, title TEXT, authors TEXT, year INTEGER,
             status TEXT, abstract TEXT, doi TEXT, pmid TEXT, source TEXT,
             pdf_local_path TEXT, added_at TEXT, updated_at TEXT)""")
-        conn.execute("""CREATE TABLE extractions (
-            id INTEGER PRIMARY KEY, paper_id INTEGER, extraction_schema_hash TEXT,
-            extracted_data TEXT, reasoning_trace TEXT, model TEXT,
-            model_digest TEXT, auditor_model_digest TEXT, extracted_at TEXT,
-            codebook_hash TEXT, codebook_sha256 TEXT)""")
         conn.execute("""CREATE TABLE evidence_spans (
             id INTEGER PRIMARY KEY, extraction_id INTEGER, field_name TEXT,
             value TEXT, source_snippet TEXT, confidence REAL)""")
@@ -704,11 +694,6 @@ class TestRestartOllamaGraceful:
             id INTEGER PRIMARY KEY, title TEXT, authors TEXT, year INTEGER,
             status TEXT, abstract TEXT, doi TEXT, pmid TEXT, source TEXT,
             pdf_local_path TEXT, added_at TEXT, updated_at TEXT)""")
-        conn.execute("""CREATE TABLE extractions (
-            id INTEGER PRIMARY KEY, paper_id INTEGER, extraction_schema_hash TEXT,
-            extracted_data TEXT, reasoning_trace TEXT, model TEXT,
-            model_digest TEXT, auditor_model_digest TEXT, extracted_at TEXT,
-            codebook_hash TEXT, codebook_sha256 TEXT)""")
         conn.execute("""CREATE TABLE evidence_spans (
             id INTEGER PRIMARY KEY, extraction_id INTEGER, field_name TEXT,
             value TEXT, source_snippet TEXT, confidence REAL)""")

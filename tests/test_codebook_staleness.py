@@ -74,9 +74,10 @@ def test_differing_codebook_hash_is_stale(tmp_path):
 
 
 def test_the_count_predicate_agrees_with_the_row_predicate(tmp_path):
-    """check_stale_extractions and get_stale_extractions must not disagree."""
-    from engine.utils.extraction_cleanup import check_stale_extractions
+    """The row predicate over NULL, an older hash and the current one.
 
+    9c-C2 (R159, B5): the count predicate it was compared against retired with
+    its module; the row predicate it pinned survives until R160a."""
     db = ReviewDatabase("stale_count", data_root=tmp_path)
     try:
         for i, h in enumerate((None, "older", "current")):
@@ -84,7 +85,6 @@ def test_the_count_predicate_agrees_with_the_row_predicate(tmp_path):
             for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
                 db.update_status(pid, s)
             db.add_extraction(pid, None, {}, "t", "m", codebook_hash=h)
-        assert check_stale_extractions(db, "current") == 2
         assert len(db.get_stale_extractions("current")) == 2
     finally:
         db.close()
@@ -92,21 +92,13 @@ def test_the_count_predicate_agrees_with_the_row_predicate(tmp_path):
 
 def test_the_predicate_is_spelled_so_null_matches():
     """Grep-level, because the defect is a missing OR, not a wrong value."""
-    for rel in ("engine/core/database.py", "engine/utils/extraction_cleanup.py"):
+    for rel in ("engine/core/database.py",):  # 9c-C2: the second copy retired (R159)
         src = (REPO_ROOT / rel).read_text()
         assert "codebook_hash IS NULL OR" in src, rel
 
 
-def test_the_current_hash_is_the_codebooks(tmp_path):
-    from engine.utils.extraction_cleanup import get_current_schema_hash
-
-    db = ReviewDatabase("hash_src", data_root=tmp_path)
-    try:
-        beside = load_codebook_beside(db.db_path)
-        assert beside.semantic_hash == get_current_schema_hash(
-            "hash_src", codebook_path=beside.path)
-    finally:
-        db.close()
+# test_the_current_hash_is_the_codebooks retired 2026-09-25 with its subject,
+# get_current_schema_hash (9c-C2, R159; R47).
 
 
 # ── T5: parity reads codebook_hash and still only warns ──────────────

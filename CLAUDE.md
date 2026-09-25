@@ -139,7 +139,6 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - Self-documenting review workbooks: shared builder with DataValidation dropdowns, conditional formatting, Instructions sheet. Used by all 3 adjudication exporters
 - PDF quality check: AI classification (vision model) + HTML disposition + JSON import. PDF_EXCLUDED is terminal
 - Extraction validator: schema-driven field name + categorical value check. Read-only diagnostic
-- Extraction cleanup: read-only staleness report. The delete branch refuses (`DeletionRetired`, R94) and `--confirm` refuses before opening any database; the extractor's pre-flight stale count is informational
 - Ollama pre-flight: model health check + VRAM budget validation. Wired into FT screener, extractor, auditor
 - FT screening: dual-model cross-family, specialty scope, /no_think, 32K truncation, checkpoint/resume, 7 reason codes. Status-aware for papers at any lifecycle stage
 - Pass-1 think policy is declared per pass in the Review Spec (`extraction_models.pass1_think` / `.pass2_think`) and passed explicitly on every call — never left to a version-dependent Ollama default (REGRESSION-01)
@@ -540,11 +539,6 @@ python -m engine.acquisition.pdf_quality_import --review surgical_autonomy --inp
 python -m engine.agents.ft_screener --review surgical_autonomy
 python -m engine.agents.ft_screener ... --screen-only
 python -m engine.agents.ft_screener ... --verify-only
-
-# Extraction staleness report (deletes nothing; like every ReviewDatabase construction it runs pending migrations)
-python -m engine.utils.extraction_cleanup --review surgical_autonomy          # report
-# extraction_cleanup --confirm — retired (R94): refuses before opening any database. Extractions
-# are superseded by event, never deleted (row D10). The command above only reports.
 
 # Post-extraction validation
 python -m engine.validators.extraction_validator --review surgical_autonomy

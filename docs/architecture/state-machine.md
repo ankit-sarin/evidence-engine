@@ -155,16 +155,6 @@ Atomic four-phase reset:
 
 Returns `{papers_reset, spans_deleted, extractions_deleted}`.
 
-### `cleanup_stale_extractions()` (`engine/utils/extraction_cleanup.py`)
-
-Schema-hash-based stale data removal:
-- Deletes extractions where `extraction_schema_hash != current_hash`
-- Cascade deletes associated evidence spans
-- Resets EXTRACTED/AI_AUDIT_COMPLETE papers → PARSED
-- **Protected:** HUMAN_AUDIT_COMPLETE papers are never reset
-- **Dry-run default:** Requires `--confirm` flag for execution
-- Auto-backs up DB before destructive operations
-
 ### `reject_paper(paper_id, reason)`
 
 Atomic: sets status to REJECTED with `rejected_reason` recorded in papers table.

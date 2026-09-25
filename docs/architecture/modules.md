@@ -385,12 +385,6 @@ Deleted. It read `extractions.reasoning_trace` and `evidence_spans.audit_status`
 - `auto_backup(db_path_or_connection, reason)` — Reads the source through `db_fingerprint.read_snapshot` (`mode=ro`), copies with SQLite's online backup API (the copy switched to a rollback journal, so no `-wal`/`-shm` sidecar), fingerprints the copy against the source, deletes the copy and raises `BackupVerificationError` on mismatch, and returns `BackupResult(path, fingerprint)`. File name: `{db_name}.bak-{reason}-{YYYYMMDD-HHMMSS}`
 - `restore(...)` — Deliberately has no CLI; refuses an open target.
 
-### `extraction_cleanup.py`
-**Purpose:** Extraction staleness report for codebook transitions — read-only. The delete branch is retired (R25, R94; row D10): extractions are superseded by event, never deleted.
-- `check_stale_extractions(...)` — the dry-run staleness report
-- `cleanup_stale_extractions(db, schema_hash, dry_run)` — with `dry_run=False` raises `DeletionRetired` before any query runs
-- CLI `--confirm` refuses unconditionally, before any database is opened; the extractor's pre-flight stale count is informational
-
 ### `ollama_client.py`
 **Purpose:** Three-layer Ollama timeout wrapper, and the single input-fit guard for every model call.
 - `ollama_chat(model, messages, ...)` — HTTP timeout + wall-clock timeout + restart recovery. Model-aware timeouts (8b:300s, 27b:600s, 32b:900s, 70b:1200s). Default 2 retries + 30s delay. Checks input fit before and after every call (INPUT-FIT-01); request fields are never changed
@@ -525,7 +519,6 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 | `test_dedup.py` | Two-phase deduplication |
 | `test_distribution_monitor.py` | Collapse detection, Shannon entropy |
 | `test_exporters.py` | PRISMA, evidence table, DOCX, methods section |
-| `test_extraction_cleanup.py` | Stale extraction cleanup |
 | `test_extraction_validator.py` | Field validation, cross-field bleed |
 | `test_extractor.py` | Two-pass extraction, snippet validation |
 | `test_ft_screening.py` | FT screening, truncation, reason codes |

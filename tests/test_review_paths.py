@@ -170,9 +170,6 @@ SPEC_BEARING_ENTRY_POINTS = [
     "engine/acquisition/pdf_quality_check.py",
     "engine/agents/ft_screener.py",
     "engine/analysis/concordance.py",
-    # engine/utils/extraction_cleanup.py is NOT here: SCHEMA-DERIVE-01 removed
-    # its --spec flag. The hash it compares comes from the codebook now, so the
-    # entry point reads no spec at all and has nothing to identity-check.
     "engine/validators/extraction_validator.py",
     # scripts/eval_auditor_models.py retired 2026-09-24 under R125 (R31): the only
     # caller of the auditor's ollama_options override; it read the legacy tables and

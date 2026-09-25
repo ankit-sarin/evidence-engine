@@ -898,21 +898,6 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
     logger.info("Model digests (run %d) — extractor (%s): %s, auditor: %s",
                 run_id, extractor_model, extractor_digest, auditor_digest)
 
-    # Pre-flight: an informational count of extractions that do not carry the
-    # current codebook hash. It used to tell the operator to run the cleanup
-    # utility, whose delete branch is retired (R94, row D10); nothing is ever
-    # deleted to make room for a re-extraction.
-    from engine.utils.extraction_cleanup import check_stale_extractions
-    stale_count = check_stale_extractions(db, schema_hash)
-    if stale_count > 0:
-        logger.info(
-            "Informational: %d papers hold extractions without the current "
-            "codebook hash. Whether a paper is re-extracted is decided at "
-            "selection by the reuse key from session 9; earlier extractions "
-            "are superseded by event, never removed.",
-            stale_count,
-        )
-
     from engine.utils.progress import ProgressReporter
 
     stats = {"extracted": 0, "failed": 0, "total_spans": 0,

@@ -6041,70 +6041,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "engine/utils/extraction_cleanup.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 192,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 193,
-            "names": [
-              "--keep-schema"
-            ],
-            "required": false
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 197,
-            "names": [
-              "--codebook"
-            ],
-            "required": false
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 203,
-            "names": [
-              "--confirm"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "engine/utils/extraction_cleanup.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 199,
-            "role": "help_text",
-            "text": "Override the codebook path. Defaults to data/<review>/extraction_codebook.yaml; an override must declare the same review."
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 229,
-            "scope": "main"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "engine/utils/ollama_client.py": {
         "entry_point": false,
         "flags": [],
@@ -7714,18 +7650,18 @@
     "summary": {
       "db_before_spec_scopes": 0,
       "default_review_named_constants": 6,
-      "entry_points": 97,
-      "entry_points_constructing_reviewdatabase": 31,
-      "entry_points_name_only": 45,
-      "entry_points_with_review_name_flag": 67,
+      "entry_points": 96,
+      "entry_points_constructing_reviewdatabase": 30,
+      "entry_points_name_only": 44,
+      "entry_points_with_review_name_flag": 66,
       "entry_points_with_spec_flag": 23,
       "files_calling_load_review_spec_directly": 11,
       "files_calling_resolver": 26,
-      "files_scanned": 216,
+      "files_scanned": 215,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 34,
-      "name_only_constructing_reviewdatabase": 20,
+      "name_only_constructing_reviewdatabase": 19,
       "path_construction_sites_in_code": 65,
       "raw_yaml_load_sites": 3,
       "review_id_constants": 8,
@@ -7733,7 +7669,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "6e09166d6e44b2c400ad1c40754f024e6e32db6e",
+    "generated_at_commit": "804da1d4ab555822601ec93df6ee6394dbcb86ac",
     "scan_roots": [
       "engine",
       "scripts",

@@ -1,20 +1,20 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `6e09166d6e44b2c400ad1c40754f024e6e32db6e` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `804da1d4ab555822601ec93df6ee6394dbcb86ac` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 216 |
-| entry points | 97 |
+| files scanned | 215 |
+| entry points | 96 |
 | entry points with spec flag | 23 |
-| entry points with review name flag | 67 |
-| entry points name only | 45 |
-| entry points constructing reviewdatabase | 31 |
-| name only constructing reviewdatabase | 20 |
+| entry points with review name flag | 66 |
+| entry points name only | 44 |
+| entry points constructing reviewdatabase | 30 |
+| name only constructing reviewdatabase | 19 |
 | files calling resolver | 26 |
 | files calling load review spec directly | 11 |
 | raw yaml load sites | 3 |
@@ -45,16 +45,16 @@ Baselines are the figures measured by hand in GENERALIZE-READOUT-01 and SPEC-AUT
 
 | figure | hand-built | measured now | |
 |---|---:|---:|---|
-| argparse entry points naming a review | 74 | 67 | the hand scan keyed on --review/--name, which is what this counts |
+| argparse entry points naming a review | 74 | 66 | the hand scan keyed on --review/--name, which is what this counts |
 | of those, spec-bearing | 29 | 23 | differs — unexplained, investigate |
-| of those, name-only | 45 | 45 | matches |
-| entry points constructing ReviewDatabase | 35 | 31 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
-| name-only, constructing ReviewDatabase | 20 | 20 | matches |
+| of those, name-only | 45 | 44 | differs — unexplained, investigate |
+| entry points constructing ReviewDatabase | 35 | 30 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
+| name-only, constructing ReviewDatabase | 20 | 19 | differs — unexplained, investigate |
 | raw yaml load sites | 13 | 3 | differs — unexplained, investigate |
 | f-string spec-path builders | 19 | 0 | SPEC-AUTH-01 moved every one of these onto the resolver; a non-zero value here means a hand-built spec path has come back |
 | DEFAULT_REVIEW constants | 7 | 6 | differs — unexplained, investigate |
 
-Two figures deliberately have no baseline row. **entry points** (97) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
+Two figures deliberately have no baseline row. **entry points** (96) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
 
 ## Entry points
 
@@ -127,7 +127,6 @@ Two figures deliberately have no baseline row. **entry points** (97) counts anyt
 | `engine/review/extraction_audit_html.py` | `--review` required; `--output`=None | — | — | — |
 | `engine/tools/db_fingerprint.py` | `database`; `--out`; `--compare` | — | — | — |
 | `engine/tools/inventory.py` | `--write`; `--check` | — | — | — |
-| `engine/utils/extraction_cleanup.py` | `--review` required; `--keep-schema`; `--codebook`=None; `--confirm` | — | 229 | — |
 | `engine/utils/ollama_preflight.py` | `--models` required; `--timeout`=30 | — | — | — |
 | `engine/validators/distribution_monitor.py` | `--review` required; `--arm` required; `--codebook`=None; `--strict` | — | 474 | — |
 | `engine/validators/extraction_validator.py` | `--review` required; `--spec`=None | load_spec_for | 397 | main:spec_first |

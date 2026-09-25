@@ -129,7 +129,7 @@ def test_run_id_is_on_every_event_row_a_run_writes(review, spec):
     db, cb = review
     h = _open(db, spec, cb)
     db._conn.execute("INSERT INTO papers (id, title, source, status, created_at, updated_at) "
-                     "VALUES (1, 't', 's', 'EXTRACTED', 'x', 'x')")
+                     "VALUES (1, 't', 's', 'PARSED', 'x', 'x')")
     events.write_paper_event(db._conn, event_type="extracted", paper_id=1, to_state="extracted",
                              actor_kind="engine", actor_role="system", actor_name="e",
                              run_id=h.run_id)

@@ -280,15 +280,14 @@ def test_full_two_pass_mocked(tmp_path, spec):
     assert "STAR robot" in result.reasoning_trace
 
     # 9b-FLIP (R111): one asserted claim per field under the run, one
-    # `extracted` paper event, and nothing in the legacy tables.
+    # `extracted` paper event. (9c-C1: the legacy-table counts that stood here
+    # could not fail — nothing writes those tables any more.)
     claims = db._conn.execute(
         "SELECT run_id FROM field_events WHERE paper_id = ? AND event_type = 'asserted'",
         (pid,)).fetchall()
     assert len(claims) == n_expected and {r[0] for r in claims} == {run_id}
     from engine.core.effective import effective_state
     assert effective_state(db._conn, pid).processing == "extracted"
-    assert db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0] == 0
-    assert db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0] == 0
 
     db.close()
 
@@ -535,12 +534,6 @@ class TestProactiveRestart:
         assert stats["failed"] == 1
         assert stats["extracted"] == 0
 
-        # Verify no extraction or span rows were inserted
-        ext_count = db._conn.execute("SELECT COUNT(*) FROM extractions").fetchone()[0]
-        span_count = db._conn.execute("SELECT COUNT(*) FROM evidence_spans").fetchone()[0]
-        assert ext_count == 0
-        assert span_count == 0
-
         # 9b-FLIP: the outcome is a paper event, never a status write.
         paper = db._conn.execute("SELECT status FROM papers WHERE id = 1").fetchone()
         assert paper["status"] == "FT_ELIGIBLE"
@@ -645,7 +638,11 @@ class TestProactiveRestart:
         return db, spec
 
     def _make_fake_extract(self, spec):
-        """Return a fake extract_paper function that stores results in DB."""
+        """Return a fake extract_paper that returns a result and writes nothing.
+
+        The real extract_paper writes events; `run_extraction` counts a paper by
+        this return. 9c-C1 (R158): the legacy INSERT it used to make was read by
+        nothing after the cut-over."""
 
         def _fake(paper_id, paper_text, spec_arg, db, **kwargs):
             schema_hash = load_codebook_beside(db.db_path).semantic_hash
@@ -661,11 +658,6 @@ class TestProactiveRestart:
                 codebook_hash=schema_hash,
                 extracted_at=datetime.now(timezone.utc),
             )
-            db._conn.execute(
-                "INSERT INTO extractions (paper_id, extraction_schema_hash, extracted_data, model, extracted_at) VALUES (?, ?, '[]', 'test', '2026-01-01')",
-                (paper_id, schema_hash),
-            )
-            db._conn.commit()
             return result
         return _fake
 
@@ -753,10 +745,5 @@ class TestRestartOllamaGraceful:
                 codebook_hash=schema_hash,
                 extracted_at=datetime.now(timezone.utc),
             )
-            db._conn.execute(
-                "INSERT INTO extractions (paper_id, extraction_schema_hash, extracted_data, model, extracted_at) VALUES (?, ?, '[]', 'test', '2026-01-01')",
-                (paper_id, schema_hash),
-            )
-            db._conn.commit()
             return result
         return _fake

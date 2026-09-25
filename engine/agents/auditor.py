@@ -7,9 +7,6 @@ declared `audit.model`, or the `model` parameter on individual functions.
 
 import json
 import logging
-import re
-import unicodedata
-from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Literal, Optional
 
@@ -23,11 +20,12 @@ from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.core.parsed_text import NoParsedText, ParsedTextError, load_parsed_text
 from engine.utils.ollama_client import ollama_chat
 from engine.core.codebook import load_codebook_beside
+from engine.core.locator import locate
+# Re-exported under its old name: human_review.py and the frozen provenance
+# ladder (analysis/provenance/legacy.py) import it from here (9b-2d R6).
+from engine.core.locator import normalize as _normalize  # noqa: F401
 
 logger = logging.getLogger(__name__)
-
-# Fields at these tiers skip grep and go straight to semantic verification
-SEMANTIC_ONLY_TIERS = {4}
 
 
 # ── Audit Output Model ──────────────────────────────────────────────
@@ -41,65 +39,16 @@ class AuditVerdict(BaseModel):
     reasoning: str
 
 
-# ── Text Normalization ──────────────────────────────────────────────
-
-_WS_RE = re.compile(r"\s+")
-_PUNCT_GLUED_RE = re.compile(r"(?<=\w)\.(?=\w)")
-_SMART_QUOTES = str.maketrans({
-    "\u2018": "'", "\u2019": "'",   # single curly quotes
-    "\u201c": '"', "\u201d": '"',   # double curly quotes
-    "\u2013": "-", "\u2014": "-",   # en/em dash
-})
-
-
-def _normalize(text: str) -> str:
-    """Normalize text for comparison: lowercase, collapse whitespace,
-    fix glued punctuation (Table.I → Table I), straighten quotes."""
-    text = text.translate(_SMART_QUOTES)
-    text = unicodedata.normalize("NFKC", text)
-    text = _PUNCT_GLUED_RE.sub(" ", text)
-    return _WS_RE.sub(" ", text.lower()).strip()
-
-
 # ── Grep Verification ────────────────────────────────────────────────
 
 
 def grep_verify(source_snippet: str, paper_text: str) -> bool:
     """Check if source_snippet exists in paper_text (exact or fuzzy).
 
-    1. Exact substring match on normalized text.
-    2. Sliding window fuzzy match (SequenceMatcher > 0.85).
+    The shared locator's verdict (R17, 9b-2d): normalized exact substring, else
+    the best word window's SequenceMatcher ratio strictly above 0.85.
     """
-    if not source_snippet or not paper_text:
-        return False
-
-    norm_snippet = _normalize(source_snippet)
-    norm_text = _normalize(paper_text)
-
-    # Exact substring match
-    if norm_snippet in norm_text:
-        return True
-
-    # Sliding window fuzzy match
-    snippet_len = len(norm_snippet)
-    if snippet_len == 0:
-        return False
-
-    # Use word-level windows for efficiency
-    text_words = norm_text.split()
-    snippet_words = norm_snippet.split()
-    window_size = len(snippet_words)
-
-    if window_size == 0:
-        return False
-
-    for i in range(max(1, len(text_words) - window_size + 1)):
-        window = " ".join(text_words[i : i + window_size])
-        ratio = SequenceMatcher(None, norm_snippet, window).ratio()
-        if ratio > 0.85:
-            return True
-
-    return False
+    return locate(paper_text, source_snippet).located
 
 
 # ── Semantic Verification ────────────────────────────────────────────
@@ -192,7 +141,7 @@ def audit_span(
     4-state outcome:
     - 'invalid_snippet' — snippet contains ellipsis bridging
     - 'verified' — grep pass AND semantic pass
-    - 'contested' — grep fail AND semantic pass (or Tier 4 semantic pass)
+    - 'contested' — grep fail AND semantic pass
     - 'flagged' — semantic fail
 
     `non_value_tokens` (ELICIT-DESIGN-02 D1/D2) comes from the codebook via
@@ -214,10 +163,9 @@ def audit_span(
             f"audit (ELICIT-DESIGN-02 Ruling 1)."
         )
 
-    # Values that indicate the field is absent/not reported — auto-verify
-    _ABSENCE_VALUES = {"NOT_FOUND", "Not discussed", "NR", "No comparison reported"}
-    if value in _ABSENCE_VALUES:
-        return "verified", f"Field value '{value}' indicates absence — no extraction to audit."
+    # R124 (9b-2d): there is no auto-verified absence list. A sentinel is a
+    # value like any other to the locator (R17); with no snippet it is not
+    # located, exactly as a value with no snippet is not.
 
     # Fix A: Invalid snippet detection (before any other logic)
     if source_snippet and source_snippet.strip():
@@ -228,14 +176,9 @@ def audit_span(
     if not source_snippet or not source_snippet.strip():
         return "flagged", "Extracted value present but no source snippet provided."
 
-    # Fix C: Tier 4 semantic-only routing — skip grep entirely
-    is_semantic_only = field_tier in SEMANTIC_ONLY_TIERS
-
-    # Compute grep result
-    if is_semantic_only:
-        grep_pass = True  # not evaluated, treat as pass for routing
-    else:
-        grep_pass = grep_verify(source_snippet, paper_text)
+    # R124 (9b-2d): every tier is located — the tier-4 pass that set
+    # grep_pass = True unchecked is retired.
+    grep_pass = locate(paper_text, source_snippet).located
 
     # Compute semantic result
     span = EvidenceSpan(
@@ -270,8 +213,8 @@ def _tokens_for_db(db) -> frozenset[str]:
     """The review's non-value tokens, read from its own codebook (D1/D2).
 
     One accessor for both auditor sites. LOW_YIELD's absence set is the
-    codebook's too (R124/R136); `audit_span` keeps its own hand-list until slice 2
-    rewrites it with the locator.
+    codebook's too (R124/R136); `audit_span`'s hand-list retired with the locator
+    (9b-2d).
     """
     from engine.elicitation.classes import non_value_tokens_for
 

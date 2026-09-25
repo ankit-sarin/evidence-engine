@@ -4246,6 +4246,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/agents/audit_events.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/agents/audit_events.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/agents/auditor.py": {
         "entry_point": false,
         "flags": [],
@@ -4256,7 +4270,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 278,
+            "line": 221,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4658,6 +4672,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/core/audit_telemetry.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/audit_telemetry.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/core/citation_guard.py": {
         "entry_point": false,
         "flags": [],
@@ -4694,19 +4722,19 @@
           },
           {
             "kind": "literal",
-            "line": 373,
+            "line": 375,
             "role": "docstring",
             "text": "The codebook for a review: `data/<review_id>/extraction_codebook.yaml`."
           },
           {
             "kind": "literal",
-            "line": 402,
+            "line": 404,
             "role": "docstring",
             "text": "The codebook in the same review directory as this database.\n\n    The review root is wherever the review's database is \u2014 not\n    `data/<review_id>` \u2014 so a run..."
           },
           {
             "kind": "f-string",
-            "line": 439,
+            "line": 441,
             "role": "message",
             "text": "f'Codebook not found at {path}. Every review carries one at data/<review_id>/{CODEBOOK_FILENAME}.'"
           }
@@ -4716,7 +4744,7 @@
         "spec_access": [
           {
             "func": "data_root_for",
-            "line": 379,
+            "line": 381,
             "scope": "codebook_path_for"
           }
         ],
@@ -4724,7 +4752,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 443,
+            "line": 445,
             "scope": "_parse",
             "target": "text"
           }
@@ -4863,6 +4891,20 @@
         "literal_review_ids": [],
         "order": {},
         "path": "engine/core/extraction_telemetry.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
+      "engine/core/locator.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/locator.py",
         "path_construction": [],
         "review_database": [],
         "review_id_constants": [],
@@ -7933,7 +7975,7 @@
       "entry_points_with_spec_flag": 26,
       "files_calling_load_review_spec_directly": 11,
       "files_calling_resolver": 29,
-      "files_scanned": 217,
+      "files_scanned": 220,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 34,
@@ -7945,7 +7987,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "f9e18ad18ace0e340dcaa552dc59b47114f131ee",
+    "generated_at_commit": "ca9355896230e309c3ca4f0f454a403e5bffa106",
     "scan_roots": [
       "engine",
       "scripts",

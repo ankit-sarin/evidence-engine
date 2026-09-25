@@ -246,7 +246,10 @@ def write_field_event(conn, *, event_type, paper_id, field_name, arm,
     against_decisions = set(against_decisions)
     is_reviewer = event_type in REVIEWER_EVENT_TYPES and actor_role == "reviewer"
 
-    if not is_reviewer and event_type != "state_at_migration":
+    # 9b-2d R1: R59/R21/R10 govern CLAIMS. A system event about an existing
+    # claim — citation_located, superseded — is not a claim and is not refused
+    # for the arm's state, as reviewer and state_at_migration events never were.
+    if not is_reviewer and event_type in CLAIM_EVENT_TYPES:
         _refuse_claim_on_arm(conn, arm, run_id)
 
     if is_reviewer:

@@ -162,9 +162,9 @@ def build_extraction_prompt(
 ## Instructions
 For each field above, extract the value from the paper and provide:
 - **field_name**: Exactly as listed above.
-- **value**: The extracted data. If the field is not found in the paper, set to "NOT_FOUND".
+- **value**: The extracted data. If the field is not found in the paper, set to "{cb.canonical_absence_sentinel}".
   - For all categorical fields: use ONLY the exact allowed values listed. Do not paraphrase, abbreviate, or combine them.
-- **source_snippet**: A verbatim quote (1-3 sentences) copied character-for-character from the paper that supports your extraction. Do NOT paraphrase, summarize, or rephrase in any way. Do NOT bridge distant passages with "..." or ellipses — quote one continuous passage only. If value is "NOT_FOUND", set source_snippet to "". Never fabricate a snippet — every non-empty snippet must be a real quote from the paper. For Tier 4 judgment fields, quote the passage that most informed your judgment.
+- **source_snippet**: A verbatim quote (1-3 sentences) copied character-for-character from the paper that supports your extraction. Do NOT paraphrase, summarize, or rephrase in any way. Do NOT bridge distant passages with "..." or ellipses — quote one continuous passage only. If value is "{cb.canonical_absence_sentinel}", set source_snippet to "". Never fabricate a snippet — every non-empty snippet must be a real quote from the paper. For Tier 4 judgment fields, quote the passage that most informed your judgment.
 - **confidence**: How clearly the paper states this information (0.0 to 1.0). For Tier 4 judgment fields, this reflects your confidence in your assessment.
 - **tier**: The tier number of the field (1, 2, 3, or 4).
 

@@ -138,6 +138,8 @@ class Codebook:
             "review": self.review,
             "date": self.date,
             "absence_sentinels": list(self.absence_sentinels),
+            # R131 (9b-2d): the elicitation prompt reads it from this dict.
+            "canonical_absence_sentinel": self.canonical_absence_sentinel,
             "escape_token": self.escape_token,
             "contract_unmet_token": self.contract_unmet_token,
             "fields": [dict(f) for f in self.fields],

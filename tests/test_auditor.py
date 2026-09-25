@@ -218,23 +218,28 @@ def test_audit_span_flagged():
     assert status == "flagged"
 
 
-def test_audit_span_not_found_value():
-    """Absence values → auto-verified without LLM."""
+def test_audit_span_not_found_value_is_not_auto_verified():
+    """R124 (9b-2d): the absence hand-list is retired. A sentinel with no snippet
+    is not located, like any value with no snippet (R17) — never auto-verified."""
     span_data = {
         "field_name": "fda_status",
         "value": "NOT_FOUND",
         "source_snippet": "",
         "confidence": 0.0,
     }
-    status, reasoning = audit_span(span_data, PAPER_TEXT)
-    assert status == "verified"
+    with patch("engine.agents.auditor.ollama_chat") as mock_chat:
+        status, reasoning = audit_span(span_data, PAPER_TEXT)
+    assert status == "flagged"
+    mock_chat.assert_not_called()
 
 
 # ── Tier 4 Semantic-Only Routing ─────────────────────────────────────
 
 
-def test_audit_span_tier4_skips_grep():
-    """Tier 4 fields skip grep, go straight to semantic verification."""
+def test_audit_span_tier4_is_located_like_any_other_tier():
+    """R124 (9b-2d): the tier-4 pass that set grep_pass unchecked is retired. A
+    fabricated tier-4 snippet is located, fails, and a semantic pass makes it
+    'contested', not 'verified'."""
     span_data = {
         "field_name": "key_limitation",
         "value": "Small sample size limits generalizability",
@@ -249,9 +254,8 @@ def test_audit_span_tier4_skips_grep():
     with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp) as mock_chat:
         status, reasoning = audit_span(span_data, PAPER_TEXT, field_tier=4)
 
-    # LLM was called (grep was skipped)
     mock_chat.assert_called_once()
-    assert status == "verified"
+    assert status == "contested"
 
 
 def test_audit_span_tier4_semantic_fail():

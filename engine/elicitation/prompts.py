@@ -133,8 +133,11 @@ def _escape_line(escape: str) -> str:
             f'{{"{KEY_FIELD}": "...", "{KEY_INDICES}": [], "{KEY_VALUE}": "{escape}"}}')
 
 
-def _worked_example(escape: str) -> str:
+def _worked_example(escape: str, canonical: str) -> str:
     """One compact worked example of correct escape use (Ruling 2(b)).
+
+    Case 3's sentinel is the codebook's `canonical_absence_sentinel` (R131), the
+    one the engine itself writes, read through the loader and never spelled here.
 
     Deliberately built on `funding_source`, which is NOT a field in this or any
     review's codebook, and on invented sentences. An example drawn from a corpus
@@ -162,7 +165,7 @@ Say the field were `funding_source`.
    reporting the ABSENCE, so a sentinel is right — and it cites the unit that
    reports that absence:
 
-     {{"{KEY_FIELD}": "funding_source", "{KEY_INDICES}": [88], "{KEY_VALUE}": "NR"}}
+     {{"{KEY_FIELD}": "funding_source", "{KEY_INDICES}": [88], "{KEY_VALUE}": "{canonical}"}}
 
 Case 1 is the one that gets missed. If you find yourself about to write a
 sentinel with an empty citation list, the answer you want is case 1."""
@@ -229,7 +232,7 @@ its citations. Read the contract at the top of a class block before its fields.
 
 Never return a value of any other kind without at least one citation.
 
-{_worked_example(escape)}
+{_worked_example(escape, codebook["canonical_absence_sentinel"])}
 
 ## Output
 Emit exactly one entry per field ({n_fields} total), in the order the fields are

@@ -234,6 +234,9 @@ class LiveClaimEvent:
     claim_id: str
     event_type: str
     payload: dict
+    #: 9b-2d R2: what the locator needs, from the event already read.
+    value: str | None = None
+    source_snippet: str | None = None
 
 
 def live_claim_events(conn, paper_id, arm, *,
@@ -252,7 +255,8 @@ def live_claim_events(conn, paper_id, arm, *,
     for field_name in fields:
         evs = _cell_events(conn, paper_id, field_name, arm)
         live = set(_live(evs))
-        out.extend(LiveClaimEvent(field_name, e.claim_id, e.event_type, e.payload)
+        out.extend(LiveClaimEvent(field_name, e.claim_id, e.event_type, e.payload,
+                                  e.value, e.source_snippet)
                    for e in evs if e.event_type in event_types and e.claim_id in live)
     return tuple(out)
 

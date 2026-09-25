@@ -36,7 +36,9 @@ CASES = [
     PAPER + PAPER,
     # degenerate inputs
     "",
-    "   ",
+    pytest.param("   ", marks=pytest.mark.xfail(strict=True, reason=(
+        "R17 / 9b-2d R8: a snippet that normalises to nothing is not located; "
+        "grep_verify_fast keeps the frozen ladder's pre-R17 answer"))),
 ]
 
 

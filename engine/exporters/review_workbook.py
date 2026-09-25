@@ -3,7 +3,6 @@
 For interactive human review, use the HTML/JSON round-trip tools instead:
   - Abstract adjudication: engine/adjudication/abstract_adjudication_html.py
   - FT adjudication: engine/adjudication/ft_adjudication_html.py
-  - Extraction audit: engine/review/extraction_audit_html.py
 
 xlsx generation is retained for archival/reference exports only.
 

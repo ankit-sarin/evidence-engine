@@ -3967,20 +3967,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "engine/adjudication/audit_adjudicator.py": {
-        "entry_point": false,
-        "flags": [],
-        "has_main_guard": false,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "engine/adjudication/audit_adjudicator.py",
-        "path_construction": [],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "engine/adjudication/categorizer.py": {
         "entry_point": false,
         "flags": [],
@@ -4125,7 +4111,7 @@
           },
           {
             "kind": "literal",
-            "line": 68,
+            "line": 69,
             "role": "code",
             "text": "Create or update adjudication_categories.yaml for this review.\n  Location: data/<review>/adjudication_categories.yaml\n  Generate a starter template with: gen..."
           }
@@ -5700,53 +5686,6 @@
         "literal_review_ids": [],
         "order": {},
         "path": "engine/review/__init__.py",
-        "path_construction": [],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "engine/review/extraction_audit_html.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 774,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 775,
-            "names": [
-              "--output"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "engine/review/extraction_audit_html.py",
-        "path_construction": [],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "engine/review/human_review.py": {
-        "entry_point": false,
-        "flags": [],
-        "has_main_guard": false,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "engine/review/human_review.py",
         "path_construction": [],
         "review_database": [],
         "review_id_constants": [],
@@ -7650,14 +7589,14 @@
     "summary": {
       "db_before_spec_scopes": 0,
       "default_review_named_constants": 6,
-      "entry_points": 96,
+      "entry_points": 95,
       "entry_points_constructing_reviewdatabase": 30,
-      "entry_points_name_only": 44,
-      "entry_points_with_review_name_flag": 66,
+      "entry_points_name_only": 43,
+      "entry_points_with_review_name_flag": 65,
       "entry_points_with_spec_flag": 23,
       "files_calling_load_review_spec_directly": 11,
       "files_calling_resolver": 26,
-      "files_scanned": 215,
+      "files_scanned": 212,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 34,
@@ -7669,7 +7608,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "804da1d4ab555822601ec93df6ee6394dbcb86ac",
+    "generated_at_commit": "9d5fccfd362dda62bf298231452afb12f52cd626",
     "scan_roots": [
       "engine",
       "scripts",

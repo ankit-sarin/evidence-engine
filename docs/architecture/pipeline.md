@@ -316,26 +316,7 @@ python -m engine.validators.distribution_monitor --review surgical_autonomy --ar
 
 ## 12. HUMAN AUDIT REVIEW
 
-**Modules:** `engine/adjudication/audit_adjudicator.py`, `engine/review/extraction_audit_html.py`, `engine/review/human_review.py`
-
-**Flow:**
-1. **Collect papers** (`_collect_papers_for_review()`):
-   - AI_AUDIT_COMPLETE papers with contested/flagged/invalid_snippet spans
-   - LOW_YIELD papers (all spans exported for full picture)
-   - Spot-check sample (default 10% of papers with all-verified spans)
-2. **Flatten to span rows:** One row per problematic span (or all spans for low_yield/spot_check papers)
-3. **Export:** HTML (self-contained, per-span ACCEPT/REJECT/CORRECT interface with localStorage, JSON export) or xlsx (per-span rows with DataValidation dropdowns)
-4. **Human review:** Per-span decisions (stats increment only after confirmed DB update):
-   - ACCEPT → span verified
-   - REJECT / CORRECT → *Corrected 2026-09-22:* this path is **gone**. `audit_adjudication` was dropped by migration 018 (R32) and `import_audit_review_decisions` refuses at its entry point — the table's `span_id` referenced a phantom, so it was never writable and held 0 rows (A11). Human audit decisions become `field_events` (`human_accepted` / `human_corrected` / `human_withdrew`) through the importer built in session 12
-5. **Import decisions:** Two-pass validation (reject entire import on any error)
-   - Auto-discovers: `{review}_extraction_audit_decisions.json`
-   - Supports .json (from HTML tool) and .xlsx (from workbook)
-   - All verified spans → `audit_status = 'verified'`, `auditor_model = 'human_review'`
-   - Paper transitions: AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE when all spans resolved
-   - Auto-advances: AUDIT_REVIEW_COMPLETE
-
-**Naming convention:** `{review}_extraction_audit_queue.html` / `{review}_extraction_audit_decisions.json`
+Retired 2026-09-25 (R162): the human-audit tooling on legacy verdicts (the audit adjudicator, the extraction-audit HTML sheet and the CSV/JSON review queue). Stages 11–12 (`AUDIT_QUEUE_EXPORTED`, `AUDIT_REVIEW_COMPLETE`) are manual `advance_stage` until the session-12 importer.
 
 ---
 

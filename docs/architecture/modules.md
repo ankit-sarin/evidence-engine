@@ -236,13 +236,6 @@ All acquisition modules use `ReviewDatabase` as a context manager. Terminal stat
 **Purpose:** Interactive HTML for FT adjudication.
 - Table-based, reason code grouping, localStorage, JSON export
 
-### `audit_adjudicator.py`
-**Purpose:** Extraction audit review per-span export/import.
-- `_collect_papers_for_review(db, spot_check_pct, spot_check_failure_threshold)` — Contested/flagged/invalid_snippet spans + LOW_YIELD papers + 10% spot-check sample
-- `export_audit_review_queue(db, output_path, ...)` — Per-span rows. Auto-advances AUDIT_QUEUE_EXPORTED
-- `import_audit_review_decisions(db, input_path)` — ACCEPT/REJECT/CORRECT per span. Two-pass validation. Auto-advances AUDIT_REVIEW_COMPLETE
-- `check_audit_review_gate(db)` — Count of unresolved AI_AUDIT_COMPLETE papers
-
 ---
 
 ## engine/parsers/ — PDF Processing
@@ -363,14 +356,7 @@ Deleted. It read `extractions.reasoning_trace` and `evidence_spans.audit_status`
 
 ## engine/review/ — Human Review Interface
 
-### `extraction_audit_html.py`
-**Purpose:** Self-contained HTML for extraction audit.
-- `generate_extraction_audit_html(review_name, output_path)` — Per-span interface with state badges (flagged/contested/invalid_snippet/low_yield/verified), localStorage draft, JSON export
-
-### `human_review.py`
-**Purpose:** CSV/JSON-based review queue.
-- `export_review_queue(db, output_path, paper_ids, ...)` — Exports contested/flagged spans with parsed text context
-- `import_review_decisions(db, csv_path, dry_run)` — Supports .csv and .json. ACCEPT/REJECT_VALUE/ACCEPT_CORRECTED/REJECT_PAPER
+Empty since 2026-09-25: the human-audit tooling on legacy verdicts retired (R162). Stages 11–12 are manual `advance_stage` until the session-12 importer.
 
 ---
 
@@ -523,7 +509,6 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 | `test_extractor.py` | Two-pass extraction, snippet validation |
 | `test_ft_screening.py` | FT screening, truncation, reason codes |
 | `test_human_import.py` | Human workbook parsing + validation |
-| `test_human_review.py` | Review queue export/import |
 | `test_low_yield.py` | LOW_YIELD detection logic |
 | `test_ollama_client.py` | Timeout wrapper, retry, restart recovery |
 | `test_ollama_preflight.py` | Pre-flight checks, VRAM budget |

@@ -18,8 +18,8 @@ Defined in `engine/adjudication/workflow.py`.
 | 8 | `FULL_TEXT_ADJUDICATION_COMPLETE` | `import_ft_adjudication_decisions()` resolves all FT_FLAGGED | Auto |
 | 9 | `EXTRACTION_COMPLETE` | `run_pipeline.py` auto-completes after extraction stage | Auto |
 | 10 | `AI_AUDIT_COMPLETE_STAGE` | `run_pipeline.py` auto-completes after audit stage | Auto |
-| 11 | `AUDIT_QUEUE_EXPORTED` | `export_audit_review_queue()` succeeds | Auto |
-| 12 | `AUDIT_REVIEW_COMPLETE` | `import_audit_review_decisions()` validates and imports | Auto |
+| 11 | `AUDIT_QUEUE_EXPORTED` | Manual `advance_stage` until the session-12 importer | Manual |
+| 12 | `AUDIT_REVIEW_COMPLETE` | Manual `advance_stage` until the session-12 importer | Manual |
 
 ## Stage Groupings
 

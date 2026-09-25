@@ -132,14 +132,6 @@ class TestCountPopulatedFields:
 # ── check_low_yield Tests ────────────────────────────────────────
 
 
-def _seed_low_yield(db, pid):
-    """The legacy low_yield flag readers 10–14 still read, set directly: its writer
-    (check_low_yield) retired at the cut-over, and these readers move in slice 3."""
-    db._conn.execute("UPDATE extractions SET low_yield = 1 WHERE id = (SELECT MAX(id) "
-                     "FROM extractions WHERE paper_id = ?)", (pid,))
-    db._conn.commit()
-
-
 class TestCheckLowYield:
 
     # test_paper_below_threshold_flagged, test_paper_above_threshold_not_flagged and
@@ -152,66 +144,8 @@ class TestCheckLowYield:
 
 
 # ── Audit Queue Integration Tests ────────────────────────────────
-
-
-class TestLowYieldInAuditQueue:
-
-    def test_low_yield_papers_in_audit_export(self, tmp_db, tmp_path, spec):
-        """LOW_YIELD papers should appear in the exported audit queue."""
-        from engine.adjudication.audit_adjudicator import (
-            _collect_papers_for_review,
-            export_audit_review_queue,
-        )
-
-        pid = _add_paper(tmp_db, title="Sparse Export Paper", pmid="60001")
-        sparse_data = {
-            "study_type": "Original Research",
-            "robot_platform": "STAR",
-            "task_performed": "NR",
-            "sample_size": "NR",
-        }
-        _advance_to_ai_audit(tmp_db, pid, sparse_data, spec)
-
-        # Flag as low_yield
-        _seed_low_yield(tmp_db, pid)
-
-        # Collect papers for review
-        papers = _collect_papers_for_review(tmp_db, spot_check_pct=0)
-        assert len(papers) == 1
-        assert papers[0]["paper_id"] == pid
-        assert papers[0]["review_reason"] == "low_yield"
-        assert papers[0]["low_yield"] is True
-
-    def test_export_includes_low_yield_spans(self, tmp_db, tmp_path, spec):
-        """Exported XLSX should show LOW_YIELD audit state for low-yield paper spans."""
-        from engine.adjudication.audit_adjudicator import export_audit_review_queue
-
-        pid = _add_paper(tmp_db, title="LY XLSX Paper", pmid="60002")
-        sparse_data = {
-            "study_type": "Original Research",
-            "robot_platform": "STAR",
-            "task_performed": "NR",
-        }
-        _advance_to_ai_audit(tmp_db, pid, sparse_data, spec)
-        _seed_low_yield(tmp_db, pid)
-
-        out = tmp_path / "audit_queue.xlsx"
-        result = export_audit_review_queue(tmp_db, out, spot_check_pct=0)
-        assert result["low_yield"] == 1
-
-        from openpyxl import load_workbook
-        wb = load_workbook(out)
-        ws = wb["Review Queue"]
-        headers = [cell.value for cell in ws[1]]
-        assert "Audit State" in headers
-
-        # LOW_YIELD papers have verified spans shown as "LOW_YIELD" audit state
-        audit_col = headers.index("Audit State")
-        audit_values = []
-        for row in ws.iter_rows(min_row=2, values_only=False):
-            if row[0].value is not None:
-                audit_values.append(row[audit_col].value)
-        assert any(v == "LOW_YIELD" for v in audit_values)
+# TestLowYieldInAuditQueue (2 tests) retired 2026-09-25 with the audit
+# adjudicator it drove (9c-C3, R162; R47).
 
 
 # ── PRISMA Tests ─────────────────────────────────────────────────
@@ -227,7 +161,6 @@ class TestPrismaLowYield:
             "robot_platform": "NR",
         }
         _advance_to_ai_audit(tmp_db, pid, sparse_data, spec)
-        _seed_low_yield(tmp_db, pid)
 
         # Reject the paper with low_yield reason
         tmp_db.reject_paper(pid, "low_yield_excluded: too few populated fields")

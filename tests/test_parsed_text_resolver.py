@@ -139,7 +139,7 @@ def test_extractor_site_hands_on_the_file(db, tmp_path):
 
 @pytest.mark.parametrize("module", [
     "engine.agents.extractor", "engine.agents.audit_events", "engine.agents.ft_screener",
-    "engine.cloud.base", "engine.review.human_review"])
+    "engine.cloud.base"])  # the human-review queue module retired 9c-C3 (R162)
 def test_each_former_glob_site_reads_through_the_resolver(module):
     mod = importlib.import_module(module)
     if module in ("engine.agents.extractor", "engine.agents.audit_events"):

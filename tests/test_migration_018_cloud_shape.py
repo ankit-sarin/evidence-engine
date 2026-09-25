@@ -281,3 +281,35 @@ def test_the_other_adjudication_tables_are_still_provisioned(tmp_path):
                 "workflow_state"} <= names
     finally:
         db.close()
+
+
+# ── moved from tests/test_audit_adjudication.py (9c-C3, R162): the test pins
+# migration 018 and engine/adjudication/schema.py, which survive the retirement
+# of the audit adjudicator it used to live beside. Body unchanged.
+
+@pytest.fixture
+def db(tmp_path):
+    from engine.core.database import ReviewDatabase
+    d = ReviewDatabase("test_audit_adj", data_root=tmp_path)
+    yield d
+    d.close()
+
+
+def test_audit_adjudication_is_gone_and_does_not_come_back(db):
+    """B5 rewrite. This test pinned "R18 stops the writer; it does not drop the
+    table" — which was true until R32 reversed the sequencing half of A11 Option
+    B and migration 018 dropped it. The behaviour it pinned is exactly what the
+    ruling changed, so it is rewritten to the corrected behaviour, not deleted.
+
+    Three things are asserted, because dropping the table was not enough on its
+    own: `ensure_adjudication_table` used to recreate it on every construction
+    (census reproducer: present 1 -> 0 -> 1). The across-constructions half lives
+    in `tests/test_migration_018_cloud_shape.py`.
+    """
+    assert db._conn.execute(
+        "SELECT COUNT(*) FROM sqlite_master WHERE type='table' "
+        "AND name='audit_adjudication'").fetchone()[0] == 0
+    # nothing anywhere still names the phantom the table's FK pointed at (A11)
+    assert not [s for (s,) in db._conn.execute(
+        "SELECT sql FROM sqlite_master WHERE sql IS NOT NULL")
+        if "_evidence_spans_old" in s]

@@ -15,8 +15,8 @@ from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.utils.ollama_client import ollama_chat
 from engine.core.locator import locate
-# Re-exported under its old name: human_review.py and the frozen provenance
-# ladder (analysis/provenance/legacy.py) import it from here (9b-2d R6).
+# Re-exported under its old name: the frozen provenance ladder
+# (analysis/provenance/legacy.py) imports it from here (9b-2d R6).
 from engine.core.locator import normalize as _normalize  # noqa: F401
 
 logger = logging.getLogger(__name__)

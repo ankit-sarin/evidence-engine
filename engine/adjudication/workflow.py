@@ -15,10 +15,11 @@ Full-text screening stages (7–8):
   8. FULL_TEXT_ADJUDICATION_COMPLETE — auto: full-text adjudication import
 
 Extraction stages (9–12):
-  9. EXTRACTION_COMPLETE       — auto: all included papers reach EXTRACTED status
- 10. AI_AUDIT_COMPLETE_STAGE   — auto: audit run finishes (all papers audited)
- 11. AUDIT_QUEUE_EXPORTED      — auto: export_audit_review_queue succeeds
- 12. AUDIT_REVIEW_COMPLETE     — auto: import with zero unresolved spans
+  9. EXTRACTION_COMPLETE       — auto: run_pipeline, once any corpus paper's processing
+                                  state is extracted or audited_ai (event store, R112)
+ 10. AI_AUDIT_COMPLETE_STAGE   — auto: run_pipeline, once any corpus paper is audited_ai
+ 11. AUDIT_QUEUE_EXPORTED      — manual: advance_stage until the session-12 importer
+ 12. AUDIT_REVIEW_COMPLETE     — manual: advance_stage until the session-12 importer
 """
 
 import logging
@@ -102,14 +103,16 @@ _NEXT_STEP_GUIDANCE = {
         "  python scripts/run_pipeline.py --spec <spec> --name <name> --skip-to audit"
     ),
     "AUDIT_QUEUE_EXPORTED": (
-        "Export the audit review queue for human review:\n"
-        "  from engine.adjudication.audit_adjudicator import export_audit_review_queue\n"
-        "  export_audit_review_queue(review_db, 'path/to/audit_queue.xlsx')"
+        "Manual advance_stage until the session-12 importer (the human-audit "
+        "tooling on legacy verdicts retired, R162):\n"
+        "  python -m engine.adjudication.advance_stage --review <name> "
+        "--stage AUDIT_QUEUE_EXPORTED --note '<why>'"
     ),
     "AUDIT_REVIEW_COMPLETE": (
-        "Complete human review of the audit queue, then run:\n"
-        "  from engine.adjudication.audit_adjudicator import import_audit_review_decisions\n"
-        "  import_audit_review_decisions(review_db, 'path/to/completed_audit_queue.xlsx')"
+        "Manual advance_stage until the session-12 importer (the human-audit "
+        "tooling on legacy verdicts retired, R162):\n"
+        "  python -m engine.adjudication.advance_stage --review <name> "
+        "--stage AUDIT_REVIEW_COMPLETE --note '<why>'"
     ),
 }
 

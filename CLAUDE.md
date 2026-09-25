@@ -132,7 +132,6 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - PDF acquisition: 5-strategy cascade, %PDF validation, publisher grouping, --background tmux support
 - PDF verify/import: filename matching, canonical rename to `EE-{nnn}_{Author}_{Year}.pdf`, DB update
 - DB-driven PDF path resolution: `full_text_assets.pdf_path` → `papers.pdf_local_path` → glob fallback
-- Audit adjudication: per-span ACCEPT/REJECT/CORRECT, spot-check sampling, two-pass import validation
 - min_status parameter on exporters: AI_AUDIT_COMPLETE (raw AI) vs HUMAN_AUDIT_COMPLETE (human-verified)
 - PRISMA reconciliation: validates terminal + in-progress = total, no double-counting
 - Three-tier PDF parsing: Docling → PyMuPDF fallback (hyperlink/structure errors) → Qwen2.5-VL:7b (scanned). Sparse threshold <100 chars after both text parsers
@@ -480,7 +479,6 @@ Generators:
 - engine/adjudication/abstract_adjudication_html.py
 - engine/adjudication/ft_adjudication_html.py
 - engine/acquisition/pdf_quality_html.py (mode=acquisition | quality_check)
-- engine/review/extraction_audit_html.py
 
 Importers auto-detect .json vs .xlsx. Default --file auto-discovers
 from naming convention. xlsx retained with --format xlsx for archival.

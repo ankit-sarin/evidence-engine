@@ -24,7 +24,8 @@ def _build_evidence_rows(
     db: ReviewDatabase, spec: ReviewSpec,
     min_status: str = "AI_AUDIT_COMPLETE",
     exclude_empty: bool = False,
-    arm: str = "local",
+    *,
+    arm: str,
 ) -> tuple[list[str], list[list]]:
     """Build header and data rows for the evidence table, THROUGH THE READER.
 
@@ -37,8 +38,10 @@ def _build_evidence_rows(
     reader (R30). Resolution is rule v2.1, and the numbered row that produced
     each value is exported beside it.
 
-    **`arm` is now a parameter (R18/Q4)** and defaults to `"local"`, which is
-    what every caller silently meant.
+    **`arm` is a required keyword (R18/Q4; 9d-C3, row C29).** It defaulted to
+    `"local"`, the pre-manifest Run-6 arm, so `export_all` exported that arm
+    whatever the spec's extraction arm was. `export_all` passes the spec's
+    `extraction_models.arm`.
 
     **Columns changed (R36).** Per field the export emitted
     `value, snippet, confidence, audit_status`. `confidence` was a per-span
@@ -55,7 +58,7 @@ def _build_evidence_rows(
             paper-level gate is a per-FIELD question under the event model, which
             the `{field}_state` column now answers per cell.
         exclude_empty: omit papers for which no field carries a value.
-        arm: which arm to export. Required knowledge, defaulted for compatibility.
+        arm: which arm to export. Required (9d-C3).
     """
     from engine.core.effective import (
         effective_state, eligible_paper_ids, iter_grid, registered_arms,
@@ -144,7 +147,8 @@ def export_evidence_csv(
     db: ReviewDatabase, spec: ReviewSpec, output_path: str,
     min_status: str = "AI_AUDIT_COMPLETE",
     exclude_empty: bool = False,
-    arm: str = "local",
+    *,
+    arm: str,
 ) -> None:
     """Export evidence table as CSV. `arm` per R18/Q4."""
     headers, rows = _build_evidence_rows(db, spec, min_status=min_status,
@@ -172,7 +176,8 @@ def export_evidence_excel(
     db: ReviewDatabase, spec: ReviewSpec, output_path: str,
     min_status: str = "AI_AUDIT_COMPLETE",
     exclude_empty: bool = False,
-    arm: str = "local",
+    *,
+    arm: str,
 ) -> None:
     """Export evidence table as Excel with 3 sheets. `arm` per R18/Q4."""
     from engine.core.effective import eligible_paper_ids

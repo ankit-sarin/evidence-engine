@@ -157,7 +157,7 @@ def test_prisma_csv(populated_db, tmp_path):
 
 def test_evidence_csv_columns(populated_db, spec, tmp_path):
     out = str(tmp_path / "evidence.csv")
-    export_evidence_csv(populated_db, spec, out)
+    export_evidence_csv(populated_db, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
     assert Path(out).exists()
 
     with open(out) as f:
@@ -202,7 +202,7 @@ def test_evidence_csv_columns(populated_db, spec, tmp_path):
 
 def test_evidence_excel_sheets(populated_db, spec, tmp_path):
     out = str(tmp_path / "evidence.xlsx")
-    export_evidence_excel(populated_db, spec, out)
+    export_evidence_excel(populated_db, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
     assert Path(out).exists()
 
     wb = openpyxl.load_workbook(out)
@@ -236,7 +236,7 @@ def test_evidence_excel_sheets(populated_db, spec, tmp_path):
 
 def test_docx_created(populated_db, spec, tmp_path):
     out = str(tmp_path / "evidence.docx")
-    export_evidence_docx(populated_db, spec, out)
+    export_evidence_docx(populated_db, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
     assert Path(out).exists()
 
     # Verify it's a valid docx by loading it
@@ -282,7 +282,11 @@ def test_methods_md_export(populated_db, spec, tmp_path):
 
 def test_export_all(populated_db, spec, tmp_path):
     out_dir = str(tmp_path / "all_exports")
-    paths = export_all(populated_db, spec, "test_export", output_dir=out_dir,
+    # 9d-C3: export_all exports the spec's extraction arm; this fixture's claims
+    # are mirrored into `local`, so the spec copy names that arm.
+    local_spec = spec.model_copy(update={"extraction_models": spec.extraction_models.model_copy(
+        update={"arm": "local"})})
+    paths = export_all(populated_db, local_spec, "test_export", output_dir=out_dir,
                        run_id=None)  # 9d-C2-R1 (1): run_id is required; None = no run
 
     # The three trace keys went with `trace_exporter.py` (R46): it reported on
@@ -314,7 +318,7 @@ def test_atomic_csv_no_partial_on_error(populated_db, spec, tmp_path):
         instance.writerows.side_effect = IOError("disk full")
 
         with pytest.raises(IOError, match="disk full"):
-            export_evidence_csv(populated_db, spec, out)
+            export_evidence_csv(populated_db, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
 
     assert not Path(out).exists(), "Final file should not exist after error"
     assert not Path(out + ".tmp").exists(), "Temp file should be cleaned up"
@@ -344,7 +348,7 @@ def test_atomic_docx_no_partial_on_error(populated_db, spec, tmp_path):
         mock_doc.save.side_effect = IOError("disk full")
 
         with pytest.raises(IOError, match="disk full"):
-            export_evidence_docx(populated_db, spec, out)
+            export_evidence_docx(populated_db, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
 
     assert not Path(out).exists(), "Final file should not exist after error"
     assert not Path(out + ".tmp").exists(), "Temp file should be cleaned up"
@@ -433,7 +437,7 @@ def db_with_empty_extractions(tmp_path, spec):
 def test_empty_extraction_has_marker(db_with_empty_extractions, spec, tmp_path):
     """Papers with no extraction spans get [NO EXTRACTION DATA] marker."""
     out = str(tmp_path / "evidence.csv")
-    export_evidence_csv(db_with_empty_extractions, spec, out)
+    export_evidence_csv(db_with_empty_extractions, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
 
     with open(out) as f:
         reader = csv.DictReader(f)
@@ -454,7 +458,8 @@ def test_empty_extraction_has_marker(db_with_empty_extractions, spec, tmp_path):
 def test_exclude_empty_omits_empty_papers(db_with_empty_extractions, spec, tmp_path):
     """With exclude_empty=True, papers with no extraction data are omitted."""
     out = str(tmp_path / "evidence.csv")
-    export_evidence_csv(db_with_empty_extractions, spec, out, exclude_empty=True)
+    export_evidence_csv(db_with_empty_extractions, spec, out, exclude_empty=True,
+                        arm="local")  # 9d-C3: the fixture's mirrored arm
 
     with open(out) as f:
         reader = csv.DictReader(f)
@@ -467,7 +472,8 @@ def test_exclude_empty_omits_empty_papers(db_with_empty_extractions, spec, tmp_p
 def test_exclude_empty_excel(db_with_empty_extractions, spec, tmp_path):
     """Excel export also supports exclude_empty."""
     out = str(tmp_path / "evidence.xlsx")
-    export_evidence_excel(db_with_empty_extractions, spec, out, exclude_empty=True)
+    export_evidence_excel(db_with_empty_extractions, spec, out, exclude_empty=True,
+                          arm="local")  # 9d-C3: the fixture's mirrored arm
 
     wb = openpyxl.load_workbook(out)
     ws = wb["Evidence Table"]
@@ -656,4 +662,51 @@ def test_methods_placeholder_when_no_data(tmp_path, spec):
     assert "[MODEL NOT SPECIFIED]" in methods
     assert sentinel not in methods
 
+    db.close()
+
+
+# ── Row C29: the export arm (9d-C3, R174, R176) ─────────────────────
+
+
+def test_export_all_exports_the_spec_arm(tmp_path, spec):
+    """`export_all` exports the spec's `extraction_models.arm` — here
+    `fixture-arm` — and nothing from the pre-manifest `local` arm, which holds
+    claims of its own on the same papers. Before 9d-C3 the exporters defaulted to
+    `"local"` and `export_all` passed no arm (row C29)."""
+    from docx import Document
+
+    from engine.core import events
+    from engine.core.effective import PRE_MANIFEST
+    from tests._event_store_fixture import add_values, seed_claim
+
+    db = ReviewDatabase("test_export_arm", data_root=tmp_path)
+    _real_codebook(db)
+    db.add_papers([Citation(title=f"Arm Study {i}", source="pubmed", pmid=str(i))
+                   for i in range(1, 3)])
+    pids = [r[0] for r in db._conn.execute("SELECT id FROM papers ORDER BY id")]
+
+    # fixture-arm: registered and pinned by the fixture run; papers made eligible.
+    add_values(db.db_path, "fixture-arm", "study_type",
+               ["Original Research"] * len(pids), start_paper=pids[0])
+    # local: the Run-6 shape — registered pre-manifest, seeded claims.
+    events.register_arm(db._conn, "local", "model", configuration_marker=PRE_MANIFEST)
+    for pid in pids:
+        seed_claim(db._conn, arm="local", paper_id=pid, field_name="study_type",
+                   value="Review", source_snippet="local-only snippet")
+    db._conn.commit()
+
+    arm_spec = spec.model_copy(update={"extraction_models": spec.extraction_models.model_copy(
+        update={"arm": "fixture-arm"})})
+    paths = export_all(db, arm_spec, "test_export_arm",
+                       output_dir=str(tmp_path / "out"), run_id=None)
+
+    with open(paths["evidence_csv"]) as f:
+        rows = list(csv.DictReader(f))
+    assert [r["study_type"] for r in rows] == ["Original Research"] * len(pids)
+    assert "local-only snippet" not in Path(paths["evidence_csv"]).read_text()
+
+    docx_text = "\n".join(c.text for t in Document(paths["evidence_docx"]).tables
+                          for row in t.rows for c in row.cells)
+    assert "Original Research" in docx_text
+    assert "Review" not in docx_text
     db.close()

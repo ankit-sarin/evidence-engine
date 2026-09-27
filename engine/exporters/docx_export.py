@@ -43,7 +43,8 @@ def _cell_text(ev) -> str:
 def export_evidence_docx(
     db: ReviewDatabase, spec: ReviewSpec, output_path: str,
     min_status: str = "AI_AUDIT_COMPLETE",
-    arm: str = "local",
+    *,
+    arm: str,
 ) -> None:
     """Export a professional evidence table as DOCX, THROUGH THE READER.
 
@@ -52,8 +53,9 @@ def export_evidence_docx(
     and that extraction's spans — the second of three copies of one resolution
     rule in this repository. It is removed, not kept beside the reader.
 
-    **`arm` is a parameter now** (R18/Q4), defaulted to `"local"`, which is what
-    every caller silently meant.
+    **`arm` is a required keyword** (R18/Q4; 9d-C3, row C29). It defaulted to
+    `"local"`, the pre-manifest Run-6 arm; `export_all` passes the spec's
+    `extraction_models.arm`.
 
     **A non-value state is shown, not blanked.** R1 makes REJECT a withdrawal —
     "no value in the current result" — so a withdrawn field renders EMPTY, the

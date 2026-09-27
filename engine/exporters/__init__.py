@@ -19,8 +19,14 @@ def export_all(
     review_name: str,
     output_dir: str | None = None,
     min_status: str = "AI_AUDIT_COMPLETE",
+    *,
+    run_id: int | None,
 ) -> dict:
-    """Run all exports and return dict of file paths created."""
+    """Run all exports and return dict of file paths created.
+
+    `run_id` is the run whose manifest the methods section reads its models
+    from; required, and `None` means no run (9d-C2-R1).
+    """
     if output_dir is None:
         output_dir = str(Path(db.db_path).parent / "exports")
 
@@ -46,7 +52,7 @@ def export_all(
     paths["evidence_docx"] = docx_path
 
     methods_path = str(out / "methods_section.md")
-    export_methods_md(db, spec, methods_path)
+    export_methods_md(db, spec, methods_path, run_id=run_id)
     paths["methods_md"] = methods_path
 
     # The trace exports were RETIRED, not migrated (R46, READERS-01 Phase 2b).

@@ -7,6 +7,9 @@ from engine.core.database import ReviewDatabase
 from engine.core.review_spec import ReviewSpec
 from engine.exporters.prisma import generate_prisma_flow
 from engine.core.codebook import load_codebook_beside
+# The local extraction stages as the manifest writer declares them: a private
+# name imported rather than copied (9d-C2-R1 clause 4); C3 makes it public.
+from engine.core.run_manifest import _LOCAL_EXTRACTION_STAGES
 
 logger = logging.getLogger(__name__)
 
@@ -29,25 +32,54 @@ def _query_ft_screening_models(db: ReviewDatabase) -> dict[str, int]:
     return {row["model"]: row["cnt"] for row in rows}
 
 
-def _query_extraction_models(db: ReviewDatabase) -> dict[str, int]:
-    """Query actual extraction models and paper counts from extractions table."""
-    rows = db._conn.execute(
-        "SELECT model, COUNT(DISTINCT paper_id) as cnt FROM extractions WHERE model IS NOT NULL GROUP BY model"
+def _run_extraction_models(conn, run_id: int | None) -> dict[str, int]:
+    """{model_name: papers} for the run's local extraction stages (R177).
+
+    The model is the stage row's `model_name`; papers are the distinct
+    `run_calls.paper_id` of those stages. No run → {}.
+    """
+    if run_id is None:
+        return {}
+    placeholders = ", ".join("?" * len(_LOCAL_EXTRACTION_STAGES))
+    rows = conn.execute(
+        "SELECT sc.model_name, COUNT(DISTINCT rc.paper_id) "
+        "FROM run_stage_configs sc "
+        "LEFT JOIN run_calls rc ON rc.run_id = sc.run_id AND rc.stage = sc.stage "
+        f"WHERE sc.run_id = ? AND sc.stage_kind IN ({placeholders}) "
+        "GROUP BY sc.model_name",
+        (run_id, *_LOCAL_EXTRACTION_STAGES),
     ).fetchall()
-    return {row["model"]: row["cnt"] for row in rows}
+    return {model: cnt for model, cnt in rows}
 
 
-def _query_audit_models(db: ReviewDatabase) -> dict[str, int]:
-    """Query actual auditor models from evidence_spans."""
-    rows = db._conn.execute(
-        "SELECT auditor_model, COUNT(DISTINCT es.extraction_id) as cnt "
-        "FROM evidence_spans es WHERE es.auditor_model IS NOT NULL GROUP BY es.auditor_model"
+def _run_audit_models(conn, run_id: int | None) -> dict[str, int]:
+    """{model_name: papers} for the run's audit stage (R177).
+
+    The model is the audit stage row's `model_name`; papers are the distinct
+    papers holding an `audited_ai` paper event written by the run. Not
+    `run_calls`: the audit call records no `paper_id` (row C31). No run → {}.
+    """
+    if run_id is None:
+        return {}
+    rows = conn.execute(
+        "SELECT sc.model_name, COUNT(DISTINCT pe.paper_id) "
+        "FROM run_stage_configs sc "
+        "LEFT JOIN paper_events pe ON pe.run_id = sc.run_id AND pe.to_state = 'audited_ai' "
+        "WHERE sc.run_id = ? AND sc.stage_kind = 'audit' "
+        "GROUP BY sc.model_name",
+        (run_id,),
     ).fetchall()
-    return {row["auditor_model"]: row["cnt"] for row in rows}
+    return {model: cnt for model, cnt in rows}
 
 
-def generate_methods_section(db: ReviewDatabase, spec: ReviewSpec) -> str:
-    """Generate a draft PRISMA-style methods paragraph from pipeline data."""
+def generate_methods_section(db: ReviewDatabase, spec: ReviewSpec, *, run_id: int | None) -> str:
+    """Generate a draft PRISMA-style methods paragraph from pipeline data.
+
+    The extraction and audit models are read from run `run_id`'s manifest
+    (`run_stage_configs`, `run_calls`, `audited_ai` paper events), never from
+    the spec (row C30). `run_id=None` means no run: both model lines render
+    "[MODEL NOT SPECIFIED]". The keyword is required.
+    """
     flow = generate_prisma_flow(db)
 
     databases = ", ".join(spec.search_strategy.databases)
@@ -81,8 +113,8 @@ def generate_methods_section(db: ReviewDatabase, spec: ReviewSpec) -> str:
     else:
         ft_primary = None  # will use ft_model_counts formatting
 
-    # Extraction: query DB, fall back to spec hint (no spec field exists)
-    extraction_model_counts = _query_extraction_models(db)
+    # Extraction and audit: the run's manifest, never the spec (R177, C30).
+    extraction_model_counts = _run_extraction_models(db._conn, run_id)
     if not extraction_model_counts:
         extraction_model_str = "[MODEL NOT SPECIFIED]"
     elif len(extraction_model_counts) == 1:
@@ -90,10 +122,9 @@ def generate_methods_section(db: ReviewDatabase, spec: ReviewSpec) -> str:
     else:
         extraction_model_str = _format_model_counts(extraction_model_counts)
 
-    # Audit: query DB, fall back to spec
-    audit_model_counts = _query_audit_models(db)
+    audit_model_counts = _run_audit_models(db._conn, run_id)
     if not audit_model_counts:
-        audit_model_str = spec.auditor_model or "[MODEL NOT SPECIFIED]"
+        audit_model_str = "[MODEL NOT SPECIFIED]"
     elif len(audit_model_counts) == 1:
         audit_model_str = next(iter(audit_model_counts))
     else:
@@ -160,10 +191,11 @@ def generate_methods_section(db: ReviewDatabase, spec: ReviewSpec) -> str:
 
 
 def export_methods_md(
-    db: ReviewDatabase, spec: ReviewSpec, output_path: str
+    db: ReviewDatabase, spec: ReviewSpec, output_path: str, *, run_id: int | None
 ) -> None:
-    """Write the methods section to a Markdown file."""
-    methods = generate_methods_section(db, spec)
+    """Write the methods section to a Markdown file. `run_id` as for
+    `generate_methods_section`."""
+    methods = generate_methods_section(db, spec, run_id=run_id)
     tmp_path = output_path + ".tmp"
     try:
         with open(tmp_path, "w") as f:

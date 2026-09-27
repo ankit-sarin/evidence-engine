@@ -253,15 +253,15 @@ def test_docx_created(populated_db, spec, tmp_path):
 
 
 def test_methods_section_content(populated_db, spec):
-    methods = generate_methods_section(populated_db, spec)
+    methods = generate_methods_section(populated_db, spec, run_id=None)
 
     # Key pipeline details present
     assert "PubMed" in methods
     assert "OpenAlex" in methods
     # Model names should come from spec, not be hardcoded
     assert spec.screening_models.primary in methods
-    assert "deepseek-r1:32b" in methods  # from DB extraction data
-    assert "qwen3:32b" in methods  # from DB audit data
+    # 9d-C2-R1 (2): the extraction and audit model strings are pinned by
+    # test_methods_uses_db_extraction_model and test_methods_uses_db_audit_model.
     assert "dual-pass" in methods
     assert "two-pass" in methods
     assert "15" in methods  # total records
@@ -269,7 +269,7 @@ def test_methods_section_content(populated_db, spec):
 
 def test_methods_md_export(populated_db, spec, tmp_path):
     out = str(tmp_path / "methods.md")
-    export_methods_md(populated_db, spec, out)
+    export_methods_md(populated_db, spec, out, run_id=None)  # 9d-C2-R1 (1)
     assert Path(out).exists()
 
     content = Path(out).read_text()
@@ -282,7 +282,8 @@ def test_methods_md_export(populated_db, spec, tmp_path):
 
 def test_export_all(populated_db, spec, tmp_path):
     out_dir = str(tmp_path / "all_exports")
-    paths = export_all(populated_db, spec, "test_export", output_dir=out_dir)
+    paths = export_all(populated_db, spec, "test_export", output_dir=out_dir,
+                       run_id=None)  # 9d-C2-R1 (1): run_id is required; None = no run
 
     # The three trace keys went with `trace_exporter.py` (R46): it reported on
     # reasoning traces and auditor verdicts, and the event store carries neither,
@@ -370,7 +371,7 @@ def test_atomic_methods_md_no_partial_on_error(populated_db, spec, tmp_path):
 
     with patch("builtins.open", side_effect=IOError("disk full")):
         with pytest.raises(IOError, match="disk full"):
-            export_methods_md(populated_db, spec, out)
+            export_methods_md(populated_db, spec, out, run_id=None)  # 9d-C2-R1 (1)
 
     assert not Path(out).exists()
 
@@ -480,20 +481,93 @@ def test_exclude_empty_excel(db_with_empty_extractions, spec, tmp_path):
 
 def test_methods_uses_spec_screening_model(populated_db, spec):
     """Methods section uses screening model from spec, not hardcoded."""
-    methods = generate_methods_section(populated_db, spec)
+    methods = generate_methods_section(populated_db, spec, run_id=None)  # 9d-C2-R1 (1)
     assert spec.screening_models.primary in methods
 
 
-def test_methods_uses_db_extraction_model(populated_db, spec):
-    """Methods section uses extraction model from DB data."""
-    methods = generate_methods_section(populated_db, spec)
-    assert "deepseek-r1:32b" in methods
+#: Model names no spec attribute carries: the run is opened on a copy of the
+#: spec declaring them, and the module is handed the UNMODIFIED spec, so a
+#: rendered name can only have come from the run's stage rows (9d-C2-R1 (3)).
+#: `run_stage_configs` refuses UPDATE (migration 020), hence the spec copy.
+RUN_EXTRACTOR = "fixture-extractor:x"
+RUN_AUDITOR = "fixture-auditor:y"
 
 
-def test_methods_uses_db_audit_model(populated_db, spec):
-    """Methods section uses auditor model from DB evidence_spans."""
-    methods = generate_methods_section(populated_db, spec)
-    assert "qwen3:32b" in methods
+@pytest.fixture()
+def run_db(tmp_path, spec):
+    """A review with one extraction run (R177): its extract stages name
+    RUN_EXTRACTOR, its audit stage RUN_AUDITOR. Three papers; paper 1 is called
+    twice on extract_pass1 and once on extract_pass2, paper 2 once on
+    extract_pass1; paper 1 holds the run's one `audited_ai` event.
+    Returns (db, run_id)."""
+    from engine.core import events, run_manifest as rm
+    from tests._event_store_fixture import open_extraction_run
+
+    db = ReviewDatabase("test_methods_run", data_root=tmp_path)
+    _real_codebook(db)
+    db.add_papers([Citation(title=f"Study {i}", source="pubmed", pmid=str(i))
+                   for i in range(1, 4)])
+    p1, p2, _p3 = [r[0] for r in db._conn.execute("SELECT id FROM papers ORDER BY id")]
+
+    arm = spec.extraction_models.arm
+    run_spec = spec.model_copy(update={
+        "extraction_models": spec.extraction_models.model_copy(
+            update={"extractor": RUN_EXTRACTOR}),
+        "arms": [a.model_copy(update={"model": RUN_EXTRACTOR}) if a.name == arm else a
+                 for a in spec.arms],
+        "auditor_model": RUN_AUDITOR,
+    })
+    run_id = open_extraction_run(db, run_spec)
+
+    t = "2026-01-01T00:00:00+00:00"
+    for stage, pid in (("extract_pass1", p1), ("extract_pass1", p1),
+                       ("extract_pass2", p1), ("extract_pass1", p2)):
+        rm.record_call(db._conn, run_id, stage, pid, {"stage": stage, "paper": pid},
+                       "d" * 64, t, t)
+    events.write_paper_event(
+        db._conn, event_type="audited", paper_id=p1, to_state="audited_ai",
+        actor_kind="engine", actor_role="system", actor_name="auditor",
+        run_id=run_id, stage_name="audit")
+    yield db, run_id
+    db.close()
+
+
+def test_methods_uses_db_extraction_model(run_db, spec):
+    """Methods section names the extraction model from the run's stage rows."""
+    db, run_id = run_db
+    methods = generate_methods_section(db, spec, run_id=run_id)
+    assert RUN_EXTRACTOR in methods
+    assert RUN_EXTRACTOR not in spec.model_dump_json()   # the row, not the spec
+    # Papers, over the run's stages in `_LOCAL_EXTRACTION_STAGES`: papers 1 and 2.
+    from engine.exporters.methods_section import _run_extraction_models
+    assert _run_extraction_models(db._conn, run_id) == {RUN_EXTRACTOR: 2}
+    # G4: without the run, the placeholder.
+    assert RUN_EXTRACTOR not in generate_methods_section(db, spec, run_id=None)
+
+
+def test_methods_uses_db_audit_model(run_db, spec):
+    """Methods section names the auditor from the run's audit stage row, and
+    counts the papers holding the run's `audited_ai` event."""
+    db, run_id = run_db
+    methods = generate_methods_section(db, spec, run_id=run_id)
+    assert f"Cross-model verification was performed by {RUN_AUDITOR}." in methods
+    assert RUN_AUDITOR not in spec.model_dump_json()     # the row, not the spec
+    from engine.exporters.methods_section import _run_audit_models
+    assert _run_audit_models(db._conn, run_id) == {RUN_AUDITOR: 1}
+    # G4: without the run, the placeholder.
+    assert ("Cross-model verification was performed by [MODEL NOT SPECIFIED]."
+            in generate_methods_section(db, spec, run_id=None))
+
+
+def test_methods_counts_papers_not_calls(run_db):
+    """Paper 1 has three extraction calls and paper 2 one: the count is 2
+    papers, not 4 calls (R177: counts are papers throughout)."""
+    from engine.exporters.methods_section import _run_extraction_models
+    db, run_id = run_db
+    calls = db._conn.execute(
+        "SELECT COUNT(*) FROM run_calls WHERE run_id = ?", (run_id,)).fetchone()[0]
+    assert calls == 4
+    assert _run_extraction_models(db._conn, run_id) == {RUN_EXTRACTOR: 2}
 
 
 def test_methods_multi_model_ft_screening(tmp_path, spec):
@@ -544,7 +618,7 @@ def test_methods_multi_model_ft_screening(tmp_path, spec):
 
     db._conn.commit()
 
-    methods = generate_methods_section(db, spec)
+    methods = generate_methods_section(db, spec, run_id=None)  # 9d-C2-R1 (1)
 
     # Should contain both FT models with counts
     assert "qwen3.5:27b (n=3)" in methods
@@ -573,9 +647,13 @@ def test_methods_placeholder_when_no_data(tmp_path, spec):
         db.update_status(p["id"], "EXTRACTED")
         db.update_status(p["id"], "AI_AUDIT_COMPLETE")
 
-    methods = generate_methods_section(db, spec)
+    # C30 (9d-C2-R1 (2)): the spec's `auditor_model` is never a fallback.
+    sentinel = "sentinel-auditor-must-not-render"
+    methods = generate_methods_section(
+        db, spec.model_copy(update={"auditor_model": sentinel}), run_id=None)
 
     # No extractions or audits in DB → placeholders
     assert "[MODEL NOT SPECIFIED]" in methods
+    assert sentinel not in methods
 
     db.close()

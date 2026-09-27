@@ -172,7 +172,7 @@ def run_pipeline(
 
         # ── EXPORT ───────────────────────────────────────────
         if start_idx <= STAGES.index("export"):
-            results["export"] = _stage_export(db, spec, review_name)
+            results["export"] = _stage_export(db, spec, review_name, run_id=run_id)
 
         _finish_review_run(db, run_id, "completed")
 
@@ -401,12 +401,13 @@ def _stage_audit(db: ReviewDatabase, review_name: str, spec: ReviewSpec = None, 
     return {**stats, "elapsed": elapsed}
 
 
-def _stage_export(db: ReviewDatabase, spec: ReviewSpec, review_name: str) -> dict:
+def _stage_export(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
+                  run_id: int) -> dict:
     t = time.time()
     logger.info("=" * 60)
     logger.info("STAGE: EXPORT")
 
-    paths = export_all(db, spec, review_name)
+    paths = export_all(db, spec, review_name, run_id=run_id)
     elapsed = time.time() - t
     logger.info("Export complete in %.1fs", elapsed)
     for name, path in paths.items():

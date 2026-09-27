@@ -6139,7 +6139,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 307,
+            "line": 331,
             "names": [
               "--review"
             ],
@@ -6148,45 +6148,45 @@
           {
             "default": "None",
             "dest": null,
-            "line": 308,
+            "line": 332,
             "names": [
               "--spec"
+            ],
+            "required": false
+          },
+          {
+            "default": "None",
+            "dest": null,
+            "line": 334,
+            "names": [
+              "--arm"
             ],
             "required": false
           }
         ],
         "has_main_guard": true,
         "literal_review_ids": [],
-        "order": {
-          "main": "spec_first"
-        },
+        "order": {},
         "path": "engine/validators/extraction_validator.py",
         "path_construction": [
           {
             "kind": "literal",
-            "line": 62,
-            "role": "code",
-            "text": "extraction_codebook.yaml"
-          },
-          {
-            "kind": "literal",
-            "line": 309,
+            "line": 333,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
         ],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 313,
-            "scope": "main"
-          }
-        ],
+        "review_database": [],
         "review_id_constants": [],
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 312,
+            "line": 338,
+            "scope": "main"
+          },
+          {
+            "func": "data_root_for",
+            "line": 339,
             "scope": "main"
           }
         ],
@@ -7541,7 +7541,7 @@
       "db_before_spec_scopes": 0,
       "default_review_named_constants": 5,
       "entry_points": 94,
-      "entry_points_constructing_reviewdatabase": 30,
+      "entry_points_constructing_reviewdatabase": 29,
       "entry_points_name_only": 42,
       "entry_points_with_review_name_flag": 64,
       "entry_points_with_spec_flag": 23,
@@ -7552,14 +7552,14 @@
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 33,
       "name_only_constructing_reviewdatabase": 19,
-      "path_construction_sites_in_code": 63,
+      "path_construction_sites_in_code": 62,
       "raw_yaml_load_sites": 3,
       "review_id_constants": 7,
       "unparsed_sites": 0
     }
   },
   "meta": {
-    "generated_at_commit": "2259bb66e6fee4819354da5ea6c443fed4eccb73",
+    "generated_at_commit": "4bd40c6a140b828f9dd7b61685c9d7dc7850027f",
     "scan_roots": [
       "engine",
       "scripts",

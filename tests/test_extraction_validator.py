@@ -1,19 +1,30 @@
 """Tests for post-extraction field validation."""
 
+import shutil
+import sqlite3
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
-from engine.core.database import ReviewDatabase
+from engine.core.codebook import load_codebook
 from engine.core.review_spec import load_review_spec
-from engine.search.models import Citation
+from engine.validators import extraction_validator as V
 from engine.validators.extraction_validator import (
     detect_cross_field_bleed,
     normalize_prefix,
+    validate_all,
     validate_extraction,
     verify_schema_parity,
     _closest_match,
 )
+from tests._event_store_fixture import add_values
+
+LIVE_CODEBOOK = (Path(__file__).resolve().parent.parent
+                 / "data" / "surgical_autonomy" / "extraction_codebook.yaml")
+
+#: The arm every rewritten fixture declares its values under (9d-C1, R175).
+ARM = "local_fixture_arm"
 
 
 @pytest.fixture
@@ -29,96 +40,71 @@ def codebook():
 
 
 @pytest.fixture
-def db(tmp_path):
-    rdb = ReviewDatabase("test_val", data_root=tmp_path)
-    # The validator reads the codebook beside the database, not the spec
-    # (SCHEMA-DERIVE-01). These tests validate against the real 20-field
-    # schema, so the real codebook belongs in this review's directory —
-    # conftest's one-field placeholder would validate a different review.
-    import shutil
-    shutil.copy2(
-        Path(__file__).resolve().parent.parent
-        / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
-        Path(rdb.db_path).parent / "extraction_codebook.yaml",
-    )
-    yield rdb
-    rdb.close()
+def review(tmp_path):
+    """A review directory: the real 20-field codebook beside an event-store
+    database. The validator reads the grid (9d-C1, R175), so the fixture declares
+    its values as field events — one claim per (paper, field) on `ARM` — rather
+    than as `evidence_spans` rows no reader looks at."""
+    shutil.copy2(LIVE_CODEBOOK, tmp_path / "extraction_codebook.yaml")
+    return tmp_path
 
 
-def _add_paper_and_extraction(db, spans, pmid="1"):
-    """Helper: add paper, extraction, and evidence spans."""
-    db.add_papers([Citation(title="Test", source="pubmed", pmid=pmid)])
-    pid = db._conn.execute("SELECT id FROM papers WHERE pmid = ?", (pmid,)).fetchone()["id"]
-    db.update_status(pid, "ABSTRACT_SCREENED_IN")
-    db.update_status(pid, "PDF_ACQUIRED")
-    db.update_status(pid, "PARSED")
-    db.update_status(pid, "EXTRACTED")
-
-    db._conn.execute(
-        "INSERT INTO extractions (paper_id, model, extraction_schema_hash, extracted_at, extracted_data) "
-        "VALUES (?, 'test', 'abc', '2026-01-01', '{}')",
-        (pid,),
-    )
-    ext_id = db._conn.execute("SELECT last_insert_rowid()").fetchone()[0]
-
+def _declare(review, spans, pid=1, arm=ARM):
+    """Declare `spans` as `arm`'s claims on paper `pid` (eligible by the fixture)."""
     for s in spans:
-        db._conn.execute(
-            "INSERT INTO evidence_spans (extraction_id, field_name, value, "
-            "source_snippet, confidence) VALUES (?, ?, ?, ?, ?)",
-            (ext_id, s["field_name"], s["value"], "snippet", 0.9),
-        )
-    db._conn.commit()
+        add_values(review / "review.db", arm, s["field_name"], [s["value"]], start_paper=pid)
     return pid
 
 
-def test_valid_spans_no_issues(db, spec):
-    pid = _add_paper_and_extraction(db, [
+def _issues(review, arm=ARM):
+    conn = sqlite3.connect(review / "review.db")
+    try:
+        return validate_all(conn, load_codebook(review / "extraction_codebook.yaml"), arm=arm)[0]
+    finally:
+        conn.close()
+
+
+def test_valid_spans_no_issues(review):
+    _declare(review, [
         {"field_name": "study_type", "value": "Original Research"},
         {"field_name": "autonomy_level", "value": "3 (Conditional autonomy)"},
         {"field_name": "sample_size", "value": "42"},
         {"field_name": "robot_platform", "value": "da Vinci"},
     ])
-    issues = validate_extraction(spec, pid, db)
-    assert issues == []
+    assert _issues(review) == []
 
 
-def test_unknown_field_name_flagged(db, spec):
-    pid = _add_paper_and_extraction(db, [
-        {"field_name": "studytype", "value": "Original Research"},
-    ], pmid="2")
-    issues = validate_extraction(spec, pid, db)
-    assert len(issues) == 1
-    assert "unknown field name" in issues[0]["issue"]
-    assert "study_type" in issues[0]["issue"]  # closest match suggestion
+# test_unknown_field_name_flagged retired 2026-09-27 (9d-C1, R175): the grid's
+# fields are the codebook's, so the check cannot fire; the writer's refusal of an
+# unknown field name is Step 2 row B15.
 
 
-def test_invalid_categorical_value_flagged(db, spec):
-    pid = _add_paper_and_extraction(db, [
+def test_invalid_categorical_value_flagged(review):
+    _declare(review, [
         {"field_name": "study_type", "value": "Orginal Research"},
-    ], pmid="3")
-    issues = validate_extraction(spec, pid, db)
+    ])
+    issues = _issues(review)
     assert len(issues) == 1
     assert "invalid categorical value" in issues[0]["issue"]
     assert "closest:" in issues[0]["issue"]
     assert "Original Research" in issues[0]["issue"]
 
 
-def test_numeric_field_non_numeric_flagged(db, spec):
-    pid = _add_paper_and_extraction(db, [
+def test_numeric_field_non_numeric_flagged(review):
+    _declare(review, [
         {"field_name": "sample_size", "value": "twelve patients"},
-    ], pmid="4")
-    issues = validate_extraction(spec, pid, db)
+    ])
+    issues = _issues(review)
     assert len(issues) == 1
     assert "non-numeric sample_size" in issues[0]["issue"]
 
 
-def test_not_found_value_accepted(db, spec):
-    pid = _add_paper_and_extraction(db, [
+def test_not_found_value_accepted(review):
+    _declare(review, [
         {"field_name": "study_type", "value": "NOT_FOUND"},
         {"field_name": "sample_size", "value": "NR"},
-    ], pmid="5")
-    issues = validate_extraction(spec, pid, db)
-    assert issues == []
+    ])
+    assert _issues(review) == []
 
 
 def test_closest_match_similarity():
@@ -173,44 +159,43 @@ def test_normalize_prefix_no_match():
 # ── element-wise semicolon validation tests ──────────────────────────
 
 
-def test_semicolon_all_valid(db, spec):
+def test_semicolon_all_valid(review):
     """All semicolon-separated elements valid → no issues."""
-    pid = _add_paper_and_extraction(db, [
+    _declare(review, [
         {"field_name": "task_monitor", "value": "H; R; Shared"},
-    ], pmid="semi1")
-    issues = validate_extraction(spec, pid, db)
-    assert issues == []
+    ])
+    assert _issues(review) == []
 
 
-def test_semicolon_one_invalid(db, spec):
+def test_semicolon_one_invalid(review):
     """One invalid element among valid ones — only the bad element reported."""
-    pid = _add_paper_and_extraction(db, [
+    _declare(review, [
         {"field_name": "task_monitor", "value": "H; Robotic; Shared"},
-    ], pmid="semi2")
-    issues = validate_extraction(spec, pid, db)
+    ])
+    issues = _issues(review)
     assert len(issues) == 1
     assert issues[0]["value"] == "Robotic"
     assert "invalid categorical value" in issues[0]["issue"]
 
 
-def test_single_value_no_semicolons(db, spec):
+def test_single_value_no_semicolons(review):
     """Single value without semicolons — unchanged validation behavior."""
-    pid = _add_paper_and_extraction(db, [
+    _declare(review, [
         {"field_name": "study_type", "value": "Orginal Research"},
-    ], pmid="semi3")
-    issues = validate_extraction(spec, pid, db)
+    ])
+    issues = _issues(review)
     assert len(issues) == 1
     assert issues[0]["value"] == "Orginal Research"
     assert "closest:" in issues[0]["issue"]
     assert "Original Research" in issues[0]["issue"]
 
 
-def test_semicolon_all_invalid(db, spec):
+def test_semicolon_all_invalid(review):
     """All elements invalid — each one reported separately."""
-    pid = _add_paper_and_extraction(db, [
+    _declare(review, [
         {"field_name": "task_monitor", "value": "Robotic; Autonomous"},
-    ], pmid="semi4")
-    issues = validate_extraction(spec, pid, db)
+    ])
+    issues = _issues(review)
     assert len(issues) == 2
     bad_values = {i["value"] for i in issues}
     assert bad_values == {"Robotic", "Autonomous"}
@@ -316,3 +301,98 @@ def test_modified_codebook_different_hash(tmp_path, spec):
         clear_cache()
 
     assert h_a != h_b
+
+
+# ── the grid, the arm and the CLI (9d-C1, R174 as amended, R175) ─────
+
+
+def test_empty_cell_is_skipped(review, codebook):
+    """A cell with no claim for the arm (value None, state `missing`) is skipped,
+    not flagged — and not dereferenced (`None.split` would raise)."""
+    _declare(review, [{"field_name": "study_type", "value": "Original Research"}])
+    assert validate_extraction(codebook, 1, [
+        {"field_name": "study_type", "value": None},
+        {"field_name": "sample_size", "value": None},
+    ]) == []
+    # Through the grid: 19 of the paper's 20 cells are empty and none is reported.
+    assert _issues(review) == []
+
+
+def test_only_the_named_arm_is_validated(review):
+    """G4: two registered arms with claims under both; each arm's report carries
+    only its own cells."""
+    _declare(review, [{"field_name": "study_type", "value": "Orginal Research"}], arm="arm_a")
+    _declare(review, [{"field_name": "task_monitor", "value": "Robotic"}], arm="arm_b")
+    a, b = _issues(review, arm="arm_a"), _issues(review, arm="arm_b")
+    assert [(i["field_name"], i["value"]) for i in a] == [("study_type", "Orginal Research")]
+    assert [(i["field_name"], i["value"]) for i in b] == [("task_monitor", "Robotic")]
+
+
+def _point_cli_at(monkeypatch, review, spec_arm):
+    monkeypatch.setattr(V, "data_root_for", lambda review_id: review)
+    monkeypatch.setattr(V, "load_spec_for", lambda review_id, override=None:
+                        SimpleNamespace(extraction_models=SimpleNamespace(arm=spec_arm)))
+
+
+def test_default_arm_unregistered_reports_zero_cells(review, monkeypatch, capsys):
+    """The spec's extraction arm is used as named even when it is not registered
+    yet (R174 as amended by 9d-C1): zero cells, the arm named, exit 0 — never a
+    refusal. `iter_grid` itself raises `UnknownArm` for such an arm."""
+    _declare(review, [{"field_name": "study_type", "value": "Orginal Research"}])
+    conn = sqlite3.connect(review / "review.db")
+    try:
+        cb = load_codebook(review / "extraction_codebook.yaml")
+        assert V.arm_cells(conn, cb, "not_yet_pinned") == {}
+        assert validate_all(conn, cb, arm="not_yet_pinned") == ([], [])
+    finally:
+        conn.close()
+
+    _point_cli_at(monkeypatch, review, "not_yet_pinned")
+    assert V.main(["--review", "surgical_autonomy"]) == 0
+    out = capsys.readouterr().out
+    assert "not_yet_pinned" in out and "not a registered arm" in out
+    assert "Populated cells: 0" in out
+
+
+def test_arm_override_unregistered_is_refused(review, monkeypatch, capsys):
+    """`--arm` must name a registered arm; the refusal lists the registered ones."""
+    _declare(review, [{"field_name": "study_type", "value": "Original Research"}])
+    _point_cli_at(monkeypatch, review, ARM)
+    assert V.main(["--review", "surgical_autonomy", "--arm", "no_such_arm"]) == 2
+    err = capsys.readouterr().err
+    assert "no_such_arm" in err and ARM in err
+
+    # A registered override is accepted and validated.
+    assert V.main(["--review", "surgical_autonomy", "--arm", ARM]) == 0
+    assert "Populated cells: 1" in capsys.readouterr().out
+
+
+def test_cli_opens_read_only(review, monkeypatch):
+    """The CLI's one connection is `open_read_only`'s `mode=ro` connection: a
+    write through it is refused, and a CLI run leaves the database byte-identical."""
+    import hashlib
+
+    _declare(review, [{"field_name": "study_type", "value": "Orginal Research"}])
+    db = review / "review.db"
+    before = hashlib.sha256(db.read_bytes()).hexdigest()
+
+    opened = []
+    real = V.open_read_only
+
+    def spy(path):
+        conn = real(path)
+        opened.append(conn)
+        return conn
+
+    monkeypatch.setattr(V, "open_read_only", spy)
+    _point_cli_at(monkeypatch, review, ARM)
+    assert V.main(["--review", "surgical_autonomy"]) == 0
+    assert len(opened) == 1
+
+    conn = real(db)
+    try:
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("INSERT INTO papers (id) VALUES (999)")
+    finally:
+        conn.close()
+    assert hashlib.sha256(db.read_bytes()).hexdigest() == before

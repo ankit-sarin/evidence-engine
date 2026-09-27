@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `2259bb66e6fee4819354da5ea6c443fed4eccb73` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `4bd40c6a140b828f9dd7b61685c9d7dc7850027f` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -13,7 +13,7 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | entry points with spec flag | 23 |
 | entry points with review name flag | 64 |
 | entry points name only | 42 |
-| entry points constructing reviewdatabase | 30 |
+| entry points constructing reviewdatabase | 29 |
 | name only constructing reviewdatabase | 19 |
 | files calling resolver | 26 |
 | files calling load review spec directly | 11 |
@@ -21,7 +21,7 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | files with raw yaml loads | 3 |
 | review id constants | 7 |
 | literal review id sites in code | 33 |
-| path construction sites in code | 63 |
+| path construction sites in code | 62 |
 | db before spec scopes | 0 |
 | fstring spec path sites | 0 |
 | default review named constants | 5 |
@@ -48,7 +48,7 @@ Baselines are the figures measured by hand in GENERALIZE-READOUT-01 and SPEC-AUT
 | argparse entry points naming a review | 74 | 64 | the hand scan keyed on --review/--name, which is what this counts |
 | of those, spec-bearing | 29 | 23 | differs — unexplained, investigate |
 | of those, name-only | 45 | 42 | differs — unexplained, investigate |
-| entry points constructing ReviewDatabase | 35 | 30 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
+| entry points constructing ReviewDatabase | 35 | 29 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
 | name-only, constructing ReviewDatabase | 20 | 19 | differs — unexplained, investigate |
 | raw yaml load sites | 13 | 3 | differs — unexplained, investigate |
 | f-string spec-path builders | 19 | 0 | SPEC-AUTH-01 moved every one of these onto the resolver; a non-zero value here means a hand-built spec path has come back |
@@ -128,7 +128,7 @@ Two figures deliberately have no baseline row. **entry points** (94) counts anyt
 | `engine/tools/inventory.py` | `--write`; `--check` | — | — | — |
 | `engine/utils/ollama_preflight.py` | `--models` required; `--timeout`=30 | — | — | — |
 | `engine/validators/distribution_monitor.py` | `--review` required; `--arm` required; `--codebook`=None; `--strict` | — | 526 | — |
-| `engine/validators/extraction_validator.py` | `--review` required; `--spec`=None | load_spec_for | 313 | main:spec_first |
+| `engine/validators/extraction_validator.py` | `--review` required; `--spec`=None; `--arm`=None | data_root_for, load_spec_for | — | — |
 | `scripts/_pass2_delta.py` | — | — | — | — |
 | `scripts/_pass2_eyeball.py` | — | — | — | — |
 | `scripts/_pass2_stability.py` | — | — | 62 | — |
@@ -215,7 +215,6 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/tools/inventory.py` | 533 | literal | `Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse prose, and messages passed to an exception or a logger. This is the class a ...` |
 | `engine/tools/inventory.py` | 682 | literal | `data/ subdirectories changed: ` |
 | `engine/validators/distribution_monitor.py` | 531 | literal | `extraction_codebook.yaml` |
-| `engine/validators/extraction_validator.py` | 62 | literal | `extraction_codebook.yaml` |
 | `scripts/_pass2_delta.py` | 13 | literal | `data/surgical_autonomy/review.db` |
 | `scripts/_pass2_delta.py` | 16 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
 | `scripts/_pass2_eyeball.py` | 15 | literal | `data/surgical_autonomy/review.db` |

@@ -1,9 +1,28 @@
 """Post-extraction field validation — read-only diagnostic tool.
 
-Checks extracted spans against the Review Spec schema:
-  - Unknown field names
-  - Invalid categorical values (with closest-match suggestion)
+Checks one arm's effective values against the codebook:
+  - Invalid categorical values (with closest-match suggestion), element-wise
+    over semicolon-separated lists
   - Non-numeric sample_size values
+Absence sentinels (the codebook's) and the non-value tokens are skipped.
+
+**It reads the reader** (WRITE-PATH-01 9d-C1, R175): the cells are
+`engine.core.effective.iter_grid`'s rows for ONE arm over the corpus — eligible
+papers x codebook fields. So what is validated is each cell's effective value
+under resolution rule v2.1 — one value per cell, not every claim ever written —
+which is the effective-result model working as designed. An empty cell (value
+None, state `missing`) is skipped, not flagged.
+
+**The arm** (R174 as amended by 9d-C1) is the spec's extraction arm
+(`extraction_models.arm`) unless the CLI's `--arm` names another. An `--arm`
+that is not a registered arm is refused, listing the registered arms. The
+default is used as named: if it is not registered yet (true on a review whose
+extraction arm has not pinned at its first manifest), the validator reports zero
+cells for it and never refuses.
+
+**There is no unknown-field-name check.** The grid's fields are the codebook's
+by construction, so the check could not fire on a grid row. An unknown field
+name is the event writer's to refuse (Step 2 row B15).
 
 Also provides prefix normalization for categorical values (Item 87a).
 """
@@ -12,13 +31,13 @@ import argparse
 import difflib
 import hashlib
 import logging
+import sqlite3
 import sys
-from pathlib import Path
 
-from engine.core.database import ReviewDatabase
-from engine.core.review_paths import load_spec_for
+from engine.core.codebook import Codebook, load_codebook_beside
+from engine.core.effective import eligible_paper_ids, iter_grid, registered_arms
+from engine.core.review_paths import data_root_for, load_spec_for
 from engine.core.review_spec import ReviewSpec
-from engine.core.codebook import load_codebook_beside
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +63,7 @@ def verify_schema_parity(spec: ReviewSpec) -> str:
 # ── Prefix Normalization ─────────────────────────────────────────────
 
 
-def _non_value_tokens(db: "ReviewDatabase | None" = None) -> frozenset[str]:
+def _non_value_tokens(codebook: Codebook) -> frozenset[str]:
     """The review's non-value tokens (ELICIT-DESIGN-02 D1, site 3).
 
     A terminal state is not a categorical value. The two read-only checks skip
@@ -55,11 +74,9 @@ def _non_value_tokens(db: "ReviewDatabase | None" = None) -> frozenset[str]:
     Absence sentinels are skipped at each site through the codebook
     (`Codebook.is_absence_sentinel`, R124); there is no hand-list here.
     """
-    from engine.elicitation.classes import non_value_tokens_for
+    from engine.elicitation.classes import non_value_tokens
 
-    if db is None:
-        return frozenset()
-    return non_value_tokens_for(Path(db.db_path).parent / "extraction_codebook.yaml")
+    return non_value_tokens(codebook.raw)
 
 
 def normalize_prefix(value: str, valid_values: list[str]) -> str:
@@ -174,42 +191,27 @@ def _closest_match(value: str, valid: list[str]) -> str | None:
 
 
 def validate_extraction(
-    spec: ReviewSpec, paper_id: int, db: ReviewDatabase,
+    codebook: Codebook, paper_id: int, cells: list[dict],
 ) -> list[dict]:
-    """Validate a paper's extracted spans against the spec schema.
+    """Validate one paper's cells for one arm against the codebook.
+
+    `cells` are ``{"field_name", "value"}`` dicts built from `iter_grid` rows —
+    field names are the codebook's by construction. A cell whose value is None
+    (nothing recorded for the arm) is skipped, not flagged.
 
     Returns a list of issue dicts: {paper_id, field_name, value, issue}.
-    Read-only — does not modify the DB.
+    Read-only.
     """
-    # Build lookup from spec
-    codebook = load_codebook_beside(db.db_path)
     field_map = {v.name: v for v in codebook.views}
-    valid_field_names = set(field_map)
-    non_value = _non_value_tokens(db)
-
-    # Fetch spans
-    rows = db._conn.execute(
-        """SELECT es.field_name, es.value
-           FROM evidence_spans es
-           JOIN extractions e ON es.extraction_id = e.id
-           WHERE e.paper_id = ?""",
-        (paper_id,),
-    ).fetchall()
+    non_value = _non_value_tokens(codebook)
 
     issues: list[dict] = []
 
-    for row in rows:
-        fname = row["field_name"]
-        value = row["value"]
+    for cell in cells:
+        fname = cell["field_name"]
+        value = cell["value"]
 
-        # 1. Unknown field name
-        if fname not in valid_field_names:
-            suggestion = _closest_match(fname, list(valid_field_names))
-            msg = f"unknown field name"
-            if suggestion:
-                msg += f" (did you mean '{suggestion}'?)"
-            issues.append({"paper_id": paper_id, "field_name": fname,
-                           "value": value, "issue": msg})
+        if value is None:
             continue
 
         field_def = field_map[fname]
@@ -221,7 +223,7 @@ def validate_extraction(
         if str(value).strip().upper() in non_value:
             continue
 
-        # 2. Categorical field — check enum_values
+        # 1. Categorical field — check enum_values
         #    Fields may contain semicolon-separated multi-values; each element
         #    is validated independently.  Only invalid elements are reported.
         if field_def.type == "categorical" and field_def.enum_values:
@@ -246,7 +248,7 @@ def validate_extraction(
                 issues.append({"paper_id": paper_id, "field_name": fname,
                                "value": bad, "issue": msg})
 
-        # 3. sample_size — must be integer or an absence sentinel (already handled above)
+        # 2. sample_size — must be integer or an absence sentinel (already handled above)
         if fname == "sample_size":
             stripped = value.strip()
             try:
@@ -259,37 +261,37 @@ def validate_extraction(
     return issues
 
 
+def arm_cells(conn: sqlite3.Connection, codebook: Codebook, arm: str) -> dict[int, list[dict]]:
+    """The arm's grid over the corpus, as ``{paper_id: [{"field_name", "value"}, ...]}``.
+
+    Empty for an arm that is not registered: `iter_grid` raises `UnknownArm`
+    for one, and the default arm is reported, never refused (R174 as amended
+    by 9d-C1).
+    """
+    if arm not in registered_arms(conn, include_retired=True):
+        return {}
+    cells: dict[int, list[dict]] = {}
+    for paper_id, field_name, _arm, ev in iter_grid(conn, codebook=codebook, arms=(arm,)):
+        cells.setdefault(paper_id, []).append({"field_name": field_name, "value": ev.value})
+    return cells
+
+
 def validate_all(
-    spec: ReviewSpec, db: ReviewDatabase, statuses: tuple[str, ...] = ("EXTRACTED", "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE"),
+    conn: sqlite3.Connection, codebook: Codebook, *, arm: str,
 ) -> tuple[list[dict], list[dict]]:
-    """Validate all extracted papers.
+    """Validate every corpus paper's cells for `arm`.
 
     Returns (issues, bleeds) where issues is the standard validation list
     and bleeds is the cross-field bleed detection list.
     """
-    paper_ids: list[int] = []
-    for status in statuses:
-        rows = db._conn.execute(
-            "SELECT id FROM papers WHERE status = ?", (status,),
-        ).fetchall()
-        paper_ids.extend(r["id"] for r in rows)
-
+    non_value = _non_value_tokens(codebook)
     all_issues: list[dict] = []
     all_bleeds: list[dict] = []
-    for pid in sorted(set(paper_ids)):
-        all_issues.extend(validate_extraction(spec, pid, db))
+    for pid, cells in sorted(arm_cells(conn, codebook, arm).items()):
+        all_issues.extend(validate_extraction(codebook, pid, cells))
 
-        # Cross-field bleed detection (after normalization, before audit)
-        rows = db._conn.execute(
-            """SELECT es.field_name, es.value
-               FROM evidence_spans es
-               JOIN extractions e ON es.extraction_id = e.id
-               WHERE e.paper_id = ?""",
-            (pid,),
-        ).fetchall()
-        spans = [{"field_name": r["field_name"], "value": r["value"]} for r in rows]
-        bleeds = detect_cross_field_bleed(
-            load_codebook_beside(db.db_path), spans, _non_value_tokens(db))
+        spans = [c for c in cells if c["value"] is not None]
+        bleeds = detect_cross_field_bleed(codebook, spans, non_value)
         for b in bleeds:
             b["paper_id"] = pid
         all_bleeds.extend(bleeds)
@@ -300,32 +302,62 @@ def validate_all(
 # ── CLI ──────────────────────────────────────────────────────────────
 
 
-def main():
+class ArmNotRegistered(ValueError):
+    """`--arm` named an arm this review's registry does not hold."""
+
+
+def select_arm(conn: sqlite3.Connection, spec: ReviewSpec, override: str | None) -> str:
+    """The arm to report (R174 as amended by 9d-C1): `override` if given — which
+    must be registered — else the spec's extraction arm, used as named."""
+    if override is None:
+        return spec.extraction_models.arm
+    registered = registered_arms(conn, include_retired=True)
+    if override not in registered:
+        raise ArmNotRegistered(
+            f"--arm {override!r} is not a registered arm of this review; "
+            f"registered arms are {list(registered)}.")
+    return override
+
+
+def open_read_only(db_path) -> sqlite3.Connection:
+    """`mode=ro`, never `immutable=1`: the database is live."""
+    return sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+
+
+def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
     parser = argparse.ArgumentParser(description="Post-extraction field validation (read-only)")
     parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
     parser.add_argument("--spec", default=None,
                         help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.")
-    args = parser.parse_args()
+    parser.add_argument("--arm", default=None,
+                        help="Arm to validate. Defaults to the spec's extraction_models.arm; an override must be a registered arm.")
+    args = parser.parse_args(argv)
 
     spec = load_spec_for(args.review, args.spec)
-    db = ReviewDatabase(args.review)
+    db_path = data_root_for(args.review) / "review.db"
+    codebook = load_codebook_beside(db_path)
+    conn = open_read_only(db_path)
 
     try:
-        # Count total spans
-        total_spans = db._conn.execute(
-            """SELECT COUNT(*) FROM evidence_spans es
-               JOIN extractions e ON es.extraction_id = e.id
-               JOIN papers p ON e.paper_id = p.id
-               WHERE p.status IN ('EXTRACTED', 'AI_AUDIT_COMPLETE', 'HUMAN_AUDIT_COMPLETE')"""
-        ).fetchone()[0]
+        try:
+            arm = select_arm(conn, spec, args.arm)
+        except ArmNotRegistered as exc:
+            print(f"refused: {exc}", file=sys.stderr)
+            return 2
 
-        issues, bleeds = validate_all(spec, db)
+        cells = arm_cells(conn, codebook, arm)
+        populated = sum(1 for cs in cells.values() for c in cs if c["value"] is not None)
+        issues, bleeds = validate_all(conn, codebook, arm=arm)
 
         # Summary
-        print(f"\nSpans checked:  {total_spans}")
-        print(f"Issues found:   {len(issues)}")
+        registered = "" if arm in registered_arms(conn, include_retired=True) \
+            else "  (not a registered arm — zero cells)"
+        print(f"\nArm:             {arm}{registered}")
+        print(f"Corpus papers:   {len(eligible_paper_ids(conn))}")
+        print(f"Populated cells: {populated}")
+        print(f"Issues found:    {len(issues)}")
         print(f"Cross-field bleeds: {len(bleeds)}")
 
         if issues:
@@ -350,8 +382,9 @@ def main():
                 print(f"  paper={b['paper_id']:>5d}  field={b['field_name']:35s}  "
                       f"value={b['extracted_value'][:50]:50s}  belongs_to={b['belongs_to_field']}")
     finally:
-        db.close()
+        conn.close()
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

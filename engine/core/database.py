@@ -40,6 +40,22 @@ STATUSES = (
     "REJECTED",
 )
 
+#: The screening-side `papers.status` tokens (R184, as amended by 9e-R1a): the
+#: only status tokens the PRISMA count model and `get_screening_summary` read.
+#: The screeners are not cut over to the event store (R183), so these tokens are
+#: the screening record until that cut-over, which retires this set.
+SCREENING_TOKENS: frozenset[str] = frozenset({
+    "INGESTED",
+    "ABSTRACT_SCREENED_IN",
+    "ABSTRACT_SCREEN_FLAGGED",
+    "ABSTRACT_SCREENED_OUT",
+    "PDF_ACQUIRED",
+    "PDF_EXCLUDED",
+    "PARSED",
+    "FT_FLAGGED",
+    "FT_SCREENED_OUT",
+})
+
 ALLOWED_TRANSITIONS: dict[str, set[str]] = {
     "INGESTED": {"ABSTRACT_SCREENED_IN", "ABSTRACT_SCREENED_OUT", "ABSTRACT_SCREEN_FLAGGED"},
     "ABSTRACT_SCREENED_IN": {"PDF_ACQUIRED", "ABSTRACT_SCREEN_FLAGGED"},
@@ -591,11 +607,21 @@ class ReviewDatabase:
         return cur.lastrowid
 
     def get_screening_summary(self) -> dict:
-        """Counts per paper status for screening-related states."""
-        rows = self._conn.execute(
-            "SELECT status, COUNT(*) as cnt FROM papers GROUP BY status"
-        ).fetchall()
-        return {r["status"]: r["cnt"] for r in rows}
+        """Screening-side counts (H5, R194): each of the nine `SCREENING_TOKENS`
+        -> its `papers.status` count (0 when absent), plus `eligible` -> the
+        number of papers `eligible` on the eligibility axis.
+
+        No other status token is a key. The extraction tokens are not screening
+        facts, and the run path no longer writes them; a token outside the set
+        is neither counted nor refused here (PRISMA's seam refuses it).
+        """
+        from engine.core.effective import eligible_paper_ids
+
+        counts = {r["status"]: r["cnt"] for r in self._conn.execute(
+            "SELECT status, COUNT(*) as cnt FROM papers GROUP BY status").fetchall()}
+        summary = {token: counts.get(token, 0) for token in sorted(SCREENING_TOKENS)}
+        summary["eligible"] = len(eligible_paper_ids(self._conn))
+        return summary
 
     # ── Extractions ──────────────────────────────────────────
 
@@ -675,8 +701,8 @@ class ReviewDatabase:
         axes come from `effective_state`, one call per paper; `no_recorded_state`
         is reported as it is (the screeners write no events yet), not filtered.
 
-        - `screening`: `get_screening_summary()`, `papers.status` counts (the
-          screeners are not cut over).
+        - `screening`: `get_screening_summary()` — the nine screening tokens'
+          `papers.status` counts (the screeners are not cut over) and `eligible`.
         - `eligibility`: every paper's eligibility token.
         - `processing`: the processing token of each ELIGIBLE paper.
         - `processing_failures`: the reason code of each eligible paper whose

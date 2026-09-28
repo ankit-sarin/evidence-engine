@@ -334,8 +334,12 @@ def test_pipeline_stats(db):
     assert set(stats) == {"total_papers", "screening", "eligibility", "processing",
                           "processing_failures", "analysis_ready"}
     assert stats["total_papers"] == 10
-    assert stats["screening"] == {"ABSTRACT_SCREENED_IN": 3, "ABSTRACT_SCREENED_OUT": 2,
-                                  "INGESTED": 5}
+    # B5 (H5, R194): the nine screening tokens, zeros included, plus `eligible`
+    # from the eligibility axis.
+    assert stats["screening"] == {
+        "INGESTED": 5, "ABSTRACT_SCREENED_IN": 3, "ABSTRACT_SCREEN_FLAGGED": 0,
+        "ABSTRACT_SCREENED_OUT": 2, "PDF_ACQUIRED": 0, "PDF_EXCLUDED": 0,
+        "PARSED": 0, "FT_FLAGGED": 0, "FT_SCREENED_OUT": 0, "eligible": 4}
     assert stats["eligibility"] == {"eligible": 4, "abstract_out": 1,
                                     "no_recorded_state": 5}
     # ids[5]'s `extracted` is not counted: it is not in the corpus.
@@ -343,6 +347,36 @@ def test_pipeline_stats(db):
                                    "extraction_failed": 1, "no_recorded_state": 1}
     assert stats["processing_failures"] == {"no_fields_returned": 1}
     assert stats["analysis_ready"] == 2
+
+
+def test_screening_summary_reports_screening_tokens_and_the_corpus(db):
+    """H5 (R194): a paper at AI_AUDIT_COMPLETE on status and eligible on events
+    is counted once, as `eligible`; the extraction token is not a key."""
+    from engine.core.database import SCREENING_TOKENS
+    from _event_store_fixture import seed_eligibility
+
+    db.add_papers([_cit(pmid="1", title="Included"), _cit(pmid="2", title="Out")])
+    included, out = [p["id"] for p in db.get_papers_by_status("INGESTED")]
+    # Raw SQL on papers.status: the frozen token a Run-6 paper carries.
+    db._conn.execute("UPDATE papers SET status = 'AI_AUDIT_COMPLETE' WHERE id = ?",
+                     (included,))
+    db.update_status(out, "ABSTRACT_SCREENED_OUT")
+    seed_eligibility(db._conn, included)
+
+    summary = db.get_screening_summary()
+    assert set(summary) == set(SCREENING_TOKENS) | {"eligible"}
+    assert "AI_AUDIT_COMPLETE" not in summary
+    assert summary["eligible"] == 1
+    assert summary["ABSTRACT_SCREENED_OUT"] == 1
+    assert sum(v for k, v in summary.items() if k != "eligible") == 1
+
+
+def test_screening_tokens_have_one_home():
+    """PRISMA and the screening summary read the same set, by identity."""
+    from engine.core import database
+    from engine.exporters import prisma
+    assert prisma.SCREENING_TOKENS is database.SCREENING_TOKENS
+    assert len(database.SCREENING_TOKENS) == 9
 
 
 # ── Reset for Re-Extraction ──────────────────────────────────────────

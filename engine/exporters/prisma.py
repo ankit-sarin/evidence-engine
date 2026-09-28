@@ -23,25 +23,11 @@ import csv
 import logging
 import os
 
-from engine.core.database import ReviewDatabase
+from engine.core.database import SCREENING_TOKENS, ReviewDatabase
 from engine.core.effective import effective_state, eligible_paper_ids
 from engine.core.paper_state import FAILURE_STATES, NO_RECORDED_STATE
 
 logger = logging.getLogger(__name__)
-
-#: The only `papers.status` tokens this module names (R184 c, as amended by
-#: 9e-R1a). Read on the status column until the screeners' cut-over (R183).
-SCREENING_TOKENS = frozenset({
-    "INGESTED",
-    "ABSTRACT_SCREENED_IN",
-    "ABSTRACT_SCREEN_FLAGGED",
-    "ABSTRACT_SCREENED_OUT",
-    "PDF_ACQUIRED",
-    "PDF_EXCLUDED",
-    "PARSED",
-    "FT_FLAGGED",
-    "FT_SCREENED_OUT",
-})
 
 #: Processing-axis tokens counted as "still in extraction" (R184 d): no
 #: processing record yet, parsed, or extracted but not yet audited.

@@ -56,23 +56,42 @@ SCREENING_TOKENS: frozenset[str] = frozenset({
     "FT_SCREENED_OUT",
 })
 
+#: The extraction-stage `papers.status` tokens retired by R160b (R197). They stay
+#: in `STATUSES` — 190 live rows carry AI_AUDIT_COMPLETE — but no transition may
+#: enter or leave one. Their successor is the event store:
+#: `engine.core.events.write_paper_event` on the processing axis.
+RETIRED_TOKENS: frozenset[str] = frozenset({
+    "EXTRACTED",
+    "EXTRACT_FAILED",
+    "AI_AUDIT_COMPLETE",
+    "HUMAN_AUDIT_COMPLETE",
+    "REJECTED",
+})
+
+
+class RetiredTransition(ValueError):
+    """`update_status` into or out of a `RETIRED_TOKENS` token (R160b, R198).
+
+    A `ValueError`, so every existing catch site behaves as before; distinct, so
+    a caller learns the successor instead of reading "Invalid transition".
+    """
+
+
 ALLOWED_TRANSITIONS: dict[str, set[str]] = {
     "INGESTED": {"ABSTRACT_SCREENED_IN", "ABSTRACT_SCREENED_OUT", "ABSTRACT_SCREEN_FLAGGED"},
     "ABSTRACT_SCREENED_IN": {"PDF_ACQUIRED", "ABSTRACT_SCREEN_FLAGGED"},
     "ABSTRACT_SCREEN_FLAGGED": {"ABSTRACT_SCREENED_IN", "ABSTRACT_SCREENED_OUT"},
     "PDF_ACQUIRED": {"PARSED", "PDF_EXCLUDED"},
     "PDF_EXCLUDED": set(),  # Terminal — papers here do not advance
-    "PARSED": {"FT_ELIGIBLE", "FT_SCREENED_OUT", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED"},
-    "FT_ELIGIBLE": {"EXTRACTED", "EXTRACT_FAILED", "FT_FLAGGED"},
+    "PARSED": {"FT_ELIGIBLE", "FT_SCREENED_OUT", "FT_FLAGGED"},
+    # FT_ELIGIBLE → FT_FLAGGED survives R160b: its target is a screening token (R196).
+    "FT_ELIGIBLE": {"FT_FLAGGED"},
     "FT_FLAGGED": {"FT_ELIGIBLE", "FT_SCREENED_OUT"},
-    "EXTRACT_FAILED": {"PARSED", "FT_ELIGIBLE", "EXTRACTED"},
-    "EXTRACTED": {"AI_AUDIT_COMPLETE"},
-    "AI_AUDIT_COMPLETE": {"HUMAN_AUDIT_COMPLETE", "REJECTED"},
     # Terminal states with no forward transitions
     "ABSTRACT_SCREENED_OUT": set(),
     "FT_SCREENED_OUT": set(),
-    "HUMAN_AUDIT_COMPLETE": {"REJECTED"},
-    "REJECTED": set(),
+    # R160b (R199): the extraction-stage edges and the retired tokens' keys are
+    # gone; `update_status` refuses a retired token by name (RetiredTransition).
 }
 
 
@@ -434,8 +453,11 @@ class ReviewDatabase:
 
         When called outside a transaction, wraps validation + update in
         BEGIN IMMEDIATE to prevent races. When called inside an existing
-        transaction (e.g., from reject_paper), participates in that
-        transaction without starting a nested one.
+        transaction, participates in that transaction without starting a
+        nested one.
+
+        Raises `RetiredTransition` (before the transition check, row unchanged)
+        when either end is a `RETIRED_TOKENS` token (R160b, R198).
         """
         if new_status not in STATUSES:
             raise ValueError(f"Invalid status: {new_status}")
@@ -454,6 +476,17 @@ class ReviewDatabase:
                 raise ValueError(f"Paper {paper_id} not found")
 
             current = row["status"]
+            retired = new_status if new_status in RETIRED_TOKENS else (
+                current if current in RETIRED_TOKENS else None)
+            if retired is not None:
+                if own_txn:
+                    self._conn.execute("ROLLBACK")
+                raise RetiredTransition(
+                    f"Paper {paper_id}: {current} → {new_status} names the retired "
+                    f"status {retired} (R160b); successor: "
+                    f"engine.core.events.write_paper_event (processing axis)"
+                )
+
             allowed = ALLOWED_TRANSITIONS.get(current, set())
             if new_status not in allowed:
                 if own_txn:
@@ -482,39 +515,6 @@ class ReviewDatabase:
             "SELECT * FROM papers WHERE status = ?", (status,)
         ).fetchall()
         return [dict(r) for r in rows]
-
-    def reject_paper(self, paper_id: int, reason: str) -> None:
-        """Reject a paper from the review, preserving its row and identifiers.
-
-        Sets status to REJECTED and records the rejection reason.
-        Wraps in a single transaction.
-        """
-        row = self._conn.execute(
-            "SELECT status FROM papers WHERE id = ?", (paper_id,)
-        ).fetchone()
-        if row is None:
-            raise ValueError(f"Paper {paper_id} not found")
-
-        current = row["status"]
-        allowed = ALLOWED_TRANSITIONS.get(current, set())
-        if "REJECTED" not in allowed:
-            raise ValueError(
-                f"Cannot reject paper {paper_id}: transition {current} → REJECTED "
-                f"not allowed (allowed: {allowed or 'none'})"
-            )
-
-        try:
-            self._conn.execute("BEGIN")
-            self._conn.execute(
-                """UPDATE papers
-                   SET status = 'REJECTED', rejected_reason = ?, updated_at = ?
-                   WHERE id = ?""",
-                (reason, _now(), paper_id),
-            )
-            self._conn.execute("COMMIT")
-        except Exception:
-            self._conn.execute("ROLLBACK")
-            raise
 
     # ── Screening ────────────────────────────────────────────
 
@@ -622,74 +622,6 @@ class ReviewDatabase:
         summary = {token: counts.get(token, 0) for token in sorted(SCREENING_TOKENS)}
         summary["eligible"] = len(eligible_paper_ids(self._conn))
         return summary
-
-    # ── Extractions ──────────────────────────────────────────
-
-    def add_extraction(
-        self,
-        paper_id: int,
-        schema_hash: str | None,
-        extracted_data: dict,
-        reasoning_trace: str,
-        model: str,
-        codebook_hash: str | None = None,
-        codebook_sha256: str | None = None,
-    ) -> int:
-        """Record an extraction. Returns the extraction id."""
-        cur = self._conn.execute(
-            """INSERT INTO extractions
-               (paper_id, extraction_schema_hash, extracted_data,
-                reasoning_trace, model, extracted_at,
-                codebook_hash, codebook_sha256)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-            (
-                paper_id,
-                schema_hash,
-                json.dumps(extracted_data),
-                reasoning_trace,
-                model,
-                _now(),
-                codebook_hash,
-                codebook_sha256,
-            ),
-        )
-        self._conn.commit()
-        return cur.lastrowid
-
-    # ── Evidence Spans ───────────────────────────────────────
-
-    def add_evidence_span(
-        self,
-        extraction_id: int,
-        field_name: str,
-        value: str,
-        source_snippet: str,
-        confidence: float,
-        tier: int = 1,
-    ) -> int:
-        """Record an evidence span. Returns the span id."""
-        cur = self._conn.execute(
-            """INSERT INTO evidence_spans
-               (extraction_id, field_name, value, source_snippet,
-                confidence, tier, audit_status)
-               VALUES (?, ?, ?, ?, ?, ?, 'pending')""",
-            (extraction_id, field_name, value, source_snippet, confidence, tier),
-        )
-        self._conn.commit()
-        return cur.lastrowid
-
-    def update_audit(
-        self, span_id: int, status: str, model: str, rationale: str
-    ) -> None:
-        """Update audit status on an evidence span."""
-        self._conn.execute(
-            """UPDATE evidence_spans
-               SET audit_status = ?, auditor_model = ?,
-                   audit_rationale = ?, audited_at = ?
-               WHERE id = ?""",
-            (status, model, rationale, _now(), span_id),
-        )
-        self._conn.commit()
 
     # ── Pipeline Stats ───────────────────────────────────────
 

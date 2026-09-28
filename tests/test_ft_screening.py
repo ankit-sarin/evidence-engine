@@ -28,7 +28,7 @@ from engine.agents.ft_screener import (
     truncate_paper_text,
 )
 from engine.core.constants import FT_MAX_TEXT_CHARS
-from engine.core.database import ReviewDatabase
+from engine.core.database import ReviewDatabase, RetiredTransition
 from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
 
@@ -310,14 +310,16 @@ class TestFTTransitions:
         assert row["status"] == "FT_FLAGGED"
 
     def test_ft_eligible_to_extracted(self, tmp_db):
+        """B5 (R160b, R200 row 38): the edge is retired and refused by name."""
         pid = _add_paper(tmp_db, title="Trans4", pmid="88004")
         _advance_to_parsed(tmp_db, pid)
         tmp_db.update_status(pid, "FT_ELIGIBLE")
-        tmp_db.update_status(pid, "EXTRACTED")
+        with pytest.raises(RetiredTransition, match="FT_ELIGIBLE → EXTRACTED"):
+            tmp_db.update_status(pid, "EXTRACTED")
         row = tmp_db._conn.execute(
             "SELECT status FROM papers WHERE id = ?", (pid,)
         ).fetchone()
-        assert row["status"] == "EXTRACTED"
+        assert row["status"] == "FT_ELIGIBLE"
 
     def test_ft_flagged_to_ft_eligible(self, tmp_db):
         pid = _add_paper(tmp_db, title="Trans5", pmid="88005")
@@ -347,14 +349,16 @@ class TestFTTransitions:
             tmp_db.update_status(pid, "FT_ELIGIBLE")
 
     def test_parsed_can_skip_ft_to_extracted(self, tmp_db):
-        """PARSED can go directly to EXTRACTED (for reviews without FT screening)."""
+        """B5 (R160b, R200 row 39): the PARSED → EXTRACTED skip edge is retired
+        and refused by name."""
         pid = _add_paper(tmp_db, title="Trans8", pmid="88008")
         _advance_to_parsed(tmp_db, pid)
-        tmp_db.update_status(pid, "EXTRACTED")
+        with pytest.raises(RetiredTransition, match="PARSED → EXTRACTED"):
+            tmp_db.update_status(pid, "EXTRACTED")
         row = tmp_db._conn.execute(
             "SELECT status FROM papers WHERE id = ?", (pid,)
         ).fetchone()
-        assert row["status"] == "EXTRACTED"
+        assert row["status"] == "PARSED"
 
 
 # ── Prompt Builder Tests ─────────────────────────────────────────
@@ -737,19 +741,14 @@ class TestSpecialtyScopeInPrompt:
 
 class TestFTScreeningSkipsAdvancedStatus:
 
-    def _advance_to_ai_audit(self, db, paper_id):
-        """Move paper through full lifecycle to AI_AUDIT_COMPLETE."""
-        db.update_status(paper_id, "ABSTRACT_SCREENED_IN")
-        db.update_status(paper_id, "PDF_ACQUIRED")
-        db.update_status(paper_id, "PARSED")
-        db.update_status(paper_id, "EXTRACTED")
-        db.update_status(paper_id, "AI_AUDIT_COMPLETE")
-
     def test_ft_screen_ai_audit_complete_records_decision(self, tmp_db, spec, tmp_path):
         """FT screening an AI_AUDIT_COMPLETE paper records the decision
         in ft_screening_decisions but does not change workflow status."""
         pid = _add_paper(tmp_db, title="Audit Complete Paper", pmid="99001")
-        self._advance_to_ai_audit(tmp_db, pid)
+        # Raw SQL on papers.status: retires at the screeners' cut-over (R163).
+        tmp_db._conn.execute(
+            "UPDATE papers SET status = 'AI_AUDIT_COMPLETE' WHERE id = ?", (pid,))
+        tmp_db._conn.commit()
 
         # Write parsed text so the screener doesn't skip
         md_path = tmp_path / "test_review" / "parsed_text" / f"{pid}_v1.md"

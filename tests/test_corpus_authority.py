@@ -67,8 +67,8 @@ def test_the_lifecycle_status_set_is_pinned_whole():
     """A new status must be ruled on for corpus membership, not absorbed silently.
 
     CORPUS_STATUSES is a declared constant because ALLOWED_TRANSITIONS carries no
-    success/failure marking (its forward closure from FT_ELIGIBLE is nine statuses,
-    not four). That declaration is only safe while someone is forced to revisit it
+    success/failure marking (its forward closure from FT_ELIGIBLE is three
+    statuses — FT_ELIGIBLE, FT_FLAGGED, FT_SCREENED_OUT — not four, since R160b). That declaration is only safe while someone is forced to revisit it
     when the lifecycle changes, which is what this test does: adding a member to
     STATUSES turns it red until the new status is classified here.
     """
@@ -81,6 +81,8 @@ def test_the_transition_graph_still_does_not_yield_the_four_by_closure():
 
     If someone later adds a success/failure marking to the state machine, this
     test fails and the authority should be re-derived from it (Contract 1a).
+    Since R160b the closure from FT_ELIGIBLE is FT_ELIGIBLE, FT_FLAGGED and
+    FT_SCREENED_OUT: the extraction-stage edges are retired.
     """
     seen, stack = {"FT_ELIGIBLE"}, ["FT_ELIGIBLE"]
     while stack:
@@ -89,9 +91,9 @@ def test_the_transition_graph_still_does_not_yield_the_four_by_closure():
                 seen.add(nxt)
                 stack.append(nxt)
     assert seen != set(CORPUS_STATUSES)
-    assert seen - set(CORPUS_STATUSES) == {
-        "EXTRACT_FAILED", "FT_FLAGGED", "FT_SCREENED_OUT", "PARSED", "REJECTED",
-    }
+    # B5 (R160b, R200 row 41): with the extraction-stage edges retired, the
+    # closure from FT_ELIGIBLE is {FT_ELIGIBLE, FT_FLAGGED, FT_SCREENED_OUT}.
+    assert seen - set(CORPUS_STATUSES) == {"FT_FLAGGED", "FT_SCREENED_OUT"}
 
 
 # ── T3 — predicate and SQL view agree on every status ─────────────────────

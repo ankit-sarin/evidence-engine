@@ -2,7 +2,7 @@
 
 Persistence only. No loading, prompting, or CLI. Mirrors the
 `try: BEGIN ... COMMIT / except: ROLLBACK` transaction idiom
-used by engine.core.database.ReviewDatabase.add_extraction.
+of the retired `ReviewDatabase.reject_paper` (R160b; recoverable at a6b884f).
 """
 
 from __future__ import annotations

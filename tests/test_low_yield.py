@@ -13,7 +13,7 @@ from engine.agents.auditor import count_populated_fields
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
-from engine.core.codebook import load_codebook, load_codebook_beside
+from engine.core.codebook import load_codebook
 
 
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
@@ -45,34 +45,6 @@ def _add_paper(db, title="Test Paper", pmid=None):
         "SELECT id FROM papers WHERE title = ?", (title,)
     ).fetchone()
     return row["id"]
-
-
-def _advance_to_ai_audit(db, pid, extracted_data, spec):
-    """Move paper through to AI_AUDIT_COMPLETE with given extracted_data."""
-    db.update_status(pid, "ABSTRACT_SCREENED_IN")
-    db.update_status(pid, "PDF_ACQUIRED")
-    db.update_status(pid, "PARSED")
-    db.update_status(pid, "EXTRACTED")
-
-    ext_id = db.add_extraction(
-        pid, load_codebook_beside(db.db_path).semantic_hash, extracted_data,
-        "reasoning trace", "deepseek-r1:32b",
-    )
-
-    # Add evidence spans for populated fields
-    for fname, value in extracted_data.items():
-        if value and not load_codebook_beside(db.db_path).is_absence_sentinel(value):
-            db.add_evidence_span(ext_id, fname, value, "Source text here.", 0.9)
-
-    # Audit all spans as verified
-    spans = db._conn.execute(
-        "SELECT id FROM evidence_spans WHERE extraction_id = ?", (ext_id,)
-    ).fetchall()
-    for s in spans:
-        db.update_audit(s["id"], "verified", "gemma3:27b", "OK")
-
-    db.update_status(pid, "AI_AUDIT_COMPLETE")
-    return ext_id
 
 
 # ── count_populated_fields Tests ─────────────────────────────────
@@ -163,31 +135,6 @@ class TestCheckLowYield:
 
 
 # ── Database Schema Tests ────────────────────────────────────────
-
-
-class TestLowYieldSchema:
-
-    def test_extractions_has_low_yield_column(self, tmp_db):
-        """The extractions table should have a low_yield column."""
-        row = tmp_db._conn.execute(
-            "PRAGMA table_info(extractions)"
-        ).fetchall()
-        col_names = [r["name"] for r in row]
-        assert "low_yield" in col_names
-
-    def test_low_yield_defaults_to_zero(self, tmp_db, spec):
-        """New extractions should have low_yield=0 by default."""
-        pid = _add_paper(tmp_db, title="Default Test", pmid="80001")
-        tmp_db.update_status(pid, "ABSTRACT_SCREENED_IN")
-        tmp_db.update_status(pid, "PDF_ACQUIRED")
-        tmp_db.update_status(pid, "PARSED")
-        tmp_db.update_status(pid, "EXTRACTED")
-
-        ext_id = tmp_db.add_extraction(
-            pid, None, {"study_type": "RCT"}, "trace", "model",
-            codebook_hash=load_codebook_beside(tmp_db.db_path).semantic_hash,
-        )
-        row = tmp_db._conn.execute(
-            "SELECT low_yield FROM extractions WHERE id = ?", (ext_id,)
-        ).fetchone()
-        assert row["low_yield"] == 0
+# TestLowYieldSchema (2 ids) retired under R200 (R47, B17): they pinned the
+# legacy `extractions.low_yield` column, whose only writer (add_extraction)
+# retired with R160b. The column stays on disk under R25.

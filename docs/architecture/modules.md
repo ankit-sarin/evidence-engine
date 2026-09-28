@@ -20,7 +20,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 - `ReviewDatabase` — Main class. Creates `data/{review}/` with subdirs: pdfs/, parsed_text/, vector_store/. WAL mode, 5s busy timeout, foreign keys
 - `STATUSES` — 15 paper lifecycle states (see state-machine.md)
 - `ALLOWED_TRANSITIONS` — State machine transition rules
-- **Key methods:** `add_papers()`, `update_status()`, `get_papers_by_status()`, `reject_paper()`, `add_screening_decision()`, `add_verification_decision()`, `add_ft_screening_decision()`, `add_ft_verification_decision()`, `get_screening_summary()`, `add_extraction()`, `add_evidence_span()`, `update_audit()`, `get_pipeline_stats()`
+- **Key methods:** `add_papers()`, `update_status()`, `get_papers_by_status()`, `add_screening_decision()`, `add_verification_decision()`, `add_ft_screening_decision()`, `add_ft_verification_decision()`, `get_screening_summary()`, `get_pipeline_stats()`. `reject_paper()`, `add_extraction()`, `add_evidence_span()` and `update_audit()` are retired (R160b); extraction outcomes are written by `engine.core.events.write_paper_event` / `write_field_event`
 - **Tables:** papers (24 columns), abstract_screening_decisions, abstract_verification_decisions, ft_screening_decisions, ft_verification_decisions, full_text_assets, extractions (with model_digest, auditor_model_digest, low_yield), evidence_spans, review_runs
 
 ### `naming.py`

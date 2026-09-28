@@ -5,7 +5,9 @@ import sqlite3
 
 import pytest
 
-from engine.core.database import ReviewDatabase, STATUSES, ALLOWED_TRANSITIONS
+from engine.core.database import (
+    RETIRED_TOKENS, SCREENING_TOKENS, STATUSES, ReviewDatabase, RetiredTransition,
+)
 from engine.search.models import Citation
 
 
@@ -94,23 +96,15 @@ def test_full_lifecycle(db):
     # PDF_ACQUIRED → PARSED
     db.update_status(pid, "PARSED")
 
-    # PARSED → EXTRACTED
-    db.update_status(pid, "EXTRACTED")
+    # PARSED → FT_ELIGIBLE
+    db.update_status(pid, "FT_ELIGIBLE")
+    assert db.get_papers_by_status("FT_ELIGIBLE")[0]["id"] == pid
 
-    # EXTRACTED → AI_AUDIT_COMPLETE
-    db.update_status(pid, "AI_AUDIT_COMPLETE")
-    assert db.get_papers_by_status("AI_AUDIT_COMPLETE")[0]["id"] == pid
-
-
-def test_ai_to_human_audit_transition(db):
-    db.add_papers([_cit(pmid="AH1", title="AI to Human")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-
-    for status in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED", "AI_AUDIT_COMPLETE"):
-        db.update_status(pid, status)
-
-    db.update_status(pid, "HUMAN_AUDIT_COMPLETE")
-    assert db.get_papers_by_status("HUMAN_AUDIT_COMPLETE")[0]["id"] == pid
+    # B5 (R160b, R200 row 33): the forward walk ends at FT_ELIGIBLE; the
+    # extraction stage is the event store's, so →EXTRACTED is refused by name.
+    with pytest.raises(RetiredTransition, match="EXTRACTED"):
+        db.update_status(pid, "EXTRACTED")
+    assert db.get_papers_by_status("FT_ELIGIBLE")[0]["id"] == pid
 
 
 def test_screened_out_lifecycle(db):
@@ -140,7 +134,8 @@ def test_invalid_transition_raises(db):
     paper = db.get_papers_by_status("INGESTED")[0]
     pid = paper["id"]
 
-    with pytest.raises(ValueError, match="Invalid transition"):
+    # R160b rewrite (R200 row 35): a retired target is refused by name.
+    with pytest.raises(RetiredTransition, match="INGESTED → EXTRACTED"):
         db.update_status(pid, "EXTRACTED")
 
 
@@ -190,103 +185,13 @@ def test_abstract_screening_decisions(db):
 # ── Evidence Spans & Audit ───────────────────────────────────────────
 
 
-def test_evidence_spans_and_audit(db):
-    db.add_papers([_cit(pmid="ES1", title="Spans")])
-    paper = db.get_papers_by_status("INGESTED")[0]
-    pid = paper["id"]
-
-    db.update_status(pid, "ABSTRACT_SCREENED_IN")
-    db.update_status(pid, "PDF_ACQUIRED")
-    db.update_status(pid, "PARSED")
-    db.update_status(pid, "EXTRACTED")
-
-    ext_id = db.add_extraction(pid, "hash1", {"design": "RCT"}, "trace", "deepseek-r1:32b")
-    span_id = db.add_evidence_span(ext_id, "study_design", "RCT", "This was an RCT...", 0.95)
-
-    # Verify pending
-    span = db._conn.execute(
-        "SELECT * FROM evidence_spans WHERE id = ?", (span_id,)
-    ).fetchone()
-    assert span["audit_status"] == "pending"
-
-    # Audit it
-    db.update_audit(span_id, "verified", "qwen3:32b", "Confirmed RCT design")
-    span = db._conn.execute(
-        "SELECT * FROM evidence_spans WHERE id = ?", (span_id,)
-    ).fetchone()
-    assert span["audit_status"] == "verified"
-    assert span["auditor_model"] == "qwen3:32b"
-
-
-def test_evidence_spans_contested_status(db):
-    """New 'contested' audit status is accepted by the schema."""
-    db.add_papers([_cit(pmid="CS1", title="Contested")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
-        db.update_status(pid, s)
-
-    ext_id = db.add_extraction(pid, "h1", {}, "t", "m")
-    span_id = db.add_evidence_span(ext_id, "f", "v", "s", 0.9)
-    db.update_audit(span_id, "contested", "qwen3:32b", "Grep fail, semantic pass")
-
-    span = db._conn.execute("SELECT audit_status FROM evidence_spans WHERE id = ?", (span_id,)).fetchone()
-    assert span["audit_status"] == "contested"
-
-
-def test_evidence_spans_invalid_snippet_status(db):
-    """New 'invalid_snippet' audit status is accepted by the schema."""
-    db.add_papers([_cit(pmid="IS2", title="Invalid Snippet")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
-        db.update_status(pid, s)
-
-    ext_id = db.add_extraction(pid, "h1", {}, "t", "m")
-    span_id = db.add_evidence_span(ext_id, "f", "v", "s", 0.9)
-    db.update_audit(span_id, "invalid_snippet", "qwen3:32b", "Ellipsis bridging")
-
-    span = db._conn.execute("SELECT audit_status FROM evidence_spans WHERE id = ?", (span_id,)).fetchone()
-    assert span["audit_status"] == "invalid_snippet"
-
-
 # ── Atomic Extraction ─────────────────────────────────────────────────
 
 
 # ── Reset for Re-Audit ──────────────────────────────────────────────
 
 
-def _walk_to_ai_audit(db, pmid):
-    """Helper: add a paper and walk it to AI_AUDIT_COMPLETE with spans."""
-    db.add_papers([_cit(pmid=pmid, title=f"Paper {pmid}")])
-    pid = db.get_papers_by_status("INGESTED")[-1]["id"]
-    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
-        db.update_status(pid, s)
-    ext_id = db.add_extraction(pid, "h", {}, "t", "m")
-    s1 = db.add_evidence_span(ext_id, "f1", "v1", "snip1", 0.9)
-    s2 = db.add_evidence_span(ext_id, "f2", "v2", "snip2", 0.8)
-    db.update_audit(s1, "verified", "qwen3:32b", "ok")
-    db.update_audit(s2, "flagged", "qwen3:32b", "bad")
-    db.update_status(pid, "AI_AUDIT_COMPLETE")
-    return pid
-
-
 # ── Reject Paper ────────────────────────────────────────────────────
-
-
-def test_reject_paper(db):
-    pid = _walk_to_ai_audit(db, "RJ1")
-    db.reject_paper(pid, "Extended abstract only")
-
-    paper = db._conn.execute("SELECT * FROM papers WHERE id = ?", (pid,)).fetchone()
-    assert paper["status"] == "REJECTED"
-    assert paper["rejected_reason"] == "Extended abstract only"
-
-
-def test_reject_paper_invalid_status(db):
-    db.add_papers([_cit(pmid="RJ2", title="Cannot Reject")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-
-    with pytest.raises(ValueError, match="not allowed"):
-        db.reject_paper(pid, "some reason")
 
 
 # ── Min Status Gate ─────────────────────────────────────────────────
@@ -377,6 +282,16 @@ def test_screening_tokens_have_one_home():
     from engine.exporters import prisma
     assert prisma.SCREENING_TOKENS is database.SCREENING_TOKENS
     assert len(database.SCREENING_TOKENS) == 9
+
+
+def test_statuses_partition_into_screening_retired_and_ft_eligible():
+    """R197: every status is a screening token, a retired token, or FT_ELIGIBLE
+    (the corpus status with no processing), and the three are disjoint."""
+    corpus = {"FT_ELIGIBLE"}
+    assert set(STATUSES) == SCREENING_TOKENS | RETIRED_TOKENS | corpus
+    assert not SCREENING_TOKENS & RETIRED_TOKENS
+    assert not SCREENING_TOKENS & corpus
+    assert not RETIRED_TOKENS & corpus
 
 
 # ── Reset for Re-Extraction ──────────────────────────────────────────
@@ -476,56 +391,22 @@ def test_migration_syntax_error_raises(tmp_path):
 
 
 def test_normal_pipeline_cannot_use_admin_transition(tmp_path):
-    """update_status still rejects AI_AUDIT_COMPLETE → PARSED."""
+    """update_status still rejects AI_AUDIT_COMPLETE → PARSED — now by name,
+    because the source is a retired token (R160b rewrite, R200 row 36)."""
     db = ReviewDatabase("admin_guard", data_root=tmp_path)
     db.add_papers([_cit(pmid="AG1", title="Guard")])
     pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED",
-              "EXTRACTED", "AI_AUDIT_COMPLETE"):
-        db.update_status(pid, s)
+    # Raw SQL on papers.status: retires at the screeners' cut-over (R163 precedent).
+    db._conn.execute("UPDATE papers SET status = 'AI_AUDIT_COMPLETE' WHERE id = ?", (pid,))
+    db._conn.commit()
 
-    with pytest.raises(ValueError, match="Invalid transition"):
+    with pytest.raises(RetiredTransition, match="AI_AUDIT_COMPLETE → PARSED"):
         db.update_status(pid, "PARSED")
+    assert db.get_papers_by_status("AI_AUDIT_COMPLETE")[0]["id"] == pid
     db.close()
 
 
 # ── L3: NOT NULL constraints ──────────────────────────────────────────
-
-
-def test_null_confidence_raises_integrity_error(db):
-    """L3: Inserting a span with NULL confidence raises IntegrityError."""
-    db.add_papers([_cit(pmid="L3_1", title="Null Conf")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
-        db.update_status(pid, s)
-
-    ext_id = db.add_extraction(pid, "h", {}, "t", "m")
-
-    with pytest.raises(sqlite3.IntegrityError):
-        db._conn.execute(
-            """INSERT INTO evidence_spans
-               (extraction_id, field_name, value, source_snippet, confidence)
-               VALUES (?, ?, ?, ?, ?)""",
-            (ext_id, "f", "v", "s", None),
-        )
-
-
-def test_null_tier_raises_integrity_error(db):
-    """L3: Inserting a span with NULL tier raises IntegrityError."""
-    db.add_papers([_cit(pmid="L3_tier", title="Null Tier")])
-    pid = db.get_papers_by_status("INGESTED")[0]["id"]
-    for s in ("ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PARSED", "EXTRACTED"):
-        db.update_status(pid, s)
-
-    ext_id = db.add_extraction(pid, "h", {}, "t", "m")
-
-    with pytest.raises(sqlite3.IntegrityError):
-        db._conn.execute(
-            """INSERT INTO evidence_spans
-               (extraction_id, field_name, value, source_snippet, confidence, tier)
-               VALUES (?, ?, ?, ?, ?, ?)""",
-            (ext_id, "f", "v", "s", 0.9, None),
-        )
 
 
 def test_cloud_null_confidence_raises_integrity_error(tmp_path):
@@ -608,7 +489,8 @@ def test_update_status_invalid_transition_still_raises(tmp_path):
     db.add_papers([_cit(pmid="AE1", title="Invalid")])
     pid = db.get_papers_by_status("INGESTED")[0]["id"]
 
-    with pytest.raises(ValueError, match="Invalid transition"):
+    # R160b rewrite (R200 row 37): refused by name; the row is unchanged.
+    with pytest.raises(RetiredTransition, match="successor: engine.core.events"):
         db.update_status(pid, "EXTRACTED")
 
     # Paper should still be INGESTED

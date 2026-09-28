@@ -214,7 +214,7 @@ def test_evidence_excel_sheets(exporter_db, spec, tmp_path):
 
     # Evidence Table has header + data rows
     ws1 = wb["Evidence Table"]
-    assert ws1.max_row >= 4  # 1 header + 3 AI_AUDIT_COMPLETE papers
+    assert ws1.max_row >= 4  # 1 header + the fixture's 5 eligible papers
 
     # Screening Log has entries
     ws2 = wb["Screening Log"]
@@ -245,7 +245,7 @@ def test_docx_created(exporter_db, spec, tmp_path):
     assert len(doc.tables) >= 1
     # Table should have header + data rows
     table = doc.tables[0]
-    assert len(table.rows) >= 4  # 1 header + 3 AI_AUDIT_COMPLETE papers
+    assert len(table.rows) >= 4  # 1 header + the fixture's 5 eligible papers
 
 
 # ── Methods Section ──────────────────────────────────────────────────
@@ -572,19 +572,8 @@ def test_methods_multi_model_ft_screening(tmp_path, spec):
         )
         db.update_status(p["id"], "FT_ELIGIBLE")
 
-    schema_hash = load_codebook_beside(db.db_path).semantic_hash
-    for p in papers:
-        pid = p["id"]
-        db.update_status(pid, "EXTRACTED")
-        ext_id = db.add_extraction(pid, schema_hash, {}, "trace", "deepseek-r1:32b")
-        db.add_evidence_span(ext_id, "study_design", "RCT", ".", 0.9)
-        spans = db._conn.execute(
-            "SELECT id FROM evidence_spans WHERE extraction_id = ?", (ext_id,)
-        ).fetchall()
-        for s in spans:
-            db.update_audit(s["id"], "verified", "gemma3:27b", "OK")
-        db.update_status(pid, "AI_AUDIT_COMPLETE")
-
+    # B5 (R200 row 17): the extraction block was incidental — the FT model
+    # counts come from ft_screening_decisions alone — so papers stay at FT_ELIGIBLE.
     db._conn.commit()
 
     methods = generate_methods_section(db, spec, run_id=None)  # 9d-C2-R1 (1)
@@ -612,9 +601,7 @@ def test_methods_placeholder_when_no_data(tmp_path, spec):
         db.add_screening_decision(p["id"], 2, "include", "OK", "qwen3:8b")
         db.update_status(p["id"], "ABSTRACT_SCREENED_IN")
         db.update_status(p["id"], "PDF_ACQUIRED")
-        db.update_status(p["id"], "PARSED")
-        db.update_status(p["id"], "EXTRACTED")
-        db.update_status(p["id"], "AI_AUDIT_COMPLETE")
+        db.update_status(p["id"], "PARSED")  # B5 (R200 row 27): the walk stops here
 
     # C30 (9d-C2-R1 (2)): the spec's `auditor_model` is never a fallback.
     sentinel = "sentinel-auditor-must-not-render"

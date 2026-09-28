@@ -53,38 +53,23 @@ PDF_EXCLUDED                        ← terminal, no outgoing transitions
 PARSED
 ├──▶ FT_ELIGIBLE
 ├──▶ FT_SCREENED_OUT                ← terminal
-├──▶ FT_FLAGGED
-├──▶ EXTRACTED                      ← skip path (reviews without FT screening)
-└──▶ EXTRACT_FAILED                 ← skip path
+└──▶ FT_FLAGGED
 
 FT_ELIGIBLE
-├──▶ EXTRACTED
-├──▶ EXTRACT_FAILED
 └──▶ FT_FLAGGED
 
 FT_FLAGGED
 ├──▶ FT_ELIGIBLE                    ← after adjudication
 └──▶ FT_SCREENED_OUT                ← terminal
 
-EXTRACT_FAILED
-├──▶ PARSED                         ← retry path
-├──▶ FT_ELIGIBLE                    ← retry path
-└──▶ EXTRACTED                      ← retry success
-
-EXTRACTED
-└──▶ AI_AUDIT_COMPLETE
-
-AI_AUDIT_COMPLETE
-├──▶ HUMAN_AUDIT_COMPLETE
-└──▶ REJECTED                       ← terminal
-
-HUMAN_AUDIT_COMPLETE
-└──▶ REJECTED                       ← terminal
-
 ABSTRACT_SCREENED_OUT               ← terminal
 FT_SCREENED_OUT                     ← terminal
-REJECTED                            ← terminal
 ```
+
+EXTRACTED, EXTRACT_FAILED, AI_AUDIT_COMPLETE, HUMAN_AUDIT_COMPLETE and REJECTED are
+retired (R160b): they remain in `STATUSES`, but `update_status` refuses any transition
+into or out of them with `RetiredTransition`. Their successor is the event store,
+`engine.core.events.write_paper_event` on the processing axis.
 
 ## Terminal States
 
@@ -93,7 +78,7 @@ REJECTED                            ← terminal
 | `ABSTRACT_SCREENED_OUT` | Excluded at abstract screening (dual-model agreement or adjudication) |
 | `PDF_EXCLUDED` | Excluded at PDF quality check (non-English, not manuscript, inaccessible, other) |
 | `FT_SCREENED_OUT` | Excluded at full-text screening (dual-model agreement or adjudication) |
-| `REJECTED` | Excluded at human audit review |
+| `REJECTED` | Retired (R160b): no writer reaches it; `update_status` refuses it |
 
 **Data retention:** All paper data is retained permanently regardless of terminal status. SCREENED_OUT is a label, not a deletion.
 
@@ -121,7 +106,8 @@ pending → invalid_snippet ellipsis bridging detected (INVALID_SNIPPET_RE match
 
 ### `reject_paper(paper_id, reason)`
 
-Atomic: sets status to REJECTED with `rejected_reason` recorded in papers table.
+Retired (R160b). REJECTED is a retired token; there is no paper-level rejection
+writer on the event store yet.
 
 ## Database Tables
 

@@ -1,8 +1,9 @@
 """The event-side auditor (WRITE-PATH-01 9b-2d; R17, F8, F10).
 
 Built and tested here; `run_pipeline`'s audit stage is wired to it at the flip,
-when `run_audit`'s reads of `evidence_spans` and its `update_audit` / LOW_YIELD
-writes retire. Until then nothing in the run path calls this module.
+when `run_audit`'s reads of `evidence_spans` and its LOW_YIELD writes retire
+(`ReviewDatabase.update_audit` itself retired under R160b; this module's event
+writes are its successor). Until then nothing in the run path calls this module.
 
 **Per eligible paper, for one arm:**
 

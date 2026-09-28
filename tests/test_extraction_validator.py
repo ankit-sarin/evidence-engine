@@ -8,13 +8,11 @@ from types import SimpleNamespace
 import pytest
 
 from engine.core.codebook import load_codebook
-from engine.core.review_spec import load_review_spec
 from engine.validators import extraction_validator as V
 from engine.validators.extraction_validator import (
     detect_cross_field_bleed,
     validate_all,
     validate_extraction,
-    verify_schema_parity,
     _closest_match,
 )
 from tests._event_store_fixture import add_values
@@ -24,11 +22,6 @@ LIVE_CODEBOOK = (Path(__file__).resolve().parent.parent
 
 #: The arm every rewritten fixture declares its values under (9d-C1, R175).
 ARM = "local_fixture_arm"
-
-
-@pytest.fixture
-def spec():
-    return load_review_spec("review_specs/surgical_autonomy.yaml")
 
 
 @pytest.fixture
@@ -210,58 +203,8 @@ def test_bleed_semicolon_multi_value(codebook):
     assert bleeds[0]["belongs_to_field"] == "study_design"
 
 
-# ── schema hash parity tests ────────────────────────────────────────
-
-
-def test_same_spec_same_hash(spec):
-    """Same spec produces the same prompt hash deterministically."""
-    h1 = verify_schema_parity(spec)
-    h2 = verify_schema_parity(spec)
-    assert h1 == h2
-    assert len(h1) == 64  # SHA-256 hex digest
-
-
-def test_modified_codebook_different_hash(tmp_path, spec):
-    """Adding a field changes the prompt hash — from the CODEBOOK now.
-
-    This used to append an ExtractionField to spec.extraction_schema. The
-    prompt never read the spec's field list for its CONTENT and, since
-    SCHEMA-DERIVE-01, does not read it for the field SET either — so
-    mutating the spec changed nothing and the test compared a hash with
-    itself. The field set is the codebook's.
-    """
-    import yaml
-
-    from engine.core.codebook import clear_cache
-
-    live = (Path(__file__).resolve().parent.parent
-            / "data" / "surgical_autonomy" / "extraction_codebook.yaml")
-    h_a = verify_schema_parity(spec)
-
-    # data_root_for resolves against the cwd, so mirror data/<review_id>
-    review_dir = tmp_path / "data" / "surgical_autonomy"
-    review_dir.mkdir(parents=True)
-    doc = yaml.safe_load(live.read_text())
-    doc["fields"].append({
-        "name": "fake_new_field", "type": "free_text", "tier": 1,
-        "definition": "A fake field for testing.", "instruction": "Extract it.",
-        "field_class": "stated", "judge_rubric_family": "free_text",
-    })
-    (review_dir / "extraction_codebook.yaml").write_text(yaml.safe_dump(doc))
-
-    clear_cache()
-    try:
-        import os
-        cwd = os.getcwd()
-        os.chdir(tmp_path)
-        try:
-            h_b = verify_schema_parity(spec)
-        finally:
-            os.chdir(cwd)
-    finally:
-        clear_cache()
-
-    assert h_a != h_b
+# The two schema-hash parity tests retired 2026-09-28 with their subject
+# (9e-R47, C34; R47).
 
 
 # ── the grid, the arm and the CLI (9d-C1, R174 as amended, R175) ─────

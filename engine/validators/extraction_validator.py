@@ -29,7 +29,6 @@ Also provides prefix normalization for categorical values (Item 87a).
 
 import argparse
 import difflib
-import hashlib
 import logging
 import sqlite3
 import sys
@@ -40,24 +39,6 @@ from engine.core.review_paths import data_root_for, load_spec_for
 from engine.core.review_spec import ReviewSpec
 
 logger = logging.getLogger(__name__)
-
-
-# ── Schema Hash Parity ───────────────────────────────────────────────
-
-
-def verify_schema_parity(spec: ReviewSpec) -> str:
-    """Compute a SHA-256 hash of the extraction prompt for schema versioning.
-
-    Builds the extraction prompt with a dummy paper text and hashes the result.
-    If the prompt changes (codebook edits, field additions, template changes),
-    the hash changes — making schema drift detectable.
-
-    Returns the hex digest string.
-    """
-    from engine.agents.extractor import build_extraction_prompt
-
-    prompt = build_extraction_prompt("TEST", spec)
-    return hashlib.sha256(prompt.encode()).hexdigest()
 
 
 # ── Non-value tokens ─────────────────────────────────────────────────

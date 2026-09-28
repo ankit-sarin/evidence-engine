@@ -1362,9 +1362,10 @@ Expected values at session-10 open, as measured at this closeout:
 - Event store unchanged: **3 arms · 190 paper events · 194 parsed-text refs (all with `parsed_text_sha256`) · 3 identity rows · 0 field events**. `run_manifests`, `run_stage_configs`, `run_calls` empty. **20 receipts**, last `021_parsed_text_sha256`.
 - Restore points present, re-measured at this closeout: `…input-identity-01-phase3-pre-write-20260924-204138` (34 tables, `bb39ba81170c4f11d59954b9e70837afc427c66da710bde30881aad570d16c40`), `…manifest-01-phase3-pre-write-20260923-161020` (31 tables, `e564f250afe40af7eb9a6bc07596a3c795972f7ef3b653c37599e8bc18285b63`), `…readers-01-phase3-pre-write-20260922-165453` (32 tables, `62f3912813b6e9efa3a651ee4c4ebcd611adf89c989f240a58e83dcf6759b79a`). All three retire at the freshman freeze (session 10); the four older backups stay unopened (R88).
 - Codebook sha256 `89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82`, unchanged. Live spec `extraction_models.elicitation: false`, arm `local_deepseek_r1_32b`.
-- Decision log ends at **R209**.
+- R71 in force under R210 (F15).
+- Decision log ends at **R210**.
 
-**Embargo 07:00–10:35 UTC** for any live write (R86). **R19 and R114 remain in force** until the freshman smoke run (session 10). **R71's stated condition** ("until sessions 8 and 9 both land") **is met at this closeout**; lifting it is a ruling, not recorded here, so R71 is treated as in force until ruled.
+**Embargo 07:00–10:35 UTC** for any live write (R86). **R19 and R114 remain in force** until the freshman smoke run (session 10). **R71 in force under R210 (F15):** no cloud extraction on any review until F15 closes and the arms are spec-enabled on the tagged state.
 
 ## Decision log
 
@@ -1588,6 +1589,7 @@ Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in 
 | 2026-09-28 | R207 — **`identified` and `duplicate_of` retire from the `paper_events` event_type CHECK** in session 10's migration (R31: no state describes them, no writer). Abstract-stage eligibility events (`abstract_out`) remain junior (9e-SE-A §3, §7.4) | PI, on architect recommendation |
 | 2026-09-28 | R208 — **Session 10's migration set, amended:** + `run_kind 'import'` (the CHECK and `RUN_KINDS`); + R207; − the external actor value; − the reason-CHECK rewrite; + the reason vocabulary for `parse_failed` / `full_text_not_obtainable` (row C35); unchanged otherwise (C24, C25, C26, C27, D16, B8, C14, C22, the `run_events` decision, B15, C31) | PI, on architect recommendation |
 | 2026-09-28 | R209 — **The collected-id baseline is re-cut at the 9e closeout:** `docs/session-reports/write-path-01/collected_ids_46cd7df.txt` (the standard-gate selection, 2,782 ids — identical to the closeout tree's) supersedes `collected_ids_40ea017.txt`, which stays on disk unedited; per-commit diffs against the parent remain the per-commit instrument | PI, on architect recommendation |
+| 2026-09-28 | R210 — **R71 stands, re-based.** Its condition ("until sessions 8 and 9 both land") is met at `88889e6`, but the cloud path keeps its legacy writer and its own pickup until the cloud cut-over (F15), so a cloud extraction run would still write rows no reader consumes. R71 now reads: **no cloud extraction on any review until F15 closes and the arms are spec-enabled on the tagged state** (R25's clause on cloud comparators unchanged) | PI, on architect recommendation |
 
 *Addendum 2026-09-23 (INPUT-IDENTITY-01 Part 0), to the R86 row:* the CLAUDE.md half of R86 is applied in this commit; the I13 wording item is closed by R89. *(Placed after the table rather than directly under the R86 row: a non-table line inside the table would end it at R86 and un-table R87–R89.)*
 

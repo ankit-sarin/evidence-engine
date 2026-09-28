@@ -22,7 +22,7 @@ from engine.exporters.methods_section import generate_methods_section, export_me
 from engine.exporters.prisma import generate_prisma_flow, export_prisma_csv
 from engine.search.models import Citation
 from engine.core.codebook import load_codebook_beside
-from tests._event_store_fixture import mirror_legacy_into_events, seed_prisma_world
+from tests._event_store_fixture import add_values, open_extraction_run, seed_prisma_world
 
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
@@ -48,80 +48,53 @@ def spec():
     return load_review_spec(SPEC_PATH)
 
 
-@pytest.fixture()
-def populated_db(tmp_path, spec):
-    """Create a DB with papers at various pipeline stages and extraction data."""
-    db = ReviewDatabase("test_export", data_root=tmp_path)
+def _toolkit_world(tmp_path, spec, name, *, citations):
+    """A review on the event toolkit (9e-C-P2, R190): papers, a real extraction
+    run pinning the spec's extraction arm, and both PRISMA sides declared."""
+    db = ReviewDatabase(name, data_root=tmp_path)
     _real_codebook(db)
+    db.add_papers(citations)
+    open_extraction_run(db, spec)
+    return db
 
-    # 10 PubMed + 5 OpenAlex papers
-    pm_cits = [
-        Citation(title=f"PubMed Study {i}", source="pubmed", pmid=str(i),
-                 doi=f"10.1/{i}", authors=["Smith A", "Jones B"],
-                 journal="J Surg Robot", year=2023)
-        for i in range(1, 11)
-    ]
-    oa_cits = [
-        Citation(title=f"OpenAlex Study {i}", source="openalex", pmid=str(100 + i),
-                 doi=f"10.2/{i}", authors=["Lee C"], journal="Robot Rev", year=2024)
-        for i in range(1, 6)
-    ]
-    db.add_papers(pm_cits + oa_cits)
 
-    papers = db.get_papers_by_status("INGESTED")
+@pytest.fixture()
+def exporter_db(tmp_path, spec):
+    """exporter_db's world on the toolkit (9e-C-P2 B1, R190).
 
-    # Screen 8 in, 4 out, 3 flagged
-    for p in papers[:8]:
-        db.add_screening_decision(p["id"], 1, "include", "Relevant", "qwen3:8b")
-        db.add_screening_decision(p["id"], 2, "include", "Confirmed", "qwen3:8b")
-        db.update_status(p["id"], "ABSTRACT_SCREENED_IN")
-
-    for p in papers[8:12]:
-        db.add_screening_decision(p["id"], 1, "exclude", "Not surgical", "qwen3:8b")
-        db.add_screening_decision(p["id"], 2, "exclude", "Confirmed exclude", "qwen3:8b")
-        db.update_status(p["id"], "ABSTRACT_SCREENED_OUT")
-
-    for p in papers[12:15]:
-        db.add_screening_decision(p["id"], 1, "include", "Maybe relevant", "qwen3:8b")
-        db.add_screening_decision(p["id"], 2, "exclude", "Borderline", "qwen3:8b")
-        db.update_status(p["id"], "ABSTRACT_SCREEN_FLAGGED")
-
-    # Walk 5 screened-in papers to EXTRACTED/AI_AUDIT_COMPLETE
-    screened_in = db.get_papers_by_status("ABSTRACT_SCREENED_IN")
-    schema_hash = load_codebook_beside(db.db_path).semantic_hash
-
-    for j, p in enumerate(screened_in[:5]):
-        pid = p["id"]
-        db.update_status(pid, "PDF_ACQUIRED")
-        db.update_status(pid, "PARSED")
-        db.update_status(pid, "EXTRACTED")
-
-        ext_id = db.add_extraction(
-            pid, schema_hash,
-            {"study_design": "RCT", "sample_size": "20"},
-            "reasoning trace here", "deepseek-r1:32b",
-        )
-
-        # Add evidence spans for a few fields
-        db.add_evidence_span(ext_id, "study_design", "RCT", "An RCT was performed.", 0.95)
-        db.add_evidence_span(ext_id, "sample_size", "20", "Twenty trials.", 0.9)
-        db.add_evidence_span(ext_id, "robot_platform", "STAR", "The STAR robot.", 0.85)
-
-        # Audit 3 papers
-        if j < 3:
-            spans = db._conn.execute(
-                "SELECT id FROM evidence_spans WHERE extraction_id = ?", (ext_id,)
-            ).fetchall()
-            for s in spans:
-                db.update_audit(s["id"], "verified", "qwen3:32b", "Confirmed.")
-            db.update_status(pid, "AI_AUDIT_COMPLETE")
-
-    # B5 (READERS-01 Phase 2a): the evidence-table exporter reads through
-    # `effective_value` now, so the fixture's declarations are mirrored into the
-    # event store. What the fixture SAYS is unchanged; where the exporter LOOKS
-    # is what moved.
-    mirror_legacy_into_events(db)
-
+    15 papers (10 PubMed, 5 OpenAlex); 4 screened out, 3 flagged, 3 screened in
+    and not yet acquired; 5 eligible. The 3 papers the old fixture audited are
+    `audited_ai` with located claims; the 2 it only extracted are `extracted`
+    with claims and no `citation_located`. Claims are on the spec's extraction
+    arm, which `open_extraction_run` pins.
+    """
+    db = _toolkit_world(
+        tmp_path, spec, "test_export",
+        citations=[Citation(title=f"PubMed Study {i}", source="pubmed", pmid=str(i),
+                            doi=f"10.1/{i}", authors=["Smith A", "Jones B"],
+                            journal="J Surg Robot", year=2023) for i in range(1, 11)]
+        + [Citation(title=f"OpenAlex Study {i}", source="openalex", pmid=str(100 + i),
+                    doi=f"10.2/{i}", authors=["Lee C"], journal="Robot Rev", year=2024)
+           for i in range(1, 6)])
+    world = seed_prisma_world(
+        db,
+        screening=[("ABSTRACT_SCREENED_OUT", None)] * 4
+        + [("ABSTRACT_SCREEN_FLAGGED", None)] * 3
+        + [("ABSTRACT_SCREENED_IN", None)] * 3,
+        eligible=[("audited_ai", None)] * 3 + [("extracted", None)] * 2,
+    )
+    # Screening decisions for the Screening Log sheet, through the screening
+    # writer; retires at the screeners' cut-over (R163 precedent).
+    for pid in world["screening"]:
+        db.add_screening_decision(pid, 1, "include", "Relevant", "qwen3:8b")
+        db.add_screening_decision(pid, 2, "include", "Confirmed", "qwen3:8b")
+    arm = spec.extraction_models.arm
+    audited, extracted = world["eligible"][:3], world["eligible"][3:]
+    for pids, located in ((audited, True), (extracted, False)):
+        for field, value in (("study_design", "RCT"), ("sample_size", "20"),
+                             ("robot_platform", "STAR")):
+            add_values(db.db_path, arm, field, [value] * len(pids),
+                       start_paper=pids[0], located=located)
     yield db
     db.close()
 
@@ -181,9 +154,9 @@ def test_prisma_csv(prisma_db, tmp_path):
 # ── Evidence CSV ─────────────────────────────────────────────────────
 
 
-def test_evidence_csv_columns(populated_db, spec, tmp_path):
+def test_evidence_csv_columns(exporter_db, spec, tmp_path):
     out = str(tmp_path / "evidence.csv")
-    export_evidence_csv(populated_db, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
+    export_evidence_csv(exporter_db, spec, out, arm=spec.extraction_models.arm)
     assert Path(out).exists()
 
     with open(out) as f:
@@ -220,15 +193,15 @@ def test_evidence_csv_columns(populated_db, spec, tmp_path):
     # axis — so it is asserted as a DERIVATION against the reader rather than as
     # a literal that decays the first time the fixture gains a paper.
     from engine.core.effective import eligible_paper_ids
-    assert len(rows) - 1 == len(eligible_paper_ids(populated_db._conn))
+    assert len(rows) - 1 == len(eligible_paper_ids(exporter_db._conn))
 
 
 # ── Evidence Excel ───────────────────────────────────────────────────
 
 
-def test_evidence_excel_sheets(populated_db, spec, tmp_path):
+def test_evidence_excel_sheets(exporter_db, spec, tmp_path):
     out = str(tmp_path / "evidence.xlsx")
-    export_evidence_excel(populated_db, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
+    export_evidence_excel(exporter_db, spec, out, arm=spec.extraction_models.arm)
     assert Path(out).exists()
 
     wb = openpyxl.load_workbook(out)
@@ -251,8 +224,8 @@ def test_evidence_excel_sheets(populated_db, spec, tmp_path):
     ws3 = wb["Field States"]
     from engine.core.codebook import load_codebook_beside
     from engine.core.effective import eligible_paper_ids
-    n_papers = len(eligible_paper_ids(populated_db._conn))
-    n_fields = len(load_codebook_beside(populated_db.db_path).field_names)
+    n_papers = len(eligible_paper_ids(exporter_db._conn))
+    n_fields = len(load_codebook_beside(exporter_db.db_path).field_names)
     assert ws3.max_row == 1 + n_papers * n_fields     # a derivation, not a literal
     wb.close()
 
@@ -260,9 +233,9 @@ def test_evidence_excel_sheets(populated_db, spec, tmp_path):
 # ── DOCX ─────────────────────────────────────────────────────────────
 
 
-def test_docx_created(populated_db, spec, tmp_path):
+def test_docx_created(exporter_db, spec, tmp_path):
     out = str(tmp_path / "evidence.docx")
-    export_evidence_docx(populated_db, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
+    export_evidence_docx(exporter_db, spec, out, arm=spec.extraction_models.arm)
     assert Path(out).exists()
 
     # Verify it's a valid docx by loading it
@@ -278,8 +251,8 @@ def test_docx_created(populated_db, spec, tmp_path):
 # ── Methods Section ──────────────────────────────────────────────────
 
 
-def test_methods_section_content(populated_db, spec):
-    methods = generate_methods_section(populated_db, spec, run_id=None)
+def test_methods_section_content(exporter_db, spec):
+    methods = generate_methods_section(exporter_db, spec, run_id=None)
 
     # Key pipeline details present
     assert "PubMed" in methods
@@ -293,9 +266,9 @@ def test_methods_section_content(populated_db, spec):
     assert "15" in methods  # total records
 
 
-def test_methods_md_export(populated_db, spec, tmp_path):
+def test_methods_md_export(exporter_db, spec, tmp_path):
     out = str(tmp_path / "methods.md")
-    export_methods_md(populated_db, spec, out, run_id=None)  # 9d-C2-R1 (1)
+    export_methods_md(exporter_db, spec, out, run_id=None)  # 9d-C2-R1 (1)
     assert Path(out).exists()
 
     content = Path(out).read_text()
@@ -306,13 +279,11 @@ def test_methods_md_export(populated_db, spec, tmp_path):
 # ── export_all ───────────────────────────────────────────────────────
 
 
-def test_export_all(populated_db, spec, tmp_path):
+def test_export_all(exporter_db, spec, tmp_path):
     out_dir = str(tmp_path / "all_exports")
-    # 9d-C3: export_all exports the spec's extraction arm; this fixture's claims
-    # are mirrored into `local`, so the spec copy names that arm.
-    local_spec = spec.model_copy(update={"extraction_models": spec.extraction_models.model_copy(
-        update={"arm": "local"})})
-    paths = export_all(populated_db, local_spec, "test_export", output_dir=out_dir,
+    # 9d-C3: export_all exports the spec's extraction arm, which holds the
+    # fixture's claims (9e-C-P2).
+    paths = export_all(exporter_db, spec, "test_export", output_dir=out_dir,
                        run_id=None)  # 9d-C2-R1 (1): run_id is required; None = no run
 
     # The three trace keys went with `trace_exporter.py` (R46): it reported on
@@ -334,7 +305,7 @@ def test_export_all(populated_db, spec, tmp_path):
 # ── H6: Atomic write — no partial files on error ────────────────────
 
 
-def test_atomic_csv_no_partial_on_error(populated_db, spec, tmp_path):
+def test_atomic_csv_no_partial_on_error(exporter_db, spec, tmp_path):
     """If CSV export fails mid-write, no final file or temp file remains."""
     out = str(tmp_path / "evidence.csv")
 
@@ -344,13 +315,13 @@ def test_atomic_csv_no_partial_on_error(populated_db, spec, tmp_path):
         instance.writerows.side_effect = IOError("disk full")
 
         with pytest.raises(IOError, match="disk full"):
-            export_evidence_csv(populated_db, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
+            export_evidence_csv(exporter_db, spec, out, arm=spec.extraction_models.arm)
 
     assert not Path(out).exists(), "Final file should not exist after error"
     assert not Path(out + ".tmp").exists(), "Temp file should be cleaned up"
 
 
-def test_atomic_docx_no_partial_on_error(populated_db, spec, tmp_path):
+def test_atomic_docx_no_partial_on_error(exporter_db, spec, tmp_path):
     """If DOCX export fails during save, no final file or temp file remains."""
     out = str(tmp_path / "evidence.docx")
 
@@ -374,7 +345,7 @@ def test_atomic_docx_no_partial_on_error(populated_db, spec, tmp_path):
         mock_doc.save.side_effect = IOError("disk full")
 
         with pytest.raises(IOError, match="disk full"):
-            export_evidence_docx(populated_db, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
+            export_evidence_docx(exporter_db, spec, out, arm=spec.extraction_models.arm)
 
     assert not Path(out).exists(), "Final file should not exist after error"
     assert not Path(out + ".tmp").exists(), "Temp file should be cleaned up"
@@ -395,13 +366,13 @@ def test_atomic_prisma_csv_no_partial_on_error(prisma_db, tmp_path):
     assert not Path(out + ".tmp").exists()
 
 
-def test_atomic_methods_md_no_partial_on_error(populated_db, spec, tmp_path):
+def test_atomic_methods_md_no_partial_on_error(exporter_db, spec, tmp_path):
     """If methods MD export fails during write, no file remains."""
     out = str(tmp_path / "methods.md")
 
     with patch("builtins.open", side_effect=IOError("disk full")):
         with pytest.raises(IOError, match="disk full"):
-            export_methods_md(populated_db, spec, out, run_id=None)  # 9d-C2-R1 (1)
+            export_methods_md(exporter_db, spec, out, run_id=None)  # 9d-C2-R1 (1)
 
     assert not Path(out).exists()
 
@@ -410,60 +381,26 @@ def test_atomic_methods_md_no_partial_on_error(populated_db, spec, tmp_path):
 
 
 @pytest.fixture()
-def db_with_empty_extractions(tmp_path, spec):
-    """DB with one paper that has extractions and one that doesn't."""
-    db = ReviewDatabase("test_empty", data_root=tmp_path)
-    _real_codebook(db)
-
-    # Two papers
-    cits = [
-        Citation(title=f"Study {i}", source="pubmed", pmid=str(i),
-                 doi=f"10.1/{i}", authors=["Auth A"], journal="J Test", year=2023)
-        for i in range(1, 3)
-    ]
-    db.add_papers(cits)
-    papers = db.get_papers_by_status("INGESTED")
-    schema_hash = load_codebook_beside(db.db_path).semantic_hash
-
-    for p in papers:
-        db.add_screening_decision(p["id"], 1, "include", "Relevant", "qwen3:8b")
-        db.add_screening_decision(p["id"], 2, "include", "Confirmed", "qwen3:8b")
-        db.update_status(p["id"], "ABSTRACT_SCREENED_IN")
-        db.update_status(p["id"], "PDF_ACQUIRED")
-        db.update_status(p["id"], "PARSED")
-        db.update_status(p["id"], "EXTRACTED")
-
-    # Paper 1: has extraction data
-    p1 = papers[0]["id"]
-    ext_id = db.add_extraction(
-        p1, schema_hash,
-        {"study_design": "RCT"}, "trace", "deepseek-r1:32b",
-    )
-    db.add_evidence_span(ext_id, "study_design", "RCT", "An RCT.", 0.95)
-    spans = db._conn.execute(
-        "SELECT id FROM evidence_spans WHERE extraction_id = ?", (ext_id,)
-    ).fetchall()
-    for s in spans:
-        db.update_audit(s["id"], "verified", "gemma3:27b", "OK")
-    db.update_status(p1, "AI_AUDIT_COMPLETE")
-
-    # Paper 2: has extraction row but NO evidence spans
-    p2 = papers[1]["id"]
-    db.add_extraction(
-        p2, schema_hash, {}, "empty trace", "deepseek-r1:32b",
-    )
-    db.update_status(p2, "AI_AUDIT_COMPLETE")
-
-    mirror_legacy_into_events(db)   # B5, as above
-
+def empty_extraction_db(tmp_path, spec):
+    """empty_extraction_db' world on the toolkit (9e-C-P2 B2, R190): two
+    eligible papers; paper 1 `audited_ai` with a located study_design claim,
+    paper 2 `extracted` with no field events."""
+    db = _toolkit_world(
+        tmp_path, spec, "test_empty",
+        citations=[Citation(title=f"Study {i}", source="pubmed", pmid=str(i),
+                            doi=f"10.1/{i}", authors=["Auth A"], journal="J Test",
+                            year=2023) for i in range(1, 3)])
+    world = seed_prisma_world(db, eligible=[("audited_ai", None), ("extracted", None)])
+    add_values(db.db_path, spec.extraction_models.arm, "study_design", ["RCT"],
+               start_paper=world["eligible"][0])
     yield db
     db.close()
 
 
-def test_empty_extraction_has_marker(db_with_empty_extractions, spec, tmp_path):
+def test_empty_extraction_has_marker(empty_extraction_db, spec, tmp_path):
     """Papers with no extraction spans get [NO EXTRACTION DATA] marker."""
     out = str(tmp_path / "evidence.csv")
-    export_evidence_csv(db_with_empty_extractions, spec, out, arm="local")  # 9d-C3: the fixture's mirrored arm
+    export_evidence_csv(empty_extraction_db, spec, out, arm=spec.extraction_models.arm)
 
     with open(out) as f:
         reader = csv.DictReader(f)
@@ -481,11 +418,11 @@ def test_empty_extraction_has_marker(db_with_empty_extractions, spec, tmp_path):
     assert non_markers[0]["study_design"] == "RCT"
 
 
-def test_exclude_empty_omits_empty_papers(db_with_empty_extractions, spec, tmp_path):
+def test_exclude_empty_omits_empty_papers(empty_extraction_db, spec, tmp_path):
     """With exclude_empty=True, papers with no extraction data are omitted."""
     out = str(tmp_path / "evidence.csv")
-    export_evidence_csv(db_with_empty_extractions, spec, out, exclude_empty=True,
-                        arm="local")  # 9d-C3: the fixture's mirrored arm
+    export_evidence_csv(empty_extraction_db, spec, out, exclude_empty=True,
+                        arm=spec.extraction_models.arm)
 
     with open(out) as f:
         reader = csv.DictReader(f)
@@ -495,11 +432,11 @@ def test_exclude_empty_omits_empty_papers(db_with_empty_extractions, spec, tmp_p
     assert rows[0]["study_design"] == "RCT"
 
 
-def test_exclude_empty_excel(db_with_empty_extractions, spec, tmp_path):
+def test_exclude_empty_excel(empty_extraction_db, spec, tmp_path):
     """Excel export also supports exclude_empty."""
     out = str(tmp_path / "evidence.xlsx")
-    export_evidence_excel(db_with_empty_extractions, spec, out, exclude_empty=True,
-                          arm="local")  # 9d-C3: the fixture's mirrored arm
+    export_evidence_excel(empty_extraction_db, spec, out, exclude_empty=True,
+                          arm=spec.extraction_models.arm)
 
     wb = openpyxl.load_workbook(out)
     ws = wb["Evidence Table"]
@@ -511,9 +448,9 @@ def test_exclude_empty_excel(db_with_empty_extractions, spec, tmp_path):
 # ── H15: Dynamic model names in methods section ─────────────────────
 
 
-def test_methods_uses_spec_screening_model(populated_db, spec):
+def test_methods_uses_spec_screening_model(exporter_db, spec):
     """Methods section uses screening model from spec, not hardcoded."""
-    methods = generate_methods_section(populated_db, spec, run_id=None)  # 9d-C2-R1 (1)
+    methods = generate_methods_section(exporter_db, spec, run_id=None)  # 9d-C2-R1 (1)
     assert spec.screening_models.primary in methods
 
 

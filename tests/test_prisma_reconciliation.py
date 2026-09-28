@@ -1,14 +1,25 @@
-"""Tests for PRISMA count reconciliation and hardened flow logic."""
+"""Tests for PRISMA count reconciliation on the freshman count model (R183–R196).
+
+The screening side is declared on `papers.status` and the extraction side on the
+event store, both through `seed_prisma_world` (tests/_event_store_fixture.py).
+"""
+
+import re
+from pathlib import Path
 
 import pytest
 
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
-from engine.exporters.prisma import generate_prisma_flow, validate_prisma_counts, export_prisma_csv
+from engine.exporters.prisma import (
+    SCREENING_TOKENS, export_prisma_csv, generate_prisma_flow, validate_prisma_counts,
+)
 from engine.search.models import Citation
+from tests._event_store_fixture import add_values, seed_eligibility, seed_prisma_world
 
 
 SPEC_PATH = "review_specs/surgical_autonomy.yaml"
+PRISMA_SRC = Path(__file__).resolve().parent.parent / "engine" / "exporters" / "prisma.py"
 
 
 @pytest.fixture
@@ -35,91 +46,79 @@ def _add_papers(db, n, source="pubmed"):
 class TestReconciliation:
 
     def test_reconciliation_passes_clean_db(self, db, spec):
-        """PRISMA reconciliation passes on a fully categorized DB."""
-        pids = _add_papers(db, 10)
-
-        # 4 screened out
-        for pid in pids[:4]:
-            db.update_status(pid, "ABSTRACT_SCREENED_OUT")
-
-        # 3 to AI_AUDIT_COMPLETE
-        for pid in pids[4:7]:
-            db.update_status(pid, "ABSTRACT_SCREENED_IN")
-            db.update_status(pid, "PDF_ACQUIRED")
-            db.update_status(pid, "PARSED")
-            db.update_status(pid, "EXTRACTED")
-            db.update_status(pid, "AI_AUDIT_COMPLETE")
-
-        # 2 PDF_EXCLUDED
-        for pid in pids[7:9]:
-            db.update_status(pid, "ABSTRACT_SCREENED_IN")
-            db.update_status(pid, "PDF_ACQUIRED")
-            db._conn.execute(
-                "UPDATE papers SET pdf_exclusion_reason = 'NON_ENGLISH' WHERE id = ?",
-                (pid,),
-            )
-            db.update_status(pid, "PDF_EXCLUDED")
-
-        # 1 FT_SCREENED_OUT
-        db.update_status(pids[9], "ABSTRACT_SCREENED_IN")
-        db.update_status(pids[9], "PDF_ACQUIRED")
-        db.update_status(pids[9], "PARSED")
-        db.update_status(pids[9], "FT_SCREENED_OUT")
+        """Both identities hold on a fully categorized DB."""
+        _add_papers(db, 10)
+        seed_prisma_world(
+            db,
+            screening=[("ABSTRACT_SCREENED_OUT", None)] * 4
+            + [("PDF_EXCLUDED", "NON_ENGLISH")] * 2
+            + [("FT_SCREENED_OUT", None)],
+            eligible=[("audited_ai", None)] * 3,
+        )
 
         result = validate_prisma_counts(db)
         assert result["valid"] is True
         assert result["total_db"] == 10
         assert result["discrepancy"] == 0
 
-    def test_reconciliation_catches_mismatch(self, db):
-        """Reconciliation detects when PRISMA totals don't match DB."""
-        _add_papers(db, 5)
-        # Directly corrupt a status to something not in any bucket
-        db._conn.execute(
-            "UPDATE papers SET status = 'BOGUS_STATUS' WHERE id = (SELECT MIN(id) FROM papers)"
-        )
-        db._conn.commit()
+    def test_reconciliation_catches_mismatch(self, tmp_path):
+        """B5 rewrite (R193): the seam is compared as SETS, and each paper on the
+        wrong side is named with its status token.
 
-        # The bogus status will be counted in in_progress (it's not terminal),
-        # so reconciliation should still pass (total = terminal + non-terminal).
-        # But let's test a real mismatch: delete a paper from the DB after generating flow
-        # Actually the cleanest test: insert a paper directly bypassing add_papers
-        db._conn.execute(
-            "INSERT INTO papers (title, source, status, created_at, updated_at) "
-            "VALUES ('Ghost', 'test', 'ABSTRACT_SCREENED_OUT', '2026-01-01', '2026-01-01')"
-        )
-        db._conn.commit()
+        (i) eligible on events, INGESTED on status (9d route C);
+        (ii) a paper at REJECTED — no writer, no box.
 
-        # This should still reconcile (the new paper is in ABSTRACT_SCREENED_OUT)
-        result = validate_prisma_counts(db)
-        assert result["valid"] is True
+        Mutation note: with the two seam `details.append` blocks in
+        `validate_prisma_counts` removed, (i) passes reconciliation (the status
+        partition alone still sums) and this test fails.
+        """
+        # (i)
+        db1 = ReviewDatabase("mismatch_seam", data_root=tmp_path)
+        _add_papers(db1, 3)
+        world = seed_prisma_world(db1, screening=[("ABSTRACT_SCREENED_OUT", None)],
+                                  eligible=[("audited_ai", None)])
+        ghost = max(world["screening"] + world["eligible"]) + 1
+        assert db1._conn.execute("SELECT status FROM papers WHERE id = ?",
+                                 (ghost,)).fetchone()[0] == "INGESTED"
+        seed_eligibility(db1._conn, ghost)
+        with pytest.raises(ValueError, match="PRISMA reconciliation failed") as exc:
+            validate_prisma_counts(db1)
+        assert f"{ghost} (INGESTED)" in str(exc.value)
+        assert "eligible on the eligibility axis but at a screening token" in str(exc.value)
+        db1.close()
+
+        # (ii)
+        db2 = ReviewDatabase("mismatch_rejected", data_root=tmp_path)
+        _add_papers(db2, 3)
+        world = seed_prisma_world(db2, screening=[("ABSTRACT_SCREENED_OUT", None)],
+                                  eligible=[("audited_ai", None)])
+        rejected = max(world["screening"] + world["eligible"]) + 1
+        db2._conn.execute("UPDATE papers SET status = 'REJECTED' WHERE id = ?", (rejected,))
+        db2._conn.commit()
+        with pytest.raises(ValueError, match="PRISMA reconciliation failed") as exc:
+            validate_prisma_counts(db2)
+        assert f"{rejected} (REJECTED)" in str(exc.value)
+        assert "not eligible on the eligibility axis" in str(exc.value)
+        db2.close()
 
     def test_in_progress_papers_counted(self, db):
-        """Papers mid-pipeline appear in in_progress, not lost."""
-        pids = _add_papers(db, 6)
-
-        # 2 at ABSTRACT_SCREENED_IN (mid-pipeline)
-        db.update_status(pids[0], "ABSTRACT_SCREENED_IN")
-        db.update_status(pids[1], "ABSTRACT_SCREENED_IN")
-
-        # 1 at PARSED
-        db.update_status(pids[2], "ABSTRACT_SCREENED_IN")
-        db.update_status(pids[2], "PDF_ACQUIRED")
-        db.update_status(pids[2], "PARSED")
-
-        # 1 at FT_ELIGIBLE
-        db.update_status(pids[3], "ABSTRACT_SCREENED_IN")
-        db.update_status(pids[3], "PDF_ACQUIRED")
-        db.update_status(pids[3], "PARSED")
-        db.update_status(pids[3], "FT_ELIGIBLE")
-
-        # 2 screened out (terminal)
-        db.update_status(pids[4], "ABSTRACT_SCREENED_OUT")
-        db.update_status(pids[5], "ABSTRACT_SCREENED_OUT")
+        """Papers mid-pipeline land in one of the two in-progress boxes, not lost."""
+        _add_papers(db, 10)
+        seed_prisma_world(
+            db,
+            screening=[("ABSTRACT_SCREENED_IN", None)] * 2
+            + [("PARSED", None), ("FT_FLAGGED", None)]
+            + [("ABSTRACT_SCREENED_OUT", None)] * 2,
+            eligible=[(None, None), ("parsed", None), ("extracted", None),
+                      ("audited_ai", None)],
+        )
 
         flow = generate_prisma_flow(db)
-        assert flow["in_progress"] == 4  # INGESTED(0) + SCREENED_IN(2) + PARSED(1) + FT_ELIGIBLE(1)
+        assert flow["screening_in_progress"] == 4  # SCREENED_IN(2) + PARSED(1) + FT_FLAGGED(1)
+        assert flow["extraction_in_progress"] == 3  # none, parsed, extracted
+        assert flow["studies_included"] == 1
         assert flow["records_excluded"] == 2
+        assert flow["n_eligible"] == 4
 
         result = validate_prisma_counts(db)
         assert result["valid"] is True
@@ -152,64 +151,38 @@ class TestPDFExcludedSubcounts:
 class TestNoDoubleCount:
 
     def test_no_paper_in_multiple_terminal_boxes(self, db):
-        """Each paper appears in at most one terminal PRISMA box."""
-        pids = _add_papers(db, 4)
-
-        db.update_status(pids[0], "ABSTRACT_SCREENED_OUT")
-
-        db.update_status(pids[1], "ABSTRACT_SCREENED_IN")
-        db.update_status(pids[1], "PDF_ACQUIRED")
-        db._conn.execute(
-            "UPDATE papers SET pdf_exclusion_reason = 'NON_ENGLISH' WHERE id = ?",
-            (pids[1],),
+        """Each paper appears in exactly one box; included comes from events."""
+        _add_papers(db, 4)
+        seed_prisma_world(
+            db,
+            screening=[("ABSTRACT_SCREENED_OUT", None), ("PDF_EXCLUDED", "NON_ENGLISH"),
+                       ("FT_SCREENED_OUT", None)],
+            eligible=[("audited_ai", None)],
         )
-        db.update_status(pids[1], "PDF_EXCLUDED")
-
-        db.update_status(pids[2], "ABSTRACT_SCREENED_IN")
-        db.update_status(pids[2], "PDF_ACQUIRED")
-        db.update_status(pids[2], "PARSED")
-        db.update_status(pids[2], "FT_SCREENED_OUT")
-
-        db.update_status(pids[3], "ABSTRACT_SCREENED_IN")
-        db.update_status(pids[3], "PDF_ACQUIRED")
-        db.update_status(pids[3], "PARSED")
-        db.update_status(pids[3], "EXTRACTED")
-        db.update_status(pids[3], "AI_AUDIT_COMPLETE")
 
         flow = generate_prisma_flow(db)
-
-        # Each terminal count is exactly 1
         assert flow["records_excluded"] == 1
         assert flow["pdf_excluded"] == 1
         assert flow["ft_screened_out"] == 1
         assert flow["studies_included"] == 1
-        assert flow["in_progress"] == 0
+        assert flow["screening_in_progress"] == 0
+        assert flow["extraction_in_progress"] == 0
 
         result = validate_prisma_counts(db)
         assert result["valid"] is True
         assert result["total_db"] == 4
 
     def test_ai_audit_complete_not_double_counted_with_ft(self, db):
-        """Papers at AI_AUDIT_COMPLETE are counted once in studies_included,
-        not also in full_text_assessed as a separate in-progress paper."""
-        pids = _add_papers(db, 2)
-
-        # One paper goes PARSED → FT_ELIGIBLE (in progress)
-        db.update_status(pids[0], "ABSTRACT_SCREENED_IN")
-        db.update_status(pids[0], "PDF_ACQUIRED")
-        db.update_status(pids[0], "PARSED")
-        db.update_status(pids[0], "FT_ELIGIBLE")
-
-        # Other paper at AI_AUDIT_COMPLETE (terminal included)
-        db.update_status(pids[1], "ABSTRACT_SCREENED_IN")
-        db.update_status(pids[1], "PDF_ACQUIRED")
-        db.update_status(pids[1], "PARSED")
-        db.update_status(pids[1], "EXTRACTED")
-        db.update_status(pids[1], "AI_AUDIT_COMPLETE")
+        """An audited paper is counted once in studies_included; an eligible paper
+        with no processing record is extraction-in-progress, and both are counted
+        once in full_text_assessed."""
+        _add_papers(db, 2)
+        seed_prisma_world(db, eligible=[(None, None), ("audited_ai", None)])
 
         flow = generate_prisma_flow(db)
         assert flow["studies_included"] == 1
-        assert flow["in_progress"] == 1  # only FT_ELIGIBLE
+        assert flow["extraction_in_progress"] == 1
+        assert flow["full_text_assessed"] == 2
 
         result = validate_prisma_counts(db)
         assert result["valid"] is True
@@ -218,59 +191,90 @@ class TestNoDoubleCount:
 
 class TestExtractFailed:
 
-    def _advance_to_parsed(self, db, pid):
-        db.update_status(pid, "ABSTRACT_SCREENED_IN")
-        db.update_status(pid, "PDF_ACQUIRED")
-        db.update_status(pid, "PARSED")
-
     def test_extract_failed_appears_in_flow_and_csv(self, db, tmp_path):
-        """PRISMA output with 2 EXTRACT_FAILED papers shows the line with correct count."""
-        pids = _add_papers(db, 5)
-
-        # 2 EXTRACT_FAILED
-        for pid in pids[:2]:
-            self._advance_to_parsed(db, pid)
-            db.update_status(pid, "EXTRACT_FAILED")
-
-        # 1 AI_AUDIT_COMPLETE (included)
-        self._advance_to_parsed(db, pids[2])
-        db.update_status(pids[2], "EXTRACTED")
-        db.update_status(pids[2], "AI_AUDIT_COMPLETE")
-
-        # 2 ABSTRACT_SCREENED_OUT
-        db.update_status(pids[3], "ABSTRACT_SCREENED_OUT")
-        db.update_status(pids[4], "ABSTRACT_SCREENED_OUT")
+        """Failed extractions are counted per processing token and rendered one
+        CSV line per reason code."""
+        _add_papers(db, 6)
+        seed_prisma_world(
+            db,
+            screening=[("ABSTRACT_SCREENED_OUT", None)] * 2,
+            eligible=[("extraction_failed", "model_call_failed")] * 2
+            + [("input_exceeds_context", "input_overflow_estimated"),
+               ("audited_ai", None)],
+        )
 
         flow = generate_prisma_flow(db)
-        assert flow["extract_failed"] == 2
-        assert flow["studies_included"] == 1  # only successfully extracted
+        assert flow["extraction_failed"] == 2
+        assert flow["failure_reasons"]["extraction_failed"] == {"model_call_failed": 2}
+        assert flow["input_exceeds_context"] == 1
+        assert flow["studies_included"] == 1  # only the audited paper
 
-        # Reconciliation still passes
         result = validate_prisma_counts(db)
         assert result["valid"] is True
 
-        # CSV contains the line
         csv_path = str(tmp_path / "prisma.csv")
         export_prisma_csv(db, csv_path)
         content = open(csv_path).read()
-        assert "Extraction failed" in content
-        assert "Model timeout/error" in content
+        assert "Extraction failed,2,model_call_failed" in content
+        assert "Input exceeds context,1,input_overflow_estimated" in content
 
     def test_extract_failed_zero_omitted_from_csv(self, db, tmp_path):
-        """PRISMA output with 0 EXTRACT_FAILED omits the line entirely."""
-        pids = _add_papers(db, 3)
-
-        # 1 AI_AUDIT_COMPLETE, 2 ABSTRACT_SCREENED_OUT — no EXTRACT_FAILED
-        self._advance_to_parsed(db, pids[0])
-        db.update_status(pids[0], "EXTRACTED")
-        db.update_status(pids[0], "AI_AUDIT_COMPLETE")
-        db.update_status(pids[1], "ABSTRACT_SCREENED_OUT")
-        db.update_status(pids[2], "ABSTRACT_SCREENED_OUT")
+        """With no failure events, no failure line is rendered."""
+        _add_papers(db, 3)
+        seed_prisma_world(db, screening=[("ABSTRACT_SCREENED_OUT", None)] * 2,
+                          eligible=[("audited_ai", None)])
 
         flow = generate_prisma_flow(db)
-        assert flow["extract_failed"] == 0
+        assert flow["extraction_failed"] == 0
 
         csv_path = str(tmp_path / "prisma.csv")
         export_prisma_csv(db, csv_path)
         content = open(csv_path).read()
         assert "Extraction failed" not in content
+
+
+class TestCountModel:
+
+    def test_prisma_names_only_screening_tokens(self):
+        """R184(e) as amended: prisma.py names no extraction-stage status token,
+        takes no complement over status counts, and does not reach the frozen
+        corpus module."""
+        text = PRISMA_SRC.read_text()
+        for banned in ("EXTRACTED", "EXTRACT_FAILED", "AI_AUDIT_COMPLETE",
+                       "HUMAN_AUDIT_COMPLETE", "REJECTED", "status_counts.items()",
+                       "engine.core.corpus"):
+            assert banned not in text, banned
+        assert len(SCREENING_TOKENS) == 9
+        named = set(re.findall(r'"([A-Z][A-Z_]+)"', text))
+        assert named - {"INACCESSIBLE"} <= SCREENING_TOKENS
+
+    def test_bare_add_values_paper_passes_identity_1(self, tmp_path):
+        """R191: a bare `add_values` paper is FT_ELIGIBLE on status (the toolkit
+        DDL default) and eligible on events, so the reconciler passes with no
+        further declaration.
+
+        `ReviewDatabase` cannot open a toolkit-built file (9d route B), so the
+        three screening-side reads the flow makes are given empty shapes here by
+        raw SQL; they retire at the screeners' cut-over (R163 precedent).
+        """
+        import sqlite3
+        from types import SimpleNamespace
+
+        path = tmp_path / "bare.db"
+        add_values(path, "local", "study_design", ["RCT", "Cohort"], start_paper=1)
+        conn = sqlite3.connect(str(path))
+        conn.row_factory = sqlite3.Row
+        conn.executescript(
+            "ALTER TABLE papers ADD COLUMN pdf_exclusion_reason TEXT;"
+            "CREATE TABLE abstract_screening_decisions "
+            "(paper_id INTEGER, decision TEXT, rationale TEXT);"
+            "CREATE TABLE ft_screening_adjudication "
+            "(paper_id INTEGER, adjudication_decision TEXT);")
+        try:
+            statuses = {r[0] for r in conn.execute("SELECT status FROM papers")}
+            assert statuses == {"FT_ELIGIBLE"}
+            result = validate_prisma_counts(SimpleNamespace(_conn=conn))
+            assert result["valid"] is True
+            assert result["total_db"] == 2
+        finally:
+            conn.close()

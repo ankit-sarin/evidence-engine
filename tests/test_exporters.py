@@ -22,7 +22,7 @@ from engine.exporters.methods_section import generate_methods_section, export_me
 from engine.exporters.prisma import generate_prisma_flow, export_prisma_csv
 from engine.search.models import Citation
 from engine.core.codebook import load_codebook_beside
-from tests._event_store_fixture import mirror_legacy_into_events
+from tests._event_store_fixture import mirror_legacy_into_events, seed_prisma_world
 
 SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
 
@@ -129,19 +129,41 @@ def populated_db(tmp_path, spec):
 # ── PRISMA Flow ──────────────────────────────────────────────────────
 
 
-def test_prisma_flow_counts(populated_db):
-    flow = generate_prisma_flow(populated_db)
+@pytest.fixture()
+def prisma_db(tmp_path):
+    """9e-C-P1 (R190, R193): both PRISMA sides declared — screening tokens on
+    `papers.status`, the corpus on the event store. 10 PubMed + 5 OpenAlex."""
+    db = ReviewDatabase("test_prisma_export", data_root=tmp_path)
+    db.add_papers(
+        [Citation(title=f"PubMed Study {i}", source="pubmed", pmid=str(i))
+         for i in range(1, 11)]
+        + [Citation(title=f"OpenAlex Study {i}", source="openalex", pmid=str(100 + i))
+           for i in range(1, 6)])
+    seed_prisma_world(
+        db,
+        screening=[("ABSTRACT_SCREENED_OUT", None)] * 4
+        + [("ABSTRACT_SCREEN_FLAGGED", None)] * 3
+        + [("ABSTRACT_SCREENED_IN", None)] * 3,
+        eligible=[("audited_ai", None)] * 3 + [("extracted", None)] * 2,
+    )
+    yield db
+    db.close()
+
+
+def test_prisma_flow_counts(prisma_db):
+    flow = generate_prisma_flow(prisma_db)
     assert flow["records_identified"] == 15
     assert flow["records_by_source"]["pubmed"] == 10
     assert flow["records_by_source"]["openalex"] == 5
     assert flow["records_excluded"] == 4
     assert flow["screen_flagged"] == 3
-    assert flow["studies_included"] == 3  # AI_AUDIT_COMPLETE
+    assert flow["studies_included"] == 3  # eligible and audited_ai on events
+    assert flow["extraction_in_progress"] == 2
 
 
-def test_prisma_csv(populated_db, tmp_path):
+def test_prisma_csv(prisma_db, tmp_path):
     out = str(tmp_path / "prisma.csv")
-    export_prisma_csv(populated_db, out)
+    export_prisma_csv(prisma_db, out)
     assert Path(out).exists()
 
     with open(out) as f:
@@ -150,6 +172,10 @@ def test_prisma_csv(populated_db, tmp_path):
     # Header + data rows
     assert len(rows) > 5
     assert rows[0] == ["Stage", "Count", "Detail"]
+    labels = {r[0]: r[1] for r in rows if r[0]}
+    assert labels["Screening in progress"] == "6"  # 3 flagged + 3 screened in
+    assert labels["Extraction in progress"] == "2"
+    assert labels["Studies included"] == "3"
 
 
 # ── Evidence CSV ─────────────────────────────────────────────────────
@@ -354,7 +380,7 @@ def test_atomic_docx_no_partial_on_error(populated_db, spec, tmp_path):
     assert not Path(out + ".tmp").exists(), "Temp file should be cleaned up"
 
 
-def test_atomic_prisma_csv_no_partial_on_error(populated_db, tmp_path):
+def test_atomic_prisma_csv_no_partial_on_error(prisma_db, tmp_path):
     """If PRISMA CSV export fails, no final or temp file remains."""
     out = str(tmp_path / "prisma.csv")
 
@@ -363,7 +389,7 @@ def test_atomic_prisma_csv_no_partial_on_error(populated_db, tmp_path):
         instance.writerows.side_effect = IOError("disk full")
 
         with pytest.raises(IOError, match="disk full"):
-            export_prisma_csv(populated_db, out)
+            export_prisma_csv(prisma_db, out)
 
     assert not Path(out).exists()
     assert not Path(out + ".tmp").exists()
@@ -684,6 +710,10 @@ def test_export_all_exports_the_spec_arm(tmp_path, spec):
     db.add_papers([Citation(title=f"Arm Study {i}", source="pubmed", pmid=str(i))
                    for i in range(1, 3)])
     pids = [r[0] for r in db._conn.execute("SELECT id FROM papers ORDER BY id")]
+    # Raw SQL on papers.status: retires at the screeners' cut-over (R163 precedent).
+    # The corpus status matches the eligible events below, so PRISMA's seam holds.
+    db._conn.execute("UPDATE papers SET status = 'FT_ELIGIBLE'")
+    db._conn.commit()
 
     # fixture-arm: registered and pinned by the fixture run; papers made eligible.
     add_values(db.db_path, "fixture-arm", "study_type",

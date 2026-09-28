@@ -12,7 +12,6 @@ import pytest
 from engine.agents.auditor import count_populated_fields
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
-from engine.exporters.prisma import generate_prisma_flow
 from engine.search.models import Citation
 from engine.core.codebook import load_codebook, load_codebook_beside
 
@@ -158,29 +157,9 @@ class TestCheckLowYield:
 # ── PRISMA Tests ─────────────────────────────────────────────────
 
 
-class TestPrismaLowYield:
-
-    def test_prisma_includes_low_yield_rejected(self, tmp_db, spec):
-        """PRISMA flow should report LOW_YIELD rejections as a distinct category."""
-        pid = _add_paper(tmp_db, title="Rejected LY Paper", pmid="70001")
-        sparse_data = {
-            "study_type": "Original Research",
-            "robot_platform": "NR",
-        }
-        _advance_to_ai_audit(tmp_db, pid, sparse_data, spec)
-
-        # Reject the paper with low_yield reason
-        tmp_db.reject_paper(pid, "low_yield_excluded: too few populated fields")
-
-        flow = generate_prisma_flow(tmp_db)
-        assert flow["papers_rejected"] == 1
-        assert flow["low_yield_rejected"] == 1
-        assert "low_yield_excluded" in str(flow["rejection_reasons"])
-
-    def test_prisma_no_low_yield_when_none_rejected(self, tmp_db):
-        """PRISMA low_yield_rejected should be 0 when no such rejections exist."""
-        flow = generate_prisma_flow(tmp_db)
-        assert flow["low_yield_rejected"] == 0
+# TestPrismaLowYield (2 ids) retired under R187 (R47): papers_rejected,
+# rejection_reasons and low_yield_rejected are no longer PRISMA quantities —
+# no writer reaches REJECTED and low yield is a per-arm reader function.
 
 
 # ── Database Schema Tests ────────────────────────────────────────

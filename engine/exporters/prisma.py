@@ -1,55 +1,90 @@
-"""PRISMA flow diagram data, CSV export, and count reconciliation."""
+"""PRISMA flow diagram data, CSV export, and count reconciliation.
+
+The freshman count model (R183–R196): two stores, one seam.
+
+* **Screening side** — `papers.status`, read ONLY for the nine tokens in
+  `SCREENING_TOKENS`, plus the screening tables. The screeners have not been cut
+  over to the event store (R183); until they are (junior), these tokens are the
+  screening record.
+* **Extraction side** — the event store ONLY, through `engine.core.effective`:
+  the eligibility axis says which papers reached extraction, the processing axis
+  says how far each one got.
+* **The seam** — the papers whose status is outside `SCREENING_TOKENS` must be
+  exactly the papers `eligible` on the eligibility axis. `validate_prisma_counts`
+  checks it as SETS.
+
+Every count is an explicit sum of named screening tokens, a screening-table read,
+an event-axis read, or a sum of named PRISMA counts. No count is a complement
+over the status column (R184 e; pinned by source inspection in
+`tests/test_prisma_reconciliation.py`).
+"""
 
 import csv
 import logging
 import os
 
 from engine.core.database import ReviewDatabase
+from engine.core.effective import effective_state, eligible_paper_ids
+from engine.core.paper_state import FAILURE_STATES, NO_RECORDED_STATE
 
 logger = logging.getLogger(__name__)
 
-# Terminal statuses — every paper must end in exactly one of these (or be in-progress)
-_TERMINAL_EXCLUDED = {"ABSTRACT_SCREENED_OUT", "PDF_EXCLUDED", "FT_SCREENED_OUT", "REJECTED"}
-_TERMINAL_INCLUDED = {"AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE"}
-_IN_PROGRESS = {
-    "INGESTED", "ABSTRACT_SCREENED_IN", "ABSTRACT_SCREEN_FLAGGED",
-    "PDF_ACQUIRED", "PARSED", "FT_ELIGIBLE", "FT_FLAGGED",
-    "EXTRACTED", "EXTRACT_FAILED",
+#: The only `papers.status` tokens this module names (R184 c, as amended by
+#: 9e-R1a). Read on the status column until the screeners' cut-over (R183).
+SCREENING_TOKENS = frozenset({
+    "INGESTED",
+    "ABSTRACT_SCREENED_IN",
+    "ABSTRACT_SCREEN_FLAGGED",
+    "ABSTRACT_SCREENED_OUT",
+    "PDF_ACQUIRED",
+    "PDF_EXCLUDED",
+    "PARSED",
+    "FT_FLAGGED",
+    "FT_SCREENED_OUT",
+})
+
+#: Processing-axis tokens counted as "still in extraction" (R184 d): no
+#: processing record yet, parsed, or extracted but not yet audited.
+_EXTRACTION_IN_PROGRESS = (NO_RECORDED_STATE, "parsed", "extracted")
+
+#: CSV label per processing failure token (R184 d), one line per non-zero reason.
+_FAILURE_LABELS = {
+    "extraction_failed": "Extraction failed",
+    "input_exceeds_context": "Input exceeds context",
+    "parse_failed": "Parse failed",
+    "full_text_not_obtainable": "Full text not obtainable",
 }
+
+
+def _status_counts(conn) -> dict:
+    return {row[0]: row[1] for row in conn.execute(
+        "SELECT status, COUNT(*) FROM papers GROUP BY status").fetchall()}
 
 
 def generate_prisma_flow(db: ReviewDatabase) -> dict:
     """Generate PRISMA flow counts from the database."""
     conn = db._conn
 
-    # Records identified by source
+    # ── Identity ────────────────────────────────────────────────────
     source_counts = {}
     for row in conn.execute(
         "SELECT source, COUNT(*) as cnt FROM papers GROUP BY source"
     ).fetchall():
         source_counts[row["source"]] = row["cnt"]
-
     total_identified = sum(source_counts.values())
+    duplicates_removed = 0  # tracked externally by dedup module
 
-    # Status counts
-    status_counts = {}
-    for row in conn.execute(
-        "SELECT status, COUNT(*) as cnt FROM papers GROUP BY status"
-    ).fetchall():
-        status_counts[row["status"]] = row["cnt"]
+    status_counts = _status_counts(conn)
+
+    def n(token: str) -> int:
+        assert token in SCREENING_TOKENS, token
+        return status_counts.get(token, 0)
 
     # ── Abstract Screening ──────────────────────────────────────────
-    screened_out = status_counts.get("ABSTRACT_SCREENED_OUT", 0)
-    screen_flagged = status_counts.get("ABSTRACT_SCREEN_FLAGGED", 0)
+    screened_out = n("ABSTRACT_SCREENED_OUT")
+    screen_flagged = n("ABSTRACT_SCREEN_FLAGGED")
+    records_screened = total_identified - duplicates_removed - n("INGESTED")
 
-    # Screened in = everything that passed abstract screening
-    # (any status beyond INGESTED/SCREENED_OUT/FLAGGED)
-    _pre_screening = {"INGESTED", "ABSTRACT_SCREENED_OUT", "ABSTRACT_SCREEN_FLAGGED"}
-    screened_in = sum(c for s, c in status_counts.items() if s not in _pre_screening)
-
-    records_screened = screened_in + screened_out + screen_flagged
-
-    # Screening exclusion reasons
     exclusion_reasons = {}
     for row in conn.execute(
         """SELECT sd.rationale, COUNT(*) as cnt
@@ -60,8 +95,11 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
     ).fetchall():
         exclusion_reasons[row["rationale"] or "No reason given"] = row["cnt"]
 
+    # Every paper past abstract screening (PRISMA 2020 "reports sought").
+    reports_sought = records_screened - screened_out - screen_flagged
+
     # ── PDF Exclusions (split: not-retrieved vs eligibility) ────────
-    pdf_excluded = status_counts.get("PDF_EXCLUDED", 0)
+    pdf_excluded = n("PDF_EXCLUDED")
     pdf_exclusion_reasons = {}
     for row in conn.execute(
         "SELECT pdf_exclusion_reason, COUNT(*) as cnt FROM papers "
@@ -78,8 +116,8 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
     }
 
     # ── Full-Text Screening ─────────────────────────────────────────
-    ft_screened_out = status_counts.get("FT_SCREENED_OUT", 0)
-    ft_flagged = status_counts.get("FT_FLAGGED", 0)
+    ft_screened_out = n("FT_SCREENED_OUT")
+    ft_flagged = n("FT_FLAGGED")
 
     # FT exclusion breakdown: PI-adjudicated vs AI primary
     ft_pi_adjudicated = conn.execute(
@@ -90,63 +128,59 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
     ).fetchone()[0]
     ft_ai_primary = ft_screened_out - ft_pi_adjudicated
 
-    # Combined eligibility exclusions (PDF non-retrieval + FT screening)
+    # Combined eligibility exclusions (PDF eligibility + FT screening)
     eligibility_exclusions = dict(pdf_eligibility_exclusions)
     eligibility_exclusions["FT screening (AI primary)"] = ft_ai_primary
     if ft_pi_adjudicated > 0:
         eligibility_exclusions["FT screening (PI adjudicated)"] = ft_pi_adjudicated
     eligibility_excluded_total = sum(eligibility_exclusions.values())
 
-    # Full text reports retrieved = papers that reached PARSED or beyond
-    _pre_fulltext = _pre_screening | {"ABSTRACT_SCREENED_IN", "PDF_ACQUIRED", "PDF_EXCLUDED"}
-    full_text_retrieved = sum(c for s, c in status_counts.items() if s not in _pre_fulltext)
-
-    # Full text assessed for eligibility = retrieved (all get screened or are in progress)
-    full_text_assessed = full_text_retrieved
-
-    # ── Extraction failures ─────────────────────────────────────────
-    extract_failed = status_counts.get("EXTRACT_FAILED", 0)
-
-    # ── Extraction / Audit / Inclusion ──────────────────────────────
-    studies_included = sum(
-        status_counts.get(s, 0) for s in _TERMINAL_INCLUDED
+    screening_in_progress = (
+        n("ABSTRACT_SCREENED_IN") + n("ABSTRACT_SCREEN_FLAGGED")
+        + n("PDF_ACQUIRED") + n("PARSED") + n("FT_FLAGGED")
     )
 
-    # Rejected papers
-    rejected = status_counts.get("REJECTED", 0)
-    rejection_reasons = {}
-    for row in conn.execute(
-        "SELECT rejected_reason, COUNT(*) as cnt FROM papers "
-        "WHERE status = 'REJECTED' GROUP BY rejected_reason"
-    ).fetchall():
-        rejection_reasons[row["rejected_reason"] or "No reason given"] = row["cnt"]
+    # ── The seam: papers reaching extraction, from the eligibility axis ──
+    eligible_ids = eligible_paper_ids(conn)
+    n_eligible = len(eligible_ids)
 
-    low_yield_rejected = sum(
-        cnt for reason, cnt in rejection_reasons.items()
-        if "low_yield" in reason.lower()
+    # ABSTRACT_SCREENED_IN = acquisition pending, so not yet retrieved.
+    full_text_retrieved = (
+        reports_sought - reports_not_retrieved - n("ABSTRACT_SCREENED_IN")
+    )
+    full_text_assessed = (
+        sum(pdf_eligibility_exclusions.values()) + ft_flagged + ft_screened_out
+        + n_eligible
     )
 
-    # In-progress papers (not yet at a terminal state) — computed as remainder
-    # to avoid double-counting between PRISMA boxes
-    _terminal = _TERMINAL_EXCLUDED | _TERMINAL_INCLUDED
-    in_progress = sum(c for s, c in status_counts.items() if s not in _terminal)
-
-    # ── Audit stats ─────────────────────────────────────────────────
-    spans_verified = conn.execute(
-        "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'verified'"
-    ).fetchone()[0]
-    spans_flagged = conn.execute(
-        "SELECT COUNT(*) FROM evidence_spans WHERE audit_status = 'flagged'"
-    ).fetchone()[0]
+    # ── Extraction side: the processing axis, over the eligible papers ──
+    studies_included = 0
+    extraction_in_progress = 0
+    failures = {token: 0 for token in FAILURE_STATES}
+    failure_reasons = {token: {} for token in FAILURE_STATES}
+    for pid in eligible_ids:
+        state = effective_state(conn, pid)
+        if state.processing == "audited_ai":
+            studies_included += 1
+        elif state.processing in failures:
+            failures[state.processing] += 1
+            reasons = failure_reasons[state.processing]
+            reasons[state.processing_reason] = reasons.get(state.processing_reason, 0) + 1
+        elif state.processing in _EXTRACTION_IN_PROGRESS:
+            extraction_in_progress += 1
+        else:  # pragma: no cover - PROCESSING_STATES is closed and covered above
+            raise ValueError(
+                f"paper {pid}: processing token {state.processing!r} has no PRISMA box")
 
     return {
         "records_identified": total_identified,
         "records_by_source": source_counts,
-        "duplicates_removed": 0,  # tracked externally by dedup module
+        "duplicates_removed": duplicates_removed,
         "records_screened": records_screened,
         "records_excluded": screened_out,
         "exclusion_reasons": exclusion_reasons,
         "screen_flagged": screen_flagged,
+        "reports_sought": reports_sought,
         "pdf_excluded": pdf_excluded,
         "pdf_exclusion_reasons": pdf_exclusion_reasons,
         "reports_not_retrieved": reports_not_retrieved,
@@ -159,95 +193,99 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
         "ft_ai_primary": ft_ai_primary,
         "ft_pi_adjudicated": ft_pi_adjudicated,
         "ft_flagged": ft_flagged,
+        "screening_in_progress": screening_in_progress,
+        "n_eligible": n_eligible,
         "studies_included": studies_included,
-        "papers_rejected": rejected,
-        "rejection_reasons": rejection_reasons,
-        "low_yield_rejected": low_yield_rejected,
-        "in_progress": in_progress,
-        "extract_failed": extract_failed,
-        "spans_verified": spans_verified,
-        "spans_flagged": spans_flagged,
+        "extraction_failed": failures["extraction_failed"],
+        "input_exceeds_context": failures["input_exceeds_context"],
+        "parse_failed": failures["parse_failed"],
+        "full_text_not_obtainable": failures["full_text_not_obtainable"],
+        "failure_reasons": failure_reasons,
+        "extraction_in_progress": extraction_in_progress,
     }
 
 
 # ── Reconciliation ───────────────────────────────────────────────────
 
 
-def validate_prisma_counts(db: ReviewDatabase) -> dict:
-    """Verify PRISMA counts reconcile against raw DB totals.
+def validate_prisma_counts(db: ReviewDatabase, flow: dict | None = None) -> dict:
+    """Verify PRISMA counts reconcile (R186 as amended by 9e-R1a).
 
-    Checks:
-    1. Every paper appears in exactly one category (terminal or in-progress)
-    2. PDF_EXCLUDED sub-counts sum to total
-    3. No paper appears in multiple terminal boxes
+    1. Screening partition + seam: every paper is counted once under a
+       screening token or is in the remainder (status outside
+       `SCREENING_TOKENS`), AND the remainder equals the eligible papers as
+       SETS. Each paper on either side of a set difference is named with its
+       status token verbatim. Count equality alone never passes.
+    2. Extraction partition (events only): the eligible papers are exactly
+       studies included + every failure box + extraction in progress.
+    Plus the PDF sub-count check and reports-not-retrieved + PDF eligibility
+    == PDF_EXCLUDED.
 
-    Returns dict with {valid: bool, total_db, total_prisma, discrepancy, details}.
+    `flow` is the result of `generate_prisma_flow(db)`; computed when omitted.
+    Returns dict with {valid, total_db, total_prisma, discrepancy, details}.
     Raises ValueError if counts don't reconcile.
     """
     conn = db._conn
-    total_db = conn.execute("SELECT COUNT(*) FROM papers").fetchone()[0]
+    if flow is None:
+        flow = generate_prisma_flow(db)
 
-    flow = generate_prisma_flow(db)
-
-    # Sum all mutually exclusive PRISMA categories:
-    # terminal excluded + terminal included + in-progress = total
-    # (screen_flagged, ft_flagged are subsets of in_progress, not separate)
-    total_prisma = (
-        flow["records_excluded"]       # ABSTRACT_SCREENED_OUT
-        + flow["pdf_excluded"]         # PDF_EXCLUDED
-        + flow["ft_screened_out"]      # FT_SCREENED_OUT
-        + flow["papers_rejected"]      # REJECTED
-        + flow["studies_included"]     # AI_AUDIT_COMPLETE + HUMAN_AUDIT_COMPLETE
-        + flow["in_progress"]          # everything not at a terminal status
-    )
+    status_of = dict(conn.execute("SELECT id, status FROM papers").fetchall())
+    total_db = len(status_of)
+    status_counts = _status_counts(conn)
+    screening_total = sum(status_counts.get(t, 0) for t in SCREENING_TOKENS)
+    remainder_ids = {pid for pid, s in status_of.items() if s not in SCREENING_TOKENS}
+    eligible_ids = set(eligible_paper_ids(conn))
+    total_prisma = screening_total + len(remainder_ids)
 
     details = []
 
-    # Check 1: totals match
+    # Identity 1: screening partition + seam
     if total_prisma != total_db:
         details.append(
-            f"Total mismatch: DB has {total_db} papers but PRISMA accounts for {total_prisma}"
+            f"Total mismatch: DB has {total_db} papers but screening tokens + "
+            f"remainder account for {total_prisma}"
+        )
+    not_eligible = sorted(remainder_ids - eligible_ids)
+    if not_eligible:
+        details.append(
+            "Seam: papers past screening on papers.status but not eligible on the "
+            "eligibility axis: "
+            + ", ".join(f"{pid} ({status_of[pid]})" for pid in not_eligible)
+        )
+    not_in_remainder = sorted(eligible_ids - remainder_ids)
+    if not_in_remainder:
+        details.append(
+            "Seam: papers eligible on the eligibility axis but at a screening "
+            "token on papers.status: "
+            + ", ".join(f"{pid} ({status_of.get(pid)})" for pid in not_in_remainder)
         )
 
-    # Check 2: PDF_EXCLUDED sub-counts
+    # Identity 2: extraction partition
+    extraction_total = (
+        flow["studies_included"]
+        + sum(flow[token] for token in FAILURE_STATES)
+        + flow["extraction_in_progress"]
+    )
+    if extraction_total != flow["n_eligible"]:
+        details.append(
+            f"Extraction partition: {flow['n_eligible']} eligible papers but "
+            f"included + failures + in progress = {extraction_total}"
+        )
+
+    # PDF_EXCLUDED sub-counts
     pdf_sub_total = sum(flow["pdf_exclusion_reasons"].values())
     if pdf_sub_total != flow["pdf_excluded"]:
         details.append(
             f"PDF_EXCLUDED sub-counts ({pdf_sub_total}) != total ({flow['pdf_excluded']})"
         )
 
-    # Check 2b: eligibility box sub-counts
-    elig_sub_total = sum(flow["eligibility_exclusions"].values())
-    expected_elig = flow["eligibility_excluded_total"]
-    if elig_sub_total != expected_elig:
-        details.append(
-            f"Eligibility sub-counts ({elig_sub_total}) != total ({expected_elig})"
-        )
-
-    # Check 2c: reports_not_retrieved + pdf_eligibility = pdf_excluded
+    # reports_not_retrieved + pdf_eligibility = pdf_excluded
     pdf_recon = flow["reports_not_retrieved"] + sum(flow["pdf_eligibility_exclusions"].values())
     if pdf_recon != flow["pdf_excluded"]:
         details.append(
             f"Reports not retrieved ({flow['reports_not_retrieved']}) + "
             f"PDF eligibility ({sum(flow['pdf_eligibility_exclusions'].values())}) "
             f"!= PDF_EXCLUDED ({flow['pdf_excluded']})"
-        )
-
-    # Check 3: no paper in multiple terminal boxes (check DB for duplicates)
-    terminal_statuses = list(_TERMINAL_EXCLUDED | _TERMINAL_INCLUDED)
-    placeholders = ",".join("?" * len(terminal_statuses))
-    terminal_count = conn.execute(
-        f"SELECT COUNT(*) FROM papers WHERE status IN ({placeholders})",
-        terminal_statuses,
-    ).fetchone()[0]
-    expected_terminal = (
-        flow["records_excluded"] + flow["pdf_excluded"]
-        + flow["ft_screened_out"] + flow["papers_rejected"]
-        + flow["studies_included"]
-    )
-    if terminal_count != expected_terminal:
-        details.append(
-            f"Terminal status count ({terminal_count}) != PRISMA terminal sum ({expected_terminal})"
         )
 
     result = {
@@ -270,11 +308,9 @@ def validate_prisma_counts(db: ReviewDatabase) -> dict:
 
 
 def export_prisma_csv(db: ReviewDatabase, output_path: str) -> None:
-    """Write PRISMA flow data as a CSV file."""
-    # Reconcile before exporting
-    validate_prisma_counts(db)
-
+    """Write PRISMA flow data as a CSV file, after reconciling it."""
     flow = generate_prisma_flow(db)
+    validate_prisma_counts(db, flow)
 
     rows = [
         ("Stage", "Count", "Detail"),
@@ -292,6 +328,7 @@ def export_prisma_csv(db: ReviewDatabase, output_path: str) -> None:
         rows.append(("", count, reason[:80]))
 
     rows.append(("Screen flagged", flow["screen_flagged"], "For human review"))
+    rows.append(("Reports sought for retrieval", flow["reports_sought"], ""))
 
     # PRISMA 2020: Reports not retrieved (INACCESSIBLE only)
     rows.append(("Reports not retrieved", flow["reports_not_retrieved"], "PDF inaccessible"))
@@ -310,34 +347,24 @@ def export_prisma_csv(db: ReviewDatabase, output_path: str) -> None:
     for reason, count in flow["eligibility_exclusions"].items():
         rows.append(("", count, reason))
 
-    rows.extend([
-        ("Full text flagged", flow["ft_flagged"], "For human review (FT)"),
-        ("Papers rejected", flow["papers_rejected"], "Post-extraction exclusion"),
-    ])
-    for reason, count in flow.get("rejection_reasons", {}).items():
-        rows.append(("", count, reason[:80]))
-    if flow.get("low_yield_rejected", 0) > 0:
-        rows.append((
-            "  — Excluded after extraction (insufficient data)",
-            flow["low_yield_rejected"],
-            "LOW_YIELD: too few populated fields",
-        ))
+    rows.append(("Full text flagged", flow["ft_flagged"], "For human review (FT)"))
 
-    if flow.get("extract_failed", 0) > 0:
-        rows.append((
-            "Extraction failed",
-            flow["extract_failed"],
-            "Model timeout/error",
-        ))
+    if flow["screening_in_progress"] > 0:
+        rows.append(("Screening in progress", flow["screening_in_progress"],
+                     "Papers still in screening"))
 
-    if flow.get("in_progress", 0) > 0:
-        rows.append(("In progress", flow["in_progress"], "Papers still in pipeline"))
+    rows.append(("Eligible for extraction", flow["n_eligible"], ""))
 
-    rows.extend([
-        ("Studies included", flow["studies_included"], ""),
-        ("Evidence spans verified", flow["spans_verified"], ""),
-        ("Evidence spans flagged", flow["spans_flagged"], ""),
-    ])
+    for token in FAILURE_STATES:
+        for reason, count in sorted(flow["failure_reasons"][token].items()):
+            if count > 0:
+                rows.append((_FAILURE_LABELS[token], count, reason))
+
+    if flow["extraction_in_progress"] > 0:
+        rows.append(("Extraction in progress", flow["extraction_in_progress"],
+                     "Eligible papers not yet audited"))
+
+    rows.append(("Studies included", flow["studies_included"], ""))
 
     tmp_path = output_path + ".tmp"
     try:

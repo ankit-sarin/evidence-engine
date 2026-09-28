@@ -27,10 +27,12 @@ m019 = importlib.import_module("engine.migrations.019_paper_state_axes")
 m020 = importlib.import_module("engine.migrations.020_run_manifest")
 m021 = importlib.import_module("engine.migrations.021_parsed_text_sha256")
 
+# R191: a bare `add_values` paper is `eligible` on events, so its status default is
+# FT_ELIGIBLE — the corpus status with no processing — and the two stores agree.
 _PAPERS_DDL = """
 CREATE TABLE IF NOT EXISTS papers (
     id INTEGER PRIMARY KEY, title TEXT NOT NULL DEFAULT 't',
-    source TEXT NOT NULL DEFAULT 'fixture', status TEXT NOT NULL DEFAULT 'EXTRACTED',
+    source TEXT NOT NULL DEFAULT 'fixture', status TEXT NOT NULL DEFAULT 'FT_ELIGIBLE',
     created_at TEXT NOT NULL DEFAULT 'x', updated_at TEXT NOT NULL DEFAULT 'x',
     pmid TEXT, doi TEXT, authors TEXT, year INTEGER, journal TEXT
 );
@@ -292,6 +294,75 @@ def seed_eligibility(conn, paper_id: int, *, to_state: str = "eligible") -> int:
         conn, event_type="screened", paper_id=paper_id, to_state=to_state,
         actor_kind="engine", actor_role="system", actor_name="fixture",
         run_id=fixture_run(conn))
+
+
+#: Processing token -> the `event_type` a fixture writes it under. The two
+#: extraction-outcome tokens use the extractor's own pairing
+#: (`engine.core.extraction_events`: `extraction_failed` for every
+#: `EXTRACTION_REASONS` token, `extracted`); the rest name their stage.
+_PROCESSING_EVENT_TYPE = {
+    "parsed": "parsed",
+    "parse_failed": "parsed",
+    "full_text_not_obtainable": "not_obtainable",
+    "extracted": "extracted",
+    "extraction_failed": "extraction_failed",
+    "input_exceeds_context": "extraction_failed",
+    "audited_ai": "audited",
+}
+
+
+def seed_processing(conn, paper_id: int, to_state: str, *,
+                    reason_code: str | None = None, run_id: int | None = None) -> int:
+    """One processing-axis paper event, through the engine's writer (9e-C-P1 D2).
+
+    `run_id` defaults to the fixture run (R68); pass one from
+    `open_extraction_run` to write under a real manifest. A failure token needs
+    `reason_code` (019's CHECK); for `extraction_failed` / `input_exceeds_context`
+    it must be an `EXTRACTION_REASONS` code mapped to that token. Returns the
+    event id.
+    """
+    from engine.core import paper_state as PS
+    if to_state not in _PROCESSING_EVENT_TYPE:
+        raise ValueError(f"{to_state!r} is not a processing-axis token")
+    if to_state in ("extraction_failed", "input_exceeds_context") and \
+            PS.EXTRACTION_REASONS.get(reason_code) != to_state:
+        raise ValueError(f"reason {reason_code!r} is not an EXTRACTION_REASONS code "
+                         f"for {to_state!r}")
+    return events.write_paper_event(
+        conn, event_type=_PROCESSING_EVENT_TYPE[to_state], paper_id=paper_id,
+        to_state=to_state, reason_code=reason_code, actor_kind="engine",
+        actor_role="system", actor_name="fixture",
+        run_id=fixture_run(conn) if run_id is None else run_id)
+
+
+def seed_prisma_world(db, *, screening=(), eligible=()) -> dict:
+    """Declare BOTH sides of a PRISMA fixture on a `ReviewDatabase` (9e-C-P1 D3).
+
+    Papers already in `db` are taken in id order: the first `len(screening)`
+    get `screening[i] = (status, pdf_exclusion_reason)`; the next
+    `len(eligible)` become corpus papers — FT_ELIGIBLE on status, `eligible` on
+    events, and `eligible[i] = (processing_token, reason_code)` on the processing
+    axis (a `None` token writes no processing event). The rest stay INGESTED.
+    Returns {"screening": [ids], "eligible": [ids]}.
+    """
+    ensure_event_store(db.db_path)
+    conn = db._conn
+    pids = [r[0] for r in conn.execute("SELECT id FROM papers ORDER BY id")]
+    if len(screening) + len(eligible) > len(pids):
+        raise ValueError("more declarations than papers")
+    scr, elig = pids[:len(screening)], pids[len(screening):len(screening) + len(eligible)]
+    for pid, (status, pdf_reason) in zip(scr, screening):
+        # Raw SQL on papers.status: retires at the screeners' cut-over (R163 precedent).
+        conn.execute("UPDATE papers SET status = ?, pdf_exclusion_reason = ? WHERE id = ?",
+                     (status, pdf_reason, pid))
+    for pid, (token, reason) in zip(elig, eligible):
+        # Raw SQL on papers.status: retires at the screeners' cut-over (R163 precedent).
+        conn.execute("UPDATE papers SET status = 'FT_ELIGIBLE' WHERE id = ?", (pid,))
+        seed_eligibility(conn, pid)
+        if token is not None:
+            seed_processing(conn, pid, token, reason_code=reason)
+    conn.commit()
+    return {"screening": scr, "eligible": elig}
 
 
 #: The digest every fixture extraction run resolves (9b-2b R117 fixtures).

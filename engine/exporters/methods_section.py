@@ -181,11 +181,7 @@ def generate_methods_section(db: ReviewDatabase, spec: ReviewSpec, *, run_id: in
             f"{' and '.join(cloud_parts)}. "
         )
 
-    methods += (
-        f"Cross-model verification was performed by {audit_model_str}. "
-        f"{flow['spans_verified']} evidence spans were verified and "
-        f"{flow['spans_flagged']} flagged for review."
-    )
+    methods += f"Cross-model verification was performed by {audit_model_str}."
 
     return methods
 

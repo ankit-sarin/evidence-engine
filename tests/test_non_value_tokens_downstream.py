@@ -166,18 +166,9 @@ def test_site2_refuses_the_retired_v1_dict_shape():
 # ══ Site 3 — the categorical normaliser's REWRITE path ════════════════
 
 
-def test_site3_a_terminal_state_never_reaches_the_rewrite_path():
-    """`normalize_prefix` UPDATEs the row when a value is an unambiguous prefix
-    of exactly one enum member. Feed it a token whose prefix DOES match and the
-    pre-fix behaviour rewrites a refusal into a category."""
-    from engine.validators.extraction_validator import normalize_prefix
-
-    enum = ["CONTRACT_UNMET_BUT_CATEGORICAL", "Something else"]
-    assert normalize_prefix("CONTRACT_UNMET", enum) == "CONTRACT_UNMET_BUT_CATEGORICAL"
-
-    # The guard is the skip in front of it, so the token must be recognised
-    # before the value ever gets here.
-    assert "CONTRACT_UNMET" in TOKENS
+# test_site3_a_terminal_state_never_reaches_the_rewrite_path retired 2026-09-28
+# with the prefix normaliser (9e-R47, R180; R47): the rewrite path it guarded retired
+# at 9c-C5 (R160a).
 
 
 def test_site3_the_skip_is_wired_into_all_three_check_points():

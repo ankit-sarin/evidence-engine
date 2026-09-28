@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `dd9a7140ca84cdb83620b5e0280dea809afc4e72` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `1fef9f6b1cc4a7492c2e179d7dba265efe960ccb` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary

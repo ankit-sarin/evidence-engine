@@ -6139,7 +6139,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 331,
+            "line": 307,
             "names": [
               "--review"
             ],
@@ -6148,7 +6148,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 332,
+            "line": 308,
             "names": [
               "--spec"
             ],
@@ -6157,7 +6157,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 334,
+            "line": 310,
             "names": [
               "--arm"
             ],
@@ -6171,7 +6171,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 333,
+            "line": 309,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -6181,12 +6181,12 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 338,
+            "line": 314,
             "scope": "main"
           },
           {
             "func": "data_root_for",
-            "line": 339,
+            "line": 315,
             "scope": "main"
           }
         ],
@@ -7559,7 +7559,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "dd9a7140ca84cdb83620b5e0280dea809afc4e72",
+    "generated_at_commit": "1fef9f6b1cc4a7492c2e179d7dba265efe960ccb",
     "scan_roots": [
       "engine",
       "scripts",

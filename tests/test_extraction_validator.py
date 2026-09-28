@@ -12,7 +12,6 @@ from engine.core.review_spec import load_review_spec
 from engine.validators import extraction_validator as V
 from engine.validators.extraction_validator import (
     detect_cross_field_bleed,
-    normalize_prefix,
     validate_all,
     validate_extraction,
     verify_schema_parity,
@@ -112,46 +111,8 @@ def test_closest_match_similarity():
     assert _closest_match("xyz_garbage", ["a", "b"]) is None
 
 
-# ── normalize_prefix unit tests ──────────────────────────────────────
-
-
-SAMPLE_VALID = [
-    "Original Research",
-    "Case Report/Series",
-    "Review",
-    "Systematic Review",
-    "Other",
-]
-
-
-def test_normalize_prefix_exact_match():
-    """Exact match returns the value unchanged (including case normalization)."""
-    assert normalize_prefix("Original Research", SAMPLE_VALID) == "Original Research"
-    assert normalize_prefix("original research", SAMPLE_VALID) == "Original Research"
-
-
-def test_normalize_prefix_unambiguous():
-    """Unambiguous prefix resolves to the full canonical value."""
-    assert normalize_prefix("Case", SAMPLE_VALID) == "Case Report/Series"
-    assert normalize_prefix("Syst", SAMPLE_VALID) == "Systematic Review"
-    # Case-insensitive
-    assert normalize_prefix("case", SAMPLE_VALID) == "Case Report/Series"
-
-
-def test_normalize_prefix_ambiguous():
-    """Ambiguous prefix (matches multiple) returns value unchanged."""
-    # "Re" matches both "Review" and "Systematic Review" would not, but
-    # actually "Re" only prefix-matches "Review" — use "Other" vs "Original"
-    # "Or" matches "Original Research" only. Let's use a clear ambiguous case.
-    vals = ["Level 3 - Conditional", "Level 3 - High"]
-    assert normalize_prefix("Level 3", vals) == "Level 3"
-
-
-def test_normalize_prefix_no_match():
-    """No prefix match returns value unchanged."""
-    assert normalize_prefix("Randomized Trial", SAMPLE_VALID) == "Randomized Trial"
-
-
+# The four prefix-normaliser unit tests retired 2026-09-28 with their subject
+# (9e-R47, R180; R47).
 # The four in-place categorical normalisation tests retired 2026-09-25 with their
 # subject (9c-C5, R160a; R47).
 

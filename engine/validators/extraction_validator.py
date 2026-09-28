@@ -60,7 +60,7 @@ def verify_schema_parity(spec: ReviewSpec) -> str:
     return hashlib.sha256(prompt.encode()).hexdigest()
 
 
-# ── Prefix Normalization ─────────────────────────────────────────────
+# ── Non-value tokens ─────────────────────────────────────────────────
 
 
 def _non_value_tokens(codebook: Codebook) -> frozenset[str]:
@@ -77,30 +77,6 @@ def _non_value_tokens(codebook: Codebook) -> frozenset[str]:
     from engine.elicitation.classes import non_value_tokens
 
     return non_value_tokens(codebook.raw)
-
-
-def normalize_prefix(value: str, valid_values: list[str]) -> str:
-    """If *value* is an unambiguous case-insensitive prefix of exactly one
-    valid value, return the canonical form.  Otherwise return *value* unchanged.
-
-    An exact (case-insensitive) match always wins and counts as unambiguous.
-    """
-    value_lower = value.lower()
-
-    # Exact match (case-insensitive) — always unambiguous
-    for v in valid_values:
-        if v.lower() == value_lower:
-            return v
-
-    # Prefix match — must be unique
-    matches = [v for v in valid_values if v.lower().startswith(value_lower)]
-    if len(matches) == 1:
-        logger.debug(
-            "Prefix normalized: '%s' → '%s'", value, matches[0],
-        )
-        return matches[0]
-
-    return value
 
 
 def detect_cross_field_bleed(

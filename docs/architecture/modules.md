@@ -340,12 +340,12 @@ All acquisition modules use `ReviewDatabase` as a context manager. Terminal stat
 ### `evidence_table.py`
 **Purpose:** Evidence table exports.
 - `NO_EXTRACTION_MARKER = "[NO EXTRACTION DATA]"` — marks papers for which the store holds **no record at all** on this arm. *Corrected 2026-09-22:* it used to mean "no non-null value", which threw away the declined and withdrawn states this work exists to make visible
-- `export_evidence_csv(db, spec, output_path, min_status, exclude_empty, arm)` — One row per CORPUS paper with the two state axes and per-field value/snippet/**state**/**rule_row**, read through `effective_value`. `confidence` and `audit_status` are gone (R36, R18/Q7). Atomic temp-file-then-rename
-- `export_evidence_excel(db, spec, output_path, min_status, exclude_empty, arm)` — 3-sheet: Evidence Table, Screening Log, **Field States**. *Corrected 2026-09-22:* sheet 3 was an "Audit Log" with no latest-extraction filter while sheet 1 had one — A1 inside one file. Atomic temp-file-then-rename
+- `export_evidence_csv(db, spec, output_path, exclude_empty, arm)` — One row per CORPUS paper with the two state axes and per-field value/snippet/**state**/**rule_row**, read through `effective_value`. `confidence` and `audit_status` are gone (R36, R18/Q7). Atomic temp-file-then-rename
+- `export_evidence_excel(db, spec, output_path, exclude_empty, arm)` — 3-sheet: Evidence Table, Screening Log, **Field States**. *Corrected 2026-09-22:* sheet 3 was an "Audit Log" with no latest-extraction filter while sheet 1 had one — A1 inside one file. Atomic temp-file-then-rename
 
 ### `docx_export.py`
 **Purpose:** Publication-ready DOCX.
-- `export_evidence_docx(db, spec, output_path, min_status, arm)` — Landscape, 0.5" margins, Study + Year + Journal + extraction fields, read through `effective_value`. `[declined]` for an abstention; **empty** for a withdrawal (R1); a note under the table reports processing failures by reason (S3h)
+- `export_evidence_docx(db, spec, output_path, arm)` — Landscape, 0.5" margins, Study + Year + Journal + extraction fields, read through `effective_value`. `[declined]` for an abstention; **empty** for a withdrawal (R1); a note under the table reports processing failures by reason (S3h)
 
 ### `methods_section.py`
 **Purpose:** Auto-generated PRISMA methods paragraph.

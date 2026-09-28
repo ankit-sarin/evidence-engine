@@ -22,7 +22,6 @@ NO_EXTRACTION_MARKER = "[NO EXTRACTION DATA]"
 
 def _build_evidence_rows(
     db: ReviewDatabase, spec: ReviewSpec,
-    min_status: str = "AI_AUDIT_COMPLETE",
     exclude_empty: bool = False,
     *,
     arm: str,
@@ -51,12 +50,12 @@ def _build_evidence_rows(
     state, and `{field}_rule_row`, the v2.1 row that produced it. A disagreement
     about a value is then a disagreement about a numbered row.
 
+    The paper set is the corpus — the ELIGIBILITY axis of `effective_state`
+    (S3h). The former status-gate parameter selected nothing and was removed
+    (C33, R47): a paper-level human-audit gate is a per-FIELD question under the
+    event model, which the `{field}_state` column answers per cell.
+
     Args:
-        min_status: kept for call compatibility and **no longer selects papers**.
-            The paper set is the corpus — the ELIGIBILITY axis of
-            `effective_state` (S3h) — and `HUMAN_AUDIT_COMPLETE` as a
-            paper-level gate is a per-FIELD question under the event model, which
-            the `{field}_state` column now answers per cell.
         exclude_empty: omit papers for which no field carries a value.
         arm: which arm to export. Required (9d-C3).
     """
@@ -145,14 +144,13 @@ def _build_evidence_rows(
 
 def export_evidence_csv(
     db: ReviewDatabase, spec: ReviewSpec, output_path: str,
-    min_status: str = "AI_AUDIT_COMPLETE",
     exclude_empty: bool = False,
     *,
     arm: str,
 ) -> None:
     """Export evidence table as CSV. `arm` per R18/Q4."""
-    headers, rows = _build_evidence_rows(db, spec, min_status=min_status,
-                                          exclude_empty=exclude_empty, arm=arm)
+    headers, rows = _build_evidence_rows(db, spec, exclude_empty=exclude_empty,
+                                          arm=arm)
 
     tmp_path = output_path + ".tmp"
     try:
@@ -174,7 +172,6 @@ def export_evidence_csv(
 
 def export_evidence_excel(
     db: ReviewDatabase, spec: ReviewSpec, output_path: str,
-    min_status: str = "AI_AUDIT_COMPLETE",
     exclude_empty: bool = False,
     *,
     arm: str,
@@ -189,8 +186,8 @@ def export_evidence_excel(
     # Sheet 1: Evidence Table
     ws1 = wb.active
     ws1.title = "Evidence Table"
-    headers, rows = _build_evidence_rows(db, spec, min_status=min_status,
-                                          exclude_empty=exclude_empty, arm=arm)
+    headers, rows = _build_evidence_rows(db, spec, exclude_empty=exclude_empty,
+                                          arm=arm)
     ws1.append(headers)
     for row in rows:
         ws1.append(row)

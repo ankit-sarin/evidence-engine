@@ -18,7 +18,6 @@ def export_all(
     spec: ReviewSpec,
     review_name: str,
     output_dir: str | None = None,
-    min_status: str = "AI_AUDIT_COMPLETE",
     *,
     run_id: int | None,
 ) -> dict:
@@ -43,16 +42,15 @@ def export_all(
     arm = spec.extraction_models.arm
 
     evidence_csv_path = str(out / "evidence_table.csv")
-    export_evidence_csv(db, spec, evidence_csv_path, min_status=min_status, arm=arm)
+    export_evidence_csv(db, spec, evidence_csv_path, arm=arm)
     paths["evidence_csv"] = evidence_csv_path
 
     evidence_xlsx_path = str(out / "evidence_table.xlsx")
-    export_evidence_excel(db, spec, evidence_xlsx_path, min_status=min_status,
-                          arm=arm)
+    export_evidence_excel(db, spec, evidence_xlsx_path, arm=arm)
     paths["evidence_xlsx"] = evidence_xlsx_path
 
     docx_path = str(out / "evidence_table.docx")
-    export_evidence_docx(db, spec, docx_path, min_status=min_status, arm=arm)
+    export_evidence_docx(db, spec, docx_path, arm=arm)
     paths["evidence_docx"] = docx_path
 
     methods_path = str(out / "methods_section.md")

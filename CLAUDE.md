@@ -132,7 +132,6 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - PDF acquisition: 5-strategy cascade, %PDF validation, publisher grouping, --background tmux support
 - PDF verify/import: filename matching, canonical rename to `EE-{nnn}_{Author}_{Year}.pdf`, DB update
 - DB-driven PDF path resolution: `full_text_assets.pdf_path` → `papers.pdf_local_path` → glob fallback
-- min_status parameter on exporters: AI_AUDIT_COMPLETE (raw AI) vs HUMAN_AUDIT_COMPLETE (human-verified)
 - PRISMA reconciliation: validates terminal + in-progress = total, no double-counting
 - Three-tier PDF parsing: Docling → PyMuPDF fallback (hyperlink/structure errors) → Qwen2.5-VL:7b (scanned). Sparse threshold <100 chars after both text parsers
 - Self-documenting review workbooks: shared builder with DataValidation dropdowns, conditional formatting, Instructions sheet. Used by all 3 adjudication exporters

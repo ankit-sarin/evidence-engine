@@ -363,15 +363,15 @@ python -m engine.analysis.concordance --review surgical_autonomy --arms local,op
 
 ### Evidence Table (`evidence_table.py`)
 
-- `export_evidence_csv(db, spec, path, min_status, exclude_empty, arm)` — one row per CORPUS paper, columns: paper metadata + the two state axes (`eligibility`, `processing`, `processing_reason`, `analysis_ready`) + per-field (value, source_snippet, **state, rule_row**). *Corrected 2026-09-22:* `confidence` and `audit_status` are gone (R36) — the first has no counterpart in the event store and the second is provenance, not a field state (R18/Q7); `{field}_state` and `{field}_rule_row` carry more and are auditable. `arm` is a required piece of knowledge, defaulted to `local` (R18/Q4)
+- `export_evidence_csv(db, spec, path, exclude_empty, arm)` — one row per CORPUS paper, columns: paper metadata + the two state axes (`eligibility`, `processing`, `processing_reason`, `analysis_ready`) + per-field (value, source_snippet, **state, rule_row**). *Corrected 2026-09-22:* `confidence` and `audit_status` are gone (R36) — the first has no counterpart in the event store and the second is provenance, not a field state (R18/Q7); `{field}_state` and `{field}_rule_row` carry more and are auditable. `arm` is a required piece of knowledge, defaulted to `local` (R18/Q4)
 - `export_evidence_excel()` — three-sheet workbook: Evidence Table, Screening Log, **Field States**. *Corrected 2026-09-22:* sheet 3 was an "Audit Log" read off `evidence_spans` joined to EVERY extraction with no latest-extraction filter, while sheet 1 showed only the newest — one workbook disagreeing with itself, which is A1 inside a single file
 - Papers with no extraction data marked `[NO EXTRACTION DATA]`; `--exclude-empty` flag omits them entirely
 
-*Corrected 2026-09-22:* `min_status` no longer selects papers. The set is the corpus (the eligibility axis), and `HUMAN_AUDIT_COMPLETE` as a paper-level gate is a **per-field** question under the event model, which the `{field}_state` column answers per cell.
+*Corrected 2026-09-22:* the set is the corpus (the eligibility axis), and `HUMAN_AUDIT_COMPLETE` as a paper-level gate is a **per-field** question under the event model, which the `{field}_state` column answers per cell.
 
 ### DOCX (`docx_export.py`)
 
-`export_evidence_docx(db, spec, path, min_status, arm)` — landscape orientation, 0.5" margins, Study (first author et al.) + Year + Journal + extraction fields, read through `effective_value`. python-docx. A declined field renders `[declined]`; a withdrawn one renders **empty**, because R1 makes a withdrawal "no value in the current result". A note under the table reports processing failures by reason (S3h) rather than dropping those papers silently
+`export_evidence_docx(db, spec, path, arm)` — landscape orientation, 0.5" margins, Study (first author et al.) + Year + Journal + extraction fields, read through `effective_value`. python-docx. A declined field renders `[declined]`; a withdrawn one renders **empty**, because R1 makes a withdrawal "no value in the current result". A note under the table reports processing failures by reason (S3h) rather than dropping those papers silently
 
 ### Methods Section (`methods_section.py`)
 

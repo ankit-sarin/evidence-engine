@@ -64,9 +64,9 @@ def export_evidence_docx(
     non-value states that are claims about the extraction therefore render as a
     bracketed marker; `missing` and `out of scope` render empty.
 
-    **The paper set is the corpus** (the former status-gate parameter selected
-    nothing and was removed, C33) — the
-    eligibility axis of `effective_state` (S3h) — so a paper whose extraction
+    **The paper set is the corpus** — the eligibility axis of `effective_state`
+    (S3h); the former status-gate parameter selected nothing and was removed
+    (C33) — so a paper whose extraction
     failed is not silently absent. It cannot be shown as evidence either, so
     S3h's other half is honoured by a note under the table reporting the failed
     count by reason rather than by dropping the rows without saying so.

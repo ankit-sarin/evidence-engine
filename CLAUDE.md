@@ -48,7 +48,7 @@ evidence-engine/
 │   ├── provenance/             # Frozen v1.1 evidence-provenance taxonomy + classifier
 │   └── eval/                   # Response-contract, runtime and priming evaluations
 ├── scripts/                    # Pipeline runners, batch scripts, monitors
-├── tests/                      # 2,778 in the standard gate + 17 network/ollama/integration (deselected)
+├── tests/                      # 2,782 in the standard gate (2,781 pass + 1 xfail) + 17 network/ollama/integration (deselected)
 │   └── conftest.py             # Suite-wide service-call fence (see Ops Invariants)
 └── data/                       # gitignored — per-review databases, PDFs, exports,
                                 #   eval stores, telemetry
@@ -110,7 +110,7 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 9. **AUDIT** — Grep verify + semantic verify via gemma3:27b + LOW_YIELD detection (configurable threshold)
 10. **CONCORDANCE** — Multi-arm agreement analysis: scoring, normalization, kappa + percent agreement with 95% CI
 11. **ADJUDICATION GATE** — 12-stage workflow: 5 abstract + 1 acquisition + 2 FT + 4 extraction audit (human review required)
-12. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section (min_status filtering)
+12. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section (the corpus, from the eligibility axis)
 
 ## Inference
 - Local models via Ollama at localhost:11434, every call through `engine/utils/ollama_client.ollama_chat` with its settings from the resolver. Temperatures are 0 (the integer at most sites, `0.0` at the FT sites — the literal each has always sent).

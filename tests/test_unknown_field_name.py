@@ -71,7 +71,9 @@ def test_T1_an_unknown_field_name_under_a_run_is_refused(review, spec):
     db, cb = review
     h = _open(db, spec, cb)
     arm = spec.extraction_models.arm
-    with rm.active_run(db._conn, h.run_id, field_names=frozenset(cb.field_names)):
+    # R225a (10a-C10): field_names is no longer an activate()/active_run()
+    # keyword — open_run already registered cb's field set under h.run_id.
+    with rm.active_run(db._conn, h.run_id):
         with pytest.raises(UnknownFieldName, match="study_desiggn"):
             _write_claim(db, h.run_id, arm, "study_desiggn")
     assert db._conn.execute("SELECT COUNT(*) FROM field_events").fetchone()[0] == 0
@@ -82,7 +84,9 @@ def test_T2_every_codebook_field_name_is_accepted(review, spec):
     db, cb = review
     h = _open(db, spec, cb)
     arm = spec.extraction_models.arm
-    with rm.active_run(db._conn, h.run_id, field_names=frozenset(cb.field_names)):
+    # R225a (10a-C10): field_names is no longer an activate()/active_run()
+    # keyword — open_run already registered cb's field set under h.run_id.
+    with rm.active_run(db._conn, h.run_id):
         for name in cb.field_names:
             _write_claim(db, h.run_id, arm, name)
     rows = db._conn.execute(
@@ -112,7 +116,9 @@ def test_T4_a_reviewer_event_with_an_unknown_field_name_is_refused(review, spec)
     arm = spec.extraction_models.arm
     uid = events.mint_extraction_uid()
     cid = events.make_claim_id(arm, uid, cb.field_names[0])
-    with rm.active_run(db._conn, h.run_id, field_names=frozenset(cb.field_names)):
+    # R225a (10a-C10): field_names is no longer an activate()/active_run()
+    # keyword — open_run already registered cb's field set under h.run_id.
+    with rm.active_run(db._conn, h.run_id):
         _write_claim(db, h.run_id, arm, cb.field_names[0])
         with pytest.raises(UnknownFieldName):
             events.write_field_event(
@@ -124,10 +130,15 @@ def test_T4_a_reviewer_event_with_an_unknown_field_name_is_refused(review, spec)
         "SELECT event_type FROM field_events ORDER BY event_id")] == ["asserted"]
 
 
-# T5 — the census (A2) found no existing fixture opts into field_names, so
-# none needed editing: the check is off by default (activate()'s
-# field_names=None), exactly as every caller before this parameter existed.
-# The one production caller, scripts/run_pipeline.py, now always opts in;
-# tests/test_cut_over.py::test_t3_an_aborted_run_closes_as_aborted_with_reason
-# is the sole test that runs scripts.run_pipeline.run_pipeline end to end and
-# is verified unaffected in the same gate run as this file (R225 note).
+# R225a (10a-C10) superseded this file's original design note: field_names
+# was an activate()/active_run() keyword (opt-in per activation, R225/B15),
+# and 10a-CLOSE's stop report found that engine/agents/extractor.py::
+# run_extraction nests a second, unguarded `active_run(db._conn, run_id)`
+# inside scripts/run_pipeline.py's already-activated run — silently
+# resetting the field set for the whole extraction stage, since the old
+# design stashed it in a ContextVar every activate() call overwrote. R225a
+# replaces the per-activation keyword with a process-local registry keyed by
+# run_id, written once by open_run — T1-T4 above are edited for the removed
+# keyword only; tests/test_run_scoped_field_names.py (10a-C10) tests the
+# registry directly, including the nested-activation production shape this
+# file never covered.

@@ -326,6 +326,8 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
         conn.execute("ROLLBACK TO open_run")
         conn.execute("RELEASE open_run")
         raise
+    # R225a: registered once, on success only — a rolled-back open never ran.
+    _RUN_FIELD_NAMES[run_id] = frozenset(codebook.field_names)
     return RunHandle(run_id=run_id, run_uid=run_uid, stages=resolved)
 
 
@@ -469,38 +471,34 @@ def record_call(conn, run_id: int, stage: str, paper_id: int | None,
 
 
 _ACTIVE: contextvars.ContextVar = contextvars.ContextVar("active_run", default=None)
-#: R225/B15: the active run's codebook field names, set alongside _ACTIVE by
-#: the same activate()/deactivate() pair, read only by events.write_field_event
-#: (via active_field_names()). A separate contextvar rather than widening
-#: _ACTIVE's tuple, so record_active_ollama_call / active_stage_row (10a-C7),
-#: whose unpacking assumes (conn, run_id), need no change.
-_ACTIVE_FIELD_NAMES: contextvars.ContextVar = contextvars.ContextVar(
-    "active_field_names", default=None)
+
+#: R225a (10a-C10, amending R225/B15): the codebook field set is a property of
+#: the RUN, not of the activation — a process-local registry keyed by run_id,
+#: written once by open_run and never changed. This is what makes nested
+#: activation of the same run_id safe: activate()/active_run() carry no
+#: field_names of their own to overwrite, so extractor.py's inner
+#: `with rm.active_run(db._conn, run_id):` (the same run_id run_pipeline
+#: already activated) cannot reset anything — there is nothing per-activation
+#: to reset. A run opened without open_run (a test monkeypatching
+#: _open_run_manifest, M3) has no registry entry and so no check — a test
+#: affordance, not a production gap.
+_RUN_FIELD_NAMES: dict[int, frozenset[str]] = {}
 
 
-def activate(conn, run_id: int, *, field_names: frozenset[str] | None = None):
+def activate(conn, run_id: int):
     """Record every Ollama call from here on against `run_id`. Returns a token
-    for `deactivate`.
-
-    `field_names` (R225/B15): the active run's codebook field names, read once
-    here — never per event — and stashed for `write_field_event`'s refusal.
-    `None` (the default; every caller before this parameter existed) disables
-    the check entirely, exactly as today."""
-    token = _ACTIVE.set((conn, run_id))
-    field_token = _ACTIVE_FIELD_NAMES.set(field_names)
-    return (token, field_token)
+    for `deactivate`."""
+    return _ACTIVE.set((conn, run_id))
 
 
 def deactivate(token) -> None:
-    run_token, field_token = token
-    _ACTIVE.reset(run_token)
-    _ACTIVE_FIELD_NAMES.reset(field_token)
+    _ACTIVE.reset(token)
 
 
 @contextlib.contextmanager
-def active_run(conn, run_id: int, *, field_names: frozenset[str] | None = None):
+def active_run(conn, run_id: int):
     """Record every Ollama call made inside the block against `run_id`."""
-    token = activate(conn, run_id, field_names=field_names)
+    token = activate(conn, run_id)
     try:
         yield
     finally:
@@ -508,9 +506,14 @@ def active_run(conn, run_id: int, *, field_names: frozenset[str] | None = None):
 
 
 def active_field_names() -> frozenset[str] | None:
-    """The active run's codebook field names, or `None` outside a run or when
-    the caller of `activate`/`active_run` did not pass any (R225/B15)."""
-    return _ACTIVE_FIELD_NAMES.get()
+    """The active run's registered codebook field names (R225a), or `None`
+    outside a run or when the active run_id was never registered by
+    `open_run` (M3's test affordance)."""
+    active = _ACTIVE.get()
+    if active is None:
+        return None
+    _, run_id = active
+    return _RUN_FIELD_NAMES.get(run_id)
 
 
 def record_active_ollama_call(stage: str | None, request: Mapping[str, Any],

@@ -99,12 +99,9 @@ def run_pipeline(
     # manifest records the resolved configuration of every stage this run can
     # call, and refuses a dirty tree or a pre-manifest arm before anything runs.
     run_id = _open_run_manifest(db, spec, start_idx)
-    # R225/B15: the codebook beside the review db, read once at activation —
-    # never per event — so write_field_event can refuse an unknown field name.
-    from engine.core.codebook import load_codebook_beside
-    run_token = rm.activate(
-        db._conn, run_id,
-        field_names=frozenset(load_codebook_beside(db.db_path).field_names))
+    # R225a: the field set is registered by open_run itself, keyed by run_id
+    # (engine/core/run_manifest.py) — activation carries no codebook of its own.
+    run_token = rm.activate(db._conn, run_id)
 
     results = {}
 

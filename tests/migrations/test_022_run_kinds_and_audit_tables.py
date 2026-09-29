@@ -310,6 +310,66 @@ def test_T5_the_one_shot_trigger_permits_the_triple_together_and_refuses_a_secon
     conn.close()
 
 
+# ── T5b (10b-C1, R79) ───────────────────────────────────────────────
+
+
+def test_T5b_open_run_with_a_reason_refused(fresh):
+    """The NULL reproducer (Step 4 rule 11; 10b-P3i finding 3): with end_status
+    NULL, `end_status IS NOT 'completed' OR …` was TRUE, so an OPEN run could
+    carry an end_reason. The permitted-states CHECK refuses it."""
+    conn = sqlite3.connect(str(fresh))
+    run_id = _open_test_run(conn, tmp_dir=fresh.parent)
+    with pytest.raises(sqlite3.IntegrityError, match="CHECK constraint"):
+        conn.execute(
+            "UPDATE run_manifests SET end_reason = 'x' WHERE run_id = ?", (run_id,))
+    conn.close()
+
+
+@pytest.mark.parametrize("end_status, end_reason", [
+    ("completed", None),
+    ("aborted", "r"),
+    ("failed", None),
+    ("failed", "r"),
+    ("interrupted", None),
+    ("interrupted", "r"),
+])
+def test_T5b_permitted_close_states_accepted(fresh, end_status, end_reason):
+    conn = sqlite3.connect(str(fresh))
+    run_id = _open_test_run(conn, tmp_dir=fresh.parent)
+    conn.execute(
+        "UPDATE run_manifests SET ended_at = 't', end_status = ?, end_reason = ? "
+        "WHERE run_id = ?", (end_status, end_reason, run_id))
+    row = conn.execute(
+        "SELECT end_status, end_reason FROM run_manifests WHERE run_id = ?",
+        (run_id,)).fetchone()
+    assert row == (end_status, end_reason)
+    conn.close()
+
+
+def test_T5b_open_state_accepted(fresh):
+    conn = sqlite3.connect(str(fresh))
+    run_id = _open_test_run(conn, tmp_dir=fresh.parent)
+    row = conn.execute(
+        "SELECT end_status, ended_at, end_reason FROM run_manifests WHERE run_id = ?",
+        (run_id,)).fetchone()
+    assert row == (None, None, None)
+    conn.close()
+
+
+@pytest.mark.parametrize("end_status, end_reason", [
+    ("completed", "r"),
+    ("aborted", None),
+])
+def test_T5b_excluded_close_states_refused(fresh, end_status, end_reason):
+    conn = sqlite3.connect(str(fresh))
+    run_id = _open_test_run(conn, tmp_dir=fresh.parent)
+    with pytest.raises(sqlite3.IntegrityError, match="CHECK constraint"):
+        conn.execute(
+            "UPDATE run_manifests SET ended_at = 't', end_status = ?, end_reason = ? "
+            "WHERE run_id = ?", (end_status, end_reason, run_id))
+    conn.close()
+
+
 # ── T6 ──────────────────────────────────────────────────────────────
 
 

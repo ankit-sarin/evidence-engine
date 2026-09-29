@@ -12,7 +12,9 @@ migration set names:
   commit — the constant and the CHECK never disagree); `end_status` CHECK
   gains `'aborted'`; a new nullable `end_reason TEXT` column, with
   `end_status = 'completed' => end_reason IS NULL` and
-  `end_status = 'aborted' => end_reason IS NOT NULL`. The one-shot
+  `end_status = 'aborted' => end_reason IS NOT NULL`. (10b-C1, R79: those two
+  were written as excluded states and passed an OPEN run carrying an
+  end_reason — 10b-P3i finding 3; now one CHECK of the five permitted states.) The one-shot
   `run_manifests_end_once` trigger is re-declared from the SAME immutable
   column list (`_MANIFEST_BODY`, unchanged) that generates it in 020 — adding
   `end_reason` to the table without adding it to that list is what lets it
@@ -286,9 +288,16 @@ def run_manifests_sql(name: str = "run_manifests") -> str:
         manifest_sha256 TEXT    NOT NULL,
         CHECK ((ended_at IS NULL) = (end_status IS NULL)),
         CHECK (cloud_arms_json = '[]' OR payload_description IS NOT NULL),
-        -- R215/C26: a completed run carries no reason; an aborted one must.
-        CHECK (end_status IS NOT 'completed' OR end_reason IS NULL),
-        CHECK (end_status IS NOT 'aborted' OR end_reason IS NOT NULL)
+        -- R215/C26, R79: the permitted (end_status, end_reason) states. An open
+        -- run carries no reason; a completed run none; an aborted run must;
+        -- failed and interrupted are unconstrained.
+        CHECK (
+            (end_status IS NULL AND end_reason IS NULL)
+         OR (end_status IS 'completed' AND end_reason IS NULL)
+         OR (end_status IS 'aborted' AND end_reason IS NOT NULL)
+         OR (end_status IS 'failed')
+         OR (end_status IS 'interrupted')
+        )
     )
     """
 

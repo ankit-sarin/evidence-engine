@@ -456,6 +456,7 @@ def ollama_chat(
     retry_delay: float = DEFAULT_RETRY_DELAY,
     wall_timeout: float | None = None,
     stage: str | None = None,
+    return_request_hash: bool = False,
     **kwargs,
 ):
     """Call Ollama chat with HTTP timeouts, wall-clock watchdog, and retries.
@@ -478,6 +479,12 @@ def ollama_chat(
         The resolver stage this call serves (`EffectiveConfig.kwargs()` passes
         it). Consumed here, never sent. Inside `run_manifest.active_run` the call
         is recorded in `run_calls` against it (S3b).
+    return_request_hash : bool
+        R224a: when True, a successful call returns `(response, request_hash)`
+        instead of the bare response — the same hash `run_calls.request_hash`
+        records for this call, computed once and handed to the recorder rather
+        than recomputed. Default False returns the response alone, unchanged
+        for every caller that does not opt in.
     **kwargs
         Passed through to ollama.Client.chat() (format, options, think, etc.).
 
@@ -496,7 +503,8 @@ def ollama_chat(
 
     Returns
     -------
-    ollama response object
+    ollama response object, or `(response, request_hash)` if
+    `return_request_hash` is True.
 
     Raises
     ------
@@ -515,6 +523,10 @@ def ollama_chat(
     paper_label = f"paper_id={paper_id}" if paper_id is not None else "paper_id=unknown"
     started_at = _utcnow()
     request = {"model": model, "messages": messages, **kwargs}
+    # R224a(3): computed once, here — every recording site and the opt-in
+    # return both use this value; neither recomputes it.
+    from engine.core.run_manifest import request_hash as _compute_request_hash
+    req_hash = _compute_request_hash(request)
 
     def _record(outcome: str, *, response=None, exc: BaseException | None = None) -> None:
         """R216/C24: one row per call under an active manifest, whatever its
@@ -523,7 +535,8 @@ def ollama_chat(
         from engine.core.run_manifest import record_active_ollama_call
         detail = None if exc is None else f"{type(exc).__name__}: {exc}"
         record_active_ollama_call(stage, request, paper_id, response, started_at,
-                                  outcome=outcome, outcome_detail=detail)
+                                  outcome=outcome, outcome_detail=detail,
+                                  request_hash=req_hash)
 
     def _finish(response):
         """Post-call: the only place a checked response and its raw response
@@ -539,7 +552,7 @@ def ollama_chat(
             _record("refused_input_dropped", response=response, exc=exc)
             raise
         _record("completed", response=checked)
-        return checked
+        return (checked, req_hash) if return_request_hash else checked
 
     try:
         fit = _check_input_fits(model, messages, kwargs.get("options"), paper_label)

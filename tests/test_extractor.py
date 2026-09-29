@@ -28,8 +28,8 @@ from engine.search.models import Citation
 from engine.core.codebook import load_codebook_beside
 from engine.core.codebook import load_codebook_for
 from _parsed_text_fixture import write_parsed
-from _event_store_fixture import (claim_identity, open_extraction_run, seed_eligibility,
-                                  upgrade_event_store)
+from _event_store_fixture import (FIXTURE_CONTEXT_SHA, claim_identity, open_extraction_run,
+                                  seed_eligibility, upgrade_event_store)
 import importlib as _importlib
 _M021 = _importlib.import_module("engine.migrations.021_parsed_text_sha256")
 
@@ -271,7 +271,10 @@ def test_full_two_pass_mocked(tmp_path, spec):
 
     n_expected = len(CBK.fields)
     with patch("engine.agents.extractor.ollama_chat") as mock_chat:
-        mock_chat.side_effect = [_mock_pass1_response(), _mock_pass2_complete(spec)]
+        # R224a: extract_paper's pass1/pass2 calls always pass
+        # return_request_hash=True now, so the mock answers with (response, hash).
+        mock_chat.side_effect = [(_mock_pass1_response(), "e" * 64),
+                                 (_mock_pass2_complete(spec), "e" * 64)]
         result = extract_paper(pid, paper_text, spec, db, run_id=run_id,
                                parsed_text_ref=resolve_parsed_text(db._conn, pid))
 
@@ -326,7 +329,7 @@ def test_staleness_skip(tmp_path, spec):
         actor_role="extractor", actor_name="m",
         payload={**claim_identity(arm, pid, sha=resolve_parsed_text(db._conn, pid).sha256),
                  PAYLOAD_REUSE_KEY: key},
-        run_id=run_id)
+        run_id=run_id, presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
 
     # run_extraction should skip this paper. Preflight is patched out: it shells
     # out to `systemctl show ollama` and loads deepseek-r1:32b against the live
@@ -382,7 +385,8 @@ def test_ellipsis_snippet_triggers_retry():
     assert _has_invalid_snippet(span.source_snippet)
 
     with patch("engine.agents.extractor._retry_snippet") as mock_retry:
-        mock_retry.return_value = "Twenty participants completed the study."
+        # R224a: _retry_snippet now always returns (snippet, request_hash).
+        mock_retry.return_value = ("Twenty participants completed the study.", "e" * 64)
         validated = _validate_and_retry_snippets([span], "paper text", paper_id=1)
 
     assert len(validated) == 1
@@ -401,7 +405,7 @@ def test_bracket_ellipsis_triggers_retry():
     assert _has_invalid_snippet(span.source_snippet)
 
     with patch("engine.agents.extractor._retry_snippet") as mock_retry:
-        mock_retry.return_value = "The STAR robot was used for suturing."
+        mock_retry.return_value = ("The STAR robot was used for suturing.", "e" * 64)
         validated = _validate_and_retry_snippets([span], "paper text", paper_id=1)
 
     assert validated[0].source_snippet == "The STAR robot was used for suturing."
@@ -417,7 +421,7 @@ def test_retry_exhausted_nulls_snippet_preserves_value():
     )
 
     with patch("engine.agents.extractor._retry_snippet") as mock_retry:
-        mock_retry.return_value = None  # all retries fail
+        mock_retry.return_value = (None, None)  # all retries fail — no hash either
         validated = _validate_and_retry_snippets([span], "paper text", paper_id=1)
 
     assert len(validated) == 1
@@ -523,7 +527,8 @@ class TestProactiveRestart:
         pass2_resp = MagicMock()
         pass2_resp.message.content = zero_span_output.model_dump_json()
 
-        mock_chat.side_effect = [pass1_resp, pass2_resp] * 3   # the budget of 3
+        # R224a: pass1/pass2 always pass return_request_hash=True now.
+        mock_chat.side_effect = [(pass1_resp, "e" * 64), (pass2_resp, "e" * 64)] * 3
 
         stats = run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
 

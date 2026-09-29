@@ -429,6 +429,11 @@ def request_hash(request: Mapping[str, Any]) -> str:
     return sha256_canonical(dict(request))
 
 
+#: `record_call`'s `request_hash=` keyword shadows this name inside that
+#: function's body (R224a(3)); this alias is what it falls back to.
+_compute_request_hash = request_hash
+
+
 def response_digest(content: str | None, thinking: str | None = None) -> str:
     return sha256_canonical({"content": content or "", "thinking": thinking or ""})
 
@@ -437,18 +442,27 @@ def record_call(conn, run_id: int, stage: str, paper_id: int | None,
                 request: Mapping[str, Any], digest: str | None,
                 started_at: str, ended_at: str, *,
                 outcome: str,
-                outcome_detail: str | None = None) -> int:
+                outcome_detail: str | None = None,
+                request_hash: str | None = None) -> int:
     """`outcome` (R216/C24, 022's `run_calls.outcome` column) is required,
     keyword-only, no default (10a-C3): every caller now names it explicitly,
     so a caller this task missed fails loudly (TypeError) rather than
     silently writing 'completed'. `ollama_chat`'s recorder (10a-C3) is the
     only caller reached from a refusal path; the cloud path's `send()` still
     passes 'completed' explicitly (F15 — its own outcome semantics are out of
-    scope here)."""
+    scope here).
+
+    `request_hash` (R224a(3)): the caller's own hash of `request`, when it
+    already computed one — `ollama_chat` always does, once, and hands it
+    here rather than paying for a second identical hash. `None` (every other
+    caller, including the cloud path's `send()`) computes it here exactly as
+    before this parameter existed — behaviour-preserving by construction: the
+    module-level `request_hash()` function is the same one either way."""
+    rh = request_hash if request_hash is not None else _compute_request_hash(request)
     cur = conn.execute(
         "INSERT INTO run_calls (run_id, stage, paper_id, request_hash, response_digest, "
         "started_at, ended_at, outcome, outcome_detail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        (run_id, stage, paper_id, request_hash(request), digest, started_at, ended_at,
+        (run_id, stage, paper_id, rh, digest, started_at, ended_at,
          outcome, outcome_detail))
     conn.commit()
     return cur.lastrowid
@@ -480,11 +494,18 @@ def active_run(conn, run_id: int):
 def record_active_ollama_call(stage: str | None, request: Mapping[str, Any],
                               paper_id: int | None, response, started_at: str, *,
                               outcome: str,
-                              outcome_detail: str | None = None) -> None:
+                              outcome_detail: str | None = None,
+                              request_hash: str | None = None) -> None:
     """Called by `ollama_chat` on every outcome (10a-C3, R216) — success and
     every refusal alike. A no-op outside a run. `response` is None on a
     pre-call refusal (nothing was sent, so there is nothing to digest);
-    `digest` stays NULL for it rather than the digest of an empty message."""
+    `digest` stays NULL for it rather than the digest of an empty message.
+
+    `request_hash` (R224a(3)): `ollama_chat` always passes its own, computed
+    once; this is a pure pass-through to `record_call`, which falls back to
+    computing it when `None` (every other caller of `record_call` directly,
+    i.e. the cloud path's `send()`, which this function is never reached
+    from)."""
     active = _ACTIVE.get()
     if active is None or stage is None:
         return
@@ -495,7 +516,7 @@ def record_active_ollama_call(stage: str | None, request: Mapping[str, Any],
         msg = getattr(response, "message", None)
         digest = response_digest(getattr(msg, "content", None), getattr(msg, "thinking", None))
     record_call(conn, run_id, key, paper_id, request, digest, started_at, _now(),
-               outcome=outcome, outcome_detail=outcome_detail)
+               outcome=outcome, outcome_detail=outcome_detail, request_hash=request_hash)
 
 
 def stage_names_agree() -> tuple[str, ...]:

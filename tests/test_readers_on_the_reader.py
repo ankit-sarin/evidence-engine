@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from _event_store_fixture import claim_identity  # 9b-2c R1
+from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1, R224a
 
 from engine.core import events
 from tests._event_store_fixture import run_for
@@ -65,7 +65,8 @@ def _assert_value(conn, paper_id, field, arm, value, *, located=True):
         conn, run_id=run_for(conn), event_type="asserted", paper_id=paper_id, field_name=field,
         arm=arm, value=value, extraction_uid=uid, source_snippet=value,
         actor_kind="model", actor_role="extractor", actor_name="m",
-        payload=claim_identity(arm, paper_id))
+        payload=claim_identity(arm, paper_id),
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
     if located:
         events.write_field_event(
         conn, run_id=run_for(conn), event_type="citation_located", paper_id=paper_id,
@@ -81,7 +82,8 @@ def _decline(conn, paper_id, field, arm):
         conn, run_id=run_for(conn), event_type="declined", paper_id=paper_id, field_name=field,
         arm=arm, extraction_uid=events.mint_extraction_uid(),
         actor_kind="model", actor_role="extractor", actor_name="m",
-        payload=claim_identity(arm, paper_id))
+        payload=claim_identity(arm, paper_id),
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
     conn.commit()
 
 

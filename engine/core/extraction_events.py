@@ -53,9 +53,11 @@ from engine.core.effective import (
     live_claim_events,
 )
 from engine.core.events import (
+    PAYLOAD_CONTEXT_CHAIN,
     PAYLOAD_PARSED_TEXT_SHA256,
     PAYLOAD_PARSED_TEXT_UID,
     PAYLOAD_REUSE_KEY,
+    PAYLOAD_SNIPPET_CONTEXT,
     EventRefused,
     write_field_event,
     write_paper_event,
@@ -152,8 +154,16 @@ class ExtractionRecord:
     incomplete_fields: tuple[str, ...]
     attempts: int
     stage_name: str
-    #: 9b-2c R6: request_hash is not returned to the caller; None until it is.
+    #: 9b-2c R6 / R224a(1): the value-producing call's request hash — pass 2's,
+    #: on both paths (extract_pass2_structured is shared).
     presented_context_sha256: str | None = None
+    #: R224a(2): every model call's request hash for this paper's extraction,
+    #: in call order (pass 1 / elicitation attempts, pass 2, each retry).
+    context_chain: tuple[str, ...] = ()
+    #: R224a(2): field_name -> the retry call's request hash, for a field
+    #: whose stored source_snippet a retry supplied. Absent for every other
+    #: field, including one that was never retried at all.
+    snippet_contexts: Mapping[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -204,9 +214,17 @@ def legacy_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str,
                   parsed_text: ParsedTextRef | None, model: str, model_digest: str | None,
                   expected: tuple[str, ...], spans, offenders=(),
                   duplicated: tuple[str, ...] = (), attempts: int = 1,
-                  stage_name: str = "extract_pass2") -> ExtractionRecord:
+                  stage_name: str = "extract_pass2",
+                  presented_context_sha256: str | None = None,
+                  context_chain: tuple[str, ...] = (),
+                  snippet_contexts: Mapping[str, str] | None = None) -> ExtractionRecord:
     """The legacy prompt's attempt, per field: a duplicate or an uncited value is
-    `contract_unmet`, a span is a value, anything else is incomplete."""
+    `contract_unmet`, a span is a value, anything else is incomplete.
+
+    `presented_context_sha256`, `context_chain` and `snippet_contexts` are
+    R224a(1)/(2): the value-producing call's hash, the paper's full call
+    chain, and any retried field's own hash — the caller (`extract_paper`)
+    assembles these; this function only carries them onto the record."""
     by_name, bad = _span_by_name(spans), _index_offenders(offenders)
     fields, incomplete = [], []
     for name in expected:
@@ -222,7 +240,9 @@ def legacy_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str,
             incomplete.append(name)
     return ExtractionRecord(paper_id, arm, run_id, extraction_uid, parsed_text, model,
                             model_digest, tuple(fields), tuple(incomplete), attempts,
-                            stage_name)
+                            stage_name, presented_context_sha256=presented_context_sha256,
+                            context_chain=context_chain,
+                            snippet_contexts=snippet_contexts or {})
 
 
 def elicited_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str,
@@ -231,10 +251,17 @@ def elicited_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str
                     violations: Mapping[str, tuple[str, ...]], unmet_token: str,
                     escape_token: str, evidenced_token: str, offenders=(),
                     duplicated: tuple[str, ...] = (), attempts: int = 1,
-                    stage_name: str = "elicitation_pass1") -> ExtractionRecord:
+                    stage_name: str = "elicitation_pass1",
+                    presented_context_sha256: str | None = None,
+                    context_chain: tuple[str, ...] = (),
+                    snippet_contexts: Mapping[str, str] | None = None) -> ExtractionRecord:
     """The elicited path's attempt, from its terminal states: CONTRACT_UNMET ->
     `contract_unmet` with the class-contract violations, the escape token ->
-    `declined`, an evidenced field with its span -> a value (unless uncited)."""
+    `declined`, an evidenced field with its span -> a value (unless uncited).
+
+    `presented_context_sha256`, `context_chain` and `snippet_contexts` are
+    R224a(1)/(2), same shape as `legacy_record`'s — the elicited path has no
+    snippet-retry mechanism, so `snippet_contexts` is always empty here."""
     by_name, bad = _span_by_name(spans), _index_offenders(offenders)
     fields, incomplete = [], []
     for name in expected:
@@ -257,7 +284,9 @@ def elicited_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str
             incomplete.append(name)
     return ExtractionRecord(paper_id, arm, run_id, extraction_uid, parsed_text, model,
                             model_digest, tuple(fields), tuple(incomplete), attempts,
-                            stage_name)
+                            stage_name, presented_context_sha256=presented_context_sha256,
+                            context_chain=context_chain,
+                            snippet_contexts=snippet_contexts or {})
 
 
 # ── Exceptions -> outcomes ───────────────────────────────────────────
@@ -375,6 +404,11 @@ def plan_extraction_events(outcome, *, live: Mapping[str, tuple[LiveClaimEvent, 
             payload.update(violation_codes=list(fo.violation_codes), attempts=fo.attempts)
         elif fo.kind == VALUE and fo.confidence is not None:
             payload["confidence"] = fo.confidence
+        # R224a(2): every claim carries the full call chain; a retried
+        # field's snippet also carries the retry's own hash.
+        payload[PAYLOAD_CONTEXT_CHAIN] = list(rec.context_chain)
+        if fo.field_name in rec.snippet_contexts:
+            payload[PAYLOAD_SNIPPET_CONTEXT] = rec.snippet_contexts[fo.field_name]
         out.append(dict(base, event_type=_EVENT_TYPE[fo.kind], field_name=fo.field_name,
                         value=fo.value if fo.kind == VALUE else None,
                         source_snippet=fo.source_snippet if fo.kind == VALUE else None,

@@ -26,7 +26,7 @@ from pathlib import Path
 
 import pytest
 
-from _event_store_fixture import claim_identity  # 9b-2c R1
+from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1, R224a
 import yaml
 
 from engine.elicitation.classes import non_value_tokens_for
@@ -262,12 +262,14 @@ def test_site5_terminal_states_are_dropped_from_the_arm(tmp_path):
         conn, run_id=run_for(conn), event_type="contract_unmet", paper_id=7, field_name="b",
         arm="local", extraction_uid=events.mint_extraction_uid(),
         actor_kind="model", actor_role="extractor", actor_name="m",
-        payload={**claim_identity("local", 7), "violation_codes": ["X"], "attempts": 2})
+        payload={**claim_identity("local", 7), "violation_codes": ["X"], "attempts": 2},
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
     events.write_field_event(
         conn, run_id=run_for(conn), event_type="declined", paper_id=7, field_name="c", arm="local",
         extraction_uid=events.mint_extraction_uid(),
         actor_kind="model", actor_role="extractor", actor_name="m",
-        payload=claim_identity("local", 7))
+        payload=claim_identity("local", 7),
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
     conn.commit()
     conn.close()
 
@@ -302,7 +304,8 @@ def test_site5_a_field_the_codebook_does_not_declare_is_ignored(tmp_path):
         arm="local", value="The paper presents a dynamic potential field method",
         extraction_uid=events.mint_extraction_uid(),
         actor_kind="model", actor_role="extractor", actor_name="m",
-        payload=claim_identity("local", 7))
+        payload=claim_identity("local", 7),
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
     conn.commit()
     conn.close()
 

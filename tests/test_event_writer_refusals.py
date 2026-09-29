@@ -13,7 +13,7 @@ import sqlite3
 
 import pytest
 
-from _event_store_fixture import claim_identity  # 9b-2c R1
+from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1, R224a
 
 from engine.core import events
 from engine.core.effective import PRE_MANIFEST, effective_value
@@ -56,7 +56,8 @@ def claim(db, paper, value, *, arm="local"):
         db, event_type="asserted", paper_id=paper, field_name=FIELD, arm=arm,
         claim_id=cid, value=value, source_snippet="q", actor_kind="model",
         actor_role="extractor", actor_name="m", sentinels=SENTINELS,
-        payload=claim_identity(arm, paper), run_id=_run(db))
+        payload=claim_identity(arm, paper), run_id=_run(db),
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
     return cid
 
 

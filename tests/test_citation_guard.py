@@ -146,8 +146,10 @@ def test_uncited_value_never_reaches_the_database(tmp_path):
 
     written = []
     try:
-        with patch.object(E, "extract_pass1_reasoning", return_value="trace"), \
-             patch.object(E, "extract_pass2_structured", return_value=pass2), \
+        with patch.object(E, "extract_pass1_reasoning",
+                          return_value=("trace", "d" * 64)), \
+             patch.object(E, "extract_pass2_structured",
+                          return_value=(pass2, "d" * 64)), \
              patch.object(E, "write_extraction_events",
                           side_effect=lambda *a, **k: written.append((a, k))):
             with pytest.raises(UncitedValueError) as exc:

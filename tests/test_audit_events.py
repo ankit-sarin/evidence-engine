@@ -24,7 +24,9 @@ from engine.core.database import ReviewDatabase
 from engine.core.effective import PRE_MANIFEST, effective_state, effective_value
 from engine.core.parsed_text import resolve_parsed_text
 from engine.core.review_spec import load_review_spec
-from _event_store_fixture import claim_identity, open_extraction_run, seed_claim, seed_eligibility
+from _event_store_fixture import (
+    FIXTURE_CONTEXT_SHA, claim_identity, open_extraction_run, seed_claim, seed_eligibility,
+)
 from _parsed_text_fixture import write_parsed
 
 REPO = Path(__file__).resolve().parent.parent
@@ -78,7 +80,8 @@ def claim(db, spec, run_id, pid, field, value, snippet):
         extraction_uid=uid, actor_kind="model", actor_role="extractor",
         actor_name="deepseek-r1:32b",
         payload=claim_identity(spec.extraction_models.arm, pid, sha=ref.sha256,
-                               uid=ref.parsed_text_uid), run_id=run_id)
+                               uid=ref.parsed_text_uid), run_id=run_id,
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
     return events.make_claim_id(spec.extraction_models.arm, uid, field)
 
 

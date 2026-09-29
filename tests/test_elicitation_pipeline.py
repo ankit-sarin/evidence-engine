@@ -88,10 +88,13 @@ PASS2 = ExtractionOutput(fields=[
 
 
 def _response(content, thinking="some reasoning"):
-    return types.SimpleNamespace(
+    """R224a: every caller in this file stands in for `ollama_chat` called with
+    `return_request_hash=True` (`run_pass1`/`extract_pass2_structured` both
+    always set it now), so this returns the (response, hash) shape directly."""
+    return (types.SimpleNamespace(
         message=types.SimpleNamespace(content=content, thinking=thinking),
         done_reason="stop", prompt_eval_count=1234, eval_count=99,
-    )
+    ), "e" * 64)
 
 
 class _Field:

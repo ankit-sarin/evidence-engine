@@ -160,7 +160,8 @@ def add_values(db_path: str | Path, arm: str, field_name: str,
                 conn, event_type="asserted", paper_id=pid, field_name=field_name,
                 arm=arm, value=value, extraction_uid=uid, source_snippet=value,
                 actor_kind="model", actor_role="extractor", actor_name="fixture",
-                payload=claim_identity(arm, pid), run_id=run_id)
+                payload=claim_identity(arm, pid), run_id=run_id,
+                presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
             if located:
                 events.write_field_event(
                     conn, event_type="citation_located", paper_id=pid,
@@ -335,17 +336,27 @@ def open_extraction_run(db, spec, *, digest: str = FIXTURE_DIGEST) -> int:
 #: identity (9b-2c R1).
 FIXTURE_TEXT_SHA = "f" * 64
 
+#: R224a: the fixture call chain's one synthetic hash. Tests about presented
+#: context (tests/test_presented_context.py) build their own; every other
+#: fixture claim just needs a value that satisfies the writer.
+FIXTURE_CONTEXT_SHA = "c" * 64
+
 
 def claim_identity(arm: str, paper_id: int, *, sha: str = FIXTURE_TEXT_SHA,
                    uid: str | None = None) -> dict:
     """The three input-identity payload keys an extractor's claim must carry
-    (9b-2c R1, `events.ClaimWithoutInputIdentity`), for a fixture that writes a
-    claim through the writer. `sha` is the parsed text's hash; pass the real one
-    when the test is about selection or supersession."""
+    (9b-2c R1, `events.ClaimWithoutInputIdentity`), plus R224a's context_chain,
+    for a fixture that writes a claim through the writer. `sha` is the parsed
+    text's hash; pass the real one when the test is about selection or
+    supersession. `presented_context_sha256` is a separate `write_field_event`
+    keyword (R224a), not a payload key — a caller of this helper still passes
+    it, typically `FIXTURE_CONTEXT_SHA`."""
     from engine.core.events import (
-        PAYLOAD_PARSED_TEXT_SHA256, PAYLOAD_PARSED_TEXT_UID, PAYLOAD_REUSE_KEY,
+        PAYLOAD_CONTEXT_CHAIN, PAYLOAD_PARSED_TEXT_SHA256, PAYLOAD_PARSED_TEXT_UID,
+        PAYLOAD_REUSE_KEY,
     )
     from engine.core.reuse_key import reuse_key
     return {PAYLOAD_REUSE_KEY: reuse_key(arm, paper_id, sha),
             PAYLOAD_PARSED_TEXT_SHA256: sha,
-            PAYLOAD_PARSED_TEXT_UID: uid or f"fixture-text-{paper_id}"}
+            PAYLOAD_PARSED_TEXT_UID: uid or f"fixture-text-{paper_id}",
+            PAYLOAD_CONTEXT_CHAIN: [FIXTURE_CONTEXT_SHA]}

@@ -217,7 +217,8 @@ def pass1_messages(prompt: str) -> list[dict]:
 
 def extract_pass1_reasoning(prompt: str, think: bool | None = None, *,
                             cfg: EffectiveConfig | None = None,
-                            paper_id: int | None = None) -> str:
+                            paper_id: int | None = None,
+                            return_request_hash: bool = False) -> str | tuple[str, str]:
     """Run Pass 1: let DeepSeek-R1 reason freely, return the thinking trace.
 
     `think` is passed explicitly and never left to the Ollama default —
@@ -225,11 +226,17 @@ def extract_pass1_reasoning(prompt: str, think: bool | None = None, *,
     a version-dependent default is what let the interface change go unnoticed.
     It comes from the resolver (stage `extract_pass1`); a `think=` argument is a
     caller override.
+
+    `return_request_hash` (R224a(3)): the same opt-in as `ollama_chat`'s own —
+    default False returns the trace alone, unchanged for every existing
+    caller; `extract_paper` and the elicited path's `run_pass1` are the ones
+    that set it, to build the call chain.
     """
     cfg = _with_think(cfg or stage_config("extract_pass1"), think)
     _LAST_PASS1_TELEMETRY.clear()
-    response = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
-                           **cfg.kwargs())
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+                         return_request_hash=return_request_hash, **cfg.kwargs())
+    response, req_hash = result if return_request_hash else (result, None)
 
     content = response.message.content or ""
     thinking = getattr(response.message, "thinking", None)
@@ -241,7 +248,7 @@ def extract_pass1_reasoning(prompt: str, think: bool | None = None, *,
         finish_reason=getattr(response, "done_reason", None),
         prompt_eval_count=getattr(response, "prompt_eval_count", None),
     )
-    return trace
+    return (trace, req_hash) if return_request_hash else trace
 
 
 def parse_thinking_trace(content: str, thinking: str | None = None) -> tuple[str, str]:
@@ -313,7 +320,8 @@ def extract_pass2_structured(
     think: bool | None = None,
     codebook_hash: str | None = None,
     *, cfg: EffectiveConfig | None = None,
-) -> ExtractionResult:
+    return_request_hash: bool = False,
+) -> ExtractionResult | tuple[ExtractionResult, str]:
     """Run Pass 2: use reasoning trace as context, force structured JSON output.
 
     `codebook_hash` is the provenance stamp for the result. A caller that
@@ -321,6 +329,11 @@ def extract_pass2_structured(
     and it must, because its review lives under a temp data root that
     `spec.review_id` cannot find. Callers that do not hold one fall back to the
     review's own codebook.
+
+    `return_request_hash` (R224a(1)/(3)): the same opt-in as `ollama_chat`'s
+    own. Pass 2's call is the value-producing call on both paths — its hash is
+    `presented_context_sha256` — so `extract_paper` and the elicited path's
+    `extract_paper_elicited` both set this; every other caller is unchanged.
     """
     schema_hash = (
         codebook_hash if codebook_hash is not None
@@ -328,8 +341,10 @@ def extract_pass2_structured(
     )
     cfg = _with_think(cfg or stage_config("extract_pass2", spec), think)
 
-    response = ollama_chat(paper_id=paper_id,
-                           messages=pass2_messages(prompt, reasoning_trace), **cfg.kwargs())
+    result = ollama_chat(paper_id=paper_id,
+                         messages=pass2_messages(prompt, reasoning_trace),
+                         return_request_hash=return_request_hash, **cfg.kwargs())
+    response, req_hash = result if return_request_hash else (result, None)
 
     raw = response.message.content or ""
     # INSTRUMENT-01: stash the pre-parse response and Ollama's own done_reason
@@ -343,7 +358,7 @@ def extract_pass2_structured(
     )
     output = ExtractionOutput.model_validate_json(raw)
 
-    return ExtractionResult(
+    out = ExtractionResult(
         paper_id=paper_id,
         fields=output.fields,
         reasoning_trace=reasoning_trace,
@@ -351,6 +366,7 @@ def extract_pass2_structured(
         codebook_hash=schema_hash,
         extracted_at=datetime.now(timezone.utc),
     )
+    return (out, req_hash) if return_request_hash else out
 
 
 # ── Snippet Validation ──────────────────────────────────────────────
@@ -387,27 +403,35 @@ def _retry_snippet(
     paper_text: str,
     paper_id: int,
     *, cfg: EffectiveConfig | None = None,
-) -> str | None:
+    return_request_hash: bool = False,
+) -> str | None | tuple[str | None, str | None]:
     """Request a clean verbatim snippet for a single field.
 
     Returns the new snippet string, or None if the model still produces
     an invalid snippet or fails.
+
+    `return_request_hash` (R224a(2)/(3)): the same opt-in as the other two
+    call sites. On the `except` path (the call itself failed) the hash is
+    `None` alongside the `None` snippet — there is no request to name if the
+    call never completed. `_validate_and_retry_snippets` sets this.
     """
     cfg = cfg or stage_config("extract_retry_snippet")
     try:
-        response = ollama_chat(
+        result = ollama_chat(
             paper_id=paper_id,
             messages=retry_snippet_messages(field_name, value, paper_text),
+            return_request_hash=return_request_hash,
             **cfg.kwargs(),
         )
+        response, req_hash = result if return_request_hash else (result, None)
         raw = response.message.content or ""
         data = json.loads(raw)
         new_snippet = data.get("source_snippet")
         if new_snippet and _has_invalid_snippet(new_snippet):
-            return None
-        return new_snippet
+            new_snippet = None
+        return (new_snippet, req_hash) if return_request_hash else new_snippet
     except Exception:
-        return None
+        return (None, None) if return_request_hash else None
 
 
 def _validate_and_retry_snippets(
@@ -415,25 +439,52 @@ def _validate_and_retry_snippets(
     paper_text: str,
     paper_id: int,
     *, cfg: EffectiveConfig | None = None,
-) -> list[EvidenceSpan]:
-    """Validate snippets post-extraction; retry invalid ones up to SNIPPET_MAX_RETRIES times."""
+    return_snippet_contexts: bool = False,
+) -> (list[EvidenceSpan]
+     | tuple[list[EvidenceSpan], dict[str, str], list[str]]):
+    """Validate snippets post-extraction; retry invalid ones up to SNIPPET_MAX_RETRIES times.
+
+    `return_snippet_contexts` (R224a(2)): the same opt-in shape as the three
+    `ollama_chat`-adjacent functions. Default False returns the validated
+    fields alone, unchanged for every existing caller; `extract_paper` sets it
+    to also receive:
+
+    * a `{field_name: request_hash}` map of the retry call that supplied the
+      *stored* snippet — the last successful retry, since that is the one
+      whose text ended up in the field (`new_snippet is not None` breaks the
+      loop, so it is also the last attempt made). A field never retried, or
+      whose every retry failed, is absent from the map.
+    * the ordered hashes of every retry call that completed (successfully or
+      with a still-invalid snippet — either way a request was made and
+      answered), in the order attempted, for `extract_paper`'s call chain. A
+      retry that raised before returning contributes no hash (R224a(3): the
+      hash is returned only on `ollama_chat`'s success path)."""
     validated = []
+    snippet_contexts: dict[str, str] = {}
+    retry_chain: list[str] = []
     for span in fields:
         if not _has_invalid_snippet(span.source_snippet):
             validated.append(span)
             continue
 
         new_snippet = None
+        retry_hash = None
         for attempt in range(1, SNIPPET_MAX_RETRIES + 1):
             logger.debug(
                 "Paper %d, field %s: invalid snippet retry %d/%d",
                 paper_id, span.field_name, attempt, SNIPPET_MAX_RETRIES,
             )
-            new_snippet = _retry_snippet(
+            new_snippet, retry_hash = _retry_snippet(
                 span.field_name, span.value, paper_text, paper_id, cfg=cfg,
+                return_request_hash=True,
             )
+            if retry_hash is not None:
+                retry_chain.append(retry_hash)
             if new_snippet is not None:
                 break
+
+        if new_snippet is not None and retry_hash is not None:
+            snippet_contexts[span.field_name] = retry_hash
 
         validated.append(EvidenceSpan(
             field_name=span.field_name,
@@ -442,7 +493,8 @@ def _validate_and_retry_snippets(
             confidence=span.confidence,
             tier=span.tier,
         ))
-    return validated
+    return ((validated, snippet_contexts, retry_chain) if return_snippet_contexts
+           else validated)
 
 
 def _absence_tokens(codebook_path: Path) -> tuple[str, frozenset[str]]:
@@ -527,16 +579,23 @@ def extract_paper(
     cfg_retry = stage_config("extract_retry_snippet", spec)
 
     # Pass 1: reasoning
-    reasoning_trace = extract_pass1_reasoning(prompt, cfg=cfg1, paper_id=paper_id)
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+        prompt, cfg=cfg1, paper_id=paper_id, return_request_hash=True)
 
-    # Pass 2: structured output
-    result = extract_pass2_structured(prompt, reasoning_trace, spec, paper_id,
-                                      codebook_hash=cb.semantic_hash, cfg=cfg2)
+    # Pass 2: structured output. R224a(1): this call's hash is
+    # presented_context_sha256 on every claim this paper's extraction makes.
+    result, pass2_hash = extract_pass2_structured(
+        prompt, reasoning_trace, spec, paper_id,
+        codebook_hash=cb.semantic_hash, cfg=cfg2, return_request_hash=True)
 
-    # Validate snippets and retry invalid ones before storing
-    validated_fields = _validate_and_retry_snippets(
+    # Validate snippets and retry invalid ones before storing. R224a(2): the
+    # paper's full call chain, in call order, and which field's stored
+    # snippet (if any) a retry supplied.
+    validated_fields, snippet_contexts, retry_chain = _validate_and_retry_snippets(
         result.fields, paper_text, paper_id, cfg=cfg_retry,
+        return_snippet_contexts=True,
     )
+    context_chain = (pass1_hash, pass2_hash, *retry_chain)
     result = ExtractionResult(
         paper_id=result.paper_id,
         fields=validated_fields,
@@ -592,7 +651,9 @@ def extract_paper(
             offenders=check_citations(kept, escape_token=escape, absence_sentinels=sentinels,
                                       mode=LEGACY).offenders,
             duplicated=check_completeness(span_dicts, expected).duplicated,
-            attempts=attempt or 1)
+            attempts=attempt or 1,
+            presented_context_sha256=pass2_hash, context_chain=context_chain,
+            snippet_contexts=snippet_contexts)
         raise
     result = result.model_copy(update={"fields": drop_unexpected(result.fields, expected)})
 
@@ -605,7 +666,9 @@ def extract_paper(
             paper_id=paper_id, arm=spec.extraction_models.arm, run_id=run_id,
             extraction_uid=mint_extraction_uid(), parsed_text=parsed_text_ref,
             model=cfg1.model, model_digest=model_digest, expected=expected,
-            spans=span_dicts, attempts=attempt or 1),
+            spans=span_dicts, attempts=attempt or 1,
+            presented_context_sha256=pass2_hash, context_chain=context_chain,
+            snippet_contexts=snippet_contexts),
         sentinels=frozenset(cb.absence_sentinels), review_dir=Path(db.db_path).parent)
     return result
 

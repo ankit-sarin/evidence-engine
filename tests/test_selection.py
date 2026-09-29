@@ -29,8 +29,8 @@ from engine.core.parsed_text import (
 )
 from engine.core.reuse_key import reuse_key
 from engine.core.selection import SelectionResult, select_for_extraction
-from _event_store_fixture import (claim_identity, fixture_run, open_extraction_run,
-                                  seed_eligibility)
+from _event_store_fixture import (FIXTURE_CONTEXT_SHA, claim_identity, fixture_run,
+                                  open_extraction_run, seed_eligibility)
 from _parsed_text_fixture import write_parsed
 
 ARM = "local_test_arm"
@@ -72,7 +72,8 @@ def _claim(conn, pid, *, arm=ARM, key=None, event_type="asserted", payload=None)
         extraction_uid=uid, value="v" if event_type == "asserted" else None,
         source_snippet="v" if event_type == "asserted" else None,
         actor_kind="model", actor_role="extractor", actor_name="m",
-        payload=body, run_id=fixture_run(conn, arm))
+        payload=body, run_id=fixture_run(conn, arm),
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
     return events.make_claim_id(arm, uid, FIELD)
 
 

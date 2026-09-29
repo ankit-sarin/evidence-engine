@@ -87,7 +87,9 @@ def _record(db, spec, run_id, fields, incomplete=(), ref=None, uid=None):
         extraction_uid=uid or events.mint_extraction_uid(),
         parsed_text=ref or resolve_parsed_text(db._conn, PID), model="deepseek-r1:32b",
         model_digest="a" * 64, fields=tuple(fields), incomplete_fields=tuple(incomplete),
-        attempts=1, stage_name="extract_pass2")
+        attempts=1, stage_name="extract_pass2",
+        # R224a: every claim needs a presented context; the fixture chain is one hash.
+        presented_context_sha256="d" * 64, context_chain=("d" * 64,))
 
 
 def _value(name, value="RCT", snippet="A clean sentence."):
@@ -107,6 +109,11 @@ def _pev(db):
                             "ORDER BY event_id", (PID,)).fetchall()
 
 
+#: R224a: a fixture hash for the mocked pass1/pass2 calls below — real
+#: extract_paper now unpacks (value, request_hash) from both.
+FIXTURE_PASS_HASH = "d" * 64
+
+
 def _pass2(fields):
     return ExtractionResult(paper_id=PID, fields=fields, reasoning_trace="t",
                             model="deepseek-r1:32b", codebook_hash="h",
@@ -124,8 +131,10 @@ def _spans(expected, **override):
 
 def _legacy(db, spec, run_id, spans, *, attempt=3):
     """The real legacy `extract_paper`, its two model passes stubbed."""
-    with patch.object(E, "extract_pass1_reasoning", return_value="trace"), \
-         patch.object(E, "extract_pass2_structured", return_value=_pass2(spans)):
+    with patch.object(E, "extract_pass1_reasoning",
+                      return_value=("trace", FIXTURE_PASS_HASH)), \
+         patch.object(E, "extract_pass2_structured",
+                      return_value=(_pass2(spans), FIXTURE_PASS_HASH)):
         return E.extract_paper(PID, "The paper reports a trial.", spec, db, attempt=attempt,
                                parsed_text_ref=resolve_parsed_text(db._conn, PID),
                                run_id=run_id)
@@ -223,8 +232,9 @@ def test_t4_a_duplicated_field_is_retried_then_contract_unmet(db, spec, run_id, 
 
     def pass2(*a, **k):
         calls["n"] += 1
-        return _pass2(spans)
-    with patch.object(E, "extract_pass1_reasoning", return_value="trace"), \
+        return (_pass2(spans), FIXTURE_PASS_HASH)
+    with patch.object(E, "extract_pass1_reasoning",
+                      return_value=("trace", FIXTURE_PASS_HASH)), \
          patch.object(E, "extract_pass2_structured", side_effect=pass2):
         with pytest.raises(DuplicateFieldError) as err:
             E.extract_paper_with_completeness(
@@ -340,7 +350,8 @@ def test_t10_the_writer_refuses_an_extractor_claim_without_input_identity(db, sp
     events.write_field_event(
         db._conn, event_type="asserted", paper_id=PID, field_name="f", arm=arm, value="v",
         source_snippet="v", extraction_uid=uid, actor_kind="model", actor_role="extractor",
-        actor_name="m", payload=claim_identity(arm, PID), run_id=run_id)
+        actor_name="m", payload=claim_identity(arm, PID), run_id=run_id,
+        presented_context_sha256="d" * 64)  # R224a
     cid = events.make_claim_id(arm, uid, "f")
     events.write_field_event(      # a reviewer event names no input: not refused
         db._conn, event_type="human_corrected", paper_id=PID, field_name="f", arm=arm,

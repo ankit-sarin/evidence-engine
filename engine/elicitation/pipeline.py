@@ -131,12 +131,24 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     prompt = build_pass1_prompt(unit_map, codebook, field_names) + feedback
     cfg = _with_think(cfg or stage_config("elicitation_pass1"), think)
 
-    response = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt), **cfg.kwargs())
+    # R224a(2): this attempt's hash rides in the telemetry dict rather than
+    # changing this function's return shape — `elicit`'s two-attempt loop
+    # already carries telemetry per attempt, in call order.
+    response, req_hash = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+                                     return_request_hash=True, **cfg.kwargs())
     raw = response.message.content or ""
     thinking = getattr(response.message, "thinking", None) or ""
     pec = getattr(response, "prompt_eval_count", None)
 
-    result = check_response(raw, unit_map, codebook, field_names)
+    try:
+        result = check_response(raw, unit_map, codebook, field_names)
+    except DuplicateFieldError as exc:
+        # R224a: this call succeeded and its hash exists, but the exception
+        # unwinds past `return` below — attach it here or it is lost, the
+        # same "no return occurred" loss `ollama_chat`'s own refusal paths
+        # have (10a-C8-B A1).
+        exc.request_hash = req_hash
+        raise
     telemetry = {
         "pass1_prompt_chars": len(prompt),
         "pass1_feedback_chars": len(feedback),
@@ -145,6 +157,7 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
         "pass1_thinking_chars": len(thinking),
         "pass1_done_reason": getattr(response, "done_reason", None),
         "pass1_raw_content": raw,
+        "pass1_request_hash": req_hash,
         **result.telemetry(),
     }
     return result, telemetry
@@ -249,8 +262,13 @@ def extract_paper_elicited(
     escape_tok = C.escape_token(codebook)
     unmet_tok = C.contract_unmet_token(codebook)
 
-    def _record(states, spans=(), violations=None, offenders=(), duplicated=()):
-        """9b-2c R3: this attempt's record as built so far, for a refusal."""
+    def _record(states, spans=(), violations=None, offenders=(), duplicated=(),
+               presented_context_sha256=None, context_chain=()):
+        """9b-2c R3: this attempt's record as built so far, for a refusal.
+
+        `presented_context_sha256`/`context_chain` (R224a(1)/(2)) are the
+        caller's own — each call site below has different hashes in scope at
+        the point it can raise."""
         return elicited_record(
             paper_id=paper_id, arm=getattr(getattr(spec, "extraction_models", None),
                                            "arm", None) or model_name,
@@ -259,7 +277,9 @@ def extract_paper_elicited(
             expected=field_names, states=states, spans=spans,
             violations=violations or {}, unmet_token=unmet_tok, escape_token=escape_tok,
             evidenced_token=C.EVIDENCED_VALUE, offenders=offenders,
-            duplicated=duplicated, attempts=attempt or 1)
+            duplicated=duplicated, attempts=attempt or 1,
+            presented_context_sha256=presented_context_sha256,
+            context_chain=context_chain)
 
     try:
         p1, accepted_attempt, pass1_tels = elicit(
@@ -267,10 +287,16 @@ def extract_paper_elicited(
         )
     except DuplicateFieldError as exc:
         # R118: a field answered twice in Pass 1. Nothing else is built yet.
+        # R224a: the one call that ran is the only thing that can name its
+        # own hash — `run_pass1` attached it to the exception (:145).
         exc.arm = model_name
-        exc.record = _record({}, duplicated=exc.duplicated)
+        ctx_hash = getattr(exc, "request_hash", None)
+        exc.record = _record({}, duplicated=exc.duplicated,
+                             presented_context_sha256=ctx_hash,
+                             context_chain=(ctx_hash,) if ctx_hash else ())
         raise
     p1_tel = pass1_tels[accepted_attempt - 1]
+    pass1_hashes = tuple(tel["pass1_request_hash"] for tel in pass1_tels)
     states = T.terminal_states(p1, codebook)
     n_unmet = T.n_contract_unmet(states, codebook)
     n_evidenced = T.n_evidenced(states)
@@ -318,12 +344,14 @@ def extract_paper_elicited(
     divergent: list[str] = []
     pass2_values: dict[str, EvidenceSpan] = {}
     schema_hash = codebook_hash
+    pass2_hash = None
     if n_evidenced:
         pass2_prompt = build_extraction_prompt(paper_text, spec, cb_path)
         priming_msg = build_pass2_priming_message(priming)
-        result = extract_pass2_structured(
+        # R224a(1): the structured pass's hash is presented_context_sha256.
+        result, pass2_hash = extract_pass2_structured(
             pass2_prompt, priming_msg, spec, paper_id, cfg=cfg_p2,
-            codebook_hash=codebook_hash,
+            codebook_hash=codebook_hash, return_request_hash=True,
         )
         schema_hash = result.codebook_hash
         names = [s.field_name for s in result.fields]
@@ -334,7 +362,9 @@ def extract_paper_elicited(
             raise DuplicateFieldError(
                 paper_id=paper_id, arm=model_name, duplicated=duplicated,
                 n_expected=len(field_names), attempt=attempt,
-                record=_record(states, duplicated=duplicated))
+                record=_record(states, duplicated=duplicated,
+                               presented_context_sha256=pass2_hash,
+                               context_chain=pass1_hashes + (pass2_hash,)))
         for span in result.fields:
             pass2_values[span.field_name] = span
     else:
@@ -343,6 +373,12 @@ def extract_paper_elicited(
             "%d escape. Pass 2 skipped; the terminal states are the extraction.",
             paper_id, n_unmet, len(states) - n_unmet,
         )
+
+    # R224a(1)/(2): pass 2's hash when it ran; otherwise the accepted pass-1
+    # attempt's hash is the only call that produced anything for this paper —
+    # every terminal state (all CONTRACT_UNMET/escape here) came from it.
+    elicited_presented = pass2_hash if pass2_hash is not None else p1_tel["pass1_request_hash"]
+    elicited_chain = pass1_hashes + ((pass2_hash,) if pass2_hash is not None else ())
 
     # ── Build one span per field, in prompt order, from its terminal state ──
     spans: list[EvidenceSpan] = []
@@ -400,7 +436,8 @@ def extract_paper_elicited(
                 span_dicts, escape_token=escape_tok,
                 absence_sentinels=C.absence_sentinels(codebook), mode=STRICT,
                 citation_counts=citation_counts, contract_unmet_token=unmet_tok,
-            ).offenders)
+            ).offenders,
+            presented_context_sha256=elicited_presented, context_chain=elicited_chain)
         raise
 
     _LAST_PASS2_TELEMETRY.setdefault("model", model_name)
@@ -423,6 +460,7 @@ def extract_paper_elicited(
     # `extracted` paper event. Nothing is written to the legacy extraction tables.
     write_extraction_events(
         db._conn,
-        _record(states, span_dicts, violations),
+        _record(states, span_dicts, violations,
+               presented_context_sha256=elicited_presented, context_chain=elicited_chain),
         sentinels=frozenset(_cb.absence_sentinels), review_dir=review_dir)
     return stored

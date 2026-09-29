@@ -21,7 +21,7 @@ from engine.core.events import (
 )
 from engine.core.reuse_key import reuse_key
 from engine.core.selection import select_for_extraction
-from _event_store_fixture import claim_identity, fixture_run, seed_claim
+from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity, fixture_run, seed_claim
 
 ARM = "local_test_arm"
 FIELD_A = "study_design"
@@ -58,7 +58,8 @@ def _write(conn, *, uid, field_name=FIELD_A, arm=ARM, paper_id=1,
         conn, event_type=event_type, paper_id=paper_id, field_name=field_name,
         arm=arm, extraction_uid=uid, value="v", source_snippet="v",
         actor_kind="model", actor_role="extractor", actor_name="m",
-        payload=ident, run_id=run_id)
+        payload=ident, run_id=run_id,
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
 
 
 # ── T1 ──────────────────────────────────────────────────────────────

@@ -60,7 +60,7 @@ __all__ = [
     "EventRefused", "ReviewerDecisionAmbiguous", "AgainstReferenceIncomplete",
     "AcceptAgainstMultipleClaims", "CellNotAssigned", "ArmConfigurationFrozen",
     "RunLinkRefused", "ClaimOnPreManifestArm", "ClaimOnRetiredArm", "ArmNotInRun",
-    "ClaimWithoutInputIdentity", "ClaimInputMismatch",
+    "ClaimWithoutInputIdentity", "ClaimInputMismatch", "ClaimWithoutPresentedContext",
     "UnknownArm", "PRE_MANIFEST", "PRE_MANIFEST_MARKER",
     "mint_extraction_uid", "make_claim_id", "register_arm", "retire_arm",
     "write_field_event", "write_paper_event",
@@ -123,6 +123,14 @@ class ClaimInputMismatch(EventRefused):
     engine refuses rather than silently overwrite."""
 
 
+class ClaimWithoutPresentedContext(EventRefused):
+    """R224a: an extractor's claim must say which call's response supplied its
+    value — `presented_context_sha256` — and the full call chain that produced
+    the extraction it belongs to (`context_chain`, non-empty). A claim implies
+    at least one model call; one that cannot name it is refused rather than
+    stored with no way to reproduce what the model was shown."""
+
+
 #: The event-row marker for seeded, pre-manifest rows (R68). Migration 020
 #: re-declares it; a test asserts the two agree.
 PRE_MANIFEST_MARKER = "pre-manifest"
@@ -134,6 +142,13 @@ PRE_MANIFEST_MARKER = "pre-manifest"
 PAYLOAD_REUSE_KEY = "reuse_key"
 PAYLOAD_PARSED_TEXT_SHA256 = "parsed_text_sha256"
 PAYLOAD_PARSED_TEXT_UID = "parsed_text_uid"
+
+#: R224a(2): the ordered request hashes of every model call made for a paper's
+#: extraction (pass 1 / elicitation attempts, pass 2, each snippet retry), and
+#: the request hash of the retry that supplied a field's stored snippet, when
+#: one did. Spelled here and nowhere else a payload is read.
+PAYLOAD_CONTEXT_CHAIN = "context_chain"
+PAYLOAD_SNIPPET_CONTEXT = "snippet_context_sha256"
 
 _MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
 _MISSING = object()
@@ -296,6 +311,12 @@ def write_field_event(conn, *, event_type, paper_id, field_name, arm,
                 f"{event_type} refused: paper {paper_id} field {field_name!r} arm {arm!r} "
                 f"carries no {', '.join(absent)} in its payload. An extractor's claim "
                 "names the input it was made from (F2, 9b-2c R1).")
+        if presented_context_sha256 is None or not payload.get(PAYLOAD_CONTEXT_CHAIN):
+            raise ClaimWithoutPresentedContext(
+                f"{event_type} refused: paper {paper_id} field {field_name!r} arm {arm!r} "
+                "carries no presented_context_sha256, or an absent/empty context_chain, in "
+                "its payload. An extractor's claim names the call that supplied its value "
+                "and the full chain of calls made for this extraction (R224a).")
     payload.setdefault("state_at_write",
                        classify_field_state(value, [], event_type, sentinels=sentinels))
     payload.setdefault("rule_version", RULE_VERSION)

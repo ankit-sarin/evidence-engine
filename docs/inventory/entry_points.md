@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `1f1c94d8645eec3aff14e911092bdce2e7f59c86` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `a19ab920d825b831ddfd46ac58f5ce5a6058f044` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -198,7 +198,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/adjudication/workflow.py` | 69 | literal | `Create or update adjudication_categories.yaml for this review.
   Location: data/<review>/adjudication_categories.yaml
   Generate a starter template with: gen...` |
-| `engine/agents/extractor.py` | 694 | literal | `extraction_codebook.yaml` |
+| `engine/agents/extractor.py` | 757 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 509 | literal | `extraction_codebook.yaml` |
 | `engine/core/codebook.py` | 36 | literal | `extraction_codebook.yaml` |
 | `engine/core/review_paths.py` | 28 | literal | `review_specs` |

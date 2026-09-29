@@ -17,7 +17,7 @@ import sqlite3
 
 import pytest
 
-from _event_store_fixture import claim_identity  # 9b-2c R1
+from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1, R224a
 
 from engine.core import events
 from engine.core.effective import (
@@ -86,7 +86,8 @@ def assert_claim(db, paper, value, *, arm="local", claim_id=None, uid=None,
         db, event_type=etype, paper_id=paper, field_name=FIELD, arm=arm,
         claim_id=claim_id, extraction_uid=uid, value=value, source_snippet=snippet,
         actor_kind="model", actor_role="extractor", actor_name="deepseek-r1:32b",
-        sentinels=SENTINELS, payload=claim_identity(arm, paper), run_id=_run(db))
+        sentinels=SENTINELS, payload=claim_identity(arm, paper), run_id=_run(db),
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
 
 
 def locate(db, paper, claim_id, located, *, arm="local"):
@@ -402,7 +403,8 @@ def test_d1_3_an_auditor_verdict_is_provenance_never_a_field_state(db):
         claim_id=cid, value="5", source_snippet="q", actor_kind="model",
         actor_role="extractor", actor_name="deepseek-r1:32b",
         payload={**claim_identity("local", 1), "auditor_verdict": "flagged"},
-        sentinels=SENTINELS, run_id=_run(db))
+        sentinels=SENTINELS, run_id=_run(db),
+        presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
     r = read(db, 1)
     assert r.state == ASSERTED_WITHOUT_EVIDENCE      # R18/Q7: not a field state
     assert "endorsed" not in r.provenance            # so the work is still owed

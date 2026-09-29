@@ -1,0 +1,583 @@
+19:21:35 [INFO] pipeline: Review: surgical_autonomy_smoke10b — Autonomy in Surgical Robotics: A Systematic Review (v1.0)
+19:21:35 [INFO] pipeline: Database: data/surgical_autonomy_smoke10b/review.db
+19:21:35 [INFO] pipeline: 
+Review Workflow — surgical_autonomy_smoke10b
+  ── Abstract Screening Adjudication ──
+  [✓] ABSTRACT_SCREENING_COMPLETE (2026-03-10 05:36)
+  [✓] ABSTRACT_DIAGNOSTIC_COMPLETE (2026-03-10 05:42)
+  [✓] ABSTRACT_CATEGORIES_CONFIGURED (2026-03-10 05:48)
+  [✓] ABSTRACT_QUEUE_EXPORTED (2026-03-10 05:48)
+  [✓] ABSTRACT_ADJUDICATION_COMPLETE (2026-03-12 05:37)
+  ── PDF Acquisition ──
+  [ ] PDF_ACQUISITION — Acquire PDFs for all included papers (OA check + download + manual).
+  ── Full-Text Screening ──
+  [✓] FULL_TEXT_SCREENING_COMPLETE (2026-03-14 23:55)
+  [✓] FULL_TEXT_ADJUDICATION_COMPLETE (2026-03-15 04:55)
+  ── Extraction Audit ──
+  [ ] EXTRACTION_COMPLETE
+  [ ] AI_AUDIT_COMPLETE_STAGE
+  [ ] AUDIT_QUEUE_EXPORTED
+  [ ] AUDIT_REVIEW_COMPLETE
+19:21:35 [INFO] pipeline: Skipping to stage: extract
+19:21:35 [INFO] httpx: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+19:21:35 [INFO] httpx: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+19:21:35 [INFO] pipeline: Run manifest 1 (0bef7d02-7d87-431d-b772-d4faf427cf6d) written: 6 stage rows
+19:21:35 [INFO] pipeline: ============================================================
+19:21:35 [INFO] pipeline: STAGE: EXTRACT
+19:21:35 [INFO] pipeline: Selection bounded to 5 of 190 papers for arm local_deepseek_r1_32b (--max-papers).
+19:21:35 [INFO] engine.utils.ollama_lock: Experiment lock acquired: /home/ankitsarin/.ollama_experiment.lock (pid 915888)
+19:21:35 [INFO] engine.agents.extractor: Starting extraction on 5 papers (schema hash: 1e67684b81c8)
+19:21:35 [INFO] engine.utils.ollama_preflight: Ollama environment OK: OLLAMA_FLASH_ATTENTION=true, OLLAMA_MAX_LOADED_MODELS=1, OLLAMA_KV_CACHE_TYPE=f16
+19:21:35 [INFO] engine.utils.ollama_preflight: Checking model: deepseek-r1:32b
+19:21:35 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/show "HTTP/1.1 200 OK"
+19:21:48 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:21:48 [INFO] engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 6, "done_reason": "length", "estimate_low": 3, "model": "deepseek-r1:32b", "ratio": 0.4}
+19:21:48 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+19:21:48 [INFO] engine.utils.ollama_preflight:   deepseek-r1:32b: OK (13.1s, 60.3 GB VRAM)
+19:21:48 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+19:21:48 [INFO] engine.utils.ollama_preflight: Pre-flight OK: 1 models loaded, 60.3 GB VRAM total
+19:21:48 [INFO] engine.agents.extractor: Model digests (run 1) — extractor (deepseek-r1:32b): edba8017331d15236e57480eb45406c0d721db77a4cdcf234df500fc2ad3960c, auditor: a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203
+19:25:09 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:25:09 [INFO] engine.utils.ollama_client: input_fit paper_id=9 {"ceiling": 131072, "chars": 104242, "count": 24603, "done_reason": "stop", "estimate_low": 19806, "model": "deepseek-r1:32b", "ratio": 0.236}
+19:29:47 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:29:47 [INFO] engine.utils.ollama_client: input_fit paper_id=9 {"ceiling": 131072, "chars": 107052, "count": 25197, "done_reason": "stop", "estimate_low": 20340, "model": "deepseek-r1:32b", "ratio": 0.2354}
+19:30:26 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:30:26 [INFO] engine.utils.ollama_client: input_fit paper_id=9 {"ceiling": 131072, "chars": 78578, "count": 19008, "done_reason": "stop", "estimate_low": 14930, "model": "deepseek-r1:32b", "ratio": 0.2419}
+[Local extraction] 1/5 (20.0%) | Paper EE-009 EXTRACTED | 8m38s | ETA ~34m32s | 0 failed
+19:30:26 [INFO] engine.agents.extractor: Extracted 1/5 — 20 fields from 'Autonomous robotic laparoscopic surgery for intestinal anast'
+19:35:43 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:35:43 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 182311, "count": 48982, "done_reason": "stop", "estimate_low": 34639, "model": "deepseek-r1:32b", "ratio": 0.2687}
+19:40:59 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:40:59 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 184219, "count": 49380, "done_reason": "stop", "estimate_low": 35002, "model": "deepseek-r1:32b", "ratio": 0.2681}
+[Local extraction] 2/5 (40.0%) | Paper EE-011 EXTRACTED | 10m32s | ETA ~28m46s | 0 failed
+19:40:59 [INFO] engine.agents.extractor: Extracted 2/5 — 20 fields from 'Development of a Cognitive Robotic System for Simple Surgica'
+19:44:38 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:44:38 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 64444, "count": 14715, "done_reason": "stop", "estimate_low": 12244, "model": "deepseek-r1:32b", "ratio": 0.2283}
+19:48:10 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:48:10 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 67865, "count": 15406, "done_reason": "stop", "estimate_low": 12894, "model": "deepseek-r1:32b", "ratio": 0.227}
+[Local extraction] 3/5 (60.0%) | Paper EE-012 EXTRACTED | 7m10s | ETA ~17m34s | 0 failed
+19:48:10 [INFO] engine.agents.extractor: Extracted 3/5 — 20 fields from 'A Step Towards Conditional Autonomy - Robotic Appendectomy'
+19:50:51 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:50:51 [INFO] engine.utils.ollama_client: input_fit paper_id=14 {"ceiling": 131072, "chars": 50755, "count": 11888, "done_reason": "stop", "estimate_low": 9643, "model": "deepseek-r1:32b", "ratio": 0.2342}
+19:54:09 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:54:09 [INFO] engine.utils.ollama_client: input_fit paper_id=14 {"ceiling": 131072, "chars": 52643, "count": 12291, "done_reason": "stop", "estimate_low": 10002, "model": "deepseek-r1:32b", "ratio": 0.2335}
+[Local extraction] 4/5 (80.0%) | Paper EE-014 EXTRACTED | 5m59s | ETA ~8m05s | 0 failed
+19:54:09 [INFO] engine.agents.extractor: Extracted 4/5 — 20 fields from 'Human-integrated automation of suturing task with one-master'
+19:58:40 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+19:58:40 [INFO] engine.utils.ollama_client: input_fit paper_id=15 {"ceiling": 131072, "chars": 111524, "count": 26426, "done_reason": "stop", "estimate_low": 21190, "model": "deepseek-r1:32b", "ratio": 0.237}
+20:02:51 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:02:51 [INFO] engine.utils.ollama_client: input_fit paper_id=15 {"ceiling": 131072, "chars": 114625, "count": 27089, "done_reason": "stop", "estimate_low": 21779, "model": "deepseek-r1:32b", "ratio": 0.2363}
+[Local extraction] 5/5 (100.0%) | Paper EE-015 EXTRACTED | 8m42s | ETA ~0s | 0 failed
+20:02:51 [INFO] engine.agents.extractor: Extracted 5/5 — 20 fields from 'Toward Autonomous Robotic Minimally Invasive Surgery: A Hybr'
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 5
+  Succeeded    : 5
+  Failed       : 0
+  Wall time    : 41m02s
+  Mean/paper   : 8m12s
+  Median/paper : 8m38s
+  Max/paper    : 10m32s
+============================================================
+20:02:51 [INFO] engine.agents.extractor: Extraction complete: 5 extracted, 0 skipped (asserted), 0 skipped (refused), 0 failed, 100 total spans
+20:02:51 [INFO] engine.utils.ollama_lock: Experiment lock released: /home/ankitsarin/.ollama_experiment.lock (pid 915888)
+20:02:51 [INFO] engine.validators.distribution_monitor: Distribution monitor skipped: only 5 eligible papers hold a live claim for arm local_deepseek_r1_32b (minimum 10)
+20:02:51 [INFO] pipeline: Distribution check (run 1, arm local_deepseek_r1_32b): skipped — only 5 eligible papers hold a live claim for arm local_deepseek_r1_32b (minimum 10)
+20:02:51 [INFO] pipeline: Extraction complete in 2476.1s — {"extracted": 5, "failed": 0, "total_spans": 100, "skipped_asserted": 0, "skipped_refused": 0, "distribution_check": {"skipped": true, "skip_reason": "only 5 eligible papers hold a live claim for arm local_deepseek_r1_32b (minimum 10)", "arm_population": 5, "ok": 0, "low_variance": 0, "collapsed": 0, "collapsed_fields": [], "low_variance_fields": []}}
+20:02:51 [INFO] pipeline: ============================================================
+20:02:51 [INFO] pipeline: STAGE: AUDIT
+20:02:51 [INFO] engine.utils.ollama_preflight: Ollama environment OK: OLLAMA_FLASH_ATTENTION=true, OLLAMA_MAX_LOADED_MODELS=1, OLLAMA_KV_CACHE_TYPE=f16
+20:02:51 [INFO] engine.utils.ollama_preflight: Checking model: gemma3:27b
+20:02:51 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/show "HTTP/1.1 200 OK"
+20:02:58 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:02:58 [INFO] engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 12, "done_reason": "stop", "estimate_low": 3, "model": "gemma3:27b", "ratio": 0.8}
+20:02:58 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+20:02:58 [INFO] engine.utils.ollama_preflight:   gemma3:27b: OK (7.1s, 28.4 GB VRAM)
+20:02:58 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+20:02:58 [INFO] engine.utils.ollama_preflight: Pre-flight OK: 1 models loaded, 28.4 GB VRAM total
+20:03:11 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:03:11 [INFO] engine.utils.ollama_client: input_fit paper_id=9 {"ceiling": 131072, "chars": 946, "count": 217, "done_reason": "stop", "estimate_low": 180, "model": "gemma3:27b", "ratio": 0.2294}
+20:03:20 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:03:20 [INFO] engine.utils.ollama_client: input_fit paper_id=9 {"ceiling": 131072, "chars": 1105, "count": 232, "done_reason": "stop", "estimate_low": 210, "model": "gemma3:27b", "ratio": 0.21}
+20:03:25 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:03:25 [INFO] engine.utils.ollama_client: input_fit paper_id=9 {"ceiling": 131072, "chars": 1046, "count": 226, "done_reason": "stop", "estimate_low": 199, "model": "gemma3:27b", "ratio": 0.2161}
+20:03:40 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:03:40 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 1082, "count": 238, "done_reason": "stop", "estimate_low": 206, "model": "gemma3:27b", "ratio": 0.22}
+20:03:47 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:03:47 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 1084, "count": 238, "done_reason": "stop", "estimate_low": 206, "model": "gemma3:27b", "ratio": 0.2196}
+20:03:53 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:03:53 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 916, "count": 210, "done_reason": "stop", "estimate_low": 174, "model": "gemma3:27b", "ratio": 0.2293}
+20:04:02 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:04:02 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 1021, "count": 231, "done_reason": "stop", "estimate_low": 194, "model": "gemma3:27b", "ratio": 0.2262}
+20:04:11 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:04:11 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 954, "count": 225, "done_reason": "stop", "estimate_low": 181, "model": "gemma3:27b", "ratio": 0.2358}
+20:04:20 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:04:20 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 1076, "count": 228, "done_reason": "stop", "estimate_low": 204, "model": "gemma3:27b", "ratio": 0.2119}
+20:04:31 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:04:31 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 1108, "count": 239, "done_reason": "stop", "estimate_low": 211, "model": "gemma3:27b", "ratio": 0.2157}
+20:04:36 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:04:36 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 1043, "count": 226, "done_reason": "stop", "estimate_low": 198, "model": "gemma3:27b", "ratio": 0.2167}
+20:04:43 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:04:43 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 1062, "count": 229, "done_reason": "stop", "estimate_low": 202, "model": "gemma3:27b", "ratio": 0.2156}
+20:04:50 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:04:50 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 982, "count": 219, "done_reason": "stop", "estimate_low": 187, "model": "gemma3:27b", "ratio": 0.223}
+20:04:59 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:04:59 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 969, "count": 216, "done_reason": "stop", "estimate_low": 184, "model": "gemma3:27b", "ratio": 0.2229}
+20:05:08 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:05:08 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 984, "count": 220, "done_reason": "stop", "estimate_low": 187, "model": "gemma3:27b", "ratio": 0.2236}
+20:05:15 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:05:15 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 959, "count": 221, "done_reason": "stop", "estimate_low": 182, "model": "gemma3:27b", "ratio": 0.2304}
+20:05:24 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:05:24 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 975, "count": 219, "done_reason": "stop", "estimate_low": 185, "model": "gemma3:27b", "ratio": 0.2246}
+20:05:31 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:05:31 [INFO] engine.utils.ollama_client: input_fit paper_id=11 {"ceiling": 131072, "chars": 1042, "count": 226, "done_reason": "stop", "estimate_low": 198, "model": "gemma3:27b", "ratio": 0.2169}
+20:05:40 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:05:40 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 1179, "count": 248, "done_reason": "stop", "estimate_low": 224, "model": "gemma3:27b", "ratio": 0.2103}
+20:05:45 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:05:45 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 931, "count": 211, "done_reason": "stop", "estimate_low": 177, "model": "gemma3:27b", "ratio": 0.2266}
+20:05:53 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:05:53 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 1099, "count": 246, "done_reason": "stop", "estimate_low": 209, "model": "gemma3:27b", "ratio": 0.2238}
+20:06:03 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:06:03 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 1163, "count": 244, "done_reason": "stop", "estimate_low": 221, "model": "gemma3:27b", "ratio": 0.2098}
+20:06:10 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:06:10 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 1049, "count": 230, "done_reason": "stop", "estimate_low": 199, "model": "gemma3:27b", "ratio": 0.2193}
+20:06:16 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:06:16 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 1065, "count": 231, "done_reason": "stop", "estimate_low": 202, "model": "gemma3:27b", "ratio": 0.2169}
+20:06:26 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:06:26 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 1069, "count": 237, "done_reason": "stop", "estimate_low": 203, "model": "gemma3:27b", "ratio": 0.2217}
+20:06:31 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:06:31 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 978, "count": 228, "done_reason": "stop", "estimate_low": 186, "model": "gemma3:27b", "ratio": 0.2331}
+20:06:38 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:06:38 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 993, "count": 222, "done_reason": "stop", "estimate_low": 189, "model": "gemma3:27b", "ratio": 0.2236}
+20:06:45 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:06:45 [INFO] engine.utils.ollama_client: input_fit paper_id=12 {"ceiling": 131072, "chars": 1160, "count": 249, "done_reason": "stop", "estimate_low": 220, "model": "gemma3:27b", "ratio": 0.2147}
+20:06:56 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:06:56 [INFO] engine.utils.ollama_client: input_fit paper_id=14 {"ceiling": 131072, "chars": 934, "count": 225, "done_reason": "stop", "estimate_low": 177, "model": "gemma3:27b", "ratio": 0.2409}
+20:07:06 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:07:06 [INFO] engine.utils.ollama_client: input_fit paper_id=14 {"ceiling": 131072, "chars": 1052, "count": 230, "done_reason": "stop", "estimate_low": 200, "model": "gemma3:27b", "ratio": 0.2186}
+20:07:17 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:07:17 [INFO] engine.utils.ollama_client: input_fit paper_id=15 {"ceiling": 131072, "chars": 1075, "count": 238, "done_reason": "stop", "estimate_low": 204, "model": "gemma3:27b", "ratio": 0.2214}
+20:07:23 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:07:23 [INFO] engine.utils.ollama_client: input_fit paper_id=15 {"ceiling": 131072, "chars": 896, "count": 207, "done_reason": "stop", "estimate_low": 170, "model": "gemma3:27b", "ratio": 0.231}
+20:07:38 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:07:38 [INFO] engine.utils.ollama_client: input_fit paper_id=15 {"ceiling": 131072, "chars": 1011, "count": 225, "done_reason": "stop", "estimate_low": 192, "model": "gemma3:27b", "ratio": 0.2226}
+20:07:47 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:07:47 [INFO] engine.utils.ollama_client: input_fit paper_id=15 {"ceiling": 131072, "chars": 993, "count": 221, "done_reason": "stop", "estimate_low": 189, "model": "gemma3:27b", "ratio": 0.2226}
+20:07:54 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:07:54 [INFO] engine.utils.ollama_client: input_fit paper_id=15 {"ceiling": 131072, "chars": 993, "count": 222, "done_reason": "stop", "estimate_low": 189, "model": "gemma3:27b", "ratio": 0.2236}
+20:08:02 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+20:08:02 [INFO] engine.utils.ollama_client: input_fit paper_id=15 {"ceiling": 131072, "chars": 977, "count": 218, "done_reason": "stop", "estimate_low": 186, "model": "gemma3:27b", "ratio": 0.2231}
+20:08:04 [INFO] pipeline: Audit complete in 312.6s — {"papers_audited": 5, "located": 52, "not_located": 48, "verified": 28, "flagged": 8, "skipped_refused": [], "low_yield": []}
+20:08:04 [INFO] engine.adjudication.workflow: Workflow stage completed: EXTRACTION_COMPLETE
+20:08:04 [INFO] engine.adjudication.workflow: Workflow stage completed: AI_AUDIT_COMPLETE_STAGE
+20:08:04 [INFO] pipeline: ============================================================
+20:08:04 [INFO] pipeline: STAGE: EXPORT
+20:08:04 [INFO] engine.exporters.prisma: PRISMA CSV exported to data/surgical_autonomy_smoke10b/exports/prisma_flow.csv
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 17 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 22 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 24 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 39 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 67 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 78 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 81 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 82 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 102 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 121 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 132 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 252 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 262 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 268 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 277 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 281 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 286 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 292 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 295 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 296 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 297 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 318 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 323 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 346 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 347 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 364 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 366 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 368 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 370 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 376 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 378 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 380 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 383 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 386 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 388 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 392 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 395 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 400 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 402 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 405 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 406 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 407 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 409 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 411 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 415 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 431 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 432 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 433 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 434 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 439 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 442 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 445 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 449 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 453 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 455 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 457 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 458 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 459 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 460 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 461 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 462 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 463 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 464 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 466 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 467 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 470 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 472 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 473 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 474 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 475 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 476 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 477 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 478 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 480 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 485 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 486 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 487 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 488 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 489 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 491 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 492 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 493 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 497 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 498 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 502 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 504 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 507 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 509 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 511 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 513 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 514 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 515 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 516 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 517 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 519 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 522 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 526 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 528 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 532 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 534 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 536 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 537 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 538 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 541 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 542 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 543 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 546 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 548 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 549 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 550 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 553 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 554 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 556 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 557 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 562 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 566 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 568 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 570 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 572 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 574 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 576 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 577 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 580 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 581 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 586 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 589 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 590 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 602 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 604 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 607 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 608 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 610 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 614 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 617 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 618 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 622 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 623 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 626 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 628 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 635 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 637 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 639 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 640 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 643 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 644 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 645 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 653 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 654 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 659 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 660 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 661 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 663 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 668 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 670 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 676 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 679 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 683 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 687 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 689 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 690 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 691 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 693 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 694 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 699 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 700 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 708 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 719 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 720 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 738 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 741 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 742 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 744 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 748 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 750 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 752 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 755 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 758 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 763 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 764 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 769 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 779 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 780 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 783 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 796 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 801 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [INFO] engine.exporters.evidence_table: Evidence CSV exported to data/surgical_autonomy_smoke10b/exports/evidence_table.csv (190 rows)
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 17 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 22 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 24 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 39 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 67 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 78 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 81 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 82 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 102 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 121 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 132 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 252 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 262 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 268 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 277 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 281 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 286 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 292 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 295 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 296 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 297 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 318 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 323 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 346 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 347 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 364 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 366 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 368 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 370 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 376 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 378 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 380 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 383 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 386 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 388 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 392 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 395 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 400 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 402 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 405 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 406 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 407 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 409 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 411 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 415 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 431 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 432 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 433 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 434 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 439 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 442 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 445 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 449 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 453 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 455 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 457 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 458 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 459 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 460 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 461 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 462 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 463 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 464 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 466 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 467 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 470 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 472 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 473 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 474 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 475 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 476 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 477 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 478 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 480 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 485 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 486 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 487 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 488 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 489 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 491 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 492 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 493 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 497 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 498 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 502 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 504 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 507 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 509 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 511 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 513 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 514 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 515 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 516 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 517 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 519 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 522 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 526 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 528 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 532 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 534 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 536 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 537 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 538 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 541 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 542 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 543 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 546 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 548 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 549 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 550 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 553 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 554 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 556 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 557 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 562 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 566 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 568 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 570 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 572 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 574 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 576 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 577 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 580 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 581 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 586 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 589 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 590 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 602 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 604 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 607 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 608 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 610 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 614 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 617 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 618 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 622 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 623 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 626 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 628 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 635 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 637 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 639 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 640 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 643 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 644 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 645 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 653 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 654 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 659 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 660 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 661 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 663 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 668 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 670 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 676 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 679 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 683 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 687 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 689 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 690 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 691 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 693 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 694 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 699 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 700 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 708 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 719 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 720 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 738 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 741 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 742 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 744 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 748 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 750 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 752 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 755 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 758 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 763 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 764 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 769 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 779 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 780 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 783 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 796 has no value on any field for arm local_deepseek_r1_32b
+20:08:04 [WARNING] engine.exporters.evidence_table: Paper 801 has no value on any field for arm local_deepseek_r1_32b
+20:08:05 [INFO] engine.exporters.evidence_table: Evidence Excel exported to data/surgical_autonomy_smoke10b/exports/evidence_table.xlsx
+20:08:06 [INFO] engine.exporters.docx_export: Evidence DOCX exported to data/surgical_autonomy_smoke10b/exports/evidence_table.docx (190 studies, arm local_deepseek_r1_32b)
+20:08:06 [INFO] engine.exporters.methods_section: Methods section exported to data/surgical_autonomy_smoke10b/exports/methods_section.md
+20:08:06 [INFO] engine.exporters: All exports written to data/surgical_autonomy_smoke10b/exports
+20:08:06 [INFO] pipeline: Export complete in 2.4s
+20:08:06 [INFO] pipeline:   prisma_csv: data/surgical_autonomy_smoke10b/exports/prisma_flow.csv
+20:08:06 [INFO] pipeline:   evidence_csv: data/surgical_autonomy_smoke10b/exports/evidence_table.csv
+20:08:06 [INFO] pipeline:   evidence_xlsx: data/surgical_autonomy_smoke10b/exports/evidence_table.xlsx
+20:08:06 [INFO] pipeline:   evidence_docx: data/surgical_autonomy_smoke10b/exports/evidence_table.docx
+20:08:06 [INFO] pipeline:   methods_md: data/surgical_autonomy_smoke10b/exports/methods_section.md
+20:08:06 [INFO] pipeline: ============================================================
+20:08:06 [INFO] pipeline: PIPELINE COMPLETE in 2791.2s
+20:08:06 [INFO] pipeline: Pipeline stats: {
+  "total_papers": 10039,
+  "screening": {
+    "ABSTRACT_SCREENED_IN": 0,
+    "ABSTRACT_SCREENED_OUT": 9647,
+    "ABSTRACT_SCREEN_FLAGGED": 0,
+    "FT_FLAGGED": 0,
+    "FT_SCREENED_OUT": 171,
+    "INGESTED": 0,
+    "PARSED": 0,
+    "PDF_ACQUIRED": 0,
+    "PDF_EXCLUDED": 31,
+    "eligible": 190
+  },
+  "eligibility": {
+    "no_recorded_state": 9849,
+    "eligible": 190
+  },
+  "processing": {
+    "audited_ai": 5,
+    "no_recorded_state": 185
+  },
+  "processing_failures": {},
+  "analysis_ready": 5
+}

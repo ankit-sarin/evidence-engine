@@ -279,7 +279,8 @@ def test_T9_run_aborted_closes_aborted_with_reason(db):
     exc = RunAborted(
         f"run {run_id} aborted: 3 consecutive papers produced nothing usable "
         f"(last: paper 42, no_fields_returned). Every paper's event is "
-        "written; the run closes as 'failed'.")
+        "written; the run closes with end_status 'aborted' and the abort's "
+        "reason.")
 
     _finish_review_run(db, run_id, "aborted", reason=str(exc))
 

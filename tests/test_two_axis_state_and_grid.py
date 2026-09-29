@@ -26,6 +26,8 @@ from engine.core.effective import (
 m016 = importlib.import_module("engine.migrations.016_event_store")
 m019 = importlib.import_module("engine.migrations.019_paper_state_axes")
 m020 = importlib.import_module("engine.migrations.020_run_manifest")
+m021 = importlib.import_module("engine.migrations.021_parsed_text_sha256")
+m022 = importlib.import_module("engine.migrations.022_run_kinds_and_audit_tables")
 from tests._event_store_fixture import run_for  # noqa: E402  (R68: events carry a run)
 
 
@@ -52,6 +54,10 @@ def db(tmp_path):
     conn.close()
     m019.run_migration(str(tmp_path / "t.db"))
     m020.run_migration(str(tmp_path / "t.db"))
+    m021.run_migration(str(tmp_path / "t.db"))
+    # R217 (10a-C4): claim_inputs must exist for write_field_event's
+    # extractor claim invariant to run at all.
+    m022.run_migration(str(tmp_path / "t.db"))
     conn = sqlite3.connect(tmp_path / "t.db")
     conn.execute("PRAGMA foreign_keys = ON")
     yield conn

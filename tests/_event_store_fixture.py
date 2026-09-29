@@ -26,6 +26,7 @@ m016 = importlib.import_module("engine.migrations.016_event_store")
 m019 = importlib.import_module("engine.migrations.019_paper_state_axes")
 m020 = importlib.import_module("engine.migrations.020_run_manifest")
 m021 = importlib.import_module("engine.migrations.021_parsed_text_sha256")
+m022 = importlib.import_module("engine.migrations.022_run_kinds_and_audit_tables")
 
 # R191: a bare `add_values` paper is `eligible` on events, so its status default is
 # FT_ELIGIBLE — the corpus status with no processing — and the two stores agree.
@@ -67,6 +68,9 @@ def ensure_event_store(db_path: str | Path) -> None:
     # read references a fixture records. The table is empty here, so 021 reads
     # no file and needs no baseline.
     m021.run_migration(db_path)
+    # R217 (10a-C4): claim_inputs must exist for write_field_event's extractor
+    # claim invariant to run at all.
+    m022.run_migration(db_path)
     _DONE.add(db_path)
 
 
@@ -170,7 +174,9 @@ def add_values(db_path: str | Path, arm: str, field_name: str,
 
 def upgrade_event_store(db_path) -> None:
     """Bring a fixture database that already holds `papers` (and, if it had them,
-    016's tables) to the post-020 shape: 016 → 019 → 020, each idempotent."""
+    016's tables) to the post-022 shape: 016 → 019 → 020 → 021 → 022, each
+    idempotent. R217 (10a-C4): write_field_event now requires claim_inputs to
+    exist for any extractor claim-bearing event under a real run."""
     conn = sqlite3.connect(str(db_path))
     try:
         if not conn.execute(
@@ -182,6 +188,8 @@ def upgrade_event_store(db_path) -> None:
         conn.close()
     m019.run_migration(str(db_path))
     m020.run_migration(str(db_path))
+    m021.run_migration(str(db_path))
+    m022.run_migration(str(db_path))
 
 
 def seed_claim(conn, *, arm: str, paper_id: int, field_name: str, value=None,

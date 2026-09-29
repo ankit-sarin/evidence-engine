@@ -60,7 +60,7 @@ __all__ = [
     "EventRefused", "ReviewerDecisionAmbiguous", "AgainstReferenceIncomplete",
     "AcceptAgainstMultipleClaims", "CellNotAssigned", "ArmConfigurationFrozen",
     "RunLinkRefused", "ClaimOnPreManifestArm", "ClaimOnRetiredArm", "ArmNotInRun",
-    "ClaimWithoutInputIdentity",
+    "ClaimWithoutInputIdentity", "ClaimInputMismatch",
     "UnknownArm", "PRE_MANIFEST", "PRE_MANIFEST_MARKER",
     "mint_extraction_uid", "make_claim_id", "register_arm", "retire_arm",
     "write_field_event", "write_paper_event",
@@ -112,6 +112,15 @@ class ClaimWithoutInputIdentity(EventRefused):
     """9b-2c R1: an extractor's claim must say which input it was made from —
     the reuse key, the parsed-text hash and uid — or selection could never skip
     it and a new text version could never supersede it (F2, R96)."""
+
+
+class ClaimInputMismatch(EventRefused):
+    """R217/D16: an extraction_uid names exactly one call's input identity.
+    `claim_inputs` is written once per extraction_uid, at its first
+    claim-bearing event; every later event of the same extraction_uid must
+    agree with that row (arm, paper, reuse key, parsed-text hash/uid, run) —
+    disagreement means two calls are being conflated under one uid, which the
+    engine refuses rather than silently overwrite."""
 
 
 #: The event-row marker for seeded, pre-manifest rows (R68). Migration 020
@@ -300,6 +309,34 @@ def write_field_event(conn, *, event_type, paper_id, field_name, arm,
             extraction_uid = mint_extraction_uid()
         claim_id = make_claim_id(arm, extraction_uid, field_name)
 
+    # R217/D16: claim_inputs is the constrained, indexed authority for one
+    # extraction call's input identity — one row per extraction_uid, checked
+    # here for consistency across every event that extraction_uid's call
+    # writes. Only an extractor's claim-bearing event under a real run: a
+    # migration-marked row (run_id NULL, run_marker 'pre-manifest') is
+    # reachable only from engine/migrations/ (I5, R150) and gets neither a
+    # row nor a check — a migration seeds history, it does not make new calls.
+    insert_claim_inputs = False
+    if actor_role == "extractor" and event_type in CLAIM_EVENT_TYPES and run_id is not None:
+        fields = ("arm", "paper_id", "reuse_key", "parsed_text_sha256",
+                 "parsed_text_uid", "run_id")
+        new_values = (arm, paper_id, payload[PAYLOAD_REUSE_KEY],
+                     payload[PAYLOAD_PARSED_TEXT_SHA256],
+                     payload[PAYLOAD_PARSED_TEXT_UID], run_id)
+        existing = conn.execute(
+            "SELECT arm, paper_id, reuse_key, parsed_text_sha256, parsed_text_uid, "
+            "run_id FROM claim_inputs WHERE extraction_uid = ?", (extraction_uid,)
+        ).fetchone()
+        if existing is None:
+            insert_claim_inputs = True
+        elif tuple(existing) != new_values:
+            differing = [f for f, old, new in zip(fields, existing, new_values) if old != new]
+            raise ClaimInputMismatch(
+                f"{event_type} refused: extraction_uid {extraction_uid!r} already names a "
+                f"claim_inputs row that disagrees on {', '.join(differing)} — one "
+                "extraction_uid identifies exactly one call's input identity (R217, D16).")
+
+    row_occurred_at = occurred_at or _now()
     try:
         cur = conn.execute(
             "INSERT INTO field_events (event_uid, event_type, occurred_at, recorded_at, "
@@ -307,11 +344,21 @@ def write_field_event(conn, *, event_type, paper_id, field_name, arm,
             "prior_event_id, presented_context_sha256, reason, payload_json, claim_id, "
             "extraction_uid, paper_id, field_name, arm, value, source_snippet) "
             "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-            (str(uuid.uuid4()), event_type, occurred_at or _now(), _now(),
+            (str(uuid.uuid4()), event_type, row_occurred_at, _now(),
              actor_kind, actor_role, actor_name, actor_digest, run_id, run_marker,
              prior_event_id, presented_context_sha256, reason, json.dumps(payload),
              claim_id, extraction_uid, paper_id, field_name, arm, value, source_snippet))
         event_id = cur.lastrowid
+        if insert_claim_inputs:
+            # Same timestamp as the event's own occurred_at, not a fresh
+            # _now(): both rows describe the same write, at the same moment.
+            conn.execute(
+                "INSERT INTO claim_inputs (extraction_uid, arm, paper_id, reuse_key, "
+                "parsed_text_sha256, parsed_text_uid, run_id, recorded_at) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (extraction_uid, arm, paper_id, payload[PAYLOAD_REUSE_KEY],
+                 payload[PAYLOAD_PARSED_TEXT_SHA256], payload[PAYLOAD_PARSED_TEXT_UID],
+                 run_id, row_occurred_at))
         for cid in sorted(against_claims):
             conn.execute("INSERT INTO field_event_against (event_id, against_claim_id) "
                          "VALUES (?, ?)", (event_id, cid))

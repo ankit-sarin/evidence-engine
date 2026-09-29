@@ -196,9 +196,11 @@ def test_every_event_table_is_append_only_by_trigger(db, table):
     d = reviewer(db, 1, "human_withdrew", against={c})
     db.execute("INSERT INTO field_event_against_decisions VALUES (?, ?)", (d, d))
     db.commit()
+    # 021's rebuild made parsed_text_sha256 NOT NULL; upgrade_event_store now
+    # applies 021 (10a-C4, for claim_inputs), which is what surfaced this.
     db.execute("INSERT INTO parsed_text_refs (parsed_text_uid, paper_id, "
-               "parsed_text_path, parsed_text_version, recorded_at) "
-               "VALUES ('u', 1, 'p.md', 1, 'now')")
+               "parsed_text_path, parsed_text_version, parsed_text_sha256, recorded_at) "
+               "VALUES ('u', 1, 'p.md', 1, ?, 'now')", ("0" * 64,))
     db.execute("INSERT INTO review_identities VALUES ('k', 'v', '{}', 'now')")
     seed_pre_manifest_paper_event(db, 1)
     for stmt in (f"DELETE FROM {table}", f"UPDATE {table} SET rowid = rowid"):

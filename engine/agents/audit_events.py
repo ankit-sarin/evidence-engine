@@ -141,7 +141,7 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
                                 tier=tiers.get(c.field_name, 1))
             try:
                 v = semantic_verify(span, text, field_type=types.get(c.field_name, "text"),
-                                    cfg=cfg)
+                                    cfg=cfg, paper_id=pid)
                 verdicts.append((c, v.status, v.reasoning))
             except ValidationError as exc:
                 verdicts.append((c, VERDICT_FLAGGED,

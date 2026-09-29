@@ -52,7 +52,7 @@ def grep_verify(source_snippet: str, paper_text: str) -> bool:
 def semantic_verify(
     span: EvidenceSpan, paper_text: str, field_type: str = "text",
     model: str | None = None,
-    *, cfg: EffectiveConfig | None = None,
+    *, cfg: EffectiveConfig | None = None, paper_id: int | None = None,
 ) -> AuditVerdict:
     """Use an LLM to verify if extracted value matches the source snippet.
 
@@ -61,12 +61,16 @@ def semantic_verify(
 
     `cfg` is the resolved `audit` stage; without one the spec model's declared
     defaults apply. The `ollama_options` override retired with its only caller,
-    `scripts/eval_auditor_models.py` (R125).
+    `scripts/eval_auditor_models.py` (R125). `paper_id` (R225/C31) is the paper
+    whose claim is being verified — passed straight to `ollama_chat` so the
+    audit stage's `run_calls` rows are attributable per paper, like every
+    other stage's; `None` (the legacy `audit_span` path) is unchanged.
     """
     cfg = (cfg or stage_config("audit", None, model=model))
     if model is not None and model != cfg.model:
         cfg = cfg.with_model(model)
     response = ollama_chat(
+        paper_id=paper_id,
         messages=build_audit_messages(span, field_type=field_type), **cfg.kwargs())
 
     raw = response.message.content or ""

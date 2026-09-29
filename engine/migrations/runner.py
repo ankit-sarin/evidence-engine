@@ -116,6 +116,20 @@ class MigrationDrift(MigrationError):
     """A migration file changed after its receipt was written."""
 
 
+class PendingMigrations(MigrationError):
+    """R222/I16: a receipt-bearing (non-fresh) database has migrations pending
+    and `apply_pending` was not passed.
+
+    A fresh database (no receipts) always applies pending migrations — that is
+    how every test database and every first `ReviewDatabase` construction has
+    always worked, and stays unchanged. A database that already carries
+    receipts is a different case: once a migration module is in the tree, any
+    ordinary `ReviewDatabase` construction (the staleness report,
+    `advance_stage --status`, …) would otherwise apply it to a live-style
+    database with no backup, no embargo check and no rehearsal behind it. This
+    refusal is raised before any transaction opens and before any write."""
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -188,7 +202,8 @@ def _write_receipt(conn, migration_id, path, mode, note=None) -> None:
     )
 
 
-def run(db_path: str | Path, *, include_data: bool = False) -> dict:
+def run(db_path: str | Path, *, include_data: bool = False,
+       apply_pending: bool = False) -> dict:
     """Apply every pending migration to `db_path`, newest last.
 
     One transaction per RECEIPT, committed before the next migration begins.
@@ -212,17 +227,36 @@ def run(db_path: str | Path, *, include_data: bool = False) -> dict:
     `include_data` is False by default: data migrations are never executed on a
     fresh database. It exists so an operator can run one deliberately, naming it.
 
+    `apply_pending` (R222/I16) governs a **non-fresh** database only — one that
+    already carries at least one receipt. A fresh database (no
+    `schema_migrations` table, or the table exists with zero rows) always
+    applies pending migrations, exactly as before this parameter existed. A
+    non-fresh database with something pending refuses with `PendingMigrations`
+    unless `apply_pending=True` — `engine/migrations/__main__.py` is the only
+    caller in the tree that passes it (R222a). Drift is checked first, as it
+    always was: a migration file that changed after its receipt is a
+    correctness alarm about receipts already believed applied, independent of
+    whether anything new is pending, so it is worth knowing about even when
+    there is nothing to apply.
+
     Returns `{"executed": [...], "skipped": [...], "already": [...]}`.
 
     Raises:
         MigrationDrift: a migration file changed after its receipt.
+        PendingMigrations: a non-fresh database has pending migrations and
+            `apply_pending` was not passed. Raised before any transaction opens
+            and before any write; the database is untouched.
         MigrationError: a migration failed; earlier ones stay applied.
     """
     db_path = Path(db_path)
     conn = sqlite3.connect(str(db_path))
     try:
         conn.execute("PRAGMA foreign_keys = OFF")  # table rebuilds re-point FKs
-        ensure_receipts(conn)
+        existed_before = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' "
+            "AND name = 'schema_migrations'"
+        ).fetchone() is not None
+        ensure_receipts(conn)  # a no-op, writing nothing, when it already existed
 
         drifted = check_drift(conn)
         if drifted:
@@ -234,6 +268,28 @@ def run(db_path: str | Path, *, include_data: bool = False) -> dict:
             )
 
         have = receipts(conn)
+        fresh = (not existed_before) or (not have)
+
+        if not fresh and not apply_pending:
+            pending = [
+                migration_id for migration_id, _ in discover()
+                if migration_id not in have
+                and (kind_of(migration_id) != "data" or include_data)
+            ]
+            if pending:
+                resolved = str(db_path.resolve())
+                cmd = f"python -m engine.migrations {resolved} --apply-pending"
+                if any(kind_of(m) == "data" for m in pending):
+                    cmd += " --include-data"
+                raise PendingMigrations(
+                    "refusing to apply pending migrations to a database that "
+                    "already carries receipts (R222/I16): "
+                    + ", ".join(pending) + ". This is not a fresh database — "
+                    "applying migrations here unprompted has no backup, embargo "
+                    "or rehearsal behind it. To apply them deliberately: "
+                    f"`{cmd}`"
+                )
+
         result = {"executed": [], "skipped": [], "already": []}
 
         for migration_id, path in discover():

@@ -59,6 +59,31 @@ database's `schema_migrations` table. **The series begins at 002** — there is 
   assertion that someone made on evidence; it checks nothing about the schema
   and its docstring says so.
 
+## Applying to a non-fresh database (R222/R222a)
+
+A **fresh** database (no `schema_migrations` table, or the table exists with
+zero rows) always applies every pending migration — that is unchanged, and
+covers every test database and every first `ReviewDatabase` construction. A
+database that already carries at least one receipt is different: once a
+migration module is in the tree, an ordinary `ReviewDatabase` construction
+against it (the staleness report, `advance_stage --status`, …) would otherwise
+apply that migration with no backup, no embargo check and no rehearsal behind
+it. `runner.run()` therefore raises `PendingMigrations` on a non-fresh database
+with something pending unless it is called with `apply_pending=True`.
+
+The sanctioned way to apply pending migrations to a non-fresh database
+deliberately is:
+
+```
+python -m engine.migrations <db_path> --apply-pending [--include-data]
+```
+
+`engine/migrations/__main__.py` is the **only** caller in the tree that passes
+`apply_pending=True` — `PendingMigrations`'s own message names this exact
+invocation, with the resolved path of the database that refused. The module
+opens nothing else and performs no backup, embargo or exclusivity check of its
+own; those belong to the operator's pre-flight before running it, not to code.
+
 ## The existing set
 
 | id | kind | note |

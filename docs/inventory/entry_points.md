@@ -1,15 +1,15 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `894f3cfa9620cd1fb6966e7e81d9ed70be2c213a` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `a5744d9dcffcab7088e70e5c8b57f57693634682` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 211 |
-| entry points | 94 |
+| files scanned | 212 |
+| entry points | 95 |
 | entry points with spec flag | 23 |
 | entry points with review name flag | 64 |
 | entry points name only | 42 |
@@ -54,7 +54,7 @@ Baselines are the figures measured by hand in GENERALIZE-READOUT-01 and SPEC-AUT
 | f-string spec-path builders | 19 | 0 | SPEC-AUTH-01 moved every one of these onto the resolver; a non-zero value here means a hand-built spec path has come back |
 | DEFAULT_REVIEW constants | 7 | 5 | differs — unexplained, investigate |
 
-Two figures deliberately have no baseline row. **entry points** (94) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
+Two figures deliberately have no baseline row. **entry points** (95) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
 
 ## Entry points
 
@@ -123,6 +123,7 @@ Two figures deliberately have no baseline row. **entry points** (94) counts anyt
 | `engine/migrations/011_add_absence_claim_class.py` | — | — | — | — |
 | `engine/migrations/012_codebook_provenance.py` | — | — | — | — |
 | `engine/migrations/013_drop_schema_hash_not_null.py` | — | — | — | — |
+| `engine/migrations/__main__.py` | `db_path`; `--apply-pending`; `--include-data` | — | — | — |
 | `engine/parsers/pdf_parser.py` | `--verify-hashes`; `--review` required | — | 1179 | — |
 | `engine/tools/db_fingerprint.py` | `database`; `--out`; `--compare` | — | — | — |
 | `engine/tools/inventory.py` | `--write`; `--check` | — | — | — |

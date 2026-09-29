@@ -207,7 +207,7 @@ def test_t3_an_aborted_run_closes_as_aborted_with_reason(db, spec, monkeypatch):
     run_id = open_extraction_run(db, spec)
     monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
     monkeypatch.setattr(rp, "ReviewDatabase", lambda name: db)
-    monkeypatch.setattr(rp, "_open_run_manifest", lambda d, s, i: run_id)
+    monkeypatch.setattr(rp, "_open_run_manifest", lambda d, s, i, **k: run_id)
     monkeypatch.setattr(rp, "is_adjudication_complete", lambda conn: True)
     monkeypatch.setattr(rp, "_stage_parse", lambda *a, **k: {})
     monkeypatch.setattr(rp, "_stage_extract",

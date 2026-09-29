@@ -194,12 +194,17 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
              arms: Iterable[str] = (),
              digest_fn: Callable[[str], str] | None = None,
              git: GitState | None = None, host: str | None = None,
-             payload_description: str | None = None) -> RunHandle:
+             payload_description: str | None = None,
+             selection_bound: Mapping[str, Any] | None = None) -> RunHandle:
     """Write the manifest and pin its arms, or refuse. Before the first call.
 
     `stages` are resolver stage names; each cloud arm in `cloud_arms` adds
     `cloud:<arm>`. `arms` names extra arms to pin (a human arm, say). `codebook`
     is the loaded `Codebook` the run's prompts are built from.
+
+    `selection_bound` (10b-C2), when given, is recorded verbatim under the
+    manifest's `selection_bound` key — declared before the first call and, like
+    the rest of the body, never edited. Absent, the manifest carries no such key.
     """
     if kind not in RUN_KINDS:
         raise ValueError(f"run kind {kind!r} is not one of {RUN_KINDS}")
@@ -275,6 +280,8 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
         "stages": {k: _stage_row(k, r) for k, r in sorted(resolved.items())},
         "pins": {k: v[1] for k, v in sorted(pins.items())},
     }
+    if selection_bound is not None:
+        manifest["selection_bound"] = dict(selection_bound)
     if cloud_list and not payload_description:
         raise ValueError("a run with cloud arms records a payload description (S3g)")
 

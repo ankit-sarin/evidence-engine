@@ -7265,7 +7265,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 492,
+            "line": 530,
             "names": [
               "--review",
               "--name"
@@ -7275,7 +7275,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 498,
+            "line": 536,
             "names": [
               "--spec"
             ],
@@ -7284,7 +7284,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 504,
+            "line": 542,
             "names": [
               "--skip-to"
             ],
@@ -7293,9 +7293,18 @@
           {
             "default": "None",
             "dest": null,
-            "line": 510,
+            "line": 548,
             "names": [
               "--limit"
+            ],
+            "required": false
+          },
+          {
+            "default": "None",
+            "dest": null,
+            "line": 554,
+            "names": [
+              "--max-papers"
             ],
             "required": false
           }
@@ -7309,19 +7318,19 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 298,
+            "line": 310,
             "role": "message",
             "text": "No papers with status PDF_ACQUIRED. PDF acquisition is manual for v1. Place PDFs in data/%s/pdfs/ named as {paper_id}.pdf, then set status to PDF_ACQUIRED."
           },
           {
             "kind": "literal",
-            "line": 494,
+            "line": 532,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 500,
+            "line": 538,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7329,7 +7338,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 82,
+            "line": 89,
             "scope": "run_pipeline"
           }
         ],
@@ -7337,7 +7346,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 78,
+            "line": 85,
             "scope": "run_pipeline"
           }
         ],
@@ -7615,7 +7624,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "94ee916b932010b279e49f1a995f4fdb91803a2d",
+    "generated_at_commit": "0bcdbb21bdda573500a567cba70f4786c47f9003",
     "scan_roots": [
       "engine",
       "scripts",

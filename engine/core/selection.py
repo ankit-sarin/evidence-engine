@@ -94,3 +94,26 @@ def select_for_extraction(conn: sqlite3.Connection, *, arm: str) -> SelectionRes
             to_extract.append((paper_id, ref))
     return SelectionResult(arm, tuple(to_extract), tuple(skipped_asserted),
                            tuple(skipped_refused))
+
+
+def check_max_papers(max_papers) -> None:
+    """The one rule for an extraction bound (10b-C2): an integer >= 1, bool
+    excluded. `run_pipeline` calls it before anything is opened, so a refused
+    bound writes no manifest; `bound_selection` calls it again at application."""
+    if isinstance(max_papers, bool) or not isinstance(max_papers, int) or max_papers < 1:
+        raise ValueError(f"--max-papers must be an integer >= 1, got {max_papers!r}")
+
+
+def bound_selection(selection: SelectionResult, max_papers: int) -> SelectionResult:
+    """The first `max_papers` of `selection.to_extract`, in its order (10b-C2).
+
+    Applied AFTER the reuse-key skip, so the bound is a window on the unskipped
+    remainder, not a fixed paper list: `to_extract` is built in
+    `eligible_paper_ids` order (ascending paper_id), so a second bounded run
+    with the same N and unchanged parsed texts skips the first N by reuse key
+    and takes the NEXT N. The papers past the window are neither skipped nor
+    refused — they are simply not this run's; the skip lists are unchanged.
+    """
+    check_max_papers(max_papers)
+    return SelectionResult(selection.arm, selection.to_extract[:max_papers],
+                           selection.skipped_asserted, selection.skipped_refused)

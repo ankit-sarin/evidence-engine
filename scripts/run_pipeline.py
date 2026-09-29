@@ -26,7 +26,7 @@ from engine.agents.extractor import run_extraction, verify_extraction_run
 from engine.core.codebook import CODEBOOK_FILENAME
 from engine.core.run_telemetry import record_run_event
 from engine.validators.distribution_monitor import run_post_extraction_check
-from engine.core.selection import select_for_extraction
+from engine.core.selection import bound_selection, check_max_papers, select_for_extraction
 from engine.core.effective import effective_state, eligible_paper_ids
 from engine.core.paper_state import COMPLETED_PROCESSING_STATES
 from engine.agents.screener import run_screening
@@ -62,14 +62,21 @@ def run_pipeline(
     spec_path: str | None = None,
     skip_to: str | None = None,
     limit: int | None = None,
+    max_papers: int | None = None,
 ) -> None:
     """Run the full evidence engine pipeline.
 
     `review_name` is the review's identity: the spec file and the data root
     are both derived from it. `spec_path` is an optional override and must
     carry the same review_id.
+
+    `max_papers` (10b-C2) bounds the EXTRACT stage only: declared in the run
+    manifest before the first call, applied after selection's reuse-key skip.
+    None is unbounded. See `check_max_papers` and `bound_selection`.
     """
     t_start = time.time()
+    if max_papers is not None:
+        check_max_papers(max_papers)  # before anything is opened (10b-C2)
 
     # ── Load spec ────────────────────────────────────────────
     # Before the database, always: load_spec_for refuses a spec that names a
@@ -93,12 +100,16 @@ def run_pipeline(
             sys.exit(1)
         start_idx = STAGES.index(skip_to)
         logger.info("Skipping to stage: %s", skip_to)
+    if max_papers is not None and start_idx > STAGES.index("extract"):
+        raise ValueError(
+            f"--max-papers bounds the extract stage, which a run starting at "
+            f"{STAGES[start_idx]!r} does not include — refusing before the manifest.")
 
     # ── Open the run manifest (R73) ──────────────────────────
     # Before the first model call, and instead of a review_runs row: the
     # manifest records the resolved configuration of every stage this run can
     # call, and refuses a dirty tree or a pre-manifest arm before anything runs.
-    run_id = _open_run_manifest(db, spec, start_idx)
+    run_id = _open_run_manifest(db, spec, start_idx, max_papers=max_papers)
     # R225a: the field set is registered by open_run itself, keyed by run_id
     # (engine/core/run_manifest.py) — activation carries no codebook of its own.
     run_token = rm.activate(db._conn, run_id)
@@ -140,7 +151,8 @@ def run_pipeline(
 
         # ── EXTRACT ──────────────────────────────────────────
         if start_idx <= STAGES.index("extract"):
-            results["extract"] = _stage_extract(db, spec, review_name, run_id=run_id)
+            results["extract"] = _stage_extract(db, spec, review_name, run_id=run_id,
+                                                max_papers=max_papers)
 
         # ── AUDIT ────────────────────────────────────────────
         if start_idx <= STAGES.index("audit"):
@@ -309,7 +321,7 @@ def _stage_parse(db: ReviewDatabase, review_name: str, *, run_id: int) -> dict:
 
 
 def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
-                   run_id: int) -> dict:
+                   run_id: int, max_papers: int | None = None) -> dict:
     t = time.time()
     logger.info("=" * 60)
     logger.info("STAGE: EXTRACT")
@@ -320,6 +332,17 @@ def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
     # Selection is the corpus predicate with the reuse key (D9, R96, R119), made
     # once here and handed to the run, not a papers.status gate.
     selection = select_for_extraction(db._conn, arm=spec.extraction_models.arm)
+    if max_papers is not None:
+        # 10b-C2: the manifest's declared bound, applied after the reuse-key skip
+        # — a window on the unskipped remainder (bound_selection's docstring).
+        before = len(selection.to_extract)
+        selection = bound_selection(selection, max_papers)
+        logger.info("Selection bounded to %d of %d papers for arm %s (--max-papers).",
+                    len(selection.to_extract), before, selection.arm)
+        record_run_event(Path(db.db_path).parent, run_id=run_id, kind="selection_bounded",
+                         payload={"run_id": run_id, "arm": selection.arm,
+                                  "max_papers": max_papers, "selected_before": before,
+                                  "selected_after": len(selection.to_extract)})
     if not selection.to_extract:
         logger.info("Nothing to extract for arm %s — %d skipped (asserted), "
                     "%d skipped (refused).", selection.arm,
@@ -430,7 +453,19 @@ _PIPELINE_STAGE_CONFIGS = {
 }
 
 
-def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int) -> int:
+def _positive_int(text: str) -> int:
+    """argparse type for --max-papers: refuses 0, negatives and non-integers."""
+    try:
+        value = int(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"not an integer: {text!r}")
+    if value < 1:
+        raise argparse.ArgumentTypeError(f"must be >= 1, got {value}")
+    return value
+
+
+def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int, *,
+                       max_papers: int | None = None) -> int:
     """Write this run's manifest before its first call (S3a, R73).
 
     `review_runs` is no longer written: it linked to nothing, recorded no
@@ -458,8 +493,11 @@ def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int) -> 
         logger.warning("Codebook lint: %s", finding)
     kind = "extraction" if any(s.startswith(("extract", "elicitation", "audit"))
                                for s in stages) else "screening"
+    bound = ({"stage": "extract", "max_papers": max_papers}
+             if max_papers is not None else None)
     handle = rm.open_run(db._conn, spec, kind=kind, stages=stages, codebook=codebook,
-                         preflight_models=sorted(set(preflight)))
+                         preflight_models=sorted(set(preflight)),
+                         selection_bound=bound)
     logger.info("Run manifest %d (%s) written: %d stage rows", handle.run_id,
                 handle.run_uid, len(handle.stages))
     return handle.run_id
@@ -513,6 +551,14 @@ def main():
         default=None,
         help="Limit number of papers to process (for testing)",
     )
+    parser.add_argument(
+        "--max-papers",
+        type=_positive_int,
+        default=None,
+        help=("Bound the EXTRACT stage to the first N selected papers (after the "
+              "reuse-key skip, ascending paper_id). Recorded in the run manifest. "
+              "Absent: unbounded."),
+    )
     args = parser.parse_args()
 
     if "--name" in sys.argv:
@@ -520,7 +566,8 @@ def main():
             "--name is deprecated and will be removed; use --review %s.", args.review
         )
 
-    run_pipeline(args.review, args.spec, skip_to=args.skip_to, limit=args.limit)
+    run_pipeline(args.review, args.spec, skip_to=args.skip_to, limit=args.limit,
+                 max_papers=args.max_papers)
 
 
 if __name__ == "__main__":

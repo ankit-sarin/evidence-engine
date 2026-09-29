@@ -76,6 +76,20 @@ class UnknownStage(KeyError):
     """A stage name outside the closed vocabulary."""
 
 
+class UndeclaredOverride(Exception):
+    """R223: a caller's option override disagrees with this run's declared
+    `run_stage_configs` row for the stage. The manifest is the contract — an
+    override not declared at open time is refused before any call is built."""
+
+    def __init__(self, stage: str, differing: Mapping[str, Mapping[str, Any]]):
+        self.stage = stage
+        self.differing = dict(differing)
+        super().__init__(
+            f"{stage}: option override refused — this run declared different "
+            f"values for this stage. Differing keys (recorded vs requested): "
+            f"{self.differing}")
+
+
 # ── Canonical hashing (one function, owned here) ─────────────────────
 def canonical_json(obj: Any) -> str:
     """The single serialisation every manifest hash is taken over."""
@@ -130,15 +144,38 @@ class EffectiveConfig:
 
     def with_options(self, extra: Mapping[str, Any] | None) -> "EffectiveConfig":
         """A caller's option override, recorded as source `caller`. Live callers:
-        the FT screener (`temperature`) and the vision parser (`num_predict`,
-        `num_ctx`). The auditor's `ollama_options` override retired with
-        `scripts/eval_auditor_models.py` (R125)."""
+        the FT screener (`temperature` — dead in production, R223a defers its
+        retirement to session 11) and the vision parser (`num_predict`,
+        `num_ctx` — also dead in production; M2, 10a-C7). The auditor's
+        `ollama_options` override retired with `scripts/eval_auditor_models.py`
+        (R125).
+
+        R223: under an active run whose manifest declared this stage, a merged
+        result that disagrees with the declared `run_stage_configs` row is
+        refused before any call is built — the manifest is the contract, not
+        `run_calls.request_hash` alone. No active run, or the stage was not
+        declared by this run: today's behaviour, unchanged."""
         if not extra:
             return self
         opts = {**self.options, **extra}
         srcs = {**self.sources, **{f"options.{k}": "caller" for k in extra}}
         rec = {**self.recorded, **{k: v for k, v in extra.items() if k in RECORDED_UNSENT}}
-        return _replace(self, options=opts, recorded=rec, sources=srcs)
+        merged = _replace(self, options=opts, recorded=rec, sources=srcs)
+
+        from engine.core.run_manifest import active_stage_row  # lazy: avoids the import cycle
+        row = active_stage_row(self.stage)
+        if row is not None:
+            recorded_hash, recorded_json = row
+            if merged.options_hash != recorded_hash:
+                recorded_opts = {k: v for k, v in json.loads(recorded_json).items()
+                                 if not k.startswith("__")}
+                differing = {
+                    k: {"recorded": recorded_opts.get(k), "requested": merged.options.get(k)}
+                    for k in sorted(set(recorded_opts) | set(merged.options))
+                    if recorded_opts.get(k) != merged.options.get(k)
+                }
+                raise UndeclaredOverride(self.stage, differing)
+        return merged
 
     @property
     def options_hash(self) -> str:

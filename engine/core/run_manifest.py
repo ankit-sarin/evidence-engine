@@ -351,6 +351,22 @@ def stage_digest(conn, run_id: int, stage: str) -> str | None:
     return None if row is None else row[0]
 
 
+def active_stage_row(stage: str) -> tuple[str, str] | None:
+    """The active run's declared `(options_hash, options_json)` for `stage`
+    (R223), or `None` outside a run or when this run never declared the stage —
+    both cases leave `EffectiveConfig.with_options` at today's behaviour.
+
+    Reads `_ACTIVE` directly rather than taking `(conn, run_id)`: it is called
+    from `with_options`, which has neither."""
+    active = _ACTIVE.get()
+    if active is None:
+        return None
+    conn, run_id = active
+    row = conn.execute("SELECT options_hash, options_json FROM run_stage_configs "
+                       "WHERE run_id = ? AND stage = ?", (run_id, stage)).fetchone()
+    return None if row is None else (row[0], row[1])
+
+
 def extraction_digest(conn, run_id: int, *, arm: str, stages: Iterable[str]) -> str:
     """The run's one extraction digest (R117), checked against `arm`'s pin.
 

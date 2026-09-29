@@ -924,8 +924,8 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
                 f"run {run_id} aborted: {consecutive_failures} consecutive papers "
                 f"produced nothing usable (last: paper {pid}, "
                 f"{getattr(outcome, 'reason_code', REASON_NO_FIELDS_RETURNED)}). Every "
-                "paper's event is "
-                "written; the run closes as 'failed'.")
+                "paper's event is written; the run closes with end_status "
+                "'aborted' and the abort's reason.")
 
     for i, (pid, ref) in enumerate(papers, 1):
         row = db._conn.execute("SELECT title FROM papers WHERE id = ?", (pid,)).fetchone()

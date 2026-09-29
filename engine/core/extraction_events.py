@@ -85,7 +85,8 @@ class ExhaustedWithoutRecord(RuntimeError):
 class RunAborted(RuntimeError):
     """9b-FLIP (2(c) R5): the run stopped itself after `CONSECUTIVE_FAILURE_ABORT`
     papers in a row produced nothing usable. Each of those papers' events is
-    written before this is raised; the run closes with end_status 'failed'."""
+    written before this is raised; the run closes with end_status 'aborted'
+    and the abort's reason (R215/C26, wired at 10a-C3)."""
 
 
 #: Consecutive `extraction_failed` papers after which a run aborts. A14 refusals

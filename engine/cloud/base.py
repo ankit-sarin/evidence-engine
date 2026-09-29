@@ -139,8 +139,13 @@ class CloudExtractorBase:
         started = datetime.now(timezone.utc).isoformat()
         response = self._create(**payload)
         if self.run_id is not None:
+            # 10a-C3: record_call's `outcome` is now required, no default.
+            # 'completed' is unchanged from before this parameter existed —
+            # the cloud path's own outcome semantics are F15's, out of scope
+            # here (10a-C3 B2, the one permitted touch outside its file list).
             rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
-                           payload, None, started, datetime.now(timezone.utc).isoformat())
+                           payload, None, started, datetime.now(timezone.utc).isoformat(),
+                           outcome="completed")
         return response
 
     def get_pending_papers(self, arm: str) -> list[dict]:

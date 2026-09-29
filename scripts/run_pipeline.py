@@ -178,10 +178,10 @@ def run_pipeline(
 
     except RunAborted as exc:
         # 9b-FLIP: the consecutive-failure abort. Every aborted paper's event is
-        # written; the manifest records 'failed' (020's closed end_status set),
-        # and the reason is here and in the exception (row C26).
+        # written; the manifest records end_status 'aborted' with the reason
+        # (10a-C3, R215/C26 — the manifest carries it now, not just the log).
         logger.error("RUN ABORTED: %s", exc)
-        _finish_review_run(db, run_id, "failed")
+        _finish_review_run(db, run_id, "aborted", reason=str(exc))
         raise
     except Exception as exc:
         logger.error("Pipeline failed: %s", exc, exc_info=True)
@@ -463,9 +463,12 @@ def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int) -> 
     return handle.run_id
 
 
-def _finish_review_run(db: ReviewDatabase, run_id: int, status: str) -> None:
-    """Record the run's end on its manifest, once."""
-    rm.close_run(db._conn, run_id, status)
+def _finish_review_run(db: ReviewDatabase, run_id: int, status: str,
+                       reason: str | None = None) -> None:
+    """Record the run's end on its manifest, once. `reason` (10a-C3, R215) is
+    passed only by the RunAborted handler; 'completed'/'failed'/'interrupted'
+    closes stay reason=None, unchanged."""
+    rm.close_run(db._conn, run_id, status, reason=reason)
 
 
 # ── CLI ──────────────────────────────────────────────────────────────

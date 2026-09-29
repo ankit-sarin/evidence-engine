@@ -492,7 +492,7 @@ def run_db(tmp_path, spec):
     for stage, pid in (("extract_pass1", p1), ("extract_pass1", p1),
                        ("extract_pass2", p1), ("extract_pass1", p2)):
         rm.record_call(db._conn, run_id, stage, pid, {"stage": stage, "paper": pid},
-                       "d" * 64, t, t)
+                       "d" * 64, t, t, outcome="completed")
     events.write_paper_event(
         db._conn, event_type="audited", paper_id=p1, to_state="audited_ai",
         actor_kind="engine", actor_role="system", actor_name="auditor",

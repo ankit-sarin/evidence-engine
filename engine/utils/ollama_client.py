@@ -514,89 +514,126 @@ def ollama_chat(
     effective_timeout = wall_timeout or _wall_timeout_for_model(model)
     paper_label = f"paper_id={paper_id}" if paper_id is not None else "paper_id=unknown"
     started_at = _utcnow()
+    request = {"model": model, "messages": messages, **kwargs}
 
-    def _done(response):
-        if stage is not None:
-            from engine.core.run_manifest import record_active_ollama_call
-            record_active_ollama_call(
-                stage, {"model": model, "messages": messages, **kwargs},
-                paper_id, response, started_at)
-        return response
-    fit = _check_input_fits(model, messages, kwargs.get("options"), paper_label)
+    def _record(outcome: str, *, response=None, exc: BaseException | None = None) -> None:
+        """R216/C24: one row per call under an active manifest, whatever its
+        outcome. A no-op outside a run (`record_active_ollama_call` itself
+        checks) — B3/10a-C2-P0-P1-A4 is unchanged by this function existing."""
+        from engine.core.run_manifest import record_active_ollama_call
+        detail = None if exc is None else f"{type(exc).__name__}: {exc}"
+        record_active_ollama_call(stage, request, paper_id, response, started_at,
+                                  outcome=outcome, outcome_detail=detail)
 
-    for attempt in range(1 + max_retries):
-        t0 = time.monotonic()
-        executor = ThreadPoolExecutor(max_workers=1)
+    def _finish(response):
+        """Post-call: the only place a checked response and its raw response
+        both exist, so this is where 'completed', 'refused_input_truncated'
+        and 'refused_input_dropped' are recorded (R216) — one site, not
+        three, because they share this one calling point."""
         try:
-            future = executor.submit(
-                _client.chat,
-                model=model,
-                messages=messages,
-                **kwargs,
-            )
-            response = future.result(timeout=effective_timeout)
+            checked = _check_input_was_read(response, fit, paper_label)
+        except InputTruncated as exc:
+            _record("refused_input_truncated", response=response, exc=exc)
+            raise
+        except InputDropped as exc:
+            _record("refused_input_dropped", response=response, exc=exc)
+            raise
+        _record("completed", response=checked)
+        return checked
 
-        except FuturesTimeoutError:
-            # Abandon the hung thread — do not wait for it
-            executor.shutdown(wait=False, cancel_futures=True)
-            elapsed = time.monotonic() - t0
-            logger.warning(
-                "Ollama wall-clock timeout: model=%s, %s, elapsed=%.0fs, "
-                "limit=%.0fs, attempt=%d/%d",
-                model, paper_label, elapsed, effective_timeout,
-                attempt + 1, 1 + max_retries,
-            )
-            if attempt < max_retries:
-                time.sleep(retry_delay)
+    try:
+        fit = _check_input_fits(model, messages, kwargs.get("options"), paper_label)
+    except InputOverflow as exc:
+        _record("refused_input_overflow", exc=exc)
+        raise
+    except CeilingUnavailable as exc:
+        _record("refused_ceiling_unavailable", exc=exc)
+        raise
+
+    try:
+        for attempt in range(1 + max_retries):
+            t0 = time.monotonic()
+            executor = ThreadPoolExecutor(max_workers=1)
+            try:
+                future = executor.submit(
+                    _client.chat,
+                    model=model,
+                    messages=messages,
+                    **kwargs,
+                )
+                response = future.result(timeout=effective_timeout)
+
+            except FuturesTimeoutError:
+                # Abandon the hung thread — do not wait for it
+                executor.shutdown(wait=False, cancel_futures=True)
+                elapsed = time.monotonic() - t0
+                logger.warning(
+                    "Ollama wall-clock timeout: model=%s, %s, elapsed=%.0fs, "
+                    "limit=%.0fs, attempt=%d/%d",
+                    model, paper_label, elapsed, effective_timeout,
+                    attempt + 1, 1 + max_retries,
+                )
+                if attempt < max_retries:
+                    time.sleep(retry_delay)
+                else:
+                    # All retries exhausted — attempt Ollama restart as last resort
+                    try:
+                        response = _restart_ollama_and_retry(
+                            model=model, messages=messages,
+                            paper_label=paper_label,
+                            effective_timeout=effective_timeout,
+                            max_retries=max_retries,
+                            **kwargs,
+                        )
+                    except RuntimeError:
+                        raise TimeoutError(
+                            f"Ollama call timed out after {1 + max_retries} attempts + restart "
+                            f"(model={model}, {paper_label}, limit={effective_timeout}s)"
+                        )
+                    return _finish(response)
+
+            except (httpx.TimeoutException, httpx.ConnectError) as exc:
+                executor.shutdown(wait=False, cancel_futures=True)
+                elapsed = time.monotonic() - t0
+                logger.warning(
+                    "Ollama HTTP timeout: model=%s, %s, elapsed=%.0fs, "
+                    "error=%s, attempt=%d/%d",
+                    model, paper_label, elapsed, exc,
+                    attempt + 1, 1 + max_retries,
+                )
+                if attempt < max_retries:
+                    time.sleep(retry_delay)
+                else:
+                    raise
+
+            except Exception as exc:
+                executor.shutdown(wait=False, cancel_futures=True)
+                elapsed = time.monotonic() - t0
+                logger.warning(
+                    "Ollama call failed: model=%s, %s, elapsed=%.0fs, "
+                    "error=%s, attempt=%d/%d",
+                    model, paper_label, elapsed, exc,
+                    attempt + 1, 1 + max_retries,
+                )
+                if attempt < max_retries:
+                    time.sleep(retry_delay)
+                else:
+                    raise
+
             else:
-                # All retries exhausted — attempt Ollama restart as last resort
-                try:
-                    response = _restart_ollama_and_retry(
-                        model=model, messages=messages,
-                        paper_label=paper_label,
-                        effective_timeout=effective_timeout,
-                        max_retries=max_retries,
-                        **kwargs,
-                    )
-                except RuntimeError:
-                    raise TimeoutError(
-                        f"Ollama call timed out after {1 + max_retries} attempts + restart "
-                        f"(model={model}, {paper_label}, limit={effective_timeout}s)"
-                    )
-                return _done(_check_input_was_read(response, fit, paper_label))
-
-        except (httpx.TimeoutException, httpx.ConnectError) as exc:
-            executor.shutdown(wait=False, cancel_futures=True)
-            elapsed = time.monotonic() - t0
-            logger.warning(
-                "Ollama HTTP timeout: model=%s, %s, elapsed=%.0fs, "
-                "error=%s, attempt=%d/%d",
-                model, paper_label, elapsed, exc,
-                attempt + 1, 1 + max_retries,
-            )
-            if attempt < max_retries:
-                time.sleep(retry_delay)
-            else:
-                raise
-
-        except Exception as exc:
-            executor.shutdown(wait=False, cancel_futures=True)
-            elapsed = time.monotonic() - t0
-            logger.warning(
-                "Ollama call failed: model=%s, %s, elapsed=%.0fs, "
-                "error=%s, attempt=%d/%d",
-                model, paper_label, elapsed, exc,
-                attempt + 1, 1 + max_retries,
-            )
-            if attempt < max_retries:
-                time.sleep(retry_delay)
-            else:
-                raise
-
-        else:
-            # Outside the handlers above on purpose: an input-fit failure is
-            # neither retried nor converted into a timeout.
-            return _done(_check_input_was_read(response, fit, paper_label))
+                # Outside the handlers above on purpose: an input-fit failure is
+                # neither retried nor converted into a timeout.
+                return _finish(response)
+    except (InputTruncated, InputDropped):
+        raise  # already recorded inside _finish — never double-recorded
+    except Exception as exc:
+        # Every OTHER way this call can end after the request hash exists:
+        # the wall-clock watchdog exhausted with a failed restart (TimeoutError),
+        # an HTTP-level timeout/connect failure exhausted, or any other
+        # exception from the client exhausted. One site, because none of these
+        # carry a response object to record against — 10a-C3 Phase A A3.
+        _record("error", exc=exc)
+        raise
 
 
 # ── Ollama restart recovery (Layer 3) ────────────────────────────────

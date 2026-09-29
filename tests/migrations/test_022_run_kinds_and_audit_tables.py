@@ -358,10 +358,14 @@ def test_T6_an_unlisted_outcome_token_is_refused(fresh):
 
 
 def test_T6_record_call_on_a_fixture_writes_outcome_completed(fresh):
+    """10a-C3 note: `outcome` is now required (no default) on `record_call`;
+    this still writes 'completed' — the caller names it explicitly, same as
+    every other caller (`ollama_chat`'s recorder, cloud's `send()`)."""
     conn = sqlite3.connect(str(fresh))
     run_id = _linked_run_and_stage(conn)
     call_id = rm.record_call(
-        conn, run_id, "audit", None, {"model": "m"}, "digest", "t0", "t1")
+        conn, run_id, "audit", None, {"model": "m"}, "digest", "t0", "t1",
+        outcome="completed")
     row = conn.execute(
         "SELECT outcome, outcome_detail FROM run_calls WHERE call_id = ?", (call_id,)
     ).fetchone()

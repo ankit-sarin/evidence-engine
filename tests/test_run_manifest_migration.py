@@ -323,10 +323,9 @@ def test_the_run_kinds_and_end_statuses_agree_with_run_manifest():
     # now-superseded re-declaration (10a-C2, one CHECK, one constant, never
     # disagreeing at any commit).
     assert m022.RUN_KINDS == run_manifest.RUN_KINDS
-    # END_STATUSES: unchanged by 10a-C2 — R215's 'aborted' status is DDL-only
-    # until 10a-C3 wires a caller to actually use it, so 020's set is still
-    # the live agreement.
-    assert m020.END_STATUSES == run_manifest.END_STATUSES
+    # END_STATUSES: 022 also owns this vocabulary now (R215 added 'aborted');
+    # 10a-C3 wired RunAborted to actually use it (M4, this task's own finding).
+    assert m022.END_STATUSES == run_manifest.END_STATUSES
     assert m020.ARM_PINNED == run_manifest.ARM_PINNED
 
 

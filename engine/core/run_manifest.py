@@ -57,10 +57,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 #: Re-declared in migration 022 (R214, R35); a test asserts the two agree.
 RUN_KINDS = ("extraction", "screening", "judge", "review_session", "import")
-#: R215's 'aborted' status is DELIBERATELY not added here yet — 022 (10a-C2)
-#: only builds the DDL that permits it; wiring a caller to actually close a
-#: run 'aborted' is 10a-C3. Until then this stays 020's set, unchanged.
-END_STATUSES = ("completed", "failed", "interrupted")
+#: R215/10a-C3: 'aborted' wired to RunAborted's close in scripts/run_pipeline.py.
+END_STATUSES = ("completed", "failed", "interrupted", "aborted")
 ARM_PINNED = "pinned"
 
 #: R75: the client libraries whose versions every manifest records.
@@ -422,14 +420,15 @@ def response_digest(content: str | None, thinking: str | None = None) -> str:
 def record_call(conn, run_id: int, stage: str, paper_id: int | None,
                 request: Mapping[str, Any], digest: str | None,
                 started_at: str, ended_at: str, *,
-                outcome: str = "completed",
+                outcome: str,
                 outcome_detail: str | None = None) -> int:
-    """`outcome` (R216/C24, 022's `run_calls.outcome` column) defaults to
-    'completed': this is the only path this function has ever been reached
-    from (the input-fit guard's refusals raise before any call gets here —
-    10a-P0/P1 Q5), so every existing caller keeps writing exactly what it
-    always wrote without needing an edit. Wiring the other five outcome
-    tokens into the refusal paths themselves is 10a-C3."""
+    """`outcome` (R216/C24, 022's `run_calls.outcome` column) is required,
+    keyword-only, no default (10a-C3): every caller now names it explicitly,
+    so a caller this task missed fails loudly (TypeError) rather than
+    silently writing 'completed'. `ollama_chat`'s recorder (10a-C3) is the
+    only caller reached from a refusal path; the cloud path's `send()` still
+    passes 'completed' explicitly (F15 — its own outcome semantics are out of
+    scope here)."""
     cur = conn.execute(
         "INSERT INTO run_calls (run_id, stage, paper_id, request_hash, response_digest, "
         "started_at, ended_at, outcome, outcome_detail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -463,16 +462,24 @@ def active_run(conn, run_id: int):
 
 
 def record_active_ollama_call(stage: str | None, request: Mapping[str, Any],
-                              paper_id: int | None, response, started_at: str) -> None:
-    """Called by `ollama_chat` after a call returns. A no-op outside a run."""
+                              paper_id: int | None, response, started_at: str, *,
+                              outcome: str,
+                              outcome_detail: str | None = None) -> None:
+    """Called by `ollama_chat` on every outcome (10a-C3, R216) — success and
+    every refusal alike. A no-op outside a run. `response` is None on a
+    pre-call refusal (nothing was sent, so there is nothing to digest);
+    `digest` stays NULL for it rather than the digest of an empty message."""
     active = _ACTIVE.get()
     if active is None or stage is None:
         return
     conn, run_id = active
     key = f"preflight:{request.get('model')}" if stage == "preflight" else stage
-    msg = getattr(response, "message", None)
-    digest = response_digest(getattr(msg, "content", None), getattr(msg, "thinking", None))
-    record_call(conn, run_id, key, paper_id, request, digest, started_at, _now())
+    digest = None
+    if response is not None:
+        msg = getattr(response, "message", None)
+        digest = response_digest(getattr(msg, "content", None), getattr(msg, "thinking", None))
+    record_call(conn, run_id, key, paper_id, request, digest, started_at, _now(),
+               outcome=outcome, outcome_detail=outcome_detail)
 
 
 def stage_names_agree() -> tuple[str, ...]:

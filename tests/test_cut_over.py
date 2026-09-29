@@ -199,7 +199,10 @@ def test_t3_a_success_between_failures_resets_the_count(db, spec, fields, fake_m
     assert stats["failed"] == 3 and stats["extracted"] == 1
 
 
-def test_t3_an_aborted_run_closes_as_failed(db, spec, monkeypatch):
+def test_t3_an_aborted_run_closes_as_aborted_with_reason(db, spec, monkeypatch):
+    """10a-C3 (R215/C26): the manifest now records the abort as its own
+    end_status, with RunAborted's message as end_reason — was 'failed' with
+    no reason before this wiring landed."""
     import scripts.run_pipeline as rp
     run_id = open_extraction_run(db, spec)
     monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
@@ -213,8 +216,10 @@ def test_t3_an_aborted_run_closes_as_failed(db, spec, monkeypatch):
         rp.run_pipeline("flip", skip_to="extract")
     conn = sqlite3.connect(db.db_path)
     try:
-        assert conn.execute("SELECT end_status FROM run_manifests WHERE run_id = ?",
-                            (run_id,)).fetchone()[0] == "failed"
+        row = conn.execute("SELECT end_status, end_reason FROM run_manifests WHERE run_id = ?",
+                           (run_id,)).fetchone()
+        assert row[0] == "aborted"
+        assert row[1] == "run aborted: 3"
     finally:
         conn.close()
 

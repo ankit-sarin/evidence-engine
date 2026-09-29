@@ -24,6 +24,14 @@ from engine.core.database import ReviewDatabase
 from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.core.review_spec import PDFParsing, ReviewSpec
 from engine.core.parsed_text import next_version, record_parsed_text
+from engine.core.events import write_paper_event
+from engine.core.paper_state import (
+    REASON_PARSE_CASCADE_EMPTY,
+    REASON_PARSE_FILE_UNREADABLE,
+    REASON_PARSE_PYMUPDF_EXHAUSTED,
+    REASON_PARSE_UNCLASSIFIED_ERROR,
+    REASON_PARSE_VISION_EXHAUSTED,
+)
 from engine.parsers.models import ParseAttempt, ParsedDocument
 from engine.parsers import font_audit as _font_audit
 from engine.parsers.parse_quality import (
@@ -36,6 +44,22 @@ from engine.parsers.parse_quality import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class ParseFailed(Exception):
+    """R227/R228: the cascade could not produce a usable parsed text for this
+    paper. `reason_code` is one of `engine.core.paper_state.PARSE_REASONS`,
+    named for the branch that raised it (10a-C6-A census). The branch's own
+    exception, if any, rides as `__cause__` — `raise ParseFailed(...) from exc`.
+
+    `parse_all_pdfs` turns this into one `parse_failed` paper event under a
+    run (R228b); outside a run, or from `reparse_papers`, it is an ordinary
+    exception like any other the caller already handles.
+    """
+
+    def __init__(self, reason_code: str, message: str):
+        super().__init__(message)
+        self.reason_code = reason_code
 
 # Defaults — the spec model's declared defaults, overridden by
 # ReviewSpec.pdf_parsing when available. C19: these were module constants that
@@ -649,7 +673,19 @@ def parse_pdf(
             logger.warning("Paper %d attempt %d: %s",
                            paper_id, attempts[-1].attempt_index, reason)
 
-        if is_scanned_pdf(pdf_path, threshold=scanned_threshold):
+        try:
+            scanned = is_scanned_pdf(pdf_path, threshold=scanned_threshold)
+        except Exception as exc:
+            # Branch #2 (10a-C6-A census): the file cannot even be opened to
+            # decide scanned vs. digital — no tier has run yet, so no ledger
+            # row exists for this paper's failure (nothing was appended to
+            # `attempts`), unlike every branch below.
+            raise ParseFailed(
+                REASON_PARSE_FILE_UNREADABLE,
+                f"Paper {paper_id}: could not be opened to detect scanned vs. "
+                f"digital — {exc}",
+            ) from exc
+        if scanned:
             # PARSE-GATE-06b: a scanned page goes to the DETERMINISTIC OCR tier
             # first. It was the vision model, which is a per-page model call with a
             # 30-minute observed worst case; docling_ocr is ~6 s/page, reproducible,
@@ -686,7 +722,13 @@ def parse_pdf(
                     parser_used = "qwen2.5vl"
                 except Exception as exc:
                     _record_error("qwen2.5vl", exc, started)
-                    raise
+                    # Branch #6 (10a-C6-A census): vision is the last tier on
+                    # the scanned route (after OCR failed, skipped or sparse).
+                    raise ParseFailed(
+                        REASON_PARSE_VISION_EXHAUSTED,
+                        f"Paper {paper_id}: vision, the last tier on the "
+                        f"scanned route, failed — {exc}",
+                    ) from exc
         else:
             logger.info("Paper %d: digital PDF, using Docling", paper_id)
             started = time.monotonic()
@@ -727,7 +769,14 @@ def parse_pdf(
                         parser_used = "pymupdf"
                     except Exception as exc3:
                         _record_error("pymupdf", exc3, started)
-                        raise
+                        # Branch #10 (10a-C6-A census): docling, the sanitized
+                        # retry (or its skip) and pymupdf have all failed —
+                        # vision is never reached on this path.
+                        raise ParseFailed(
+                            REASON_PARSE_PYMUPDF_EXHAUSTED,
+                            f"Paper {paper_id}: docling and pymupdf both "
+                            f"failed — {exc3}",
+                        ) from exc3
 
             # If output is sparse, try PyMuPDF (if not already), then vision model
             if (len(markdown.strip()) < scanned_threshold
@@ -742,7 +791,13 @@ def parse_pdf(
                     parser_used = "pymupdf"
                 except Exception as exc:
                     _record_error("pymupdf", exc, started)
-                    raise
+                    # Branch #11 (10a-C6-A census): pymupdf was the designated
+                    # next tier for sparse docling output, and it failed.
+                    raise ParseFailed(
+                        REASON_PARSE_PYMUPDF_EXHAUSTED,
+                        f"Paper {paper_id}: pymupdf fallback for sparse "
+                        f"{parser_used} output failed — {exc}",
+                    ) from exc
 
             if len(markdown.strip()) < scanned_threshold:
                 logger.warning(
@@ -756,7 +811,14 @@ def parse_pdf(
                     parser_used = "qwen2.5vl"
                 except Exception as exc:
                     _record_error("qwen2.5vl", exc, started)
-                    raise
+                    # Branch #12 (10a-C6-A census): vision is the last tier
+                    # in the digital route too, once docling/pymupdf both left
+                    # the output sparse.
+                    raise ParseFailed(
+                        REASON_PARSE_VISION_EXHAUSTED,
+                        f"Paper {paper_id}: vision, the last tier on the "
+                        f"digital route, failed — {exc}",
+                    ) from exc
 
         # ── Judge, and re-route while it fails ──────────────────────────
         texts: dict[str, str] = {}
@@ -859,10 +921,13 @@ def parse_pdf(
             _attach_structure(pdf_path, attempts, paper_id)
             _commit_attempts(db, paper_id, pdf_hash, version, attempts)
             attempts_committed = True
-            raise ValueError(
+            # Branch #17 (10a-C6-A census): every tier ran (or was skipped/
+            # re-routed) and selection found nothing usable.
+            raise ParseFailed(
+                REASON_PARSE_CASCADE_EMPTY,
                 f"Paper {paper_id}: all parsers returned empty text — "
                 f"{len(attempts)} attempt(s) recorded, no file written, "
-                "no asset row created"
+                "no asset row created",
             )
         accepted.accepted = True
         markdown = texts[accepted.parser_used]
@@ -871,9 +936,12 @@ def parse_pdf(
         # Belt and braces: selection already refuses sparse output, so reaching this
         # means the accepted text changed under us.
         if not markdown.strip():
-            raise ValueError(
+            # Branch #18 (10a-C6-A census): defensively unreachable per
+            # selection's own contract, same code as #17 if it ever fires.
+            raise ParseFailed(
+                REASON_PARSE_CASCADE_EMPTY,
                 f"Paper {paper_id}: all parsers returned empty text — "
-                "no file written, no DB row created"
+                "no file written, no DB row created",
             )
 
         # Atomic write: temp file → DB commit → rename
@@ -946,8 +1014,16 @@ def parse_pdf(
             Path(sanitized_path).unlink(missing_ok=True)
 
 
-def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
-    """Parse all PDF_ACQUIRED papers. Returns stats dict."""
+def parse_all_pdfs(db: ReviewDatabase, review_name: str, *, run_id: int | None = None) -> dict:
+    """Parse all PDF_ACQUIRED papers. Returns stats dict.
+
+    `run_id` (R228b, 10a-C6-B): when given, a `ParseFailed` or any other
+    exception `parse_pdf` raises writes one `parse_failed` paper event on
+    `db._conn`, in the same style as `_stage_extract`'s `run_id` keyword
+    (`scripts/run_pipeline.py`). With no `run_id` — `reparse_papers`, or any
+    caller outside a run — behaviour is unchanged from before this ruling:
+    log and continue, no event (R68 forbids an event with no run).
+    """
     papers = db.get_papers_by_status("PDF_ACQUIRED")
     total = len(papers)
     logger.info("Starting PDF parsing for %d papers", total)
@@ -1030,9 +1106,31 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str) -> dict:
             else:
                 db.update_status(pid, "PARSED")
                 stats["parsed"] += 1
+        except ParseFailed as exc:
+            logger.exception("Paper %d: parsing failed — %s", pid, exc)
+            stats["failed"] += 1
+            if run_id is not None:
+                cause = exc.__cause__
+                write_paper_event(
+                    db._conn, event_type="parsed", paper_id=pid,
+                    to_state="parse_failed", reason_code=exc.reason_code,
+                    actor_kind="engine", actor_role="system", actor_name="parser",
+                    stage_name="parse", reason=str(cause) if cause is not None else str(exc),
+                    run_id=run_id)
+        except FileExistsError:
+            # R231: the R99 version-conflict guard is an engine integrity
+            # fault, not a paper outcome — it propagates like the other run
+            # faults `outcome_for_exception` names, never mapped to an event.
+            raise
         except Exception as exc:
             logger.exception("Paper %d: parsing failed — %s", pid, exc)
             stats["failed"] += 1
+            if run_id is not None:
+                write_paper_event(
+                    db._conn, event_type="parsed", paper_id=pid,
+                    to_state="parse_failed", reason_code=REASON_PARSE_UNCLASSIFIED_ERROR,
+                    actor_kind="engine", actor_role="system", actor_name="parser",
+                    stage_name="parse", reason=str(exc), run_id=run_id)
 
         if i % 10 == 0 or i == total:
             logger.info("Parsed %d/%d papers", i, total)

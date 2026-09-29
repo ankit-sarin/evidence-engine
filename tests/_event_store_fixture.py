@@ -260,16 +260,15 @@ def seed_processing(conn, paper_id: int, to_state: str, *,
 
     `run_id` defaults to the fixture run (R68); pass one from
     `open_extraction_run` to write under a real manifest. A failure token needs
-    `reason_code` (019's CHECK); for `extraction_failed` / `input_exceeds_context`
-    it must be an `EXTRACTION_REASONS` code mapped to that token. Returns the
-    event id.
+    `reason_code` (019's CHECK) that is a `PROCESSING_REASONS` code mapped to
+    that token (R227, 10a-C6-B — extended from `EXTRACTION_REASONS` alone to
+    the union over all four failure tokens). Returns the event id.
     """
     from engine.core import paper_state as PS
     if to_state not in _PROCESSING_EVENT_TYPE:
         raise ValueError(f"{to_state!r} is not a processing-axis token")
-    if to_state in ("extraction_failed", "input_exceeds_context") and \
-            PS.EXTRACTION_REASONS.get(reason_code) != to_state:
-        raise ValueError(f"reason {reason_code!r} is not an EXTRACTION_REASONS code "
+    if to_state in PS.FAILURE_STATES and PS.PROCESSING_REASONS.get(reason_code) != to_state:
+        raise ValueError(f"reason {reason_code!r} is not a PROCESSING_REASONS code "
                          f"for {to_state!r}")
     return events.write_paper_event(
         conn, event_type=_PROCESSING_EVENT_TYPE[to_state], paper_id=paper_id,

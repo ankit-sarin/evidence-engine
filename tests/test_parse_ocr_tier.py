@@ -27,6 +27,7 @@ from engine.parsers.parse_quality import (
 from engine.parsers.pdf_parser import (
     _MAX_ATTEMPTS,
     _REROUTE,
+    ParseFailed,
     parse_all_pdfs,
     parse_pdf,
     parse_with_docling_ocr,
@@ -292,7 +293,9 @@ def test_total_failure_still_writes_the_attempt_rows(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
-        with pytest.raises(ValueError, match="all parsers returned empty text"):
+        # 10a-C6-B (R227/R228): branch #17 now raises ParseFailed, not a bare
+        # ValueError — same message text, a typed reason_code besides.
+        with pytest.raises(ParseFailed, match="all parsers returned empty text"):
             parse_pdf(str(digital_pdf), pid, "test_ocr", db)
 
     rows = _rows(db, pid)
@@ -315,8 +318,13 @@ def test_the_ledger_survives_a_raise_out_of_parse_pdf(digital_pdf, db):
                side_effect=RuntimeError("docling exploded")), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf",
                side_effect=OSError("disk gone")):
-        with pytest.raises(OSError, match="disk gone"):
+        # 10a-C6-B (R227/R228): branch #10 now raises ParseFailed, wrapping
+        # the real OSError as __cause__ (still "more useful than a generic
+        # message", now typed too).
+        with pytest.raises(ParseFailed) as exc:
             parse_pdf(str(digital_pdf), pid, "test_ocr", db)
+        assert isinstance(exc.value.__cause__, OSError)
+        assert "disk gone" in str(exc.value.__cause__)
 
     rows = _rows(db, pid)
     assert [r["parser_used"] for r in rows] == [

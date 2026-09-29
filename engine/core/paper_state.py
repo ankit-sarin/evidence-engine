@@ -175,3 +175,59 @@ EXTRACTION_REASONS: dict[str, str] = {
 }
 
 EXTRACTION_REASON_CODES: frozenset[str] = frozenset(EXTRACTION_REASONS)
+
+
+# ── R227 (C35, 10a-C6-A/B): the closed reason vocabularies for the parser's
+# and the acquisition path's failure branches — one code per branch, derived
+# by reading the branches themselves (10a-C6-A census), never invented ──
+#
+# `parse_version_conflict` is DELIBERATELY not a code here (R231): the R99
+# version-file guard is an engine integrity fault, not a paper outcome — it
+# joins the run faults `outcome_for_exception` propagates rather than maps
+# (`engine/core/extraction_events.py`): `CodebookContractError`,
+# `ExhaustedWithoutRecord`, `EventRefused`, `RunAborted`, and now
+# `FileExistsError` (the R99 guard, `engine/parsers/pdf_parser.py`).
+
+#: The parser cascade ran out of usable tiers. `engine.parsers.pdf_parser`'s
+#: `ParseFailed` carries one of these; each names the branch it was raised at
+#: (10a-C6-A census, branch numbers from that report).
+REASON_PARSE_FILE_UNREADABLE = "parse_file_unreadable"
+REASON_PARSE_VISION_EXHAUSTED = "parse_vision_exhausted"
+REASON_PARSE_PYMUPDF_EXHAUSTED = "parse_pymupdf_exhausted"
+REASON_PARSE_CASCADE_EMPTY = "parse_cascade_empty"
+#: Any other Exception escaping parse_pdf (mirrors REASON_UNCLASSIFIED_ERROR).
+REASON_PARSE_UNCLASSIFIED_ERROR = "parse_unclassified_error"
+
+PARSE_REASONS: dict[str, str] = {
+    REASON_PARSE_FILE_UNREADABLE: "parse_failed",
+    REASON_PARSE_VISION_EXHAUSTED: "parse_failed",
+    REASON_PARSE_PYMUPDF_EXHAUSTED: "parse_failed",
+    REASON_PARSE_CASCADE_EMPTY: "parse_failed",
+    REASON_PARSE_UNCLASSIFIED_ERROR: "parse_failed",
+}
+
+#: full_text_not_obtainable's codes (R227). **No writer exists in session 10**
+#: (R230) — `download_status='failed'` is retriable, not terminal the way
+#: `PDF_EXCLUDED` is, and the acquisition stage's cut-over is junior with the
+#: screeners (R183). Declared now so the vocabulary is closed and derived from
+#: the branches (10a-C6-A A2.1), not invented at the writer's own commit.
+REASON_ACQUIRE_NO_LOCATOR = "acquire_no_locator"
+REASON_ACQUIRE_CASCADE_EXHAUSTED = "acquire_cascade_exhausted"
+
+ACQUISITION_REASONS: dict[str, str] = {
+    REASON_ACQUIRE_NO_LOCATOR: "full_text_not_obtainable",
+    REASON_ACQUIRE_CASCADE_EXHAUSTED: "full_text_not_obtainable",
+}
+
+#: The union — every reason code any processing-axis failure can carry today
+#: (extraction, parse) or is declared for ahead of its writer (acquisition).
+#: No database CHECK enforces membership (R202/R208); this dict is the sole
+#: closed set, and a test pins every code's literal string to this module
+#: alone (F9, extended to the union at 10a-C6-B).
+PROCESSING_REASONS: dict[str, str] = {
+    **EXTRACTION_REASONS,
+    **PARSE_REASONS,
+    **ACQUISITION_REASONS,
+}
+
+PROCESSING_REASON_CODES: frozenset[str] = frozenset(PROCESSING_REASONS)

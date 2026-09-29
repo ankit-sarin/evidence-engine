@@ -9,6 +9,7 @@ from fpdf import FPDF
 from engine.core.database import ReviewDatabase
 from engine.parsers.models import ParsedDocument
 from engine.parsers.pdf_parser import (
+    ParseFailed,
     compute_pdf_hash,
     is_scanned_pdf,
     parse_with_docling,
@@ -234,14 +235,16 @@ def test_docling_exception_triggers_pymupdf(digital_pdf, db):
 
 
 def test_all_parsers_empty_raises_value_error(scanned_pdf, db):
-    """When all three parsers return empty text, ValueError is raised with no side effects."""
+    """When all three parsers return empty text, ParseFailed is raised with no side effects."""
     pid = _add_paper(db, pid_hint="99")
     db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
 
     # Mock the vision parser to return empty (scanned PDF routes directly here)
     with patch("engine.parsers.pdf_parser.parse_with_vision", return_value=""):
-        with pytest.raises(ValueError, match="all parsers returned empty text"):
+        # 10a-C6-B (R227/R228): branch #17 now raises ParseFailed, not a bare
+        # ValueError — same message text, a typed reason_code besides.
+        with pytest.raises(ParseFailed, match="all parsers returned empty text"):
             parse_pdf(str(scanned_pdf), pid, "test_parse", db)
 
     # No file written to disk

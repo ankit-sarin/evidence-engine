@@ -328,14 +328,16 @@ def test_a_total_failure_records_the_structure_half(db, small_pdf):
     half of the audit that needs no text. `font_exposure_per_kchar` is None on
     these rows — the criterion was never evaluated, and the reason says why.
     """
-    from engine.parsers.pdf_parser import parse_pdf
+    from engine.parsers.pdf_parser import ParseFailed, parse_pdf
 
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
-        with pytest.raises(ValueError, match="all parsers returned empty text"):
+        # 10a-C6-B (R227/R228): branch #17 now raises ParseFailed, not a bare
+        # ValueError — same message text, a typed reason_code besides.
+        with pytest.raises(ParseFailed, match="all parsers returned empty text"):
             parse_pdf(str(small_pdf), pid, "test_font_ledger", db)
 
     rows = db._conn.execute(

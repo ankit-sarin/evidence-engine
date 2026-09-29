@@ -104,17 +104,39 @@ def test_each_non_failure_processing_token_reads_back_with_no_reason(db, token, 
     assert s.analysis_ready == (token in paper_state.COMPLETED_PROCESSING_STATES)
 
 
+#: One real PROCESSING_REASONS code per failure token (R227, 10a-C6-B) — was
+#: an invented "<token> detail" placeholder; the writer records whatever
+#: reason_code it is given, but a fixture pinning "the reason round-trips"
+#: should use a code the vocabulary actually declares.
+_FAILURE_TOKEN_REASON = {
+    "extraction_failed": paper_state.REASON_UNCLASSIFIED_ERROR,
+    "input_exceeds_context": paper_state.REASON_INPUT_OVERFLOW_ESTIMATED,
+    "parse_failed": paper_state.REASON_PARSE_CASCADE_EMPTY,
+    "full_text_not_obtainable": paper_state.REASON_ACQUIRE_CASCADE_EXHAUSTED,
+}
+#: event_type per failure token (R229): 'parsed' -> 'parse_failed' (was
+#: wrongly 'extraction_failed' here, disagreeing with
+#: tests/_event_store_fixture.py's own mapping — 10a-C6-A A5 finding),
+#: 'not_obtainable' -> 'full_text_not_obtainable', 'extraction_failed'
+#: otherwise.
+_FAILURE_TOKEN_EVENT_TYPE = {
+    "parse_failed": "parsed",
+    "full_text_not_obtainable": "not_obtainable",
+}
+
+
 @pytest.mark.parametrize("token", paper_state.FAILURE_STATES)
 def test_each_failure_token_reads_back_with_its_reason_and_stays_eligible(db, token):
     """G3's shape, for every failure token R39 declares."""
     _paper_event(db, 1, "adjudicated", "eligible")
-    etype = {"full_text_not_obtainable": "not_obtainable"}.get(token, "extraction_failed")
-    _paper_event(db, 1, etype, token, reason=f"{token} detail")
+    etype = _FAILURE_TOKEN_EVENT_TYPE.get(token, "extraction_failed")
+    reason = _FAILURE_TOKEN_REASON[token]
+    _paper_event(db, 1, etype, token, reason=reason)
     s = effective_state(db, 1)
     assert s.eligibility == "eligible"
     assert s.in_corpus is True, "a processing failure must not remove a paper (A9)"
     assert s.processing == token
-    assert s.processing_reason == f"{token} detail"
+    assert s.processing_reason == reason
     assert s.analysis_ready is False
 
 

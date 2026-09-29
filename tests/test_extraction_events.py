@@ -414,10 +414,27 @@ def test_t12_every_code_the_mapping_emits_is_in_the_closed_set(spec):
 
 
 def test_t12_the_reason_codes_are_spelled_only_in_the_vocabulary():
+    """R227 (10a-C6-B): extended from EXTRACTION_REASON_CODES alone to the
+    union PROCESSING_REASON_CODES — the parse and acquisition codes must be
+    spelled nowhere but paper_state.py either, same pin, same reason."""
     home = REPO / "engine" / "core" / "paper_state.py"
     pattern = re.compile("|".join(rf"[\"']{re.escape(c)}[\"']"
-                                  for c in PS.EXTRACTION_REASON_CODES))
+                                  for c in PS.PROCESSING_REASON_CODES))
     hits = [f.relative_to(REPO).as_posix() for f in (REPO / "engine").rglob("*.py")
             if f != home and pattern.search(f.read_text())]
     assert hits == []
     assert pattern.search(home.read_text())      # the pin can fire
+
+
+def test_t12_processing_reasons_is_exactly_the_union_of_its_three_parts():
+    """R227: PROCESSING_REASONS is the union of EXTRACTION_REASONS,
+    PARSE_REASONS and ACQUISITION_REASONS — nothing more, nothing less."""
+    assert PS.PROCESSING_REASON_CODES == (
+        PS.EXTRACTION_REASON_CODES | frozenset(PS.PARSE_REASONS) | frozenset(PS.ACQUISITION_REASONS))
+    # No overlap between the three closed sets.
+    assert not (PS.EXTRACTION_REASON_CODES & frozenset(PS.PARSE_REASONS))
+    assert not (PS.EXTRACTION_REASON_CODES & frozenset(PS.ACQUISITION_REASONS))
+    assert not (frozenset(PS.PARSE_REASONS) & frozenset(PS.ACQUISITION_REASONS))
+    # Every code maps to the token its own dict/family name says it should.
+    assert set(PS.PARSE_REASONS.values()) == {"parse_failed"}
+    assert set(PS.ACQUISITION_REASONS.values()) == {"full_text_not_obtainable"}

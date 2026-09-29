@@ -19,6 +19,7 @@ from fpdf import FPDF
 
 from engine.core.database import ReviewDatabase
 from engine.parsers.pdf_parser import (
+    ParseFailed,
     error_reason,
     parse_all_pdfs,
     parse_pdf,
@@ -255,8 +256,13 @@ def test_a_raising_pymupdf_is_recorded_then_reraised(linked_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=_boom()), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf",
                side_effect=OSError("disk gone")):
-        with pytest.raises(OSError, match="disk gone"):
+        # 10a-C6-B (R227/R228): branch #10 now raises ParseFailed, wrapping
+        # the real OSError as __cause__ — the exception still reaches the
+        # caller, just typed now.
+        with pytest.raises(ParseFailed) as exc:
             parse_pdf(str(linked_pdf), pid, "test_sanitized", db)
+        assert isinstance(exc.value.__cause__, OSError)
+        assert "disk gone" in str(exc.value.__cause__)
     # The write never happened, so no rows are committed -- but nothing is stored
     # silently either: the exception reaches the caller.
     assert db._conn.execute(

@@ -20,6 +20,7 @@ from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.parsers.pdf_parser import (
     VISION_PROMPT,
+    ParseFailed,
     VisionTruncatedError,
     parse_pdf,
     parse_with_vision,
@@ -163,10 +164,13 @@ def test_truncation_becomes_an_unselectable_error_row(scanned_pdf, db):
                side_effect=RuntimeError("ocr off")), \
          patch("engine.parsers.pdf_parser.ollama_chat",
                return_value=_resp(done_reason="length")):
-        # The real cause propagates -- it is more useful than a generic message --
-        # and the ledger is committed anyway (PARSE-GATE-06b Contract 7).
-        with pytest.raises(VisionTruncatedError, match="page 1 hit num_predict"):
+        # 10a-C6-B (R228): the branch now raises ParseFailed, wrapping the
+        # real cause as __cause__ -- more useful than a generic message, and
+        # the ledger is committed anyway (PARSE-GATE-06b Contract 7).
+        with pytest.raises(ParseFailed) as exc:
             parse_pdf(str(scanned_pdf), pid, "test_vbounds", db)
+        assert isinstance(exc.value.__cause__, VisionTruncatedError)
+        assert "page 1 hit num_predict" in str(exc.value.__cause__)
 
     rows = db._conn.execute(
         "SELECT * FROM parse_attempts WHERE paper_id = ? ORDER BY attempt_index",

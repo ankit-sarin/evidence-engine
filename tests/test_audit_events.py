@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import sqlite3
 from pathlib import Path
 from unittest.mock import patch
 
@@ -88,6 +89,15 @@ def located_events(db, pid=None):
     return {r[0]: json.loads(r[1]) for r in rows}
 
 
+def verdicts(db, pid=None):
+    """R218: audit_verdicts is the authority now, not audit_calls.jsonl."""
+    db._conn.row_factory = sqlite3.Row
+    sql = "SELECT * FROM audit_verdicts"
+    rows = db._conn.execute(sql + (" WHERE paper_id = ?" if pid else ""),
+                            (pid,) if pid else ()).fetchall()
+    return [dict(r) for r in rows]
+
+
 def audited(db, pid):
     return db._conn.execute("SELECT COUNT(*) FROM paper_events WHERE paper_id = ? AND "
                             "to_state = 'audited_ai'", (pid,)).fetchone()[0]
@@ -126,7 +136,7 @@ def test_t3_locate_every_claim_verify_only_the_unlocated_value(db, spec, run_id,
     assert (evs[exact]["kind"], evs[fuzzy]["kind"], evs[lost]["located"]) == \
         ("exact", "fuzzy", False)
     assert verify.call_count == 1 and verify.call_args.args[0].field_name == "country"
-    rows = AT.read_verdicts(review_dir)
+    rows = verdicts(db, P7)  # R218: audit_verdicts, not audit_calls.jsonl
     assert len(rows) == 1 and rows[0]["claim_id"] == lost and rows[0]["run_id"] == run_id
     assert audited(db, P7) == 1 and rep.papers_audited == 1
     assert effective_state(db._conn, P7).processing == "audited_ai"
@@ -192,7 +202,7 @@ def test_t8_the_old_hand_list_values_are_not_auto_verified(db, spec, run_id, rev
     evs = located_events(db, P7)
     assert evs[nd]["located"] is False and evs[ncr]["snippet_supplied"] is False
     assert verify.call_count == 1                        # "Not discussed" is a value
-    by_claim = {r["claim_id"]: r for r in AT.read_verdicts(review_dir)}
+    by_claim = {r["claim_id"]: r for r in verdicts(db, P7)}  # R218
     assert by_claim[ncr]["verdict"] == "flagged"         # no snippet, no auto-verify
     # The legacy per-span audit no longer short-circuits them either.
     for value in ("Not discussed", "No comparison reported", "NR"):
@@ -226,18 +236,90 @@ def test_t10_low_yield_reads_the_codebook(db, spec, run_id, review_dir):
     assert AE.low_yield(db._conn, P8, arm, codebook=cb, threshold=4) is True
 
 
-# ── T12 ───────────────────────────────────────────────────────────────
-def test_t12_the_audit_telemetry_row_is_pinned(tmp_path):
+# ── T12 RETIRED (R218, 10a-C5) ───────────────────────────────────────
+# `test_t12_the_audit_telemetry_row_is_pinned` pinned audit_calls.jsonl file
+# mechanics — `AT.telemetry_path`, a file-based record_verdict/read_verdicts
+# round trip — none of which exist any more (audit_verdicts is the table).
+# Its one surviving fact, SCHEMA_VERSION/FIELDS, is pinned by test_t15 below.
+# Retention ledger: id retired, not rewritten — its premise (a JSONL file
+# exists to round-trip) cannot survive R218.
+
+
+# ── T15 (R218 B4-T1): one audit_verdicts row per verdict ──────────────
+def test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs(
+        db, spec, run_id, review_dir, verify):
+    """Two claims that both need a model call (no snippet, or unlocated) —
+    each gets exactly one audit_verdicts row, fields equal to the call's
+    inputs, run_id equal to the audited_ai event's run_id."""
+    arm = spec.extraction_models.arm
+    lost = claim(db, spec, run_id, P7, "country", "Norway",
+                "Conducted in Norway by the authors.")
+    no_snippet = claim(db, spec, run_id, P7, "task_performed", "suturing", "")
+    rep = run(db, spec, run_id, review_dir)
+
+    rows = {r["claim_id"]: r for r in verdicts(db, P7)}
+    assert set(rows) == {lost, no_snippet}
     assert AT.SCHEMA_VERSION == "audit-telemetry-1"
-    assert AT.telemetry_path(tmp_path) == tmp_path / "telemetry" / "audit_calls.jsonl"
-    AT.record_verdict(tmp_path, run_id=1, paper_id=7, claim_id="c", field_name="f", arm="a",
-                      auditor_model="gemma3:27b", auditor_digest="d" * 64, verdict="flagged",
-                      rationale="r")
-    (row,) = AT.read_verdicts(tmp_path)
-    assert tuple(row) == AT.FIELDS == (
-        "schema", "run_id", "paper_id", "claim_id", "field_name", "arm", "auditor_model",
-        "auditor_digest", "verdict", "rationale", "occurred_at")
-    assert row["schema"] == "audit-telemetry-1"
+    for cid, field_name in ((lost, "country"), (no_snippet, "task_performed")):
+        r = rows[cid]
+        assert r["schema"] == "audit-telemetry-1"
+        assert r["field_name"] == field_name and r["arm"] == arm
+        assert r["auditor_model"] == "gemma3:27b"
+        row_audited_ai = db._conn.execute(
+            "SELECT run_id FROM paper_events WHERE paper_id = ? AND to_state = "
+            "'audited_ai'", (P7,)).fetchone()
+        assert r["run_id"] == row_audited_ai[0] == run_id
+    assert rep.papers_audited == 1
+
+
+# ── T16 (R218 B4-T2): atomicity — verdicts and the paper event together ──
+def test_t16_a_failure_after_verdicts_leaves_no_verdict_rows_and_no_audited_ai(
+        db, spec, run_id, review_dir, verify):
+    """A failure injected between the verdict-row writes and the paper
+    event's write rolls back the whole savepoint — zero audit_verdicts rows
+    for the paper, no audited_ai event. Same shape as T7, one layer deeper."""
+    claim(db, spec, run_id, P7, "country", "Norway", "Conducted in Norway.")
+    with patch.object(AE, "write_paper_event", side_effect=events.RunLinkRefused("boom")):
+        with pytest.raises(events.RunLinkRefused):
+            run(db, spec, run_id, review_dir)
+    assert verdicts(db, P7) == []
+    assert audited(db, P7) == 0
+
+
+# ── T17 (R218 B4-T3): record_verdict refuses with no run_id ──────────
+def test_t17_record_verdict_with_no_run_id_refuses_and_writes_nothing(db):
+    with pytest.raises(AT.VerdictWithoutRun):
+        AT.record_verdict(
+            db._conn, run_id=None, paper_id=P7, claim_id="c", field_name="f",
+            arm="a", auditor_model="gemma3:27b", auditor_digest="d" * 64,
+            verdict="flagged", rationale="r", occurred_at="2026-01-01T00:00:00+00:00")
+    assert db._conn.execute("SELECT COUNT(*) FROM audit_verdicts").fetchone()[0] == 0
+
+
+# ── T18 (R218 B4-T4): no JSONL file is ever created ───────────────────
+def test_t18_no_audit_calls_jsonl_is_created_by_a_run(db, spec, run_id, review_dir, verify):
+    claim(db, spec, run_id, P7, "country", "Norway", "Conducted in Norway.")
+    run(db, spec, run_id, review_dir)
+    assert not (review_dir / "telemetry" / "audit_calls.jsonl").exists()
+    assert not hasattr(AT, "telemetry_path")
+    assert not hasattr(AT, "read_verdicts")
+
+
+# ── T19 (R218 B4-T5): a claim needing no model call ────────────────────
+def test_t19_an_unlocated_absence_sentinel_gets_no_verdict_row_at_all(
+        db, spec, run_id, review_dir, verify):
+    """R218 B4-T5, distinct from T14/T18's 'no snippet' case: an unlocated
+    claim whose value is one of the codebook's absence_sentinels is not
+    `is_populated`, so `audit_run` never appends anything to `verdicts` for
+    it — `continue`s before the flagged-without-a-call branch even runs.
+    Pinning what the code does today, unchanged: NO verdict row (not a
+    'flagged' one) for a sentinel value, though its citation_located event
+    is still written."""
+    c = claim(db, spec, run_id, P7, "country", "NR", "unmatched text entirely")
+    run(db, spec, run_id, review_dir)
+    verify.assert_not_called()
+    assert located_events(db, P7)[c]["located"] is False
+    assert verdicts(db, P7) == []
 
 
 # ── T13 (R1) ──────────────────────────────────────────────────────────
@@ -264,7 +346,7 @@ def test_t14_a_snippet_less_value_is_flagged_without_a_model_call(db, spec, run_
     c = claim(db, spec, run_id, P7, "country", "Norway", "")
     run(db, spec, run_id, review_dir)
     verify.assert_not_called()
-    (row,) = AT.read_verdicts(review_dir)
+    (row,) = verdicts(db, P7)  # R218
     assert (row["claim_id"], row["verdict"], row["rationale"]) == \
         (c, "flagged", AE.NO_SNIPPET_RATIONALE)
     assert located_events(db, P7)[c]["snippet_supplied"] is False

@@ -16,13 +16,13 @@ writes are its successor). Until then nothing in the run path calls this module.
 3. Cross-family semantic verification (`auditor.semantic_verify`, the `audit`
    stage) runs only on a claim that was NOT located, is not an absence sentinel
    or non-value token, and has a snippet to show the model. A claim with no
-   snippet gets verdict `flagged` without a call (9b-2d R4). Verdicts go to
-   run-linked telemetry (`engine.core.audit_telemetry`), not to an event.
-   The model calls happen before the paper's transaction opens: nothing is held
-   across inference.
-4. The located events and, once every live asserted claim of the arm carries
-   one, the `audited_ai` paper event are written in ONE savepoint with one
-   commit — a refusal anywhere writes nothing for the paper.
+   snippet gets verdict `flagged` without a call (9b-2d R4). The model calls
+   happen before the paper's transaction opens: nothing is held across inference.
+4. The located events, the verdict rows (`engine.core.audit_telemetry` — B8/R218,
+   `audit_verdicts`, not a file) and, once every live asserted claim of the arm
+   carries a located event, the `audited_ai` paper event are written in ONE
+   savepoint with one commit — a refusal anywhere writes nothing for the paper,
+   verdicts included.
 
 `low_yield` is computed on read (R136), never stored.
 """
@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 from pydantic import ValidationError
@@ -147,6 +148,7 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
                                  f"auditor returned unparseable output: {str(exc)[:100]}"))
 
         processing = effective_state(conn, pid).processing
+        verdict_occurred_at = datetime.now(timezone.utc).isoformat()
         conn.execute("SAVEPOINT audit_paper")
         try:
             for c, res in results:
@@ -158,6 +160,11 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
                                            parsed_text_sha256=ref.sha256,
                                            parsed_text_uid=ref.parsed_text_uid),
                     run_id=run_id, commit=False)
+            for c, verdict, why in verdicts:
+                record_verdict(conn, run_id=run_id, paper_id=pid, claim_id=c.claim_id,
+                               field_name=c.field_name, arm=arm, auditor_model=cfg.model,
+                               auditor_digest=auditor_digest, verdict=verdict,
+                               rationale=why, occurred_at=verdict_occurred_at)
             located = sum(1 for _, r in results if r.located)
             write_paper_event(
                 conn, event_type="audited", paper_id=pid, to_state="audited_ai",
@@ -177,10 +184,6 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
                 conn.execute("RELEASE audit_paper")
             raise
 
-        for c, verdict, why in verdicts:
-            record_verdict(review_dir, run_id=run_id, paper_id=pid, claim_id=c.claim_id,
-                           field_name=c.field_name, arm=arm, auditor_model=cfg.model,
-                           auditor_digest=auditor_digest, verdict=verdict, rationale=why)
         audited += 1
         n_loc += located
         n_not += len(results) - located

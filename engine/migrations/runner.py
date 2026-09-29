@@ -91,6 +91,12 @@ KINDS: dict[str, str] = {
                        # shape; its table is empty, so the backfill reads no file.
                        # On a database with rows it recomputes and checks every
                        # hash against the committed baseline or refuses (R101).
+    "022": "schema",   # R212-R218: paper_events rebuilt (identified/duplicate_of
+                       # retired); run_manifests rebuilt (run_kind 'import',
+                       # end_status 'aborted' + end_reason); run_calls rebuilt
+                       # (outcome + outcome_detail); claim_inputs and
+                       # audit_verdicts created. A fresh database needs every
+                       # shape; run_stage_configs is untouched (10a-C2 Phase A).
 }
 
 _RECEIPTS_DDL = """

@@ -5556,6 +5556,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/migrations/022_run_kinds_and_audit_tables.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/migrations/022_run_kinds_and_audit_tables.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/migrations/__init__.py": {
         "entry_point": false,
         "flags": [],
@@ -7589,7 +7603,7 @@
       "entry_points_with_spec_flag": 23,
       "files_calling_load_review_spec_directly": 11,
       "files_calling_resolver": 26,
-      "files_scanned": 212,
+      "files_scanned": 213,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 33,
@@ -7601,7 +7615,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "a5744d9dcffcab7088e70e5c8b57f57693634682",
+    "generated_at_commit": "9c4fd00e4fc42a36f89cd3543d6a360d7804bb46",
     "scan_roots": [
       "engine",
       "scripts",

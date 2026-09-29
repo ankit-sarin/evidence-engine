@@ -55,8 +55,11 @@ from engine.core.effective_config import (
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
-#: Re-declared in migration 020 (R35); a test asserts the two agree.
-RUN_KINDS = ("extraction", "screening", "judge", "review_session")
+#: Re-declared in migration 022 (R214, R35); a test asserts the two agree.
+RUN_KINDS = ("extraction", "screening", "judge", "review_session", "import")
+#: R215's 'aborted' status is DELIBERATELY not added here yet — 022 (10a-C2)
+#: only builds the DDL that permits it; wiring a caller to actually close a
+#: run 'aborted' is 10a-C3. Until then this stays 020's set, unchanged.
 END_STATUSES = ("completed", "failed", "interrupted")
 ARM_PINNED = "pinned"
 
@@ -393,11 +396,16 @@ def open_review_session(conn, spec, *, codebook, git: GitState | None = None,
                     arms=arms, git=git, host=host, digest_fn=lambda m: "")
 
 
-def close_run(conn, run_id: int, status: str = "completed") -> None:
+def close_run(conn, run_id: int, status: str = "completed",
+              reason: str | None = None) -> None:
+    """`reason` (R215/C26, 022's `end_reason` column) — no caller passes it
+    yet; wiring `RunAborted` to close 'aborted' with a reason is 10a-C3."""
     if status not in END_STATUSES:
         raise ValueError(f"end status {status!r} is not one of {END_STATUSES}")
-    conn.execute("UPDATE run_manifests SET ended_at = ?, end_status = ? WHERE run_id = ?",
-                 (_now(), status, run_id))
+    conn.execute(
+        "UPDATE run_manifests SET ended_at = ?, end_status = ?, end_reason = ? "
+        "WHERE run_id = ?",
+        (_now(), status, reason, run_id))
     conn.commit()
 
 
@@ -413,11 +421,20 @@ def response_digest(content: str | None, thinking: str | None = None) -> str:
 
 def record_call(conn, run_id: int, stage: str, paper_id: int | None,
                 request: Mapping[str, Any], digest: str | None,
-                started_at: str, ended_at: str) -> int:
+                started_at: str, ended_at: str, *,
+                outcome: str = "completed",
+                outcome_detail: str | None = None) -> int:
+    """`outcome` (R216/C24, 022's `run_calls.outcome` column) defaults to
+    'completed': this is the only path this function has ever been reached
+    from (the input-fit guard's refusals raise before any call gets here —
+    10a-P0/P1 Q5), so every existing caller keeps writing exactly what it
+    always wrote without needing an edit. Wiring the other five outcome
+    tokens into the refusal paths themselves is 10a-C3."""
     cur = conn.execute(
         "INSERT INTO run_calls (run_id, stage, paper_id, request_hash, response_digest, "
-        "started_at, ended_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        (run_id, stage, paper_id, request_hash(request), digest, started_at, ended_at))
+        "started_at, ended_at, outcome, outcome_detail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (run_id, stage, paper_id, request_hash(request), digest, started_at, ended_at,
+         outcome, outcome_detail))
     conn.commit()
     return cur.lastrowid
 

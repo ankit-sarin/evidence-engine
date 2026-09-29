@@ -29,6 +29,7 @@ from engine.migrations import runner
 m016 = importlib.import_module("engine.migrations.016_event_store")
 m019 = importlib.import_module("engine.migrations.019_paper_state_axes")
 m020 = importlib.import_module("engine.migrations.020_run_manifest")
+m022 = importlib.import_module("engine.migrations.022_run_kinds_and_audit_tables")
 
 R77_CHECK = (
     "CHECK (\n"
@@ -306,7 +307,8 @@ def test_a_call_row_must_name_a_declared_stage(linked):
     conn, run_id = linked
     with pytest.raises(sqlite3.IntegrityError, match="FOREIGN KEY"):
         conn.execute("INSERT INTO run_calls (run_id, stage, request_hash, started_at, "
-                     "ended_at) VALUES (?, 'undeclared', 'h', 't', 't')", (run_id,))
+                     "ended_at, outcome) VALUES (?, 'undeclared', 'h', 't', 't', "
+                     "'completed')", (run_id,))
 
 
 # ── R35: re-declared lists agree with their owners ───────────────────
@@ -315,7 +317,15 @@ def test_the_stage_vocabulary_agrees_with_the_resolver():
 
 
 def test_the_run_kinds_and_end_statuses_agree_with_run_manifest():
-    assert m020.RUN_KINDS == run_manifest.RUN_KINDS
+    # RUN_KINDS: 022 is the migration that most recently touched this
+    # vocabulary (R214 added 'import') — run_manifest.py's constant must
+    # agree with whichever migration's CHECK is actually live, not with 020's
+    # now-superseded re-declaration (10a-C2, one CHECK, one constant, never
+    # disagreeing at any commit).
+    assert m022.RUN_KINDS == run_manifest.RUN_KINDS
+    # END_STATUSES: unchanged by 10a-C2 — R215's 'aborted' status is DDL-only
+    # until 10a-C3 wires a caller to actually use it, so 020's set is still
+    # the live agreement.
     assert m020.END_STATUSES == run_manifest.END_STATUSES
     assert m020.ARM_PINNED == run_manifest.ARM_PINNED
 

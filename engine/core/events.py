@@ -61,6 +61,7 @@ __all__ = [
     "AcceptAgainstMultipleClaims", "CellNotAssigned", "ArmConfigurationFrozen",
     "RunLinkRefused", "ClaimOnPreManifestArm", "ClaimOnRetiredArm", "ArmNotInRun",
     "ClaimWithoutInputIdentity", "ClaimInputMismatch", "ClaimWithoutPresentedContext",
+    "UnknownFieldName",
     "UnknownArm", "PRE_MANIFEST", "PRE_MANIFEST_MARKER",
     "mint_extraction_uid", "make_claim_id", "register_arm", "retire_arm",
     "write_field_event", "write_paper_event",
@@ -129,6 +130,13 @@ class ClaimWithoutPresentedContext(EventRefused):
     the extraction it belongs to (`context_chain`, non-empty). A claim implies
     at least one model call; one that cannot name it is refused rather than
     stored with no way to reproduce what the model was shown."""
+
+
+class UnknownFieldName(EventRefused):
+    """R225/B15: `field_name` is not declared in the active run's codebook. A
+    misspelled or stale name would be a live claim invisible to every
+    codebook-driven reader (`iter_grid`, `validate_all`, R175) — refused
+    before it is written, rather than discovered by silence downstream."""
 
 
 #: The event-row marker for seeded, pre-manifest rows (R68). Migration 020
@@ -266,6 +274,20 @@ def write_field_event(conn, *, event_type, paper_id, field_name, arm,
     """
     run_id, run_marker = _run_link(conn, run_id, run_marker,
                                    migration=_called_from_migration(2))
+
+    # R225/B15: a name check precedes every identity/claim check below — any
+    # field event under a run whose codebook is known (reviewer events too;
+    # not scoped to actor_role) names one of its fields. No active run, or
+    # activate() was called with no field set (every caller before this
+    # existed): active_field_names() is None and nothing is checked.
+    from engine.core.run_manifest import active_field_names
+    active_fields = active_field_names()
+    if active_fields is not None and field_name not in active_fields:
+        raise UnknownFieldName(
+            f"{event_type} refused: field {field_name!r} is not declared in the "
+            f"active run's codebook ({len(active_fields)} known fields). A field "
+            "event names one of its fields (R225/B15).")
+
     against_claims = set(against_claims)
     against_decisions = set(against_decisions)
     is_reviewer = event_type in REVIEWER_EVENT_TYPES and actor_role == "reviewer"

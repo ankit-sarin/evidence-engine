@@ -469,26 +469,48 @@ def record_call(conn, run_id: int, stage: str, paper_id: int | None,
 
 
 _ACTIVE: contextvars.ContextVar = contextvars.ContextVar("active_run", default=None)
+#: R225/B15: the active run's codebook field names, set alongside _ACTIVE by
+#: the same activate()/deactivate() pair, read only by events.write_field_event
+#: (via active_field_names()). A separate contextvar rather than widening
+#: _ACTIVE's tuple, so record_active_ollama_call / active_stage_row (10a-C7),
+#: whose unpacking assumes (conn, run_id), need no change.
+_ACTIVE_FIELD_NAMES: contextvars.ContextVar = contextvars.ContextVar(
+    "active_field_names", default=None)
 
 
-def activate(conn, run_id: int):
+def activate(conn, run_id: int, *, field_names: frozenset[str] | None = None):
     """Record every Ollama call from here on against `run_id`. Returns a token
-    for `deactivate`."""
-    return _ACTIVE.set((conn, run_id))
+    for `deactivate`.
+
+    `field_names` (R225/B15): the active run's codebook field names, read once
+    here — never per event — and stashed for `write_field_event`'s refusal.
+    `None` (the default; every caller before this parameter existed) disables
+    the check entirely, exactly as today."""
+    token = _ACTIVE.set((conn, run_id))
+    field_token = _ACTIVE_FIELD_NAMES.set(field_names)
+    return (token, field_token)
 
 
 def deactivate(token) -> None:
-    _ACTIVE.reset(token)
+    run_token, field_token = token
+    _ACTIVE.reset(run_token)
+    _ACTIVE_FIELD_NAMES.reset(field_token)
 
 
 @contextlib.contextmanager
-def active_run(conn, run_id: int):
+def active_run(conn, run_id: int, *, field_names: frozenset[str] | None = None):
     """Record every Ollama call made inside the block against `run_id`."""
-    token = activate(conn, run_id)
+    token = activate(conn, run_id, field_names=field_names)
     try:
         yield
     finally:
         deactivate(token)
+
+
+def active_field_names() -> frozenset[str] | None:
+    """The active run's codebook field names, or `None` outside a run or when
+    the caller of `activate`/`active_run` did not pass any (R225/B15)."""
+    return _ACTIVE_FIELD_NAMES.get()
 
 
 def record_active_ollama_call(stage: str | None, request: Mapping[str, Any],

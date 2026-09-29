@@ -7265,7 +7265,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 490,
+            "line": 495,
             "names": [
               "--review",
               "--name"
@@ -7275,7 +7275,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 496,
+            "line": 501,
             "names": [
               "--spec"
             ],
@@ -7284,7 +7284,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 502,
+            "line": 507,
             "names": [
               "--skip-to"
             ],
@@ -7293,7 +7293,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 508,
+            "line": 513,
             "names": [
               "--limit"
             ],
@@ -7309,19 +7309,19 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 296,
+            "line": 301,
             "role": "message",
             "text": "No papers with status PDF_ACQUIRED. PDF acquisition is manual for v1. Place PDFs in data/%s/pdfs/ named as {paper_id}.pdf, then set status to PDF_ACQUIRED."
           },
           {
             "kind": "literal",
-            "line": 492,
+            "line": 497,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 498,
+            "line": 503,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7615,7 +7615,7 @@
     }
   },
   "meta": {
-    "generated_at_commit": "a19ab920d825b831ddfd46ac58f5ce5a6058f044",
+    "generated_at_commit": "e859b79e4d3123329851de33eeb0a7929bbe06ee",
     "scan_roots": [
       "engine",
       "scripts",

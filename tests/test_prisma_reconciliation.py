@@ -124,6 +124,72 @@ class TestReconciliation:
         assert result["valid"] is True
 
 
+class TestVerificationPending:
+    """R-S1 (session 11): identity 1 refined for the FT primary's include.
+
+    Mutation-checked: with `- pending_ids` removed from clause (b), the (c) test
+    fails with the "past screening … but not eligible" message; with the (d)
+    block removed, the (d) test passes validation and fails its `raises`."""
+
+    def _world_with_one_pending(self, db):
+        _add_papers(db, 6)
+        world = seed_prisma_world(
+            db, screening=[("ABSTRACT_SCREENED_OUT", None)] * 2,
+            eligible=[("audited_ai", None)] * 2)
+        pending = max(world["screening"] + world["eligible"]) + 1
+        # Raw SQL on papers.status: retires at the screeners' cut-over (R163 precedent).
+        db._conn.execute("UPDATE papers SET status = 'FT_ELIGIBLE' WHERE id = ?", (pending,))
+        db._conn.commit()
+        return world, pending
+
+    def test_c_ft_eligible_without_an_event_is_verification_pending(self, db, tmp_path):
+        world, _ = self._world_with_one_pending(db)
+        before = generate_prisma_flow(db)
+        result = validate_prisma_counts(db)
+        assert result["valid"] is True and result["verification_pending"] == 1
+        assert before["verification_pending"] == 1
+        assert before["n_eligible"] == len(world["eligible"])
+        # The two INGESTED leftovers are not in the box; the pending paper is.
+        assert before["screening_in_progress"] == 1
+        out = tmp_path / "prisma.csv"
+        export_prisma_csv(db, str(out))
+        assert "Screening in progress,1," in out.read_text()
+
+    def test_d_ft_eligible_reversed_to_full_text_out_fails(self, db):
+        _, pending = self._world_with_one_pending(db)
+        seed_eligibility(db._conn, pending, to_state="full_text_out")
+        with pytest.raises(ValueError, match="PRISMA reconciliation failed") as exc:
+            validate_prisma_counts(db)
+        assert ("Seam: papers at FT_ELIGIBLE reversed to full_text_out on the "
+                "eligibility axis without a status write") in str(exc.value)
+        assert f"{pending} (FT_ELIGIBLE)" in str(exc.value)
+
+    def test_live_shape_reads_as_before(self, db):
+        """Live's shape: every eligible paper at a status outside both token sets
+        (AI_AUDIT_COMPLETE) with an eligible event; nothing at FT_ELIGIBLE."""
+        _add_papers(db, 7)
+        world = seed_prisma_world(
+            db, screening=[("ABSTRACT_SCREENED_OUT", None)] * 2
+            + [("FT_SCREENED_OUT", None), ("PDF_EXCLUDED", "INACCESSIBLE")],
+            eligible=[("audited_ai", None)] * 3)
+        for pid in world["eligible"]:
+            db._conn.execute("UPDATE papers SET status = 'AI_AUDIT_COMPLETE' WHERE id = ?",
+                             (pid,))
+        db._conn.commit()
+        flow = generate_prisma_flow(db)
+        result = validate_prisma_counts(db, flow)
+        assert result["valid"] is True
+        assert result["verification_pending"] == 0 and flow["verification_pending"] == 0
+        assert flow["screening_in_progress"] == 0
+        assert flow["n_eligible"] == 3 and flow["studies_included"] == 3
+        assert result["total_db"] == result["total_prisma"] == 7
+
+    def test_the_pending_token_set_is_declared_once_and_disjoint(self):
+        from engine.core.database import VERIFICATION_PENDING_TOKENS
+        assert VERIFICATION_PENDING_TOKENS == frozenset({"FT_ELIGIBLE"})
+        assert not (VERIFICATION_PENDING_TOKENS & SCREENING_TOKENS)
+
+
 class TestPDFExcludedSubcounts:
 
     def test_pdf_excluded_subcounts_sum(self, db):

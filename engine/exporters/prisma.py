@@ -3,7 +3,8 @@
 The freshman count model (R183–R196): two stores, one seam.
 
 * **Screening side** — `papers.status`, read ONLY for the nine tokens in
-  `SCREENING_TOKENS`, plus the screening tables. The screeners have not been cut
+  `SCREENING_TOKENS` and `VERIFICATION_PENDING_TOKENS` for the seam's
+  in-progress clause (R-S1), plus the screening tables. The screeners have not been cut
   over to the event store (R183); until they are (junior), these tokens are the
   screening record.
 * **Extraction side** — the event store ONLY, through `engine.core.effective`:
@@ -23,7 +24,9 @@ import csv
 import logging
 import os
 
-from engine.core.database import SCREENING_TOKENS, ReviewDatabase
+from engine.core.database import (
+    SCREENING_TOKENS, VERIFICATION_PENDING_TOKENS, ReviewDatabase,
+)
 from engine.core.effective import effective_state, eligible_paper_ids
 from engine.core.paper_state import FAILURE_STATES, NO_RECORDED_STATE
 
@@ -45,6 +48,14 @@ _FAILURE_LABELS = {
 def _status_counts(conn) -> dict:
     return {row[0]: row[1] for row in conn.execute(
         "SELECT status, COUNT(*) FROM papers GROUP BY status").fetchall()}
+
+
+def _pending_ids(conn) -> set[int]:
+    """Papers at a `VERIFICATION_PENDING_TOKENS` status (R-S1's P set)."""
+    placeholders = ", ".join("?" * len(VERIFICATION_PENDING_TOKENS))
+    return {r[0] for r in conn.execute(
+        f"SELECT id FROM papers WHERE status IN ({placeholders})",
+        tuple(sorted(VERIFICATION_PENDING_TOKENS)))}
 
 
 def generate_prisma_flow(db: ReviewDatabase) -> dict:
@@ -130,6 +141,11 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
     eligible_ids = eligible_paper_ids(conn)
     n_eligible = len(eligible_ids)
 
+    # R-S1 (c): the FT primary included it, the verifier has not confirmed it —
+    # verification pending, so screening is still in progress for it.
+    verification_pending = len(_pending_ids(conn) - set(eligible_ids))
+    screening_in_progress += verification_pending
+
     # ABSTRACT_SCREENED_IN = acquisition pending, so not yet retrieved.
     full_text_retrieved = (
         reports_sought - reports_not_retrieved - n("ABSTRACT_SCREENED_IN")
@@ -180,6 +196,7 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
         "ft_pi_adjudicated": ft_pi_adjudicated,
         "ft_flagged": ft_flagged,
         "screening_in_progress": screening_in_progress,
+        "verification_pending": verification_pending,
         "n_eligible": n_eligible,
         "studies_included": studies_included,
         "extraction_failed": failures["extraction_failed"],
@@ -195,20 +212,36 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
 
 
 def validate_prisma_counts(db: ReviewDatabase, flow: dict | None = None) -> dict:
-    """Verify PRISMA counts reconcile (R186 as amended by 9e-R1a).
+    r"""Verify PRISMA counts reconcile (R186 as amended by 9e-R1a, identity 1
+    refined by R-S1, session 11).
 
-    1. Screening partition + seam: every paper is counted once under a
+    1. Screening partition + seam. Every paper is counted once under a
        screening token or is in the remainder (status outside
-       `SCREENING_TOKENS`), AND the remainder equals the eligible papers as
-       SETS. Each paper on either side of a set difference is named with its
-       status token verbatim. Count equality alone never passes.
+       `SCREENING_TOKENS`). With E = papers with a live `eligible` event,
+       S = papers at a screening token and P = papers at a
+       `VERIFICATION_PENDING_TOKENS` status (FT_ELIGIBLE):
+         (a) E ∩ S is empty — "eligible … but at a screening token";
+         (b) every paper outside S and outside P is in E — "past screening …
+             but not eligible";
+         (c) a paper in P \ E is verification pending: the FT primary
+             included it and the verifier has not confirmed it. It is counted
+             in `screening_in_progress`, reported as `verification_pending`,
+             and is never a failure; it is not in `n_eligible`;
+         (d) a paper in P whose live eligibility-axis state is `full_text_out`
+             is a failure — reversed on the eligibility axis without a status
+             write. (Such a paper is also in P \ E; the failure governs.)
+       Each paper named in a failure carries its status token verbatim. The
+       total check is unchanged: the remainder is still defined by status, so
+       a P \ E paper is in the remainder and the partition still sums to the
+       database's paper count.
     2. Extraction partition (events only): the eligible papers are exactly
        studies included + every failure box + extraction in progress.
     Plus the PDF sub-count check and reports-not-retrieved + PDF eligibility
     == PDF_EXCLUDED.
 
     `flow` is the result of `generate_prisma_flow(db)`; computed when omitted.
-    Returns dict with {valid, total_db, total_prisma, discrepancy, details}.
+    Returns dict with {valid, total_db, total_prisma, discrepancy,
+    verification_pending, details}.
     Raises ValueError if counts don't reconcile.
     """
     conn = db._conn
@@ -221,6 +254,7 @@ def validate_prisma_counts(db: ReviewDatabase, flow: dict | None = None) -> dict
     screening_total = sum(status_counts.get(t, 0) for t in SCREENING_TOKENS)
     remainder_ids = {pid for pid, s in status_of.items() if s not in SCREENING_TOKENS}
     eligible_ids = set(eligible_paper_ids(conn))
+    pending_ids = _pending_ids(conn)
     total_prisma = screening_total + len(remainder_ids)
 
     details = []
@@ -231,20 +265,30 @@ def validate_prisma_counts(db: ReviewDatabase, flow: dict | None = None) -> dict
             f"Total mismatch: DB has {total_db} papers but screening tokens + "
             f"remainder account for {total_prisma}"
         )
-    not_eligible = sorted(remainder_ids - eligible_ids)
+    not_eligible = sorted(remainder_ids - pending_ids - eligible_ids)          # (b)
     if not_eligible:
         details.append(
             "Seam: papers past screening on papers.status but not eligible on the "
             "eligibility axis: "
             + ", ".join(f"{pid} ({status_of[pid]})" for pid in not_eligible)
         )
-    not_in_remainder = sorted(eligible_ids - remainder_ids)
+    not_in_remainder = sorted(eligible_ids - remainder_ids)                   # (a)
     if not_in_remainder:
         details.append(
             "Seam: papers eligible on the eligibility axis but at a screening "
             "token on papers.status: "
             + ", ".join(f"{pid} ({status_of.get(pid)})" for pid in not_in_remainder)
         )
+
+    reversed_ids = sorted(pid for pid in pending_ids                        # (d)
+                          if effective_state(conn, pid).eligibility == "full_text_out")
+    if reversed_ids:
+        details.append(
+            "Seam: papers at FT_ELIGIBLE reversed to full_text_out on the "
+            "eligibility axis without a status write: "
+            + ", ".join(f"{pid} ({status_of[pid]})" for pid in reversed_ids)
+        )
+    verification_pending = len(pending_ids - eligible_ids)                   # (c)
 
     # Identity 2: extraction partition
     extraction_total = (
@@ -279,6 +323,7 @@ def validate_prisma_counts(db: ReviewDatabase, flow: dict | None = None) -> dict
         "total_db": total_db,
         "total_prisma": total_prisma,
         "discrepancy": total_prisma - total_db,
+        "verification_pending": verification_pending,
         "details": details,
     }
 

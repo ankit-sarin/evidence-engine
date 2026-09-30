@@ -56,6 +56,9 @@ SCREENING_TOKENS: frozenset[str] = frozenset({
     "FT_SCREENED_OUT",
 })
 
+#: the FT primary's include; 'eligible' on the eligibility axis is written only by the verifier's confirm (R-S1, session 11) — a paper here without a live eligible event is verification pending
+VERIFICATION_PENDING_TOKENS: frozenset[str] = frozenset({"FT_ELIGIBLE"})
+
 #: The extraction-stage `papers.status` tokens retired by R160b (R197). They stay
 #: in `STATUSES` — 190 live rows carry AI_AUDIT_COMPLETE — but no transition may
 #: enter or leave one. Their successor is the event store:

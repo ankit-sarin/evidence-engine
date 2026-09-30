@@ -736,56 +736,52 @@ class TestSpecialtyScopeInPrompt:
         assert "dental" in prompt.lower() or "ophthalmic" in prompt.lower()
 
 
-# ── AI_AUDIT_COMPLETE Status Preservation ────────────────────────
+# ── Past-FT papers are not selected (R-e, session 11) ─────────────
 
 
 class TestFTScreeningSkipsAdvancedStatus:
 
-    def test_ft_screen_ai_audit_complete_records_decision(self, tmp_db, spec, tmp_path):
-        """FT screening an AI_AUDIT_COMPLETE paper records the decision
-        in ft_screening_decisions but does not change workflow status."""
-        pid = _add_paper(tmp_db, title="Audit Complete Paper", pmid="99001")
+    def test_ft_screen_selects_parsed_only_and_ignores_ai_audit_complete(
+            self, tmp_db, spec, tmp_path):
+        """Rewritten (B5) from the test that pinned the retrofit: an
+        AI_AUDIT_COMPLETE paper used to be screened, its decision recorded and
+        its status left alone. R-e removed that pickup — only PARSED papers are
+        screened, and a past-FT paper gets no decision row and no status write.
+        Mutation-checked: restoring the AI_AUDIT_COMPLETE pickup turns this red."""
+        parsed = _add_paper(tmp_db, title="Parsed Paper", pmid="99002")
+        _advance_to_parsed(tmp_db, parsed)
+        write_parsed(tmp_db, parsed, "# Full Paper\n\nAutonomous robotic suturing. " * 50)
+
+        done = _add_paper(tmp_db, title="Audit Complete Paper", pmid="99001")
         # Raw SQL on papers.status: retires at the screeners' cut-over (R163).
         tmp_db._conn.execute(
-            "UPDATE papers SET status = 'AI_AUDIT_COMPLETE' WHERE id = ?", (pid,))
+            "UPDATE papers SET status = 'AI_AUDIT_COMPLETE' WHERE id = ?", (done,))
         tmp_db._conn.commit()
-
-        # Write parsed text so the screener doesn't skip
-        md_path = tmp_path / "test_review" / "parsed_text" / f"{pid}_v1.md"
-        md_path.parent.mkdir(parents=True, exist_ok=True)
-        md_path.write_text("# Full Paper\n\nAutonomous robotic suturing results. " * 50)
-        _record(tmp_db, pid, md_path)
-        tmp_db._conn.execute(
-            "INSERT INTO full_text_assets (paper_id, pdf_path, pdf_hash, "
-            "parsed_text_path, parsed_text_version, parser_used, parsed_at) "
-            "VALUES (?, ?, ?, ?, 1, 'docling', '2026-01-01')",
-            (pid, "fake.pdf", "abc123", str(md_path)),
-        )
-        tmp_db._conn.commit()
+        write_parsed(tmp_db, done, "# Full Paper\n\nAutonomous robotic suturing. " * 50)
 
         mock_decision = FTScreeningDecision(
             decision="FT_ELIGIBLE", reason_code="eligible",
             rationale="Paper describes autonomous suturing", confidence=0.95,
         )
         with patch("engine.utils.ollama_preflight.require_preflight"):
-            with patch("engine.agents.ft_screener.ft_screen_paper", return_value=mock_decision):
+            with patch("engine.agents.ft_screener.ft_screen_paper",
+                       return_value=mock_decision) as screen:
                 stats = run_ft_screening(tmp_db, spec, review_name="test_review")
 
-        # (a) Decision recorded in ft_screening_decisions
-        row = tmp_db._conn.execute(
-            "SELECT * FROM ft_screening_decisions WHERE paper_id = ?", (pid,)
-        ).fetchone()
-        assert row is not None
-        assert row["decision"] == "FT_ELIGIBLE"
+        assert screen.call_count == 1
+        assert stats["total"] == 1 and stats["ft_eligible"] == 1
 
-        # (b) Status remains AI_AUDIT_COMPLETE
-        status_row = tmp_db._conn.execute(
-            "SELECT status FROM papers WHERE id = ?", (pid,)
-        ).fetchone()
-        assert status_row["status"] == "AI_AUDIT_COMPLETE"
+        def decisions(pid):
+            return tmp_db._conn.execute(
+                "SELECT COUNT(*) FROM ft_screening_decisions WHERE paper_id = ?", (pid,)
+            ).fetchone()[0]
 
-        # (c) No exception raised — stats counted
-        assert stats["ft_eligible"] == 1
+        def status(pid):
+            return tmp_db._conn.execute(
+                "SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()["status"]
+
+        assert decisions(parsed) == 1 and status(parsed) == "FT_ELIGIBLE"
+        assert decisions(done) == 0 and status(done) == "AI_AUDIT_COMPLETE"
 
 
 # ── H10: Missing parsed text → FT_FLAGGED ──────────────────────────

@@ -265,8 +265,10 @@ def run_ft_screening(
 ) -> dict:
     """Run full-text primary screening on all PARSED papers with parsed text.
 
-    Papers at PARSED status (or AI_AUDIT_COMPLETE for the existing corpus)
-    that have parsed text available are screened.
+    Only PARSED papers are selected (R-e, session 11). The second pickup that
+    retrofitted FT screening onto the already-extracted corpus (de7e6a5) read
+    a retired status token (D18) and is gone: that corpus has its FT
+    decisions, and no paper can enter a retired token now.
 
     Returns summary stats dict.
     """
@@ -279,8 +281,7 @@ def run_ft_screening(
         runner_name="FT screening",
     )
 
-    # Collect eligible papers: PARSED or AI_AUDIT_COMPLETE with parsed text
-    papers = db.get_papers_by_status("PARSED") + db.get_papers_by_status("AI_AUDIT_COMPLETE")
+    papers = db.get_papers_by_status("PARSED")
     total = len(papers)
 
     ckpt_path = _checkpoint_path(db)
@@ -307,14 +308,10 @@ def run_ft_screening(
         parsed_text = _load_parsed_text(db, pid)
         if not parsed_text:
             logger.warning("Paper %d has no parsed text — marking FT_FLAGGED", pid)
-            current_status = paper.get("status", "")
-            _PAST_FT = {"FT_ELIGIBLE", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED",
-                         "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE", "REJECTED"}
-            if current_status not in _PAST_FT:
-                # No decision row. Nothing was screened, so there is no decision to
-                # record and no reason code that would be true of it; the status
-                # alone parks the paper for a human.
-                db.update_status(pid, "FT_FLAGGED")
+            # No decision row. Nothing was screened, so there is no decision to
+            # record and no reason code that would be true of it; the status
+            # alone parks the paper for a human.
+            db.update_status(pid, "FT_FLAGGED")
             stats["skipped_no_text"] += 1
             screened_ids.add(pid)
             continue
@@ -334,11 +331,7 @@ def run_ft_screening(
                 "Paper %d: malformed FT screening output — flagging: %s",
                 pid, str(exc)[:200],
             )
-            current_status = paper.get("status", "")
-            _PAST_FT_2 = {"FT_ELIGIBLE", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED",
-                           "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE", "REJECTED"}
-            if current_status not in _PAST_FT_2:
-                db.update_status(pid, "FT_FLAGGED")
+            db.update_status(pid, "FT_FLAGGED")
             stats["parse_errors"] += 1
             screened_ids.add(pid)
             continue
@@ -350,21 +343,7 @@ def run_ft_screening(
             reason_codes=spec.eligibility.reason_codes(),
         )
 
-        # Update paper status — skip if already past FT screening
-        current_status = paper.get("status", "")
-        _PAST_FT = {"FT_ELIGIBLE", "FT_FLAGGED", "EXTRACTED", "EXTRACT_FAILED",
-                     "AI_AUDIT_COMPLETE", "HUMAN_AUDIT_COMPLETE", "REJECTED"}
-
-        if current_status in _PAST_FT:
-            logger.info(
-                "Paper %d already at %s, FT decision recorded without status change",
-                pid, current_status,
-            )
-            if decision.decision == "FT_ELIGIBLE":
-                stats["ft_eligible"] += 1
-            else:
-                stats["ft_exclude"] += 1
-        elif decision.decision == "FT_ELIGIBLE":
+        if decision.decision == "FT_ELIGIBLE":
             db.update_status(pid, "FT_ELIGIBLE")
             stats["ft_eligible"] += 1
         else:

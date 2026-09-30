@@ -5881,7 +5881,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 705,
+            "line": 735,
             "names": [
               "--write"
             ],
@@ -5890,7 +5890,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 707,
+            "line": 737,
             "names": [
               "--check"
             ],
@@ -5936,47 +5936,71 @@
             "kind": "literal",
             "line": 54,
             "role": "docstring",
-            "text": "The review ids on disk, and every data/ subdirectory NOT counted as one.\n\n    Spec stems are reviews by definition. A data/ subdirectory is counted only\n    ..."
+            "text": "The review ids, the data/ subdirectories NOT counted as reviews, and the\n    throwaway copies \u2014 one classification, anchored on review_specs/ (B21, R-b).\n\n  ..."
           },
           {
             "kind": "literal",
-            "line": 67,
+            "line": 79,
             "role": "code",
             "text": "*.yaml"
           },
           {
+            "kind": "f-string",
+            "line": 90,
+            "role": "code",
+            "text": "f'{child.name}.yaml'"
+          },
+          {
             "kind": "literal",
-            "line": 122,
+            "line": 92,
+            "role": "code",
+            "text": "spec.yaml"
+          },
+          {
+            "kind": "literal",
+            "line": 140,
             "role": "docstring",
             "text": "String Constants that are PIECES of an f-string, not strings in their own right.\n\n    Without this the f-string `f\"review_specs/{review}_v1.yaml\"` is reporte..."
           },
           {
             "kind": "literal",
-            "line": 158,
+            "line": 176,
             "role": "docstring",
             "text": "String nodes passed to an exception constructor or a logging call.\n\n    `raise ReviewSpecError(f\"... e.g. review_specs/<review_id>.yaml\")` mentions\n    a pat..."
           },
           {
             "kind": "literal",
-            "line": 431,
+            "line": 449,
             "role": "code",
             "text": "review_specs"
           },
           {
             "kind": "literal",
-            "line": 498,
+            "line": 519,
             "role": "code",
             "text": "`data/` subdirectories NOT counted as reviews (no `review.db`):"
           },
           {
             "kind": "literal",
-            "line": 533,
+            "line": 521,
+            "role": "code",
+            "text": "`data/` subdirectories NOT counted as reviews:"
+          },
+          {
+            "kind": "literal",
+            "line": 529,
+            "role": "code",
+            "text": "Throwaway copies under `data/` (a `review.db` with its own `spec.yaml`, R235) \u2014 informational, not compared by the drift check:"
+          },
+          {
+            "kind": "literal",
+            "line": 563,
             "role": "code",
             "text": "Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse prose, and messages passed to an exception or a logger. This is the class a ..."
           },
           {
             "kind": "literal",
-            "line": 682,
+            "line": 712,
             "role": "code",
             "text": "data/ subdirectories changed: "
           }
@@ -7617,14 +7641,15 @@
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 33,
       "name_only_constructing_reviewdatabase": 19,
-      "path_construction_sites_in_code": 62,
+      "path_construction_sites_in_code": 66,
       "raw_yaml_load_sites": 3,
       "review_id_constants": 7,
       "unparsed_sites": 0
-    }
+    },
+    "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "0bcdbb21bdda573500a567cba70f4786c47f9003",
+    "generated_at_commit": "e86e16347dd9b4f495ce9bb607c6acdbe25c77db",
     "scan_roots": [
       "engine",
       "scripts",

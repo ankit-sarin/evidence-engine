@@ -50,31 +50,49 @@ PATH_MARKERS = ("review_specs", "data/", ".yaml")
 # ── Review ids ───────────────────────────────────────────────────────
 
 
-def review_ids(repo_root: Path) -> tuple[list[str], dict[str, str]]:
-    """The review ids on disk, and every data/ subdirectory NOT counted as one.
+def review_ids(repo_root: Path) -> tuple[list[str], dict[str, str], list[str]]:
+    """The review ids, the data/ subdirectories NOT counted as reviews, and the
+    throwaway copies — one classification, anchored on review_specs/ (B21, R-b).
 
-    Spec stems are reviews by definition. A data/ subdirectory is counted only
-    if it holds a review.db — checked by existence, never opened.
+    Spec stems under review_specs/ are reviews by definition. Each data/<dir>/
+    that is a directory falls in exactly one of four cases, every file checked
+    by existence and never opened:
+
+      (i)   review.db and review_specs/<dir>.yaml  -> a review id.
+      (ii)  review.db, no review_specs/<dir>.yaml, but data/<dir>/spec.yaml
+            -> a throwaway copy by structure (R235: a smoke copy carries its
+            own spec beside its database). In neither compared set; returned
+            third, for information only — drift() never compares it.
+      (iii) review.db and neither spec  -> excluded, "review.db without spec".
+            A stray database is a finding, so it drifts.
+      (iv)  no review.db  -> excluded, "no review.db".
 
     The filter is not cosmetic. `ReviewDatabase.__init__` mkdirs its root, so
     any run or test that constructed one without a temp data_root left a
     directory behind; data/ therefore contains debris that is not a review, and
     treating every subdirectory as a review id would flag the strings "data",
-    "review" and "logs" throughout the codebase. Both sets are reported so the
-    exclusions are visible rather than assumed.
+    "review" and "logs" throughout the codebase. Counting every data/<dir>/
+    holding a review.db as a review (the rule before B21) made a smoke copy
+    drift the committed inventory. No name pattern is matched anywhere.
     """
     ids = set()
     for spec in sorted((repo_root / SPEC_DIR).glob("*.yaml")):
         ids.add(spec.stem)
 
     excluded: dict[str, str] = {}
+    throwaways: list[str] = []
     data_root = repo_root / DATA_DIR
     if data_root.is_dir():
         for child in sorted(data_root.iterdir()):
             if not child.is_dir():
                 continue
             if (child / "review.db").exists():
-                ids.add(child.name)
+                if (repo_root / SPEC_DIR / f"{child.name}.yaml").exists():
+                    ids.add(child.name)
+                elif (child / "spec.yaml").exists():
+                    throwaways.append(child.name)
+                else:
+                    excluded[child.name] = "review.db without spec"
             else:
                 # The REASON only, never the contents. It used to name the
                 # first three files in the directory, which made the committed
@@ -83,7 +101,7 @@ def review_ids(repo_root: Path) -> tuple[list[str], dict[str, str]]:
                 # test red, with a message that printed two identical key
                 # lists and no way to see what had moved.
                 excluded[child.name] = "no review.db"
-    return sorted(ids), excluded
+    return sorted(ids), excluded, throwaways
 
 
 # ── AST helpers ──────────────────────────────────────────────────────
@@ -365,7 +383,7 @@ def analyze_file(path: Path, rel: str, ids: set[str]) -> dict:
 
 
 def build_inventory(repo_root: Path = REPO_ROOT) -> dict:
-    ids, excluded = review_ids(repo_root)
+    ids, excluded, throwaways = review_ids(repo_root)
     id_set = set(ids)
 
     files: dict[str, dict] = {}
@@ -441,6 +459,8 @@ def build_inventory(repo_root: Path = REPO_ROOT) -> dict:
     return {
         "review_ids": ids,
         "data_dirs_excluded": excluded,
+        # Informational only: drift() never compares it (B21, R-b case ii).
+        "throwaway_copies": throwaways,
         "summary": summary,
         "files": files,
     }
@@ -495,12 +515,22 @@ def render_markdown(inv: dict, commit: str) -> str:
     L.append(f"Review ids on disk: {', '.join('`%s`' % i for i in inv['review_ids'])}")
     if inv["data_dirs_excluded"]:
         L.append("")
-        L.append("`data/` subdirectories NOT counted as reviews (no `review.db`):")
+        if all(why == "no review.db" for why in inv["data_dirs_excluded"].values()):
+            L.append("`data/` subdirectories NOT counted as reviews (no `review.db`):")
+        else:
+            L.append("`data/` subdirectories NOT counted as reviews:")
         L.append("")
         L.append("| directory | why |")
         L.append("|---|---|")
         for name, why in sorted(inv["data_dirs_excluded"].items()):
             L.append(f"| `{name}` | {why} |")
+    if inv.get("throwaway_copies"):
+        L.append("")
+        L.append("Throwaway copies under `data/` (a `review.db` with its own "
+                 "`spec.yaml`, R235) — informational, not compared by the drift check:")
+        L.append("")
+        for name in inv["throwaway_copies"]:
+            L.append(f"- `{name}`")
     L.append("")
     L.append(_render_reconciliation(s))
     L.append("")

@@ -173,16 +173,55 @@ def test_syntax_error_is_reported_not_raised(tmp_path):
     assert r["entry_point"] is False
 
 
-def test_review_ids_exclude_data_dirs_without_a_review_db(tmp_path):
+def _census_tree(root):
+    """The four B21 cases (R-b) on one tree: alpha (i), alpha_smoke (ii),
+    stray (iii), backups (iv)."""
+    (root / "review_specs").mkdir()
+    (root / "review_specs" / "alpha.yaml").write_text("review_id: alpha\n")
+    (root / "data" / "alpha").mkdir(parents=True)
+    (root / "data" / "alpha" / "review.db").write_text("")
+    (root / "data" / "backups").mkdir()
+    (root / "data" / "backups" / "old.db").write_text("")
+    (root / "data" / "alpha_smoke").mkdir()
+    (root / "data" / "alpha_smoke" / "review.db").write_text("")
+    (root / "data" / "alpha_smoke" / "spec.yaml").write_text("review_id: alpha_smoke\n")
+    (root / "data" / "stray").mkdir()
+    (root / "data" / "stray" / "review.db").write_text("")
+
+
+def test_review_ids_classify_data_dirs_in_four_cases(tmp_path):
+    """B21 (R-b), rewritten from the two-way test (B5). Mutation-checked: with
+    the case-(ii) branch removed, alpha_smoke falls to case (iii) and this fails."""
+    _census_tree(tmp_path)
+    ids, excluded, throwaways = inventory.review_ids(tmp_path)
+    assert ids == ["alpha"]                                   # (i)
+    assert throwaways == ["alpha_smoke"]                      # (ii)
+    assert "alpha_smoke" not in excluded
+    assert excluded["stray"] == "review.db without spec"      # (iii)
+    assert excluded["backups"] == "no review.db"              # (iv)
+    assert set(excluded) == {"stray", "backups"}
+
+
+def test_a_throwaway_copy_does_not_drift_and_a_stray_database_does(tmp_path, monkeypatch):
+    """B21: case (ii) is in neither compared set; case (iii) is in one."""
     (tmp_path / "review_specs").mkdir()
     (tmp_path / "review_specs" / "alpha.yaml").write_text("review_id: alpha\n")
     (tmp_path / "data" / "alpha").mkdir(parents=True)
     (tmp_path / "data" / "alpha" / "review.db").write_text("")
-    (tmp_path / "data" / "backups").mkdir()
-    (tmp_path / "data" / "backups" / "old.db").write_text("")
-    ids, excluded = inventory.review_ids(tmp_path)
-    assert ids == ["alpha"]
-    assert "backups" in excluded and "no review.db" in excluded["backups"]
+    committed = inventory.build_inventory(tmp_path)
+    committed.pop("throwaway_copies")          # a committed file written before the copy existed
+    monkeypatch.setattr(inventory, "committed_inventory", lambda *_a, **_k: committed)
+    assert inventory.drift(tmp_path) is None
+
+    (tmp_path / "data" / "alpha_smoke").mkdir()
+    (tmp_path / "data" / "alpha_smoke" / "review.db").write_text("")
+    (tmp_path / "data" / "alpha_smoke" / "spec.yaml").write_text("review_id: alpha_smoke\n")
+    assert inventory.drift(tmp_path) is None
+
+    (tmp_path / "data" / "stray").mkdir()
+    (tmp_path / "data" / "stray" / "review.db").write_text("")
+    message = inventory.drift(tmp_path)
+    assert message is not None and "review.db without spec" in message
 
 
 # ── T2: drift ────────────────────────────────────────────────────────

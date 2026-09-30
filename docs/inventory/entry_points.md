@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `0bcdbb21bdda573500a567cba70f4786c47f9003` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `e86e16347dd9b4f495ce9bb607c6acdbe25c77db` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -21,7 +21,7 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | files with raw yaml loads | 3 |
 | review id constants | 7 |
 | literal review id sites in code | 33 |
-| path construction sites in code | 62 |
+| path construction sites in code | 66 |
 | db before spec scopes | 0 |
 | fstring spec path sites | 0 |
 | default review named constants | 5 |
@@ -210,11 +210,15 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/tools/inventory.py` | 47 | literal | `.yaml` |
 | `engine/tools/inventory.py` | 47 | literal | `data/` |
 | `engine/tools/inventory.py` | 47 | literal | `review_specs` |
-| `engine/tools/inventory.py` | 67 | literal | `*.yaml` |
-| `engine/tools/inventory.py` | 431 | literal | `review_specs` |
-| `engine/tools/inventory.py` | 498 | literal | ``data/` subdirectories NOT counted as reviews (no `review.db`):` |
-| `engine/tools/inventory.py` | 533 | literal | `Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse prose, and messages passed to an exception or a logger. This is the class a ...` |
-| `engine/tools/inventory.py` | 682 | literal | `data/ subdirectories changed: ` |
+| `engine/tools/inventory.py` | 79 | literal | `*.yaml` |
+| `engine/tools/inventory.py` | 90 | f-string | `f'{child.name}.yaml'` |
+| `engine/tools/inventory.py` | 92 | literal | `spec.yaml` |
+| `engine/tools/inventory.py` | 449 | literal | `review_specs` |
+| `engine/tools/inventory.py` | 519 | literal | ``data/` subdirectories NOT counted as reviews (no `review.db`):` |
+| `engine/tools/inventory.py` | 521 | literal | ``data/` subdirectories NOT counted as reviews:` |
+| `engine/tools/inventory.py` | 529 | literal | `Throwaway copies under `data/` (a `review.db` with its own `spec.yaml`, R235) — informational, not compared by the drift check:` |
+| `engine/tools/inventory.py` | 563 | literal | `Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse prose, and messages passed to an exception or a logger. This is the class a ...` |
+| `engine/tools/inventory.py` | 712 | literal | `data/ subdirectories changed: ` |
 | `engine/validators/distribution_monitor.py` | 531 | literal | `extraction_codebook.yaml` |
 | `scripts/_pass2_delta.py` | 13 | literal | `data/surgical_autonomy/review.db` |
 | `scripts/_pass2_delta.py` | 16 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |

@@ -4,9 +4,12 @@ Two properties, against a REAL SQLite database rather than a recording stub,
 because the claim is about what survives a transaction:
 
   1. (Retired 2026-09-25 with the legacy atomic writer it tested — 9c-C5,
-     R160a. The event writer's one-transaction property,
-     `engine/core/extraction_events.write_extraction_events`, has no test yet:
-     an open finding, not a covered case.)
+     R160a.) The event writer's one-transaction property,
+     `engine/core/extraction_events.write_extraction_events`, is tested beside
+     the writer in `tests/test_extraction_events.py`:
+     `test_t11_a_refusal_on_the_last_field_writes_nothing_for_the_paper`,
+     `test_b10_a_failure_at_the_paper_event_write_writes_nothing_for_the_paper`
+     and `test_b10_a_sqlite_raised_error_mid_write_writes_nothing_for_the_paper`.
 
   2. A refusal before the write leaves nothing behind. There is no "store what
      we got" path, because storing what we got is what produced those 21.

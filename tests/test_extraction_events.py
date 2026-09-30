@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import re
 import shutil
+import sqlite3
 from pathlib import Path
 from unittest.mock import patch
 
@@ -376,6 +377,116 @@ def test_t11_a_refusal_on_the_last_field_writes_nothing_for_the_paper(db, spec, 
         with pytest.raises(events.ArmNotInRun):
             X.write_extraction_events(db._conn, rec, sentinels=sentinels)
     assert _fev(db) == [] and _pev(db) == []
+
+
+# ── B10 (R244): the paper-event and SQLite-raised failure points ─────
+OTHER = 8
+
+
+def _paper_rows(db, pid):
+    """Every row the writer can leave for `pid`: field events, paper events,
+    claim_inputs — the three stores one paper's write spans."""
+    return tuple(
+        tuple(tuple(r) for r in db._conn.execute(
+            f"SELECT * FROM {table} WHERE paper_id = ? ORDER BY 1", (pid,)))
+        for table in ("field_events", "paper_events", "claim_inputs"))
+
+
+def _another_paper_written_whole(db, spec, run_id, sentinels):
+    """A second paper, written by the writer before the failing one, so each test
+    can show the rollback is scoped to the paper that failed."""
+    db._conn.execute("INSERT INTO papers (id, title, source, status, created_at, "
+                     "updated_at) VALUES (?, 't2', 's', 'FT_ELIGIBLE', 'n', 'n')", (OTHER,))
+    seed_eligibility(db._conn, OTHER)
+    write_parsed(db, OTHER, "The paper reports a trial. A clean sentence.\n")
+    db._conn.commit()
+    X.write_extraction_events(db._conn, X.ExtractionRecord(
+        paper_id=OTHER, arm=spec.extraction_models.arm, run_id=run_id,
+        extraction_uid=events.mint_extraction_uid(),
+        parsed_text=resolve_parsed_text(db._conn, OTHER), model="deepseek-r1:32b",
+        model_digest="a" * 64, fields=(_value("study_design"), _value("country", "USA")),
+        incomplete_fields=(), attempts=1, stage_name="extract_pass2",
+        presented_context_sha256="d" * 64, context_chain=("d" * 64,)),
+        sentinels=sentinels)
+    rows = _paper_rows(db, OTHER)
+    assert all(rows), "the other paper must hold field events, a paper event and claim_inputs"
+    return rows
+
+
+def _claim_inputs(db, pid):
+    return db._conn.execute("SELECT COUNT(*) FROM claim_inputs WHERE paper_id = ?",
+                            (pid,)).fetchone()[0]
+
+
+def test_b10_a_failure_at_the_paper_event_write_writes_nothing_for_the_paper(
+        db, spec, run_id, sentinels):
+    """T-PE. Every field event and the claim_inputs row are written; the paper
+    event, the last write, fails. Nothing for the paper survives — the rollback
+    reaches back over the whole savepoint — and the exception propagates."""
+    other = _another_paper_written_whole(db, spec, run_id, sentinels)
+    before = _paper_rows(db, PID)
+    names = ("study_design", "country", "sample_size")
+    rec = _record(db, spec, run_id, [_value("study_design"), _value("country", "USA"),
+                                     _value("sample_size", "40")])
+    real, written = X.write_field_event, []
+
+    def spy(conn, **kw):
+        event_id = real(conn, **kw)
+        written.append(kw["field_name"])
+        return event_id
+
+    def refuse(conn, **kw):
+        # Inside the open write: every field event and the claim_inputs row exist.
+        assert sorted(written) == sorted(names)
+        assert _claim_inputs(db, PID) == 1
+        raise RuntimeError("refused at the paper-event write")
+    with patch.object(X, "write_field_event", side_effect=spy), \
+            patch.object(X, "write_paper_event", side_effect=refuse):
+        with pytest.raises(RuntimeError, match="paper-event write"):
+            X.write_extraction_events(db._conn, rec, sentinels=sentinels)
+    fe, pe, ci = _paper_rows(db, PID)
+    assert fe == () and ci == ()
+    assert pe == before[1]                  # no paper event added
+    assert _paper_rows(db, OTHER) == other
+    assert not db._conn.in_transaction
+
+
+def test_b10_a_sqlite_raised_error_mid_write_writes_nothing_for_the_paper(
+        db, spec, run_id, sentinels):
+    """T-SQ. SQLite itself refuses the second field event (a TEMP trigger on the
+    test connection, RAISE(ABORT) — no engine code touched), after the first
+    field event and its claim_inputs row and before the paper event. Nothing for
+    the paper survives and the sqlite3 error propagates unwrapped.
+
+    On this path the rollback comes from `write_field_event`'s own handler
+    (`conn.rollback()`, which ends the whole transaction), not from the writer's
+    savepoint: by the time the writer's `except` runs, no transaction is open."""
+    other = _another_paper_written_whole(db, spec, run_id, sentinels)
+    before = _paper_rows(db, PID)
+    db._conn.execute(
+        f"CREATE TEMP TRIGGER b10_abort BEFORE INSERT ON main.field_events "
+        f"WHEN NEW.paper_id = {PID} AND "
+        f"(SELECT COUNT(*) FROM main.field_events WHERE paper_id = {PID}) >= 1 "
+        f"BEGIN SELECT RAISE(ABORT, 'b10: refused by SQLite'); END")
+    rec = _record(db, spec, run_id, [_value("study_design"), _value("country", "USA"),
+                                     _value("sample_size", "40")])
+    real, seen = X.write_field_event, []
+
+    def spy(conn, **kw):
+        seen.append(_claim_inputs(db, PID))
+        return real(conn, **kw)
+    try:
+        with patch.object(X, "write_field_event", side_effect=spy):
+            with pytest.raises(sqlite3.IntegrityError, match="b10: refused by SQLite"):
+                X.write_extraction_events(db._conn, rec, sentinels=sentinels)
+    finally:
+        db._conn.execute("DROP TRIGGER IF EXISTS temp.b10_abort")
+    assert seen == [0, 1]                   # the failure came after a field event and its claim_inputs row
+    fe, pe, ci = _paper_rows(db, PID)
+    assert fe == () and ci == ()
+    assert pe == before[1]
+    assert _paper_rows(db, OTHER) == other
+    assert not db._conn.in_transaction
 
 
 def test_an_exhaustion_without_a_record_raises_and_writes_nothing(db, spec, run_id):

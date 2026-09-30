@@ -27,6 +27,8 @@ from engine.agents.ft_screener import (
     run_ft_screening,
     truncate_paper_text,
 )
+from engine.core import run_manifest as rm
+from engine.core.codebook import load_codebook
 from engine.core.constants import FT_MAX_TEXT_CHARS
 from engine.core.database import ReviewDatabase, RetiredTransition
 from engine.core.review_spec import load_review_spec
@@ -79,6 +81,21 @@ def _add_paper(db, title="Test Paper", pmid=None, doi=None, abstract="Test abstr
         "SELECT id FROM papers WHERE title = ?", (title,)
     ).fetchone()
     return row["id"]
+
+
+_LIVE_CODEBOOK = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+
+
+def _screening_run(db, spec):
+    """A real `screening` manifest for the run functions' required `run_id`
+    (R258): clean tree and a fixed digest, so nothing reaches git or a server."""
+    if not _LIVE_CODEBOOK.exists():
+        pytest.skip("codebook not available")
+    return rm.open_run(db._conn, spec, kind="screening",
+                       stages=("ft_screen_primary", "ft_screen_verifier"),
+                       codebook=load_codebook(_LIVE_CODEBOOK),
+                       git=rm.GitState(commit="b" * 40, dirty=False, tag=None),
+                       digest_fn=lambda m: "a" * 64).run_id
 
 
 def _advance_to_parsed(db, paper_id):
@@ -765,8 +782,9 @@ class TestFTScreeningSkipsAdvancedStatus:
         )
         with patch("engine.utils.ollama_preflight.require_preflight"):
             with patch("engine.agents.ft_screener.ft_screen_paper",
-                       return_value=mock_decision) as screen:
-                stats = run_ft_screening(tmp_db, spec, review_name="test_review")
+                       return_value=(mock_decision, "0" * 64)) as screen:
+                stats = run_ft_screening(tmp_db, spec, review_name="test_review",
+                                         run_id=_screening_run(tmp_db, spec))
 
         assert screen.call_count == 1
         assert stats["total"] == 1 and stats["ft_eligible"] == 1
@@ -801,7 +819,7 @@ class TestMissingParsedText:
 
         with patch("engine.utils.ollama_preflight.require_preflight"):
             with patch("engine.agents.ft_screener.ft_screen_paper") as mock_screen:
-                stats = run_ft_screening(tmp_db, spec)
+                stats = run_ft_screening(tmp_db, spec, run_id=_screening_run(tmp_db, spec))
 
         # Paper should be FT_FLAGGED, not silently left at PARSED
         paper = tmp_db._conn.execute(
@@ -847,11 +865,11 @@ class TestFTParseError:
             return FTScreeningDecision(
                 decision="FT_ELIGIBLE", reason_code="eligible",
                 rationale="Meets criteria", confidence=0.9,
-            )
+            ), "0" * 64
 
         with patch("engine.utils.ollama_preflight.require_preflight"):
             with patch("engine.agents.ft_screener.ft_screen_paper", side_effect=_mock_ft_screen):
-                stats = run_ft_screening(tmp_db, spec)
+                stats = run_ft_screening(tmp_db, spec, run_id=_screening_run(tmp_db, spec))
 
         assert stats["parse_errors"] == 1
         assert stats["ft_eligible"] == 1

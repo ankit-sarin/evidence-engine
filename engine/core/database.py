@@ -566,8 +566,12 @@ class ReviewDatabase:
         confidence: float,
         *,
         reason_codes: Collection[str],
+        commit: bool = True,
     ) -> int:
         """Record a full-text screening decision. Returns the decision id.
+
+        `commit=False` leaves the row in the caller's transaction: the FT
+        screener writes decision, status and eligibility event as one (R260).
 
         `reason_codes` is the review's effective vocabulary
         (`spec.eligibility.reason_codes()`); a code outside it is refused before
@@ -588,7 +592,8 @@ class ReviewDatabase:
                VALUES (?, ?, ?, ?, ?, ?, ?)""",
             (paper_id, model, decision, reason_code, rationale, confidence, _now()),
         )
-        self._conn.commit()
+        if commit:
+            self._conn.commit()
         return cur.lastrowid
 
     def add_ft_verification_decision(
@@ -598,15 +603,20 @@ class ReviewDatabase:
         decision: str,
         rationale: str,
         confidence: float,
+        *,
+        commit: bool = True,
     ) -> int:
-        """Record a full-text verification decision. Returns the decision id."""
+        """Record a full-text verification decision. Returns the decision id.
+
+        `commit=False` leaves the row in the caller's transaction (R260)."""
         cur = self._conn.execute(
             """INSERT INTO ft_verification_decisions
                (paper_id, model, decision, rationale, confidence, decided_at)
                VALUES (?, ?, ?, ?, ?, ?)""",
             (paper_id, model, decision, rationale, confidence, _now()),
         )
-        self._conn.commit()
+        if commit:
+            self._conn.commit()
         return cur.lastrowid
 
     def get_screening_summary(self) -> dict:

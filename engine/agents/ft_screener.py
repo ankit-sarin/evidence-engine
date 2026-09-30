@@ -7,6 +7,7 @@ Mirrors the abstract screening architecture but operates on parsed PDF text
 with specialty scope filtering.
 """
 
+import contextlib
 import json
 import logging
 import re
@@ -16,8 +17,11 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, ValidationError
 
+from engine.core import run_manifest as rm
 from engine.core.constants import FT_MAX_TEXT_CHARS
 from engine.core.database import ReviewDatabase
+from engine.core.effective import NO_RECORDED_STATE, effective_state, eligible_paper_ids
+from engine.core.events import write_paper_event
 from engine.core import eligibility_render as render
 from engine.core.review_spec import ReviewSpec
 from engine.core.effective_config import stage_config
@@ -203,20 +207,61 @@ def _ft_config(stage: str, spec: ReviewSpec):
     return stage_config(stage, spec)
 
 
-def ft_screen_paper(paper_text: str, spec: ReviewSpec) -> FTScreeningDecision:
-    """Screen a single paper's full text. Returns structured decision."""
+def ft_screen_paper(paper_text: str, spec: ReviewSpec) -> tuple[FTScreeningDecision, str]:
+    """Screen a single paper's full text. Returns the structured decision and
+    the request hash of the one call that decided it — the value
+    `run_calls.request_hash` records for that call (R261)."""
     cfg = _ft_config("ft_screen_primary", spec)
-    response = ollama_chat(
-        messages=build_ft_messages(paper_text, spec, "primary"), **cfg.kwargs())
-    return FTScreeningDecision.model_validate_json(response.message.content)
+    response, request_hash = ollama_chat(
+        messages=build_ft_messages(paper_text, spec, "primary"),
+        return_request_hash=True, **cfg.kwargs())
+    return FTScreeningDecision.model_validate_json(response.message.content), request_hash
 
 
-def ft_verify_paper(paper_text: str, spec: ReviewSpec) -> FTVerificationDecision:
-    """Verify a single paper's full text (strict, FP-catching). Returns structured decision."""
+def ft_verify_paper(paper_text: str, spec: ReviewSpec) -> tuple[FTVerificationDecision, str]:
+    """Verify a single paper's full text (strict, FP-catching). Returns the
+    structured decision and its deciding call's request hash (R261)."""
     cfg = _ft_config("ft_screen_verifier", spec)
-    response = ollama_chat(
-        messages=build_ft_messages(paper_text, spec, "verifier"), **cfg.kwargs())
-    return FTVerificationDecision.model_validate_json(response.message.content)
+    response, request_hash = ollama_chat(
+        messages=build_ft_messages(paper_text, spec, "verifier"),
+        return_request_hash=True, **cfg.kwargs())
+    return FTVerificationDecision.model_validate_json(response.message.content), request_hash
+
+
+# ── Eligibility events (the bridge, R258–R261) ─────────────────────
+
+
+@contextlib.contextmanager
+def _paper_transaction(db: ReviewDatabase):
+    """One decided paper, one transaction (R260): everything written inside is
+    committed together, and any exception — a refused transition included —
+    rolls all of it back, leaving nothing written for the paper."""
+    try:
+        yield
+        db._conn.commit()
+    except BaseException:
+        db._conn.rollback()
+        raise
+
+
+def _write_eligibility_event(db: ReviewDatabase, spec: ReviewSpec, *, run_id: int,
+                             paper_id: int, stage: str, event_type: str,
+                             to_state: str, request_hash: str) -> int:
+    """The model's eligibility event, inside the caller's transaction (R259).
+
+    Actor is the stage's resolved model with the digest this run recorded for
+    the stage; `presented_context_sha256` is the deciding call's request hash.
+    `from_state` is the paper's current eligibility-axis state, or None when that
+    axis has none; `prior_event_id` stays None (R-E1)."""
+    current = effective_state(db._conn, paper_id).eligibility
+    return write_paper_event(
+        db._conn, event_type=event_type, paper_id=paper_id, to_state=to_state,
+        from_state=None if current == NO_RECORDED_STATE else current,
+        actor_kind="model", actor_role="reviewer",
+        actor_name=_ft_config(stage, spec).model,
+        actor_digest=rm.stage_digest(db._conn, run_id, stage),
+        run_id=run_id, presented_context_sha256=request_hash,
+        stage_name=stage, commit=False)
 
 
 # ── Checkpoint Helpers ───────────────────────────────────────────────
@@ -261,7 +306,7 @@ def _load_parsed_text(db: ReviewDatabase, paper_id: int) -> str | None:
 
 
 def run_ft_screening(
-    db: ReviewDatabase, spec: ReviewSpec, review_name: str = "",
+    db: ReviewDatabase, spec: ReviewSpec, review_name: str = "", *, run_id: int,
 ) -> dict:
     """Run full-text primary screening on all PARSED papers with parsed text.
 
@@ -325,7 +370,7 @@ def run_ft_screening(
 
         # Screen
         try:
-            decision = ft_screen_paper(truncated, spec)
+            decision, request_hash = ft_screen_paper(truncated, spec)
         except (json.JSONDecodeError, ValidationError) as exc:
             logger.warning(
                 "Paper %d: malformed FT screening output — flagging: %s",
@@ -336,18 +381,25 @@ def run_ft_screening(
             screened_ids.add(pid)
             continue
 
-        # Write decision to DB
-        db.add_ft_screening_decision(
-            pid, primary_model, decision.decision,
-            decision.reason_code, decision.rationale, decision.confidence,
-            reason_codes=spec.eligibility.reason_codes(),
-        )
-
+        # Decision row → status → (exclude) event, one transaction (R260). An
+        # include writes no event: 'eligible' is the verifier's to write (R-S1).
+        with _paper_transaction(db):
+            db.add_ft_screening_decision(
+                pid, primary_model, decision.decision,
+                decision.reason_code, decision.rationale, decision.confidence,
+                reason_codes=spec.eligibility.reason_codes(), commit=False,
+            )
+            if decision.decision == "FT_ELIGIBLE":
+                db.update_status(pid, "FT_ELIGIBLE")
+            else:
+                db.update_status(pid, "FT_SCREENED_OUT")
+                _write_eligibility_event(
+                    db, spec, run_id=run_id, paper_id=pid, stage="ft_screen_primary",
+                    event_type="screened", to_state="full_text_out",
+                    request_hash=request_hash)
         if decision.decision == "FT_ELIGIBLE":
-            db.update_status(pid, "FT_ELIGIBLE")
             stats["ft_eligible"] += 1
         else:
-            db.update_status(pid, "FT_SCREENED_OUT")
             stats["ft_exclude"] += 1
 
         screened_ids.add(pid)
@@ -373,16 +425,26 @@ def run_ft_screening(
 
 
 def run_ft_verification(
-    db: ReviewDatabase, spec: ReviewSpec, review_name: str = "",
+    db: ReviewDatabase, spec: ReviewSpec, review_name: str = "", *, run_id: int,
 ) -> dict:
     """Re-screen FT_ELIGIBLE papers with the verification model.
 
     Consensus logic:
-      - Verifier confirms → stays FT_ELIGIBLE
+      - Verifier confirms → stays FT_ELIGIBLE, and the paper gets its
+        `verified` → `eligible` event
       - Verifier flags → FT_FLAGGED (for human adjudication)
+
+    Selection (R-V1): a paper at FT_ELIGIBLE with no live eligible event AND no
+    verification decision row — the papers the verifier has never decided. That
+    is what makes a repeat run idempotent; the checkpoint is only a within-run
+    resume aid.
     """
     verification_model = spec.ft_screening_models.verifier
-    papers = db.get_papers_by_status("FT_ELIGIBLE")
+    eligible = set(eligible_paper_ids(db._conn))
+    decided = {r[0] for r in db._conn.execute(
+        "SELECT DISTINCT paper_id FROM ft_verification_decisions")}
+    papers = [p for p in db.get_papers_by_status("FT_ELIGIBLE")
+              if p["id"] not in eligible and p["id"] not in decided]
 
     ckpt_path = _checkpoint_path(db, suffix="_verification")
     verified_ids = _load_checkpoint(ckpt_path)
@@ -400,6 +462,7 @@ def run_ft_verification(
     )
 
     stats = {"confirmed": 0, "flagged": 0, "parse_errors": 0, "total": len(pending)}
+    decisions_written = 0
 
     for i, paper in enumerate(pending, 1):
         pid = paper["id"]
@@ -419,7 +482,7 @@ def run_ft_verification(
         )
 
         try:
-            decision = ft_verify_paper(truncated, spec)
+            decision, request_hash = ft_verify_paper(truncated, spec)
         except (json.JSONDecodeError, ValidationError) as exc:
             logger.warning(
                 "Paper %d: malformed verifier output — flagging: %s",
@@ -431,15 +494,24 @@ def run_ft_verification(
             verified_ids.add(pid)
             continue
 
-        db.add_ft_verification_decision(
-            pid, verification_model, decision.decision,
-            decision.rationale, decision.confidence,
-        )
-
+        # Confirm: decision row → event. Flag: decision row → status. One
+        # transaction either way (R260).
+        with _paper_transaction(db):
+            db.add_ft_verification_decision(
+                pid, verification_model, decision.decision,
+                decision.rationale, decision.confidence, commit=False,
+            )
+            if decision.decision == "FT_ELIGIBLE":
+                _write_eligibility_event(
+                    db, spec, run_id=run_id, paper_id=pid, stage="ft_screen_verifier",
+                    event_type="verified", to_state="eligible",
+                    request_hash=request_hash)
+            else:
+                db.update_status(pid, "FT_FLAGGED")
+        decisions_written += 1
         if decision.decision == "FT_ELIGIBLE":
             stats["confirmed"] += 1
         else:
-            db.update_status(pid, "FT_FLAGGED")
             stats["flagged"] += 1
 
         verified_ids.add(pid)
@@ -454,7 +526,20 @@ def run_ft_verification(
     if ckpt_path.exists():
         ckpt_path.unlink()
 
-    # Auto-advance workflow
+    # Auto-advance workflow — only when this run decided a paper (R-W1): a run
+    # that decided nothing has no completion to record, and must not overwrite
+    # the stage's existing metadata with zero counts.
+    if decisions_written:
+        _complete_ft_stage(db, stats)
+
+    logger.info(
+        "FT verification complete: %d confirmed, %d flagged",
+        stats["confirmed"], stats["flagged"],
+    )
+    return stats
+
+
+def _complete_ft_stage(db: ReviewDatabase, stats: dict) -> None:
     try:
         from engine.adjudication.workflow import complete_stage
         complete_stage(
@@ -467,11 +552,58 @@ def run_ft_verification(
         else:
             raise
 
-    logger.info(
-        "FT verification complete: %d confirmed, %d flagged",
-        stats["confirmed"], stats["flagged"],
-    )
-    return stats
+
+# ── One invocation, one screening manifest (R258) ──────────────────
+
+
+def open_screening_manifest(db: ReviewDatabase, spec: ReviewSpec, *,
+                            with_preflight: bool, git=None, digest_fn=None) -> int:
+    """Write this invocation's `screening` manifest before its first call.
+
+    Both FT stages are always declared; `preflight` with both FT models is
+    declared whenever the primary screen runs (it is the one that preflights).
+    `git` / `digest_fn` default to the live tree and `/api/tags`."""
+    from engine.core.codebook import load_codebook_beside
+
+    stages = ["ft_screen_primary", "ft_screen_verifier"]
+    preflight: list[str] = []
+    if with_preflight:
+        stages.append("preflight")
+        preflight = sorted({spec.ft_screening_models.primary,
+                            spec.ft_screening_models.verifier})
+    handle = rm.open_run(db._conn, spec, kind="screening", stages=stages,
+                         codebook=load_codebook_beside(db.db_path),
+                         preflight_models=preflight, git=git, digest_fn=digest_fn)
+    logger.info("Run manifest %d (%s) written: %d stage rows", handle.run_id,
+                handle.run_uid, len(handle.stages))
+    return handle.run_id
+
+
+def run_ft_invocation(db: ReviewDatabase, spec: ReviewSpec, *, review_name: str = "",
+                      screen_only: bool = False, verify_only: bool = False,
+                      git=None, digest_fn=None) -> int:
+    """The CLI's body: open the manifest, run inside it, close it. Returns the
+    run id. A resumed run is simply a new invocation, so a new manifest.
+    Closes `completed`, or `failed` on any exception, which re-raises."""
+    run_id = open_screening_manifest(db, spec, with_preflight=not verify_only,
+                                     git=git, digest_fn=digest_fn)
+    token = rm.activate(db._conn, run_id)
+    try:
+        if verify_only:
+            run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+        elif screen_only:
+            run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+        else:
+            run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+            run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+        rm.close_run(db._conn, run_id, "completed")
+    except Exception:
+        logger.error("FT screening run %d failed", run_id, exc_info=True)
+        rm.close_run(db._conn, run_id, "failed")
+        raise
+    finally:
+        rm.deactivate(token)
+    return run_id
 
 
 # ── CLI Entry Point ──────────────────────────────────────────────────
@@ -510,12 +642,7 @@ if __name__ == "__main__":
     db = ReviewDatabase(args.review)
 
     try:
-        if args.verify_only:
-            run_ft_verification(db, spec, review_name=args.review)
-        elif args.screen_only:
-            run_ft_screening(db, spec, review_name=args.review)
-        else:
-            run_ft_screening(db, spec, review_name=args.review)
-            run_ft_verification(db, spec, review_name=args.review)
+        run_ft_invocation(db, spec, review_name=args.review,
+                          screen_only=args.screen_only, verify_only=args.verify_only)
     finally:
         db.close()

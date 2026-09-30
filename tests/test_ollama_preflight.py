@@ -264,7 +264,8 @@ class TestRunnerIntegration:
         with patch("engine.utils.ollama_preflight.require_preflight",
                    side_effect=RuntimeError("preflight failed")) as mock_pf:
             with pytest.raises(RuntimeError, match="preflight failed"):
-                run_ft_screening(db, spec, review_name="test_pf")
+                # run_id is never used: preflight refuses before any paper is read.
+                run_ft_screening(db, spec, review_name="test_pf", run_id=0)
 
             mock_pf.assert_called_once_with(
                 [spec.ft_screening_models.primary, spec.ft_screening_models.verifier],

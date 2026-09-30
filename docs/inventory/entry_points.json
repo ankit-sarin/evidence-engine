@@ -4197,7 +4197,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 495,
+            "line": 627,
             "names": [
               "--review"
             ],
@@ -4206,7 +4206,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 496,
+            "line": 628,
             "names": [
               "--spec"
             ],
@@ -4215,7 +4215,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 500,
+            "line": 632,
             "names": [
               "--screen-only"
             ],
@@ -4224,7 +4224,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 501,
+            "line": 633,
             "names": [
               "--verify-only"
             ],
@@ -4233,7 +4233,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 502,
+            "line": 634,
             "names": [
               "--background"
             ],
@@ -4249,7 +4249,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 498,
+            "line": 630,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -4257,7 +4257,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 510,
+            "line": 642,
             "scope": "<module>"
           }
         ],
@@ -4265,7 +4265,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 509,
+            "line": 641,
             "scope": "<module>"
           }
         ],
@@ -7649,7 +7649,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "3a114daccdd5468fc2f131b326cf77694a14db1a",
+    "generated_at_commit": "41bb4176e38ed74681d97da4db18cadd015f8b20",
     "scan_roots": [
       "engine",
       "scripts",

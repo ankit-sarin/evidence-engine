@@ -96,7 +96,7 @@ manifest and cloud opt-in" below). No site names a model or builds an options di
 INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAGGED → PDF_ACQUIRED → PDF_EXCLUDED (terminal) or PARSED → FT_ELIGIBLE / FT_SCREENED_OUT / FT_FLAGGED → EXTRACTED / EXTRACT_FAILED → AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE → REJECTED
 (PARSED can skip FT screening directly to EXTRACTED for reviews without FT screening)
 (PDF_EXCLUDED is terminal — papers excluded at quality check do not advance)
-(Papers at AI_AUDIT_COMPLETE entering FT screening: decisions recorded but status not changed)
+(The FT primary selects PARSED papers only — its AI_AUDIT_COMPLETE re-screen pickup was removed at `ce86e30`, D18 partial)
 
 ## Pipeline Stages
 1. **SEARCH** — PubMed + OpenAlex → deduplicate → add to DB

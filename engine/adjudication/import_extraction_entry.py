@@ -98,17 +98,20 @@ def _parsed_text_dir(review_db: ReviewDatabase) -> Path:
     return Path(review_db.db_path).parent / "parsed_text"
 
 
-def _validate(review_db: ReviewDatabase, input_path: Path) -> tuple[str, list[_Entry]]:
-    """The whole file, and the review, before any write. Raises
-    `ExtractionEntryRejected` listing every rule that failed."""
+# ── Validators shared with the screening-entry import (11c R-t) ──────────
+
+
+def _load_document(input_path: Path, rejected: type[ValueError]) -> tuple[str, list, list[str]]:
+    """Read the file and check its top-level shape. Returns (source, papers,
+    errors-so-far); raises `rejected` at once when nothing further can be checked."""
     try:
         doc = json.loads(input_path.read_bytes())
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise ExtractionEntryRejected([f"input file unreadable as JSON: {exc}"]) from exc
+        raise rejected([f"input file unreadable as JSON: {exc}"]) from exc
 
     errors: list[str] = []
     if not isinstance(doc, dict) or set(doc) != {"source", "papers"}:
-        raise ExtractionEntryRejected([
+        raise rejected([
             "top-level shape: the file must be an object with exactly the keys "
             "'source' and 'papers'"])
     source = doc["source"]
@@ -117,7 +120,59 @@ def _validate(review_db: ReviewDatabase, input_path: Path) -> tuple[str, list[_E
     papers = doc["papers"]
     if not isinstance(papers, list) or not papers:
         errors.append("papers: must be a non-empty list")
-        raise ExtractionEntryRejected(errors)
+        raise rejected(errors)
+    return source, papers, errors
+
+
+def _check_title_and_ids(rec: dict, where: str,
+                         errors: list[str]) -> tuple[object, str | None, str | None]:
+    """The title rule and the pmid/doi type rules (R-o). Returns (title, pmid,
+    doi), each identifier None when absent or blank."""
+    title = rec.get("title")
+    if not isinstance(title, str) or not title.strip():
+        errors.append(f"{where}: title must be a non-empty string")
+    pmid, doi = rec.get("pmid"), rec.get("doi")
+    for key, val in (("pmid", pmid), ("doi", doi)):
+        if val is not None and not isinstance(val, str):
+            errors.append(f"{where}: {key} must be a string or null")
+    pmid = pmid if isinstance(pmid, str) and pmid.strip() else None
+    doi = doi if isinstance(doi, str) and doi.strip() else None
+    return title, pmid, doi
+
+
+def _check_id_duplicates(n: int, where: str, pmid: str | None, doi: str | None,
+                         seen_pmid: dict[str, int], seen_doi: dict[str, int],
+                         errors: list[str]) -> None:
+    """11c R-m: pmid compared stripped, doi stripped and lower-cased; stored as given."""
+    if pmid is not None:
+        key = pmid.strip()
+        if key in seen_pmid:
+            errors.append(f"{where}: duplicate pmid {pmid!r} (also entry {seen_pmid[key]})")
+        seen_pmid.setdefault(key, n)
+    if doi is not None:
+        key = doi.strip().lower()
+        if key in seen_doi:
+            errors.append(f"{where}: duplicate doi {doi!r} (also entry {seen_doi[key]})")
+        seen_doi.setdefault(key, n)
+
+
+def _check_optional_fields(rec: dict, where: str, errors: list[str]) -> tuple:
+    """The optional-field type rules (R-o). Returns (abstract, authors, journal, year)."""
+    for key, typ in _OPTIONAL_TYPES.items():
+        val = rec.get(key)
+        if val is not None and (not isinstance(val, typ) or isinstance(val, bool)):
+            errors.append(f"{where}: {key} must be {typ.__name__} or null")
+    authors = rec.get("authors")
+    if authors is not None and not (isinstance(authors, list)
+                                    and all(isinstance(a, str) for a in authors)):
+        errors.append(f"{where}: authors must be a list of strings or null")
+    return rec.get("abstract"), authors, rec.get("journal"), rec.get("year")
+
+
+def _validate(review_db: ReviewDatabase, input_path: Path) -> tuple[str, list[_Entry]]:
+    """The whole file, and the review, before any write. Raises
+    `ExtractionEntryRejected` listing every rule that failed."""
+    source, papers, errors = _load_document(input_path, ExtractionEntryRejected)
 
     base = input_path.parent
     entries: list[_Entry] = []
@@ -129,36 +184,11 @@ def _validate(review_db: ReviewDatabase, input_path: Path) -> tuple[str, list[_E
         if not isinstance(rec, dict):
             errors.append(f"{where}: must be an object")
             continue
-        title = rec.get("title")
-        if not isinstance(title, str) or not title.strip():
-            errors.append(f"{where}: title must be a non-empty string")
-        pmid, doi = rec.get("pmid"), rec.get("doi")
-        for key, val in (("pmid", pmid), ("doi", doi)):
-            if val is not None and not isinstance(val, str):
-                errors.append(f"{where}: {key} must be a string or null")
-        pmid = pmid if isinstance(pmid, str) and pmid.strip() else None
-        doi = doi if isinstance(doi, str) and doi.strip() else None
+        title, pmid, doi = _check_title_and_ids(rec, where, errors)
         if pmid is None and doi is None:
             errors.append(f"{where}: at least one of pmid and doi is required")
-        # 11c R-m: compared stripped (doi also lower-cased), stored as given.
-        if pmid is not None:
-            key = pmid.strip()
-            if key in seen_pmid:
-                errors.append(f"{where}: duplicate pmid {pmid!r} (also entry {seen_pmid[key]})")
-            seen_pmid.setdefault(key, n)
-        if doi is not None:
-            key = doi.strip().lower()
-            if key in seen_doi:
-                errors.append(f"{where}: duplicate doi {doi!r} (also entry {seen_doi[key]})")
-            seen_doi.setdefault(key, n)
-        for key, typ in _OPTIONAL_TYPES.items():
-            val = rec.get(key)
-            if val is not None and (not isinstance(val, typ) or isinstance(val, bool)):
-                errors.append(f"{where}: {key} must be {typ.__name__} or null")
-        authors = rec.get("authors")
-        if authors is not None and not (isinstance(authors, list)
-                                        and all(isinstance(a, str) for a in authors)):
-            errors.append(f"{where}: authors must be a list of strings or null")
+        _check_id_duplicates(n, where, pmid, doi, seen_pmid, seen_doi, errors)
+        abstract, authors, journal, year = _check_optional_fields(rec, where, errors)
 
         text_path, data = rec.get("text_path"), None
         if not isinstance(text_path, str) or not text_path:
@@ -184,8 +214,8 @@ def _validate(review_db: ReviewDatabase, input_path: Path) -> tuple[str, list[_E
                               f"entry {seen_text[text_path]}'s")
             seen_text.setdefault(text_path, n)
 
-        entries.append(_Entry(n, title, pmid, doi, rec.get("abstract"), authors,
-                              rec.get("journal"), rec.get("year"), text_path, data))
+        entries.append(_Entry(n, title, pmid, doi, abstract, authors,
+                              journal, year, text_path, data))
 
     # 11c R-e: a review entered at extraction starts empty.
     (n_papers,) = review_db._conn.execute("SELECT COUNT(*) FROM papers").fetchone()

@@ -175,20 +175,33 @@ def get_workflow_status(conn: sqlite3.Connection) -> list[dict]:
 
 
 def complete_stage(conn: sqlite3.Connection, stage_name: str,
-                   metadata: str | None = None) -> None:
-    """Mark a workflow stage as complete."""
+                   metadata: str | None = None, *, commit: bool = True) -> None:
+    """Mark a workflow stage as complete.
+
+    `commit=False` (11b-ADJ D4) is for a caller's open transaction: it skips
+    `ensure_workflow_table` — whose `executescript` would commit that
+    transaction — runs the UPDATE only, leaves it uncommitted, and raises unless
+    exactly one row was touched. The caller ensures the table beforehand.
+    """
     if stage_name not in WORKFLOW_STAGES:
         raise ValueError(f"Unknown stage: {stage_name}")
 
-    ensure_workflow_table(conn)
+    if commit:
+        ensure_workflow_table(conn)
     now = datetime.now(timezone.utc).isoformat()
 
-    conn.execute(
+    cur = conn.execute(
         """UPDATE workflow_state
            SET status = 'complete', completed_at = ?, metadata = ?
            WHERE stage_name = ?""",
         (now, metadata, stage_name),
     )
+    if not commit:
+        if cur.rowcount != 1:
+            raise RuntimeError(
+                f"complete_stage({stage_name!r}, commit=False) touched {cur.rowcount} "
+                "rows, not 1 — ensure the workflow table before the transaction")
+        return
     conn.commit()
     logger.info("Workflow stage completed: %s", stage_name)
 

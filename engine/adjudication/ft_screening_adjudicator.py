@@ -5,6 +5,7 @@ Mirrors the screening_adjudicator pattern but for full-text screening results.
 Supports both xlsx (workbook) and JSON (HTML tool) import formats.
 """
 
+import hashlib
 import json
 import logging
 from datetime import datetime, timezone
@@ -327,6 +328,10 @@ def _write_ft_xlsx(
 def import_ft_adjudication_decisions(
     review_db: ReviewDatabase,
     input_path: str | Path | None = None,
+    *,
+    spec,
+    git=None,
+    digest_fn=None,
 ) -> dict:
     """Read completed FT adjudication decisions and write to database.
 
@@ -340,10 +345,22 @@ def import_ft_adjudication_decisions(
     JSON schema: [{paper_id: int, decision: "FT_ELIGIBLE"|"FT_SCREENED_OUT", note: str|null}]
 
     Validates the entire file before making any changes:
-      - Rejects if any decision is missing or invalid
+      - Rejects if any decision is missing or invalid, or any paper_id is
+        missing or not an integer (D6). A rejected file writes nothing — not
+        even a manifest (D3).
 
-    Records decisions in ft_screening_adjudication table.
-    Auto-advances FULL_TEXT_ADJUDICATION_COMPLETE if zero unresolved.
+    A valid file is applied under one `import` manifest (R247), opened after
+    validation with the file's sha256 under the manifest's `inputs` (D1), and in
+    ONE transaction (R252): per decision the ft_screening_adjudication row, the
+    status write and the `adjudicated` eligibility event (actor human /
+    reviewer, actor_name the file's stored path, D2). A refused transition rolls
+    the whole file back, closes the manifest `aborted` with the paper and the
+    transition as its reason, and re-raises the ValueError (D5).
+    FULL_TEXT_ADJUDICATION_COMPLETE advances inside the transaction, and only
+    when no FT_FLAGGED paper remains unresolved (D9).
+
+    `spec` is the loaded ReviewSpec the manifest records (D8); `git` and
+    `digest_fn` pass through to `open_run` (a test seam; production defaults).
 
     Returns summary dict.
     """
@@ -362,15 +379,33 @@ def import_ft_adjudication_decisions(
 
     input_path = Path(input_path)
 
+    run = {"input_path": input_path, "spec": spec, "git": git, "digest_fn": digest_fn}
     if input_path.suffix.lower() == ".json":
-        return _import_ft_json(review_db, input_path)
+        return _import_ft_json(review_db, input_path, run)
 
-    return _import_ft_xlsx(review_db, input_path)
+    return _import_ft_xlsx(review_db, input_path, run)
+
+
+def _is_paper_id(value) -> bool:
+    """D6: a paper_id is an integer — not missing, not a bool, not text."""
+    return isinstance(value, int) and not isinstance(value, bool) and value > 0
+
+
+def _stored_path(path: Path) -> str:
+    """D2: the path resolved, then repo-relative when it lies under the repo root,
+    else absolute. Used for both actor_name and the manifest's inputs key."""
+    from engine.core.run_manifest import REPO_ROOT
+    resolved = Path(path).resolve()
+    try:
+        return resolved.relative_to(REPO_ROOT.resolve()).as_posix()
+    except ValueError:
+        return str(resolved)
 
 
 def _import_ft_json(
     review_db: ReviewDatabase,
     input_path: Path,
+    run: dict,
 ) -> dict:
     """Import FT adjudication decisions from JSON (HTML tool output).
 
@@ -406,8 +441,8 @@ def _import_ft_json(
         decision_raw = rec.get("decision", "")
         note = rec.get("note") or ""
 
-        if not paper_id:
-            invalid_rows.append(f"  Record {i}: missing paper_id")
+        if not _is_paper_id(paper_id):
+            invalid_rows.append(f"  Record {i}: missing or non-integer paper_id {paper_id!r}")
             continue
 
         decision = str(decision_raw).strip().upper()
@@ -462,60 +497,93 @@ def _import_ft_json(
         }
 
     # ── Pass 2: Apply ─────────────────────────────────────────────
-    return _apply_ft_decisions(review_db, parsed_rows)
+    return _apply_ft_decisions(review_db, parsed_rows, **run)
+
+
+#: The eligibility-axis state each adjudication decision writes (R247).
+_ADJUDICATED_TO_STATE = {"FT_ELIGIBLE": "eligible", "FT_SCREENED_OUT": "full_text_out"}
 
 
 def _apply_ft_decisions(
     review_db: ReviewDatabase,
     parsed_rows: list[dict],
+    *,
+    input_path: Path,
+    spec,
+    git=None,
+    digest_fn=None,
 ) -> dict:
-    """Shared logic: write validated decisions to DB and advance workflow."""
-    ensure_adjudication_table(review_db._conn)
+    """Apply a validated file under one import manifest, in one transaction."""
+    from engine.core import run_manifest as rm
+    from engine.core.codebook import load_codebook_beside
+    from engine.core.effective import NO_RECORDED_STATE, effective_state
+    from engine.core.events import write_paper_event
+
+    conn = review_db._conn
+    stored = _stored_path(input_path)
+    file_sha256 = hashlib.sha256(Path(input_path).read_bytes()).hexdigest()
+    # DirtyTree and every other open_run refusal raise here, before any write.
+    run_id = rm.open_run(conn, spec, kind="import", stages=(),
+                         codebook=load_codebook_beside(review_db.db_path),
+                         inputs={stored: file_sha256}, git=git,
+                         digest_fn=digest_fn).run_id
 
     now = datetime.now(timezone.utc).isoformat()
     stats = {
         "ft_eligible": 0, "ft_screened_out": 0,
         "missing": 0, "invalid": 0,
-        "status_update_failed": 0,
         "total": len(parsed_rows),
     }
-
-    for pr in parsed_rows:
-        decision = pr["decision"]
-        paper_id = pr["paper_id"]
-        title = pr["title"]
-        reason_code = pr["reason_code"]
-        notes = pr["notes"]
-
-        # Record in ft_screening_adjudication table
-        review_db._conn.execute(
-            """INSERT INTO ft_screening_adjudication
-               (paper_id, title, reason_code, adjudication_decision,
-                adjudication_reason, adjudication_timestamp, created_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (paper_id, title, reason_code, decision, notes, now, now),
-        )
-
-        # Update paper status (FT_FLAGGED → FT_ELIGIBLE or FT_SCREENED_OUT)
-        status_updated = False
-        if paper_id:
+    refused = None
+    try:
+        # Its executescript commits, so it runs before the transaction opens (D4).
+        ensure_adjudication_table(conn)
+        for pr in parsed_rows:
+            decision = pr["decision"]
+            paper_id = pr["paper_id"]
+            conn.execute(
+                """INSERT INTO ft_screening_adjudication
+                   (paper_id, title, reason_code, adjudication_decision,
+                    adjudication_reason, adjudication_timestamp, created_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                (paper_id, pr["title"], pr["reason_code"], decision, pr["notes"], now, now),
+            )
+            # FT_FLAGGED → FT_ELIGIBLE or FT_SCREENED_OUT; a refusal aborts the file.
             try:
-                review_db.update_status(int(paper_id), decision)
-                status_updated = True
-            except ValueError as e:
-                logger.error(
-                    "Paper %s: status update failed — adjudication recorded but "
-                    "paper will not progress: %s", paper_id, e,
-                )
-                stats["status_update_failed"] += 1
-
-        if status_updated:
+                review_db.update_status(paper_id, decision)
+            except ValueError as exc:
+                refused = f"paper {paper_id}: {exc}"
+                raise
+            current = effective_state(conn, paper_id).eligibility
+            write_paper_event(
+                conn, event_type="adjudicated", paper_id=paper_id,
+                to_state=_ADJUDICATED_TO_STATE[decision],
+                from_state=None if current == NO_RECORDED_STATE else current,
+                actor_kind="human", actor_role="reviewer", actor_name=stored,
+                actor_digest=None, run_id=run_id, stage_name="ft_adjudication",
+                commit=False)
             if decision == "FT_ELIGIBLE":
                 stats["ft_eligible"] += 1
             else:
                 stats["ft_screened_out"] += 1
 
-    review_db._conn.commit()
+        # D9: the stage completes only when nothing is left to adjudicate.
+        if check_ft_adjudication_gate(review_db) == 0:
+            complete_stage(
+                conn, "FULL_TEXT_ADJUDICATION_COMPLETE",
+                metadata=(
+                    f"{stats['ft_eligible']} eligible, {stats['ft_screened_out']} screened out "
+                    f"(of {stats['total']} total)"
+                ),
+                commit=False,
+            )
+        conn.commit()
+    except Exception as exc:
+        conn.rollback()
+        rm.close_run(conn, run_id, "aborted" if refused else "failed",
+                     reason=refused or str(exc))
+        raise
+    rm.close_run(conn, run_id, "completed")
 
     # Success summary
     print(
@@ -530,21 +598,13 @@ def _apply_ft_decisions(
         stats["ft_eligible"], stats["ft_screened_out"], stats["total"],
     )
 
-    # Auto-advance workflow: FULL_TEXT_ADJUDICATION_COMPLETE
-    complete_stage(
-        review_db._conn, "FULL_TEXT_ADJUDICATION_COMPLETE",
-        metadata=(
-            f"{stats['ft_eligible']} eligible, {stats['ft_screened_out']} screened out "
-            f"(of {stats['total']} total)"
-        ),
-    )
-
     return {"stats": stats, "warnings": []}
 
 
 def _import_ft_xlsx(
     review_db: ReviewDatabase,
     input_path: Path,
+    run: dict,
 ) -> dict:
     """Import FT adjudication decisions from Excel workbook."""
     from openpyxl import load_workbook
@@ -633,6 +693,12 @@ def _import_ft_xlsx(
             )
             continue
 
+        if not _is_paper_id(paper_id):
+            invalid_rows.append(
+                f"  Row {row_num}: missing or non-integer Paper ID {paper_id!r}"
+            )
+            continue
+
         parsed_rows.append({
             "row_num": row_num,
             "paper_id": paper_id,
@@ -675,7 +741,7 @@ def _import_ft_xlsx(
         }
 
     # ── Pass 2: Apply all validated decisions ───────────────────
-    return _apply_ft_decisions(review_db, parsed_rows)
+    return _apply_ft_decisions(review_db, parsed_rows, **run)
 
 
 # ── Pipeline Gate ──────────────────────────────────────────────────

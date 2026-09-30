@@ -3,6 +3,7 @@ database FT tables, workflow stages, specialty scope in prompts, text truncation
 """
 
 import json
+import shutil
 import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -96,6 +97,19 @@ def _screening_run(db, spec):
                        codebook=load_codebook(_LIVE_CODEBOOK),
                        git=rm.GitState(commit="b" * 40, dirty=False, tag=None),
                        digest_fn=lambda m: "a" * 64).run_id
+
+
+def _import(db, path):
+    """The importer under a real `import` manifest (R247): a clean tree and a
+    codebook beside the database, so nothing reaches git or a server."""
+    if not _LIVE_CODEBOOK.exists():
+        pytest.skip("codebook not available")
+    beside = Path(db.db_path).parent / "extraction_codebook.yaml"
+    if not beside.exists():
+        shutil.copy2(_LIVE_CODEBOOK, beside)
+    return import_ft_adjudication_decisions(
+        db, path, spec=_SPEC_FOR_EXPORT,
+        git=rm.GitState(commit="b" * 40, dirty=False, tag=None), digest_fn=lambda m: "")
 
 
 def _advance_to_parsed(db, paper_id):
@@ -524,7 +538,7 @@ class TestFTAdjudication:
         wb.save(out)
 
         # Import
-        result = import_ft_adjudication_decisions(tmp_db, out)
+        result = _import(tmp_db, out)
         assert result["stats"]["ft_eligible"] == 1
         assert result["stats"]["ft_screened_out"] == 1
         assert result["stats"]["missing"] == 0
@@ -549,7 +563,7 @@ class TestFTAdjudication:
         export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
 
         # Don't fill in any decisions — import as-is
-        result = import_ft_adjudication_decisions(tmp_db, out)
+        result = _import(tmp_db, out)
         assert result["stats"]["missing"] == 1
         assert result["stats"]["ft_eligible"] == 0
 
@@ -576,7 +590,7 @@ class TestFTAdjudication:
             row[dec_col].value = "INCLUDE"  # wrong value
         wb.save(out)
 
-        result = import_ft_adjudication_decisions(tmp_db, out)
+        result = _import(tmp_db, out)
         assert result["stats"]["invalid"] == 1
 
         # Verify paper status unchanged
@@ -603,7 +617,7 @@ class TestFTAdjudication:
                 row[dec_col].value = "FT_ELIGIBLE"
         wb.save(out)
 
-        import_ft_adjudication_decisions(tmp_db, out)
+        _import(tmp_db, out)
         assert is_stage_done(tmp_db._conn, "FULL_TEXT_ADJUDICATION_COMPLETE")
 
     def test_ft_adjudication_gate(self, tmp_db):
@@ -633,7 +647,7 @@ class TestFTAdjudication:
                 row[notes_col].value = "Reviewer confirmed"
         wb.save(out)
 
-        import_ft_adjudication_decisions(tmp_db, out)
+        _import(tmp_db, out)
 
         row = tmp_db._conn.execute(
             "SELECT * FROM ft_screening_adjudication WHERE paper_id = ?", (pid,)
@@ -642,14 +656,17 @@ class TestFTAdjudication:
         assert row["adjudication_decision"] == "FT_ELIGIBLE"
         assert row["adjudication_reason"] == "Reviewer confirmed"
 
-    def test_status_update_failure_tracked(self, tmp_db, tmp_path):
-        """Status update failure is tracked in stats, not counted as success."""
+    def test_a_refused_transition_aborts_the_import(self, tmp_db, tmp_path):
+        """Rewritten (B5) from test_status_update_failure_tracked, which pinned
+        the swallow: a refused transition was logged, counted in
+        `status_update_failed`, and its adjudication row committed anyway (C42).
+        R252/D5: the refusal raises, the file is rolled back whole and the
+        import manifest closes `aborted` naming the paper. Mutation-checked:
+        restoring the `except ValueError` swallow turns this red."""
         pid = _add_paper(tmp_db, title="Status Fail", pmid="77030")
         _advance_to_ft_flagged(tmp_db, pid)
-
         out = tmp_path / "ft_status_fail.xlsx"
         export_ft_adjudication_queue(tmp_db, out, review_spec=_SPEC_FOR_EXPORT)
-
         from openpyxl import load_workbook
         wb = load_workbook(out)
         ws = wb["Review Queue"]
@@ -658,19 +675,25 @@ class TestFTAdjudication:
         for row in ws.iter_rows(min_row=2, values_only=False):
             row[dec_col].value = "FT_ELIGIBLE"
         wb.save(out)
-
         # Force the paper to a status where FT_ELIGIBLE is not a valid transition
         tmp_db._conn.execute(
             "UPDATE papers SET status = 'INGESTED' WHERE id = ?", (pid,)
         )
         tmp_db._conn.commit()
-
-        result = import_ft_adjudication_decisions(tmp_db, out)
-
-        # Decision was recorded but status update failed
-        assert result["stats"]["status_update_failed"] == 1
-        # Should NOT count as successful ft_eligible
-        assert result["stats"]["ft_eligible"] == 0
+        with pytest.raises(ValueError, match="Invalid transition"):
+            _import(tmp_db, out)
+        # Nothing written for the paper; the manifest records the abort.
+        assert tmp_db._conn.execute(
+            "SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()[0] == "INGESTED"
+        assert tmp_db._conn.execute(
+            "SELECT COUNT(*) FROM ft_screening_adjudication").fetchone()[0] == 0
+        assert tmp_db._conn.execute(
+            "SELECT COUNT(*) FROM paper_events WHERE paper_id = ?", (pid,)).fetchone()[0] == 0
+        end = tmp_db._conn.execute(
+            "SELECT end_status, end_reason FROM run_manifests WHERE run_kind = 'import'"
+        ).fetchall()
+        assert len(end) == 1 and end[0][0] == "aborted"
+        assert f"paper {pid}" in end[0][1] and "INGESTED → FT_ELIGIBLE" in end[0][1]
 
 
 # ── Workflow FT Stage Tests ──────────────────────────────────────

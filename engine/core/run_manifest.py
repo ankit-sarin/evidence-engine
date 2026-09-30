@@ -195,7 +195,8 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
              digest_fn: Callable[[str], str] | None = None,
              git: GitState | None = None, host: str | None = None,
              payload_description: str | None = None,
-             selection_bound: Mapping[str, Any] | None = None) -> RunHandle:
+             selection_bound: Mapping[str, Any] | None = None,
+             inputs: Mapping[str, str] | None = None) -> RunHandle:
     """Write the manifest and pin its arms, or refuse. Before the first call.
 
     `stages` are resolver stage names; each cloud arm in `cloud_arms` adds
@@ -205,6 +206,11 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     `selection_bound` (10b-C2), when given, is recorded verbatim under the
     manifest's `selection_bound` key — declared before the first call and, like
     the rest of the body, never edited. Absent, the manifest carries no such key.
+
+    `inputs` (11b-ADJ D1, amending R203's wording) maps each input file a run
+    reads — an import's decision file — to the sha256 of its bytes, recorded
+    under the manifest's `inputs` key. `pins` stays the arm pins. Absent, the
+    manifest carries no such key.
     """
     if kind not in RUN_KINDS:
         raise ValueError(f"run kind {kind!r} is not one of {RUN_KINDS}")
@@ -282,6 +288,8 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     }
     if selection_bound is not None:
         manifest["selection_bound"] = dict(selection_bound)
+    if inputs is not None:
+        manifest["inputs"] = dict(inputs)
     if cloud_list and not payload_description:
         raise ValueError("a run with cloud arms records a payload description (S3g)")
 

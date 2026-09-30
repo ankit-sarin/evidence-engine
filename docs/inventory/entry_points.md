@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `e86e16347dd9b4f495ce9bb607c6acdbe25c77db` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `392d1c763a45b0c0db91cea1418a6859e8436475` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -109,7 +109,7 @@ Two figures deliberately have no baseline row. **entry points** (95) counts anyt
 | `engine/adjudication/abstract_adjudication_html.py` | `--review` required; `--output`=None | — | — | — |
 | `engine/adjudication/advance_stage.py` | `--review` required; `--stage`; `--note`; `--force`; `--status` | — | 73 | — |
 | `engine/adjudication/ft_adjudication_html.py` | `--review` required; `--output`=None | — | — | — |
-| `engine/agents/ft_screener.py` | `--review` required; `--spec`=None; `--screen-only`; `--verify-only`; `--background` | load_spec_for | 547 | <module>:spec_first |
+| `engine/agents/ft_screener.py` | `--review` required; `--spec`=None; `--screen-only`; `--verify-only`; `--background` | load_spec_for | 531 | <module>:spec_first |
 | `engine/analysis/concordance.py` | `--review` required; `--arms` required; `--spec`=None | data_root_for, load_review_spec, load_spec_for, spec_path_for | — | — |
 | `engine/migrations/002_screening_rename.py` | — | — | — | — |
 | `engine/migrations/003_backfill_expanded_screening.py` | — | — | — | — |

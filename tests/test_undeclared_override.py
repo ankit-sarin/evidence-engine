@@ -5,10 +5,11 @@ The manifest is the contract: a caller's option merge that disagrees with the
 stage's declared `run_stage_configs` row is refused before any call is built,
 never left to `run_calls.request_hash` alone to notice after the fact.
 
-R223a defers the FT screener's half (B2) to session 11's eligibility-bridge
-commit, because no production driver opens a manifest naming
-`ft_screen_primary` / `ft_screen_verifier` today (10a-C7 Phase A, M1) — T4
-below pins that deferral rather than exercising a refusal that cannot fire yet.
+R223a deferred the FT screener's half (B2) to session 11. It landed as a removal
+(STAGED-ENTRY-01 FT-OVR, R-c): `_ft_config` takes no caller override at all, so
+there is nothing on the FT path for `with_options` to refuse — T4 below pins that
+absence, the resolver identity for both FT stages, and agreement with a declared
+row under an active run.
 The vision path's `num_predict` / `num_ctx` override needed no code change
 (B3): it is already resolver-supplied (M2) and is now simply guarded by
 `with_options` whenever it runs under a manifest that declared `vision_parse`.
@@ -109,19 +110,49 @@ def test_T3_no_active_run_is_todays_merge_behaviour(spec):
     assert merged.options["num_ctx"] == 4096
 
 
-# ── T4' — the FT deferral (R223a): no manifest ever declares FT today ─
-def test_T4_ft_config_with_temperature_none_is_the_resolver_unchanged(spec):
-    cfg = _ft_config("ft_screen_primary", spec, None, None, None)
-    resolver = ec.stage_config("ft_screen_primary", spec, model=None)
-    assert cfg.options == resolver.options
+# ── T4' — the FT path takes its configuration from the resolver alone (R-c) ─
+def test_T4_ft_config_is_the_resolver_unchanged(spec):
+    """Rewritten (B5) from the `(stage, spec, None, None, None)` call shape: the
+    call now has no override arguments, and the result is the resolver's,
+    equal as a whole rather than in `options` alone."""
+    assert _ft_config("ft_screen_primary", spec) == ec.stage_config("ft_screen_primary", spec)
 
 
-def test_T4_ft_config_with_a_differing_temperature_and_no_manifest_still_merges(spec):
-    """Pins the R223a deferral: FT screening runs with no active manifest today
-    (10a-C7 Phase A, M1), so `with_options` returns today's merged config
-    rather than refusing — there is no declared row to refuse against."""
-    cfg = _ft_config("ft_screen_primary", spec, None, None, 0.7)
-    assert cfg.options["temperature"] == 0.7
+def test_T4_ft_config_accepts_no_caller_override():
+    """Rewritten (B5) from the test that pinned the temperature override's merge
+    with no manifest. The override is gone: `_ft_config`, `ft_screen_paper` and
+    `ft_verify_paper` take no model, think or temperature. Mutation-checked:
+    restoring a `temperature` parameter turns this red."""
+    import inspect
+    from engine.agents import ft_screener as ft
+    assert list(inspect.signature(ft._ft_config).parameters) == ["stage", "spec"]
+    assert list(inspect.signature(ft.ft_screen_paper).parameters) == ["paper_text", "spec"]
+    assert list(inspect.signature(ft.ft_verify_paper).parameters) == ["paper_text", "spec"]
+
+
+@pytest.mark.parametrize("stage", ["ft_screen_primary", "ft_screen_verifier"])
+def test_T4_ft_config_equals_the_resolver_in_every_hash_and_source(spec, stage):
+    cfg, resolver = _ft_config(stage, spec), ec.stage_config(stage, spec)
+    assert cfg.options_hash == resolver.options_hash
+    assert cfg.format_schema_hash == resolver.format_schema_hash
+    assert ec.prompt_hash(stage, spec, cfg) == ec.prompt_hash(stage, spec, resolver)
+    assert dict(cfg.sources) == dict(resolver.sources)
+    assert cfg.sources["model"] == "spec"            # never "caller" (R-c)
+    assert cfg.kwargs() == resolver.kwargs()
+
+
+def test_T4_ft_config_under_a_declared_run_agrees_with_its_row(review, spec):
+    """Under an active run that declared both FT stages, `_ft_config` raises no
+    UndeclaredOverride and its options hash is the declared row's."""
+    db, cb = review
+    h = rm.open_run(db._conn, spec, kind="screening",
+                    stages=("ft_screen_primary", "ft_screen_verifier"),
+                    codebook=cb, git=CLEAN, digest_fn=_digest)
+    with rm.active_run(db._conn, h.run_id):
+        for stage in ("ft_screen_primary", "ft_screen_verifier"):
+            cfg = _ft_config(stage, spec)
+            recorded_hash, _ = rm.active_stage_row(stage)
+            assert cfg.options_hash == recorded_hash
 
 
 # ── T5 — the vision path, guarded by B1, with no code change of its own ─

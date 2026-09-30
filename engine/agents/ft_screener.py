@@ -191,45 +191,29 @@ def build_ft_messages(paper_text: str, spec: ReviewSpec, which: str = "primary")
                            review_title=spec.title)
 
 
-def _ft_config(stage: str, spec: ReviewSpec, model, think, temperature):
-    """The resolver's config, with this signature's historical overrides applied.
+def _ft_config(stage: str, spec: ReviewSpec):
+    """The resolver's config for an FT stage, unchanged (R223a, R-c).
 
-    `model`, `think` and `temperature` have always been accepted as arguments;
-    `None` means the spec's value, as before. A non-None argument is a caller
-    override and is recorded as one.
+    No caller override: `model`, `think` and `temperature` used to be accepted
+    here and applied through the config's option merge and its private replace
+    helper — the latter bypassing `UndeclaredOverride`. Production passed only `model=`, the
+    spec's own value, whose one effect was to relabel its source `caller`.
+    Every FT value comes from `ft_screening_models`.
     """
-    cfg = stage_config(stage, spec, model=model)
-    if think is not None and think != cfg.think:
-        from engine.core.effective_config import _replace
-        cfg = _replace(cfg, think=think, sources={**cfg.sources, "think": "caller"})
-    if temperature is not None and temperature != cfg.options.get("temperature"):
-        cfg = cfg.with_options({"temperature": temperature})
-    return cfg
+    return stage_config(stage, spec)
 
 
-def ft_screen_paper(
-    paper_text: str,
-    spec: ReviewSpec,
-    model: str | None = None,
-    think: bool | None = None,
-    temperature: float | None = None,
-) -> FTScreeningDecision:
+def ft_screen_paper(paper_text: str, spec: ReviewSpec) -> FTScreeningDecision:
     """Screen a single paper's full text. Returns structured decision."""
-    cfg = _ft_config("ft_screen_primary", spec, model, think, temperature)
+    cfg = _ft_config("ft_screen_primary", spec)
     response = ollama_chat(
         messages=build_ft_messages(paper_text, spec, "primary"), **cfg.kwargs())
     return FTScreeningDecision.model_validate_json(response.message.content)
 
 
-def ft_verify_paper(
-    paper_text: str,
-    spec: ReviewSpec,
-    model: str | None = None,
-    think: bool | None = None,
-    temperature: float | None = None,
-) -> FTVerificationDecision:
+def ft_verify_paper(paper_text: str, spec: ReviewSpec) -> FTVerificationDecision:
     """Verify a single paper's full text (strict, FP-catching). Returns structured decision."""
-    cfg = _ft_config("ft_screen_verifier", spec, model, think, temperature)
+    cfg = _ft_config("ft_screen_verifier", spec)
     response = ollama_chat(
         messages=build_ft_messages(paper_text, spec, "verifier"), **cfg.kwargs())
     return FTVerificationDecision.model_validate_json(response.message.content)
@@ -344,7 +328,7 @@ def run_ft_screening(
 
         # Screen
         try:
-            decision = ft_screen_paper(truncated, spec, model=primary_model)
+            decision = ft_screen_paper(truncated, spec)
         except (json.JSONDecodeError, ValidationError) as exc:
             logger.warning(
                 "Paper %d: malformed FT screening output — flagging: %s",
@@ -456,7 +440,7 @@ def run_ft_verification(
         )
 
         try:
-            decision = ft_verify_paper(truncated, spec, model=verification_model)
+            decision = ft_verify_paper(truncated, spec)
         except (json.JSONDecodeError, ValidationError) as exc:
             logger.warning(
                 "Paper %d: malformed verifier output — flagging: %s",

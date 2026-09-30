@@ -203,10 +203,8 @@ def test_ft_screen_primary_and_verifier(capture, spec):
         return json.dumps({"decision": "FT_ELIGIBLE", "rationale": "r",
                            "confidence": 0.9}), None
     fake = capture(respond)
-    ft_screener.ft_screen_paper("Title: T\n\nAbstract: A", spec,
-                                model=spec.ft_screening_models.primary)
-    ft_screener.ft_verify_paper("Title: T\n\nAbstract: A", spec,
-                                model=spec.ft_screening_models.verifier)
+    ft_screener.ft_screen_paper("Title: T\n\nAbstract: A", spec)
+    ft_screener.ft_verify_paper("Title: T\n\nAbstract: A", spec)
     _assert_site("ft_screen_primary", fake.calls[0], spec)
     _assert_site("ft_screen_verifier", fake.calls[1], spec)
 

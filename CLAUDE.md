@@ -138,7 +138,7 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - PDF quality check: AI classification (vision model) + HTML disposition + JSON import. PDF_EXCLUDED is terminal
 - Extraction validator: schema-driven field name + categorical value check. Read-only diagnostic
 - Ollama pre-flight: model health check + VRAM budget validation. Wired into FT screener, extractor, auditor
-- FT screening: dual-model cross-family, specialty scope, /no_think, 32K truncation, checkpoint/resume, 7 reason codes. Status-aware for papers at any lifecycle stage
+- FT screening: dual-model cross-family, specialty scope, /no_think, 32K truncation, checkpoint/resume, reason codes from the spec's eligibility block (Eligibility.reason_codes()). The primary selects PARSED papers; the verifier selects FT_ELIGIBLE papers with no live eligible event and no ft_verification_decisions row.
 - Pass-1 think policy is declared per pass in the Review Spec (`extraction_models.pass1_think` / `.pass2_think`) and passed explicitly on every call — never left to a version-dependent Ollama default (REGRESSION-01)
 
 ## Ops Invariants — Ollama service safety

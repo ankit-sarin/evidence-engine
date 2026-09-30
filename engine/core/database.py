@@ -72,12 +72,55 @@ RETIRED_TOKENS: frozenset[str] = frozenset({
 })
 
 
+#: the only statuses an importer may insert a paper at; the one sanctioned bypass of update_status (R204, 11c)
+IMPORT_ENTRY_STATUSES: frozenset[str] = frozenset({"INGESTED", "FT_ELIGIBLE"})
+
+
 class RetiredTransition(ValueError):
     """`update_status` into or out of a `RETIRED_TOKENS` token (R160b, R198).
 
     A `ValueError`, so every existing catch site behaves as before; distinct, so
     a caller learns the successor instead of reading "Invalid transition".
     """
+
+
+class ImportStatusRefused(ValueError):
+    """`insert_paper_at_status` asked for a status outside `IMPORT_ENTRY_STATUSES`."""
+
+
+def insert_paper_at_status(conn: sqlite3.Connection, *, status: str, title: str,
+                           source: str, pmid: str | None = None,
+                           doi: str | None = None, abstract: str | None = None,
+                           authors: list[str] | None = None,
+                           journal: str | None = None,
+                           year: int | None = None) -> int:
+    """Insert one `papers` row at an `IMPORT_ENTRY_STATUSES` status; return its id.
+
+    The one sanctioned bypass of `update_status` (R204, 11c R-d): an importer
+    enters a paper at a status no allowed transition reaches without the stage
+    the import stands in for. Writes the column set `add_papers` writes. Never
+    commits and never runs `executescript` — it belongs to the caller's unit of
+    work. Refuses a retired token by name (`RetiredTransition`) and any other
+    status outside the set (`ImportStatusRefused`), before any write.
+    """
+    if status in RETIRED_TOKENS:
+        raise RetiredTransition(
+            f"insert at {status} names a retired status (R160b); an importer may "
+            f"insert only at {sorted(IMPORT_ENTRY_STATUSES)}")
+    if status not in IMPORT_ENTRY_STATUSES:
+        raise ImportStatusRefused(
+            f"insert at {status!r} refused: an importer may insert only at "
+            f"{sorted(IMPORT_ENTRY_STATUSES)} (R204, 11c R-d)")
+    now = _now()
+    cur = conn.execute(
+        """INSERT INTO papers
+           (pmid, doi, title, abstract, authors, journal, year,
+            source, status, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (pmid, doi, title, abstract, json.dumps(authors or []), journal, year,
+         source, status, now, now),
+    )
+    return cur.lastrowid
 
 
 ALLOWED_TRANSITIONS: dict[str, set[str]] = {

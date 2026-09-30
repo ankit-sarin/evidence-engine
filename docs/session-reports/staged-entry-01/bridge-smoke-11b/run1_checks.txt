@@ -1,0 +1,11 @@
+manifests [(1, 'screening', '7d9f916ebc2e2f2a4db78382618d4eb6e42bd7e6', 0, 'completed', None, '2026-09-30T09:26:06.250462+00:00', '2026-09-30T09:26:18.948454+00:00')]
+stage cols ['run_id', 'stage', 'stage_kind', 'arm_name', 'provider', 'model_name', 'model_digest', 'options_json', 'options_hash', 'sent_keys_json', 'sources_json', 'keep_alive', 'format_schema_hash', 'prompt_hash']
+stage rows [(1, 'ft_screen_primary', '030ee887880fc378860c2dd35101da424377520441ae4bfe7be6deff8ade7840'), (1, 'ft_screen_verifier', 'a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203'), (1, 'preflight:gemma3:27b', 'a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203'), (1, 'preflight:qwen3:32b', '030ee887880fc378860c2dd35101da424377520441ae4bfe7be6deff8ade7840')]
+run_calls [(1, 'preflight:qwen3:32b', None, 'completed', '31804cc5eb6bbf219ea06db01ad9ec9cc29b9e57288e2120fd3733e8df4d34c4'), (1, 'preflight:gemma3:27b', None, 'completed', '830876f7a4cdb75a50f947e27f6f7d8e2d555000ebfe6ee559172a097f962f9f')]
+paper_events 190 field_events 0
+fk run_calls []
+workflow FT [(11, 'FULL_TEXT_SCREENING_COMPLETE', 'complete', '2026-03-14T23:55:25.554742+00:00', '143 confirmed, 36 flagged')]
+sqlite_sequence before [('fabrication_verifications', 7431), ('field_events', 0), ('judge_pair_ratings', 6831), ('judge_ratings', 2277), ('judge_run_audit', 1), ('paper_events', 190), ('provenance_classifications', 22034), ('run_calls', 0), ('run_manifests', 0)]
+sqlite_sequence after  [('fabrication_verifications', 7431), ('field_events', 0), ('judge_pair_ratings', 6831), ('judge_ratings', 2277), ('judge_run_audit', 1), ('paper_events', 190), ('provenance_classifications', 22034), ('run_calls', 2), ('run_manifests', 1)]
+prisma {'valid': True, 'total_db': 10039, 'total_prisma': 10039, 'discrepancy': 0, 'verification_pending': 0} []
+seam eligible 190 remainder 190

@@ -1,0 +1,4 @@
+.venv/bin/python -c 'import sys; from engine.core.database import ReviewDatabase; from engine.core.review_paths import load_spec_for; from engine.adjudication.ft_screening_adjudicator import import_ft_adjudication_decisions as imp; db = ReviewDatabase("surgical_autonomy_smoke11c"); spec = load_spec_for("surgical_autonomy_smoke11c", "data/surgical_autonomy_smoke11c/spec.yaml");
+try: imp(db, spec=spec)
+except ValueError as e: print("CALLER GOT", type(e).__name__, e); sys.exit(3)'
+exit 3

@@ -1,0 +1,22 @@
+09:26:06 [INFO] httpx: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+09:26:06 [INFO] httpx: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+09:26:06 [INFO] __main__: Run manifest 1 (b201dba4-948b-4c24-996d-bb27ff79caad) written: 4 stage rows
+09:26:06 [INFO] engine.utils.ollama_preflight: Ollama environment OK: OLLAMA_FLASH_ATTENTION=true, OLLAMA_MAX_LOADED_MODELS=1, OLLAMA_KV_CACHE_TYPE=f16
+09:26:06 [INFO] engine.utils.ollama_preflight: Checking model: qwen3:32b
+09:26:06 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/show "HTTP/1.1 200 OK"
+09:26:13 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+09:26:13 [INFO] engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 40960, "chars": 15, "count": 13, "done_reason": "length", "estimate_low": 3, "model": "qwen3:32b", "ratio": 0.8667}
+09:26:13 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+09:26:13 [INFO] engine.utils.ollama_preflight:   qwen3:32b: OK (7.3s, 29.1 GB VRAM)
+09:26:13 [INFO] engine.utils.ollama_preflight: Checking model: gemma3:27b
+09:26:13 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/show "HTTP/1.1 200 OK"
+09:26:18 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+09:26:18 [INFO] engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 12, "done_reason": "stop", "estimate_low": 3, "model": "gemma3:27b", "ratio": 0.8}
+09:26:18 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+09:26:18 [INFO] engine.utils.ollama_preflight:   gemma3:27b: OK (5.3s, 28.4 GB VRAM)
+09:26:18 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+09:26:18 [INFO] engine.utils.ollama_preflight: Pre-flight OK: 2 models loaded, 28.4 GB VRAM total
+09:26:18 [INFO] __main__: Starting full-text screening on 0 papers (0 pending) with qwen3:32b
+09:26:18 [INFO] __main__: FT screening complete: 0 eligible, 0 excluded, 0 skipped (no text)
+09:26:18 [INFO] __main__: Starting FT verification on 0 papers (0 pending) with gemma3:27b
+09:26:18 [INFO] __main__: FT verification complete: 0 confirmed, 0 flagged

@@ -1,0 +1,9 @@
+manifest (1, 'import', '5d83ac35a35c62fff63595bc2b7483d55d5d1b42', 0, 'aborted', 'paper 5: Invalid transition: FT_SCREENED_OUT → FT_ELIGIBLE (allowed: none)')
+inputs {'data/surgical_autonomy_smoke11c/surgical_autonomy_smoke11c_ft_adjudication_decisions.json': '1e1426b313e84a672e78ba9a3efbd3b94a6e7d3e4e6ef8330694936574db561a'} pins {}
+stage rows 0 run_calls 0
+paper_events 190 paper5 [('FT_SCREENED_OUT',)]
+adj rows 36
+workflow FT [('FULL_TEXT_SCREENING_COMPLETE', 'complete', '2026-03-14T23:55:25.554742+00:00', '143 confirmed, 36 flagged'), ('FULL_TEXT_ADJUDICATION_COMPLETE', 'complete', '2026-03-15T04:55:49.856126+00:00', '31 eligible, 5 screened out (of 36 total)')]
+sqlite_sequence [('fabrication_verifications', 7431), ('field_events', 0), ('judge_pair_ratings', 6831), ('judge_ratings', 2277), ('judge_run_audit', 1), ('paper_events', 190), ('provenance_classifications', 22034), ('run_calls', 0), ('run_manifests', 1)]
+prisma {'valid': True, 'total_db': 10039, 'total_prisma': 10039, 'discrepancy': 0, 'verification_pending': 0}
+seam eligible 190 remainder 190

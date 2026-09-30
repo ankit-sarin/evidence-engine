@@ -1,0 +1,3 @@
+== fingerprints before
+tables   : 36 overall  : 5e8ea2456037badaec807a9bb58306ceb82e894b4259c624df3551076b8059c2 <- data/surgical_autonomy_smoke11b/review.db
+tables   : 36 overall  : 0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25 <- data/surgical_autonomy/review.db.bak-smoke11b-source-20260930-092559

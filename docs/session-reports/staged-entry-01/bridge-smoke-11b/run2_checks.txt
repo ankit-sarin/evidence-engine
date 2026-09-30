@@ -1,0 +1,8 @@
+manifests [(1, 'screening', '7d9f916ebc2e2f2a4db78382618d4eb6e42bd7e6', 0, 'completed', None), (2, 'screening', '7d9f916ebc2e2f2a4db78382618d4eb6e42bd7e6', 0, 'completed', None)]
+run2 stages [('ft_screen_primary', '030ee887880fc378860c2dd35101da424377520441ae4bfe7be6deff8ade7840'), ('ft_screen_verifier', 'a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203')]
+run_calls by run [(1, 2)]
+paper_events 190
+sqlite_sequence [('fabrication_verifications', 7431), ('field_events', 0), ('judge_pair_ratings', 6831), ('judge_ratings', 2277), ('judge_run_audit', 1), ('paper_events', 190), ('provenance_classifications', 22034), ('run_calls', 2), ('run_manifests', 2)]
+workflow FT [(11, 'FULL_TEXT_SCREENING_COMPLETE', 'complete', '2026-03-14T23:55:25.554742+00:00', '143 confirmed, 36 flagged')]
+prisma {'valid': True, 'total_db': 10039, 'total_prisma': 10039, 'discrepancy': 0, 'verification_pending': 0}
+seam eligible 190 remainder 190

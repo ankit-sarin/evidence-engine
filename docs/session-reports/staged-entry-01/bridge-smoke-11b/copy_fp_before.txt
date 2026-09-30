@@ -1,0 +1,4 @@
+wall     : 0.354 s
+
+compared against docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json
+IDENTICAL — schema, every table, and the overall hash all match.

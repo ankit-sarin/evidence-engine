@@ -1,0 +1,20 @@
+database : /home/ankitsarin/projects/evidence-engine/data/surgical_autonomy_smoke11b/review.db
+           134361088 B @ 2026-09-30T10:41:36.927032+00:00
+uri      : file:/home/ankitsarin/projects/evidence-engine/data/surgical_autonomy_smoke11b/review.db?mode=ro  (immutable=False)
+-wal     : 0 B at read (non-empty=False)
+tables   : 36
+schema   : f8d6388751e91a08e5d8580dc2de44a4be965e1dfd628a133950f8ed7d153cee  (textual)
+structure: b0dffa3fdd7ff57a4aa6910181c1b02269b9478feee0d33c8d14744ecb1f57aa  (PRAGMA-derived)
+overall  : 5e8ea2456037badaec807a9bb58306ceb82e894b4259c624df3551076b8059c2
+wall     : 0.363 s
+
+compared against data/surgical_autonomy_smoke11b/logs/copy_fp_before.json
+DIFFERENCES (8):
+  overall_sha256: reference='0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25' measured='5e8ea2456037badaec807a9bb58306ceb82e894b4259c624df3551076b8059c2'
+  table 'run_calls': row_count reference=0 measured=2
+  table 'run_calls': sha256 reference=e3b0c44298fc1c14… measured=b3015532d9910335…
+  table 'run_manifests': row_count reference=0 measured=2
+  table 'run_manifests': sha256 reference=e3b0c44298fc1c14… measured=0eb297dd6186546d…
+  table 'run_stage_configs': row_count reference=0 measured=6
+  table 'run_stage_configs': sha256 reference=e3b0c44298fc1c14… measured=60edda410c10b253…
+  table 'sqlite_sequence': sha256 reference=9a2fc21776c4d93d… measured=1b0fdc43b21c3090…

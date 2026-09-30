@@ -1,0 +1,12 @@
+--- spec diff
+3c3
+< review_id: surgical_autonomy
+---
+> review_id: "surgical_autonomy_smoke11b"
+--- codebook diff
+8c8
+< review: "surgical_autonomy"
+---
+> review: "surgical_autonomy_smoke11b"
+bf5781875e67d0b1f9d5400332d22e98c6582d5f8fe6a88892bea729ce0e85e3  data/surgical_autonomy_smoke11b/spec.yaml
+a420bcb241cbee1c8db2b5df5f8c405413e0e48d4f8f522218f62793eb26d94f  data/surgical_autonomy_smoke11b/extraction_codebook.yaml

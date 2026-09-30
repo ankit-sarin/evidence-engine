@@ -1,0 +1,1 @@
+paper 5: (5, 'FT_SCREENED_OUT') lowest FT_SCREENED_OUT: (5,)

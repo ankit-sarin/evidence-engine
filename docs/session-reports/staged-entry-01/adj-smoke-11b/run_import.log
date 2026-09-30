@@ -1,0 +1,1 @@
+CALLER GOT ValueError Invalid transition: FT_SCREENED_OUT → FT_ELIGIBLE (allowed: none)

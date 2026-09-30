@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/home/ankitsarin/projects/evidence-engine/engine/adjudication/import_screening_entry.py", line 153, in import_screening_entry
+    source, entries = _validate(review_db, input_path)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/adjudication/import_screening_entry.py", line 131, in _validate
+    raise ScreeningEntryRejected(errors)
+engine.adjudication.import_screening_entry.ScreeningEntryRejected: screening-entry import rejected — no database changes were made:
+  review: holds 5 papers row(s); a screening-entry import enters an empty review only (R-r)

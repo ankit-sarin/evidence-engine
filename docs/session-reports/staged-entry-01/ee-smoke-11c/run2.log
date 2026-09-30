@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/home/ankitsarin/projects/evidence-engine/engine/adjudication/import_extraction_entry.py", line 242, in import_extraction_entry
+    source, entries = _validate(review_db, input_path)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/adjudication/import_extraction_entry.py", line 202, in _validate
+    raise ExtractionEntryRejected(errors)
+engine.adjudication.import_extraction_entry.ExtractionEntryRejected: extraction-entry import rejected — no database changes were made:
+  review: holds 3 papers row(s); an extraction-entry import enters an empty review only (R-e)
+  review: data/ee_smoke_11c/parsed_text is not empty; an extraction-entry import places its texts into an empty parsed_text/ only (R-l)

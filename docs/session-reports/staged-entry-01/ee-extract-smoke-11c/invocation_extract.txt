@@ -1,0 +1,1 @@
+.venv/bin/python scripts/run_pipeline.py --review ee_smoke_11c --spec data/ee_smoke_11c/spec.yaml --skip-to extract --max-papers 1 --background

@@ -1,0 +1,115 @@
+16:04:04 [INFO] pipeline: Review: ee_smoke_11c — Autonomy in Surgical Robotics: A Systematic Review (v1.0)
+16:04:04 [INFO] pipeline: Database: data/ee_smoke_11c/review.db
+16:04:04 [INFO] pipeline: 
+Review Workflow — ee_smoke_11c
+  ── Abstract Screening Adjudication ──
+  [✓] ABSTRACT_SCREENING_COMPLETE (2026-09-30 15:06)
+  [✓] ABSTRACT_DIAGNOSTIC_COMPLETE (2026-09-30 15:06)
+  [✓] ABSTRACT_CATEGORIES_CONFIGURED (2026-09-30 15:06)
+  [✓] ABSTRACT_QUEUE_EXPORTED (2026-09-30 15:06)
+  [✓] ABSTRACT_ADJUDICATION_COMPLETE (2026-09-30 15:06)
+  ── PDF Acquisition ──
+  [✓] PDF_ACQUISITION (2026-09-30 15:06)
+  ── Full-Text Screening ──
+  [✓] FULL_TEXT_SCREENING_COMPLETE (2026-09-30 15:06)
+  [✓] FULL_TEXT_ADJUDICATION_COMPLETE (2026-09-30 15:06)
+  ── Extraction Audit ──
+  [ ] EXTRACTION_COMPLETE — Run full-text extraction on all included papers:
+  [ ] AI_AUDIT_COMPLETE_STAGE
+  [ ] AUDIT_QUEUE_EXPORTED
+  [ ] AUDIT_REVIEW_COMPLETE
+16:04:04 [INFO] pipeline: Skipping to stage: extract
+16:04:04 [INFO] httpx: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+16:04:04 [INFO] httpx: HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+16:04:04 [INFO] pipeline: Run manifest 2 (e3349327-a4e2-438b-a827-5d34e3cbab0d) written: 6 stage rows
+16:04:04 [INFO] pipeline: ============================================================
+16:04:04 [INFO] pipeline: STAGE: EXTRACT
+16:04:04 [INFO] pipeline: Selection bounded to 1 of 3 papers for arm local_deepseek_r1_32b (--max-papers).
+16:04:04 [INFO] engine.utils.ollama_lock: Experiment lock acquired: /home/ankitsarin/.ollama_experiment.lock (pid 2061851)
+16:04:04 [INFO] engine.agents.extractor: Starting extraction on 1 papers (schema hash: 1e67684b81c8)
+16:04:04 [INFO] engine.utils.ollama_preflight: Ollama environment OK: OLLAMA_FLASH_ATTENTION=true, OLLAMA_MAX_LOADED_MODELS=1, OLLAMA_KV_CACHE_TYPE=f16
+16:04:04 [INFO] engine.utils.ollama_preflight: Checking model: deepseek-r1:32b
+16:04:04 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/show "HTTP/1.1 200 OK"
+16:04:29 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+16:04:29 [INFO] engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 6, "done_reason": "length", "estimate_low": 3, "model": "deepseek-r1:32b", "ratio": 0.4}
+16:04:29 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+16:04:29 [INFO] engine.utils.ollama_preflight:   deepseek-r1:32b: OK (25.6s, 60.3 GB VRAM)
+16:04:29 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+16:04:29 [INFO] engine.utils.ollama_preflight: Pre-flight OK: 1 models loaded, 60.3 GB VRAM total
+16:04:29 [INFO] engine.agents.extractor: Model digests (run 2) — extractor (deepseek-r1:32b): edba8017331d15236e57480eb45406c0d721db77a4cdcf234df500fc2ad3960c, auditor: a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203
+16:08:15 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+16:08:15 [INFO] engine.utils.ollama_client: input_fit paper_id=1 {"ceiling": 131072, "chars": 104242, "count": 24603, "done_reason": "stop", "estimate_low": 19806, "model": "deepseek-r1:32b", "ratio": 0.236}
+16:13:21 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+16:13:21 [INFO] engine.utils.ollama_client: input_fit paper_id=1 {"ceiling": 131072, "chars": 107052, "count": 25197, "done_reason": "stop", "estimate_low": 20340, "model": "deepseek-r1:32b", "ratio": 0.2354}
+16:14:04 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+16:14:04 [INFO] engine.utils.ollama_client: input_fit paper_id=1 {"ceiling": 131072, "chars": 78578, "count": 19008, "done_reason": "stop", "estimate_low": 14930, "model": "deepseek-r1:32b", "ratio": 0.2419}
+[Local extraction] 1/1 (100.0%) | Paper EE-001 EXTRACTED | 9m34s | ETA ~0s | 0 failed
+16:14:04 [INFO] engine.agents.extractor: Extracted 1/1 — 20 fields from 'Autonomous robotic laparoscopic surgery for intestinal anast'
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 1
+  Failed       : 0
+  Wall time    : 9m34s
+  Mean/paper   : 9m34s
+  Median/paper : 9m34s
+  Max/paper    : 9m34s
+============================================================
+16:14:04 [INFO] engine.agents.extractor: Extraction complete: 1 extracted, 0 skipped (asserted), 0 skipped (refused), 0 failed, 20 total spans
+16:14:04 [INFO] engine.utils.ollama_lock: Experiment lock released: /home/ankitsarin/.ollama_experiment.lock (pid 2061851)
+16:14:04 [INFO] engine.validators.distribution_monitor: Distribution monitor skipped: only 1 eligible papers hold a live claim for arm local_deepseek_r1_32b (minimum 10)
+16:14:04 [INFO] pipeline: Distribution check (run 2, arm local_deepseek_r1_32b): skipped — only 1 eligible papers hold a live claim for arm local_deepseek_r1_32b (minimum 10)
+16:14:04 [INFO] pipeline: Extraction complete in 600.2s — {"extracted": 1, "failed": 0, "total_spans": 20, "skipped_asserted": 0, "skipped_refused": 0, "distribution_check": {"skipped": true, "skip_reason": "only 1 eligible papers hold a live claim for arm local_deepseek_r1_32b (minimum 10)", "arm_population": 1, "ok": 0, "low_variance": 0, "collapsed": 0, "collapsed_fields": [], "low_variance_fields": []}}
+16:14:04 [INFO] pipeline: ============================================================
+16:14:04 [INFO] pipeline: STAGE: AUDIT
+16:14:04 [INFO] engine.utils.ollama_preflight: Ollama environment OK: OLLAMA_FLASH_ATTENTION=true, OLLAMA_MAX_LOADED_MODELS=1, OLLAMA_KV_CACHE_TYPE=f16
+16:14:04 [INFO] engine.utils.ollama_preflight: Checking model: gemma3:27b
+16:14:04 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/show "HTTP/1.1 200 OK"
+16:14:11 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+16:14:11 [INFO] engine.utils.ollama_client: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 12, "done_reason": "stop", "estimate_low": 3, "model": "gemma3:27b", "ratio": 0.8}
+16:14:11 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+16:14:11 [INFO] engine.utils.ollama_preflight:   gemma3:27b: OK (7.6s, 28.4 GB VRAM)
+16:14:11 [INFO] httpx: HTTP Request: GET http://127.0.0.1:11434/api/ps "HTTP/1.1 200 OK"
+16:14:11 [INFO] engine.utils.ollama_preflight: Pre-flight OK: 1 models loaded, 28.4 GB VRAM total
+16:14:25 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+16:14:25 [INFO] engine.utils.ollama_client: input_fit paper_id=1 {"ceiling": 131072, "chars": 946, "count": 217, "done_reason": "stop", "estimate_low": 180, "model": "gemma3:27b", "ratio": 0.2294}
+16:14:35 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+16:14:35 [INFO] engine.utils.ollama_client: input_fit paper_id=1 {"ceiling": 131072, "chars": 1105, "count": 232, "done_reason": "stop", "estimate_low": 210, "model": "gemma3:27b", "ratio": 0.21}
+16:14:41 [INFO] httpx: HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+16:14:41 [INFO] engine.utils.ollama_client: input_fit paper_id=1 {"ceiling": 131072, "chars": 1046, "count": 226, "done_reason": "stop", "estimate_low": 199, "model": "gemma3:27b", "ratio": 0.2161}
+16:14:46 [INFO] pipeline: Audit complete in 41.9s — {"papers_audited": 1, "located": 16, "not_located": 4, "verified": 3, "flagged": 0, "skipped_refused": [], "low_yield": []}
+16:14:46 [INFO] engine.adjudication.workflow: Workflow stage completed: EXTRACTION_COMPLETE
+16:14:46 [INFO] engine.adjudication.workflow: Workflow stage completed: AI_AUDIT_COMPLETE_STAGE
+16:14:46 [ERROR] pipeline: 
+16:14:46 [ERROR] pipeline: BLOCKED: Audit review workflow incomplete.
+16:14:46 [ERROR] pipeline: Current stage: AUDIT_QUEUE_EXPORTED
+16:14:46 [ERROR] pipeline: Next step: Manual advance_stage until the session-12 importer (the human-audit tooling on legacy verdicts retired, R162):
+  python -m engine.adjudication.advance_stage --review <name> --stage AUDIT_QUEUE_EXPORTED --note '<why>'
+16:14:46 [ERROR] pipeline: 
+16:14:46 [ERROR] pipeline: Run 'python -m engine.adjudication.advance_stage --review ee_smoke_11c --status' for full workflow status.
+16:14:46 [INFO] pipeline: ============================================================
+16:14:46 [INFO] pipeline: PIPELINE COMPLETE in 642.1s
+16:14:46 [INFO] pipeline: Pipeline stats: {
+  "total_papers": 3,
+  "screening": {
+    "ABSTRACT_SCREENED_IN": 0,
+    "ABSTRACT_SCREENED_OUT": 0,
+    "ABSTRACT_SCREEN_FLAGGED": 0,
+    "FT_FLAGGED": 0,
+    "FT_SCREENED_OUT": 0,
+    "INGESTED": 0,
+    "PARSED": 0,
+    "PDF_ACQUIRED": 0,
+    "PDF_EXCLUDED": 0,
+    "eligible": 3
+  },
+  "eligibility": {
+    "eligible": 3
+  },
+  "processing": {
+    "audited_ai": 1,
+    "no_recorded_state": 2
+  },
+  "processing_failures": {},
+  "analysis_ready": 1
+}

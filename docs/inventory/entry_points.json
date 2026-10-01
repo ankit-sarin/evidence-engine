@@ -5744,7 +5744,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1270,
+            "line": 1267,
             "names": [
               "--verify-hashes"
             ],
@@ -5753,7 +5753,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1272,
+            "line": 1269,
             "names": [
               "--review"
             ],
@@ -5768,7 +5768,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 1276,
+            "line": 1273,
             "scope": "main"
           }
         ],
@@ -6626,7 +6626,7 @@
           {
             "default": "dynamic: DEFAULT_REVIEW",
             "dest": null,
-            "line": 33,
+            "line": 34,
             "names": [
               "--review"
             ],
@@ -6636,29 +6636,37 @@
         "has_main_guard": true,
         "literal_review_ids": [
           {
-            "line": 28,
+            "line": 29,
             "role": "code",
             "value": "surgical_autonomy"
           }
         ],
-        "order": {},
+        "order": {
+          "main": "spec_first"
+        },
         "path": "scripts/parse_expanded_corpus.py",
         "path_construction": [],
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 40,
+            "line": 42,
             "scope": "main"
           }
         ],
         "review_id_constants": [
           {
-            "line": 28,
+            "line": 29,
             "name": "DEFAULT_REVIEW",
             "value": "surgical_autonomy"
           }
         ],
-        "spec_access": [],
+        "spec_access": [
+          {
+            "func": "load_spec_for",
+            "line": 41,
+            "scope": "main"
+          }
+        ],
         "unparsed": [],
         "yaml_loads": []
       },
@@ -7317,7 +7325,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 554,
+            "line": 555,
             "names": [
               "--review",
               "--name"
@@ -7327,7 +7335,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 560,
+            "line": 561,
             "names": [
               "--spec"
             ],
@@ -7336,7 +7344,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 566,
+            "line": 567,
             "names": [
               "--skip-to"
             ],
@@ -7345,7 +7353,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 572,
+            "line": 573,
             "names": [
               "--limit"
             ],
@@ -7354,7 +7362,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 578,
+            "line": 579,
             "names": [
               "--max-papers"
             ],
@@ -7370,19 +7378,19 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 327,
+            "line": 328,
             "role": "message",
             "text": "No papers with status PDF_ACQUIRED. PDF acquisition is manual for v1. Place PDFs in data/%s/pdfs/ named as {paper_id}.pdf, then set status to PDF_ACQUIRED."
           },
           {
             "kind": "literal",
-            "line": 556,
+            "line": 557,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 562,
+            "line": 563,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7663,7 +7671,7 @@
       "entry_points_with_review_name_flag": 64,
       "entry_points_with_spec_flag": 23,
       "files_calling_load_review_spec_directly": 11,
-      "files_calling_resolver": 26,
+      "files_calling_resolver": 27,
       "files_scanned": 215,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
@@ -7677,7 +7685,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "2f878550d9006362aeaeb94af00e5b51fa70890a",
+    "generated_at_commit": "b9099892ae0be1bbb61bacc1a14aa4bf3d7d94d4",
     "scan_roots": [
       "engine",
       "scripts",

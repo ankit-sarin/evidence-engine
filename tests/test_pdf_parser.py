@@ -19,6 +19,9 @@ from engine.parsers.pdf_parser import (
 )
 from engine.search.models import Citation
 
+from engine.core.review_spec import load_review_spec
+PARSE_SPEC = load_review_spec("review_specs/surgical_autonomy.yaml")   # 12c-C53: the parse entry points take the spec
+
 
 # ── Fixtures ─────────────────────────────────────────────────────────
 
@@ -127,7 +130,7 @@ def test_digital_routes_to_docling(digital_pdf, db):
     db.update_status(pid, "ABSTRACT_SCREENED_IN")
     db.update_status(pid, "PDF_ACQUIRED")
 
-    result = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+    result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
     assert result.parser_used == "docling"
     assert result.version == 1
     assert len(result.parsed_markdown) > 0
@@ -143,7 +146,7 @@ def test_scanned_routes_to_vision_model(scanned_pdf, db):
     mock_response.done_reason = "stop"   # PARSE-GATE-06c
 
     with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response):
-        result = parse_pdf(str(scanned_pdf), pid, "test_parse", db)
+        result = parse_pdf(str(scanned_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     assert result.parser_used == "qwen2.5vl"
     assert "Extracted Text" in result.parsed_markdown
@@ -159,7 +162,7 @@ def test_version_increments_on_reparse(digital_pdf, db):
     db.update_status(pid, "PDF_ACQUIRED")
 
     # First parse
-    r1 = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+    r1 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
     assert r1.version == 1
 
     # Modify the PDF hash check so it doesn't skip (simulate changed PDF)
@@ -171,7 +174,7 @@ def test_version_increments_on_reparse(digital_pdf, db):
     db._conn.commit()
 
     # Second parse — should increment version
-    r2 = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+    r2 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
     assert r2.version == 2
 
 
@@ -185,10 +188,10 @@ def test_skip_if_same_hash(digital_pdf, db):
     db.update_status(pid, "PDF_ACQUIRED")
 
     # First parse
-    r1 = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+    r1 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     # Second parse with same file — should return same version
-    r2 = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+    r2 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
     assert r2.version == r1.version
 
 
@@ -208,7 +211,7 @@ def test_docling_success_uses_docling(digital_pdf, db):
     db.update_status(pid, "PDF_ACQUIRED")
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
-        result = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     assert result.parser_used == "docling"
     row = db._conn.execute(
@@ -224,7 +227,7 @@ def test_docling_exception_triggers_pymupdf(digital_pdf, db):
     db.update_status(pid, "PDF_ACQUIRED")
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=RuntimeError("hyperlink validation")):
-        result = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     assert result.parser_used == "pymupdf"
     assert len(result.parsed_markdown) > 50
@@ -245,7 +248,7 @@ def test_all_parsers_empty_raises_value_error(scanned_pdf, db):
         # 10a-C6-B (R227/R228): branch #17 now raises ParseFailed, not a bare
         # ValueError — same message text, a typed reason_code besides.
         with pytest.raises(ParseFailed, match="all parsers returned empty text"):
-            parse_pdf(str(scanned_pdf), pid, "test_parse", db)
+            parse_pdf(str(scanned_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     # No file written to disk
     parsed_dir = Path(db.db_path).parent / "parsed_text"
@@ -271,7 +274,7 @@ def test_docling_and_pymupdf_sparse_triggers_vision(scanned_pdf, db):
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"):
         with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response):
-            result = parse_pdf(str(scanned_pdf), pid, "test_parse", db)
+            result = parse_pdf(str(scanned_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     assert result.parser_used == "qwen2.5vl"
     row = db._conn.execute(
@@ -287,7 +290,7 @@ def test_docling_sparse_pymupdf_sufficient(digital_pdf, db):
     db.update_status(pid, "PDF_ACQUIRED")
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"):
-        result = parse_pdf(str(digital_pdf), pid, "test_parse", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     assert result.parser_used == "pymupdf"
     assert len(result.parsed_markdown) > 50
@@ -331,7 +334,7 @@ def test_hash_stored_in_papers_table(digital_pdf, db):
     db.update_status(pid, "PDF_ACQUIRED")
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
-        parse_pdf(str(digital_pdf), pid, "test_parse", db)
+        parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     row = db._conn.execute(
         "SELECT pdf_content_hash FROM papers WHERE id = ?", (pid,)
@@ -347,7 +350,7 @@ def test_verify_hashes_no_mismatch(digital_pdf, db):
     db.update_status(pid, "PDF_ACQUIRED")
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
-        parse_pdf(str(digital_pdf), pid, "test_parse", db)
+        parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     mismatches = verify_hashes(db)
     assert mismatches == []
@@ -360,7 +363,7 @@ def test_verify_hashes_reports_mismatch(digital_pdf, db, tmp_path):
     db.update_status(pid, "PDF_ACQUIRED")
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
-        parse_pdf(str(digital_pdf), pid, "test_parse", db)
+        parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     # Modify the PDF file to change its hash
     with open(str(digital_pdf), "ab") as f:
@@ -394,7 +397,7 @@ def test_atomic_write_no_temp_on_db_failure(digital_pdf, db):
     import sqlite3
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong content " * 10):
         with pytest.raises(sqlite3.IntegrityError, match="simulated commit failure"):
-            parse_pdf(str(digital_pdf), pid, "test_parse", db)
+            parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
 
     # No temp file should remain
     parsed_dir = Path(db.db_path).parent / "parsed_text"

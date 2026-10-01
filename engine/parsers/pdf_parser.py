@@ -562,7 +562,7 @@ def parse_pdf(
     paper_id: int,
     review_name: str,
     db: ReviewDatabase,
-    spec: ReviewSpec | None = None,
+    spec: ReviewSpec,
     force: bool = False,
 ) -> ParsedDocument:
     """Parse a PDF, judging every attempt and re-routing on a quality failure.
@@ -571,25 +571,20 @@ def parse_pdf(
     redone; it does not change any paper status. Status is the caller's business
     (`parse_all_pdfs` sets it, `reparse_papers` deliberately does not).
     """
-    # Read thresholds from spec if available
-    scanned_threshold = _SCANNED_THRESHOLD
-    vision_max_pages = _VISION_MAX_PAGES
-    ocr_engine = _OCR_ENGINE
-    ocr_max_pages = _OCR_MAX_PAGES
-    vision_page_timeout_s = _VISION_PAGE_TIMEOUT_S
-    thresholds = Thresholds()
-    vision_cfg = stage_config("vision_parse", spec if spec and hasattr(spec, "pdf_parsing") else None)
+    # The vision stage and every threshold come from the spec, always (C53): the
+    # run's manifest records `vision_parse` resolved with the spec, so the parse
+    # must send that same resolution, not the declared defaults.
+    vision_cfg = stage_config("vision_parse", spec)
     vision_model = vision_cfg.model
-    if spec and hasattr(spec, "pdf_parsing"):
-        scanned_threshold = spec.pdf_parsing.scanned_text_threshold
-        vision_max_pages = spec.pdf_parsing.vision_max_pages
-        ocr_engine = spec.pdf_parsing.ocr_engine
-        ocr_max_pages = spec.pdf_parsing.ocr_max_pages
-        vision_page_timeout_s = spec.pdf_parsing.vision_page_timeout_s
-        # The only construction path: engine defaults and spec defaults are pinned
-        # equal by test, so this cannot silently diverge from Thresholds().
-        thresholds = Thresholds.from_mapping(
-            getattr(spec.pdf_parsing, "parse_quality", None))
+    scanned_threshold = spec.pdf_parsing.scanned_text_threshold
+    vision_max_pages = spec.pdf_parsing.vision_max_pages
+    ocr_engine = spec.pdf_parsing.ocr_engine
+    ocr_max_pages = spec.pdf_parsing.ocr_max_pages
+    vision_page_timeout_s = spec.pdf_parsing.vision_page_timeout_s
+    # The only construction path: engine defaults and spec defaults are pinned
+    # equal by test, so this cannot silently diverge from Thresholds().
+    thresholds = Thresholds.from_mapping(
+        getattr(spec.pdf_parsing, "parse_quality", None))
 
     vision_opts = {
         "page_timeout_s": vision_page_timeout_s,
@@ -1013,7 +1008,8 @@ def parse_pdf(
             Path(sanitized_path).unlink(missing_ok=True)
 
 
-def parse_all_pdfs(db: ReviewDatabase, review_name: str, *, run_id: int | None = None) -> dict:
+def parse_all_pdfs(db: ReviewDatabase, review_name: str, *, spec: ReviewSpec,
+                   run_id: int | None = None) -> dict:
     """Parse all PDF_ACQUIRED papers. Returns stats dict.
 
     `run_id` (R228b, 10a-C6-B): when given, a `ParseFailed` or any other
@@ -1079,7 +1075,7 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str, *, run_id: int | None =
             stats["failed"] += 1
             continue
         try:
-            result = parse_pdf(pdf_path, pid, review_name, db)
+            result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
 
             stats[result.parser_used] = stats.get(result.parser_used, 0) + 1
 
@@ -1151,7 +1147,8 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str, *, run_id: int | None =
 def reparse_papers(
     db: ReviewDatabase,
     paper_ids: list[int],
-    spec: ReviewSpec | None = None,
+    *,
+    spec: ReviewSpec,
     force: bool = True,
 ) -> dict[int, dict]:
     """Re-run the parse cascade for specific papers, at any lifecycle status.

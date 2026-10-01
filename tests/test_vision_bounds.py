@@ -29,6 +29,7 @@ from engine.search.models import Citation
 from engine.core.effective_config import stage_config
 
 SPEC = "review_specs/surgical_autonomy.yaml"
+PARSE_SPEC = load_review_spec(SPEC)   # 12c-C53: parse_pdf / parse_all_pdfs / reparse_papers take the spec
 CLEAN = (
     "The robotic assistant was evaluated in a porcine model over twelve "
     "procedures. Task completion time fell by nineteen percent against the "
@@ -169,7 +170,7 @@ def test_truncation_becomes_an_unselectable_error_row(scanned_pdf, db):
         # real cause as __cause__ -- more useful than a generic message, and
         # the ledger is committed anyway (PARSE-GATE-06b Contract 7).
         with pytest.raises(ParseFailed) as exc:
-            parse_pdf(str(scanned_pdf), pid, "test_vbounds", db)
+            parse_pdf(str(scanned_pdf), pid, "test_vbounds", db, spec=PARSE_SPEC)
         assert isinstance(exc.value.__cause__, VisionTruncatedError)
         assert "page 1 hit num_predict" in str(exc.value.__cause__)
 

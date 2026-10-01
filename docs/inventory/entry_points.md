@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `2f878550d9006362aeaeb94af00e5b51fa70890a` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `b9099892ae0be1bbb61bacc1a14aa4bf3d7d94d4` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -15,7 +15,7 @@ A drift test at the standard gate fails if this file's JSON twin stops matching 
 | entry points name only | 42 |
 | entry points constructing reviewdatabase | 29 |
 | name only constructing reviewdatabase | 19 |
-| files calling resolver | 26 |
+| files calling resolver | 27 |
 | files calling load review spec directly | 11 |
 | raw yaml load sites | 3 |
 | files with raw yaml loads | 3 |
@@ -124,7 +124,7 @@ Two figures deliberately have no baseline row. **entry points** (95) counts anyt
 | `engine/migrations/012_codebook_provenance.py` | — | — | — | — |
 | `engine/migrations/013_drop_schema_hash_not_null.py` | — | — | — | — |
 | `engine/migrations/__main__.py` | `db_path`; `--apply-pending`; `--include-data` | — | — | — |
-| `engine/parsers/pdf_parser.py` | `--verify-hashes`; `--review` required | — | 1276 | — |
+| `engine/parsers/pdf_parser.py` | `--verify-hashes`; `--review` required | — | 1273 | — |
 | `engine/tools/db_fingerprint.py` | `database`; `--out`; `--compare` | — | — | — |
 | `engine/tools/inventory.py` | `--write`; `--check` | — | — | — |
 | `engine/utils/ollama_preflight.py` | `--models` required; `--timeout`=30 | — | — | — |
@@ -137,7 +137,7 @@ Two figures deliberately have no baseline row. **entry points** (95) counts anyt
 | `scripts/backfill_authors.py` | `--review`=dynamic: DEFAULT_REVIEW; `--dry-run` | — | — | — |
 | `scripts/backfill_cloud_spans.py` | `--review`=dynamic: DEFAULT_REVIEW; `--confirm`; `--db`=None | — | — | — |
 | `scripts/ft_screening_smoke_test.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 55 | main:spec_first |
-| `scripts/parse_expanded_corpus.py` | `--review`=dynamic: DEFAULT_REVIEW | — | 40 | — |
+| `scripts/parse_expanded_corpus.py` | `--review`=dynamic: DEFAULT_REVIEW | load_spec_for | 42 | main:spec_first |
 | `scripts/pdf_acquisition/step1_export_citations.py` | — | — | — | — |
 | `scripts/pdf_acquisition/step2_unpaywall_check.py` | — | — | — | — |
 | `scripts/pdf_acquisition/step3_download_oa_pdfs.py` | — | — | — | — |
@@ -258,7 +258,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `scripts/advance_to_pdf_acquired.py` | 19 | `surgical_autonomy` |
 | `scripts/backfill_authors.py` | 23 | `surgical_autonomy` |
 | `scripts/backfill_cloud_spans.py` | 29 | `surgical_autonomy` |
-| `scripts/parse_expanded_corpus.py` | 28 | `surgical_autonomy` |
+| `scripts/parse_expanded_corpus.py` | 29 | `surgical_autonomy` |
 | `scripts/pdf_acquisition/step1_export_citations.py` | 14 | `surgical_autonomy` |
 | `scripts/pdf_acquisition/step1_export_citations.py` | 15 | `surgical_autonomy` |
 | `scripts/pdf_acquisition/step2_unpaywall_check.py` | 18 | `surgical_autonomy` |
@@ -286,7 +286,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `scripts/advance_to_pdf_acquired.py` | 19 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/backfill_authors.py` | 23 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/backfill_cloud_spans.py` | 29 | `DEFAULT_REVIEW` | `surgical_autonomy` |
-| `scripts/parse_expanded_corpus.py` | 28 | `DEFAULT_REVIEW` | `surgical_autonomy` |
+| `scripts/parse_expanded_corpus.py` | 29 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/prepare_concordance_pdfs.py` | 12 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 
 ## UNPARSED

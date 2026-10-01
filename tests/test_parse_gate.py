@@ -29,6 +29,7 @@ from engine.parsers.parse_quality import GLYPH_DENSITY, SHATTERED
 from engine.search.models import Citation
 
 SPEC = "review_specs/surgical_autonomy.yaml"
+PARSE_SPEC = load_review_spec(SPEC)   # 12c-C53: parse_pdf / parse_all_pdfs / reparse_papers take the spec
 
 # ── synthetic parser outputs, each engineered to a known verdict ──────
 
@@ -137,7 +138,7 @@ def test_clean_docling_parse_is_one_accepted_attempt(digital_pdf, db):
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN), \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
-        result = parse_pdf(str(digital_pdf), pid, "test_gate", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
 
     vision.assert_not_called()
     assert result.accepted_parser == "docling"
@@ -155,7 +156,7 @@ def test_clean_parse_reaches_parsed_status(digital_pdf, db):
     pid = _paper(db)
     _staged(db, pid, digital_pdf)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
-        parse_all_pdfs(db, "test_gate")
+        parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
     assert db._conn.execute(
         "SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()[0] == "PARSED"
 
@@ -173,7 +174,7 @@ def test_glyph_failure_reroutes_to_the_ocr_tier_and_stops(digital_pdf, db):
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf, \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
-        result = parse_pdf(str(digital_pdf), pid, "test_gate", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
 
     vision.assert_not_called()          # deterministic tier before the model
     pymupdf.assert_not_called()
@@ -190,7 +191,7 @@ def test_rerouted_pass_still_reaches_parsed(digital_pdf, db):
     _staged(db, pid, digital_pdf)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN):
-        parse_all_pdfs(db, "test_gate")
+        parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
     assert db._conn.execute(
         "SELECT status FROM papers WHERE id = ?", (pid,)).fetchone()[0] == "PARSED"
 
@@ -203,7 +204,7 @@ def test_glyph_then_shattered_then_vision_passes(digital_pdf, db):
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
                return_value=SHATTERED_TEXT), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
-        result = parse_pdf(str(digital_pdf), pid, "test_gate", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
 
     rows = _attempts(db, pid)
     assert [r["parser_used"] for r in rows] == ["docling", "docling_ocr", "qwen2.5vl"]
@@ -222,7 +223,7 @@ def test_pymupdf_first_shattered_reroutes_without_retrying_pymupdf(digital_pdf, 
          patch("engine.parsers.pdf_parser.parse_with_pymupdf",
                return_value=SHATTERED_TEXT) as pymupdf, \
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN):
-        result = parse_pdf(str(digital_pdf), pid, "test_gate", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
 
     assert pymupdf.call_count == 1                  # tried once, never retried
     # PARSE-GATE-06a records the docling raise and the skipped sanitized retry;
@@ -279,7 +280,7 @@ def test_all_fail_selects_least_bad_and_excludes_with_reason(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=worst), \
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
-        parse_all_pdfs(db, "test_gate")
+        parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
 
     rows = _attempts(db, pid)
     assert len(rows) == 3
@@ -305,7 +306,7 @@ def test_excluded_paper_still_has_its_text_stored(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
-        parse_all_pdfs(db, "test_gate")
+        parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
 
     row = db._conn.execute(
         "SELECT parsed_text_path FROM full_text_assets WHERE paper_id = ?",
@@ -330,7 +331,7 @@ def test_vision_skipped_above_page_cap_and_never_called(big_pdf, db):
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
                return_value=SHATTERED_TEXT), \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
-        parse_pdf(str(big_pdf), pid, "test_gate", db)
+        parse_pdf(str(big_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
 
     vision.assert_not_called()
     rows = _attempts(db, pid)
@@ -356,7 +357,7 @@ def test_sparse_length_fallback_precedes_the_quality_gate(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN), \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
-        result = parse_pdf(str(digital_pdf), pid, "test_gate", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
 
     vision.assert_not_called()
     rows = _attempts(db, pid)
@@ -389,7 +390,7 @@ def test_failure_between_asset_and_attempt_rows_leaves_neither(digital_pdf, db):
     try:
         with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
             with pytest.raises(sqlite3.OperationalError, match="injected failure"):
-                parse_pdf(str(digital_pdf), pid, "test_gate", db)
+                parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
     finally:
         db._conn = real
 
@@ -409,13 +410,13 @@ def test_reparse_writes_new_version_and_leaves_status_alone(digital_pdf, db):
     pid = _paper(db)
     _staged(db, pid, digital_pdf)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
-        parse_all_pdfs(db, "test_gate")
+        parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
     db._conn.execute("UPDATE papers SET status='EXTRACTED' WHERE id=?", (pid,))
     db._conn.execute("UPDATE papers SET status='AI_AUDIT_COMPLETE' WHERE id=?", (pid,))
     db._conn.commit()
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
-        out = reparse_papers(db, [pid])
+        out = reparse_papers(db, [pid], spec=PARSE_SPEC)
 
     assert out[pid]["passed"] is True
     assert out[pid]["version"] == 2                    # short-circuit bypassed
@@ -431,12 +432,12 @@ def test_reparse_reports_failures_without_excluding(digital_pdf, db):
     pid = _paper(db)
     _staged(db, pid, digital_pdf)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
-        parse_all_pdfs(db, "test_gate")
+        parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
-        out = reparse_papers(db, [pid])
+        out = reparse_papers(db, [pid], spec=PARSE_SPEC)
 
     assert out[pid]["passed"] is False
     assert out[pid]["failures"][0][0] == GLYPH_DENSITY
@@ -446,7 +447,7 @@ def test_reparse_reports_failures_without_excluding(digital_pdf, db):
 
 def test_reparse_reports_a_missing_pdf_without_aborting_the_batch(db):
     pid = _paper(db)
-    out = reparse_papers(db, [pid])
+    out = reparse_papers(db, [pid], spec=PARSE_SPEC)
     assert "error" in out[pid]
 
 
@@ -457,10 +458,10 @@ def test_short_circuit_returns_the_stored_parser_used(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling",
                side_effect=RuntimeError("boom")), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
-        first = parse_pdf(str(digital_pdf), pid, "test_gate", db)
+        first = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
     assert first.parser_used == "pymupdf"
 
-    again = parse_pdf(str(digital_pdf), pid, "test_gate", db)   # same hash
+    again = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)   # same hash
     assert again.parser_used == "pymupdf"        # not the literal "docling"
     assert again.accepted_parser == "pymupdf"
     assert again.version == first.version
@@ -477,7 +478,7 @@ def test_short_circuit_does_not_read_the_parsed_text_file(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling",
                side_effect=RuntimeError("boom")), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
-        first = parse_pdf(str(digital_pdf), pid, "test_gate", db)
+        first = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
     md_name = f"{pid}_v{first.version}.md"
 
     reads: list[str] = []
@@ -488,7 +489,7 @@ def test_short_circuit_does_not_read_the_parsed_text_file(digital_pdf, db):
         return real_read_text(self, *a, **kw)
 
     with patch.object(Path, "read_text", spy):
-        again = parse_pdf(str(digital_pdf), pid, "test_gate", db)   # same hash
+        again = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)   # same hash
     assert again.version == first.version
     assert md_name not in reads
     assert again.parsed_markdown is None
@@ -549,7 +550,7 @@ def test_the_reroute_chain_is_bounded(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
-        parse_pdf(str(digital_pdf), pid, "test_gate", db)
+        parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
     rows = _attempts(db, pid)
     assert [r["parser_used"] for r in rows] == ["docling", "docling_ocr", "qwen2.5vl"]
     assert len(rows) <= 5

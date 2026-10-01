@@ -27,6 +27,9 @@ from engine.parsers.pdf_parser import (
 )
 from engine.search.models import Citation
 
+from engine.core.review_spec import load_review_spec
+PARSE_SPEC = load_review_spec("review_specs/surgical_autonomy.yaml")   # 12c-C53: the parse entry points take the spec
+
 CLEAN = (
     "The robotic assistant was evaluated in a porcine model over twelve "
     "procedures. Task completion time fell by nineteen percent against the "
@@ -104,7 +107,7 @@ def test_docling_crash_is_recovered_by_the_sanitized_retry(linked_pdf, db):
                side_effect=[_boom(), CLEAN]) as doc, \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf, \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
-        result = parse_pdf(str(linked_pdf), pid, "test_sanitized", db)
+        result = parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
 
     assert doc.call_count == 2
     pymupdf.assert_not_called()          # the crash no longer degrades to PyMuPDF
@@ -128,7 +131,7 @@ def test_sanitized_success_reaches_parsed_status(linked_pdf, db, tmp_path):
 
     with patch("engine.parsers.pdf_parser.parse_with_docling",
                side_effect=[_boom(), CLEAN]):
-        parse_all_pdfs(db, "test_sanitized")
+        parse_all_pdfs(db, "test_sanitized", spec=PARSE_SPEC)
 
     assert db._conn.execute(
         "SELECT status FROM papers WHERE id=?", (pid,)).fetchone()[0] == "PARSED"
@@ -144,7 +147,7 @@ def test_both_docling_attempts_fail_then_pymupdf(linked_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling",
                side_effect=[_boom(), _boom("second failure")]), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
-        result = parse_pdf(str(linked_pdf), pid, "test_sanitized", db)
+        result = parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
 
     rows = _rows(db, pid)
     assert [r["parser_used"] for r in rows] == ["docling", "docling_sanitized", "pymupdf"]
@@ -183,7 +186,7 @@ def test_temp_copy_is_removed_after_a_successful_retry(linked_pdf, db):
         raise _boom()
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=capture):
-        parse_pdf(str(linked_pdf), pid, "test_sanitized", db)
+        parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
     assert "tmp" in seen and not Path(seen["tmp"]).exists()
 
 
@@ -198,7 +201,7 @@ def test_temp_copy_is_removed_after_a_raising_retry(linked_pdf, db):
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=capture), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
-        parse_pdf(str(linked_pdf), pid, "test_sanitized", db)
+        parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
     assert "tmp" in seen and not Path(seen["tmp"]).exists()
 
 
@@ -210,7 +213,7 @@ def test_a_pdf_with_no_links_skips_the_sanitized_retry(tmp_path, db):
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=_boom()), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
-        parse_pdf(str(plain), pid, "test_sanitized", db)
+        parse_pdf(str(plain), pid, "test_sanitized", db, spec=PARSE_SPEC)
 
     rows = _rows(db, pid)
     assert [r["parser_used"] for r in rows] == ["docling", "docling_sanitized", "pymupdf"]
@@ -235,7 +238,7 @@ def test_retry_is_skipped_when_stripping_would_change_the_text(linked_pdf, db):
     with patch.object(fitz.Page, "get_text", drifting), \
          patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=_boom()), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
-        parse_pdf(str(linked_pdf), pid, "test_sanitized", db)
+        parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
 
     rows = _rows(db, pid)
     assert rows[1]["parser_used"] == "docling_sanitized"
@@ -260,7 +263,7 @@ def test_a_raising_pymupdf_is_recorded_then_reraised(linked_pdf, db):
         # the real OSError as __cause__ — the exception still reaches the
         # caller, just typed now.
         with pytest.raises(ParseFailed) as exc:
-            parse_pdf(str(linked_pdf), pid, "test_sanitized", db)
+            parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
         assert isinstance(exc.value.__cause__, OSError)
         assert "disk gone" in str(exc.value.__cause__)
     # The write never happened, so no rows are committed -- but nothing is stored
@@ -278,7 +281,7 @@ def test_a_raising_reroute_is_recorded_and_ends_the_loop(linked_pdf, db):
     shattered = "\n".join(list("computerassistedsurgicalnavigation" * 40))
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=shattered):
-        parse_pdf(str(linked_pdf), pid, "test_sanitized", db)
+        parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
 
     rows = _rows(db, pid)
     assert [r["parser_used"] for r in rows] == ["docling", "docling_ocr"]
@@ -308,7 +311,7 @@ def test_real_docling_crash_on_p455_is_recovered_by_the_sanitized_retry(db):
     from engine.parsers.parse_quality import assess
 
     pid = _paper(db)
-    result = parse_pdf(str(P455_PDF), pid, "test_sanitized", db)
+    result = parse_pdf(str(P455_PDF), pid, "test_sanitized", db, spec=PARSE_SPEC)
 
     rows = _rows(db, pid)
     assert rows[0]["parser_used"] == "docling"

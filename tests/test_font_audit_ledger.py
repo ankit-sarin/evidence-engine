@@ -41,6 +41,9 @@ from engine.parsers.pdf_parser import _insert_attempts
 from engine.search.models import Citation
 from tests._font_fixtures import _make_pdf
 
+from engine.core.review_spec import load_review_spec
+PARSE_SPEC = load_review_spec("review_specs/surgical_autonomy.yaml")   # 12c-C53: the parse entry points take the spec
+
 _LEDGER_KEYS = {
     "estimator", "block_min", "reason", "font_exposure_per_kchar",
     "signature_fonts", "unresolving_fonts", "total_fonts", "sig_chars_pdf",
@@ -308,7 +311,7 @@ def test_a_judged_attempt_records_its_audit(db, small_pdf):
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling",
                return_value="Autonomous robotic suturing evaluation. " * 40):
-        parse_pdf(str(small_pdf), pid, "test_font_ledger", db)
+        parse_pdf(str(small_pdf), pid, "test_font_ledger", db, spec=PARSE_SPEC)
 
     row = db._conn.execute(
         "SELECT font_audit FROM parse_attempts WHERE paper_id = ? "
@@ -338,7 +341,7 @@ def test_a_total_failure_records_the_structure_half(db, small_pdf):
         # 10a-C6-B (R227/R228): branch #17 now raises ParseFailed, not a bare
         # ValueError — same message text, a typed reason_code besides.
         with pytest.raises(ParseFailed, match="all parsers returned empty text"):
-            parse_pdf(str(small_pdf), pid, "test_font_ledger", db)
+            parse_pdf(str(small_pdf), pid, "test_font_ledger", db, spec=PARSE_SPEC)
 
     rows = db._conn.execute(
         "SELECT font_audit FROM parse_attempts WHERE paper_id = ?", (pid,)
@@ -366,7 +369,7 @@ def test_an_audit_that_raises_does_not_fail_the_parse(db, small_pdf):
                return_value="Autonomous robotic suturing evaluation. " * 40), \
          patch("engine.parsers.font_audit.audit",
                side_effect=RuntimeError("font table exploded")):
-        result = parse_pdf(str(small_pdf), pid, "test_font_ledger", db)
+        result = parse_pdf(str(small_pdf), pid, "test_font_ledger", db, spec=PARSE_SPEC)
 
     assert result.accepted_parser == "docling"
     row = db._conn.execute(

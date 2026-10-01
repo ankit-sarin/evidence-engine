@@ -23,6 +23,9 @@ from engine.parsers.pdf_parser import ParseFailed, parse_all_pdfs, parse_pdf
 from engine.search.models import Citation
 from _event_store_fixture import fixture_run, seed_eligibility
 
+from engine.core.review_spec import load_review_spec
+PARSE_SPEC = load_review_spec("review_specs/surgical_autonomy.yaml")   # 12c-C53: the parse entry points take the spec
+
 
 @pytest.fixture(autouse=True)
 def _no_unstubbed_ocr():
@@ -85,7 +88,7 @@ def test_T1_branch_2_file_unreadable(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.is_scanned_pdf",
                side_effect=RuntimeError("corrupt file")):
         with pytest.raises(ParseFailed) as exc:
-            parse_pdf(str(digital_pdf), pid, "test_parse_fail", db)
+            parse_pdf(str(digital_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
     assert exc.value.reason_code == PS.REASON_PARSE_FILE_UNREADABLE
     assert isinstance(exc.value.__cause__, RuntimeError)
     assert _attempt_count(db, pid) == 0, "no tier ran — no ledger row (unique to #2)"
@@ -100,7 +103,7 @@ def test_T1_branch_6_vision_exhausted_scanned_route(scanned_pdf, db):
          patch("engine.parsers.pdf_parser.parse_with_vision",
                side_effect=RuntimeError("vision off")):
         with pytest.raises(ParseFailed) as exc:
-            parse_pdf(str(scanned_pdf), pid, "test_parse_fail", db)
+            parse_pdf(str(scanned_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
     assert exc.value.reason_code == PS.REASON_PARSE_VISION_EXHAUSTED
     assert isinstance(exc.value.__cause__, RuntimeError)
     assert str(exc.value.__cause__) == "vision off"
@@ -116,7 +119,7 @@ def test_T1_branch_10_pymupdf_exhausted_digital_route(digital_pdf, db):
          patch("engine.parsers.pdf_parser.parse_with_pymupdf",
                side_effect=OSError("disk gone")):
         with pytest.raises(ParseFailed) as exc:
-            parse_pdf(str(digital_pdf), pid, "test_parse_fail", db)
+            parse_pdf(str(digital_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
     assert exc.value.reason_code == PS.REASON_PARSE_PYMUPDF_EXHAUSTED
     assert isinstance(exc.value.__cause__, OSError)
     assert _attempt_count(db, pid) >= 1
@@ -130,7 +133,7 @@ def test_T1_branch_17_cascade_empty(digital_pdf, db):
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
         with pytest.raises(ParseFailed) as exc:
-            parse_pdf(str(digital_pdf), pid, "test_parse_fail", db)
+            parse_pdf(str(digital_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
     assert exc.value.reason_code == PS.REASON_PARSE_CASCADE_EMPTY
     assert exc.value.__cause__ is None, "a logic-derived failure, nothing to wrap"
     assert _attempt_count(db, pid) >= 1, "Contract 7: the ledger survives total failure"
@@ -163,7 +166,7 @@ def test_T2_cascade_empty_under_a_run_writes_one_event_and_continues(digital_pdf
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
-        stats = parse_all_pdfs(db, "test_parse_fail", run_id=run_id)
+        stats = parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
 
     assert stats["failed"] == 2, "the loop continued to the second paper"
     rows = db._conn.execute(
@@ -195,7 +198,7 @@ def test_T3_unclassified_exception_under_a_run_writes_its_own_code(digital_pdf, 
                return_value="Autonomous robotic suturing evaluation. " * 40), \
          patch("engine.parsers.pdf_parser.record_parsed_text",
                side_effect=KeyError("not a ParseFailed at all")):
-        stats = parse_all_pdfs(db, "test_parse_fail", run_id=run_id)
+        stats = parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
 
     assert stats["failed"] == 1
     row = db._conn.execute(
@@ -216,7 +219,7 @@ def test_T4_no_run_id_writes_no_event(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
-        stats = parse_all_pdfs(db, "test_parse_fail")  # run_id defaults to None
+        stats = parse_all_pdfs(db, "test_parse_fail", spec=PARSE_SPEC)  # run_id defaults to None
 
     assert stats["failed"] == 1
     assert db._conn.execute(
@@ -238,7 +241,7 @@ def test_T5_effective_state_and_prisma_carry_the_new_reason(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
-        parse_all_pdfs(db, "test_parse_fail", run_id=run_id)
+        parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
 
     state = effective_state(db._conn, pid)
     assert state.processing == "parse_failed"
@@ -264,7 +267,7 @@ def test_T6_file_exists_error_propagates_out_of_parse_all_pdfs(digital_pdf, db):
     target.write_text("an unrecorded file")
 
     with pytest.raises(FileExistsError, match="R99"):
-        parse_all_pdfs(db, "test_parse_fail", run_id=run_id)
+        parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
     assert db._conn.execute(
         "SELECT COUNT(*) FROM paper_events WHERE paper_id = ?", (pid,)
     ).fetchone()[0] == 0, "an integrity guard is never a paper outcome (R231)"

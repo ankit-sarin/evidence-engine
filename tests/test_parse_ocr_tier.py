@@ -36,6 +36,7 @@ from engine.parsers.pdf_parser import (
 from engine.search.models import Citation
 
 SPEC = "review_specs/surgical_autonomy.yaml"
+PARSE_SPEC = load_review_spec(SPEC)   # 12c-C53: parse_pdf / parse_all_pdfs / reparse_papers take the spec
 REPO = Path(__file__).resolve().parents[1]
 P719_PDF = REPO / "data" / "surgical_autonomy" / "pdfs" / "EE-567_Bauzano_2010.pdf"
 FIXTURES = REPO / "tests" / "fixtures" / "parse_quality"
@@ -111,7 +112,7 @@ def test_scanned_pdf_goes_to_the_ocr_tier_first(scanned_pdf, db):
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN), \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
-        result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db)
+        result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
 
     vision.assert_not_called()
     assert result.accepted_parser == "docling_ocr"
@@ -125,7 +126,7 @@ def test_scanned_ocr_failure_falls_through_to_vision(scanned_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
                side_effect=RuntimeError("ocr exploded")), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
-        result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db)
+        result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
 
     rows = _rows(db, pid)
     assert [r["parser_used"] for r in rows] == ["docling_ocr", "qwen2.5vl"]
@@ -138,7 +139,7 @@ def test_scanned_ocr_sparse_output_also_falls_through_to_vision(scanned_pdf, db)
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
-        result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db)
+        result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
 
     rows = _rows(db, pid)
     assert rows[0]["parser_used"] == "docling_ocr"
@@ -153,7 +154,7 @@ def test_digital_clean_docling_never_reaches_the_ocr_tier(digital_pdf, db):
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN), \
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr") as ocr, \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
-        result = parse_pdf(str(digital_pdf), pid, "test_ocr", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
 
     ocr.assert_not_called()
     vision.assert_not_called()
@@ -183,7 +184,7 @@ def test_glyph_failure_reaches_ocr_without_touching_pymupdf(digital_pdf, db):
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf, \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
-        result = parse_pdf(str(digital_pdf), pid, "test_ocr", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
 
     pymupdf.assert_not_called()
     vision.assert_not_called()
@@ -217,7 +218,7 @@ def test_ocr_tier_reuses_the_sanitized_copy_and_it_is_cleaned_up(tmp_path, db):
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=docling), \
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr", side_effect=ocr):
-        result = parse_pdf(str(linked), pid, "test_ocr", db)
+        result = parse_pdf(str(linked), pid, "test_ocr", db, spec=PARSE_SPEC)
 
     assert "parse_sanitized_" in seen["path"], "OCR must read the sanitized copy"
     assert seen["existed"] is True, "copy must still exist during the OCR attempt"
@@ -235,7 +236,7 @@ def test_ocr_cap_skips_the_tier_and_the_next_parser_is_tried(big_scanned_pdf, db
     """101 pages: over ocr_max_pages=100. The cap is not a dead end."""
     pid = _paper(db)
     with patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
-        result = parse_pdf(str(big_scanned_pdf), pid, "test_ocr", db)
+        result = parse_pdf(str(big_scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
 
     rows = _rows(db, pid)
     assert rows[0]["parser_used"] == "docling_ocr"
@@ -278,7 +279,7 @@ def test_sparse_length_fallback_still_precedes_the_gate(digital_pdf, db):
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN), \
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr") as ocr, \
          patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
-        result = parse_pdf(str(digital_pdf), pid, "test_ocr", db)
+        result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
 
     ocr.assert_not_called()
     vision.assert_not_called()
@@ -296,7 +297,7 @@ def test_total_failure_still_writes_the_attempt_rows(digital_pdf, db):
         # 10a-C6-B (R227/R228): branch #17 now raises ParseFailed, not a bare
         # ValueError — same message text, a typed reason_code besides.
         with pytest.raises(ParseFailed, match="all parsers returned empty text"):
-            parse_pdf(str(digital_pdf), pid, "test_ocr", db)
+            parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
 
     rows = _rows(db, pid)
     assert len(rows) >= 1, "a wholly failed parse used to leave no trace at all"
@@ -322,7 +323,7 @@ def test_the_ledger_survives_a_raise_out_of_parse_pdf(digital_pdf, db):
         # the real OSError as __cause__ (still "more useful than a generic
         # message", now typed too).
         with pytest.raises(ParseFailed) as exc:
-            parse_pdf(str(digital_pdf), pid, "test_ocr", db)
+            parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
         assert isinstance(exc.value.__cause__, OSError)
         assert "disk gone" in str(exc.value.__cause__)
 
@@ -339,12 +340,12 @@ def test_reparse_reports_a_total_failure_with_rows_written(digital_pdf, db):
     pdfs = Path(db.db_path).parent / "pdfs"; pdfs.mkdir(parents=True, exist_ok=True)
     (pdfs / f"{pid}.pdf").write_bytes(digital_pdf.read_bytes())
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
-        parse_all_pdfs(db, "test_ocr")
+        parse_all_pdfs(db, "test_ocr", spec=PARSE_SPEC)
 
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
-        out = reparse_papers(db, [pid])
+        out = reparse_papers(db, [pid], spec=PARSE_SPEC)
 
     assert "error" in out[pid]
     assert "all parsers returned empty text" in out[pid]["error"]

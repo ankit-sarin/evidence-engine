@@ -149,7 +149,7 @@ def run_pipeline(
 
         # ── PARSE ────────────────────────────────────────────
         if start_idx <= STAGES.index("parse"):
-            results["parse"] = _stage_parse(db, review_name, run_id=run_id)
+            results["parse"] = _stage_parse(db, review_name, spec=spec, run_id=run_id)
 
         # ── EXTRACT ──────────────────────────────────────────
         if start_idx <= STAGES.index("extract"):
@@ -316,7 +316,8 @@ def _stage_screen(db: ReviewDatabase, spec: ReviewSpec, limit: int | None) -> di
     return {**stats, "elapsed": elapsed}
 
 
-def _stage_parse(db: ReviewDatabase, review_name: str, *, run_id: int) -> dict:
+def _stage_parse(db: ReviewDatabase, review_name: str, *, spec: ReviewSpec,
+                 run_id: int) -> dict:
     t = time.time()
     logger.info("=" * 60)
     logger.info("STAGE: PARSE")
@@ -331,7 +332,7 @@ def _stage_parse(db: ReviewDatabase, review_name: str, *, run_id: int) -> dict:
         )
         return {"parsed": 0, "note": "No PDFs available", "elapsed": 0}
 
-    stats = parse_all_pdfs(db, review_name, run_id=run_id)
+    stats = parse_all_pdfs(db, review_name, spec=spec, run_id=run_id)
     elapsed = time.time() - t
     logger.info("Parse complete in %.1fs — %s", elapsed, json.dumps(stats))
     return {**stats, "elapsed": elapsed}

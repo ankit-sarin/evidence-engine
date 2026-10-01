@@ -18,6 +18,9 @@ from engine.core import parsed_text as pt
 from engine.core.database import ReviewDatabase
 from engine.parsers.pdf_parser import parse_pdf
 
+from engine.core.review_spec import load_review_spec
+PARSE_SPEC = load_review_spec("review_specs/surgical_autonomy.yaml")   # 12c-C53: the parse entry points take the spec
+
 TEXT_A = "# Title\n\nLong enough content about autonomous suturing. " * 10
 TEXT_B = "# Title\n\nLong enough content about autonomous knot tying. " * 10
 
@@ -52,7 +55,7 @@ def _refs(db):
 
 def _parse(pdf, db, text, force=False):
     with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=text):
-        return parse_pdf(str(pdf), 5, "writer", db, force=force)
+        return parse_pdf(str(pdf), 5, "writer", db, force=force, spec=PARSE_SPEC)
 
 
 def test_two_parses_record_versions_1_and_2_and_the_resolver_picks_2(pdf, db):
@@ -105,6 +108,6 @@ def test_a_failed_parse_writes_no_reference_and_no_asset_row(pdf, db):
          patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=""), \
          patch("engine.parsers.pdf_parser.parse_with_vision", return_value=""):
         with pytest.raises(Exception):
-            parse_pdf(str(pdf), 5, "writer", db)
+            parse_pdf(str(pdf), 5, "writer", db, spec=PARSE_SPEC)
     assert _refs(db) == []
     assert db._conn.execute("SELECT COUNT(*) FROM full_text_assets").fetchone()[0] == 0

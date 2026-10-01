@@ -16,6 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from engine.core.database import ReviewDatabase
+from engine.core.review_paths import load_spec_for
 from engine.parsers.pdf_parser import parse_all_pdfs
 
 logging.basicConfig(
@@ -37,6 +38,7 @@ def main():
         logging.warning("No --review specified, using default 'surgical_autonomy'.")
 
     review = args.review
+    spec = load_spec_for(review)   # before the database: a mismatched review never reaches it
     db = ReviewDatabase(review)
 
     # Find ABSTRACT_SCREENED_IN papers with PDFs but no parsed text
@@ -74,7 +76,7 @@ def main():
 
     # Step 2: Parse all PDF_ACQUIRED papers
     t0 = time.time()
-    stats = parse_all_pdfs(db, review)
+    stats = parse_all_pdfs(db, review, spec=spec)
     elapsed = time.time() - t0
 
     print(f"\n{'=' * 60}")

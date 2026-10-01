@@ -427,3 +427,28 @@ def test_the_prompt_carries_the_integer_only_instruction():
     assert "Use the\ninteger only" in prompt or "Use the integer only" in prompt
     assert "never `[S12, S13]`" in prompt
     assert "never `[S7]`" in prompt, "the JUDGMENT step contract needs it too"
+
+
+# ══ 12c-DEADCODE — the two unreachable priming branches raise ═════════
+
+
+def test_an_escape_record_at_evidence_block_raises(unit_map):
+    """An escape record is routed to the escape token and filtered out before
+    priming; reaching `evidence_block` is an internal invariant violation, not
+    a formatting case — it raises and emits no text."""
+    rec = K.FieldRecord("robot_platform", C.STATED, "NO_EVIDENCE_LOCATABLE", True)
+    with pytest.raises(M.PrimingInvariantViolated) as exc:
+        M.evidence_block(rec, unit_map)
+    msg = str(exc.value)
+    assert "'robot_platform'" in msg and "NO_EVIDENCE_LOCATABLE" in msg
+    assert "terminal.terminal_states" in msg
+
+
+def test_citations_on_an_unresolvable_index_raises(unit_map):
+    """`citations` used to drop an index the unit map could not resolve; every
+    index reaching it was validated, so one that does not resolve now raises."""
+    rec = K.FieldRecord("robot_platform", C.STATED, "dVRK", False, indices=(1, 99))
+    with pytest.raises(M.PrimingInvariantViolated) as exc:
+        M.citations(rec, unit_map)
+    msg = str(exc.value)
+    assert "'robot_platform'" in msg and "unit 99" in msg and "(4 units)" in msg

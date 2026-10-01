@@ -42,12 +42,6 @@ SYSTEM_PASS1 = (
     "before you answer, and never copy text — cite unit numbers only."
 )
 
-SYSTEM_PASS2 = (
-    "You are a systematic review data extractor. "
-    "Use the cited evidence to produce accurate structured output. "
-    "Respond ONLY with the requested JSON."
-)
-
 _CLASS_TITLE = {
     C.STATED: "STATED — the paper asserts it",
     C.INFERABLE: "INFERABLE — the paper fixes it without asserting it",

@@ -30,6 +30,10 @@ from engine.elicitation.contracts import FieldRecord
 from engine.elicitation.units import UnitMap
 
 
+class PrimingInvariantViolated(RuntimeError):
+    """Pass 2's priming input carries a record the routing upstream guarantees it cannot."""
+
+
 @dataclass(frozen=True)
 class Citation:
     index: int
@@ -41,8 +45,12 @@ def citations(record: FieldRecord, unit_map: UnitMap) -> tuple[Citation, ...]:
     out = []
     for ix in record.indices:
         text = unit_map.resolve(ix)
-        if text is not None:          # cannot be None: indices were validated
-            out.append(Citation(index=ix, text=text))
+        if text is None:
+            raise PrimingInvariantViolated(
+                f"priming invariant violated: field {record.field_name!r} cites unit {ix}, "
+                f"which this unit map ({unit_map.n} units) cannot resolve — indices are "
+                "validated in contracts.check_entry before priming")
+        out.append(Citation(index=ix, text=text))
     return tuple(out)
 
 
@@ -83,8 +91,11 @@ def evidence_block(record: FieldRecord, unit_map: UnitMap) -> str:
     """
     lines = [f"### {record.field_name}  [{record.field_class}]"]
     if record.is_escape:
-        lines.append(f"  (declared: {record.value} -- no evidence was locatable)")
-        return "\n".join(lines)
+        raise PrimingInvariantViolated(
+            f"priming invariant violated: field {record.field_name!r} is an escape record "
+            f"({record.value!r}) yet reached the priming input — terminal.terminal_states "
+            "routes every escape to the escape token (NO_EVIDENCE_LOCATABLE) and "
+            "pass2_priming is given EVIDENCED_VALUE records only")
 
     for c in citations(record, unit_map):
         lines.append(f'  [S{c.index}] "{c.text}"')

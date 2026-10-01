@@ -32,6 +32,7 @@ from engine.agents.extractor import (
     extract_pass2_structured,
 )
 from engine.core.completeness import check_completeness, expected_field_names
+from engine.core.effective_config import stage_config
 from engine.core.review_paths import load_spec_for
 from engine.utils.ollama_lock import hold_experiment_lock
 
@@ -63,7 +64,7 @@ def main(argv: list[str] | None = None) -> int:
             prompt = build_extraction_prompt(text, spec)
             t0 = time.time()
             try:
-                trace = extract_pass1_reasoning(prompt)
+                trace = extract_pass1_reasoning(prompt, cfg=stage_config("extract_pass1", spec))
                 res = extract_pass2_structured(prompt, trace, spec, pid)
                 spans = [s.model_dump() for s in res.fields]
                 chk = check_completeness(spans, expected)

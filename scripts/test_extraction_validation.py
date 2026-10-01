@@ -137,7 +137,7 @@ def process_paper(pdf_path: str, label: str, spec, paper_id: int) -> dict:
     logger.info("[%s] Pass 1: free reasoning (DeepSeek-R1:32b)...", label)
     t0 = time.time()
     try:
-        reasoning_trace = extract_pass1_reasoning(prompt)
+        reasoning_trace = extract_pass1_reasoning(prompt, cfg=stage_config("extract_pass1", spec))
         result["pass1_ok"] = bool(reasoning_trace and len(reasoning_trace) > 50)
         result["pass1_time"] = round(time.time() - t0, 1)
         logger.info("[%s] Pass 1 done: %d chars in %.1fs", label, len(reasoning_trace), result["pass1_time"])

@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from engine.agents.auditor import audit_span, grep_verify
 from engine.agents.extractor import build_extraction_prompt, extract_pass1_reasoning, extract_pass2_structured
 from engine.core.database import ReviewDatabase
+from engine.core.effective_config import stage_config
 from engine.core.review_paths import load_spec_for, spec_path_for
 from engine.core.review_spec import ReviewSpec
 from engine.core.codebook import load_codebook_for
@@ -80,7 +81,7 @@ def main():
         prompt = build_extraction_prompt(paper_text, spec)
         t0 = time.time()
         logger.info("Pass 1: reasoning...")
-        reasoning = extract_pass1_reasoning(prompt)
+        reasoning = extract_pass1_reasoning(prompt, cfg=stage_config("extract_pass1", spec))
         t1 = time.time()
         logger.info("Pass 1 done in %.1fs (%d chars)", t1 - t0, len(reasoning))
 

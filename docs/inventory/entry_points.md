@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `45969655adcae3a68d7d8f51bb6f55423de8634f` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `2997cc9165014653fca5ee42a08f88432c0b0ab4` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -144,8 +144,8 @@ Two figures deliberately have no baseline row. **entry points** (95) counts anyt
 | `scripts/pdf_acquisition/step3b_retry_failed.py` | — | — | — | — |
 | `scripts/pdf_acquisition/step4_manual_download_list.py` | — | — | — | — |
 | `scripts/prepare_concordance_pdfs.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
-| `scripts/q8_validation.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 142 | main:spec_first |
-| `scripts/q8_validation_fast.py` | `--review` required; `--spec`=None; `paper_ids`=dynamic: [370, 432] | load_spec_for, spec_path_for | 97 | main:spec_first |
+| `scripts/q8_validation.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 143 | main:spec_first |
+| `scripts/q8_validation_fast.py` | `--review` required; `--spec`=None; `paper_ids`=dynamic: [370, 432] | load_spec_for, spec_path_for | 98 | main:spec_first |
 | `scripts/reparse_cloud_spans.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/rescreen_original_251.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/rescreen_with_specialty.py` | `--review` required; `--spec`=None; `--background`; `--verify-only`; `--report-only` | load_spec_for, spec_path_for | 112 | main:spec_first |
@@ -177,8 +177,8 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/eval/elicit01/manifest.py` | 105 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/elicit01/runner.py` | 153 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/parse01/flag.py` | 63 | literal | `data/surgical_autonomy/eval/parse01/sweep.jsonl` |
-| `analysis/eval/run_local_ab.py` | 162 | literal | `extraction_codebook.yaml` |
-| `analysis/eval/run_local_abc.py` | 202 | literal | `extraction_codebook.yaml` |
+| `analysis/eval/run_local_ab.py` | 163 | literal | `extraction_codebook.yaml` |
+| `analysis/eval/run_local_abc.py` | 203 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/run_qualgap01.py` | 287 | literal | `extraction_codebook.yaml` |
 | `analysis/eval/run_screen2f.py` | 219 | literal | `armC_spec.yaml` |
 | `analysis/eval/score_screen2f.py` | 40 | literal | `data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx` |
@@ -186,7 +186,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/eval/screen2f_export.py` | 36 | literal | `data/surgical_autonomy/review.db` |
 | `analysis/eval/screen2f_export.py` | 37 | literal | `data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx` |
 | `analysis/eval/screen2f_export.py` | 38 | literal | `data/surgical_autonomy/expanded_search/abstracts.jsonl` |
-| `analysis/eval/smoke_regression01.py` | 53 | literal | `extraction_codebook.yaml` |
+| `analysis/eval/smoke_regression01.py` | 54 | literal | `extraction_codebook.yaml` |
 | `analysis/paper1/adjudication.py` | 603 | literal | `extraction_codebook.yaml` |
 | `analysis/paper1/consensus.py` | 433 | literal | `extraction_codebook.yaml` |
 | `analysis/paper1/human_import.py` | 307 | literal | `extraction_codebook.yaml` |
@@ -233,7 +233,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `scripts/rescreen_original_251.py` | 52 | f-string | `f'data/{review}/review.db'` |
 | `scripts/rescreen_original_251.py` | 53 | f-string | `f'data/{review}/expanded_search'` |
 | `scripts/screen_expanded.py` | 510 | f-string | `f'data/{review}/expanded_search'` |
-| `scripts/smoke_test_fixes.py` | 46 | f-string | `f'data/{review}'` |
+| `scripts/smoke_test_fixes.py` | 47 | f-string | `f'data/{review}'` |
 | `scripts/test_e2e_search_screen.py` | 32 | literal | `review_specs` |
 | `scripts/test_e2e_search_screen.py` | 32 | literal | `surgical_autonomy.yaml` |
 | `scripts/test_extraction_validation.py` | 35 | literal | `review_specs` |

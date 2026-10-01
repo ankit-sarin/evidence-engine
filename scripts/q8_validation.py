@@ -17,6 +17,7 @@ from engine.agents.extractor import (
     _validate_and_retry_snippets,
 )
 from engine.core.database import ReviewDatabase
+from engine.core.effective_config import stage_config
 from engine.core.review_paths import load_spec_for, spec_path_for
 from engine.core.review_spec import ReviewSpec
 
@@ -48,7 +49,7 @@ def extract_single(paper_id: int, paper_text: str, spec: ReviewSpec) -> list[dic
     prompt = build_extraction_prompt(paper_text, spec)
 
     t0 = time.time()
-    reasoning_trace = extract_pass1_reasoning(prompt)
+    reasoning_trace = extract_pass1_reasoning(prompt, cfg=stage_config("extract_pass1", spec))
     t1 = time.time()
     logger.info("Paper %d — Pass 1 reasoning: %.1fs", paper_id, t1 - t0)
 

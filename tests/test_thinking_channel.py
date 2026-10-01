@@ -22,6 +22,7 @@ from engine.agents.extractor import (
     extract_pass1_reasoning,
     parse_thinking_trace,
 )
+from engine.core.effective_config import stage_config
 from engine.core.extraction_telemetry import SCHEMA_VERSION, read_calls, record_call
 from engine.core.review_spec import ExtractionModels
 
@@ -109,7 +110,7 @@ def test_pass1_passes_think_explicitly_and_defaults_on():
     """No reliance on the Ollama default — that is what hid the interface change."""
     with patch("engine.agents.extractor.ollama_chat") as chat:
         chat.return_value = _resp(ANSWER_CONTENT, NATIVE_THINKING)
-        extract_pass1_reasoning("prompt")
+        extract_pass1_reasoning("prompt", cfg=stage_config("extract_pass1"))
     assert chat.call_args.kwargs["think"] is True
 
 
@@ -140,7 +141,7 @@ def test_think_is_not_a_caller_override():
 def test_pass1_returns_the_native_trace_not_the_answer():
     with patch("engine.agents.extractor.ollama_chat") as chat:
         chat.return_value = _resp(ANSWER_CONTENT, NATIVE_THINKING)
-        trace = extract_pass1_reasoning("prompt")
+        trace = extract_pass1_reasoning("prompt", cfg=stage_config("extract_pass1"))
     assert trace == NATIVE_THINKING
     assert "field_name" not in trace, "the answer must never leak in as the trace"
 
@@ -150,7 +151,7 @@ def test_pass1_records_branch_telemetry():
 
     with patch("engine.agents.extractor.ollama_chat") as chat:
         chat.return_value = _resp(ANSWER_CONTENT, NATIVE_THINKING, done_reason="stop")
-        extract_pass1_reasoning("prompt")
+        extract_pass1_reasoning("prompt", cfg=stage_config("extract_pass1"))
     assert _LAST_PASS1_TELEMETRY["parse_branch"] == "native"
     assert _LAST_PASS1_TELEMETRY["thinking_present"] is True
     assert _LAST_PASS1_TELEMETRY["thinking_chars"] == len(NATIVE_THINKING)

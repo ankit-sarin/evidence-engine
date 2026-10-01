@@ -208,7 +208,7 @@ def pass1_messages(prompt: str) -> list[dict]:
 
 
 def extract_pass1_reasoning(prompt: str, *,
-                            cfg: EffectiveConfig | None = None,
+                            cfg: EffectiveConfig,
                             paper_id: int | None = None,
                             return_request_hash: bool = False) -> str | tuple[str, str]:
     """Run Pass 1: let DeepSeek-R1 reason freely, return the thinking trace.
@@ -224,7 +224,6 @@ def extract_pass1_reasoning(prompt: str, *,
     caller; `extract_paper` and the elicited path's `run_pass1` are the ones
     that set it, to build the call chain.
     """
-    cfg = cfg or stage_config("extract_pass1")
     _LAST_PASS1_TELEMETRY.clear()
     result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
                          return_request_hash=return_request_hash, **cfg.kwargs())
@@ -309,8 +308,9 @@ def extract_pass2_structured(
     reasoning_trace: str,
     spec: ReviewSpec,
     paper_id: int,
+    *,
     codebook_hash: str | None = None,
-    *, cfg: EffectiveConfig | None = None,
+    cfg: EffectiveConfig | None = None,
     return_request_hash: bool = False,
 ) -> ExtractionResult | tuple[ExtractionResult, str]:
     """Run Pass 2: use reasoning trace as context, force structured JSON output.

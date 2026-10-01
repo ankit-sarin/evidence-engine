@@ -37,6 +37,7 @@ from engine.agents.extractor import (
 )
 from engine.agents.models import ExtractionOutput
 from engine.core.completeness import check_completeness, expected_field_names
+from engine.core.effective_config import stage_config
 from engine.core.review_paths import load_spec_for
 from engine.utils.ollama_client import ollama_chat
 from engine.utils.ollama_lock import hold_experiment_lock
@@ -110,7 +111,7 @@ def run_paper(paper_id: int, stratum: str, paper_text: str, spec, expected,
     prompt = build_extraction_prompt(paper_text, spec)
     t0 = time.time()
     try:
-        trace = extract_pass1_reasoning(prompt)
+        trace = extract_pass1_reasoning(prompt, cfg=stage_config("extract_pass1", spec))
         kwargs = {"options": {"temperature": 0}, "think": False}
         if condition == CONDITION_B:
             kwargs["format"] = ExtractionOutput.model_json_schema()

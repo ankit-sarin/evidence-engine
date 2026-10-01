@@ -52,6 +52,7 @@ from engine.agents.models import ExtractionOutput
 #: resolver now, and a frozen study keeps the value it used, not a live one.
 MODEL = "deepseek-r1:32b"
 from engine.core.completeness import check_completeness, expected_field_names
+from engine.core.effective_config import stage_config
 from engine.core.review_paths import load_spec_for
 from engine.utils.ollama_client import ollama_chat
 from engine.utils.ollama_lock import hold_experiment_lock
@@ -127,7 +128,7 @@ def run_one(paper, condition: str, paper_text: str, spec, expected, slot_schema)
         fields_expected=len(expected),
     )
     try:
-        trace = extract_pass1_reasoning(prompt)
+        trace = extract_pass1_reasoning(prompt, cfg=stage_config("extract_pass1", spec))
         t1 = time.time()
         branch = _LAST_PASS1_TELEMETRY.get("parse_branch")
         thinking_chars = _LAST_PASS1_TELEMETRY.get("thinking_chars")

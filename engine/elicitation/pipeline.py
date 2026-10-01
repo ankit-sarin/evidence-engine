@@ -266,8 +266,8 @@ def sentinel_priming_message(spec, codebook_path=None) -> str:
 
 
 def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
-              paper_id: int,
-              feedback: str = "", *, cfg: EffectiveConfig | None = None,
+              paper_id: int, *,
+              feedback: str = "", cfg: EffectiveConfig,
               ) -> tuple[Pass1Result, dict]:
     """Elicit citations. Returns (checked result, call telemetry).
 
@@ -277,7 +277,6 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     like any other input (INPUT-FIT-01), never truncated silently.
     """
     prompt = pass1_prompt(unit_map, codebook, field_names, feedback)
-    cfg = cfg or stage_config("elicitation_pass1")
 
     # R224a(2): this attempt's hash rides in the telemetry dict rather than
     # changing this function's return shape — `elicit`'s two-attempt loop
@@ -313,7 +312,7 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
 
 def elicit(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
            paper_id: int, *,
-           cfg: EffectiveConfig | None = None,
+           cfg: EffectiveConfig,
            ) -> tuple[Pass1Result, int, list[dict]]:
     """Ruling 4's bounded, feedback-carrying Pass-1 loop.
 

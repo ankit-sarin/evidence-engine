@@ -11,18 +11,18 @@ no model), injectable as `digest_fn`.
 * `DirtyTree` — the working tree has uncommitted changes. An untagged HEAD is
   allowed.
 * `AmbiguousEngineState` — two or more engine-state tags point at HEAD (E-STATE).
-
-`engine_state` is the engine-state name tagged at HEAD, NULL when none is
-(E-STATE). A state is tagged with its bare name as an annotated tag — e.g.
-`freshman` — from `ENGINE_STATES`; any other tag at HEAD is ignored here (it
-still reaches `git_tag` through `git describe`). The value is part of the
-manifest body, so `manifest_sha256` covers it: the hash covers the recorded body.
 * `PreManifestArm` — a named arm was registered pre-manifest (R59).
 * `RetiredArm` — a named arm is retired (R21).
 * `ArmPinMismatch` — a named arm is pinned and this run resolves it differently
   (R10); the differing keys are named.
 * `CloudArmNotEnabled` — a cloud arm is requested that `cloud.enabled_arms`
   does not enable (S3g).
+
+`engine_state` is the engine-state name tagged at HEAD, NULL when none is
+(E-STATE). A state is tagged with its bare name as an annotated tag — e.g.
+`freshman` — from `ENGINE_STATES`; any other tag at HEAD is ignored here (it
+still reaches `git_tag` through `git describe`). The value is part of the
+manifest body, so `manifest_sha256` covers it: the hash covers the recorded body.
 
 **At extraction time** (R116/R117, WRITE-PATH-01 9b-2b), `extraction_digest`
 refuses before anything is selected: `StageNotInRun` when the run did not declare

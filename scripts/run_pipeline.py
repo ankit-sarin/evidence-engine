@@ -23,7 +23,9 @@ from engine.adjudication.workflow import (
 )
 from engine.agents.audit_events import audit_run
 from engine.core.extraction_events import RunAborted
-from engine.agents.extractor import run_extraction, verify_extraction_run
+from engine.agents.extractor import (
+    record_selection_refusals, run_extraction, verify_extraction_run,
+)
 from engine.core.codebook import CODEBOOK_FILENAME
 from engine.core.run_telemetry import record_run_event
 from engine.validators.distribution_monitor import run_post_extraction_check
@@ -350,6 +352,10 @@ def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
     # Selection is the corpus predicate with the reuse key (D9, R96, R119), made
     # once here and handed to the run, not a papers.status gate.
     selection = select_for_extraction(db._conn, arm=spec.extraction_models.arm)
+    # D21: every paper refused at selection is recorded now — before the bound
+    # and the empty-selection return, so neither can drop one. The selection
+    # handed to run_extraction below is not recorded a second time.
+    record_selection_refusals(db, selection, run_id=run_id)
     if max_papers is not None:
         # 10b-C2: the manifest's declared bound, applied after the reuse-key skip
         # — a window on the unskipped remainder (bound_selection's docstring).

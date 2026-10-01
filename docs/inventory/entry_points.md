@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `b9099892ae0be1bbb61bacc1a14aa4bf3d7d94d4` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `a1d9d164f86aab50cf1c47b0d55302f24d4e9470` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -150,7 +150,7 @@ Two figures deliberately have no baseline row. **entry points** (95) counts anyt
 | `scripts/rescreen_original_251.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/rescreen_with_specialty.py` | `--review` required; `--spec`=None; `--background`; `--verify-only`; `--report-only` | load_spec_for, spec_path_for | 112 | main:spec_first |
 | `scripts/run_cloud_extraction.py` | `--review` required; `--arm`=None; `--spec`=None; `--db`=None; `--max-papers`=None; `--max-cost`=None; `--progress`; `--dry-run` | data_root_for, load_review_spec, load_spec_for, spec_path_for | — | — |
-| `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None; `--max-papers`=None | load_spec_for | 90 | run_pipeline:spec_first |
+| `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None; `--max-papers`=None | load_spec_for | 92 | run_pipeline:spec_first |
 | `scripts/screen_expanded.py` | `--review` required; `--spec`=None; `--fetch-only`; `--screen-only`; `--verify-only`; `--fresh` | load_review_spec, load_spec_for, spec_path_for | — | — |
 | `scripts/smoke_test_fixes.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/test_e2e_search_screen.py` | — | load_review_spec | 66 | main:spec_first |

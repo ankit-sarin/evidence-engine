@@ -33,7 +33,7 @@ from engine.core.citation_guard import (
 )
 from engine.core.events import mint_extraction_uid
 from engine.core.extraction_events import (  # noqa: F401 — re-exported (T7)
-    CONSECUTIVE_FAILURE_ABORT, MissingThinkingChannelError, RunAborted,
+    CONSECUTIVE_FAILURE_ABORT, MissingThinkingChannelError, PaperFailure, RunAborted,
     counts_toward_abort, legacy_record, outcome_for_exception, write_extraction_events,
 )
 from engine.core.extraction_telemetry import record_call
@@ -894,6 +894,25 @@ def verify_extraction_run(conn, spec: ReviewSpec, run_id: int) -> str:
                                 stages=extraction_stages(spec))
 
 
+def record_selection_refusals(db: ReviewDatabase, selection: SelectionResult, *,
+                              run_id: int) -> int:
+    """D21 — R122 at selection time: one `extraction_failed` processing event per
+    paper `select_for_extraction` refused, carrying the error's own reason code.
+
+    The event is the one the per-paper loop writes for a text refused on re-read
+    (`record_failure` → `outcome_for_exception` → `PaperFailure` →
+    `write_extraction_events`): same type, axis, reason, run, actor and stage.
+    Selection keeps only the reason code, not the exception, so the payload says
+    where the refusal was seen instead of repeating its message. Refusals never
+    touch the consecutive-failure abort counter (A14). Returns how many it wrote.
+    """
+    for pid, reason_code in selection.skipped_refused:
+        write_extraction_events(db._conn, PaperFailure(
+            pid, selection.arm, run_id, reason_code, "extract_pass1",
+            detail={"refused_at": "selection"}))
+    return len(selection.skipped_refused)
+
+
 def _run_extraction_unlocked(
     db: ReviewDatabase,
     spec: ReviewSpec,
@@ -919,6 +938,7 @@ def _run_extraction_unlocked(
     auditor_digest = rm.stage_digest(db._conn, run_id, "audit")
     if selection is None:
         selection = select_for_extraction(db._conn, arm=spec.extraction_models.arm)
+        record_selection_refusals(db, selection, run_id=run_id)     # D21
     with rm.active_run(db._conn, run_id):
         return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
                                  extractor_digest=extractor_digest,

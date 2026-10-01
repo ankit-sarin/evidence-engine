@@ -142,7 +142,8 @@ def run_pipeline(
                         "--review %s --status' for full workflow status.",
                         review_name,
                     )
-                    _finish_review_run(db, run_id, "interrupted")
+                    _finish_review_run(db, run_id, "interrupted",
+                                       reason=rm.REASON_BLOCKED_ADJUDICATION)
                     return
 
         # ── PARSE ────────────────────────────────────────────
@@ -181,7 +182,8 @@ def run_pipeline(
                         "--review %s --status' for full workflow status.",
                         review_name,
                     )
-                    _finish_review_run(db, run_id, "interrupted")
+                    _finish_review_run(db, run_id, "interrupted",
+                                       reason=rm.REASON_BLOCKED_AUDIT_REVIEW)
                     return
 
         # ── EXPORT ───────────────────────────────────────────
@@ -503,11 +505,12 @@ def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int, *,
     return handle.run_id
 
 
-def _finish_review_run(db: ReviewDatabase, run_id: int, status: str,
+def _finish_review_run(db: ReviewDatabase, run_id: int, status: str, *,
                        reason: str | None = None) -> None:
-    """Record the run's end on its manifest, once. `reason` (10a-C3, R215) is
-    passed only by the RunAborted handler; 'completed'/'failed'/'interrupted'
-    closes stay reason=None, unchanged."""
+    """Record the run's end on its manifest, once — every run_pipeline close
+    goes through here. `reason`: the RunAborted message for 'aborted' (10a-C3,
+    R215); the stopping gate's `rm.INTERRUPTED_REASONS` value for 'interrupted'
+    (C40); None for 'completed' and 'failed'."""
     rm.close_run(db._conn, run_id, status, reason=reason)
 
 

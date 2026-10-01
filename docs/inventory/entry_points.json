@@ -7317,7 +7317,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 530,
+            "line": 533,
             "names": [
               "--review",
               "--name"
@@ -7327,7 +7327,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 536,
+            "line": 539,
             "names": [
               "--spec"
             ],
@@ -7336,7 +7336,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 542,
+            "line": 545,
             "names": [
               "--skip-to"
             ],
@@ -7345,7 +7345,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 548,
+            "line": 551,
             "names": [
               "--limit"
             ],
@@ -7354,7 +7354,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 554,
+            "line": 557,
             "names": [
               "--max-papers"
             ],
@@ -7370,19 +7370,19 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 310,
+            "line": 312,
             "role": "message",
             "text": "No papers with status PDF_ACQUIRED. PDF acquisition is manual for v1. Place PDFs in data/%s/pdfs/ named as {paper_id}.pdf, then set status to PDF_ACQUIRED."
           },
           {
             "kind": "literal",
-            "line": 532,
+            "line": 535,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 538,
+            "line": 541,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7677,7 +7677,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "e40030c1365512d24d34479e45ba6850d9b0b027",
+    "generated_at_commit": "198a3492ff5babb3bcfc4c0f7144fa20e555bef0",
     "scan_roots": [
       "engine",
       "scripts",

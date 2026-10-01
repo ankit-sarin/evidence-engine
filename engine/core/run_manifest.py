@@ -59,6 +59,12 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 RUN_KINDS = ("extraction", "screening", "judge", "review_session", "import")
 #: R215/10a-C3: 'aborted' wired to RunAborted's close in scripts/run_pipeline.py.
 END_STATUSES = ("completed", "failed", "interrupted", "aborted")
+#: C40: the closed set of `end_reason` values an 'interrupted' close carries.
+#: One per `run_pipeline` gate that stops a run; C47 adds its interrupt reasons
+#: here. Kept beside END_STATUSES so engine/ callers can import it too.
+REASON_BLOCKED_ADJUDICATION = "blocked:adjudication"
+REASON_BLOCKED_AUDIT_REVIEW = "blocked:audit_review"
+INTERRUPTED_REASONS = (REASON_BLOCKED_ADJUDICATION, REASON_BLOCKED_AUDIT_REVIEW)
 ARM_PINNED = "pinned"
 
 #: R75: the client libraries whose versions every manifest records.
@@ -429,8 +435,12 @@ def open_review_session(conn, spec, *, codebook, git: GitState | None = None,
 
 def close_run(conn, run_id: int, status: str = "completed",
               reason: str | None = None) -> None:
-    """`reason` (R215/C26, 022's `end_reason` column) — no caller passes it
-    yet; wiring `RunAborted` to close 'aborted' with a reason is 10a-C3."""
+    """`reason` is 022's `end_reason` column (R215/C26); 022's CHECK requires
+    one for 'aborted', refuses one for 'completed', and permits either for
+    'failed' and 'interrupted' (R234). `run_pipeline` passes the RunAborted
+    message for 'aborted' and an `INTERRUPTED_REASONS` value at its gate stops
+    (C40); the three import paths pass the refused entry or failure message.
+    Free text apart from `INTERRUPTED_REASONS`; this function does not check it."""
     if status not in END_STATUSES:
         raise ValueError(f"end status {status!r} is not one of {END_STATUSES}")
     conn.execute(

@@ -48,7 +48,9 @@ evidence-engine/
 │   ├── provenance/             # Frozen v1.1 evidence-provenance taxonomy + classifier
 │   └── eval/                   # Response-contract, runtime and priming evaluations
 ├── scripts/                    # Pipeline runners, batch scripts, monitors
-├── tests/                      # 2,782 in the standard gate (2,781 pass + 1 xfail) + 17 network/ollama/integration (deselected)
+├── tests/                      # standard gate + network/ollama/integration tier (deselected); count and wall-time band:
+│                               #   the current "Expected values at session-N open" in docs/plan/ENGINE_REFACTOR_PLAN.md,
+│                               #   with that session's collected_ids file
 │   └── conftest.py             # Suite-wide service-call fence (see Ops Invariants)
 └── data/                       # gitignored — per-review databases, PDFs, exports,
                                 #   eval stores, telemetry
@@ -93,10 +95,13 @@ manifest and cloud opt-in" below). No site names a model or builds an options di
 | ~~audit_adjudication~~ | **DROPPED by migration 018** (R32). 0 rows; its `span_id` referenced the phantom `_evidence_spans_old`, so the path was never writable (A11). `engine/adjudication/schema.py` no longer creates it — a DROP alone did not survive the next `ReviewDatabase` construction. Human audit decisions become `field_events`; the importer is session 12's |
 
 ## Paper Lifecycle
-INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAGGED → PDF_ACQUIRED → PDF_EXCLUDED (terminal) or PARSED → FT_ELIGIBLE / FT_SCREENED_OUT / FT_FLAGGED → EXTRACTED / EXTRACT_FAILED → AI_AUDIT_COMPLETE → HUMAN_AUDIT_COMPLETE → REJECTED
-(PARSED can skip FT screening directly to EXTRACTED for reviews without FT screening)
-(PDF_EXCLUDED is terminal — papers excluded at quality check do not advance)
-(The FT primary selects PARSED papers only — its AI_AUDIT_COMPLETE re-screen pickup was removed at `ce86e30`, D18 partial)
+INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAGGED → PDF_ACQUIRED → PDF_EXCLUDED (terminal) or PARSED → FT_ELIGIBLE / FT_SCREENED_OUT / FT_FLAGGED
+(`papers.status` as `update_status` permits it — `ALLOWED_TRANSITIONS`, engine/core/database.py. ABSTRACT_SCREEN_FLAGGED resolves to ABSTRACT_SCREENED_IN or ABSTRACT_SCREENED_OUT, and ABSTRACT_SCREENED_IN may move to it; FT_FLAGGED resolves to FT_ELIGIBLE or FT_SCREENED_OUT, and FT_ELIGIBLE may move to it. ABSTRACT_SCREENED_OUT, FT_SCREENED_OUT and PDF_EXCLUDED are terminal — papers excluded at quality check do not advance)
+(EXTRACTED, EXTRACT_FAILED, AI_AUDIT_COMPLETE, HUMAN_AUDIT_COMPLETE and REJECTED are retired (R160b): they stay in `STATUSES` because existing rows carry them, and `update_status` refuses any transition into or out of one with `RetiredTransition`)
+(Extraction progress lives on the event store's processing axis — `parsed` · `extracted` · `extraction_failed` · `full_text_not_obtainable` · `parse_failed` · `input_exceeds_context` · `audited_ai` (`PROCESSING_STATES`, engine/core/paper_state.py) — over the corpus papers whose eligibility axis reads `eligible` (`eligible_paper_ids`, which extraction selects from))
+(`papers.status` does not identify the corpus: extraction selects on the eligibility axis, and papers may sit at a retired status while the axis reads `eligible`.)
+(A corpus screened elsewhere enters at FT_ELIGIBLE through `import_extraction_entry`, with an `adjudicated` → `eligible` event; an identified citation set enters at INGESTED through `import_screening_entry`)
+(The FT primary selects PARSED papers only — its re-screen pickup of already-audited papers was removed at `ce86e30`, D18 partial)
 
 ## Pipeline Stages
 1. **SEARCH** — PubMed + OpenAlex → deduplicate → add to DB
@@ -481,8 +486,13 @@ Generators:
 - engine/adjudication/ft_adjudication_html.py
 - engine/acquisition/pdf_quality_html.py (mode=acquisition | quality_check)
 
-Importers auto-detect .json vs .xlsx. Default --file auto-discovers
-from naming convention. xlsx retained with --format xlsx for archival.
+The abstract and FT adjudication importers (`import_adjudication_decisions`,
+`import_ft_adjudication_decisions`; Python functions, no CLI) pick JSON or xlsx by
+file extension; with `input_path=None` they look for `{review}_{stage}_decisions.json`
+by naming convention. Passing an `.xlsx` path imports an archival workbook.
+`pdf_quality_import` is a CLI that requires `--input` (JSON only). The entry
+importers (`import_screening_entry`, `import_extraction_entry`) are JSON-only
+functions with a required path and no CLI.
 
 ## Extraction Quality Investigation (analysis/eval/)
 
@@ -622,7 +632,7 @@ EVIDENCE_ENGINE_NO_OLLAMA_RESTART=1 PYTHONPATH=. python -m <harness>
 # Test suite
 python -m pytest tests/ -v                                        # all tests (nightly)
 python -m pytest tests/ -v -m "not network and not ollama"        # offline only
-python -m pytest tests/ -v -m "not network and not ollama and not integration"  # standard gate (~3m25s)
+python -m pytest tests/ -v -m "not network and not ollama and not integration"  # standard gate (wall-time band: current session expectations, docs/plan/ENGINE_REFACTOR_PLAN.md)
 ```
 
 The standard gate is the third form. All tiers run under the `tests/conftest.py`

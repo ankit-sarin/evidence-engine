@@ -336,10 +336,19 @@ def test_T5_pass2_skipped_presented_is_the_accepted_pass1_attempt(tmp_path, monk
                         lambda **kw: (_fake_response(_PASS1_BAD, thinking=None), next(hashes)))
 
     db = _ElicitDB(tmp_path)
-    PL.extract_paper_elicited(7, _ELICIT_PAPER, _ElicitSpec(), db, unit_map_dir_name="run_T5b")
+    result = PL.extract_paper_elicited(7, _ELICIT_PAPER, _ElicitSpec(), db,
+                                       unit_map_dir_name="run_T5b")
 
     assert db.stored.context_chain == ("h-p1a", "h-p1b")
     assert db.stored.presented_context_sha256 == "h-p1a"
+    # 12c-E-PIN-B-R2: pass 2 skipped, the stored trace is the (empty) priming
+    # block, unchanged by the pass2_priming factoring. Recorded on the tree
+    # before it.
+    from engine.core.effective_config import sha256_canonical
+    assert sha256_canonical(result.reasoning_trace) == SKIPPED_PASS2_TRACE_SHA256
+
+
+SKIPPED_PASS2_TRACE_SHA256 = "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126"
 
 
 # ── T6 — the writer refusal ─────────────────────────────────────────

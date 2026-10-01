@@ -63,10 +63,14 @@ from engine.core.codebook import CODEBOOK_FILENAME, load_codebook
 from engine.elicitation import classes as C
 from engine.elicitation import materialize as M
 from engine.elicitation import terminal as T
-from engine.elicitation.contracts import Pass1Result, check_response
+from engine.elicitation.contracts import (
+    ESCAPE_WITH_CITATION, FIELD_MISSING, INDEX_MALFORMED, INDEX_OUT_OF_RANGE,
+    INFERENCE_MALFORMED, INFERENCE_MISSING, STEP_WITHOUT_BASIS, STEPS_MISSING,
+    VALUE_MISSING, VALUE_WITHOUT_CITATION, FieldRecord, Pass1Result, Step, check_response,
+)
 from engine.elicitation.prompts import (
-    SYSTEM_PASS1, build_feedback_block, build_pass1_prompt,
-    build_pass2_priming_message, prompt_field_order,
+    FEEDBACK_ECHO_CAP, SYSTEM_PASS1, build_feedback_block, build_pass1_prompt,
+    build_pass2_priming_message, group_by_class, prompt_field_order,
 )
 from engine.elicitation.units import UnitMap, build_unit_map
 from engine.utils.ollama_client import ollama_chat
@@ -107,14 +111,106 @@ def pass1_messages(prompt: str) -> list[dict]:
             {"role": "user", "content": prompt}]
 
 
-def sentinel_pass1_prompt(spec, codebook_path=None) -> str:
-    """The Pass-1 prompt over the resolver's sentinel text, for the prompt hash."""
+def pass1_prompt(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
+                 feedback: str = "") -> str:
+    """One Pass-1 attempt's prompt: the elicitation prompt, then any feedback.
+
+    The one composition `run_pass1` sends and the `elicitation_pass1` prompt hash
+    renders (12c-E-PIN): attempt 2 is attempt 1's prompt with the typed feedback
+    block appended to the STRING."""
+    return build_pass1_prompt(unit_map, codebook, field_names) + feedback
+
+
+def pass2_priming(records: dict[str, FieldRecord], unit_map: UnitMap,
+                  order: tuple[str, ...]) -> tuple[str, str]:
+    """(priming block, priming message) for the elicited Pass 2.
+
+    The block is the materialized evidence, stored as the result's
+    `reasoning_trace`; the message wraps it and is what Pass 2 is sent as its
+    `reasoning_trace` argument. The one composition the runtime performs and the
+    elicited `extract_pass2` prompt hash renders (12c-E-PIN, 12c-E-PIN-B-R2)."""
+    block = M.priming_block(records, unit_map, order)
+    return block, build_pass2_priming_message(block)
+
+
+# ── 12c-E-PIN: sentinels for the prompt hash ─────────────────────────
+# A stage's prompt_hash renders every template its runtime call can send,
+# through the builders the runtime calls; only model output and paper text are
+# placeholders (12c-E-PIN-R1). Values, inferences and step texts below stand in
+# for model output; unit text stands in for paper text. Field names and classes
+# are the codebook's own, because the runtime sends them.
+SENTINEL_PRIMING_TEXT = "Unit one has words. Unit two has words."   # two units: "S1, S2"
+_SENTINEL_LONG_VALUE = "V" * (FEEDBACK_ECHO_CAP + 1)               # reaches the truncation marker
+
+
+def _sentinel_codebook(spec, codebook_path) -> tuple[dict, tuple[str, ...]]:
     from engine.core.codebook import load_codebook_for
-    from engine.core.effective_config import SENTINEL_TEXT
     cb = load_codebook(codebook_path) if codebook_path else load_codebook_for(spec.review_id)
-    cb_path = codebook_path or cb.path
-    return build_pass1_prompt(build_unit_map(0, SENTINEL_TEXT), cb.raw,
-                              expected_field_names(spec, cb_path))
+    return cb.raw, expected_field_names(spec, codebook_path or cb.path)
+
+
+def _names_by_class(codebook: dict, field_names: tuple[str, ...]) -> dict[str, list[str]]:
+    grouped = group_by_class(codebook, field_names)
+    return {cls: [f["name"] for f in grouped[cls]] for cls in C.CLASSES}
+
+
+def sentinel_pass1_prompt(spec, codebook_path=None, feedback: str = "") -> str:
+    """The Pass-1 prompt over the resolver's sentinel text, for the prompt hash."""
+    from engine.core.effective_config import SENTINEL_TEXT
+    codebook, names = _sentinel_codebook(spec, codebook_path)
+    return pass1_prompt(build_unit_map(0, SENTINEL_TEXT), codebook, names, feedback)
+
+
+def sentinel_pass1_result(codebook: dict, field_names: tuple[str, ...],
+                          n_units: int) -> Pass1Result:
+    """An attempt-1 result whose feedback block reaches every template it can
+    send: all ten FATAL codes, each class's accompaniment (VALUE_WITHOUT_CITATION
+    on every class), the unresolved-index line, the inference and step lines,
+    and the echo's truncation marker."""
+    by = _names_by_class(codebook, field_names)
+    s, i, j = by[C.STATED], by[C.INFERABLE], by[C.JUDGMENT]
+    recs = (
+        FieldRecord(s[0], C.STATED, _SENTINEL_LONG_VALUE, False, bad_indices=("S9", 9),
+                    violations=(VALUE_WITHOUT_CITATION, INDEX_MALFORMED, INDEX_OUT_OF_RANGE)),
+        FieldRecord(i[0], C.INFERABLE, "V", False, inference="I",
+                    violations=(VALUE_WITHOUT_CITATION, INFERENCE_MISSING, INFERENCE_MALFORMED)),
+        FieldRecord(j[0], C.JUDGMENT, "V", False, steps=(Step("T"),),
+                    violations=(VALUE_WITHOUT_CITATION, STEPS_MISSING, STEP_WITHOUT_BASIS)),
+        FieldRecord(s[1], C.STATED, "", False, violations=(FIELD_MISSING,)),
+        FieldRecord(s[2], C.STATED, "", False, violations=(VALUE_MISSING,)),
+        FieldRecord(s[3], C.STATED, C.escape_token(codebook), True, indices=(1,),
+                    violations=(ESCAPE_WITH_CITATION,)),
+    )
+    return Pass1Result(records={r.field_name: r for r in recs}, parse_path="sentinel",
+                       n_units=n_units)
+
+
+def sentinel_feedback_block(spec, codebook_path=None) -> str:
+    """Attempt 2's feedback over `sentinel_pass1_result`, built by the runtime's
+    own `build_feedback_block` against the attempt-1 sentinel unit map."""
+    from engine.core.effective_config import SENTINEL_TEXT
+    codebook, names = _sentinel_codebook(spec, codebook_path)
+    n_units = build_unit_map(0, SENTINEL_TEXT).n
+    return build_feedback_block(sentinel_pass1_result(codebook, names, n_units), codebook)
+
+
+def sentinel_priming_message(spec, codebook_path=None) -> str:
+    """The elicited Pass-2 priming message over one EVIDENCED record per class,
+    reaching every branch the runtime sends: cited units, a declared inference,
+    a step citing two units and a criteria-application step, the Pass-1 value.
+    `evidence_block`'s escape branch is left out: Pass 2 is primed with
+    EVIDENCED_VALUE records only, so the runtime never sends it (12c-E-PIN-B-R1)."""
+    codebook, names = _sentinel_codebook(spec, codebook_path)
+    by = _names_by_class(codebook, names)
+    recs = (
+        FieldRecord(by[C.STATED][0], C.STATED, "V", False, indices=(1, 2)),
+        FieldRecord(by[C.INFERABLE][0], C.INFERABLE, "V", False, indices=(1,), inference="I"),
+        FieldRecord(by[C.JUDGMENT][0], C.JUDGMENT, "V", False, indices=(1,),
+                    steps=(Step("T1", (1, 2)), Step("T2", (), True))),
+    )
+    records = {r.field_name: r for r in recs}
+    order = tuple(n for n in prompt_field_order(codebook, names) if n in records)
+    return pass2_priming(records, build_unit_map(0, SENTINEL_PRIMING_TEXT), order)[1]
 
 
 def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
@@ -128,7 +224,7 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     request: a correction that would overflow the context is refused or reported
     like any other input (INPUT-FIT-01), never truncated silently.
     """
-    prompt = build_pass1_prompt(unit_map, codebook, field_names) + feedback
+    prompt = pass1_prompt(unit_map, codebook, field_names, feedback)
     cfg = _with_think(cfg or stage_config("elicitation_pass1"), think)
 
     # R224a(2): this attempt's hash rides in the telemetry dict rather than
@@ -333,7 +429,7 @@ def extract_paper_elicited(
 
     order = prompt_field_order(codebook, field_names)
     evidenced = {n for n, s in states.items() if s == C.EVIDENCED_VALUE}
-    priming = M.priming_block(
+    priming, priming_msg = pass2_priming(
         {n: r for n, r in p1.records.items() if n in evidenced}, unit_map,
         tuple(n for n in order if n in evidenced),
     )
@@ -347,7 +443,6 @@ def extract_paper_elicited(
     pass2_hash = None
     if n_evidenced:
         pass2_prompt = build_extraction_prompt(paper_text, spec, cb_path)
-        priming_msg = build_pass2_priming_message(priming)
         # R224a(1): the structured pass's hash is presented_context_sha256.
         result, pass2_hash = extract_pass2_structured(
             pass2_prompt, priming_msg, spec, paper_id, cfg=cfg_p2,

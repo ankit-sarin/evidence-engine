@@ -431,11 +431,24 @@ def render_messages(stage: str, spec: ReviewSpec | None, *,
         if stage == "extract_pass1":
             return ex.pass1_messages(prompt)
         if stage == "extract_pass2":
+            # 12c-E-PIN: the elicited Pass 2 is sent the priming message as its
+            # `reasoning_trace`, so its render carries that message's templates;
+            # the non-elicited trace is Pass-1 model output, a placeholder.
+            if spec is not None and ex.extraction_stages(spec)[0] == "elicitation_pass1":
+                from engine.elicitation import pipeline as el
+                return ex.pass2_messages(prompt, el.sentinel_priming_message(spec, codebook_path))
             return ex.pass2_messages(prompt, "R")
         return ex.retry_snippet_messages("f", "v", SENTINEL_TEXT)
     if stage == "elicitation_pass1":
+        # 12c-E-PIN: both attempts, as the audit stage renders both variants —
+        # attempt 2 is attempt 1's prompt plus the typed feedback block.
         from engine.elicitation import pipeline as el
-        return el.pass1_messages(el.sentinel_pass1_prompt(spec, codebook_path))
+        messages = el.pass1_messages(el.sentinel_pass1_prompt(spec, codebook_path))
+        if el.MAX_PASS1_ATTEMPTS > 1:
+            feedback = el.sentinel_feedback_block(spec, codebook_path)
+            messages += el.pass1_messages(
+                el.sentinel_pass1_prompt(spec, codebook_path, feedback=feedback))
+        return messages
     if stage == "vision_parse":
         from engine.parsers.pdf_parser import vision_messages
         return vision_messages(SENTINEL_IMAGE)

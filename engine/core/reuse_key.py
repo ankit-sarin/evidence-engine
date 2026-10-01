@@ -9,6 +9,12 @@ refusals are pinned by name in `tests/test_run_manifest.py`, two of them by
 R97). A changed configuration is therefore a new arm NAME, and the arm's name
 is already in the key.
 
+The arm carries prompt identity because every stage's `prompt_hash` renders
+every template that stage's runtime call can send, through the builders the
+runtime calls, with only model output and paper text as placeholders
+(12c-E-PIN-R1). A template edit therefore moves `prompt_hash`, then the pin,
+and the run refuses at open.
+
 **Scheme (stable; changing it is a new scheme id, never an edit):**
 
     rk1:<sha256 of canonical_json({"arm": <str>, "paper_id": <int>,

@@ -444,3 +444,78 @@ def test_the_accepted_attempt_and_both_attempts_reach_telemetry(review, monkeypa
     assert [a["attempt"] for a in tel["attempts"]] == [1, 2]
     assert tel["attempts"][0]["feedback_chars"] == 0
     assert tel["attempts"][1]["feedback_chars"] > 0, "attempt 2 carried feedback"
+
+
+# ── 12c-E-PIN: the runtime requests are byte-identical across the refactor ──
+# The digest below was recorded on the tree BEFORE `pass1_prompt` and
+# `pass2_priming_message` were factored out of `run_pass1` and
+# `extract_paper_elicited` (12c-E-PIN-B). Attempt 1 fails, attempt 2 carries the
+# typed feedback block, Pass 2 carries the priming wrapper — every elicited
+# template reaches the wire. A change to this digest is a change to what Run 7
+# sends, which is a PI fork (12c-E-PASS2-R2), never a test update.
+ELICITED_REQUESTS_SHA256 = "d0dd7b5e1e5c8b4552dec7a34b99ce71fbf9ca526d1deb401b2f558882f37fb7"
+# 12c-E-PIN-B-R2: the stored reasoning_trace (the bare priming block, not the
+# message Pass 2 is sent) is guarded the same way, recorded on the same tree.
+ELICITED_TRACE_SHA256 = "18d4eb72e7833f84276f3103a5e54fc03ff0e9484009ffbeae04dd2b39cc6ee2"
+
+
+def test_the_elicited_requests_are_byte_identical(review, monkeypatch):
+    import engine.agents.extractor as E
+    import engine.elicitation.pipeline as PL
+    from engine.core.effective_config import sha256_canonical
+
+    sent: list[dict] = []
+    pass1 = iter([PASS1_BAD, PASS1_GOOD])
+
+    def fake_pass1(**kw):
+        sent.append(kw)
+        return _response(next(pass1))
+
+    def fake_pass2(**kw):
+        sent.append(kw)
+        return _response(PASS2, thinking=None)
+
+    monkeypatch.setattr(PL, "ollama_chat", fake_pass1)
+    monkeypatch.setattr(E, "ollama_chat", fake_pass2)
+    result = PL.extract_paper_elicited(7, PAPER, _Spec(), _DB(review),
+                                       unit_map_dir_name="run_TEST")
+
+    assert [kw["stage"] for kw in sent] == [
+        "elicitation_pass1", "elicitation_pass1", "extract_pass2"]
+    assert "did not meet the contract" in sent[1]["messages"][-1]["content"]
+    assert "Here is the evidence you cited" in sent[2]["messages"][-1]["content"]
+    assert result.reasoning_trace and result.reasoning_trace in sent[2]["messages"][-1]["content"]
+    assert sha256_canonical(sent) == ELICITED_REQUESTS_SHA256
+    assert sha256_canonical(result.reasoning_trace) == ELICITED_TRACE_SHA256
+
+
+def test_an_escape_record_never_reaches_the_priming_input(review, monkeypatch):
+    """12c-E-PIN-B R-5: the priming sentinel leaves out evidence_block's escape
+    branch because the runtime never sends it — an escape record takes the
+    escape token and is filtered out before `priming_block`. This pins that."""
+    import engine.agents.extractor as E
+    import engine.elicitation.materialize as M
+    import engine.elicitation.pipeline as PL
+
+    pass1 = json.dumps({"fields": [
+        {"field_name": "robot_platform", "unit_indices": [], "value": "NO_EVIDENCE_LOCATABLE"},
+        {"field_name": "country", "unit_indices": [2],
+         "inference": "Vancouver General Hospital is in Vancouver, so the country is Canada.",
+         "value": "Canada"},
+    ]})
+    primed: list[dict] = []
+    real = M.priming_block
+
+    def spy(records, unit_map, order):
+        primed.append(dict(records))
+        return real(records, unit_map, order)
+
+    monkeypatch.setattr(M, "priming_block", spy)
+    monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(pass1))
+    monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+    PL.extract_paper_elicited(7, PAPER, _Spec(), _DB(review), unit_map_dir_name="run_TEST")
+
+    states = E._LAST_PASS1_TELEMETRY["elicitation"]["terminal_states"]
+    assert states == {"robot_platform": "NO_EVIDENCE_LOCATABLE", "country": "EVIDENCED_VALUE"}
+    assert len(primed) == 1 and set(primed[0]) == {"country"}
+    assert not any(r.is_escape for r in primed[0].values())

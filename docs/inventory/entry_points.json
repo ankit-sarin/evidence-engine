@@ -5097,7 +5097,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 81,
+            "line": 85,
             "role": "docstring",
             "text": "Derived from the review directory, never searched (CODEBOOK-AUTH-01).\n\n    `review_dir` is `data/<review_id>`, so this is `codebook_path_for` with the\n    id..."
           }
@@ -7677,7 +7677,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "e5dac6286afa3b0e50986e845956fcc38d6c9513",
+    "generated_at_commit": "93e3a55b3b6bfa476690177cc9e8d4664c795b05",
     "scan_roots": [
       "engine",
       "scripts",

@@ -39,14 +39,17 @@ import contextlib
 import contextvars
 import importlib.metadata
 import json
+import logging
+import os
 import signal
 import socket
 import subprocess
+import sys
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable, Iterable, Mapping
+from typing import Any, Callable, Iterable, Mapping, NoReturn
 
 from engine.core.effective import PRE_MANIFEST
 from engine.core.effective_config import (
@@ -501,6 +504,51 @@ def interrupt_signum(exc: BaseException) -> int:
 def interrupt_reason(exc: BaseException) -> str:
     """The `INTERRUPTED_REASONS` value an interrupted close records (C47)."""
     return _INTERRUPT_REASON_BY_SIGNAL[interrupt_signum(exc)]
+
+
+#: The exit codes a command-line main returns after an interrupt: 128 + signum
+#: for SIGINT / SIGTERM / SIGHUP — 130 / 143 / 129 (C47).
+INTERRUPT_EXIT_CODES = frozenset(128 + signum for signum in _INTERRUPT_REASON_BY_SIGNAL)
+
+
+def _flush_logging_handlers() -> None:
+    loggers = [logging.getLogger()] + [
+        lg for lg in logging.Logger.manager.loggerDict.values()
+        if isinstance(lg, logging.Logger)]
+    for handler in {h for lg in loggers for h in lg.handlers}:
+        try:
+            handler.flush()
+        except Exception:  # a broken stream must not keep the process alive
+            pass
+
+
+def exit_process(code: int) -> NoReturn:
+    """End a command-line process with `main()`'s exit code (E-EXEC).
+
+    An interrupt exit (`INTERRUPT_EXIT_CODES`) flushes every logging handler,
+    then stdout and stderr, then `os._exit(code)`. Normal interpreter shutdown
+    would join `ollama_chat`'s executor worker — concurrent.futures' exit hook
+    joins every started worker — and hold the process, and Ollama's GPU, for the
+    rest of the abandoned generation (E-EXEC-A: 77 s on gemma3:27b; up to the
+    900 s read timeout). `os._exit` closes the socket, and Ollama cancels a
+    request whose client disconnects (E-EXEC-A V4). Nothing is lost: when
+    `main()` returns an interrupt code every cleanup has already run — the
+    experiment lock's release, the rollback and the 'interrupted' close, the
+    entry point's `finally` with `db.close()`, the log line (C47) — and no atexit
+    hook the CLIs register persists run data (E-EXEC Step 1).
+
+    Every other code goes through `sys.exit(code)` and normal shutdown,
+    unchanged. Called only from a module's `if __name__ == "__main__":` line,
+    never inside `main()`, so tests that call `main()` keep their process."""
+    if code in INTERRUPT_EXIT_CODES:
+        _flush_logging_handlers()
+        for stream in (sys.stdout, sys.stderr):
+            try:
+                stream.flush()
+            except Exception:
+                pass
+        os._exit(code)
+    sys.exit(code)
 
 
 @contextlib.contextmanager

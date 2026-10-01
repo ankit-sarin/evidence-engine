@@ -206,12 +206,14 @@ def run_pipeline(
         raise
     except (KeyboardInterrupt, rm.RunInterrupted) as exc:
         # C47: an interrupt closes the run 'interrupted' with its signal's
-        # reason — unless the run already closed (a gate stop), whose close
-        # stands. An uncommitted write is rolled back first, never committed
-        # by the close. Then the interrupt propagates to main().
+        # reason. Roll back first, then check: an uncommitted write is never
+        # committed by the close, and a close the interrupt caught before its
+        # commit is rolled back with it — a rolled-back close is not a close
+        # (12a-C47-R2). A committed close (a gate stop) stands. Then the
+        # interrupt propagates to main().
+        if db._conn.in_transaction:
+            db._conn.rollback()
         if not rm.is_closed(db._conn, run_id):
-            if db._conn.in_transaction:
-                db._conn.rollback()
             _finish_review_run(db, run_id, "interrupted",
                                reason=rm.interrupt_reason(exc))
         exc.run_id = run_id
@@ -524,7 +526,12 @@ def _finish_review_run(db: ReviewDatabase, run_id: int, status: str, *,
     goes through here. `reason`: the RunAborted message for 'aborted' (10a-C3,
     R215); for 'interrupted', the stopping gate's `rm.REASON_BLOCKED_*` (C40)
     or `rm.interrupt_reason(exc)` — "interrupt:SIGINT" / "interrupt:SIGTERM" /
-    "interrupt:SIGHUP" (C47); None for 'completed' and 'failed'."""
+    "interrupt:SIGHUP" (C47); None for 'completed' and 'failed'.
+
+    On an interrupt, run_pipeline rolls back any open transaction BEFORE asking
+    `rm.is_closed`: an interrupt can land between a close's UPDATE and its
+    commit, and that uncommitted end would read as closed and then be discarded
+    with the connection. A rolled-back close is not a close (12a-C47-R2)."""
     rm.close_run(db._conn, run_id, status, reason=reason)
 
 

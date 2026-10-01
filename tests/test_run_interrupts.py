@@ -303,3 +303,54 @@ def test_t8_an_interrupt_leaves_an_uncommitted_write_absent(db, pipeline, monkey
     finally:
         conn.close()
     assert _end(db, pipeline)[:2] == ("interrupted", rm.REASON_INTERRUPT_SIGINT)
+
+
+# ── T9: an interrupt inside the normal close ──────────────────────────
+class _CommitInterrupted:
+    """The run's connection for one `close_run` call: every statement runs for
+    real, and the commit is where the KeyboardInterrupt lands — after the
+    UPDATE, before it is committed."""
+
+    def __init__(self, conn):
+        self._conn = conn
+
+    def execute(self, *a, **k):
+        return self._conn.execute(*a, **k)
+
+    def commit(self):
+        raise KeyboardInterrupt()
+
+
+@pytest.fixture
+def close_interrupted_once(monkeypatch):
+    """The first `close_run` is interrupted at its commit; later ones are real."""
+    real, calls = rm.close_run, []
+
+    def close_run(conn, *a, **k):
+        calls.append(a[1] if len(a) > 1 else k.get("status"))
+        return real(_CommitInterrupted(conn) if len(calls) == 1 else conn, *a, **k)
+
+    monkeypatch.setattr(rm, "close_run", close_run)
+    return calls
+
+
+def test_t9_run_pipeline_an_interrupt_inside_the_completed_close_closes_interrupted(
+        db, pipeline, close_interrupted_once):
+    with pytest.raises(KeyboardInterrupt):
+        rp.run_pipeline("intr", skip_to="extract")
+    assert close_interrupted_once[0] == "completed"
+    status, reason, ended_at = _end(db, pipeline)
+    assert (status, reason) == ("interrupted", rm.REASON_INTERRUPT_SIGINT)
+    assert ended_at is not None
+
+
+def test_t9_run_ft_invocation_an_interrupt_inside_the_completed_close_closes_interrupted(
+        db, spec, monkeypatch, close_interrupted_once):
+    monkeypatch.setattr(ft, "run_ft_screening", lambda *a, **k: None)
+    with pytest.raises(KeyboardInterrupt) as caught:
+        ft.run_ft_invocation(db, spec, review_name="intr", screen_only=True,
+                             git=CLEAN, digest_fn=FT_DIGESTS.__getitem__)
+    assert close_interrupted_once[0] == "completed"
+    status, reason, ended_at = _end(db, caught.value.run_id)
+    assert (status, reason) == ("interrupted", rm.REASON_INTERRUPT_SIGINT)
+    assert ended_at is not None

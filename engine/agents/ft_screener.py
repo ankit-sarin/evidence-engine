@@ -586,7 +586,11 @@ def run_ft_invocation(db: ReviewDatabase, spec: ReviewSpec, *, review_name: str 
     run id. A resumed run is simply a new invocation, so a new manifest.
     Closes `completed`, or `failed` on any exception, which re-raises; on an
     interrupt (KeyboardInterrupt, or `rm.RunInterrupted` from SIGTERM/SIGHUP)
-    closes `interrupted` with `rm.interrupt_reason(exc)` and re-raises (C47)."""
+    closes `interrupted` with `rm.interrupt_reason(exc)` and re-raises (C47).
+    The interrupt path rolls back any open transaction before it asks
+    `rm.is_closed`, so a close the interrupt caught between its UPDATE and its
+    commit is undone rather than mistaken for a close: a rolled-back close is
+    not a close (12a-C47-R2)."""
     run_id = open_screening_manifest(db, spec, with_preflight=not verify_only,
                                      git=git, digest_fn=digest_fn)
     token = rm.activate(db._conn, run_id)
@@ -604,11 +608,12 @@ def run_ft_invocation(db: ReviewDatabase, spec: ReviewSpec, *, review_name: str 
         rm.close_run(db._conn, run_id, "failed")
         raise
     except (KeyboardInterrupt, rm.RunInterrupted) as exc:
-        # C47: as run_pipeline — a run already closed keeps its close; an
-        # uncommitted write is rolled back, never committed by the close.
+        # C47: as run_pipeline — roll back, then check: a committed close
+        # stands, while an uncommitted write or a close caught before its
+        # commit is rolled back and the run closes 'interrupted' (12a-C47-R2).
+        if db._conn.in_transaction:
+            db._conn.rollback()
         if not rm.is_closed(db._conn, run_id):
-            if db._conn.in_transaction:
-                db._conn.rollback()
             rm.close_run(db._conn, run_id, "interrupted",
                          reason=rm.interrupt_reason(exc))
         exc.run_id = run_id

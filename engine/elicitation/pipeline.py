@@ -58,6 +58,7 @@ from engine.core.completeness import (
     enforce_terminal_states, expected_field_names,
 )
 from engine.core.events import mint_extraction_uid
+from engine.core.run_manifest import RunRefused
 from engine.core.extraction_events import elicited_record, write_extraction_events
 from engine.core.codebook import CODEBOOK_FILENAME, load_codebook
 from engine.elicitation import classes as C
@@ -143,10 +144,82 @@ SENTINEL_PRIMING_TEXT = "Unit one has words. Unit two has words."   # two units:
 _SENTINEL_LONG_VALUE = "V" * (FEEDBACK_ECHO_CAP + 1)               # reaches the truncation marker
 
 
-def _sentinel_codebook(spec, codebook_path) -> tuple[dict, tuple[str, ...]]:
+# The two sentinels as tables: one (class, record factory) per record, in the
+# order the records are rendered. A record's field is the next codebook field of
+# its class, so the tables are also the sentinels' field requirement
+# (`sentinel_requirement`) — there is no second count to drift from them.
+_FEEDBACK_SENTINEL = (
+    (C.STATED, lambda name, cb: FieldRecord(
+        name, C.STATED, _SENTINEL_LONG_VALUE, False, bad_indices=("S9", 9),
+        violations=(VALUE_WITHOUT_CITATION, INDEX_MALFORMED, INDEX_OUT_OF_RANGE))),
+    (C.INFERABLE, lambda name, cb: FieldRecord(
+        name, C.INFERABLE, "V", False, inference="I",
+        violations=(VALUE_WITHOUT_CITATION, INFERENCE_MISSING, INFERENCE_MALFORMED))),
+    (C.JUDGMENT, lambda name, cb: FieldRecord(
+        name, C.JUDGMENT, "V", False, steps=(Step("T"),),
+        violations=(VALUE_WITHOUT_CITATION, STEPS_MISSING, STEP_WITHOUT_BASIS))),
+    (C.STATED, lambda name, cb: FieldRecord(name, C.STATED, "", False,
+                                            violations=(FIELD_MISSING,))),
+    (C.STATED, lambda name, cb: FieldRecord(name, C.STATED, "", False,
+                                            violations=(VALUE_MISSING,))),
+    (C.STATED, lambda name, cb: FieldRecord(name, C.STATED, C.escape_token(cb), True,
+                                            indices=(1,), violations=(ESCAPE_WITH_CITATION,))),
+)
+_PRIMING_SENTINEL = (
+    (C.STATED, lambda name, cb: FieldRecord(name, C.STATED, "V", False, indices=(1, 2))),
+    (C.INFERABLE, lambda name, cb: FieldRecord(name, C.INFERABLE, "V", False,
+                                               indices=(1,), inference="I")),
+    (C.JUDGMENT, lambda name, cb: FieldRecord(
+        name, C.JUDGMENT, "V", False, indices=(1,),
+        steps=(Step("T1", (1, 2)), Step("T2", (), True)))),
+)
+
+
+class ElicitationSentinelUnsatisfiable(RunRefused):
+    """The review's codebook has too few fields of some class for the elicited
+    prompt-hash sentinels (12c-E-SENTINEL). Raised from the render, which
+    `open_run` reaches through `resolve_run` before it writes anything."""
+
+
+def sentinel_requirement() -> dict[str, int]:
+    """Fields needed per class: for each class, the most records any one
+    sentinel table gives it. Counted from the tables themselves."""
+    need = {cls: 0 for cls in C.CLASSES}
+    for table in (_FEEDBACK_SENTINEL, _PRIMING_SENTINEL):
+        for cls in C.CLASSES:
+            need[cls] = max(need[cls], sum(1 for c, _ in table if c == cls))
+    return need
+
+
+def check_sentinel_fields(codebook: dict, field_names: tuple[str, ...],
+                          codebook_path) -> dict[str, list[str]]:
+    """The codebook's field names per class, or a named refusal if any class has
+    fewer than `sentinel_requirement()` asks — before any index is taken."""
+    have = _names_by_class(codebook, field_names)
+    short = [(cls, n, len(have[cls])) for cls, n in sentinel_requirement().items()
+             if len(have[cls]) < n]
+    if short:
+        detail = "; ".join(f"{cls.upper()}: {n} required, {got} present" for cls, n, got in short)
+        raise ElicitationSentinelUnsatisfiable(
+            f"run refused: the codebook {codebook_path} has too few fields for the elicited "
+            f"prompt-hash sentinels — {detail}. An elicited run cannot be pinned against it. "
+            "An adaptive sentinel is row E-SENTINEL-ADAPT.")
+    return have
+
+
+def _sentinel_records(table, codebook: dict, field_names: tuple[str, ...],
+                      codebook_path) -> dict[str, FieldRecord]:
+    have = check_sentinel_fields(codebook, field_names, codebook_path)
+    pools = {cls: iter(names) for cls, names in have.items()}
+    recs = (make(next(pools[cls]), codebook) for cls, make in table)
+    return {r.field_name: r for r in recs}
+
+
+def _sentinel_codebook(spec, codebook_path) -> tuple[dict, tuple[str, ...], object]:
     from engine.core.codebook import load_codebook_for
     cb = load_codebook(codebook_path) if codebook_path else load_codebook_for(spec.review_id)
-    return cb.raw, expected_field_names(spec, codebook_path or cb.path)
+    path = codebook_path or cb.path
+    return cb.raw, expected_field_names(spec, path), path
 
 
 def _names_by_class(codebook: dict, field_names: tuple[str, ...]) -> dict[str, list[str]]:
@@ -157,41 +230,27 @@ def _names_by_class(codebook: dict, field_names: tuple[str, ...]) -> dict[str, l
 def sentinel_pass1_prompt(spec, codebook_path=None, feedback: str = "") -> str:
     """The Pass-1 prompt over the resolver's sentinel text, for the prompt hash."""
     from engine.core.effective_config import SENTINEL_TEXT
-    codebook, names = _sentinel_codebook(spec, codebook_path)
+    codebook, names, _ = _sentinel_codebook(spec, codebook_path)
     return pass1_prompt(build_unit_map(0, SENTINEL_TEXT), codebook, names, feedback)
 
 
 def sentinel_pass1_result(codebook: dict, field_names: tuple[str, ...],
-                          n_units: int) -> Pass1Result:
+                          n_units: int, codebook_path=None) -> Pass1Result:
     """An attempt-1 result whose feedback block reaches every template it can
     send: all ten FATAL codes, each class's accompaniment (VALUE_WITHOUT_CITATION
     on every class), the unresolved-index line, the inference and step lines,
     and the echo's truncation marker."""
-    by = _names_by_class(codebook, field_names)
-    s, i, j = by[C.STATED], by[C.INFERABLE], by[C.JUDGMENT]
-    recs = (
-        FieldRecord(s[0], C.STATED, _SENTINEL_LONG_VALUE, False, bad_indices=("S9", 9),
-                    violations=(VALUE_WITHOUT_CITATION, INDEX_MALFORMED, INDEX_OUT_OF_RANGE)),
-        FieldRecord(i[0], C.INFERABLE, "V", False, inference="I",
-                    violations=(VALUE_WITHOUT_CITATION, INFERENCE_MISSING, INFERENCE_MALFORMED)),
-        FieldRecord(j[0], C.JUDGMENT, "V", False, steps=(Step("T"),),
-                    violations=(VALUE_WITHOUT_CITATION, STEPS_MISSING, STEP_WITHOUT_BASIS)),
-        FieldRecord(s[1], C.STATED, "", False, violations=(FIELD_MISSING,)),
-        FieldRecord(s[2], C.STATED, "", False, violations=(VALUE_MISSING,)),
-        FieldRecord(s[3], C.STATED, C.escape_token(codebook), True, indices=(1,),
-                    violations=(ESCAPE_WITH_CITATION,)),
-    )
-    return Pass1Result(records={r.field_name: r for r in recs}, parse_path="sentinel",
-                       n_units=n_units)
+    records = _sentinel_records(_FEEDBACK_SENTINEL, codebook, field_names, codebook_path)
+    return Pass1Result(records=records, parse_path="sentinel", n_units=n_units)
 
 
 def sentinel_feedback_block(spec, codebook_path=None) -> str:
     """Attempt 2's feedback over `sentinel_pass1_result`, built by the runtime's
     own `build_feedback_block` against the attempt-1 sentinel unit map."""
     from engine.core.effective_config import SENTINEL_TEXT
-    codebook, names = _sentinel_codebook(spec, codebook_path)
+    codebook, names, path = _sentinel_codebook(spec, codebook_path)
     n_units = build_unit_map(0, SENTINEL_TEXT).n
-    return build_feedback_block(sentinel_pass1_result(codebook, names, n_units), codebook)
+    return build_feedback_block(sentinel_pass1_result(codebook, names, n_units, path), codebook)
 
 
 def sentinel_priming_message(spec, codebook_path=None) -> str:
@@ -200,15 +259,8 @@ def sentinel_priming_message(spec, codebook_path=None) -> str:
     a step citing two units and a criteria-application step, the Pass-1 value.
     `evidence_block`'s escape branch is left out: Pass 2 is primed with
     EVIDENCED_VALUE records only, so the runtime never sends it (12c-E-PIN-B-R1)."""
-    codebook, names = _sentinel_codebook(spec, codebook_path)
-    by = _names_by_class(codebook, names)
-    recs = (
-        FieldRecord(by[C.STATED][0], C.STATED, "V", False, indices=(1, 2)),
-        FieldRecord(by[C.INFERABLE][0], C.INFERABLE, "V", False, indices=(1,), inference="I"),
-        FieldRecord(by[C.JUDGMENT][0], C.JUDGMENT, "V", False, indices=(1,),
-                    steps=(Step("T1", (1, 2)), Step("T2", (), True))),
-    )
-    records = {r.field_name: r for r in recs}
+    codebook, names, path = _sentinel_codebook(spec, codebook_path)
+    records = _sentinel_records(_PRIMING_SENTINEL, codebook, names, path)
     order = tuple(n for n in prompt_field_order(codebook, names) if n in records)
     return pass2_priming(records, build_unit_map(0, SENTINEL_PRIMING_TEXT), order)[1]
 

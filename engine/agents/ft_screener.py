@@ -584,7 +584,9 @@ def run_ft_invocation(db: ReviewDatabase, spec: ReviewSpec, *, review_name: str 
                       git=None, digest_fn=None) -> int:
     """The CLI's body: open the manifest, run inside it, close it. Returns the
     run id. A resumed run is simply a new invocation, so a new manifest.
-    Closes `completed`, or `failed` on any exception, which re-raises."""
+    Closes `completed`, or `failed` on any exception, which re-raises; on an
+    interrupt (KeyboardInterrupt, or `rm.RunInterrupted` from SIGTERM/SIGHUP)
+    closes `interrupted` with `rm.interrupt_reason(exc)` and re-raises (C47)."""
     run_id = open_screening_manifest(db, spec, with_preflight=not verify_only,
                                      git=git, digest_fn=digest_fn)
     token = rm.activate(db._conn, run_id)
@@ -601,6 +603,16 @@ def run_ft_invocation(db: ReviewDatabase, spec: ReviewSpec, *, review_name: str 
         logger.error("FT screening run %d failed", run_id, exc_info=True)
         rm.close_run(db._conn, run_id, "failed")
         raise
+    except (KeyboardInterrupt, rm.RunInterrupted) as exc:
+        # C47: as run_pipeline — a run already closed keeps its close; an
+        # uncommitted write is rolled back, never committed by the close.
+        if not rm.is_closed(db._conn, run_id):
+            if db._conn.in_transaction:
+                db._conn.rollback()
+            rm.close_run(db._conn, run_id, "interrupted",
+                         reason=rm.interrupt_reason(exc))
+        exc.run_id = run_id
+        raise
     finally:
         rm.deactivate(token)
     return run_id
@@ -609,8 +621,11 @@ def run_ft_invocation(db: ReviewDatabase, spec: ReviewSpec, *, review_name: str 
 # ── CLI Entry Point ──────────────────────────────────────────────────
 
 
-if __name__ == "__main__":
+def main(argv: list[str] | None = None) -> int:
+    """The FT screening command line. `argv` None reads sys.argv. Returns the
+    exit code: 0, or 128 + signum after an interrupt closed the run (C47)."""
     import argparse
+    import signal
     import sys
 
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
@@ -632,7 +647,7 @@ if __name__ == "__main__":
     parser.add_argument("--screen-only", action="store_true", help="Primary screen only")
     parser.add_argument("--verify-only", action="store_true", help="Verification only")
     parser.add_argument("--background", action="store_true", help="Run in tmux background")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.background:
         from engine.utils.background import maybe_background
@@ -642,7 +657,21 @@ if __name__ == "__main__":
     db = ReviewDatabase(args.review)
 
     try:
-        run_ft_invocation(db, spec, review_name=args.review,
-                          screen_only=args.screen_only, verify_only=args.verify_only)
+        with rm.interrupt_signals():
+            run_ft_invocation(db, spec, review_name=args.review,
+                              screen_only=args.screen_only, verify_only=args.verify_only)
+    except (KeyboardInterrupt, rm.RunInterrupted) as exc:
+        # C47: one line, no traceback, the conventional 128 + signum exit.
+        signum = rm.interrupt_signum(exc)
+        run_id = getattr(exc, "run_id", None)
+        logger.error("Interrupted by %s — %s.", signal.Signals(signum).name,
+                     f"run_id {run_id} is closed" if run_id is not None
+                     else "no run manifest was open")
+        return 128 + signum
     finally:
         db.close()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

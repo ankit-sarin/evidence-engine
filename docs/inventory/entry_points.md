@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `198a3492ff5babb3bcfc4c0f7144fa20e555bef0` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `59c4047577264e5eb8981f615e1d5fc0aeb3a370` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -109,7 +109,7 @@ Two figures deliberately have no baseline row. **entry points** (95) counts anyt
 | `engine/adjudication/abstract_adjudication_html.py` | `--review` required; `--output`=None | — | — | — |
 | `engine/adjudication/advance_stage.py` | `--review` required; `--stage`; `--note`; `--force`; `--status` | — | 73 | — |
 | `engine/adjudication/ft_adjudication_html.py` | `--review` required; `--output`=None | — | — | — |
-| `engine/agents/ft_screener.py` | `--review` required; `--spec`=None; `--screen-only`; `--verify-only`; `--background` | load_spec_for | 642 | <module>:spec_first |
+| `engine/agents/ft_screener.py` | `--review` required; `--spec`=None; `--screen-only`; `--verify-only`; `--background` | load_spec_for | 657 | main:spec_first |
 | `engine/analysis/concordance.py` | `--review` required; `--arms` required; `--spec`=None | data_root_for, load_review_spec, load_spec_for, spec_path_for | — | — |
 | `engine/migrations/002_screening_rename.py` | — | — | — | — |
 | `engine/migrations/003_backfill_expanded_screening.py` | — | — | — | — |
@@ -150,7 +150,7 @@ Two figures deliberately have no baseline row. **entry points** (95) counts anyt
 | `scripts/rescreen_original_251.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/rescreen_with_specialty.py` | `--review` required; `--spec`=None; `--background`; `--verify-only`; `--report-only` | load_spec_for, spec_path_for | 112 | main:spec_first |
 | `scripts/run_cloud_extraction.py` | `--review` required; `--arm`=None; `--spec`=None; `--db`=None; `--max-papers`=None; `--max-cost`=None; `--progress`; `--dry-run` | data_root_for, load_review_spec, load_spec_for, spec_path_for | — | — |
-| `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None; `--max-papers`=None | load_spec_for | 89 | run_pipeline:spec_first |
+| `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None; `--max-papers`=None | load_spec_for | 90 | run_pipeline:spec_first |
 | `scripts/screen_expanded.py` | `--review` required; `--spec`=None; `--fetch-only`; `--screen-only`; `--verify-only`; `--fresh` | load_review_spec, load_spec_for, spec_path_for | — | — |
 | `scripts/smoke_test_fixes.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/test_e2e_search_screen.py` | — | load_review_spec | 66 | main:spec_first |

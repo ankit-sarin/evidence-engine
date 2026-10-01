@@ -39,6 +39,7 @@ import contextlib
 import contextvars
 import importlib.metadata
 import json
+import signal
 import socket
 import subprocess
 import uuid
@@ -60,11 +61,23 @@ RUN_KINDS = ("extraction", "screening", "judge", "review_session", "import")
 #: R215/10a-C3: 'aborted' wired to RunAborted's close in scripts/run_pipeline.py.
 END_STATUSES = ("completed", "failed", "interrupted", "aborted")
 #: C40: the closed set of `end_reason` values an 'interrupted' close carries.
-#: One per `run_pipeline` gate that stops a run; C47 adds its interrupt reasons
-#: here. Kept beside END_STATUSES so engine/ callers can import it too.
+#: One per `run_pipeline` gate that stops a run (C40), one per interrupt (C47).
+#: Kept beside END_STATUSES so engine/ callers can import it too.
 REASON_BLOCKED_ADJUDICATION = "blocked:adjudication"
 REASON_BLOCKED_AUDIT_REVIEW = "blocked:audit_review"
-INTERRUPTED_REASONS = (REASON_BLOCKED_ADJUDICATION, REASON_BLOCKED_AUDIT_REVIEW)
+REASON_INTERRUPT_SIGINT = "interrupt:SIGINT"
+REASON_INTERRUPT_SIGTERM = "interrupt:SIGTERM"
+REASON_INTERRUPT_SIGHUP = "interrupt:SIGHUP"
+INTERRUPTED_REASONS = (REASON_BLOCKED_ADJUDICATION, REASON_BLOCKED_AUDIT_REVIEW,
+                       REASON_INTERRUPT_SIGINT, REASON_INTERRUPT_SIGTERM,
+                       REASON_INTERRUPT_SIGHUP)
+#: The signal each interrupt reason names. SIGINT arrives as Python's own
+#: KeyboardInterrupt; SIGTERM and SIGHUP as RunInterrupted (`interrupt_signals`).
+_INTERRUPT_REASON_BY_SIGNAL = {
+    signal.SIGINT: REASON_INTERRUPT_SIGINT,
+    signal.SIGTERM: REASON_INTERRUPT_SIGTERM,
+    signal.SIGHUP: REASON_INTERRUPT_SIGHUP,
+}
 ARM_PINNED = "pinned"
 
 #: R75: the client libraries whose versions every manifest records.
@@ -80,6 +93,18 @@ _LOCAL_EXTRACTION_STAGES = ("extract_pass1", "extract_pass2",
 
 class RunRefused(Exception):
     """A run that may not open. Raised before anything is written."""
+
+
+class RunInterrupted(BaseException):
+    """SIGTERM or SIGHUP, raised by `interrupt_signals`' handler (C47).
+
+    A BaseException, like KeyboardInterrupt, and deliberately not an Exception:
+    every `except Exception` on the run path (the per-paper loop, `ollama_chat`'s
+    retry, an entry point's 'failed' close) must let it through."""
+
+    def __init__(self, signum: int):
+        super().__init__(signal.Signals(signum).name)
+        self.signum = signum
 
 
 class DirtyTree(RunRefused):
@@ -439,8 +464,12 @@ def close_run(conn, run_id: int, status: str = "completed",
     one for 'aborted', refuses one for 'completed', and permits either for
     'failed' and 'interrupted' (R234). `run_pipeline` passes the RunAborted
     message for 'aborted' and an `INTERRUPTED_REASONS` value at its gate stops
-    (C40); the three import paths pass the refused entry or failure message.
-    Free text apart from `INTERRUPTED_REASONS`; this function does not check it."""
+    (C40); `run_pipeline` and `run_ft_invocation` pass `interrupt_reason(exc)`
+    — "interrupt:SIGINT" / "interrupt:SIGTERM" / "interrupt:SIGHUP" — on an
+    interrupt (C47); the three import paths pass the refused entry or failure
+    message. Free text apart from `INTERRUPTED_REASONS`; this function does not
+    check it. A second close is refused by 022's `run_manifests_end_once`
+    trigger (an IntegrityError) — callers that may race one check `is_closed`."""
     if status not in END_STATUSES:
         raise ValueError(f"end status {status!r} is not one of {END_STATUSES}")
     conn.execute(
@@ -448,6 +477,51 @@ def close_run(conn, run_id: int, status: str = "completed",
         "WHERE run_id = ?",
         (_now(), status, reason, run_id))
     conn.commit()
+
+
+def is_closed(conn, run_id: int) -> bool:
+    """True once the run's end is recorded (`ended_at` set). An interrupt
+    handler checks this first, so a run already closed keeps its first close
+    rather than meeting the end-once trigger (C47)."""
+    row = conn.execute("SELECT ended_at FROM run_manifests WHERE run_id = ?",
+                       (run_id,)).fetchone()
+    return row is not None and row[0] is not None
+
+
+def interrupt_signum(exc: BaseException) -> int:
+    """The signal an interrupt stands for: SIGINT for KeyboardInterrupt, the
+    carried number for RunInterrupted. Anything else is not an interrupt."""
+    if isinstance(exc, KeyboardInterrupt):
+        return signal.SIGINT
+    if isinstance(exc, RunInterrupted):
+        return exc.signum
+    raise TypeError(f"{type(exc).__name__} is not an interrupt")
+
+
+def interrupt_reason(exc: BaseException) -> str:
+    """The `INTERRUPTED_REASONS` value an interrupted close records (C47)."""
+    return _INTERRUPT_REASON_BY_SIGNAL[interrupt_signum(exc)]
+
+
+@contextlib.contextmanager
+def interrupt_signals():
+    """Install SIGTERM and SIGHUP handlers that raise `RunInterrupted(signum)`,
+    and restore the prior handlers on exit, whatever ends the block (C47).
+
+    Only a command-line main uses this — never `run_pipeline()` or
+    `run_ft_invocation()` themselves, so a library caller or a test keeps its
+    own handlers. SIGINT keeps Python's default KeyboardInterrupt."""
+    def _raise(signum, _frame):
+        raise RunInterrupted(signum)
+
+    prior = {}
+    try:
+        for signum in (signal.SIGTERM, signal.SIGHUP):
+            prior[signum] = signal.signal(signum, _raise)
+        yield
+    finally:
+        for signum, handler in prior.items():
+            signal.signal(signum, handler)
 
 
 # ── Call recording ───────────────────────────────────────────────────

@@ -4,6 +4,7 @@
 import argparse
 import json
 import logging
+import signal
 import sys
 import time
 from datetime import datetime, timezone
@@ -202,6 +203,18 @@ def run_pipeline(
     except Exception as exc:
         logger.error("Pipeline failed: %s", exc, exc_info=True)
         _finish_review_run(db, run_id, "failed")
+        raise
+    except (KeyboardInterrupt, rm.RunInterrupted) as exc:
+        # C47: an interrupt closes the run 'interrupted' with its signal's
+        # reason — unless the run already closed (a gate stop), whose close
+        # stands. An uncommitted write is rolled back first, never committed
+        # by the close. Then the interrupt propagates to main().
+        if not rm.is_closed(db._conn, run_id):
+            if db._conn.in_transaction:
+                db._conn.rollback()
+            _finish_review_run(db, run_id, "interrupted",
+                               reason=rm.interrupt_reason(exc))
+        exc.run_id = run_id
         raise
     finally:
         rm.deactivate(run_token)
@@ -509,8 +522,9 @@ def _finish_review_run(db: ReviewDatabase, run_id: int, status: str, *,
                        reason: str | None = None) -> None:
     """Record the run's end on its manifest, once — every run_pipeline close
     goes through here. `reason`: the RunAborted message for 'aborted' (10a-C3,
-    R215); the stopping gate's `rm.INTERRUPTED_REASONS` value for 'interrupted'
-    (C40); None for 'completed' and 'failed'."""
+    R215); for 'interrupted', the stopping gate's `rm.REASON_BLOCKED_*` (C40)
+    or `rm.interrupt_reason(exc)` — "interrupt:SIGINT" / "interrupt:SIGTERM" /
+    "interrupt:SIGHUP" (C47); None for 'completed' and 'failed'."""
     rm.close_run(db._conn, run_id, status, reason=reason)
 
 
@@ -569,9 +583,20 @@ def main():
             "--name is deprecated and will be removed; use --review %s.", args.review
         )
 
-    run_pipeline(args.review, args.spec, skip_to=args.skip_to, limit=args.limit,
-                 max_papers=args.max_papers)
+    try:
+        with rm.interrupt_signals():
+            run_pipeline(args.review, args.spec, skip_to=args.skip_to, limit=args.limit,
+                         max_papers=args.max_papers)
+    except (KeyboardInterrupt, rm.RunInterrupted) as exc:
+        # C47: one line, no traceback, the conventional 128 + signum exit.
+        signum = rm.interrupt_signum(exc)
+        run_id = getattr(exc, "run_id", None)
+        logger.error("Interrupted by %s — %s.", signal.Signals(signum).name,
+                     f"run_id {run_id} is closed" if run_id is not None
+                     else "no run manifest was open")
+        return 128 + signum
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

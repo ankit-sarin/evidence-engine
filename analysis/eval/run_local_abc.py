@@ -127,7 +127,7 @@ def run_one(paper, condition: str, paper_text: str, spec, expected, slot_schema)
         fields_expected=len(expected),
     )
     try:
-        trace = extract_pass1_reasoning(prompt, think=models.pass1_think)
+        trace = extract_pass1_reasoning(prompt)
         t1 = time.time()
         branch = _LAST_PASS1_TELEMETRY.get("parse_branch")
         thinking_chars = _LAST_PASS1_TELEMETRY.get("thinking_chars")

@@ -113,15 +113,28 @@ def test_pass1_passes_think_explicitly_and_defaults_on():
     assert chat.call_args.kwargs["think"] is True
 
 
-def test_pass1_think_is_overridable():
-    with patch("engine.agents.extractor.ollama_chat") as chat:
-        chat.return_value = _resp(ANSWER_CONTENT, NATIVE_THINKING)
-        with pytest.raises(MissingThinkingChannelError):
-            # think=False on a model that then returns no thinking must still
-            # refuse to substitute content.
-            chat.return_value = _resp(ANSWER_CONTENT, None)
-            extract_pass1_reasoning("prompt", think=False)
-    assert chat.call_args.kwargs["think"] is False
+def test_think_is_not_a_caller_override():
+    """C41 (12c): `think` comes from the resolved stage config only, as FT's did
+    after R246. The `think=` parameter that let a caller override it through the
+    private `_replace` — bypassing `with_options`' UndeclaredOverride check — is
+    gone from every extraction signature; passing it is a TypeError, before any
+    call is built."""
+    from engine.agents.extractor import extract_pass2_structured
+    from engine.elicitation import pipeline as PL
+
+    with patch("engine.agents.extractor.ollama_chat") as chat, \
+            patch("engine.elicitation.pipeline.ollama_chat") as el_chat:
+        calls = (
+            lambda: extract_pass1_reasoning("prompt", think=False),
+            lambda: extract_pass2_structured("prompt", "trace", None, 1, think=False),
+            lambda: PL.run_pass1(None, {}, (), 1, think=False),
+            lambda: PL.elicit(None, {}, (), 1, think=False),
+        )
+        for call in calls:
+            with pytest.raises(TypeError, match="unexpected keyword argument 'think'"):
+                call()
+    chat.assert_not_called()
+    el_chat.assert_not_called()
 
 
 def test_pass1_returns_the_native_trace_not_the_answer():

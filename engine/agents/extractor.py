@@ -192,14 +192,6 @@ You MUST emit exactly one entry per field listed above ({total_fields} fields to
 _LAST_PASS1_TELEMETRY: dict = {}
 
 
-def _with_think(cfg: EffectiveConfig, think: bool | None) -> EffectiveConfig:
-    """A `think=` argument these signatures have always accepted, as an override."""
-    if think is None or think == cfg.think:
-        return cfg
-    from engine.core.effective_config import _replace
-    return _replace(cfg, think=think, sources={**cfg.sources, "think": "caller"})
-
-
 def pass1_messages(prompt: str) -> list[dict]:
     """Pass 1's message list — one builder for the call and the prompt hash (R60)."""
     return [
@@ -215,7 +207,7 @@ def pass1_messages(prompt: str) -> list[dict]:
     ]
 
 
-def extract_pass1_reasoning(prompt: str, think: bool | None = None, *,
+def extract_pass1_reasoning(prompt: str, *,
                             cfg: EffectiveConfig | None = None,
                             paper_id: int | None = None,
                             return_request_hash: bool = False) -> str | tuple[str, str]:
@@ -224,15 +216,15 @@ def extract_pass1_reasoning(prompt: str, think: bool | None = None, *,
     `think` is passed explicitly and never left to the Ollama default —
     REGRESSION-01: 0.21.0 auto-enables thinking for deepseek-r1, and relying on
     a version-dependent default is what let the interface change go unnoticed.
-    It comes from the resolver (stage `extract_pass1`); a `think=` argument is a
-    caller override.
+    It comes from the resolver (stage `extract_pass1`) and nowhere else: the
+    `think=` caller override is gone (C41, as R246 removed FT's).
 
     `return_request_hash` (R224a(3)): the same opt-in as `ollama_chat`'s own —
     default False returns the trace alone, unchanged for every existing
     caller; `extract_paper` and the elicited path's `run_pass1` are the ones
     that set it, to build the call chain.
     """
-    cfg = _with_think(cfg or stage_config("extract_pass1"), think)
+    cfg = cfg or stage_config("extract_pass1")
     _LAST_PASS1_TELEMETRY.clear()
     result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
                          return_request_hash=return_request_hash, **cfg.kwargs())
@@ -317,7 +309,6 @@ def extract_pass2_structured(
     reasoning_trace: str,
     spec: ReviewSpec,
     paper_id: int,
-    think: bool | None = None,
     codebook_hash: str | None = None,
     *, cfg: EffectiveConfig | None = None,
     return_request_hash: bool = False,
@@ -339,7 +330,7 @@ def extract_pass2_structured(
         codebook_hash if codebook_hash is not None
         else load_codebook_for(spec.review_id).semantic_hash
     )
-    cfg = _with_think(cfg or stage_config("extract_pass2", spec), think)
+    cfg = cfg or stage_config("extract_pass2", spec)
 
     result = ollama_chat(paper_id=paper_id,
                          messages=pass2_messages(prompt, reasoning_trace),

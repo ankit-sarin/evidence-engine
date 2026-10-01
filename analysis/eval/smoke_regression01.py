@@ -63,9 +63,8 @@ def main(argv: list[str] | None = None) -> int:
             prompt = build_extraction_prompt(text, spec)
             t0 = time.time()
             try:
-                trace = extract_pass1_reasoning(prompt, think=models.pass1_think)
-                res = extract_pass2_structured(prompt, trace, spec, pid,
-                                               think=models.pass2_think)
+                trace = extract_pass1_reasoning(prompt)
+                res = extract_pass2_structured(prompt, trace, spec, pid)
                 spans = [s.model_dump() for s in res.fields]
                 chk = check_completeness(spans, expected)
                 paper = C.PaperIndex.build(pid, text)

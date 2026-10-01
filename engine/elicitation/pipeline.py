@@ -46,7 +46,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from engine.agents.extractor import (
-    _with_think, build_extraction_prompt, extract_pass2_structured,
+    build_extraction_prompt, extract_pass2_structured,
     _LAST_PASS1_TELEMETRY, _LAST_PASS2_TELEMETRY,
 )
 from engine.core.effective_config import EffectiveConfig, stage_config
@@ -266,7 +266,7 @@ def sentinel_priming_message(spec, codebook_path=None) -> str:
 
 
 def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
-              paper_id: int, think: bool | None = None,
+              paper_id: int,
               feedback: str = "", *, cfg: EffectiveConfig | None = None,
               ) -> tuple[Pass1Result, dict]:
     """Elicit citations. Returns (checked result, call telemetry).
@@ -277,7 +277,7 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     like any other input (INPUT-FIT-01), never truncated silently.
     """
     prompt = pass1_prompt(unit_map, codebook, field_names, feedback)
-    cfg = _with_think(cfg or stage_config("elicitation_pass1"), think)
+    cfg = cfg or stage_config("elicitation_pass1")
 
     # R224a(2): this attempt's hash rides in the telemetry dict rather than
     # changing this function's return shape — `elicit`'s two-attempt loop
@@ -312,7 +312,7 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
 
 
 def elicit(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
-           paper_id: int, think: bool | None = None, *,
+           paper_id: int, *,
            cfg: EffectiveConfig | None = None,
            ) -> tuple[Pass1Result, int, list[dict]]:
     """Ruling 4's bounded, feedback-carrying Pass-1 loop.
@@ -327,14 +327,14 @@ def elicit(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     regressed is a measurement, and discarding the losing attempt would delete
     the only evidence that the feedback did not land.
     """
-    first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, think=think, cfg=cfg)
+    first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, cfg=cfg)
     tels = [tel_first]
     second = None
 
     if first.failed_fields and MAX_PASS1_ATTEMPTS > 1:
         feedback = build_feedback_block(first, codebook)
         second, tel_second = run_pass1(
-            unit_map, codebook, field_names, paper_id, think=think, feedback=feedback,
+            unit_map, codebook, field_names, paper_id, feedback=feedback,
             cfg=cfg,
         )
         tels.append(tel_second)

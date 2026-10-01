@@ -30,6 +30,7 @@ from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1
 import yaml
 
 from engine.elicitation.classes import non_value_tokens_for
+from engine.core.effective_config import stage_config
 
 TOKENS = frozenset({"NO_EVIDENCE_LOCATABLE", "CONTRACT_UNMET"})
 #: The fixture codebook's absence sentinels, upper-cased as the loader hands them out.
@@ -112,11 +113,11 @@ def test_site1_auditor_no_longer_flags_a_terminal_state(token):
 
     span = {"value": token, "source_snippet": ""}
 
-    pre_status, pre_reason = audit_span(span, "paper text")
+    pre_status, pre_reason = audit_span(span, "paper text", cfg=stage_config("audit"))
     assert pre_status == "flagged"
     assert "no source snippet" in pre_reason
 
-    status, reason = audit_span(span, "paper text", non_value_tokens=TOKENS)
+    status, reason = audit_span(span, "paper text", non_value_tokens=TOKENS, cfg=stage_config("audit"))
     assert status == "verified"
     assert "terminal state" in reason
 
@@ -127,7 +128,7 @@ def test_site1_a_real_value_is_still_audited(monkeypatch):
     from engine.agents.auditor import audit_span
 
     status, _ = audit_span({"value": "General Surgery", "source_snippet": ""},
-                           "paper text", non_value_tokens=TOKENS)
+                           "paper text", non_value_tokens=TOKENS, cfg=stage_config("audit"))
     assert status == "flagged"
 
 

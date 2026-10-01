@@ -393,7 +393,7 @@ def _retry_snippet(
     value: str,
     paper_text: str,
     paper_id: int,
-    *, cfg: EffectiveConfig | None = None,
+    *, cfg: EffectiveConfig,
     return_request_hash: bool = False,
 ) -> str | None | tuple[str | None, str | None]:
     """Request a clean verbatim snippet for a single field.
@@ -406,7 +406,6 @@ def _retry_snippet(
     `None` alongside the `None` snippet — there is no request to name if the
     call never completed. `_validate_and_retry_snippets` sets this.
     """
-    cfg = cfg or stage_config("extract_retry_snippet")
     try:
         result = ollama_chat(
             paper_id=paper_id,
@@ -429,7 +428,7 @@ def _validate_and_retry_snippets(
     fields: list[EvidenceSpan],
     paper_text: str,
     paper_id: int,
-    *, cfg: EffectiveConfig | None = None,
+    *, cfg: EffectiveConfig,
     return_snippet_contexts: bool = False,
 ) -> (list[EvidenceSpan]
      | tuple[list[EvidenceSpan], dict[str, str], list[str]]):

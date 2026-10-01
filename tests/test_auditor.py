@@ -15,6 +15,7 @@ from engine.agents.auditor import (
 from engine.core.constants import INVALID_SNIPPET_RE as _INVALID_SNIPPET_RE
 from engine.core.database import ReviewDatabase
 from engine.search.models import Citation
+from engine.core.effective_config import stage_config
 from _parsed_text_fixture import write_parsed
 
 
@@ -139,7 +140,7 @@ def test_semantic_verify_mocked():
     ).model_dump_json()
 
     with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
-        verdict = semantic_verify(span, PAPER_TEXT)
+        verdict = semantic_verify(span, PAPER_TEXT, cfg=stage_config("audit"))
 
     assert verdict.status == "verified"
 
@@ -155,7 +156,7 @@ def test_audit_span_invalid_snippet():
         "source_snippet": "We enrolled [...] twenty patients in total.",
         "confidence": 0.9,
     }
-    status, reasoning = audit_span(span_data, PAPER_TEXT)
+    status, reasoning = audit_span(span_data, PAPER_TEXT, cfg=stage_config("audit"))
     assert status == "invalid_snippet"
 
 
@@ -173,7 +174,7 @@ def test_audit_span_verified():
     ).model_dump_json()
 
     with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
-        status, reasoning = audit_span(span_data, PAPER_TEXT)
+        status, reasoning = audit_span(span_data, PAPER_TEXT, cfg=stage_config("audit"))
 
     assert status == "verified"
 
@@ -192,7 +193,7 @@ def test_audit_span_contested():
     ).model_dump_json()
 
     with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
-        status, reasoning = audit_span(span_data, PAPER_TEXT)
+        status, reasoning = audit_span(span_data, PAPER_TEXT, cfg=stage_config("audit"))
 
     assert status == "contested"
     assert "Grep failed" in reasoning
@@ -212,7 +213,7 @@ def test_audit_span_flagged():
     ).model_dump_json()
 
     with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
-        status, reasoning = audit_span(span_data, PAPER_TEXT)
+        status, reasoning = audit_span(span_data, PAPER_TEXT, cfg=stage_config("audit"))
 
     assert status == "flagged"
 
@@ -227,7 +228,7 @@ def test_audit_span_not_found_value_is_not_auto_verified():
         "confidence": 0.0,
     }
     with patch("engine.agents.auditor.ollama_chat") as mock_chat:
-        status, reasoning = audit_span(span_data, PAPER_TEXT)
+        status, reasoning = audit_span(span_data, PAPER_TEXT, cfg=stage_config("audit"))
     assert status == "flagged"
     mock_chat.assert_not_called()
 
@@ -251,7 +252,7 @@ def test_audit_span_tier4_is_located_like_any_other_tier():
     ).model_dump_json()
 
     with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp) as mock_chat:
-        status, reasoning = audit_span(span_data, PAPER_TEXT, field_tier=4)
+        status, reasoning = audit_span(span_data, PAPER_TEXT, field_tier=4, cfg=stage_config("audit"))
 
     mock_chat.assert_called_once()
     assert status == "contested"
@@ -271,7 +272,7 @@ def test_audit_span_tier4_semantic_fail():
     ).model_dump_json()
 
     with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
-        status, reasoning = audit_span(span_data, PAPER_TEXT, field_tier=4)
+        status, reasoning = audit_span(span_data, PAPER_TEXT, field_tier=4, cfg=stage_config("audit"))
 
     assert status == "flagged"
 

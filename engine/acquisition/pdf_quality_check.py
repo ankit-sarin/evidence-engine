@@ -90,14 +90,13 @@ def _classify_page(
     img_b64: str,
     model: str | None = None,
     timeout: float = _DEFAULTS.timeout,
-    *, cfg: EffectiveConfig | None = None,
+    *, cfg: EffectiveConfig,
 ) -> dict:
     """Send first-page image to vision model and parse JSON classification.
 
     Model and options come from the resolver's `pdf_quality` stage; a `model=`
     argument that differs is a caller override.
     """
-    cfg = cfg or stage_config("pdf_quality")
     if model is not None and model != cfg.model:
         cfg = cfg.with_model(model)
     for attempt in range(1 + MAX_RETRIES):

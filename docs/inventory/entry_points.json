@@ -3643,7 +3643,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 266,
+            "line": 265,
             "names": [
               "--review"
             ],
@@ -3652,7 +3652,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 267,
+            "line": 266,
             "names": [
               "--spec"
             ],
@@ -3661,7 +3661,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 268,
+            "line": 267,
             "names": [
               "--dry-run"
             ],
@@ -3670,7 +3670,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 269,
+            "line": 268,
             "names": [
               "--limit"
             ],
@@ -3684,7 +3684,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 267,
+            "line": 266,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -3694,7 +3694,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 276,
+            "line": 275,
             "scope": "main"
           }
         ],
@@ -4202,13 +4202,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 492,
+            "line": 491,
             "role": "docstring",
             "text": "(escape token, absence sentinels) from the codebook beside the database.\n\n    Located from the DATABASE's own directory, not from `data/<review_id>`: the\n   ..."
           },
           {
             "kind": "literal",
-            "line": 748,
+            "line": 747,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -5744,7 +5744,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1271,
+            "line": 1270,
             "names": [
               "--verify-hashes"
             ],
@@ -5753,7 +5753,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 1273,
+            "line": 1272,
             "names": [
               "--review"
             ],
@@ -5768,7 +5768,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 1277,
+            "line": 1276,
             "scope": "main"
           }
         ],
@@ -6863,7 +6863,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 135,
+            "line": 136,
             "names": [
               "--review"
             ],
@@ -6872,7 +6872,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 136,
+            "line": 137,
             "names": [
               "--spec"
             ],
@@ -6888,7 +6888,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 136,
+            "line": 137,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -6896,7 +6896,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 143,
+            "line": 144,
             "scope": "main"
           }
         ],
@@ -6904,12 +6904,12 @@
         "spec_access": [
           {
             "func": "spec_path_for",
-            "line": 140,
+            "line": 141,
             "scope": "main"
           },
           {
             "func": "load_spec_for",
-            "line": 142,
+            "line": 143,
             "scope": "main"
           }
         ],
@@ -7677,7 +7677,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "2997cc9165014653fca5ee42a08f88432c0b0ab4",
+    "generated_at_commit": "2f878550d9006362aeaeb94af00e5b51fa70890a",
     "scan_roots": [
       "engine",
       "scripts",

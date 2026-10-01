@@ -119,7 +119,8 @@ def main():
                 "tier": span.tier,
             }
             ft = field_type_map.get(field_name, "text")
-            verdict = audit_span(span_data, paper_text, field_type=ft)
+            verdict = audit_span(span_data, paper_text, field_type=ft,
+                                 cfg=stage_config("audit", spec))
 
             if verdict.status == "verified":
                 stats["verified"] += 1

@@ -24,6 +24,7 @@ from engine.core.database import ReviewDatabase
 from engine.core.effective import PRE_MANIFEST, effective_state, effective_value
 from engine.core.parsed_text import resolve_parsed_text
 from engine.core.review_spec import load_review_spec
+from engine.core.effective_config import stage_config
 from _event_store_fixture import (
     FIXTURE_CONTEXT_SHA, claim_identity, open_extraction_run, seed_claim, seed_eligibility,
 )
@@ -210,7 +211,7 @@ def test_t8_the_old_hand_list_values_are_not_auto_verified(db, spec, run_id, rev
     # The legacy per-span audit no longer short-circuits them either.
     for value in ("Not discussed", "No comparison reported", "NR"):
         status, _ = audit_span({"field_name": "country", "value": value, "source_snippet": ""},
-                               TEXT)
+                               TEXT, cfg=stage_config("audit"))
         assert status == "flagged", value
 
 
@@ -222,7 +223,7 @@ def test_t9_a_tier_4_claim_is_located_like_any_other(db, spec, run_id, review_di
     with patch("engine.agents.auditor.semantic_verify", return_value=AuditVerdict(
             status="verified", grep_found=False, reasoning="ok")):
         status, _ = audit_span({"field_name": "key_limitation", "value": "small",
-                                "source_snippet": "Not a sentence here."}, TEXT, field_tier=4)
+                                "source_snippet": "Not a sentence here."}, TEXT, field_tier=4, cfg=stage_config("audit"))
     assert status == "contested"           # grep evaluated and failed; never passed unchecked
 
 

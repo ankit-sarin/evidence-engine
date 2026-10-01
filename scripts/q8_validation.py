@@ -57,7 +57,8 @@ def extract_single(paper_id: int, paper_text: str, spec: ReviewSpec) -> list[dic
     t2 = time.time()
     logger.info("Paper %d — Pass 2 structured: %.1fs", paper_id, t2 - t1)
 
-    validated = _validate_and_retry_snippets(result.fields, paper_text, paper_id)
+    validated = _validate_and_retry_snippets(result.fields, paper_text, paper_id,
+                                             cfg=stage_config("extract_retry_snippet", spec))
     t3 = time.time()
     logger.info("Paper %d — Snippet validation: %.1fs", paper_id, t3 - t2)
     logger.info("Paper %d — Total: %.1fs", paper_id, t3 - t0)

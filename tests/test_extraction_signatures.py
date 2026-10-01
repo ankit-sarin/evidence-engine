@@ -18,8 +18,13 @@ from unittest.mock import patch
 
 import pytest
 
+from engine.acquisition import pdf_quality_check as QC
+from engine.agents import auditor as AU
+from engine.agents import extractor as E
 from engine.agents.extractor import extract_pass1_reasoning, extract_pass2_structured
+from engine.agents.models import EvidenceSpan
 from engine.elicitation import pipeline as PL
+from engine.parsers import pdf_parser as PP
 
 
 def _no_model_call(**kw):
@@ -29,15 +34,30 @@ def _no_model_call(**kw):
 @pytest.fixture(autouse=True)
 def _fence_model_calls():
     with patch("engine.agents.extractor.ollama_chat", _no_model_call), \
-            patch("engine.elicitation.pipeline.ollama_chat", _no_model_call):
+            patch("engine.elicitation.pipeline.ollama_chat", _no_model_call), \
+            patch("engine.agents.auditor.ollama_chat", _no_model_call), \
+            patch("engine.parsers.pdf_parser.ollama_chat", _no_model_call), \
+            patch("engine.acquisition.pdf_quality_check.ollama_chat", _no_model_call):
         yield
+
+
+_SPAN = EvidenceSpan(field_name="f", value="v", source_snippet="s", confidence=0.5, tier=1)
 
 
 @pytest.mark.parametrize("call", [
     lambda: extract_pass1_reasoning("prompt"),
     lambda: PL.run_pass1(None, {}, (), 1),
     lambda: PL.elicit(None, {}, (), 1),
-], ids=["extract_pass1_reasoning", "run_pass1", "elicit"])
+    # 12c-C52: the four remaining spec-dropping sites and their two pass-throughs.
+    lambda: E._retry_snippet("f", "v", "text", 1),
+    lambda: E._validate_and_retry_snippets([], "text", 1),
+    lambda: PP.parse_with_vision("no-such.pdf"),
+    lambda: AU.semantic_verify(_SPAN, "text"),
+    lambda: AU.audit_span({"field_name": "f", "value": "v", "source_snippet": "s"}, "text"),
+    lambda: QC._classify_page("img"),
+], ids=["extract_pass1_reasoning", "run_pass1", "elicit",
+        "_retry_snippet", "_validate_and_retry_snippets", "parse_with_vision",
+        "semantic_verify", "audit_span", "_classify_page"])
 def test_cfg_is_required(call):
     with pytest.raises(TypeError, match="missing 1 required keyword-only argument: 'cfg'"):
         call()

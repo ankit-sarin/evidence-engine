@@ -26,6 +26,7 @@ from engine.parsers.pdf_parser import (
     parse_with_vision,
 )
 from engine.search.models import Citation
+from engine.core.effective_config import stage_config
 
 SPEC = "review_specs/surgical_autonomy.yaml"
 CLEAN = (
@@ -81,7 +82,7 @@ def _paper(db, hint="1") -> int:
 
 def test_defaults_send_num_predict_and_num_ctx(three_page_pdf):
     with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
-        parse_with_vision(str(three_page_pdf))
+        parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
     opts = chat.call_args.kwargs["options"]
     assert opts["num_predict"] == 2048
     assert opts["num_ctx"] == 8192
@@ -90,7 +91,7 @@ def test_defaults_send_num_predict_and_num_ctx(three_page_pdf):
 
 def test_explicit_overrides_reach_the_call(three_page_pdf):
     with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
-        parse_with_vision(str(three_page_pdf), num_predict=99, num_ctx=1024)
+        parse_with_vision(str(three_page_pdf), num_predict=99, num_ctx=1024, cfg=stage_config("vision_parse"))
     opts = chat.call_args.kwargs["options"]
     assert opts["num_predict"] == 99 and opts["num_ctx"] == 1024
 
@@ -138,7 +139,7 @@ def test_the_looping_prompt_is_not_reintroduced():
 
 def test_the_prompt_is_what_is_sent(three_page_pdf):
     with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
-        parse_with_vision(str(three_page_pdf))
+        parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
     assert chat.call_args.kwargs["messages"][0]["content"] == VISION_PROMPT
 
 
@@ -153,7 +154,7 @@ def test_truncation_on_page_2_aborts_before_page_3(three_page_pdf):
 
     with patch("engine.parsers.pdf_parser.ollama_chat", side_effect=responses):
         with pytest.raises(VisionTruncatedError, match="page 2 hit num_predict=2048"):
-            parse_with_vision(str(three_page_pdf))
+            parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
 
     assert calls["n"] == 2, "page 3 must never be requested"
 
@@ -193,7 +194,7 @@ def test_no_partial_document_survives_a_truncated_page(three_page_pdf):
 
     with patch("engine.parsers.pdf_parser.ollama_chat", side_effect=responses):
         with pytest.raises(VisionTruncatedError):
-            parse_with_vision(str(three_page_pdf))
+            parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
     # nothing to assert on a return value: there is none, which is the point.
 
 
@@ -202,7 +203,7 @@ def test_no_partial_document_survives_a_truncated_page(three_page_pdf):
 def test_all_pages_stop_assembles_the_document_as_before(three_page_pdf):
     with patch("engine.parsers.pdf_parser.ollama_chat",
                return_value=_resp(text="body")):
-        out = parse_with_vision(str(three_page_pdf))
+        out = parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
     assert out.count("<!-- Page ") == 3
     assert out.count("\n\n---\n\n") == 2          # joining unchanged
     assert "<!-- Page 1 -->\nbody" in out
@@ -212,7 +213,7 @@ def test_per_page_log_lines_are_emitted(three_page_pdf, caplog):
     import logging
     with caplog.at_level(logging.INFO, logger="engine.parsers.pdf_parser"):
         with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()):
-            parse_with_vision(str(three_page_pdf), paper_id=455)
+            parse_with_vision(str(three_page_pdf), paper_id=455, cfg=stage_config("vision_parse"))
     lines = [r.getMessage() for r in caplog.records if "Vision page" in r.getMessage()]
     assert len(lines) == 3
     assert "done_reason=stop" in lines[0]
@@ -226,13 +227,13 @@ def test_per_page_log_lines_are_emitted(three_page_pdf, caplog):
 def test_per_call_wall_timeout_is_passed(three_page_pdf):
     """ollama_chat accepts wall_timeout, so Contract 4 applies."""
     with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
-        parse_with_vision(str(three_page_pdf), page_timeout_s=123)
+        parse_with_vision(str(three_page_pdf), page_timeout_s=123, cfg=stage_config("vision_parse"))
     assert chat.call_args.kwargs["wall_timeout"] == 123
 
 
 def test_default_page_timeout_is_the_spec_default(three_page_pdf):
     with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
-        parse_with_vision(str(three_page_pdf))
+        parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
     assert chat.call_args.kwargs["wall_timeout"] == 240
     assert load_review_spec(SPEC).pdf_parsing.vision_page_timeout_s == 240
 

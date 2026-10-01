@@ -13,7 +13,7 @@ from pydantic import BaseModel
 
 from engine.agents.models import EvidenceSpan
 from engine.core.constants import INVALID_SNIPPET_RE
-from engine.core.effective_config import EffectiveConfig, stage_config
+from engine.core.effective_config import EffectiveConfig
 from engine.utils.ollama_client import ollama_chat
 from engine.core.locator import locate
 # Re-exported under its old name: the frozen provenance ladder
@@ -52,21 +52,20 @@ def grep_verify(source_snippet: str, paper_text: str) -> bool:
 def semantic_verify(
     span: EvidenceSpan, paper_text: str, field_type: str = "text",
     model: str | None = None,
-    *, cfg: EffectiveConfig | None = None, paper_id: int | None = None,
+    *, cfg: EffectiveConfig, paper_id: int | None = None,
 ) -> AuditVerdict:
     """Use an LLM to verify if extracted value matches the source snippet.
 
     For categorical fields, the prompt asks whether the source text supports
     the classification rather than whether it contains the exact phrase.
 
-    `cfg` is the resolved `audit` stage; without one the spec model's declared
-    defaults apply. The `ollama_options` override retired with its only caller,
+    `cfg` is the resolved `audit` stage, required: the spec-less fallback is
+    gone (C52), so a caller cannot silently send the declared defaults. The `ollama_options` override retired with its only caller,
     `scripts/eval_auditor_models.py` (R125). `paper_id` (R225/C31) is the paper
     whose claim is being verified — passed straight to `ollama_chat` so the
     audit stage's `run_calls` rows are attributable per paper, like every
     other stage's; `None` (the legacy `audit_span` path) is unchanged.
     """
-    cfg = (cfg or stage_config("audit", None, model=model))
     if model is not None and model != cfg.model:
         cfg = cfg.with_model(model)
     response = ollama_chat(
@@ -133,7 +132,7 @@ def audit_span(
     span_data: dict, paper_text: str, field_type: str = "text",
     field_tier: int = 1, model: str | None = None,
     non_value_tokens: frozenset[str] = frozenset(),
-    *, cfg: EffectiveConfig | None = None,
+    *, cfg: EffectiveConfig,
 ) -> tuple[str, str]:
     """Audit a single evidence span. Returns (audit_status, reasoning).
 

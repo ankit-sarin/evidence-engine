@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `2997cc9165014653fca5ee42a08f88432c0b0ab4` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `2f878550d9006362aeaeb94af00e5b51fa70890a` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -124,7 +124,7 @@ Two figures deliberately have no baseline row. **entry points** (95) counts anyt
 | `engine/migrations/012_codebook_provenance.py` | — | — | — | — |
 | `engine/migrations/013_drop_schema_hash_not_null.py` | — | — | — | — |
 | `engine/migrations/__main__.py` | `db_path`; `--apply-pending`; `--include-data` | — | — | — |
-| `engine/parsers/pdf_parser.py` | `--verify-hashes`; `--review` required | — | 1277 | — |
+| `engine/parsers/pdf_parser.py` | `--verify-hashes`; `--review` required | — | 1276 | — |
 | `engine/tools/db_fingerprint.py` | `database`; `--out`; `--compare` | — | — | — |
 | `engine/tools/inventory.py` | `--write`; `--check` | — | — | — |
 | `engine/utils/ollama_preflight.py` | `--models` required; `--timeout`=30 | — | — | — |
@@ -144,7 +144,7 @@ Two figures deliberately have no baseline row. **entry points** (95) counts anyt
 | `scripts/pdf_acquisition/step3b_retry_failed.py` | — | — | — | — |
 | `scripts/pdf_acquisition/step4_manual_download_list.py` | — | — | — | — |
 | `scripts/prepare_concordance_pdfs.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
-| `scripts/q8_validation.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 143 | main:spec_first |
+| `scripts/q8_validation.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 144 | main:spec_first |
 | `scripts/q8_validation_fast.py` | `--review` required; `--spec`=None; `paper_ids`=dynamic: [370, 432] | load_spec_for, spec_path_for | 98 | main:spec_first |
 | `scripts/reparse_cloud_spans.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/rescreen_original_251.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
@@ -198,7 +198,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/adjudication/workflow.py` | 69 | literal | `Create or update adjudication_categories.yaml for this review.
   Location: data/<review>/adjudication_categories.yaml
   Generate a starter template with: gen...` |
-| `engine/agents/extractor.py` | 748 | literal | `extraction_codebook.yaml` |
+| `engine/agents/extractor.py` | 747 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 509 | literal | `extraction_codebook.yaml` |
 | `engine/core/codebook.py` | 36 | literal | `extraction_codebook.yaml` |
 | `engine/core/review_paths.py` | 28 | literal | `review_specs` |

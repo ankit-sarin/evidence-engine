@@ -246,7 +246,7 @@ def parse_with_vision(
     num_ctx: int | None = None,
     page_timeout_s: int = _VISION_PAGE_TIMEOUT_S,
     paper_id: int | None = None,
-    *, cfg: EffectiveConfig | None = None,
+    *, cfg: EffectiveConfig,
 ) -> str:
     """Parse a scanned PDF by sending page images to a vision model via Ollama.
 
@@ -257,7 +257,6 @@ def parse_with_vision(
     """
     # The resolver's `vision_parse` stage; an explicit argument that differs is a
     # caller override, recorded as one.
-    cfg = cfg or stage_config("vision_parse")
     if vision_model is not None and vision_model != cfg.model:
         cfg = cfg.with_model(vision_model)
     override = {k: v for k, v in (("num_predict", num_predict), ("num_ctx", num_ctx))

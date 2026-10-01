@@ -298,6 +298,12 @@ def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id
     Propagated as run faults, never mapped (R5): `CodebookContractError`,
     `ExhaustedWithoutRecord`, an `EventRefused` (a write the store forbids) and
     `RunAborted`.
+
+    Interrupts never reach it: its one caller, the extractor's `record_failure`,
+    is called only from `except ParsedTextError` / `except Exception`, which a
+    KeyboardInterrupt or `RunInterrupted` passes through. Interrupts are
+    run-level (C47) — the manifest closes 'interrupted' and the in-flight paper
+    keeps no claim and no event (E-DEADKI).
     """
     import httpx
     from pydantic import ValidationError
@@ -340,8 +346,6 @@ def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id
     if isinstance(exc, (TimeoutError, httpx.HTTPError)) or \
             type(exc).__module__.startswith("ollama"):
         return fail(PS.REASON_MODEL_CALL_FAILED)
-    if isinstance(exc, KeyboardInterrupt):
-        return fail(PS.REASON_RUN_INTERRUPTED)
     return fail(PS.REASON_UNCLASSIFIED_ERROR)
 
 

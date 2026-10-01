@@ -532,7 +532,15 @@ def test_t12_every_code_the_mapping_emits_is_in_the_closed_set(spec):
     empty = X.ExtractionRecord(PID, "a", 1, "u", None, "m", None, (), ("x",), 1, "s")
     plan = X.plan_extraction_events(empty, live={}, from_state=None)
     codes.add(plan.paper_event["reason_code"])
-    assert codes == PS.EXTRACTION_REASON_CODES
+    # E-DEADKI: an interrupt never reaches the mapping — it is run-level (C47),
+    # pinned end to end by test_run_interrupts.py::test_t6_an_interrupt_mid_paper_
+    # keeps_finished_papers_and_writes_none_for_it. Called directly with one, the
+    # mapping has no interrupt branch and returns what the remaining code does.
+    # REASON_RUN_INTERRUPTED stays in the closed set (R146) with no emitter.
+    ki = X.outcome_for_exception(KeyboardInterrupt(), paper_id=PID, arm="a", run_id=1,
+                                 stage_name="s")
+    assert ki.reason_code == PS.REASON_UNCLASSIFIED_ERROR
+    assert codes == PS.EXTRACTION_REASON_CODES - {PS.REASON_RUN_INTERRUPTED}
 
 
 def test_t12_the_reason_codes_are_spelled_only_in_the_vocabulary():

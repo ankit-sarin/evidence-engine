@@ -9,7 +9,14 @@ no model), injectable as `digest_fn`.
 **Refusals, all before anything is written:**
 
 * `DirtyTree` — the working tree has uncommitted changes. An untagged HEAD is
-  allowed; `engine_state` stays NULL until the freshman tag (session 10).
+  allowed.
+* `AmbiguousEngineState` — two or more engine-state tags point at HEAD (E-STATE).
+
+`engine_state` is the engine-state name tagged at HEAD, NULL when none is
+(E-STATE). A state is tagged with its bare name as an annotated tag — e.g.
+`freshman` — from `ENGINE_STATES`; any other tag at HEAD is ignored here (it
+still reaches `git_tag` through `git describe`). The value is part of the
+manifest body, so `manifest_sha256` covers it: the hash covers the recorded body.
 * `PreManifestArm` — a named arm was registered pre-manifest (R59).
 * `RetiredArm` — a named arm is retired (R21).
 * `ArmPinMismatch` — a named arm is pinned and this run resolves it differently
@@ -61,6 +68,9 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 #: Re-declared in migration 022 (R214, R35); a test asserts the two agree.
 RUN_KINDS = ("extraction", "screening", "judge", "review_session", "import")
+#: The named engine states, in order (R300): each is tagged at the commit that
+#: reaches it with its bare name as an annotated tag (E-STATE).
+ENGINE_STATES = ("freshman", "sophomore", "junior", "senior")
 #: R215/10a-C3: 'aborted' wired to RunAborted's close in scripts/run_pipeline.py.
 END_STATUSES = ("completed", "failed", "interrupted", "aborted")
 #: C40: the closed set of `end_reason` values an 'interrupted' close carries.
@@ -114,6 +124,10 @@ class DirtyTree(RunRefused):
     pass
 
 
+class AmbiguousEngineState(RunRefused):
+    """Two or more `ENGINE_STATES` tags point at HEAD (E-STATE)."""
+
+
 class PreManifestArm(RunRefused):
     pass
 
@@ -140,6 +154,8 @@ class GitState:
     commit: str
     dirty: bool
     tag: str | None
+    #: The `ENGINE_STATES` tags pointing at HEAD, in R300 order (E-STATE).
+    state_tags: tuple[str, ...] = ()
 
 
 def git_state(repo_root: Path = REPO_ROOT) -> GitState:
@@ -149,8 +165,10 @@ def git_state(repo_root: Path = REPO_ROOT) -> GitState:
     commit = _git("rev-parse", "HEAD").stdout.strip()
     dirty = bool(_git("status", "--porcelain").stdout.strip())
     tag = _git("describe", "--exact-match", "--tags", "HEAD")
+    at_head = set(_git("tag", "--points-at", "HEAD").stdout.split())
     return GitState(commit=commit, dirty=dirty,
-                    tag=tag.stdout.strip() if tag.returncode == 0 else None)
+                    tag=tag.stdout.strip() if tag.returncode == 0 else None,
+                    state_tags=tuple(s for s in ENGINE_STATES if s in at_head))
 
 
 def library_versions() -> dict[str, str]:
@@ -253,6 +271,11 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
         raise DirtyTree(
             "run refused: the working tree has uncommitted changes, so the commit "
             f"{g.commit[:12]} is not the code that would run. Commit or stash, then retry.")
+    if len(g.state_tags) > 1:
+        raise AmbiguousEngineState(
+            f"run refused: HEAD {g.commit[:12]} carries more than one engine-state tag "
+            f"{list(g.state_tags)}; a commit reaches one state. Remove the wrong tag, then retry.")
+    engine_state = g.state_tags[0] if g.state_tags else None
 
     cloud_arms = list(cloud_arms)
     enabled = set(spec.cloud.enabled_arms)
@@ -311,7 +334,7 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     manifest = {
         "run_uid": run_uid, "review_id": spec.review_id, "run_kind": kind,
         "git": {"commit": g.commit, "dirty": g.dirty, "tag": g.tag},
-        "engine_state": None,
+        "engine_state": engine_state,
         "spec_hash": spec_hash(spec),
         "codebook": {"semantic_hash": codebook.semantic_hash, "sha256": codebook.sha256},
         "libraries": libs, "host": host or socket.gethostname(),
@@ -336,7 +359,7 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
             "git_tag, engine_state, spec_hash, codebook_hash, codebook_sha256, "
             "library_versions_json, host, started_at, cloud_arms_json, payload_description, "
             "manifest_json, manifest_sha256) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-            (run_uid, spec.review_id, kind, g.commit, int(g.dirty), g.tag, None,
+            (run_uid, spec.review_id, kind, g.commit, int(g.dirty), g.tag, engine_state,
              manifest["spec_hash"], codebook.semantic_hash, codebook.sha256,
              canonical_json(libs), manifest["host"], started, canonical_json(cloud_list),
              payload_description, canonical_json(manifest), sha256_canonical(manifest)))

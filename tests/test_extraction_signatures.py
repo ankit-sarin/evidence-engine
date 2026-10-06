@@ -63,6 +63,17 @@ def test_cfg_is_required(call):
         call()
 
 
+def test_semantic_verify_takes_nothing_positional_after_the_span():
+    """12d-B23-R2: `paper_text` was the second positional parameter until B23
+    removed it, which left `field_type` in that slot — a stale caller still
+    passing the paper text second would have had it rendered as the request's
+    `Field type:`. Everything after `span` is keyword-only, so that call is a
+    TypeError before any request is built."""
+    from engine.core.effective_config import stage_config
+    with pytest.raises(TypeError, match="positional argument"):
+        AU.semantic_verify(_SPAN, "the paper text", cfg=stage_config("audit"))
+
+
 @pytest.mark.parametrize("call", [
     lambda: extract_pass2_structured("prompt", "trace", None, 1, "codebook-hash"),
     lambda: PL.run_pass1(None, {}, (), 1, "feedback"),

@@ -50,9 +50,9 @@ def grep_verify(source_snippet: str, paper_text: str) -> bool:
 
 
 def semantic_verify(
-    span: EvidenceSpan, field_type: str = "text",
+    span: EvidenceSpan, *, field_type: str = "text",
     model: str | None = None,
-    *, cfg: EffectiveConfig, paper_id: int | None = None,
+    cfg: EffectiveConfig, paper_id: int | None = None,
 ) -> AuditVerdict:
     """Use an LLM to verify if extracted value matches the source snippet.
 

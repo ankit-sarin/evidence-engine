@@ -463,3 +463,37 @@ def test_d23_a_claim_with_no_recorded_text_identity_refuses_the_paper(db, spec, 
                        review_dir=review_dir)
     assert rep.skipped_refused == ((P7, "parsed_text_not_recorded"),)
     assert located_events(db, P7) == {} and audited(db, P7) == 0
+
+
+# ── D23 strict form (12d-D23-R2 R-1): present AND equal ───────────────
+def test_d23_t7_the_writer_refuses_a_citation_that_names_no_text(db, spec, run_id):
+    c = claim(db, spec, run_id, P7, "study_type", "RCT", SNIPPET)
+    assert db._conn.execute(
+        "SELECT COUNT(*) FROM field_events fe JOIN claim_inputs ci "
+        "ON fe.extraction_uid = ci.extraction_uid WHERE fe.claim_id = ?", (c,)).fetchone()[0] == 1
+    n = db._conn.execute("SELECT COUNT(*) FROM field_events").fetchone()[0]
+    with pytest.raises(events.CitationTextMismatch) as exc:
+        events.write_field_event(
+            db._conn, event_type="citation_located", paper_id=P7, field_name="study_type",
+            arm=spec.extraction_models.arm, claim_id=c, actor_kind="engine",
+            actor_role="system", actor_name=AE.LOCATOR_ACTOR,
+            payload={"located": True}, run_id=run_id)
+    assert "names no text" in str(exc.value)
+    assert db._conn.execute("SELECT COUNT(*) FROM field_events").fetchone()[0] == n
+    assert located_events(db, P7) == {}
+
+
+def test_d23_t8_a_citation_on_a_claim_with_no_claim_inputs_row_is_admitted(db, run_id):
+    events.register_arm(db._conn, "premanifest_a", "model", configuration_marker=PRE_MANIFEST)
+    uid = events.mint_extraction_uid()
+    cid = seed_claim(db._conn, arm="premanifest_a", paper_id=P7, field_name="country",
+                     value="Norway", source_snippet="x", extraction_uid=uid)
+    db._conn.commit()
+    assert db._conn.execute("SELECT extraction_uid FROM field_events WHERE claim_id = ?",
+                            (cid,)).fetchone()[0] == uid
+    assert db._conn.execute("SELECT COUNT(*) FROM claim_inputs").fetchone()[0] == 0
+    events.write_field_event(
+        db._conn, event_type="citation_located", paper_id=P7, field_name="country",
+        arm="premanifest_a", claim_id=cid, actor_kind="engine", actor_role="system",
+        actor_name=AE.LOCATOR_ACTOR, payload={"located": True}, run_id=run_id)
+    assert set(located_events(db, P7)) == {cid}

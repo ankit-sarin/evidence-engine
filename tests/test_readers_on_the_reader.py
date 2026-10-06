@@ -16,7 +16,9 @@ from pathlib import Path
 
 import pytest
 
-from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1, R224a
+from _event_store_fixture import (  # 9b-2c R1, R224a; D23 strict form
+    FIXTURE_CONTEXT_SHA, FIXTURE_TEXT_SHA, claim_identity,
+)
 
 from engine.core import events
 from tests._event_store_fixture import run_for
@@ -72,7 +74,8 @@ def _assert_value(conn, paper_id, field, arm, value, *, located=True):
         conn, run_id=run_for(conn), event_type="citation_located", paper_id=paper_id,
             field_name=field, arm=arm, extraction_uid=uid,
             actor_kind="engine", actor_role="system", actor_name="locator",
-            payload={"located": True, "snippet": value})
+            payload={"located": True, "snippet": value,
+                     "parsed_text_sha256": FIXTURE_TEXT_SHA})
     conn.commit()
     return events.make_claim_id(arm, uid, field)
 

@@ -7,7 +7,9 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
-from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1, R224a
+from _event_store_fixture import (  # 9b-2c R1, R224a; D23 strict form
+    FIXTURE_CONTEXT_SHA, FIXTURE_TEXT_SHA, claim_identity,
+)
 
 from analysis.paper1.adjudication import (
     _load_field_types,
@@ -146,7 +148,8 @@ def _mirror(db_path) -> None:
         conn, run_id=run_for(conn), event_type="citation_located", paper_id=pid,
                 field_name=field, arm=arm, extraction_uid=uid,
                 actor_kind="engine", actor_role="system", actor_name="locator",
-                payload={"located": True, "snippet": snippet or ""})
+                payload={"located": True, "snippet": snippet or "",
+                         "parsed_text_sha256": FIXTURE_TEXT_SHA})
         conn.commit()
     finally:
         conn.close()

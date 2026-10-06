@@ -33,7 +33,7 @@ no refusal applies to a pre-manifest arm; R59 reinstated one, for *claims*):
 * **9b-2c R1** `ClaimWithoutInputIdentity` — an extractor's claim-bearing event
   without the three input-identity payload keys.
 * **D23** `CitationTextMismatch` — a `citation_located` event whose
-  `parsed_text_sha256` differs from its claim's `claim_inputs` row.
+  `parsed_text_sha256` is absent or differs from its claim's `claim_inputs` row.
 
 **Row 7 stays reachable.** v2.1 row 7 is two live claims on a pre-manifest
 arm. After R59 no new claim can land on such an arm, so on live data row 7 is
@@ -138,9 +138,10 @@ class CitationTextMismatch(EventRefused):
     """D23 (12d-D23-R1 R-3): a citation says where a claim's snippet was found in
     a parsed text; one located against a text other than the one the claim was
     extracted from says nothing about that claim. Compared by sha256, never by
-    uid — a byte-identical re-parse has a new uid and the same text. A citation
-    that names no text, or a claim with no `claim_inputs` row (a migration
-    seed), has nothing to compare and is not refused here."""
+    uid — a byte-identical re-parse has a new uid and the same text. On a claim
+    that has a `claim_inputs` row the citation's sha256 must be present AND
+    equal (12d-D23-R2 R-1): a citation that names no text is refused too. A
+    claim with no `claim_inputs` row (a migration seed) is outside the rule."""
 
 
 class UnknownFieldName(EventRefused):
@@ -370,11 +371,13 @@ def write_field_event(conn, *, event_type, paper_id, field_name, arm,
             "SELECT ci.parsed_text_sha256 FROM field_events fe "
             "JOIN claim_inputs ci ON fe.extraction_uid = ci.extraction_uid "
             "WHERE fe.claim_id = ? LIMIT 1", (claim_id,)).fetchone()
-        if cited_sha is not None and claimed is not None and cited_sha != claimed[0]:
+        if claimed is not None and cited_sha != claimed[0]:
             raise CitationTextMismatch(
                 f"citation_located refused: claim {claim_id!r} was extracted from parsed "
-                f"text sha256 {claimed[0]}, and this citation was located against "
-                f"{cited_sha}. A citation is located against its claim's own text (D23).")
+                f"text sha256 {claimed[0]}, and this citation "
+                + (f"was located against {cited_sha}" if cited_sha is not None
+                   else f"names no text (no {PAYLOAD_PARSED_TEXT_SHA256} in its payload)")
+                + ". A citation is located against its claim's own text (D23).")
 
     # R217/D16: claim_inputs is the constrained, indexed authority for one
     # extraction call's input identity — one row per extraction_uid, checked

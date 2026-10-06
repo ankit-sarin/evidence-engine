@@ -167,7 +167,8 @@ def add_values(db_path: str | Path, arm: str, field_name: str,
                     conn, event_type="citation_located", paper_id=pid,
                     field_name=field_name, arm=arm, extraction_uid=uid,
                     actor_kind="engine", actor_role="system", actor_name="locator",
-                    payload={"located": True, "snippet": value}, run_id=run_id)
+                    payload={"located": True, "snippet": value,
+                             "parsed_text_sha256": FIXTURE_TEXT_SHA}, run_id=run_id)
         conn.commit()
     finally:
         conn.close()

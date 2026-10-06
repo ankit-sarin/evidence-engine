@@ -171,10 +171,10 @@ def run_pipeline(
         # ── AUDIT REVIEW GATE ──────────────────────────────
         if start_idx <= STAGES.index("export"):
             if not is_audit_review_complete(db._conn):
+                # C58: the audit review's own state decides. The first pending
+                # stage may be an earlier one; it is named below, it does not gate.
                 blocker = get_current_blocker(db._conn)
-                if blocker and blocker["stage_name"] in (
-                    "AUDIT_QUEUE_EXPORTED", "AUDIT_REVIEW_COMPLETE",
-                ):
+                if blocker:
                     logger.error("")
                     logger.error("BLOCKED: Audit review workflow incomplete.")
                     logger.error("Current stage: %s", blocker["stage_name"])

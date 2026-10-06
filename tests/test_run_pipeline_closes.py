@@ -110,3 +110,68 @@ def test_a_failed_run_closes_failed_with_no_reason(db, pipeline, monkeypatch):
     status, reason, ended_at = _end(db, pipeline)
     assert (status, reason) == ("failed", None)
     assert ended_at is not None
+
+
+# ── C58: the audit-review gate on REAL workflow state ─────────────────
+EXPORT_FILES = {"prisma_flow.csv", "evidence_table.csv", "evidence_table.xlsx",
+                "evidence_table.docx", "methods_section.md"}
+
+
+@pytest.fixture
+def real_gates(db, spec, monkeypatch):
+    """`run_pipeline` on the scratch database with both gates and the export
+    stage REAL: no gate function is stubbed, and `get_current_blocker` reads the
+    workflow table. Parse, extract and audit are stubbed — the gate is what is
+    under test. Returns `(run_id, set_workflow)`."""
+    from engine.adjudication import workflow as wf
+
+    run_id = open_extraction_run(db, spec)
+    monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+    monkeypatch.setattr(rp, "ReviewDatabase", lambda name: db)
+    monkeypatch.setattr(rp, "_open_run_manifest", lambda d, s, i, **k: run_id)
+    for stage in ("_stage_parse", "_stage_extract", "_stage_audit"):
+        monkeypatch.setattr(rp, stage, lambda *a, **k: {})
+
+    def set_workflow(pending):
+        wf.ensure_workflow_table(db._conn)
+        for stage in wf.WORKFLOW_STAGES:
+            if stage not in pending:
+                wf.complete_stage(db._conn, stage, metadata="fixture")
+    return run_id, set_workflow
+
+
+def _exports(db):
+    out = Path(db.db_path).parent / "exports"
+    return {p.name for p in out.iterdir()} if out.exists() else set()
+
+
+def test_the_audit_review_gate_stops_on_live_like_workflow_rows(db, real_gates):
+    """Live's shape at the gate: `PDF_ACQUISITION` pending ahead of the two
+    audit stages. The first pending stage is not an audit stage; the gate
+    stops all the same, and nothing is exported."""
+    run_id, set_workflow = real_gates
+    set_workflow({"PDF_ACQUISITION", "AUDIT_QUEUE_EXPORTED", "AUDIT_REVIEW_COMPLETE"})
+    rp.run_pipeline("closes", skip_to="extract")
+    assert _end(db, run_id)[:2] == ("interrupted", rm.REASON_BLOCKED_AUDIT_REVIEW)
+    assert _exports(db) == set()
+
+
+def test_the_audit_review_gate_stops_behind_any_earlier_pending_stage(db, real_gates):
+    """`ABSTRACT_SCREENING_COMPLETE` never completes on a review screened
+    through `run_pipeline` (E9); it must not open the gate either."""
+    run_id, set_workflow = real_gates
+    set_workflow({"ABSTRACT_SCREENING_COMPLETE", "AUDIT_QUEUE_EXPORTED",
+                  "AUDIT_REVIEW_COMPLETE"})
+    rp.run_pipeline("closes", skip_to="extract")
+    assert _end(db, run_id)[:2] == ("interrupted", rm.REASON_BLOCKED_AUDIT_REVIEW)
+    assert _exports(db) == set()
+
+
+def test_a_completed_audit_review_lets_the_run_export(db, real_gates):
+    """The gate keys on `AUDIT_REVIEW_COMPLETE` alone: with it complete the run
+    exports, whatever earlier stage is still pending."""
+    run_id, set_workflow = real_gates
+    set_workflow({"PDF_ACQUISITION"})
+    rp.run_pipeline("closes", skip_to="extract")
+    assert _end(db, run_id)[:2] == ("completed", None)
+    assert _exports(db) == EXPORT_FILES

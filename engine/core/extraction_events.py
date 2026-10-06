@@ -25,6 +25,11 @@ arguments for `events.write_field_event` / `write_paper_event`. Rules:
 * a live claim on the cell under a different reuse key -> `superseded` against
   it, before the new claim; under the SAME key the plan refuses, because
   selection should have skipped the paper (R96);
+* D24: an outcome under reuse key K — a stored record, incomplete fields
+  included, or an `extraction_failed` paper — also supersedes every live claim of
+  the arm on the paper's OTHER cells whose key is not K. A cell left with no live
+  claim reads `missing` (reader row 1); a first extraction has nothing live and
+  plans exactly what it always did;
 * no `citation_located` event — the locator is 2(d).
 
 Every claim-bearing event carries the three input-identity payload keys named
@@ -62,7 +67,9 @@ from engine.core.events import (
     write_field_event,
     write_paper_event,
 )
-from engine.core.parsed_text import ParsedTextError, ParsedTextRef
+from engine.core.parsed_text import (
+    NoParsedText, ParsedTextError, ParsedTextRef, resolve_parsed_text,
+)
 from engine.core.reuse_key import reuse_key
 
 logger = logging.getLogger(__name__)
@@ -367,13 +374,49 @@ def _paper_event(outcome, *, event_type, to_state, from_state, reason_code, payl
                 stage_name=outcome.stage_name, payload=payload)
 
 
+def _supersede_old_text_claims(outcome, live, ident, *, written=frozenset(),
+                               extraction_uid=None, sentinels=frozenset()) -> list[dict]:
+    """D24 (12d-D24-R1): one `superseded` event per cell, outside `written`, that
+    holds a live claim of this arm whose reuse key is not the outcome's — an
+    absent key counts as differing. `ident` is the identity of the text the
+    outcome was made on; with none (the paper has no recorded text at all) there
+    is no new input identity to supersede under, and nothing is planned."""
+    key = ident.get(PAYLOAD_REUSE_KEY)
+    if key is None:
+        return []
+    out = []
+    for field_name in sorted(live):
+        if field_name in written:
+            continue
+        stale = {ev.claim_id for ev in live[field_name]
+                 if ev.payload.get(PAYLOAD_REUSE_KEY) != key}
+        if stale:
+            event = dict(event_type="superseded", paper_id=outcome.paper_id, arm=outcome.arm,
+                         run_id=outcome.run_id, field_name=field_name, actor_kind="engine",
+                         actor_role="system", actor_name="extractor", against_claims=stale,
+                         reason="input identity changed", payload=dict(ident),
+                         sentinels=sentinels)
+            if extraction_uid is not None:
+                event["extraction_uid"] = extraction_uid
+            out.append(event)
+    return out
+
+
 def plan_extraction_events(outcome, *, live: Mapping[str, tuple[LiveClaimEvent, ...]],
-                           from_state: str | None, sentinels=frozenset()) -> EventPlan:
-    """The events one outcome becomes. Pure: no connection, no clock."""
+                           from_state: str | None, sentinels=frozenset(),
+                           current_text: ParsedTextRef | None = None) -> EventPlan:
+    """The events one outcome becomes. Pure: no connection, no clock.
+
+    `current_text` is the text a `PaperFailure` was made on — the paper's
+    current reference — so the failure can supersede the arm's claims made on an
+    earlier text (D24). A record carries its own."""
     if isinstance(outcome, PaperFailure):
         if outcome.reason_code not in PS.EXTRACTION_REASON_CODES:
             raise ValueError(f"reason {outcome.reason_code!r} is not in the closed set (F9)")
-        return EventPlan((), _paper_event(
+        stale = _supersede_old_text_claims(
+            outcome, live, _identity(outcome.arm, outcome.paper_id, current_text),
+            sentinels=sentinels)
+        return EventPlan(tuple(stale), _paper_event(
             outcome, event_type="extraction_failed", to_state=outcome.to_state,
             from_state=from_state, reason_code=outcome.reason_code,
             payload={**dict(outcome.detail), "arm": outcome.arm}))
@@ -383,7 +426,8 @@ def plan_extraction_events(outcome, *, live: Mapping[str, tuple[LiveClaimEvent, 
         return plan_extraction_events(
             PaperFailure(rec.paper_id, rec.arm, rec.run_id, PS.REASON_NO_FIELDS_RETURNED,
                          rec.stage_name, detail={"incomplete_fields": list(rec.incomplete_fields)}),
-            live=live, from_state=from_state, sentinels=sentinels)
+            live=live, from_state=from_state, sentinels=sentinels,
+            current_text=rec.parsed_text)
 
     ident = _identity(rec.arm, rec.paper_id, rec.parsed_text)
     key = ident.get(PAYLOAD_REUSE_KEY)
@@ -421,6 +465,11 @@ def plan_extraction_events(outcome, *, live: Mapping[str, tuple[LiveClaimEvent, 
                         presented_context_sha256=rec.presented_context_sha256,
                         payload=payload))
 
+    # D24: the cells this record gave no outcome (incomplete fields, R140).
+    out.extend(_supersede_old_text_claims(
+        rec, live, ident, written=frozenset(fo.field_name for fo in rec.fields),
+        extraction_uid=rec.extraction_uid, sentinels=sentinels))
+
     counts = {k: sum(1 for f in rec.fields if f.kind == k) for k in _FIELD_KINDS}
     return EventPlan(tuple(out), _paper_event(
         rec, event_type="extracted", to_state="extracted", from_state=from_state,
@@ -439,10 +488,19 @@ def write_extraction_events(conn, outcome, *, sentinels=frozenset(),
     for ev in live_claim_events(conn, outcome.paper_id, outcome.arm):
         by_field.setdefault(ev.field_name, []).append(ev)
     processing = effective_state(conn, outcome.paper_id).processing
+    # D24: a failed paper supersedes under its CURRENT text's key — the recorded
+    # reference, never the file (a refusal's file may be missing or altered).
+    # Resolved only when there is something live to supersede.
+    current_text = None
+    if isinstance(outcome, PaperFailure) and by_field:
+        try:
+            current_text = resolve_parsed_text(conn, outcome.paper_id)
+        except NoParsedText:
+            current_text = None
     plan = plan_extraction_events(
         outcome, live={k: tuple(v) for k, v in by_field.items()},
         from_state=None if processing == NO_RECORDED_STATE else processing,
-        sentinels=sentinels)
+        sentinels=sentinels, current_text=current_text)
 
     conn.execute("SAVEPOINT extraction_events")
     try:

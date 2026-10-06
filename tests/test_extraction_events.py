@@ -568,3 +568,171 @@ def test_t12_processing_reasons_is_exactly_the_union_of_its_three_parts():
     # Every code maps to the token its own dict/family name says it should.
     assert set(PS.PARSE_REASONS.values()) == {"parse_failed"}
     assert set(PS.ACQUISITION_REASONS.values()) == {"full_text_not_obtainable"}
+
+
+# ── D24 (12d-D24-R1): a new outcome supersedes the paper's old-text claims ──
+V3_TEXT = "A corrected parse of the paper. A clean sentence.\n"
+
+
+def _two_claims_on_the_first_text(db, spec, run_id, sentinels):
+    """`study_design` and `country` claimed on the paper's first text; returns
+    their claim ids."""
+    arm = spec.extraction_models.arm
+    X.write_extraction_events(
+        db._conn, _record(db, spec, run_id, [_value("study_design"), _value("country", "USA")]),
+        sentinels=sentinels)
+    return (live_claims(db._conn, PID, "study_design", arm)[0],
+            live_claims(db._conn, PID, "country", arm)[0])
+
+
+def _reads(db, spec, sentinels, field):
+    ev = effective_value(db._conn, PID, field, spec.extraction_models.arm, sentinels=sentinels)
+    return ev.state, ev.rule_row, ev.value
+
+
+def _superseded(db):
+    return {r[1] for r in _fev(db, event_type="superseded")}
+
+
+def test_d24_t1_an_incomplete_field_on_reextraction_is_superseded_and_reads_missing(
+        db, spec, run_id, sentinels):
+    arm = spec.extraction_models.arm
+    _two_claims_on_the_first_text(db, spec, run_id, sentinels)
+    write_parsed(db, PID, V3_TEXT)
+    X.write_extraction_events(
+        db._conn, _record(db, spec, run_id, [_value("study_design", "RCT2")],
+                          incomplete=("country",)), sentinels=sentinels)
+    assert _superseded(db) == {"study_design", "country"}
+    assert [r[0] for r in _fev(db, field_name="country")] == ["asserted", "superseded"]
+    assert live_claims(db._conn, PID, "country", arm) == []
+    assert _reads(db, spec, sentinels, "country") == ("missing", 1, None)
+    assert _reads(db, spec, sentinels, "study_design")[2] == "RCT2"
+    new = resolve_parsed_text(db._conn, PID)
+    payload = json.loads(_fev(db, field_name="country")[-1][2])
+    assert payload["parsed_text_sha256"] == new.sha256
+    sel = select_for_extraction(db._conn, arm=arm)
+    assert sel.skipped_asserted == (PID,) and sel.to_extract == ()
+
+
+def test_d24_t2_a_failed_reextraction_supersedes_every_old_text_claim(db, spec, run_id,
+                                                                      sentinels):
+    arm = spec.extraction_models.arm
+    _two_claims_on_the_first_text(db, spec, run_id, sentinels)
+    write_parsed(db, PID, V3_TEXT)
+    out = X.outcome_for_exception(TimeoutError("gave up"), paper_id=PID, arm=arm,
+                                  run_id=run_id, stage_name="extract_pass1")
+    X.write_extraction_events(db._conn, out)
+    assert _superseded(db) == {"study_design", "country"}
+    assert _pev(db)[-1][:3] == ("extraction_failed", "extraction_failed",
+                                PS.REASON_MODEL_CALL_FAILED)
+    for field in ("study_design", "country"):
+        assert _reads(db, spec, sentinels, field) == ("missing", 1, None)
+    sel = select_for_extraction(db._conn, arm=arm)
+    assert [p for p, _ in sel.to_extract] == [PID] and sel.skipped_asserted == ()
+
+
+def test_d24_t3_a_selection_refusal_supersedes_every_old_text_claim_in_one_savepoint(
+        db, spec, run_id, sentinels):
+    arm = spec.extraction_models.arm
+    _two_claims_on_the_first_text(db, spec, run_id, sentinels)
+    write_parsed(db, PID, V3_TEXT).unlink()
+    sel = select_for_extraction(db._conn, arm=arm)
+    assert sel.skipped_refused == ((PID, PS.REASON_PARSED_TEXT_MISSING),)
+    n_fe, n_pe = len(_fev(db)), len(_pev(db))
+
+    # One savepoint: a failure at the paper event leaves no superseded event.
+    with patch.object(X, "write_paper_event", side_effect=events.RunLinkRefused("boom")):
+        with pytest.raises(events.RunLinkRefused):
+            E.record_selection_refusals(db, sel, run_id=run_id)
+    assert (len(_fev(db)), len(_pev(db))) == (n_fe, n_pe)
+
+    assert E.record_selection_refusals(db, sel, run_id=run_id) == 1
+    assert _superseded(db) == {"study_design", "country"}
+    assert len(_fev(db)) == n_fe + 2 and len(_pev(db)) == n_pe + 1
+    assert _pev(db)[-1][:3] == ("extraction_failed", "extraction_failed",
+                                PS.REASON_PARSED_TEXT_MISSING)
+    for field in ("study_design", "country"):
+        assert _reads(db, spec, sentinels, field) == ("missing", 1, None)
+
+
+def test_d24_t4_a_first_extraction_plans_no_superseded_event(db, spec, run_id, sentinels):
+    """Run 7's shape — no earlier claim on the paper: stored and failed alike
+    plan exactly the events they planned before D24."""
+    arm = spec.extraction_models.arm
+    stored = X.plan_extraction_events(
+        _record(db, spec, run_id, [_value("study_design")], incomplete=("country",)),
+        live={}, from_state=None, sentinels=sentinels)
+    assert [fe["event_type"] for fe in stored.field_events] == ["asserted"]
+    assert stored.paper_event["to_state"] == "extracted"
+    failed = X.plan_extraction_events(
+        X.PaperFailure(PID, arm, run_id, PS.REASON_MODEL_CALL_FAILED, "extract_pass1"),
+        live={}, from_state=None, sentinels=sentinels)
+    assert failed.field_events == () and failed.paper_event["to_state"] == "extraction_failed"
+    # Through the writer, with a text on record and nothing live:
+    X.write_extraction_events(
+        db._conn, X.PaperFailure(PID, arm, run_id, PS.REASON_MODEL_CALL_FAILED,
+                                 "extract_pass1"))
+    assert _fev(db) == []
+
+
+@pytest.mark.parametrize("how", ["stored_incomplete", "failed", "refused_at_selection"])
+def test_d24_t5_another_arms_claims_on_the_paper_are_untouched(db, spec, run_id, sentinels,
+                                                               how):
+    from engine.core.effective import PRE_MANIFEST
+    from _event_store_fixture import seed_claim
+    arm = spec.extraction_models.arm
+    events.register_arm(db._conn, "other_arm", "model", configuration_marker=PRE_MANIFEST)
+    other = seed_claim(db._conn, arm="other_arm", paper_id=PID, field_name="country",
+                       value="Norway", source_snippet="x")
+    db._conn.commit()
+    _two_claims_on_the_first_text(db, spec, run_id, sentinels)
+    path = write_parsed(db, PID, V3_TEXT)
+    if how == "stored_incomplete":
+        X.write_extraction_events(
+            db._conn, _record(db, spec, run_id, [_value("study_design", "RCT2")],
+                              incomplete=("country",)), sentinels=sentinels)
+    elif how == "failed":
+        X.write_extraction_events(db._conn, X.PaperFailure(
+            PID, arm, run_id, PS.REASON_MODEL_CALL_FAILED, "extract_pass1"))
+    else:
+        path.unlink()
+        E.record_selection_refusals(db, select_for_extraction(db._conn, arm=arm),
+                                    run_id=run_id)
+    assert live_claims(db._conn, PID, "country", arm) == []
+    assert live_claims(db._conn, PID, "country", "other_arm") == [other]
+    assert db._conn.execute("SELECT COUNT(*) FROM field_events WHERE arm = 'other_arm'"
+                            ).fetchone()[0] == 1
+
+
+def test_d24_t6_after_a_partial_reextraction_the_audit_runs_on_the_paper(db, spec, run_id,
+                                                                         sentinels):
+    from engine.agents import audit_events as AE
+    from engine.agents.auditor import AuditVerdict
+    _two_claims_on_the_first_text(db, spec, run_id, sentinels)
+    write_parsed(db, PID, V3_TEXT)
+    X.write_extraction_events(
+        db._conn, _record(db, spec, run_id, [_value("study_design", "RCT2")],
+                          incomplete=("country",)), sentinels=sentinels)
+    with patch.object(AE, "semantic_verify", return_value=AuditVerdict(
+            status="flagged", grep_found=False, reasoning="r")):
+        rep = AE.audit_run(db._conn, spec, run_id=run_id, arm=spec.extraction_models.arm,
+                           review_dir=Path(db.db_path).parent)
+    assert rep.skipped_refused == () and rep.papers_audited == 1
+    assert effective_state(db._conn, PID).processing == "audited_ai"
+
+
+def test_d24_t7_a_reviewer_decision_on_a_claim_the_reextraction_retired_needs_rereview(
+        db, spec, run_id, sentinels):
+    arm = spec.extraction_models.arm
+    _, country = _two_claims_on_the_first_text(db, spec, run_id, sentinels)
+    events.write_field_event(
+        db._conn, event_type="human_corrected", paper_id=PID, field_name="country", arm=arm,
+        claim_id=country, value="Canada", actor_kind="human", actor_role="reviewer",
+        actor_name="PI", against_claims={country}, sentinels=sentinels, run_id=run_id)
+    assert _reads(db, spec, sentinels, "country")[1] == 5
+    write_parsed(db, PID, V3_TEXT)
+    X.write_extraction_events(
+        db._conn, _record(db, spec, run_id, [_value("study_design", "RCT2")],
+                          incomplete=("country",)), sentinels=sentinels)
+    state, row, value = _reads(db, spec, sentinels, "country")
+    assert (row, value) == (3, None) and state.startswith("unresolved")

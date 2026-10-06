@@ -129,8 +129,8 @@ def run_pipeline(
             results["screen"] = _stage_screen(db, spec, limit)
 
         # ── ADJUDICATION GATE ─────────────────────────────────
-        # Check before any post-screening stage
-        target_stage = STAGES[start_idx] if skip_to else "parse"
+        # Check before any post-screening stage; a start at or before SCREEN targets PARSE (C57)
+        target_stage = STAGES[start_idx] if start_idx > STAGES.index("screen") else "parse"
         if target_stage in _POST_SCREENING_STAGES:
             if not is_adjudication_complete(db._conn):
                 blocker = get_current_blocker(db._conn)

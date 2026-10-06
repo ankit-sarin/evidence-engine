@@ -1,6 +1,10 @@
 """C57 — a `run_pipeline` start at or before SCREEN stops at the adjudication
 gate, whether or not `--skip-to` named the start (12e-C55-R1).
 
+C55 — such a run's manifest declares the abstract-screening model's preflight,
+so SCREEN's own probe is a declared call: it is sent and recorded, and the run
+reaches the gate with the real preflight in place.
+
 Each test drives `run_pipeline` itself, from its real manifest
 (`_open_run_manifest`, injected git state and digests) through the real SEARCH
 and SCREEN stages, on a scratch `ReviewDatabase`. The two searches return
@@ -143,3 +147,39 @@ def test_a_start_at_or_before_screen_stops_at_the_adjudication_gate(review, spec
     assert set(fake.models) == {spec.screening_models.primary}
     assert len(fake.calls) == 4
     assert field_events == 0
+
+
+# ── (iii) C55: the screening preflight is declared, sent and recorded ─
+ENV_OK = {"OLLAMA_FLASH_ATTENTION": "true", "OLLAMA_MAX_LOADED_MODELS": "1",
+          "OLLAMA_KV_CACHE_TYPE": "f16", "OLLAMA_NUM_PARALLEL": "1"}
+
+
+@pytest.mark.parametrize("skip_to", [None, "search", "screen"])
+def test_a_start_that_screens_declares_and_sends_the_screening_preflight(
+        review, spec, skip_to):
+    """The real `require_preflight`, with only its two host reads patched
+    (`systemctl show`, `ollama.ps`): the probe goes through `ollama_chat` and
+    its pre-send check. No `UndeclaredCall`; the run ends at the gate."""
+    db_path, fake = review
+    primary = spec.screening_models.primary
+    with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=ENV_OK), \
+         patch("engine.utils.ollama_preflight.ollama.ps", return_value={"models": []}):
+        rp.run_pipeline("starts", skip_to=skip_to)
+    end, stages, field_events, screened = _state(db_path)
+    assert end == ("interrupted", rm.REASON_BLOCKED_ADJUDICATION)
+    assert stages == ["abstract_screen_primary", f"preflight:{primary}"]
+    assert fake.models == [primary] * 5            # the probe, then two papers x two passes
+    assert fake.calls[0]["messages"] == [{"role": "user", "content": "Respond with OK"}]
+    assert screened == ["ABSTRACT_SCREENED_IN", "ABSTRACT_SCREENED_IN"]
+    assert field_events == 0
+    conn = sqlite3.connect(db_path)
+    try:
+        declared = conn.execute(
+            "SELECT model_name FROM run_stage_configs WHERE stage = ?",
+            (f"preflight:{primary}",)).fetchall()
+        outcomes = conn.execute(
+            "SELECT outcome FROM run_calls WHERE stage = ?", (f"preflight:{primary}",)).fetchall()
+    finally:
+        conn.close()
+    assert declared == [(primary,)]
+    assert outcomes == [("completed",)]

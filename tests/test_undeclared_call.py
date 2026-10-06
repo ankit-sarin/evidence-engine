@@ -161,6 +161,29 @@ def test_3_an_undeclared_preflight_model_is_refused_before_the_send(review, spec
     assert _run_calls(db) == []
 
 
+# ── C55: check_model does not wrap the refusal ────────────────────────
+def test_an_undeclared_preflight_leaves_require_preflight_as_itself(review, spec, fake):
+    """`check_model` turns every other failure into an `error` result, which
+    `require_preflight` reports as a RuntimeError about model availability. A
+    probe the manifest did not declare is not that: it propagates unwrapped."""
+    from engine.utils import ollama_preflight as pf
+    db, cb = review
+    declared = ec.stage_config("audit", spec).model
+    run_id = _open(db, spec, cb, ("audit", "preflight"), preflight_models=[declared])
+    env = {"OLLAMA_FLASH_ATTENTION": "true", "OLLAMA_MAX_LOADED_MODELS": "1",
+           "OLLAMA_KV_CACHE_TYPE": "f16", "OLLAMA_NUM_PARALLEL": "1"}
+    with rm.active_run(db._conn, run_id), \
+         patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env), \
+         patch("engine.utils.ollama_preflight.ollama.ps", return_value={"models": []}):
+        with pytest.raises(rm.UndeclaredCall) as exc:
+            pf.require_preflight([OTHER_MODEL], runner_name="Probe", spec=spec)
+        assert pf.check_model(declared, spec=spec).status == "ok"      # a declared probe still runs
+    assert not isinstance(exc.value, RuntimeError)
+    assert "fix model availability" not in str(exc.value)
+    assert exc.value.stage_key == f"preflight:{OTHER_MODEL}"
+    assert [c["model"] for c in fake.calls] == [declared]
+
+
 # ── (4) a declared call is sent and recorded, bytes unchanged ─────────
 def test_4_a_declared_call_is_sent_and_recorded_with_its_request_unchanged(
         review, spec, fake):

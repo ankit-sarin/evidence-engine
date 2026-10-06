@@ -6122,7 +6122,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 268,
+            "line": 276,
             "names": [
               "--models"
             ],
@@ -6131,7 +6131,7 @@
           {
             "default": "30",
             "dest": null,
-            "line": 269,
+            "line": 277,
             "names": [
               "--timeout"
             ],
@@ -7325,7 +7325,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 561,
+            "line": 563,
             "names": [
               "--review",
               "--name"
@@ -7335,7 +7335,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 567,
+            "line": 569,
             "names": [
               "--spec"
             ],
@@ -7344,7 +7344,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 573,
+            "line": 575,
             "names": [
               "--skip-to"
             ],
@@ -7353,7 +7353,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 579,
+            "line": 581,
             "names": [
               "--limit"
             ],
@@ -7362,7 +7362,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 585,
+            "line": 587,
             "names": [
               "--max-papers"
             ],
@@ -7384,13 +7384,13 @@
           },
           {
             "kind": "literal",
-            "line": 563,
+            "line": 565,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 569,
+            "line": 571,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7685,7 +7685,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "a1d9d164f86aab50cf1c47b0d55302f24d4e9470",
+    "generated_at_commit": "0cfd5912bbbc71d369dacd6a8c861f5379c65fa3",
     "scan_roots": [
       "engine",
       "scripts",

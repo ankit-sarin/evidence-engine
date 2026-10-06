@@ -505,6 +505,8 @@ def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int, *,
         stages.extend(_PIPELINE_STAGE_CONFIGS.get(name, ()))
     if spec.extraction_models.elicitation and "extract_pass1" in stages:
         stages[stages.index("extract_pass1")] = "elicitation_pass1"
+    if "abstract_screen_primary" in stages:     # C55: run_screening preflights it
+        preflight.append(stage_config("abstract_screen_primary", spec).model)
     if any(s.startswith("extract") or s == "elicitation_pass1" for s in stages):
         preflight.append(stage_config("extract_pass1", spec).model)
     if "audit" in stages:

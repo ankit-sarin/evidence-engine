@@ -148,6 +148,27 @@ class StageNotInRun(RunRefused):
     """The run named does not exist or did not declare the stage a caller needs."""
 
 
+class UndeclaredCall(Exception):
+    """C54: a model call the active run's manifest did not declare — its stage
+    key has no `run_stage_configs` row, or the row names a different model.
+    Raised by `ollama_chat` before anything is sent; a run fault, never a paper
+    outcome. Not a `RunRefused`: that is a run that may not open, and this run
+    is open. `declared_model` is None when the stage key is undeclared."""
+
+    def __init__(self, stage_key: str, declared_model: str | None, requested_model: str):
+        self.stage_key = stage_key
+        self.declared_model = declared_model
+        self.requested_model = requested_model
+        if declared_model is None:
+            detail = f"this run declared no {stage_key!r} stage"
+        else:
+            detail = f"this run declared {stage_key!r} with model {declared_model!r}"
+        super().__init__(
+            f"call refused before sending: {detail}, and the call would send model "
+            f"{requested_model!r}. The manifest is the contract — a run sends only the "
+            "stages and models it declared at open.")
+
+
 # ── Inputs a manifest records ────────────────────────────────────────
 @dataclass(frozen=True)
 class GitState:
@@ -686,6 +707,32 @@ def active_field_names() -> frozenset[str] | None:
     return _RUN_FIELD_NAMES.get(run_id)
 
 
+def call_stage_key(stage: str, model: str | None) -> str:
+    """The `run_stage_configs` key a call is declared and recorded under: the
+    stage, except `preflight`, which is declared once per probed model (R63)."""
+    return f"preflight:{model}" if stage == "preflight" else stage
+
+
+def check_declared_call(stage: str | None, model: str) -> None:
+    """C54: under an active run, refuse a call the manifest did not declare.
+
+    Called by `ollama_chat` before it sends anything. Raises `UndeclaredCall`
+    when the run has no `run_stage_configs` row for the call's stage key, or
+    that row's `model_name` is not `model`. A no-op outside a run, and for a
+    call that names no stage — the same two cases in which
+    `record_active_ollama_call` records nothing. Reads only."""
+    active = _ACTIVE.get()
+    if active is None or stage is None:
+        return
+    conn, run_id = active
+    key = call_stage_key(stage, model)
+    row = conn.execute("SELECT model_name FROM run_stage_configs "
+                       "WHERE run_id = ? AND stage = ?", (run_id, key)).fetchone()
+    declared = None if row is None else row[0]
+    if declared != model:
+        raise UndeclaredCall(key, declared, model)
+
+
 def record_active_ollama_call(stage: str | None, request: Mapping[str, Any],
                               paper_id: int | None, response, started_at: str, *,
                               outcome: str,
@@ -705,7 +752,7 @@ def record_active_ollama_call(stage: str | None, request: Mapping[str, Any],
     if active is None or stage is None:
         return
     conn, run_id = active
-    key = f"preflight:{request.get('model')}" if stage == "preflight" else stage
+    key = call_stage_key(stage, request.get("model"))
     digest = None
     if response is not None:
         msg = getattr(response, "message", None)

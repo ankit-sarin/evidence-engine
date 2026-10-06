@@ -508,6 +508,9 @@ def ollama_chat(
 
     Raises
     ------
+    UndeclaredCall
+        Before the call, under an active run whose manifest did not declare
+        this stage with this model (C54). Nothing is sent or recorded.
     InputOverflow
         Before the call, if the input cannot fit. Nothing is sent.
     InputTruncated, InputDropped
@@ -553,6 +556,12 @@ def ollama_chat(
             raise
         _record("completed", response=checked)
         return (checked, req_hash) if return_request_hash else checked
+
+    # C54: under an active run, a call the manifest did not declare is refused
+    # here — before the input-fit read and the send, so nothing reaches the
+    # server, and unrecorded, because nothing was sent. A no-op outside a run.
+    from engine.core.run_manifest import check_declared_call
+    check_declared_call(stage, model)
 
     try:
         fit = _check_input_fits(model, messages, kwargs.get("options"), paper_label)

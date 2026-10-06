@@ -17,7 +17,9 @@ import sqlite3
 
 import pytest
 
-from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1, R224a
+from _event_store_fixture import (  # 9b-2c R1, R224a; D23 strict form
+    FIXTURE_CONTEXT_SHA, FIXTURE_TEXT_SHA, claim_identity,
+)
 
 from engine.core import events
 from engine.core.effective import (
@@ -95,7 +97,8 @@ def locate(db, paper, claim_id, located, *, arm="local"):
         db, event_type="citation_located", paper_id=paper, field_name=FIELD, arm=arm,
         claim_id=claim_id, actor_kind="engine", actor_role="system",
         actor_name="locator", payload={"located": located, "parsed_text_id": "pt-1",
-                                       "threshold": 0.85, "locator_version": "0"},
+                                       "threshold": 0.85, "locator_version": "0",
+                                       "parsed_text_sha256": FIXTURE_TEXT_SHA},
         sentinels=SENTINELS, run_id=_run(db))
 
 
@@ -124,7 +127,7 @@ def read(db, paper, *, arm="local"):
 def one_claim(db, paper, value, **kw):
     uid = events.mint_extraction_uid()
     cid = events.make_claim_id(kw.get("arm", "local"), uid, FIELD)
-    assert_claim(db, paper, value, claim_id=cid, **kw)
+    assert_claim(db, paper, value, claim_id=cid, uid=uid, **kw)
     return cid
 
 
@@ -211,8 +214,8 @@ def test_row8_accepted_keeps_the_extractor_state_and_adds_endorsement(db):
 def test_row6_duplicate_values_within_one_claim_are_unresolved(db):
     uid = events.mint_extraction_uid()
     cid = events.make_claim_id("local", uid, FIELD)
-    assert_claim(db, 1, "5", claim_id=cid)
-    assert_claim(db, 1, "50", claim_id=cid)      # same claim_id, differing values
+    assert_claim(db, 1, "5", claim_id=cid, uid=uid)
+    assert_claim(db, 1, "50", claim_id=cid, uid=uid)  # same claim_id, differing values
     r = read(db, 1)
     assert r.state == UNRESOLVED_DUPLICATE and r.rule_row == 6
     assert sorted(r.provenance["candidates"]) == ["5", "50"]
@@ -221,8 +224,8 @@ def test_row6_duplicate_values_within_one_claim_are_unresolved(db):
 def test_row6_exit_correct_naming_every_competing_claim(db):
     uid = events.mint_extraction_uid()
     cid = events.make_claim_id("local", uid, FIELD)
-    assert_claim(db, 1, "5", claim_id=cid)
-    assert_claim(db, 1, "50", claim_id=cid)
+    assert_claim(db, 1, "5", claim_id=cid, uid=uid)
+    assert_claim(db, 1, "50", claim_id=cid, uid=uid)
     review(db, 1, "human_corrected", against={cid}, value="5")
     r = read(db, 1)
     assert r.state == CORRECTED_BY_HUMAN and r.value == "5"
@@ -400,8 +403,8 @@ def test_d1_3_an_auditor_verdict_is_provenance_never_a_field_state(db):
     cid = events.make_claim_id("local", uid, FIELD)
     events.write_field_event(
         db, event_type="asserted", paper_id=1, field_name=FIELD, arm="local",
-        claim_id=cid, value="5", source_snippet="q", actor_kind="model",
-        actor_role="extractor", actor_name="deepseek-r1:32b",
+        claim_id=cid, extraction_uid=uid, value="5", source_snippet="q",
+        actor_kind="model", actor_role="extractor", actor_name="deepseek-r1:32b",
         payload={**claim_identity("local", 1), "auditor_verdict": "flagged"},
         sentinels=SENTINELS, run_id=_run(db),
         presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a

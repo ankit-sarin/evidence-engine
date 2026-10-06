@@ -54,8 +54,8 @@ def claim(db, paper, value, *, arm="local"):
     cid = events.make_claim_id(arm, uid, FIELD)
     events.write_field_event(
         db, event_type="asserted", paper_id=paper, field_name=FIELD, arm=arm,
-        claim_id=cid, value=value, source_snippet="q", actor_kind="model",
-        actor_role="extractor", actor_name="m", sentinels=SENTINELS,
+        claim_id=cid, extraction_uid=uid, value=value, source_snippet="q",
+        actor_kind="model", actor_role="extractor", actor_name="m", sentinels=SENTINELS,
         payload=claim_identity(arm, paper), run_id=_run(db),
         presented_context_sha256=FIXTURE_CONTEXT_SHA)  # R224a
     return cid
@@ -378,3 +378,42 @@ def test_r59_a_pinned_arm_is_frozen_before_it_holds_any_claim(db):
     with pytest.raises(sqlite3.IntegrityError, match="pinned by a manifest"):
         db.execute("UPDATE arms SET configuration_json = '{\"model\":\"other\"}' "
                    "WHERE arm_name = 'local'")
+
+
+# ── D26 (12d) — a model extraction claim names its extraction ─────────
+def _store_counts(db):
+    return db.execute("SELECT (SELECT COUNT(*) FROM field_events), "
+                      "(SELECT COUNT(*) FROM claim_inputs)").fetchone()
+
+
+def _model_claim(db, **kw):
+    return events.write_field_event(
+        db, event_type="asserted", paper_id=1, field_name=FIELD, arm="local",
+        value="5", source_snippet="q", actor_kind="model", actor_role="extractor",
+        actor_name="m", sentinels=SENTINELS, payload=claim_identity("local", 1),
+        run_id=_run(db), presented_context_sha256=FIXTURE_CONTEXT_SHA, **kw)
+
+
+def test_d26_t1_a_model_claim_with_a_claim_id_and_no_extraction_uid_is_refused(db):
+    cid = events.make_claim_id("local", events.mint_extraction_uid(), FIELD)
+    with pytest.raises(events.ClaimWithoutExtractionUid) as e:
+        _model_claim(db, claim_id=cid)
+    assert isinstance(e.value, events.EventRefused) and cid in str(e.value)
+    assert tuple(_store_counts(db)) == (0, 0)
+
+
+def test_d26_t2_a_model_claim_with_an_empty_extraction_uid_is_refused(db):
+    with pytest.raises(events.ClaimWithoutExtractionUid):
+        _model_claim(db, extraction_uid="")
+    assert tuple(_store_counts(db)) == (0, 0)
+
+
+def test_d26_t3_a_reviewer_event_with_no_extraction_uid_of_its_own_is_admitted(db):
+    uid = events.mint_extraction_uid()
+    cid = events.make_claim_id("local", uid, FIELD)
+    _model_claim(db, claim_id=cid, extraction_uid=uid)
+    reviewer(db, 1, "human_accepted", against={cid})
+    row = db.execute("SELECT extraction_uid FROM field_events "
+                     "WHERE actor_role = 'reviewer'").fetchone()
+    assert row == (None,)
+    assert tuple(_store_counts(db)) == (2, 1)

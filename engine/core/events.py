@@ -32,6 +32,8 @@ no refusal applies to a pre-manifest arm; R59 reinstated one, for *claims*):
 * **R10** `ArmNotInRun` — a claim on a model arm the run's manifest did not pin.
 * **9b-2c R1** `ClaimWithoutInputIdentity` — an extractor's claim-bearing event
   without the three input-identity payload keys.
+* **D26** `ClaimWithoutExtractionUid` — a model extractor's claim-bearing event
+  whose `extraction_uid` would be stored NULL or empty.
 * **D23** `CitationTextMismatch` — a `citation_located` event whose
   `parsed_text_sha256` is absent or differs from its claim's `claim_inputs` row.
 
@@ -63,7 +65,7 @@ __all__ = [
     "AcceptAgainstMultipleClaims", "CellNotAssigned", "ArmConfigurationFrozen",
     "RunLinkRefused", "ClaimOnPreManifestArm", "ClaimOnRetiredArm", "ArmNotInRun",
     "ClaimWithoutInputIdentity", "ClaimInputMismatch", "ClaimWithoutPresentedContext",
-    "CitationTextMismatch", "UnknownFieldName",
+    "CitationTextMismatch", "ClaimWithoutExtractionUid", "UnknownFieldName",
     "UnknownArm", "PRE_MANIFEST", "PRE_MANIFEST_MARKER",
     "mint_extraction_uid", "make_claim_id", "register_arm", "retire_arm",
     "write_field_event", "write_paper_event",
@@ -132,6 +134,16 @@ class ClaimWithoutPresentedContext(EventRefused):
     the extraction it belongs to (`context_chain`, non-empty). A claim implies
     at least one model call; one that cannot name it is refused rather than
     stored with no way to reproduce what the model was shown."""
+
+
+class ClaimWithoutExtractionUid(EventRefused):
+    """D26 (12d-D23-R3 R-2a): a model extractor's claim names the extraction it
+    belongs to. A caller that passed a `claim_id` and no `extraction_uid` used to
+    store the event with a NULL uid and its `claim_inputs` row under a NULL
+    primary key — a claim the reuse-key join, the R217 consistency check, the
+    audit's text read (D23) and the citation check could never see. A caller that
+    passes neither still gets a minted uid; a human extractor's claim is outside
+    this rule (B19)."""
 
 
 class CitationTextMismatch(EventRefused):
@@ -363,6 +375,16 @@ def write_field_event(conn, *, event_type, paper_id, field_name, arm,
         if extraction_uid is None:
             extraction_uid = mint_extraction_uid()
         claim_id = make_claim_id(arm, extraction_uid, field_name)
+
+    # D26: checked after the mint above, so it fires only for a uid that would
+    # be STORED null or empty — a claim_id passed without one, or an empty string.
+    if (actor_kind == "model" and actor_role == "extractor"
+            and event_type in CLAIM_EVENT_TYPES and not extraction_uid):
+        raise ClaimWithoutExtractionUid(
+            f"{event_type} refused: paper {paper_id} field {field_name!r} arm {arm!r} "
+            f"claim {claim_id!r} carries no extraction_uid. A model extractor's claim "
+            "names the extraction it belongs to; pass the uid the claim id was built "
+            "from (D26).")
 
     # D23: a citation is checked against the text its claim was extracted from.
     if event_type == "citation_located":

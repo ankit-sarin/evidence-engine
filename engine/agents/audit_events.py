@@ -1,15 +1,19 @@
 """The event-side auditor (WRITE-PATH-01 9b-2d; R17, F8, F10).
 
-Built and tested here; `run_pipeline`'s audit stage is wired to it at the flip,
-when `run_audit`'s reads of `evidence_spans` and its LOW_YIELD writes retire
+`run_pipeline`'s audit stage (`_stage_audit`) calls `audit_run`, since the flip
+that retired `run_audit`'s reads of `evidence_spans` and its LOW_YIELD writes
 (`ReviewDatabase.update_audit` itself retired under R160b; this module's event
-writes are its successor). Until then nothing in the run path calls this module.
+writes are its successor).
 
 **Per eligible paper, for one arm:**
 
-1. Resolve and read the paper's parsed text (R95). A refused text (A14) skips the
-   paper with its reason and writes nothing — the extractor wrote the paper
-   event that says why (R122).
+1. Resolve and read the parsed text the paper's claims were EXTRACTED FROM — the
+   version each claim's `claim_inputs` row names, by uid, verified by hash (R95,
+   D23) — not the paper's newest version. A refused text (that version missing,
+   altered or without a row; a claim with no recorded text; or the claims to
+   locate spanning more than one text sha256) skips the paper with a log line
+   naming the paper, the uid(s) and the reason, and writes nothing. No event
+   records the skip until migration 023 (D22).
 2. Every live `asserted` claim without a `citation_located` event is located by
    the one locator (`engine.core.locator`). The test is identical for a value and
    an absence sentinel (R17).
@@ -48,13 +52,31 @@ from engine.core.effective import (
 from engine.core.effective_config import stage_config
 from engine.core.events import write_field_event, write_paper_event
 from engine.core.locator import FUZZY_THRESHOLD, LOCATOR_VERSION, locate, locate_payload
-from engine.core.parsed_text import ParsedTextError, read_parsed_text, resolve_parsed_text
+from engine.core.paper_state import REASON_PARSED_TEXT_NOT_RECORDED
+from engine.core.parsed_text import (
+    ParsedTextError, ParsedTextRef, read_parsed_text, resolve_parsed_text_by_uid,
+)
 
 logger = logging.getLogger(__name__)
 
 LOCATOR_ACTOR = f"locator@{LOCATOR_VERSION}"
 VERDICT_FLAGGED = "flagged"
 NO_SNIPPET_RATIONALE = "no snippet supplied"
+
+#: D23 (12d-D23-R1 R-2): a paper whose claims to locate were extracted from more
+#: than one parsed text. Reported in `AuditReport.skipped_refused` and the log
+#: only; the reason vocabulary of the paper event that will record an audit
+#: refusal is set with migration 023 (D22), and this name is provisional until then.
+REFUSAL_MIXED_TEXT_VERSIONS = "claims_span_text_versions"
+
+
+class _ClaimTextRefused(Exception):
+    """A paper's claims do not name one resolvable text (D23). Internal to
+    `audit_run`'s refusal branch; carries the reason and the uids for its log line."""
+
+    def __init__(self, reason_code: str, uids: tuple[str, ...], detail: str):
+        self.reason_code, self.uids = reason_code, uids
+        super().__init__(detail)
 
 
 @dataclass(frozen=True)
@@ -88,6 +110,33 @@ def low_yield(conn, paper_id: int, arm: str, *, codebook: Codebook, threshold: i
     return populated < threshold
 
 
+def claim_text_ref(conn, claims) -> ParsedTextRef:
+    """The one parsed text `claims` were extracted from (D23), from their
+    `claim_inputs` rows — joined by claim id, as `selection._live_reuse_keys`
+    joins them. Compared by sha256, never by uid: a byte-identical re-parse has a
+    new uid and the same text. Refuses a claim with no row and claims on more
+    than one sha256; the by-uid resolver refuses a uid with no reference."""
+    claim_ids = sorted({c.claim_id for c in claims})
+    rows = conn.execute(
+        "SELECT DISTINCT fe.claim_id, ci.parsed_text_uid, ci.parsed_text_sha256 "
+        "FROM field_events fe JOIN claim_inputs ci ON fe.extraction_uid = ci.extraction_uid "
+        f"WHERE fe.claim_id IN ({', '.join('?' * len(claim_ids))})", claim_ids).fetchall()
+    uids = tuple(sorted({r[1] for r in rows}))
+    unrecorded = sorted(set(claim_ids) - {r[0] for r in rows})
+    if unrecorded:
+        raise _ClaimTextRefused(
+            REASON_PARSED_TEXT_NOT_RECORDED, uids,
+            f"{len(unrecorded)} claim(s) carry no recorded text identity "
+            f"(no claim_inputs row): {', '.join(unrecorded)}")
+    if len({r[2] for r in rows}) > 1:
+        raise _ClaimTextRefused(
+            REFUSAL_MIXED_TEXT_VERSIONS, uids,
+            "its claims to locate were extracted from more than one parsed text")
+    # One sha256. More than one uid means the same bytes recorded twice; the
+    # first in sorted order is taken so the choice is deterministic.
+    return resolve_parsed_text_by_uid(conn, uids[0])
+
+
 def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> AuditReport:
     """Locate, verify and record the audit of every eligible paper for `arm`."""
     auditor_digest = rm.stage_digest(conn, run_id, "audit")
@@ -117,11 +166,17 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
         todo = [c for c in claims if c.claim_id not in done]
         if not todo:
             continue
+        uids: tuple[str, ...] = ()
         try:
-            ref = resolve_parsed_text(conn, pid)
+            ref = claim_text_ref(conn, todo)
+            uids = (ref.parsed_text_uid,)
             text = read_parsed_text(ref)
-        except ParsedTextError as exc:
-            logger.warning("Paper %d: audit skipped — %s (%s)", pid, exc.reason_code, exc)
+        except (ParsedTextError, _ClaimTextRefused) as exc:
+            uids = getattr(exc, "uids", None) or uids
+            if not uids and getattr(exc, "uid", None):
+                uids = (exc.uid,)
+            logger.warning("Paper %d: audit skipped — %s; parsed text uid(s) %s (%s)",
+                           pid, exc.reason_code, ", ".join(uids) or "none", exc)
             refused.append((pid, exc.reason_code))
             continue
 

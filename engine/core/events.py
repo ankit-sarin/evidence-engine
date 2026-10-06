@@ -32,6 +32,8 @@ no refusal applies to a pre-manifest arm; R59 reinstated one, for *claims*):
 * **R10** `ArmNotInRun` — a claim on a model arm the run's manifest did not pin.
 * **9b-2c R1** `ClaimWithoutInputIdentity` — an extractor's claim-bearing event
   without the three input-identity payload keys.
+* **D23** `CitationTextMismatch` — a `citation_located` event whose
+  `parsed_text_sha256` differs from its claim's `claim_inputs` row.
 
 **Row 7 stays reachable.** v2.1 row 7 is two live claims on a pre-manifest
 arm. After R59 no new claim can land on such an arm, so on live data row 7 is
@@ -61,7 +63,7 @@ __all__ = [
     "AcceptAgainstMultipleClaims", "CellNotAssigned", "ArmConfigurationFrozen",
     "RunLinkRefused", "ClaimOnPreManifestArm", "ClaimOnRetiredArm", "ArmNotInRun",
     "ClaimWithoutInputIdentity", "ClaimInputMismatch", "ClaimWithoutPresentedContext",
-    "UnknownFieldName",
+    "CitationTextMismatch", "UnknownFieldName",
     "UnknownArm", "PRE_MANIFEST", "PRE_MANIFEST_MARKER",
     "mint_extraction_uid", "make_claim_id", "register_arm", "retire_arm",
     "write_field_event", "write_paper_event",
@@ -130,6 +132,15 @@ class ClaimWithoutPresentedContext(EventRefused):
     the extraction it belongs to (`context_chain`, non-empty). A claim implies
     at least one model call; one that cannot name it is refused rather than
     stored with no way to reproduce what the model was shown."""
+
+
+class CitationTextMismatch(EventRefused):
+    """D23 (12d-D23-R1 R-3): a citation says where a claim's snippet was found in
+    a parsed text; one located against a text other than the one the claim was
+    extracted from says nothing about that claim. Compared by sha256, never by
+    uid — a byte-identical re-parse has a new uid and the same text. A citation
+    that names no text, or a claim with no `claim_inputs` row (a migration
+    seed), has nothing to compare and is not refused here."""
 
 
 class UnknownFieldName(EventRefused):
@@ -351,6 +362,19 @@ def write_field_event(conn, *, event_type, paper_id, field_name, arm,
         if extraction_uid is None:
             extraction_uid = mint_extraction_uid()
         claim_id = make_claim_id(arm, extraction_uid, field_name)
+
+    # D23: a citation is checked against the text its claim was extracted from.
+    if event_type == "citation_located":
+        cited_sha = payload.get(PAYLOAD_PARSED_TEXT_SHA256)
+        claimed = conn.execute(
+            "SELECT ci.parsed_text_sha256 FROM field_events fe "
+            "JOIN claim_inputs ci ON fe.extraction_uid = ci.extraction_uid "
+            "WHERE fe.claim_id = ? LIMIT 1", (claim_id,)).fetchone()
+        if cited_sha is not None and claimed is not None and cited_sha != claimed[0]:
+            raise CitationTextMismatch(
+                f"citation_located refused: claim {claim_id!r} was extracted from parsed "
+                f"text sha256 {claimed[0]}, and this citation was located against "
+                f"{cited_sha}. A citation is located against its claim's own text (D23).")
 
     # R217/D16: claim_inputs is the constrained, indexed authority for one
     # extraction call's input identity — one row per extraction_uid, checked

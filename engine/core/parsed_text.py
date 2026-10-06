@@ -11,6 +11,9 @@ database is.
   greatest `parsed_text_version`, compared as an INTEGER in SQL. Migration
   021's `UNIQUE (paper_id, parsed_text_version)` is what makes that one row. No
   glob, no directory listing.
+* **`resolve_parsed_text_by_uid(conn, parsed_text_uid)`** — one NAMED version, by
+  the table's primary key (D23): the text a claim was extracted from, which need
+  not be the paper's newest. Same `ParsedTextRef`, same verified read.
 * **`read_parsed_text(ref)` / `load_parsed_text(conn, paper_id)`** — read the
   file and recompute its SHA-256 on EVERY read (R95). A mismatch raises
   `ParsedTextModified` naming the uid, both hashes and the remedy: record the
@@ -59,14 +62,19 @@ class ParsedTextError(RuntimeError):
 
 
 class NoParsedText(ParsedTextError):
-    """The paper has no `parsed_text_refs` row at all."""
+    """The paper has no `parsed_text_refs` row at all — or, from the by-uid
+    resolver (D23), the named uid has none."""
 
     reason_code = REASON_PARSED_TEXT_NOT_RECORDED
 
-    def __init__(self, paper_id: int):
-        self.paper_id = paper_id
-        super().__init__(f"paper {paper_id}: no parsed text is recorded "
-                         "(no parsed_text_refs row)")
+    def __init__(self, paper_id: int | None = None, *, uid: str | None = None):
+        self.paper_id, self.uid = paper_id, uid
+        if uid is not None:
+            super().__init__(f"parsed text {uid}: no parsed text is recorded under "
+                             "this uid (no parsed_text_refs row)")
+        else:
+            super().__init__(f"paper {paper_id}: no parsed text is recorded "
+                             "(no parsed_text_refs row)")
 
 
 class ParsedTextMissing(ParsedTextError):
@@ -133,6 +141,21 @@ def resolve_parsed_text(conn: sqlite3.Connection, paper_id: int) -> ParsedTextRe
     ).fetchone()
     if row is None:
         raise NoParsedText(paper_id)
+    uid, pid, stored, version, sha = tuple(row)
+    return ParsedTextRef(uid, pid, resolve_stored_path(stored), stored, int(version), sha)
+
+
+def resolve_parsed_text_by_uid(conn: sqlite3.Connection, parsed_text_uid: str) -> ParsedTextRef:
+    """One named version (D23): the `parsed_text_refs` row with this uid, whether
+    or not it is the paper's newest. Read it with `read_parsed_text`, which
+    verifies the recorded hash exactly as for the current version."""
+    row = conn.execute(
+        "SELECT parsed_text_uid, paper_id, parsed_text_path, parsed_text_version, "
+        "parsed_text_sha256 FROM parsed_text_refs WHERE parsed_text_uid = ?",
+        (parsed_text_uid,),
+    ).fetchone()
+    if row is None:
+        raise NoParsedText(uid=parsed_text_uid)
     uid, pid, stored, version, sha = tuple(row)
     return ParsedTextRef(uid, pid, resolve_stored_path(stored), stored, int(version), sha)
 

@@ -361,3 +361,105 @@ def test_an_audit_run_needs_its_audit_stage(db, spec):
     with pytest.raises(rm.StageNotInRun):
         AE.audit_run(db._conn, spec, run_id=999, arm=spec.extraction_models.arm,
                      review_dir=Path(db.db_path).parent)
+
+
+# ── D23 (12d): audit reads each claim's own recorded text version ─────
+OTHER_TEXT = "An entirely different parse of the same paper, sharing no sentence.\n"
+SNIPPET = "The trial enrolled forty patients at two centres."
+
+
+def test_d23_t1_claims_on_an_older_version_are_located_against_that_version(
+        db, spec, run_id, review_dir, verify):
+    old = resolve_parsed_text(db._conn, P7)
+    c = claim(db, spec, run_id, P7, "study_type", "RCT", SNIPPET)
+    write_parsed(db, P7, OTHER_TEXT)
+    assert resolve_parsed_text(db._conn, P7).parsed_text_uid != old.parsed_text_uid
+    rep = run(db, spec, run_id, review_dir)
+    p = located_events(db, P7)[c]
+    assert (p["located"], p["kind"]) == (True, "exact")
+    assert (p["parsed_text_uid"], p["parsed_text_sha256"]) == (old.parsed_text_uid, old.sha256)
+    payload = json.loads(db._conn.execute(
+        "SELECT payload_json FROM paper_events WHERE paper_id = ? AND to_state = 'audited_ai'",
+        (P7,)).fetchone()[0])
+    assert payload["parsed_text_sha256"] == old.sha256
+    assert rep.skipped_refused == () and rep.located == 1
+
+
+def test_d23_t2_claims_spanning_two_text_versions_refuse_the_paper(
+        db, spec, run_id, review_dir, verify, caplog):
+    old = resolve_parsed_text(db._conn, P7)
+    claim(db, spec, run_id, P7, "study_type", "RCT", SNIPPET)
+    write_parsed(db, P7, OTHER_TEXT)
+    new = resolve_parsed_text(db._conn, P7)
+    claim(db, spec, run_id, P7, "country", "Norway", "An entirely different parse")
+    claim(db, spec, run_id, P8, "country", "Norway", SNIPPET)
+    with caplog.at_level("WARNING", logger=AE.logger.name):
+        rep = run(db, spec, run_id, review_dir)
+    assert rep.skipped_refused == ((P7, AE.REFUSAL_MIXED_TEXT_VERSIONS),)
+    line = next(r.getMessage() for r in caplog.records if "audit skipped" in r.getMessage())
+    assert f"Paper {P7}" in line and AE.REFUSAL_MIXED_TEXT_VERSIONS in line
+    assert old.parsed_text_uid in line and new.parsed_text_uid in line
+    assert located_events(db, P7) == {} and audited(db, P7) == 0
+    assert audited(db, P8) == 1 and rep.papers_audited == 1
+
+
+def test_d23_t3_an_altered_claim_version_refuses_the_paper_though_a_newer_one_is_intact(
+        db, spec, run_id, review_dir, verify, caplog):
+    old = resolve_parsed_text(db._conn, P7)
+    claim(db, spec, run_id, P7, "study_type", "RCT", SNIPPET)
+    write_parsed(db, P7, OTHER_TEXT)
+    old.path.write_text("edited in place\n")
+    claim(db, spec, run_id, P8, "country", "Norway", SNIPPET)
+    with caplog.at_level("WARNING", logger=AE.logger.name):
+        rep = run(db, spec, run_id, review_dir)
+    assert rep.skipped_refused == ((P7, "parsed_text_modified"),)
+    line = next(r.getMessage() for r in caplog.records if "audit skipped" in r.getMessage())
+    assert f"Paper {P7}" in line and old.parsed_text_uid in line
+    assert located_events(db, P7) == {} and audited(db, P7) == 0
+    assert audited(db, P8) == 1
+
+
+def test_d23_t4_the_writer_refuses_a_citation_against_another_text(db, spec, run_id):
+    ref = resolve_parsed_text(db._conn, P7)
+    c = claim(db, spec, run_id, P7, "study_type", "RCT", SNIPPET)
+    n = db._conn.execute("SELECT COUNT(*) FROM field_events").fetchone()[0]
+    res = AE.locate(TEXT, SNIPPET)
+    other = "0" * 64
+    with pytest.raises(events.CitationTextMismatch) as exc:
+        events.write_field_event(
+            db._conn, event_type="citation_located", paper_id=P7, field_name="study_type",
+            arm=spec.extraction_models.arm, claim_id=c, actor_kind="engine",
+            actor_role="system", actor_name=AE.LOCATOR_ACTOR,
+            payload=AE.locate_payload(res, threshold=AE.FUZZY_THRESHOLD,
+                                      parsed_text_sha256=other,
+                                      parsed_text_uid=ref.parsed_text_uid), run_id=run_id)
+    assert isinstance(exc.value, events.EventRefused)
+    assert ref.sha256 in str(exc.value) and other in str(exc.value)
+    assert db._conn.execute("SELECT COUNT(*) FROM field_events").fetchone()[0] == n
+    assert located_events(db, P7) == {}
+
+
+def test_d23_t5_a_byte_identical_reparse_is_not_a_mismatch(db, spec, run_id, review_dir,
+                                                           verify):
+    old = resolve_parsed_text(db._conn, P7)
+    c = claim(db, spec, run_id, P7, "study_type", "RCT", SNIPPET)
+    write_parsed(db, P7, TEXT)
+    new = resolve_parsed_text(db._conn, P7)
+    assert (new.sha256 == old.sha256) and new.parsed_text_uid != old.parsed_text_uid
+    rep = run(db, spec, run_id, review_dir)
+    p = located_events(db, P7)[c]
+    assert p["located"] is True and p["parsed_text_sha256"] == old.sha256
+    assert p["parsed_text_uid"] == old.parsed_text_uid
+    assert rep.skipped_refused == () and audited(db, P7) == 1
+
+
+def test_d23_a_claim_with_no_recorded_text_identity_refuses_the_paper(db, spec, run_id,
+                                                                      review_dir, verify):
+    events.register_arm(db._conn, "premanifest_a", "model", configuration_marker=PRE_MANIFEST)
+    seed_claim(db._conn, arm="premanifest_a", paper_id=P7, field_name="country",
+               value="Norway", source_snippet=SNIPPET)
+    db._conn.commit()
+    rep = AE.audit_run(db._conn, spec, run_id=run_id, arm="premanifest_a",
+                       review_dir=review_dir)
+    assert rep.skipped_refused == ((P7, "parsed_text_not_recorded"),)
+    assert located_events(db, P7) == {} and audited(db, P7) == 0

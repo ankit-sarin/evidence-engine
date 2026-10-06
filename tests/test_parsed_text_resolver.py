@@ -172,3 +172,32 @@ def test_migration_021_and_the_resolver_canonicalise_alike(stored):
     assert m021.canonical_path(stored, pt.REPO_ROOT) == pt.canonical_path(stored)
     under = str(pt.REPO_ROOT / "data" / "q.md")
     assert m021.canonical_path(under, pt.REPO_ROOT) == pt.canonical_path(under) == "data/q.md"
+
+
+# ── D23 (12d): a named version, resolved by uid, verified on read ─────
+def test_d23_t6_the_by_uid_resolver_returns_the_named_version_not_the_newest(db):
+    write_parsed(db, 7, "version one\n")
+    first = pt.resolve_parsed_text(db._conn, 7)
+    write_parsed(db, 7, "version two\n")
+    assert pt.resolve_parsed_text(db._conn, 7).version == 2
+    ref = pt.resolve_parsed_text_by_uid(db._conn, first.parsed_text_uid)
+    assert ref == first and isinstance(ref, pt.ParsedTextRef)
+    assert pt.read_parsed_text(ref) == "version one\n"
+
+
+def test_d23_t6_an_unknown_uid_is_no_parsed_text(db):
+    write_parsed(db, 7, "x\n")
+    with pytest.raises(pt.NoParsedText) as exc:
+        pt.resolve_parsed_text_by_uid(db._conn, "no-such-uid")
+    assert "no-such-uid" in str(exc.value)
+    assert exc.value.reason_code == "parsed_text_not_recorded"
+
+
+def test_d23_t6_an_altered_named_version_is_refused_on_read(db):
+    path = write_parsed(db, 7, "version one\n")
+    first = pt.resolve_parsed_text(db._conn, 7)
+    write_parsed(db, 7, "version two\n")
+    path.write_text("version 0ne\n")
+    ref = pt.resolve_parsed_text_by_uid(db._conn, first.parsed_text_uid)
+    with pytest.raises(pt.ParsedTextModified):
+        pt.read_parsed_text(ref)

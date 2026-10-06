@@ -50,14 +50,17 @@ def grep_verify(source_snippet: str, paper_text: str) -> bool:
 
 
 def semantic_verify(
-    span: EvidenceSpan, paper_text: str, field_type: str = "text",
+    span: EvidenceSpan, field_type: str = "text",
     model: str | None = None,
     *, cfg: EffectiveConfig, paper_id: int | None = None,
 ) -> AuditVerdict:
     """Use an LLM to verify if extracted value matches the source snippet.
 
-    For categorical fields, the prompt asks whether the source text supports
-    the classification rather than whether it contains the exact phrase.
+    The model is shown the field, the value and the extractor's quoted snippet,
+    and nothing else: the paper text is not sent (B23), so this checks the value
+    against the snippet, not against the paper. For categorical fields, the
+    prompt asks whether the snippet supports the classification rather than
+    whether it contains the exact phrase.
 
     `cfg` is the resolved `audit` stage, required: the spec-less fallback is
     gone (C52), so a caller cannot silently send the declared defaults. The `ollama_options` override retired with its only caller,
@@ -186,8 +189,7 @@ def audit_span(
         confidence=span_data.get("confidence", 0.5),
         tier=field_tier,
     )
-    verdict = semantic_verify(span, paper_text, field_type=field_type, model=model,
-                              cfg=cfg)
+    verdict = semantic_verify(span, field_type=field_type, model=model, cfg=cfg)
     semantic_pass = verdict.status == "verified"
 
     # Fix D: 4-state outcome

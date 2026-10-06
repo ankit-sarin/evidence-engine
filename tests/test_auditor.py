@@ -124,6 +124,18 @@ def test_valid_snippet_no_ellipsis():
 
 
 def test_semantic_verify_mocked():
+    """B23 (12d-B23-R1): rewritten under its id to the signature without
+    `paper_text`. It also reads the request the mocked client was handed and
+    asserts no paper text is in it.
+
+    Mutation note: re-adding a `paper_text` parameter fails the signature
+    assertion; rendering anything of the paper beyond the span's own snippet
+    into `build_audit_messages` is a request change the audit stage's
+    `prompt_hash` and `test_request_capture::test_audit` catch — the content
+    assertion here pins that what is sent for THIS span is the snippet, never
+    the passage around it."""
+    import inspect
+
     from engine.agents.models import EvidenceSpan
 
     span = EvidenceSpan(
@@ -139,10 +151,16 @@ def test_semantic_verify_mocked():
         status="verified", grep_found=True, reasoning="Value matches snippet."
     ).model_dump_json()
 
-    with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
-        verdict = semantic_verify(span, PAPER_TEXT, cfg=stage_config("audit"))
+    with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp) as chat:
+        verdict = semantic_verify(span, cfg=stage_config("audit"))
 
     assert verdict.status == "verified"
+    assert "paper_text" not in inspect.signature(semantic_verify).parameters
+    sent = "\n".join(m["content"] for m in chat.call_args.kwargs["messages"])
+    assert span.source_snippet in sent
+    for sentence in ("Smart Tissue Autonomous Robot", "20 trials on porcine tissue",
+                     "Suture placement accuracy was 95.2%"):
+        assert sentence in PAPER_TEXT and sentence not in sent
 
 
 # ── audit_span: 4-state outcomes ─────────────────────────────────────

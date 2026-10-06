@@ -112,7 +112,7 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 6. **EXTRACT** — Pass 1: DeepSeek-R1 reasoning → Pass 2: structured JSON
 7. **CLOUD EXTRACT** — Parallel concordance arms: OpenAI o4-mini + Anthropic Sonnet 4.6. Same codebook prompt, independent parsing
 8. **DISTRIBUTION CHECK** — Post-extraction quality gate on the local extract stage and on each cloud arm run: detect categorical field collapse for the arm just extracted. Local: skipped when the arm has fewer than 10 papers with live claims; COLLAPSED is recorded to run telemetry and the run continues. Cloud: skipped under 10 extracted papers or on a partial run; COLLAPSED raises
-9. **AUDIT** — Grep verify + semantic verify via gemma3:27b + LOW_YIELD detection (configurable threshold)
+9. **AUDIT** — Grep verify (the snippet is located in the paper text) + semantic verify via gemma3:27b (an unlocated claim's value is checked against the extractor's snippet; the paper text is not sent) + LOW_YIELD detection (configurable threshold)
 10. **CONCORDANCE** — Multi-arm agreement analysis: scoring, normalization, kappa + percent agreement with 95% CI
 11. **ADJUDICATION GATE** — 12-stage workflow: 5 abstract + 1 acquisition + 2 FT + 4 extraction audit (human review required)
 12. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section (the corpus, from the eligibility axis)
@@ -128,7 +128,7 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 - Role-aware screening: primary sees simplified exclusions (high recall), verifier sees full strict criteria (high precision). Cross-family diversity (Qwen vs Gemma)
 - Two-pass extraction: free reasoning trace → grammar-constrained structured output
 - Evidence spans: source_snippet fields for traceability
-- Grep + semantic audit: check snippet exists in paper, then verify value matches
+- Grep + semantic audit: check snippet exists in paper; for a claim whose snippet is not found, verify the value against the extractor's snippet (the verifier is not shown the paper text)
 - Per-review isolation: each review gets its own SQLite DB and directory tree
 - 12-stage workflow enforcement with human gates between phases
 - Abstract retention policy: all paper data retained permanently — SCREENED_OUT is a label, not a deletion

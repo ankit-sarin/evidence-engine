@@ -52,7 +52,7 @@ _SPAN = EvidenceSpan(field_name="f", value="v", source_snippet="s", confidence=0
     lambda: E._retry_snippet("f", "v", "text", 1),
     lambda: E._validate_and_retry_snippets([], "text", 1),
     lambda: PP.parse_with_vision("no-such.pdf"),
-    lambda: AU.semantic_verify(_SPAN, "text"),
+    lambda: AU.semantic_verify(_SPAN),
     lambda: AU.audit_span({"field_name": "f", "value": "v", "source_snippet": "s"}, "text"),
     lambda: QC._classify_page("img"),
 ], ids=["extract_pass1_reasoning", "run_pass1", "elicit",

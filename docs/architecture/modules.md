@@ -152,7 +152,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 - `DEFAULT_AUDITOR_MODEL = "gemma3:27b"`, `SEMANTIC_ONLY_TIERS = {4}`
 - `_ABSENCE_VALUES = {"NOT_FOUND", "Not discussed", "NR", "No comparison reported", "Not assessable"}`
 - `grep_verify(source_snippet, paper_text)` — Normalized exact + fuzzy (>0.85) substring match
-- `semantic_verify(span, paper_text, field_type, model, *, cfg)` — LLM verification. Categorical: "Does source support this classification?" Text: "Does value match snippet?"
+- `semantic_verify(span, field_type, model, *, cfg, paper_id)` — LLM verification of the value against the extractor's snippet; the paper text is not sent. Categorical: "Does the snippet support this classification?" Text: "Does value match snippet?"
 - `audit_span(span_data, paper_text, field_type, field_tier, model, non_value_tokens, *, cfg)` — 4-state audit: absence → auto-verify; invalid snippet → invalid_snippet; tier 4 → semantic-only; others → grep then semantic
 - `check_low_yield(db, threshold)` — Flags papers with < threshold populated fields; absence is the codebook's `absence_sentinels` plus the non-value tokens (R136) — any other declared value, e.g. "Not assessable", counts as populated
 - `run_audit(db, review_name, spec, model)` — Batch audit. Builds field type/tier lookup. Post-audit LOW_YIELD detection

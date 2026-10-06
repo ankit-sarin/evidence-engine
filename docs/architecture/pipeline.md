@@ -275,7 +275,7 @@ PYTHONPATH=. python scripts/run_cloud_extraction.py --dry-run
    - Empty snippet on non-absence value → `flagged`
    - Tier 4 fields → semantic-only (skip grep)
    - `grep_verify()`: normalized substring match or sliding-window fuzzy match (SequenceMatcher > 0.85)
-   - `semantic_verify()`: LLM check via gemma3:27b — categorical fields ask "Does source support this classification?", text fields ask "Does value match snippet?"
+   - `semantic_verify()`: LLM check via gemma3:27b of the value against the extractor's snippet; the paper text is not sent — categorical fields ask "Does the snippet support this classification?", text fields ask "Does value match snippet?"
    - Outcomes: `verified` (grep+semantic pass), `contested` (grep fail + semantic pass), `flagged` (semantic fail), `invalid_snippet`
 4. **Status transition:** When no pending spans remain for a paper → AI_AUDIT_COMPLETE
 5. **LOW_YIELD detection** (`check_low_yield()`): Post-audit, papers with fewer than `spec.low_yield_threshold` (default 4) populated fields flagged (`extractions.low_yield = 1`)

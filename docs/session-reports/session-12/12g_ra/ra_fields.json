@@ -1,0 +1,536 @@
+{
+ "all_payload_counts_agree": true,
+ "cells": 220,
+ "completeness_retries": 0,
+ "contract_unmet_by_field": {
+  "autonomy_level": {
+   "STEPS_MISSING": 1
+  },
+  "clinical_readiness_assessment": {
+   "STEPS_MISSING": 1,
+   "VALUE_WITHOUT_CITATION": 2
+  },
+  "comparison_to_human": {
+   "VALUE_WITHOUT_CITATION": 5
+  },
+  "country": {
+   "FIELD_MISSING": 1,
+   "INFERENCE_MISSING": 2
+  },
+  "key_limitation": {
+   "STEPS_MISSING": 1,
+   "VALUE_WITHOUT_CITATION": 1
+  },
+  "primary_outcome_value": {
+   "VALUE_WITHOUT_CITATION": 1
+  },
+  "sample_size": {
+   "VALUE_WITHOUT_CITATION": 2
+  },
+  "secondary_outcomes": {
+   "VALUE_WITHOUT_CITATION": 1
+  },
+  "study_design": {
+   "STEPS_MISSING": 1,
+   "VALUE_WITHOUT_CITATION": 1
+  },
+  "study_type": {
+   "VALUE_WITHOUT_CITATION": 1
+  },
+  "surgical_domain": {
+   "INFERENCE_MISSING": 1,
+   "VALUE_WITHOUT_CITATION": 1
+  },
+  "system_maturity": {
+   "STEPS_MISSING": 1
+  },
+  "task_execute": {
+   "VALUE_WITHOUT_CITATION": 1
+  },
+  "task_generate": {
+   "VALUE_WITHOUT_CITATION": 1
+  },
+  "task_monitor": {
+   "VALUE_WITHOUT_CITATION": 1
+  },
+  "task_select": {
+   "FIELD_MISSING": 1,
+   "VALUE_WITHOUT_CITATION": 1
+  }
+ },
+ "extracted": 11,
+ "fields_expected": 20,
+ "label": "stress sample (N=12, selected for length and text pathologies); not a Run 7 estimate",
+ "not_extracted": [
+  {
+   "live_paper_id": 415,
+   "paper_id": 2,
+   "reason_code": "input_overflow_estimated",
+   "to_state": "input_exceeds_context"
+  }
+ ],
+ "papers": [
+  {
+   "asserted": 14,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 2,
+   "declined": 4,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 121,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 1,
+   "pass1_accepted_attempt": 1,
+   "pass1_attempts": 2,
+   "pass1_failed_field_names_attempt1": [
+    "study_design",
+    "comparison_to_human"
+   ],
+   "pass1_failed_fields_by_attempt": [
+    2,
+    3
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 0,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 0,
+   "declined": 0,
+   "fields_with_a_terminal_state": 0,
+   "incomplete_fields": [],
+   "live_paper_id": 415,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 2,
+   "pass1_accepted_attempt": null,
+   "pass1_attempts": 0,
+   "pass1_failed_field_names_attempt1": [],
+   "pass1_failed_fields_by_attempt": [],
+   "payload_counts_agree": true,
+   "reason_code": "input_overflow_estimated",
+   "telemetry_outcome": "input_exceeds_context",
+   "to_state": "input_exceeds_context",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 13,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 4,
+   "declined": 3,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 11,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 3,
+   "pass1_accepted_attempt": 2,
+   "pass1_attempts": 2,
+   "pass1_failed_field_names_attempt1": [
+    "sample_size",
+    "autonomy_level",
+    "task_select",
+    "system_maturity",
+    "study_design",
+    "primary_outcome_value",
+    "comparison_to_human",
+    "key_limitation",
+    "clinical_readiness_assessment"
+   ],
+   "pass1_failed_fields_by_attempt": [
+    9,
+    4
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 11,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 5,
+   "declined": 4,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 498,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 4,
+   "pass1_accepted_attempt": 2,
+   "pass1_attempts": 2,
+   "pass1_failed_field_names_attempt1": [
+    "sample_size",
+    "surgical_domain",
+    "autonomy_level",
+    "system_maturity",
+    "study_design",
+    "primary_outcome_value",
+    "comparison_to_human",
+    "key_limitation",
+    "clinical_readiness_assessment"
+   ],
+   "pass1_failed_fields_by_attempt": [
+    9,
+    5
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 18,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 1,
+   "declined": 1,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 607,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 5,
+   "pass1_accepted_attempt": 2,
+   "pass1_attempts": 2,
+   "pass1_failed_field_names_attempt1": [
+    "sample_size",
+    "surgical_domain",
+    "autonomy_level",
+    "system_maturity",
+    "study_design",
+    "country",
+    "key_limitation",
+    "clinical_readiness_assessment"
+   ],
+   "pass1_failed_fields_by_attempt": [
+    8,
+    1
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 19,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 1,
+   "declined": 0,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 748,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 6,
+   "pass1_accepted_attempt": 1,
+   "pass1_attempts": 2,
+   "pass1_failed_field_names_attempt1": [
+    "key_limitation"
+   ],
+   "pass1_failed_fields_by_attempt": [
+    1,
+    7
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 13,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 6,
+   "declined": 1,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 368,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 7,
+   "pass1_accepted_attempt": 1,
+   "pass1_attempts": 2,
+   "pass1_failed_field_names_attempt1": [
+    "autonomy_level",
+    "system_maturity",
+    "study_design",
+    "comparison_to_human",
+    "key_limitation",
+    "clinical_readiness_assessment"
+   ],
+   "pass1_failed_fields_by_attempt": [
+    6,
+    6
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 16,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 4,
+   "declined": 0,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 455,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 8,
+   "pass1_accepted_attempt": 1,
+   "pass1_attempts": 2,
+   "pass1_failed_field_names_attempt1": [
+    "sample_size",
+    "primary_outcome_value",
+    "comparison_to_human",
+    "secondary_outcomes"
+   ],
+   "pass1_failed_fields_by_attempt": [
+    4,
+    12
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 19,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 1,
+   "declined": 0,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 699,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 9,
+   "pass1_accepted_attempt": 1,
+   "pass1_attempts": 2,
+   "pass1_failed_field_names_attempt1": [
+    "comparison_to_human"
+   ],
+   "pass1_failed_fields_by_attempt": [
+    1,
+    12
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 17,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 3,
+   "declined": 0,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 431,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 10,
+   "pass1_accepted_attempt": 1,
+   "pass1_attempts": 2,
+   "pass1_failed_field_names_attempt1": [
+    "study_type",
+    "sample_size",
+    "comparison_to_human"
+   ],
+   "pass1_failed_fields_by_attempt": [
+    3,
+    11
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 19,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 0,
+   "declined": 1,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 783,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 11,
+   "pass1_accepted_attempt": 1,
+   "pass1_attempts": 1,
+   "pass1_failed_field_names_attempt1": [],
+   "pass1_failed_fields_by_attempt": [
+    0
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  },
+  {
+   "asserted": 18,
+   "asserted_values_under_half": false,
+   "completeness_attempts": 1,
+   "contract_unmet": 1,
+   "declined": 1,
+   "fields_with_a_terminal_state": 20,
+   "incomplete_fields": [],
+   "live_paper_id": 604,
+   "missing_fields_telemetry": null,
+   "n_incomplete": 0,
+   "paper_id": 12,
+   "pass1_accepted_attempt": 2,
+   "pass1_attempts": 2,
+   "pass1_failed_field_names_attempt1": [
+    "task_select",
+    "comparison_to_human",
+    "secondary_outcomes"
+   ],
+   "pass1_failed_fields_by_attempt": [
+    3,
+    1
+   ],
+   "payload_counts_agree": true,
+   "reason_code": null,
+   "telemetry_outcome": "stored",
+   "to_state": "extracted",
+   "under_R535_floor_by_fields_held": false
+  }
+ ],
+ "papers_under_R535_floor_by_fields_held": 0,
+ "papers_with_any_contract_unmet": 10,
+ "papers_with_any_incomplete_field": 0,
+ "papers_with_asserted_values_under_half": [],
+ "pass1": {
+  "attempt2_accepted": 4,
+  "attempt2_equal": 1,
+  "attempt2_more": 5,
+  "attempt2_not_accepted": 6,
+  "attempt2_strictly_fewer": 4,
+  "failed_fields_attempt1_total": 46,
+  "failed_fields_attempt1_total_where_attempt2_run": 46,
+  "failed_fields_attempt2_total_where_run": 62,
+  "papers_with_two_attempts": 10
+ },
+ "per_field": {
+  "autonomy_level": {
+   "asserted": 10,
+   "contract_unmet": 1
+  },
+  "clinical_readiness_assessment": {
+   "asserted": 8,
+   "contract_unmet": 3
+  },
+  "comparison_to_human": {
+   "asserted": 4,
+   "contract_unmet": 5,
+   "declined": 2
+  },
+  "country": {
+   "asserted": 8,
+   "contract_unmet": 3
+  },
+  "key_limitation": {
+   "asserted": 9,
+   "contract_unmet": 2
+  },
+  "primary_outcome_metric": {
+   "asserted": 9,
+   "declined": 2
+  },
+  "primary_outcome_value": {
+   "asserted": 7,
+   "contract_unmet": 1,
+   "declined": 3
+  },
+  "robot_platform": {
+   "asserted": 11
+  },
+  "sample_size": {
+   "asserted": 3,
+   "contract_unmet": 2,
+   "declined": 6
+  },
+  "secondary_outcomes": {
+   "asserted": 8,
+   "contract_unmet": 1,
+   "declined": 2
+  },
+  "study_design": {
+   "asserted": 9,
+   "contract_unmet": 2
+  },
+  "study_type": {
+   "asserted": 10,
+   "contract_unmet": 1
+  },
+  "surgical_domain": {
+   "asserted": 10,
+   "contract_unmet": 1
+  },
+  "system_maturity": {
+   "asserted": 10,
+   "contract_unmet": 1
+  },
+  "task_execute": {
+   "asserted": 10,
+   "contract_unmet": 1
+  },
+  "task_generate": {
+   "asserted": 10,
+   "contract_unmet": 1
+  },
+  "task_monitor": {
+   "asserted": 10,
+   "contract_unmet": 1
+  },
+  "task_performed": {
+   "asserted": 11
+  },
+  "task_select": {
+   "asserted": 9,
+   "contract_unmet": 2
+  },
+  "validation_setting": {
+   "asserted": 11
+  }
+ },
+ "totals": {
+  "asserted": 177,
+  "contract_unmet": 28,
+  "declined": 15,
+  "n_incomplete": 0
+ },
+ "violation_codes": {
+  "FIELD_MISSING": 2,
+  "INFERENCE_MISSING": 3,
+  "STEPS_MISSING": 5,
+  "VALUE_WITHOUT_CITATION": 19
+ }
+}

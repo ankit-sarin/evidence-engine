@@ -1,0 +1,98 @@
+[
+ {
+  "throwaway_paper_id": 1,
+  "live_paper_id": 121,
+  "version": 1,
+  "sha256": "2eff45aa80e1eee6eff579d8fdfb42cf317d386aff871c72801734314391ca13",
+  "bytes": 21352,
+  "text_path": "texts/01_live121_v1.md"
+ },
+ {
+  "throwaway_paper_id": 2,
+  "live_paper_id": 415,
+  "version": 2,
+  "sha256": "09933a869b91a816776452152ea70d244a334b72f626ce0a7a9b3e42f176af8a",
+  "bytes": 1776058,
+  "text_path": "texts/02_live415_v2.md"
+ },
+ {
+  "throwaway_paper_id": 3,
+  "live_paper_id": 11,
+  "version": 1,
+  "sha256": "8e01895288b44a947ffb646509e713104de8df277108b9cc0efd9aa186d6f8b5",
+  "bytes": 164723,
+  "text_path": "texts/03_live11_v1.md"
+ },
+ {
+  "throwaway_paper_id": 4,
+  "live_paper_id": 498,
+  "version": 2,
+  "sha256": "3ff539a382b63237b0e3f5facc9fbfbc64a15572b78835c7c724b12101d51dcd",
+  "bytes": 149281,
+  "text_path": "texts/04_live498_v2.md"
+ },
+ {
+  "throwaway_paper_id": 5,
+  "live_paper_id": 607,
+  "version": 2,
+  "sha256": "86261a1fa24d72ce163fbb1465524a7c52dd0934b4a34202de258a39b8cd4863",
+  "bytes": 131347,
+  "text_path": "texts/05_live607_v2.md"
+ },
+ {
+  "throwaway_paper_id": 6,
+  "live_paper_id": 748,
+  "version": 2,
+  "sha256": "79e2ac16a33519a74af81fc6f130d03342e4d5e62a79a880fabcba1b069091da",
+  "bytes": 56411,
+  "text_path": "texts/06_live748_v2.md"
+ },
+ {
+  "throwaway_paper_id": 7,
+  "live_paper_id": 368,
+  "version": 2,
+  "sha256": "dc407b8314caab8617642bf5948f8add6073c00a52e3b93e575b714c01328742",
+  "bytes": 56161,
+  "text_path": "texts/07_live368_v2.md"
+ },
+ {
+  "throwaway_paper_id": 8,
+  "live_paper_id": 455,
+  "version": 3,
+  "sha256": "71d3448949a0952d4c08dd0b5ada3b6889115b534b5993d16636ce94916c6e51",
+  "bytes": 52503,
+  "text_path": "texts/08_live455_v3.md"
+ },
+ {
+  "throwaway_paper_id": 9,
+  "live_paper_id": 699,
+  "version": 3,
+  "sha256": "5313b9e201163cf5a79345a7a6a3325ab14c265c2f568501983c39be7ef54de7",
+  "bytes": 27069,
+  "text_path": "texts/09_live699_v3.md"
+ },
+ {
+  "throwaway_paper_id": 10,
+  "live_paper_id": 431,
+  "version": 2,
+  "sha256": "3c9924328f81971c44086e3aa42ea6f3db819ecf5962b79b381c27ceb33597f4",
+  "bytes": 38318,
+  "text_path": "texts/10_live431_v2.md"
+ },
+ {
+  "throwaway_paper_id": 11,
+  "live_paper_id": 783,
+  "version": 2,
+  "sha256": "709549ee800d9e5924cd1b30fc9238c1bb0560a95d3f97daff5155c1c7b2ff67",
+  "bytes": 7987,
+  "text_path": "texts/11_live783_v2.md"
+ },
+ {
+  "throwaway_paper_id": 12,
+  "live_paper_id": 604,
+  "version": 2,
+  "sha256": "50b6346a59007286b58b69f04655c19f0af73d8f3055056297c0b90050a35e5d",
+  "bytes": 38947,
+  "text_path": "texts/12_live604_v2.md"
+ }
+]

@@ -1,0 +1,501 @@
+{
+ "all_done_reasons": {
+  "": 1,
+  "length": 1,
+  "stop": 34
+ },
+ "audit_calls": 1,
+ "audit_stage_seconds_first_call_to_manifest_close": 15.9,
+ "by_stage": {
+  "audit": {
+   "actual_over_estimate_low": {
+    "max": 1.322,
+    "median": 1.322,
+    "min": 1.322,
+    "n": 1
+   },
+   "completed_calls": 1,
+   "done_reason": {
+    "stop": 1
+   },
+   "headroom_tokens_after_prompt": {
+    "max": 130801,
+    "median": 130801,
+    "min": 130801,
+    "n": 1
+   },
+   "prompt_eval_count": {
+    "max": 271,
+    "median": 271,
+    "min": 271,
+    "n": 1
+   },
+   "prompt_share_of_ceiling": {
+    "max": 0.0021,
+    "median": 0.0021,
+    "min": 0.0021,
+    "n": 1
+   },
+   "seconds": {
+    "max": 7.9,
+    "median": 7.9,
+    "min": 7.9,
+    "n": 1
+   },
+   "tokens_per_char": {
+    "max": 0.2509,
+    "median": 0.2509,
+    "min": 0.2509,
+    "n": 1
+   }
+  },
+  "elicitation_pass1": {
+   "actual_over_estimate_low": {
+    "max": 1.5631,
+    "median": 1.3581,
+    "min": 1.232,
+    "n": 21
+   },
+   "completed_calls": 21,
+   "done_reason": {
+    "stop": 21
+   },
+   "headroom_tokens_after_prompt": {
+    "max": 121718,
+    "median": 110216,
+    "min": 72045,
+    "n": 21
+   },
+   "prompt_eval_count": {
+    "max": 59027,
+    "median": 20856,
+    "min": 9354,
+    "n": 21
+   },
+   "prompt_share_of_ceiling": {
+    "max": 0.4503,
+    "median": 0.1591,
+    "min": 0.0714,
+    "n": 21
+   },
+   "seconds": {
+    "max": 378.5,
+    "median": 229.1,
+    "min": 87.9,
+    "n": 21
+   },
+   "tokens_per_char": {
+    "max": 0.297,
+    "median": 0.258,
+    "min": 0.2341,
+    "n": 21
+   }
+  },
+  "extract_pass2": {
+   "actual_over_estimate_low": {
+    "max": 1.4133,
+    "median": 1.2511,
+    "min": 1.1774,
+    "n": 11
+   },
+   "completed_calls": 11,
+   "done_reason": {
+    "stop": 11
+   },
+   "headroom_tokens_after_prompt": {
+    "max": 121575,
+    "median": 111902,
+    "min": 80503,
+    "n": 11
+   },
+   "prompt_eval_count": {
+    "max": 50569,
+    "median": 19170,
+    "min": 9497,
+    "n": 11
+   },
+   "prompt_share_of_ceiling": {
+    "max": 0.3858,
+    "median": 0.1463,
+    "min": 0.0725,
+    "n": 11
+   },
+   "seconds": {
+    "max": 370.5,
+    "median": 272.6,
+    "min": 193.6,
+    "n": 11
+   },
+   "tokens_per_char": {
+    "max": 0.2685,
+    "median": 0.2377,
+    "min": 0.2237,
+    "n": 11
+   }
+  },
+  "preflight:deepseek-r1:32b": {
+   "actual_over_estimate_low": {
+    "max": 2.0,
+    "median": 2.0,
+    "min": 2.0,
+    "n": 1
+   },
+   "completed_calls": 1,
+   "done_reason": {
+    "length": 1
+   },
+   "headroom_tokens_after_prompt": {
+    "max": 131066,
+    "median": 131066,
+    "min": 131066,
+    "n": 1
+   },
+   "prompt_eval_count": {
+    "max": 6,
+    "median": 6,
+    "min": 6,
+    "n": 1
+   },
+   "prompt_share_of_ceiling": {
+    "max": 0.0,
+    "median": 0.0,
+    "min": 0.0,
+    "n": 1
+   },
+   "seconds": {
+    "max": 15.3,
+    "median": 15.3,
+    "min": 15.3,
+    "n": 1
+   },
+   "tokens_per_char": {
+    "max": 0.4,
+    "median": 0.4,
+    "min": 0.4,
+    "n": 1
+   }
+  },
+  "preflight:gemma3:27b": {
+   "actual_over_estimate_low": {
+    "max": 4.0,
+    "median": 4.0,
+    "min": 4.0,
+    "n": 1
+   },
+   "completed_calls": 1,
+   "done_reason": {
+    "stop": 1
+   },
+   "headroom_tokens_after_prompt": {
+    "max": 131060,
+    "median": 131060,
+    "min": 131060,
+    "n": 1
+   },
+   "prompt_eval_count": {
+    "max": 12,
+    "median": 12,
+    "min": 12,
+    "n": 1
+   },
+   "prompt_share_of_ceiling": {
+    "max": 0.0001,
+    "median": 0.0001,
+    "min": 0.0001,
+    "n": 1
+   },
+   "seconds": {
+    "max": 6.1,
+    "median": 6.1,
+    "min": 6.1,
+    "n": 1
+   },
+   "tokens_per_char": {
+    "max": 0.8,
+    "median": 0.8,
+    "min": 0.8,
+    "n": 1
+   }
+  }
+ },
+ "calls": 36,
+ "extracted_model_seconds_share_of_wall": 1.0001,
+ "extracted_wall_seconds": {
+  "max": 991,
+  "median": 699,
+  "min": 417,
+  "n": 11
+ },
+ "extracted_wall_seconds_mean": 723.4,
+ "input_fit_lines": 36,
+ "label": "stress sample (N=12, selected for length and text pathologies); not a Run 7 estimate",
+ "max_prompt_share_of_ceiling_any_call": 0.4503,
+ "min_headroom_tokens_any_call": 72045,
+ "papers": [
+  {
+   "extract_first_call_start": "2026-10-08T18:25:16.790073+00:00",
+   "extract_last_call_end": "2026-10-08T18:34:42.446174+00:00",
+   "live_paper_id": 121,
+   "max_prompt_eval_count": 12797,
+   "min_headroom_tokens": 118275,
+   "model_seconds": 565.6,
+   "paper_id": 1,
+   "pass1_accepted_attempt": 1,
+   "pass1_calls": 2,
+   "pass1_content_chars_accepted": 3360,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 3903,
+   "pass2_calls": 1,
+   "pass2_content_chars": 5492,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 565
+  },
+  {
+   "extract_first_call_start": "2026-10-08T18:35:10.234710+00:00",
+   "extract_last_call_end": "2026-10-08T18:35:10.246150+00:00",
+   "live_paper_id": 415,
+   "max_prompt_eval_count": null,
+   "min_headroom_tokens": null,
+   "model_seconds": 0.0,
+   "paper_id": 2,
+   "pass1_accepted_attempt": null,
+   "pass1_calls": 0,
+   "pass1_content_chars_accepted": null,
+   "pass1_done_reason": null,
+   "pass1_thinking_chars_accepted": null,
+   "pass2_calls": 0,
+   "pass2_content_chars": null,
+   "pass2_done_reason": null,
+   "result": "FAILED",
+   "telemetry_outcome": "input_exceeds_context",
+   "wall_seconds": 28
+  },
+  {
+   "extract_first_call_start": "2026-10-08T18:35:11.529938+00:00",
+   "extract_last_call_end": "2026-10-08T18:51:04.834181+00:00",
+   "live_paper_id": 11,
+   "max_prompt_eval_count": 59027,
+   "min_headroom_tokens": 72045,
+   "model_seconds": 953.3,
+   "paper_id": 3,
+   "pass1_accepted_attempt": 2,
+   "pass1_calls": 2,
+   "pass1_content_chars_accepted": 3358,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 2003,
+   "pass2_calls": 1,
+   "pass2_content_chars": 4771,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 954
+  },
+  {
+   "extract_first_call_start": "2026-10-08T18:51:05.601601+00:00",
+   "extract_last_call_end": "2026-10-08T19:06:59.509476+00:00",
+   "live_paper_id": 498,
+   "max_prompt_eval_count": 48941,
+   "min_headroom_tokens": 82131,
+   "model_seconds": 953.9,
+   "paper_id": 4,
+   "pass1_accepted_attempt": 2,
+   "pass1_calls": 2,
+   "pass1_content_chars_accepted": 3875,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 3001,
+   "pass2_calls": 1,
+   "pass2_content_chars": 4919,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 954
+  },
+  {
+   "extract_first_call_start": "2026-10-08T19:07:01.230482+00:00",
+   "extract_last_call_end": "2026-10-08T19:23:30.559182+00:00",
+   "live_paper_id": 607,
+   "max_prompt_eval_count": 46934,
+   "min_headroom_tokens": 84138,
+   "model_seconds": 989.2,
+   "paper_id": 5,
+   "pass1_accepted_attempt": 2,
+   "pass1_calls": 2,
+   "pass1_content_chars_accepted": 3747,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 2777,
+   "pass2_calls": 1,
+   "pass2_content_chars": 6026,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 991
+  },
+  {
+   "extract_first_call_start": "2026-10-08T19:23:30.799257+00:00",
+   "extract_last_call_end": "2026-10-08T19:36:11.434687+00:00",
+   "live_paper_id": 748,
+   "max_prompt_eval_count": 27788,
+   "min_headroom_tokens": 103284,
+   "model_seconds": 760.6,
+   "paper_id": 6,
+   "pass1_accepted_attempt": 1,
+   "pass1_calls": 2,
+   "pass1_content_chars_accepted": 4152,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 2690,
+   "pass2_calls": 1,
+   "pass2_content_chars": 6789,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 760
+  },
+  {
+   "extract_first_call_start": "2026-10-08T19:36:11.616670+00:00",
+   "extract_last_call_end": "2026-10-08T19:50:44.308803+00:00",
+   "live_paper_id": 368,
+   "max_prompt_eval_count": 27560,
+   "min_headroom_tokens": 103512,
+   "model_seconds": 872.6,
+   "paper_id": 7,
+   "pass1_accepted_attempt": 1,
+   "pass1_calls": 2,
+   "pass1_content_chars_accepted": 3730,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 3262,
+   "pass2_calls": 1,
+   "pass2_content_chars": 8502,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 872
+  },
+  {
+   "extract_first_call_start": "2026-10-08T19:50:44.491915+00:00",
+   "extract_last_call_end": "2026-10-08T19:59:53.994162+00:00",
+   "live_paper_id": 455,
+   "max_prompt_eval_count": 20856,
+   "min_headroom_tokens": 110216,
+   "model_seconds": 549.4,
+   "paper_id": 8,
+   "pass1_accepted_attempt": 1,
+   "pass1_calls": 2,
+   "pass1_content_chars_accepted": 3762,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 2716,
+   "pass2_calls": 1,
+   "pass2_content_chars": 5442,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 549
+  },
+  {
+   "extract_first_call_start": "2026-10-08T19:59:54.081680+00:00",
+   "extract_last_call_end": "2026-10-08T20:11:33.474427+00:00",
+   "live_paper_id": 699,
+   "max_prompt_eval_count": 16011,
+   "min_headroom_tokens": 115061,
+   "model_seconds": 699.4,
+   "paper_id": 9,
+   "pass1_accepted_attempt": 1,
+   "pass1_calls": 2,
+   "pass1_content_chars_accepted": 4020,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 3125,
+   "pass2_calls": 1,
+   "pass2_content_chars": 10095,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 699
+  },
+  {
+   "extract_first_call_start": "2026-10-08T20:11:33.733661+00:00",
+   "extract_last_call_end": "2026-10-08T20:20:49.876105+00:00",
+   "live_paper_id": 431,
+   "max_prompt_eval_count": 18574,
+   "min_headroom_tokens": 112498,
+   "model_seconds": 556.2,
+   "paper_id": 10,
+   "pass1_accepted_attempt": 1,
+   "pass1_calls": 2,
+   "pass1_content_chars_accepted": 4007,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 3217,
+   "pass2_calls": 1,
+   "pass2_content_chars": 4350,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 556
+  },
+  {
+   "extract_first_call_start": "2026-10-08T20:20:49.939768+00:00",
+   "extract_last_call_end": "2026-10-08T20:27:47.133027+00:00",
+   "live_paper_id": 783,
+   "max_prompt_eval_count": 9497,
+   "min_headroom_tokens": 121575,
+   "model_seconds": 417.2,
+   "paper_id": 11,
+   "pass1_accepted_attempt": 1,
+   "pass1_calls": 1,
+   "pass1_content_chars_accepted": 3494,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 3368,
+   "pass2_calls": 1,
+   "pass2_content_chars": 6104,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 417
+  },
+  {
+   "extract_first_call_start": "2026-10-08T20:27:47.299833+00:00",
+   "extract_last_call_end": "2026-10-08T20:38:27.319363+00:00",
+   "live_paper_id": 604,
+   "max_prompt_eval_count": 18190,
+   "min_headroom_tokens": 112882,
+   "model_seconds": 640.0,
+   "paper_id": 12,
+   "pass1_accepted_attempt": 2,
+   "pass1_calls": 2,
+   "pass1_content_chars_accepted": 4725,
+   "pass1_done_reason": "stop",
+   "pass1_thinking_chars_accepted": 1745,
+   "pass2_calls": 1,
+   "pass2_content_chars": 5231,
+   "pass2_done_reason": "stop",
+   "result": "EXTRACTED",
+   "telemetry_outcome": "stored",
+   "wall_seconds": 640
+  }
+ ],
+ "papers_with_two_pass1_attempts": 10,
+ "refused": [
+  {
+   "ceiling": 131072,
+   "estimate_low_tokens": 365765,
+   "live_paper_id": 415,
+   "outcome": "refused_input_overflow",
+   "paper_id": 2,
+   "request_chars": 1925081,
+   "stage": "elicitation_pass1"
+  }
+ ],
+ "run": {
+  "ended_at": "2026-10-08T20:38:43.280864+00:00",
+  "started_at": "2026-10-08T18:25:01.406264+00:00",
+  "wall_seconds": 8021.9
+ },
+ "run_calls_by_stage_outcome": {
+  "audit|completed": 1,
+  "elicitation_pass1|completed": 21,
+  "elicitation_pass1|refused_input_overflow": 1,
+  "extract_pass2|completed": 11,
+  "preflight:deepseek-r1:32b|completed": 1,
+  "preflight:gemma3:27b|completed": 1
+ }
+}

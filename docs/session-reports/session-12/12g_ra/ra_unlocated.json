@@ -1,0 +1,331 @@
+{
+ "all_claims_classes": {
+  "INT-g6-1_join_of_units_not_in_text": 9,
+  "INT-g6-1_unit_rewritten": 17,
+  "raw_exact": 151
+ },
+ "asserted_claims": 177,
+ "claims_citing_more_than_one_run": 89,
+ "examples_located_not_raw_exact": [
+  {
+   "class": "INT-g6-1_unit_rewritten",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "study_type",
+   "first_run": "20",
+   "live_paper_id": 11,
+   "snippet": "## Abstract The introduction of robotic surgery within the operating rooms  has  significantly  improved  the  quality  of  many surgical  procedures.",
+   "units_not_in_stripped": "20"
+  },
+  {
+   "class": "INT-g6-1_unit_rewritten",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "task_performed",
+   "first_run": "20",
+   "live_paper_id": 11,
+   "snippet": "## Abstract The introduction of robotic surgery within the operating rooms  has  significantly  improved  the  quality  of  many surgical  procedures.",
+   "units_not_in_stripped": "20"
+  },
+  {
+   "class": "INT-g6-1_unit_rewritten",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "autonomy_level",
+   "first_run": "1200",
+   "live_paper_id": 11,
+   "snippet": "facilities. jurisdictio autonomo",
+   "units_not_in_stripped": "1200"
+  },
+  {
+   "class": "INT-g6-1_unit_rewritten",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "task_generate",
+   "first_run": "1200",
+   "live_paper_id": 11,
+   "snippet": "facilities. jurisdictio autonomo",
+   "units_not_in_stripped": "1200"
+  },
+  {
+   "class": "INT-g6-1_unit_rewritten",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "study_design",
+   "first_run": "20",
+   "live_paper_id": 11,
+   "snippet": "## Abstract The introduction of robotic surgery within the operating rooms  has  significantly  improved  the  quality  of  many surgical  procedures.",
+   "units_not_in_stripped": "20"
+  },
+  {
+   "class": "INT-g6-1_unit_rewritten",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "study_type",
+   "first_run": "15",
+   "live_paper_id": 607,
+   "snippet": ": +56-2-27-183-350 Abstract: This study introduces a Neuro-Visual Adaptive Control (NVAC) architecture designed to enhance precision and safety in robot-assisted surgery.",
+   "units_not_in_stripped": "15"
+  },
+  {
+   "class": "INT-g6-1_join_of_units_not_in_text",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "study_type",
+   "first_run": "12 13",
+   "live_paper_id": 748,
+   "snippet": "This paper presents the design, control, and experimental evaluation of a novel fully automated robotic-assisted system for the positioning and insertion of a commercial full core biopsy",
+   "units_not_in_stripped": ""
+  },
+  {
+   "class": "INT-g6-1_unit_rewritten",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "robot_platform",
+   "first_run": "18 19 20",
+   "live_paper_id": 748,
+   "snippet": "The robotic system incorporates the advantages of both freehand and probe-guided biopsy techniques. The proposed robotic system can be used as a slave robot in a teleoperation con\ufb01guration or as an",
+   "units_not_in_stripped": "20"
+  },
+  {
+   "class": "INT-g6-1_join_of_units_not_in_text",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "autonomy_level",
+   "first_run": "193 194",
+   "live_paper_id": 748,
+   "snippet": "by a reinforcement learning-based controller (RL) using the Deep Deterministic Policy Gradient (DDPG) algorithm to position the",
+   "units_not_in_stripped": ""
+  },
+  {
+   "class": "INT-g6-1_join_of_units_not_in_text",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "task_monitor",
+   "first_run": "89 90",
+   "live_paper_id": 748,
+   "snippet": "the ultrasound probe to keep the needle within the ultrasound image (Phal et al., 2005).",
+   "units_not_in_stripped": ""
+  },
+  {
+   "class": "INT-g6-1_join_of_units_not_in_text",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "task_generate",
+   "first_run": "193 194",
+   "live_paper_id": 748,
+   "snippet": "by a reinforcement learning-based controller (RL) using the Deep Deterministic Policy Gradient (DDPG) algorithm to position the",
+   "units_not_in_stripped": ""
+  },
+  {
+   "class": "INT-g6-1_join_of_units_not_in_text",
+   "exact_after_whitespace_collapse_raw": 1,
+   "exact_after_whitespace_collapse_stripped": 1,
+   "field_name": "task_execute",
+   "first_run": "89 90",
+   "live_paper_id": 748,
+   "snippet": "the ultrasound probe to keep the needle within the ultrasound image (Phal et al., 2005).",
+   "units_not_in_stripped": ""
+  }
+ ],
+ "label": "stress sample (N=12, selected for length and text pathologies); not a Run 7 estimate",
+ "located": 176,
+ "located_claims": {
+  "not_raw_exact": 25,
+  "not_raw_exact_classes": {
+   "INT-g6-1_join_of_units_not_in_text": 9,
+   "INT-g6-1_unit_rewritten": 16
+  },
+  "raw_exact": 151,
+  "total": 176
+ },
+ "locator_kind": {
+  "exact": 176,
+  "none": 1
+ },
+ "not_raw_exact_but_exact_after_whitespace_collapse": {
+  "against_comment_stripped": 25,
+  "against_raw": 25,
+  "neither": 1
+ },
+ "per_paper": [
+  {
+   "claims": 14,
+   "classes": {
+    "raw_exact": 14
+   },
+   "docling_comments": 7,
+   "eol_hyphens": 0,
+   "ligatures": 0,
+   "live_paper_id": 121,
+   "located_not_raw_exact": 0,
+   "paper_id": 1,
+   "unlocated": 0
+  },
+  {
+   "claims": 13,
+   "classes": {
+    "INT-g6-1_unit_rewritten": 5,
+    "raw_exact": 8
+   },
+   "docling_comments": 27,
+   "eol_hyphens": 0,
+   "ligatures": 0,
+   "live_paper_id": 11,
+   "located_not_raw_exact": 5,
+   "paper_id": 3,
+   "unlocated": 0
+  },
+  {
+   "claims": 11,
+   "classes": {
+    "raw_exact": 11
+   },
+   "docling_comments": 79,
+   "eol_hyphens": 0,
+   "ligatures": 0,
+   "live_paper_id": 498,
+   "located_not_raw_exact": 0,
+   "paper_id": 4,
+   "unlocated": 0
+  },
+  {
+   "claims": 18,
+   "classes": {
+    "INT-g6-1_unit_rewritten": 1,
+    "raw_exact": 17
+   },
+   "docling_comments": 47,
+   "eol_hyphens": 0,
+   "ligatures": 0,
+   "live_paper_id": 607,
+   "located_not_raw_exact": 1,
+   "paper_id": 5,
+   "unlocated": 0
+  },
+  {
+   "claims": 19,
+   "classes": {
+    "INT-g6-1_join_of_units_not_in_text": 7,
+    "INT-g6-1_unit_rewritten": 1,
+    "raw_exact": 11
+   },
+   "docling_comments": 16,
+   "eol_hyphens": 15,
+   "ligatures": 64,
+   "live_paper_id": 748,
+   "located_not_raw_exact": 8,
+   "paper_id": 6,
+   "unlocated": 0
+  },
+  {
+   "claims": 13,
+   "classes": {
+    "INT-g6-1_join_of_units_not_in_text": 2,
+    "INT-g6-1_unit_rewritten": 2,
+    "raw_exact": 9
+   },
+   "docling_comments": 10,
+   "eol_hyphens": 8,
+   "ligatures": 92,
+   "live_paper_id": 368,
+   "located_not_raw_exact": 4,
+   "paper_id": 7,
+   "unlocated": 0
+  },
+  {
+   "claims": 16,
+   "classes": {
+    "INT-g6-1_unit_rewritten": 1,
+    "raw_exact": 15
+   },
+   "docling_comments": 34,
+   "eol_hyphens": 0,
+   "ligatures": 0,
+   "live_paper_id": 455,
+   "located_not_raw_exact": 1,
+   "paper_id": 8,
+   "unlocated": 0
+  },
+  {
+   "claims": 19,
+   "classes": {
+    "INT-g6-1_unit_rewritten": 6,
+    "raw_exact": 13
+   },
+   "docling_comments": 15,
+   "eol_hyphens": 0,
+   "ligatures": 0,
+   "live_paper_id": 699,
+   "located_not_raw_exact": 5,
+   "paper_id": 9,
+   "unlocated": 1
+  },
+  {
+   "claims": 17,
+   "classes": {
+    "raw_exact": 17
+   },
+   "docling_comments": 60,
+   "eol_hyphens": 0,
+   "ligatures": 0,
+   "live_paper_id": 431,
+   "located_not_raw_exact": 0,
+   "paper_id": 10,
+   "unlocated": 0
+  },
+  {
+   "claims": 19,
+   "classes": {
+    "INT-g6-1_unit_rewritten": 1,
+    "raw_exact": 18
+   },
+   "docling_comments": 2,
+   "eol_hyphens": 0,
+   "ligatures": 0,
+   "live_paper_id": 783,
+   "located_not_raw_exact": 1,
+   "paper_id": 11,
+   "unlocated": 0
+  },
+  {
+   "claims": 18,
+   "classes": {
+    "raw_exact": 18
+   },
+   "docling_comments": 18,
+   "eol_hyphens": 0,
+   "ligatures": 0,
+   "live_paper_id": 604,
+   "located_not_raw_exact": 0,
+   "paper_id": 12,
+   "unlocated": 0
+  }
+ ],
+ "snippet_equals_rebuilt_first_run": 177,
+ "state_at_write": {
+  "asserted without locatable evidence": 177
+ },
+ "unlocated": 1,
+ "unlocated_claims": [
+  {
+   "a9_repairs_that_locate": "",
+   "audit_verdict": "verified",
+   "cited_indices": "95 96",
+   "class": "INT-g6-1_unit_rewritten",
+   "field_name": "secondary_outcomes",
+   "first_run": "95 96",
+   "kind": "none",
+   "live_paper_id": 699,
+   "score": 0.7241379310344828,
+   "snippet": "(4),Eq. (5). According to the experimental data in Table 1, the calculations yield CR=83.3% and CT=70.81s. In this paper, we proposed a cooperative suturing scheme.",
+   "units_not_in_stripped": "95",
+   "value": "Task completion rate: 83.3%; Average completion time: 70.81s"
+  }
+ ],
+ "unlocated_classes": {
+  "INT-g6-1_unit_rewritten": 1
+ },
+ "would_fail_a_materialisation_time_EXACT_check_against_raw_text": 26,
+ "would_fail_an_EXACT_check_against_comment_stripped_text": 26
+}

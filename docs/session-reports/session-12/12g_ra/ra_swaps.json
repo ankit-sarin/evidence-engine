@@ -1,0 +1,139 @@
+{
+ "caveat": "Sample chosen for length and text pathologies; 10 of 11 papers ran a second Pass-1 attempt. The mean-based figure overstates a corpus whose median text is shorter than the sample's.",
+ "corpus_median_text_chars": 42738.5,
+ "corpus_papers_that_fit": 189,
+ "foreign_loads": [],
+ "foreign_swap_papers": [],
+ "label": "stress sample (N=12, selected for length and text pathologies); not a Run 7 estimate",
+ "loads_in_window": [
+  {
+   "blob": "6150cb382311",
+   "foreign": false,
+   "in_run_stages": true,
+   "model": "deepseek-r1:32b",
+   "run_call_in_flight": "preflight:deepseek-r1:32b",
+   "time": "2026-10-08T18:25:02.682Z"
+  },
+  {
+   "blob": "e796792eba26",
+   "foreign": false,
+   "in_run_stages": true,
+   "model": "gemma3:27b",
+   "run_call_in_flight": "preflight:gemma3:27b",
+   "time": "2026-10-08T20:38:29.240Z"
+  }
+ ],
+ "papers": [
+  {
+   "live_paper_id": 121,
+   "paper_id": 1,
+   "pass1_calls": 2,
+   "swap_status": "clean",
+   "wall_seconds": 565
+  },
+  {
+   "live_paper_id": 11,
+   "paper_id": 3,
+   "pass1_calls": 2,
+   "swap_status": "clean",
+   "wall_seconds": 954
+  },
+  {
+   "live_paper_id": 498,
+   "paper_id": 4,
+   "pass1_calls": 2,
+   "swap_status": "clean",
+   "wall_seconds": 954
+  },
+  {
+   "live_paper_id": 607,
+   "paper_id": 5,
+   "pass1_calls": 2,
+   "swap_status": "clean",
+   "wall_seconds": 991
+  },
+  {
+   "live_paper_id": 748,
+   "paper_id": 6,
+   "pass1_calls": 2,
+   "swap_status": "clean",
+   "wall_seconds": 760
+  },
+  {
+   "live_paper_id": 368,
+   "paper_id": 7,
+   "pass1_calls": 2,
+   "swap_status": "clean",
+   "wall_seconds": 872
+  },
+  {
+   "live_paper_id": 455,
+   "paper_id": 8,
+   "pass1_calls": 2,
+   "swap_status": "clean",
+   "wall_seconds": 549
+  },
+  {
+   "live_paper_id": 699,
+   "paper_id": 9,
+   "pass1_calls": 2,
+   "swap_status": "clean",
+   "wall_seconds": 699
+  },
+  {
+   "live_paper_id": 431,
+   "paper_id": 10,
+   "pass1_calls": 2,
+   "swap_status": "clean",
+   "wall_seconds": 556
+  },
+  {
+   "live_paper_id": 783,
+   "paper_id": 11,
+   "pass1_calls": 1,
+   "swap_status": "clean",
+   "wall_seconds": 417
+  },
+  {
+   "live_paper_id": 604,
+   "paper_id": 12,
+   "pass1_calls": 2,
+   "swap_status": "clean",
+   "wall_seconds": 640
+  }
+ ],
+ "run7_extraction_estimate_all_papers": {
+  "hours_at_sample_mean_x_fitting_papers": 38.0,
+  "length_model": {
+   "hours_over_fitting_papers": 34.6,
+   "intercept_s": 507.8,
+   "seconds_per_1000_text_chars": 3.234
+  },
+  "max_wall_seconds": 991,
+  "mean_wall_seconds": 723.4,
+  "min_wall_seconds": 417,
+  "papers": 11
+ },
+ "run7_extraction_estimate_clean_papers_only": {
+  "hours_at_sample_mean_x_fitting_papers": 38.0,
+  "length_model": {
+   "hours_over_fitting_papers": 34.6,
+   "intercept_s": 507.8,
+   "seconds_per_1000_text_chars": 3.234
+  },
+  "max_wall_seconds": 991,
+  "mean_wall_seconds": 723.4,
+  "min_wall_seconds": 417,
+  "papers": 11
+ },
+ "run_stage_models": [
+  "deepseek-r1:32b",
+  "gemma3:27b"
+ ],
+ "sample_median_text_chars": 52403,
+ "unload_or_evict_lines_in_journal": [],
+ "window": {
+  "from": "2026-10-08T18:25:01.406264+00:00",
+  "to": "2026-10-08T20:38:43.280864+00:00"
+ }
+}

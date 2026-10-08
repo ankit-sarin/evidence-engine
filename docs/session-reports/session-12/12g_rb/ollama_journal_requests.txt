@@ -1,0 +1,5 @@
+      3 GET "/api/ps"
+      4 GET "/api/tags"
+      1 HEAD "/"
+     85 POST "/api/chat"
+      1 POST "/api/show"

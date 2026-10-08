@@ -1,0 +1,204 @@
+{
+ "calls_total": 85,
+ "calls_under_undeclared_stage": 0,
+ "calls_with_null_paper_id": 85,
+ "ceiling": 40960,
+ "declared_stage_rows": 10,
+ "done_reasons_screen": {
+  "stop": 84
+ },
+ "foreign_loads": [],
+ "input_fit_flags": {
+  "": 85
+ },
+ "journal_chat_requests_equal_completed_calls": true,
+ "journal_loads": [
+  {
+   "foreign": false,
+   "model": "qwen3:8b",
+   "run_call_in_flight": "preflight:qwen3:8b",
+   "time": "2026-10-08T21:44:57.957Z"
+  }
+ ],
+ "journal_requests": {
+  "GET /api/ps": 3,
+  "GET /api/tags": 4,
+  "HEAD /": 1,
+  "POST /api/chat": 85,
+  "POST /api/show": 1
+ },
+ "log": {
+  "STAGE_lines": [
+   "[INFO] pipeline: STAGE: SCREEN"
+  ],
+  "Traceback": 0,
+  "UndeclaredCall_or_Override": 0,
+  "gate_lines": [
+   "[ERROR] pipeline: BLOCKED: Adjudication workflow incomplete.",
+   "[ERROR] pipeline: Current stage: ABSTRACT_SCREENING_COMPLETE"
+  ]
+ },
+ "longest_abstracts": [
+  {
+   "abstract_chars": 27606,
+   "ceiling": 40960,
+   "done_reason_pass1": "stop",
+   "done_reason_pass2": "stop",
+   "live_paper_id": 2976,
+   "paper_id": 29,
+   "prompt_share_of_ceiling": 0.158,
+   "prompt_tokens_pass1": 6473,
+   "request_chars_pass1": 31176,
+   "seconds_pass1": 6.16,
+   "seconds_pass2": 3.29,
+   "seconds_record": 9.47,
+   "tokens_per_char_pass1": 0.2076
+  },
+  {
+   "abstract_chars": 26352,
+   "ceiling": 40960,
+   "done_reason_pass1": "stop",
+   "done_reason_pass2": "stop",
+   "live_paper_id": 2000,
+   "paper_id": 25,
+   "prompt_share_of_ceiling": 0.147,
+   "prompt_tokens_pass1": 6022,
+   "request_chars_pass1": 29906,
+   "seconds_pass1": 4.71,
+   "seconds_pass2": 2.86,
+   "seconds_record": 7.59,
+   "tokens_per_char_pass1": 0.2014
+  }
+ ],
+ "manifest": {
+  "end_reason": "blocked:adjudication",
+  "end_status": "interrupted",
+  "ended_at": "2026-10-08T21:49:35.857381+00:00",
+  "git_commit": "015b2e486d85ce2c09f26e45ef72f4582d2f2b7b",
+  "run_kind": "extraction",
+  "started_at": "2026-10-08T21:44:56.995165+00:00",
+  "wall_seconds": 278.9
+ },
+ "max_decision_row_lag_after_call_seconds": 0.016,
+ "max_prompt_share_of_ceiling": 0.158,
+ "outcomes": {
+  "completed": 85
+ },
+ "preflight": [
+  {
+   "chars": 15,
+   "count": 13,
+   "done_reason": "length",
+   "outcome": "completed",
+   "seconds": 2.42,
+   "stage": "preflight:qwen3:8b"
+  }
+ ],
+ "record_seconds": {
+  "max": 9.47,
+  "median": 6.25,
+  "min": 3.32
+ },
+ "screen_call_seconds": {
+  "max": 6.16,
+  "median": 3.105,
+  "min": 1.56,
+  "n": 84,
+  "sum": 274.7
+ },
+ "stage_table": [
+  {
+   "arm": null,
+   "calls": 84,
+   "model": "qwen3:8b",
+   "note": "",
+   "outcomes": {
+    "completed": 84
+   },
+   "stage": "abstract_screen_primary"
+  },
+  {
+   "arm": null,
+   "calls": 0,
+   "model": "gemma3:27b",
+   "note": "declared, not reached: the run stops at the adjudication gate (RB-A2)",
+   "outcomes": {},
+   "stage": "abstract_screen_verifier"
+  },
+  {
+   "arm": null,
+   "calls": 0,
+   "model": "gemma3:27b",
+   "note": "declared, not reached: the run stops at the adjudication gate (RB-A2)",
+   "outcomes": {},
+   "stage": "audit"
+  },
+  {
+   "arm": "local_deepseek_r1_32b",
+   "calls": 0,
+   "model": "deepseek-r1:32b",
+   "note": "declared, not reached: the run stops at the adjudication gate (RB-A2)",
+   "outcomes": {},
+   "stage": "extract_pass1"
+  },
+  {
+   "arm": "local_deepseek_r1_32b",
+   "calls": 0,
+   "model": "deepseek-r1:32b",
+   "note": "declared, not reached: the run stops at the adjudication gate (RB-A2)",
+   "outcomes": {},
+   "stage": "extract_pass2"
+  },
+  {
+   "arm": "local_deepseek_r1_32b",
+   "calls": 0,
+   "model": "deepseek-r1:32b",
+   "note": "declared, not reached: the run stops at the adjudication gate (RB-A2)",
+   "outcomes": {},
+   "stage": "extract_retry_snippet"
+  },
+  {
+   "arm": null,
+   "calls": 0,
+   "model": "deepseek-r1:32b",
+   "note": "declared, not reached: the run stops at the adjudication gate (RB-A2)",
+   "outcomes": {},
+   "stage": "preflight:deepseek-r1:32b"
+  },
+  {
+   "arm": null,
+   "calls": 0,
+   "model": "gemma3:27b",
+   "note": "declared, not reached: the run stops at the adjudication gate (RB-A2)",
+   "outcomes": {},
+   "stage": "preflight:gemma3:27b"
+  },
+  {
+   "arm": null,
+   "calls": 1,
+   "model": "qwen3:8b",
+   "note": "",
+   "outcomes": {
+    "completed": 1
+   },
+   "stage": "preflight:qwen3:8b"
+  },
+  {
+   "arm": null,
+   "calls": 0,
+   "model": "qwen2.5vl:7b",
+   "note": "declared, not reached: the run stops at the adjudication gate (RB-A2)",
+   "outcomes": {},
+   "stage": "vision_parse"
+  }
+ ],
+ "stages_with_calls": [
+  "abstract_screen_primary",
+  "preflight:qwen3:8b"
+ ],
+ "tokens_per_char": {
+  "max": 0.2236,
+  "median": 0.2111,
+  "min": 0.2014
+ }
+}

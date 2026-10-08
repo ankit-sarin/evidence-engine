@@ -1,0 +1,5 @@
+Oct 08 21:44:57 spark-59e4 ollama[2453]: time=2026-10-08T21:44:57.619Z level=INFO source=server.go:444 msg="starting runner" cmd="/usr/local/bin/ollama runner --ollama-engine --port 35233"
+Oct 08 21:44:57 spark-59e4 ollama[2453]: time=2026-10-08T21:44:57.957Z level=INFO source=server.go:444 msg="starting runner" cmd="/usr/local/bin/ollama runner --ollama-engine --model /usr/share/ollama/.ollama/models/blobs/sha256-a3de86cd1c132c822487ededd47a324
+Oct 08 21:44:57 spark-59e4 ollama[2453]: time=2026-10-08T21:44:57.958Z level=INFO source=server.go:771 msg="loading model" "model layers"=37 requested=-1
+Oct 08 21:44:59 spark-59e4 ollama[2453]: time=2026-10-08T21:44:59.027Z level=INFO source=sched.go:561 msg="loaded runners" count=1
+Oct 08 21:44:59 spark-59e4 ollama[2453]: time=2026-10-08T21:44:59.278Z level=INFO source=server.go:1402 msg="llama runner started in 1.32 seconds"

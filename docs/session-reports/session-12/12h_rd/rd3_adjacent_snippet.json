@@ -1,0 +1,22 @@
+{
+ "cells_with_an_asserted_event": 177,
+ "derived_state": {
+  "asserted with evidence": 176,
+  "asserted without locatable evidence": 1
+ },
+ "provenance_located_is_a_dict": 177,
+ "provenance_located_keys": {
+  "bridged": 177,
+  "kind": 177,
+  "located": 177,
+  "locator_version": 177,
+  "parsed_text_sha256": 177,
+  "parsed_text_uid": 177,
+  "rule_version": 177,
+  "score": 177,
+  "snippet_supplied": 177,
+  "state_at_write": 177,
+  "threshold": 177
+ },
+ "provenance_located_with_a_nonempty_snippet": 0
+}

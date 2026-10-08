@@ -1,0 +1,20 @@
+{
+ "asserted_events": 177,
+ "asserted_label_without_evidence_but_located_later": 176,
+ "asserted_with_a_located_citation_event": 176,
+ "asserted_with_citation_event_not_located": 1,
+ "asserted_with_no_citation_event": 0,
+ "field_events": 397,
+ "label_by_event_type": {
+  "asserted | \"asserted without locatable evidence\"": 177,
+  "citation_located | null": 177,
+  "contract_unmet | \"contract unmet\"": 28,
+  "declined | \"declined\"": 15
+ },
+ "payload_has_key_by_event_type": {
+  "asserted | True": 177,
+  "citation_located | True": 177,
+  "contract_unmet | True": 28,
+  "declined | True": 15
+ }
+}

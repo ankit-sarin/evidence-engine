@@ -1,0 +1,337 @@
+{
+ "A_ast_constants": [
+  {
+   "excerpt": "…r\nreads a stored one (read-out §5.5). The writer records\n`{\"state_at_write\": …, \"rule_version\": \"v2.…",
+   "file": "engine/migrations/016_event_store.py",
+   "function": "<module>",
+   "is_whole_literal": false
+  },
+  {
+   "excerpt": "…copied. The writer records its own verdict in\n`payload_json.state_at_write` as telemetry a test asse…",
+   "file": "engine/core/effective.py",
+   "function": "<module>",
+   "is_whole_literal": false
+  },
+  {
+   "excerpt": "state_at_write",
+   "file": "engine/core/events.py",
+   "function": "write_field_event",
+   "is_whole_literal": true
+  },
+  {
+   "excerpt": "state_at_write",
+   "file": "tests/_event_store_fixture.py",
+   "function": "seed_claim",
+   "is_whole_literal": true
+  },
+  {
+   "excerpt": "state_at_write",
+   "file": "tests/test_effective_reader.py",
+   "function": "test_rule_v21_reader_state_equals_state_at_write_when_no_citation_follows",
+   "is_whole_literal": true
+  },
+  {
+   "excerpt": "state_at_write",
+   "file": "tests/test_effective_reader.py",
+   "function": "test_rule_v21_a_later_located_event_moves_the_state_off_state_at_write",
+   "is_whole_literal": true
+  },
+  {
+   "excerpt": "state_at_write",
+   "file": "tests/test_event_writer_refusals.py",
+   "function": "test_the_writer_and_the_reader_share_one_classifier_by_construction",
+   "is_whole_literal": true
+  },
+  {
+   "excerpt": "state_at_write",
+   "file": "tests/test_extraction_events.py",
+   "function": "test_t1_a_complete_record_asserts_every_field_with_its_input",
+   "is_whole_literal": true
+  },
+  {
+   "excerpt": "state_at_write",
+   "file": "docs/session-reports/session-12/12g_ra/ra_unlocated.py",
+   "function": "<module>",
+   "is_whole_literal": true
+  },
+  {
+   "excerpt": "state_at_write",
+   "file": "docs/session-reports/session-12/12g_ra/ra_unlocated.py",
+   "function": "<module>",
+   "is_whole_literal": true
+  },
+  {
+   "excerpt": "state_at_write",
+   "file": "docs/session-reports/session-12/12g_ra/ra_unlocated.py",
+   "function": "<module>",
+   "is_whole_literal": true
+  },
+  {
+   "excerpt": "state_at_write",
+   "file": "docs/session-reports/session-12/12g_ra/ra_unlocated.py",
+   "function": "<module>",
+   "is_whole_literal": true
+  }
+ ],
+ "B_payload_keys_read": {
+  "0": [
+   "tests/test_parse_gate.py::test_glyph_failure_reroutes_to_the_ocr_tier_and_stops (subscript-on-json.loads)",
+   "tests/test_parse_gate.py::test_glyph_then_shattered_then_vision_passes (subscript-on-json.loads)"
+  ],
+  "<name> PAYLOAD_REUSE_KEY": [
+   "engine/core/extraction_events.py::_supersede_old_text_claims (get)",
+   "engine/core/extraction_events.py::plan_extraction_events (get)"
+  ],
+  "asserted": [
+   "docs/session-reports/session-12/12g_ra/ra_fields.py::<module> (subscript-Load)",
+   "tests/test_extraction_events.py::test_t1_a_complete_record_asserts_every_field_with_its_input (subscript-Load)"
+  ],
+  "attempts": [
+   "engine/core/effective.py::_classify_claim (get)",
+   "tests/test_extraction_events.py::test_t2_an_exhausted_uncited_value_is_contract_unmet_and_the_paper_stores (subscript-Load)"
+  ],
+  "chars": [
+   "tests/test_parse_gate.py::test_clean_docling_parse_is_one_accepted_attempt (subscript-on-json.loads)"
+  ],
+  "confidence": [
+   "engine/agents/audit_events.py::audit_run (get)"
+  ],
+  "contract_unmet": [
+   "docs/session-reports/session-12/12g_ra/ra_fields.py::<module> (subscript-Load)",
+   "tests/test_extraction_events.py::test_t1_a_complete_record_asserts_every_field_with_its_input (subscript-Load)"
+  ],
+  "count": [
+   "tests/test_migration_021_parsed_text_sha256.py::test_the_committed_baseline_matches_the_declared_digest (subscript-on-json.loads)"
+  ],
+  "data": [
+   "engine/tools/inventory.py::committed_inventory (subscript-on-json.loads)"
+  ],
+  "declined": [
+   "docs/session-reports/session-12/12g_ra/ra_fields.py::<module> (subscript-Load)",
+   "tests/test_extraction_events.py::test_t1_a_complete_record_asserts_every_field_with_its_input (subscript-Load)"
+  ],
+  "engine_state": [
+   "tests/test_engine_state.py::_stored (subscript-on-json.loads)"
+  ],
+  "estimate_low": [
+   "tests/test_ollama_input_fit.py::test_migrated_a_fitting_prompt_is_sent_with_its_estimate_logged (subscript-on-json.loads)"
+  ],
+  "incomplete_fields": [
+   "docs/session-reports/session-12/12g_ra/ra_fields.py::<module> (get)",
+   "tests/test_extraction_events.py::test_t1_a_complete_record_asserts_every_field_with_its_input (subscript-Load)"
+  ],
+  "inputs": [
+   "tests/test_import_extraction_entry.py::test_t11_every_imported_ref_sha_appears_under_its_import_manifest_inputs (subscript-on-json.loads)",
+   "tests/test_import_extraction_entry.py::test_t7_manifest_inputs_hold_the_json_and_every_text_by_stored_path (subscript-on-json.loads)",
+   "tests/test_import_screening_entry.py::test_t1_four_entries_enter_at_ingested_under_one_manifest (subscript-on-json.loads)"
+  ],
+  "labels": [
+   "analysis/eval/adjud01_pairs.py::main (subscript-on-json.loads)"
+  ],
+  "note": [
+   "engine/core/effective.py::effective_state (get)",
+   "tests/test_migration_016_017.py::test_017_seeds_eligibility_only_one_state_at_migration_event_per_corpus_paper (subscript-on-json.loads)"
+  ],
+  "paper_id": [
+   "tests/test_parse_quality.py::test_metrics_reproduce_the_phase1_sweep_row (subscript-on-json.loads)"
+  ],
+  "parsed_text_sha256": [
+   "tests/test_audit_events.py::test_d23_t1_claims_on_an_older_version_are_located_against_that_version (subscript-Load)"
+  ],
+  "presented_context_sha256": [
+   "engine/core/effective.py::effective_value (get)"
+  ],
+  "reason": [
+   "engine/core/effective.py::effective_value (get)"
+  ],
+  "source": [
+   "engine/core/effective.py::effective_state (get)"
+  ],
+  "state_at_write": [
+   "tests/test_effective_reader.py::test_rule_v21_a_later_located_event_moves_the_state_off_state_at_write (subscript-on-json.loads)",
+   "tests/test_event_writer_refusals.py::test_the_writer_and_the_reader_share_one_classifier_by_construction (subscript-Load)",
+   "tests/test_extraction_events.py::test_t1_a_complete_record_asserts_every_field_with_its_input (subscript-Load)"
+  ],
+  "violation_codes": [
+   "engine/core/effective.py::_classify_claim (get)",
+   "tests/test_extraction_events.py::test_t2_an_exhausted_uncited_value_is_contract_unmet_and_the_paper_stores (subscript-Load)",
+   "tests/test_extraction_events.py::test_t4_a_duplicated_field_is_retried_then_contract_unmet (subscript-on-json.loads)"
+  ]
+ },
+ "B_state_at_write_keyed_reads": [
+  {
+   "access": "subscript-on-json.loads",
+   "file": "tests/test_effective_reader.py",
+   "function": "test_rule_v21_a_later_located_event_moves_the_state_off_state_at_write",
+   "key": "state_at_write",
+   "on": "json.loads(db.execute(\"SELECT payload_json FROM field_events WHERE claim_id = ? "
+  },
+  {
+   "access": "subscript-Load",
+   "file": "tests/test_event_writer_refusals.py",
+   "function": "test_the_writer_and_the_reader_share_one_classifier_by_construction",
+   "key": "state_at_write",
+   "on": "written"
+  },
+  {
+   "access": "subscript-Load",
+   "file": "tests/test_extraction_events.py",
+   "function": "test_t1_a_complete_record_asserts_every_field_with_its_input",
+   "key": "state_at_write",
+   "on": "p"
+  }
+ ],
+ "C_whole_payload_escapes": [
+  {
+   "expr": "e.payload",
+   "file": "engine/core/effective.py",
+   "function": "live_claim_events",
+   "how": "argument to LiveClaimEvent"
+  },
+  {
+   "expr": "[e.payload for e in evs if e.event_type == 'citation_located' and e.claim_id == claim_id]",
+   "file": "engine/core/effective.py",
+   "function": "_citations_for",
+   "how": "element of a comprehension"
+  },
+  {
+   "expr": "[p for p, _ in sel.to_extract]",
+   "file": "tests/test_extraction_events.py",
+   "function": "test_d24_t2_a_failed_reextraction_supersedes_every_old_text_claim",
+   "how": "element of a comprehension"
+  }
+ ],
+ "grep_by_tree": {
+  "docs": {
+   "files": 22,
+   "occurrences": 73
+  },
+  "engine": {
+   "files": 3,
+   "occurrences": 3
+  },
+  "tests": {
+   "files": 4,
+   "occurrences": 7
+  }
+ },
+ "grep_files": [
+  {
+   "file": "docs/plan/ENGINE_REFACTOR_PLAN.md",
+   "occurrences": 7
+  },
+  {
+   "file": "docs/session-reports/effective-result-02/PHASE2_build_report.md",
+   "occurrences": 1
+  },
+  {
+   "file": "docs/session-reports/migration-02/SMOKE-10b_log_20260929T191255Z.md",
+   "occurrences": 1
+  },
+  {
+   "file": "docs/session-reports/migration-02/collected_ids_c1c6210.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/migration-02/collected_ids_f335c4a.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/session-12/12g_RA-B.md",
+   "occurrences": 1
+  },
+  {
+   "file": "docs/session-reports/session-12/12g_ra/ra_unlocated.json",
+   "occurrences": 1
+  },
+  {
+   "file": "docs/session-reports/session-12/12g_ra/ra_unlocated.py",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/session-12/12g_ra/ra_unlocated_claims.csv",
+   "occurrences": 1
+  },
+  {
+   "file": "docs/session-reports/session-12/collected_ids_12a.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/session-12/collected_ids_12c.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/session-12/collected_ids_12d.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/session-12/collected_ids_12e.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/staged-entry-01/collected_ids_11b.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/staged-entry-01/collected_ids_11c.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/staged-entry-01/collected_ids_B21.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/staged-entry-01/collected_ids_FT-OVR.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/staged-entry-01/collected_ids_FT-PICKUP.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/staged-entry-01/collected_ids_SEAM.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/write-path-01/WRITE-PATH-01_phase1a_readout_20260924.md",
+   "occurrences": 1
+  },
+  {
+   "file": "docs/session-reports/write-path-01/collected_ids_40ea017.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "docs/session-reports/write-path-01/collected_ids_46cd7df.txt",
+   "occurrences": 4
+  },
+  {
+   "file": "engine/core/effective.py",
+   "occurrences": 1
+  },
+  {
+   "file": "engine/core/events.py",
+   "occurrences": 1
+  },
+  {
+   "file": "engine/migrations/016_event_store.py",
+   "occurrences": 1
+  },
+  {
+   "file": "tests/_event_store_fixture.py",
+   "occurrences": 1
+  },
+  {
+   "file": "tests/test_effective_reader.py",
+   "occurrences": 4
+  },
+  {
+   "file": "tests/test_event_writer_refusals.py",
+   "occurrences": 1
+  },
+  {
+   "file": "tests/test_extraction_events.py",
+   "occurrences": 1
+  }
+ ],
+ "token": "state_at_write"
+}

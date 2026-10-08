@@ -1,0 +1,10 @@
+dedup stats (what _stage_search returns and logs): {'pubmed_total': 10, 'openalex_total': 8, 'duplicates_found': 3, 'unique_total': 15}
+added: 15
+records_identified: 15
+records_by_source: {'openalex': 5, 'pubmed': 10}
+duplicates_removed: 0
+records_screened: 1
+records_excluded: 1
+exclusion_reasons: {'Not surgical': 1, 'Wrong population': 1}
+sum(exclusion_reasons) = 2 vs records_excluded = 1
+validate_prisma_counts valid: True

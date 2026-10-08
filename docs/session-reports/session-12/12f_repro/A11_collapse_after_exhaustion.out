@@ -1,0 +1,8 @@
+expected fields: 20; a one-span response validates against the Pass-2 schema model: 1 span
+an EMPTY array validates too: 0 spans
+write boundary: REFUSED IncompleteExtractionError n_stored=1 n_expected=20 missing=19  (budget 3 attempts)
+after exhaustion: paper event type=extracted to_state=extracted reason_code=None
+  field events written: [('asserted', 'study_type')]
+  payload asserted=1 incomplete_fields=19
+  to_state in COMPLETED_PROCESSING_STATES (=> analysis_ready for an eligible paper): True
+  counts toward the consecutive-failure abort: False

@@ -1,0 +1,7 @@
+max_chars 32000 | input 46627 | output 31998
+A. Methods kept: False | Results kept: False
+A. any omission marker in output: False
+A. output is a pure prefix of header+body: True
+B. early 'References ...' prose line: output 50 chars of 46704 -> 'Abstract: A\n\n# Introduction\nShort intro.'
+C. 40k-char abstract: output 32000 | contains any body: False
+D. _SECTION_RE occurrences in module source: 1 (1 = definition only)

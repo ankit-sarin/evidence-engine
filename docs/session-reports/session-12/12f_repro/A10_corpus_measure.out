@@ -1,0 +1,4 @@
+files measured: 60; files with >=1 miss: 60
+single units: 36817; not EXACT-locatable in raw text: 253 (0.69%)
+  of the first 40 such units (<=60 words), not located even FUZZY: 17
+adjacent unit pairs: 36757; joined pair not EXACT-locatable in raw text: 3576 (9.73%)

@@ -1,0 +1,28 @@
+
+[control: no comment] units=2 cite=(1, 2)
+   S1: 'The trial enrolled 40 patients in total.'
+   S2: 'Robotic suturing was fully autonomous here.'
+   stored snippet : 'The trial enrolled 40 patients in total. Robotic suturing was fully autonomous here.'
+   locate vs RAW parsed text  : located=True kind=exact score=1.0
+   locate vs stripped text    : located=True kind=exact
+
+[comment INSIDE one short unit] units=2 cite=(1,)
+   S1: 'The trial enrolled   40 patients in total.'
+   S2: 'Robotic suturing was fully autonomous here.'
+   stored snippet : 'The trial enrolled   40 patients in total.'
+   locate vs RAW parsed text  : located=False kind=none score=0.642
+   locate vs stripped text    : located=True kind=exact
+
+[comment BETWEEN two cited adjacent units] units=2 cite=(1, 2)
+   S1: 'The trial enrolled 40 patients.'
+   S2: 'Suturing was fully autonomous.'
+   stored snippet : 'The trial enrolled 40 patients. Suturing was fully autonomous.'
+   locate vs RAW parsed text  : located=False kind=none score=0.642
+   locate vs stripped text    : located=True kind=exact
+
+[comment inside one LONG unit] units=2 cite=(1,)
+   S1: 'The prospective single centre trial enrolled forty consecutive adult patients who underwent robot assisted   laparoscopic intestinal anastomosis with the autonomous suturing system during the study period.'
+   S2: 'A second sentence follows here.'
+   stored snippet : 'The prospective single centre trial enrolled forty consecutive adult patients who underwent robot assisted   laparoscopic intestinal anastomosis with the autonomous suturing system during the study period.'
+   locate vs RAW parsed text  : located=True kind=fuzzy score=0.918
+   locate vs stripped text    : located=True kind=exact

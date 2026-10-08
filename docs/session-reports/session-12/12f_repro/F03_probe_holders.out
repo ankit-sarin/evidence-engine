@@ -1,0 +1,12 @@
+DELETE holder=idle       (pid 2775045, other process) -> _refuse_if_open: ALLOWED (no refusal)
+DELETE holder=never_read (pid 2775046, other process) -> _refuse_if_open: ALLOWED (no refusal)
+DELETE holder=read_txn   (pid 2775047, other process) -> _refuse_if_open: REFUSED
+WAL    holder=idle       (pid 2775057, other process) -> _refuse_if_open: REFUSED
+WAL    holder=never_read (pid 2775058, other process) -> _refuse_if_open: ALLOWED (no refusal)
+WAL    holder=read_txn   (pid 2775064, other process) -> _refuse_if_open: REFUSED
+restore() over idle-held DELETE target: COMPLETED, no refusal
+  target inode changed: True
+  holder (still open on the OLD inode) reads: [('target-original',)]
+  holder writes: ERR OperationalError attempt to write a readonly database 
+  holder re-reads: [('target-original',)]
+  file now at target path holds: [('from-backup',)]

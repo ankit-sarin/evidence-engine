@@ -1,0 +1,7 @@
+late opener committed a row; sidecars: ['target.db-shm', 'target.db-wal']
+restore(): COMPLETED, no refusal
+sidecars after restore: []
+late opener: SELECT v FROM t -> [('target-original',), ('committed-by-late-opener',)]
+late opener: INSERT INTO t VALUES ('second write') -> []
+file at target path holds: [('from-backup',)] | integrity: ok
+sidecars at end: []

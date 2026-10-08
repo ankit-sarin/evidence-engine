@@ -1,0 +1,12 @@
+--- import engine.core.database (no construction)
+   openai: False | anthropic: False | engine.cloud.openai_extractor: False
+--- import engine.cloud.schema
+   openai: True | anthropic: True | engine.cloud.openai_extractor: True
+--- import engine.cloud.base
+   openai: True | anthropic: True | engine.cloud.openai_extractor: True
+--- FRESH ReviewDatabase('f17', data_root=./f17_data)
+   openai: True | anthropic: True | engine.cloud.openai_extractor: True
+--- SECOND construction on the same (now receipted) database
+   openai: False | anthropic: False | engine.cloud.openai_extractor: False
+--- FRESH construction with openai+anthropic made unimportable
+   construction FAILED: MigrationError 014_cloud_tables failed: ModuleNotFoundError: import of anthropic halted; None in sys.modules

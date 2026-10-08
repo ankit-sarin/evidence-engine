@@ -1,0 +1,22 @@
+'It was used to fit a neural network model, i.e., the model was trained to fit the data. As a result it works.'
+   S1: 'It was used to fit a neural network model, i.e., the model was trained to fit the data.'
+        verbatim in input: True | locate: exact 1.0
+   S2: 'As a result it works.'
+        verbatim in input: True | locate: exact 1.0
+   run S1+S2 joined verbatim in input: True | locate: exact
+'Springer Nature 2021. Vol.:(0123456789) is the footer line here. The next sentence follows it.'
+   S1: 'Springer Nature 2021.'
+        verbatim in input: True | locate: exact 1.0
+   S2: 'Vol. :(0123456789) is the footer line here.'
+        verbatim in input: False | locate: fuzzy 0.944
+   S3: 'The next sentence follows it.'
+        verbatim in input: True | locate: exact 1.0
+   run S1+S2 joined verbatim in input: False | locate: fuzzy
+'The first half of the claim... and the second half of the claim. Another sentence here.'
+   S1: 'The first half of the claim'
+        verbatim in input: True | locate: exact 1.0
+   S2: 'and the second half of the claim.'
+        verbatim in input: True | locate: exact 1.0
+   S3: 'Another sentence here.'
+        verbatim in input: True | locate: exact 1.0
+   run S1+S2 joined verbatim in input: False | locate: fuzzy

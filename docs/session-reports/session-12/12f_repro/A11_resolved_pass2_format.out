@@ -1,0 +1,67 @@
+--- live spec file: elicitation=False model=deepseek-r1:32b sent_keys=['format', 'keep_alive', 'messages', 'model', 'options', 'think']
+top-level type: object | properties: ['fields'] | required: ['fields'] | additionalProperties: <absent>
+fields: {'items': {'$ref': '#/$defs/EvidenceSpan'}, 'title': 'Fields', 'type': 'array'}
+minItems anywhere in schema: False | format_hash: n/a
+--- same spec, elicitation=True: elicitation=True model=deepseek-r1:32b sent_keys=['format', 'keep_alive', 'messages', 'model', 'options', 'think']
+top-level type: object | properties: ['fields'] | required: ['fields'] | additionalProperties: <absent>
+fields: {'items': {'$ref': '#/$defs/EvidenceSpan'}, 'title': 'Fields', 'type': 'array'}
+minItems anywhere in schema: False | format_hash: n/a
+identical format on both paths: True
+{
+ "$defs": {
+  "EvidenceSpan": {
+   "description": "A single extracted field with its supporting evidence.",
+   "properties": {
+    "confidence": {
+     "maximum": 1.0,
+     "minimum": 0.0,
+     "title": "Confidence",
+     "type": "number"
+    },
+    "field_name": {
+     "title": "Field Name",
+     "type": "string"
+    },
+    "source_snippet": {
+     "description": "Verbatim quote from paper supporting this value (1-3 sentences). Empty string if value is NOT_FOUND.",
+     "title": "Source Snippet",
+     "type": "string"
+    },
+    "tier": {
+     "maximum": 4,
+     "minimum": 1,
+     "title": "Tier",
+     "type": "integer"
+    },
+    "value": {
+     "title": "Value",
+     "type": "string"
+    }
+   },
+   "required": [
+    "field_name",
+    "value",
+    "source_snippet",
+    "confidence",
+    "tier"
+   ],
+   "title": "EvidenceSpan",
+   "type": "object"
+  }
+ },
+ "description": "Schema used for Ollama structured output (Pass 2 only).",
+ "properties": {
+  "fields": {
+   "items": {
+    "$ref": "#/$defs/EvidenceSpan"
+   },
+   "title": "Fields",
+   "type": "array"
+  }
+ },
+ "required": [
+  "fields"
+ ],
+ "title": "ExtractionOutput",
+ "type": "object"
+}

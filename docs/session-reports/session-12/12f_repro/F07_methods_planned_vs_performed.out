@@ -1,0 +1,9 @@
+run 2 extraction models: {'model-B': 0}
+run 2 audit models     : {'auditor-B': 0}
+run 3 extraction models: {}
+
+--- run_id=2 (no cloud call was ever made; cloud tables do not even exist) ---
+A systematic search was conducted across PubMed covering publications from 2015 to 2025 using the following queries: q. 10 citations were retrieved (10 from pubmed). Title-abstract screening was performed using a dual-pass local LLM approach (CURRENT-SPEC-screener, Ollama) with structured output constraints. 10 abstracts were screened, with 4 included, 5 excluded, and 1 flagged for human review. Full-text screening was performed by old-ft-model:1 (n=2) and qwen3:32b (n=1). Data extraction was performed using model-B with a two-pass reasoning-then-structured-output approach on 0 included studies across 20 predefined fields. Concordance extraction was additionally performed by OpenAI o4-mini-2025-04-16. Cross-model verification was performed by auditor-B.
+
+--- run_id=3 (no cloud call was ever made; cloud tables do not even exist) ---
+A systematic search was conducted across PubMed covering publications from 2015 to 2025 using the following queries: q. 10 citations were retrieved (10 from pubmed). Title-abstract screening was performed using a dual-pass local LLM approach (CURRENT-SPEC-screener, Ollama) with structured output constraints. 10 abstracts were screened, with 4 included, 5 excluded, and 1 flagged for human review. Full-text screening was performed by old-ft-model:1 (n=2) and qwen3:32b (n=1). Data extraction was performed using [MODEL NOT SPECIFIED] with a two-pass reasoning-then-structured-output approach on 0 included studies across 20 predefined fields. Concordance extraction was additionally performed by OpenAI o4-mini-2025-04-16. Cross-model verification was performed by [MODEL NOT SPECIFIED].

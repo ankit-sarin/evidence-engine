@@ -1,0 +1,16 @@
+--- B's exact pair (cell boundary)
+  A rows: [('a\x1fT:b', 'c')]  B rows: [('a', 'b\x1fT:c')]
+  A overall: 541d981bf27a6b85d3df7515c793fdbfc9966476bca7f234a29fb62b91e3f56a
+  B overall: 541d981bf27a6b85d3df7515c793fdbfc9966476bca7f234a29fb62b91e3f56a
+  overall equal: True | table sha equal: True | row_count A/B: 1 1 | compare() diffs: []
+--- type confusion (TEXT carrying an encoded INTEGER / NULL; 3 untyped-affinity columns)
+  A rows: [('a\x1fI:5', 'z', None)]  B rows: [('a', 5, 'z\x1fN')]
+  A overall: 924a24b12cce763f448b13c1471f84bbfe49ecb4ae914a69bf1d66e1dfb46bd7
+  B overall: 924a24b12cce763f448b13c1471f84bbfe49ecb4ae914a69bf1d66e1dfb46bd7
+  overall equal: True | table sha equal: True | row_count A/B: 1 1 | compare() diffs: []
+--- row boundary (1 row with U+001E vs 2 rows)
+  table sha equal: True | overall equal: True | row_count A/B: 1 2
+  compare() diffs: ["table 't': row_count left=1 right=2"]
+--- CLI: fingerprint B.db --compare A.fp.json -> exit 0
+  IDENTICAL — schema, every table, and the overall hash all match.
+stored values differ: [('a\x1fT:b', 'c')] [('a', 'b\x1fT:c')]

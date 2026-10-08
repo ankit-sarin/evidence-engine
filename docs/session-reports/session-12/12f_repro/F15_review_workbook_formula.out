@@ -1,0 +1,3 @@
+[('n', 1), ('f', '=HYPERLINK("http://example.invalid","Robotic suturing")'), ('f', '=1+1')]
+[('n', 2), ('s', '-12% leak rate after robotic anastomosis'), ('s', '@note')]
+control char -> IllegalCharacterError

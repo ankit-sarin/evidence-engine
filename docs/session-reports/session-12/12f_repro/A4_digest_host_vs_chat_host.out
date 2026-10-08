@@ -1,0 +1,8 @@
+--- env OLLAMA_HOST=<unset>
+chat  (_client.chat) host        : http://127.0.0.1:11434
+digest (fetch_model_digest) host : http://localhost:11434
+after an in-process rebind       : chat http://127.0.0.1:11435 | digest http://localhost:11434
+--- env OLLAMA_HOST=http://127.0.0.1:11435
+chat  (_client.chat) host        : http://127.0.0.1:11435
+digest (fetch_model_digest) host : http://localhost:11434
+after an in-process rebind       : chat http://127.0.0.1:11435 | digest http://localhost:11434

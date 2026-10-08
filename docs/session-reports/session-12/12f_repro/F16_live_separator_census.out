@@ -1,0 +1,3 @@
+tables=36 columns=384 text_cells_scanned=590185
+non-zero (table, column, cells_with_US, cells_with_RS): NONE — all 0
+sqlite_master rows with US / RS: (0, 0)

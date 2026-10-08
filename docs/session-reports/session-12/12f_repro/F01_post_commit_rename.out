@@ -1,0 +1,13 @@
+before: {'full_text_assets': 0, 'parsed_text_refs': 0, 'parse_attempts': 0} []
+parse_pdf raised: OSError injected: rename failed after commit
+after injected rename failure: {'full_text_assets': 1, 'parsed_text_refs': 1, 'parse_attempts': 1} files: []
+  in_transaction after handler rollback: False
+  committed ref -> 1_v1.md v 1 | exists on disk: False
+  seen by a second connection (i.e. committed): 1 ref row(s)
+resolver read: ParsedTextMissing - parsed text be44aaa5-abe2-4634-a411-c1d11c6c866e: the recorded file is missing at /home/an
+retry parse_pdf (no force): version 1 parsed_markdown None attempts 0 | files: []
+status before parse_all_pdfs: PDF_ACQUIRED
+parse_all_pdfs stats: {'parsed': 1, 'docling': 1}
+status after parse_all_pdfs: PARSED | files: []
+resolver read after PARSED: ParsedTextMissing
+force re-parse: version 2 | files: ['1_v2.md'] | counts: {'full_text_assets': 2, 'parsed_text_refs': 2, 'parse_attempts': 2}

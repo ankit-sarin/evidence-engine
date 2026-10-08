@@ -1,0 +1,21 @@
+--- B1 same title, distinct DOIs, pubmed+openalex
+    unique=1 duplicates=1
+    kept: source=pubmed pmid=111 doi=10.1000/aaa title='Autonomous suturing in robotic surgery: a randomized trial' raw={'origin': 'pubmed:10.1000/aaa'}
+    pair: ('Autonomous suturing in robotic surgery: a randomized trial', 'Autonomous suturing in robotic surgery: a randomized trial')
+--- B1b same title, distinct DOIs, both openalex
+    unique=1 duplicates=1
+    kept: source=openalex pmid=None doi=10.1000/aaa title='Autonomous suturing in robotic surgery: a randomized trial' raw={'origin': 'openalex:10.1000/aaa'}
+    pair: ('Autonomous suturing in robotic surgery: a randomized trial', 'Autonomous suturing in robotic surgery: a randomized trial')
+--- B2 two identical PubMed entries
+    unique=2 duplicates=0
+    kept: source=pubmed pmid=111 doi=10.1000/aaa title='Autonomous suturing in robotic surgery: a randomized trial' raw={'origin': 'pubmed:10.1000/aaa'}
+    kept: source=pubmed pmid=111 doi=10.1000/aaa title='Autonomous suturing in robotic surgery: a randomized trial' raw={'origin': 'pubmed:10.1000/aaa'}
+--- FUZZY companion papers, distinct DOI+PMID
+    unique=1 duplicates=1
+    kept: source=pubmed pmid=301 doi=10.1000/p1 title='Autonomous suturing in robotic surgery: a randomized trial - part 1' raw={'origin': 'pubmed:10.1000/p1'}
+    pair: ('Autonomous suturing in robotic surgery: a randomized trial - part 1', 'Autonomous suturing in robotic surgery: a randomized trial - part 2')
+--- INDEX pubmed rec without DOI gains DOI X by title merge; later openalex rec with DOI X, other title
+    unique=2 duplicates=1
+    kept: source=pubmed pmid=401 doi=10.1000/x title='Autonomous suturing in robotic surgery: a randomized trial' raw={'origin': 'pubmed:401'}
+    kept: source=openalex pmid=None doi=10.1000/X title='Erratum to an entirely different heading about livers' raw={'origin': 'openalex:10.1000/X'}
+    pair: ('Autonomous suturing in robotic surgery: a randomized trial', 'Autonomous suturing in robotic surgery: a randomized trial')

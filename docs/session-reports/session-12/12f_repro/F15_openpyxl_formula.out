@@ -1,0 +1,20 @@
+openpyxl 3.1.5
+append '=1+1'                               -> data_type='f' value='=1+1'
+append '+1+1'                               -> data_type='s' value='+1+1'
+append '-1+1'                               -> data_type='s' value='-1+1'
+append '@SUM(1,1)'                          -> data_type='s' value='@SUM(1,1)'
+append ' =1+1'                              -> data_type='s' value=' =1+1'
+append '\t=1+1'                             -> data_type='s' value='\t=1+1'
+append '\r=1+1'                             -> data_type='s' value='\r=1+1'
+append '='                                  -> data_type='s' value='='
+append '-5'                                 -> data_type='s' value='-5'
+append 'plain'                              -> data_type='s' value='plain'
+append '=HYPERLINK("http://x","click")'     -> data_type='f' value='=HYPERLINK("http://x","click")'
+ws.cell(value='=1+1') -> f
+after c.data_type='s'   -> s '=1+1'
+leading apostrophe      -> s "'=1+1"
+quotePrefix only (no data_type change) -> f
+reloaded: [('f', '=1+1'), ('s', '+1+1'), ('s', '-1+1'), ('s', '@SUM(1,1)'), ('s', ' =1+1'), ('s', '\t=1+1'), ('s', '\r=1+1'), ('s', '='), ('s', '-5'), ('s', 'plain'), ('f', '=HYPERLINK("http://x","click")')]
+reloaded r50/r51: s s
+csv.writer output: '=1+1\r\n+1+1\r\n-1+1\r\n"@SUM(1,1)"\r\n =1+1\r\n\t=1+1\r\n'
+control char -> IllegalCharacterError snippet with a vertical tab  from a PDF cannot be used in worksheets.

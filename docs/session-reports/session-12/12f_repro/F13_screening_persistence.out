@@ -1,0 +1,14 @@
+run 1 died: simulated watchdog exhaustion
+after run 1: status {1: 'INGESTED', 2: 'INGESTED'} | checkpoint exists: False
+  decisions (id, paper, pass, decision, rationale, model, at):
+    (1, 1, 1, 'include') m-primary
+after run 2: status {1: 'ABSTRACT_SCREENED_IN', 2: 'ABSTRACT_SCREENED_IN'}
+    (1, 1, 1, 'include') m-primary
+    (2, 1, 1, 'include') m-primary
+    (3, 1, 2, 'include') m-primary
+    (4, 2, 1, 'include') m-primary
+    (5, 2, 2, 'include') m-primary
+paper 1 pass-1 rows: 2 | columns: ['id', 'paper_id', 'pass_number', 'decision', 'rationale', 'model', 'decided_at']
+verification: invocation 1 made 2 calls; identical invocation 2 made 2 calls
+  abstract_verification_decisions rows: 4 for 2 papers | verification checkpoint exists: False
+  paper_events rows: 0

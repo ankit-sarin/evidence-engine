@@ -1,0 +1,3439 @@
+{
+ "absence_sentinels": [
+  "N/A",
+  "NA",
+  "NOT FOUND",
+  "NOT REPORTED",
+  "NOT_FOUND",
+  "NR"
+ ],
+ "accepted_attempt_failing_entries": [
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "comparison_to_human",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 1,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "NR",
+   "value_kind": "absence sentinel"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "judgment",
+   "field_name": "study_design",
+   "indices": null,
+   "keys": [
+    "reasoning_steps",
+    "value"
+   ],
+   "n_steps": 1,
+   "paper_id": 1,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 1,
+   "value": "Other",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "VALUE_WITHOUT_CITATION",
+    "INFERENCE_MISSING"
+   ],
+   "field_class": "inferable",
+   "field_name": "surgical_domain",
+   "indices": null,
+   "keys": [
+    "reasoning_steps",
+    "value"
+   ],
+   "n_steps": 1,
+   "paper_id": 3,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 1,
+   "steps_marked_criteria": 0,
+   "value": "Urology",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "judgment",
+   "field_name": "clinical_readiness_assessment",
+   "indices": null,
+   "keys": [
+    "reasoning_steps",
+    "value"
+   ],
+   "n_steps": 1,
+   "paper_id": 3,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 1,
+   "value": "Not assessable",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "inferable",
+   "field_name": "task_monitor",
+   "indices": [],
+   "keys": [
+    "inference",
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 4,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "R",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "inferable",
+   "field_name": "task_generate",
+   "indices": [],
+   "keys": [
+    "inference",
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 4,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "R",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "inferable",
+   "field_name": "task_select",
+   "indices": [],
+   "keys": [
+    "inference",
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 4,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "R",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "inferable",
+   "field_name": "task_execute",
+   "indices": [],
+   "keys": [
+    "inference",
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 4,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "R",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "INFERENCE_MISSING"
+   ],
+   "field_class": "inferable",
+   "field_name": "country",
+   "indices": [
+    32
+   ],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 4,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "Hong Kong, China",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "judgment",
+   "field_name": "clinical_readiness_assessment",
+   "indices": null,
+   "keys": [
+    "reasoning_steps",
+    "value"
+   ],
+   "n_steps": 1,
+   "paper_id": 5,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 1,
+   "value": "Proof of concept only",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "judgment",
+   "field_name": "key_limitation",
+   "indices": null,
+   "keys": [
+    "reasoning_steps",
+    "value"
+   ],
+   "n_steps": 1,
+   "paper_id": 6,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 1,
+   "value": "Lack of clinical validation and testing on human patients.",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "comparison_to_human",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 7,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "NR",
+   "value_kind": "absence sentinel"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "STEPS_MISSING"
+   ],
+   "field_class": "judgment",
+   "field_name": "autonomy_level",
+   "indices": [
+    259,
+    407
+   ],
+   "keys": [
+    "inference",
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 7,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "2 (Task autonomy)",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "STEPS_MISSING"
+   ],
+   "field_class": "judgment",
+   "field_name": "system_maturity",
+   "indices": [
+    213,
+    407
+   ],
+   "keys": [
+    "inference",
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 7,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "Algorithm on existing platform",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "STEPS_MISSING"
+   ],
+   "field_class": "judgment",
+   "field_name": "study_design",
+   "indices": [
+    764,
+    851
+   ],
+   "keys": [
+    "inference",
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 7,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "Feasibility study",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "STEPS_MISSING"
+   ],
+   "field_class": "judgment",
+   "field_name": "key_limitation",
+   "indices": [
+    864,
+    870
+   ],
+   "keys": [
+    "inference",
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 7,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "Reliance on initial probe placement and use of FSR",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "STEPS_MISSING"
+   ],
+   "field_class": "judgment",
+   "field_name": "clinical_readiness_assessment",
+   "indices": [
+    213,
+    764
+   ],
+   "keys": [
+    "inference",
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 7,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "Proof of concept only",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "sample_size",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 8,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "NR",
+   "value_kind": "absence sentinel"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "primary_outcome_value",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 8,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "NR",
+   "value_kind": "absence sentinel"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "comparison_to_human",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 8,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "NR",
+   "value_kind": "absence sentinel"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "secondary_outcomes",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 8,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "NR",
+   "value_kind": "absence sentinel"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "comparison_to_human",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 9,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "NR",
+   "value_kind": "absence sentinel"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "study_type",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 10,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "Original Research",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "sample_size",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 10,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "NR",
+   "value_kind": "absence sentinel"
+  },
+  {
+   "accepted_attempt": 1,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "comparison_to_human",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 10,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "NR",
+   "value_kind": "absence sentinel"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "INFERENCE_MISSING"
+   ],
+   "field_class": "inferable",
+   "field_name": "country",
+   "indices": [
+    22
+   ],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 12,
+   "source": "ra_12g",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "United States",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "INFERENCE_MISSING"
+   ],
+   "field_class": "inferable",
+   "field_name": "country",
+   "indices": [
+    22
+   ],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 604,
+   "source": "sep05_0113",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "United States of America",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "comparison_to_human",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 498,
+   "source": "sep05_0113",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "No comparison reported",
+   "value_kind": "other value"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "field_class": "stated",
+   "field_name": "secondary_outcomes",
+   "indices": [],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 498,
+   "source": "sep05_0113",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "NR",
+   "value_kind": "absence sentinel"
+  },
+  {
+   "accepted_attempt": 2,
+   "codes": [
+    "INFERENCE_MISSING"
+   ],
+   "field_class": "inferable",
+   "field_name": "country",
+   "indices": [
+    32
+   ],
+   "keys": [
+    "unit_indices",
+    "value"
+   ],
+   "n_steps": null,
+   "paper_id": 498,
+   "source": "sep05_0243",
+   "steps_citing_a_unit": 0,
+   "steps_marked_criteria": 0,
+   "value": "Hong Kong, China",
+   "value_kind": "other value"
+  }
+ ],
+ "accepted_attempt_failing_value_kinds": {
+  "ra_12g | INFERENCE_MISSING": {
+   "other value": 3
+  },
+  "ra_12g | STEPS_MISSING": {
+   "other value": 5
+  },
+  "ra_12g | VALUE_WITHOUT_CITATION": {
+   "absence sentinel": 9,
+   "other value": 10
+  },
+  "sep05_0113 | INFERENCE_MISSING": {
+   "other value": 1
+  },
+  "sep05_0113 | VALUE_WITHOUT_CITATION": {
+   "absence sentinel": 1,
+   "other value": 1
+  },
+  "sep05_0243 | INFERENCE_MISSING": {
+   "other value": 1
+  }
+ },
+ "attempt1_failures_by_class_and_sentinel_prose": {
+  "ra_12g": {
+   "inferable | prose names a sentinel: False": {
+    "failed": 4,
+    "field_attempts": 55
+   },
+   "inferable | prose names a sentinel: True": {
+    "failed": 1,
+    "field_attempts": 11
+   },
+   "judgment | prose names a sentinel: False": {
+    "failed": 22,
+    "field_attempts": 55
+   },
+   "stated | prose names a sentinel: False": {
+    "failed": 4,
+    "field_attempts": 66
+   },
+   "stated | prose names a sentinel: True": {
+    "failed": 15,
+    "field_attempts": 33
+   }
+  },
+  "sep05_0113": {
+   "inferable | prose names a sentinel: False": {
+    "failed": 4,
+    "field_attempts": 15
+   },
+   "inferable | prose names a sentinel: True": {
+    "failed": 2,
+    "field_attempts": 3
+   },
+   "judgment | prose names a sentinel: False": {
+    "failed": 10,
+    "field_attempts": 15
+   },
+   "stated | prose names a sentinel: False": {
+    "failed": 1,
+    "field_attempts": 18
+   },
+   "stated | prose names a sentinel: True": {
+    "failed": 2,
+    "field_attempts": 9
+   }
+  },
+  "sep05_0243": {
+   "inferable | prose names a sentinel: False": {
+    "failed": 0,
+    "field_attempts": 5
+   },
+   "inferable | prose names a sentinel: True": {
+    "failed": 0,
+    "field_attempts": 1
+   },
+   "judgment | prose names a sentinel: False": {
+    "failed": 0,
+    "field_attempts": 5
+   },
+   "stated | prose names a sentinel: False": {
+    "failed": 1,
+    "field_attempts": 6
+   },
+   "stated | prose names a sentinel: True": {
+    "failed": 2,
+    "field_attempts": 3
+   }
+  }
+ },
+ "calls_from_run_log": {
+  "ra_12g": {
+   "1": [
+    {
+     "at": "18:29:00",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 12547
+    },
+    {
+     "at": "18:31:21",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 12797
+    },
+    {
+     "at": "18:34:42",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 12217
+    }
+   ],
+   "10": [
+    {
+     "at": "20:15:51",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 18252
+    },
+    {
+     "at": "20:17:36",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 18574
+    },
+    {
+     "at": "20:20:49",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 17210
+    }
+   ],
+   "11": [
+    {
+     "at": "20:24:14",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 9354
+    },
+    {
+     "at": "20:27:47",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 9497
+    }
+   ],
+   "12": [
+    {
+     "at": "20:31:36",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 17905
+    },
+    {
+     "at": "20:34:52",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 18190
+    },
+    {
+     "at": "20:38:27",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 17163
+    }
+   ],
+   "3": [
+    {
+     "at": "18:41:30",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 57927
+    },
+    {
+     "at": "18:45:26",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 59027
+    },
+    {
+     "at": "18:51:04",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 50569
+    }
+   ],
+   "4": [
+    {
+     "at": "18:57:22",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 47962
+    },
+    {
+     "at": "19:01:48",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 48941
+    },
+    {
+     "at": "19:06:59",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 42761
+    }
+   ],
+   "5": [
+    {
+     "at": "19:13:06",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 45981
+    },
+    {
+     "at": "19:17:29",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 46934
+    },
+    {
+     "at": "19:23:30",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 39811
+    }
+   ],
+   "6": [
+    {
+     "at": "19:28:20",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 27617
+    },
+    {
+     "at": "19:31:38",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 27788
+    },
+    {
+     "at": "19:36:11",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 22145
+    }
+   ],
+   "7": [
+    {
+     "at": "19:41:10",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 26909
+    },
+    {
+     "at": "19:44:56",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 27560
+    },
+    {
+     "at": "19:50:44",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 21665
+    }
+   ],
+   "8": [
+    {
+     "at": "19:54:36",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 20444
+    },
+    {
+     "at": "19:56:04",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 20856
+    },
+    {
+     "at": "19:59:53",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 19170
+    }
+   ],
+   "9": [
+    {
+     "at": "20:03:40",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 14271
+    },
+    {
+     "at": "20:05:22",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 14413
+    },
+    {
+     "at": "20:11:33",
+     "done_reason": "stop",
+     "model": "deepseek-r1:32b",
+     "prompt_tokens": 16011
+    },
+    {
+     "at": "20:38:43",
+     "done_reason": "stop",
+     "model": "gemma3:27b",
+     "prompt_tokens": 271
+    }
+   ]
+  }
+ },
+ "escape_token": "NO_EVIDENCE_LOCATABLE",
+ "field_flags_from_codebook": {
+  "autonomy_level": {
+   "field_class": "judgment",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": true
+  },
+  "clinical_readiness_assessment": {
+   "field_class": "judgment",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": false
+  },
+  "comparison_to_human": {
+   "field_class": "stated",
+   "prose_names_a_sentinel": true,
+   "prose_sentence": "If no comparison was made, record \"NR\"",
+   "valid_values_include_a_sentinel": false
+  },
+  "country": {
+   "field_class": "inferable",
+   "prose_names_a_sentinel": true,
+   "prose_sentence": "If unclear, record \"NR\"",
+   "valid_values_include_a_sentinel": false
+  },
+  "key_limitation": {
+   "field_class": "judgment",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": false
+  },
+  "primary_outcome_metric": {
+   "field_class": "stated",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": false
+  },
+  "primary_outcome_value": {
+   "field_class": "stated",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": false
+  },
+  "robot_platform": {
+   "field_class": "stated",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": false
+  },
+  "sample_size": {
+   "field_class": "stated",
+   "prose_names_a_sentinel": true,
+   "prose_sentence": "Enter the number only, or NR",
+   "valid_values_include_a_sentinel": false
+  },
+  "secondary_outcomes": {
+   "field_class": "stated",
+   "prose_names_a_sentinel": true,
+   "prose_sentence": "Enter NR if only one outcome reported",
+   "valid_values_include_a_sentinel": false
+  },
+  "study_design": {
+   "field_class": "judgment",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": false
+  },
+  "study_type": {
+   "field_class": "stated",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": false
+  },
+  "surgical_domain": {
+   "field_class": "inferable",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": false
+  },
+  "system_maturity": {
+   "field_class": "judgment",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": false
+  },
+  "task_execute": {
+   "field_class": "inferable",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": true
+  },
+  "task_generate": {
+   "field_class": "inferable",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": true
+  },
+  "task_monitor": {
+   "field_class": "inferable",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": true
+  },
+  "task_performed": {
+   "field_class": "stated",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": false
+  },
+  "task_select": {
+   "field_class": "inferable",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": true
+  },
+  "validation_setting": {
+   "field_class": "stated",
+   "prose_names_a_sentinel": false,
+   "prose_sentence": null,
+   "valid_values_include_a_sentinel": true
+  }
+ },
+ "papers": [
+  {
+   "accepted_attempt": 1,
+   "feedback_chars": [
+    0,
+    1057
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    2,
+    3
+   ],
+   "paper_id": 1,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "outcomes": [
+    "input_exceeds_context"
+   ],
+   "paper_id": 2,
+   "policy": "no_elicitation_record",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 2,
+   "feedback_chars": [
+    0,
+    4413
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    9,
+    4
+   ],
+   "paper_id": 3,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 2,
+   "feedback_chars": [
+    0,
+    4176
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    9,
+    5
+   ],
+   "paper_id": 4,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 2,
+   "feedback_chars": [
+    0,
+    3901
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    8,
+    1
+   ],
+   "paper_id": 5,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 1,
+   "feedback_chars": [
+    0,
+    743
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    1,
+    7
+   ],
+   "paper_id": 6,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 1,
+   "feedback_chars": [
+    0,
+    2524
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    6,
+    6
+   ],
+   "paper_id": 7,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 1,
+   "feedback_chars": [
+    0,
+    1710
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    4,
+    12
+   ],
+   "paper_id": 8,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 1,
+   "feedback_chars": [
+    0,
+    610
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    1,
+    12
+   ],
+   "paper_id": 9,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 1,
+   "feedback_chars": [
+    0,
+    1346
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    3,
+    11
+   ],
+   "paper_id": 10,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 1,
+   "feedback_chars": [
+    0
+   ],
+   "n_attempts": 1,
+   "n_failed": [
+    0
+   ],
+   "paper_id": 11,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 2,
+   "feedback_chars": [
+    0,
+    1208
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    3,
+    1
+   ],
+   "paper_id": 12,
+   "policy": "feedback_retry",
+   "source": "ra_12g"
+  },
+  {
+   "accepted_attempt": 2,
+   "feedback_chars": [
+    0,
+    2268
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    6,
+    0
+   ],
+   "paper_id": 121,
+   "policy": "feedback_retry",
+   "source": "sep05_0113"
+  },
+  {
+   "accepted_attempt": 2,
+   "feedback_chars": [
+    0,
+    2701
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    5,
+    1
+   ],
+   "paper_id": 604,
+   "policy": "feedback_retry",
+   "source": "sep05_0113"
+  },
+  {
+   "accepted_attempt": 2,
+   "feedback_chars": [
+    0,
+    3574
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    8,
+    2
+   ],
+   "paper_id": 498,
+   "policy": "feedback_retry",
+   "source": "sep05_0113"
+  },
+  {
+   "accepted_attempt": 2,
+   "feedback_chars": [
+    0,
+    1205
+   ],
+   "n_attempts": 2,
+   "n_failed": [
+    3,
+    1
+   ],
+   "paper_id": 498,
+   "policy": "feedback_retry",
+   "source": "sep05_0243"
+  },
+  {
+   "n_attempts": 3,
+   "n_failed": [
+    6,
+    7,
+    7
+   ],
+   "paper_id": 121,
+   "parse_path": [
+    "direct",
+    "direct",
+    "direct"
+   ],
+   "policy": "identical_reissue",
+   "source": "sep03_1556"
+  },
+  {
+   "n_attempts": 3,
+   "n_failed": [
+    2,
+    5,
+    5
+   ],
+   "paper_id": 604,
+   "parse_path": [
+    "direct",
+    "direct",
+    "direct"
+   ],
+   "policy": "identical_reissue",
+   "source": "sep03_1556"
+  },
+  {
+   "n_attempts": 3,
+   "n_failed": [
+    13,
+    13,
+    13
+   ],
+   "paper_id": 498,
+   "parse_path": [
+    "direct",
+    "direct",
+    "direct"
+   ],
+   "policy": "identical_reissue",
+   "source": "sep03_1556"
+  },
+  {
+   "n_attempts": 3,
+   "n_failed": [
+    20,
+    20,
+    20
+   ],
+   "paper_id": 121,
+   "parse_path": [
+    "unparseable",
+    "unparseable",
+    "unparseable"
+   ],
+   "policy": "identical_reissue",
+   "source": "sep03_1538_aborted"
+  },
+  {
+   "n_attempts": 1,
+   "n_failed": [
+    4
+   ],
+   "paper_id": 604,
+   "parse_path": [
+    "direct"
+   ],
+   "policy": "identical_reissue",
+   "source": "sep03_1538_aborted"
+  }
+ ],
+ "papers_where_attempt_2_was_accepted": [
+  {
+   "fixed_by_attempt_2": [
+    "autonomy_level",
+    "comparison_to_human",
+    "key_limitation",
+    "primary_outcome_value",
+    "sample_size",
+    "study_design",
+    "system_maturity"
+   ],
+   "met_on_1_and_failed_on_accepted_2": [
+    "country",
+    "surgical_domain"
+   ],
+   "paper_id": 3,
+   "source": "ra_12g"
+  },
+  {
+   "fixed_by_attempt_2": [
+    "autonomy_level",
+    "clinical_readiness_assessment",
+    "comparison_to_human",
+    "key_limitation",
+    "primary_outcome_value",
+    "sample_size",
+    "study_design",
+    "surgical_domain",
+    "system_maturity"
+   ],
+   "met_on_1_and_failed_on_accepted_2": [
+    "country",
+    "task_execute",
+    "task_generate",
+    "task_monitor",
+    "task_select"
+   ],
+   "paper_id": 4,
+   "source": "ra_12g"
+  },
+  {
+   "fixed_by_attempt_2": [
+    "autonomy_level",
+    "country",
+    "key_limitation",
+    "sample_size",
+    "study_design",
+    "surgical_domain",
+    "system_maturity"
+   ],
+   "met_on_1_and_failed_on_accepted_2": [],
+   "paper_id": 5,
+   "source": "ra_12g"
+  },
+  {
+   "fixed_by_attempt_2": [
+    "comparison_to_human",
+    "secondary_outcomes",
+    "task_select"
+   ],
+   "met_on_1_and_failed_on_accepted_2": [
+    "country"
+   ],
+   "paper_id": 12,
+   "source": "ra_12g"
+  },
+  {
+   "fixed_by_attempt_2": [
+    "autonomy_level",
+    "clinical_readiness_assessment",
+    "country",
+    "key_limitation",
+    "study_design",
+    "system_maturity"
+   ],
+   "met_on_1_and_failed_on_accepted_2": [],
+   "paper_id": 121,
+   "source": "sep05_0113"
+  },
+  {
+   "fixed_by_attempt_2": [
+    "comparison_to_human",
+    "secondary_outcomes",
+    "task_execute",
+    "task_monitor",
+    "task_select"
+   ],
+   "met_on_1_and_failed_on_accepted_2": [
+    "country"
+   ],
+   "paper_id": 604,
+   "source": "sep05_0113"
+  },
+  {
+   "fixed_by_attempt_2": [
+    "autonomy_level",
+    "clinical_readiness_assessment",
+    "country",
+    "key_limitation",
+    "primary_outcome_value",
+    "study_design",
+    "surgical_domain",
+    "system_maturity"
+   ],
+   "met_on_1_and_failed_on_accepted_2": [
+    "comparison_to_human",
+    "secondary_outcomes"
+   ],
+   "paper_id": 498,
+   "source": "sep05_0113"
+  },
+  {
+   "fixed_by_attempt_2": [
+    "comparison_to_human",
+    "primary_outcome_value",
+    "sample_size"
+   ],
+   "met_on_1_and_failed_on_accepted_2": [
+    "country"
+   ],
+   "paper_id": 498,
+   "source": "sep05_0243"
+  }
+ ],
+ "sources": {
+  "ra_12g": {
+   "attempt1_code_outcome_on_attempt2": {
+    "FIELD_MISSING": {
+     "fixed": 2,
+     "new on attempt 2": 34
+    },
+    "INDEX_OUT_OF_RANGE": {
+     "fixed": 1
+    },
+    "INFERENCE_MISSING": {
+     "fixed": 2,
+     "new on attempt 2": 9,
+     "still failing": 1
+    },
+    "STEPS_MISSING": {
+     "fixed": 13,
+     "new on attempt 2": 1,
+     "still failing": 2
+    },
+    "VALUE_WITHOUT_CITATION": {
+     "fixed": 23,
+     "new on attempt 2": 18,
+     "still failing": 7
+    }
+   },
+   "attempts_missing_a_whole_class": [
+    {
+     "attempt": 2,
+     "classes_with_every_field_missing": [
+      "inferable",
+      "judgment"
+     ],
+     "paper_id": 8
+    },
+    {
+     "attempt": 2,
+     "classes_with_every_field_missing": [
+      "inferable",
+      "judgment"
+     ],
+     "paper_id": 9
+    },
+    {
+     "attempt": 2,
+     "classes_with_every_field_missing": [
+      "inferable",
+      "judgment"
+     ],
+     "paper_id": 10
+    }
+   ],
+   "by_class": {
+    "inferable": {
+     "1": {
+      "FIELD_MISSING": 1,
+      "INFERENCE_MISSING": 3,
+      "VALUE_WITHOUT_CITATION": 3,
+      "failed": 5,
+      "fields": 66
+     },
+     "2": {
+      "FIELD_MISSING": 20,
+      "INFERENCE_MISSING": 9,
+      "VALUE_WITHOUT_CITATION": 12,
+      "failed": 34,
+      "fields": 60
+     }
+    },
+    "judgment": {
+     "1": {
+      "INDEX_OUT_OF_RANGE": 1,
+      "STEPS_MISSING": 15,
+      "VALUE_WITHOUT_CITATION": 9,
+      "failed": 22,
+      "fields": 55
+     },
+     "2": {
+      "FIELD_MISSING": 15,
+      "STEPS_MISSING": 1,
+      "STEP_WITHOUT_BASIS": 1,
+      "VALUE_WITHOUT_CITATION": 8,
+      "failed": 25,
+      "fields": 50
+     }
+    },
+    "stated": {
+     "1": {
+      "FIELD_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 18,
+      "failed": 19,
+      "fields": 99
+     },
+     "2": {
+      "VALUE_WITHOUT_CITATION": 3,
+      "failed": 3,
+      "fields": 90
+     }
+    }
+   },
+   "by_field": {
+    "autonomy_level": {
+     "1": {
+      "failed": 4,
+      "fields": 11
+     },
+     "2": {
+      "failed": 5,
+      "fields": 10
+     }
+    },
+    "clinical_readiness_assessment": {
+     "1": {
+      "failed": 4,
+      "fields": 11
+     },
+     "2": {
+      "failed": 6,
+      "fields": 10
+     }
+    },
+    "comparison_to_human": {
+     "1": {
+      "failed": 8,
+      "fields": 11
+     },
+     "2": {
+      "failed": 3,
+      "fields": 10
+     }
+    },
+    "country": {
+     "1": {
+      "failed": 1,
+      "fields": 11
+     },
+     "2": {
+      "failed": 7,
+      "fields": 10
+     }
+    },
+    "key_limitation": {
+     "1": {
+      "failed": 5,
+      "fields": 11
+     },
+     "2": {
+      "failed": 4,
+      "fields": 10
+     }
+    },
+    "primary_outcome_metric": {
+     "1": {
+      "failed": 0,
+      "fields": 11
+     },
+     "2": {
+      "failed": 0,
+      "fields": 10
+     }
+    },
+    "primary_outcome_value": {
+     "1": {
+      "failed": 3,
+      "fields": 11
+     },
+     "2": {
+      "failed": 0,
+      "fields": 10
+     }
+    },
+    "robot_platform": {
+     "1": {
+      "failed": 0,
+      "fields": 11
+     },
+     "2": {
+      "failed": 0,
+      "fields": 10
+     }
+    },
+    "sample_size": {
+     "1": {
+      "failed": 5,
+      "fields": 11
+     },
+     "2": {
+      "failed": 0,
+      "fields": 10
+     }
+    },
+    "secondary_outcomes": {
+     "1": {
+      "failed": 2,
+      "fields": 11
+     },
+     "2": {
+      "failed": 0,
+      "fields": 10
+     }
+    },
+    "study_design": {
+     "1": {
+      "failed": 5,
+      "fields": 11
+     },
+     "2": {
+      "failed": 5,
+      "fields": 10
+     }
+    },
+    "study_type": {
+     "1": {
+      "failed": 1,
+      "fields": 11
+     },
+     "2": {
+      "failed": 0,
+      "fields": 10
+     }
+    },
+    "surgical_domain": {
+     "1": {
+      "failed": 2,
+      "fields": 11
+     },
+     "2": {
+      "failed": 6,
+      "fields": 10
+     }
+    },
+    "system_maturity": {
+     "1": {
+      "failed": 4,
+      "fields": 11
+     },
+     "2": {
+      "failed": 5,
+      "fields": 10
+     }
+    },
+    "task_execute": {
+     "1": {
+      "failed": 0,
+      "fields": 11
+     },
+     "2": {
+      "failed": 5,
+      "fields": 10
+     }
+    },
+    "task_generate": {
+     "1": {
+      "failed": 0,
+      "fields": 11
+     },
+     "2": {
+      "failed": 5,
+      "fields": 10
+     }
+    },
+    "task_monitor": {
+     "1": {
+      "failed": 0,
+      "fields": 11
+     },
+     "2": {
+      "failed": 5,
+      "fields": 10
+     }
+    },
+    "task_performed": {
+     "1": {
+      "failed": 0,
+      "fields": 11
+     },
+     "2": {
+      "failed": 0,
+      "fields": 10
+     }
+    },
+    "task_select": {
+     "1": {
+      "failed": 2,
+      "fields": 11
+     },
+     "2": {
+      "failed": 6,
+      "fields": 10
+     }
+    },
+    "validation_setting": {
+     "1": {
+      "failed": 0,
+      "fields": 11
+     },
+     "2": {
+      "failed": 0,
+      "fields": 10
+     }
+    }
+   },
+   "codes_by_attempt": {
+    "1": {
+     "FIELD_MISSING": 2,
+     "INDEX_OUT_OF_RANGE": 1,
+     "INFERENCE_MISSING": 3,
+     "STEPS_MISSING": 15,
+     "VALUE_WITHOUT_CITATION": 30
+    },
+    "2": {
+     "FIELD_MISSING": 35,
+     "INFERENCE_MISSING": 9,
+     "STEPS_MISSING": 1,
+     "STEP_WITHOUT_BASIS": 1,
+     "VALUE_WITHOUT_CITATION": 23
+    }
+   },
+   "codes_by_attempt_and_class": {
+    "1": {
+     "inferable": {
+      "FIELD_MISSING": 1,
+      "INFERENCE_MISSING": 3,
+      "VALUE_WITHOUT_CITATION": 3
+     },
+     "judgment": {
+      "INDEX_OUT_OF_RANGE": 1,
+      "STEPS_MISSING": 15,
+      "VALUE_WITHOUT_CITATION": 9
+     },
+     "stated": {
+      "FIELD_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 18
+     }
+    },
+    "2": {
+     "inferable": {
+      "FIELD_MISSING": 20,
+      "INFERENCE_MISSING": 9,
+      "VALUE_WITHOUT_CITATION": 12
+     },
+     "judgment": {
+      "FIELD_MISSING": 15,
+      "STEPS_MISSING": 1,
+      "STEP_WITHOUT_BASIS": 1,
+      "VALUE_WITHOUT_CITATION": 8
+     },
+     "stated": {
+      "VALUE_WITHOUT_CITATION": 3
+     }
+    }
+   },
+   "failed_by_attempt": {
+    "1": 46,
+    "2": 62
+   },
+   "field_attempts": {
+    "1": 220,
+    "2": 200
+   },
+   "policy": "feedback_retry",
+   "transitions_attempt1_to_2": {
+    "failed -> failed": 7,
+    "failed -> ok": 39,
+    "ok -> failed": 55,
+    "ok -> ok": 99
+   },
+   "transitions_by_class": {
+    "inferable": {
+     "failed -> failed": 1,
+     "failed -> ok": 4,
+     "ok -> failed": 33,
+     "ok -> ok": 22
+    },
+    "judgment": {
+     "failed -> failed": 4,
+     "failed -> ok": 18,
+     "ok -> failed": 21,
+     "ok -> ok": 7
+    },
+    "stated": {
+     "failed -> failed": 2,
+     "failed -> ok": 17,
+     "ok -> failed": 1,
+     "ok -> ok": 70
+    }
+   }
+  },
+  "sep03_1538_aborted": {
+   "attempt1_code_outcome_on_attempt2": {
+    "FIELD_MISSING": {
+     "still failing": 20
+    }
+   },
+   "attempts_missing_a_whole_class": [
+    {
+     "attempt": 1,
+     "classes_with_every_field_missing": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "paper_id": 121
+    },
+    {
+     "attempt": 2,
+     "classes_with_every_field_missing": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "paper_id": 121
+    },
+    {
+     "attempt": 3,
+     "classes_with_every_field_missing": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "paper_id": 121
+    }
+   ],
+   "by_class": {
+    "inferable": {
+     "1": {
+      "FIELD_MISSING": 6,
+      "VALUE_WITHOUT_CITATION": 1,
+      "failed": 7,
+      "fields": 12
+     },
+     "2": {
+      "FIELD_MISSING": 6,
+      "failed": 6,
+      "fields": 6
+     },
+     "3": {
+      "FIELD_MISSING": 6,
+      "failed": 6,
+      "fields": 6
+     }
+    },
+    "judgment": {
+     "1": {
+      "FIELD_MISSING": 5,
+      "STEPS_MISSING": 1,
+      "failed": 6,
+      "fields": 10
+     },
+     "2": {
+      "FIELD_MISSING": 5,
+      "failed": 5,
+      "fields": 5
+     },
+     "3": {
+      "FIELD_MISSING": 5,
+      "failed": 5,
+      "fields": 5
+     }
+    },
+    "stated": {
+     "1": {
+      "FIELD_MISSING": 9,
+      "VALUE_WITHOUT_CITATION": 2,
+      "failed": 11,
+      "fields": 18
+     },
+     "2": {
+      "FIELD_MISSING": 9,
+      "failed": 9,
+      "fields": 9
+     },
+     "3": {
+      "FIELD_MISSING": 9,
+      "failed": 9,
+      "fields": 9
+     }
+    }
+   },
+   "by_field": {
+    "autonomy_level": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "clinical_readiness_assessment": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "comparison_to_human": {
+     "1": {
+      "failed": 2,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "country": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "key_limitation": {
+     "1": {
+      "failed": 2,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "primary_outcome_metric": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "primary_outcome_value": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "robot_platform": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "sample_size": {
+     "1": {
+      "failed": 2,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "secondary_outcomes": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "study_design": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "study_type": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "surgical_domain": {
+     "1": {
+      "failed": 2,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "system_maturity": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "task_execute": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "task_generate": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "task_monitor": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "task_performed": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "task_select": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "validation_setting": {
+     "1": {
+      "failed": 1,
+      "fields": 2
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     },
+     "3": {
+      "failed": 1,
+      "fields": 1
+     }
+    }
+   },
+   "codes_by_attempt": {
+    "1": {
+     "FIELD_MISSING": 20,
+     "STEPS_MISSING": 1,
+     "VALUE_WITHOUT_CITATION": 3
+    },
+    "2": {
+     "FIELD_MISSING": 20
+    },
+    "3": {
+     "FIELD_MISSING": 20
+    }
+   },
+   "codes_by_attempt_and_class": {
+    "1": {
+     "inferable": {
+      "FIELD_MISSING": 6,
+      "VALUE_WITHOUT_CITATION": 1
+     },
+     "judgment": {
+      "FIELD_MISSING": 5,
+      "STEPS_MISSING": 1
+     },
+     "stated": {
+      "FIELD_MISSING": 9,
+      "VALUE_WITHOUT_CITATION": 2
+     }
+    },
+    "2": {
+     "inferable": {
+      "FIELD_MISSING": 6
+     },
+     "judgment": {
+      "FIELD_MISSING": 5
+     },
+     "stated": {
+      "FIELD_MISSING": 9
+     }
+    },
+    "3": {
+     "inferable": {
+      "FIELD_MISSING": 6
+     },
+     "judgment": {
+      "FIELD_MISSING": 5
+     },
+     "stated": {
+      "FIELD_MISSING": 9
+     }
+    }
+   },
+   "failed_by_attempt": {
+    "1": 24,
+    "2": 20,
+    "3": 20
+   },
+   "field_attempts": {
+    "1": 40,
+    "2": 20,
+    "3": 20
+   },
+   "policy": "identical_reissue",
+   "transitions_attempt1_to_2": {
+    "failed -> failed": 20
+   },
+   "transitions_by_class": {
+    "inferable": {
+     "failed -> failed": 6
+    },
+    "judgment": {
+     "failed -> failed": 5
+    },
+    "stated": {
+     "failed -> failed": 9
+    }
+   }
+  },
+  "sep03_1556": {
+   "attempt1_code_outcome_on_attempt2": {
+    "INFERENCE_MISSING": {
+     "still failing": 1
+    },
+    "STEPS_MISSING": {
+     "new on attempt 2": 1,
+     "still failing": 2
+    },
+    "STEP_WITHOUT_BASIS": {
+     "new on attempt 2": 3
+    },
+    "VALUE_WITHOUT_CITATION": {
+     "still failing": 18
+    }
+   },
+   "attempts_missing_a_whole_class": [],
+   "by_class": {
+    "inferable": {
+     "1": {
+      "INFERENCE_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 6,
+      "failed": 7,
+      "fields": 18
+     },
+     "2": {
+      "INFERENCE_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 6,
+      "failed": 7,
+      "fields": 18
+     },
+     "3": {
+      "INFERENCE_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 6,
+      "failed": 7,
+      "fields": 18
+     }
+    },
+    "judgment": {
+     "1": {
+      "STEPS_MISSING": 2,
+      "VALUE_WITHOUT_CITATION": 4,
+      "failed": 6,
+      "fields": 15
+     },
+     "2": {
+      "STEPS_MISSING": 3,
+      "STEP_WITHOUT_BASIS": 3,
+      "VALUE_WITHOUT_CITATION": 4,
+      "failed": 10,
+      "fields": 15
+     },
+     "3": {
+      "STEPS_MISSING": 3,
+      "STEP_WITHOUT_BASIS": 3,
+      "VALUE_WITHOUT_CITATION": 4,
+      "failed": 10,
+      "fields": 15
+     }
+    },
+    "stated": {
+     "1": {
+      "VALUE_WITHOUT_CITATION": 8,
+      "failed": 8,
+      "fields": 27
+     },
+     "2": {
+      "VALUE_WITHOUT_CITATION": 8,
+      "failed": 8,
+      "fields": 27
+     },
+     "3": {
+      "VALUE_WITHOUT_CITATION": 8,
+      "failed": 8,
+      "fields": 27
+     }
+    }
+   },
+   "by_field": {
+    "autonomy_level": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     },
+     "3": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "clinical_readiness_assessment": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 2,
+      "fields": 3
+     },
+     "3": {
+      "failed": 2,
+      "fields": 3
+     }
+    },
+    "comparison_to_human": {
+     "1": {
+      "failed": 3,
+      "fields": 3
+     },
+     "2": {
+      "failed": 3,
+      "fields": 3
+     },
+     "3": {
+      "failed": 3,
+      "fields": 3
+     }
+    },
+    "country": {
+     "1": {
+      "failed": 2,
+      "fields": 3
+     },
+     "2": {
+      "failed": 2,
+      "fields": 3
+     },
+     "3": {
+      "failed": 2,
+      "fields": 3
+     }
+    },
+    "key_limitation": {
+     "1": {
+      "failed": 2,
+      "fields": 3
+     },
+     "2": {
+      "failed": 3,
+      "fields": 3
+     },
+     "3": {
+      "failed": 3,
+      "fields": 3
+     }
+    },
+    "primary_outcome_metric": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     },
+     "3": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "primary_outcome_value": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     },
+     "3": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "robot_platform": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     },
+     "3": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "sample_size": {
+     "1": {
+      "failed": 2,
+      "fields": 3
+     },
+     "2": {
+      "failed": 2,
+      "fields": 3
+     },
+     "3": {
+      "failed": 2,
+      "fields": 3
+     }
+    },
+    "secondary_outcomes": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     },
+     "3": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "study_design": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 2,
+      "fields": 3
+     },
+     "3": {
+      "failed": 2,
+      "fields": 3
+     }
+    },
+    "study_type": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     },
+     "3": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "surgical_domain": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     },
+     "3": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "system_maturity": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 2,
+      "fields": 3
+     },
+     "3": {
+      "failed": 2,
+      "fields": 3
+     }
+    },
+    "task_execute": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     },
+     "3": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "task_generate": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     },
+     "3": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "task_monitor": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     },
+     "3": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "task_performed": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     },
+     "3": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "task_select": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     },
+     "3": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "validation_setting": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     },
+     "3": {
+      "failed": 0,
+      "fields": 3
+     }
+    }
+   },
+   "codes_by_attempt": {
+    "1": {
+     "INFERENCE_MISSING": 1,
+     "STEPS_MISSING": 2,
+     "VALUE_WITHOUT_CITATION": 18
+    },
+    "2": {
+     "INFERENCE_MISSING": 1,
+     "STEPS_MISSING": 3,
+     "STEP_WITHOUT_BASIS": 3,
+     "VALUE_WITHOUT_CITATION": 18
+    },
+    "3": {
+     "INFERENCE_MISSING": 1,
+     "STEPS_MISSING": 3,
+     "STEP_WITHOUT_BASIS": 3,
+     "VALUE_WITHOUT_CITATION": 18
+    }
+   },
+   "codes_by_attempt_and_class": {
+    "1": {
+     "inferable": {
+      "INFERENCE_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 6
+     },
+     "judgment": {
+      "STEPS_MISSING": 2,
+      "VALUE_WITHOUT_CITATION": 4
+     },
+     "stated": {
+      "VALUE_WITHOUT_CITATION": 8
+     }
+    },
+    "2": {
+     "inferable": {
+      "INFERENCE_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 6
+     },
+     "judgment": {
+      "STEPS_MISSING": 3,
+      "STEP_WITHOUT_BASIS": 3,
+      "VALUE_WITHOUT_CITATION": 4
+     },
+     "stated": {
+      "VALUE_WITHOUT_CITATION": 8
+     }
+    },
+    "3": {
+     "inferable": {
+      "INFERENCE_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 6
+     },
+     "judgment": {
+      "STEPS_MISSING": 3,
+      "STEP_WITHOUT_BASIS": 3,
+      "VALUE_WITHOUT_CITATION": 4
+     },
+     "stated": {
+      "VALUE_WITHOUT_CITATION": 8
+     }
+    }
+   },
+   "failed_by_attempt": {
+    "1": 21,
+    "2": 25,
+    "3": 25
+   },
+   "field_attempts": {
+    "1": 60,
+    "2": 60,
+    "3": 60
+   },
+   "policy": "identical_reissue",
+   "transitions_attempt1_to_2": {
+    "failed -> failed": 21,
+    "ok -> failed": 4,
+    "ok -> ok": 35
+   },
+   "transitions_by_class": {
+    "inferable": {
+     "failed -> failed": 7,
+     "ok -> ok": 11
+    },
+    "judgment": {
+     "failed -> failed": 6,
+     "ok -> failed": 4,
+     "ok -> ok": 5
+    },
+    "stated": {
+     "failed -> failed": 8,
+     "ok -> ok": 19
+    }
+   }
+  },
+  "sep05_0113": {
+   "attempt1_code_outcome_on_attempt2": {
+    "FIELD_MISSING": {
+     "fixed": 6
+    },
+    "INFERENCE_MISSING": {
+     "fixed": 1,
+     "new on attempt 2": 1
+    },
+    "STEPS_MISSING": {
+     "fixed": 2
+    },
+    "VALUE_WITHOUT_CITATION": {
+     "fixed": 11,
+     "new on attempt 2": 2
+    }
+   },
+   "attempts_missing_a_whole_class": [],
+   "by_class": {
+    "inferable": {
+     "1": {
+      "FIELD_MISSING": 1,
+      "INFERENCE_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 5,
+      "failed": 6,
+      "fields": 18
+     },
+     "2": {
+      "INFERENCE_MISSING": 1,
+      "failed": 1,
+      "fields": 18
+     }
+    },
+    "judgment": {
+     "1": {
+      "FIELD_MISSING": 4,
+      "STEPS_MISSING": 2,
+      "VALUE_WITHOUT_CITATION": 4,
+      "failed": 10,
+      "fields": 15
+     },
+     "2": {
+      "failed": 0,
+      "fields": 15
+     }
+    },
+    "stated": {
+     "1": {
+      "FIELD_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 2,
+      "failed": 3,
+      "fields": 27
+     },
+     "2": {
+      "VALUE_WITHOUT_CITATION": 2,
+      "failed": 2,
+      "fields": 27
+     }
+    }
+   },
+   "by_field": {
+    "autonomy_level": {
+     "1": {
+      "failed": 2,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "clinical_readiness_assessment": {
+     "1": {
+      "failed": 2,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "comparison_to_human": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "country": {
+     "1": {
+      "failed": 2,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "key_limitation": {
+     "1": {
+      "failed": 2,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "primary_outcome_metric": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "primary_outcome_value": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "robot_platform": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "sample_size": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "secondary_outcomes": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 1,
+      "fields": 3
+     }
+    },
+    "study_design": {
+     "1": {
+      "failed": 2,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "study_type": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "surgical_domain": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "system_maturity": {
+     "1": {
+      "failed": 2,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "task_execute": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "task_generate": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "task_monitor": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "task_performed": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "task_select": {
+     "1": {
+      "failed": 1,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    },
+    "validation_setting": {
+     "1": {
+      "failed": 0,
+      "fields": 3
+     },
+     "2": {
+      "failed": 0,
+      "fields": 3
+     }
+    }
+   },
+   "codes_by_attempt": {
+    "1": {
+     "FIELD_MISSING": 6,
+     "INFERENCE_MISSING": 1,
+     "STEPS_MISSING": 2,
+     "VALUE_WITHOUT_CITATION": 11
+    },
+    "2": {
+     "INFERENCE_MISSING": 1,
+     "VALUE_WITHOUT_CITATION": 2
+    }
+   },
+   "codes_by_attempt_and_class": {
+    "1": {
+     "inferable": {
+      "FIELD_MISSING": 1,
+      "INFERENCE_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 5
+     },
+     "judgment": {
+      "FIELD_MISSING": 4,
+      "STEPS_MISSING": 2,
+      "VALUE_WITHOUT_CITATION": 4
+     },
+     "stated": {
+      "FIELD_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 2
+     }
+    },
+    "2": {
+     "inferable": {
+      "INFERENCE_MISSING": 1
+     },
+     "stated": {
+      "VALUE_WITHOUT_CITATION": 2
+     }
+    }
+   },
+   "failed_by_attempt": {
+    "1": 19,
+    "2": 3
+   },
+   "field_attempts": {
+    "1": 60,
+    "2": 60
+   },
+   "policy": "feedback_retry",
+   "transitions_attempt1_to_2": {
+    "failed -> ok": 19,
+    "ok -> failed": 3,
+    "ok -> ok": 38
+   },
+   "transitions_by_class": {
+    "inferable": {
+     "failed -> ok": 6,
+     "ok -> failed": 1,
+     "ok -> ok": 11
+    },
+    "judgment": {
+     "failed -> ok": 10,
+     "ok -> ok": 5
+    },
+    "stated": {
+     "failed -> ok": 3,
+     "ok -> failed": 2,
+     "ok -> ok": 22
+    }
+   }
+  },
+  "sep05_0243": {
+   "attempt1_code_outcome_on_attempt2": {
+    "FIELD_MISSING": {
+     "fixed": 1
+    },
+    "INFERENCE_MISSING": {
+     "new on attempt 2": 1
+    },
+    "VALUE_WITHOUT_CITATION": {
+     "fixed": 2
+    }
+   },
+   "attempts_missing_a_whole_class": [],
+   "by_class": {
+    "inferable": {
+     "1": {
+      "failed": 0,
+      "fields": 6
+     },
+     "2": {
+      "INFERENCE_MISSING": 1,
+      "failed": 1,
+      "fields": 6
+     }
+    },
+    "judgment": {
+     "1": {
+      "failed": 0,
+      "fields": 5
+     },
+     "2": {
+      "failed": 0,
+      "fields": 5
+     }
+    },
+    "stated": {
+     "1": {
+      "FIELD_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 2,
+      "failed": 3,
+      "fields": 9
+     },
+     "2": {
+      "failed": 0,
+      "fields": 9
+     }
+    }
+   },
+   "by_field": {
+    "autonomy_level": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "clinical_readiness_assessment": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "comparison_to_human": {
+     "1": {
+      "failed": 1,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "country": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 1,
+      "fields": 1
+     }
+    },
+    "key_limitation": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "primary_outcome_metric": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "primary_outcome_value": {
+     "1": {
+      "failed": 1,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "robot_platform": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "sample_size": {
+     "1": {
+      "failed": 1,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "secondary_outcomes": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "study_design": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "study_type": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "surgical_domain": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "system_maturity": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "task_execute": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "task_generate": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "task_monitor": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "task_performed": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "task_select": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    },
+    "validation_setting": {
+     "1": {
+      "failed": 0,
+      "fields": 1
+     },
+     "2": {
+      "failed": 0,
+      "fields": 1
+     }
+    }
+   },
+   "codes_by_attempt": {
+    "1": {
+     "FIELD_MISSING": 1,
+     "VALUE_WITHOUT_CITATION": 2
+    },
+    "2": {
+     "INFERENCE_MISSING": 1
+    }
+   },
+   "codes_by_attempt_and_class": {
+    "1": {
+     "stated": {
+      "FIELD_MISSING": 1,
+      "VALUE_WITHOUT_CITATION": 2
+     }
+    },
+    "2": {
+     "inferable": {
+      "INFERENCE_MISSING": 1
+     }
+    }
+   },
+   "failed_by_attempt": {
+    "1": 3,
+    "2": 1
+   },
+   "field_attempts": {
+    "1": 20,
+    "2": 20
+   },
+   "policy": "feedback_retry",
+   "transitions_attempt1_to_2": {
+    "failed -> ok": 3,
+    "ok -> failed": 1,
+    "ok -> ok": 16
+   },
+   "transitions_by_class": {
+    "inferable": {
+     "ok -> failed": 1,
+     "ok -> ok": 5
+    },
+    "judgment": {
+     "ok -> ok": 5
+    },
+    "stated": {
+     "failed -> ok": 3,
+     "ok -> ok": 6
+    }
+   }
+  }
+ }
+}

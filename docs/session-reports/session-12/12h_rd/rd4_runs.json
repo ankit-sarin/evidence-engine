@@ -1,0 +1,144 @@
+{
+ "asserted_events": 177,
+ "asserted_payload_keys": {
+  "confidence": 177,
+  "context_chain": 177,
+  "parsed_text_sha256": 177,
+  "parsed_text_uid": 177,
+  "presented_context_sha256": 177,
+  "reuse_key": 177,
+  "rule_version": 177,
+  "state_at_write": 177
+ },
+ "claims_by_number_of_runs": {
+  "1": 88,
+  "2": 79,
+  "3": 10
+ },
+ "claims_citing_more_than_one_run": 89,
+ "later_run_units_resolvable_in_unit_map": "99 of 99",
+ "multi_run_by_field": {
+  "autonomy_level": {
+   "claims": 10,
+   "multi_run": 6
+  },
+  "clinical_readiness_assessment": {
+   "claims": 8,
+   "multi_run": 7
+  },
+  "comparison_to_human": {
+   "claims": 4,
+   "multi_run": 0
+  },
+  "country": {
+   "claims": 8,
+   "multi_run": 1
+  },
+  "key_limitation": {
+   "claims": 9,
+   "multi_run": 3
+  },
+  "primary_outcome_metric": {
+   "claims": 9,
+   "multi_run": 2
+  },
+  "primary_outcome_value": {
+   "claims": 7,
+   "multi_run": 2
+  },
+  "robot_platform": {
+   "claims": 11,
+   "multi_run": 5
+  },
+  "sample_size": {
+   "claims": 3,
+   "multi_run": 1
+  },
+  "secondary_outcomes": {
+   "claims": 8,
+   "multi_run": 1
+  },
+  "study_design": {
+   "claims": 9,
+   "multi_run": 7
+  },
+  "study_type": {
+   "claims": 10,
+   "multi_run": 1
+  },
+  "surgical_domain": {
+   "claims": 10,
+   "multi_run": 5
+  },
+  "system_maturity": {
+   "claims": 10,
+   "multi_run": 6
+  },
+  "task_execute": {
+   "claims": 10,
+   "multi_run": 7
+  },
+  "task_generate": {
+   "claims": 10,
+   "multi_run": 7
+  },
+  "task_monitor": {
+   "claims": 10,
+   "multi_run": 5
+  },
+  "task_performed": {
+   "claims": 11,
+   "multi_run": 9
+  },
+  "task_select": {
+   "claims": 9,
+   "multi_run": 6
+  },
+  "validation_setting": {
+   "claims": 11,
+   "multi_run": 8
+  }
+ },
+ "stored_snippet_equals_first_run": 177,
+ "telemetry_record_keys": [
+  "arm",
+  "attempt",
+  "error",
+  "extra",
+  "fields_expected",
+  "finish_reason",
+  "input_tokens",
+  "missing_fields",
+  "model",
+  "outcome",
+  "output_tokens",
+  "paper_id",
+  "parse_branch",
+  "pass1_done_reason",
+  "pass1_prompt_eval_count",
+  "pass2_prompt_eval_count",
+  "raw_content",
+  "raw_content_chars",
+  "raw_content_truncated",
+  "reasoning_tokens",
+  "salvage",
+  "schema",
+  "spans_parsed",
+  "thinking_chars",
+  "thinking_present",
+  "ts"
+ ],
+ "telemetry_rows_per_paper": {
+  "1": 12
+ },
+ "unit_map_file_keys": {
+  "min_unit_tokens": 12,
+  "n_units": 12,
+  "paper_id": 12,
+  "units": 12,
+  "version": 12
+ },
+ "units_cited_total": 295,
+ "units_in_later_runs_not_on_the_claim": 99,
+ "units_in_stored_first_runs": 196
+}

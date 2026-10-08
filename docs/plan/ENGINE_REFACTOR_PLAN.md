@@ -834,6 +834,21 @@ The engine's hot path is frozen. Sessions in this window touch only documents, s
 10. **A migration module is self-contained** (R35). From 018 onward it imports nothing from `engine/` that can change: the DDL, token lists and constants it needs are declared in the module, so editing a constant can never change what an already-applied migration meant. Where a token list is needed in both a migration and a reader, the reader imports it from a constants module, the migration re-declares it, and a test asserts the two agree.
 11. **A CHECK constraint is written as the states it permits, never as the state it excludes, and is tested with a NULL in every column it names — SQLite passes a CHECK that evaluates to NULL** (R79). Found in MANIFEST-01 Phase 2a: `CHECK (run_id IS NOT NULL OR run_marker = 'pre-manifest')` admitted a row with both columns NULL, and `CHECK (provider <> 'ollama' OR length(model_digest) = 64)` admitted an Ollama stage with no digest.
 
+### Core assumption discipline (R508–R510)
+
+*Added 2026-10-08 (12f item 0c). The plan carried no section of this name before this commit; the placement — directly after "Rules that hold across every session" — was chosen by the PI at 12f.*
+
+Defect classes (R508, engine-wide — any review, any entry path; all three fixed before the tag under X3).
+- Class 1 — integrity: can make any review's stored results, their provenance, or a human gate wrong or silent. Full process: Phase A where the mechanism is unread, ruling, tests on real state, mutation note.
+- Class 2 — function: a path fails loudly, refuses, or is unusable without corrupting anything. One brief, one commit, a conditional proceed; Phase A only if the fix's mechanism is unread.
+- Class 3 — wording, telemetry, docs, test hygiene: one batched pass before the tag — one brief, no Phase A, no per-item rulings.
+- Discovery is front-loaded (R509): a new finding after the 12f triage enters the list only with its class stated; a Phase A that finds an adjacent defect records it and stops, it does not chase it.
+- R510: every close records pre-tag rows in / out and counts by class.
+- Triage table columns: ID · source (existing row, rehearsal, internal review, outside A/B) · evidence level (reproduced / code order / conditional / not present at HEAD) · class · owning state · minimum loud-failure fix · full fix · acceptance test · size.
+- Outside findings are INFERRED until read at HEAD. A report written against an unknown snapshot is checked line by line before any class is assigned.
+- Make the silent failure loud first. Where a full fix is large, the first commit turns a silent wrong result into a refusal or a human review; the full fix follows in its own commit.
+- Stated guarantees are checked against behaviour — docstrings, generated methods text, and "refuses any …" claims.
+
 ### Retention ledger (R31)
 
 R31 says a retirement is recorded in a ledger and executed by the session that owns the artifact.
@@ -2029,6 +2044,8 @@ CC's own:
 
 **Session 12e closed.** Next, in order (X4, R503): item 0 (the lane line this close proposes); the startup verify; C56 Phase A, then STOP for a ruling; I20, C50, E-UNITMAP, E-ROOT, E-METHODS (with B23's methods fold-in, R447), E-TEST, C48, C49 (widened), B18 (Phase A first), C38, B12, A16; housekeeping (retirements, I21, the root `evidence_engine.db`, the 12c notes, the architecture docs describing the retired auditor, `with_model`'s docstring (12e_C54-A F6), the audit-review stop message (X2, R501)); the B18/B19 design (R206); then the migration session (023 unchanged, six items: C39, E-CALL, D22 with its writer and D23's refusal writer, D25, D26(b); 024: D14 after measuring); the freeze session (expected smoke end `('interrupted', "blocked:audit_review")`, no export — R496); tag `freshman`; then 12b, Run 7.
 
+*Addendum 2026-10-08 (12f item 0c; R511, R513), to the "Next" above:* R511 and R513 supersede R503's 12f order. Session 12f is the verification read: a targeted, read-only verification of every outside finding at HEAD, the C56 census, and one triage by class of every open pre-tag row, ending at a STOP for the PI's ruling on the triaged list. Session 12g holds the rehearsals (the elicited dress rehearsal and the front-half rehearsal). The "Next" paragraph is left as written.
+
 *Addendum 2026-10-06 (12e close, R496), to the R350 row:* "such a run ends at the audit-review gate as `('interrupted', "blocked:audit_review")` since C40" is corrected; the row is left as written. C40 gave the gate's stop its reason; it did not make the gate stop. On the validation review `PDF_ACQUISITION` is pending ahead of the audit stages, so until `49845c10e96379df247a3a0f3ca0e9abd487f15c` a `--skip-to extract` run passed the gate, exported and closed `completed` (row J6's 10b amendment; 12e_C58-A). Run 7 ends at the audit-review gate only from that commit.
 
 *Addendum 2026-10-06 (12e close, R496), to the R357 row:* a Run 7 manifest closed `('interrupted', "blocked:audit_review")` is complete, not resumable — it is how a run that extracted and audited now ends. Resume applies to a manifest closed `interrupted` with any other reason (`interrupt:SIGINT`, `interrupt:SIGTERM`, `interrupt:SIGHUP`), and to `failed` and `aborted` closes as before. The row is left as written.
@@ -2655,3 +2672,17 @@ Rulings R464–R506, transcribed at 12e-CLOSE in issue order: the 12e-OPEN brief
 | 2026-10-06 | R504 — **X5 — the reports committed (issued outside a block, in the 12e-CLOSE brief).** "The three Phase A reports (12e_C54-A.md, 12e_C55-A.md, 12e_C58-A.md) and collected_ids_12e.txt are committed at this close." *Transcribed:* committed at this closeout | PI |
 | 2026-10-06 | R505 — **X6 — the gate band (issued outside a block, in the 12e-CLOSE brief).** "Gate band: re-cut per I3's rule from this session's measured gates; if no rule is recorded, the proposed band is held for the wrap ruling and the 12f expectation reads "band per the 12e wrap"." *Transcribed:* a rule is recorded — R328, "The band is re-cut to the measured value ±5%", applied at the 12a re-cut to the closeout tree's gate ("722–798 s (the measured value ±5%)" of 760.00 s). Applied here to this closeout tree's gate: 803.11 s, band 763–843 s (803.11 × 0.95 = 762.95 and × 1.05 = 843.27, each rounded to the second). This session's five earlier gates ran 781.07–796.81 s | PI |
 | 2026-10-06 | R506 — **X7 — three lessons for the assumption discipline (issued outside a block, in the 12e-CLOSE brief).** "(a) a transcription that asserts runtime behaviour is a claim — check it against the row inventory (R350 vs J6); (b) a gate or guard tested only with a stub that names its own trigger has not been shown to fire on real state (C58); (c) a fix that removes a loud failure can unmask a silent one — probe downstream with the failure neutralised before fixing (C55 masked C57)." *Transcribed:* the closure's notes | Architect |
+
+## Decision log — between sessions 12e and 12f (2026-10-07)
+
+Rulings R507–R513 (Y1–Y7), each made by PI, 2026-10-07, in the architect conversation after the 12e close, and transcribed verbatim from the 12f brief at 12f item 0c (2026-10-08). "Definitions below" in R508 refers to the defect-class definitions, recorded at "Core assumption discipline (R508–R510)" in Step 4. The two outside assessments these rulings act on are committed as inputs under `docs/session-reports/session-12/outside/`.
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-07 | R507 — **Y1.** "X3 stands: pre-tag scope is the whole engine; every known defect is fixed before the tag." | PI, 2026-10-07, in the architect conversation after the 12e close |
+| 2026-10-07 | R508 — **Y2.** "Defect classes, engine-wide, set the *process*, not the scope: Class 1 integrity, Class 2 function, Class 3 wording/telemetry/docs/test hygiene in one batched pass (definitions below)." | PI, 2026-10-07, in the architect conversation after the 12e close |
+| 2026-10-07 | R509 — **Y3.** "Discovery before fixing; one triage of every open pre-tag row and finding into classes; the PI rules the list once." | PI, 2026-10-07, in the architect conversation after the 12e close |
+| 2026-10-07 | R510 — **Y4.** "Each close records pre-tag rows in / out and counts by class." | PI, 2026-10-07, in the architect conversation after the 12e close |
+| 2026-10-07 | R511 — **Y5.** "12f opens with a targeted, read-only verification of every outside finding at HEAD; the pre-tag list and roadmap are rebuilt from the result. Supersedes R503's 12f order and v74's parts A–C for 12f." | PI, 2026-10-07, in the architect conversation after the 12e close |
+| 2026-10-07 | R512 — **Y6.** "Every confirmed outside finding is fixed before the tag, including those outside *freshman*'s former claims: F06 (search ledger and PRISMA identification), F09 (export packaging) and F10 (acquisition limits). Architect note recorded: none of these three changes Run 7's extraction inputs, so none forces a Run 8 on its own — the ruling stands on engine quality; it lengthens the road to the tag." | PI, 2026-10-07, in the architect conversation after the 12e close |
+| 2026-10-07 | R513 — **Y7.** "The engine comes before Run 7. The elicited dress rehearsal and front-half rehearsal move to 12g, after the read. Run 7 has no schedule pressure." | PI, 2026-10-07, in the architect conversation after the 12e close |

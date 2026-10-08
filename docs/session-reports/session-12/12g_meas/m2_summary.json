@@ -1,0 +1,243 @@
+{
+ "advertised_total_fields_in_stats_json": [],
+ "advertised_total_or_pagination_columns_in_any_file": [],
+ "arithmetic": {
+  "10000 - openalex_total": 581,
+  "== duplicates_removed": true,
+  "equals unique_total": true,
+  "minus duplicates_removed": 10038,
+  "net_new_csv_records == net_new": true,
+  "openalex_total - results_csv openalex": 469,
+  "openalex_total < 10000": true,
+  "openalex_total mod 200 (per-page size)": 19,
+  "pubmed_total + openalex_total": 10507,
+  "results_csv pubmed == pubmed_total": true,
+  "results_csv_records == unique_total": true,
+  "unique_total - overlap_with_existing == net_new": true
+ },
+ "files": {
+  "abstracts.jsonl": {
+   "by_source": {
+    "openalex": 8719,
+    "pubmed": 1068
+   },
+   "bytes": 14243306,
+   "columns": [
+    "abstract",
+    "doi",
+    "journal",
+    "key",
+    "pmid",
+    "source",
+    "title",
+    "year"
+   ],
+   "mtime_utc": "2026-03-08T09:10:41.177715+00:00",
+   "records": 9787,
+   "sha256": "ab21456aa9412cb051caa92fc92ce4a03d360c0f83d1c1104bf7b2942b8fbe56"
+  },
+  "expanded_search_results.csv": {
+   "by_source": {
+    "openalex": 8950,
+    "pubmed": 1088
+   },
+   "bytes": 1708936,
+   "columns": [
+    "doi",
+    "journal",
+    "pmid",
+    "source",
+    "title",
+    "year"
+   ],
+   "mtime_utc": "2026-03-08T07:54:22.964983+00:00",
+   "records": 10038,
+   "sha256": "939aca46d5fdccfc4c230cb3cab8a3f824c79564a03456f02f9b0ad483d1b6fe"
+  },
+  "net_new_papers.csv": {
+   "by_source": {
+    "openalex": 8719,
+    "pubmed": 1068
+   },
+   "bytes": 1668514,
+   "columns": [
+    "doi",
+    "journal",
+    "pmid",
+    "source",
+    "title",
+    "year"
+   ],
+   "mtime_utc": "2026-03-08T07:54:23.005808+00:00",
+   "records": 9787,
+   "sha256": "8c7eb75641a0677a4f5950b27157243658e12a8a2fba7b6ca0b52a4f11fb27e1"
+  },
+  "rescreen_original_251.csv": {
+   "bytes": 264470,
+   "mtime_utc": "2026-03-08T15:53:55.584821+00:00",
+   "records": 251,
+   "sha256": "651564313a46c3b3a8c8d51802392c362fa1a5238af4517c5800b3c106547f65"
+  },
+  "screening_progress.json": {
+   "bytes": 405952,
+   "mtime_utc": "2026-03-09T15:16:18.947288+00:00",
+   "sha256": "2b0bcf7df84faac59fb735c2ab9b07ee59f9035e8d217a0293225fd517b8b1e9"
+  },
+  "screening_results.csv": {
+   "by_source": {
+    "openalex": 8719,
+    "pubmed": 1068
+   },
+   "bytes": 9054854,
+   "columns": [
+    "doi",
+    "has_abstract",
+    "journal",
+    "pass1_confidence",
+    "pass1_decision",
+    "pass1_rationale",
+    "pass2_confidence",
+    "pass2_decision",
+    "pass2_rationale",
+    "pmid",
+    "screening_decision",
+    "source",
+    "title",
+    "year"
+   ],
+   "mtime_utc": "2026-03-09T15:16:18.938287+00:00",
+   "records": 9787,
+   "sha256": "c7c5f2128d683b38d9141636dec2fd4e4e58009f54577106110e053de75c258c"
+  },
+  "stats.json": {
+   "bytes": 157,
+   "content": {
+    "duplicates_removed": 469,
+    "net_new": 9787,
+    "openalex_total": 9419,
+    "overlap_with_existing": 251,
+    "pubmed_total": 1088,
+    "unique_total": 10038
+   },
+   "mtime_utc": "2026-03-08T07:54:23.005880+00:00",
+   "sha256": "409464f5f78317ddef55fcf98cdadd65548c4e55892850391b80546668c70658"
+  },
+  "verification_progress.json": {
+   "bytes": 38497,
+   "mtime_utc": "2026-03-09T17:54:43.046146+00:00",
+   "sha256": "1004415f6cbda7cfb2e7696192057bfc3c1ed63296ebb7c0f90542ba69a2b38a"
+  },
+  "verification_results.csv": {
+   "by_source": {
+    "openalex": 642,
+    "pubmed": 316
+   },
+   "bytes": 603807,
+   "columns": [
+    "doi",
+    "final_decision",
+    "journal",
+    "pmid",
+    "primary_decision",
+    "source",
+    "title",
+    "verification_confidence",
+    "verification_decision",
+    "verification_rationale",
+    "year"
+   ],
+   "mtime_utc": "2026-03-09T17:54:43.045146+00:00",
+   "records": 958,
+   "sha256": "39c4543b198ed661ff6403815e4349d7c9a8b955fb815a515891c61bc4cb669e"
+  }
+ },
+ "generated_utc": "2026-10-08T17:42:41.061511+00:00",
+ "live": {
+  "by_source": {
+   "hand-search": 1,
+   "openalex": 8964,
+   "pubmed": 1074
+  },
+  "created_at_by_day": {
+   "2026-02-28": 251,
+   "2026-03-12": 9788
+  },
+  "papers": 10039
+ },
+ "live_ids_gt_251_by_source": {
+  "hand-search": 1,
+  "openalex": 8719,
+  "pubmed": 1068
+ },
+ "live_ids_le_251_by_source": {
+  "openalex": 245,
+  "pubmed": 6
+ },
+ "live_papers_matching_no_results_csv_row": {
+  "by_source": {
+   "hand-search": 1
+  },
+  "count": 1,
+  "ids": [
+   605
+  ],
+  "ids_le_251": 0
+ },
+ "openalex_records_in_results_csv": {
+  "empty_doi": 400,
+  "empty_title": 0,
+  "records": 8950,
+  "with_pmid": 3151,
+  "year_max": "2025",
+  "year_min": "2010"
+ },
+ "stats_json": {
+  "duplicates_removed": 469,
+  "net_new": 9787,
+  "openalex_total": 9419,
+  "overlap_with_existing": 251,
+  "pubmed_total": 1088,
+  "unique_total": 10038
+ },
+ "trace_net_new_csv_to_live": {
+  "distinct_live_ids": 9787,
+  "file_source_vs_live_source": {
+   "openalex->openalex": 8719,
+   "pubmed->pubmed": 1068
+  },
+  "found_on_live": 9787,
+  "live_source_of_found": {
+   "openalex": 8719,
+   "pubmed": 1068
+  },
+  "not_found_on_live": 0,
+  "records": 9787
+ },
+ "trace_openalex_rows_of_results_csv_to_live": {
+  "distinct_live_ids": 8950,
+  "file_source_vs_live_source": {
+   "openalex->openalex": 8950
+  },
+  "found_on_live": 8950,
+  "live_source_of_found": {
+   "openalex": 8950
+  },
+  "not_found_on_live": 0,
+  "records": 8950
+ },
+ "trace_results_csv_to_live": {
+  "distinct_live_ids": 10038,
+  "file_source_vs_live_source": {
+   "openalex->openalex": 8950,
+   "pubmed->openalex": 14,
+   "pubmed->pubmed": 1074
+  },
+  "found_on_live": 10038,
+  "live_source_of_found": {
+   "openalex": 8964,
+   "pubmed": 1074
+  },
+  "not_found_on_live": 0,
+  "records": 10038
+ }
+}

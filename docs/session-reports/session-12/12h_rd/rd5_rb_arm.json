@@ -1,0 +1,147 @@
+{
+ "live": {
+  "arms": [
+   {
+    "arm_kind": "model",
+    "arm_name": "local",
+    "configuration_marker": "not recorded (pre-manifest)",
+    "pinned_run_id": null,
+    "pinned_sha256": null,
+    "retired_at": null
+   },
+   {
+    "arm_kind": "model",
+    "arm_name": "anthropic_sonnet_4_6",
+    "configuration_marker": "not recorded (pre-manifest)",
+    "pinned_run_id": null,
+    "pinned_sha256": null,
+    "retired_at": null
+   },
+   {
+    "arm_kind": "model",
+    "arm_name": "openai_o4_mini_high",
+    "configuration_marker": "not recorded (pre-manifest)",
+    "pinned_run_id": null,
+    "pinned_sha256": null,
+    "retired_at": null
+   }
+  ],
+  "workflow_ABSTRACT_ADJUDICATION_COMPLETE": "complete"
+ },
+ "rb_12g": {
+  "arms": [
+   {
+    "arm_kind": "model",
+    "arm_name": "local_deepseek_r1_32b",
+    "configuration_marker": "pinned",
+    "pinned_run_id": 2,
+    "pinned_sha256": "defd293bfe62e427b906e072dcf56d0ca6e321e7d1ca4ad1fde3758fb84f3e6e",
+    "retired_at": null
+   }
+  ],
+  "field_events": 0,
+  "field_events_on_the_pinned_arm": 0,
+  "pinned_configuration_stage_keys": [
+   "extract_pass1",
+   "extract_pass2",
+   "extract_retry_snippet"
+  ],
+  "pinned_configuration_top_keys": [
+   "arm_kind",
+   "client_library",
+   "codebook_hash",
+   "model",
+   "provider",
+   "stages"
+  ],
+  "run_manifests": [
+   {
+    "end_reason": null,
+    "end_status": "completed",
+    "run_id": 1,
+    "run_kind": "import"
+   },
+   {
+    "end_reason": "blocked:adjudication",
+    "end_status": "interrupted",
+    "run_id": 2,
+    "run_kind": "extraction"
+   }
+  ],
+  "stage_rows": [
+   {
+    "arm_name": null,
+    "calls": 84,
+    "model": "qwen3:8b",
+    "run_id": 2,
+    "stage": "abstract_screen_primary"
+   },
+   {
+    "arm_name": null,
+    "calls": 0,
+    "model": "gemma3:27b",
+    "run_id": 2,
+    "stage": "abstract_screen_verifier"
+   },
+   {
+    "arm_name": null,
+    "calls": 0,
+    "model": "gemma3:27b",
+    "run_id": 2,
+    "stage": "audit"
+   },
+   {
+    "arm_name": "local_deepseek_r1_32b",
+    "calls": 0,
+    "model": "deepseek-r1:32b",
+    "run_id": 2,
+    "stage": "extract_pass1"
+   },
+   {
+    "arm_name": "local_deepseek_r1_32b",
+    "calls": 0,
+    "model": "deepseek-r1:32b",
+    "run_id": 2,
+    "stage": "extract_pass2"
+   },
+   {
+    "arm_name": "local_deepseek_r1_32b",
+    "calls": 0,
+    "model": "deepseek-r1:32b",
+    "run_id": 2,
+    "stage": "extract_retry_snippet"
+   },
+   {
+    "arm_name": null,
+    "calls": 0,
+    "model": "deepseek-r1:32b",
+    "run_id": 2,
+    "stage": "preflight:deepseek-r1:32b"
+   },
+   {
+    "arm_name": null,
+    "calls": 0,
+    "model": "gemma3:27b",
+    "run_id": 2,
+    "stage": "preflight:gemma3:27b"
+   },
+   {
+    "arm_name": null,
+    "calls": 1,
+    "model": "qwen3:8b",
+    "run_id": 2,
+    "stage": "preflight:qwen3:8b"
+   },
+   {
+    "arm_name": null,
+    "calls": 0,
+    "model": "qwen2.5vl:7b",
+    "run_id": 2,
+    "stage": "vision_parse"
+   }
+  ],
+  "stage_rows_declared": 10,
+  "stage_rows_naming_an_arm": 3,
+  "stage_rows_with_calls": 2
+ }
+}

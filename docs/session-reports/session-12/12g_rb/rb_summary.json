@@ -1,0 +1,94 @@
+{
+ "abstract_screen_primary_config": {
+  "options": {
+   "temperature": 0
+  },
+  "sent_keys": [
+   "format",
+   "keep_alive",
+   "messages",
+   "model",
+   "options",
+   "think"
+  ]
+ },
+ "by_stratum": {
+  "abstract under 200 characters (E5)": 2,
+  "both passes exclude": 12,
+  "both passes include, excluded later at abstract (verifier or PI)": 4,
+  "included at abstract, eligible today": 10,
+  "included at abstract, excluded at full text": 6,
+  "longest abstracts": 2,
+  "no abstract (E5)": 2,
+  "passes disagreed": 4
+ },
+ "declared_stages_for_skip_to_screen": [
+  "abstract_screen_primary",
+  "abstract_screen_verifier",
+  "vision_parse",
+  "extract_pass1",
+  "extract_pass2",
+  "extract_retry_snippet",
+  "audit",
+  "preflight"
+ ],
+ "live_abstract_chars": {
+  "empty": 1595,
+  "max": 27606,
+  "median": 1166,
+  "under_200": 309
+ },
+ "march_seconds_between_decisions": {
+  "max": 6.36,
+  "median": 2.85,
+  "n": 1798,
+  "p90": 3.56
+ },
+ "n": 42,
+ "papers_with_decisions": 10039,
+ "pin_live_spec": "defd293bfe62e427b906e072dcf56d0ca6e321e7d1ca4ad1fde3758fb84f3e6e",
+ "pin_throwaway_review_id_rb_12g": "defd293bfe62e427b906e072dcf56d0ca6e321e7d1ca4ad1fde3758fb84f3e6e",
+ "pins_equal": true,
+ "preflight_models": [
+  "deepseek-r1:32b",
+  "gemma3:27b",
+  "qwen3:8b"
+ ],
+ "run_kind": "extraction",
+ "run_stage_configs_rows_expected": [
+  "abstract_screen_primary",
+  "abstract_screen_verifier",
+  "audit",
+  "extract_pass1",
+  "extract_pass2",
+  "extract_retry_snippet",
+  "preflight:deepseek-r1:32b",
+  "preflight:gemma3:27b",
+  "preflight:qwen3:8b",
+  "vision_parse"
+ ],
+ "screening_primary_model": "qwen3:8b",
+ "stage_models": {
+  "abstract_screen_primary": "qwen3:8b",
+  "abstract_screen_verifier": "gemma3:27b",
+  "audit": "gemma3:27b",
+  "extract_pass1": "deepseek-r1:32b",
+  "extract_pass2": "deepseek-r1:32b",
+  "extract_retry_snippet": "deepseek-r1:32b",
+  "vision_parse": "qwen2.5vl:7b"
+ },
+ "stages_of_the_arm": [
+  "extract_pass1",
+  "extract_pass2",
+  "extract_retry_snippet"
+ ],
+ "strata_population": {
+  "abstract under 200 characters (E5)": 309,
+  "both passes exclude": 6593,
+  "both passes include, excluded later at abstract (verifier or PI)": 406,
+  "included at abstract, eligible today": 175,
+  "included at abstract, excluded at full text": 155,
+  "no abstract (E5)": 1595,
+  "passes disagreed": 16
+ }
+}

@@ -1,0 +1,43 @@
+throwaway_paper_id,live_paper_id,stratum,abstract_chars,title_chars,has_pmid,has_doi,march_pass1,march_pass2,march_verifier,pi_reason_recorded,live_status_today
+1,1,both passes exclude,1762,117,1,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+2,5,"included at abstract, excluded at full text",1006,95,1,1,include,include,include,0,FT_SCREENED_OUT
+3,9,"included at abstract, eligible today",1788,66,1,1,include,include,include,0,AI_AUDIT_COMPLETE
+4,18,"both passes include, excluded later at abstract (verifier or PI)",1251,90,0,1,include,include,exclude,0,ABSTRACT_SCREENED_OUT
+5,21,no abstract (E5),0,114,0,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+6,95,abstract under 200 characters (E5),147,81,1,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+7,281,"included at abstract, eligible today",1497,99,1,1,include,include,include,0,AI_AUDIT_COMPLETE
+8,361,"included at abstract, excluded at full text",1951,100,1,1,include,include,include,0,FT_SCREENED_OUT
+9,382,passes disagreed,1412,62,1,1,include,exclude,include,0,ABSTRACT_SCREENED_OUT
+10,400,"included at abstract, eligible today",1227,120,1,1,include,include,include,0,AI_AUDIT_COMPLETE
+11,463,"included at abstract, eligible today",1113,110,0,1,include,include,include,0,AI_AUDIT_COMPLETE
+12,494,"included at abstract, excluded at full text",1147,64,0,1,include,include,include,0,FT_SCREENED_OUT
+13,497,"included at abstract, eligible today",886,112,0,1,include,include,include,0,AI_AUDIT_COMPLETE
+14,538,"included at abstract, eligible today",1759,114,0,1,include,include,include,0,AI_AUDIT_COMPLETE
+15,563,"included at abstract, excluded at full text",1429,120,0,1,include,include,include,0,FT_SCREENED_OUT
+16,577,"included at abstract, eligible today",810,74,0,1,include,include,include,0,AI_AUDIT_COMPLETE
+17,639,"included at abstract, eligible today",1364,127,0,1,include,include,include,0,AI_AUDIT_COMPLETE
+18,656,"included at abstract, excluded at full text",1498,48,1,1,include,include,include,0,FT_SCREENED_OUT
+19,699,"included at abstract, eligible today",1399,76,0,1,include,include,include,0,AI_AUDIT_COMPLETE
+20,801,"included at abstract, eligible today",1774,101,1,1,include,include,include,0,AI_AUDIT_COMPLETE
+21,803,"included at abstract, excluded at full text",1334,82,1,1,include,include,include,0,FT_SCREENED_OUT
+22,998,passes disagreed,1568,118,1,1,exclude,include,,1,ABSTRACT_SCREENED_OUT
+23,1321,both passes exclude,1503,111,1,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+24,1654,"both passes include, excluded later at abstract (verifier or PI)",1044,72,0,1,include,include,exclude,1,ABSTRACT_SCREENED_OUT
+25,2000,longest abstracts,26352,72,1,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+26,2102,passes disagreed,2127,87,1,1,include,exclude,,1,ABSTRACT_SCREENED_OUT
+27,2198,both passes exclude,2785,35,0,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+28,2969,both passes exclude,1325,113,0,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+29,2976,longest abstracts,27606,88,1,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+30,3273,"both passes include, excluded later at abstract (verifier or PI)",1867,132,1,1,include,include,exclude,1,ABSTRACT_SCREENED_OUT
+31,3721,both passes exclude,925,83,0,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+32,4455,both passes exclude,1290,157,0,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+33,5188,both passes exclude,1381,149,1,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+34,5916,both passes exclude,1000,68,1,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+35,6668,both passes exclude,1647,198,1,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+36,7380,both passes exclude,1226,123,1,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+37,8121,both passes exclude,2157,88,0,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+38,8754,abstract under 200 characters (E5),1,108,0,1,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+39,9682,passes disagreed,780,104,1,0,exclude,include,,1,ABSTRACT_SCREENED_OUT
+40,9688,"both passes include, excluded later at abstract (verifier or PI)",2244,103,1,0,include,include,exclude,1,ABSTRACT_SCREENED_OUT
+41,9719,both passes exclude,1040,59,1,0,exclude,exclude,,0,ABSTRACT_SCREENED_OUT
+42,10039,no abstract (E5),0,113,0,0,exclude,exclude,,0,ABSTRACT_SCREENED_OUT

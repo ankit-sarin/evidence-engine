@@ -1,0 +1,722 @@
+{
+ "commits_adding_or_removing_def_screen_paper": [
+  "e2adff3 2026-09-13 feat(eval): SCREEN-AUTH-01 Phase 2f three-arm abstract-screening smoke harness",
+  "b50ffba 2026-02-23 A5: Dual-pass screening agent"
+ ],
+ "commits_touching_file": 15,
+ "distinct_states": 5,
+ "every_screen_paper_call_line_ever_added": [
+  {
+   "first_added": "e2adff3 2026-09-13",
+   "line": "d = screener.screen_paper(paper, spec, pass_number=1, model=model, role=\"verifier\")"
+  },
+  {
+   "first_added": "e2adff3 2026-09-13",
+   "line": "d = screener.screen_paper(paper, spec, pass_number=pass_number, model=model)"
+  },
+  {
+   "first_added": "b50ffba 2026-02-23",
+   "line": "d1 = screen_paper(paper, spec, pass_number=1)"
+  },
+  {
+   "first_added": "ff35fdf 2026-03-08",
+   "line": "d1 = screen_paper(paper, spec, pass_number=1, model=primary_model)"
+  },
+  {
+   "first_added": "d5fa5bc 2026-03-13",
+   "line": "d1 = screen_paper(paper, spec, pass_number=RESCREEN_PASS1, model=primary_model, role=\"primary\")"
+  },
+  {
+   "first_added": "92d2f02 2026-03-08",
+   "line": "d1 = screen_paper(paper_dict, spec, pass_number=1)"
+  },
+  {
+   "first_added": "b50ffba 2026-02-23",
+   "line": "d2 = screen_paper(paper, spec, pass_number=2)"
+  },
+  {
+   "first_added": "ff35fdf 2026-03-08",
+   "line": "d2 = screen_paper(paper, spec, pass_number=2, model=primary_model)"
+  },
+  {
+   "first_added": "d5fa5bc 2026-03-13",
+   "line": "d2 = screen_paper(paper, spec, pass_number=RESCREEN_PASS2, model=primary_model, role=\"primary\")"
+  },
+  {
+   "first_added": "92d2f02 2026-03-08",
+   "line": "d2 = screen_paper(paper_dict, spec, pass_number=2)"
+  },
+  {
+   "first_added": "d5fa5bc 2026-03-13",
+   "line": "decision = screen_paper("
+  },
+  {
+   "first_added": "ff35fdf 2026-03-08",
+   "line": "decision = screen_paper(paper, spec, pass_number=1, model=verification_model)"
+  },
+  {
+   "first_added": "234125c 2026-03-09",
+   "line": "decision = screen_paper(paper, spec, pass_number=1, model=verification_model, role=\"verifier\")"
+  },
+  {
+   "first_added": "234125c 2026-03-09",
+   "line": "decision = screen_paper(paper_dict, spec, pass_number=1, model=verification_model, role=\"verifier\")"
+  },
+  {
+   "first_added": "b50ffba 2026-02-23",
+   "line": "result = screen_paper(paper, spec, pass_number=1)"
+  },
+  {
+   "first_added": "e2adff3 2026-09-13",
+   "line": "screener.screen_paper(dict(lib.PLACEHOLDER_PAPER), spec, 1)"
+  },
+  {
+   "first_added": "e2adff3 2026-09-13",
+   "line": "screener.screen_paper(dict(lib.PLACEHOLDER_PAPER), spec, 2, role=\"verifier\")"
+  },
+  {
+   "first_added": "e2adff3 2026-09-13",
+   "line": "screener.screen_paper(dict(lib.PLACEHOLDER_PAPER), spec, pn, role=role)"
+  },
+  {
+   "first_added": "1cd80a4 2026-09-22",
+   "line": "screener.screen_paper(paper, spec, 1, model=spec.screening_models.primary, role=\"primary\")"
+  },
+  {
+   "first_added": "1cd80a4 2026-09-22",
+   "line": "screener.screen_paper(paper, spec, 2, model=spec.screening_models.verification,"
+  },
+  {
+   "first_added": "1cd80a4 2026-09-22",
+   "line": "screener.screen_paper({\"title\": \"T\", \"abstract\": \"A\"}, spec, 1)"
+  }
+ ],
+ "pass_number_ever_read_in_screen_paper": false,
+ "path": "engine/agents/screener.py",
+ "per_commit": [
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1)",
+      "screen_paper(paper, spec, pass_number=2)"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama.chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "MODEL",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "b50ffba8ee171fe00ef85fb6e85a91fe98ac6c09",
+   "date": "2026-02-23T04:09:06+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "A5: Dual-pass screening agent",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1)",
+      "screen_paper(paper, spec, pass_number=2)"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama.chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "MODEL",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "92d2f0213a64e2ec937fdf2768e4c556bf81edad",
+   "date": "2026-03-08T08:26:45+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "Add checkpoint/resume to screening pipeline",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model)"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama.chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "ff35fdf25bd7d7939b26dd48de5e925076c45d5d",
+   "date": "2026-03-08T16:07:59+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "feat: dual-model screening verification + tmux background mode for long-running jobs",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model)"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama.chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "6d28a67cef470fb97996e4d37451f1e42e0be315",
+   "date": "2026-03-09T01:01:38+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "fix: tighten screening criteria to reduce 38% false positive rate",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama.chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "234125ce988ff05e8e380ab3336fbddb15eacbc8",
+   "date": "2026-03-09T01:55:54+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "fix: role-aware screening prompts \u2014 primary (high-recall) + verifier (strict)",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama.chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "0944372a8ec086f228ccf72fc0b908568eb7b009",
+   "date": "2026-03-10T07:22:10+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "feat: 9-stage workflow, audit adjudication, min_status exports, gemma3:27b default auditor",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama.chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "c21ad34f8cfb7b1564796b607b3888d19dd5fc2d",
+   "date": "2026-03-13T00:27:44+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "Engine v2: dual-stage screening architecture, full backfill, LOW_YIELD",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama.chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "d5fa5bcb0ff5936e30963777641f3824c89404f2",
+   "date": "2026-03-13T01:02:26+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "docs: architecture v19 \u2014 dual-stage screening, FT pipeline, LOW_YIELD",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama_chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "8ba20bb49ebcd623146dff0319efa21ed6f974ab",
+   "date": "2026-03-14T21:21:33+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "feat: Ollama watchdog \u2014 shared client with HTTP timeouts and wall-clock guard",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama_chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "b1ef2cbbd6505c684276e5d88a6e1785461b5694",
+   "date": "2026-03-19T05:16:37+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "feat: engine hardening \u2014 codebase audit fixes (Batches 1-7)",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama_chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "e124b20b04f1befbdbeabc27b233acd114140578",
+   "date": "2026-03-19T16:28:34+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "feat: engine hardening \u2014 codebase audit fixes (Batches 8-10)",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama_chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "521b92a1aa37e5360611374b1205b51a336320ce",
+   "date": "2026-09-12T21:56:33+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "feat(screening): one eligibility authority, and a renderer that proves it",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama_chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "e9c4aa0a0b45490b486b21c941db5f88259ebf13",
+   "date": "2026-09-12T22:15:56+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "feat(screening): the identity gate covers the whole request, not half of it",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama_chat",
+     "keywords": {
+      "format": "ScreeningDecision.model_json_schema()",
+      "model": "model",
+      "options": "{'temperature': 0}",
+      "think": "False"
+     }
+    }
+   ],
+   "commit": "a01ab476d12a4d023f42292c1cd56fa127c61828",
+   "date": "2026-09-13T00:07:13+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "feat(screening): fold the eligibility authority to one canonical wording",
+   "temperature_mentions": 1
+  },
+  {
+   "callers_in_file": [
+    {
+     "function": "run_screening",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=primary_model)",
+      "screen_paper(paper, spec, pass_number=2, model=primary_model)"
+     ]
+    },
+    {
+     "function": "run_verification",
+     "screen_paper_calls": [
+      "screen_paper(paper, spec, pass_number=1, model=verification_model, role='verifier')"
+     ]
+    }
+   ],
+   "chat_calls": [
+    {
+     "callee": "ollama_chat",
+     "keywords": {
+      "**": "cfg.kwargs()"
+     }
+    }
+   ],
+   "commit": "1cd80a498b3894378847d1a7c54702b501f10285",
+   "date": "2026-09-22T21:27:58+00:00",
+   "params": [
+    "paper",
+    "spec",
+    "pass_number",
+    "model",
+    "role"
+   ],
+   "pass_number_reads_in_body": 0,
+   "seed_mentions": 0,
+   "subject": "feat(manifest): MANIFEST-01 Phase 2a \u2014 resolver, capture instrument, run manifest, arm pinning, cloud opt-in",
+   "temperature_mentions": 0
+  }
+ ],
+ "screen_paper_call_sites_at_HEAD": [
+  "analysis/eval/screen2f_worker.py:124:                    d = screener.screen_paper(paper, spec, pass_number=pass_number, model=model)",
+  "analysis/eval/screen2f_worker.py:126:                    d = screener.screen_paper(paper, spec, pass_number=1, model=model, role=\"verifier\")",
+  "analysis/eval/screen2f_worker.py:185:                    screener.screen_paper(dict(lib.PLACEHOLDER_PAPER), spec, 1)",
+  "analysis/eval/screen2f_worker.py:187:                    screener.screen_paper(dict(lib.PLACEHOLDER_PAPER), spec, 2, role=\"verifier\")",
+  "engine/agents/ft_screener.py:210:def ft_screen_paper(paper_text: str, spec: ReviewSpec) -> tuple[FTScreeningDecision, str]:",
+  "engine/agents/ft_screener.py:373:            decision, request_hash = ft_screen_paper(truncated, spec)",
+  "engine/agents/screener.py:105:def screen_paper(",
+  "engine/agents/screener.py:195:            d1 = screen_paper(paper, spec, pass_number=1, model=primary_model)",
+  "engine/agents/screener.py:199:            d2 = screen_paper(paper, spec, pass_number=2, model=primary_model)",
+  "engine/agents/screener.py:284:            decision = screen_paper(paper, spec, pass_number=1, model=verification_model, role=\"verifier\")",
+  "scripts/ft_screening_smoke_test.py:101:            decision = ft_screen_paper(truncated, spec)",
+  "scripts/rescreen_original_251.py:86:        d1 = screen_paper(paper_dict, spec, pass_number=1)",
+  "scripts/rescreen_original_251.py:87:        d2 = screen_paper(paper_dict, spec, pass_number=2)",
+  "scripts/rescreen_with_specialty.py:167:            d1 = screen_paper(paper, spec, pass_number=RESCREEN_PASS1, model=primary_model, role=\"primary\")",
+  "scripts/rescreen_with_specialty.py:174:            d2 = screen_paper(paper, spec, pass_number=RESCREEN_PASS2, model=primary_model, role=\"primary\")",
+  "scripts/rescreen_with_specialty.py:274:            decision = screen_paper(",
+  "scripts/screen_expanded.py:265:            d1 = screen_paper(paper_dict, spec, pass_number=1)",
+  "scripts/screen_expanded.py:266:            d2 = screen_paper(paper_dict, spec, pass_number=2)",
+  "scripts/screen_expanded.py:407:            decision = screen_paper(paper_dict, spec, pass_number=1, model=verification_model, role=\"verifier\")",
+  "tests/test_request_capture.py:188:    screener.screen_paper(paper, spec, 1, model=spec.screening_models.primary, role=\"primary\")",
+  "tests/test_request_capture.py:189:    screener.screen_paper(paper, spec, 2, model=spec.screening_models.verification,",
+  "tests/test_request_capture.py:206:    ft_screener.ft_screen_paper(\"Title: T\\n\\nAbstract: A\", spec)",
+  "tests/test_request_capture.py:409:    screener.screen_paper({\"title\": \"T\", \"abstract\": \"A\"}, spec, 1)",
+  "tests/test_screen2f_armsets.py:175:            screener.screen_paper(dict(lib.PLACEHOLDER_PAPER), spec, pn, role=role)",
+  "tests/test_screen2f_harness.py:322:def screen_paper(paper, spec, pass_number, model=None, role=\"primary\"):",
+  "tests/test_screener.py:65:    result = screen_paper(paper, spec, pass_number=1)",
+  "tests/test_screener.py:81:    result = screen_paper(paper, spec, pass_number=1)"
+ ],
+ "seed_ever_mentioned_in_screen_paper": false
+}

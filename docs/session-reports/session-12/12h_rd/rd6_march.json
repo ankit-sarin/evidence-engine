@@ -1,0 +1,127 @@
+{
+ "abstract_screening_decisions_columns": [
+  "id",
+  "paper_id",
+  "pass_number",
+  "decision",
+  "rationale",
+  "model",
+  "decided_at"
+ ],
+ "adjacent_pass1_pass2_pairs": 10687,
+ "by_month": {
+  "2026-02": {
+   "decisions_agree": 251,
+   "pairs": 251,
+   "rationale_identical": 146
+  },
+  "2026-03": {
+   "decisions_agree": 10419,
+   "pairs": 10436,
+   "rationale_identical": 6539
+  }
+ },
+ "decisions_disagree": 17,
+ "first_decided_at": "2026-02-28T23:33:06.817257+00:00",
+ "last_decided_at": "2026-03-13T01:38:41.024671+00:00",
+ "manifest_tables_rows": {
+  "run_calls": 0,
+  "run_manifests": 0,
+  "run_stage_configs": 0
+ },
+ "papers_with_rows": 10039,
+ "pass1_pass2_decision_combinations": {
+  "exclude / exclude": 9149,
+  "exclude / include": 8,
+  "include / exclude": 9,
+  "include / include": 1521
+ },
+ "rb_12g_at_HEAD": {
+  "abstract_screen_primary_calls": 84,
+  "distinct_request_hashes": 42,
+  "request_hashes_used_exactly_twice": 42,
+  "stage_rows": [
+   {
+    "model": "qwen3:8b",
+    "options_json": "{\"__recorded__\":{\"num_ctx\":\"unset\",\"seed\":\"unset\"},\"__think__\":false,\"temperature\":0}",
+    "prompt_hash": "9212e64219229348e5b5a72c94c5e9e8336516e38f64d5f9ff292440dca85cc0",
+    "sent_keys_json": "[\"format\",\"keep_alive\",\"messages\",\"model\",\"options\",\"think\"]",
+    "stage": "abstract_screen_primary"
+   },
+   {
+    "model": "gemma3:27b",
+    "options_json": "{\"__recorded__\":{\"num_ctx\":\"unset\",\"seed\":\"unset\"},\"__think__\":false,\"temperature\":0}",
+    "prompt_hash": "f14d0b71d7255643864c12f9996a6a740acfc1cc12130c5bcb8c40297e3ea7a6",
+    "sent_keys_json": "[\"format\",\"keep_alive\",\"messages\",\"model\",\"options\",\"think\"]",
+    "stage": "abstract_screen_verifier"
+   }
+  ]
+ },
+ "review_runs": [
+  {
+   "completed_at": "2026-02-28T23:53:52.094230+00:00",
+   "id": 1,
+   "log_chars": 2,
+   "started_at": "2026-02-28T23:32:52.751123+00:00",
+   "status": "completed"
+  },
+  {
+   "completed_at": "2026-03-01T18:13:40.997865+00:00",
+   "id": 2,
+   "log_chars": 2,
+   "started_at": "2026-03-01T18:13:40.197092+00:00",
+   "status": "completed"
+  },
+  {
+   "completed_at": null,
+   "id": 3,
+   "log_chars": 2,
+   "started_at": "2026-03-01T20:40:49.413023+00:00",
+   "status": "running"
+  },
+  {
+   "completed_at": "2026-03-03T08:40:53.203804+00:00",
+   "id": 4,
+   "log_chars": 2,
+   "started_at": "2026-03-02T20:18:18.860775+00:00",
+   "status": "completed"
+  },
+  {
+   "completed_at": "2026-03-04T10:55:52.111973+00:00",
+   "id": 5,
+   "log_chars": 2,
+   "started_at": "2026-03-04T00:41:47.012374+00:00",
+   "status": "completed"
+  },
+  {
+   "completed_at": "2026-03-06T19:41:01.393545+00:00",
+   "id": 6,
+   "log_chars": 2,
+   "started_at": "2026-03-06T01:01:46.161631+00:00",
+   "status": "completed"
+  }
+ ],
+ "review_runs_columns": [
+  "id",
+  "review_spec_hash",
+  "screening_hash",
+  "extraction_hash",
+  "started_at",
+  "completed_at",
+  "status",
+  "log",
+  "codebook_hash",
+  "codebook_sha256"
+ ],
+ "rows": 21374,
+ "rows_by_pass_and_model": {
+  "pass 1 | qwen3:8b": 10687,
+  "pass 2 | qwen3:8b": 10687
+ },
+ "rows_not_in_an_adjacent_pair": 0,
+ "totals": {
+  "decisions_agree": 10670,
+  "pairs": 10687,
+  "rationale_identical": 6685
+ }
+}

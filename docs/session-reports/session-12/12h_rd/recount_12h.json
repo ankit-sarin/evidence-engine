@@ -1,0 +1,81 @@
+{
+ "baseline_12g_close": {
+  "class_1": 32,
+  "class_2": 14,
+  "class_3": 22,
+  "rows": 71,
+  "without_class": 3,
+  "without_class_ids": [
+   "A-6",
+   "A-9",
+   "INT-g12-4"
+  ]
+ },
+ "class_changes": [
+  {
+   "after": "3",
+   "before": "none",
+   "id": "A-9",
+   "ruling": "R572"
+  },
+  {
+   "after": "3",
+   "before": "1",
+   "id": "INT-g12-3",
+   "ruling": "R566"
+  },
+  {
+   "after": "2",
+   "before": "none",
+   "id": "INT-g12-4",
+   "ruling": "R569"
+  },
+  {
+   "after": "3",
+   "before": "1",
+   "id": "INT-g12-5",
+   "ruling": "R570"
+  }
+ ],
+ "class_kept": [
+  {
+   "after": "1",
+   "before": "1",
+   "id": "A-10",
+   "ruling": "R572"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "id": "INT-g12-1",
+   "ruling": "R568"
+  }
+ ],
+ "now": {
+  "class_1": 31,
+  "class_2": 16,
+  "class_3": 25,
+  "rows": 73,
+  "without_class": 1,
+  "without_class_ids": [
+   "A-6"
+  ]
+ },
+ "r510": {
+  "rows_in": 2,
+  "rows_out": 0
+ },
+ "rows_in": [
+  {
+   "class": "1",
+   "id": "INT-h12-1",
+   "ruling": "R567"
+  },
+  {
+   "class": "2",
+   "id": "INT-h12-2",
+   "ruling": "R571"
+  }
+ ],
+ "rows_out": []
+}

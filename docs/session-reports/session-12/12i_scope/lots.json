@@ -1,0 +1,644 @@
+{
+ "lots": [
+  {
+   "lot": "L01",
+   "title": "Extraction write path: claims as events, guards, selection, locator, telemetry",
+   "readers": 1,
+   "units": [
+    "engine/core/audit_telemetry.py",
+    "engine/core/citation_guard.py",
+    "engine/core/events.py",
+    "engine/core/extraction_events.py",
+    "engine/core/extraction_telemetry.py",
+    "engine/core/locator.py",
+    "engine/core/reuse_key.py",
+    "engine/core/run_telemetry.py",
+    "engine/core/selection.py"
+   ],
+   "n_units": 9,
+   "lines": 1772,
+   "run7_top_units": 9,
+   "run7_top_lines": 1772,
+   "run7_lazy_units": 0,
+   "run7_lazy_lines": 0,
+   "run7_share_lines": 1.0,
+   "N_units": 8,
+   "C_units": 1,
+   "not_recorded_12F": 4
+  },
+  {
+   "lot": "L02",
+   "title": "Elicitation (the Run 7 extraction design)",
+   "readers": 1,
+   "units": [
+    "engine/elicitation/__init__.py",
+    "engine/elicitation/classes.py",
+    "engine/elicitation/contracts.py",
+    "engine/elicitation/materialize.py",
+    "engine/elicitation/pipeline.py",
+    "engine/elicitation/prompts.py",
+    "engine/elicitation/terminal.py",
+    "engine/elicitation/units.py"
+   ],
+   "n_units": 8,
+   "lines": 2088,
+   "run7_top_units": 2,
+   "run7_top_lines": 288,
+   "run7_lazy_units": 6,
+   "run7_lazy_lines": 1800,
+   "run7_share_lines": 1.0,
+   "N_units": 0,
+   "C_units": 8,
+   "not_recorded_12F": 4
+  },
+  {
+   "lot": "L03",
+   "title": "Audit and the distribution gate",
+   "readers": 1,
+   "units": [
+    "engine/agents/audit_events.py",
+    "engine/agents/auditor.py",
+    "engine/validators/__init__.py",
+    "engine/validators/distribution_monitor.py"
+   ],
+   "n_units": 4,
+   "lines": 1057,
+   "run7_top_units": 4,
+   "run7_top_lines": 1057,
+   "run7_lazy_units": 0,
+   "run7_lazy_lines": 0,
+   "run7_share_lines": 1.0,
+   "N_units": 4,
+   "C_units": 0,
+   "not_recorded_12F": 1
+  },
+  {
+   "lot": "L04",
+   "title": "Resolver and run manifest",
+   "readers": 1,
+   "units": [
+    "engine/core/effective_config.py",
+    "engine/core/run_manifest.py"
+   ],
+   "n_units": 2,
+   "lines": 1300,
+   "run7_top_units": 2,
+   "run7_top_lines": 1300,
+   "run7_lazy_units": 0,
+   "run7_lazy_lines": 0,
+   "run7_share_lines": 1.0,
+   "N_units": 1,
+   "C_units": 1,
+   "not_recorded_12F": 0
+  },
+  {
+   "lot": "L05",
+   "title": "Spec, codebook, review identity, eligibility rendering",
+   "readers": 1,
+   "units": [
+    "engine/core/codebook.py",
+    "engine/core/constants.py",
+    "engine/core/eligibility_render.py",
+    "engine/core/review_paths.py",
+    "engine/core/review_spec.py"
+   ],
+   "n_units": 5,
+   "lines": 1940,
+   "run7_top_units": 5,
+   "run7_top_lines": 1940,
+   "run7_lazy_units": 0,
+   "run7_lazy_lines": 0,
+   "run7_share_lines": 1.0,
+   "N_units": 4,
+   "C_units": 1,
+   "not_recorded_12F": 3
+  },
+  {
+   "lot": "L06",
+   "title": "Readers: the one reader, the parsed-text resolver, naming",
+   "readers": 1,
+   "units": [
+    "engine/core/effective.py",
+    "engine/core/naming.py",
+    "engine/core/parsed_text.py"
+   ],
+   "n_units": 3,
+   "lines": 864,
+   "run7_top_units": 2,
+   "run7_top_lines": 810,
+   "run7_lazy_units": 1,
+   "run7_lazy_lines": 54,
+   "run7_share_lines": 1.0,
+   "N_units": 1,
+   "C_units": 2,
+   "not_recorded_12F": 1
+  },
+  {
+   "lot": "L07",
+   "title": "Parser support: font audit, parse-quality verdict, markers, models",
+   "readers": 1,
+   "units": [
+    "engine/parsers/font_audit.py",
+    "engine/parsers/markers.py",
+    "engine/parsers/models.py",
+    "engine/parsers/parse_quality.py"
+   ],
+   "n_units": 4,
+   "lines": 1181,
+   "run7_top_units": 4,
+   "run7_top_lines": 1181,
+   "run7_lazy_units": 0,
+   "run7_lazy_lines": 0,
+   "run7_share_lines": 1.0,
+   "N_units": 4,
+   "C_units": 0,
+   "not_recorded_12F": 1
+  },
+  {
+   "lot": "L08",
+   "title": "Workflow, adjudication schema and the two entry importers",
+   "readers": 1,
+   "units": [
+    "engine/adjudication/__init__.py",
+    "engine/adjudication/import_extraction_entry.py",
+    "engine/adjudication/import_screening_entry.py",
+    "engine/adjudication/schema.py",
+    "engine/adjudication/workflow.py"
+   ],
+   "n_units": 5,
+   "lines": 1023,
+   "run7_top_units": 3,
+   "run7_top_lines": 501,
+   "run7_lazy_units": 0,
+   "run7_lazy_lines": 0,
+   "run7_share_lines": 0.49,
+   "N_units": 3,
+   "C_units": 2,
+   "not_recorded_12F": 2
+  },
+  {
+   "lot": "L09",
+   "title": "Human screening adjudication: adjudicators, HTML generators, categorizer",
+   "readers": 2,
+   "units": [
+    "engine/adjudication/abstract_adjudication_html.py",
+    "engine/adjudication/categorizer.py",
+    "engine/adjudication/ft_adjudication_html.py",
+    "engine/adjudication/ft_screening_adjudicator.py",
+    "engine/adjudication/screening_adjudicator.py"
+   ],
+   "n_units": 5,
+   "lines": 3152,
+   "run7_top_units": 3,
+   "run7_top_lines": 1911,
+   "run7_lazy_units": 2,
+   "run7_lazy_lines": 1241,
+   "run7_share_lines": 1.0,
+   "N_units": 3,
+   "C_units": 2,
+   "not_recorded_12F": 2
+  },
+  {
+   "lot": "L10",
+   "title": "Front half remainder: PubMed client, search models, acquisition except download.py",
+   "readers": 1,
+   "units": [
+    "engine/acquisition/__init__.py",
+    "engine/acquisition/check_oa.py",
+    "engine/acquisition/manual_list.py",
+    "engine/acquisition/pdf_quality_check.py",
+    "engine/acquisition/pdf_quality_html.py",
+    "engine/acquisition/pdf_quality_import.py",
+    "engine/acquisition/verify_downloads.py",
+    "engine/search/models.py",
+    "engine/search/pubmed.py"
+   ],
+   "n_units": 9,
+   "lines": 2644,
+   "run7_top_units": 2,
+   "run7_top_lines": 199,
+   "run7_lazy_units": 5,
+   "run7_lazy_lines": 1247,
+   "run7_share_lines": 0.547,
+   "N_units": 0,
+   "C_units": 9,
+   "not_recorded_12F": 5
+  },
+  {
+   "lot": "L11",
+   "title": "Local-model utilities and run support: preflight, tmux background, progress",
+   "readers": 1,
+   "units": [
+    "engine/utils/background.py",
+    "engine/utils/ollama_preflight.py",
+    "engine/utils/progress.py"
+   ],
+   "n_units": 3,
+   "lines": 465,
+   "run7_top_units": 0,
+   "run7_top_lines": 0,
+   "run7_lazy_units": 3,
+   "run7_lazy_lines": 465,
+   "run7_share_lines": 1.0,
+   "N_units": 2,
+   "C_units": 1,
+   "not_recorded_12F": 2
+  },
+  {
+   "lot": "L12",
+   "title": "Cloud arms (R71: no cloud extraction yet)",
+   "readers": 1,
+   "units": [
+    "engine/cloud/anthropic_extractor.py",
+    "engine/cloud/base.py",
+    "engine/cloud/openai_extractor.py",
+    "engine/cloud/schema.py"
+   ],
+   "n_units": 4,
+   "lines": 1105,
+   "run7_top_units": 0,
+   "run7_top_lines": 0,
+   "run7_lazy_units": 4,
+   "run7_lazy_lines": 1105,
+   "run7_share_lines": 1.0,
+   "N_units": 3,
+   "C_units": 1,
+   "not_recorded_12F": 0
+  },
+  {
+   "lot": "L13",
+   "title": "Export remainder: DOCX and the shared review workbook",
+   "readers": 1,
+   "units": [
+    "engine/exporters/docx_export.py",
+    "engine/exporters/review_workbook.py"
+   ],
+   "n_units": 2,
+   "lines": 568,
+   "run7_top_units": 1,
+   "run7_top_lines": 194,
+   "run7_lazy_units": 1,
+   "run7_lazy_lines": 374,
+   "run7_share_lines": 1.0,
+   "N_units": 0,
+   "C_units": 2,
+   "not_recorded_12F": 1
+  },
+  {
+   "lot": "L14",
+   "title": "Concordance: engine/analysis",
+   "readers": 1,
+   "units": [
+    "engine/analysis/__init__.py",
+    "engine/analysis/concordance.py",
+    "engine/analysis/metrics.py",
+    "engine/analysis/normalize.py",
+    "engine/analysis/report.py",
+    "engine/analysis/scoring.py"
+   ],
+   "n_units": 6,
+   "lines": 1431,
+   "run7_top_units": 0,
+   "run7_top_lines": 0,
+   "run7_lazy_units": 0,
+   "run7_lazy_lines": 0,
+   "run7_share_lines": 0.0,
+   "N_units": 6,
+   "C_units": 0,
+   "not_recorded_12F": 4
+  },
+  {
+   "lot": "L15",
+   "title": "Numbered migrations and the migrations CLI (applied text is frozen by receipt)",
+   "readers": 1,
+   "units": [
+    "engine/migrations/002_screening_rename.py",
+    "engine/migrations/003_backfill_expanded_screening.py",
+    "engine/migrations/004_pdf_quality_check.py",
+    "engine/migrations/005_model_digest.py",
+    "engine/migrations/006_not_null_confidence_tier.py",
+    "engine/migrations/007_add_judge_tables.py",
+    "engine/migrations/008_add_fabrication_verifications.py",
+    "engine/migrations/009_add_backfill_audit_log.py",
+    "engine/migrations/010_add_provenance_classifications.py",
+    "engine/migrations/011_add_absence_claim_class.py",
+    "engine/migrations/012_codebook_provenance.py",
+    "engine/migrations/013_drop_schema_hash_not_null.py",
+    "engine/migrations/014_cloud_tables.py",
+    "engine/migrations/015_drop_prerename_adjudication_indices.py",
+    "engine/migrations/016_event_store.py",
+    "engine/migrations/017_seed_event_store.py",
+    "engine/migrations/018_cloud_shape_and_audit_adjudication.py",
+    "engine/migrations/019_paper_state_axes.py",
+    "engine/migrations/020_run_manifest.py",
+    "engine/migrations/021_parsed_text_sha256.py",
+    "engine/migrations/022_run_kinds_and_audit_tables.py",
+    "engine/migrations/__init__.py",
+    "engine/migrations/__main__.py"
+   ],
+   "n_units": 23,
+   "lines": 4604,
+   "run7_top_units": 0,
+   "run7_top_lines": 0,
+   "run7_lazy_units": 22,
+   "run7_lazy_lines": 4547,
+   "run7_share_lines": 0.988,
+   "N_units": 0,
+   "C_units": 23,
+   "not_recorded_12F": 21
+  },
+  {
+   "lot": "L16",
+   "title": "Developer tools and the read-only validator",
+   "readers": 1,
+   "units": [
+    "engine/tools/__init__.py",
+    "engine/tools/inventory.py",
+    "engine/validators/extraction_validator.py"
+   ],
+   "n_units": 3,
+   "lines": 1105,
+   "run7_top_units": 0,
+   "run7_top_lines": 0,
+   "run7_lazy_units": 0,
+   "run7_lazy_lines": 0,
+   "run7_share_lines": 0.0,
+   "N_units": 3,
+   "C_units": 0,
+   "not_recorded_12F": 3
+  },
+  {
+   "lot": "L17",
+   "title": "Scripts off the Run 7 import graph",
+   "readers": 2,
+   "units": [
+    "scripts/_pass2_delta.py",
+    "scripts/_pass2_eyeball.py",
+    "scripts/_pass2_stability.py",
+    "scripts/backfill_authors.py",
+    "scripts/backfill_cloud_spans.py",
+    "scripts/ft_screening_smoke_test.py",
+    "scripts/parse_expanded_corpus.py",
+    "scripts/pdf_acquisition/step1_export_citations.py",
+    "scripts/pdf_acquisition/step2_unpaywall_check.py",
+    "scripts/pdf_acquisition/step3_download_oa_pdfs.py",
+    "scripts/pdf_acquisition/step3b_retry_failed.py",
+    "scripts/pdf_acquisition/step4_manual_download_list.py",
+    "scripts/prepare_concordance_pdfs.py",
+    "scripts/q8_validation.py",
+    "scripts/q8_validation_fast.py",
+    "scripts/reparse_cloud_spans.py",
+    "scripts/rescreen_original_251.py",
+    "scripts/rescreen_with_specialty.py",
+    "scripts/run_cloud_extraction.py",
+    "scripts/screen_expanded.py",
+    "scripts/smoke_test_fixes.py",
+    "scripts/test_e2e_search_screen.py",
+    "scripts/test_extraction_validation.py"
+   ],
+   "n_units": 23,
+   "lines": 4991,
+   "run7_top_units": 0,
+   "run7_top_lines": 0,
+   "run7_lazy_units": 0,
+   "run7_lazy_lines": 0,
+   "run7_share_lines": 0.0,
+   "N_units": 23,
+   "C_units": 0,
+   "not_recorded_12F": 10
+  },
+  {
+   "lot": "L18",
+   "title": "Empty package markers (0 lines each; nothing to read)",
+   "readers": 0,
+   "units": [
+    "engine/__init__.py",
+    "engine/agents/__init__.py",
+    "engine/core/__init__.py",
+    "engine/parsers/__init__.py",
+    "engine/search/__init__.py",
+    "engine/utils/__init__.py"
+   ],
+   "n_units": 6,
+   "lines": 0,
+   "run7_top_units": 6,
+   "run7_top_lines": 0,
+   "run7_lazy_units": 0,
+   "run7_lazy_lines": 0,
+   "run7_share_lines": null,
+   "N_units": 5,
+   "C_units": 1,
+   "not_recorded_12F": 6
+  }
+ ],
+ "totals": {
+  "lots": 18,
+  "units": 124,
+  "lines": 31290,
+  "readers": 19,
+  "excluded_F_units": 25,
+  "excluded_F_lines": 9442
+ },
+ "excluded_F": [
+  {
+   "unit": "engine/acquisition/download.py",
+   "lines": 477,
+   "RUN7": "lazy",
+   "A": "N",
+   "B": "F",
+   "12F": "Q2"
+  },
+  {
+   "unit": "engine/adjudication/advance_stage.py",
+   "lines": 101,
+   "RUN7": "-",
+   "A": "F",
+   "B": "N",
+   "12F": "Q3"
+  },
+  {
+   "unit": "engine/agents/extractor.py",
+   "lines": 1077,
+   "RUN7": "top",
+   "A": "F",
+   "B": "N",
+   "12F": "Q8"
+  },
+  {
+   "unit": "engine/agents/ft_screener.py",
+   "lines": 682,
+   "RUN7": "lazy",
+   "A": "N",
+   "B": "F",
+   "12F": "Q6"
+  },
+  {
+   "unit": "engine/agents/models.py",
+   "lines": 47,
+   "RUN7": "top",
+   "A": "F",
+   "B": "N",
+   "12F": "Q1"
+  },
+  {
+   "unit": "engine/agents/screener.py",
+   "lines": 340,
+   "RUN7": "top",
+   "A": "N",
+   "B": "F",
+   "12F": "Q5"
+  },
+  {
+   "unit": "engine/cloud/__init__.py",
+   "lines": 5,
+   "RUN7": "lazy",
+   "A": "N",
+   "B": "F",
+   "12F": "Q3"
+  },
+  {
+   "unit": "engine/core/completeness.py",
+   "lines": 313,
+   "RUN7": "top",
+   "A": "F",
+   "B": "N",
+   "12F": "Q5"
+  },
+  {
+   "unit": "engine/core/corpus.py",
+   "lines": 83,
+   "RUN7": "lazy",
+   "A": "F",
+   "B": "N",
+   "12F": "not recorded"
+  },
+  {
+   "unit": "engine/core/database.py",
+   "lines": 748,
+   "RUN7": "top",
+   "A": "C",
+   "B": "F",
+   "12F": "Q9"
+  },
+  {
+   "unit": "engine/core/paper_state.py",
+   "lines": 233,
+   "RUN7": "top",
+   "A": "F",
+   "B": "N",
+   "12F": "Q3"
+  },
+  {
+   "unit": "engine/exporters/__init__.py",
+   "lines": 73,
+   "RUN7": "top",
+   "A": "C",
+   "B": "F",
+   "12F": "Q1"
+  },
+  {
+   "unit": "engine/exporters/evidence_table.py",
+   "lines": 253,
+   "RUN7": "top",
+   "A": "C",
+   "B": "F",
+   "12F": "Q3"
+  },
+  {
+   "unit": "engine/exporters/methods_section.py",
+   "lines": 207,
+   "RUN7": "top",
+   "A": "C",
+   "B": "F",
+   "12F": "Q1"
+  },
+  {
+   "unit": "engine/exporters/prisma.py",
+   "lines": 411,
+   "RUN7": "top",
+   "A": "F",
+   "B": "F",
+   "12F": "Q4"
+  },
+  {
+   "unit": "engine/migrations/runner.py",
+   "lines": 360,
+   "RUN7": "lazy",
+   "A": "C",
+   "B": "F",
+   "12F": "Q5"
+  },
+  {
+   "unit": "engine/parsers/pdf_parser.py",
+   "lines": 1295,
+   "RUN7": "top",
+   "A": "N",
+   "B": "F",
+   "12F": "Q7"
+  },
+  {
+   "unit": "engine/search/dedup.py",
+   "lines": 200,
+   "RUN7": "top",
+   "A": "N",
+   "B": "F",
+   "12F": "Q2"
+  },
+  {
+   "unit": "engine/search/openalex.py",
+   "lines": 148,
+   "RUN7": "top",
+   "A": "N",
+   "B": "F",
+   "12F": "Q3"
+  },
+  {
+   "unit": "engine/tools/db_fingerprint.py",
+   "lines": 451,
+   "RUN7": "-",
+   "A": "N",
+   "B": "F",
+   "12F": "Q1"
+  },
+  {
+   "unit": "engine/utils/db_backup.py",
+   "lines": 277,
+   "RUN7": "-",
+   "A": "N",
+   "B": "F",
+   "12F": "Q6"
+  },
+  {
+   "unit": "engine/utils/ollama_client.py",
+   "lines": 739,
+   "RUN7": "top",
+   "A": "F",
+   "B": "F",
+   "12F": "Q8"
+  },
+  {
+   "unit": "engine/utils/ollama_lock.py",
+   "lines": 191,
+   "RUN7": "top",
+   "A": "F",
+   "B": "C",
+   "12F": "Q2"
+  },
+  {
+   "unit": "scripts/advance_to_pdf_acquired.py",
+   "lines": 113,
+   "RUN7": "-",
+   "A": "F",
+   "B": "N",
+   "12F": "Q5"
+  },
+  {
+   "unit": "scripts/run_pipeline.py",
+   "lines": 618,
+   "RUN7": "top",
+   "A": "N",
+   "B": "F",
+   "12F": "Q9"
+  }
+ ]
+}

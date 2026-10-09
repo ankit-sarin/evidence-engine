@@ -1,0 +1,191 @@
+{
+ "database": "data/surgical_autonomy/review.db",
+ "papers_id_exists": {
+  "4": true,
+  "23": true,
+  "168": true
+ },
+ "papers": {
+  "4": {
+   "status": "ABSTRACT_SCREENED_OUT",
+   "source": "pubmed",
+   "abstract_decisions_by_pass": {
+    "1": {
+     "rows": 2
+    },
+    "2": {
+     "rows": 2
+    }
+   },
+   "abstract_decisions_by_pass_and_decision": [
+    [
+     1,
+     "exclude",
+     1
+    ],
+    [
+     1,
+     "include",
+     1
+    ],
+    [
+     2,
+     "exclude",
+     1
+    ],
+    [
+     2,
+     "include",
+     1
+    ]
+   ],
+   "abstract_decisions_by_model": [
+    [
+     "qwen3:8b",
+     4,
+     "2026-02-28T23:33:19.758130+00:00",
+     "2026-03-13T01:30:13.629874+00:00"
+    ]
+   ],
+   "abstract_verification_rows": 0,
+   "abstract_adjudication_rows": 0,
+   "ft_decisions_primary": [
+    [
+     "FT_EXCLUDE",
+     1
+    ]
+   ],
+   "ft_decisions_verifier": [],
+   "ft_adjudication_rows": 0,
+   "paper_events_by_axis_and_to_state": {},
+   "paper_events_rows": 0,
+   "parsed_text_refs_rows": 0,
+   "full_text_assets_rows": 1,
+   "parse_attempts_rows": 0
+  },
+  "23": {
+   "status": "ABSTRACT_SCREENED_OUT",
+   "source": "openalex",
+   "abstract_decisions_by_pass": {
+    "1": {
+     "rows": 2
+    },
+    "2": {
+     "rows": 2
+    }
+   },
+   "abstract_decisions_by_pass_and_decision": [
+    [
+     1,
+     "exclude",
+     1
+    ],
+    [
+     1,
+     "include",
+     1
+    ],
+    [
+     2,
+     "exclude",
+     1
+    ],
+    [
+     2,
+     "include",
+     1
+    ]
+   ],
+   "abstract_decisions_by_model": [
+    [
+     "qwen3:8b",
+     4,
+     "2026-02-28T23:35:05.331488+00:00",
+     "2026-03-13T01:31:27.648203+00:00"
+    ]
+   ],
+   "abstract_verification_rows": 0,
+   "abstract_adjudication_rows": 0,
+   "ft_decisions_primary": [
+    [
+     "FT_EXCLUDE",
+     1
+    ]
+   ],
+   "ft_decisions_verifier": [],
+   "ft_adjudication_rows": 0,
+   "paper_events_by_axis_and_to_state": {},
+   "paper_events_rows": 0,
+   "parsed_text_refs_rows": 0,
+   "full_text_assets_rows": 1,
+   "parse_attempts_rows": 0
+  },
+  "168": {
+   "status": "ABSTRACT_SCREENED_OUT",
+   "source": "openalex",
+   "abstract_decisions_by_pass": {
+    "1": {
+     "rows": 2
+    },
+    "2": {
+     "rows": 2
+    }
+   },
+   "abstract_decisions_by_pass_and_decision": [
+    [
+     1,
+     "exclude",
+     1
+    ],
+    [
+     1,
+     "include",
+     1
+    ],
+    [
+     2,
+     "exclude",
+     1
+    ],
+    [
+     2,
+     "include",
+     1
+    ]
+   ],
+   "abstract_decisions_by_model": [
+    [
+     "qwen3:8b",
+     4,
+     "2026-02-28T23:46:58.393764+00:00",
+     "2026-03-13T01:35:58.304540+00:00"
+    ]
+   ],
+   "abstract_verification_rows": 0,
+   "abstract_adjudication_rows": 0,
+   "ft_decisions_primary": [
+    [
+     "FT_ELIGIBLE",
+     1
+    ]
+   ],
+   "ft_decisions_verifier": [
+    [
+     "FT_ELIGIBLE",
+     1
+    ]
+   ],
+   "ft_adjudication_rows": 0,
+   "paper_events_by_axis_and_to_state": {},
+   "paper_events_rows": 0,
+   "parsed_text_refs_rows": 0,
+   "full_text_assets_rows": 1,
+   "parse_attempts_rows": 0
+  }
+ },
+ "abstract_screened_out_with_ft_rows": [
+  4,
+  23,
+  168
+ ]
+}

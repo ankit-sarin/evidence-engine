@@ -1,0 +1,1147 @@
+{
+ "ambiguous": [
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/elicit01/units.py",
+    "engine/elicitation/units.py"
+   ],
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a73.3",
+   "token": "units.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/elicit01/units.py",
+    "engine/elicitation/units.py"
+   ],
+   "finding": true,
+   "kind": "NAME",
+   "note": "one candidate is PATH-matched in the same part",
+   "part": "A-\u00a73.3",
+   "token": "MIN_UNIT_TOKENS"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/analyze_qualgap01.py",
+    "analysis/eval/analyze_schema_eval.py",
+    "analysis/eval/analyze_schema_eval2.py",
+    "analysis/paper1/pi_audit_unblind.py"
+   ],
+   "finding": true,
+   "kind": "NAME",
+   "part": "A-\u00a74.1",
+   "token": "_norm"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/elicit01/units.py",
+    "engine/elicitation/units.py"
+   ],
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-FP3",
+   "token": "units.py"
+  }
+ ],
+ "matches": [
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/run_qualgap01.py"
+   ],
+   "file": "analysis/eval/run_qualgap01.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a71.1",
+   "token": "analysis/eval/run_qualgap01.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/utils/ollama_client.py"
+   ],
+   "file": "engine/utils/ollama_client.py",
+   "finding": true,
+   "kind": "DOTTED",
+   "part": "A-\u00a71.1",
+   "token": "engine.utils.ollama_client._client"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/utils/ollama_lock.py"
+   ],
+   "file": "engine/utils/ollama_lock.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a71.2",
+   "token": "engine/utils/ollama_lock.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/agents/extractor.py"
+   ],
+   "file": "engine/agents/extractor.py",
+   "finding": true,
+   "kind": "NAME",
+   "part": "A-\u00a71.2",
+   "token": "restart_ollama"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/run_screen2f.py"
+   ],
+   "file": "analysis/eval/run_screen2f.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a71.3",
+   "token": "analysis/eval/run_screen2f.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/screen2f_worker.py"
+   ],
+   "file": "analysis/eval/screen2f_worker.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a71.3",
+   "token": "screen2f_worker.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/migrations/019_paper_state_axes.py"
+   ],
+   "file": "engine/migrations/019_paper_state_axes.py",
+   "finding": false,
+   "kind": "PATH",
+   "part": "A:\u00a72 overview",
+   "token": "019_paper_state_axes.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/migrations/016_event_store.py"
+   ],
+   "file": "engine/migrations/016_event_store.py",
+   "finding": false,
+   "kind": "PATH",
+   "part": "A:\u00a72 overview",
+   "token": "016_event_store.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [],
+   "file": "engine/migrations/",
+   "finding": false,
+   "kind": "DIR",
+   "part": "A:\u00a72 overview",
+   "token": "engine/migrations/"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/elicit01/manifest.py"
+   ],
+   "file": "analysis/eval/elicit01/manifest.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a72.1",
+   "token": "analysis/eval/elicit01/manifest.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/parse01/sweep.py"
+   ],
+   "file": "analysis/eval/parse01/sweep.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a72.1",
+   "token": "analysis/eval/parse01/sweep.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/paper1/adjudication.py"
+   ],
+   "file": "analysis/paper1/adjudication.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a72.1",
+   "token": "analysis/paper1/adjudication.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/migrations/016_event_store.py"
+   ],
+   "file": "engine/migrations/016_event_store.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a72.2",
+   "token": "016_event_store.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/migrations/017_seed_event_store.py"
+   ],
+   "file": "engine/migrations/017_seed_event_store.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a72.2",
+   "token": "017_seed_event_store.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/core/paper_state.py"
+   ],
+   "file": "engine/core/paper_state.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a72.2",
+   "token": "engine/core/paper_state.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/core/completeness.py"
+   ],
+   "file": "engine/core/completeness.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a72.2",
+   "token": "engine/core/completeness.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/migrations/015_drop_prerename_adjudication_indices.py"
+   ],
+   "file": "engine/migrations/015_drop_prerename_adjudication_indices.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a72.3",
+   "token": "015_drop_prerename_adjudication_indices.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/elicit01/manifest.py"
+   ],
+   "file": "analysis/eval/elicit01/manifest.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a73.1",
+   "token": "analysis/eval/elicit01/manifest.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/elicit01/analyze.py"
+   ],
+   "file": "analysis/eval/elicit01/analyze.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a73.1",
+   "token": "analysis/eval/elicit01/analyze.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/utils/ollama_client.py"
+   ],
+   "file": "engine/utils/ollama_client.py",
+   "finding": true,
+   "kind": "NAME",
+   "part": "A-\u00a73.1",
+   "token": "n_ctx_train"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/schema_eval2.py"
+   ],
+   "file": "analysis/eval/schema_eval2.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a73.2",
+   "token": "schema_eval2.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/agents/models.py"
+   ],
+   "file": "engine/agents/models.py",
+   "finding": true,
+   "kind": "NAME",
+   "part": "A-\u00a73.2",
+   "token": "ExtractionOutput"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/elicit01/units.py"
+   ],
+   "file": "analysis/eval/elicit01/units.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a73.3",
+   "token": "analysis/eval/elicit01/units.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/provenance/classifier.py"
+   ],
+   "file": "analysis/provenance/classifier.py",
+   "finding": true,
+   "kind": "NAME",
+   "part": "A-\u00a73.3",
+   "token": "PaperIndex"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/provenance/classifier.py"
+   ],
+   "file": "analysis/provenance/classifier.py",
+   "finding": false,
+   "kind": "PATH",
+   "part": "A:\u00a74 overview",
+   "token": "analysis/provenance/classifier.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/exporters/prisma.py"
+   ],
+   "file": "engine/exporters/prisma.py",
+   "finding": false,
+   "kind": "PATH",
+   "part": "A:\u00a74 overview",
+   "token": "exporters/prisma.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/adjud01_pairs.py"
+   ],
+   "file": "analysis/eval/adjud01_pairs.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a74.1",
+   "token": "analysis/eval/adjud01_pairs.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/provenance/classifier.py"
+   ],
+   "file": "analysis/provenance/classifier.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a74.2",
+   "token": "analysis/provenance/classifier.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/elicitation/materialize.py"
+   ],
+   "file": "engine/elicitation/materialize.py",
+   "finding": true,
+   "kind": "NAME",
+   "part": "A-\u00a74.2",
+   "token": "source_snippet"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/exporters/prisma.py"
+   ],
+   "file": "engine/exporters/prisma.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a74.3",
+   "token": "exporters/prisma.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/core/corpus.py"
+   ],
+   "file": "engine/core/corpus.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-\u00a74.3",
+   "token": "engine/core/corpus.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/schema_eval2.py"
+   ],
+   "file": "analysis/eval/schema_eval2.py",
+   "finding": true,
+   "kind": "NAME",
+   "part": "A-\u00a74.3",
+   "token": "CARRIED_NON_CORPUS"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/run_screen2f.py"
+   ],
+   "file": "analysis/eval/run_screen2f.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-FP1",
+   "token": "analysis/eval/run_screen2f.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/screen2f.py"
+   ],
+   "file": "analysis/eval/screen2f.py",
+   "finding": true,
+   "kind": "NAME",
+   "part": "A-FP1",
+   "token": "in_quiet_window"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/adjudication/advance_stage.py"
+   ],
+   "file": "engine/adjudication/advance_stage.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-FP2",
+   "token": "engine/adjudication/advance_stage.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/core/paper_state.py"
+   ],
+   "file": "engine/core/paper_state.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-FP2",
+   "token": "engine/core/paper_state.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "scripts/advance_to_pdf_acquired.py"
+   ],
+   "file": "scripts/advance_to_pdf_acquired.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-FP2",
+   "token": "scripts/advance_to_pdf_acquired.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/eval/elicit01/units.py"
+   ],
+   "file": "analysis/eval/elicit01/units.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-FP3",
+   "token": "analysis/eval/elicit01/units.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/provenance/classifier.py"
+   ],
+   "file": "analysis/provenance/classifier.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-FP4",
+   "token": "analysis/provenance/classifier.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/provenance/normalize.py"
+   ],
+   "file": "analysis/provenance/normalize.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-FP4",
+   "token": "analysis/provenance/normalize.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "analysis/provenance/normalize.py"
+   ],
+   "file": "analysis/provenance/normalize.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-FP4",
+   "token": "analysis/provenance/normalize.py"
+  },
+  {
+   "assessment": "A",
+   "candidates": [
+    "engine/utils/ollama_client.py"
+   ],
+   "file": "engine/utils/ollama_client.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "A-T1",
+   "token": "ollama_client.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/cloud/schema.py"
+   ],
+   "file": "engine/cloud/schema.py",
+   "finding": false,
+   "kind": "DOTTED",
+   "part": "B:Scope and verification",
+   "token": "engine.cloud.schema"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/core/database.py"
+   ],
+   "file": "engine/core/database.py",
+   "finding": false,
+   "kind": "NAME",
+   "part": "B:Scope and verification",
+   "token": "ReviewDatabase"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/parsers/pdf_parser.py"
+   ],
+   "file": "engine/parsers/pdf_parser.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F01",
+   "token": "engine/parsers/pdf_parser.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/core/parsed_text.py"
+   ],
+   "file": "engine/core/parsed_text.py",
+   "finding": true,
+   "kind": "NAME",
+   "part": "F01",
+   "token": "ParsedTextMissing"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "tests/test_pdf_parser.py"
+   ],
+   "file": "tests/test_pdf_parser.py",
+   "finding": true,
+   "kind": "NAME",
+   "part": "F01",
+   "token": "test_atomic_write_no_temp_on_db_failure"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/core/database.py"
+   ],
+   "file": "engine/core/database.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F02",
+   "token": "engine/core/database.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/migrations/runner.py"
+   ],
+   "file": "engine/migrations/runner.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F02",
+   "token": "engine/migrations/runner.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/utils/db_backup.py"
+   ],
+   "file": "engine/utils/db_backup.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F03",
+   "token": "engine/utils/db_backup.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/search/dedup.py"
+   ],
+   "file": "engine/search/dedup.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F04",
+   "token": "engine/search/dedup.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/core/database.py"
+   ],
+   "file": "engine/core/database.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F05",
+   "token": "engine/core/database.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "scripts/run_pipeline.py"
+   ],
+   "file": "scripts/run_pipeline.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F05",
+   "token": "scripts/run_pipeline.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/exporters/prisma.py"
+   ],
+   "file": "engine/exporters/prisma.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F06",
+   "token": "engine/exporters/prisma.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "scripts/run_pipeline.py"
+   ],
+   "file": "scripts/run_pipeline.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F06",
+   "token": "scripts/run_pipeline.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/exporters/methods_section.py"
+   ],
+   "file": "engine/exporters/methods_section.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F07",
+   "token": "engine/exporters/methods_section.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/search/openalex.py"
+   ],
+   "file": "engine/search/openalex.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F08",
+   "token": "engine/search/openalex.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/exporters/__init__.py"
+   ],
+   "file": "engine/exporters/__init__.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F09",
+   "token": "engine/exporters/__init__.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/exporters/evidence_table.py"
+   ],
+   "file": "engine/exporters/evidence_table.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F09",
+   "token": "engine/exporters/evidence_table.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/acquisition/download.py"
+   ],
+   "file": "engine/acquisition/download.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F10",
+   "token": "engine/acquisition/download.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/agents/ft_screener.py"
+   ],
+   "file": "engine/agents/ft_screener.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F11",
+   "token": "engine/agents/ft_screener.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "scripts/run_pipeline.py"
+   ],
+   "file": "scripts/run_pipeline.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F12",
+   "token": "scripts/run_pipeline.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/agents/screener.py"
+   ],
+   "file": "engine/agents/screener.py",
+   "finding": true,
+   "kind": "NAME",
+   "part": "F12",
+   "token": "run_screening"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/agents/screener.py"
+   ],
+   "file": "engine/agents/screener.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F13",
+   "token": "engine/agents/screener.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/core/database.py"
+   ],
+   "file": "engine/core/database.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F13",
+   "token": "engine/core/database.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/utils/ollama_client.py"
+   ],
+   "file": "engine/utils/ollama_client.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F14",
+   "token": "engine/utils/ollama_client.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/exporters/evidence_table.py"
+   ],
+   "file": "engine/exporters/evidence_table.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F15",
+   "token": "engine/exporters/evidence_table.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/tools/db_fingerprint.py"
+   ],
+   "file": "engine/tools/db_fingerprint.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F16",
+   "token": "engine/tools/db_fingerprint.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/cloud/__init__.py"
+   ],
+   "file": "engine/cloud/__init__.py",
+   "finding": true,
+   "kind": "PATH",
+   "part": "F17",
+   "token": "engine/cloud/__init__.py"
+  },
+  {
+   "assessment": "B",
+   "candidates": [
+    "engine/migrations/runner.py"
+   ],
+   "file": "engine/migrations/runner.py",
+   "finding": false,
+   "kind": "NAME",
+   "part": "B:Reproduction record",
+   "token": "PendingMigrations"
+  }
+ ],
+ "parts": {
+  "A": [
+   [
+    "A:intro",
+    false,
+    404
+   ],
+   [
+    "A:\u00a71 heading",
+    false,
+    56
+   ],
+   [
+    "A:\u00a71 overview",
+    false,
+    378
+   ],
+   [
+    "A:\u00a71 findings heading",
+    false,
+    31
+   ],
+   [
+    "A-\u00a71.1",
+    true,
+    619
+   ],
+   [
+    "A-\u00a71.2",
+    true,
+    618
+   ],
+   [
+    "A-\u00a71.3",
+    true,
+    635
+   ],
+   [
+    "A:\u00a72 heading",
+    false,
+    41
+   ],
+   [
+    "A:\u00a72 overview",
+    false,
+    441
+   ],
+   [
+    "A:\u00a72 findings heading",
+    false,
+    31
+   ],
+   [
+    "A-\u00a72.1",
+    true,
+    657
+   ],
+   [
+    "A-\u00a72.2",
+    true,
+    550
+   ],
+   [
+    "A-\u00a72.3",
+    true,
+    405
+   ],
+   [
+    "A:\u00a73 heading",
+    false,
+    37
+   ],
+   [
+    "A:\u00a73 overview",
+    false,
+    460
+   ],
+   [
+    "A:\u00a73 findings heading",
+    false,
+    31
+   ],
+   [
+    "A-\u00a73.1",
+    true,
+    676
+   ],
+   [
+    "A-\u00a73.2",
+    true,
+    613
+   ],
+   [
+    "A-\u00a73.3",
+    true,
+    595
+   ],
+   [
+    "A:\u00a74 heading",
+    false,
+    39
+   ],
+   [
+    "A:\u00a74 overview",
+    false,
+    389
+   ],
+   [
+    "A:\u00a74 findings heading",
+    false,
+    31
+   ],
+   [
+    "A-\u00a74.1",
+    true,
+    596
+   ],
+   [
+    "A-\u00a74.2",
+    true,
+    523
+   ],
+   [
+    "A-\u00a74.3",
+    true,
+    541
+   ],
+   [
+    "A:fresh-pass heading",
+    false,
+    171
+   ],
+   [
+    "A-FP1",
+    true,
+    953
+   ],
+   [
+    "A-FP2",
+    true,
+    811
+   ],
+   [
+    "A-FP3",
+    true,
+    888
+   ],
+   [
+    "A-FP4",
+    true,
+    827
+   ],
+   [
+    "A:table heading",
+    false,
+    114
+   ],
+   [
+    "A-T1",
+    true,
+    203
+   ],
+   [
+    "A-T2",
+    true,
+    208
+   ],
+   [
+    "A-T3",
+    true,
+    219
+   ],
+   [
+    "A-T4",
+    true,
+    230
+   ]
+  ],
+  "B": [
+   [
+    "B:front",
+    false,
+    281
+   ],
+   [
+    "B:Overall assessment",
+    false,
+    1339
+   ],
+   [
+    "B:Scope and verification",
+    false,
+    1565
+   ],
+   [
+    "B:Priority definitions",
+    false,
+    360
+   ],
+   [
+    "B:Findings at a glance",
+    false,
+    1848
+   ],
+   [
+    "B:Detailed findings",
+    false,
+    21
+   ],
+   [
+    "F01",
+    true,
+    1759
+   ],
+   [
+    "F02",
+    true,
+    1853
+   ],
+   [
+    "F03",
+    true,
+    1688
+   ],
+   [
+    "F04",
+    true,
+    1702
+   ],
+   [
+    "F05",
+    true,
+    1446
+   ],
+   [
+    "F06",
+    true,
+    1972
+   ],
+   [
+    "F07",
+    true,
+    1779
+   ],
+   [
+    "F08",
+    true,
+    1486
+   ],
+   [
+    "F09",
+    true,
+    1500
+   ],
+   [
+    "F10",
+    true,
+    1610
+   ],
+   [
+    "F11",
+    true,
+    1639
+   ],
+   [
+    "F12",
+    true,
+    1020
+   ],
+   [
+    "F13",
+    true,
+    1620
+   ],
+   [
+    "F14",
+    true,
+    1412
+   ],
+   [
+    "F15",
+    true,
+    1471
+   ],
+   [
+    "F16",
+    true,
+    1602
+   ],
+   [
+    "F17",
+    true,
+    2002
+   ],
+   [
+    "B:Suggested repair sequence",
+    false,
+    29
+   ],
+   [
+    "B:1. Establish durable state and trustwort",
+    false,
+    369
+   ],
+   [
+    "B:2. Repair scientific reporting and scree",
+    false,
+    610
+   ],
+   [
+    "B:3. Make repeated and concurrent operatio",
+    false,
+    389
+   ],
+   [
+    "B:Completion criteria",
+    false,
+    752
+   ],
+   [
+    "B:Reproduction record",
+    false,
+    1459
+   ]
+  ]
+ }
+}

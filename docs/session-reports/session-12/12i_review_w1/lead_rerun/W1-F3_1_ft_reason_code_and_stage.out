@@ -1,0 +1,12 @@
+vocabulary: ('eligible', 'review_article', 'editorial_commentary', 'abstract_only', 'wrong_intervention', 'teleoperation_only', 'analysis_only', 'no_autonomy_content', 'insufficient_data', 'wrong_specialty', 'protocol_only', 'duplicate_cohort')
+format schema reason_code: {'description': 'One of: eligible, review_article, editorial_commentary, abstract_only, wrong_intervention, teleoperation_only, analysis_only, no_autonomy_content, insufficient_data, wrong_specialty, protocol_only, duplicate_cohort', 'title': 'Reason Code', 'type': 'string'}
+A run 1: raised ValueError: reason_code 'not_surgical_robotics' is not in this review's reason-code vocabulary ['abstr
+   statuses: {1: 'PARSED', 2: 'PARSED'} | ft_screening_decisions: 0 | manifests: [(1, 'failed')] | checkpoint exists: False
+A run 2: raised ValueError: reason_code 'not_surgical_robotics' is not in this review's reason-code vocabulary ['abstr
+   statuses: {1: 'PARSED', 2: 'PARSED'} | ft_screening_decisions: 0 | manifests: [(1, 'failed'), (2, 'failed')] | checkpoint exists: False
+   run_calls outcomes: [('ft_screen_primary', 'completed', 2), ('preflight:gemma3:27b', 'completed', 2), ('preflight:qwen3:32b', 'completed', 2)]
+B statuses: {2: 'FT_ELIGIBLE', 1: 'FT_SCREENED_OUT'}
+B decision rows: [(1, 'FT_EXCLUDE', 'eligible'), (2, 'FT_ELIGIBLE', 'wrong_specialty')]
+B paper_events: [(1, 'screened', 'full_text_out')]
+C statuses: {1: 'FT_ELIGIBLE', 2: 'PARSED', 3: 'PARSED'}
+C workflow FULL_TEXT_SCREENING_COMPLETE: ('complete', '1 confirmed, 0 flagged')

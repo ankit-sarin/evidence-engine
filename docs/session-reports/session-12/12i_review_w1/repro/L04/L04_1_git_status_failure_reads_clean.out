@@ -1,0 +1,4 @@
+healthy repo, edited file  : GitState(commit='e9aecfaacf338396dcd9946e7d0d1e28850d110d', dirty=True, tag=None, state_tags=())
+git status rc / stdout / err: 128 '' fatal: .git/index: index file smaller than expected
+corrupt index, edited file : GitState(commit='e9aecfaacf338396dcd9946e7d0d1e28850d110d', dirty=False, tag=None, state_tags=())
+commit is 40 hex: True | dirty: False -> open_run's DirtyTree check would PASS

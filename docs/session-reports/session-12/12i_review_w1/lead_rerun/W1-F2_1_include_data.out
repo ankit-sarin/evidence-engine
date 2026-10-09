@@ -1,0 +1,6 @@
+(a) fresh db, include_data=True -> {'executed': ['901_fake_schema', '902_fake_data_old', '903_fake_data_wanted'], 'skipped': [], 'already': []}
+    tables: ['t_901_fake_schema', 't_902_fake_data_old', 't_903_fake_data_wanted']
+(b) fresh build, default        -> {'executed': ['901_fake_schema'], 'skipped': ['902_fake_data_old', '903_fake_data_wanted'], 'already': []}
+    receipts: ['901_fake_schema']
+(b) --apply-pending --include-data -> {'executed': ['902_fake_data_old', '903_fake_data_wanted'], 'skipped': [], 'already': ['901_fake_schema']}
+    tables: ['t_901_fake_schema', 't_902_fake_data_old', 't_903_fake_data_wanted']

@@ -1,0 +1,4 @@
+run_calls rows: [('extract_pass1', 'completed'), ('extract_pass2', 'completed'), ('extract_retry_snippet', 'completed'), ('extract_retry_snippet', 'completed')]
+context_chain length on the retried field's claim: 2
+retry call hashes present in the chain: [False, False]
+stored snippet for the retried field: None

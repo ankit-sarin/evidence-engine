@@ -1,0 +1,3 @@
+files   : ['0025_four_digits.py', '004_ok.py', '005_a.py', '005_b.py', '023_AddThing.py', '024-add-thing.py']
+discover: ['004_ok', '005_a', '005_b'] (023/024/0025 have no KINDS entry; no refusal)
+receipt for a file no longer on disk -> check_drift: []

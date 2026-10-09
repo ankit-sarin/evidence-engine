@@ -1,0 +1,6 @@
+snippet length (chars): 379   threshold: 0.85
+1 word(s) changed of 70: locate -> located=True kind=fuzzy score=0.995 | same pair autojunk=True 0.996 autojunk=False 0.996
+2 word(s) changed of 70: locate -> located=True kind=fuzzy score=0.986 | same pair autojunk=True 0.987 autojunk=False 0.989
+3 word(s) changed of 70: locate -> located=False kind=none score=0.732 | same pair autojunk=True 0.731 autojunk=False 0.974
+5 word(s) changed of 70: locate -> located=False kind=none score=0.757 | same pair autojunk=True 0.756 autojunk=False 0.955
+control, short snippet (88 chars, 1 word changed): located=True kind=fuzzy score=0.983

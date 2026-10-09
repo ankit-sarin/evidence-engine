@@ -1,0 +1,2 @@
+PosixPath('data/surgical_autonomy\n') PosixPath('review_specs/surgical_autonomy\n.yaml')
+spec field refuses the same string: string_pattern_mismatch

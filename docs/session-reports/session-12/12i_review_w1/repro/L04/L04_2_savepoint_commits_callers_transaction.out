@@ -1,0 +1,3 @@
+caller in_transaction before: True
+in_transaction after RELEASE : True
+rows after caller rollback   : [('caller write, uncommitted',), ('manifest',)]

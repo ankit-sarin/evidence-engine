@@ -1,0 +1,25 @@
+scanned_text_threshold default: 100
+pages= 1 body=empty   len(strip)=  15 empty=False sparse(<thr)=True is_empty_metric=False verdict=PASS units=2 short%=50.0 cpu=8.0
+pages= 1 body=newline len(strip)=  15 empty=False sparse(<thr)=True is_empty_metric=False verdict=PASS units=2 short%=50.0 cpu=8.5
+pages= 1 body=space   len(strip)=  15 empty=False sparse(<thr)=True is_empty_metric=False verdict=PASS units=2 short%=50.0 cpu=8.5
+pages= 2 body=empty   len(strip)=  38 empty=False sparse(<thr)=True is_empty_metric=False verdict=FAIL: SHATTERED=(60.0, 7.8) (limit (50.0, 20.0)) units=5 short%=60.0 cpu=7.8
+pages= 2 body=newline len(strip)=  39 empty=False sparse(<thr)=True is_empty_metric=False verdict=FAIL: SHATTERED=(60.0, 8.2) (limit (50.0, 20.0)) units=5 short%=60.0 cpu=8.2
+pages= 2 body=space   len(strip)=  39 empty=False sparse(<thr)=True is_empty_metric=False verdict=FAIL: SHATTERED=(60.0, 8.2) (limit (50.0, 20.0)) units=5 short%=60.0 cpu=8.2
+pages= 3 body=empty   len(strip)=  61 empty=False sparse(<thr)=True is_empty_metric=False verdict=FAIL: SHATTERED=(62.5, 7.8) (limit (50.0, 20.0)) units=8 short%=62.5 cpu=7.8
+pages= 3 body=newline len(strip)=  63 empty=False sparse(<thr)=True is_empty_metric=False verdict=FAIL: SHATTERED=(62.5, 8.1) (limit (50.0, 20.0)) units=8 short%=62.5 cpu=8.1
+pages= 3 body=space   len(strip)=  63 empty=False sparse(<thr)=True is_empty_metric=False verdict=FAIL: SHATTERED=(62.5, 8.1) (limit (50.0, 20.0)) units=8 short%=62.5 cpu=8.1
+pages= 4 body=empty   len(strip)=  84 empty=False sparse(<thr)=True is_empty_metric=False verdict=FAIL: SHATTERED=(63.6, 7.7) (limit (50.0, 20.0)) units=11 short%=63.6 cpu=7.7
+pages= 4 body=newline len(strip)=  87 empty=False sparse(<thr)=True is_empty_metric=False verdict=FAIL: SHATTERED=(63.6, 8.1) (limit (50.0, 20.0)) units=11 short%=63.6 cpu=8.1
+pages= 4 body=space   len(strip)=  87 empty=False sparse(<thr)=True is_empty_metric=False verdict=FAIL: SHATTERED=(63.6, 8.1) (limit (50.0, 20.0)) units=11 short%=63.6 cpu=8.1
+pages= 5 body=empty   len(strip)= 107 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(64.3, 7.7) (limit (50.0, 20.0)) units=14 short%=64.3 cpu=7.7
+pages= 5 body=newline len(strip)= 111 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(64.3, 8.1) (limit (50.0, 20.0)) units=14 short%=64.3 cpu=8.1
+pages= 5 body=space   len(strip)= 111 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(64.3, 8.1) (limit (50.0, 20.0)) units=14 short%=64.3 cpu=8.1
+pages= 6 body=empty   len(strip)= 130 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(64.7, 7.7) (limit (50.0, 20.0)) units=17 short%=64.7 cpu=7.7
+pages= 6 body=newline len(strip)= 135 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(64.7, 8.1) (limit (50.0, 20.0)) units=17 short%=64.7 cpu=8.1
+pages= 6 body=space   len(strip)= 135 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(64.7, 8.1) (limit (50.0, 20.0)) units=17 short%=64.7 cpu=8.1
+pages=12 body=empty   len(strip)= 271 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(65.7, 7.8) (limit (50.0, 20.0)) units=35 short%=65.7 cpu=7.8
+pages=12 body=newline len(strip)= 282 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(65.7, 8.1) (limit (50.0, 20.0)) units=35 short%=65.7 cpu=8.1
+pages=12 body=space   len(strip)= 282 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(65.7, 8.1) (limit (50.0, 20.0)) units=35 short%=65.7 cpu=8.1
+pages=60 body=empty   len(strip)=1423 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(66.5, 8.0) (limit (50.0, 20.0)) units=179 short%=66.5 cpu=8.0
+pages=60 body=newline len(strip)=1482 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(66.5, 8.3) (limit (50.0, 20.0)) units=179 short%=66.5 cpu=8.3
+pages=60 body=space   len(strip)=1482 empty=False sparse(<thr)=False is_empty_metric=False verdict=FAIL: SHATTERED=(66.5, 8.3) (limit (50.0, 20.0)) units=179 short%=66.5 cpu=8.3

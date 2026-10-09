@@ -1,0 +1,4 @@
+before audit : parse_failed parse_file_unreadable analysis_ready = False
+report       : AuditReport(papers_audited=1, located=1, not_located=0, verified=0, flagged=0, skipped_refused=(), low_yield=(7,))
+after audit  : audited_ai None analysis_ready = True
+audited event from_state: ('parse_failed', 'audited_ai')

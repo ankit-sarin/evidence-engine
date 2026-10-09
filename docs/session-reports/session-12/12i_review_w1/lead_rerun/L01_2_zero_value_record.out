@@ -1,0 +1,6 @@
+fields with a value        : 0 of 20
+paper event                : extracted -> extracted reason_code = None
+payload counts             : {'asserted': 0, 'contract_unmet': 20, 'declined': 0}
+to_state is 'completed'    : True (analysis_ready when eligible)
+counts_toward_abort(record): False
+claim-bearing events       : 20 - each carries reuse_key: True (selection._live_reuse_keys then skips the paper)

@@ -1,0 +1,163 @@
+INFO: Migration 004 complete: 0 columns added, 6 skipped, 0 PDF_EXCLUDED papers
+INFO: migration 004_pdf_quality_check executed
+INFO: Migration 005 complete: 0 columns added, 2 skipped
+INFO: migration 005_model_digest executed
+INFO: evidence_spans already has tier column — skipping migration
+INFO: migration 006_not_null_confidence_tier executed
+INFO: Migration 007 complete: 4 tables created, 8 indexes created
+INFO: migration 007_add_judge_tables executed
+INFO: Migration 008 complete: 1 tables created, 4 indexes created
+INFO: migration 008_add_fabrication_verifications executed
+INFO: Migration 009 complete: 1 tables created, 2 indexes created
+INFO: migration 009_add_backfill_audit_log executed
+INFO: Migration 010 complete: 2 tables created, 5 indexes created
+INFO: migration 010_add_provenance_classifications executed
+INFO: Migration 011 complete: 2 columns added, 0 rows preserved
+INFO: migration 011_add_absence_claim_class executed
+INFO: Migration 012 added: extractions.codebook_hash, extractions.codebook_sha256, review_runs.codebook_hash, review_runs.codebook_sha256
+INFO: migration 012_codebook_provenance executed
+INFO: Migration 013 lifted NOT NULL on: extractions.extraction_schema_hash, review_runs.extraction_hash
+INFO: migration 013_drop_schema_hash_not_null executed
+INFO: migration 014_cloud_tables executed
+INFO: migration 015_drop_prerename_adjudication_indices executed
+INFO: migration 016_event_store executed
+INFO: migration 018_cloud_shape_and_audit_adjudication executed
+INFO: migration 019_paper_state_axes executed
+INFO: migration 020_run_manifest executed
+INFO: migration 021_parsed_text_sha256 executed
+INFO: migration 022_run_kinds_and_audit_tables executed
+INFO: Migrations executed: 004_pdf_quality_check, 005_model_digest, 006_not_null_confidence_tier, 007_add_judge_tables, 008_add_fabrication_verifications, 009_add_backfill_audit_log, 010_add_provenance_classifications, 011_add_absence_claim_class, 012_codebook_provenance, 013_drop_schema_hash_not_null, 014_cloud_tables, 015_drop_prerename_adjudication_indices, 016_event_store, 018_cloud_shape_and_audit_adjudication, 019_paper_state_axes, 020_run_manifest, 021_parsed_text_sha256, 022_run_kinds_and_audit_tables
+INFO: Added 1/1 papers (duplicates skipped)
+INFO: Added 1/1 papers (duplicates skipped)
+INFO: Run manifest 1 (a99f9c6f-0f29-4499-a216-997418b1cb5e) written: 4 stage rows
+INFO: Checking model: qwen3:32b
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 4, "done_reason": "stop", "estimate_low": 3, "model": "qwen3:32b", "ratio": 0.2667}
+INFO:   qwen3:32b: OK (0.0s, 0.0 GB VRAM)
+INFO: Checking model: gemma3:27b
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 4, "done_reason": "stop", "estimate_low": 3, "model": "gemma3:27b", "ratio": 0.2667}
+INFO:   gemma3:27b: OK (0.0s, 0.0 GB VRAM)
+INFO: Pre-flight OK: 2 models loaded, 0.0 GB VRAM total
+INFO: Starting full-text screening on 2 papers (2 pending) with qwen3:32b
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 6876, "count": 2062, "done_reason": "stop", "estimate_low": 1306, "model": "qwen3:32b", "ratio": 0.2999}
+ERROR: FT screening run 1 failed
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/agents/ft_screener.py", line 601, in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+  File "/home/ankitsarin/projects/evidence-engine/engine/agents/ft_screener.py", line 387, in run_ft_screening
+    db.add_ft_screening_decision(
+  File "/home/ankitsarin/projects/evidence-engine/engine/core/database.py", line 626, in add_ft_screening_decision
+    raise ValueError(
+ValueError: reason_code 'not_surgical_robotics' is not in this review's reason-code vocabulary ['abstract_only', 'analysis_only', 'duplicate_cohort', 'editorial_commentary', 'eligible', 'insufficient_data', 'no_autonomy_content', 'protocol_only', 'review_article', 'teleoperation_only', 'wrong_intervention', 'wrong_specialty']. A code outside it names no rule the review declares, so the stored decision could not be traced to a criterion.
+INFO: Run manifest 2 (cbdceb51-7c51-4f9c-b2b0-85993aa35224) written: 4 stage rows
+INFO: Checking model: qwen3:32b
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 4, "done_reason": "stop", "estimate_low": 3, "model": "qwen3:32b", "ratio": 0.2667}
+INFO:   qwen3:32b: OK (0.0s, 0.0 GB VRAM)
+INFO: Checking model: gemma3:27b
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 4, "done_reason": "stop", "estimate_low": 3, "model": "gemma3:27b", "ratio": 0.2667}
+INFO:   gemma3:27b: OK (0.0s, 0.0 GB VRAM)
+INFO: Pre-flight OK: 2 models loaded, 0.0 GB VRAM total
+INFO: Starting full-text screening on 2 papers (2 pending) with qwen3:32b
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 6876, "count": 2062, "done_reason": "stop", "estimate_low": 1306, "model": "qwen3:32b", "ratio": 0.2999}
+ERROR: FT screening run 2 failed
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/agents/ft_screener.py", line 601, in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+  File "/home/ankitsarin/projects/evidence-engine/engine/agents/ft_screener.py", line 387, in run_ft_screening
+    db.add_ft_screening_decision(
+  File "/home/ankitsarin/projects/evidence-engine/engine/core/database.py", line 626, in add_ft_screening_decision
+    raise ValueError(
+ValueError: reason_code 'not_surgical_robotics' is not in this review's reason-code vocabulary ['abstract_only', 'analysis_only', 'duplicate_cohort', 'editorial_commentary', 'eligible', 'insufficient_data', 'no_autonomy_content', 'protocol_only', 'review_article', 'teleoperation_only', 'wrong_intervention', 'wrong_specialty']. A code outside it names no rule the review declares, so the stored decision could not be traced to a criterion.
+INFO: Migration 004 complete: 0 columns added, 6 skipped, 0 PDF_EXCLUDED papers
+INFO: migration 004_pdf_quality_check executed
+INFO: Migration 005 complete: 0 columns added, 2 skipped
+INFO: migration 005_model_digest executed
+INFO: evidence_spans already has tier column — skipping migration
+INFO: migration 006_not_null_confidence_tier executed
+INFO: Migration 007 complete: 4 tables created, 8 indexes created
+INFO: migration 007_add_judge_tables executed
+INFO: Migration 008 complete: 1 tables created, 4 indexes created
+INFO: migration 008_add_fabrication_verifications executed
+INFO: Migration 009 complete: 1 tables created, 2 indexes created
+INFO: migration 009_add_backfill_audit_log executed
+INFO: Migration 010 complete: 2 tables created, 5 indexes created
+INFO: migration 010_add_provenance_classifications executed
+INFO: Migration 011 complete: 2 columns added, 0 rows preserved
+INFO: migration 011_add_absence_claim_class executed
+INFO: Migration 012 added: extractions.codebook_hash, extractions.codebook_sha256, review_runs.codebook_hash, review_runs.codebook_sha256
+INFO: migration 012_codebook_provenance executed
+INFO: Migration 013 lifted NOT NULL on: extractions.extraction_schema_hash, review_runs.extraction_hash
+INFO: migration 013_drop_schema_hash_not_null executed
+INFO: migration 014_cloud_tables executed
+INFO: migration 015_drop_prerename_adjudication_indices executed
+INFO: migration 016_event_store executed
+INFO: migration 018_cloud_shape_and_audit_adjudication executed
+INFO: migration 019_paper_state_axes executed
+INFO: migration 020_run_manifest executed
+INFO: migration 021_parsed_text_sha256 executed
+INFO: migration 022_run_kinds_and_audit_tables executed
+INFO: Migrations executed: 004_pdf_quality_check, 005_model_digest, 006_not_null_confidence_tier, 007_add_judge_tables, 008_add_fabrication_verifications, 009_add_backfill_audit_log, 010_add_provenance_classifications, 011_add_absence_claim_class, 012_codebook_provenance, 013_drop_schema_hash_not_null, 014_cloud_tables, 015_drop_prerename_adjudication_indices, 016_event_store, 018_cloud_shape_and_audit_adjudication, 019_paper_state_axes, 020_run_manifest, 021_parsed_text_sha256, 022_run_kinds_and_audit_tables
+INFO: Added 1/1 papers (duplicates skipped)
+INFO: Added 1/1 papers (duplicates skipped)
+INFO: Run manifest 1 (62a21a92-b2fd-4df2-9de8-6c2371a7beb1) written: 4 stage rows
+INFO: Checking model: qwen3:32b
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 4, "done_reason": "stop", "estimate_low": 3, "model": "qwen3:32b", "ratio": 0.2667}
+INFO:   qwen3:32b: OK (0.0s, 0.0 GB VRAM)
+INFO: Checking model: gemma3:27b
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 15, "count": 4, "done_reason": "stop", "estimate_low": 3, "model": "gemma3:27b", "ratio": 0.2667}
+INFO:   gemma3:27b: OK (0.0s, 0.0 GB VRAM)
+INFO: Pre-flight OK: 2 models loaded, 0.0 GB VRAM total
+INFO: Starting full-text screening on 2 papers (2 pending) with qwen3:32b
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 6876, "count": 2062, "done_reason": "stop", "estimate_low": 1306, "model": "qwen3:32b", "ratio": 0.2999}
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 6876, "count": 2062, "done_reason": "stop", "estimate_low": 1306, "model": "qwen3:32b", "ratio": 0.2999}
+INFO: FT screened 2/2 — 1 eligible, 1 excluded (checkpoint saved)
+INFO: FT screening complete: 1 eligible, 1 excluded, 0 skipped (no text)
+INFO: Migration 004 complete: 0 columns added, 6 skipped, 0 PDF_EXCLUDED papers
+INFO: migration 004_pdf_quality_check executed
+INFO: Migration 005 complete: 0 columns added, 2 skipped
+INFO: migration 005_model_digest executed
+INFO: evidence_spans already has tier column — skipping migration
+INFO: migration 006_not_null_confidence_tier executed
+INFO: Migration 007 complete: 4 tables created, 8 indexes created
+INFO: migration 007_add_judge_tables executed
+INFO: Migration 008 complete: 1 tables created, 4 indexes created
+INFO: migration 008_add_fabrication_verifications executed
+INFO: Migration 009 complete: 1 tables created, 2 indexes created
+INFO: migration 009_add_backfill_audit_log executed
+INFO: Migration 010 complete: 2 tables created, 5 indexes created
+INFO: migration 010_add_provenance_classifications executed
+INFO: Migration 011 complete: 2 columns added, 0 rows preserved
+INFO: migration 011_add_absence_claim_class executed
+INFO: Migration 012 added: extractions.codebook_hash, extractions.codebook_sha256, review_runs.codebook_hash, review_runs.codebook_sha256
+INFO: migration 012_codebook_provenance executed
+INFO: Migration 013 lifted NOT NULL on: extractions.extraction_schema_hash, review_runs.extraction_hash
+INFO: migration 013_drop_schema_hash_not_null executed
+INFO: migration 014_cloud_tables executed
+INFO: migration 015_drop_prerename_adjudication_indices executed
+INFO: migration 016_event_store executed
+INFO: migration 018_cloud_shape_and_audit_adjudication executed
+INFO: migration 019_paper_state_axes executed
+INFO: migration 020_run_manifest executed
+INFO: migration 021_parsed_text_sha256 executed
+INFO: migration 022_run_kinds_and_audit_tables executed
+INFO: Migrations executed: 004_pdf_quality_check, 005_model_digest, 006_not_null_confidence_tier, 007_add_judge_tables, 008_add_fabrication_verifications, 009_add_backfill_audit_log, 010_add_provenance_classifications, 011_add_absence_claim_class, 012_codebook_provenance, 013_drop_schema_hash_not_null, 014_cloud_tables, 015_drop_prerename_adjudication_indices, 016_event_store, 018_cloud_shape_and_audit_adjudication, 019_paper_state_axes, 020_run_manifest, 021_parsed_text_sha256, 022_run_kinds_and_audit_tables
+INFO: Added 1/1 papers (duplicates skipped)
+INFO: Added 1/1 papers (duplicates skipped)
+INFO: Added 1/1 papers (duplicates skipped)
+INFO: Run manifest 1 (5d9f7575-d9a0-45c2-adc8-ed5e0885ceb3) written: 2 stage rows
+INFO: Starting FT verification on 1 papers (1 pending) with gemma3:27b
+INFO: input_fit paper_id=unknown {"ceiling": 131072, "chars": 6106, "count": 1831, "done_reason": "stop", "estimate_low": 1160, "model": "gemma3:27b", "ratio": 0.2999}
+INFO: FT verified 1/1 — 1 confirmed, 0 flagged (checkpoint saved)
+INFO: Workflow stage completed: FULL_TEXT_SCREENING_COMPLETE
+INFO: FT verification complete: 1 confirmed, 0 flagged
+vocabulary: ('eligible', 'review_article', 'editorial_commentary', 'abstract_only', 'wrong_intervention', 'teleoperation_only', 'analysis_only', 'no_autonomy_content', 'insufficient_data', 'wrong_specialty', 'protocol_only', 'duplicate_cohort')
+format schema reason_code: {'description': 'One of: eligible, review_article, editorial_commentary, abstract_only, wrong_intervention, teleoperation_only, analysis_only, no_autonomy_content, insufficient_data, wrong_specialty, protocol_only, duplicate_cohort', 'title': 'Reason Code', 'type': 'string'}
+A run 1: raised ValueError: reason_code 'not_surgical_robotics' is not in this review's reason-code vocabulary ['abstr
+   statuses: {1: 'PARSED', 2: 'PARSED'} | ft_screening_decisions: 0 | manifests: [(1, 'failed')] | checkpoint exists: False
+A run 2: raised ValueError: reason_code 'not_surgical_robotics' is not in this review's reason-code vocabulary ['abstr
+   statuses: {1: 'PARSED', 2: 'PARSED'} | ft_screening_decisions: 0 | manifests: [(1, 'failed'), (2, 'failed')] | checkpoint exists: False
+   run_calls outcomes: [('ft_screen_primary', 'completed', 2), ('preflight:gemma3:27b', 'completed', 2), ('preflight:qwen3:32b', 'completed', 2)]
+B statuses: {2: 'FT_ELIGIBLE', 1: 'FT_SCREENED_OUT'}
+B decision rows: [(1, 'FT_EXCLUDE', 'eligible'), (2, 'FT_ELIGIBLE', 'wrong_specialty')]
+B paper_events: [(1, 'screened', 'full_text_out')]
+C statuses: {1: 'FT_ELIGIBLE', 2: 'PARSED', 3: 'PARSED'}
+C workflow FULL_TEXT_SCREENING_COMPLETE: ('complete', '1 confirmed, 0 flagged')

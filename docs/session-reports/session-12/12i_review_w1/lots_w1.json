@@ -1,0 +1,1069 @@
+{
+ "lots": [
+  {
+   "lot": "L01",
+   "title": "Extraction write path: claims as events, guards, selection, locator, telemetry",
+   "units": [
+    {
+     "unit": "engine/core/audit_telemetry.py",
+     "in_scope_lines": 49,
+     "F": null
+    },
+    {
+     "unit": "engine/core/citation_guard.py",
+     "in_scope_lines": 210,
+     "F": null
+    },
+    {
+     "unit": "engine/core/events.py",
+     "in_scope_lines": 491,
+     "F": null
+    },
+    {
+     "unit": "engine/core/extraction_events.py",
+     "in_scope_lines": 529,
+     "F": null
+    },
+    {
+     "unit": "engine/core/extraction_telemetry.py",
+     "in_scope_lines": 148,
+     "F": null
+    },
+    {
+     "unit": "engine/core/locator.py",
+     "in_scope_lines": 102,
+     "F": null
+    },
+    {
+     "unit": "engine/core/reuse_key.py",
+     "in_scope_lines": 55,
+     "F": null
+    },
+    {
+     "unit": "engine/core/run_telemetry.py",
+     "in_scope_lines": 69,
+     "F": null
+    },
+    {
+     "unit": "engine/core/selection.py",
+     "in_scope_lines": 119,
+     "F": null
+    },
+    {
+     "unit": "engine/core/completeness.py",
+     "in_scope_lines": 313,
+     "F": {
+      "cites": [
+       "A:A-\u00a72.2"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 313
+     }
+    },
+    {
+     "unit": "engine/core/paper_state.py",
+     "in_scope_lines": 233,
+     "F": {
+      "cites": [
+       "A:A-\u00a72.2",
+       "A:A-FP2"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 233
+     }
+    }
+   ],
+   "extra": [],
+   "n_units": 11,
+   "lines": 2318
+  },
+  {
+   "lot": "L02",
+   "title": "Elicitation (the Run 7 extraction design)",
+   "units": [
+    {
+     "unit": "engine/elicitation/__init__.py",
+     "in_scope_lines": 10,
+     "F": null
+    },
+    {
+     "unit": "engine/elicitation/classes.py",
+     "in_scope_lines": 278,
+     "F": null
+    },
+    {
+     "unit": "engine/elicitation/contracts.py",
+     "in_scope_lines": 458,
+     "F": null
+    },
+    {
+     "unit": "engine/elicitation/materialize.py",
+     "in_scope_lines": 116,
+     "F": null
+    },
+    {
+     "unit": "engine/elicitation/pipeline.py",
+     "in_scope_lines": 612,
+     "F": null
+    },
+    {
+     "unit": "engine/elicitation/prompts.py",
+     "in_scope_lines": 378,
+     "F": null
+    },
+    {
+     "unit": "engine/elicitation/terminal.py",
+     "in_scope_lines": 104,
+     "F": null
+    },
+    {
+     "unit": "engine/elicitation/units.py",
+     "in_scope_lines": 132,
+     "F": null
+    },
+    {
+     "unit": "engine/agents/models.py",
+     "in_scope_lines": 43,
+     "F": {
+      "cites": [
+       "A:A-\u00a73.2"
+      ],
+      "whole_file": false,
+      "block_only": false,
+      "why": "A-\u00a73.2 names `ExtractionOutput.model_json_schema()`",
+      "excluded": {
+       "ExtractionOutput": {
+        "spans": [
+         [
+          44,
+          47
+         ]
+        ]
+       }
+      },
+      "file_lines": 47
+     }
+    }
+   ],
+   "extra": [],
+   "n_units": 9,
+   "lines": 2131
+  },
+  {
+   "lot": "L03",
+   "title": "Audit and the distribution gate",
+   "units": [
+    {
+     "unit": "engine/agents/audit_events.py",
+     "in_scope_lines": 250,
+     "F": null
+    },
+    {
+     "unit": "engine/agents/auditor.py",
+     "in_scope_lines": 259,
+     "F": null
+    },
+    {
+     "unit": "engine/validators/__init__.py",
+     "in_scope_lines": 1,
+     "F": null
+    },
+    {
+     "unit": "engine/validators/distribution_monitor.py",
+     "in_scope_lines": 547,
+     "F": null
+    }
+   ],
+   "extra": [],
+   "n_units": 4,
+   "lines": 1057
+  },
+  {
+   "lot": "L04",
+   "title": "Resolver and run manifest",
+   "units": [
+    {
+     "unit": "engine/core/effective_config.py",
+     "in_scope_lines": 534,
+     "F": null
+    },
+    {
+     "unit": "engine/core/run_manifest.py",
+     "in_scope_lines": 766,
+     "F": null
+    }
+   ],
+   "extra": [],
+   "n_units": 2,
+   "lines": 1300
+  },
+  {
+   "lot": "L05",
+   "title": "Spec, codebook, review identity, eligibility rendering",
+   "units": [
+    {
+     "unit": "engine/core/codebook.py",
+     "in_scope_lines": 482,
+     "F": null
+    },
+    {
+     "unit": "engine/core/constants.py",
+     "in_scope_lines": 10,
+     "F": null
+    },
+    {
+     "unit": "engine/core/eligibility_render.py",
+     "in_scope_lines": 424,
+     "F": null
+    },
+    {
+     "unit": "engine/core/review_paths.py",
+     "in_scope_lines": 92,
+     "F": null
+    },
+    {
+     "unit": "engine/core/review_spec.py",
+     "in_scope_lines": 932,
+     "F": null
+    }
+   ],
+   "extra": [],
+   "n_units": 5,
+   "lines": 1940
+  },
+  {
+   "lot": "L06",
+   "title": "Readers: the one reader, the parsed-text resolver, naming",
+   "units": [
+    {
+     "unit": "engine/core/effective.py",
+     "in_scope_lines": 599,
+     "F": null
+    },
+    {
+     "unit": "engine/core/naming.py",
+     "in_scope_lines": 54,
+     "F": null
+    },
+    {
+     "unit": "engine/core/parsed_text.py",
+     "in_scope_lines": 211,
+     "F": null
+    },
+    {
+     "unit": "engine/core/corpus.py",
+     "in_scope_lines": 83,
+     "F": {
+      "cites": [
+       "A:A-\u00a74.3"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 83
+     }
+    }
+   ],
+   "extra": [],
+   "n_units": 4,
+   "lines": 947
+  },
+  {
+   "lot": "L07",
+   "title": "Parser support: font audit, parse-quality verdict, markers, models",
+   "units": [
+    {
+     "unit": "engine/parsers/font_audit.py",
+     "in_scope_lines": 719,
+     "F": null
+    },
+    {
+     "unit": "engine/parsers/markers.py",
+     "in_scope_lines": 41,
+     "F": null
+    },
+    {
+     "unit": "engine/parsers/models.py",
+     "in_scope_lines": 57,
+     "F": null
+    },
+    {
+     "unit": "engine/parsers/parse_quality.py",
+     "in_scope_lines": 364,
+     "F": null
+    },
+    {
+     "unit": "engine/parsers/pdf_parser.py",
+     "in_scope_lines": 1295,
+     "F": {
+      "cites": [
+       "B:F01"
+      ],
+      "whole_file": false,
+      "block_only": true,
+      "why": "F01 names `parse_pdf` and locates the temp-file / commit / rename block inside it; ONLY THAT BLOCK is excluded and the rest of the 449-line function is in scope, so no line is subtracted here",
+      "excluded": {},
+      "file_lines": 1295
+     }
+    }
+   ],
+   "extra": [
+    {
+     "unit": "analysis/provenance/segment.py",
+     "in_scope_lines": 64,
+     "note": "outside the census; imported at module level by parse_quality.py, contracts.py, units.py (row A-5)"
+    }
+   ],
+   "n_units": 6,
+   "lines": 2540
+  },
+  {
+   "lot": "W1-F1",
+   "title": "The two-pass extractor",
+   "units": [
+    {
+     "unit": "engine/agents/extractor.py",
+     "in_scope_lines": 1023,
+     "F": {
+      "cites": [
+       "A:A-\u00a71.2"
+      ],
+      "whole_file": false,
+      "block_only": false,
+      "why": "A-\u00a71.2 names `restart_ollama()`",
+      "excluded": {
+       "restart_ollama": {
+        "spans": [
+         [
+          669,
+          722
+         ]
+        ]
+       }
+      },
+      "file_lines": 1077
+     }
+    }
+   ],
+   "extra": [],
+   "n_units": 1,
+   "lines": 1023
+  },
+  {
+   "lot": "W1-F2",
+   "title": "Database construction and the migration runner",
+   "units": [
+    {
+     "unit": "engine/cloud/__init__.py",
+     "in_scope_lines": 5,
+     "F": {
+      "cites": [
+       "B:F17"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 5
+     }
+    },
+    {
+     "unit": "engine/core/database.py",
+     "in_scope_lines": 630,
+     "F": {
+      "cites": [
+       "B:F02",
+       "B:F05",
+       "B:F13"
+      ],
+      "whole_file": false,
+      "block_only": false,
+      "why": "F02 names `ReviewDatabase.__init__` and `_run_migrations`; F05 names `add_papers`; F13 cites lines only",
+      "excluded": {
+       "ReviewDatabase.__init__": {
+        "spans": [
+         [
+          374,
+          389
+         ]
+        ]
+       },
+       "ReviewDatabase._run_migrations": {
+        "spans": [
+         [
+          391,
+          452
+         ]
+        ]
+       },
+       "ReviewDatabase.add_papers": {
+        "spans": [
+         [
+          456,
+          495
+         ]
+        ]
+       }
+      },
+      "file_lines": 748
+     }
+    },
+    {
+     "unit": "engine/migrations/runner.py",
+     "in_scope_lines": 360,
+     "F": {
+      "cites": [
+       "B:F02"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 360
+     }
+    }
+   ],
+   "extra": [],
+   "n_units": 3,
+   "lines": 995
+  },
+  {
+   "lot": "W1-F3",
+   "title": "Screening agents, dedup, OpenAlex client, download",
+   "units": [
+    {
+     "unit": "engine/acquisition/download.py",
+     "in_scope_lines": 477,
+     "F": {
+      "cites": [
+       "B:F10"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 477
+     }
+    },
+    {
+     "unit": "engine/agents/ft_screener.py",
+     "in_scope_lines": 682,
+     "F": {
+      "cites": [
+       "B:F11"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 682
+     }
+    },
+    {
+     "unit": "engine/agents/screener.py",
+     "in_scope_lines": 340,
+     "F": {
+      "cites": [
+       "B:F12",
+       "B:F13"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 340
+     }
+    },
+    {
+     "unit": "engine/search/dedup.py",
+     "in_scope_lines": 178,
+     "F": {
+      "cites": [
+       "B:F04"
+      ],
+      "whole_file": false,
+      "block_only": false,
+      "why": "F04 names `_exact_match`",
+      "excluded": {
+       "_exact_match": {
+        "spans": [
+         [
+          134,
+          155
+         ]
+        ]
+       }
+      },
+      "file_lines": 200
+     }
+    },
+    {
+     "unit": "engine/search/openalex.py",
+     "in_scope_lines": 122,
+     "F": {
+      "cites": [
+       "B:F08"
+      ],
+      "whole_file": false,
+      "block_only": false,
+      "why": "F08 names `_paginate_with_retry`",
+      "excluded": {
+       "_paginate_with_retry": {
+        "spans": [
+         [
+          58,
+          83
+         ]
+        ]
+       }
+      },
+      "file_lines": 148
+     }
+    }
+   ],
+   "extra": [],
+   "n_units": 5,
+   "lines": 1799
+  },
+  {
+   "lot": "W1-F4",
+   "title": "The pipeline runner and the exporters",
+   "units": [
+    {
+     "unit": "engine/exporters/__init__.py",
+     "in_scope_lines": 15,
+     "F": {
+      "cites": [
+       "B:F09"
+      ],
+      "whole_file": false,
+      "block_only": false,
+      "why": "F09 names `export_all`",
+      "excluded": {
+       "export_all": {
+        "spans": [
+         [
+          16,
+          73
+         ]
+        ]
+       }
+      },
+      "file_lines": 73
+     }
+    },
+    {
+     "unit": "engine/exporters/evidence_table.py",
+     "in_scope_lines": 253,
+     "F": {
+      "cites": [
+       "B:F09",
+       "B:F15"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 253
+     }
+    },
+    {
+     "unit": "engine/exporters/methods_section.py",
+     "in_scope_lines": 207,
+     "F": {
+      "cites": [
+       "B:F07"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 207
+     }
+    },
+    {
+     "unit": "engine/exporters/prisma.py",
+     "in_scope_lines": 411,
+     "F": {
+      "cites": [
+       "A:A-\u00a74.3",
+       "B:F06"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 411
+     }
+    },
+    {
+     "unit": "scripts/run_pipeline.py",
+     "in_scope_lines": 567,
+     "F": {
+      "cites": [
+       "B:F05",
+       "B:F06",
+       "B:F12"
+      ],
+      "whole_file": false,
+      "block_only": false,
+      "why": "F06 names `_stage_search`; F12 names `_stage_screen`",
+      "excluded": {
+       "_stage_search": {
+        "spans": [
+         [
+          266,
+          297
+         ]
+        ]
+       },
+       "_stage_screen": {
+        "spans": [
+         [
+          300,
+          318
+         ]
+        ]
+       }
+      },
+      "file_lines": 618
+     }
+    }
+   ],
+   "extra": [],
+   "n_units": 5,
+   "lines": 1453
+  },
+  {
+   "lot": "W1-F5",
+   "title": "The Ollama client and the experiment lock",
+   "units": [
+    {
+     "unit": "engine/utils/ollama_client.py",
+     "in_scope_lines": 739,
+     "F": {
+      "cites": [
+       "A:A-\u00a71.1",
+       "A:A-T1",
+       "A:A-\u00a73.1",
+       "B:F14"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 739
+     }
+    },
+    {
+     "unit": "engine/utils/ollama_lock.py",
+     "in_scope_lines": 191,
+     "F": {
+      "cites": [
+       "A:A-\u00a71.2"
+      ],
+      "whole_file": true,
+      "block_only": false,
+      "why": "no function is named as the location of the finding",
+      "excluded": {},
+      "file_lines": 191
+     }
+    }
+   ],
+   "extra": [],
+   "n_units": 2,
+   "lines": 930
+  }
+ ],
+ "totals": {
+  "lots": 12,
+  "readers": 12,
+  "units": 56,
+  "extra_units": 1,
+  "lines": 18433,
+  "f_units": 21,
+  "f_units_whole_file": 13,
+  "f_units_function_named": 8,
+  "f_excluded_lines": 333
+ },
+ "f_units": {
+  "engine/acquisition/download.py": {
+   "lines": 477,
+   "RUN7": "lazy",
+   "cites": [
+    "B:F10"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 477,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/agents/extractor.py": {
+   "lines": 1077,
+   "RUN7": "top",
+   "cites": [
+    "A:A-\u00a71.2"
+   ],
+   "excluded": {
+    "restart_ollama": {
+     "spans": [
+      [
+       669,
+       722
+      ]
+     ]
+    }
+   },
+   "why": "A-\u00a71.2 names `restart_ollama()`",
+   "excluded_lines": 54,
+   "in_scope_lines": 1023,
+   "whole_file": false,
+   "block_only": false
+  },
+  "engine/agents/ft_screener.py": {
+   "lines": 682,
+   "RUN7": "lazy",
+   "cites": [
+    "B:F11"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 682,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/agents/models.py": {
+   "lines": 47,
+   "RUN7": "top",
+   "cites": [
+    "A:A-\u00a73.2"
+   ],
+   "excluded": {
+    "ExtractionOutput": {
+     "spans": [
+      [
+       44,
+       47
+      ]
+     ]
+    }
+   },
+   "why": "A-\u00a73.2 names `ExtractionOutput.model_json_schema()`",
+   "excluded_lines": 4,
+   "in_scope_lines": 43,
+   "whole_file": false,
+   "block_only": false
+  },
+  "engine/agents/screener.py": {
+   "lines": 340,
+   "RUN7": "top",
+   "cites": [
+    "B:F12",
+    "B:F13"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 340,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/cloud/__init__.py": {
+   "lines": 5,
+   "RUN7": "lazy",
+   "cites": [
+    "B:F17"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 5,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/core/completeness.py": {
+   "lines": 313,
+   "RUN7": "top",
+   "cites": [
+    "A:A-\u00a72.2"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 313,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/core/corpus.py": {
+   "lines": 83,
+   "RUN7": "lazy",
+   "cites": [
+    "A:A-\u00a74.3"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 83,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/core/database.py": {
+   "lines": 748,
+   "RUN7": "top",
+   "cites": [
+    "B:F02",
+    "B:F05",
+    "B:F13"
+   ],
+   "excluded": {
+    "ReviewDatabase.__init__": {
+     "spans": [
+      [
+       374,
+       389
+      ]
+     ]
+    },
+    "ReviewDatabase._run_migrations": {
+     "spans": [
+      [
+       391,
+       452
+      ]
+     ]
+    },
+    "ReviewDatabase.add_papers": {
+     "spans": [
+      [
+       456,
+       495
+      ]
+     ]
+    }
+   },
+   "why": "F02 names `ReviewDatabase.__init__` and `_run_migrations`; F05 names `add_papers`; F13 cites lines only",
+   "excluded_lines": 118,
+   "in_scope_lines": 630,
+   "whole_file": false,
+   "block_only": false
+  },
+  "engine/core/paper_state.py": {
+   "lines": 233,
+   "RUN7": "top",
+   "cites": [
+    "A:A-\u00a72.2",
+    "A:A-FP2"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 233,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/exporters/__init__.py": {
+   "lines": 73,
+   "RUN7": "top",
+   "cites": [
+    "B:F09"
+   ],
+   "excluded": {
+    "export_all": {
+     "spans": [
+      [
+       16,
+       73
+      ]
+     ]
+    }
+   },
+   "why": "F09 names `export_all`",
+   "excluded_lines": 58,
+   "in_scope_lines": 15,
+   "whole_file": false,
+   "block_only": false
+  },
+  "engine/exporters/evidence_table.py": {
+   "lines": 253,
+   "RUN7": "top",
+   "cites": [
+    "B:F09",
+    "B:F15"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 253,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/exporters/methods_section.py": {
+   "lines": 207,
+   "RUN7": "top",
+   "cites": [
+    "B:F07"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 207,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/exporters/prisma.py": {
+   "lines": 411,
+   "RUN7": "top",
+   "cites": [
+    "A:A-\u00a74.3",
+    "B:F06"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 411,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/migrations/runner.py": {
+   "lines": 360,
+   "RUN7": "lazy",
+   "cites": [
+    "B:F02"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 360,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/parsers/pdf_parser.py": {
+   "lines": 1295,
+   "RUN7": "top",
+   "cites": [
+    "B:F01"
+   ],
+   "excluded": {},
+   "why": "F01 names `parse_pdf` and locates the temp-file / commit / rename block inside it; ONLY THAT BLOCK is excluded and the rest of the 449-line function is in scope, so no line is subtracted here",
+   "excluded_lines": 0,
+   "in_scope_lines": 1295,
+   "whole_file": false,
+   "block_only": true
+  },
+  "engine/search/dedup.py": {
+   "lines": 200,
+   "RUN7": "top",
+   "cites": [
+    "B:F04"
+   ],
+   "excluded": {
+    "_exact_match": {
+     "spans": [
+      [
+       134,
+       155
+      ]
+     ]
+    }
+   },
+   "why": "F04 names `_exact_match`",
+   "excluded_lines": 22,
+   "in_scope_lines": 178,
+   "whole_file": false,
+   "block_only": false
+  },
+  "engine/search/openalex.py": {
+   "lines": 148,
+   "RUN7": "top",
+   "cites": [
+    "B:F08"
+   ],
+   "excluded": {
+    "_paginate_with_retry": {
+     "spans": [
+      [
+       58,
+       83
+      ]
+     ]
+    }
+   },
+   "why": "F08 names `_paginate_with_retry`",
+   "excluded_lines": 26,
+   "in_scope_lines": 122,
+   "whole_file": false,
+   "block_only": false
+  },
+  "engine/utils/ollama_client.py": {
+   "lines": 739,
+   "RUN7": "top",
+   "cites": [
+    "A:A-\u00a71.1",
+    "A:A-T1",
+    "A:A-\u00a73.1",
+    "B:F14"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 739,
+   "whole_file": true,
+   "block_only": false
+  },
+  "engine/utils/ollama_lock.py": {
+   "lines": 191,
+   "RUN7": "top",
+   "cites": [
+    "A:A-\u00a71.2"
+   ],
+   "excluded": {},
+   "why": "no function is named as the location of the finding",
+   "excluded_lines": 0,
+   "in_scope_lines": 191,
+   "whole_file": true,
+   "block_only": false
+  },
+  "scripts/run_pipeline.py": {
+   "lines": 618,
+   "RUN7": "top",
+   "cites": [
+    "B:F05",
+    "B:F06",
+    "B:F12"
+   ],
+   "excluded": {
+    "_stage_search": {
+     "spans": [
+      [
+       266,
+       297
+      ]
+     ]
+    },
+    "_stage_screen": {
+     "spans": [
+      [
+       300,
+       318
+      ]
+     ]
+    }
+   },
+   "why": "F06 names `_stage_search`; F12 names `_stage_screen`",
+   "excluded_lines": 51,
+   "in_scope_lines": 567,
+   "whole_file": false,
+   "block_only": false
+  }
+ }
+}

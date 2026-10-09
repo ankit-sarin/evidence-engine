@@ -1,0 +1,5 @@
+enum_values('randomised') = [True, False]
+absence_sentinels = ('NR', 'NOT_FOUND', 'False', 'None')
+is_absence_sentinel('NO') = False | ('False') = True | ('None') = True
+build_extraction_prompt raised: TypeError sequence item 0: expected str instance, bool found
+normalize._build_prefix_map raised: TypeError expected string or bytes-like object, got 'bool'

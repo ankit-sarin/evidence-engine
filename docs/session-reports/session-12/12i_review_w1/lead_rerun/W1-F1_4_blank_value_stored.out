@@ -1,0 +1,3 @@
+study_type: event=asserted value='' snippet='Snippet for study_type.' -> reader row 11, state asserted without locatable evidence, is_absence_sentinel=False
+robot_platform: event=asserted value='   ' snippet='Snippet for robot_platform.' -> reader row 11, state asserted without locatable evidence, is_absence_sentinel=False
+paper processing: extracted

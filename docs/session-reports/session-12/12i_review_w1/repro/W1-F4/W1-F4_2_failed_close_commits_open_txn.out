@@ -1,0 +1,3 @@
+real_add_papers_midbatch_error     raised=TypeError          manifest end=('failed', None)  papers rows committed=2
+stub_half_write_runtimeerror       raised=RuntimeError       manifest end=('failed', None)  papers rows committed=1
+stub_half_write_keyboardinterrupt  raised=KeyboardInterrupt  manifest end=('interrupted', 'interrupt:SIGINT')  papers rows committed=0

@@ -1,0 +1,6 @@
+SEMANTIC_KEYS: ('fields', 'absence_sentinels', 'escape_token', 'contract_unmet_token')
+canonical a/b: NR NOT_FOUND
+semantic_hash equal: True
+byte sha256 equal:   False
+legacy extraction prompt equal: False
+prompt a says set to "NR": True | prompt b says set to "NOT_FOUND": True

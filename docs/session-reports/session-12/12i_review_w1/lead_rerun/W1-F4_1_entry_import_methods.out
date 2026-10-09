@@ -1,0 +1,17 @@
+import: 3
+tables with screening rows: {'abstract_screening_decisions': 0, 'ft_screening_decisions': 0, 'run_calls': 0}
+papers.status / source: [('FT_ELIGIBLE', 'external_screening_tool', 3)]
+  records_identified: 3
+  records_by_source: {'external_screening_tool': 3}
+  duplicates_removed: 0
+  records_screened: 3
+  records_excluded: 0
+  reports_sought: 3
+  full_text_retrieved: 3
+  full_text_assessed: 3
+  n_eligible: 3
+  studies_included: 0
+validate_prisma_counts valid: True
+
+METHODS (run_id = the import run):
+A systematic search was conducted across PubMed, OpenAlex covering publications from 2010 to 2025 using the following queries: ("surgical robot" OR "robotic surgery" OR "surgical automation" OR "medical robot" OR "medical robotics" OR "robotic surgical"); ("autonomous" OR "autonomy" OR "self-directed" OR "automated"). 3 citations were retrieved (3 from external_screening_tool). Title-abstract screening was performed using a dual-pass local LLM approach (qwen3:8b, Ollama) with structured output constraints. 3 abstracts were screened, with 3 included, 0 excluded, and 0 flagged for human review. Full-text screening was performed by qwen3:32b with verification by gemma3:27b. Data extraction was performed using [MODEL NOT SPECIFIED] with a two-pass reasoning-then-structured-output approach on 0 included studies across 20 predefined fields. Cross-model verification was performed by [MODEL NOT SPECIFIED].

@@ -1,0 +1,34 @@
+[Local extraction] 1/1 (100.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 0
+  Failed       : 1
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+[Local extraction] 1/1 (100.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 0
+  Failed       : 1
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+--- case a: fields A=study_type B=robot_platform C=task_performed
+extractor paper events: [('extracted', 'extracted', None)]
+  study_type: asserted value='attempt3' attempts=None violation_codes=None
+  robot_platform: asserted value='attempt3' attempts=None violation_codes=None
+  task_performed: contract_unmet value=None attempts=3 violation_codes=['VALUE_WITHOUT_CITATION']
+  claim-bearing events stored: 20
+--- case b: fields A=study_type B=robot_platform C=task_performed
+extractor paper events: [('extraction_failed', 'extraction_failed', 'response_unparseable')]
+  study_type: no claim
+  robot_platform: no claim
+  task_performed: no claim
+  claim-bearing events stored: 0

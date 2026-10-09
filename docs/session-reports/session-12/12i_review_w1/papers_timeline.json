@@ -1,0 +1,673 @@
+{
+ "papers": {
+  "4": {
+   "row": {
+    "id": 4,
+    "pmid": "31714234",
+    "doi": "10.1109/RBME.2019.2949749",
+    "title": "Robots and Tools for Remodeling Bone.",
+    "source": "pubmed",
+    "status": "ABSTRACT_SCREENED_OUT",
+    "created_at": "2026-02-28T23:33:01.951453+00:00",
+    "updated_at": "2026-03-13T01:30:13.640804+00:00",
+    "rejected_reason": null,
+    "ee_identifier": "EE-001",
+    "oa_status": "closed",
+    "download_status": "success",
+    "pdf_local_path": "data/surgical_autonomy/pdfs/4.pdf",
+    "acquisition_date": "2026-03-12T06:28:12.989479+00:00",
+    "pdf_exclusion_reason": null,
+    "pdf_quality_check_status": null
+   },
+   "timeline": [
+    {
+     "at": "2026-02-28T23:33:01.951453+00:00",
+     "what": "papers.created_at"
+    },
+    {
+     "at": "2026-02-28T23:33:19.758130+00:00",
+     "what": "abstract pass 1",
+     "decision": "include",
+     "model": "qwen3:8b",
+     "row_id": 7,
+     "rationale": "The paper discusses robotic surgery and its application in bone remodeling, which involves a physical surgical task. It covers robotic tools and their use in surgical procedures, and while it does not explicitly describe a study with a validated simulation platform, it is focused on surgical robotic"
+    },
+    {
+     "at": "2026-02-28T23:33:22.752556+00:00",
+     "what": "abstract pass 2",
+     "decision": "include",
+     "model": "qwen3:8b",
+     "row_id": 8,
+     "rationale": "The paper discusses robotic surgery and its application in bone remodeling, which involves a physical surgical task. It covers robotic tools and their use in surgical procedures, and while it does not explicitly describe a study with a validated simulation platform, it is focused on surgical robotic"
+    },
+    {
+     "at": "2026-03-01T20:41:07.987803+00:00",
+     "what": "full_text_assets row (parsed_at)",
+     "parser": "docling",
+     "version": 1,
+     "row_id": 1,
+     "parsed_text_path": "data/surgical_autonomy/parsed_text/4_v1.md"
+    },
+    {
+     "at": "2026-03-12T06:28:12.989479+00:00",
+     "what": "papers.acquisition_date",
+     "download_status": "success"
+    },
+    {
+     "at": "2026-03-13T00:11:43.682135+00:00",
+     "what": "FT primary",
+     "decision": "FT_EXCLUDE",
+     "model": "qwen3.5:27b",
+     "reason_code": "insufficient_data",
+     "row_id": 5,
+     "rationale": "The paper is a methodological review providing an overview of current robots and tools for bone remodeling, proposing a new classification for autonomy levels, and examining future directions. It does not present original research data, experimental results, or specific study outcomes (e.g., task ac"
+    },
+    {
+     "at": "2026-03-13T01:30:10.257010+00:00",
+     "what": "abstract pass 1",
+     "decision": "exclude",
+     "model": "qwen3:8b",
+     "row_id": 21185,
+     "rationale": "[specialty_rescreen] The paper discusses robotic tools for bone remodeling but does not specify whether the robotic systems are autonomous or semi-autonomous. It mentions levels of autonomy (active, semi-active, passive, remote manipulator) but does not describe any physical surgical task performed "
+    },
+    {
+     "at": "2026-03-13T01:30:13.629874+00:00",
+     "what": "abstract pass 2",
+     "decision": "exclude",
+     "model": "qwen3:8b",
+     "row_id": 21186,
+     "rationale": "[specialty_rescreen] The paper discusses robotic tools for bone remodeling but does not specify whether the robotic systems are autonomous or semi-autonomous. It mentions levels of autonomy (active, semi-active, passive, remote manipulator) but does not describe any physical surgical task performed "
+    },
+    {
+     "at": "2026-03-13T01:30:13.640804+00:00",
+     "what": "papers.updated_at (the last UPDATE that stamped the row; status now ABSTRACT_SCREENED_OUT)"
+    }
+   ],
+   "parsed_text_file_exists": [
+    true
+   ]
+  },
+  "23": {
+   "row": {
+    "id": 23,
+    "pmid": null,
+    "doi": "10.1109/jproc.2022.3180350",
+    "title": "Robot-Assisted Minimally Invasive Surgery\u2014Surgical Robotics in the Data Age",
+    "source": "openalex",
+    "status": "ABSTRACT_SCREENED_OUT",
+    "created_at": "2026-02-28T23:33:01.951453+00:00",
+    "updated_at": "2026-03-13T01:31:27.658707+00:00",
+    "rejected_reason": null,
+    "ee_identifier": "EE-014",
+    "oa_status": "hybrid",
+    "download_status": "success",
+    "pdf_local_path": "data/surgical_autonomy/pdfs/23.pdf",
+    "acquisition_date": "2026-03-12T06:28:12.989723+00:00",
+    "pdf_exclusion_reason": null,
+    "pdf_quality_check_status": null
+   },
+   "timeline": [
+    {
+     "at": "2026-02-28T23:33:01.951453+00:00",
+     "what": "papers.created_at"
+    },
+    {
+     "at": "2026-02-28T23:35:05.331488+00:00",
+     "what": "abstract pass 1",
+     "decision": "include",
+     "model": "qwen3:8b",
+     "row_id": 45,
+     "rationale": "The paper discusses robot-assisted minimally invasive surgery (RAMIS), which involves a physical surgical task. It covers telesurgical robotics, including the da Vinci system and other emerging robotic systems, and discusses their functionalities, such as enhanced manipulation, refined sensors, adva"
+    },
+    {
+     "at": "2026-02-28T23:35:09.314917+00:00",
+     "what": "abstract pass 2",
+     "decision": "include",
+     "model": "qwen3:8b",
+     "row_id": 46,
+     "rationale": "The paper discusses robot-assisted minimally invasive surgery (RAMIS), which involves a physical surgical task. It covers telesurgical robotics, including the da Vinci system and other emerging robotic systems, and discusses their functionalities, such as enhanced manipulation, refined sensors, adva"
+    },
+    {
+     "at": "2026-03-01T20:45:00.747708+00:00",
+     "what": "full_text_assets row (parsed_at)",
+     "parser": "docling",
+     "version": 1,
+     "row_id": 14,
+     "parsed_text_path": "data/surgical_autonomy/parsed_text/23_v1.md"
+    },
+    {
+     "at": "2026-03-12T06:28:12.989723+00:00",
+     "what": "papers.acquisition_date",
+     "download_status": "success"
+    },
+    {
+     "at": "2026-03-13T00:11:18.363171+00:00",
+     "what": "FT primary",
+     "decision": "FT_EXCLUDE",
+     "model": "qwen3.5:27b",
+     "reason_code": "insufficient_data",
+     "row_id": 4,
+     "rationale": "The paper is a review article (specifically described as a 'scoping literature review' and an overview of the state of the art) rather than original research. It discusses concepts, market trends, and existing technologies in robot-assisted minimally invasive surgery but does not present primary dat"
+    },
+    {
+     "at": "2026-03-13T01:31:25.175794+00:00",
+     "what": "abstract pass 1",
+     "decision": "exclude",
+     "model": "qwen3:8b",
+     "row_id": 21211,
+     "rationale": "[specialty_rescreen] The paper provides a general overview of telesurgical robotics and its evolution, focusing on technological advancements and commercialization rather than evaluating specific autonomous or semi-autonomous surgical robotic systems performing physical surgical tasks. It does not d"
+    },
+    {
+     "at": "2026-03-13T01:31:27.648203+00:00",
+     "what": "abstract pass 2",
+     "decision": "exclude",
+     "model": "qwen3:8b",
+     "row_id": 21212,
+     "rationale": "[specialty_rescreen] The paper provides an overview of telesurgical robotics and discusses advancements in the field, but it does not describe any specific study involving autonomous or semi-autonomous surgical robotic systems performing physical surgical tasks. It focuses on general trends, commerc"
+    },
+    {
+     "at": "2026-03-13T01:31:27.658707+00:00",
+     "what": "papers.updated_at (the last UPDATE that stamped the row; status now ABSTRACT_SCREENED_OUT)"
+    }
+   ],
+   "parsed_text_file_exists": [
+    true
+   ]
+  },
+  "168": {
+   "row": {
+    "id": 168,
+    "pmid": "33991305",
+    "doi": "10.1007/s11548-021-02397-y",
+    "title": "Autonomous pick-and-place using the dVRK",
+    "source": "openalex",
+    "status": "ABSTRACT_SCREENED_OUT",
+    "created_at": "2026-02-28T23:33:01.951453+00:00",
+    "updated_at": "2026-03-13T01:35:58.315545+00:00",
+    "rejected_reason": null,
+    "ee_identifier": "EE-068",
+    "oa_status": "hybrid",
+    "download_status": "success",
+    "pdf_local_path": "data/surgical_autonomy/pdfs/168.pdf",
+    "acquisition_date": "2026-03-12T06:28:12.990400+00:00",
+    "pdf_exclusion_reason": null,
+    "pdf_quality_check_status": null
+   },
+   "timeline": [
+    {
+     "at": "2026-02-28T23:33:01.951453+00:00",
+     "what": "papers.created_at"
+    },
+    {
+     "at": "2026-02-28T23:46:58.393764+00:00",
+     "what": "abstract pass 1",
+     "decision": "include",
+     "model": "qwen3:8b",
+     "row_id": 335,
+     "rationale": "The title suggests the study involves autonomous robotic surgery, which meets the inclusion criteria for a physical surgical task. The dVRK is a surgical robotics platform, and the mention of 'autonomous pick-and-place' implies an autonomous or semi-autonomous component. The paper is likely a peer-r"
+    },
+    {
+     "at": "2026-02-28T23:47:01.280549+00:00",
+     "what": "abstract pass 2",
+     "decision": "include",
+     "model": "qwen3:8b",
+     "row_id": 336,
+     "rationale": "The title suggests the study involves autonomous robotic surgery, which meets the inclusion criteria for a physical surgical task. The dVRK is a surgical robotics platform, and the mention of 'autonomous pick-and-place' implies an autonomous or semi-autonomous component. The paper is likely a peer-r"
+    },
+    {
+     "at": "2026-03-01T21:13:10.514740+00:00",
+     "what": "full_text_assets row (parsed_at)",
+     "parser": "docling",
+     "version": 1,
+     "row_id": 67,
+     "parsed_text_path": "data/surgical_autonomy/parsed_text/168_v1.md"
+    },
+    {
+     "at": "2026-03-12T06:28:12.990400+00:00",
+     "what": "papers.acquisition_date",
+     "download_status": "success"
+    },
+    {
+     "at": "2026-03-13T00:10:53.827621+00:00",
+     "what": "FT primary",
+     "decision": "FT_ELIGIBLE",
+     "model": "qwen3.5:27b",
+     "reason_code": "eligible",
+     "row_id": 3,
+     "rationale": "The paper describes a semi-autonomous robotic system using the da Vinci Research Kit (dVRK) to perform a physical surgical task (pick-and-place of a rail on an ex vivo porcine kidney). The intervention involves autonomous trajectory generation and visual servoing to grasp and place the rail, satisfy"
+    },
+    {
+     "at": "2026-03-13T00:12:42.695222+00:00",
+     "what": "FT verifier",
+     "decision": "FT_ELIGIBLE",
+     "model": "gemma3:27b",
+     "row_id": 3,
+     "rationale": "The paper clearly describes a robotic system (dVRK) performing a surgical task (US probe positioning) with an autonomous component (automated grasping and positioning of a rail). It meets all inclusion criteria and avoids exclusion criteria. The focus is on physical surgical tasks, not just analysis"
+    },
+    {
+     "at": "2026-03-13T01:35:57.097134+00:00",
+     "what": "abstract pass 1",
+     "decision": "exclude",
+     "model": "qwen3:8b",
+     "row_id": 21315,
+     "rationale": "[specialty_rescreen] The paper has no abstract available, which is a clear exclusion criterion as per the provided guidelines."
+    },
+    {
+     "at": "2026-03-13T01:35:58.304540+00:00",
+     "what": "abstract pass 2",
+     "decision": "exclude",
+     "model": "qwen3:8b",
+     "row_id": 21316,
+     "rationale": "[specialty_rescreen] The paper has no abstract available, which is a clear exclusion criterion as per the provided guidelines."
+    },
+    {
+     "at": "2026-03-13T01:35:58.315545+00:00",
+     "what": "papers.updated_at (the last UPDATE that stamped the row; status now ABSTRACT_SCREENED_OUT)"
+    }
+   ],
+   "parsed_text_file_exists": [
+    true
+   ]
+  }
+ },
+ "tables_without_rows": [
+  {
+   "table": "abstract_screening_adjudication",
+   "rows_all": 0,
+   "rows_these_three": 0
+  },
+  {
+   "table": "abstract_verification_decisions",
+   "rows_all": 1422,
+   "rows_these_three": 0
+  },
+  {
+   "table": "ft_screening_adjudication",
+   "rows_all": 36,
+   "rows_these_three": 0
+  },
+  {
+   "table": "paper_events",
+   "rows_all": 190,
+   "rows_these_three": 0
+  }
+ ],
+ "workflow_state": [
+  {
+   "id": 1,
+   "stage_name": "ABSTRACT_SCREENING_COMPLETE",
+   "status": "complete",
+   "completed_at": "2026-03-10T05:36:32.109457+00:00",
+   "metadata": "Original 251 papers screened (95 in, 156 out) + expanded search 9787 papers (958 include, 8818 exclude, 11 flagged) + verification (553 confirmed, 405 flagged)"
+  },
+  {
+   "id": 2,
+   "stage_name": "ABSTRACT_DIAGNOSTIC_COMPLETE",
+   "status": "complete",
+   "completed_at": "2026-03-10T05:42:13.681951+00:00",
+   "metadata": "FP analysis done during initial categorizer build \u2014 7 FP categories identified from 416 flagged papers"
+  },
+  {
+   "id": 3,
+   "stage_name": "ABSTRACT_CATEGORIES_CONFIGURED",
+   "status": "complete",
+   "completed_at": "2026-03-10T05:48:19.339509+00:00",
+   "metadata": "7 categories loaded"
+  },
+  {
+   "id": 4,
+   "stage_name": "ABSTRACT_QUEUE_EXPORTED",
+   "status": "complete",
+   "completed_at": "2026-03-10T05:48:19.634614+00:00",
+   "metadata": "416 papers exported to data/surgical_autonomy/adjudication/screening_queue_20260310.xlsx"
+  },
+  {
+   "id": 5,
+   "stage_name": "ABSTRACT_ADJUDICATION_COMPLETE",
+   "status": "complete",
+   "completed_at": "2026-03-12T05:37:12.242426+00:00",
+   "metadata": "416 expanded-search papers excluded via human review (screening_queue_20260310.xlsx). 0 missing, 0 invalid decisions."
+  },
+  {
+   "id": 6,
+   "stage_name": "EXTRACTION_COMPLETE",
+   "status": "pending",
+   "completed_at": null,
+   "metadata": null
+  },
+  {
+   "id": 7,
+   "stage_name": "AI_AUDIT_COMPLETE_STAGE",
+   "status": "pending",
+   "completed_at": null,
+   "metadata": null
+  },
+  {
+   "id": 8,
+   "stage_name": "AUDIT_QUEUE_EXPORTED",
+   "status": "pending",
+   "completed_at": null,
+   "metadata": null
+  },
+  {
+   "id": 9,
+   "stage_name": "AUDIT_REVIEW_COMPLETE",
+   "status": "pending",
+   "completed_at": null,
+   "metadata": null
+  },
+  {
+   "id": 10,
+   "stage_name": "PDF_ACQUISITION",
+   "status": "pending",
+   "completed_at": null,
+   "metadata": null
+  },
+  {
+   "id": 11,
+   "stage_name": "FULL_TEXT_SCREENING_COMPLETE",
+   "status": "complete",
+   "completed_at": "2026-03-14T23:55:25.554742+00:00",
+   "metadata": "143 confirmed, 36 flagged"
+  },
+  {
+   "id": 12,
+   "stage_name": "FULL_TEXT_ADJUDICATION_COMPLETE",
+   "status": "complete",
+   "completed_at": "2026-03-15T04:55:49.856126+00:00",
+   "metadata": "31 eligible, 5 screened out (of 36 total)"
+  }
+ ],
+ "xlsx_artifacts": [
+  {
+   "file": "data/surgical_autonomy/Extraction_Workbook_v2_A.xlsx",
+   "mtime": 1773760168.4901142,
+   "sheets": {
+    "Instructions": {
+     "rows": 49,
+     "header": null,
+     "found": []
+    },
+    "Extraction Form": {
+     "rows": 72,
+     "header": [
+      "PAPER IDENTIFIERS",
+      "",
+      "",
+      "",
+      "TIER 1 \u2014 EXPLICIT",
+      "",
+      "",
+      "",
+      "",
+      "TIER 2 \u2014 INTERPRETIVE",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "TIER 3 \u2014 NUMERIC",
+      "",
+      "",
+      "",
+      "TIER 4 \u2014 JUDGMENT",
+      "",
+      "SOURCE QUOTES (MANDATORY)",
+      "",
+      "NOTES"
+     ],
+     "found": [
+      {
+       "paper": 23,
+       "sheet_row": 5,
+       "matched_by": "title/pmid/doi",
+       "cells": {
+        "PAPER IDENTIFIERS": "EE-014",
+        "": "Human-integrated automation of suturing task with one-master two-slave system for laparoscopic surgery"
+       }
+      }
+     ]
+    },
+    "Codebook": {
+     "rows": 21,
+     "header": [
+      "Tier",
+      "Field Name",
+      "Data Type",
+      "Definition & Instructions",
+      "Valid Values",
+      "Example",
+      "Source Quote Required"
+     ],
+     "found": []
+    }
+   }
+  },
+  {
+   "file": "data/surgical_autonomy/adjudication/screening_queue_20260310.xlsx",
+   "mtime": 1773292352.4178221,
+   "sheets": {
+    "Review Queue": {
+     "rows": 417,
+     "header": [
+      "Row #",
+      "Auto Category",
+      "Title",
+      "Abstract",
+      "DOI",
+      "PMID",
+      "Year",
+      "Journal",
+      "Source",
+      "Flagged By",
+      "Primary Decision",
+      "Primary Rationale",
+      "Verifier Decision",
+      "Verifier Rationale",
+      "DECISION (INCLUDE/EXCLUDE)",
+      "Notes (optional)"
+     ],
+     "found": []
+    },
+    "Category Summary": {
+     "rows": 9,
+     "header": [
+      "Category",
+      "Count",
+      "Description"
+     ],
+     "found": []
+    },
+    "Instructions": {
+     "rows": 19,
+     "header": null,
+     "found": []
+    }
+   }
+  },
+  {
+   "file": "data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx",
+   "mtime": 1773375379.1488934,
+   "sheets": {
+    "Specialty Rescreen Flagged": {
+     "rows": 87,
+     "header": [
+      "paper_id",
+      "ee_identifier",
+      "title",
+      "authors",
+      "abstract",
+      "verifier_reason_category",
+      "primary_decision",
+      "primary_reasoning",
+      "verifier_decision",
+      "verifier_reasoning",
+      "PI_decision",
+      "PI_notes"
+     ],
+     "found": []
+    }
+   }
+  },
+  {
+   "file": "data/surgical_autonomy/adjudication/test_self_documenting_workbook.xlsx",
+   "mtime": 1773378397.4976377,
+   "sheets": {
+    "Instructions": {
+     "rows": 30,
+     "header": null,
+     "found": []
+    },
+    "Review Queue": {
+     "rows": 4,
+     "header": [
+      "Row #",
+      "Auto Category",
+      "Title",
+      "Abstract",
+      "DOI",
+      "PMID",
+      "Year",
+      "Journal",
+      "Source",
+      "Flagged By",
+      "Primary Decision",
+      "Primary Rationale",
+      "Verifier Decision",
+      "Verifier Rationale",
+      "PI_decision (INCLUDE/EXCLUDE)",
+      "PI_notes (optional)"
+     ],
+     "found": []
+    },
+    "Screening Criteria": {
+     "rows": 45,
+     "header": null,
+     "found": []
+    }
+   }
+  }
+ ],
+ "json_artifacts": [
+  {
+   "file": "data/surgical_autonomy/ft_adjudication_queue.json",
+   "mtime": 1773542144.0947757,
+   "top_type": "list",
+   "top_keys": null,
+   "n_items": 36,
+   "found": []
+  },
+  {
+   "file": "data/surgical_autonomy/surgical_autonomy_ft_adjudication_decisions.json",
+   "mtime": 1773550156.7972617,
+   "top_type": "list",
+   "top_keys": null,
+   "n_items": 36,
+   "found": []
+  }
+ ],
+ "context": {
+  "aso_updated_20260313_by_reason": [
+   [
+    "(null)",
+    255
+   ],
+   [
+    "verifier-excluded, consistent with 416/416 adjudication concordance",
+    2
+   ]
+  ],
+  "ft_primary_rows_by_day": [
+   [
+    "2026-03-13",
+    5,
+    "2026-03-13T00:10:03.182136+00:00",
+    "2026-03-13T00:11:43.682135+00:00"
+   ],
+   [
+    "2026-03-14",
+    361,
+    "2026-03-14T03:46:29.308649+00:00",
+    "2026-03-14T22:55:36.093751+00:00"
+   ]
+  ],
+  "ft_verifier_rows_by_day": [
+   [
+    "2026-03-13",
+    3,
+    "2026-03-13T00:12:06.243025+00:00",
+    "2026-03-13T00:12:42.695222+00:00"
+   ],
+   [
+    "2026-03-14",
+    179,
+    "2026-03-14T22:56:04.960954+00:00",
+    "2026-03-14T23:55:25.542648+00:00"
+   ]
+  ],
+  "abstract_rows_20260313": [
+   [
+    "qwen3:8b",
+    1,
+    "exclude",
+    182,
+    182,
+    "2026-03-13T00:35:06.333883+00:00",
+    "2026-03-13T01:38:38.118168+00:00"
+   ],
+   [
+    "qwen3:8b",
+    1,
+    "include",
+    467,
+    467,
+    "2026-03-13T00:34:42.570148+00:00",
+    "2026-03-13T01:38:27.109836+00:00"
+   ],
+   [
+    "qwen3:8b",
+    2,
+    "exclude",
+    182,
+    182,
+    "2026-03-13T00:35:09.607440+00:00",
+    "2026-03-13T01:38:41.024671+00:00"
+   ],
+   [
+    "qwen3:8b",
+    2,
+    "include",
+    467,
+    467,
+    "2026-03-13T00:34:45.609540+00:00",
+    "2026-03-13T01:38:30.814768+00:00"
+   ]
+  ],
+  "status_of_papers_rescreened_20260313": [
+   [
+    "ABSTRACT_SCREENED_OUT",
+    257
+   ],
+   [
+    "AI_AUDIT_COMPLETE",
+    190
+   ],
+   [
+    "FT_SCREENED_OUT",
+    171
+   ],
+   [
+    "PDF_EXCLUDED",
+    31
+   ]
+  ],
+  "rejected_reason_these": {
+   "4": null,
+   "23": null,
+   "168": null
+  }
+ }
+}

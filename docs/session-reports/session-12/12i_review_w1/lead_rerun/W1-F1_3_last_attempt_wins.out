@@ -1,0 +1,12 @@
+--- case a: fields A=study_type B=robot_platform C=task_performed
+extractor paper events: [('extracted', 'extracted', None)]
+  study_type: asserted value='attempt3' attempts=None violation_codes=None
+  robot_platform: asserted value='attempt3' attempts=None violation_codes=None
+  task_performed: contract_unmet value=None attempts=3 violation_codes=['VALUE_WITHOUT_CITATION']
+  claim-bearing events stored: 20
+--- case b: fields A=study_type B=robot_platform C=task_performed
+extractor paper events: [('extraction_failed', 'extraction_failed', 'response_unparseable')]
+  study_type: no claim
+  robot_platform: no claim
+  task_performed: no claim
+  claim-bearing events stored: 0

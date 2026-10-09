@@ -1,0 +1,5 @@
+40 x 'Original Research' (control)             -> raised DistributionCollapseError Distribution collapse detected in 1 field(s): study_type
+40 x 'NR' (every paper absent)                 n=  0 distinct=0 status=OK           gate: skipped=False collapsed=0 (did not raise)
+31 x 'NR' + 9 x 'Original Research'            n=  9 distinct=1 status=OK           gate: skipped=False collapsed=0 (did not raise)
+39 x 'Original Research' + 1 x 'original research' n= 40 distinct=2 status=LOW_VARIANCE gate: skipped=False collapsed=0 (did not raise)
+15 x 'Original Research' + 1 x 'Original Research.' n= 16 distinct=2 status=OK           gate: skipped=False collapsed=0 (did not raise)

@@ -1,0 +1,17 @@
+== C: JUDGMENT step shapes
+ bare-string step beside a dict step -> () ok= True n_steps= 1
+ criteria_application='false' (string) -> () ok= True
+ one step, no text, criteria only -> () ok= True step text= ''
+== scalar unit_indices
+ unit_indices=12 (not a list) -> (12,) ()
+== unparseable / empty / truncated Pass-1 response -> terminal states
+ empty content: parse_path=unparseable states={'j': 'CONTRACT_UNMET', 's': 'CONTRACT_UNMET'}
+ truncated: parse_path=unparseable states={'j': 'CONTRACT_UNMET', 's': 'CONTRACT_UNMET'}
+ prose: parse_path=unparseable states={'j': 'CONTRACT_UNMET', 's': 'CONTRACT_UNMET'}
+== source_snippet: which run is 'first'
+ cited order (47, 48, 12) -> stored: 'Unit number 12 has words.'
+== write-boundary: empty Pass-2 value on an EVIDENCED field
+ ok= True offenders= ()
+== units: comment regex
+ units: ['First real sentence here.', 'Fourth sentence survives here.']
+ matches unterminated tail alone: False

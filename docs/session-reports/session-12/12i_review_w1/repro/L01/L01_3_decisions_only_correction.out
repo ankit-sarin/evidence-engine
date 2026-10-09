@@ -1,0 +1,3 @@
+machine claim '5'                                          value='5' state=asserted without locatable evidence row=11
+two conflicting reviewer decisions (row 2)                 value=None state=unresolved (needs re-review) row=2
+resolving CORRECT to '7' naming both decisions, no claim   value='5' state=asserted without locatable evidence row=11

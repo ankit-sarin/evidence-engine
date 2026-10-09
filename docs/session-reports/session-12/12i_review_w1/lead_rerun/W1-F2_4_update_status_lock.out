@@ -1,0 +1,3 @@
+raised: OperationalError - cannot rollback - no transaction is active
+__context__: OperationalError - database is locked
+status after: INGESTED

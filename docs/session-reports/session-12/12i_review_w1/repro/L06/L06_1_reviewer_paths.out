@@ -1,0 +1,23 @@
+== A. row 2's exit written with against_decisions only (no against_claims)
+A before exit: value=None state='unresolved (needs re-review)' row=2 prov_keys=['decisions', 'exit']
+   writer accepted the decision-only resolving event (no refusal)
+A after exit : value='5' state='asserted without locatable evidence' row=11 prov_keys=['actor', 'arm', 'claim_id', 'located', 'role', 'snippet_supplied']
+== B1. ACCEPT on ONE claim id carrying two differing asserted values (row 6)
+B1 before    : value=None state='unresolved (duplicate values)' row=6 prov_keys=['candidates', 'claim_id', 'exit']
+   writer accepted ACCEPT (no AcceptAgainstMultipleClaims)
+B1 after     : value='50' state='asserted without locatable evidence' row=11 prov_keys=['actor', 'arm', 'claim_id', 'endorsed', 'located', 'role', 'rule_row_endorsement', 'snippet_supplied']
+   endorsed: {'accepted_by': 'PI', 'at': '2026-10-09T02:10:18.413356+00:00', 'presented_context_sha256': 'ctx-human_accepted'}
+== B2. ACCEPT first, a second differing asserted event on the same claim id later
+B2 accepted  : value='5' state='asserted without locatable evidence' row=11 prov_keys=['actor', 'arm', 'claim_id', 'endorsed', 'located', 'role', 'rule_row_endorsement', 'snippet_supplied']
+B2 after dup : value='50' state='asserted without locatable evidence' row=11 prov_keys=['actor', 'arm', 'claim_id', 'endorsed', 'located', 'role', 'rule_row_endorsement', 'snippet_supplied']
+   endorsed: {'accepted_by': 'PI', 'at': '2026-10-09T02:10:18.428110+00:00', 'presented_context_sha256': 'ctx-human_accepted'}
+== C. row 3's stated exit ('a new decision against the current claim')
+C stale      : value=None state='unresolved (needs re-review)' row=3 prov_keys=['current', 'exit', 'reviewer', 'value_unchanged']
+   exit text: a new decision against the current claim
+C after exit : value=None state='unresolved (needs re-review)' row=2 prov_keys=['decisions', 'exit']
+   exit text: a reviewer event referencing all competing decisions (R20)
+== D. sentinel row number: exact membership vs Codebook.is_absence_sentinel
+   value='NR': row=13 state='asserted without locatable evidence'
+   value='nr': row=11 state='asserted without locatable evidence'
+   value='Not reported': row=11 state='asserted without locatable evidence'
+   value=' NR': row=11 state='asserted without locatable evidence'

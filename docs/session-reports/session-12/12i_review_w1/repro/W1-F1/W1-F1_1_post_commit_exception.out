@@ -1,0 +1,6 @@
+model calls made: 2
+stats: {'extracted': 1, 'failed': 1, 'total_spans': 20}
+extractor paper events, in order: [('extracted', 'extracted', None), ('extraction_failed', 'extraction_failed', 'unclassified_error')]
+live claims of the arm on the paper: 20
+effective_state: processing=extraction_failed reason=unclassified_error analysis_ready=False
+next run's selection: to_extract=[] skipped_asserted=[1]

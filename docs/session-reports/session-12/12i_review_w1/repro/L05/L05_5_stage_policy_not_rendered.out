@@ -1,0 +1,9 @@
+changed policies validate: True
+screening_hash moved: True
+ft_primary prompt identical:         True
+ft_verifier prompt identical:        True
+abstract_verifier prompt identical:  True
+ft_adjudication guidance (live): 'autonomous task performed in an orthopedic or neurosurgical context, include it.'
+ft_adjudication guidance (alt) : When in doubt between FT_ELIGIBLE and FT_SCREENED_OUT, lean toward FT_ELIGIBLE. Choose FT_SCREENED_OUT only when the title or full text states something that meets an exclusion criterion. That the full text does not state, mention, or confirm an inclusion criterion is not a ground to choose FT_SCREENED_OUT. When the full text is silent on a point, do not choose FT_SCREENED_OUT on that silence.
+no-ft-verifier-tests spec validates; instruction = 'Apply these tests strictly:\n\n\nIf ANY test fails, mark as FT_FLAGGED. Only mark FT_ELIGIBLE if the paper clearly passes all tests.'
+no-evidence-criterion spec validates; first abstract-less paper raises ValueError: stage 'abstract_primary' can render a paper with no abstract, but no e

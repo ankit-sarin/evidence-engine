@@ -1,0 +1,3 @@
+guard (LEGACY): n_escape = 1  offenders = (('f2', 'VALUE_WITHOUT_CITATION'),)
+f1: event_type=asserted value='NO_EVIDENCE_LOCATABLE' source_snippet=None
+f2: event_type=contract_unmet value=None source_snippet=None

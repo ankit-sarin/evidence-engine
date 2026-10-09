@@ -1,0 +1,1646 @@
+{
+ "L01-C1": {
+  "title": "L01-C1 \u2014 A record in which no field carries a value is stored as `extracted`, never counts toward the abort, and blocks reselection",
+  "class_line": "1 / P1 \u2014 a failed run reads as a completed one and burns the pinned arm; belongs with A-11's floor.",
+  "chars": 3261,
+  "quotes_found": 13,
+  "quotes_missing": 10,
+  "missing": [
+   "engine/core/selection.py :: select_for_extraction",
+   "event is claim-bearing and carries the reuse key, so",
+   "returns the key and",
+   "L01_2_zero_value_record.py",
+   ": 20 of 20 fields",
+   "paper event: extracted -> extracted reason_code = None",
+   "payload counts {'asserted': 0, 'contract_unmet': 20, 'declined': 0}",
+   "counts_toward_abort(record): False",
+   "(analysis-ready) with zero values.",
+   "tests/test_extraction_events.py::test_t2_an_elicited_contract_unmet_and_an_incomplete_carrier"
+  ]
+ },
+ "L01-C2": {
+  "title": "L01-C2 \u2014 The writer accepts a reviewer decision that names competing decisions but no claim; the reader then discards its value and silently restores ",
+  "class_line": "1 / P5 \u2014 a human decision is dropped without a signal; lands before the importer that will write reviewer events (the fix is one refusal in the writer or one ro",
+  "chars": 2805,
+  "quotes_found": 7,
+  "quotes_missing": 11,
+  "missing": [
+   "machine claim '5' value='5'",
+   "two conflicting reviewer decisions (row 2) value=None state=unresolved (needs re-review) row=2",
+   "resolving CORRECT to '7' naming both decisions, no claim value='5'",
+   "engine/core/events.py :: write_field_event",
+   "engine/core/effective.py :: effective_value",
+   "empty passes both. Reader:",
+   "returns it as governing (",
+   "), so row 2 no longer fires; then",
+   "L01_3_decisions_only_correction.py",
+   "tests/test_event_writer_refusals.py::test_r24_naming_a_claim_outside_live_is_row_3_not_a_refusal",
+   "tests/test_effective_reader.py::test_row2_exit_a_decision_referencing_all_competing_decisions"
+  ]
+ },
+ "L01-C3": {
+  "title": "L01-C3 \u2014 The locator's fuzzy score is taken with difflib's `autojunk` on; a near-verbatim snippet of 200+ characters scores far below its real similar",
+  "class_line": "1 / P1 \u2014 provenance written append-only by a versioned instrument; audit-side, outside the pin, and a fix is a new `LOCATOR_VERSION` (R572 bars locator-2 before",
+  "chars": 3164,
+  "quotes_found": 3,
+  "quotes_missing": 15,
+  "missing": [
+   "2 word(s) changed of 70: located=True score=0.986 | autojunk=True 0.987 autojunk=False 0.989",
+   "3 word(s) changed of 70: located=False score=0.732 | autojunk=True 0.731 autojunk=False 0.974",
+   "5 word(s) changed of 70: located=False score=0.757 | autojunk=True 0.756 autojunk=False 0.955",
+   "control, short snippet (88 chars, 1 word changed): located=True score=0.983",
+   "on; a near-verbatim snippet of 200+ characters scores far below its real similarity and is recorded",
+   "engine/core/locator.py :: locate",
+   "is not the similarity the docstring describes) \u2014 also i (\"",
+   ". The repository states the hazard itself, in",
+   ": \"autojunk MUST stay off: the heuristic treats characters appearing in >1% of a >=200-element sequence as junk, which silently distorts rat",
+   "L01_1_locator_autojunk.py",
+   "that is not a similarity. The claim reads row 11/13 (\"without locatable evidence\") and goes to",
+   "grep -c autojunk docs/plan/ENGINE_REFACTOR_PLAN.md"
+  ]
+ },
+ "L01-C4": {
+  "title": "L01-C4 \u2014 On the legacy path a value equal to the escape token passes the citation guard and is stored as an `asserted` value with no snippet",
+  "class_line": "1 (conditional) / P1 \u2014 wrong stored event type for a cell if triggered; one branch in `legacy_record` or a LEGACY-mode refusal closes it.",
+  "chars": 2467,
+  "quotes_found": 0,
+  "quotes_missing": 17,
+  "missing": [
+   "guard (LEGACY): n_escape = 1 offenders = (('f2', 'VALUE_WITHOUT_CITATION'),)",
+   "f1: event_type=asserted value='NO_EVIDENCE_LOCATABLE' source_snippet=None",
+   "f2: event_type=contract_unmet value=None source_snippet=None",
+   "engine/core/citation_guard.py :: check_citations",
+   "engine/core/extraction_events.py :: legacy_record",
+   "docstring: \"Both modes refuse to store a positive claim with nothing behind it\";",
+   "docstring: \"the elicited escape token ->",
+   "applies the escape exemption in both modes whenever the codebook declares the token (",
+   "extractor._absence_tokens",
+   ", which the codebook loader requires.",
+   "has three branches \u2014 duplicated, offender,",
+   "L01_4_legacy_escape_token_asserted.py"
+  ]
+ },
+ "L01-C5": {
+  "title": "L01-C5 \u2014 The R130 telemetry row mislabels the call it describes",
+  "class_line": "3 / P7 \u2014 telemetry labelling.",
+  "chars": 1643,
+  "quotes_found": 7,
+  "quotes_missing": 6,
+  "missing": [
+   "engine/core/extraction_events.py :: write_extraction_events",
+   "is always 1, the count is always filed as",
+   "whichever call (pass 1, pass 2, snippet retry) was truncated, and both done-reason fields are always null. The paper event beside it carries",
+   "from the caller, which is the constant",
+   "being the model name is intended (extractor comment: \"The telemetry",
+   "label has always been the extraction model's name\")."
+  ]
+ },
+ "L01-C6": {
+  "title": "L01-C6 \u2014 Stated-guarantee wording that the code does not meet (batch)",
+  "class_line": "3 / P7 \u2014 wording and dead code.",
+  "chars": 3094,
+  "quotes_found": 15,
+  "quotes_missing": 15,
+  "missing": [
+   "citation_guard.py :: UncitedValueError",
+   ". Same family as A-11's",
+   "module docstring \u2014 \"This is the only caller of",
+   "reaching it returns",
+   "events.py :: _refuse_claim_on_arm",
+   "FOREIGN KEY constraint failed",
+   "extraction_telemetry.py :: record_call",
+   "is one of: 'stored', 'incomplete_retry', 'incomplete_exhausted', 'contract_retry', 'contract_exhausted', 'error'\". Emitted and not listed:",
+   "unparseable_exhausted",
+   "completeness.py :: _codebook_field_names",
+   "(its docstring describes a cross-check",
+   "no longer makes);"
+  ]
+ },
+ "L02-C1": {
+  "title": "L02-C1 \u2014 An unparseable, empty or truncated Pass-1 response becomes twenty `CONTRACT_UNMET` claims and an `extracted` paper; it never counts toward th",
+  "class_line": "1 / P1 \u2014 a runtime fault is recorded as per-field paper outcomes on the arm Run 7 pins, silently and unrecoverably under the same arm.",
+  "chars": 3584,
+  "quotes_found": 20,
+  "quotes_missing": 12,
+  "missing": [
+   "engine/elicitation/terminal.py",
+   "parse_path=unparseable",
+   "else: logger.warning(\"Paper %d: no field met its evidence contract",
+   "Pass 2 skipped; the terminal states are the extraction.\")",
+   "extraction_events.plan_extraction_events",
+   "extractor._extract_selected",
+   "consecutive_failures = 0; stats[\"extracted\"] += 1",
+   "for every field, never \"your JSON did not parse\") the paper is written",
+   "(2 hits, both about Pass 2's",
+   "tests/test_elicitation_pipeline.py::test_pass_2_is_skipped_when_no_field_survived",
+   "\" for a parseable non-compliant response (",
+   "). No test drives an empty/unparseable/"
+  ]
+ },
+ "L02-C2": {
+  "title": "L02-C2 \u2014 \"Value divergence is recorded, not reconciled\": it is not recorded anywhere that persists",
+  "class_line": "1 / P1 \u2014 provenance of a stored (value, snippet) pair: the stated record of a mismatch does not exist. (If ruled wording-only: 3 / P7.)",
+  "chars": 2237,
+  "quotes_found": 14,
+  "quotes_missing": 6,
+  "missing": [
+   "grep -rn value_divergence",
+   "over units Pass 1 cited for a positive value \u2014 the strict guard passes because",
+   "). The one signal that this happened is dropped; neither the event payload nor the telemetry row carries it.",
+   "has a fixed signature plus",
+   "carries Pass 1's per-field record but not Pass 1's value nor the divergence list (",
+   "key), so it cannot be re-derived from telemetry either \u2014 only by re-parsing"
+  ]
+ },
+ "L02-C3": {
+  "title": "L02-C3 \u2014 A blank Pass-2 value on an EVIDENCED field is stored as an `asserted` claim with a snippet",
+  "class_line": "1 / P1 \u2014 a stored claim with no value, not refused, not `contract_unmet`.",
+  "chars": 1693,
+  "quotes_found": 6,
+  "quotes_missing": 9,
+  "missing": [
+   "citation_counts={\"s\": 1}",
+   "ok=True, offenders=()",
+   "spans.append(EvidenceSpan(field_name=name, value=span.value, source_snippet=M.source_snippet(rec, unit_map),",
+   "EvidenceSpan.value: str",
+   "citation_guard.check_citations",
+   "is neither token nor sentinel and",
+   "is true, so no offender.",
+   "(or whitespace) for a field Pass 1 evidenced; the cell gets a live",
+   "claim with an empty value and a real snippet. Pass 1 enforces"
+  ]
+ },
+ "L02-C4": {
+  "title": "L02-C4 \u2014 JUDGMENT \"EVERY step cites a unit or is marked criteria application\" is not what `_parse_steps` enforces",
+  "class_line": "1 / P1 \u2014 a field's contract state (`asserted` vs `contract_unmet`) can be wrong; checker-side, not prompt-side, so not pin-affecting.",
+  "chars": 1823,
+  "quotes_found": 6,
+  "quotes_missing": 6,
+  "missing": [
+   "violations=() ok=True",
+   "for a two-step answer).",
+   "(or any non-empty value) is a basis.",
+   "with no check \u2014 a step with no text and",
+   "tests/test_elicitation_contracts.py",
+   "tests/test_elicitation_contracts.py"
+  ]
+ },
+ "L02-C5": {
+  "title": "L02-C5 \u2014 The index space a pinned elicited arm runs on is identified nowhere a claim or the manifest can reach",
+  "class_line": "1 / P1 \u2014 input identity of a pinned arm; (b) is pin-affecting.",
+  "chars": 2905,
+  "quotes_found": 13,
+  "quotes_missing": 6,
+  "missing": [
+   "review_dir / \"elicitation\" / unit_map_dir_name / \"unit_maps\" / f\"{paper_id}.json\"",
+   "extractor._default_run_id()",
+   ". The only place the name is recorded is",
+   "but not the segmenter's version;",
+   "(the library that decides every",
+   "or the installed pysbd changes every real paper's numbered text and need not change that render, so"
+  ]
+ },
+ "L02-C6": {
+  "title": "L02-C6 \u2014 `COMMENT_RE` does not match an unterminated comment, and an unterminated `<!--` swallows paper text up to the next `-->`",
+  "class_line": "1 if the condition occurs in any corpus, else 3 / P1 with A-10 and INT-g6-1.",
+  "chars": 2117,
+  "quotes_found": 4,
+  "quotes_missing": 7,
+  "missing": [
+   "does not match an unterminated comment, and an unterminated",
+   "swallows paper text up to the next",
+   "before the next comment \u2014 a Docling artifact cut by a page break, or literal",
+   "# Matches Docling's comment artifacts, including the unterminated tails pysbd would otherwise shred. Non-greedy so adjacent comments do not ",
+   "\"First real sentence here. <!-- image Second real sentence is lost. Third one too. <!-- formula-not-decoded --> Fourth sentence survives her",
+   "['First real sentence here.', 'Fourth sentence survives here.']",
+   "COMMENT_RE.search(\"text <!-- image and no close\")"
+  ]
+ },
+ "L02-C7": {
+  "title": "L02-C7 \u2014 A duplicate field on Pass-1 attempt 2 discards attempt 1 and writes a context chain that omits attempt 1's call",
+  "class_line": "1 / P1 \u2014 R224a(2) \"every model call's request hash \u2026 in call order\" not met on this path. Low frequency.",
+  "chars": 1986,
+  "quotes_found": 9,
+  "quotes_missing": 6,
+  "missing": [
+   "attached it to the exception (:145)\". When the raise comes from attempt 2, two calls ran.",
+   "raises before building its telemetry dict, and",
+   "is updated only after",
+   "returns, so the duplicate-bearing raw response and attempt 1's result reach no telemetry row (",
+   "payload.context_chain",
+   "still has both calls by run and stage, so the calls are not lost from the manifest \u2014 only from the claim's chain and the telemetry sidecar. "
+  ]
+ },
+ "L02-C8": {
+  "title": "L02-C8 \u2014 The sentinel rule spells `NR`; its `sentinels` argument is unused",
+  "class_line": "3 / P7 (prompt text \u21d2 pin-affecting if changed; schedule before the pin or leave) \u2014 engine-wide wording against a stated \"no hand-list\" guarantee.",
+  "chars": 1668,
+  "quotes_found": 1,
+  "quotes_missing": 10,
+  "missing": [
+   "engine/elicitation/prompts.py",
+   "def _sentinel_rule(escape: str, sentinels: str) -> str: return (f\"**The sentinel rule.** A sentinel such as NR is a claim about the paper",
+   "never used. Module docstring: \"**No hand-curated lists**",
+   "the escape token all come from the codebook\";",
+   ": \"the codebook's",
+   "read through the loader and never spelled here\". Also",
+   "gets a Pass-1 prompt teaching",
+   "as a sentinel; a model that emits it stores an ordinary value no consumer treats as absence. Nothing wrong on the live codebook (",
+   "tests/test_elicitation_prompts_ruling2.py::test_the_sentinel_rule_is_present_at_its_stated_intent",
+   "\u2014 the literal is pinned as the ruling's wording, so this may be accepted-as-built for the live review; the engine-wide statement is still un"
+  ]
+ },
+ "L02-C9": {
+  "title": "L02-C9 \u2014 \"First contiguous run\" is the lowest-numbered run, not the first cited",
+  "class_line": "3 / P7, or fold into INT-g12-1's Phase A \u2014 closes when the full citation set is on the claim.",
+  "chars": 1282,
+  "quotes_found": 1,
+  "quotes_missing": 4,
+  "missing": [
+   "engine/elicitation/materialize.py",
+   "'Unit number 12 has words.'",
+   ". Module docstring and CLAUDE.md: \"the span carries the FIRST CONTIGUOUS RUN of cited units\". For JUDGMENT,",
+   "' own docstring explains the sort (so"
+  ]
+ },
+ "L02-C10": {
+  "title": "L02-C10 \u2014 Container/index handling repairs shapes without recording it",
+  "class_line": "3 / P7 \u2014 telemetry/wording.",
+  "chars": 1160,
+  "quotes_found": 5,
+  "quotes_missing": 1,
+  "missing": [
+   "\"unit_indices\": 12"
+  ]
+ },
+ "L02-C11": {
+  "title": "L02-C11 \u2014 The Pass-2 priming message does not replace the legacy trace wrapper; it is nested inside it",
+  "class_line": "3 / P7 \u2014 wording; any change to the text is pin-affecting.",
+  "chars": 1675,
+  "quotes_found": 4,
+  "quotes_missing": 7,
+  "missing": [
+   "engine/elicitation/prompts.py",
+   "extractor.extract_pass2_structured(pass2_prompt, priming_msg,",
+   "extractor.pass2_messages",
+   "f\"Here is your prior analysis of this paper:\\n\\n{reasoning_trace}\\n\\nNow output the structured extraction as JSON matching the schema. Inclu",
+   "reasoning_trace = priming_msg",
+   "that the engine then overwrites. The pipeline docstring does say the message is passed \"as its",
+   "effective_config.render_messages"
+  ]
+ },
+ "L02-C12": {
+  "title": "L02-C12 \u2014 Small stated-vs-actual items in the retry path (batch)",
+  "class_line": "3 / P7.",
+  "chars": 1715,
+  "quotes_found": 8,
+  "quotes_missing": 9,
+  "missing": [
+   "engine/elicitation/prompts.py",
+   "docstring: \"Both attempts' telemetry is returned whichever one wins",
+   "discarding the losing attempt would delete the only evidence\" \u2014 the persisted",
+   ", not the losing attempt's",
+   "or request hash. (b)",
+   ": \"fields in the response's own order\" \u2014 it iterates",
+   "order. (c) For an unparseable attempt 1 the feedback lists every field as",
+   "you returned value: ''",
+   "; its text is not in"
+  ]
+ },
+ "L02-C13": {
+  "title": "L02-C13 \u2014 `EvidenceSpan` rewrites an out-of-range confidence silently, and its schema text states the legacy absence rule",
+  "class_line": "3 / P7 \u2014 confidence is not used for any decision I found in this lot.",
+  "chars": 1415,
+  "quotes_found": 3,
+  "quotes_missing": 6,
+  "missing": [
+   "engine/agents/models.py",
+   "EvidenceSpan.clamp_confidence",
+   ", with no log; the elicited path copies it (",
+   ") into the claim payload.",
+   "is carried in the Pass-2",
+   "schema on both paths; on the elicited path a sentinel requires a citation and the token is codebook-declared, not"
+  ]
+ },
+ "L03-C1": {
+  "title": "L03-C1 \u2014 `audit_run` writes `audited_ai` over any processing state, including a recorded failure",
+  "class_line": "1 / P1 \u2014 a paper's recorded outcome and analysis-readiness can be wrong without any error; the audit stage is on the Run-7 path (P6 if folded into D22's 023 bui",
+  "chars": 3647,
+  "quotes_found": 16,
+  "quotes_missing": 16,
+  "missing": [
+   "before audit : parse_failed parse_file_unreadable analysis_ready = False",
+   "report : AuditReport(papers_audited=1, located=1, not_located=0,",
+   "after audit : audited_ai None analysis_ready = True",
+   "audited event from_state: ('parse_failed', 'audited_ai')",
+   "engine/core/events.py::write_paper_event",
+   "takes the last processing-axis event, so",
+   "becomes the state and",
+   "~/scratch/12i-w1/repro/L03/L03_1_audited_ai_over_failure_state.py",
+   "by the next audit stage: the failure and its reason leave the processing axis, the paper becomes analysis-ready and PRISMA stops counting it",
+   "event). The mechanism is reproduced; the production sequence is the conditional part \u2014 it needs a failure event written after claims that st",
+   "without audit, or an audit refusal under D22, followed by a failed re-parse:",
+   "extraction_events._supersede_old_text_claims"
+  ]
+ },
+ "L03-C2": {
+  "title": "L03-C2 \u2014 The collapse monitor reports `OK` for a field that collapsed into absence (or has no observations at all)",
+  "class_line": "1 / P2 \u2014 an instrument reporting a clean result on the failure it exists to catch (if the PI rules the status intended, it drops to Class 3 wording: the report ",
+  "chars": 2929,
+  "quotes_found": 16,
+  "quotes_missing": 10,
+  "missing": [
+   "40 x 'Original Research' (control) -> raised DistributionCollapseError",
+   "40 x 'NR' (every paper absent) n= 0 distinct=0 status=OK gate: skipped=False collapsed=0 (did not raise)",
+   "31 x 'NR' + 9 x 'Original Research' n= 9 distinct=1 status=OK gate: skipped=False collapsed=0 (did not raise)",
+   "L03_2_monitor_blind_spots.py",
+   ", the summary counts it under",
+   ", the cloud contract does not raise, the local telemetry row (",
+   ") records no finding. A field 78% absent with one surviving level is likewise",
+   "docstring argues absences must not count as a level). That ruling is about not manufacturing a LEVEL; it does not say a field with zero obse",
+   ". The behaviour is pinned as built by",
+   "(\"All NR values \u2192 total_non_null = 0, OK\") \u2014 so this is \"pinned, not ruled\": no plan ruling found for the zero-observation status (grep"
+  ]
+ },
+ "L03-C3": {
+  "title": "L03-C3 \u2014 Values are counted raw, so one off-vocabulary spelling is a second \"level\" and COLLAPSED cannot fire",
+  "class_line": "1 / P2 \u2014 same reasoning as C2: the gate is silent on a real collapse.",
+  "chars": 2529,
+  "quotes_found": 9,
+  "quotes_missing": 9,
+  "missing": [
+   "39 x 'Original Research' + 1 x 'original research' n= 40 distinct=2 status=LOW_VARIANCE (did not raise)",
+   "15 x 'Original Research' + 1 x 'Original Research.' n= 16 distinct=2 status=OK (did not raise)",
+   "strips and case-folds only to DECIDE exclusion; the value appended is the stored string \u2014",
+   ". On the cloud contract (",
+   ", non-strict) nothing raises. Off-vocabulary values reach the store: the write path checks field names and citations, not categorical vocabu",
+   "grep categorizer|normalize_categorical|canonicali[sz]e",
+   ": none); looked for a codebook-vocabulary filter in the monitor: none. Grammar-constrained Pass 2 does not enumerate categorical values (sch",
+   "tests/test_distribution_monitor.py",
+   "TestCheckCollapsed::test_all_same_value_collapsed"
+  ]
+ },
+ "L03-C4": {
+  "title": "L03-C4 \u2014 LOW_YIELD has no reader: computed only for papers audited in this invocation, and surfaced only in a log line",
+  "class_line": "1 / P5 \u2014 a stated human-review gate that reaches no human (Class 3 if the PI rules LOW_YIELD telemetry-only; then the CLAUDE.md and spec sentences are the fix).",
+  "chars": 2639,
+  "quotes_found": 9,
+  "quotes_missing": 6,
+  "missing": [
+   "scripts/run_pipeline.py::_stage_audit",
+   "grep -rn \"low_yield\\|LOW_YIELD\" engine scripts analysis",
+   "(ledger, R111/R168) records that PRISMA's",
+   "is a substring count over",
+   "and that the legacy column's only reader (reader 11) retired; no row found that says the event-side value is unreported.",
+   "tests/test_audit_events.py::test_t10_low_yield_reads_the_codebook"
+  ]
+ },
+ "L03-C5": {
+  "title": "L03-C5 \u2014 The spec's `distribution_monitor` thresholds are declared, validated and hashed, and no caller reads them; the population floor is a second, ",
+  "class_line": "1 / P2 \u2014 recorded configuration differs from the applied one, silently (Class 3 if ruled a dead field to delete).",
+  "chars": 2845,
+  "quotes_found": 22,
+  "quotes_missing": 12,
+  "missing": [
+   "scripts/run_pipeline.py::_distribution_check",
+   "engine/cloud/base.py::run_distribution_check",
+   "run_post_extraction_check(Path(db.db_path), review_name, arm, review_dir / CODEBOOK_FILENAME, extracted_count=",
+   "grep \"distribution_monitor\\b\"",
+   "engine scripts analysis",
+   "spec.distribution_monitor",
+   "collapsed_min_papers: 5",
+   "docs/session-reports/SPEC-AUTH-01_phase-2_readout.md",
+   "GENERALIZE-READOUT-01_readout.md",
+   "grep MONITOR-WIRE",
+   "tests/test_distribution_monitor.py::TestConfigurableThresholds",
+   "tests/test_distribution_check_wiring.py"
+  ]
+ },
+ "L03-C6": {
+  "title": "L03-C6 \u2014 An unparseable or empty auditor response is stored as a `flagged` verdict",
+  "class_line": "3 / P7 \u2014 telemetry attribution (rises to 1 only if `audit_verdicts` ever gains a reader that filters on `flagged`).",
+  "chars": 2121,
+  "quotes_found": 12,
+  "quotes_missing": 8,
+  "missing": [
+   "wraps the whole call, so any pydantic",
+   "verdict='flagged'",
+   "AuditReport.flagged",
+   "audit_verdicts.verdict",
+   "audit_telemetry.record_verdict",
+   "grep \"unparseable output\" tests/",
+   "is mocked to return a verdict in every",
+   "ever gains a reader that filters on"
+  ]
+ },
+ "L03-C7": {
+  "title": "L03-C7 \u2014 `check_distribution` reads two codebooks; the CLI's `--codebook` is honoured for half the check",
+  "class_line": "3 / P7 \u2014 CLI-only; one authority should be chosen.",
+  "chars": 1637,
+  "quotes_found": 14,
+  "quotes_missing": 2,
+  "missing": [
+   "(or any caller passing a path other than the file beside the database) the list of categorical fields and the non-value tokens come from X w",
+   "and copies the same file beside the database ("
+  ]
+ },
+ "L03-C8": {
+  "title": "L03-C8 \u2014 \"Cross-family\" verification is stated, not enforced",
+  "class_line": "3 / P7 \u2014 wording unless the PI wants a spec-level refusal (then Class 2).",
+  "chars": 1421,
+  "quotes_found": 6,
+  "quotes_missing": 3,
+  "missing": [
+   "compares the audit model with the arm's (",
+   "in those three files: no hit).",
+   ") differs from the declared extractor family, so the default configuration meets the claim; no validator found. No plan row found ("
+  ]
+ },
+ "L03-C9": {
+  "title": "L03-C9 \u2014 Class 3 batch: stale or inexact text in the two modules",
+  "class_line": "3 / P7",
+  "chars": 1884,
+  "quotes_found": 10,
+  "quotes_missing": 8,
+  "missing": [
+   "is 57 (checked for several (k, n) pairs). The stored",
+   "keeps its signature for the tests and the two external callers\" \u2014",
+   ": \"Extraction arm (local, cloud arm name, human_X)\" and CLAUDE.md's",
+   "example \u2014 routing is the registry; a",
+   "arm reads OUT OF SCOPE (R13),",
+   "auditor.py::audit_span",
+   "auditor.py::semantic_verify(model=",
+   ") is the original's; only the legacy"
+  ]
+ },
+ "L04-C1": {
+  "title": "L04-C1 \u2014 A cloud arm's prompt hash and pin are taken over the codebook beside the database; its prompts are built from the codebook under `data/<revie",
+  "class_line": "1 (latent) / P1 \u2014 pin-affecting provenance for a cloud arm; dormant under R71 and the default `--db`.",
+  "chars": 2923,
+  "quotes_found": 17,
+  "quotes_missing": 13,
+  "missing": [
+   "engine/core/effective_config.py :: render_messages",
+   "engine/core/run_manifest.py :: open_run",
+   "; the sending half is",
+   "scripts/run_cloud_extraction.py --db <path>",
+   "scripts/run_cloud_extraction.py :: run_arm",
+   "pointing elsewhere,",
+   "and the arm pin's",
+   "all describe file A, while every outbound prompt is rendered from file B. No refusal:",
+   "identity gate \u2014 binds spec to",
+   "to the review. Default",
+   "makes A and B the same path (same cache object), so the default CLI is sound.",
+   "has no cloud/prompt-hash-vs-send case by name (grep of its test names for"
+  ]
+ },
+ "L04-C2": {
+  "title": "L04-C2 \u2014 `git_state` ignores git's return codes: a failed `git status` reads as a clean tree",
+  "class_line": "1 (latent) / P2 \u2014 a manifest can record the wrong code identity silently; the trigger is rare.",
+  "chars": 2269,
+  "quotes_found": 5,
+  "quotes_missing": 18,
+  "missing": [
+   "healthy repo, edited file : GitState(commit='e9ae",
+   "110d', dirty=True,",
+   "git status rc / stdout / err: 128 '' fatal: .git/index: index file smaller than expected",
+   "corrupt index, edited file : GitState(commit='e9ae",
+   "110d', dirty=False,",
+   "commit is 40 hex: True | dirty: False -> open_run's DirtyTree check would PASS",
+   "ignores git's return codes: a failed",
+   "engine/core/run_manifest.py :: git_state",
+   "'s is read). Reproducer",
+   "(throwaway repo, tracked file edited,",
+   "exits non-zero while",
+   "still answers (damaged or unreadable index), an edited tree opens a run whose manifest records"
+  ]
+ },
+ "L04-C3": {
+  "title": "L04-C3 \u2014 The model digest is read once at run open and never again; a model replaced under the same tag mid-run is attributed to the opening digest",
+  "class_line": "1 (latent) / P1 \u2014 pin/provenance of Run-7 claims; needs an operator action during a run.",
+  "chars": 1882,
+  "quotes_found": 11,
+  "quotes_missing": 5,
+  "missing": [
+   "engine/core/effective_config.py :: resolve_run",
+   "engine/core/run_manifest.py :: check_declared_call",
+   "run_stage_configs.model_digest",
+   "for the auditor digest at stage start) \u2014 none per call or at",
+   ". 12f triage grep for"
+  ]
+ },
+ "L04-C4": {
+  "title": "L04-C4 \u2014 `open_run` commits a caller's open transaction, against its own \"nests inside a caller's open transaction\" comment",
+  "class_line": "2 / P5 \u2014 a trap for the next importer; no live path reaches it.",
+  "chars": 2111,
+  "quotes_found": 8,
+  "quotes_missing": 9,
+  "missing": [
+   "engine/core/run_manifest.py :: open_run",
+   "of an outermost savepoint",
+   "is already False, so the",
+   "fires only when a caller's transaction was open \u2014 and commits it. Reproducer",
+   "in_transaction after RELEASE : True",
+   "rows after caller rollback : [('caller write, uncommitted',), ('manifest',)]",
+   "; and the manifest cannot be rolled back with the caller's work. Today's five production callers (",
+   "ft_screener.open_screening_manifest",
+   "run_cloud_extraction.run_arm"
+  ]
+ },
+ "L04-C5": {
+  "title": "L04-C5 \u2014 An arm named with no stages is pinned to an empty stage set (and to the codebook hash); `open_review_session(arms=\u2026)` would do this to any ar",
+  "class_line": "2 / P5 \u2014 loud refusal on the human-importer path, nothing corrupted.",
+  "chars": 1861,
+  "quotes_found": 8,
+  "quotes_missing": 7,
+  "missing": [
+   "open_review_session(arms=",
+   "engine/core/run_manifest.py :: pin_tuple",
+   "for key, r in sorted(resolved.items()) if r.arm_name == arm_name}",
+   "['stages.extract_pass1',",
+   "so the extraction run refuses forever (the arm is frozen once pinned). (b) a human arm is pinned to",
+   "'s pass-through and tests. R247 (the adjudicator opens an",
+   "tests/test_run_manifest.py :: test_a_review_session_is_a_run_with_zero_stage_rows"
+  ]
+ },
+ "L04-C6": {
+  "title": "L04-C6 \u2014 `run_calls` holds one row per `ollama_chat` call, not per request sent; the module docstring says \"one `run_calls` row per Ollama call (the h",
+  "class_line": "3 / P7 \u2014 telemetry completeness and docstring wording.",
+  "chars": 1535,
+  "quotes_found": 5,
+  "quotes_missing": 8,
+  "missing": [
+   "holds one row per",
+   "call, not per request sent; the module docstring says \"one",
+   "engine/utils/ollama_client.py :: ollama_chat",
+   "the recorder is called only from",
+   "except Exception as exc: _record(\"error\", exc=exc)",
+   "up to three times, and",
+   "once more, with no record per attempt.",
+   "row; the two abandoned generations (still running server-side, F14) leave no row. Counts of requests sent, and per-call durations, read from"
+  ]
+ },
+ "L04-C7": {
+  "title": "L04-C7 \u2014 `engine_state` accepts a lightweight tag; the docstring says a state \"is tagged with its bare name as an annotated tag\"",
+  "class_line": "3 / P7 \u2014 wording, or one `git cat-file -t` check.",
+  "chars": 1189,
+  "quotes_found": 2,
+  "quotes_missing": 6,
+  "missing": [
+   "engine/core/run_manifest.py :: git_state",
+   "git tag --points-at",
+   "git tag freshman",
+   "engine_state = 'freshman'",
+   "membership and a test with \"one annotated",
+   "tests/test_engine_state.py"
+  ]
+ },
+ "L04-C8": {
+  "title": "L04-C8 \u2014 `stage_config(stage, spec=None)` is documented as resolving from declared defaults for every stage, but raises for `ft_screen_primary`; and t",
+  "class_line": "3 / P7 \u2014 docstring and a source label.",
+  "chars": 1310,
+  "quotes_found": 5,
+  "quotes_missing": 6,
+  "missing": [
+   "stage_config(stage, spec=None)",
+   "engine/core/effective_config.py :: stage_config",
+   "it resolves from the spec model's declared defaults\".",
+   "return render.with_reason_code_vocabulary(FTScreeningDecision.model_json_schema(), spec.eligibility)",
+   "run_stage_configs.sources_json",
+   "; and the manifest's per-option source says the FT primary's format is a declared default when it is spec-derived (the"
+  ]
+ },
+ "L04-C9": {
+  "title": "L04-C9 \u2014 `_RUN_FIELD_NAMES` is keyed by `run_id` alone, though run ids are per database; \"written once by open_run and never changed\" does not hold ac",
+  "class_line": "3 / P7 \u2014 key by `run_uid`.",
+  "chars": 1307,
+  "quotes_found": 8,
+  "quotes_missing": 1,
+  "missing": [
+   "engine/core/run_manifest.py :: open_run"
+  ]
+ },
+ "L05-C1": {
+  "title": "L05-C1 \u2014 A stage policy is required of every model stage, but only `abstract_primary` renders one; the FT human sheet renders `ft_primary`'s",
+  "class_line": "1 / P4 \u2014 a human gate can state a policy the model stage was never given; reachable from any spec, latent on live.",
+  "chars": 4003,
+  "quotes_found": 21,
+  "quotes_missing": 18,
+  "missing": [
+   "\"Every model stage must declare its policy, exclusion_basis included; an undeclared stage \"",
+   "parts.append(_VERIFIER_CLOSER[stage]) # no policy_for() read",
+   "screening_hash moved: True",
+   "ft_primary prompt identical: True",
+   "ft_verifier prompt identical: True",
+   "abstract_verifier prompt identical: True",
+   "ft_adjudication guidance (alt) : When in doubt between FT_ELIGIBLE and FT_SCREENED_OUT, lean toward FT_ELIGIBLE. Choose FT_SCREENED_OUT only",
+   "engine/core/review_spec.py :: Eligibility._check",
+   "engine/core/eligibility_render.py :: decision_instruction",
+   "engine/agents/ft_screener.py :: build_ft_screening_prompt",
+   "ADJUDICATES[\"ft_adjudication\"] = \"ft_primary\"",
+   "L05_5_stage_policy_not_rendered.py"
+  ]
+ },
+ "L05-C2": {
+  "title": "L05-C2 \u2014 The codebook's `review` is never checked on any run path; only `load_codebook_for` checks it",
+  "class_line": "1 / P1 \u2014 a run can extract under another review's codebook without refusal; conditional on a mis-copied file, which the smoke procedure makes plausible.",
+  "chars": 3116,
+  "quotes_found": 20,
+  "quotes_missing": 14,
+  "missing": [
+   "is never checked on any run path; only",
+   "engine/core/codebook.py :: load_codebook",
+   "key is checked against the review it was asked for\";",
+   "git grep -E 'codebook\\.review|cb\\.review'",
+   "engine/agents/extractor.py :: extract_paper",
+   "cb_path = Path(db.db_path).parent / CODEBOOK_FILENAME; cb = load_codebook(cb_path); prompt = build_extraction_prompt(paper_text, spec, cb_pa",
+   "engine/cloud/base.py :: __init__",
+   "engine/core/run_manifest.py :: open_run",
+   "and the codebook's two hashes and reads",
+   "it declares. The realistic trigger is R235's own procedure (copy",
+   "beside a new review id \"with",
+   "changed and nothing else\"): the spec half of that edit is enforced by"
+  ]
+ },
+ "L05-C3": {
+  "title": "L05-C3 \u2014 `INVALID_SNIPPET_RE` cannot tell a bridged snippet from a verbatim quote that contains an ellipsis",
+  "class_line": "1 / P1 \u2014 an audit status / located payload says \"bridged\" about a verbatim quote. How often parsed texts carry ellipses was not measured (see Could not establis",
+  "chars": 2587,
+  "quotes_found": 9,
+  "quotes_missing": 12,
+  "missing": [
+   "'the robot \u201cperformed the anastomosis",
+   "withou' | regex hit: True | located: True exact | bridged: True",
+   "'the task completed",
+   "as planned' | regex hit: True | located: True exact | bridged: True",
+   "engine/core/constants.py :: INVALID_SNIPPET_RE",
+   "engine/agents/extractor.py :: _has_invalid_snippet",
+   "engine/core/locator.py :: locate",
+   "extractor.py :: _retry_snippet",
+   "L05_6_ellipsis_regex.py",
+   "(paper text that itself contains",
+   "or a dotted leader is labelled bridged/invalid although it is an EXACT substring of the paper: the auditor returns",
+   "without locating it, the extractor spends its snippet retries and nulls a retry answer that is again verbatim, and"
+  ]
+ },
+ "L05-C4": {
+  "title": "L05-C4 \u2014 The semantic hash omits `canonical_absence_sentinel`, which reaches the extraction prompt",
+  "class_line": "1 (weak \u2014 second witnesses exist; 3 if those are held sufficient) / P1 pin-affecting \u2014 adding the key moves every semantic hash and therefore every pin, so it i",
+  "chars": 2725,
+  "quotes_found": 12,
+  "quotes_missing": 12,
+  "missing": [
+   "semantic_hash equal: True",
+   "byte sha256 equal: False",
+   "legacy extraction prompt equal: False",
+   "engine/core/codebook.py :: SEMANTIC_KEYS",
+   "extractor.py :: build_extraction_prompt",
+   "elicitation/prompts.py",
+   "L05_1_semantic_hash_blind_to_canonical.py",
+   "run_manifests.codebook_hash",
+   "are identical for two codebooks that prompt differently and write a different absence value. C34's closure names this hash \"the schema ident",
+   "is rendered through the codebook (",
+   "run_manifests.codebook_sha256",
+   "tests/test_codebook_loader.py :: test_semantic_hash_moves_on_a_token_edit"
+  ]
+ },
+ "L05-C5": {
+  "title": "L05-C5 \u2014 Eligibility validation leaves three render-time failures to the first paper that meets them",
+  "class_line": "2 / P4 \u2014 (b) is a loud mid-run stop; (a) is the silent one and would be Class 1 on a spec that hit it.",
+  "chars": 2261,
+  "quotes_found": 5,
+  "quotes_missing": 10,
+  "missing": [
+   "no-ft-verifier-tests spec validates; instruction = 'Apply these tests strictly:\\n\\n\\nIf ANY test fails, mark as FT_FLAGGED. Only mark FT_ELI",
+   "no-evidence-criterion spec validates; first abstract-less paper raises ValueError: stage 'abstract_primary' can render a paper with no abstr",
+   "engine/core/review_spec.py :: Eligibility._check",
+   "engine/core/eligibility_render.py :: decision_instruction",
+   "VerifierTest.stages: list[Stage]",
+   "is called for verifier stages only;",
+   "and nothing at load requires it.",
+   "screener.run_screening",
+   "Eligibility._check",
+   "tests/test_eligibility.py :: test_the_fallback_refuses_when_no_evidence_criterion_applies"
+  ]
+ },
+ "L05-C6": {
+  "title": "L05-C6 \u2014 A YAML key declared twice is accepted by both loaders; the earlier declaration silently never takes effect",
+  "class_line": "3 / P7 \u2014 records stay true; Class 1 if a dead declaration in the configuration authority is counted as the docstring counts a dropped key.",
+  "chars": 1877,
+  "quotes_found": 1,
+  "quotes_missing": 9,
+  "missing": [
+   "codebook loaded; escape_token = SECOND_TOKEN | robot_platform.definition = SOMETHING ELSE ENTIRELY.",
+   "spec loaded; low_yield_threshold 4 -> 19",
+   "ft primary qwen3:32b -> some-other-model:1b | ft verifier gemma3:27b -> gemma3:27b",
+   "engine/core/review_spec.py :: load_review_spec",
+   "engine/core/codebook.py :: _parse",
+   "docstring: \"a misspelled key was dropped with no error and no warning, so a review could declare configuration that never took effect and re",
+   ", which keeps the last of two identical keys without error.",
+   "git grep \"duplicate key\"",
+   "tests/test_codebook_loader.py :: test_duplicate_field_name_rejected"
+  ]
+ },
+ "L05-C7": {
+  "title": "L05-C7 \u2014 Codebook scalars are not type-checked: unquoted yes/no/null load as booleans and None",
+  "class_line": "2 / P1 \u2014 loud for values; the sentinel case is the silent remainder.",
+  "chars": 1799,
+  "quotes_found": 5,
+  "quotes_missing": 11,
+  "missing": [
+   "enum_values('randomised') = [True, False]",
+   "absence_sentinels = ('NR', 'NOT_FOUND', 'False', 'None')",
+   "is_absence_sentinel('NO') = False | ('False') = True | ('None') = True",
+   "build_extraction_prompt raised: TypeError sequence item 0: expected str instance, bool found",
+   "normalize._build_prefix_map raised: TypeError expected string or bytes-like object, got 'bool'",
+   "engine/core/codebook.py :: _validate_valid_values",
+   "and uniqueness, never",
+   "L05_4_yaml_bool_values.py",
+   "(the commonest categorical pair) passes \"eager validation\" and fails later with a",
+   "inside prompt building \u2014 loud, but far from the cause. An unquoted sentinel",
+   "tests/test_codebook_loader.py"
+  ]
+ },
+ "L05-C8": {
+  "title": "L05-C8 \u2014 `Codebook.sha256` is not the hash of the file's bytes",
+  "class_line": "3 / P2 \u2014 latent on this host; a one-line change to hash `read_bytes()`.",
+  "chars": 1614,
+  "quotes_found": 7,
+  "quotes_missing": 6,
+  "missing": [
+   "engine/core/codebook.py :: _parse",
+   "decodes in the locale encoding with universal newlines.",
+   "compute_codebook_sha256()",
+   "run_manifests.codebook_sha256",
+   "of the file reproduces only the latter. Two files differing only in line endings share a",
+   "tests/test_codebook_loader.py :: test_byte_hash_is_the_same_function_the_judge_lane_uses"
+  ]
+ },
+ "L05-C9": {
+  "title": "L05-C9 \u2014 The declared screening defaults pair two models of one family",
+  "class_line": "3 / P7 \u2014 a default that contradicts the stated pattern.",
+  "chars": 1135,
+  "quotes_found": 4,
+  "quotes_missing": 5,
+  "missing": [
+   "engine/core/review_spec.py :: ScreeningModels",
+   "ReviewSpec.screening_models",
+   ", runs a same-family verifier; the manifest records it truthfully as",
+   "ReviewSpec._arms_consistent",
+   "Eligibility._check"
+  ]
+ },
+ "L05-C10": {
+  "title": "L05-C10 \u2014 The requested-id check accepts a trailing newline",
+  "class_line": "3 / P7 \u2014 `re.fullmatch` closes it.",
+  "chars": 1220,
+  "quotes_found": 3,
+  "quotes_missing": 7,
+  "missing": [
+   "engine/core/review_paths.py :: _validate_requested_id",
+   "also matches before a final",
+   "L05_7_review_id_newline.out",
+   "PosixPath('data/surgical_autonomy\\n') PosixPath('review_specs/surgical_autonomy\\n.yaml')",
+   "data_root_for(\"x\\n\")",
+   "then fails as file-not-found, the message the check exists to replace; a caller that takes",
+   "tests/test_review_paths.py"
+  ]
+ },
+ "L06-C1": {
+  "title": "L06-C1 \u2014 A row-2 exit that names only the competing decisions discharges the conflict and silently returns the machine's value; both human decisions v",
+  "class_line": "1 / P5 \u2014 a human gate's outcome is silently replaced by the machine value in every reader behind `effective_value`; lands with the human importer.",
+  "chars": 3762,
+  "quotes_found": 19,
+  "quotes_missing": 10,
+  "missing": [
+   "A before exit: value=None state='unresolved (needs re-review)' row=2 prov_keys=['decisions', 'exit']",
+   "writer accepted the decision-only resolving event (no refusal)",
+   "A after exit : value='5' state='asserted without locatable evidence' row=11 prov_keys=['actor','arm','claim_id','located','role','snippet_su",
+   "then acts on it only through",
+   "empty and a live claim present, neither branch fires,",
+   "~/scratch/12i-w1/repro/L06/L06_1_reviewer_paths.py",
+   "human_accepted|human_corrected|human_withdrew",
+   ", migrations and a comment in",
+   "tests/test_effective_reader.py::test_row2_exit_a_decision_referencing_all_competing_decisions",
+   "tests/test_event_writer_refusals.py::test_r20_refuses_a_reviewer_decision_with_an_empty_against_reference"
+  ]
+ },
+ "L06-C2": {
+  "title": "L06-C2 \u2014 ACCEPT on a duplicate-valued claim is not \"refused at write\", and the reader then endorses whichever asserted value is newest",
+  "class_line": "1 / P5 \u2014 an endorsement attaches to a value the reviewer was not shown; conditional on the two writers named above.",
+  "chars": 3330,
+  "quotes_found": 10,
+  "quotes_missing": 11,
+  "missing": [
+   "B1 before : value=None state='unresolved (duplicate values)' row=6",
+   "writer accepted ACCEPT (no AcceptAgainstMultipleClaims)",
+   "B1 after : value='50'",
+   ", 'rule_row_endorsement',",
+   "B2 accepted : value='5'",
+   "B2 after dup : value='50'",
+   "'endorsed' (presented_context_sha256 unchanged: 'ctx-human_accepted')",
+   "extraction_events.legacy_record",
+   "), 016 deliberately keeps no UNIQUE on",
+   "tests/test_effective_reader.py::test_row6_exit_correct_naming_every_competing_claim",
+   "tests/test_event_writer_refusals.py::test_r20_refuses_accept_when_more_than_one_claim_is_live"
+  ]
+ },
+ "L06-C3": {
+  "title": "L06-C3 \u2014 Row 3's stated exit lands in row 2 unless the new decision repeats the stale one's effect",
+  "class_line": "2 / P5 \u2014 the cell stays unresolved until a second, undocumented reference is supplied; the importer's design must know it.",
+  "chars": 2215,
+  "quotes_found": 8,
+  "quotes_missing": 5,
+  "missing": [
+   "row=3 exit text: a new decision against the current claim",
+   "C after exit : value=None state='unresolved (needs re-review)' row=2",
+   "exit text: a reviewer event referencing all competing decisions (R20)",
+   "row 3 provenance;",
+   "tests/test_effective_reader.py::test_row3_reviewer_decision_against_a_superseded_claim_is_unresolved"
+  ]
+ },
+ "L06-C4": {
+  "title": "L06-C4 \u2014 The reader's sentinel test is exact membership, not the codebook's one predicate; a case or whitespace variant reads at row 10/11 instead of ",
+  "class_line": "3 / P7 \u2014 an exported provenance number, two predicates for one question; no value or state changes.",
+  "chars": 1779,
+  "quotes_found": 9,
+  "quotes_missing": 3,
+  "missing": [
+   "). Reproducer case D:",
+   "use the exact spelling",
+   "tests/test_effective_reader.py::test_row13_sentinel_with_no_located_event"
+  ]
+ },
+ "L06-C5": {
+  "title": "L06-C5 \u2014 `corpus.py`'s \"exactly one permitted consumer\" is two: `analysis/eval/schema_eval2.py` still imports and calls it, and the guard test require",
+  "class_line": "3 / P7 \u2014 wording plus an overdue retirement; an eval harness, not an engine path.",
+  "chars": 1835,
+  "quotes_found": 9,
+  "quotes_missing": 1,
+  "missing": [
+   "'s \"exactly one permitted consumer\" is two:"
+  ]
+ },
+ "L06-C6": {
+  "title": "L06-C6 \u2014 Docstring drift in `effective.py` (four sentences)",
+  "class_line": "3 / P7 \u2014 wording.",
+  "chars": 1643,
+  "quotes_found": 6,
+  "quotes_missing": 2,
+  "missing": [
+   ", module docstring /",
+   "tests/test_two_axis_state_and_grid.py::test_eligible_paper_ids_is_the_eligibility_axis_only"
+  ]
+ },
+ "L07-C1": {
+  "title": "L07-C1 \u2014 A text made only of the parser's own `<!-- Page N -->` markers is never \"empty\": 1 page passes the gate, \u22652 pages is stored and excluded as S",
+  "class_line": "1 / P4 \u2014 a textless paper can reach `PARSED` (1 page), and a textless \"parse\" is stored with full provenance under a wrong criterion.",
+  "chars": 4695,
+  "quotes_found": 18,
+  "quotes_missing": 17,
+  "missing": [
+   "engine/parsers/parse_quality.py",
+   "is_empty_metric=False verdict=PASS units=2 short%=50.0 cpu=8.0",
+   "verdict=FAIL: SHATTERED=(60.0, 7.8)",
+   "sparse(<thr)=False",
+   "verdict=FAIL: SHATTERED=(64.3, 7.7)",
+   "verdict=FAIL: SHATTERED=(66.5, 8.0)",
+   "), is accepted, written as the parsed text, and",
+   "chars) is passed by the markers alone. The least-bad marker-only text is accepted, stored as",
+   "with asset + ref rows, and the paper ends",
+   "/ \"parse_quality: SHATTERED=",
+   "\" (terminal) instead of",
+   "markers, non-empty and worthless, and storing page markers as a paper is worse than refusing the parse\"; \"Empty output is unusable always\";"
+  ]
+ },
+ "L07-C2": {
+  "title": "L07-C2 \u2014 The same-hash short-circuit returns no verdict and the driver reads \"no accepted attempt\" as a pass: a stored gate-FAILED parse becomes `PARS",
+  "class_line": "1 / P4 \u2014 the parse-quality gate is bypassed silently on resume.",
+  "chars": 3434,
+  "quotes_found": 10,
+  "quotes_missing": 21,
+  "missing": [
+   "existing = None if force else db._conn.execute(\"SELECT parsed_text_version, parser_used FROM full_text_assets WHERE paper_id = ? AND pdf_has",
+   "version=version, accepted_parser=stored_parser)",
+   "else: db.update_status(pid, \"PARSED\"); stats[\"parsed\"] += 1",
+   "commits asset + ref + attempts (",
+   "while holding a stored parse whose accepted attempt failed the gate is promoted to",
+   "on the next ordinary parse stage, with no gate, no exclusion reason and no log beyond \"already parsed (v%d, same hash) \u2014 skipping\". Routes t",
+   "/commit raises after",
+   "and, under a run, writes a",
+   "; (2) process death between",
+   "'s commit and the status write; (3)",
+   "paper (it \"never calls",
+   "\" by design, so a failing re-parse is left stored); (4) an operator returning a"
+  ]
+ },
+ "L07-C3": {
+  "title": "L07-C3 \u2014 An interrupt inside the asset write block makes the outer handler COMMIT the half-done transaction",
+  "class_line": "1 / P2 \u2014 committed provenance for an unpublished file, produced by the interrupt path the run layer otherwise handles.",
+  "chars": 2849,
+  "quotes_found": 16,
+  "quotes_missing": 12,
+  "missing": [
+   "connects with the default isolation level, so the block's",
+   ", which commits the pending asset row, the",
+   "row (final path, sha256) and the hash update. The rename never ran, so only",
+   "is on disk. Result is F01's state (committed ref, no final file \u2192 later",
+   "; next parse stage short-circuits to",
+   ") reached by a path F01's reorder alone does not remove; and if the interrupt lands after the block's own",
+   ", the attempt rows are written twice (",
+   "has no UNIQUE on",
+   "is non-empty (always, once a parser was judged); that no SAVEPOINT or explicit",
+   "tests/test_parse_ocr_tier.py::test_the_ledger_survives_a_raise_out_of_parse_pdf",
+   "tests/test_parse_gate.py::test_failure_between_asset_and_attempt_rows_leaves_neither",
+   "subclasses only; none injects a"
+  ]
+ },
+ "L07-C4": {
+  "title": "L07-C4 \u2014 A tier that RAISES on a re-route ends the cascade, and the paper is `PDF_EXCLUDED` (terminal) on an engine or environment fault",
+  "class_line": "1 / P4 \u2014 an environment fault becomes a terminal exclusion with a quality reason.",
+  "chars": 2663,
+  "quotes_found": 4,
+  "quotes_missing": 14,
+  "missing": [
+   "(re-route tail of the judge loop),",
+   "except Exception as exc: _record_error(nxt, exc, started); break",
+   "accepted = select_attempt([a for a in attempts if a.parser_used not in unusable])",
+   "raises (memory, a missing ONNX model) \u2192 the cascade stops without trying",
+   ", the next entry of the same",
+   "tuple. Or the vision tier raises because Ollama is down / times out /",
+   ". Either way the paper is excluded *terminally* as a parse-quality outcome, the stored text is the damaged one, and under a run no event is ",
+   ", which is retriable and carries a reason); this site converts the same faults to a terminal human-gate-like status with the cause visible o",
+   ". Also contradicts the selection-loop comment \"A cap is not a dead end -- it removes ONE candidate, and the criterion's remaining order stil",
+   "on this path \u2014 only",
+   "tests/test_parse_gate.py::test_the_reroute_chain_is_bounded",
+   "tests/test_parse_*.py"
+  ]
+ },
+ "L07-C5": {
+  "title": "L07-C5 \u2014 `FONT_EXPOSURE` is a gate criterion with no re-route entry: a document that fails it alone is excluded with no remedy tried",
+  "class_line": "2 / P4 \u2014 fails closed (exclusion), but a recoverable paper is lost from the corpus without the remedy being tried.",
+  "chars": 2158,
+  "quotes_found": 6,
+  "quotes_missing": 6,
+  "missing": [
+   "engine/parsers/parse_quality.py",
+   ". No tier is re-routed to; the Docling text is accepted least-bad and the paper is",
+   "although the OCR tier \u2014 the stated remedy for exactly this defect \u2014 was never run.",
+   "FONT_EXPOSURE \u2265 GLYPH_DENSITY",
+   "tests/test_font_audit_ledger.py::test_font_exposure_dominates_glyph_density",
+   "tests/test_parse_ocr_tier.py::test_every_criterion_reroutes_to_the_ocr_tier_before_vision"
+  ]
+ },
+ "L07-C6": {
+  "title": "L07-C6 \u2014 Font audit: a signature font whose characters do not join by name contributes zero, with no residual and no warning",
+  "class_line": "1 (conditional) / P4 \u2014 a gate criterion's false negative with a clean-looking ledger row.",
+  "chars": 2325,
+  "quotes_found": 10,
+  "quotes_missing": 9,
+  "missing": [
+   "'s span font name is not one of",
+   "/DescendantFonts 12 0 R",
+   "' own docstring says fails (\"699's parent is",
+   "a reader matching on the parent finds nothing\"). In",
+   "passes, and silently wrong characters enter the parsed text of a",
+   "paper. This is the failure shape the",
+   ") is handled; PARSE-GATE-10's 88/88 corpus objects evidently use it.",
+   "still catches the",
+   "tests/_font_fixtures.py"
+  ]
+ },
+ "L07-C7": {
+  "title": "L07-C7 \u2014 `reparse_papers` \"leaves the ruling to a person\", but its new version is immediately the current text for every reader",
+  "class_line": "1 (latent, no caller) / P2 \u2014 changes the input identity of later results without a decision.",
+  "chars": 1710,
+  "quotes_found": 4,
+  "quotes_missing": 5,
+  "missing": [
+   "parse_pdf(force=True)",
+   "engine/core/parsed_text.py::resolve_parsed_text",
+   "grep reparse_papers",
+   ": definition and docstrings only; tests call it), so nothing triggers it today. Whether claims pin their",
+   "tests/test_parse_gate.py::test_reparse_writes_new_version_and_leaves_status_alone"
+  ]
+ },
+ "L07-C8": {
+  "title": "L07-C8 \u2014 `strip_links_to_temp` raising aborts the cascade before PyMuPDF and leaks the temp copy",
+  "class_line": "2 / P4 \u2014 loud, recorded as failed; a recoverable paper is not recovered.",
+  "chars": 1520,
+  "quotes_found": 11,
+  "quotes_missing": 4,
+  "missing": [
+   "try/finally: doc.close()",
+   "as a raw exception: PyMuPDF text extraction \u2014 the tier that might have parsed it \u2014 is never tried,",
+   "/tmp/parse_sanitized_*.pdf",
+   ", still None here."
+  ]
+ },
+ "L07-C9": {
+  "title": "L07-C9 \u2014 `vision_max_pages` is not applied on either initial route",
+  "class_line": "2 / P4 \u2014 an unbounded model workload the spec says is bounded.",
+  "chars": 1652,
+  "quotes_found": 7,
+  "quotes_missing": 2,
+  "missing": [
+   "*; the digital sparse branch does the same. Spec text (",
+   "tests/test_parse_ocr_tier.py::test_ocr_cap_skips_the_tier_and_the_next_parser_is_tried"
+  ]
+ },
+ "L07-C10": {
+  "title": "L07-C10 \u2014 \"No PDF found\" in `parse_all_pdfs` is a log line and a counter, with no event even under a run",
+  "class_line": "2 / P4 \u2014 silent non-outcome, nothing corrupted.",
+  "chars": 1351,
+  "quotes_found": 3,
+  "quotes_missing": 6,
+  "missing": [
+   "if not pdf_path: logger.warning(\"Paper %d: no PDF found in %s\", pid, pdf_dir); stats[\"failed\"] += 1; continue",
+   "branch (the only event writers) sees it. Docstring: \"when given, a",
+   "paper whose file is missing or renamed is counted with real parse failures in",
+   ", gets no processing-axis state and no reason, and is silently retried every run. By contrast a file that exists but cannot be opened gets",
+   "branches (10a-C6-A census); this branch is in the driver and is not in that list. D20 records that no writer of",
+   "tests/test_parse_failures.py"
+  ]
+ },
+ "L07-C11": {
+  "title": "L07-C11 \u2014 The attempt ledger omits a sparse Docling result on the digital route, and `tried` omits tiers that were skipped or raised",
+  "class_line": "3 / P7 \u2014 telemetry completeness and a wasted attempt.",
+  "chars": 1798,
+  "quotes_found": 2,
+  "quotes_missing": 9,
+  "missing": [
+   "(digital sparse fall-through;",
+   "markdown = parse_with_pymupdf(pdf_path); parser_used = \"pymupdf\"",
+   "for the discarded Docling output (the scanned branch records",
+   "for the same event; the PyMuPDF\u2192vision sparse step likewise records nothing for PyMuPDF).",
+   "happens only inside the judge loop, so a tier recorded by",
+   "on the initial route is not in",
+   "'s \"'docling was tried and blew up' and 'docling was never tried' are different facts and the ledger must be able to tell them apart\". (b) s",
+   "tests/test_parse_ocr_tier.py::test_sparse_length_fallback_still_precedes_the_gate",
+   "tests/test_parse_gate.py::test_sparse_length_fallback_precedes_the_quality_gate"
+  ]
+ },
+ "L07-C12": {
+  "title": "L07-C12 \u2014 `audit()` picks a font's program facts by stripped NAME, `font_structure()` by signature object",
+  "class_line": "3 / P7 \u2014 telemetry only.",
+  "chars": 1472,
+  "quotes_found": 7,
+  "quotes_missing": 5,
+  "missing": [
+   "picks a font's program facts by stripped NAME,",
+   "docstring names 586's",
+   "of the clean same-named font (and the clean row those of the signature font), and",
+   "is computed against the wrong glyph-emptiness table. The two entry points can disagree about the same PDF. Stored in",
+   "test_font_audit_ledger.py"
+  ]
+ },
+ "L07-C13": {
+  "title": "L07-C13 \u2014 `verify_hashes` compares against an arbitrary asset row's path, resolved against the cwd",
+  "class_line": "3 / P7",
+  "chars": 1236,
+  "quotes_found": 9,
+  "quotes_missing": 1,
+  "missing": [
+   "does \u2014 so the CLI reports"
+  ]
+ },
+ "L07-C14": {
+  "title": "L07-C14 \u2014 Small stated-versus-actual items in the parse driver",
+  "class_line": "3 / P7",
+  "chars": 1109,
+  "quotes_found": 7,
+  "quotes_missing": 0,
+  "missing": []
+ },
+ "W1-F1-C1": {
+  "title": "W1-F1-C1 \u2014 an exception after the paper's events are committed is recorded as that paper's extraction failure",
+  "class_line": "1 / P1 \u2014 a stored paper's state is made wrong and unrecoverable by selection; low likelihood, one-line narrowing of the `try`, same lines as C56's extract-path ",
+  "chars": 4255,
+  "quotes_found": 21,
+  "quotes_missing": 23,
+  "missing": [
+   ") # write_extraction_events commits in here",
+   "progress.report(pid, \"EXTRACTED\", elapsed) # print(line, file=sys.stderr, flush=True)",
+   "model calls made: 2",
+   "stats: {'extracted': 1, 'failed': 1, 'total_spans': 20}",
+   "extractor paper events, in order: [('extracted', 'extracted', None), ('extraction_failed', 'extraction_failed', 'unclassified_error')]",
+   "live claims of the arm on the paper: 20",
+   "effective_state: processing=extraction_failed reason=unclassified_error analysis_ready=False",
+   "next run's selection: to_extract=[] skipped_asserted=[1]",
+   "supersedes only claims whose reuse key differs (",
+   "repro/W1-F1/W1-F1_1_post_commit_exception.py",
+   "ProgressReporter.report",
+   "on a non-blocking stderr,"
+  ]
+ },
+ "W1-F1-C2": {
+  "title": "W1-F1-C2 \u2014 at budget exhaustion the stored outcome is the last attempt's alone",
+  "class_line": "1 (weak) / P1 \u2014 a stored `contract_unmet` and its `attempts` can misstate what the arm produced; goes with A-11's R535 fix. A PI decision on the policy (last / ",
+  "chars": 3404,
+  "quotes_found": 9,
+  "quotes_missing": 16,
+  "missing": [
+   "--- case a: (attempt 1: A uncited; attempt 2: B uncited; attempt 3: C uncited)",
+   "extractor paper events: [('extracted', 'extracted', None)]",
+   "study_type: asserted value='attempt3' attempts=None violation_codes=None",
+   "robot_platform: asserted value='attempt3' attempts=None violation_codes=None",
+   "task_performed: contract_unmet value=None attempts=3 violation_codes=['VALUE_WITHOUT_CITATION']",
+   "--- case b: (attempts 1 and 2: 19 cited fields each; attempt 3: unparseable JSON)",
+   "extractor paper events: [('extraction_failed', 'extraction_failed', 'response_unparseable')]",
+   "claim-bearing events stored: 0",
+   "for the one exception it is handed; a",
+   "repro/W1-F1/W1-F1_3_last_attempt_wins.py",
+   "\u2014 the payload reads as \"failed three times\" when it is the paper's attempt number \u2014 and its two good values are gone; the paper is",
+   ", so selection never revisits it. (b) which attempt comes last decides between \"19 fields stored\" and \"nothing stored,"
+  ]
+ },
+ "W1-F1-C3": {
+  "title": "W1-F1-C3 \u2014 a blank value with a non-empty snippet is stored as an asserted value",
+  "class_line": "1 (weak) / P1 \u2014 a non-value stored as a value on the Run-7 path; the elicited path's equivalent was not read (other lot).",
+  "chars": 2172,
+  "quotes_found": 5,
+  "quotes_missing": 11,
+  "missing": [
+   "study_type: event=asserted value='' snippet='Snippet for study_type.' -> reader row 11, state asserted without locatable evidence, is_absenc",
+   "robot_platform: event=asserted value=' ' snippet='Snippet for robot_platform.' -> reader row 11, state asserted without locatable evidence, ",
+   "paper processing: extracted",
+   "enforce_citations(mode=LEGACY)",
+   "EvidenceSpan.value: str",
+   "refuses a value only for missing evidence (",
+   "tests the value itself.",
+   "schema constrains",
+   "to a string, not to a non-empty one (12f A11's schema dump);",
+   "has no value check for",
+   "field_events.value"
+  ]
+ },
+ "W1-F1-C4": {
+  "title": "W1-F1-C4 \u2014 `context_chain` omits a snippet-retry call that was sent and answered but did not parse",
+  "class_line": "3 / P1 \u2014 provenance detail, recoverable; fixed for free if C56's handler-#4 narrowing parses outside the call's `try`.",
+  "chars": 2519,
+  "quotes_found": 10,
+  "quotes_missing": 10,
+  "missing": [
+   "run_calls rows: [('extract_pass1', 'completed'), ('extract_pass2', 'completed'), ('extract_retry_snippet', 'completed'), ('extract_retry_sni",
+   "context_chain length on the retried field's claim: 2",
+   "retry call hashes present in the chain: [False, False]",
+   "stored snippet for the retried field: None",
+   "'s success path)\". Here",
+   "did return the hash; the parse failure discards it.",
+   "repro/W1-F1/W1-F1_2_retry_chain_omits_answered_call.py",
+   "but absent from every claim's",
+   "; the claims then state a shorter call chain than the paper's extraction made. Recoverable from",
+   "tests/test_presented_context.py::test_T4_a_retried_snippet_carries_its_own_hash_a_clean_one_does_not"
+  ]
+ },
+ "W1-F1-C5": {
+  "title": "W1-F1-C5 \u2014 failure paper events carry a hard-coded `stage_name` that is not where the failure occurred",
+  "class_line": "3 / P7 \u2014 a recorded label nobody reads.",
+  "chars": 1615,
+  "quotes_found": 13,
+  "quotes_missing": 4,
+  "missing": [
+   "for every exception \u2014 including",
+   "and the input-fit family raised by Pass 1, and every failure of the elicited path, whose first stage is",
+   ", a stage an elicited run never declares (",
+   "(grep), so nothing consumes the wrong label today;"
+  ]
+ },
+ "W1-F1-C6": {
+  "title": "W1-F1-C6 \u2014 `build_extraction_prompt` states an identity refusal for a codebook override that it does not perform; the run path never compares the code",
+  "class_line": "3 / P7 \u2014 stated guarantee; becomes Class 1 / P1 only if the PI wants spec\u2194codebook identity enforced at run open.",
+  "chars": 2195,
+  "quotes_found": 12,
+  "quotes_missing": 6,
+  "missing": [
+   ": \"No identity check: the caller named a file and no review to check it against.\"",
+   "is the form that checks.",
+   "always passes the path (",
+   "with the spec on the run path: only",
+   "tests/test_codebook_loader.py",
+   "tests/test_prompt_sentinels.py"
+  ]
+ },
+ "W1-F1-C7": {
+  "title": "W1-F1-C7 \u2014 statements in this file that the code does not match (wording and counts)",
+  "class_line": "3 / P7 \u2014 wording and telemetry; (a) travels with A-11's text corrections in P1.",
+  "chars": 2565,
+  "quotes_found": 12,
+  "quotes_missing": 5,
+  "missing": [
+   "W1-F1_3_last_attempt_wins.out",
+   "is accepted now so the call shape does not change when the event writer that stamps it on every claim lands (slice 2(c)); nothing reads it y",
+   "(R140) as failed: the run summary printed \"Succeeded: 0 / Failed: 1\" for a paper with 20 claim events and an",
+   "feeds only telemetry (",
+   "record_call(review_dir, arm=model_name,"
+  ]
+ },
+ "W1-F2-C1": {
+  "title": "W1-F2-C1 \u2014 `include_data` is all-or-nothing and is honoured on a fresh database; \"never executed on a fresh database\" and \"naming it\" are both false",
+  "class_line": "1 / P6 \u2014 one operator flag writes another review's corpus into a review database under valid receipts; the migration session is where the flag is next used.",
+  "chars": 4658,
+  "quotes_found": 5,
+  "quotes_missing": 23,
+  "missing": [
+   "(stated guarantee also in the module docstring,",
+   ", CLAUDE.md, and",
+   "migration moves rows and is **never** executed on a fresh database\";",
+   "is False by default: data migrations are never executed on a fresh database. It exists so an operator can run one deliberately, naming it.\";",
+   "if kind_of(migration_id) == \"data\" and not include_data: result[\"skipped\"].append(migration_id); continue",
+   "is a bool, with no migration id anywhere in the signature or in",
+   "'s argparse. Freshness is consulted only by the refusal:",
+   "writes no receipt), so on every review created by",
+   "the three real data migrations 002, 003, 017 stay unreceipted for good. Any later",
+   "engine/migrations/003_backfill_expanded_screening.py",
+   "W1-F2_1_include_data.py",
+   "(a) fresh db, include_data=True -> {'executed': ['901_fake_schema', '902_fake_data_old', '903_fake_data_wanted'], 'skipped': [],"
+  ]
+ },
+ "W1-F2-C2": {
+  "title": "W1-F2-C2 \u2014 `receipts()` converts any `sqlite3.OperationalError` into \"no receipts\", which `run` reads as a fresh database and `check_drift` reads as n",
+  "class_line": "1 (latent) / P2 \u2014 a swallowed environment fault disables both migration guards at once; fix is one line (catch only the missing-table case).",
+  "chars": 3279,
+  "quotes_found": 8,
+  "quotes_missing": 19,
+  "missing": [
+   "reads as a fresh database and",
+   "; conditional for the consequence inside",
+   "other than \"no such table\" at one of",
+   "'s two receipt reads \u2014 e.g. a rollback-journal database whose lock is taken after",
+   "try: rows = conn.execute(\"SELECT migration_id, file_sha256,",
+   "FROM schema_migrations\").fetchall()",
+   "when the store does not exist yet\". The handler is not limited to that case; in",
+   "the store always exists by then (",
+   "precedes both reads), so inside",
+   "the R222 refusal is skipped and the loop treats every migration as un-applied (",
+   "never true), re-executing each and re-writing its receipt through",
+   "W1-F2_2_receipts_swallow.py"
+  ]
+ },
+ "W1-F2-C3": {
+  "title": "W1-F2-C3 \u2014 A migration that commits and then loses its receipt is indistinguishable from one never run; \"the database then says exactly how far it got",
+  "class_line": "2 / P6 \u2014 loud refusal plus a re-run that depends on per-module idempotence; the sentence is a stated guarantee to correct with it.",
+  "chars": 2633,
+  "quotes_found": 5,
+  "quotes_missing": 6,
+  "missing": [
+   ". Two transactions on two connections, by design (\"One transaction per RECEIPT\"). Only the first is inside",
+   "; a failure of the reconnect or of the receipt write (a lock, a kill, ENOSPC) leaves the schema migrated, no receipt, and raises a bare",
+   "error with no migration id. Stated:",
+   "'s return value (README: \"returns a small summary the log can print\") is discarded \u2014 not logged by the runner, and the receipt's",
+   "is always NULL for",
+   "construction with"
+  ]
+ },
+ "W1-F2-C4": {
+  "title": "W1-F2-C4 \u2014 `update_status` replaces a failed `BEGIN IMMEDIATE`'s error with \"cannot rollback - no transaction is active\"",
+  "class_line": "3 / P7 \u2014 error wording; guard the rollback with `self._conn.in_transaction`.",
+  "chars": 1890,
+  "quotes_found": 5,
+  "quotes_missing": 14,
+  "missing": [
+   "replaces a failed",
+   "except Exception: if own_txn: self._conn.execute(\"ROLLBACK\"); raise",
+   "itself is what failed, no transaction is open and the",
+   "raises inside the handler. Reproducer",
+   "ReviewDatabase(\"synth\", data_root=<scratch>)",
+   ", busy_timeout lowered to 200 ms):",
+   "__context__: OperationalError - database is locked",
+   "status after: INGESTED",
+   "exists for (another writer) surfaces as a rollback error; the real cause survives only as",
+   ". Callers that record",
+   "(12f A7's landing sites store exception type and message as a paper failure's",
+   "paths are correct (a transaction is open there). Checked"
+  ]
+ },
+ "W1-F2-C5": {
+  "title": "W1-F2-C5 \u2014 `discover()` silently ignores numbered files outside its filename pattern, and a receipt whose file is gone is not drift",
+  "class_line": "3 / P7 \u2014 stated-guarantee wording / guard completeness; no effect on the current set.",
+  "chars": 2046,
+  "quotes_found": 4,
+  "quotes_missing": 9,
+  "missing": [
+   ": \"Every numbered file must appear here; the runner refuses to start if one does not, so a new migration cannot be added without a ruling on",
+   "check runs only over files that matched.",
+   "is keyed by number, so two files sharing a prefix both pass.",
+   "W1-F2_3_discover_and_orphans.py",
+   "runner.MIGRATIONS_DIR",
+   "0025_four_digits.py, 004_ok.py, 005_a.py, 005_b.py, 023_AddThing.py, 024-add-thing.py",
+   "discover: ['004_ok', '005_a', '005_b']",
+   "receipt for a file no longer on disk -> check_drift: []",
+   "tests/test_migration_runner.py"
+  ]
+ },
+ "W1-F3-C1": {
+  "title": "W1-F3-C1 \u2014 An FT primary decision and its reason code are never checked against each other",
+  "class_line": "1 / P4 \u2014 a terminal eligibility exclusion can be stored with a reason that says the paper was eligible, silently.",
+  "chars": 3091,
+  "quotes_found": 13,
+  "quotes_missing": 19,
+  "missing": [
+   "engine/core/database.py::add_ft_screening_decision",
+   "db.add_ft_screening_decision(pid, primary_model, decision.decision, decision.reason_code,",
+   ", reason_codes=spec.eligibility.reason_codes(), commit=False)",
+   "if decision.decision == \"FT_ELIGIBLE\": db.update_status(pid, \"FT_ELIGIBLE\") / else: db.update_status(pid, \"FT_SCREENED_OUT\"); _write_eligibi",
+   "reserves the code:",
+   "\u2014 \"the code a paper that passes",
+   "\" (refused as a criterion's code), and",
+   "puts it first in the same vocabulary. Reproducer part B: answers",
+   "{FT_ELIGIBLE, \"wrong_specialty\"}",
+   "B decision rows: [(1, 'FT_EXCLUDE', 'eligible'), (2, 'FT_ELIGIBLE', 'wrong_specialty')]",
+   "B statuses: {2: 'FT_ELIGIBLE', 1: 'FT_SCREENED_OUT'}",
+   "B paper_events: [(1, 'screened', 'full_text_out')]"
+  ]
+ },
+ "W1-F3-C2": {
+  "title": "W1-F3-C2 \u2014 `FULL_TEXT_SCREENING_COMPLETE` is completed by \"this run wrote one verification decision\", not by \"nothing is left to screen\"",
+  "class_line": "1 / P4 \u2014 a human-gate record (\"FT screening complete\") can be true of nothing; arguably 2 if the workflow table is treated as advisory.",
+  "chars": 2601,
+  "quotes_found": 11,
+  "quotes_missing": 10,
+  "missing": [
+   "complete_stage(db._conn, \"FULL_TEXT_SCREENING_COMPLETE\", metadata=",
+   "). Nothing reads",
+   "or the remaining verification-pending set before completing. Reproducer part C: one",
+   "paper pending verification plus two",
+   "papers never screened,",
+   "C statuses: {1: 'FT_ELIGIBLE', 2: 'PARSED', 3: 'PARSED'}",
+   "C workflow FULL_TEXT_SCREENING_COMPLETE: ('complete', '1 confirmed, 0 flagged')",
+   "run, or any run on a review where papers are parsed later, marks the human-gate workflow stage complete while PARSED papers have no FT decis",
+   ") need not be complete. The stage row is what",
+   "tests/test_ft_bridge.py::test_14_a_deciding_run_completes_the_stage"
+  ]
+ },
+ "W1-F3-C3": {
+  "title": "W1-F3-C3 \u2014 A downloaded PDF's provenance (strategy, URL, hash) and a failure's cause are printed, never stored",
+  "class_line": "1 / P4 \u2014 provenance of the full text silently absent (weak 1; the batch-start timestamp alone would be 3).",
+  "chars": 2257,
+  "quotes_found": 10,
+  "quotes_missing": 9,
+  "missing": [
+   "goes to the return dict and stdout only.",
+   "); this module writes no",
+   "row and no hash (grep",
+   "engine/acquisition/*.py",
+   "), not the stored",
+   "download_status='success'",
+   ", \"timeout\", \"archive_too_large\", \"not_pdf\" and \"no identifier at all\" are indistinguishable afterwards; the manual list is built from the b",
+   "is taken once before the loop (",
+   "full_text_assets(paper_id, pdf_path)"
+  ]
+ },
+ "W1-F3-C4": {
+  "title": "W1-F3-C4 \u2014 The OpenAlex request is not the query the methods text reports, and its extra filter is recorded nowhere",
+  "class_line": "1 (conditional) / P3 \u2014 the reported search may not be the search run; the unreported filter alone is class 3.",
+  "chars": 2076,
+  "quotes_found": 6,
+  "quotes_missing": 3,
+  "missing": [
+   "Works().search(query_text).filter(publication_year=f\"{start_year}-{end_year}\", type=\"article|review\")",
+   "type=article|review",
+   "tests/test_openalex.py"
+  ]
+ },
+ "W1-F3-C5": {
+  "title": "W1-F3-C5 \u2014 A reason code outside the vocabulary ends the whole FT run, and the same paper ends every rerun",
+  "class_line": "2 / P4 \u2014 loud, nothing corrupted, but the FT stage cannot pass that paper without a code or spec change.",
+  "chars": 2625,
+  "quotes_found": 7,
+  "quotes_missing": 15,
+  "missing": [
+   "try: decision, request_hash = ft_screen_paper(truncated, spec) / except (json.JSONDecodeError, ValidationError)",
+   "reason_codes=spec.eligibility.reason_codes(), commit=False)",
+   "raise ValueError(\"reason_code",
+   "is not in this review's reason-code vocabulary",
+   "FTScreeningDecision.reason_code",
+   "and the request's format schema leaves it",
+   "with the vocabulary in the description only, so neither pydantic nor the grammar can refuse the code earlier. Reproducer part A (two PARSED ",
+   "A run 1: raised ValueError",
+   "statuses: {1: 'PARSED', 2: 'PARSED'} | ft_screening_decisions: 0 | manifests: [(1, 'failed')] | checkpoint exists: False",
+   "manifests: [(1, 'failed'), (2, 'failed')]",
+   "and is not in the checkpoint, selection order is unchanged (",
+   "tests/test_eligibility.py::test_the_ft_format_schema_lists_the_whole_vocabulary"
+  ]
+ },
+ "W1-F3-C6": {
+  "title": "W1-F3-C6 \u2014 `download_papers` targets every non-terminal paper, not \"included papers \u2026 with PDF URLs or DOIs\"",
+  "class_line": "2 / P4 \u2014 no stored result is wrong; the path does work its contract does not describe (class 3 if read as docstring only).",
+  "chars": 2044,
+  "quotes_found": 6,
+  "quotes_missing": 6,
+  "missing": [
+   "(unscreened) and",
+   "(awaiting a human) papers are targets, each costing up to five strategies of outbound requests plus the 2 s delay.",
+   "if pdf_url: status, size_kb = _download_direct(pdf_url, dest); if status == \"success\": return",
+   ", the same value as a transient failure, and re-attempted by every",
+   "terminal list, so the selection is a module-family convention \u2014 but the docstrings say \"included\". The workflow guidance places download aft",
+   "take no workflow check)."
+  ]
+ },
+ "W1-F3-C7": {
+  "title": "W1-F3-C7 \u2014 Why a paper was flagged (malformed output, no parsed text) is not stored; a PARSED paper with no recorded text becomes a human-queue item",
+  "class_line": "3 / P7 \u2014 behaviour is as ruled; the gap is a recorded reason (would be 1 if a no-text paper adjudicated `FT_ELIGIBLE` is shown to reach the corpus \u2014 outside thi",
+  "chars": 2484,
+  "quotes_found": 14,
+  "quotes_missing": 7,
+  "missing": [
+   ". A paper selected at",
+   "is an engine-state inconsistency (the status says a text was produced), and",
+   "also sends a recorded empty text down the same branch. The queue (",
+   "tests/test_ft_screening.py",
+   "tests/test_ft_bridge.py::test_5_*",
+   "tests/test_screener.py::test_parse_error_flags_paper_and_continues",
+   "has the malformed call's row, but with"
+  ]
+ },
+ "W1-F3-C8": {
+  "title": "W1-F3-C8 \u2014 The FT screener carries the same id-only, non-atomic checkpoint files as the abstract screener",
+  "class_line": "3 / P7 (conditional on a restored or reused database; delete the files with F13's fix).",
+  "chars": 1798,
+  "quotes_found": 9,
+  "quotes_missing": 1,
+  "missing": [
+   "(database restored from a backup, or the directory reused) is silently skipped by the next run, which then logs completion and deletes the f"
+  ]
+ },
+ "W1-F3-C9": {
+  "title": "W1-F3-C9 \u2014 Class 3 batch (dead code, unused parameters, hard-coded identity)",
+  "class_line": "3 / P7",
+  "chars": 1932,
+  "quotes_found": 8,
+  "quotes_missing": 9,
+  "missing": [
+   "download.py::_download_via_mdpi",
+   "if not suffix: pdf_url = landing.replace(\"/htm\", \"/pdf\") if \"/htm\" in landing else landing; continue",
+   "screener.py::ScreeningDecision.confidence",
+   "screener.py::screen_paper(",
+   "ft_screener.run_ft_screening",
+   ", review_name=\"\")",
+   "openalex.py::_parse_work",
+   "assignment is dead; a title-less work returns",
+   "dedup.py::deduplicate"
+  ]
+ },
+ "W1-F3-C10": {
+  "title": "W1-F3-C10 \u2014 OpenAlex identifiers are normalised by exact literal prefix only",
+  "class_line": "3 / P3 (1 if the condition holds for real records)",
+  "chars": 1264,
+  "quotes_found": 3,
+  "quotes_missing": 5,
+  "missing": [
+   "in any form other than the two literals \u2014 e.g.",
+   ", a trailing slash, or",
+   "(falling to the title branch F04 describes), and a URL-shaped",
+   "is inserted into",
+   "tests/test_openalex.py"
+  ]
+ },
+ "W1-F4-C1": {
+  "title": "W1-F4-C1 \u2014 A review entered by import is exported with a search, an abstract screen and a full-text screen the engine never ran",
+  "class_line": "1 / P3 \u2014 a generated provenance statement and a reporting artifact",
+  "chars": 6167,
+  "quotes_found": 22,
+  "quotes_missing": 22,
+  "missing": [
+   "tables with screening rows: {'abstract_screening_decisions': 0, 'ft_screening_decisions': 0, 'run_calls': 0}",
+   "papers.status / source: [('FT_ELIGIBLE', 'external_screening_tool', 3)]",
+   "records_identified: 3 records_by_source: {'external_screening_tool': 3}",
+   "records_screened: 3 records_excluded: 0 reports_sought: 3",
+   "full_text_retrieved: 3 full_text_assessed: 3 n_eligible: 3",
+   "validate_prisma_counts valid: True",
+   "A systematic search was conducted across PubMed, OpenAlex covering publications from 2010 to 2025 using the following queries: (",
+   "). 3 citations were retrieved (3 from external_screening_tool). Title-abstract screening was performed using a dual-pass local LLM approach ",
+   "engine/exporters/methods_section.py::generate_methods_section",
+   "engine/exporters/prisma.py::generate_prisma_flow",
+   "full_text_retrieved = (reports_sought - reports_not_retrieved - n(\"ABSTRACT_SCREENED_IN\"))",
+   "full_text_assessed = (sum(pdf_eligibility_exclusions.values()) + ft_flagged + ft_screened_out + n_eligible)"
+  ]
+ },
+ "W1-F4-C2": {
+  "title": "W1-F4-C2 \u2014 The `failed` close commits whatever transaction the failing stage left open; only the interrupt close rolls back",
+  "class_line": "1 / P2 \u2014 a crash-time write no reader distinguishes from a",
+  "chars": 4203,
+  "quotes_found": 13,
+  "quotes_missing": 13,
+  "missing": [
+   "real_add_papers_midbatch_error raised=TypeError manifest end=('failed', None) papers rows committed=2",
+   "stub_half_write_runtimeerror raised=RuntimeError manifest end=('failed', None) papers rows committed=1",
+   "stub_half_write_keyboardinterrupt raised=KeyboardInterrupt manifest end=('interrupted', 'interrupt:SIGINT') papers rows committed=0",
+   "scripts/run_pipeline.py::run_pipeline",
+   "engine/core/run_manifest.py::close_run",
+   "conn.execute(\"UPDATE run_manifests SET ended_at = ?, end_status = ?, end_reason = ? \" \"WHERE run_id = ?\",",
+   "engine/core/database.py::add_papers",
+   "self._conn.execute(\"\"\"INSERT INTO papers",
+   "except sqlite3.IntegrityError: continue",
+   "~/scratch/12i-w1/repro/W1-F4/W1-F4_2_failed_close_commits_open_txn.py",
+   ") cannot come through a validated",
+   "tests/test_run_interrupts.py::test_t8_an_interrupt_leaves_an_uncommitted_write_absent"
+  ]
+ },
+ "W1-F4-C3": {
+  "title": "W1-F4-C3 \u2014 Every exit logs \"PIPELINE COMPLETE\", a gate stop exits 0, and the stats read in `finally` can replace the propagating exception",
+  "class_line": "3 / P7 \u2014 log wording and exit status; no stored value involved.",
+  "chars": 2009,
+  "quotes_found": 9,
+  "quotes_missing": 2,
+  "missing": [
+   "scripts/run_pipeline.py::run_pipeline",
+   "tests/test_run_interrupts.py::test_t7_a_clean_main_exits_zero"
+  ]
+ },
+ "W1-F4-C4": {
+  "title": "W1-F4-C4 \u2014 `--background` writes the log directory from an unvalidated review name, before the spec check the function says must come first",
+  "class_line": "3 / P7 \u2014 a stray directory and a misplaced log; nothing stored.",
+  "chars": 1892,
+  "quotes_found": 15,
+  "quotes_missing": 5,
+  "missing": [
+   "scripts/run_pipeline.py::main",
+   "engine/utils/background.py::maybe_background",
+   "data/<typo>/logs/",
+   "data/review/logs/",
+   "tests/test_run_pipeline_*"
+  ]
+ },
+ "W1-F5-C1": {
+  "title": "W1-F5-C1 \u2014 The truncation ceiling ignores a Modelfile `PARAMETER num_ctx`; the post-call check is then blind",
+  "class_line": "1 / P1 \u2014 a silently truncated model input stored as a normal result, on any review whose model declares its own context; conditional, so priority follows the co",
+  "chars": 3298,
+  "quotes_found": 23,
+  "quotes_missing": 8,
+  "missing": [
+   "PARAMETER num_ctx",
+   "PARAMETER num_ctx",
+   ". Not established for any installed model \u2014 no",
+   "call permitted. That Ollama applies a Modelfile",
+   "docs/session-reports/INPUT-FIT-01_phase-1_readout.md",
+   "\". CLAUDE.md (R66) itself names the source the guard omits:",
+   "of N below the trained context, the runtime cuts at N while the guard's ceiling stays at the trained value. A truncated call returns",
+   "= N < ceiling, and passes unless N is also under 10% of the character count (observed ratios are ~0.19\u20130.26, so anything short of losing rou"
+  ]
+ },
+ "W1-F5-C2": {
+  "title": "W1-F5-C2 \u2014 The restart gate is a probe that is released before the restart, not a hold across it",
+  "class_line": "2 / P2 \u2014 a narrow race ending in loud connection failures for the late holder; no stored result is made wrong.",
+  "chars": 2403,
+  "quotes_found": 14,
+  "quotes_missing": 5,
+  "missing": [
+   "subprocess.run([\"sudo\", \"systemctl\", \"restart\", \"ollama\"], timeout=30,",
+   ". Nothing holds the lock between the probe and the end of the restart. Stated guarantees:",
+   "docstring, \"restarting under someone else's experiment is the bug this module prevents\";",
+   "tests/test_restart_recovery_guard.py::test_restart_proceeds_when_lock_is_free",
+   "::test_restart_refused_under_foreign_lock"
+  ]
+ },
+ "W1-F5-C3": {
+  "title": "W1-F5-C3 \u2014 A response with no `prompt_eval_count` passes the post-call guard and is recorded `completed`",
+  "class_line": "3 / P7 \u2014 a docstring guarantee with an unstated exception and an unrecorded status; it becomes Class 1 only if the condition is shown on the pinned runtime.",
+  "chars": 2229,
+  "quotes_found": 8,
+  "quotes_missing": 5,
+  "missing": [
+   "logger.warning(\"input_fit UNVERIFIED %s: the response carries no prompt_eval_count, \"",
+   "ollama_chat._finish",
+   "row says the fit was not verified. Against the module docstring: \"an input the runtime truncated or silently dropped part of fails loudly af",
+   "tests/test_ollama_input_fit.py::test_a_missing_count_is_logged_unverified_not_raised",
+   "tests/test_ollama_client.py::test_successful_call_returns_response"
+  ]
+ },
+ "W1-F5-C4": {
+  "title": "W1-F5-C4 \u2014 Every restart-path ending is reported as \"timed out after N attempts + restart\", and a restart that happened is recorded nowhere in the man",
+  "class_line": "3 / P7 \u2014 recorded telemetry and wording; no stored value changes.",
+  "chars": 2624,
+  "quotes_found": 9,
+  "quotes_missing": 13,
+  "missing": [
+   "for four different endings: opt-out (\"restart refused:",
+   "is set\"), foreign lock (\"restart refused: another process holds the experiment lock\"),",
+   "failing (\"Ollama restart failed\"), and",
+   "around the final call (\"Post-restart Ollama call failed\"), which wraps any exception \u2014 a refused connection because 10 s was not enough, an",
+   ", a second watchdog timeout alike. The recorder writes",
+   ", whose text is the same in all four cases; the",
+   "survives only as",
+   "and a log line. On the successful ending,",
+   "row for a call whose restart was refused says \"+ restart\" although no restart ran; a call that failed after the restart for a non-timeout re",
+   "to the paper outcome",
+   "tests/test_restart_recovery_guard.py::test_refusal_surfaces_as_timeout_from_ollama_chat",
+   "), which CLAUDE.md states; nothing pins or checks the message or the recorded detail. F14's accounting note (\"one"
+  ]
+ },
+ "W1-F5-C5": {
+  "title": "W1-F5-C5 \u2014 The `httpx.ConnectError` arm of the HTTP-timeout handler cannot be reached from `_client.chat`",
+  "class_line": "3 / P7 \u2014 dead exception arm and log label.",
+  "chars": 1549,
+  "quotes_found": 4,
+  "quotes_missing": 6,
+  "missing": [
+   "ollama/_client.py",
+   "Client._request_raw",
+   "except httpx.ConnectError: raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None",
+   "and lands in the generic",
+   "arm (\"Ollama call failed\"), not the arm that names",
+   "tests/test_ollama_client.py::test_transient_failure_then_success"
+  ]
+ }
+}

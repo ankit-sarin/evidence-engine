@@ -1,0 +1,4 @@
+unlocked: receipts -> ['002_screening_rename'] | check_drift -> ['002_screening_rename']
+a plain read under the lock raises: database is locked
+locked:   receipts -> {} | check_drift -> []
+other-shape receipts table (1 row): receipts -> {}

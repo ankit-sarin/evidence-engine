@@ -1,0 +1,820 @@
+{
+ "by_field": {
+  "Title": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 0,
+   "in_codebook": false,
+   "matched_after_all": 0,
+   "raw": 0,
+   "share_after_all": 0.0,
+   "spans": 1
+  },
+  "autonomy_level": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 9,
+   "in_codebook": true,
+   "matched_after_all": 93,
+   "raw": 84,
+   "share_after_all": 0.5054,
+   "spans": 184
+  },
+  "clinical_readiness_assessment": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 7,
+   "in_codebook": true,
+   "matched_after_all": 87,
+   "raw": 80,
+   "share_after_all": 0.4728,
+   "spans": 184
+  },
+  "comparison_to_human": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 2,
+   "in_codebook": true,
+   "matched_after_all": 39,
+   "raw": 37,
+   "share_after_all": 0.2671,
+   "spans": 146
+  },
+  "country": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 7,
+   "in_codebook": true,
+   "matched_after_all": 94,
+   "raw": 87,
+   "share_after_all": 0.5281,
+   "spans": 178
+  },
+  "key_limitation": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 14,
+   "in_codebook": true,
+   "matched_after_all": 111,
+   "raw": 97,
+   "share_after_all": 0.6,
+   "spans": 185
+  },
+  "primary_outcome_metric": {
+   "gain_comment": 1,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 7,
+   "in_codebook": true,
+   "matched_after_all": 84,
+   "raw": 76,
+   "share_after_all": 0.459,
+   "spans": 183
+  },
+  "primary_outcome_value": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 7,
+   "in_codebook": true,
+   "matched_after_all": 70,
+   "raw": 63,
+   "share_after_all": 0.4,
+   "spans": 175
+  },
+  "robot_platform": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 13,
+   "in_codebook": true,
+   "matched_after_all": 119,
+   "raw": 106,
+   "share_after_all": 0.6503,
+   "spans": 183
+  },
+  "sample_size": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 7,
+   "in_codebook": true,
+   "matched_after_all": 72,
+   "raw": 65,
+   "share_after_all": 0.4932,
+   "spans": 146
+  },
+  "secondary_outcomes": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 6,
+   "in_codebook": true,
+   "matched_after_all": 63,
+   "raw": 57,
+   "share_after_all": 0.3728,
+   "spans": 169
+  },
+  "study_design": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 11,
+   "in_codebook": true,
+   "matched_after_all": 109,
+   "raw": 98,
+   "share_after_all": 0.5892,
+   "spans": 185
+  },
+  "study_type": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 13,
+   "in_codebook": true,
+   "matched_after_all": 147,
+   "raw": 134,
+   "share_after_all": 0.7946,
+   "spans": 185
+  },
+  "surgical_domain": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 19,
+   "in_codebook": true,
+   "matched_after_all": 113,
+   "raw": 94,
+   "share_after_all": 0.6278,
+   "spans": 180
+  },
+  "system_maturity": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 9,
+   "in_codebook": true,
+   "matched_after_all": 85,
+   "raw": 76,
+   "share_after_all": 0.462,
+   "spans": 184
+  },
+  "task_execute": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 4,
+   "in_codebook": true,
+   "matched_after_all": 57,
+   "raw": 53,
+   "share_after_all": 0.3081,
+   "spans": 185
+  },
+  "task_generate": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 3,
+   "in_codebook": true,
+   "matched_after_all": 57,
+   "raw": 54,
+   "share_after_all": 0.3081,
+   "spans": 185
+  },
+  "task_monitor": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 5,
+   "in_codebook": true,
+   "matched_after_all": 67,
+   "raw": 62,
+   "share_after_all": 0.3681,
+   "spans": 182
+  },
+  "task_performed": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 15,
+   "in_codebook": true,
+   "matched_after_all": 121,
+   "raw": 106,
+   "share_after_all": 0.6541,
+   "spans": 185
+  },
+  "task_select": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 4,
+   "in_codebook": true,
+   "matched_after_all": 58,
+   "raw": 54,
+   "share_after_all": 0.3295,
+   "spans": 176
+  },
+  "validation_setting": {
+   "gain_comment": 0,
+   "gain_dehyphen": 0,
+   "gain_ligature": 0,
+   "gain_soft_hyphen": 0,
+   "gain_whitespace": 8,
+   "in_codebook": true,
+   "matched_after_all": 106,
+   "raw": 98,
+   "share_after_all": 0.5856,
+   "spans": 181
+  }
+ },
+ "checks": {
+  "headline_snippets_containing_a_ligature": 9,
+  "headline_snippets_containing_a_soft_hyphen": 0,
+  "headline_spans_whose_text_was_parsed_after_extraction": 0,
+  "matches_lost_by_a_later_stage (non-monotone)": 0,
+  "source_texts_containing_a_comment": 194,
+  "source_texts_containing_a_ligature": 5,
+  "source_texts_containing_a_soft_hyphen": 0,
+  "source_texts_read": 194
+ },
+ "d11": {
+  "against_v2": {
+   "spans": 57,
+   "stages": [
+    {
+     "marginal_gain": 9,
+     "marginal_gain_share_of_all": 0.1579,
+     "matched_cumulative": 9,
+     "share_cumulative": 0.1579,
+     "stage": "raw"
+    },
+    {
+     "marginal_gain": 7,
+     "marginal_gain_share_of_all": 0.1228,
+     "matched_cumulative": 16,
+     "share_cumulative": 0.2807,
+     "stage": "whitespace"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 16,
+     "share_cumulative": 0.2807,
+     "stage": "comment_stripped"
+    },
+    {
+     "marginal_gain": 2,
+     "marginal_gain_share_of_all": 0.0351,
+     "matched_cumulative": 18,
+     "share_cumulative": 0.3158,
+     "stage": "de_hyphenated"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 18,
+     "share_cumulative": 0.3158,
+     "stage": "ligature_folded"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 18,
+     "share_cumulative": 0.3158,
+     "stage": "soft_hyphen_removed"
+    }
+   ],
+   "unmatched_after_all": 39,
+   "unmatched_share": 0.6842
+  },
+  "against_v3": {
+   "spans": 57,
+   "stages": [
+    {
+     "marginal_gain": 5,
+     "marginal_gain_share_of_all": 0.0877,
+     "matched_cumulative": 5,
+     "share_cumulative": 0.0877,
+     "stage": "raw"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 5,
+     "share_cumulative": 0.0877,
+     "stage": "whitespace"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 5,
+     "share_cumulative": 0.0877,
+     "stage": "comment_stripped"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 5,
+     "share_cumulative": 0.0877,
+     "stage": "de_hyphenated"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 5,
+     "share_cumulative": 0.0877,
+     "stage": "ligature_folded"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 5,
+     "share_cumulative": 0.0877,
+     "stage": "soft_hyphen_removed"
+    }
+   ],
+   "unmatched_after_all": 52,
+   "unmatched_share": 0.9123
+  },
+  "empty_snippet": 4,
+  "per_paper": {
+   "455": {
+    "spans_with_snippet": 17,
+    "v2_matched_after_all": 3,
+    "v2_raw": 0,
+    "v3_matched_after_all": 3,
+    "v3_raw": 3
+   },
+   "586": {
+    "spans_with_snippet": 19,
+    "v2_matched_after_all": 8,
+    "v2_raw": 2,
+    "v3_matched_after_all": 1,
+    "v3_raw": 1
+   },
+   "699": {
+    "spans_with_snippet": 20,
+    "v2_matched_after_all": 7,
+    "v2_raw": 7,
+    "v3_matched_after_all": 1,
+    "v3_raw": 1
+   },
+   "719": {
+    "spans_with_snippet": 1,
+    "v2_matched_after_all": 0,
+    "v2_raw": 0,
+    "v3_matched_after_all": 0,
+    "v3_raw": 0
+   }
+  },
+  "spans": 61,
+  "v2_parsed_after_extraction": [],
+  "v3_parsed_after_extraction": [
+   455,
+   586,
+   699,
+   719
+  ]
+ },
+ "d11_papers": [
+  455,
+  586,
+  699,
+  719
+ ],
+ "empty_snippets": {
+  "all": 141,
+  "by_value": {
+   "36": 1,
+   "Head & Neck / ENT": 1,
+   "N/A": 1,
+   "NOT_FOUND": 6,
+   "NR": 75,
+   "No comparison reported": 36,
+   "Non-clinical Bench / Phantom": 2,
+   "Phantom/Simulation": 2,
+   "R": 3,
+   "Smart Tissue Autonomous Robot (STAR); KUKA LBR Med": 1,
+   "United States": 2,
+   "Urology": 1
+  },
+  "sentinel_valued": 118
+ },
+ "extracted_at_range": [
+  "2026-03-15T21:15:25.560511+00:00",
+  "2026-03-18T20:50:15.573764+00:00"
+ ],
+ "extraction_models": {
+  "deepseek-r1:32b": 3760
+ },
+ "field_names_not_in_codebook": [
+  "Title",
+  "field_1"
+ ],
+ "headline": {
+  "spans": 3562,
+  "stages": [
+   {
+    "marginal_gain": 1581,
+    "marginal_gain_share_of_all": 0.4439,
+    "matched_cumulative": 1581,
+    "share_cumulative": 0.4439,
+    "stage": "raw"
+   },
+   {
+    "marginal_gain": 170,
+    "marginal_gain_share_of_all": 0.0477,
+    "matched_cumulative": 1751,
+    "share_cumulative": 0.4916,
+    "stage": "whitespace"
+   },
+   {
+    "marginal_gain": 1,
+    "marginal_gain_share_of_all": 0.0003,
+    "matched_cumulative": 1752,
+    "share_cumulative": 0.4919,
+    "stage": "comment_stripped"
+   },
+   {
+    "marginal_gain": 0,
+    "marginal_gain_share_of_all": 0.0,
+    "matched_cumulative": 1752,
+    "share_cumulative": 0.4919,
+    "stage": "de_hyphenated"
+   },
+   {
+    "marginal_gain": 0,
+    "marginal_gain_share_of_all": 0.0,
+    "matched_cumulative": 1752,
+    "share_cumulative": 0.4919,
+    "stage": "ligature_folded"
+   },
+   {
+    "marginal_gain": 0,
+    "marginal_gain_share_of_all": 0.0,
+    "matched_cumulative": 1752,
+    "share_cumulative": 0.4919,
+    "stage": "soft_hyphen_removed"
+   }
+  ],
+  "unmatched_after_all": 1810,
+  "unmatched_share": 0.5081
+ },
+ "headline_by_run6_audit_status": {
+  "contested": {
+   "spans": 440,
+   "stages": [
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 0,
+     "share_cumulative": 0.0,
+     "stage": "raw"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 0,
+     "share_cumulative": 0.0,
+     "stage": "whitespace"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 0,
+     "share_cumulative": 0.0,
+     "stage": "comment_stripped"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 0,
+     "share_cumulative": 0.0,
+     "stage": "de_hyphenated"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 0,
+     "share_cumulative": 0.0,
+     "stage": "ligature_folded"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 0,
+     "share_cumulative": 0.0,
+     "stage": "soft_hyphen_removed"
+    }
+   ],
+   "unmatched_after_all": 440,
+   "unmatched_share": 1.0
+  },
+  "flagged": {
+   "spans": 1116,
+   "stages": [
+    {
+     "marginal_gain": 507,
+     "marginal_gain_share_of_all": 0.4543,
+     "matched_cumulative": 507,
+     "share_cumulative": 0.4543,
+     "stage": "raw"
+    },
+    {
+     "marginal_gain": 58,
+     "marginal_gain_share_of_all": 0.052,
+     "matched_cumulative": 565,
+     "share_cumulative": 0.5063,
+     "stage": "whitespace"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 565,
+     "share_cumulative": 0.5063,
+     "stage": "comment_stripped"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 565,
+     "share_cumulative": 0.5063,
+     "stage": "de_hyphenated"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 565,
+     "share_cumulative": 0.5063,
+     "stage": "ligature_folded"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 565,
+     "share_cumulative": 0.5063,
+     "stage": "soft_hyphen_removed"
+    }
+   ],
+   "unmatched_after_all": 551,
+   "unmatched_share": 0.4937
+  },
+  "verified": {
+   "spans": 2006,
+   "stages": [
+    {
+     "marginal_gain": 1074,
+     "marginal_gain_share_of_all": 0.5354,
+     "matched_cumulative": 1074,
+     "share_cumulative": 0.5354,
+     "stage": "raw"
+    },
+    {
+     "marginal_gain": 112,
+     "marginal_gain_share_of_all": 0.0558,
+     "matched_cumulative": 1186,
+     "share_cumulative": 0.5912,
+     "stage": "whitespace"
+    },
+    {
+     "marginal_gain": 1,
+     "marginal_gain_share_of_all": 0.0005,
+     "matched_cumulative": 1187,
+     "share_cumulative": 0.5917,
+     "stage": "comment_stripped"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 1187,
+     "share_cumulative": 0.5917,
+     "stage": "de_hyphenated"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 1187,
+     "share_cumulative": 0.5917,
+     "stage": "ligature_folded"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 1187,
+     "share_cumulative": 0.5917,
+     "stage": "soft_hyphen_removed"
+    }
+   ],
+   "unmatched_after_all": 819,
+   "unmatched_share": 0.4083
+  }
+ },
+ "headline_excluding_sentinel_valued": {
+  "spans": 3371,
+  "stages": [
+   {
+    "marginal_gain": 1553,
+    "marginal_gain_share_of_all": 0.4607,
+    "matched_cumulative": 1553,
+    "share_cumulative": 0.4607,
+    "stage": "raw"
+   },
+   {
+    "marginal_gain": 168,
+    "marginal_gain_share_of_all": 0.0498,
+    "matched_cumulative": 1721,
+    "share_cumulative": 0.5105,
+    "stage": "whitespace"
+   },
+   {
+    "marginal_gain": 1,
+    "marginal_gain_share_of_all": 0.0003,
+    "matched_cumulative": 1722,
+    "share_cumulative": 0.5108,
+    "stage": "comment_stripped"
+   },
+   {
+    "marginal_gain": 0,
+    "marginal_gain_share_of_all": 0.0,
+    "matched_cumulative": 1722,
+    "share_cumulative": 0.5108,
+    "stage": "de_hyphenated"
+   },
+   {
+    "marginal_gain": 0,
+    "marginal_gain_share_of_all": 0.0,
+    "matched_cumulative": 1722,
+    "share_cumulative": 0.5108,
+    "stage": "ligature_folded"
+   },
+   {
+    "marginal_gain": 0,
+    "marginal_gain_share_of_all": 0.0,
+    "matched_cumulative": 1722,
+    "share_cumulative": 0.5108,
+    "stage": "soft_hyphen_removed"
+   }
+  ],
+  "unmatched_after_all": 1649,
+  "unmatched_share": 0.4892
+ },
+ "label": "two-pass legacy snippets measure the corpus's text-pathology rate, not the elicited path",
+ "papers": 190,
+ "populations": {
+  "all_spans": 3760,
+  "d11_spans": 61,
+  "headline_not_sentinel_valued": 3371,
+  "headline_sentinel_valued": 191,
+  "single_version_empty_snippet": 137,
+  "single_version_non_empty (headline)": 3562,
+  "single_version_spans": 3699
+ },
+ "residual_unmatched_headline": {
+  "bridged_with_ellipsis": 0,
+  "by_audit_status": {
+   "contested": 440,
+   "flagged": 551,
+   "verified": 819
+  },
+  "sentinel_valued": 161,
+  "spans": 1810
+ },
+ "sentinel_valued_single_version": {
+  "by_value": {
+   "N/A": 1,
+   "NOT_FOUND": 6,
+   "NR": 171,
+   "No comparison reported": 128
+  },
+  "empty_snippet": 115,
+  "spans": 306,
+  "with_snippet": {
+   "spans": 191,
+   "stages": [
+    {
+     "marginal_gain": 28,
+     "marginal_gain_share_of_all": 0.1466,
+     "matched_cumulative": 28,
+     "share_cumulative": 0.1466,
+     "stage": "raw"
+    },
+    {
+     "marginal_gain": 2,
+     "marginal_gain_share_of_all": 0.0105,
+     "matched_cumulative": 30,
+     "share_cumulative": 0.1571,
+     "stage": "whitespace"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 30,
+     "share_cumulative": 0.1571,
+     "stage": "comment_stripped"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 30,
+     "share_cumulative": 0.1571,
+     "stage": "de_hyphenated"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 30,
+     "share_cumulative": 0.1571,
+     "stage": "ligature_folded"
+    },
+    {
+     "marginal_gain": 0,
+     "marginal_gain_share_of_all": 0.0,
+     "matched_cumulative": 30,
+     "share_cumulative": 0.1571,
+     "stage": "soft_hyphen_removed"
+    }
+   ],
+   "unmatched_after_all": 161,
+   "unmatched_share": 0.8429
+  }
+ },
+ "sentinel_values_used": [
+  "N/A",
+  "NA",
+  "NOT FOUND",
+  "NOT REPORTED",
+  "NOT_FOUND",
+  "NR",
+  "No comparison reported"
+ ],
+ "spans_total": 3760,
+ "stages_in_order": [
+  "raw",
+  "whitespace",
+  "comment_stripped",
+  "de_hyphenated",
+  "ligature_folded",
+  "soft_hyphen_removed"
+ ],
+ "supplementary_locator1_exact_stage": {
+  "spans": 3562,
+  "stages": [
+   {
+    "marginal_gain": 2008,
+    "marginal_gain_share_of_all": 0.5637,
+    "matched_cumulative": 2008,
+    "share_cumulative": 0.5637,
+    "stage": "locator1_normalize"
+   },
+   {
+    "marginal_gain": 1,
+    "marginal_gain_share_of_all": 0.0003,
+    "matched_cumulative": 2009,
+    "share_cumulative": 0.564,
+    "stage": "+comment_stripped"
+   },
+   {
+    "marginal_gain": 0,
+    "marginal_gain_share_of_all": 0.0,
+    "matched_cumulative": 2009,
+    "share_cumulative": 0.564,
+    "stage": "+de_hyphenated"
+   },
+   {
+    "marginal_gain": 0,
+    "marginal_gain_share_of_all": 0.0,
+    "matched_cumulative": 2009,
+    "share_cumulative": 0.564,
+    "stage": "+soft_hyphen_removed"
+   }
+  ],
+  "unmatched_after_all": 1553,
+  "unmatched_share": 0.436
+ }
+}

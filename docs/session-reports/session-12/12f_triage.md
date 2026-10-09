@@ -300,3 +300,25 @@ Each is stated so it can be answered in one line.
 - **ID clashes.** `A7`, `A16`, `F15` and `F16` already name other things in the plan; hence
   the prefixes here.
 - **Carried, not measured here:** D5's 366 (v49 FT-INPUT-01); D14's 250 (INPUT-IDENTITY-01).
+
+---
+
+*Addendum 2026-10-09 (session 12i close; R582(2)) — the reader count and roles, as the 12f
+record supports them. No line above is edited.*
+
+"How the read was done" says the findings were read "by eight parallel read-only readers (five
+for B, two for A, two halves of the C56 census)". The parenthesis adds up to nine. What the
+committed record shows, read at the 12i close (`12f_triage_rows.md`, `12f_C56-A.md`, and the
+scratch directory `~/scratch/12f/`):
+
+- **Eight reader tags exist:** `g1`, `g2`, `g3`, `g4`, `g5`, `g6`, `c56a` and `c56b` — six
+  finding readers and the two halves of the C56 census. This agrees with "eight".
+- **Scratch paths in `12f_triage_rows.md` tie five tags to Assessment B's findings and one to
+  Assessment A's:** `g1` — F01, F02, F03; `g2` — F04, F05; `g3` — F06, F15; `g4` — F11, F13;
+  `g5` — F16, F17; `g6` — A2, A3 (and `~/scratch/12f/g6/` holds working directories named
+  `a2`, `a3`, `a4`, `a10`, `a11`). The adjacent rows carry the same tags (`INT-g2-1`,
+  `INT-g3-1`, `INT-g6-1`, `INT-g6-2`).
+- **Not recorded:** which reader read the sections that name no scratch path (F07, F08, F09,
+  F10, F12, F14; A1, A1-NIGHTLY, A4, A5, A6, A7, A10, A11). The record therefore supports
+  5 (B) + 1 (A) + 2 (C56) = 8 by tag, and does not show a second reader for A; "two for A" is
+  the part of the sentence the record does not support. It is left as written.

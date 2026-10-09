@@ -236,7 +236,7 @@ closeout; **the old record is superseded, never edited.**
   before any live write, exclusivity is checked against scheduled jobs that read or write
   review.db or the evidence-engine tree — not every timer on the box (R85) — plus
   lsof/fuser empty on review.db.
-- R237: No extraction against live before Run 7 on the tagged freshman state. The first run whose manifest declares an extraction stage pins the arm, whether or not it extracts; recovery is a new arm name (R10). Smokes run on a throwaway copy (R235) and declare --max-papers (R236).
+- R237: No extraction against live before Run 7 on the tagged freshman state. The first run whose manifest declares an extraction stage pins the arm, whether or not it extracts; recovery is a new arm name (R10). On live, that run is Run 7. Smokes run on a throwaway copy (R235) and declare --max-papers (R236).
 - **Smokes run on a throwaway copy of the review (R235):** a verified `auto_backup` copied to `data/<id>/review.db` under a new review id, `spec.yaml` and `extraction_codebook.yaml` copied beside it with `review_id` / `review:` changed and nothing else, launched with both `--review <id>` and `--spec data/<id>/spec.yaml`; its logs stay under `data/<id>/logs/` until the manifest closes, and the whole copy is moved out of `data/` before the next gate run (R241: the inventory counts every `data/<dir>/review.db`, row B21).
 - **Record of reference (live, since 022 was applied 2026-09-29):** `docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json` — 36 tables, overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`.
 

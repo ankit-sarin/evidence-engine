@@ -1,0 +1,1192 @@
+{
+ "live": {
+  "papers": 10039,
+  "with_ee_identifier": 648,
+  "ee_identifier_equals_EE_id": 0,
+  "max_id_with_ee_identifier": 804
+ },
+ "keys_naming_two_different_papers": {
+  "count": 648,
+  "first": [
+   [
+    "EE-001",
+    1,
+    4
+   ],
+   [
+    "EE-002",
+    2,
+    5
+   ],
+   [
+    "EE-003",
+    3,
+    6
+   ],
+   [
+    "EE-004",
+    4,
+    9
+   ],
+   [
+    "EE-005",
+    5,
+    11
+   ]
+  ]
+ },
+ "human_workbook": {
+  "file": "Extraction_Workbook_v2_A.xlsx",
+  "sheet": "Extraction Form",
+  "keys": 70,
+  "title_resolved_to_one_live_paper": 70,
+  "key_is_EE_papers_id": 70,
+  "key_is_ee_identifier": 0,
+  "key_also_an_ee_identifier_of_a_DIFFERENT_paper": [
+   {
+    "key": "EE-011",
+    "human_side_paper": 11,
+    "human_title": "Development of a Cognitive Robotic System for Simple Surgical Tasks",
+    "live_paper_with_that_ee_identifier": 20,
+    "live_title": "Development of Operational Framework and Standard Requirements for AI Assisted Robotic Sur"
+   },
+   {
+    "key": "EE-012",
+    "human_side_paper": 12,
+    "human_title": "A Step Towards Conditional Autonomy - Robotic Appendectomy",
+    "live_paper_with_that_ee_identifier": 21,
+    "live_title": "Learning surgical skills under the RCM constraint from demonstrations in robot-assisted mi"
+   },
+   {
+    "key": "EE-014",
+    "human_side_paper": 14,
+    "human_title": "Human-integrated automation of suturing task with one-master two-slave system for laparosc",
+    "live_paper_with_that_ee_identifier": 23,
+    "live_title": "Robot-Assisted Minimally Invasive Surgery\u2014Surgical Robotics in the Data Age"
+   },
+   {
+    "key": "EE-017",
+    "human_side_paper": 17,
+    "human_title": "Cognitive Robotic Architecture for Semi-Autonomous Execution of Manipulation Tasks in a Su",
+    "live_paper_with_that_ee_identifier": 30,
+    "live_title": "The IDEAL framework for surgical robotics: development, comparative evaluation and long-te"
+   },
+   {
+    "key": "EE-024",
+    "human_side_paper": 24,
+    "human_title": "Path Generation with Reinforcement Learning for Surgical Robot Control",
+    "live_paper_with_that_ee_identifier": 47,
+    "live_title": "A Dexterous Robotic System for Autonomous Debridement of Osteolytic Bone Lesions in Confin"
+   },
+   {
+    "key": "EE-067",
+    "human_side_paper": 67,
+    "human_title": "Autonomous Endoscope Robot Positioning Using Instrument Segmentation With Virtual Reality ",
+    "live_paper_with_that_ee_identifier": 167,
+    "live_title": "Human-centric predictive model of task difficulty for human-in-the-loop control tasks"
+   },
+   {
+    "key": "EE-081",
+    "human_side_paper": 81,
+    "human_title": "Data-Driven Intra-Operative Estimation of Anatomical Attachments for Autonomous Tissue Dis",
+    "live_paper_with_that_ee_identifier": 195,
+    "live_title": "Going Hands-Free: MagnetoSuture\u2122 for Untethered Guided Needle Penetration of Human Tissue "
+   },
+   {
+    "key": "EE-102",
+    "human_side_paper": 102,
+    "human_title": "Autonomous Robotic System for Breast Biopsy With Deformation Compensation",
+    "live_paper_with_that_ee_identifier": 254,
+    "live_title": "Palpation sensing for robotic-assisted surgery."
+   },
+   {
+    "key": "EE-121",
+    "human_side_paper": 121,
+    "human_title": "A blueprint for robotic surgery: From algorithmic control to embodied intelligence",
+    "live_paper_with_that_ee_identifier": 273,
+    "live_title": "Autonomous robotic surgery for sinus lateral window preparation and simultaneous dental im"
+   },
+   {
+    "key": "EE-132",
+    "human_side_paper": 132,
+    "human_title": "Integrating Learned Retraction and Model-Based Resection Planning for Automated Central Ai",
+    "live_paper_with_that_ee_identifier": 284,
+    "live_title": "Comparison of Accuracy and Systematic Precision Between Autonomous Dental Robot and Static"
+   },
+   {
+    "key": "EE-262",
+    "human_side_paper": 262,
+    "human_title": "Level I/II autonomy in robotically navigated lithotripsy: comprehensive system evaluation ",
+    "live_paper_with_that_ee_identifier": 414,
+    "live_title": "Prostatic hydroablation (Aquablation): A new effective ultrasound guided robotic waterjet "
+   },
+   {
+    "key": "EE-268",
+    "human_side_paper": 268,
+    "human_title": "Hands-Free Camera Assistant: Autonomous Laparoscope Manipulation in Robot-Assisted Surgery",
+    "live_paper_with_that_ee_identifier": 420,
+    "live_title": "Development and preliminary evaluation of an autonomous surgical system for oral and maxil"
+   },
+   {
+    "key": "EE-281",
+    "human_side_paper": 281,
+    "human_title": "SRT-H: A hierarchical framework for autonomous surgery via language-conditioned imitation ",
+    "live_paper_with_that_ee_identifier": 433,
+    "live_title": "Toward Semi-autonomous Cryoablation of Kidney Tumors via Model-Independent Deformable Tiss"
+   },
+   {
+    "key": "EE-286",
+    "human_side_paper": 286,
+    "human_title": "DP4AuSu: Autonomous Surgical Framework for Suturing Manipulation Using Diffusion Policy Wi",
+    "live_paper_with_that_ee_identifier": 438,
+    "live_title": "Electromagnetic tracking of flexible robotic catheters enables \"assisted navigation\" and b"
+   },
+   {
+    "key": "EE-292",
+    "human_side_paper": 292,
+    "human_title": "Intuition-guided Reinforcement Learning for Soft Tissue Manipulation with Unknown Constrai",
+    "live_paper_with_that_ee_identifier": 444,
+    "live_title": "Needle Grasp and Entry Port Selection for Automatic Execution of Suturing Tasks in Robotic"
+   },
+   {
+    "key": "EE-347",
+    "human_side_paper": 347,
+    "human_title": "Autonomous medical needle steering in vivo.",
+    "live_paper_with_that_ee_identifier": 499,
+    "live_title": "Robotic ultrasound trajectory planning for volume of interest coverage"
+   },
+   {
+    "key": "EE-370",
+    "human_side_paper": 370,
+    "human_title": "Robotic Autonomy for Magnetic Endoscope Biopsy.",
+    "live_paper_with_that_ee_identifier": 522,
+    "live_title": "Autonomous Deformable Tissue Retraction System Based on 2-D Visual Representation and Asym"
+   },
+   {
+    "key": "EE-376",
+    "human_side_paper": 376,
+    "human_title": "Localization and Control of Magnetic Suture Needles in Cluttered Surgical Site with Blood ",
+    "live_paper_with_that_ee_identifier": 528,
+    "live_title": "Autonomous High Precision Positioning of Surgical Instruments in Robot-Assisted Minimally "
+   },
+   {
+    "key": "EE-388",
+    "human_side_paper": 388,
+    "human_title": "A learning robot for cognitive camera control in minimally invasive surgery.",
+    "live_paper_with_that_ee_identifier": 540,
+    "live_title": "Study on Autonomous Surgical Control System of The Vascular Interventional Surgical Robot "
+   },
+   {
+    "key": "EE-395",
+    "human_side_paper": 395,
+    "human_title": "Enabling Autonomous Colonoscopy Intervention Using a Robotic Endoscope Platform.",
+    "live_paper_with_that_ee_identifier": 547,
+    "live_title": "Advancements in Deep Learning for Minimally Invasive Surgery: A Journey through Surgical S"
+   },
+   {
+    "key": "EE-402",
+    "human_side_paper": 402,
+    "human_title": "An extended algorithm for autonomous grasping of soft tissues during robotic surgery.",
+    "live_paper_with_that_ee_identifier": 554,
+    "live_title": "Model predictive control architectures with force feedback for robotic-assisted beating he"
+   },
+   {
+    "key": "EE-406",
+    "human_side_paper": 406,
+    "human_title": "Adaptive Fusion-Based Autonomous Laparoscope Control for Semi-Autonomous Surgery.",
+    "live_paper_with_that_ee_identifier": 558,
+    "live_title": "Optimization-Based Constrained Trajectory Generation for Robot-Assisted Stitching in Endon"
+   },
+   {
+    "key": "EE-409",
+    "human_side_paper": 409,
+    "human_title": "Development of a novel intelligent laparoscope system for semi-automatic minimally invasiv",
+    "live_paper_with_that_ee_identifier": 561,
+    "live_title": "Development and Quantitative Evaluation of a Novel Autonomous In Situ Bioprinting Surgical"
+   },
+   {
+    "key": "EE-411",
+    "human_side_paper": 411,
+    "human_title": "Supervised Autonomous Electrosurgery via Biocompatible Near-Infrared Tissue Tracking Techn",
+    "live_paper_with_that_ee_identifier": 563,
+    "live_title": "Automate surgical tasks for a flexible Serpentine Manipulator via learning actuation space"
+   },
+   {
+    "key": "EE-432",
+    "human_side_paper": 432,
+    "human_title": "Closed-Loop Active Compensation for Needle Deflection and Target Shift During Cooperativel",
+    "live_paper_with_that_ee_identifier": 584,
+    "live_title": "Neural Network Model of eFAST Target Prediction for Robotic Ultrasound Diagnostics in Aust"
+   },
+   {
+    "key": "EE-439",
+    "human_side_paper": 439,
+    "human_title": "Semi-Autonomous Electrosurgery for Tumor Resection Using a Multi-Degree of Freedom Electro",
+    "live_paper_with_that_ee_identifier": 591,
+    "live_title": "Cascade robot force control architecture for autonomous beating heart motion compensation "
+   },
+   {
+    "key": "EE-445",
+    "human_side_paper": 445,
+    "human_title": "Supervised autonomous robotic soft tissue surgery.",
+    "live_paper_with_that_ee_identifier": 597,
+    "live_title": "SAVAnet: Surgical Action-Driven Visual Attention Network for Autonomous Endoscope Control"
+   },
+   {
+    "key": "EE-449",
+    "human_side_paper": 449,
+    "human_title": "Optimal Needle Grasp Selection for Automatic Execution of Suturing Tasks in Robotic Minima",
+    "live_paper_with_that_ee_identifier": 601,
+    "live_title": "Haptics-Enabled Forceps With Multimodal Force Sensing: Toward Task-Autonomous Surgery"
+   },
+   {
+    "key": "EE-455",
+    "human_side_paper": 455,
+    "human_title": "A minimally invasive surgery robotic assistant for HALS-SILS techniques.",
+    "live_paper_with_that_ee_identifier": 607,
+    "live_title": "Neuro-Visual Adaptive Control for Precision in Robot-Assisted Surgery"
+   },
+   {
+    "key": "EE-463",
+    "human_side_paper": 463,
+    "human_title": "Autonomous suturing via surgical robot: An algorithm for optimal selection of needle diame",
+    "live_paper_with_that_ee_identifier": 615,
+    "live_title": "1A2-B12 Autonomous risk detection system for robotic surgery(Medical Robotics and Mechatro"
+   },
+   {
+    "key": "EE-464",
+    "human_side_paper": 464,
+    "human_title": "Single-Master Dual-Slave Surgical Robot With Automated Relay of Suture Needle",
+    "live_paper_with_that_ee_identifier": 616,
+    "live_title": "Puncture path planning algorithm of flexible needle in percutaneous nephrolithotomy with a"
+   },
+   {
+    "key": "EE-467",
+    "human_side_paper": 467,
+    "human_title": "Autonomous Suturing Framework and Quantification Using a Cable-Driven Surgical Robot",
+    "live_paper_with_that_ee_identifier": 619,
+    "live_title": "Towards a Surgeon-in-the-Loop Ophthalmic Robotic Apprentice using Reinforcement and Imitat"
+   },
+   {
+    "key": "EE-472",
+    "human_side_paper": 472,
+    "human_title": "Autonomous Needle Manipulation for Robotic Surgical Suturing Based on Skills Learned from ",
+    "live_paper_with_that_ee_identifier": 624,
+    "live_title": "FF-SRL: High Performance GPU-Based Simulation For Surgical Robot Learning"
+   },
+   {
+    "key": "EE-476",
+    "human_side_paper": 476,
+    "human_title": "Sim-to-Real Surgical Robot Learning and Autonomous Planning for Internal Tissue Points Man",
+    "live_paper_with_that_ee_identifier": 628,
+    "live_title": "Optimizing Safety and Efficiency in the Suturing Task: A Comparison of Model Predictive Co"
+   },
+   {
+    "key": "EE-478",
+    "human_side_paper": 478,
+    "human_title": "Parallelism in Autonomous Robotic Surgery",
+    "live_paper_with_that_ee_identifier": 630,
+    "live_title": "THINK surgical TSolution-One<sup>\u00ae</sup>(Robodoc) total knee arthroplasty"
+   },
+   {
+    "key": "EE-485",
+    "human_side_paper": 485,
+    "human_title": "Human-Machine Collaborative surgery using learned models",
+    "live_paper_with_that_ee_identifier": 637,
+    "live_title": "Suture Thread Modeling Using Control Barrier Functions for Autonomous Surgery"
+   },
+   {
+    "key": "EE-487",
+    "human_side_paper": 487,
+    "human_title": "A Cognitive Robot Control Architecture for Autonomous Execution of Surgical Tasks",
+    "live_paper_with_that_ee_identifier": 639,
+    "live_title": "SURESTEP: An Uncertainty-Aware Trajectory Optimization Framework to Enhance Visual Tool Tr"
+   },
+   {
+    "key": "EE-488",
+    "human_side_paper": 488,
+    "human_title": "Autonomous Flexible Endoscope for Minimally Invasive Surgery With Enhanced Safety",
+    "live_paper_with_that_ee_identifier": 640,
+    "live_title": "Autonomous Navigation Strategy Based on Image Data Weighted Fusion for Flexible Endoscopic"
+   },
+   {
+    "key": "EE-492",
+    "human_side_paper": 492,
+    "human_title": "Toward Human-Out-of-the-Loop Endoscope Navigation Based on Context Awareness for Enhanced ",
+    "live_paper_with_that_ee_identifier": 644,
+    "live_title": "Cone-based Automatic Instrument Interchange Interface for Autonomous Robotic Surgical Syst"
+   },
+   {
+    "key": "EE-497",
+    "human_side_paper": 497,
+    "human_title": "Automation of tissue piercing using circular needles and vision guidance for computer aide",
+    "live_paper_with_that_ee_identifier": 649,
+    "live_title": "Feasibility Study of a Hand Guided Robotic Drill for Cochleostomy"
+   },
+   {
+    "key": "EE-504",
+    "human_side_paper": 504,
+    "human_title": "Transferring Know-How for an Autonomous Camera Robotic Assistant",
+    "live_paper_with_that_ee_identifier": 656,
+    "live_title": "A Compact, Bone-Attached Robot for Mastoidectomy"
+   },
+   {
+    "key": "EE-507",
+    "human_side_paper": 507,
+    "human_title": "Trajectory planning under different initial conditions for surgical task automation by lea",
+    "live_paper_with_that_ee_identifier": 659,
+    "live_title": "Enhancing Robotic Surgery With Haptic Feedback: A Cooperative Control Strategy for Autonom"
+   },
+   {
+    "key": "EE-515",
+    "human_side_paper": 515,
+    "human_title": "SCAN: System for Camera Autonomous Navigation in Robotic-Assisted Surgery",
+    "live_paper_with_that_ee_identifier": 667,
+    "live_title": "AI-Powered Robotic Surgery: Improving Accuracy, Safety and Clinical Decision-Making"
+   },
+   {
+    "key": "EE-516",
+    "human_side_paper": 516,
+    "human_title": "Toward automated tissue retraction in robot-assisted surgery",
+    "live_paper_with_that_ee_identifier": 668,
+    "live_title": "Miniature Robotic Telesurgery Demonstration Aboard the ISS"
+   },
+   {
+    "key": "EE-517",
+    "human_side_paper": 517,
+    "human_title": "A knowledge-based framework for task automation in surgery",
+    "live_paper_with_that_ee_identifier": 669,
+    "live_title": "Intelligent Robotic Assistance in Precision Surgery: Vision, Automation, and Human-Robot C"
+   },
+   {
+    "key": "EE-528",
+    "human_side_paper": 528,
+    "human_title": "Autonomous High Precision Positioning of Surgical Instruments in Robot-Assisted Minimally ",
+    "live_paper_with_that_ee_identifier": 680,
+    "live_title": "A New Suture Needle State estimation Method Based on Electrical Impedance Sensing"
+   },
+   {
+    "key": "EE-534",
+    "human_side_paper": 534,
+    "human_title": "Automated suturing: sharp wound recognition and planning with surgical robot",
+    "live_paper_with_that_ee_identifier": 686,
+    "live_title": "An Artificial Intelligence-Aided Robotic Platform for Ultrasound-Guided Transcarotid Revas"
+   },
+   {
+    "key": "EE-536",
+    "human_side_paper": 536,
+    "human_title": "Collaborative Human\u2013Robot System for HALS Suture Procedures",
+    "live_paper_with_that_ee_identifier": 688,
+    "live_title": "An automatic drug injection device with spatial micro-force perception guided by an micros"
+   },
+   {
+    "key": "EE-543",
+    "human_side_paper": 543,
+    "human_title": "Control of Magnetic Surgical Robots With Model-Based Simulators and Reinforcement Learning",
+    "live_paper_with_that_ee_identifier": 695,
+    "live_title": "An Adaptive Control Method and Learning Strategy for Ultrasound-Guided Puncture Robot"
+   },
+   {
+    "key": "EE-550",
+    "human_side_paper": 550,
+    "human_title": "SuFIA: Language-Guided Augmented Dexterity for Robotic Surgical Assistants",
+    "live_paper_with_that_ee_identifier": 702,
+    "live_title": "SurgiPose: Estimating Surgical Tool Kinematics from Monocular Video for Surgical Robot Lea"
+   },
+   {
+    "key": "EE-570",
+    "human_side_paper": 570,
+    "human_title": "Autonomous Tissue Scanning under Free-Form Motion for Intraoperative Tissue Characterisati",
+    "live_paper_with_that_ee_identifier": 722,
+    "live_title": "Spatiotemporal Motion Prediction of Intraocular Microsurgical Robot in Non-Visible Regions"
+   },
+   {
+    "key": "EE-590",
+    "human_side_paper": 590,
+    "human_title": "Construction of motion reproduction system using haptic forceps robots for needle insertio",
+    "live_paper_with_that_ee_identifier": 742,
+    "live_title": "A Shared Control Method of Multiobjective Motion Fusion for Surgical Robot"
+   },
+   {
+    "key": "EE-608",
+    "human_side_paper": 608,
+    "human_title": "A Semi-Autonomous Data-Driven Shared Control Framework for Robotic Manipulation and Cuttin",
+    "live_paper_with_that_ee_identifier": 760,
+    "live_title": "A novel endovascular robotic-assisted system for endovascular aortic repair: first-in-huma"
+   },
+   {
+    "key": "EE-614",
+    "human_side_paper": 614,
+    "human_title": "Automatic and real-time tissue sensing for autonomous intestinal anastomosis using hybrid ",
+    "live_paper_with_that_ee_identifier": 766,
+    "live_title": "A Deep-Learning-Based Guidewire Compliant Control Method for the Endovascular Surgery Robo"
+   },
+   {
+    "key": "EE-623",
+    "human_side_paper": 623,
+    "human_title": "Transferring autonomous reaching and targeting behaviors for cable-driven robots in minima",
+    "live_paper_with_that_ee_identifier": 775,
+    "live_title": "Semi-automated mid-turbinate swab sampling using a six degrees of freedom collaborative ro"
+   },
+   {
+    "key": "EE-628",
+    "human_side_paper": 628,
+    "human_title": "Optimizing Safety and Efficiency in the Suturing Task: A Comparison of Model Predictive Co",
+    "live_paper_with_that_ee_identifier": 780,
+    "live_title": "Real Time Estimator to Perform Targeted Biopsies With a Free-Wrist Robot Despite Large Def"
+   },
+   {
+    "key": "EE-644",
+    "human_side_paper": 644,
+    "human_title": "Cone-based Automatic Instrument Interchange Interface for Autonomous Robotic Surgical Syst",
+    "live_paper_with_that_ee_identifier": 796,
+    "live_title": "Experimental evaluation of ultrasound-guided 3D needle steering in biological tissue"
+   },
+   {
+    "key": "EE-645",
+    "human_side_paper": 645,
+    "human_title": "Contact-Aware Prediction for Reliable Autonomous Deformable Tissue Retraction in Robotic S",
+    "live_paper_with_that_ee_identifier": 797,
+    "live_title": "Dise\u00f1o de una plataforma rob\u00f3tica aut\u00f3noma para cirug\u00eda endosc\u00f3pica endonasal"
+   }
+  ],
+  "key_not_any_ee_identifier": [
+   "EE-659",
+   "EE-670",
+   "EE-683",
+   "EE-690",
+   "EE-700",
+   "EE-708",
+   "EE-750",
+   "EE-764",
+   "EE-769",
+   "EE-783",
+   "EE-796",
+   "EE-801"
+  ],
+  "unresolved_titles": [],
+  "statuses": {
+   "AI_AUDIT_COMPLETE": 70
+  },
+  "rows": [
+   {
+    "key": "EE-011",
+    "title": "Development of a Cognitive Robotic System for Simple Surgical Tasks",
+    "live_paper_by_title": 11,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 11,
+    "paper_named_by_ee_identifier": 20,
+    "live_ee_identifier_of_that_paper": "EE-005",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-012",
+    "title": "A Step Towards Conditional Autonomy - Robotic Appendectomy",
+    "live_paper_by_title": 12,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 12,
+    "paper_named_by_ee_identifier": 21,
+    "live_ee_identifier_of_that_paper": "EE-006",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-014",
+    "title": "Human-integrated automation of suturing task with one-master two-slave system for laparosc",
+    "live_paper_by_title": 14,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 14,
+    "paper_named_by_ee_identifier": 23,
+    "live_ee_identifier_of_that_paper": "EE-007",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-017",
+    "title": "Cognitive Robotic Architecture for Semi-Autonomous Execution of Manipulation Tasks in a Su",
+    "live_paper_by_title": 17,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 17,
+    "paper_named_by_ee_identifier": 30,
+    "live_ee_identifier_of_that_paper": "EE-009",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-024",
+    "title": "Path Generation with Reinforcement Learning for Surgical Robot Control",
+    "live_paper_by_title": 24,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 24,
+    "paper_named_by_ee_identifier": 47,
+    "live_ee_identifier_of_that_paper": "EE-015",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-067",
+    "title": "Autonomous Endoscope Robot Positioning Using Instrument Segmentation With Virtual Reality ",
+    "live_paper_by_title": 67,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 67,
+    "paper_named_by_ee_identifier": 167,
+    "live_ee_identifier_of_that_paper": "EE-029",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-081",
+    "title": "Data-Driven Intra-Operative Estimation of Anatomical Attachments for Autonomous Tissue Dis",
+    "live_paper_by_title": 81,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 81,
+    "paper_named_by_ee_identifier": 195,
+    "live_ee_identifier_of_that_paper": "EE-034",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-102",
+    "title": "Autonomous Robotic System for Breast Biopsy With Deformation Compensation",
+    "live_paper_by_title": 102,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 102,
+    "paper_named_by_ee_identifier": 254,
+    "live_ee_identifier_of_that_paper": "EE-045",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-121",
+    "title": "A blueprint for robotic surgery: From algorithmic control to embodied intelligence",
+    "live_paper_by_title": 121,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 121,
+    "paper_named_by_ee_identifier": 273,
+    "live_ee_identifier_of_that_paper": "EE-049",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-132",
+    "title": "Integrating Learned Retraction and Model-Based Resection Planning for Automated Central Ai",
+    "live_paper_by_title": 132,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 132,
+    "paper_named_by_ee_identifier": 284,
+    "live_ee_identifier_of_that_paper": "EE-053",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-262",
+    "title": "Level I/II autonomy in robotically navigated lithotripsy: comprehensive system evaluation ",
+    "live_paper_by_title": 262,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 262,
+    "paper_named_by_ee_identifier": 414,
+    "live_ee_identifier_of_that_paper": "EE-110",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-268",
+    "title": "Hands-Free Camera Assistant: Autonomous Laparoscope Manipulation in Robot-Assisted Surgery",
+    "live_paper_by_title": 268,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 268,
+    "paper_named_by_ee_identifier": 420,
+    "live_ee_identifier_of_that_paper": "EE-116",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-281",
+    "title": "SRT-H: A hierarchical framework for autonomous surgery via language-conditioned imitation ",
+    "live_paper_by_title": 281,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 281,
+    "paper_named_by_ee_identifier": 433,
+    "live_ee_identifier_of_that_paper": "EE-129",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-286",
+    "title": "DP4AuSu: Autonomous Surgical Framework for Suturing Manipulation Using Diffusion Policy Wi",
+    "live_paper_by_title": 286,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 286,
+    "paper_named_by_ee_identifier": 438,
+    "live_ee_identifier_of_that_paper": "EE-134",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-292",
+    "title": "Intuition-guided Reinforcement Learning for Soft Tissue Manipulation with Unknown Constrai",
+    "live_paper_by_title": 292,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 292,
+    "paper_named_by_ee_identifier": 444,
+    "live_ee_identifier_of_that_paper": "EE-140",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-347",
+    "title": "Autonomous medical needle steering in vivo.",
+    "live_paper_by_title": 347,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 347,
+    "paper_named_by_ee_identifier": 499,
+    "live_ee_identifier_of_that_paper": "EE-195",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-370",
+    "title": "Robotic Autonomy for Magnetic Endoscope Biopsy.",
+    "live_paper_by_title": 370,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 370,
+    "paper_named_by_ee_identifier": 522,
+    "live_ee_identifier_of_that_paper": "EE-218",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-376",
+    "title": "Localization and Control of Magnetic Suture Needles in Cluttered Surgical Site with Blood ",
+    "live_paper_by_title": 376,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 376,
+    "paper_named_by_ee_identifier": 528,
+    "live_ee_identifier_of_that_paper": "EE-224",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-388",
+    "title": "A learning robot for cognitive camera control in minimally invasive surgery.",
+    "live_paper_by_title": 388,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 388,
+    "paper_named_by_ee_identifier": 540,
+    "live_ee_identifier_of_that_paper": "EE-236",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-395",
+    "title": "Enabling Autonomous Colonoscopy Intervention Using a Robotic Endoscope Platform.",
+    "live_paper_by_title": 395,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 395,
+    "paper_named_by_ee_identifier": 547,
+    "live_ee_identifier_of_that_paper": "EE-243",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-402",
+    "title": "An extended algorithm for autonomous grasping of soft tissues during robotic surgery.",
+    "live_paper_by_title": 402,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 402,
+    "paper_named_by_ee_identifier": 554,
+    "live_ee_identifier_of_that_paper": "EE-250",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-406",
+    "title": "Adaptive Fusion-Based Autonomous Laparoscope Control for Semi-Autonomous Surgery.",
+    "live_paper_by_title": 406,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 406,
+    "paper_named_by_ee_identifier": 558,
+    "live_ee_identifier_of_that_paper": "EE-254",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-409",
+    "title": "Development of a novel intelligent laparoscope system for semi-automatic minimally invasiv",
+    "live_paper_by_title": 409,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 409,
+    "paper_named_by_ee_identifier": 561,
+    "live_ee_identifier_of_that_paper": "EE-257",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-411",
+    "title": "Supervised Autonomous Electrosurgery via Biocompatible Near-Infrared Tissue Tracking Techn",
+    "live_paper_by_title": 411,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 411,
+    "paper_named_by_ee_identifier": 563,
+    "live_ee_identifier_of_that_paper": "EE-259",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-432",
+    "title": "Closed-Loop Active Compensation for Needle Deflection and Target Shift During Cooperativel",
+    "live_paper_by_title": 432,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 432,
+    "paper_named_by_ee_identifier": 584,
+    "live_ee_identifier_of_that_paper": "EE-280",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-439",
+    "title": "Semi-Autonomous Electrosurgery for Tumor Resection Using a Multi-Degree of Freedom Electro",
+    "live_paper_by_title": 439,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 439,
+    "paper_named_by_ee_identifier": 591,
+    "live_ee_identifier_of_that_paper": "EE-287",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-445",
+    "title": "Supervised autonomous robotic soft tissue surgery.",
+    "live_paper_by_title": 445,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 445,
+    "paper_named_by_ee_identifier": 597,
+    "live_ee_identifier_of_that_paper": "EE-293",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-449",
+    "title": "Optimal Needle Grasp Selection for Automatic Execution of Suturing Tasks in Robotic Minima",
+    "live_paper_by_title": 449,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 449,
+    "paper_named_by_ee_identifier": 601,
+    "live_ee_identifier_of_that_paper": "EE-297",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-455",
+    "title": "A minimally invasive surgery robotic assistant for HALS-SILS techniques.",
+    "live_paper_by_title": 455,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 455,
+    "paper_named_by_ee_identifier": 607,
+    "live_ee_identifier_of_that_paper": "EE-303",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-463",
+    "title": "Autonomous suturing via surgical robot: An algorithm for optimal selection of needle diame",
+    "live_paper_by_title": 463,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 463,
+    "paper_named_by_ee_identifier": 615,
+    "live_ee_identifier_of_that_paper": "EE-311",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-464",
+    "title": "Single-Master Dual-Slave Surgical Robot With Automated Relay of Suture Needle",
+    "live_paper_by_title": 464,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 464,
+    "paper_named_by_ee_identifier": 616,
+    "live_ee_identifier_of_that_paper": "EE-312",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-467",
+    "title": "Autonomous Suturing Framework and Quantification Using a Cable-Driven Surgical Robot",
+    "live_paper_by_title": 467,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 467,
+    "paper_named_by_ee_identifier": 619,
+    "live_ee_identifier_of_that_paper": "EE-315",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-472",
+    "title": "Autonomous Needle Manipulation for Robotic Surgical Suturing Based on Skills Learned from ",
+    "live_paper_by_title": 472,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 472,
+    "paper_named_by_ee_identifier": 624,
+    "live_ee_identifier_of_that_paper": "EE-320",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-476",
+    "title": "Sim-to-Real Surgical Robot Learning and Autonomous Planning for Internal Tissue Points Man",
+    "live_paper_by_title": 476,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 476,
+    "paper_named_by_ee_identifier": 628,
+    "live_ee_identifier_of_that_paper": "EE-324",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-478",
+    "title": "Parallelism in Autonomous Robotic Surgery",
+    "live_paper_by_title": 478,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 478,
+    "paper_named_by_ee_identifier": 630,
+    "live_ee_identifier_of_that_paper": "EE-326",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-485",
+    "title": "Human-Machine Collaborative surgery using learned models",
+    "live_paper_by_title": 485,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 485,
+    "paper_named_by_ee_identifier": 637,
+    "live_ee_identifier_of_that_paper": "EE-333",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-487",
+    "title": "A Cognitive Robot Control Architecture for Autonomous Execution of Surgical Tasks",
+    "live_paper_by_title": 487,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 487,
+    "paper_named_by_ee_identifier": 639,
+    "live_ee_identifier_of_that_paper": "EE-335",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-488",
+    "title": "Autonomous Flexible Endoscope for Minimally Invasive Surgery With Enhanced Safety",
+    "live_paper_by_title": 488,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 488,
+    "paper_named_by_ee_identifier": 640,
+    "live_ee_identifier_of_that_paper": "EE-336",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-492",
+    "title": "Toward Human-Out-of-the-Loop Endoscope Navigation Based on Context Awareness for Enhanced ",
+    "live_paper_by_title": 492,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 492,
+    "paper_named_by_ee_identifier": 644,
+    "live_ee_identifier_of_that_paper": "EE-340",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-497",
+    "title": "Automation of tissue piercing using circular needles and vision guidance for computer aide",
+    "live_paper_by_title": 497,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 497,
+    "paper_named_by_ee_identifier": 649,
+    "live_ee_identifier_of_that_paper": "EE-345",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-504",
+    "title": "Transferring Know-How for an Autonomous Camera Robotic Assistant",
+    "live_paper_by_title": 504,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 504,
+    "paper_named_by_ee_identifier": 656,
+    "live_ee_identifier_of_that_paper": "EE-352",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-507",
+    "title": "Trajectory planning under different initial conditions for surgical task automation by lea",
+    "live_paper_by_title": 507,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 507,
+    "paper_named_by_ee_identifier": 659,
+    "live_ee_identifier_of_that_paper": "EE-355",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-515",
+    "title": "SCAN: System for Camera Autonomous Navigation in Robotic-Assisted Surgery",
+    "live_paper_by_title": 515,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 515,
+    "paper_named_by_ee_identifier": 667,
+    "live_ee_identifier_of_that_paper": "EE-363",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-516",
+    "title": "Toward automated tissue retraction in robot-assisted surgery",
+    "live_paper_by_title": 516,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 516,
+    "paper_named_by_ee_identifier": 668,
+    "live_ee_identifier_of_that_paper": "EE-364",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-517",
+    "title": "A knowledge-based framework for task automation in surgery",
+    "live_paper_by_title": 517,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 517,
+    "paper_named_by_ee_identifier": 669,
+    "live_ee_identifier_of_that_paper": "EE-365",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-528",
+    "title": "Autonomous High Precision Positioning of Surgical Instruments in Robot-Assisted Minimally ",
+    "live_paper_by_title": 528,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 528,
+    "paper_named_by_ee_identifier": 680,
+    "live_ee_identifier_of_that_paper": "EE-376",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-534",
+    "title": "Automated suturing: sharp wound recognition and planning with surgical robot",
+    "live_paper_by_title": 534,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 534,
+    "paper_named_by_ee_identifier": 686,
+    "live_ee_identifier_of_that_paper": "EE-382",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-536",
+    "title": "Collaborative Human\u2013Robot System for HALS Suture Procedures",
+    "live_paper_by_title": 536,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 536,
+    "paper_named_by_ee_identifier": 688,
+    "live_ee_identifier_of_that_paper": "EE-384",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-543",
+    "title": "Control of Magnetic Surgical Robots With Model-Based Simulators and Reinforcement Learning",
+    "live_paper_by_title": 543,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 543,
+    "paper_named_by_ee_identifier": 695,
+    "live_ee_identifier_of_that_paper": "EE-391",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-550",
+    "title": "SuFIA: Language-Guided Augmented Dexterity for Robotic Surgical Assistants",
+    "live_paper_by_title": 550,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 550,
+    "paper_named_by_ee_identifier": 702,
+    "live_ee_identifier_of_that_paper": "EE-398",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-570",
+    "title": "Autonomous Tissue Scanning under Free-Form Motion for Intraoperative Tissue Characterisati",
+    "live_paper_by_title": 570,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 570,
+    "paper_named_by_ee_identifier": 722,
+    "live_ee_identifier_of_that_paper": "EE-418",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-590",
+    "title": "Construction of motion reproduction system using haptic forceps robots for needle insertio",
+    "live_paper_by_title": 590,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 590,
+    "paper_named_by_ee_identifier": 742,
+    "live_ee_identifier_of_that_paper": "EE-438",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-608",
+    "title": "A Semi-Autonomous Data-Driven Shared Control Framework for Robotic Manipulation and Cuttin",
+    "live_paper_by_title": 608,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 608,
+    "paper_named_by_ee_identifier": 760,
+    "live_ee_identifier_of_that_paper": "EE-456",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-614",
+    "title": "Automatic and real-time tissue sensing for autonomous intestinal anastomosis using hybrid ",
+    "live_paper_by_title": 614,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 614,
+    "paper_named_by_ee_identifier": 766,
+    "live_ee_identifier_of_that_paper": "EE-462",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-623",
+    "title": "Transferring autonomous reaching and targeting behaviors for cable-driven robots in minima",
+    "live_paper_by_title": 623,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 623,
+    "paper_named_by_ee_identifier": 775,
+    "live_ee_identifier_of_that_paper": "EE-471",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-628",
+    "title": "Optimizing Safety and Efficiency in the Suturing Task: A Comparison of Model Predictive Co",
+    "live_paper_by_title": 628,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 628,
+    "paper_named_by_ee_identifier": 780,
+    "live_ee_identifier_of_that_paper": "EE-476",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-644",
+    "title": "Cone-based Automatic Instrument Interchange Interface for Autonomous Robotic Surgical Syst",
+    "live_paper_by_title": 644,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 644,
+    "paper_named_by_ee_identifier": 796,
+    "live_ee_identifier_of_that_paper": "EE-492",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-645",
+    "title": "Contact-Aware Prediction for Reliable Autonomous Deformable Tissue Retraction in Robotic S",
+    "live_paper_by_title": 645,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 645,
+    "paper_named_by_ee_identifier": 797,
+    "live_ee_identifier_of_that_paper": "EE-493",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-659",
+    "title": "Enhancing Robotic Surgery With Haptic Feedback: A Cooperative Control Strategy for Autonom",
+    "live_paper_by_title": 659,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 659,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-507",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-670",
+    "title": "Vision-Based Real-Time Tracking of Surgical Robot Instruments and Soft Tissues by Fusing N",
+    "live_paper_by_title": 670,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 670,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-518",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-683",
+    "title": "Autonomous Suturing Method for Robot-Assisted Minimally Invasive Surgery",
+    "live_paper_by_title": 683,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 683,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-531",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-690",
+    "title": "Automatic Multiple-Needle Surgical Planning of Robotic-Assisted Microwave Coagulation in L",
+    "live_paper_by_title": 690,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 690,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-538",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-700",
+    "title": "Autonomous Dissection in Robotic Cholecystectomy",
+    "live_paper_by_title": 700,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 700,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-548",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-708",
+    "title": "Shape Tracking and Feedback Control of Cardiac Catheter Using MRI-Guided Robotic Platform\u2014",
+    "live_paper_by_title": 708,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 708,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-556",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-750",
+    "title": "Assistant Robotic Arm In Endoscopic Surgery",
+    "live_paper_by_title": 750,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 750,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-598",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-764",
+    "title": "Development of Robot-assisted Ultrasound System for Fetoscopic Tracking in Twin to Twin Tr",
+    "live_paper_by_title": 764,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 764,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-612",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-769",
+    "title": "The comparison of the process of manual and robotic positioning of the electrode performin",
+    "live_paper_by_title": 769,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 769,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-617",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-783",
+    "title": "In Vivo Demonstration of a Bevel Tip Steerable Needle with an Integrated Fluid Channel",
+    "live_paper_by_title": 783,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 783,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-631",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-796",
+    "title": "Experimental evaluation of ultrasound-guided 3D needle steering in biological tissue",
+    "live_paper_by_title": 796,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 796,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-644",
+    "status": "AI_AUDIT_COMPLETE"
+   },
+   {
+    "key": "EE-801",
+    "title": "Individualized Ultrasound-Guided Intervention Phantom Development, Fabrication, and Proof ",
+    "live_paper_by_title": 801,
+    "title_matches": 1,
+    "paper_named_by_EE_id": 801,
+    "paper_named_by_ee_identifier": null,
+    "live_ee_identifier_of_that_paper": "EE-649",
+    "status": "AI_AUDIT_COMPLETE"
+   }
+  ]
+ },
+ "concordance_manifest": {
+  "rows": 96,
+  "ee_id_equals_live_ee_identifier_of_db_id": 95,
+  "ee_id_equals_EE_db_id": 0,
+  "disagree_with_live_ee_identifier": [
+   [
+    "EE-095",
+    229,
+    null
+   ]
+  ]
+ },
+ "pdf_file_names": {
+  "papers_with_EE_named_pdf": 381,
+  "file_EE_equals_ee_identifier": 381,
+  "file_EE_equals_EE_id": 0,
+  "neither": []
+ }
+}

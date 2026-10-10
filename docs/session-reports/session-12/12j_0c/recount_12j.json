@@ -1,0 +1,713 @@
+{
+ "baseline_12h_rulings": {
+  "class_1": 31,
+  "class_2": 16,
+  "class_3": 25,
+  "rows": 73,
+  "source": "the plan's 12h-rulings recount sentence",
+  "without_class": 1,
+  "without_class_ids": [
+   "A-6"
+  ]
+ },
+ "class_changes": [
+  {
+   "after": "3",
+   "before": "none",
+   "candidates": [
+    "Wave 1 row 86 (Class 3)"
+   ],
+   "id": "A-6",
+   "rule": "R597(d)"
+  }
+ ],
+ "class_kept": [
+  {
+   "after": "2",
+   "before": "2",
+   "candidates": [
+    "Wave 1 row 53 (Class 2)"
+   ],
+   "id": "A-1",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 7 (Class 1)"
+   ],
+   "id": "A-10",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 1 (Class 1)",
+    "Wave 1 row 9 (Class 1)",
+    "Wave 1 row 55 item 1 (Class 3)",
+    "Wave 1 row 83 items (a) and (d) (Class 3)"
+   ],
+   "id": "A-11",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 16 (Class 1)"
+   ],
+   "id": "A-4b",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "2",
+   "before": "2",
+   "candidates": [
+    "Wave 1 row 84 (Class 3)"
+   ],
+   "id": "A-7",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 24 (Class 1)",
+    "Wave 1 row 25 (Class 1)"
+   ],
+   "id": "B-F01",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 38 (Class 1)"
+   ],
+   "id": "B-F02",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 89 (Class 3)"
+   ],
+   "id": "B-F04",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 34 (Class 1)"
+   ],
+   "id": "B-F06",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 34 (Class 1)"
+   ],
+   "id": "B-F07",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 31 (Class 1)"
+   ],
+   "id": "B-F10",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 87 (Class 3)"
+   ],
+   "id": "B-F13",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "2",
+   "before": "2",
+   "candidates": [
+    "Wave 1 row 66 (Class 3)",
+    "Wave 1 row 93 (Class 3)"
+   ],
+   "id": "B-F14",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 8 (Class 1)",
+    "Wave 1 row 25 (Class 1)",
+    "Wave 1 row 26 (Class 1)",
+    "Wave 1 row 47 (Class 2)",
+    "Wave 1 row 81 (Class 3)"
+   ],
+   "id": "C56",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 1 row 5 item (a) (Class 1)",
+    "Wave 1 row 57 (Class 3)"
+   ],
+   "id": "INT-g12-1",
+   "rule": "R597(d)"
+  }
+ ],
+ "existing_rows_entering_by_a_classed_note": [
+  {
+   "candidates": [
+    "Wave 1 row 86 (Class 3)"
+   ],
+   "class": "3",
+   "id": "A14",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by the 12g form"
+  },
+  {
+   "candidates": [
+    "Wave 1 row 75 (Class 3)"
+   ],
+   "class": "3",
+   "id": "C13",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by the 12g form"
+  },
+  {
+   "candidates": [
+    "Wave 1 row 14 (Class 1)"
+   ],
+   "class": "1",
+   "id": "C34",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by the 12g form"
+  },
+  {
+   "candidates": [
+    "Wave 1 row 43 (Class 2)"
+   ],
+   "class": "2",
+   "id": "C45",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by the 12g form"
+  },
+  {
+   "candidates": [
+    "Wave 1 row 31 (Class 1)",
+    "Wave 1 row 49 (Class 2)"
+   ],
+   "class": "1",
+   "id": "D20",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by the 12g form"
+  },
+  {
+   "candidates": [
+    "Wave 1 row 30 (Class 1)"
+   ],
+   "class": "1",
+   "id": "J8",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by the 12g form"
+  }
+ ],
+ "expected_by_the_ruling": {
+  "cause": "existing rows not on the list that carry a Wave 1 note with a class and package: A14, C13, C34, C45, D20, J8",
+  "difference": 6,
+  "formula": "73 + 66 + n + 10 + 1, n = 0 (R597 assumption A8 did not hold; nothing opened under R597(b))",
+  "rows": 150
+ },
+ "now": {
+  "class_1": 65,
+  "class_2": 31,
+  "class_3": 60,
+  "rows": 156,
+  "without_class": 0,
+  "without_class_ids": []
+ },
+ "r510": {
+  "rows_in": 83,
+  "rows_in_existing_rows_entering": 6,
+  "rows_in_opened": 77,
+  "rows_out": 0
+ },
+ "rows_opened": {
+  "class_1": 31,
+  "class_1_conditional": 16,
+  "class_2": 14,
+  "class_3": 32,
+  "count": 77,
+  "rows": [
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-1",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-2",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-3",
+    "ruling": "R587; R588"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-4",
+    "ruling": "R587; R589; R597(c)"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-5",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-6",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-7",
+    "ruling": "R587; R590"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-8",
+    "ruling": "R587; R590"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-9",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-10",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-11",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-12",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-13",
+    "ruling": "R587; R588"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-14",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-15",
+    "ruling": "R587; R588"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-16",
+    "ruling": "R587; R588"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-17",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-18",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-19",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-20",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-21",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-22",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-23",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-24",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-25",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-i12-26",
+    "ruling": "R587"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-27",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-28",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-29",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-30",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-31",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-32",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-33",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-34",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-35",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-36",
+    "ruling": "R587; R588"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-37",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-38",
+    "ruling": "R587; R589"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-39",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-40",
+    "ruling": "R587; R589"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-41",
+    "ruling": "R587; R589"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-42",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-43",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-44",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-45",
+    "ruling": "R587; R588"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-46",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-47",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-48",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-49",
+    "ruling": "R587"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-50",
+    "ruling": "R587; R588"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-51",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-52",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-53",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-54",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-55",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-56",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-57",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-58",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-59",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-60",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-61",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-62",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-63",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-64",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-65",
+    "ruling": "R587; R588"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-66",
+    "ruling": "R587"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-67",
+    "ruling": "R593"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-68",
+    "ruling": "R593"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-69",
+    "ruling": "R593"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-70",
+    "ruling": "R593"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-71",
+    "ruling": "R593"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-72",
+    "ruling": "R593"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-73",
+    "ruling": "R593"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-i12-74",
+    "ruling": "R593"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-75",
+    "ruling": "R593"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-i12-76",
+    "ruling": "R593"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-i12-77",
+    "ruling": "R595, as amended by R596"
+   }
+  ]
+ }
+}

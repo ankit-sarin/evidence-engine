@@ -4,7 +4,9 @@ usage, from the repository root: recount_12j.py docs/plan/ENGINE_REFACTOR_PLAN.m
 Baseline: the count the plan records at the 12h rulings (parsed from its own sentence), and the
 list's membership as the plan gives it: the rows of section L's tables above "L (12i additions)",
 plus the 21 inventory rows the 12g paragraph names ("Of the 61: …").
-Deltas, all read from the plan:
+A second stage (12j-0c-FIX, R598) starts from the count the plan records at 44e37f8 and adds the
+rows of the "L (12i additions, continued under R598)" table; its result is the key "after_r598".
+Deltas of the first stage, all read from the plan:
   - every row of the "L (12i additions)" table enters with the leading digit of its Class cell;
   - a "Note 2026-10-10 (12j item 0c, …): Wave 1 row N (…) extends this row — Class C" on a row
     states a candidate's class. R597(d): the row takes the higher of its own class and the
@@ -101,7 +103,27 @@ now = {"rows": rows_now, "class_1": counts["1"], "class_2": counts["2"], "class_
        "without_class": counts["none"], "without_class_ids": sorted(unclassed)}
 assert now["rows"] == now["class_1"] + now["class_2"] + now["class_3"] + now["without_class"]
 expected = total + 66 + 0 + 10 + 1
+
+# ---- 12j-0c-FIX (R598): from the count the plan records at 44e37f8, the rows of the continued table ----
+k = re.search(r"\*\*Now (\d+) rows: Class 1 / 2 / 3 = (\d+) / (\d+) / (\d+), and (\d+) without a class\.\*\* "
+              r"\*\*R510: rows in 83", L)
+b2 = dict(zip(("rows", "class_1", "class_2", "class_3", "without_class"), map(int, k.groups())))
+assert b2 == {x: now[x] for x in b2}, (b2, now)          # the plan's sentence is this script's own first result
+cont = L.split("**L (12i additions, continued under R598).**")[1].split("**The pre-tag list, recounted 2026-10-10 (12j-0c-FIX")[0]
+opened2 = []
+c2 = Counter({"1": b2["class_1"], "2": b2["class_2"], "3": b2["class_3"], "none": b2["without_class"]})
+for line in cont.split("\n"):
+    if line.startswith("| INT-"):
+        c = cells(line)
+        c2[c[2][0]] += 1
+        opened2.append({"id": c[0], "class": c[2][0], "ruling": c[4]})
+now2 = {"rows": b2["rows"] + len(opened2), "class_1": c2["1"], "class_2": c2["2"], "class_3": c2["3"], "without_class": c2["none"]}
+assert now2["rows"] == now2["class_1"] + now2["class_2"] + now2["class_3"] + now2["without_class"]
+after_r598 = {"baseline_at_44e37f8": dict(b2, source="the plan's 12j item 0c recount sentence, checked against this script's first result"),
+              "rows_opened": opened2, "now": now2, "r510": {"rows_in": len(opened2), "rows_out": 0},
+              "expected_by_the_ruling": {"rows": 168, "difference": now2["rows"] - 168}}
 print(json.dumps({
+    "after_r598": after_r598,
     "baseline_12h_rulings": baseline,
     "rows_opened": {"count": len(opened), "class_1": by_class["1"], "class_2": by_class["2"], "class_3": by_class["3"],
                     "class_1_conditional": sum(o["conditional"] for o in opened), "rows": opened},

@@ -1,4 +1,91 @@
 {
+ "after_r598": {
+  "baseline_at_44e37f8": {
+   "class_1": 65,
+   "class_2": 31,
+   "class_3": 60,
+   "rows": 156,
+   "source": "the plan's 12j item 0c recount sentence, checked against this script's first result",
+   "without_class": 0
+  },
+  "expected_by_the_ruling": {
+   "difference": 0,
+   "rows": 168
+  },
+  "now": {
+   "class_1": 65,
+   "class_2": 31,
+   "class_3": 72,
+   "rows": 168,
+   "without_class": 0
+  },
+  "r510": {
+   "rows_in": 12,
+   "rows_out": 0
+  },
+  "rows_opened": [
+   {
+    "class": "3",
+    "id": "INT-i12-78",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-79",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-80",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-81",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-82",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-83",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-84",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-85",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-86",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-87",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-88",
+    "ruling": "R598(a); R597(b)"
+   },
+   {
+    "class": "3",
+    "id": "INT-i12-89",
+    "ruling": "R598(a); R597(b)"
+   }
+  ]
+ },
  "baseline_12h_rulings": {
   "class_1": 31,
   "class_2": 16,

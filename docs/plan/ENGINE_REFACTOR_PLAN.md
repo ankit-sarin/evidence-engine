@@ -3110,3 +3110,145 @@ Rulings R574–R576, each made by PI during session 12h as a follow-up to R566�
 | 2026-10-09 | R576 — **12h-RD-2.** Dated notes on three rows, with no class or package change: - INT-g6-1: R572's condition (a multi-unit run is materialised as one contiguous source slice, never as joined units; the acceptance test covers a run straddling a Docling comment and a blank line); R568's ordering (INT-g12-1's citation record lands after INT-g6-1). - E-METHODS and C36: the "dual-pass" wording from R570 is carried with B-F07. *Transcribed:* the three notes. | PI, 2026-10-09, during session 12h |
 
 *Addendum 2026-10-09 (12h rulings; R575), to the R540 row:* the locator-2 clause of the P1 line in the R540 order to the tag — "then locator-2 for A-10/A-9 from 12g's measurements (R534)" — is withdrawn by R572. P1 builds no locator-2 before the tag. R540 is otherwise unchanged, and its row and the P1 line are left as written.
+
+## Decision log — session 12i and the 12j open (2026-10-09 to 2026-10-10)
+
+Rulings R577–R597, each made by PI on architect recommendation, issued in six blocks: Blocks 1–4 during session 12i (2026-10-09), Block 5 between sessions 12i and 12j (2026-10-10), Block 6 during session 12j (2026-10-10, on the 12j-OPEN stop report). Transcribed in one commit at 12j item 0c (R594), dated 2026-10-10 UTC, from the ruling text carried in the 12j-OPEN brief and in the R597 block. Form as ruled by R597(e): each block's header line and ASSUMPTIONS list are given exactly as issued, in a fenced block with the block's own line breaks; each ruling is one table row, the text after the ruling number being the ruling as issued, verbatim, with the block's line breaks and list indentation joined into one line. Lines a block carries after its last ruling are given as issued in a second fenced block. Nothing is reworded; the block labels ("Block 1" … "Block 6") and the note below are the transcription's.
+
+*Transcriber's note, 2026-10-10 (12j item 0c):* the header lines of Blocks 1 and 2 say "transcribe at the 12i close"; R594 moved transcription to 12j item 0c. The header lines are left as issued.
+
+**Block 1.**
+
+```text
+RULINGS (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at the 12i close)
+
+ASSUMPTIONS IN THIS RULING:
+  INFERRED A1 — an applied migration's text cannot change without the runner refusing (R27,
+    MigrationDrift). Not acted on in this session; P6's Phase A reads it. Failure would be loud.
+  INFERRED A2 — the F units on the Run 7 graph can be listed from 12i_scope's census with each
+    unit's located function named. Verify before dispatch; if any F cell names no function,
+    report it and treat the whole file as in scope.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-09 | R577 — I2 confirmed. The internal review's "packages" are engine code modules. The architect's R4 wording ("most" of A's references under analysis/eval/) was inexact; 12i_scope's count (9 of 24 under analysis/eval/, 12 of 24 under analysis/) stands. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R578 — Scope. A C grade is treated as N. F units on the Run 7 import graph (top or lazy) are in scope, except the function or block their finding located, which 12f triaged. F units off the graph are out. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R579 — Out of the internal review: L15 (moves to P6's Phase A, which reads the schema and the applied migrations before 023/024), L16, L17, L18. The review read-out lists each with its reason as "not reviewed". | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R580 — Two waves. Wave 1 = L01–L07, plus the in-scope F units on the Run 7 graph, plus the read for papers 4, 23 and 168 (R583); then STOP for rulings. Wave 2 = L08–L14, under its own brief. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R581 — Finish line. The internal review closes when the Wave 1 and Wave 2 read-outs are committed and their findings are ruled. Findings enter per R509 with class and package. No fix and no inventory row during the review. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R582 — Adjacent items. (1) engine/acquisition/manual_list.py goes on the HK-RETIRE housekeeping line (Class 3, P7); no row. (2) 12f_triage.md gets a dated addendum at the 12i close stating the reader count and roles as recorded. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R583 — Papers 4, 23 and 168 get a timeline read in Wave 1 (spec in TASK below). Paper 168 is the priority. | PI, 2026-10-09, during session 12i |
+
+**Block 2.**
+
+```text
+RULINGS (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at the 12i close)
+
+ASSUMPTIONS IN THIS RULING:
+  READ — the list below is quoted verbatim from unified plan v78 §2, paragraph "Known false or
+    silent at HEAD", fetched by the architect this session.
+  INFERRED A3 — the identity of the human abstract exclusions is recoverable from live, as an
+    earlier read-out's "addendum 3 §F" established (session-4 S2 Phase 1 read-out set; locate it
+    under docs/session-reports/). If you cannot locate it, say so and proceed from
+    papers.rejected_reason, papers.updated_at and workflow_state; this does not stop W1.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-09 | R584 — The brief's "Known false or silent at HEAD" input is the list below, passed to every reader verbatim. - Each reader also gets the inventory rows naming its files (sections A–L, with status) and the matching 12f_triage_rows.md sections. - Record as an architect error: 12i-REVIEW-W1 cited a unified-plan-only list without supplying it. --- begin list (unified plan v78 §2) --- **Known false or silent at HEAD** (each a pre-tag row; the stated text is corrected with its fix): "parse writes file + asset + ref in one transaction" (B-F01); "the refusal comes before any write" (B-F02); "restore refuses an open target" (B-F03); "a materialized quote is ANCHORED by construction" (A-10, INT-g6-1); "no partial extraction is stored" (A-11); "long runs wrap themselves in the experiment lock" (A-1); `truncate_paper_text`'s section prioritisation (B-F11); PRISMA "duplicates tracked externally" (B-F06); **the evidence table's snippet column and the judge loader's span are empty on every claim** — the located payload has no `snippet` key (INT-h12-1); **a claim stores only the first contiguous run of the units it cited**, the rest only in a telemetry sidecar (INT-g12-1); the methods text's "dual-pass" abstract screening is the same request sent twice (RD-6, folds into B-F07). --- end list --- | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R585 — The lot table as reported is accepted. - 12 readers. - The 13 F units with no named function are read whole. - pdf_parser.py excludes only B's F01 block. - The exclusion list is your reading. State it in the read-out as such, with the assessment sentence behind each exclusion. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R586 — W1-d (papers 4, 23, 168) proceeds without an adjudication-table row. - Give, per paper and in time order: the decision rows (decided_at), papers.updated_at, papers.rejected_reason, and the workflow_state stamp for the human abstract review. - Locate the March queue artifact (the xlsx the workflow_state metadata names), read-only. If found, state the paper's row in it and any date it carries; if not found, say so. - For 168, answer: (a) Does the human exclusion demonstrably postdate both FT_ELIGIBLE rows? Answer yes, no, or "cannot be established", with the evidence. (b) Did the reviewer's artifact show the FT result? (c) Did any engine path set the status without a human decision? - The 0-row abstract_screening_adjudication table is row A2, not a new finding. | PI, 2026-10-09, during session 12i |
+
+After the last ruling of Block 2, as issued:
+
+```text
+Readers write full evidence to files under 12i_review_w1/ and return compact candidate tables
+only, as you proposed. All other terms of 12i-REVIEW-W1 stand unchanged. Dispatch.
+```
+
+**Block 3.**
+
+```text
+RULINGS (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at 12j item 0c with R577–R586)
+
+ASSUMPTIONS IN THIS RULING:
+  INFERRED A4 — a model-family attribute exists (spec, resolver or manifest) that row 64's check
+    can compare. Not acted on now; P1's Phase A for row 64 establishes it. If none exists, row 64's
+    fix includes declaring one.
+  INFERRED A5 — the live codebook's canonical absence sentinel is "NR", so row 56's fix renders
+    byte-identical prompt text on surgical_autonomy. Not acted on now; at P1 the pin is the check.
+  INFERRED A6 — row 60's "stale prompt sentence" is in a template a stage sends. Not acted on now;
+    P1 verifies before classing the change as pin-affecting.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-09 | R587 — Wave 1 accepted as proposed (class, package, new INT-i12-n or a note on the existing row), except as amended in R588–R593. Rows marked conditional / latent / weak enter at Class 1 with their condition stated; the owning package's Phase A establishes the trigger and may move the class. Row 27's consequence is recorded as unestablished. Rows are opened and notes written at 12j item 0c, not now (R581). | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R588 — Alternatives ruled: - row 4: the behaviour is fixed (divergence recorded where a reader sees it); Class 1, P1, not pin-affecting. - row 19: Class 1, P2. - row 21: Class 3, P7 — CLAUDE.md and the spec say what is true; LOW_YIELD surfacing goes to the sophomore audit screen (note on J7). - row 22: Class 1, P2 — the monitor reads the spec's thresholds (Review Spec as the single configuration source). - row 52: Class 2, P4. - row 64: Class 2, P1, Phase A first (A4) — an audit model of the same family as the arm's extractor is refused or recorded at run open (the settled cross-family rule). - row 70: Class 2, P2 — duplicate YAML keys refused at load, spec and codebook. - rows 89 and 92: Class 3, as proposed. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R589 — Pin-affecting rows: 5(b), 14 and the prompt-text items in rows 56 and 60 land in P1 before the freeze smoke, in the INT-h12-2 batch; the one comparison rehearsal covers them together (R539). Row 59 is wording-only (docstring). | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R590 — Rows 11 and 12 are fixed in P1 as a LOCATOR_VERSION bump of the existing locator, audit-side and outside the pin (R539). They are not locator-2; R572 and R575 stand. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R591 — Papers: (a) Papers 4 and 23: no action. (b) Paper 168 and the other 14 empty-abstract [specialty_rescreen] exclusions join R549's open item for P4's Phase A: whether each goes to full-text screening or to human FT adjudication before Run 7. None is moved to the corpus by the engine. (c) The other 164 re-screen exclusions: no pre-tag action; note on E1 (owner S4, junior). (d) scripts/rescreen_with_specialty.py: notes on I19 and INT-g6-2; Class 1 while runnable, closed by its retirement in P7. (e) The 255 ABSTRACT_SCREENED_OUT papers with a NULL rejected_reason: note on B-F06. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R592 — Row 38 and assumption A1: P6's Phase A states the conditions under which the migration drift refusal holds. No other ruling relies on A1. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R593 — Wave 1's adjacent items: - Items 1–6, 8, 9, 13, 16 and 18 enter at 12j item 0c with the class and package listed in 12i_review_w1.md. - Items marked "for Wave 2" (7, 10–12, 14, 17) are passed to the Wave 2 readers' inputs. - Item 15 goes with row 37. - Item 19 is a dated row-text correction on C41. | PI, 2026-10-09, during session 12i |
+| 2026-10-09 | R594 — Session: 12i closes next under its own closeout brief. 12j (fresh) does item 0c — the transcription of R577–R594, the Wave 1 rows and notes, and the recount — then Wave 2 (L08–L14) under its own brief. | PI, 2026-10-09, during session 12i |
+
+**Block 4.**
+
+```text
+RULING (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at 12j item 0c)
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-09 | R595 — The two "EE-NNN" numberings (EE-{papers.id} in the human workbook, the importer and analysis/paper1; papers.ee_identifier in PDF file names, the concordance manifest and the human-facing sheets) enter as a new row, Class 1, P5 with B18 (ID assigned at 12j item 0c). - Its Phase A states which numbering each artifact given to a human extractor carries (PDFs, workbooks, manifest), and checks filled workbook rows against both candidate papers. - Its fix: the importer cross-checks each row's title against the paper its key names and refuses a mismatch; a key alone is never trusted. - A dated note on R14 records the second numbering. - Evidence: 12i_ee_locate.md (this closeout). | PI, 2026-10-09, during session 12i |
+
+**Block 5.**
+
+```text
+RULING (PI, 2026-10-10, between sessions 12i and 12j, on architect recommendation; transcribe at 12j item 0c)
+
+ASSUMPTIONS IN THIS RULING:
+  READ — the PI's check of the residents' Dropbox folder, 2026-10-08: PDFs named
+    EE-{papers.id}_{Author}_{Year} (EE-009 … EE-383 and EE-654 … EE-801 checked against the
+    corpus metadata); the four distributed workbooks keyed EE-{papers.id}, with matching titles.
+  INFERRED A7 — no engine path today joins a key from a human-produced file to a paper through
+    papers.ee_identifier. Not acted on now; the row's Phase A establishes it. A failure would be
+    silent, which is why the row stays Class 1 until then.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-10 | R596 — Amends R595 (R595 stands as written; this is its amendment). (a) Recorded: the artifacts given to human extractors (PDF file names, workbooks) carry EE-{papers.id}. The second numbering (papers.ee_identifier) is on engine-side artifacts only (the DGX PDF file names, the concordance manifest). (b) R595's Phase A drops the check of filled workbook rows against two candidate papers. (c) The row stays Class 1, conditional, P5 with B18. Trigger: any engine path, in any review, that joins a key from an external or human-produced file to a paper through an identifier other than the one the file was keyed with. Its Phase A lists every engine path that reads a paper key from such a file or writes one into an artifact for people, and which identifier each uses. It may lower the class if no path can mis-join. (d) Engine-wide, not review-specific: the importer fix applies to every importer of a paper-keyed external file in any review (human extraction workbooks, adjudication files, and any later declared human arm, R14). Each row's content is cross-checked against the paper its key names, and a mismatch is refused; a key alone is never trusted. (e) Its justification is the engine's reuse across reviews, not Paper 1 or this review's concordance. | PI, 2026-10-10, between sessions 12i and 12j |
+
+**Block 6.**
+
+```text
+RULING (PI, 2026-10-10, session 12j, on architect recommendation; transcribe at 12j item 0c with R577–R596)
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (12j-OPEN stop report, this session): adjacent item 4's cell reads "with row 1" and
+    gives no class or package; row 1 is "1 / P1", extends A-11. Rows 55 and 83 say "rest new"
+    and propose no ID. RB-7 has no row (R559 withdrawn).
+  INFERRED A8 — each "rest new" item of rows 55 and 83 is identifiable in 12i_review_w1.md by
+    its item number with a sentence that can be quoted. Verify before opening; if any is not,
+    report it and open nothing for that item.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-10 | R597 — Item 0c resolutions: (a) Adjacent item 4 is a dated note on A-11, beside row 1's note (as item 15 goes with row 37). It opens no row. (b) Rows 55 and 83: the parts that extend A-11 are notes on A-11. Each "rest new" item opens as a new row with its parent row's class and package. Row 55's item 8 opens as new, and its row notes that it relates to RB-7, which has no row (R559 withdrawn). (c) Row 5(a) is a dated note on INT-g12-1; 5(b) opens INT-i12-4. A row naming two existing rows (25, 31, 34, 86) gets one note on each. (d) Class of an extended row: an existing row takes the higher of its own class and the class of the candidate noted on it; each change is listed in the recount with its cause. A note never lowers a class. (e) Decision-log form: each block's header line and ASSUMPTIONS list exactly as issued; each ruling one table row with its line breaks joined, as R566–R576. (f) IDs after INT-i12-66, in order: the "rest new" items of row 55, then row 83 (in item order); then adjacent items 1–3, 5, 6, 8, 9, 13, 16, 18; then R595's row. | PI, 2026-10-10, during session 12j |
+
+After the last ruling of Block 6, as issued:
+
+```text
+Resume TASK [evidence-engine 12j-OPEN] at step 2(a). Changes to that brief:
+  - Decision log appends R577–R597 (this block is Block 6, verbatim). The startup verify expects
+    the log to end at R597.
+  - Expected recount: 73 + 66 + n + 10 + 1 rows, where n is the number of new rows opened under
+    R597(b); 0 out. A different total is reported with its cause.
+  - FINAL REPORT item (3) adds: the "rest new" items opened under R597(b), each with its source
+    sentence; and A8's result. Item (4) adds: each class change under R597(d), with its cause.
+All other terms of 12j-OPEN stand. Stop and report after the startup verify; Wave 2 is not part
+of this task.
+```

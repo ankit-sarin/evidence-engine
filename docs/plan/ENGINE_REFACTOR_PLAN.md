@@ -3419,3 +3419,23 @@ of this task.
 ```
 
 *Addendum 2026-10-10 (12j item 0c; R595, as amended by R596(a)), to the R14 row:* R14's text speaks of one "EE-NNN" key. There are two numberings (`12i_ee_locate.md`, quoted: ""EE-NNN" means two different things on this box, and the two numberings never coincide. One is `EE-{papers.id}`; the other is the stored column `papers.ee_identifier`."). R596(a) records where each is: "the artifacts given to human extractors (PDF file names, workbooks) carry EE-{papers.id}. The second numbering (papers.ee_identifier) is on engine-side artifacts only (the DGX PDF file names, the concordance manifest)." The row for it is INT-i12-77 in section L (12i additions). R14 is otherwise unamended, and its row is left as written.
+
+**Block 7.** *Transcribed 2026-10-10 (12j-0c-FIX), in its own commit, in the R597(e) form:* ruling R598, made by PI on architect recommendation during session 12j on the 12j-OPEN report (`44e37f84217b5eb732158e636a70904e758331c8`). The task brief issued with the block (12j-0c-FIX) follows the ruling in the paste and is not part of the block.
+
+```text
+RULING (PI, 2026-10-10, session 12j, on architect recommendation; transcribe in this task)
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (12j-OPEN report, this session, 44e37f8): A8 did not hold; the twelve "rest new"
+    items are in 12i_review_w1/readers/L01.md (L01-C6, items 2–8) and W1-F1.md (W1-F1-C7, items
+    (b), (c), (e), (f), (g)), each with an item number and a quotable sentence. Six existing
+    rows not on the list (C34, J8, D20, C45, C13, A14) now carry a Wave 1 note with a class and
+    package. No note records R591(b).
+  INFERRED A9 — each reader file states a class and package for some or all of the twelve
+    items. Where it states none, R597(b)'s fallback (the parent row's class and package)
+    applies. Report which rule each item took.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-10 | R598 — Item 0c corrections: (a) The twelve "rest new" items of rows 55 and 83 open as new rows INT-i12-78 … INT-i12-89, in the order row 55 items 2–8, then row 83 items (b), (c), (e), (f), (g). Each text cell quotes the reader file. Each row takes the class and package the reader file gives that item; where it gives none, R597(b) applies. Row 55's item 8 notes that it relates to RB-7, which has no row (R559 withdrawn). (b) The recount's reading stands: an existing row that carries a Wave 1 note with a class and package is on the pre-tag list (the 12g form, R587, R597(d)). - C34 (closed) and C45 (no action) each get a dated note: reopened for that Wave 1 finding only; the rest of the row stays as recorded. - D20, J8, C13 and A14 each get a dated note: only the Wave 1 finding is pre-tag, in its package; the rest of the row keeps its existing owner. (c) B-F11 gets a dated note recording R591(b): paper 168 and the other 14 empty-abstract [specialty_rescreen] exclusions join R549's open item for P4's Phase A; none is moved to the corpus by the engine. (d) The 77 coverage-map rows written at 44e37f8 stand. The hook-appended PROJECT_LEDGER.md row in claude-config settles at the wrap (R370). | PI, 2026-10-10, during session 12j |

@@ -1,0 +1,58 @@
+{
+ "database": "data/surgical_autonomy/review.db",
+ "spec": "review_specs/surgical_autonomy.yaml",
+ "spec_extraction_arm": "local_deepseek_r1_32b",
+ "spec_arms_declared": [
+  "local_deepseek_r1_32b",
+  "openai_o4_mini_2025_04_16_high",
+  "anthropic_claude_sonnet_4_6"
+ ],
+ "arms_columns": [
+  "arm_name",
+  "arm_kind",
+  "configuration_json",
+  "configuration_marker",
+  "registered_at",
+  "retired_at",
+  "pinned_run_id",
+  "pinned_sha256"
+ ],
+ "arms_rows_as_stored": [
+  {
+   "arm_name": "anthropic_sonnet_4_6",
+   "arm_kind": "model",
+   "configuration_json": "{}",
+   "configuration_marker": "not recorded (pre-manifest)",
+   "registered_at": "2026-09-21T21:17:40.193732+00:00",
+   "retired_at": null,
+   "pinned_run_id": null,
+   "pinned_sha256": null
+  },
+  {
+   "arm_name": "local",
+   "arm_kind": "model",
+   "configuration_json": "{}",
+   "configuration_marker": "not recorded (pre-manifest)",
+   "registered_at": "2026-09-21T21:17:40.193732+00:00",
+   "retired_at": null,
+   "pinned_run_id": null,
+   "pinned_sha256": null
+  },
+  {
+   "arm_name": "openai_o4_mini_high",
+   "arm_kind": "model",
+   "configuration_json": "{}",
+   "configuration_marker": "not recorded (pre-manifest)",
+   "registered_at": "2026-09-21T21:17:40.193732+00:00",
+   "retired_at": null,
+   "pinned_run_id": null,
+   "pinned_sha256": null
+  }
+ ],
+ "extraction_arm_row": null,
+ "extraction_arm_pinned": false,
+ "run_manifests_rows": 0,
+ "run_stage_configs_rows": 0,
+ "manifest_stage_rows_declaring_an_extraction_stage": [],
+ "field_events_rows": 0
+}

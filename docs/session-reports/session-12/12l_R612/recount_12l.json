@@ -1,0 +1,227 @@
+{
+ "I1_holds": true,
+ "P1_units": {
+  "every_new_P1_row_joins_an_existing_unit": true,
+  "fix_units_after_R612": 35,
+  "fix_units_in_the_package_plan": 35,
+  "new_P1_rows_and_the_unit_each_joins": {
+   "INT-l12-1": "U04",
+   "INT-l12-2": "U31"
+  },
+  "package_plan_rows_equal_P1_rows_before_R612": true,
+  "placed_steps_not_fix_units": [
+   "U13"
+  ]
+ },
+ "baseline_12k_item_0c": {
+  "class_1": 98,
+  "class_2": 44,
+  "class_3": 96,
+  "rows": 238,
+  "without_class": 0
+ },
+ "by_package_and_class": {
+  "rule": "first-named package, as recount_12k.py reads it; a row opened here by its Owning-package cell",
+  "whole_list": {
+   "P1": {
+    "class_1": 26,
+    "class_2": 16,
+    "class_3": 7,
+    "rows": 49
+   },
+   "P2": {
+    "class_1": 12,
+    "class_2": 7,
+    "class_3": 1,
+    "rows": 20
+   },
+   "P3": {
+    "class_1": 10,
+    "class_2": 2,
+    "class_3": 2,
+    "rows": 14
+   },
+   "P4": {
+    "class_1": 24,
+    "class_2": 10,
+    "class_3": 0,
+    "rows": 34
+   },
+   "P5": {
+    "class_1": 15,
+    "class_2": 8,
+    "class_3": 0,
+    "rows": 23
+   },
+   "P6": {
+    "class_1": 8,
+    "class_2": 2,
+    "class_3": 0,
+    "rows": 10
+   },
+   "P7": {
+    "class_1": 0,
+    "class_2": 1,
+    "class_3": 98,
+    "rows": 99
+   }
+  }
+ },
+ "class_moves": [
+  {
+   "after": "2",
+   "before": "1",
+   "id": "C24",
+   "package": "P1",
+   "row": "entered at 12k by a note",
+   "ruling": "R612(l); D11"
+  },
+  {
+   "after": "3",
+   "before": "1",
+   "id": "INT-i12-6",
+   "package": "P1",
+   "row": "section L",
+   "ruling": "R612(l); D11"
+  },
+  {
+   "after": "2",
+   "before": "1",
+   "id": "INT-i12-8",
+   "package": "P1",
+   "row": "section L",
+   "ruling": "R612(l); D11"
+  },
+  {
+   "after": "3",
+   "before": "1",
+   "id": "INT-j12-19",
+   "package": "P1",
+   "row": "opened at 12k item 0c",
+   "ruling": "R612(l); D11"
+  }
+ ],
+ "expected_by_the_brief_I1": {
+  "P1": {
+   "class_1": 26,
+   "class_2": 16,
+   "class_3": 7,
+   "rows": 49
+  },
+  "P1_units": 35,
+  "class_1": 95,
+  "class_2": 46,
+  "class_3": 108,
+  "rows": 249
+ },
+ "now": {
+  "class_1": 95,
+  "class_2": 46,
+  "class_3": 108,
+  "rows": 249,
+  "without_class": 0
+ },
+ "r510": {
+  "rows_in": 11,
+  "rows_in_existing_rows_entering": 0,
+  "rows_in_opened": 11,
+  "rows_out": 0
+ },
+ "rows_opened": {
+  "class_1": 1,
+  "class_1_conditional": 1,
+  "class_2": 0,
+  "class_3": 10,
+  "count": 11,
+  "rows": [
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-l12-1",
+    "package": "P1",
+    "ruling": "R612(d)",
+    "unit": "U04"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-l12-2",
+    "package": "P1",
+    "ruling": "R612(o); R31",
+    "unit": "U31"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-l12-3",
+    "package": "P7",
+    "ruling": "R612(p)",
+    "unit": null
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-l12-4",
+    "package": "P7",
+    "ruling": "R612(p)",
+    "unit": null
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-l12-5",
+    "package": "P7",
+    "ruling": "R612(p)",
+    "unit": null
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-l12-6",
+    "package": "P7",
+    "ruling": "R612(p)",
+    "unit": null
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-l12-7",
+    "package": "P7",
+    "ruling": "R612(p)",
+    "unit": null
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-l12-8",
+    "package": "P7",
+    "ruling": "R612(p)",
+    "unit": null
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-l12-9",
+    "package": "P7",
+    "ruling": "R612(p)",
+    "unit": null
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-l12-10",
+    "package": "P7",
+    "ruling": "R612(p)",
+    "unit": null
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-l12-11",
+    "package": "P7",
+    "ruling": "R612(p)",
+    "unit": null
+   }
+  ]
+ }
+}

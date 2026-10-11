@@ -11,7 +11,8 @@ differ only in what must ACCOMPANY the citations:
              when a cited unit states the value outright, then the value.
   JUDGMENT   stepwise reasoning where EACH step either cites >=1 unit or is
              explicitly marked as criteria application (no textual basis
-             claimed); then the value.
+             claimed), and AT LEAST ONE step cites a unit (R571(b), R616(c):
+             a field-level citation alone does not meet it); then the value.
 
 Any class may instead return the escape token with zero citations.
 
@@ -386,7 +387,11 @@ def check_entry(entry: dict, cb_field: dict, cls: str, unit_map: UnitMap,
         if cited_t:
             violations.append(ESCAPE_WITH_CITATION)
     else:
-        if not cited_t:
+        # R616(c), following R571(b): a JUDGMENT field meets the citation
+        # requirement only when at least one reasoning step cites a unit. A
+        # field-level citation alone does not meet it, because the prompt tells
+        # the model "At least one step must cite a unit."
+        if not cited_t or (cls == C.JUDGMENT and not any(s.indices for s in steps)):
             violations.append(VALUE_WITHOUT_CITATION)
         if cls == C.INFERABLE:
             if not inference:

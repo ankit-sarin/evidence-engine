@@ -207,3 +207,48 @@ def test_judgment_step_shapes_that_carry_no_basis_fail_the_field():
 
     # every failing shape uses the closed vocabulary: no new code, no new feedback text
     assert {K.STEP_WITHOUT_BASIS, K.STEPS_MISSING} <= K.FATAL and len(K.FATAL) == 10
+
+
+# ── R616(c), commit 4 — the check follows R571(b) ─────────────────────
+CRITERIA_STEP = {"step": "The codebook's criteria apply.", "criteria_application": True}
+
+
+def test_a_judgment_field_needs_a_step_that_cites_a_unit():
+    # a field-level citation and only criteria-application steps: not enough
+    rec = _judgment([CRITERIA_STEP], unit_indices=[3])
+    assert rec.indices == (3,) and not rec.ok
+    assert rec.fatal == (K.VALUE_WITHOUT_CITATION,)
+    rec = _judgment([CRITERIA_STEP, dict(CRITERIA_STEP)], unit_indices=[3, 4])
+    assert not rec.ok and rec.fatal == (K.VALUE_WITHOUT_CITATION,)
+
+    # the same field with one cited step passes, with or without the field-level citation
+    assert _judgment([GOOD_STEP, CRITERIA_STEP], unit_indices=[3]).ok
+    assert _judgment([GOOD_STEP, CRITERIA_STEP]).ok
+    assert _judgment([CRITERIA_STEP, GOOD_STEP], unit_indices=[4]).indices == (4, 3)
+
+    # no steps at all: still STEPS_MISSING, and the citation requirement is unmet too
+    rec = _judgment([], unit_indices=[3])
+    assert set(rec.fatal) == {K.STEPS_MISSING, K.VALUE_WITHOUT_CITATION}
+
+    # the escape is untouched: no citation, no steps needed
+    entry = {"field_name": "study_design", "unit_indices": [], "value": "NO_EVIDENCE_LOCATABLE"}
+    r = K.check_response(json.dumps({"fields": [entry]}), build_unit_map(1, PAPER),
+                         JUDGMENT_CODEBOOK, ("study_design",))
+    assert r.records["study_design"].ok and r.records["study_design"].is_escape
+
+    # the other classes are untouched: a field-level citation meets theirs
+    stated = {**JUDGMENT_CODEBOOK, "fields": [{"name": "a", "type": "free_text",
+                                               "field_class": "stated", "definition": "A."}]}
+    r = K.check_response(json.dumps({"fields": [{"field_name": "a", "unit_indices": [3],
+                                                 "value": "x"}]}),
+                         build_unit_map(1, PAPER), stated, ("a",))
+    assert r.records["a"].ok
+
+    # attempt 2's feedback for the failing field already says what the rule requires
+    failing = K.check_response(
+        json.dumps({"fields": [{"field_name": "study_design", "unit_indices": [3],
+                                "reasoning_steps": [CRITERIA_STEP],
+                                "value": "Preclinical validation"}]}),
+        build_unit_map(1, PAPER), JUDGMENT_CODEBOOK, ("study_design",))
+    feedback = P.build_feedback_block(failing, JUDGMENT_CODEBOOK)
+    assert f"✗ {K.VALUE_WITHOUT_CITATION} — " in feedback and T_B in feedback

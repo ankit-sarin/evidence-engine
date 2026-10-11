@@ -1,0 +1,15 @@
+E       KeyError: 'segmentation'
+tests/test_pin_records.py:84: KeyError
+E       AssertionError: assert '1e67684b81c82e6002c45951f5f0ea4860f3a2a1774177f7324df0f54aa99172' != '1e67684b81c82e6002c45951f5f0ea4860f3a2a1774177f7324df0f54aa99172'
+E        +  where '1e67684b81c82e6002c45951f5f0ea4860f3a2a1774177f7324df0f54aa99172' = compute_semantic_hash({'absence_sentinels': ['NR', 'N/A', 'NA', 'NOT_FOUND', 'NOT FOUND', 'NOT REPORTED'], 'canonical_absence_sentine
+E        +  and   '1e67684b81c82e6002c45951f5f0ea4860f3a2a1774177f7324df0f54aa99172' = compute_semantic_hash({'absence_sentinels': ['NR', 'N/A', 'NA', 'NOT_FOUND', 'NOT FOUND', 'NOT REPORTED'], 'canonical_absence_sentine
+tests/test_pin_records.py:118: AssertionError
+E       AssertionError: assert ('elicitation...etry_snippet') == ('elicitation...xtract_pass2')
+E         
+E         Left contains one more item: 'extract_retry_snippet'
+E         Use -v to get more diff
+tests/test_pin_records.py:151: AssertionError
+FAILED tests/test_pin_records.py::test_a_segmentation_change_moves_the_elicited_arm_pin
+FAILED tests/test_pin_records.py::test_semantic_hash_moves_on_a_canonical_sentinel_edit
+FAILED tests/test_pin_records.py::test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry
+3 failed in 1.80s

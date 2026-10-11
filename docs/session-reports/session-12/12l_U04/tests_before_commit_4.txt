@@ -1,0 +1,7 @@
+E       AssertionError: assert ((3,) == (3,)
+E         
+E         Use -v to get more diff and not True)
+E        +  where True = FieldRecord(field_name='study_design', field_class='judgment', value='Preclinical validation', is_escape=False, indice... indices=(), criteria_application=True),), violations=('VALUE_BEFORE_EVIDE
+tests/test_pass1_contract_text.py:219: AssertionError
+FAILED tests/test_pass1_contract_text.py::test_a_judgment_field_needs_a_step_that_cites_a_unit
+1 failed in 0.24s

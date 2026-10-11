@@ -1,0 +1,3387 @@
+{
+"adjacent_pairs": 246016,
+"adjacent_pairs_exact": 246016,
+"comment_spans": 11934,
+"files": 446,
+"files_whose_unit_count_changed": 350,
+"files_with_a_short_unit": 114,
+"files_with_fewer_units": 49,
+"files_with_more_units": 301,
+"largest_change": {
+"after": 20893,
+"before": 20772,
+"comments": 695,
+"file": "416_v2.md",
+"pairs": 20892,
+"short_units": 1
+},
+"locator_1_on_a_sample": {
+"kind": {
+"exact": 11109,
+"fuzzy": 20
+},
+"not_exact_examples": [
+{
+"file": "132_v1.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+23,
+24
+],
+"score": 0.9985775248933144,
+"snippet_tail": "sity, Nashville, TN 37203, USA tanner.a."
+},
+{
+"file": "209_v1.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+10,
+11
+],
+"score": 0.9983948635634029,
+"snippet_tail": "ss with the best performance \u020b R \u0378 =  \u0376."
+},
+{
+"file": "209_v1.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+11,
+12
+],
+"score": 0.9959839357429718,
+"snippet_tail": "est performance \u020b R \u0378 =  \u0376.\u037f\u037f, MAE = \u0377\u0377."
+},
+{
+"file": "528_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+2,
+3
+],
+"score": 0.9977426636568849,
+"snippet_tail": "versity of Tokyo Tokyo, Japan osa@nml.t."
+},
+{
+"file": "60_v1.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+8,
+9
+],
+"score": 0.9982300884955753,
+"snippet_tail": "del produced high Recall scores \u020bmean \u0376."
+},
+{
+"file": "60_v1.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+10,
+11
+],
+"score": 0.9900990099009901,
+"snippet_tail": "m \u0376.\u037e\u037c\u0377\u020c. Mean F\u0377/Dice scores reached \u0376."
+},
+{
+"file": "60_v1.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+16,
+17
+],
+"score": 0.9797979797979798,
+"snippet_tail": "e mean misrecognition score was a low \u0376."
+},
+{
+"file": "60_v1.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+17,
+18
+],
+"score": 0.9924812030075187,
+"snippet_tail": "gnition score was a low \u0376.\u0377\u037a \u020brange \u0376-\u0376."
+},
+{
+"file": "620_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+1,
+2
+],
+"score": 0.9969604863221885,
+"snippet_tail": " The University of Tokyo, t.sakai@nml.t."
+},
+{
+"file": "635_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+1,
+2
+],
+"score": 0.9979035639412998,
+"snippet_tail": "pan Email: { osa, sugi, mamoru } @nml.t."
+},
+{
+"file": "656_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+7,
+8
+],
+"score": 0.9977426636568849,
+"snippet_tail": ", Nashville, TN 37235 e-mail: michael.a."
+},
+{
+"file": "689_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+2,
+3
+],
+"score": 0.9977011494252873,
+"snippet_tail": "; yimin.zhao@hofstra.edu (Y.Z.); sina.y."
+},
+{
+"file": "769_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+17,
+18
+],
+"score": 0.9849246231155779,
+"snippet_tail": "operation with a maximum deviation of \u0376."
+},
+{
+"file": "769_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+18,
+19
+],
+"score": 0.9795918367346939,
+"snippet_tail": "th a maximum deviation of \u0376.\u037b\u037b mm and \u037d."
+},
+{
+"file": "769_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+25,
+26
+],
+"score": 0.9906542056074766,
+"snippet_tail": "the value of the average velocity was \u0376."
+},
+{
+"file": "777_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+11,
+12
+],
+"score": 0.991304347826087,
+"snippet_tail": "l group, the distance \u020bt = \u0378.\u037b9\u0377, p = \u0376."
+},
+{
+"file": "777_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+13,
+14
+],
+"score": 0.9855072463768116,
+"snippet_tail": "\u0376\u0377\u0377\u020c and angular \u020bt = \u037a.\u0378\u037d\u037c, p = \u0376."
+},
+{
+"file": "777_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+15,
+16
+],
+"score": 0.9947643979057592,
+"snippet_tail": "ction device position \u020bt = \u0379.\u0378\u0378\u0378, p = \u0376."
+},
+{
+"file": "777_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+17,
+18
+],
+"score": 0.9863013698630136,
+"snippet_tail": "\u0376\u03769\u020c and direction \u020bt = \u037a.\u037c9\u037d, p = \u0376."
+},
+{
+"file": "777_v2.md",
+"kind": "fuzzy",
+"located": true,
+"pair": [
+19,
+20
+],
+"score": 0.9927007299270073,
+"snippet_tail": "ion effect was better \u020bt = \u037a.\u03769\u037c, p = \u0376."
+}
+],
+"not_located": 0,
+"pairs": 11129,
+"sample_per_file": 25
+},
+"per_file": {
+"100_v1.md": {
+"after": 511,
+"before": 507,
+"comments": 24,
+"pairs": 510,
+"short_units": 0
+},
+"102_v1.md": {
+"after": 275,
+"before": 273,
+"comments": 7,
+"pairs": 274,
+"short_units": 0
+},
+"103_v1.md": {
+"after": 256,
+"before": 255,
+"comments": 5,
+"pairs": 255,
+"short_units": 1
+},
+"105_v1.md": {
+"after": 615,
+"before": 624,
+"comments": 80,
+"pairs": 614,
+"short_units": 0
+},
+"106_v1.md": {
+"after": 454,
+"before": 451,
+"comments": 30,
+"pairs": 453,
+"short_units": 1
+},
+"112_v1.md": {
+"after": 417,
+"before": 424,
+"comments": 7,
+"pairs": 416,
+"short_units": 0
+},
+"11_v1.md": {
+"after": 1520,
+"before": 1491,
+"comments": 27,
+"pairs": 1519,
+"short_units": 0
+},
+"121_v1.md": {
+"after": 152,
+"before": 152,
+"comments": 7,
+"pairs": 151,
+"short_units": 0
+},
+"123_v1.md": {
+"after": 1991,
+"before": 1991,
+"comments": 77,
+"pairs": 1990,
+"short_units": 0
+},
+"125_v1.md": {
+"after": 524,
+"before": 522,
+"comments": 23,
+"pairs": 523,
+"short_units": 0
+},
+"12_v1.md": {
+"after": 359,
+"before": 355,
+"comments": 20,
+"pairs": 358,
+"short_units": 0
+},
+"131_v1.md": {
+"after": 427,
+"before": 428,
+"comments": 5,
+"pairs": 426,
+"short_units": 2
+},
+"132_v1.md": {
+"after": 328,
+"before": 325,
+"comments": 14,
+"pairs": 327,
+"short_units": 0
+},
+"133_v1.md": {
+"after": 498,
+"before": 497,
+"comments": 8,
+"pairs": 497,
+"short_units": 0
+},
+"134_v1.md": {
+"after": 184,
+"before": 181,
+"comments": 30,
+"pairs": 183,
+"short_units": 2
+},
+"136_v1.md": {
+"after": 643,
+"before": 643,
+"comments": 6,
+"pairs": 642,
+"short_units": 0
+},
+"139_v1.md": {
+"after": 445,
+"before": 434,
+"comments": 50,
+"pairs": 444,
+"short_units": 0
+},
+"142_v1.md": {
+"after": 681,
+"before": 681,
+"comments": 8,
+"pairs": 680,
+"short_units": 0
+},
+"143_v1.md": {
+"after": 72,
+"before": 71,
+"comments": 4,
+"pairs": 71,
+"short_units": 1
+},
+"144_v1.md": {
+"after": 528,
+"before": 527,
+"comments": 6,
+"pairs": 527,
+"short_units": 0
+},
+"145_v1.md": {
+"after": 594,
+"before": 593,
+"comments": 15,
+"pairs": 593,
+"short_units": 0
+},
+"149_v1.md": {
+"after": 6369,
+"before": 6335,
+"comments": 312,
+"pairs": 6368,
+"short_units": 4
+},
+"14_v1.md": {
+"after": 254,
+"before": 253,
+"comments": 22,
+"pairs": 253,
+"short_units": 0
+},
+"150_v1.md": {
+"after": 680,
+"before": 670,
+"comments": 47,
+"pairs": 679,
+"short_units": 1
+},
+"158_v1.md": {
+"after": 561,
+"before": 559,
+"comments": 9,
+"pairs": 560,
+"short_units": 0
+},
+"15_v1.md": {
+"after": 676,
+"before": 665,
+"comments": 60,
+"pairs": 675,
+"short_units": 1
+},
+"160_v1.md": {
+"after": 591,
+"before": 591,
+"comments": 30,
+"pairs": 590,
+"short_units": 0
+},
+"161_v1.md": {
+"after": 379,
+"before": 379,
+"comments": 11,
+"pairs": 378,
+"short_units": 0
+},
+"164_v1.md": {
+"after": 552,
+"before": 546,
+"comments": 20,
+"pairs": 551,
+"short_units": 0
+},
+"167_v1.md": {
+"after": 661,
+"before": 655,
+"comments": 35,
+"pairs": 660,
+"short_units": 1
+},
+"168_v1.md": {
+"after": 294,
+"before": 292,
+"comments": 21,
+"pairs": 293,
+"short_units": 0
+},
+"169_v1.md": {
+"after": 461,
+"before": 456,
+"comments": 24,
+"pairs": 460,
+"short_units": 0
+},
+"170_v1.md": {
+"after": 409,
+"before": 405,
+"comments": 37,
+"pairs": 408,
+"short_units": 1
+},
+"172_v1.md": {
+"after": 653,
+"before": 647,
+"comments": 61,
+"pairs": 652,
+"short_units": 3
+},
+"174_v1.md": {
+"after": 811,
+"before": 797,
+"comments": 26,
+"pairs": 810,
+"short_units": 1
+},
+"177_v1.md": {
+"after": 650,
+"before": 642,
+"comments": 21,
+"pairs": 649,
+"short_units": 2
+},
+"17_v1.md": {
+"after": 260,
+"before": 259,
+"comments": 19,
+"pairs": 259,
+"short_units": 0
+},
+"180_v1.md": {
+"after": 405,
+"before": 405,
+"comments": 9,
+"pairs": 404,
+"short_units": 0
+},
+"181_v1.md": {
+"after": 221,
+"before": 220,
+"comments": 4,
+"pairs": 220,
+"short_units": 0
+},
+"183_v1.md": {
+"after": 444,
+"before": 440,
+"comments": 42,
+"pairs": 443,
+"short_units": 5
+},
+"184_v1.md": {
+"after": 571,
+"before": 564,
+"comments": 8,
+"pairs": 570,
+"short_units": 0
+},
+"185_v1.md": {
+"after": 564,
+"before": 564,
+"comments": 18,
+"pairs": 563,
+"short_units": 0
+},
+"187_v1.md": {
+"after": 559,
+"before": 552,
+"comments": 16,
+"pairs": 558,
+"short_units": 1
+},
+"18_v1.md": {
+"after": 506,
+"before": 501,
+"comments": 19,
+"pairs": 505,
+"short_units": 0
+},
+"190_v1.md": {
+"after": 1571,
+"before": 1570,
+"comments": 127,
+"pairs": 1570,
+"short_units": 2
+},
+"195_v1.md": {
+"after": 573,
+"before": 571,
+"comments": 13,
+"pairs": 572,
+"short_units": 0
+},
+"199_v1.md": {
+"after": 148,
+"before": 148,
+"comments": 4,
+"pairs": 147,
+"short_units": 0
+},
+"204_v1.md": {
+"after": 518,
+"before": 512,
+"comments": 45,
+"pairs": 517,
+"short_units": 0
+},
+"205_v1.md": {
+"after": 668,
+"before": 660,
+"comments": 54,
+"pairs": 667,
+"short_units": 0
+},
+"206_v1.md": {
+"after": 600,
+"before": 589,
+"comments": 37,
+"pairs": 599,
+"short_units": 0
+},
+"208_v1.md": {
+"after": 348,
+"before": 348,
+"comments": 7,
+"pairs": 347,
+"short_units": 0
+},
+"209_v1.md": {
+"after": 219,
+"before": 215,
+"comments": 10,
+"pairs": 218,
+"short_units": 1
+},
+"20_v1.md": {
+"after": 282,
+"before": 287,
+"comments": 3,
+"pairs": 281,
+"short_units": 0
+},
+"213_v1.md": {
+"after": 325,
+"before": 321,
+"comments": 25,
+"pairs": 324,
+"short_units": 0
+},
+"214_v1.md": {
+"after": 467,
+"before": 465,
+"comments": 13,
+"pairs": 466,
+"short_units": 0
+},
+"219_v1.md": {
+"after": 380,
+"before": 377,
+"comments": 49,
+"pairs": 379,
+"short_units": 1
+},
+"21_v1.md": {
+"after": 390,
+"before": 386,
+"comments": 37,
+"pairs": 389,
+"short_units": 1
+},
+"221_v1.md": {
+"after": 459,
+"before": 458,
+"comments": 47,
+"pairs": 458,
+"short_units": 1
+},
+"222_v1.md": {
+"after": 413,
+"before": 410,
+"comments": 70,
+"pairs": 412,
+"short_units": 3
+},
+"224_v1.md": {
+"after": 688,
+"before": 678,
+"comments": 32,
+"pairs": 687,
+"short_units": 0
+},
+"225_v1.md": {
+"after": 8002,
+"before": 8002,
+"comments": 13,
+"pairs": 8001,
+"short_units": 0
+},
+"229_v1.md": {
+"after": 412,
+"before": 412,
+"comments": 43,
+"pairs": 411,
+"short_units": 1
+},
+"22_v1.md": {
+"after": 505,
+"before": 505,
+"comments": 22,
+"pairs": 504,
+"short_units": 0
+},
+"230_v1.md": {
+"after": 54,
+"before": 53,
+"comments": 3,
+"pairs": 53,
+"short_units": 0
+},
+"238_v1.md": {
+"after": 344,
+"before": 345,
+"comments": 46,
+"pairs": 343,
+"short_units": 0
+},
+"23_v1.md": {
+"after": 692,
+"before": 695,
+"comments": 12,
+"pairs": 691,
+"short_units": 0
+},
+"241_v1.md": {
+"after": 320,
+"before": 320,
+"comments": 1,
+"pairs": 319,
+"short_units": 0
+},
+"246_v1.md": {
+"after": 546,
+"before": 546,
+"comments": 19,
+"pairs": 545,
+"short_units": 0
+},
+"24_v1.md": {
+"after": 193,
+"before": 193,
+"comments": 9,
+"pairs": 192,
+"short_units": 0
+},
+"252_v2.md": {
+"after": 520,
+"before": 514,
+"comments": 16,
+"pairs": 519,
+"short_units": 0
+},
+"253_v2.md": {
+"after": 755,
+"before": 751,
+"comments": 10,
+"pairs": 754,
+"short_units": 0
+},
+"255_v2.md": {
+"after": 437,
+"before": 438,
+"comments": 24,
+"pairs": 436,
+"short_units": 0
+},
+"260_v2.md": {
+"after": 319,
+"before": 319,
+"comments": 12,
+"pairs": 318,
+"short_units": 0
+},
+"262_v2.md": {
+"after": 272,
+"before": 271,
+"comments": 31,
+"pairs": 271,
+"short_units": 1
+},
+"268_v2.md": {
+"after": 178,
+"before": 174,
+"comments": 26,
+"pairs": 177,
+"short_units": 1
+},
+"271_v2.md": {
+"after": 582,
+"before": 573,
+"comments": 32,
+"pairs": 581,
+"short_units": 0
+},
+"274_v2.md": {
+"after": 1010,
+"before": 1011,
+"comments": 11,
+"pairs": 1009,
+"short_units": 0
+},
+"275_v2.md": {
+"after": 714,
+"before": 714,
+"comments": 15,
+"pairs": 713,
+"short_units": 0
+},
+"277_v2.md": {
+"after": 735,
+"before": 744,
+"comments": 12,
+"pairs": 734,
+"short_units": 0
+},
+"281_v2.md": {
+"after": 848,
+"before": 850,
+"comments": 13,
+"pairs": 847,
+"short_units": 0
+},
+"285_v2.md": {
+"after": 227,
+"before": 225,
+"comments": 22,
+"pairs": 226,
+"short_units": 0
+},
+"286_v2.md": {
+"after": 428,
+"before": 427,
+"comments": 26,
+"pairs": 427,
+"short_units": 0
+},
+"288_v2.md": {
+"after": 319,
+"before": 319,
+"comments": 3,
+"pairs": 318,
+"short_units": 0
+},
+"289_v2.md": {
+"after": 549,
+"before": 543,
+"comments": 16,
+"pairs": 548,
+"short_units": 0
+},
+"28_v1.md": {
+"after": 1691,
+"before": 1687,
+"comments": 47,
+"pairs": 1690,
+"short_units": 1
+},
+"291_v2.md": {
+"after": 333,
+"before": 333,
+"comments": 29,
+"pairs": 332,
+"short_units": 0
+},
+"292_v2.md": {
+"after": 508,
+"before": 506,
+"comments": 24,
+"pairs": 507,
+"short_units": 0
+},
+"293_v2.md": {
+"after": 440,
+"before": 437,
+"comments": 14,
+"pairs": 439,
+"short_units": 0
+},
+"294_v2.md": {
+"after": 776,
+"before": 777,
+"comments": 6,
+"pairs": 775,
+"short_units": 0
+},
+"295_v2.md": {
+"after": 616,
+"before": 613,
+"comments": 6,
+"pairs": 615,
+"short_units": 0
+},
+"296_v2.md": {
+"after": 755,
+"before": 752,
+"comments": 36,
+"pairs": 754,
+"short_units": 1
+},
+"297_v2.md": {
+"after": 472,
+"before": 471,
+"comments": 17,
+"pairs": 471,
+"short_units": 0
+},
+"304_v2.md": {
+"after": 349,
+"before": 348,
+"comments": 10,
+"pairs": 348,
+"short_units": 0
+},
+"308_v2.md": {
+"after": 264,
+"before": 263,
+"comments": 23,
+"pairs": 263,
+"short_units": 0
+},
+"30_v1.md": {
+"after": 877,
+"before": 877,
+"comments": 4,
+"pairs": 876,
+"short_units": 0
+},
+"311_v2.md": {
+"after": 1038,
+"before": 1030,
+"comments": 36,
+"pairs": 1037,
+"short_units": 0
+},
+"312_v2.md": {
+"after": 700,
+"before": 703,
+"comments": 72,
+"pairs": 699,
+"short_units": 1
+},
+"318_v2.md": {
+"after": 305,
+"before": 301,
+"comments": 19,
+"pairs": 304,
+"short_units": 0
+},
+"321_v2.md": {
+"after": 297,
+"before": 295,
+"comments": 24,
+"pairs": 296,
+"short_units": 1
+},
+"323_v2.md": {
+"after": 292,
+"before": 292,
+"comments": 14,
+"pairs": 291,
+"short_units": 0
+},
+"327_v2.md": {
+"after": 607,
+"before": 609,
+"comments": 14,
+"pairs": 606,
+"short_units": 0
+},
+"329_v2.md": {
+"after": 376,
+"before": 377,
+"comments": 9,
+"pairs": 375,
+"short_units": 0
+},
+"332_v2.md": {
+"after": 403,
+"before": 398,
+"comments": 32,
+"pairs": 402,
+"short_units": 0
+},
+"334_v2.md": {
+"after": 431,
+"before": 415,
+"comments": 44,
+"pairs": 430,
+"short_units": 3
+},
+"338_v2.md": {
+"after": 795,
+"before": 791,
+"comments": 50,
+"pairs": 794,
+"short_units": 1
+},
+"339_v2.md": {
+"after": 669,
+"before": 668,
+"comments": 14,
+"pairs": 668,
+"short_units": 0
+},
+"33_v1.md": {
+"after": 598,
+"before": 597,
+"comments": 18,
+"pairs": 597,
+"short_units": 0
+},
+"340_v2.md": {
+"after": 400,
+"before": 394,
+"comments": 16,
+"pairs": 399,
+"short_units": 0
+},
+"342_v2.md": {
+"after": 214,
+"before": 217,
+"comments": 6,
+"pairs": 213,
+"short_units": 0
+},
+"345_v2.md": {
+"after": 272,
+"before": 270,
+"comments": 10,
+"pairs": 271,
+"short_units": 0
+},
+"346_v2.md": {
+"after": 293,
+"before": 293,
+"comments": 2,
+"pairs": 292,
+"short_units": 0
+},
+"347_v2.md": {
+"after": 547,
+"before": 548,
+"comments": 9,
+"pairs": 546,
+"short_units": 0
+},
+"352_v2.md": {
+"after": 270,
+"before": 270,
+"comments": 1,
+"pairs": 269,
+"short_units": 0
+},
+"357_v2.md": {
+"after": 170,
+"before": 167,
+"comments": 9,
+"pairs": 169,
+"short_units": 0
+},
+"358_v2.md": {
+"after": 514,
+"before": 512,
+"comments": 34,
+"pairs": 513,
+"short_units": 0
+},
+"361_v2.md": {
+"after": 313,
+"before": 312,
+"comments": 33,
+"pairs": 312,
+"short_units": 0
+},
+"364_v2.md": {
+"after": 299,
+"before": 299,
+"comments": 21,
+"pairs": 298,
+"short_units": 0
+},
+"366_v2.md": {
+"after": 662,
+"before": 661,
+"comments": 15,
+"pairs": 661,
+"short_units": 0
+},
+"367_v2.md": {
+"after": 616,
+"before": 613,
+"comments": 79,
+"pairs": 615,
+"short_units": 0
+},
+"368_v2.md": {
+"after": 1081,
+"before": 1082,
+"comments": 10,
+"pairs": 1080,
+"short_units": 0
+},
+"369_v2.md": {
+"after": 450,
+"before": 446,
+"comments": 16,
+"pairs": 449,
+"short_units": 0
+},
+"370_v2.md": {
+"after": 374,
+"before": 373,
+"comments": 25,
+"pairs": 373,
+"short_units": 0
+},
+"371_v2.md": {
+"after": 301,
+"before": 299,
+"comments": 17,
+"pairs": 300,
+"short_units": 0
+},
+"373_v2.md": {
+"after": 599,
+"before": 599,
+"comments": 10,
+"pairs": 598,
+"short_units": 0
+},
+"375_v2.md": {
+"after": 428,
+"before": 419,
+"comments": 11,
+"pairs": 427,
+"short_units": 0
+},
+"376_v2.md": {
+"after": 341,
+"before": 342,
+"comments": 21,
+"pairs": 340,
+"short_units": 0
+},
+"377_v2.md": {
+"after": 88,
+"before": 87,
+"comments": 2,
+"pairs": 87,
+"short_units": 0
+},
+"378_v2.md": {
+"after": 866,
+"before": 868,
+"comments": 10,
+"pairs": 865,
+"short_units": 0
+},
+"37_v1.md": {
+"after": 6369,
+"before": 6335,
+"comments": 312,
+"pairs": 6368,
+"short_units": 4
+},
+"380_v2.md": {
+"after": 362,
+"before": 362,
+"comments": 7,
+"pairs": 361,
+"short_units": 0
+},
+"381_v2.md": {
+"after": 372,
+"before": 368,
+"comments": 26,
+"pairs": 371,
+"short_units": 0
+},
+"383_v2.md": {
+"after": 493,
+"before": 486,
+"comments": 14,
+"pairs": 492,
+"short_units": 0
+},
+"386_v2.md": {
+"after": 294,
+"before": 294,
+"comments": 18,
+"pairs": 293,
+"short_units": 0
+},
+"388_v2.md": {
+"after": 398,
+"before": 390,
+"comments": 14,
+"pairs": 397,
+"short_units": 0
+},
+"389_v2.md": {
+"after": 779,
+"before": 755,
+"comments": 20,
+"pairs": 778,
+"short_units": 1
+},
+"38_v1.md": {
+"after": 899,
+"before": 897,
+"comments": 109,
+"pairs": 898,
+"short_units": 3
+},
+"390_v2.md": {
+"after": 408,
+"before": 405,
+"comments": 45,
+"pairs": 407,
+"short_units": 4
+},
+"392_v2.md": {
+"after": 261,
+"before": 260,
+"comments": 3,
+"pairs": 260,
+"short_units": 0
+},
+"395_v2.md": {
+"after": 496,
+"before": 493,
+"comments": 25,
+"pairs": 495,
+"short_units": 0
+},
+"396_v2.md": {
+"after": 518,
+"before": 512,
+"comments": 37,
+"pairs": 517,
+"short_units": 4
+},
+"397_v2.md": {
+"after": 276,
+"before": 273,
+"comments": 5,
+"pairs": 275,
+"short_units": 0
+},
+"398_v2.md": {
+"after": 280,
+"before": 274,
+"comments": 39,
+"pairs": 279,
+"short_units": 2
+},
+"399_v2.md": {
+"after": 406,
+"before": 406,
+"comments": 5,
+"pairs": 405,
+"short_units": 0
+},
+"39_v1.md": {
+"after": 677,
+"before": 678,
+"comments": 9,
+"pairs": 676,
+"short_units": 0
+},
+"400_v2.md": {
+"after": 496,
+"before": 492,
+"comments": 47,
+"pairs": 495,
+"short_units": 1
+},
+"401_v2.md": {
+"after": 496,
+"before": 495,
+"comments": 20,
+"pairs": 495,
+"short_units": 1
+},
+"402_v2.md": {
+"after": 395,
+"before": 392,
+"comments": 47,
+"pairs": 394,
+"short_units": 0
+},
+"405_v2.md": {
+"after": 357,
+"before": 353,
+"comments": 59,
+"pairs": 356,
+"short_units": 0
+},
+"406_v2.md": {
+"after": 325,
+"before": 317,
+"comments": 58,
+"pairs": 324,
+"short_units": 1
+},
+"407_v2.md": {
+"after": 345,
+"before": 343,
+"comments": 32,
+"pairs": 344,
+"short_units": 0
+},
+"409_v2.md": {
+"after": 380,
+"before": 373,
+"comments": 68,
+"pairs": 379,
+"short_units": 1
+},
+"411_v2.md": {
+"after": 434,
+"before": 433,
+"comments": 15,
+"pairs": 433,
+"short_units": 0
+},
+"415_v2.md": {
+"after": 17131,
+"before": 17058,
+"comments": 671,
+"pairs": 17130,
+"short_units": 5
+},
+"416_v2.md": {
+"after": 20893,
+"before": 20772,
+"comments": 695,
+"pairs": 20892,
+"short_units": 1
+},
+"417_v2.md": {
+"after": 447,
+"before": 441,
+"comments": 38,
+"pairs": 446,
+"short_units": 0
+},
+"421_v2.md": {
+"after": 387,
+"before": 386,
+"comments": 9,
+"pairs": 386,
+"short_units": 0
+},
+"423_v2.md": {
+"after": 305,
+"before": 302,
+"comments": 9,
+"pairs": 304,
+"short_units": 0
+},
+"42_v1.md": {
+"after": 367,
+"before": 364,
+"comments": 2,
+"pairs": 366,
+"short_units": 0
+},
+"431_v2.md": {
+"after": 383,
+"before": 369,
+"comments": 60,
+"pairs": 382,
+"short_units": 2
+},
+"432_v2.md": {
+"after": 361,
+"before": 357,
+"comments": 31,
+"pairs": 360,
+"short_units": 0
+},
+"433_v2.md": {
+"after": 384,
+"before": 446,
+"comments": 35,
+"pairs": 383,
+"short_units": 0
+},
+"434_v2.md": {
+"after": 353,
+"before": 349,
+"comments": 12,
+"pairs": 352,
+"short_units": 0
+},
+"436_v2.md": {
+"after": 295,
+"before": 295,
+"comments": 9,
+"pairs": 294,
+"short_units": 0
+},
+"437_v2.md": {
+"after": 403,
+"before": 400,
+"comments": 20,
+"pairs": 402,
+"short_units": 1
+},
+"438_v2.md": {
+"after": 240,
+"before": 239,
+"comments": 4,
+"pairs": 239,
+"short_units": 0
+},
+"439_v2.md": {
+"after": 425,
+"before": 423,
+"comments": 11,
+"pairs": 424,
+"short_units": 0
+},
+"440_v2.md": {
+"after": 261,
+"before": 260,
+"comments": 6,
+"pairs": 260,
+"short_units": 0
+},
+"441_v2.md": {
+"after": 231,
+"before": 231,
+"comments": 13,
+"pairs": 230,
+"short_units": 0
+},
+"442_v2.md": {
+"after": 473,
+"before": 468,
+"comments": 54,
+"pairs": 472,
+"short_units": 3
+},
+"444_v2.md": {
+"after": 589,
+"before": 579,
+"comments": 27,
+"pairs": 588,
+"short_units": 2
+},
+"445_v2.md": {
+"after": 484,
+"before": 485,
+"comments": 5,
+"pairs": 483,
+"short_units": 0
+},
+"447_v2.md": {
+"after": 318,
+"before": 311,
+"comments": 16,
+"pairs": 317,
+"short_units": 0
+},
+"448_v2.md": {
+"after": 964,
+"before": 952,
+"comments": 41,
+"pairs": 963,
+"short_units": 2
+},
+"449_v2.md": {
+"after": 310,
+"before": 304,
+"comments": 22,
+"pairs": 309,
+"short_units": 3
+},
+"451_v2.md": {
+"after": 168,
+"before": 166,
+"comments": 22,
+"pairs": 167,
+"short_units": 0
+},
+"453_v2.md": {
+"after": 327,
+"before": 324,
+"comments": 23,
+"pairs": 326,
+"short_units": 0
+},
+"455_v2.md": {
+"after": 2881,
+"before": 2885,
+"comments": 12,
+"pairs": 2880,
+"short_units": 0
+},
+"455_v3.md": {
+"after": 373,
+"before": 369,
+"comments": 34,
+"pairs": 372,
+"short_units": 0
+},
+"457_v2.md": {
+"after": 363,
+"before": 369,
+"comments": 8,
+"pairs": 362,
+"short_units": 0
+},
+"458_v2.md": {
+"after": 477,
+"before": 468,
+"comments": 33,
+"pairs": 476,
+"short_units": 0
+},
+"459_v2.md": {
+"after": 681,
+"before": 675,
+"comments": 77,
+"pairs": 680,
+"short_units": 2
+},
+"460_v2.md": {
+"after": 380,
+"before": 378,
+"comments": 12,
+"pairs": 379,
+"short_units": 0
+},
+"461_v2.md": {
+"after": 309,
+"before": 305,
+"comments": 10,
+"pairs": 308,
+"short_units": 0
+},
+"462_v2.md": {
+"after": 393,
+"before": 401,
+"comments": 34,
+"pairs": 392,
+"short_units": 1
+},
+"463_v2.md": {
+"after": 358,
+"before": 348,
+"comments": 38,
+"pairs": 357,
+"short_units": 4
+},
+"464_v2.md": {
+"after": 447,
+"before": 447,
+"comments": 27,
+"pairs": 446,
+"short_units": 0
+},
+"465_v2.md": {
+"after": 181,
+"before": 184,
+"comments": 8,
+"pairs": 180,
+"short_units": 0
+},
+"466_v2.md": {
+"after": 431,
+"before": 427,
+"comments": 24,
+"pairs": 430,
+"short_units": 0
+},
+"467_v2.md": {
+"after": 587,
+"before": 584,
+"comments": 39,
+"pairs": 586,
+"short_units": 1
+},
+"469_v2.md": {
+"after": 169,
+"before": 166,
+"comments": 3,
+"pairs": 168,
+"short_units": 0
+},
+"46_v1.md": {
+"after": 430,
+"before": 430,
+"comments": 9,
+"pairs": 429,
+"short_units": 0
+},
+"470_v2.md": {
+"after": 323,
+"before": 323,
+"comments": 12,
+"pairs": 322,
+"short_units": 0
+},
+"471_v2.md": {
+"after": 274,
+"before": 269,
+"comments": 24,
+"pairs": 273,
+"short_units": 0
+},
+"472_v2.md": {
+"after": 364,
+"before": 356,
+"comments": 11,
+"pairs": 363,
+"short_units": 0
+},
+"473_v2.md": {
+"after": 207,
+"before": 207,
+"comments": 7,
+"pairs": 206,
+"short_units": 0
+},
+"474_v2.md": {
+"after": 342,
+"before": 343,
+"comments": 11,
+"pairs": 341,
+"short_units": 0
+},
+"475_v2.md": {
+"after": 244,
+"before": 243,
+"comments": 11,
+"pairs": 243,
+"short_units": 0
+},
+"476_v2.md": {
+"after": 344,
+"before": 342,
+"comments": 25,
+"pairs": 343,
+"short_units": 0
+},
+"477_v2.md": {
+"after": 437,
+"before": 435,
+"comments": 10,
+"pairs": 436,
+"short_units": 0
+},
+"478_v2.md": {
+"after": 414,
+"before": 411,
+"comments": 9,
+"pairs": 413,
+"short_units": 0
+},
+"479_v2.md": {
+"after": 525,
+"before": 520,
+"comments": 26,
+"pairs": 524,
+"short_units": 0
+},
+"47_v1.md": {
+"after": 714,
+"before": 714,
+"comments": 43,
+"pairs": 713,
+"short_units": 0
+},
+"480_v2.md": {
+"after": 514,
+"before": 505,
+"comments": 42,
+"pairs": 513,
+"short_units": 0
+},
+"481_v2.md": {
+"after": 174,
+"before": 174,
+"comments": 6,
+"pairs": 173,
+"short_units": 0
+},
+"482_v2.md": {
+"after": 266,
+"before": 267,
+"comments": 34,
+"pairs": 265,
+"short_units": 1
+},
+"483_v2.md": {
+"after": 262,
+"before": 262,
+"comments": 11,
+"pairs": 261,
+"short_units": 0
+},
+"484_v2.md": {
+"after": 5,
+"before": 3,
+"comments": 10,
+"pairs": 4,
+"short_units": 3
+},
+"485_v2.md": {
+"after": 345,
+"before": 336,
+"comments": 20,
+"pairs": 344,
+"short_units": 0
+},
+"486_v2.md": {
+"after": 417,
+"before": 417,
+"comments": 8,
+"pairs": 416,
+"short_units": 0
+},
+"487_v2.md": {
+"after": 555,
+"before": 550,
+"comments": 25,
+"pairs": 554,
+"short_units": 1
+},
+"488_v2.md": {
+"after": 345,
+"before": 339,
+"comments": 27,
+"pairs": 344,
+"short_units": 1
+},
+"489_v2.md": {
+"after": 502,
+"before": 502,
+"comments": 8,
+"pairs": 501,
+"short_units": 0
+},
+"490_v2.md": {
+"after": 206,
+"before": 206,
+"comments": 10,
+"pairs": 205,
+"short_units": 0
+},
+"491_v2.md": {
+"after": 90,
+"before": 87,
+"comments": 4,
+"pairs": 89,
+"short_units": 0
+},
+"492_v2.md": {
+"after": 408,
+"before": 403,
+"comments": 13,
+"pairs": 407,
+"short_units": 0
+},
+"493_v2.md": {
+"after": 601,
+"before": 606,
+"comments": 44,
+"pairs": 600,
+"short_units": 0
+},
+"494_v2.md": {
+"after": 353,
+"before": 353,
+"comments": 14,
+"pairs": 352,
+"short_units": 0
+},
+"495_v2.md": {
+"after": 260,
+"before": 259,
+"comments": 27,
+"pairs": 259,
+"short_units": 0
+},
+"496_v2.md": {
+"after": 456,
+"before": 454,
+"comments": 16,
+"pairs": 455,
+"short_units": 2
+},
+"497_v2.md": {
+"after": 295,
+"before": 294,
+"comments": 16,
+"pairs": 294,
+"short_units": 0
+},
+"498_v2.md": {
+"after": 1092,
+"before": 1064,
+"comments": 79,
+"pairs": 1091,
+"short_units": 0
+},
+"499_v2.md": {
+"after": 241,
+"before": 239,
+"comments": 13,
+"pairs": 240,
+"short_units": 0
+},
+"4_v1.md": {
+"after": 787,
+"before": 787,
+"comments": 20,
+"pairs": 786,
+"short_units": 0
+},
+"500_v2.md": {
+"after": 397,
+"before": 395,
+"comments": 26,
+"pairs": 396,
+"short_units": 1
+},
+"501_v2.md": {
+"after": 238,
+"before": 235,
+"comments": 13,
+"pairs": 237,
+"short_units": 0
+},
+"502_v2.md": {
+"after": 373,
+"before": 371,
+"comments": 22,
+"pairs": 372,
+"short_units": 0
+},
+"504_v2.md": {
+"after": 420,
+"before": 418,
+"comments": 32,
+"pairs": 419,
+"short_units": 0
+},
+"505_v2.md": {
+"after": 182,
+"before": 182,
+"comments": 5,
+"pairs": 181,
+"short_units": 0
+},
+"506_v2.md": {
+"after": 287,
+"before": 280,
+"comments": 14,
+"pairs": 286,
+"short_units": 0
+},
+"507_v2.md": {
+"after": 280,
+"before": 278,
+"comments": 38,
+"pairs": 279,
+"short_units": 1
+},
+"508_v2.md": {
+"after": 228,
+"before": 223,
+"comments": 20,
+"pairs": 227,
+"short_units": 0
+},
+"509_v2.md": {
+"after": 330,
+"before": 330,
+"comments": 7,
+"pairs": 329,
+"short_units": 0
+},
+"510_v2.md": {
+"after": 147,
+"before": 147,
+"comments": 17,
+"pairs": 146,
+"short_units": 1
+},
+"511_v2.md": {
+"after": 685,
+"before": 682,
+"comments": 44,
+"pairs": 684,
+"short_units": 1
+},
+"512_v2.md": {
+"after": 228,
+"before": 226,
+"comments": 13,
+"pairs": 227,
+"short_units": 0
+},
+"513_v2.md": {
+"after": 304,
+"before": 302,
+"comments": 25,
+"pairs": 303,
+"short_units": 0
+},
+"514_v2.md": {
+"after": 320,
+"before": 319,
+"comments": 8,
+"pairs": 319,
+"short_units": 0
+},
+"515_v2.md": {
+"after": 301,
+"before": 299,
+"comments": 11,
+"pairs": 300,
+"short_units": 0
+},
+"516_v2.md": {
+"after": 338,
+"before": 338,
+"comments": 10,
+"pairs": 337,
+"short_units": 0
+},
+"517_v2.md": {
+"after": 246,
+"before": 244,
+"comments": 9,
+"pairs": 245,
+"short_units": 0
+},
+"518_v2.md": {
+"after": 202,
+"before": 201,
+"comments": 10,
+"pairs": 201,
+"short_units": 0
+},
+"519_v2.md": {
+"after": 240,
+"before": 237,
+"comments": 27,
+"pairs": 239,
+"short_units": 2
+},
+"520_v2.md": {
+"after": 325,
+"before": 325,
+"comments": 11,
+"pairs": 324,
+"short_units": 0
+},
+"521_v2.md": {
+"after": 424,
+"before": 410,
+"comments": 62,
+"pairs": 423,
+"short_units": 0
+},
+"522_v2.md": {
+"after": 563,
+"before": 551,
+"comments": 18,
+"pairs": 562,
+"short_units": 0
+},
+"525_v2.md": {
+"after": 631,
+"before": 619,
+"comments": 38,
+"pairs": 630,
+"short_units": 0
+},
+"526_v2.md": {
+"after": 591,
+"before": 588,
+"comments": 24,
+"pairs": 590,
+"short_units": 1
+},
+"527_v2.md": {
+"after": 344,
+"before": 342,
+"comments": 17,
+"pairs": 343,
+"short_units": 0
+},
+"528_v2.md": {
+"after": 250,
+"before": 252,
+"comments": 19,
+"pairs": 249,
+"short_units": 0
+},
+"529_v2.md": {
+"after": 265,
+"before": 262,
+"comments": 33,
+"pairs": 264,
+"short_units": 1
+},
+"531_v2.md": {
+"after": 198,
+"before": 198,
+"comments": 9,
+"pairs": 197,
+"short_units": 0
+},
+"532_v2.md": {
+"after": 528,
+"before": 527,
+"comments": 22,
+"pairs": 527,
+"short_units": 0
+},
+"534_v2.md": {
+"after": 390,
+"before": 387,
+"comments": 49,
+"pairs": 389,
+"short_units": 1
+},
+"535_v2.md": {
+"after": 281,
+"before": 276,
+"comments": 36,
+"pairs": 280,
+"short_units": 2
+},
+"536_v2.md": {
+"after": 486,
+"before": 481,
+"comments": 23,
+"pairs": 485,
+"short_units": 0
+},
+"537_v2.md": {
+"after": 311,
+"before": 309,
+"comments": 14,
+"pairs": 310,
+"short_units": 0
+},
+"538_v2.md": {
+"after": 455,
+"before": 455,
+"comments": 12,
+"pairs": 454,
+"short_units": 0
+},
+"540_v2.md": {
+"after": 194,
+"before": 194,
+"comments": 23,
+"pairs": 193,
+"short_units": 0
+},
+"541_v2.md": {
+"after": 329,
+"before": 330,
+"comments": 15,
+"pairs": 328,
+"short_units": 1
+},
+"542_v2.md": {
+"after": 319,
+"before": 317,
+"comments": 15,
+"pairs": 318,
+"short_units": 0
+},
+"543_v2.md": {
+"after": 543,
+"before": 537,
+"comments": 26,
+"pairs": 542,
+"short_units": 2
+},
+"544_v2.md": {
+"after": 254,
+"before": 254,
+"comments": 21,
+"pairs": 253,
+"short_units": 0
+},
+"545_v2.md": {
+"after": 209,
+"before": 208,
+"comments": 10,
+"pairs": 208,
+"short_units": 0
+},
+"546_v2.md": {
+"after": 528,
+"before": 518,
+"comments": 21,
+"pairs": 527,
+"short_units": 0
+},
+"547_v2.md": {
+"after": 308,
+"before": 308,
+"comments": 3,
+"pairs": 307,
+"short_units": 0
+},
+"548_v2.md": {
+"after": 334,
+"before": 325,
+"comments": 21,
+"pairs": 333,
+"short_units": 1
+},
+"549_v2.md": {
+"after": 313,
+"before": 310,
+"comments": 14,
+"pairs": 312,
+"short_units": 1
+},
+"54_v1.md": {
+"after": 588,
+"before": 588,
+"comments": 12,
+"pairs": 587,
+"short_units": 0
+},
+"550_v2.md": {
+"after": 357,
+"before": 357,
+"comments": 7,
+"pairs": 356,
+"short_units": 0
+},
+"551_v2.md": {
+"after": 463,
+"before": 462,
+"comments": 20,
+"pairs": 462,
+"short_units": 0
+},
+"552_v2.md": {
+"after": 331,
+"before": 327,
+"comments": 29,
+"pairs": 330,
+"short_units": 0
+},
+"553_v2.md": {
+"after": 278,
+"before": 277,
+"comments": 27,
+"pairs": 277,
+"short_units": 0
+},
+"554_v2.md": {
+"after": 319,
+"before": 310,
+"comments": 48,
+"pairs": 318,
+"short_units": 7
+},
+"555_v2.md": {
+"after": 478,
+"before": 471,
+"comments": 30,
+"pairs": 477,
+"short_units": 1
+},
+"556_v2.md": {
+"after": 173,
+"before": 173,
+"comments": 15,
+"pairs": 172,
+"short_units": 0
+},
+"557_v2.md": {
+"after": 474,
+"before": 467,
+"comments": 22,
+"pairs": 473,
+"short_units": 0
+},
+"558_v2.md": {
+"after": 682,
+"before": 674,
+"comments": 58,
+"pairs": 681,
+"short_units": 2
+},
+"559_v2.md": {
+"after": 389,
+"before": 389,
+"comments": 10,
+"pairs": 388,
+"short_units": 0
+},
+"560_v2.md": {
+"after": 567,
+"before": 567,
+"comments": 39,
+"pairs": 566,
+"short_units": 0
+},
+"561_v2.md": {
+"after": 453,
+"before": 454,
+"comments": 24,
+"pairs": 452,
+"short_units": 1
+},
+"562_v2.md": {
+"after": 451,
+"before": 451,
+"comments": 27,
+"pairs": 450,
+"short_units": 0
+},
+"563_v2.md": {
+"after": 325,
+"before": 327,
+"comments": 38,
+"pairs": 324,
+"short_units": 0
+},
+"564_v2.md": {
+"after": 267,
+"before": 265,
+"comments": 6,
+"pairs": 266,
+"short_units": 0
+},
+"566_v2.md": {
+"after": 251,
+"before": 251,
+"comments": 9,
+"pairs": 250,
+"short_units": 0
+},
+"568_v2.md": {
+"after": 511,
+"before": 511,
+"comments": 14,
+"pairs": 510,
+"short_units": 0
+},
+"569_v2.md": {
+"after": 176,
+"before": 176,
+"comments": 20,
+"pairs": 175,
+"short_units": 0
+},
+"570_v2.md": {
+"after": 316,
+"before": 315,
+"comments": 15,
+"pairs": 315,
+"short_units": 0
+},
+"571_v2.md": {
+"after": 396,
+"before": 392,
+"comments": 25,
+"pairs": 395,
+"short_units": 1
+},
+"572_v2.md": {
+"after": 389,
+"before": 385,
+"comments": 5,
+"pairs": 388,
+"short_units": 0
+},
+"573_v2.md": {
+"after": 386,
+"before": 385,
+"comments": 18,
+"pairs": 385,
+"short_units": 0
+},
+"574_v2.md": {
+"after": 377,
+"before": 375,
+"comments": 22,
+"pairs": 376,
+"short_units": 0
+},
+"575_v2.md": {
+"after": 195,
+"before": 194,
+"comments": 58,
+"pairs": 194,
+"short_units": 0
+},
+"576_v2.md": {
+"after": 151,
+"before": 152,
+"comments": 8,
+"pairs": 150,
+"short_units": 0
+},
+"577_v2.md": {
+"after": 274,
+"before": 270,
+"comments": 13,
+"pairs": 273,
+"short_units": 0
+},
+"578_v2.md": {
+"after": 267,
+"before": 265,
+"comments": 14,
+"pairs": 266,
+"short_units": 0
+},
+"579_v2.md": {
+"after": 527,
+"before": 527,
+"comments": 100,
+"pairs": 526,
+"short_units": 0
+},
+"57_v1.md": {
+"after": 393,
+"before": 390,
+"comments": 17,
+"pairs": 392,
+"short_units": 1
+},
+"580_v2.md": {
+"after": 421,
+"before": 420,
+"comments": 14,
+"pairs": 420,
+"short_units": 0
+},
+"581_v2.md": {
+"after": 571,
+"before": 571,
+"comments": 41,
+"pairs": 570,
+"short_units": 1
+},
+"583_v2.md": {
+"after": 238,
+"before": 238,
+"comments": 9,
+"pairs": 237,
+"short_units": 0
+},
+"584_v2.md": {
+"after": 278,
+"before": 277,
+"comments": 11,
+"pairs": 277,
+"short_units": 0
+},
+"585_v2.md": {
+"after": 347,
+"before": 344,
+"comments": 23,
+"pairs": 346,
+"short_units": 0
+},
+"586_v2.md": {
+"after": 352,
+"before": 349,
+"comments": 16,
+"pairs": 351,
+"short_units": 0
+},
+"586_v3.md": {
+"after": 233,
+"before": 231,
+"comments": 16,
+"pairs": 232,
+"short_units": 0
+},
+"587_v2.md": {
+"after": 249,
+"before": 249,
+"comments": 7,
+"pairs": 248,
+"short_units": 0
+},
+"589_v2.md": {
+"after": 292,
+"before": 291,
+"comments": 6,
+"pairs": 291,
+"short_units": 0
+},
+"58_v1.md": {
+"after": 391,
+"before": 390,
+"comments": 15,
+"pairs": 390,
+"short_units": 0
+},
+"590_v2.md": {
+"after": 252,
+"before": 247,
+"comments": 22,
+"pairs": 251,
+"short_units": 0
+},
+"591_v2.md": {
+"after": 342,
+"before": 336,
+"comments": 40,
+"pairs": 341,
+"short_units": 5
+},
+"592_v2.md": {
+"after": 98,
+"before": 98,
+"comments": 3,
+"pairs": 97,
+"short_units": 0
+},
+"593_v2.md": {
+"after": 306,
+"before": 304,
+"comments": 29,
+"pairs": 305,
+"short_units": 1
+},
+"594_v2.md": {
+"after": 344,
+"before": 335,
+"comments": 25,
+"pairs": 343,
+"short_units": 0
+},
+"597_v2.md": {
+"after": 553,
+"before": 547,
+"comments": 33,
+"pairs": 552,
+"short_units": 0
+},
+"599_v2.md": {
+"after": 375,
+"before": 373,
+"comments": 19,
+"pairs": 374,
+"short_units": 0
+},
+"5_v1.md": {
+"after": 310,
+"before": 310,
+"comments": 15,
+"pairs": 309,
+"short_units": 0
+},
+"601_v2.md": {
+"after": 535,
+"before": 538,
+"comments": 31,
+"pairs": 534,
+"short_units": 0
+},
+"602_v2.md": {
+"after": 306,
+"before": 306,
+"comments": 15,
+"pairs": 305,
+"short_units": 0
+},
+"604_v2.md": {
+"after": 304,
+"before": 304,
+"comments": 18,
+"pairs": 303,
+"short_units": 0
+},
+"605_v2.md": {
+"after": 641,
+"before": 640,
+"comments": 38,
+"pairs": 640,
+"short_units": 4
+},
+"607_v2.md": {
+"after": 1276,
+"before": 1249,
+"comments": 47,
+"pairs": 1275,
+"short_units": 0
+},
+"608_v2.md": {
+"after": 246,
+"before": 242,
+"comments": 10,
+"pairs": 245,
+"short_units": 0
+},
+"609_v2.md": {
+"after": 221,
+"before": 220,
+"comments": 14,
+"pairs": 220,
+"short_units": 0
+},
+"60_v1.md": {
+"after": 383,
+"before": 380,
+"comments": 10,
+"pairs": 382,
+"short_units": 1
+},
+"610_v2.md": {
+"after": 323,
+"before": 321,
+"comments": 5,
+"pairs": 322,
+"short_units": 0
+},
+"611_v2.md": {
+"after": 279,
+"before": 276,
+"comments": 12,
+"pairs": 278,
+"short_units": 0
+},
+"612_v2.md": {
+"after": 344,
+"before": 344,
+"comments": 19,
+"pairs": 343,
+"short_units": 1
+},
+"614_v2.md": {
+"after": 819,
+"before": 815,
+"comments": 21,
+"pairs": 818,
+"short_units": 0
+},
+"616_v2.md": {
+"after": 510,
+"before": 507,
+"comments": 25,
+"pairs": 509,
+"short_units": 0
+},
+"617_v2.md": {
+"after": 657,
+"before": 652,
+"comments": 29,
+"pairs": 656,
+"short_units": 0
+},
+"618_v2.md": {
+"after": 587,
+"before": 586,
+"comments": 55,
+"pairs": 586,
+"short_units": 1
+},
+"620_v2.md": {
+"after": 173,
+"before": 176,
+"comments": 14,
+"pairs": 172,
+"short_units": 0
+},
+"622_v2.md": {
+"after": 599,
+"before": 594,
+"comments": 63,
+"pairs": 598,
+"short_units": 0
+},
+"623_v2.md": {
+"after": 217,
+"before": 219,
+"comments": 25,
+"pairs": 216,
+"short_units": 0
+},
+"626_v2.md": {
+"after": 557,
+"before": 558,
+"comments": 50,
+"pairs": 556,
+"short_units": 0
+},
+"627_v2.md": {
+"after": 557,
+"before": 552,
+"comments": 46,
+"pairs": 556,
+"short_units": 0
+},
+"628_v2.md": {
+"after": 236,
+"before": 235,
+"comments": 43,
+"pairs": 235,
+"short_units": 1
+},
+"629_v2.md": {
+"after": 99,
+"before": 99,
+"comments": 2,
+"pairs": 98,
+"short_units": 0
+},
+"630_v2.md": {
+"after": 192,
+"before": 187,
+"comments": 8,
+"pairs": 191,
+"short_units": 0
+},
+"631_v2.md": {
+"after": 374,
+"before": 366,
+"comments": 9,
+"pairs": 373,
+"short_units": 0
+},
+"635_v2.md": {
+"after": 349,
+"before": 343,
+"comments": 45,
+"pairs": 348,
+"short_units": 4
+},
+"637_v2.md": {
+"after": 310,
+"before": 309,
+"comments": 30,
+"pairs": 309,
+"short_units": 0
+},
+"638_v2.md": {
+"after": 215,
+"before": 213,
+"comments": 33,
+"pairs": 214,
+"short_units": 4
+},
+"639_v2.md": {
+"after": 391,
+"before": 391,
+"comments": 21,
+"pairs": 390,
+"short_units": 0
+},
+"640_v2.md": {
+"after": 266,
+"before": 265,
+"comments": 15,
+"pairs": 265,
+"short_units": 1
+},
+"642_v2.md": {
+"after": 173,
+"before": 169,
+"comments": 12,
+"pairs": 172,
+"short_units": 0
+},
+"643_v2.md": {
+"after": 398,
+"before": 395,
+"comments": 22,
+"pairs": 397,
+"short_units": 1
+},
+"644_v2.md": {
+"after": 315,
+"before": 313,
+"comments": 13,
+"pairs": 314,
+"short_units": 0
+},
+"645_v2.md": {
+"after": 372,
+"before": 364,
+"comments": 17,
+"pairs": 371,
+"short_units": 0
+},
+"646_v2.md": {
+"after": 186,
+"before": 185,
+"comments": 16,
+"pairs": 185,
+"short_units": 0
+},
+"648_v2.md": {
+"after": 492,
+"before": 488,
+"comments": 15,
+"pairs": 491,
+"short_units": 0
+},
+"651_v2.md": {
+"after": 529,
+"before": 525,
+"comments": 19,
+"pairs": 528,
+"short_units": 0
+},
+"653_v2.md": {
+"after": 298,
+"before": 295,
+"comments": 13,
+"pairs": 297,
+"short_units": 0
+},
+"654_v2.md": {
+"after": 254,
+"before": 254,
+"comments": 14,
+"pairs": 253,
+"short_units": 0
+},
+"656_v2.md": {
+"after": 323,
+"before": 322,
+"comments": 10,
+"pairs": 322,
+"short_units": 0
+},
+"658_v2.md": {
+"after": 365,
+"before": 363,
+"comments": 29,
+"pairs": 364,
+"short_units": 0
+},
+"659_v2.md": {
+"after": 555,
+"before": 546,
+"comments": 48,
+"pairs": 554,
+"short_units": 1
+},
+"660_v2.md": {
+"after": 580,
+"before": 555,
+"comments": 43,
+"pairs": 579,
+"short_units": 3
+},
+"661_v2.md": {
+"after": 472,
+"before": 472,
+"comments": 57,
+"pairs": 471,
+"short_units": 1
+},
+"663_v2.md": {
+"after": 506,
+"before": 500,
+"comments": 15,
+"pairs": 505,
+"short_units": 0
+},
+"664_v2.md": {
+"after": 601,
+"before": 598,
+"comments": 32,
+"pairs": 600,
+"short_units": 0
+},
+"666_v2.md": {
+"after": 416,
+"before": 413,
+"comments": 24,
+"pairs": 415,
+"short_units": 1
+},
+"667_v2.md": {
+"after": 158,
+"before": 159,
+"comments": 2,
+"pairs": 157,
+"short_units": 0
+},
+"668_v2.md": {
+"after": 156,
+"before": 156,
+"comments": 6,
+"pairs": 155,
+"short_units": 0
+},
+"670_v2.md": {
+"after": 272,
+"before": 272,
+"comments": 14,
+"pairs": 271,
+"short_units": 0
+},
+"671_v2.md": {
+"after": 477,
+"before": 475,
+"comments": 14,
+"pairs": 476,
+"short_units": 0
+},
+"672_v2.md": {
+"after": 578,
+"before": 575,
+"comments": 46,
+"pairs": 577,
+"short_units": 0
+},
+"674_v2.md": {
+"after": 234,
+"before": 234,
+"comments": 9,
+"pairs": 233,
+"short_units": 0
+},
+"675_v2.md": {
+"after": 329,
+"before": 326,
+"comments": 14,
+"pairs": 328,
+"short_units": 0
+},
+"676_v2.md": {
+"after": 254,
+"before": 247,
+"comments": 19,
+"pairs": 253,
+"short_units": 1
+},
+"679_v2.md": {
+"after": 125,
+"before": 125,
+"comments": 7,
+"pairs": 124,
+"short_units": 0
+},
+"67_v1.md": {
+"after": 457,
+"before": 450,
+"comments": 35,
+"pairs": 456,
+"short_units": 3
+},
+"681_v2.md": {
+"after": 346,
+"before": 335,
+"comments": 25,
+"pairs": 345,
+"short_units": 2
+},
+"683_v2.md": {
+"after": 316,
+"before": 311,
+"comments": 18,
+"pairs": 315,
+"short_units": 0
+},
+"686_v2.md": {
+"after": 402,
+"before": 399,
+"comments": 17,
+"pairs": 401,
+"short_units": 1
+},
+"687_v2.md": {
+"after": 282,
+"before": 275,
+"comments": 9,
+"pairs": 281,
+"short_units": 0
+},
+"689_v2.md": {
+"after": 669,
+"before": 656,
+"comments": 60,
+"pairs": 668,
+"short_units": 2
+},
+"690_v2.md": {
+"after": 744,
+"before": 707,
+"comments": 76,
+"pairs": 743,
+"short_units": 12
+},
+"691_v2.md": {
+"after": 320,
+"before": 321,
+"comments": 5,
+"pairs": 319,
+"short_units": 0
+},
+"692_v2.md": {
+"after": 194,
+"before": 194,
+"comments": 4,
+"pairs": 193,
+"short_units": 0
+},
+"693_v2.md": {
+"after": 230,
+"before": 225,
+"comments": 11,
+"pairs": 229,
+"short_units": 0
+},
+"694_v2.md": {
+"after": 278,
+"before": 277,
+"comments": 3,
+"pairs": 277,
+"short_units": 0
+},
+"695_v2.md": {
+"after": 909,
+"before": 906,
+"comments": 46,
+"pairs": 908,
+"short_units": 0
+},
+"697_v2.md": {
+"after": 55,
+"before": 55,
+"comments": 0,
+"pairs": 54,
+"short_units": 0
+},
+"699_v2.md": {
+"after": 228,
+"before": 228,
+"comments": 16,
+"pairs": 227,
+"short_units": 1
+},
+"699_v3.md": {
+"after": 146,
+"before": 147,
+"comments": 15,
+"pairs": 145,
+"short_units": 1
+},
+"6_v1.md": {
+"after": 666,
+"before": 663,
+"comments": 20,
+"pairs": 665,
+"short_units": 1
+},
+"700_v2.md": {
+"after": 306,
+"before": 306,
+"comments": 11,
+"pairs": 305,
+"short_units": 0
+},
+"702_v2.md": {
+"after": 349,
+"before": 349,
+"comments": 15,
+"pairs": 348,
+"short_units": 0
+},
+"706_v2.md": {
+"after": 403,
+"before": 404,
+"comments": 18,
+"pairs": 402,
+"short_units": 0
+},
+"708_v2.md": {
+"after": 807,
+"before": 807,
+"comments": 53,
+"pairs": 806,
+"short_units": 0
+},
+"709_v2.md": {
+"after": 203,
+"before": 201,
+"comments": 10,
+"pairs": 202,
+"short_units": 0
+},
+"70_v1.md": {
+"after": 429,
+"before": 430,
+"comments": 8,
+"pairs": 428,
+"short_units": 0
+},
+"711_v2.md": {
+"after": 574,
+"before": 567,
+"comments": 40,
+"pairs": 573,
+"short_units": 0
+},
+"713_v2.md": {
+"after": 704,
+"before": 697,
+"comments": 22,
+"pairs": 703,
+"short_units": 0
+},
+"715_v2.md": {
+"after": 182,
+"before": 181,
+"comments": 13,
+"pairs": 181,
+"short_units": 0
+},
+"717_v2.md": {
+"after": 34,
+"before": 34,
+"comments": 0,
+"pairs": 33,
+"short_units": 0
+},
+"718_v2.md": {
+"after": 508,
+"before": 502,
+"comments": 74,
+"pairs": 507,
+"short_units": 0
+},
+"719_v2.md": {
+"after": 130,
+"before": 131,
+"comments": 14,
+"pairs": 129,
+"short_units": 0
+},
+"719_v3.md": {
+"after": 207,
+"before": 209,
+"comments": 14,
+"pairs": 206,
+"short_units": 0
+},
+"71_v1.md": {
+"after": 662,
+"before": 655,
+"comments": 60,
+"pairs": 661,
+"short_units": 4
+},
+"720_v2.md": {
+"after": 569,
+"before": 567,
+"comments": 35,
+"pairs": 568,
+"short_units": 0
+},
+"731_v2.md": {
+"after": 218,
+"before": 217,
+"comments": 12,
+"pairs": 217,
+"short_units": 0
+},
+"732_v2.md": {
+"after": 47,
+"before": 47,
+"comments": 0,
+"pairs": 46,
+"short_units": 0
+},
+"738_v2.md": {
+"after": 324,
+"before": 324,
+"comments": 7,
+"pairs": 323,
+"short_units": 0
+},
+"739_v2.md": {
+"after": 464,
+"before": 459,
+"comments": 28,
+"pairs": 463,
+"short_units": 0
+},
+"741_v2.md": {
+"after": 418,
+"before": 419,
+"comments": 15,
+"pairs": 417,
+"short_units": 0
+},
+"742_v2.md": {
+"after": 576,
+"before": 559,
+"comments": 82,
+"pairs": 575,
+"short_units": 6
+},
+"744_v2.md": {
+"after": 269,
+"before": 265,
+"comments": 28,
+"pairs": 268,
+"short_units": 0
+},
+"747_v2.md": {
+"after": 221,
+"before": 219,
+"comments": 5,
+"pairs": 220,
+"short_units": 0
+},
+"748_v2.md": {
+"after": 1133,
+"before": 1146,
+"comments": 16,
+"pairs": 1132,
+"short_units": 0
+},
+"750_v2.md": {
+"after": 380,
+"before": 379,
+"comments": 7,
+"pairs": 379,
+"short_units": 1
+},
+"752_v2.md": {
+"after": 210,
+"before": 214,
+"comments": 12,
+"pairs": 209,
+"short_units": 0
+},
+"755_v2.md": {
+"after": 503,
+"before": 502,
+"comments": 44,
+"pairs": 502,
+"short_units": 0
+},
+"756_v2.md": {
+"after": 674,
+"before": 663,
+"comments": 59,
+"pairs": 673,
+"short_units": 3
+},
+"758_v2.md": {
+"after": 227,
+"before": 226,
+"comments": 29,
+"pairs": 226,
+"short_units": 1
+},
+"759_v2.md": {
+"after": 351,
+"before": 351,
+"comments": 11,
+"pairs": 350,
+"short_units": 0
+},
+"760_v2.md": {
+"after": 388,
+"before": 387,
+"comments": 19,
+"pairs": 387,
+"short_units": 1
+},
+"762_v2.md": {
+"after": 305,
+"before": 304,
+"comments": 8,
+"pairs": 304,
+"short_units": 0
+},
+"763_v2.md": {
+"after": 178,
+"before": 178,
+"comments": 6,
+"pairs": 177,
+"short_units": 0
+},
+"764_v2.md": {
+"after": 432,
+"before": 426,
+"comments": 19,
+"pairs": 431,
+"short_units": 0
+},
+"766_v2.md": {
+"after": 664,
+"before": 654,
+"comments": 22,
+"pairs": 663,
+"short_units": 0
+},
+"769_v2.md": {
+"after": 363,
+"before": 358,
+"comments": 8,
+"pairs": 362,
+"short_units": 1
+},
+"770_v2.md": {
+"after": 281,
+"before": 279,
+"comments": 21,
+"pairs": 280,
+"short_units": 0
+},
+"776_v2.md": {
+"after": 549,
+"before": 546,
+"comments": 24,
+"pairs": 548,
+"short_units": 2
+},
+"777_v2.md": {
+"after": 341,
+"before": 341,
+"comments": 8,
+"pairs": 340,
+"short_units": 1
+},
+"779_v2.md": {
+"after": 308,
+"before": 308,
+"comments": 23,
+"pairs": 307,
+"short_units": 0
+},
+"780_v2.md": {
+"after": 1243,
+"before": 1242,
+"comments": 14,
+"pairs": 1242,
+"short_units": 0
+},
+"783_v2.md": {
+"after": 59,
+"before": 58,
+"comments": 2,
+"pairs": 58,
+"short_units": 0
+},
+"789_v2.md": {
+"after": 257,
+"before": 256,
+"comments": 7,
+"pairs": 256,
+"short_units": 1
+},
+"78_v1.md": {
+"after": 465,
+"before": 460,
+"comments": 10,
+"pairs": 464,
+"short_units": 1
+},
+"796_v2.md": {
+"after": 349,
+"before": 343,
+"comments": 15,
+"pairs": 348,
+"short_units": 0
+},
+"799_v2.md": {
+"after": 247,
+"before": 247,
+"comments": 8,
+"pairs": 246,
+"short_units": 0
+},
+"801_v2.md": {
+"after": 185,
+"before": 185,
+"comments": 6,
+"pairs": 184,
+"short_units": 0
+},
+"803_v2.md": {
+"after": 460,
+"before": 450,
+"comments": 12,
+"pairs": 459,
+"short_units": 0
+},
+"80_v1.md": {
+"after": 428,
+"before": 427,
+"comments": 15,
+"pairs": 427,
+"short_units": 1
+},
+"81_v1.md": {
+"after": 353,
+"before": 349,
+"comments": 10,
+"pairs": 352,
+"short_units": 0
+},
+"82_v1.md": {
+"after": 425,
+"before": 421,
+"comments": 17,
+"pairs": 424,
+"short_units": 0
+},
+"83_v1.md": {
+"after": 29,
+"before": 29,
+"comments": 0,
+"pairs": 28,
+"short_units": 0
+},
+"89_v1.md": {
+"after": 467,
+"before": 464,
+"comments": 31,
+"pairs": 466,
+"short_units": 0
+},
+"94_v1.md": {
+"after": 430,
+"before": 427,
+"comments": 24,
+"pairs": 429,
+"short_units": 0
+},
+"95_v1.md": {
+"after": 627,
+"before": 633,
+"comments": 22,
+"pairs": 626,
+"short_units": 0
+},
+"96_v1.md": {
+"after": 425,
+"before": 421,
+"comments": 19,
+"pairs": 424,
+"short_units": 0
+},
+"97_v1.md": {
+"after": 458,
+"before": 455,
+"comments": 23,
+"pairs": 457,
+"short_units": 0
+},
+"98_v1.md": {
+"after": 480,
+"before": 474,
+"comments": 10,
+"pairs": 479,
+"short_units": 0
+},
+"99_v1.md": {
+"after": 202,
+"before": 202,
+"comments": 13,
+"pairs": 201,
+"short_units": 1
+},
+"9_v1.md": {
+"after": 539,
+"before": 538,
+"comments": 6,
+"pairs": 538,
+"short_units": 0
+}
+},
+"root": "data/surgical_autonomy/parsed_text",
+"segmenter_alignment_fallbacks": {},
+"units_after": 246462,
+"units_before": 245046,
+"units_shorter_than_min_tokens": 212,
+"units_version": "units-2",
+"violation_examples": {},
+"violations": {
+"V1": 0,
+"V2": 0,
+"V3": 0,
+"V4": 0,
+"V5": 0
+}
+}

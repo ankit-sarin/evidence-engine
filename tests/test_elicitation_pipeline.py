@@ -334,7 +334,7 @@ def test_write_guard_also_fires_on_the_elicited_path(review, monkeypatch):
 
     monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_GOOD))
     monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
-    monkeypatch.setattr(PL.M, "source_snippet", lambda rec, um: "")
+    monkeypatch.setattr(PL.M, "source_snippet", lambda rec, um, text=None: "")
     monkeypatch.setattr(PL, "enforce_citations", _uncited_stub)
     db = _DB(review)
     with pytest.raises(UncitedValueError):

@@ -62,3 +62,84 @@ def sentences(text: str) -> list[str]:
             continue
         out.extend(s for s in (s.strip() for s in _segmenter().segment(chunk)) if s)
     return out
+
+
+def _align(chunk: str, stats: dict | None) -> list[tuple[int, int]]:
+    """(start, end) of each pysbd sentence in `chunk`, covering every
+    non-whitespace character of it exactly once.
+
+    pysbd returns strings, not offsets, and does not promise to return the text
+    unchanged, so each sentence is found again in the chunk. A sentence that is
+    not the next text in the chunk (pysbd rewrote a character) is placed by its
+    count of non-whitespace characters instead, and counted in
+    `stats["realigned"]`. Whatever pysbd did, the spans tile the chunk: text is
+    never dropped, only the boundary between two sentences can be lost.
+    """
+    spans: list[tuple[int, int]] = []
+    cursor, n = 0, len(chunk)
+    for seg in _segmenter().segment(chunk):
+        core = seg.strip()
+        if not core:
+            continue
+        while cursor < n and chunk[cursor].isspace():
+            cursor += 1
+        if cursor >= n:
+            break
+        if chunk.startswith(core, cursor):
+            end = cursor + len(core)
+        else:
+            if stats is not None:
+                stats["realigned"] = stats.get("realigned", 0) + 1
+            want = sum(1 for ch in core if not ch.isspace())
+            end = cursor
+            while end < n and want:
+                if not chunk[end].isspace():
+                    want -= 1
+                end += 1
+        spans.append((cursor, end))
+        cursor = end
+    rest = chunk[cursor:]
+    if rest.strip():                       # pysbd returned less than the chunk holds
+        if stats is not None:
+            stats["tail_recovered"] = stats.get("tail_recovered", 0) + 1
+        end = cursor + len(rest.rstrip())
+        if spans:
+            spans[-1] = (spans[-1][0], end)
+        else:
+            spans.append((cursor + len(rest) - len(rest.lstrip()), end))
+    return spans
+
+
+def sentence_spans(text: str, stats: dict | None = None) -> list[tuple[int, int]]:
+    """`sentences()` with offsets: the (start, end) of each sentence in `text`.
+
+    Same segmentation as `sentences` (T-seg-0, then pysbd on each chunk), with
+    two differences that follow from returning positions instead of copies.
+    `text[start:end]` is the sentence exactly as written, where `sentences`
+    returns pysbd's string. And the ellipsis marker is not discarded: it is
+    still where the split happens, and it belongs to the sentence before it
+    (to the one after when nothing precedes it). Spans are ordered, disjoint
+    and trimmed, and together hold every non-whitespace character of `text`.
+
+    `sentences` is unchanged and remains what the provenance taxonomy scores.
+    `stats`, when given, counts the alignments that needed the fallback.
+    """
+    spans: list[tuple[int, int]] = []
+    carry: int | None = None               # start of an ellipsis with no sentence before it
+    pos = 0
+    pieces = [(m.start(), m.end()) for m in _ELLIPSIS_SPLIT_RE.finditer(text)]
+    for ell_start, ell_end in pieces + [(len(text), len(text))]:
+        found = [(pos + s, pos + e) for s, e in _align(text[pos:ell_start], stats)]
+        if found and carry is not None:
+            found[0] = (carry, found[0][1])
+            carry = None
+        spans.extend(found)
+        if ell_end > ell_start:
+            if spans and carry is None:
+                spans[-1] = (spans[-1][0], ell_end)
+            elif carry is None:
+                carry = ell_start
+        pos = ell_end
+    if carry is not None:                  # the text is nothing but ellipses
+        spans.append((carry, len(text.rstrip())))
+    return spans

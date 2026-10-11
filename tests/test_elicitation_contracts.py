@@ -272,7 +272,7 @@ def test_valid_index_round_trips_to_verbatim_paper_text(unit_map):
               unit_map, ("robot_platform",))
     cites = M.citations(r.records["robot_platform"], unit_map)
     assert len(cites) == 1
-    assert cites[0].text in unit_map.source_stripped
+    assert cites[0].text in unit_map.source_raw
     assert cites[0].text == "The system used a da Vinci Research Kit."
 
 
@@ -341,7 +341,7 @@ def test_source_snippet_is_verbatim_contiguous_in_the_paper(unit_map):
     r = check(wrap({"field_name": "robot_platform", "unit_indices": [1, 2],
                     "value": "dVRK"}), unit_map, ("robot_platform",))
     snippet = M.source_snippet(r.records["robot_platform"], unit_map)
-    assert snippet in unit_map.source_stripped
+    assert snippet in unit_map.source_raw
 
 
 def test_escape_field_materializes_no_snippet(unit_map):

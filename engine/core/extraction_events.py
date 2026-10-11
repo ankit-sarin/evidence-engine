@@ -304,7 +304,10 @@ def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id
 
     Propagated as run faults, never mapped (R5): `CodebookContractError`,
     `ExhaustedWithoutRecord`, an `EventRefused` (a write the store forbids),
-    `RunAborted` and `UndeclaredCall` (a call the manifest did not declare, C54).
+    `RunAborted`, `UndeclaredCall` (a call the manifest did not declare, C54) and
+    `SnippetNotExact` (R534: a materialised snippet is not the paper's text at its
+    offsets — the unit map and the parsed text disagree, which is not this
+    paper's outcome).
 
     Interrupts never reach it: its one caller, the extractor's `record_failure`,
     is called only from `except ParsedTextError` / `except Exception`, which a
@@ -317,11 +320,12 @@ def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id
 
     from engine.core.run_manifest import UndeclaredCall
     from engine.elicitation.classes import CodebookContractError
+    from engine.elicitation.materialize import SnippetNotExact
     from engine.utils.ollama_client import (
         CeilingUnavailable, InputDropped, InputOverflow, InputTruncated,
     )
     if isinstance(exc, (CodebookContractError, ExhaustedWithoutRecord, EventRefused,
-                        RunAborted, UndeclaredCall)):
+                        RunAborted, UndeclaredCall, SnippetNotExact)):
         raise exc
     if isinstance(exc, (IncompleteExtractionError, UncitedValueError)):
         if exc.record is None:

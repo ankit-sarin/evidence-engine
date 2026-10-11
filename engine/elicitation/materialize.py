@@ -1,25 +1,28 @@
 """Turn cited unit indices into verbatim text.
 
 The model never copies text; it names units. The engine resolves those names
-against the unit map it built and rendered. Every materialized quote is
-therefore verbatim by construction -- ELICIT-01's 505/505 round-trip is a
-property of this step, not a hope about the model.
+against the unit map it built and rendered, and cuts what it stores out of the
+paper by the units' offsets.
 
-**One continuous passage per span.** `evidence_spans.source_snippet` holds a
-single quote, and the existing contract on it is one continuous passage with no
-ellipsis bridging. Cited units are frequently adjacent ([12, 13]) and sometimes
-not ([12, 47]). Joining disjoint units would manufacture a quote that appears
-nowhere in the paper -- the frozen v1.1 taxonomy would score it STITCHED or
-DRIFTED, and the design would be penalized for the materializer's choice rather
-than measured. So the span carries the FIRST CONTIGUOUS RUN of cited units,
-which is verbatim-contiguous and ANCHORED by construction.
+**One continuous passage per claim.** A claim's `source_snippet` holds a single
+quote, and the contract on it is one continuous passage with no ellipsis
+bridging. Cited units are frequently adjacent ([12, 13]) and sometimes not
+([12, 47]). Joining disjoint units would manufacture a quote that appears
+nowhere in the paper, so the claim carries the FIRST CONTIGUOUS RUN of cited
+units — the lowest-numbered run, since the indices are sorted first.
 
-That is a real narrowing at the database boundary, and it is a consequence of
-the no-migration ruling (ELICIT-DESIGN-01 C5), not of the elicitation design:
-`evidence_spans` has no column for a citation set. Nothing is lost from the
-record -- every cited index and every materialized unit reaches
-`record_call(extra=...)` and the per-run unit-map file, and Pass 2 is primed with
-ALL of them, not just the first run. Only the single-quote column is narrowed.
+**A run is one slice, not a join (R572).** The run is materialised as
+`source_raw[start of its first unit : end of its last unit]`: whatever lies
+between the units in the paper — a line wrap, a blank line, a Docling comment —
+is in the snippet, because it is in the paper. `source_snippet` then confirms
+the snippet is the text at those offsets and a substring of the text it is
+checked against, and raises `SnippetNotExact` otherwise (R534's
+materialisation-time EXACT check): a snippet that is not in the paper is a
+fault of the run, never something to store.
+
+Only the first run is on the claim. Every cited index reaches
+`record_call(extra=...)` and the per-run unit-map file, and Pass 2 is primed
+with ALL cited units, not just the first run.
 """
 
 from __future__ import annotations
@@ -32,6 +35,13 @@ from engine.elicitation.units import UnitMap
 
 class PrimingInvariantViolated(RuntimeError):
     """Pass 2's priming input carries a record the routing upstream guarantees it cannot."""
+
+
+class SnippetNotExact(RuntimeError):
+    """R534: a materialised snippet is not the paper's text at its offsets.
+
+    A run fault, not a paper outcome: the unit map and the text it is checked
+    against disagree, which no retry on this paper can repair."""
 
 
 @dataclass(frozen=True)
@@ -69,16 +79,36 @@ def contiguous_runs(indices: tuple[int, ...]) -> list[list[int]]:
     return runs
 
 
-def source_snippet(record: FieldRecord, unit_map: UnitMap) -> str:
-    """The single continuous verbatim passage stored on the span.
+def source_snippet(record: FieldRecord, unit_map: UnitMap,
+                   source_text: str | None = None) -> str:
+    """The single continuous verbatim passage stored on the claim.
 
     Empty string when nothing was cited -- which, for a non-escape value, is
     exactly the condition the write-boundary fail-fast refuses.
+
+    `source_text` is the text the snippet must be an exact slice of; it
+    defaults to the text the unit map was built from. The pipeline passes the
+    parsed text the claim names, so a unit map built from any other text is
+    refused here.
     """
     runs = contiguous_runs(record.indices)
     if not runs:
         return ""
-    return " ".join(unit_map.resolve(i) or "" for i in runs[0]).strip()
+    first, last = unit_map.span(runs[0][0]), unit_map.span(runs[0][-1])
+    if first is None or last is None:
+        raise PrimingInvariantViolated(
+            f"priming invariant violated: field {record.field_name!r} cites units "
+            f"{runs[0]}, which this unit map ({unit_map.n} units) cannot resolve")
+    start, end = first[0], last[1]
+    snippet = unit_map.source_raw[start:end]
+    text = unit_map.source_raw if source_text is None else source_text
+    if not snippet or text[start:end] != snippet or snippet not in text:
+        raise SnippetNotExact(
+            f"field {record.field_name!r}: the snippet materialised for units {runs[0]} "
+            f"(offsets {start}–{end}, unit map {unit_map.version}) is not the source "
+            "text at those offsets. The unit map was built from a different text than "
+            "the one the claim names; nothing was stored.")
+    return snippet
 
 
 def evidence_block(record: FieldRecord, unit_map: UnitMap) -> str:

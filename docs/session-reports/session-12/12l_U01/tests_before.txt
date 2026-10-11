@@ -1,0 +1,14 @@
+E   AttributeError: 'UnitMap' object has no attribute 'spans'
+/home/ankitsarin/projects/evidence-engine/tests/test_units_as_source_slices.py:66: AttributeError: 'UnitMap' object has no attribute 'spans'
+E   AssertionError: assert ('A first sent...entence here.' == 'A first sent...entence here.'
+/home/ankitsarin/projects/evidence-engine/tests/test_units_as_source_slices.py:106: AssertionError: assert ('A first sent...entence here.' == 'A first sent...entence here.'
+E   AttributeError: 'UnitMap' object has no attribute 'spans'
+/home/ankitsarin/projects/evidence-engine/tests/test_units_as_source_slices.py:122: AttributeError: 'UnitMap' object has no attribute 'spans'
+E   AssertionError: assert {'Research Ki...al Hospital.'} == {'Research Ki...al Hospital.'}
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+/home/ankitsarin/projects/evidence-engine/tests/test_units_as_source_slices.py:265: AssertionError: assert {'Research Ki...al Hospital.'} == {'Research Ki...al Hospital.'}
+FAILED tests/test_units_as_source_slices.py::test_a_materialised_run_is_one_exact_slice_of_the_raw_text
+FAILED tests/test_units_as_source_slices.py::test_a_run_straddling_a_docling_comment_and_a_blank_line_is_located_exact
+FAILED tests/test_units_as_source_slices.py::test_the_presented_form_is_the_whitespace_collapsed_slice
+FAILED tests/test_units_as_source_slices.py::test_an_elicited_run_opens_pins_verifies_and_writes_real_events
+4 failed in 1.09s

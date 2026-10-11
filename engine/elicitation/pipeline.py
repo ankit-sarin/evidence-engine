@@ -547,7 +547,7 @@ def extract_paper_elicited(
             spans.append(EvidenceSpan(
                 field_name=name,
                 value=span.value,
-                source_snippet=M.source_snippet(rec, unit_map),
+                source_snippet=M.source_snippet(rec, unit_map, paper_text),
                 confidence=span.confidence,
                 tier=span.tier,
             ))

@@ -1,0 +1,85 @@
+{
+ "elicited": {
+  "pin": "255462870d11ba4037d18f3d08a84ac7594b3ca7064c2df29c1793c3c0e73541",
+  "rows": {
+   "audit": {
+    "format_schema_hash": "0054264a6925099ed7f07ab05c32b9b6d2a63bcab013a852b9c8e6d17ab1dc62",
+    "model": "gemma3:27b",
+    "options_hash": "f4705792a4a25cb35b151c393af800d0865765ea9985c784d78609cf58ace6e9",
+    "prompt_hash": "d972c46dde944f1381c4f2d5472c6264c3a1053bd23bdd3801bdf0fdc2a5838d"
+   },
+   "elicitation_pass1": {
+    "format_schema_hash": "none",
+    "model": "deepseek-r1:32b",
+    "options_hash": "a611f2d4e93d65fc218ef9919dc31c38e0a2a925d245fb3a30f73f26614313c0",
+    "prompt_hash": "18ac4255473a556b83e3aefffdc48de0ca2ae1d6826322deccb39175927f2f1c"
+   },
+   "extract_pass2": {
+    "format_schema_hash": "2c9ec255d3b2a90d941cd4a81f8f9fd685c17d6077b4acb25b41c110d87a10b3",
+    "model": "deepseek-r1:32b",
+    "options_hash": "f4705792a4a25cb35b151c393af800d0865765ea9985c784d78609cf58ace6e9",
+    "prompt_hash": "b2a44f28c9d9cade12a5782fdfce3618daca1b95a83b152c448fffb88ac710fe"
+   },
+   "extract_retry_snippet": {
+    "format_schema_hash": "none",
+    "model": "deepseek-r1:32b",
+    "options_hash": "f4705792a4a25cb35b151c393af800d0865765ea9985c784d78609cf58ace6e9",
+    "prompt_hash": "05a981814969ec38c5785343a403d02f6c5c8ff2724490cae3a602da069b55aa"
+   },
+   "preflight:deepseek-r1:32b": {
+    "format_schema_hash": "none",
+    "model": "deepseek-r1:32b",
+    "options_hash": "d48ff57a526eb0a4d653c694ecbafc6126d4c94f29c103335ce8917d8c5f4dad",
+    "prompt_hash": "de95332f63517c2c6a6558c76892369173dd3a55cf71944cabd0850ed44d322a"
+   },
+   "preflight:gemma3:27b": {
+    "format_schema_hash": "none",
+    "model": "gemma3:27b",
+    "options_hash": "d48ff57a526eb0a4d653c694ecbafc6126d4c94f29c103335ce8917d8c5f4dad",
+    "prompt_hash": "de95332f63517c2c6a6558c76892369173dd3a55cf71944cabd0850ed44d322a"
+   }
+  }
+ },
+ "engine_file": "/home/ankitsarin/projects/evidence-engine/engine/core/run_manifest.py",
+ "non_elicited": {
+  "pin": "defd293bfe62e427b906e072dcf56d0ca6e321e7d1ca4ad1fde3758fb84f3e6e",
+  "rows": {
+   "audit": {
+    "format_schema_hash": "0054264a6925099ed7f07ab05c32b9b6d2a63bcab013a852b9c8e6d17ab1dc62",
+    "model": "gemma3:27b",
+    "options_hash": "f4705792a4a25cb35b151c393af800d0865765ea9985c784d78609cf58ace6e9",
+    "prompt_hash": "d972c46dde944f1381c4f2d5472c6264c3a1053bd23bdd3801bdf0fdc2a5838d"
+   },
+   "extract_pass1": {
+    "format_schema_hash": "none",
+    "model": "deepseek-r1:32b",
+    "options_hash": "a611f2d4e93d65fc218ef9919dc31c38e0a2a925d245fb3a30f73f26614313c0",
+    "prompt_hash": "c0083f30e0d7a4ff3e8036ac6e6feeb0e79319dab7693ec246aee3809d054f34"
+   },
+   "extract_pass2": {
+    "format_schema_hash": "2c9ec255d3b2a90d941cd4a81f8f9fd685c17d6077b4acb25b41c110d87a10b3",
+    "model": "deepseek-r1:32b",
+    "options_hash": "f4705792a4a25cb35b151c393af800d0865765ea9985c784d78609cf58ace6e9",
+    "prompt_hash": "a4f3cb35706fcc1974494f0e746e10a6bc21499a661bc9a49bcbf2d51b6e8e78"
+   },
+   "extract_retry_snippet": {
+    "format_schema_hash": "none",
+    "model": "deepseek-r1:32b",
+    "options_hash": "f4705792a4a25cb35b151c393af800d0865765ea9985c784d78609cf58ace6e9",
+    "prompt_hash": "05a981814969ec38c5785343a403d02f6c5c8ff2724490cae3a602da069b55aa"
+   },
+   "preflight:deepseek-r1:32b": {
+    "format_schema_hash": "none",
+    "model": "deepseek-r1:32b",
+    "options_hash": "d48ff57a526eb0a4d653c694ecbafc6126d4c94f29c103335ce8917d8c5f4dad",
+    "prompt_hash": "de95332f63517c2c6a6558c76892369173dd3a55cf71944cabd0850ed44d322a"
+   },
+   "preflight:gemma3:27b": {
+    "format_schema_hash": "none",
+    "model": "gemma3:27b",
+    "options_hash": "d48ff57a526eb0a4d653c694ecbafc6126d4c94f29c103335ce8917d8c5f4dad",
+    "prompt_hash": "de95332f63517c2c6a6558c76892369173dd3a55cf71944cabd0850ed44d322a"
+   }
+  }
+ }
+}

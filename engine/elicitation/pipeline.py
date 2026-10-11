@@ -326,7 +326,9 @@ def elicit(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     Returns (accepted result, accepted attempt number, per-attempt telemetry).
     Both attempts' telemetry is returned whichever one wins: a retry that
     regressed is a measurement, and discarding the losing attempt would delete
-    the only evidence that the feedback did not land.
+    the only evidence that the feedback did not land. The stored telemetry row
+    keeps each attempt's raw response and request hash under `attempts`
+    (R571(e)).
     """
     first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, cfg=cfg)
     tels = [tel_first]
@@ -477,6 +479,10 @@ def extract_paper_elicited(
                     "prompt_chars": tel["pass1_prompt_chars"],
                     "prompt_eval_count": tel["pass1_prompt_eval_count"],
                     "fields": tel["fields"],
+                    # R571(e): each attempt's raw response and request hash,
+                    # the rejected attempt's included.
+                    "raw_content": tel["pass1_raw_content"],
+                    "request_hash": tel["pass1_request_hash"],
                 }
                 for i, tel in enumerate(pass1_tels, start=1)
             ],

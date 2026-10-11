@@ -1,0 +1,36 @@
+E           assert 0 == 1
+E            +  where 0 = <built-in method count of str object at 0x3ebc1680>('A field instruction to record NR does not set aside the sentinel rule: cite the sentence that states the absence, or output NO_EVIDENCE_LOCATABLE if no such sent
+E            +    where <built-in method count of str object at 0x3ebc1680> = '### STATED — the paper asserts it  (9 fields)\n\nFor each field below: cite at least one unit that asserts the value,....\n  *Nothing citable for this field?* 
+tests/test_pass1_contract_text.py:97: AssertionError
+E       AssertionError: assert 0 == 2
+E        +  where 0 = <built-in method count of str object at 0x3ec1d460>('A field instruction to record NOT_FOUND does not set aside the sentinel rule: cite the sentence that states the absence, or output NOTHING_TO_CITE if no such sentenc
+E        +    where <built-in method count of str object at 0x3ec1d460> = 'Extract structured data from the following paper for a systematic review.\n\nThe paper text below is split into numbe...Sentence number 38 carries some words for the
+E        +    and   'A field instruction to record NOT_FOUND does not set aside the sentinel rule: cite the sentence that states the absence, or output NOTHING_TO_CITE if no such sentence exists.' = t_a('NOT_FOUND', 'NOTHING_TO_CITE')
+tests/test_pass1_contract_text.py:125: AssertionError
+E       AssertionError: assert '**The sentinel rule.** A sentinel such as NOT_FOUND is a claim about the paper and must cite the sentence stating that absence. If no such sentence exists, output NO_EVIDENCE_LOCATABLE.' in 'Extract structure
+E        +  where '**The sentinel rule.** A sentinel such as NOT_FOUND is a claim about the paper and must cite the sentence stating that absence. If no such sentence exists, output NO_EVIDENCE_LOCATABLE.' = <built-in method replace of str 
+E        +    where <built-in method replace of str object at 0xffcded8a9610> = '**The sentinel rule.** A sentinel such as NR is a claim about the paper and must cite the sentence stating that absence. If no such sentence exists, output NO_
+tests/test_pass1_contract_text.py:136: AssertionError
+E       AssertionError: assert 'the whole r...is discarded' not in 'Extract str...he unit map.'
+E         
+E         'the whole response is discarded' is contained here:
+E           
+E           JSON and the whole response is discarded.
+E           
+E           Section headings are numbered units too and may be cited.
+E           ...
+E         
+E         ...Full output truncated (329 lines hidden), use '-vv' to show
+tests/test_pass1_contract_text.py:143: AssertionError
+E       AssertionError: assert (not True)
+E        +  where True = FieldRecord(field_name='study_design', field_class='judgment', value='Preclinical validation', is_escape=False, indice...ects were enrolled.', indices=(3,), criteria_application=False),), violations=(), bad_indices=
+tests/test_pass1_contract_text.py:185: AssertionError
+E       KeyError: 'raw_content'
+tests/test_elicitation_pipeline.py:465: KeyError
+FAILED tests/test_pass1_contract_text.py::test_the_stated_and_judgment_contract_sentences_are_in_the_pass1_prompt
+FAILED tests/test_pass1_contract_text.py::test_the_contract_sentence_is_rendered_from_the_codebook
+FAILED tests/test_pass1_contract_text.py::test_the_sentinel_rule_renders_the_canonical_sentinel
+FAILED tests/test_pass1_contract_text.py::test_the_marker_sentence_says_what_the_checker_does
+FAILED tests/test_pass1_contract_text.py::test_judgment_step_shapes_that_carry_no_basis_fail_the_field
+FAILED tests/test_elicitation_pipeline.py::test_both_pass1_attempts_raw_responses_reach_telemetry
+6 failed in 0.31s

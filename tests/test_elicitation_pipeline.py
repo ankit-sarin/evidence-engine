@@ -446,6 +446,27 @@ def test_the_accepted_attempt_and_both_attempts_reach_telemetry(review, monkeypa
     assert tel["attempts"][1]["feedback_chars"] > 0, "attempt 2 carried feedback"
 
 
+def test_both_pass1_attempts_raw_responses_reach_telemetry(review, monkeypatch):
+    """R571(e) (INT-h12-2; absorbs ADJ-RD1-1): the stored telemetry row keeps each
+    Pass-1 attempt's raw response, the rejected one included."""
+    import engine.agents.extractor as E
+    import engine.elicitation.pipeline as PL
+    from engine.core.extraction_telemetry import telemetry_path
+
+    answers = iter([PASS1_HALF, PASS1_BAD])          # attempt 2 fails more: rejected
+    monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(next(answers)))
+    monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+    E.extract_paper_with_completeness(7, PAPER, _Spec(), _DB(review), run_id=1)
+
+    rows = [json.loads(line) for line in telemetry_path(review).read_text().splitlines()]
+    assert [r["outcome"] for r in rows] == ["stored"]
+    tel = rows[0]["extra"]
+    assert tel["n_pass1_attempts"] == 2 and tel["accepted_attempt"] == 1
+    assert [a["raw_content"] for a in tel["attempts"]] == [PASS1_HALF, PASS1_BAD]
+    assert [a["request_hash"] for a in tel["attempts"]] == ["e" * 64, "e" * 64]
+    assert tel["pass1_raw_content"] == PASS1_HALF      # the accepted attempt's, as before
+
+
 # ── 12c-E-PIN: the runtime requests are byte-identical across the refactor ──
 # The digest below was recorded on the tree BEFORE `pass1_prompt` and
 # `pass2_priming_message` were factored out of `run_pass1` and

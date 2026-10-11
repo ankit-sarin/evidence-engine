@@ -1,0 +1,808 @@
+{
+ "baseline_12j_0c_fix": {
+  "class_1": 65,
+  "class_2": 31,
+  "class_3": 72,
+  "rows": 168,
+  "source": "the plan's 12j-0c-FIX recount sentence",
+  "without_class": 0
+ },
+ "by_package_and_class": {
+  "package_source_counts": {
+   "12g note": 20,
+   "Owning-package cell": 65,
+   "a note on the row": 3,
+   "coverage-map line": 129,
+   "coverage-map line (its dated note)": 4,
+   "highest classed note (12j)": 6,
+   "highest classed note (12k)": 11
+  },
+  "rows_in_at_12k": {
+   "P1": {
+    "class_1": 6,
+    "class_2": 3,
+    "class_3": 0,
+    "rows": 9
+   },
+   "P2": {
+    "class_1": 1,
+    "class_2": 1,
+    "class_3": 0,
+    "rows": 2
+   },
+   "P3": {
+    "class_1": 1,
+    "class_2": 1,
+    "class_3": 0,
+    "rows": 2
+   },
+   "P4": {
+    "class_1": 15,
+    "class_2": 5,
+    "class_3": 0,
+    "rows": 20
+   },
+   "P5": {
+    "class_1": 9,
+    "class_2": 2,
+    "class_3": 0,
+    "rows": 11
+   },
+   "P6": {
+    "class_1": 1,
+    "class_2": 0,
+    "class_3": 0,
+    "rows": 1
+   },
+   "P7": {
+    "class_1": 0,
+    "class_2": 1,
+    "class_3": 24,
+    "rows": 25
+   }
+  },
+  "rows_with_no_package_stated": [],
+  "rule": "first-named package; see the docstring",
+  "whole_list": {
+   "P1": {
+    "class_1": 29,
+    "class_2": 14,
+    "class_3": 4,
+    "rows": 47
+   },
+   "P2": {
+    "class_1": 12,
+    "class_2": 7,
+    "class_3": 1,
+    "rows": 20
+   },
+   "P3": {
+    "class_1": 10,
+    "class_2": 2,
+    "class_3": 2,
+    "rows": 14
+   },
+   "P4": {
+    "class_1": 24,
+    "class_2": 10,
+    "class_3": 0,
+    "rows": 34
+   },
+   "P5": {
+    "class_1": 15,
+    "class_2": 8,
+    "class_3": 0,
+    "rows": 23
+   },
+   "P6": {
+    "class_1": 8,
+    "class_2": 2,
+    "class_3": 0,
+    "rows": 10
+   },
+   "P7": {
+    "class_1": 0,
+    "class_2": 1,
+    "class_3": 89,
+    "rows": 90
+   }
+  }
+ },
+ "class_changes": [],
+ "class_kept": [
+  {
+   "after": "2",
+   "before": "2",
+   "candidates": [
+    "Wave 2 row 45 (Class 2, P1)"
+   ],
+   "id": "A-1",
+   "row": "section L",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 2 row 53 (Class 3, P3)"
+   ],
+   "id": "B-F06",
+   "row": "section L",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 2 row 53 (Class 3, P3)"
+   ],
+   "id": "B-F07",
+   "row": "section L",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "2",
+   "before": "2",
+   "candidates": [
+    "Wave 2 row 72 (Class 3, P5)"
+   ],
+   "id": "B-F09",
+   "row": "section L",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 2 row 24 (Class 1, P1)",
+    "Wave 2 adjacent item 1 (Class 3, P7)"
+   ],
+   "id": "C56",
+   "row": "inventory (12g)",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "2",
+   "before": "2",
+   "candidates": [
+    "Wave 2 row 50 (Class 2, P5)"
+   ],
+   "id": "INT-g3-1",
+   "row": "section L",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 2 row 14 (Class 1, P2)"
+   ],
+   "id": "INT-g6-2",
+   "row": "section L",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "2",
+   "before": "2",
+   "candidates": [
+    "Wave 2 row 41 (Class 2, P4)"
+   ],
+   "id": "INT-i12-36",
+   "row": "section L",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "2",
+   "before": "2",
+   "candidates": [
+    "Wave 2 row 59 (Class 3, P2)"
+   ],
+   "id": "INT-i12-74",
+   "row": "section L",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 2 row 19 (Class 1, P5)"
+   ],
+   "id": "INT-i12-77",
+   "row": "section L",
+   "rule": "R597(d)"
+  },
+  {
+   "after": "1",
+   "before": "1",
+   "candidates": [
+    "Wave 2 adjacent item 13 (Class 1, P4)"
+   ],
+   "id": "INT-j12-8",
+   "row": "opened at 12k item 0c",
+   "rule": "R597(d)"
+  }
+ ],
+ "existing_rows_entering_by_a_classed_note": [
+  {
+   "candidates": [
+    "Wave 2 row 5 (Class 1, P4)"
+   ],
+   "class": "1",
+   "id": "A2",
+   "limiting_note": "only this finding is pre-tag, in its package",
+   "package": "P4",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  },
+  {
+   "candidates": [
+    "Wave 2 row 3 (Class 1, P5)",
+    "Wave 2 row 4 (Class 1, P5)"
+   ],
+   "class": "1",
+   "id": "B2",
+   "limiting_note": "only this finding is pre-tag, in its package",
+   "package": "P5",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  },
+  {
+   "candidates": [
+    "Wave 2 row 25 (Class 1, P1)"
+   ],
+   "class": "1",
+   "id": "B9",
+   "limiting_note": "reopened for this finding only",
+   "package": "P1",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  },
+  {
+   "candidates": [
+    "Wave 2 row 29 (Class 1, P6)"
+   ],
+   "class": "1",
+   "id": "C10",
+   "limiting_note": "only this finding is pre-tag, in its package",
+   "package": "P6",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  },
+  {
+   "candidates": [
+    "Wave 2 adjacent item 5 (Class 1, P5)"
+   ],
+   "class": "1",
+   "id": "C12",
+   "limiting_note": "only this finding is pre-tag, in its package",
+   "package": "P5",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  },
+  {
+   "candidates": [
+    "Wave 2 row 28 (Class 1, P1)"
+   ],
+   "class": "1",
+   "id": "C24",
+   "limiting_note": "reopened for this finding only",
+   "package": "P1",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  },
+  {
+   "candidates": [
+    "Wave 2 row 25 (Class 1, P1)",
+    "Wave 2 row 27 (Class 1, P1)"
+   ],
+   "class": "1",
+   "id": "C28",
+   "limiting_note": "only this finding is pre-tag, in its package",
+   "package": "P1",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  },
+  {
+   "candidates": [
+    "Wave 2 row 15 (Class 1, P5)",
+    "Wave 2 adjacent item 5 (Class 1, P5)"
+   ],
+   "class": "1",
+   "id": "C37",
+   "limiting_note": "only this finding is pre-tag, in its package",
+   "package": "P5",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  },
+  {
+   "candidates": [
+    "Wave 2 row 5 (Class 1, P4)"
+   ],
+   "class": "1",
+   "id": "C42",
+   "limiting_note": "reopened for this finding only",
+   "package": "P4",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  },
+  {
+   "candidates": [
+    "Wave 2 row 15 (Class 1, P5)",
+    "Wave 2 row 33 (Class 2, P5)"
+   ],
+   "class": "1",
+   "id": "C47",
+   "limiting_note": "reopened for this finding only",
+   "package": "P5",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  },
+  {
+   "candidates": [
+    "Wave 2 row 32 (Class 1, P5)"
+   ],
+   "class": "1",
+   "id": "G3",
+   "limiting_note": "only this finding is pre-tag, in its package",
+   "package": "P5",
+   "rule": "R597(d): no class of its own, takes the candidate's; on the list by R598(b) as applied to Wave 2"
+  }
+ ],
+ "expected_by_the_brief": {
+  "difference": 0,
+  "formula": "168 + 59 + k, k = existing rows entering by a note",
+  "k": 11,
+  "rows": 238
+ },
+ "moved_classes_applied_to_the_baseline": {
+  "A-6": {
+   "class": "3",
+   "ruling": "R597(d), Wave 1 row 86"
+  },
+  "A-8": {
+   "class": "3",
+   "ruling": "R564"
+  },
+  "A-9": {
+   "class": "3",
+   "ruling": "R572"
+  },
+  "INT-g12-3": {
+   "class": "3",
+   "ruling": "R566"
+  },
+  "INT-g12-4": {
+   "class": "2",
+   "ruling": "R569"
+  },
+  "INT-g12-5": {
+   "class": "3",
+   "ruling": "R570"
+  }
+ },
+ "now": {
+  "class_1": 98,
+  "class_2": 44,
+  "class_3": 96,
+  "rows": 238,
+  "without_class": 0
+ },
+ "r510": {
+  "rows_in": 70,
+  "rows_in_existing_rows_entering": 11,
+  "rows_in_opened": 59,
+  "rows_out": 0
+ },
+ "rows_opened": {
+  "class_1": 22,
+  "class_1_conditional": 8,
+  "class_2": 13,
+  "class_3": 24,
+  "count": 59,
+  "rows": [
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-1",
+    "package": "P5",
+    "ruling": "R599; R602"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-2",
+    "package": "P5",
+    "ruling": "R599"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-3",
+    "package": "P4",
+    "ruling": "R599; R601"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-4",
+    "package": "P4",
+    "ruling": "R599; R600; R601"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-5",
+    "package": "P4",
+    "ruling": "R599; R601"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-6",
+    "package": "P4",
+    "ruling": "R599; R600; R601"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-7",
+    "package": "P4",
+    "ruling": "R599"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-8",
+    "package": "P4",
+    "ruling": "R599; R602"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-9",
+    "package": "P4",
+    "ruling": "R599"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-10",
+    "package": "P4",
+    "ruling": "R599; R600; R601"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-11",
+    "package": "P2",
+    "ruling": "R599; R600"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-12",
+    "package": "P4",
+    "ruling": "R599; R600"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-j12-13",
+    "package": "P4",
+    "ruling": "R599; R601"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-j12-14",
+    "package": "P4",
+    "ruling": "R599; R600; R601"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-j12-15",
+    "package": "P4",
+    "ruling": "R599"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-j12-16",
+    "package": "P3",
+    "ruling": "R599"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-j12-17",
+    "package": "P1",
+    "ruling": "R599; R600"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-j12-18",
+    "package": "P1",
+    "ruling": "R599"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-j12-19",
+    "package": "P1",
+    "ruling": "R599; R600"
+   },
+   {
+    "class": "1",
+    "conditional": true,
+    "id": "INT-j12-20",
+    "package": "P5",
+    "ruling": "R599; R600"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-21",
+    "package": "P2",
+    "ruling": "R599"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-22",
+    "package": "P4",
+    "ruling": "R599; R600; R602"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-23",
+    "package": "P4",
+    "ruling": "R599; R601"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-24",
+    "package": "P4",
+    "ruling": "R599; R601"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-25",
+    "package": "P4",
+    "ruling": "R599; R600; R601"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-26",
+    "package": "P5",
+    "ruling": "R599; R601"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-27",
+    "package": "P4",
+    "ruling": "R599"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-28",
+    "package": "P3",
+    "ruling": "R599"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-29",
+    "package": "P4",
+    "ruling": "R599; R602"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-30",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-31",
+    "package": "P1",
+    "ruling": "R599"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-32",
+    "package": "P1",
+    "ruling": "R599"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-33",
+    "package": "P1",
+    "ruling": "R599; R602"
+   },
+   {
+    "class": "2",
+    "conditional": false,
+    "id": "INT-j12-34",
+    "package": "P5",
+    "ruling": "R599; R600"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-35",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-36",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-37",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-38",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-39",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-40",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-41",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-42",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-43",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-44",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-45",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-46",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-47",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-48",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-49",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-50",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-51",
+    "package": "P7",
+    "ruling": "R599; R602"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-52",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-53",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-54",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-55",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-56",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-57",
+    "package": "P7",
+    "ruling": "R599"
+   },
+   {
+    "class": "1",
+    "conditional": false,
+    "id": "INT-j12-58",
+    "package": "P5",
+    "ruling": "R599; R600"
+   },
+   {
+    "class": "3",
+    "conditional": false,
+    "id": "INT-j12-59",
+    "package": "P7",
+    "ruling": "R602"
+   }
+  ]
+ }
+}

@@ -1,0 +1,26 @@
+E           KeyError: 'citation_record'
+tests/test_citation_record.py:216: KeyError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+E           KeyError: 'citation_record'
+tests/test_citation_record.py:255: KeyError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+E       AssertionError: assert {'run_2026101...7Z': '8.json'} == {'run_2': '7...._3': '8.json'}
+E         
+E         Left contains 1 more item:
+E         {'run_20261011T223417Z': '8.json'}
+E         Right contains 2 more items:
+E         {'run_2': '7.json', 'run_3': '8.json'}
+E         Use -v to get more diff
+tests/test_citation_record.py:290: AssertionError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 1/1 (100.0%) | Paper EE-008 EXTRACTED | 0s | ETA ~0s | 0 failed
+E       AttributeError: module 'engine.agents.extractor' has no attribute 'unit_map_dir_for'
+tests/test_citation_record.py:300: AttributeError
+E       AttributeError: module 'engine.core.events' has no attribute 'PAYLOAD_CITATION_RECORD'
+tests/test_citation_record.py:312: AttributeError
+FAILED tests/test_citation_record.py::test_an_asserted_claim_carries_every_cited_run_resolvable_from_the_parsed_text
+FAILED tests/test_citation_record.py::test_a_judgment_claim_records_each_steps_citations_resolvably
+FAILED tests/test_citation_record.py::test_the_unit_map_directory_is_named_by_the_manifest_run_id
+FAILED tests/test_citation_record.py::test_without_a_manifest_run_the_directory_name_cannot_be_a_manifest_name
+FAILED tests/test_citation_record.py::test_the_citation_record_is_checked_exact_against_the_text_the_claim_names
+5 failed, 1 passed in 2.46s

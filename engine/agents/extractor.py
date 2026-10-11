@@ -521,9 +521,21 @@ def _absence_tokens(codebook_path: Path) -> tuple[str, frozenset[str]]:
 
 
 @lru_cache(maxsize=1)
-def _default_run_id() -> str:
-    """One run id per process, for the per-run unit-map directory."""
-    return datetime.now(timezone.utc).strftime("run_%Y%m%dT%H%M%SZ")
+def _unmanifested_dir_name() -> str:
+    return datetime.now(timezone.utc).strftime("unmanifested_%Y%m%dT%H%M%SZ")
+
+
+def unit_map_dir_for(run_id: int | None) -> str:
+    """The elicited path's unit-map directory for a run (E-UNITMAP).
+
+    `run_<run_id>` for a manifest run, so a run's unit maps are found from its
+    `run_manifests` row and a second run in the same process writes elsewhere.
+    With no manifest run, one timestamped name per process under a prefix no
+    manifest name starts with.
+    """
+    if run_id is None:
+        return _unmanifested_dir_name()
+    return f"run_{run_id}"
 
 
 def extract_paper(
@@ -542,7 +554,8 @@ def extract_paper(
 
     `run_id` is the run manifest's id (R116), required and never read from the
     active-run contextvar. `unit_map_dir_name` is the elicited path's per-run
-    unit-map directory, a different thing that used to share the name.
+    unit-map directory, a different thing that used to share the name; left
+    unset it is `unit_map_dir_for(run_id)`.
 
     `parsed_text_ref` is the text identity selection resolved (9b-2a). It is
     accepted now so the call shape does not change when the event writer that
@@ -558,7 +571,7 @@ def extract_paper(
 
         return extract_paper_elicited(
             paper_id, paper_text, spec, db,
-            unit_map_dir_name=unit_map_dir_name or _default_run_id(),
+            unit_map_dir_name=unit_map_dir_name or unit_map_dir_for(run_id),
             model_digest=model_digest,
             attempt=attempt,
             run_id=run_id,
@@ -758,7 +771,7 @@ def extract_paper_with_completeness(
     """
     review_dir = Path(db.db_path).parent
     expected = expected_field_names(spec, review_dir / "extraction_codebook.yaml")
-    unit_map_dir_name = _default_run_id()
+    unit_map_dir = unit_map_dir_for(run_id)
     # The telemetry `arm` label has always been the extraction model's name.
     model_name = stage_config("extract_pass1", spec).model
     last_error: Exception | None = None
@@ -788,7 +801,7 @@ def extract_paper_with_completeness(
             result = extract_paper(
                 paper_id, paper_text, spec, db,
                 model_digest=model_digest,
-                    unit_map_dir_name=unit_map_dir_name, attempt=attempt,
+                    unit_map_dir_name=unit_map_dir, attempt=attempt,
                 parsed_text_ref=parsed_text_ref, run_id=run_id,
             )
         except RETRYABLE as exc:

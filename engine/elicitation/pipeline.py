@@ -95,9 +95,11 @@ def _codebook_path(review_dir: Path) -> Path:
 def persist_unit_map(unit_map: UnitMap, review_dir: Path, unit_map_dir_name: str) -> Path:
     """Write the paper's unit map for this run, so every cited index is auditable.
 
-    Per paper per run, the shape ELICIT-01 persisted. Kept on the filesystem
-    rather than in `review.db`: `evidence_spans` has no column for a citation
-    set and no migration is in scope (ELICIT-DESIGN-01 C5).
+    Per paper per run, the shape ELICIT-01 persisted: the whole map, cited or
+    not, under `elicitation/<unit_map_dir_name>/unit_maps/`. The directory is
+    named by the manifest run (`extractor.unit_map_dir_for`). A claim does not
+    depend on this file: its payload's `citation_record` carries every cited
+    unit's offsets into the parsed text (INT-g12-1).
     """
     out = review_dir / "elicitation" / unit_map_dir_name / "unit_maps"
     out.mkdir(parents=True, exist_ok=True)
@@ -408,6 +410,8 @@ def extract_paper_elicited(
 
     escape_tok = C.escape_token(codebook)
     unmet_tok = C.contract_unmet_token(codebook)
+    # INT-g12-1: field -> its citation record, filled as each span is built.
+    citation_records: dict[str, dict] = {}
 
     def _record(states, spans=(), violations=None, offenders=(), duplicated=(),
                presented_context_sha256=None, context_chain=()):
@@ -426,7 +430,7 @@ def extract_paper_elicited(
             evidenced_token=C.EVIDENCED_VALUE, offenders=offenders,
             duplicated=duplicated, attempts=attempt or 1,
             presented_context_sha256=presented_context_sha256,
-            context_chain=context_chain)
+            context_chain=context_chain, citation_records=citation_records)
 
     try:
         p1, accepted_attempt, pass1_tels = elicit(
@@ -457,6 +461,7 @@ def extract_paper_elicited(
         prompt_eval_count=p1_tel["pass1_prompt_eval_count"],
         elicitation={
             **p1_tel,
+            "unit_map_dir": unit_map_dir_name,
             "accepted_attempt": accepted_attempt,
             "n_pass1_attempts": len(pass1_tels),
             "terminal_states": states,
@@ -552,6 +557,9 @@ def extract_paper_elicited(
                 tier=span.tier,
             ))
             citation_counts[name] = len(rec.indices)
+            cited = M.citation_record(rec, unit_map, paper_text)
+            if cited is not None:
+                citation_records[name] = cited
 
     span_dicts = [
         {"field_name": s.field_name, "value": s.value,
@@ -587,7 +595,6 @@ def extract_paper_elicited(
         raise
 
     _LAST_PASS2_TELEMETRY.setdefault("model", model_name)
-    _LAST_PASS2_TELEMETRY["elicitation_run_id"] = unit_map_dir_name
     _LAST_PASS2_TELEMETRY["value_divergence"] = divergent
     _LAST_PASS2_TELEMETRY["n_value_divergence"] = len(divergent)
     _LAST_PASS2_TELEMETRY["n_contract_unmet"] = n_unmet

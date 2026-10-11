@@ -182,6 +182,14 @@ PAYLOAD_PARSED_TEXT_UID = "parsed_text_uid"
 PAYLOAD_CONTEXT_CHAIN = "context_chain"
 PAYLOAD_SNIPPET_CONTEXT = "snippet_context_sha256"
 
+#: INT-g12-1 (R612(i), D8): every unit an evidenced claim cites — the indices
+#: in the model's order, the runs derived from them with their offsets into the
+#: parsed text the claim names by `parsed_text_sha256`, the units version, and
+#: a JUDGMENT field's citations per step. Built by
+#: `engine.elicitation.materialize.citation_record`; resolves without the
+#: unit-map directory. Spelled here and nowhere else a payload is read.
+PAYLOAD_CITATION_RECORD = "citation_record"
+
 _MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
 _MISSING = object()
 

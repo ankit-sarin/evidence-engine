@@ -30,6 +30,8 @@ arguments for `events.write_field_event` / `write_paper_event`. Rules:
   the arm on the paper's OTHER cells whose key is not K. A cell left with no live
   claim reads `missing` (reader row 1); a first extraction has nothing live and
   plans exactly what it always did;
+* a value whose evidence is cited units carries its `citation_record` in the
+  payload — every cited unit, not only the stored snippet's run (INT-g12-1);
 * no `citation_located` event — the locator is 2(d).
 
 Every claim-bearing event carries the three input-identity payload keys named
@@ -58,6 +60,7 @@ from engine.core.effective import (
     live_claim_events,
 )
 from engine.core.events import (
+    PAYLOAD_CITATION_RECORD,
     PAYLOAD_CONTEXT_CHAIN,
     PAYLOAD_PARSED_TEXT_SHA256,
     PAYLOAD_PARSED_TEXT_UID,
@@ -142,6 +145,10 @@ class FieldOutcome:
     confidence: float | None = None
     violation_codes: tuple[str, ...] = ()
     attempts: int = 1
+    #: INT-g12-1: every unit a VALUE cites (`materialize.citation_record`), for
+    #: a claim whose evidence is cited units. None on the legacy path, whose
+    #: snippet is the model's own text and cites no unit.
+    citation_record: Mapping | None = None
 
     def __post_init__(self):
         if self.kind not in _FIELD_KINDS:
@@ -211,10 +218,11 @@ def _span_by_name(spans) -> dict[str, Mapping]:
     return out
 
 
-def _value(name, span, attempts) -> FieldOutcome:
+def _value(name, span, attempts, citation_record=None) -> FieldOutcome:
     return FieldOutcome(name, VALUE, value=span.get("value"),
                         source_snippet=span.get("source_snippet") or None,
-                        confidence=span.get("confidence"), attempts=attempts)
+                        confidence=span.get("confidence"), attempts=attempts,
+                        citation_record=citation_record)
 
 
 def legacy_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str,
@@ -261,15 +269,21 @@ def elicited_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str
                     stage_name: str = "elicitation_pass1",
                     presented_context_sha256: str | None = None,
                     context_chain: tuple[str, ...] = (),
-                    snippet_contexts: Mapping[str, str] | None = None) -> ExtractionRecord:
+                    snippet_contexts: Mapping[str, str] | None = None,
+                    citation_records: Mapping[str, Mapping] | None = None
+                    ) -> ExtractionRecord:
     """The elicited path's attempt, from its terminal states: CONTRACT_UNMET ->
     `contract_unmet` with the class-contract violations, the escape token ->
     `declined`, an evidenced field with its span -> a value (unless uncited).
+
+    `citation_records` is field_name -> that field's citation record
+    (INT-g12-1); a value carries its field's onto the claim.
 
     `presented_context_sha256`, `context_chain` and `snippet_contexts` are
     R224a(1)/(2), same shape as `legacy_record`'s — the elicited path has no
     snippet-retry mechanism, so `snippet_contexts` is always empty here."""
     by_name, bad = _span_by_name(spans), _index_offenders(offenders)
+    cited = citation_records or {}
     fields, incomplete = [], []
     for name in expected:
         state = states.get(name)
@@ -286,7 +300,7 @@ def elicited_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str
             fields.append(FieldOutcome(name, CONTRACT_UNMET, violation_codes=bad[name],
                                        attempts=attempts))
         elif state == evidenced_token and name in by_name:
-            fields.append(_value(name, by_name[name], attempts))
+            fields.append(_value(name, by_name[name], attempts, cited.get(name)))
         else:
             incomplete.append(name)
     return ExtractionRecord(paper_id, arm, run_id, extraction_uid, parsed_text, model,
@@ -504,6 +518,8 @@ def plan_extraction_events(outcome, *, live: Mapping[str, tuple[LiveClaimEvent, 
             payload.update(violation_codes=list(fo.violation_codes), attempts=fo.attempts)
         elif fo.kind == VALUE and fo.confidence is not None:
             payload["confidence"] = fo.confidence
+        if fo.kind == VALUE and fo.citation_record:
+            payload[PAYLOAD_CITATION_RECORD] = fo.citation_record
         # R224a(2): every claim carries the full call chain; a retried
         # field's snippet also carries the retry's own hash.
         payload[PAYLOAD_CONTEXT_CHAIN] = list(rec.context_chain)

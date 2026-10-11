@@ -8,8 +8,10 @@ paper by the units' offsets.
 quote, and the contract on it is one continuous passage with no ellipsis
 bridging. Cited units are frequently adjacent ([12, 13]) and sometimes not
 ([12, 47]). Joining disjoint units would manufacture a quote that appears
-nowhere in the paper, so the claim carries the FIRST CONTIGUOUS RUN of cited
-units — the lowest-numbered run, since the indices are sorted first.
+nowhere in the paper, so the claim's `source_snippet` is ONE contiguous run of
+cited units: the LOWEST-NUMBERED run. The indices are sorted before they are
+split into runs, so this is not the run the model cited first — cited
+[47, 48, 12], the stored snippet is unit 12 (Wave 1 row 57).
 
 **A run is one slice, not a join (R572).** The run is materialised as
 `source_raw[start of its first unit : end of its last unit]`: whatever lies
@@ -20,9 +22,12 @@ checked against, and raises `SnippetNotExact` otherwise (R534's
 materialisation-time EXACT check): a snippet that is not in the paper is a
 fault of the run, never something to store.
 
-Only the first run is on the claim. Every cited index reaches
-`record_call(extra=...)` and the per-run unit-map file, and Pass 2 is primed
-with ALL cited units, not just the first run.
+**Every cited unit is on the claim (INT-g12-1).** The snippet is one run; the
+claim's payload also carries `citation_record`: the indices as the contract
+check counted them, in the model's order, every run derived from them with its
+offsets into the parsed text, and each JUDGMENT step's own citations. It
+resolves from the parsed text the claim names by sha256 and needs no unit-map
+file. Pass 2 is primed with ALL cited units, not just the stored run.
 """
 
 from __future__ import annotations
@@ -79,9 +84,30 @@ def contiguous_runs(indices: tuple[int, ...]) -> list[list[int]]:
     return runs
 
 
+def _run_slice(field_name: str, run: list[int], unit_map: UnitMap,
+               source_text: str | None) -> tuple[int, int, str]:
+    """(start, end, text) of one run: one slice of the source, checked EXACT (R534)."""
+    first, last = unit_map.span(run[0]), unit_map.span(run[-1])
+    if first is None or last is None:
+        raise PrimingInvariantViolated(
+            f"priming invariant violated: field {field_name!r} cites units "
+            f"{run}, which this unit map ({unit_map.n} units) cannot resolve")
+    start, end = first[0], last[1]
+    snippet = unit_map.source_raw[start:end]
+    text = unit_map.source_raw if source_text is None else source_text
+    if not snippet or text[start:end] != snippet or snippet not in text:
+        raise SnippetNotExact(
+            f"field {field_name!r}: the snippet materialised for units {run} "
+            f"(offsets {start}–{end}, unit map {unit_map.version}) is not the source "
+            "text at those offsets. The unit map was built from a different text than "
+            "the one the claim names; nothing was stored.")
+    return start, end, snippet
+
+
 def source_snippet(record: FieldRecord, unit_map: UnitMap,
                    source_text: str | None = None) -> str:
-    """The single continuous verbatim passage stored on the claim.
+    """The single continuous verbatim passage stored on the claim: the
+    lowest-numbered run of the cited units, not the run cited first.
 
     Empty string when nothing was cited -- which, for a non-escape value, is
     exactly the condition the write-boundary fail-fast refuses.
@@ -94,21 +120,48 @@ def source_snippet(record: FieldRecord, unit_map: UnitMap,
     runs = contiguous_runs(record.indices)
     if not runs:
         return ""
-    first, last = unit_map.span(runs[0][0]), unit_map.span(runs[0][-1])
-    if first is None or last is None:
-        raise PrimingInvariantViolated(
-            f"priming invariant violated: field {record.field_name!r} cites units "
-            f"{runs[0]}, which this unit map ({unit_map.n} units) cannot resolve")
-    start, end = first[0], last[1]
-    snippet = unit_map.source_raw[start:end]
-    text = unit_map.source_raw if source_text is None else source_text
-    if not snippet or text[start:end] != snippet or snippet not in text:
-        raise SnippetNotExact(
-            f"field {record.field_name!r}: the snippet materialised for units {runs[0]} "
-            f"(offsets {start}–{end}, unit map {unit_map.version}) is not the source "
-            "text at those offsets. The unit map was built from a different text than "
-            "the one the claim names; nothing was stored.")
-    return snippet
+    return _run_slice(record.field_name, runs[0], unit_map, source_text)[2]
+
+
+def _runs_with_offsets(field_name: str, indices: tuple[int, ...], unit_map: UnitMap,
+                       source_text: str | None) -> list[dict]:
+    out = []
+    for run in contiguous_runs(indices):
+        start, end, _ = _run_slice(field_name, run, unit_map, source_text)
+        out.append({"first": run[0], "last": run[-1], "start": start, "end": end})
+    return out
+
+
+def citation_record(record: FieldRecord, unit_map: UnitMap,
+                    source_text: str | None = None) -> dict | None:
+    """Every unit the claim cites, resolvable from the parsed text alone (INT-g12-1).
+
+    * `units_version` — the segmentation the indices belong to.
+    * `cited` — `record.indices`: every index the contract check counted as a
+      citation for the field, in the model's order. For a JUDGMENT field that is
+      its field-level indices followed by its steps' (`contracts.check_entry`).
+    * `runs` — the runs derived from `cited` (sorted, de-duplicated), each with
+      its `first` and `last` unit and the `start` and `end` character offsets of
+      its slice in the parsed text. `runs[0]` is the stored `source_snippet`.
+    * `steps` — JUDGMENT only, one entry per reasoning step in order: the step's
+      own `cited` and `runs`, and whether it is a criteria application.
+
+    Each run is checked EXACT against `source_text` exactly as `source_snippet`
+    checks its one (`SnippetNotExact` otherwise). `None` when nothing was cited.
+    Plain JSON types: it is stored as one key of the claim's payload.
+    """
+    if not record.indices:
+        return None
+    name = record.field_name
+    out: dict = {"units_version": unit_map.version,
+                 "cited": list(record.indices),
+                 "runs": _runs_with_offsets(name, record.indices, unit_map, source_text)}
+    if record.steps:
+        out["steps"] = [{"cited": list(s.indices),
+                         "runs": _runs_with_offsets(name, s.indices, unit_map, source_text),
+                         "criteria_application": bool(s.criteria_application)}
+                        for s in record.steps]
+    return out
 
 
 def evidence_block(record: FieldRecord, unit_map: UnitMap) -> str:

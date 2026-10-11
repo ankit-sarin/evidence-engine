@@ -1,0 +1,32 @@
+== C1: a cell with NO VALUE (load_arm leaves the key absent: missing / declined /
+   contract unmet / unresolved / withdrawn / out of scope) scored as an ABSENCE ANSWER
+  paper 1 sample_size  A='40'   B='40'   -> MATCH: exact: '40'
+  paper 1 study_type   A='NR'   B=None   -> MATCH: both absent
+  paper 3 sample_size  A='7'    B=None   -> MISMATCH: one absent, one '7'
+  paper 3 study_type   A='RCT'  B='RCT'  -> MATCH: exact: 'RCT'
+  papers only in A (never scored, no cell): [2]
+
+== C2: decimal point is a token boundary, so a number 'is contained' in a different number
+  '5' vs '0.5 mm mean error' -> MATCH: whole-token containment: '5' within '0.5 mm mean error'
+  '12' vs 'mean 3.12 s per stitch' -> MATCH: whole-token containment: '12' within 'mean 3.12 s per stitch'
+  '5' vs '-5 degrees of deviation' -> MATCH: whole-token containment: '5' within '-5 degrees of deviation'
+  '2' vs 'level 2 of 5' -> MATCH: whole-token containment: '2' within 'level 2 of 5'
+  '5' vs 'level 2 of 5' -> MATCH: whole-token containment: '5' within 'level 2 of 5'
+
+== C3: the unit word is discarded on every field, not only on counts
+  [primary_outcome_value] '5 mm' vs '5 cm' -> MATCH: numeric equal: 5
+  [primary_outcome_value] '1.2 mm' vs '1.2 N' -> MATCH: numeric equal: 1.2
+  [primary_outcome_value] '30 s' vs '30 min' -> MATCH: numeric equal: 30
+  [key_limitation] '3D' vs '3' -> MATCH: numeric equal: 3
+  [sample_size] '5k' vs '5' -> MATCH: numeric equal: 5
+
+== C4: the kappa CI
+  n=2, perfect agreement     kappa=1.0 CI=[1.0, 1.0] p_o=1.0 p_e=0.5
+  n=4, perfect agreement     kappa=1.0 CI=[1.0, 1.0] p_o=1.0 p_e=0.625
+  n=2, total disagreement    kappa=-1.0 CI=[-1.0, -1.0] p_o=0.0 p_e=0.5
+  n=10                       kappa=0.6154 CI=[-0.0998, 1.3305] p_o=0.9 p_e=0.74
+
+== C5: verdict MATCH, kappa label DISAGREE (one-element set vs string)
+  MATCH: norm_a={'Phantom'} norm_b='Phantom'
+  MATCH: norm_a='Clinical' norm_b='Clinical'
+  percent_agreement=1.0 kappa=0.3333 kappa_p_o=0.5

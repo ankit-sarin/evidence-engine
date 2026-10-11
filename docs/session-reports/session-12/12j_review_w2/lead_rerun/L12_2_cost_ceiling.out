@@ -1,0 +1,31 @@
+[Cloud o4-mini] 1/5 (20.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud o4-mini] 2/5 (40.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+[Cloud o4-mini] 3/5 (60.0%) | Paper EE-003 FAILED | 0s | ETA ~0s | 3 failed
+[Cloud o4-mini] 4/5 (80.0%) | Paper EE-004 FAILED | 0s | ETA ~0s | 4 failed
+[Cloud o4-mini] 5/5 (100.0%) | Paper EE-005 FAILED | 0s | ETA ~0s | 5 failed
+============================================================
+[Cloud o4-mini] COMPLETE
+  Total papers : 5
+  Succeeded    : 0
+  Failed       : 5
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+[Cloud o4-mini] 1/5 (20.0%) | Paper EE-001 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Cloud o4-mini] 2/5 (40.0%) | Paper EE-002 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Cloud o4-mini] 3/5 (60.0%) | Paper EE-003 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Cloud o4-mini] COMPLETE
+  Total papers : 3
+  Succeeded    : 3
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+A: ceiling $0.50 | paid calls=15 at $1.00 each = $15.00 | stats.total_cost=$0.00 | failed=5 | loop ran all 5 papers
+Cost ceiling $2.50 exceeded — stopping
+B: ceiling $2.50 | paid calls=9 = $9.00 | stats.total_cost=$3.00 | stored (paper, cost_usd)=[(1, 1.0), (2, 1.0), (3, 1.0)]

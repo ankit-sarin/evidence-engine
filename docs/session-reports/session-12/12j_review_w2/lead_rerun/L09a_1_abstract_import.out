@@ -1,0 +1,21 @@
+== (a) JSON: paper 1 FLAGGED, paper 2 INGESTED (never flagged), paper 1 twice
+  printed: IMPORT SUCCESSFUL — 4 decisions processed.
+  stats: {'include': 2, 'exclude': 2, 'missing': 0, 'invalid': 0, 'total': 4} warnings: []
+  statuses: {1: 'ABSTRACT_SCREENED_OUT', 2: 'INGESTED', 3: 'INGESTED'}
+  adjudication rows: [(1, 'EXCLUDE'), (1, 'INCLUDE'), (2, 'INCLUDE'), (3, 'EXCLUDE')]
+== (b) xlsx without a 'PI_decision' header but with a 'DECISION' column
+  human wrote EXCLUDE x3; printed: IMPORT SUCCESSFUL — 3 decisions processed.
+  stats: {'include': 3, 'exclude': 0, 'missing': 0, 'invalid': 0, 'total': 3}
+  statuses: {1: 'ABSTRACT_SCREENED_IN', 2: 'ABSTRACT_SCREENED_IN', 3: 'ABSTRACT_SCREENED_IN'}
+== (c) xlsx row: Title of paper 1, DOI of paper 2, no PMID -> joined on DOI alone
+  printed: IMPORT SUCCESSFUL — 1 decisions processed.
+  statuses: {2: 'ABSTRACT_SCREENED_OUT', 1: 'ABSTRACT_SCREEN_FLAGGED', 3: 'INGESTED'}
+  adjudication rows: [(2, '10.1/d2', 'Paper 1', 'EXCLUDE')]
+== (d) flagged paper with no DOI and no PMID, decided in an xlsx
+  printed: IMPORT SUCCESSFUL — 1 decisions processed.
+  stats: {'include': 1, 'exclude': 0, 'missing': 0, 'invalid': 0, 'total': 1} warnings: []
+  statuses: {1: 'ABSTRACT_SCREEN_FLAGGED'}
+== (e) stage stamp: complete by a real import, then an empty file
+  after real import : ('complete', '1 included, 0 excluded (of 1 total)')
+  empty file printed: IMPORT SUCCESSFUL — 0 decisions processed.
+  after empty import: ('complete', '0 included, 0 excluded (of 0 total)')

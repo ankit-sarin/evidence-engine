@@ -1,0 +1,1414 @@
+{
+ "rows": [
+  {
+   "row": 1,
+   "reader_ids": [
+    "L14-C1"
+   ],
+   "lots": [
+    "L14"
+   ],
+   "class": "1",
+   "package": "P5",
+   "mapping": "new — **INT-j12-1**",
+   "proposed_id": "INT-j12-1",
+   "pattern": "ii / i",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/analysis/concordance.py::load_arm` + `align_arms`; `engine/analysis/scoring.py::_verdict`; `engine/analysis/metrics.py::_hashable`",
+   "statement": "a cell with no value is scored as the rater answering \"absent\""
+  },
+  {
+   "row": 2,
+   "reader_ids": [
+    "L14-C2"
+   ],
+   "lots": [
+    "L14"
+   ],
+   "class": "1",
+   "package": "P5",
+   "mapping": "new — **INT-j12-2**",
+   "proposed_id": "INT-j12-2",
+   "pattern": "i (R28)",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/analysis/concordance.py::align_arms`, `run_concordance`",
+   "statement": "`run_concordance`'s universe is not the grid: papers and cells are dropped by what the arms hold"
+  },
+  {
+   "row": 3,
+   "reader_ids": [
+    "L14-C3"
+   ],
+   "lots": [
+    "L14"
+   ],
+   "class": "1",
+   "package": "P5",
+   "mapping": "extends B2",
+   "proposed_id": null,
+   "pattern": "i",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/analysis/scoring.py::_tokens`, `_contiguous_run`, `_score_free_text`",
+   "statement": "whole-token containment matches a number inside a different number"
+  },
+  {
+   "row": 4,
+   "reader_ids": [
+    "L14-C4"
+   ],
+   "lots": [
+    "L14"
+   ],
+   "class": "1",
+   "package": "P5",
+   "mapping": "extends B2",
+   "proposed_id": null,
+   "pattern": "i",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/analysis/scoring.py::parse_number`, `_score_numeric`, `_score_free_text`",
+   "statement": "the unit word is discarded on every field, so equal numbers in different units MATCH"
+  },
+  {
+   "row": 5,
+   "reader_ids": [
+    "L09a-C2"
+   ],
+   "lots": [
+    "L09a"
+   ],
+   "class": "1",
+   "package": "P4",
+   "mapping": "extends C42 (closed for FT only) and A2",
+   "proposed_id": null,
+   "pattern": "i / ii",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`screening_adjudicator.py::_apply_abstract_decisions` (reached from both `_import_abstract_json` and `_import_abstract_xlsx`)",
+   "statement": "the abstract importer reports success for decisions it did not apply (the C42 defect, abstract side, never closed)"
+  },
+  {
+   "row": 6,
+   "reader_ids": [
+    "L09b-C1",
+    "L09a-C8"
+   ],
+   "lots": [
+    "L09a",
+    "L09b"
+   ],
+   "class": "1",
+   "package": "P4 (the collector half was proposed 3 / P7)",
+   "mapping": "new — **INT-j12-3**",
+   "proposed_id": "INT-j12-3",
+   "pattern": "v / i",
+   "evidence": "reproduced (the page); code order (the xlsx collector)",
+   "rederived": "Y code+rerun",
+   "file_function": "`abstract_adjudication_html.py`, `_query_abstract_flagged` // `screening_adjudicator.py::_collect_db_flagged`",
+   "statement": "the abstract page drops the pass-2 decision: a paper flagged because pass 1 and pass 2 disagreed is shown with pass 1 only // the abstract queue shows the reviewer pass 1 only, and labels the flag by whether any verification row exists"
+  },
+  {
+   "row": 7,
+   "reader_ids": [
+    "L09b-C4"
+   ],
+   "lots": [
+    "L09b"
+   ],
+   "class": "1",
+   "package": "P4 (the reader: the lead may weigh it as 2)",
+   "mapping": "new — **INT-j12-4**",
+   "proposed_id": "INT-j12-4",
+   "pattern": "other",
+   "evidence": "code order (no JS runtime on the box)",
+   "rederived": "Y code",
+   "file_function": "`abstract_adjudication_html.py`, page script `setDecision`, `applyFilter`, the `keydown` listener",
+   "statement": "keyboard decisions land on a card that is not marked as focused, and a held key excludes successive unseen papers (abstract page, \"Pending\" filter)"
+  },
+  {
+   "row": 8,
+   "reader_ids": [
+    "L09b-C5"
+   ],
+   "lots": [
+    "L09b"
+   ],
+   "class": "1",
+   "package": "P4",
+   "mapping": "new — **INT-j12-5**",
+   "proposed_id": "INT-j12-5",
+   "pattern": "iv",
+   "evidence": "code order",
+   "rederived": "Y code",
+   "file_function": "`abstract_adjudication_html.py`, `generate_abstract_adjudication_html` (category assignment, batch buttons) and page script `batchExclude`, `exportJSON`",
+   "statement": "a keyword-category batch exclusion is exported and stored as an ordinary per-paper human decision"
+  },
+  {
+   "row": 9,
+   "reader_ids": [
+    "L09b-C6"
+   ],
+   "lots": [
+    "L09b"
+   ],
+   "class": "1",
+   "package": "P4 (3 if ruled an intended excerpt)",
+   "mapping": "new — **INT-j12-6**",
+   "proposed_id": "INT-j12-6",
+   "pattern": "i / other",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`abstract_adjudication_html.py` `generate_abstract_adjudication_html`; `ft_adjudication_html.py` `_query_ft_flagged`",
+   "statement": "the reviewer is shown less than the models judged: abstract cut at 400 / 300 characters, and the full-text page carries no full text or path to it"
+  },
+  {
+   "row": 10,
+   "reader_ids": [
+    "L10-C1"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "1",
+   "package": "P4",
+   "mapping": "new — **INT-j12-7**",
+   "proposed_id": "INT-j12-7",
+   "pattern": "vi / iii",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/acquisition/verify_downloads.py` — `canonical_filename`, `verify_downloads`",
+   "statement": "`verify_downloads` points two papers at one PDF when `ee_identifier` is NULL (canonical name is not unique per paper)"
+  },
+  {
+   "row": 11,
+   "reader_ids": [
+    "L10-C2"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "1",
+   "package": "P4",
+   "mapping": "new — **INT-j12-8**",
+   "proposed_id": "INT-j12-8",
+   "pattern": "vi / i",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/acquisition/verify_downloads.py` — `verify_downloads`, `_match_file_to_paper`",
+   "statement": "`verify_downloads` records success against a file it has just judged invalid; and matches file to paper on the key alone"
+  },
+  {
+   "row": 12,
+   "reader_ids": [
+    "L10-C3"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "1",
+   "package": "P4",
+   "mapping": "new — **INT-j12-9**",
+   "proposed_id": "INT-j12-9",
+   "pattern": "i / other",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/acquisition/pdf_quality_check.py` — `_get_papers_to_check`, `run_quality_check`; `pdf_quality_import.import_dispositions`",
+   "statement": "A human PROCEED is erased by the next quality-check run"
+  },
+  {
+   "row": 13,
+   "reader_ids": [
+    "L10-C4"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "1",
+   "package": "P4 (2 if the gate is ruled advisory)",
+   "mapping": "new — **INT-j12-10**",
+   "proposed_id": "INT-j12-10",
+   "pattern": "ii / v",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/acquisition/pdf_quality_check.py::run_quality_check`; `engine/acquisition/pdf_quality_html.py::_query_section1/2/3`, `generate_quality_html`",
+   "statement": "A paper whose AI check failed (or never ran) is on no section of the quality review page; \"Export Final\" still enables"
+  },
+  {
+   "row": 14,
+   "reader_ids": [
+    "L10-C5"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "1",
+   "package": "P5 (or P2 with INT-g6-2)",
+   "mapping": "extends INT-g6-2; a Phase A site for INT-i12-77 (R596(d))",
+   "proposed_id": null,
+   "pattern": "vi / i",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/acquisition/pdf_quality_import.py` — `validate_disposition_json`, `import_dispositions`",
+   "statement": "The disposition importer trusts `paper_id` alone: `review`, `mode` and `complete` are never checked, and a second file cannot revise"
+  },
+  {
+   "row": 15,
+   "reader_ids": [
+    "L08-C1"
+   ],
+   "lots": [
+    "L08"
+   ],
+   "class": "1",
+   "package": "P5",
+   "mapping": "extends C47 (two new sites) and C37",
+   "proposed_id": null,
+   "pattern": "iii (i)",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/adjudication/import_extraction_entry.py::import_extraction_entry`; `engine/adjudication/import_screening_entry.py::import_screening_entry` (same shape); committed by `engine/adjudication/workflow.py::ensure_workflow_table`.",
+   "statement": "An interrupt mid-import is not handled; in-process, the half-written import stays open on the connection and the next workflow read commits it"
+  },
+  {
+   "row": 16,
+   "reader_ids": [
+    "L08-C3"
+   ],
+   "lots": [
+    "L08"
+   ],
+   "class": "1",
+   "package": "P2 (3 if the log line is ruled the audit trail)",
+   "mapping": "new — **INT-j12-11**",
+   "proposed_id": "INT-j12-11",
+   "pattern": "i (iv)",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`workflow.py::bypass_stage`, `complete_stage`, `reset_stage`, `advance_stage`",
+   "statement": "The bypass record (\"Logged to audit trail\") is one mutable row; `complete_stage` and `reset_stage` erase it"
+  },
+  {
+   "row": 17,
+   "reader_ids": [
+    "L08-C4"
+   ],
+   "lots": [
+    "L08"
+   ],
+   "class": "1",
+   "package": "P4 for (a) (operator-initiated: the reader says the lead may read it as 3); (b) 3 / P7",
+   "mapping": "new — **INT-j12-12**",
+   "proposed_id": "INT-j12-12",
+   "pattern": "i",
+   "evidence": "code order",
+   "rederived": "Y code",
+   "file_function": "`workflow.py::advance_stage`, `complete_stage`, `is_adjudication_complete`; module docstring",
+   "statement": "`advance_stage` without `--force` records an \"auto\" human-gate stage as `complete` with no check of the condition the stage stands for; the sequence is enforced nowhere else"
+  },
+  {
+   "row": 18,
+   "reader_ids": [
+    "L09a-C1"
+   ],
+   "lots": [
+    "L09a"
+   ],
+   "class": "1c",
+   "package": "P4",
+   "mapping": "new — **INT-j12-13**",
+   "proposed_id": "INT-j12-13",
+   "pattern": "vi / other",
+   "evidence": "reproduced; conditional (a workbook with no `PI_decision` header)",
+   "rederived": "Y code+rerun",
+   "file_function": "`screening_adjudicator.py::_import_abstract_xlsx` and `ft_screening_adjudicator.py::_import_ft_xlsx` — the nested `_find_col`, identical in both.",
+   "statement": "the xlsx importers' header fallback reads the MODEL's \"Primary Decision\" column as the human decision"
+  },
+  {
+   "row": 19,
+   "reader_ids": [
+    "L09a-C3",
+    "L09b-C2",
+    "L13-C1"
+   ],
+   "lots": [
+    "L09a",
+    "L09b",
+    "L13"
+   ],
+   "class": "1c",
+   "package": "P5, with INT-i12-77",
+   "mapping": "extends INT-i12-77 (its Phase A list: six import paths, the two pages' export, the workbook builder)",
+   "proposed_id": null,
+   "pattern": "vi (iv)",
+   "evidence": "reproduced (both xlsx imports, the workbook builder); code order (both JSON imports, the pages' export); conditional (file rows not matching this database's flagged papers)",
+   "rederived": "Y code+rerun",
+   "file_function": "`_apply_abstract_decisions`, `_import_abstract_json`, `_import_abstract_xlsx`; `_import_ft_json`, `_import_ft_xlsx`, `_apply_ft_decisions` // both files, the page script's `exportJSON` // `engine/exporters/review_workbook.py` · `_build_review_queue_sheet`, `_build_instructions_sheet`, `create_review_workbook`",
+   "statement": "every import path joins the file to a paper on a key alone; which key, per path // the decisions file the pages emit carries a bare `papers.id` and nothing else: no title, DOI, review, generation time or queue identity for an importer to check // A returned review workbook carries nothing that binds a row's decision to the paper it was exported for"
+  },
+  {
+   "row": 20,
+   "reader_ids": [
+    "L09b-C3"
+   ],
+   "lots": [
+    "L09b"
+   ],
+   "class": "1c",
+   "package": "P4",
+   "mapping": "new — **INT-j12-14**",
+   "proposed_id": "INT-j12-14",
+   "pattern": "vi / iv",
+   "evidence": "conditional (same paper id on a later page for the same review name, same browser profile); code order",
+   "rederived": "Y code",
+   "file_function": "both files, page script `STORAGE_KEY`, `restoreState`",
+   "statement": "draft state is keyed by review name alone, so a regenerated page opens with earlier decisions already applied"
+  },
+  {
+   "row": 21,
+   "reader_ids": [
+    "L10-C6"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "1c",
+   "package": "P4",
+   "mapping": "new — **INT-j12-15**",
+   "proposed_id": "INT-j12-15",
+   "pattern": "iv / i",
+   "evidence": "code order; conditional (the quality-check CLI is run)",
+   "rederived": "Y code",
+   "file_function": "`engine/acquisition/pdf_quality_check.py` — `run_quality_check`, `main`",
+   "statement": "`pdf_quality_check` makes model calls outside any run manifest; the stored classification has no model, digest, prompt or run (W1 adjacent item 7)"
+  },
+  {
+   "row": 22,
+   "reader_ids": [
+    "L10-C10"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "1c",
+   "package": "P3",
+   "mapping": "new — **INT-j12-16**",
+   "proposed_id": "INT-j12-16",
+   "pattern": "ii / i",
+   "evidence": "code order (the drops); conditional (the trigger)",
+   "rederived": "Y code",
+   "file_function": "`engine/search/pubmed.py` — `search_pubmed`, `_esearch`, `_parse_record`",
+   "statement": "`search_pubmed` drops records and never compares what it fetched with what PubMed counted"
+  },
+  {
+   "row": 23,
+   "reader_ids": [
+    "L11-C1"
+   ],
+   "lots": [
+    "L11"
+   ],
+   "class": "1c",
+   "package": "P1 (the reader: the lead may lower it to 2)",
+   "mapping": "new — **INT-j12-17**",
+   "proposed_id": "INT-j12-17",
+   "pattern": "i / iv",
+   "evidence": "conditional (override edited without restart, or applied by the run's own restart; or `OLLAMA_HOST` elsewhere)",
+   "rederived": "Y code",
+   "file_function": "`engine/utils/ollama_preflight.py` — `_get_ollama_env`, `check_ollama_env`, `require_preflight`",
+   "statement": "The Ollama env check reads the unit's configured environment, not the running server's; nothing re-checks after a restart and no manifest records it"
+  },
+  {
+   "row": 24,
+   "reader_ids": [
+    "L11-C9"
+   ],
+   "lots": [
+    "L11"
+   ],
+   "class": "1c",
+   "package": "P1, with Wave 1 row 8 (the progress-side fix alone is Class 3)",
+   "mapping": "extends C56 (Wave 1 row 8's note)",
+   "proposed_id": null,
+   "pattern": "ii",
+   "evidence": "conditional (the tee end of the pipe gone while Python lives)",
+   "rederived": "Y code",
+   "file_function": "`engine/utils/progress.py::ProgressReporter.report` (and `summary`)",
+   "statement": "`ProgressReporter.report` is an unguarded stderr write with flush; under `--background` stderr is a pipe to `tee`"
+  },
+  {
+   "row": 25,
+   "reader_ids": [
+    "L12-C1"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "1c",
+   "package": "P1 (cloud; not reachable on live while R71 keeps `enabled_arms` empty)",
+   "mapping": "extends C28 and B9",
+   "proposed_id": null,
+   "pattern": "i / v",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/cloud/base.py` — `CloudExtractorBase.run_distribution_check`, `store_result`; called at the end of `OpenAIExtractor.run` / `AnthropicExtractor.run`",
+   "statement": "The cloud run's collapse gate reads a store the cloud path never writes"
+  },
+  {
+   "row": 26,
+   "reader_ids": [
+    "L12-C2"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "1c",
+   "package": "P1 (cloud; not reachable on live while R71 keeps `enabled_arms` empty)",
+   "mapping": "new — **INT-j12-18**",
+   "proposed_id": "INT-j12-18",
+   "pattern": "ii / other",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/cloud/base.py` — `CloudExtractorBase.parse_response_to_spans`",
+   "statement": "Response repair writes a value the model did not give: a span with no `value` key becomes the absence sentinel; a list, dict or bool becomes its Python repr"
+  },
+  {
+   "row": 27,
+   "reader_ids": [
+    "L12-C3"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "1c",
+   "package": "P1 (cloud; not reachable on live while R71 keeps `enabled_arms` empty)",
+   "mapping": "extends C28",
+   "proposed_id": null,
+   "pattern": "i",
+   "evidence": "code order",
+   "rederived": "Y code",
+   "file_function": "`engine/cloud/base.py` — `parse_response_to_spans` (`if isinstance(span, dict) and \"source_snippet\" not in span: span[\"source_snippet\"] = \"\"`, comment \"so spans aren't dropped\") and `store_result` (checks `if not spans` and `enforce_completeness` only)",
+   "statement": "No citation check at the cloud write boundary; a missing snippet is filled with \"\""
+  },
+  {
+   "row": 28,
+   "reader_ids": [
+    "L12-C4"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "1c",
+   "package": "P1 (cloud; not reachable on live while R71 keeps `enabled_arms` empty)",
+   "mapping": "extends C24 (cloud half)",
+   "proposed_id": null,
+   "pattern": "iv / i",
+   "evidence": "code order",
+   "rederived": "Y code",
+   "file_function": "`engine/cloud/base.py` — `CloudExtractorBase.send`",
+   "statement": "`send()` records a call only after it returns, always as `completed`, with no response digest; a request that raises leaves no `run_calls` row"
+  },
+  {
+   "row": 29,
+   "reader_ids": [
+    "L12-C5"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "1c",
+   "package": "P6",
+   "mapping": "extends C10",
+   "proposed_id": null,
+   "pattern": "iii / i",
+   "evidence": "reproduced; conditional (a pre-018 database with NULLs; dead on live)",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/cloud/schema.py` — `init_cloud_tables`",
+   "statement": "`init_cloud_tables` still invents `confidence = 0.0` / `tier = 1` and rebuilds the table, from read-only entry points, with no receipt"
+  },
+  {
+   "row": 30,
+   "reader_ids": [
+    "L12-C6"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "1c",
+   "package": "P1 (cloud; not reachable on live while R71 keeps `enabled_arms` empty) (weak: pinned as intended by a test; could be read as Class 3)",
+   "mapping": "new — **INT-j12-19**",
+   "proposed_id": "INT-j12-19",
+   "pattern": "other",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/cloud/anthropic_extractor.py` — `AnthropicExtractor.extract_paper` (\"Normalize empty strings → null with annotation\"); no counterpart in `OpenAIExtractor.extract_paper`",
+   "statement": "The same response is stored differently by transport: Anthropic turns `\"\"` into NULL, OpenAI keeps `\"\"`, and both turn JSON null into the sentinel"
+  },
+  {
+   "row": 31,
+   "reader_ids": [
+    "L14-C5"
+   ],
+   "lots": [
+    "L14"
+   ],
+   "class": "1c",
+   "package": "P5 (the reader: the lead may weigh it as 3)",
+   "mapping": "new — **INT-j12-20**",
+   "proposed_id": "INT-j12-20",
+   "pattern": "other",
+   "evidence": "reproduced, on a narrow input",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/analysis/normalize.py::normalize_for_concordance` (multi-value branch); `engine/analysis/metrics.py::_hashable`",
+   "statement": "a one-element set and the same string: verdict MATCH, kappa label disagree"
+  },
+  {
+   "row": 32,
+   "reader_ids": [
+    "L14-C9"
+   ],
+   "lots": [
+    "L14"
+   ],
+   "class": "1c",
+   "package": "P5, with G2 (the report site is 3)",
+   "mapping": "extends G3, under G2's condition",
+   "proposed_id": null,
+   "pattern": "ii",
+   "evidence": "code order",
+   "rederived": "Y code",
+   "file_function": "`engine/analysis/normalize.py::_get_field_def`; `engine/analysis/report.py::_is_categorical`",
+   "statement": "two more swallow sites around the hard-coded codebook"
+  },
+  {
+   "row": 33,
+   "reader_ids": [
+    "L08-C2"
+   ],
+   "lots": [
+    "L08"
+   ],
+   "class": "2",
+   "package": "P5",
+   "mapping": "extends C47",
+   "proposed_id": null,
+   "pattern": "i",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`import_extraction_entry.py::import_extraction_entry` / `_place`; `_validate` (R-l)",
+   "statement": "Interrupted extraction-entry import (process exit) leaves placed texts and an open manifest; the retry is refused until files are removed by hand"
+  },
+  {
+   "row": 34,
+   "reader_ids": [
+    "L08-C8"
+   ],
+   "lots": [
+    "L08"
+   ],
+   "class": "2",
+   "package": "P2",
+   "mapping": "new — **INT-j12-21**",
+   "proposed_id": "INT-j12-21",
+   "pattern": "iv",
+   "evidence": "conditional (the caller passes another review's spec; whether `open_run` refuses was not established)",
+   "rederived": "Y code",
+   "file_function": "`import_extraction_entry`, `import_screening_entry`",
+   "statement": "Neither importer checks that `spec` belongs to `review_db`"
+  },
+  {
+   "row": 35,
+   "reader_ids": [
+    "L09a-C4"
+   ],
+   "lots": [
+    "L09a"
+   ],
+   "class": "2",
+   "package": "P4 (1 if the caller continues on the connection)",
+   "mapping": "new — **INT-j12-22**",
+   "proposed_id": "INT-j12-22",
+   "pattern": "iii / i",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`screening_adjudicator.py::_import_abstract_json` → `_apply_abstract_decisions`",
+   "statement": "the abstract import is not one transaction: a fault mid-file leaves it half-applied on an open transaction"
+  },
+  {
+   "row": 36,
+   "reader_ids": [
+    "L09a-C5",
+    "L13-C4"
+   ],
+   "lots": [
+    "L09a",
+    "L13"
+   ],
+   "class": "2",
+   "package": "P4 (the builder-text half was proposed 3 / P5)",
+   "mapping": "new — **INT-j12-23**",
+   "proposed_id": "INT-j12-23",
+   "pattern": "i / ii",
+   "evidence": "reproduced (FT import, the builder text); code order (abstract import)",
+   "rederived": "Y code+rerun",
+   "file_function": "`_import_ft_xlsx`, `_import_abstract_xlsx` // `engine/exporters/review_workbook.py` · `InstructionsConfig` (defaults `notes_on_rejection`, `pre_import_validation`), written by `_build_instructions_sheet`",
+   "statement": "an xlsx row whose Title cell is empty is skipped without a word, id and decision intact // The Instructions sheet's default import guarantees are builder text the xlsx importers do not meet for a row with an empty Title cell"
+  },
+  {
+   "row": 37,
+   "reader_ids": [
+    "L09b-C8",
+    "L09a-C7"
+   ],
+   "lots": [
+    "L09a",
+    "L09b"
+   ],
+   "class": "2",
+   "package": "P4 (the exporter half was proposed 3 / P7)",
+   "mapping": "new — **INT-j12-24**",
+   "proposed_id": "INT-j12-24",
+   "pattern": "iv / i",
+   "evidence": "code order; conditional (the caller's database is not `DATA_ROOT/<name>/review.db`, or the name is omitted)",
+   "rederived": "Y code",
+   "file_function": "both files, `generate_*_adjudication_html` // `screening_adjudicator.py::export_adjudication_queue`, `ft_screening_adjudicator.py::export_ft_adjudication_queue`",
+   "statement": "the generators open the database by review name under the module's `DATA_ROOT`, not the database their caller holds // `format=\"html\"` ignores everything the caller passed and re-opens `data/<name>/review.db` by cwd"
+  },
+  {
+   "row": 38,
+   "reader_ids": [
+    "L09b-C9"
+   ],
+   "lots": [
+    "L09b"
+   ],
+   "class": "2",
+   "package": "P4",
+   "mapping": "new — **INT-j12-25**",
+   "proposed_id": "INT-j12-25",
+   "pattern": "ii",
+   "evidence": "code order (no JS runtime on the box)",
+   "rederived": "Y code",
+   "file_function": "both files, page script `restoreState`, `setDecision`, `saveState`",
+   "statement": "restoring a draft aborts silently at the first id with no card, after the stored draft has already been overwritten"
+  },
+  {
+   "row": 39,
+   "reader_ids": [
+    "L10-C7"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "2",
+   "package": "P5",
+   "mapping": "new — **INT-j12-26**",
+   "proposed_id": "INT-j12-26",
+   "pattern": "v / i",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/acquisition/pdf_quality_html.py::generate_acquisition_html`; `pdf_quality_import.VALID_DISPOSITIONS`",
+   "statement": "The acquisition-mode page exports a disposition the importer rejects (`ACQUIRED`)"
+  },
+  {
+   "row": 40,
+   "reader_ids": [
+    "L10-C8"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "2",
+   "package": "P4",
+   "mapping": "new — **INT-j12-27**",
+   "proposed_id": "INT-j12-27",
+   "pattern": "ii / iii",
+   "evidence": "code order",
+   "rederived": "Y code",
+   "file_function": "`engine/acquisition/check_oa.py` — `_query_unpaywall`, `check_oa_status`",
+   "statement": "`check_oa`: a network fault is stored as the paper's OA status and never retried; one write transaction spans the whole run"
+  },
+  {
+   "row": 41,
+   "reader_ids": [
+    "L10-C9"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "2",
+   "package": "P4",
+   "mapping": "extends INT-i12-36",
+   "proposed_id": null,
+   "pattern": "i",
+   "evidence": "code order",
+   "rederived": "Y code",
+   "file_function": "`check_oa.check_oa_status` (`_TERMINAL`), `manual_list.generate_manual_list`",
+   "statement": "`check_oa` and `manual_list` select every non-terminal status (W1 adjacent item 11)"
+  },
+  {
+   "row": 42,
+   "reader_ids": [
+    "L10-C11"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "2",
+   "package": "P3",
+   "mapping": "new — **INT-j12-28**",
+   "proposed_id": "INT-j12-28",
+   "pattern": "other",
+   "evidence": "conditional (a term with a top-level OR and no parentheses; live's terms are wrapped)",
+   "rederived": "Y code",
+   "file_function": "`engine/search/pubmed.py::_build_query`",
+   "statement": "`_build_query` joins raw terms with AND without parenthesising each term"
+  },
+  {
+   "row": 43,
+   "reader_ids": [
+    "L11-C2"
+   ],
+   "lots": [
+    "L11"
+   ],
+   "class": "2",
+   "package": "P4",
+   "mapping": "new — **INT-j12-29**",
+   "proposed_id": "INT-j12-29",
+   "pattern": "i / other",
+   "evidence": "reproduced (synthetic package, tmux stubbed); code order for the `ft_screener` site",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/utils/background.py::maybe_background`",
+   "statement": "`python -m <module> --background` is relaunched as `python /abs/path/module.py`; for `ft_screener` the detached run dies on import while the launcher prints \"Launched\" and exits 0"
+  },
+  {
+   "row": 44,
+   "reader_ids": [
+    "L11-C3"
+   ],
+   "lots": [
+    "L11"
+   ],
+   "class": "2",
+   "package": "P7",
+   "mapping": "new — **INT-j12-30**",
+   "proposed_id": "INT-j12-30",
+   "pattern": "i / other",
+   "evidence": "conditional (a tmux server already running; tmux's documented behaviour, not run)",
+   "rederived": "Y code",
+   "file_function": "`engine/utils/background.py::maybe_background`",
+   "statement": "The detached session does not inherit the launching shell's environment when a tmux server is already running: `PYTHONPATH=.`, the restart opt-out and API keys set on the command line are dropped"
+  },
+  {
+   "row": 45,
+   "reader_ids": [
+    "L11-C4"
+   ],
+   "lots": [
+    "L11"
+   ],
+   "class": "2",
+   "package": "P1, with A-1",
+   "mapping": "extends A-1",
+   "proposed_id": null,
+   "pattern": "i / other",
+   "evidence": "code order; conditional (a probe over 60 s)",
+   "rederived": "Y code",
+   "file_function": "`engine/utils/ollama_preflight.py::check_model` (with `ollama_client.ollama_chat`)",
+   "statement": "The preflight probe is one 60-second timeout away from `sudo systemctl restart ollama`, and most of its callers hold no lock"
+  },
+  {
+   "row": 46,
+   "reader_ids": [
+    "L12-C7"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "2",
+   "package": "P1 (cloud; not reachable on live while R71 keeps `enabled_arms` empty)",
+   "mapping": "new — **INT-j12-31**",
+   "proposed_id": "INT-j12-31",
+   "pattern": "i",
+   "evidence": "reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`OpenAIExtractor.run` / `AnthropicExtractor.run`; `CloudExtractorBase.extract_with_completeness`; `get_progress`",
+   "statement": "`--max-cost` counts only the final attempt of papers that were stored"
+  },
+  {
+   "row": 47,
+   "reader_ids": [
+    "L12-C8"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "2",
+   "package": "P1 (cloud; not reachable on live while R71 keeps `enabled_arms` empty)",
+   "mapping": "new — **INT-j12-32**",
+   "proposed_id": "INT-j12-32",
+   "pattern": "other",
+   "evidence": "conditional (a provider sends a non-integer header); the path reproduced",
+   "rederived": "Y code+rerun",
+   "file_function": "`OpenAIExtractor.run` (`wait = int(retry_after) if retry_after else 30 * (2 ** attempt)`), `AnthropicExtractor.run` (`wait = int(retry_after)`)",
+   "statement": "A non-integer `retry-after` header aborts the whole run"
+  },
+  {
+   "row": 48,
+   "reader_ids": [
+    "L12-C12"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "2",
+   "package": "P1 (cloud; not reachable on live while R71 keeps `enabled_arms` empty)",
+   "mapping": "new — **INT-j12-33**",
+   "proposed_id": "INT-j12-33",
+   "pattern": "i",
+   "evidence": "conditional (a caller other than `run_arm`; none at HEAD)",
+   "rederived": "Y code",
+   "file_function": "`CloudExtractorBase.__init__` / `send` (`if self.run_id is not None:`), `OpenAIExtractor.run`",
+   "statement": "Opt-in and the manifest are enforced by one caller, not by the classes"
+  },
+  {
+   "row": 49,
+   "reader_ids": [
+    "L13-C2"
+   ],
+   "lots": [
+    "L13"
+   ],
+   "class": "2",
+   "package": "P5 (the label alone could be 3 / P7)",
+   "mapping": "new — **INT-j12-34**",
+   "proposed_id": "INT-j12-34",
+   "pattern": "v",
+   "evidence": "reproduced (the expression); code order (the path)",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/exporters/docx_export.py` · `export_evidence_docx`",
+   "statement": "DOCX \"Study\" label is the first author's initials for PubMed-format names, and raises on an empty first author"
+  },
+  {
+   "row": 50,
+   "reader_ids": [
+    "L13-C5"
+   ],
+   "lots": [
+    "L13"
+   ],
+   "class": "2",
+   "package": "P5",
+   "mapping": "extends INT-g3-1",
+   "proposed_id": null,
+   "pattern": "other",
+   "evidence": "reproduced at the python-docx boundary; conditional for the engine path",
+   "rederived": "Y code+rerun",
+   "file_function": "`engine/exporters/docx_export.py` · `export_evidence_docx`",
+   "statement": "DOCX export raises on a control character in any value, title or journal (new site of INT-g3-1)"
+  },
+  {
+   "row": 51,
+   "reader_ids": [
+    "L08-C5"
+   ],
+   "lots": [
+    "L08"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-35**",
+   "proposed_id": "INT-j12-35",
+   "pattern": "i",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "`import_extraction_entry.py::import_extraction_entry`",
+   "statement": "`ptd.mkdir` sits between `open_run` and the `try`: a failure there leaves the manifest open"
+  },
+  {
+   "row": 52,
+   "reader_ids": [
+    "L08-C6"
+   ],
+   "lots": [
+    "L08"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-36**",
+   "proposed_id": "INT-j12-36",
+   "pattern": "iv",
+   "evidence": "conditional (the file changes between two reads)",
+   "rederived": "N",
+   "file_function": "`import_extraction_entry.py::_load_document` and `import_extraction_entry`; `import_screening_entry.py::import_screening_entry`",
+   "statement": "The import JSON is read twice: parsed from one read, pinned in `inputs` from another"
+  },
+  {
+   "row": 53,
+   "reader_ids": [
+    "L08-C7"
+   ],
+   "lots": [
+    "L08"
+   ],
+   "class": "3",
+   "package": "P3",
+   "mapping": "extends B-F07 and B-F06 (through Wave 1 row 34)",
+   "proposed_id": null,
+   "pattern": "iv",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "`import_extraction_entry.py` module docstring; `import_extraction_entry`",
+   "statement": "The \"imported\" mark of a parsed-text ref is recorded and read by nothing"
+  },
+  {
+   "row": 54,
+   "reader_ids": [
+    "L09a-C6"
+   ],
+   "lots": [
+    "L09a"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-37**",
+   "proposed_id": "INT-j12-37",
+   "pattern": "iv / i / iii",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "`ft_screening_adjudicator.py::_apply_ft_decisions`, `_import_ft_json`",
+   "statement": "FT import: three small gaps against its own docstring (hash by second read; manifest written for an unknown paper; close after commit)"
+  },
+  {
+   "row": 55,
+   "reader_ids": [
+    "L09a-C9"
+   ],
+   "lots": [
+    "L09a"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-38**",
+   "proposed_id": "INT-j12-38",
+   "pattern": "iv",
+   "evidence": "reproduced (abstract); code order (FT)",
+   "rederived": "N",
+   "file_function": "`_apply_abstract_decisions`; `_apply_ft_decisions`; `export_adjudication_queue`",
+   "statement": "any later import, including an empty file, re-stamps the adjudication stage"
+  },
+  {
+   "row": 56,
+   "reader_ids": [
+    "L09a-C10"
+   ],
+   "lots": [
+    "L09a"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-39**",
+   "proposed_id": "INT-j12-39",
+   "pattern": "other",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "`screening_adjudicator.py`, module level",
+   "statement": "dead module constant naming one review"
+  },
+  {
+   "row": 57,
+   "reader_ids": [
+    "L09a-C11"
+   ],
+   "lots": [
+    "L09a"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-40**",
+   "proposed_id": "INT-j12-40",
+   "pattern": "i",
+   "evidence": "reproduced",
+   "rederived": "N",
+   "file_function": "`ft_screening_adjudicator.py::_write_ft_xlsx`, `_build_ft_reference_content`, `export_ft_adjudication_queue`",
+   "statement": "FT export: the default call fails with AttributeError, and the Instructions sheet prints an import command that cannot run"
+  },
+  {
+   "row": 58,
+   "reader_ids": [
+    "L09a-C12"
+   ],
+   "lots": [
+    "L09a"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-41**",
+   "proposed_id": "INT-j12-41",
+   "pattern": "i",
+   "evidence": "reproduced",
+   "rederived": "N",
+   "file_function": "`categorizer.py::categorize_paper`, `_matches_category`, `CategoryConfig.load`",
+   "statement": "categorizer: regex mode is matched against lowercased text, and a category with regexes ignores its keywords"
+  },
+  {
+   "row": 59,
+   "reader_ids": [
+    "L10-C12",
+    "L09a-C13"
+   ],
+   "lots": [
+    "L09a",
+    "L10"
+   ],
+   "class": "3",
+   "package": "P2, with INT-i12-74 (the categorizer half was proposed P7)",
+   "mapping": "extends INT-i12-74",
+   "proposed_id": null,
+   "pattern": "other / ii",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "`engine/acquisition/pdf_quality_check.py` — module constant; `run_quality_check` // `categorizer.py` module level, `config_path_for_review`, `load_config`",
+   "statement": "`pdf_quality_check` declares a private `DATA_ROOT = Path(\"data\")` (W1 adjacent item 12) // categorizer's private cwd-relative `DATA_ROOT` (W1 adjacent item 12, this lot's half) — verified"
+  },
+  {
+   "row": 60,
+   "reader_ids": [
+    "L09a-C14"
+   ],
+   "lots": [
+    "L09a"
+   ],
+   "class": "3",
+   "package": "P7 (or P2)",
+   "mapping": "new — **INT-j12-42**",
+   "proposed_id": "INT-j12-42",
+   "pattern": "iv",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "`engine/adjudication/ft_screening_adjudicator.py::_collect_ft_flagged`",
+   "statement": "`_collect_ft_flagged` reads the excerpt outside the resolver (W1 adjacent item 10) — verified"
+  },
+  {
+   "row": 61,
+   "reader_ids": [
+    "L09b-C7"
+   ],
+   "lots": [
+    "L09b"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-43**",
+   "proposed_id": "INT-j12-43",
+   "pattern": "ii",
+   "evidence": "reproduced (the no-row case)",
+   "rederived": "N",
+   "file_function": "`ft_adjudication_html.py`, `_query_ft_flagged` and the card template",
+   "statement": "the FT page does not say why a paper is flagged; an engine fault and a model disagreement look alike"
+  },
+  {
+   "row": 62,
+   "reader_ids": [
+    "L09b-C10"
+   ],
+   "lots": [
+    "L09b"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-44**",
+   "proposed_id": "INT-j12-44",
+   "pattern": "i",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "both",
+   "statement": "Class 3 batch for the two files"
+  },
+  {
+   "row": 63,
+   "reader_ids": [
+    "L10-C13"
+   ],
+   "lots": [
+    "L10"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-45**",
+   "proposed_id": "INT-j12-45",
+   "pattern": "i / other",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "batch across the lot's files",
+   "statement": "Class 3 batch"
+  },
+  {
+   "row": 64,
+   "reader_ids": [
+    "L11-C5"
+   ],
+   "lots": [
+    "L11"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-46**",
+   "proposed_id": "INT-j12-46",
+   "pattern": "ii",
+   "evidence": "reproduced",
+   "rederived": "N",
+   "file_function": "`engine/utils/ollama_preflight.py::_get_ollama_env`, `check_ollama_env`",
+   "statement": "A failed `systemctl` read is reported as three variables \"not set\", with the remediation for drift"
+  },
+  {
+   "row": 65,
+   "reader_ids": [
+    "L11-C6"
+   ],
+   "lots": [
+    "L11"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-47**",
+   "proposed_id": "INT-j12-47",
+   "pattern": "other",
+   "evidence": "reproduced (the status); code order",
+   "rederived": "N",
+   "file_function": "`engine/utils/background.py::maybe_background`",
+   "statement": "(W1 adjacent item 14) No `pipefail`, and more to the point no exit status of a backgrounded run is recorded anywhere"
+  },
+  {
+   "row": 66,
+   "reader_ids": [
+    "L11-C7"
+   ],
+   "lots": [
+    "L11"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-48**",
+   "proposed_id": "INT-j12-48",
+   "pattern": "i",
+   "evidence": "reproduced",
+   "rederived": "N",
+   "file_function": "`engine/utils/ollama_preflight.py` — `check_model`, `preflight_check`, `require_preflight`, `main` (`--timeout`)",
+   "statement": "`timeout` is accepted by four signatures and the CLI and reaches nothing"
+  },
+  {
+   "row": 67,
+   "reader_ids": [
+    "L11-C8"
+   ],
+   "lots": [
+    "L11"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-49**",
+   "proposed_id": "INT-j12-49",
+   "pattern": "i",
+   "evidence": "reproduced",
+   "rederived": "N",
+   "file_function": "`engine/utils/ollama_preflight.py` — `_get_model_vram_gb`, `_model_name_matches`, `main`",
+   "statement": "VRAM attribution matches on the model family name; the CLI skips the env check its docstring claims"
+  },
+  {
+   "row": 68,
+   "reader_ids": [
+    "L11-C10"
+   ],
+   "lots": [
+    "L11"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-50**",
+   "proposed_id": "INT-j12-50",
+   "pattern": "i",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "`engine/utils/progress.py::ProgressReporter.summary`",
+   "statement": "Summary wording: \"COMPLETE\" and \"Total papers\" describe papers reported, not the run"
+  },
+  {
+   "row": 69,
+   "reader_ids": [
+    "L12-C9"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-51**",
+   "proposed_id": "INT-j12-51",
+   "pattern": "i",
+   "evidence": "reproduced",
+   "rederived": "N",
+   "file_function": "`CloudExtractorBase.store_result` (calls `enforce_completeness`, never `drop_unexpected`)",
+   "statement": "An unexpected field is logged \"dropped (R118)\" and then stored"
+  },
+  {
+   "row": 70,
+   "reader_ids": [
+    "L12-C10"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-52**",
+   "proposed_id": "INT-j12-52",
+   "pattern": "i",
+   "evidence": "reproduced",
+   "rederived": "N",
+   "file_function": "`CloudExtractorBase.extract_with_completeness` (`outcome=\"stored\" if check.complete else …`), then `store_result` → `enforce_completeness` raising `DuplicateFieldError`, caught by `run`'s `except Exception` around `store_result`",
+   "statement": "Telemetry records `stored` before the store, and a duplicated field fails the paper with no retry"
+  },
+  {
+   "row": 71,
+   "reader_ids": [
+    "L12-C11"
+   ],
+   "lots": [
+    "L12"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-53**",
+   "proposed_id": "INT-j12-53",
+   "pattern": "iv",
+   "evidence": "code order (the pinned SDK types read offline)",
+   "rederived": "N",
+   "file_function": "`AnthropicExtractor.extract_paper` (`if hasattr(usage, \"thinking_tokens\")`), `OpenAIExtractor.extract_paper` (`getattr(…message, \"reasoning_content\", None)`)",
+   "statement": "Reasoning fields read attributes the pinned SDK types do not have"
+  },
+  {
+   "row": 72,
+   "reader_ids": [
+    "L13-C3"
+   ],
+   "lots": [
+    "L13"
+   ],
+   "class": "3",
+   "package": "P5",
+   "mapping": "extends B-F09 (the per-artifact half)",
+   "proposed_id": null,
+   "pattern": "iv",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "`engine/exporters/docx_export.py` · `export_evidence_docx`",
+   "statement": "The DOCX table carries no paper identifier and does not say which arm, run or database it shows"
+  },
+  {
+   "row": 73,
+   "reader_ids": [
+    "L13-C6"
+   ],
+   "lots": [
+    "L13"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-54**",
+   "proposed_id": "INT-j12-54",
+   "pattern": "i",
+   "evidence": "reproduced (the saved XML)",
+   "rederived": "N",
+   "file_function": "`engine/exporters/review_workbook.py` · `_build_review_queue_sheet`",
+   "statement": "The decision dropdown's validation is not enforced: error and prompt messages are set but never switched on"
+  },
+  {
+   "row": 74,
+   "reader_ids": [
+    "L13-C7"
+   ],
+   "lots": [
+    "L13"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-55**",
+   "proposed_id": "INT-j12-55",
+   "pattern": "i / other",
+   "evidence": "reproduced (a, d, e); code order (the rest)",
+   "rederived": "N",
+   "file_function": "as listed per item",
+   "statement": "Class 3 batch (both files)"
+  },
+  {
+   "row": 75,
+   "reader_ids": [
+    "L14-C6"
+   ],
+   "lots": [
+    "L14"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-56**",
+   "proposed_id": "INT-j12-56",
+   "pattern": "i",
+   "evidence": "reproduced (the behaviour); attribution by formula",
+   "rederived": "N",
+   "file_function": "`engine/analysis/metrics.py::cohens_kappa`",
+   "statement": "the CI is not the Fleiss (1981) SE the code and CLAUDE.md name"
+  },
+  {
+   "row": 76,
+   "reader_ids": [
+    "L14-C7"
+   ],
+   "lots": [
+    "L14"
+   ],
+   "class": "3",
+   "package": "P7",
+   "mapping": "new — **INT-j12-57**",
+   "proposed_id": "INT-j12-57",
+   "pattern": "i / v",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "`engine/analysis/report.py::_write_summary_csv`, `_write_html`, `print_summary`, `_short_arm`; `engine/analysis/concordance.py::_print_report`",
+   "statement": "the report writers drop the material that explains a kappa"
+  },
+  {
+   "row": 77,
+   "reader_ids": [
+    "L14-C8"
+   ],
+   "lots": [
+    "L14"
+   ],
+   "class": "3",
+   "package": "P5 (1 if derived statistics count as provenance)",
+   "mapping": "new — **INT-j12-58**",
+   "proposed_id": "INT-j12-58",
+   "pattern": "iv",
+   "evidence": "code order",
+   "rederived": "N",
+   "file_function": "`engine/analysis/concordance.py::_save_report`, `main`; `engine/analysis/report.py::write_report`",
+   "statement": "concordance outputs record no input identity and are overwritten under fixed names"
+  }
+ ],
+ "by_class": {
+  "1": 17,
+  "1c": 15,
+  "2": 18,
+  "3": 27
+ },
+ "new_by_class": {
+  "1": 12,
+  "1c": 8,
+  "2": 14,
+  "3": 24
+ }
+}

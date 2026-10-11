@@ -1,0 +1,7 @@
+[a] dataValidation element: <dataValidation sqref="E2:E3" showDropDown="0" showInputMessage="0" showErrorMessage="0" allowBlank="1" errorTitle="Invalid Decision" error="Value must be one of: A,B" promptTitle="PI_decision" prompt="Select: A,B" type="list">
+[b] truncate=20 cell: 'xxxxxxxxxxxxxxxxxxxx' (no marker)
+[c] 40000-char value stored length: 32767
+[d] row with empty title, as reloaded: [8, None, None, None, None, None]
+[e] Instructions 'Total rows' cell vs real rows: ['999'] real 2
+[f] zero rows -> TypeError expected <class 'openpyxl.worksheet.cell_range.MultiCellRange'> | file written: False
+[g] docstring usage example -> AttributeError 'dict' object has no attribute 'key'

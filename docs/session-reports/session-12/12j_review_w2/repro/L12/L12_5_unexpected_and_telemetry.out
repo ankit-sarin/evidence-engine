@@ -1,0 +1,4 @@
+LOG WARNING Paper 1 (syn_arm): unexpected field(s) ['invented_field'] dropped (R118) — 3/2 fields, unexpected=['invented_field']
+(a) stored fields: ['a', 'b', 'invented_field']
+(b) store_result raised: DuplicateFieldError
+(b) telemetry outcomes: ['stored'] | cloud_extractions rows: 1

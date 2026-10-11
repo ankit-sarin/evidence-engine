@@ -1,0 +1,3 @@
+field: study_type | cloud_evidence_spans: 1 distinct value over 12 rows | field_events for arm: 0
+cloud gate: skipped=False collapsed=0 | study_type total_non_null=0 status=OK
+control (same values in the event store): DistributionCollapseError raised

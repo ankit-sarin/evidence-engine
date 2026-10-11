@@ -1,0 +1,7 @@
+== (a)
+  raised: IntegrityError FOREIGN KEY constraint failed | in_transaction: True
+  seen by a second connection: [(1, 'ABSTRACT_SCREENED_OUT'), (2, 'ABSTRACT_SCREEN_FLAGGED')] [(1, 'EXCLUDE')]
+== (b)
+  regex 'CNN' on title 'A CNN for tools'      -> ambiguous
+  regex 'cnn' on the same title               -> c
+  regex 'zzz' + title_keywords ['cnn']        -> ambiguous

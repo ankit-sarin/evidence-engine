@@ -1,0 +1,7 @@
+parent stdout tail: ['Launched in background tmux session: ee_ft_screening_20261011_000411', 'Log: data/synthetic/logs/ee_ft_screening_20261011_000411.log', 'Reconnect: tmux attach -t ee_ft_screening_20261011_000411', '{"argv": ["tmux", "new-session", "-d", "-s", "ee_ft_screening_20261011_000411", "bash", "-c", "/home/ankitsarin/projects/evidence-engine/.venv/bin/python /home/ankitsarin/scratch/12j-w2/repro/L11/fakepkg/runner.py --review synthetic 2>&1 | tee data/synthetic/logs/ee_ft_screening_20261011_000411.log"], "exit": 0}']
+parent exit code as maybe_background set it: 0
+tmux bash -c string: /home/ankitsarin/projects/evidence-engine/.venv/bin/python /home/ankitsarin/scratch/12j-w2/repro/L11/fakepkg/runner.py --review synthetic 2>&1 | tee data/synthetic/logs/ee_ft_screening_20261011_000411.log
+relaunch rc: 1
+relaunch stderr last line: ModuleNotFoundError: No module named 'fakepkg'
+relaunch stdout: 
+with `| tee`: pipeline_rc=0

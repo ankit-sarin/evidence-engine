@@ -1,0 +1,6 @@
+no_value_key   value='NR'                         snippet=''
+list_value     value="['RCT', 'Cohort']"          snippet='q'
+bool_value     value='True'                       snippet='q'
+dict_value     value="{'n': 40}"                  snippet='q'
+explicit_null  value='NR'                         snippet=''
+anthropic: [('empty_string', None, 'empty_string_to_null'), ('json_null', 'NR', None)]

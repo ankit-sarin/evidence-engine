@@ -1,0 +1,80 @@
+INFO:engine.migrations.004_pdf_quality_check: Migration 004 complete: 0 columns added, 6 skipped, 0 PDF_EXCLUDED papers
+INFO:engine.migrations.runner: migration 004_pdf_quality_check executed
+INFO:engine.migrations.005_model_digest: Migration 005 complete: 0 columns added, 2 skipped
+INFO:engine.migrations.runner: migration 005_model_digest executed
+INFO:engine.migrations.006_not_null_confidence_tier: evidence_spans already has tier column — skipping migration
+INFO:engine.migrations.runner: migration 006_not_null_confidence_tier executed
+INFO:engine.migrations.007_add_judge_tables: Migration 007 complete: 4 tables created, 8 indexes created
+INFO:engine.migrations.runner: migration 007_add_judge_tables executed
+INFO:engine.migrations.008_add_fabrication_verifications: Migration 008 complete: 1 tables created, 4 indexes created
+INFO:engine.migrations.runner: migration 008_add_fabrication_verifications executed
+INFO:engine.migrations.009_add_backfill_audit_log: Migration 009 complete: 1 tables created, 2 indexes created
+INFO:engine.migrations.runner: migration 009_add_backfill_audit_log executed
+INFO:engine.migrations.010_add_provenance_classifications: Migration 010 complete: 2 tables created, 5 indexes created
+INFO:engine.migrations.runner: migration 010_add_provenance_classifications executed
+INFO:engine.migrations.011_add_absence_claim_class: Migration 011 complete: 2 columns added, 0 rows preserved
+INFO:engine.migrations.runner: migration 011_add_absence_claim_class executed
+INFO:engine.migrations.012_codebook_provenance: Migration 012 added: extractions.codebook_hash, extractions.codebook_sha256, review_runs.codebook_hash, review_runs.codebook_sha256
+INFO:engine.migrations.runner: migration 012_codebook_provenance executed
+INFO:engine.migrations.013_drop_schema_hash_not_null: Migration 013 lifted NOT NULL on: extractions.extraction_schema_hash, review_runs.extraction_hash
+INFO:engine.migrations.runner: migration 013_drop_schema_hash_not_null executed
+INFO:engine.migrations.runner: migration 014_cloud_tables executed
+INFO:engine.migrations.runner: migration 015_drop_prerename_adjudication_indices executed
+INFO:engine.migrations.runner: migration 016_event_store executed
+INFO:engine.migrations.runner: migration 018_cloud_shape_and_audit_adjudication executed
+INFO:engine.migrations.runner: migration 019_paper_state_axes executed
+INFO:engine.migrations.runner: migration 020_run_manifest executed
+INFO:engine.migrations.runner: migration 021_parsed_text_sha256 executed
+INFO:engine.migrations.runner: migration 022_run_kinds_and_audit_tables executed
+INFO:engine.core.database: Migrations executed: 004_pdf_quality_check, 005_model_digest, 006_not_null_confidence_tier, 007_add_judge_tables, 008_add_fabrication_verifications, 009_add_backfill_audit_log, 010_add_provenance_classifications, 011_add_absence_claim_class, 012_codebook_provenance, 013_drop_schema_hash_not_null, 014_cloud_tables, 015_drop_prerename_adjudication_indices, 016_event_store, 018_cloud_shape_and_audit_adjudication, 019_paper_state_axes, 020_run_manifest, 021_parsed_text_sha256, 022_run_kinds_and_audit_tables
+INFO:engine.core.database: Added 1/1 papers (duplicates skipped)
+INFO:engine.core.database: Added 1/1 papers (duplicates skipped)
+INFO:engine.core.database: Added 1/1 papers (duplicates skipped)
+INFO:engine.acquisition.pdf_quality_check: Using model=qwen2.5vl:7b, dpi=150, timeout=120s
+INFO:engine.acquisition.pdf_quality_check: Found 3 papers to check
+INFO:engine.acquisition.pdf_quality_check: [1/3] id=1: 1.pdf
+INFO:engine.acquisition.pdf_quality_check:   → language=German  content_type=full_manuscript  confidence=0.90  note=x
+INFO:engine.acquisition.pdf_quality_check: [2/3] id=2: 2.pdf
+ERROR:engine.acquisition.pdf_quality_check:   id=2: FAILED — ollama not reachable
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/acquisition/pdf_quality_check.py", line 217, in run_quality_check
+    result = _classify_page(img_b64, timeout=cfg.timeout, cfg=stage_cfg)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/scratch/12j-w2/repro/L10/L10_3_quality_gate.py", line 25, in fake_classify
+    if img == str(B): raise TimeoutError("ollama not reachable")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: ollama not reachable
+INFO:engine.acquisition.pdf_quality_check: [3/3] id=3: 3.pdf
+INFO:engine.acquisition.pdf_quality_check:   → language=German  content_type=full_manuscript  confidence=0.90  note=x
+INFO:engine.acquisition.pdf_quality_html: Wrote quality review HTML: q1.html
+INFO:engine.acquisition.pdf_quality_import:   PROCEED pid=1 → HUMAN_CONFIRMED
+INFO:engine.acquisition.pdf_quality_import:   EXCLUDE pid=3 reason=NON_ENGLISH
+INFO:engine.acquisition.pdf_quality_import: PDF acquisition finalized (complete=true)
+INFO:engine.acquisition.pdf_quality_check: Using model=qwen2.5vl:7b, dpi=150, timeout=120s
+INFO:engine.acquisition.pdf_quality_check: Found 2 papers to check
+INFO:engine.acquisition.pdf_quality_check: [1/2] id=1: 1.pdf
+INFO:engine.acquisition.pdf_quality_check:   → language=German  content_type=full_manuscript  confidence=0.90  note=x
+INFO:engine.acquisition.pdf_quality_check: [2/2] id=2: 2.pdf
+ERROR:engine.acquisition.pdf_quality_check:   id=2: FAILED — ollama not reachable
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/acquisition/pdf_quality_check.py", line 217, in run_quality_check
+    result = _classify_page(img_b64, timeout=cfg.timeout, cfg=stage_cfg)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/scratch/12j-w2/repro/L10/L10_3_quality_gate.py", line 25, in fake_classify
+    if img == str(B): raise TimeoutError("ollama not reachable")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: ollama not reachable
+INFO:engine.acquisition.pdf_quality_html: Wrote quality review HTML: q2.html
+run 1: {'total': 3, 'checked': 2, 'failed': 1}
+[(1, 'ABSTRACT_SCREENED_IN', 'AI_CHECKED', 'German'), (2, 'ABSTRACT_SCREENED_IN', None, None), (3, 'ABSTRACT_SCREENED_IN', 'AI_CHECKED', 'German')]
+page 1 sections: {'section1': 0, 'section2': 2, 'section3': 0, 'finalized_confirmed': 0, 'finalized_excluded': 0, 'total': 2}
+paper B (failed check) has a row on the page: False
+first-author cell: [&quot;Smith J&quot;</td>
+  
+import 1 (other review's draft): {'proceeded': 1, 'excluded': 1, 'exclude_breakdown': {'NON_ENGLISH': 1}, 'will_attempt': 0, 'skipped_unset': 0, 'skipped_already': 0, 'is_complete': False}
+[(1, 'ABSTRACT_SCREENED_IN', 'HUMAN_CONFIRMED', 'German'), (2, 'ABSTRACT_SCREENED_IN', None, None), (3, 'PDF_EXCLUDED', 'AI_CHECKED', 'German')]
+import 2 (final, C revised to PROCEED): {'proceeded': 0, 'excluded': 0, 'exclude_breakdown': {}, 'will_attempt': 0, 'skipped_unset': 0, 'skipped_already': 1, 'is_complete': True}
+[(1, 'ABSTRACT_SCREENED_IN', 'HUMAN_CONFIRMED', 'German'), (2, 'ABSTRACT_SCREENED_IN', None, None), (3, 'PDF_EXCLUDED', 'AI_CHECKED', 'German')]
+run 2: {'total': 2, 'checked': 1, 'failed': 1} classified: ['1', '2']
+[(1, 'ABSTRACT_SCREENED_IN', 'AI_CHECKED', 'German'), (2, 'ABSTRACT_SCREENED_IN', None, None), (3, 'PDF_EXCLUDED', 'AI_CHECKED', 'German')]
+page 2 sections: {'section1': 0, 'section2': 1, 'section3': 0, 'finalized_confirmed': 0, 'finalized_excluded': 1, 'total': 2}

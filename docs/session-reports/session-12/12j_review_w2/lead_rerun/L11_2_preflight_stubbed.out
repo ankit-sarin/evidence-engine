@@ -1,0 +1,12 @@
+Could not read Ollama service environment: Command 'systemctl' timed out after 10 seconds
+Ollama performance env drift:  OLLAMA_NUM_PARALLEL: expected='1', actual=<not set>
+C3 message when systemctl timed out:
+Ollama environment check failed:
+  OLLAMA_FLASH_ATTENTION: expected='true', actual=<not set>
+  OLLAMA_MAX_LOADED_MODELS: expected='1', actual=<not set>
+  OLLAMA_KV_CACHE_TYPE: expected='f16', actual=<not set>
+Fix the Ollama systemd override and restart the service.
+C4 timeout=5 -> {'wall_timeout': 60.0, 'max_retries': 0}
+C4 timeout=600 -> {'wall_timeout': 60.0, 'max_retries': 0}
+C5 _get_model_vram_gb('qwen3:8b') with only qwen3.5:27b loaded -> 20.0
+C5 _model_name_matches('qwen3:32b','qwen3:8b') -> True

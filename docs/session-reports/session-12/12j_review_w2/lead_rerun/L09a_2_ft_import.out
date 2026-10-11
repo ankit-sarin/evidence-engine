@@ -1,0 +1,17 @@
+== (a) header 'DECISION' (no 'PI_decision'): human wrote FT_SCREENED_OUT x3
+  printed: IMPORT SUCCESSFUL — 3 decisions processed.
+  stats: {'ft_eligible': 3, 'ft_screened_out': 0, 'missing': 0, 'invalid': 0, 'total': 3}
+  statuses: {1: 'FT_ELIGIBLE', 2: 'FT_ELIGIBLE', 3: 'FT_ELIGIBLE'}
+  events: [(1, 'adjudicated', 'eligible'), (2, 'adjudicated', 'eligible'), (3, 'adjudicated', 'eligible')]
+== (b) row: Paper ID 2, Title 'Paper 1', EE-ID 'EE-001'
+  printed: IMPORT SUCCESSFUL — 1 decisions processed.
+  statuses: {1: 'FT_FLAGGED', 3: 'FT_FLAGGED', 2: 'FT_SCREENED_OUT'}
+  adjudication rows: [(2, 'Paper 1', 'FT_SCREENED_OUT')]
+== (c) the command the Instructions sheet prints: import_ft_adjudication_decisions(db, path)
+  TypeError: import_ft_adjudication_decisions() missing 1 required keyword-only argument: 'spec'
+== (d) export_ft_adjudication_queue(db, out) with the default review_spec=None
+  AttributeError: 'NoneType' object has no attribute 'eligibility'
+== (e) three flagged; row 2's Title cell emptied, its Paper ID and decision intact
+  printed: IMPORT SUCCESSFUL — 2 decisions processed.
+  stats: {'ft_eligible': 2, 'ft_screened_out': 0, 'missing': 0, 'invalid': 0, 'total': 2} warnings: []
+  statuses: {1: 'FT_ELIGIBLE', 3: 'FT_ELIGIBLE', 2: 'FT_FLAGGED'}

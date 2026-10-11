@@ -1,0 +1,19 @@
+[a] expression present in source: True
+     ['Smith JA', 'Jones B'] -> 'JA et al.'
+     ['John A. Smith', 'B Jones'] -> 'Smith et al.'
+     ['van der Berg P', 'X Y'] -> 'P et al.'
+     ['Smith JA'] -> 'Smith JA'
+     ['', 'Jones B'] -> IndexError list index out of range
+     [' ', 'Jones B'] -> IndexError list index out of range
+[b] cell.text 'ok\x0cvalue' -> ValueError All strings must be XML compatible: Unicode or ASCII, no NULL bytes or
+[b] cell.text 'ok\x0bvalue' -> ValueError All strings must be XML compatible: Unicode or ASCII, no NULL bytes or
+[b] cell.text 'ok\x00' -> ValueError All strings must be XML compatible: Unicode or ASCII, no NULL bytes or
+[b] cell.text 'a\tb\nc' -> ok
+[c] _cell_text keys vs effective constants:
+     DECLINED 'declined' -> '[declined]'
+     CONTRACT_UNMET 'contract unmet' -> '[contract unmet]'
+     UNRESOLVED_REREVIEW 'unresolved (needs re-review)' -> '[unresolved]'
+     UNRESOLVED_DUPLICATE 'unresolved (duplicate values)' -> '[unresolved: duplicate]'
+     WITHDRAWN 'withdrawn' -> ''
+     MISSING 'missing' -> ''
+     OUT_OF_SCOPE 'out of scope' -> ''

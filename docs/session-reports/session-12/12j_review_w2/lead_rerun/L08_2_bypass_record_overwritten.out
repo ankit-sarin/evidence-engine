@@ -1,0 +1,8 @@
+AUDIT: Stage ABSTRACT_ADJUDICATION_COMPLETE bypassed by operator at 2026-10-11T00:07:11.673133+00:00. Note: skip the human review
+AUDIT: Stage FULL_TEXT_ADJUDICATION_COMPLETE bypassed by operator at 2026-10-11T00:07:11.673498+00:00. Note: forced
+advance_stage(force=True): Stage ABSTRACT_ADJUDICATION_COMPLETE bypassed with --force. Logged to audit trail.
+  row: ('bypassed', 'Stage ABSTRACT_ADJUDICATION_COMPLETE bypassed by operator at 2026-10-11T00:07:11.673133+00:00. Note: skip the human review')
+after a later complete_stage: ('complete', 'import complete')
+  rows anywhere still saying 'bypassed': 0
+bypassed ('bypassed', 'Stage FULL_TEXT_ADJUDICATION_COMPLETE bypassed by operator at 2026-10-11T00:07:11.673498+00:00. Note: forced')
+after reset_stage: ('pending', None, None)

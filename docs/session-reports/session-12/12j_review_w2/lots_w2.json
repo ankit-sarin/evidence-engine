@@ -1,0 +1,457 @@
+{
+ "lots": [
+  {
+   "lot": "L08",
+   "from_lot": "L08",
+   "title": "Workflow, adjudication schema and the two entry importers",
+   "units": [
+    {
+     "unit": "engine/adjudication/__init__.py",
+     "in_scope_lines": 43,
+     "lines_on_disk_now": 43,
+     "F": null,
+     "run7": "top",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/adjudication/import_extraction_entry.py",
+     "in_scope_lines": 333,
+     "lines_on_disk_now": 333,
+     "F": null,
+     "run7": "-",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/adjudication/import_screening_entry.py",
+     "in_scope_lines": 189,
+     "lines_on_disk_now": 189,
+     "F": null,
+     "run7": "-",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/adjudication/schema.py",
+     "in_scope_lines": 78,
+     "lines_on_disk_now": 78,
+     "F": null,
+     "run7": "top",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/adjudication/workflow.py",
+     "in_scope_lines": 380,
+     "lines_on_disk_now": 380,
+     "F": null,
+     "run7": "top",
+     "grade_A": "C",
+     "grade_B": "N",
+     "also_in_wave1": false
+    }
+   ],
+   "extra": [],
+   "lines": 1023,
+   "n_units": 5
+  },
+  {
+   "lot": "L09a",
+   "from_lot": "L09",
+   "title": "Human screening adjudication: the two adjudicators and the categorizer",
+   "units": [
+    {
+     "unit": "engine/adjudication/categorizer.py",
+     "in_scope_lines": 259,
+     "lines_on_disk_now": 259,
+     "F": null,
+     "run7": "top",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/adjudication/ft_screening_adjudicator.py",
+     "in_scope_lines": 753,
+     "lines_on_disk_now": 753,
+     "F": null,
+     "run7": "top",
+     "grade_A": "C",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/adjudication/screening_adjudicator.py",
+     "in_scope_lines": 899,
+     "lines_on_disk_now": 899,
+     "F": null,
+     "run7": "top",
+     "grade_A": "C",
+     "grade_B": "C",
+     "also_in_wave1": false
+    }
+   ],
+   "extra": [],
+   "lines": 1911,
+   "n_units": 3
+  },
+  {
+   "lot": "L09b",
+   "from_lot": "L09",
+   "title": "Human screening adjudication: the two HTML generators",
+   "units": [
+    {
+     "unit": "engine/adjudication/abstract_adjudication_html.py",
+     "in_scope_lines": 708,
+     "lines_on_disk_now": 708,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/adjudication/ft_adjudication_html.py",
+     "in_scope_lines": 533,
+     "lines_on_disk_now": 533,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    }
+   ],
+   "extra": [],
+   "lines": 1241,
+   "n_units": 2
+  },
+  {
+   "lot": "L10",
+   "from_lot": "L10",
+   "title": "Front half remainder: PubMed client, search models, acquisition except download.py",
+   "units": [
+    {
+     "unit": "engine/acquisition/__init__.py",
+     "in_scope_lines": 29,
+     "lines_on_disk_now": 29,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/acquisition/check_oa.py",
+     "in_scope_lines": 197,
+     "lines_on_disk_now": 197,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/acquisition/manual_list.py",
+     "in_scope_lines": 448,
+     "lines_on_disk_now": 448,
+     "F": null,
+     "run7": "-",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/acquisition/pdf_quality_check.py",
+     "in_scope_lines": 326,
+     "lines_on_disk_now": 326,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/acquisition/pdf_quality_html.py",
+     "in_scope_lines": 750,
+     "lines_on_disk_now": 750,
+     "F": null,
+     "run7": "-",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/acquisition/pdf_quality_import.py",
+     "in_scope_lines": 316,
+     "lines_on_disk_now": 316,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/acquisition/verify_downloads.py",
+     "in_scope_lines": 379,
+     "lines_on_disk_now": 379,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/search/models.py",
+     "in_scope_lines": 19,
+     "lines_on_disk_now": 19,
+     "F": null,
+     "run7": "top",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/search/pubmed.py",
+     "in_scope_lines": 180,
+     "lines_on_disk_now": 180,
+     "F": null,
+     "run7": "top",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    }
+   ],
+   "extra": [],
+   "lines": 2644,
+   "n_units": 9
+  },
+  {
+   "lot": "L11",
+   "from_lot": "L11",
+   "title": "Local-model utilities and run support: preflight, tmux background, progress",
+   "units": [
+    {
+     "unit": "engine/utils/background.py",
+     "in_scope_lines": 66,
+     "lines_on_disk_now": 66,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/utils/ollama_preflight.py",
+     "in_scope_lines": 303,
+     "lines_on_disk_now": 303,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "C",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/utils/progress.py",
+     "in_scope_lines": 96,
+     "lines_on_disk_now": 96,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    }
+   ],
+   "extra": [],
+   "lines": 465,
+   "n_units": 3
+  },
+  {
+   "lot": "L12",
+   "from_lot": "L12",
+   "title": "Cloud arms (R71: no cloud extraction yet)",
+   "units": [
+    {
+     "unit": "engine/cloud/anthropic_extractor.py",
+     "in_scope_lines": 260,
+     "lines_on_disk_now": 260,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/cloud/base.py",
+     "in_scope_lines": 517,
+     "lines_on_disk_now": 517,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/cloud/openai_extractor.py",
+     "in_scope_lines": 232,
+     "lines_on_disk_now": 232,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/cloud/schema.py",
+     "in_scope_lines": 96,
+     "lines_on_disk_now": 96,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "N",
+     "grade_B": "C",
+     "also_in_wave1": false
+    }
+   ],
+   "extra": [],
+   "lines": 1105,
+   "n_units": 4
+  },
+  {
+   "lot": "L13",
+   "from_lot": "L13",
+   "title": "Export remainder: DOCX and the shared review workbook",
+   "units": [
+    {
+     "unit": "engine/exporters/docx_export.py",
+     "in_scope_lines": 194,
+     "lines_on_disk_now": 194,
+     "F": null,
+     "run7": "top",
+     "grade_A": "C",
+     "grade_B": "C",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/exporters/review_workbook.py",
+     "in_scope_lines": 374,
+     "lines_on_disk_now": 374,
+     "F": null,
+     "run7": "lazy",
+     "grade_A": "C",
+     "grade_B": "C",
+     "also_in_wave1": false
+    }
+   ],
+   "extra": [],
+   "lines": 568,
+   "n_units": 2
+  },
+  {
+   "lot": "L14",
+   "from_lot": "L14",
+   "title": "Concordance: engine/analysis",
+   "units": [
+    {
+     "unit": "engine/analysis/__init__.py",
+     "in_scope_lines": 0,
+     "lines_on_disk_now": 0,
+     "F": null,
+     "run7": "-",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/analysis/concordance.py",
+     "in_scope_lines": 399,
+     "lines_on_disk_now": 399,
+     "F": null,
+     "run7": "-",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/analysis/metrics.py",
+     "in_scope_lines": 233,
+     "lines_on_disk_now": 233,
+     "F": null,
+     "run7": "-",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/analysis/normalize.py",
+     "in_scope_lines": 181,
+     "lines_on_disk_now": 181,
+     "F": null,
+     "run7": "-",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/analysis/report.py",
+     "in_scope_lines": 359,
+     "lines_on_disk_now": 359,
+     "F": null,
+     "run7": "-",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    },
+    {
+     "unit": "engine/analysis/scoring.py",
+     "in_scope_lines": 259,
+     "lines_on_disk_now": 259,
+     "F": null,
+     "run7": "-",
+     "grade_A": "N",
+     "grade_B": "N",
+     "also_in_wave1": false
+    }
+   ],
+   "extra": [],
+   "lines": 1431,
+   "n_units": 6
+  }
+ ],
+ "totals": {
+  "readers": 8,
+  "units": 34,
+  "lines": 10388,
+  "units_also_in_wave1": [],
+  "line_count_changed_since_census": []
+ },
+ "census_columns": [
+  "unit",
+  "package",
+  "lines",
+  "RUN7",
+  "RUN7_hops",
+  "FT",
+  "MIG",
+  "OTHER_n",
+  "imported_by_n"
+ ],
+ "coverage_columns": [
+  "unit",
+  "lines",
+  "RUN7",
+  "FT",
+  "MIG",
+  "A",
+  "A_mark",
+  "B",
+  "B_mark",
+  "either",
+  "12F",
+  "A_cite",
+  "B_cite"
+ ]
+}

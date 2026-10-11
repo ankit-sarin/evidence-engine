@@ -1,0 +1,13 @@
+ABSTRACT page, paper 7 (pass1 include / pass2 exclude):
+  pass-1 rationale on card : True
+  pass-2 rationale on card : False
+  word 'exclude' on card   : False
+  decisive tail of abstract: False | anywhere in file: False
+  ee_identifier EE-900     : False | id shown: #7
+FT page, paper 8 (FT_FLAGGED, no decision row):
+  panel text               : class="panels"> Primary: — Decision: — Reason: — — Verifier: — Decision: — — 
+  decisive tail of abstract: False
+  any path/link to PDF or parsed text: False
+exported record shape (abstract): ['paper_id:', 'pid,', 'decision:', 'dec', '===', '"INCLUDE"', '?', '"ABSTRACT_SCREENED_IN"', ':', '"ABSTRACT_SCREENED_OUT",', 'note:', 'note', '&&', 'note.value.trim()', '?', 'note.value.trim()', ':', 'null']
+exported record shape (ft)      : ['paper_id:', 'pid,', 'decision:', 'dec', '===', '"INCLUDE"', '?', '"FT_ELIGIBLE"', ':', '"FT_SCREENED_OUT",', 'note:', 'note', '&&', 'note.value.trim()', '?', 'note.value.trim()', ':', 'null']
+FT papers_json embedded in page : False

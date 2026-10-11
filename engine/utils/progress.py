@@ -1,8 +1,11 @@
 """Periodic progress reporting for long extraction runs."""
 
+import logging
 import statistics
 import sys
 import time
+
+logger = logging.getLogger(__name__)
 
 
 def _fmt_duration(seconds: float) -> str:
@@ -39,6 +42,23 @@ class ProgressReporter:
         self.failed = 0
         self.elapsed_list: list[float] = []
         self._wall_start = time.monotonic()
+        self._stream_dead = False
+
+    def _emit(self, text: str) -> None:
+        """Write a progress line, or stop writing once the stream is gone.
+
+        Under `--background` stderr is a pipe to `tee`; if its reader dies the
+        write raises. Progress output is bookkeeping: a dead stream is logged
+        once and the run carries on, with the counts still kept here."""
+        if self._stream_dead:
+            return
+        try:
+            print(text, file=self.file, flush=True)
+        except (OSError, ValueError) as exc:
+            self._stream_dead = True
+            logger.warning("progress output stopped: the stream is gone (%s: %s); "
+                           "the run continues and the counts are kept",
+                           type(exc).__name__, exc)
 
     def report(self, paper_id: int, status: str, elapsed_seconds: float) -> None:
         """Record one paper's completion and print a progress line.
@@ -65,7 +85,7 @@ class ProgressReporter:
             f"ETA ~{_fmt_duration(eta)} | "
             f"{self.failed} failed"
         )
-        print(line, file=self.file, flush=True)
+        self._emit(line)
 
     def summary(self) -> str:
         """Print and return a final summary block."""
@@ -92,5 +112,5 @@ class ProgressReporter:
         lines.append(f"{'=' * 60}")
 
         block = "\n".join(lines)
-        print(block, file=self.file, flush=True)
+        self._emit(block)
         return block

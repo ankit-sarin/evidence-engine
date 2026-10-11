@@ -521,7 +521,7 @@ def test_t12_every_code_the_mapping_emits_is_in_the_closed_set(spec):
              InputOverflow(model="m", chars=1, estimate_low=2.0, ceiling=1),
              InputTruncated(model="m", count=1, ceiling=1, chars=1),
              InputDropped(model="m", count=1, chars=1, floor=2.0, ceiling=3),
-             CeilingUnavailable(model="m", reason="r"), TimeoutError("t"), invalid,
+             TimeoutError("t"), invalid,
              E.MissingThinkingChannelError("m"), KeyboardInterrupt(), ValueError("v")]
     codes = set()
     for exc in cases:
@@ -540,7 +540,14 @@ def test_t12_every_code_the_mapping_emits_is_in_the_closed_set(spec):
     ki = X.outcome_for_exception(KeyboardInterrupt(), paper_id=PID, arm="a", run_id=1,
                                  stage_name="s")
     assert ki.reason_code == PS.REASON_UNCLASSIFIED_ERROR
-    assert codes == PS.EXTRACTION_REASON_CODES - {PS.REASON_RUN_INTERRUPTED}
+    # P1 unit U02 (R532): CeilingUnavailable is a run fault, re-raised and never
+    # mapped, so REASON_CONTEXT_CEILING_UNAVAILABLE stays in the closed set (it is
+    # in migration 019's CHECK) with no emitter, as REASON_RUN_INTERRUPTED does.
+    with pytest.raises(CeilingUnavailable):
+        X.outcome_for_exception(CeilingUnavailable(model="m", reason="r"), paper_id=PID,
+                                arm="a", run_id=1, stage_name="s")
+    assert codes == PS.EXTRACTION_REASON_CODES - {PS.REASON_RUN_INTERRUPTED,
+                                                  PS.REASON_CONTEXT_CEILING_UNAVAILABLE}
 
 
 def test_t12_the_reason_codes_are_spelled_only_in_the_vocabulary():

@@ -34,7 +34,8 @@ from engine.core.citation_guard import (
 from engine.core.events import mint_extraction_uid
 from engine.core.extraction_events import (  # noqa: F401 — re-exported (T7)
     CONSECUTIVE_FAILURE_ABORT, MissingThinkingChannelError, PaperFailure, RunAborted,
-    counts_toward_abort, legacy_record, outcome_for_exception, write_extraction_events,
+    counts_toward_abort, is_run_fault, legacy_record, outcome_for_exception,
+    write_extraction_events,
 )
 from engine.core.extraction_telemetry import record_call
 from engine.core.effective_config import EffectiveConfig, stage_config
@@ -402,9 +403,14 @@ def _retry_snippet(
     an invalid snippet or fails.
 
     `return_request_hash` (R224a(2)/(3)): the same opt-in as the other two
-    call sites. On the `except` path (the call itself failed) the hash is
-    `None` alongside the `None` snippet — there is no request to name if the
-    call never completed. `_validate_and_retry_snippets` sets this.
+    call sites. When the call itself failed the hash is `None` alongside the
+    `None` snippet — there is no request to name if the call never completed.
+    When the call was ANSWERED and the answer does not parse, the hash is
+    returned with the `None` snippet: a request was made and recorded, and the
+    claim's context chain must name it. `_validate_and_retry_snippets` sets this.
+
+    A run fault (`is_run_fault`) is re-raised before either conversion: a locked
+    database or an unreachable server is not a missing snippet (C56 handler 1).
     """
     try:
         result = ollama_chat(
@@ -413,15 +419,21 @@ def _retry_snippet(
             return_request_hash=return_request_hash,
             **cfg.kwargs(),
         )
-        response, req_hash = result if return_request_hash else (result, None)
-        raw = response.message.content or ""
-        data = json.loads(raw)
+    except Exception as exc:
+        if is_run_fault(exc):
+            raise
+        return (None, None) if return_request_hash else None
+    response, req_hash = result if return_request_hash else (result, None)
+    try:
+        data = json.loads(response.message.content or "")
         new_snippet = data.get("source_snippet")
         if new_snippet and _has_invalid_snippet(new_snippet):
             new_snippet = None
-        return (new_snippet, req_hash) if return_request_hash else new_snippet
-    except Exception:
-        return (None, None) if return_request_hash else None
+    except Exception as exc:
+        if is_run_fault(exc):
+            raise
+        new_snippet = None                  # answered, but not a usable JSON object
+    return (new_snippet, req_hash) if return_request_hash else new_snippet
 
 
 def _validate_and_retry_snippets(
@@ -445,10 +457,11 @@ def _validate_and_retry_snippets(
       loop, so it is also the last attempt made). A field never retried, or
       whose every retry failed, is absent from the map.
     * the ordered hashes of every retry call that completed (successfully or
-      with a still-invalid snippet — either way a request was made and
-      answered), in the order attempted, for `extract_paper`'s call chain. A
-      retry that raised before returning contributes no hash (R224a(3): the
-      hash is returned only on `ollama_chat`'s success path)."""
+      with a still-invalid snippet, or with a response that is not a JSON
+      object — either way a request was made and answered), in the order
+      attempted, for `extract_paper`'s call chain. A retry that raised before
+      returning contributes no hash (R224a(3): the hash is returned only on
+      `ollama_chat`'s success path)."""
     validated = []
     snippet_contexts: dict[str, str] = {}
     retry_chain: list[str] = []
@@ -981,8 +994,7 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
     def record_failure(pid: int, exc: BaseException, stage: str) -> None:
         """Write the paper's failure event; abort after the Nth in a row.
 
-        Run faults (an EventRefused, a record-less exhaustion, a codebook that
-        cannot support the contract) are re-raised by `outcome_for_exception`
+        Run faults (`is_run_fault`) are re-raised by `outcome_for_exception`
         and never counted: they are not the paper's outcome."""
         nonlocal consecutive_failures
         outcome = outcome_for_exception(exc, paper_id=pid, arm=arm, run_id=run_id,
@@ -1017,6 +1029,10 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
             continue
         t_paper = time.time()
 
+        # The try covers the extraction and nothing else (C56 handler 2). What
+        # follows a stored extraction — counters, progress, the log line — is
+        # bookkeeping: a failure there is not this paper's failure, so it is
+        # outside the try and stops the run as itself.
         try:
             result = extract_paper_with_completeness(
                 pid, paper_text, spec, db,
@@ -1024,16 +1040,18 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
                 parsed_text_ref=ref,
                 run_id=run_id,
             )
-            consecutive_failures = 0
-            stats["extracted"] += 1
-            stats["total_spans"] += len(result.fields)
-            elapsed = time.time() - t_paper
-            progress.report(pid, "EXTRACTED", elapsed)
-            logger.info(
-                "Extracted %d/%d — %d fields from '%s'",
-                i, total, len(result.fields), title[:60],
-            )
         except Exception as exc:
+            # A run fault is not a paper outcome (R531–R533): re-raised before
+            # any conversion, with the paper untouched and nothing counted.
+            if is_run_fault(exc):
+                raise
+            # 9b-FLIP: the outcome is written as events (an exhausted refusal
+            # stores its record, R139/R140; anything else is a paper event with
+            # its F9 reason) — never a papers.status write (finding 1, D17).
+            # The event is written FIRST: no progress or log output below can
+            # cost the paper its failure event.
+            record_failure(pid, exc, "extract_pass2")
+            stats["failed"] += 1
             # INPUT-FIT-01: an input-fit refusal carries the numbers that explain
             # it (model, ceiling, characters, count); they go in this same entry.
             fit_fields = exc.fields if isinstance(exc, InputFitError) else None
@@ -1041,13 +1059,16 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
                 "Paper %d extraction failed: %s%s", pid, exc,
                 f" | input_fit={fit_fields}" if fit_fields else "",
             )
-            stats["failed"] += 1
-            elapsed = time.time() - t_paper
-            progress.report(pid, "FAILED", elapsed)
-            # 9b-FLIP: the outcome is written as events (an exhausted refusal
-            # stores its record, R139/R140; anything else is a paper event with
-            # its F9 reason) — never a papers.status write (finding 1, D17).
-            record_failure(pid, exc, "extract_pass2")
+            progress.report(pid, "FAILED", time.time() - t_paper)
+        else:
+            consecutive_failures = 0
+            stats["extracted"] += 1
+            stats["total_spans"] += len(result.fields)
+            progress.report(pid, "EXTRACTED", time.time() - t_paper)
+            logger.info(
+                "Extracted %d/%d — %d fields from '%s'",
+                i, total, len(result.fields), title[:60],
+            )
 
         # Proactive Ollama restart to clear CUDA context fragmentation
         papers_since_restart += 1

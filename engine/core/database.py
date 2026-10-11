@@ -509,10 +509,12 @@ class ReviewDatabase:
             raise ValueError(f"Invalid status: {new_status}")
 
         own_txn = not self._conn.in_transaction
+        if own_txn:
+            # Outside the try: when BEGIN IMMEDIATE itself fails (the database is
+            # locked) no transaction is open, and the handler's ROLLBACK would
+            # replace the lock error with "cannot rollback".
+            self._conn.execute("BEGIN IMMEDIATE")
         try:
-            if own_txn:
-                self._conn.execute("BEGIN IMMEDIATE")
-
             row = self._conn.execute(
                 "SELECT status FROM papers WHERE id = ?", (paper_id,)
             ).fetchone()

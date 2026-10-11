@@ -1,0 +1,95 @@
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:132: AttributeError: module 'engine.core.extraction_events' has no attribute 'run_fault_classes'
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: database is locked
+E   engine.utils.ollama_client.CeilingUnavailable: cannot resolve the context ceiling for m: show failed. The call was not sent; a guard that cannot read its ceiling must not guess one.
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: cannot resolve the context ceiling for m: show failed. The call was not sent; a guard that cannot read its ceiling must not guess one. | input_fit={'mod
+engine.utils.ollama_client.CeilingUnavailable: cannot resolve the context ceiling for m: show failed. The call was not sent; a guard that cannot read its ceiling must not guess one.
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: vision_parse: option override refused — this run declared different values for this stage. Differing keys (recorded vs requested): {'num_ctx': {'recor
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: a run that may not open
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: Failed to connect to Ollama.
+E   engine.core.extraction_events.RunAborted: run 2 aborted: 1 consecutive papers produced nothing usable (last: paper 7, model_call_failed). Every paper's event is written; the run closes with end_status 'aborted' and the abort's
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: connection refused
+/home/ankitsarin/projects/evidence-engine/engine/agents/extractor.py:996: engine.core.extraction_events.RunAborted: run 2 aborted: 1 consecutive papers produced nothing usable (last: paper 7, model_call_failed). Every paper's even
+E   engine.core.extraction_events.RunAborted: run 2 aborted: 1 consecutive papers produced nothing usable (last: paper 7, model_call_failed). Every paper's event is written; the run closes with end_status 'aborted' and the abort's
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: connect timed out
+/home/ankitsarin/projects/evidence-engine/engine/agents/extractor.py:996: engine.core.extraction_events.RunAborted: run 2 aborted: 1 consecutive papers produced nothing usable (last: paper 7, model_call_failed). Every paper's even
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: refused
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: refused
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: refused
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: refused
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: refused
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: refused
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: refused
+[Local extraction] 1/2 (50.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: refused
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:180: Failed: DID NOT RAISE <class 'sqlite3.OperationalError'>
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:180: Failed: DID NOT RAISE <class 'engine.elicitation.classes.CodebookContractError'>
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:180: Failed: DID NOT RAISE <class 'ConnectionError'>
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:180: Failed: DID NOT RAISE <class 'httpx.ConnectError'>
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:201: AssertionError: assert (None, None) == (None, 'aaaaa...aaaaaaaaaaaa')
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: bookkeeping failed after the commit
+    raise RuntimeError("bookkeeping failed after the commit")
+RuntimeError: bookkeeping failed after the commit
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:270: Failed: DID NOT RAISE <class 'RuntimeError'>
+E   AssertionError: assert [] == [(7, 'model_call_failed')]
+      Right contains one more item: (7, 'model_call_failed')
+ERROR    engine.agents.extractor:extractor.py:1040 Paper 7 extraction failed: timed out
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:291: AssertionError: assert [] == [(7, 'model_call_failed')]
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:301: BrokenPipeError: [Errno 32] Broken pipe
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:324: AssertionError: Regex pattern did not match.
+FAILED tests/test_run_fault_predicate.py::test_the_declared_run_fault_tuple_is_the_handoffs
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[Error]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[CeilingUnavailable]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[UndeclaredOverride]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[RunRefused]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[ConnectionError]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[ConnectError]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[ConnectTimeout]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[AmbiguousEngineState]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[ArmPinMismatch]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[CloudArmNotEnabled]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[DirtyTree]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[ElicitationSentinelUnsatisfiable]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[PreManifestArm]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[RetiredArm]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[StageNotInRun]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[Error]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[CeilingUnavailable]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[UndeclaredCall]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[UndeclaredOverride]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[RunRefused]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[RunAborted]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[EventRefused]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[CodebookContractError]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[ExhaustedWithoutRecord]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[SnippetNotExact]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[ConnectionError]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[ConnectError]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[ConnectTimeout]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[AmbiguousEngineState]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[ArmPinMismatch]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[CloudArmNotEnabled]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[DirtyTree]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[ElicitationSentinelUnsatisfiable]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[PreManifestArm]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[RetiredArm]
+FAILED tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[StageNotInRun]
+FAILED tests/test_run_fault_predicate.py::test_an_answered_snippet_retry_that_does_not_parse_keeps_its_request_hash
+FAILED tests/test_run_fault_predicate.py::test_a_post_commit_bookkeeping_failure_is_not_an_extraction_failure
+FAILED tests/test_run_fault_predicate.py::test_a_progress_failure_in_the_handler_does_not_cost_the_failure_event
+FAILED tests/test_run_fault_predicate.py::test_the_progress_reporter_survives_a_broken_stream
+FAILED tests/test_run_fault_predicate.py::test_a_lock_on_begin_immediate_surfaces_as_the_lock_error
+42 failed, 18 passed in 20.62s

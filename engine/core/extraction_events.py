@@ -296,18 +296,73 @@ def elicited_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str
                             snippet_contexts=snippet_contexts or {})
 
 
+# ── Run faults (R531–R533, R612(g)) ──────────────────────────────────
+_RUN_FAULT_CLASSES: tuple[type[BaseException], ...] | None = None
+
+
+def run_fault_classes() -> tuple[type[BaseException], ...]:
+    """THE run-fault tuple, declared once (R533: "One owned run-fault predicate").
+
+    A run fault is a condition of the run, not of the paper in hand: the run
+    stops and the paper is left untouched — no failure event, no abort count.
+
+    * `sqlite3.Error` — the store, "database is locked" included (R531, R533).
+    * `CeilingUnavailable` — the input-fit ceiling could not be read (R532).
+    * `ConnectionError`, `httpx.ConnectError`, `httpx.ConnectTimeout` — the
+      Ollama server refused the connection or did not accept it in time (R532).
+      With ollama 0.6.1 a refused connection reaches the extract loop as the
+      builtin `ConnectionError` (the client converts `httpx.ConnectError`), a
+      connect timeout as `httpx.ConnectTimeout`.
+    * `UndeclaredCall`, `UndeclaredOverride` — a call or an override the
+      manifest did not declare (C54, C27).
+    * `RunRefused` and every subclass — a run that may not open or proceed.
+    * `RunAborted`, `EventRefused`, `CodebookContractError`,
+      `ExhaustedWithoutRecord`, `SnippetNotExact` (R5, R534).
+
+    NOT run faults (R532): `TimeoutError`, the overflow family (`InputOverflow`,
+    `InputTruncated`, `InputDropped`), and an error response from a server that
+    answered (`ollama.ResponseError`, any other `httpx.HTTPError`). They are
+    paper outcomes, bounded by the consecutive-failure abort. `ollama_chat`
+    turns a failed post-restart call into `TimeoutError` whatever its cause, so
+    a connection lost there still reads as a paper outcome.
+
+    Built on first use: three of the classes live in modules that import this one.
+    """
+    global _RUN_FAULT_CLASSES
+    if _RUN_FAULT_CLASSES is None:
+        import sqlite3
+
+        import httpx
+
+        from engine.core.effective_config import UndeclaredOverride
+        from engine.core.run_manifest import RunRefused, UndeclaredCall
+        from engine.elicitation.classes import CodebookContractError
+        from engine.elicitation.materialize import SnippetNotExact
+        from engine.utils.ollama_client import CeilingUnavailable
+        _RUN_FAULT_CLASSES = (
+            sqlite3.Error, CeilingUnavailable,
+            ConnectionError, httpx.ConnectError, httpx.ConnectTimeout,
+            UndeclaredCall, UndeclaredOverride, RunRefused,
+            RunAborted, EventRefused, CodebookContractError, ExhaustedWithoutRecord,
+            SnippetNotExact,
+        )
+    return _RUN_FAULT_CLASSES
+
+
+def is_run_fault(exc: BaseException) -> bool:
+    """The one run-fault predicate. Every handler that converts an exception
+    into a paper outcome asks it first and re-raises on True."""
+    return isinstance(exc, run_fault_classes())
+
+
 # ── Exceptions -> outcomes ───────────────────────────────────────────
 def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id: int,
                           stage_name: str):
     """What the extractor's failure branch records for `exc`: the exhausted
     attempt's `ExtractionRecord`, or a `PaperFailure` with its F9 code.
 
-    Propagated as run faults, never mapped (R5): `CodebookContractError`,
-    `ExhaustedWithoutRecord`, an `EventRefused` (a write the store forbids),
-    `RunAborted`, `UndeclaredCall` (a call the manifest did not declare, C54) and
-    `SnippetNotExact` (R534: a materialised snippet is not the paper's text at its
-    offsets — the unit map and the parsed text disagree, which is not this
-    paper's outcome).
+    A run fault (`is_run_fault`, over `run_fault_classes`) is re-raised, never
+    mapped: it is not this paper's outcome.
 
     Interrupts never reach it: its one caller, the extractor's `record_failure`,
     is called only from `except ParsedTextError` / `except Exception`, which a
@@ -318,14 +373,8 @@ def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id
     import httpx
     from pydantic import ValidationError
 
-    from engine.core.run_manifest import UndeclaredCall
-    from engine.elicitation.classes import CodebookContractError
-    from engine.elicitation.materialize import SnippetNotExact
-    from engine.utils.ollama_client import (
-        CeilingUnavailable, InputDropped, InputOverflow, InputTruncated,
-    )
-    if isinstance(exc, (CodebookContractError, ExhaustedWithoutRecord, EventRefused,
-                        RunAborted, UndeclaredCall, SnippetNotExact)):
+    from engine.utils.ollama_client import InputDropped, InputOverflow, InputTruncated
+    if is_run_fault(exc):
         raise exc
     if isinstance(exc, (IncompleteExtractionError, UncitedValueError)):
         if exc.record is None:
@@ -341,8 +390,6 @@ def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id
 
     if isinstance(exc, ParsedTextError):
         return fail(exc.reason_code)
-    if isinstance(exc, CeilingUnavailable):
-        return fail(PS.REASON_CONTEXT_CEILING_UNAVAILABLE)
     fit = {InputOverflow: PS.REASON_INPUT_OVERFLOW_ESTIMATED,
            InputTruncated: PS.REASON_INPUT_TRUNCATED_AT_CEILING,
            InputDropped: PS.REASON_INPUT_DROPPED_BELOW_FLOOR}

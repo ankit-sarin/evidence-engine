@@ -4633,19 +4633,19 @@
           },
           {
             "kind": "literal",
-            "line": 375,
+            "line": 378,
             "role": "docstring",
             "text": "The codebook for a review: `data/<review_id>/extraction_codebook.yaml`."
           },
           {
             "kind": "literal",
-            "line": 404,
+            "line": 407,
             "role": "docstring",
             "text": "The codebook in the same review directory as this database.\n\n    The review root is wherever the review's database is \u2014 not\n    `data/<review_id>` \u2014 so a run..."
           },
           {
             "kind": "f-string",
-            "line": 441,
+            "line": 444,
             "role": "message",
             "text": "f'Codebook not found at {path}. Every review carries one at data/<review_id>/{CODEBOOK_FILENAME}.'"
           }
@@ -4655,7 +4655,7 @@
         "spec_access": [
           {
             "func": "data_root_for",
-            "line": 381,
+            "line": 384,
             "scope": "codebook_path_for"
           }
         ],
@@ -4663,7 +4663,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 445,
+            "line": 448,
             "scope": "_parse",
             "target": "text"
           }
@@ -7325,7 +7325,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 563,
+            "line": 567,
             "names": [
               "--review",
               "--name"
@@ -7335,7 +7335,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 569,
+            "line": 573,
             "names": [
               "--spec"
             ],
@@ -7344,7 +7344,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 575,
+            "line": 579,
             "names": [
               "--skip-to"
             ],
@@ -7353,7 +7353,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 581,
+            "line": 585,
             "names": [
               "--limit"
             ],
@@ -7362,7 +7362,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 587,
+            "line": 591,
             "names": [
               "--max-papers"
             ],
@@ -7384,13 +7384,13 @@
           },
           {
             "kind": "literal",
-            "line": 565,
+            "line": 569,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 571,
+            "line": 575,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7685,7 +7685,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "e2189c13e021172ec09523ed679bc95911cc1366",
+    "generated_at_commit": "f3c35359be849923c4b9db0a005a23850e6c27e6",
     "scan_roots": [
       "engine",
       "scripts",

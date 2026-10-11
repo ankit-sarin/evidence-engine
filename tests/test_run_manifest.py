@@ -77,7 +77,7 @@ def test_a_run_writes_its_manifest_and_one_row_per_stage(review, spec):
     assert row["git_commit"] == "b" * 40 and row["git_dirty"] == 0 and row["engine_state"] is None
     assert row["spec_hash"] == rm.spec_hash(spec) and row["codebook_hash"] == cb.semantic_hash
     libs = json.loads(row["library_versions_json"])
-    assert set(libs) == {"ollama", "openai", "anthropic"}           # R75
+    assert set(libs) == {"ollama", "openai", "anthropic", "pysbd"}   # R75; pysbd: INT-i12-4
     assert row["cloud_arms_json"] == "[]" and row["ended_at"] is None
     stages = {r["stage"]: r for r in db._conn.execute(
         "SELECT * FROM run_stage_configs WHERE run_id = ?", (h.run_id,))}

@@ -75,12 +75,15 @@ ALLOWED_FIELD_KEYS = frozenset(REQUIRED_FIELD_KEYS) | frozenset(OPTIONAL_FIELD_K
 #: Measured in CODEBOOK-AUTH-01 Phase 2 pre-flight P2 — `fields[*]` (whose keys
 #: feed `extractor._build_field_block`, shared by the extraction prompt and the
 #: elicitation Pass-1 prompt, plus `field_class` which groups Pass 1's blocks)
-#: and the three token/sentinel keys, two of which are rendered into Pass-1 text.
+#: and the four token/sentinel keys. `canonical_absence_sentinel` is among them
+#: (C34): it is rendered into the extraction prompts and is the sentinel the
+#: engine itself writes, so an edit to it alone must move the hash.
 #: `version`, `date` and `review` reach no prompt and no code, so an edit to any
 #: of them must NOT move the semantic hash — a provenance value that changes
 #: when nothing the model saw changed is a false alarm, and false alarms are how
 #: staleness detection gets ignored.
-SEMANTIC_KEYS = ("fields", "absence_sentinels", "escape_token", "contract_unmet_token")
+SEMANTIC_KEYS = ("fields", "absence_sentinels", "canonical_absence_sentinel",
+                 "escape_token", "contract_unmet_token")
 
 
 class CodebookError(ValueError):

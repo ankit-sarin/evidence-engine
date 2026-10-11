@@ -93,8 +93,13 @@ _INTERRUPT_REASON_BY_SIGNAL = {
 }
 ARM_PINNED = "pinned"
 
-#: R75: the client libraries whose versions every manifest records.
-LIBRARIES = ("ollama", "openai", "anthropic")
+#: R75: the libraries whose versions every manifest records — the three model
+#: clients, and `pysbd`, the sentence segmenter that cuts a paper into the units
+#: an elicited run cites (INT-i12-4).
+LIBRARIES = ("ollama", "openai", "anthropic", "pysbd")
+
+#: The stage whose arm cites numbered units; its pin records the segmentation.
+_UNIT_CITING_STAGE = "elicitation_pass1"
 
 #: Spec arm kind -> registry arm kind (016's CHECK spells the human kind in full).
 _REGISTRY_KIND = {"model": "model", "human": "human_extractor"}
@@ -235,7 +240,7 @@ def pin_tuple(spec, arm_name: str, resolved: Mapping[str, ResolvedStage],
         for key, r in sorted(resolved.items()) if r.arm_name == arm_name
     }
     lib = {"ollama": "ollama"}.get(arm.provider, arm.provider)
-    return {
+    tup = {
         "arm_kind": _REGISTRY_KIND[arm.kind],
         "provider": arm.provider,
         "model": arm.model,
@@ -243,6 +248,15 @@ def pin_tuple(spec, arm_name: str, resolved: Mapping[str, ResolvedStage],
         "codebook_hash": codebook_hash,
         "client_library": {lib: libraries.get(lib)} if lib else {},
     }
+    if _UNIT_CITING_STAGE in stages:
+        # INT-i12-4: the index space the arm's citations live in. The prompt
+        # hash renders a two-line sentinel text and cannot see a change to how
+        # a paper is cut into units; these three keys can.
+        from engine.elicitation import units
+        tup["segmentation"] = {"pysbd": libraries.get("pysbd"),
+                               "min_unit_tokens": units.MIN_UNIT_TOKENS,
+                               "units_version": units.UNITS_VERSION}
+    return tup
 
 
 def _diff_keys(old: Any, new: Any, prefix: str = "") -> list[str]:

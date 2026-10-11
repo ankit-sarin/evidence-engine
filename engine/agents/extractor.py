@@ -906,11 +906,16 @@ def run_extraction(
 
 
 def extraction_stages(spec: ReviewSpec) -> tuple[str, ...]:
-    """The local extraction stages a run declares for this spec, pass 1 first —
-    the same renaming `run_pipeline._open_run_manifest` applies."""
-    first = ("elicitation_pass1" if spec.extraction_models.elicitation
-             else "extract_pass1")
-    return (first, "extract_pass2", "extract_retry_snippet")
+    """The local extraction stages a run declares for this spec, pass 1 first.
+    The one declaration: `run_pipeline._open_run_manifest` takes its extract
+    stages from here.
+
+    An elicited run declares two (INT-l12-1): its snippets are materialised by
+    the engine, so it never calls the snippet retry, and a stage it never calls
+    is not declared or pinned."""
+    if spec.extraction_models.elicitation:
+        return ("elicitation_pass1", "extract_pass2")
+    return ("extract_pass1", "extract_pass2", "extract_retry_snippet")
 
 
 def verify_extraction_run(conn, spec: ReviewSpec, run_id: int) -> str:

@@ -24,7 +24,7 @@ from engine.adjudication.workflow import (
 from engine.agents.audit_events import audit_run
 from engine.core.extraction_events import RunAborted
 from engine.agents.extractor import (
-    record_selection_refusals, run_extraction, verify_extraction_run,
+    extraction_stages, record_selection_refusals, run_extraction, verify_extraction_run,
 )
 from engine.core.codebook import CODEBOOK_FILENAME
 from engine.core.run_telemetry import record_run_event
@@ -503,8 +503,12 @@ def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int, *,
     preflight: list[str] = []
     for name in STAGES[start_idx:]:
         stages.extend(_PIPELINE_STAGE_CONFIGS.get(name, ()))
-    if spec.extraction_models.elicitation and "extract_pass1" in stages:
-        stages[stages.index("extract_pass1")] = "elicitation_pass1"
+    if "extract_pass1" in stages:
+        # The extractor's own stage set for this spec (INT-l12-1): an elicited
+        # run declares elicitation_pass1 and extract_pass2, and no snippet retry.
+        at = stages.index("extract_pass1")
+        stages = [s for s in stages if s not in _PIPELINE_STAGE_CONFIGS["extract"]]
+        stages[at:at] = extraction_stages(spec)
     if "abstract_screen_primary" in stages:     # C55: run_screening preflights it
         preflight.append(stage_config("abstract_screen_primary", spec).model)
     if any(s.startswith("extract") or s == "elicitation_pass1" for s in stages):

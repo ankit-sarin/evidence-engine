@@ -169,9 +169,11 @@ class Pass1Result:
     def telemetry(self) -> dict:
         """Flat, JSON-safe summary for `record_call(extra=...)`.
 
-        Carries the per-field citation record C5 rules must live outside the
-        database: indices, class, escape usage and every violation, so a stored
-        span's evidence is auditable after the fact without a migration.
+        Per field: indices, class, escape usage and every violation, for every
+        field the response was checked for — failed fields included, which
+        store no claim. A stored claim's own citations are on the claim, in its
+        payload's `citation_record` (INT-g12-1); this is the attempt's record,
+        not the claim's.
         """
         return {
             "elicitation_version": C.ELICITATION_VERSION,
@@ -320,6 +322,10 @@ def _parse_steps(raw, unit_map: UnitMap
         return (), (), (), violations
     for s in raw:
         if not isinstance(s, dict):
+            # INT-i12-1: a step that is not an object is still a step the model
+            # wrote. It is kept — counted, with no basis — so the field fails
+            # STEP_WITHOUT_BASIS instead of passing on the steps beside it.
+            steps.append(Step(text=s.strip() if isinstance(s, str) else json.dumps(s)))
             continue
         idx, b, d, v = _resolve_indices(s.get(KEY_INDICES), unit_map)
         bad.extend(b)
@@ -330,7 +336,9 @@ def _parse_steps(raw, unit_map: UnitMap
         steps.append(Step(
             text=str(s.get(KEY_STEP_TEXT) or "").strip(),
             indices=idx,
-            criteria_application=bool(s.get(KEY_STEP_CRITERIA)),
+            # INT-i12-1: only the JSON boolean `true` marks a criteria
+            # application; "false", "no", 1 and "true" are not that.
+            criteria_application=s.get(KEY_STEP_CRITERIA) is True,
         ))
     return tuple(steps), tuple(bad), tuple(dupes), violations
 
@@ -389,9 +397,11 @@ def check_entry(entry: dict, cb_field: dict, cls: str, unit_map: UnitMap,
                       <= len(sentences(inference)) <= INFERENCE_MAX_SENTENCES):
                 violations.append(INFERENCE_MALFORMED)
         elif cls == C.JUDGMENT:
-            if not steps:
+            # INT-i12-1: a step with no text is not a reasoning step, whatever
+            # it cites or marks; and every step needs a basis.
+            if not steps or any(not s.text for s in steps):
                 violations.append(STEPS_MISSING)
-            elif any(not s.has_basis for s in steps):
+            if any(not s.has_basis for s in steps):
                 violations.append(STEP_WITHOUT_BASIS)
 
     if not escape and cited_t and _value_precedes_evidence(entry, cls):

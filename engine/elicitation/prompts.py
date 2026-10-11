@@ -85,6 +85,30 @@ _CLASS_CONTRACT = {
 }
 
 
+#: R571(b) (INT-h12-2): stated in the JUDGMENT class contract and in its
+#: attempt-2 accompaniment. One string, so the two cannot drift.
+JUDGMENT_STEP_CITES = "At least one step must cite a unit."
+
+
+def _sentinel_instruction(escape: str, canonical: str) -> str:
+    """R571(a), placed by R612(e): a field's own instruction to record a sentinel
+    stays subject to the sentinel rule. Said in the STATED and INFERABLE class
+    contracts, next to the field blocks that carry such instructions; the
+    codebook's field text is not edited (R26)."""
+    return (f"A field instruction to record {canonical} does not set aside the "
+            f"sentinel rule: cite the sentence that states the absence, or output "
+            f"{escape} if no such sentence exists.")
+
+
+def class_contract(cls: str, escape: str, canonical: str) -> str:
+    """One class's contract as the prompt renders it: `_CLASS_CONTRACT[cls]`
+    and the sentence R571 appends to it. Tokens come from the codebook."""
+    appended = {C.STATED: _sentinel_instruction(escape, canonical),
+                C.INFERABLE: _sentinel_instruction(escape, canonical),
+                C.JUDGMENT: JUDGMENT_STEP_CITES}[cls]
+    return f"{_CLASS_CONTRACT[cls]}\n{appended}"
+
+
 def group_by_class(codebook: dict, field_names: tuple[str, ...]
                    ) -> dict[str, list[dict]]:
     """{class: [codebook entry, ...]} for the requested fields, codebook order.
@@ -165,9 +189,12 @@ Case 1 is the one that gets missed. If you find yourself about to write a
 sentinel with an empty citation list, the answer you want is case 1."""
 
 
-def _sentinel_rule(escape: str, sentinels: str) -> str:
-    """The explicit sentinel rule (Ruling 2(c)), at the ruling's stated intent."""
-    return (f"**The sentinel rule.** A sentinel such as NR is a claim about the "
+def _sentinel_rule(escape: str, canonical: str) -> str:
+    """The explicit sentinel rule (Ruling 2(c)), at the ruling's stated intent.
+
+    The sentinel it names is the codebook's `canonical_absence_sentinel`
+    (INT-i12-38), read through the loader and never spelled here."""
+    return (f"**The sentinel rule.** A sentinel such as {canonical} is a claim about the "
             f"paper and must cite the sentence stating that absence. If no such "
             f"sentence exists, output {escape}.")
 
@@ -177,6 +204,7 @@ def build_pass1_prompt(unit_map: UnitMap, codebook: dict,
     """The elicitation prompt: numbered paper text plus per-class contracts."""
     grouped = group_by_class(codebook, field_names)
     escape = C.escape_token(codebook)
+    canonical = codebook["canonical_absence_sentinel"]
     sentinels = ", ".join(sorted(C.absence_sentinels(codebook)))
 
     sections = []
@@ -189,7 +217,7 @@ def build_pass1_prompt(unit_map: UnitMap, codebook: dict,
         )
         sections.append(
             f"### {_CLASS_TITLE[cls]}  ({len(entries)} fields)\n\n"
-            f"{_CLASS_CONTRACT[cls]}\n\n{blocks}"
+            f"{class_contract(cls, escape, canonical)}\n\n{blocks}"
         )
     schema_text = "\n\n".join(sections)
     n_fields = sum(len(v) for v in grouped.values())
@@ -204,7 +232,7 @@ Every index must be a bare JSON integer between 1 and {unit_map.n}. **Use the
 integer only, not the "[S12]" marker** — write `[12, 13]`, never `[S12, S13]`.
 This applies to every `{KEY_INDICES}` list in your response, including the ones
 nested inside reasoning steps. A marker written into an index list is not valid
-JSON and the whole response is discarded.
+JSON, and the field it is written in fails.
 
 Section headings are numbered units too and may be cited.
 
@@ -222,11 +250,11 @@ its citations. Read the contract at the top of a class block before its fields.
   about the paper's text, so it is a value like any other and REQUIRES at least
   one citation showing where the paper would have reported it and does not.
 
-{_sentinel_rule(escape, sentinels)}
+{_sentinel_rule(escape, canonical)}
 
 Never return a value of any other kind without at least one citation.
 
-{_worked_example(escape, codebook["canonical_absence_sentinel"])}
+{_worked_example(escape, canonical)}
 
 ## Output
 Emit exactly one entry per field ({n_fields} total), in the order the fields are
@@ -293,7 +321,8 @@ def _requirement(code: str, cls: str, escape: str, n_units: int) -> str:
         ),
         C.JUDGMENT: (
             "reason in steps where EVERY step either cites at least one unit or "
-            "sets criteria_application: true, then the value"
+            "sets criteria_application: true, then the value. "
+            + JUDGMENT_STEP_CITES.rstrip(".")
         ),
     }[cls]
     return {

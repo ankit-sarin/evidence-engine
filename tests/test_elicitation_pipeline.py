@@ -453,7 +453,10 @@ def test_the_accepted_attempt_and_both_attempts_reach_telemetry(review, monkeypa
 # typed feedback block, Pass 2 carries the priming wrapper — every elicited
 # template reaches the wire. A change to this digest is a change to what Run 7
 # sends, which is a PI fork (12c-E-PASS2-R2), never a test update.
-ELICITED_REQUESTS_SHA256 = "d0dd7b5e1e5c8b4552dec7a34b99ce71fbf9ca526d1deb401b2f558882f37fb7"
+# Re-recorded at P1 U04 (12l) for the prompt text PI ruled: R571(a) as placed by
+# R612(e), R571(b), and the marker sentence (R589, row 60). Before:
+# d0dd7b5e1e5c8b4552dec7a34b99ce71fbf9ca526d1deb401b2f558882f37fb7.
+ELICITED_REQUESTS_SHA256 = "a56ac21bff388ea70a4a5ae0fc7fbdde3c54c1a024843abec198c53677edfbe0"
 # 12c-E-PIN-B-R2: the stored reasoning_trace (the bare priming block, not the
 # message Pass 2 is sent) is guarded the same way, recorded on the same tree.
 ELICITED_TRACE_SHA256 = "18d4eb72e7833f84276f3103a5e54fc03ff0e9484009ffbeae04dd2b39cc6ee2"

@@ -37,6 +37,11 @@ arguments for `events.write_field_event` / `write_paper_event`. Rules:
   plans exactly what it always did;
 * a value whose evidence is cited units carries its `citation_record` in the
   payload — every cited unit, not only the stored snippet's run (INT-g12-1);
+* a value that differs from the one Pass 1 stated carries `pass1_value`
+  (INT-i12-3);
+* `attempts` on a `contract_unmet` claim, on the `extracted` paper event and on
+  a floor failure is the attempts SPENT on the paper; `kept_attempt` is the
+  attempt whose record was kept (R620(c));
 * no `citation_located` event — the locator is 2(d).
 
 Every claim-bearing event carries the three input-identity payload keys named
@@ -68,8 +73,11 @@ from engine.core.effective import (
     live_claim_events,
 )
 from engine.core.events import (
+    PAYLOAD_ATTEMPTS,
     PAYLOAD_CITATION_RECORD,
     PAYLOAD_CONTEXT_CHAIN,
+    PAYLOAD_KEPT_ATTEMPT,
+    PAYLOAD_PASS1_VALUE,
     PAYLOAD_PARSED_TEXT_SHA256,
     PAYLOAD_PARSED_TEXT_UID,
     PAYLOAD_REUSE_KEY,
@@ -173,6 +181,9 @@ class FieldOutcome:
     #: a claim whose evidence is cited units. None on the legacy path, whose
     #: snippet is the model's own text and cites no unit.
     citation_record: Mapping | None = None
+    #: INT-i12-3: the value Pass 1 stated for this field, set only when the
+    #: stored value differs from it (exact after strip).
+    pass1_value: str | None = None
 
     def __post_init__(self):
         if self.kind not in _FIELD_KINDS:
@@ -190,6 +201,7 @@ class ExtractionRecord:
     model_digest: str | None
     fields: tuple[FieldOutcome, ...]
     incomplete_fields: tuple[str, ...]
+    #: The attempt this record was made at (1-based).
     attempts: int
     stage_name: str
     #: 9b-2c R6 / R224a(1): the value-producing call's request hash — pass 2's,
@@ -202,6 +214,15 @@ class ExtractionRecord:
     #: whose stored source_snippet a retry supplied. Absent for every other
     #: field, including one that was never retried at all.
     snippet_contexts: Mapping[str, str] = field(default_factory=dict)
+    #: R620(c): the attempts spent on the paper when this record was kept. Set
+    #: by the retry driver at exhaustion; None means the record's own attempt
+    #: was the last one spent (a stored first, second or third attempt).
+    attempts_spent: int | None = None
+
+    @property
+    def spent(self) -> int:
+        """Attempts spent on the paper: what `attempts` means on what is stored."""
+        return self.attempts if self.attempts_spent is None else self.attempts_spent
 
 
 @dataclass(frozen=True)
@@ -242,11 +263,25 @@ def _span_by_name(spans) -> dict[str, Mapping]:
     return out
 
 
-def _value(name, span, attempts, citation_record=None) -> FieldOutcome:
+def _value(name, span, attempts, citation_record=None, pass1_value=None) -> FieldOutcome:
     return FieldOutcome(name, VALUE, value=span.get("value"),
                         source_snippet=span.get("source_snippet") or None,
                         confidence=span.get("confidence"), attempts=attempts,
-                        citation_record=citation_record)
+                        citation_record=citation_record, pass1_value=pass1_value)
+
+
+def diverges(pass1_value: str | None, stored_value: str | None) -> bool:
+    """INT-i12-3: the stored value differs from the value Pass 1 stated, exact
+    after strip. A field Pass 1 gave no value for cannot diverge."""
+    return bool(pass1_value) and (stored_value or "").strip() != pass1_value.strip()
+
+
+def divergence_kind(pass1_value: str, stored_value: str | None) -> str:
+    """`case_or_whitespace` when the difference vanishes under casefold and
+    whitespace collapse, else `substantive`."""
+    def fold(v):
+        return " ".join((v or "").split()).casefold()
+    return "case_or_whitespace" if fold(pass1_value) == fold(stored_value) else "substantive"
 
 
 def legacy_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str,
@@ -294,7 +329,8 @@ def elicited_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str
                     presented_context_sha256: str | None = None,
                     context_chain: tuple[str, ...] = (),
                     snippet_contexts: Mapping[str, str] | None = None,
-                    citation_records: Mapping[str, Mapping] | None = None
+                    citation_records: Mapping[str, Mapping] | None = None,
+                    pass1_values: Mapping[str, str] | None = None
                     ) -> ExtractionRecord:
     """The elicited path's attempt, from its terminal states: CONTRACT_UNMET ->
     `contract_unmet` with the class-contract violations, the escape token ->
@@ -303,11 +339,16 @@ def elicited_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str
     `citation_records` is field_name -> that field's citation record
     (INT-g12-1); a value carries its field's onto the claim.
 
+    `pass1_values` is field_name -> the value Pass 1 stated (INT-i12-3). A
+    value that differs from its field's carries it onto the claim; one that
+    agrees carries nothing.
+
     `presented_context_sha256`, `context_chain` and `snippet_contexts` are
     R224a(1)/(2), same shape as `legacy_record`'s — the elicited path has no
     snippet-retry mechanism, so `snippet_contexts` is always empty here."""
     by_name, bad = _span_by_name(spans), _index_offenders(offenders)
     cited = citation_records or {}
+    stated = pass1_values or {}
     fields, incomplete = [], []
     for name in expected:
         state = states.get(name)
@@ -324,7 +365,10 @@ def elicited_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str
             fields.append(FieldOutcome(name, CONTRACT_UNMET, violation_codes=bad[name],
                                        attempts=attempts))
         elif state == evidenced_token and name in by_name:
-            fields.append(_value(name, by_name[name], attempts, cited.get(name)))
+            p1 = stated.get(name)
+            fields.append(_value(
+                name, by_name[name], attempts, cited.get(name),
+                p1 if diverges(p1, by_name[name].get("value")) else None))
         else:
             incomplete.append(name)
     return ExtractionRecord(paper_id, arm, run_id, extraction_uid, parsed_text, model,
@@ -373,7 +417,8 @@ def floor_failure(rec: ExtractionRecord) -> PaperFailure | None:
                 "contract_unmet_fields": {f.field_name: list(f.violation_codes)
                                           for f in rec.fields if f.kind == CONTRACT_UNMET},
                 "incomplete_fields": list(rec.incomplete_fields),
-                "attempts": rec.attempts, "extraction_uid": rec.extraction_uid,
+                PAYLOAD_ATTEMPTS: rec.spent, PAYLOAD_KEPT_ATTEMPT: rec.attempts,
+                "extraction_uid": rec.extraction_uid,
                 "context_chain": list(rec.context_chain)})
 
 
@@ -584,11 +629,15 @@ def plan_extraction_events(outcome, *, live: Mapping[str, tuple[LiveClaimEvent, 
                             payload=dict(ident)))
         payload = dict(ident)
         if fo.kind == CONTRACT_UNMET:
-            payload.update(violation_codes=list(fo.violation_codes), attempts=fo.attempts)
+            # R620(c): the attempts spent on the paper, and the attempt kept.
+            payload.update({"violation_codes": list(fo.violation_codes),
+                            PAYLOAD_ATTEMPTS: rec.spent, PAYLOAD_KEPT_ATTEMPT: rec.attempts})
         elif fo.kind == VALUE and fo.confidence is not None:
             payload["confidence"] = fo.confidence
         if fo.kind == VALUE and fo.citation_record:
             payload[PAYLOAD_CITATION_RECORD] = fo.citation_record
+        if fo.kind == VALUE and fo.pass1_value is not None:
+            payload[PAYLOAD_PASS1_VALUE] = fo.pass1_value
         # R224a(2): every claim carries the full call chain; a retried
         # field's snippet also carries the retry's own hash.
         payload[PAYLOAD_CONTEXT_CHAIN] = list(rec.context_chain)
@@ -613,6 +662,7 @@ def plan_extraction_events(outcome, *, live: Mapping[str, tuple[LiveClaimEvent, 
         reason_code=None,
         payload={"asserted": counts[VALUE], "contract_unmet": counts[CONTRACT_UNMET],
                  "declined": counts[DECLINED], "incomplete_fields": list(rec.incomplete_fields),
+                 PAYLOAD_ATTEMPTS: rec.spent, PAYLOAD_KEPT_ATTEMPT: rec.attempts,
                  "extraction_uid": rec.extraction_uid, "arm": rec.arm, **ident}))
 
 
@@ -689,7 +739,12 @@ def run_extraction_summary(conn, run_id: int) -> dict:
       with fields missing after the retry budget, and which fields;
     * `all_declined` — papers stored `extracted` whose held fields are all
       declined (no value asserted);
-    * `below_floor` — papers failed with `held_fields_below_floor`.
+    * `below_floor` — papers failed with `held_fields_below_floor`;
+    * `value_divergence` — asserted claims of the run whose stored value
+      differs from the value Pass 1 stated (`pass1_value` on the claim,
+      INT-i12-3): a count and the fields, split into `case_or_whitespace`
+      (the difference vanishes under casefold and whitespace collapse) and
+      `substantive`.
     """
     extracted = _latest_extracted(conn, run_id)
     incomplete = {pid: list(p["incomplete_fields"]) for pid, p in extracted.items()
@@ -698,10 +753,21 @@ def run_extraction_summary(conn, run_id: int) -> dict:
         "SELECT COUNT(DISTINCT paper_id) FROM paper_events WHERE run_id = ? "
         "AND event_type = 'extraction_failed' AND reason_code = ?",
         (run_id, PS.REASON_HELD_FIELDS_BELOW_FLOOR)).fetchone()[0]
+    import json
+    divergence = {k: {"count": 0, "fields": {}} for k in ("substantive", "case_or_whitespace")}
+    for field_name, value, payload in conn.execute(
+            "SELECT field_name, value, payload_json FROM field_events WHERE run_id = ? "
+            "AND event_type = 'asserted' ORDER BY event_id", (run_id,)):
+        stated = json.loads(payload or "{}").get(PAYLOAD_PASS1_VALUE)
+        if stated is None:
+            continue
+        bucket = divergence[divergence_kind(stated, value)]
+        bucket["count"] += 1
+        bucket["fields"][field_name] = bucket["fields"].get(field_name, 0) + 1
     return {"stored_incomplete": len(incomplete), "incomplete_fields": incomplete,
             "all_declined": sum(1 for p in extracted.values()
                                 if not p.get("asserted") and p.get("declined")),
-            "below_floor": below}
+            "below_floor": below, "value_divergence": divergence}
 
 
 def _latest_extracted(conn, run_id: int | None) -> dict[int, dict]:

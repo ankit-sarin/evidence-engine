@@ -197,6 +197,18 @@ PAYLOAD_SNIPPET_CONTEXT = "snippet_context_sha256"
 #: unit-map directory. Spelled here and nowhere else a payload is read.
 PAYLOAD_CITATION_RECORD = "citation_record"
 
+#: INT-i12-3 (R612(j), D9): the value Pass 1 stated for the field when it chose
+#: the evidence, on an asserted claim whose stored (Pass-2) value differs from
+#: it, exact after strip. Absent when the two agree. Nothing is reconciled: the
+#: stored value stays Pass 2's.
+PAYLOAD_PASS1_VALUE = "pass1_value"
+
+#: R620(c): `attempts` on a stored claim or paper event is the number of
+#: attempts spent on the paper; this is the attempt whose record was kept
+#: (the attempt rule, R612(f): the earliest attempt holding the most fields).
+PAYLOAD_ATTEMPTS = "attempts"
+PAYLOAD_KEPT_ATTEMPT = "kept_attempt"
+
 _MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
 _MISSING = object()
 

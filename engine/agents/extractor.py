@@ -1,5 +1,6 @@
 """Two-pass extraction agent using DeepSeek-R1:32b via Ollama."""
 
+import dataclasses
 import json
 import logging
 import re
@@ -927,6 +928,9 @@ def extract_paper_with_completeness(
         "expected fields; otherwise the paper fails (R139, R140, R535). %s",
         paper_id, model_name, max_attempts, kept_held, kept,
     )
+    # R620(c): what is stored says how many attempts were spent on the paper;
+    # the kept record's own attempt number stays on it as the kept attempt.
+    kept.record = dataclasses.replace(kept.record, attempts_spent=max_attempts)
     raise kept
 
 
@@ -1205,6 +1209,17 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
             "(held_fields_below_floor).",
             run_id, summary["stored_incomplete"], summary["incomplete_fields"],
             summary["all_declined"], summary["below_floor"])
+    divergence = summary["value_divergence"]
+    if divergence["substantive"]["count"] or divergence["case_or_whitespace"]["count"]:
+        # INT-i12-3: the stored value is Pass 2's; these claims carry the value
+        # Pass 1 stated when it chose their evidence (`pass1_value`).
+        logger.warning(
+            "Value divergence (run %d): %d claim(s) whose stored value differs in "
+            "substance from the value Pass 1 stated, by field %s; %d differing in "
+            "case or whitespace only, by field %s.",
+            run_id, divergence["substantive"]["count"], divergence["substantive"]["fields"],
+            divergence["case_or_whitespace"]["count"],
+            divergence["case_or_whitespace"]["fields"])
 
     progress.summary()
     logger.info(

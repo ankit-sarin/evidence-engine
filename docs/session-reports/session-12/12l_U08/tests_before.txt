@@ -1,0 +1,20 @@
+tests/test_value_divergence.py:144: KeyError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+tests/test_value_divergence.py:157: KeyError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+tests/test_value_divergence.py:169: KeyError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+WARNING  engine.agents.extractor:extractor.py:1202 Extraction summary (run 2): 1 paper(s) stored with incomplete fields {7: ['clinical_readiness_assessment']}; 0 stored with every held field declined;
+tests/test_value_divergence.py:180: KeyError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+tests/test_value_divergence.py:214: KeyError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+tests/test_value_divergence.py:228: KeyError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+FAILED tests/test_value_divergence.py::test_value_divergence_reaches_the_stored_record
+FAILED tests/test_value_divergence.py::test_equal_values_record_no_divergence
+FAILED tests/test_value_divergence.py::test_divergence_is_recorded_on_a_record_stored_after_the_retry_budget
+FAILED tests/test_value_divergence.py::test_a_case_or_whitespace_difference_is_recorded_and_counted_apart
+FAILED tests/test_value_divergence.py::test_attempts_is_the_attempts_spent_and_the_kept_attempt_is_separate
+FAILED tests/test_value_divergence.py::test_a_first_attempt_extraction_spent_one_attempt
+6 failed in 4.27s

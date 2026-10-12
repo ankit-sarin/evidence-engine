@@ -171,9 +171,10 @@ def test_a_blank_pass2_value_with_evidence_is_refused_in_both_modes(
     claims = _claims(db)
     kind, value, payload = claims[blank_field]
     assert (kind, value) == ("contract_unmet", None)
-    # three attempts were refused the same way; the attempt rule (U06) keeps the
-    # first on a tie, and `attempts` is the attempt the kept record was made at
-    assert payload["violation_codes"] == [G.BLANK_VALUE] and payload["attempts"] == 1
+    # three attempts were refused the same way: three were spent, and the attempt
+    # rule (U06) kept the first on the tie (R620(c))
+    assert payload["violation_codes"] == [G.BLANK_VALUE]
+    assert (payload["attempts"], payload["kept_attempt"]) == (3, 1)
     asserted = {n: c for n, c in claims.items() if c[0] == "asserted"}
     assert len(asserted) == 19 and all((c[1] or "").strip() for c in asserted.values())
 

@@ -33,9 +33,13 @@ confidence and the tier.
 
 **Value divergence is recorded, not reconciled.** Pass 2 may return a value that
 differs from the one Pass 1 stated while citing the same units. The stored value
-is Pass 2's (it is the schema-constrained pass) and the divergence is counted in
-telemetry, because a silent reconciliation would hide the one signal that says
-priming is not landing.
+is Pass 2's (it is the schema-constrained pass). The divergence is recorded on
+the claim: its payload carries the value Pass 1 stated under `pass1_value`
+(`engine.core.events.PAYLOAD_PASS1_VALUE`), on a record stored after the retry
+budget as well as on a first-attempt one, and the run summary
+(`extraction_events.run_extraction_summary`) counts the divergent claims and
+names their fields, apart for differences of case or whitespace only. A silent
+reconciliation would hide the one signal that says priming is not landing.
 """
 
 from __future__ import annotations
@@ -414,6 +418,9 @@ def extract_paper_elicited(
     unmet_tok = C.contract_unmet_token(codebook)
     # INT-g12-1: field -> its citation record, filled as each span is built.
     citation_records: dict[str, dict] = {}
+    # INT-i12-3: field -> the value Pass 1 stated, for every evidenced field
+    # Pass 2 answered. The record builder keeps it on a claim that differs.
+    pass1_values: dict[str, str] = {}
 
     def _record(states, spans=(), violations=None, offenders=(), duplicated=(),
                presented_context_sha256=None, context_chain=()):
@@ -432,7 +439,8 @@ def extract_paper_elicited(
             evidenced_token=C.EVIDENCED_VALUE, offenders=offenders,
             duplicated=duplicated, attempts=attempt or 1,
             presented_context_sha256=presented_context_sha256,
-            context_chain=context_chain, citation_records=citation_records)
+            context_chain=context_chain, citation_records=citation_records,
+            pass1_values=pass1_values)
 
     try:
         p1, accepted_attempt, pass1_tels = elicit(
@@ -499,7 +507,6 @@ def extract_paper_elicited(
     # Pass 2 supplies values, and only EVIDENCED_VALUE fields take one. A paper
     # with none of them has nothing for a 32B call to answer, so it does not
     # make one -- the terminal states are already complete without it.
-    divergent: list[str] = []
     pass2_values: dict[str, EvidenceSpan] = {}
     schema_hash = codebook_hash
     pass2_hash = None
@@ -553,8 +560,8 @@ def extract_paper_elicited(
             if span is None:
                 continue          # Pass 2 dropped it; completeness will speak
             rec = p1.records[name]
-            if rec.value and span.value.strip() != rec.value:
-                divergent.append(name)
+            if rec.value:
+                pass1_values[name] = rec.value
             spans.append(EvidenceSpan(
                 field_name=name,
                 value=span.value,
@@ -601,8 +608,6 @@ def extract_paper_elicited(
         raise
 
     _LAST_PASS2_TELEMETRY.setdefault("model", model_name)
-    _LAST_PASS2_TELEMETRY["value_divergence"] = divergent
-    _LAST_PASS2_TELEMETRY["n_value_divergence"] = len(divergent)
     _LAST_PASS2_TELEMETRY["n_contract_unmet"] = n_unmet
     _LAST_PASS2_TELEMETRY["accepted_pass1_attempt"] = accepted_attempt
 

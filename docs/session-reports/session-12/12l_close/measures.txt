@@ -1,0 +1,21 @@
+codebook 89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82
+spec 917c24de29afdf802b5ddea61c34627a9bb0a857de3f97395af36d44ca664e5f
+62:  elicitation: false
+95:  enabled_arms: []
+ollama {"version":"0.21.0"}
+gemma3:27b a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203
+qwen3:32b 030ee887880fc378860c2dd35101da424377520441ae4bfe7be6deff8ade7840
+deepseek-r1:32b edba8017331d15236e57480eb45406c0d721db77a4cdcf234df500fc2ad3960c
+resident [('gemma3:27b', '2319-01-22T04:19:29.640180424Z')]
+NRestarts=0
+ExecMainStartTimestamp=Fri 2026-09-11 21:09:13 UTC
+134361088 2026-09-29 17:21:15.332724767 data/surgical_autonomy/review.db
+32768 2026-10-12 05:05:15.217679151 data/surgical_autonomy/review.db-shm
+0 2026-09-29 17:22:11.627632568 data/surgical_autonomy/review.db-wal
+data/surgical_autonomy/review.db
+claude-config 1300214913c3cf0b9d94c977f37dad91e3ca2350 0/0
+ M PROJECT_LEDGER.md
+ 1 file changed, 36 insertions(+)
+10b-close 12f 12g-meas 12g-ra 12g-rb 12h-rd 12i-scope 12i-w1 12j-open 12j-w2 12k-close 12k-est 12k-open 12k-rule 12l-close 12l-open 12l-p1a 12l-r612 12l-u01 12l-u02 12l-u03 12l-u04 12l-u04b 12l-u05 12l-u06 12l-u07 12l-u08 12l-u09 12l-u10 12l-u11 e_exec_probe retained 
+code-diff-since-e2d76a2: 0
+91 passed in 6.68s

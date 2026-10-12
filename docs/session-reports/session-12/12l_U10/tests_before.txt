@@ -1,0 +1,17 @@
+>       with pytest.raises(rm.CodebookReviewMismatch) as exc:
+tests/test_codebook_review_at_open.py:90: AttributeError
+>       with pytest.raises(rm.CodebookReviewMismatch):
+tests/test_codebook_review_at_open.py:109: AttributeError
+>       with pytest.raises(rm.CodebookReviewMismatch) as exc:
+tests/test_codebook_review_at_open.py:120: AttributeError
+>       with pytest.raises(rm.CodebookReviewMismatch) as exc:
+tests/test_codebook_review_at_open.py:153: AttributeError
+>       assert X.is_run_fault(rm.CodebookReviewMismatch("refused"))
+tests/test_codebook_review_at_open.py:163: AttributeError
+FAILED tests/test_codebook_review_at_open.py::test_open_run_refuses_a_codebook_beside_the_database_that_declares_another_review
+FAILED tests/test_codebook_review_at_open.py::test_a_review_session_is_refused_the_same_way
+FAILED tests/test_codebook_review_at_open.py::test_run_pipelines_own_opener_refuses_before_any_row_or_fetch
+FAILED tests/test_codebook_review_at_open.py::test_run_cloud_extractions_run_arm_refuses_before_any_row_or_send
+FAILED tests/test_codebook_review_at_open.py::test_the_refusal_is_a_run_fault
+5 failed in 5.50s
+BEHAVIOUR BEFORE THE UNIT (same fixture, class absent): open_run with spec.review_id='surgical_autonomy' and codebook.review='another_review' opened run 1; rows (run_manifests, arms, run_stage_configs) = (1, 1, 4)

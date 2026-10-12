@@ -150,6 +150,13 @@ class CloudArmNotEnabled(RunRefused):
     pass
 
 
+class CodebookReviewMismatch(RunRefused):
+    """INT-i12-9: the codebook handed to `open_run` declares a review other than
+    the spec's, or none. A run's prompts are built from that codebook; one that
+    belongs to another review does not fail, it extracts another review's
+    fields under this review's manifest."""
+
+
 class StageNotInRun(RunRefused):
     """The run named does not exist or did not declare the stage a caller needs."""
 
@@ -306,6 +313,19 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     """
     if kind not in RUN_KINDS:
         raise ValueError(f"run kind {kind!r} is not one of {RUN_KINDS}")
+    # INT-i12-9: every loader on the run path takes the codebook by path and
+    # checks no identity (`load_codebook`, `load_codebook_beside`); this is the
+    # one place every run passes. Before anything is resolved or written.
+    declared = str(getattr(codebook, "review", "") or "").strip()
+    if declared != spec.review_id:
+        where = getattr(codebook, "path", None)
+        said = f"declares review {declared!r}" if declared else "declares no review"
+        raise CodebookReviewMismatch(
+            f"run refused: the codebook at {where} {said}, and this run is for review "
+            f"{spec.review_id!r}. Nothing was written. Read the codebook's `review:` line: "
+            f"if the file is this review's (a copy made under R235 whose `review:` was "
+            f"not changed), set it to {spec.review_id!r}; if it is another review's "
+            "codebook, put this review's codebook beside the database.")
     g = git or git_state()
     if g.dirty:
         raise DirtyTree(

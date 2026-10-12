@@ -104,9 +104,10 @@ def _import(db, path):
     codebook beside the database, so nothing reaches git or a server."""
     if not _LIVE_CODEBOOK.exists():
         pytest.skip("codebook not available")
-    beside = Path(db.db_path).parent / "extraction_codebook.yaml"
-    if not beside.exists():
-        shutil.copy2(_LIVE_CODEBOOK, beside)
+    # the spec's own codebook beside the database (INT-i12-9): conftest's
+    # placeholder declares the scratch review's name, not the spec's
+    from _event_store_fixture import use_spec_codebook
+    use_spec_codebook(db, _SPEC_FOR_EXPORT)
     return import_ft_adjudication_decisions(
         db, path, spec=_SPEC_FOR_EXPORT,
         git=rm.GitState(commit="b" * 40, dirty=False, tag=None), digest_fn=lambda m: "")

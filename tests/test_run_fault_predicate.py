@@ -73,6 +73,7 @@ RUN_FAULTS = {
 RUN_REFUSED_MEMBERS = {
     rm.DirtyTree, rm.AmbiguousEngineState, rm.PreManifestArm, rm.RetiredArm,
     rm.ArmPinMismatch, rm.CloudArmNotEnabled, rm.StageNotInRun,
+    rm.CodebookReviewMismatch,
     ElicitationSentinelUnsatisfiable,
 }
 FAULTS = [pytest.param(make, id=cls.__name__) for cls, make in RUN_FAULTS.items()] + [

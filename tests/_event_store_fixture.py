@@ -329,6 +329,29 @@ def seed_prisma_world(db, *, screening=(), eligible=()) -> dict:
 FIXTURE_DIGEST = "a" * 64
 
 
+def use_spec_codebook(db, spec) -> None:
+    """Give a scratch review the codebook of the spec it is run with.
+
+    `tests/conftest.py` puts a placeholder codebook in every scratch review
+    directory, declaring the scratch review's own name. A test that runs such a
+    review under a real spec (`review_specs/<review_id>.yaml`) then pairs one
+    review's spec with another's codebook — what `open_run` refuses since
+    INT-i12-9. This replaces the placeholder with the spec's review's codebook,
+    `data/<spec.review_id>/extraction_codebook.yaml`; a codebook that already
+    declares the spec's review is left alone."""
+    import shutil
+    from pathlib import Path as _P
+    from engine.core import codebook as cbmod
+
+    beside = _P(db.db_path).parent / cbmod.CODEBOOK_FILENAME
+    if beside.exists() and cbmod.load_codebook(beside).review == spec.review_id:
+        return
+    source = (_P(__file__).resolve().parent.parent / "data" / spec.review_id
+              / cbmod.CODEBOOK_FILENAME)
+    shutil.copy2(source, beside)
+    cbmod.clear_cache()
+
+
 def open_extraction_run(db, spec, *, digest: str = FIXTURE_DIGEST) -> int:
     """A real run manifest on a scratch database, through `run_manifest.open_run`
     (WRITE-PATH-01 9b-2b): the spec's extraction stages plus `audit`, every
@@ -342,6 +365,8 @@ def open_extraction_run(db, spec, *, digest: str = FIXTURE_DIGEST) -> int:
     from engine.agents.extractor import extraction_stages, verify_extraction_run
     from engine.core import run_manifest as rm
     from engine.core.codebook import load_codebook_beside
+
+    use_spec_codebook(db, spec)       # the spec's own codebook (INT-i12-9)
 
     handle = rm.open_run(
         db._conn, spec, kind="extraction",

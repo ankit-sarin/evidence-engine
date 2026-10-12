@@ -33,7 +33,8 @@ from engine.core.citation_guard import (
 )
 from engine.core.events import mint_extraction_uid
 from engine.core.extraction_events import (  # noqa: F401 — re-exported (T7)
-    CONSECUTIVE_FAILURE_ABORT, HeldFieldsBelowFloor, MissingThinkingChannelError,
+    CONSECUTIVE_FAILURE_ABORT, ExtractionRecord, HeldFieldsBelowFloor,
+    MissingThinkingChannelError,
     PaperFailure, RunAborted, counts_toward_abort, expected_count, held_count, is_run_fault,
     legacy_record, outcome_for_exception, run_extraction_summary, write_extraction_events,
 )
@@ -500,6 +501,12 @@ def _validate_and_retry_snippets(
            else validated)
 
 
+def _contract_unmet_token(codebook_path: Path) -> str | None:
+    """The codebook's contract-unmet token, or None if it declares none. The
+    legacy guard takes it so that the token is never asserted as a value (N13)."""
+    return load_codebook(codebook_path).raw.get("contract_unmet_token")
+
+
 def _absence_tokens(codebook_path: Path) -> tuple[str, frozenset[str]]:
     """(escape token, absence sentinels) from the codebook beside the database.
 
@@ -639,6 +646,7 @@ def extract_paper(
     # with a non-codebook field name and passed a non-emptiness check.
     expected = expected_field_names(spec, cb_path)
     escape, sentinels = _absence_tokens(cb_path)
+    unmet = _contract_unmet_token(cb_path)
     try:
         # R118: a missing or duplicated field refuses (retryable); an unexpected
         # one is logged here and dropped below, before anything else sees it.
@@ -652,9 +660,13 @@ def extract_paper(
         # still needs a quote. The elicitation path runs the same predicate in
         # STRICT mode, where a sentinel is a value like any other and owes a
         # citation.
+        # A blank value with a snippet (INT-i12-2) and the elicited design's two
+        # non-value tokens (INT-i12-6, N13) are refused here too: neither is a
+        # value this prompt asked for.
         enforce_citations(
             span_dicts, paper_id=paper_id, arm=cfg1.model, mode=LEGACY,
             escape_token=escape, absence_sentinels=sentinels,
+            contract_unmet_token=unmet,
         )
     except (IncompleteExtractionError, UncitedValueError) as exc:
         # 9b-2c R3: the refusal carries this attempt's record, so an exhausted
@@ -665,7 +677,7 @@ def extract_paper(
             extraction_uid=mint_extraction_uid(), parsed_text=parsed_text_ref,
             model=cfg1.model, model_digest=model_digest, expected=expected, spans=kept,
             offenders=check_citations(kept, escape_token=escape, absence_sentinels=sentinels,
-                                      mode=LEGACY).offenders,
+                                      mode=LEGACY, contract_unmet_token=unmet).offenders,
             duplicated=check_completeness(span_dicts, expected).duplicated,
             attempts=attempt or 1,
             presented_context_sha256=pass2_hash, context_chain=context_chain,
@@ -1068,8 +1080,10 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
     consecutive_failures = 0  # 9b-FLIP: the abort counter (counts_toward_abort)
     arm = spec.extraction_models.arm
 
-    def record_failure(pid: int, exc: BaseException, stage: str) -> None:
-        """Write the paper's failure event; abort after the Nth in a row.
+    def record_failure(pid: int, exc: BaseException, stage: str):
+        """Write what the refusal left — the paper's failure event, or the
+        exhausted attempt's record if it holds enough to store — and return it;
+        abort after the Nth failure in a row.
 
         Run faults (`is_run_fault`) are re-raised by `outcome_for_exception`
         and never counted: they are not the paper's outcome."""
@@ -1088,6 +1102,7 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
                 f"{getattr(outcome, 'reason_code', 'stored')}). Every "
                 "paper's event is written; the run closes with end_status "
                 "'aborted' and the abort's reason.")
+        return outcome
 
     for i, (pid, ref) in enumerate(papers, 1):
         row = db._conn.execute("SELECT title FROM papers WHERE id = ?", (pid,)).fetchone()
@@ -1127,16 +1142,32 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
             # its F9 reason) — never a papers.status write (finding 1, D17).
             # The event is written FIRST: no progress or log output below can
             # cost the paper its failure event.
-            record_failure(pid, exc, "extract_pass2")
-            stats["failed"] += 1
-            # INPUT-FIT-01: an input-fit refusal carries the numbers that explain
-            # it (model, ceiling, characters, count); they go in this same entry.
-            fit_fields = exc.fields if isinstance(exc, InputFitError) else None
-            logger.exception(
-                "Paper %d extraction failed: %s%s", pid, exc,
-                f" | input_fit={fit_fields}" if fit_fields else "",
-            )
-            progress.report(pid, "FAILED", time.time() - t_paper)
+            outcome = record_failure(pid, exc, "extract_pass2")
+            if isinstance(outcome, ExtractionRecord):
+                # INT-l12-20: the budget was exhausted and the kept attempt's
+                # record is at or above the floor, so the paper IS stored as
+                # extracted. It is counted and reported as what the store holds.
+                stats["extracted"] += 1
+                stats["total_spans"] += held_count(outcome)
+                progress.report(pid, "EXTRACTED", time.time() - t_paper)
+                logger.warning(
+                    "Paper %d stored as extracted after the retry budget: %d field(s) "
+                    "held, %d incomplete %s, %d contract_unmet. Last refusal: %s",
+                    pid, held_count(outcome), len(outcome.incomplete_fields),
+                    list(outcome.incomplete_fields),
+                    sum(1 for f in outcome.fields if f.kind == "contract_unmet"), exc,
+                )
+            else:
+                stats["failed"] += 1
+                # INPUT-FIT-01: an input-fit refusal carries the numbers that
+                # explain it (model, ceiling, characters, count); they go in
+                # this same entry.
+                fit_fields = exc.fields if isinstance(exc, InputFitError) else None
+                logger.exception(
+                    "Paper %d extraction failed: %s%s", pid, exc,
+                    f" | input_fit={fit_fields}" if fit_fields else "",
+                )
+                progress.report(pid, "FAILED", time.time() - t_paper)
         else:
             consecutive_failures = 0
             stats["extracted"] += 1

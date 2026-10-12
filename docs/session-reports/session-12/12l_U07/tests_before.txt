@@ -1,0 +1,14 @@
+>               assert r.offenders == (("f", G.BLANK_VALUE),), (value, mode)
+tests/test_write_boundary_guard.py:148: AttributeError
+>           assert r.offenders == (("f", G.NON_VALUE_TOKEN_AS_VALUE),), (token, snippet)
+tests/test_write_boundary_guard.py:188: AttributeError
+>       assert (stats["extracted"], stats["failed"], stats["stored_incomplete"]) == (1, 0, 1)
+tests/test_write_boundary_guard.py:237: AssertionError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1135 Paper 7 extraction failed: Paper 7 (deepseek-r1:32b): incomplete extraction — 12/20 fields. Missing: study_design, country, primary_outcome_metric,
+WARNING  engine.agents.extractor:extractor.py:1171 Extraction summary (run 2): 1 paper(s) stored with incomplete fields {7: ['study_design', 'country', 'primary_outcome_metric', 'primary_outcome_value
+INFO     engine.agents.extractor:extractor.py:1179 Extraction complete: 0 extracted, 0 skipped (asserted), 0 skipped (refused), 1 failed, 0 total spans
+FAILED tests/test_write_boundary_guard.py::test_a_blank_pass2_value_with_evidence_is_refused_in_both_modes
+FAILED tests/test_write_boundary_guard.py::test_on_the_legacy_path_a_non_value_token_is_never_asserted
+FAILED tests/test_write_boundary_guard.py::test_a_stored_record_with_incomplete_fields_is_counted_extracted
+3 failed, 1 passed in 5.59s

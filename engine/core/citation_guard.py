@@ -42,6 +42,19 @@ engine writes that token and writes it only where it refused to store evidence.
 Hence a distinct code: the two failures have different culprits and the log
 should not blur them.
 
+**A blank value is not a value** (INT-i12-2). Pass 2 supplies the stored value
+under a schema that allows any string, the empty one included. An empty or
+whitespace value with evidence behind it is neither a token nor a sentinel, and
+it used to pass both modes and be stored as an `asserted` value. It is an
+offender in both modes, `BLANK_VALUE`: Pass 1 has `VALUE_MISSING` for this, and
+this is Pass 2's equivalent.
+
+**Non-value tokens on the legacy path** (INT-i12-6, N13). The escape token and
+the contract-unmet token are states of the elicited design. The legacy prompt
+offers neither, so one returned as a field's value there is not a value and is
+not a state the model was asked for: in `legacy` mode it is an offender,
+`NON_VALUE_TOKEN_AS_VALUE`, with or without a snippet, and is never asserted.
+
 Note what did NOT change. This guard's strictness is untouched: an uncited value
 is still refused. Ruling 1 moved where the refusal LANDS — the offending field
 becomes CONTRACT_UNMET rather than the whole paper being dropped — and by the
@@ -64,6 +77,10 @@ MODES = (STRICT, LEGACY)
 VALUE_WITHOUT_CITATION = "VALUE_WITHOUT_CITATION"
 ESCAPE_WITH_CITATION = "ESCAPE_WITH_CITATION"
 CONTRACT_UNMET_WITH_CITATION = "CONTRACT_UNMET_WITH_CITATION"
+#: INT-i12-2: an empty or whitespace value that carries evidence.
+BLANK_VALUE = "BLANK_VALUE"
+#: INT-i12-6, N13: the escape or contract-unmet token as a value, legacy mode.
+NON_VALUE_TOKEN_AS_VALUE = "NON_VALUE_TOKEN_AS_VALUE"
 
 
 class UncitedValueError(RuntimeError):
@@ -151,8 +168,18 @@ def check_citations(
         cited = citation_counts.get(name, 0) if citation_counts is not None else None
         has_evidence = bool(snippet) if cited is None else cited > 0
 
+        if not value_u and has_evidence:
+            # INT-i12-2: evidence with no value. Without evidence it is the
+            # ordinary uncited case below.
+            offenders.append((name, BLANK_VALUE))
+            continue
+
         if escape_u is not None and value_u == escape_u:
             n_escape += 1
+            if mode == LEGACY:
+                # INT-i12-6: not a value the legacy prompt offers.
+                offenders.append((name, NON_VALUE_TOKEN_AS_VALUE))
+                continue
             # The escape token is a statement about the search, not the paper.
             # Evidence alongside it contradicts the token it accompanies.
             if has_evidence:
@@ -161,6 +188,10 @@ def check_citations(
 
         if unmet_u is not None and value_u == unmet_u:
             n_unmet += 1
+            if mode == LEGACY:
+                # N13: the engine's own token, which no legacy record writes.
+                offenders.append((name, NON_VALUE_TOKEN_AS_VALUE))
+                continue
             # The engine writes this token only where it refused to store
             # evidence, so evidence alongside it is the engine contradicting
             # itself -- see the module docstring on why the code differs.

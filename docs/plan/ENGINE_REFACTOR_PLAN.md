@@ -770,6 +770,14 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 **The pre-tag list, recounted 2026-10-12 (12l item 0, R620), by script from the plan** (`docs/session-reports/session-12/12l_R620/recount_12l_r620.py` → `recount_12l_r620.json`: the R619 count above as the baseline, reproduced by `recount_12l_r619.py` on this file, and the row above). Baseline: 258 rows — Class 1 / 2 / 3 = 95 / 49 / 114, and 0 without a class. Deltas: 1 row enters, Class 3 (INT-l12-21 in P7); R620 moves no class. **Now 259 rows: Class 1 / 2 / 3 = 95 / 49 / 115, and 0 without a class.** **R510 (2026-10-12, 12l item 0, R620): rows in 1 (1 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 0 / 1), rows out 0.** The brief's expected total (the architect's arithmetic, I3) was 259 rows, 95 / 49 / 115, with P1 at 53 rows and 35 units; the script gives the same. Counts by package and class (first-named package, as before): P1 26 / 19 / 8 (53); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 104 (105). P1's fix units stay 35.
 
+**L (12l additions, R621).** *Opened 2026-10-12 (12l item 0 of the 12l-U09 brief) under R509 and R621.* One row from unit U08's report (`12l_U08.md`, `8058399`): `INT-l12-22` for its findings F1 and F2 together (R621(a)). The text cell is each finding's heading and the report's own sentences, quoted unchanged; class and package are R621's. Not a row, as ruled: F3 opens nothing (R621(b)).
+
+| # | On disk (the unit report, quoted) | Class | Owning package | Governing ruling | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| INT-l12-22 | F1 — two more readerless telemetry writes remain in `pipeline.py`. `_LAST_PASS2_TELEMETRY["n_contract_unmet"]` and `["accepted_pass1_attempt"]` are written beside the two removed here and read by nothing; both figures already reach the telemetry row through the `elicitation` extra. F2 — `FieldOutcome.attempts` no longer reaches anything stored. The record builders still set it; `plan_extraction_events` now writes the record's `spent` and `attempts`. | 3 | P7 | R621(a) | `12l_U08.md` "R509 findings", F1 and F2 (`engine/elicitation/pipeline.py::extract_paper_elicited`; `engine/core/extraction_events.py::FieldOutcome`, `plan_extraction_events`). R621(a): "F1 (two readerless _LAST_PASS2_TELEMETRY writes in pipeline.py) and F2 (FieldOutcome.attempts no longer reaches anything stored): one new row, Class 3, P7." |
+
+**The pre-tag list, recounted 2026-10-12 (12l item 0, R621), by script from the plan** (`docs/session-reports/session-12/12l_R621/recount_12l_r621.py` → `recount_12l_r621.json`: the R620 count above as the baseline, reproduced by `recount_12l_r620.py` on this file, and the row above). Baseline: 259 rows — Class 1 / 2 / 3 = 95 / 49 / 115, and 0 without a class. Deltas: 1 row enters, Class 3 (INT-l12-22 in P7); R621 moves no class. **Now 260 rows: Class 1 / 2 / 3 = 95 / 49 / 116, and 0 without a class.** **R510 (2026-10-12, 12l item 0, R621): rows in 1 (1 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 0 / 1), rows out 0.** The brief's expected total (the architect's arithmetic, I3) was 260 rows, 95 / 49 / 116, with P1 at 53 rows and 35 units; the script gives the same. Counts by package and class (first-named package, as before): P1 26 / 19 / 8 (53); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 105 (106). P1's fix units stay 35.
+
 ### Not engine defects — plan v50 wording
 
 The product description ("autonomously executes … synthesis," "publication-ready," "no data leaves the machine" — the last is CLI-flag-dependent per C5); the four contradicted counts (D4, D1, F4, G1); the §10 novelty sentence; and "Run 7 once the engine is settled" as an open-ended dependency.
@@ -1302,6 +1310,7 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | INT-l12-19 | P7 — R618(c) |
 | INT-l12-20 | P1, landing in U07 — R619(c) |
 | INT-l12-21 | P7 — R620(d) |
+| INT-l12-22 | P7 — R621(a) |
 
 *Addendum 2026-09-27 (9d closeout), to the coverage map:* four rows whose unit reads "9d" moved by ruling and were not worked in 9d. **H3** → 9e (R180: `normalize_prefix` has five test callers, not four; all retire with it). **B12** and **B13** → 9e with PRISMA (R178). **A16** → session 12, the freshman freeze (R178). The rows' "On disk" cells are unchanged; this addendum is the record.
 
@@ -4094,3 +4103,20 @@ R620 — U07's findings (R509), on 12l_U07 (c4f1369).
 | Date | Ruling | Made by |
 | --- | --- | --- |
 | 2026-10-11 | R620 — U07's findings (R509), on 12l_U07 (c4f1369). (a) F1 (the cloud distribution check skips on any failed paper or under 10 papers extracted in the run): a dated note on B9; closes in U28 with the cloud gate. (b) F3: no row. (c) F2: on a stored claim, attempts means the attempts spent on the paper; the attempt whose record was kept is recorded separately. Lands in U08. A dated note on A-11. (d) F4 (UncitedValueError's name and first line are narrower than the offenders it carries): new row, Class 3, P7. | PI, 2026-10-11, during session 12l |
+
+**Block 19.** *Transcribed 2026-10-12 (12l item 0 of the 12l-U09 brief), in its own commit with the row it orders, in the R597(e) form:* ruling R621, made by PI on architect recommendation during session 12l on unit U08's report (`docs/session-reports/session-12/12l_U08/12l_U08.md`, `8058399`), carried in the 12l-U09 brief. The ruling as issued, with its line breaks:
+
+```text
+RULING (PI, 2026-10-11, session 12l, on architect recommendation; transcribe at item 0 as
+R621 in Block 18's form)
+
+R621 — U08's findings (R509), on 12l_U08 (8058399).
+(a) F1 (two readerless _LAST_PASS2_TELEMETRY writes in pipeline.py) and F2
+    (FieldOutcome.attempts no longer reaches anything stored): one new row, Class 3,
+    P7.
+(b) F3: no row.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-11 | R621 — U08's findings (R509), on 12l_U08 (8058399). (a) F1 (two readerless _LAST_PASS2_TELEMETRY writes in pipeline.py) and F2 (FieldOutcome.attempts no longer reaches anything stored): one new row, Class 3, P7. (b) F3: no row. | PI, 2026-10-11, during session 12l |

@@ -236,7 +236,7 @@ closeout; **the old record is superseded, never edited.**
   before any live write, exclusivity is checked against scheduled jobs that read or write
   review.db or the evidence-engine tree — not every timer on the box (R85) — plus
   lsof/fuser empty on review.db.
-- R237: No extraction against live before Run 7 on the tagged freshman state. The first run whose manifest declares an extraction stage pins the arm, whether or not it extracts; recovery is a new arm name (R10). On live, that run is Run 7. Smokes run on a throwaway copy (R235) and declare --max-papers (R236).
+- R237: No extraction against live before Run 7 on the tagged freshman state. The first run that reaches the extract stage pins the arm; a run that stops before extract leaves it unpinned, and any later run is compared against the pin over its whole tuple. Recovery is a new arm name (R10). On live, that run is Run 7. Smokes run on a throwaway copy (R235) and declare --max-papers (R236).
 - **Smokes run on a throwaway copy of the review (R235):** a verified `auto_backup` copied to `data/<id>/review.db` under a new review id, `spec.yaml` and `extraction_codebook.yaml` copied beside it with `review_id` / `review:` changed and nothing else, launched with both `--review <id>` and `--spec data/<id>/spec.yaml`; its logs stay under `data/<id>/logs/` until the manifest closes, and the whole copy is moved out of `data/` before the next gate run (R241: the inventory counts every `data/<dir>/review.db`, row B21).
 - **Record of reference (live, since 022 was applied 2026-09-29):** `docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json` — 36 tables, overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`.
 
@@ -414,8 +414,8 @@ sentinel with no citation fails the write and enters bounded retry. Intended, no
 A three-way pin test asserts codebook == module == document; on disagreement **the codebook is the
 copy that is wrong**. Prompt construction hand-lists no field — grep-provable, pinned by test.
 
-**Modules.** `units.py` (ELICIT-01 index space, ported; `MIN_UNIT_TOKENS=3` is a study artifact
-adopted provisionally — re-derivation belongs to the parse-quality-gate task) · `classes.py` ·
+**Modules.** `units.py` (exact source slices of the raw parsed text, units-2, shown to the model
+whitespace-collapsed; `MIN_UNIT_TOKENS=3` is a study artifact adopted provisionally — re-derivation belongs to the parse-quality-gate task) · `classes.py` ·
 `contracts.py` (parse-time contract enforcement; closed violation vocabulary, FATAL vs ADVISORY) ·
 `materialize.py` · `prompts.py` · `sizing.py` · `pipeline.py`.
 
@@ -423,13 +423,16 @@ adopted provisionally — re-derivation belongs to the parse-quality-gate task) 
 - **No silent repair.** An out-of-range or malformed index is recorded verbatim and FAILS the
   field; it is never dropped so the surviving indices can carry the field.
 - **The stored snippet is the engine's, not the model's.** Pass 2's `source_snippet` is
-  overwritten with materialized unit text. ⚠ A materialized quote is ANCHORED by construction, so
+  overwritten with the materialized run: one exact slice of the raw parsed text, checked at
+  materialisation (SnippetNotExact stops the run). ⚠ A materialized quote is ANCHORED by construction, so
   **anchored rates from this path are NOT comparable to Run 6's 58.3% or the ~39–43% corrected
   baseline**. Citation validity, contract-violation counts and judge-scored supportedness are the
   measures that carry information.
 - **First contiguous run only.** The span carries the first run of consecutive cited units, never
   a join of disjoint ones — joining would manufacture a quote appearing nowhere in the paper.
-  Full citation set lives in `record_call(extra=…)` and the per-run unit-map file (no migration).
+  Every evidenced claim carries its full citation record in its payload (`citation_record`: cited
+  indices, derived runs with offsets, per step for JUDGMENT), resolvable from the parsed text alone;
+  unit maps are written under `run_<run_id>`.
 - **Index lists take bare integers.** The prompt must keep "Use the integer only, not the `[S12]`
   marker" for both field-level and step-level `unit_indices`; dropping it cost a whole smoke run.
   `parse_container`'s `recovered_marker_tokens` branch is the backstop and turns a regression into

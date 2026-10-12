@@ -10,6 +10,14 @@ extractor, `PARSED` at `run_pipeline`'s gate — and skip a paper that held an
 * **Input identity** is the paper's current parsed text, resolved and then read
   once so that all three refusals surface here, not mid-run (R122, 9b-2a R2).
   A refused paper is reported with its `reason_code` and the run continues.
+* **Already extracted is decided first (INT-i12-69).** The reuse key needs only
+  the RECORDED reference (`parsed_text_refs.parsed_text_sha256`), not the file,
+  so "this arm already holds the paper under this key" is decided before the
+  file is read. A paper the arm holds is never refused for its file: if the
+  file is missing or no longer matches the recorded hash it is skipped as
+  asserted and named in `claimed_text_unreadable`, and nothing about its
+  processing state or claims changes. Only a paper the arm does not hold is
+  refused for its file.
 * **Skip** a paper only when this arm already holds a LIVE claim-bearing event
   (asserted, declined or contract_unmet — 9b-2a R3) whose `claim_inputs` row
   (R217, D16 — the constrained, indexed authority the writer fills, not the
@@ -53,6 +61,10 @@ class SelectionResult:
     to_extract: tuple[tuple[int, ParsedTextRef], ...]
     skipped_asserted: tuple[int, ...]
     skipped_refused: tuple[tuple[int, str], ...]   # (paper_id, reason_code)
+    #: INT-i12-69: papers in `skipped_asserted` whose recorded text file is
+    #: missing or altered — (paper_id, reason_code, stored path). Reported, not
+    #: refused: the arm already holds them under their key.
+    claimed_text_unreadable: tuple[tuple[int, str, str], ...] = ()
 
 
 def _live_reuse_keys(conn: sqlite3.Connection, paper_id: int, arm: str) -> set[str]:
@@ -77,23 +89,42 @@ def _live_reuse_keys(conn: sqlite3.Connection, paper_id: int, arm: str) -> set[s
 
 def select_for_extraction(conn: sqlite3.Connection, *, arm: str) -> SelectionResult:
     """The papers `arm` should extract now, and why each other corpus paper is not."""
-    to_extract, skipped_asserted, skipped_refused = [], [], []
+    to_extract, skipped_asserted, skipped_refused, unreadable = [], [], [], []
     for paper_id in eligible_paper_ids(conn):
         try:
             ref = resolve_parsed_text(conn, paper_id)
-            read_parsed_bytes(ref)
-        except ParsedTextError as exc:
+        except ParsedTextError as exc:           # no recorded text: no key to hold
             logger.warning("Paper %d: not selected — %s (%s)",
                            paper_id, exc.reason_code, exc)
             skipped_refused.append((paper_id, exc.reason_code))
             continue
-        key = reuse_key(arm, paper_id, ref.sha256)
-        if key in _live_reuse_keys(conn, paper_id, arm):
+        # INT-i12-69: the key is built from the recorded hash, so whether the arm
+        # already holds this paper is known before its file is read.
+        held = reuse_key(arm, paper_id, ref.sha256) in _live_reuse_keys(conn, paper_id, arm)
+        try:
+            read_parsed_bytes(ref)
+        except ParsedTextError as exc:
+            if held:
+                logger.warning(
+                    "Paper %d: arm %s already holds it under its current key, and its "
+                    "recorded parsed text is unreadable — %s, %s. Not selected and not "
+                    "refused: its claims and processing state are unchanged. Restore the "
+                    "file at that path so it matches the recorded hash, or record a new "
+                    "parsed text for the paper.",
+                    paper_id, arm, exc.reason_code, ref.stored_path)
+                skipped_asserted.append(paper_id)
+                unreadable.append((paper_id, exc.reason_code, ref.stored_path))
+            else:
+                logger.warning("Paper %d: not selected — %s (%s)",
+                               paper_id, exc.reason_code, exc)
+                skipped_refused.append((paper_id, exc.reason_code))
+            continue
+        if held:
             skipped_asserted.append(paper_id)
         else:
             to_extract.append((paper_id, ref))
     return SelectionResult(arm, tuple(to_extract), tuple(skipped_asserted),
-                           tuple(skipped_refused))
+                           tuple(skipped_refused), tuple(unreadable))
 
 
 def check_max_papers(max_papers) -> None:
@@ -116,4 +147,5 @@ def bound_selection(selection: SelectionResult, max_papers: int) -> SelectionRes
     """
     check_max_papers(max_papers)
     return SelectionResult(selection.arm, selection.to_extract[:max_papers],
-                           selection.skipped_asserted, selection.skipped_refused)
+                           selection.skipped_asserted, selection.skipped_refused,
+                           selection.claimed_text_unreadable)

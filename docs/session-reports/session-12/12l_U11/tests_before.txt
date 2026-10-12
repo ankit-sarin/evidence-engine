@@ -1,0 +1,20 @@
+______ test_a_missing_text_on_an_audited_paper_is_not_re_failed_each_run _______
+    def test_a_missing_text_on_an_audited_paper_is_not_re_failed_each_run(db, spec, caplog):
+>           assert sel.skipped_asserted == (DONE,) and sel.to_extract == ()
+tests/test_text_refusal_at_selection.py:144: AssertionError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+>       assert _failed_events(rdb, DONE) == []
+tests/test_text_refusal_at_selection.py:173: AssertionError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+>       assert stats["extracted"] == 1 and stats["skipped_asserted"] == 1
+tests/test_text_refusal_at_selection.py:190: AssertionError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 1/1 (100.0%) | Paper EE-008 EXTRACTED | 0s | ETA ~0s | 0 failed
+>       assert _failed_events(rdb, FRESH) == [(run_1, MISSING)]
+tests/test_text_refusal_at_selection.py:209: AssertionError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+FAILED tests/test_text_refusal_at_selection.py::test_a_missing_text_on_an_audited_paper_is_not_re_failed_each_run
+FAILED tests/test_text_refusal_at_selection.py::test_changed_bytes_on_an_audited_paper_are_reported_as_changed
+FAILED tests/test_text_refusal_at_selection.py::test_the_run_summary_names_the_paper_when_other_papers_are_extracted
+FAILED tests/test_text_refusal_at_selection.py::test_a_paper_with_no_claims_and_a_missing_file_is_refused_once
+4 failed in 5.65s

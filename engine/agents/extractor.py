@@ -36,10 +36,13 @@ from engine.core.events import mint_extraction_uid
 from engine.core.extraction_events import (  # noqa: F401 — re-exported (T7)
     CONSECUTIVE_FAILURE_ABORT, ExtractionRecord, HeldFieldsBelowFloor,
     MissingThinkingChannelError,
-    PaperFailure, RunAborted, counts_toward_abort, expected_count, held_count, is_run_fault,
+    PaperFailure, RunAborted, claimed_text_unreadable_entries, counts_toward_abort,
+    expected_count, held_count, is_run_fault,
     legacy_record, outcome_for_exception, run_extraction_summary, write_extraction_events,
 )
+from engine.core.effective import effective_state
 from engine.core.extraction_telemetry import record_call
+from engine.core.run_telemetry import record_run_event
 from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.core.parsed_text import ParsedTextError, ParsedTextRef, read_parsed_text
 from engine.core.selection import SelectionResult, select_for_extraction
@@ -1011,12 +1014,37 @@ def record_selection_refusals(db: ReviewDatabase, selection: SelectionResult, *,
     Selection keeps only the reason code, not the exception, so the payload says
     where the refusal was seen instead of repeating its message. Refusals never
     touch the consecutive-failure abort counter (A14). Returns how many it wrote.
+
+    INT-i12-69, two things. **Once, not once per run:** a refusal is written only
+    when the paper's processing state is not already `extraction_failed` with the
+    same reason — the same fact is not a new event on every run. **Reported, not
+    refused:** papers the arm already holds whose text file is unreadable
+    (`selection.claimed_text_unreadable`) get no event; they are written to the
+    run's telemetry (`claimed_papers_text_unreadable`) and logged, here because
+    every run that selects passes through this function.
     """
+    written = 0
     for pid, reason_code in selection.skipped_refused:
+        state = effective_state(db._conn, pid)
+        if (state.processing, state.processing_reason) == ("extraction_failed", reason_code):
+            logger.info("Paper %d: still refused at selection (%s); its refusal is "
+                        "already its latest processing event, so none is written.",
+                        pid, reason_code)
+            continue
         write_extraction_events(db._conn, PaperFailure(
             pid, selection.arm, run_id, reason_code, "extract_pass1",
             detail={"refused_at": "selection"}))
-    return len(selection.skipped_refused)
+        written += 1
+    held = claimed_text_unreadable_entries(selection)
+    if held:
+        logger.warning(
+            "Run %d: %d paper(s) arm %s already holds have an unreadable recorded "
+            "parsed text and were neither selected nor refused: %s",
+            run_id, len(held), selection.arm, held)
+        record_run_event(Path(db.db_path).parent, run_id=run_id,
+                         kind="claimed_papers_text_unreadable",
+                         payload={"run_id": run_id, "arm": selection.arm, "papers": held})
+    return written
 
 
 def _run_extraction_unlocked(
@@ -1200,7 +1228,7 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
     # R535 / R612(f): what the run stored, read back from its paper events —
     # papers stored with fields missing (and which), papers whose held fields
     # are all declined, and papers failed under the floor.
-    summary = run_extraction_summary(db._conn, run_id)
+    summary = run_extraction_summary(db._conn, run_id, selection)
     stats.update(summary)
     if summary["stored_incomplete"] or summary["all_declined"] or summary["below_floor"]:
         logger.warning(

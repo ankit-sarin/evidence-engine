@@ -732,8 +732,17 @@ def incomplete_extractions(conn, *, run_id: int | None = None) -> dict[int, tupl
             if p.get("incomplete_fields")}
 
 
-def run_extraction_summary(conn, run_id: int) -> dict:
-    """What one run stored, from its paper events:
+def claimed_text_unreadable_entries(selection) -> list[dict]:
+    """INT-i12-69: the run summary's entry for papers the arm already holds whose
+    recorded text file is missing or altered — one dict per paper, from the
+    selection that found them. `condition` is the parsed-text reason code."""
+    return [{"paper_id": pid, "condition": reason, "path": path}
+            for pid, reason, path in getattr(selection, "claimed_text_unreadable", ())]
+
+
+def run_extraction_summary(conn, run_id: int, selection=None) -> dict:
+    """What one run stored, from its paper events, and — with `selection` — what
+    its selection found without storing (`claimed_text_unreadable`):
 
     * `stored_incomplete` / `incomplete_fields` — papers stored `extracted`
       with fields missing after the retry budget, and which fields;
@@ -767,7 +776,8 @@ def run_extraction_summary(conn, run_id: int) -> dict:
     return {"stored_incomplete": len(incomplete), "incomplete_fields": incomplete,
             "all_declined": sum(1 for p in extracted.values()
                                 if not p.get("asserted") and p.get("declined")),
-            "below_floor": below, "value_divergence": divergence}
+            "below_floor": below, "value_divergence": divergence,
+            "claimed_text_unreadable": claimed_text_unreadable_entries(selection)}
 
 
 def _latest_extracted(conn, run_id: int | None) -> dict[int, dict]:

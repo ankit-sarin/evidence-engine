@@ -1,0 +1,332 @@
+{
+ "arm": "local_deepseek_r1_32b",
+ "arm_row": {
+  "configuration_marker": "pinned",
+  "pinned_run_id": 1
+ },
+ "cases": {
+  "A_pass1_empty_on_both_attempts": {
+   "abort": "run 1 aborted: 3 consecutive papers produced nothing usable (last: paper 783, held_fields_below_floor). Every paper's event is written; the run closes with end_status 'aborted' and the abort's reason.",
+   "calls": {
+    "pass1": 6,
+    "pass2": 0
+   },
+   "claims_written": {},
+   "ended": "aborted",
+   "manifest_end": [
+    "aborted",
+    "run 1 aborted: 3 consecutive papers produced nothing usable (last: paper 783, held_fields_below_floor). Every paper's event is written; the run closes with end_status 'aborted' and the abort's reason."
+   ],
+   "paper_events": [
+    {
+     "asserted": 0,
+     "contract_unmet": 20,
+     "declined": 0,
+     "expected": 20,
+     "held": 0,
+     "incomplete_fields": [],
+     "paper_id": 491,
+     "reason_code": "held_fields_below_floor",
+     "to_state": "extraction_failed"
+    },
+    {
+     "asserted": 0,
+     "contract_unmet": 20,
+     "declined": 0,
+     "expected": 20,
+     "held": 0,
+     "incomplete_fields": [],
+     "paper_id": 679,
+     "reason_code": "held_fields_below_floor",
+     "to_state": "extraction_failed"
+    },
+    {
+     "asserted": 0,
+     "contract_unmet": 20,
+     "declined": 0,
+     "expected": 20,
+     "held": 0,
+     "incomplete_fields": [],
+     "paper_id": 783,
+     "reason_code": "held_fields_below_floor",
+     "to_state": "extraction_failed"
+    }
+   ],
+   "run_id": 1,
+   "selected": [
+    491,
+    679,
+    783
+   ],
+   "selected_again_by_the_next_run": [
+    783,
+    491,
+    679
+   ]
+  },
+  "B_exhausted_record_under_the_floor": {
+   "abort": "run 2 aborted: 3 consecutive papers produced nothing usable (last: paper 783, held_fields_below_floor). Every paper's event is written; the run closes with end_status 'aborted' and the abort's reason.",
+   "calls": {
+    "pass1": 9,
+    "pass2": 9
+   },
+   "claims_written": {},
+   "ended": "aborted",
+   "manifest_end": [
+    "aborted",
+    "run 2 aborted: 3 consecutive papers produced nothing usable (last: paper 783, held_fields_below_floor). Every paper's event is written; the run closes with end_status 'aborted' and the abort's reason."
+   ],
+   "paper_events": [
+    {
+     "asserted": 5,
+     "contract_unmet": 0,
+     "declined": 0,
+     "expected": 20,
+     "held": 5,
+     "incomplete_fields": [
+      "autonomy_level",
+      "validation_setting",
+      "task_monitor",
+      "task_generate",
+      "task_select",
+      "task_execute",
+      "system_maturity",
+      "study_design",
+      "country",
+      "primary_outcome_metric",
+      "primary_outcome_value",
+      "comparison_to_human",
+      "secondary_outcomes",
+      "key_limitation",
+      "clinical_readiness_assessment"
+     ],
+     "paper_id": 491,
+     "reason_code": "held_fields_below_floor",
+     "to_state": "extraction_failed"
+    },
+    {
+     "asserted": 5,
+     "contract_unmet": 0,
+     "declined": 0,
+     "expected": 20,
+     "held": 5,
+     "incomplete_fields": [
+      "autonomy_level",
+      "validation_setting",
+      "task_monitor",
+      "task_generate",
+      "task_select",
+      "task_execute",
+      "system_maturity",
+      "study_design",
+      "country",
+      "primary_outcome_metric",
+      "primary_outcome_value",
+      "comparison_to_human",
+      "secondary_outcomes",
+      "key_limitation",
+      "clinical_readiness_assessment"
+     ],
+     "paper_id": 679,
+     "reason_code": "held_fields_below_floor",
+     "to_state": "extraction_failed"
+    },
+    {
+     "asserted": 5,
+     "contract_unmet": 0,
+     "declined": 0,
+     "expected": 20,
+     "held": 5,
+     "incomplete_fields": [
+      "autonomy_level",
+      "validation_setting",
+      "task_monitor",
+      "task_generate",
+      "task_select",
+      "task_execute",
+      "system_maturity",
+      "study_design",
+      "country",
+      "primary_outcome_metric",
+      "primary_outcome_value",
+      "comparison_to_human",
+      "secondary_outcomes",
+      "key_limitation",
+      "clinical_readiness_assessment"
+     ],
+     "paper_id": 783,
+     "reason_code": "held_fields_below_floor",
+     "to_state": "extraction_failed"
+    }
+   ],
+   "run_id": 2,
+   "selected": [
+    491,
+    679,
+    783
+   ],
+   "selected_again_by_the_next_run": [
+    783,
+    491,
+    679
+   ]
+  },
+  "C_exhausted_record_at_or_above_the_floor": {
+   "calls": {
+    "pass1": 9,
+    "pass2": 9
+   },
+   "claims_written": {
+    "asserted": 42
+   },
+   "ended": "completed",
+   "manifest_end": [
+    "completed",
+    null
+   ],
+   "paper_events": [
+    {
+     "asserted": 14,
+     "contract_unmet": 0,
+     "declined": 0,
+     "incomplete_fields": [
+      "primary_outcome_metric",
+      "primary_outcome_value",
+      "comparison_to_human",
+      "secondary_outcomes",
+      "key_limitation",
+      "clinical_readiness_assessment"
+     ],
+     "paper_id": 491,
+     "reason_code": null,
+     "to_state": "extracted"
+    },
+    {
+     "asserted": 14,
+     "contract_unmet": 0,
+     "declined": 0,
+     "incomplete_fields": [
+      "primary_outcome_metric",
+      "primary_outcome_value",
+      "comparison_to_human",
+      "secondary_outcomes",
+      "key_limitation",
+      "clinical_readiness_assessment"
+     ],
+     "paper_id": 679,
+     "reason_code": null,
+     "to_state": "extracted"
+    },
+    {
+     "asserted": 14,
+     "contract_unmet": 0,
+     "declined": 0,
+     "incomplete_fields": [
+      "primary_outcome_metric",
+      "primary_outcome_value",
+      "comparison_to_human",
+      "secondary_outcomes",
+      "key_limitation",
+      "clinical_readiness_assessment"
+     ],
+     "paper_id": 783,
+     "reason_code": null,
+     "to_state": "extracted"
+    }
+   ],
+   "run_id": 3,
+   "selected": [
+    491,
+    679,
+    783
+   ],
+   "selected_again_by_the_next_run": [],
+   "stats": {
+    "all_declined": 0,
+    "below_floor": 0,
+    "extracted": 0,
+    "failed": 3,
+    "incomplete_fields": {
+     "491": [
+      "primary_outcome_metric",
+      "primary_outcome_value",
+      "comparison_to_human",
+      "secondary_outcomes",
+      "key_limitation",
+      "clinical_readiness_assessment"
+     ],
+     "679": [
+      "primary_outcome_metric",
+      "primary_outcome_value",
+      "comparison_to_human",
+      "secondary_outcomes",
+      "key_limitation",
+      "clinical_readiness_assessment"
+     ],
+     "783": [
+      "primary_outcome_metric",
+      "primary_outcome_value",
+      "comparison_to_human",
+      "secondary_outcomes",
+      "key_limitation",
+      "clinical_readiness_assessment"
+     ]
+    },
+    "stored_incomplete": 3
+   }
+  }
+ },
+ "consecutive_failure_abort": 3,
+ "copy_overall_sha256_after": "000db389fa40fd573dff449c33138471f44a3c10585a492dac9affd80397f6ca",
+ "copy_overall_sha256_before": "0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25",
+ "database": "data/u06_floor_20261012/review.db",
+ "git": {
+  "commit": "e52c17e51363d69e90fbd7b00d68169b6c1338be",
+  "dirty": false
+ },
+ "papers": [
+  783,
+  491,
+  679
+ ],
+ "parsed_texts": {
+  "491": {
+   "bytes": 10377,
+   "path": "data/surgical_autonomy/parsed_text/491_v2.md",
+   "sha256": "c95e7f4f558ae7e409c70243b6fa349b33fd6fe66dd321e2eac39f4810db7dfd",
+   "sha256_of_file_now": "c95e7f4f558ae7e409c70243b6fa349b33fd6fe66dd321e2eac39f4810db7dfd"
+  },
+  "679": {
+   "bytes": 12317,
+   "path": "data/surgical_autonomy/parsed_text/679_v2.md",
+   "sha256": "1c96977ad82d9a2680d2a32445ba7c5869b3da939c712ecd821dc57b2621d841",
+   "sha256_of_file_now": "1c96977ad82d9a2680d2a32445ba7c5869b3da939c712ecd821dc57b2621d841"
+  },
+  "783": {
+   "bytes": 7987,
+   "path": "data/surgical_autonomy/parsed_text/783_v2.md",
+   "sha256": "709549ee800d9e5924cd1b30fc9238c1bb0560a95d3f97daff5155c1c7b2ff67",
+   "sha256_of_file_now": "709549ee800d9e5924cd1b30fc9238c1bb0560a95d3f97daff5155c1c7b2ff67"
+  }
+ },
+ "prisma": {
+  "extracted_incomplete": 3,
+  "extraction_failed": 0,
+  "failure_reasons_extraction_failed": {},
+  "incomplete_fields": {
+   "clinical_readiness_assessment": 3,
+   "comparison_to_human": 3,
+   "key_limitation": 3,
+   "primary_outcome_metric": 3,
+   "primary_outcome_value": 3,
+   "secondary_outcomes": 3
+  },
+  "n_eligible": 190,
+  "validation": {
+   "valid": true
+  }
+ },
+ "review_id": "u06_floor_20261012",
+ "run_utc": "2026-10-12T01:10:36Z",
+ "spec": "data/u06_floor_20261012/spec.yaml with extraction_models.elicitation set True in memory"
+}

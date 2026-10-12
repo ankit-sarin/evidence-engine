@@ -1,0 +1,10 @@
+{
+ "copied": "data/surgical_autonomy/review.db (online backup API, verified against its source), review_specs/surgical_autonomy.yaml, data/surgical_autonomy/extraction_codebook.yaml",
+ "copy_equals_source": true,
+ "copy_overall_sha256": "0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25",
+ "copy_tables": 36,
+ "finished_utc": "2026-10-12T01:10:26Z",
+ "source_overall_sha256": "0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25",
+ "started_utc": "2026-10-12T01:10:25Z",
+ "to": "data/u06_floor_20261012"
+}

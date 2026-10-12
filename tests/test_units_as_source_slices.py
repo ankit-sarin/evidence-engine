@@ -233,13 +233,15 @@ def test_an_elicited_run_opens_pins_verifies_and_writes_real_events(db, elicited
         codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: "e" * 64,
         git=rm.GitState(commit="0" * 40, dirty=False, tag=None), host="fixture")
 
-    # the manifest pinned the arm, and the extract-time check agrees with the pin
+    # the manifest registered the arm; the extract-time check pins it (R569(b),
+    # P1 U05) and agrees with the pin
     arm = spec.extraction_models.arm
-    marker, pinned_run, pinned_sha = conn.execute(
-        "SELECT configuration_marker, pinned_run_id, pinned_sha256 FROM arms "
-        "WHERE arm_name = ?", (arm,)).fetchone()
-    assert (marker, pinned_run) == ("pinned", handle.run_id) and len(pinned_sha) == 64
+    pin = ("SELECT configuration_marker, pinned_run_id, pinned_sha256 FROM arms "
+           "WHERE arm_name = ?")
+    assert tuple(conn.execute(pin, (arm,)).fetchone()) == (None, None, None)
     assert E.verify_extraction_run(conn, spec, handle.run_id) == "e" * 64
+    marker, pinned_run, pinned_sha = conn.execute(pin, (arm,)).fetchone()
+    assert (marker, pinned_run) == ("pinned", handle.run_id) and len(pinned_sha) == 64
 
     with patch("engine.utils.ollama_preflight.require_preflight"):
         stats = E.run_extraction(db, spec, "etest", experiment_lock=False,

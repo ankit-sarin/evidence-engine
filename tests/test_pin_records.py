@@ -88,7 +88,8 @@ def test_a_segmentation_change_moves_the_elicited_arm_pin(review, elicited, spec
     # an arm that cuts no units records no segmentation
     assert "segmentation" not in _pin(spec, cb)
 
-    _open(db, elicited, cb)                          # the arm is pinned here
+    first = _open(db, elicited, cb)
+    E.verify_extraction_run(db._conn, elicited, first.run_id)    # the arm is pinned here
     real_versions = rm.library_versions
 
     def changes():
@@ -164,6 +165,7 @@ def test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_re
     assert declared == sorted(ELICITED_STAGES)
     assert "extract_retry_snippet" not in [r[0] for r in conn.execute(
         "SELECT stage FROM run_stage_configs WHERE run_id = ?", (run_id,))]
+    assert E.verify_extraction_run(conn, elicited, run_id) == DIGEST   # extract pins (U05)
     pinned = json.loads(conn.execute(
         "SELECT configuration_json FROM arms WHERE arm_name = ?", (ARM,)).fetchone()[0])
     assert sorted(pinned["stages"]) == sorted(ELICITED_STAGES)

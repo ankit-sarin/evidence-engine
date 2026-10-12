@@ -50,6 +50,7 @@ import logging
 import os
 import signal
 import socket
+import sqlite3
 import subprocess
 import sys
 import uuid
@@ -286,6 +287,10 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
              inputs: Mapping[str, str] | None = None) -> RunHandle:
     """Write the manifest and pin its arms, or refuse. Before the first call.
 
+    The local extraction arm is the exception (R569(b)): it is registered and,
+    if already pinned, compared here, but pinned only by the run that reaches
+    the extract stage — `bind_extraction_arm`, with the tuple resolved here.
+
     `stages` are resolver stage names; each cloud arm in `cloud_arms` adds
     `cloud:<arm>`. `arms` names extra arms to pin (a human arm, say). `codebook`
     is the loaded `Codebook` the run's prompts are built from.
@@ -324,6 +329,12 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     stage_list = list(stages) + [f"{CLOUD_STAGE_PREFIX}{a}" for a in cloud_arms]
     arms_by_stage = {s: a for s in stage_list if (a := _stage_arm(spec, s))}
     named_arms = sorted(set(arms_by_stage.values()) | set(arms))
+    # R569(b), Design A: the local extraction arm is not pinned here. It is
+    # pinned by the run that reaches the extract stage (`bind_extraction_arm`).
+    # A cloud arm's open is its extract start, and an `arms=` arm is named to
+    # be pinned, so both still pin at open.
+    deferred = ({a for s, a in arms_by_stage.items() if s in _LOCAL_EXTRACTION_STAGES}
+                - set(arms))
 
     # R59 / R21 before any resolution or write.
     existing = {}
@@ -350,9 +361,12 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     libs = library_versions()
 
     pins = {}
+    carried: dict[str, tuple[dict, str]] = {}
     for name in named_arms:
         tup = pin_tuple(spec, name, resolved, codebook.semantic_hash, libs)
         sha = sha256_canonical(tup)
+        if name in deferred:
+            carried[name] = (tup, sha)
         if name in existing and existing[name][1] == ARM_PINNED:
             if existing[name][2] != sha:
                 diff = _diff_keys(json.loads(existing[name][0]), tup)
@@ -361,7 +375,8 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
                     f"this run differs at {diff}. A changed configuration is a new arm "
                     "(R10); declare one in the spec.")
             continue
-        pins[name] = (tup, sha)
+        if name not in deferred:
+            pins[name] = (tup, sha)
 
     cloud_list = sorted(cloud_arms)
     run_uid = str(uuid.uuid4())
@@ -400,6 +415,14 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
              payload_description, canonical_json(manifest), sha256_canonical(manifest)))
         run_id = cur.lastrowid
         # Arms first: a stage row's arm_name is an FK to the registry.
+        for name in sorted(deferred):
+            if name not in existing:
+                # Registered, not pinned: the row the stage rows' FK needs.
+                conn.execute(
+                    "INSERT INTO arms (arm_name, arm_kind, configuration_json, "
+                    "configuration_marker, registered_at, retired_at) "
+                    "VALUES (?, ?, '{}', NULL, ?, NULL)",
+                    (name, _REGISTRY_KIND[spec.arm(name).kind], started))
         for name, (tup, sha) in pins.items():
             arm = spec.arm(name)
             if name in existing:
@@ -435,7 +458,77 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
         raise
     # R225a: registered once, on success only — a rolled-back open never ran.
     _RUN_FIELD_NAMES[run_id] = frozenset(codebook.field_names)
+    if carried:
+        _RUN_ARM_TUPLES[(_database_file(conn), run_id)] = carried
     return RunHandle(run_id=run_id, run_uid=run_uid, stages=resolved)
+
+
+#: (database file, run_id) -> {arm: (pin tuple, its sha256)} for each local
+#: extraction arm the run resolved at open. The run's own tuple, carried to its
+#: extract stage in this process so nothing is resolved twice (R569(b)).
+#: Registered on a successful open only, like `_RUN_FIELD_NAMES`.
+_RUN_ARM_TUPLES: dict[tuple[str, int], dict[str, tuple[dict, str]]] = {}
+
+
+def _database_file(conn) -> str:
+    return conn.execute("PRAGMA database_list").fetchone()[2]
+
+
+def bind_extraction_arm(conn, run_id: int, *, arm: str) -> None:
+    """R569(b), Design A: at the extract stage, before anything is selected or
+    sent, bind `arm` to the tuple run `run_id` resolved at open.
+
+    * The arm is unpinned -> it is pinned with that tuple, `pinned_run_id` this
+      run. One write, committed here.
+    * The arm is pinned -> the whole tuple is compared, and a difference
+      refuses the run naming every differing key. Nothing is written, so a
+      second call in the same run is a comparison that agrees.
+
+    The tuple is the one `open_run` computed, carried in this process; it is
+    not resolved again. For a run this process did not open there is no tuple
+    to bind or compare, and this returns: `extraction_digest`, which every
+    caller runs next, then refuses an unpinned arm and compares each stage's
+    digest against a pinned one, from the run's own rows.
+    """
+    held = _RUN_ARM_TUPLES.get((_database_file(conn), run_id), {}).get(arm)
+    if held is None:
+        return
+    tup, sha = held
+    row = conn.execute(
+        "SELECT configuration_json, configuration_marker, pinned_sha256 FROM arms "
+        "WHERE arm_name = ?", (arm,)).fetchone()
+    if row is not None and row[1] == ARM_PINNED:
+        if row[2] != sha:
+            diff = _diff_keys(json.loads(row[0]), tup)
+            raise ArmPinMismatch(
+                f"run refused at the extract stage: arm {arm!r} is pinned to a different "
+                f"configuration; run {run_id} differs at {diff}. Another run reached "
+                "extract first and pinned the arm. A changed configuration is a new arm "
+                "(R10); declare one in the spec.")
+        return
+    conn.execute("SAVEPOINT bind_extraction_arm")
+    try:
+        conn.execute(
+            "UPDATE arms SET configuration_json = ?, configuration_marker = ?, "
+            "pinned_run_id = ?, pinned_sha256 = ? WHERE arm_name = ? "
+            "AND configuration_marker IS NULL",
+            (canonical_json(tup), ARM_PINNED, run_id, sha, arm))
+        conn.execute("RELEASE bind_extraction_arm")
+        if conn.in_transaction:
+            conn.commit()
+    except sqlite3.IntegrityError as exc:
+        conn.execute("ROLLBACK TO bind_extraction_arm")
+        conn.execute("RELEASE bind_extraction_arm")
+        # The freeze trigger: an unpinned arm that already holds a claim.
+        raise ArmPinMismatch(
+            f"run refused at the extract stage: arm {arm!r} is not pinned and cannot be "
+            f"pinned by run {run_id} — {exc}. An arm that holds claims made before any "
+            "run pinned it has no configuration of record; declare a new arm name in "
+            "the spec (R10).") from exc
+    except BaseException:
+        conn.execute("ROLLBACK TO bind_extraction_arm")
+        conn.execute("RELEASE bind_extraction_arm")
+        raise
 
 
 def _stage_row(key: str, r: ResolvedStage) -> dict:

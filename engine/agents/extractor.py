@@ -919,8 +919,14 @@ def extraction_stages(spec: ReviewSpec) -> tuple[str, ...]:
 
 
 def verify_extraction_run(conn, spec: ReviewSpec, run_id: int) -> str:
-    """R117: the run's one extraction digest, checked against the arm's pin.
-    Raises `StageNotInRun` / `ArmPinMismatch` before anything is selected."""
+    """The extract stage's binding check, before anything is selected or sent.
+
+    R569(b): the arm is pinned here, by the first run to reach extract, with
+    the tuple that run resolved at open; a pinned arm is compared over the
+    whole tuple. Then R117: the run's one extraction digest, checked against
+    the pin. Raises `StageNotInRun` / `ArmPinMismatch`. Called at the stage's
+    start and again by the extraction loop; the second call writes nothing."""
+    rm.bind_extraction_arm(conn, run_id, arm=spec.extraction_models.arm)
     return rm.extraction_digest(conn, run_id, arm=spec.extraction_models.arm,
                                 stages=extraction_stages(spec))
 

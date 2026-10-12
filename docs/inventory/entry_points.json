@@ -7325,7 +7325,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 567,
+            "line": 569,
             "names": [
               "--review",
               "--name"
@@ -7335,7 +7335,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 573,
+            "line": 575,
             "names": [
               "--spec"
             ],
@@ -7344,7 +7344,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 579,
+            "line": 581,
             "names": [
               "--skip-to"
             ],
@@ -7353,7 +7353,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 585,
+            "line": 587,
             "names": [
               "--limit"
             ],
@@ -7362,7 +7362,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 591,
+            "line": 593,
             "names": [
               "--max-papers"
             ],
@@ -7384,13 +7384,13 @@
           },
           {
             "kind": "literal",
-            "line": 569,
+            "line": 571,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 575,
+            "line": 577,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -7685,7 +7685,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "f3c35359be849923c4b9db0a005a23850e6c27e6",
+    "generated_at_commit": "304b13a679576419d38c2fbc2cba2df51fe29456",
     "scan_roots": [
       "engine",
       "scripts",

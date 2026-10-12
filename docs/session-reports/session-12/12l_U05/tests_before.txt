@@ -1,0 +1,19 @@
+E       AssertionError: assert ('pinned', 1,...b19a4c778883') == (None, None, None)
+E         
+E         At index 0 diff: 'pinned' != None
+E         Use -v to get more diff
+tests/test_arm_pinned_at_extract.py:123: AssertionError
+E       AssertionError: assert 'pinned' is None
+tests/test_arm_pinned_at_extract.py:144: AssertionError
+E                   engine.core.run_manifest.ArmPinMismatch: run refused: arm 'local_deepseek_r1_32b' is pinned to a different configuration; this run differs at ['stages.extract_pass1.options_hash', 
+E       AssertionError: assert 0 == 1
+E        +  where 0 = <function test_verifying_twice_in_one_run_writes_the_pin_once.<locals>.rows_changed_by_verify at 0xf94970852a20>(1)
+E        +    where 1 = RunHandle(run_id=1, run_uid='d394ce40-0a88-4b3e-b73f-bd823c22a979', stages={'extract_pass1': ResolvedStage(config=Effe...aaaaaaaaaaaaaaaaaaaa', prompt_hash='d972c46dde944f1381c
+tests/test_arm_pinned_at_extract.py:211: AssertionError
+E       Failed: DID NOT RAISE <class 'engine.core.run_manifest.ArmPinMismatch'>
+FAILED tests/test_arm_pinned_at_extract.py::test_a_screen_start_that_stops_at_the_gate_leaves_the_extraction_arm_unpinned
+FAILED tests/test_arm_pinned_at_extract.py::test_a_screen_start_that_reaches_extract_pins_there_and_a_differing_run_is_refused
+FAILED tests/test_arm_pinned_at_extract.py::test_two_runs_opened_unpinned_the_first_to_reach_extract_pins_and_the_other_is_refused
+FAILED tests/test_arm_pinned_at_extract.py::test_verifying_twice_in_one_run_writes_the_pin_once
+FAILED tests/test_arm_pinned_at_extract.py::test_an_unpinned_arm_that_already_holds_a_claim_is_refused_by_name
+5 failed, 2 passed in 7.56s

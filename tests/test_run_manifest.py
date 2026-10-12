@@ -65,6 +65,14 @@ def _open(db, spec, cb, **kw):
     return rm.open_run(db._conn, spec, kind=kw.pop("kind", "extraction"), codebook=cb, **kw)
 
 
+def _open_and_reach_extract(db, spec, cb, **kw):
+    """Open, then the extract stage's binding: the arm is pinned by the run that
+    reaches extract (R569(b), P1 U05), not by the manifest that declares it."""
+    h = _open(db, spec, cb, **kw)
+    rm.bind_extraction_arm(db._conn, h.run_id, arm=LOCAL_ARM)
+    return h
+
+
 def _count(conn, table):
     return conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
 
@@ -189,10 +197,16 @@ def test_a_retired_arm_is_refused(review, spec):
         _open(db, spec, cb)
 
 
-def test_a_declared_arm_is_pinned_at_its_first_manifest(review, spec):
+def test_a_declared_arm_is_registered_at_its_first_manifest_and_pinned_at_extract(review, spec):
     db, cb = review
     assert db._conn.execute("SELECT 1 FROM arms WHERE arm_name = ?", (LOCAL_ARM,)).fetchone() is None
     h = _open(db, spec, cb)
+    row = db._conn.execute("SELECT * FROM arms WHERE arm_name = ?", (LOCAL_ARM,)).fetchone()
+    assert (row["configuration_marker"], row["pinned_run_id"], row["pinned_sha256"]) == (
+        None, None, None)                             # R569(b): registered, not pinned
+    assert json.loads(db._conn.execute("SELECT manifest_json FROM run_manifests WHERE run_id = ?",
+                                       (h.run_id,)).fetchone()[0])["pins"] == {}
+    rm.bind_extraction_arm(db._conn, h.run_id, arm=LOCAL_ARM)
     row = db._conn.execute("SELECT * FROM arms WHERE arm_name = ?", (LOCAL_ARM,)).fetchone()
     assert row["configuration_marker"] == "pinned" and row["pinned_run_id"] == h.run_id
     tup = json.loads(row["configuration_json"])
@@ -200,19 +214,19 @@ def test_a_declared_arm_is_pinned_at_its_first_manifest(review, spec):
     assert row["pinned_sha256"] == rm.sha256_canonical(tup)
 
 
-def test_an_unpinned_registered_arm_is_pinned_too(review, spec):
+def test_an_unpinned_registered_arm_is_pinned_at_extract_too(review, spec):
     db, cb = review
     events.register_arm(db._conn, LOCAL_ARM, "model")
     db._conn.commit()
-    h = _open(db, spec, cb)
+    h = _open_and_reach_extract(db, spec, cb)
     assert tuple(db._conn.execute("SELECT configuration_marker, pinned_run_id FROM arms "
                                   "WHERE arm_name = ?", (LOCAL_ARM,)).fetchone()) == ("pinned", h.run_id)
 
 
 def test_the_same_configuration_opens_again_and_keeps_the_first_pin(review, spec):
     db, cb = review
-    first = _open(db, spec, cb)
-    second = _open(db, spec, cb)
+    first = _open_and_reach_extract(db, spec, cb)
+    second = _open_and_reach_extract(db, spec, cb)
     assert second.run_id != first.run_id
     assert db._conn.execute("SELECT pinned_run_id FROM arms WHERE arm_name = ?",
                             (LOCAL_ARM,)).fetchone()[0] == first.run_id
@@ -220,7 +234,7 @@ def test_the_same_configuration_opens_again_and_keeps_the_first_pin(review, spec
 
 def test_a_pinned_arm_resolving_differently_is_refused_and_the_difference_named(review, spec):
     db, cb = review
-    _open(db, spec, cb)
+    _open_and_reach_extract(db, spec, cb)
     changed = spec.model_copy(update={"extraction_models":
                                       spec.extraction_models.model_copy(update={"temperature": 0.2})})
     with pytest.raises(rm.ArmPinMismatch, match="options_hash"):
@@ -230,7 +244,7 @@ def test_a_pinned_arm_resolving_differently_is_refused_and_the_difference_named(
 
 def test_a_changed_model_digest_is_a_pin_mismatch(review, spec):
     db, cb = review
-    _open(db, spec, cb)
+    _open_and_reach_extract(db, spec, cb)
     with pytest.raises(rm.ArmPinMismatch, match="model_digest"):
         _open(db, spec, cb, digest_fn=lambda m: "e" * 64)
 
@@ -239,7 +253,7 @@ def test_a_changed_prompt_hash_is_a_pin_mismatch(review, spec):
     """R97: the prompt template is pinned — a changed rendering refuses, named."""
     from engine.core import effective_config as ec
     db, cb = review
-    _open(db, spec, cb)
+    _open_and_reach_extract(db, spec, cb)
     original = ec.render_messages
 
     def reworded(stage, s, **kw):
@@ -260,7 +274,7 @@ def test_a_changed_codebook_hash_is_a_pin_mismatch(review, spec):
     """R97: the codebook the arm extracts under is pinned (its semantic hash)."""
     import dataclasses
     db, cb = review
-    _open(db, spec, cb)
+    _open_and_reach_extract(db, spec, cb)
     other = dataclasses.replace(cb, semantic_hash="f" * 64)
     with pytest.raises(rm.ArmPinMismatch, match="codebook_hash") as exc:
         _open(db, spec, other)

@@ -346,8 +346,10 @@ def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
     logger.info("=" * 60)
     logger.info("STAGE: EXTRACT")
 
-    # R117: the manifest's digest agrees with the arm's pin, or the run refuses
-    # here — before anything is selected.
+    # R569(b): the first run to reach this stage pins the arm with the tuple it
+    # resolved at open; a pinned arm is compared over the whole tuple. R117: the
+    # manifest's digest agrees with the pin. Either refuses here — before
+    # anything is selected.
     verify_extraction_run(db._conn, spec, run_id)
     # Selection is the corpus predicate with the reuse key (D9, R96, R119), made
     # once here and handed to the run, not a papers.status gate.

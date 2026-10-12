@@ -745,6 +745,15 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 **The pre-tag list, recounted 2026-10-12 (12l item 0, R617), by script from the plan** (`docs/session-reports/session-12/12l_R617/recount_12l_r617.py` → `recount_12l_r617.json`: the R616 count above, reproduced by `recount_12l_r616.py` on this file). R617 opens no row and moves no class: three dated notes (INT-h12-2, INT-l12-17, INT-i12-4). **Unchanged at 255 rows: Class 1 / 2 / 3 = 95 / 47 / 113, and 0 without a class.** **R510 (2026-10-12, 12l item 0, R617): rows in 0, rows out 0.** The brief's expected total (I4) was 255 rows; the script gives the same. P1 stays 51 rows (26 / 17 / 8) and 35 fix units.
 
+**L (12l additions, R618).** *Opened 2026-10-12 (12l item 0 of the 12l-U06 brief) under R509 and R618.* Two rows from unit U05's report (`12l_U05.md`, `6a9b58c`): `INT-l12-18` for its finding F1 (R618(b)) and `INT-l12-19` for F2 and F3 together (R618(c)). The text cell is each finding's heading and the report's own sentences, quoted unchanged; class and package are R618's. Not rows, as ruled: F4 and F5 open nothing (R618(d)). R618(a) is the CLAUDE.md text, applied in its own commit.
+
+| # | On disk (the unit report, quoted) | Class | Owning package | Governing ruling | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| INT-l12-18 | the event writer accepts a claim on an arm that no run has pinned. `events._refuse_claim_on_arm` requires only that the claim's run declared the arm (a `run_stage_configs` row). With pinning moved to the extract stage, a claim written between open and extract would land on an unpinned arm, and the freeze trigger would then refuse the pin for good. No engine path writes one there: the extractor writes after `verify_extraction_run`. | 2 | P1, landing in unit U06 | R618(b) | `12l_U05.md` "R509 findings", F1 (`engine/core/events.py::_refuse_claim_on_arm`; `engine/core/run_manifest.py::bind_extraction_arm`; `tests/test_arm_pinned_at_extract.py::test_an_unpinned_arm_that_already_holds_a_claim_is_refused_by_name`). R618(b): "F1 (the event writer accepts a claim on an arm no run has pinned): new row, Class 2, P1, landing in U06: the writer refuses a model arm's claim while that arm is unpinned." |
+| INT-l12-19 | F2 — a run this process did not open gets the digest comparison only. The whole-tuple comparison at extract needs the tuple `open_run` computed, which is carried in memory. A run opened in another process has none; `extraction_digest` still refuses an unpinned arm and compares digests. No engine path extracts under a run another process opened. F3 — a manifest no longer says which tuple its local arm resolved to. `manifest_json.pins` listed the arm's pin sha when the manifest pinned it; it is now empty for a local extraction run, and `arms.pinned_run_id` names only the run that pinned. The per-stage hashes are still in `run_stage_configs`. | 3 | P7 | R618(c) | `12l_U05.md` "R509 findings", F2 and F3 (`engine/core/run_manifest.py::_RUN_ARM_TUPLES`, `bind_extraction_arm`, `open_run`). R618(c): "F2 and F3 (the open-time tuple is held in memory only; the manifest no longer lists the local arm's pin): one new row, Class 3, P7: record the resolved tuple durably." |
+
+**The pre-tag list, recounted 2026-10-12 (12l item 0, R618), by script from the plan** (`docs/session-reports/session-12/12l_R618/recount_12l_r618.py` → `recount_12l_r618.json`: the R617 count above as the baseline, reproduced by `recount_12l_r617.py` on this file, and the two rows above). Baseline: 255 rows — Class 1 / 2 / 3 = 95 / 47 / 113, and 0 without a class. Deltas: 2 rows enter, one Class 2 (INT-l12-18 in P1) and one Class 3 (INT-l12-19 in P7); R618 moves no class. **Now 257 rows: Class 1 / 2 / 3 = 95 / 48 / 114, and 0 without a class.** **R510 (2026-10-12, 12l item 0, R618): rows in 2 (2 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 1 / 1), rows out 0.** The brief's expected total (the architect's arithmetic, I4) was 257 rows, 95 / 48 / 114, with P1 at 52 rows (26 / 18 / 8) and 35 units; the script gives the same. Counts by package and class (first-named package, as before): P1 26 / 18 / 8 (52); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 103 (104). P1's fix units stay 35: INT-l12-18 lands in U06.
+
 ### Not engine defects — plan v50 wording
 
 The product description ("autonomously executes … synthesis," "publication-ready," "no data leaves the machine" — the last is CLI-flag-dependent per C5); the four contradicted counts (D4, D1, F4, G1); the §10 novelty sentence; and "Run 7 once the engine is settled" as an open-ended dependency.
@@ -1273,6 +1282,8 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | INT-l12-15 | P7 — R614(b) |
 | INT-l12-16 | P7 — R614(e) |
 | INT-l12-17 | P7 — R616(d) |
+| INT-l12-18 | P1, landing in U06 — R618(b) |
+| INT-l12-19 | P7 — R618(c) |
 
 *Addendum 2026-09-27 (9d closeout), to the coverage map:* four rows whose unit reads "9d" moved by ruling and were not worked in 9d. **H3** → 9e (R180: `normalize_prefix` has five test callers, not four; all retire with it). **B12** and **B13** → 9e with PRISMA (R178). **A16** → session 12, the freshman freeze (R178). The rows' "On disk" cells are unchanged; this addendum is the record.
 
@@ -3976,3 +3987,43 @@ R617 — U04b's findings (R509), on 12l_U04b_addendum (dccd679).
 | Date | Ruling | Made by |
 | --- | --- | --- |
 | 2026-10-11 | R617 — U04b's findings (R509), on 12l_U04b_addendum (dccd679). (a) F1 (the worked example shows only the field-level citation shape): a dated note on INT-h12-2. No prompt change before the rehearsal. The rehearsal's design counts JUDGMENT first-attempt VALUE_WITHOUT_CITATION separately, split by whether the field carried a field-level citation, because the check tightened at dccd679 and 12g_RA-B was scored under the earlier check. (b) F2: a dated note on INT-l12-17. (c) F3: the session-close expected-values record computes pins with 12l_U04/pin_tuples.py; a dated note on INT-i12-4. (d) F4: no row. | PI, 2026-10-11, during session 12l |
+
+**Block 16.** *Transcribed 2026-10-12 (12l item 0 of the 12l-U06 brief), in its own commit with the rows it orders, in the R597(e) form:* ruling R618, made by PI on architect recommendation during session 12l on unit U05's report and stop (`docs/session-reports/session-12/12l_U05/12l_U05.md`, `6a9b58c`), carried in the 12l-U06 brief. The ruling as issued, with its line breaks, and the CLAUDE.md text its clause (a) refers to ("below"), as the brief carries it:
+
+```text
+RULING (PI, 2026-10-11, session 12l, on architect recommendation; transcribe at item 0 as
+R618 in Block 15's form)
+
+R618 — U05's stop and findings (R509), on 12l_U05 (6a9b58c).
+(a) T-d is replaced by T-d1 and T-d2 below. The provisional MIN_UNIT_TOKENS clause and
+    the comparability warning stay word for word. The CLAUDE.md commit carries T-c,
+    T-d1, T-d2 and T-e.
+(b) F1 (the event writer accepts a claim on an arm no run has pinned): new row,
+    Class 2, P1, landing in U06: the writer refuses a model arm's claim while that arm
+    is unpinned.
+(c) F2 and F3 (the open-time tuple is held in memory only; the manifest no longer lists
+    the local arm's pin): one new row, Class 3, P7: record the resolved tuple durably.
+(d) F4, F5: no row.
+
+CLAUDE.MD TEXT (PI-approved; replace exactly, nothing else in the file):
+T-c. "The first run whose manifest declares an extraction stage pins the arm, whether
+  or not it extracts; recovery is a new arm name (R10)." → "The first run that reaches
+  the extract stage pins the arm; a run that stops before extract leaves it unpinned,
+  and any later run is compared against the pin over its whole tuple. Recovery is a
+  new arm name (R10)."
+T-d1. In the Modules line, "ELICIT-01 index space, ported;" → "exact source slices of
+  the raw parsed text, units-2, shown to the model whitespace-collapsed;"
+T-d2. "Pass 2's `source_snippet` is overwritten with materialized unit text." → "Pass
+  2's `source_snippet` is overwritten with the materialized run: one exact slice of the
+  raw parsed text, checked at materialisation (SnippetNotExact stops the run)."
+T-e. "Full citation set lives in `record_call(extra=…)` and the per-run unit-map file
+  (no migration)." → "Every evidenced claim carries its full citation record in its
+  payload (`citation_record`: cited indices, derived runs with offsets, per step for
+  JUDGMENT), resolvable from the parsed text alone; unit maps are written under
+  `run_<run_id>`."
+Each old string must be found verbatim once, or STOP before the CLAUDE.md commit.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-11 | R618 — U05's stop and findings (R509), on 12l_U05 (6a9b58c). (a) T-d is replaced by T-d1 and T-d2 below. The provisional MIN_UNIT_TOKENS clause and the comparability warning stay word for word. The CLAUDE.md commit carries T-c, T-d1, T-d2 and T-e. (b) F1 (the event writer accepts a claim on an arm no run has pinned): new row, Class 2, P1, landing in U06: the writer refuses a model arm's claim while that arm is unpinned. (c) F2 and F3 (the open-time tuple is held in memory only; the manifest no longer lists the local arm's pin): one new row, Class 3, P7: record the resolved tuple durably. (d) F4, F5: no row. | PI, 2026-10-11, during session 12l |

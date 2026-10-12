@@ -85,6 +85,11 @@ logger = logging.getLogger(__name__)
 
 MAX_PASS1_ATTEMPTS = 2          # Ruling 4
 
+#: The telemetry `parse_path` of a Pass-1 attempt refused whole because it named
+#: an expected field twice (R118, INT-i12-5). Not one of `parse_container`'s
+#: paths: the container parsed, and the response was refused after it.
+PARSE_PATH_DUPLICATE_FIELD = "duplicate_field"
+
 
 def _codebook_path(review_dir: Path) -> Path:
     """Derived from the review directory, never searched (CODEBOOK-AUTH-01).
@@ -293,16 +298,7 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     thinking = getattr(response.message, "thinking", None) or ""
     pec = getattr(response, "prompt_eval_count", None)
 
-    try:
-        result = check_response(raw, unit_map, codebook, field_names)
-    except DuplicateFieldError as exc:
-        # R224a: this call succeeded and its hash exists, but the exception
-        # unwinds past `return` below — attach it here or it is lost, the
-        # same "no return occurred" loss `ollama_chat`'s own refusal paths
-        # have (10a-C8-B A1).
-        exc.request_hash = req_hash
-        raise
-    telemetry = {
+    call = {
         "pass1_prompt_chars": len(prompt),
         "pass1_feedback_chars": len(feedback),
         "pass1_prompt_eval_count": pec,
@@ -311,8 +307,25 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
         "pass1_done_reason": getattr(response, "done_reason", None),
         "pass1_raw_content": raw,
         "pass1_request_hash": req_hash,
-        **result.telemetry(),
     }
+    try:
+        result = check_response(raw, unit_map, codebook, field_names)
+    except DuplicateFieldError as exc:
+        # R224a: this call succeeded and its hash exists, but the exception
+        # unwinds past `return` below — attach it here or it is lost, the
+        # same "no return occurred" loss `ollama_chat`'s own refusal paths
+        # have (10a-C8-B A1).
+        exc.request_hash = req_hash
+        # INT-i12-5: and the call's telemetry, for a caller that keeps the
+        # attempt on record without a result (`elicit`, attempt 2). No record
+        # was built — the response is refused whole (R118) — so the per-field
+        # summary is empty and the duplicated names say why.
+        exc.telemetry = {**call, "elicitation_version": C.ELICITATION_VERSION,
+                         "parse_path": PARSE_PATH_DUPLICATE_FIELD, "n_units": unit_map.n,
+                         "unknown_fields": [], "failed_fields": [], "fields": {},
+                         "duplicated_fields": list(exc.duplicated)}
+        raise
+    telemetry = {**call, **result.telemetry()}
     return result, telemetry
 
 
@@ -333,6 +346,16 @@ def elicit(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
     the only evidence that the feedback did not land. The stored telemetry row
     keeps each attempt's raw response and request hash under `attempts`
     (R571(e)).
+
+    **A duplicate on attempt 2 (INT-i12-5).** An attempt-2 response that names
+    an expected field twice is refused whole (R118: it is not collapsed
+    last-wins), so it produced no usable result — exactly as an unparseable
+    attempt 2 produces none that can win. Attempt 1's result is the elicited
+    result. Attempt 2's call stays on record: its telemetry entry (with the
+    duplicated field names and its raw response) is returned, so its request
+    hash is in the paper's context chain after attempt 1's. Nothing of it is
+    merged into attempt 1's result. A duplicate on attempt 1 is not handled
+    here: with no earlier result to keep it propagates, as before.
     """
     first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, cfg=cfg)
     tels = [tel_first]
@@ -340,10 +363,19 @@ def elicit(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
 
     if first.failed_fields and MAX_PASS1_ATTEMPTS > 1:
         feedback = build_feedback_block(first, codebook)
-        second, tel_second = run_pass1(
-            unit_map, codebook, field_names, paper_id, feedback=feedback,
-            cfg=cfg,
-        )
+        try:
+            second, tel_second = run_pass1(
+                unit_map, codebook, field_names, paper_id, feedback=feedback,
+                cfg=cfg,
+            )
+        except DuplicateFieldError as exc:
+            tels.append(exc.telemetry)
+            logger.warning(
+                "Paper %d: Pass-1 attempt 2 named %s more than once and is refused whole "
+                "(R118); attempt 1's result is kept, with %d field(s) failing.",
+                paper_id, list(exc.duplicated), len(first.failed_fields),
+            )
+            return first, 1, tels
         tels.append(tel_second)
 
     accepted, n = T.accept_attempt(first, second, codebook)
@@ -491,6 +523,9 @@ def extract_paper_elicited(
                     # the rejected attempt's included.
                     "raw_content": tel["pass1_raw_content"],
                     "request_hash": tel["pass1_request_hash"],
+                    # INT-i12-5: the expected fields an attempt named twice;
+                    # non-empty only for an attempt 2 refused whole for it.
+                    "duplicated_fields": tel.get("duplicated_fields", []),
                 }
                 for i, tel in enumerate(pass1_tels, start=1)
             ],

@@ -1,0 +1,19 @@
+>       assert calls == ["first", "feedback"]
+tests/test_duplicate_on_pass1_attempt_2.py:147: AssertionError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1170 Paper 7 extraction failed: Paper 7 (): incomplete extraction — 19/20 fields, salvage=duplicated=['study_type']. Missing: 
+WARNING  engine.agents.extractor:extractor.py:1206 Extraction summary (run 2): 0 paper(s) stored with incomplete fields {}; 0 stored with every held field declined; 1 failed under the floor (held_fiel
+>       assert calls == ["first", "feedback"]
+tests/test_duplicate_on_pass1_attempt_2.py:185: AssertionError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1170 Paper 7 extraction failed: Paper 7 (): incomplete extraction — 19/20 fields, salvage=duplicated=['study_type']. Missing: 
+WARNING  engine.agents.extractor:extractor.py:1206 Extraction summary (run 2): 0 paper(s) stored with incomplete fields {}; 0 stored with every held field declined; 1 failed under the floor (held_fiel
+>       assert calls == ["first", "feedback"]                               # not retried
+tests/test_duplicate_on_pass1_attempt_2.py:197: AssertionError
+[Local extraction] 1/1 (100.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+ERROR    engine.agents.extractor:extractor.py:1170 Paper 7 extraction failed: Paper 7 (): incomplete extraction — 19/20 fields, salvage=duplicated=['study_type']. Missing: 
+WARNING  engine.agents.extractor:extractor.py:1206 Extraction summary (run 2): 0 paper(s) stored with incomplete fields {}; 0 stored with every held field declined; 1 failed under the floor (held_fiel
+FAILED tests/test_duplicate_on_pass1_attempt_2.py::test_a_duplicate_on_pass1_attempt_2_keeps_both_hashes_and_attempt_1
+FAILED tests/test_duplicate_on_pass1_attempt_2.py::test_with_twelve_good_fields_attempt_1_is_still_kept_and_stored
+FAILED tests/test_duplicate_on_pass1_attempt_2.py::test_the_floor_applies_to_the_kept_attempt_1_record_as_to_any_record
+3 failed, 1 passed in 3.02s

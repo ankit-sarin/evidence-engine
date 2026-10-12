@@ -36,7 +36,7 @@ from engine.core.parsed_text import (
 from engine.core.review_spec import load_review_spec
 from engine.core.selection import select_for_extraction
 from engine.utils.ollama_client import InputTruncated
-from _event_store_fixture import open_extraction_run, seed_eligibility
+from _event_store_fixture import open_extraction_run, seed_eligibility, register_pinned_arm
 from _parsed_text_fixture import write_parsed
 
 REPO = Path(__file__).resolve().parent.parent
@@ -212,10 +212,11 @@ def test_t2_an_elicited_contract_unmet_and_an_incomplete_carrier(db, spec, run_i
 # ── T3 (R140) ─────────────────────────────────────────────────────────
 def test_t3_missing_fields_write_nothing_and_are_named_on_the_paper(db, spec, run_id,
                                                                     sentinels):
-    rec = _record(db, spec, run_id, [_value("study_design")],
+    # two held of four expected: at the floor (R535, R612(f)), so it stores
+    rec = _record(db, spec, run_id, [_value("study_design"), _value("robot_platform")],
                   incomplete=("country", "sample_size"))
     X.write_extraction_events(db._conn, rec, sentinels=sentinels)
-    assert [r[1] for r in _fev(db)] == ["study_design"]
+    assert [r[1] for r in _fev(db)] == ["study_design", "robot_platform"]
     payload = json.loads(_pev(db)[0][3])
     assert payload["incomplete_fields"] == ["country", "sample_size"]
     for name in ("country", "sample_size"):
@@ -532,6 +533,12 @@ def test_t12_every_code_the_mapping_emits_is_in_the_closed_set(spec):
     empty = X.ExtractionRecord(PID, "a", 1, "u", None, "m", None, (), ("x",), 1, "s")
     plan = X.plan_extraction_events(empty, live={}, from_state=None)
     codes.add(plan.paper_event["reason_code"])
+    # R535 / R612(f): a record under the floor plans as its own reason.
+    thin = X.ExtractionRecord(PID, "a", 1, "u", None, "m", None,
+                              (X.FieldOutcome("f", X.VALUE, value="v"),), ("x", "y"), 1, "s")
+    plan = X.plan_extraction_events(thin, live={}, from_state=None)
+    assert plan.paper_event["reason_code"] == PS.REASON_HELD_FIELDS_BELOW_FLOOR
+    codes.add(plan.paper_event["reason_code"])
     # E-DEADKI: an interrupt never reaches the mapping — it is run-level (C47),
     # pinned end to end by test_run_interrupts.py::test_t6_an_interrupt_mid_paper_
     # keeps_finished_papers_and_writes_none_for_it. Called directly with one, the
@@ -541,8 +548,9 @@ def test_t12_every_code_the_mapping_emits_is_in_the_closed_set(spec):
                                  stage_name="s")
     assert ki.reason_code == PS.REASON_UNCLASSIFIED_ERROR
     # P1 unit U02 (R532): CeilingUnavailable is a run fault, re-raised and never
-    # mapped, so REASON_CONTEXT_CEILING_UNAVAILABLE stays in the closed set (it is
-    # in migration 019's CHECK) with no emitter, as REASON_RUN_INTERRUPTED does.
+    # mapped, so REASON_CONTEXT_CEILING_UNAVAILABLE stays in the closed set with
+    # no emitter, as REASON_RUN_INTERRUPTED does. (Migration 019's CHECK requires
+    # a reason for a failure state; it does not enumerate the codes.)
     with pytest.raises(CeilingUnavailable):
         X.outcome_for_exception(CeilingUnavailable(model="m", reason="r"), paper_id=PID,
                                 arm="a", run_id=1, stage_name="s")
@@ -688,7 +696,7 @@ def test_d24_t5_another_arms_claims_on_the_paper_are_untouched(db, spec, run_id,
     from engine.core.effective import PRE_MANIFEST
     from _event_store_fixture import seed_claim
     arm = spec.extraction_models.arm
-    events.register_arm(db._conn, "other_arm", "model", configuration_marker=PRE_MANIFEST)
+    register_pinned_arm(db._conn, "other_arm", "model", configuration_marker=PRE_MANIFEST)
     other = seed_claim(db._conn, arm="other_arm", paper_id=PID, field_name="country",
                        value="Norway", source_snippet="x")
     db._conn.commit()

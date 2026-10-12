@@ -4208,7 +4208,7 @@
           },
           {
             "kind": "literal",
-            "line": 773,
+            "line": 787,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -7685,7 +7685,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "304b13a679576419d38c2fbc2cba2df51fe29456",
+    "generated_at_commit": "06edfbacd8eecc36925bf03b57917b9e84ebc435",
     "scan_roots": [
       "engine",
       "scripts",

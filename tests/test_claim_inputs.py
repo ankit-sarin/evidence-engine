@@ -21,7 +21,7 @@ from engine.core.events import (
 )
 from engine.core.reuse_key import reuse_key
 from engine.core.selection import select_for_extraction
-from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity, fixture_run, seed_claim
+from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity, fixture_run, seed_claim, register_pinned_arm
 
 ARM = "local_test_arm"
 FIELD_A = "study_design"
@@ -154,7 +154,7 @@ def test_T5_missing_payload_keys_refuses_as_before_no_claim_inputs_row(db):
 
 def test_T6_citation_located_on_a_pre_manifest_arm_writes_no_claim_inputs_row(db):
     conn = db._conn
-    events.register_arm(conn, "premanifest_arm", "model",
+    register_pinned_arm(conn, "premanifest_arm", "model",
                         configuration_marker="not recorded (pre-manifest)")
     claim_id = seed_claim(conn, arm="premanifest_arm", paper_id=1, field_name=FIELD_A,
                           value="5")
@@ -250,7 +250,7 @@ def test_T10_payload_reuse_key_matches_but_no_claim_inputs_row_does_not_block(se
     conn = sel_db._conn
     sha = _text_sha(conn, 1)
     key = reuse_key(ARM, 1, sha)
-    events.register_arm(conn, ARM, "model",
+    register_pinned_arm(conn, ARM, "model",
                         configuration_marker="not recorded (pre-manifest)")
     seed_claim(conn, arm=ARM, paper_id=1, field_name=FIELD_A, value="5",
               payload={"reuse_key": key, "parsed_text_sha256": sha,

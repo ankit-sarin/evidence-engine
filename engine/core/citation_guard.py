@@ -69,10 +69,12 @@ CONTRACT_UNMET_WITH_CITATION = "CONTRACT_UNMET_WITH_CITATION"
 class UncitedValueError(RuntimeError):
     """An extraction carries a value with no evidence behind it.
 
-    Raised BEFORE any INSERT, exactly like `IncompleteExtractionError`, so an
-    extraction that cannot satisfy the contract leaves nothing behind. There is
-    no "store what we got" path: a partially-evidenced extraction is what the
-    guard exists to prevent, not a degraded success to record.
+    Raised BEFORE any INSERT, exactly like `IncompleteExtractionError`, and
+    retried under the same bounded budget. If the budget is exhausted, the
+    uncited value is not stored: its field is recorded as `contract_unmet` with
+    the violation (R139), and the rest of the record is stored — provided the
+    record holds at least half of the expected fields; under that floor the
+    paper is `extraction_failed` and nothing of it is stored (R535, R612(f)).
     """
 
     def __init__(self, paper_id: int, arm: str, offenders: tuple[tuple[str, str], ...],

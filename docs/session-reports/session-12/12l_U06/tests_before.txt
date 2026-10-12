@@ -1,0 +1,81 @@
+tests/test_floor_and_stored_attempt.py:143: AttributeError
+tests/test_floor_and_stored_attempt.py:188: AttributeError
+[Local extraction] 1/3 (33.3%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 1/3 (33.3%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 1/3 (33.3%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 EXTRACTED | 0s | ETA ~0s | 0 failed
+>       assert stats["extracted"] == 0 and stats["failed"] == 3 and stats["below_floor"] == 3
+tests/test_floor_and_stored_attempt.py:278: AssertionError
+[Local extraction] 1/3 (33.3%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 EXTRACTED | 0s | ETA ~0s | 0 failed
+>       assert stats["extracted"] == 3 and stats["failed"] == 0 and stats["below_floor"] == 0
+tests/test_floor_and_stored_attempt.py:296: KeyError
+[Local extraction] 1/3 (33.3%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 EXTRACTED | 0s | ETA ~0s | 0 failed
+tests/test_floor_and_stored_attempt.py:309: KeyError
+[Local extraction] 1/3 (33.3%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 EXTRACTED | 0s | ETA ~0s | 0 failed
+tests/test_floor_and_stored_attempt.py:361: KeyError
+[Local extraction] 1/3 (33.3%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 FAILED | 0s | ETA ~0s | 2 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 FAILED | 0s | ETA ~0s | 3 failed
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 7 extraction failed: Paper 7 (deepseek-r1:32b): incomplete extraction — 12/20 fields. Missing: study_design, country, primary_outcome_metric,
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 8 extraction failed: Paper 8 (deepseek-r1:32b): incomplete extraction — 12/20 fields. Missing: study_design, country, primary_outcome_metric,
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 9 extraction failed: Paper 9 (deepseek-r1:32b): incomplete extraction — 12/20 fields. Missing: study_design, country, primary_outcome_metric,
+[Local extraction] 1/3 (33.3%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 FAILED | 0s | ETA ~0s | 2 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 FAILED | 0s | ETA ~0s | 3 failed
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 7 extraction failed: Paper 7 (deepseek-r1:32b): incomplete extraction — 1/20 fields. Missing: robot_platform, task_performed, sample_size, su
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 8 extraction failed: Paper 8 (deepseek-r1:32b): incomplete extraction — 1/20 fields. Missing: robot_platform, task_performed, sample_size, su
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 9 extraction failed: Paper 9 (deepseek-r1:32b): incomplete extraction — 1/20 fields. Missing: robot_platform, task_performed, sample_size, su
+tests/test_floor_and_stored_attempt.py:404: AssertionError
+[Local extraction] 1/3 (33.3%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 FAILED | 0s | ETA ~0s | 2 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 FAILED | 0s | ETA ~0s | 3 failed
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 7 extraction failed: Paper 7 (deepseek-r1:32b): incomplete extraction — 12/20 fields. Missing: study_design, country, primary_outcome_metric,
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 8 extraction failed: Paper 8 (deepseek-r1:32b): incomplete extraction — 12/20 fields. Missing: study_design, country, primary_outcome_metric,
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 9 extraction failed: Paper 9 (deepseek-r1:32b): incomplete extraction — 12/20 fields. Missing: study_design, country, primary_outcome_metric,
+tests/test_floor_and_stored_attempt.py:404: AssertionError
+[Local extraction] 1/3 (33.3%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 FAILED | 0s | ETA ~0s | 2 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 FAILED | 0s | ETA ~0s | 3 failed
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 7 extraction failed: Paper 7 (deepseek-r1:32b): incomplete extraction — 12/20 fields. Missing: study_design, country, primary_outcome_metric,
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 8 extraction failed: Paper 8 (deepseek-r1:32b): incomplete extraction — 12/20 fields. Missing: study_design, country, primary_outcome_metric,
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 9 extraction failed: Paper 9 (deepseek-r1:32b): incomplete extraction — 12/20 fields. Missing: study_design, country, primary_outcome_metric,
+tests/test_floor_and_stored_attempt.py:404: AssertionError
+[Local extraction] 1/3 (33.3%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 FAILED | 0s | ETA ~0s | 2 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-009 FAILED | 0s | ETA ~0s | 3 failed
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 7 extraction failed: Paper 7 (deepseek-r1:32b): incomplete extraction — 13/20 fields. Missing: country, primary_outcome_metric, primary_outco
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 8 extraction failed: Paper 8 (deepseek-r1:32b): incomplete extraction — 13/20 fields. Missing: country, primary_outcome_metric, primary_outco
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 9 extraction failed: Paper 9 (deepseek-r1:32b): incomplete extraction — 13/20 fields. Missing: country, primary_outcome_metric, primary_outco
+tests/test_floor_and_stored_attempt.py:343: ValidationError
+[Local extraction] 1/3 (33.3%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-008 FAILED | 0s | ETA ~0s | 2 failed
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 7 extraction failed: 1 validation error for ExtractionOutput
+ERROR    engine.agents.extractor:extractor.py:1082 Paper 8 extraction failed: 1 validation error for ExtractionOutput
+tests/test_floor_and_stored_attempt.py:447: AttributeError
+FAILED tests/test_floor_and_stored_attempt.py::test_the_floor_counts_held_fields_against_the_expected
+FAILED tests/test_floor_and_stored_attempt.py::test_a_record_under_the_floor_is_never_written_as_a_record
+FAILED tests/test_floor_and_stored_attempt.py::test_an_empty_pass1_on_both_attempts_fails_the_paper_counts_and_is_selected_again[empty]
+FAILED tests/test_floor_and_stored_attempt.py::test_an_empty_pass1_on_both_attempts_fails_the_paper_counts_and_is_selected_again[truncated]
+FAILED tests/test_floor_and_stored_attempt.py::test_an_empty_pass1_on_both_attempts_fails_the_paper_counts_and_is_selected_again[not-json]
+FAILED tests/test_floor_and_stored_attempt.py::test_a_record_under_the_floor_that_was_not_exhausted_fails_the_same_way
+FAILED tests/test_floor_and_stored_attempt.py::test_a_record_at_the_floor_is_stored
+FAILED tests/test_floor_and_stored_attempt.py::test_a_record_of_all_declined_fields_is_stored_and_counted
+FAILED tests/test_floor_and_stored_attempt.py::test_a_record_at_or_above_the_floor_is_stored_with_incomplete_fields_and_reported
+FAILED tests/test_floor_and_stored_attempt.py::test_an_exhausted_record_under_the_floor_fails_and_no_longer_resets_the_abort_count
+FAILED tests/test_floor_and_stored_attempt.py::test_the_attempt_rule_keeps_the_record_that_holds_strictly_more[earlier-better]
+FAILED tests/test_floor_and_stored_attempt.py::test_the_attempt_rule_keeps_the_record_that_holds_strictly_more[tie]
+FAILED tests/test_floor_and_stored_attempt.py::test_the_attempt_rule_keeps_the_record_that_holds_strictly_more[second-best]
+FAILED tests/test_floor_and_stored_attempt.py::test_an_unparseable_last_attempt_does_not_cost_the_record_an_earlier_one_held
+FAILED tests/test_floor_and_stored_attempt.py::test_a_model_arms_claim_on_an_unpinned_arm_is_refused_by_name
+15 failed, 2 passed in 12.63s

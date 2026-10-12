@@ -18,6 +18,7 @@ import sqlite3
 import pytest
 
 from _event_store_fixture import (  # 9b-2c R1, R224a; D23 strict form
+    register_pinned_arm,
     FIXTURE_CONTEXT_SHA, FIXTURE_TEXT_SHA, claim_identity,
 )
 
@@ -55,12 +56,12 @@ def db(tmp_path):
     conn.close()
     upgrade_event_store(path)
     conn = sqlite3.connect(path)
-    events.register_arm(conn, "local", "model",
+    register_pinned_arm(conn, "local", "model",
                         configuration={"model": "deepseek-r1:32b", "temperature": 0})
-    events.register_arm(conn, "cloud", "model", configuration={"model": "o4-mini"})
-    events.register_arm(conn, "premanifest_a", "model",
+    register_pinned_arm(conn, "cloud", "model", configuration={"model": "o4-mini"})
+    register_pinned_arm(conn, "premanifest_a", "model",
                         configuration_marker=PRE_MANIFEST)
-    events.register_arm(conn, "human_A", "human_extractor",
+    register_pinned_arm(conn, "human_A", "human_extractor",
                         configuration={"extractor": "A"})
     fixture_run(conn, "local")
     fixture_run(conn, "cloud")

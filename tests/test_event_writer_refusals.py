@@ -14,6 +14,7 @@ import sqlite3
 import pytest
 
 from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1, R224a
+from _event_store_fixture import register_pinned_arm
 
 from engine.core import events
 from engine.core.effective import PRE_MANIFEST, effective_value
@@ -37,8 +38,8 @@ def db(tmp_path):
     conn.close()
     upgrade_event_store(path)
     conn = sqlite3.connect(path)
-    events.register_arm(conn, "local", "model", configuration={"model": "m"})
-    events.register_arm(conn, "human_A", "human_extractor", configuration={"x": 1})
+    register_pinned_arm(conn, "local", "model", configuration={"model": "m"})
+    register_pinned_arm(conn, "human_A", "human_extractor", configuration={"x": 1})
     fixture_run(conn, "local")
     conn.commit()
     yield conn
@@ -141,10 +142,13 @@ def test_r21_refuses_a_configuration_repin_once_the_arm_holds_a_claim(db):
 
 
 def test_r21_a_configuration_repin_is_allowed_before_any_claim(db):
+    # an arm no run has pinned and that holds no claim (the fixture's 'local' is
+    # registered pinned since INT-l12-18, so this needs its own)
+    events.register_arm(db, "unpinned_arm", "model", configuration={"model": "m"})
     db.execute("UPDATE arms SET configuration_json = '{\"model\":\"other\"}' "
-               "WHERE arm_name = 'local'")
+               "WHERE arm_name = 'unpinned_arm'")
     db.commit()
-    assert db.execute("SELECT configuration_json FROM arms WHERE arm_name='local'"
+    assert db.execute("SELECT configuration_json FROM arms WHERE arm_name='unpinned_arm'"
                       ).fetchone()[0] == '{"model":"other"}'
 
 
@@ -319,7 +323,7 @@ def test_r68_migration_017_may_still_write_its_pre_manifest_seed(db, tmp_path):
 
 # ── R59 / R21 / R10 — which arms accept a claim ──────────────────────
 def test_r59_a_claim_on_a_pre_manifest_arm_is_refused(db):
-    events.register_arm(db, "old_arm", "model", configuration_marker=PRE_MANIFEST)
+    register_pinned_arm(db, "old_arm", "model", configuration_marker=PRE_MANIFEST)
     with pytest.raises(events.ClaimOnPreManifestArm, match="R59"):
         events.write_field_event(
             db, event_type="asserted", paper_id=1, field_name=FIELD, arm="old_arm",
@@ -334,7 +338,7 @@ def test_r21_a_claim_on_a_retired_arm_is_refused(db):
 
 
 def test_r10_a_claim_on_a_model_arm_the_run_did_not_pin_is_refused(db):
-    events.register_arm(db, "other_arm", "model")
+    register_pinned_arm(db, "other_arm", "model")
     with pytest.raises(events.ArmNotInRun, match="R10"):
         events.write_field_event(
             db, event_type="asserted", paper_id=1, field_name=FIELD, arm="other_arm",
@@ -345,7 +349,7 @@ def test_r10_a_claim_on_a_model_arm_the_run_did_not_pin_is_refused(db):
 def test_r68_a_reviewer_event_on_a_pre_manifest_claim_is_allowed_under_a_review_session(db):
     """Row 7's exit. The claims were seeded; the reviewer's decision is new and
     carries its review session's run_id."""
-    events.register_arm(db, "old_arm", "model", configuration_marker=PRE_MANIFEST)
+    register_pinned_arm(db, "old_arm", "model", configuration_marker=PRE_MANIFEST)
     a = seed_claim(db, arm="old_arm", paper_id=1, field_name=FIELD, value="5",
                    source_snippet="q")
     b = seed_claim(db, arm="old_arm", paper_id=1, field_name=FIELD, value="6",
@@ -366,15 +370,15 @@ def test_r68_a_reviewer_event_on_a_pre_manifest_claim_is_allowed_under_a_review_
 
 # ── R59 — the widened freeze trigger ─────────────────────────────────
 def test_r59_a_pre_manifest_arm_can_never_be_pinned(db):
-    events.register_arm(db, "old_arm", "model", configuration_marker=PRE_MANIFEST)
+    register_pinned_arm(db, "old_arm", "model", configuration_marker=PRE_MANIFEST)
     with pytest.raises(sqlite3.IntegrityError, match="R59"):
         db.execute("UPDATE arms SET configuration_json = '{}', configuration_marker = "
                    "'pinned' WHERE arm_name = 'old_arm'")
 
 
 def test_r59_a_pinned_arm_is_frozen_before_it_holds_any_claim(db):
-    db.execute("UPDATE arms SET configuration_marker = 'pinned', pinned_run_id = ?, "
-               "pinned_sha256 = 'x' WHERE arm_name = 'local'", (_run(db),))
+    assert db.execute("SELECT configuration_marker FROM arms WHERE arm_name = 'local'"
+                      ).fetchone()[0] == "pinned"       # pinned by the fixture, no claim yet
     with pytest.raises(sqlite3.IntegrityError, match="pinned by a manifest"):
         db.execute("UPDATE arms SET configuration_json = '{\"model\":\"other\"}' "
                    "WHERE arm_name = 'local'")

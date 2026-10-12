@@ -26,6 +26,7 @@ from engine.core.parsed_text import resolve_parsed_text
 from engine.core.review_spec import load_review_spec
 from engine.core.effective_config import stage_config
 from _event_store_fixture import (
+    register_pinned_arm,
     FIXTURE_CONTEXT_SHA, claim_identity, open_extraction_run, seed_claim, seed_eligibility,
 )
 from _parsed_text_fixture import write_parsed
@@ -328,7 +329,7 @@ def test_t19_an_unlocated_absence_sentinel_gets_no_verdict_row_at_all(
 
 # ── T13 (R1) ──────────────────────────────────────────────────────────
 def test_t13_a_located_event_on_a_pre_manifest_claim_is_admitted_a_claim_is_not(db, run_id):
-    events.register_arm(db._conn, "premanifest_a", "model", configuration_marker=PRE_MANIFEST)
+    register_pinned_arm(db._conn, "premanifest_a", "model", configuration_marker=PRE_MANIFEST)
     cid = seed_claim(db._conn, arm="premanifest_a", paper_id=P7, field_name="country",
                      value="Norway", source_snippet="x")
     db._conn.commit()
@@ -455,7 +456,7 @@ def test_d23_t5_a_byte_identical_reparse_is_not_a_mismatch(db, spec, run_id, rev
 
 def test_d23_a_claim_with_no_recorded_text_identity_refuses_the_paper(db, spec, run_id,
                                                                       review_dir, verify):
-    events.register_arm(db._conn, "premanifest_a", "model", configuration_marker=PRE_MANIFEST)
+    register_pinned_arm(db._conn, "premanifest_a", "model", configuration_marker=PRE_MANIFEST)
     seed_claim(db._conn, arm="premanifest_a", paper_id=P7, field_name="country",
                value="Norway", source_snippet=SNIPPET)
     db._conn.commit()
@@ -484,7 +485,7 @@ def test_d23_t7_the_writer_refuses_a_citation_that_names_no_text(db, spec, run_i
 
 
 def test_d23_t8_a_citation_on_a_claim_with_no_claim_inputs_row_is_admitted(db, run_id):
-    events.register_arm(db._conn, "premanifest_a", "model", configuration_marker=PRE_MANIFEST)
+    register_pinned_arm(db._conn, "premanifest_a", "model", configuration_marker=PRE_MANIFEST)
     uid = events.mint_extraction_uid()
     cid = seed_claim(db._conn, arm="premanifest_a", paper_id=P7, field_name="country",
                      value="Norway", source_snippet="x", extraction_uid=uid)

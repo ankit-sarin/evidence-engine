@@ -21,6 +21,11 @@ arguments for `events.write_field_event` / `write_paper_event`. Rules:
 * a value -> `asserted` (an absence sentinel is a value; rows 12/13 derive it);
 * a class-contract failure, an uncited value or a duplicate after the budget ->
   `contract_unmet` with `violation_codes` and `attempts` (R139, R118);
+* **the floor (R535, R612(f))**: a record that holds fewer than half of the
+  expected fields — held = an asserted value or a declined outcome;
+  `contract_unmet` and a field that never came back are not held — is not an
+  extraction. It plans as `extraction_failed` / `held_fields_below_floor` with
+  no claim, exhausted or not;
 * the elicited escape token -> `declined` (row 14);
 * a live claim on the cell under a different reuse key -> `superseded` against
   it, before the new claim; under the SAME key the plan refuses, because
@@ -39,7 +44,10 @@ in `engine.core.events`; the writer refuses one that does not (R1).
 
 **`write_extraction_events` is the only thing that touches a connection**: one
 savepoint, every event written with `commit=False`, one commit — a refusal
-anywhere in a paper writes nothing for it. The R130 telemetry row for an input
+anywhere in a paper writes nothing for it. Handed a record under the floor it
+writes nothing and raises `HeldFieldsBelowFloor`: a caller on a success path
+must not go on as if it had stored an extraction, and the extractor's failure
+branch records the paper's failure through `outcome_for_exception`. The R130 telemetry row for an input
 that does not fit is JSONL and is written after the commit, outside it.
 """
 
@@ -94,6 +102,21 @@ class ExhaustedWithoutRecord(RuntimeError):
     invariant, not a paper outcome: the run stops rather than guess."""
 
 
+class HeldFieldsBelowFloor(Exception):
+    """R535 as amended by R612(f): the record handed to the writer holds fewer
+    than half of the expected fields. Nothing was written. A paper outcome, not
+    a run fault: `outcome_for_exception` turns it into the paper's
+    `held_fields_below_floor` failure. Not retried — the floor is a property of
+    the record at the write boundary, not a refusal of the attempt."""
+
+    def __init__(self, record: "ExtractionRecord"):
+        self.record = record
+        super().__init__(
+            f"paper {record.paper_id}: the record holds {held_count(record)} of "
+            f"{expected_count(record)} expected fields, under the floor of half "
+            "(R535, R612(f)); it is not stored as an extraction.")
+
+
 class RunAborted(RuntimeError):
     """9b-FLIP (2(c) R5): the run stopped itself after `CONSECUTIVE_FAILURE_ABORT`
     papers in a row produced nothing usable. Each of those papers' events is
@@ -113,9 +136,10 @@ A14_REASONS = frozenset({PS.REASON_PARSED_TEXT_NOT_RECORDED, PS.REASON_PARSED_TE
 
 def counts_toward_abort(outcome) -> bool:
     """A paper recorded as extraction_failed, other than an A14 refusal — which
-    includes an exhausted record with no field, planned as no_fields_returned."""
+    includes any record under the floor (N09: one held field of twenty is not
+    "something usable"), planned as a paper failure."""
     if isinstance(outcome, ExtractionRecord):
-        return not outcome.fields
+        return floor_failure(outcome) is not None
     return (isinstance(outcome, PaperFailure) and outcome.to_state == "extraction_failed"
             and outcome.reason_code not in A14_REASONS)
 
@@ -310,6 +334,49 @@ def elicited_record(*, paper_id: int, arm: str, run_id: int, extraction_uid: str
                             snippet_contexts=snippet_contexts or {})
 
 
+# ── The floor (R535, R612(f)) ────────────────────────────────────────
+def held_count(rec: ExtractionRecord) -> int:
+    """Fields the record HOLDS: an asserted value (a cited sentinel is a value)
+    or a declined outcome. `contract_unmet` is an outcome, not a held field."""
+    return sum(1 for f in rec.fields if f.kind in (VALUE, DECLINED))
+
+
+def expected_count(rec: ExtractionRecord) -> int:
+    """Fields the record was asked for: those with an outcome and those that
+    never came back."""
+    return len(rec.fields) + len(rec.incomplete_fields)
+
+
+def below_floor(rec: ExtractionRecord) -> bool:
+    """True when the record holds fewer than half of the expected fields."""
+    return held_count(rec) * 2 < expected_count(rec)
+
+
+def floor_failure(rec: ExtractionRecord) -> PaperFailure | None:
+    """The paper failure a record plans as, or None if it is an extraction.
+
+    A record with no field at all keeps `no_fields_returned`; any other record
+    under the floor is `held_fields_below_floor`. The detail carries what the
+    attempt produced, since none of it is stored as a claim."""
+    if not rec.fields:
+        return PaperFailure(rec.paper_id, rec.arm, rec.run_id, PS.REASON_NO_FIELDS_RETURNED,
+                            rec.stage_name,
+                            detail={"incomplete_fields": list(rec.incomplete_fields)})
+    if not below_floor(rec):
+        return None
+    counts = {k: sum(1 for f in rec.fields if f.kind == k) for k in _FIELD_KINDS}
+    return PaperFailure(
+        rec.paper_id, rec.arm, rec.run_id, PS.REASON_HELD_FIELDS_BELOW_FLOOR, rec.stage_name,
+        detail={"held": held_count(rec), "expected": expected_count(rec),
+                "asserted": counts[VALUE], "declined": counts[DECLINED],
+                "contract_unmet": counts[CONTRACT_UNMET],
+                "contract_unmet_fields": {f.field_name: list(f.violation_codes)
+                                          for f in rec.fields if f.kind == CONTRACT_UNMET},
+                "incomplete_fields": list(rec.incomplete_fields),
+                "attempts": rec.attempts, "extraction_uid": rec.extraction_uid,
+                "context_chain": list(rec.context_chain)})
+
+
 # ── Run faults (R531–R533, R612(g)) ──────────────────────────────────
 _RUN_FAULT_CLASSES: tuple[type[BaseException], ...] | None = None
 
@@ -373,7 +440,9 @@ def is_run_fault(exc: BaseException) -> bool:
 def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id: int,
                           stage_name: str):
     """What the extractor's failure branch records for `exc`: the exhausted
-    attempt's `ExtractionRecord`, or a `PaperFailure` with its F9 code.
+    attempt's `ExtractionRecord`, or a `PaperFailure` with its F9 code. A
+    record under the floor is returned as its `PaperFailure` (R535, R612(f)),
+    whether it arrived on a refusal or from the write boundary.
 
     A run fault (`is_run_fault`, over `run_fault_classes`) is re-raised, never
     mapped: it is not this paper's outcome.
@@ -390,12 +459,14 @@ def outcome_for_exception(exc: BaseException, *, paper_id: int, arm: str, run_id
     from engine.utils.ollama_client import InputDropped, InputOverflow, InputTruncated
     if is_run_fault(exc):
         raise exc
+    if isinstance(exc, HeldFieldsBelowFloor):
+        return floor_failure(exc.record)
     if isinstance(exc, (IncompleteExtractionError, UncitedValueError)):
         if exc.record is None:
             raise ExhaustedWithoutRecord(
                 f"paper {paper_id}: {type(exc).__name__} exhausted the budget with no "
                 "record attached at its raising site (9b-2c R3)") from exc
-        return exc.record
+        return floor_failure(exc.record) or exc.record
 
     def fail(code, telemetry=None):
         return PaperFailure(paper_id, arm, run_id, code, stage_name,
@@ -488,12 +559,10 @@ def plan_extraction_events(outcome, *, live: Mapping[str, tuple[LiveClaimEvent, 
             payload={**dict(outcome.detail), "arm": outcome.arm}))
 
     rec: ExtractionRecord = outcome
-    if not rec.fields:
-        return plan_extraction_events(
-            PaperFailure(rec.paper_id, rec.arm, rec.run_id, PS.REASON_NO_FIELDS_RETURNED,
-                         rec.stage_name, detail={"incomplete_fields": list(rec.incomplete_fields)}),
-            live=live, from_state=from_state, sentinels=sentinels,
-            current_text=rec.parsed_text)
+    failure = floor_failure(rec)
+    if failure is not None:
+        return plan_extraction_events(failure, live=live, from_state=from_state,
+                                      sentinels=sentinels, current_text=rec.parsed_text)
 
     ident = _identity(rec.arm, rec.paper_id, rec.parsed_text)
     key = ident.get(PAYLOAD_REUSE_KEY)
@@ -551,7 +620,12 @@ def plan_extraction_events(outcome, *, live: Mapping[str, tuple[LiveClaimEvent, 
 def write_extraction_events(conn, outcome, *, sentinels=frozenset(),
                             review_dir: str | Path | None = None) -> EventPlan:
     """Plan `outcome` against the database's live claims and write it: every event
-    in one savepoint, one commit, nothing on any refusal."""
+    in one savepoint, one commit, nothing on any refusal.
+
+    A record under the floor is refused with `HeldFieldsBelowFloor` and nothing
+    is written: the paper's failure goes through `outcome_for_exception`."""
+    if isinstance(outcome, ExtractionRecord) and floor_failure(outcome) is not None:
+        raise HeldFieldsBelowFloor(outcome)
     by_field: dict[str, list[LiveClaimEvent]] = {}
     for ev in live_claim_events(conn, outcome.paper_id, outcome.arm):
         by_field.setdefault(ev.field_name, []).append(ev)
@@ -594,3 +668,49 @@ def write_extraction_events(conn, outcome, *, sentinels=frozenset(),
                     pass1_prompt_eval_count=t.get("prompt_eval_count"),
                     error=outcome.reason_code, extra={"input_fit": dict(t.get("fields", {}))})
     return plan
+
+
+# ── Readers of what was stored (R535: `incomplete_fields` gets a reader) ──
+def incomplete_extractions(conn, *, run_id: int | None = None) -> dict[int, tuple[str, ...]]:
+    """paper_id -> the fields its stored extraction never got back.
+
+    Read from each paper's latest `extracted` paper event (its
+    `incomplete_fields` payload key), over one run or the whole store. Papers
+    whose latest extraction is complete are absent."""
+    return {pid: tuple(p["incomplete_fields"])
+            for pid, p in _latest_extracted(conn, run_id).items()
+            if p.get("incomplete_fields")}
+
+
+def run_extraction_summary(conn, run_id: int) -> dict:
+    """What one run stored, from its paper events:
+
+    * `stored_incomplete` / `incomplete_fields` — papers stored `extracted`
+      with fields missing after the retry budget, and which fields;
+    * `all_declined` — papers stored `extracted` whose held fields are all
+      declined (no value asserted);
+    * `below_floor` — papers failed with `held_fields_below_floor`.
+    """
+    extracted = _latest_extracted(conn, run_id)
+    incomplete = {pid: list(p["incomplete_fields"]) for pid, p in extracted.items()
+                  if p.get("incomplete_fields")}
+    below = conn.execute(
+        "SELECT COUNT(DISTINCT paper_id) FROM paper_events WHERE run_id = ? "
+        "AND event_type = 'extraction_failed' AND reason_code = ?",
+        (run_id, PS.REASON_HELD_FIELDS_BELOW_FLOOR)).fetchone()[0]
+    return {"stored_incomplete": len(incomplete), "incomplete_fields": incomplete,
+            "all_declined": sum(1 for p in extracted.values()
+                                if not p.get("asserted") and p.get("declined")),
+            "below_floor": below}
+
+
+def _latest_extracted(conn, run_id: int | None) -> dict[int, dict]:
+    import json
+    sql = "SELECT paper_id, payload_json FROM paper_events WHERE event_type = 'extracted'"
+    args: tuple = ()
+    if run_id is not None:
+        sql, args = sql + " AND run_id = ?", (run_id,)
+    out: dict[int, dict] = {}
+    for pid, payload in conn.execute(sql + " ORDER BY event_id", args):
+        out[pid] = json.loads(payload or "{}")
+    return out

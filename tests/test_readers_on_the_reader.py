@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from _event_store_fixture import (  # 9b-2c R1, R224a; D23 strict form
+    register_pinned_arm,
     FIXTURE_CONTEXT_SHA, FIXTURE_TEXT_SHA, claim_identity,
 )
 
@@ -46,9 +47,9 @@ def review(tmp_path):
             "'x','x',?,?,'[]',2026,'J')", (pid, f"paper {pid}", str(pid), f"10.1/{pid}"))
     conn.commit()
 
-    events.register_arm(conn, "local", "model")
-    events.register_arm(conn, "openai_o4_mini_high", "model")
-    events.register_arm(conn, "human_A", "human_extractor")
+    register_pinned_arm(conn, "local", "model")
+    register_pinned_arm(conn, "openai_o4_mini_high", "model")
+    register_pinned_arm(conn, "human_A", "human_extractor")
     for pid in (1, 2, 3):
         events.write_paper_event(
         conn, run_id=run_for(conn), event_type="adjudicated", paper_id=pid, to_state="eligible",
@@ -562,7 +563,7 @@ def test_an_arm_the_row_format_cannot_name_is_refused(review):
     from analysis.paper1.export_disagreement_pairs import arms_in_scope
 
     db, root = review
-    events.register_arm(db._conn, "some_new_model_arm", "model")
+    register_pinned_arm(db._conn, "some_new_model_arm", "model")
     db._conn.commit()
     with pytest.raises(RuntimeError, match="no column for"):
         arms_in_scope(db._conn)

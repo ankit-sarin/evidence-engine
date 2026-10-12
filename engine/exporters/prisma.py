@@ -28,6 +28,7 @@ from engine.core.database import (
     SCREENING_TOKENS, VERIFICATION_PENDING_TOKENS, ReviewDatabase,
 )
 from engine.core.effective import effective_state, eligible_paper_ids
+from engine.core.extraction_events import incomplete_extractions
 from engine.core.paper_state import FAILURE_STATES, NO_RECORDED_STATE
 
 logger = logging.getLogger(__name__)
@@ -160,8 +161,19 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
     extraction_in_progress = 0
     failures = {token: 0 for token in FAILURE_STATES}
     failure_reasons = {token: {} for token in FAILURE_STATES}
+    # R535: papers whose stored extraction never got some fields back (the
+    # `extracted` paper event's `incomplete_fields`). Not a flow box — these
+    # papers are counted in "in progress" or "included" like any other stored
+    # extraction — but a report of what the stored extractions lack.
+    never_returned = incomplete_extractions(conn)
+    extracted_incomplete = 0
+    incomplete_fields: dict[str, int] = {}
     for pid in eligible_ids:
         state = effective_state(conn, pid)
+        if state.processing in ("extracted", "audited_ai") and pid in never_returned:
+            extracted_incomplete += 1
+            for name in never_returned[pid]:
+                incomplete_fields[name] = incomplete_fields.get(name, 0) + 1
         if state.processing == "audited_ai":
             studies_included += 1
         elif state.processing in failures:
@@ -205,6 +217,8 @@ def generate_prisma_flow(db: ReviewDatabase) -> dict:
         "full_text_not_obtainable": failures["full_text_not_obtainable"],
         "failure_reasons": failure_reasons,
         "extraction_in_progress": extraction_in_progress,
+        "extracted_incomplete": extracted_incomplete,
+        "incomplete_fields": incomplete_fields,
     }
 
 
@@ -394,6 +408,12 @@ def export_prisma_csv(db: ReviewDatabase, output_path: str) -> None:
     if flow["extraction_in_progress"] > 0:
         rows.append(("Extraction in progress", flow["extraction_in_progress"],
                      "Eligible papers not yet audited"))
+
+    if flow["extracted_incomplete"] > 0:
+        rows.append(("Extracted with incomplete fields", flow["extracted_incomplete"],
+                     "papers stored with fields not returned after the retry budget"))
+        for name, count in sorted(flow["incomplete_fields"].items()):
+            rows.append(("", count, f"field not returned: {name}"))
 
     rows.append(("Studies included", flow["studies_included"], ""))
 

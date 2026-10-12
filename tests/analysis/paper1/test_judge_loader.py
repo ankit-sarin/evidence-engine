@@ -8,6 +8,7 @@ import logging
 import pytest
 
 from _event_store_fixture import (  # 9b-2c R1, R224a; D23 strict form
+    register_pinned_arm,
     FIXTURE_CONTEXT_SHA, FIXTURE_TEXT_SHA, claim_identity,
 )
 
@@ -305,7 +306,7 @@ def _mirror_spans_into_events(rdb) -> None:
     for arm, pid, field, value, snippet in rows:
         if not conn.execute("SELECT COUNT(*) FROM arms WHERE arm_name = ?",
                             (arm,)).fetchone()[0]:
-            events.register_arm(conn, arm, "model")
+            register_pinned_arm(conn, arm, "model")
         if not conn.execute(
             "SELECT COUNT(*) FROM paper_events WHERE paper_id = ?", (pid,)
         ).fetchone()[0]:

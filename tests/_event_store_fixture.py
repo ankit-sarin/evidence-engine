@@ -83,6 +83,22 @@ def ensure_event_store(db_path: str | Path) -> None:
 FIXTURE_RUN_UID = "fixture-run"
 
 
+def register_pinned_arm(conn, arm_name: str, arm_kind: str = "model", **kw) -> None:
+    """`events.register_arm`, then — for a model arm — the pin a run's extract
+    stage writes (R569(b)), under the fixture run. INT-l12-18: the writer
+    refuses a model arm's claim while the arm is unpinned, so a fixture that
+    writes claims on an arm it registers itself registers it pinned. An arm
+    registered with a `configuration_marker` (a pre-manifest arm) or of another
+    kind is left exactly as `register_arm` made it."""
+    events.register_arm(conn, arm_name, arm_kind, **kw)
+    if arm_kind != "model" or kw.get("configuration_marker") is not None:
+        return
+    conn.execute(
+        "UPDATE arms SET configuration_marker = 'pinned', pinned_run_id = ?, "
+        "pinned_sha256 = 'fixture' WHERE arm_name = ? AND configuration_marker IS NULL",
+        (fixture_run(conn), arm_name))
+
+
 def fixture_run(conn, arm: str | None = None, *, arm_kind: str = "model") -> int:
     """The fixture database's run id; with `arm`, that run also pins `arm`."""
     row = conn.execute("SELECT run_id FROM run_manifests WHERE run_uid = ?",
@@ -99,7 +115,7 @@ def fixture_run(conn, arm: str | None = None, *, arm_kind: str = "model") -> int
             (FIXTURE_RUN_UID, "0" * 40)).lastrowid
     if arm is not None:
         if not conn.execute("SELECT 1 FROM arms WHERE arm_name = ?", (arm,)).fetchone():
-            events.register_arm(conn, arm, arm_kind)
+            register_pinned_arm(conn, arm, arm_kind)
         if not conn.execute("SELECT 1 FROM run_stage_configs WHERE run_id = ? AND arm_name = ?",
                             (run_id, arm)).fetchone():
             conn.execute(

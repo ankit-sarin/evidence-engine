@@ -33,9 +33,9 @@ from engine.core.citation_guard import (
 )
 from engine.core.events import mint_extraction_uid
 from engine.core.extraction_events import (  # noqa: F401 — re-exported (T7)
-    CONSECUTIVE_FAILURE_ABORT, MissingThinkingChannelError, PaperFailure, RunAborted,
-    counts_toward_abort, is_run_fault, legacy_record, outcome_for_exception,
-    write_extraction_events,
+    CONSECUTIVE_FAILURE_ABORT, HeldFieldsBelowFloor, MissingThinkingChannelError,
+    PaperFailure, RunAborted, counts_toward_abort, expected_count, held_count, is_run_fault,
+    legacy_record, outcome_for_exception, run_extraction_summary, write_extraction_events,
 )
 from engine.core.extraction_telemetry import record_call
 from engine.core.effective_config import EffectiveConfig, stage_config
@@ -766,8 +766,22 @@ def extract_paper_with_completeness(
     same paper text, same spec, same codebook — because the failure being
     guarded against is response shape, not prompt content.
 
-    extract_paper() raises IncompleteExtractionError *before* its write, so an
-    exhausted paper leaves nothing behind.
+    extract_paper() raises its refusal *before* its write, carrying the
+    attempt's record. What an exhausted budget leaves behind is decided at the
+    write boundary (R139, R140, R535 as amended by R612(f)):
+
+    * the attempts' records are compared by held fields — an asserted value or a
+      declined outcome — and a later record replaces the kept one only if it
+      holds strictly more; a tie keeps the earlier, and an attempt with no
+      record (an unparseable response) never replaces one;
+    * the kept refusal is raised, and the caller stores its record as
+      `extracted`, with its `contract_unmet` and `incomplete_fields`, if it holds
+      at least half of the expected fields; under that floor the paper is
+      `extraction_failed` and nothing of the record is stored.
+
+    A record under the floor that was not refused — every field answered, too
+    few held — is raised by the write boundary as `HeldFieldsBelowFloor`. It is
+    recorded in telemetry and re-raised, never retried.
     """
     review_dir = Path(db.db_path).parent
     expected = expected_field_names(spec, review_dir / "extraction_codebook.yaml")
@@ -775,6 +789,10 @@ def extract_paper_with_completeness(
     # The telemetry `arm` label has always been the extraction model's name.
     model_name = stage_config("extract_pass1", spec).model
     last_error: Exception | None = None
+    # The attempt rule (R612(f)): the refusal whose record holds the most
+    # fields, the earliest on a tie.
+    kept: Exception | None = None
+    kept_held = -1
 
     # One bounded retry budget covers every pre-write refusal: an incomplete
     # Pass 2, a missing or illegal terminal state, and an uncited value at the
@@ -804,8 +822,34 @@ def extract_paper_with_completeness(
                     unit_map_dir_name=unit_map_dir, attempt=attempt,
                 parsed_text_ref=parsed_text_ref, run_id=run_id,
             )
+        except HeldFieldsBelowFloor as exc:
+            # R535 / R612(f): the write boundary refused a record under the
+            # floor. Not a retryable refusal: recorded, and the paper fails.
+            record_call(
+                review_dir, arm=model_name, paper_id=paper_id, attempt=attempt,
+                outcome="below_floor",
+                model=_LAST_PASS2_TELEMETRY.get("model", model_name),
+                finish_reason=_LAST_PASS2_TELEMETRY.get("finish_reason"),
+                raw_content=_LAST_PASS2_TELEMETRY.get("raw_content"),
+                spans_parsed=held_count(exc.record),
+                fields_expected=expected_count(exc.record),
+                missing_fields=exc.record.incomplete_fields or None,
+                thinking_present=_LAST_PASS1_TELEMETRY.get("thinking_present"),
+                thinking_chars=_LAST_PASS1_TELEMETRY.get("thinking_chars"),
+                parse_branch=_LAST_PASS1_TELEMETRY.get("parse_branch"),
+                pass1_done_reason=_LAST_PASS1_TELEMETRY.get("finish_reason"),
+                pass1_prompt_eval_count=_LAST_PASS1_TELEMETRY.get("prompt_eval_count"),
+                pass2_prompt_eval_count=_LAST_PASS2_TELEMETRY.get("prompt_eval_count"),
+                error=str(exc),
+                extra=_LAST_PASS1_TELEMETRY.get("elicitation"),
+            )
+            raise
         except RETRYABLE as exc:
             last_error = exc
+            record = getattr(exc, "record", None)
+            held = held_count(record) if record is not None else -1
+            if held > kept_held:
+                kept, kept_held = exc, held
             incomplete = isinstance(exc, IncompleteExtractionError)
             kind = ("incomplete" if incomplete else
                     "unparseable" if isinstance(exc, ValidationError) else "contract")
@@ -857,12 +901,21 @@ def extract_paper_with_completeness(
             )
         return result
 
+    if kept is None:
+        logger.error(
+            "Paper %d (%s): refused on all %d attempts and no attempt produced a "
+            "record — the paper fails. %s",
+            paper_id, model_name, max_attempts, last_error,
+        )
+        raise last_error
     logger.error(
-        "Paper %d (%s): UNSTORABLE after %d attempts — failing the paper, "
-        "NOT storing a partial extraction. %s",
-        paper_id, model_name, max_attempts, last_error,
+        "Paper %d (%s): refused on all %d attempts. The attempt holding the most "
+        "fields (%d held) is kept: it is stored as extracted, with its incomplete "
+        "and contract_unmet fields recorded, if it holds at least half of the "
+        "expected fields; otherwise the paper fails (R139, R140, R535). %s",
+        paper_id, model_name, max_attempts, kept_held, kept,
     )
-    raise last_error
+    raise kept
 
 
 # ── Batch Extraction Pipeline ─────────────────────────────────────────
@@ -1032,7 +1085,7 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
             raise RunAborted(
                 f"run {run_id} aborted: {consecutive_failures} consecutive papers "
                 f"produced nothing usable (last: paper {pid}, "
-                f"{getattr(outcome, 'reason_code', REASON_NO_FIELDS_RETURNED)}). Every "
+                f"{getattr(outcome, 'reason_code', 'stored')}). Every "
                 "paper's event is written; the run closes with end_status "
                 "'aborted' and the abort's reason.")
 
@@ -1108,6 +1161,19 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
                     "Proactive Ollama restart failed — continuing without restart. "
                     "Monitor for instability."
                 )
+
+    # R535 / R612(f): what the run stored, read back from its paper events —
+    # papers stored with fields missing (and which), papers whose held fields
+    # are all declined, and papers failed under the floor.
+    summary = run_extraction_summary(db._conn, run_id)
+    stats.update(summary)
+    if summary["stored_incomplete"] or summary["all_declined"] or summary["below_floor"]:
+        logger.warning(
+            "Extraction summary (run %d): %d paper(s) stored with incomplete fields %s; "
+            "%d stored with every held field declined; %d failed under the floor "
+            "(held_fields_below_floor).",
+            run_id, summary["stored_incomplete"], summary["incomplete_fields"],
+            summary["all_declined"], summary["below_floor"])
 
     progress.summary()
     logger.info(

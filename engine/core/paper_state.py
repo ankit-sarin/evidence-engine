@@ -130,8 +130,11 @@ def is_failure(to_state: str) -> bool:
 # mapping can emit is here and spelled nowhere else in the engine (T12's pin).
 # The exhaustion outcomes — an incomplete, uncited or duplicated field after the
 # retry budget — are deliberately ABSENT: they store (R139 contract_unmet, R140
-# incomplete_fields), so they are not failures. `extraction_failed` is reserved
-# for "the arm produced nothing usable; select the paper again next run".
+# incomplete_fields), so they are not failures, PROVIDED the record holds at
+# least half of the expected fields. Under that floor the record is not stored
+# and the paper fails with `held_fields_below_floor` (R535, R612(f)).
+# `extraction_failed` is reserved for "the arm produced nothing usable; select
+# the paper again next run".
 
 #: A14 (R122): the parsed text cannot be handed out. `engine.core.parsed_text`'s
 #: refusals carry these as their `reason_code`.
@@ -152,6 +155,9 @@ REASON_THINKING_CHANNEL_MISSING = "thinking_channel_missing"
 REASON_RESPONSE_UNPARSEABLE = "response_unparseable"
 #: The arm returned no field with any outcome.
 REASON_NO_FIELDS_RETURNED = "no_fields_returned"
+#: R535 as amended by R612(f): the arm answered, but fewer than half of the
+#: expected fields are held (an asserted value or a declined outcome).
+REASON_HELD_FIELDS_BELOW_FLOOR = "held_fields_below_floor"
 #: The run stopped mid-paper.
 REASON_RUN_INTERRUPTED = "run_interrupted"
 #: Anything else; the exception's type and message ride in the payload (R5).
@@ -170,6 +176,7 @@ EXTRACTION_REASONS: dict[str, str] = {
     REASON_THINKING_CHANNEL_MISSING: "extraction_failed",
     REASON_RESPONSE_UNPARSEABLE: "extraction_failed",
     REASON_NO_FIELDS_RETURNED: "extraction_failed",
+    REASON_HELD_FIELDS_BELOW_FLOOR: "extraction_failed",
     REASON_RUN_INTERRUPTED: "extraction_failed",
     REASON_UNCLASSIFIED_ERROR: "extraction_failed",
 }

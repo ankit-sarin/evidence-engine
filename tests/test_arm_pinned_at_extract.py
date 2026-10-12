@@ -244,9 +244,11 @@ def test_a_cloud_arm_and_a_named_arm_still_pin_at_open(review, spec):
 
 
 def test_an_unpinned_arm_that_already_holds_a_claim_is_refused_by_name(review, spec):
-    """The freeze trigger refuses to pin an arm that holds a claim (R21). No
-    engine path writes one before the extract stage's binding; if one exists,
-    the run refuses with a named `ArmPinMismatch`, not a bare IntegrityError."""
+    """The freeze trigger refuses to pin an arm that holds a claim (R21). The
+    event writer refuses such a claim since INT-l12-18, so the claim here is
+    written with that refusal switched off — a row seeded below the writer. If
+    one exists, the run refuses with a named `ArmPinMismatch`, not a bare
+    IntegrityError."""
     from engine.core import events
     from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity
     db, cb = review
@@ -254,11 +256,13 @@ def test_an_unpinned_arm_that_already_holds_a_claim_is_refused_by_name(review, s
     h = _open(db, spec, cb)
     conn.execute("INSERT INTO papers (id, title, source, status, created_at, updated_at) "
                  "VALUES (7, 't', 's', 'FT_ELIGIBLE', 'n', 'n')")
-    events.write_field_event(
-        conn, event_type="asserted", paper_id=7, field_name="study_design", arm=ARM,
-        value="RCT", source_snippet="RCT", actor_kind="model", actor_role="extractor",
-        actor_name="m", payload=claim_identity(ARM, 7), run_id=h.run_id,
-        presented_context_sha256=FIXTURE_CONTEXT_SHA)
+    from unittest.mock import patch
+    with patch.object(events, "_refuse_claim_on_arm"):
+        events.write_field_event(
+            conn, event_type="asserted", paper_id=7, field_name="study_design", arm=ARM,
+            value="RCT", source_snippet="RCT", actor_kind="model", actor_role="extractor",
+            actor_name="m", payload=claim_identity(ARM, 7), run_id=h.run_id,
+            presented_context_sha256=FIXTURE_CONTEXT_SHA)
     with pytest.raises(rm.ArmPinMismatch, match="cannot be pinned") as exc:
         E.verify_extraction_run(conn, spec, h.run_id)
     assert "new arm name" in str(exc.value)

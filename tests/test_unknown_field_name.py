@@ -53,8 +53,11 @@ def spec():
 
 
 def _open(db, spec, cb):
-    return rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
-                       codebook=cb, git=CLEAN, digest_fn=_digest)
+    h = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+                    codebook=cb, git=CLEAN, digest_fn=_digest)
+    # the extract stage's binding: a claim needs a pinned arm (INT-l12-18)
+    rm.bind_extraction_arm(db._conn, h.run_id, arm=spec.extraction_models.arm)
+    return h
 
 
 def _write_claim(db, run_id, arm, field_name, paper_id=1):

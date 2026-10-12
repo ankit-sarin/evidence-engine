@@ -113,6 +113,13 @@ class ArmNotInRun(EventRefused):
     """R10: a claim on a model arm whose configuration the run did not pin."""
 
 
+class ClaimOnUnpinnedArm(EventRefused):
+    """INT-l12-18 (R618(b)): a claim on a model arm no run has pinned. The arm
+    is pinned by the first run to reach the extract stage (R569(b)); a claim
+    before that has no configuration of record, and would freeze the arm
+    unpinned for good."""
+
+
 class ClaimWithoutInputIdentity(EventRefused):
     """9b-2c R1: an extractor's claim must say which input it was made from —
     the reuse key, the parsed-text hash and uid — or selection could never skip
@@ -228,7 +235,8 @@ def _run_link(conn, run_id, run_marker, *, migration: bool) -> tuple:
 
 
 def _refuse_claim_on_arm(conn, arm: str, run_id) -> None:
-    """R59, R21, R10 — a claim may land only on a live arm its run pinned."""
+    """R59, R21, R10, INT-l12-18 — a claim may land only on a live, pinned arm
+    that its run declared."""
     row = conn.execute(
         "SELECT arm_kind, configuration_marker, retired_at FROM arms WHERE arm_name = ?",
         (arm,)).fetchone()
@@ -243,6 +251,12 @@ def _refuse_claim_on_arm(conn, arm: str, run_id) -> None:
         raise ClaimOnRetiredArm(
             f"claim refused: arm {arm!r} was retired at {retired}; a retired arm "
             "accepts no new claims, its existing claims stand (R21).")
+    from engine.core.run_manifest import ARM_PINNED     # the token open_run / bind write
+    if kind == "model" and marker != ARM_PINNED:
+        raise ClaimOnUnpinnedArm(
+            f"claim refused: model arm {arm!r} is not pinned. An arm is pinned by the "
+            "first run that reaches the extract stage (R569(b)); a claim written before "
+            "that has no configuration of record and would freeze the arm unpinned (R21).")
     if kind == "model" and run_id is not None and not conn.execute(
             "SELECT 1 FROM run_stage_configs WHERE run_id = ? AND arm_name = ?",
             (run_id, arm)).fetchone():

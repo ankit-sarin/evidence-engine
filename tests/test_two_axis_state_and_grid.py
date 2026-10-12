@@ -16,6 +16,7 @@ import sqlite3
 import pytest
 
 from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1, R224a
+from _event_store_fixture import register_pinned_arm
 
 from engine.core import events, paper_state
 from engine.core.effective import (
@@ -198,9 +199,9 @@ def test_eligible_paper_ids_is_the_eligibility_axis_only(db):
 # ── G6 / A12: the registry is the one routing predicate ──────────────
 
 def test_registered_arms_is_ordered_and_excludes_retired_by_default(db):
-    events.register_arm(db, "local", "model")
-    events.register_arm(db, "human_A", "human_extractor")
-    events.register_arm(db, "openai_o4_mini_high", "model")
+    register_pinned_arm(db, "local", "model")
+    register_pinned_arm(db, "human_A", "human_extractor")
+    register_pinned_arm(db, "openai_o4_mini_high", "model")
     db.commit()
     assert registered_arms(db) == ("human_A", "local", "openai_o4_mini_high")
     assert registered_arms(db, kind="model") == ("local", "openai_o4_mini_high")
@@ -224,8 +225,8 @@ class _CB:
 def test_the_grid_is_papers_times_fields_times_registered_arms(db):
     for pid in (1, 2, 3):
         _paper_event(db, pid, "adjudicated", "eligible")
-    events.register_arm(db, "local", "model")
-    events.register_arm(db, "openai_o4_mini_high", "model")
+    register_pinned_arm(db, "local", "model")
+    register_pinned_arm(db, "openai_o4_mini_high", "model")
     db.commit()
 
     cells = grid_cells(db, codebook=_CB)
@@ -244,7 +245,7 @@ def test_the_grid_uses_the_live_codebooks_twenty_fields(db):
     cb = load_codebook("data/surgical_autonomy/extraction_codebook.yaml")
     assert len(cb.field_names) == 20
     _paper_event(db, 1, "adjudicated", "eligible")
-    events.register_arm(db, "local", "model")
+    register_pinned_arm(db, "local", "model")
     db.commit()
     assert len(grid_cells(db, codebook=cb)) == 1 * 20 * 1
 
@@ -255,8 +256,8 @@ def test_iter_grid_yields_every_cell_including_the_empty_ones(db):
     3,802 cells were never judged, one-directionally."""
     _paper_event(db, 1, "adjudicated", "eligible")
     _paper_event(db, 2, "adjudicated", "eligible")
-    events.register_arm(db, "local", "model")
-    events.register_arm(db, "openai_o4_mini_high", "model")
+    register_pinned_arm(db, "local", "model")
+    register_pinned_arm(db, "openai_o4_mini_high", "model")
     db.commit()
 
     out = list(iter_grid(db, codebook=_CB))
@@ -267,7 +268,7 @@ def test_iter_grid_yields_every_cell_including_the_empty_ones(db):
 
 def test_a_populated_cell_and_an_empty_one_are_both_yielded(db):
     _paper_event(db, 1, "adjudicated", "eligible")
-    events.register_arm(db, "local", "model")
+    register_pinned_arm(db, "local", "model")
     db.commit()
     uid = events.mint_extraction_uid()
     events.write_field_event(

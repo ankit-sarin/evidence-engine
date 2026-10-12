@@ -28,7 +28,7 @@ from engine.core.events import ClaimWithoutPresentedContext, PAYLOAD_CONTEXT_CHA
 from engine.core.review_paths import load_spec_for
 from engine.utils import ollama_client as oc
 from engine.utils.ollama_client import InputOverflow, ollama_chat
-from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity, fixture_run
+from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity, fixture_run, register_pinned_arm
 
 REPO = Path(__file__).resolve().parent.parent
 LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
@@ -71,7 +71,10 @@ def _open(db, spec, cb, **kw):
     kw.setdefault("stages", EXTRACTION)
     kw.setdefault("git", CLEAN)
     kw.setdefault("digest_fn", _digest)
-    return rm.open_run(db._conn, spec, kind=kw.pop("kind", "extraction"), codebook=cb, **kw)
+    h = rm.open_run(db._conn, spec, kind=kw.pop("kind", "extraction"), codebook=cb, **kw)
+    # the extract stage's binding: a claim needs a pinned arm (INT-l12-18)
+    rm.bind_extraction_arm(db._conn, h.run_id, arm=spec.extraction_models.arm)
+    return h
 
 
 def _insert_paper(db, pid=1):
@@ -410,7 +413,7 @@ def test_T6_a_migration_marked_event_is_exempt(review, spec):
     db, cb = review
     _open(db, spec, cb)
     _insert_paper(db)
-    events.register_arm(db._conn, "premanifest_seed", "model",
+    register_pinned_arm(db._conn, "premanifest_seed", "model",
                         configuration_marker=events.PRE_MANIFEST)
     claim_id = seed_claim(db._conn, arm="premanifest_seed", paper_id=1, field_name="f",
                           value="5")

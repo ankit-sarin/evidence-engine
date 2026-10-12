@@ -8,6 +8,7 @@ from unittest.mock import patch, MagicMock
 import pytest
 
 from _event_store_fixture import (  # 9b-2c R1, R224a; D23 strict form
+    register_pinned_arm,
     FIXTURE_CONTEXT_SHA, FIXTURE_TEXT_SHA, claim_identity,
 )
 
@@ -125,7 +126,7 @@ def _mirror(db_path) -> None:
             if arm not in seen_arms:
                 if not conn.execute("SELECT COUNT(*) FROM arms WHERE arm_name = ?",
                                     (arm,)).fetchone()[0]:
-                    events.register_arm(conn, arm, "model")
+                    register_pinned_arm(conn, arm, "model")
                 seen_arms.add(arm)
             if pid not in seen_papers:
                 conn.execute("INSERT OR IGNORE INTO papers (id) VALUES (?)", (pid,))
@@ -312,7 +313,7 @@ class TestExportAmbiguousPairs:
         db_path = _make_review_db(tmp_path)
         ensure_event_store(db_path)
         conn = sqlite3.connect(str(db_path))
-        events.register_arm(conn, "empty_arm", "model")
+        register_pinned_arm(conn, "empty_arm", "model")
         conn.commit()
         conn.close()
 

@@ -20,9 +20,15 @@ Design notes:
   * **Arm-agnostic.** The same predicate governs the local extractor and both
     cloud arms, so a repair run cannot be complete on one arm's terms and
     incomplete on another's.
-  * **Fail the call, never write partially.** An incomplete result raises before
-    any INSERT. There is no "store what we got" path, because that is exactly
-    what produced the 21 collapsed extractions.
+  * **Refuse the attempt before any write; what is stored is decided at the
+    write boundary.** An incomplete result raises before any INSERT and is
+    retried under the bounded budget. If the budget is exhausted, the attempt
+    that holds the most fields is stored as `extracted` with the fields that
+    never came back named in `incomplete_fields` (R140) — but only if it holds
+    at least half of the expected fields. Under that floor nothing of it is
+    stored and the paper is `extraction_failed` (R535 as amended by R612(f);
+    `engine.core.extraction_events`). A collapsed one-span response therefore
+    never becomes an extraction, which is what produced the 21 collapsed ones.
 """
 
 from __future__ import annotations

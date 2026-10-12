@@ -9,6 +9,7 @@ from unittest.mock import patch
 import openpyxl
 import pytest
 
+from _event_store_fixture import register_pinned_arm
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.exporters import export_all
@@ -643,7 +644,7 @@ def test_export_all_exports_the_spec_arm(tmp_path, spec):
     add_values(db.db_path, "fixture-arm", "study_type",
                ["Original Research"] * len(pids), start_paper=pids[0])
     # local: the Run-6 shape — registered pre-manifest, seeded claims.
-    events.register_arm(db._conn, "local", "model", configuration_marker=PRE_MANIFEST)
+    register_pinned_arm(db._conn, "local", "model", configuration_marker=PRE_MANIFEST)
     for pid in pids:
         seed_claim(db._conn, arm="local", paper_id=pid, field_name="study_type",
                    value="Review", source_snippet="local-only snippet")

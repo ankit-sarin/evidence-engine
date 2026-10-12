@@ -1,0 +1,28 @@
+system | sysstat-collect.timer | OnCalendar=*-*-* *:00/10:00  | /usr/lib/sysstat/sa1 1 1  
+system | anacron.timer | OnCalendar=*-*-* 07..23:30:00  | /usr/sbin/anacron -d -q $ANACRON_ARGS  
+system | fwupd-refresh.timer | OnCalendar=*-*-* *:00:00  | /usr/bin/fwupdmgr refresh  
+system | update-notifier-download.timer |  OnUnitActiveUSec=1d  OnStartupUSec=5min  | /usr/lib/update-notifier/package-data-downloader  
+system | etckeeper.timer |  OnUnitActiveUSec=1d  OnBootUSec=15min  | /etc/etckeeper/daily  
+system | systemd-tmpfiles-clean.timer |  OnUnitActiveUSec=1d  OnBootUSec=15min  | systemd-tmpfiles --clean  
+system | dpkg-db-backup.timer | OnCalendar=*-*-* 00:00:00  | /usr/libexec/dpkg/dpkg-db-backup  
+system | logrotate.timer | OnCalendar=*-*-* 00:00:00  | /usr/sbin/logrotate /etc/logrotate.conf  
+system | sysstat-summary.timer | OnCalendar=*-*-* 00:07:00  | /usr/lib/sysstat/sa2 -A  
+system | ua-timer.timer |  OnStartupUSec=1min  OnUnitActiveUSec=6h  | /usr/bin/python3 /usr/lib/ubuntu-advantage/timer.py  
+system | motd-news.timer | OnCalendar=*-*-* 00,12:00:00  OnStartupUSec=1min  | /etc/update-motd.d/50-motd-news --force  
+system | apt-daily.timer | OnCalendar=*-*-* 06,18:00:00  | /usr/lib/apt/apt.systemd.daily update  
+system | apt-daily-upgrade.timer | OnCalendar=*-*-* 06:00:00  | /usr/lib/apt/apt.systemd.daily install  
+system | man-db.timer | OnCalendar=*-*-* 00:00:00  | /usr/bin/install -d -o man -g man -m 0755 /var/cache/man  /usr/bin/mandb --quiet  
+system | dgx-snapshot-user.timer | OnCalendar=*-*-* 10:30:00 UTC  | /home/ankitsarin/projects/dgx-infra/bin/dgx-snapshot-user  
+system | dgx-snapshot-root.timer | OnCalendar=*-*-* 10:45:00 UTC  | /home/ankitsarin/projects/dgx-infra/bin/dgx-snapshot-root  
+system | dgx-snapshot-upload.timer | OnCalendar=*-*-* 11:15:00 UTC  | /home/ankitsarin/projects/dgx-infra/bin/dgx-snapshot-upload --config ${RUNTIME_DIRECTORY}/rclone.conf --cache-dir ${RUNTIME_DIRECTORY}/cache --corpus-roo 
+system | dgx-backup-monitor.timer | OnCalendar=*-*-* 12:30:00 UTC  | /home/ankitsarin/projects/dgx-infra/bin/dgx-backup-monitor --config ${RUNTIME_DIRECTORY}/rclone.conf --cache-dir ${RUNTIME_DIRECTORY}/cache --corpus-root 
+system | update-notifier-motd.timer | OnCalendar=Sun *-*-* 06:00:00  | /usr/lib/ubuntu-release-upgrader/release-upgrade-motd  
+system | e2scrub_all.timer | OnCalendar=Sun *-*-* 03:10:00  | /sbin/e2scrub_all  
+system | fstrim.timer | OnCalendar=Mon *-*-* 00:00:00  | /sbin/fstrim --listed-in /etc/fstab:/proc/self/mountinfo --verbose --quiet-unsupported  
+system | apport-autoreport.timer |  OnUnitActiveUSec=3h  OnStartupUSec=1h  | /usr/share/apport/whoopsie-upload-all --timeout 20  
+system | snapd.snap-repair.timer | OnCalendar=*-*-* 05,11,17,23:00:00  OnStartupUSec=15min  | /usr/lib/snapd/snap-repair run  
+user | surgical-cv-health.timer |  OnUnitActiveUSec=5min  OnBootUSec=1min  | /home/ankitsarin/projects/surgical-cv/.venv/bin/python -m app.health  
+user | surgical-cv-worker.timer |  OnUnitActiveUSec=5min  OnBootUSec=2min  | /home/ankitsarin/projects/surgical-cv/.venv/bin/python -m app.worker --once  
+user | snap.firmware-updater.firmware-notifier.timer | OnCalendar=*-*-* 21:00:00  | /usr/bin/snap run --timer=00:00-24:00/8 firmware-updater.firmware-notifier  
+user | launchpadlib-cache-clean.timer |  OnUnitActiveUSec=1d  OnStartupUSec=5min  | find /home/ankitsarin/.launchpadlib/api.launchpad.net/cache -type f -mtime +30 -delete  
+user | surgical-cv-backup.timer | OnCalendar=*-*-* 03:17:00 UTC  | /home/ankitsarin/projects/surgical-cv/.venv/bin/python tools/backup_state.py  

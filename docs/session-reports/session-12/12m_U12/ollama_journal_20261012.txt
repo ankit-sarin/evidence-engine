@@ -1,0 +1,157 @@
+Oct 12 03:14:32 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 03:14:32 | 200 |  198.054634ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 03:15:18 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 03:15:18 | 200 | 46.228984674s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 03:50:42 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 03:50:42 | 200 |   87.157849ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 03:50:43 spark-59e4 ollama[2453]: time=2026-10-12T03:50:43.348Z level=INFO source=server.go:771 msg="loading model" "model layers"=37 requested=-1
+Oct 12 03:50:44 spark-59e4 ollama[2453]: time=2026-10-12T03:50:44.445Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 03:50:44 spark-59e4 ollama[2453]: time=2026-10-12T03:50:44.696Z level=INFO source=server.go:1402 msg="llama runner started in 1.35 seconds"
+Oct 12 03:50:49 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 03:50:49 | 200 |   7.23671738s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 03:50:51 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 03:50:51 | 200 |  1.940947959s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 03:54:33 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 03:54:33 | 200 |  238.947646ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 03:54:34 spark-59e4 ollama[2453]: time=2026-10-12T03:54:34.200Z level=INFO source=server.go:771 msg="loading model" "model layers"=63 requested=-1
+Oct 12 03:54:35 spark-59e4 ollama[2453]: time=2026-10-12T03:54:35.854Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 03:54:36 spark-59e4 ollama[2453]: time=2026-10-12T03:54:36.859Z level=INFO source=server.go:1402 msg="llama runner started in 2.66 seconds"
+Oct 12 03:55:22 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 03:55:22 | 200 | 49.540326613s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 04:04:31 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 04:04:31 | 200 |   58.503917ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 04:04:32 spark-59e4 ollama[2453]: time=2026-10-12T04:04:32.762Z level=INFO source=server.go:771 msg="loading model" "model layers"=37 requested=-1
+Oct 12 04:04:33 spark-59e4 ollama[2453]: time=2026-10-12T04:04:33.818Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 04:04:34 spark-59e4 ollama[2453]: time=2026-10-12T04:04:34.069Z level=INFO source=server.go:1402 msg="llama runner started in 1.31 seconds"
+Oct 12 04:04:39 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 04:04:39 | 200 |  7.161882315s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 04:04:41 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 04:04:41 | 200 |   1.99233623s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 04:31:23 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 04:31:23 | 200 |  200.922514ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 04:31:23 spark-59e4 ollama[2453]: time=2026-10-12T04:31:23.985Z level=INFO source=server.go:771 msg="loading model" "model layers"=63 requested=-1
+Oct 12 04:31:25 spark-59e4 ollama[2453]: time=2026-10-12T04:31:25.640Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 04:31:26 spark-59e4 ollama[2453]: time=2026-10-12T04:31:26.645Z level=INFO source=server.go:1402 msg="llama runner started in 2.66 seconds"
+Oct 12 04:32:12 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 04:32:12 | 200 |  49.66920518s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 05:32:15 spark-59e4 ollama[2453]: time=2026-10-12T05:32:15.200Z level=INFO source=server.go:771 msg="loading model" "model layers"=41 requested=-1
+Oct 12 05:32:18 spark-59e4 ollama[2453]: time=2026-10-12T05:32:18.030Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 05:32:20 spark-59e4 ollama[2453]: time=2026-10-12T05:32:20.791Z level=INFO source=server.go:1402 msg="llama runner started in 5.59 seconds"
+Oct 12 05:33:03 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 05:33:03 | 200 | 49.543331691s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 05:34:08 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 05:34:08 | 200 | 21.618850939s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 07:00:01 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:01 | 200 |  120.738842ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:00:02 spark-59e4 ollama[2453]: time=2026-10-12T07:00:02.231Z level=INFO source=server.go:771 msg="loading model" "model layers"=41 requested=-1
+Oct 12 07:00:07 spark-59e4 ollama[2453]: time=2026-10-12T07:00:07.762Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:00:08 spark-59e4 ollama[2453]: time=2026-10-12T07:00:08.767Z level=INFO source=server.go:1402 msg="llama runner started in 6.54 seconds"
+Oct 12 07:00:12 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:12 | 200 | 11.480337194s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:00:12 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:12 | 200 |  132.384526ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:00:14 spark-59e4 ollama[2453]: time=2026-10-12T07:00:14.161Z level=INFO source=server.go:771 msg="loading model" "model layers"=65 requested=-1
+Oct 12 07:00:20 spark-59e4 ollama[2453]: time=2026-10-12T07:00:20.350Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:00:23 spark-59e4 ollama[2453]: time=2026-10-12T07:00:23.111Z level=INFO source=server.go:1402 msg="llama runner started in 8.95 seconds"
+Oct 12 07:00:32 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:32 | 200 | 19.847586279s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:00:32 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:32 | 200 |  179.030413ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:00:34 spark-59e4 ollama[2453]: time=2026-10-12T07:00:34.296Z level=INFO source=server.go:771 msg="loading model" "model layers"=25 requested=-1
+Oct 12 07:00:36 spark-59e4 ollama[2453]: time=2026-10-12T07:00:36.190Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:00:38 spark-59e4 ollama[2453]: time=2026-10-12T07:00:38.952Z level=INFO source=server.go:1402 msg="llama runner started in 4.66 seconds"
+Oct 12 07:00:39 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:39 | 200 |  6.921309655s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:00:40 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:40 | 200 |  211.927218ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:00:41 spark-59e4 ollama[2453]: time=2026-10-12T07:00:41.083Z level=INFO source=server.go:771 msg="loading model" "model layers"=31 requested=-1
+Oct 12 07:00:44 spark-59e4 ollama[2453]: time=2026-10-12T07:00:44.387Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:00:46 spark-59e4 ollama[2453]: time=2026-10-12T07:00:46.647Z level=INFO source=server.go:1402 msg="llama runner started in 5.56 seconds"
+Oct 12 07:00:47 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:47 | 200 |  7.853642655s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:00:48 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:48 | 200 |   94.635184ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:00:48 spark-59e4 ollama[2453]: time=2026-10-12T07:00:48.952Z level=INFO source=server.go:771 msg="loading model" "model layers"=49 requested=-1
+Oct 12 07:00:52 spark-59e4 ollama[2453]: time=2026-10-12T07:00:52.021Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:00:54 spark-59e4 ollama[2453]: time=2026-10-12T07:00:54.283Z level=INFO source=server.go:1402 msg="llama runner started in 5.33 seconds"
+Oct 12 07:00:54 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:54 | 200 |  6.355737189s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:00:54 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:00:54 | 200 |  191.654935ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:00:55 spark-59e4 ollama[2453]: time=2026-10-12T07:00:55.947Z level=INFO source=server.go:771 msg="loading model" "model layers"=61 requested=-1
+Oct 12 07:01:00 spark-59e4 ollama[2453]: time=2026-10-12T07:01:00.089Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:01:03 spark-59e4 ollama[2453]: time=2026-10-12T07:01:03.353Z level=INFO source=server.go:1402 msg="llama runner started in 7.41 seconds"
+Oct 12 07:01:06 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:01:06 | 200 |   11.7998612s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:01:06 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:01:06 | 200 |  189.047585ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:01:07 spark-59e4 ollama[2453]: time=2026-10-12T07:01:07.822Z level=INFO source=server.go:771 msg="loading model" "model layers"=65 requested=-1
+Oct 12 07:01:13 spark-59e4 ollama[2453]: time=2026-10-12T07:01:13.894Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:01:16 spark-59e4 ollama[2453]: time=2026-10-12T07:01:16.656Z level=INFO source=server.go:1402 msg="llama runner started in 8.83 seconds"
+Oct 12 07:01:32 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:01:32 | 200 | 26.163350174s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:01:33 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:01:33 | 200 |  212.928974ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:01:34 spark-59e4 ollama[2453]: time=2026-10-12T07:01:34.562Z level=INFO source=server.go:771 msg="loading model" "model layers"=63 requested=-1
+Oct 12 07:01:37 spark-59e4 ollama[2453]: time=2026-10-12T07:01:37.062Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:01:39 spark-59e4 ollama[2453]: time=2026-10-12T07:01:39.321Z level=INFO source=server.go:1402 msg="llama runner started in 4.76 seconds"
+Oct 12 07:01:39 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:01:39 | 200 |  6.629762608s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:01:39 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:01:39 | 200 |  106.277831ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:01:40 spark-59e4 ollama[2453]: time=2026-10-12T07:01:40.723Z level=INFO source=server.go:771 msg="loading model" "model layers"=29 requested=-1
+Oct 12 07:01:44 spark-59e4 ollama[2453]: time=2026-10-12T07:01:44.517Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:01:45 spark-59e4 ollama[2453]: time=2026-10-12T07:01:45.521Z level=INFO source=server.go:1402 msg="llama runner started in 4.80 seconds"
+Oct 12 07:01:45 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:01:45 | 200 |  5.813150829s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:01:45 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:01:45 | 200 |  107.345291ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:01:46 spark-59e4 ollama[2453]: time=2026-10-12T07:01:46.600Z level=INFO source=server.go:771 msg="loading model" "model layers"=37 requested=-1
+Oct 12 07:01:47 spark-59e4 ollama[2453]: time=2026-10-12T07:01:47.690Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:01:48 spark-59e4 ollama[2453]: time=2026-10-12T07:01:48.694Z level=INFO source=server.go:1402 msg="llama runner started in 2.09 seconds"
+Oct 12 07:01:53 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:01:53 | 200 |  7.964143846s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:01:53 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:01:53 | 200 |   90.225974ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:01:54 spark-59e4 ollama[2453]: time=2026-10-12T07:01:54.575Z level=INFO source=server.go:771 msg="loading model" "model layers"=65 requested=-1
+Oct 12 07:01:56 spark-59e4 ollama[2453]: time=2026-10-12T07:01:56.567Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:01:58 spark-59e4 ollama[2453]: time=2026-10-12T07:01:58.827Z level=INFO source=server.go:1402 msg="llama runner started in 4.25 seconds"
+Oct 12 07:02:11 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:02:11 | 200 | 17.805044558s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:02:11 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:02:11 | 200 |   96.605707ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:02:13 spark-59e4 ollama[2453]: time=2026-10-12T07:02:13.259Z level=INFO source=server.go:511 msg="loading model" "model layers"=29 requested=-1
+Oct 12 07:02:13 spark-59e4 ollama[2453]: time=2026-10-12T07:02:13.517Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:02:13 spark-59e4 ollama[2453]: load_tensors: loading model tensors, this can take a while... (mmap = true)
+Oct 12 07:02:17 spark-59e4 ollama[2453]: time=2026-10-12T07:02:17.284Z level=INFO source=server.go:1402 msg="llama runner started in 4.02 seconds"
+Oct 12 07:02:17 spark-59e4 ollama[2453]: time=2026-10-12T07:02:17.284Z level=INFO source=server.go:1402 msg="llama runner started in 4.03 seconds"
+Oct 12 07:02:17 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:02:17 | 200 |  6.220901604s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:02:18 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:02:18 | 200 |  131.633848ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:02:18 spark-59e4 ollama[2453]: time=2026-10-12T07:02:18.845Z level=INFO source=server.go:771 msg="loading model" "model layers"=37 requested=-1
+Oct 12 07:02:24 spark-59e4 ollama[2453]: time=2026-10-12T07:02:24.351Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:02:25 spark-59e4 ollama[2453]: time=2026-10-12T07:02:25.355Z level=INFO source=server.go:1402 msg="llama runner started in 6.51 seconds"
+Oct 12 07:02:36 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:02:36 | 200 | 18.759331385s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:02:37 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:02:37 | 200 |  112.033006ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:02:38 spark-59e4 ollama[2453]: time=2026-10-12T07:02:38.698Z level=INFO source=server.go:511 msg="loading model" "model layers"=29 requested=-1
+Oct 12 07:02:38 spark-59e4 ollama[2453]: time=2026-10-12T07:02:38.967Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:02:39 spark-59e4 ollama[2453]: load_tensors: loading model tensors, this can take a while... (mmap = true)
+Oct 12 07:02:41 spark-59e4 ollama[2453]: time=2026-10-12T07:02:41.727Z level=INFO source=server.go:1402 msg="llama runner started in 3.03 seconds"
+Oct 12 07:02:41 spark-59e4 ollama[2453]: time=2026-10-12T07:02:41.728Z level=INFO source=server.go:1402 msg="llama runner started in 3.03 seconds"
+Oct 12 07:02:41 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:02:41 | 200 |  4.793138102s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:02:41 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:02:41 | 200 |   67.025505ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:02:43 spark-59e4 ollama[2453]: time=2026-10-12T07:02:43.131Z level=INFO source=server.go:511 msg="loading model" "model layers"=65 requested=-1
+Oct 12 07:02:43 spark-59e4 ollama[2453]: time=2026-10-12T07:02:43.400Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:02:43 spark-59e4 ollama[2453]: load_tensors: loading model tensors, this can take a while... (mmap = true)
+Oct 12 07:02:55 spark-59e4 ollama[2453]: time=2026-10-12T07:02:55.963Z level=INFO source=server.go:1402 msg="llama runner started in 12.83 seconds"
+Oct 12 07:02:55 spark-59e4 ollama[2453]: time=2026-10-12T07:02:55.964Z level=INFO source=server.go:1402 msg="llama runner started in 12.83 seconds"
+Oct 12 07:02:57 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:02:57 | 200 | 15.517548519s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:02:57 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:02:57 | 200 |   21.819268ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:02:58 spark-59e4 ollama[2453]: time=2026-10-12T07:02:58.555Z level=INFO source=server.go:511 msg="loading model" "model layers"=33 requested=-1
+Oct 12 07:02:58 spark-59e4 ollama[2453]: time=2026-10-12T07:02:58.819Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:02:58 spark-59e4 ollama[2453]: load_tensors: loading model tensors, this can take a while... (mmap = true)
+Oct 12 07:03:01 spark-59e4 ollama[2453]: time=2026-10-12T07:03:01.331Z level=INFO source=server.go:1402 msg="llama runner started in 2.78 seconds"
+Oct 12 07:03:01 spark-59e4 ollama[2453]: time=2026-10-12T07:03:01.331Z level=INFO source=server.go:1402 msg="llama runner started in 2.78 seconds"
+Oct 12 07:03:01 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:03:01 | 200 |  4.177812493s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:03:01 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:03:01 | 200 |  141.360011ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:03:03 spark-59e4 ollama[2453]: time=2026-10-12T07:03:03.048Z level=INFO source=server.go:511 msg="loading model" "model layers"=47 requested=-1
+Oct 12 07:03:03 spark-59e4 ollama[2453]: time=2026-10-12T07:03:03.308Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:03:03 spark-59e4 ollama[2453]: load_tensors: loading model tensors, this can take a while... (mmap = true)
+Oct 12 07:03:11 spark-59e4 ollama[2453]: time=2026-10-12T07:03:11.094Z level=INFO source=server.go:1402 msg="llama runner started in 8.05 seconds"
+Oct 12 07:03:11 spark-59e4 ollama[2453]: time=2026-10-12T07:03:11.094Z level=INFO source=server.go:1402 msg="llama runner started in 8.05 seconds"
+Oct 12 07:03:11 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:03:11 | 200 |  9.497419182s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:03:11 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:03:11 | 200 |  107.146449ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:03:12 spark-59e4 ollama[2453]: time=2026-10-12T07:03:12.390Z level=INFO source=server.go:511 msg="loading model" "model layers"=65 requested=-1
+Oct 12 07:03:12 spark-59e4 ollama[2453]: time=2026-10-12T07:03:12.652Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:03:12 spark-59e4 ollama[2453]: load_tensors: loading model tensors, this can take a while... (mmap = true)
+Oct 12 07:03:23 spark-59e4 ollama[2453]: time=2026-10-12T07:03:23.960Z level=INFO source=server.go:1402 msg="llama runner started in 11.57 seconds"
+Oct 12 07:03:23 spark-59e4 ollama[2453]: time=2026-10-12T07:03:23.970Z level=INFO source=server.go:1402 msg="llama runner started in 11.58 seconds"
+Oct 12 07:03:24 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:03:24 | 200 | 12.829912667s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:03:24 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:03:24 | 200 |   98.124965ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:03:25 spark-59e4 ollama[2453]: time=2026-10-12T07:03:25.613Z level=INFO source=server.go:511 msg="loading model" "model layers"=81 requested=-1
+Oct 12 07:03:25 spark-59e4 ollama[2453]: time=2026-10-12T07:03:25.885Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:03:26 spark-59e4 ollama[2453]: load_tensors: loading model tensors, this can take a while... (mmap = true)
+Oct 12 07:03:51 spark-59e4 ollama[2453]: time=2026-10-12T07:03:51.716Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:04:26 spark-59e4 ollama[2453]: time=2026-10-12T07:04:26.861Z level=INFO source=server.go:1402 msg="llama runner started in 61.25 seconds"
+Oct 12 07:04:26 spark-59e4 ollama[2453]: time=2026-10-12T07:04:26.884Z level=INFO source=server.go:1402 msg="llama runner started in 61.27 seconds"
+Oct 12 07:04:27 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:04:27 | 200 |          1m3s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 07:04:28 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:04:28 | 200 |  453.977285ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 07:04:32 spark-59e4 ollama[2453]: time=2026-10-12T07:04:32.079Z level=INFO source=server.go:511 msg="loading model" "model layers"=29 requested=-1
+Oct 12 07:04:32 spark-59e4 ollama[2453]: time=2026-10-12T07:04:32.352Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 07:04:32 spark-59e4 ollama[2453]: load_tensors: loading model tensors, this can take a while... (mmap = true)
+Oct 12 07:04:34 spark-59e4 ollama[2453]: time=2026-10-12T07:04:34.611Z level=INFO source=server.go:1402 msg="llama runner started in 2.53 seconds"
+Oct 12 07:04:34 spark-59e4 ollama[2453]: time=2026-10-12T07:04:34.611Z level=INFO source=server.go:1402 msg="llama runner started in 2.53 seconds"
+Oct 12 07:04:34 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 07:04:34 | 200 |  6.631376289s |       127.0.0.1 | POST     "/api/generate"
+Oct 12 09:00:23 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 09:00:23 | 200 |  234.733112ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 09:00:24 spark-59e4 ollama[2453]: time=2026-10-12T09:00:24.801Z level=INFO source=server.go:771 msg="loading model" "model layers"=63 requested=-1
+Oct 12 09:00:26 spark-59e4 ollama[2453]: time=2026-10-12T09:00:26.591Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 09:00:28 spark-59e4 ollama[2453]: time=2026-10-12T09:00:28.598Z level=INFO source=server.go:1402 msg="llama runner started in 3.80 seconds"
+Oct 12 09:01:14 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 09:01:14 | 200 | 50.781365485s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 09:16:27 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 09:16:27 | 200 |  106.425235ms |       127.0.0.1 | POST     "/api/show"
+Oct 12 09:16:28 spark-59e4 ollama[2453]: time=2026-10-12T09:16:28.752Z level=INFO source=server.go:771 msg="loading model" "model layers"=37 requested=-1
+Oct 12 09:16:29 spark-59e4 ollama[2453]: time=2026-10-12T09:16:29.795Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 12 09:16:30 spark-59e4 ollama[2453]: time=2026-10-12T09:16:30.548Z level=INFO source=server.go:1402 msg="llama runner started in 1.80 seconds"
+Oct 12 09:16:35 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 09:16:35 | 200 |  7.723678893s |       127.0.0.1 | POST     "/api/chat"
+Oct 12 09:16:37 spark-59e4 ollama[2453]: [GIN] 2026/10/12 - 09:16:37 | 200 |  1.938843417s |       127.0.0.1 | POST     "/api/chat"

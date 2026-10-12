@@ -1,0 +1,495 @@
+{
+ "declared": [
+  {
+   "requirement": "pydantic",
+   "spec": "",
+   "pinned": false,
+   "installed": "2.12.5",
+   "imported_under": [
+    "analysis",
+    "engine",
+    "tests"
+   ]
+  },
+  {
+   "requirement": "ollama",
+   "spec": "==0.6.1",
+   "pinned": true,
+   "installed": "0.6.1",
+   "imported_under": [
+    "analysis",
+    "engine",
+    "tests"
+   ]
+  },
+  {
+   "requirement": "biopython",
+   "spec": "",
+   "pinned": false,
+   "installed": "1.86",
+   "imported_under": [
+    "engine",
+    "scripts"
+   ]
+  },
+  {
+   "requirement": "pyalex",
+   "spec": "",
+   "pinned": false,
+   "installed": "0.20",
+   "imported_under": [
+    "engine",
+    "scripts"
+   ]
+  },
+  {
+   "requirement": "chromadb",
+   "spec": "",
+   "pinned": false,
+   "installed": "1.5.1",
+   "imported_under": []
+  },
+  {
+   "requirement": "sentence-transformers",
+   "spec": "",
+   "pinned": false,
+   "installed": "5.2.3",
+   "imported_under": []
+  },
+  {
+   "requirement": "gradio",
+   "spec": "",
+   "pinned": false,
+   "installed": "6.6.0",
+   "imported_under": []
+  },
+  {
+   "requirement": "pyyaml",
+   "spec": "",
+   "pinned": false,
+   "installed": "6.0.3",
+   "imported_under": [
+    "analysis",
+    "engine",
+    "tests"
+   ]
+  },
+  {
+   "requirement": "python-docx",
+   "spec": "",
+   "pinned": false,
+   "installed": "1.2.0",
+   "imported_under": [
+    "engine",
+    "tests"
+   ]
+  },
+  {
+   "requirement": "openpyxl",
+   "spec": "",
+   "pinned": false,
+   "installed": "3.1.5",
+   "imported_under": [
+    "analysis",
+    "engine",
+    "tests"
+   ]
+  },
+  {
+   "requirement": "docling",
+   "spec": "==2.74.0",
+   "pinned": true,
+   "installed": "2.74.0",
+   "imported_under": [
+    "engine"
+   ]
+  },
+  {
+   "requirement": "openai",
+   "spec": "==2.24.0",
+   "pinned": true,
+   "installed": "2.24.0",
+   "imported_under": [
+    "engine",
+    "tests"
+   ]
+  },
+  {
+   "requirement": "anthropic",
+   "spec": "==0.84.0",
+   "pinned": true,
+   "installed": "0.84.0",
+   "imported_under": [
+    "engine",
+    "tests"
+   ]
+  },
+  {
+   "requirement": "tiktoken",
+   "spec": "",
+   "pinned": false,
+   "installed": "0.12.0",
+   "imported_under": [
+    "analysis"
+   ]
+  },
+  {
+   "requirement": "pysbd",
+   "spec": "==0.3.4",
+   "pinned": true,
+   "installed": "0.3.4",
+   "imported_under": [
+    "analysis"
+   ]
+  }
+ ],
+ "declared_count": 15,
+ "declared_unpinned": [
+  "pydantic",
+  "biopython",
+  "pyalex",
+  "chromadb",
+  "sentence-transformers",
+  "gradio",
+  "pyyaml",
+  "python-docx",
+  "openpyxl",
+  "tiktoken"
+ ],
+ "declared_not_imported": [
+  "chromadb",
+  "sentence-transformers",
+  "gradio"
+ ],
+ "imported_undeclared": [
+  "fitz",
+  "fontTools",
+  "fpdf",
+  "httpx",
+  "pandas",
+  "pytest",
+  "requests",
+  "sklearn"
+ ],
+ "imports": [
+  {
+   "import": "anthropic",
+   "distribution": [
+    "anthropic"
+   ],
+   "installed": {
+    "anthropic": "0.84.0"
+   },
+   "declared": true,
+   "pinned": true,
+   "roots": {
+    "engine": 1,
+    "tests": 1
+   },
+   "example": "engine/cloud/anthropic_extractor.py"
+  },
+  {
+   "import": "Bio",
+   "distribution": [
+    "biopython"
+   ],
+   "installed": {
+    "biopython": "1.86"
+   },
+   "declared": true,
+   "pinned": false,
+   "roots": {
+    "engine": 1,
+    "scripts": 2
+   },
+   "example": "engine/search/pubmed.py"
+  },
+  {
+   "import": "docling",
+   "distribution": [
+    "docling"
+   ],
+   "installed": {
+    "docling": "2.74.0"
+   },
+   "declared": true,
+   "pinned": true,
+   "roots": {
+    "engine": 1
+   },
+   "example": "engine/parsers/pdf_parser.py"
+  },
+  {
+   "import": "docx",
+   "distribution": [
+    "python-docx"
+   ],
+   "installed": {
+    "python-docx": "1.2.0"
+   },
+   "declared": true,
+   "pinned": false,
+   "roots": {
+    "engine": 1,
+    "tests": 2
+   },
+   "example": "engine/exporters/docx_export.py"
+  },
+  {
+   "import": "fitz",
+   "distribution": [
+    "pymupdf"
+   ],
+   "installed": {
+    "pymupdf": "1.27.1"
+   },
+   "declared": false,
+   "pinned": false,
+   "roots": {
+    "engine": 3,
+    "tests": 5
+   },
+   "example": "engine/acquisition/pdf_quality_check.py"
+  },
+  {
+   "import": "fontTools",
+   "distribution": [
+    "fonttools"
+   ],
+   "installed": {
+    "fonttools": "4.61.1"
+   },
+   "declared": false,
+   "pinned": false,
+   "roots": {
+    "engine": 1,
+    "tests": 1
+   },
+   "example": "engine/parsers/font_audit.py"
+  },
+  {
+   "import": "fpdf",
+   "distribution": [
+    "fpdf2"
+   ],
+   "installed": {
+    "fpdf2": "2.8.6"
+   },
+   "declared": false,
+   "pinned": false,
+   "roots": {
+    "tests": 9
+   },
+   "example": "tests/test_font_audit_ledger.py"
+  },
+  {
+   "import": "httpx",
+   "distribution": [
+    "httpx"
+   ],
+   "installed": {
+    "httpx": "0.28.1"
+   },
+   "declared": false,
+   "pinned": false,
+   "roots": {
+    "analysis": 2,
+    "engine": 3,
+    "tests": 14
+   },
+   "example": "analysis/eval/run_qualgap01.py"
+  },
+  {
+   "import": "ollama",
+   "distribution": [
+    "ollama"
+   ],
+   "installed": {
+    "ollama": "0.6.1"
+   },
+   "declared": true,
+   "pinned": true,
+   "roots": {
+    "analysis": 1,
+    "engine": 2,
+    "tests": 1
+   },
+   "example": "analysis/eval/run_qualgap01.py"
+  },
+  {
+   "import": "openai",
+   "distribution": [
+    "openai"
+   ],
+   "installed": {
+    "openai": "2.24.0"
+   },
+   "declared": true,
+   "pinned": true,
+   "roots": {
+    "engine": 1,
+    "tests": 1
+   },
+   "example": "engine/cloud/openai_extractor.py"
+  },
+  {
+   "import": "openpyxl",
+   "distribution": [
+    "openpyxl"
+   ],
+   "installed": {
+    "openpyxl": "3.1.5"
+   },
+   "declared": true,
+   "pinned": false,
+   "roots": {
+    "analysis": 8,
+    "engine": 4,
+    "tests": 7
+   },
+   "example": "analysis/eval/score_screen2f.py"
+  },
+  {
+   "import": "pandas",
+   "distribution": [
+    "pandas"
+   ],
+   "installed": {
+    "pandas": "2.3.3"
+   },
+   "declared": false,
+   "pinned": false,
+   "roots": {
+    "analysis": 1,
+    "tests": 1
+   },
+   "example": "analysis/paper1/pass1_inspection.py"
+  },
+  {
+   "import": "pyalex",
+   "distribution": [
+    "pyalex"
+   ],
+   "installed": {
+    "pyalex": "0.20"
+   },
+   "declared": true,
+   "pinned": false,
+   "roots": {
+    "engine": 1,
+    "scripts": 2
+   },
+   "example": "engine/search/openalex.py"
+  },
+  {
+   "import": "pydantic",
+   "distribution": [
+    "pydantic"
+   ],
+   "installed": {
+    "pydantic": "2.12.5"
+   },
+   "declared": true,
+   "pinned": false,
+   "roots": {
+    "analysis": 4,
+    "engine": 11,
+    "tests": 6
+   },
+   "example": "analysis/eval/screen2f_worker.py"
+  },
+  {
+   "import": "pysbd",
+   "distribution": [
+    "pysbd"
+   ],
+   "installed": {
+    "pysbd": "0.3.4"
+   },
+   "declared": true,
+   "pinned": true,
+   "roots": {
+    "analysis": 1
+   },
+   "example": "analysis/provenance/segment.py"
+  },
+  {
+   "import": "pytest",
+   "distribution": [
+    "pytest"
+   ],
+   "installed": {
+    "pytest": "9.0.2"
+   },
+   "declared": false,
+   "pinned": false,
+   "roots": {
+    "tests": 166
+   },
+   "example": "tests/analysis/paper1/test_judge.py"
+  },
+  {
+   "import": "requests",
+   "distribution": [
+    "requests"
+   ],
+   "installed": {
+    "requests": "2.32.5"
+   },
+   "declared": false,
+   "pinned": false,
+   "roots": {
+    "engine": 2,
+    "scripts": 4
+   },
+   "example": "engine/acquisition/check_oa.py"
+  },
+  {
+   "import": "sklearn",
+   "distribution": [
+    "scikit-learn"
+   ],
+   "installed": {
+    "scikit-learn": "1.8.0"
+   },
+   "declared": false,
+   "pinned": false,
+   "roots": {
+    "tests": 1
+   },
+   "example": "tests/test_kappa.py"
+  },
+  {
+   "import": "tiktoken",
+   "distribution": [
+    "tiktoken"
+   ],
+   "installed": {
+    "tiktoken": "0.12.0"
+   },
+   "declared": true,
+   "pinned": false,
+   "roots": {
+    "analysis": 2
+   },
+   "example": "analysis/paper1/judge_prompts.py"
+  },
+  {
+   "import": "yaml",
+   "distribution": [
+    "pyyaml"
+   ],
+   "installed": {
+    "pyyaml": "6.0.3"
+   },
+   "declared": true,
+   "pinned": false,
+   "roots": {
+    "analysis": 7,
+    "engine": 5,
+    "tests": 20
+   },
+   "example": "analysis/eval/adjud01_pairs.py"
+  }
+ ]
+}

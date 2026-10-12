@@ -1,0 +1,3 @@
+tests/analysis/paper1/test_judge_pass2.py::test_paper_366_grammar_prevents_four_element_emission
+tests/test_screener.py::test_screen_relevant_paper
+tests/test_screener.py::test_screen_irrelevant_paper

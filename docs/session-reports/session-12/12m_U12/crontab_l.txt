@@ -1,0 +1,8 @@
+0 9 * * * /bin/bash /home/ankitsarin/projects/evidence-engine/scripts/nightly_tests.sh
+30 13 * * * /bin/bash /home/ankitsarin/scripts/morning_digest.sh >> /home/ankitsarin/logs/morning_digest_cron.log 2>&1
+# service health: self-logs to date-stamped service_health_*.log; on ALERT it
+# emails (same Gmail creds as morning_digest) and writes syslog. R2-4: output is
+# no longer discarded — it appends here, matching the other jobs' convention.
+0 */6 * * * /bin/bash /home/ankitsarin/scripts/service_health_check.sh >> /home/ankitsarin/logs/service_health_cron.log 2>&1
+0 7 * * * /bin/bash /home/ankitsarin/scripts/ollama_health_check.sh >> /home/ankitsarin/logs/ollama_health_cron.log 2>&1
+30 9 * * *  /bin/bash /home/ankitsarin/projects/citation-mcp/harness/run_nightly.sh >> /home/ankitsarin/logs/citation_mcp_cron.log 2>&1

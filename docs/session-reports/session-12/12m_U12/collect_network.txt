@@ -1,0 +1,8 @@
+tests/test_openalex.py::test_search_returns_citations
+tests/test_openalex.py::test_citations_have_required_fields
+tests/test_openalex.py::test_citations_have_years_in_range
+tests/test_openalex.py::test_citations_have_authors
+tests/test_pubmed.py::test_search_returns_citations
+tests/test_pubmed.py::test_citations_have_required_fields
+tests/test_pubmed.py::test_citations_have_abstracts
+tests/test_pubmed.py::test_rate_limiting_no_errors

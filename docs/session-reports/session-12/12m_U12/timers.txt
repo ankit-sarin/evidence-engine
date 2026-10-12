@@ -1,0 +1,34 @@
+NEXT                            LEFT LAST                               PASSED UNIT                           ACTIVATES
+Mon 2026-10-12 19:10:00 UTC     5min Mon 2026-10-12 19:00:12 UTC  4min 28s ago sysstat-collect.timer          sysstat-collect.service
+Mon 2026-10-12 19:31:06 UTC    26min Mon 2026-10-12 18:34:17 UTC     30min ago anacron.timer                  anacron.service
+Mon 2026-10-12 19:47:46 UTC    43min Mon 2026-10-12 18:56:17 UTC      8min ago fwupd-refresh.timer            fwupd-refresh.service
+Mon 2026-10-12 21:19:26 UTC 2h 14min Sun 2026-10-11 21:19:26 UTC       21h ago update-notifier-download.timer update-notifier-download.service
+Mon 2026-10-12 21:31:12 UTC 2h 26min Sun 2026-10-11 21:31:12 UTC       21h ago etckeeper.timer                etckeeper.service
+Mon 2026-10-12 21:31:12 UTC 2h 26min Sun 2026-10-11 21:31:12 UTC       21h ago systemd-tmpfiles-clean.timer   systemd-tmpfiles-clean.service
+Tue 2026-10-13 00:00:00 UTC 4h 55min Mon 2026-10-12 00:00:01 UTC       19h ago dpkg-db-backup.timer           dpkg-db-backup.service
+Tue 2026-10-13 00:00:00 UTC 4h 55min Mon 2026-10-12 00:00:01 UTC       19h ago logrotate.timer                logrotate.service
+Tue 2026-10-13 00:07:00 UTC  5h 2min Mon 2026-10-12 00:07:17 UTC       18h ago sysstat-summary.timer          sysstat-summary.service
+Tue 2026-10-13 00:55:46 UTC 5h 51min Mon 2026-10-12 18:31:22 UTC     33min ago ua-timer.timer                 ua-timer.service
+Tue 2026-10-13 01:09:11 UTC       6h Mon 2026-10-12 18:18:17 UTC     46min ago motd-news.timer                motd-news.service
+Tue 2026-10-13 02:19:03 UTC       7h Mon 2026-10-12 17:55:32 UTC   1h 9min ago apt-daily.timer                apt-daily.service
+Tue 2026-10-13 06:09:13 UTC      11h Mon 2026-10-12 06:19:17 UTC       12h ago apt-daily-upgrade.timer        apt-daily-upgrade.service
+Tue 2026-10-13 10:06:56 UTC      15h Mon 2026-10-12 01:26:06 UTC       17h ago man-db.timer                   man-db.service
+Tue 2026-10-13 10:30:39 UTC      15h Mon 2026-10-12 10:31:42 UTC        8h ago dgx-snapshot-user.timer        dgx-snapshot-user.service
+Tue 2026-10-13 10:46:04 UTC      15h Mon 2026-10-12 10:45:17 UTC        8h ago dgx-snapshot-root.timer        dgx-snapshot-root.service
+Tue 2026-10-13 11:15:01 UTC      16h Mon 2026-10-12 11:15:12 UTC        7h ago dgx-snapshot-upload.timer      dgx-snapshot-upload.service
+Tue 2026-10-13 12:31:38 UTC      17h Mon 2026-10-12 12:31:42 UTC        6h ago dgx-backup-monitor.timer       dgx-backup-monitor.service
+Sat 2026-10-17 05:11:17 UTC   4 days Wed 2026-10-07 00:44:17 UTC    5 days ago update-notifier-motd.timer     update-notifier-motd.service
+Sun 2026-10-18 03:10:29 UTC   5 days Sun 2026-10-11 03:10:42 UTC 1 day 15h ago e2scrub_all.timer              e2scrub_all.service
+Mon 2026-10-19 01:19:23 UTC   6 days Mon 2026-10-12 00:56:22 UTC       18h ago fstrim.timer                   fstrim.service
+-                                  - -                                       - apport-autoreport.timer        apport-autoreport.service
+-                                  - -                                       - snapd.snap-repair.timer        snapd.snap-repair.service
+
+23 timers listed.
+NEXT                            LEFT LAST                              PASSED UNIT                                          ACTIVATES
+Mon 2026-10-12 19:06:52 UTC 2min 11s Mon 2026-10-12 19:01:52 UTC 2min 48s ago surgical-cv-health.timer                      surgical-cv-health.service
+Mon 2026-10-12 19:06:52 UTC 2min 11s Mon 2026-10-12 19:01:52 UTC 2min 48s ago surgical-cv-worker.timer                      surgical-cv-worker.service
+Mon 2026-10-12 21:00:00 UTC 1h 55min Mon 2026-10-12 18:00:17 UTC  1h 4min ago snap.firmware-updater.firmware-notifier.timer snap.firmware-updater.firmware-notifier.service
+Mon 2026-10-12 21:30:22 UTC 2h 25min Sun 2026-10-11 21:30:22 UTC      21h ago launchpadlib-cache-clean.timer                launchpadlib-cache-clean.service
+Tue 2026-10-13 03:17:00 UTC       8h Mon 2026-10-12 03:17:17 UTC      15h ago surgical-cv-backup.timer                      surgical-cv-backup.service
+
+5 timers listed.

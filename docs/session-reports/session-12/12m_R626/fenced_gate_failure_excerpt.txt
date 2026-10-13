@@ -1,0 +1,70 @@
+_________________ TestRequirePreflight.test_raises_on_failure __________________
+
+self = <test_ollama_preflight.TestRequirePreflight object at 0xf9284bd5fad0>
+
+    def test_raises_on_failure(self):
+        with patch("engine.utils.ollama_preflight.check_ollama_env"):
+            with patch("engine.utils.ollama_preflight.ollama_chat",
+                       side_effect=ConnectionError("dead")):
+                with pytest.raises(RuntimeError, match="pre-flight check failed"):
+>                   require_preflight(["broken:7b"], runner_name="Test")
+
+tests/test_ollama_preflight.py:227: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+engine/utils/ollama_preflight.py:251: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:124: in preflight_check
+    ps = ollama.ps()
+         ^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/ollama/_client.py:646: in ps
+    return self._request(
+.venv/lib/python3.12/site-packages/ollama/_client.py:189: in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/ollama/_client.py:129: in _request_raw
+    r = self._client.request(*args, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+.venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/conftest.py:405: in handle_request
+    _check_httpx(http_request)
+tests/conftest.py:395: in _check_httpx
+    _refuse_ollama(_endpoint(url.host, url.port, url.scheme), "httpx transport",
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+endpoint = ('loopback', 11434), route = 'httpx transport'
+detail = 'GET http://127.0.0.1:11434/api/ps'
+nodeid = 'tests/test_ollama_preflight.py::TestRequirePreflight::test_raises_on_failure'
+
+    def _refuse_ollama(endpoint: tuple[str, int], route: str, detail: str, nodeid: str):
+        if endpoint not in ollama_endpoints():
+            return
+        message = (
+            f"BLOCKED: {nodeid} sent a request to the Ollama server via {route}: {detail}.\n"
+            f"Only a test marked `ollama`, run with {LIVE_TIERS_ENV}=1, may reach the "
+            f"server; a model call from the suite evicts the resident model of any run "
+            f"on this box (INT-m12-2).\n"
+            f"Fix: put a fake in the client's place, e.g. "
+            f"monkeypatch.setattr(ollama_client, '_client', fake), or mark the test."
+        )
+        _ollama_violations.append(message)
+>       raise OllamaCallBlocked(message)
+E       conftest.OllamaCallBlocked: BLOCKED: tests/test_ollama_preflight.py::TestRequirePreflight::test_raises_on_failure sent a request to the Ollama server via httpx transport: GET http://127.0.0.1:11434/api/ps.
+E       Only a test marked `ollama`, run with EVIDENCE_ENGINE_LIVE_TIERS=1, may reach the server; a model call from the suite evicts the resident model of any run on this box (INT-m12-2).
+E       Fix: put a fake in the client's place, e.g. monkeypatch.setattr(ollama_client, '_client', fake), or mark the test.
+
+tests/conftest.py:376: OllamaCallBlocked
+------------------------------ Captured log call -------------------------------
+= 1 failed, 3328 passed, 17 deselected, 1 xfailed, 2 warnings in 856.51s (0:14:16) =

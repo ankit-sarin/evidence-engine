@@ -1,0 +1,8 @@
+commit 4 gate (861.36 s wall): 2377 listed phases, sum 852.6 s
+commit 5 dry run: 2399 listed phases, sum 877.8 s
+phases slower by more than 10 s against commit 4's file: none
+   +0.49  setup    tests/test_selection_bound.py::test_T3_an_invalid_bound_refuses_before_any_manifest[-1]
+   +0.40  setup    tests/test_workflow.py::test_complete_stage
+   +0.39  setup    tests/test_workflow.py::test_complete_unknown_stage_raises
+   +0.39  call     tests/test_lock_census.py::test_every_model_calling_entry_point_holds_the_experiment_lock
+phases slower by >5 ms: 826; faster by >5 ms: 527

@@ -43,12 +43,13 @@ Design, pinned:
     the raise via `pytest.raises`, so for them a recorded violation is the
     expected result rather than an escape.
 
-**No tier is exempt, including the nightly full-suite run.** The exemption was
+**No tier is exempt: the fence applies to the standard gate, which the nightly
+runs, and to a live-tier run alike.** The exemption was
 considered and is not needed: the `ollama`-marked tier loads models over HTTP and
 the `network`/`integration` tiers hit APIs and parse PDFs — none of them manage
 a service. Nothing in this repository has a legitimate reason to restart Ollama
 from inside a test, so the fence is unconditional and `scripts/nightly_tests.sh`
-(which runs `pytest tests/` with no marker filter) is covered by it too.
+(which runs the standard gate's selection since U12 commit 5) is covered by it too.
 """
 
 from __future__ import annotations
@@ -190,8 +191,9 @@ def block_service_calls(monkeypatch, request):
 # prevents_four_element_emission` constructed `ReviewDatabase("surgical_
 # autonomy")` with no `data_root`, which resolves to the production corpus
 # database, read-write. It is marked `ollama` + `integration`, and
-# `scripts/nightly_tests.sh` runs `pytest tests/ -v` with no marker
-# expression, so it executed unattended every night at 09:00 UTC. It ran on
+# `scripts/nightly_tests.sh` then ran `pytest tests/ -v` with no marker
+# expression (it runs the standard gate's selection since U12 commit 5), so
+# it executed unattended every night at 09:00 UTC. It ran on
 # 2026-09-08 and it ran during the PARSE-GATE-06c deviation, where the live
 # file's size and mtime moved.
 #

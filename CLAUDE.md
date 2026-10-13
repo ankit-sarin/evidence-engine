@@ -178,12 +178,16 @@ now gated, and the suite is fenced. Do not add a third ungated path.
   argv naming a service manager or privilege escalation, matched on command basename.
   `ServiceCallBlocked` derives from **`BaseException`** — load-bearing, because
   application code catches `Exception` around restarts and would otherwise swallow it.
-  No tier is exempt, including the nightly full-suite run. Tests that exercise the
+  No tier is exempt: the fence applies to the standard gate, which the nightly
+  runs, and to a live-tier run alike. Tests that exercise the
   fence carry `@pytest.mark.fence_selftest`.
   - Tests must never reach a live service. Patch the boundary:
     `@patch("engine.utils.ollama_client.subprocess.run")`, or
     `@patch("engine.utils.ollama_preflight.require_preflight")` for anything calling
     `run_extraction` (preflight shells out to `systemctl show` *and* loads a 20 GB model).
+- **The suite and the experiment lock** (`tests/conftest.py`, U12). Every test gets its own lock path under `tmp_path`; no test takes `~/.ollama_experiment.lock`.
+- **Ollama fence** (`tests/conftest.py`, U12). A request to the Ollama server from a test is refused with `OllamaCallBlocked` (a `BaseException`) at the httpx transport, the `requests` adapter and `socket.connect`. The server is `OLLAMA_HOST` as the client resolves it, the engine client's host, the addresses the engine names, and port 11435 on loopback. Only a test marked `ollama`, run with the opt-in, is exempt.
+- **The live tiers are opt-in.** Tests marked `ollama`, `network` or `integration` skip unless `EVIDENCE_ENGINE_LIVE_TIERS=1`, however they are selected. Under it each holds the experiment lock non-blocking for its duration and skips if another process holds it. No scheduled run sets it; a live-tier run is a pre-tag step.
 
 ## Ops Invariants — the database
 
@@ -639,12 +643,11 @@ PYTHONPATH=. python -m analysis.eval.analyze_prime01 --review surgical_autonomy
 EVIDENCE_ENGINE_NO_OLLAMA_RESTART=1 PYTHONPATH=. python -m <harness>
 
 # Test suite
-python -m pytest tests/ -v                                        # all tests (nightly)
-python -m pytest tests/ -v -m "not network and not ollama"        # offline only
-python -m pytest tests/ -v -m "not network and not ollama and not integration"  # standard gate (wall-time band: current session expectations, docs/plan/ENGINE_REFACTOR_PLAN.md)
+python -m pytest tests/ -v -m "not network and not ollama and not integration"  # standard gate (and the nightly)
+EVIDENCE_ENGINE_LIVE_TIERS=1 python -m pytest tests/ -v -m "network or ollama or integration"  # live tiers: calls models and APIs, holds the experiment lock
 ```
 
-The standard gate is the third form. All tiers run under the `tests/conftest.py`
+The standard gate is the first form, and it is what the nightly runs. All tiers run under the `tests/conftest.py`
 service-call fence — see Ops Invariants. Verify a suite run touched nothing:
 
 ```bash

@@ -836,6 +836,14 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 **The pre-tag list, recounted 2026-10-13 (12n-R629), by script from the plan** (`docs/session-reports/session-12/12n_R629/recount_12n_r629.py` → `recount_12n_r629.json`: the R627 count above as the baseline, reproduced by `recount_12m_r627.py` on this file and equal to its committed JSON, and the row above). Baseline: 268 rows — Class 1 / 2 / 3 = 95 / 50 / 123, and 0 without a class. Deltas: 1 row enters, Class 3 (INT-n12-1 in P7); R629 moves no class. **Now 269 rows: Class 1 / 2 / 3 = 95 / 50 / 124, and 0 without a class.** **R510 (2026-10-13, 12n-R629): rows in 1 (1 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 0 / 1), rows out 0.** The brief's expected total (the architect's arithmetic, I2) was 269 rows, 95 / 50 / 124, with P1 at 57 and P7 at 111; the script gives the same. Counts by package and class (first-named package, as before): P1 26 / 20 / 11 (57); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 110 (111). P1's fix units stay 35.
 
+**L (12n additions, R631).** *Opened 2026-10-13 (item 0b of the resume 12n-U12-C2-R1) under R509 and R631.* One row from the 12n-U12-C2 stop report: `INT-n12-2` (R631(d)). The text cell is R631(d)'s, quoted unchanged; class and package are R631's. The file it names is archived outside the repository, not retired (R631(a)); the committed inventory loses its row in U12 commit 2 (R631(d)).
+
+| # | On disk (R631(d), quoted) | Class | Owning package | Governing ruling | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| INT-n12-2 | The inventory's entry-point census reads the working tree, so the committed docs/inventory/entry_points.md carried a row for analysis/paper1/runner_smoke_phase2a.py, a file ignored by .gitignore and never committed; inventory --check would drift on a fresh clone. | 3 | P7 | R631(d) | the 12n-U12-C2 stop report (MEASURED: the acceptance census run on a `git archive` of HEAD `0457978` gave 83 entry points against 84 on disk; `.gitignore` line 31 names the file; `git log --all` has no commit for it). R631(d): "The committed inventory is regenerated in commit 2 without the archived file's row. New row INT-n12-2, Class 3, P7, text cell: "The inventory's entry-point census reads the working tree, so the committed docs/inventory/entry_points.md carried a row for analysis/paper1/runner_smoke_phase2a.py, a file ignored by .gitignore and never committed; inventory --check would drift on a fresh clone." Evidence: the 12n-U12-C2 stop report (finding found by the acceptance census run on a git archive of HEAD: 83 entry points against 84 on disk)." |
+
+**The pre-tag list, recounted 2026-10-13 (12n-R631), by script from the plan** (`docs/session-reports/session-12/12n_R631/recount_12n_r631.py` → `recount_12n_r631.json`: the R629 count above as the baseline, reproduced by `recount_12n_r629.py` on this file and equal to its committed JSON, and the row above). Baseline: 269 rows — Class 1 / 2 / 3 = 95 / 50 / 124, and 0 without a class. Deltas: 1 row enters, Class 3 (INT-n12-2 in P7); R631 moves no class. **Now 270 rows: Class 1 / 2 / 3 = 95 / 50 / 125, and 0 without a class.** **R510 (2026-10-13, 12n-R631): rows in 1 (1 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 0 / 1), rows out 0.** The resume's expected total (the architect's arithmetic, V2) was 270 rows, 95 / 50 / 125, with P1 at 57 and P7 at 112; the script gives the same. Counts by package and class (first-named package, as before): P1 26 / 20 / 11 (57); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 111 (112). P1's fix units stay 35.
+
 ### Not engine defects — plan v50 wording
 
 The product description ("autonomously executes … synthesis," "publication-ready," "no data leaves the machine" — the last is CLI-flag-dependent per C5); the four contradicted counts (D4, D1, F4, G1); the §10 novelty sentence; and "Run 7 once the engine is settled" as an open-ended dependency.
@@ -1378,6 +1386,7 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | INT-m12-4 | P1, closing in U12 — R626(a) |
 | INT-m12-5 | P7 — R627(a) |
 | INT-n12-1 | P7 — R629(f) |
+| INT-n12-2 | P7 — R631(d) |
 
 *Addendum 2026-09-27 (9d closeout), to the coverage map:* four rows whose unit reads "9d" moved by ruling and were not worked in 9d. **H3** → 9e (R180: `normalize_prefix` has five test callers, not four; all retire with it). **B12** and **B13** → 9e with PRISMA (R178). **A16** → session 12, the freshman freeze (R178). The rows' "On disk" cells are unchanged; this addendum is the record.
 
@@ -4707,3 +4716,37 @@ R630(d) — Restoring the tree clean at the out-of-band gate, and leaving commit
 | 2026-10-13 | R630(a) — The 12n-U12-C2B item-1 gate (2026-10-13T16:54:08Z–17:09:18Z) is accepted as reported. Collected 3,245 and 3,244 passed / 1 xfailed / 17 deselected, exactly as predicted (the five node ids listed); journal window empty; inventory in sync. Wall time 908.49 s is outside the 814–900 s band with no cause found, on a change that only removes tests. The gate is not re-run. R630(b) — The band is not re-cut on this run. If commit 2's gate also exceeds 900 s, its handoff produces per-test durations and a comparison with the 12n-open gate before the band is changed. R630(c) — The retirement's gate evidence is committed with the retirement, under docs/session-reports/session-12/12n_U12_C2B/. R630(d) — Restoring the tree clean at the out-of-band gate, and leaving commit 2's row text as it was, are accepted as made. Commit 2's row text is updated when that commit lands. | PI, 2026-10-13, during session 12n |
 
 The decision log in this file ends at R630.
+
+**Block 29.** *Transcribed 2026-10-13 (item 0b of the resume 12n-U12-C2-R1), in its own commit with the row it orders, in the R597(e) form:* ruling R631, made by PI on architect recommendation on 2026-10-13 UTC, during session 12n, on the 12n-U12-C2 stop report (unit U12, commit 2, stopped before its gate; item 0 landed as `04579787a6372f4f0aa783ff7e6436b46c4c82d4`, item 1 saved as a patch and not committed). Under R631(a) the file was moved on 2026-10-13 to the path the ruling names, before this transcription: the on-disk copy as hand-reverted after the stopped edit, sha256 `6b053f0b19b289b52d32053bea5568ab594dfa42b9000e3bfbda7c60da15b810`, 9,539 bytes. The user-tier snapshot `20261013T103017Z` holds no copy of it, so its pre-edit bytes are unverified; its compiled cache of 2026-06-04 records a 9,539-byte source and the same compiled code. The ruling as issued, with its line breaks:
+
+```text
+RULING R631 (PI, 2026-10-13 UTC, session 12n, on architect recommendation, on the
+12n-U12-C2 stop report):
+
+R631(a) — analysis/paper1/runner_smoke_phase2a.py, ignored by .gitignore and never
+  committed, is moved out of the repository working tree to
+  ~/scratch/12n-c2/archive/analysis/paper1/runner_smoke_phase2a.py. It is not retired
+  under R31 (never tracked; no ledger row). The .gitignore line naming it is left as it
+  is.
+R631(b) — Commit 2's C3 is amended to the eleven tracked entry points. "Seven harnesses"
+  in the 12n-U12-C2 brief reads "six" (run_screen2f retired at 9390328).
+R631(c) — The census and the acceptance test read the working tree as found. An
+  untracked entry point with an unlocked path to a sink fails the gate on the box where
+  it sits. It is not restricted to tracked files.
+R631(d) — The committed inventory is regenerated in commit 2 without the archived file's
+  row. New row INT-n12-2, Class 3, P7, text cell: "The inventory's entry-point census
+  reads the working tree, so the committed docs/inventory/entry_points.md carried a row
+  for analysis/paper1/runner_smoke_phase2a.py, a file ignored by .gitignore and never
+  committed; inventory --check would drift on a fresh clone." Evidence: the 12n-U12-C2
+  stop report (finding found by the acceptance census run on a git archive of HEAD: 83
+  entry points against 84 on disk).
+R631(e) — The 12n-U12-C2 brief is otherwise unchanged. Its saved patch
+  (~/scratch/12n-c2/commit2_partial.patch, sha256 182d1dc5…1d2a) is the starting point
+  of item 1.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-13 | R631(a) — analysis/paper1/runner_smoke_phase2a.py, ignored by .gitignore and never committed, is moved out of the repository working tree to ~/scratch/12n-c2/archive/analysis/paper1/runner_smoke_phase2a.py. It is not retired under R31 (never tracked; no ledger row). The .gitignore line naming it is left as it is. R631(b) — Commit 2's C3 is amended to the eleven tracked entry points. "Seven harnesses" in the 12n-U12-C2 brief reads "six" (run_screen2f retired at 9390328). R631(c) — The census and the acceptance test read the working tree as found. An untracked entry point with an unlocked path to a sink fails the gate on the box where it sits. It is not restricted to tracked files. R631(d) — The committed inventory is regenerated in commit 2 without the archived file's row. New row INT-n12-2, Class 3, P7, text cell: "The inventory's entry-point census reads the working tree, so the committed docs/inventory/entry_points.md carried a row for analysis/paper1/runner_smoke_phase2a.py, a file ignored by .gitignore and never committed; inventory --check would drift on a fresh clone." Evidence: the 12n-U12-C2 stop report (finding found by the acceptance census run on a git archive of HEAD: 83 entry points against 84 on disk). R631(e) — The 12n-U12-C2 brief is otherwise unchanged. Its saved patch (~/scratch/12n-c2/commit2_partial.patch, sha256 182d1dc5…1d2a) is the starting point of item 1. | PI, 2026-10-13, during session 12n |
+
+The decision log in this file ends at R631.

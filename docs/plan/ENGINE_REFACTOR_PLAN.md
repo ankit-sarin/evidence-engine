@@ -4680,3 +4680,30 @@ R629(g) — 12m_U12A.md §10.1's commit-2 file list and §5.3's probe-caller lis
 | 2026-10-13 | R629(a) — Item 0's block header for R628, in the form of Blocks 23–25, is accepted as made. R629(b) — No acquisition of the experiment lock waits. Every acquisition is non-blocking: if the lock is held by any other open file description, the process exits non-zero before opening any database or manifest, with a message naming the lock file and, where /proc/locks shows one, the holder's pid. Re-entrant acquisition inside a process that already holds the lock is unchanged. Blocking acquisition is removed from the lock API. This satisfies R625(a)(7) for every form measured in 12n_U12_C2A A2, with no detector. It replaces "a log line before a wait" in commit 2's row (N22): there is no wait. R629(c) — Commit 2's acceptance test (R625(b)): entry points are discovered by static census, as entry_census.py does. Every entry point with a static path to a local model call or an Ollama restart has its body under the one declared lock wrapper, placed after maybe_background where that is called. The test fails naming the entry point and the chain. Cloud-only entry points are outside it (R625(a)(3)). R629(d) — Scope: engine/, scripts/ and analysis/, with no exemption. analysis/eval/run_screen2f.py and analysis/eval/screen2f_worker.py are retired under R31, with ledger entries, in their own commit before commit 2. R629(e) — run_pipeline takes the lock in its command-line entry, after maybe_background and before any database or manifest is opened (12n_U12_C2A A6, first position). R629(f) — Findings: F-1 (the lock closes its descriptor on Exception only): fixed in commit 2, which releases on any exit; no row. F-2 (a fork child reads as the holder): a dated note on A-1; no row. F-3 (scripts/watch_run4.sh): onto the HK-RETIRE line (Class 3, P7); no row. F-4 (Ollama reads that load no model sit outside the lock and the census): a dated note on A-1, recording that the census covers local model calls and restarts only (R625(a)(3)); no row. F-5 (the preflight CLI skips check_ollama_env()): new row INT-n12-1, Class 3, P7; its text cell quotes the read-out's F-5 unchanged, evidence 12n_U12_C2A.md A9. R629(g) — 12m_U12A.md §10.1's commit-2 file list and §5.3's probe-caller list are superseded by 12n_U12_C2A A3 and A4: a dated note on commit 2's row of the U12 commit table. | PI, 2026-10-13, during session 12n |
 
 The decision log in this file ends at R629.
+
+**Block 28.** *Transcribed 2026-10-13 (item 0 of the 12n-U12-C2 brief), in its own commit, in the R597(e) form:* ruling R630, made by PI on architect recommendation on 2026-10-13 UTC, during session 12n, on the 12n-U12-C2B stop report (unit U12, the screen2f retirement, stopped at its gate on wall time; no commit). It was issued with the resume 12n-U12-C2B-R1, under which the retirement landed as `93903280be321e0df8acf8d1a30905eaf150a4fe` with its evidence in `docs/session-reports/session-12/12n_U12_C2B/` (R630(c)). The ruling as issued, with its line breaks:
+
+```text
+RULING R630 (PI, 2026-10-13 UTC, session 12n, on architect recommendation, on the
+12n-U12-C2B stop report):
+
+R630(a) — The 12n-U12-C2B item-1 gate (2026-10-13T16:54:08Z–17:09:18Z) is accepted
+  as reported. Collected 3,245 and 3,244 passed / 1 xfailed / 17 deselected,
+  exactly as predicted (the five node ids listed); journal window empty; inventory
+  in sync. Wall time 908.49 s is outside the 814–900 s band with no cause found, on
+  a change that only removes tests. The gate is not re-run.
+R630(b) — The band is not re-cut on this run. If commit 2's gate also exceeds
+  900 s, its handoff produces per-test durations and a comparison with the 12n-open
+  gate before the band is changed.
+R630(c) — The retirement's gate evidence is committed with the retirement, under
+  docs/session-reports/session-12/12n_U12_C2B/.
+R630(d) — Restoring the tree clean at the out-of-band gate, and leaving commit 2's
+  row text as it was, are accepted as made. Commit 2's row text is updated when
+  that commit lands.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-13 | R630(a) — The 12n-U12-C2B item-1 gate (2026-10-13T16:54:08Z–17:09:18Z) is accepted as reported. Collected 3,245 and 3,244 passed / 1 xfailed / 17 deselected, exactly as predicted (the five node ids listed); journal window empty; inventory in sync. Wall time 908.49 s is outside the 814–900 s band with no cause found, on a change that only removes tests. The gate is not re-run. R630(b) — The band is not re-cut on this run. If commit 2's gate also exceeds 900 s, its handoff produces per-test durations and a comparison with the 12n-open gate before the band is changed. R630(c) — The retirement's gate evidence is committed with the retirement, under docs/session-reports/session-12/12n_U12_C2B/. R630(d) — Restoring the tree clean at the out-of-band gate, and leaving commit 2's row text as it was, are accepted as made. Commit 2's row text is updated when that commit lands. | PI, 2026-10-13, during session 12n |
+
+The decision log in this file ends at R630.

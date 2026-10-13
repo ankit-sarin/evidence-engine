@@ -1,0 +1,73 @@
+=== _pass2_stability
+docs/inventory/entry_points.json:6358:      "scripts/_pass2_stability.py": {
+docs/inventory/entry_points.json:6375:        "path": "scripts/_pass2_stability.py",
+docs/inventory/entry_points.md:135:| `scripts/_pass2_stability.py` | — | — | 62 | — |
+docs/inventory/entry_points.md:227:| `scripts/_pass2_stability.py` | 25 | literal | `data/surgical_autonomy/review.db` |
+docs/inventory/entry_points.md:228:| `scripts/_pass2_stability.py` | 27 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
+docs/inventory/entry_points.md:256:| `scripts/_pass2_stability.py` | 29 | `surgical_autonomy` |
+docs/inventory/entry_points.md:257:| `scripts/_pass2_stability.py` | 62 | `surgical_autonomy` |
+=== ft_screening_smoke_test
+docs/architecture/modules.md:463:| `ft_screening_smoke_test.py` | FT screening on 5 known papers |
+docs/inventory/entry_points.json:6564:      "scripts/ft_screening_smoke_test.py": {
+docs/inventory/entry_points.json:6591:        "path": "scripts/ft_screening_smoke_test.py",
+docs/inventory/entry_points.md:139:| `scripts/ft_screening_smoke_test.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 55 | m
+tests/test_review_paths.py:177:    "scripts/ft_screening_smoke_test.py",
+=== q8_validation_fast
+CLAUDE.md:583:PYTHONPATH=. python scripts/q8_validation_fast.py --review surgical_autonomy
+docs/architecture/modules.md:465:| `q8_validation_fast.py` | q8_0 KV cache validation (fast, no snippet retries) |
+docs/inventory/entry_points.json:6927:      "scripts/q8_validation_fast.py": {
+docs/inventory/entry_points.json:6963:        "path": "scripts/q8_validation_fast.py",
+docs/inventory/entry_points.md:148:| `scripts/q8_validation_fast.py` | `--review` required; `--spec`=None; `paper_ids`=dynamic: [370, 432] | load_spec
+tests/test_review_paths.py:179:    "scripts/q8_validation_fast.py",
+=== q8_validation
+CLAUDE.md:582:PYTHONPATH=. python scripts/q8_validation.py --review surgical_autonomy
+docs/architecture/modules.md:464:| `q8_validation.py` | q8_0 KV cache validation (full) |
+docs/inventory/entry_points.json:6868:      "scripts/q8_validation.py": {
+docs/inventory/entry_points.json:6895:        "path": "scripts/q8_validation.py",
+docs/inventory/entry_points.md:147:| `scripts/q8_validation.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | 144 | main:spec_
+engine/utils/ollama_preflight.py:163:#       extraction (see scripts/q8_validation.py). Silent drift would corrupt
+tests/test_review_paths.py:178:    "scripts/q8_validation.py",
+=== rescreen_original_251
+docs/architecture/modules.md:442:| `rescreen_original_251.py` | Re-screen with updated criteria | `--review`, `--spec` |
+docs/inventory/entry_points.json:7052:      "scripts/rescreen_original_251.py": {
+docs/inventory/entry_points.json:7077:        "path": "scripts/rescreen_original_251.py",
+docs/inventory/entry_points.md:150:| `scripts/rescreen_original_251.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | �
+docs/inventory/entry_points.md:233:| `scripts/rescreen_original_251.py` | 52 | f-string | `f'data/{review}/review.db'` |
+docs/inventory/entry_points.md:234:| `scripts/rescreen_original_251.py` | 53 | f-string | `f'data/{review}/expanded_search'` |
+engine/migrations/003_backfill_expanded_screening.py:25:RESCREEN_FILE = EXPANDED_DIR / "rescreen_original_251.csv"
+engine/migrations/003_backfill_expanded_screening.py:72:    """Load rescreen_original_251.csv keyed by DB id."""
+engine/migrations/003_backfill_expanded_screening.py:151:    print(f"  rescreen_original_251.csv: {len(rescreen)} records")
+tests/test_review_paths.py:185:    "scripts/rescreen_original_251.py",
+=== rescreen_with_specialty
+docs/architecture/modules.md:443:| `rescreen_with_specialty.py` | Re-screen with specialty_scope | `--background`, `--force` |
+docs/inventory/entry_points.json:7115:      "scripts/rescreen_with_specialty.py": {
+docs/inventory/entry_points.json:7169:        "path": "scripts/rescreen_with_specialty.py",
+docs/inventory/entry_points.md:151:| `scripts/rescreen_with_specialty.py` | `--review` required; `--spec`=None; `--background`; `--verify-only`; `--re
+tests/test_review_paths.py:186:    "scripts/rescreen_with_specialty.py",
+=== run_expanded_screen_and_verify
+docs/architecture/modules.md:475:| `run_expanded_screen_and_verify.sh` | tmux runner for expanded screening phases 2+3 |
+=== smoke_test_fixes
+docs/architecture/modules.md:460:| `smoke_test_fixes.py` | Extract + audit 5 papers with temp DB |
+docs/inventory/entry_points.json:7519:      "scripts/smoke_test_fixes.py": {
+docs/inventory/entry_points.json:7544:        "path": "scripts/smoke_test_fixes.py",
+docs/inventory/entry_points.md:155:| `scripts/smoke_test_fixes.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
+docs/inventory/entry_points.md:236:| `scripts/smoke_test_fixes.py` | 47 | f-string | `f'data/{review}'` |
+tests/test_review_paths.py:193:    "scripts/smoke_test_fixes.py",
+=== test_e2e_search_screen
+docs/architecture/modules.md:461:| `test_e2e_search_screen.py` | Live end-to-end search + screening on 20 papers |
+docs/inventory/entry_points.json:7576:      "scripts/test_e2e_search_screen.py": {
+docs/inventory/entry_points.json:7584:        "path": "scripts/test_e2e_search_screen.py",
+docs/inventory/entry_points.md:156:| `scripts/test_e2e_search_screen.py` | — | load_review_spec | 66 | main:spec_first |
+docs/inventory/entry_points.md:237:| `scripts/test_e2e_search_screen.py` | 32 | literal | `review_specs` |
+docs/inventory/entry_points.md:238:| `scripts/test_e2e_search_screen.py` | 32 | literal | `surgical_autonomy.yaml` |
+tests/e2e_test_log.md:9:| Screening (dual-pass) | Live Ollama in `test_screener.py` + `scripts/test_e2e_search_screen.py` | Automated |
+tests/e2e_test_log.md:27:python scripts/test_e2e_search_screen.py
+=== test_extraction_validation
+docs/architecture/modules.md:462:| `test_extraction_validation.py` | Parse 3 PDFs + validate extraction quality |
+docs/inventory/entry_points.json:7617:      "scripts/test_extraction_validation.py": {
+docs/inventory/entry_points.json:7634:        "path": "scripts/test_extraction_validation.py",
+docs/inventory/entry_points.md:157:| `scripts/test_extraction_validation.py` | — | load_review_spec | — | — |
+docs/inventory/entry_points.md:239:| `scripts/test_extraction_validation.py` | 35 | literal | `review_specs` |
+docs/inventory/entry_points.md:240:| `scripts/test_extraction_validation.py` | 35 | literal | `surgical_autonomy.yaml` |
+docs/inventory/entry_points.md:277:| `scripts/test_extraction_validation.py` | 36 | `surgical_autonomy` |
+docs/inventory/entry_points.md:278:| `scripts/test_extraction_validation.py` | 37 | `surgical_autonomy` |

@@ -6122,7 +6122,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 276,
+            "line": 277,
             "names": [
               "--models"
             ],
@@ -6131,7 +6131,7 @@
           {
             "default": "30",
             "dest": null,
-            "line": 277,
+            "line": 278,
             "names": [
               "--timeout"
             ],
@@ -6355,50 +6355,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "scripts/_pass2_stability.py": {
-        "entry_point": true,
-        "flags": [],
-        "has_main_guard": true,
-        "literal_review_ids": [
-          {
-            "line": 29,
-            "role": "code",
-            "value": "surgical_autonomy"
-          },
-          {
-            "line": 62,
-            "role": "code",
-            "value": "surgical_autonomy"
-          }
-        ],
-        "order": {},
-        "path": "scripts/_pass2_stability.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 25,
-            "role": "code",
-            "text": "data/surgical_autonomy/review.db"
-          },
-          {
-            "kind": "literal",
-            "line": 27,
-            "role": "code",
-            "text": "data/surgical_autonomy/exports/disagreement_pairs_3arm.csv"
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 62,
-            "scope": "main"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "scripts/advance_to_pdf_acquired.py": {
         "entry_point": true,
         "flags": [
@@ -6558,65 +6514,6 @@
           }
         ],
         "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "scripts/ft_screening_smoke_test.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 47,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 48,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {
-          "main": "spec_first"
-        },
-        "path": "scripts/ft_screening_smoke_test.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 48,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 55,
-            "scope": "main"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "spec_path_for",
-            "line": 52,
-            "scope": "main"
-          },
-          {
-            "func": "load_spec_for",
-            "line": 54,
-            "scope": "main"
-          }
-        ],
         "unparsed": [],
         "yaml_loads": []
       },
@@ -6865,133 +6762,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "scripts/q8_validation.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 136,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 137,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {
-          "main": "spec_first"
-        },
-        "path": "scripts/q8_validation.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 137,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 144,
-            "scope": "main"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "spec_path_for",
-            "line": 141,
-            "scope": "main"
-          },
-          {
-            "func": "load_spec_for",
-            "line": 143,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "scripts/q8_validation_fast.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 88,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 89,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          },
-          {
-            "default": "dynamic: [370, 432]",
-            "dest": null,
-            "line": 90,
-            "names": [
-              "paper_ids"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {
-          "main": "spec_first"
-        },
-        "path": "scripts/q8_validation_fast.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 89,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 98,
-            "scope": "main"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "spec_path_for",
-            "line": 94,
-            "scope": "main"
-          },
-          {
-            "func": "load_spec_for",
-            "line": 97,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "scripts/reparse_cloud_spans.py": {
         "entry_point": true,
         "flags": [
@@ -7043,155 +6813,6 @@
           {
             "func": "spec_path_for",
             "line": 37,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "scripts/rescreen_original_251.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 46,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 47,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "scripts/rescreen_original_251.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 47,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          },
-          {
-            "kind": "f-string",
-            "line": 52,
-            "role": "code",
-            "text": "f'data/{review}/review.db'"
-          },
-          {
-            "kind": "f-string",
-            "line": 53,
-            "role": "code",
-            "text": "f'data/{review}/expanded_search'"
-          }
-        ],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "spec_path_for",
-            "line": 51,
-            "scope": "main"
-          },
-          {
-            "func": "load_spec_for",
-            "line": 57,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "scripts/rescreen_with_specialty.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 94,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 95,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 96,
-            "names": [
-              "--background"
-            ],
-            "required": false
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 97,
-            "names": [
-              "--verify-only"
-            ],
-            "required": false
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 98,
-            "names": [
-              "--report-only"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {
-          "main": "spec_first"
-        },
-        "path": "scripts/rescreen_with_specialty.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 95,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 112,
-            "scope": "main"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "spec_path_for",
-            "line": 102,
-            "scope": "main"
-          },
-          {
-            "func": "load_spec_for",
-            "line": 111,
             "scope": "main"
           }
         ],
@@ -7515,148 +7136,6 @@
         ],
         "unparsed": [],
         "yaml_loads": []
-      },
-      "scripts/smoke_test_fixes.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 41,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 42,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "scripts/smoke_test_fixes.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 42,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          },
-          {
-            "kind": "f-string",
-            "line": 47,
-            "role": "code",
-            "text": "f'data/{review}'"
-          }
-        ],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "spec_path_for",
-            "line": 46,
-            "scope": "main"
-          },
-          {
-            "func": "load_spec_for",
-            "line": 50,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "scripts/test_e2e_search_screen.py": {
-        "entry_point": true,
-        "flags": [],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {
-          "main": "spec_first"
-        },
-        "path": "scripts/test_e2e_search_screen.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 32,
-            "role": "code",
-            "text": "review_specs"
-          },
-          {
-            "kind": "literal",
-            "line": 32,
-            "role": "code",
-            "text": "surgical_autonomy.yaml"
-          }
-        ],
-        "review_database": [
-          {
-            "data_root_passed": false,
-            "line": 66,
-            "scope": "main"
-          }
-        ],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "load_review_spec",
-            "line": 43,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "scripts/test_extraction_validation.py": {
-        "entry_point": true,
-        "flags": [],
-        "has_main_guard": true,
-        "literal_review_ids": [
-          {
-            "line": 36,
-            "role": "code",
-            "value": "surgical_autonomy"
-          },
-          {
-            "line": 37,
-            "role": "code",
-            "value": "surgical_autonomy"
-          }
-        ],
-        "order": {},
-        "path": "scripts/test_extraction_validation.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 35,
-            "role": "code",
-            "text": "review_specs"
-          },
-          {
-            "kind": "literal",
-            "line": 35,
-            "role": "code",
-            "text": "surgical_autonomy.yaml"
-          }
-        ],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "load_review_spec",
-            "line": 312,
-            "scope": "main"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
       }
     },
     "review_ids": [
@@ -7665,19 +7144,19 @@
     "summary": {
       "db_before_spec_scopes": 0,
       "default_review_named_constants": 5,
-      "entry_points": 95,
-      "entry_points_constructing_reviewdatabase": 29,
+      "entry_points": 86,
+      "entry_points_constructing_reviewdatabase": 23,
       "entry_points_name_only": 42,
-      "entry_points_with_review_name_flag": 64,
-      "entry_points_with_spec_flag": 23,
-      "files_calling_load_review_spec_directly": 11,
-      "files_calling_resolver": 27,
-      "files_scanned": 215,
+      "entry_points_with_review_name_flag": 58,
+      "entry_points_with_spec_flag": 17,
+      "files_calling_load_review_spec_directly": 9,
+      "files_calling_resolver": 21,
+      "files_scanned": 206,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
-      "literal_review_id_sites_in_code": 33,
+      "literal_review_id_sites_in_code": 29,
       "name_only_constructing_reviewdatabase": 19,
-      "path_construction_sites_in_code": 66,
+      "path_construction_sites_in_code": 57,
       "raw_yaml_load_sites": 3,
       "review_id_constants": 7,
       "unparsed_sites": 0
@@ -7685,7 +7164,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "af9a46bf3ad78724bc760da9b991877ecd686154",
+    "generated_at_commit": "9cf9318fe527cb8154add17b10df8d2f181c75cb",
     "scan_roots": [
       "engine",
       "scripts",

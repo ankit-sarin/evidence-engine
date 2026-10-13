@@ -578,10 +578,6 @@ python -m engine.validators.distribution_monitor --review surgical_autonomy --ar
 # Cloud span backfill (for extractions missing span rows)
 PYTHONPATH=. python scripts/backfill_cloud_spans.py --review surgical_autonomy [--dry-run]
 
-# q8 KV cache validation
-PYTHONPATH=. python scripts/q8_validation.py --review surgical_autonomy
-PYTHONPATH=. python scripts/q8_validation_fast.py --review surgical_autonomy
-
 # Workflow status
 python -m engine.adjudication.advance_stage --review surgical_autonomy --status
 

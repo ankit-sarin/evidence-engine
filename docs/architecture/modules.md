@@ -439,8 +439,8 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 | Script | Purpose | Key CLI Args |
 |--------|---------|--------------|
 | `reextract_failed.py` | **Retired 2026-09-25** (R113, 9b-2e/f) — recoverable at `6e09166` | — |
-| `rescreen_original_251.py` | Re-screen with updated criteria | `--review`, `--spec` |
-| `rescreen_with_specialty.py` | Re-screen with specialty_scope | `--background`, `--force` |
+| `rescreen_original_251.py` | **Retired 2026-10-13** (R625(a)(6), 12m-U12-RET) — recoverable at `9cf9318` | — |
+| `rescreen_with_specialty.py` | **Retired 2026-10-13** (R625(a)(6), 12m-U12-RET) — recoverable at `9cf9318` | — |
 
 ### PDF / Parsing
 
@@ -457,12 +457,12 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 
 | Script | Purpose |
 |--------|---------|
-| `smoke_test_fixes.py` | Extract + audit 5 papers with temp DB |
-| `test_e2e_search_screen.py` | Live end-to-end search + screening on 20 papers |
-| `test_extraction_validation.py` | Parse 3 PDFs + validate extraction quality |
-| `ft_screening_smoke_test.py` | FT screening on 5 known papers |
-| `q8_validation.py` | q8_0 KV cache validation (full) |
-| `q8_validation_fast.py` | q8_0 KV cache validation (fast, no snippet retries) |
+| `smoke_test_fixes.py` | **Retired 2026-10-13** (R625(a)(6), 12m-U12-RET) — recoverable at `9cf9318` |
+| `test_e2e_search_screen.py` | **Retired 2026-10-13** (R625(a)(6), 12m-U12-RET) — recoverable at `9cf9318` |
+| `test_extraction_validation.py` | **Retired 2026-10-13** (R625(a)(6), 12m-U12-RET) — recoverable at `9cf9318` |
+| `ft_screening_smoke_test.py` | **Retired 2026-10-13** (R625(a)(6), 12m-U12-RET) — recoverable at `9cf9318` |
+| `q8_validation.py` | **Retired 2026-10-13** (R625(a)(6), 12m-U12-RET) — recoverable at `9cf9318` |
+| `q8_validation_fast.py` | **Retired 2026-10-13** (R625(a)(6), 12m-U12-RET) — recoverable at `9cf9318` |
 
 ### Legacy (scripts/pdf_acquisition/)
 
@@ -472,7 +472,7 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 
 | Script | Purpose |
 |--------|---------|
-| `run_expanded_screen_and_verify.sh` | tmux runner for expanded screening phases 2+3 |
+| `run_expanded_screen_and_verify.sh` | **Retired 2026-10-13** (R625(a)(6), 12m-U12-RET) — recoverable at `9cf9318` |
 | `watch_run4.sh` | Poll DB every 5 min for extraction progress |
 
 ---

@@ -160,7 +160,8 @@ def preflight_check(models: list[str], timeout: int = 30, *, spec=None) -> Prefl
 #   OLLAMA_FLASH_ATTENTION=true — required for supported runner configuration.
 #   OLLAMA_MAX_LOADED_MODELS=1  — serialize model loads on the shared GPU.
 #   OLLAMA_KV_CACHE_TYPE=f16    — q8_0 quantization degrades structured
-#       extraction (see scripts/q8_validation.py). Silent drift would corrupt
+#       extraction (measured by scripts/q8_validation.py, retired 2026-10-13;
+#       9cf9318:scripts/q8_validation.py). Silent drift would corrupt
 #       multi-hour batch runs.
 _CORRECTNESS_ENV = {
     "OLLAMA_FLASH_ATTENTION": "true",

@@ -3158,7 +3158,7 @@ Session 12m closed 2026-10-13 UTC; opened 2026-10-12 18:00 UTC on the 12l HEAD `
 | 1 — the suite's lock redirect, the Ollama fence, the live-tier opt-in | INT-m12-1, INT-m12-2, INT-m12-4 | `9cf9318` | landed. INT-m12-1 and INT-m12-4 closed. INT-m12-2 closed for the suite (R625(a)(2)); R627(d)'s check waits for the first live-tier run. The nightly script is unchanged until commit 5 |
 | the retirement (R625(a)(6)) | no pre-tag row; ten retention-ledger rows | `954796e` | landed; the prerequisite of commit 2's census test |
 | 2 — every local model-calling entry point holds the lock, by static census (R625(b), R629(c)); every acquisition is non-blocking, and a held lock is refused at once with a message naming the lock file (R629(b); R625(a)(3), (a)(7)) | A-1, INT-g12-7; the read-out's N19, N22 and L11-C4 (no rows of their own) | `f6a13a6df342fc8ef19e1838eaaca73dbed6d301` (recorded 2026-10-13 under R632(a); as landed, this cell read "the commit that carries this edit, the child of `944efd383cad399bfbbbf2ac349911b91e5c6168`", since a file cannot name the commit that records it) | landed 2026-10-13 (12n-U12-C2, under R629–R631). `hold_experiment_lock()` makes one non-blocking attempt and raises `ExperimentLockHeld`; eleven entry points take it in their own entry, `run_pipeline` in `main` around the whole run (R629(e)); `tests/test_lock_census.py` is the acceptance test. INT-g12-7 is closed. A-1 is closed for its own statement; the notes on it naming W1-F5-C2 and INT-i12-68 stay P2, and N17 is commit 3. N19 (the audit, screen and parse stages run under the lock), N22 (no wait remains to log) and L11-C4 (every probe caller that an entry point reaches holds the lock; the probe's timeout is unchanged) are answered. R510's rows out stay 0 until P1's close (R607(d)). *Note 2026-10-13 (12n-U12-C2, R630(d)):* this row's text cell was updated when the commit landed; until then it read "every local model-calling entry point holds the lock, by static census (R625(b)); a log line before a wait; fail fast under an inherited holder (R625(a)(3), (a)(7))". *Note 2026-10-13 (12n-U12-C2B item 0, R629(g)):* the file list and the probe-caller list this commit was planned from are superseded by `12n_U12_C2A.md` A3 and A4. R629(g): "12m_U12A.md §10.1's commit-2 file list and §5.3's probe-caller list are superseded by 12n_U12_C2A A3 and A4: a dated note on commit 2's row of the U12 commit table." |
-| 3 — `restart_ollama` honours the opt-out | the read-out's N17 (no row of its own) | the child of `4db7a6b1c955b76bbcd18473a7f6871289b7d6b4` (the closure records the hash) | landed 2026-10-13 (12n-U12-C3). `extractor.restart_ollama` reads `restart_disabled()` before the lock: with `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` set it attempts nothing, logs one skip line naming the variable and returns as the foreign-lock skip does. `_extract_selected` needed no change: it already resets its cadence counter on any normal return. N17 is answered; it has no row of its own |
+| 3 — `restart_ollama` honours the opt-out | the read-out's N17 (no row of its own) | `9a00dc96568bc44a410483fec0143057e5d3c92a` (recorded 2026-10-13 with R633's transcription; as landed, this cell read "the child of `4db7a6b1c955b76bbcd18473a7f6871289b7d6b4` (the closure records the hash)") | landed 2026-10-13 (12n-U12-C3). `extractor.restart_ollama` reads `restart_disabled()` before the lock: with `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` set it attempts nothing, logs one skip line naming the variable and returns as the foreign-lock skip does. `_extract_selected` needed no change: it already resets its cadence counter on any normal return. N17 is answered; it has no row of its own |
 | 4 — a failed close records "<ExceptionClass>: <message>" at all six sites (R625(a)(8)) | INT-l12-14 | — | open |
 | 5 — the nightly runs the standard gate; the CLAUDE.md text (R627(c)) | A-1N, B-F17 (f) | — | open |
 | 6 — a fresh database needs no provider SDK, by lazy import (R625(a)(4)) | B-F17 (g) | — | open |
@@ -4780,3 +4780,35 @@ R632(e) — The stale __pycache__ entry of the archived file is left as it is.
 | 2026-10-13 | R632(a) — U12 commit 2 is accepted as landed at f6a13a6 (gate 3,271 / 1 / 17, collected 3,272, 856.52 s, journal empty). The U12 table's commit 2 cell records f6a13a6. A-1 and INT-g12-7 close as the row states; R510's rows out stay 0 until P1's close (R607(d)). R632(b) — The six analysis/eval harnesses now refuse a held lock through an unhandled ExperimentLockHeld (traceback, exit 1). Accepted; loud and non-zero. No edit to the harnesses; no row. R632(c) — The inventory drift between R631(a)'s archive and commit 2 (no gate in the window) is accepted as made. The archived file's pre-edit bytes are unverified; the archive records it so. R632(d) — tests/test_api_parity.py generates test cases from scripts' imports, so a commit that adds or removes an import in a script changes the collected count. Every brief that touches a script predicts that delta explicitly. Recorded as a note on the operating rules; no row. R632(e) — The stale __pycache__ entry of the archived file is left as it is. | PI, 2026-10-13, during session 12n |
 
 The decision log in this file ends at R632.
+
+**Block 31.** *Transcribed 2026-10-13 (item 0 of the 12n-U12-C4 brief), in its own commit with the cell update the brief orders, in the R597(e) form:* ruling R633, made by PI on architect recommendation on 2026-10-13 UTC, during session 12n, on the 12n-U12-C3 stop report (unit U12, commit 3, stopped at its gate on wall time). It was issued with the resume 12n-U12-C3-R2, under which commit 3 landed as `9a00dc96568bc44a410483fec0143057e5d3c92a` with its evidence in `docs/session-reports/session-12/12n_U12_C3/`. The ruling as issued, with its line breaks:
+
+```text
+RULING R633 (PI, 2026-10-13 UTC, session 12n, on architect recommendation, on the
+12n-U12-C3 stop report):
+
+R633(a) — The 12n-U12-C3 gate (2026-10-13T18:51:22Z–19:06:27Z) is accepted as
+  reported: 3,277 passed / 1 xfailed / 17 deselected, collected 3,278 as predicted,
+  journal window empty. Wall time 903.11 s. The per-test comparison with commit 2's
+  gate (R630(b)) shows the 46 s spread over 910 phases, none slower by more than
+  0.6 s, none of the six new tests measurable; host user CPU was twice commit 2's
+  window. Variance, not a regression. Not re-run.
+R633(b) — The band rule (R328, as applied by R619(g)) is amended: the band is ±10%
+  of the mean wall time of the last four standard gates of the current session,
+  re-cut at each closeout and stated in the expected values. For the rest of
+  session 12n the band is 792–968 s (mean of 853.31, 908.49, 856.52, 903.11 =
+  880.4 s). A gate inside the band with a single phase slower than 10 s against
+  the previous gate's durations file is still reported, as the durations
+  comparison now runs on every gate.
+R633(c) — docs/inventory/ is regenerated in any commit that edits a file the
+  inventory records a line number in; that regeneration is inside Touches by
+  implication, and G3's "staged stat shows only Touches" reads with it. Commit 3
+  carries the two inventory files.
+R633(d) — R632(d) as rule 12 of the standing session rules is accepted as made.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-13 | R633(a) — The 12n-U12-C3 gate (2026-10-13T18:51:22Z–19:06:27Z) is accepted as reported: 3,277 passed / 1 xfailed / 17 deselected, collected 3,278 as predicted, journal window empty. Wall time 903.11 s. The per-test comparison with commit 2's gate (R630(b)) shows the 46 s spread over 910 phases, none slower by more than 0.6 s, none of the six new tests measurable; host user CPU was twice commit 2's window. Variance, not a regression. Not re-run. R633(b) — The band rule (R328, as applied by R619(g)) is amended: the band is ±10% of the mean wall time of the last four standard gates of the current session, re-cut at each closeout and stated in the expected values. For the rest of session 12n the band is 792–968 s (mean of 853.31, 908.49, 856.52, 903.11 = 880.4 s). A gate inside the band with a single phase slower than 10 s against the previous gate's durations file is still reported, as the durations comparison now runs on every gate. R633(c) — docs/inventory/ is regenerated in any commit that edits a file the inventory records a line number in; that regeneration is inside Touches by implication, and G3's "staged stat shows only Touches" reads with it. Commit 3 carries the two inventory files. R633(d) — R632(d) as rule 12 of the standing session rules is accepted as made. | PI, 2026-10-13, during session 12n |
+
+The decision log in this file ends at R633.

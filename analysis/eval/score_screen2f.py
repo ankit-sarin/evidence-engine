@@ -1,6 +1,7 @@
 """SCREEN-AUTH-01 Phase 2f smoke — scoring, disagreement lists, descriptive read-out.
 
-Reads the run directory `run_screen2f` wrote, the exported papers file and the
+Reads the run directory `run_screen2f` wrote (the runner is retired under R31, R629(d);
+recoverable at `7338c85:analysis/eval/run_screen2f.py`), the exported papers file and the
 86-paper PI workbook. Writes CSV, JSON and Markdown under --out-dir. Calls no
 model and opens no database.
 

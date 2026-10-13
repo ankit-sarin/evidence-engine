@@ -1,0 +1,5 @@
+tests/test_screen2f_harness.py::test_harness_source_has_no_database_reference[run_screen2f.py]
+tests/test_screen2f_harness.py::test_harness_source_has_no_database_reference[screen2f_worker.py]
+tests/test_screen2f_harness.py::test_worker_pauses_inside_the_quiet_window
+tests/test_screen2f_harness.py::test_worker_refuses_an_engine_from_outside_its_root
+tests/test_screen2f_harness.py::test_worker_runs_both_phases_and_resumes_without_recalling

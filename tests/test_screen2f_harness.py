@@ -2,17 +2,15 @@
 
 Covers arm construction, the pipeline's combination rules as the harness
 reproduces them, resume from checkpoint, the quiet window, the gate-1 identity
-check, and the harness-never-names-the-database rule. The worker is exercised
-end to end in a subprocess against a fake engine tree, which is also how the
-one-tree-per-process mechanism is tested: a worker whose `engine` resolves
-outside --root must refuse.
+check, and the harness-never-names-the-database rule.
+
+The runner and its worker (`analysis/eval/run_screen2f.py`, `screen2f_worker.py`)
+were retired under R31 (R629(d)); their three end-to-end worker tests and their two
+database-reference cases went with them. Recoverable at `7338c85`.
 """
 
 import ast
 import json
-import subprocess
-import sys
-import textwrap
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -23,11 +21,8 @@ from engine.core.review_spec import load_review_spec
 
 REPO = Path(__file__).resolve().parents[1]
 LIVE_SPEC = REPO / "review_specs" / "surgical_autonomy.yaml"
-WORKER = REPO / "analysis" / "eval" / "screen2f_worker.py"
 HARNESS_SOURCES = [
     REPO / "analysis" / "eval" / "screen2f.py",
-    REPO / "analysis" / "eval" / "screen2f_worker.py",
-    REPO / "analysis" / "eval" / "run_screen2f.py",
 ]
 # Arm C is retired (2f four-vs-eight ruling). Its screening_hash in the 2f run, built from the
 # 61326fa live spec, was e23b74de9275df8655d3efeacc2ca769542ac41c325d9691c1b2fac11b0f0120 — a
@@ -302,128 +297,3 @@ def test_harness_source_has_no_database_reference(path):
 
 def test_the_database_reference_scan_can_fail():
     assert _database_references('P = "data/x/review.db"\nfrom engine.core.database import ReviewDatabase\n')
-
-
-# ── worker, end to end, against a fake engine tree ───────────────────
-
-
-_FAKE_SCREENER = '''
-import json
-from pydantic import BaseModel
-
-def ollama_chat(**kw):
-    raise AssertionError("the worker must interpose on this name")
-
-class D(BaseModel):
-    decision: str
-    rationale: str
-    confidence: float
-
-def screen_paper(paper, spec, pass_number, model=None, role="primary"):
-    resp = ollama_chat(model=model, messages=[{"role": "user", "content": paper["title"] + role}],
-                       format={"schema": 1}, options={"temperature": 0}, think=False)
-    return D.model_validate_json(resp.message.content)
-'''
-
-_FAKE_SPEC = '''
-class _M:
-    primary = "fake-8b"
-    verification = "fake-27b"
-
-class _S:
-    screening_models = _M()
-    def screening_hash(self):
-        return "fakehash"
-
-def load_review_spec(path):
-    return _S()
-'''
-
-_FAKE_CLIENT_PATCH = '''
-import engine.agents.screener as s
-from types import SimpleNamespace
-
-TABLE = {"t1primary": "include", "t2primary": "exclude", "t1verifier": "include"}
-
-def fake_chat(**kw):
-    key = kw["messages"][0]["content"]
-    v = TABLE[key]
-    return SimpleNamespace(message=SimpleNamespace(content=json.dumps({"decision": v, "rationale": "r", "confidence": 1.0})),
-                           total_duration=1, load_duration=0, prompt_eval_count=1, prompt_eval_duration=1,
-                           eval_count=1, eval_duration=1, done_reason="stop")
-'''
-
-
-def _fake_tree(root: Path) -> None:
-    for pkg in ("engine", "engine/agents", "engine/core", "engine/utils"):
-        (root / pkg).mkdir(parents=True, exist_ok=True)
-        (root / pkg / "__init__.py").write_text("")
-    # The fake client answers from a table; the worker wraps it as it wraps the real one.
-    (root / "engine/agents/screener.py").write_text(
-        _FAKE_SCREENER.replace('raise AssertionError("the worker must interpose on this name")',
-                               "return fake_chat(**kw)")
-        + textwrap.dedent(_FAKE_CLIENT_PATCH).replace("import engine.agents.screener as s\n", ""))
-    (root / "engine/core/review_spec.py").write_text(_FAKE_SPEC)
-    (root / "review_specs").mkdir(exist_ok=True)
-    (root / "review_specs/surgical_autonomy.yaml").write_text("fake: true\n")
-
-
-def _worker(root: Path, out: Path, papers: Path, phase: str, pythonpath: Path | None = None, extra=()):
-    env = {"PYTHONPATH": str(pythonpath or root), "PATH": "/usr/bin:/bin", lib.NOW_ENV: "2026-09-13T03:00:00+00:00"}
-    return subprocess.run(
-        [sys.executable, "-P", str(WORKER), "--arm", "B", "--root", str(root),
-         "--spec", str(root / "review_specs/surgical_autonomy.yaml"), "--phase", phase,
-         "--papers", str(papers), "--out-dir", str(out), *extra],
-        env=env, capture_output=True, text=True, timeout=60)
-
-
-def test_worker_runs_both_phases_and_resumes_without_recalling(tmp_path):
-    root, out = tmp_path / "tree", tmp_path / "out"
-    _fake_tree(root)
-    papers = tmp_path / "papers.jsonl"
-    papers.write_text("\n".join(json.dumps(p) for p in _papers(1, 2)) + "\n")
-
-    r = _worker(root, out, papers, "primary")
-    assert r.returncode == 0, r.stderr
-    primary, _ = lib.Checkpoint(out / "primary.jsonl").load()
-    assert {k: v["outcome"] for k, v in primary.items()} == {1: lib.IN, 2: lib.OUT}
-    call = primary[1]["calls"][0]["call"]
-    assert call["call_kwargs"] == {"model": "fake-8b", "options": {"temperature": 0}, "think": False}
-    assert len(call["request_hash"]) == 64 and call["raw"]
-
-    r = _worker(root, out, papers, "verifier")
-    assert r.returncode == 0, r.stderr
-    ver, _ = lib.Checkpoint(out / "verifier.jsonl").load()
-    assert {k: v["outcome"] for k, v in ver.items()} == {1: lib.IN}
-    assert ver[1]["calls"][0]["call"]["model"] == "fake-27b"
-
-    before = (out / "primary.jsonl").read_text()
-    assert _worker(root, out, papers, "primary").returncode == 0
-    assert (out / "primary.jsonl").read_text() == before  # resume: nothing re-called
-
-
-def test_worker_refuses_an_engine_from_outside_its_root(tmp_path):
-    root, other, out = tmp_path / "tree", tmp_path / "other", tmp_path / "out"
-    _fake_tree(root)
-    _fake_tree(other)
-    papers = tmp_path / "papers.jsonl"
-    papers.write_text(json.dumps(_papers(1)[0]) + "\n")
-    r = _worker(root, out, papers, "primary", pythonpath=other)
-    assert r.returncode == 4 and "REFUSED" in r.stderr
-    assert not (out / "primary.jsonl").exists()
-
-
-def test_worker_pauses_inside_the_quiet_window(tmp_path):
-    root, out = tmp_path / "tree", tmp_path / "out"
-    _fake_tree(root)
-    papers = tmp_path / "papers.jsonl"
-    papers.write_text(json.dumps(_papers(1)[0]) + "\n")
-    env_now = "2026-09-13T07:00:00+00:00"
-    r = subprocess.run(
-        [sys.executable, "-P", str(WORKER), "--arm", "B", "--root", str(root),
-         "--spec", str(root / "review_specs/surgical_autonomy.yaml"), "--phase", "primary",
-         "--papers", str(papers), "--out-dir", str(out)],
-        env={"PYTHONPATH": str(root), "PATH": "/usr/bin:/bin", lib.NOW_ENV: env_now},
-        capture_output=True, text=True, timeout=60)
-    assert r.returncode == 3, r.stderr
-    assert not (out / "primary.jsonl").exists()

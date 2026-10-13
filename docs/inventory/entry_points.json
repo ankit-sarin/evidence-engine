@@ -947,151 +947,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "analysis/eval/run_screen2f.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 149,
-            "names": [
-              "--out-dir"
-            ],
-            "required": true
-          },
-          {
-            "default": "'2f'",
-            "dest": null,
-            "line": 150,
-            "names": [
-              "--arm-set"
-            ],
-            "required": false
-          },
-          {
-            "default": "dynamic: []",
-            "dest": null,
-            "line": 151,
-            "names": [
-              "--arm-root"
-            ],
-            "required": false
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 153,
-            "names": [
-              "--arm-a-root"
-            ],
-            "required": false
-          },
-          {
-            "default": "dynamic: DEFAULT_PAPERS",
-            "dest": null,
-            "line": 154,
-            "names": [
-              "--papers"
-            ],
-            "required": false
-          },
-          {
-            "default": "''",
-            "dest": null,
-            "line": 155,
-            "names": [
-              "--ids"
-            ],
-            "required": false
-          },
-          {
-            "default": "''",
-            "dest": null,
-            "line": 156,
-            "names": [
-              "--forced-verifier-ids"
-            ],
-            "required": false
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 157,
-            "names": [
-              "--watch-file"
-            ],
-            "required": false
-          },
-          {
-            "default": "dynamic: lib.DEFAULT_LEAD_MINUTES",
-            "dest": null,
-            "line": 158,
-            "names": [
-              "--lead-minutes"
-            ],
-            "required": false
-          },
-          {
-            "default": "240",
-            "dest": null,
-            "line": 159,
-            "names": [
-              "--max-resume-wait-min"
-            ],
-            "required": false
-          },
-          {
-            "default": "'primary,verifier'",
-            "dest": null,
-            "line": 160,
-            "names": [
-              "--phases"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [
-          {
-            "line": 57,
-            "role": "code",
-            "value": "surgical_autonomy"
-          }
-        ],
-        "order": {},
-        "path": "analysis/eval/run_screen2f.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 1,
-            "role": "docstring",
-            "text": "SCREEN-AUTH-01 Phase 2f smoke runner: 3 arms x the abstract-stage pipeline.\n\nPhase-batched (ruling R1): every arm's primary phase on qwen3:8b, then every\narm..."
-          },
-          {
-            "kind": "literal",
-            "line": 219,
-            "role": "code",
-            "text": "armC_spec.yaml"
-          }
-        ],
-        "review_database": [],
-        "review_id_constants": [
-          {
-            "line": 57,
-            "name": "REVIEW",
-            "value": "surgical_autonomy"
-          }
-        ],
-        "spec_access": [
-          {
-            "func": "spec_path_for",
-            "line": 216,
-            "scope": "_run"
-          }
-        ],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "analysis/eval/schema_eval.py": {
         "entry_point": false,
         "flags": [],
@@ -1126,7 +981,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 598,
+            "line": 599,
             "names": [
               "--run-dir"
             ],
@@ -1135,7 +990,7 @@
           {
             "default": "dynamic: DEFAULT_WORKBOOK",
             "dest": null,
-            "line": 599,
+            "line": 600,
             "names": [
               "--workbook"
             ],
@@ -1144,7 +999,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 600,
+            "line": 601,
             "names": [
               "--out-dir"
             ],
@@ -1153,7 +1008,7 @@
           {
             "default": "'2f'",
             "dest": null,
-            "line": 601,
+            "line": 602,
             "names": [
               "--arm-set"
             ],
@@ -1162,7 +1017,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 602,
+            "line": 603,
             "names": [
               "--corrections"
             ],
@@ -1171,7 +1026,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 604,
+            "line": 605,
             "names": [
               "--verdicts"
             ],
@@ -1180,7 +1035,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 606,
+            "line": 607,
             "names": [
               "--stability-baseline"
             ],
@@ -1194,7 +1049,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 40,
+            "line": 41,
             "role": "code",
             "text": "data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx"
           }
@@ -1293,108 +1148,6 @@
         "review_database": [],
         "review_id_constants": [],
         "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "analysis/eval/screen2f_worker.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 62,
-            "names": [
-              "--arm"
-            ],
-            "required": true
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 63,
-            "names": [
-              "--root"
-            ],
-            "required": true
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 64,
-            "names": [
-              "--spec"
-            ],
-            "required": true
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 65,
-            "names": [
-              "--phase"
-            ],
-            "required": true
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 66,
-            "names": [
-              "--papers"
-            ],
-            "required": false
-          },
-          {
-            "default": "''",
-            "dest": null,
-            "line": 67,
-            "names": [
-              "--ids"
-            ],
-            "required": false
-          },
-          {
-            "default": "''",
-            "dest": null,
-            "line": 68,
-            "names": [
-              "--forced-verifier-ids"
-            ],
-            "required": false
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 69,
-            "names": [
-              "--out-dir"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 70,
-            "names": [
-              "--lead-minutes"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "analysis/eval/screen2f_worker.py",
-        "path_construction": [],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "load_review_spec",
-            "line": 91,
-            "scope": "main"
-          }
-        ],
         "unparsed": [],
         "yaml_loads": []
       },
@@ -7144,27 +6897,27 @@
     "summary": {
       "db_before_spec_scopes": 0,
       "default_review_named_constants": 5,
-      "entry_points": 86,
+      "entry_points": 84,
       "entry_points_constructing_reviewdatabase": 23,
       "entry_points_name_only": 42,
       "entry_points_with_review_name_flag": 58,
-      "entry_points_with_spec_flag": 17,
-      "files_calling_load_review_spec_directly": 9,
-      "files_calling_resolver": 21,
-      "files_scanned": 206,
+      "entry_points_with_spec_flag": 16,
+      "files_calling_load_review_spec_directly": 8,
+      "files_calling_resolver": 20,
+      "files_scanned": 204,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
-      "literal_review_id_sites_in_code": 29,
+      "literal_review_id_sites_in_code": 28,
       "name_only_constructing_reviewdatabase": 19,
-      "path_construction_sites_in_code": 57,
+      "path_construction_sites_in_code": 56,
       "raw_yaml_load_sites": 3,
-      "review_id_constants": 7,
+      "review_id_constants": 6,
       "unparsed_sites": 0
     },
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "9cf9318fe527cb8154add17b10df8d2f181c75cb",
+    "generated_at_commit": "7338c85586e77f9dc44cd615d594ceacff3e5690",
     "scan_roots": [
       "engine",
       "scripts",

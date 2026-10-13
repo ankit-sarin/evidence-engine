@@ -1,0 +1,9 @@
+commit 5 dry run (886.73 s wall): 2399 listed phases, sum 877.8 s
+commit 5B gate (905.76 s wall): 2397 listed phases, sum 897.0 s
+the four new tests: 2 listed phases, 0.02 s
+phases slower by more than 10 s against the commit 5 dry run's file: none
+   +0.54  setup    tests/test_import_screening_entry.py::test_t4_an_entry_rule_rejects_the_file_and_writes_nothing[dup_
+   +0.48  setup    tests/test_import_screening_entry.py::test_t4_a_file_shape_rule_rejects[missing_source]
+   +0.47  setup    tests/test_import_screening_entry.py::test_t4_an_entry_rule_rejects_the_file_and_writes_nothing[year
+   +0.47  setup    tests/test_import_screening_entry.py::test_t4_an_entry_rule_rejects_the_file_and_writes_nothing[idle
+phases slower by >5 ms: 770; faster by >5 ms: 684

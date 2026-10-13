@@ -1,0 +1,6 @@
+=========================== short test summary info ============================
+FAILED tests/test_nightly_script.py::test_the_nightly_script_selects_the_standard_gate_written_once
+FAILED tests/test_nightly_script.py::test_the_nightly_script_has_no_unconditional_exit_and_exits_with_pytests_code
+FAILED tests/test_nightly_script.py::test_nightly_script_runs_the_standard_gate_and_propagates_status[exit_0]
+FAILED tests/test_nightly_script.py::test_nightly_script_runs_the_standard_gate_and_propagates_status[exit_3]
+4 failed in 0.16s

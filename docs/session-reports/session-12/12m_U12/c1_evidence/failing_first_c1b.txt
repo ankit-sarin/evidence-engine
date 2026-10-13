@@ -1,0 +1,1584 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+__________ test_an_unmarked_test_resolves_the_lock_under_its_tmp_path __________
+
+tmp_path = PosixPath('/tmp/pytest-of-ankitsarin/pytest-1674/test_an_unmarked_test_resolves0')
+
+    def test_an_unmarked_test_resolves_the_lock_under_its_tmp_path(tmp_path):
+>       assert L.lock_path().is_relative_to(tmp_path)
+E       AssertionError: assert False
+E        +  where False = is_relative_to(PosixPath('/tmp/pytest-of-ankitsarin/pytest-1674/test_an_unmarked_test_resolves0'))
+E        +    where is_relative_to = PosixPath('/home/ankitsarin/.ollama_experiment.lock').is_relative_to
+E        +      where PosixPath('/home/ankitsarin/.ollama_experiment.lock') = <function lock_path at 0xe0e0a1208180>()
+E        +        where <function lock_path at 0xe0e0a1208180> = L.lock_path
+
+tests/test_suite_live_fence.py:81: AssertionError
+_____ test_an_unmarked_test_is_refused_on_every_route_to_the_ollama_server _____
+
+tmp_path = PosixPath('/tmp/pytest-of-ankitsarin/pytest-1674/test_an_unmarked_test_is_refus0')
+
+    def test_an_unmarked_test_is_refused_on_every_route_to_the_ollama_server(tmp_path):
+        r = _inner(tmp_path, _ROUTES)
+        out = r.stdout + r.stderr
+        # six raise through the test; the seventh swallows the refusal, so its call
+        # passes and the fence's teardown re-assert turns it into an error
+>       assert "6 failed, 1 passed, 1 error" in out, out
+E       AssertionError: FFFFFF.                                                                  [100%]
+E         =================================== FAILURES ===================================
+E         ________________________________ test_httpx_get ________________________________
+E         
+E             @contextlib.contextmanager
+E             def map_httpcore_exceptions() -> typing.Iterator[None]:
+E                 global HTTPCORE_EXC_MAP
+E                 if len(HTTPCORE_EXC_MAP) == 0:
+E                     HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+E                 try:
+E         >           yield
+E         
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:101: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:250: in handle_request
+E             resp = self._pool.handle_request(req)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+E             raise exc from None
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+E             response = connection.handle_request(
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:101: in handle_request
+E             raise exc
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:78: in handle_request
+E             stream = self._connect(request)
+E                      ^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:124: in _connect
+E             stream = self._network_backend.connect_tcp(**kwargs)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+E             with map_exceptions(exc_map):
+E         /usr/lib/python3.12/contextlib.py:158: in __exit__
+E             self.gen.throw(value)
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         map = {<class 'TimeoutError'>: <class 'httpcore.ConnectTimeout'>, <class 'OSError'>: <class 'httpcore.ConnectError'>}
+E         
+E             @contextlib.contextmanager
+E             def map_exceptions(map: ExceptionMapping) -> typing.Iterator[None]:
+E                 try:
+E                     yield
+E                 except Exception as exc:  # noqa: PIE786
+E                     for from_exc, to_exc in map.items():
+E                         if isinstance(exc, from_exc):
+E         >                   raise to_exc(exc) from exc
+E         E                   httpcore.ConnectError: [Errno 111] Connection refused
+E         
+E         .venv/lib/python3.12/site-packages/httpcore/_exceptions.py:14: ConnectError
+E         
+E         The above exception was the direct cause of the following exception:
+E         
+E             def test_httpx_get():
+E         >       _mark("httpx"); httpx.get(_url() + "/api/tags", timeout=2)
+E                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_an_unmarked_test_is_refus0/test_inner.py:15: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/httpx/_api.py:195: in get
+E             return request(
+E         .venv/lib/python3.12/site-packages/httpx/_api.py:109: in request
+E             return client.request(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+E             return self.send(request, auth=auth, follow_redirects=follow_redirects)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+E             response = self._send_handling_auth(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+E             response = self._send_handling_redirects(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+E             response = self._send_single_request(request)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+E             response = transport.handle_request(request)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:249: in handle_request
+E             with map_httpcore_exceptions():
+E         /usr/lib/python3.12/contextlib.py:158: in __exit__
+E             self.gen.throw(value)
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             @contextlib.contextmanager
+E             def map_httpcore_exceptions() -> typing.Iterator[None]:
+E                 global HTTPCORE_EXC_MAP
+E                 if len(HTTPCORE_EXC_MAP) == 0:
+E                     HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+E                 try:
+E                     yield
+E                 except Exception as exc:
+E                     mapped_exc = None
+E             
+E                     for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+E                         if not isinstance(exc, from_exc):
+E                             continue
+E                         # We want to map to the most specific exception we can find.
+E                         # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+E                         # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+E                         if mapped_exc is None or issubclass(to_exc, mapped_exc):
+E                             mapped_exc = to_exc
+E             
+E                     if mapped_exc is None:  # pragma: no cover
+E                         raise
+E             
+E                     message = str(exc)
+E         >           raise mapped_exc(message) from exc
+E         E           httpx.ConnectError: [Errno 111] Connection refused
+E         
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:118: ConnectError
+E         ______________________________ test_ollama_client ______________________________
+E         
+E             def test_ollama_client():
+E         >       _mark("client"); ollama.Client().ps()
+E                                  ^^^^^^^^^^^^^^^^^^^^
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_an_unmarked_test_is_refus0/test_inner.py:18: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/ollama/_client.py:646: in ps
+E             return self._request(
+E         .venv/lib/python3.12/site-packages/ollama/_client.py:189: in _request
+E             return cls(**self._request_raw(*args, **kwargs).json())
+E                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         self = <ollama._client.Client object at 0xe15b5155fe00>
+E         args = ('GET', '/api/ps'), kwargs = {}
+E         
+E             def _request_raw(self, *args, **kwargs):
+E               try:
+E                 r = self._client.request(*args, **kwargs)
+E                 r.raise_for_status()
+E                 return r
+E               except httpx.HTTPStatusError as e:
+E                 raise ResponseError(e.response.text, e.response.status_code) from None
+E               except httpx.ConnectError:
+E         >       raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+E         E       ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+E         
+E         .venv/lib/python3.12/site-packages/ollama/_client.py:135: ConnectionError
+E         ______________________ test_ollama_module_default_client _______________________
+E         
+E             def test_ollama_module_default_client():
+E         >       _mark("module"); ollama.ps()
+E                                  ^^^^^^^^^^^
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_an_unmarked_test_is_refus0/test_inner.py:21: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/ollama/_client.py:646: in ps
+E             return self._request(
+E         .venv/lib/python3.12/site-packages/ollama/_client.py:189: in _request
+E             return cls(**self._request_raw(*args, **kwargs).json())
+E                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         self = <ollama._client.Client object at 0xe15b526c8ec0>
+E         args = ('GET', '/api/ps'), kwargs = {}
+E         
+E             def _request_raw(self, *args, **kwargs):
+E               try:
+E                 r = self._client.request(*args, **kwargs)
+E                 r.raise_for_status()
+E                 return r
+E               except httpx.HTTPStatusError as e:
+E                 raise ResponseError(e.response.text, e.response.status_code) from None
+E               except httpx.ConnectError:
+E         >       raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+E         E       ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+E         
+E         .venv/lib/python3.12/site-packages/ollama/_client.py:135: ConnectionError
+E         ______________________________ test_requests_get _______________________________
+E         
+E         self = <HTTPConnection(host='127.0.0.1', port=47001) at 0xe15b5128cdd0>
+E         
+E             def _new_conn(self) -> socket.socket:
+E                 """Establish a socket connection and set nodelay settings on it.
+E             
+E                 :return: New socket connection.
+E                 """
+E                 try:
+E         >           sock = connection.create_connection(
+E                         (self._dns_host, self.port),
+E                         self.timeout,
+E                         source_address=self.source_address,
+E                         socket_options=self.socket_options,
+E                     )
+E         
+E         .venv/lib/python3.12/site-packages/urllib3/connection.py:204: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/urllib3/util/connection.py:85: in create_connection
+E             raise err
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         address = ('127.0.0.1', 47001), timeout = 2, source_address = None
+E         socket_options = [(6, 1, 1)]
+E         
+E             def create_connection(
+E                 address: tuple[str, int],
+E                 timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+E                 source_address: tuple[str, int] | None = None,
+E                 socket_options: _TYPE_SOCKET_OPTIONS | None = None,
+E             ) -> socket.socket:
+E                 """Connect to *address* and return the socket object.
+E             
+E                 Convenience function.  Connect to *address* (a 2-tuple ``(host,
+E                 port)``) and return the socket object.  Passing the optional
+E                 *timeout* parameter will set the timeout on the socket instance
+E                 before attempting to connect.  If no *timeout* is supplied, the
+E                 global default timeout setting returned by :func:`socket.getdefaulttimeout`
+E                 is used.  If *source_address* is set it must be a tuple of (host, port)
+E                 for the socket to bind as a source address before making the connection.
+E                 An host of '' or port 0 tells the OS to use the default.
+E                 """
+E             
+E                 host, port = address
+E                 if host.startswith("["):
+E                     host = host.strip("[]")
+E                 err = None
+E             
+E                 # Using the value from allowed_gai_family() in the context of getaddrinfo lets
+E                 # us select whether to work with IPv4 DNS records, IPv6 records, or both.
+E                 # The original create_connection function always returns all records.
+E                 family = allowed_gai_family()
+E             
+E                 try:
+E                     host.encode("idna")
+E                 except UnicodeError:
+E                     raise LocationParseError(f"'{host}', label empty or too long") from None
+E             
+E                 for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+E                     af, socktype, proto, canonname, sa = res
+E                     sock = None
+E                     try:
+E                         sock = socket.socket(af, socktype, proto)
+E             
+E                         # If provided, set socket level options before connecting.
+E                         _set_socket_options(sock, socket_options)
+E             
+E                         if timeout is not _DEFAULT_TIMEOUT:
+E                             sock.settimeout(timeout)
+E                         if source_address:
+E                             sock.bind(source_address)
+E         >               sock.connect(sa)
+E         E               ConnectionRefusedError: [Errno 111] Connection refused
+E         
+E         .venv/lib/python3.12/site-packages/urllib3/util/connection.py:73: ConnectionRefusedError
+E         
+E         The above exception was the direct cause of the following exception:
+E         
+E         self = <urllib3.connectionpool.HTTPConnectionPool object at 0xe15b5128c3e0>
+E         method = 'GET', url = '/api/tags', body = None
+E         headers = {'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': '*/*', 'Connection': 'keep-alive'}
+E         retries = Retry(total=0, connect=None, read=False, redirect=None, status=None)
+E         redirect = False, assert_same_host = False
+E         timeout = Timeout(connect=2, read=2, total=None), pool_timeout = None
+E         release_conn = False, chunked = False, body_pos = None, preload_content = False
+E         decode_content = False, response_kw = {}
+E         parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/api/tags', query=None, fragment=None)
+E         destination_scheme = None, conn = None, release_this_conn = True
+E         http_tunnel_required = False, err = None, clean_exit = False
+E         
+E             def urlopen(  # type: ignore[override]
+E                 self,
+E                 method: str,
+E                 url: str,
+E                 body: _TYPE_BODY | None = None,
+E                 headers: typing.Mapping[str, str] | None = None,
+E                 retries: Retry | bool | int | None = None,
+E                 redirect: bool = True,
+E                 assert_same_host: bool = True,
+E                 timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+E                 pool_timeout: int | None = None,
+E                 release_conn: bool | None = None,
+E                 chunked: bool = False,
+E                 body_pos: _TYPE_BODY_POSITION | None = None,
+E                 preload_content: bool = True,
+E                 decode_content: bool = True,
+E                 **response_kw: typing.Any,
+E             ) -> BaseHTTPResponse:
+E                 """
+E                 Get a connection from the pool and perform an HTTP request. This is the
+E                 lowest level call for making a request, so you'll need to specify all
+E                 the raw details.
+E             
+E                 .. note::
+E             
+E                    More commonly, it's appropriate to use a convenience method
+E                    such as :meth:`request`.
+E             
+E                 .. note::
+E             
+E                    `release_conn` will only behave as expected if
+E                    `preload_content=False` because we want to make
+E                    `preload_content=False` the default behaviour someday soon without
+E                    breaking backwards compatibility.
+E             
+E                 :param method:
+E                     HTTP request method (such as GET, POST, PUT, etc.)
+E             
+E                 :param url:
+E                     The URL to perform the request on.
+E             
+E                 :param body:
+E                     Data to send in the request body, either :class:`str`, :class:`bytes`,
+E                     an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+E             
+E                 :param headers:
+E                     Dictionary of custom headers to send, such as User-Agent,
+E                     If-None-Match, etc. If None, pool headers are used. If provided,
+E                     these headers completely replace any pool-specific headers.
+E             
+E                 :param retries:
+E                     Configure the number of retries to allow before raising a
+E                     :class:`~urllib3.exceptions.MaxRetryError` exception.
+E             
+E                     If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+E                     :class:`~urllib3.util.retry.Retry` object for fine-grained control
+E                     over different types of retries.
+E                     Pass an integer number to retry connection errors that many times,
+E                     but no other types of errors. Pass zero to never retry.
+E             
+E                     If ``False``, then retries are disabled and any exception is raised
+E                     immediately. Also, instead of raising a MaxRetryError on redirects,
+E                     the redirect response will be returned.
+E             
+E                 :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+E             
+E                 :param redirect:
+E                     If True, automatically handle redirects (status codes 301, 302,
+E                     303, 307, 308). Each redirect counts as a retry. Disabling retries
+E                     will disable redirect, too.
+E             
+E                 :param assert_same_host:
+E                     If ``True``, will make sure that the host of the pool requests is
+E                     consistent else will raise HostChangedError. When ``False``, you can
+E                     use the pool on an HTTP proxy and request foreign hosts.
+E             
+E                 :param timeout:
+E                     If specified, overrides the default timeout for this one
+E                     request. It may be a float (in seconds) or an instance of
+E                     :class:`urllib3.util.Timeout`.
+E             
+E                 :param pool_timeout:
+E                     If set and the pool is set to block=True, then this method will
+E                     block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+E                     connection is available within the time period.
+E             
+E                 :param bool preload_content:
+E                     If True, the response's body will be preloaded into memory.
+E             
+E                 :param bool decode_content:
+E                     If True, will attempt to decode the body based on the
+E                     'content-encoding' header.
+E             
+E                 :param release_conn:
+E                     If False, then the urlopen call will not release the connection
+E                     back into the pool once a response is received (but will release if
+E                     you read the entire contents of the response such as when
+E                     `preload_content=True`). This is useful if you're not preloading
+E                     the response's content immediately. You will need to call
+E                     ``r.release_conn()`` on the response ``r`` to return the connection
+E                     back into the pool. If None, it takes the value of ``preload_content``
+E                     which defaults to ``True``.
+E             
+E                 :param bool chunked:
+E                     If True, urllib3 will send the body using chunked transfer
+E                     encoding. Otherwise, urllib3 will send the body using the standard
+E                     content-length form. Defaults to False.
+E             
+E                 :param int body_pos:
+E                     Position to seek to in file-like body in the event of a retry or
+E                     redirect. Typically this won't need to be set because urllib3 will
+E                     auto-populate the value when needed.
+E                 """
+E                 parsed_url = parse_url(url)
+E                 destination_scheme = parsed_url.scheme
+E             
+E                 if headers is None:
+E                     headers = self.headers
+E             
+E                 if not isinstance(retries, Retry):
+E                     retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+E             
+E                 if release_conn is None:
+E                     release_conn = preload_content
+E             
+E                 # Check host
+E                 if assert_same_host and not self.is_same_host(url):
+E                     raise HostChangedError(self, url, retries)
+E             
+E                 # Ensure that the URL we're connecting to is properly encoded
+E                 if url.startswith("/"):
+E                     url = to_str(_encode_target(url))
+E                 else:
+E                     url = to_str(parsed_url.url)
+E             
+E                 conn = None
+E             
+E                 # Track whether `conn` needs to be released before
+E                 # returning/raising/recursing. Update this variable if necessary, and
+E                 # leave `release_conn` constant throughout the function. That way, if
+E                 # the function recurses, the original value of `release_conn` will be
+E                 # passed down into the recursive call, and its value will be respected.
+E                 #
+E                 # See issue #651 [1] for details.
+E                 #
+E                 # [1] <https://github.com/urllib3/urllib3/issues/651>
+E                 release_this_conn = release_conn
+E             
+E                 http_tunnel_required = connection_requires_http_tunnel(
+E                     self.proxy, self.proxy_config, destination_scheme
+E                 )
+E             
+E                 # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+E                 # have to copy the headers dict so we can safely change it without those
+E                 # changes being reflected in anyone else's copy.
+E                 if not http_tunnel_required:
+E                     headers = headers.copy()  # type: ignore[attr-defined]
+E                     headers.update(self.proxy_headers)  # type: ignore[union-attr]
+E             
+E                 # Must keep the exception bound to a separate variable or else Python 3
+E                 # complains about UnboundLocalError.
+E                 err = None
+E             
+E                 # Keep track of whether we cleanly exited the except block. This
+E                 # ensures we do proper cleanup in finally.
+E                 clean_exit = False
+E             
+E                 # Rewind body position, if needed. Record current position
+E                 # for future rewinds in the event of a redirect/retry.
+E                 body_pos = set_file_position(body, body_pos)
+E             
+E                 try:
+E                     # Request a connection from the queue.
+E                     timeout_obj = self._get_timeout(timeout)
+E                     conn = self._get_conn(timeout=pool_timeout)
+E             
+E                     conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+E             
+E                     # Is this a closed/new connection that requires CONNECT tunnelling?
+E                     if self.proxy is not None and http_tunnel_required and conn.is_closed:
+E                         try:
+E                             self._prepare_proxy(conn)
+E                         except (BaseSSLError, OSError, SocketTimeout) as e:
+E                             self._raise_timeout(
+E                                 err=e, url=self.proxy.url, timeout_value=conn.timeout
+E                             )
+E                             raise
+E             
+E                     # If we're going to release the connection in ``finally:``, then
+E                     # the response doesn't need to know about the connection. Otherwise
+E                     # it will also try to release it and we'll have a double-release
+E                     # mess.
+E                     response_conn = conn if not release_conn else None
+E             
+E                     # Make the request on the HTTPConnection object
+E         >           response = self._make_request(
+E                         conn,
+E                         method,
+E                         url,
+E                         timeout=timeout_obj,
+E                         body=body,
+E                         headers=headers,
+E                         chunked=chunked,
+E                         retries=retries,
+E                         response_conn=response_conn,
+E                         preload_content=preload_content,
+E                         decode_content=decode_content,
+E                         **response_kw,
+E                     )
+E         
+E         .venv/lib/python3.12/site-packages/urllib3/connectionpool.py:787: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/urllib3/connectionpool.py:493: in _make_request
+E             conn.request(
+E         .venv/lib/python3.12/site-packages/urllib3/connection.py:500: in request
+E             self.endheaders()
+E         /usr/lib/python3.12/http/client.py:1360: in endheaders
+E             self._send_output(message_body, encode_chunked=encode_chunked)
+E         /usr/lib/python3.12/http/client.py:1120: in _send_output
+E             self.send(msg)
+E         /usr/lib/python3.12/http/client.py:1064: in send
+E             self.connect()
+E         .venv/lib/python3.12/site-packages/urllib3/connection.py:331: in connect
+E             self.sock = self._new_conn()
+E                         ^^^^^^^^^^^^^^^^
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         self = <HTTPConnection(host='127.0.0.1', port=47001) at 0xe15b5128cdd0>
+E         
+E             def _new_conn(self) -> socket.socket:
+E                 """Establish a socket connection and set nodelay settings on it.
+E             
+E                 :return: New socket connection.
+E                 """
+E                 try:
+E                     sock = connection.create_connection(
+E                         (self._dns_host, self.port),
+E                         self.timeout,
+E                         source_address=self.source_address,
+E                         socket_options=self.socket_options,
+E                     )
+E                 except socket.gaierror as e:
+E                     raise NameResolutionError(self.host, self, e) from e
+E                 except SocketTimeout as e:
+E                     raise ConnectTimeoutError(
+E                         self,
+E                         f"Connection to {self.host} timed out. (connect timeout={self.timeout})",
+E                     ) from e
+E             
+E                 except OSError as e:
+E         >           raise NewConnectionError(
+E                         self, f"Failed to establish a new connection: {e}"
+E                     ) from e
+E         E           urllib3.exceptions.NewConnectionError: HTTPConnection(host='127.0.0.1', port=47001): Failed to establish a new connection: [Errno 111] Connection refused
+E         
+E         .venv/lib/python3.12/site-packages/urllib3/connection.py:219: NewConnectionError
+E         
+E         The above exception was the direct cause of the following exception:
+E         
+E         self = <requests.adapters.HTTPAdapter object at 0xe15b5128c140>
+E         request = <PreparedRequest [GET]>, stream = False
+E         timeout = Timeout(connect=2, read=2, total=None), verify = True, cert = None
+E         proxies = OrderedDict()
+E         
+E             def send(
+E                 self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+E             ):
+E                 """Sends PreparedRequest object. Returns Response object.
+E             
+E                 :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+E                 :param stream: (optional) Whether to stream the request content.
+E                 :param timeout: (optional) How long to wait for the server to send
+E                     data before giving up, as a float, or a :ref:`(connect timeout,
+E                     read timeout) <timeouts>` tuple.
+E                 :type timeout: float or tuple or urllib3 Timeout object
+E                 :param verify: (optional) Either a boolean, in which case it controls whether
+E                     we verify the server's TLS certificate, or a string, in which case it
+E                     must be a path to a CA bundle to use
+E                 :param cert: (optional) Any user-provided SSL certificate to be trusted.
+E                 :param proxies: (optional) The proxies dictionary to apply to the request.
+E                 :rtype: requests.Response
+E                 """
+E             
+E                 try:
+E                     conn = self.get_connection_with_tls_context(
+E                         request, verify, proxies=proxies, cert=cert
+E                     )
+E                 except LocationValueError as e:
+E                     raise InvalidURL(e, request=request)
+E             
+E                 self.cert_verify(conn, request.url, verify, cert)
+E                 url = self.request_url(request, proxies)
+E                 self.add_headers(
+E                     request,
+E                     stream=stream,
+E                     timeout=timeout,
+E                     verify=verify,
+E                     cert=cert,
+E                     proxies=proxies,
+E                 )
+E             
+E                 chunked = not (request.body is None or "Content-Length" in request.headers)
+E             
+E                 if isinstance(timeout, tuple):
+E                     try:
+E                         connect, read = timeout
+E                         timeout = TimeoutSauce(connect=connect, read=read)
+E                     except ValueError:
+E                         raise ValueError(
+E                             f"Invalid timeout {timeout}. Pass a (connect, read) timeout tuple, "
+E                             f"or a single float to set both timeouts to the same value."
+E                         )
+E                 elif isinstance(timeout, TimeoutSauce):
+E                     pass
+E                 else:
+E                     timeout = TimeoutSauce(connect=timeout, read=timeout)
+E             
+E                 try:
+E         >           resp = conn.urlopen(
+E                         method=request.method,
+E                         url=url,
+E                         body=request.body,
+E                         headers=request.headers,
+E                         redirect=False,
+E                         assert_same_host=False,
+E                         preload_content=False,
+E                         decode_content=False,
+E                         retries=self.max_retries,
+E                         timeout=timeout,
+E                         chunked=chunked,
+E                     )
+E         
+E         .venv/lib/python3.12/site-packages/requests/adapters.py:644: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/urllib3/connectionpool.py:841: in urlopen
+E             retries = retries.increment(
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         self = Retry(total=0, connect=None, read=False, redirect=None, status=None)
+E         method = 'GET', url = '/api/tags', response = None
+E         error = NewConnectionError("HTTPConnection(host='127.0.0.1', port=47001): Failed to establish a new connection: [Errno 111] Connection refused")
+E         _pool = <urllib3.connectionpool.HTTPConnectionPool object at 0xe15b5128c3e0>
+E         _stacktrace = <traceback object at 0xe15b512176c0>
+E         
+E             def increment(
+E                 self,
+E                 method: str | None = None,
+E                 url: str | None = None,
+E                 response: BaseHTTPResponse | None = None,
+E                 error: Exception | None = None,
+E                 _pool: ConnectionPool | None = None,
+E                 _stacktrace: TracebackType | None = None,
+E             ) -> Self:
+E                 """Return a new Retry object with incremented retry counters.
+E             
+E                 :param response: A response object, or None, if the server did not
+E                     return a response.
+E                 :type response: :class:`~urllib3.response.BaseHTTPResponse`
+E                 :param Exception error: An error encountered during the request, or
+E                     None if the response was received successfully.
+E             
+E                 :return: A new ``Retry`` object.
+E                 """
+E                 if self.total is False and error:
+E                     # Disabled, indicate to re-raise the error.
+E                     raise reraise(type(error), error, _stacktrace)
+E             
+E                 total = self.total
+E                 if total is not None:
+E                     total -= 1
+E             
+E                 connect = self.connect
+E                 read = self.read
+E                 redirect = self.redirect
+E                 status_count = self.status
+E                 other = self.other
+E                 cause = "unknown"
+E                 status = None
+E                 redirect_location = None
+E             
+E                 if error and self._is_connection_error(error):
+E                     # Connect retry?
+E                     if connect is False:
+E                         raise reraise(type(error), error, _stacktrace)
+E                     elif connect is not None:
+E                         connect -= 1
+E             
+E                 elif error and self._is_read_error(error):
+E                     # Read retry?
+E                     if read is False or method is None or not self._is_method_retryable(method):
+E                         raise reraise(type(error), error, _stacktrace)
+E                     elif read is not None:
+E                         read -= 1
+E             
+E                 elif error:
+E                     # Other retry?
+E                     if other is not None:
+E                         other -= 1
+E             
+E                 elif response and response.get_redirect_location():
+E                     # Redirect retry?
+E                     if redirect is not None:
+E                         redirect -= 1
+E                     cause = "too many redirects"
+E                     response_redirect_location = response.get_redirect_location()
+E                     if response_redirect_location:
+E                         redirect_location = response_redirect_location
+E                     status = response.status
+E             
+E                 else:
+E                     # Incrementing because of a server error like a 500 in
+E                     # status_forcelist and the given method is in the allowed_methods
+E                     cause = ResponseError.GENERIC_ERROR
+E                     if response and response.status:
+E                         if status_count is not None:
+E                             status_count -= 1
+E                         cause = ResponseError.SPECIFIC_ERROR.format(status_code=response.status)
+E                         status = response.status
+E             
+E                 history = self.history + (
+E                     RequestHistory(method, url, error, status, redirect_location),
+E                 )
+E             
+E                 new_retry = self.new(
+E                     total=total,
+E                     connect=connect,
+E                     read=read,
+E                     redirect=redirect,
+E                     status=status_count,
+E                     other=other,
+E                     history=history,
+E                 )
+E             
+E                 if new_retry.is_exhausted():
+E                     reason = error or ResponseError(cause)
+E         >           raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+E                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         E           urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=47001): Max retries exceeded with url: /api/tags (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=47001): Failed to establish a new connection: [Errno 111] Connection refused"))
+E         
+E         .venv/lib/python3.12/site-packages/urllib3/util/retry.py:535: MaxRetryError
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E             def test_requests_get():
+E         >       _mark("requests"); requests.get(_url() + "/api/tags", timeout=2)
+E                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_an_unmarked_test_is_refus0/test_inner.py:24: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/requests/api.py:73: in get
+E             return request("get", url, params=params, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/requests/api.py:59: in request
+E             return session.request(method=method, url=url, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/requests/sessions.py:589: in request
+E             resp = self.send(prep, **send_kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/requests/sessions.py:703: in send
+E             r = adapter.send(request, **kwargs)
+E                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         self = <requests.adapters.HTTPAdapter object at 0xe15b5128c140>
+E         request = <PreparedRequest [GET]>, stream = False
+E         timeout = Timeout(connect=2, read=2, total=None), verify = True, cert = None
+E         proxies = OrderedDict()
+E         
+E             def send(
+E                 self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+E             ):
+E                 """Sends PreparedRequest object. Returns Response object.
+E             
+E                 :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+E                 :param stream: (optional) Whether to stream the request content.
+E                 :param timeout: (optional) How long to wait for the server to send
+E                     data before giving up, as a float, or a :ref:`(connect timeout,
+E                     read timeout) <timeouts>` tuple.
+E                 :type timeout: float or tuple or urllib3 Timeout object
+E                 :param verify: (optional) Either a boolean, in which case it controls whether
+E                     we verify the server's TLS certificate, or a string, in which case it
+E                     must be a path to a CA bundle to use
+E                 :param cert: (optional) Any user-provided SSL certificate to be trusted.
+E                 :param proxies: (optional) The proxies dictionary to apply to the request.
+E                 :rtype: requests.Response
+E                 """
+E             
+E                 try:
+E                     conn = self.get_connection_with_tls_context(
+E                         request, verify, proxies=proxies, cert=cert
+E                     )
+E                 except LocationValueError as e:
+E                     raise InvalidURL(e, request=request)
+E             
+E                 self.cert_verify(conn, request.url, verify, cert)
+E                 url = self.request_url(request, proxies)
+E                 self.add_headers(
+E                     request,
+E                     stream=stream,
+E                     timeout=timeout,
+E                     verify=verify,
+E                     cert=cert,
+E                     proxies=proxies,
+E                 )
+E             
+E                 chunked = not (request.body is None or "Content-Length" in request.headers)
+E             
+E                 if isinstance(timeout, tuple):
+E                     try:
+E                         connect, read = timeout
+E                         timeout = TimeoutSauce(connect=connect, read=read)
+E                     except ValueError:
+E                         raise ValueError(
+E                             f"Invalid timeout {timeout}. Pass a (connect, read) timeout tuple, "
+E                             f"or a single float to set both timeouts to the same value."
+E                         )
+E                 elif isinstance(timeout, TimeoutSauce):
+E                     pass
+E                 else:
+E                     timeout = TimeoutSauce(connect=timeout, read=timeout)
+E             
+E                 try:
+E                     resp = conn.urlopen(
+E                         method=request.method,
+E                         url=url,
+E                         body=request.body,
+E                         headers=request.headers,
+E                         redirect=False,
+E                         assert_same_host=False,
+E                         preload_content=False,
+E                         decode_content=False,
+E                         retries=self.max_retries,
+E                         timeout=timeout,
+E                         chunked=chunked,
+E                     )
+E             
+E                 except (ProtocolError, OSError) as err:
+E                     raise ConnectionError(err, request=request)
+E             
+E                 except MaxRetryError as e:
+E                     if isinstance(e.reason, ConnectTimeoutError):
+E                         # TODO: Remove this in 3.0.0: see #2811
+E                         if not isinstance(e.reason, NewConnectionError):
+E                             raise ConnectTimeout(e, request=request)
+E             
+E                     if isinstance(e.reason, ResponseError):
+E                         raise RetryError(e, request=request)
+E             
+E                     if isinstance(e.reason, _ProxyError):
+E                         raise ProxyError(e, request=request)
+E             
+E                     if isinstance(e.reason, _SSLError):
+E                         # This branch is for urllib3 v1.22 and later.
+E                         raise SSLError(e, request=request)
+E             
+E         >           raise ConnectionError(e, request=request)
+E         E           requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=47001): Max retries exceeded with url: /api/tags (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=47001): Failed to establish a new connection: [Errno 111] Connection refused"))
+E         
+E         .venv/lib/python3.12/site-packages/requests/adapters.py:677: ConnectionError
+E         _________________________________ test_urllib __________________________________
+E         
+E         self = <urllib.request.HTTPHandler object at 0xe15b511d7140>
+E         http_class = <class 'http.client.HTTPConnection'>
+E         req = <urllib.request.Request object at 0xe15b514eab10>, http_conn_args = {}
+E         host = '127.0.0.1:47001'
+E         h = <http.client.HTTPConnection object at 0xe15b511d56d0>
+E         headers = {'Connection': 'close', 'Host': '127.0.0.1:47001', 'User-Agent': 'Python-urllib/3.12'}
+E         
+E             def do_open(self, http_class, req, **http_conn_args):
+E                 """Return an HTTPResponse object for the request, using http_class.
+E             
+E                 http_class must implement the HTTPConnection API from http.client.
+E                 """
+E                 host = req.host
+E                 if not host:
+E                     raise URLError('no host given')
+E             
+E                 # will parse host:port
+E                 h = http_class(host, timeout=req.timeout, **http_conn_args)
+E                 h.set_debuglevel(self._debuglevel)
+E             
+E                 headers = dict(req.unredirected_hdrs)
+E                 headers.update({k: v for k, v in req.headers.items()
+E                                 if k not in headers})
+E             
+E                 # TODO(jhylton): Should this be redesigned to handle
+E                 # persistent connections?
+E             
+E                 # We want to make an HTTP/1.1 request, but the addinfourl
+E                 # class isn't prepared to deal with a persistent connection.
+E                 # It will try to read all remaining data from the socket,
+E                 # which will block while the server waits for the next request.
+E                 # So make sure the connection gets closed after the (only)
+E                 # request.
+E                 headers["Connection"] = "close"
+E                 headers = {name.title(): val for name, val in headers.items()}
+E             
+E                 if req._tunnel_host:
+E                     tunnel_headers = {}
+E                     proxy_auth_hdr = "Proxy-Authorization"
+E                     if proxy_auth_hdr in headers:
+E                         tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+E                         # Proxy-Authorization should not be sent to origin
+E                         # server.
+E                         del headers[proxy_auth_hdr]
+E                     h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+E             
+E                 try:
+E                     try:
+E         >               h.request(req.get_method(), req.selector, req.data, headers,
+E                                   encode_chunked=req.has_header('Transfer-encoding'))
+E         
+E         /usr/lib/python3.12/urllib/request.py:1344: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         /usr/lib/python3.12/http/client.py:1365: in request
+E             self._send_request(method, url, body, headers, encode_chunked)
+E         /usr/lib/python3.12/http/client.py:1411: in _send_request
+E             self.endheaders(body, encode_chunked=encode_chunked)
+E         /usr/lib/python3.12/http/client.py:1360: in endheaders
+E             self._send_output(message_body, encode_chunked=encode_chunked)
+E         /usr/lib/python3.12/http/client.py:1120: in _send_output
+E             self.send(msg)
+E         /usr/lib/python3.12/http/client.py:1064: in send
+E             self.connect()
+E         /usr/lib/python3.12/http/client.py:1030: in connect
+E             self.sock = self._create_connection(
+E         /usr/lib/python3.12/socket.py:852: in create_connection
+E             raise exceptions[0]
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         address = ('127.0.0.1', 47001), timeout = 2, source_address = None
+E         
+E             def create_connection(address, timeout=_GLOBAL_DEFAULT_TIMEOUT,
+E                                   source_address=None, *, all_errors=False):
+E                 """Connect to *address* and return the socket object.
+E             
+E                 Convenience function.  Connect to *address* (a 2-tuple ``(host,
+E                 port)``) and return the socket object.  Passing the optional
+E                 *timeout* parameter will set the timeout on the socket instance
+E                 before attempting to connect.  If no *timeout* is supplied, the
+E                 global default timeout setting returned by :func:`getdefaulttimeout`
+E                 is used.  If *source_address* is set it must be a tuple of (host, port)
+E                 for the socket to bind as a source address before making the connection.
+E                 A host of '' or port 0 tells the OS to use the default. When a connection
+E                 cannot be created, raises the last error if *all_errors* is False,
+E                 and an ExceptionGroup of all errors if *all_errors* is True.
+E                 """
+E             
+E                 host, port = address
+E                 exceptions = []
+E                 for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+E                     af, socktype, proto, canonname, sa = res
+E                     sock = None
+E                     try:
+E                         sock = socket(af, socktype, proto)
+E                         if timeout is not _GLOBAL_DEFAULT_TIMEOUT:
+E                             sock.settimeout(timeout)
+E                         if source_address:
+E                             sock.bind(source_address)
+E         >               sock.connect(sa)
+E         E               ConnectionRefusedError: [Errno 111] Connection refused
+E         
+E         /usr/lib/python3.12/socket.py:837: ConnectionRefusedError
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E             def test_urllib():
+E         >       _mark("urllib"); urllib.request.urlopen(_url() + "/api/tags", timeout=2)
+E                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_an_unmarked_test_is_refus0/test_inner.py:27: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         /usr/lib/python3.12/urllib/request.py:215: in urlopen
+E             return opener.open(url, data, timeout)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         /usr/lib/python3.12/urllib/request.py:515: in open
+E             response = self._open(req, data)
+E                        ^^^^^^^^^^^^^^^^^^^^^
+E         /usr/lib/python3.12/urllib/request.py:532: in _open
+E             result = self._call_chain(self.handle_open, protocol, protocol +
+E         /usr/lib/python3.12/urllib/request.py:492: in _call_chain
+E             result = func(*args)
+E                      ^^^^^^^^^^^
+E         /usr/lib/python3.12/urllib/request.py:1373: in http_open
+E             return self.do_open(http.client.HTTPConnection, req)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         self = <urllib.request.HTTPHandler object at 0xe15b511d7140>
+E         http_class = <class 'http.client.HTTPConnection'>
+E         req = <urllib.request.Request object at 0xe15b514eab10>, http_conn_args = {}
+E         host = '127.0.0.1:47001'
+E         h = <http.client.HTTPConnection object at 0xe15b511d56d0>
+E         headers = {'Connection': 'close', 'Host': '127.0.0.1:47001', 'User-Agent': 'Python-urllib/3.12'}
+E         
+E             def do_open(self, http_class, req, **http_conn_args):
+E                 """Return an HTTPResponse object for the request, using http_class.
+E             
+E                 http_class must implement the HTTPConnection API from http.client.
+E                 """
+E                 host = req.host
+E                 if not host:
+E                     raise URLError('no host given')
+E             
+E                 # will parse host:port
+E                 h = http_class(host, timeout=req.timeout, **http_conn_args)
+E                 h.set_debuglevel(self._debuglevel)
+E             
+E                 headers = dict(req.unredirected_hdrs)
+E                 headers.update({k: v for k, v in req.headers.items()
+E                                 if k not in headers})
+E             
+E                 # TODO(jhylton): Should this be redesigned to handle
+E                 # persistent connections?
+E             
+E                 # We want to make an HTTP/1.1 request, but the addinfourl
+E                 # class isn't prepared to deal with a persistent connection.
+E                 # It will try to read all remaining data from the socket,
+E                 # which will block while the server waits for the next request.
+E                 # So make sure the connection gets closed after the (only)
+E                 # request.
+E                 headers["Connection"] = "close"
+E                 headers = {name.title(): val for name, val in headers.items()}
+E             
+E                 if req._tunnel_host:
+E                     tunnel_headers = {}
+E                     proxy_auth_hdr = "Proxy-Authorization"
+E                     if proxy_auth_hdr in headers:
+E                         tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+E                         # Proxy-Authorization should not be sent to origin
+E                         # server.
+E                         del headers[proxy_auth_hdr]
+E                     h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+E             
+E                 try:
+E                     try:
+E                         h.request(req.get_method(), req.selector, req.data, headers,
+E                                   encode_chunked=req.has_header('Transfer-encoding'))
+E                     except OSError as err: # timeout error
+E         >               raise URLError(err)
+E         E               urllib.error.URLError: <urlopen error [Errno 111] Connection refused>
+E         
+E         /usr/lib/python3.12/urllib/request.py:1347: URLError
+E         _______________________________ test_raw_socket ________________________________
+E         
+E             def test_raw_socket():
+E                 _mark("socket")
+E                 host, port = os.environ["OLLAMA_HOST"].split(":")
+E         >       socket.create_connection((host, int(port)), timeout=2)
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_an_unmarked_test_is_refus0/test_inner.py:32: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         /usr/lib/python3.12/socket.py:852: in create_connection
+E             raise exceptions[0]
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         address = ('127.0.0.1', 47001), timeout = 2, source_address = None
+E         
+E             def create_connection(address, timeout=_GLOBAL_DEFAULT_TIMEOUT,
+E                                   source_address=None, *, all_errors=False):
+E                 """Connect to *address* and return the socket object.
+E             
+E                 Convenience function.  Connect to *address* (a 2-tuple ``(host,
+E                 port)``) and return the socket object.  Passing the optional
+E                 *timeout* parameter will set the timeout on the socket instance
+E                 before attempting to connect.  If no *timeout* is supplied, the
+E                 global default timeout setting returned by :func:`getdefaulttimeout`
+E                 is used.  If *source_address* is set it must be a tuple of (host, port)
+E                 for the socket to bind as a source address before making the connection.
+E                 A host of '' or port 0 tells the OS to use the default. When a connection
+E                 cannot be created, raises the last error if *all_errors* is False,
+E                 and an ExceptionGroup of all errors if *all_errors* is True.
+E                 """
+E             
+E                 host, port = address
+E                 exceptions = []
+E                 for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+E                     af, socktype, proto, canonname, sa = res
+E                     sock = None
+E                     try:
+E                         sock = socket(af, socktype, proto)
+E                         if timeout is not _GLOBAL_DEFAULT_TIMEOUT:
+E                             sock.settimeout(timeout)
+E                         if source_address:
+E                             sock.bind(source_address)
+E         >               sock.connect(sa)
+E         E               ConnectionRefusedError: [Errno 111] Connection refused
+E         
+E         /usr/lib/python3.12/socket.py:837: ConnectionRefusedError
+E         ==================================== PASSES ====================================
+E         =========================== short test summary info ============================
+E         PASSED ::test_a_swallowed_refusal_still_fails
+E         FAILED ::test_httpx_get - httpx.ConnectError: [Errno 111] Connection refused
+E         FAILED ::test_ollama_client - ConnectionError: Failed to connect to Ollama. P...
+E         FAILED ::test_ollama_module_default_client - ConnectionError: Failed to conne...
+E         FAILED ::test_requests_get - requests.exceptions.ConnectionError: HTTPConnect...
+E         FAILED ::test_urllib - urllib.error.URLError: <urlopen error [Errno 111] Conn...
+E         FAILED ::test_raw_socket - ConnectionRefusedError: [Errno 111] Connection ref...
+E         6 failed, 1 passed in 0.44s
+E         
+E       assert '6 failed, 1 passed, 1 error' in 'FFFFFF.                                                                  [100%]\n=================================== ...nn...\nFAILED ::test_raw_socket - ConnectionRefusedError: [Errno 111] Connection ref...\n6 failed, 1 passed in 0.44s\n'
+
+tests/test_suite_live_fence.py:129: AssertionError
+___ test_the_fenced_server_is_OLLAMA_HOST_and_the_addresses_the_engine_names ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe0e0a0692d80>
+
+    def test_the_fenced_server_is_OLLAMA_HOST_and_the_addresses_the_engine_names(monkeypatch):
+        """`extractor.restart_ollama` and `fetch_model_digest` name 127.0.0.1:11434 and
+        localhost:11434 outright, whatever OLLAMA_HOST says, so the fence covers both."""
+>       from conftest import ollama_endpoints
+E       ImportError: cannot import name 'ollama_endpoints' from 'conftest' (/home/ankitsarin/projects/evidence-engine/tests/conftest.py)
+
+tests/test_suite_live_fence.py:142: ImportError
+________ test_the_fenced_server_includes_the_second_server_on_loopback _________
+
+    def test_the_fenced_server_includes_the_second_server_on_loopback():
+        """R626(c): `run_qualgap01` targets port 11435 by default. Every loopback name
+        is the same host to the fence."""
+>       from conftest import _endpoint, ollama_endpoints
+E       ImportError: cannot import name '_endpoint' from 'conftest' (/home/ankitsarin/projects/evidence-engine/tests/conftest.py)
+
+tests/test_suite_live_fence.py:153: ImportError
+_____ test_without_the_opt_in_a_live_tier_test_named_by_node_id_is_skipped _____
+
+tmp_path = PosixPath('/tmp/pytest-of-ankitsarin/pytest-1674/test_without_the_opt_in_a_live0')
+
+    def test_without_the_opt_in_a_live_tier_test_named_by_node_id_is_skipped(tmp_path):
+        r = _inner(tmp_path, _LIVE, "test_live_ollama", "test_live_ollama_is_not_fenced",
+                   "test_live_network_is_still_fenced_from_ollama", "test_live_integration")
+        out = r.stdout + r.stderr
+>       assert "4 skipped" in out and "passed" not in out and "failed" not in out, out
+E       AssertionError: F.FF                                                                     [100%]
+E         =================================== FAILURES ===================================
+E         _______________________________ test_live_ollama _______________________________
+E         
+E             @pytest.mark.ollama
+E             def test_live_ollama():
+E                 _mark("ollama")
+E                 assert os.environ.get("OLLAMA_EXPERIMENT_LOCK") == str(L.lock_path())
+E         >       assert L.self_holds_lock()            # the conftest holds it for the test
+E                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         E       assert False
+E         E        +  where False = <function self_holds_lock at 0xec7d393747c0>()
+E         E        +    where <function self_holds_lock at 0xec7d393747c0> = L.self_holds_lock
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_without_the_opt_in_a_live0/test_inner.py:14: AssertionError
+E         ________________ test_live_network_is_still_fenced_from_ollama _________________
+E         
+E             @contextlib.contextmanager
+E             def map_httpcore_exceptions() -> typing.Iterator[None]:
+E                 global HTTPCORE_EXC_MAP
+E                 if len(HTTPCORE_EXC_MAP) == 0:
+E                     HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+E                 try:
+E         >           yield
+E         
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:101: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:250: in handle_request
+E             resp = self._pool.handle_request(req)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+E             raise exc from None
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+E             response = connection.handle_request(
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:101: in handle_request
+E             raise exc
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:78: in handle_request
+E             stream = self._connect(request)
+E                      ^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:124: in _connect
+E             stream = self._network_backend.connect_tcp(**kwargs)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+E             with map_exceptions(exc_map):
+E         /usr/lib/python3.12/contextlib.py:158: in __exit__
+E             self.gen.throw(value)
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         map = {<class 'TimeoutError'>: <class 'httpcore.ConnectTimeout'>, <class 'OSError'>: <class 'httpcore.ConnectError'>}
+E         
+E             @contextlib.contextmanager
+E             def map_exceptions(map: ExceptionMapping) -> typing.Iterator[None]:
+E                 try:
+E                     yield
+E                 except Exception as exc:  # noqa: PIE786
+E                     for from_exc, to_exc in map.items():
+E                         if isinstance(exc, from_exc):
+E         >                   raise to_exc(exc) from exc
+E         E                   httpcore.ConnectError: [Errno 111] Connection refused
+E         
+E         .venv/lib/python3.12/site-packages/httpcore/_exceptions.py:14: ConnectError
+E         
+E         The above exception was the direct cause of the following exception:
+E         
+E             @pytest.mark.network
+E             def test_live_network_is_still_fenced_from_ollama():
+E                 import httpx
+E                 from ollama._client import _parse_host
+E                 _mark("network")
+E         >       httpx.get(_parse_host(os.environ["OLLAMA_HOST"]) + "/api/tags", timeout=2)
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_without_the_opt_in_a_live0/test_inner.py:31: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/httpx/_api.py:195: in get
+E             return request(
+E         .venv/lib/python3.12/site-packages/httpx/_api.py:109: in request
+E             return client.request(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+E             return self.send(request, auth=auth, follow_redirects=follow_redirects)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+E             response = self._send_handling_auth(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+E             response = self._send_handling_redirects(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+E             response = self._send_single_request(request)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+E             response = transport.handle_request(request)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:249: in handle_request
+E             with map_httpcore_exceptions():
+E         /usr/lib/python3.12/contextlib.py:158: in __exit__
+E             self.gen.throw(value)
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             @contextlib.contextmanager
+E             def map_httpcore_exceptions() -> typing.Iterator[None]:
+E                 global HTTPCORE_EXC_MAP
+E                 if len(HTTPCORE_EXC_MAP) == 0:
+E                     HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+E                 try:
+E                     yield
+E                 except Exception as exc:
+E                     mapped_exc = None
+E             
+E                     for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+E                         if not isinstance(exc, from_exc):
+E                             continue
+E                         # We want to map to the most specific exception we can find.
+E                         # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+E                         # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+E                         if mapped_exc is None or issubclass(to_exc, mapped_exc):
+E                             mapped_exc = to_exc
+E             
+E                     if mapped_exc is None:  # pragma: no cover
+E                         raise
+E             
+E                     message = str(exc)
+E         >           raise mapped_exc(message) from exc
+E         E           httpx.ConnectError: [Errno 111] Connection refused
+E         
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:118: ConnectError
+E         ____________________________ test_live_integration _____________________________
+E         
+E             @pytest.mark.integration
+E             def test_live_integration():
+E                 _mark("integration")
+E         >       assert L.self_holds_lock()
+E         E       assert False
+E         E        +  where False = <function self_holds_lock at 0xec7d393747c0>()
+E         E        +    where <function self_holds_lock at 0xec7d393747c0> = L.self_holds_lock
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_without_the_opt_in_a_live0/test_inner.py:36: AssertionError
+E         ==================================== PASSES ====================================
+E         =========================== short test summary info ============================
+E         PASSED ::test_live_ollama_is_not_fenced
+E         FAILED ::test_live_ollama - assert False
+E         FAILED ::test_live_network_is_still_fenced_from_ollama - httpx.ConnectError: ...
+E         FAILED ::test_live_integration - assert False
+E         3 failed, 1 passed in 0.25s
+E         
+E       assert ('4 skipped' in 'F.FF                                                                     [100%]\n=================================== ...ed_from_ollama - httpx.ConnectError: ...\nFAILED ::test_live_integration - assert False\n3 failed, 1 passed in 0.25s\n')
+
+tests/test_suite_live_fence.py:203: AssertionError
+_________ test_with_the_opt_in_a_live_tier_test_runs_holding_the_lock __________
+
+tmp_path = PosixPath('/tmp/pytest-of-ankitsarin/pytest-1674/test_with_the_opt_in_a_live_ti0')
+
+    def test_with_the_opt_in_a_live_tier_test_runs_holding_the_lock(tmp_path):
+        lock = tmp_path / "redirected.lock"
+        r = _inner(tmp_path, _LIVE, live_tiers=True, lock=lock)
+        out = r.stdout + r.stderr
+>       assert "3 passed" in out and "1 failed" in out and "skipped" not in out, out
+E       AssertionError: F.FF                                                                     [100%]
+E         =================================== FAILURES ===================================
+E         _______________________________ test_live_ollama _______________________________
+E         
+E             @pytest.mark.ollama
+E             def test_live_ollama():
+E                 _mark("ollama")
+E                 assert os.environ.get("OLLAMA_EXPERIMENT_LOCK") == str(L.lock_path())
+E         >       assert L.self_holds_lock()            # the conftest holds it for the test
+E                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         E       assert False
+E         E        +  where False = <function self_holds_lock at 0xf48bdb064400>()
+E         E        +    where <function self_holds_lock at 0xf48bdb064400> = L.self_holds_lock
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_with_the_opt_in_a_live_ti0/test_inner.py:14: AssertionError
+E         ________________ test_live_network_is_still_fenced_from_ollama _________________
+E         
+E             @contextlib.contextmanager
+E             def map_httpcore_exceptions() -> typing.Iterator[None]:
+E                 global HTTPCORE_EXC_MAP
+E                 if len(HTTPCORE_EXC_MAP) == 0:
+E                     HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+E                 try:
+E         >           yield
+E         
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:101: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:250: in handle_request
+E             resp = self._pool.handle_request(req)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+E             raise exc from None
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+E             response = connection.handle_request(
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:101: in handle_request
+E             raise exc
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:78: in handle_request
+E             stream = self._connect(request)
+E                      ^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:124: in _connect
+E             stream = self._network_backend.connect_tcp(**kwargs)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+E             with map_exceptions(exc_map):
+E         /usr/lib/python3.12/contextlib.py:158: in __exit__
+E             self.gen.throw(value)
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         map = {<class 'TimeoutError'>: <class 'httpcore.ConnectTimeout'>, <class 'OSError'>: <class 'httpcore.ConnectError'>}
+E         
+E             @contextlib.contextmanager
+E             def map_exceptions(map: ExceptionMapping) -> typing.Iterator[None]:
+E                 try:
+E                     yield
+E                 except Exception as exc:  # noqa: PIE786
+E                     for from_exc, to_exc in map.items():
+E                         if isinstance(exc, from_exc):
+E         >                   raise to_exc(exc) from exc
+E         E                   httpcore.ConnectError: [Errno 111] Connection refused
+E         
+E         .venv/lib/python3.12/site-packages/httpcore/_exceptions.py:14: ConnectError
+E         
+E         The above exception was the direct cause of the following exception:
+E         
+E             @pytest.mark.network
+E             def test_live_network_is_still_fenced_from_ollama():
+E                 import httpx
+E                 from ollama._client import _parse_host
+E                 _mark("network")
+E         >       httpx.get(_parse_host(os.environ["OLLAMA_HOST"]) + "/api/tags", timeout=2)
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_with_the_opt_in_a_live_ti0/test_inner.py:31: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/httpx/_api.py:195: in get
+E             return request(
+E         .venv/lib/python3.12/site-packages/httpx/_api.py:109: in request
+E             return client.request(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+E             return self.send(request, auth=auth, follow_redirects=follow_redirects)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+E             response = self._send_handling_auth(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+E             response = self._send_handling_redirects(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+E             response = self._send_single_request(request)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+E             response = transport.handle_request(request)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:249: in handle_request
+E             with map_httpcore_exceptions():
+E         /usr/lib/python3.12/contextlib.py:158: in __exit__
+E             self.gen.throw(value)
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             @contextlib.contextmanager
+E             def map_httpcore_exceptions() -> typing.Iterator[None]:
+E                 global HTTPCORE_EXC_MAP
+E                 if len(HTTPCORE_EXC_MAP) == 0:
+E                     HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+E                 try:
+E                     yield
+E                 except Exception as exc:
+E                     mapped_exc = None
+E             
+E                     for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+E                         if not isinstance(exc, from_exc):
+E                             continue
+E                         # We want to map to the most specific exception we can find.
+E                         # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+E                         # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+E                         if mapped_exc is None or issubclass(to_exc, mapped_exc):
+E                             mapped_exc = to_exc
+E             
+E                     if mapped_exc is None:  # pragma: no cover
+E                         raise
+E             
+E                     message = str(exc)
+E         >           raise mapped_exc(message) from exc
+E         E           httpx.ConnectError: [Errno 111] Connection refused
+E         
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:118: ConnectError
+E         ____________________________ test_live_integration _____________________________
+E         
+E             @pytest.mark.integration
+E             def test_live_integration():
+E                 _mark("integration")
+E         >       assert L.self_holds_lock()
+E         E       assert False
+E         E        +  where False = <function self_holds_lock at 0xf48bdb064400>()
+E         E        +    where <function self_holds_lock at 0xf48bdb064400> = L.self_holds_lock
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_with_the_opt_in_a_live_ti0/test_inner.py:36: AssertionError
+E         ==================================== PASSES ====================================
+E         =========================== short test summary info ============================
+E         PASSED ::test_live_ollama_is_not_fenced
+E         FAILED ::test_live_ollama - assert False
+E         FAILED ::test_live_network_is_still_fenced_from_ollama - httpx.ConnectError: ...
+E         FAILED ::test_live_integration - assert False
+E         3 failed, 1 passed in 0.24s
+E         
+E       assert ('3 passed' in 'F.FF                                                                     [100%]\n=================================== ...ed_from_ollama - httpx.ConnectError: ...\nFAILED ::test_live_integration - assert False\n3 failed, 1 passed in 0.24s\n')
+
+tests/test_suite_live_fence.py:214: AssertionError
+___ test_with_the_opt_in_and_the_lock_held_elsewhere_a_live_tier_test_skips ____
+
+tmp_path = PosixPath('/tmp/pytest-of-ankitsarin/pytest-1674/test_with_the_opt_in_and_the_l0')
+
+    def test_with_the_opt_in_and_the_lock_held_elsewhere_a_live_tier_test_skips(tmp_path):
+        lock = tmp_path / "redirected.lock"
+        holder = subprocess.Popen([sys.executable, "-c", _HOLDER, str(lock)],
+                                  stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+        try:
+            assert holder.stdout.readline().strip() == "held"
+            r = _inner(tmp_path, _LIVE, live_tiers=True, lock=lock)
+        finally:
+            holder.stdin.close()
+            holder.wait(timeout=10)
+        out = r.stdout + r.stderr
+>       assert "4 skipped" in out and "passed" not in out and "failed" not in out, out
+E       AssertionError: F.FF                                                                     [100%]
+E         =================================== FAILURES ===================================
+E         _______________________________ test_live_ollama _______________________________
+E         
+E             @pytest.mark.ollama
+E             def test_live_ollama():
+E                 _mark("ollama")
+E                 assert os.environ.get("OLLAMA_EXPERIMENT_LOCK") == str(L.lock_path())
+E         >       assert L.self_holds_lock()            # the conftest holds it for the test
+E                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         E       assert False
+E         E        +  where False = <function self_holds_lock at 0xedad446f8400>()
+E         E        +    where <function self_holds_lock at 0xedad446f8400> = L.self_holds_lock
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_with_the_opt_in_and_the_l0/test_inner.py:14: AssertionError
+E         ________________ test_live_network_is_still_fenced_from_ollama _________________
+E         
+E             @contextlib.contextmanager
+E             def map_httpcore_exceptions() -> typing.Iterator[None]:
+E                 global HTTPCORE_EXC_MAP
+E                 if len(HTTPCORE_EXC_MAP) == 0:
+E                     HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+E                 try:
+E         >           yield
+E         
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:101: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:250: in handle_request
+E             resp = self._pool.handle_request(req)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+E             raise exc from None
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+E             response = connection.handle_request(
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:101: in handle_request
+E             raise exc
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:78: in handle_request
+E             stream = self._connect(request)
+E                      ^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_sync/connection.py:124: in _connect
+E             stream = self._network_backend.connect_tcp(**kwargs)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+E             with map_exceptions(exc_map):
+E         /usr/lib/python3.12/contextlib.py:158: in __exit__
+E             self.gen.throw(value)
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E         map = {<class 'TimeoutError'>: <class 'httpcore.ConnectTimeout'>, <class 'OSError'>: <class 'httpcore.ConnectError'>}
+E         
+E             @contextlib.contextmanager
+E             def map_exceptions(map: ExceptionMapping) -> typing.Iterator[None]:
+E                 try:
+E                     yield
+E                 except Exception as exc:  # noqa: PIE786
+E                     for from_exc, to_exc in map.items():
+E                         if isinstance(exc, from_exc):
+E         >                   raise to_exc(exc) from exc
+E         E                   httpcore.ConnectError: [Errno 111] Connection refused
+E         
+E         .venv/lib/python3.12/site-packages/httpcore/_exceptions.py:14: ConnectError
+E         
+E         The above exception was the direct cause of the following exception:
+E         
+E             @pytest.mark.network
+E             def test_live_network_is_still_fenced_from_ollama():
+E                 import httpx
+E                 from ollama._client import _parse_host
+E                 _mark("network")
+E         >       httpx.get(_parse_host(os.environ["OLLAMA_HOST"]) + "/api/tags", timeout=2)
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_with_the_opt_in_and_the_l0/test_inner.py:31: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         .venv/lib/python3.12/site-packages/httpx/_api.py:195: in get
+E             return request(
+E         .venv/lib/python3.12/site-packages/httpx/_api.py:109: in request
+E             return client.request(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+E             return self.send(request, auth=auth, follow_redirects=follow_redirects)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+E             response = self._send_handling_auth(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+E             response = self._send_handling_redirects(
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+E             response = self._send_single_request(request)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+E             response = transport.handle_request(request)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:249: in handle_request
+E             with map_httpcore_exceptions():
+E         /usr/lib/python3.12/contextlib.py:158: in __exit__
+E             self.gen.throw(value)
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             @contextlib.contextmanager
+E             def map_httpcore_exceptions() -> typing.Iterator[None]:
+E                 global HTTPCORE_EXC_MAP
+E                 if len(HTTPCORE_EXC_MAP) == 0:
+E                     HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+E                 try:
+E                     yield
+E                 except Exception as exc:
+E                     mapped_exc = None
+E             
+E                     for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+E                         if not isinstance(exc, from_exc):
+E                             continue
+E                         # We want to map to the most specific exception we can find.
+E                         # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+E                         # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+E                         if mapped_exc is None or issubclass(to_exc, mapped_exc):
+E                             mapped_exc = to_exc
+E             
+E                     if mapped_exc is None:  # pragma: no cover
+E                         raise
+E             
+E                     message = str(exc)
+E         >           raise mapped_exc(message) from exc
+E         E           httpx.ConnectError: [Errno 111] Connection refused
+E         
+E         .venv/lib/python3.12/site-packages/httpx/_transports/default.py:118: ConnectError
+E         ____________________________ test_live_integration _____________________________
+E         
+E             @pytest.mark.integration
+E             def test_live_integration():
+E                 _mark("integration")
+E         >       assert L.self_holds_lock()
+E         E       assert False
+E         E        +  where False = <function self_holds_lock at 0xedad446f8400>()
+E         E        +    where <function self_holds_lock at 0xedad446f8400> = L.self_holds_lock
+E         
+E         /tmp/pytest-of-ankitsarin/pytest-1674/test_with_the_opt_in_and_the_l0/test_inner.py:36: AssertionError
+E         ==================================== PASSES ====================================
+E         =========================== short test summary info ============================
+E         PASSED ::test_live_ollama_is_not_fenced
+E         FAILED ::test_live_ollama - assert False
+E         FAILED ::test_live_network_is_still_fenced_from_ollama - httpx.ConnectError: ...
+E         FAILED ::test_live_integration - assert False
+E         3 failed, 1 passed in 0.25s
+E         
+E       assert ('4 skipped' in 'F.FF                                                                     [100%]\n=================================== ...ed_from_ollama - httpx.ConnectError: ...\nFAILED ::test_live_integration - assert False\n3 failed, 1 passed in 0.25s\n')
+
+tests/test_suite_live_fence.py:244: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_suite_live_fence.py::test_an_unmarked_test_resolves_the_lock_under_its_tmp_path
+FAILED tests/test_suite_live_fence.py::test_an_unmarked_test_is_refused_on_every_route_to_the_ollama_server
+FAILED tests/test_suite_live_fence.py::test_the_fenced_server_is_OLLAMA_HOST_and_the_addresses_the_engine_names
+FAILED tests/test_suite_live_fence.py::test_the_fenced_server_includes_the_second_server_on_loopback
+FAILED tests/test_suite_live_fence.py::test_without_the_opt_in_a_live_tier_test_named_by_node_id_is_skipped
+FAILED tests/test_suite_live_fence.py::test_with_the_opt_in_a_live_tier_test_runs_holding_the_lock
+FAILED tests/test_suite_live_fence.py::test_with_the_opt_in_and_the_lock_held_elsewhere_a_live_tier_test_skips
+7 failed in 2.31s

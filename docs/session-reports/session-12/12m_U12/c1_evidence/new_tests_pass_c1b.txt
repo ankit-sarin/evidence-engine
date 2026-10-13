@@ -1,0 +1,16 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 7 items
+
+tests/test_suite_live_fence.py::test_an_unmarked_test_resolves_the_lock_under_its_tmp_path PASSED [ 14%]
+tests/test_suite_live_fence.py::test_an_unmarked_test_is_refused_on_every_route_to_the_ollama_server PASSED [ 28%]
+tests/test_suite_live_fence.py::test_the_fenced_server_is_OLLAMA_HOST_and_the_addresses_the_engine_names PASSED [ 42%]
+tests/test_suite_live_fence.py::test_the_fenced_server_includes_the_second_server_on_loopback PASSED [ 57%]
+tests/test_suite_live_fence.py::test_without_the_opt_in_a_live_tier_test_named_by_node_id_is_skipped PASSED [ 71%]
+tests/test_suite_live_fence.py::test_with_the_opt_in_a_live_tier_test_runs_holding_the_lock PASSED [ 85%]
+tests/test_suite_live_fence.py::test_with_the_opt_in_and_the_lock_held_elsewhere_a_live_tier_test_skips PASSED [100%]
+
+============================== 7 passed in 2.09s ===============================

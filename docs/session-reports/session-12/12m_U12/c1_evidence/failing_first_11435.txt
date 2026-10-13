@@ -1,0 +1,22 @@
+...F...                                                                  [100%]
+=================================== FAILURES ===================================
+________ test_the_fenced_server_includes_the_second_server_on_loopback _________
+
+    def test_the_fenced_server_includes_the_second_server_on_loopback():
+        """R626(c): `run_qualgap01` targets port 11435 by default. Every loopback name
+        is the same host to the fence."""
+        from conftest import _endpoint, ollama_endpoints
+    
+        from analysis.eval.qualgap01 import DEFAULT_HOST
+    
+        assert DEFAULT_HOST.endswith(":11435")
+        for name in ("127.0.0.1", "localhost", "::1"):
+>           assert _endpoint(name, 11435) in ollama_endpoints()
+E           AssertionError: assert ('loopback', 11435) in frozenset({('10.1.2.3', 4567), ('loopback', 11434)})
+E            +  where ('loopback', 11435) = <function _endpoint at 0xec6e600d5580>('127.0.0.1', 11435)
+E            +  and   frozenset({('10.1.2.3', 4567), ('loopback', 11434)}) = <function ollama_endpoints at 0xec6e600d56c0>()
+
+tests/test_suite_live_fence.py:159: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_suite_live_fence.py::test_the_fenced_server_includes_the_second_server_on_loopback
+1 failed, 6 passed in 2.06s

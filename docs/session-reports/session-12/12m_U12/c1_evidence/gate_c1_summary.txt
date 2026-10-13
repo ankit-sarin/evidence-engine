@@ -1,0 +1,11 @@
+2026-10-13T03:35:34Z
+2026-10-13T03:49:54Z
+3330
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==== 3330 passed, 17 deselected, 1 xfailed, 2 warnings in 858.07s (0:14:18) ====

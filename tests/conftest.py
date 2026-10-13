@@ -249,7 +249,7 @@ from _live_db_guard import (  # noqa: E402
     violations as _db_violations,
 )
 
-__all__ = ["ServiceCallBlocked", "LiveDatabaseBlocked"]
+__all__ = ["ServiceCallBlocked", "LiveDatabaseBlocked", "OllamaCallBlocked"]
 
 
 def pytest_configure(config):
@@ -257,6 +257,218 @@ def pytest_configure(config):
         "markers",
         "dbguard_selftest: exercises the live-data fence and expects it to fire",
     )
+
+
+# ── The experiment lock and the Ollama server (U12 commit 1; R625) ────
+#
+# Root causes this exists for.
+#
+#   * INT-m12-1. Ten `run_extraction` tests acquired `~/.ollama_experiment.lock`
+#     itself, blocking. A gate or a nightly started while a long run held the
+#     lock would have waited, silently, until the run ended.
+#   * INT-m12-2. A test marked `ollama` calls the live server whenever its file
+#     is run by name, because only a `-m` expression kept it out. Five such
+#     calls reached the server during session 12l's unit work.
+#
+# Three rules, pinned:
+#
+#   * **Every test gets its own lock path.** `OLLAMA_EXPERIMENT_LOCK` is set to
+#     a file under the test's `tmp_path`, so a test that takes the lock takes a
+#     lock nobody else can hold. A test that sets the variable itself, or
+#     patches `hold_experiment_lock`, overrides this as before.
+#
+#   * **A request to the Ollama server is refused unless the test is marked
+#     `ollama` and the live tiers are opted into.** Fenced at the boundary, as
+#     the two fences above are: the httpx transport (the route of `ollama.Client`
+#     and of every bare `httpx.get`), the `requests` adapter, and
+#     `socket.connect` beneath them both (urllib, http.client, a raw socket).
+#     The server is whatever `OLLAMA_HOST` resolves to by the client library's
+#     own rule, the engine client's bound host, the addresses the engine names
+#     outright (A-4b's family), and the second server `run_qualgap01` targets by
+#     default, port 11435 (R626(c)). Loopback names are one host. A fake client
+#     never reaches a transport and is untouched.
+#     `OllamaCallBlocked` is a `BaseException` and is re-asserted at teardown,
+#     for the reason `ServiceCallBlocked` is: `ollama_chat` retries on
+#     `Exception`, and its call runs under a watchdog thread.
+#
+#   * **The live tiers are opt-in.** Without `EVIDENCE_ENGINE_LIVE_TIERS=1` a
+#     test marked `ollama`, `network` or `integration` is skipped at collection,
+#     however it was selected — by `-m`, by file or by node id. With it, each
+#     such test holds the experiment lock for its duration, at the path the
+#     environment configures, through `hold_experiment_lock(blocking=False)`;
+#     if someone else holds it the test skips, naming the file. The lock is
+#     taken in-process and never through a second descriptor or `flock(1)`
+#     (INT-g12-7), so the test's own blocking acquire is re-entrant.
+
+LIVE_TIERS_ENV = "EVIDENCE_ENGINE_LIVE_TIERS"
+LIVE_TIER_MARKERS = ("ollama", "network", "integration")
+_LOOPBACK = frozenset({"localhost", "127.0.0.1", "::1", "0.0.0.0", "::"})
+
+
+class OllamaCallBlocked(BaseException):
+    """A test without the `ollama` marker and the opt-in sent a request to Ollama.
+
+    A BaseException for the same reason as `ServiceCallBlocked`.
+    """
+
+
+_ollama_violations: list[str] = []
+
+
+def live_tiers_enabled() -> bool:
+    return os.environ.get(LIVE_TIERS_ENV) == "1"
+
+
+def _live_tiers_of(item) -> list[str]:
+    return [m for m in LIVE_TIER_MARKERS if item.get_closest_marker(m) is not None]
+
+
+def pytest_collection_modifyitems(config, items):
+    if live_tiers_enabled():
+        return
+    for item in items:
+        tiers = _live_tiers_of(item)
+        if tiers:
+            item.add_marker(pytest.mark.skip(
+                reason=f"live tier ({', '.join(tiers)}): set {LIVE_TIERS_ENV}=1 to run it"
+            ))
+
+
+def _endpoint(host, port, scheme="http") -> tuple[str, int]:
+    host = str(host or "").strip("[]").lower()
+    if port is None:
+        port = 443 if scheme == "https" else 80
+    return ("loopback" if host in _LOOPBACK else host, int(port))
+
+
+def _url_endpoint(url: str) -> tuple[str, int]:
+    from urllib.parse import urlsplit
+
+    parts = urlsplit(url)
+    return _endpoint(parts.hostname, parts.port, parts.scheme)
+
+
+def ollama_endpoints() -> frozenset[tuple[str, int]]:
+    """Every (host, port) that is the Ollama server, for this process, now."""
+    from ollama._client import _parse_host
+
+    from engine.utils import ollama_client as oc
+
+    from analysis.eval.qualgap01 import DEFAULT_HOST as second_server
+
+    urls = {_parse_host(os.environ.get("OLLAMA_HOST")), oc.OLLAMA_BASE_URL,
+            *oc._LOCAL_SERVICE_HOSTS, second_server}
+    try:
+        urls.add(oc._client_host())
+    except Exception:  # a test has put a fake in the client's place
+        pass
+    return frozenset(_url_endpoint(u) for u in urls if u)
+
+
+def _refuse_ollama(endpoint: tuple[str, int], route: str, detail: str, nodeid: str):
+    if endpoint not in ollama_endpoints():
+        return
+    message = (
+        f"BLOCKED: {nodeid} sent a request to the Ollama server via {route}: {detail}.\n"
+        f"Only a test marked `ollama`, run with {LIVE_TIERS_ENV}=1, may reach the "
+        f"server; a model call from the suite evicts the resident model of any run "
+        f"on this box (INT-m12-2).\n"
+        f"Fix: put a fake in the client's place, e.g. "
+        f"monkeypatch.setattr(ollama_client, '_client', fake), or mark the test."
+    )
+    _ollama_violations.append(message)
+    raise OllamaCallBlocked(message)
+
+
+@pytest.fixture(autouse=True, scope="function")
+def block_ollama_calls(monkeypatch, request):
+    """Refuse any request to the Ollama server, unless this is an opted-in `ollama` test."""
+    if request.node.get_closest_marker("ollama") is not None and live_tiers_enabled():
+        yield
+        return
+
+    import socket
+
+    import httpx
+    import requests.adapters
+
+    nodeid = request.node.nodeid
+
+    def _check_httpx(http_request):
+        url = http_request.url
+        _refuse_ollama(_endpoint(url.host, url.port, url.scheme), "httpx transport",
+                       f"{http_request.method} {url}", nodeid)
+
+    real_handle = httpx.HTTPTransport.handle_request
+    real_async_handle = httpx.AsyncHTTPTransport.handle_async_request
+    real_send = requests.adapters.HTTPAdapter.send
+    real_connect = socket.socket.connect
+    real_connect_ex = socket.socket.connect_ex
+
+    def handle_request(self, http_request):
+        _check_httpx(http_request)
+        return real_handle(self, http_request)
+
+    async def handle_async_request(self, http_request):
+        _check_httpx(http_request)
+        return await real_async_handle(self, http_request)
+
+    def send(self, prepared, *args, **kwargs):
+        _refuse_ollama(_url_endpoint(prepared.url), "requests",
+                       f"{prepared.method} {prepared.url}", nodeid)
+        return real_send(self, prepared, *args, **kwargs)
+
+    def _check_socket(address):
+        if isinstance(address, tuple) and len(address) >= 2:
+            _refuse_ollama(_endpoint(address[0], address[1]), "socket.connect",
+                           f"{address[0]}:{address[1]}", nodeid)
+
+    def connect(self, address):
+        _check_socket(address)
+        return real_connect(self, address)
+
+    def connect_ex(self, address):
+        _check_socket(address)
+        return real_connect_ex(self, address)
+
+    monkeypatch.setattr(httpx.HTTPTransport, "handle_request", handle_request)
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request", handle_async_request)
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", send)
+    monkeypatch.setattr(socket.socket, "connect", connect)
+    monkeypatch.setattr(socket.socket, "connect_ex", connect_ex)
+
+    before = len(_ollama_violations)
+    yield
+    new = _ollama_violations[before:]
+    if new and not request.node.stash.get(_PHASE_FAILED, False):
+        pytest.fail("a request to the Ollama server was blocked during this test:\n"
+                    + "\n".join(new))
+
+
+@pytest.fixture(autouse=True, scope="function")
+def experiment_lock_for_tests(monkeypatch, request, tmp_path):
+    """Give every test its own lock path; hold the configured lock for a live-tier test."""
+    tiers = _live_tiers_of(request.node)
+    if not tiers:
+        monkeypatch.setenv("OLLAMA_EXPERIMENT_LOCK", str(tmp_path / "ollama_experiment.lock"))
+        yield
+        return
+    if not live_tiers_enabled():  # collection already skipped it; never run it unlocked
+        pytest.skip(f"live tier ({', '.join(tiers)}): set {LIVE_TIERS_ENV}=1 to run it")
+
+    from contextlib import ExitStack
+
+    from engine.utils import ollama_lock
+
+    with ExitStack() as held:
+        try:
+            held.enter_context(ollama_lock.hold_experiment_lock(blocking=False))
+        except BlockingIOError:
+            pytest.skip(
+                f"the experiment lock is held by another process "
+                f"({ollama_lock.lock_path()}); a live-tier test does not run beside it"
+            )
+        yield
 
 
 # ── Every review directory carries a codebook ────────────────────────

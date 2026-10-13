@@ -1,0 +1,17 @@
+tests/analysis/paper1/test_judge_pass2.py::test_paper_366_grammar_prevents_four_element_emission
+tests/test_openalex.py::test_search_returns_citations
+tests/test_openalex.py::test_citations_have_required_fields
+tests/test_openalex.py::test_citations_have_years_in_range
+tests/test_openalex.py::test_citations_have_authors
+tests/test_parse_ocr_tier.py::test_real_ocr_tier_recovers_p719
+tests/test_parse_sanitized_retry.py::test_real_docling_crash_on_p455_is_recovered_by_the_sanitized_retry
+tests/test_pdf_parser.py::test_parse_with_docling
+tests/test_pdf_parser.py::test_digital_routes_to_docling
+tests/test_pdf_parser.py::test_version_increments_on_reparse
+tests/test_pdf_parser.py::test_skip_if_same_hash
+tests/test_pubmed.py::test_search_returns_citations
+tests/test_pubmed.py::test_citations_have_required_fields
+tests/test_pubmed.py::test_citations_have_abstracts
+tests/test_pubmed.py::test_rate_limiting_no_errors
+tests/test_screener.py::test_screen_relevant_paper
+tests/test_screener.py::test_screen_irrelevant_paper

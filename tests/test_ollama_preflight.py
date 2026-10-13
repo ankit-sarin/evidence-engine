@@ -223,8 +223,10 @@ class TestRequirePreflight:
         with patch("engine.utils.ollama_preflight.check_ollama_env"):
             with patch("engine.utils.ollama_preflight.ollama_chat",
                        side_effect=ConnectionError("dead")):
-                with pytest.raises(RuntimeError, match="pre-flight check failed"):
-                    require_preflight(["broken:7b"], runner_name="Test")
+                with patch("engine.utils.ollama_preflight.ollama.ps",
+                           return_value={"models": []}):
+                    with pytest.raises(RuntimeError, match="pre-flight check failed"):
+                        require_preflight(["broken:7b"], runner_name="Test")
 
     def test_passes_silently_on_success(self):
         mock_response = MagicMock()

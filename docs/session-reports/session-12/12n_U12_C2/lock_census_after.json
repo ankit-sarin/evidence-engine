@@ -1,0 +1,4375 @@
+{
+ "python_entry_points": 83,
+ "counts_by_tree_and_category": {
+  "analysis": {
+   "none": 25,
+   "local: every resolved path locked": 11
+  },
+  "engine": {
+   "none": 28,
+   "local: every resolved path locked": 3
+  },
+  "scripts": {
+   "none": 12,
+   "local: every resolved path locked": 3,
+   "cloud only": 1
+  }
+ },
+ "shell_scripts": [
+  "scripts/nightly_tests.sh",
+  "scripts/watch_run4.sh"
+ ],
+ "rows": [
+  {
+   "entry": "analysis/eval/adjud01_pairs.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/analyze_capture01.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/analyze_prime01.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/analyze_qualgap01.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/analyze_schema_eval.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/analyze_schema_eval2.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/elicit01/analyze.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/elicit01/manifest.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/elicit01/runner.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.eval.elicit01.runner::main -> analysis.eval.elicit01.runner::call[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.eval.elicit01.runner::main -> analysis.eval.elicit01.runner::call[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": "analysis.eval.elicit01.runner::main -> engine.agents.extractor::restart_ollama[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.eval.elicit01.runner::main -> engine.agents.extractor::restart_ollama[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/eval/elicit01/runner.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/agents/extractor.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]",
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": [
+    "#: The model this frozen study ran with. MANIFEST-01 Phase 2a removed",
+    "#: resolver now, and a frozen study keeps the value it used, not a live one."
+   ]
+  },
+  {
+   "entry": "analysis/eval/parse01/flag.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/parse01/sweep.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/run_capture01.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_capture01::main -> analysis.eval.run_capture01::capture_one[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_capture01::main -> analysis.eval.run_capture01::capture_one[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_capture01::main -> engine.agents.extractor::restart_ollama[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_capture01::main -> engine.agents.extractor::restart_ollama[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/eval/run_capture01.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/agents/extractor.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]",
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": [
+    "#: The model this frozen study ran with. MANIFEST-01 Phase 2a removed",
+    "#: resolver now, and a frozen study keeps the value it used, not a live one."
+   ]
+  },
+  {
+   "entry": "analysis/eval/run_local_ab.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_local_ab::main -> analysis.eval.run_local_ab::run_paper[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_local_ab::main -> analysis.eval.run_local_ab::run_paper[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_local_ab::main -> analysis.eval.run_local_ab::run_paper[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/eval/run_local_ab.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/run_local_abc.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_local_abc::main -> analysis.eval.run_local_abc::run_one[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_local_abc::main -> analysis.eval.run_local_abc::run_one[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_local_abc::main -> analysis.eval.run_local_abc::run_one[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/eval/run_local_abc.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": [
+    "#: The model this frozen study ran with. MANIFEST-01 Phase 2a removed",
+    "#: resolver now, and a frozen study keeps the value it used, not a live one."
+   ]
+  },
+  {
+   "entry": "analysis/eval/run_qualgap01.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_qualgap01::main -> analysis.eval.run_qualgap01::probe[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_qualgap01::main -> analysis.eval.run_qualgap01::probe[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.eval.run_qualgap01::main -> analysis.eval.run_qualgap01::probe[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/eval/run_qualgap01.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": [
+    "#: The model this frozen study ran with. MANIFEST-01 Phase 2a removed",
+    "#: resolver now, and a frozen study keeps the value it used, not a live one."
+   ]
+  },
+  {
+   "entry": "analysis/eval/score_screen2f.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/screen2f_export.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/eval/smoke_regression01.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.eval.smoke_regression01::main -> engine.agents.extractor::extract_pass1_reasoning[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.eval.smoke_regression01::main -> engine.agents.extractor::extract_pass1_reasoning[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.eval.smoke_regression01::main -> engine.agents.extractor::extract_pass1_reasoning[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/eval/smoke_regression01.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/adjudication.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/consensus.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/export_disagreement_pairs.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/human_import.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/judge_cli.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.paper1.judge_cli::main -> analysis.paper1.judge_cli::run -> analysis.paper1.judge_cli::_run_locked[L] -> analysis.paper1.judge::run_pass1[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.paper1.judge_cli::main -> analysis.paper1.judge_cli::run -> analysis.paper1.judge_cli::_run_locked[L] -> analysis.paper1.judge::run_pass1[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": "analysis.paper1.judge_cli::main -> analysis.paper1.judge_cli::run -> analysis.paper1.judge_cli::_run_locked[L] -> engine.utils.ollama_client::fetch_model_digest[L]",
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.paper1.judge_cli::main -> analysis.paper1.judge_cli::run -> analysis.paper1.judge_cli::_run_locked[L] -> analysis.paper1.judge::run_pass1[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/paper1/judge_cli.py::run"
+   ],
+   "process_sites_reached": [
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/judge_codebook_smoke.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.paper1.judge_codebook_smoke::run -> analysis.paper1.judge_codebook_smoke::_run_locked[L] -> analysis.paper1.judge_codebook_smoke::run_conditions[L] -> analysis.paper1.judge::run_pass2[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.paper1.judge_codebook_smoke::run -> analysis.paper1.judge_codebook_smoke::_run_locked[L] -> analysis.paper1.judge_codebook_smoke::run_conditions[L] -> analysis.paper1.judge::run_pass2[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": "analysis.paper1.judge_codebook_smoke::run -> analysis.paper1.judge_codebook_smoke::_run_locked[L] -> engine.utils.ollama_preflight::require_preflight[L] -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": "analysis.paper1.judge_codebook_smoke::run -> analysis.paper1.judge_codebook_smoke::_run_locked[L] -> engine.utils.ollama_preflight::require_preflight[L]",
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": "analysis.paper1.judge_codebook_smoke::run -> analysis.paper1.judge_codebook_smoke::_run_locked[L] -> engine.utils.ollama_client::fetch_model_digest[L]",
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.paper1.judge_codebook_smoke::run -> analysis.paper1.judge_codebook_smoke::_run_locked[L] -> analysis.paper1.judge_codebook_smoke::run_conditions[L] -> analysis.paper1.judge::run_pass2[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/paper1/judge_codebook_smoke.py::run"
+   ],
+   "process_sites_reached": [
+    "engine/utils/background.py:subprocess.run(['tmux', 'new-session', '-d', '-s', session_name, 'bash', '-c', tmux_c)",
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]",
+    "engine/utils/ollama_preflight.py:subprocess.run(['systemctl', 'show', 'ollama', '--property=Environment']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/judge_provenance.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/pass1_inspection.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/pass2_branchB_report.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/pass2_full.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_full::main -> analysis.paper1.pass2_full::run -> analysis.paper1.pass2_full::_run_locked[L] -> analysis.paper1.pass2_full::run_full[L] -> analysis.paper1.judge::run_pass2[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_full::main -> analysis.paper1.pass2_full::run -> analysis.paper1.pass2_full::_run_locked[L] -> analysis.paper1.pass2_full::run_full[L] -> analysis.paper1.judge::run_pass2[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_full::main -> analysis.paper1.pass2_full::run -> analysis.paper1.pass2_full::_run_locked[L] -> analysis.paper1.pass2_full::run_full[L] -> engine.agents.extractor::restart_ollama[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_full::main -> analysis.paper1.pass2_full::run -> analysis.paper1.pass2_full::_run_locked[L] -> analysis.paper1.pass2_full::run_full[L] -> engine.utils.ollama_client::fetch_model_digest[L]",
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_full::main -> analysis.paper1.pass2_full::run -> analysis.paper1.pass2_full::_run_locked[L] -> analysis.paper1.pass2_full::run_full[L] -> engine.agents.extractor::restart_ollama[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/paper1/pass2_full.py::run"
+   ],
+   "process_sites_reached": [
+    "engine/agents/extractor.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]",
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/pass2_retry_single.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_retry_single::main -> analysis.paper1.pass2_retry_single::_main_locked[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_retry_single::main -> analysis.paper1.pass2_retry_single::_main_locked[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_retry_single::main -> analysis.paper1.pass2_retry_single::_main_locked[L] -> engine.utils.ollama_client::fetch_model_digest[L]",
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_retry_single::main -> analysis.paper1.pass2_retry_single::_main_locked[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/paper1/pass2_retry_single.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/pass2_smoke.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_smoke::main -> analysis.paper1.pass2_smoke::run -> analysis.paper1.pass2_smoke::_run_locked[L] -> analysis.paper1.pass2_smoke::run_smoke[L] -> analysis.paper1.judge::run_pass2[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_smoke::main -> analysis.paper1.pass2_smoke::run -> analysis.paper1.pass2_smoke::_run_locked[L] -> analysis.paper1.pass2_smoke::run_smoke[L] -> analysis.paper1.judge::run_pass2[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_smoke::main -> analysis.paper1.pass2_smoke::run -> analysis.paper1.pass2_smoke::_run_locked[L] -> analysis.paper1.pass2_smoke::run_smoke[L] -> engine.utils.ollama_client::fetch_model_digest[L]",
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "analysis.paper1.pass2_smoke::main -> analysis.paper1.pass2_smoke::run -> analysis.paper1.pass2_smoke::_run_locked[L] -> analysis.paper1.pass2_smoke::run_smoke[L] -> analysis.paper1.judge::run_pass2[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "analysis/paper1/pass2_smoke.py::run"
+   ],
+   "process_sites_reached": [
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/pi_audit_sampler.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/pi_audit_sampler_v2.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/pi_audit_unblind.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/paper1/spanloss_autopsy.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/provenance/census.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [
+    "analysis/provenance/census.py:Pool(args.workers)"
+   ],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "analysis/provenance/recount.py",
+   "tree": "analysis",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/acquisition/check_oa.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [
+    "engine/utils/background.py:subprocess.run(['tmux', 'new-session', '-d', '-s', session_name, 'bash', '-c', tmux_c)"
+   ],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/acquisition/download.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [
+    "engine/utils/background.py:subprocess.run(['tmux', 'new-session', '-d', '-s', session_name, 'bash', '-c', tmux_c)"
+   ],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/acquisition/manual_list.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [
+    "engine/utils/background.py:subprocess.run(['tmux', 'new-session', '-d', '-s', session_name, 'bash', '-c', tmux_c)"
+   ],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/acquisition/pdf_quality_check.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": "engine.acquisition.pdf_quality_check::main -> engine.acquisition.pdf_quality_check::run_quality_check[L] -> engine.acquisition.pdf_quality_check::_classify_page[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "engine.acquisition.pdf_quality_check::main -> engine.acquisition.pdf_quality_check::run_quality_check[L] -> engine.acquisition.pdf_quality_check::_classify_page[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "engine.acquisition.pdf_quality_check::main -> engine.acquisition.pdf_quality_check::run_quality_check[L] -> engine.acquisition.pdf_quality_check::_classify_page[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "engine/acquisition/pdf_quality_check.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/acquisition/pdf_quality_html.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/acquisition/pdf_quality_import.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/acquisition/verify_downloads.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/adjudication/abstract_adjudication_html.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/adjudication/advance_stage.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/adjudication/ft_adjudication_html.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/agents/ft_screener.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": "engine.agents.ft_screener::main -> engine.agents.ft_screener::run_ft_invocation[L] -> engine.agents.ft_screener::run_ft_verification[L] -> engine.agents.ft_screener::ft_verify_paper[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "engine.agents.ft_screener::main -> engine.agents.ft_screener::run_ft_invocation[L] -> engine.agents.ft_screener::run_ft_verification[L] -> engine.agents.ft_screener::ft_verify_paper[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": "engine.agents.ft_screener::main -> engine.agents.ft_screener::run_ft_invocation[L] -> engine.agents.ft_screener::run_ft_screening[L] -> engine.utils.ollama_preflight::require_preflight[L] -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": "engine.agents.ft_screener::main -> engine.agents.ft_screener::run_ft_invocation[L] -> engine.agents.ft_screener::run_ft_screening[L] -> engine.utils.ollama_preflight::require_preflight[L]",
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": "engine.agents.ft_screener::main -> engine.agents.ft_screener::run_ft_invocation[L] -> engine.agents.ft_screener::open_screening_manifest[L] -> engine.core.run_manifest::open_run[L] -> engine.core.effective_config::resolve_run[L] -> engine.utils.ollama_client::fetch_model_digest[L]",
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "engine.agents.ft_screener::main -> engine.agents.ft_screener::run_ft_invocation[L] -> engine.agents.ft_screener::run_ft_verification[L] -> engine.agents.ft_screener::ft_verify_paper[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "engine/agents/ft_screener.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/core/run_manifest.py:subprocess.run(['git', '-C', str(repo_root), *args]) [L]",
+    "engine/utils/background.py:subprocess.run(['tmux', 'new-session', '-d', '-s', session_name, 'bash', '-c', tmux_c)",
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]",
+    "engine/utils/ollama_preflight.py:subprocess.run(['systemctl', 'show', 'ollama', '--property=Environment']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/analysis/concordance.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/002_screening_rename.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/003_backfill_expanded_screening.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/004_pdf_quality_check.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/005_model_digest.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/006_not_null_confidence_tier.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/007_add_judge_tables.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/008_add_fabrication_verifications.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/009_add_backfill_audit_log.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/010_add_provenance_classifications.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/011_add_absence_claim_class.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/012_codebook_provenance.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/013_drop_schema_hash_not_null.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/migrations/__main__.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/parsers/pdf_parser.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/tools/db_fingerprint.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/tools/inventory.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [
+    "engine/tools/inventory.py:subprocess.run(['git', '-C', str(repo_root), 'rev-parse', 'HEAD'])"
+   ],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/utils/ollama_preflight.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": "engine.utils.ollama_preflight::main -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "engine.utils.ollama_preflight::main -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": "engine.utils.ollama_preflight::main -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": "engine.utils.ollama_preflight::main -> engine.utils.ollama_preflight::preflight_check[L]",
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "engine.utils.ollama_preflight::main -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "engine/utils/ollama_preflight.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/validators/distribution_monitor.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "engine/validators/extraction_validator.py",
+   "tree": "engine",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/_pass2_delta.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/_pass2_eyeball.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/advance_to_pdf_acquired.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/backfill_authors.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/backfill_cloud_spans.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/parse_expanded_corpus.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": "scripts.parse_expanded_corpus::main -> scripts.parse_expanded_corpus::_main_locked[L] -> engine.parsers.pdf_parser::parse_all_pdfs[L] -> engine.parsers.pdf_parser::parse_pdf[L] -> engine.parsers.pdf_parser::parse_with_vision[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "scripts.parse_expanded_corpus::main -> scripts.parse_expanded_corpus::_main_locked[L] -> engine.parsers.pdf_parser::parse_all_pdfs[L] -> engine.parsers.pdf_parser::parse_pdf[L] -> engine.parsers.pdf_parser::parse_with_vision[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "scripts.parse_expanded_corpus::main -> scripts.parse_expanded_corpus::_main_locked[L] -> engine.parsers.pdf_parser::parse_all_pdfs[L] -> engine.parsers.pdf_parser::parse_pdf[L] -> engine.parsers.pdf_parser::parse_with_vision[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "scripts/parse_expanded_corpus.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/pdf_acquisition/step1_export_citations.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/pdf_acquisition/step2_unpaywall_check.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/pdf_acquisition/step3_download_oa_pdfs.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/pdf_acquisition/step3b_retry_failed.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/pdf_acquisition/step4_manual_download_list.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/prepare_concordance_pdfs.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/reparse_cloud_spans.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [],
+   "category": "none",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/run_cloud_extraction.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": "scripts.run_cloud_extraction::main -> scripts.run_cloud_extraction::run_arm -> engine.core.run_manifest::open_run -> engine.core.effective_config::resolve_run -> engine.utils.ollama_client::fetch_model_digest",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": "engine.cloud.anthropic_extractor::AnthropicExtractor",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [],
+   "process_sites_reached": [
+    "engine/core/run_manifest.py:subprocess.run(['git', '-C', str(repo_root), *args])",
+    "engine/utils/background.py:subprocess.run(['tmux', 'new-session', '-d', '-s', session_name, 'bash', '-c', tmux_c)"
+   ],
+   "category": "cloud only",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/run_pipeline.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::main -> scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_stage_screen[L] -> engine.agents.screener::run_screening[L] -> engine.agents.screener::screen_paper[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::main -> scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_stage_screen[L] -> engine.agents.screener::run_screening[L] -> engine.agents.screener::screen_paper[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::main -> scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_stage_extract[L] -> engine.agents.extractor::run_extraction[L] -> engine.agents.extractor::_run_extraction_unlocked[L] -> engine.agents.extractor::_extract_selected[L] -> engine.agents.extractor::restart_ollama[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::main -> scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_stage_audit[L] -> engine.utils.ollama_preflight::require_preflight[L] -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::main -> scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_stage_audit[L] -> engine.utils.ollama_preflight::require_preflight[L]",
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::main -> scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_open_run_manifest[L] -> engine.core.run_manifest::open_run[L] -> engine.core.effective_config::resolve_run[L] -> engine.utils.ollama_client::fetch_model_digest[L]",
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::main -> scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_stage_screen[L] -> engine.agents.screener::run_screening[L] -> engine.agents.screener::screen_paper[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "engine/agents/extractor.py::run_extraction",
+    "scripts/run_pipeline.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/agents/extractor.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]",
+    "engine/core/run_manifest.py:subprocess.run(['git', '-C', str(repo_root), *args]) [L]",
+    "engine/utils/background.py:subprocess.run(['tmux', 'new-session', '-d', '-s', session_name, 'bash', '-c', tmux_c)",
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]",
+    "engine/utils/ollama_preflight.py:subprocess.run(['systemctl', 'show', 'ollama', '--property=Environment']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  },
+  {
+   "entry": "scripts/screen_expanded.py",
+   "tree": "scripts",
+   "local_call": {
+    "unlocked": null,
+    "locked": "scripts.screen_expanded::main -> scripts.screen_expanded::run_screen_phase[L] -> engine.agents.screener::screen_paper[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_last_resort": {
+    "unlocked": null,
+    "locked": "scripts.screen_expanded::main -> scripts.screen_expanded::run_screen_phase[L] -> engine.agents.screener::screen_paper[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "cloud_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "probes_lock": {
+    "unlocked": null,
+    "locked": "scripts.screen_expanded::main -> scripts.screen_expanded::run_screen_phase[L] -> engine.agents.screener::screen_paper[L] -> engine.utils.ollama_client::ollama_chat[L] -> engine.utils.ollama_client::_restart_ollama_and_retry[L] -> engine.utils.ollama_lock::foreign_lock_held[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "scripts/screen_expanded.py::main"
+   ],
+   "process_sites_reached": [
+    "engine/utils/background.py:subprocess.run(['tmux', 'new-session', '-d', '-s', session_name, 'bash', '-c', tmux_c)",
+    "engine/utils/ollama_client.py:subprocess.run(['sudo', 'systemctl', 'restart', 'ollama']) [L]"
+   ],
+   "category": "local: every resolved path locked",
+   "frozen_marker": []
+  }
+ ],
+ "stages": {
+  "_open_run_manifest": {
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": "engine.core.run_manifest::open_run -> engine.core.effective_config::resolve_run -> engine.utils.ollama_client::fetch_model_digest",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": []
+  },
+  "_stage_audit": {
+   "local_call": {
+    "unlocked": "engine.agents.audit_events::audit_run -> engine.agents.auditor::semantic_verify -> engine.utils.ollama_client::ollama_chat",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": "engine.utils.ollama_preflight::require_preflight -> engine.utils.ollama_preflight::preflight_check -> engine.utils.ollama_preflight::check_model",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": "engine.utils.ollama_preflight::require_preflight",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": []
+  },
+  "_stage_export": {
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": []
+  },
+  "_stage_extract": {
+   "local_call": {
+    "unlocked": "engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked -> engine.agents.extractor::_extract_selected -> engine.utils.ollama_preflight::require_preflight -> engine.utils.ollama_preflight::preflight_check -> engine.utils.ollama_preflight::check_model -> engine.utils.ollama_client::ollama_chat",
+    "locked": "engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked[L] -> engine.agents.extractor::_extract_selected[L] -> engine.utils.ollama_preflight::require_preflight[L] -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": true
+   },
+   "restart_proactive": {
+    "unlocked": "engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked -> engine.agents.extractor::_extract_selected -> engine.agents.extractor::restart_ollama",
+    "locked": "engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked[L] -> engine.agents.extractor::_extract_selected[L] -> engine.agents.extractor::restart_ollama[L]",
+    "unlocked_only_via_optout": true
+   },
+   "preflight_probe": {
+    "unlocked": "engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked -> engine.agents.extractor::_extract_selected -> engine.utils.ollama_preflight::require_preflight -> engine.utils.ollama_preflight::preflight_check -> engine.utils.ollama_preflight::check_model",
+    "locked": "engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked[L] -> engine.agents.extractor::_extract_selected[L] -> engine.utils.ollama_preflight::require_preflight[L] -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L]",
+    "unlocked_only_via_optout": true
+   },
+   "preflight_wrappers": {
+    "unlocked": "engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked -> engine.agents.extractor::_extract_selected -> engine.utils.ollama_preflight::require_preflight",
+    "locked": "engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked[L] -> engine.agents.extractor::_extract_selected[L] -> engine.utils.ollama_preflight::require_preflight[L]",
+    "unlocked_only_via_optout": true
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "engine/agents/extractor.py::run_extraction"
+   ]
+  },
+  "_stage_parse": {
+   "local_call": {
+    "unlocked": "engine.parsers.pdf_parser::parse_all_pdfs -> engine.parsers.pdf_parser::parse_pdf -> engine.parsers.pdf_parser::parse_with_vision -> engine.utils.ollama_client::ollama_chat",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": []
+  },
+  "_stage_screen": {
+   "local_call": {
+    "unlocked": "engine.agents.screener::run_screening -> engine.agents.screener::screen_paper -> engine.utils.ollama_client::ollama_chat",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": "engine.agents.screener::run_screening -> engine.utils.ollama_preflight::require_preflight -> engine.utils.ollama_preflight::preflight_check -> engine.utils.ollama_preflight::check_model",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": "engine.agents.screener::run_screening -> engine.utils.ollama_preflight::require_preflight",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": []
+  },
+  "_stage_search": {
+   "local_call": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": []
+  },
+  "main": {
+   "local_call": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_stage_screen[L] -> engine.agents.screener::run_screening[L] -> engine.agents.screener::screen_paper[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_stage_extract[L] -> engine.agents.extractor::run_extraction[L] -> engine.agents.extractor::_run_extraction_unlocked[L] -> engine.agents.extractor::_extract_selected[L] -> engine.agents.extractor::restart_ollama[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_probe": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_stage_audit[L] -> engine.utils.ollama_preflight::require_preflight[L] -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_stage_audit[L] -> engine.utils.ollama_preflight::require_preflight[L]",
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": null,
+    "locked": "scripts.run_pipeline::run_pipeline[L] -> scripts.run_pipeline::_open_run_manifest[L] -> engine.core.run_manifest::open_run[L] -> engine.core.effective_config::resolve_run[L] -> engine.utils.ollama_client::fetch_model_digest[L]",
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "engine/agents/extractor.py::run_extraction"
+   ]
+  },
+  "run_pipeline": {
+   "local_call": {
+    "unlocked": "scripts.run_pipeline::_stage_screen -> engine.agents.screener::run_screening -> engine.agents.screener::screen_paper -> engine.utils.ollama_client::ollama_chat",
+    "locked": "scripts.run_pipeline::_stage_extract -> engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked[L] -> engine.agents.extractor::_extract_selected[L] -> engine.utils.ollama_preflight::require_preflight[L] -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L] -> engine.utils.ollama_client::ollama_chat[L]",
+    "unlocked_only_via_optout": false
+   },
+   "restart_proactive": {
+    "unlocked": "scripts.run_pipeline::_stage_extract -> engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked -> engine.agents.extractor::_extract_selected -> engine.agents.extractor::restart_ollama",
+    "locked": "scripts.run_pipeline::_stage_extract -> engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked[L] -> engine.agents.extractor::_extract_selected[L] -> engine.agents.extractor::restart_ollama[L]",
+    "unlocked_only_via_optout": true
+   },
+   "preflight_probe": {
+    "unlocked": "scripts.run_pipeline::_stage_audit -> engine.utils.ollama_preflight::require_preflight -> engine.utils.ollama_preflight::preflight_check -> engine.utils.ollama_preflight::check_model",
+    "locked": "scripts.run_pipeline::_stage_extract -> engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked[L] -> engine.agents.extractor::_extract_selected[L] -> engine.utils.ollama_preflight::require_preflight[L] -> engine.utils.ollama_preflight::preflight_check[L] -> engine.utils.ollama_preflight::check_model[L]",
+    "unlocked_only_via_optout": false
+   },
+   "preflight_wrappers": {
+    "unlocked": "scripts.run_pipeline::_stage_audit -> engine.utils.ollama_preflight::require_preflight",
+    "locked": "scripts.run_pipeline::_stage_extract -> engine.agents.extractor::run_extraction -> engine.agents.extractor::_run_extraction_unlocked[L] -> engine.agents.extractor::_extract_selected[L] -> engine.utils.ollama_preflight::require_preflight[L]",
+    "unlocked_only_via_optout": false
+   },
+   "ollama_read": {
+    "unlocked": "scripts.run_pipeline::_open_run_manifest -> engine.core.run_manifest::open_run -> engine.core.effective_config::resolve_run -> engine.utils.ollama_client::fetch_model_digest",
+    "locked": null,
+    "unlocked_only_via_optout": false
+   },
+   "lock_sites_reached": [
+    "engine/agents/extractor.py::run_extraction"
+   ]
+  }
+ }
+}

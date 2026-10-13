@@ -53,6 +53,7 @@ from analysis.paper1.judge_storage import (
 )
 from engine.core.database import ReviewDatabase
 from engine.utils.ollama_client import fetch_model_digest, ollama_chat
+from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 DEFAULT_MODEL = "gemma3:27b"
 DEFAULT_NUM_CTX = 24576
@@ -133,6 +134,16 @@ def _build_arg_parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = _build_arg_parser().parse_args()
 
+    # The experiment lock, before any database, manifest or model call (R629(b), (c)).
+    try:
+        with hold_experiment_lock():
+            return _main_locked(args)
+    except ExperimentLockHeld as exc:
+        raise SystemExit(str(exc)) from None
+
+
+def _main_locked(args) -> int:
+    """`main` after argument parsing, under the experiment lock."""
     if args.data_root is not None:
         db = ReviewDatabase(args.review, data_root=args.data_root)
     else:

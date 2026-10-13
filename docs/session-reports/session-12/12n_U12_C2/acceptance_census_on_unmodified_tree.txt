@@ -1,0 +1,12 @@
+T1's census on the unmodified tree (git archive of HEAD): 83 entry points, 11 with an unlocked path
+  analysis/paper1/judge_cli.py ['last-resort Ollama restart', 'local model call']
+  analysis/paper1/judge_codebook_smoke.py ['last-resort Ollama restart', 'local model call']
+  analysis/paper1/pass2_full.py ['last-resort Ollama restart', 'local model call', 'proactive Ollama restart']
+  analysis/paper1/pass2_retry_single.py ['last-resort Ollama restart', 'local model call']
+  analysis/paper1/pass2_smoke.py ['last-resort Ollama restart', 'local model call']
+  engine/acquisition/pdf_quality_check.py ['last-resort Ollama restart', 'local model call']
+  engine/agents/ft_screener.py ['last-resort Ollama restart', 'local model call']
+  engine/utils/ollama_preflight.py ['last-resort Ollama restart', 'local model call']
+  scripts/parse_expanded_corpus.py ['last-resort Ollama restart', 'local model call']
+  scripts/run_pipeline.py ['last-resort Ollama restart', 'local model call', 'proactive Ollama restart']
+  scripts/screen_expanded.py ['last-resort Ollama restart', 'local model call']

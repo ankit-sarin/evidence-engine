@@ -295,10 +295,10 @@ def pytest_configure(config):
 #     test marked `ollama`, `network` or `integration` is skipped at collection,
 #     however it was selected — by `-m`, by file or by node id. With it, each
 #     such test holds the experiment lock for its duration, at the path the
-#     environment configures, through `hold_experiment_lock(blocking=False)`;
-#     if someone else holds it the test skips, naming the file. The lock is
-#     taken in-process and never through a second descriptor or `flock(1)`
-#     (INT-g12-7), so the test's own blocking acquire is re-entrant.
+#     environment configures, through `hold_experiment_lock()`, which never
+#     waits (R629(b)); if someone else holds it the test skips, naming the file.
+#     The lock is taken in-process and never through a second descriptor or
+#     `flock(1)` (INT-g12-7), so the test's own acquire is re-entrant.
 
 LIVE_TIERS_ENV = "EVIDENCE_ENGINE_LIVE_TIERS"
 LIVE_TIER_MARKERS = ("ollama", "network", "integration")
@@ -462,7 +462,7 @@ def experiment_lock_for_tests(monkeypatch, request, tmp_path):
 
     with ExitStack() as held:
         try:
-            held.enter_context(ollama_lock.hold_experiment_lock(blocking=False))
+            held.enter_context(ollama_lock.hold_experiment_lock())
         except BlockingIOError:
             pytest.skip(
                 f"the experiment lock is held by another process "

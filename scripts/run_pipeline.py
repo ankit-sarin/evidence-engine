@@ -43,6 +43,7 @@ from engine.parsers.pdf_parser import parse_all_pdfs
 from engine.search.dedup import deduplicate
 from engine.search.openalex import search_openalex
 from engine.search.pubmed import search_pubmed
+from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 logging.basicConfig(
     level=logging.INFO,
@@ -605,10 +606,17 @@ def main():
             "--name is deprecated and will be removed; use --review %s.", args.review
         )
 
+    # The experiment lock, for the whole run: taken here, after maybe_background
+    # and before run_pipeline opens the database or the manifest, so screen,
+    # parse, extract and audit all run under it (R629(e); N19). A refusal exits
+    # non-zero with nothing opened. run_extraction's own acquire nests under it.
     try:
         with rm.interrupt_signals():
-            run_pipeline(args.review, args.spec, skip_to=args.skip_to, limit=args.limit,
-                         max_papers=args.max_papers)
+            with hold_experiment_lock():
+                run_pipeline(args.review, args.spec, skip_to=args.skip_to, limit=args.limit,
+                             max_papers=args.max_papers)
+    except ExperimentLockHeld as exc:
+        raise SystemExit(str(exc)) from None
     except (KeyboardInterrupt, rm.RunInterrupted) as exc:
         # C47: one line, no traceback, the conventional 128 + signum exit.
         signum = rm.interrupt_signum(exc)

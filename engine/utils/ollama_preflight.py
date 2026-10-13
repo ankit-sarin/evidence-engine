@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 import ollama
 
 from engine.utils.ollama_client import ollama_chat
+from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 #: The probe's message list — one builder for the call and the prompt hash (R60).
 PREFLIGHT_MESSAGES = ({"role": "user", "content": "Respond with OK"},)
@@ -278,7 +279,12 @@ def main():
     parser.add_argument("--timeout", type=int, default=30, help="Timeout per model (seconds)")
     args = parser.parse_args()
 
-    result = preflight_check(args.models, timeout=args.timeout)
+    # The experiment lock, before any database, manifest or model call (R629(b), (c)).
+    try:
+        with hold_experiment_lock():
+            result = preflight_check(args.models, timeout=args.timeout)
+    except ExperimentLockHeld as exc:
+        raise SystemExit(str(exc)) from None
 
     print(f"\n{'=' * 50}")
     print("OLLAMA PRE-FLIGHT RESULTS")

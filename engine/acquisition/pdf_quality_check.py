@@ -33,6 +33,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from engine.core.review_spec import PDFQualityCheck
 from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.utils.ollama_client import ollama_chat
+from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -272,14 +273,19 @@ def main():
     # whether or not an override was passed (SPEC-AUTH-01). Previously the
     # thresholds applied only when someone remembered to pass --spec.
     from engine.core.review_paths import load_spec_for
-    config = load_spec_for(args.review, args.spec).pdf_quality_check
+    # The experiment lock, before any database, manifest or model call (R629(b), (c)).
+    try:
+        with hold_experiment_lock():
+            config = load_spec_for(args.review, args.spec).pdf_quality_check
 
-    stats = run_quality_check(
-        review_name=args.review,
-        dry_run=args.dry_run,
-        limit=args.limit,
-        config=config,
-    )
+            stats = run_quality_check(
+                review_name=args.review,
+                dry_run=args.dry_run,
+                limit=args.limit,
+                config=config,
+            )
+    except ExperimentLockHeld as exc:
+        raise SystemExit(str(exc)) from None
 
     # ── Report ──
     print(f"\n{'=' * 60}")

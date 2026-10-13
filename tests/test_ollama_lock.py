@@ -1,18 +1,25 @@
 """Unit tests for the Ollama experiment lock (OPS-GUARD-01).
 
-Covers the three things that make or break this guard:
+Covers the things that make or break this guard:
   * acquire / release / auto-release-on-death (flock, not existence);
   * the non-blocking probe leaves state untouched;
   * self-vs-foreign, which exists because flock is per open file description —
     a same-process probe is indistinguishable from a foreign holder without
-    explicit bookkeeping.
+    explicit bookkeeping;
+  * no acquisition waits (R629(b)): a held lock is refused at once with an
+    `ExperimentLockHeld` naming the file, under an unrelated holder and under
+    each outer-lock form that used to deadlock (INT-g12-7);
+  * the descriptor is closed on any exit, an interrupt included (12n F-1).
 """
 
+import fcntl
+import logging
 import os
 import subprocess
 import sys
 import textwrap
 import time
+from pathlib import Path
 
 import pytest
 
@@ -95,7 +102,7 @@ def test_release_happens_even_on_exception():
     assert L.self_holds_lock() is False
 
 
-# ── re-entrancy (a second blocking flock in-process would deadlock) ──────
+# ── re-entrancy (a second flock in-process would be refused like anyone's) ──
 
 
 def test_nested_hold_is_reentrant():
@@ -142,12 +149,27 @@ def test_lock_auto_releases_when_holder_dies(tmp_path):
     assert L.check_experiment_lock() is False
 
 
-def test_non_blocking_acquire_raises_under_foreign_hold(tmp_path):
+# ── no acquisition waits (R629(b)) ───────────────────────────────────────
+
+
+def test_a_held_lock_is_refused_at_once_naming_the_file_and_the_holder(tmp_path, caplog):
+    """T4. Another process holds the lock: the acquire raises within 2 s, never waits."""
     proc = _spawn_holder(tmp_path)
+    lock = os.environ["OLLAMA_EXPERIMENT_LOCK"]
     try:
-        with pytest.raises(BlockingIOError):
-            with L.hold_experiment_lock(blocking=False):
-                pass
+        t0 = time.monotonic()
+        with caplog.at_level(logging.ERROR, logger="engine.utils.ollama_lock"):
+            with pytest.raises(L.ExperimentLockHeld) as refused:
+                with L.hold_experiment_lock():
+                    pytest.fail("the block ran under someone else's lock")
+        assert time.monotonic() - t0 < 2.0
+        exc = refused.value
+        assert isinstance(exc, BlockingIOError)
+        assert lock in str(exc) and exc.lock_path == Path(lock)
+        assert exc.holder_pid == proc.pid
+        assert f"pid recorded by the kernel: {proc.pid}" in str(exc)
+        # logged once, at the refusal, with the message's own text
+        assert [r.getMessage() for r in caplog.records] == [str(exc)]
         # a failed acquire must not corrupt self-ownership state
         assert L.self_holds_lock() is False
     finally:
@@ -155,17 +177,136 @@ def test_non_blocking_acquire_raises_under_foreign_hold(tmp_path):
         proc.wait()
 
 
-def test_blocking_acquire_waits_then_succeeds(tmp_path):
-    proc = _spawn_holder(tmp_path, hold_seconds=1.0)
+def test_the_lock_is_taken_as_soon_as_the_holder_is_gone(tmp_path):
+    """There is no wait to inherit: the refusal holds nothing, so the next attempt wins."""
+    proc = _spawn_holder(tmp_path)
     try:
-        t0 = time.monotonic()
-        with L.hold_experiment_lock():
-            waited = time.monotonic() - t0
-            assert L.self_holds_lock() is True
-        assert waited >= 0.3, "blocking acquire should have waited for the holder"
+        with pytest.raises(L.ExperimentLockHeld):
+            with L.hold_experiment_lock():
+                pass
     finally:
         proc.kill()
         proc.wait()
+    with L.hold_experiment_lock():
+        assert L.self_holds_lock() is True
+
+
+def test_a_refusal_with_no_pid_in_proc_locks_still_names_the_file(tmp_path, monkeypatch):
+    proc = _spawn_holder(tmp_path)
+    monkeypatch.setattr(L, "_holder_pid", lambda fd: None)
+    try:
+        with pytest.raises(L.ExperimentLockHeld) as refused:
+            with L.hold_experiment_lock():
+                pass
+        assert refused.value.holder_pid is None
+        assert os.environ["OLLAMA_EXPERIMENT_LOCK"] in str(refused.value)
+        assert "no holder pid" in str(refused.value)
+    finally:
+        proc.kill()
+        proc.wait()
+
+
+# ── T5 — the outer-lock forms that used to deadlock (INT-g12-7) ──────────
+
+_CHILD = """
+import sys
+from engine.utils import ollama_lock as L
+try:
+    with L.hold_experiment_lock():
+        print("ACQUIRED")
+except L.ExperimentLockHeld as exc:
+    print("REFUSED", exc)
+    sys.exit(3)
+"""
+# The four forms measured in 12n_U12_C2A A2: each blocked a child until its timeout.
+_OUTER_FORMS = {
+    "E1_flock_wrapper": 'flock "$LOCK" "$PY" -c "$CHILD"',
+    "E2_flock_wrapper_fd_closed": 'flock -o "$LOCK" "$PY" -c "$CHILD"',
+    "E3_inherited_fd_9": 'exec 9>>"$LOCK"; flock -n 9 || exit 99; "$PY" -c "$CHILD"',
+    "E4_fd_9_closed_for_child": 'exec 9>>"$LOCK"; flock -n 9 || exit 99; "$PY" -c "$CHILD" 9>&-',
+}
+
+
+@pytest.mark.parametrize("form", sorted(_OUTER_FORMS))
+def test_a_child_under_an_outer_lock_is_refused_not_blocked(form, tmp_path):
+    lock = os.environ["OLLAMA_EXPERIMENT_LOCK"]
+    repo = str(Path(__file__).resolve().parents[1])
+    env = {"PATH": os.environ["PATH"], "PYTHONPATH": repo, "OLLAMA_EXPERIMENT_LOCK": lock,
+           "LOCK": lock, "PY": sys.executable, "CHILD": _CHILD}
+    try:
+        r = subprocess.run(["bash", "-c", _OUTER_FORMS[form]], env=env, cwd=repo,
+                           capture_output=True, text=True, timeout=30)
+    except subprocess.TimeoutExpired:
+        pytest.fail(f"{form}: the child blocked on the outer lock instead of refusing")
+    assert r.returncode == 3, (r.returncode, r.stdout, r.stderr)
+    assert r.stdout.startswith("REFUSED Experiment lock held: " + lock), r.stdout
+    assert "ACQUIRED" not in r.stdout
+
+
+# ── T6 — a nested acquire makes no second flock ──────────────────────────
+
+
+def test_a_nested_acquire_makes_no_second_flock_and_the_outer_hold_survives(monkeypatch):
+    real, taken = fcntl.flock, []
+
+    def counting(fd, op):
+        if op & fcntl.LOCK_EX:
+            taken.append(fd)
+        return real(fd, op)
+
+    monkeypatch.setattr(L.fcntl, "flock", counting)
+    with L.hold_experiment_lock():
+        outer_fd = L._SELF_FD
+        assert taken == [outer_fd]
+        with L.hold_experiment_lock():
+            with L.hold_experiment_lock():
+                assert L._SELF_FD == outer_fd
+        assert taken == [outer_fd]                 # no second flock by this process
+        assert L.self_holds_lock() is True         # still held after the inner blocks
+        monkeypatch.setattr(L.fcntl, "flock", real)
+        assert L.check_experiment_lock() is True
+    assert L.self_holds_lock() is False
+
+
+# ── T7 — an interrupt leaves the lock free and the descriptor closed (F-1) ──
+
+
+def _is_closed(fd: int) -> bool:
+    try:
+        os.fstat(fd)
+    except OSError:
+        return True
+    return False
+
+
+def test_an_interrupt_inside_the_hold_frees_the_lock_and_closes_the_descriptor():
+    held = {}
+    with pytest.raises(KeyboardInterrupt):
+        with L.hold_experiment_lock():
+            held["fd"] = L._SELF_FD
+            raise KeyboardInterrupt
+    assert _is_closed(held["fd"])
+    assert L.self_holds_lock() is False and L.check_experiment_lock() is False
+
+
+def test_an_interrupt_during_the_acquire_itself_closes_the_descriptor(monkeypatch):
+    """The site F-1 named: before this commit `except Exception` left it open."""
+    opened, real_open = [], L._open_lock_file
+
+    def tracking_open():
+        opened.append(real_open())
+        return opened[-1]
+
+    def interrupted(fd, op):
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(L, "_open_lock_file", tracking_open)
+    monkeypatch.setattr(L.fcntl, "flock", interrupted)
+    with pytest.raises(KeyboardInterrupt):
+        with L.hold_experiment_lock():
+            pytest.fail("the block ran")
+    assert len(opened) == 1 and _is_closed(opened[0])
+    assert L.self_holds_lock() is False
 
 
 def test_probe_failure_fails_safe(monkeypatch):

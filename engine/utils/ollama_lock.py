@@ -27,6 +27,16 @@ Design, pinned:
     `self_holds_lock()` answers "is that me", and `foreign_lock_held()` is the
     conjunction callers almost always want.
 
+  * **No acquisition waits (R629(b)).** `hold_experiment_lock()` makes one
+    non-blocking attempt. If any other open file description holds the lock it
+    raises `ExperimentLockHeld` at once, naming the lock file. A process started
+    under an outer `flock(1)`, or with an inherited locked descriptor, would
+    otherwise wait on a lock its own wrapper holds and never get it
+    (INT-g12-7), and nothing distinguishes that case from an unrelated holder
+    in every form it takes — so there is no wait to get wrong. An entry point
+    takes the lock before it opens a database or a manifest and exits non-zero
+    on a refusal.
+
 Usage:
 
     from engine.utils.ollama_lock import hold_experiment_lock
@@ -39,6 +49,7 @@ No Ollama calls, no network, no third-party dependencies.
 
 from __future__ import annotations
 
+import errno
 import fcntl
 import logging
 import os
@@ -83,6 +94,59 @@ def _open_lock_file() -> int:
     # O_RDWR|O_CREAT, never truncate: the file's contents are irrelevant, and
     # truncating would race harmlessly but pointlessly with other openers.
     return os.open(path, os.O_RDWR | os.O_CREAT, 0o644)
+
+
+class ExperimentLockHeld(BlockingIOError):
+    """The experiment lock is held by another open file description.
+
+    A `BlockingIOError`, so a caller written for a refused non-blocking flock
+    still catches it. `str(exc)` is the whole message; `lock_path` and
+    `holder_pid` carry its two facts. `holder_pid` is the pid the kernel
+    recorded when the lock was taken (`/proc/locks`), or None. It is the pid of
+    the process that made the flock call, which may have exited while a
+    descriptor it left in another process still holds the lock — a shell that
+    ran `flock -n 9` reads that way.
+    """
+
+    def __init__(self, path: Path, holder_pid: int | None):
+        self.lock_path = Path(path)
+        self.holder_pid = holder_pid
+        if holder_pid is None:
+            who = "the kernel records no holder pid in /proc/locks"
+            look = f"To see what has it open, run: lsof {self.lock_path}"
+        else:
+            who = f"pid recorded by the kernel: {holder_pid}"
+            look = (
+                f"To see the holder, run: ps -p {holder_pid} -o pid,etimes,args "
+                f"(only the header line means that process has exited and a "
+                f"descriptor it left open in another process still holds the lock; "
+                f"then run: lsof {self.lock_path})"
+            )
+        self.message = (
+            f"Experiment lock held: {self.lock_path} is locked by another process "
+            f"({who}). Nothing was started and nothing waits for the lock. {look}. "
+            f"Run this command again once the lock is free."
+        )
+        super().__init__(errno.EAGAIN, self.message)
+
+    def __str__(self) -> str:
+        return self.message
+
+
+def _holder_pid(fd: int) -> int | None:
+    """The pid `/proc/locks` records for the flock on this descriptor's file, or None."""
+    try:
+        st = os.fstat(fd)
+        key = f"{os.major(st.st_dev):02x}:{os.minor(st.st_dev):02x}:{st.st_ino}"
+        with open("/proc/locks", encoding="ascii", errors="replace") as locks:
+            for line in locks:
+                parts = line.split()
+                # "<n>: FLOCK ADVISORY WRITE <pid> <maj:min:inode> <start> <end>"
+                if len(parts) >= 6 and parts[1] == "FLOCK" and parts[5] == key:
+                    return int(parts[4])
+    except (OSError, ValueError):
+        pass
+    return None
 
 
 def self_holds_lock() -> bool:
@@ -136,17 +200,21 @@ def foreign_lock_held() -> bool:
 
 
 @contextmanager
-def hold_experiment_lock(blocking: bool = True) -> Iterator[Path]:
-    """Hold the experiment lock for the duration of the block.
+def hold_experiment_lock() -> Iterator[Path]:
+    """Hold the experiment lock for the duration of the block, or refuse at once.
 
-    Blocking by default: an experiment that has to wait is safe, whereas an
-    experiment that proceeds unguarded can be destroyed. Pass blocking=False to
-    raise BlockingIOError instead of waiting.
+    One non-blocking attempt (R629(b)). If the lock is held through any other
+    open file description this raises `ExperimentLockHeld` — a
+    `BlockingIOError` whose message names the lock file and the holder pid the
+    kernel records — and logs that message once. It never waits.
 
-    Re-entrant. A nested acquire in the same process must NOT re-flock: flock is
-    per open file description, so a second blocking acquire from the same
-    process would deadlock against itself. Nested calls bump a depth counter and
-    reuse the outermost fd.
+    Re-entrant. A nested acquire in the same process does NOT re-flock: flock is
+    per open file description, so a second acquire from the process that holds
+    the lock would be refused like anyone else's. Nested calls bump a depth
+    counter and reuse the outermost fd.
+
+    The descriptor is unlocked and closed on any exit from the outermost block,
+    `BaseException` included.
     """
     global _SELF_DEPTH, _SELF_FD
 
@@ -164,10 +232,14 @@ def hold_experiment_lock(blocking: bool = True) -> Iterator[Path]:
         return
 
     fd = _open_lock_file()
-    flags = fcntl.LOCK_EX | (0 if blocking else fcntl.LOCK_NB)
     try:
-        fcntl.flock(fd, flags)
-    except Exception:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        refusal = ExperimentLockHeld(lock_path(), _holder_pid(fd))
+        os.close(fd)
+        logger.error("%s", refusal)
+        raise refusal from None
+    except BaseException:
         os.close(fd)
         raise
 

@@ -40,6 +40,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from engine.agents.screener import screen_paper
 from engine.core.review_paths import load_spec_for, spec_path_for
 from engine.core.review_spec import load_review_spec
+from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 logging.basicConfig(
     level=logging.INFO,
@@ -518,22 +519,27 @@ def main():
     from engine.utils.background import maybe_background
     maybe_background("screening", review_name=review)
 
-    if args.fresh:
-        for f in [OUTPUT_CSV, SCREENING_PROGRESS, VERIFICATION_CSV, VERIFICATION_PROGRESS]:
-            if f.exists():
-                logger.info("Removing %s", f)
-                f.unlink()
+    # The experiment lock, before any database, manifest or model call (R629(b), (c)).
+    try:
+        with hold_experiment_lock():
+            if args.fresh:
+                for f in [OUTPUT_CSV, SCREENING_PROGRESS, VERIFICATION_CSV, VERIFICATION_PROGRESS]:
+                    if f.exists():
+                        logger.info("Removing %s", f)
+                        f.unlink()
 
-    if args.fetch_only:
-        run_fetch_phase()
-    elif args.screen_only:
-        run_screen_phase(spec_path)
-    elif args.verify_only:
-        run_verify_phase(spec_path)
-    else:
-        run_fetch_phase()
-        run_screen_phase(spec_path)
-        run_verify_phase(spec_path)
+            if args.fetch_only:
+                run_fetch_phase()
+            elif args.screen_only:
+                run_screen_phase(spec_path)
+            elif args.verify_only:
+                run_verify_phase(spec_path)
+            else:
+                run_fetch_phase()
+                run_screen_phase(spec_path)
+                run_verify_phase(spec_path)
+    except ExperimentLockHeld as exc:
+        raise SystemExit(str(exc)) from None
 
 
 if __name__ == "__main__":

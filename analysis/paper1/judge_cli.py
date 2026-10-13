@@ -48,6 +48,7 @@ from analysis.paper1.judge_storage import (
 )
 from engine.core.database import ReviewDatabase
 from engine.utils.ollama_client import fetch_model_digest
+from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 logger = logging.getLogger(__name__)
 
@@ -235,6 +236,16 @@ def run(argv: Optional[list[str]] = None) -> int:
             "Pass 2 (fabrication verification) will land in task #7"
         )
 
+    # The experiment lock, before any database, manifest or model call (R629(b), (c)).
+    try:
+        with hold_experiment_lock():
+            return _run_locked(args)
+    except ExperimentLockHeld as exc:
+        raise SystemExit(str(exc)) from None
+
+
+def _run_locked(args) -> int:
+    """`run` after argument parsing, under the experiment lock."""
     db = _resolve_db(args)
     _configure_logging(db.db_path.parent)
 

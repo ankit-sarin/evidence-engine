@@ -1,20 +1,20 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `7338c85586e77f9dc44cd615d594ceacff3e5690` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `944efd383cad399bfbbbf2ac349911b91e5c6168` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 204 |
-| entry points | 84 |
+| files scanned | 203 |
+| entry points | 83 |
 | entry points with spec flag | 16 |
-| entry points with review name flag | 58 |
-| entry points name only | 42 |
-| entry points constructing reviewdatabase | 23 |
-| name only constructing reviewdatabase | 19 |
+| entry points with review name flag | 57 |
+| entry points name only | 41 |
+| entry points constructing reviewdatabase | 22 |
+| name only constructing reviewdatabase | 18 |
 | files calling resolver | 20 |
 | files calling load review spec directly | 8 |
 | raw yaml load sites | 3 |
@@ -45,16 +45,16 @@ Baselines are the figures measured by hand in GENERALIZE-READOUT-01 and SPEC-AUT
 
 | figure | hand-built | measured now | |
 |---|---:|---:|---|
-| argparse entry points naming a review | 74 | 58 | the hand scan keyed on --review/--name, which is what this counts |
+| argparse entry points naming a review | 74 | 57 | the hand scan keyed on --review/--name, which is what this counts |
 | of those, spec-bearing | 29 | 16 | differs — unexplained, investigate |
-| of those, name-only | 45 | 42 | differs — unexplained, investigate |
-| entry points constructing ReviewDatabase | 35 | 23 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
-| name-only, constructing ReviewDatabase | 20 | 19 | differs — unexplained, investigate |
+| of those, name-only | 45 | 41 | differs — unexplained, investigate |
+| entry points constructing ReviewDatabase | 35 | 22 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
+| name-only, constructing ReviewDatabase | 20 | 18 | differs — unexplained, investigate |
 | raw yaml load sites | 13 | 3 | differs — unexplained, investigate |
 | f-string spec-path builders | 19 | 0 | SPEC-AUTH-01 moved every one of these onto the resolver; a non-zero value here means a hand-built spec path has come back |
 | DEFAULT_REVIEW constants | 7 | 5 | differs — unexplained, investigate |
 
-Two figures deliberately have no baseline row. **entry points** (84) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
+Two figures deliberately have no baseline row. **entry points** (83) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
 
 ## Entry points
 
@@ -82,18 +82,17 @@ Two figures deliberately have no baseline row. **entry points** (84) counts anyt
 | `analysis/paper1/consensus.py` | `--review` required; `--codebook`=None; `--dry-run`; `--review` required | — | 427 | — |
 | `analysis/paper1/export_disagreement_pairs.py` | `--review` required; `--spec`=None | load_review_spec, load_spec_for, spec_path_for | — | — |
 | `analysis/paper1/human_import.py` | `--workbook` required; `--review` required; `--codebook`=None; `--dry-run` | — | 302 | — |
-| `analysis/paper1/judge_cli.py` | `--review` required; `--input` required; `--pairs-csv`; `--codebook` required; `--pass`=1; `--limit`=0; `--dry-run`; `--model`=dynamic: DEFAULT_MODEL; `--run-note`=None; `--data-root`=None | — | 194, 195 | — |
-| `analysis/paper1/judge_codebook_smoke.py` | `--review` required; `--pairs-csv` required; `--codebook` required; `--audit-dir`=dynamic: Path('artifacts/paper1/pi_audit'); `--completed`=None; `--key`=None; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--model`=dynamic: DEFAULT_MODEL; `--run-id`=dynamic: RECORDED_RUN_ID; `--limit`=None; `--data-root`=None; `--builder`='production'; `--assert-v2`=None; `--background` | — | 1186, 1187 | — |
+| `analysis/paper1/judge_cli.py` | `--review` required; `--input` required; `--pairs-csv`; `--codebook` required; `--pass`=1; `--limit`=0; `--dry-run`; `--model`=dynamic: DEFAULT_MODEL; `--run-note`=None; `--data-root`=None | — | 195, 196 | — |
+| `analysis/paper1/judge_codebook_smoke.py` | `--review` required; `--pairs-csv` required; `--codebook` required; `--audit-dir`=dynamic: Path('artifacts/paper1/pi_audit'); `--completed`=None; `--key`=None; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--model`=dynamic: DEFAULT_MODEL; `--run-id`=dynamic: RECORDED_RUN_ID; `--limit`=None; `--data-root`=None; `--builder`='production'; `--assert-v2`=None; `--background` | — | 1197, 1198 | — |
 | `analysis/paper1/judge_provenance.py` | `--review` required; `--data-root`='data'; `--judge-run-id`=None; `--census-run-id`=None; `--legacy-csv`=None; `--out-dir`=None | — | — | — |
 | `analysis/paper1/pass1_inspection.py` | `--review` required; `--run-id` required; `--pairs-csv` required; `--codebook` required; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--data-root`=None | — | 554, 555 | — |
 | `analysis/paper1/pass2_branchB_report.py` | `--review` required; `--run-id` required; `--pairs-csv` required; `--codebook` required; `--run-log` required; `--out-dir`=dynamic: Path('artifacts/paper1'); `--data-root`=None | — | 541, 542 | — |
-| `analysis/paper1/pass2_full.py` | `--review` required; `--pass1-run-id` required; `--pairs-csv` required; `--codebook` required; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--model`=dynamic: DEFAULT_MODEL; `--run-tag`='full'; `--limit`=None; `--seed-run-id`=None; `--resume-run-id`=None; `--restart-every`=0; `--dry-run`; `--data-root`=None | — | 662, 663 | — |
-| `analysis/paper1/pass2_retry_single.py` | `--review` required; `--run-id` required; `--paper-id` required; `--field-name` required; `--pairs-csv` required; `--codebook` required; `--model`=dynamic: DEFAULT_MODEL; `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--data-root`=None | — | 137, 139 | — |
-| `analysis/paper1/pass2_smoke.py` | `--review` required; `--pass1-run-id` required; `--pairs-csv` required; `--codebook` required; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--model`=dynamic: DEFAULT_MODEL; `--dry-run`; `--data-root`=None; `--run-tag`='' | — | 797, 798 | — |
+| `analysis/paper1/pass2_full.py` | `--review` required; `--pass1-run-id` required; `--pairs-csv` required; `--codebook` required; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--model`=dynamic: DEFAULT_MODEL; `--run-tag`='full'; `--limit`=None; `--seed-run-id`=None; `--resume-run-id`=None; `--restart-every`=0; `--dry-run`; `--data-root`=None | — | 663, 664 | — |
+| `analysis/paper1/pass2_retry_single.py` | `--review` required; `--run-id` required; `--paper-id` required; `--field-name` required; `--pairs-csv` required; `--codebook` required; `--model`=dynamic: DEFAULT_MODEL; `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--data-root`=None | — | 148, 150 | — |
+| `analysis/paper1/pass2_smoke.py` | `--review` required; `--pass1-run-id` required; `--pairs-csv` required; `--codebook` required; `--out-dir`=dynamic: Path('analysis/paper1/reports'); `--log-dir`=dynamic: Path('analysis/paper1/logs'); `--model`=dynamic: DEFAULT_MODEL; `--dry-run`; `--data-root`=None; `--run-tag`='' | — | 798, 799 | — |
 | `analysis/paper1/pi_audit_sampler.py` | `--review` required; `--out-dir`=dynamic: Path('artifacts/paper1/pi_audit'); `--data-root`=None; `--supersedes`=None; `--regeneration-reason`=None | — | 1340, 1341 | — |
 | `analysis/paper1/pi_audit_sampler_v2.py` | `--review` required; `--codebook` required; `--pairs-csv`=None; `--out-dir`=dynamic: Path('artifacts/paper1/pi_audit_v2'); `--data-root`=None | — | 1205, 1206 | — |
 | `analysis/paper1/pi_audit_unblind.py` | `--completed`=None; `--key`=None; `--audit-dir`=dynamic: Path('artifacts/paper1/pi_audit'); `--out-dir`=None | — | — | — |
-| `analysis/paper1/runner_smoke_phase2a.py` | `--review` required; `--pass1-run-id` required; `--pairs-csv` required; `--codebook` required; `--prior-run-id` required; `--limit`=3; `--model`=dynamic: DEFAULT_MODEL | — | 87 | — |
 | `analysis/paper1/spanloss_autopsy.py` | `--review` required; `--data-root`='data'; `--out-dir`=None | — | — | — |
 | `analysis/provenance/census.py` | `--review` required; `--data-root`='data'; `--out-dir`=None; `--threshold`=dynamic: C.THRESHOLD_PRIMARY; `--strict-variant`; `--legacy`; `--workers`=10; `--no-persist`; `--notes`='' | — | — | — |
 | `analysis/provenance/recount.py` | `--review` required; `--data-root`='data'; `--run-id`=None; `--out-dir`=None | — | — | — |
@@ -107,7 +106,7 @@ Two figures deliberately have no baseline row. **entry points** (84) counts anyt
 | `engine/adjudication/abstract_adjudication_html.py` | `--review` required; `--output`=None | — | — | — |
 | `engine/adjudication/advance_stage.py` | `--review` required; `--stage`; `--note`; `--force`; `--status` | — | 73 | — |
 | `engine/adjudication/ft_adjudication_html.py` | `--review` required; `--output`=None | — | — | — |
-| `engine/agents/ft_screener.py` | `--review` required; `--spec`=None; `--screen-only`; `--verify-only`; `--background` | load_spec_for | 662 | main:spec_first |
+| `engine/agents/ft_screener.py` | `--review` required; `--spec`=None; `--screen-only`; `--verify-only`; `--background` | load_spec_for | 666 | main:spec_first |
 | `engine/analysis/concordance.py` | `--review` required; `--arms` required; `--spec`=None | data_root_for, load_review_spec, load_spec_for, spec_path_for | — | — |
 | `engine/migrations/002_screening_rename.py` | — | — | — | — |
 | `engine/migrations/003_backfill_expanded_screening.py` | — | — | — | — |
@@ -133,7 +132,7 @@ Two figures deliberately have no baseline row. **entry points** (84) counts anyt
 | `scripts/advance_to_pdf_acquired.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
 | `scripts/backfill_authors.py` | `--review`=dynamic: DEFAULT_REVIEW; `--dry-run` | — | — | — |
 | `scripts/backfill_cloud_spans.py` | `--review`=dynamic: DEFAULT_REVIEW; `--confirm`; `--db`=None | — | — | — |
-| `scripts/parse_expanded_corpus.py` | `--review`=dynamic: DEFAULT_REVIEW | load_spec_for | 42 | main:spec_first |
+| `scripts/parse_expanded_corpus.py` | `--review`=dynamic: DEFAULT_REVIEW | load_spec_for | 53 | _main_locked:spec_first |
 | `scripts/pdf_acquisition/step1_export_citations.py` | — | — | — | — |
 | `scripts/pdf_acquisition/step2_unpaywall_check.py` | — | — | — | — |
 | `scripts/pdf_acquisition/step3_download_oa_pdfs.py` | — | — | — | — |
@@ -142,7 +141,7 @@ Two figures deliberately have no baseline row. **entry points** (84) counts anyt
 | `scripts/prepare_concordance_pdfs.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
 | `scripts/reparse_cloud_spans.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/run_cloud_extraction.py` | `--review` required; `--arm`=None; `--spec`=None; `--db`=None; `--max-papers`=None; `--max-cost`=None; `--progress`; `--dry-run` | data_root_for, load_review_spec, load_spec_for, spec_path_for | — | — |
-| `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None; `--max-papers`=None | load_spec_for | 92 | run_pipeline:spec_first |
+| `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None; `--max-papers`=None | load_spec_for | 93 | run_pipeline:spec_first |
 | `scripts/screen_expanded.py` | `--review` required; `--spec`=None; `--fetch-only`; `--screen-only`; `--verify-only`; `--fresh` | load_review_spec, load_spec_for, spec_path_for | — | — |
 
 ## Raw YAML loads (outside the spec loader)
@@ -216,7 +215,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `scripts/backfill_cloud_spans.py` | 42 | f-string | `f'data/{args.review}/review.db'` |
 | `scripts/pdf_acquisition/step4_manual_download_list.py` | 121 | f-string | `f"""<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Manual PD...` |
 | `scripts/reparse_cloud_spans.py` | 33 | f-string | `f'data/{review}/review.db'` |
-| `scripts/screen_expanded.py` | 510 | f-string | `f'data/{review}/expanded_search'` |
+| `scripts/screen_expanded.py` | 511 | f-string | `f'data/{review}/expanded_search'` |
 
 ## Literal review ids in code
 
@@ -225,7 +224,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/eval/elicit01/analyze.py` | 54 | `surgical_autonomy` |
 | `analysis/eval/elicit01/prompts.py` | 54 | `surgical_autonomy` |
 | `analysis/eval/elicit01/runner.py` | 144 | `surgical_autonomy` |
-| `analysis/paper1/judge_codebook_smoke.py` | 1167 | `surgical_autonomy` |
+| `analysis/paper1/judge_codebook_smoke.py` | 1168 | `surgical_autonomy` |
 | `engine/analysis/normalize.py` | 60 | `surgical_autonomy` |
 | `engine/analysis/report.py` | 27 | `surgical_autonomy` |
 | `engine/migrations/003_backfill_expanded_screening.py` | 19 | `surgical_autonomy` |
@@ -234,7 +233,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `scripts/advance_to_pdf_acquired.py` | 19 | `surgical_autonomy` |
 | `scripts/backfill_authors.py` | 23 | `surgical_autonomy` |
 | `scripts/backfill_cloud_spans.py` | 29 | `surgical_autonomy` |
-| `scripts/parse_expanded_corpus.py` | 29 | `surgical_autonomy` |
+| `scripts/parse_expanded_corpus.py` | 30 | `surgical_autonomy` |
 | `scripts/pdf_acquisition/step1_export_citations.py` | 14 | `surgical_autonomy` |
 | `scripts/pdf_acquisition/step1_export_citations.py` | 15 | `surgical_autonomy` |
 | `scripts/pdf_acquisition/step2_unpaywall_check.py` | 18 | `surgical_autonomy` |
@@ -259,7 +258,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `scripts/advance_to_pdf_acquired.py` | 19 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/backfill_authors.py` | 23 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/backfill_cloud_spans.py` | 29 | `DEFAULT_REVIEW` | `surgical_autonomy` |
-| `scripts/parse_expanded_corpus.py` | 29 | `DEFAULT_REVIEW` | `surgical_autonomy` |
+| `scripts/parse_expanded_corpus.py` | 30 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/prepare_concordance_pdfs.py` | 12 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 
 ## UNPARSED

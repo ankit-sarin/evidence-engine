@@ -100,6 +100,7 @@ from analysis.paper1.pi_audit_unblind import (
 from engine.core.database import ReviewDatabase
 from engine.utils.background import maybe_background
 from engine.utils.ollama_preflight import require_preflight
+from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 logger = logging.getLogger(__name__)
 
@@ -1166,6 +1167,16 @@ def assert_reproduces_v2(
 def run(argv: Optional[list[str]] = None) -> int:
     maybe_background("judge_codebook_smoke", review_name="surgical_autonomy")
     args = _build_parser().parse_args(argv)
+    # The experiment lock, before any database, manifest or model call (R629(b), (c)).
+    try:
+        with hold_experiment_lock():
+            return _run_locked(args)
+    except ExperimentLockHeld as exc:
+        raise SystemExit(str(exc)) from None
+
+
+def _run_locked(args) -> int:
+    """`run` after `maybe_background` and argument parsing, under the experiment lock."""
     log_file = _setup_logging(args.log_dir)
     logger.info("judge codebook smoke starting; log=%s", log_file)
 

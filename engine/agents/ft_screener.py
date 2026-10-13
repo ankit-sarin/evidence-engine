@@ -27,6 +27,7 @@ from engine.core.review_spec import ReviewSpec
 from engine.core.effective_config import stage_config
 from engine.core.parsed_text import NoParsedText, load_parsed_text
 from engine.utils.ollama_client import ollama_chat
+from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 logger = logging.getLogger(__name__)
 
@@ -658,24 +659,29 @@ def main(argv: list[str] | None = None) -> int:
         from engine.utils.background import maybe_background
         maybe_background("ft_screening", review_name=args.review)
 
-    spec = load_spec_for(args.review, args.spec)
-    db = ReviewDatabase(args.review)
-
+    # The experiment lock, before any database, manifest or model call (R629(b), (c)).
     try:
-        with rm.interrupt_signals():
-            run_ft_invocation(db, spec, review_name=args.review,
-                              screen_only=args.screen_only, verify_only=args.verify_only)
-    except (KeyboardInterrupt, rm.RunInterrupted) as exc:
-        # C47: one line, no traceback, the conventional 128 + signum exit.
-        signum = rm.interrupt_signum(exc)
-        run_id = getattr(exc, "run_id", None)
-        logger.error("Interrupted by %s — %s.", signal.Signals(signum).name,
-                     f"run_id {run_id} is closed" if run_id is not None
-                     else "no run manifest was open")
-        return 128 + signum
-    finally:
-        db.close()
-    return 0
+        with hold_experiment_lock():
+            spec = load_spec_for(args.review, args.spec)
+            db = ReviewDatabase(args.review)
+
+            try:
+                with rm.interrupt_signals():
+                    run_ft_invocation(db, spec, review_name=args.review,
+                                      screen_only=args.screen_only, verify_only=args.verify_only)
+            except (KeyboardInterrupt, rm.RunInterrupted) as exc:
+                # C47: one line, no traceback, the conventional 128 + signum exit.
+                signum = rm.interrupt_signum(exc)
+                run_id = getattr(exc, "run_id", None)
+                logger.error("Interrupted by %s — %s.", signal.Signals(signum).name,
+                             f"run_id {run_id} is closed" if run_id is not None
+                             else "no run manifest was open")
+                return 128 + signum
+            finally:
+                db.close()
+            return 0
+    except ExperimentLockHeld as exc:
+        raise SystemExit(str(exc)) from None
 
 
 if __name__ == "__main__":

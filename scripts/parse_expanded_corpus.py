@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from engine.core.database import ReviewDatabase
 from engine.core.review_paths import load_spec_for
 from engine.parsers.pdf_parser import parse_all_pdfs
+from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 logging.basicConfig(
     level=logging.INFO,
@@ -37,6 +38,16 @@ def main():
     if args.review == DEFAULT_REVIEW and "--review" not in " ".join(sys.argv):
         logging.warning("No --review specified, using default 'surgical_autonomy'.")
 
+    # The experiment lock, before any database, manifest or model call (R629(b), (c)).
+    try:
+        with hold_experiment_lock():
+            return _main_locked(args)
+    except ExperimentLockHeld as exc:
+        raise SystemExit(str(exc)) from None
+
+
+def _main_locked(args):
+    """`main` after argument parsing, under the experiment lock."""
     review = args.review
     spec = load_spec_for(review)   # before the database: a mismatched review never reaches it
     db = ReviewDatabase(review)

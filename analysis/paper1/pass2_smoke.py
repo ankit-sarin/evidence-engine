@@ -52,6 +52,7 @@ from analysis.paper1.judge_storage import (
 )
 from engine.core.database import ReviewDatabase
 from engine.utils.ollama_client import fetch_model_digest
+from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 logger = logging.getLogger(__name__)
 
@@ -843,6 +844,16 @@ def _setup_logging(log_dir: Path) -> Path:
 
 def run(argv: Optional[list[str]] = None) -> int:
     args = _build_arg_parser().parse_args(argv)
+    # The experiment lock, before any database, manifest or model call (R629(b), (c)).
+    try:
+        with hold_experiment_lock():
+            return _run_locked(args)
+    except ExperimentLockHeld as exc:
+        raise SystemExit(str(exc)) from None
+
+
+def _run_locked(args) -> int:
+    """`run` after argument parsing, under the experiment lock."""
     log_file = _setup_logging(args.log_dir)
     logger.info("pass2 smoke starting; log=%s", log_file)
 

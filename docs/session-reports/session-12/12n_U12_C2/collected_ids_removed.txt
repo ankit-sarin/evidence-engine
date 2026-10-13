@@ -1,0 +1,2 @@
+tests/test_ollama_lock.py::test_blocking_acquire_waits_then_succeeds
+tests/test_ollama_lock.py::test_non_blocking_acquire_raises_under_foreign_hold

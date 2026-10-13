@@ -154,7 +154,14 @@ now gated, and the suite is fenced. Do not add a third ungated path.
 
 - **Experiment flock** (`engine/utils/ollama_lock.py`, OPS-GUARD-01): `flock(2)` on
   `~/.ollama_experiment.lock`, never an existence check, so a dead holder releases
-  automatically. Long runs wrap themselves in `hold_experiment_lock()`.
+  automatically. Every entry point that can reach a local model call or an Ollama
+  restart takes it with `with hold_experiment_lock():` before it opens a database or
+  a manifest, and `tests/test_lock_census.py` finds the entry points itself and fails
+  on one that does not (R625(b), R629). **No acquisition waits:** if any other open
+  file description holds the lock, the acquire raises `ExperimentLockHeld` (a
+  `BlockingIOError`) at once, naming the lock file and the holder pid the kernel
+  records, and the entry point exits non-zero with nothing opened. A nested acquire in
+  the process that holds the lock re-enters without a second flock.
 - **Both restart paths gate on `foreign_lock_held()`**, deliberately narrower than
   `check_experiment_lock()` — a process holding the lock for its own run must still
   be able to restart, but restarting under *someone else's* experiment destroys it.

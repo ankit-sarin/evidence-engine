@@ -168,9 +168,11 @@ now gated, and the suite is fenced. Do not add a third ungated path.
   - `extractor.restart_ollama()` — proactive CUDA-defrag restart (`RESTART_EVERY_N`).
   - `ollama_client._restart_ollama_and_retry()` — last-resort recovery after the
     wall-clock watchdog exhausts retries (OPSFIX-01).
-- **Opt-out:** `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` disarms the recovery branch for
-  harnesses pointed at a different server. Refusal raises `RuntimeError`, which
-  `ollama_chat` surfaces as `TimeoutError` — never a silent success.
+- **Opt-out:** `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` disarms both restart paths, for
+  harnesses pointed at a different server. The recovery branch refuses with
+  `RuntimeError`, which `ollama_chat` surfaces as `TimeoutError` — never a silent
+  success. The proactive restart is skipped with one log line naming the variable,
+  and the run continues.
 - **Suite fence** (`tests/conftest.py`, OPSFIX-01): an autouse fixture wraps
   `subprocess.run/Popen/call/check_call/check_output` and `os.system` and refuses any
   argv naming a service manager or privilege escalation, matched on command basename.
@@ -633,7 +635,7 @@ PYTHONPATH=. python -m analysis.eval.analyze_qualgap01 --review surgical_autonom
 # PRIME-01 Pass-1 channel quote-richness (offline, zero model calls; ~15 min)
 PYTHONPATH=. python -m analysis.eval.analyze_prime01 --review surgical_autonomy
 
-# Disarm the last-resort Ollama restart for a harness on another server
+# Disarm both Ollama restart paths for a harness on another server
 EVIDENCE_ENGINE_NO_OLLAMA_RESTART=1 PYTHONPATH=. python -m <harness>
 
 # Test suite

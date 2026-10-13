@@ -48,7 +48,9 @@ from engine.core.parsed_text import ParsedTextError, ParsedTextRef, read_parsed_
 from engine.core.selection import SelectionResult, select_for_extraction
 from engine.core.paper_state import REASON_NO_FIELDS_RETURNED
 from engine.core import run_manifest as rm
-from engine.utils.ollama_client import InputFitError, ollama_chat
+from engine.utils.ollama_client import (
+    RESTART_OPT_OUT_ENV, InputFitError, ollama_chat, restart_disabled,
+)
 from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
 
 logger = logging.getLogger(__name__)
@@ -717,6 +719,18 @@ def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> None:
     Raises RuntimeError if Ollama doesn't come back within 60 seconds.
     """
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # The explicit opt-out comes first (N17): a harness pointed at another
+    # server sets it so that no path in this process restarts the systemd unit.
+    # It is the same switch the last-resort recovery reads
+    # (`ollama_client._restart_ollama_and_retry`). Skipping is a no-op, as below.
+    if restart_disabled():
+        logger.warning(
+            "[%s] RESTART SKIPPED — %s is set (%s, %d papers done). Proactive "
+            "restarts are disabled for this process; continuing without restarting.",
+            ts, RESTART_OPT_OUT_ENV, reason, papers_done,
+        )
+        return
 
     # OPS-GUARD-01 (C): never restart Ollama out from under someone else's
     # experiment. `foreign_lock_held()` is deliberately narrower than

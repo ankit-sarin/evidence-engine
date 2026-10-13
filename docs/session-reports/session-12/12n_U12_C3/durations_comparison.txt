@@ -1,0 +1,37 @@
+commit 2 gate (856.52 s wall): 2367 listed phases, sum 848.0 s
+commit 3 gate (903.11 s wall): 2402 listed phases, sum 894.3 s
+  call     commit 2   290.5 s   commit 3   306.3 s
+  setup    commit 2   556.9 s   commit 3   587.2 s
+  teardown commit 2     0.6 s   commit 3     0.8 s
+phases listed only in commit 3's file: 68 sum 0.7 s;  only in commit 2's: 33, sum 0.3 s
+the six new tests: 0.00 s listed
+largest increases (s):
+   +0.60  call     tests/test_distribution_monitor.py::TestCheckOK::test_healthy_spread  (0.60 -> 1.20)
+   +0.52  call     tests/test_distribution_monitor.py::TestArmRouting::test_cloud_arm_filters_by_arm_name  (0.51 -> 1.03)
+   +0.48  setup    tests/test_database.py::test_no_duplicates_on_readd  (0.56 -> 1.04)
+   +0.46  call     tests/test_parse_quality.py::test_metrics_reproduce_the_phase1_sweep_row[415]  (27.52 -> 27.98)
+   +0.46  call     tests/test_distribution_monitor.py::TestRunPostExtractionCheck::test_called_on_completion  (0.51 -> 0.97)
+   +0.45  setup    tests/analysis/paper1/test_pass1_inspection.py::test_q2_field_level2_flags_saturation  (0.59 -> 1.04)
+   +0.45  call     tests/test_distribution_monitor.py::TestCheckEdgeCases::test_only_categorical_fields_checked  (0.45 -> 0.90)
+   +0.44  call     tests/test_distribution_monitor.py::TestCheckLowVariance::test_84pct_not_low_variance  (0.53 -> 0.97)
+   +0.44  call     tests/test_distribution_monitor.py::TestCheckCollapsed::test_collapsed_entropy_zero  (0.51 -> 0.95)
+   +0.43  setup    tests/analysis/paper1/test_pass1_inspection.py::test_q3_fieldtype_level2  (0.60 -> 1.03)
+   +0.42  call     tests/test_distribution_monitor.py::TestCheckEdgeCases::test_all_nr_excluded  (0.48 -> 0.90)
+   +0.42  setup    tests/migrations/test_022_run_kinds_and_audit_tables.py::test_T1_fresh_database_carries_022_executed  (0.60 -> 1.02)
+largest decreases (s):
+   -0.11  setup    tests/analysis/paper1/test_judge_storage_pass2.py::TestInsertPass2Verifications::test_rollback_on_duplicate_ar
+   -0.12  setup    tests/test_undeclared_call.py::test_3_an_undeclared_preflight_model_is_refused_before_the_send
+   -0.12  setup    tests/test_ft_screening.py::TestFTAdjudication::test_import_rejects_blank_decisions
+   -0.19  setup    tests/test_selection_bound.py::test_T1_absent_bound_selects_as_today_and_records_nothing
+largest increases by test file (s):
+   +7.28  tests/test_distribution_monitor.py
+   +6.99  tests/test_database.py
+   +4.19  tests/migrations/test_022_run_kinds_and_audit_tables.py
+   +3.50  tests/analysis/paper1/test_judge_storage.py
+   +2.23  tests/test_corpus_authority.py
+   +2.16  tests/test_cut_over.py
+   +2.08  tests/analysis/paper1/test_judge_storage_pass2.py
+   +1.93  tests/test_ft_adjudication_import.py
+   +1.88  tests/analysis/paper1/test_pass1_inspection.py
+   +1.27  tests/test_codebook_review_at_open.py
+phases slower by >5 ms: 910; faster by >5 ms: 480

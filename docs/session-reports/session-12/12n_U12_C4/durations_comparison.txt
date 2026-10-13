@@ -1,0 +1,23 @@
+commit 3 gate (903.11 s wall): 2402 listed phases, sum 894.3 s
+commit 4 gate (861.36 s wall): 2377 listed phases, sum 852.6 s
+  call     commit 3   306.3 s   commit 4   291.5 s
+  setup    commit 3   587.2 s   commit 4   560.6 s
+  teardown commit 3     0.8 s   commit 4     0.5 s
+the new tests: 9 listed phases, 2.56 s
+phases slower by more than 10 s against commit 3's file: none
+largest increases (s):
+   +0.62  setup    tests/test_run_pipeline_closes.py::test_a_failed_run_closes_failed_with_its_exception_class_and_message  (0.00 -> 0.62)
+   +0.61  setup    tests/test_failed_close_reason.py::test_a_cloud_arm_that_raises_closes_failed_with_the_class_and_message  (0.00 -> 0.61)
+   +0.60  setup    tests/test_failed_close_reason.py::test_a_cloud_arm_that_returns_closes_completed_with_no_reason  (0.00 -> 0.60)
+   +0.59  setup    tests/test_failed_close_reason.py::test_a_cloud_arm_interrupted_closes_failed_naming_the_interrupt  (0.00 -> 0.59)
+   +0.22  setup    tests/test_pdf_parser.py::test_verify_hashes_no_mismatch  (0.55 -> 0.77)
+   +0.21  setup    tests/test_run_interrupts.py::test_t5_an_interrupt_after_a_gate_close_leaves_the_gate_close  (0.63 -> 0.84)
+   +0.19  setup    tests/test_ft_bridge.py::test_10_seam_include_is_pending_confirm_is_eligible_exclude_is_valid  (0.58 -> 0.77)
+   +0.17  call     tests/test_parse_quality.py::test_glyph_density_is_per_kchar_not_a_raw_count  (0.09 -> 0.26)
+largest decreases (s):
+   -0.45  setup    tests/test_database.py::test_no_duplicates_on_readd
+   -0.46  setup    tests/migrations/test_022_run_kinds_and_audit_tables.py::test_T6_run_calls_insert_without_outcome_refused
+   -0.48  call     tests/test_distribution_monitor.py::TestArmRouting::test_cloud_arm_filters_by_arm_name
+   -0.62  call     tests/test_distribution_monitor.py::TestCheckOK::test_healthy_spread
+   -0.69  setup    tests/test_run_pipeline_closes.py::test_a_failed_run_closes_failed_with_no_reason
+phases slower by >5 ms: 537; faster by >5 ms: 924

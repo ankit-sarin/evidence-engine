@@ -6487,7 +6487,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 132,
+            "line": 136,
             "names": [
               "--review"
             ],
@@ -6496,7 +6496,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 137,
+            "line": 141,
             "names": [
               "--arm"
             ],
@@ -6505,7 +6505,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 143,
+            "line": 147,
             "names": [
               "--spec"
             ],
@@ -6514,7 +6514,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 148,
+            "line": 152,
             "names": [
               "--db"
             ],
@@ -6523,7 +6523,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 153,
+            "line": 157,
             "names": [
               "--max-papers"
             ],
@@ -6532,7 +6532,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 159,
+            "line": 163,
             "names": [
               "--max-cost"
             ],
@@ -6541,7 +6541,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 165,
+            "line": 169,
             "names": [
               "--progress"
             ],
@@ -6550,7 +6550,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 170,
+            "line": 174,
             "names": [
               "--dry-run"
             ],
@@ -6564,13 +6564,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 146,
+            "line": 150,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           },
           {
             "kind": "literal",
-            "line": 151,
+            "line": 155,
             "role": "help_text",
             "text": "Path to database (default: data/<review>/review.db)"
           }
@@ -6585,17 +6585,17 @@
           },
           {
             "func": "load_spec_for",
-            "line": 181,
+            "line": 185,
             "scope": "main"
           },
           {
             "func": "data_root_for",
-            "line": 182,
+            "line": 186,
             "scope": "main"
           },
           {
             "func": "spec_path_for",
-            "line": 183,
+            "line": 187,
             "scope": "main"
           }
         ],
@@ -6608,7 +6608,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 570,
+            "line": 571,
             "names": [
               "--review",
               "--name"
@@ -6618,7 +6618,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 576,
+            "line": 577,
             "names": [
               "--spec"
             ],
@@ -6627,7 +6627,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 582,
+            "line": 583,
             "names": [
               "--skip-to"
             ],
@@ -6636,7 +6636,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 588,
+            "line": 589,
             "names": [
               "--limit"
             ],
@@ -6645,7 +6645,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 594,
+            "line": 595,
             "names": [
               "--max-papers"
             ],
@@ -6667,13 +6667,13 @@
           },
           {
             "kind": "literal",
-            "line": 572,
+            "line": 573,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 578,
+            "line": 579,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -6826,7 +6826,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "4db7a6b1c955b76bbcd18473a7f6871289b7d6b4",
+    "generated_at_commit": "d3dd3352be5824001230f7f751b0220a1b882c97",
     "scan_roots": [
       "engine",
       "scripts",

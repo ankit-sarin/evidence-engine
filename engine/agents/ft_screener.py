@@ -604,9 +604,9 @@ def run_ft_invocation(db: ReviewDatabase, spec: ReviewSpec, *, review_name: str 
             run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
             run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
         rm.close_run(db._conn, run_id, "completed")
-    except Exception:
+    except Exception as exc:
         logger.error("FT screening run %d failed", run_id, exc_info=True)
-        rm.close_run(db._conn, run_id, "failed")
+        rm.close_run(db._conn, run_id, "failed", reason=rm.failure_reason(exc))
         raise
     except (KeyboardInterrupt, rm.RunInterrupted) as exc:
         # C47: as run_pipeline — roll back, then check: a committed close

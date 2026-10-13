@@ -581,7 +581,7 @@ def _apply_ft_decisions(
     except Exception as exc:
         conn.rollback()
         rm.close_run(conn, run_id, "aborted" if refused else "failed",
-                     reason=refused or str(exc))
+                     reason=refused or rm.failure_reason(exc))
         raise
     rm.close_run(conn, run_id, "completed")
 

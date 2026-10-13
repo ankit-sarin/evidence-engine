@@ -197,7 +197,8 @@ def test_6_an_exception_at_the_event_write_writes_nothing_and_fails_the_run(
     assert _count(db, "ft_screening_adjudication") == 0 and _count(db, "paper_events") == 0
     assert _status(db, pid) == "FT_FLAGGED"
     (m,) = _manifests(db)
-    assert m["end_status"] == "failed" and m["end_reason"] == "event write failed"
+    assert m["end_status"] == "failed"
+    assert m["end_reason"] == "RuntimeError: event write failed"      # R625(a)(8)
 
 
 # ── 7, 11 — validation rejects before any write (D3, D6) ────────────

@@ -309,6 +309,10 @@ def _last_run_status(db):
     return _one(db, "SELECT end_status FROM run_manifests ORDER BY run_id DESC LIMIT 1")[0]
 
 
+def _last_run_reason(db):
+    return _one(db, "SELECT end_reason FROM run_manifests ORDER BY run_id DESC LIMIT 1")[0]
+
+
 def test_6_a_refused_status_write_leaves_nothing_for_the_paper(db, spec, fake, monkeypatch):
     pid = _paper(db, 1)
     before = _snapshot(db, pid)
@@ -321,6 +325,8 @@ def test_6_a_refused_status_write_leaves_nothing_for_the_paper(db, spec, fake, m
         _invoke(db, spec, screen_only=True)
     assert _snapshot(db, pid) == before
     assert _last_run_status(db) == "failed"
+    # R625(a)(8): the FT run's failed close names the exception and its message
+    assert _last_run_reason(db) == "ValueError: Invalid transition: PARSED → FT_SCREENED_OUT"
     assert not db._conn.in_transaction
 
 
@@ -336,6 +342,7 @@ def test_6_an_exception_at_the_primary_event_write_leaves_nothing(db, spec, fake
         _invoke(db, spec, screen_only=True)
     assert _snapshot(db, pid) == before == (0, 0, "PARSED", 0)
     assert _last_run_status(db) == "failed"
+    assert _last_run_reason(db) == "RuntimeError: event write failed"
 
 
 def test_6_an_exception_at_the_verifier_event_write_leaves_nothing(db, spec, fake, monkeypatch):

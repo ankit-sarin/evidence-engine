@@ -101,14 +101,16 @@ def test_a_completed_run_closes_completed_with_no_reason(db, pipeline):
     assert ended_at is not None
 
 
-def test_a_failed_run_closes_failed_with_no_reason(db, pipeline, monkeypatch):
+def test_a_failed_run_closes_failed_with_its_exception_class_and_message(db, pipeline, monkeypatch):
+    """INT-l12-14: this close carried no reason, so a failed run's manifest did
+    not say what failed. R625(a)(8): "<ExceptionClass>: <message>"."""
     def boom(*a, **k):
-        raise RuntimeError("stage failed")
+        raise ValueError("x")
     monkeypatch.setattr(rp, "_stage_extract", boom)
-    with pytest.raises(RuntimeError, match="stage failed"):
+    with pytest.raises(ValueError, match="x"):
         rp.run_pipeline("closes", skip_to="extract")
     status, reason, ended_at = _end(db, pipeline)
-    assert (status, reason) == ("failed", None)
+    assert (status, reason) == ("failed", "ValueError: x")
     assert ended_at is not None
 
 

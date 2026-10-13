@@ -294,8 +294,8 @@ def test_t6a_a_generic_failure_at_entry_2_rolls_back_and_closes_failed(db, spec,
     _nothing_written(db)   # no md and no tmp under parsed_text/
     m = _manifests(db)
     assert len(m) == 1 and m[0]["end_status"] == "failed"
-    assert m[0]["end_reason"].startswith("entry 2 (")
-    assert m[0]["end_reason"] == "entry 2 (EE2): injected"
+    assert m[0]["end_reason"].startswith("RuntimeError: entry 2 (")
+    assert m[0]["end_reason"] == "RuntimeError: entry 2 (EE2): injected"
     assert all(s == "pending" for (s,) in db._conn.execute(
         "SELECT status FROM workflow_state"))
 
@@ -327,7 +327,8 @@ def test_t6b_a_pre_placed_target_at_entry_2_aborts_and_is_left_untouched(db, spe
 
 
 def test_t6_an_exception_after_the_loop_closes_failed_unprefixed(db, spec, tmp_path):
-    """R-k: outside the per-paper loop the reason is str(exc), unprefixed."""
+    """R-k: outside the per-paper loop the reason carries no entry label — the
+    exception's class and message alone (R625(a)(8))."""
     def boom(*a, **kw):
         raise RuntimeError("stage write failed")
 
@@ -336,7 +337,8 @@ def test_t6_an_exception_after_the_loop_closes_failed_unprefixed(db, spec, tmp_p
         _import(db, spec, _input(tmp_path))
     _nothing_written(db)
     m = _manifests(db)
-    assert (m[0]["end_status"], m[0]["end_reason"]) == ("failed", "stage write failed")
+    assert (m[0]["end_status"], m[0]["end_reason"]) == \
+        ("failed", "RuntimeError: stage write failed")
 
 
 # ── T7 — the manifest pins every input ──────────────────────────────

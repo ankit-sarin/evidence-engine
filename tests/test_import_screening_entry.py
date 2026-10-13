@@ -248,7 +248,7 @@ def test_t6_a_generic_failure_at_entry_2_rolls_back_and_closes_failed(db, spec, 
     assert _n(db, "papers") == 0
     m = _manifests(db)
     assert len(m) == 1 and m[0]["end_status"] == "failed"
-    assert m[0]["end_reason"] == "entry 2 (10.1/se.2): injected"
+    assert m[0]["end_reason"] == "RuntimeError: entry 2 (10.1/se.2): injected"
 
 
 def test_t6_an_id_less_entry_is_labelled_by_its_title(db, spec, tmp_path):
@@ -265,7 +265,8 @@ def test_t6_an_id_less_entry_is_labelled_by_its_title(db, spec, tmp_path):
     with patch.object(se, "insert_paper_at_status", boom), pytest.raises(RuntimeError):
         _import(db, spec, _input(tmp_path))
     reason = _manifests(db)[0]["end_reason"]
-    assert reason == "entry 4 (title: A conference abstract with no identifier): injected"
+    assert reason == \
+        "RuntimeError: entry 4 (title: A conference abstract with no identifier): injected"
 
 
 def test_t6_a_helper_refusal_closes_aborted(db, spec, tmp_path, monkeypatch):

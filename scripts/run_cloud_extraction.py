@@ -115,12 +115,16 @@ def run_arm(
             extractor._conn, spec, kind="extraction", stages=(), codebook=codebook,
             cloud_arms=[arm_name], payload_description=PAYLOAD_DESCRIPTION)
         extractor.run_id = handle.run_id
-        status = "failed"
+        status, reason = "completed", None
         try:
             extractor.run(max_papers=max_papers, max_cost_usd=max_cost)
-            status = "completed"
+        except BaseException as exc:
+            # Any exit but a return closes the run 'failed', an interrupt
+            # included, with the exception's class and message (R625(a)(8)).
+            status, reason = "failed", rm.failure_reason(exc)
+            raise
         finally:
-            rm.close_run(extractor._conn, handle.run_id, status)
+            rm.close_run(extractor._conn, handle.run_id, status, reason=reason)
     finally:
         extractor.close()
 

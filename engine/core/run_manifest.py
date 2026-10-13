@@ -632,6 +632,30 @@ def open_review_session(conn, spec, *, codebook, git: GitState | None = None,
                     arms=arms, git=git, host=host, digest_fn=lambda m: "")
 
 
+#: The longest `failure_reason` a manifest stores.
+FAILURE_REASON_MAX = 500
+
+
+def failure_reason(exc: BaseException, context: str | None = None) -> str:
+    """The `end_reason` of a 'failed' close: "<ExceptionClass>: <message>", or
+    "<ExceptionClass>: <context>: <message>" when the site has a label for where
+    it failed (an import's entry label). R625(a)(8), INT-l12-14.
+
+    The class name is unqualified; the message is the first line of `str(exc)`
+    with its whitespace collapsed; an empty message leaves "<ExceptionClass>" or
+    "<ExceptionClass>: <context>". The whole is cut to `FAILURE_REASON_MAX`
+    characters, ending in "…" when cut. This is the only place the string is
+    assembled: a site passes the exception and, where it has one, its label.
+    """
+    lines = str(exc).strip().splitlines()
+    message = " ".join(lines[0].split()) if lines else ""
+    label = " ".join(context.split()) if context else ""
+    reason = ": ".join(part for part in (type(exc).__name__, label, message) if part)
+    if len(reason) > FAILURE_REASON_MAX:
+        reason = reason[:FAILURE_REASON_MAX - 1] + "…"
+    return reason
+
+
 def close_run(conn, run_id: int, status: str = "completed",
               reason: str | None = None) -> None:
     """`reason` is 022's `end_reason` column (R215/C26); 022's CHECK requires
@@ -640,9 +664,11 @@ def close_run(conn, run_id: int, status: str = "completed",
     message for 'aborted' and an `INTERRUPTED_REASONS` value at its gate stops
     (C40); `run_pipeline` and `run_ft_invocation` pass `interrupt_reason(exc)`
     — "interrupt:SIGINT" / "interrupt:SIGTERM" / "interrupt:SIGHUP" — on an
-    interrupt (C47); the three import paths pass the refused entry or failure
-    message. Free text apart from `INTERRUPTED_REASONS`; this function does not
-    check it. A second close is refused by 022's `run_manifests_end_once`
+    interrupt (C47); the three import paths pass the refused entry for 'aborted'.
+    Every 'failed' close passes `failure_reason(exc)` — the exception's class and
+    message, with the entry label as context where an import has one
+    (R625(a)(8)). Free text apart from `INTERRUPTED_REASONS`; this function does
+    not check it. A second close is refused by 022's `run_manifests_end_once`
     trigger (an IntegrityError) — callers that may race one check `is_closed`."""
     if status not in END_STATUSES:
         raise ValueError(f"end status {status!r} is not one of {END_STATUSES}")

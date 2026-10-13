@@ -288,7 +288,7 @@ def import_extraction_entry(review_db: ReviewDatabase, input_path: str | Path, *
     ptd.mkdir(exist_ok=True)
     placed: list[Path] = []
     paper_ids: list[int] = []
-    refused = loop_reason = None
+    refused = failed_at = None
     try:
         for e in entries:
             try:
@@ -309,8 +309,8 @@ def import_extraction_entry(review_db: ReviewDatabase, input_path: str | Path, *
             except _REFUSALS as exc:
                 refused = e.label + str(exc)
                 raise
-            except Exception as exc:
-                loop_reason = e.label + str(exc)
+            except Exception:
+                failed_at = e.label.removesuffix(": ")     # the entry, as the reason's context
                 raise
             paper_ids.append(pid)
 
@@ -324,7 +324,7 @@ def import_extraction_entry(review_db: ReviewDatabase, input_path: str | Path, *
         for path in reversed(placed):
             path.unlink(missing_ok=True)
         rm.close_run(conn, run_id, "aborted" if refused else "failed",
-                     reason=refused or loop_reason or str(exc))
+                     reason=refused or rm.failure_reason(exc, context=failed_at))
         raise
     rm.close_run(conn, run_id, "completed")
 

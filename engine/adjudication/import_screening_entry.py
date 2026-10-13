@@ -161,7 +161,7 @@ def import_screening_entry(review_db: ReviewDatabase, input_path: str | Path, *,
                          inputs=inputs, git=git, digest_fn=digest_fn).run_id
 
     paper_ids: list[int] = []
-    refused = loop_reason = None
+    refused = failed_at = None
     try:
         for e in entries:
             try:
@@ -172,15 +172,15 @@ def import_screening_entry(review_db: ReviewDatabase, input_path: str | Path, *,
             except _REFUSALS as exc:
                 refused = e.label + str(exc)
                 raise
-            except Exception as exc:
-                loop_reason = e.label + str(exc)
+            except Exception:
+                failed_at = e.label.removesuffix(": ")     # the entry, as the reason's context
                 raise
             paper_ids.append(pid)
         conn.commit()
     except Exception as exc:
         conn.rollback()
         rm.close_run(conn, run_id, "aborted" if refused else "failed",
-                     reason=refused or loop_reason or str(exc))
+                     reason=refused or rm.failure_reason(exc, context=failed_at))
         raise
     rm.close_run(conn, run_id, "completed")
 

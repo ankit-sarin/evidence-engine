@@ -205,7 +205,7 @@ def run_pipeline(
         raise
     except Exception as exc:
         logger.error("Pipeline failed: %s", exc, exc_info=True)
-        _finish_review_run(db, run_id, "failed")
+        _finish_review_run(db, run_id, "failed", reason=rm.failure_reason(exc))
         raise
     except (KeyboardInterrupt, rm.RunInterrupted) as exc:
         # C47: an interrupt closes the run 'interrupted' with its signal's
@@ -542,7 +542,8 @@ def _finish_review_run(db: ReviewDatabase, run_id: int, status: str, *,
     goes through here. `reason`: the RunAborted message for 'aborted' (10a-C3,
     R215); for 'interrupted', the stopping gate's `rm.REASON_BLOCKED_*` (C40)
     or `rm.interrupt_reason(exc)` — "interrupt:SIGINT" / "interrupt:SIGTERM" /
-    "interrupt:SIGHUP" (C47); None for 'completed' and 'failed'.
+    "interrupt:SIGHUP" (C47); `rm.failure_reason(exc)` for 'failed'; None for
+    'completed'
 
     On an interrupt, run_pipeline rolls back any open transaction BEFORE asking
     `rm.is_closed`: an interrupt can land between a close's UPDATE and its

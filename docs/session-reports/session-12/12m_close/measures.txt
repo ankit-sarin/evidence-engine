@@ -1,0 +1,26 @@
+89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82  data/surgical_autonomy/extraction_codebook.yaml
+917c24de29afdf802b5ddea61c34627a9bb0a857de3f97395af36d44ca664e5f  review_specs/surgical_autonomy.yaml
+62:  elicitation: false
+95:  enabled_arms: []
+NRestarts=0
+ExecMainStartTimestamp=Fri 2026-09-11 21:09:13 UTC
+134361088 2026-09-29 17:21:15.332724767 +0000 data/surgical_autonomy/review.db
+32768 2026-10-13 04:32:25.984119525 +0000 data/surgical_autonomy/review.db-shm
+0 2026-09-29 17:22:11.627632568 +0000 data/surgical_autonomy/review.db-wal
+data/surgical_autonomy/review.db
+code-diff-since-954796e: 0
+10b-close 12f 12g-meas 12g-ra 12g-rb 12h-rd 12i-scope 12i-w1 12j-open 12j-w2 12k-close 12k-est 12k-open 12k-rule 12l-close 12l-open 12l-p1a 12l-r612 12l-u01 12l-u02 12l-u03 12l-u04 12l-u04b 12l-u05 12l-u06 12l-u07 12l-u08 12l-u09 12l-u10 12l-u11 12m-R625 12m-U12 12m-U12-C1 12m-U12-RET 12m-close 12m-open e_exec_probe retained 
+claude-config 1ef81a820850c0dd8b2bd512409b117f53beb7fa 0/0
+ M PROJECT_LEDGER.md
+ 1 file changed, 6 insertions(+)
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock
+-rw-rw-r-- 1 ankitsarin ankitsarin 335482 Oct 10 09:17 logs/nightly_test_20261010.log
+-rw-rw-r-- 1 ankitsarin ankitsarin 335482 Oct 11 09:17 logs/nightly_test_20261011.log
+-rw-rw-r-- 1 ankitsarin ankitsarin 350676 Oct 12 09:18 logs/nightly_test_20261012.log
+--- after the gate:
+{"version":"0.21.0"}
+gemma3:27b a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203
+qwen3:32b 030ee887880fc378860c2dd35101da424377520441ae4bfe7be6deff8ade7840
+deepseek-r1:32b edba8017331d15236e57480eb45406c0d721db77a4cdcf234df500fc2ad3960c
+resident [('qwen3:8b', '2319-01-22T09:03:54.458174454Z')]
+inventory in sync

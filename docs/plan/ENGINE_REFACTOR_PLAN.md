@@ -4576,3 +4576,33 @@ R627(d) — C1-F3: at the first live-tier run (EVIDENCE_ENGINE_LIVE_TIERS=1), an
 | Date | Ruling | Made by |
 | --- | --- | --- |
 | 2026-10-13 | R627(a) — RET-F2 (12m_U12_RET.md): docs/architecture/modules.md is hand-written and nothing checks it against the tree, so its script tables go stale at each retirement unless the retiring commit edits them. New row INT-m12-5, Class 3, P7. R627(b) — C1-F1 (12m_U12_C1.md): ollama_client.py:59 builds the engine client at first import, reading OLLAMA_HOST then. A test that sets OLLAMA_HOST before that first import leaves the client bound to its value for later tests. A dated note on A-4b; no new row. RET-F1 (the dated count in the SPEC_BEARING_ENTRY_POINTS comment) is accepted as made; no row. R627(c) — The CLAUDE.md text proposed in 12m_U12_C1.md §(7) is approved for U12 commit 5. With it, commit 5 rewords the existing sentence "No tier is exempt, including the nightly full-suite run" to match the opt-in. The commit 5 handoff quotes the final text. R627(d) — C1-F3: at the first live-tier run (EVIDENCE_ENGINE_LIVE_TIERS=1), any test marked network or integration but not ollama that is refused by the Ollama fence is reported and re-marked. Recorded on INT-m12-2 as a dated note; no row. | PI, 2026-10-13, during session 12m |
+
+**Block 26.** *Transcribed 2026-10-13 (item 0 of the 12n-U12-C2A brief), in its own commit with the journal extracts R628(b) orders, in the R597(e) form:* ruling R628, made by PI on architect recommendation on 2026-10-13 UTC, during session 12n, on the 12n-OPEN report (startup verify; claude-config `c37fc507a21ccc3c004663998ebe1d5a5abb7a99`, no evidence-engine commit). The ruling as issued, with its line breaks:
+
+```text
+RULING R628 (PI, 2026-10-13 UTC, session 12n, on architect recommendation):
+
+R628(a) — The 12n-open startup verify is accepted, every value as reported. Its gate
+  (3,249 passed / 1 xfailed / 17 deselected, 853.31 s) stands. The three requests in
+  its journal window (GET /api/version, /api/tags, /api/ps at 2026-10-13 15:41:17
+  UTC) are the operator's concurrent residency reads, not requests from the suite.
+  Basis: the 2026-10-13 09:00 UTC nightly ran the no-marker suite (3,267 collected, a
+  superset of the gate's 3,250) on the same tree and under the same fence, and its
+  journal window 09:00–09:25 UTC holds no entries. The gate is not re-run.
+R628(b) — R626(e) (the 18:02:05 UTC group in the 12m-OPEN gate window): that gate ran
+  before commit 1's fence (9cf9318), so the 2026-10-13 nightly does not bear on it.
+  It is closed as operator reads if the 12l U10 and U11 standard-gate windows, also
+  unfenced, hold no GET /api/version and no GET /api/tags; otherwise it stays open,
+  with the extracts recorded beside it.
+R628(c) — From the next startup verify on, Ollama version, tags and ps reads are made
+  before the gate is launched and after it exits, each bracketed by a UTC timestamp in
+  the report; none is made while the gate runs.
+Made by PI on architect recommendation, 2026-10-13 UTC, during session 12n, on the
+12n-OPEN report.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-13 | R628(a) — The 12n-open startup verify is accepted, every value as reported. Its gate (3,249 passed / 1 xfailed / 17 deselected, 853.31 s) stands. The three requests in its journal window (GET /api/version, /api/tags, /api/ps at 2026-10-13 15:41:17 UTC) are the operator's concurrent residency reads, not requests from the suite. Basis: the 2026-10-13 09:00 UTC nightly ran the no-marker suite (3,267 collected, a superset of the gate's 3,250) on the same tree and under the same fence, and its journal window 09:00–09:25 UTC holds no entries. The gate is not re-run. R628(b) — R626(e) (the 18:02:05 UTC group in the 12m-OPEN gate window): that gate ran before commit 1's fence (9cf9318), so the 2026-10-13 nightly does not bear on it. It is closed as operator reads if the 12l U10 and U11 standard-gate windows, also unfenced, hold no GET /api/version and no GET /api/tags; otherwise it stays open, with the extracts recorded beside it. R628(c) — From the next startup verify on, Ollama version, tags and ps reads are made before the gate is launched and after it exits, each bracketed by a UTC timestamp in the report; none is made while the gate runs. | PI, 2026-10-13, during session 12n |
+
+*R628(b)'s outcome, measured 2026-10-13 (12n-U12-C2A item 0):* **R626(e) is closed as operator reads.** The 12l U10 gate window (2026-10-12 04:06:23 → 04:20:35 UTC, from `12l_U10/12l_U10.md`) holds one line, `GET "/api/ps"` at 04:14:58; the 12l U11 gate window (04:41:14 → 04:55:21 UTC, from `12l_U11/12l_U11.md`) holds one line, `GET "/api/ps"` at 04:49:45. Neither holds a `GET /api/version` or a `GET /api/tags`. Extracts: `docs/session-reports/session-12/12n_R628/journal_12l_U10_gate_window.txt`, `docs/session-reports/session-12/12n_R628/journal_12l_U11_gate_window.txt` (`journalctl -u ollama --utc` over each window). Both gates predate commit 1's fence (`9cf9318`, 2026-10-13 03:51:59 UTC), as did the 12m-OPEN gate (2026-10-12, on `4dd721d`). The decision log in this file ends at R628.

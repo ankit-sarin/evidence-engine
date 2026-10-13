@@ -1,0 +1,97 @@
+{
+ "I1_holds": true,
+ "P1_units": {
+  "fix_units": 35,
+  "new_P1_rows_and_the_unit_each_joins": {}
+ },
+ "baseline_12m_R626": {
+  "class_1": 95,
+  "class_2": 50,
+  "class_3": 122,
+  "rows": 267,
+  "without_class": 0
+ },
+ "by_package_and_class": {
+  "whole_list": {
+   "P1": {
+    "class_1": 26,
+    "class_2": 20,
+    "class_3": 11,
+    "rows": 57
+   },
+   "P2": {
+    "class_1": 12,
+    "class_2": 7,
+    "class_3": 1,
+    "rows": 20
+   },
+   "P3": {
+    "class_1": 10,
+    "class_2": 2,
+    "class_3": 2,
+    "rows": 14
+   },
+   "P4": {
+    "class_1": 24,
+    "class_2": 10,
+    "class_3": 0,
+    "rows": 34
+   },
+   "P5": {
+    "class_1": 15,
+    "class_2": 8,
+    "class_3": 0,
+    "rows": 23
+   },
+   "P6": {
+    "class_1": 8,
+    "class_2": 2,
+    "class_3": 0,
+    "rows": 10
+   },
+   "P7": {
+    "class_1": 0,
+    "class_2": 1,
+    "class_3": 109,
+    "rows": 110
+   }
+  }
+ },
+ "class_moves": [],
+ "expected_by_the_brief_I1": {
+  "P1_rows": 57,
+  "P7_rows": 110,
+  "class_1": 95,
+  "class_2": 50,
+  "class_3": 123,
+  "rows": 268
+ },
+ "now": {
+  "class_1": 95,
+  "class_2": 50,
+  "class_3": 123,
+  "rows": 268,
+  "without_class": 0
+ },
+ "r510": {
+  "rows_in": 1,
+  "rows_in_existing_rows_entering": 0,
+  "rows_in_opened": 1,
+  "rows_out": 0
+ },
+ "rows_opened": {
+  "class_1": 0,
+  "class_2": 0,
+  "class_3": 1,
+  "count": 1,
+  "rows": [
+   {
+    "class": "3",
+    "id": "INT-m12-5",
+    "package": "P7",
+    "ruling": "R627(a)",
+    "unit": null
+   }
+  ]
+ }
+}

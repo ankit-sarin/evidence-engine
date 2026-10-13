@@ -1,0 +1,19 @@
+2026-10-13T16:32:00Z
+E0 free
+  D1 inherited_fd=False [] | D2 ancestor_in_proc_locks=False | D3 ancestor_fd=True {578287: 'unreadable(13)', 2476: 'unreadable(13)', 1: 'unreadable(13)'} | holders=[]
+E1 flock <lock> cmd
+  D1 inherited_fd=True [3] | D2 ancestor_in_proc_locks=True | D3 ancestor_fd=True {646651: [3], 578287: 'unreadable(13)', 2476: 'unreadable(13)', 1: 'unreadable(13)'} | holders=[646651]
+E2 flock -o <lock> cmd
+  D1 inherited_fd=False [] | D2 ancestor_in_proc_locks=True | D3 ancestor_fd=True {646654: [3], 578287: 'unreadable(13)', 2476: 'unreadable(13)', 1: 'unreadable(13)'} | holders=[646654]
+E3 exec 9>>; flock -n 9; cmd
+  D1 inherited_fd=True [9] | D2 ancestor_in_proc_locks=False | D3 ancestor_fd=True {646659: [9], 578287: 'unreadable(13)', 2476: 'unreadable(13)', 1: 'unreadable(13)'} | holders=[646660]
+E4 same, 9>&- for the child
+  D1 inherited_fd=False [] | D2 ancestor_in_proc_locks=False | D3 ancestor_fd=True {646662: [9], 578287: 'unreadable(13)', 2476: 'unreadable(13)', 1: 'unreadable(13)'} | holders=[646663]
+E7 unrelated foreign holder (a sibling process, not an ancestor)
+  D1 inherited_fd=False [] | D2 ancestor_in_proc_locks=False | D3 ancestor_fd=True {578287: 'unreadable(13)', 2476: 'unreadable(13)', 1: 'unreadable(13)'} | holders=[646667]
+E8 ancestor has the file open but does NOT hold; a sibling holds
+  D1 inherited_fd=False [] | D2 ancestor_in_proc_locks=False | D3 ancestor_fd=True {646750: [9], 578287: 'unreadable(13)', 2476: 'unreadable(13)', 1: 'unreadable(13)'} | holders=[646751]
+E6 child (exec) of a Python holder
+  D1 inherited_fd=False [] | D2 ancestor_in_proc_locks=True | D3 ancestor_fd=True {646819: [3], 578287: 'unreadable(13)', 2476: 'unreadable(13)', 1: 'unreadable(13)'} | holders=[646819]
+2026-10-13T16:32:08Z
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock

@@ -1,0 +1,45 @@
+start 2026-10-13T16:30:10Z lock=/home/ankitsarin/scratch/12n-c2a/lockexp/scratch.lock
+E0 control: no outer lock, blocking acquire
+  pid=635707 inherited_fds_on_lock_inode=[] probe.check_experiment_lock=False self_holds=False foreign_lock_held=False
+  /proc/locks: []
+  acquiring, blocking ...
+  ACQUIRED after 0.00s
+  exit=0
+E1 outer flock(1) wrapper: flock <lock> python (fd inherited)
+  pid=635710 inherited_fds_on_lock_inode=[3] probe.check_experiment_lock=True self_holds=False foreign_lock_held=True
+  /proc/locks: [('FLOCK', 'WRITE', '635709', 'ANCESTOR')]
+  acquiring, blocking ...
+  exit=124
+E2 outer flock -o (fd closed before exec; flock(1) parent holds)
+  pid=635831 inherited_fds_on_lock_inode=[] probe.check_experiment_lock=True self_holds=False foreign_lock_held=True
+  /proc/locks: [('FLOCK', 'WRITE', '635830', 'ANCESTOR')]
+  acquiring, blocking ...
+  exit=124
+E3 inherited fd 9, the health job's pattern (exec 9>>lock; flock -n 9)
+  pid=638044 inherited_fds_on_lock_inode=[9] probe.check_experiment_lock=True self_holds=False foreign_lock_held=True
+  /proc/locks: [('FLOCK', 'WRITE', '638042', 'other')]
+  acquiring, blocking ...
+  exit=124
+E4 fd 9 held by the shell, closed for the child (9>&-)
+  pid=640732 inherited_fds_on_lock_inode=[] probe.check_experiment_lock=True self_holds=False foreign_lock_held=True
+  /proc/locks: [('FLOCK', 'WRITE', '640726', 'other')]
+  acquiring, blocking ...
+  exit=124
+E5 same as E1, non-blocking acquire
+  pid=642155 inherited_fds_on_lock_inode=[3] probe.check_experiment_lock=True self_holds=False foreign_lock_held=True
+  /proc/locks: [('FLOCK', 'WRITE', '642154', 'ANCESTOR')]
+  BlockingIOError: [Errno 11] Resource temporarily unavailable
+  exit=0
+E6 a Python holder, its subprocess child and its fork child
+  pid=642159 inherited_fds_on_lock_inode=[] probe.check_experiment_lock=False self_holds=False foreign_lock_held=False
+  /proc/locks: []
+  holder fd=3 inheritable=False
+  -- subprocess child (exec):
+  pid=642161 inherited_fds_on_lock_inode=[] probe.check_experiment_lock=True self_holds=False foreign_lock_held=True
+  /proc/locks: [('FLOCK', 'WRITE', '642159', 'ANCESTOR')]
+  BlockingIOError: [Errno 11] Resource temporarily unavailable
+  -- fork child: self_holds=True foreign=False inherited_fds=[3]
+  -- fork child: nested acquire yielded without flock
+  exit=0
+end 2026-10-13T16:30:42Z
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock

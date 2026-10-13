@@ -1,0 +1,783 @@
+{
+ "python_entry_points": 86,
+ "shell_scripts": [
+  "scripts/nightly_tests.sh",
+  "scripts/watch_run4.sh"
+ ],
+ "rows": [
+  {
+   "entry": "analysis/eval/adjud01_pairs.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/analyze_capture01.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/analyze_prime01.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/analyze_qualgap01.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/analyze_schema_eval.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/analyze_schema_eval2.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/elicit01/analyze.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/elicit01/manifest.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/elicit01/runner.py",
+   "local_call": true,
+   "restart_proactive": true,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": true,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/eval/parse01/flag.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/parse01/sweep.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/run_capture01.py",
+   "local_call": true,
+   "restart_proactive": true,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": true,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/eval/run_local_ab.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": true,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/eval/run_local_abc.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": true,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/eval/run_qualgap01.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": true,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/eval/run_screen2f.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": true,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/score_screen2f.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/screen2f_export.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/eval/screen2f_worker.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/eval/smoke_regression01.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": true,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/paper1/adjudication.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/paper1/consensus.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/paper1/export_disagreement_pairs.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/paper1/human_import.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/paper1/judge_cli.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/paper1/judge_codebook_smoke.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": true,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/paper1/judge_provenance.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/paper1/pass1_inspection.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/paper1/pass2_branchB_report.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/paper1/pass2_full.py",
+   "local_call": true,
+   "restart_proactive": true,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/paper1/pass2_retry_single.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/paper1/pass2_smoke.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/paper1/pi_audit_sampler.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/paper1/pi_audit_sampler_v2.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/paper1/pi_audit_unblind.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/paper1/runner_smoke_phase2a.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "analysis/paper1/spanloss_autopsy.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/provenance/census.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "analysis/provenance/recount.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/acquisition/check_oa.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/acquisition/download.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/acquisition/manual_list.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/acquisition/pdf_quality_check.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "engine/acquisition/pdf_quality_html.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/acquisition/pdf_quality_import.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/acquisition/verify_downloads.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/adjudication/abstract_adjudication_html.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/adjudication/advance_stage.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/adjudication/ft_adjudication_html.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/agents/ft_screener.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": true,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "engine/analysis/concordance.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/002_screening_rename.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/003_backfill_expanded_screening.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/004_pdf_quality_check.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/005_model_digest.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/006_not_null_confidence_tier.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/007_add_judge_tables.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/008_add_fabrication_verifications.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/009_add_backfill_audit_log.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/010_add_provenance_classifications.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/011_add_absence_claim_class.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/012_codebook_provenance.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/013_drop_schema_hash_not_null.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/migrations/__main__.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/parsers/pdf_parser.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/tools/db_fingerprint.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/tools/inventory.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/utils/ollama_preflight.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": true,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "engine/validators/distribution_monitor.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "engine/validators/extraction_validator.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/_pass2_delta.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/_pass2_eyeball.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/advance_to_pdf_acquired.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/backfill_authors.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/backfill_cloud_spans.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/parse_expanded_corpus.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  },
+  {
+   "entry": "scripts/pdf_acquisition/step1_export_citations.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/pdf_acquisition/step2_unpaywall_check.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/pdf_acquisition/step3_download_oa_pdfs.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/pdf_acquisition/step3b_retry_failed.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/pdf_acquisition/step4_manual_download_list.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/prepare_concordance_pdfs.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/reparse_cloud_spans.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/run_cloud_extraction.py",
+   "local_call": false,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": false
+  },
+  {
+   "entry": "scripts/run_pipeline.py",
+   "local_call": true,
+   "restart_proactive": true,
+   "preflight_probe": true,
+   "cloud_call": false,
+   "holds_lock": true,
+   "probes_lock": true
+  },
+  {
+   "entry": "scripts/screen_expanded.py",
+   "local_call": true,
+   "restart_proactive": false,
+   "preflight_probe": false,
+   "cloud_call": false,
+   "holds_lock": false,
+   "probes_lock": true
+  }
+ ]
+}

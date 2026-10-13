@@ -1,0 +1,399 @@
+# 12n-U12-C2A — U12 commit 2, Phase A: the lock census and design read-out
+
+Session 12n, 2026-10-13 UTC. Read-only: no engine, test, script, analysis, spec, CLAUDE.md or plan change in this phase; no model call; no Ollama request of any kind; the real lock file `~/.ollama_experiment.lock` was never opened (mtime 2026-07-27 23:22:08 UTC before and after, by `stat`). HEAD at the read: `469ebe5ce733bb55b795915bfc021ffefd4ed9ea` (item 0 of this brief, R628 as Block 26).
+
+Every claim is tagged **MEASURED** (a value computed by a script run here; the script is named), **CODE ORDER** (a reading of control flow, not executed) or **INFERRED** (anything else). Sources are cited as `file::symbol` with the quoted line. Nothing in A8 is chosen.
+
+Files beside this read-out:
+
+- `lock_census.py` → `lock_census.json`; `census_table.py` → `lock_census_table.md` (the full table, all 86 entry points, with call chains).
+- `entry_census_12m_script_at_head.json` — the 12m script (`12m_U12/entry_census.py`), unmodified, run at this HEAD.
+- `import_closure_control.py` → `import_closure_control.out`.
+- `lockexp/` — `child.py`, `run.sh`, `run.out` (A2); `detect.py`, `detect.out` (A8 (ii)). Scratch lock path `~/scratch/12n-c2a/lockexp/scratch.lock`.
+
+Command windows (UTC, 2026-10-13): task start 16:25:13; item 0 pushed 16:26:14; 12m census at HEAD 16:26:38; lock census 16:28:51; lock experiment 16:30:10–16:30:42; detector experiment 16:32:00–16:32:08. `journalctl -u ollama --utc --since "2026-10-13 16:25:00 UTC"` read at 16:33:10: `-- No entries --` (MEASURED).
+
+## Summary
+
+1. **86 Python entry points; 19 have a resolved path to a local model call.** 6 hold the lock on every resolved path, 12 hold no lock, and `scripts/run_pipeline.py` holds it for the extract stage only. One more entry point (`analysis/eval/run_screen2f.py`) holds the lock and makes no call itself: its child workers do. One is cloud only. 65 have no resolved path (A3).
+2. **The outer-lock deadlock reproduces in four forms** on a scratch lock path: `flock <lock> cmd`, `flock -o <lock> cmd`, an inherited fd 9, and fd 9 held by the parent shell but closed for the child. Each blocked until its 8-second timeout (A2).
+3. **`screen2f_worker.py` is the one child process beneath a holder that makes local calls.** Under "every local entry point holds the lock" plus R625(a)(7) it would fail fast as written. That needs a ruling (A5, A8 (iii)).
+4. **No single detector separates "outer or inherited lock" from "an unrelated holder" in every measured case.** The health job's own pattern with the descriptor closed for the child (E4) is visible only by scanning ancestors' descriptors, and that scan has a false positive (A8 (ii)).
+5. **Two files in the 12m read-out's commit-2 list need no holder under an entry-point rule:** `engine/agents/screener.py` has no `__main__` block, and `engine/parsers/pdf_parser.py`'s CLI reaches no model call (A3).
+
+## A1 — the texts
+
+**Expected:** the quotes are found on disk as the brief gives them. **Found:** they are; N19, N22 and L11-C4 are defined outside `12m_U12A.md` (in `12l_P1A.md` §5 and the Wave 2 reader file `12j_review_w2/readers/L11.md`) and are quoted from there. Every block below was cut from its source by `build_readout.py`, not retyped.
+
+**`12m_U12A.md` §10.1, the table header and commit 2's row:**
+
+{{S101_HEAD}}
+{{S101_ROW2}}
+
+**§10.1's closing sentence, and §10.2's line on commit 2:**
+
+{{S101_TAIL}}
+
+{{S102_C2}}
+
+The ten scripts were retired at `954796e` (R625(a)(6)); the sentence is moot at this HEAD.
+
+**`12m_U12A.md` §5, whole:**
+
+{{S5}}
+
+**N19 and N22 (`12l_P1A.md` §5, their rows):**
+
+{{N19}}
+{{N22}}
+
+**L11-C4 (`12j_review_w2/readers/L11.md`, whole entry):**
+
+{{L11C4}}
+
+**The plan's rows A-1 and INT-g12-7, and commit 2's row in the U12 table:**
+
+{{A1}}
+
+{{G127}}
+
+{{TABLE2}}
+
+## A2 — the lock implementation
+
+**Expected:** the deadlock reproduces. **Found:** it does, in four forms (E1–E4 below).
+
+**Module:** `engine/utils/ollama_lock.py`, 191 lines, stdlib only ("No Ollama calls, no network, no third-party dependencies").
+
+**Public API (CODE ORDER, whole file read):**
+
+| Symbol | Behaviour | Quoted line |
+| --- | --- | --- |
+| `lock_path()` | The path: the override or `~/.ollama_experiment.lock` | `override = os.environ.get("OLLAMA_EXPERIMENT_LOCK")` / `return Path(override) if override else _DEFAULT_LOCK_PATH` |
+| `hold_experiment_lock(blocking=True)` | Context manager. Opens the file, `flock(LOCK_EX)`; blocks unless `blocking=False`, which raises `BlockingIOError` | `flags = fcntl.LOCK_EX \| (0 if blocking else fcntl.LOCK_NB)` |
+| `check_experiment_lock()` | Non-blocking probe on a second descriptor, released at once; an unopenable file reads as held | `fcntl.flock(fd, fcntl.LOCK_EX \| fcntl.LOCK_NB)` / `fcntl.flock(fd, fcntl.LOCK_UN)` |
+| `self_holds_lock()` | This process holds it | `return _SELF_DEPTH > 0` |
+| `foreign_lock_held()` | Held, and not by this process | `return check_experiment_lock() and not self_holds_lock()` |
+
+**Re-entrancy:** a process-global depth counter under a `threading.RLock`. A nested acquire does not call `flock`: `nested = _SELF_DEPTH > 0` / `if nested: _SELF_DEPTH += 1` and the nested branch yields and decrements. The outermost acquire stores the descriptor: `_SELF_DEPTH = 1` / `_SELF_FD = fd`.
+
+**Environment variables:** the module reads one, `OLLAMA_EXPERIMENT_LOCK` (the path). The restart opt-out `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` is not a lock setting: it is read by `engine/utils/ollama_client.py::restart_disabled` (`return os.environ.get(RESTART_OPT_OUT_ENV, "").strip().lower() not in ("", "0", "false", "no")`), which gates `_restart_ollama_and_retry` only.
+
+**Logging (N22):** two lines, both after the fact: `logger.info("Experiment lock acquired: %s (pid %d)", lock_path(), os.getpid())` and `logger.info("Experiment lock released: %s (pid %d)", …)`. Nothing is logged before the blocking `fcntl.flock(fd, flags)`.
+
+**The descriptor is not inheritable across `exec`** (MEASURED, `lockexp/run.out` E6: `holder fd=3 inheritable=False`). `_open_lock_file` uses `os.open(path, os.O_RDWR | os.O_CREAT, 0o644)`, and Python opens descriptors close-on-exec. A `subprocess` child of a Python holder therefore inherits no descriptor; a `fork` child without `exec` inherits both the descriptor and the depth counter.
+
+**The experiment (MEASURED, `lockexp/run.sh` → `run.out`; every case under `timeout 8`, exit 124 = it blocked until killed):**
+
+| Case | What the process saw before acquiring | Blocking acquire |
+| --- | --- | --- |
+| E0 control, no outer lock | no descriptor on the lock inode; probe free | acquired after 0.00 s, exit 0 |
+| E1 `flock <lock> python …` | inherited fd 3 on the lock inode; `foreign_lock_held=True`; `/proc/locks` names an ancestor | **blocked, exit 124** |
+| E2 `flock -o <lock> python …` (descriptor closed before exec) | no inherited descriptor; `foreign_lock_held=True`; `/proc/locks` names an ancestor | **blocked, exit 124** |
+| E3 `exec 9>>lock; flock -n 9; python …` (the health job's pattern, inherited) | inherited fd 9; `foreign_lock_held=True`; `/proc/locks` names a pid that is not an ancestor | **blocked, exit 124** |
+| E4 the same with `9>&-` for the child | no inherited descriptor; `foreign_lock_held=True`; `/proc/locks` names a pid that is not an ancestor | **blocked, exit 124** |
+| E5 as E1, `blocking=False` | as E1 | `BlockingIOError: [Errno 11] Resource temporarily unavailable`, exit 0 |
+| E6 a Python holder's `subprocess` child | no inherited descriptor; `foreign_lock_held=True`; `/proc/locks` names an ancestor | non-blocking acquire raised `BlockingIOError` |
+| E6 a Python holder's `fork` child | inherited fd 3; **`self_holds=True`, `foreign=False`** | the nested acquire yielded without calling `flock` |
+
+- In no blocked case was any line logged between "acquiring" and the kill: that is N22 as measured.
+- In E3 and E4 the pid in `/proc/locks` is the short-lived `flock(1)` process that made the call, which has exited; the kernel keeps the pid of the caller, not of the shell that owns the descriptor.
+- The message in E5 names no file.
+- **The fork child believes it holds the lock** because `_SELF_DEPTH` is copied by `fork`. That it would also release the parent's lock by running the outermost `finally` (`fcntl.flock(fd, fcntl.LOCK_UN)` on the shared open file description) is CODE ORDER, not measured. No fork site sits beneath a holder today (A5).
+
+## A3 — the census
+
+**Expected:** `run_pipeline` holds the lock for extract only; the FT screener CLI, the abstract screening path, the audit stage and the vision parse path reach a local model call unlocked. **Found:** all five hold. I5 holds: `docs/session-reports/session-12/12m_U12/entry_census.py` runs read-only at HEAD. I6 holds: the lock is taken in `run_extraction` and in seven `analysis/eval` harnesses, and nowhere else.
+
+**The 12m script at HEAD (MEASURED, `entry_census_12m_script_at_head.json`):** 86 Python entry points (95 at 12m; the 9 removed are the retired Python scripts, 0 added, 0 rows changed among the 86); 20 with a resolved path to a call, a restart, the probe or the lock; 66 with none. Shell scripts: `scripts/nightly_tests.sh`, `scripts/watch_run4.sh`.
+
+**The extension (`lock_census.py`, in this directory, not in the tree).** It keeps the 12m script's module table and reference resolution and adds three things.
+
+- **Lock context.** A reference is locked when it sits lexically inside a `with` whose context expression calls `hold_experiment_lock`, or is reached from one that is. A sink reached in an unlocked state has an unlocked static path.
+- **Call chains.** The shortest chain per sink, preferring exactly resolved edges over the method-name over-approximation.
+- **More sinks.** The last-resort restart, the preflight wrappers, the cloud transports, and process-spawning sites.
+
+**Entry-point definition:** a module with an `if __name__ == "__main__":` block, a package's `__main__.py` included (`engine/migrations/__main__.py` has one). `pyproject.toml` declares no console script, and no module defines `main()` without a `__main__` block (MEASURED, grep).
+
+**Sinks (MEASURED, grep of the three trees):**
+
+- **Local model call:** `engine/utils/ollama_client.py::ollama_chat` is the only route. No file calls `ollama.chat` or `ollama.generate` directly; `_client.chat` appears only inside `ollama_client.py`.
+- **Restart:** two sites run `["sudo", "systemctl", "restart", "ollama"]` — `engine/agents/extractor.py::restart_ollama` and `engine/utils/ollama_client.py::_restart_ollama_and_retry` — and no third.
+
+**Counts by tree and category (MEASURED, `lock_census.json`):**
+
+| Tree | Entry points | Local, every resolved path locked | Local, part locked | Local, no lock | Cloud only | None |
+| --- | --- | --- | --- | --- | --- | --- |
+| `engine/` | 31 | 0 | 0 | 3 | 0 | 28 |
+| `scripts/` | 16 | 0 | 1 | 2 | 1 | 12 |
+| `analysis/` | 39 | 6 | 0 | 7 | 0 | 26 |
+| **Total** | **86** | **6** | **1** | **12** | **1** | **66** |
+
+`analysis/eval/run_screen2f.py` is among the 26: it takes the lock (`with hold_experiment_lock(blocking=False):` in `_run`) and makes no model call itself.
+
+**The 20 entry points that are not "none", plus `run_screen2f` (MEASURED; chains in `lock_census_table.md`):**
+
+| Entry point | Local call | Proactive restart | Preflight probe | Lock taken in | Frozen marker in the file |
+| --- | --- | --- | --- | --- | --- |
+| `scripts/run_pipeline.py` | **extract: locked; screen, parse, audit: unlocked** | locked | extract: locked; screen, audit: unlocked | `extractor.py::run_extraction` | — |
+| `engine/agents/ft_screener.py` | unlocked | — | unlocked | — | — |
+| `engine/acquisition/pdf_quality_check.py` | unlocked | — | — | — | — |
+| `engine/utils/ollama_preflight.py` | unlocked | — | unlocked | — | — |
+| `scripts/screen_expanded.py` | unlocked | — | — | — | — |
+| `scripts/parse_expanded_corpus.py` | unlocked | — | — | — | — |
+| `analysis/paper1/judge_cli.py` | unlocked | — | — | — | — |
+| `analysis/paper1/pass2_full.py` | unlocked | **unlocked** | — | — | — |
+| `analysis/paper1/pass2_smoke.py` | unlocked | — | — | — | — |
+| `analysis/paper1/pass2_retry_single.py` | unlocked | — | — | — | — |
+| `analysis/paper1/judge_codebook_smoke.py` | unlocked | — | unlocked | — | — |
+| `analysis/paper1/runner_smoke_phase2a.py` | unlocked | — | — | — | — |
+| `analysis/eval/screen2f_worker.py` | unlocked in its own process; run only as a child of `run_screen2f`, which holds | — | — | — | — |
+| `analysis/eval/run_screen2f.py` | none itself | — | — | `run_screen2f.py::_run`, non-blocking | — |
+| `analysis/eval/elicit01/runner.py` | locked | locked | — | `runner.py::main` | yes |
+| `analysis/eval/run_capture01.py` | locked | locked | — | `run_capture01.py::main` | yes |
+| `analysis/eval/run_local_ab.py` | locked | — | — | `run_local_ab.py::main` | — |
+| `analysis/eval/run_local_abc.py` | locked | — | — | `run_local_abc.py::main` | yes |
+| `analysis/eval/run_qualgap01.py` | locked | — | — | `run_qualgap01.py::main` | yes |
+| `analysis/eval/smoke_regression01.py` | locked | — | — | `smoke_regression01.py::main` | — |
+| `scripts/run_cloud_extraction.py` | none (cloud only, R625(a)(3)) | — | — | — | — |
+
+Every local caller also reaches the last-resort restart through `ollama_chat`; that column is in the table file.
+
+**Frozen and retained status.**
+
+- **Frozen marker:** four harnesses carry the comment "The model this frozen study ran with…" (`elicit01/runner.py`, `run_capture01.py`, `run_local_abc.py`, `run_qualgap01.py`); all four already hold the lock.
+- **Retention ledger:** none of the 21 is a ledger row. The ledger's text names `engine/utils/ollama_preflight.py` and `scripts/screen_expanded.py` only inside other artifacts' rows (the table file's "named" column is a text search, not a status).
+- **Not established here:** which of the unlocked `analysis/paper1` scripts serve the engine going forward under R31. That is the PI's decision in A8 (iii).
+
+**`run_pipeline` by stage (MEASURED, `lock_census.json` `stages`):**
+
+| Function | Local call | Preflight | Lock |
+| --- | --- | --- | --- |
+| `_open_run_manifest` | none; one Ollama read (`open_run -> resolve_run -> fetch_model_digest`, `GET /api/tags`) | — | none |
+| `_stage_search` | none | — | none |
+| `_stage_screen` | unlocked: `run_screening -> screen_paper -> ollama_chat` | unlocked, in `run_screening` | none |
+| `_stage_parse` | unlocked: `parse_all_pdfs -> parse_pdf -> parse_with_vision -> ollama_chat` | — | none |
+| `_stage_extract` | locked: `run_extraction -> _run_extraction_unlocked[L] -> … -> ollama_chat[L]` | locked, in `_extract_selected` | `run_extraction` |
+| `_stage_audit` | unlocked: `audit_run -> semantic_verify -> ollama_chat` | unlocked, in `_stage_audit` | none |
+| `_stage_export` | none | — | none |
+
+**What the census cannot see.**
+
+- **A lock decided by a parameter.** `run_extraction` has `if not experiment_lock:` / `return _run_extraction_unlocked(…)` outside its `with`. The census reports that branch separately ("unlocked: opt-out branch only"). No file under `engine/`, `scripts/` or `analysis/` passes `experiment_lock=False` (MEASURED, grep); twelve test files do (A7).
+- **Dynamic dispatch.** `scripts/run_cloud_extraction.py` picks its class from `EXTRACTORS = {"openai": OpenAIExtractor, "anthropic": AnthropicExtractor}`; the census sees the class references and so classes it cloud only. No `importlib` or `getattr` dispatch to a model caller was found by grep, which is not proof of absence.
+- **Over-approximation.** A `~` edge (a method matched by name across one import hop) can invent a path. None of the 21 rows' reported chains contains one (MEASURED: no `~` in `lock_census_table.md`'s chains for local calls).
+- **A caller's caller in another process.** `screen2f_worker.py` reads as unlocked because its lock is its parent's.
+
+**Controls.**
+
+- **Module-level reach is the wrong criterion.** `engine/parsers/pdf_parser.py` contains a call site (`parse_with_vision`) and has a `__main__` block, but its `main` only runs `verify_hashes` (CODE ORDER, `main` read whole). The census classes it "none", correctly.
+- **Import closure is useless as a criterion.** 29 of the 67 "none" or "cloud only" entry points have `engine.utils.ollama_client` in their transitive import closure (MEASURED, `import_closure_control.out`), `engine/adjudication/advance_stage.py` among them.
+- **Hand check of the "none" set:** of those 66, the only ones that import a module with a textual call site directly are `pdf_parser.py` (above) and `run_screen2f.py` (the lock module only) (MEASURED). The other 64 were not read line by line.
+
+**Against the 12m read-out's commit-2 file list (§10.1).** It names `engine/agents/screener.py` and `engine/parsers/pdf_parser.py` "(if a standalone path remains)". `screener.py` is not an entry point (no `__main__` block), and `pdf_parser.py`'s CLI reaches no model call. It does not name `analysis/eval/screen2f_worker.py`, which is an entry point with an unlocked local call.
+
+## A4 — preflight and restart (L11-C4)
+
+**Expected:** most callers of the probe hold no lock. **Found:** of seven call sites, one is locked, five are unlocked, and one is reached from no entry point.
+
+**The probe:** `engine/utils/ollama_preflight.py::check_model` sends `ollama_chat(messages=[dict(m) for m in PREFLIGHT_MESSAGES], max_retries=0, wall_timeout=60.0, **cfg.kwargs())`. In `ollama_chat` a timeout with `attempt < max_retries` false goes to `# All retries exhausted — attempt Ollama restart as last resort` / `response = _restart_ollama_and_retry(…)` (CODE ORDER). So one 60-second timeout reaches the restart, gated only by `restart_disabled()` and `foreign_lock_held()`.
+
+**Every caller of the probe (MEASURED, grep; lock status from the census):**
+
+| Call site (`file::function`, quoted) | Reached from entry point | Lock held at the call |
+| --- | --- | --- |
+| `engine/agents/extractor.py::_extract_selected` — `require_preflight([extractor_model], runner_name="Extraction", spec=spec)` | `scripts/run_pipeline.py` (extract) | **Yes** |
+| `scripts/run_pipeline.py::_stage_audit` — `require_preflight([stage_config("audit", spec).model], runner_name="Audit", spec=spec)` | `scripts/run_pipeline.py` (audit) | No |
+| `engine/agents/screener.py::run_screening` — `require_preflight([primary_model], runner_name="Abstract screening")` | `scripts/run_pipeline.py` (screen) | No |
+| `engine/agents/screener.py::run_verification` — `require_preflight([verification_model], runner_name="Abstract verification")` | **no entry point**: `run_verification` has no caller under `engine/`, `scripts/` or `analysis/` (MEASURED, grep). `scripts/screen_expanded.py` calls `screen_paper` directly and runs no preflight | — |
+| `engine/agents/ft_screener.py::run_ft_screening` — `require_preflight(` | `engine/agents/ft_screener.py` | No |
+| `analysis/paper1/judge_codebook_smoke.py::run` — `require_preflight([args.model], runner_name="judge_codebook_smoke")` | itself | No |
+| `engine/utils/ollama_preflight.py::main` — `result = preflight_check(args.models, timeout=args.timeout)` | itself (the `--models` CLI) | No |
+
+`require_preflight` also runs `check_ollama_env()` first, which shells out to `["systemctl", "show", "ollama", "--property=Environment"]` (a read).
+
+**Every path to a restart:**
+
+| Restart | Call site | Entry point | Lock held |
+| --- | --- | --- | --- |
+| Proactive, `extractor.py::restart_ollama` | `extractor.py::_extract_selected` — `if restart_every > 0 and papers_since_restart >= restart_every:` | `scripts/run_pipeline.py` | Yes (inside `run_extraction`) |
+| Proactive | `analysis/paper1/pass2_full.py::run_full` — `restart_ollama(reason="proactive", papers_done=processed)`, when `--restart-every` is non-zero (default 0) | `pass2_full.py` | **No** |
+| Proactive | `analysis/eval/elicit01/runner.py::main` — `restart_ollama(reason="elicit01 cadence", papers_done=n)` | itself | Yes |
+| Proactive | `analysis/eval/run_capture01.py::main` — `restart_ollama(reason="capture01 cadence", papers_done=n)` | itself | Yes |
+| Last resort, `ollama_client.py::_restart_ollama_and_retry` | inside `ollama_chat`, after `1 + max_retries` wall-clock timeouts | all 19 local callers | 6 yes, 12 no, `run_pipeline` in extract only |
+
+`restart_ollama` is not changed or proposed for change here; its opt-out is commit 3 (N17).
+
+## A5 — subprocesses beneath a lock holder
+
+**Expected:** not predicted. **Found:** one child that would itself take the lock (`screen2f_worker.py`), and one self-relaunch (`maybe_background`) whose position relative to the acquisition matters.
+
+Every process-spawning site reachable from the 20 entry points that hold or would hold the lock (MEASURED, `lock_census.json` `process_sites_reached`, then each site read):
+
+| Site | What it starts | Would the child take the lock? |
+| --- | --- | --- |
+| `analysis/eval/run_screen2f.py::run_worker` — `subprocess.run(cmd, cwd=str(arm.root), env=env, stdout=logf, stderr=subprocess.STDOUT)`, inside `with hold_experiment_lock(blocking=False):` | `python -P analysis/eval/screen2f_worker.py …`, with `"EVIDENCE_ENGINE_NO_OLLAMA_RESTART": "1"` and `PYTHONPATH` set to the arm's tree | **Yes, if the rule is "every local-calling entry point holds".** The worker makes local calls (`screen2f_worker::main -> ollama_chat`). As a child of a holder it would block today (E6) and fail fast under R625(a)(7). The worker also imports `engine` from the arm's tree, which for arm A is a worktree of an older commit (the worker's docstring: "Arm A's tree is a worktree of 83defc5"), so the lock module it would import is that tree's |
+| `engine/utils/background.py::maybe_background` — `subprocess.run(["tmux", "new-session", "-d", "-s", session_name, "bash", "-c", tmux_cmd], check=True)`, then `sys.exit(0)` | The same entry point, re-launched in tmux without `--background` | **Yes — it is the same entry point.** Today every caller runs it before any lock: `run_pipeline.py::main`, `ft_screener.py::main`, `screen_expanded.py::main`, `judge_codebook_smoke.py::run`, `run_screen2f.py::main`. If the acquisition were placed around the whole of `main`, the parent would hold the lock while launching its own replacement and release it a moment later at `sys.exit(0)`. Whether the tmux child counts as a descendant of the parent was not measured (INFERRED: it is started by the tmux server) |
+| `extractor.py::restart_ollama` and `ollama_client.py::_restart_ollama_and_retry` — `subprocess.run(["sudo", "systemctl", "restart", "ollama"], …)` | `sudo`, `systemctl` | No |
+| `engine/utils/ollama_preflight.py::_get_ollama_env` — `["systemctl", "show", "ollama", "--property=Environment"]` | `systemctl` | No |
+| `engine/core/run_manifest.py::_git` and three `git` calls in `run_screen2f.py` | `git` | No |
+| `ollama_client.py::ollama_chat` and `_restart_ollama_and_retry` — `ThreadPoolExecutor(max_workers=1)` | a thread, not a process | No; a thread shares the holder's depth counter |
+
+- **No `fork`, `multiprocessing` or process-pool site sits beneath a holder.** The only one in the three trees is `analysis/provenance/census.py` (`Pool(args.workers)`), which reaches no model call.
+- **Not visible to the AST:** processes started inside third-party libraries (Docling, for one) during the parse stage. Not read.
+
+## A6 — `run_pipeline` across all model stages (N19)
+
+**Expected:** not predicted. **Found:** three candidate positions; the health job needs no change.
+
+**Order of events in a run today (CODE ORDER, `scripts/run_pipeline.py::main` and `::run_pipeline`):**
+
+1. `main`: `maybe_background("pipeline", review_name=review_name)`, then argument parsing.
+2. `main`: `with rm.interrupt_signals():` → `run_pipeline(…)`.
+3. `run_pipeline`: `spec = load_spec_for(review_name, spec_path)`; `db = ReviewDatabase(review_name)`; the `--skip-to` check.
+4. `run_id = _open_run_manifest(db, spec, start_idx, max_papers=max_papers)` — the manifest row, the dirty-tree refusal, and the digest read (`GET /api/tags`).
+5. `try:` the stages in order; each gate stop closes the manifest and returns.
+6. `finally:` `rm.deactivate(run_token)`, the summary, `db.close()`.
+
+**Where the acquisition can sit so every model stage and every preflight is under it:**
+
+| Position | Covers | Consequence |
+| --- | --- | --- |
+| P-a: in `main`, around `run_pipeline(…)`, after `maybe_background` and argument parsing | Steps 3–6: the manifest open, its digest read, every stage, the close | A wait for the lock happens before the database is opened and before the manifest is written, so the manifest's start is the run's start. A programmatic caller of `run_pipeline()` is not covered (six test files call it; A7) |
+| P-b: in `run_pipeline`, from before `_open_run_manifest` to the end of the `finally` | Steps 4–6, for every caller | A wait holds an open `ReviewDatabase` connection for its whole length. Tests that call `run_pipeline()` take their per-test lock |
+| P-c: around the `try:` only | Steps 5–6 | The manifest is written, then the run may wait for hours: an open manifest with no call behind it. The digest read is outside the lock |
+
+**Interaction with `run_extraction`'s own acquisition.** With any outer acquisition in the same process, `run_extraction`'s `with hold_experiment_lock():` takes the nested branch (`nested = _SELF_DEPTH > 0`) and does not call `flock` again; `tests/test_ollama_lock.py::test_nested_hold_is_reentrant` pins that. The outer lock is released only when the outer `with` exits. Any fail-fast detection added to the acquire has to sit after the nested check, or the inner acquire would see the process's own lock as an outer one.
+
+**An interrupt during a wait.** `rm.RunInterrupted` derives from `BaseException` (`class RunInterrupted(BaseException):`). `hold_experiment_lock` closes its descriptor on `except Exception:` only, so an interrupt raised during the blocking `flock` leaves the descriptor open until the process exits (CODE ORDER; F-1).
+
+**The 07:00 UTC health job (`~/scripts/ollama_health_check.sh` → `dgx-infra/scripts/`, read only), quoted:**
+
+```bash
+LOCKFILE="${OLLAMA_EXPERIMENT_LOCK:-$HOME/.ollama_experiment.lock}"
+LOCK_OK=true
+exec 9>>"$LOCKFILE" 2>/dev/null || LOCK_OK=false
+if ! $LOCK_OK; then
+  LOCK_STATE="ERROR"
+elif flock -n 9; then
+  LOCK_STATE="ACQUIRED"
+else
+  LOCK_STATE="HELD"
+fi
+```
+
+```bash
+if [[ "$LOCK_STATE" == "HELD" ]]; then
+  …
+  msg="SKIPPED — experiment lock held ($LOCKFILE)"
+  printf '%s\n' "$msg"
+  {
+    printf '%s\n' "$msg"
+    echo "No models were exercised; no Ollama requests were issued."
+    …
+  } >> "$LOGFILE"
+  exit 0
+fi
+```
+
+- **While `run_pipeline` holds the lock:** `flock -n 9` fails, the job writes its SKIPPED line and exits 0, still taking its `systemctl show` environment snapshot. No change to that script is needed (CODE ORDER). A 35–38 h run spans one or two 07:00 jobs, each skipped.
+- **The reverse case:** a run started while the job holds the lock (about 07:00–07:05; 12m measured 07:00:01 to 07:04:34 for 20 models) waits at the blocking `flock`, today with no log line. That wait is where N22's line belongs.
+- **The job's pattern is E3:** anything it launched while holding fd 9 would inherit the descriptor. It launches `ollama run`, not an engine entry point.
+
+## A7 — tests that touch the lock
+
+**Expected:** not predicted. **Found:** 22 test files name the lock API or its environment variable (MEASURED, grep).
+
+| Group | Files | What they do | Would commit 2 change them |
+| --- | --- | --- | --- |
+| The lock's own tests | `tests/test_ollama_lock.py` (13 tests) | Acquire, release, nesting, a foreign holder as a `Popen` child (`_spawn_holder`), non-blocking refusal, blocking wait, probe fail-safe, path override | **Added to**, for the log line and the fail-fast. Its holders are children of the test process, not ancestors, and share no descriptor with it, so an ancestor- or descriptor-based detector does not fire on them. A detector that treated any foreign holder as fail-fast would break `test_blocking_acquire_waits_then_succeeds` |
+| The restart guards | `tests/test_restart_ollama_guard.py` (6), `tests/test_restart_recovery_guard.py` | `foreign_lock_held()` gates both restarts; `test_run_extraction_holds_the_lock`; `test_run_extraction_can_opt_out` | Unchanged if `run_extraction` keeps its own acquisition and its `experiment_lock` parameter. **Both change** if the acquisition moves wholly to the entry point |
+| The suite fixture and its tests | `tests/conftest.py::experiment_lock_for_tests`; `tests/test_suite_live_fence.py` | Every unmarked test gets `OLLAMA_EXPERIMENT_LOCK` under its `tmp_path`. A live-tier test takes the configured lock with `hold_experiment_lock(blocking=False)` and skips on `BlockingIOError` | Unchanged, provided a fail-fast raised from a non-blocking acquire is still a `BlockingIOError`. The holder in `test_with_the_opt_in_and_the_lock_held_elsewhere…` is a sibling process, not an ancestor |
+| Patch the extractor's lock to a null context | `test_run_pipeline_starts.py`, `test_cut_over.py`, `test_undeclared_call.py`, `test_selection_bound.py`, `test_run_interrupts.py` — `monkeypatch.setattr(E, "hold_experiment_lock", nullcontext)` | Remove `run_extraction`'s acquisition for a `run_pipeline` test | **The patch stops covering the run** if `run_pipeline` acquires through its own import or a helper: the test then takes its per-test lock (harmless since commit 1) and runs any new detection and log line |
+| Pass `experiment_lock=False` | 12 files: `test_extraction_run_link.py`, `test_parsed_text_resolver.py`, `test_units_as_source_slices.py`, `test_value_divergence.py`, `test_restart_ollama_guard.py`, `test_floor_and_stored_attempt.py`, `test_selection_refusals.py`, `test_citation_record.py`, `test_text_refusal_at_selection.py`, `test_run_fault_predicate.py`, `test_duplicate_on_pass1_attempt_2.py`, `test_write_boundary_guard.py` | Call `run_extraction` with no lock | Unchanged while the parameter exists. **All 12 change** if it is removed |
+| Mention only | `test_service_call_fence.py` (a docstring) | — | No |
+
+**Tests that call an entry point's `main` or `run_pipeline` in-process** and would take their per-test lock under P-a or P-b: `test_run_pipeline_starts.py`, `test_cut_over.py`, `test_run_pipeline_closes.py`, `test_run_interrupts.py`, `test_selection_bound.py`, `test_arm_pinned_at_extract.py` (MEASURED, grep; the calls were not traced one by one).
+
+**New tests commit 2 needs, by the rows:** the acceptance test of R625(b); the log line before a wait (N22); the fail-fast under each outer-lock form that the chosen detector covers (INT-g12-7, R625(a)(7)); `run_pipeline` holding across screen, parse and audit (N19); a probe caller holding (L11-C4).
+
+## A8 — design options (none chosen)
+
+### (i) How the acceptance test decides, statically, that an entry point "holds the lock", and how it finds entry points
+
+**Discovery (R625(b): no hard-coded list).**
+
+| Option | How | Cannot see |
+| --- | --- | --- |
+| d1 | Walk the trees for `if __name__ == "__main__":`, as `entry_census.py` does | `python -c`, a function imported and run by another repository, a shell script that calls Python (two `.sh` files exist; neither calls a model outside pytest) |
+| d2 | Take the entry points from `engine/tools/inventory.py` (`has_main_guard` or argparse flags), which is already kept in sync by `inventory --check` | The same; and it ties the lock test to the inventory's wider definition of an entry point |
+
+**The decision.**
+
+| Option | Rule the test applies | Cannot see | Files touched | Tests added | Risk |
+| --- | --- | --- | --- | --- | --- |
+| I-A, lexical lock context | An entry point fails if a local-call or restart sink is reachable in a state outside every `with hold_experiment_lock(…)` — what `lock_census.py` computes | A lock decided by a parameter (`experiment_lock=False`), unless that branch is named in the test or the parameter goes; dynamic dispatch (a missed path passes silently); a lock held by a parent process. A `~` edge can fail an entry point that is fine | The 13 entry points that gain a `with`; the census logic as a test helper | The acceptance test; a self-test that a deliberately unlocked fixture module fails it | The test trusts its own resolver (about 150 lines). Placement is free, so each entry point can acquire after its own argument parsing and `maybe_background` |
+| I-B, one shape at the entry | Every entry point with a resolved path to a sink (the 12m census, no lock context) must reach the sink only through one named wrapper — a decorator on the function its `__main__` block calls, or a `run_locked(main)` call in the block | A call made at import time or outside the wrapped function; programmatic callers of inner functions are not covered at all | The 13, plus the seven harnesses that already hold mid-`main` (they would be reshaped or fail the shape rule), four of them marked frozen | The acceptance test (a shape check, simpler than I-A) | `maybe_background` and argument errors would run under the lock (A5). Edits to frozen harnesses |
+| I-C, a declared marker | Each entry point with a resolved path declares its status in the file (holds / cloud only / child of a named holder); the test checks that every such entry point declares one, and checks "holds" by I-A or I-B | A marker is a claim: "child of" and "cloud only" are only as true as the check behind them | As I-A or I-B, plus one line per file | The acceptance test, and a check that a "child of" target really spawns the file | The markers together are a list, distributed across files; whether that satisfies R625(b)'s "not a hard-coded list" is a ruling |
+| I-D, enforcement at the sink (a complement, not static) | `ollama_chat` and `restart_ollama` refuse when `self_holds_lock()` is false | Nothing dynamic escapes it; but a child of a holder is refused too | `ollama_client.py`, `extractor.py` | Many existing tests call `ollama_chat` on a fake client without holding and would need the lock or an exemption | Outside R625(b)'s wording, which asks for a static census test. Large blast radius in the suite |
+
+### (ii) Detecting an inherited or outer lock, and where the log line goes
+
+**Common to every option below (PROPOSED shape, not chosen):** the nested check comes first; then one non-blocking attempt. If it succeeds there is nothing to log. If it fails, the acquire classifies the holder, then either raises with a message naming the lock file or logs "waiting for the experiment lock <path>" and blocks. **That is the one place the "log line before a wait" can go**: after the failed attempt, before the blocking `flock`.
+
+**What each detector saw (MEASURED, `lockexp/detect.out`):**
+
+| Case | D1: own descriptor on the lock inode | D2: `/proc/locks` names an ancestor | D3: a readable ancestor has a descriptor on the inode |
+| --- | --- | --- | --- |
+| E0 free | no | no | no |
+| E1 `flock <lock> cmd` | **yes** | **yes** | **yes** |
+| E2 `flock -o <lock> cmd` | no | **yes** | **yes** |
+| E3 inherited fd 9 (the health job's pattern) | **yes** | no | **yes** |
+| E4 fd 9 closed for the child | no | no | **yes** |
+| E6 `subprocess` child of a Python holder | no | **yes** | **yes** |
+| E7 an unrelated holder (a sibling process) | no | no | no |
+| E8 an ancestor has the file open but does not hold it; a sibling holds | no | no | **yes — a false positive** |
+
+In every run, three ancestors above the session were unreadable (`/proc/<pid>/fd`: errno 13), so D3 cannot see past them.
+
+| Option | Detects | Misses (the process waits, now with a log line) | False positives | Effect on the suite's `tmp_path` locks |
+| --- | --- | --- | --- | --- |
+| II-A: D1 | E1, E3 | E2, E4, E6 | none measured | none: no test process inherits a descriptor on its own per-test lock file |
+| II-B: D1 or D2 | E1, E2, E3, E6 | E4 | none measured | none: test holders are children or siblings, never ancestors |
+| II-C: D1 or D3 | E1–E4, E6 | an outer holder above an unreadable ancestor | E8: fails fast where waiting was right | none measured for the same reason; a test run launched from a shell that has the lock file open would see E8, but each test's lock is a fresh file under `tmp_path` |
+| II-D: the holder announces itself in the environment (a variable carrying its pid, checked against live ancestors) | E6 only | every shell form (E1–E4): nothing sets the variable | a stale variable, unless the pid is checked | none, unless a test sets the variable |
+| II-E: no classification; a bounded wait, then a refusal naming the file | every case, late | — | **a legitimate long holder** (a 35 h run) is refused after the bound; not "fail fast" | `test_blocking_acquire_waits_then_succeeds` holds for 30 s by default and would need the bound above that |
+
+- **A non-blocking acquire under an outer lock** already raises (E5), with a message that names no file. If the fail-fast is a new exception type, `tests/conftest.py::experiment_lock_for_tests` and `run_screen2f.py` (`blocking=False`) keep working only if it derives from `BlockingIOError`.
+- **The fork child** (E6) is not an outer-lock case by any detector: it reads as the holder itself. No such site exists beneath a holder (A5); F-2.
+- **Files touched, every option:** `engine/utils/ollama_lock.py` only. **Tests added:** one per detected case in `tests/test_ollama_lock.py`, each on a `tmp_path` lock with a timeout, spawning `flock(1)` (not a command the service fence blocks: `BLOCKED_COMMANDS` is service managers and privilege escalation). **Risk:** D2 and D3 read `/proc`, which is Linux-only and, for D3, limited by what the process may read.
+
+### (iii) Which trees the census covers, and frozen harnesses and retained scripts
+
+| Option | Coverage | Consequence | Files touched | Tests | Risk |
+| --- | --- | --- | --- | --- | --- |
+| III-A | All three trees, no exemption | 13 entry points gain a holder, six of them under `analysis/paper1/`. `screen2f_worker.py` would take the lock as a child of a holder and fail fast under R625(a)(7): the harness stops working as built | The 13 | The acceptance test | Breaks `run_screen2f` unless the worker is changed too |
+| III-B | All three trees; a child worker is exempt by a checked declaration ("runs only as a child of <entry>", and the test confirms that entry holds and spawns it) | 12 gain a holder; the worker stays as it is | The 12, plus one declaration | The acceptance test and the child check | The exemption is a marker (I-C's question) |
+| III-C | `engine/` and `scripts/` enforced; `analysis/` reported only | Six gain a holder. The judge passes and `pass2_full`'s cadence restart stay unlocked, which is what row A-1 names ("the judge passes … can be restarted beneath. `pass2_full` restarts on a cadence and takes no lock") | Six | The acceptance test over two trees | Leaves part of A-1 open |
+| III-D | As III-A or III-B, after retiring under R31 any `analysis/` entry point that does not serve the engine going forward | Fewer files gain a holder; each retirement is a ledger row and may remove generated test cases, as `954796e` did | Per ruling | Per ruling | A per-file PI decision; not measurable here |
+
+- **Frozen harnesses:** the four with a "frozen study" comment already hold the lock and need no edit under I-A. Under I-B they would be reshaped.
+- **Shell scripts:** `scripts/nightly_tests.sh` runs pytest (commit 5's subject); `scripts/watch_run4.sh` makes no model call (F-3).
+- **`run_extraction`'s own acquisition and its `experiment_lock` parameter:** kept, it is a second, inner holder and the 12 `experiment_lock=False` test files are untouched; removed, the entry point is the only holder and those 12 files and two guard tests change (A7).
+
+## A9 — findings outside commit 2's scope (reported, not fixed)
+
+| # | Finding | Evidence |
+| --- | --- | --- |
+| F-1 | `hold_experiment_lock` closes its descriptor on `except Exception:` only. An interrupt raised during a blocking wait (`KeyboardInterrupt`, or `rm.RunInterrupted`, a `BaseException`) leaves the descriptor open until the process exits. Harmless while the process exits at once; it matters if a caller ever catches the interrupt and continues | CODE ORDER: `engine/utils/ollama_lock.py::hold_experiment_lock` — `try:` / `fcntl.flock(fd, flags)` / `except Exception:` / `os.close(fd)`; `engine/core/run_manifest.py` — `class RunInterrupted(BaseException):` |
+| F-2 | A `fork` child of a holder reads as the holder: `self_holds=True`, `foreign=False`, and its nested acquire yields without `flock`. Its restarts would not be refused, and (CODE ORDER, not measured) its exit from an outermost `with` would unlock the shared description. No fork site sits beneath a holder today | MEASURED: `lockexp/run.out`, E6, "fork child" lines |
+| F-3 | `scripts/watch_run4.sh` is a Run 4 leftover: it polls live `review.db` every 300 s with the `sqlite3` CLI (an ordinary read-write open, not `mode=ro`) for `status='AI_AUDIT_COMPLETE'` against a hard-coded 96, a status R160b retired. Nothing schedules it. An R31 question | READ: the file, 20 lines — `count=$(sqlite3 "$DB" "SELECT COUNT(*) FROM papers WHERE status='AI_AUDIT_COMPLETE';")` |
+| F-4 | Ollama reads that load no model sit outside both the lock and R625(a)(3)'s census: `ollama.ps()` in `ollama_preflight.py::_get_model_vram_gb` and `::preflight_check`; `fetch_model_digest` (`GET /api/tags`) from `open_run`; `httpx.get(f"{OLLAMA}/api/ps", …)` and `/api/version` in `run_screen2f.py`; `oc._client.list()` in two eval harnesses. `scripts/run_cloud_extraction.py` has a static path to `fetch_model_digest` through `open_run -> resolve_run`; whether a cloud-only stage set executes it was not read | MEASURED: grep of the three trees; the census chain for `run_cloud_extraction.py` |
+| F-5 | `engine/utils/ollama_preflight.py::main` (the `--models` CLI) calls `preflight_check` without `check_ollama_env()` and without a spec, so the hand-run "health check" skips the environment check that every runner's `require_preflight` makes | CODE ORDER: `main` — `result = preflight_check(args.models, timeout=args.timeout)`; `require_preflight` — `check_ollama_env()` |
+
+## State
+
+- **Written by this phase:** this directory, and `~/scratch/12n-c2a/` (scripts, outputs, the scratch lock file). Nothing under `engine/`, `tests/`, `scripts/`, `analysis/` or `review_specs/`.
+- **Not run:** no test, no gate, no collection.
+- **Ollama:** no request of any kind since the task start (journal, above). The real lock file was not opened.
+- **Not measured, and said so above:** the fork child's unlock of the parent; whether a tmux relaunch is a descendant of the launcher; processes started inside third-party parsers; 64 of the 66 "none" entry points were classified by the census and not read line by line.

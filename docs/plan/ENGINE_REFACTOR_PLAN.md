@@ -3213,6 +3213,8 @@ Expected values at session-12n open, as at this closeout (2026-10-13):
 
 Session 12n closed 2026-10-13 UTC; opened 2026-10-13 15:39 UTC on the 12m HEAD `60c6d3e15d4133b1af07794597dfd5d896acd89a`, CC session `d6bf1f3d` (one session, continued across context summaries). **Unit U12 advanced from commit 1 to commit 5**: commit 2's Phase A read-out and its rulings, the screen2f retirement it needed, and commits 2, 3, 4, 5 and 5B. **No model call and no live write.** Briefs, in order: 12n-OPEN, 12n-U12-C2A, 12n-U12-C2B (with a resume and the resume 12n-U12-C2B-R1), 12n-U12-C2 (with the resume 12n-U12-C2-R1), 12n-U12-C3 (with the resumes R1 and R2), 12n-U12-C4 (with the resume R1), 12n-U12-C5 (with the resume R1), 12n-U12-C5B and this closeout.
 
+*Note 2026-10-15 (12o item 0, R637(a)):* claude-config `574fd25` ("ledger: rows through 2026-10-13T21:58:24Z", 22:37:22 UTC) is another session's wrap and committed the 22 pending ledger rows; the lane-line commit `5271233` is its child and carried `primer.md` and one row. This closure's sentence stating claude-config at `c37fc50` with 22 rows uncommitted, and the lane line landing with those rows, is wrong as written; the text is left as printed (R102). The lane-line file is copied into `12n_close/` with this note's commit (R637(b)).
+
 **Commits, in order.**
 
 - claude-config `c37fc507a21ccc3c004663998ebe1d5a5abb7a99` — item 0 of the open: the 12m lane line applied to the global primer, pushed.
@@ -5008,3 +5010,34 @@ R636(d) — Session 12n closes with U12 commits 1–5 and 5B landed and commits 
 | 2026-10-13 | R636(a) — 12n-U12-C5B is accepted as landed at f4a5586: tests/test_nightly_script.py, four cases, static and shim-driven, with the script unedited. The scratch-home route (a scratch $HOME with an empty venv activation and a python shim first on PATH) is accepted in place of the interpreter override the brief's I3 proposed; no override is added to a cron-run script. R636(b) — The 2026-10-14 09:00 UTC nightly's expected values are docs/session-reports/session-12/12n_U12_C5B/expected_nightly_20261014.md, which supersedes 12n_U12_C5's file. R636(c) — Under R633(b), the band for session 12o is cut from the last four standard gates of 12n (C3, C4, C5-dry, C5B) and written in "Expected values at session-12o open". Three of 12n's five gates over 900 s under the old band is recorded as variance, not a trend; a trend is declared only on a durations comparison that shows a phase or a file growing across gates. R636(d) — Session 12n closes with U12 commits 1–5 and 5B landed and commits 6–8 open. Commit 6 (lazy import of the provider SDKs, R625(a)(4)) opens 12o after the nightly check, in a fresh CC session, with a read of every importer of engine.cloud before any edit. | PI, 2026-10-13, during session 12n |
 
 The decision log in this file ends at R636.
+
+**Block 35.** *Transcribed 2026-10-15 (item 0 of the 12o-OPEN brief), in its own commit with the dated note on the 12n closure and the lane-line file it orders, in the R597(e) form:* ruling R637, made by PI on architect recommendation on 2026-10-13 UTC, during session 12n, on the 12n-CLOSE report (the session's closeout commit `8a52a92bde974adcb8c7319142874566b8c1dd31`; evidence in `docs/session-reports/session-12/12n_close/`). The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12n-R637] — the foreign claude-config commit; close now
+STATUS: PI ruling, 2026-10-13 UTC, session 12n, on architect recommendation, on the
+  12n-CLOSE report. Transcribe as item 0 of 12o-OPEN, not now.
+
+R637(a) — claude-config 574fd25 ("ledger: rows through 2026-10-13T21:58:24Z", 22:37:22
+  UTC) is another session's wrap and is accepted as found. The 12n closure's sentence
+  stating claude-config at c37fc50 with 22 rows uncommitted, and that the lane line
+  landed "with those rows", is wrong: the rows landed in 574fd25; the lane line commit
+  5271233 is its child and carried primer.md and one row. 12o-OPEN's item 0 appends a
+  dated note on the 12n closure saying so; the closure's text is not edited.
+R637(b) — The 12n closeout block and the lane line (~/scratch/12n-close/lane_line_12n.txt,
+  sha256 33bd150c…5a3b, 3,222 bytes) are accepted as printed. 12o-OPEN's item 0 copies
+  the lane-line file into docs/session-reports/session-12/12n_close/ with the note's
+  commit.
+R637(c) — 12o-OPEN's startup verify checks claude-config at 5271233, or at the wrap's
+  commit if /wrap adds one; either is level with origin and clean.
+R637(d) — Session 12n closes without a closeout gate; the expected gate values for 12o
+  are the C5B gate's on unchanged code, as the closure records.
+
+Run /wrap now. The closeout block stands; report the archive command.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-13 | R637(a) — claude-config 574fd25 ("ledger: rows through 2026-10-13T21:58:24Z", 22:37:22 UTC) is another session's wrap and is accepted as found. The 12n closure's sentence stating claude-config at c37fc50 with 22 rows uncommitted, and that the lane line landed "with those rows", is wrong: the rows landed in 574fd25; the lane line commit 5271233 is its child and carried primer.md and one row. 12o-OPEN's item 0 appends a dated note on the 12n closure saying so; the closure's text is not edited. R637(b) — The 12n closeout block and the lane line (~/scratch/12n-close/lane_line_12n.txt, sha256 33bd150c…5a3b, 3,222 bytes) are accepted as printed. 12o-OPEN's item 0 copies the lane-line file into docs/session-reports/session-12/12n_close/ with the note's commit. R637(c) — 12o-OPEN's startup verify checks claude-config at 5271233, or at the wrap's commit if /wrap adds one; either is level with origin and clean. R637(d) — Session 12n closes without a closeout gate; the expected gate values for 12o are the C5B gate's on unchanged code, as the closure records. | PI, 2026-10-13, during session 12n, on the 12n-CLOSE report |
+
+The decision log in this file ends at R637.

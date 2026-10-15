@@ -3331,6 +3331,8 @@ Expected values at session-12o open, as at this closeout (2026-10-13):
 
 Session 12o closed 2026-10-15 UTC; opened 2026-10-15 03:07 UTC on the 12n HEAD `8a52a92bde974adcb8c7319142874566b8c1dd31`, CC session `fe337b8f` (one session). **Unit U12 closed**: the open and its nightly check, commit 6's Phase A read-out, and U12 commits 6, 7 and 8. **No model call and no live write.** Briefs, in order: 12o-OPEN, 12o-U12-C6A (with two resumes), 12o-U12-C6 (with a resume), 12o-U12-C7 (with two resumes), 12o-U12-C8 (re-issued once, then 12o-U12-C8-RESUME) and this closeout.
 
+*Note 2026-10-15 (12p item 0, R646(a)):* claude-config `92aba14` ("ledger: rows through 2026-10-15T05:09:58Z", 05:22:39 UTC) is another session's wrap and committed this lane's ledger rows for `8c7049b`, `ce9d4cc` and `f957ccb`; only the rows for `5dbd3c4` and the closeout commit `f723c6e` were uncommitted at the closeout, and they landed in the wrap `7bae1d9`, the child of the lane-line commit `baa588b`. This closure's note (b) and the "Expected values at session-12p open" claude-config bullet, which state `492a402` with five rows uncommitted, are wrong as written; the text is left as printed (R102). The lane-line file is copied into `12o_close/` with this note's commit (R646(c)).
+
 **Commits, in order.**
 
 - `8c6c665` — item 0 of the open: R637 (Block 35), the dated note on the 12n closure, the 12n lane-line file in `12n_close/`.
@@ -5452,3 +5454,45 @@ R645(e) — Session 12o closes tonight. Session 12p: item 0, startup verify with
 | 2026-10-15 | R645(a) — 12o-U12-C8 is accepted as landed at 5dbd3c4: the empty-selection return carries the extraction summary; two tests and one parity case added; test_selection.py:213 a subset assertion (R644(b)); CLAUDE.md:78 deleted. INT-l12-25 is closed. U12 is closed in full: commits 1–8 and the two retirements. Gate 3,305 / 1 / 17, collected 3,306, 866.76 s; the three trend files at their 12o-OPEN values; pins unchanged. R645(b) — The 12n closure's printed copy of the U12 commit table is left as printed (read-outs are never edited); the live table is the record. The U12 close line's naming of the screen2f retirement (9390328) is accurate and stands; the live table gains no row for it. R645(c) — The band for session 12p is ±10% of the mean of 12o's four standard gates (865.41, 942.13, 961.11, 866.76; mean 908.85): 818–1000 s. Row I20's note gains the four-gate series. R645(d) — The pytest temp root (/tmp/pytest-of-ankitsarin) grows by about 1.3 GB per gate and is never emptied. The 12o closeout empties it after confirming no pytest process is running, records the size removed, and the 12p startup verify records its size before and after the gate. Whether the growth is pytest's retention or the suite's is a read for 12p's open; no row. R645(e) — Session 12o closes tonight. Session 12p: item 0, startup verify with the 2026-10-15 nightly check, then U13's design read (the comparison rehearsal on Rehearsal A's 12 papers; R612(b), R617(a), R622(b)); B-F17 (e)'s Phase A is P7's. | PI, 2026-10-15, during session 12o, on the 12o-U12-C8 report |
 
 The decision log in this file ends at R645.
+
+**Block 44.** *Transcribed 2026-10-15 (item 0 of the 12p-OPEN brief), in its own commit with the dated note on the 12o closure and the lane-line file it orders, in the R597(e) form:* ruling R646, made by PI on architect recommendation on 2026-10-15 UTC, during session 12o, on the 12o-CLOSE closeout block (the session's closeout commit `f723c6e5e3a2f42b1d538ae7d4281302be25836d`; evidence in `docs/session-reports/session-12/12o_close/`). The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12o-R646] — wrap ruling: the foreign claude-config commit again; lane line approved; close now
+STATUS: PI ruling, 2026-10-15 UTC, session 12o, on architect recommendation, on the
+  12o-CLOSE closeout block (f723c6e5e3a2f42b1d538ae7d4281302be25836d). Transcribe as item 0 of
+  12p-OPEN (Block 44), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block):
+  MEASURED: "HEAD is 92aba14, not the expected 492a402. It is 'ledger: rows through
+    2026-10-15T05:09:58Z', committed 05:22:39 UTC by another session's wrap (the rg-b1 lane). It
+    carried this session's rows for 8c7049b, ce9d4cc and f957ccb"; "Uncommitted: PROJECT_LEDGER.md,
+    2 rows (5dbd3c4 at 05:47:00Z, f723c6e at 05:59:47Z)"; "~/scratch/12o-close/lane_line_12o.txt,
+    sha256 7a7319a386bddf2e271f4231010041871e2680a6a7efc8b923731c8863343d9c, 3,763 bytes, 10
+    lines"; "Fingerprint: IDENTICAL at 05:56:52Z and at 06:00:22Z"; "the closure says four and
+    lists them".
+
+R646(a) — claude-config 92aba14 is another session's wrap and is accepted as found. The 12o
+  closure's note (b) and the "Expected values at session-12p open" claude-config bullet, which
+  state 492a402 with five rows uncommitted, are wrong as written: three rows landed in 92aba14;
+  only the rows for 5dbd3c4 and f723c6e were uncommitted at the closeout. The text is left as
+  printed; 12p-OPEN's item 0 appends a dated note on the 12o closure saying so, in R637(a)'s
+  form.
+R646(b) — The closeout block and the lane line (sha256 7a7319a3…3d9c, 3,763 bytes) are accepted
+  as printed and as written. The closure's "four times" count stands; the brief's "five" was the
+  architect's. The cause-and-fix line (the architect-handoff skill amended 2026-10-15) is a PI
+  statement and stands.
+R646(c) — 12p-OPEN's startup verify checks claude-config at the commit the wrap leaves (child of
+  the lane-line commit, itself child of 92aba14), level with origin and clean. 12p's item 0 copies
+  lane_line_12o.txt into docs/session-reports/session-12/12o_close/ with the note's commit.
+R646(d) — No closeout gate ran; the expected gate values for 12p are commit 8's (5dbd3c4) on
+  unchanged code, as the closure records. The 2026-10-15 09:00 UTC nightly runs on f723c6e, whose
+  code equals 5dbd3c4's; expected_nightly_20261015.md governs.
+R646(e) — Session 12o closes now.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-15 | R646(a) — claude-config 92aba14 is another session's wrap and is accepted as found. The 12o closure's note (b) and the "Expected values at session-12p open" claude-config bullet, which state 492a402 with five rows uncommitted, are wrong as written: three rows landed in 92aba14; only the rows for 5dbd3c4 and f723c6e were uncommitted at the closeout. The text is left as printed; 12p-OPEN's item 0 appends a dated note on the 12o closure saying so, in R637(a)'s form. R646(b) — The closeout block and the lane line (sha256 7a7319a3…3d9c, 3,763 bytes) are accepted as printed and as written. The closure's "four times" count stands; the brief's "five" was the architect's. The cause-and-fix line (the architect-handoff skill amended 2026-10-15) is a PI statement and stands. R646(c) — 12p-OPEN's startup verify checks claude-config at the commit the wrap leaves (child of the lane-line commit, itself child of 92aba14), level with origin and clean. 12p's item 0 copies lane_line_12o.txt into docs/session-reports/session-12/12o_close/ with the note's commit. R646(d) — No closeout gate ran; the expected gate values for 12p are commit 8's (5dbd3c4) on unchanged code, as the closure records. The 2026-10-15 09:00 UTC nightly runs on f723c6e, whose code equals 5dbd3c4's; expected_nightly_20261015.md governs. R646(e) — Session 12o closes now. | PI, 2026-10-15, during session 12o, on architect recommendation, on the 12o-CLOSE closeout block |
+
+The decision log in this file ends at R646.

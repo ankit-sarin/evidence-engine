@@ -1,0 +1,78 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 6 items / 4 deselected / 2 selected
+
+tests/test_text_refusal_at_selection.py::test_an_empty_selection_returns_the_populated_paths_key_set FAILED [ 50%]
+tests/test_text_refusal_at_selection.py::test_an_empty_selection_reports_the_selections_unreadable_entries FAILED [100%]
+
+=================================== FAILURES ===================================
+_________ test_an_empty_selection_returns_the_populated_paths_key_set __________
+tests/test_text_refusal_at_selection.py:236: in test_an_empty_selection_returns_the_populated_paths_key_set
+    assert set(empty) == set(populated)
+E   AssertionError: assert {'distributio...pped_refused'} == {'all_decline...tracted', ...}
+E     
+E     Extra items in the right set:
+E     'failed'
+E     'claimed_text_unreadable'
+E     'value_divergence'
+E     'below_floor'
+E     'total_spans'...
+E     
+E     ...Full output truncated (20 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 1
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/1 (100.0%) | Paper EE-008 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 1
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.core.selection:selection.py:108 Paper 7: arm local_deepseek_r1_32b already holds it under its current key, and its recorded parsed text is unreadable — parsed_text_missing, /tmp/pytest-of-ankitsarin/pytest-1779/test_an_empty_selection_return0/sel11/parsed_text/7_v1.md. Not selected and not refused: its claims and processing state are unchanged. Restore the file at that path so it matches the recorded hash, or record a new parsed text for the paper.
+WARNING  engine.agents.extractor:extractor.py:1054 Run 3: 1 paper(s) arm local_deepseek_r1_32b already holds have an unreadable recorded parsed text and were neither selected nor refused: [{'paper_id': 7, 'condition': 'parsed_text_missing', 'path': '/tmp/pytest-of-ankitsarin/pytest-1779/test_an_empty_selection_return0/sel11/parsed_text/7_v1.md'}]
+WARNING  engine.core.selection:selection.py:108 Paper 7: arm local_deepseek_r1_32b already holds it under its current key, and its recorded parsed text is unreadable — parsed_text_missing, /tmp/pytest-of-ankitsarin/pytest-1779/test_an_empty_selection_return0/sel11/parsed_text/7_v1.md. Not selected and not refused: its claims and processing state are unchanged. Restore the file at that path so it matches the recorded hash, or record a new parsed text for the paper.
+WARNING  engine.agents.extractor:extractor.py:1054 Run 4: 1 paper(s) arm local_deepseek_r1_32b already holds have an unreadable recorded parsed text and were neither selected nor refused: [{'paper_id': 7, 'condition': 'parsed_text_missing', 'path': '/tmp/pytest-of-ankitsarin/pytest-1779/test_an_empty_selection_return0/sel11/parsed_text/7_v1.md'}]
+______ test_an_empty_selection_reports_the_selections_unreadable_entries _______
+tests/test_text_refusal_at_selection.py:247: in test_an_empty_selection_reports_the_selections_unreadable_entries
+    assert stats["claimed_text_unreadable"] == claimed_text_unreadable_entries(sel)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'claimed_text_unreadable'
+---------------------------- Captured stderr setup -----------------------------
+[Local extraction] 1/1 (100.0%) | Paper EE-007 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 1
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.core.selection:selection.py:108 Paper 7: arm local_deepseek_r1_32b already holds it under its current key, and its recorded parsed text is unreadable — parsed_text_missing, /tmp/pytest-of-ankitsarin/pytest-1779/test_an_empty_selection_report0/sel11/parsed_text/7_v1.md. Not selected and not refused: its claims and processing state are unchanged. Restore the file at that path so it matches the recorded hash, or record a new parsed text for the paper.
+WARNING  engine.core.selection:selection.py:108 Paper 7: arm local_deepseek_r1_32b already holds it under its current key, and its recorded parsed text is unreadable — parsed_text_missing, /tmp/pytest-of-ankitsarin/pytest-1779/test_an_empty_selection_report0/sel11/parsed_text/7_v1.md. Not selected and not refused: its claims and processing state are unchanged. Restore the file at that path so it matches the recorded hash, or record a new parsed text for the paper.
+WARNING  engine.agents.extractor:extractor.py:1054 Run 3: 1 paper(s) arm local_deepseek_r1_32b already holds have an unreadable recorded parsed text and were neither selected nor refused: [{'paper_id': 7, 'condition': 'parsed_text_missing', 'path': '/tmp/pytest-of-ankitsarin/pytest-1779/test_an_empty_selection_report0/sel11/parsed_text/7_v1.md'}]
+=========================== short test summary info ============================
+FAILED tests/test_text_refusal_at_selection.py::test_an_empty_selection_returns_the_populated_paths_key_set
+FAILED tests/test_text_refusal_at_selection.py::test_an_empty_selection_reports_the_selections_unreadable_entries
+======================= 2 failed, 4 deselected in 4.12s ========================

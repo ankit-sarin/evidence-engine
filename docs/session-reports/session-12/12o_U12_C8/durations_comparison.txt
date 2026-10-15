@@ -1,0 +1,7 @@
+C8 gate (866.76 s wall): 2370 phases, sum 855.9 s | C8 stop run (890.81 s): 2409, 879.4 s
+phases slower by more than 10 s against the stop run: none
+worst: +0.18 call tests/test_value_divergence.py::test_attempts_is_the_attempts_spent_and_the_kept_attempt_is_separate
+the three files, 12o-OPEN / C6 / C7 / C8 stop run / C8:
+  tests/test_database.py: 15.34 / 16.26 / 23.84 / 15.88 / 16.15
+  tests/test_readers_on_the_reader.py: 13.05 / 13.37 / 20.07 / 13.28 / 13.30
+  tests/test_parse_gate.py: 12.77 / 13.48 / 18.62 / 12.62 / 12.30

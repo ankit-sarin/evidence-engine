@@ -1,0 +1,15 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 6 items
+
+tests/test_text_refusal_at_selection.py::test_a_missing_text_on_an_audited_paper_is_not_re_failed_each_run PASSED [ 16%]
+tests/test_text_refusal_at_selection.py::test_changed_bytes_on_an_audited_paper_are_reported_as_changed PASSED [ 33%]
+tests/test_text_refusal_at_selection.py::test_the_run_summary_names_the_paper_when_other_papers_are_extracted PASSED [ 50%]
+tests/test_text_refusal_at_selection.py::test_a_paper_with_no_claims_and_a_missing_file_is_refused_once PASSED [ 66%]
+tests/test_text_refusal_at_selection.py::test_an_empty_selection_returns_the_populated_paths_key_set PASSED [ 83%]
+tests/test_text_refusal_at_selection.py::test_an_empty_selection_reports_the_selections_unreadable_entries PASSED [100%]
+
+============================== 6 passed in 7.02s ===============================

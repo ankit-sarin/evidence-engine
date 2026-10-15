@@ -34,6 +34,7 @@ from engine.core import events
 from engine.core.codebook import load_codebook
 from engine.core.database import ReviewDatabase
 from engine.core.effective import effective_state, live_claim_events
+from engine.core.extraction_events import claimed_text_unreadable_entries
 from engine.core.parsed_text import resolve_parsed_text
 from engine.core.review_spec import load_review_spec
 from engine.core.run_telemetry import read_run_events
@@ -216,3 +217,31 @@ def test_a_paper_with_no_claims_and_a_missing_file_is_refused_once(db, spec):
     # the file restored, the paper is selected again
     fresh_path.write_text(TEXT)
     assert [p for p, _ in select_for_extraction(rdb._conn, arm=arm).to_extract] == [FRESH]
+
+
+# ── INT-l12-25 (U12 commit 8, R643(f)) ────────────────────────────────
+# On an empty selection `run_pipeline._stage_extract` returned before
+# `run_extraction`, with three keys of its own, so the run summary — and in it the
+# `claimed_text_unreadable` entry this module is about — never reached the stats.
+def test_an_empty_selection_returns_the_populated_paths_key_set(db, spec):
+    """The key set is the populated path's own, taken from a populated run on the
+    same review — never written down here."""
+    rdb, path = db
+    path.unlink()
+    _add(rdb, FRESH)
+    _, populated = _extract_stage(rdb, spec)      # FRESH extracted, through run_extraction
+    assert populated["extracted"] == 1
+    _, empty = _extract_stage(rdb, spec)          # nothing left to extract: the early return
+    assert empty["extracted"] == 0
+    assert set(empty) == set(populated)
+
+
+def test_an_empty_selection_reports_the_selections_unreadable_entries(db, spec):
+    """F1's case: every paper already extracted, one with its text file missing.
+    Gate 1's setup."""
+    rdb, path = db
+    path.unlink()
+    sel = select_for_extraction(rdb._conn, arm=spec.extraction_models.arm)
+    assert sel.to_extract == () and sel.claimed_text_unreadable
+    _, stats = _extract_stage(rdb, spec)
+    assert stats["claimed_text_unreadable"] == claimed_text_unreadable_entries(sel)

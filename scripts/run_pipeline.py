@@ -22,7 +22,7 @@ from engine.adjudication.workflow import (
     is_audit_review_complete,
 )
 from engine.agents.audit_events import audit_run
-from engine.core.extraction_events import RunAborted
+from engine.core.extraction_events import RunAborted, run_extraction_summary
 from engine.agents.extractor import (
     extraction_stages, record_selection_refusals, run_extraction, verify_extraction_run,
 )
@@ -374,9 +374,13 @@ def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
         logger.info("Nothing to extract for arm %s — %d skipped (asserted), "
                     "%d skipped (refused).", selection.arm,
                     len(selection.skipped_asserted), len(selection.skipped_refused))
-        stats = {"extracted": 0,
+        stats = {"extracted": 0, "failed": 0, "total_spans": 0,
                  "skipped_asserted": len(selection.skipped_asserted),
                  "skipped_refused": len(selection.skipped_refused)}
+        # INT-l12-25: the run summary, as run_extraction returns it — so both returns
+        # carry one key set, and `claimed_text_unreadable` names the papers this
+        # selection held without reading (every paper already extracted is its case).
+        stats.update(run_extraction_summary(db._conn, run_id, selection))
         stats["distribution_check"] = _distribution_check(
             db, spec, review_name, run_id=run_id, stats=stats)
         return {**stats, "elapsed": time.time() - t}

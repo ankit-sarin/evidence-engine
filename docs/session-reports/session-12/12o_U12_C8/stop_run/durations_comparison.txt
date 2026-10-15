@@ -1,0 +1,6 @@
+C8 gate (890.81 s wall): 2409 phases, sum 879.4 s | C7 (961.11 s): 2457, 950.0 s
+phases slower by more than 10 s against C7: none
+worst: +0.44 setup tests/analysis/paper1/test_judge_cli.py::TestArgParsing::test_pass_2_raises_not_implemented
+  tests/test_database.py: C7 23.84 -> C8 15.88
+  tests/test_readers_on_the_reader.py: C7 20.07 -> C8 13.28
+  tests/test_parse_gate.py: C7 18.62 -> C8 12.62

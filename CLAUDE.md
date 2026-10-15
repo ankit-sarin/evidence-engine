@@ -75,7 +75,6 @@ manifest and cloud opt-in" below). No site names a model or builds an options di
 
 ## Data Architecture
 - SQLite: One database per review (state machine, provenance)
-- ChromaDB: Vector embeddings per review (disposable, rebuildable)
 - File system: Immutable PDF + parsed Markdown store
 
 ### Database Tables (beyond core papers/extractions/evidence_spans)

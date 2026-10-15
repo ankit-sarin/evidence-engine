@@ -1,0 +1,21 @@
+| Cloud Extractor (Anthropic) | claude-sonnet-4-6 | Concordance arm — extended thinking |
+
+The models above are the **live spec's values**, not constants: every model, option, `think`,
+`format` and `keep_alive` a call sends comes from the resolver (see "Configuration, the run
+manifest and cloud opt-in" below). No site names a model or builds an options dict.
+
+## Data Architecture
+- SQLite: One database per review (state machine, provenance)
+- ChromaDB: Vector embeddings per review (disposable, rebuildable)
+- File system: Immutable PDF + parsed Markdown store
+
+### Database Tables (beyond core papers/extractions/evidence_spans)
+| Table | Purpose |
+|-------|---------|
+| cloud_extractions | Parallel to `extractions` — tracks arm, model, cost, reasoning traces |
+| cloud_evidence_spans | Parallel to `evidence_spans` — cloud-arm field values |
+| human_extractions | Human extractor workbook values (paper_id as "EE-NNN", extractor_id A/B/C/D). **Does not exist on `surgical_autonomy`'s database.** It is created by `human_import.py`'s own `CREATE TABLE IF NOT EXISTS` on first import, which has never been run — so it carries no migration receipt. Moves to a numbered migration in session 12 (R14), where the TEXT "EE-NNN" key is also reconciled to `papers.id`. |
+| judge_runs | Paper 1 LLM-as-judge runs (Pass 1 pairwise rating + Pass 2 fabrication verification). PK `run_id TEXT`. Stores `judge_model_digest` (canonical SHA-256 from Ollama `/api/tags`) and `codebook_sha256`. Migration 007. |
+| judge_ratings | Per-triple Pass 1 output. One row per (run_id, paper_id, field_name). Stores `pass1_fabrication_risk`, arm permutation, seed, prompt hash, raw response. Migration 007. |
+| judge_pair_ratings | C(N,2) rows per `judge_ratings` row — Level 1 (EQUIVALENT / PARTIAL / DIVERGENT) and Level 2 (GRANULARITY / SELECTION / FABRICATION / …) per arm pair. Migration 007. |
+| fabrication_verifications | Pass 2 per-arm verdicts. UNIQUE (judge_run_id, paper_id, field_name, arm_name). verdict ∈ {SUPPORTED, PARTIALLY_SUPPORTED, UNSUPPORTED}. CHECK: UNSUPPORTED requires non-empty reasoning + fabrication_hypothesis. CASCADE FK to judge_runs. Migration 008. |

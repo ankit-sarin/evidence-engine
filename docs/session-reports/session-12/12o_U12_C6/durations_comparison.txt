@@ -1,0 +1,11 @@
+12o-U12-C6 gate (942.13 s wall): 2415 listed phases, sum 931.0 s
+12o-OPEN gate (865.41 s wall): 2373 listed phases, sum 854.0 s
+the three new tests: 2 listed phases, 0.94 s
+phases slower by more than 10 s against the 12o-OPEN file: none
+worst five deltas:
+  +0.56 call     tests/test_verify_downloads.py::TestVerifyDownloadsIntegration::test_ee_prefixed_match
+  +0.52 setup    tests/test_run_manifest_migration.py::test_r78_every_check_refuses_a_null[run_manifests.payload_description]
+  +0.49 call     tests/test_verify_downloads.py::TestVerifyDownloadsIntegration::test_bare_integer_match_and_rename
+  +0.48 setup    tests/test_run_manifest_migration.py::test_the_r77_check_text_is_on_both_event_tables_verbatim
+  +0.48 setup    tests/test_migration_016_017.py::test_017_seeds_eligibility_only_one_state_at_migration_event_per_corpus_paper
+sum of positive deltas 88.4 s over 987 phases; sum of all deltas 76.5 s

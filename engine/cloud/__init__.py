@@ -1,5 +1,5 @@
-"""Cloud extraction arms for concordance study."""
+"""Cloud extraction arms for concordance study.
 
-from engine.cloud.anthropic_extractor import AnthropicExtractor
-from engine.cloud.openai_extractor import OpenAIExtractor
-from engine.cloud.schema import init_cloud_tables
+The package init imports nothing, so that a fresh review database needs no provider SDK;
+callers import the submodules directly.
+"""

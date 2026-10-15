@@ -1,0 +1,12 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 3 items
+
+tests/test_cloud_package_init.py::test_fresh_review_database_needs_no_provider_sdk PASSED [ 33%]
+tests/test_cloud_package_init.py::test_cloud_schema_and_base_import_without_either_sdk PASSED [ 66%]
+tests/test_cloud_package_init.py::test_the_cloud_package_init_imports_nothing PASSED [100%]
+
+============================== 3 passed in 1.04s ===============================

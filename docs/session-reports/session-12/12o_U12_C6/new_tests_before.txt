@@ -1,0 +1,86 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 3 items
+
+tests/test_cloud_package_init.py::test_fresh_review_database_needs_no_provider_sdk FAILED [ 33%]
+tests/test_cloud_package_init.py::test_cloud_schema_and_base_import_without_either_sdk FAILED [ 66%]
+tests/test_cloud_package_init.py::test_the_cloud_package_init_imports_nothing FAILED [100%]
+
+=================================== FAILURES ===================================
+E   AssertionError: INFO: Migration 004 complete: 0 columns added, 6 skipped, 0 PDF_EXCLUDED papers
+      INFO: migration 004_pdf_quality_check executed
+      INFO: Migration 005 complete: 0 columns added, 2 skipped
+      INFO: migration 005_model_digest executed
+      INFO: evidence_spans already has tier column — skipping migration
+      INFO: migration 006_not_null_confidence_tier executed
+      INFO: Migration 007 complete: 4 tables created, 8 indexes created
+      INFO: migration 007_add_judge_tables executed
+      INFO: Migration 008 complete: 1 tables created, 4 indexes created
+      INFO: migration 008_add_fabrication_verifications executed
+      INFO: Migration 009 complete: 1 tables created, 2 indexes created
+      INFO: migration 009_add_backfill_audit_log executed
+      INFO: Migration 010 complete: 2 tables created, 5 indexes created
+      INFO: migration 010_add_provenance_classifications executed
+      INFO: Migration 011 complete: 2 columns added, 0 rows preserved
+      INFO: migration 011_add_absence_claim_class executed
+      INFO: Migration 012 added: extractions.codebook_hash, extractions.codebook_sha256, review_runs.codebook_hash, review_runs.codebook_sha256
+      INFO: migration 012_codebook_provenance executed
+      INFO: Migration 013 lifted NOT NULL on: extractions.extraction_schema_hash, review_runs.extraction_hash
+      INFO: migration 013_drop_schema_hash_not_null executed
+      Traceback (most recent call last):
+        File "/home/ankitsarin/projects/evidence-engine/engine/migrations/runner.py", line 312, in run
+          module.run_migration(str(db_path))
+        File "/home/ankitsarin/projects/evidence-engine/engine/migrations/014_cloud_tables.py", line 38, in run_migration
+          from engine.cloud.schema import init_cloud_tables
+        File "/home/ankitsarin/projects/evidence-engine/engine/cloud/__init__.py", line 3, in <module>
+          from engine.cloud.anthropic_extractor import AnthropicExtractor
+        File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 9, in <module>
+          import anthropic
+      ModuleNotFoundError: import of anthropic halted; None in sys.modules
+      
+      The above exception was the direct cause of the following exception:
+      
+      Traceback (most recent call last):
+        File "<string>", line 9, in <module>
+        File "/home/ankitsarin/projects/evidence-engine/engine/core/database.py", line 389, in __init__
+          self._run_migrations()
+        File "/home/ankitsarin/projects/evidence-engine/engine/core/database.py", line 444, in _run_migrations
+          result = runner.run(self.db_path)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ankitsarin/projects/evidence-engine/engine/migrations/runner.py", line 314, in run
+          raise MigrationError(
+      engine.migrations.runner.MigrationError: 014_cloud_tables failed: ModuleNotFoundError: import of anthropic halted; None in sys.modules
+      
+    assert 1 == 0
+     +  where 1 = CompletedProcess(args=['/home/ankitsarin/projects/evidence-engine/.venv/bin/python', '-I', '-c', '\nimport json, sys\nsys.modules["openai"] = None\nsys.modules["anthropic"] = None\nsys.path.insert(0, sys.argv[1])\n\nimport sqlite3\nfrom engine.core.database import ReviewDatabase\ndb = ReviewDatabase(sys.argv[3], data_root=__import__("pathlib").Path(sys.argv[2]))\nconn = sqlite3.connect(f"file:{db.db_path}?mode=ro", uri=True)\nprint(json.dumps({"receipts": sorted(r[0] for r in conn.execute(\n    "SELECT migration_id FROM schema_migrations"))}))\n', '/home/ankitsarin/projects/evidence-engine', '/tmp/pytest-of-ankitsarin/pytest-1752/test_fresh_review_database_nee0', 'sdkfree_review'], returncode=1, stdout='', stderr='INFO: Migration 004 complete: 0 columns added, 6 skipped, 0 PDF_EXCLUDED papers\nINFO: migration 004_pdf_quality_check executed\nINFO: Migration 005 complete: 0 columns added, 2 skipped\nINFO: migration 005_model_digest executed\nINFO: evidence_spans already has tier column — skipping migration\nINFO: migration 006_not_null_confidence_tier executed\nINFO: Migration 007 complete: 4 tables created, 8 indexes created\nINFO: migration 007_add_judge_tables executed\nINFO: Mi...ns/014_cloud_tables.py", line 38, in run_migration\n    from engine.cloud.schema import init_cloud_tables\n  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/__init__.py", line 3, in <module>\n    from engine.cloud.anthropic_extractor import AnthropicExtractor\n  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 9, in <module>\n    import anthropic\nModuleNotFoundError: import of anthropic halted; None in sys.modules\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File "<string>", line 9, in <module>\n  File "/home/ankitsarin/projects/evidence-engine/engine/core/database.py", line 389, in __init__\n    self._run_migrations()\n  File "/home/ankitsarin/projects/evidence-engine/engine/core/database.py", line 444, in _run_migrations\n    result = runner.run(self.db_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/ankitsarin/projects/evidence-engine/engine/migrations/runner.py", line 314, in run\n    raise MigrationError(\nengine.migrations.runner.MigrationError: 014_cloud_tables failed: ModuleNotFoundError: import of anthropic halted; None in sys.modules\n').returncode
+/home/ankitsarin/projects/evidence-engine/tests/test_cloud_package_init.py:44: AssertionError: INFO: Migration 004 complete: 0 columns added, 6 skipped, 0 PDF_EXCLUDED papers
+E   AssertionError: Traceback (most recent call last):
+        File "<string>", line 7, in <module>
+        File "/home/ankitsarin/projects/evidence-engine/engine/cloud/__init__.py", line 3, in <module>
+          from engine.cloud.anthropic_extractor import AnthropicExtractor
+        File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 9, in <module>
+          import anthropic
+      ModuleNotFoundError: import of anthropic halted; None in sys.modules
+      
+    assert 1 == 0
+     +  where 1 = CompletedProcess(args=['/home/ankitsarin/projects/evidence-engine/.venv/bin/python', '-I', '-c', '\nimport json, sys\nsys.modules["openai"] = None\nsys.modules["anthropic"] = None\nsys.path.insert(0, sys.argv[1])\n\nimport engine.cloud.schema, engine.cloud.base\nprint(json.dumps({"loaded": [m for m in ("openai", "anthropic")\n                             if sys.modules.get(m) is not None]}))\n', '/home/ankitsarin/projects/evidence-engine'], returncode=1, stdout='', stderr='Traceback (most recent call last):\n  File "<string>", line 7, in <module>\n  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/__init__.py", line 3, in <module>\n    from engine.cloud.anthropic_extractor import AnthropicExtractor\n  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 9, in <module>\n    import anthropic\nModuleNotFoundError: import of anthropic halted; None in sys.modules\n').returncode
+/home/ankitsarin/projects/evidence-engine/tests/test_cloud_package_init.py:44: AssertionError: Traceback (most recent call last):
+E   AssertionError: assert ['from engine...cloud_tables'] == []
+      
+      Left contains 3 more items, first extra item: 'from engine.cloud.anthropic_extractor import AnthropicExtractor'
+      
+      Full diff:
+      - []
+      + [
+      +     'from engine.cloud.anthropic_extractor import AnthropicExtractor',...
+      
+      ...Full output truncated (3 lines hidden), use '-vv' to show
+/home/ankitsarin/projects/evidence-engine/tests/test_cloud_package_init.py:85: AssertionError: assert ['from engine...cloud_tables'] == []
+=========================== short test summary info ============================
+FAILED tests/test_cloud_package_init.py::test_fresh_review_database_needs_no_provider_sdk
+FAILED tests/test_cloud_package_init.py::test_cloud_schema_and_base_import_without_either_sdk
+FAILED tests/test_cloud_package_init.py::test_the_cloud_package_init_imports_nothing
+============================== 3 failed in 0.62s ===============================

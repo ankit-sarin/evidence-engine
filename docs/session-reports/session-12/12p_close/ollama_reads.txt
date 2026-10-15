@@ -1,0 +1,10 @@
+close 2026-10-15T21:23:41Z
+ollama version is 0.21.0
+-- GET /api/tags 2026-10-15T21:23:41Z
+gemma3:27b a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203
+qwen3:32b 030ee887880fc378860c2dd35101da424377520441ae4bfe7be6deff8ade7840
+deepseek-r1:32b edba8017331d15236e57480eb45406c0d721db77a4cdcf234df500fc2ad3960c
+-- GET /api/ps 2026-10-15T21:23:41Z
+resident [('llama3.2:3b', '2319-01-25T06:53:15.565552206Z')]
+NRestarts=0
+ExecMainStartTimestamp=Fri 2026-09-11 21:09:13 UTC

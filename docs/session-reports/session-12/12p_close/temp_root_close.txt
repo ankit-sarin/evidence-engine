@@ -1,0 +1,15 @@
+# pytest temp root at the 12p closeout 2026-10-15T21:23:41Z — measured, not emptied (R648(b), R647(c))
+/tmp/pytest-of-ankitsarin
+entries: 4
+2734101661	/tmp/pytest-of-ankitsarin
+1366901317	/tmp/pytest-of-ankitsarin/pytest-0
+1366897270	/tmp/pytest-of-ankitsarin/pytest-1
+303040	/tmp/pytest-of-ankitsarin/pytest-2
+34	/tmp/pytest-of-ankitsarin/pytest-current
+total 784
+drwx------    5 ankitsarin ankitsarin   4096 2026-10-15 14:43:59.562128960 +0000 .
+drwxrwxrwt  572 root       root        45056 2026-10-15 21:23:33.126751185 +0000 ..
+drwx------ 3308 ankitsarin ankitsarin 368640 2026-10-15 09:14:34.156506082 +0000 pytest-0
+drwx------ 3308 ankitsarin ankitsarin 368640 2026-10-15 14:16:04.230334769 +0000 pytest-1
+drwx------   25 ankitsarin ankitsarin   4096 2026-10-15 14:44:00.029131305 +0000 pytest-2
+lrwxrwxrwx    1 ankitsarin ankitsarin     34 2026-10-15 14:43:59.562128960 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-2

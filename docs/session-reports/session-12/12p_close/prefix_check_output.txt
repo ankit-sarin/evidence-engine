@@ -1,0 +1,9 @@
+diff of docs/plan/ENGINE_REFACTOR_PLAN.md (staged): 6 '-' lines, 274 '+' lines
+  C46: closing '|' present; '+' lines extending it: 1; +267 chars inserted before the closing '|'; PASS
+  HK-ARCH: closing '|' present; '+' lines extending it: 1; +189 chars inserted before the closing '|'; PASS
+  INT-g12-7: closing '|' present; '+' lines extending it: 1; +333 chars inserted before the closing '|'; PASS
+  INT-h12-2: closing '|' present; '+' lines extending it: 1; +897 chars inserted before the closing '|'; PASS
+  INT-i12-3: closing '|' present; '+' lines extending it: 1; +353 chars inserted before the closing '|'; PASS
+  INT-i12-5: closing '|' present; '+' lines extending it: 1; +459 chars inserted before the closing '|'; PASS
+exactly six '-' lines, the six R651(b) rows: True
+RESULT: PASS

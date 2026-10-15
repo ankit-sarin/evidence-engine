@@ -1,0 +1,13 @@
+R645(d) — pytest temp root emptied, 2026-10-15T05:57:28Z
+process scan: no pytest process (needle assembled at runtime; self and parent excluded)
+owner/mode: ankitsarin:ankitsarin 700
+entries before:
+drwx------  283 ankitsarin ankitsarin  36864 Oct 13 03:35 pytest-1677
+drwx------    3 ankitsarin ankitsarin   4096 Oct 15 04:10 pytest-1755
+drwx------ 3308 ankitsarin ankitsarin 368640 Oct 15 05:23 pytest-1781
+drwx------    5 ankitsarin ankitsarin   4096 Oct 15 05:30 pytest-1782
+drwx------ 3308 ankitsarin ankitsarin 368640 Oct 15 05:44 pytest-1783
+lrwxrwxrwx    1 ankitsarin ankitsarin     37 Oct 15 05:30 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-1783
+size before: 2762793839 bytes (2.7G)
+entries after: 0
+size after: 0 bytes (4.0K)

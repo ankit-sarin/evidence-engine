@@ -1,0 +1,20 @@
+# retained throwaway reviews (file sha256), ~/scratch/retained/
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db
+# U06's copy (R638(d)), not a restore point
+path: /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+tables   : 36
+overall  : 000db389fa40fd573dff449c33138471f44a3c10585a492dac9affd80397f6ca
+# the five restore points (fingerprints)
+data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138 tables   : 34 overall  : bb39ba81170c4f11d59954b9e70837afc427c66da710bde30881aad570d16c40 
+data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020 tables   : 31 overall  : e564f250afe40af7eb9a6bc07596a3c795972f7ef3b653c37599e8bc18285b63 
+data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104 tables   : 34 overall  : ea05912d67f0b841bf003a7a941f6505e2c57140b5c2f62e1ff446ea16b9ce01 
+data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807 tables   : 24 overall  : f376562e095cfbcbf23ca997f31375feba340f74ed7a14ffe26e42cc63839e00 
+data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453 tables   : 32 overall  : 62f3912813b6e9efa3a651ee4c4ebcd611adf89c989f240a58e83dcf6759b79a 

@@ -1,0 +1,27 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 1 item
+
+tests/test_requirements_census.py::test_requirements_declare_exactly_the_imported_distributions FAILED [100%]
+
+=================================== FAILURES ===================================
+_________ test_requirements_declare_exactly_the_imported_distributions _________
+tests/test_requirements_census.py:93: in test_requirements_declare_exactly_the_imported_distributions
+    assert undeclared == [], f"imported but not declared: {undeclared}"
+E   AssertionError: imported but not declared: ['fonttools', 'fpdf2', 'httpx', 'pandas', 'pymupdf', 'pytest', 'requests', 'scikit-learn']
+E   assert ['fonttools',...'pytest', ...] == []
+E     
+E     Left contains 8 more items, first extra item: 'fonttools'
+E     
+E     Full diff:
+E     - []
+E     + [
+E     +     'fonttools',...
+E     
+E     ...Full output truncated (8 lines hidden), use '-vv' to show
+=========================== short test summary info ============================
+FAILED tests/test_requirements_census.py::test_requirements_declare_exactly_the_imported_distributions
+============================== 1 failed in 0.97s ===============================

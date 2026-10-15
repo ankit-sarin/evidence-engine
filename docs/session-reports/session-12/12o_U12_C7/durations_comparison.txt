@@ -1,0 +1,16 @@
+C7 gate (961.11 s wall): 2457 phases, sum 950.0 s | C6 (942.13 s): 2415, 931.0 s | 12o-OPEN (865.41 s): 2373, 854.0 s
+the new test: 1 listed phases, 0.96 s
+phases slower by more than 10 s against C6: none
+worst five vs C6:
+  +0.55 call     tests/test_prisma_reconciliation.py::TestReconciliation::test_reconciliation_catches_mismatch
+  +0.54 setup    tests/migrations/test_pending_guard.py::test_T3_apply_pending_true_applies_the_fake_migration
+  +0.50 setup    tests/analysis/paper1/test_judge_storage.py::TestInsertErrors::test_duplicate_run_paper_field_rejected
+  +0.50 setup    tests/analysis/paper1/test_judge_storage.py::TestInsertErrors::test_slot_a_out_of_range
+  +0.48 call     tests/test_parse_quality.py::test_metrics_reproduce_the_phase1_sweep_row[415]
+vs C6: sum of deltas 18.7 s; 944 phases slower
+files growing across all three 12o gates (OPEN < C6 < C7), top five by total growth:
+  +8.50 s  tests/test_database.py  15.34 -> 16.26 -> 23.84
+  +7.02 s  tests/test_readers_on_the_reader.py  13.05 -> 13.37 -> 20.07
+  +5.85 s  tests/test_parse_gate.py  12.77 -> 13.48 -> 18.62
+  +4.13 s  tests/test_workflow.py  19.20 -> 20.04 -> 23.33
+  +3.83 s  tests/test_adjudication.py  10.79 -> 11.03 -> 14.62

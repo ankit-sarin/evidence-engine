@@ -1,0 +1,309 @@
+[
+ {
+  "import": "Bio",
+  "distributions": [
+   "biopython"
+  ],
+  "versions": {
+   "biopython": "1.86"
+  },
+  "where": [
+   "engine",
+   "scripts"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "_event_store_fixture",
+  "distributions": [],
+  "versions": {},
+  "where": [
+   "tests"
+  ],
+  "local_module_of_same_name": true
+ },
+ {
+  "import": "_lock_census",
+  "distributions": [],
+  "versions": {},
+  "where": [
+   "tests"
+  ],
+  "local_module_of_same_name": true
+ },
+ {
+  "import": "_parsed_text_fixture",
+  "distributions": [],
+  "versions": {},
+  "where": [
+   "tests"
+  ],
+  "local_module_of_same_name": true
+ },
+ {
+  "import": "anthropic",
+  "distributions": [
+   "anthropic"
+  ],
+  "versions": {
+   "anthropic": "0.84.0"
+  },
+  "where": [
+   "engine",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "docling",
+  "distributions": [
+   "docling"
+  ],
+  "versions": {
+   "docling": "2.74.0"
+  },
+  "where": [
+   "engine"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "docx",
+  "distributions": [
+   "python-docx"
+  ],
+  "versions": {
+   "python-docx": "1.2.0"
+  },
+  "where": [
+   "engine",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "fitz",
+  "distributions": [
+   "PyMuPDF"
+  ],
+  "versions": {
+   "PyMuPDF": "1.27.1"
+  },
+  "where": [
+   "engine",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "fontTools",
+  "distributions": [
+   "fonttools"
+  ],
+  "versions": {
+   "fonttools": "4.61.1"
+  },
+  "where": [
+   "engine",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "fpdf",
+  "distributions": [
+   "fpdf2"
+  ],
+  "versions": {
+   "fpdf2": "2.8.6"
+  },
+  "where": [
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "httpx",
+  "distributions": [
+   "httpx"
+  ],
+  "versions": {
+   "httpx": "0.28.1"
+  },
+  "where": [
+   "analysis",
+   "engine",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "ollama",
+  "distributions": [
+   "ollama"
+  ],
+  "versions": {
+   "ollama": "0.6.1"
+  },
+  "where": [
+   "analysis",
+   "engine",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "openai",
+  "distributions": [
+   "openai"
+  ],
+  "versions": {
+   "openai": "2.24.0"
+  },
+  "where": [
+   "engine",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "openpyxl",
+  "distributions": [
+   "openpyxl"
+  ],
+  "versions": {
+   "openpyxl": "3.1.5"
+  },
+  "where": [
+   "analysis",
+   "engine",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "pandas",
+  "distributions": [
+   "pandas"
+  ],
+  "versions": {
+   "pandas": "2.3.3"
+  },
+  "where": [
+   "analysis",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "pyalex",
+  "distributions": [
+   "pyalex"
+  ],
+  "versions": {
+   "pyalex": "0.20"
+  },
+  "where": [
+   "engine",
+   "scripts"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "pydantic",
+  "distributions": [
+   "pydantic"
+  ],
+  "versions": {
+   "pydantic": "2.12.5"
+  },
+  "where": [
+   "analysis",
+   "engine",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "pysbd",
+  "distributions": [
+   "pysbd"
+  ],
+  "versions": {
+   "pysbd": "0.3.4"
+  },
+  "where": [
+   "analysis"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "pytest",
+  "distributions": [
+   "pytest"
+  ],
+  "versions": {
+   "pytest": "9.0.2"
+  },
+  "where": [
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "requests",
+  "distributions": [
+   "requests"
+  ],
+  "versions": {
+   "requests": "2.32.5"
+  },
+  "where": [
+   "engine",
+   "scripts",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "sklearn",
+  "distributions": [
+   "scikit-learn"
+  ],
+  "versions": {
+   "scikit-learn": "1.8.0"
+  },
+  "where": [
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "tiktoken",
+  "distributions": [
+   "tiktoken"
+  ],
+  "versions": {
+   "tiktoken": "0.12.0"
+  },
+  "where": [
+   "analysis"
+  ],
+  "local_module_of_same_name": false
+ },
+ {
+  "import": "yaml",
+  "distributions": [
+   "PyYAML"
+  ],
+  "versions": {
+   "PyYAML": "6.0.3"
+  },
+  "where": [
+   "analysis",
+   "engine",
+   "tests"
+  ],
+  "local_module_of_same_name": false
+ }
+]

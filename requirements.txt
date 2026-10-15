@@ -1,18 +1,23 @@
-pydantic
+pydantic==2.12.5
 ollama==0.6.1  # R75: pinned to the installed version the engine runs under; every run manifest records it
-biopython
-pyalex
-chromadb
-sentence-transformers
-gradio
-pyyaml
-python-docx
-openpyxl
+biopython==1.86
+pyalex==0.20
+pyyaml==6.0.3
+python-docx==1.2.0
+openpyxl==3.1.5
 docling==2.74.0  # pinned PARSE-GATE-06a: 2.74.0 + pydantic 2.12.5 is the
                  # combination whose PdfHyperlink URL validation the
                  # sanitized retry works around; docling-core is
                  # transitive (2.65.1 installed) and not listed here.
 openai==2.24.0  # R75
 anthropic==0.84.0  # R75
-tiktoken
+tiktoken==0.12.0
 pysbd==0.3.4
+requests==2.32.5
+httpx==0.28.1
+PyMuPDF==1.27.1
+fonttools==4.61.1
+pandas==2.3.3
+fpdf2==2.8.6
+scikit-learn==1.8.0
+pytest==9.0.2

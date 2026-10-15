@@ -1,0 +1,351 @@
+{
+ "attempt1_judgment_fields": 55,
+ "attempt1_judgment_raw_on_disk": 35,
+ "attempt1_judgment_vwc_recorded": 9,
+ "duplicates": [
+  {
+   "attempt_1_raw_on_disk": true,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 1
+  },
+  {
+   "attempt_1_raw_on_disk": false,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 3
+  },
+  {
+   "attempt_1_raw_on_disk": false,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 4
+  },
+  {
+   "attempt_1_raw_on_disk": false,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 5
+  },
+  {
+   "attempt_1_raw_on_disk": true,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 6
+  },
+  {
+   "attempt_1_raw_on_disk": true,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 7
+  },
+  {
+   "attempt_1_raw_on_disk": true,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 8
+  },
+  {
+   "attempt_1_raw_on_disk": true,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 9
+  },
+  {
+   "attempt_1_raw_on_disk": true,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 10
+  },
+  {
+   "attempt_1_raw_on_disk": true,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 11
+  },
+  {
+   "attempt_1_raw_on_disk": false,
+   "duplicates_in_accepted_raw": [],
+   "paper_id": 12
+  }
+ ],
+ "on_disk_split": {
+  "field_level_citation_and_no_step_cites": 5,
+  "no_field_level_citation_and_no_step_cites": 2,
+  "pass_pre_fail_at_head": 5,
+  "pass_pre_fail_at_head_already_failing_other_code": 5,
+  "pass_pre_fail_at_head_field_newly_failing": 0,
+  "vwc_at_head": 7,
+  "vwc_pre_dccd679": 2
+ },
+ "papers": {
+  "1": {
+   "a1_failed": 2,
+   "accepted": 1,
+   "n_attempts": 2,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  },
+  "2": {
+   "outcomes": [
+    "input_exceeds_context"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 0
+  },
+  "3": {
+   "a1_failed": 9,
+   "accepted": 2,
+   "n_attempts": 2,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  },
+  "4": {
+   "a1_failed": 9,
+   "accepted": 2,
+   "n_attempts": 2,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  },
+  "5": {
+   "a1_failed": 8,
+   "accepted": 2,
+   "n_attempts": 2,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  },
+  "6": {
+   "a1_failed": 1,
+   "accepted": 1,
+   "n_attempts": 2,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  },
+  "7": {
+   "a1_failed": 6,
+   "accepted": 1,
+   "n_attempts": 2,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  },
+  "8": {
+   "a1_failed": 4,
+   "accepted": 1,
+   "n_attempts": 2,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  },
+  "9": {
+   "a1_failed": 1,
+   "accepted": 1,
+   "n_attempts": 2,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  },
+  "10": {
+   "a1_failed": 3,
+   "accepted": 1,
+   "n_attempts": 2,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  },
+  "11": {
+   "a1_failed": 0,
+   "accepted": 1,
+   "n_attempts": 1,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  },
+  "12": {
+   "a1_failed": 3,
+   "accepted": 2,
+   "n_attempts": 2,
+   "outcomes": [
+    "stored"
+   ],
+   "rows": 1,
+   "rows_with_attempts": 1
+  }
+ },
+ "papers_with_more_than_one_row": [],
+ "pass_pre_fail_at_head_rows": [
+  {
+   "any_step_cites": false,
+   "codes": [
+    "STEPS_MISSING"
+   ],
+   "escape": false,
+   "field": "autonomy_level",
+   "field_level_citation": true,
+   "paper_id": 7,
+   "raw_on_disk": true,
+   "vwc_at_head": true,
+   "vwc_pre_dccd679": false
+  },
+  {
+   "any_step_cites": false,
+   "codes": [
+    "STEPS_MISSING"
+   ],
+   "escape": false,
+   "field": "system_maturity",
+   "field_level_citation": true,
+   "paper_id": 7,
+   "raw_on_disk": true,
+   "vwc_at_head": true,
+   "vwc_pre_dccd679": false
+  },
+  {
+   "any_step_cites": false,
+   "codes": [
+    "STEPS_MISSING"
+   ],
+   "escape": false,
+   "field": "study_design",
+   "field_level_citation": true,
+   "paper_id": 7,
+   "raw_on_disk": true,
+   "vwc_at_head": true,
+   "vwc_pre_dccd679": false
+  },
+  {
+   "any_step_cites": false,
+   "codes": [
+    "STEPS_MISSING"
+   ],
+   "escape": false,
+   "field": "key_limitation",
+   "field_level_citation": true,
+   "paper_id": 7,
+   "raw_on_disk": true,
+   "vwc_at_head": true,
+   "vwc_pre_dccd679": false
+  },
+  {
+   "any_step_cites": false,
+   "codes": [
+    "STEPS_MISSING"
+   ],
+   "escape": false,
+   "field": "clinical_readiness_assessment",
+   "field_level_citation": true,
+   "paper_id": 7,
+   "raw_on_disk": true,
+   "vwc_at_head": true,
+   "vwc_pre_dccd679": false
+  }
+ ],
+ "vwc_recorded_rows": [
+  {
+   "any_step_cites": false,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "escape": false,
+   "field": "study_design",
+   "field_level_citation": false,
+   "paper_id": 1,
+   "raw_on_disk": true,
+   "vwc_at_head": true,
+   "vwc_pre_dccd679": true
+  },
+  {
+   "codes": [
+    "VALUE_WITHOUT_CITATION",
+    "STEPS_MISSING"
+   ],
+   "escape": false,
+   "field": "clinical_readiness_assessment",
+   "paper_id": 3,
+   "raw_on_disk": false
+  },
+  {
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "escape": false,
+   "field": "autonomy_level",
+   "paper_id": 4,
+   "raw_on_disk": false
+  },
+  {
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "escape": false,
+   "field": "system_maturity",
+   "paper_id": 4,
+   "raw_on_disk": false
+  },
+  {
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "escape": false,
+   "field": "study_design",
+   "paper_id": 4,
+   "raw_on_disk": false
+  },
+  {
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "escape": false,
+   "field": "key_limitation",
+   "paper_id": 4,
+   "raw_on_disk": false
+  },
+  {
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "escape": false,
+   "field": "clinical_readiness_assessment",
+   "paper_id": 4,
+   "raw_on_disk": false
+  },
+  {
+   "codes": [
+    "VALUE_WITHOUT_CITATION",
+    "STEPS_MISSING"
+   ],
+   "escape": false,
+   "field": "clinical_readiness_assessment",
+   "paper_id": 5,
+   "raw_on_disk": false
+  },
+  {
+   "any_step_cites": false,
+   "codes": [
+    "VALUE_WITHOUT_CITATION"
+   ],
+   "escape": false,
+   "field": "key_limitation",
+   "field_level_citation": false,
+   "paper_id": 6,
+   "raw_on_disk": true,
+   "vwc_at_head": true,
+   "vwc_pre_dccd679": true
+  }
+ ]
+}

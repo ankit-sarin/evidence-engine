@@ -1,0 +1,12 @@
+{
+ "arm": "local_deepseek_r1_32b",
+ "pinned_sha256": "77ae99d8671534aaa1350013f1cb6a4409a16eba7a1e097dad408188b81d1bf2",
+ "recomputed_from_stored_tuple": "77ae99d8671534aaa1350013f1cb6a4409a16eba7a1e097dad408188b81d1bf2",
+ "head_pin": "8f0aeecdeda659a13b3c182fabdc2568523f38891cd692f0a8cf9ce629de3488",
+ "differs_at": [
+  "codebook_hash",
+  "segmentation",
+  "stages.elicitation_pass1.prompt_hash",
+  "stages.extract_retry_snippet"
+ ]
+}

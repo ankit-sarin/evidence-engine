@@ -844,6 +844,14 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 **The pre-tag list, recounted 2026-10-13 (12n-R631), by script from the plan** (`docs/session-reports/session-12/12n_R631/recount_12n_r631.py` → `recount_12n_r631.json`: the R629 count above as the baseline, reproduced by `recount_12n_r629.py` on this file and equal to its committed JSON, and the row above). Baseline: 269 rows — Class 1 / 2 / 3 = 95 / 50 / 124, and 0 without a class. Deltas: 1 row enters, Class 3 (INT-n12-2 in P7); R631 moves no class. **Now 270 rows: Class 1 / 2 / 3 = 95 / 50 / 125, and 0 without a class.** **R510 (2026-10-13, 12n-R631): rows in 1 (1 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 0 / 1), rows out 0.** The resume's expected total (the architect's arithmetic, V2) was 270 rows, 95 / 50 / 125, with P1 at 57 and P7 at 112; the script gives the same. Counts by package and class (first-named package, as before): P1 26 / 20 / 11 (57); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 111 (112). P1's fix units stay 35.
 
+**L (12p additions).** *Opened 2026-10-15 (12p-U13A item 0) under R509 and R648(c).* One row from the 12p-OPEN report as resumed under R647: `INT-p12-1` (R648(c)). The text cell is the report's words as R648(c) quotes them, unchanged; class and package are R648(c)'s.
+
+| # | On disk (the 12p-OPEN report, quoted) | Class | Owning package | Governing ruling | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| INT-p12-1 | six test directories per run each hold a full copy of the live review.db, about 806 MB of the 1.37 GB per run, made by shutil.copy2(LIVE_DB, …) in test_codebook_staleness.py. INFERRED: test_codebook_provenance.py does the same. | 3 | P7 | R648(c) | 12p-OPEN report (resumed), section (7) item 1; `~/scratch/12p-open/` host_after and the temp-root read; `tests/test_codebook_staleness.py:95` |
+
+**The pre-tag list, recounted 2026-10-15 (12p-U13A item 0, R648(c)), by script from the plan** (`docs/session-reports/session-12/12p_open/recount_12p_item0.py` → `recount_12p_item0.json`: the R631 count above as the baseline, reproduced by `recount_12n_r631.py` on this file, and the row above; R649(b)). Baseline: 270 rows — Class 1 / 2 / 3 = 95 / 50 / 125, and 0 without a class. Deltas: 1 row enters, Class 3 (INT-p12-1 in P7); R648 moves no class. **Now 271 rows: Class 1 / 2 / 3 = 95 / 50 / 126, and 0 without a class.** **R510 (2026-10-15, 12p-U13A item 0): rows in 1 (1 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 0 / 1), rows out 0.** Counts by package and class (first-named package, as before): P1 26 / 20 / 11 (57); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 112 (113). P1's fix units stay 35.
+
 ### Not engine defects — plan v50 wording
 
 The product description ("autonomously executes … synthesis," "publication-ready," "no data leaves the machine" — the last is CLI-flag-dependent per C5); the four contradicted counts (D4, D1, F4, G1); the §10 novelty sentence; and "Run 7 once the engine is settled" as an open-ended dependency.
@@ -5496,3 +5504,138 @@ R646(e) — Session 12o closes now.
 | 2026-10-15 | R646(a) — claude-config 92aba14 is another session's wrap and is accepted as found. The 12o closure's note (b) and the "Expected values at session-12p open" claude-config bullet, which state 492a402 with five rows uncommitted, are wrong as written: three rows landed in 92aba14; only the rows for 5dbd3c4 and f723c6e were uncommitted at the closeout. The text is left as printed; 12p-OPEN's item 0 appends a dated note on the 12o closure saying so, in R637(a)'s form. R646(b) — The closeout block and the lane line (sha256 7a7319a3…3d9c, 3,763 bytes) are accepted as printed and as written. The closure's "four times" count stands; the brief's "five" was the architect's. The cause-and-fix line (the architect-handoff skill amended 2026-10-15) is a PI statement and stands. R646(c) — 12p-OPEN's startup verify checks claude-config at the commit the wrap leaves (child of the lane-line commit, itself child of 92aba14), level with origin and clean. 12p's item 0 copies lane_line_12o.txt into docs/session-reports/session-12/12o_close/ with the note's commit. R646(d) — No closeout gate ran; the expected gate values for 12p are commit 8's (5dbd3c4) on unchanged code, as the closure records. The 2026-10-15 09:00 UTC nightly runs on f723c6e, whose code equals 5dbd3c4's; expected_nightly_20261015.md governs. R646(e) — Session 12o closes now. | PI, 2026-10-15, during session 12o, on architect recommendation, on the 12o-CLOSE closeout block |
 
 The decision log in this file ends at R646.
+
+**Block 45.** *Transcribed 2026-10-15 (item 0 of the 12p-U13A brief), in its own commit with Block 46 and row INT-p12-1, in the R597(e) form:* ruling R647, made by PI on architect recommendation on 2026-10-15 UTC, during session 12p, on the 12p-OPEN report stopped at step 2(a) (item 0 landed as `9e32a465aeb9e2a988dd10de7f82fdfae1596891`; evidence in `~/scratch/12p-open/`). The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12p-R647] — I4 withdrawn; step 2 resumes on the measured temp root
+STATUS: PI ruling, 2026-10-15 UTC, session 12p, on architect recommendation, on the 12p-OPEN
+  report (stopped at step 2(a); item 0 landed as 9e32a465aeb9e2a988dd10de7f82fdfae1596891;
+  claude-config a356f73). Transcribe as item 0 of the next brief (Block 45), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12p-OPEN report):
+  MEASURED: "/tmp/pytest-of-ankitsarin has 2 entries, 1,366,901,351 bytes in total: pytest-0:
+    1,366,901,317 bytes; pytest-current → pytest-0: 34 bytes"; "pytest-0 was created at
+    2026-10-15 09:00:09 UTC and last changed at 09:14:34 UTC"; "The nightly log's mtime is
+    09:14:35"; "Commit: 9e32a465aeb9e2a988dd10de7f82fdfae1596891, pushed and level with origin";
+    "sha256 01375e6b7f2fe4fddec0fd2b2516ca500530b3014ebff13055bd86bf1195081e, 1,355,389 bytes";
+    "12o_close/ also holds ollama_reads.txt".
+  INFERRED (CC's, from the timestamps): "the growth is the 09:00 nightly". Loud if wrong: step
+    2(c)'s read names the directory's contents.
+
+R647(a) — 12p-OPEN's I4 ("the pytest temp root … is empty at the open") was an architect
+  premise and is withdrawn. The brief's clauses on a non-empty root disagreed (I4's own text
+  versus the INFERRED rule and the contradiction list); the stop at the earliest clean point
+  was correct. A session that opens after 09:00 UTC finds the nightly's basetemp in the root;
+  "empty at the open" is not an expectation from now on. The 12o closure's "empty at this
+  closeout" stands as a statement about the closeout.
+R647(b) — Step 2 resumes under option A. The "before" size is 1,366,901,351 bytes, 2 entries,
+  as measured. The gate's growth is the after total minus that. R645(d)'s read is made on both
+  directories: the nightly's (pytest-0) and the gate's own basetemp.
+R647(c) — From the 12p closeout, every "Expected values at session-N open" block states the
+  temp root at the open as the nightly's basetemp directory (one pytest-N directory plus the
+  pytest-current link), with the size as a reading not matched, never as "empty". What a
+  closeout does with the root is ruled at that closeout, as R645(d) was.
+R647(d) — Item 0 is accepted as landed (9e32a46; claude-config a356f73, one hook row, the
+  492a402 form). 12o_close/ollama_reads.txt is a file the brief's I3 omitted; no action, no row.
+R647(e) — The remainder of 12p-OPEN (step 2 from (a), step 3, the final report) runs under the
+  resume below. No other clause of the brief changes.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-15 | R647(a) — 12p-OPEN's I4 ("the pytest temp root … is empty at the open") was an architect premise and is withdrawn. The brief's clauses on a non-empty root disagreed (I4's own text versus the INFERRED rule and the contradiction list); the stop at the earliest clean point was correct. A session that opens after 09:00 UTC finds the nightly's basetemp in the root; "empty at the open" is not an expectation from now on. The 12o closure's "empty at this closeout" stands as a statement about the closeout. R647(b) — Step 2 resumes under option A. The "before" size is 1,366,901,351 bytes, 2 entries, as measured. The gate's growth is the after total minus that. R645(d)'s read is made on both directories: the nightly's (pytest-0) and the gate's own basetemp. R647(c) — From the 12p closeout, every "Expected values at session-N open" block states the temp root at the open as the nightly's basetemp directory (one pytest-N directory plus the pytest-current link), with the size as a reading not matched, never as "empty". What a closeout does with the root is ruled at that closeout, as R645(d) was. R647(d) — Item 0 is accepted as landed (9e32a46; claude-config a356f73, one hook row, the 492a402 form). 12o_close/ollama_reads.txt is a file the brief's I3 omitted; no action, no row. R647(e) — The remainder of 12p-OPEN (step 2 from (a), step 3, the final report) runs under the resume below. No other clause of the brief changes. | PI, 2026-10-15, during session 12p, on architect recommendation, on the 12p-OPEN report stopped at step 2(a) |
+
+The decision log in this file ends at R647.
+
+**Block 46.** *Transcribed 2026-10-15 (item 0 of the 12p-U13A brief), in its own commit with Block 45 and row INT-p12-1, in the R597(e) form:* ruling R648, made by PI on architect recommendation on 2026-10-15 UTC, during session 12p, on the 12p-OPEN report as resumed under R647 (sections (3)–(7); the gate at 881.71 s; evidence in `~/scratch/12p-open/`). The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12p-R648] — 12p-OPEN accepted; R645(d) answered; one row; U13's design read opens
+STATUS: PI ruling, 2026-10-15 UTC, session 12p, on architect recommendation, on the 12p-OPEN
+  report as resumed under R647 (sections (3)–(7)). Transcribe as item 0 of the 12p-U13A brief
+  below, in this block (Block 46), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12p-OPEN resumed report):
+  MEASURED: "Wall time: 881.71 s, from 14:01:23Z to 14:16:05Z"; "Collected ids: 0/0";
+    "Durations against C8: no phase is slower by more than 10 s"; "Growth from the gate:
+    1,366,897,270 bytes, all of it in the new pytest-1"; "Per-test directories: 3,306, holding
+    1,366,726,152 B"; "Each one is a single review.db exactly the live database's size
+    (134,361,088 B)"; "tests/test_codebook_staleness.py:95 does shutil.copy2(LIVE_DB, dest)";
+    "the nightly took 870.95 s"; "-- No entries --" (journal 09:00–09:25).
+  INFERRED (CC's, each with its check): "tests/test_codebook_provenance.py builds its copy the
+    same way … I located it by test name and did not read its fixture" (the Phase A in R648(c)
+    reads it); "Pytest keeps the last three basetemps" (read at the next session open: the
+    root's entry count and size).
+
+R648(a) — 12p-OPEN is accepted as reported: every step-0 and step-2 value matched; the gate
+  3305 / 17 / 1, 2 warnings, 881.71 s, inside 818–1000 s; the 2026-10-15 nightly matched
+  expected_nightly_20261015.md line for line. The 12p open stands verified.
+R648(b) — R645(d)'s read is answered: the pytest temp root grows by one basetemp per run,
+  1,366,897,270 bytes, 3,306 per-test directories, and the growth is the suite's fixtures, not
+  pytest's retention; six directories each hold a copy of the live review.db (134,361,088 B).
+  The root is left as found. Under R647(c) the 12p closeout records its entry count and size;
+  whether pytest retains three basetemps is read at the 12q open, not assumed. No further row
+  for the growth.
+R648(c) — New row INT-p12-1, section L "L (12p additions)", in the 12p-OPEN report's words:
+  "six test directories per run each hold a full copy of the live review.db, about 806 MB of
+  the 1.37 GB per run, made by shutil.copy2(LIVE_DB, …) in test_codebook_staleness.py.
+  INFERRED: test_codebook_provenance.py does the same." Class 3, owner P7; B14's family (a
+  suite dependency on a gitignored database) plus a raw copy outside the backup API. P7's
+  Phase A reads both fixtures and states: what each test asserts, whether it skips or fails
+  when LIVE_DB is absent, whether the copy is read-only after creation, and whether a
+  schema-only or restore-point copy would serve; the Phase A may raise the class. Not Class 1
+  today: no stored value depends on it and no gate runs during a live write (R86, the session
+  rules). No change before U13.
+R648(d) — The ffmpeg process (another lane's) and .pytest_cache (gitignored) are readings; no
+  row. The host-snapshot form stands.
+R648(e) — R647 and R648 are transcribed as Blocks 45 and 46 at item 0 of the brief below;
+  INT-p12-1 opens in the same commit; the recount is re-run by script (expected 271: 95 / 50 /
+  126; R510 rows in 1, out 0).
+R648(f) — U13's design read opens under the brief below: read-only, no model call, no live
+  write, one committed read-out, then STOP for the design ruling. The rehearsal runs in a
+  later live-tier session, outside 07:00–10:35 UTC.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-15 | R648(a) — 12p-OPEN is accepted as reported: every step-0 and step-2 value matched; the gate 3305 / 17 / 1, 2 warnings, 881.71 s, inside 818–1000 s; the 2026-10-15 nightly matched expected_nightly_20261015.md line for line. The 12p open stands verified. R648(b) — R645(d)'s read is answered: the pytest temp root grows by one basetemp per run, 1,366,897,270 bytes, 3,306 per-test directories, and the growth is the suite's fixtures, not pytest's retention; six directories each hold a copy of the live review.db (134,361,088 B). The root is left as found. Under R647(c) the 12p closeout records its entry count and size; whether pytest retains three basetemps is read at the 12q open, not assumed. No further row for the growth. R648(c) — New row INT-p12-1, section L "L (12p additions)", in the 12p-OPEN report's words: "six test directories per run each hold a full copy of the live review.db, about 806 MB of the 1.37 GB per run, made by shutil.copy2(LIVE_DB, …) in test_codebook_staleness.py. INFERRED: test_codebook_provenance.py does the same." Class 3, owner P7; B14's family (a suite dependency on a gitignored database) plus a raw copy outside the backup API. P7's Phase A reads both fixtures and states: what each test asserts, whether it skips or fails when LIVE_DB is absent, whether the copy is read-only after creation, and whether a schema-only or restore-point copy would serve; the Phase A may raise the class. Not Class 1 today: no stored value depends on it and no gate runs during a live write (R86, the session rules). No change before U13. R648(d) — The ffmpeg process (another lane's) and .pytest_cache (gitignored) are readings; no row. The host-snapshot form stands. R648(e) — R647 and R648 are transcribed as Blocks 45 and 46 at item 0 of the brief below; INT-p12-1 opens in the same commit; the recount is re-run by script (expected 271: 95 / 50 / 126; R510 rows in 1, out 0). R648(f) — U13's design read opens under the brief below: read-only, no model call, no live write, one committed read-out, then STOP for the design ruling. The rehearsal runs in a later live-tier session, outside 07:00–10:35 UTC. | PI, 2026-10-15, during session 12p, on architect recommendation, on the 12p-OPEN report as resumed under R647 |
+
+The decision log in this file ends at R648.
+
+**Block 47.** *Transcribed 2026-10-15 (item 0 of the 12p-U13A brief, under the 12p-U13A-R1 resume), in the item-0 commit with Blocks 45 and 46 and row INT-p12-1, in the R597(e) form:* ruling R649, made by PI on architect recommendation on 2026-10-15 UTC, during session 12p, on the 12p-U13A report (stopped at step 1; the I1 probe in `~/scratch/12p-u13a/recount_i1_probe.json`). The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12p-R649] — I1 withdrawn; the chained recount script authorised
+STATUS: PI ruling, 2026-10-15 UTC, session 12p, on architect recommendation, on the 12p-U13A
+  report (stopped at step 1; trees clean at 9e32a46 and a356f73). Transcribe as Block 47 in
+  the item-0 commit of the resume below, in this block.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12p-U13A report):
+  MEASURED: "exit 0, with now = 270 rows, 95 / 50 / 125, 0 without a class. rows_opened = 1,
+    which is INT-n12-2 and not INT-p12-1"; "recount_12n_r631.py runs recount_12n_r629.py, which
+    in turn runs the scripts back to recount_12l_r624.py. No script in the chain counts section
+    L by the form of its tables"; "the plan's established practice is a new recount script for
+    each set of rows opened".
+
+R649(a) — 12p-U13A's I1 (the recount script counts a new section-L table by its form) was an
+  architect premise and is withdrawn. The recount is a chain of per-session scripts, each
+  naming its own table and totals (MEASURED above).
+R649(b) — Option A. docs/session-reports/session-12/12p_open/recount_12p_item0.py is written
+  in the 12n_R631 form: it runs recount_12n_r631.py as its baseline and asserts 270 (95 / 50 /
+  125); it adds the rows of the "**L (12p additions).**" table, located by the same split
+  pattern the chain uses, naming the table's header and the recount paragraph that follows it
+  as its bounds; it expects 271 (95 / 50 / 126, 0 without a class), rows_opened 1 (INT-p12-1),
+  and writes recount_12p_item0.json beside itself. It edits no earlier script. It is the one
+  exception to 12p-U13A's "no new code", confined to that directory, and lands in the item-0
+  commit with its JSON.
+R649(c) — Blocks 45, 46 and 47 (R647, R648, R649) are transcribed in the item-0 commit; the
+  decision log then ends at R649. R648(e)'s expected recount, 271, is unchanged.
+R649(d) — Nothing else in 12p-U13A changes. The design read runs as written after item 0.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-15 | R649(a) — 12p-U13A's I1 (the recount script counts a new section-L table by its form) was an architect premise and is withdrawn. The recount is a chain of per-session scripts, each naming its own table and totals (MEASURED above). R649(b) — Option A. docs/session-reports/session-12/12p_open/recount_12p_item0.py is written in the 12n_R631 form: it runs recount_12n_r631.py as its baseline and asserts 270 (95 / 50 / 125); it adds the rows of the "**L (12p additions).**" table, located by the same split pattern the chain uses, naming the table's header and the recount paragraph that follows it as its bounds; it expects 271 (95 / 50 / 126, 0 without a class), rows_opened 1 (INT-p12-1), and writes recount_12p_item0.json beside itself. It edits no earlier script. It is the one exception to 12p-U13A's "no new code", confined to that directory, and lands in the item-0 commit with its JSON. R649(c) — Blocks 45, 46 and 47 (R647, R648, R649) are transcribed in the item-0 commit; the decision log then ends at R649. R648(e)'s expected recount, 271, is unchanged. R649(d) — Nothing else in 12p-U13A changes. The design read runs as written after item 0. | PI, 2026-10-15, during session 12p, on architect recommendation, on the 12p-U13A report stopped at step 1 |
+
+The decision log in this file ends at R649.

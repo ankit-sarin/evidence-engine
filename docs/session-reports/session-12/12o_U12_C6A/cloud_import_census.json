@@ -1,0 +1,501 @@
+{
+ "imports": [
+  {
+   "file": "engine/cloud/__init__.py",
+   "line": 3,
+   "stmt": "from engine.cloud.anthropic_extractor import AnthropicExtractor",
+   "names": [
+    "AnthropicExtractor"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "engine/cloud/__init__.py",
+   "line": 4,
+   "stmt": "from engine.cloud.openai_extractor import OpenAIExtractor",
+   "names": [
+    "OpenAIExtractor"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "engine/cloud/__init__.py",
+   "line": 5,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "engine/cloud/anthropic_extractor.py",
+   "line": 13,
+   "stmt": "from engine.cloud.base import CloudExtractorBase, outbound_messages",
+   "names": [
+    "CloudExtractorBase",
+    "outbound_messages"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "engine/cloud/base.py",
+   "line": 13,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "engine/cloud/openai_extractor.py",
+   "line": 12,
+   "stmt": "from engine.cloud.base import CloudExtractorBase, outbound_messages",
+   "names": [
+    "CloudExtractorBase",
+    "outbound_messages"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "engine/core/effective_config.py",
+   "line": 462,
+   "stmt": "from engine.cloud.base import outbound_messages",
+   "names": [
+    "outbound_messages"
+   ],
+   "scope": "render_messages"
+  },
+  {
+   "file": "engine/migrations/014_cloud_tables.py",
+   "line": 38,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "run_migration"
+  },
+  {
+   "file": "scripts/backfill_cloud_spans.py",
+   "line": 20,
+   "stmt": "from engine.cloud.base import CloudExtractorBase",
+   "names": [
+    "CloudExtractorBase"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "scripts/reparse_cloud_spans.py",
+   "line": 20,
+   "stmt": "from engine.cloud.base import CloudExtractorBase",
+   "names": [
+    "CloudExtractorBase"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "scripts/run_cloud_extraction.py",
+   "line": 25,
+   "stmt": "from engine.cloud.anthropic_extractor import AnthropicExtractor",
+   "names": [
+    "AnthropicExtractor"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "scripts/run_cloud_extraction.py",
+   "line": 26,
+   "stmt": "from engine.cloud.base import PAYLOAD_DESCRIPTION, CloudExtractorBase",
+   "names": [
+    "PAYLOAD_DESCRIPTION",
+    "CloudExtractorBase"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "scripts/run_cloud_extraction.py",
+   "line": 27,
+   "stmt": "from engine.cloud.openai_extractor import OpenAIExtractor",
+   "names": [
+    "OpenAIExtractor"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "scripts/run_cloud_extraction.py",
+   "line": 28,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "tests/analysis/paper1/test_judge_cli.py",
+   "line": 22,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "tests/analysis/paper1/test_judge_loader.py",
+   "line": 21,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "tests/test_arm_pinned_at_extract.py",
+   "line": 230,
+   "stmt": "from engine.cloud.base import PAYLOAD_DESCRIPTION",
+   "names": [
+    "PAYLOAD_DESCRIPTION"
+   ],
+   "scope": "test_a_cloud_arm_and_a_named_arm_still_pin_at_open"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 15,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 16,
+   "stmt": "from engine.cloud.base import CloudExtractorBase",
+   "names": [
+    "CloudExtractorBase"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 17,
+   "stmt": "from engine.cloud.openai_extractor import OpenAIExtractor",
+   "names": [
+    "OpenAIExtractor"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 18,
+   "stmt": "from engine.cloud.anthropic_extractor import AnthropicExtractor",
+   "names": [
+    "AnthropicExtractor"
+   ],
+   "scope": "module"
+  },
+  {
+   "file": "tests/test_codebook_provenance.py",
+   "line": 178,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "test_cloud_tables_carry_the_columns_when_created_fresh"
+  },
+  {
+   "file": "tests/test_codebook_provenance.py",
+   "line": 196,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "test_cloud_tables_gain_the_columns_when_they_predate_them"
+  },
+  {
+   "file": "tests/test_completeness_guard.py",
+   "line": 248,
+   "stmt": "from engine.cloud.base import CloudExtractorBase",
+   "names": [
+    "CloudExtractorBase"
+   ],
+   "scope": "_driver"
+  },
+  {
+   "file": "tests/test_corpus_authority.py",
+   "line": 143,
+   "stmt": "from engine.cloud.base import CloudExtractorBase",
+   "names": [
+    "CloudExtractorBase"
+   ],
+   "scope": "_detached_extractor"
+  },
+  {
+   "file": "tests/test_database.py",
+   "line": 414,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "test_cloud_null_confidence_raises_integrity_error"
+  },
+  {
+   "file": "tests/test_database.py",
+   "line": 443,
+   "stmt": "from engine.cloud.schema import init_cloud_tables",
+   "names": [
+    "init_cloud_tables"
+   ],
+   "scope": "test_cloud_null_tier_raises_integrity_error"
+  },
+  {
+   "file": "tests/test_effective_config.py",
+   "line": 200,
+   "stmt": "from engine.cloud.anthropic_extractor import AnthropicExtractor",
+   "names": [
+    "AnthropicExtractor"
+   ],
+   "scope": "test_no_cloud_extractor_carries_a_class_constant_arm"
+  },
+  {
+   "file": "tests/test_effective_config.py",
+   "line": 201,
+   "stmt": "from engine.cloud.openai_extractor import OpenAIExtractor",
+   "names": [
+    "OpenAIExtractor"
+   ],
+   "scope": "test_no_cloud_extractor_carries_a_class_constant_arm"
+  },
+  {
+   "file": "tests/test_parsed_text_resolver.py",
+   "line": 111,
+   "stmt": "from engine.cloud.base import CloudExtractorBase",
+   "names": [
+    "CloudExtractorBase"
+   ],
+   "scope": "test_cloud_site_hands_on_the_file"
+  },
+  {
+   "file": "tests/test_request_capture.py",
+   "line": 351,
+   "stmt": "from engine.cloud.openai_extractor import OpenAIExtractor",
+   "names": [
+    "OpenAIExtractor"
+   ],
+   "scope": "test_openai_request_as_sent"
+  },
+  {
+   "file": "tests/test_request_capture.py",
+   "line": 379,
+   "stmt": "from engine.cloud.anthropic_extractor import AnthropicExtractor",
+   "names": [
+    "AnthropicExtractor"
+   ],
+   "scope": "test_anthropic_request_as_sent"
+  },
+  {
+   "file": "tests/test_run_manifest.py",
+   "line": 325,
+   "stmt": "from engine.cloud.base import PAYLOAD_DESCRIPTION",
+   "names": [
+    "PAYLOAD_DESCRIPTION"
+   ],
+   "scope": "test_an_enabled_cloud_run_records_its_arms_and_payload_description"
+  },
+  {
+   "file": "tests/test_run_manifest.py",
+   "line": 371,
+   "stmt": "from engine.cloud.openai_extractor import OpenAIExtractor",
+   "names": [
+    "OpenAIExtractor"
+   ],
+   "scope": "test_a_cloud_call_records_the_hash_of_its_complete_payload"
+  }
+ ],
+ "strings": [
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 385,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_extract_paper"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 412,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_cost_calculation"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 456,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_extract_paper"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 479,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_reasoning_trace_from_thinking_blocks"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 500,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_json_extracted_from_text_blocks"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 522,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_cost_calculation"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 588,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_empty_string_normalized_to_null"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 636,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_null_converted_to_nr"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 674,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_nonempty_string_unchanged"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 704,
+   "value": "engine.cloud.anthropic_extractor.time.sleep",
+   "scope": "test_429_triggers_30s_plus_backoff"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 705,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_429_triggers_30s_plus_backoff"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 752,
+   "value": "engine.cloud.anthropic_extractor.time.sleep",
+   "scope": "test_429_uses_retry_after_header"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 753,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_429_uses_retry_after_header"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 802,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_openai_store_failure_continues_run"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 851,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_distribution_collapse_not_caught"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 880,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_openai_401_aborts_immediately"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 909,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_anthropic_401_aborts_immediately"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 943,
+   "value": "engine.cloud.openai_extractor.time.sleep",
+   "scope": "test_429_triggers_30s_plus_backoff"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 944,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_429_triggers_30s_plus_backoff"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 993,
+   "value": "engine.cloud.openai_extractor.time.sleep",
+   "scope": "test_429_uses_retry_after_header"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 994,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_429_uses_retry_after_header"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 1060,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_openai_reads_from_spec"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 1074,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_anthropic_reads_from_spec"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 1088,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_no_default_price"
+  },
+  {
+   "file": "tests/test_cloud_extraction.py",
+   "line": 1096,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_no_default_arm"
+  },
+  {
+   "file": "tests/test_effective_config.py",
+   "line": 190,
+   "value": "engine.cloud.openai_extractor",
+   "scope": "test_the_retired_constant_is_gone"
+  },
+  {
+   "file": "tests/test_effective_config.py",
+   "line": 191,
+   "value": "engine.cloud.anthropic_extractor",
+   "scope": "test_the_retired_constant_is_gone"
+  },
+  {
+   "file": "tests/test_parsed_text_resolver.py",
+   "line": 142,
+   "value": "engine.cloud.base",
+   "scope": "test_each_former_glob_site_reads_through_the_resolver"
+  },
+  {
+   "file": "tests/test_request_capture.py",
+   "line": 362,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_openai_request_as_sent"
+  },
+  {
+   "file": "tests/test_request_capture.py",
+   "line": 389,
+   "value": "engine.cloud.anthropic_extractor.anthropic.Anthropic",
+   "scope": "test_anthropic_request_as_sent"
+  },
+  {
+   "file": "tests/test_run_manifest.py",
+   "line": 382,
+   "value": "engine.cloud.openai_extractor.openai.OpenAI",
+   "scope": "test_a_cloud_call_records_the_hash_of_its_complete_payload"
+  }
+ ]
+}

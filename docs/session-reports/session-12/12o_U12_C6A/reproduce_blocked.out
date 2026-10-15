@@ -1,0 +1,47 @@
+INFO: Migration 004 complete: 0 columns added, 6 skipped, 0 PDF_EXCLUDED papers
+INFO: migration 004_pdf_quality_check executed
+INFO: Migration 005 complete: 0 columns added, 2 skipped
+INFO: migration 005_model_digest executed
+INFO: evidence_spans already has tier column — skipping migration
+INFO: migration 006_not_null_confidence_tier executed
+INFO: Migration 007 complete: 4 tables created, 8 indexes created
+INFO: migration 007_add_judge_tables executed
+INFO: Migration 008 complete: 1 tables created, 4 indexes created
+INFO: migration 008_add_fabrication_verifications executed
+INFO: Migration 009 complete: 1 tables created, 2 indexes created
+INFO: migration 009_add_backfill_audit_log executed
+INFO: Migration 010 complete: 2 tables created, 5 indexes created
+INFO: migration 010_add_provenance_classifications executed
+INFO: Migration 011 complete: 2 columns added, 0 rows preserved
+INFO: migration 011_add_absence_claim_class executed
+INFO: Migration 012 added: extractions.codebook_hash, extractions.codebook_sha256, review_runs.codebook_hash, review_runs.codebook_sha256
+INFO: migration 012_codebook_provenance executed
+INFO: Migration 013 lifted NOT NULL on: extractions.extraction_schema_hash, review_runs.extraction_hash
+INFO: migration 013_drop_schema_hash_not_null executed
+RAISED engine.migrations.runner.MigrationError
+__cause__: ModuleNotFoundError: import of anthropic halted; None in sys.modules
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/migrations/runner.py", line 312, in run
+    module.run_migration(str(db_path))
+  File "/home/ankitsarin/projects/evidence-engine/engine/migrations/014_cloud_tables.py", line 38, in run_migration
+    from engine.cloud.schema import init_cloud_tables
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/__init__.py", line 3, in <module>
+    from engine.cloud.anthropic_extractor import AnthropicExtractor
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 9, in <module>
+    import anthropic
+ModuleNotFoundError: import of anthropic halted; None in sys.modules
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ankitsarin/scratch/12o-c6a/reproduce_fresh_db.py", line 36, in <module>
+    db = ReviewDatabase(review_id, data_root=data_root)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/core/database.py", line 389, in __init__
+    self._run_migrations()
+  File "/home/ankitsarin/projects/evidence-engine/engine/core/database.py", line 444, in _run_migrations
+    result = runner.run(self.db_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/migrations/runner.py", line 314, in run
+    raise MigrationError(
+engine.migrations.runner.MigrationError: 014_cloud_tables failed: ModuleNotFoundError: import of anthropic halted; None in sys.modules

@@ -1,0 +1,7 @@
+tests/test_api_parity.py::test_engine_import_resolves[backfill_cloud_spans.py::engine.cloud.base.CloudExtractorBase]
+tests/test_api_parity.py::test_engine_import_resolves[reparse_cloud_spans.py::engine.cloud.base.CloudExtractorBase]
+tests/test_api_parity.py::test_engine_import_resolves[run_cloud_extraction.py::engine.cloud.anthropic_extractor.AnthropicExtractor]
+tests/test_api_parity.py::test_engine_import_resolves[run_cloud_extraction.py::engine.cloud.base.PAYLOAD_DESCRIPTION]
+tests/test_api_parity.py::test_engine_import_resolves[run_cloud_extraction.py::engine.cloud.base.CloudExtractorBase]
+tests/test_api_parity.py::test_engine_import_resolves[run_cloud_extraction.py::engine.cloud.openai_extractor.OpenAIExtractor]
+tests/test_api_parity.py::test_engine_import_resolves[run_cloud_extraction.py::engine.cloud.schema.init_cloud_tables]

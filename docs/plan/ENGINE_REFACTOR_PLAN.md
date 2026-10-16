@@ -5907,3 +5907,52 @@ R652(d) — Nothing else changes. CC completes 12p-CLOSE-R1 from its staged work
 | 2026-10-15 | R652(a) — R651(b)'s check is restated: each "−" line, minus its closing "\|", is a strict prefix of a "+" line in the same diff that ends with "\|". Exactly six "−" lines; any other "−" line or any failed check is a STOP. The in-cell form stands. R652(b) — Option A. INT-p12-2 rides with the placed step U13 as its telemetry prerequisite, not as a fix unit. The 35 fix units of R612(m) and 12l_P1A/p1_plan.py are unchanged; recount_12p_close.py asserts, for this row only and citing R650(e) and this ruling, that a row naming the placed step U13 satisfies the unit check; a second such row is not accepted by that script and would need its own ruling. The 12q block states "P1 58 rows (26 / 20 / 12); 35 fix units; INT-p12-2 rides with the placed step U13 (R652(b))". The fix lands in 12q as its own gated commit before the rehearsal, as R650(e) and R650(h) order. R652(c) — The pytest temp root is shared with other lanes' pytest (pytest-2 is surgical-cv's). R647(c)'s wording gains: entries not of this lane are reported with their origin, not matched; nothing is emptied. No row. R652(d) — Nothing else changes. CC completes 12p-CLOSE-R1 from its staged work: Blocks 48, 49 and 50; the decision log ends at R652, and the 12q block and the lane line say so. | PI, 2026-10-15, during session 12p, on architect recommendation, on the 12p-CLOSE-R1 report stopped before the commit |
 
 The decision log in this file ends at R652.
+
+**Block 51.** *Transcribed 2026-10-16 (item 0 of the 12q-OPEN brief), in its own commit with the lane-line file it orders, in the R597(e) form:* ruling R653, made by PI on architect recommendation on 2026-10-15 UTC, during session 12p, on the 12p-CLOSE closeout block (85daac2d865abadd69dfb0b81e48dc64294c5ef5; evidence in `docs/session-reports/session-12/12p_close/`). The architect's note that followed the ruling in the paste and the 12q-OPEN brief are not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12p-R653] — wrap ruling: closeout accepted; lane line approved; close now
+STATUS: PI ruling, 2026-10-15 UTC, session 12p, on architect recommendation, on the 12p-CLOSE
+  closeout block (85daac2d865abadd69dfb0b81e48dc64294c5ef5). Transcribe as item 0 of 12q-OPEN
+  (Block 51), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block and the 12p-CLOSE report):
+  MEASURED: "HEAD 85daac2d865abadd69dfb0b81e48dc64294c5ef5 parent f4b296de1464b44fb383eea524632cb7f3f5aa17,
+    clean, level with origin (0/0) at 21:33:45Z"; "sha256
+    c2331757855b5578ef74d257795563b6d4f2e46d1219906aa27013bc8cdb160b 1,414,543 bytes"; "ends at
+    R652"; "claude-config HEAD f141b8433137c960a382b870deff575cf8044296, level (0/0);
+    uncommitted: PROJECT_LEDGER.md +1 (the hook row for 85daac2; the wrap commits it)";
+    "fingerprint IDENTICAL at 21:22:34Z, 21:29:20Z, 21:33:15Z, 21:33:46Z"; "lane line
+    ~/scratch/12p-close/lane_line_12p.txt sha256 57cd585a…15ef 3,916 bytes 10 lines (not
+    applied)"; "The 5 "−" lines equal lines 41–45 of ~/claude-config/primer.md"; "recount 272 —
+    95 / 50 / 127, 0 without a class; P1 58 (26/20/12), 35 fix units; P7 113"; "Exactly six '-'
+    lines, the six R651(b) rows: True. RESULT: PASS".
+
+R653(a) — The 12p-CLOSE closeout block is accepted as printed. The escaping of "|" as "\|"
+  inside the ruling-table cells of Blocks 49 and 50 is accepted: the ```text blocks are the
+  verbatim record (R102); the table cell is a rendering. The stops table's note crediting the
+  literal-prefix wording to the 12p-CLOSE report, under the "architect premise" label, is
+  accepted as accurate.
+R653(b) — The lane line (sha256 57cd585ad019afc7192117fe2730454b42c29bdda043e6889158559e3db815ef,
+  3,916 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines
+  41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its
+  five "+" lines, applied from the file, not from a paste; commit primer.md together with the
+  uncommitted hook row for 85daac2 ("ledger" form), push, level.
+R653(c) — 12q-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child
+  of the lane-line commit, itself the child of f141b84), level with origin and clean; another
+  lane's wrap committing rows in between is accepted as found and corrected by dated note at
+  12q's item 0, as R637 and R646 were. 12q's item 0 copies lane_line_12p.txt into
+  docs/session-reports/session-12/12p_close/ with its commit.
+R653(d) — No closeout gate ran; the expected gate values for 12q are the 12p-open gate's on
+  unchanged code (code unchanged since 5dbd3c4), band 822–1004 s; the 2026-10-16 09:00 UTC
+  nightly runs on 85daac2, whose code equals 5dbd3c4's; 12p_close/expected_nightly_20261016.md
+  governs. The temp root is read under R647(c) and R652(c), never matched.
+R653(e) — Session 12p closes now. After R653(b) has landed, run /wrap. Report the archive
+  command; the closeout block stands.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-15 | R653(a) — The 12p-CLOSE closeout block is accepted as printed. The escaping of "\|" as "\\\|" inside the ruling-table cells of Blocks 49 and 50 is accepted: the ```text blocks are the verbatim record (R102); the table cell is a rendering. The stops table's note crediting the literal-prefix wording to the 12p-CLOSE report, under the "architect premise" label, is accepted as accurate. R653(b) — The lane line (sha256 57cd585ad019afc7192117fe2730454b42c29bdda043e6889158559e3db815ef, 3,916 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with the uncommitted hook row for 85daac2 ("ledger" form), push, level. R653(c) — 12q-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the lane-line commit, itself the child of f141b84), level with origin and clean; another lane's wrap committing rows in between is accepted as found and corrected by dated note at 12q's item 0, as R637 and R646 were. 12q's item 0 copies lane_line_12p.txt into docs/session-reports/session-12/12p_close/ with its commit. R653(d) — No closeout gate ran; the expected gate values for 12q are the 12p-open gate's on unchanged code (code unchanged since 5dbd3c4), band 822–1004 s; the 2026-10-16 09:00 UTC nightly runs on 85daac2, whose code equals 5dbd3c4's; 12p_close/expected_nightly_20261016.md governs. The temp root is read under R647(c) and R652(c), never matched. R653(e) — Session 12p closes now. After R653(b) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-15, during session 12p, on architect recommendation, on the 12p-CLOSE closeout block |
+
+The decision log in this file ends at R653.

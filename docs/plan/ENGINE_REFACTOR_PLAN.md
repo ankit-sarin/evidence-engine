@@ -5956,3 +5956,288 @@ R653(e) — Session 12p closes now. After R653(b) has landed, run /wrap. Report 
 | 2026-10-15 | R653(a) — The 12p-CLOSE closeout block is accepted as printed. The escaping of "\|" as "\\\|" inside the ruling-table cells of Blocks 49 and 50 is accepted: the ```text blocks are the verbatim record (R102); the table cell is a rendering. The stops table's note crediting the literal-prefix wording to the 12p-CLOSE report, under the "architect premise" label, is accepted as accurate. R653(b) — The lane line (sha256 57cd585ad019afc7192117fe2730454b42c29bdda043e6889158559e3db815ef, 3,916 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with the uncommitted hook row for 85daac2 ("ledger" form), push, level. R653(c) — 12q-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the lane-line commit, itself the child of f141b84), level with origin and clean; another lane's wrap committing rows in between is accepted as found and corrected by dated note at 12q's item 0, as R637 and R646 were. 12q's item 0 copies lane_line_12p.txt into docs/session-reports/session-12/12p_close/ with its commit. R653(d) — No closeout gate ran; the expected gate values for 12q are the 12p-open gate's on unchanged code (code unchanged since 5dbd3c4), band 822–1004 s; the 2026-10-16 09:00 UTC nightly runs on 85daac2, whose code equals 5dbd3c4's; 12p_close/expected_nightly_20261016.md governs. The temp root is read under R647(c) and R652(c), never matched. R653(e) — Session 12p closes now. After R653(b) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-15, during session 12p, on architect recommendation, on the 12p-CLOSE closeout block |
 
 The decision log in this file ends at R653.
+
+**Block 52.** *Transcribed 2026-10-16 (item 0 of the 12q-P12-2A brief), in one commit with Blocks 52–56, in the R597(e) form:* ruling R654, made by PI on architect recommendation on 2026-10-16 UTC, during session 12q, on the 12q-OPEN stop report at step 0(d) (evidence `~/scratch/12q-open/i2_stop.txt`). The resume 12q-OPEN-R1 that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12q-R654] — I2 case C ruled: the foreign uncommitted ledger rows are
+  committed by this lane's ledger step; 12q-OPEN resumes from step 0(e)
+STATUS: PI ruling, 2026-10-16 UTC, session 12q, on architect recommendation, on the 12q-OPEN
+  report stopped at step 0(d) (evidence ~/scratch/12q-open/i2_stop.txt). Transcribe as item 0
+  of the next brief in this session (the INT-p12-2 brief, Block 52), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12q-OPEN stop report):
+  MEASURED: "HEAD 85daac2d865abadd69dfb0b81e48dc64294c5ef5" with "parent
+    f4b296de1464b44fb383eea524632cb7f3f5aa17", porcelain "empty", "0 0"; plan file
+    "c2331757855b5578ef74d257795563b6d4f2e46d1219906aa27013bc8cdb160b (both)", "1414543",
+    "line 5909 The decision log in this file ends at R652. / count 0"; claude-config
+    "885985e52e43ffc961c0eb77e18e03a350457b3a", "0 0", porcelain " M PROJECT_LEDGER.md";
+    "line 778 | 2026-10-15T21:33:11Z | evidence-engine | main | 85daac2 | …"; the diff is
+    exactly four "+" lines, each "| mc-f1 | mc-f1 |", hashes 0566ce1, 43fa27a, 0996ba9,
+    aebb297, timestamps 2026-10-16T03:30:19Z to 03:43:05Z; file mtime "2026-10-16 03:43:05.59
+    +0000".
+  INFERRED (architect's): the four rows are hook-written and mc-f1 has not run its wrap. Loud
+    if wrong: a later mc-f1 wrap finds nothing to commit for them; no harm either way.
+
+R654(a) — The stop at step 0(d) was correct: R653(c) provides for another lane's wrap that has
+  committed rows (case B) and says nothing about rows another lane left uncommitted. The gap
+  is in R653(c), not in either repository; the brief's I2 line was right to treat the tree as
+  dirty.
+R654(b) — The four mc-f1 rows are committed by this lane's ledger step at 12q-OPEN step 1(e),
+  in the "ledger" form of a356f73, together with the hook row for the item-0 commit if the
+  hook writes one, and on their own if it does not. The commit message names them: four
+  hook-written rows of lane mc-f1 (0566ce1, 43fa27a, 0996ba9, aebb297), found uncommitted at
+  the 12q open and committed as found. The symmetric case — another lane's wrap committing
+  this lane's rows — was accepted as found at R637 and R646; this is the same rule in the
+  other direction. The rows are not edited, reordered or moved; the file is committed whole.
+R654(c) — No dated note on the 12p closure: its claude-config sentence (885985e) is true as
+  written, and R653(c)'s note is for a closure sentence a foreign commit made wrong. 12q's
+  closure paragraph records the four rows and this ruling instead.
+R654(d) — From this ruling on, "another lane's rows found uncommitted in PROJECT_LEDGER.md at a
+  session open" is case B's neighbour, not case C: they are committed by this lane's next
+  ledger step, named in its message, and recorded in the session's closure. A dirty
+  claude-config for any other reason (edits to primer.md or any file other than
+  PROJECT_LEDGER.md, a non-row change inside PROJECT_LEDGER.md, divergence from origin, this
+  lane's rows missing) stays a STOP.
+R654(e) — 12q-OPEN resumes under the resume below, from step 0(e). Nothing else in the brief
+  changes. The I2 line is read as amended by R654(d).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-16 | R654(a) — The stop at step 0(d) was correct: R653(c) provides for another lane's wrap that has committed rows (case B) and says nothing about rows another lane left uncommitted. The gap is in R653(c), not in either repository; the brief's I2 line was right to treat the tree as dirty. R654(b) — The four mc-f1 rows are committed by this lane's ledger step at 12q-OPEN step 1(e), in the "ledger" form of a356f73, together with the hook row for the item-0 commit if the hook writes one, and on their own if it does not. The commit message names them: four hook-written rows of lane mc-f1 (0566ce1, 43fa27a, 0996ba9, aebb297), found uncommitted at the 12q open and committed as found. The symmetric case — another lane's wrap committing this lane's rows — was accepted as found at R637 and R646; this is the same rule in the other direction. The rows are not edited, reordered or moved; the file is committed whole. R654(c) — No dated note on the 12p closure: its claude-config sentence (885985e) is true as written, and R653(c)'s note is for a closure sentence a foreign commit made wrong. 12q's closure paragraph records the four rows and this ruling instead. R654(d) — From this ruling on, "another lane's rows found uncommitted in PROJECT_LEDGER.md at a session open" is case B's neighbour, not case C: they are committed by this lane's next ledger step, named in its message, and recorded in the session's closure. A dirty claude-config for any other reason (edits to primer.md or any file other than PROJECT_LEDGER.md, a non-row change inside PROJECT_LEDGER.md, divergence from origin, this lane's rows missing) stays a STOP. R654(e) — 12q-OPEN resumes under the resume below, from step 0(e). Nothing else in the brief changes. The I2 line is read as amended by R654(d). | PI, 2026-10-16, during session 12q, on architect recommendation, on the 12q-OPEN stop report at step 0(d) |
+
+**Block 53.** *Transcribed 2026-10-16 (item 0 of the 12q-P12-2A brief), in one commit with Blocks 52–56, in the R597(e) form:* ruling R655, made by PI on architect recommendation on 2026-10-16 UTC, during session 12q, on the 12q-OPEN stop report at step 0(g), the 12q-OPEN-R1 report (evidence `~/scratch/12q-open/i9_stop.txt`). The resume 12q-OPEN-R2 that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12q-R655] — I9 reversed: "the same set" means set equality; 0/0 is a set
+  comparison against the 12p file; 12q-OPEN resumes from step 0(h)
+STATUS: PI ruling, 2026-10-16 UTC, session 12q, on architect recommendation, on the 12q-OPEN-R1
+  report stopped at step 0(g) (evidence ~/scratch/12q-open/i9_stop.txt). Transcribe as item 0
+  of the next brief in this session (the INT-p12-2 brief, Block 53, after R654's Block 52),
+  not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12q-OPEN-R1 stop report):
+  MEASURED: "12p_close/collected_ids_12p_close.txt | d6f92426…b252 | 3306 / 293524 | sorted";
+    "12o_close/collected_ids_12o_close.txt | 3a808167…7d4e | 3306 / 293524 | not sorted
+    (collection order)"; "cmp: differ: byte 42, line 1"; "Sorting both files and diffing them
+    gives an empty result, so the two id sets are identical."; steps 0(e), 0(f), I4, I10 and
+    the pin_tuples.py diff all matched as reported; dbchecks.py sha256
+    "909e3ed2c548e09593759b9727c10031793291bef6bc639631dcaa9aa9734ff5" recorded (a reading).
+  READ (the refactor plan's 12q block): "0/0 against docs/session-reports/session-12/
+    12o_close/collected_ids_12o_close.txt (the same set as 12p_close/collected_ids_12p_close.txt,
+    the 12p gate's list)".
+  No INFERRED item: this ruling narrows an architect-added requirement and adds no claim
+  about the box.
+
+R655(a) — I9's "byte-identical" was an architect premise, not the plan's wording, and is
+  withdrawn. The plan's "the same set" is read as set equality of the two files' ids, which the
+  report measured (sorted diff empty). I9 holds under that reading. The stop was correct: the
+  I9 line named cmp failure as a STOP, and two clauses that disagree stop at the earliest
+  clean point.
+R655(b) — "0/0 against <file>" means, here and in every later expected-values block, the set
+  difference in both directions between the gate's collected ids and the file's ids: 0 ids
+  added, 0 removed, computed on sorted lists. Order is not compared.
+R655(c) — The one target for 12q-OPEN step 2(c) is
+  docs/session-reports/session-12/12p_close/collected_ids_12p_close.txt (the 12p gate's list,
+  sorted). 12o_close's file is not consulted. The 12q list is written sorted to
+  ~/scratch/12q-open/collected_ids_12q_open.txt, so a later cmp against it is meaningful.
+R655(d) — The dbchecks.py sha256 the report recorded (909e3ed2…4ff5) is a reading; the 12p
+  close recorded none, so there is nothing to match. 12q's closeout records it in
+  12q_close/ so the next open has a value.
+R655(e) — 12q-OPEN resumes from step 0(h) under the resume below. R654 stands unchanged;
+  mc-f1 is an open session on another lane (PI statement, 2026-10-16), which changes nothing
+  in R654(b).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-16 | R655(a) — I9's "byte-identical" was an architect premise, not the plan's wording, and is withdrawn. The plan's "the same set" is read as set equality of the two files' ids, which the report measured (sorted diff empty). I9 holds under that reading. The stop was correct: the I9 line named cmp failure as a STOP, and two clauses that disagree stop at the earliest clean point. R655(b) — "0/0 against <file>" means, here and in every later expected-values block, the set difference in both directions between the gate's collected ids and the file's ids: 0 ids added, 0 removed, computed on sorted lists. Order is not compared. R655(c) — The one target for 12q-OPEN step 2(c) is docs/session-reports/session-12/12p_close/collected_ids_12p_close.txt (the 12p gate's list, sorted). 12o_close's file is not consulted. The 12q list is written sorted to ~/scratch/12q-open/collected_ids_12q_open.txt, so a later cmp against it is meaningful. R655(d) — The dbchecks.py sha256 the report recorded (909e3ed2…4ff5) is a reading; the 12p close recorded none, so there is nothing to match. 12q's closeout records it in 12q_close/ so the next open has a value. R655(e) — 12q-OPEN resumes from step 0(h) under the resume below. R654 stands unchanged; mc-f1 is an open session on another lane (PI statement, 2026-10-16), which changes nothing in R654(b). | PI, 2026-10-16, during session 12q, on architect recommendation, on the 12q-OPEN stop report at step 0(g), the 12q-OPEN-R1 report |
+
+**Block 54.** *Transcribed 2026-10-16 (item 0 of the 12q-P12-2A brief), in one commit with Blocks 52–56, in the R597(e) form:* ruling R656, made by PI on architect recommendation on 2026-10-16 UTC, during session 12q, on the 12q-OPEN-R2 report stopped at step 1(a) (evidence `~/scratch/12q-open/i7_stop.txt`). The resume 12q-OPEN-R3 that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12q-R656] — I7 ruled: candidate B; the cell rule gains one clause;
+  item 0's "−" line expectation corrected to 0; 12q-OPEN resumes at drafting Block 51
+STATUS: PI ruling, 2026-10-16 UTC, session 12q, on architect recommendation, on the 12q-OPEN-R2
+  report stopped at step 1(a) (evidence ~/scratch/12q-open/i7_stop.txt). Transcribe as item 0
+  of the next brief in this session (the INT-p12-2 brief, Block 54, after R654's Block 52 and
+  R655's Block 53), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12q-OPEN-R2 stop report):
+  MEASURED: "IDENTICAL — schema, every table, and the overall hash all match., exit=0, overall
+    0d3eedea…cb25" at 2026-10-16T22:43:00Z; "version 0.21.0. qwen3:32b 030ee887…7840,
+    gemma3:27b a418f583…2203 and deepseek-r1:32b edba8017…960c are all present"; temp root
+    "4 entries, 1,621,639,786 B", "pytest-15 (1,366,899,960 B) is this lane's 09:00 nightly,
+    born 09:00:09Z"; "I found four earlier rows with a backslash in a cell, but none where the
+    backslash comes right before a pipe"; candidate A "renders as "|" as "|": the backslash
+    is lost"; candidate B "renders as … "\|": correct"; "9e32a46 … left ends at R645 where it
+    was and appended a new The decision log in this file ends at R646. after Block 44. Its
+    plan diff is all additions (54 insertions, 0 deletions)"; "The project interpreter is
+    .venv/bin/python"; evidence-engine clean, claude-config " M PROJECT_LEDGER.md" (the four
+    mc-f1 rows) only.
+  No INFERRED item: this ruling chooses between two renderings CC measured and corrects an
+  architect-added expectation.
+
+R656(a) — Candidate B. In the decision-log table cell for R653, every "|" is rendered "\|"
+  (the Blocks 49/50 rule) and the one backslash that immediately precedes a pipe in R653(a)'s
+  text is rendered "\\", so the cell renders as the ruling reads: escaping of "|" as "\|".
+  The ```text block is the verbatim record (R102); the cell is a rendering (R653(a)).
+R656(b) — The cell rule from this ruling on: in a decision-log table cell, "|" is written
+  "\|", and a backslash immediately before a pipe is written "\\". A backslash anywhere else
+  is written as it is, as the four earlier cells did. Earlier cells are left as printed
+  (R102).
+R656(c) — The 12q-OPEN step 1(d) expectation "exactly 1 '−' line" was an architect premise
+  from a description of 9e32a46, not a read of it, and is withdrawn. Item 0 appends "The
+  decision log in this file ends at R653." after Block 51 and leaves the "ends at R652" line
+  where it is; the plan diff of the item-0 commit has 0 "−" lines. From this ruling on, a
+  brief that states a "−" line count for a plan edit states it from a read of the prior
+  commit it cites.
+R656(d) — The interpreter is .venv/bin/python; the first fingerprint attempt's exit 127 is a
+  reading, and the 22:43:00Z run is the one of record. Briefs from here name
+  .venv/bin/python for every repository script. No row.
+R656(e) — 12q-OPEN resumes under the resume below, at step 1(a), drafting Block 51. R654 and
+  R655 stand unchanged.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-16 | R656(a) — Candidate B. In the decision-log table cell for R653, every "\|" is rendered "\\\|" (the Blocks 49/50 rule) and the one backslash that immediately precedes a pipe in R653(a)'s text is rendered "\\", so the cell renders as the ruling reads: escaping of "\|" as "\\\|". The ```text block is the verbatim record (R102); the cell is a rendering (R653(a)). R656(b) — The cell rule from this ruling on: in a decision-log table cell, "\|" is written "\\\|", and a backslash immediately before a pipe is written "\\". A backslash anywhere else is written as it is, as the four earlier cells did. Earlier cells are left as printed (R102). R656(c) — The 12q-OPEN step 1(d) expectation "exactly 1 '−' line" was an architect premise from a description of 9e32a46, not a read of it, and is withdrawn. Item 0 appends "The decision log in this file ends at R653." after Block 51 and leaves the "ends at R652" line where it is; the plan diff of the item-0 commit has 0 "−" lines. From this ruling on, a brief that states a "−" line count for a plan edit states it from a read of the prior commit it cites. R656(d) — The interpreter is .venv/bin/python; the first fingerprint attempt's exit 127 is a reading, and the 22:43:00Z run is the one of record. Briefs from here name .venv/bin/python for every repository script. No row. R656(e) — 12q-OPEN resumes under the resume below, at step 1(a), drafting Block 51. R654 and R655 stand unchanged. | PI, 2026-10-16, during session 12q, on architect recommendation, on the 12q-OPEN-R2 report stopped at step 1(a) |
+
+**Block 55.** *Transcribed 2026-10-16 (item 0 of the 12q-P12-2A brief), in one commit with Blocks 52–56, in the R597(e) form:* ruling R657, made by PI on architect recommendation on 2026-10-16 UTC, during session 12q, on the 12q-OPEN-R3 report stopped before step 2(c) (evidence `~/scratch/12q-open/reboot_evidence.txt`, `apt_history_20261016.txt`, `stop_reboot.txt`). The resume 12q-OPEN-R4 that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12q-R657] — the host maintenance is a reading; the gate runs now as the
+  first on the upgraded host; wall time and Ollama start time become readings; the band
+  restarts
+STATUS: PI ruling, 2026-10-16 UTC, session 12q, on architect recommendation, on the 12q-OPEN-R3
+  report stopped before step 2(c) (evidence ~/scratch/12q-open/reboot_evidence.txt,
+  apt_history_20261016.txt, stop_reboot.txt). Transcribe as item 0 of the next brief in this
+  session (the INT-p12-2 brief, Block 55, after Blocks 52–54 for R654–R656), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12q-OPEN-R3 report):
+  MEASURED: "evidence-engine f087d4f8828b9181f955b0f26c3d13a90067298b, the child of 85daac2.
+    Pushed, 0/0."; "59 insertions, 0 "−" lines"; "Block 51's ```text block against r653.txt:
+    identical"; "The committed closing line is The decision log in this file ends at R653. at
+    line 5958. Line 5909, "ends at R652", stays."; "The plan file is now sha256 00bcdd7a…23a3,
+    1,420,037 bytes."; "claude-config 4f388d39b4eeef55fc8a5657c1743372d27e6b6f, the child of
+    885985e … Pushed, 0/0, clean."; "exactly five "+" lines and no "−" lines"; "Fingerprint:
+    IDENTICAL, exit 0, at 22:43:00Z, 23:13:54Z … and 23:14:55Z"; "apt full-upgrade,
+    22:45:12–22:47:29Z, requested by ankitsarin, 264 package lines"; "systemd-reboot 23:05:07Z,
+    up since 23:05:38Z"; "Ollama service start … Fri 2026-10-16 23:05:57 UTC. NRestarts=0,
+    version 0.21.0, and the three digests unchanged."; "/tmp was cleared at boot, including
+    the nightly's pytest-15"; "libsqlite3-0 went from …ubuntu2.7 to …ubuntu2.8, with
+    sqlite_version still 3.45.1"; "~/.ollama_experiment.lock mtime … unchanged"; "failed
+    units … none; is-system-running reads running"; "20 POST /api/show requests at
+    23:06:00–02Z"; "No model is resident."
+  PI statement (2026-10-16): the upgrade and reboot were deliberate host maintenance.
+  INFERRED (CC's): the 20 POSTs "look like app services starting up (hello-ai, surgical-cv-app,
+    citation-mcp are running)". Verify-before: step 2(b) below attributes them by process if
+    the service journals allow; else they are recorded unattributed.
+
+R657(a) — Item 0 is accepted as landed: f087d4f (plan +49, lane-line copy +10, 0 "−" lines;
+  Block 51 verbatim; the R653 cell under R656) and claude-config 4f388d3 (five rows, four of
+  them mc-f1's, committed as found under R654(b)).
+R657(b) — The host maintenance of 2026-10-16 (apt full-upgrade 22:45–22:47 UTC, reboot
+  23:05 UTC, by the PI) is a dated fact of 12q's closure, not a defect and not a stop
+  condition for the remaining steps. Everything the 12q expected-values block states about
+  the host is a reading from here: Ollama service start time (now 2026-10-16 23:05:57 UTC,
+  NRestarts=0), the temp root (cleared at boot; the 0(i) reading of 22:43:26Z is the last
+  reading of the nightly's basetemp and answers step 3(e): pytest had pruned to three
+  basetemps), and the gate's wall time.
+R657(c) — The gate runs now, as the first standard gate on the upgraded host, under the
+  pasted step 2 with these changes: the band 822–1004 s is not applied; the wall time is
+  recorded as a reading with a note that the page cache is cold after boot; the pass /
+  xfailed / deselected counts, the collected set (R655), the two sklearn warnings, the
+  attributed journal window and every non-timing check of step 2 are matched as written. The
+  durations comparison against 12p_close/durations_12p_open.txt is reported in full (every
+  phase over 10 s slower) as a reading, not a finding.
+R657(d) — Band rule from this ruling on: a band is cut only from standard gates run on the
+  same host state (kernel, driver, libsqlite3 and Python as read at the gate). The 12r band is
+  cut at 12q's closeout from the gates of this session on the upgraded host, ±10% of their
+  mean, and is a reading until four such gates exist. The expected-values block at 12q's
+  close records the host state the band belongs to.
+R657(e) — Step 2(k)'s expectation is restated: version 0.21.0; the three digests
+  030ee887…7840, a418f583…2203, edba8017…960c; NRestarts=0; service start 2026-10-16
+  23:05:57 UTC; residency recorded. Step 3(e) is answered by the 0(i) reading. Steps 3(a)–(d)
+  run as written (the log files are in the repository; the lock mtime is unchanged).
+R657(f) — The 20 POST /api/show requests at 23:06:00–02Z are outside every gate window and
+  are recorded in the pre-gate attribution with their source process if the service journals
+  show one, else as "unattributed, loopback, at boot". Not a row. Any POST inside the gate's
+  window remains a STOP.
+R657(g) — For the rehearsal brief: the 2026-10-17 07:00 UTC health job is Ollama's first full
+  model load on the upgraded host, and the 2026-10-17 09:00 nightly is the first nightly on
+  it; U13's preflight reads both before launch. Recorded here so the rehearsal brief carries
+  it.
+R657(h) — 12q-OPEN resumes under the resume below, at step 2(a).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-16 | R657(a) — Item 0 is accepted as landed: f087d4f (plan +49, lane-line copy +10, 0 "−" lines; Block 51 verbatim; the R653 cell under R656) and claude-config 4f388d3 (five rows, four of them mc-f1's, committed as found under R654(b)). R657(b) — The host maintenance of 2026-10-16 (apt full-upgrade 22:45–22:47 UTC, reboot 23:05 UTC, by the PI) is a dated fact of 12q's closure, not a defect and not a stop condition for the remaining steps. Everything the 12q expected-values block states about the host is a reading from here: Ollama service start time (now 2026-10-16 23:05:57 UTC, NRestarts=0), the temp root (cleared at boot; the 0(i) reading of 22:43:26Z is the last reading of the nightly's basetemp and answers step 3(e): pytest had pruned to three basetemps), and the gate's wall time. R657(c) — The gate runs now, as the first standard gate on the upgraded host, under the pasted step 2 with these changes: the band 822–1004 s is not applied; the wall time is recorded as a reading with a note that the page cache is cold after boot; the pass / xfailed / deselected counts, the collected set (R655), the two sklearn warnings, the attributed journal window and every non-timing check of step 2 are matched as written. The durations comparison against 12p_close/durations_12p_open.txt is reported in full (every phase over 10 s slower) as a reading, not a finding. R657(d) — Band rule from this ruling on: a band is cut only from standard gates run on the same host state (kernel, driver, libsqlite3 and Python as read at the gate). The 12r band is cut at 12q's closeout from the gates of this session on the upgraded host, ±10% of their mean, and is a reading until four such gates exist. The expected-values block at 12q's close records the host state the band belongs to. R657(e) — Step 2(k)'s expectation is restated: version 0.21.0; the three digests 030ee887…7840, a418f583…2203, edba8017…960c; NRestarts=0; service start 2026-10-16 23:05:57 UTC; residency recorded. Step 3(e) is answered by the 0(i) reading. Steps 3(a)–(d) run as written (the log files are in the repository; the lock mtime is unchanged). R657(f) — The 20 POST /api/show requests at 23:06:00–02Z are outside every gate window and are recorded in the pre-gate attribution with their source process if the service journals show one, else as "unattributed, loopback, at boot". Not a row. Any POST inside the gate's window remains a STOP. R657(g) — For the rehearsal brief: the 2026-10-17 07:00 UTC health job is Ollama's first full model load on the upgraded host, and the 2026-10-17 09:00 nightly is the first nightly on it; U13's preflight reads both before launch. Recorded here so the rehearsal brief carries it. R657(h) — 12q-OPEN resumes under the resume below, at step 2(a). | PI, 2026-10-16, during session 12q, on architect recommendation, on the 12q-OPEN-R3 report stopped before step 2(c) |
+
+**Block 56.** *Transcribed 2026-10-16 (item 0 of the 12q-P12-2A brief), in one commit with Blocks 52–56, in the R597(e) form:* ruling R658, made by PI on architect recommendation on 2026-10-16 UTC, during session 12q, on the 12q-OPEN final report (evidence `~/scratch/12q-open/`). The 12q-P12-2A task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12q-R658] — 12q-OPEN accepted; three notes, no rows; item 0 of the next
+  brief transcribes R654–R658; INT-p12-2's Phase A opens
+STATUS: PI ruling, 2026-10-16 UTC, session 12q, on architect recommendation, on the 12q-OPEN
+  final report (evidence ~/scratch/12q-open/). Transcribe as item 0 of the 12q-P12-2A brief
+  below, in this block (Block 56, after Blocks 52–55 for R654–R657), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12q-OPEN final report):
+  MEASURED: "evidence-engine f087d4f8828b9181f955b0f26c3d13a90067298b, the child of 85daac2";
+    "claude-config 4f388d39b4eeef55fc8a5657c1743372d27e6b6f, the child of 885985e"; "The plan
+    file is now sha256 00bcdd7a…23a3, 1,420,037 bytes"; "3305 passed, 17 deselected, 1 xfailed,
+    2 warnings in 865.99s; exit 0"; "0 / 0, 3306 / 3306"; "launched 23:31:31Z, exited
+    23:45:59Z; 868.02 s by wall clock"; gate window "-- No entries --"; "0 test phases slower
+    by more than 10 s"; "3323 / 91"; "inventory in sync, exit 0 / exactly those six"; dbchecks
+    "identical"; retention "identical"; codebook and spec "as expected"; pins "identical;
+    pins.err empty; journal for the run -- No entries --"; "272 (95/50/127, 0), P1 58
+    (26/20/12), 35, P7 113, expected_holds: true; 271 (95/50/126, 0)"; nightly "3305 passed,
+    17 deselected, 1 xfailed, 2 warnings in 869.10s", "pytest exit code: 0", journal
+    09:00–09:25 "-- No entries --", lock mtime "2026-07-27 23:22:08.906 and unchanged";
+    "After the gate: pytest-0 alone, 1,366,897,243 B, born 23:31:35Z"; host_state_12q.txt
+    "kernel 6.17.0-1032-nvidia; Python 3.12.3; libsqlite3-0:arm64 3.45.1-1ubuntu2.8; NVIDIA
+    driver 580.173.02; Ollama 0.21.0; NRestarts=0; ActiveEnterTimestamp Fri 2026-10-16
+    23:05:57 UTC"; "Fingerprint IDENTICAL at 22:43:00Z, 23:13:54Z, 23:14:55Z and … 23:48:24Z";
+    "the literal find data -name review.db returns eight paths, not one … At data/<dir>/
+    review.db depth only live exists".
+  INFERRED (CC's, recorded not matched): "I attribute them to hello-ai.service (PID 2640,
+    hello-ai-v2/app.py)" — rests on timing, count and one log line. Loud if wrong: outside
+    every gate window either way.
+
+R658(a) — 12q-OPEN is accepted as reported. The 12q open stands verified on the upgraded host:
+  the gate's counts and collected set matched, its wall time 868.02 s is the first reading of
+  the new band series (R657(d)), and the 2026-10-16 nightly matched its expected file line
+  for line.
+R658(b) — The seven `review.db` files below `data/<dir>/` depth are row I21's seven nested
+  paths (debris_2026-09-09 and the elicit_design01 smoke copies), already recorded and owned
+  by P7. The plan's wording ("No second data/<dir>/review.db") governs; the brief's `find`
+  literal was the architect's. From here the check is written as `ls data/*/review.db` and
+  expects one path. No row.
+R658(c) — The refused `rm -rf /tmp/pytest-of-ankitsarin`: nothing ran, and it is recorded as
+  the architect reads it — the brief's DO NOT TOUCH was the constraint, and the classifier's
+  refusal is not a guard this lane relies on. From here, no helper command composed for a
+  brief deletes any path outside ~/scratch/<session>/; a deletion elsewhere is its own named
+  step with the PI's ruling. No row.
+R658(d) — The boot-time requests (2 GET /api/tags, 20 POST /api/show at 23:06:00–02Z) are
+  recorded as attributed to hello-ai on CC's inference, outside every gate window. The 12q
+  closure carries them in its journal attribution. No row.
+R658(e) — Item 0 of the 12q-P12-2A brief transcribes R654, R655, R656, R657 and this ruling
+  as Blocks 52–56 in the R597(e) form (R654's and R655's headers name the 12q-OPEN stop
+  reports at steps 0(d) and 0(g); R656's the 12q-OPEN-R2 stop at step 1(a); R657's the
+  12q-OPEN-R3 stop before step 2(c); this ruling's the 12q-OPEN final report), each with its
+  cell under R656(b), followed by one appended "The decision log in this file ends at R658."
+  line; the standing "ends at R653" line stays (R656(c)). The item-0 plan diff has 0 "−"
+  lines. One commit; the hook's ledger row committed after it in a356f73's form.
+R658(f) — INT-p12-2's Phase A opens under the brief below: read-only, one committed read-out,
+  no edit to engine or test code, no gate. Phase B is a later brief, after the ruling on the
+  read-out.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-16 | R658(a) — 12q-OPEN is accepted as reported. The 12q open stands verified on the upgraded host: the gate's counts and collected set matched, its wall time 868.02 s is the first reading of the new band series (R657(d)), and the 2026-10-16 nightly matched its expected file line for line. R658(b) — The seven `review.db` files below `data/<dir>/` depth are row I21's seven nested paths (debris_2026-09-09 and the elicit_design01 smoke copies), already recorded and owned by P7. The plan's wording ("No second data/<dir>/review.db") governs; the brief's `find` literal was the architect's. From here the check is written as `ls data/*/review.db` and expects one path. No row. R658(c) — The refused `rm -rf /tmp/pytest-of-ankitsarin`: nothing ran, and it is recorded as the architect reads it — the brief's DO NOT TOUCH was the constraint, and the classifier's refusal is not a guard this lane relies on. From here, no helper command composed for a brief deletes any path outside ~/scratch/<session>/; a deletion elsewhere is its own named step with the PI's ruling. No row. R658(d) — The boot-time requests (2 GET /api/tags, 20 POST /api/show at 23:06:00–02Z) are recorded as attributed to hello-ai on CC's inference, outside every gate window. The 12q closure carries them in its journal attribution. No row. R658(e) — Item 0 of the 12q-P12-2A brief transcribes R654, R655, R656, R657 and this ruling as Blocks 52–56 in the R597(e) form (R654's and R655's headers name the 12q-OPEN stop reports at steps 0(d) and 0(g); R656's the 12q-OPEN-R2 stop at step 1(a); R657's the 12q-OPEN-R3 stop before step 2(c); this ruling's the 12q-OPEN final report), each with its cell under R656(b), followed by one appended "The decision log in this file ends at R658." line; the standing "ends at R653" line stays (R656(c)). The item-0 plan diff has 0 "−" lines. One commit; the hook's ledger row committed after it in a356f73's form. R658(f) — INT-p12-2's Phase A opens under the brief below: read-only, one committed read-out, no edit to engine or test code, no gate. Phase B is a later brief, after the ruling on the read-out. | PI, 2026-10-16, during session 12q, on architect recommendation, on the 12q-OPEN final report |
+
+The decision log in this file ends at R658.

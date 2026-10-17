@@ -1,0 +1,25 @@
+# pytest temp root at the 12q closeout 2026-10-17T05:56:21Z — measured, not matched, not emptied (R647(c), R652(c))
+/tmp/pytest-of-ankitsarin
+entries: 4
+1372220719	/tmp/pytest-of-ankitsarin
+2414389	/tmp/pytest-of-ankitsarin/pytest-2
+2431369	/tmp/pytest-of-ankitsarin/pytest-3
+1367374927	/tmp/pytest-of-ankitsarin/pytest-4
+34	/tmp/pytest-of-ankitsarin/pytest-current
+total 428
+drwx------    5 ankitsarin ankitsarin   4096 2026-10-17 00:36:51.688649636 +0000 .
+drwxrwxrwt   38 root       root        49152 2026-10-17 05:56:33.569348111 +0000 ..
+drwx------    7 ankitsarin ankitsarin   4096 2026-10-17 00:21:45.580093580 +0000 pytest-2
+drwx------    7 ankitsarin ankitsarin   4096 2026-10-17 00:22:10.739220870 +0000 pytest-3
+drwx------ 3309 ankitsarin ankitsarin 368640 2026-10-17 00:36:51.688649636 +0000 pytest-4
+lrwxrwxrwx    1 ankitsarin ankitsarin     34 2026-10-17 00:22:26.752299751 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-4
+
+# origins
+The root itself was born 2026-10-16 23:31:35Z: /tmp was cleared by the 23:05:07Z reboot (R657), so the 12q-open reading's pytest-13, -14, -15 are gone and numbering restarted at pytest-0.
+pytest-0: never observed; inferred to be the 12q-open gate's (that gate launched 2026-10-16T23:31:31Z, four seconds before the root's birth). Pruned by pytest (three kept).
+pytest-1: created and pruned between the 12q-open gate and pytest-2's birth; never observed, origin unknown.
+pytest-2: born 2026-10-17 00:21:42Z, last mtime 00:21:45Z; test_a_duplicate_on_attempt_1_* only: 12q-P12-2B's run of the new test on the parent's code (the recorded failure, launched 00:21:33Z). This lane.
+pytest-3: born 00:22:05Z, last mtime 00:22:10Z; the same test names: 12q-P12-2B's five-test run after the edit. This lane.
+pytest-4: born 00:22:26Z, last mtime 00:36:51Z; the b3f0072 gate (00:22:21Z to 00:36:52Z). This lane.
+pytest-current -> pytest-4.
+No pytest process running at the reading (pgrep exit 1). The 2026-10-17 09:00 UTC nightly will add one basetemp and pytest will prune to three.

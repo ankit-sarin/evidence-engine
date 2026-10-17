@@ -1,0 +1,19 @@
+# host state for the 12q-open gate, 2026-10-16T23:30:19Z (R657(d))
+uname -r: 6.17.0-1032-nvidia
+python: Python 3.12.3
+libsqlite3-0: ii libsqlite3-0:arm64 3.45.1-1ubuntu2.8 arm64 SQLite 3 shared library
+nvidia driver: 580.173.02
+ollama: ollama version is 0.21.0 
+NRestarts=0
+ActiveEnterTimestamp=Fri 2026-10-16 23:05:57 UTC
+up since: 2026-10-16 23:05:33 UTC; up 24 minutes
+
+# re-read at the 12q closeout, 2026-10-17T05:57:03Z: the six values unchanged (the 12q-open line "ollama: ollama version is 0.21.0 " carries a trailing space from its capture; the value is the same); same boot (boot id 7af66b66-d1df-4c73-95c1-c71d3b4d7dde, started 2026-10-16 23:05:38 UTC)
+uname -r: 6.17.0-1032-nvidia
+python: Python 3.12.3
+libsqlite3-0: ii libsqlite3-0:arm64 3.45.1-1ubuntu2.8 arm64 SQLite 3 shared library
+nvidia driver: 580.173.02
+ollama: ollama version is 0.21.0
+NRestarts=0
+ActiveEnterTimestamp=Fri 2026-10-16 23:05:57 UTC
+up since: 2026-10-16 23:05:33 UTC; up 6 hours, 51 minutes

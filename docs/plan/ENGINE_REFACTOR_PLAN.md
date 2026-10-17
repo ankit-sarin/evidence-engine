@@ -3510,6 +3510,107 @@ Expected values at session-12q open, as at this closeout (2026-10-15):
 - **U13's rehearsal** — its own brief; R650(b)'s text check first (a STOP if any of the twelve texts differs); outside 07:00–10:35 UTC (R650(h)).
 - **12q's closeout.** B-F17 (e)'s Phase A stays P7's.
 
+Session 12q closed 2026-10-17 UTC; opened 2026-10-16 22:28 UTC on the 12p HEAD `85daac2d865abadd69dfb0b81e48dc64294c5ef5`, CC session `b3531d2d` (one session, continued across one context compaction). **INT-p12-2 is fixed and closed at `b3f0072`; U13's throwaway `ra_12q` is built, verified and staged out of `data/`; the rehearsal moves to session 12r (R661).** **No model call and no live write.** Briefs, in order: 12q-OPEN (stopped at step 0(d), R654; resumed as 12q-OPEN-R1, stopped at step 0(g), R655; resumed as 12q-OPEN-R2, stopped at step 1(a), R656; resumed as 12q-OPEN-R3, stopped before step 2(c) on the host reboot, R657; resumed as 12q-OPEN-R4 and completed, R658), 12q-P12-2A (INT-p12-2's Phase A, R659), 12q-P12-2B (INT-p12-2's fix and gate, R660), 12q-U13-BUILD (R661), 12q-U13-STAGE, and this closeout, 12q-CLOSE.
+
+**Commits, in order.**
+
+- `f087d4f` — item 0 of the open: R653 (Block 51), the 12p lane-line file in `12p_close/`.
+- claude-config `4f388d3` — the hook's ledger row for `f087d4f`, and the four hook-written rows of lane mc-f1 (`0566ce1`, `43fa27a`, `0996ba9`, `aebb297`) found uncommitted at the open, committed as found and named in its message (R654(b); R654(c) has them recorded here).
+- `e9a827a` — item 0 of 12q-P12-2A: R654–R658 (Blocks 52–56).
+- claude-config `56d1bb5` — the hook's ledger row for `e9a827a`.
+- `ef5e7fb` — **12q-P12-2A**: INT-p12-2's Phase A read-out (`12q_P12-2A/12q_P12-2A.md`); read-only.
+- claude-config `926b409` — the hook's ledger row for `ef5e7fb`.
+- `89be3c4` — item 0 of 12q-P12-2B: R659 (Block 57), rows INT-q12-1–3 in "L (12q additions, R659)", the R659(e) note on INT-p12-2, `12q_P12-2B/recount_12q_r659.py` and its JSON (275).
+- claude-config `ba96e9d` — the hook's ledger row for `89be3c4`.
+- `b3f0072` — **12q-P12-2B**, the session's one code commit: `engine/agents/extractor.py`, one line (shape A, R659(b)); the test `test_a_duplicate_on_attempt_1_is_named_in_every_retry_row` in `tests/test_duplicate_on_pass1_attempt_2.py`, with the file's docstring; the gate's evidence in `12q_P12-2B/`.
+- claude-config `b99ee61` — the hook's ledger row for `b3f0072`.
+- `ddfd1cc` — item 0 of 12q-U13-BUILD: R660 (Block 58), INT-p12-2's closing note.
+- claude-config `fd3d02d` — the hook's ledger row for `ddfd1cc`, its message amended before the push to the row's exact timestamp (R661(e)).
+- **This closeout** — the commit that carries this paragraph, the child of `ddfd1cc`: R661 (Block 59), this closure and the 12r expected values, `docs/session-reports/session-12/12q_close/`.
+
+**Rulings R654–R661, all transcribed. The decision log in this file ends at R661.**
+
+- R654 — the stop at 0(d) was correct; the four mc-f1 rows committed as found by this lane's ledger step, named in its message; R654(d), the rule for another lane's uncommitted ledger rows.
+- R655 — I9's "byte-identical" withdrawn; "0/0 against a file" is a set comparison on sorted lists, in both directions (R655(b)); the dbchecks.py sha256 is a reading, recorded at this close (R655(d)).
+- R656 — candidate B for the R653 cell; the cell rule (R656(b)); "−" counts stated from a read of the prior commit (R656(c)); `.venv/bin/python` (R656(d)).
+- R657 — the host maintenance a dated fact (R657(b)); the open's gate the first on the upgraded host, its wall time a reading; a band cut only from gates on one host state (R657(d)); the boot-time POSTs attributed; the 07:00 health job and 09:00 nightly of 2026-10-17 read before U13's launch (R657(g)).
+- R658 — 12q-OPEN accepted; `ls data/*/review.db` expects one path (R658(b)); no helper command deletes outside the session's scratch (R658(c)); the boot-time requests attributed to hello-ai (R658(d)); INT-p12-2's Phase A opens.
+- R659 — the Phase A read-out accepted; shape A; the one test; rows INT-q12-1–3 (Class 3, P7); F4 a note on INT-p12-2; the R656 renderings accepted (R659(f)); Phase B opens.
+- R660 — 12q-P12-2B accepted; INT-p12-2 CLOSED at `b3f0072`, still counted (R607(d)); before-gate reads at least 5 s before launch (R660(b)); the band series, the basetemp read right after the gate, the cell renderer committed at this close (R660(c)); U13 as two briefs, build then run.
+- R661 — 12q-U13-BUILD accepted; `ra_12q` staged out of `data/` before the 09:00 nightly and restored by the launch brief (R661(b)); the rehearsal launches after the 2026-10-17 07:00 and 09:00 jobs, both read (R661(c)); 12q closes and the rehearsal is session 12r (R661(d)); notes F2–F5 (R661(e)).
+
+**Stops, and what they exposed.** Every stop was made before any edit to the repository, or with the tree clean, and none followed a bad commit. Three traced to premises in the brief; one was a change of host state.
+
+| Brief | The assumption | What was on disk | Settled by |
+| --- | --- | --- | --- |
+| 12q-OPEN, I2 (step 0(d)) | claude-config at the 12p wrap's commit, clean or dirty only with this lane's rows | `885985e` with four hook-written rows of lane mc-f1 uncommitted in `PROJECT_LEDGER.md`; I2's cases did not reach another lane's rows (an architect premise) | R654 |
+| 12q-OPEN-R1, I9 (step 0(g)) | `12p_close/collected_ids_12p_close.txt` byte-identical to `12o_close/`'s | `cmp` differs at byte 42, line 1; the sorted sets are equal (an architect premise, not the plan's wording) | R655 |
+| 12q-OPEN-R2, steps 1(a) and 1(d) | the R653 cell rendered under Blocks 49 and 50's rule; the item-0 diff has exactly one "−" line | under markdown-it 4.0.0 that rule drops the backslash of R653(a)'s escaped pipe and candidate B renders as the ruling reads; `9e32a46` appended its ends-at line and left the old one, so the diff has 0 "−" lines (two architect premises: the rendering, and a "−" count from a description of `9e32a46`, not a read of it) | R656 |
+| 12q-OPEN-R3, before step 2(c) | the host as at the 12p close (Ollama service start 2026-09-11 21:09:13 UTC; the nightly's basetemp in the temp root) | an apt full-upgrade at 22:45:12–22:47:29Z and a reboot at 23:05:07Z, by the PI; Ollama started 23:05:57Z; `/tmp` cleared at boot (a change of host state, not a premise) | R657 |
+
+**The host maintenance of 2026-10-16** (R657(b)), a dated fact. `apt full-upgrade` ran 22:45:12–22:47:29 UTC (libsqlite3-0 `3.45.1-1ubuntu2.7` → `2.8` among the upgrades); the host rebooted at 23:05:07 UTC and was up at 23:05:38 UTC; the Ollama service started 23:05:57 UTC. The host state the band belongs to (R657(d)), read at the open's gate and again at this closeout (`12q_close/host_state_close.txt`, unchanged, same boot): kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02, Ollama 0.21.0, `NRestarts=0`.
+
+**Measured — the recount** (`docs/session-reports/session-12/12q_close/recount_12q_close.py` → `recount_12q_close.json`, chained onto `12q_P12-2B/recount_12q_r659.py`, which reproduces its committed JSON byte for byte; `12p_close/recount_12p_close.py` on the pre-table file, the plan at `ef5e7fb`, gives 272 and its committed JSON). **The pre-tag list in this file is 275 rows — Class 1 / 2 / 3 = 95 / 50 / 130, and 0 without a class**; P1 58 (26 / 20 / 12), 35 fix units; P7 116. INT-p12-2 is closed at `b3f0072` and stays counted until P1's close (R607(d)). **R510 for the session: rows in 3 (INT-q12-1, INT-q12-2, INT-q12-3; all opened, R659(d)), rows out 0.**
+
+**Measured — the session's gates.** Two standard gates, both on the upgraded host. The open's (R657(c)), on `f087d4f`: **3,305 passed / 1 xfailed / 17 deselected, 3,306 collected**, 2 warnings (sklearn's), wall **868.02 s** (2026-10-16T23:31:31Z to 23:45:59Z; the page cache cold after boot), the band not applied; collected ids 0/0 against `12p_close/collected_ids_12p_close.txt` (R655(b)); durations against `12p_close/durations_12p_open.txt`: no phase slower by more than 10 s. `b3f0072`'s (R659(g)): **3,306 passed / 1 xfailed / 17 deselected, 3,307 collected**, 2 warnings, wall **871.59 s** (2026-10-17T00:22:21Z to 00:36:52Z); against `12p_close/collected_ids_12p_close.txt` one id added (`tests/test_duplicate_on_pass1_attempt_2.py::test_a_duplicate_on_attempt_1_is_named_in_every_retry_row`), none removed; durations against the open's: no phase slower by more than 10 s; the new test failed on the parent's code first (`assert None == ['study_type']`); pins unchanged; `inventory --check` in sync. **The band series on this host state is 868.02 and 871.59 s** (R660(c)); under R657(d) no band is cut until four gates exist on it. No closeout gate: the code is unchanged since `b3f0072` (`git diff --stat b3f0072 HEAD -- engine tests scripts analysis review_specs` empty at this closeout).
+
+**Measured — the 2026-10-16 09:00 UTC nightly** matched `12p_close/expected_nightly_20261016.md` line for line: 3305 passed, 17 deselected, 1 xfailed, 2 warnings, 869.10 s, exit 0; the Ollama journal for 09:00–09:25 UTC empty; the real lock file's mtime 2026-07-27 23:22:08 UTC.
+
+**The pytest temp root** (R647(c), R652(c)). Read at the open (22:43:26Z) with the 2026-10-16 nightly's basetemp `pytest-15` and surgical-cv's `pytest-13` and `pytest-14`; `/tmp` was cleared at the reboot, and the root was born again at 23:31:35Z with the open's gate. At this closeout (05:56:21Z): **4 entries, 1,372,220,719 bytes** — `pytest-2` (2,414,389 B) and `pytest-3` (2,431,369 B), 12q-P12-2B's runs of the new test before and after the edit; `pytest-4` (1,367,374,927 B), the `b3f0072` gate; `pytest-current` → `pytest-4`; all this lane's (`12q_close/temp_root_close.txt`). Nothing emptied.
+
+**Requests this session sent to the Ollama server.** No POST and no `/api/show`: no model was loaded or evicted by this session. `GET /api/version`, `/api/tags` and `/api/ps` only: 22:43:35 (the open), 23:15:23 (the reboot read), 23:31:12 and 23:46:09 (bracketing the open's gate), 00:22:21 and 00:37:02 (bracketing `b3f0072`'s gate), 00:51:24 (U13's build) and 05:56:07 (this closeout), with lone `GET /api/version` reads at 23:30:19 and 05:57:03 (the host-state reads' `ollama --version`). The gate windows: the open's empty; `b3f0072`'s held its own three bracketing reads at the launch second (attributed, R660(b)). The other requests in the journal since 22:28 UTC are not this session's: 2 GET `/api/tags` and 20 POST `/api/show` at 22:47:39–41Z, and the same at 23:06:00–02Z, each a hello-ai.service start (at 22:47:37Z restarted by the apt run, at 23:05:57Z by the boot; the boot-time set attributed by R658(d), the 22:47 set read at this closeout by the same pattern); `HEAD /` and `GET /api/ps` at 00:17:00Z, another lane's (a `sudo` attempt from `~/projects/surgical-cv` in the same second); all outside every gate window. Service start 2026-10-16 23:05:57 UTC, `NRestarts=0`; nothing resident at this closeout. The real lock file was never opened; its state was read through `/proc/locks` and `fuser` (R661(e)), and its mtime is 2026-07-27 23:22:08 UTC.
+
+**Live.** Never written. `db_fingerprint --compare` against the migration-02 record was IDENTICAL at every check of the session (overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`, 36 tables). Live was opened `mode=ro` only: by the fingerprint, `dbchecks.py`, and U13's build (the text check, `~/scratch/12q-u13-build/text_check.py`, and `12g_ra/build_input.py`, which reads the twelve texts through the resolver). The Phase A read-out opened no database.
+
+**The staged throwaway `ra_12q`** (R650(b), R661(b)). Built at 00:50 UTC by 12g's construction (`12g_RA-A.md` §3, `12g_ra/build_input.py`): an empty review into which `import_extraction_entry` brought the twelve papers of Rehearsal A in `id_map.json`'s order, with the twelve texts byte-equal to what 12g imported (twelve of twelve) and the import input byte-identical to 12g's. Spec `review_id: ra_12q`, `elicitation: true`; codebook `review: "ra_12q"`; pins identical to `12p_close/pin_tuples_close.json`. Moved by one `mv` to `~/scratch/12q-u13-build/stage/ra_12q/` at 2026-10-17T04:06:24Z, before the 09:00 nightly (R241, B21): `review.db` file sha256 `9461bf26126b0744783ffc86524e0d661db2cc1db30643990812245068ad7705`, fingerprint overall `fb80c5ebc47a4d88f430081ad53fb713e2bd2717428f580f1dc31d08af90cef5` (36 tables), both unchanged by the move; the restore command and both checks are in `~/scratch/12q-u13-build/stage/RESTORE.txt`.
+
+**Conventions added this session:**
+- R654(d) — another lane's rows found uncommitted in `PROJECT_LEDGER.md` at a session open are committed by this lane's next ledger step, named in its message, and recorded in the closure; any other dirt in claude-config is a STOP.
+- R655(b) — "0/0 against a file" is a set difference in both directions, computed on sorted lists.
+- R656(b) — in a decision-log table cell, a pipe is written backslash-pipe, and a backslash immediately before a pipe is written as two backslashes; a backslash anywhere else is written as it is. The function is `12q_close/render_cell.py` (R660(c)).
+- R656(c) — a "−" line count for a plan edit is stated from a read of the prior commit the brief cites.
+- R656(d) — `.venv/bin/python` for every repository script.
+- R657(d) — a band is cut only from standard gates on the same host state (kernel, driver, libsqlite3, Python).
+- R658(b) — the data-directory check is `ls data/*/review.db`, expecting one path.
+- R658(c) — no helper command composed for a brief deletes any path outside `~/scratch/<session>/`; a deletion elsewhere is its own named step with the PI's ruling.
+- R660(b) — before-gate Ollama reads are made at least five seconds before the launch.
+- R660(c) — a gate's basetemp is read immediately after the gate, before any other pytest invocation.
+- R661(e) — where a brief forbids taking the experiment lock, its state is read through `/proc/locks` and `fuser`, never by a probe acquisition; hook ledger commits carry the row's exact timestamp.
+
+*Notes recorded at this close, no rows:*
+
+- (a) The claude-config HEAD read at this commit's own step is `fd3d02d1f94f43e6b6992ff956f51cc63b061317`, clean and level; the hook writes this closeout's ledger row after the commit, and this closeout commits it in `a356f73`'s form (its hash in the closeout block).
+- (b) The 12q lane line is built after this commit, because it names this commit's hash; `12q_close/` therefore does not hold it. It is `~/scratch/12q-close/lane_line_12q.txt`, and its sha256 and byte count are in the closeout block.
+- (c) `~/scratch/12q-open/u06_copy/` — the byte copy of U06's `review.db` (file sha256 `fc7d061d…7cf8`, equal to the copy it was taken from) with the `-shm` and `-wal` its `mode=ro` read created, 134,393,856 bytes, named by no file under `docs/` — is removed by this closeout's named step, after this commit is drafted (R658(c)); the sizes are in the closeout block. U06's copy itself, at `~/scratch/12l-u06/throwaway/u06_floor_20261012/`, is untouched and still listed in retention.
+- (d) The pytest temp root as read above: 4 entries, 1,372,220,719 bytes, all this lane's, nothing emptied.
+
+**Session 12q closed.** Next: session 12r, fresh.
+
+Expected values at session-12r open, as at this closeout (2026-10-17):
+- HEAD: the 12q closeout commit (child of `ddfd1cc17de7c69d0495a1a9b63460d894568e01`; its full hash is in the closeout block and the lane line), clean and **level with origin** (R370). The plan file's sha256 and byte count are in the closeout block and the lane line, since this file cannot name its own hash.
+- **The decision log in this file ends at R661** (or at the last wrap ruling, if any is transcribed before 12r).
+- **The gate** on this tree: **3,306 passed / 1 xfailed / 17 deselected**, collected **3,307**, 0/0 (a set comparison, R655(b)) against `docs/session-reports/session-12/12q_close/collected_ids_12q_close.txt`; **wall time a reading**, beside the series on this host state, 868.02 and 871.59 s (no band until four standard gates exist on it, R657(d)); Ollama version, tags and ps reads at least five seconds before the gate is launched and after it exits, each timestamped (R628(c), R660(b)); the gate's journal window empty; a durations file written (`--durations=0`) and compared with `12q_P12-2B/durations_12q_p12_2b.txt`, any phase slower by more than 10 s reported; the basetemp read immediately after the gate (R660(c)); the two warnings are sklearn's (R641(c)). No gate while `ra_12q` is under `data/` (R241).
+- **The 2026-10-17 09:00 UTC nightly**, read against `docs/session-reports/session-12/12q_close/expected_nightly_20261017.md`: `logs/nightly_test_20261017.log` reads `collected 3324 items / 17 deselected / 3307 selected`, **3306 passed, 17 deselected, 1 xfailed, 2 warnings**, last line **"pytest exit code: 0"**; `logs/nightly_durations_20261017.txt` present; the Ollama journal for 09:00–09:25 UTC empty; the real lock file's mtime unchanged (2026-07-27 23:22:08 UTC). It is the first nightly on the `b3f0072` tree and on the upgraded host. Any other nightly result is reported, not adapted to.
+- **The 2026-10-17 07:00 UTC health job**, the first full model load on the upgraded host (R657(g)): its model loads and their outcome in the Ollama journal are read and reported by 12r-OPEN before U13's launch (R661(c)).
+- **The pytest temp root at the open** (R647(c), R652(c)): the nightly's basetemp beside `pytest-2`, `pytest-3` and `pytest-4` (this lane's, at this closeout), or fewer if pytest has pruned; entry count and size recorded, not matched; entries not of this lane reported with their origin; nothing emptied.
+- No-marker collection **3,324**; `tests/test_eligibility.py` 91; `inventory --check` in sync; `git diff --stat f4a5586 HEAD -- engine tests scripts analysis review_specs` lists exactly `engine/agents/extractor.py`, `engine/cloud/__init__.py`, `scripts/run_pipeline.py`, `tests/test_cloud_package_init.py`, `tests/test_duplicate_on_pass1_attempt_2.py`, `tests/test_requirements_census.py`, `tests/test_selection.py`, `tests/test_text_refusal_at_selection.py`.
+- **The fingerprint of record, unchanged:** `docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json` — 36 tables; overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`. `ls data/*/review.db` lists one path, `data/surgical_autonomy/review.db` (R658(b)), until the restore of `ra_12q`.
+- **`~/scratch/12i-scope/dbchecks.py`** (its own sha256 `909e3ed2c548e09593759b9727c10031793291bef6bc639631dcaa9aa9734ff5`, R655(d)), its output byte-identical to `12q_close/dbchecks_close.txt` (itself byte-identical to `12p_close/dbchecks_close.txt`). R71 in force.
+- **Retention** (`12q_close/retention_close.txt`, whose retained part is byte-identical to `12p_close/`'s): the eight retained throwaway reviews under `~/scratch/retained/` (file sha256 of `review.db` only, F9 on C46); U06's copy at `~/scratch/12l-u06/throwaway/u06_floor_20261012/` (file sha256 `fc7d061d…7cf8`, fingerprint overall `000db389…f6ca`, 36 tables, not a restore point); the five restore points (fingerprints `bb39ba81…6c40`, `e564f250…5b63`, `ea05912d…ce01`, `f376562e…9e00`, `62f39128…b79a`). **Staged, not retained:** `ra_12q` at `~/scratch/12q-u13-build/stage/ra_12q/` — `review.db` file sha256 `9461bf26…7705`, fingerprint overall `fb80c5eb…cef5`, 36 tables, staged 2026-10-17T04:06:24Z, restore by `~/scratch/12q-u13-build/stage/RESTORE.txt`.
+- **Codebook and live spec, unchanged:** codebook sha256 `89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82`; live spec sha256 `917c24de29afdf802b5ddea61c34627a9bb0a857de3f97395af36d44ca664e5f`.
+- **Pins, by `docs/session-reports/session-12/12l_U04/pin_tuples.py`** with both arguments (spec, then codebook): `12q_close/pin_tuples_close.json`, byte-identical to `12p_close/pin_tuples_close.json` — semantic hash `f261af76…5646`; non-elicited arm pin `d3672ab6…ff5c`; elicited arm pin `8f0aeecd…3488`.
+- **Ollama:** 0.21.0; digests `qwen3:32b` `030ee887…7840`, `gemma3:27b` `a418f583…2203`, `deepseek-r1:32b` `edba8017…960c`; `NRestarts=0`, service start Fri 2026-10-16 23:05:57 UTC. Residency recorded and not matched: nothing resident at this closeout; this session loaded nothing.
+- **The host state the band belongs to** (R657(d), `12q_close/host_state_close.txt`): kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02. A change in any of them starts a new series.
+- **The pre-tag list in this file is 275 rows — Class 1 / 2 / 3 = 95 / 50 / 130, and 0 without a class** (`12q_close/recount_12q_close.json`). P1 58 rows (26 / 20 / 12); 35 fix units; INT-p12-2 closed and counted (R607(d)). U13's rehearsal next, in 12r.
+- **Scratch:** the five 12q directories — `12q-open/` (without `u06_copy/`, removed at this closeout), `12q-p12-2a/`, `12q-p12-2b/`, `12q-u13-build/` (with `stage/ra_12q/` and `stage/RESTORE.txt`) and `12q-close/` — beside those present at the 12q open and `retained/`.
+- **claude-config:** at this commit, `fd3d02d1f94f43e6b6992ff956f51cc63b061317`, with this closeout's hook-written ledger row uncommitted; this closeout commits it, the wrap follows and the 12q lane line is applied under the wrap ruling. The claude-config HEAD expected at the 12r open is the one the closeout block or the wrap reports last.
+
+12r's first items, in this order:
+- **12r-OPEN** — item 0 transcribes the wrap ruling and copies the 12q lane-line file into `12q_close/`; the startup verify against this block, outside 07:00–10:35 UTC, with the two reads of R661(c): the 2026-10-17 07:00 UTC health job's loads and their outcome, and the 09:00 nightly against `expected_nightly_20261017.md`.
+- **The restore of `ra_12q`** per `~/scratch/12q-u13-build/stage/RESTORE.txt`, re-verified by both hashes, outside 07:00–10:35 UTC and after the open's gate (R241).
+- **12r-U13-RUN** — the launch; the clock arithmetic redone from the read-out's estimate; `/api/ps` read first and what is resident reported (R650(g)); R650(b)'s text check already made (twelve of twelve, 12q-U13-BUILD); the confounder statement and F4's source-string note in the read-out's first section (R650(d), R661(e)).
+- **12r's closeout.** B-F17 (e)'s Phase A stays P7's.
+
 ## Decision log
 
 Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in order. The architect's four provisional rulings of 2026-09-19 (recall-bounded filter with code-enforced basis; SYNERGY as reference; a tiered lane with 2d first; a 50 KB plan) were withdrawn after the external review and replaced by R1–R9 below.
@@ -6378,3 +6479,67 @@ R660(d) — U13's rehearsal runs in this session under two briefs: 12q-U13-BUILD
 | 2026-10-17 | R660(a) — 12q-P12-2B is accepted. Row INT-p12-2 is CLOSED 2026-10-17 at b3f0072 (its acceptance test, `test_a_duplicate_on_attempt_1_is_named_in_every_retry_row`, failed on the parent and passes in the commit's gate; pin tuples unchanged). It stays counted until P1's close (R607(d)); the recount is unchanged at 275. The closing note goes in the row's last cell at the next item 0, prefix-checked. R660(b) — The three GET entries at the launch second are this session's bracketing reads and the window is attributed; from here the before-gate reads are made at least five seconds before the launch so the window starts empty. R660(c) — F1: the band series on the upgraded host holds 868.02 and 871.59 s; R657(d) stands. F2: a gate's basetemp is read immediately after the gate, before any other pytest invocation; no row. F3: the R656(b) cell renderer is committed once at 12q's closeout as docs/session-reports/session-12/12q_close/render_cell.py, the scratch copies retired; tooling, Class 3, no row. R660(d) — U13's rehearsal runs in this session under two briefs: 12q-U13-BUILD (below) builds and verifies the throwaway and stops before launch; 12q-U13-RUN launches, scores and writes the read-out. The PI may instead close 12q and run both as session 12r; the build brief is written to survive either. | PI, 2026-10-17, during session 12q, on architect recommendation, on the 12q-P12-2B final report (b3f0072) |
 
 The decision log in this file ends at R660.
+
+**Block 59.** *Transcribed 2026-10-17 (item 0 of the 12q-CLOSE brief), in the session's closeout commit, in the R597(e) form:* ruling R661, made by PI on architect recommendation on 2026-10-17 UTC, during session 12q, on the 12q-U13-BUILD final report (item 0 ddfd1cc) (evidence `~/scratch/12q-u13-build/`). The 12q-U13-STAGE task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12q-R661] — 12q-U13-BUILD accepted; F1 ruled (b): the throwaway is
+  staged out of data/ now, the rehearsal launches after the 07:00 and 09:00 jobs; four notes
+STATUS: PI ruling, 2026-10-17 UTC, session 12q, on architect recommendation, on the
+  12q-U13-BUILD final report (item 0 ddfd1cc; evidence ~/scratch/12q-u13-build/). Transcribe
+  as item 0 of the next brief that transcribes (the 12q closeout, or 12r's first brief), as
+  Block 59, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12q-U13-BUILD report):
+  MEASURED: "ddfd1cc17de7c69d0495a1a9b63460d894568e01, child of b3f0072"; "The decision log in
+    this file ends at R660. at line 6380"; ledger "fd3d02d1f94f43e6b6992ff956f51cc63b061317";
+    "twelve for twelve equal" (the table); "id_map.json is cmp-identical to 12g's, and
+    entry.json hashes to 12g's 14512cd1…a5bf"; "Codebook line 8: review: "ra_12q". Spec:
+    review_id: ra_12q, elicitation: true, arm: local_deepseek_r1_32b, enabled_arms: []";
+    "12 papers, ids 1–12, all FT_ELIGIBLE"; "select_for_extraction … returns to_extract [1…12]
+    with nothing skipped"; "pin_tuples.py run on the throwaway's spec and codebook is
+    cmp-identical to 12p_close/pin_tuples_close.json"; "The throwaway's own fingerprint: 36
+    tables, overall fb80c5eb…cef5. File sha256 9461bf26…7705"; "Live fingerprint: IDENTICAL
+    at 00:50:04Z (before), 00:50:30Z (after) and 00:51:45Z (end)"; "Ollama: 0.21.0, nothing
+    resident, NRestarts=0"; "Lock: free; no /proc/locks entry, fuser empty"; "The abort line
+    crosses 07:00 for any launch after 02:24. The upper estimate crosses it for any launch
+    after 03:54."; "My mode=ro reads created review.db-shm and an empty -wal beside the
+    throwaway."
+  PI reading of the clock: this ruling is issued after 03:54 UTC.
+
+R661(a) — 12q-U13-BUILD is accepted. The read-out's construction was followed where the
+  brief's description differed (the probes under 12p_U13A/ against the scripts under 12g_ra/);
+  the read-out governed, as the brief said it should. Item 0 (Block 58, INT-p12-2's closing
+  note, ends-at R660) stands.
+R661(b) — F1: option (b). data/ra_12q/ is moved whole — review.db with its -shm and -wal,
+  spec.yaml, extraction_codebook.yaml, parsed_text/, pdfs/, vector_store/ — to
+  ~/scratch/12q-u13-build/stage/ra_12q/ now, before the 09:00 nightly (R241, B21), and moved
+  back to data/ra_12q/ by the launch brief. The round trip is checked both ways by the
+  review.db file sha256 9461bf26…7705 and the fingerprint fb80c5eb…cef5 (mode=ro on the
+  staged copy is permitted: it is not a retained throwaway, F5). Nothing is deleted.
+R661(c) — The rehearsal launches after the 2026-10-17 07:00 UTC health job and the 09:00 UTC
+  nightly have run, with both read before launch (R657(g)): the health job's model loads and
+  their outcome in the Ollama journal, and the nightly against an expected-values file for
+  the b3f0072 tree (3,306 passed / 1 xfailed / 17 deselected; collected 3324 / 17 / 3307;
+  exit 0). The launch is outside 07:00–10:35 UTC. The clock arithmetic is redone at the
+  launch brief from the read-out's estimate.
+R661(d) — Session shape: 12q closes after the staging move, under a closeout brief; the
+  rehearsal runs in a fresh session 12r under 12r-OPEN (startup verify, which also makes the
+  two reads of (c)), then 12r-U13-RUN. If the PI prefers to keep 12q open and launch in it,
+  the launch brief is 12q-U13-RUN with the same preflight; nothing in (b) or (c) changes.
+R661(e) — Notes, no rows: F2, the throwaway id ra_12q is accepted and is the name the
+  rehearsal's read-out uses. F3, the lock's state is read through /proc/locks and fuser,
+  never by a probe acquisition, in any brief that forbids taking the lock; the I7 wording
+  "flock -n probe" is withdrawn for such briefs. F4, 12g's source string in ra_12q's import
+  manifest (build_input.py's hard-coded source) is recorded in the rehearsal read-out's
+  first section beside the confounder statement; a reader goes by the eligibility events'
+  actor path. F5, the sidecars travel with the directory. The amended-before-push ledger
+  commit is within the rule (never amend after pushing); hook commits carry the row's exact
+  timestamp from here.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-17 | R661(a) — 12q-U13-BUILD is accepted. The read-out's construction was followed where the brief's description differed (the probes under 12p_U13A/ against the scripts under 12g_ra/); the read-out governed, as the brief said it should. Item 0 (Block 58, INT-p12-2's closing note, ends-at R660) stands. R661(b) — F1: option (b). data/ra_12q/ is moved whole — review.db with its -shm and -wal, spec.yaml, extraction_codebook.yaml, parsed_text/, pdfs/, vector_store/ — to ~/scratch/12q-u13-build/stage/ra_12q/ now, before the 09:00 nightly (R241, B21), and moved back to data/ra_12q/ by the launch brief. The round trip is checked both ways by the review.db file sha256 9461bf26…7705 and the fingerprint fb80c5eb…cef5 (mode=ro on the staged copy is permitted: it is not a retained throwaway, F5). Nothing is deleted. R661(c) — The rehearsal launches after the 2026-10-17 07:00 UTC health job and the 09:00 UTC nightly have run, with both read before launch (R657(g)): the health job's model loads and their outcome in the Ollama journal, and the nightly against an expected-values file for the b3f0072 tree (3,306 passed / 1 xfailed / 17 deselected; collected 3324 / 17 / 3307; exit 0). The launch is outside 07:00–10:35 UTC. The clock arithmetic is redone at the launch brief from the read-out's estimate. R661(d) — Session shape: 12q closes after the staging move, under a closeout brief; the rehearsal runs in a fresh session 12r under 12r-OPEN (startup verify, which also makes the two reads of (c)), then 12r-U13-RUN. If the PI prefers to keep 12q open and launch in it, the launch brief is 12q-U13-RUN with the same preflight; nothing in (b) or (c) changes. R661(e) — Notes, no rows: F2, the throwaway id ra_12q is accepted and is the name the rehearsal's read-out uses. F3, the lock's state is read through /proc/locks and fuser, never by a probe acquisition, in any brief that forbids taking the lock; the I7 wording "flock -n probe" is withdrawn for such briefs. F4, 12g's source string in ra_12q's import manifest (build_input.py's hard-coded source) is recorded in the rehearsal read-out's first section beside the confounder statement; a reader goes by the eligibility events' actor path. F5, the sidecars travel with the directory. The amended-before-push ledger commit is within the rule (never amend after pushing); hook commits carry the row's exact timestamp from here. | PI, 2026-10-17, during session 12q, on architect recommendation, on the 12q-U13-BUILD final report (item 0 ddfd1cc) |
+
+The decision log in this file ends at R661.

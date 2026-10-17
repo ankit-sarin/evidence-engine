@@ -1,0 +1,62 @@
+{
+ "INT-p12-2": {
+  "class": "3",
+  "closed_note_present": true,
+  "still_counted": true
+ },
+ "P1": {
+  "class_1": 26,
+  "class_2": 20,
+  "class_3": 12,
+  "rows": 58
+ },
+ "P7_rows": 116,
+ "baseline_12q_r659": {
+  "class_1": 95,
+  "class_2": 50,
+  "class_3": 130,
+  "rows": 275,
+  "without_class": 0
+ },
+ "class_moves": [],
+ "expected": {
+  "P1": {
+   "class_1": 26,
+   "class_2": 20,
+   "class_3": 12,
+   "rows": 58
+  },
+  "P7_rows": 116,
+  "class_1": 95,
+  "class_2": 50,
+  "class_3": 130,
+  "fix_units": 35,
+  "rows": 275,
+  "session_rows_in": [
+   "INT-q12-1",
+   "INT-q12-2",
+   "INT-q12-3"
+  ],
+  "without_class": 0
+ },
+ "expected_holds": true,
+ "fix_units": 35,
+ "now": {
+  "class_1": 95,
+  "class_2": 50,
+  "class_3": 130,
+  "rows": 275,
+  "without_class": 0
+ },
+ "r510_session_12q": {
+  "rows_in": 3,
+  "rows_in_ids": [
+   "INT-q12-1",
+   "INT-q12-2",
+   "INT-q12-3"
+  ],
+  "rows_out": 0
+ },
+ "rows_opened_at_close": 0,
+ "section_L_tables_after_R659": []
+}

@@ -204,8 +204,9 @@ def test_the_floor_applies_to_the_kept_attempt_1_record_as_to_any_record(db, eli
 
 
 def test_a_duplicate_on_attempt_1_keeps_its_own_path(db, elicited, cb, monkeypatch):
-    """Out of scope and unchanged: attempt 1 naming a field twice is refused as a
-    duplicate (R118), retried under the outer budget, and recorded as one."""
+    """Attempt 1 naming a field twice is refused as a duplicate (R118), retried under
+    the outer budget, and recorded as one; since INT-p12-2 each retry row also names
+    the duplicated fields (the next test)."""
     good = [_entry(f, cb, True) for f in cb.fields]
     doubled = json.dumps({"fields": good + [dict(good[0])]})
     monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(doubled, H1))
@@ -221,3 +222,26 @@ def test_a_duplicate_on_attempt_1_keeps_its_own_path(db, elicited, cb, monkeypat
     assert (state, reason) == ("extraction_failed", FLOOR)
     assert payload["contract_unmet_fields"] == {cb.fields[0]["name"]: [DUPLICATE_FIELD]}
     assert payload["context_chain"] == [H1]
+
+
+def test_a_duplicate_on_attempt_1_is_named_in_every_retry_row(db, elicited, cb, monkeypatch):
+    """INT-p12-2 (R659): each outer attempt's row for an attempt-1 duplicate carries the
+    duplicated names under the attempt-2 path's key, with the attempt's parse path and
+    request hash, so the rehearsal can count attempt-1 duplicates (R622(b))."""
+    good = [_entry(f, cb, True) for f in cb.fields]
+    doubled = json.dumps({"fields": good + [dict(good[0])]})
+    monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(doubled, H1))
+    monkeypatch.setattr(E, "ollama_chat",
+                        lambda **kw: pytest.fail("Pass 2 was reached after a duplicate"))
+    monkeypatch.setattr(E, "CONSECUTIVE_FAILURE_ABORT", 99)
+    with patch("engine.utils.ollama_preflight.require_preflight"):
+        E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+                         run_id=open_extraction_run(db, elicited))
+    rows = _telemetry(db)
+    assert [r["outcome"] for r in rows] == [
+        "incomplete_retry", "incomplete_retry", "incomplete_exhausted"]
+    for r in rows:
+        extra = r.get("extra") or {}
+        assert extra.get("duplicated_fields") == [cb.fields[0]["name"]]
+        assert extra.get("parse_path") == "duplicate_field"
+        assert extra.get("pass1_request_hash") == H1

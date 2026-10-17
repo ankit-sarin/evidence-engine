@@ -1,0 +1,11 @@
+# 12q-P12-2B standard gate (the second on the upgraded host, R657(d), R659(g))
+launch: 2026-10-17T00:22:21Z  exit: 2026-10-17T00:36:52Z  pytest exit: 0  wall: 871.59 s (a reading; the 12q-open gate was 868.02 s)
+collecting ... collected 3324 items / 17 deselected / 3307 selected
+==== 3306 passed, 17 deselected, 1 xfailed, 2 warnings in 869.57s (0:14:29) ====
+warnings: the two from sklearn, tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one (_classification.py:620 UserWarning, :991 RuntimeWarning)
+collected ids against 12p_close/collected_ids_12p_close.txt (R655(b)): 1 added, 0 removed; added: tests/test_duplicate_on_pass1_attempt_2.py::test_a_duplicate_on_attempt_1_is_named_in_every_retry_row
+no-marker collection: 3324; tests/test_eligibility.py: 91; inventory --check: in sync
+pins (12l_U04/pin_tuples.py, spec then codebook): cmp identical to 12p_close/pin_tuples_close.json; Ollama journal for the run: -- No entries --
+fingerprint --compare after the gate (2026-10-17T00:37:34Z): IDENTICAL
+host state: 6.17.0-1032-nvidia;Python 3.12.3;ii libsqlite3-0:arm64 3.45.1-1ubuntu2.8 arm64 SQLite 3 shared library;580.173.02;
+durations: 0 phases slower by >10 s against ~/scratch/12q-open/durations_12q_open.txt (sum of listed phases 857.28 -> 858.74 s)

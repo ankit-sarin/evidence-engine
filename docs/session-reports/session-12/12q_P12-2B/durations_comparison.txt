@@ -1,0 +1,8 @@
+12q-open entries 2383 12q-p12-2b entries 2399
+phases slower by >10 s: 0
+tests/test_database.py: 12q-open 16.17 -> 12q-p12-2b 15.95
+tests/test_readers_on_the_reader.py: 12q-open 12.83 -> 12q-p12-2b 12.63
+tests/test_parse_gate.py: 12q-open 12.91 -> 12q-p12-2b 12.90
+tests/test_duplicate_on_pass1_attempt_2.py: 12q-open 2.88 -> 12q-p12-2b 3.52
+sum of listed phases: 857.28 -> 858.74
+new test phases: {'setup': 0.64, 'call': 0.06}

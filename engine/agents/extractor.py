@@ -899,7 +899,7 @@ def extract_paper_with_completeness(
                 pass1_prompt_eval_count=_LAST_PASS1_TELEMETRY.get("prompt_eval_count"),
                 pass2_prompt_eval_count=_LAST_PASS2_TELEMETRY.get("prompt_eval_count"),
                 error=None if incomplete else str(exc),
-                extra=_LAST_PASS1_TELEMETRY.get("elicitation"),
+                extra=_LAST_PASS1_TELEMETRY.get("elicitation") or getattr(exc, "telemetry", None),
             )
             logger.warning(
                 "Paper %d (%s): %s attempt %d/%d — %s. Re-issuing identical request.",

@@ -1,0 +1,79 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_a_duplicate_on_attempt_1_is_named_in_every_retry_row ___________
+
+db = <engine.core.database.ReviewDatabase object at 0xe7091bdf6840>
+elicited = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+cb = Codebook(review='surgical_autonomy', version='2.0', date='2026-03-15', fields=({'name': 'study_type', 'field_class': '...fec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=())
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe7091c0fa8a0>
+
+    def test_a_duplicate_on_attempt_1_is_named_in_every_retry_row(db, elicited, cb, monkeypatch):
+        """INT-p12-2 (R659): each outer attempt's row for an attempt-1 duplicate carries the
+        duplicated names under the attempt-2 path's key, with the attempt's parse path and
+        request hash, so the rehearsal can count attempt-1 duplicates (R622(b))."""
+        good = [_entry(f, cb, True) for f in cb.fields]
+        doubled = json.dumps({"fields": good + [dict(good[0])]})
+        monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(doubled, H1))
+        monkeypatch.setattr(E, "ollama_chat",
+                            lambda **kw: pytest.fail("Pass 2 was reached after a duplicate"))
+        monkeypatch.setattr(E, "CONSECUTIVE_FAILURE_ABORT", 99)
+        with patch("engine.utils.ollama_preflight.require_preflight"):
+            E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+                             run_id=open_extraction_run(db, elicited))
+        rows = _telemetry(db)
+        assert [r["outcome"] for r in rows] == [
+            "incomplete_retry", "incomplete_retry", "incomplete_exhausted"]
+        for r in rows:
+            extra = r.get("extra") or {}
+>           assert extra.get("duplicated_fields") == [cb.fields[0]["name"]]
+E           AssertionError: assert None == ['study_type']
+E            +  where None = <built-in method get of dict object at 0xe7091bcf61c0>('duplicated_fields')
+E            +    where <built-in method get of dict object at 0xe7091bcf61c0> = {}.get
+
+tests/test_duplicate_on_pass1_attempt_2.py:244: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/1 (100.0%) | Paper EE-007 FAILED | 0s | ETA ~0s | 1 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 0
+  Failed       : 1
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.agents.extractor:extractor.py:904 Paper 7 (deepseek-r1:32b): INCOMPLETE attempt 1/3 — Paper 7 (): incomplete extraction — 19/20 fields, salvage=duplicated=['study_type']. Missing: . Re-issuing identical request.
+WARNING  engine.agents.extractor:extractor.py:904 Paper 7 (deepseek-r1:32b): INCOMPLETE attempt 2/3 — Paper 7 (): incomplete extraction — 19/20 fields, salvage=duplicated=['study_type']. Missing: . Re-issuing identical request.
+WARNING  engine.agents.extractor:extractor.py:904 Paper 7 (deepseek-r1:32b): INCOMPLETE attempt 3/3 — Paper 7 (): incomplete extraction — 19/20 fields, salvage=duplicated=['study_type']. Missing: . Re-issuing identical request.
+ERROR    engine.agents.extractor:extractor.py:941 Paper 7 (deepseek-r1:32b): refused on all 3 attempts. The attempt holding the most fields (0 held) is kept: it is stored as extracted, with its incomplete and contract_unmet fields recorded, if it holds at least half of the expected fields; otherwise the paper fails (R139, R140, R535). Paper 7 (): incomplete extraction — 19/20 fields, salvage=duplicated=['study_type']. Missing: 
+ERROR    engine.agents.extractor:extractor.py:1212 Paper 7 extraction failed: Paper 7 (): incomplete extraction — 19/20 fields, salvage=duplicated=['study_type']. Missing: 
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/agents/extractor.py", line 1175, in _extract_selected
+    result = extract_paper_with_completeness(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/agents/extractor.py", line 951, in extract_paper_with_completeness
+    raise kept
+  File "/home/ankitsarin/projects/evidence-engine/engine/agents/extractor.py", line 849, in extract_paper_with_completeness
+    result = extract_paper(
+             ^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/agents/extractor.py", line 585, in extract_paper
+    return extract_paper_elicited(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/elicitation/pipeline.py", line 478, in extract_paper_elicited
+    p1, accepted_attempt, pass1_tels = elicit(
+                                       ^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/elicitation/pipeline.py", line 360, in elicit
+    first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, cfg=cfg)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/elicitation/pipeline.py", line 312, in run_pass1
+    result = check_response(raw, unit_map, codebook, field_names)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/elicitation/contracts.py", line 448, in check_response
+    raise DuplicateFieldError(paper_id=unit_map.paper_id, arm="",
+engine.core.completeness.DuplicateFieldError: Paper 7 (): incomplete extraction — 19/20 fields, salvage=duplicated=['study_type']. Missing: 
+WARNING  engine.agents.extractor:extractor.py:1248 Extraction summary (run 2): 0 paper(s) stored with incomplete fields {}; 0 stored with every held field declined; 1 failed under the floor (held_fields_below_floor).
+=========================== short test summary info ============================
+FAILED tests/test_duplicate_on_pass1_attempt_2.py::test_a_duplicate_on_attempt_1_is_named_in_every_retry_row
+1 failed in 0.93s

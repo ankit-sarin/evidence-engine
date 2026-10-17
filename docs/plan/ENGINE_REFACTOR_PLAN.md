@@ -856,7 +856,7 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 | # | On disk (`12p_U13A.md` §8 F3, as R650(e) quotes it) | Class | Owning package | Governing ruling | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| INT-p12-2 | An attempt-1 duplicate is not named in telemetry (read, not executed). The outer driver clears the Pass-1 telemetry at the start of each outer attempt (extractor.py:847). The elicited path fills it only after the Pass-1 loop returns (pipeline.py:497). The retry branch's record_call (extractor.py:886–903) passes neither the duplicated names, nor salvage, nor the telemetry that run_pass1 attached (pipeline.py:323–326). An attempt-2 duplicate is recorded in full. R622(b) asks for both. | 3 | P1, rides with U13 (R543 form) | R650(e) | 12p_U13A.md §8 F3; extractor.py:847, :886–903; pipeline.py:323–326, :497 *Note 2026-10-17 (12q-P12-2B item 0, R659(e); `12q_P12-2A.md` §8 F4):* an attempt-1 duplicate's row has null `thinking_*`, `parse_branch` and `pass1_*` columns although `run_pass1` measured them; shape A carries them inside `extra`; neither shape fills the columns. |
+| INT-p12-2 | An attempt-1 duplicate is not named in telemetry (read, not executed). The outer driver clears the Pass-1 telemetry at the start of each outer attempt (extractor.py:847). The elicited path fills it only after the Pass-1 loop returns (pipeline.py:497). The retry branch's record_call (extractor.py:886–903) passes neither the duplicated names, nor salvage, nor the telemetry that run_pass1 attached (pipeline.py:323–326). An attempt-2 duplicate is recorded in full. R622(b) asks for both. | 3 | P1, rides with U13 (R543 form) | R650(e) | 12p_U13A.md §8 F3; extractor.py:847, :886–903; pipeline.py:323–326, :497 *Note 2026-10-17 (12q-P12-2B item 0, R659(e); `12q_P12-2A.md` §8 F4):* an attempt-1 duplicate's row has null `thinking_*`, `parse_branch` and `pass1_*` columns although `run_pass1` measured them; shape A carries them inside `extra`; neither shape fills the columns. *Note 2026-10-17 (12q-P12-2B, R660(a)):* CLOSED at `b3f0072` — its acceptance test `test_a_duplicate_on_attempt_1_is_named_in_every_retry_row` failed on the parent and passes in the commit's gate; pin tuples unchanged. It stays counted until P1's close (R607(d)); the recount is unchanged at 275. |
 
 **The pre-tag list, recounted 2026-10-15 (12p-CLOSE, R650(e)), by script from the plan** (`docs/session-reports/session-12/12p_close/recount_12p_close.py` → `recount_12p_close.json`: the item-0 count above as the baseline, reproduced by `recount_12p_item0.py` on this file and equal to its committed JSON byte for byte, and the row above; R651(a), R652(b)). Baseline: 271 rows — Class 1 / 2 / 3 = 95 / 50 / 126, and 0 without a class. Deltas: 1 row enters, Class 3 (INT-p12-2 in P1); R650 moves no class. **Now 272 rows: Class 1 / 2 / 3 = 95 / 50 / 127, and 0 without a class.** **R510 (2026-10-15, 12p-CLOSE): rows in 1 (1 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 0 / 1), rows out 0.** The brief's expected total (the architect's arithmetic, I3) was 272 rows, 95 / 50 / 127, with P1 at 58; the script gives the same. Counts by package and class (first-named package, as before): P1 26 / 20 / 12 (58); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 112 (113). P1's fix units stay 35: INT-p12-2 rides with the placed step U13 as its telemetry prerequisite, not as a fix unit, and the script accepts that for this row only (R650(e), R652(b)).
 
@@ -6327,3 +6327,54 @@ R659(g) — Phase B opens under the brief below. The gate is the second standard
 | 2026-10-16 | R659(a) — The read-out is accepted. INT-p12-2's row text holds at HEAD line for line (I1). R659(b) — Shape A. In `extract_paper_with_completeness`'s `except RETRYABLE` branch, the one `record_call` at extractor.py:886–903 changes only its `extra=` argument, from `_LAST_PASS1_TELEMETRY.get("elicitation")` to `_LAST_PASS1_TELEMETRY.get("elicitation") or getattr(exc, "telemetry", None)`. Nothing else in engine/ changes. The names then sit at row["extra"]["duplicated_fields"] on the attempt-1 duplicate's retry rows, under the attempt-2 path's key; the attempt-2 names stay at row["extra"]["attempts"][1]["duplicated_fields"]. The rehearsal's counter reads both locations and reports them as two cases (R622(b)); U13's brief says so. Shape B is not taken: R571(e) wants each Pass-1 attempt's raw response and request hash in telemetry, and the attached dict carries them. R659(c) — The one test (R650(e)): in tests/test_duplicate_on_pass1_attempt_2.py, beside `test_a_duplicate_on_attempt_1_keeps_its_own_path`, reusing its fixtures: drive the same attempt-1 duplicate and assert on each of the three rows (incomplete_retry ×2, incomplete_exhausted) that row["extra"]["duplicated_fields"] == [the doubled field's name], row["extra"]["parse_path"] == "duplicate_field", and row["extra"]["pass1_request_hash"] equals the attempt's request hash. The test is written and run before the edit and must fail on HEAD (F7); it must pass after. The existing test's docstring sentence "Out of scope and unchanged" (:207) is corrected in the same commit (F5), by text quoted in the brief's report before the commit. R659(d) — Three rows, section "L (12q additions, R659)", in the read-out's words, each Class 3, owning package P7, not riding with U13: INT-q12-1 (F1: an elicited Pass-2 duplicate is not named in telemetry; outside R622(b)); INT-q12-2 (F2: a legacy-path duplicate is unnamed by the same mechanism); INT-q12-3 (F3: `spans_parsed` on a duplicate retry row is `n_expected − len(duplicated)`, a count no response produced, and `missing_fields` is null). The pre-tag list goes from 272 to 275 (95 / 50 / 130, 0 unclassed); P1 unchanged at 58 rows and 35 fix units; P7 116. R510 (12q, this ruling): rows in 3 (3 opened, 0 existing rows entering — 0 / 0 / 3), rows out 0. The table gets its own chained script, baseline `12p_close/recount_12p_close.py`'s 272. R659(e) — F4 is a dated note on INT-p12-2: an attempt-1 duplicate's row has null thinking_*, parse_branch and pass1_* columns although run_pass1 measured them; shape A carries them inside `extra`; neither shape fills the columns. F6 is INT-l12-23's F3 (P7), no action here. F7 is accepted as the Phase B gate's first step. R659(f) — The R656 cell rendering is accepted as ruled: R656(b) has no clause for a lone backslash, the cell reads "\" where the text has "\\", and the ```text block is the record (R102). No further clause. R659(g) — Phase B opens under the brief below. The gate is the second standard gate on the upgraded host; its wall time is a reading (R657(d)). | PI, 2026-10-16, during session 12q, on architect recommendation, on the 12q-P12-2A final report and the read-out 12q_P12-2A.md (ef5e7fb) |
 
 The decision log in this file ends at R659.
+
+**Block 58.** *Transcribed 2026-10-17 (item 0 of the 12q-U13-BUILD brief), in its own commit with the closing note on INT-p12-2 it orders, in the R597(e) form:* ruling R660, made by PI on architect recommendation on 2026-10-17 UTC, during session 12q, on the 12q-P12-2B final report (b3f0072) (evidence `docs/session-reports/session-12/12q_P12-2B/`). The 12q-U13-BUILD task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12q-R660] — 12q-P12-2B accepted; INT-p12-2 closed; three notes, no rows;
+  U13's rehearsal opens as a build brief, launch under its own brief
+STATUS: PI ruling, 2026-10-17 UTC, session 12q, on architect recommendation, on the 12q-P12-2B
+  final report (b3f0072, the child of 89be3c4; evidence docs/session-reports/session-12/
+  12q_P12-2B/). Transcribe as item 0 of the 12q-U13-BUILD brief below, in this block (Block
+  58), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12q-P12-2B report):
+  MEASURED: item 0 "89be3c4bc5b9ed345e5ee4468a7069f3e2a9b333, child of ef5e7fb"; "275 rows
+    (95 / 50 / 130, 0 without a class). P1 is 58 (26 / 20 / 12) with 35 fix units, and P7 is
+    116"; "The decision log in this file ends at R659. at line 6329"; the new test on HEAD
+    "AssertionError: assert None == ['study_type']", "1 failed in 0.93s"; after the edit
+    "5 passed"; the engine diff one line, `extra=_LAST_PASS1_TELEMETRY.get("elicitation") or
+    getattr(exc, "telemetry", None)`; the gate "3306 passed, 17 deselected, 1 xfailed, 2
+    warnings in 869.57s; exit 0", "collected 3324 items / 17 deselected / 3307 selected";
+    "1 added, …::test_a_duplicate_on_attempt_1_is_named_in_every_retry_row; 0 removed";
+    "inventory in sync, exit 0; not regenerated"; pins "IDENTICAL to
+    12p_close/pin_tuples_close.json"; journal window "3 entries, all at 00:22:21: GET
+    /api/version, /api/tags, /api/ps"; "871.59 s by wall clock"; commit
+    "b3f0072870f05259b3744775e4d055546c918b05, child of 89be3c4"; "git diff --stat 85daac2
+    HEAD -- engine lists only engine/agents/extractor.py | 2 +-"; ledger
+    "b99ee6139e6250cad69b3fc49834873a3e417074"; fingerprint "IDENTICAL at 00:38:13Z".
+
+R660(a) — 12q-P12-2B is accepted. Row INT-p12-2 is CLOSED 2026-10-17 at b3f0072 (its
+  acceptance test, `test_a_duplicate_on_attempt_1_is_named_in_every_retry_row`, failed on the
+  parent and passes in the commit's gate; pin tuples unchanged). It stays counted until P1's
+  close (R607(d)); the recount is unchanged at 275. The closing note goes in the row's last
+  cell at the next item 0, prefix-checked.
+R660(b) — The three GET entries at the launch second are this session's bracketing reads and
+  the window is attributed; from here the before-gate reads are made at least five seconds
+  before the launch so the window starts empty.
+R660(c) — F1: the band series on the upgraded host holds 868.02 and 871.59 s; R657(d) stands.
+  F2: a gate's basetemp is read immediately after the gate, before any other pytest
+  invocation; no row. F3: the R656(b) cell renderer is committed once at 12q's closeout as
+  docs/session-reports/session-12/12q_close/render_cell.py, the scratch copies retired;
+  tooling, Class 3, no row.
+R660(d) — U13's rehearsal runs in this session under two briefs: 12q-U13-BUILD (below) builds
+  and verifies the throwaway and stops before launch; 12q-U13-RUN launches, scores and
+  writes the read-out. The PI may instead close 12q and run both as session 12r; the build
+  brief is written to survive either.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-17 | R660(a) — 12q-P12-2B is accepted. Row INT-p12-2 is CLOSED 2026-10-17 at b3f0072 (its acceptance test, `test_a_duplicate_on_attempt_1_is_named_in_every_retry_row`, failed on the parent and passes in the commit's gate; pin tuples unchanged). It stays counted until P1's close (R607(d)); the recount is unchanged at 275. The closing note goes in the row's last cell at the next item 0, prefix-checked. R660(b) — The three GET entries at the launch second are this session's bracketing reads and the window is attributed; from here the before-gate reads are made at least five seconds before the launch so the window starts empty. R660(c) — F1: the band series on the upgraded host holds 868.02 and 871.59 s; R657(d) stands. F2: a gate's basetemp is read immediately after the gate, before any other pytest invocation; no row. F3: the R656(b) cell renderer is committed once at 12q's closeout as docs/session-reports/session-12/12q_close/render_cell.py, the scratch copies retired; tooling, Class 3, no row. R660(d) — U13's rehearsal runs in this session under two briefs: 12q-U13-BUILD (below) builds and verifies the throwaway and stops before launch; 12q-U13-RUN launches, scores and writes the read-out. The PI may instead close 12q and run both as session 12r; the build brief is written to survive either. | PI, 2026-10-17, during session 12q, on architect recommendation, on the 12q-P12-2B final report (b3f0072) |
+
+The decision log in this file ends at R660.

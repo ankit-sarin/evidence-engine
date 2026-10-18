@@ -3512,6 +3512,8 @@ Expected values at session-12q open, as at this closeout (2026-10-15):
 
 Session 12q closed 2026-10-17 UTC; opened 2026-10-16 22:28 UTC on the 12p HEAD `85daac2d865abadd69dfb0b81e48dc64294c5ef5`, CC session `b3531d2d` (one session, continued across one context compaction). **INT-p12-2 is fixed and closed at `b3f0072`; U13's throwaway `ra_12q` is built, verified and staged out of `data/`; the rehearsal moves to session 12r (R661).** **No model call and no live write.** Briefs, in order: 12q-OPEN (stopped at step 0(d), R654; resumed as 12q-OPEN-R1, stopped at step 0(g), R655; resumed as 12q-OPEN-R2, stopped at step 1(a), R656; resumed as 12q-OPEN-R3, stopped before step 2(c) on the host reboot, R657; resumed as 12q-OPEN-R4 and completed, R658), 12q-P12-2A (INT-p12-2's Phase A, R659), 12q-P12-2B (INT-p12-2's fix and gate, R660), 12q-U13-BUILD (R661), 12q-U13-STAGE, and this closeout, 12q-CLOSE.
 
+*Note 2026-10-18 (12r item 0, R662(c), R663(b)):* claude-config at the 12r open was `9aa59b365fd170ad00c90d6f88baeacd0a2da46e`, a descendant of `74b8cb4` by two commits of other lanes — `2466df3` (dgx-infra, `primer.md` §16, +47 lines) and `9aa59b3` (a ledger wrap carrying one surgical-cv-mbf1 row) — with this lane's rows and `primer.md` lines 41–45 intact; accepted as found under R663(b).
+
 **Commits, in order.**
 
 - `f087d4f` — item 0 of the open: R653 (Block 51), the 12p lane-line file in `12p_close/`.
@@ -6543,3 +6545,70 @@ R661(e) — Notes, no rows: F2, the throwaway id ra_12q is accepted and is the n
 | 2026-10-17 | R661(a) — 12q-U13-BUILD is accepted. The read-out's construction was followed where the brief's description differed (the probes under 12p_U13A/ against the scripts under 12g_ra/); the read-out governed, as the brief said it should. Item 0 (Block 58, INT-p12-2's closing note, ends-at R660) stands. R661(b) — F1: option (b). data/ra_12q/ is moved whole — review.db with its -shm and -wal, spec.yaml, extraction_codebook.yaml, parsed_text/, pdfs/, vector_store/ — to ~/scratch/12q-u13-build/stage/ra_12q/ now, before the 09:00 nightly (R241, B21), and moved back to data/ra_12q/ by the launch brief. The round trip is checked both ways by the review.db file sha256 9461bf26…7705 and the fingerprint fb80c5eb…cef5 (mode=ro on the staged copy is permitted: it is not a retained throwaway, F5). Nothing is deleted. R661(c) — The rehearsal launches after the 2026-10-17 07:00 UTC health job and the 09:00 UTC nightly have run, with both read before launch (R657(g)): the health job's model loads and their outcome in the Ollama journal, and the nightly against an expected-values file for the b3f0072 tree (3,306 passed / 1 xfailed / 17 deselected; collected 3324 / 17 / 3307; exit 0). The launch is outside 07:00–10:35 UTC. The clock arithmetic is redone at the launch brief from the read-out's estimate. R661(d) — Session shape: 12q closes after the staging move, under a closeout brief; the rehearsal runs in a fresh session 12r under 12r-OPEN (startup verify, which also makes the two reads of (c)), then 12r-U13-RUN. If the PI prefers to keep 12q open and launch in it, the launch brief is 12q-U13-RUN with the same preflight; nothing in (b) or (c) changes. R661(e) — Notes, no rows: F2, the throwaway id ra_12q is accepted and is the name the rehearsal's read-out uses. F3, the lock's state is read through /proc/locks and fuser, never by a probe acquisition, in any brief that forbids taking the lock; the I7 wording "flock -n probe" is withdrawn for such briefs. F4, 12g's source string in ra_12q's import manifest (build_input.py's hard-coded source) is recorded in the rehearsal read-out's first section beside the confounder statement; a reader goes by the eligibility events' actor path. F5, the sidecars travel with the directory. The amended-before-push ledger commit is within the rule (never amend after pushing); hook commits carry the row's exact timestamp from here. | PI, 2026-10-17, during session 12q, on architect recommendation, on the 12q-U13-BUILD final report (item 0 ddfd1cc) |
 
 The decision log in this file ends at R661.
+
+**Block 60.** *Transcribed 2026-10-18 (item 0 of the 12r-OPEN brief), in its own commit with the lane-line copy it orders, in the R597(e) form:* ruling R662, made by PI on architect recommendation on 2026-10-17 UTC, during session 12q, on the 12q-CLOSE closeout block (`e5ec600c2c2efa306a61f819879f4c80e749e58b`). The 12r-OPEN task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12q-R662] — wrap ruling: closeout accepted; lane line approved; close now
+STATUS: PI ruling, 2026-10-17 UTC, session 12q, on architect recommendation, on the 12q-CLOSE
+  closeout block (e5ec600c2c2efa306a61f819879f4c80e749e58b). Transcribe as item 0 of 12r-OPEN
+  (Block 60), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block and the 12q-CLOSE report):
+  MEASURED: "HEAD e5ec600c2c2efa306a61f819879f4c80e749e58b, parent
+    ddfd1cc17de7c69d0495a1a9b63460d894568e01. Clean, level with origin (0/0)"; "Plan: sha256
+    fc44927856b086ca9b9b844d457c506dc6532d80dbbec84ed7a2e9021f68099e, 1,498,906 bytes. The
+    decision log ends at R661"; "claude-config: 251d3f74ccb302182841fd28a660cf8e5735aa06, the
+    ledger row for e5ec600. Clean, level. primer.md untouched"; "Live fingerprint: IDENTICAL at
+    05:55 (before the commit), 06:04:28Z (after the push) and 06:05:49Z"; "Lane line:
+    ~/scratch/12q-close/lane_line_12q.txt, sha256 73d9fd0f…99b5, 4,287 bytes, 10 lines (not
+    applied). Its five "−" lines equal ~/claude-config/primer.md lines 41–45"; "Recount: 275
+    rows (95 / 50 / 130, 0 unclassed); P1 58 (26 / 20 / 12), 35 fix units; P7 116. R510 for
+    12q: in 3, out 0"; "Staged throwaway: … review.db sha256 9461bf26…7705, fingerprint
+    fb80c5eb…cef5"; "ls data/*/review.db lists live only"; "Temp root: 4 entries,
+    1,372,220,719 B"; "u06_copy/: removed, 134,393,856 B"; "the plan +165 and 14 new files in
+    12q_close/; 15 files, 3,854 insertions, 0 deletions"; "Block 59's fence equals r661.txt";
+    "Its -shm mtime moved from 04:06:32 to 06:05:49" (F1); the (c) retention file "first 2,134
+    bytes (all of 12p's file) identical" with the staged section appended.
+  INFERRED (CC's, recorded as such, not matched): F2's two attributions (hello-ai's pre-flight
+    at 22:47:39–41Z after apt restarted it; the 00:17:00Z HEAD / and GET /api/ps from the
+    surgical-cv lane); F6's pytest-0 origin. Each is outside every gate window.
+
+R662(a) — The 12q-CLOSE closeout block is accepted as printed. The block's element list (the
+  12q-CLOSE brief's step 9) is the closeout block's form from here; the 12p block's form was
+  in an archived transcript, not on disk (F7), and this ruling makes the on-disk form the
+  one that governs. The retention file's appended "Staged, not retained" section is accepted:
+  the 12p portion is byte-identical and the staged line is below it, as ordered.
+R662(b) — The lane line (sha256 73d9fd0f67cc2916c1890e813f4f0afd572f3f5841740119c06aa4e3149799b5,
+  4,287 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines
+  41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its
+  five "+" lines, applied from the file, not from a paste; commit primer.md together with any
+  uncommitted hook row ("ledger" form), push, level.
+R662(c) — 12r-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child
+  of the lane-line commit, itself the child of 251d3f7), level with origin and clean. Another
+  lane's rows committed in between are accepted as found and noted (R653(c)); another lane's
+  rows left uncommitted are committed by 12r's first ledger step, named (R654(d)). 12r's item
+  0 copies lane_line_12q.txt into docs/session-reports/session-12/12q_close/ with its commit.
+R662(d) — No closeout gate ran: the expected gate values for 12r are the b3f0072 gate's on
+  unchanged code (3,306 / 1 xfailed / 17 deselected, collected 3,307; wall time a reading on
+  the series 868.02, 871.59 s, R657(d)); the 2026-10-17 09:00 UTC nightly runs on e5ec600,
+  whose code equals b3f0072's; 12q_close/expected_nightly_20261017.md governs; the 07:00 UTC
+  health job's loads are read and reported by 12r-OPEN (R657(g), R661(c)). The temp root is
+  read, never matched (R647(c), R652(c)).
+R662(e) — Notes, no rows: F1, the mode=ro fingerprint of the staged copy is accepted —
+  review.db and its fingerprint unchanged, the sidecar mtime moved; the restore checks by
+  the two hashes (R661(b)); from here a staged or retained copy is read by file hash only,
+  and a fingerprint of it is its own named step. F2, both request sets are recorded in the
+  12q closure's journal attribution as CC's inference; 12r-OPEN's bracketing reads attribute
+  their own window as usual. F3, five scratch directories (12q-close/ included) is the count
+  the block records. F4, dbchecks_py_sha256.txt stays. F5, the gitignored __pycache__/ in
+  12q_close/ is left as found. F6, pytest-1's origin unknown is a reading.
+R662(f) — Session 12q closes now. After R662(b) has landed, run /wrap. Report the archive
+  command; the closeout block stands.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-17 | R662(a) — The 12q-CLOSE closeout block is accepted as printed. The block's element list (the 12q-CLOSE brief's step 9) is the closeout block's form from here; the 12p block's form was in an archived transcript, not on disk (F7), and this ruling makes the on-disk form the one that governs. The retention file's appended "Staged, not retained" section is accepted: the 12p portion is byte-identical and the staged line is below it, as ordered. R662(b) — The lane line (sha256 73d9fd0f67cc2916c1890e813f4f0afd572f3f5841740119c06aa4e3149799b5, 4,287 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form), push, level. R662(c) — 12r-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the lane-line commit, itself the child of 251d3f7), level with origin and clean. Another lane's rows committed in between are accepted as found and noted (R653(c)); another lane's rows left uncommitted are committed by 12r's first ledger step, named (R654(d)). 12r's item 0 copies lane_line_12q.txt into docs/session-reports/session-12/12q_close/ with its commit. R662(d) — No closeout gate ran: the expected gate values for 12r are the b3f0072 gate's on unchanged code (3,306 / 1 xfailed / 17 deselected, collected 3,307; wall time a reading on the series 868.02, 871.59 s, R657(d)); the 2026-10-17 09:00 UTC nightly runs on e5ec600, whose code equals b3f0072's; 12q_close/expected_nightly_20261017.md governs; the 07:00 UTC health job's loads are read and reported by 12r-OPEN (R657(g), R661(c)). The temp root is read, never matched (R647(c), R652(c)). R662(e) — Notes, no rows: F1, the mode=ro fingerprint of the staged copy is accepted — review.db and its fingerprint unchanged, the sidecar mtime moved; the restore checks by the two hashes (R661(b)); from here a staged or retained copy is read by file hash only, and a fingerprint of it is its own named step. F2, both request sets are recorded in the 12q closure's journal attribution as CC's inference; 12r-OPEN's bracketing reads attribute their own window as usual. F3, five scratch directories (12q-close/ included) is the count the block records. F4, dbchecks_py_sha256.txt stays. F5, the gitignored __pycache__/ in 12q_close/ is left as found. F6, pytest-1's origin unknown is a reading. R662(f) — Session 12q closes now. After R662(b) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-17, during session 12q, on architect recommendation, on the 12q-CLOSE closeout block |
+
+The decision log in this file ends at R662.

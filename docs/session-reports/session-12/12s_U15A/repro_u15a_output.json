@@ -1,0 +1,354 @@
+{
+ "row18_parse_failed": {
+  "before": {
+   "processing": "parse_failed",
+   "reason": "parse_file_unreadable",
+   "analysis_ready": false,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "audit": {
+   "papers_audited": 1,
+   "skipped_refused": [],
+   "last_paper_event": [
+    "parse_failed",
+    "audited_ai",
+    null
+   ]
+  },
+  "after": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 1,
+   "studies_included": 1
+  }
+ },
+ "row18_extraction_failed": {
+  "before": {
+   "processing": "extraction_failed",
+   "reason": "model_call_failed",
+   "analysis_ready": false,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "audit": {
+   "papers_audited": 1,
+   "skipped_refused": [],
+   "last_paper_event": [
+    "extraction_failed",
+    "audited_ai",
+    null
+   ]
+  },
+  "after": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 1,
+   "studies_included": 1
+  }
+ },
+ "row18_input_exceeds_context": {
+  "before": {
+   "processing": "input_exceeds_context",
+   "reason": "input_overflow_estimated",
+   "analysis_ready": false,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "audit": {
+   "papers_audited": 1,
+   "skipped_refused": [],
+   "last_paper_event": [
+    "input_exceeds_context",
+    "audited_ai",
+    null
+   ]
+  },
+  "after": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 1,
+   "studies_included": 1
+  }
+ },
+ "row18_full_text_not_obtainable": {
+  "before": {
+   "processing": "full_text_not_obtainable",
+   "reason": "acquire_cascade_exhausted",
+   "analysis_ready": false,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "audit": {
+   "papers_audited": 1,
+   "skipped_refused": [],
+   "last_paper_event": [
+    "full_text_not_obtainable",
+    "audited_ai",
+    null
+   ]
+  },
+  "after": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 1,
+   "studies_included": 1
+  }
+ },
+ "row18_parsed": {
+  "before": {
+   "processing": "parsed",
+   "reason": null,
+   "analysis_ready": false,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "audit": {
+   "papers_audited": 1,
+   "skipped_refused": [],
+   "last_paper_event": [
+    "parsed",
+    "audited_ai",
+    null
+   ]
+  },
+  "after": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 1,
+   "studies_included": 1
+  }
+ },
+ "row18_no_recorded_state": {
+  "before": {
+   "processing": "no_recorded_state",
+   "reason": null,
+   "analysis_ready": false,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "audit": {
+   "papers_audited": 1,
+   "skipped_refused": [],
+   "last_paper_event": [
+    null,
+    "audited_ai",
+    null
+   ]
+  },
+  "after": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 1,
+   "studies_included": 1
+  }
+ },
+ "row18_extracted": {
+  "before": {
+   "processing": "extracted",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "audit": {
+   "papers_audited": 1,
+   "skipped_refused": [],
+   "last_paper_event": [
+    "extracted",
+    "audited_ai",
+    null
+   ]
+  },
+  "after": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 1,
+   "studies_included": 1
+  }
+ },
+ "d24_reparse": {
+  "selection": {
+   "to_extract": [
+    7
+   ],
+   "skipped_asserted": []
+  },
+  "before": {
+   "processing": "extracted",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "after_failure": {
+   "processing": "extraction_failed",
+   "reason": "model_call_failed",
+   "analysis_ready": false,
+   "live_asserted_claims": 0,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "audit": {
+   "papers_audited": 0,
+   "skipped_refused": [],
+   "last_paper_event": [
+    "extracted",
+    "extraction_failed",
+    "model_call_failed"
+   ]
+  },
+  "after": {
+   "processing": "extraction_failed",
+   "reason": "model_call_failed",
+   "analysis_ready": false,
+   "live_asserted_claims": 0,
+   "located_events": 0,
+   "studies_included": 0
+  }
+ },
+ "d21_refusal": {
+  "selection": {
+   "to_extract": [],
+   "skipped_refused": [
+    [
+     7,
+     "parsed_text_missing"
+    ]
+   ]
+  },
+  "refusals_written": 1,
+  "before": {
+   "processing": "extracted",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "after_refusal": {
+   "processing": "extraction_failed",
+   "reason": "parsed_text_missing",
+   "analysis_ready": false,
+   "live_asserted_claims": 0,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "audit": {
+   "papers_audited": 0,
+   "skipped_refused": [],
+   "last_paper_event": [
+    "extracted",
+    "extraction_failed",
+    "parsed_text_missing"
+   ]
+  },
+  "after": {
+   "processing": "extraction_failed",
+   "reason": "parsed_text_missing",
+   "analysis_ready": false,
+   "live_asserted_claims": 0,
+   "located_events": 0,
+   "studies_included": 0
+  }
+ },
+ "same_key": {
+  "selection": {
+   "to_extract": [],
+   "skipped_asserted": [
+    7
+   ]
+  },
+  "before": {
+   "processing": "extracted",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "after_direct_failure": {
+   "processing": "extraction_failed",
+   "reason": "model_call_failed",
+   "analysis_ready": false,
+   "live_asserted_claims": 1,
+   "located_events": 0,
+   "studies_included": 0
+  },
+  "audit": {
+   "papers_audited": 1,
+   "skipped_refused": [],
+   "last_paper_event": [
+    "extraction_failed",
+    "audited_ai",
+    null
+   ]
+  },
+  "after": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "live_asserted_claims": 1,
+   "located_events": 1,
+   "studies_included": 1
+  }
+ },
+ "located_then_failure": {
+  "first_audit": {
+   "papers_audited": 1,
+   "skipped_refused": [],
+   "last_paper_event": [
+    "extracted",
+    "audited_ai",
+    null
+   ]
+  },
+  "before_second": {
+   "processing": "parse_failed",
+   "reason": "parse_file_unreadable",
+   "analysis_ready": false,
+   "live_asserted_claims": 1,
+   "located_events": 1,
+   "studies_included": 0
+  },
+  "second_audit": {
+   "papers_audited": 0,
+   "skipped_refused": [],
+   "last_paper_event": [
+    null,
+    "parse_failed",
+    "parse_file_unreadable"
+   ]
+  },
+  "after": {
+   "processing": "parse_failed",
+   "reason": "parse_file_unreadable",
+   "analysis_ready": false,
+   "live_asserted_claims": 1,
+   "located_events": 1,
+   "studies_included": 0
+  }
+ }
+}

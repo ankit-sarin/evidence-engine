@@ -1,0 +1,309 @@
+engine/adjudication/ft_screening_adjudicator.py:519  [<module>._apply_ft_decisions]  import effective_state
+engine/adjudication/ft_screening_adjudicator.py:557  [<module>._apply_ft_decisions]  name effective_state
+engine/adjudication/workflow.py:1  [<module>]  string ['audited_ai'] <1254 chars>
+engine/agents/audit_events.py:1  [<module>]  string ['audited_ai'] <1865 chars>
+engine/agents/audit_events.py:49  [<module>]  import effective_state
+engine/agents/audit_events.py:49  [<module>]  import eligible_paper_ids
+engine/agents/audit_events.py:160  [<module>.audit_run]  name eligible_paper_ids
+engine/agents/audit_events.py:205  [<module>.audit_run]  attr .processing (load)
+engine/agents/audit_events.py:205  [<module>.audit_run]  name effective_state
+engine/agents/audit_events.py:225  [<module>.audit_run]  string ['audited_ai'] 'audited_ai'
+engine/agents/extractor.py:43  [<module>]  import effective_state
+engine/agents/extractor.py:1042  [<module>.record_selection_refusals]  name effective_state
+engine/agents/extractor.py:1043  [<module>.record_selection_refusals]  attr .processing (load)
+engine/agents/extractor.py:1043  [<module>.record_selection_refusals]  attr .processing_reason (load)
+engine/agents/ft_screener.py:23  [<module>]  import effective_state
+engine/agents/ft_screener.py:23  [<module>]  import eligible_paper_ids
+engine/agents/ft_screener.py:257  [<module>._write_eligibility_event]  name effective_state
+engine/agents/ft_screener.py:444  [<module>.run_ft_verification]  name eligible_paper_ids
+engine/core/audit_telemetry.py:1  [<module>]  string ['audited_ai'] <642 chars>
+engine/core/database.py:676  [<module>.ReviewDatabase.get_screening_summary]  import eligible_paper_ids
+engine/core/database.py:687  [<module>.ReviewDatabase.get_pipeline_stats]  string ['analysis_ready'] <879 chars>
+engine/core/database.py:703  [<module>.ReviewDatabase.get_pipeline_stats]  import effective_state
+engine/core/database.py:708  [<module>.ReviewDatabase.get_pipeline_stats]  name analysis_ready
+engine/core/database.py:718  [<module>.ReviewDatabase.get_pipeline_stats]  name analysis_ready
+engine/core/database.py:718  [<module>.ReviewDatabase.get_pipeline_stats]  attr .analysis_ready (load)
+engine/core/database.py:725  [<module>.ReviewDatabase.get_pipeline_stats]  string ['analysis_ready'] 'analysis_ready'
+engine/core/database.py:725  [<module>.ReviewDatabase.get_pipeline_stats]  name analysis_ready
+engine/core/database.py:681  [<module>.ReviewDatabase.get_screening_summary]  name eligible_paper_ids
+engine/core/database.py:711  [<module>.ReviewDatabase.get_pipeline_stats]  name effective_state
+engine/core/database.py:715  [<module>.ReviewDatabase.get_pipeline_stats]  attr .processing (load)
+engine/core/database.py:716  [<module>.ReviewDatabase.get_pipeline_stats]  attr .processing_reason (load)
+engine/core/database.py:717  [<module>.ReviewDatabase.get_pipeline_stats]  attr .processing_reason (load)
+engine/core/effective.py:57  [<module>]  import COMPLETED_PROCESSING_STATES
+engine/core/effective.py:61  [<module>]  import is_failure
+engine/core/effective.py:97  [<module>.EffectiveState]  string ['analysis_ready'] <790 chars>
+engine/core/effective.py:114  [<module>.EffectiveState]  name processing_reason
+engine/core/effective.py:558  [<module>.corpus_id_sql]  name eligible_paper_ids
+engine/core/effective.py:574  [<module>.grid_cells]  name eligible_paper_ids
+engine/core/effective.py:121  [<module>.EffectiveState.analysis_ready]  attr .processing (load)
+engine/core/effective.py:121  [<module>.EffectiveState.analysis_ready]  name COMPLETED_PROCESSING_STATES
+engine/core/effective.py:483  [<module>.effective_state]  name is_failure
+engine/core/extraction_events.py:72  [<module>]  import effective_state
+engine/core/extraction_events.py:682  [<module>.write_extraction_events]  attr .processing (load)
+engine/core/extraction_events.py:682  [<module>.write_extraction_events]  name effective_state
+engine/core/paper_state.py:1  [<module>]  string ['audited_ai', 'analysis_ready'] <2047 chars>
+engine/core/paper_state.py:62  [<module>]  name FAILURE_STATES
+engine/core/paper_state.py:71  [<module>]  name COMPLETED_PROCESSING_STATES
+engine/core/paper_state.py:54  [<module>]  string ['audited_ai'] 'audited_ai'
+engine/core/paper_state.py:73  [<module>]  string ['audited_ai'] 'audited_ai'
+engine/core/paper_state.py:124  [<module>.is_failure]  name FAILURE_STATES
+engine/core/selection.py:46  [<module>]  import eligible_paper_ids
+engine/core/selection.py:93  [<module>.select_for_extraction]  name eligible_paper_ids
+engine/exporters/docx_export.py:19  [<module>]  import FAILURE_STATES
+engine/exporters/docx_export.py:75  [<module>.export_evidence_docx]  import effective_state
+engine/exporters/docx_export.py:75  [<module>.export_evidence_docx]  import eligible_paper_ids
+engine/exporters/docx_export.py:111  [<module>.export_evidence_docx]  name eligible_paper_ids
+engine/exporters/docx_export.py:144  [<module>.export_evidence_docx]  name effective_state
+engine/exporters/docx_export.py:145  [<module>.export_evidence_docx]  attr .processing (load)
+engine/exporters/docx_export.py:146  [<module>.export_evidence_docx]  attr .processing_reason (load)
+engine/exporters/docx_export.py:146  [<module>.export_evidence_docx]  attr .processing (load)
+engine/exporters/evidence_table.py:63  [<module>._build_evidence_rows]  import effective_state
+engine/exporters/evidence_table.py:63  [<module>._build_evidence_rows]  import eligible_paper_ids
+engine/exporters/evidence_table.py:180  [<module>.export_evidence_excel]  import eligible_paper_ids
+engine/exporters/evidence_table.py:70  [<module>._build_evidence_rows]  string ['analysis_ready'] 'analysis_ready'
+engine/exporters/evidence_table.py:83  [<module>._build_evidence_rows]  name eligible_paper_ids
+engine/exporters/evidence_table.py:183  [<module>.export_evidence_excel]  name eligible_paper_ids
+engine/exporters/evidence_table.py:100  [<module>._build_evidence_rows]  name effective_state
+engine/exporters/evidence_table.py:115  [<module>._build_evidence_rows]  attr .processing (load)
+engine/exporters/evidence_table.py:115  [<module>._build_evidence_rows]  attr .processing_reason (load)
+engine/exporters/evidence_table.py:116  [<module>._build_evidence_rows]  attr .analysis_ready (load)
+engine/exporters/methods_section.py:56  [<module>._run_audit_models]  string ['audited_ai'] "{model_name: papers} for the run's audit stage (R177).\n\n    The model is the audit stage r"
+engine/exporters/methods_section.py:76  [<module>.generate_methods_section]  string ['audited_ai'] <355 chars>
+engine/exporters/methods_section.py:102  [<module>.generate_methods_section]  string ['studies_included'] 'studies_included'
+engine/exporters/methods_section.py:97  [<module>.generate_methods_section]  string ['studies_included'] 'studies_included'
+engine/exporters/methods_section.py:65  [<module>._run_audit_models]  string ['audited_ai'] 'SELECT sc.model_name, COUNT(DISTINCT pe.paper_id) FROM run_stage_configs sc LEFT JOIN pape'
+engine/exporters/prisma.py:30  [<module>]  import effective_state
+engine/exporters/prisma.py:30  [<module>]  import eligible_paper_ids
+engine/exporters/prisma.py:32  [<module>]  import FAILURE_STATES
+engine/exporters/prisma.py:403  [<module>.export_prisma_csv]  name FAILURE_STATES
+engine/exporters/prisma.py:142  [<module>.generate_prisma_flow]  name eligible_paper_ids
+engine/exporters/prisma.py:213  [<module>.generate_prisma_flow]  string ['studies_included'] 'studies_included'
+engine/exporters/prisma.py:162  [<module>.generate_prisma_flow]  name FAILURE_STATES
+engine/exporters/prisma.py:163  [<module>.generate_prisma_flow]  name FAILURE_STATES
+engine/exporters/prisma.py:172  [<module>.generate_prisma_flow]  name effective_state
+engine/exporters/prisma.py:177  [<module>.generate_prisma_flow]  attr .processing (load)
+engine/exporters/prisma.py:177  [<module>.generate_prisma_flow]  string ['audited_ai'] 'audited_ai'
+engine/exporters/prisma.py:270  [<module>.validate_prisma_counts]  name eligible_paper_ids
+engine/exporters/prisma.py:173  [<module>.generate_prisma_flow]  attr .processing (load)
+engine/exporters/prisma.py:179  [<module>.generate_prisma_flow]  attr .processing (load)
+engine/exporters/prisma.py:309  [<module>.validate_prisma_counts]  string ['studies_included'] 'studies_included'
+engine/exporters/prisma.py:418  [<module>.export_prisma_csv]  string ['studies_included'] 'studies_included'
+engine/exporters/prisma.py:173  [<module>.generate_prisma_flow]  string ['audited_ai'] 'audited_ai'
+engine/exporters/prisma.py:180  [<module>.generate_prisma_flow]  attr .processing (load)
+engine/exporters/prisma.py:181  [<module>.generate_prisma_flow]  attr .processing (load)
+engine/exporters/prisma.py:182  [<module>.generate_prisma_flow]  attr .processing_reason (load)
+engine/exporters/prisma.py:183  [<module>.generate_prisma_flow]  attr .processing (load)
+engine/exporters/prisma.py:182  [<module>.generate_prisma_flow]  attr .processing_reason (load)
+engine/exporters/prisma.py:310  [<module>.validate_prisma_counts]  name FAILURE_STATES
+engine/exporters/prisma.py:298  [<module>.validate_prisma_counts]  name effective_state
+engine/exporters/prisma.py:187  [<module>.generate_prisma_flow]  attr .processing (load)
+engine/migrations/016_event_store.py:1  [<module>]  string ['audited_ai'] <3265 chars>
+engine/migrations/016_event_store.py:65  [<module>]  string ['audited_ai'] 'audited_ai'
+engine/migrations/019_paper_state_axes.py:1  [<module>]  string ['audited_ai'] <2828 chars>
+engine/migrations/019_paper_state_axes.py:63  [<module>]  name FAILURE_STATES
+engine/migrations/019_paper_state_axes.py:68  [<module>]  name COMPLETED_PROCESSING_STATES
+engine/migrations/019_paper_state_axes.py:60  [<module>]  string ['audited_ai'] 'audited_ai'
+engine/migrations/019_paper_state_axes.py:68  [<module>]  string ['audited_ai'] 'audited_ai'
+engine/migrations/019_paper_state_axes.py:153  [<module>.table_sql]  name FAILURE_STATES
+engine/migrations/019_paper_state_axes.py:154  [<module>.table_sql]  name FAILURE_STATES
+engine/migrations/019_paper_state_axes.py:202  [<module>._refuse_unreasoned_failures]  name FAILURE_STATES
+engine/migrations/019_paper_state_axes.py:206  [<module>._refuse_unreasoned_failures]  name FAILURE_STATES
+engine/migrations/020_run_manifest.py:76  [<module>]  name FAILURE_STATES
+engine/migrations/020_run_manifest.py:74  [<module>]  string ['audited_ai'] 'audited_ai'
+engine/migrations/020_run_manifest.py:265  [<module>.paper_events_sql]  name FAILURE_STATES
+engine/migrations/020_run_manifest.py:266  [<module>.paper_events_sql]  name FAILURE_STATES
+engine/migrations/022_run_kinds_and_audit_tables.py:94  [<module>]  name FAILURE_STATES
+engine/migrations/022_run_kinds_and_audit_tables.py:92  [<module>]  string ['audited_ai'] 'audited_ai'
+engine/migrations/022_run_kinds_and_audit_tables.py:230  [<module>.paper_events_sql]  name FAILURE_STATES
+engine/migrations/022_run_kinds_and_audit_tables.py:231  [<module>.paper_events_sql]  name FAILURE_STATES
+engine/validators/distribution_monitor.py:357  [<module>.arm_population]  import eligible_paper_ids
+engine/validators/distribution_monitor.py:361  [<module>.arm_population]  name eligible_paper_ids
+engine/validators/extraction_validator.py:37  [<module>]  import eligible_paper_ids
+engine/validators/extraction_validator.py:315  [<module>.main]  name eligible_paper_ids
+scripts/run_pipeline.py:24  [<module>]  import audit_run
+scripts/run_pipeline.py:33  [<module>]  import effective_state
+scripts/run_pipeline.py:33  [<module>]  import eligible_paper_ids
+scripts/run_pipeline.py:34  [<module>]  import COMPLETED_PROCESSING_STATES
+scripts/run_pipeline.py:249  [<module>._advance_extraction_workflow]  string ['audited_ai'] "Reader 8 on the reader (9b-FLIP 1/2): EXTRACTION_COMPLETE once any corpus\n    paper's proc"
+scripts/run_pipeline.py:439  [<module>._stage_audit]  string ['audited_ai'] "The event-side audit (9b-FLIP, R111): locate every live claim of the\n    spec's arm, verif"
+scripts/run_pipeline.py:245  [<module>._processing_states]  attr .processing (load)
+scripts/run_pipeline.py:452  [<module>._stage_audit]  name audit_run
+scripts/run_pipeline.py:245  [<module>._processing_states]  name effective_state
+scripts/run_pipeline.py:245  [<module>._processing_states]  name eligible_paper_ids
+scripts/run_pipeline.py:253  [<module>._advance_extraction_workflow]  name COMPLETED_PROCESSING_STATES
+scripts/run_pipeline.py:254  [<module>._advance_extraction_workflow]  string ['audited_ai'] 'audited_ai'
+tests/_event_store_fixture.py:271  [<module>]  string ['audited_ai'] 'audited_ai'
+tests/_event_store_fixture.py:288  [<module>.seed_processing]  attr .FAILURE_STATES (load)
+tests/test_audit_events.py:24  [<module>]  import effective_state
+tests/test_audit_events.py:256  [<module>.test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs]  string ['audited_ai'] 'Two claims that both need a model call (no snippet, or unlocated) —\n    each gets exactly '
+tests/test_audit_events.py:283  [<module>.test_t16_a_failure_after_verdicts_leaves_no_verdict_rows_and_no_audited_ai]  string ['audited_ai'] "A failure injected between the verdict-row writes and the paper\n    event's write rolls ba"
+tests/test_audit_events.py:119  [<module>.run]  attr .audit_run (load)
+tests/test_audit_events.py:147  [<module>.test_t3_locate_every_claim_verify_only_the_unlocated_value]  attr .processing (load)
+tests/test_audit_events.py:147  [<module>.test_t3_locate_every_claim_verify_only_the_unlocated_value]  string ['audited_ai'] 'audited_ai'
+tests/test_audit_events.py:463  [<module>.test_d23_a_claim_with_no_recorded_text_identity_refuses_the_paper]  attr .audit_run (load)
+tests/test_audit_events.py:363  [<module>.test_an_audit_run_needs_its_audit_stage]  attr .audit_run (load)
+tests/test_audit_events.py:147  [<module>.test_t3_locate_every_claim_verify_only_the_unlocated_value]  name effective_state
+tests/test_audit_events.py:513  [<module>.test_u14_every_writer_carries_locator_1_1]  string ['audited_ai'] "SELECT payload_json FROM paper_events WHERE paper_id = ? AND to_state = 'audited_ai'"
+tests/test_audit_events.py:107  [<module>.audited]  string ['audited_ai'] "SELECT COUNT(*) FROM paper_events WHERE paper_id = ? AND to_state = 'audited_ai'"
+tests/test_audit_events.py:274  [<module>.test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs]  string ['audited_ai'] "SELECT run_id FROM paper_events WHERE paper_id = ? AND to_state = 'audited_ai'"
+tests/test_audit_events.py:383  [<module>.test_d23_t1_claims_on_an_older_version_are_located_against_that_version]  string ['audited_ai'] "SELECT payload_json FROM paper_events WHERE paper_id = ? AND to_state = 'audited_ai'"
+tests/test_audit_paper_id.py:109  [<module>.test_T6_every_audit_call_row_carries_the_paper_it_verified]  attr .audit_run (load)
+tests/test_audit_paper_id.py:135  [<module>.test_T7_no_other_stage_is_affected]  attr .audit_run (load)
+tests/test_corpus_authority.py:161  [<module>.test_cloud_get_pending_papers_now_reads_the_eligibility_axis]  import eligible_paper_ids
+tests/test_corpus_authority.py:187  [<module>.test_a_failed_paper_is_in_the_corpus_and_carries_its_reason]  import effective_state
+tests/test_corpus_authority.py:203  [<module>.test_cloud_get_progress_counts_the_corpus_from_the_axis]  import eligible_paper_ids
+tests/test_corpus_authority.py:192  [<module>.test_a_failed_paper_is_in_the_corpus_and_carries_its_reason]  name effective_state
+tests/test_corpus_authority.py:194  [<module>.test_a_failed_paper_is_in_the_corpus_and_carries_its_reason]  attr .processing (load)
+tests/test_corpus_authority.py:195  [<module>.test_a_failed_paper_is_in_the_corpus_and_carries_its_reason]  attr .processing_reason (load)
+tests/test_corpus_authority.py:196  [<module>.test_a_failed_paper_is_in_the_corpus_and_carries_its_reason]  attr .analysis_ready (load)
+tests/test_corpus_authority.py:168  [<module>.test_cloud_get_pending_papers_now_reads_the_eligibility_axis]  name eligible_paper_ids
+tests/test_corpus_authority.py:208  [<module>.test_cloud_get_progress_counts_the_corpus_from_the_axis]  name eligible_paper_ids
+tests/test_cut_over.py:31  [<module>]  import effective_state
+tests/test_cut_over.py:161  [<module>.test_t2_a_live_shaped_paper_extracts_and_keeps_its_status]  attr .processing (load)
+tests/test_cut_over.py:149  [<module>.test_t1_extract_then_audit_under_one_manifest_writes_events_only]  attr .processing (load)
+tests/test_cut_over.py:149  [<module>.test_t1_extract_then_audit_under_one_manifest_writes_events_only]  string ['audited_ai'] 'audited_ai'
+tests/test_cut_over.py:148  [<module>.test_t1_extract_then_audit_under_one_manifest_writes_events_only]  string ['audited_ai'] 'audited_ai'
+tests/test_cut_over.py:161  [<module>.test_t2_a_live_shaped_paper_extracts_and_keeps_its_status]  name effective_state
+tests/test_cut_over.py:149  [<module>.test_t1_extract_then_audit_under_one_manifest_writes_events_only]  name effective_state
+tests/test_database.py:233  [<module>.test_pipeline_stats]  string ['audited_ai'] 'audited_ai'
+tests/test_database.py:240  [<module>.test_pipeline_stats]  string ['analysis_ready'] 'analysis_ready'
+tests/test_database.py:251  [<module>.test_pipeline_stats]  string ['audited_ai'] 'audited_ai'
+tests/test_database.py:254  [<module>.test_pipeline_stats]  string ['analysis_ready'] 'analysis_ready'
+tests/test_effective_reader.py:30  [<module>]  import effective_state
+tests/test_effective_reader.py:347  [<module>.test_row17_state_at_migration_is_effective_states_row_not_a_fields]  name effective_state
+tests/test_effective_reader.py:353  [<module>.test_row17_state_at_migration_is_effective_states_row_not_a_fields]  attr .processing (load)
+tests/test_effective_reader.py:354  [<module>.test_row17_state_at_migration_is_effective_states_row_not_a_fields]  attr .processing_reason (load)
+tests/test_effective_reader.py:355  [<module>.test_row17_state_at_migration_is_effective_states_row_not_a_fields]  attr .analysis_ready (load)
+tests/test_effective_reader.py:364  [<module>.test_q2_a_paper_with_no_paper_events_has_no_recorded_state]  name effective_state
+tests/test_effective_reader.py:367  [<module>.test_q2_a_paper_with_no_paper_events_has_no_recorded_state]  attr .processing (load)
+tests/test_effective_reader.py:376  [<module>.test_q2_the_reader_never_reads_papers_status]  name effective_state
+tests/test_effective_reader.py:369  [<module>.test_q2_a_paper_with_no_paper_events_has_no_recorded_state]  attr .analysis_ready (load)
+tests/test_effective_reader.py:377  [<module>.test_q2_the_reader_never_reads_papers_status]  attr .processing (load)
+tests/test_exporters.py:64  [<module>.exporter_db]  string ['audited_ai'] <419 chars>
+tests/test_exporters.py:196  [<module>.test_evidence_csv_columns]  import eligible_paper_ids
+tests/test_exporters.py:227  [<module>.test_evidence_excel_sheets]  import eligible_paper_ids
+tests/test_exporters.py:386  [<module>.empty_extraction_db]  string ['audited_ai'] "empty_extraction_db' world on the toolkit (9e-C-P2 B2, R190): two\n    eligible papers; pap"
+tests/test_exporters.py:468  [<module>.run_db]  string ['audited_ai'] <307 chars>
+tests/test_exporters.py:519  [<module>.test_methods_uses_db_audit_model]  string ['audited_ai'] "Methods section names the auditor from the run's audit stage row, and\n    counts the paper"
+tests/test_exporters.py:184  [<module>.test_evidence_csv_columns]  string ['analysis_ready'] 'analysis_ready'
+tests/test_exporters.py:134  [<module>.test_prisma_flow_counts]  string ['studies_included'] 'studies_included'
+tests/test_exporters.py:228  [<module>.test_evidence_excel_sheets]  name eligible_paper_ids
+tests/test_exporters.py:498  [<module>.run_db]  string ['audited_ai'] 'audited_ai'
+tests/test_exporters.py:197  [<module>.test_evidence_csv_columns]  name eligible_paper_ids
+tests/test_exporters.py:394  [<module>.empty_extraction_db]  string ['audited_ai'] 'audited_ai'
+tests/test_exporters.py:85  [<module>.exporter_db]  string ['audited_ai'] 'audited_ai'
+tests/test_exporters.py:121  [<module>.prisma_db]  string ['audited_ai'] 'audited_ai'
+tests/test_extraction_events.py:30  [<module>]  import effective_state
+tests/test_extraction_events.py:167  [<module>.test_t1_a_complete_record_asserts_every_field_with_its_input]  attr .processing (load)
+tests/test_extraction_events.py:736  [<module>.test_d24_t6_after_a_partial_reextraction_the_audit_runs_on_the_paper]  attr .processing (load)
+tests/test_extraction_events.py:736  [<module>.test_d24_t6_after_a_partial_reextraction_the_audit_runs_on_the_paper]  string ['audited_ai'] 'audited_ai'
+tests/test_extraction_events.py:733  [<module>.test_d24_t6_after_a_partial_reextraction_the_audit_runs_on_the_paper]  attr .audit_run (load)
+tests/test_extraction_events.py:167  [<module>.test_t1_a_complete_record_asserts_every_field_with_its_input]  name effective_state
+tests/test_extraction_events.py:531  [<module>.test_t12_every_code_the_mapping_emits_is_in_the_closed_set]  attr .is_failure (load)
+tests/test_extraction_events.py:736  [<module>.test_d24_t6_after_a_partial_reextraction_the_audit_runs_on_the_paper]  name effective_state
+tests/test_extractor.py:293  [<module>.test_full_two_pass_mocked]  import effective_state
+tests/test_extractor.py:294  [<module>.test_full_two_pass_mocked]  attr .processing (load)
+tests/test_extractor.py:294  [<module>.test_full_two_pass_mocked]  name effective_state
+tests/test_ft_adjudication_import.py:28  [<module>]  import eligible_paper_ids
+tests/test_ft_adjudication_import.py:285  [<module>.test_10_adjudicating_a_flagged_paper_eligible_keeps_the_seam_valid]  name eligible_paper_ids
+tests/test_ft_adjudication_import.py:289  [<module>.test_10_adjudicating_a_flagged_paper_eligible_keeps_the_seam_valid]  name eligible_paper_ids
+tests/test_ft_adjudication_import.py:353  [<module>.test_14_a_primary_flag_adjudicated_eligible_is_not_selected_by_the_verifier]  name eligible_paper_ids
+tests/test_ft_bridge.py:457  [<module>.test_10_seam_include_is_pending_confirm_is_eligible_exclude_is_valid]  import eligible_paper_ids
+tests/test_ft_bridge.py:458  [<module>.test_10_seam_include_is_pending_confirm_is_eligible_exclude_is_valid]  name eligible_paper_ids
+tests/test_import_extraction_entry.py:38  [<module>]  import eligible_paper_ids
+tests/test_import_extraction_entry.py:185  [<module>.test_t3_select_for_extraction_selects_the_three_with_no_refusal]  name eligible_paper_ids
+tests/test_migration_016_017.py:19  [<module>]  import effective_state
+tests/test_migration_016_017.py:219  [<module>.test_017_seeded_papers_read_back_through_effective_state]  name effective_state
+tests/test_migration_016_017.py:221  [<module>.test_017_seeded_papers_read_back_through_effective_state]  attr .processing (load)
+tests/test_migration_016_017.py:212  [<module>.test_017_seeded_papers_read_back_through_effective_state]  name effective_state
+tests/test_migration_016_017.py:216  [<module>.test_017_seeded_papers_read_back_through_effective_state]  attr .processing (load)
+tests/test_migration_016_017.py:217  [<module>.test_017_seeded_papers_read_back_through_effective_state]  attr .analysis_ready (load)
+tests/test_migration_019_paper_axes.py:176  [<module>.test_a_failure_token_with_no_reason_is_refused]  attr .FAILURE_STATES (load)
+tests/test_migration_019_paper_axes.py:189  [<module>.test_a_non_failure_token_carrying_a_reason_is_refused]  string ['audited_ai'] 'audited_ai'
+tests/test_migration_019_paper_axes.py:193  [<module>.test_a_non_failure_token_carrying_a_reason_is_refused]  string ['audited_ai'] 'audited_ai'
+tests/test_migration_019_paper_axes.py:249  [<module>.test_state_at_migration_may_land_on_either_axis]  string ['audited_ai'] 'audited_ai'
+tests/test_paper_state_vocabulary.py:87  [<module>.test_axis_of_and_is_failure_agree_with_the_sets]  attr .FAILURE_STATES (load)
+tests/test_paper_state_vocabulary.py:45  [<module>.test_every_failure_token_is_a_processing_token]  attr .FAILURE_STATES (load)
+tests/test_paper_state_vocabulary.py:88  [<module>.test_axis_of_and_is_failure_agree_with_the_sets]  attr .is_failure (load)
+tests/test_paper_state_vocabulary.py:89  [<module>.test_axis_of_and_is_failure_agree_with_the_sets]  attr .is_failure (load)
+tests/test_paper_state_vocabulary.py:49  [<module>.test_no_completed_token_is_a_failure_token]  attr .COMPLETED_PROCESSING_STATES (load)
+tests/test_paper_state_vocabulary.py:50  [<module>.test_no_completed_token_is_a_failure_token]  attr .FAILURE_STATES (load)
+tests/test_parse_failures.py:20  [<module>]  import effective_state
+tests/test_parse_failures.py:246  [<module>.test_T5_effective_state_and_prisma_carry_the_new_reason]  name effective_state
+tests/test_parse_failures.py:247  [<module>.test_T5_effective_state_and_prisma_carry_the_new_reason]  attr .processing (load)
+tests/test_parse_failures.py:248  [<module>.test_T5_effective_state_and_prisma_carry_the_new_reason]  attr .processing_reason (load)
+tests/test_prisma_reconciliation.py:242  [<module>.TestNoDoubleCount.test_ai_audit_complete_not_double_counted_with_ft]  string ['studies_included'] 'An audited paper is counted once in studies_included; an eligible paper\n        with no pr'
+tests/test_prisma_reconciliation.py:119  [<module>.TestReconciliation.test_in_progress_papers_counted]  string ['studies_included'] 'studies_included'
+tests/test_prisma_reconciliation.py:233  [<module>.TestNoDoubleCount.test_no_paper_in_multiple_terminal_boxes]  string ['studies_included'] 'studies_included'
+tests/test_prisma_reconciliation.py:249  [<module>.TestNoDoubleCount.test_ai_audit_complete_not_double_counted_with_ft]  string ['studies_included'] 'studies_included'
+tests/test_prisma_reconciliation.py:276  [<module>.TestExtractFailed.test_extract_failed_appears_in_flow_and_csv]  string ['studies_included'] 'studies_included'
+tests/test_prisma_reconciliation.py:184  [<module>.TestVerificationPending.test_live_shape_reads_as_before]  string ['studies_included'] 'studies_included'
+tests/test_prisma_reconciliation.py:79  [<module>.TestReconciliation.test_reconciliation_catches_mismatch]  string ['audited_ai'] 'audited_ai'
+tests/test_prisma_reconciliation.py:94  [<module>.TestReconciliation.test_reconciliation_catches_mismatch]  string ['audited_ai'] 'audited_ai'
+tests/test_prisma_reconciliation.py:113  [<module>.TestReconciliation.test_in_progress_papers_counted]  string ['audited_ai'] 'audited_ai'
+tests/test_prisma_reconciliation.py:226  [<module>.TestNoDoubleCount.test_no_paper_in_multiple_terminal_boxes]  string ['audited_ai'] 'audited_ai'
+tests/test_prisma_reconciliation.py:246  [<module>.TestNoDoubleCount.test_ai_audit_complete_not_double_counted_with_ft]  string ['audited_ai'] 'audited_ai'
+tests/test_prisma_reconciliation.py:291  [<module>.TestExtractFailed.test_extract_failed_zero_omitted_from_csv]  string ['audited_ai'] 'audited_ai'
+tests/test_prisma_reconciliation.py:56  [<module>.TestReconciliation.test_reconciliation_passes_clean_db]  string ['audited_ai'] 'audited_ai'
+tests/test_prisma_reconciliation.py:138  [<module>.TestVerificationPending._world_with_one_pending]  string ['audited_ai'] 'audited_ai'
+tests/test_prisma_reconciliation.py:174  [<module>.TestVerificationPending.test_live_shape_reads_as_before]  string ['audited_ai'] 'audited_ai'
+tests/test_prisma_reconciliation.py:269  [<module>.TestExtractFailed.test_extract_failed_appears_in_flow_and_csv]  string ['audited_ai'] 'audited_ai'
+tests/test_readers_on_the_reader.py:267  [<module>.test_the_judge_loader_attempts_every_cell_whatever_the_verdict]  import eligible_paper_ids
+tests/test_readers_on_the_reader.py:503  [<module>.test_disagreement_pairs_emits_every_grid_cell_none_filtered]  import eligible_paper_ids
+tests/test_readers_on_the_reader.py:210  [<module>.test_the_evidence_table_carries_both_axes_and_no_confidence_column]  string ['analysis_ready'] 'analysis_ready'
+tests/test_readers_on_the_reader.py:232  [<module>.test_a_failed_paper_is_exported_with_its_reason_and_is_not_analysis_ready]  string ['analysis_ready'] 'analysis_ready'
+tests/test_readers_on_the_reader.py:270  [<module>.test_the_judge_loader_attempts_every_cell_whatever_the_verdict]  name eligible_paper_ids
+tests/test_readers_on_the_reader.py:516  [<module>.test_disagreement_pairs_emits_every_grid_cell_none_filtered]  name eligible_paper_ids
+tests/test_run_interrupts.py:259  [<module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it]  string ['audited_ai'] "SELECT COUNT(*) FROM paper_events WHERE paper_id = ? AND to_state IN ('extracted', 'extrac"
+tests/test_stage_completion.py:49  [<module>.test_t6_audit_complete_follows_audited_ai]  string ['audited_ai'] 'audited_ai'
+tests/test_text_refusal_at_selection.py:1  [<module>]  string ['audited_ai'] <1010 chars>
+tests/test_text_refusal_at_selection.py:36  [<module>]  import effective_state
+tests/test_text_refusal_at_selection.py:102  [<module>.db]  attr .processing (load)
+tests/test_text_refusal_at_selection.py:102  [<module>.db]  string ['audited_ai'] 'audited_ai'
+tests/test_text_refusal_at_selection.py:152  [<module>.test_a_missing_text_on_an_audited_paper_is_not_re_failed_each_run]  attr .processing (load)
+tests/test_text_refusal_at_selection.py:152  [<module>.test_a_missing_text_on_an_audited_paper_is_not_re_failed_each_run]  string ['audited_ai'] 'audited_ai'
+tests/test_text_refusal_at_selection.py:175  [<module>.test_changed_bytes_on_an_audited_paper_are_reported_as_changed]  attr .processing (load)
+tests/test_text_refusal_at_selection.py:175  [<module>.test_changed_bytes_on_an_audited_paper_are_reported_as_changed]  string ['audited_ai'] 'audited_ai'
+tests/test_text_refusal_at_selection.py:194  [<module>.test_the_run_summary_names_the_paper_when_other_papers_are_extracted]  attr .processing (load)
+tests/test_text_refusal_at_selection.py:194  [<module>.test_the_run_summary_names_the_paper_when_other_papers_are_extracted]  string ['audited_ai'] 'audited_ai'
+tests/test_text_refusal_at_selection.py:211  [<module>.test_a_paper_with_no_claims_and_a_missing_file_is_refused_once]  attr .processing (load)
+tests/test_text_refusal_at_selection.py:98  [<module>.db]  string ['audited_ai'] 'audited_ai'
+tests/test_text_refusal_at_selection.py:102  [<module>.db]  name effective_state
+tests/test_text_refusal_at_selection.py:152  [<module>.test_a_missing_text_on_an_audited_paper_is_not_re_failed_each_run]  name effective_state
+tests/test_text_refusal_at_selection.py:175  [<module>.test_changed_bytes_on_an_audited_paper_are_reported_as_changed]  name effective_state
+tests/test_text_refusal_at_selection.py:194  [<module>.test_the_run_summary_names_the_paper_when_other_papers_are_extracted]  name effective_state
+tests/test_text_refusal_at_selection.py:211  [<module>.test_a_paper_with_no_claims_and_a_missing_file_is_refused_once]  name effective_state
+tests/test_two_axis_state_and_grid.py:23  [<module>]  import effective_state
+tests/test_two_axis_state_and_grid.py:23  [<module>]  import eligible_paper_ids
+tests/test_two_axis_state_and_grid.py:129  [<module>.test_each_failure_token_reads_back_with_its_reason_and_stays_eligible]  attr .FAILURE_STATES (load)
+tests/test_two_axis_state_and_grid.py:78  [<module>.test_no_events_reads_no_recorded_state_on_both_axes]  name effective_state
+tests/test_two_axis_state_and_grid.py:80  [<module>.test_no_events_reads_no_recorded_state_on_both_axes]  attr .processing_reason (load)
+tests/test_two_axis_state_and_grid.py:89  [<module>.test_each_eligibility_token_is_read_back_on_its_own_axis]  name effective_state
+tests/test_two_axis_state_and_grid.py:91  [<module>.test_each_eligibility_token_is_read_back_on_its_own_axis]  attr .processing (load)
+tests/test_two_axis_state_and_grid.py:101  [<module>.test_each_non_failure_processing_token_reads_back_with_no_reason]  name effective_state
+tests/test_two_axis_state_and_grid.py:103  [<module>.test_each_non_failure_processing_token_reads_back_with_no_reason]  attr .processing (load)
+tests/test_two_axis_state_and_grid.py:104  [<module>.test_each_non_failure_processing_token_reads_back_with_no_reason]  attr .processing_reason (load)
+tests/test_two_axis_state_and_grid.py:105  [<module>.test_each_non_failure_processing_token_reads_back_with_no_reason]  attr .analysis_ready (load)
+tests/test_two_axis_state_and_grid.py:136  [<module>.test_each_failure_token_reads_back_with_its_reason_and_stays_eligible]  name effective_state
+tests/test_two_axis_state_and_grid.py:139  [<module>.test_each_failure_token_reads_back_with_its_reason_and_stays_eligible]  attr .processing (load)
+tests/test_two_axis_state_and_grid.py:140  [<module>.test_each_failure_token_reads_back_with_its_reason_and_stays_eligible]  attr .processing_reason (load)
+tests/test_two_axis_state_and_grid.py:141  [<module>.test_each_failure_token_reads_back_with_its_reason_and_stays_eligible]  attr .analysis_ready (load)
+tests/test_two_axis_state_and_grid.py:150  [<module>.test_a_processing_event_does_not_erase_the_eligibility_fact]  name effective_state
+tests/test_two_axis_state_and_grid.py:152  [<module>.test_a_processing_event_does_not_erase_the_eligibility_fact]  attr .processing (load)
+tests/test_two_axis_state_and_grid.py:158  [<module>.test_an_eligibility_event_does_not_erase_the_processing_fact]  name effective_state
+tests/test_two_axis_state_and_grid.py:159  [<module>.test_an_eligibility_event_does_not_erase_the_processing_fact]  attr .processing (load)
+tests/test_two_axis_state_and_grid.py:168  [<module>.test_the_latest_event_on_each_axis_wins_independently]  name effective_state
+tests/test_two_axis_state_and_grid.py:170  [<module>.test_the_latest_event_on_each_axis_wins_independently]  attr .analysis_ready (load)
+tests/test_two_axis_state_and_grid.py:183  [<module>.test_analysis_ready_is_derived_and_stored_nowhere]  string ['analysis_ready'] 'analysis_ready'
+tests/test_two_axis_state_and_grid.py:185  [<module>.test_analysis_ready_is_derived_and_stored_nowhere]  attr .analysis_ready (load)
+tests/test_two_axis_state_and_grid.py:233  [<module>.test_the_grid_is_papers_times_fields_times_registered_arms]  name eligible_paper_ids
+tests/test_two_axis_state_and_grid.py:79  [<module>.test_no_events_reads_no_recorded_state_on_both_axes]  attr .processing (load)
+tests/test_two_axis_state_and_grid.py:81  [<module>.test_no_events_reads_no_recorded_state_on_both_axes]  attr .analysis_ready (load)
+tests/test_two_axis_state_and_grid.py:105  [<module>.test_each_non_failure_processing_token_reads_back_with_no_reason]  attr .COMPLETED_PROCESSING_STATES (load)
+tests/test_two_axis_state_and_grid.py:96  [<module>.test_each_non_failure_processing_token_reads_back_with_no_reason]  string ['audited_ai'] 'audited_ai'
+tests/test_two_axis_state_and_grid.py:169  [<module>.test_the_latest_event_on_each_axis_wins_independently]  attr .processing (load)
+tests/test_two_axis_state_and_grid.py:178  [<module>.test_the_reader_never_reads_papers_status]  name eligible_paper_ids
+tests/test_two_axis_state_and_grid.py:195  [<module>.test_eligible_paper_ids_is_the_eligibility_axis_only]  name eligible_paper_ids
+tests/test_two_axis_state_and_grid.py:177  [<module>.test_the_reader_never_reads_papers_status]  name effective_state
+files with a site: 45 | sites: 308 | unparsed: none

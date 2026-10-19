@@ -1,0 +1,59 @@
+RULING [evidence-engine 12s-R676] — U14 accepted and landed; INT-i12-7 and INT-i12-8 CLOSED at
+  7074305; the measurement-first commit made a convention; four notes; U15's Phase A opens, the
+  12s closeout follows it
+STATUS: PI ruling, 2026-10-19 UTC, session 12s, on architect recommendation, on the 12s-U14B final
+  report and the read-out docs/session-reports/session-12/12s_U14B/12s_U14B.md (cb27494). Transcribe
+  as Block 74 at item 0 of the 12s-U15A brief below, in this block, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12s-U14B final report):
+  MEASURED: "Lost of 300: today 6, plain A 0, variant 0"; "its window differs from plain A's in 0 of
+    300"; "F11 medians: today 5.209 s, plain A 43.424 s, variant 5.224 s"; "Commit:
+    7074305160eb781f9863eb141d0b46af0f3567e1, parent 9f1809ad8e9bc45a121eef1205858006fbe94d57";
+    "engine/agents/auditor.py | 16, engine/core/locator.py | 73, tests/test_audit_events.py | 17,
+    tests/test_auditor.py | 15, tests/test_locator.py | 161. extractor.py, elicitation/ and
+    review_specs/ have an empty diff"; "FUZZY_THRESHOLD = 0.85 is unchanged"; "LOCATOR_VERSION =
+    "locator-1.1". No "locator-1" literal remains"; "Pre-fix result, measured in a scratch clone: 9
+    failed, 16 passed"; "==== 3330 passed, 17 deselected, 1 xfailed, 2 warnings in 892.84s (0:14:52)
+    ====, collected 3348 items / 17 deselected / 3331 selected"; "Wall time 895.02 s"; "only-gate is
+    24 ids and equals expected_new_ids.txt; only-ref is 0"; "test_api_parity.py delta 0 (69 / 69)";
+    "pins == 12r_close True"; "restore points 5/5 MATCH by file sha256"; "journal for the gate
+    window -- No entries --"; "post_fix_check on the committed module: 300 edits, 0 not located";
+    item 0 "2 − lines and 94 + lines", "RESULT: PASS", recount "rows 276", "expected_holds True";
+    read-out commit "cb274942708c56347f6be0dadc3d3faaff422039".
+  READ (CC's): F5 "docs/architecture/state-machine.md's line invalid_snippet … (INVALID_SNIPPET_RE
+    match) is now inexact for audit_span"; F6 "the 12s_U14A reproducer, and variant_measurement.py …
+    now run only against locator-1"; F7 "pytest's own retention rotate out pytest-6, -7 and -8";
+    I3 "docs/inventory/ names no test files".
+  INFERRED: none.
+
+R676(a) — 12s-U14B is accepted. U14 landed at 7074305 (the variant: all windows ranked with autojunk
+  on, the five best re-scored with autojunk=False, RESCORE_TOP_K = 5; bridged true only when the
+  snippet's ellipsis is absent from the located span; audit_span locates first; LOCATOR_VERSION
+  "locator-1.1"; FUZZY_THRESHOLD unchanged; extractor.py untouched). The gate on it is 3,330 / 1
+  xfailed / 17 deselected, collected 3,348, only-gate the 24 predicted ids, only-ref 0; both pins
+  byte-identical; 24 new ids and one rewritten pin, 9 of them failing on the pre-fix module.
+R676(b) — INT-i12-7 and INT-i12-8 are CLOSED at 7074305 (R514: each acceptance test passes in the
+  commit's gate; the 300-edit reproducer gives 0 not located on the committed module). Each row
+  gains a dated note at 12s-U15A's item 0 in the section-L closed form ("**CLOSED 2026-10-19**
+  (`7074305160eb781f9863eb141d0b46af0f3567e1`, R676): …", naming the test ids); the class cells are
+  not edited; both stay counted until P1 closes (R607(d)); the recount stays 276. Fix units: U14
+  done, 35 named.
+R676(c) — The extra docs commit 9f1809a (variant_measurement.md before any engine edit) is accepted
+  and is the form from here: a brief's conditional proceed commits its measurement and the branch it
+  states before the edit that depends on it. The variant JSON landing with the read-out is a
+  reading, no action.
+R676(d) — Notes, no rows: (i) F5 — docs/architecture/state-machine.md's invalid_snippet line is
+  stale for audit_span since 7074305; onto the HK-ARCH line (Class 3, P7). (ii) F6 — the 12s_U14A
+  reproducer and variant_measurement.py are bound to locator-1 by design and are not edited;
+  12s_U14B/post_fix_check is the locator-1.1 instrument; a dated note on INT-i12-7 with its CLOSED
+  note. (iii) F7 — ad-hoc pytest runs rotated three gate basetemps out of the shared temp root;
+  nothing deleted by hand; each basetemp had been read at its gate (R660(c)); from here an ad-hoc
+  pytest run in a brief passes --basetemp under the session's scratch directory, so the shared
+  root holds gates' and the nightly's directories only. (iv) I3 — docs/inventory/ censuses no test
+  file; a dated note on B11; the 12s_U14A AST census is the instrument until the inventory does.
+R676(e) — The gate's 895.02 s is the fifth reading on this host state (868.02, 871.59, 906.50,
+  858.50, 895.02), the third beside an encode; the band stays the closeout's (R674(c)). The
+  concurrent surgical-cv encodes are now the usual state of the box, which bears on that decision.
+R676(f) — U15's Phase A (INT-i12-12, R612(a)) opens under the brief below, read-only. The 12s
+  closeout follows it in this session, carrying R674(c)'s band decision and R675(e)'s row INT-s12-1
+  with the chained recount. U16 and INT-r12-1's Phase A are 12t's.

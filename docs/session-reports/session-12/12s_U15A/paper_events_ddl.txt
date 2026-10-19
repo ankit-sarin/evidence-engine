@@ -1,0 +1,52 @@
+-- index idx_paper_events_paper
+CREATE INDEX idx_paper_events_paper ON paper_events(paper_id, event_id)
+
+-- table paper_events
+CREATE TABLE "paper_events" (
+    event_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_uid   TEXT    NOT NULL UNIQUE,
+    event_type  TEXT    NOT NULL,
+    occurred_at TEXT    NOT NULL,
+    recorded_at TEXT    NOT NULL,
+    actor_kind  TEXT    NOT NULL CHECK (actor_kind IN ('model', 'human', 'engine')),
+    actor_role  TEXT    NOT NULL CHECK (actor_role IN ('reviewer', 'extractor', 'system')),
+    actor_name  TEXT    NOT NULL,
+    actor_digest TEXT,
+    run_id      INTEGER REFERENCES run_manifests(run_id),
+    run_marker  TEXT,
+    prior_event_id INTEGER REFERENCES "paper_events"(event_id),
+    presented_context_sha256 TEXT,
+    reason      TEXT,
+    payload_json TEXT   NOT NULL DEFAULT '{}',
+        paper_id    INTEGER NOT NULL REFERENCES papers(id),
+        to_state    TEXT    NOT NULL CHECK (to_state IN ('eligible', 'abstract_out', 'full_text_out', 'parsed', 'extracted', 'extraction_failed', 'full_text_not_obtainable', 'parse_failed', 'input_exceeds_context', 'audited_ai')),
+        from_state  TEXT,
+        reason_code TEXT,
+        stage_name  TEXT,
+        CHECK (actor_role <> 'system' OR actor_kind = 'engine'),
+        CHECK (event_type IN ('screened', 'verified', 'adjudicated', 'acquired', 'not_obtainable', 'parsed', 'extracted', 'extraction_failed', 'audited', 'manual_advance', 'bypass', 'state_at_migration')),
+        -- R39: an event's type and its to_state must name the same axis.
+        CHECK (
+            (event_type IN ('screened', 'verified', 'adjudicated') AND to_state IN ('eligible', 'abstract_out', 'full_text_out'))
+         OR (event_type IN ('acquired', 'not_obtainable', 'parsed', 'extracted', 'extraction_failed', 'audited') AND to_state IN ('parsed', 'extracted', 'extraction_failed', 'full_text_not_obtainable', 'parse_failed', 'input_exceeds_context', 'audited_ai'))
+         OR (event_type IN ('manual_advance', 'bypass', 'state_at_migration'))
+        ),
+        -- R39 / S3h: a reason for exactly the failure tokens, and for no other.
+        CHECK (
+            (to_state IN ('extraction_failed', 'full_text_not_obtainable', 'parse_failed', 'input_exceeds_context') AND reason_code IS NOT NULL)
+         OR (to_state NOT IN ('extraction_failed', 'full_text_not_obtainable', 'parse_failed', 'input_exceeds_context') AND reason_code IS NULL)
+        ),
+        -- R68: a row with no run is a seeded, pre-manifest row and nothing else.
+        CHECK (
+            (run_id IS NOT NULL AND run_marker IS NULL)
+            OR
+            (run_id IS NULL AND run_marker IS 'pre-manifest')
+        )
+    )
+
+-- trigger paper_events_no_delete
+CREATE TRIGGER paper_events_no_delete BEFORE DELETE ON paper_events BEGIN SELECT RAISE(ABORT, 'paper_events is append-only: correct by appending an event'); END
+
+-- trigger paper_events_no_update
+CREATE TRIGGER paper_events_no_update BEFORE UPDATE ON paper_events BEGIN SELECT RAISE(ABORT, 'paper_events is append-only: correct by appending an event'); END
+

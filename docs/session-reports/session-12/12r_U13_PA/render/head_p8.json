@@ -1,0 +1,47 @@
+{
+ "tree": "/home/ankitsarin/projects/evidence-engine",
+ "engine_file": "/home/ankitsarin/projects/evidence-engine/engine/__init__.py",
+ "paper_id": 8,
+ "request_hash": "1d7e9edac7feb008deffb0f6b8ca6548103678eda7dbde90c8e8f13c5e7f330c",
+ "request_keys": [
+  "keep_alive",
+  "messages",
+  "model",
+  "options",
+  "think"
+ ],
+ "options": {
+  "model": "deepseek-r1:32b",
+  "options": {
+   "temperature": 0
+  },
+  "think": true,
+  "keep_alive": -1
+ },
+ "system_sha256": "e8557867155d29ca808a40b00caec6fd02a9454e09489843a7cabee046ee29a5",
+ "prompt_sha256": "71ee561c0d3213a589b7a86271f4b33230f55bd2d91af71fc3bcfbb1d0969e14",
+ "prompt_chars": 85150,
+ "n_units": 373,
+ "field_names": [
+  "study_type",
+  "robot_platform",
+  "task_performed",
+  "sample_size",
+  "surgical_domain",
+  "autonomy_level",
+  "validation_setting",
+  "task_monitor",
+  "task_generate",
+  "task_select",
+  "task_execute",
+  "system_maturity",
+  "study_design",
+  "country",
+  "primary_outcome_metric",
+  "primary_outcome_value",
+  "comparison_to_human",
+  "secondary_outcomes",
+  "key_limitation",
+  "clinical_readiness_assessment"
+ ]
+}

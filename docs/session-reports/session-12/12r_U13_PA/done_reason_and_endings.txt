@@ -1,0 +1,40 @@
+# grep -n 'input_fit paper_id=\(3\|8\|9\|10\) ' on each run.log (12g: ra_12g_copy/logs/ra_12g_run.log; 12r: ~/scratch/12r-u13/run.log); per paper in call order: Pass-1 attempt 1, attempt 2, Pass 2
+## 12g
+paper_id=3 {"ceiling": 131072, "chars": 195040, "count": 57927, "done_reason": "stop", "estimate_low": 37058, "model": "deepseek-r1:32b", "ratio": 0.297}
+paper_id=3 {"ceiling": 131072, "chars": 199453, "count": 59027, "done_reason": "stop", "estimate_low": 37896, "model": "deepseek-r1:32b", "ratio": 0.2959}
+paper_id=3 {"ceiling": 131072, "chars": 188314, "count": 50569, "done_reason": "stop", "estimate_low": 35780, "model": "deepseek-r1:32b", "ratio": 0.2685}
+paper_id=8 {"ceiling": 131072, "chars": 85435, "count": 20444, "done_reason": "stop", "estimate_low": 16233, "model": "deepseek-r1:32b", "ratio": 0.2393}
+paper_id=8 {"ceiling": 131072, "chars": 87145, "count": 20856, "done_reason": "stop", "estimate_low": 16558, "model": "deepseek-r1:32b", "ratio": 0.2393}
+paper_id=8 {"ceiling": 131072, "chars": 85697, "count": 19170, "done_reason": "stop", "estimate_low": 16282, "model": "deepseek-r1:32b", "ratio": 0.2237}
+paper_id=9 {"ceiling": 131072, "chars": 59083, "count": 14271, "done_reason": "stop", "estimate_low": 11226, "model": "deepseek-r1:32b", "ratio": 0.2415}
+paper_id=9 {"ceiling": 131072, "chars": 59693, "count": 14413, "done_reason": "stop", "estimate_low": 11342, "model": "deepseek-r1:32b", "ratio": 0.2415}
+paper_id=9 {"ceiling": 131072, "chars": 69278, "count": 16011, "done_reason": "stop", "estimate_low": 13163, "model": "deepseek-r1:32b", "ratio": 0.2311}
+paper_id=10 {"ceiling": 131072, "chars": 70633, "count": 18252, "done_reason": "stop", "estimate_low": 13420, "model": "deepseek-r1:32b", "ratio": 0.2584}
+paper_id=10 {"ceiling": 131072, "chars": 71979, "count": 18574, "done_reason": "stop", "estimate_low": 13676, "model": "deepseek-r1:32b", "ratio": 0.258}
+paper_id=10 {"ceiling": 131072, "chars": 71887, "count": 17210, "done_reason": "stop", "estimate_low": 13659, "model": "deepseek-r1:32b", "ratio": 0.2394}
+## 12r
+paper_id=3 {"ceiling": 131072, "chars": 191598, "count": 55425, "done_reason": "stop", "estimate_low": 36404, "model": "deepseek-r1:32b", "ratio": 0.2893}
+paper_id=3 {"ceiling": 131072, "chars": 195011, "count": 56226, "done_reason": "stop", "estimate_low": 37052, "model": "deepseek-r1:32b", "ratio": 0.2883}
+paper_id=3 {"ceiling": 131072, "chars": 187704, "count": 50219, "done_reason": "stop", "estimate_low": 35664, "model": "deepseek-r1:32b", "ratio": 0.2675}
+paper_id=8 {"ceiling": 131072, "chars": 85365, "count": 20445, "done_reason": "stop", "estimate_low": 16219, "model": "deepseek-r1:32b", "ratio": 0.2395}
+paper_id=8 {"ceiling": 131072, "chars": 85975, "count": 20587, "done_reason": "stop", "estimate_low": 16335, "model": "deepseek-r1:32b", "ratio": 0.2395}
+paper_id=8 {"ceiling": 131072, "chars": 85890, "count": 19295, "done_reason": "stop", "estimate_low": 16319, "model": "deepseek-r1:32b", "ratio": 0.2246}
+paper_id=9 {"ceiling": 131072, "chars": 59428, "count": 14332, "done_reason": "stop", "estimate_low": 11291, "model": "deepseek-r1:32b", "ratio": 0.2412}
+paper_id=9 {"ceiling": 131072, "chars": 61283, "count": 14798, "done_reason": "stop", "estimate_low": 11644, "model": "deepseek-r1:32b", "ratio": 0.2415}
+paper_id=9 {"ceiling": 131072, "chars": 63896, "count": 14873, "done_reason": "stop", "estimate_low": 12140, "model": "deepseek-r1:32b", "ratio": 0.2328}
+paper_id=10 {"ceiling": 131072, "chars": 70933, "count": 18384, "done_reason": "stop", "estimate_low": 13477, "model": "deepseek-r1:32b", "ratio": 0.2592}
+paper_id=10 {"ceiling": 131072, "chars": 74500, "count": 19227, "done_reason": "stop", "estimate_low": 14155, "model": "deepseek-r1:32b", "ratio": 0.2581}
+paper_id=10 {"ceiling": 131072, "chars": 71152, "count": 16969, "done_reason": "stop", "estimate_low": 13519, "model": "deepseek-r1:32b", "ratio": 0.2385}
+## raw response endings (last 12 chars, %q)
+raw_12g_p10_a1.txt $' }\n  ]\n}\n```'
+raw_12g_p3_a2.txt $' }\n  ]\n}\n```'
+raw_12g_p8_a1.txt $' }\n  ]\n}\n```'
+raw_12g_p9_a1.txt $' }\n  ]\n}\n```'
+raw_12r_p10_a1.txt $' }\n  ]\n}\n```'
+raw_12r_p10_a2.txt $'ly"\n    }\n]}'
+raw_12r_p3_a1.txt $' }\n  ]\n}\n```'
+raw_12r_p3_a2.txt $' }\n  ]\n}\n```'
+raw_12r_p8_a1.txt $' }\n  ]\n}\n```'
+raw_12r_p8_a2.txt $'ns"\n    }\n]}'
+raw_12r_p9_a1.txt $' }\n  ]\n}\n```'
+raw_12r_p9_a2.txt $' }\n  ]\n}\n```'

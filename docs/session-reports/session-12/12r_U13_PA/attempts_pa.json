@@ -1,0 +1,1404 @@
+{
+ "done_reason_by_paper": {
+  "1": [
+   {
+    "at": "22:18:17",
+    "done_reason": "stop",
+    "prompt_count": 12105
+   },
+   {
+    "at": "22:21:25",
+    "done_reason": "stop",
+    "prompt_count": 13661
+   },
+   {
+    "at": "22:25:41",
+    "done_reason": "stop",
+    "prompt_count": 12013
+   }
+  ],
+  "3": [
+   {
+    "at": "22:30:47",
+    "done_reason": "stop",
+    "prompt_count": 55425
+   },
+   {
+    "at": "22:35:29",
+    "done_reason": "stop",
+    "prompt_count": 56226
+   },
+   {
+    "at": "22:41:35",
+    "done_reason": "stop",
+    "prompt_count": 50219
+   }
+  ],
+  "4": [
+   {
+    "at": "22:48:10",
+    "done_reason": "stop",
+    "prompt_count": 48039
+   },
+   {
+    "at": "22:52:57",
+    "done_reason": "stop",
+    "prompt_count": 48446
+   },
+   {
+    "at": "22:59:22",
+    "done_reason": "stop",
+    "prompt_count": 43285
+   }
+  ],
+  "5": [
+   {
+    "at": "23:05:03",
+    "done_reason": "stop",
+    "prompt_count": 45737
+   },
+   {
+    "at": "23:11:04",
+    "done_reason": "stop",
+    "prompt_count": 47373
+   },
+   {
+    "at": "23:16:29",
+    "done_reason": "stop",
+    "prompt_count": 39688
+   }
+  ],
+  "6": [
+   {
+    "at": "23:21:48",
+    "done_reason": "stop",
+    "prompt_count": 27575
+   },
+   {
+    "at": "23:26:20",
+    "done_reason": "stop",
+    "prompt_count": 27713
+   },
+   {
+    "at": "23:30:39",
+    "done_reason": "stop",
+    "prompt_count": 22395
+   }
+  ],
+  "7": [
+   {
+    "at": "23:35:35",
+    "done_reason": "stop",
+    "prompt_count": 26978
+   },
+   {
+    "at": "23:39:23",
+    "done_reason": "stop",
+    "prompt_count": 27298
+   },
+   {
+    "at": "23:44:14",
+    "done_reason": "stop",
+    "prompt_count": 22185
+   }
+  ],
+  "8": [
+   {
+    "at": "23:48:39",
+    "done_reason": "stop",
+    "prompt_count": 20445
+   },
+   {
+    "at": "23:50:15",
+    "done_reason": "stop",
+    "prompt_count": 20587
+   },
+   {
+    "at": "23:54:27",
+    "done_reason": "stop",
+    "prompt_count": 19295
+   }
+  ],
+  "9": [
+   {
+    "at": "23:58:25",
+    "done_reason": "stop",
+    "prompt_count": 14332
+   },
+   {
+    "at": "00:01:33",
+    "done_reason": "stop",
+    "prompt_count": 14798
+   },
+   {
+    "at": "00:07:19",
+    "done_reason": "stop",
+    "prompt_count": 14873
+   }
+  ],
+  "10": [
+   {
+    "at": "00:13:23",
+    "done_reason": "stop",
+    "prompt_count": 18384
+   },
+   {
+    "at": "00:17:39",
+    "done_reason": "stop",
+    "prompt_count": 19227
+   },
+   {
+    "at": "00:21:50",
+    "done_reason": "stop",
+    "prompt_count": 16969
+   }
+  ],
+  "11": [
+   {
+    "at": "00:25:05",
+    "done_reason": "stop",
+    "prompt_count": 9441
+   },
+   {
+    "at": "00:28:47",
+    "done_reason": "stop",
+    "prompt_count": 10484
+   },
+   {
+    "at": "00:32:41",
+    "done_reason": "stop",
+    "prompt_count": 9879
+   }
+  ],
+  "12": [
+   {
+    "at": "00:37:06",
+    "done_reason": "stop",
+    "prompt_count": 17963
+   },
+   {
+    "at": "00:40:32",
+    "done_reason": "stop",
+    "prompt_count": 18195
+   },
+   {
+    "at": "00:45:22",
+    "done_reason": "stop",
+    "prompt_count": 17493
+   }
+  ]
+ },
+ "papers": {
+  "12g": {
+   "3": {
+    "accepted_attempt": 2,
+    "attempts": [
+     {
+      "attempt": 1,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [],
+        "present": 6
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [],
+        "present": 5
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "INDEX_OUT_OF_RANGE": 1,
+       "INFERENCE_MISSING": 1,
+       "STEPS_MISSING": 5,
+       "VALUE_WITHOUT_CITATION": 5
+      },
+      "duplicated_fields": null,
+      "feedback_chars": 0,
+      "field_set": "derived from codes (no raw stored)",
+      "n_failed": 9,
+      "parse_path_recorded": "direct",
+      "prompt_chars": 194825,
+      "prompt_eval_count": 57927,
+      "raw_source": null,
+      "request_hash": null
+     },
+     {
+      "attempt": 2,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [
+         "task_select",
+         "country"
+        ],
+        "present": 4
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [],
+        "present": 5
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "FIELD_MISSING": 2,
+       "INFERENCE_MISSING": 1,
+       "VALUE_WITHOUT_CITATION": 2
+      },
+      "duplicated_fields": null,
+      "feedback_chars": 4413,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 4,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes",
+       "surgical_domain",
+       "task_monitor",
+       "task_generate",
+       "task_execute",
+       "autonomy_level",
+       "system_maturity",
+       "study_design",
+       "key_limitation",
+       "clinical_readiness_assessment"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 199238,
+      "prompt_eval_count": 59027,
+      "raw_chars": 3358,
+      "raw_source": "pass1_raw_content (accepted)",
+      "request_hash": null
+     }
+    ],
+    "outcome": "stored"
+   },
+   "8": {
+    "accepted_attempt": 1,
+    "attempts": [
+     {
+      "attempt": 1,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [],
+        "present": 6
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [],
+        "present": 5
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "VALUE_WITHOUT_CITATION": 4
+      },
+      "duplicated_fields": null,
+      "feedback_chars": 0,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 4,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes",
+       "surgical_domain",
+       "task_monitor",
+       "task_generate",
+       "task_select",
+       "task_execute",
+       "country",
+       "autonomy_level",
+       "system_maturity",
+       "study_design",
+       "key_limitation",
+       "clinical_readiness_assessment"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 85220,
+      "prompt_eval_count": 20444,
+      "raw_chars": 3762,
+      "raw_source": "pass1_raw_content (accepted)",
+      "request_hash": null
+     },
+     {
+      "attempt": 2,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [
+         "surgical_domain",
+         "task_monitor",
+         "task_generate",
+         "task_select",
+         "task_execute",
+         "country"
+        ],
+        "present": 0
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [
+         "autonomy_level",
+         "system_maturity",
+         "study_design",
+         "key_limitation",
+         "clinical_readiness_assessment"
+        ],
+        "present": 0
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "FIELD_MISSING": 11,
+       "VALUE_WITHOUT_CITATION": 1
+      },
+      "duplicated_fields": null,
+      "feedback_chars": 1710,
+      "field_set": "derived from codes (no raw stored)",
+      "n_failed": 12,
+      "parse_path_recorded": "direct",
+      "prompt_chars": 86930,
+      "prompt_eval_count": 20856,
+      "raw_source": null,
+      "request_hash": null
+     }
+    ],
+    "outcome": "stored"
+   },
+   "9": {
+    "accepted_attempt": 1,
+    "attempts": [
+     {
+      "attempt": 1,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [],
+        "present": 6
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [],
+        "present": 5
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "VALUE_WITHOUT_CITATION": 1
+      },
+      "duplicated_fields": null,
+      "feedback_chars": 0,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 1,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes",
+       "surgical_domain",
+       "task_monitor",
+       "task_generate",
+       "task_select",
+       "task_execute",
+       "country",
+       "autonomy_level",
+       "system_maturity",
+       "study_design",
+       "key_limitation",
+       "clinical_readiness_assessment"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 58868,
+      "prompt_eval_count": 14271,
+      "raw_chars": 4020,
+      "raw_source": "pass1_raw_content (accepted)",
+      "request_hash": null
+     },
+     {
+      "attempt": 2,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [
+         "surgical_domain",
+         "task_monitor",
+         "task_generate",
+         "task_select",
+         "task_execute",
+         "country"
+        ],
+        "present": 0
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [
+         "autonomy_level",
+         "system_maturity",
+         "study_design",
+         "key_limitation",
+         "clinical_readiness_assessment"
+        ],
+        "present": 0
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "FIELD_MISSING": 11,
+       "VALUE_WITHOUT_CITATION": 1
+      },
+      "duplicated_fields": null,
+      "feedback_chars": 610,
+      "field_set": "derived from codes (no raw stored)",
+      "n_failed": 12,
+      "parse_path_recorded": "direct",
+      "prompt_chars": 59478,
+      "prompt_eval_count": 14413,
+      "raw_source": null,
+      "request_hash": null
+     }
+    ],
+    "outcome": "stored"
+   },
+   "10": {
+    "accepted_attempt": 1,
+    "attempts": [
+     {
+      "attempt": 1,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [],
+        "present": 6
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [],
+        "present": 5
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "VALUE_WITHOUT_CITATION": 3
+      },
+      "duplicated_fields": null,
+      "feedback_chars": 0,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 3,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes",
+       "surgical_domain",
+       "task_monitor",
+       "task_generate",
+       "task_select",
+       "task_execute",
+       "country",
+       "autonomy_level",
+       "system_maturity",
+       "study_design",
+       "key_limitation",
+       "clinical_readiness_assessment"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 70418,
+      "prompt_eval_count": 18252,
+      "raw_chars": 4007,
+      "raw_source": "pass1_raw_content (accepted)",
+      "request_hash": null
+     },
+     {
+      "attempt": 2,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [
+         "surgical_domain",
+         "task_monitor",
+         "task_generate",
+         "task_select",
+         "task_execute",
+         "country"
+        ],
+        "present": 0
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [
+         "autonomy_level",
+         "system_maturity",
+         "study_design",
+         "key_limitation",
+         "clinical_readiness_assessment"
+        ],
+        "present": 0
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "FIELD_MISSING": 11
+      },
+      "duplicated_fields": null,
+      "feedback_chars": 1346,
+      "field_set": "derived from codes (no raw stored)",
+      "n_failed": 11,
+      "parse_path_recorded": "direct",
+      "prompt_chars": 71764,
+      "prompt_eval_count": 18574,
+      "raw_source": null,
+      "request_hash": null
+     }
+    ],
+    "outcome": "stored"
+   }
+  },
+  "12r": {
+   "3": {
+    "accepted_attempt": 2,
+    "attempts": [
+     {
+      "attempt": 1,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [
+         "surgical_domain",
+         "task_monitor",
+         "task_generate",
+         "task_select",
+         "task_execute",
+         "country"
+        ],
+        "present": 0
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [
+         "autonomy_level",
+         "system_maturity",
+         "study_design",
+         "key_limitation",
+         "clinical_readiness_assessment"
+        ],
+        "present": 0
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [
+         "primary_outcome_value"
+        ],
+        "present": 8
+       }
+      },
+      "codes": {
+       "FIELD_MISSING": 12,
+       "VALUE_WITHOUT_CITATION": 1
+      },
+      "duplicated_fields": [],
+      "feedback_chars": 0,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 13,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "comparison_to_human",
+       "secondary_outcomes"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 191383,
+      "prompt_eval_count": 55425,
+      "raw_chars": 1095,
+      "raw_source": "attempts[].raw_content",
+      "request_hash": "9769dd264f358f223a1fd6041c8025d5d8aa8ef095289383ca7a1dbe00c4fe33"
+     },
+     {
+      "attempt": 2,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [],
+        "present": 6
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [],
+        "present": 5
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "VALUE_WITHOUT_CITATION": 1
+      },
+      "duplicated_fields": [],
+      "feedback_chars": 3413,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 1,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes",
+       "surgical_domain",
+       "task_monitor",
+       "task_generate",
+       "task_select",
+       "task_execute",
+       "country",
+       "autonomy_level",
+       "system_maturity",
+       "study_design",
+       "key_limitation",
+       "clinical_readiness_assessment"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 194796,
+      "prompt_eval_count": 56226,
+      "raw_chars": 3763,
+      "raw_source": "attempts[].raw_content",
+      "request_hash": "6aefc77c5cdcef33302dd4df7f6046e5d25efe2a0a1d3fb95cb177cfc691fb06"
+     }
+    ],
+    "outcome": "stored",
+    "pass1_calls_done_reason": [
+     {
+      "at": "22:30:47",
+      "done_reason": "stop",
+      "prompt_count": 55425
+     },
+     {
+      "at": "22:35:29",
+      "done_reason": "stop",
+      "prompt_count": 56226
+     },
+     {
+      "at": "22:41:35",
+      "done_reason": "stop",
+      "prompt_count": 50219
+     }
+    ],
+    "rerender": {
+     "attempt1_hash_equal": true,
+     "attempt2_hash_equal": true,
+     "feedback_chars": 3413,
+     "feedback_chars_recorded": 3413
+    }
+   },
+   "8": {
+    "accepted_attempt": 1,
+    "attempts": [
+     {
+      "attempt": 1,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [],
+        "present": 6
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [],
+        "present": 5
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "VALUE_WITHOUT_CITATION": 1
+      },
+      "duplicated_fields": [],
+      "feedback_chars": 0,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 1,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes",
+       "surgical_domain",
+       "task_monitor",
+       "task_generate",
+       "task_select",
+       "task_execute",
+       "country",
+       "autonomy_level",
+       "system_maturity",
+       "study_design",
+       "key_limitation",
+       "clinical_readiness_assessment"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 85150,
+      "prompt_eval_count": 20445,
+      "raw_chars": 4046,
+      "raw_source": "attempts[].raw_content",
+      "request_hash": "1d7e9edac7feb008deffb0f6b8ca6548103678eda7dbde90c8e8f13c5e7f330c"
+     },
+     {
+      "attempt": 2,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [
+         "surgical_domain",
+         "task_monitor",
+         "task_generate",
+         "task_select",
+         "task_execute",
+         "country"
+        ],
+        "present": 0
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [
+         "autonomy_level",
+         "system_maturity",
+         "study_design",
+         "key_limitation",
+         "clinical_readiness_assessment"
+        ],
+        "present": 0
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "FIELD_MISSING": 11,
+       "VALUE_WITHOUT_CITATION": 1
+      },
+      "duplicated_fields": [],
+      "feedback_chars": 610,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 12,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 85760,
+      "prompt_eval_count": 20587,
+      "raw_chars": 1372,
+      "raw_source": "attempts[].raw_content",
+      "request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658"
+     }
+    ],
+    "outcome": "stored",
+    "pass1_calls_done_reason": [
+     {
+      "at": "23:48:39",
+      "done_reason": "stop",
+      "prompt_count": 20445
+     },
+     {
+      "at": "23:50:15",
+      "done_reason": "stop",
+      "prompt_count": 20587
+     },
+     {
+      "at": "23:54:27",
+      "done_reason": "stop",
+      "prompt_count": 19295
+     }
+    ],
+    "rerender": {
+     "attempt1_hash_equal": true,
+     "attempt2_hash_equal": true,
+     "feedback_chars": 610,
+     "feedback_chars_recorded": 610
+    }
+   },
+   "9": {
+    "accepted_attempt": 1,
+    "attempts": [
+     {
+      "attempt": 1,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [],
+        "present": 6
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [],
+        "present": 5
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "STEPS_MISSING": 3,
+       "VALUE_WITHOUT_CITATION": 1
+      },
+      "duplicated_fields": [],
+      "feedback_chars": 0,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 4,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes",
+       "surgical_domain",
+       "task_monitor",
+       "task_generate",
+       "task_select",
+       "task_execute",
+       "country",
+       "autonomy_level",
+       "system_maturity",
+       "study_design",
+       "key_limitation",
+       "clinical_readiness_assessment"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 59213,
+      "prompt_eval_count": 14332,
+      "raw_chars": 3889,
+      "raw_source": "attempts[].raw_content",
+      "request_hash": "4d4acab293e67e1ae215fe506c30bcfc65b98371f7cda1a163a57c1b5c92f188"
+     },
+     {
+      "attempt": 2,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [],
+        "present": 6
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [],
+        "present": 5
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "INFERENCE_MISSING": 6,
+       "VALUE_WITHOUT_CITATION": 5
+      },
+      "duplicated_fields": [],
+      "feedback_chars": 1855,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 6,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes",
+       "surgical_domain",
+       "task_monitor",
+       "task_generate",
+       "task_select",
+       "task_execute",
+       "country",
+       "autonomy_level",
+       "system_maturity",
+       "study_design",
+       "key_limitation",
+       "clinical_readiness_assessment"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 61068,
+      "prompt_eval_count": 14798,
+      "raw_chars": 3568,
+      "raw_source": "attempts[].raw_content",
+      "request_hash": "d215f3a323dc97d21570338eaed5510414fec979df40c7fd2bd25633b9a63b9a"
+     }
+    ],
+    "outcome": "stored",
+    "pass1_calls_done_reason": [
+     {
+      "at": "23:58:25",
+      "done_reason": "stop",
+      "prompt_count": 14332
+     },
+     {
+      "at": "00:01:33",
+      "done_reason": "stop",
+      "prompt_count": 14798
+     },
+     {
+      "at": "00:07:19",
+      "done_reason": "stop",
+      "prompt_count": 14873
+     }
+    ],
+    "rerender": {
+     "attempt1_hash_equal": true,
+     "attempt2_hash_equal": true,
+     "feedback_chars": 1855,
+     "feedback_chars_recorded": 1855
+    }
+   },
+   "10": {
+    "accepted_attempt": 2,
+    "attempts": [
+     {
+      "attempt": 1,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [
+         "surgical_domain",
+         "task_monitor",
+         "task_generate",
+         "task_select",
+         "task_execute",
+         "country"
+        ],
+        "present": 0
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [
+         "autonomy_level",
+         "system_maturity",
+         "study_design",
+         "key_limitation",
+         "clinical_readiness_assessment"
+        ],
+        "present": 0
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {
+       "FIELD_MISSING": 11,
+       "VALUE_WITHOUT_CITATION": 2
+      },
+      "duplicated_fields": [],
+      "feedback_chars": 0,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 13,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 70718,
+      "prompt_eval_count": 18384,
+      "raw_chars": 2601,
+      "raw_source": "attempts[].raw_content",
+      "request_hash": "b86027c8a6b0aaefc97c4f6eff3546d345d9fc7c11a4be6d80a88f94e8525821"
+     },
+     {
+      "attempt": 2,
+      "classes": {
+       "inferable": {
+        "expected": 6,
+        "missing": [],
+        "present": 6
+       },
+       "judgment": {
+        "expected": 5,
+        "missing": [],
+        "present": 5
+       },
+       "stated": {
+        "expected": 9,
+        "missing": [],
+        "present": 9
+       }
+      },
+      "codes": {},
+      "duplicated_fields": [],
+      "feedback_chars": 3567,
+      "field_set": "from raw",
+      "json_whole": {
+       "parses": true
+      },
+      "n_failed": 0,
+      "names_present": [
+       "study_type",
+       "robot_platform",
+       "task_performed",
+       "sample_size",
+       "validation_setting",
+       "primary_outcome_metric",
+       "primary_outcome_value",
+       "comparison_to_human",
+       "secondary_outcomes",
+       "surgical_domain",
+       "task_monitor",
+       "task_generate",
+       "task_select",
+       "task_execute",
+       "country",
+       "autonomy_level",
+       "system_maturity",
+       "study_design",
+       "key_limitation",
+       "clinical_readiness_assessment"
+      ],
+      "parse_container_path": "direct",
+      "parse_path_recorded": "direct",
+      "prompt_chars": 74285,
+      "prompt_eval_count": 19227,
+      "raw_chars": 4050,
+      "raw_source": "attempts[].raw_content",
+      "request_hash": "3acf7b198db5942099a7e0eb7edfed5ce8efd0729a561302ba247bac424df379"
+     }
+    ],
+    "outcome": "stored",
+    "pass1_calls_done_reason": [
+     {
+      "at": "00:13:23",
+      "done_reason": "stop",
+      "prompt_count": 18384
+     },
+     {
+      "at": "00:17:39",
+      "done_reason": "stop",
+      "prompt_count": 19227
+     },
+     {
+      "at": "00:21:50",
+      "done_reason": "stop",
+      "prompt_count": 16969
+     }
+    ],
+    "rerender": {
+     "attempt1_hash_equal": true,
+     "attempt2_hash_equal": true,
+     "feedback_chars": 3567,
+     "feedback_chars_recorded": 3567
+    }
+   }
+  }
+ },
+ "r8": {
+  "12g": {
+   "1": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "2": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "input_exceeds_context",
+    "stated": 0,
+    "total": 0
+   },
+   "3": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "4": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 1,
+    "total": 1
+   },
+   "5": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "6": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "7": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "8": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "9": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "10": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "11": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "12": {
+    "inferable": 1,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 1
+   }
+  },
+  "12r": {
+   "1": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "2": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "input_exceeds_context",
+    "stated": 0,
+    "total": 0
+   },
+   "3": {
+    "inferable": 6,
+    "judgment": 5,
+    "outcome": "stored",
+    "stated": 1,
+    "total": 12
+   },
+   "4": {
+    "inferable": 1,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 1,
+    "total": 2
+   },
+   "5": {
+    "inferable": 1,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 1
+   },
+   "6": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "7": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "8": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "9": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "10": {
+    "inferable": 6,
+    "judgment": 5,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 11
+   },
+   "11": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   },
+   "12": {
+    "inferable": 0,
+    "judgment": 0,
+    "outcome": "stored",
+    "stated": 0,
+    "total": 0
+   }
+  }
+ }
+}

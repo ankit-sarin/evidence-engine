@@ -1,0 +1,47 @@
+{
+ "tree": "/home/ankitsarin/scratch/12r-u13-pa/tree_90f4697",
+ "engine_file": "/home/ankitsarin/scratch/12r-u13-pa/tree_90f4697/engine/__init__.py",
+ "paper_id": 10,
+ "request_hash": "788cdcee3acebe2c7348f482e32448236285a47e40d3dd08ccceede781ccf026",
+ "request_keys": [
+  "keep_alive",
+  "messages",
+  "model",
+  "options",
+  "think"
+ ],
+ "options": {
+  "model": "deepseek-r1:32b",
+  "options": {
+   "temperature": 0
+  },
+  "think": true,
+  "keep_alive": -1
+ },
+ "system_sha256": "e8557867155d29ca808a40b00caec6fd02a9454e09489843a7cabee046ee29a5",
+ "prompt_sha256": "067fe8b05e6771bd4eceaf2bfd0a3ea0d36b22bc9e95daeb41f3dc796eb36658",
+ "prompt_chars": 70418,
+ "n_units": 369,
+ "field_names": [
+  "study_type",
+  "robot_platform",
+  "task_performed",
+  "sample_size",
+  "surgical_domain",
+  "autonomy_level",
+  "validation_setting",
+  "task_monitor",
+  "task_generate",
+  "task_select",
+  "task_execute",
+  "system_maturity",
+  "study_design",
+  "country",
+  "primary_outcome_metric",
+  "primary_outcome_value",
+  "comparison_to_human",
+  "secondary_outcomes",
+  "key_limitation",
+  "clinical_readiness_assessment"
+ ]
+}

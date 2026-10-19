@@ -1,0 +1,18 @@
+4c4
+< marker of the form [S1], [S2], ... [S1491]. You cite evidence by unit
+---
+> marker of the form [S1], [S2], ... [S1520]. You cite evidence by unit
+7c7
+< Every index must be a bare JSON integer between 1 and 1491. **Use the
+---
+> Every index must be a bare JSON integer between 1 and 1520. **Use the
+11c11
+< JSON and the whole response is discarded.
+---
+> JSON, and the field it is written in fails.
+22a23
+> A field instruction to record NR does not set aside the sentinel rule: cite the sentence that states the absence, or output NO_EVIDENCE_LOCATABLE if no such sentence exists.
+93a95
+> A field instruction to record NR does not set aside the sentinel rule: cite the sentence that states the absence, or output NO_EVIDENCE_LOCATABLE if no such sentence exists.
+169a172
+> At least one step must cite a unit.

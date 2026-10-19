@@ -1,0 +1,379 @@
+=== 12r paper 3 attempt 1 (attempts[].raw_content; 1095 chars)
+--- first 300
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [20],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [253, 261],
+      "value": "UR5 robot; ISUR robot"
+    },
+    {
+      "field_name": "task_performed"
+--- last 300
+ "field_name": "comparison_to_human",
+      "unit_indices": [],
+      "value": "NR"
+    },
+    {
+      "field_name": "secondary_outcomes",
+      "unit_indices": [276, 314],
+      "value": "registration accuracy; US image segmentation quality; system stability during needle insertion"
+    }
+  ]
+}
+```
+
+=== 12r paper 3 attempt 2 (attempts[].raw_content; 3763 chars)
+--- first 300
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [20],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [175, 183],
+      "value": "UR5 robot; ISUR robot"
+    },
+    {
+      "field_name": "task_performed"
+--- last 300
+cal validation"
+    },
+    {
+      "field_name": "clinical_readiness_assessment",
+      "reasoning_steps": [
+        {
+          "step": "The system is in early development, tested on phantoms.",
+          "unit_indices": [175]
+        }
+      ],
+      "value": "Early-stage research"
+    }
+  ]
+}
+```
+
+=== 12r paper 8 attempt 1 (attempts[].raw_content; 4046 chars)
+--- first 300
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [20],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [276, 281],
+      "value": "CISOBOT"
+    },
+    {
+      "field_name": "task_performed",
+      "unit_
+--- last 300
+  },
+    {
+      "field_name": "clinical_readiness_assessment",
+      "reasoning_steps": [
+        {
+          "step": "The system has been tested in vitro but not yet in clinical trials.",
+          "unit_indices": [275, 305]
+        }
+      ],
+      "value": "Proof of concept only"
+    }
+  ]
+}
+```
+
+=== 12r paper 8 attempt 2 (attempts[].raw_content; 1372 chars)
+--- first 300
+{"fields": [
+    {
+        "field_name": "study_type",
+        "unit_indices": [20],
+        "value": "Original Research"
+    },
+    {
+        "field_name": "robot_platform",
+        "unit_indices": [276, 281],
+        "value": "CISOBOT"
+    },
+    {
+        "field_name": "task_performed",
+        "
+--- last 300
+on_to_human",
+        "unit_indices": [],
+        "value": "NR"
+    },
+    {
+        "field_name": "secondary_outcomes",
+        "unit_indices": [315, 324],
+        "value": "Distance to target: achieved with minimal collision risk; Tool velocities: adapted in real-time to avoid collisions"
+    }
+]}
+
+=== 12r paper 9 attempt 1 (attempts[].raw_content; 3889 chars)
+--- first 300
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [146],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [35, 38],
+      "value": "Jaka Robotics Ltd., China; customised fanges"
+    },
+    {
+      "field_n
+--- last 300
+"
+    },
+    {
+      "field_name": "clinical_readiness_assessment",
+      "reasoning_steps": [
+        {"step": "Demonstrated on phantom model without clinical trials.", "unit_indices": [36, 107]},
+        {"criteria_application": true}
+      ],
+      "value": "Proof of concept only"
+    }
+  ]
+}
+```
+
+=== 12r paper 9 attempt 2 (attempts[].raw_content; 3568 chars)
+--- first 300
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [34],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [35, 38],
+      "value": "Jaka Robotics Ltd., China; Jaka Robotics Ltd., China"
+    },
+    {
+      "
+--- last 300
+mple; model is simplified compared to real surgery."
+    },
+    {
+      "field_name": "clinical_readiness_assessment",
+      "reasoning_steps": [
+        {"step": "Tested on phantom model without clinical trials.", "unit_indices": [36]}
+      ],
+      "value": "Proof of concept only"
+    }
+  ]
+}
+```
+
+=== 12r paper 10 attempt 1 (attempts[].raw_content; 2601 chars)
+--- first 300
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [2],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [41, 76, 80, 95, 103, 105, 110, 112, 114, 115, 116, 117, 118, 120, 121, 122, 123, 124, 125, 126, 127,
+--- last 300
+: "primary_outcome_value",
+      "unit_indices": [221],
+      "value": "1.622 mm"
+    },
+    {
+      "field_name": "comparison_to_human",
+      "unit_indices": [],
+      "value": "NR"
+    },
+    {
+      "field_name": "secondary_outcomes",
+      "unit_indices": [],
+      "value": "NR"
+    }
+  ]
+}
+```
+
+=== 12r paper 10 attempt 2 (attempts[].raw_content; 4050 chars)
+--- first 300
+{"fields": [
+    {
+        "field_name": "study_type",
+        "unit_indices": [12],
+        "value": "Original Research"
+    },
+    {
+        "field_name": "robot_platform",
+        "unit_indices": [40, 41],
+        "value": "Magnetic anchoring robot system"
+    },
+    {
+        "field_name": "task
+--- last 300
+clinical_readiness_assessment",
+        "reasoning_steps": [
+            {
+                "step": "The system has been tested on tissue and simulations but not in clinical trials.",
+                "unit_indices": [218, 250]
+            }
+        ],
+        "value": "Proof of concept only"
+    }
+]}
+
+=== 12g paper 3 attempt 2 (pass1_raw_content (accepted); 3358 chars)
+--- first 300
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [20],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [149, 253],
+      "value": "ISUR robot; UR5 robot"
+    },
+    {
+      "field_name": "task_performed"
+--- last 300
+g"
+    },
+    {
+      "field_name": "clinical_readiness_assessment",
+      "reasoning_steps": [
+        {
+          "step": "The paper does not discuss clinical trials or regulatory clearance.",
+          "criteria_application": true
+        }
+      ],
+      "value": "Not assessable"
+    }
+  ]
+}
+```
+
+=== 12g paper 8 attempt 1 (pass1_raw_content (accepted); 3762 chars)
+--- first 300
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [20],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [278],
+      "value": "CISOBOT"
+    },
+    {
+      "field_name": "task_performed",
+      "unit_indic
+--- last 300
+force control."
+    },
+    {
+      "field_name": "clinical_readiness_assessment",
+      "reasoning_steps": [
+        {
+          "step": "Experiments are in vitro without clinical trials.",
+          "unit_indices": [269, 278]
+        }
+      ],
+      "value": "Proof of concept only"
+    }
+  ]
+}
+```
+
+=== 12g paper 9 attempt 1 (pass1_raw_content (accepted); 4020 chars)
+--- first 300
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [1],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [35, 36],
+      "value": "Two collaborative robots (Jaka Robotics Ltd., China)"
+    },
+    {
+      "f
+--- last 300
+ {
+      "field_name": "clinical_readiness_assessment",
+      "reasoning_steps": [
+        {"step": "Demonstrated on phantom model.", "unit_indices": [36]},
+        {"step": "No clinical trials conducted.", "criteria_application": true}
+      ],
+      "value": "Proof of concept only"
+    }
+  ]
+}
+```
+
+=== 12g paper 10 attempt 1 (pass1_raw_content (accepted); 4007 chars)
+--- first 300
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [2, 40],
+      "value": "Magnetic anchoring robot system; Visual servo control subsystem"
+    },
+    {
+--- last 300
+    },
+    {
+      "field_name": "clinical_readiness_assessment",
+      "reasoning_steps": [
+        {
+          "step": "Demonstrated on tissue phantoms and cadavers, no clinical trials.",
+          "unit_indices": [205, 236]
+        }
+      ],
+      "value": "Proof of concept only"
+    }
+  ]
+}
+```

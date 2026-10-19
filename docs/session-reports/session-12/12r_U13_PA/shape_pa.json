@@ -1,0 +1,337 @@
+{
+ "attempts": {
+  "12g": {
+   "1": {
+    "1": {
+     "n_failed": 2,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 3,
+     "stated_only": false
+    }
+   },
+   "10": {
+    "1": {
+     "n_failed": 3,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "stated"
+     ],
+     "n_failed": 11,
+     "stated_only": true
+    }
+   },
+   "11": {
+    "1": {
+     "n_failed": 0,
+     "stated_only": false
+    }
+   },
+   "12": {
+    "1": {
+     "n_failed": 3,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "stated"
+     ],
+     "n_failed": 1,
+     "stated_only": false
+    }
+   },
+   "3": {
+    "1": {
+     "n_failed": 9,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 4,
+     "stated_only": false
+    }
+   },
+   "4": {
+    "1": {
+     "n_failed": 9,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 5,
+     "stated_only": false
+    }
+   },
+   "5": {
+    "1": {
+     "n_failed": 8,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 1,
+     "stated_only": false
+    }
+   },
+   "6": {
+    "1": {
+     "n_failed": 1,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "judgment"
+     ],
+     "n_failed": 7,
+     "stated_only": false
+    }
+   },
+   "7": {
+    "1": {
+     "n_failed": 6,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 6,
+     "stated_only": false
+    }
+   },
+   "8": {
+    "1": {
+     "n_failed": 4,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "stated"
+     ],
+     "n_failed": 12,
+     "stated_only": true
+    }
+   },
+   "9": {
+    "1": {
+     "n_failed": 1,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "stated"
+     ],
+     "n_failed": 12,
+     "stated_only": true
+    }
+   }
+  },
+  "12r": {
+   "1": {
+    "1": {
+     "n_failed": 11,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 1,
+     "stated_only": false
+    }
+   },
+   "10": {
+    "1": {
+     "n_failed": 13,
+     "stated_only": true
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 0,
+     "stated_only": false
+    }
+   },
+   "11": {
+    "1": {
+     "n_failed": 7,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "stated"
+     ],
+     "n_failed": 0,
+     "stated_only": false
+    }
+   },
+   "12": {
+    "1": {
+     "n_failed": 2,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "stated"
+     ],
+     "n_failed": 0,
+     "stated_only": false
+    }
+   },
+   "3": {
+    "1": {
+     "n_failed": 13,
+     "stated_only": true
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 1,
+     "stated_only": false
+    }
+   },
+   "4": {
+    "1": {
+     "n_failed": 4,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 5,
+     "stated_only": false
+    }
+   },
+   "5": {
+    "1": {
+     "n_failed": 13,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 1,
+     "stated_only": false
+    }
+   },
+   "6": {
+    "1": {
+     "n_failed": 1,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable"
+     ],
+     "n_failed": 1,
+     "stated_only": false
+    }
+   },
+   "7": {
+    "1": {
+     "n_failed": 3,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "inferable",
+      "stated"
+     ],
+     "n_failed": 0,
+     "stated_only": false
+    }
+   },
+   "8": {
+    "1": {
+     "n_failed": 1,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "stated"
+     ],
+     "n_failed": 12,
+     "stated_only": true
+    }
+   },
+   "9": {
+    "1": {
+     "n_failed": 4,
+     "stated_only": false
+    },
+    "2": {
+     "attempt1_failed_classes": [
+      "judgment",
+      "stated"
+     ],
+     "n_failed": 6,
+     "stated_only": false
+    }
+   }
+  }
+ },
+ "summary": {
+  "12g": {
+   "attempt1_stated_only": [],
+   "attempt2_after_stated_only_feedback": [
+    "8",
+    "9",
+    "10"
+   ],
+   "attempt2_stated_only": [
+    "8",
+    "9",
+    "10"
+   ]
+  },
+  "12r": {
+   "attempt1_stated_only": [
+    "3",
+    "10"
+   ],
+   "attempt2_after_stated_only_feedback": [
+    "8",
+    "12"
+   ],
+   "attempt2_stated_only": [
+    "8"
+   ]
+  }
+ }
+}

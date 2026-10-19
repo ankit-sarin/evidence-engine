@@ -1,0 +1,50 @@
+RULING [evidence-engine 12s-R674] — 12s-OPEN accepted; 3(i)'s "no database is opened" withdrawn for
+  the restore points; the band decision deferred to the 12s closeout with four readings recorded;
+  U14's Phase A opens
+STATUS: PI ruling, 2026-10-19 UTC, session 12s, on architect recommendation, on the 12s-OPEN final
+  report under R673 (item 0 1ddff37637531fb8e22d8c69309f47caf0f0001c; claude-config
+  f7da8138d49732acffd75ad3e90efbfc2bb35ad3). Transcribe as Block 72 at item 0 of the 12s-U14A brief
+  below, in this block, after Block 71 (R673), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12s-OPEN final report):
+  MEASURED: "Commit 1ddff37637531fb8e22d8c69309f47caf0f0001c, parent
+    15b7ef9bd85885f5d1ef25d4b1c5dfcad625d32d"; "3 files changed, 124 insertions(+), 1 deletion(-)";
+    "exactly 1 '-' line(s), one per named row: True / RESULT: PASS"; "Committed plan: sha256
+    11df06ff…5560, 1,592,088 bytes, 7,230 lines"; "line 7168 is still The decision log in this file
+    ends at R671."; "Commit f7da8138d49732acffd75ad3e90efbfc2bb35ad3, parent
+    a9459b61487d2c5c7b9e04ab0e1f06d117b8ffca"; "ledger: rows through 2026-10-19T16:13:20Z"; "==== 3306
+    passed, 17 deselected, 1 xfailed, 2 warnings in 855.93s (0:14:15) ===="; "Wall time 858.50 s";
+    "only-gate 0 / only-ref 0"; "Ollama journal 16:13:52–16:28:12: -- No entries --"; "phases slower by
+    >10 s: 0"; "The four R-13 values are unchanged from step 0 and equal host_state_close.txt";
+    "An ffmpeg encode was running throughout the gate"; "Temp root after: 4 entries (pytest-6,
+    pytest-7, pytest-8, pytest-current), 4,102,124,900 B"; (g)–(l) MATCHED as tabled; the recount
+    JSON "now {'class_1': 95, 'class_2': 50, 'class_3': 131, 'rows': 276, 'without_class': 0}",
+    "expected_holds True"; the restore-point table (five sizes, mtimes, file sha256 prefixes);
+    "None has a -wal or -shm sidecar"; "Nothing is resident in Ollama."
+  READ (CC's): "12r-OPEN's retention_open.txt shows its fingerprint lines in db_fingerprint output
+    form".
+  INFERRED: none.
+
+R674(a) — 12s-OPEN is accepted as reported: item 0 landed as 1ddff37 (Block 70, the INT-h12-2
+  package-table note, lane_line_12r.txt and r672.txt in 12r_close/), the ledger row as f7da813; the
+  decision log in the file ends at R672; the recount is 276 (95 / 50 / 131, 0; P1 58, 35 fix units;
+  P7 117). The 2026-10-19 nightly matched expected_nightly_20261019.md line for line; the 07:00
+  health job loaded 20 of 20. The 12s open stands verified.
+R674(b) — 3(i)'s "No database is opened for this" was an architect clause that, applied to the five
+  restore points, forbade the only instrument that can verify them; withdrawn for restore points.
+  From here, retention is two checks with two instruments: retained throwaway reviews and U06's copy
+  by review.db file sha256 only, never opened (R662(e), F9, unchanged); the five restore points by
+  db_fingerprint --compare against their recorded records, opened mode=ro, as 12r-OPEN did, a named
+  step. The five are re-verified at item 0 of 12s-U14A. The sizes, mtimes and file sha256s CC
+  recorded are readings and become a second record for the five, written into the 12s-U14A
+  evidence directory.
+R674(c) — The band series on this host state has four readings: 868.02, 871.59, 906.50 and 858.50 s,
+  the third and fourth each beside a concurrent surgical-cv encode (R666(b)). Means: 876.15 s over
+  four, 866.04 s over the two unconfounded. Whether a confounded reading enters the mean is the 12s
+  closeout's decision (R657(d)); no band is cut now, and the Phase A's gates, if any, report wall
+  time as a reading beside the four.
+R674(d) — Readings, no rows: this gate's concurrent encode is its confounder, recorded as 906.50's
+  was; pytest rotated surgical-cv's pytest-5 out of the temp root on its own; the two warnings are
+  sklearn's from tests/test_kappa.py.
+R674(e) — U14's Phase A opens under the brief below, read-only. R673 and R674 transcribe as Blocks
+  71 and 72 at its item 0.

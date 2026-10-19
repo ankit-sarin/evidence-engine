@@ -1,0 +1,214 @@
+engine/agents/audit_events.py:1  [<module>]  string ['located'] <1865 chars>
+engine/agents/audit_events.py:54  [<module>]  import FUZZY_THRESHOLD
+engine/agents/audit_events.py:54  [<module>]  import LOCATOR_VERSION
+engine/agents/audit_events.py:54  [<module>]  import locate
+engine/agents/audit_events.py:54  [<module>]  import locate_payload
+engine/agents/audit_events.py:62  [<module>]  name LOCATOR_ACTOR
+engine/agents/audit_events.py:62  [<module>]  name LOCATOR_VERSION
+engine/agents/audit_events.py:186  [<module>.audit_run]  name locate
+engine/agents/audit_events.py:188  [<module>.audit_run]  attr .located (load)
+engine/agents/audit_events.py:211  [<module>.audit_run]  string ['located'] 'citation_located'
+engine/agents/audit_events.py:213  [<module>.audit_run]  name LOCATOR_ACTOR
+engine/agents/audit_events.py:223  [<module>.audit_run]  attr .located (load)
+engine/agents/audit_events.py:229  [<module>.audit_run]  string ['located'] 'located'
+engine/agents/audit_events.py:230  [<module>.audit_run]  string ['located'] 'not_located'
+engine/agents/audit_events.py:231  [<module>.audit_run]  string ['locator_version'] 'locator_version'
+engine/agents/audit_events.py:231  [<module>.audit_run]  name LOCATOR_VERSION
+engine/agents/audit_events.py:165  [<module>.audit_run]  string ['located'] 'citation_located'
+engine/agents/audit_events.py:214  [<module>.audit_run]  name locate_payload
+engine/agents/audit_events.py:214  [<module>.audit_run]  name FUZZY_THRESHOLD
+engine/agents/auditor.py:15  [<module>]  import INVALID_SNIPPET_RE
+engine/agents/auditor.py:18  [<module>]  import locate
+engine/agents/auditor.py:46  [<module>.grep_verify]  attr .located (load)
+engine/agents/auditor.py:182  [<module>.audit_span]  attr .located (load)
+engine/agents/auditor.py:46  [<module>.grep_verify]  name locate
+engine/agents/auditor.py:182  [<module>.audit_span]  name locate
+engine/agents/auditor.py:173  [<module>.audit_span]  name INVALID_SNIPPET_RE
+engine/agents/extractor.py:18  [<module>]  import INVALID_SNIPPET_RE
+engine/agents/extractor.py:437  [<module>._retry_snippet]  name _has_invalid_snippet
+engine/agents/extractor.py:476  [<module>._validate_and_retry_snippets]  name _has_invalid_snippet
+engine/agents/extractor.py:376  [<module>._has_invalid_snippet]  name INVALID_SNIPPET_RE
+engine/core/audit_telemetry.py:1  [<module>]  string ['located'] <642 chars>
+engine/core/codebook.py:1  [<module>]  string ['located'] <1162 chars>
+engine/core/codebook.py:214  [<module>.compute_codebook_sha256]  string ['located'] 'SHA-256 hex digest of the codebook file bytes (no normalization).\n\n    Relocated from `ana'
+engine/core/constants.py:7  [<module>]  name INVALID_SNIPPET_RE
+engine/core/effective.py:143  [<module>.classify_field_state]  string ['located'] "The one derivation of a claim-bearing event's field state.\n\n    `citations` is the sequenc"
+engine/core/effective.py:442  [<module>._classify_claim]  string ['located'] 'located'
+engine/core/effective.py:438  [<module>._classify_claim]  string ['located'] 'located'
+engine/core/effective.py:156  [<module>.classify_field_state]  string ['located'] 'located'
+engine/core/effective.py:295  [<module>._citations_for]  string ['located'] 'citation_located'
+engine/core/effective.py:435  [<module>._classify_claim]  string ['located'] 'located'
+engine/core/events.py:1  [<module>]  string ['located'] <2880 chars>
+engine/core/events.py:157  [<module>.CitationTextMismatch]  string ['located'] <541 chars>
+engine/core/events.py:424  [<module>.write_field_event]  string ['located'] 'citation_located'
+engine/core/events.py:436  [<module>.write_field_event]  string ['located'] ". A citation is located against its claim's own text (D23)."
+engine/core/events.py:432  [<module>.write_field_event]  string ['located'] 'citation_located refused: claim '
+engine/core/events.py:434  [<module>.write_field_event]  string ['located'] 'was located against '
+engine/core/extraction_events.py:1  [<module>]  string ['located'] <3458 chars>
+engine/core/locator.py:1  [<module>]  string ['located'] <1277 chars>
+engine/core/locator.py:30  [<module>]  import INVALID_SNIPPET_RE
+engine/core/locator.py:32  [<module>]  name LOCATOR_VERSION
+engine/core/locator.py:33  [<module>]  name FUZZY_THRESHOLD
+engine/core/locator.py:65  [<module>.locate]  name LocateResult
+engine/core/locator.py:65  [<module>.locate]  name FUZZY_THRESHOLD
+engine/core/locator.py:97  [<module>.locate_payload]  string ['located'] 'The `citation_located` event payload (R17): the verdict, the threshold, the\n    locator ve'
+engine/core/locator.py:92  [<module>.locate]  name LocateResult
+engine/core/locator.py:95  [<module>.locate_payload]  name LocateResult
+engine/core/locator.py:99  [<module>.locate_payload]  string ['located'] 'located'
+engine/core/locator.py:100  [<module>.locate_payload]  string ['locator_version'] 'locator_version'
+engine/core/locator.py:101  [<module>.locate_payload]  string ['bridged'] 'bridged'
+engine/core/locator.py:99  [<module>.locate_payload]  attr .located (load)
+engine/core/locator.py:100  [<module>.locate_payload]  name LOCATOR_VERSION
+engine/core/locator.py:101  [<module>.locate_payload]  attr .bridged (load)
+engine/core/locator.py:73  [<module>.locate]  name LocateResult
+engine/core/locator.py:77  [<module>.locate]  name LocateResult
+engine/core/locator.py:83  [<module>.locate]  name LocateResult
+engine/core/locator.py:71  [<module>.locate]  name INVALID_SNIPPET_RE
+engine/exporters/evidence_table.py:224  [<module>.export_evidence_excel]  string ['located'] 'located'
+engine/exporters/evidence_table.py:229  [<module>.export_evidence_excel]  string ['located'] 'located'
+engine/exporters/evidence_table.py:233  [<module>.export_evidence_excel]  string ['located'] 'located'
+engine/exporters/evidence_table.py:132  [<module>._build_evidence_rows]  string ['located'] 'located'
+engine/exporters/evidence_table.py:131  [<module>._build_evidence_rows]  string ['located'] 'located'
+engine/migrations/016_event_store.py:71  [<module>]  string ['located'] 'citation_located'
+engine/migrations/016_event_store.py:91  [<module>._spine]  string ['located'] <437 chars>
+engine/migrations/016_event_store.py:148  [<module>.schema_sql]  string ['located'] ")),\n        CHECK (event_type <> 'citation_located'\n               OR json_extract(payload"
+engine/migrations/020_run_manifest.py:68  [<module>]  string ['located'] 'citation_located'
+engine/migrations/020_run_manifest.py:237  [<module>.field_events_sql]  string ['located'] ")),\n        CHECK (event_type <> 'citation_located'\n               OR json_extract(payload"
+engine/parsers/font_audit.py:212  [<module>.PaperAudit.font_exposure_per_kchar]  string ['located'] 'Marked plus placed-silent characters per thousand exported characters.\n\n        The FLOOR,'
+scripts/run_pipeline.py:439  [<module>._stage_audit]  string ['located'] "The event-side audit (9b-FLIP, R111): locate every live claim of the\n    spec's arm, verif"
+analysis/paper1/judge_loader.py:209  [<module>._fetch_spans_for_paper]  string ['located'] 'located'
+analysis/paper1/judge_loader.py:279  [<module>.load_grid]  string ['located'] 'located'
+analysis/paper1/judge_prompts.py:406  [<module>]  string ['located'] <2377 chars>
+analysis/paper1/judge_prompts.py:290  [<module>.window_source_text]  string ['located'] 'Return (text, was_windowed, token_count).\n\n    If source fits in budget_tokens, return as-'
+analysis/paper1/judge_provenance.py:1  [<module>]  string ['located'] <1198 chars>
+analysis/paper1/pi_audit_sampler.py:377  [<module>._token_window_around]  string ['located'] 'Return a ±radius_tokens window centered on `span_text`, or None\n    if the span cannot be '
+analysis/paper1/pi_audit_sampler_v2.py:498  [<module>.build_source_text]  string ['located'] <448 chars>
+analysis/paper1/pi_audit_unblind.py:1036  [<module>.run]  string ['located'] 'Inputs located:'
+tests/_event_store_fixture.py:183  [<module>.add_values]  string ['located'] 'citation_located'
+tests/_event_store_fixture.py:186  [<module>.add_values]  string ['located'] 'located'
+tests/analysis/paper1/test_judge_loader.py:327  [<module>._mirror_spans_into_events]  string ['located'] 'citation_located'
+tests/analysis/paper1/test_judge_loader.py:330  [<module>._mirror_spans_into_events]  string ['located'] 'located'
+tests/analysis/provenance/test_legacy_equivalence.py:40  [<module>]  string ['located'] 'R17 / 9b-2d R8: a snippet that normalises to nothing is not located; grep_verify_fast keep'
+tests/test_adjudication_pairs.py:149  [<module>._mirror]  string ['located'] 'citation_located'
+tests/test_adjudication_pairs.py:152  [<module>._mirror]  string ['located'] 'located'
+tests/test_audit_events.py:19  [<module>]  import audit_span
+tests/test_audit_events.py:91  [<module>.located_events]  string ['located'] "SELECT claim_id, payload_json FROM field_events WHERE event_type = 'citation_located'"
+tests/test_audit_events.py:256  [<module>.test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs]  string ['located'] 'Two claims that both need a model call (no snippet, or unlocated) —\n    each gets exactly '
+tests/test_audit_events.py:316  [<module>.test_t19_an_unlocated_absence_sentinel_gets_no_verdict_row_at_all]  string ['located'] <456 chars>
+tests/test_audit_events.py:427  [<module>.test_d23_t4_the_writer_refuses_a_citation_against_another_text]  name .locate
+tests/test_audit_events.py:214  [<module>.test_t8_the_old_hand_list_values_are_not_auto_verified]  name audit_span
+tests/test_audit_events.py:226  [<module>.test_t9_a_tier_4_claim_is_located_like_any_other]  name audit_span
+tests/test_audit_events.py:326  [<module>.test_t19_an_unlocated_absence_sentinel_gets_no_verdict_row_at_all]  string ['located'] 'located'
+tests/test_audit_events.py:337  [<module>.test_t13_a_located_event_on_a_pre_manifest_claim_is_admitted_a_claim_is_not]  string ['located'] 'citation_located'
+tests/test_audit_events.py:339  [<module>.test_t13_a_located_event_on_a_pre_manifest_claim_is_admitted_a_claim_is_not]  name .LOCATOR_ACTOR
+tests/test_audit_events.py:386  [<module>.test_d23_t1_claims_on_an_older_version_are_located_against_that_version]  attr .located (load)
+tests/test_audit_events.py:497  [<module>.test_d23_t8_a_citation_on_a_claim_with_no_claim_inputs_row_is_admitted]  string ['located'] 'citation_located'
+tests/test_audit_events.py:499  [<module>.test_d23_t8_a_citation_on_a_claim_with_no_claim_inputs_row_is_admitted]  name .LOCATOR_ACTOR
+tests/test_audit_events.py:139  [<module>.test_t3_locate_every_claim_verify_only_the_unlocated_value]  string ['located'] 'located'
+tests/test_audit_events.py:139  [<module>.test_t3_locate_every_claim_verify_only_the_unlocated_value]  string ['locator_version'] 'locator_version'
+tests/test_audit_events.py:140  [<module>.test_t3_locate_every_claim_verify_only_the_unlocated_value]  string ['bridged'] 'bridged'
+tests/test_audit_events.py:141  [<module>.test_t3_locate_every_claim_verify_only_the_unlocated_value]  string ['located'] 'located'
+tests/test_audit_events.py:208  [<module>.test_t8_the_old_hand_list_values_are_not_auto_verified]  string ['located'] 'located'
+tests/test_audit_events.py:223  [<module>.test_t9_a_tier_4_claim_is_located_like_any_other]  string ['located'] 'located'
+tests/test_audit_events.py:339  [<module>.test_t13_a_located_event_on_a_pre_manifest_claim_is_admitted_a_claim_is_not]  string ['located'] 'located'
+tests/test_audit_events.py:380  [<module>.test_d23_t1_claims_on_an_older_version_are_located_against_that_version]  string ['located'] 'located'
+tests/test_audit_events.py:431  [<module>.test_d23_t4_the_writer_refuses_a_citation_against_another_text]  string ['located'] 'citation_located'
+tests/test_audit_events.py:433  [<module>.test_d23_t4_the_writer_refuses_a_citation_against_another_text]  name .LOCATOR_ACTOR
+tests/test_audit_events.py:452  [<module>.test_d23_t5_a_byte_identical_reparse_is_not_a_mismatch]  string ['located'] 'located'
+tests/test_audit_events.py:478  [<module>.test_d23_t7_the_writer_refuses_a_citation_that_names_no_text]  string ['located'] 'citation_located'
+tests/test_audit_events.py:480  [<module>.test_d23_t7_the_writer_refuses_a_citation_that_names_no_text]  name .LOCATOR_ACTOR
+tests/test_audit_events.py:499  [<module>.test_d23_t8_a_citation_on_a_claim_with_no_claim_inputs_row_is_admitted]  string ['located'] 'located'
+tests/test_audit_events.py:434  [<module>.test_d23_t4_the_writer_refuses_a_citation_against_another_text]  name .locate_payload
+tests/test_audit_events.py:481  [<module>.test_d23_t7_the_writer_refuses_a_citation_that_names_no_text]  string ['located'] 'located'
+tests/test_audit_events.py:434  [<module>.test_d23_t4_the_writer_refuses_a_citation_against_another_text]  name .FUZZY_THRESHOLD
+tests/test_audit_paper_id.py:75  [<module>._claim_unlocatable]  string ['located'] 'A snippet nothing in TEXT is close to — unlocated, so semantic_verify\n    (and therefore a'
+tests/test_auditor.py:10  [<module>]  import audit_span
+tests/test_auditor.py:15  [<module>]  import INVALID_SNIPPET_RE as _INVALID_SNIPPET_RE
+tests/test_auditor.py:240  [<module>.test_audit_span_not_found_value_is_not_auto_verified]  string ['located'] 'R124 (9b-2d): the absence hand-list is retired. A sentinel with no snippet\n    is not loca'
+tests/test_auditor.py:258  [<module>.test_audit_span_tier4_is_located_like_any_other_tier]  string ['located'] 'R124 (9b-2d): the tier-4 pass that set grep_pass unchecked is retired. A\n    fabricated ti'
+tests/test_auditor.py:177  [<module>.test_audit_span_invalid_snippet]  name audit_span
+tests/test_auditor.py:195  [<module>.test_audit_span_verified]  name audit_span
+tests/test_auditor.py:214  [<module>.test_audit_span_contested]  name audit_span
+tests/test_auditor.py:234  [<module>.test_audit_span_flagged]  name audit_span
+tests/test_auditor.py:249  [<module>.test_audit_span_not_found_value_is_not_auto_verified]  name audit_span
+tests/test_auditor.py:273  [<module>.test_audit_span_tier4_is_located_like_any_other_tier]  name audit_span
+tests/test_auditor.py:293  [<module>.test_audit_span_tier4_semantic_fail]  name audit_span
+tests/test_claim_inputs.py:163  [<module>.test_T6_citation_located_on_a_pre_manifest_arm_writes_no_claim_inputs_row]  string ['located'] 'citation_located'
+tests/test_claim_inputs.py:166  [<module>.test_T6_citation_located_on_a_pre_manifest_arm_writes_no_claim_inputs_row]  string ['located'] 'located'
+tests/test_claim_inputs.py:168  [<module>.test_T6_citation_located_on_a_pre_manifest_arm_writes_no_claim_inputs_row]  string ['located'] "SELECT 1 FROM field_events WHERE claim_id = ? AND event_type = 'citation_located'"
+tests/test_cut_over.py:145  [<module>.test_t1_extract_then_audit_under_one_manifest_writes_events_only]  string ['located'] "SELECT claim_id FROM field_events WHERE paper_id = ? AND event_type = 'citation_located'"
+tests/test_effective_reader.py:443  [<module>.test_rule_v21_a_later_located_event_moves_the_state_off_state_at_write]  string ['located'] "Not a divergence: the writer's verdict is true at write time, and a\n    citation_located a"
+tests/test_effective_reader.py:206  [<module>.test_row8_accepted_keeps_the_extractor_state_and_adds_endorsement]  name locate
+tests/test_effective_reader.py:267  [<module>.test_row10_value_with_a_located_citation_is_asserted_with_evidence]  name locate
+tests/test_effective_reader.py:283  [<module>.test_row11_u6_located_false_is_the_same_state_with_a_different_provenance]  name locate
+tests/test_effective_reader.py:291  [<module>.test_row12_sentinel_with_a_located_citation_takes_the_identical_test]  name locate
+tests/test_effective_reader.py:450  [<module>.test_rule_v21_a_later_located_event_moves_the_state_off_state_at_write]  name locate
+tests/test_effective_reader.py:98  [<module>.locate]  string ['located'] 'citation_located'
+tests/test_effective_reader.py:270  [<module>.test_row10_value_with_a_located_citation_is_asserted_with_evidence]  string ['locator_version'] 'locator_version'
+tests/test_effective_reader.py:277  [<module>.test_row11_value_with_no_located_event_is_asserted_without_evidence]  string ['located'] 'located'
+tests/test_effective_reader.py:286  [<module>.test_row11_u6_located_false_is_the_same_state_with_a_different_provenance]  string ['located'] 'located'
+tests/test_effective_reader.py:100  [<module>.locate]  string ['located'] 'located'
+tests/test_effective_reader.py:101  [<module>.locate]  string ['locator_version'] 'locator_version'
+tests/test_effective_reader.py:270  [<module>.test_row10_value_with_a_located_citation_is_asserted_with_evidence]  string ['located'] 'located'
+tests/test_effective_reader.py:286  [<module>.test_row11_u6_located_false_is_the_same_state_with_a_different_provenance]  string ['located'] 'located'
+tests/test_exporters.py:64  [<module>.exporter_db]  string ['located'] <419 chars>
+tests/test_exporters.py:386  [<module>.empty_extraction_db]  string ['located'] "empty_extraction_db' world on the toolkit (9e-C-P2 B2, R190): two\n    eligible papers; pap"
+tests/test_exporters.py:98  [<module>.exporter_db]  kwarg located=
+tests/test_extraction_signatures.py:56  [<module>.test_cfg_is_required]  name .audit_span
+tests/test_extractor.py:13  [<module>]  import _has_invalid_snippet
+tests/test_extractor.py:24  [<module>]  import INVALID_SNIPPET_RE
+tests/test_extractor.py:376  [<module>.test_invalid_snippet_re_imported_from_constants]  name INVALID_SNIPPET_RE
+tests/test_extractor.py:376  [<module>.test_invalid_snippet_re_imported_from_constants]  name .INVALID_SNIPPET_RE
+tests/test_extractor.py:386  [<module>.test_ellipsis_snippet_triggers_retry]  name _has_invalid_snippet
+tests/test_extractor.py:406  [<module>.test_bracket_ellipsis_triggers_retry]  name _has_invalid_snippet
+tests/test_extractor.py:441  [<module>.test_valid_snippet_no_retry]  name _has_invalid_snippet
+tests/test_locator.py:110  [<module>.test_t2_identical_output_across_calls_and_processes]  string ['located', 'bridged'] 'import json,sys; from engine.core import locator as L; t, cs = json.loads(sys.stdin.read()'
+tests/test_locator.py:23  [<module>.test_t1_exact_match]  name .locate
+tests/test_locator.py:28  [<module>.test_t1_fuzzy_above_the_threshold]  name .locate
+tests/test_locator.py:29  [<module>.test_t1_fuzzy_above_the_threshold]  attr .located (load)
+tests/test_locator.py:30  [<module>.test_t1_fuzzy_above_the_threshold]  name .FUZZY_THRESHOLD
+tests/test_locator.py:34  [<module>.test_t1_fuzzy_below_the_threshold]  name .locate
+tests/test_locator.py:41  [<module>.test_t1_no_snippet_is_not_located_and_says_so]  name .locate
+tests/test_locator.py:50  [<module>.test_r8_a_snippet_that_normalises_to_nothing_is_not_located]  name .locate
+tests/test_locator.py:61  [<module>.test_the_threshold_is_strict]  name .locate
+tests/test_locator.py:62  [<module>.test_the_threshold_is_strict]  name .locate
+tests/test_locator.py:64  [<module>.test_the_threshold_is_strict]  attr .located (load)
+tests/test_locator.py:68  [<module>.test_a_bridged_snippet_is_marked]  name .locate
+tests/test_locator.py:73  [<module>.test_the_payload_carries_what_r17_names]  name .locate
+tests/test_locator.py:74  [<module>.test_the_payload_carries_what_r17_names]  name .locate_payload
+tests/test_locator.py:78  [<module>.test_the_payload_carries_what_r17_names]  name .LOCATOR_VERSION
+tests/test_locator.py:93  [<module>.test_located_equals_the_legacy_grep_verdict]  attr .located (load)
+tests/test_locator.py:104  [<module>._as_tuple]  attr .located (load)
+tests/test_locator.py:104  [<module>._as_tuple]  attr .bridged (load)
+tests/test_locator.py:24  [<module>.test_t1_exact_match]  attr .located (load)
+tests/test_locator.py:35  [<module>.test_t1_fuzzy_below_the_threshold]  attr .located (load)
+tests/test_locator.py:36  [<module>.test_t1_fuzzy_below_the_threshold]  name .FUZZY_THRESHOLD
+tests/test_locator.py:42  [<module>.test_t1_no_snippet_is_not_located_and_says_so]  attr .located (load)
+tests/test_locator.py:51  [<module>.test_r8_a_snippet_that_normalises_to_nothing_is_not_located]  attr .located (load)
+tests/test_locator.py:51  [<module>.test_r8_a_snippet_that_normalises_to_nothing_is_not_located]  attr .bridged (load)
+tests/test_locator.py:57  [<module>.test_t1_a_sentinel_claim_with_no_snippet_takes_the_identical_test]  name .locate
+tests/test_locator.py:57  [<module>.test_t1_a_sentinel_claim_with_no_snippet_takes_the_identical_test]  name .locate
+tests/test_locator.py:69  [<module>.test_a_bridged_snippet_is_marked]  attr .bridged (load)
+tests/test_locator.py:74  [<module>.test_the_payload_carries_what_r17_names]  name .FUZZY_THRESHOLD
+tests/test_locator.py:76  [<module>.test_the_payload_carries_what_r17_names]  string ['located'] 'located'
+tests/test_locator.py:76  [<module>.test_the_payload_carries_what_r17_names]  string ['locator_version'] 'locator_version'
+tests/test_locator.py:77  [<module>.test_the_payload_carries_what_r17_names]  string ['bridged'] 'bridged'
+tests/test_locator.py:78  [<module>.test_the_payload_carries_what_r17_names]  string ['locator_version'] 'locator_version'
+tests/test_locator.py:93  [<module>.test_located_equals_the_legacy_grep_verdict]  name .locate
+tests/test_locator.py:108  [<module>.test_t2_identical_output_across_calls_and_processes]  name .locate
+tests/test_locator.py:109  [<module>.test_t2_identical_output_across_calls_and_processes]  name .locate
+tests/test_non_value_tokens_downstream.py:112  [<module>.test_site1_auditor_no_longer_flags_a_terminal_state]  import audit_span
+tests/test_non_value_tokens_downstream.py:128  [<module>.test_site1_a_real_value_is_still_audited]  import audit_span
+tests/test_non_value_tokens_downstream.py:116  [<module>.test_site1_auditor_no_longer_flags_a_terminal_state]  name audit_span
+tests/test_non_value_tokens_downstream.py:120  [<module>.test_site1_auditor_no_longer_flags_a_terminal_state]  name audit_span
+tests/test_non_value_tokens_downstream.py:130  [<module>.test_site1_a_real_value_is_still_audited]  name audit_span
+tests/test_readers_on_the_reader.py:75  [<module>._assert_value]  string ['located'] 'citation_located'
+tests/test_readers_on_the_reader.py:78  [<module>._assert_value]  string ['located'] 'located'
+tests/test_request_capture.py:216  [<module>.test_audit]  name .audit_span
+tests/test_units_as_source_slices.py:1  [<module>]  string ['located'] <641 chars>
+tests/test_units_as_source_slices.py:29  [<module>]  import locate
+tests/test_units_as_source_slices.py:107  [<module>.test_a_run_straddling_a_docling_comment_and_a_blank_line_is_located_exact]  name locate
+tests/test_units_as_source_slices.py:268  [<module>.test_an_elicited_run_opens_pins_verifies_and_writes_real_events]  name locate
+tests/test_unknown_field_name.py:108  [<module>.test_T3_no_active_run_is_todays_behaviour]  string ['located'] 'citation_located'
+tests/test_unknown_field_name.py:111  [<module>.test_T3_no_active_run_is_todays_behaviour]  string ['located'] 'located'
+files with a site: 40 | sites: 213 | unparsed: none

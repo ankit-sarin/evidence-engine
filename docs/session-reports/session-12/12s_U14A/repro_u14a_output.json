@@ -1,0 +1,344 @@
+{
+ "locator_version": "locator-1",
+ "fuzzy_threshold": 0.85,
+ "i12_7": {
+  "row_text_figures": "379 characters, 3 of 70 words changed, 0.732 against 0.974 (12i read-out)",
+  "passage_chars": 382,
+  "passage_words": 70,
+  "words_changed": 3,
+  "case_long_3_words_changed": {
+   "snippet_chars": 383,
+   "snippet_words": 70,
+   "locate_module": {
+    "located": true,
+    "kind": "fuzzy",
+    "score": 0.9752,
+    "bridged": false
+   },
+   "autojunk_false": {
+    "located": true,
+    "kind": "fuzzy",
+    "score": 0.9856
+   }
+  },
+  "case_long_0_words_changed": {
+   "snippet_chars": 382,
+   "snippet_words": 70,
+   "locate_module": {
+    "located": true,
+    "kind": "exact",
+    "score": 1.0,
+    "bridged": false
+   },
+   "autojunk_false": {
+    "located": true,
+    "kind": "exact",
+    "score": 1.0
+   }
+  },
+  "case_150_same_edit": {
+   "snippet_chars": 146,
+   "snippet_words": 27,
+   "locate_module": {
+    "located": true,
+    "kind": "fuzzy",
+    "score": 0.9658,
+    "bridged": false
+   },
+   "autojunk_false": {
+    "located": true,
+    "kind": "fuzzy",
+    "score": 0.9658
+   },
+   "words_changed": 2
+  },
+  "sweep_long_3_words_changed": {
+   "n": 300,
+   "seed": 20261019,
+   "snippet_chars": 385,
+   "autojunk_on": {
+    "min": 0.8136,
+    "median": 0.9883,
+    "max": 0.9883,
+    "not_located": 6
+   },
+   "autojunk_off": {
+    "min": 0.9883,
+    "median": 0.9883,
+    "max": 0.9883,
+    "not_located": 0
+   },
+   "worst_draw_autojunk_on": {
+    "snippet": "We used the robotic platform to suture zqhe small bowel in twelve adult pigs. The arm held a curved needle with braided nylon thread. Each knot was tied by the arm, then trimmed by a nurse after every run. We observed no leakage zqt either test pressure in any animal. The mean time per stitch was zqetween six and nine seconds, and no procedure was stopped early or finished manually.",
+    "snippet_chars": 385,
+    "snippet_words": 70,
+    "locate_module": {
+     "located": false,
+     "kind": "none",
+     "score": 0.8136,
+     "bridged": false
+    },
+    "autojunk_false": {
+     "located": true,
+     "kind": "fuzzy",
+     "score": 0.9883
+    }
+   }
+  },
+  "sweep_150_3_words_changed": {
+   "n": 300,
+   "seed": 20261019,
+   "snippet_chars": 149,
+   "autojunk_on": {
+    "min": 0.9695,
+    "median": 0.9695,
+    "max": 0.9695,
+    "not_located": 0
+   },
+   "autojunk_off": {
+    "min": 0.9695,
+    "median": 0.9695,
+    "max": 0.9695,
+    "not_located": 0
+   },
+   "worst_draw_autojunk_on": {
+    "snippet": "We used the robotic platform to suture the small bowel zqn twelve adult pigs. The arm held a zqurved needle with braided nylon zqhread. Each knot was",
+    "snippet_chars": 149,
+    "snippet_words": 27,
+    "locate_module": {
+     "located": true,
+     "kind": "fuzzy",
+     "score": 0.9695,
+     "bridged": false
+    },
+    "autojunk_false": {
+     "located": true,
+     "kind": "fuzzy",
+     "score": 0.9695
+    }
+   }
+  }
+ },
+ "fuzzy_fixtures": {
+  "rows": [
+   {
+    "file": "tests/test_locator.py",
+    "snippet": "The robot performd autonomous suturing on porcine tisue in ten trials.",
+    "chars": 70,
+    "words": 11,
+    "autojunk_on": [
+     true,
+     0.9859
+    ],
+    "autojunk_off": [
+     true,
+     0.9859
+    ]
+   },
+   {
+    "file": "tests/test_locator.py",
+    "snippet": "Conducted in Norway by the authors of this study.",
+    "chars": 49,
+    "words": 9,
+    "autojunk_on": [
+     false,
+     0.3551
+    ],
+    "autojunk_off": [
+     false,
+     0.3551
+    ]
+   },
+   {
+    "file": "tests/test_locator.py",
+    "snippet": "Conducted in Norway.",
+    "chars": 20,
+    "words": 3,
+    "autojunk_on": [
+     false,
+     0.4242
+    ],
+    "autojunk_off": [
+     false,
+     0.4242
+    ]
+   },
+   {
+    "file": "tests/test_locator.py",
+    "snippet": "outcomes were measured at six month",
+    "chars": 35,
+    "words": 6,
+    "autojunk_on": [
+     true,
+     1.0
+    ],
+    "autojunk_off": [
+     true,
+     1.0
+    ]
+   },
+   {
+    "file": "tests/test_locator.py",
+    "snippet": "Table.I shows",
+    "chars": 13,
+    "words": 2,
+    "autojunk_on": [
+     false,
+     0.3846
+    ],
+    "autojunk_off": [
+     false,
+     0.3846
+    ]
+   },
+   {
+    "file": "tests/test_auditor.py",
+    "snippet": "20 trials on porcme tissue",
+    "chars": 26,
+    "words": 5,
+    "autojunk_on": [
+     true,
+     0.9259
+    ],
+    "autojunk_off": [
+     true,
+     0.9259
+    ]
+   },
+   {
+    "file": "tests/test_auditor.py",
+    "snippet": "500 experiments on synthetic phantoms with laser guidance",
+    "chars": 57,
+    "words": 8,
+    "autojunk_on": [
+     false,
+     0.3717
+    ],
+    "autojunk_off": [
+     false,
+     0.3717
+    ]
+   },
+   {
+    "file": "tests/test_auditor.py",
+    "snippet": "The experiment was performed on cadaveric specimens",
+    "chars": 51,
+    "words": 7,
+    "autojunk_on": [
+     false,
+     0.4211
+    ],
+    "autojunk_off": [
+     false,
+     0.4211
+    ]
+   },
+   {
+    "file": "tests/test_auditor.py",
+    "snippet": "Cooking temperature affects protein denaturation",
+    "chars": 48,
+    "words": 5,
+    "autojunk_on": [
+     false,
+     0.3678
+    ],
+    "autojunk_off": [
+     false,
+     0.3678
+    ]
+   },
+   {
+    "file": "tests/test_auditor.py",
+    "snippet": "This snippet does not exist in the paper text at all.",
+    "chars": 53,
+    "words": 11,
+    "autojunk_on": [
+     false,
+     0.4
+    ],
+    "autojunk_off": [
+     false,
+     0.4
+    ]
+   }
+  ],
+  "max_chars": 70,
+  "any_at_or_over_200": false,
+  "outcome_differs_under_autojunk_false": 0
+ },
+ "i12_8": {
+  "pattern": "\\[\\.{3}\\]|\\[…\\]|…|\\.{3,}",
+  "nfkc_of_U+2026": "...",
+  "cases": {
+   "verbatim_quote_with_unicode_ellipsis": {
+    "snippet": "Patients were followed for twelve months… Two were lost to follow-up.",
+    "regex_fires_on_snippet": true,
+    "ellipsis_in_text": true,
+    "locate": {
+     "located": true,
+     "kind": "exact",
+     "score": 1.0,
+     "bridged": true
+    },
+    "extractor__has_invalid_snippet": true,
+    "auditor_audit_span": "invalid_snippet"
+   },
+   "verbatim_quote_with_three_dots": {
+    "snippet": "The protocol was revised twice... Recruitment closed in March.",
+    "regex_fires_on_snippet": true,
+    "ellipsis_in_text": true,
+    "locate": {
+     "located": true,
+     "kind": "exact",
+     "score": 1.0,
+     "bridged": true
+    },
+    "extractor__has_invalid_snippet": true,
+    "auditor_audit_span": "invalid_snippet"
+   },
+   "control_same_text_quote_without_ellipsis": {
+    "snippet": "Two were lost to follow-up.",
+    "regex_fires_on_snippet": false,
+    "ellipsis_in_text": true,
+    "locate": {
+     "located": true,
+     "kind": "exact",
+     "score": 1.0,
+     "bridged": false
+    },
+    "extractor__has_invalid_snippet": false,
+    "auditor_audit_span": "(not reached: the precheck does not fire)"
+   },
+   "bridging_snippet_ellipsis_not_in_text": {
+    "snippet": "Two were lost to follow-up ... Complications were minor.",
+    "regex_fires_on_snippet": true,
+    "ellipsis_in_text": false,
+    "locate": {
+     "located": false,
+     "kind": "none",
+     "score": 0.6981,
+     "bridged": true
+    },
+    "extractor__has_invalid_snippet": true,
+    "auditor_audit_span": "invalid_snippet"
+   }
+  }
+ },
+ "cost": {
+  "text_chars": 156196,
+  "text_words": 22322,
+  "snippet_chars": 383,
+  "runs_s_autojunk_on_locate": [
+   5.209,
+   5.214,
+   5.219
+  ],
+  "runs_s_autojunk_off": [
+   43.011,
+   43.024,
+   43.007
+  ],
+  "median_s_autojunk_on": 5.214,
+  "median_s_autojunk_off": 43.011
+ }
+}

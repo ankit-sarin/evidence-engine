@@ -1,0 +1,34 @@
+# 12s-U14A — the five restore points: a second record by file (R674(b)). Read as files only; none was opened.
+# Fingerprint verification by db_fingerprint --compare was NOT run: item 0(b) stopped at I5 (12r-OPEN's retention_open.txt
+# records each restore point as a text line 'tables : N overall : <sha256>'; --compare takes a JSON record ("--compare JSON"), and no JSON record names a .bak path).
+# read at 2026-10-19T16:48:54Z
+path: data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138
+  size: 134361088  mtime: 2026-09-24 20:41:38.658952176 +0000
+  file sha256: 72008c75095b2f67dcbc4d8507d56708b1ee43c786a1f8f65b9e8ef5dc0ce7f1
+  sidecars (-wal, -shm, -journal): none
+  recorded fingerprint (retention_open.txt): tables : 34 overall : bb39ba81170c4f11d59954b9e70837afc427c66da710bde30881aad570d16c40 
+  fingerprint --compare: NOT RUN (I5)
+path: data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020
+  size: 134361088  mtime: 2026-09-23 16:10:20.743901330 +0000
+  file sha256: 33714bed6337e6025a330ce7258038f0706bd2dfb2995cfaf19dcd5c25ad7900
+  sidecars (-wal, -shm, -journal): none
+  recorded fingerprint (retention_open.txt): tables : 31 overall : e564f250afe40af7eb9a6bc07596a3c795972f7ef3b653c37599e8bc18285b63 
+  fingerprint --compare: NOT RUN (I5)
+path: data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104
+  size: 134361088  mtime: 2026-09-29 17:21:04.870483559 +0000
+  file sha256: 4abb5f4d7412576f5d4ebfef68335297117e7f7f1c6aee18ebffdaf103556302
+  sidecars (-wal, -shm, -journal): none
+  recorded fingerprint (retention_open.txt): tables : 34 overall : ea05912d67f0b841bf003a7a941f6505e2c57140b5c2f62e1ff446ea16b9ce01 
+  fingerprint --compare: NOT RUN (I5)
+path: data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807
+  size: 101978112  mtime: 2026-09-21 00:28:07.633823074 +0000
+  file sha256: 94fb4dec080b5e6ab7c77e07b197c72a3d2a479b84e792d6c880987179cc9eb9
+  sidecars (-wal, -shm, -journal): none
+  recorded fingerprint (retention_open.txt): tables : 24 overall : f376562e095cfbcbf23ca997f31375feba340f74ed7a14ffe26e42cc63839e00 
+  fingerprint --compare: NOT RUN (I5)
+path: data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453
+  size: 101978112  mtime: 2026-09-22 16:54:53.470422856 +0000
+  file sha256: 9b971da1adf08eab47c778eb1d03d0ecb629beb8167f5d5c7b00726371aad571
+  sidecars (-wal, -shm, -journal): none
+  recorded fingerprint (retention_open.txt): tables : 32 overall : 62f3912813b6e9efa3a651ee4c4ebcd611adf89c989f240a58e83dcf6759b79a 
+  fingerprint --compare: NOT RUN (I5)

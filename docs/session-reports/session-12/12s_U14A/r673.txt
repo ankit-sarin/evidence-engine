@@ -1,0 +1,42 @@
+RULING [evidence-engine 12s-R673] — 2(d)'s line-count clause withdrawn; the scratch build accepted as
+  checked; 12s-OPEN resumes at step 2(e)
+STATUS: PI ruling, 2026-10-19 UTC, session 12s, on architect recommendation, on the 12s-OPEN stop
+  report at step 2(d) (nothing applied, both repositories clean). Transcribe as Block 71 at item 0
+  of the next brief in this session that transcribes, after Block 70, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12s-OPEN stop report):
+  MEASURED: "diff against the HEAD blob: 1243c1243, 7168a7169,7230; minus: 1  plus: 63. No other
+    hunk."; "exactly 1 '-' line(s), one per named row: True / RESULT: PASS"; "Block 70's fence
+    equals r672.txt: True. The table cell equals render_cell's output: True."; "Line count: 7,230";
+    "New plan in scratch: sha256 11df06ff7c167cd122cb60da5b11a9dea9e68d72e6153373c3ad156acfd95560,
+    1,592,088 B, 7,230 lines"; "r672.txt: sha256
+    275287735764e2ce814110fd03b929103455298b357a74d5464acd6c09e18964, 4,308 B, 51 lines"; recount
+    "now = {rows 276, class_1 95, class_2 50, class_3 131, without_class 0}; P1 {26, 20, 12, rows
+    58}; P7 117; fix units 35" and "Baseline: 275 (95 / 50 / 130), on the file with sha256
+    f2e4dc60…9b8d; expected_holds true"; "output byte-identical to the committed
+    recount_12r_close.json"; line 1243 "count 1"; step 0 every item MATCHED; the nightly "All six
+    rows MATCHED. Wall time 863.77 s"; "20 models, all OK"; "earlyoom kill lines this boot: 0";
+    "evidence-engine 15b7ef9, clean and level. claude-config a9459b6, clean and level."
+  READ (CC's reads of the scripts and the file): prefix_check.py's rule and usage; render_cell.py's
+    usage; recount_12r_close.py "prints JSON, not the sentence"; Block 69's and Block 60's headers
+    as quoted; a356f73's message form.
+  INFERRED: none. This ruling withdraws an architect premise and makes no new claim about the box.
+
+R673(a) — The 2(d) clause "line count = 7,168 + the '+' count" was an architect premise that ignored
+  the "−" line the same brief required; withdrawn. The measured form is the rule from here: a plan
+  commit's line count is the prior count plus its "+" lines minus its "−" lines (7,168 + 63 − 1 =
+  7,230). The stop was correct, at the earliest point that left both repositories clean.
+R673(b) — I3 is corrected: 12r_close/recount_12r_close.py prints JSON and writes it beside itself;
+  the sentence "The pre-tag list in this file is 276 rows — …" is the plan's rendering of that JSON.
+  A brief that cites the recount quotes the JSON fields (rows, class_1/2/3, without_class, P1, P7,
+  fix units, baseline, expected_holds); running it in a scratch clone so the repository is not
+  written is accepted as the way to run it before a commit.
+R673(c) — The scratch build is accepted as checked: Block 70's header as written (the on-disk
+  ", in the R597(e) form:*" clause kept, R664(d)); the note on line 1243 as written; r672.txt as
+  hashed. The build is applied as it stands; nothing in new_plan.md is re-edited.
+R673(d) — Readings, no rows: the two NVRM NV_ERR_NO_MEMORY lines of the 07:00 job (07:02:57 on
+  qwen2.5:32b, 07:03:31 on llama3.3:70b, both loads completed) join the dgx-infra item; five this
+  boot. The flash-attention WARN on gemma2:27b is a reading. pytest-4's rotation out of the temp
+  root is a reading (the root held pytest-5, -6, -7 and pytest-current at 15:57Z).
+R673(e) — 12s-OPEN resumes at step 2(e) under the resume below. Steps 2(e)–(g), 3 and the final
+  report run as written, with 2(d)'s line-count clause read under R673(a). No other clause changes.

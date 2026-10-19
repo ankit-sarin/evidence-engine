@@ -1240,7 +1240,7 @@ An engine state is a git tag plus the manifest fields in S3a. The first named st
 | INT-g12-9 | P3 — R548 |
 | INT-g12-10 | P3 — R548 |
 | INT-h12-1 | P5, Phase A first — R567 |
-| INT-h12-2 | P1, pin-affecting, before the freeze — R571 |
+| INT-h12-2 | P1, pin-affecting, before the freeze — R571 *Note 2026-10-19 (12s item 0, R672(c); R670(c), R671(a)):* P7, Class 3, by the 12r-CLOSE note on the row's section L line. R671(a): "INT-h12-2 moves from Class 2 to Class 3 and from P1 to P7, by a dated note in its row (R670(c)); the class cell is not edited; the recount reads the note." The recount reads that section L note, not this line, and is unchanged at 276. |
 | INT-i12-1 | P1 — R587 |
 | INT-i12-2 | P1 — R587 |
 | INT-i12-3 | P1 — R587; R588 |
@@ -7166,3 +7166,65 @@ R671(c) — Session 12r closes under the brief below. No closeout gate; the expe
 | 2026-10-19 | R671(a) — INT-h12-2 moves from Class 2 to Class 3 and from P1 to P7, by a dated note in its row (R670(c)); the class cell is not edited; the recount reads the note. R671(b) — Row INT-r12-1 is opened in section L, "L (12r additions, R668, R671)": text cell the F3 sentence of docs/session-reports/session-12/12r_U13_PA/12r_U13_PA.md §7, quoted unchanged; Class 2; package P1; pin-affecting; governing rulings R668(b), R670(e), R671(b); evidence 12r_U13_PA.md. Its fix unit is assigned at its Phase A; the fix-unit count stays 35 until then. R671(c) — Session 12r closes under the brief below. No closeout gate; the expected gate values for 12s are 12r-OPEN's on unchanged code. The wrap ruling follows the closeout block. | PI, 2026-10-19, during session 12r, on the architect's R670(h) list |
 
 The decision log in this file ends at R671.
+
+**Block 70.** *Transcribed 2026-10-19 (item 0 of the 12s-OPEN brief), in its own commit with the dated note on INT-h12-2's package-assignment table line and the 12r lane-line file, in the R597(e) form:* ruling R672, made by PI on architect recommendation on 2026-10-19 UTC, during session 12r, on the 12r-CLOSE closeout block (`15b7ef9bd85885f5d1ef25d4b1c5dfcad625d32d`). The 12s-OPEN task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12r-R672] — wrap ruling: closeout accepted; lane line approved and applied;
+  the INT-h12-2 package-table note deferred to 12s's item 0; close now
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on architect recommendation, on the 12r-CLOSE closeout
+  block (15b7ef9bd85885f5d1ef25d4b1c5dfcad625d32d). Transcribe as item 0 of 12s-OPEN (Block 70), not
+  now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block):
+  MEASURED: "HEAD: 15b7ef9bd85885f5d1ef25d4b1c5dfcad625d32d, parent
+    d7bafc45a404e0b0ebaa79a921ad4796672c9f97; status[], lr[0 0]"; "1584234 bytes"; "The decision log
+    in this file ends at R671."; "1 file changed, 557 insertions(+), 3 deletions(-)" (the plan);
+    "exactly 3 '-' line(s), one per named row: True, RESULT: PASS"; Blocks 61–69 fence cmp "True";
+    "text cell == F3: True"; claude-config ledger "message "ledger: rows through 2026-10-19T02:18:05Z",
+    which is the row's exact timestamp"; "cc[7cf4ae1  0     0]"; live IDENTICAL at 02:17:58Z, 02:18:08Z
+    and 02:18:17Z; lane line "4672 bytes, 10 lines. Not applied", its five "−" lines equal primer.md
+    41–45; "276 rows, 95 / 50 / 131, 0 unclassed; P1 58 (26 / 20 / 12); 35 fix units; P7 117"; R510
+    "rows in 1 (INT-r12-1)", one class move; retention "the retained part of 12q's file is
+    byte-identical (20 lines, 2,134 bytes), followed by the ninth"; "Temp root: 4 entries,
+    1,622,165,155 B"; seven 12r scratch directories; "/api/ps: deepseek-r1:32b, kept loaded
+    indefinitely"; dbchecks and pin_tuples outputs byte-identical to 12q_close/'s; the nine rNNN.txt
+    hashes as tabled; "the package-assignment table (line 1235 before the edit: | INT-h12-2 | P1,
+    pin-affecting, before the freeze — R571 |)".
+  INFERRED: none; the package-table line is a read CC made, quoted.
+
+R672(a) — The 12r-CLOSE closeout block is accepted as printed. The brief's step-7 element list stood in
+  for the 12q list (I6, a reading) and is the on-disk form from here, as printed in this block.
+R672(b) — The lane line (sha256 836cfbc9145bb99415577e84f61e23ac93b70688406bc3299ac78db11a249817, 4,672
+  bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of
+  ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines,
+  applied from the file, not from a paste; commit primer.md together with any uncommitted hook row
+  ("ledger" form, the row's exact timestamp), push, level.
+R672(c) — INT-h12-2's package-assignment table line (the line that read "| INT-h12-2 | P1,
+  pin-affecting, before the freeze — R571 |" at d7bafc4) gains a dated note in 12s's item-0 commit,
+  in the R570 form, quoting R670(c)/R671(a): package P7, Class 3; the recount is unchanged by it (276;
+  it reads the row's note). That commit's "−" count is stated from a read of that line and of the
+  12r closure's rows as edited (expected: one for the table line; the wrap-ruling transcription adds
+  none). 12r_close/prefix_check.py --expected-row names it.
+R672(d) — 12s-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the
+  lane-line commit, itself the child of 7cf4ae1), level and clean; foreign commits and rows per
+  R653(c), R654(d), R663(b). 12s's item 0 copies lane_line_12r.txt into
+  docs/session-reports/session-12/12r_close/ with its commit.
+R672(e) — No closeout gate ran: the expected gate values for 12s are 12r-OPEN's on unchanged code
+  (3,306 / 1 xfailed / 17 deselected, collected 3,307; series 868.02, 871.59, 906.50 s, no band,
+  R657(d), R666(b)); the 2026-10-19 09:00 UTC nightly runs on 15b7ef9, whose engine tree equals
+  e5ec600's; 12r_close/expected_nightly_20261019.md governs; the 07:00 health job's loads are read
+  and reported by 12s-OPEN, with an NVRM grep. The temp root is read, never matched. deepseek-r1:32b
+  resident is a reading; the 07:00 job unloads it.
+R672(f) — Notes, no rows: the baseline recount runs on the plan at d7bafc4 by sha256, as the 12r
+  script's header says — the chain form from here; the -shm mtime movement is F1's effect; the
+  seven scratch directories are the count the block records.
+R672(g) — Session 12r closes now. After R672(b) has landed, run /wrap. Report the archive command; the
+  closeout block stands.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-19 | R672(a) — The 12r-CLOSE closeout block is accepted as printed. The brief's step-7 element list stood in for the 12q list (I6, a reading) and is the on-disk form from here, as printed in this block. R672(b) — The lane line (sha256 836cfbc9145bb99415577e84f61e23ac93b70688406bc3299ac78db11a249817, 4,672 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, the row's exact timestamp), push, level. R672(c) — INT-h12-2's package-assignment table line (the line that read "\| INT-h12-2 \| P1, pin-affecting, before the freeze — R571 \|" at d7bafc4) gains a dated note in 12s's item-0 commit, in the R570 form, quoting R670(c)/R671(a): package P7, Class 3; the recount is unchanged by it (276; it reads the row's note). That commit's "−" count is stated from a read of that line and of the 12r closure's rows as edited (expected: one for the table line; the wrap-ruling transcription adds none). 12r_close/prefix_check.py --expected-row names it. R672(d) — 12s-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the lane-line commit, itself the child of 7cf4ae1), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12s's item 0 copies lane_line_12r.txt into docs/session-reports/session-12/12r_close/ with its commit. R672(e) — No closeout gate ran: the expected gate values for 12s are 12r-OPEN's on unchanged code (3,306 / 1 xfailed / 17 deselected, collected 3,307; series 868.02, 871.59, 906.50 s, no band, R657(d), R666(b)); the 2026-10-19 09:00 UTC nightly runs on 15b7ef9, whose engine tree equals e5ec600's; 12r_close/expected_nightly_20261019.md governs; the 07:00 health job's loads are read and reported by 12s-OPEN, with an NVRM grep. The temp root is read, never matched. deepseek-r1:32b resident is a reading; the 07:00 job unloads it. R672(f) — Notes, no rows: the baseline recount runs on the plan at d7bafc4 by sha256, as the 12r script's header says — the chain form from here; the -shm mtime movement is F1's effect; the seven scratch directories are the count the block records. R672(g) — Session 12r closes now. After R672(b) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-19, during session 12r, on architect recommendation, on the 12r-CLOSE closeout block |
+
+The decision log in this file ends at R672.

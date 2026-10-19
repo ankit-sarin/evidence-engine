@@ -12,7 +12,6 @@ from typing import Literal
 from pydantic import BaseModel
 
 from engine.agents.models import EvidenceSpan
-from engine.core.constants import INVALID_SNIPPET_RE
 from engine.core.effective_config import EffectiveConfig
 from engine.utils.ollama_client import ollama_chat
 from engine.core.locator import locate
@@ -168,18 +167,21 @@ def audit_span(
     # value like any other to the locator (R17); with no snippet it is not
     # located, exactly as a value with no snippet is not.
 
-    # Fix A: Invalid snippet detection (before any other logic)
-    if source_snippet and source_snippet.strip():
-        if INVALID_SNIPPET_RE.search(source_snippet):
-            return "invalid_snippet", "Source snippet contains ellipsis bridging — marked invalid."
-
     # Empty snippet on a non-absence value
     if not source_snippet or not source_snippet.strip():
         return "flagged", "Extracted value present but no source snippet provided."
 
     # R124 (9b-2d): every tier is located — the tier-4 pass that set
     # grep_pass = True unchecked is retired.
-    grep_pass = locate(paper_text, source_snippet).located
+    located = locate(paper_text, source_snippet)
+
+    # Fix A: invalid snippet detection, before the semantic check. An ellipsis
+    # bridges passages only when the located text lacks it (INT-i12-8, R675(d)):
+    # a verbatim quote of a passage that contains one is not bridged.
+    if located.bridged:
+        return "invalid_snippet", "Source snippet contains ellipsis bridging — marked invalid."
+
+    grep_pass = located.located
 
     # Compute semantic result
     span = EvidenceSpan(

@@ -178,6 +178,21 @@ def test_audit_span_invalid_snippet():
     assert status == "invalid_snippet"
 
 
+
+def test_u14_audit_span_does_not_invalidate_a_verbatim_quote_containing_an_ellipsis():
+    """INT-i12-8 (R675(d)): the paper's own ellipsis is not bridging; the snippet is located
+    and goes to the semantic check like any other."""
+    paper = PAPER_TEXT + " Follow-up lasted twelve months… two animals were excluded."
+    span_data = {"field_name": "follow_up", "value": "12 months",
+                 "source_snippet": "Follow-up lasted twelve months… two animals were excluded.",
+                 "confidence": 0.9}
+    mock_resp = MagicMock()
+    mock_resp.message.content = AuditVerdict(
+        status="verified", grep_found=True, reasoning="Confirmed.").model_dump_json()
+    with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
+        status, _ = audit_span(span_data, paper, cfg=stage_config("audit"))
+    assert status == "verified"
+
 def test_audit_span_verified():
     """Grep pass + semantic pass → verified."""
     span_data = {

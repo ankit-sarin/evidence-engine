@@ -498,3 +498,20 @@ def test_d23_t8_a_citation_on_a_claim_with_no_claim_inputs_row_is_admitted(db, r
         arm="premanifest_a", claim_id=cid, actor_kind="engine", actor_role="system",
         actor_name=AE.LOCATOR_ACTOR, payload={"located": True}, run_id=run_id)
     assert set(located_events(db, P7)) == {cid}
+
+
+# ── U14 (R675(f)): every writer of the locator's version ──────────────
+def test_u14_every_writer_carries_locator_1_1(db, spec, run_id, review_dir, verify):
+    """The citation_located payload, its actor name and the audited payload all read
+    LOCATOR_VERSION, which U14 made "locator-1.1"."""
+    claim(db, spec, run_id, P7, "country", "Norway", "Conducted in Norway.")
+    run(db, spec, run_id, review_dir)
+    (name, payload), = db._conn.execute(
+        "SELECT actor_name, payload_json FROM field_events "
+        "WHERE event_type = 'citation_located' AND paper_id = ?", (P7,)).fetchall()
+    (audited_payload,), = db._conn.execute(
+        "SELECT payload_json FROM paper_events WHERE paper_id = ? AND to_state = 'audited_ai'",
+        (P7,)).fetchall()
+    assert (name, json.loads(payload)["locator_version"],
+            json.loads(audited_payload)["locator_version"]) == \
+        ("locator@locator-1.1", "locator-1.1", "locator-1.1")

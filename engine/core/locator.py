@@ -1,4 +1,4 @@
-"""The one deterministic locator (R17; WRITE-PATH-01 9b-2d).
+"""The one deterministic locator (R17; WRITE-PATH-01 9b-2d; U14, R675).
 
 "A single implementation of the auditor's normalize + exact/fuzzy match." It
 answers one question — does this snippet occur in this parsed text — and
@@ -7,21 +7,36 @@ for a value and for an absence sentinel (R17); a claim with no snippet is simply
 not located, and provenance says why (`snippet_supplied`), which is R22-U6's
 point that "located = false" and "no snippet" are one state with two histories.
 
-**Verdict-identical to the auditor's `grep_verify`** (9b-2d R3, R6): the same
-`normalize`, moved here verbatim; exact substring on normalized text first;
-else every word window of the snippet's length, `SequenceMatcher` ratio, located
-when the best window's ratio is strictly greater than the threshold. The one
-difference is that the whole text is scanned so the best ratio can be reported
-as `score` — `grep_verify` stopped at the first window over the threshold, which
-decides the same `located` but cannot say how close a miss was.
+The match: exact substring on normalized text first; else every word window of
+the snippet's length is scored with `SequenceMatcher`, the `RESCORE_TOP_K` best
+windows are re-scored with `autojunk=False`, and the claim is located when the
+best re-scored ratio is strictly greater than the threshold. The whole text is
+scanned so the best ratio can be reported as `score`.
+
+Why the re-score (INT-i12-7, R675(c)): `SequenceMatcher`'s automatic junk
+heuristic drops every character occurring in more than 1% of a sequence of 200
+or more elements, which in an English window is nearly every letter, so a
+snippet of 200 or more characters was under-scored and a lightly edited long
+quote could fall below the threshold. Below 200 characters the two settings give
+the same ratio. Scoring every window with `autojunk=False` costs about eight
+times as much on a long text (12s_U14A F11); ranking with the heuristic and
+re-scoring only the best windows recovered the same claims at the same windows
+at the original cost (12s_U14B variant measurement).
+
+`bridged` (INT-i12-8, R675(d)): the snippet carries an ellipsis
+(`INVALID_SNIPPET_RE`) that the located text does not. A verbatim quote of a
+passage that itself contains an ellipsis is not bridged; a snippet that joins
+passages with an ellipsis the text does not have is, located or not.
 
 `LOCATOR_VERSION` names this algorithm. Changing the normalisation, the window
-rule or the threshold is a new version, never an edit, because every
-`citation_located` event records the version it was decided by.
+rule, the scoring or the threshold is a new version, never an edit, because
+every `citation_located` event records the version it was decided by.
+"locator-1.1" is U14 (R675(f)); "locator-2" is the name R572 and R575 reserve.
 """
 
 from __future__ import annotations
 
+import heapq
 import re
 import unicodedata
 from dataclasses import dataclass
@@ -29,8 +44,9 @@ from difflib import SequenceMatcher
 
 from engine.core.constants import INVALID_SNIPPET_RE
 
-LOCATOR_VERSION = "locator-1"
+LOCATOR_VERSION = "locator-1.1"
 FUZZY_THRESHOLD = 0.85
+RESCORE_TOP_K = 5
 
 EXACT, FUZZY, NONE = "exact", "fuzzy", "none"
 
@@ -56,9 +72,9 @@ def normalize(text: str) -> str:
 class LocateResult:
     located: bool
     kind: str                  # EXACT | FUZZY | NONE
-    score: float | None        # 1.0 exact; best window ratio otherwise; None if not tried
+    score: float | None        # 1.0 exact; best re-scored window ratio otherwise; None if not tried
     snippet_supplied: bool
-    bridged: bool              # the snippet bridges passages with an ellipsis
+    bridged: bool              # the snippet has an ellipsis the located text does not
 
 
 def locate(parsed_text: str, snippet: str | None, *,
@@ -68,27 +84,38 @@ def locate(parsed_text: str, snippet: str | None, *,
     # grep let "   " through and found "" in every text; that is not a location.
     norm_snippet = normalize(snippet) if snippet else ""
     supplied = bool(norm_snippet)
-    bridged = bool(supplied and INVALID_SNIPPET_RE.search(snippet))
+    ellipsis = bool(supplied and INVALID_SNIPPET_RE.search(snippet))
     if not supplied or not parsed_text:
-        return LocateResult(False, NONE, None, supplied, bridged)
+        return LocateResult(False, NONE, None, supplied, ellipsis)
 
     norm_text = normalize(parsed_text)
     if norm_snippet in norm_text:
-        return LocateResult(True, EXACT, 1.0, True, bridged)
+        # An exact match contains the snippet's ellipsis, if it has one.
+        return LocateResult(True, EXACT, 1.0, True, False)
 
     snippet_words = norm_snippet.split()
     text_words = norm_text.split()
     size = len(snippet_words)
     if size == 0:
-        return LocateResult(False, NONE, None, True, bridged)
+        return LocateResult(False, NONE, None, True, ellipsis)
 
-    best = 0.0
-    for i in range(max(1, len(text_words) - size + 1)):
-        window = " ".join(text_words[i: i + size])
-        ratio = SequenceMatcher(None, norm_snippet, window).ratio()
+    def window(i: int) -> str:
+        return " ".join(text_words[i: i + size])
+
+    # Rank every window with the heuristic on, then re-score the best few
+    # without it (INT-i12-7). Ties rank the earlier window first.
+    ranked = heapq.nlargest(
+        RESCORE_TOP_K,
+        ((SequenceMatcher(None, norm_snippet, window(i)).ratio(), -i)
+         for i in range(max(1, len(text_words) - size + 1))))
+    best, best_window = 0.0, ""
+    for i in sorted(-neg for _, neg in ranked):
+        w = window(i)
+        ratio = SequenceMatcher(None, norm_snippet, w, autojunk=False).ratio()
         if ratio > best:
-            best = ratio
+            best, best_window = ratio, w
     located = best > threshold
+    bridged = ellipsis and not (located and INVALID_SNIPPET_RE.search(best_window))
     return LocateResult(located, FUZZY if located else NONE, best, True, bridged)
 
 

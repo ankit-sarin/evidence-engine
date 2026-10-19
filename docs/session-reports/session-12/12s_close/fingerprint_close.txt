@@ -1,0 +1,12 @@
+database : /home/ankitsarin/projects/evidence-engine/data/surgical_autonomy/review.db
+           134361088 B @ 2026-09-29T17:21:15.332725+00:00
+uri      : file:/home/ankitsarin/projects/evidence-engine/data/surgical_autonomy/review.db?mode=ro  (immutable=False)
+-wal     : 0 B at read (non-empty=False)
+tables   : 36
+schema   : f8d6388751e91a08e5d8580dc2de44a4be965e1dfd628a133950f8ed7d153cee  (textual)
+structure: b0dffa3fdd7ff57a4aa6910181c1b02269b9478feee0d33c8d14744ecb1f57aa  (PRAGMA-derived)
+overall  : 0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25
+wall     : 0.373 s
+
+compared against docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json
+IDENTICAL — schema, every table, and the overall hash all match.

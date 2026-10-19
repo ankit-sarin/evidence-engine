@@ -1,0 +1,15 @@
+== temp root 2026-10-19T18:16:12Z
+total 460
+drwx------    5 ankitsarin ankitsarin   4096 2026-10-19 17:26:02.398872215 +0000 .
+drwxrwxrwt   70 root       root        49152 2026-10-19 18:16:05.175516044 +0000 ..
+drwx------   27 ankitsarin ankitsarin   4096 2026-10-19 17:09:18.499020627 +0000 pytest-11
+drwx------  194 ankitsarin ankitsarin  24576 2026-10-19 17:10:13.898233224 +0000 pytest-12
+drwx------ 3333 ankitsarin ankitsarin 376832 2026-10-19 17:26:02.398872215 +0000 pytest-13
+lrwxrwxrwx    1 ankitsarin ankitsarin     35 2026-10-19 17:11:12.799352144 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-13
+entries 4
+1390591765	/tmp/pytest-of-ankitsarin
+/tmp/pytest-of-ankitsarin/pytest-11/ test_the_payload_carries_what_0 test_the_payload_carries_what_current 
+/tmp/pytest-of-ankitsarin/pytest-12/ test_a_bridged_snippet_is_mark0 test_a_bridged_snippet_is_markcurrent 
+/tmp/pytest-of-ankitsarin/pytest-13/ test_013_is_idempotent0 test_013_is_idempotentcurrent 
+/tmp/pytest-of-ankitsarin/pytest-current/ test_013_is_idempotent0 test_013_is_idempotentcurrent 
+# origins: pytest-11, pytest-12 — this lane's ad-hoc 12s-U14B runs (17:05–17:10 UTC); pytest-13 — the 12s-U14B gate (basetemp, R660(c)); nothing emptied

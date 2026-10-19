@@ -1,0 +1,64 @@
+RULING [evidence-engine 12s-R677] — U15 Phase A accepted; INT-i12-12 to Class 2, stays P1 as U15
+  (option A, 12t's first brief); one row named (INT-s12-2, P6); the band cut; the 12s closeout
+  proceeds
+STATUS: PI ruling, 2026-10-19 UTC, session 12s, on architect recommendation, on the 12s-U15A final
+  report and the read-out docs/session-reports/session-12/12s_U15A/12s_U15A.md (8b2c388). Transcribe
+  as Block 75 at item 0 of the 12s-CLOSE brief below, in this block, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12s-U15A final report):
+  MEASURED: item 0 "01751e71bbb2254dd1c4e9df220a9d423b2619a7", "4 − lines and 74 + lines", "RESULT:
+    PASS", "rows 276", "expected_holds True"; read-out "8b2c388684e66a780168c211a97db3f2ad2142a9";
+    "git diff --stat 01751e7 HEAD -- engine tests scripts analysis review_specs is empty"; F1
+    "audit_run selects papers only by the eligibility axis and the arm's live, unlocated asserted
+    claims"; F2 "no CHECK, no trigger, and no writer check. from_state is free TEXT, write_paper_event
+    is a bare INSERT, and effective_state takes the last token on the axis"; F3 "Row 18 reproduces
+    for every non-admitted state"; F5 "No production writer puts a non-extracted state above live,
+    unlocated claims, on either Run 7's path or a second review's"; F6 "If selection's skip is
+    bypassed, a same-key failure leaves the claim live, and the next audit writes audited_ai over
+    it"; F7 "Nothing writes parsed or full_text_not_obtainable outside migrations.
+    REASON_ACQUIRE_NO_LOCATOR, REASON_ACQUIRE_CASCADE_EXHAUSTED and REASON_RUN_INTERRUPTED are
+    declared and never used"; F8 "PRISMA's studies_included counts audited_ai"; F9 "No audit_run
+    test seeds a processing state or asserts analysis_ready"; F10; F11 "the 12i reproducer exists
+    only in scratch"; the trigger table (four rows, as printed); "Pin effect: none"; 12s-U14B's gate
+    "892.84s", "Wall time 895.02 s".
+  READ (CC's): "the vocabulary lives in paper_state.py and in 022's rebuild DDL"; the parse stage
+    "selects only PDF_ACQUIRED papers, and that status is reachable only from ABSTRACT_SCREENED_IN".
+  INFERRED: none.
+
+R677(a) — 12s-U15A is accepted: item 0 at 01751e7 (Block 74, four notes), the read-out at 8b2c388;
+  no engine change; no pin effect.
+R677(b) — INT-i12-12 moves from Class 1 to Class 2 by a dated note in its row (the class cell not
+  edited; the recount reads the note): the mechanism reproduces for every non-admitted state (F3) and
+  its consequence reaches PRISMA (F8), but no production writer reaches it at HEAD on either path
+  (F5); the demonstrated route is a selection bypass (F6). It stays in P1 as unit U15 (R612(a)).
+R677(c) — U15's fix, for 12t's first brief: option (A). audit_run admits a paper only when its
+  processing state is in a named admitted set, defined once beside the vocabulary in paper_state.py:
+  {extracted, audited_ai}; a non-admitted paper is skipped with one log line naming paper id and
+  state and, until 023, no event; when 023 lands, audit_not_possible joins the set in that one
+  place (D22). The F9 fixtures record an extracted event before they audit; the regression set is
+  every existing audit_run test unchanged in outcome. Option (B)'s write guard is not built in U15;
+  its invariant is INT-s12-2's. Pin effect none (audit-side). Acceptance tests: the read-out's §11
+  eight, each failing on 8b2c388's module where it has a failing form, plus the regression set.
+R677(d) — Row named, opened at this closeout in "L (12s additions, R675, R677)" beside INT-s12-1:
+  INT-s12-2, text cell F2's sentence quoted from 12s_U15A.md; Class 2 (latent: no writer violates it
+  today, F5); package P6, with 023, D22's state and writer — a processing-axis transition table
+  enforced where the vocabulary lives, its form set by P6's Phase A; not pin-affecting; governing
+  rulings R431, R677(d); evidence 12s_U15A.md.
+R677(e) — Notes, no rows: (i) F7 — a successful parse writes no processing-axis event, and
+  full_text_not_obtainable has no writer (D20): a dated note on C35 for P4's Phase A, which decides
+  whether the parse stage writes parsed; the three unused reason codes are recorded there
+  (REASON_RUN_INTERRUPTED stays under R146, E-DEADKI). (ii) F10 — a failure written after a
+  completed audit stands, since located claims are not re-audited: the safe direction; a note on
+  INT-i12-12. (iii) F11 — the 12i reproducer was never committed; 12s_U15A/'s are the committed
+  instrument; a note on INT-i12-12. (iv) I2's correction (the vocabulary in paper_state.py and 022's
+  DDL): recorded in the read-out, no note.
+R677(f) — The band (R657(d), R674(c), R676(e)): cut from the last four standard gates on this host
+  state, 871.59, 906.50, 858.50 and 895.02 s (mean 882.90 s), confounded readings included with
+  their confounders recorded: 795–971 s. The session-12t startup verify's gate is matched against
+  it; a gate outside it is reported with its concurrent jobs, not adapted to. A confounded reading
+  enters the mean from here; the host's concurrent encodes are its usual state (R676(e)).
+R677(g) — Session 12s closes under the brief below. No closeout gate: the expected gate values for
+  12t are 12s-U14B's (7074305) on unchanged code; the collected-id reference becomes
+  12s_close/collected_ids_12s_close.txt, copied from U14B's gate list. The 2026-10-20 09:00 UTC
+  nightly runs on the closeout commit, whose engine tree equals 7074305's. The wrap ruling follows
+  the closeout block.

@@ -1,0 +1,81 @@
+RULING [evidence-engine 12s-R675] — U14 Phase A accepted; R674(b) amended (restore points by file
+  sha256); INT-i12-7 option A with the top-k variant measured first; INT-i12-8 option A;
+  LOCATOR_VERSION "locator-1.1"; one row named for the 12s closeout; U14's fix opens
+STATUS: PI ruling, 2026-10-19 UTC, session 12s, on architect recommendation, on the 12s-U14A final
+  report and the read-out docs/session-reports/session-12/12s_U14A/12s_U14A.md (2d8823e). Transcribe
+  as Block 73 at item 0 of the 12s-U14B brief below, in this block, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12s-U14A final report):
+  MEASURED: "Commit: 134f41b850f65ec5c5f3563c379d0ea1c2cd569b, parent
+    1ddff37637531fb8e22d8c69309f47caf0f0001c"; "staged minus 0 plus 112"; "Commit
+    2d8823e4a42cf8fb9e8330116cefa9a8cb6a1a45, parent 134f41b…"; "git diff --stat 134f41b -- engine
+    tests scripts analysis review_specs is empty"; F1 "SequenceMatcher(None, norm_snippet, window)
+    with no autojunk argument"; F2 "Across 300 seeded 3-word edits, autojunk on gives a minimum of
+    0.8136 and 6 not located; off gives a minimum of 0.9883 and 0 not located"; F3 "No existing
+    fuzzy fixture reaches 200 characters (the longest is 70)"; F6 "LOCATOR_VERSION ("locator-1") is
+    written into every citation_located payload, the audited payload, and the actor name. No
+    engine, script or analysis code reads it back. One test pins its value."; F7 "audit_run skips
+    any claim that already has a located event"; F8 "located, exact, 1.0, with bridged True"; F9's
+    three callers and "The live spec reads elicitation: false"; F10 "on the elicited path every
+    snippet is an exact raw-text slice"; F11 "a median of 5.214 s with autojunk on and 43.011 s with
+    autojunk=False (8.2×)"; F12 "Neither row changes a pin input"; "Readers of bridged outside the
+    locator and its tests: none"; "--compare takes a JSON record"; the five restore points' sizes
+    and file sha256 prefixes "all equal the 12s-OPEN readings".
+  READ (CC's reads): F4 "font_audit.py passes it with no comment saying why"; F5 "locate has one
+    production caller, audit_events.audit_run".
+  INFERRED (architect's, each with its check): the top-k re-scoring variant recovers the 6 lost
+    claims at near-1× cost — measured at step 1 of the brief below before anything rests on it;
+    no CLAUDE.md or docs/architecture line states the locator's autojunk behaviour or its version
+    string — grep at step 2(a), STOP and quote if one does.
+
+R675(a) — 12s-U14A is accepted: item 0 landed as 134f41b (Blocks 71–72, 0 "−" lines); the read-out
+  as 2d8823e; both ledger rows committed. The pin effect of both rows is none (F12); U14 stays
+  audit-side, outside the pin (R590).
+R675(b) — R674(b) is amended on the measured fact that 12r-OPEN's retention record holds text lines
+  and --compare takes a JSON record (I5 false). From here the five restore points are verified by
+  review.db file sha256 against docs/session-reports/session-12/12s_U14A/restore_points_12s.txt,
+  the record of reference for them, as the throwaways are (R662(e)); they are never opened. Their
+  fingerprint values stay recorded in the plan as what they were when each copy was taken, and
+  the JSON records that equal them by hash (read-out §13) are not paired to the files. One
+  instrument for every never-opened copy.
+R675(c) — INT-i12-7: option (A), autojunk=False at locate's one SequenceMatcher call, is the
+  mechanism. Its cost (F11) is paid once per long non-exact model-typed snippet at the audit
+  stage, on Run 7's path while the live spec reads elicitation: false (F9, F10). Before building,
+  the fix brief measures the variant: score every window with autojunk on, then re-score the k
+  best windows (k = 5) with autojunk=False and take the best of those. Condition for the variant:
+  on the committed 300-edit reproducer it recovers all 6 lost claims with no claim lost that
+  plain (A) locates, and its median cost on the F11 text is at most 1.5× today's 5.214 s. Met →
+  the variant is built; not met → plain (A) is built and its cost is recorded as a Run 7 runbook
+  figure. Either way the threshold constant is not changed (option (B) rejected, as the read-out
+  argues).
+R675(d) — INT-i12-8: option (A). bridged is true only when the snippet's ellipsis is absent from the
+  located span; the bridging-snippet case (an ellipsis in the snippet not in the text) stays
+  caught; located and the payload's key set are unchanged. audit_span (no production caller) is
+  changed in the same way where it applies the regex before locating, or not at all if its check
+  cannot see a span — the brief reads it and says which. extractor._has_invalid_snippet is not
+  touched by U14.
+R675(e) — Row named, to be opened at the 12s closeout in a section "L (12s additions, R675)" with the
+  chained recount script (R672(f) form; baseline 276): INT-s12-1, text cell F9's sentence on the
+  extractor quoted from the read-out ("extractor._has_invalid_snippet: on the pipeline only when
+  elicitation is off. The live spec reads elicitation: false.") with the mechanism sentence of F8;
+  Class 2 (fails toward a retry, not a wrong value); package P1; pin-affecting by R612(c)'s reading
+  (it changes which retry calls are sent); placed with INT-r12-1's batch and its one comparison
+  rehearsal (R539); governing rulings R612(c), R675(e); evidence 12s_U14A.md. Not U14's.
+R675(f) — LOCATOR_VERSION becomes "locator-1.1" in U14's commit. "locator-2" stays the name R572 and
+  R575 reserve for the design that is not built. The one test that pins the value is rewritten
+  to the new value under its id. A bump re-locates nothing (F7): by design — a located event is
+  append-only and a re-location is a new audit run; nothing reads the version back (F6): its
+  reader is the sophomore audit screen (S7); both are dated notes on INT-i12-7, no row.
+R675(g) — Dated notes at U14B's item 0: on INT-i12-7 — the 12i passage is not on disk and the row's
+  "0.732 against 0.974" is not reproduced; the measured values are F2's; font_audit.py passes
+  autojunk=False with no comment (F4); INT-i12-7 affects model-typed snippets only (F10); the F6
+  and F7 notes of (f). On INT-i12-8 — nothing reads bridged (confirmed, R612(l)); the three callers
+  and their pipeline status (F9). Two cell notes, two "−" lines (R664(b)); the recount unchanged at
+  276.
+R675(h) — Acceptance tests for U14 are the read-out's §11 set, plus: a fuzzy fixture of ≥ 300
+  characters (none exists, F3); a deterministic, seeded subset of the 300-edit reproducer (30
+  edits, fixed seed) asserting 0 not located; the verbatim-quote-with-ellipsis case asserting
+  bridged False and located exact; the bridging case asserting bridged True; every existing
+  fuzzy fixture's outcome and score unchanged (F3). The 300-edit run and the F11 timing are
+  committed as evidence, not as tests.
+R675(i) — The band decision stays the 12s closeout's (R674(c)). U14's fix opens under the brief below.

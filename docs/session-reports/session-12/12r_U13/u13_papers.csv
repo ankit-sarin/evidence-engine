@@ -1,0 +1,13 @@
+paper_id,outer_rows,flag_multiple_outer_rows,outcomes,pass1_attempts_per_row,first_row_accepted_attempt,last_row_accepted_attempt,attempt1_n_failed
+1,1,0,stored,2,2,2,11
+2,1,0,input_exceeds_context,0,,,
+3,1,0,stored,2,2,2,13
+4,1,0,stored,2,1,1,4
+5,1,0,stored,2,2,2,13
+6,1,0,stored,2,1,1,1
+7,1,0,stored,2,2,2,3
+8,1,0,stored,2,1,1,1
+9,1,0,stored,2,1,1,4
+10,1,0,stored,2,2,2,13
+11,1,0,stored,2,2,2,7
+12,1,0,stored,2,2,2,2

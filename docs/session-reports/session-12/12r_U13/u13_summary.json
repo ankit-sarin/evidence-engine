@@ -1,0 +1,931 @@
+{
+ "attempt1_cells": 220,
+ "attempt1_failed_head": 72,
+ "attempt1_failed_pre_dccd679": 70,
+ "baseline": {
+  "attempt1_cells": 220,
+  "failed": 46,
+  "papers": [
+   1,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "source": "ra_12g"
+ },
+ "codes": {
+  "baseline_12g": {
+   "FIELD_MISSING": 2,
+   "INDEX_OUT_OF_RANGE": 1,
+   "INFERENCE_MISSING": 3,
+   "STEPS_MISSING": 15,
+   "VALUE_WITHOUT_CITATION": 30
+  },
+  "u13_head": {
+   "FIELD_MISSING": 26,
+   "INFERENCE_MISSING": 12,
+   "STEPS_MISSING": 10,
+   "VALUE_WITHOUT_CITATION": 37
+  },
+  "u13_pre_dccd679": {
+   "FIELD_MISSING": 26,
+   "INFERENCE_MISSING": 12,
+   "STEPS_MISSING": 10,
+   "VALUE_WITHOUT_CITATION": 28
+  }
+ },
+ "concentrations": {
+  "judgment": {
+   "baseline_12g": {
+    "failed": 22,
+    "field_attempts": 55
+   },
+   "u13_head": {
+    "failed": 24,
+    "field_attempts": 55
+   },
+   "u13_pre_dccd679": {
+    "failed": 22,
+    "field_attempts": 55
+   }
+  },
+  "other": {
+   "baseline_12g": {
+    "failed": 9,
+    "field_attempts": 132
+   },
+   "u13_head": {
+    "failed": 32,
+    "field_attempts": 132
+   },
+   "u13_pre_dccd679": {
+    "failed": 32,
+    "field_attempts": 132
+   }
+  },
+  "stated_with_sentinel": {
+   "baseline_12g": {
+    "failed": 15,
+    "field_attempts": 33
+   },
+   "u13_head": {
+    "failed": 16,
+    "field_attempts": 33
+   },
+   "u13_pre_dccd679": {
+    "failed": 16,
+    "field_attempts": 33
+   }
+  }
+ },
+ "duplicates": {
+  "attempt_1": 0,
+  "attempt_2": 0,
+  "cases": []
+ },
+ "inputs": {
+  "/home/ankitsarin/projects/evidence-engine/docs/session-reports/session-12/12r_U13/score_12r_u13.py": "270a7af9a7d5b4082115446b52387d22d2f51377a378851b5635bf70125b16df",
+  "data/ra_12q/extraction_codebook.yaml": "8342aa05a54f27bee6203fac1aa6e0c93fcd35de0f0554df8f5166668400e5cc",
+  "data/ra_12q/telemetry/extraction_calls.jsonl": "61348cbbb2e4193ee80dde8e4767023fbe9282d82d2ffb046230fcf5becbd5ad",
+  "docs/session-reports/session-12/12h_rd/rd1_attempts_cells.csv": "aa2575294f9727f14ab6e2e47954af1c3d2b69c9e2b6ab7a0df02dc3a8d12132"
+ },
+ "outputs": [
+  "u13_cells.csv",
+  "u13_papers.csv",
+  "u13_duplicates.csv",
+  "u13_stored.csv"
+ ],
+ "papers": [
+  {
+   "attempt1_n_failed": 11,
+   "first_row_accepted_attempt": 2,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 2,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 1,
+   "pass1_attempts_per_row": "2"
+  },
+  {
+   "attempt1_n_failed": null,
+   "first_row_accepted_attempt": null,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": null,
+   "outcomes": "input_exceeds_context",
+   "outer_rows": 1,
+   "paper_id": 2,
+   "pass1_attempts_per_row": "0"
+  },
+  {
+   "attempt1_n_failed": 13,
+   "first_row_accepted_attempt": 2,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 2,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 3,
+   "pass1_attempts_per_row": "2"
+  },
+  {
+   "attempt1_n_failed": 4,
+   "first_row_accepted_attempt": 1,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 1,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 4,
+   "pass1_attempts_per_row": "2"
+  },
+  {
+   "attempt1_n_failed": 13,
+   "first_row_accepted_attempt": 2,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 2,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 5,
+   "pass1_attempts_per_row": "2"
+  },
+  {
+   "attempt1_n_failed": 1,
+   "first_row_accepted_attempt": 1,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 1,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 6,
+   "pass1_attempts_per_row": "2"
+  },
+  {
+   "attempt1_n_failed": 3,
+   "first_row_accepted_attempt": 2,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 2,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 7,
+   "pass1_attempts_per_row": "2"
+  },
+  {
+   "attempt1_n_failed": 1,
+   "first_row_accepted_attempt": 1,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 1,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 8,
+   "pass1_attempts_per_row": "2"
+  },
+  {
+   "attempt1_n_failed": 4,
+   "first_row_accepted_attempt": 1,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 1,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 9,
+   "pass1_attempts_per_row": "2"
+  },
+  {
+   "attempt1_n_failed": 13,
+   "first_row_accepted_attempt": 2,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 2,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 10,
+   "pass1_attempts_per_row": "2"
+  },
+  {
+   "attempt1_n_failed": 7,
+   "first_row_accepted_attempt": 2,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 2,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 11,
+   "pass1_attempts_per_row": "2"
+  },
+  {
+   "attempt1_n_failed": 2,
+   "first_row_accepted_attempt": 2,
+   "flag_multiple_outer_rows": 0,
+   "last_row_accepted_attempt": 2,
+   "outcomes": "stored",
+   "outer_rows": 1,
+   "paper_id": 12,
+   "pass1_attempts_per_row": "2"
+  }
+ ],
+ "papers_with_rows": 12,
+ "per_field": {
+  "autonomy_level": {
+   "baseline_12g": {
+    "failed": 4,
+    "field_attempts": 11
+   },
+   "class": "judgment",
+   "concentration": "judgment",
+   "u13_head": {
+    "failed": 4,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 4,
+    "field_attempts": 11
+   }
+  },
+  "clinical_readiness_assessment": {
+   "baseline_12g": {
+    "failed": 4,
+    "field_attempts": 11
+   },
+   "class": "judgment",
+   "concentration": "judgment",
+   "u13_head": {
+    "failed": 5,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 4,
+    "field_attempts": 11
+   }
+  },
+  "comparison_to_human": {
+   "baseline_12g": {
+    "failed": 8,
+    "field_attempts": 11
+   },
+   "class": "stated",
+   "concentration": "stated_with_sentinel",
+   "u13_head": {
+    "failed": 9,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 9,
+    "field_attempts": 11
+   }
+  },
+  "country": {
+   "baseline_12g": {
+    "failed": 1,
+    "field_attempts": 11
+   },
+   "class": "inferable",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 5,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 5,
+    "field_attempts": 11
+   }
+  },
+  "key_limitation": {
+   "baseline_12g": {
+    "failed": 5,
+    "field_attempts": 11
+   },
+   "class": "judgment",
+   "concentration": "judgment",
+   "u13_head": {
+    "failed": 4,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 3,
+    "field_attempts": 11
+   }
+  },
+  "primary_outcome_metric": {
+   "baseline_12g": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "class": "stated",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 1,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 1,
+    "field_attempts": 11
+   }
+  },
+  "primary_outcome_value": {
+   "baseline_12g": {
+    "failed": 3,
+    "field_attempts": 11
+   },
+   "class": "stated",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 3,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 3,
+    "field_attempts": 11
+   }
+  },
+  "robot_platform": {
+   "baseline_12g": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "class": "stated",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 0,
+    "field_attempts": 11
+   }
+  },
+  "sample_size": {
+   "baseline_12g": {
+    "failed": 5,
+    "field_attempts": 11
+   },
+   "class": "stated",
+   "concentration": "stated_with_sentinel",
+   "u13_head": {
+    "failed": 3,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 3,
+    "field_attempts": 11
+   }
+  },
+  "secondary_outcomes": {
+   "baseline_12g": {
+    "failed": 2,
+    "field_attempts": 11
+   },
+   "class": "stated",
+   "concentration": "stated_with_sentinel",
+   "u13_head": {
+    "failed": 4,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 4,
+    "field_attempts": 11
+   }
+  },
+  "study_design": {
+   "baseline_12g": {
+    "failed": 5,
+    "field_attempts": 11
+   },
+   "class": "judgment",
+   "concentration": "judgment",
+   "u13_head": {
+    "failed": 5,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 5,
+    "field_attempts": 11
+   }
+  },
+  "study_type": {
+   "baseline_12g": {
+    "failed": 1,
+    "field_attempts": 11
+   },
+   "class": "stated",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 0,
+    "field_attempts": 11
+   }
+  },
+  "surgical_domain": {
+   "baseline_12g": {
+    "failed": 2,
+    "field_attempts": 11
+   },
+   "class": "inferable",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 5,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 5,
+    "field_attempts": 11
+   }
+  },
+  "system_maturity": {
+   "baseline_12g": {
+    "failed": 4,
+    "field_attempts": 11
+   },
+   "class": "judgment",
+   "concentration": "judgment",
+   "u13_head": {
+    "failed": 6,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 6,
+    "field_attempts": 11
+   }
+  },
+  "task_execute": {
+   "baseline_12g": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "class": "inferable",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 4,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 4,
+    "field_attempts": 11
+   }
+  },
+  "task_generate": {
+   "baseline_12g": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "class": "inferable",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 4,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 4,
+    "field_attempts": 11
+   }
+  },
+  "task_monitor": {
+   "baseline_12g": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "class": "inferable",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 4,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 4,
+    "field_attempts": 11
+   }
+  },
+  "task_performed": {
+   "baseline_12g": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "class": "stated",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 0,
+    "field_attempts": 11
+   }
+  },
+  "task_select": {
+   "baseline_12g": {
+    "failed": 2,
+    "field_attempts": 11
+   },
+   "class": "inferable",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 6,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 6,
+    "field_attempts": 11
+   }
+  },
+  "validation_setting": {
+   "baseline_12g": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "class": "stated",
+   "concentration": "other",
+   "u13_head": {
+    "failed": 0,
+    "field_attempts": 11
+   },
+   "u13_pre_dccd679": {
+    "failed": 0,
+    "field_attempts": 11
+   }
+  }
+ },
+ "per_paper": {
+  "1": {
+   "baseline_12g": {
+    "failed": 2,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 11,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 11,
+    "field_attempts": 20
+   }
+  },
+  "10": {
+   "baseline_12g": {
+    "failed": 3,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 13,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 13,
+    "field_attempts": 20
+   }
+  },
+  "11": {
+   "baseline_12g": {
+    "failed": 0,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 7,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 7,
+    "field_attempts": 20
+   }
+  },
+  "12": {
+   "baseline_12g": {
+    "failed": 3,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 2,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 2,
+    "field_attempts": 20
+   }
+  },
+  "3": {
+   "baseline_12g": {
+    "failed": 9,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 13,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 13,
+    "field_attempts": 20
+   }
+  },
+  "4": {
+   "baseline_12g": {
+    "failed": 9,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 4,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 4,
+    "field_attempts": 20
+   }
+  },
+  "5": {
+   "baseline_12g": {
+    "failed": 8,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 13,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 11,
+    "field_attempts": 20
+   }
+  },
+  "6": {
+   "baseline_12g": {
+    "failed": 1,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 1,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 1,
+    "field_attempts": 20
+   }
+  },
+  "7": {
+   "baseline_12g": {
+    "failed": 6,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 3,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 3,
+    "field_attempts": 20
+   }
+  },
+  "8": {
+   "baseline_12g": {
+    "failed": 4,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 1,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 1,
+    "field_attempts": 20
+   }
+  },
+  "9": {
+   "baseline_12g": {
+    "failed": 1,
+    "field_attempts": 20
+   },
+   "u13_head": {
+    "failed": 4,
+    "field_attempts": 20
+   },
+   "u13_pre_dccd679": {
+    "failed": 4,
+    "field_attempts": 20
+   }
+  }
+ },
+ "r617a_judgment_vwc_split": {
+  "head": {
+   "judgment_value_without_citation": 11,
+   "with_field_level_citation": 9,
+   "without_field_level_citation": 2
+  },
+  "pre_dccd679": {
+   "judgment_value_without_citation": 2,
+   "with_field_level_citation": 0,
+   "without_field_level_citation": 2
+  }
+ },
+ "recheck_against_recorded_codes": {
+  "equal": 220
+ },
+ "run": {
+  "manifest": [
+   2,
+   "5bee5d16-58cd-4585-9e7d-b5445eb2f00e",
+   "2026-10-18T22:14:07.369867+00:00",
+   "2026-10-19T00:45:32.697492+00:00",
+   "interrupted",
+   "blocked:audit_review"
+  ],
+  "run_id": 2
+ },
+ "stored": {
+  "field_events_by_type": {
+   "asserted": 188,
+   "citation_located": 188,
+   "contract_unmet": 13,
+   "declined": 19
+  },
+  "paper_events": [
+   [
+    1,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-18T22:25:41.798350+00:00"
+   ],
+   [
+    2,
+    "extraction_failed",
+    "input_exceeds_context",
+    "input_overflow_estimated",
+    "2026-10-18T22:25:46.720115+00:00"
+   ],
+   [
+    3,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-18T22:41:35.310489+00:00"
+   ],
+   [
+    4,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-18T22:59:22.553998+00:00"
+   ],
+   [
+    5,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-18T23:16:29.782066+00:00"
+   ],
+   [
+    6,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-18T23:30:39.717525+00:00"
+   ],
+   [
+    7,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-18T23:44:14.686040+00:00"
+   ],
+   [
+    8,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-18T23:54:27.644973+00:00"
+   ],
+   [
+    9,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-19T00:07:19.387616+00:00"
+   ],
+   [
+    10,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-19T00:21:50.292403+00:00"
+   ],
+   [
+    11,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-19T00:32:41.800300+00:00"
+   ],
+   [
+    12,
+    "extracted",
+    "extracted",
+    null,
+    "2026-10-19T00:45:22.571304+00:00"
+   ],
+   [
+    1,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:31.349340+00:00"
+   ],
+   [
+    3,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:31.607297+00:00"
+   ],
+   [
+    4,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:31.877589+00:00"
+   ],
+   [
+    5,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:32.114411+00:00"
+   ],
+   [
+    6,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:32.241016+00:00"
+   ],
+   [
+    7,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:32.355830+00:00"
+   ],
+   [
+    8,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:32.460022+00:00"
+   ],
+   [
+    9,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:32.509075+00:00"
+   ],
+   [
+    10,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:32.582356+00:00"
+   ],
+   [
+    11,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:32.592757+00:00"
+   ],
+   [
+    12,
+    "audited",
+    "audited_ai",
+    null,
+    "2026-10-19T00:45:32.677934+00:00"
+   ]
+  ],
+  "run_extraction_summary": {
+   "all_declined": 0,
+   "below_floor": 0,
+   "claimed_text_unreadable": [],
+   "incomplete_fields": {},
+   "stored_incomplete": 0,
+   "value_divergence": {
+    "case_or_whitespace": {
+     "count": 0,
+     "fields": {}
+    },
+    "substantive": {
+     "count": 1,
+     "fields": {
+      "autonomy_level": 1
+     }
+    }
+   }
+  }
+ },
+ "telemetry_rows": 12,
+ "unscored_papers": [
+  {
+   "first_row_error": "input_overflow_estimated",
+   "first_row_outcome": "input_exceeds_context",
+   "paper_id": 2,
+   "reason": "first row carries no elicitation attempts"
+  }
+ ]
+}

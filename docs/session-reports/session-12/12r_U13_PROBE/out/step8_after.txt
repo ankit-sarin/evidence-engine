@@ -1,0 +1,14 @@
+== step 8 2026-10-19T01:56:42Z
+/api/ps [('deepseek-r1:32b', '2319-01-29T01:43:17.788893676Z')]
+NRestarts=0
+earlyoom kills this boot: 0
+2026-10-19T01:28:24+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+MemAvailable:   58708512 kB
+mask:       40:34 python -m pipeline mask --case UCD-FIL-023
+lock: no /proc/locks entry
+lock: no holder
+probe tmux closed
+Ollama POSTs 01:28-01:57: 7
+      6 "/api/chat" POST
+      2 "/api/ps" GET
+      1 "/api/show" POST

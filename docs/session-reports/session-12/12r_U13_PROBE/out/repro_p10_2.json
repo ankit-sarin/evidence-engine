@@ -1,0 +1,50 @@
+{
+ "label": "repro_p10_2",
+ "request_hash": "b86027c8a6b0aaefc97c4f6eff3546d345d9fc7c11a4be6d80a88f94e8525821",
+ "expect_hash": "b86027c8a6b0aaefc97c4f6eff3546d345d9fc7c11a4be6d80a88f94e8525821",
+ "prompt_file": "/home/ankitsarin/scratch/12r-u13-pa/render/head_p10.txt",
+ "prompt_sha256": "70b4188e91c950642983df81771809be1eb57b18648ffb589f1050ce39551870",
+ "started_at": "2026-10-19T01:49:04.533687+00:00",
+ "ended_at": "2026-10-19T01:52:32.995153+00:00",
+ "done_reason": "stop",
+ "eval_count": 1532,
+ "prompt_eval_count": 18384,
+ "load_duration_ns": 82209927,
+ "thinking_chars": 2447,
+ "raw_chars": 3869,
+ "raw_sha256": "9d9915415a538d3c0d4337bebdfd5d67e7036a5294173977881441ad0e57e191",
+ "json_parses": true,
+ "names_present": [
+  "study_type",
+  "robot_platform",
+  "task_performed",
+  "sample_size",
+  "validation_setting",
+  "primary_outcome_metric",
+  "primary_outcome_value",
+  "comparison_to_human",
+  "secondary_outcomes",
+  "surgical_domain",
+  "task_monitor",
+  "task_generate",
+  "task_select",
+  "task_execute",
+  "country",
+  "autonomy_level",
+  "system_maturity",
+  "study_design",
+  "key_limitation",
+  "clinical_readiness_assessment"
+ ],
+ "present_by_class": {
+  "stated": 9,
+  "inferable": 6,
+  "judgment": 5
+ },
+ "expected_by_class": {
+  "stated": 9,
+  "inferable": 6,
+  "judgment": 5
+ },
+ "stated_only": false
+}

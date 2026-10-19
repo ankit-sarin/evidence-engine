@@ -1,0 +1,26 @@
+{
+ "paper_id": 10,
+ "units": {
+  "head": 383,
+  "g90f4697": 369
+ },
+ "self_test": "identity recomposition equal",
+ "a": {
+  "composition": "HEAD numbered text + 90f4697 instructions",
+  "rewritten_line_4": "marker of the form [S1], [S2], ... [S383]. You cite evidence by unit",
+  "rewritten_line_7": "Every index must be a bare JSON integer between 1 and 383. **Use the",
+  "prompt_chars": 70332,
+  "prompt_sha256": "1e011dd3de4c1380ec3268921a4e6fc5acb40283dd162999013e431333aa44d7",
+  "would_send_request_hash": "314b558aa2b0d2753fa8f4df34e6852dc2fdd10418d0c9ffa62b40c5561f5842",
+  "file": "/home/ankitsarin/scratch/12r-u13-probe/out/cond_a_p10.txt"
+ },
+ "b": {
+  "composition": "90f4697 numbered text + HEAD instructions",
+  "rewritten_line_4": "marker of the form [S1], [S2], ... [S369]. You cite evidence by unit",
+  "rewritten_line_7": "Every index must be a bare JSON integer between 1 and 369. **Use the",
+  "prompt_chars": 70804,
+  "prompt_sha256": "ead557b57df7497c904e17831d19b2aee80a46bd85e18f93573a0904ffff8ad4",
+  "would_send_request_hash": "23612e5a2f0757c6733930e53ad098e0cfdf6e26dd19c22a702fec9529a4b53d",
+  "file": "/home/ankitsarin/scratch/12r-u13-probe/out/cond_b_p10.txt"
+ }
+}

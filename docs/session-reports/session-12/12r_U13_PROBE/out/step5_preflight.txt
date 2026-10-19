@@ -1,0 +1,10 @@
+== step 5 2026-10-19T01:28:03Z
+/api/ps [('gemma3:27b', '2319-01-29T00:32:48.135686394Z')]
+NRestarts=0
+earlyoom kills this boot: 0
+MemAvailable:   81805004 kB
+mask:       11:54 python -m pipeline mask --case UCD-FIL-023
+ 01:28:03 up 1 day,  2:24,  6 users,  load average: 17.52, 17.58, 14.98
+lock: no /proc/locks entry
+lock: no holder
+clock: 01:28 — outside 07:00–10:35; projected end ≈ +75 min, before 06:40

@@ -1,0 +1,56 @@
+RULING [evidence-engine 12r-R670] — 12r-U13-PROBE accepted; the STATED-only attempt-1 shape is model
+  variation, not a request effect; R571's test closed negative; INT-h12-2 to Class 3 / P7 (PROPOSED);
+  U13 closed as a unit; INT-r12-1 stands as proposed; no prompt tuning before the tag
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on architect recommendation, on the 12r-U13-PROBE Phase 2
+  final report and docs/session-reports/session-12/12r_U13_PROBE/12r_U13_PROBE.md (commit d7bafc4).
+  Transcribe as Block 68 at item 0 of the 12r closeout, after Blocks 61–67, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the Phase 2 report):
+  MEASURED: six calls, each "stop", present "8/6/5" (paper 3, three calls) and "9/6/5" (paper 10, three
+    calls), "STATED-only false" on all six; "Each prompt_eval_count equals 12r's attempt 1 (55,425 and
+    18,384)"; "DECISION paper 3: NOT REPRODUCED (0 of 3 STATED-only)"; "DECISION paper 10: NOT
+    REPRODUCED (0 of 3 STATED-only)"; "No ablation calls followed"; "In both papers, calls 2 and 3
+    returned byte-identical text, while call 1 differed"; "Every paper-3 response omits
+    primary_outcome_value, the same STATED field 12r's attempt 1 omitted"; "Commit:
+    d7bafc45a404e0b0ebaa79a921ad4796672c9f97, parent 94ea85c"; "fingerprint IDENTICAL, overall
+    0d3eedea…cb25"; "held by one process (PID 1169525) from 01:28:10Z to 01:56:00Z, and free
+    afterwards"; "6 POST /api/chat, 1 POST /api/show and 2 GET /api/ps. NRestarts stayed 0"; "one
+    kernel NV_ERR_NO_MEMORY line at 01:28:24, during the model swap"; "the response does carry it
+    (1,414–1,532 here)"; ledger "6c7d86ef90c97b17a3479647f46822426e5b8144 … carries the row's exact
+    timestamp (01:57:50Z)".
+  INFERRED (CC's, recorded as such): "consistent with a low per-call rate"; the server-state difference
+    between 12r's run and the probe as a limit. Neither is matched; neither changes a clause below.
+  READ (12r_U13 §4, §6, the committed read-out): "no outer retries"; "asserted 188, citation_located
+    188, declined 19, contract_unmet 13" — the run stored papers 3 and 10 after attempt 2.
+
+R670(a) — 12r-U13-PROBE is accepted. §4 stands as the finding of record: the STATED-only attempt-1
+  response is not reproducible from its request; the request's content (U01's text, U04's sentences)
+  is not its cause on this evidence. The two limits in §4 are recorded with it.
+R670(b) — R571's test (R612(b), R650(a),(c)) is closed negative: the two first-attempt concentrations
+  did not change (12r_U13 §3: STATED-with-sentinel 15/33 → 16/33; JUDGMENT as that table's row). U04's
+  items (a), (b) and (e) stay in the tree and inside the pin; they are retained on neutral evidence,
+  not on a measured benefit. No further prompt change before the freshman tag is made to move a
+  first-attempt failure rate; the retry loop is the engine's handling of attempt-1 omissions, and
+  12r shows it recovering papers 3 and 10.
+R670(c) — PROPOSED, for the PI to confirm or amend: INT-h12-2 moves from Class 2 to Class 3 and from
+  P1 to P7, with a dated note quoting 12r_U13 §3 and 12r_U13_PROBE §4: its mechanism ("a sentence in
+  the prompt behind it") is refuted; the concentrations are a measured property of the model on this
+  codebook. The INT-h12-2 note R667(b) ordered becomes this note.
+R670(d) — U13 (the comparison rehearsal) is closed as a unit: built (12q), run and scored (12r),
+  read (12r-U13-PA), probed (12r-U13-PROBE). P1's unit count is unchanged at 35; the next unit is U14.
+R670(e) — INT-r12-1 (R668(b), the feedback-induced STATED-only re-emission) stands as proposed; the
+  probe did not test it (its F6). It is the one actionable finding of the rehearsal; its Phase A, when
+  its unit opens, reads the feedback template and the 12g and 12r attempt-2 cases.
+R670(f) — Notes, no rows: INT-g12-6 — the client's response carries eval_count and prompt_eval_count
+  and the probe recorded both; the engine records neither (F4); the fix is a telemetry field when
+  INT-g12-6's unit lands. The third NV_ERR_NO_MEMORY line on a completing load (01:28:24, the model
+  swap): a dgx-infra item, recorded in the 12r closure with the other two. The server-state
+  difference and the call-1 text variation: recorded under INT-g12-5's note.
+R670(g) — The post-run ra_12q and the probe's scratch (raw responses named by hash under
+  ~/scratch/12r-u13-probe/out/) are retained with the 12r retention entry (R667(d)); the probe's
+  composed cross-condition prompts are kept there too, unsent, named by hash.
+R670(h) — Session 12r's remaining work is its closeout: Blocks 61–68, the INT-h12-2 note (as R670(c)
+  if confirmed), the INT-r12-1 row (if confirmed), the R668(d) and R670(f) notes, prefix_check.py's
+  expected-row argument (R668(e)), the retention entry, the 12r closure with its host facts (R663,
+  R666, R670(f)), the lane line, then v88. It runs under a closeout brief when the PI ends the session,
+  outside 07:00–10:35 UTC.

@@ -1,0 +1,49 @@
+RULING [evidence-engine 12r-R668] — 12r-U13-PA accepted; cause A established, the request change
+  undecided; one row proposed (the feedback-induced STATED-only re-emission); a reproduction-gated probe;
+  the INT-h12-2 note and prefix_check.py's row argument move to the 12r closeout; the ledger timestamp
+  recorded
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on architect recommendation, on the 12r-U13-PA final
+  report and docs/session-reports/session-12/12r_U13_PA/12r_U13_PA.md (commit 94ea85c). Transcribe as
+  Block 66 at item 0 of the next brief in this session that transcribes, after Blocks 61–65, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-U13-PA final report; the read-out on disk governs where
+  the architect's copy was garbled):
+  MEASURED: "Raw response 1,095 chars, "json_whole": {"parses": true}, parse_container path direct,
+    present stated 8/9, inferable 0/6, judgment 0/5, done_reason: stop" (paper 3); "Raw 2,601 chars,
+    parses whole, present 9/0/0, done_reason: stop" (paper 10); "HEAD's builders reproduce 12r's stored
+    attempt-1 request hash on 4 of 4 papers"; "HEAD's feedback re-render reproduces 12r's attempt-2 hash
+    on 4 of 4"; ""attempt1_stated_only": ["3", "10"], "attempt2_stated_only": ["8"]"; "In 4 of 5 such
+    attempt-2 cases across the two runs, attempt 2 came back STATED" -only; "The instructions changed by
+    three added sentences and one reworded clause"; "num_ctx is unset / modelfile_or_server on both
+    runs"; "§5: "duplicates": {"attempt_1": 0, "attempt_2": 0, "cases": []}"; "Commit:
+    94ea85cd4e4e3a438372fb9890287e7571e1dc78, parent ef12a41, 18 files changed, 3009 insertions(+)";
+    R1 "ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f before (01:05:03Z) and after
+    (01:10:42Z)"; "the ledger commit message reads "rows through 2026-10-19T01:10:58Z", but the row's
+    timestamp is 01:10:50Z".
+  INFERRED (CC's, recorded as such): 12g's three attempt-2 cases classed A "from the shared response
+    shape" (no raw text stored; C excluded by run.log's done_reason); "Which request change moved the
+    model there can't be decided from this read" — accepted as the read's limit, which the probe below
+    addresses.
+
+R668(a) — 12r-U13-PA is accepted as reported. Cause A stands for 12r's papers 3 and 10 (attempt 1) and
+  paper 8 (attempt 2); 12g's three attempt-2 cases are A by inference, recorded as such.
+R668(b) — PROPOSED row, for the PI to confirm or strike: the feedback-induced STATED-only re-emission
+  (the read-out's F3; text cell = the F3 sentence of 12r_U13_PA.md §7, quoted at transcription). Class
+  2 (loud under U06's floor — the paper fails held_fields_below_floor — but a yield loss that the
+  feedback template itself induces); P1; pin-affecting (the feedback template is inside the pin, E-PIN);
+  fix designed after the probe below, in the INT-h12-2 batch's successor unit. ID INT-r12-1.
+R668(c) — The attempt-1 STATED-only shape (papers 3 and 10): cause undecided between U01's text change
+  and U04's instruction change; no ruling on U04's sentences until the probe reports; no prompt edit of
+  any kind before that. The probe is an experiment outside any run manifest, writing to no review, under
+  the experiment lock, as the 12e and 12a probes were.
+R668(d) — INT-g12-6 gains a dated note: the per-call done_reason in run.log distinguishes a normal end
+  from a cut-short one; eval_count stays unrecorded; the output-headroom question stands.
+R668(e) — The INT-h12-2 dated note (R667(b)), the INT-r12-1 row if confirmed, and the R668(d) note land
+  in the 12r closeout's plan commit. That commit carries cell notes, so under R664(c) prefix_check.py
+  gains its expected-row argument there (one function change, committed under 12r_close/, Class 3
+  tooling, no row), and the commit's "−" count is stated from a read of the rows edited.
+R668(f) — The ledger commit 26632bc…'s message timestamp (01:10:58Z against the row's 01:10:50Z) is left
+  as pushed (never amend after pushing); a dated line in the 12r closure; the convention of R661(e)
+  stands; no row.
+R668(g) — The probe runs under the brief below, tonight if the PI continues the session, else as the
+  first brief of session 12s after the 12r closeout.

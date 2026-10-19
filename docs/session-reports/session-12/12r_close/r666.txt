@@ -1,0 +1,58 @@
+RULING [evidence-engine 12r-R666] — 12r-OPEN accepted; the band series continues at three readings;
+  three host findings recorded (the stall, earlyoom's preference for ollama, the 10-17 NVRM lines);
+  the restore proceeds; the launch brief's confounder statement and preflight are extended
+STATUS: PI ruling, 2026-10-18 UTC, session 12r, on architect recommendation, on the 12r-OPEN-R3 final
+  report (item 0 c7481294a059c4065511d0ecd24996c786f009da; evidence ~/scratch/12r-open/). Transcribe
+  as Block 64 at item 0 of the next brief in this session that transcribes, after Blocks 61–63,
+  not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-OPEN-R3 final report):
+  MEASURED: "Commit: c7481294a059c4065511d0ecd24996c786f009da, child of e5ec600"; "2 files changed, 79
+    insertions(+)"; "claude-config 8cf101c4aeee8e654a42318d6294b3f5f64f3884, parent 9aa59b3"; "The
+    four values equal host_state_close.txt"; "3306 passed, 17 deselected, 1 xfailed, 2 warnings in
+    904.19s, exit 0"; "Wall time 906.50 s"; "0 added / 0 removed"; "phases slower by >10 s: 0";
+    "-- No entries --, 0 POST"; dbchecks, retention, codebook, spec, pins "MATCHED"; recount "275
+    rows (95 / 50 / 130, 0 unclassed), P1 58 (26 / 20 / 12), 35 fix units, P7 116"; "/api/ps reads
+    {"models":[]} both times"; 3(b) "every line matches the expected file"; 3(a) "The log reads OK
+    for all 20 models"; "two kernel NVRM: … Out of memory [NV_ERR_NO_MEMORY] lines at 07:04:29";
+    3(d)(i) "The window holds 7 lines, all systemd-journald[833]: Under memory pressure, flushing
+    caches."; "The first memory-pressure line is at 18:59:27, and there are 69 on that boot"; "Ollama's
+    last lines on that boot are GETs at 10:30:20"; 3(d)(ii) "Running argv: -r 3600 -m 6 -s 100,100
+    --avoid ^(sshd|…)$ --prefer ^ollama$"; "SIGTERM when mem <= 6.00% and swap <= 100.00%, SIGKILL
+    when mem <= 3.00%"; "No kill lines this boot"; "memory available … was 90.60% at 20:43";
+    "ollama.service: none set, live oom_score_adj=0"; "vm.min_free_kbytes: live 1048576"; 3(d)(iii)
+    "KEEP_ALIVE = 0", "NUM_CTX = 4096"; "It does take the experiment lock"; "ffmpeg at 1518% CPU …
+    python -m pipeline mask --case UCD-FIL-020"; "live is IDENTICAL at 21:33:14Z".
+  INFERRED (CC's, recorded as such): "the box was stalled rather than idle"; the 10-17 resident model
+    "llama3.2:3b"; "ollama serve and its runners are named ollama, so they are preferred victims" (a
+    reading of the config, not a kill observed). Not matched; the second is answered by the
+    restore brief's 2(d) read.
+
+R666(a) — 12r-OPEN is accepted as reported. Item 0 stands (c748129; claude-config 8cf101c). The
+  step-3 reads made during the gate are accepted: journal and file reads, no request, the gate's
+  window empty.
+R666(b) — The band series on host state {6.17.0-1032-nvidia, 580.173.02, 3.45.1-1ubuntu2.8, 3.12.3}
+  holds 868.02, 871.59 and 906.50 s; the third is recorded with its confounder (a foreign 15-core
+  encode for the whole gate). Whether a confounded reading enters the mean is decided when the band
+  is cut, at the first closeout with four readings. R657(d) stands.
+R666(c) — Three host findings, each a dated paragraph in the 12r closure and in the 12r host-state
+  record, no row (host, not engine):
+  (i) the 2026-10-17 stall (18:56 → 22:49 UTC, memory-pressure lines only, no model loaded) and
+      the reboot at 23:03:59 UTC; cause not this lane's to find;
+  (ii) earlyoom as installed 2026-10-18 05:43 UTC with --prefer ^ollama$ (SIGTERM ≤ 6%, SIGKILL ≤ 3%
+      available memory), ollama.service oom_score_adj 0, vm.min_free_kbytes 1048576 — from here a
+      launch brief states these in its confounder statement (R650(d)) and records available memory
+      and GPU memory at launch and at exit; an earlyoom kill of ollama during a run is a run fault
+      (U02's ConnectionError path), the run is reported as stopped and is not re-launched without a
+      ruling;
+  (iii) the two NV_ERR_NO_MEMORY lines of the 2026-10-17 07:00 job under the old health-check design
+      (num_ctx 262144, keep-alive forever) with every model reporting OK: recorded; the 10-18 run's
+      journal is grepped for NVRM lines by the restore brief below (2(c)); a dgx-infra item, not a
+      row.
+R666(d) — Run 7 operator item (§5 item 6 gains a line): earlyoom's preference for ollama means a
+  35–38 h run's model server is the first process terminated under any lane's memory pressure;
+  before Run 7 the PI either secures a window with no other lane on the box or asks dgx-infra to
+  change the preference for the run. Not decided here.
+R666(e) — The restore of ra_12q proceeds now under the brief below, in this session, after this
+  open's gate (R241) and outside 07:00–10:35 UTC. 12r-U13-RUN follows as its own brief; its preflight
+  rests on the restore brief's section 2 reads and R666(c)(ii).

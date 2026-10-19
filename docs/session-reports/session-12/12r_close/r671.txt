@@ -1,0 +1,11 @@
+RULING [evidence-engine 12r-R671] — R670(c) and R668(b) confirmed; the 12r closeout proceeds
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on the architect's R670(h) list. Transcribe as Block 69
+  in the 12r closeout's plan commit, after Block 68, with the others.
+R671(a) — INT-h12-2 moves from Class 2 to Class 3 and from P1 to P7, by a dated note in its row
+  (R670(c)); the class cell is not edited; the recount reads the note.
+R671(b) — Row INT-r12-1 is opened in section L, "L (12r additions, R668, R671)": text cell the F3
+  sentence of docs/session-reports/session-12/12r_U13_PA/12r_U13_PA.md §7, quoted unchanged; Class 2;
+  package P1; pin-affecting; governing rulings R668(b), R670(e), R671(b); evidence 12r_U13_PA.md. Its
+  fix unit is assigned at its Phase A; the fix-unit count stays 35 until then.
+R671(c) — Session 12r closes under the brief below. No closeout gate; the expected gate values for 12s
+  are 12r-OPEN's on unchanged code. The wrap ruling follows the closeout block.

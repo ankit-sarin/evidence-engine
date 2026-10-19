@@ -1,0 +1,12 @@
+# host state for the 12r closeout, 2026-10-19T02:14:35Z (R657(d), R663(a)); no closeout gate (R671(c))
+uname -r: 6.17.0-1032-nvidia
+python: Python 3.12.3
+libsqlite3-0: ii libsqlite3-0:arm64 3.45.1-1ubuntu2.8 arm64 SQLite 3 shared library
+nvidia driver: 580.173.02
+ollama: ollama version is 0.21.0
+NRestarts=0
+ActiveEnterTimestamp=Sat 2026-10-17 23:04:05 UTC
+up since: 2026-10-17 23:03:53 UTC; up 1 day, 3 hours, 10 minutes
+# readings (R663(a), R663(c), R666(c)): boot id abf99132-fd8b-41f9-b9fd-62241e40110c; previous boot 7af66b66-d1df-4c73-95c1-c71d3b4d7dde, 2026-10-16 23:05:38 → 2026-10-17 22:49:11 UTC
+# earlyoom: active, started Sun 2026-10-18 05:43:03 UTC; argv: /usr/bin/earlyoom -r 3600 -m 6 -s 100,100 --avoid ^(sshd|tailscaled|cloudflared|systemd|systemd-journal|NetworkManager|Xorg|gnome-shell|gdm.*)$ --prefer ^ollama$ 
+# vm.min_free_kbytes = 1048576; ollama.service OOMScoreAdjust=0

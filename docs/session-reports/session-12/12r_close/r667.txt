@@ -1,0 +1,52 @@
+RULING [evidence-engine 12r-R667] — 12r-U13-RUN accepted; R571's test negative on the concentrations;
+  the FIELD_MISSING regression goes to a read-only Phase A before any ruling on the prompt; the post-run
+  copy retained; I5's proceed recorded
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on architect recommendation, on the 12r-U13-RUN final
+  report and the read-out docs/session-reports/session-12/12r_U13/12r_U13.md (commit ef12a41). Transcribe
+  as Block 65 at item 0 of the next brief in this session that transcribes, after Blocks 61–64, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-U13-RUN final report; the read-out on disk governs
+  where the paste the architect received was garbled):
+  MEASURED: "Exit code 0 at 00:45:41.69Z; wall time 9,097.3 s"; "attempt 1 failed 72 of 220 fields under
+    HEAD's check (70 under the pre-dccd679 verdict), against 12g's 46"; "STATED with sentinel prose |
+    15/33 | 16/33 | 16/33"; "all other fields | 9/132 | 32/132 | 32/132"; "FIELD_MISSING rose from 2 to
+    26"; "every INFERABLE and JUDGMENT field missing on attempt 1 (F3)" on papers 3 and 10; "dccd679
+    alone fails two fields: paper 5's key_limitation and clinical_readiness_assessment"; ""attempt_1": 0"
+    (duplicates); "asserted 188, citation_located 188, declined 19, contract_unmet 13"; "no outer
+    retries"; "Paper 2 is unscored here and in 12g"; "elicitation_pass1 23 (22 completed, 1
+    input_overflow, nothing sent)"; "extract_pass2 11"; "earlyoom kills 0, NRestarts=0" at every
+    checkpoint; "MemAvailable stayed between 59.4" GB and the pre-flight 114 GB; "One kernel
+    NV_ERR_NO_MEMORY line" during the 32B load, "The load completed"; "the cold preflight load 11.1
+    min"; "The manifest closed interrupted / blocked:audit_review"; "commit ef12a41 … 9 files changed,
+    1861 insertions(+)"; the post-run copy at ~/scratch/12r-u13/run/ra_12q/ (its review.db sha256 and
+    fingerprint are in §8 of the read-out; the architect's copy of the report truncated them).
+  INFERRED (CC's): "I judged that the substance of I5 holds and launched"; the JUDGMENT concentration's
+    HEAD and pre-dccd679 cells (garbled in the architect's copy; read from the read-out in the Phase A
+    and quoted there).
+
+R667(a) — 12r-U13-RUN is accepted as reported: the run, the scoring, the read-out at ef12a41, A3 and
+  A4. Abort condition D fired once (the NVRM line) and was handled as written.
+R667(b) — R571's test, as R612(b) framed it (attempt-level measures compared per field against
+  12h_rd/rd1_attempts_cells.csv), is negative on both concentrations: STATED-with-sentinel 15→16 of 33,
+  JUDGMENT unchanged within its range (the exact cells quoted in the Phase A). No ruling on U04's
+  sentences (R571(a), (b)) is made now; they stay in the tree; the pin stands. INT-h12-2 gains a dated
+  note recording the result, quoted from §3, in the Phase A's commit.
+R667(c) — The FIELD_MISSING increase (2→26; papers 3 and 10 losing every INFERABLE and JUDGMENT field
+  on attempt 1; F3) is a candidate defect, not yet classed, and is read before anything is changed:
+  the Phase A below. Root cause before fix; the prompt content is audited before the model is blamed.
+  No prompt edit, no retry-budget change, no floor change until the Phase A's read-out is committed
+  and ruled on.
+R667(d) — Retention: the post-run ra_12q at ~/scratch/12r-u13/run/ra_12q/ is retained as the ninth
+  retained throwaway, by review.db file sha256 (the §8 value), entered in the retention ledger at the
+  12r closeout with the 12g copy it is compared against; opened only as a byte copy (F9); not a
+  restore point. The build-stage records (ra_12q_fingerprint_built.json, stage_before.txt) describe
+  the pre-run copy and are kept with it.
+R667(e) — I5: the premise ("CLAUDE.md carries … watchdog 900 s") was an architect's embellished
+  value; the fact that mattered (the section exists and names the watchdog and restart paths) held.
+  CC's proceed is accepted this once and recorded; from here an INFERRED item names only the fact that
+  must hold, and a brief that wants a value checked names it as a separate reading. The global
+  CLAUDE.md's "300s" stays on the HK-ARCH line (F5, R650(g)).
+R667(f) — Operator readings for Run 7, no rows: the 32B model's working set about 55 GB on this box;
+  the cold first load 11.1 min on a fresh boot; the NV_ERR_NO_MEMORY line on a completing load, seen
+  2026-10-17 and 2026-10-18 — a dgx-infra item.
+R667(g) — The Phase A runs now or in the next session, read-only; no gate, no model call, no lock.

@@ -1,0 +1,38 @@
+RULING [evidence-engine 12r-R664] — S3 ruled (a): prefix_check.py's rule applies to cell-note commits
+  only; a zero-note commit is verified by its "−" count; the two form adjustments accepted;
+  12r-OPEN-R1 resumes at item 1(d)
+STATUS: PI ruling, 2026-10-18 UTC, session 12r, on architect recommendation, on the 12r-OPEN-R1 stop
+  report at item 1(d) (evidence ~/scratch/12r-open/, scratch only, no commit). Transcribe as Block 62
+  at item 0 of the next brief in this session that transcribes, after Block 61 (R663), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-OPEN-R1 stop report):
+  MEASURED: "diff of docs/plan/ENGINE_REFACTOR_PLAN.md (staged): 0 '-' lines, 69 '+' lines"; "exactly
+    one '-' line, the INT-p12-2 row: False"; "RESULT: FAIL (STOP)"; "79 insertions(+), 0 deletions";
+    "new_plan.md (sha256 f2e4dc60…8d)"; "6,614 lines (+69, 0 "−"), and its last line is The decision
+    log in this file ends at R662., line 6614"; "Block 60's fence is cmp-identical to r662.txt"; "the
+    evidence-engine ledger rows number 458 at both 74b8cb4 and HEAD"; step 0 "all MATCHED" at
+    20:41:08Z; temp root "4 entries, 254,923,153 B".
+  READ (CC's read of the script and the history): "the script is hard-coded to require exactly one
+    "−" line, the INT-p12-2 row"; "prefix_check.py first lands in e5ec600, the 12q closeout, after
+    f087d4f"; "Blocks 50–59 all carry a sentence like that".
+  No INFERRED item: this ruling withdraws an architect premise and makes no new claim about the box.
+
+R664(a) — The brief's clause "prefix_check.py run as the 12q item-0 commit ran it (expect it to pass
+  with 0 "−" lines)" was an architect premise about a script's behaviour, asserted from its purpose,
+  not from a read; it is withdrawn. The stop was correct: two clauses disagreed and CC stopped with
+  both repositories clean.
+R664(b) — R656(c) as applied from here: a plan commit that carries N dated notes inside table-row
+  cells has exactly N "−" lines, each verified by prefix_check.py's rule; a commit that carries no
+  cell note (an appended block, a note paragraph after a closure, a new file) is verified by its "−"
+  count alone, which must be 0. Item 0 of 12r is the second kind. Acceptance gate 2 of 12r-OPEN reads:
+  0 "−" lines in the plan diff, measured by the staged diff.
+R664(c) — prefix_check.py's single hard-coded row is a tooling limitation of the 12q closeout's
+  instrument, recorded as a dated line in the 12r closure; no row (tooling, Class 3, as R660(c) F3
+  treated render_cell.py). Whether the script takes its expected row as an argument is decided at a
+  closeout that next carries a cell note, not now.
+R664(d) — Both form adjustments are accepted: the sentence "The 12r-OPEN task brief that followed the
+  ruling in the paste is not part of the block." in Block 60's header, and the backticked hashes and
+  file name in the 1(c) note. The on-disk form governs over the brief's wording (R643(e)'s rule in the
+  other direction).
+R664(e) — 12r-OPEN-R1 resumes at item 1(d) under the resume below, applying the scratch-built file as
+  staged. Nothing else in the brief or in R663 changes.

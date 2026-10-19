@@ -1,0 +1,14 @@
+== temp root 2026-10-19T02:09:08Z
+total 836
+drwx------    5 ankitsarin ankitsarin   4096 2026-10-18 21:32:14.894254961 +0000 .
+drwxrwxrwt   63 root       root        49152 2026-10-19 02:08:59.678928504 +0000 ..
+drwx------ 1813 ankitsarin ankitsarin 208896 2026-10-18 18:11:09.965941127 +0000 pytest-4
+drwx------ 1813 ankitsarin ankitsarin 208896 2026-10-18 19:17:49.855320660 +0000 pytest-5
+drwx------ 3309 ankitsarin ankitsarin 368640 2026-10-18 21:32:14.894254961 +0000 pytest-6
+lrwxrwxrwx    1 ankitsarin ankitsarin     34 2026-10-18 21:17:13.612930557 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-6
+entries 4
+1622165155	/tmp/pytest-of-ankitsarin
+/tmp/pytest-of-ankitsarin/pytest-4/ app_db_template0 app_db_templatecurrent 
+/tmp/pytest-of-ankitsarin/pytest-5/ app_db_template0 app_db_templatecurrent 
+/tmp/pytest-of-ankitsarin/pytest-6/ test_013_is_idempotent0 test_013_is_idempotentcurrent 
+/tmp/pytest-of-ankitsarin/pytest-current/ test_013_is_idempotent0 test_013_is_idempotentcurrent 

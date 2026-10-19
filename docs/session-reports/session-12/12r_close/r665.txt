@@ -1,0 +1,22 @@
+RULING [evidence-engine 12r-R665] — I10 restated as the two-hunk check, already measured; 12r-OPEN-R2
+  resumes at item 1(d)
+STATUS: PI ruling, 2026-10-18 UTC, session 12r, on architect recommendation, on the 12r-OPEN-R2 stop
+  report at I10 (nothing applied, both repositories clean). Transcribe as Block 63 at item 0 of the
+  next brief in this session that transcribes, after Blocks 61 and 62, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-OPEN-R2 stop report):
+  MEASURED: "differ: byte 908262, line 3515, cmp exit 1"; "exactly two insertion hunks and nothing
+    changed or deleted: 3514a3515,3516: the note and a blank line. 6545a6548,6614: Block 60"; "With
+    lines 3515–3516 removed, the first 6,545 lines are identical to the current file. The R661 ends-at
+    line is kept, now at line 6547"; "sha256 f2e4dc60d5dd4eb396083475d221a45e5600ccb91849181766a56de730cb9b8d";
+    at 20:44:43Z "HEAD is e5ec600, clean, 0 0", "claude-config is 9aa59b3, clean, 0 0", "The
+    fingerprint is IDENTICAL".
+  No INFERRED item: this ruling replaces an architect premise with the measured form.
+
+R665(a) — I10's "first 6,545 lines byte-identical" was an architect premise that ignored R663's own
+  placement of the 1(c) note; withdrawn. The stop was correct.
+R665(b) — I10 reads: new_plan.md equals the plan at e5ec600 with exactly two insertion hunks — the
+  1(c) note and its blank line at 3515–3516, and Block 60 at 6548–6614 — and no changed or deleted
+  line; the R661 ends-at line retained at 6547; the file's last line the R662 ends-at line at 6614.
+  The report's diff measured exactly this; I10 holds.
+R665(c) — 12r-OPEN-R2 resumes at item 1(d) under the resume below. Nothing else changes.

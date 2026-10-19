@@ -1,0 +1,55 @@
+RULING [evidence-engine 12r-R663] — S1 ruled: the 2026-10-17 reboot is a dated fact, the service
+  start a reading (R657(b) reaffirmed), the band series decided by the four values at 2(a); S2 ruled:
+  the two foreign claude-config commits accepted as found and noted; one read-only section added;
+  12r-OPEN resumes from step 0
+STATUS: PI ruling, 2026-10-18 UTC, session 12r, on architect recommendation, on the 12r-OPEN stop
+  report at step 0 (evidence ~/scratch/12r-open/step0_20261018T203625Z.txt). Transcribe as Block 61
+  at item 0 of the next brief in this session that transcribes (after Block 60 has landed under the
+  resume below), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-OPEN stop report):
+  MEASURED: "ExecMainStartTimestamp=Sat 2026-10-17 23:04:05 UTC, NRestarts=0"; "boot 7af66b66…, the
+    one host_state_close.txt records, as Fri 2026-10-16 23:05:38 UTC → Sat 2026-10-17 22:49:11 UTC.
+    The current boot abf99132… started Sat 2026-10-17 23:03:59 UTC"; "The previous boot's last
+    journal lines are systemd-journald: Under memory pressure, flushing caches. at 22:32:40, 22:40:41
+    and 22:49:11"; "The kernel still reads 6.17.0-1032-nvidia"; "HEAD is
+    9aa59b365fd170ad00c90d6f88baeacd0a2da46e, clean, 0 0, and a descendant of 74b8cb4"; "2466df3:
+    "docs(primer): §16 memory safeguards installed — MS-S1 → MS-V1 baselines (2026-10-18)", primer.md
+    +47 at line 2413 onward"; "9aa59b3: "ledger: rows through 2026-10-18T18:11:28Z", one
+    surgical-cv-mbf1 row"; "the diff is insertions only, the lane line's five "+" lines still equal
+    primer.md lines 41–45, and none of its "−" lines are present"; "4 entries, 254,923,153 B"; every
+    other step-0 value MATCHED as the table reports it; "r662.txt sha256
+    b5d1ad0829c591a625f9e84a1a10092128f4bbd2c255e6d6730e0dce2521ca95, 56 lines, 4,719 bytes".
+  READ (by CC, from ~/claude-config/primer.md §16, another lane's text): the safeguards "were
+    installed 2026-10-18 05:42–05:43Z"; "the 07:00 check now uses HTTP with keep_alive 0 and "leaves
+    nothing resident" (dgx-infra 7723cf1, first run 2026-10-18 07:00Z)". These are that lane's claims
+    about the box; the resume reads the installed configuration and the journal, and does not rely on
+    §16's wording.
+  INFERRED (CC's, recorded as such): the link between the memory-pressure lines and "the 2026-10-17
+    seizure"; the surgical-cv attribution of pytest-3/-4/-5. Neither is matched; 3(d) below reads the
+    old boot's journal, which is where the first one is checked.
+
+R663(a) — S1: the brief's step 2(b) expected the Ollama service start as a value; that was an
+  architect addition, withdrawn. R657(b) stands: the service start is a reading. The reboot of
+  2026-10-17 23:03:59 UTC is a dated fact of the 12r closure, recorded with both boot ids. Whether
+  the band series continues is decided at step 2(a) by the four R657(d) values (kernel, NVIDIA
+  driver, libsqlite3-0, Python) read against 12q_close/host_state_close.txt: all four equal → the
+  series continues at 868.02, 871.59 s; any differs → a new series, the gate's wall time its first
+  reading. The 12r host-state record gains the current boot id and the service start as readings.
+R663(b) — S2: claude-config 9aa59b3 is accepted as found. The ledger commit is R653(c)'s case B. The
+  primer commit 2466df3 is a new case, ruled here and from now on: a committed change by another lane
+  to claude-config that leaves this lane's ledger rows and primer.md lines 41–45 intact is accepted as
+  found and recorded by a dated note naming each commit by hash and author lane; it is not a stop.
+  R654(d)'s stops are unchanged (any change to lines 41–45, a missing row of this lane, uncommitted
+  non-row dirt, divergence). Item 0(c)'s note is written, naming 2466df3 and 9aa59b3.
+R663(c) — The memory event and the safeguards are read before any launch decision, read-only, as
+  step 3(d) of the resume below. No ruling on U13's launch is made here; 12r-U13-RUN's brief rests on
+  those reads. Whether earlyoom, vm.min_free_kbytes and the OOMScoreAdjust settings are host-state
+  values for R657(d) is left open; the 12r host-state record carries them as readings.
+R663(d) — I6 is corrected: after a keep_alive-0 health check nothing is expected resident; residency
+  is a reading at every Ollama read, whatever its value. The 10-17 reads stand as R661(c) states
+  them (both jobs ran on the old boot, before 22:32 UTC); the 10-18 reads are readings on the new
+  boot and the new health-check design, reported, not matched.
+R663(e) — 12r-OPEN resumes from step 0 under the resume below. Nothing else in the brief changes.
+  The gate, if it runs, is the third standard gate of the series only if R663(a)'s four values are
+  equal; R657(d)'s "no band until four" holds either way.

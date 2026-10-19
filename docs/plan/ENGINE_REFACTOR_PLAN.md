@@ -499,8 +499,8 @@ Housekeeping lines of the 12f table (section E4) that have no inventory row of t
 | INT-g12-2 | the unit map for the refused paper (live 415, 17,058 units) was built and written before the refusal, which is where that paper's 28 seconds went. | 3 | P7 | R560 | `12g_RA-B.md` |
 | INT-g12-3 | Every one of the 177 `asserted` events carries `state_at_write` "asserted without locatable evidence" in its payload, including claims located a moment later. Not read further | 1 (conservative, until the 12h read RD-3 shows no reader of `state_at_write`) | P1 (pending RD-3) | R563 (RD-3) | `12g_RA-B.md` *Note 2026-10-09 (12h rulings, R566):* RD-3 read (`12h_RD-3.md`): no engine, export, methods or judge reader of `state_at_write`. Class 3, P7, option (a): two docstring sentences (`write_field_event` and `effective.py`'s module docstring); no payload change. |
 | INT-g12-4 | A screen-start manifest declares ten stage rows and pins the extraction arm for a run that makes screening calls only. | — (pending the 12h read RD-5; the refusal is loud) | — (pending RD-5) | R563 (RD-5); R564 | `12g_RB-A.md` *Note 2026-10-09 (12h rulings, R569):* RD-5 read (`12h_RD-5.md`): by design but undocumented. Class 2, P1. (a) R237's sentence in `CLAUDE.md` corrected in the transcription commit. (b) The fix: the extraction arm is pinned by the first run that reaches the extract stage, not by the first manifest that declares it (amends R59 in part; R10 and R21 stand); Phase A first. *Note 2026-10-11 (12l-R612, R612(h); D7):* "D7: Design A. U05 includes the full-tuple comparison at the extract stage. The CLAUDE.md R237 sentence is replaced in U05's commit by text quoted in U05's handoff for PI approval." Design A, as `12l_P1A.md` §2 D7 states it: `open_run` registers the arm unpinned and compares against any existing pin; the pin is written at the extract stage. Unit U05, pin-affecting by arm-binding. |
-| INT-g12-5 | **The two abstract passes send byte-identical requests.** All 42 pass-1 / pass-2 pairs have the same `run_calls.request_hash`, at temperature 0 with no seed. The decisions agreed on 42 of 42; the response text was identical on 16 of 42 pairs. | 1 (conservative, until the 12h read RD-6) | — (pending RD-6) | R565 (RD-6) | `12g_RB-B.md` *Note 2026-10-09 (12h rulings, R570):* RD-6 read (`12h_RD-6.md`): long-standing design, from git; session 7 collapsed nothing. Class 3, P7, the mechanism recorded as a design fact. The methods-section "dual-pass" wording folds into B-F07 / E-METHODS / C36 (P3). Keeping, changing or dropping pass 2 is decided at S4. |
-| INT-g12-6 | `eval_count` is recorded nowhere, so output size in tokens and output headroom cannot be measured on any run, Run 7 included | 3 | P1 | R552 | `12g_RA-A.md` |
+| INT-g12-5 | **The two abstract passes send byte-identical requests.** All 42 pass-1 / pass-2 pairs have the same `run_calls.request_hash`, at temperature 0 with no seed. The decisions agreed on 42 of 42; the response text was identical on 16 of 42 pairs. | 1 (conservative, until the 12h read RD-6) | — (pending RD-6) | R565 (RD-6) | `12g_RB-B.md` *Note 2026-10-09 (12h rulings, R570):* RD-6 read (`12h_RD-6.md`): long-standing design, from git; session 7 collapsed nothing. Class 3, P7, the mechanism recorded as a design fact. The methods-section "dual-pass" wording folds into B-F07 / E-METHODS / C36 (P3). Keeping, changing or dropping pass 2 is decided at S4. *Note 2026-10-19 (12r-CLOSE, R670(f)):* 12r-U13-PROBE resent one fixed Pass-1 request three times per paper at temperature 0 with no seed: calls 2 and 3 returned byte-identical text and call 1 differed, in both papers (`12r_U13_PROBE.md` §2, F2); the probe's first call followed a model swap, a server state unlike the run's, recorded as a limit in its §4. |
+| INT-g12-6 | `eval_count` is recorded nowhere, so output size in tokens and output headroom cannot be measured on any run, Run 7 included | 3 | P1 | R552 | `12g_RA-A.md` *Note 2026-10-19 (12r-CLOSE, R668(d), R670(f)):* the per-call `done_reason` in run.log (the `input_fit` lines) distinguishes a normal end from a cut-short one (`12r_U13_PA.md` §4); the client's response carries `eval_count` and `prompt_eval_count`, and 12r-U13-PROBE recorded both (`eval_count` 1,414–1,532, `12r_U13_PROBE.md` F4); the engine records neither, and the output-headroom question stands. The fix is a telemetry field when this row's unit lands. |
 | INT-g12-7 | An outer `flock(1)` on the lock file deadlocks `run_extraction`. A constraint on how A-1's fix (R528) and any lock-holding cron job are built | 3 | P1, with A-1 | R552 | `12g_RA-A.md` *Note 2026-10-15 (12p-CLOSE, R650(g)):* F6 (`12p_U13A.md` §8): `main()` holds the experiment lock for the whole run (`run_pipeline.py:614–622`); the in-process launcher R629(b) names is superseded for `run_pipeline`, and `EVIDENCE_ENGINE_LIVE_TIERS` governs tests only (`conftest.py:305`) — the rehearsal needs no tier flag. No row. |
 | INT-g12-8 | Abstract screening calls pass no `paper_id`, so their `run_calls` rows carry NULL — the abstract-stage form of C48 (FT) — confirmed on the run: all 85 `run_calls` rows carry a NULL `paper_id`, so a screening call is tied to its record only by order and time | 3 | P7, with C48 | R564, R565 | `12g_RB-A.md` |
 | INT-g12-9 | The script that wrote the stored search files is not in the repository, and the query text it sent is recorded nowhere beside them | 3 | P3 | R548 | `12g_measurements.md` |
@@ -515,7 +515,7 @@ Provisional and pending rows, listed apart because a 12h read may move each: INT
 | # | On disk (the read-out, quoted) | Class | Owning package | Governing ruling | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | INT-h12-1 | the located payload has no `snippet` key, so the readers that take a snippet from it get none. | 1 | P5, Phase A first; the Phase A also states why the exporter and judge-loader tests passed with the snippet empty (B5) | R567 | `12h_RD-3.md` (ADJ-RD3-1) |
-| INT-h12-2 | First-attempt failures are concentrated in two places, and each has a sentence in the prompt behind it. | 2 | P1, pin-affecting, before the freeze: (a) the NR collision resolved in the prompt only (the codebook is not edited, R26); (b) the JUDGMENT contract states that at least one step must cite a unit; (e) the rejected Pass-1 attempt's raw response kept in telemetry (absorbs ADJ-RD1-1; not pin-affecting); then a comparison rehearsal on Rehearsal A's 12 papers | R571 | `12h_RD-1.md` (RB-3) *Note 2026-10-11 (12l-R612, R612(b), R612(d), R612(e); D1, D3, D4):* three rulings on this row's batch (unit U04) and its rehearsal (placed as U13). R612(e), on item (a): "D4: amended. The sentence that makes a field's instruction to record a sentinel subject to the sentinel rule is placed in the STATED and the INFERABLE class contracts, next to their field blocks, not in the shared sentinel rule. The codebook is not edited (R26)." R612(d): "D3: Option A. extract_retry_snippet leaves the elicited stage set in U04. New row, Class 3, P1, pin-affecting." (row INT-l12-1). R612(b), on the comparison rehearsal: "D1: Option A. The rehearsal's brief separates attempt-level measures (first-attempt failure codes per field) from stored-outcome measures; only the former are compared against 12g_RA-B's per-field results as R571's test. Stored outcomes are reported, not compared." *Note 2026-10-11 (12l item 0, R616(c); U04 F2):* U04's commits 1 and 3 landed at `36de472` and `a0b818e` (items (a), (b) and (e) of this row). Its finding F2, as `12l_U04.md` states it: "T-b states more than the checker enforces. A JUDGMENT field with a field-level citation and steps that are all criteria applications passes: `VALUE_WITHOUT_CITATION` needs one citation anywhere, not one in a step. R571(b) rules the sentence, not a check." R616(c): "F2: the check follows R571(b). A JUDGMENT field meets the citation requirement only when at least one reasoning step cites a unit; a field-level citation alone no longer meets it. Lands in U04 as commit 4, before the rehearsal. A dated note on INT-h12-2; no row." *Note 2026-10-12 (12l item 0, R617(a); U04b F1):* U04's commits 2 and 4 landed at `fe3ffe3` and `dccd679`; commit 4 is R616(c)'s check (a JUDGMENT field with no citing step is `VALUE_WITHOUT_CITATION`). Finding F1, as `12l_U04b_addendum.md` states it: "the worked example shows only the field-level citation shape. Its cases 2 and 3 cite at field level with no steps, on a field with no class. A JUDGMENT field answered in that shape failed before this unit (`STEPS_MISSING`) and fails now. The prompt shows no JUDGMENT field reporting an absence, where the citing step would be the one that cites the absence sentence." R617(a): "F1 (the worked example shows only the field-level citation shape): a dated note on INT-h12-2. No prompt change before the rehearsal. The rehearsal's design counts JUDGMENT first-attempt VALUE_WITHOUT_CITATION separately, split by whether the field carried a field-level citation, because the check tightened at dccd679 and 12g_RA-B was scored under the earlier check." *Note 2026-10-15 (12p-CLOSE, R650(a), R650(c)):* R612(b)'s attempt-level comparison target is `12h_rd/rd1_attempts_cells.csv` (46 failed fields of 220; the two concentrations 15 of 33 and 22 of 55), not `12g_RA-B.md` §6, which is the accepted attempt's outcome and a stored-outcome table (R650(a)). The rehearsal's measures (R650(c)): per field, the first Pass-1 attempt's violation codes, "attempt 1" being `extra.attempts[0]` of the first telemetry row written for the paper, with outer retries per paper reported beside it and a paper with more than one outer row flagged, not excluded; scored under HEAD's check and under the pre-dccd679 verdict reconstructed from the raw response, with R617(a)'s split (field-level citation present or not) reported under both; compared per field (R571's test) and per paper; stored outcomes reported, not compared. The rehearsal is session 12q's (R650(h)). |
+| INT-h12-2 | First-attempt failures are concentrated in two places, and each has a sentence in the prompt behind it. | 2 | P1, pin-affecting, before the freeze: (a) the NR collision resolved in the prompt only (the codebook is not edited, R26); (b) the JUDGMENT contract states that at least one step must cite a unit; (e) the rejected Pass-1 attempt's raw response kept in telemetry (absorbs ADJ-RD1-1; not pin-affecting); then a comparison rehearsal on Rehearsal A's 12 papers | R571 | `12h_RD-1.md` (RB-3) *Note 2026-10-11 (12l-R612, R612(b), R612(d), R612(e); D1, D3, D4):* three rulings on this row's batch (unit U04) and its rehearsal (placed as U13). R612(e), on item (a): "D4: amended. The sentence that makes a field's instruction to record a sentinel subject to the sentinel rule is placed in the STATED and the INFERABLE class contracts, next to their field blocks, not in the shared sentinel rule. The codebook is not edited (R26)." R612(d): "D3: Option A. extract_retry_snippet leaves the elicited stage set in U04. New row, Class 3, P1, pin-affecting." (row INT-l12-1). R612(b), on the comparison rehearsal: "D1: Option A. The rehearsal's brief separates attempt-level measures (first-attempt failure codes per field) from stored-outcome measures; only the former are compared against 12g_RA-B's per-field results as R571's test. Stored outcomes are reported, not compared." *Note 2026-10-11 (12l item 0, R616(c); U04 F2):* U04's commits 1 and 3 landed at `36de472` and `a0b818e` (items (a), (b) and (e) of this row). Its finding F2, as `12l_U04.md` states it: "T-b states more than the checker enforces. A JUDGMENT field with a field-level citation and steps that are all criteria applications passes: `VALUE_WITHOUT_CITATION` needs one citation anywhere, not one in a step. R571(b) rules the sentence, not a check." R616(c): "F2: the check follows R571(b). A JUDGMENT field meets the citation requirement only when at least one reasoning step cites a unit; a field-level citation alone no longer meets it. Lands in U04 as commit 4, before the rehearsal. A dated note on INT-h12-2; no row." *Note 2026-10-12 (12l item 0, R617(a); U04b F1):* U04's commits 2 and 4 landed at `fe3ffe3` and `dccd679`; commit 4 is R616(c)'s check (a JUDGMENT field with no citing step is `VALUE_WITHOUT_CITATION`). Finding F1, as `12l_U04b_addendum.md` states it: "the worked example shows only the field-level citation shape. Its cases 2 and 3 cite at field level with no steps, on a field with no class. A JUDGMENT field answered in that shape failed before this unit (`STEPS_MISSING`) and fails now. The prompt shows no JUDGMENT field reporting an absence, where the citing step would be the one that cites the absence sentence." R617(a): "F1 (the worked example shows only the field-level citation shape): a dated note on INT-h12-2. No prompt change before the rehearsal. The rehearsal's design counts JUDGMENT first-attempt VALUE_WITHOUT_CITATION separately, split by whether the field carried a field-level citation, because the check tightened at dccd679 and 12g_RA-B was scored under the earlier check." *Note 2026-10-15 (12p-CLOSE, R650(a), R650(c)):* R612(b)'s attempt-level comparison target is `12h_rd/rd1_attempts_cells.csv` (46 failed fields of 220; the two concentrations 15 of 33 and 22 of 55), not `12g_RA-B.md` §6, which is the accepted attempt's outcome and a stored-outcome table (R650(a)). The rehearsal's measures (R650(c)): per field, the first Pass-1 attempt's violation codes, "attempt 1" being `extra.attempts[0]` of the first telemetry row written for the paper, with outer retries per paper reported beside it and a paper with more than one outer row flagged, not excluded; scored under HEAD's check and under the pre-dccd679 verdict reconstructed from the raw response, with R617(a)'s split (field-level citation present or not) reported under both; compared per field (R571's test) and per paper; stored outcomes reported, not compared. The rehearsal is session 12q's (R650(h)). *Note 2026-10-19 (12r-CLOSE, R670(c), R671(a)):* moves from Class 2 to Class 3 and from P1 to P7; the class cell is not edited, and the recount reads this note (R671(a)). Its mechanism ("a sentence in the prompt behind it") is refuted: the comparison rehearsal (`12r_U13.md` §3, `ef12a41`) scored attempt 1 against `12h_rd/rd1_attempts_cells.csv` with STATED-with-sentinel-prose "15 / 33" (12g), "16 / 33" (HEAD's check), "16 / 33" (pre-dccd679) and JUDGMENT "22 / 55", "24 / 55", "22 / 55"; and the probe (`12r_U13_PROBE.md` §4, `d7bafc4`): "The shape is **not reproducible** from the request". The concentrations are a measured property of the model on this codebook (R670(c)); R571's test is closed negative (R670(b)). This is the note R667(b) ordered. |
 
 **The pre-tag list, recounted 2026-10-09 (12h rulings), by script from section L** (`docs/session-reports/session-12/12h_rd/recount_12h.py` → `recount_12h.json`: the 12g-close count above as the baseline, each row's class cell against its 12h note, and the two rows above). Baseline: 71 rows — Class 1 / 2 / 3 = 32 / 14 / 22, and 3 without a class (A-6, A-9, INT-g12-4). Deltas at the 12h rulings: INT-g12-3 moves from Class 1 to Class 3 (R566); INT-g12-5 moves from Class 1 to Class 3 (R570); INT-g12-4 takes Class 2 (R569); A-9 takes Class 3 (R572); INT-g12-1 and A-10 keep Class 1 (R568, R572); two rows enter — INT-h12-1 in Class 1 (R567), INT-h12-2 in Class 2 (R571). **Now 73 rows: Class 1 / 2 / 3 = 31 / 16 / 25, and 1 without a class** (A-6, not present at HEAD). **R510: rows in 2, rows out 0.** No row is provisional or pending a read.
 
@@ -869,6 +869,14 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 | INT-q12-3 | **F3 — two retry-row columns misstate a duplicate.** On every `DuplicateFieldError` retry row, `spans_parsed` is `exc.n_stored` = `n_expected − len(duplicated)` (`completeness.py:242`), a count no response produced (on an attempt-1 Pass-1 duplicate nothing was parsed into spans), and `missing_fields` is stored `null` (`()` is falsy at `extraction_telemetry.py:97`). | 3 | P7 | R659(d) | 12q_P12-2A.md §8 F3; completeness.py:242; extraction_telemetry.py:97 |
 
 **The pre-tag list, recounted 2026-10-17 (12q-P12-2B, R659(d)), by script from the plan** (`docs/session-reports/session-12/12q_P12-2B/recount_12q_r659.py` → `recount_12q_r659.json`: the 12p-CLOSE count above as the baseline, reproduced by `recount_12p_close.py` on this file and equal to its committed JSON byte for byte, and the three rows above). Baseline: 272 rows — Class 1 / 2 / 3 = 95 / 50 / 127, and 0 without a class. Deltas: 3 rows enter, Class 3 (INT-q12-1, INT-q12-2 and INT-q12-3, all in P7); R659 moves no class. **Now 275 rows: Class 1 / 2 / 3 = 95 / 50 / 130, and 0 without a class.** **R510 (2026-10-17, 12q-P12-2B, R659(d)): rows in 3 (3 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 0 / 3), rows out 0.** R659(d)'s expected total was 275 rows, 95 / 50 / 130, with P1 at 58 rows and 35 fix units and P7 at 116; the script gives the same. Counts by package and class (first-named package, as before): P1 26 / 20 / 12 (58); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 115 (116). P1's fix units stay 35: no P1 row enters.
+
+**L (12r additions, R668, R671).** *Opened 2026-10-19 (12r-CLOSE) under R509, R668(b), R670(e) and R671(b).* One row from the U13 Phase A read-out (`12r_U13_PA.md`, `94ea85c`): `INT-r12-1` for its finding F3 (R668(b), confirmed by R671(b)), placed in its own table so that the 12q recount's bounds are unchanged. The text cell is the read-out's F3 (§7), quoted unchanged; class and package are R668(b)'s as R671(b) confirms them; its fix unit is assigned at its Phase A, and P1's fix-unit count stays 35 until then (R671(b)). Not rows, as ruled: INT-h12-2 moves to Class 3 / P7 by a dated note in its row (R670(c), R671(a)); INT-g12-6 and INT-g12-5 carry dated notes of this date (R668(d), R670(f)).
+
+| # | On disk (`12r_U13_PA.md` §7 F3, quoted) | Class | Owning package | Governing ruling | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| INT-r12-1 | Attempt 2 after STATED-only feedback returned STATED-only on 4 of 5 attempts across the two runs (§5). The feedback block's own words ask for every field ("re-emit EVERY field in the schema"). | 2 | P1, pin-affecting (the feedback template is inside the pin, E-PIN); fix unit assigned at its Phase A | R668(b), R670(e), R671(b) | `12r_U13_PA.md` §7 F3, §5; `shape_pa.json` |
+
+**The pre-tag list, recounted 2026-10-19 (12r-CLOSE, R671), by script from the plan** (`docs/session-reports/session-12/12r_close/recount_12r_close.py` → `recount_12r_close.json`: the 12q-CLOSE count as the baseline, reproduced by `recount_12q_close.py` on the plan at `d7bafc4` — the file it was written for, sha256 `f2e4dc60d5dd4eb396083475d221a45e5600ccb91849181766a56de730cb9b8d` — and equal to its committed JSON byte for byte; the row above; and INT-h12-2's note). Baseline: 275 rows — Class 1 / 2 / 3 = 95 / 50 / 130, and 0 without a class. Deltas: 1 row enters, Class 2 (INT-r12-1, P1); one class move, INT-h12-2 from Class 2 / P1 to Class 3 / P7 (R670(c), R671(a)). **Now 276 rows: Class 1 / 2 / 3 = 95 / 50 / 131, and 0 without a class.** **R510 (2026-10-19, 12r-CLOSE, R671): rows in 1 (1 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 1 / 0), rows out 0; one class move.** Counts by package and class (first-named package, as before): P1 26 / 20 / 12 (58); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 116 (117). P1's fix units stay 35: INT-r12-1's unit is assigned at its Phase A (R671(b)).
 
 ### Not engine defects — plan v50 wording
 
@@ -3612,6 +3620,96 @@ Expected values at session-12r open, as at this closeout (2026-10-17):
 - **The restore of `ra_12q`** per `~/scratch/12q-u13-build/stage/RESTORE.txt`, re-verified by both hashes, outside 07:00–10:35 UTC and after the open's gate (R241).
 - **12r-U13-RUN** — the launch; the clock arithmetic redone from the read-out's estimate; `/api/ps` read first and what is resident reported (R650(g)); R650(b)'s text check already made (twelve of twelve, 12q-U13-BUILD); the confounder statement and F4's source-string note in the read-out's first section (R650(d), R661(e)).
 - **12r's closeout.** B-F17 (e)'s Phase A stays P7's.
+
+Session 12r closed 2026-10-19 UTC; opened 2026-10-18 20:35 UTC on the 12q HEAD `e5ec600c2c2efa306a61f819879f4c80e749e58b`, CC session `10c6f8d6`, continued in CC session `f20ec852` from 2026-10-18 22:25 UTC (one conversation). **U13, the comparison rehearsal, is run, scored, read and probed, and closed as a unit (R670(d)); R571's test is closed negative (R670(b)); INT-h12-2 moves to Class 3 / P7 (R671(a)); one row opens, INT-r12-1 (R671(b)).** **No code change and no live write.** Briefs, in order: 12r-OPEN (stopped at step 0, R663; resumed as 12r-OPEN-R1, stopped at item 1(d), R664; resumed as 12r-OPEN-R2, stopped at I10, R665; resumed as 12r-OPEN-R3 and completed, R666), 12r-RESTORE, 12r-RESTAGE, 12r-U13-RUN (R667), 12r-U13-PA (R668), 12r-U13-PROBE (Phase 1, stopped by design, R669; Phase 2 as 12r-U13-PROBE-R1, R670) and this closeout, 12r-CLOSE (R671).
+
+**Commits, in order.**
+
+- `c748129` — item 0 of the open: R662 (Block 60), the dated note on the 12q closure (R662(c), R663(b)), the 12q lane-line file in `12q_close/`.
+- claude-config `8cf101c` — the hook's ledger row for `c748129`.
+- `ef12a41` — **12r-U13-RUN**: the rehearsal's read-out and scoring (`12r_U13/12r_U13.md`, `score_12r_u13.py` and its outputs).
+- claude-config `9afafdb` — the ledger row for `ef12a41`.
+- `94ea85c` — **12r-U13-PA**: the Phase A read-out (`12r_U13_PA/12r_U13_PA.md`); read-only.
+- claude-config `26632bc` — the ledger row for `94ea85c`; its message names `01:10:58Z`, the row says `01:10:50Z` (R668(f)).
+- `d7bafc4` — **12r-U13-PROBE**: the reproduction probe's read-out (`12r_U13_PROBE/12r_U13_PROBE.md`) and scripts.
+- claude-config `6c7d86e` — the ledger row for `d7bafc4`, carrying the row's exact timestamp.
+- **This closeout** — the commit that carries this paragraph, the child of `d7bafc4`: R663–R671 (Blocks 61–69), row INT-r12-1, the notes on INT-h12-2, INT-g12-6 and INT-g12-5, this closure and the 12s expected values, `docs/session-reports/session-12/12r_close/`.
+
+**Rulings R663–R671, all transcribed. The decision log in this file ends at R671.**
+
+- R663 — the reboot of 2026-10-17 a dated fact and the service start a reading (R663(a)); another lane's committed claude-config change that leaves this lane's rows and primer lines 41–45 intact is accepted as found and noted (R663(b)); the memory event and the safeguards read before any launch (R663(c)).
+- R664 — prefix_check.py's rule applies to cell-note commits only; a zero-note commit is verified by its "−" count (R664(b)); the script's hard-coded row a tooling limitation (R664(c)).
+- R665 — I10 restated as the two-hunk check.
+- R666 — 12r-OPEN accepted; the band series holds 868.02, 871.59 and 906.50 s (R666(b)); three host findings (R666(c)); the Run 7 operator item on earlyoom (R666(d)).
+- R667 — 12r-U13-RUN accepted; R571's test negative on the concentrations (R667(b)); the FIELD_MISSING rise read before any change (R667(c)); the post-run copy retained (R667(d)); CC's I5 proceed accepted once (R667(e)).
+- R668 — 12r-U13-PA accepted, cause A (R668(a)); INT-r12-1 proposed (R668(b)); the probe (R668(c)); the INT-g12-6 note (R668(d)); prefix_check.py's row argument at this closeout (R668(e)); the ledger timestamp left as pushed (R668(f)).
+- R669 — the probe's Phase 1 accepted; cross conditions by option (ii) (R669(b)).
+- R670 — the probe accepted: the STATED-only attempt-1 response is not reproducible from its request (R670(a)); R571's test closed negative, no prompt tuning before the tag (R670(b)); INT-h12-2 to Class 3 / P7 proposed (R670(c)); U13 closed (R670(d)).
+- R671 — R670(c) and R668(b) confirmed; this closeout.
+
+**Stops, and what they exposed.** Every stop was made before any edit to the repository, or with the tree clean, and none followed a bad commit. Four traced to premises in a brief; one was a stop by design.
+
+| Brief | The assumption | What was on disk | Settled by |
+| --- | --- | --- | --- |
+| 12r-OPEN, step 0 (S1, S2) | the Ollama service start 2026-10-16 23:05:57 UTC (an expected value); claude-config at `74b8cb4` | the service started 2026-10-17 23:04:05 UTC after a reboot at 23:03:59 UTC (boot `abf99132`); claude-config `9aa59b3`, a descendant by two other lanes' commits, `2466df3` (dgx-infra, `primer.md` §16) and `9aa59b3` (a ledger wrap), this lane's rows intact | R663 |
+| 12r-OPEN-R1, item 1(d) (S3) | prefix_check.py passes on the item-0 diff, which has 0 "−" lines | the script hard-codes exactly one "−" line, the INT-p12-2 row, and printed "RESULT: FAIL (STOP)"; it first lands in `e5ec600`, after the item-0 commit it was said to have checked (an architect premise from the script's purpose) | R664 |
+| 12r-OPEN-R2, I10 (S4) | the first 6,545 lines of the built plan identical to the plan | the 1(c) note R663 ordered sits at line 3515; `cmp` differs there; the diff is two insertion hunks and nothing else (an architect premise that ignored the note's placement) | R665 |
+| 12r-U13-PROBE, Phase 1 (by design) | `render/` holds full messages lists; the instruction/text boundary decides a cross condition | `render/` holds the user turn (the system turn as its sha256); the boundary is one line, but the instruction block carries the text's unit count on lines 4 and 7 | R669 |
+
+**The host, 2026-10-17 to 2026-10-19** (R663(a), R666(c), R670(f)), dated facts. The previous boot (`7af66b66`, from 2026-10-16 23:05:38 UTC) logged nothing but `systemd-journald` memory-pressure lines from 18:59:27 UTC (69 of them; the last line from any other process 18:56:39) to its end at 22:49:11 UTC, with no OOM-killer line and no Ollama request after 10:30:20; the host rebooted at 23:03:59 UTC (boot `abf99132-fd8b-41f9-b9fd-62241e40110c`) and the Ollama service started 23:04:05 UTC; the cause is not this lane's to find. Installed by the PI 2026-10-18 05:42–05:43 UTC and read from the box: earlyoom with `--prefer ^ollama$` (SIGTERM at ≤ 6 % available memory, SIGKILL at ≤ 3 %), `ollama.service` oom_score_adj 0, `vm.min_free_kbytes` 1048576; no earlyoom kill this boot. A kernel `NV_ERR_NO_MEMORY` line was written during a completing model load three times: 2026-10-17 07:04:29 (the old health job), 2026-10-18 22:14:28 (run 2's cold 32B load) and 2026-10-19 01:28:24 (the probe's model swap) — a dgx-infra item. Operator readings for Run 7 (R667(f)): the 32B model's working set about 55 GB; the cold first load 11.1 min on a fresh boot. A surgical-cv mask batch (11 cases, ffmpeg at 9–15 cores) ran through the 12r-OPEN gate and the whole of run 2. The four band values (`12r_close/host_state_close.txt`) equal 12q's: kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02.
+
+**Measured — the session's gate.** One standard gate, the open's (12r-OPEN-R3, on `c748129`): **3,306 passed / 1 xfailed / 17 deselected, 3,307 collected**, 2 warnings (sklearn's), wall **906.50 s** (2026-10-18T21:17:09Z to 21:32:16Z, beside the concurrent encode); collected ids 0/0 against `12q_close/collected_ids_12q_close.txt`; durations against `12q_P12-2B/durations_12q_p12_2b.txt`: no phase slower by more than 10 s; the gate's journal window empty. **The band series on this host state is 868.02, 871.59 and 906.50 s, the third confounded** (R666(b)); under R657(d) no band is cut until four gates exist on it. No closeout gate (R671(c)): `git diff --stat e5ec600 HEAD -- engine tests scripts analysis review_specs` is empty at this closeout.
+
+**Measured — the nightlies and health jobs.** The 2026-10-17 and 2026-10-18 09:00 UTC nightlies both read `collected 3324 items / 17 deselected / 3307 selected`, 3306 passed, 17 deselected, 1 xfailed, 2 warnings (883.41 s and 881.76 s), exit 0, the Ollama journal for 09:00–09:25 empty, the lock file's mtime 2026-07-27 23:22:08 UTC. The 07:00 UTC health jobs: 2026-10-17 on the old design, 20 of 20 models OK with the two NVRM lines above; 2026-10-18 on the new design (dgx-infra `7723cf1`, HTTP, `keep_alive` 0), 20 of 20 OK, nothing resident at start.
+
+**The rehearsal (U13).** Run 2 on `ra_12q` (2026-10-18 22:14–2026-10-19 00:45 UTC, 9,097.3 s, exit 0, the manifest closed `interrupted` / `blocked:audit_review` at the export gate) scored first Pass-1 attempts against 12g: `12r_U13.md` §3 gives STATED with sentinel prose "15 / 33 | 16 / 33 | 16 / 33" and JUDGMENT "22 / 55 | 24 / 55 | 22 / 55" (12g | HEAD's check | pre-dccd679), so R571's test is negative (R667(b), R670(b)). The attempt-1 FIELD_MISSING rise (2 → 26) was the model's output (`12r_U13_PA.md` §4, cause A), and `12r_U13_PROBE.md` §4: "The shape is **not reproducible** from the request" (0 of 3 on each of papers 3 and 10). The one actionable finding is INT-r12-1, the STATED-only re-emission after STATED-only feedback (R670(e)).
+
+**Measured — the recount** (`docs/session-reports/session-12/12r_close/recount_12r_close.py` → `recount_12r_close.json`, chained onto `12q_close/recount_12q_close.py` run on the plan at `d7bafc4`, which reproduces its committed JSON byte for byte, and through it 272 and 275). **The pre-tag list in this file is 276 rows — Class 1 / 2 / 3 = 95 / 50 / 131, and 0 without a class**; P1 58 (26 / 20 / 12), 35 fix units; P7 117. **R510 for the session: rows in 1 (INT-r12-1, opened, R671(b)), rows out 0; one class move (INT-h12-2, Class 2 / P1 → Class 3 / P7, R671(a)).**
+
+**Requests this session sent to the Ollama server.** Run 2 (under its manifest, `run_calls`): the two preflights, 22 completed `elicitation_pass1` calls and one refused before sending (paper 2, input overflow), 11 `extract_pass2` calls; the audit sent no model call. 12r-U13-PROBE (outside any run, under the experiment lock): 6 `POST /api/chat` and 1 `POST /api/show`. Every other request was `GET /api/version`, `/api/tags` or `/api/ps`, bracketing the gate (21:16:58 and 21:32:46 UTC) and at each read. `NRestarts` 0 throughout. At this closeout `deepseek-r1:32b` is resident (keep-alive forever), from the probe.
+
+**Live.** Never written. `db_fingerprint --compare` against the migration-02 record was IDENTICAL at every check of the session (overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`, 36 tables). Live was opened `mode=ro` only, by the fingerprint and `dbchecks.py`; a `mode=ro` read moved its `-shm` mtime (a reading, as F1 of R662(e)).
+
+**The throwaway `ra_12q`.** Restored to `data/` at 21:42 UTC on 2026-10-18 and verified by both hashes (12r-RESTORE), moved back to the stage at 22:07 UTC before any nightly (12r-RESTAGE), restored again at 22:13 UTC for run 2 (the same checks), and moved out of `data/` at 00:47 UTC on 2026-10-19 to `~/scratch/12r-u13/run/ra_12q/` after the run: `review.db` file sha256 `ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f`, fingerprint `50e97bb694c9b6a709f2f7476af2882fe9b6c79090cd493cfdb9f16fef4582cd` (36 tables), the ninth retained throwaway (R667(d), `12r_close/retention_close.txt`). `ls data/*/review.db` lists live only.
+
+**Conventions added this session:**
+- R663(b) — another lane's committed claude-config change that leaves this lane's ledger rows and primer lines 41–45 intact is accepted as found and recorded by a dated note naming each commit by hash and author lane; R654(d)'s stops are unchanged.
+- R664(b) — a plan commit carrying N cell notes has exactly N "−" lines, each verified by prefix_check.py's rule; a commit carrying none is verified by its "−" count, which must be 0. The rule now runs as `12r_close/prefix_check.py --expected-row …` (R668(e)); `12q_close/prefix_check.py` is left as it was.
+- R666(c)(ii) — a launch brief states earlyoom's preference, `vm.min_free_kbytes` and ollama's oom_score_adj in its confounder statement and records available memory at launch and exit; an earlyoom kill of ollama during a run is a run fault, not re-launched without a ruling.
+- R667(e) — an INFERRED item names only the fact that must hold; a value to be checked is a separate reading.
+- R670(b) — no prompt change before the freshman tag is made to move a first-attempt failure rate.
+
+*Notes recorded at this close, no rows:*
+
+- (a) The claude-config HEAD read at this commit's step is `6c7d86ef90c97b17a3479647f46822426e5b8144`, clean and level; the hook writes this closeout's ledger row after the commit, and this closeout commits it in `a356f73`'s form with the row's exact timestamp (its hash in the closeout block).
+- (b) The 12r lane line is built after this commit, because it names this commit's hash; `12r_close/` therefore does not hold it. It is `~/scratch/12r-close/lane_line_12r.txt`, and its sha256 and byte count are in the closeout block.
+- (c) The ledger commit `26632bc`'s message timestamp (01:10:58Z against the row's 01:10:50Z) is left as pushed (R668(f)). CC's proceed past I5 in 12r-U13-RUN was accepted once (R667(e)).
+- (d) The pytest temp root as read at this closeout (02:09:08Z): 4 entries, 1,622,165,155 bytes — `pytest-4` and `pytest-5`, surgical-cv's; `pytest-6`, the 12r-OPEN gate's; `pytest-current` → `pytest-6` (`12r_close/temp_root_close.txt`). Nothing emptied.
+
+**Session 12r closed.** Next: session 12s, fresh.
+
+Expected values at session-12s open, as at this closeout (2026-10-19):
+- HEAD: the 12r closeout commit (child of `d7bafc45a404e0b0ebaa79a921ad4796672c9f97`; its full hash is in the closeout block and the lane line), clean and **level with origin** (R370). The plan file's sha256 and byte count are in the closeout block and the lane line.
+- **The decision log in this file ends at R671** (or at the last wrap ruling, if any is transcribed before 12s).
+- **The gate** on this tree: **3,306 passed / 1 xfailed / 17 deselected**, collected **3,307**, 0/0 (a set comparison, R655(b)) against `docs/session-reports/session-12/12q_close/collected_ids_12q_close.txt` (the set is unchanged since `b3f0072`); **wall time a reading**, beside the series on this host state, 868.02, 871.59 and 906.50 s (no band until four standard gates exist on it, R657(d), R666(b)); Ollama version, tags and ps reads at least five seconds before the gate is launched and after it exits, each timestamped (R660(b)); the gate's journal window empty; a durations file written (`--durations=0`) and compared with `12r_close/durations_12r_open.txt`, any phase slower by more than 10 s reported; the basetemp read immediately after the gate (R660(c)); the two warnings are sklearn's (R641(c)).
+- **The 2026-10-19 09:00 UTC nightly**, read against `docs/session-reports/session-12/12r_close/expected_nightly_20261019.md`: `logs/nightly_test_20261019.log` reads `collected 3324 items / 17 deselected / 3307 selected`, **3306 passed, 17 deselected, 1 xfailed, 2 warnings**, last line **"pytest exit code: 0"**; `logs/nightly_durations_20261019.txt` present; the Ollama journal for 09:00–09:25 UTC empty; the real lock file's mtime unchanged (2026-07-27 23:22:08 UTC). Any other nightly result is reported, not adapted to.
+- **The 2026-10-19 07:00 UTC health job** on the new design: every installed model loaded over HTTP at `keep_alive` 0, nothing resident after; its journal window read for its loads, their outcome and any NVRM line — readings (R663(d), R670(f)).
+- **The pytest temp root at the open** (R647(c), R652(c)): entry count and size recorded, not matched; entries not of this lane reported with their origin; nothing emptied.
+- No-marker collection **3,324**; `tests/test_eligibility.py` 91; `inventory --check` in sync; `git diff --stat f4a5586 HEAD -- engine tests scripts analysis review_specs` lists exactly `engine/agents/extractor.py`, `engine/cloud/__init__.py`, `scripts/run_pipeline.py`, `tests/test_cloud_package_init.py`, `tests/test_duplicate_on_pass1_attempt_2.py`, `tests/test_requirements_census.py`, `tests/test_selection.py`, `tests/test_text_refusal_at_selection.py`.
+- **The fingerprint of record, unchanged:** `docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json` — 36 tables; overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`. `ls data/*/review.db` lists one path, `data/surgical_autonomy/review.db` (R658(b)).
+- **`~/scratch/12i-scope/dbchecks.py`** (its own sha256 `909e3ed2c548e09593759b9727c10031793291bef6bc639631dcaa9aa9734ff5`), its output byte-identical to `12r_close/dbchecks_close.txt` (itself byte-identical to `12q_close/dbchecks_close.txt`). R71 in force.
+- **Retention** (`12r_close/retention_close.txt`, whose first part is byte-identical to `12q_close/`'s retained part): nine retained throwaway reviews — the eight under `~/scratch/retained/` and the post-run `ra_12q` at `~/scratch/12r-u13/run/ra_12q/` (`review.db` file sha256 `ecad5e65…b75f`) — by file sha256 of `review.db` only (R662(e)); U06's copy (file sha256 `fc7d061d…7cf8`); the five restore points (fingerprints `bb39ba81…6c40`, `e564f250…5b63`, `ea05912d…ce01`, `f376562e…9e00`, `62f39128…b79a`). `~/scratch/12q-u13-build/stage/` holds `RESTORE.txt` only.
+- **Codebook and live spec, unchanged:** codebook sha256 `89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82`; live spec sha256 `917c24de29afdf802b5ddea61c34627a9bb0a857de3f97395af36d44ca664e5f`.
+- **Pins, by `docs/session-reports/session-12/12l_U04/pin_tuples.py`** with both arguments (spec, then codebook): `12r_close/pin_tuples_close.json`, byte-identical to `12q_close/pin_tuples_close.json`.
+- **Ollama:** 0.21.0; digests `qwen3:32b` `030ee887…7840`, `gemma3:27b` `a418f583…2203`, `deepseek-r1:32b` `edba8017…960c`; `NRestarts=0`; the service start (2026-10-17 23:04:05 UTC at this closeout) and the boot id (`abf99132…` at this closeout) are readings. Residency a reading: `deepseek-r1:32b` at this closeout.
+- **The host state the band belongs to** (R657(d), `12r_close/host_state_close.txt`): kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02. earlyoom's state and argv, `vm.min_free_kbytes` and ollama's oom_score_adj are readings (R663(c)).
+- **The pre-tag list** by `12r_close/recount_12r_close.py` (the value the script prints): **The pre-tag list in this file is 276 rows — Class 1 / 2 / 3 = 95 / 50 / 131, and 0 without a class**; P1 58 (26 / 20 / 12), 35 fix units; P7 117.
+- **Scratch:** the seven 12r directories — `12r-open/`, `12r-restore/`, `12r-restage/`, `12r-u13/` (with `run/ra_12q/`, retained), `12r-u13-pa/`, `12r-u13-probe/` and `12r-close/` — beside those present at the 12r open and `retained/`.
+- **claude-config:** at this commit, `6c7d86ef90c97b17a3479647f46822426e5b8144`, with this closeout's hook-written ledger row uncommitted; this closeout commits it, the wrap follows and the 12r lane line is applied under the wrap ruling. The claude-config HEAD expected at the 12s open is the one the closeout block or the wrap reports last.
+
+12s's first items, in this order:
+- **12s-OPEN** — item 0 transcribes the wrap ruling as the next block and copies the 12r lane-line file into `12r_close/`; the startup verify against this block, outside 07:00–10:35 UTC, with the 2026-10-19 07:00 health job and 09:00 nightly read.
+- **U14's Phase A** — INT-i12-7 and INT-i12-8 (R590: the `LOCATOR_VERSION` bump, audit-side, outside the pin), read-only first.
 
 ## Decision log
 
@@ -6612,3 +6710,459 @@ R662(f) — Session 12q closes now. After R662(b) has landed, run /wrap. Report 
 | 2026-10-17 | R662(a) — The 12q-CLOSE closeout block is accepted as printed. The block's element list (the 12q-CLOSE brief's step 9) is the closeout block's form from here; the 12p block's form was in an archived transcript, not on disk (F7), and this ruling makes the on-disk form the one that governs. The retention file's appended "Staged, not retained" section is accepted: the 12p portion is byte-identical and the staged line is below it, as ordered. R662(b) — The lane line (sha256 73d9fd0f67cc2916c1890e813f4f0afd572f3f5841740119c06aa4e3149799b5, 4,287 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form), push, level. R662(c) — 12r-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the lane-line commit, itself the child of 251d3f7), level with origin and clean. Another lane's rows committed in between are accepted as found and noted (R653(c)); another lane's rows left uncommitted are committed by 12r's first ledger step, named (R654(d)). 12r's item 0 copies lane_line_12q.txt into docs/session-reports/session-12/12q_close/ with its commit. R662(d) — No closeout gate ran: the expected gate values for 12r are the b3f0072 gate's on unchanged code (3,306 / 1 xfailed / 17 deselected, collected 3,307; wall time a reading on the series 868.02, 871.59 s, R657(d)); the 2026-10-17 09:00 UTC nightly runs on e5ec600, whose code equals b3f0072's; 12q_close/expected_nightly_20261017.md governs; the 07:00 UTC health job's loads are read and reported by 12r-OPEN (R657(g), R661(c)). The temp root is read, never matched (R647(c), R652(c)). R662(e) — Notes, no rows: F1, the mode=ro fingerprint of the staged copy is accepted — review.db and its fingerprint unchanged, the sidecar mtime moved; the restore checks by the two hashes (R661(b)); from here a staged or retained copy is read by file hash only, and a fingerprint of it is its own named step. F2, both request sets are recorded in the 12q closure's journal attribution as CC's inference; 12r-OPEN's bracketing reads attribute their own window as usual. F3, five scratch directories (12q-close/ included) is the count the block records. F4, dbchecks_py_sha256.txt stays. F5, the gitignored __pycache__/ in 12q_close/ is left as found. F6, pytest-1's origin unknown is a reading. R662(f) — Session 12q closes now. After R662(b) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-17, during session 12q, on architect recommendation, on the 12q-CLOSE closeout block |
 
 The decision log in this file ends at R662.
+
+**Block 61.** *Transcribed 2026-10-19 (the 12r-CLOSE brief), in the session's closeout commit with Blocks 61–69, in the R597(e) form:* ruling R663, made by PI on architect recommendation on 2026-10-18 UTC, during session 12r, on the 12r-OPEN stop report at step 0 (evidence `~/scratch/12r-open/step0_20261018T203625Z.txt`). The resume 12r-OPEN-R1 that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12r-R663] — S1 ruled: the 2026-10-17 reboot is a dated fact, the service
+  start a reading (R657(b) reaffirmed), the band series decided by the four values at 2(a); S2 ruled:
+  the two foreign claude-config commits accepted as found and noted; one read-only section added;
+  12r-OPEN resumes from step 0
+STATUS: PI ruling, 2026-10-18 UTC, session 12r, on architect recommendation, on the 12r-OPEN stop
+  report at step 0 (evidence ~/scratch/12r-open/step0_20261018T203625Z.txt). Transcribe as Block 61
+  at item 0 of the next brief in this session that transcribes (after Block 60 has landed under the
+  resume below), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-OPEN stop report):
+  MEASURED: "ExecMainStartTimestamp=Sat 2026-10-17 23:04:05 UTC, NRestarts=0"; "boot 7af66b66…, the
+    one host_state_close.txt records, as Fri 2026-10-16 23:05:38 UTC → Sat 2026-10-17 22:49:11 UTC.
+    The current boot abf99132… started Sat 2026-10-17 23:03:59 UTC"; "The previous boot's last
+    journal lines are systemd-journald: Under memory pressure, flushing caches. at 22:32:40, 22:40:41
+    and 22:49:11"; "The kernel still reads 6.17.0-1032-nvidia"; "HEAD is
+    9aa59b365fd170ad00c90d6f88baeacd0a2da46e, clean, 0 0, and a descendant of 74b8cb4"; "2466df3:
+    "docs(primer): §16 memory safeguards installed — MS-S1 → MS-V1 baselines (2026-10-18)", primer.md
+    +47 at line 2413 onward"; "9aa59b3: "ledger: rows through 2026-10-18T18:11:28Z", one
+    surgical-cv-mbf1 row"; "the diff is insertions only, the lane line's five "+" lines still equal
+    primer.md lines 41–45, and none of its "−" lines are present"; "4 entries, 254,923,153 B"; every
+    other step-0 value MATCHED as the table reports it; "r662.txt sha256
+    b5d1ad0829c591a625f9e84a1a10092128f4bbd2c255e6d6730e0dce2521ca95, 56 lines, 4,719 bytes".
+  READ (by CC, from ~/claude-config/primer.md §16, another lane's text): the safeguards "were
+    installed 2026-10-18 05:42–05:43Z"; "the 07:00 check now uses HTTP with keep_alive 0 and "leaves
+    nothing resident" (dgx-infra 7723cf1, first run 2026-10-18 07:00Z)". These are that lane's claims
+    about the box; the resume reads the installed configuration and the journal, and does not rely on
+    §16's wording.
+  INFERRED (CC's, recorded as such): the link between the memory-pressure lines and "the 2026-10-17
+    seizure"; the surgical-cv attribution of pytest-3/-4/-5. Neither is matched; 3(d) below reads the
+    old boot's journal, which is where the first one is checked.
+
+R663(a) — S1: the brief's step 2(b) expected the Ollama service start as a value; that was an
+  architect addition, withdrawn. R657(b) stands: the service start is a reading. The reboot of
+  2026-10-17 23:03:59 UTC is a dated fact of the 12r closure, recorded with both boot ids. Whether
+  the band series continues is decided at step 2(a) by the four R657(d) values (kernel, NVIDIA
+  driver, libsqlite3-0, Python) read against 12q_close/host_state_close.txt: all four equal → the
+  series continues at 868.02, 871.59 s; any differs → a new series, the gate's wall time its first
+  reading. The 12r host-state record gains the current boot id and the service start as readings.
+R663(b) — S2: claude-config 9aa59b3 is accepted as found. The ledger commit is R653(c)'s case B. The
+  primer commit 2466df3 is a new case, ruled here and from now on: a committed change by another lane
+  to claude-config that leaves this lane's ledger rows and primer.md lines 41–45 intact is accepted as
+  found and recorded by a dated note naming each commit by hash and author lane; it is not a stop.
+  R654(d)'s stops are unchanged (any change to lines 41–45, a missing row of this lane, uncommitted
+  non-row dirt, divergence). Item 0(c)'s note is written, naming 2466df3 and 9aa59b3.
+R663(c) — The memory event and the safeguards are read before any launch decision, read-only, as
+  step 3(d) of the resume below. No ruling on U13's launch is made here; 12r-U13-RUN's brief rests on
+  those reads. Whether earlyoom, vm.min_free_kbytes and the OOMScoreAdjust settings are host-state
+  values for R657(d) is left open; the 12r host-state record carries them as readings.
+R663(d) — I6 is corrected: after a keep_alive-0 health check nothing is expected resident; residency
+  is a reading at every Ollama read, whatever its value. The 10-17 reads stand as R661(c) states
+  them (both jobs ran on the old boot, before 22:32 UTC); the 10-18 reads are readings on the new
+  boot and the new health-check design, reported, not matched.
+R663(e) — 12r-OPEN resumes from step 0 under the resume below. Nothing else in the brief changes.
+  The gate, if it runs, is the third standard gate of the series only if R663(a)'s four values are
+  equal; R657(d)'s "no band until four" holds either way.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-18 | R663(a) — S1: the brief's step 2(b) expected the Ollama service start as a value; that was an architect addition, withdrawn. R657(b) stands: the service start is a reading. The reboot of 2026-10-17 23:03:59 UTC is a dated fact of the 12r closure, recorded with both boot ids. Whether the band series continues is decided at step 2(a) by the four R657(d) values (kernel, NVIDIA driver, libsqlite3-0, Python) read against 12q_close/host_state_close.txt: all four equal → the series continues at 868.02, 871.59 s; any differs → a new series, the gate's wall time its first reading. The 12r host-state record gains the current boot id and the service start as readings. R663(b) — S2: claude-config 9aa59b3 is accepted as found. The ledger commit is R653(c)'s case B. The primer commit 2466df3 is a new case, ruled here and from now on: a committed change by another lane to claude-config that leaves this lane's ledger rows and primer.md lines 41–45 intact is accepted as found and recorded by a dated note naming each commit by hash and author lane; it is not a stop. R654(d)'s stops are unchanged (any change to lines 41–45, a missing row of this lane, uncommitted non-row dirt, divergence). Item 0(c)'s note is written, naming 2466df3 and 9aa59b3. R663(c) — The memory event and the safeguards are read before any launch decision, read-only, as step 3(d) of the resume below. No ruling on U13's launch is made here; 12r-U13-RUN's brief rests on those reads. Whether earlyoom, vm.min_free_kbytes and the OOMScoreAdjust settings are host-state values for R657(d) is left open; the 12r host-state record carries them as readings. R663(d) — I6 is corrected: after a keep_alive-0 health check nothing is expected resident; residency is a reading at every Ollama read, whatever its value. The 10-17 reads stand as R661(c) states them (both jobs ran on the old boot, before 22:32 UTC); the 10-18 reads are readings on the new boot and the new health-check design, reported, not matched. R663(e) — 12r-OPEN resumes from step 0 under the resume below. Nothing else in the brief changes. The gate, if it runs, is the third standard gate of the series only if R663(a)'s four values are equal; R657(d)'s "no band until four" holds either way. | PI, 2026-10-18, during session 12r, on architect recommendation, on the 12r-OPEN stop report at step 0 |
+
+**Block 62.** *Transcribed 2026-10-19 (the 12r-CLOSE brief), in the session's closeout commit with Blocks 61–69, in the R597(e) form:* ruling R664, made by PI on architect recommendation on 2026-10-18 UTC, during session 12r, on the 12r-OPEN-R1 stop report at item 1(d) (evidence `~/scratch/12r-open/`, scratch only, no commit). The resume 12r-OPEN-R2 that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12r-R664] — S3 ruled (a): prefix_check.py's rule applies to cell-note commits
+  only; a zero-note commit is verified by its "−" count; the two form adjustments accepted;
+  12r-OPEN-R1 resumes at item 1(d)
+STATUS: PI ruling, 2026-10-18 UTC, session 12r, on architect recommendation, on the 12r-OPEN-R1 stop
+  report at item 1(d) (evidence ~/scratch/12r-open/, scratch only, no commit). Transcribe as Block 62
+  at item 0 of the next brief in this session that transcribes, after Block 61 (R663), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-OPEN-R1 stop report):
+  MEASURED: "diff of docs/plan/ENGINE_REFACTOR_PLAN.md (staged): 0 '-' lines, 69 '+' lines"; "exactly
+    one '-' line, the INT-p12-2 row: False"; "RESULT: FAIL (STOP)"; "79 insertions(+), 0 deletions";
+    "new_plan.md (sha256 f2e4dc60…8d)"; "6,614 lines (+69, 0 "−"), and its last line is The decision
+    log in this file ends at R662., line 6614"; "Block 60's fence is cmp-identical to r662.txt"; "the
+    evidence-engine ledger rows number 458 at both 74b8cb4 and HEAD"; step 0 "all MATCHED" at
+    20:41:08Z; temp root "4 entries, 254,923,153 B".
+  READ (CC's read of the script and the history): "the script is hard-coded to require exactly one
+    "−" line, the INT-p12-2 row"; "prefix_check.py first lands in e5ec600, the 12q closeout, after
+    f087d4f"; "Blocks 50–59 all carry a sentence like that".
+  No INFERRED item: this ruling withdraws an architect premise and makes no new claim about the box.
+
+R664(a) — The brief's clause "prefix_check.py run as the 12q item-0 commit ran it (expect it to pass
+  with 0 "−" lines)" was an architect premise about a script's behaviour, asserted from its purpose,
+  not from a read; it is withdrawn. The stop was correct: two clauses disagreed and CC stopped with
+  both repositories clean.
+R664(b) — R656(c) as applied from here: a plan commit that carries N dated notes inside table-row
+  cells has exactly N "−" lines, each verified by prefix_check.py's rule; a commit that carries no
+  cell note (an appended block, a note paragraph after a closure, a new file) is verified by its "−"
+  count alone, which must be 0. Item 0 of 12r is the second kind. Acceptance gate 2 of 12r-OPEN reads:
+  0 "−" lines in the plan diff, measured by the staged diff.
+R664(c) — prefix_check.py's single hard-coded row is a tooling limitation of the 12q closeout's
+  instrument, recorded as a dated line in the 12r closure; no row (tooling, Class 3, as R660(c) F3
+  treated render_cell.py). Whether the script takes its expected row as an argument is decided at a
+  closeout that next carries a cell note, not now.
+R664(d) — Both form adjustments are accepted: the sentence "The 12r-OPEN task brief that followed the
+  ruling in the paste is not part of the block." in Block 60's header, and the backticked hashes and
+  file name in the 1(c) note. The on-disk form governs over the brief's wording (R643(e)'s rule in the
+  other direction).
+R664(e) — 12r-OPEN-R1 resumes at item 1(d) under the resume below, applying the scratch-built file as
+  staged. Nothing else in the brief or in R663 changes.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-18 | R664(a) — The brief's clause "prefix_check.py run as the 12q item-0 commit ran it (expect it to pass with 0 "−" lines)" was an architect premise about a script's behaviour, asserted from its purpose, not from a read; it is withdrawn. The stop was correct: two clauses disagreed and CC stopped with both repositories clean. R664(b) — R656(c) as applied from here: a plan commit that carries N dated notes inside table-row cells has exactly N "−" lines, each verified by prefix_check.py's rule; a commit that carries no cell note (an appended block, a note paragraph after a closure, a new file) is verified by its "−" count alone, which must be 0. Item 0 of 12r is the second kind. Acceptance gate 2 of 12r-OPEN reads: 0 "−" lines in the plan diff, measured by the staged diff. R664(c) — prefix_check.py's single hard-coded row is a tooling limitation of the 12q closeout's instrument, recorded as a dated line in the 12r closure; no row (tooling, Class 3, as R660(c) F3 treated render_cell.py). Whether the script takes its expected row as an argument is decided at a closeout that next carries a cell note, not now. R664(d) — Both form adjustments are accepted: the sentence "The 12r-OPEN task brief that followed the ruling in the paste is not part of the block." in Block 60's header, and the backticked hashes and file name in the 1(c) note. The on-disk form governs over the brief's wording (R643(e)'s rule in the other direction). R664(e) — 12r-OPEN-R1 resumes at item 1(d) under the resume below, applying the scratch-built file as staged. Nothing else in the brief or in R663 changes. | PI, 2026-10-18, during session 12r, on architect recommendation, on the 12r-OPEN-R1 stop report at item 1(d) |
+
+**Block 63.** *Transcribed 2026-10-19 (the 12r-CLOSE brief), in the session's closeout commit with Blocks 61–69, in the R597(e) form:* ruling R665, made by PI on architect recommendation on 2026-10-18 UTC, during session 12r, on the 12r-OPEN-R2 stop report at I10 (nothing applied, both repositories clean). The resume 12r-OPEN-R3 that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12r-R665] — I10 restated as the two-hunk check, already measured; 12r-OPEN-R2
+  resumes at item 1(d)
+STATUS: PI ruling, 2026-10-18 UTC, session 12r, on architect recommendation, on the 12r-OPEN-R2 stop
+  report at I10 (nothing applied, both repositories clean). Transcribe as Block 63 at item 0 of the
+  next brief in this session that transcribes, after Blocks 61 and 62, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-OPEN-R2 stop report):
+  MEASURED: "differ: byte 908262, line 3515, cmp exit 1"; "exactly two insertion hunks and nothing
+    changed or deleted: 3514a3515,3516: the note and a blank line. 6545a6548,6614: Block 60"; "With
+    lines 3515–3516 removed, the first 6,545 lines are identical to the current file. The R661 ends-at
+    line is kept, now at line 6547"; "sha256 f2e4dc60d5dd4eb396083475d221a45e5600ccb91849181766a56de730cb9b8d";
+    at 20:44:43Z "HEAD is e5ec600, clean, 0 0", "claude-config is 9aa59b3, clean, 0 0", "The
+    fingerprint is IDENTICAL".
+  No INFERRED item: this ruling replaces an architect premise with the measured form.
+
+R665(a) — I10's "first 6,545 lines byte-identical" was an architect premise that ignored R663's own
+  placement of the 1(c) note; withdrawn. The stop was correct.
+R665(b) — I10 reads: new_plan.md equals the plan at e5ec600 with exactly two insertion hunks — the
+  1(c) note and its blank line at 3515–3516, and Block 60 at 6548–6614 — and no changed or deleted
+  line; the R661 ends-at line retained at 6547; the file's last line the R662 ends-at line at 6614.
+  The report's diff measured exactly this; I10 holds.
+R665(c) — 12r-OPEN-R2 resumes at item 1(d) under the resume below. Nothing else changes.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-18 | R665(a) — I10's "first 6,545 lines byte-identical" was an architect premise that ignored R663's own placement of the 1(c) note; withdrawn. The stop was correct. R665(b) — I10 reads: new_plan.md equals the plan at e5ec600 with exactly two insertion hunks — the 1(c) note and its blank line at 3515–3516, and Block 60 at 6548–6614 — and no changed or deleted line; the R661 ends-at line retained at 6547; the file's last line the R662 ends-at line at 6614. The report's diff measured exactly this; I10 holds. R665(c) — 12r-OPEN-R2 resumes at item 1(d) under the resume below. Nothing else changes. | PI, 2026-10-18, during session 12r, on architect recommendation, on the 12r-OPEN-R2 stop report at I10 |
+
+**Block 64.** *Transcribed 2026-10-19 (the 12r-CLOSE brief), in the session's closeout commit with Blocks 61–69, in the R597(e) form:* ruling R666, made by PI on architect recommendation on 2026-10-18 UTC, during session 12r, on the 12r-OPEN-R3 final report (item 0 `c7481294a059c4065511d0ecd24996c786f009da`; evidence `~/scratch/12r-open/`). The 12r-RESTORE task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12r-R666] — 12r-OPEN accepted; the band series continues at three readings;
+  three host findings recorded (the stall, earlyoom's preference for ollama, the 10-17 NVRM lines);
+  the restore proceeds; the launch brief's confounder statement and preflight are extended
+STATUS: PI ruling, 2026-10-18 UTC, session 12r, on architect recommendation, on the 12r-OPEN-R3 final
+  report (item 0 c7481294a059c4065511d0ecd24996c786f009da; evidence ~/scratch/12r-open/). Transcribe
+  as Block 64 at item 0 of the next brief in this session that transcribes, after Blocks 61–63,
+  not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-OPEN-R3 final report):
+  MEASURED: "Commit: c7481294a059c4065511d0ecd24996c786f009da, child of e5ec600"; "2 files changed, 79
+    insertions(+)"; "claude-config 8cf101c4aeee8e654a42318d6294b3f5f64f3884, parent 9aa59b3"; "The
+    four values equal host_state_close.txt"; "3306 passed, 17 deselected, 1 xfailed, 2 warnings in
+    904.19s, exit 0"; "Wall time 906.50 s"; "0 added / 0 removed"; "phases slower by >10 s: 0";
+    "-- No entries --, 0 POST"; dbchecks, retention, codebook, spec, pins "MATCHED"; recount "275
+    rows (95 / 50 / 130, 0 unclassed), P1 58 (26 / 20 / 12), 35 fix units, P7 116"; "/api/ps reads
+    {"models":[]} both times"; 3(b) "every line matches the expected file"; 3(a) "The log reads OK
+    for all 20 models"; "two kernel NVRM: … Out of memory [NV_ERR_NO_MEMORY] lines at 07:04:29";
+    3(d)(i) "The window holds 7 lines, all systemd-journald[833]: Under memory pressure, flushing
+    caches."; "The first memory-pressure line is at 18:59:27, and there are 69 on that boot"; "Ollama's
+    last lines on that boot are GETs at 10:30:20"; 3(d)(ii) "Running argv: -r 3600 -m 6 -s 100,100
+    --avoid ^(sshd|…)$ --prefer ^ollama$"; "SIGTERM when mem <= 6.00% and swap <= 100.00%, SIGKILL
+    when mem <= 3.00%"; "No kill lines this boot"; "memory available … was 90.60% at 20:43";
+    "ollama.service: none set, live oom_score_adj=0"; "vm.min_free_kbytes: live 1048576"; 3(d)(iii)
+    "KEEP_ALIVE = 0", "NUM_CTX = 4096"; "It does take the experiment lock"; "ffmpeg at 1518% CPU …
+    python -m pipeline mask --case UCD-FIL-020"; "live is IDENTICAL at 21:33:14Z".
+  INFERRED (CC's, recorded as such): "the box was stalled rather than idle"; the 10-17 resident model
+    "llama3.2:3b"; "ollama serve and its runners are named ollama, so they are preferred victims" (a
+    reading of the config, not a kill observed). Not matched; the second is answered by the
+    restore brief's 2(d) read.
+
+R666(a) — 12r-OPEN is accepted as reported. Item 0 stands (c748129; claude-config 8cf101c). The
+  step-3 reads made during the gate are accepted: journal and file reads, no request, the gate's
+  window empty.
+R666(b) — The band series on host state {6.17.0-1032-nvidia, 580.173.02, 3.45.1-1ubuntu2.8, 3.12.3}
+  holds 868.02, 871.59 and 906.50 s; the third is recorded with its confounder (a foreign 15-core
+  encode for the whole gate). Whether a confounded reading enters the mean is decided when the band
+  is cut, at the first closeout with four readings. R657(d) stands.
+R666(c) — Three host findings, each a dated paragraph in the 12r closure and in the 12r host-state
+  record, no row (host, not engine):
+  (i) the 2026-10-17 stall (18:56 → 22:49 UTC, memory-pressure lines only, no model loaded) and
+      the reboot at 23:03:59 UTC; cause not this lane's to find;
+  (ii) earlyoom as installed 2026-10-18 05:43 UTC with --prefer ^ollama$ (SIGTERM ≤ 6%, SIGKILL ≤ 3%
+      available memory), ollama.service oom_score_adj 0, vm.min_free_kbytes 1048576 — from here a
+      launch brief states these in its confounder statement (R650(d)) and records available memory
+      and GPU memory at launch and at exit; an earlyoom kill of ollama during a run is a run fault
+      (U02's ConnectionError path), the run is reported as stopped and is not re-launched without a
+      ruling;
+  (iii) the two NV_ERR_NO_MEMORY lines of the 2026-10-17 07:00 job under the old health-check design
+      (num_ctx 262144, keep-alive forever) with every model reporting OK: recorded; the 10-18 run's
+      journal is grepped for NVRM lines by the restore brief below (2(c)); a dgx-infra item, not a
+      row.
+R666(d) — Run 7 operator item (§5 item 6 gains a line): earlyoom's preference for ollama means a
+  35–38 h run's model server is the first process terminated under any lane's memory pressure;
+  before Run 7 the PI either secures a window with no other lane on the box or asks dgx-infra to
+  change the preference for the run. Not decided here.
+R666(e) — The restore of ra_12q proceeds now under the brief below, in this session, after this
+  open's gate (R241) and outside 07:00–10:35 UTC. 12r-U13-RUN follows as its own brief; its preflight
+  rests on the restore brief's section 2 reads and R666(c)(ii).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-18 | R666(a) — 12r-OPEN is accepted as reported. Item 0 stands (c748129; claude-config 8cf101c). The step-3 reads made during the gate are accepted: journal and file reads, no request, the gate's window empty. R666(b) — The band series on host state {6.17.0-1032-nvidia, 580.173.02, 3.45.1-1ubuntu2.8, 3.12.3} holds 868.02, 871.59 and 906.50 s; the third is recorded with its confounder (a foreign 15-core encode for the whole gate). Whether a confounded reading enters the mean is decided when the band is cut, at the first closeout with four readings. R657(d) stands. R666(c) — Three host findings, each a dated paragraph in the 12r closure and in the 12r host-state record, no row (host, not engine): (i) the 2026-10-17 stall (18:56 → 22:49 UTC, memory-pressure lines only, no model loaded) and the reboot at 23:03:59 UTC; cause not this lane's to find; (ii) earlyoom as installed 2026-10-18 05:43 UTC with --prefer ^ollama$ (SIGTERM ≤ 6%, SIGKILL ≤ 3% available memory), ollama.service oom_score_adj 0, vm.min_free_kbytes 1048576 — from here a launch brief states these in its confounder statement (R650(d)) and records available memory and GPU memory at launch and at exit; an earlyoom kill of ollama during a run is a run fault (U02's ConnectionError path), the run is reported as stopped and is not re-launched without a ruling; (iii) the two NV_ERR_NO_MEMORY lines of the 2026-10-17 07:00 job under the old health-check design (num_ctx 262144, keep-alive forever) with every model reporting OK: recorded; the 10-18 run's journal is grepped for NVRM lines by the restore brief below (2(c)); a dgx-infra item, not a row. R666(d) — Run 7 operator item (§5 item 6 gains a line): earlyoom's preference for ollama means a 35–38 h run's model server is the first process terminated under any lane's memory pressure; before Run 7 the PI either secures a window with no other lane on the box or asks dgx-infra to change the preference for the run. Not decided here. R666(e) — The restore of ra_12q proceeds now under the brief below, in this session, after this open's gate (R241) and outside 07:00–10:35 UTC. 12r-U13-RUN follows as its own brief; its preflight rests on the restore brief's section 2 reads and R666(c)(ii). | PI, 2026-10-18, during session 12r, on architect recommendation, on the 12r-OPEN-R3 final report |
+
+**Block 65.** *Transcribed 2026-10-19 (the 12r-CLOSE brief), in the session's closeout commit with Blocks 61–69, in the R597(e) form:* ruling R667, made by PI on architect recommendation on 2026-10-19 UTC, during session 12r, on the 12r-U13-RUN final report and the read-out `12r_U13.md` (`ef12a41`). The 12r-U13-PA task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12r-R667] — 12r-U13-RUN accepted; R571's test negative on the concentrations;
+  the FIELD_MISSING regression goes to a read-only Phase A before any ruling on the prompt; the post-run
+  copy retained; I5's proceed recorded
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on architect recommendation, on the 12r-U13-RUN final
+  report and the read-out docs/session-reports/session-12/12r_U13/12r_U13.md (commit ef12a41). Transcribe
+  as Block 65 at item 0 of the next brief in this session that transcribes, after Blocks 61–64, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-U13-RUN final report; the read-out on disk governs
+  where the paste the architect received was garbled):
+  MEASURED: "Exit code 0 at 00:45:41.69Z; wall time 9,097.3 s"; "attempt 1 failed 72 of 220 fields under
+    HEAD's check (70 under the pre-dccd679 verdict), against 12g's 46"; "STATED with sentinel prose |
+    15/33 | 16/33 | 16/33"; "all other fields | 9/132 | 32/132 | 32/132"; "FIELD_MISSING rose from 2 to
+    26"; "every INFERABLE and JUDGMENT field missing on attempt 1 (F3)" on papers 3 and 10; "dccd679
+    alone fails two fields: paper 5's key_limitation and clinical_readiness_assessment"; ""attempt_1": 0"
+    (duplicates); "asserted 188, citation_located 188, declined 19, contract_unmet 13"; "no outer
+    retries"; "Paper 2 is unscored here and in 12g"; "elicitation_pass1 23 (22 completed, 1
+    input_overflow, nothing sent)"; "extract_pass2 11"; "earlyoom kills 0, NRestarts=0" at every
+    checkpoint; "MemAvailable stayed between 59.4" GB and the pre-flight 114 GB; "One kernel
+    NV_ERR_NO_MEMORY line" during the 32B load, "The load completed"; "the cold preflight load 11.1
+    min"; "The manifest closed interrupted / blocked:audit_review"; "commit ef12a41 … 9 files changed,
+    1861 insertions(+)"; the post-run copy at ~/scratch/12r-u13/run/ra_12q/ (its review.db sha256 and
+    fingerprint are in §8 of the read-out; the architect's copy of the report truncated them).
+  INFERRED (CC's): "I judged that the substance of I5 holds and launched"; the JUDGMENT concentration's
+    HEAD and pre-dccd679 cells (garbled in the architect's copy; read from the read-out in the Phase A
+    and quoted there).
+
+R667(a) — 12r-U13-RUN is accepted as reported: the run, the scoring, the read-out at ef12a41, A3 and
+  A4. Abort condition D fired once (the NVRM line) and was handled as written.
+R667(b) — R571's test, as R612(b) framed it (attempt-level measures compared per field against
+  12h_rd/rd1_attempts_cells.csv), is negative on both concentrations: STATED-with-sentinel 15→16 of 33,
+  JUDGMENT unchanged within its range (the exact cells quoted in the Phase A). No ruling on U04's
+  sentences (R571(a), (b)) is made now; they stay in the tree; the pin stands. INT-h12-2 gains a dated
+  note recording the result, quoted from §3, in the Phase A's commit.
+R667(c) — The FIELD_MISSING increase (2→26; papers 3 and 10 losing every INFERABLE and JUDGMENT field
+  on attempt 1; F3) is a candidate defect, not yet classed, and is read before anything is changed:
+  the Phase A below. Root cause before fix; the prompt content is audited before the model is blamed.
+  No prompt edit, no retry-budget change, no floor change until the Phase A's read-out is committed
+  and ruled on.
+R667(d) — Retention: the post-run ra_12q at ~/scratch/12r-u13/run/ra_12q/ is retained as the ninth
+  retained throwaway, by review.db file sha256 (the §8 value), entered in the retention ledger at the
+  12r closeout with the 12g copy it is compared against; opened only as a byte copy (F9); not a
+  restore point. The build-stage records (ra_12q_fingerprint_built.json, stage_before.txt) describe
+  the pre-run copy and are kept with it.
+R667(e) — I5: the premise ("CLAUDE.md carries … watchdog 900 s") was an architect's embellished
+  value; the fact that mattered (the section exists and names the watchdog and restart paths) held.
+  CC's proceed is accepted this once and recorded; from here an INFERRED item names only the fact that
+  must hold, and a brief that wants a value checked names it as a separate reading. The global
+  CLAUDE.md's "300s" stays on the HK-ARCH line (F5, R650(g)).
+R667(f) — Operator readings for Run 7, no rows: the 32B model's working set about 55 GB on this box;
+  the cold first load 11.1 min on a fresh boot; the NV_ERR_NO_MEMORY line on a completing load, seen
+  2026-10-17 and 2026-10-18 — a dgx-infra item.
+R667(g) — The Phase A runs now or in the next session, read-only; no gate, no model call, no lock.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-19 | R667(a) — 12r-U13-RUN is accepted as reported: the run, the scoring, the read-out at ef12a41, A3 and A4. Abort condition D fired once (the NVRM line) and was handled as written. R667(b) — R571's test, as R612(b) framed it (attempt-level measures compared per field against 12h_rd/rd1_attempts_cells.csv), is negative on both concentrations: STATED-with-sentinel 15→16 of 33, JUDGMENT unchanged within its range (the exact cells quoted in the Phase A). No ruling on U04's sentences (R571(a), (b)) is made now; they stay in the tree; the pin stands. INT-h12-2 gains a dated note recording the result, quoted from §3, in the Phase A's commit. R667(c) — The FIELD_MISSING increase (2→26; papers 3 and 10 losing every INFERABLE and JUDGMENT field on attempt 1; F3) is a candidate defect, not yet classed, and is read before anything is changed: the Phase A below. Root cause before fix; the prompt content is audited before the model is blamed. No prompt edit, no retry-budget change, no floor change until the Phase A's read-out is committed and ruled on. R667(d) — Retention: the post-run ra_12q at ~/scratch/12r-u13/run/ra_12q/ is retained as the ninth retained throwaway, by review.db file sha256 (the §8 value), entered in the retention ledger at the 12r closeout with the 12g copy it is compared against; opened only as a byte copy (F9); not a restore point. The build-stage records (ra_12q_fingerprint_built.json, stage_before.txt) describe the pre-run copy and are kept with it. R667(e) — I5: the premise ("CLAUDE.md carries … watchdog 900 s") was an architect's embellished value; the fact that mattered (the section exists and names the watchdog and restart paths) held. CC's proceed is accepted this once and recorded; from here an INFERRED item names only the fact that must hold, and a brief that wants a value checked names it as a separate reading. The global CLAUDE.md's "300s" stays on the HK-ARCH line (F5, R650(g)). R667(f) — Operator readings for Run 7, no rows: the 32B model's working set about 55 GB on this box; the cold first load 11.1 min on a fresh boot; the NV_ERR_NO_MEMORY line on a completing load, seen 2026-10-17 and 2026-10-18 — a dgx-infra item. R667(g) — The Phase A runs now or in the next session, read-only; no gate, no model call, no lock. | PI, 2026-10-19, during session 12r, on architect recommendation, on the 12r-U13-RUN final report and the read-out 12r_U13.md (ef12a41) |
+
+**Block 66.** *Transcribed 2026-10-19 (the 12r-CLOSE brief), in the session's closeout commit with Blocks 61–69, in the R597(e) form:* ruling R668, made by PI on architect recommendation on 2026-10-19 UTC, during session 12r, on the 12r-U13-PA final report and the read-out `12r_U13_PA.md` (`94ea85c`). The 12r-U13-PROBE task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12r-R668] — 12r-U13-PA accepted; cause A established, the request change
+  undecided; one row proposed (the feedback-induced STATED-only re-emission); a reproduction-gated probe;
+  the INT-h12-2 note and prefix_check.py's row argument move to the 12r closeout; the ledger timestamp
+  recorded
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on architect recommendation, on the 12r-U13-PA final
+  report and docs/session-reports/session-12/12r_U13_PA/12r_U13_PA.md (commit 94ea85c). Transcribe as
+  Block 66 at item 0 of the next brief in this session that transcribes, after Blocks 61–65, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12r-U13-PA final report; the read-out on disk governs where
+  the architect's copy was garbled):
+  MEASURED: "Raw response 1,095 chars, "json_whole": {"parses": true}, parse_container path direct,
+    present stated 8/9, inferable 0/6, judgment 0/5, done_reason: stop" (paper 3); "Raw 2,601 chars,
+    parses whole, present 9/0/0, done_reason: stop" (paper 10); "HEAD's builders reproduce 12r's stored
+    attempt-1 request hash on 4 of 4 papers"; "HEAD's feedback re-render reproduces 12r's attempt-2 hash
+    on 4 of 4"; ""attempt1_stated_only": ["3", "10"], "attempt2_stated_only": ["8"]"; "In 4 of 5 such
+    attempt-2 cases across the two runs, attempt 2 came back STATED" -only; "The instructions changed by
+    three added sentences and one reworded clause"; "num_ctx is unset / modelfile_or_server on both
+    runs"; "§5: "duplicates": {"attempt_1": 0, "attempt_2": 0, "cases": []}"; "Commit:
+    94ea85cd4e4e3a438372fb9890287e7571e1dc78, parent ef12a41, 18 files changed, 3009 insertions(+)";
+    R1 "ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f before (01:05:03Z) and after
+    (01:10:42Z)"; "the ledger commit message reads "rows through 2026-10-19T01:10:58Z", but the row's
+    timestamp is 01:10:50Z".
+  INFERRED (CC's, recorded as such): 12g's three attempt-2 cases classed A "from the shared response
+    shape" (no raw text stored; C excluded by run.log's done_reason); "Which request change moved the
+    model there can't be decided from this read" — accepted as the read's limit, which the probe below
+    addresses.
+
+R668(a) — 12r-U13-PA is accepted as reported. Cause A stands for 12r's papers 3 and 10 (attempt 1) and
+  paper 8 (attempt 2); 12g's three attempt-2 cases are A by inference, recorded as such.
+R668(b) — PROPOSED row, for the PI to confirm or strike: the feedback-induced STATED-only re-emission
+  (the read-out's F3; text cell = the F3 sentence of 12r_U13_PA.md §7, quoted at transcription). Class
+  2 (loud under U06's floor — the paper fails held_fields_below_floor — but a yield loss that the
+  feedback template itself induces); P1; pin-affecting (the feedback template is inside the pin, E-PIN);
+  fix designed after the probe below, in the INT-h12-2 batch's successor unit. ID INT-r12-1.
+R668(c) — The attempt-1 STATED-only shape (papers 3 and 10): cause undecided between U01's text change
+  and U04's instruction change; no ruling on U04's sentences until the probe reports; no prompt edit of
+  any kind before that. The probe is an experiment outside any run manifest, writing to no review, under
+  the experiment lock, as the 12e and 12a probes were.
+R668(d) — INT-g12-6 gains a dated note: the per-call done_reason in run.log distinguishes a normal end
+  from a cut-short one; eval_count stays unrecorded; the output-headroom question stands.
+R668(e) — The INT-h12-2 dated note (R667(b)), the INT-r12-1 row if confirmed, and the R668(d) note land
+  in the 12r closeout's plan commit. That commit carries cell notes, so under R664(c) prefix_check.py
+  gains its expected-row argument there (one function change, committed under 12r_close/, Class 3
+  tooling, no row), and the commit's "−" count is stated from a read of the rows edited.
+R668(f) — The ledger commit 26632bc…'s message timestamp (01:10:58Z against the row's 01:10:50Z) is left
+  as pushed (never amend after pushing); a dated line in the 12r closure; the convention of R661(e)
+  stands; no row.
+R668(g) — The probe runs under the brief below, tonight if the PI continues the session, else as the
+  first brief of session 12s after the 12r closeout.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-19 | R668(a) — 12r-U13-PA is accepted as reported. Cause A stands for 12r's papers 3 and 10 (attempt 1) and paper 8 (attempt 2); 12g's three attempt-2 cases are A by inference, recorded as such. R668(b) — PROPOSED row, for the PI to confirm or strike: the feedback-induced STATED-only re-emission (the read-out's F3; text cell = the F3 sentence of 12r_U13_PA.md §7, quoted at transcription). Class 2 (loud under U06's floor — the paper fails held_fields_below_floor — but a yield loss that the feedback template itself induces); P1; pin-affecting (the feedback template is inside the pin, E-PIN); fix designed after the probe below, in the INT-h12-2 batch's successor unit. ID INT-r12-1. R668(c) — The attempt-1 STATED-only shape (papers 3 and 10): cause undecided between U01's text change and U04's instruction change; no ruling on U04's sentences until the probe reports; no prompt edit of any kind before that. The probe is an experiment outside any run manifest, writing to no review, under the experiment lock, as the 12e and 12a probes were. R668(d) — INT-g12-6 gains a dated note: the per-call done_reason in run.log distinguishes a normal end from a cut-short one; eval_count stays unrecorded; the output-headroom question stands. R668(e) — The INT-h12-2 dated note (R667(b)), the INT-r12-1 row if confirmed, and the R668(d) note land in the 12r closeout's plan commit. That commit carries cell notes, so under R664(c) prefix_check.py gains its expected-row argument there (one function change, committed under 12r_close/, Class 3 tooling, no row), and the commit's "−" count is stated from a read of the rows edited. R668(f) — The ledger commit 26632bc…'s message timestamp (01:10:58Z against the row's 01:10:50Z) is left as pushed (never amend after pushing); a dated line in the 12r closure; the convention of R661(e) stands; no row. R668(g) — The probe runs under the brief below, tonight if the PI continues the session, else as the first brief of session 12s after the 12r closeout. | PI, 2026-10-19, during session 12r, on architect recommendation, on the 12r-U13-PA final report and the read-out 12r_U13_PA.md (94ea85c) |
+
+**Block 67.** *Transcribed 2026-10-19 (the 12r-CLOSE brief), in the session's closeout commit with Blocks 61–69, in the R597(e) form:* ruling R669, made by PI on architect recommendation on 2026-10-19 UTC, during session 12r, on the 12r-U13-PROBE Phase 1 report (no request sent; evidence `~/scratch/12r-u13-probe/`). The resume 12r-U13-PROBE-R1 that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12r-R669] — 12r-U13-PROBE Phase 1 accepted; I3 and I4 restated; cross
+  conditions composed by option (ii); Phase 2 proceeds
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on architect recommendation, on the 12r-U13-PROBE Phase 1
+  report (no request sent; evidence ~/scratch/12r-u13-probe/). Transcribe as Block 67 at item 0 of the
+  next brief in this session that transcribes, after Blocks 61–66, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the Phase 1 report):
+  MEASURED: "HEAD p3 … 9769dd264f358f223a1fd6041c8025d5d8aa8ef095289383ca7a1dbe00c4fe33 … 12r p3 attempt
+    1, same"; HEAD p10, 90f4697 p3 and 90f4697 p10 "equal": true against their stored hashes; "The
+    Ollama journal for 01:15:50–01:16:30 reads -- No entries --"; "the system turn is stored only as its
+    sha256, which is e8557867155d29ca… in all four renders on both trees"; "Each render has exactly one
+    ## Numbered Paper Text line: line 307 at HEAD and 304 at 90f4697"; "Paper 3 has 1520 units at HEAD
+    and 1491 at 90f4697; paper 10 has 383 and 369"; "line 4 (... [S1520]) and line 7 (between 1 and
+    1520)"; ollama_chat: "if active is None or stage is None: return"; hold_experiment_lock "never
+    waits", "re-entrant", "releases on any exit, BaseException included"; "attempt-1 calls took about
+    5.0 min (paper 3) and 6.1 min (paper 10) in run 2"; "gemma3:27b is resident now".
+  No INFERRED item: this ruling restates two architect premises in the measured form and chooses a
+  composition rule.
+
+R669(a) — Phase 1 is accepted. I3 is restated: render/ holds the user turn; the full request is rebuilt
+  by HEAD's pass1_messages and reproduces the stored hash on 4 of 4 — the property that mattered.
+R669(b) — I4 is decided: option (ii). A cross condition takes one tree's instruction block and the other
+  tree's numbered text, and rewrites the two text-bound count lines (the "[Sn]" upper bound and the
+  "between 1 and n" range) to the recipient text's unit count; no other line changes. "Instructions"
+  therefore means the wording; "text" means the numbered text with its own count (U01's slicing
+  differs between trees). The read-out quotes both rewritten lines for every cross condition and the
+  resulting request hash.
+R669(c) — The client's last-resort restart path stays armed during the probe (the lock is the probe's
+  own); a restart is recorded by NRestarts and ends the probe per the brief's constraint; nothing is
+  set to disable it. The model swap from gemma3:27b on the first call is a reading.
+R669(d) — Phase 2 runs now under the resume below; the call plan (6 reproduction calls; up to 6
+  ablation calls; ending before 06:40 UTC) stands.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-19 | R669(a) — Phase 1 is accepted. I3 is restated: render/ holds the user turn; the full request is rebuilt by HEAD's pass1_messages and reproduces the stored hash on 4 of 4 — the property that mattered. R669(b) — I4 is decided: option (ii). A cross condition takes one tree's instruction block and the other tree's numbered text, and rewrites the two text-bound count lines (the "[Sn]" upper bound and the "between 1 and n" range) to the recipient text's unit count; no other line changes. "Instructions" therefore means the wording; "text" means the numbered text with its own count (U01's slicing differs between trees). The read-out quotes both rewritten lines for every cross condition and the resulting request hash. R669(c) — The client's last-resort restart path stays armed during the probe (the lock is the probe's own); a restart is recorded by NRestarts and ends the probe per the brief's constraint; nothing is set to disable it. The model swap from gemma3:27b on the first call is a reading. R669(d) — Phase 2 runs now under the resume below; the call plan (6 reproduction calls; up to 6 ablation calls; ending before 06:40 UTC) stands. | PI, 2026-10-19, during session 12r, on architect recommendation, on the 12r-U13-PROBE Phase 1 report |
+
+**Block 68.** *Transcribed 2026-10-19 (the 12r-CLOSE brief), in the session's closeout commit with Blocks 61–69, in the R597(e) form:* ruling R670, made by PI on architect recommendation on 2026-10-19 UTC, during session 12r, on the 12r-U13-PROBE Phase 2 final report and the read-out `12r_U13_PROBE.md` (`d7bafc4`). The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12r-R670] — 12r-U13-PROBE accepted; the STATED-only attempt-1 shape is model
+  variation, not a request effect; R571's test closed negative; INT-h12-2 to Class 3 / P7 (PROPOSED);
+  U13 closed as a unit; INT-r12-1 stands as proposed; no prompt tuning before the tag
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on architect recommendation, on the 12r-U13-PROBE Phase 2
+  final report and docs/session-reports/session-12/12r_U13_PROBE/12r_U13_PROBE.md (commit d7bafc4).
+  Transcribe as Block 68 at item 0 of the 12r closeout, after Blocks 61–67, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the Phase 2 report):
+  MEASURED: six calls, each "stop", present "8/6/5" (paper 3, three calls) and "9/6/5" (paper 10, three
+    calls), "STATED-only false" on all six; "Each prompt_eval_count equals 12r's attempt 1 (55,425 and
+    18,384)"; "DECISION paper 3: NOT REPRODUCED (0 of 3 STATED-only)"; "DECISION paper 10: NOT
+    REPRODUCED (0 of 3 STATED-only)"; "No ablation calls followed"; "In both papers, calls 2 and 3
+    returned byte-identical text, while call 1 differed"; "Every paper-3 response omits
+    primary_outcome_value, the same STATED field 12r's attempt 1 omitted"; "Commit:
+    d7bafc45a404e0b0ebaa79a921ad4796672c9f97, parent 94ea85c"; "fingerprint IDENTICAL, overall
+    0d3eedea…cb25"; "held by one process (PID 1169525) from 01:28:10Z to 01:56:00Z, and free
+    afterwards"; "6 POST /api/chat, 1 POST /api/show and 2 GET /api/ps. NRestarts stayed 0"; "one
+    kernel NV_ERR_NO_MEMORY line at 01:28:24, during the model swap"; "the response does carry it
+    (1,414–1,532 here)"; ledger "6c7d86ef90c97b17a3479647f46822426e5b8144 … carries the row's exact
+    timestamp (01:57:50Z)".
+  INFERRED (CC's, recorded as such): "consistent with a low per-call rate"; the server-state difference
+    between 12r's run and the probe as a limit. Neither is matched; neither changes a clause below.
+  READ (12r_U13 §4, §6, the committed read-out): "no outer retries"; "asserted 188, citation_located
+    188, declined 19, contract_unmet 13" — the run stored papers 3 and 10 after attempt 2.
+
+R670(a) — 12r-U13-PROBE is accepted. §4 stands as the finding of record: the STATED-only attempt-1
+  response is not reproducible from its request; the request's content (U01's text, U04's sentences)
+  is not its cause on this evidence. The two limits in §4 are recorded with it.
+R670(b) — R571's test (R612(b), R650(a),(c)) is closed negative: the two first-attempt concentrations
+  did not change (12r_U13 §3: STATED-with-sentinel 15/33 → 16/33; JUDGMENT as that table's row). U04's
+  items (a), (b) and (e) stay in the tree and inside the pin; they are retained on neutral evidence,
+  not on a measured benefit. No further prompt change before the freshman tag is made to move a
+  first-attempt failure rate; the retry loop is the engine's handling of attempt-1 omissions, and
+  12r shows it recovering papers 3 and 10.
+R670(c) — PROPOSED, for the PI to confirm or amend: INT-h12-2 moves from Class 2 to Class 3 and from
+  P1 to P7, with a dated note quoting 12r_U13 §3 and 12r_U13_PROBE §4: its mechanism ("a sentence in
+  the prompt behind it") is refuted; the concentrations are a measured property of the model on this
+  codebook. The INT-h12-2 note R667(b) ordered becomes this note.
+R670(d) — U13 (the comparison rehearsal) is closed as a unit: built (12q), run and scored (12r),
+  read (12r-U13-PA), probed (12r-U13-PROBE). P1's unit count is unchanged at 35; the next unit is U14.
+R670(e) — INT-r12-1 (R668(b), the feedback-induced STATED-only re-emission) stands as proposed; the
+  probe did not test it (its F6). It is the one actionable finding of the rehearsal; its Phase A, when
+  its unit opens, reads the feedback template and the 12g and 12r attempt-2 cases.
+R670(f) — Notes, no rows: INT-g12-6 — the client's response carries eval_count and prompt_eval_count
+  and the probe recorded both; the engine records neither (F4); the fix is a telemetry field when
+  INT-g12-6's unit lands. The third NV_ERR_NO_MEMORY line on a completing load (01:28:24, the model
+  swap): a dgx-infra item, recorded in the 12r closure with the other two. The server-state
+  difference and the call-1 text variation: recorded under INT-g12-5's note.
+R670(g) — The post-run ra_12q and the probe's scratch (raw responses named by hash under
+  ~/scratch/12r-u13-probe/out/) are retained with the 12r retention entry (R667(d)); the probe's
+  composed cross-condition prompts are kept there too, unsent, named by hash.
+R670(h) — Session 12r's remaining work is its closeout: Blocks 61–68, the INT-h12-2 note (as R670(c)
+  if confirmed), the INT-r12-1 row (if confirmed), the R668(d) and R670(f) notes, prefix_check.py's
+  expected-row argument (R668(e)), the retention entry, the 12r closure with its host facts (R663,
+  R666, R670(f)), the lane line, then v88. It runs under a closeout brief when the PI ends the session,
+  outside 07:00–10:35 UTC.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-19 | R670(a) — 12r-U13-PROBE is accepted. §4 stands as the finding of record: the STATED-only attempt-1 response is not reproducible from its request; the request's content (U01's text, U04's sentences) is not its cause on this evidence. The two limits in §4 are recorded with it. R670(b) — R571's test (R612(b), R650(a),(c)) is closed negative: the two first-attempt concentrations did not change (12r_U13 §3: STATED-with-sentinel 15/33 → 16/33; JUDGMENT as that table's row). U04's items (a), (b) and (e) stay in the tree and inside the pin; they are retained on neutral evidence, not on a measured benefit. No further prompt change before the freshman tag is made to move a first-attempt failure rate; the retry loop is the engine's handling of attempt-1 omissions, and 12r shows it recovering papers 3 and 10. R670(c) — PROPOSED, for the PI to confirm or amend: INT-h12-2 moves from Class 2 to Class 3 and from P1 to P7, with a dated note quoting 12r_U13 §3 and 12r_U13_PROBE §4: its mechanism ("a sentence in the prompt behind it") is refuted; the concentrations are a measured property of the model on this codebook. The INT-h12-2 note R667(b) ordered becomes this note. R670(d) — U13 (the comparison rehearsal) is closed as a unit: built (12q), run and scored (12r), read (12r-U13-PA), probed (12r-U13-PROBE). P1's unit count is unchanged at 35; the next unit is U14. R670(e) — INT-r12-1 (R668(b), the feedback-induced STATED-only re-emission) stands as proposed; the probe did not test it (its F6). It is the one actionable finding of the rehearsal; its Phase A, when its unit opens, reads the feedback template and the 12g and 12r attempt-2 cases. R670(f) — Notes, no rows: INT-g12-6 — the client's response carries eval_count and prompt_eval_count and the probe recorded both; the engine records neither (F4); the fix is a telemetry field when INT-g12-6's unit lands. The third NV_ERR_NO_MEMORY line on a completing load (01:28:24, the model swap): a dgx-infra item, recorded in the 12r closure with the other two. The server-state difference and the call-1 text variation: recorded under INT-g12-5's note. R670(g) — The post-run ra_12q and the probe's scratch (raw responses named by hash under ~/scratch/12r-u13-probe/out/) are retained with the 12r retention entry (R667(d)); the probe's composed cross-condition prompts are kept there too, unsent, named by hash. R670(h) — Session 12r's remaining work is its closeout: Blocks 61–68, the INT-h12-2 note (as R670(c) if confirmed), the INT-r12-1 row (if confirmed), the R668(d) and R670(f) notes, prefix_check.py's expected-row argument (R668(e)), the retention entry, the 12r closure with its host facts (R663, R666, R670(f)), the lane line, then v88. It runs under a closeout brief when the PI ends the session, outside 07:00–10:35 UTC. | PI, 2026-10-19, during session 12r, on architect recommendation, on the 12r-U13-PROBE Phase 2 final report and the read-out 12r_U13_PROBE.md (d7bafc4) |
+
+**Block 69.** *Transcribed 2026-10-19 (the 12r-CLOSE brief), in the session's closeout commit with Blocks 61–69, in the R597(e) form:* ruling R671, made by PI on 2026-10-19 UTC, during session 12r, on the architect's R670(h) list. The 12r-CLOSE task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12r-R671] — R670(c) and R668(b) confirmed; the 12r closeout proceeds
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on the architect's R670(h) list. Transcribe as Block 69
+  in the 12r closeout's plan commit, after Block 68, with the others.
+R671(a) — INT-h12-2 moves from Class 2 to Class 3 and from P1 to P7, by a dated note in its row
+  (R670(c)); the class cell is not edited; the recount reads the note.
+R671(b) — Row INT-r12-1 is opened in section L, "L (12r additions, R668, R671)": text cell the F3
+  sentence of docs/session-reports/session-12/12r_U13_PA/12r_U13_PA.md §7, quoted unchanged; Class 2;
+  package P1; pin-affecting; governing rulings R668(b), R670(e), R671(b); evidence 12r_U13_PA.md. Its
+  fix unit is assigned at its Phase A; the fix-unit count stays 35 until then.
+R671(c) — Session 12r closes under the brief below. No closeout gate; the expected gate values for 12s
+  are 12r-OPEN's on unchanged code. The wrap ruling follows the closeout block.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-19 | R671(a) — INT-h12-2 moves from Class 2 to Class 3 and from P1 to P7, by a dated note in its row (R670(c)); the class cell is not edited; the recount reads the note. R671(b) — Row INT-r12-1 is opened in section L, "L (12r additions, R668, R671)": text cell the F3 sentence of docs/session-reports/session-12/12r_U13_PA/12r_U13_PA.md §7, quoted unchanged; Class 2; package P1; pin-affecting; governing rulings R668(b), R670(e), R671(b); evidence 12r_U13_PA.md. Its fix unit is assigned at its Phase A; the fix-unit count stays 35 until then. R671(c) — Session 12r closes under the brief below. No closeout gate; the expected gate values for 12s are 12r-OPEN's on unchanged code. The wrap ruling follows the closeout block. | PI, 2026-10-19, during session 12r, on the architect's R670(h) list |
+
+The decision log in this file ends at R671.

@@ -1,0 +1,32 @@
+RULING [evidence-engine 12r-R669] — 12r-U13-PROBE Phase 1 accepted; I3 and I4 restated; cross
+  conditions composed by option (ii); Phase 2 proceeds
+STATUS: PI ruling, 2026-10-19 UTC, session 12r, on architect recommendation, on the 12r-U13-PROBE Phase 1
+  report (no request sent; evidence ~/scratch/12r-u13-probe/). Transcribe as Block 67 at item 0 of the
+  next brief in this session that transcribes, after Blocks 61–66, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the Phase 1 report):
+  MEASURED: "HEAD p3 … 9769dd264f358f223a1fd6041c8025d5d8aa8ef095289383ca7a1dbe00c4fe33 … 12r p3 attempt
+    1, same"; HEAD p10, 90f4697 p3 and 90f4697 p10 "equal": true against their stored hashes; "The
+    Ollama journal for 01:15:50–01:16:30 reads -- No entries --"; "the system turn is stored only as its
+    sha256, which is e8557867155d29ca… in all four renders on both trees"; "Each render has exactly one
+    ## Numbered Paper Text line: line 307 at HEAD and 304 at 90f4697"; "Paper 3 has 1520 units at HEAD
+    and 1491 at 90f4697; paper 10 has 383 and 369"; "line 4 (... [S1520]) and line 7 (between 1 and
+    1520)"; ollama_chat: "if active is None or stage is None: return"; hold_experiment_lock "never
+    waits", "re-entrant", "releases on any exit, BaseException included"; "attempt-1 calls took about
+    5.0 min (paper 3) and 6.1 min (paper 10) in run 2"; "gemma3:27b is resident now".
+  No INFERRED item: this ruling restates two architect premises in the measured form and chooses a
+  composition rule.
+
+R669(a) — Phase 1 is accepted. I3 is restated: render/ holds the user turn; the full request is rebuilt
+  by HEAD's pass1_messages and reproduces the stored hash on 4 of 4 — the property that mattered.
+R669(b) — I4 is decided: option (ii). A cross condition takes one tree's instruction block and the other
+  tree's numbered text, and rewrites the two text-bound count lines (the "[Sn]" upper bound and the
+  "between 1 and n" range) to the recipient text's unit count; no other line changes. "Instructions"
+  therefore means the wording; "text" means the numbered text with its own count (U01's slicing
+  differs between trees). The read-out quotes both rewritten lines for every cross condition and the
+  resulting request hash.
+R669(c) — The client's last-resort restart path stays armed during the probe (the lock is the probe's
+  own); a restart is recorded by NRestarts and ends the probe per the brief's constraint; nothing is
+  set to disable it. The model swap from gemma3:27b on the first call is a reading.
+R669(d) — Phase 2 runs now under the resume below; the call plan (6 reproduction calls; up to 6
+  ablation calls; ending before 06:40 UTC) stands.

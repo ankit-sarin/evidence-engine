@@ -7228,3 +7228,115 @@ R672(g) — Session 12r closes now. After R672(b) has landed, run /wrap. Report 
 | 2026-10-19 | R672(a) — The 12r-CLOSE closeout block is accepted as printed. The brief's step-7 element list stood in for the 12q list (I6, a reading) and is the on-disk form from here, as printed in this block. R672(b) — The lane line (sha256 836cfbc9145bb99415577e84f61e23ac93b70688406bc3299ac78db11a249817, 4,672 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, the row's exact timestamp), push, level. R672(c) — INT-h12-2's package-assignment table line (the line that read "\| INT-h12-2 \| P1, pin-affecting, before the freeze — R571 \|" at d7bafc4) gains a dated note in 12s's item-0 commit, in the R570 form, quoting R670(c)/R671(a): package P7, Class 3; the recount is unchanged by it (276; it reads the row's note). That commit's "−" count is stated from a read of that line and of the 12r closure's rows as edited (expected: one for the table line; the wrap-ruling transcription adds none). 12r_close/prefix_check.py --expected-row names it. R672(d) — 12s-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the lane-line commit, itself the child of 7cf4ae1), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12s's item 0 copies lane_line_12r.txt into docs/session-reports/session-12/12r_close/ with its commit. R672(e) — No closeout gate ran: the expected gate values for 12s are 12r-OPEN's on unchanged code (3,306 / 1 xfailed / 17 deselected, collected 3,307; series 868.02, 871.59, 906.50 s, no band, R657(d), R666(b)); the 2026-10-19 09:00 UTC nightly runs on 15b7ef9, whose engine tree equals e5ec600's; 12r_close/expected_nightly_20261019.md governs; the 07:00 health job's loads are read and reported by 12s-OPEN, with an NVRM grep. The temp root is read, never matched. deepseek-r1:32b resident is a reading; the 07:00 job unloads it. R672(f) — Notes, no rows: the baseline recount runs on the plan at d7bafc4 by sha256, as the 12r script's header says — the chain form from here; the -shm mtime movement is F1's effect; the seven scratch directories are the count the block records. R672(g) — Session 12r closes now. After R672(b) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-19, during session 12r, on architect recommendation, on the 12r-CLOSE closeout block |
 
 The decision log in this file ends at R672.
+
+**Block 71.** *Transcribed 2026-10-19 (item 0 of the 12s-U14A brief), in its own commit with Block 72, in the R597(e) form:* ruling R673, made by PI on architect recommendation on 2026-10-19 UTC, during session 12s, on the 12s-OPEN stop report at step 2(d). The 12s-OPEN-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12s-R673] — 2(d)'s line-count clause withdrawn; the scratch build accepted as
+  checked; 12s-OPEN resumes at step 2(e)
+STATUS: PI ruling, 2026-10-19 UTC, session 12s, on architect recommendation, on the 12s-OPEN stop
+  report at step 2(d) (nothing applied, both repositories clean). Transcribe as Block 71 at item 0
+  of the next brief in this session that transcribes, after Block 70, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12s-OPEN stop report):
+  MEASURED: "diff against the HEAD blob: 1243c1243, 7168a7169,7230; minus: 1  plus: 63. No other
+    hunk."; "exactly 1 '-' line(s), one per named row: True / RESULT: PASS"; "Block 70's fence
+    equals r672.txt: True. The table cell equals render_cell's output: True."; "Line count: 7,230";
+    "New plan in scratch: sha256 11df06ff7c167cd122cb60da5b11a9dea9e68d72e6153373c3ad156acfd95560,
+    1,592,088 B, 7,230 lines"; "r672.txt: sha256
+    275287735764e2ce814110fd03b929103455298b357a74d5464acd6c09e18964, 4,308 B, 51 lines"; recount
+    "now = {rows 276, class_1 95, class_2 50, class_3 131, without_class 0}; P1 {26, 20, 12, rows
+    58}; P7 117; fix units 35" and "Baseline: 275 (95 / 50 / 130), on the file with sha256
+    f2e4dc60…9b8d; expected_holds true"; "output byte-identical to the committed
+    recount_12r_close.json"; line 1243 "count 1"; step 0 every item MATCHED; the nightly "All six
+    rows MATCHED. Wall time 863.77 s"; "20 models, all OK"; "earlyoom kill lines this boot: 0";
+    "evidence-engine 15b7ef9, clean and level. claude-config a9459b6, clean and level."
+  READ (CC's reads of the scripts and the file): prefix_check.py's rule and usage; render_cell.py's
+    usage; recount_12r_close.py "prints JSON, not the sentence"; Block 69's and Block 60's headers
+    as quoted; a356f73's message form.
+  INFERRED: none. This ruling withdraws an architect premise and makes no new claim about the box.
+
+R673(a) — The 2(d) clause "line count = 7,168 + the '+' count" was an architect premise that ignored
+  the "−" line the same brief required; withdrawn. The measured form is the rule from here: a plan
+  commit's line count is the prior count plus its "+" lines minus its "−" lines (7,168 + 63 − 1 =
+  7,230). The stop was correct, at the earliest point that left both repositories clean.
+R673(b) — I3 is corrected: 12r_close/recount_12r_close.py prints JSON and writes it beside itself;
+  the sentence "The pre-tag list in this file is 276 rows — …" is the plan's rendering of that JSON.
+  A brief that cites the recount quotes the JSON fields (rows, class_1/2/3, without_class, P1, P7,
+  fix units, baseline, expected_holds); running it in a scratch clone so the repository is not
+  written is accepted as the way to run it before a commit.
+R673(c) — The scratch build is accepted as checked: Block 70's header as written (the on-disk
+  ", in the R597(e) form:*" clause kept, R664(d)); the note on line 1243 as written; r672.txt as
+  hashed. The build is applied as it stands; nothing in new_plan.md is re-edited.
+R673(d) — Readings, no rows: the two NVRM NV_ERR_NO_MEMORY lines of the 07:00 job (07:02:57 on
+  qwen2.5:32b, 07:03:31 on llama3.3:70b, both loads completed) join the dgx-infra item; five this
+  boot. The flash-attention WARN on gemma2:27b is a reading. pytest-4's rotation out of the temp
+  root is a reading (the root held pytest-5, -6, -7 and pytest-current at 15:57Z).
+R673(e) — 12s-OPEN resumes at step 2(e) under the resume below. Steps 2(e)–(g), 3 and the final
+  report run as written, with 2(d)'s line-count clause read under R673(a). No other clause changes.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-19 | R673(a) — The 2(d) clause "line count = 7,168 + the '+' count" was an architect premise that ignored the "−" line the same brief required; withdrawn. The measured form is the rule from here: a plan commit's line count is the prior count plus its "+" lines minus its "−" lines (7,168 + 63 − 1 = 7,230). The stop was correct, at the earliest point that left both repositories clean. R673(b) — I3 is corrected: 12r_close/recount_12r_close.py prints JSON and writes it beside itself; the sentence "The pre-tag list in this file is 276 rows — …" is the plan's rendering of that JSON. A brief that cites the recount quotes the JSON fields (rows, class_1/2/3, without_class, P1, P7, fix units, baseline, expected_holds); running it in a scratch clone so the repository is not written is accepted as the way to run it before a commit. R673(c) — The scratch build is accepted as checked: Block 70's header as written (the on-disk ", in the R597(e) form:*" clause kept, R664(d)); the note on line 1243 as written; r672.txt as hashed. The build is applied as it stands; nothing in new_plan.md is re-edited. R673(d) — Readings, no rows: the two NVRM NV_ERR_NO_MEMORY lines of the 07:00 job (07:02:57 on qwen2.5:32b, 07:03:31 on llama3.3:70b, both loads completed) join the dgx-infra item; five this boot. The flash-attention WARN on gemma2:27b is a reading. pytest-4's rotation out of the temp root is a reading (the root held pytest-5, -6, -7 and pytest-current at 15:57Z). R673(e) — 12s-OPEN resumes at step 2(e) under the resume below. Steps 2(e)–(g), 3 and the final report run as written, with 2(d)'s line-count clause read under R673(a). No other clause changes. | PI, 2026-10-19, during session 12s, on architect recommendation, on the 12s-OPEN stop report at step 2(d) |
+
+**Block 72.** *Transcribed 2026-10-19 (item 0 of the 12s-U14A brief), in its own commit with Block 71, in the R597(e) form:* ruling R674, made by PI on architect recommendation on 2026-10-19 UTC, during session 12s, on the 12s-OPEN final report under R673 (item 0 `1ddff37637531fb8e22d8c69309f47caf0f0001c`). The 12s-U14A task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12s-R674] — 12s-OPEN accepted; 3(i)'s "no database is opened" withdrawn for
+  the restore points; the band decision deferred to the 12s closeout with four readings recorded;
+  U14's Phase A opens
+STATUS: PI ruling, 2026-10-19 UTC, session 12s, on architect recommendation, on the 12s-OPEN final
+  report under R673 (item 0 1ddff37637531fb8e22d8c69309f47caf0f0001c; claude-config
+  f7da8138d49732acffd75ad3e90efbfc2bb35ad3). Transcribe as Block 72 at item 0 of the 12s-U14A brief
+  below, in this block, after Block 71 (R673), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12s-OPEN final report):
+  MEASURED: "Commit 1ddff37637531fb8e22d8c69309f47caf0f0001c, parent
+    15b7ef9bd85885f5d1ef25d4b1c5dfcad625d32d"; "3 files changed, 124 insertions(+), 1 deletion(-)";
+    "exactly 1 '-' line(s), one per named row: True / RESULT: PASS"; "Committed plan: sha256
+    11df06ff…5560, 1,592,088 bytes, 7,230 lines"; "line 7168 is still The decision log in this file
+    ends at R671."; "Commit f7da8138d49732acffd75ad3e90efbfc2bb35ad3, parent
+    a9459b61487d2c5c7b9e04ab0e1f06d117b8ffca"; "ledger: rows through 2026-10-19T16:13:20Z"; "==== 3306
+    passed, 17 deselected, 1 xfailed, 2 warnings in 855.93s (0:14:15) ===="; "Wall time 858.50 s";
+    "only-gate 0 / only-ref 0"; "Ollama journal 16:13:52–16:28:12: -- No entries --"; "phases slower by
+    >10 s: 0"; "The four R-13 values are unchanged from step 0 and equal host_state_close.txt";
+    "An ffmpeg encode was running throughout the gate"; "Temp root after: 4 entries (pytest-6,
+    pytest-7, pytest-8, pytest-current), 4,102,124,900 B"; (g)–(l) MATCHED as tabled; the recount
+    JSON "now {'class_1': 95, 'class_2': 50, 'class_3': 131, 'rows': 276, 'without_class': 0}",
+    "expected_holds True"; the restore-point table (five sizes, mtimes, file sha256 prefixes);
+    "None has a -wal or -shm sidecar"; "Nothing is resident in Ollama."
+  READ (CC's): "12r-OPEN's retention_open.txt shows its fingerprint lines in db_fingerprint output
+    form".
+  INFERRED: none.
+
+R674(a) — 12s-OPEN is accepted as reported: item 0 landed as 1ddff37 (Block 70, the INT-h12-2
+  package-table note, lane_line_12r.txt and r672.txt in 12r_close/), the ledger row as f7da813; the
+  decision log in the file ends at R672; the recount is 276 (95 / 50 / 131, 0; P1 58, 35 fix units;
+  P7 117). The 2026-10-19 nightly matched expected_nightly_20261019.md line for line; the 07:00
+  health job loaded 20 of 20. The 12s open stands verified.
+R674(b) — 3(i)'s "No database is opened for this" was an architect clause that, applied to the five
+  restore points, forbade the only instrument that can verify them; withdrawn for restore points.
+  From here, retention is two checks with two instruments: retained throwaway reviews and U06's copy
+  by review.db file sha256 only, never opened (R662(e), F9, unchanged); the five restore points by
+  db_fingerprint --compare against their recorded records, opened mode=ro, as 12r-OPEN did, a named
+  step. The five are re-verified at item 0 of 12s-U14A. The sizes, mtimes and file sha256s CC
+  recorded are readings and become a second record for the five, written into the 12s-U14A
+  evidence directory.
+R674(c) — The band series on this host state has four readings: 868.02, 871.59, 906.50 and 858.50 s,
+  the third and fourth each beside a concurrent surgical-cv encode (R666(b)). Means: 876.15 s over
+  four, 866.04 s over the two unconfounded. Whether a confounded reading enters the mean is the 12s
+  closeout's decision (R657(d)); no band is cut now, and the Phase A's gates, if any, report wall
+  time as a reading beside the four.
+R674(d) — Readings, no rows: this gate's concurrent encode is its confounder, recorded as 906.50's
+  was; pytest rotated surgical-cv's pytest-5 out of the temp root on its own; the two warnings are
+  sklearn's from tests/test_kappa.py.
+R674(e) — U14's Phase A opens under the brief below, read-only. R673 and R674 transcribe as Blocks
+  71 and 72 at its item 0.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-19 | R674(a) — 12s-OPEN is accepted as reported: item 0 landed as 1ddff37 (Block 70, the INT-h12-2 package-table note, lane_line_12r.txt and r672.txt in 12r_close/), the ledger row as f7da813; the decision log in the file ends at R672; the recount is 276 (95 / 50 / 131, 0; P1 58, 35 fix units; P7 117). The 2026-10-19 nightly matched expected_nightly_20261019.md line for line; the 07:00 health job loaded 20 of 20. The 12s open stands verified. R674(b) — 3(i)'s "No database is opened for this" was an architect clause that, applied to the five restore points, forbade the only instrument that can verify them; withdrawn for restore points. From here, retention is two checks with two instruments: retained throwaway reviews and U06's copy by review.db file sha256 only, never opened (R662(e), F9, unchanged); the five restore points by db_fingerprint --compare against their recorded records, opened mode=ro, as 12r-OPEN did, a named step. The five are re-verified at item 0 of 12s-U14A. The sizes, mtimes and file sha256s CC recorded are readings and become a second record for the five, written into the 12s-U14A evidence directory. R674(c) — The band series on this host state has four readings: 868.02, 871.59, 906.50 and 858.50 s, the third and fourth each beside a concurrent surgical-cv encode (R666(b)). Means: 876.15 s over four, 866.04 s over the two unconfounded. Whether a confounded reading enters the mean is the 12s closeout's decision (R657(d)); no band is cut now, and the Phase A's gates, if any, report wall time as a reading beside the four. R674(d) — Readings, no rows: this gate's concurrent encode is its confounder, recorded as 906.50's was; pytest rotated surgical-cv's pytest-5 out of the temp root on its own; the two warnings are sklearn's from tests/test_kappa.py. R674(e) — U14's Phase A opens under the brief below, read-only. R673 and R674 transcribe as Blocks 71 and 72 at its item 0. | PI, 2026-10-19, during session 12s, on architect recommendation, on the 12s-OPEN final report under R673 |
+
+The decision log in this file ends at R674.

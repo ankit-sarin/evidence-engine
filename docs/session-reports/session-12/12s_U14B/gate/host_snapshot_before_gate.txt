@@ -1,0 +1,26 @@
+Mon Oct 19 17:11:02 UTC 2026
+ 17:11:02 up 1 day, 18:07,  4 users,  load average: 13.95, 13.41, 11.59
+top - 17:11:02 up 1 day, 18:07,  4 users,  load average: 13.95, 13.41, 11.59
+Tasks: 563 total,   3 running, 560 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 70.2 us,  2.4 sy,  0.0 ni, 27.4 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem : 122566.0 total,  17331.6 free,  11133.0 used,  98063.8 buff/cache     
+MiB Swap:  16384.0 total,  13624.4 free,   2759.6 used. 111433.0 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+1754835 ankitsa+  20   0 3248012 425936  37916 R  1209   0.3 124:43.77 ffmpeg
+   2556 ankitsa+  20   0  643812  79352  18024 R   9.1   0.1   2:16.38 citatio+
+1707316 ankitsa+  20   0 1603064 217744  50996 S   9.1   0.2   0:09.63 MainThr+
+1708170 ankitsa+  20   0 6160228 545268 145240 S   9.1   0.4   2:11.55 claude
+1747757 root      20   0       0      0      0 I   9.1   0.0   0:09.07 kworker+
+1793808 ankitsa+  20   0   26960   5476   3316 R   9.1   0.0   0:00.01 top
+      1 root      20   0   24552  12656   7572 S   0.0   0.0   0:46.16 systemd
+               total        used        free      shared  buff/cache   available
+Mem:          122566       11132       17332           2       98063      111433
+Swap:          16383        2759       13624
+6.17.0-1032-nvidia
+Python 3.12.3
+3.45.1-1ubuntu2.8
+580.173.02
+abf99132-fd8b-41f9-b9fd-62241e40110c
+    PID                  STARTED COMMAND
+1754835 Mon Oct 19 17:00:27 2026 ffmpeg -hide_banner -loglevel error -i /home/ankitsarin/mask-stage-scratch/UCD-FIL-051_masked.mp4 -i /mnt/nas/deid-sarin/UCD-FIL-051_video.mp4 -lavfi [0:v][1:v]psnr=st

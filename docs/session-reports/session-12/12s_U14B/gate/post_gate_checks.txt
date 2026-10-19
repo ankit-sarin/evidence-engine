@@ -1,0 +1,21 @@
+2026-10-19T17:26:52Z
+pins exit 0
+pins == 12r_close True
+909e3ed2c548e09593759b9727c10031793291bef6bc639631dcaa9aa9734ff5
+dbchecks exit 0
+dbchecks == 12r_close True
+overall  : 0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25
+IDENTICAL — schema, every table, and the overall hash all match.
+eight retained unchanged True
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8
+data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138 72008c75095b2f67 MATCH
+data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020 33714bed6337e602 MATCH
+data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104 4abb5f4d7412576f MATCH
+data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807 94fb4dec080b5e6a MATCH
+data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453 9b971da1adf08eab MATCH
+restore points matched: 5/5
+?? docs/session-reports/session-12/12s_U14B/expected_gate.md
+?? docs/session-reports/session-12/12s_U14B/expected_new_ids.txt
+?? docs/session-reports/session-12/12s_U14B/post_fix_check.py
+?? docs/session-reports/session-12/12s_U14B/variant_measurement_output.json

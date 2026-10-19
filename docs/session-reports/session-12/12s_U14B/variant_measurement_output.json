@@ -1,0 +1,164 @@
+{
+ "k": 5,
+ "n": 300,
+ "lost": {
+  "today": 6,
+  "plain_a": 0,
+  "variant": 0
+ },
+ "variant_loses_what_plain_a_locates": [],
+ "today_lost_rows": [
+  {
+   "i": 70,
+   "today": [
+    false,
+    0.824
+   ],
+   "plain_a": [
+    true,
+    0.9883,
+    17
+   ],
+   "variant": [
+    true,
+    0.9883,
+    17
+   ]
+  },
+  {
+   "i": 108,
+   "today": [
+    false,
+    0.8318
+   ],
+   "plain_a": [
+    true,
+    0.9883,
+    17
+   ],
+   "variant": [
+    true,
+    0.9883,
+    17
+   ]
+  },
+  {
+   "i": 128,
+   "today": [
+    false,
+    0.8188
+   ],
+   "plain_a": [
+    true,
+    0.9883,
+    17
+   ],
+   "variant": [
+    true,
+    0.9883,
+    17
+   ]
+  },
+  {
+   "i": 200,
+   "today": [
+    false,
+    0.8188
+   ],
+   "plain_a": [
+    true,
+    0.9883,
+    17
+   ],
+   "variant": [
+    true,
+    0.9883,
+    17
+   ]
+  },
+  {
+   "i": 288,
+   "today": [
+    false,
+    0.8136
+   ],
+   "plain_a": [
+    true,
+    0.9883,
+    17
+   ],
+   "variant": [
+    true,
+    0.9883,
+    17
+   ]
+  },
+  {
+   "i": 298,
+   "today": [
+    false,
+    0.8214
+   ],
+   "plain_a": [
+    true,
+    0.9883,
+    17
+   ],
+   "variant": [
+    true,
+    0.9883,
+    17
+   ]
+  }
+ ],
+ "window_choice_differs": [],
+ "scores": {
+  "today": {
+   "min": 0.8136,
+   "median": 0.9883
+  },
+  "plain_a": {
+   "min": 0.9883,
+   "median": 0.9883
+  },
+  "variant": {
+   "min": 0.9883,
+   "median": 0.9883
+  }
+ },
+ "timing": {
+  "text_chars": 156196,
+  "snippet_chars": 383,
+  "runs_s": {
+   "today": [
+    5.184,
+    5.209,
+    5.237
+   ],
+   "plain_a": [
+    43.249,
+    43.424,
+    43.689
+   ],
+   "variant": [
+    5.211,
+    5.24,
+    5.224
+   ]
+  },
+  "median_s": {
+   "today": 5.209,
+   "plain_a": 43.424,
+   "variant": 5.224
+  },
+  "variant_over_today": 1.003,
+  "variant_over_5_214": 1.002,
+  "plain_a_over_today": 8.336
+ },
+ "condition": {
+  "recovers_all_and_loses_nothing_plain_a_locates": true,
+  "variant_median_le_1_5x_5_214": true,
+  "window_choice_differs_count": 0,
+  "met": true
+ }
+}

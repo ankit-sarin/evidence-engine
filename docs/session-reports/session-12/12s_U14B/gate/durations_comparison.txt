@@ -1,0 +1,3 @@
+12s-open entries 2422 12s-u14b entries 2450
+phases slower by >10 s: 0
+sum of listed phases 846.27 -> 882.36 s

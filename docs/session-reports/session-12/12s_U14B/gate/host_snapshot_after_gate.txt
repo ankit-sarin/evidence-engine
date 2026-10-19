@@ -1,0 +1,12 @@
+Mon Oct 19 17:26:36 UTC 2026
+ 17:26:36 up 1 day, 18:22,  4 users,  load average: 8.74, 14.11, 13.66
+top - 17:26:36 up 1 day, 18:22,  4 users,  load average: 8.74, 14.11, 13.66
+Tasks: 564 total,   1 running, 563 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 32.3 us,  1.4 sy,  0.0 ni, 66.4 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem : 122566.0 total,  15758.9 free,  12189.1 used,  98619.5 buff/cache     
+MiB Swap:  16384.0 total,  13625.0 free,   2759.0 used. 110376.9 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+1794751 ankitsa+  20   0 3356012   1.2g  38972 S 590.9   1.0  76:24.32 ffmpeg
+1708170 ankitsa+  20   0 6160292 481636 145304 S  18.2   0.4   2:24.26 claude
+   2559 ankitsa+  20   0 1308260  22040   9252 S   9.1   0.0  52:21.43 python

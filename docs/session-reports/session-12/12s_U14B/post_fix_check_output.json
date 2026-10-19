@@ -1,0 +1,66 @@
+{
+ "locator_version": "locator-1.1",
+ "fuzzy_threshold": 0.85,
+ "rescore_top_k": 5,
+ "sweep_300": {
+  "not_located": 0,
+  "min": 0.9883,
+  "median": 0.9883
+ },
+ "i12_7_cases": {
+  "long_3_words": {
+   "located": true,
+   "kind": "fuzzy",
+   "score": 0.9856209150326798,
+   "snippet_supplied": true,
+   "bridged": false
+  },
+  "long_unchanged": {
+   "located": true,
+   "kind": "exact",
+   "score": 1.0,
+   "snippet_supplied": true,
+   "bridged": false
+  }
+ },
+ "i12_8_cases": {
+  "verbatim_unicode_ellipsis": {
+   "located": true,
+   "kind": "exact",
+   "score": 1.0,
+   "snippet_supplied": true,
+   "bridged": false
+  },
+  "verbatim_three_dots": {
+   "located": true,
+   "kind": "exact",
+   "score": 1.0,
+   "snippet_supplied": true,
+   "bridged": false
+  },
+  "control": {
+   "located": true,
+   "kind": "exact",
+   "score": 1.0,
+   "snippet_supplied": true,
+   "bridged": false
+  },
+  "bridging_on_text_without_ellipsis": {
+   "located": false,
+   "kind": "none",
+   "score": 0.6981132075471698,
+   "snippet_supplied": true,
+   "bridged": true
+  }
+ },
+ "timing_f11": {
+  "text_chars": 156196,
+  "snippet_chars": 383,
+  "runs_s": [
+   5.157,
+   5.148,
+   5.181
+  ],
+  "median_s": 5.157
+ }
+}

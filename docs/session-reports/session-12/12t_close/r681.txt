@@ -1,0 +1,38 @@
+RULING [evidence-engine 12t-R681] — T7 deferred to INT-s12-2's unit; T5 built as §11 states it;
+  Phase 2 proceeds
+STATUS: PI ruling, 2026-10-20 UTC, session 12t, on architect recommendation, on the 12t-U15B
+  Phase 1 report (item 0 at 805c79a; ledger 1d57d1a). Transcribe as item 0 of the next brief
+  (Block 79), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12t-U15B Phase 1 report):
+  MEASURED: "Commit: 805c79a267d67407ec2bccd0b65a6278b23a8044, parent 4485778"; "numstat 97 0;
+    7,853 lines (7,756 + 97); sha256 cf7903ba…88de"; ledger "1d57d1a925d8df7b12087465a4327a24845e8d07,
+    parent 00a1dc5 … with both trailers"; "23 test functions, each present exactly once in the
+    reference id list"; "New ids: k = 12"; "test_api_parity: delta 0"; "Expected counts: 3,342
+    passed / 1 xfailed / 17 deselected; collected 3,360; selected 3,343".
+  READ (CC's, from the read-out and the code): §11 item 5 "The skipped paper's WARNING line names
+    its id, state and reason, and the report lists it."; §11 item 7 "(if (B) or (C)) Writing
+    audited_ai over a non-admitted state raises the named refusal"; "the file is
+    12s_U15A/12s_U15A.md"; "effective_state(conn, pid).processing serves it with no schema
+    change. The function already calls it at line 205, only to stamp from_state"; "_stage_audit
+    returns asdict(AuditReport) as the stage summary".
+  INFERRED: none.
+
+R681(a) — Item 0 of 12t-U15B is accepted as landed (805c79a; Blocks 77 and 78; ledger 1d57d1a with
+  trailers). The headers' full hashes are accepted as written.
+R681(b) — S1: T7 is not built in U15. It has no form under option (A); it is the acceptance test
+  of INT-s12-2's unit (P6, with 023), recorded by a dated note on INT-s12-2 at the next item 0.
+  R677(c)'s "eight" was the architect's count of §11's heading; this clause is the dated
+  correction (R678(b) form). k = 12 as predicted.
+R681(c) — S2: T5 is built as §11 states it. The WARNING line names paper id, processing state and
+  the processing reason (the failure's reason code, or none); AuditReport gains one field listing
+  the skipped papers (id, state, reason), which the stage summary carries as it carries every
+  field. The 12t-U15B brief's C2 and its OUT OF SCOPE line on a stage-summary count are withdrawn
+  for this field; nothing else in OUT OF SCOPE changes. Justification: on any review, which papers
+  the audit skipped and why is operator information, and S7's audit screen reads the report.
+R681(d) — The guard's placement (after the empty-todo continue, before any text read; the one
+  effective_state read reused for the from_state stamp, the line-205 read removed) is accepted. C3
+  holds as "the events written and the audited_ai payload are byte-for-byte unchanged for an
+  admitted paper"; the regression set is the check.
+R681(e) — Finding 1 (the read-out's path) corrects I1; no action. Phase 2 of 12t-U15B proceeds
+  under the resume below.

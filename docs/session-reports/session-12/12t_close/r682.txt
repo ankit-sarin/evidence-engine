@@ -1,0 +1,47 @@
+RULING [evidence-engine 12t-R682] — U15 accepted; INT-i12-12 CLOSED; three notes; 12t closes
+STATUS: PI ruling, 2026-10-20 UTC, session 12t, on architect recommendation, on the 12t-U15B
+  Phase 2 report and the read-out 12t_U15B.md (5a250c6). Transcribe as item 0 of the 12t-CLOSE
+  brief below (Block 80, after R681 as Block 79), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12t-U15B Phase 2 report):
+  MEASURED: "Commit: 9cfd7266f577a20bcbe3f3adad07916a93be3758, parent 805c79a"; the five-file
+    diff list as printed; "The final pre-fix run read 9 failed, 3 passed, exactly as predicted";
+    "T9: the 23 regression ids, with the 12 new ones, gave 35 passed"; "test_api_parity: delta
+    0"; "Wall 887.58 s, inside 795–971"; "==== 3342 passed, 17 deselected, 1 xfailed, 2 warnings
+    in 885.22s (0:14:45) ===="; "collected 3360 items / 17 deselected / 3343 selected"; "only-gate
+    12, equal to expected_new_ids.txt; only-ref 0"; "Pins: byte-identical"; "Fingerprint:
+    IDENTICAL, 0d3eedea…cb25, after each push"; read-out "5a250c6652c5ade6b8b62cb32c1c4aca5b65a7c8
+    … 29 files"; ledger "f6faf31 (parent 1d57d1a) … with both trailers; pushed, 0 0"; "Concurrent
+    jobs: none".
+  READ (CC's): pipeline.md §10 "Module: engine/agents/auditor.py", "Candidate selection: Papers at
+    EXTRACTED with pending evidence spans", "DB transitions: EXTRACTED → AI_AUDIT_COMPLETE"; "both
+    T8 tests failed on assert () == [], because live_claim_events returns a tuple".
+  INFERRED: none.
+
+R682(a) — 12t-U15B is accepted. U15 landed at 9cfd726 (AUDIT_ADMITTED_STATES in paper_state.py; the
+  guard in audit_run before any text read, one effective_state read reused for from_state; the
+  WARNING line with id, state and reason; AuditReport.skipped_by_state); the read-out at 5a250c6;
+  the gate 3,342 / 1 xfailed / 17 deselected on 3,360 collected / 3,343 selected, only-gate the 12
+  predicted ids; pins byte-identical; no pin effect. Fix units: U15 done, 15 of 35.
+R682(b) — INT-i12-12 is CLOSED at 9cfd726 (R514: its acceptance tests T1–T6 and T8 pass in the
+  commit's gate; nine of them fail on 8b2c388's module). A dated note at the 12t-CLOSE item 0 in
+  the section-L closed form ("**CLOSED 2026-10-20** (`9cfd7266f577a20bcbe3f3adad07916a93be3758`,
+  R682): …"), naming the test ids from 12t_U15B.md; the class cell is not edited; the row stays
+  counted until P1 closes (R607(d)); the recount stays 278.
+R682(c) — Notes, no rows: (i) T7 (§11 item 7, the write-guard refusal) is INT-s12-2's acceptance
+  test: a dated note on INT-s12-2 (R681(b)). (ii) docs/architecture/pipeline.md §10 AUDIT predates
+  the event store and is stale independent of U15: onto the HK-ARCH line (Class 3, P7), the three
+  stale sentences quoted. (iii) The test defect in the first pre-fix run (a tuple compared to a
+  list) is recorded in the read-out with both runs committed; no action. (iv) T5's id name
+  predates R681(c); a reading, not renamed.
+R682(d) — The band: 887.58 s is the sixth gate on this host state (871.59, 906.50, 858.50, 895.02,
+  872.27, 887.58). The 12t closeout cuts the band in R677(f)'s form from the last four standard
+  gates (858.50, 895.02, 872.27, 887.58 s), confounded readings included with their confounders
+  recorded (the first two beside an encode, the last two on a quiet box); the closeout reports the
+  mean and the ±10% bounds to the second, and the wrap ruling sets the band from that line.
+R682(e) — Session 12t closes under the brief below. No closeout gate: the expected gate values for
+  12u are 12t-U15B's (9cfd726) on unchanged code; the collected-id reference becomes
+  12t_close/collected_ids_12t_close.txt, copied from U15B's gate list (3,343 ids). The 2026-10-21
+  09:00 UTC nightly runs on the closeout commit, whose engine tree equals 9cfd726's. U16's Phase A
+  is session 12u's first unit, after the PI's answer on R624(b) (or with the Phase A's read as its
+  input). The wrap ruling follows the closeout block.

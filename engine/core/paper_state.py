@@ -73,6 +73,16 @@ COMPLETED_PROCESSING_STATES: tuple[str, ...] = (
     "audited_ai",
 )
 
+#: Processing tokens the audit stage admits (U15, R677(c)): `audit_run` audits a
+#: paper only when its processing state is one of these, and skips any other
+#: with a log line and no event. Not `COMPLETED_PROCESSING_STATES`, though the
+#: members agree today: when migration 023 lands, `audit_not_possible` joins
+#: this set here, so a paper whose audit refusal clears can be audited (D22).
+AUDIT_ADMITTED_STATES: tuple[str, ...] = (
+    "extracted",
+    "audited_ai",
+)
+
 #: Returned on either axis when the paper has no event on that axis. Distinct
 #: from every token above: "we have no record" is not "we recorded nothing
 #: happened", and an export that cannot tell them apart will report the first as

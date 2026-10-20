@@ -28,6 +28,7 @@ from engine.core.effective_config import stage_config
 from _event_store_fixture import (
     register_pinned_arm,
     FIXTURE_CONTEXT_SHA, claim_identity, open_extraction_run, seed_claim, seed_eligibility,
+    seed_processing,
 )
 from _parsed_text_fixture import write_parsed
 
@@ -52,6 +53,7 @@ def db(tmp_path):
         rdb._conn.execute("INSERT INTO papers (id, title, source, status, created_at, "
                           "updated_at) VALUES (?, 't', 's', 'FT_ELIGIBLE', 'n', 'n')", (pid,))
         seed_eligibility(rdb._conn, pid)
+        seed_processing(rdb._conn, pid, "extracted")   # U15: the audit admits extracted papers
         write_parsed(rdb, pid, TEXT)
     rdb._conn.commit()
     yield rdb

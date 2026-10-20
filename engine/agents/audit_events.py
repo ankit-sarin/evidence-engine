@@ -7,6 +7,9 @@ writes are its successor).
 
 **Per eligible paper, for one arm:**
 
+0. A paper whose processing state is not in `AUDIT_ADMITTED_STATES` (U15) is
+   skipped with a log line naming its id, state and reason, listed on
+   `AuditReport.skipped_by_state`, and nothing is written for it.
 1. Resolve and read the parsed text the paper's claims were EXTRACTED FROM — the
    version each claim's `claim_inputs` row names, by uid, verified by hash (R95,
    D23) — not the paper's newest version. A refused text (that version missing,
@@ -52,7 +55,7 @@ from engine.core.effective import (
 from engine.core.effective_config import stage_config
 from engine.core.events import write_field_event, write_paper_event
 from engine.core.locator import FUZZY_THRESHOLD, LOCATOR_VERSION, locate, locate_payload
-from engine.core.paper_state import REASON_PARSED_TEXT_NOT_RECORDED
+from engine.core.paper_state import AUDIT_ADMITTED_STATES, REASON_PARSED_TEXT_NOT_RECORDED
 from engine.core.parsed_text import (
     ParsedTextError, ParsedTextRef, read_parsed_text, resolve_parsed_text_by_uid,
 )
@@ -88,6 +91,9 @@ class AuditReport:
     flagged: int
     skipped_refused: tuple[tuple[int, str], ...]
     low_yield: tuple[int, ...]
+    #: U15 (R681(c)): papers skipped because their processing state is not in
+    #: `AUDIT_ADMITTED_STATES` — (paper_id, state, reason or None).
+    skipped_by_state: tuple[tuple[int, str, str | None], ...]
 
 
 def _non_value_tokens(codebook: Codebook) -> frozenset[str]:
@@ -156,6 +162,7 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
 
     audited, n_loc, n_not, n_ver, n_flag = 0, 0, 0, 0, 0
     refused: list[tuple[int, str]] = []
+    skipped_state: list[tuple[int, str, str | None]] = []
     low: list[int] = []
     for pid in eligible_paper_ids(conn):
         claims = live_claim_events(conn, pid, arm, event_types=("asserted",))
@@ -165,6 +172,16 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
             conn, pid, arm, event_types=("citation_located",))}
         todo = [c for c in claims if c.claim_id not in done]
         if not todo:
+            continue
+        # U15 (R677(c)): the processing state admits the paper, or nothing is
+        # written for it. Read once; the same value stamps `from_state` below.
+        state = effective_state(conn, pid)
+        processing = state.processing
+        if processing not in AUDIT_ADMITTED_STATES:
+            logger.warning("Paper %d: audit skipped — processing state %s, reason %s; "
+                           "not in AUDIT_ADMITTED_STATES", pid, processing,
+                           state.processing_reason or "none")
+            skipped_state.append((pid, processing, state.processing_reason))
             continue
         uids: tuple[str, ...] = ()
         try:
@@ -202,7 +219,6 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
                 verdicts.append((c, VERDICT_FLAGGED,
                                  f"auditor returned unparseable output: {str(exc)[:100]}"))
 
-        processing = effective_state(conn, pid).processing
         verdict_occurred_at = datetime.now(timezone.utc).isoformat()
         conn.execute("SAVEPOINT audit_paper")
         try:
@@ -247,4 +263,5 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
         if low_yield(conn, pid, arm, codebook=codebook, threshold=threshold):
             low.append(pid)
 
-    return AuditReport(audited, n_loc, n_not, n_ver, n_flag, tuple(refused), tuple(low))
+    return AuditReport(audited, n_loc, n_not, n_ver, n_flag, tuple(refused), tuple(low),
+                       tuple(skipped_state))

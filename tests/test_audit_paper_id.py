@@ -24,7 +24,7 @@ from engine.core.parsed_text import resolve_parsed_text
 from engine.core.review_spec import load_review_spec
 from engine.utils import ollama_client as oc
 from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity, open_extraction_run, \
-    seed_eligibility
+    seed_eligibility, seed_processing
 from _parsed_text_fixture import write_parsed
 
 REPO = Path(__file__).resolve().parent.parent
@@ -50,6 +50,7 @@ def db(tmp_path):
         rdb._conn.execute("INSERT INTO papers (id, title, source, status, created_at, "
                           "updated_at) VALUES (?, 't', 's', 'FT_ELIGIBLE', 'n', 'n')", (pid,))
         seed_eligibility(rdb._conn, pid)
+        seed_processing(rdb._conn, pid, "extracted")   # U15: the audit admits extracted papers
         write_parsed(rdb, pid, TEXT)
     rdb._conn.commit()
     yield rdb

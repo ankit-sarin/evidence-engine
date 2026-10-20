@@ -1,0 +1,34 @@
+RULING [evidence-engine 12t-R680] — 12t-OPEN-R1 accepted; the open stands verified; two readings
+STATUS: PI ruling, 2026-10-20 UTC, session 12t, on architect recommendation, on the 12t-OPEN-R1
+  final report. Transcribe as item 0 of the brief below (Block 78, after R679 as Block 77), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12t-OPEN-R1 report):
+  MEASURED: "Commit: 4485778b4b8b080539807cf3e64d1918dd5523c0, parent 54499d5…"; "3 files, 141
+    insertions, 0 deletions"; "numstat 71 0"; "7,756 lines (7,685 + 71); sha256 de9b10fb…dc0d,
+    1,671,692 B"; "Fence == r678.txt: True. Cell == render_cell: True"; "Fingerprint: IDENTICAL
+    before the push (18:47:42Z) and after it (18:47:46Z)"; claude-config "Commit:
+    00a1dc560e0173f237c2bccafc98314f2e8a3982, parent 89f0eb4, message "ledger: rows through
+    2026-10-20T18:47:36Z""; "Wall 872.27 s, inside 795–971"; "==== 3330 passed, 17 deselected, 1
+    xfailed, 2 warnings in 870.41s (0:14:30) ===="; "collected 3348 items / 17 deselected / 3331
+    selected"; "3331 vs 3331, only-gate 0, only-ref 0"; "no phase is more than 10 s slower";
+    "Basetemp: /tmp/pytest-of-ankitsarin/pytest-15, 1,367,841,611 B"; "ps {"models":[]} both
+    times; NRestarts 0"; "Concurrent jobs: none"; the 3e–3i table, every row ✓; the recount JSON
+    fields as printed; "The chain reads 272 → 275 → 276 → 278".
+  READ (CC's): "a356f73's message carries Co-Authored-By and Claude-Session lines; 00a1dc5 has
+    only the subject"; "It matched the snapshot shell's own argv (PIDs 2736792 and 2744057)".
+  INFERRED: none.
+
+R680(a) — 12t-OPEN-R1 is accepted as reported. Item 0 landed at 4485778 (Block 76, r678.txt, the
+  12s lane-line copy; 71 "+" lines, 0 "−"); the ledger row at claude-config 00a1dc5; the gate
+  3,330 / 1 xfailed / 17 deselected on 3,348 collected / 3,331 selected, 0/0, 872.27 s inside the
+  band; every value of 3e–3i matched; the recount is 278 and the chain reproduces. The 12t open
+  stands verified.
+R680(b) — Reading, no row: 00a1dc5 stands as pushed (no amend after a push). The "a356f73 form"
+  means the subject line and its trailers; from here a ledger commit carries both. A dated line in
+  the 12t closure; the hook row itself is correct.
+R680(c) — Reading, no row: 872.27 s is the fifth gate on this host state (871.59, 906.50, 858.50,
+  895.02, 872.27 s), the first with no concurrent job; the band stays 795–971 s until the 12t
+  closeout cuts it in R677(f)'s form. The concurrent-jobs read excludes the snapshot shell's own
+  PIDs from here; attributed self-matches are not jobs.
+R680(d) — U15's fix opens under the brief below. R679 and R680 transcribe as Blocks 77 and 78 at its
+  item 0, from r679.txt and r680.txt in docs/session-reports/session-12/12t_U15B/.

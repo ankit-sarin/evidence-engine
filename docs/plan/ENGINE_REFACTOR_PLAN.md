@@ -7754,3 +7754,100 @@ R678(g) — Session 12s closes now. After R678(c) has landed, run /wrap. Report 
 | 2026-10-19 | R678(a) — The 12s-CLOSE closeout block is accepted as printed. Its element order, read from the 12r transcript, is the on-disk form from here. The closure's two-stop count stands; the brief's "one" was the architect's. INT-s12-1's text cell as quoted from 12s_U14A.md stands (R664(d)); R675(e)'s parenthesis was the report's summary, not the read-out's sentence. R678(b) — R673(d)'s "five this boot" is corrected: four NV_ERR_NO_MEMORY lines this boot, five since 2026-10-17 across both boots, as the closure records. The ruling text in Block 71 is not edited (R102); this clause is the dated correction. R678(c) — The lane line (sha256 9d61cee5a11bbe398f18c6df1eeb074026e9f9b127fb00dbde086affd030965c, 4,758 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, the row's exact timestamp), push, level. R678(d) — 12t-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the lane-line commit, itself the child of 2c748ec), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12t's item 0 copies lane_line_12s.txt into docs/session-reports/session-12/12s_close/ with its commit, which carries no cell note and is verified by its "−" count, 0 (R664(b)). R678(e) — No closeout gate ran: the expected gate values for 12t are 12s-U14B's on unchanged code (3,330 / 1 xfailed / 17 deselected, collected 3,348; 0/0 against 12s_close/collected_ids_12s_close.txt; band 795–971 s, R677(f), with the concurrent jobs named); the 2026-10-20 09:00 UTC nightly runs on 54499d5, whose engine tree equals 7074305's; 12s_close/expected_nightly_20261020.md governs; the 07:00 health job's loads are read and reported by 12t-OPEN, with an NVRM grep. The temp root is read, never matched. Residency is a reading. R678(f) — Notes, no rows: the recount chain now runs 12q → 12r → 12s by sha256 and is the form from here, one script per ruling that opens rows; the 12i L03 reproducer stays in scratch, uncommitted, and 12s_U15A/'s is the instrument; the six ruling files of this session live where the closeout tables them. R678(g) — Session 12s closes now. After R678(c) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-19, during session 12s, on architect recommendation, on the 12s-CLOSE closeout block (54499d5) |
 
 The decision log in this file ends at R678.
+
+**Block 77.** *Transcribed 2026-10-20 (item 0 of the 12t-U15B brief), in its own commit, in the R597(e) form:* ruling R679, made by PI on architect recommendation on 2026-10-20 UTC, during session 12t, on the 12t-OPEN report stopped at step 2e (`54499d547a241e662ad161fa67abd08fa180759c`). The 12t-OPEN-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12t-R679] — 12t-OPEN steps 0–1 accepted; 2e's prefix_check clause
+  withdrawn; the transcription independently reproduced; resume from 2a on the scratch drafts
+STATUS: PI ruling, 2026-10-20 UTC, session 12t, on architect recommendation, on the 12t-OPEN
+  report stopped at step 2e (nothing committed; both repos clean and level). Transcribe as item 0
+  of the next brief (Block 77), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12t-OPEN stop report):
+  MEASURED: "Both repos are clean and level: evidence-engine at 54499d5, claude-config at 89f0eb4";
+    "~/scratch/12t-open/r678.txt: written once from Section 1. sha256 cee37894…c602f, 4820 B, 60
+    lines, ends in a newline"; "N = 71 "+" lines and 0 removed lines; 7,756 lines (7,685 + 71);
+    sha256 de9b10fb…dc0d, 1,671,692 B. Fence == r678.txt: True. Cell == render_cell: True"; "its
+    fence equals r677.txt: True; its row equals render_cell.py output: True"; "NV_ERR_NO_MEMORY: 6
+    this boot, which is the 4 already known plus 2 new"; "20/20 OK"; "every line in
+    expected_nightly_20261020.md matched"; "==== 3330 passed, 17 deselected, 1 xfailed, 2 warnings
+    in 866.92s (0:14:26) ====".
+  READ (CC's, from the script): "prefix_check.py --expected-row <ROW-ID> [<ROW-ID> ...]", "argparse
+    declares that flag nargs="+", required=True".
+  MEASURED (architect, this session, on a second transcription of R678 made from unified plan v89
+    Appendix 12t without sight of CC's file): sha256
+    cee378946c6c556b1a830009adb2865bc46ddbe87c42f54da20e43bfcdcc602f, 4820 bytes, 60 lines.
+  INFERRED: none.
+
+R679(a) — Steps 0 and 1 of 12t-OPEN are accepted as reported: every pre-check value matched; the
+  07:00 health job loaded 20 of 20; the 09:00 nightly matched expected_nightly_20261020.md line for
+  line. The stop at 2e was correct.
+R679(b) — The prefix_check.py clause of step 2e was an architect clause and is withdrawn; R664(a)
+  had already withdrawn the same premise in 12r, and R664(b) governs: a commit carrying no cell
+  note is verified by its "−" count alone, which must be 0, read from git diff --numstat of the
+  plan file. The rest of 2e stands.
+R679(c) — The transcription is accepted. The architect's independent copy hashes to the same
+  sha256, byte count and line count as ~/scratch/12t-open/r678.txt; step 2a's second-copy diff is
+  satisfied by that comparison and is not repeated. The Made-by cell as drafted ("PI, 2026-10-19,
+  during session 12s, on architect recommendation, on the 12s-CLOSE closeout block (54499d5)") is
+  accepted in Block 75's form.
+R679(d) — Reading, no row: NV_ERR_NO_MEMORY is six this boot and seven since 2026-10-17 across both
+  boots; the two new lines sit beside the 07:00 health job's qwen2.5:32b and llama3.3:70b loads, as
+  the 2026-10-19 pair did. R678(b)'s sentence stands as dated (R102); the 12t closure records the
+  new count and the pattern; the dgx-infra item is unchanged and carries it.
+R679(e) — Steps 2a–3j resume under the resume below from the scratch drafts, as amended by (b) and
+  (c). No other clause of the 12t-OPEN brief changes. R679 transcribes as Block 77 at the next
+  brief's item 0.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-20 | R679(a) — Steps 0 and 1 of 12t-OPEN are accepted as reported: every pre-check value matched; the 07:00 health job loaded 20 of 20; the 09:00 nightly matched expected_nightly_20261020.md line for line. The stop at 2e was correct. R679(b) — The prefix_check.py clause of step 2e was an architect clause and is withdrawn; R664(a) had already withdrawn the same premise in 12r, and R664(b) governs: a commit carrying no cell note is verified by its "−" count alone, which must be 0, read from git diff --numstat of the plan file. The rest of 2e stands. R679(c) — The transcription is accepted. The architect's independent copy hashes to the same sha256, byte count and line count as ~/scratch/12t-open/r678.txt; step 2a's second-copy diff is satisfied by that comparison and is not repeated. The Made-by cell as drafted ("PI, 2026-10-19, during session 12s, on architect recommendation, on the 12s-CLOSE closeout block (54499d5)") is accepted in Block 75's form. R679(d) — Reading, no row: NV_ERR_NO_MEMORY is six this boot and seven since 2026-10-17 across both boots; the two new lines sit beside the 07:00 health job's qwen2.5:32b and llama3.3:70b loads, as the 2026-10-19 pair did. R678(b)'s sentence stands as dated (R102); the 12t closure records the new count and the pattern; the dgx-infra item is unchanged and carries it. R679(e) — Steps 2a–3j resume under the resume below from the scratch drafts, as amended by (b) and (c). No other clause of the 12t-OPEN brief changes. R679 transcribes as Block 77 at the next brief's item 0. | PI, 2026-10-20, during session 12t, on architect recommendation, on the 12t-OPEN report stopped at step 2e (54499d5) |
+
+The decision log in this file ends at R679.
+
+**Block 78.** *Transcribed 2026-10-20 (item 0 of the 12t-U15B brief), in its own commit, in the R597(e) form:* ruling R680, made by PI on architect recommendation on 2026-10-20 UTC, during session 12t, on the 12t-OPEN-R1 final report (`4485778b4b8b080539807cf3e64d1918dd5523c0`). The 12t-U15B task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12t-R680] — 12t-OPEN-R1 accepted; the open stands verified; two readings
+STATUS: PI ruling, 2026-10-20 UTC, session 12t, on architect recommendation, on the 12t-OPEN-R1
+  final report. Transcribe as item 0 of the brief below (Block 78, after R679 as Block 77), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12t-OPEN-R1 report):
+  MEASURED: "Commit: 4485778b4b8b080539807cf3e64d1918dd5523c0, parent 54499d5…"; "3 files, 141
+    insertions, 0 deletions"; "numstat 71 0"; "7,756 lines (7,685 + 71); sha256 de9b10fb…dc0d,
+    1,671,692 B"; "Fence == r678.txt: True. Cell == render_cell: True"; "Fingerprint: IDENTICAL
+    before the push (18:47:42Z) and after it (18:47:46Z)"; claude-config "Commit:
+    00a1dc560e0173f237c2bccafc98314f2e8a3982, parent 89f0eb4, message "ledger: rows through
+    2026-10-20T18:47:36Z""; "Wall 872.27 s, inside 795–971"; "==== 3330 passed, 17 deselected, 1
+    xfailed, 2 warnings in 870.41s (0:14:30) ===="; "collected 3348 items / 17 deselected / 3331
+    selected"; "3331 vs 3331, only-gate 0, only-ref 0"; "no phase is more than 10 s slower";
+    "Basetemp: /tmp/pytest-of-ankitsarin/pytest-15, 1,367,841,611 B"; "ps {"models":[]} both
+    times; NRestarts 0"; "Concurrent jobs: none"; the 3e–3i table, every row ✓; the recount JSON
+    fields as printed; "The chain reads 272 → 275 → 276 → 278".
+  READ (CC's): "a356f73's message carries Co-Authored-By and Claude-Session lines; 00a1dc5 has
+    only the subject"; "It matched the snapshot shell's own argv (PIDs 2736792 and 2744057)".
+  INFERRED: none.
+
+R680(a) — 12t-OPEN-R1 is accepted as reported. Item 0 landed at 4485778 (Block 76, r678.txt, the
+  12s lane-line copy; 71 "+" lines, 0 "−"); the ledger row at claude-config 00a1dc5; the gate
+  3,330 / 1 xfailed / 17 deselected on 3,348 collected / 3,331 selected, 0/0, 872.27 s inside the
+  band; every value of 3e–3i matched; the recount is 278 and the chain reproduces. The 12t open
+  stands verified.
+R680(b) — Reading, no row: 00a1dc5 stands as pushed (no amend after a push). The "a356f73 form"
+  means the subject line and its trailers; from here a ledger commit carries both. A dated line in
+  the 12t closure; the hook row itself is correct.
+R680(c) — Reading, no row: 872.27 s is the fifth gate on this host state (871.59, 906.50, 858.50,
+  895.02, 872.27 s), the first with no concurrent job; the band stays 795–971 s until the 12t
+  closeout cuts it in R677(f)'s form. The concurrent-jobs read excludes the snapshot shell's own
+  PIDs from here; attributed self-matches are not jobs.
+R680(d) — U15's fix opens under the brief below. R679 and R680 transcribe as Blocks 77 and 78 at its
+  item 0, from r679.txt and r680.txt in docs/session-reports/session-12/12t_U15B/.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-20 | R680(a) — 12t-OPEN-R1 is accepted as reported. Item 0 landed at 4485778 (Block 76, r678.txt, the 12s lane-line copy; 71 "+" lines, 0 "−"); the ledger row at claude-config 00a1dc5; the gate 3,330 / 1 xfailed / 17 deselected on 3,348 collected / 3,331 selected, 0/0, 872.27 s inside the band; every value of 3e–3i matched; the recount is 278 and the chain reproduces. The 12t open stands verified. R680(b) — Reading, no row: 00a1dc5 stands as pushed (no amend after a push). The "a356f73 form" means the subject line and its trailers; from here a ledger commit carries both. A dated line in the 12t closure; the hook row itself is correct. R680(c) — Reading, no row: 872.27 s is the fifth gate on this host state (871.59, 906.50, 858.50, 895.02, 872.27 s), the first with no concurrent job; the band stays 795–971 s until the 12t closeout cuts it in R677(f)'s form. The concurrent-jobs read excludes the snapshot shell's own PIDs from here; attributed self-matches are not jobs. R680(d) — U15's fix opens under the brief below. R679 and R680 transcribe as Blocks 77 and 78 at its item 0, from r679.txt and r680.txt in docs/session-reports/session-12/12t_U15B/. | PI, 2026-10-20, during session 12t, on architect recommendation, on the 12t-OPEN-R1 final report (4485778) |
+
+The decision log in this file ends at R680.

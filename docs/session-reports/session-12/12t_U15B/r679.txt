@@ -1,0 +1,41 @@
+RULING [evidence-engine 12t-R679] — 12t-OPEN steps 0–1 accepted; 2e's prefix_check clause
+  withdrawn; the transcription independently reproduced; resume from 2a on the scratch drafts
+STATUS: PI ruling, 2026-10-20 UTC, session 12t, on architect recommendation, on the 12t-OPEN
+  report stopped at step 2e (nothing committed; both repos clean and level). Transcribe as item 0
+  of the next brief (Block 77), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12t-OPEN stop report):
+  MEASURED: "Both repos are clean and level: evidence-engine at 54499d5, claude-config at 89f0eb4";
+    "~/scratch/12t-open/r678.txt: written once from Section 1. sha256 cee37894…c602f, 4820 B, 60
+    lines, ends in a newline"; "N = 71 "+" lines and 0 removed lines; 7,756 lines (7,685 + 71);
+    sha256 de9b10fb…dc0d, 1,671,692 B. Fence == r678.txt: True. Cell == render_cell: True"; "its
+    fence equals r677.txt: True; its row equals render_cell.py output: True"; "NV_ERR_NO_MEMORY: 6
+    this boot, which is the 4 already known plus 2 new"; "20/20 OK"; "every line in
+    expected_nightly_20261020.md matched"; "==== 3330 passed, 17 deselected, 1 xfailed, 2 warnings
+    in 866.92s (0:14:26) ====".
+  READ (CC's, from the script): "prefix_check.py --expected-row <ROW-ID> [<ROW-ID> ...]", "argparse
+    declares that flag nargs="+", required=True".
+  MEASURED (architect, this session, on a second transcription of R678 made from unified plan v89
+    Appendix 12t without sight of CC's file): sha256
+    cee378946c6c556b1a830009adb2865bc46ddbe87c42f54da20e43bfcdcc602f, 4820 bytes, 60 lines.
+  INFERRED: none.
+
+R679(a) — Steps 0 and 1 of 12t-OPEN are accepted as reported: every pre-check value matched; the
+  07:00 health job loaded 20 of 20; the 09:00 nightly matched expected_nightly_20261020.md line for
+  line. The stop at 2e was correct.
+R679(b) — The prefix_check.py clause of step 2e was an architect clause and is withdrawn; R664(a)
+  had already withdrawn the same premise in 12r, and R664(b) governs: a commit carrying no cell
+  note is verified by its "−" count alone, which must be 0, read from git diff --numstat of the
+  plan file. The rest of 2e stands.
+R679(c) — The transcription is accepted. The architect's independent copy hashes to the same
+  sha256, byte count and line count as ~/scratch/12t-open/r678.txt; step 2a's second-copy diff is
+  satisfied by that comparison and is not repeated. The Made-by cell as drafted ("PI, 2026-10-19,
+  during session 12s, on architect recommendation, on the 12s-CLOSE closeout block (54499d5)") is
+  accepted in Block 75's form.
+R679(d) — Reading, no row: NV_ERR_NO_MEMORY is six this boot and seven since 2026-10-17 across both
+  boots; the two new lines sit beside the 07:00 health job's qwen2.5:32b and llama3.3:70b loads, as
+  the 2026-10-19 pair did. R678(b)'s sentence stands as dated (R102); the 12t closure records the
+  new count and the pattern; the dgx-infra item is unchanged and carries it.
+R679(e) — Steps 2a–3j resume under the resume below from the scratch drafts, as amended by (b) and
+  (c). No other clause of the 12t-OPEN brief changes. R679 transcribes as Block 77 at the next
+  brief's item 0.

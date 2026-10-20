@@ -1,0 +1,1 @@
+gate ids 3343 ref 3331 only-gate 12 only-ref 0 only-gate == expected_new_ids: True

@@ -1,0 +1,44 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 35 items
+
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[parse_failed] PASSED [  2%]
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[extraction_failed] PASSED [  5%]
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[input_exceeds_context] PASSED [  8%]
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[full_text_not_obtainable] PASSED [ 11%]
+tests/test_audit_admitted_set.py::test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited[parsed] PASSED [ 14%]
+tests/test_audit_admitted_set.py::test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited[no_recorded_state] PASSED [ 17%]
+tests/test_audit_admitted_set.py::test_t3_a_paper_at_extracted_is_audited_as_today PASSED [ 20%]
+tests/test_audit_admitted_set.py::test_t4_prisma_counts_one_included_and_one_parse_failed_after_a_mixed_audit PASSED [ 22%]
+tests/test_audit_admitted_set.py::test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state PASSED [ 25%]
+tests/test_audit_admitted_set.py::test_t6_a_same_key_failure_over_live_claims_stays_extraction_failed_after_the_audit PASSED [ 28%]
+tests/test_audit_admitted_set.py::test_t8_d24_reparse_the_failure_supersedes_and_the_audit_writes_nothing PASSED [ 31%]
+tests/test_audit_admitted_set.py::test_t8_d21_refusal_the_refusal_supersedes_and_the_audit_writes_nothing PASSED [ 34%]
+tests/test_audit_events.py::test_t3_locate_every_claim_verify_only_the_unlocated_value PASSED [ 37%]
+tests/test_audit_events.py::test_t4_a_second_audit_writes_nothing PASSED [ 40%]
+tests/test_audit_events.py::test_t5_a_superseded_claim_is_ignored PASSED [ 42%]
+tests/test_audit_events.py::test_t6_a_refused_text_skips_its_paper_and_the_others_are_audited PASSED [ 45%]
+tests/test_audit_events.py::test_t7_a_failure_mid_paper_leaves_no_located_event_and_no_audited_ai PASSED [ 48%]
+tests/test_audit_events.py::test_t8_the_old_hand_list_values_are_not_auto_verified PASSED [ 51%]
+tests/test_audit_events.py::test_t9_a_tier_4_claim_is_located_like_any_other PASSED [ 54%]
+tests/test_audit_events.py::test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs PASSED [ 57%]
+tests/test_audit_events.py::test_t16_a_failure_after_verdicts_leaves_no_verdict_rows_and_no_audited_ai PASSED [ 60%]
+tests/test_audit_events.py::test_t18_no_audit_calls_jsonl_is_created_by_a_run PASSED [ 62%]
+tests/test_audit_events.py::test_t19_an_unlocated_absence_sentinel_gets_no_verdict_row_at_all PASSED [ 65%]
+tests/test_audit_events.py::test_t14_a_snippet_less_value_is_flagged_without_a_model_call PASSED [ 68%]
+tests/test_audit_events.py::test_an_audit_run_needs_its_audit_stage PASSED [ 71%]
+tests/test_audit_events.py::test_d23_t1_claims_on_an_older_version_are_located_against_that_version PASSED [ 74%]
+tests/test_audit_events.py::test_d23_t2_claims_spanning_two_text_versions_refuse_the_paper PASSED [ 77%]
+tests/test_audit_events.py::test_d23_t3_an_altered_claim_version_refuses_the_paper_though_a_newer_one_is_intact PASSED [ 80%]
+tests/test_audit_events.py::test_d23_t5_a_byte_identical_reparse_is_not_a_mismatch PASSED [ 82%]
+tests/test_audit_events.py::test_d23_a_claim_with_no_recorded_text_identity_refuses_the_paper PASSED [ 85%]
+tests/test_audit_events.py::test_u14_every_writer_carries_locator_1_1 PASSED [ 88%]
+tests/test_audit_paper_id.py::test_T6_every_audit_call_row_carries_the_paper_it_verified PASSED [ 91%]
+tests/test_audit_paper_id.py::test_T7_no_other_stage_is_affected PASSED  [ 94%]
+tests/test_cut_over.py::test_t1_extract_then_audit_under_one_manifest_writes_events_only PASSED [ 97%]
+tests/test_extraction_events.py::test_d24_t6_after_a_partial_reextraction_the_audit_runs_on_the_paper PASSED [100%]
+
+============================= 35 passed in 28.07s ==============================

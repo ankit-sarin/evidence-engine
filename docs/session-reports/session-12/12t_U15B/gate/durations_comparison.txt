@@ -1,0 +1,2 @@
+ref (12t-OPEN) lines 2407 gate lines 2439 sum ref 861.76 gate 876.21
+phases slower by >10 s: none

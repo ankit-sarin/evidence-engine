@@ -1,0 +1,385 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/scratch/12t-u15b/prefix
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 12 items
+
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[parse_failed] FAILED [  8%]
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[extraction_failed] FAILED [ 16%]
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[input_exceeds_context] FAILED [ 25%]
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[full_text_not_obtainable] FAILED [ 33%]
+tests/test_audit_admitted_set.py::test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited[parsed] FAILED [ 41%]
+tests/test_audit_admitted_set.py::test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited[no_recorded_state] FAILED [ 50%]
+tests/test_audit_admitted_set.py::test_t3_a_paper_at_extracted_is_audited_as_today PASSED [ 58%]
+tests/test_audit_admitted_set.py::test_t4_prisma_counts_one_included_and_one_parse_failed_after_a_mixed_audit FAILED [ 66%]
+tests/test_audit_admitted_set.py::test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state FAILED [ 75%]
+tests/test_audit_admitted_set.py::test_t6_a_same_key_failure_over_live_claims_stays_extraction_failed_after_the_audit FAILED [ 83%]
+tests/test_audit_admitted_set.py::test_t8_d24_reparse_the_failure_supersedes_and_the_audit_writes_nothing FAILED [ 91%]
+tests/test_audit_admitted_set.py::test_t8_d21_refusal_the_refusal_supersedes_and_the_audit_writes_nothing FAILED [100%]
+
+=================================== FAILURES ===================================
+_ test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[parse_failed] _
+
+db = <engine.core.database.ReviewDatabase object at 0xeaba1faeb2f0>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2, state = 'parse_failed'
+
+    @pytest.mark.parametrize("state", ["parse_failed", "extraction_failed",
+                                       "input_exceeds_context", "full_text_not_obtainable"])
+    def test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited(db, spec, run_id,
+                                                                                state):
+        claim(db, spec, run_id, P7)
+        at_state(db, run_id, P7, state)
+        before = written(db, P7)
+        rep = audit(db, spec, run_id)
+>       assert_not_audited(db, P7, rep, state, REASON[state])
+
+tests/test_audit_admitted_set.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <engine.core.database.ReviewDatabase object at 0xeaba1faeb2f0>, pid = 7
+rep = AuditReport(papers_audited=1, located=1, not_located=0, verified=0, flagged=0, skipped_refused=(), low_yield=(7,))
+state = 'parse_failed', reason = 'parse_file_unreadable'
+
+    def assert_not_audited(db, pid, rep, state, reason):
+        s = effective_state(db._conn, pid)
+>       assert (s.processing, s.processing_reason, s.analysis_ready) == (state, reason, False)
+E       AssertionError: assert ('audited_ai', None, True) == ('parse_faile...dable', False)
+E         
+E         At index 0 diff: 'audited_ai' != 'parse_failed'
+E         
+E         Full diff:
+E           (
+E         -     'parse_failed',
+E         -     'parse_file_unreadable',...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
+
+tests/test_audit_admitted_set.py:113: AssertionError
+_ test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[extraction_failed] _
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e99e7d10>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2, state = 'extraction_failed'
+
+    @pytest.mark.parametrize("state", ["parse_failed", "extraction_failed",
+                                       "input_exceeds_context", "full_text_not_obtainable"])
+    def test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited(db, spec, run_id,
+                                                                                state):
+        claim(db, spec, run_id, P7)
+        at_state(db, run_id, P7, state)
+        before = written(db, P7)
+        rep = audit(db, spec, run_id)
+>       assert_not_audited(db, P7, rep, state, REASON[state])
+
+tests/test_audit_admitted_set.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e99e7d10>, pid = 7
+rep = AuditReport(papers_audited=1, located=1, not_located=0, verified=0, flagged=0, skipped_refused=(), low_yield=(7,))
+state = 'extraction_failed', reason = 'model_call_failed'
+
+    def assert_not_audited(db, pid, rep, state, reason):
+        s = effective_state(db._conn, pid)
+>       assert (s.processing, s.processing_reason, s.analysis_ready) == (state, reason, False)
+E       AssertionError: assert ('audited_ai', None, True) == ('extraction_...ailed', False)
+E         
+E         At index 0 diff: 'audited_ai' != 'extraction_failed'
+E         
+E         Full diff:
+E           (
+E         -     'extraction_failed',
+E         -     'model_call_failed',...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
+
+tests/test_audit_admitted_set.py:113: AssertionError
+_ test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[input_exceeds_context] _
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8e69ac0>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2, state = 'input_exceeds_context'
+
+    @pytest.mark.parametrize("state", ["parse_failed", "extraction_failed",
+                                       "input_exceeds_context", "full_text_not_obtainable"])
+    def test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited(db, spec, run_id,
+                                                                                state):
+        claim(db, spec, run_id, P7)
+        at_state(db, run_id, P7, state)
+        before = written(db, P7)
+        rep = audit(db, spec, run_id)
+>       assert_not_audited(db, P7, rep, state, REASON[state])
+
+tests/test_audit_admitted_set.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8e69ac0>, pid = 7
+rep = AuditReport(papers_audited=1, located=1, not_located=0, verified=0, flagged=0, skipped_refused=(), low_yield=(7,))
+state = 'input_exceeds_context', reason = 'input_overflow_estimated'
+
+    def assert_not_audited(db, pid, rep, state, reason):
+        s = effective_state(db._conn, pid)
+>       assert (s.processing, s.processing_reason, s.analysis_ready) == (state, reason, False)
+E       AssertionError: assert ('audited_ai', None, True) == ('input_excee...mated', False)
+E         
+E         At index 0 diff: 'audited_ai' != 'input_exceeds_context'
+E         
+E         Full diff:
+E           (
+E         -     'input_exceeds_context',
+E         -     'input_overflow_estimated',...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
+
+tests/test_audit_admitted_set.py:113: AssertionError
+_ test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[full_text_not_obtainable] _
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8e9d7c0>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2, state = 'full_text_not_obtainable'
+
+    @pytest.mark.parametrize("state", ["parse_failed", "extraction_failed",
+                                       "input_exceeds_context", "full_text_not_obtainable"])
+    def test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited(db, spec, run_id,
+                                                                                state):
+        claim(db, spec, run_id, P7)
+        at_state(db, run_id, P7, state)
+        before = written(db, P7)
+        rep = audit(db, spec, run_id)
+>       assert_not_audited(db, P7, rep, state, REASON[state])
+
+tests/test_audit_admitted_set.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8e9d7c0>, pid = 7
+rep = AuditReport(papers_audited=1, located=1, not_located=0, verified=0, flagged=0, skipped_refused=(), low_yield=(7,))
+state = 'full_text_not_obtainable', reason = 'acquire_cascade_exhausted'
+
+    def assert_not_audited(db, pid, rep, state, reason):
+        s = effective_state(db._conn, pid)
+>       assert (s.processing, s.processing_reason, s.analysis_ready) == (state, reason, False)
+E       AssertionError: assert ('audited_ai', None, True) == ('full_text_n...usted', False)
+E         
+E         At index 0 diff: 'audited_ai' != 'full_text_not_obtainable'
+E         
+E         Full diff:
+E           (
+E         -     'full_text_not_obtainable',
+E         -     'acquire_cascade_exhausted',...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
+
+tests/test_audit_admitted_set.py:113: AssertionError
+____ test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited[parsed] _____
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8c12780>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2, state = 'parsed'
+
+    @pytest.mark.parametrize("state", ["parsed", "no_recorded_state"])
+    def test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited(db, spec, run_id, state):
+        claim(db, spec, run_id, P7)
+        at_state(db, run_id, P7, state)
+        before = written(db, P7)
+        rep = audit(db, spec, run_id)
+>       assert_not_audited(db, P7, rep, state, None)
+
+tests/test_audit_admitted_set.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8c12780>, pid = 7
+rep = AuditReport(papers_audited=1, located=1, not_located=0, verified=0, flagged=0, skipped_refused=(), low_yield=(7,))
+state = 'parsed', reason = None
+
+    def assert_not_audited(db, pid, rep, state, reason):
+        s = effective_state(db._conn, pid)
+>       assert (s.processing, s.processing_reason, s.analysis_ready) == (state, reason, False)
+E       AssertionError: assert ('audited_ai', None, True) == ('parsed', None, False)
+E         
+E         At index 0 diff: 'audited_ai' != 'parsed'
+E         
+E         Full diff:
+E           (
+E         -     'parsed',
+E         +     'audited_ai',...
+E         
+E         ...Full output truncated (4 lines hidden), use '-vv' to show
+
+tests/test_audit_admitted_set.py:113: AssertionError
+_ test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited[no_recorded_state] _
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8c1f440>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2, state = 'no_recorded_state'
+
+    @pytest.mark.parametrize("state", ["parsed", "no_recorded_state"])
+    def test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited(db, spec, run_id, state):
+        claim(db, spec, run_id, P7)
+        at_state(db, run_id, P7, state)
+        before = written(db, P7)
+        rep = audit(db, spec, run_id)
+>       assert_not_audited(db, P7, rep, state, None)
+
+tests/test_audit_admitted_set.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8c1f440>, pid = 7
+rep = AuditReport(papers_audited=1, located=1, not_located=0, verified=0, flagged=0, skipped_refused=(), low_yield=(7,))
+state = 'no_recorded_state', reason = None
+
+    def assert_not_audited(db, pid, rep, state, reason):
+        s = effective_state(db._conn, pid)
+>       assert (s.processing, s.processing_reason, s.analysis_ready) == (state, reason, False)
+E       AssertionError: assert ('audited_ai', None, True) == ('no_recorded..., None, False)
+E         
+E         At index 0 diff: 'audited_ai' != 'no_recorded_state'
+E         
+E         Full diff:
+E           (
+E         -     'no_recorded_state',
+E         +     'audited_ai',...
+E         
+E         ...Full output truncated (4 lines hidden), use '-vv' to show
+
+tests/test_audit_admitted_set.py:113: AssertionError
+_ test_t4_prisma_counts_one_included_and_one_parse_failed_after_a_mixed_audit __
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8c34770>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2
+
+    def test_t4_prisma_counts_one_included_and_one_parse_failed_after_a_mixed_audit(db, spec, run_id):
+        for pid, state in ((P7, "extracted"), (P8, "parse_failed")):
+            claim(db, spec, run_id, pid)
+            at_state(db, run_id, pid, state)
+        rep = audit(db, spec, run_id)
+        flow = generate_prisma_flow(db)
+>       assert rep.papers_audited == 1
+E       assert 2 == 1
+E        +  where 2 = AuditReport(papers_audited=2, located=2, not_located=0, verified=0, flagged=0, skipped_refused=(), low_yield=(7, 8)).papers_audited
+
+tests/test_audit_admitted_set.py:167: AssertionError
+___ test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state ____
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8c82600>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2
+caplog = <_pytest.logging.LogCaptureFixture object at 0xeab9e8c4c0b0>
+
+    def test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state(db, spec, run_id,
+                                                                               caplog):
+        """§11 item 5 as R681(c) rules it: the line names id, state and reason (a
+        failure's reason code, or none), and the report lists the paper."""
+        claim(db, spec, run_id, P7)
+        at_state(db, run_id, P7, "parse_failed")
+        claim(db, spec, run_id, P8)                      # no processing event at all
+        caplog.set_level(logging.WARNING, logger=AE.__name__)
+        rep = audit(db, spec, run_id)
+>       assert rep.skipped_by_state == ((P7, "parse_failed", "parse_file_unreadable"),
+               ^^^^^^^^^^^^^^^^^^^^
+                                        (P8, "no_recorded_state", None))
+E       AttributeError: 'AuditReport' object has no attribute 'skipped_by_state'
+
+tests/test_audit_admitted_set.py:181: AttributeError
+_ test_t6_a_same_key_failure_over_live_claims_stays_extraction_failed_after_the_audit _
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8c4de80>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2
+
+    def test_t6_a_same_key_failure_over_live_claims_stays_extraction_failed_after_the_audit(
+            db, spec, run_id):
+        arm = spec.extraction_models.arm
+        claim(db, spec, run_id, P7)
+        at_state(db, run_id, P7, "extracted")
+        write_extraction_events(db._conn, PaperFailure(paper_id=P7, arm=arm, run_id=run_id,
+                                                       reason_code="model_call_failed",
+                                                       stage_name="extract"))
+        assert len(live_claim_events(db._conn, P7, arm, event_types=("asserted",))) == 1
+        rep = audit(db, spec, run_id)
+>       assert_not_audited(db, P7, rep, "extraction_failed", "model_call_failed")
+
+tests/test_audit_admitted_set.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8c4de80>, pid = 7
+rep = AuditReport(papers_audited=1, located=1, not_located=0, verified=0, flagged=0, skipped_refused=(), low_yield=(7,))
+state = 'extraction_failed', reason = 'model_call_failed'
+
+    def assert_not_audited(db, pid, rep, state, reason):
+        s = effective_state(db._conn, pid)
+>       assert (s.processing, s.processing_reason, s.analysis_ready) == (state, reason, False)
+E       AssertionError: assert ('audited_ai', None, True) == ('extraction_...ailed', False)
+E         
+E         At index 0 diff: 'audited_ai' != 'extraction_failed'
+E         
+E         Full diff:
+E           (
+E         -     'extraction_failed',
+E         -     'model_call_failed',...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
+
+tests/test_audit_admitted_set.py:113: AssertionError
+___ test_t8_d24_reparse_the_failure_supersedes_and_the_audit_writes_nothing ____
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8c883e0>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2
+
+    def test_t8_d24_reparse_the_failure_supersedes_and_the_audit_writes_nothing(db, spec, run_id):
+        arm = spec.extraction_models.arm
+        claim(db, spec, run_id, P7)
+        at_state(db, run_id, P7, "extracted")
+        write_parsed(db, P7, T2)                         # v2 recorded; no paper event
+        sel = select_for_extraction(db._conn, arm=arm)
+        assert P7 in [p for p, _ in sel.to_extract]
+        write_extraction_events(db._conn, PaperFailure(paper_id=P7, arm=arm, run_id=run_id,
+                                                       reason_code="model_call_failed",
+                                                       stage_name="extract"))
+>       assert live_claim_events(db._conn, P7, arm, event_types=("asserted",)) == []
+E       assert () == []
+E         
+E         Full diff:
+E         - []
+E         + ()
+
+tests/test_audit_admitted_set.py:217: AssertionError
+___ test_t8_d21_refusal_the_refusal_supersedes_and_the_audit_writes_nothing ____
+
+db = <engine.core.database.ReviewDatabase object at 0xeab9e8c5b2f0>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2
+
+    def test_t8_d21_refusal_the_refusal_supersedes_and_the_audit_writes_nothing(db, spec, run_id):
+        arm = spec.extraction_models.arm
+        claim(db, spec, run_id, P7)
+        at_state(db, run_id, P7, "extracted")
+        write_parsed(db, P7, T2).unlink()                # v2 recorded, its file removed
+        sel = select_for_extraction(db._conn, arm=arm)
+        assert [p for p, _ in sel.skipped_refused] == [P7]
+        assert record_selection_refusals(db, sel, run_id=run_id) == 1
+>       assert live_claim_events(db._conn, P7, arm, event_types=("asserted",)) == []
+E       assert () == []
+E         
+E         Full diff:
+E         - []
+E         + ()
+
+tests/test_audit_admitted_set.py:232: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  engine.core.selection:selection.py:118 Paper 7: not selected — parsed_text_missing (parsed text 16718616-9438-4d7a-b4b8-c8ebe188639b: the recorded file is missing at /home/ankitsarin/scratch/12t-u15b/bt_prefix/test_t8_d21_refusal_the_refusa0/u15/parsed_text/7_v2.md)
+=========================== short test summary info ============================
+FAILED tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[parse_failed]
+FAILED tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[extraction_failed]
+FAILED tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[input_exceeds_context]
+FAILED tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[full_text_not_obtainable]
+FAILED tests/test_audit_admitted_set.py::test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited[parsed]
+FAILED tests/test_audit_admitted_set.py::test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited[no_recorded_state]
+FAILED tests/test_audit_admitted_set.py::test_t4_prisma_counts_one_included_and_one_parse_failed_after_a_mixed_audit
+FAILED tests/test_audit_admitted_set.py::test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state
+FAILED tests/test_audit_admitted_set.py::test_t6_a_same_key_failure_over_live_claims_stays_extraction_failed_after_the_audit
+FAILED tests/test_audit_admitted_set.py::test_t8_d24_reparse_the_failure_supersedes_and_the_audit_writes_nothing
+FAILED tests/test_audit_admitted_set.py::test_t8_d21_refusal_the_refusal_supersedes_and_the_audit_writes_nothing
+========================= 11 failed, 1 passed in 8.57s =========================

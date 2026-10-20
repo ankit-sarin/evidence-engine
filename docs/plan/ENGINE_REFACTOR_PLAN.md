@@ -7683,3 +7683,74 @@ R677(g) — Session 12s closes under the brief below. No closeout gate: the expe
 | 2026-10-19 | R677(a) — 12s-U15A is accepted: item 0 at 01751e7 (Block 74, four notes), the read-out at 8b2c388; no engine change; no pin effect. R677(b) — INT-i12-12 moves from Class 1 to Class 2 by a dated note in its row (the class cell not edited; the recount reads the note): the mechanism reproduces for every non-admitted state (F3) and its consequence reaches PRISMA (F8), but no production writer reaches it at HEAD on either path (F5); the demonstrated route is a selection bypass (F6). It stays in P1 as unit U15 (R612(a)). R677(c) — U15's fix, for 12t's first brief: option (A). audit_run admits a paper only when its processing state is in a named admitted set, defined once beside the vocabulary in paper_state.py: {extracted, audited_ai}; a non-admitted paper is skipped with one log line naming paper id and state and, until 023, no event; when 023 lands, audit_not_possible joins the set in that one place (D22). The F9 fixtures record an extracted event before they audit; the regression set is every existing audit_run test unchanged in outcome. Option (B)'s write guard is not built in U15; its invariant is INT-s12-2's. Pin effect none (audit-side). Acceptance tests: the read-out's §11 eight, each failing on 8b2c388's module where it has a failing form, plus the regression set. R677(d) — Row named, opened at this closeout in "L (12s additions, R675, R677)" beside INT-s12-1: INT-s12-2, text cell F2's sentence quoted from 12s_U15A.md; Class 2 (latent: no writer violates it today, F5); package P6, with 023, D22's state and writer — a processing-axis transition table enforced where the vocabulary lives, its form set by P6's Phase A; not pin-affecting; governing rulings R431, R677(d); evidence 12s_U15A.md. R677(e) — Notes, no rows: (i) F7 — a successful parse writes no processing-axis event, and full_text_not_obtainable has no writer (D20): a dated note on C35 for P4's Phase A, which decides whether the parse stage writes parsed; the three unused reason codes are recorded there (REASON_RUN_INTERRUPTED stays under R146, E-DEADKI). (ii) F10 — a failure written after a completed audit stands, since located claims are not re-audited: the safe direction; a note on INT-i12-12. (iii) F11 — the 12i reproducer was never committed; 12s_U15A/'s are the committed instrument; a note on INT-i12-12. (iv) I2's correction (the vocabulary in paper_state.py and 022's DDL): recorded in the read-out, no note. R677(f) — The band (R657(d), R674(c), R676(e)): cut from the last four standard gates on this host state, 871.59, 906.50, 858.50 and 895.02 s (mean 882.90 s), confounded readings included with their confounders recorded: 795–971 s. The session-12t startup verify's gate is matched against it; a gate outside it is reported with its concurrent jobs, not adapted to. A confounded reading enters the mean from here; the host's concurrent encodes are its usual state (R676(e)). R677(g) — Session 12s closes under the brief below. No closeout gate: the expected gate values for 12t are 12s-U14B's (7074305) on unchanged code; the collected-id reference becomes 12s_close/collected_ids_12s_close.txt, copied from U14B's gate list. The 2026-10-20 09:00 UTC nightly runs on the closeout commit, whose engine tree equals 7074305's. The wrap ruling follows the closeout block. | PI, 2026-10-19, during session 12s, on architect recommendation, on the 12s-U15A final report and the read-out 12s_U15A.md (8b2c388) |
 
 The decision log in this file ends at R677.
+
+**Block 76.** *Transcribed 2026-10-20 (item 0 of the 12t-OPEN brief), in its own commit with the lane-line copy it orders, in the R597(e) form:* ruling R678, made by PI on architect recommendation on 2026-10-19 UTC, during session 12s, on the 12s-CLOSE closeout block (`54499d547a241e662ad161fa67abd08fa180759c`). The 12t-OPEN task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12s-R678] — wrap ruling: closeout accepted; lane line approved and applied;
+  R673(d)'s NVRM count corrected; close now
+STATUS: PI ruling, 2026-10-19 UTC, session 12s, on architect recommendation, on the 12s-CLOSE
+  closeout block (54499d547a241e662ad161fa67abd08fa180759c). Transcribe as item 0 of 12t-OPEN
+  (Block 76), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block):
+  MEASURED: "HEAD: 54499d547a241e662ad161fa67abd08fa180759c, parent
+    8b2c388684e66a780168c211a97db3f2ad2142a9; status[], lr[0 0]"; "sha256
+    be8e787bd66d4a73073e3d5897fcb23abf30e57a43a4946b2bf1fbe4242fe05e, 1663739 bytes, 7685 lines";
+    "The decision log in this file ends at R677."; "15 files changed, 8886 insertions(+), 2
+    deletions(-)"; "exactly 2 '-' line(s), one per named row: True, RESULT: PASS"; "fence ==
+    r677.txt: True; cell == render_cell: True"; "git diff --stat 8b2c388 HEAD -- engine tests scripts
+    analysis review_specs is empty"; ledger "2c748ecf2a80c83e6e1db3f1d52710fc653dd047, parent
+    0bc90a5, message "ledger: rows through 2026-10-19T18:20:42Z". That is the row's exact
+    timestamp"; "cc[2c748ec 0 0]"; "primer.md is untouched; its last commit is a9459b6"; live
+    IDENTICAL at 18:15:10Z, 18:20:41Z, 18:20:42Z, 18:20:46Z and 18:22:01Z; lane line "sha256
+    9d61cee5a11bbe398f18c6df1eeb074026e9f9b127fb00dbde086affd030965c, 4758 bytes, 10 lines. Not
+    applied", "five − lines == primer.md 41–45: True"; "278 rows, 94 / 53 / 131, 0 unclassed; P1 59
+    (25 / 22 / 12); 35 fix units; P6 11; P7 117"; "rows in 2 (INT-s12-1, INT-s12-2), rows out 0, one
+    class move"; "It reproduced 272, 275 and 276; the baseline is 276"; "collected_ids_12s_close.txt
+    is U14B's gate list: 3,331 ids"; retention "first part is byte-identical to
+    12r_close/retention_close.txt", "5 MATCH", "None was opened"; "Temp root: 4 entries,
+    1,390,591,765 B"; the five 12s scratch directories; "/api/ps: {"models":[]} (18:22:01Z)";
+    "dbchecks_close.txt and pin_tuples_close.json are byte-identical to 12r_close's"; the six
+    rNNN.txt hashes as tabled; the archive command as printed.
+  READ (CC's): "there are four NV_ERR_NO_MEMORY lines this boot, plus the module-load NVRM line";
+    "the closure lists two stops, where the brief expected one".
+  INFERRED: none.
+
+R678(a) — The 12s-CLOSE closeout block is accepted as printed. Its element order, read from the 12r
+  transcript, is the on-disk form from here. The closure's two-stop count stands; the brief's "one"
+  was the architect's. INT-s12-1's text cell as quoted from 12s_U14A.md stands (R664(d)); R675(e)'s
+  parenthesis was the report's summary, not the read-out's sentence.
+R678(b) — R673(d)'s "five this boot" is corrected: four NV_ERR_NO_MEMORY lines this boot, five since
+  2026-10-17 across both boots, as the closure records. The ruling text in Block 71 is not edited
+  (R102); this clause is the dated correction.
+R678(c) — The lane line (sha256 9d61cee5a11bbe398f18c6df1eeb074026e9f9b127fb00dbde086affd030965c,
+  4,758 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45
+  of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines,
+  applied from the file, not from a paste; commit primer.md together with any uncommitted hook row
+  ("ledger" form, the row's exact timestamp), push, level.
+R678(d) — 12t-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the
+  lane-line commit, itself the child of 2c748ec), level and clean; foreign commits and rows per
+  R653(c), R654(d), R663(b). 12t's item 0 copies lane_line_12s.txt into
+  docs/session-reports/session-12/12s_close/ with its commit, which carries no cell note and is
+  verified by its "−" count, 0 (R664(b)).
+R678(e) — No closeout gate ran: the expected gate values for 12t are 12s-U14B's on unchanged code
+  (3,330 / 1 xfailed / 17 deselected, collected 3,348; 0/0 against
+  12s_close/collected_ids_12s_close.txt; band 795–971 s, R677(f), with the concurrent jobs named);
+  the 2026-10-20 09:00 UTC nightly runs on 54499d5, whose engine tree equals 7074305's;
+  12s_close/expected_nightly_20261020.md governs; the 07:00 health job's loads are read and
+  reported by 12t-OPEN, with an NVRM grep. The temp root is read, never matched. Residency is a
+  reading.
+R678(f) — Notes, no rows: the recount chain now runs 12q → 12r → 12s by sha256 and is the form from
+  here, one script per ruling that opens rows; the 12i L03 reproducer stays in scratch,
+  uncommitted, and 12s_U15A/'s is the instrument; the six ruling files of this session live where
+  the closeout tables them.
+R678(g) — Session 12s closes now. After R678(c) has landed, run /wrap. Report the archive command; the
+  closeout block stands.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-19 | R678(a) — The 12s-CLOSE closeout block is accepted as printed. Its element order, read from the 12r transcript, is the on-disk form from here. The closure's two-stop count stands; the brief's "one" was the architect's. INT-s12-1's text cell as quoted from 12s_U14A.md stands (R664(d)); R675(e)'s parenthesis was the report's summary, not the read-out's sentence. R678(b) — R673(d)'s "five this boot" is corrected: four NV_ERR_NO_MEMORY lines this boot, five since 2026-10-17 across both boots, as the closure records. The ruling text in Block 71 is not edited (R102); this clause is the dated correction. R678(c) — The lane line (sha256 9d61cee5a11bbe398f18c6df1eeb074026e9f9b127fb00dbde086affd030965c, 4,758 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, the row's exact timestamp), push, level. R678(d) — 12t-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the lane-line commit, itself the child of 2c748ec), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12t's item 0 copies lane_line_12s.txt into docs/session-reports/session-12/12s_close/ with its commit, which carries no cell note and is verified by its "−" count, 0 (R664(b)). R678(e) — No closeout gate ran: the expected gate values for 12t are 12s-U14B's on unchanged code (3,330 / 1 xfailed / 17 deselected, collected 3,348; 0/0 against 12s_close/collected_ids_12s_close.txt; band 795–971 s, R677(f), with the concurrent jobs named); the 2026-10-20 09:00 UTC nightly runs on 54499d5, whose engine tree equals 7074305's; 12s_close/expected_nightly_20261020.md governs; the 07:00 health job's loads are read and reported by 12t-OPEN, with an NVRM grep. The temp root is read, never matched. Residency is a reading. R678(f) — Notes, no rows: the recount chain now runs 12q → 12r → 12s by sha256 and is the form from here, one script per ruling that opens rows; the 12i L03 reproducer stays in scratch, uncommitted, and 12s_U15A/'s is the instrument; the six ruling files of this session live where the closeout tables them. R678(g) — Session 12s closes now. After R678(c) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-19, during session 12s, on architect recommendation, on the 12s-CLOSE closeout block (54499d5) |
+
+The decision log in this file ends at R678.

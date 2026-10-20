@@ -1,0 +1,3 @@
+mean 878.3425 lo 790.5082 hi 966.1768
+rounded to the second: 791–966
+R677(f) check: mean 882.9025 lo 794.6123 hi 971.1928 -> 795–971

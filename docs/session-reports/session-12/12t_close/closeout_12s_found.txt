@@ -1,0 +1,106 @@
+# from /home/ankitsarin/claude-session-archive/1a57a4be-7d10-453b-88eb-410c1e201b68.jsonl
+# assistant message at 2026-10-19T18:22:41.244Z
+Session 12s's closeout is committed and pushed as `54499d5`, with the ledger as `2c748ec`. The recount gives 278 rows, as 2(c) predicted. The lane line is built but not applied; /wrap waits for your wrap ruling.
+
+**Step results**
+- **Step 1:** clock 18:15:08Z. HEAD `8b2c388`, clean, `0 0`. claude-config `0bc90a5`, clean, `0 0`. Fingerprint IDENTICAL. One review database. The plan read `95951ec0…f709`, 1,630,719 B, 7,504 lines, ending at R676. prefix_check.py and render_cell.py are unchanged since `15b7ef9`.
+- **Step 2:** I2 holds; the 12s recount script copies the 12r script's structure. The build has 2 `−` and 183 `+` lines, 7,685 lines (7,504 + 183 − 2), and its JSON equals 2(c)'s arithmetic. One wording difference, by R664(d): INT-s12-1's text cell quotes the read-out's own F9 sentence with F8's first sentence. The parenthesis in R675(e) was my final report's summary of F9, not the read-out's sentence. The section's header paragraph says so.
+- **Step 3:** `12s_close/` holds 14 files.
+  - `dbchecks_close.txt` and `pin_tuples_close.json` are byte-identical to 12r_close's.
+  - `retention_close.txt` begins with 12r's file byte for byte, then adds this close's hashes: the eight throwaways unchanged and the five restore points MATCH by file sha256.
+  - `collected_ids_12s_close.txt` is U14B's gate list: 3,331 ids, equal to the 12q list plus the 24 new ids (I4 holds).
+- **Step 4:** I measured every 12t value: collections 3,348 and 3,331 of 3,348, eligibility 91, inventory in sync, the 13-file diff since f4a5586, and unchanged hashes. The ad-hoc collects ran with `--basetemp` under scratch, so the shared temp root is unchanged. Then commit, push, level, and the ledger.
+- **Step 6:** I3 holds. The project primer gained a 12s block above "*The block below is the state at the session-12r close, kept as it was.*" The previous primer is copied to `primer-history/2026-10-19-2/primer.md` and compared byte-identical. The 12r block's first line was "> Maintained by Claude Code. Last updated: 2026-10-19 at the **session-12r close — 12r CLOSED; …**".
+- **Step 7:** `~/scratch/12s-close/lane_line_12s.txt` is written. Its five `−` lines equal claude-config `primer.md` lines 41–45, which are unchanged since the 12r lane line. claude-config is untouched.
+
+## 12s-CLOSE: closeout block
+(The 12r-CLOSE block's element order, read from transcript `f20ec852`; I1 holds.)
+
+**Repository**
+- **HEAD:** `54499d547a241e662ad161fa67abd08fa180759c`, parent `8b2c388684e66a780168c211a97db3f2ad2142a9`; `status[]`, `lr[0 0]`.
+- **Plan:** sha256 `be8e787bd66d4a73073e3d5897fcb23abf30e57a43a4946b2bf1fbe4242fe05e`, `1663739` bytes, `7685` lines. The last line is `The decision log in this file ends at R677.`, and the R676 ends-at line is kept at 7610.
+- **Commit:** `15 files changed, 8886 insertions(+), 2 deletions(-)`.
+  - The two `−` lines are the rows INT-i12-12 (`541c541`) and C35 (`266c266`).
+  - `prefix_check.py --expected-row INT-i12-12 C35` gives C35 `PASS` and INT-i12-12 `PASS`, then `exactly 2 '-' line(s), one per named row: True`, `RESULT: PASS`.
+- **Block 75:** `fence == r677.txt: True`; `cell == render_cell: True`.
+- **Rows:** INT-s12-1 (Class 2, P1) and INT-s12-2 (Class 2, P6), in "L (12s additions, R675, R677)" after the 12r recount paragraph.
+- `git diff --stat 8b2c388 HEAD -- engine tests scripts analysis review_specs` is empty.
+
+**claude-config**
+- At this commit's step: `0bc90a5e3e4aa08acfae2f0d9027b934d1625671`, clean, `0 0`.
+- Ledger commit `2c748ecf2a80c83e6e1db3f1d52710fc653dd047`, parent `0bc90a5`, message "ledger: rows through 2026-10-19T18:20:42Z". That is the row's exact timestamp. Now `cc[2c748ec 0 0]`.
+- `primer.md` is untouched; its last commit is `a9459b6`.
+
+**Live fingerprint**
+- Step 1 (18:15:10Z): `IDENTICAL`, overall `0d3eedea…cb25`.
+- Before the commit (18:20:41Z): `IDENTICAL`.
+- After the commit (18:20:42Z): `IDENTICAL`.
+- After the push (18:20:46Z): `IDENTICAL`.
+- At this block (18:22:01Z): `IDENTICAL`.
+
+**Lane line**
+- `~/scratch/12s-close/lane_line_12s.txt`: sha256 `9d61cee5a11bbe398f18c6df1eeb074026e9f9b127fb00dbde086affd030965c`, `4758` bytes, `10` lines. **Not applied.**
+- `five − lines == primer.md 41–45: True`, taken from `primer.md` itself.
+
+**Recount** (`12s_close/recount_12s_close.py`, run in a scratch clone, exit 0, `"expected_holds": true`)
+- 278 rows, 94 / 53 / 131, 0 unclassed; P1 59 (25 / 22 / 12); 35 fix units; P6 11; P7 117.
+- R510 for the session: rows in 2 (INT-s12-1, INT-s12-2), rows out 0, one class move (INT-i12-12, `{"class": "1", "package": "P1"}` → `{"class": "2", "package": "P1"}`). CLOSED and still counted: INT-i12-7 and INT-i12-8.
+- The chain ran `recount_12r_close.py` on the plan at `8b2c388` (sha256 asserted `95951ec0…f709`), and through it 12q's on `d7bafc4`. It reproduced 272, 275 and 276; the baseline is 276 (95 / 50 / 131). The committed JSONs were rewritten byte-identically in the clone (status showed only `12s_close/`). The JSON from the final build equals the pre-fill build's.
+
+**Retention and state**
+- `12s_close/retention_close.txt`: its first part is byte-identical to `12r_close/retention_close.txt`.
+  - The eight throwaways are unchanged.
+  - ra_12q `ecad5e65…b75f`; U06's copy `fc7d061d…7cf8`.
+  - The five restore points are 5 MATCH against `12s_U14A/restore_points_12s.txt`.
+  - None was opened.
+- `ls data/*/review.db` lists `data/surgical_autonomy/review.db` only.
+- **Temp root:** 4 entries, 1,390,591,765 B: `pytest-11` and `-12` from this lane's ad-hoc U14B runs, `pytest-13` from the U14B gate. Nothing emptied.
+- **Scratch:** the five 12s directories, `12s-open/`, `12s-u14a/`, `12s-u14b/`, `12s-u15a/` and `12s-close/`.
+
+**Ollama**
+- 0.21.0; the three digests match; `NRestarts=0`; service start `Sat 2026-10-17 23:04:05 UTC`.
+- `/api/ps`: `{"models":[]}` (18:22:01Z).
+- `dbchecks_close.txt` and `pin_tuples_close.json` are byte-identical to 12r_close's.
+
+**The closure's notes**
+- (a) claude-config at this commit's step was `0bc90a5`; the ledger row was committed after.
+- (b) The lane line is built after the commit, because it names the commit's hash.
+- (c) Temp root as read: 4 entries, 1,390,591,765 B. pytest-6, -7 and -8 were rotated out by pytest's own retention.
+- (d) Where this session's ruling files live.
+- (e) The 12i L03 reproducer stays in scratch, uncommitted.
+
+### Contradictions and stops
+No stops in this brief. I1–I4 held. Three readings against the brief's wording:
+- **Stops table:** the closure lists two stops, where the brief expected one. The second is 12s-U14A item 0(b) at I5, settled by R675(b). Both left the repositories clean.
+- **NVRM count:** there are four `NV_ERR_NO_MEMORY` lines this boot, plus the module-load NVRM line. R673(d)'s "five" counts across both boots, including 2026-10-17 07:04:29 on the previous one; the closure says "four … this boot, five since 2026-10-17".
+- **INT-s12-1's text cell:** quoted from the read-out, not from R675(e)'s parenthesis (step 2 above).
+
+### The ruling files
+
+| file | sha256 | lines | bytes |
+|---|---|---|---|
+| 12r_close/r672.txt | `275287735764e2ce814110fd03b929103455298b357a74d5464acd6c09e18964` | 51 | 4,308 |
+| 12s_U14A/r673.txt | `e36f60ce09454e75f1ae134647cfbabd74f2b4ade5eaa40351685dbe76283645` | 42 | 3,624 |
+| 12s_U14A/r674.txt | `85a1903ce213773e141d88082fb55e15a0513919502b45938aa56734490dbe36` | 50 | 4,024 |
+| 12s_U14B/r675.txt | `5df0975b08f2ba24d1775bc2f861a577856b4769e28fc9b29ee63f8f1c4a170a` | 81 | 7,041 |
+| 12s_U15A/r676.txt | `e2fb21d1595769eb7a4089ed660e552f4e95279caff21c552fca969d08b40ae9` | 59 | 5,100 |
+| 12s_close/r677.txt | `6208918a7a81adfae4fa4a9e8e50d9b4d75aff037dfb99ceaeb2104e099dc4ac` | 64 | 5,536 |
+
+### The recount's JSON fields (`recount_12s_close.json`)
+`"now": {"class_1": 94, "class_2": 53, "class_3": 131, "rows": 278, "without_class": 0}`; `"r510_session_12s": {"class_moves": 1, "rows_in": 2, "rows_in_ids": ["INT-s12-1", "INT-s12-2"], "rows_out": 0}`; P1 `{"class_1": 25, "class_2": 22, "class_3": 12, "rows": 59}`; P6 `{"class_1": 8, "class_2": 3, "class_3": 0, "rows": 11}`; P7 `{"class_1": 0, "class_2": 1, "class_3": 116, "rows": 117}`; `"fix_units": 35`; `"baseline_12r_close"` 276 (95 / 50 / 131); `"expected_holds": true`.
+
+### `~/scratch/12s-close/`
+- Generator and inputs: `build_close.py`, `closure.md`, `primer_block.md`, `plan_d7bafc4.md`, `plan_8b2c388.md`, `plan_head.md`.
+- Built plans: `new_plan_pre.md`, `new_plan.md`.
+- Lane line: `plus.txt`, `primer_41_45_now.txt`, `lane_line_12s.txt`.
+- Ruling: `r677.txt`, `cell_r677.txt`.
+- Checks and readings: `recount_pre.json`, `recount_final.json`, `d.txt`, `step1.txt`, `step4_measure.txt`, `closeout_12r_found.txt`, `clone/` and `clone2/` (the scratch clones).
+
+### Archive command (session-archive's usage: `session-archive [-h] [--claude-dir CLAUDE_DIR] [--archive-dir ARCHIVE_DIR] [--proc-root PROC_ROOT] session_id`)
+```
+~/projects/dgx-infra/bin/session-archive 1a57a4be-7d10-453b-88eb-410c1e201b68
+```
+
+**State:** evidence-engine `54499d5` (clean, 0 0) · claude-config `2c748ec` (clean, 0 0) · fingerprint IDENTICAL `0d3eedea…cb25` · plan ends at R677 · recount 278 (94 / 53 / 131, 0) · nothing resident · clock 2026-10-19T18:22:01Z.
+
+The lane line is not applied and /wrap has not run; I'm waiting for the wrap ruling.

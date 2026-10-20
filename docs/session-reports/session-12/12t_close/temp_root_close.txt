@@ -1,0 +1,15 @@
+== temp root 2026-10-20T21:30:57Z
+total 1180
+drwx------    5 ankitsarin ankitsarin   4096 2026-10-20 20:53:36.718933639 +0000 .
+drwxrwxrwt   72 root       root        49152 2026-10-20 21:30:49.241598625 +0000 ..
+drwx------ 3333 ankitsarin ankitsarin 376832 2026-10-20 09:14:30.177127162 +0000 pytest-14
+drwx------ 3333 ankitsarin ankitsarin 376832 2026-10-20 19:03:19.540052140 +0000 pytest-15
+drwx------ 3345 ankitsarin ankitsarin 385024 2026-10-20 20:53:36.724933650 +0000 pytest-16
+lrwxrwxrwx    1 ankitsarin ankitsarin     35 2026-10-20 20:38:53.766419726 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-16
+entries 4
+4109084043	/tmp/pytest-of-ankitsarin
+/tmp/pytest-of-ankitsarin/pytest-14/ test_013_is_idempotent0 test_013_is_idempotentcurrent 
+/tmp/pytest-of-ankitsarin/pytest-15/ test_013_is_idempotent0 test_013_is_idempotentcurrent 
+/tmp/pytest-of-ankitsarin/pytest-16/ test_013_is_idempotent0 test_013_is_idempotentcurrent 
+/tmp/pytest-of-ankitsarin/pytest-current/ test_013_is_idempotent0 test_013_is_idempotentcurrent 
+# origins: pytest-14 — the 2026-10-20 09:00 UTC nightly (R647(c)); pytest-15 — the 12t-OPEN-R1 gate; pytest-16 — the 12t-U15B gate (basetemp, R660(c)); nothing emptied. This lane's ad-hoc runs used --basetemp under ~/scratch (R676(d)(iii)).

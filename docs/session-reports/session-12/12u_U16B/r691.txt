@@ -1,0 +1,74 @@
+RULING [evidence-engine 12u-R691] — U16 accepted and landed; INT-i12-73 CLOSED; the foreign
+  ledger commit accepted; two doc lines to HK-ARCH; three readings; 12u closes under its own
+  brief, next
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16C
+  final report (the read-out docs/session-reports/session-12/12u_U16B/12u_U16B.md,
+  2579f7c354841d089952396337cdb5b2c5657625; the engine commit 2c3822b6f3c8326df253cb3e3bc2dc8157dd40f0).
+  Transcribe as Block 89 at item 0 of the 12u-CLOSE brief, after Blocks 87 (R689) and 88
+  (R690), with the notes it orders, in one commit. Do nothing now; await the closeout brief.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12u-U16C report):
+  MEASURED: "Engine commit: 2c3822b6f3c8326df253cb3e3bc2dc8157dd40f0, parent f2eb7a1. 6 files,
+    +296 −18"; "2a 5 passed in 5.90s"; "2b 157 passed, per-id outcomes identical to Phase 1,
+    after the two R690 rewrites (rep.papers_audited == 1 → == 2 plus
+    assert_audited_vacuously(db, P8))"; "test_api_parity.py: 69 passed, delta 0. Inventory
+    regenerated, now in sync"; "pins byte-identical to 12t_close/pin_tuples_close.json
+    (08f1374c…55e6)"; "wall 912.14 s, inside 791–966"; "collected 3365 items / 17 deselected /
+    3348 selected"; "==== 3347 passed, 17 deselected, 1 xfailed, 2 warnings in 910.11s (0:15:10)
+    ====, exit 0"; "only-gate is exactly the five U16 ids and matches expected_new_ids.txt;
+    only-ref 0"; "no phase slower by more than 10 s"; "journal -- No entries --"; "Pins:
+    byte-identical after the edit and after the gate"; "evidence-engine: HEAD 2579f7c, 0 0,
+    clean"; "claude-config: HEAD baefb35, 0 0, clean"; "Ledger commit bdf3707 (05:39:42, no
+    trailers, not this session) carried the row for 2c3822b along with a surgical-cv row";
+    "r689.txt | 8260cdfa…9c1f | 2,518 | 32"; "r690.txt | 910f115f…765c | 2,918 | 38"; "Read-out
+    commit: 2579f7c354841d089952396337cdb5b2c5657625, parent 2c3822b. 37 files".
+  MEASURED (architect, this session): the architect's copy of R688, hashed from the block that
+    issued it: sha256 5f2613bbb29abf6e1e58a1463daa5bd052db1e51106b08ea5c149ad92d04aa20, 4,715
+    bytes, 58 lines — identical to r688.txt as transcribed at f2eb7a1 (Block 86).
+  READ (CC's): "docs/architecture/workflow.md:20 ("run_pipeline.py auto-completes after audit
+    stage") is now incomplete"; "docs/architecture/pipeline.md §10 … was already false before
+    U16"; "CLAUDE.md:99 and state-machine.md are still true"; "The vacuous branch also covers a
+    case no test drives: a paper whose claims are all located but which is still extracted";
+    "The vacuous event uses the writer's default commit=True, outside the per-paper savepoint
+    the located path uses. It is a single row"; "a surgical-cv pytest (pid 247902, started
+    05:24:01) was running at launch".
+  INFERRED: none.
+
+R691(a) — 12u-U16C is accepted as reported. U16 is landed at 2c3822b: audit_run audits
+  vacuously a paper at `extracted` with nothing to locate (one audited_ai event, "located": 0,
+  one INFO line, counted in papers_audited); _advance_extraction_workflow completes
+  AI_AUDIT_COMPLETE_STAGE only when no eligible paper is at `extracted`, one WARNING per
+  pending paper; the D23 refusal branch, _stage_audit's return, the advance's signature and
+  its caller's handler unchanged; pin effect none, both pins byte-identical. Block 86 stands
+  on the architect's hash.
+R691(b) — INT-i12-73 is CLOSED at 2c3822b (R514), counted until P1 closes (R607(d)). The note is
+  the read-out's §7 text (the R6 form), written at 12u-CLOSE's item 0 on the row line only
+  (R686(c)), carrying as readings: the two tests rewritten under R690(b) by id; finding 6 (the
+  all-located-but-extracted paper, undriven, covered by the same branch); finding 7 (the
+  vacuous event committed by the writer's default outside the located path's savepoint — a
+  single row; no row). The second-arm half stays latent with T5 on A15 (R687(b)).
+R691(c) — HK-ARCH gains a dated note: docs/architecture/workflow.md:20 ("run_pipeline.py
+  auto-completes after audit stage") is incomplete since 2c3822b — the stage completes only
+  when no paper is still `extracted`; pipeline.md §10's staleness is already recorded there
+  (R682(c)(ii)). Neither file is edited before P7. CLAUDE.md is not edited (CLAUDE.md:99 reads
+  true).
+R691(d) — The foreign ledger commit bdf3707 (another session's wrap, no trailers, carrying this
+  lane's row for 2c3822b) is accepted as found (R663(b)); R680(b) stands for this lane's own
+  ledger commits; a dated line in the 12u closure, no note.
+R691(e) — Readings, no rows: the band series gains 912.14 s (871.59, 906.50, 858.50, 895.02,
+  872.27, 887.58, 882.23, 912.14), the last beside a surgical-cv pytest at launch; the temp
+  root rotated 17 and 18 out and holds pytest-21; the four report files held outside the tree
+  during the gate and restored unchanged (finding 5) are a procedure, reported.
+R691(f) — Item 0 of 12u-CLOSE: Blocks 87 (R689), 88 (R690) and 89 (this ruling) from their
+  hashed files (r689.txt and r690.txt as committed at 2579f7c; r691.txt written then), two cell
+  notes (INT-i12-73, HK-ARCH): two "−" lines, prefix_check.py --expected-row INT-i12-73 HK-ARCH;
+  the recount stays 278 with INT-i12-73 CLOSED and counted (no new script, R678(f)). The
+  decision log then ends at R691.
+R691(g) — Session 12u closes under the 12u-CLOSE brief, issued in the next architect session,
+  outside 07:00–10:35 UTC; this CC session stays open (backgrounded, resumed with --continue).
+  No closeout gate: the expected gate values for 12v are 12u-U16C's (2c3822b) on unchanged
+  code (3,347 / 1 / 17, collected 3,365 / selected 3,348), the collected-id reference
+  12u_U16B/collected_ids_12u_u16c.txt; the 2026-10-22 09:00 UTC nightly runs on 2579f7c,
+  whose engine tree equals 2c3822b's — expected 3,347 / 17 / 1 on 3,365 / 3,348, written by
+  the closeout as expected_nightly_20261022.md. After the close: INT-r12-1's Phase A with
+  INT-s12-1 (U17 in the unit order as 12l_P1A §3 states it — the closeout quotes it).

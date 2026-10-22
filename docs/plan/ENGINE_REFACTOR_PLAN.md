@@ -487,7 +487,7 @@ Housekeeping lines of the 12f table (section E4) that have no inventory row of t
 | HK-RETIRE | Retirements: `scripts/advance_to_pdf_acquired.py`, I19's six scripts | 3 | P7 | the retention ledger (R307) and row I19 *Note 2026-10-10 (12j item 0c, R582):* `engine/acquisition/manual_list.py` goes on this line. R582(1): "engine/acquisition/manual_list.py goes on the HK-RETIRE housekeeping line (Class 3, P7); no row." *Note 2026-10-13 (12n-U12-C2B item 0, R629(f); the commit 2 read-out's finding F-3):* `scripts/watch_run4.sh` goes on this line. R629(f): "F-3 (scripts/watch_run4.sh): onto the HK-RETIRE line (Class 3, P7); no row." |
 | HK-ROOTDB | Root-level `evidence_engine.db`, 0 B | 3 | P7 | the retention ledger (R338) |
 | HK-12C | The 12c notes | 3 | P7 | the 12e closure's "Next" |
-| HK-ARCH | Architecture docs still describe the retired auditor | 3 | P7 | the 12e closure's "Next" *Note 2026-10-09 (12h rulings, R570):* ADJ-RD6-1 folds in (`12h_RD-6.md`: `docs/architecture/pipeline.md` describes pass 2 as using "full exclusion criteria", which no commit implements); no new row. *Note 2026-10-15 (12o-U12-C6 resume):* `docs/architecture/modules.md`'s entries for `OpenAIExtractor` and `AnthropicExtractor` still give `ARM=` class constants, retired at C20 (`tests/test_effective_config.py::test_no_cloud_extractor_carries_a_class_constant_arm` pins their absence); recorded here, the file not edited. *Note 2026-10-15 (12p-CLOSE, R650(g)):* F5 (`12p_U13A.md` §8): the global CLAUDE.md's "300s" for a 32B model is stale against `ollama_client.py:68`'s `900.0`; the code is the fact. No row. *Note 2026-10-19 (12s-U15A item 0, R676(d)(i)):* `docs/architecture/state-machine.md`'s line "pending → invalid_snippet ellipsis bridging detected (INVALID_SNIPPET_RE match)" is stale for `audit_span` since `7074305`: a regex match is necessary but no longer sufficient (`12s_U14B.md` F5). *Note 2026-10-20 (12t-CLOSE, R682(c)(ii)):* `docs/architecture/pipeline.md` §10 AUDIT predates the event store and is stale independent of U15 (`12t_U15B.md` §6, finding 1): "**Module:** `engine/agents/auditor.py`", "2. **Candidate selection:** Papers at EXTRACTED with pending evidence spans", "**DB transitions:** EXTRACTED → AI_AUDIT_COMPLETE". Recorded here, the file not edited. |
+| HK-ARCH | Architecture docs still describe the retired auditor | 3 | P7 | the 12e closure's "Next" *Note 2026-10-09 (12h rulings, R570):* ADJ-RD6-1 folds in (`12h_RD-6.md`: `docs/architecture/pipeline.md` describes pass 2 as using "full exclusion criteria", which no commit implements); no new row. *Note 2026-10-15 (12o-U12-C6 resume):* `docs/architecture/modules.md`'s entries for `OpenAIExtractor` and `AnthropicExtractor` still give `ARM=` class constants, retired at C20 (`tests/test_effective_config.py::test_no_cloud_extractor_carries_a_class_constant_arm` pins their absence); recorded here, the file not edited. *Note 2026-10-15 (12p-CLOSE, R650(g)):* F5 (`12p_U13A.md` §8): the global CLAUDE.md's "300s" for a 32B model is stale against `ollama_client.py:68`'s `900.0`; the code is the fact. No row. *Note 2026-10-19 (12s-U15A item 0, R676(d)(i)):* `docs/architecture/state-machine.md`'s line "pending → invalid_snippet ellipsis bridging detected (INVALID_SNIPPET_RE match)" is stale for `audit_span` since `7074305`: a regex match is necessary but no longer sufficient (`12s_U14B.md` F5). *Note 2026-10-20 (12t-CLOSE, R682(c)(ii)):* `docs/architecture/pipeline.md` §10 AUDIT predates the event store and is stale independent of U15 (`12t_U15B.md` §6, finding 1): "**Module:** `engine/agents/auditor.py`", "2. **Candidate selection:** Papers at EXTRACTED with pending evidence spans", "**DB transitions:** EXTRACTED → AI_AUDIT_COMPLETE". Recorded here, the file not edited. **2026-10-22** (R691(c)): `docs/architecture/workflow.md:20` ("`run_pipeline.py` auto-completes after audit stage") is incomplete since `2c3822b`: the stage completes only when no paper is still `extracted`. `pipeline.md` §10's staleness is already recorded here (R682(c)(ii)). Neither file is edited before P7; CLAUDE.md is not edited (CLAUDE.md:99 reads true). |
 | HK-WITHMODEL | `with_model`'s docstring (12e_C54-A F6) | 3 | P7 | the 12e closure's "Next" |
 | R501 | The audit-review stop message names the first pending stage (on live "Current stage: PDF_ACQUISITION"), the wrong next step at Run 7's end | 3 | P7 | ruling R501 |
 
@@ -599,7 +599,7 @@ Out of the internal review (R579), as `12i_review_w1.md` lists them under "Not r
 | INT-i12-70 | `against_claims` is not checked to be claims of this cell; a mistyped id is stored and the cell reads row 3 (L06) | 2 | P5 | R593 | `12i_review_w1.md`, "Adjacent items", item 5 — `engine/core/events.py::write_field_event`; the read-out's class / package cell: "2 / P5" |
 | INT-i12-71 | the cloud run never calls `rm.activate`, so R225's field-name check does not apply there; and its `finally: close_run(status)` closes `failed` on an interrupt with no rollback first (L04) | 1 (latent — the read-out lists it "1 latent / P1 (R71)"; entered at Class 1, and the owning package's Phase A establishes the trigger and may move the class, R587. Condition, as the read-out gives it: R71, under which no cloud extraction runs) | P1 | R593 | `12i_review_w1.md`, "Adjacent items", item 6 — `scripts/run_cloud_extraction.py::run_arm`; the read-out's class / package cell: "1 latent / P1 (R71)" |
 | INT-i12-72 | always searches both PubMed and OpenAlex; `spec.search_strategy.databases` feeds only the methods text (W1-F3); inside the excluded `_stage_search` | 1 (conditional — the read-out lists it "1 conditional / P3, with B-F06"; entered at Class 1, and the owning package's Phase A establishes the trigger and may move the class, R587. The read-out states no trigger beyond its sentence; the code is "inside the excluded `_stage_search`") | P3, with B-F06 | R593 | `12i_review_w1.md`, "Adjacent items", item 8 — `scripts/run_pipeline.py::_stage_search`; the read-out's class / package cell: "1 conditional / P3, with B-F06" |
-| INT-i12-73 | only `spec.extraction_models.arm` is audited while `audited_ai` is paper-level; the audit workflow stage completes once any paper is `audited_ai` (L03) | 1 (conditional — the read-out lists it "1 conditional / P1"; entered at Class 1, and the owning package's Phase A establishes the trigger and may move the class, R587. The read-out states no trigger beyond its sentence) | P1 | R593 | `12i_review_w1.md`, "Adjacent items", item 9 — `scripts/run_pipeline.py::_stage_audit`, `_advance_extraction_workflow`; the read-out's class / package cell: "1 conditional / P1" *Note 2026-10-22 (12u-U16B item 0, R685(d)):* the condition, restated. The measured triggers are (1) an eligible paper at `extracted` with no claim to locate (an all-declined record, reachable on the elicited path — U06 F6, R619(f)) and (2) a paper whose text the audit refuses under D23 (from outside the engine only); the second-arm half is latent. "An interrupted audit" is not a trigger, the advance running only after `_stage_audit` returns; this note is the correction (the P1A entry is not edited). The read-out (`12u_U16A/12u_U16A.md`): "P1A's stated trigger, "an interrupted audit", is not one. The advance is a later statement in the same `try` as `_stage_audit`."; "An all-declined paper is skipped by `audit_run` with no log line and no `AuditReport` entry" (the report's forms, as R685 quotes them: "P1A's stated trigger, "an interrupted audit", is not one. The advance runs only after _stage_audit returns"; "The all-declined paper is skipped silently: no log line and no report entry"). Class 1 (conditional) stands; P1; unit U16; the fix is R685(e). |
+| INT-i12-73 | only `spec.extraction_models.arm` is audited while `audited_ai` is paper-level; the audit workflow stage completes once any paper is `audited_ai` (L03) | 1 (conditional — the read-out lists it "1 conditional / P1"; entered at Class 1, and the owning package's Phase A establishes the trigger and may move the class, R587. The read-out states no trigger beyond its sentence) | P1 | R593 | `12i_review_w1.md`, "Adjacent items", item 9 — `scripts/run_pipeline.py::_stage_audit`, `_advance_extraction_workflow`; the read-out's class / package cell: "1 conditional / P1" *Note 2026-10-22 (12u-U16B item 0, R685(d)):* the condition, restated. The measured triggers are (1) an eligible paper at `extracted` with no claim to locate (an all-declined record, reachable on the elicited path — U06 F6, R619(f)) and (2) a paper whose text the audit refuses under D23 (from outside the engine only); the second-arm half is latent. "An interrupted audit" is not a trigger, the advance running only after `_stage_audit` returns; this note is the correction (the P1A entry is not edited). The read-out (`12u_U16A/12u_U16A.md`): "P1A's stated trigger, "an interrupted audit", is not one. The advance is a later statement in the same `try` as `_stage_audit`."; "An all-declined paper is skipped by `audit_run` with no log line and no `AuditReport` entry" (the report's forms, as R685 quotes them: "P1A's stated trigger, "an interrupted audit", is not one. The advance runs only after _stage_audit returns"; "The all-declined paper is skipped silently: no log line and no report entry"). Class 1 (conditional) stands; P1; unit U16; the fix is R685(e). **CLOSED 2026-10-22** (`2c3822b6f3c8326df253cb3e3bc2dc8157dd40f0`, R691): U16 — AI_AUDIT_COMPLETE_STAGE completes only when no eligible paper is still `extracted`, each pending paper named in one pipeline WARNING (R685(e)(i), R688(b)–(c)); an eligible paper at `extracted` with nothing to locate is audited vacuously, `"located": 0`, one log line, counted in papers_audited (R685(e)(ii), R689(b)); a paper refused under D23 stays `extracted` and holds the stage pending (R685(e)(iii)). The second-arm half stays latent with A15/F15 (R687(b)); the handler around the advance stays C56's (R685(e)(iv)). Acceptance tests passing in the commit's gate (3,347 / 1 / 17), per 12u_U16B.md §3 (the ids as 12u_U16B/expected_new_ids.txt lists them); two test_audit_events.py tests rewritten to the corrected behaviour (R690(b)). Counted until P1 closes (R607(d)). *Readings (R691(b)):* the two tests rewritten under R690(b) — `tests/test_audit_events.py::test_t3_locate_every_claim_verify_only_the_unlocated_value` (before `assert audited(db, P7) == 1 and rep.papers_audited == 1`; after `assert audited(db, P7) == 1 and rep.papers_audited == 2` and `assert_audited_vacuously(db, P8)`) and `tests/test_audit_events.py::test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs` (before `assert rep.papers_audited == 1`; after `assert rep.papers_audited == 2` and `assert_audited_vacuously(db, P8)`); finding 6 — a paper whose claims are all located but which is still `extracted` is covered by the same branch, undriven by any test; finding 7 — the vacuous event is committed by the writer's default (`commit=True`), outside the per-paper savepoint the located path uses: a single row, no row. The second-arm half stays latent with T5 on A15 (R687(b)). |
 | INT-i12-74 | cwd-relative, so `ReviewDatabase("<mistyped>")` silently creates a new empty review tree (W1-F2); inside the excluded `__init__` | 2 | P2, with B-F02 | R593 | `12i_review_w1.md`, "Adjacent items", item 13 — `engine/core/database.py::DATA_ROOT`; the read-out's class / package cell: "2 / P2, with B-F02" *Note 2026-10-11 (12k item 0c, R599):* Wave 2 row 59 (L10-C12 + L09a-C13) extends this row — Class 3, P2 (the read-out's cell: "3 / P2, with INT-i12-74 (the categorizer half was proposed P7)"). The read-out's existing-row cell: "extends INT-i12-74". Its statement (`12j_review_w2.md`, quoted): "`pdf_quality_check` declares a private `DATA_ROOT = Path("data")` (W1 adjacent item 12) // categorizer's private cwd-relative `DATA_ROOT` (W1 adjacent item 12, this lot's half) — verified". Reader file(s): `12j_review_w2/readers/L09a.md`; `12j_review_w2/readers/L10.md`. |
 | INT-i12-75 | calls `audit_span(...)` then `.status` on the returned tuple (L03) — an L17 file | 3 | P7 | R593 | `12i_review_w1.md`, "Adjacent items", item 16 — `scripts/smoke_test_fixes.py`; the read-out's class / package cell: "3 / P7" |
 | INT-i12-76 | inserts a `full_text_assets` row with a hash and no parse, which would satisfy the same-hash short-circuit of row 24 (L07). Dead today | 3 | P7 | R593 | `12i_review_w1.md`, "Adjacent items", item 18 — `scripts/advance_to_pdf_acquired.py::main`; the read-out's class / package cell: "3 / P7" |
@@ -8466,3 +8466,176 @@ R688(f) — On the gate passing, U16 is landed and INT-i12-73 closes on its acce
 | 2026-10-22 | R688(a) — Phase 1 is accepted as reported: the five tests fail on HEAD as predicted, the regression set passes, the Phase 1 commit 6229970 stands; r687.txt verified by the architect's hash. The foreign ledger row 6dd9c14 committed as found stands (R654(d)); pytest-19 is a reading (R652(c)). R688(b) — Finding 1: R685(e)(i)'s "and on the stage summary" was an architect clause and is withdrawn. The shortfall's signals are the advance's one pipeline WARNING per pending paper (id and processing state) and the stage remaining pending in workflow_state, which the audit-review gate reads (C58). _stage_audit's return value and shape are unchanged; the four pinning tests stand. The operator view of a pending stage is S7's (J1 family); no row. R688(c) — Finding 2: the advance keeps its (conn) signature and its return value; it names the pending paper's id and processing state only. The audit's refusal reason stays on audit_run's log line and AuditReport (TV2 checks it). No row. R688(d) — Finding 3: T1 as built is the test; R687(c)'s ordering was the architect's. No change. R688(e) — Phase 2, under the brief below: the engine edit per the Phase 1 report's §5 plan as amended by (b) and (c); the five tests moved into tests/test_audit_stage_completion.py under their Phase 1 ids; one engine commit; one standard gate, expected 3,347 passed / 1 xfailed / 17 deselected, collected 3,365 / selected 3,348, only-gate the five ids, only-ref 0 against 12t_close/collected_ids_12t_close.txt; band 791–966 s; both pins byte-identical; the gate must exit before 07:00 UTC, else Phase 2 stops before the gate and reports. Item 0 of that brief transcribes R687 (Block 85) and this ruling (Block 86) and writes the A15 note of R687(b) on A15's row line only (R686(c)): one "−" line, prefix_check.py --expected-row A15. R688(f) — On the gate passing, U16 is landed and INT-i12-73 closes on its acceptance tests (R514), counted until P1 closes (R607(d)); the closure form is the read-out's. The closing note on INT-i12-73 and the CLAUDE.md or architecture-doc lines, if any describe the audit stage's completion, are reported for a ruling, not edited in Phase 2. | PI, 2026-10-22, during session 12u, on architect recommendation, on the 12u-U16B Phase 1 report (6229970) |
 
 The decision log in this file ends at R688.
+
+**Block 87.** *Transcribed 2026-10-22 (item 0 of the 12u-CLOSE brief), in its own commit with Blocks 88 and 89 and the two notes R691 orders, in the R597(e) form:* ruling R689, made by PI on architect recommendation on 2026-10-22 UTC, during session 12u, on the 12u-U16C stop report at step 2a. The resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12u-R689] — the report-field clause withdrawn; a vacuous audit counts in
+  papers_audited; Block 86's clause as written stands; resume 12u-U16C from 1b
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16C
+  stop report at step 2a (item 0 landed at f2eb7a13b7198c863ab4675a0ac04db151a62f13; the engine
+  edit uncommitted in the tree). Transcribe as Block 87 at the next item 0, from a hashed
+  r689.txt in 12u_U16B/, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "Commit: f2eb7a13b7198c863ab4675a0ac04db151a62f13, parent 6229970"; ""+" 120 …
+    "−" 1"; "prefix_check.py --expected-row A15: PASS"; "Line count: 8,468 = 8,349 + 120 − 1";
+    "sha256 63f33bb27cb4ee59b33fc8bf9edaa7185e570722673bae66bd1f779acc7d2a6b, 1,767,080 bytes";
+    "r688.txt: 5f2613bbb29abf6e1e58a1463daa5bd052db1e51106b08ea5c149ad92d04aa20, 4,715 bytes, 58
+    lines"; "A15 is on lines 190 and 1118. The note went on line 190 only"; ledger
+    "c51b7b2e3f674a6170ff1c149b2efacb0a92a397"; "MEASURED 1 failed, 4 passed in 6.04s"; "T3 …
+    fails at line 222 with assert len(said) == 1 → 2 == 1"; the two lines naming paper 222 as
+    listed; "I3 holds. write_paper_event stores payload_json with no constraint on its keys".
+  READ (CC's): "_stage_audit logs json.dumps(asdict(report)), so any field that lists paper ids
+    puts a second line naming the paper"; "TV1 already accepts papers_audited == 2"; "The
+    AuditReport field also changes _stage_audit's returned dict".
+  INFERRED: none.
+
+R689(a) — The stop was right. 12u-U16C step 1b's "AuditReport gains a field listing the
+  vacuously audited papers, carried into the stage summary as skipped_by_state is" was an
+  architect clause that contradicts T3 as written; it is withdrawn (R681(c)). The test stands.
+R689(b) — Option (a). A vacuously audited paper is counted in papers_audited and in no new
+  field; AuditReport gains no field. The record of which papers were audited with nothing to
+  locate is the audited_ai event's payload ("located": 0) and the one INFO line naming the
+  paper. _stage_audit's returned dict is therefore unchanged in shape and keys, which settles
+  finding 3 under R688(b).
+R689(c) — Finding 2: Block 86's Transcribed clause as committed ("with Block 85 and the A15 note
+  it orders") is the correct reading of the brief's words; it stands, no note.
+R689(d) — Item 0 at f2eb7a1 stands. Nothing else in 12u-U16C changes; CC resumes from 1b.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-22 | R689(a) — The stop was right. 12u-U16C step 1b's "AuditReport gains a field listing the vacuously audited papers, carried into the stage summary as skipped_by_state is" was an architect clause that contradicts T3 as written; it is withdrawn (R681(c)). The test stands. R689(b) — Option (a). A vacuously audited paper is counted in papers_audited and in no new field; AuditReport gains no field. The record of which papers were audited with nothing to locate is the audited_ai event's payload ("located": 0) and the one INFO line naming the paper. _stage_audit's returned dict is therefore unchanged in shape and keys, which settles finding 3 under R688(b). R689(c) — Finding 2: Block 86's Transcribed clause as committed ("with Block 85 and the A15 note it orders") is the correct reading of the brief's words; it stands, no note. R689(d) — Item 0 at f2eb7a1 stands. Nothing else in 12u-U16C changes; CC resumes from 1b. | PI, 2026-10-22, during session 12u, on architect recommendation, on the 12u-U16C stop report at step 2a |
+
+**Block 88.** *Transcribed 2026-10-22 (item 0 of the 12u-CLOSE brief), in its own commit with Blocks 87 and 89 and the two notes R691 orders, in the R597(e) form:* ruling R690, made by PI on architect recommendation on 2026-10-22 UTC, during session 12u, on the 12u-U16C stop report at step 2b. The resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12u-R690] — tests that pin the silent skip are rewritten to the corrected
+  behaviour; the same rule for any the gate exposes; resume 12u-U16C from 2b
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16C
+  stop report at step 2b (item 0 at f2eb7a1; the amended engine edit uncommitted). Transcribe
+  as Block 88 at the next item 0, after Block 87 (R689), from a hashed r690.txt in 12u_U16B/.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "r689.txt … 8260cdfac2b1bb0d8586bbc57adc08464d0e7ad907d612203db78dfe92569c1f, 2,518
+    bytes, 32 lines"; "engine_edit_uncommitted_r689.diff, sha256 ffced98f…510a0a: 2 files, +34
+    −6"; "2a: EXPECTED 5 passed, MEASURED 5 passed in 5.90s"; "155 passed and 2 failed (Phase
+    1: 157 passed)"; "test_t3_locate_every_claim_verify_only_the_unlocated_value … assert
+    audited(db, P7) == 1 and rep.papers_audited == 1 → papers_audited=2";
+    "test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs … assert
+    rep.papers_audited == 1 → 2 == 1"; "seed_processing(rdb._conn, pid, "extracted") # U15: the
+    audit admits extracted papers"; "All the other assertions in both tests held up to the
+    count".
+  READ (CC's): "P8 is therefore an eligible paper at extracted with no claim to locate, which is
+    exactly R685(e)(ii)'s trigger"; "The local regression set covers only 12 files, so that
+    remains unmeasured".
+  INFERRED: none.
+
+R690(a) — The stop was right: a changed outcome in the regression set is a finding, and these
+  two are the finding U16 predicts. R689(b) stands.
+R690(b) — Option (a). In tests/test_audit_events.py, test_t3_locate_every_claim_verify_only_
+  the_unlocated_value and test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs
+  are rewritten to the corrected behaviour (the R47/B5 rule: a test that pins a defect is
+  rewritten, never deleted): rep.papers_audited == 2, plus an assertion that P8 carries one
+  audited_ai event with "located": 0 and reads audited_ai. Every other assertion of both tests
+  is unchanged. P8 stays in their world (option (b) would hide the behaviour).
+R690(c) — The same rule in advance for the gate: a test whose only changed outcome is a
+  papers_audited count, or an audited_ai event, on a paper its fixture seeds at `extracted`
+  with no claim to locate, is rewritten in the same way in the same engine commit and listed
+  in the read-out by id with its before/after assertion; the gate is re-run once after the
+  rewrites, and only once. Any changed outcome of any other kind is a STOP, reported, the
+  commit left unpushed.
+R690(d) — The rewritten tests ride in U16's engine commit. The read-out's §2 lists them; the
+  expected gate counts are unchanged by a rewrite (3,347 / 1 / 17 on 3,365 / 3,348).
+R690(e) — Nothing else in 12u-U16C changes; CC resumes from 2b.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-22 | R690(a) — The stop was right: a changed outcome in the regression set is a finding, and these two are the finding U16 predicts. R689(b) stands. R690(b) — Option (a). In tests/test_audit_events.py, test_t3_locate_every_claim_verify_only_ the_unlocated_value and test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs are rewritten to the corrected behaviour (the R47/B5 rule: a test that pins a defect is rewritten, never deleted): rep.papers_audited == 2, plus an assertion that P8 carries one audited_ai event with "located": 0 and reads audited_ai. Every other assertion of both tests is unchanged. P8 stays in their world (option (b) would hide the behaviour). R690(c) — The same rule in advance for the gate: a test whose only changed outcome is a papers_audited count, or an audited_ai event, on a paper its fixture seeds at `extracted` with no claim to locate, is rewritten in the same way in the same engine commit and listed in the read-out by id with its before/after assertion; the gate is re-run once after the rewrites, and only once. Any changed outcome of any other kind is a STOP, reported, the commit left unpushed. R690(d) — The rewritten tests ride in U16's engine commit. The read-out's §2 lists them; the expected gate counts are unchanged by a rewrite (3,347 / 1 / 17 on 3,365 / 3,348). R690(e) — Nothing else in 12u-U16C changes; CC resumes from 2b. | PI, 2026-10-22, during session 12u, on architect recommendation, on the 12u-U16C stop report at step 2b |
+
+**Block 89.** *Transcribed 2026-10-22 (item 0 of the 12u-CLOSE brief), in its own commit with Blocks 87 and 88 and the two notes R691 orders, in the R597(e) form:* ruling R691, made by PI on architect recommendation on 2026-10-22 UTC, during session 12u, on the 12u-U16C final report and its read-out `12u_U16B/12u_U16B.md` (`2579f7c354841d089952396337cdb5b2c5657625`). Nothing followed the ruling in its paste. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12u-R691] — U16 accepted and landed; INT-i12-73 CLOSED; the foreign
+  ledger commit accepted; two doc lines to HK-ARCH; three readings; 12u closes under its own
+  brief, next
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16C
+  final report (the read-out docs/session-reports/session-12/12u_U16B/12u_U16B.md,
+  2579f7c354841d089952396337cdb5b2c5657625; the engine commit 2c3822b6f3c8326df253cb3e3bc2dc8157dd40f0).
+  Transcribe as Block 89 at item 0 of the 12u-CLOSE brief, after Blocks 87 (R689) and 88
+  (R690), with the notes it orders, in one commit. Do nothing now; await the closeout brief.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12u-U16C report):
+  MEASURED: "Engine commit: 2c3822b6f3c8326df253cb3e3bc2dc8157dd40f0, parent f2eb7a1. 6 files,
+    +296 −18"; "2a 5 passed in 5.90s"; "2b 157 passed, per-id outcomes identical to Phase 1,
+    after the two R690 rewrites (rep.papers_audited == 1 → == 2 plus
+    assert_audited_vacuously(db, P8))"; "test_api_parity.py: 69 passed, delta 0. Inventory
+    regenerated, now in sync"; "pins byte-identical to 12t_close/pin_tuples_close.json
+    (08f1374c…55e6)"; "wall 912.14 s, inside 791–966"; "collected 3365 items / 17 deselected /
+    3348 selected"; "==== 3347 passed, 17 deselected, 1 xfailed, 2 warnings in 910.11s (0:15:10)
+    ====, exit 0"; "only-gate is exactly the five U16 ids and matches expected_new_ids.txt;
+    only-ref 0"; "no phase slower by more than 10 s"; "journal -- No entries --"; "Pins:
+    byte-identical after the edit and after the gate"; "evidence-engine: HEAD 2579f7c, 0 0,
+    clean"; "claude-config: HEAD baefb35, 0 0, clean"; "Ledger commit bdf3707 (05:39:42, no
+    trailers, not this session) carried the row for 2c3822b along with a surgical-cv row";
+    "r689.txt | 8260cdfa…9c1f | 2,518 | 32"; "r690.txt | 910f115f…765c | 2,918 | 38"; "Read-out
+    commit: 2579f7c354841d089952396337cdb5b2c5657625, parent 2c3822b. 37 files".
+  MEASURED (architect, this session): the architect's copy of R688, hashed from the block that
+    issued it: sha256 5f2613bbb29abf6e1e58a1463daa5bd052db1e51106b08ea5c149ad92d04aa20, 4,715
+    bytes, 58 lines — identical to r688.txt as transcribed at f2eb7a1 (Block 86).
+  READ (CC's): "docs/architecture/workflow.md:20 ("run_pipeline.py auto-completes after audit
+    stage") is now incomplete"; "docs/architecture/pipeline.md §10 … was already false before
+    U16"; "CLAUDE.md:99 and state-machine.md are still true"; "The vacuous branch also covers a
+    case no test drives: a paper whose claims are all located but which is still extracted";
+    "The vacuous event uses the writer's default commit=True, outside the per-paper savepoint
+    the located path uses. It is a single row"; "a surgical-cv pytest (pid 247902, started
+    05:24:01) was running at launch".
+  INFERRED: none.
+
+R691(a) — 12u-U16C is accepted as reported. U16 is landed at 2c3822b: audit_run audits
+  vacuously a paper at `extracted` with nothing to locate (one audited_ai event, "located": 0,
+  one INFO line, counted in papers_audited); _advance_extraction_workflow completes
+  AI_AUDIT_COMPLETE_STAGE only when no eligible paper is at `extracted`, one WARNING per
+  pending paper; the D23 refusal branch, _stage_audit's return, the advance's signature and
+  its caller's handler unchanged; pin effect none, both pins byte-identical. Block 86 stands
+  on the architect's hash.
+R691(b) — INT-i12-73 is CLOSED at 2c3822b (R514), counted until P1 closes (R607(d)). The note is
+  the read-out's §7 text (the R6 form), written at 12u-CLOSE's item 0 on the row line only
+  (R686(c)), carrying as readings: the two tests rewritten under R690(b) by id; finding 6 (the
+  all-located-but-extracted paper, undriven, covered by the same branch); finding 7 (the
+  vacuous event committed by the writer's default outside the located path's savepoint — a
+  single row; no row). The second-arm half stays latent with T5 on A15 (R687(b)).
+R691(c) — HK-ARCH gains a dated note: docs/architecture/workflow.md:20 ("run_pipeline.py
+  auto-completes after audit stage") is incomplete since 2c3822b — the stage completes only
+  when no paper is still `extracted`; pipeline.md §10's staleness is already recorded there
+  (R682(c)(ii)). Neither file is edited before P7. CLAUDE.md is not edited (CLAUDE.md:99 reads
+  true).
+R691(d) — The foreign ledger commit bdf3707 (another session's wrap, no trailers, carrying this
+  lane's row for 2c3822b) is accepted as found (R663(b)); R680(b) stands for this lane's own
+  ledger commits; a dated line in the 12u closure, no note.
+R691(e) — Readings, no rows: the band series gains 912.14 s (871.59, 906.50, 858.50, 895.02,
+  872.27, 887.58, 882.23, 912.14), the last beside a surgical-cv pytest at launch; the temp
+  root rotated 17 and 18 out and holds pytest-21; the four report files held outside the tree
+  during the gate and restored unchanged (finding 5) are a procedure, reported.
+R691(f) — Item 0 of 12u-CLOSE: Blocks 87 (R689), 88 (R690) and 89 (this ruling) from their
+  hashed files (r689.txt and r690.txt as committed at 2579f7c; r691.txt written then), two cell
+  notes (INT-i12-73, HK-ARCH): two "−" lines, prefix_check.py --expected-row INT-i12-73 HK-ARCH;
+  the recount stays 278 with INT-i12-73 CLOSED and counted (no new script, R678(f)). The
+  decision log then ends at R691.
+R691(g) — Session 12u closes under the 12u-CLOSE brief, issued in the next architect session,
+  outside 07:00–10:35 UTC; this CC session stays open (backgrounded, resumed with --continue).
+  No closeout gate: the expected gate values for 12v are 12u-U16C's (2c3822b) on unchanged
+  code (3,347 / 1 / 17, collected 3,365 / selected 3,348), the collected-id reference
+  12u_U16B/collected_ids_12u_u16c.txt; the 2026-10-22 09:00 UTC nightly runs on 2579f7c,
+  whose engine tree equals 2c3822b's — expected 3,347 / 17 / 1 on 3,365 / 3,348, written by
+  the closeout as expected_nightly_20261022.md. After the close: INT-r12-1's Phase A with
+  INT-s12-1 (U17 in the unit order as 12l_P1A §3 states it — the closeout quotes it).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-22 | R691(a) — 12u-U16C is accepted as reported. U16 is landed at 2c3822b: audit_run audits vacuously a paper at `extracted` with nothing to locate (one audited_ai event, "located": 0, one INFO line, counted in papers_audited); _advance_extraction_workflow completes AI_AUDIT_COMPLETE_STAGE only when no eligible paper is at `extracted`, one WARNING per pending paper; the D23 refusal branch, _stage_audit's return, the advance's signature and its caller's handler unchanged; pin effect none, both pins byte-identical. Block 86 stands on the architect's hash. R691(b) — INT-i12-73 is CLOSED at 2c3822b (R514), counted until P1 closes (R607(d)). The note is the read-out's §7 text (the R6 form), written at 12u-CLOSE's item 0 on the row line only (R686(c)), carrying as readings: the two tests rewritten under R690(b) by id; finding 6 (the all-located-but-extracted paper, undriven, covered by the same branch); finding 7 (the vacuous event committed by the writer's default outside the located path's savepoint — a single row; no row). The second-arm half stays latent with T5 on A15 (R687(b)). R691(c) — HK-ARCH gains a dated note: docs/architecture/workflow.md:20 ("run_pipeline.py auto-completes after audit stage") is incomplete since 2c3822b — the stage completes only when no paper is still `extracted`; pipeline.md §10's staleness is already recorded there (R682(c)(ii)). Neither file is edited before P7. CLAUDE.md is not edited (CLAUDE.md:99 reads true). R691(d) — The foreign ledger commit bdf3707 (another session's wrap, no trailers, carrying this lane's row for 2c3822b) is accepted as found (R663(b)); R680(b) stands for this lane's own ledger commits; a dated line in the 12u closure, no note. R691(e) — Readings, no rows: the band series gains 912.14 s (871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14), the last beside a surgical-cv pytest at launch; the temp root rotated 17 and 18 out and holds pytest-21; the four report files held outside the tree during the gate and restored unchanged (finding 5) are a procedure, reported. R691(f) — Item 0 of 12u-CLOSE: Blocks 87 (R689), 88 (R690) and 89 (this ruling) from their hashed files (r689.txt and r690.txt as committed at 2579f7c; r691.txt written then), two cell notes (INT-i12-73, HK-ARCH): two "−" lines, prefix_check.py --expected-row INT-i12-73 HK-ARCH; the recount stays 278 with INT-i12-73 CLOSED and counted (no new script, R678(f)). The decision log then ends at R691. R691(g) — Session 12u closes under the 12u-CLOSE brief, issued in the next architect session, outside 07:00–10:35 UTC; this CC session stays open (backgrounded, resumed with --continue). No closeout gate: the expected gate values for 12v are 12u-U16C's (2c3822b) on unchanged code (3,347 / 1 / 17, collected 3,365 / selected 3,348), the collected-id reference 12u_U16B/collected_ids_12u_u16c.txt; the 2026-10-22 09:00 UTC nightly runs on 2579f7c, whose engine tree equals 2c3822b's — expected 3,347 / 17 / 1 on 3,365 / 3,348, written by the closeout as expected_nightly_20261022.md. After the close: INT-r12-1's Phase A with INT-s12-1 (U17 in the unit order as 12l_P1A §3 states it — the closeout quotes it). | PI, 2026-10-22, during session 12u, on architect recommendation, on the 12u-U16C final report (2579f7c) |
+
+The decision log in this file ends at R691.

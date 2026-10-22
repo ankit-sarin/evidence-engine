@@ -1,0 +1,38 @@
+RULING [evidence-engine 12u-R690] — tests that pin the silent skip are rewritten to the corrected
+  behaviour; the same rule for any the gate exposes; resume 12u-U16C from 2b
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16C
+  stop report at step 2b (item 0 at f2eb7a1; the amended engine edit uncommitted). Transcribe
+  as Block 88 at the next item 0, after Block 87 (R689), from a hashed r690.txt in 12u_U16B/.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "r689.txt … 8260cdfac2b1bb0d8586bbc57adc08464d0e7ad907d612203db78dfe92569c1f, 2,518
+    bytes, 32 lines"; "engine_edit_uncommitted_r689.diff, sha256 ffced98f…510a0a: 2 files, +34
+    −6"; "2a: EXPECTED 5 passed, MEASURED 5 passed in 5.90s"; "155 passed and 2 failed (Phase
+    1: 157 passed)"; "test_t3_locate_every_claim_verify_only_the_unlocated_value … assert
+    audited(db, P7) == 1 and rep.papers_audited == 1 → papers_audited=2";
+    "test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs … assert
+    rep.papers_audited == 1 → 2 == 1"; "seed_processing(rdb._conn, pid, "extracted") # U15: the
+    audit admits extracted papers"; "All the other assertions in both tests held up to the
+    count".
+  READ (CC's): "P8 is therefore an eligible paper at extracted with no claim to locate, which is
+    exactly R685(e)(ii)'s trigger"; "The local regression set covers only 12 files, so that
+    remains unmeasured".
+  INFERRED: none.
+
+R690(a) — The stop was right: a changed outcome in the regression set is a finding, and these
+  two are the finding U16 predicts. R689(b) stands.
+R690(b) — Option (a). In tests/test_audit_events.py, test_t3_locate_every_claim_verify_only_
+  the_unlocated_value and test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs
+  are rewritten to the corrected behaviour (the R47/B5 rule: a test that pins a defect is
+  rewritten, never deleted): rep.papers_audited == 2, plus an assertion that P8 carries one
+  audited_ai event with "located": 0 and reads audited_ai. Every other assertion of both tests
+  is unchanged. P8 stays in their world (option (b) would hide the behaviour).
+R690(c) — The same rule in advance for the gate: a test whose only changed outcome is a
+  papers_audited count, or an audited_ai event, on a paper its fixture seeds at `extracted`
+  with no claim to locate, is rewritten in the same way in the same engine commit and listed
+  in the read-out by id with its before/after assertion; the gate is re-run once after the
+  rewrites, and only once. Any changed outcome of any other kind is a STOP, reported, the
+  commit left unpushed.
+R690(d) — The rewritten tests ride in U16's engine commit. The read-out's §2 lists them; the
+  expected gate counts are unchanged by a rewrite (3,347 / 1 / 17 on 3,365 / 3,348).
+R690(e) — Nothing else in 12u-U16C changes; CC resumes from 2b.

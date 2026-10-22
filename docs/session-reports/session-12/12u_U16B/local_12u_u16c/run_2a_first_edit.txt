@@ -1,0 +1,30 @@
+        run_id = _declined_world(db, spec, names)
+        with caplog.at_level(logging.INFO):
+            _audit(db, spec, run_id)
+        said = [m for m in _lines(caplog) if _names(m, 222)]
+>       assert len(said) == 1, said
+E       AssertionError: ['Paper 222: audited with nothing to locate — no live asserted claim of arm local_deepseek_r1_32b is unlocated; audite...rified": 0, "flagged": 0, "skipped_refused": [], "low_yield": [], "skipped_by_state": [], "audited_vacuously": [222]}']
+E       assert 2 == 1
+E        +  where 2 = len(['Paper 222: audited with nothing to locate — no live asserted claim of arm local_deepseek_r1_32b is unlocated; audite...rified": 0, "flagged": 0, "skipped_refused": [], "low_yield": [], "skipped_by_state": [], "audited_vacuously": [222]}'])
+
+tests/test_audit_stage_completion.py:222: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/1 (100.0%) | Paper EE-221 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 1
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+INFO     pipeline:run_pipeline.py:458 ============================================================
+INFO     pipeline:run_pipeline.py:459 STAGE: AUDIT
+INFO     engine.agents.audit_events:audit_events.py:194 Paper 222: audited with nothing to locate — no live asserted claim of arm local_deepseek_r1_32b is unlocated; audited_ai written, 0 located
+INFO     pipeline:run_pipeline.py:465 Audit complete in 0.0s — {"papers_audited": 1, "located": 20, "not_located": 0, "verified": 0, "flagged": 0, "skipped_refused": [], "low_yield": [], "skipped_by_state": [], "audited_vacuously": [222]}
+=========================== short test summary info ============================
+FAILED tests/test_audit_stage_completion.py::test_an_extracted_paper_with_nothing_to_audit_is_reported_not_silent
+1 failed, 4 passed in 6.04s

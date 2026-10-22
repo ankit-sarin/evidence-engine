@@ -1,0 +1,4 @@
+/tmp/pytest-of-ankitsarin/pytest-19
+/tmp/pytest-of-ankitsarin/pytest-20
+/tmp/pytest-of-ankitsarin/pytest-21
+/tmp/pytest-of-ankitsarin/pytest-current

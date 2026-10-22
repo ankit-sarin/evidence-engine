@@ -1,0 +1,32 @@
+RULING [evidence-engine 12u-R689] — the report-field clause withdrawn; a vacuous audit counts in
+  papers_audited; Block 86's clause as written stands; resume 12u-U16C from 1b
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16C
+  stop report at step 2a (item 0 landed at f2eb7a13b7198c863ab4675a0ac04db151a62f13; the engine
+  edit uncommitted in the tree). Transcribe as Block 87 at the next item 0, from a hashed
+  r689.txt in 12u_U16B/, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "Commit: f2eb7a13b7198c863ab4675a0ac04db151a62f13, parent 6229970"; ""+" 120 …
+    "−" 1"; "prefix_check.py --expected-row A15: PASS"; "Line count: 8,468 = 8,349 + 120 − 1";
+    "sha256 63f33bb27cb4ee59b33fc8bf9edaa7185e570722673bae66bd1f779acc7d2a6b, 1,767,080 bytes";
+    "r688.txt: 5f2613bbb29abf6e1e58a1463daa5bd052db1e51106b08ea5c149ad92d04aa20, 4,715 bytes, 58
+    lines"; "A15 is on lines 190 and 1118. The note went on line 190 only"; ledger
+    "c51b7b2e3f674a6170ff1c149b2efacb0a92a397"; "MEASURED 1 failed, 4 passed in 6.04s"; "T3 …
+    fails at line 222 with assert len(said) == 1 → 2 == 1"; the two lines naming paper 222 as
+    listed; "I3 holds. write_paper_event stores payload_json with no constraint on its keys".
+  READ (CC's): "_stage_audit logs json.dumps(asdict(report)), so any field that lists paper ids
+    puts a second line naming the paper"; "TV1 already accepts papers_audited == 2"; "The
+    AuditReport field also changes _stage_audit's returned dict".
+  INFERRED: none.
+
+R689(a) — The stop was right. 12u-U16C step 1b's "AuditReport gains a field listing the
+  vacuously audited papers, carried into the stage summary as skipped_by_state is" was an
+  architect clause that contradicts T3 as written; it is withdrawn (R681(c)). The test stands.
+R689(b) — Option (a). A vacuously audited paper is counted in papers_audited and in no new
+  field; AuditReport gains no field. The record of which papers were audited with nothing to
+  locate is the audited_ai event's payload ("located": 0) and the one INFO line naming the
+  paper. _stage_audit's returned dict is therefore unchanged in shape and keys, which settles
+  finding 3 under R688(b).
+R689(c) — Finding 2: Block 86's Transcribed clause as committed ("with Block 85 and the A15 note
+  it orders") is the correct reading of the brief's words; it stands, no note.
+R689(d) — Item 0 at f2eb7a1 stands. Nothing else in 12u-U16C changes; CC resumes from 1b.

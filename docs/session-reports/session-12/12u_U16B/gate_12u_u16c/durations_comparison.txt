@@ -1,0 +1,2 @@
+ref (12t-U15B) lines 2438 gate lines 2455 sum ref 876.21 gate 900.96
+phases slower by >10 s: none

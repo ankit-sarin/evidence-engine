@@ -1,0 +1,7 @@
+12u-U16C gate, predicted before launch (R655(b)), derived from the collected-id list
+(pytest --collect-only -m "not network and not ollama and not integration" on the tree of the engine commit):
+  collected 3365 items / 17 deselected / 3348 selected
+  = 12t_close/collected_ids_12t_close.txt (3,343 selected) + the 5 ids of expected_new_ids.txt; only-ref 0
+  outcomes: 3347 passed, 1 xfailed, 17 deselected, 2 warnings (sklearn's), exit 0
+  wall band 791–966 s (R683(c))
+  test_api_parity.py delta 0 (69 passed locally, no file changed under it)

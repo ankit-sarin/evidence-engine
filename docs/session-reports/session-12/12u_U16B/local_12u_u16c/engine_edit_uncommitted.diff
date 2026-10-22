@@ -1,0 +1,104 @@
+diff --git a/engine/agents/audit_events.py b/engine/agents/audit_events.py
+index e55225c..af5c91f 100644
+--- a/engine/agents/audit_events.py
++++ b/engine/agents/audit_events.py
+@@ -10,6 +10,12 @@ writes are its successor).
+ 0. A paper whose processing state is not in `AUDIT_ADMITTED_STATES` (U15) is
+    skipped with a log line naming its id, state and reason, listed on
+    `AuditReport.skipped_by_state`, and nothing is written for it.
++   A paper at `extracted` with no live asserted claim left to locate (an
++   all-declined record) is audited vacuously (U16, R685(e)(ii)): its `audited_ai`
++   event carries `located: 0`, one log line names it, it is listed on
++   `AuditReport.audited_vacuously`, and no text is read and no model is called.
++   A paper with nothing to locate at any other state, `audited_ai` included, is
++   passed over as before (F10).
+ 1. Resolve and read the parsed text the paper's claims were EXTRACTED FROM — the
+    version each claim's `claim_inputs` row names, by uid, verified by hash (R95,
+    D23) — not the paper's newest version. A refused text (that version missing,
+@@ -94,6 +100,9 @@ class AuditReport:
+     #: U15 (R681(c)): papers skipped because their processing state is not in
+     #: `AUDIT_ADMITTED_STATES` — (paper_id, state, reason or None).
+     skipped_by_state: tuple[tuple[int, str, str | None], ...]
++    #: U16 (R685(e)(ii)): papers at `extracted` with nothing left to locate,
++    #: written `audited_ai` with zero claims located.
++    audited_vacuously: tuple[int, ...] = ()
+ 
+ 
+ def _non_value_tokens(codebook: Codebook) -> frozenset[str]:
+@@ -144,7 +153,8 @@ def claim_text_ref(conn, claims) -> ParsedTextRef:
+ 
+ 
+ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> AuditReport:
+-    """Locate, verify and record the audit of every eligible paper for `arm`."""
++    """Locate, verify and record the audit of every eligible paper for `arm`. A
++    paper at `extracted` with nothing left to locate is audited vacuously."""
+     auditor_digest = rm.stage_digest(conn, run_id, "audit")
+     if auditor_digest is None and not conn.execute(
+             "SELECT 1 FROM run_stage_configs WHERE run_id = ? AND stage = 'audit'",
+@@ -164,14 +174,27 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
+     refused: list[tuple[int, str]] = []
+     skipped_state: list[tuple[int, str, str | None]] = []
+     low: list[int] = []
++    vacuous: list[int] = []
+     for pid in eligible_paper_ids(conn):
+         claims = live_claim_events(conn, pid, arm, event_types=("asserted",))
+-        if not claims:
+-            continue
+         done = {ev.claim_id for ev in live_claim_events(
+-            conn, pid, arm, event_types=("citation_located",))}
++            conn, pid, arm, event_types=("citation_located",))} if claims else set()
+         todo = [c for c in claims if c.claim_id not in done]
+         if not todo:
++            # U16 (R685(e)(ii)): nothing to locate. A paper still at `extracted`
++            # is audited vacuously; any other state is passed over (F10).
++            if effective_state(conn, pid).processing == "extracted":
++                write_paper_event(
++                    conn, event_type="audited", paper_id=pid, to_state="audited_ai",
++                    from_state="extracted", actor_kind="engine", actor_role="system",
++                    actor_name="auditor", actor_digest=auditor_digest, run_id=run_id,
++                    stage_name="audit",
++                    payload={"arm": arm, "located": 0, "not_located": 0,
++                             "locator_version": LOCATOR_VERSION})
++                logger.info("Paper %d: audited with nothing to locate — no live asserted "
++                            "claim of arm %s is unlocated; audited_ai written, 0 located",
++                            pid, arm)
++                vacuous.append(pid)
+             continue
+         # U15 (R677(c)): the processing state admits the paper, or nothing is
+         # written for it. Read once; the same value stamps `from_state` below.
+@@ -264,4 +287,4 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
+             low.append(pid)
+ 
+     return AuditReport(audited, n_loc, n_not, n_ver, n_flag, tuple(refused), tuple(low),
+-                       tuple(skipped_state))
++                       tuple(skipped_state), tuple(vacuous))
+diff --git a/scripts/run_pipeline.py b/scripts/run_pipeline.py
+index 86148e8..36c12cf 100644
+--- a/scripts/run_pipeline.py
++++ b/scripts/run_pipeline.py
+@@ -248,14 +248,23 @@ def _processing_states(conn) -> dict[int, str]:
+ def _advance_extraction_workflow(conn) -> dict[str, int]:
+     """Reader 8 on the reader (9b-FLIP 1/2): EXTRACTION_COMPLETE once any corpus
+     paper's processing state is completed (extracted or audited_ai), and
+-    AI_AUDIT_COMPLETE_STAGE once any is audited_ai. Returns the two counts."""
++    AI_AUDIT_COMPLETE_STAGE once any is audited_ai and none is still `extracted`
++    (U16, R685(e)(i)); while one is, each such paper is named in one WARNING and
++    the stage stays pending. Returns the two counts."""
+     states = _processing_states(conn)
+     extracted = sum(1 for s in states.values() if s in COMPLETED_PROCESSING_STATES)
+     audited = sum(1 for s in states.values() if s == "audited_ai")
+     if extracted > 0:
+         complete_stage(conn, "EXTRACTION_COMPLETE",
+                        metadata=f"{extracted} papers extracted")
+-    if audited > 0:
++    pending = sorted(pid for pid, s in states.items() if s == "extracted")
++    for pid in pending:
++        logger.warning(
++            "Paper %d holds AI_AUDIT_COMPLETE_STAGE pending: processing state extracted, "
++            "not audited_ai. Action: read this run's audit log for the paper; an 'audit "
++            "skipped' line names a refused text and its reason (left for migration 023); "
++            "with no such line, run the audit stage again.", pid)
++    if audited > 0 and not pending:
+         complete_stage(conn, "AI_AUDIT_COMPLETE_STAGE",
+                        metadata=f"{audited} papers audited")
+     return {"extracted": extracted, "audited": audited}

@@ -1,0 +1,10 @@
+CLAUDE.md:99:(EXTRACTED, EXTRACT_FAILED, AI_AUDIT_COMPLETE, HUMAN_AUDIT_COMPLETE and REJECTED are retired (R160b): they stay in `STATUSES` because existing rows carry them, and `update_status` refuses any transition into or out of one with `RetiredTransition`)
+docs/architecture/state-machine.md:21:    "AI_AUDIT_COMPLETE",
+docs/architecture/state-machine.md:69:EXTRACTED, EXTRACT_FAILED, AI_AUDIT_COMPLETE, HUMAN_AUDIT_COMPLETE and REJECTED are
+docs/architecture/workflow.md:20:| 10 | `AI_AUDIT_COMPLETE_STAGE` | `run_pipeline.py` auto-completes after audit stage | Auto |
+docs/architecture/workflow.md:95:| Audit review | `check_audit_review_gate(db)` | AI_AUDIT_COMPLETE papers with contested/flagged/invalid_snippet spans |
+docs/architecture/pipeline.md:166:   - Processes PARSED + AI_AUDIT_COMPLETE papers with parsed text
+docs/architecture/pipeline.md:171:   - **Status-aware:** papers already past FT gate (EXTRACTED, AI_AUDIT_COMPLETE, etc.) record decision without status change
+docs/architecture/pipeline.md:244:2. Each arm processes the CORPUS — the papers whose **eligibility axis** of `effective_state` reads `eligible` (S3h) — missing a cloud extraction for that arm. *Corrected 2026-09-22:* this previously read "papers with stat
+docs/architecture/pipeline.md:280:4. **Status transition:** When no pending spans remain for a paper → AI_AUDIT_COMPLETE
+docs/architecture/pipeline.md:283:**DB transitions:** EXTRACTED → AI_AUDIT_COMPLETE

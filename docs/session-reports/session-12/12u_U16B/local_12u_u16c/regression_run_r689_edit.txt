@@ -1,0 +1,243 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 157 items
+
+tests/test_arm_pinned_at_extract.py::test_a_screen_start_that_stops_at_the_gate_leaves_the_extraction_arm_unpinned PASSED [  0%]
+tests/test_arm_pinned_at_extract.py::test_a_screen_start_that_reaches_extract_pins_there_and_a_differing_run_is_refused PASSED [  1%]
+tests/test_arm_pinned_at_extract.py::test_two_runs_opened_unpinned_the_first_to_reach_extract_pins_and_the_other_is_refused PASSED [  1%]
+tests/test_arm_pinned_at_extract.py::test_verifying_twice_in_one_run_writes_the_pin_once PASSED [  2%]
+tests/test_arm_pinned_at_extract.py::test_a_run_that_declares_no_extraction_stage_registers_no_extraction_arm PASSED [  3%]
+tests/test_arm_pinned_at_extract.py::test_a_cloud_arm_and_a_named_arm_still_pin_at_open PASSED [  3%]
+tests/test_arm_pinned_at_extract.py::test_an_unpinned_arm_that_already_holds_a_claim_is_refused_by_name PASSED [  4%]
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[parse_failed] PASSED [  5%]
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[extraction_failed] PASSED [  5%]
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[input_exceeds_context] PASSED [  6%]
+tests/test_audit_admitted_set.py::test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited[full_text_not_obtainable] PASSED [  7%]
+tests/test_audit_admitted_set.py::test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited[parsed] PASSED [  7%]
+tests/test_audit_admitted_set.py::test_t2_a_paper_at_parsed_or_no_recorded_state_is_not_audited[no_recorded_state] PASSED [  8%]
+tests/test_audit_admitted_set.py::test_t3_a_paper_at_extracted_is_audited_as_today PASSED [  8%]
+tests/test_audit_admitted_set.py::test_t4_prisma_counts_one_included_and_one_parse_failed_after_a_mixed_audit PASSED [  9%]
+tests/test_audit_admitted_set.py::test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state PASSED [ 10%]
+tests/test_audit_admitted_set.py::test_t6_a_same_key_failure_over_live_claims_stays_extraction_failed_after_the_audit PASSED [ 10%]
+tests/test_audit_admitted_set.py::test_t8_d24_reparse_the_failure_supersedes_and_the_audit_writes_nothing PASSED [ 11%]
+tests/test_audit_admitted_set.py::test_t8_d21_refusal_the_refusal_supersedes_and_the_audit_writes_nothing PASSED [ 12%]
+tests/test_audit_events.py::test_t3_locate_every_claim_verify_only_the_unlocated_value FAILED [ 12%]
+tests/test_audit_events.py::test_t4_a_second_audit_writes_nothing PASSED [ 13%]
+tests/test_audit_events.py::test_t5_a_superseded_claim_is_ignored PASSED [ 14%]
+tests/test_audit_events.py::test_t6_a_refused_text_skips_its_paper_and_the_others_are_audited PASSED [ 14%]
+tests/test_audit_events.py::test_t7_a_failure_mid_paper_leaves_no_located_event_and_no_audited_ai PASSED [ 15%]
+tests/test_audit_events.py::test_t8_the_old_hand_list_values_are_not_auto_verified PASSED [ 15%]
+tests/test_audit_events.py::test_t9_a_tier_4_claim_is_located_like_any_other PASSED [ 16%]
+tests/test_audit_events.py::test_t10_low_yield_reads_the_codebook PASSED [ 17%]
+tests/test_audit_events.py::test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs FAILED [ 17%]
+tests/test_audit_events.py::test_t16_a_failure_after_verdicts_leaves_no_verdict_rows_and_no_audited_ai PASSED [ 18%]
+tests/test_audit_events.py::test_t17_record_verdict_with_no_run_id_refuses_and_writes_nothing PASSED [ 19%]
+tests/test_audit_events.py::test_t18_no_audit_calls_jsonl_is_created_by_a_run PASSED [ 19%]
+tests/test_audit_events.py::test_t19_an_unlocated_absence_sentinel_gets_no_verdict_row_at_all PASSED [ 20%]
+tests/test_audit_events.py::test_t13_a_located_event_on_a_pre_manifest_claim_is_admitted_a_claim_is_not PASSED [ 21%]
+tests/test_audit_events.py::test_t14_a_snippet_less_value_is_flagged_without_a_model_call PASSED [ 21%]
+tests/test_audit_events.py::test_an_audit_run_needs_its_audit_stage PASSED [ 22%]
+tests/test_audit_events.py::test_d23_t1_claims_on_an_older_version_are_located_against_that_version PASSED [ 22%]
+tests/test_audit_events.py::test_d23_t2_claims_spanning_two_text_versions_refuse_the_paper PASSED [ 23%]
+tests/test_audit_events.py::test_d23_t3_an_altered_claim_version_refuses_the_paper_though_a_newer_one_is_intact PASSED [ 24%]
+tests/test_audit_events.py::test_d23_t4_the_writer_refuses_a_citation_against_another_text PASSED [ 24%]
+tests/test_audit_events.py::test_d23_t5_a_byte_identical_reparse_is_not_a_mismatch PASSED [ 25%]
+tests/test_audit_events.py::test_d23_a_claim_with_no_recorded_text_identity_refuses_the_paper PASSED [ 26%]
+tests/test_audit_events.py::test_d23_t7_the_writer_refuses_a_citation_that_names_no_text PASSED [ 26%]
+tests/test_audit_events.py::test_d23_t8_a_citation_on_a_claim_with_no_claim_inputs_row_is_admitted PASSED [ 27%]
+tests/test_audit_events.py::test_u14_every_writer_carries_locator_1_1 PASSED [ 28%]
+tests/test_audit_paper_id.py::test_T6_every_audit_call_row_carries_the_paper_it_verified PASSED [ 28%]
+tests/test_audit_paper_id.py::test_T7_no_other_stage_is_affected PASSED  [ 29%]
+tests/test_cut_over.py::test_t1_extract_then_audit_under_one_manifest_writes_events_only PASSED [ 29%]
+tests/test_cut_over.py::test_t2_a_live_shaped_paper_extracts_and_keeps_its_status PASSED [ 30%]
+tests/test_cut_over.py::test_t3_three_consecutive_failures_abort_after_the_third_event PASSED [ 31%]
+tests/test_cut_over.py::test_t3_a_success_between_failures_resets_the_count PASSED [ 31%]
+tests/test_cut_over.py::test_t3_an_aborted_run_closes_as_aborted_with_reason PASSED [ 32%]
+tests/test_cut_over.py::test_t4_a14_and_input_fit_neither_count_nor_reset PASSED [ 33%]
+tests/test_cut_over.py::test_t4_the_counting_rule PASSED                 [ 33%]
+tests/test_cut_over.py::test_t5_zero_spans_become_no_fields_returned PASSED [ 34%]
+tests/test_cut_over.py::test_t7_the_thinking_channel_error_lives_in_core PASSED [ 35%]
+tests/test_entry_points_take_the_lock.py::test_run_pipeline_refuses_under_a_held_lock_before_opening_the_database PASSED [ 35%]
+tests/test_entry_points_take_the_lock.py::test_run_pipeline_holds_the_lock_across_every_stage PASSED [ 36%]
+tests/test_entry_points_take_the_lock.py::test_run_extractions_own_acquire_nests_under_the_entry_points PASSED [ 36%]
+tests/test_entry_points_take_the_lock.py::test_the_preflight_cli_refuses_under_a_held_lock_before_probing PASSED [ 37%]
+tests/test_entry_points_take_the_lock.py::test_the_preflight_cli_probes_under_the_lock_when_it_is_free PASSED [ 38%]
+tests/test_extraction_events.py::test_t1_a_complete_record_asserts_every_field_with_its_input PASSED [ 38%]
+tests/test_extraction_events.py::test_t2_an_exhausted_uncited_value_is_contract_unmet_and_the_paper_stores PASSED [ 39%]
+tests/test_extraction_events.py::test_t2_an_elicited_contract_unmet_and_an_incomplete_carrier PASSED [ 40%]
+tests/test_extraction_events.py::test_t3_missing_fields_write_nothing_and_are_named_on_the_paper PASSED [ 40%]
+tests/test_extraction_events.py::test_t4_a_duplicated_field_is_retried_then_contract_unmet PASSED [ 41%]
+tests/test_extraction_events.py::test_t5_an_unexpected_field_is_dropped_and_logged PASSED [ 42%]
+tests/test_extraction_events.py::test_t6_an_input_that_does_not_fit_is_a_paper_event_and_a_telemetry_row PASSED [ 42%]
+tests/test_extraction_events.py::test_t7_each_a14_refusal_is_extraction_failed_with_its_code[exc0] PASSED [ 43%]
+tests/test_extraction_events.py::test_t7_each_a14_refusal_is_extraction_failed_with_its_code[exc1] PASSED [ 43%]
+tests/test_extraction_events.py::test_t7_each_a14_refusal_is_extraction_failed_with_its_code[exc2] PASSED [ 44%]
+tests/test_extraction_events.py::test_t8_a_failed_model_call_leaves_the_paper_selectable PASSED [ 45%]
+tests/test_extraction_events.py::test_t9_a_new_text_version_supersedes_and_the_same_key_refuses PASSED [ 45%]
+tests/test_extraction_events.py::test_t10_the_writer_refuses_an_extractor_claim_without_input_identity PASSED [ 46%]
+tests/test_extraction_events.py::test_t11_a_refusal_on_the_last_field_writes_nothing_for_the_paper PASSED [ 47%]
+tests/test_extraction_events.py::test_b10_a_failure_at_the_paper_event_write_writes_nothing_for_the_paper PASSED [ 47%]
+tests/test_extraction_events.py::test_b10_a_sqlite_raised_error_mid_write_writes_nothing_for_the_paper PASSED [ 48%]
+tests/test_extraction_events.py::test_an_exhaustion_without_a_record_raises_and_writes_nothing PASSED [ 49%]
+tests/test_extraction_events.py::test_run_faults_propagate_unmapped PASSED [ 49%]
+tests/test_extraction_events.py::test_t12_every_code_the_mapping_emits_is_in_the_closed_set PASSED [ 50%]
+tests/test_extraction_events.py::test_t12_the_reason_codes_are_spelled_only_in_the_vocabulary PASSED [ 50%]
+tests/test_extraction_events.py::test_t12_processing_reasons_is_exactly_the_union_of_its_three_parts PASSED [ 51%]
+tests/test_extraction_events.py::test_d24_t1_an_incomplete_field_on_reextraction_is_superseded_and_reads_missing PASSED [ 52%]
+tests/test_extraction_events.py::test_d24_t2_a_failed_reextraction_supersedes_every_old_text_claim PASSED [ 52%]
+tests/test_extraction_events.py::test_d24_t3_a_selection_refusal_supersedes_every_old_text_claim_in_one_savepoint PASSED [ 53%]
+tests/test_extraction_events.py::test_d24_t4_a_first_extraction_plans_no_superseded_event PASSED [ 54%]
+tests/test_extraction_events.py::test_d24_t5_another_arms_claims_on_the_paper_are_untouched[stored_incomplete] PASSED [ 54%]
+tests/test_extraction_events.py::test_d24_t5_another_arms_claims_on_the_paper_are_untouched[failed] PASSED [ 55%]
+tests/test_extraction_events.py::test_d24_t5_another_arms_claims_on_the_paper_are_untouched[refused_at_selection] PASSED [ 56%]
+tests/test_extraction_events.py::test_d24_t6_after_a_partial_reextraction_the_audit_runs_on_the_paper PASSED [ 56%]
+tests/test_extraction_events.py::test_d24_t7_a_reviewer_decision_on_a_claim_the_reextraction_retired_needs_rereview PASSED [ 57%]
+tests/test_migration_backfill_audit_log.py::test_migration_applies_cleanly_on_fresh_db PASSED [ 57%]
+tests/test_migration_backfill_audit_log.py::test_migration_is_idempotent PASSED [ 58%]
+tests/test_migration_backfill_audit_log.py::test_rollback_drops_table_and_indexes PASSED [ 59%]
+tests/test_migration_backfill_audit_log.py::test_null_rationale_rejected PASSED [ 59%]
+tests/test_migration_backfill_audit_log.py::test_empty_rationale_rejected PASSED [ 60%]
+tests/test_migration_backfill_audit_log.py::test_fk_to_nonexistent_judge_run_fails PASSED [ 61%]
+tests/test_migration_backfill_audit_log.py::test_fk_cascade_delete PASSED [ 61%]
+tests/test_migration_backfill_audit_log.py::test_defaults PASSED         [ 62%]
+tests/test_ollama_preflight.py::TestCheckModel::test_success_returns_ok PASSED [ 63%]
+tests/test_ollama_preflight.py::TestCheckModel::test_error_returns_error_with_message PASSED [ 63%]
+tests/test_ollama_preflight.py::TestPreflightCheck::test_all_ok_returns_success PASSED [ 64%]
+tests/test_ollama_preflight.py::TestPreflightCheck::test_vram_filters_to_relevant_models PASSED [ 64%]
+tests/test_ollama_preflight.py::TestPreflightCheck::test_vram_unrelated_model_does_not_cause_rejection PASSED [ 65%]
+tests/test_ollama_preflight.py::TestPreflightCheck::test_one_failure_returns_failure PASSED [ 66%]
+tests/test_ollama_preflight.py::TestCheckOllamaEnv::test_passes_when_env_correct PASSED [ 66%]
+tests/test_ollama_preflight.py::TestCheckOllamaEnv::test_fails_when_flash_attention_missing PASSED [ 67%]
+tests/test_ollama_preflight.py::TestCheckOllamaEnv::test_fails_when_max_loaded_models_wrong PASSED [ 68%]
+tests/test_ollama_preflight.py::TestCheckOllamaEnv::test_fails_when_kv_cache_type_wrong PASSED [ 68%]
+tests/test_ollama_preflight.py::TestCheckOllamaEnv::test_fails_lists_all_correctness_errors PASSED [ 69%]
+tests/test_ollama_preflight.py::TestCheckOllamaEnv::test_performance_mismatch_warns_not_raises PASSED [ 70%]
+tests/test_ollama_preflight.py::TestCheckOllamaEnv::test_performance_missing_warns_not_raises PASSED [ 70%]
+tests/test_ollama_preflight.py::TestCheckOllamaEnv::test_mixed_correctness_fail_and_perf_warn PASSED [ 71%]
+tests/test_ollama_preflight.py::TestCheckOllamaEnv::test_get_ollama_env_parses_systemctl_output PASSED [ 71%]
+tests/test_ollama_preflight.py::TestCheckOllamaEnv::test_get_ollama_env_returns_empty_on_error PASSED [ 72%]
+tests/test_ollama_preflight.py::TestRequirePreflight::test_raises_on_failure PASSED [ 73%]
+tests/test_ollama_preflight.py::TestRequirePreflight::test_passes_silently_on_success PASSED [ 73%]
+tests/test_ollama_preflight.py::TestRequirePreflight::test_env_check_runs_before_model_check PASSED [ 74%]
+tests/test_ollama_preflight.py::TestRunnerIntegration::test_ft_screening_calls_preflight PASSED [ 75%]
+tests/test_ollama_preflight.py::TestRunnerIntegration::test_extraction_calls_preflight PASSED [ 75%]
+tests/test_ollama_preflight.py::TestRunnerIntegration::test_audit_calls_preflight PASSED [ 76%]
+tests/test_ollama_preflight.py::TestRunnerIntegration::test_runner_proceeds_on_preflight_success PASSED [ 77%]
+tests/test_run_interrupts.py::test_t1_run_pipeline_closes_a_keyboard_interrupt_as_sigint PASSED [ 77%]
+tests/test_run_interrupts.py::test_t2_run_pipeline_closes_a_signal_with_its_reason[15-interrupt:SIGTERM] PASSED [ 78%]
+tests/test_run_interrupts.py::test_t2_run_pipeline_closes_a_signal_with_its_reason[1-interrupt:SIGHUP] PASSED [ 78%]
+tests/test_run_interrupts.py::test_t3_run_ft_invocation_closes_an_interrupt_with_its_reason[exc0-interrupt:SIGINT] PASSED [ 79%]
+tests/test_run_interrupts.py::test_t3_run_ft_invocation_closes_an_interrupt_with_its_reason[exc1-interrupt:SIGTERM] PASSED [ 80%]
+tests/test_run_interrupts.py::test_t4_the_installed_handler_raises_run_interrupted_with_the_signum[15] PASSED [ 80%]
+tests/test_run_interrupts.py::test_t4_the_installed_handler_raises_run_interrupted_with_the_signum[1] PASSED [ 81%]
+tests/test_run_interrupts.py::test_t4_each_main_installs_then_restores_the_handlers[pipeline-None] PASSED [ 82%]
+tests/test_run_interrupts.py::test_t4_each_main_installs_then_restores_the_handlers[pipeline-raises1] PASSED [ 82%]
+tests/test_run_interrupts.py::test_t4_each_main_installs_then_restores_the_handlers[pipeline-raises2] PASSED [ 83%]
+tests/test_run_interrupts.py::test_t4_each_main_installs_then_restores_the_handlers[ft-None] PASSED [ 84%]
+tests/test_run_interrupts.py::test_t4_each_main_installs_then_restores_the_handlers[ft-raises1] PASSED [ 84%]
+tests/test_run_interrupts.py::test_t4_each_main_installs_then_restores_the_handlers[ft-raises2] PASSED [ 85%]
+tests/test_run_interrupts.py::test_t5_an_interrupt_after_a_gate_close_leaves_the_gate_close PASSED [ 85%]
+tests/test_run_interrupts.py::test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it PASSED [ 86%]
+tests/test_run_interrupts.py::test_t7_each_main_exits_128_plus_the_signal[pipeline-exc0-130] PASSED [ 87%]
+tests/test_run_interrupts.py::test_t7_each_main_exits_128_plus_the_signal[pipeline-exc1-143] PASSED [ 87%]
+tests/test_run_interrupts.py::test_t7_each_main_exits_128_plus_the_signal[pipeline-exc2-129] PASSED [ 88%]
+tests/test_run_interrupts.py::test_t7_each_main_exits_128_plus_the_signal[ft-exc0-130] PASSED [ 89%]
+tests/test_run_interrupts.py::test_t7_each_main_exits_128_plus_the_signal[ft-exc1-143] PASSED [ 89%]
+tests/test_run_interrupts.py::test_t7_each_main_exits_128_plus_the_signal[ft-exc2-129] PASSED [ 90%]
+tests/test_run_interrupts.py::test_t7_a_clean_main_exits_zero PASSED     [ 91%]
+tests/test_run_interrupts.py::test_t8_an_interrupt_leaves_an_uncommitted_write_absent PASSED [ 91%]
+tests/test_run_interrupts.py::test_t9_run_pipeline_an_interrupt_inside_the_completed_close_closes_interrupted PASSED [ 92%]
+tests/test_run_interrupts.py::test_t9_run_ft_invocation_an_interrupt_inside_the_completed_close_closes_interrupted PASSED [ 92%]
+tests/test_run_pipeline_closes.py::test_the_adjudication_gate_closes_interrupted_with_its_reason PASSED [ 93%]
+tests/test_run_pipeline_closes.py::test_the_audit_review_gate_closes_interrupted_with_its_reason PASSED [ 94%]
+tests/test_run_pipeline_closes.py::test_the_gate_reasons_are_distinct_blocked_tokens_in_the_closed_set PASSED [ 94%]
+tests/test_run_pipeline_closes.py::test_a_completed_run_closes_completed_with_no_reason PASSED [ 95%]
+tests/test_run_pipeline_closes.py::test_a_failed_run_closes_failed_with_its_exception_class_and_message PASSED [ 96%]
+tests/test_run_pipeline_closes.py::test_the_audit_review_gate_stops_on_live_like_workflow_rows PASSED [ 96%]
+tests/test_run_pipeline_closes.py::test_the_audit_review_gate_stops_behind_any_earlier_pending_stage PASSED [ 97%]
+tests/test_run_pipeline_closes.py::test_a_completed_audit_review_lets_the_run_export PASSED [ 98%]
+tests/test_stage_completion.py::test_t6_extraction_complete_follows_the_processing_axis_not_papers_status PASSED [ 98%]
+tests/test_stage_completion.py::test_t6_audit_complete_follows_audited_ai PASSED [ 99%]
+tests/test_stage_completion.py::test_t6_a_legacy_status_alone_completes_nothing PASSED [100%]
+
+=================================== FAILURES ===================================
+__________ test_t3_locate_every_claim_verify_only_the_unlocated_value __________
+
+db = <engine.core.database.ReviewDatabase object at 0xe7b9763f9280>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2
+review_dir = PosixPath('/home/ankitsarin/scratch/12u-u16c/bt/2b/test_t3_locate_every_claim_ver0/aud')
+sentinels = frozenset({'N/A', 'NA', 'NOT FOUND', 'NOT REPORTED', 'NOT_FOUND', 'NR'})
+verify = <MagicMock name='semantic_verify' id='254783738897056'>
+
+    def test_t3_locate_every_claim_verify_only_the_unlocated_value(db, spec, run_id,
+                                                                  review_dir, sentinels, verify):
+        arm = spec.extraction_models.arm
+        exact = claim(db, spec, run_id, P7, "study_type", "RCT",
+                      "The trial enrolled forty patients at two centres.")
+        fuzzy = claim(db, spec, run_id, P7, "task_performed", "suturing",
+                      "The robot performd autonomous suturing on porcine tisue in ten trials.")
+        lost = claim(db, spec, run_id, P7, "country", "Norway", "Conducted in Norway by the authors.")
+        sent = claim(db, spec, run_id, P7, "comparison_to_human", "NR",
+                     "Outcomes were measured at six months.")
+        rep = run(db, spec, run_id, review_dir)
+    
+        evs = located_events(db, P7)
+        assert set(evs) == {exact, fuzzy, lost, sent}
+        for p in evs.values():
+            assert {"located", "kind", "score", "threshold", "locator_version", "snippet_supplied",
+                    "bridged", "parsed_text_sha256", "parsed_text_uid"} <= set(p)
+        assert (evs[exact]["kind"], evs[fuzzy]["kind"], evs[lost]["located"]) == \
+            ("exact", "fuzzy", False)
+        assert verify.call_count == 1 and verify.call_args.args[0].field_name == "country"
+        rows = verdicts(db, P7)  # R218: audit_verdicts, not audit_calls.jsonl
+        assert len(rows) == 1 and rows[0]["claim_id"] == lost and rows[0]["run_id"] == run_id
+>       assert audited(db, P7) == 1 and rep.papers_audited == 1
+E       assert (1 == 1 and 2 == 1)
+E        +  where 1 = audited(<engine.core.database.ReviewDatabase object at 0xe7b9763f9280>, 7)
+E        +  and   2 = AuditReport(papers_audited=2, located=3, not_located=1, verified=0, flagged=1, skipped_refused=(), low_yield=(7,), skipped_by_state=()).papers_audited
+
+tests/test_audit_events.py:148: AssertionError
+____ test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs _____
+
+db = <engine.core.database.ReviewDatabase object at 0xe7b976194bc0>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+run_id = 2
+review_dir = PosixPath('/home/ankitsarin/scratch/12u-u16c/bt/2b/test_t15_one_audit_verdicts_ro0/aud')
+verify = <MagicMock name='semantic_verify' id='254783738357872'>
+
+    def test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs(
+            db, spec, run_id, review_dir, verify):
+        """Two claims that both need a model call (no snippet, or unlocated) —
+        each gets exactly one audit_verdicts row, fields equal to the call's
+        inputs, run_id equal to the audited_ai event's run_id."""
+        arm = spec.extraction_models.arm
+        lost = claim(db, spec, run_id, P7, "country", "Norway",
+                    "Conducted in Norway by the authors.")
+        no_snippet = claim(db, spec, run_id, P7, "task_performed", "suturing", "")
+        rep = run(db, spec, run_id, review_dir)
+    
+        rows = {r["claim_id"]: r for r in verdicts(db, P7)}
+        assert set(rows) == {lost, no_snippet}
+        assert AT.SCHEMA_VERSION == "audit-telemetry-1"
+        for cid, field_name in ((lost, "country"), (no_snippet, "task_performed")):
+            r = rows[cid]
+            assert r["schema"] == "audit-telemetry-1"
+            assert r["field_name"] == field_name and r["arm"] == arm
+            assert r["auditor_model"] == "gemma3:27b"
+            row_audited_ai = db._conn.execute(
+                "SELECT run_id FROM paper_events WHERE paper_id = ? AND to_state = "
+                "'audited_ai'", (P7,)).fetchone()
+            assert r["run_id"] == row_audited_ai[0] == run_id
+>       assert rep.papers_audited == 1
+E       assert 2 == 1
+E        +  where 2 = AuditReport(papers_audited=2, located=0, not_located=2, verified=0, flagged=2, skipped_refused=(), low_yield=(7,), skipped_by_state=()).papers_audited
+
+tests/test_audit_events.py:279: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_audit_events.py::test_t3_locate_every_claim_verify_only_the_unlocated_value
+FAILED tests/test_audit_events.py::test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs
+=================== 2 failed, 155 passed in 80.61s (0:01:20) ===================

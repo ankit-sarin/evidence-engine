@@ -10,6 +10,12 @@ writes are its successor).
 0. A paper whose processing state is not in `AUDIT_ADMITTED_STATES` (U15) is
    skipped with a log line naming its id, state and reason, listed on
    `AuditReport.skipped_by_state`, and nothing is written for it.
+   A paper at `extracted` with no live asserted claim left to locate (an
+   all-declined record) is audited vacuously (U16, R685(e)(ii)): its `audited_ai`
+   event carries `located: 0`, one log line names it, it is counted in
+   `AuditReport.papers_audited`, and no text is read and no model is called.
+   A paper with nothing to locate at any other state, `audited_ai` included, is
+   passed over as before (F10).
 1. Resolve and read the parsed text the paper's claims were EXTRACTED FROM — the
    version each claim's `claim_inputs` row names, by uid, verified by hash (R95,
    D23) — not the paper's newest version. A refused text (that version missing,
@@ -144,7 +150,8 @@ def claim_text_ref(conn, claims) -> ParsedTextRef:
 
 
 def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> AuditReport:
-    """Locate, verify and record the audit of every eligible paper for `arm`."""
+    """Locate, verify and record the audit of every eligible paper for `arm`. A
+    paper at `extracted` with nothing left to locate is audited vacuously."""
     auditor_digest = rm.stage_digest(conn, run_id, "audit")
     if auditor_digest is None and not conn.execute(
             "SELECT 1 FROM run_stage_configs WHERE run_id = ? AND stage = 'audit'",
@@ -166,12 +173,24 @@ def audit_run(conn, spec, *, run_id: int, arm: str, review_dir: str | Path) -> A
     low: list[int] = []
     for pid in eligible_paper_ids(conn):
         claims = live_claim_events(conn, pid, arm, event_types=("asserted",))
-        if not claims:
-            continue
         done = {ev.claim_id for ev in live_claim_events(
-            conn, pid, arm, event_types=("citation_located",))}
+            conn, pid, arm, event_types=("citation_located",))} if claims else set()
         todo = [c for c in claims if c.claim_id not in done]
         if not todo:
+            # U16 (R685(e)(ii)): nothing to locate. A paper still at `extracted`
+            # is audited vacuously; any other state is passed over (F10).
+            if effective_state(conn, pid).processing == "extracted":
+                write_paper_event(
+                    conn, event_type="audited", paper_id=pid, to_state="audited_ai",
+                    from_state="extracted", actor_kind="engine", actor_role="system",
+                    actor_name="auditor", actor_digest=auditor_digest, run_id=run_id,
+                    stage_name="audit",
+                    payload={"arm": arm, "located": 0, "not_located": 0,
+                             "locator_version": LOCATOR_VERSION})
+                logger.info("Paper %d: audited with nothing to locate — no live asserted "
+                            "claim of arm %s is unlocated; audited_ai written, 0 located",
+                            pid, arm)
+                audited += 1
             continue
         # U15 (R677(c)): the processing state admits the paper, or nothing is
         # written for it. Read once; the same value stamps `from_state` below.

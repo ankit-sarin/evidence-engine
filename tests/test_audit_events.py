@@ -110,6 +110,15 @@ def audited(db, pid):
                             "to_state = 'audited_ai'", (pid,)).fetchone()[0]
 
 
+def assert_audited_vacuously(db, pid):
+    """U16 (R685(e)(ii), R690(b)): a paper seeded at `extracted` with no claim to
+    locate carries one audited_ai event with zero claims located."""
+    rows = db._conn.execute("SELECT payload_json FROM paper_events WHERE paper_id = ? AND "
+                            "to_state = 'audited_ai'", (pid,)).fetchall()
+    assert [json.loads(r[0]).get("located") for r in rows] == [0]
+    assert effective_state(db._conn, pid).processing == "audited_ai"
+
+
 @pytest.fixture
 def verify():
     with patch.object(AE, "semantic_verify", return_value=AuditVerdict(
@@ -145,7 +154,8 @@ def test_t3_locate_every_claim_verify_only_the_unlocated_value(db, spec, run_id,
     assert verify.call_count == 1 and verify.call_args.args[0].field_name == "country"
     rows = verdicts(db, P7)  # R218: audit_verdicts, not audit_calls.jsonl
     assert len(rows) == 1 and rows[0]["claim_id"] == lost and rows[0]["run_id"] == run_id
-    assert audited(db, P7) == 1 and rep.papers_audited == 1
+    assert audited(db, P7) == 1 and rep.papers_audited == 2    # P8 audited vacuously (U16)
+    assert_audited_vacuously(db, P8)
     assert effective_state(db._conn, P7).processing == "audited_ai"
     row = lambda f: effective_value(db._conn, P7, f, arm, sentinels=sentinels).rule_row
     assert (row("study_type"), row("task_performed"), row("country"),
@@ -276,7 +286,8 @@ def test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs(
             "SELECT run_id FROM paper_events WHERE paper_id = ? AND to_state = "
             "'audited_ai'", (P7,)).fetchone()
         assert r["run_id"] == row_audited_ai[0] == run_id
-    assert rep.papers_audited == 1
+    assert rep.papers_audited == 2                            # P8 audited vacuously (U16)
+    assert_audited_vacuously(db, P8)
 
 
 # ── T16 (R218 B4-T2): atomicity — verdicts and the paper event together ──

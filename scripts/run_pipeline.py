@@ -248,14 +248,23 @@ def _processing_states(conn) -> dict[int, str]:
 def _advance_extraction_workflow(conn) -> dict[str, int]:
     """Reader 8 on the reader (9b-FLIP 1/2): EXTRACTION_COMPLETE once any corpus
     paper's processing state is completed (extracted or audited_ai), and
-    AI_AUDIT_COMPLETE_STAGE once any is audited_ai. Returns the two counts."""
+    AI_AUDIT_COMPLETE_STAGE once any is audited_ai and none is still `extracted`
+    (U16, R685(e)(i)); while one is, each such paper is named in one WARNING and
+    the stage stays pending. Returns the two counts."""
     states = _processing_states(conn)
     extracted = sum(1 for s in states.values() if s in COMPLETED_PROCESSING_STATES)
     audited = sum(1 for s in states.values() if s == "audited_ai")
     if extracted > 0:
         complete_stage(conn, "EXTRACTION_COMPLETE",
                        metadata=f"{extracted} papers extracted")
-    if audited > 0:
+    pending = sorted(pid for pid, s in states.items() if s == "extracted")
+    for pid in pending:
+        logger.warning(
+            "Paper %d holds AI_AUDIT_COMPLETE_STAGE pending: processing state extracted, "
+            "not audited_ai. Action: read this run's audit log for the paper; an 'audit "
+            "skipped' line names a refused text and its reason (left for migration 023); "
+            "with no such line, run the audit stage again.", pid)
+    if audited > 0 and not pending:
         complete_stage(conn, "AI_AUDIT_COMPLETE_STAGE",
                        metadata=f"{audited} papers audited")
     return {"extracted": extracted, "audited": audited}

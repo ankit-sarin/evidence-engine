@@ -1,0 +1,98 @@
+RULING [evidence-engine 12u-R685] — 12u-U16A accepted; R624(b) answered; INT-i12-73's class
+  and trigger; U16's fix designed; four notes; Phase 1 opens
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16A
+  read-out (docs/session-reports/session-12/12u_U16A/12u_U16A.md, 97e50798b854dab26d0206e8421411241810b68a;
+  item 0 at a50e067ed4797a6f70613634511ee2382ee32a23). Transcribe as item 0 of the brief below
+  (Block 83), in this block.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12u-U16A report):
+  MEASURED: "Commit: a50e067ed4797a6f70613634511ee2382ee32a23, parent 45ba353"; "Plan numstat:
+    "+" 75, "−" 0. Line count 8,200 = 8,125 + 75"; "sha256
+    427a78805c530e560c7a9b2635e4a867d9f0253833148037a3efa65a802b88cf, 1,732,282 bytes"; "r684.txt:
+    sha256 0dbf06ba7e3134c2a5d9e1de1f15382cb5da4c3601ee10b78541468bb1807613, 5,427 bytes, 64
+    lines"; "fence == r684.txt True; cell == render_cell True"; "9d03bda35334be5177092cc95618e1d0a8dcfbc8,
+    parent 94e8ec2"; "Commit: 97e50798b854dab26d0206e8421411241810b68a, parent a50e067. 10 files,
+    2,627 insertions"; "git diff --stat 45ba353 HEAD -- engine tests scripts analysis review_specs
+    is empty"; "86b5d57b2bbf50ddc3990618d134e91cea6e2781, parent 9d03bda"; "The reuse key is (arm,
+    paper_id, parsed_text_sha256)"; "No production path writes changed bytes under an existing
+    reference"; "On live today there are no held papers (field_events 0, claim_inputs 0)"; the
+    case table — paper 11 "Stays audited_ai and included, 20 live claims. Reported every run; no
+    event; the audit never looks at it"; paper 12 "Re-extracted (1 pass-2 call), 20 old claims
+    superseded, audited on v2"; paper 15 "One in-loop extraction_failed, and all 20 v1 claims
+    superseded although v1's file is intact"; papers 17, 18 "Audit refuses them every run. They
+    stay extracted and "in progress", yet the AI-audit stage completed with 5 of 7 audited";
+    "Anchor: _advance_extraction_workflow runs if audited > 0 … Its only caller wraps it in except
+    Exception: pass"; "The all-declined paper is skipped silently: no log line and no report
+    entry"; "Acceptance tests: T1–T5, each fails on HEAD as measured. T4 … rests on code reading
+    only; it was not driven"; "They agreed in every case driven; no divergence was measured".
+  MEASURED (architect, this session): the architect's copy of R684, hashed before the report was
+    read: sha256 0dbf06ba7e3134c2a5d9e1de1f15382cb5da4c3601ee10b78541468bb1807613, 5,427 bytes,
+    64 lines; 10 em dashes, 2 en dashes, 3 U+2212, 1 ×, 1 →, 3 …, 0 tabs.
+  READ (CC's, the report's own classifications): "Class verdict (INFERRED): depends on how Run 7
+    is configured"; "Case (ii) is already re-extraction. R624(b)'s open question reduces to cases
+    (i) and (iii)"; "P1A's stated trigger, "an interrupted audit", is not one. The advance runs
+    only after _stage_audit returns"; "B, C and D each fall outside U16 (they need a new P1 row),
+    and each breaks test_text_refusal_at_selection.py gates 1–2".
+  INFERRED (architect): the read-out's §5 tests T1–T3 and T5 do not assert a behaviour that
+    R685(e)(ii) or (iii) contradicts. Phase 1 step 1 quotes them and reports any contradiction
+    before a test is run.
+
+R685(a) — 12u-U16A is accepted as reported: item 0 at a50e067 (Block 82), the read-out at
+  97e5079, no engine change, no live write, no model call. The architect's copy of R684 hashed
+  identically; Block 82 stands.
+R685(b) — R624(b) is answered: no. The engine does not re-extract a paper the arm already holds
+  on the ground that its recorded text file has changed or is missing. A held paper's claims are
+  bound to the parsed_text_sha256 they were made from and stand; the engine's route to new
+  claims is a re-parse to a new version, whose new bytes are a new reuse key and which D24
+  already re-extracts (case (ii), paper 12). A file altered or removed under an existing
+  reference is an integrity fault of the review's file store, which no engine path produces;
+  today it is reported each run (claimed_text_unreadable, U11) and left, and its recorded form —
+  a processing-axis token for a held paper whose text no longer verifies — is set by P6's Phase
+  A with 023, D22's state and INT-s12-2's transition table. Candidates C (pin-affecting; cannot
+  cover a missing file; resamples on an outside fault) and D (a one-paper fault is not a run
+  fault) are rejected; B's principle is adopted and its build is 023's. test_text_refusal_at_
+  selection.py gates 1–2 stand. INT-i12-69 gains a dated note carrying this and the reduction to
+  cases (i) and (iii); its class and package are unchanged.
+R685(c) — Paper 15 is D24 as ruled (R455: a failed paper takes K from its current
+  parsed_text_refs row; every live claim under another key is superseded); measured, not a
+  defect. Finding 8 (selection reads the reuse key from claim_inputs, D24 from the payload copy;
+  no divergence in any case driven) is recorded with it. One dated note on D24; no row.
+R685(d) — INT-i12-73 stays Class 1 (conditional), P1, unit U16; no class move. Its condition is
+  restated by a dated note: the measured triggers are (1) an eligible paper at `extracted` with
+  no claim to locate (an all-declined record, reachable on the elicited path — U06 F6, R619(f))
+  and (2) a paper whose text the audit refuses under D23 (from outside the engine only); "an
+  interrupted audit" is not a trigger, the advance running only after _stage_audit returns; the
+  second-arm half is latent. The P1A entry is not edited (read-outs are never edited); the note
+  is the correction.
+R685(e) — U16's fix, for Phase 2 under the brief below:
+  (i) AI_AUDIT_COMPLETE_STAGE completes only when no eligible paper's processing state is
+      `extracted`: every eligible paper that reached extraction is audited_ai or at a failure
+      state. The advance runs after every audit stage invocation and, when it does not complete
+      the stage, reports the papers holding it pending by id, state and reason (one line each,
+      and on the stage summary).
+  (ii) An admitted paper at `extracted` with no claim to locate is audited vacuously: audit_run
+      writes its audited_ai event with a payload field naming zero claims located, one log line
+      naming the paper, counted on the report; no model call. A paper already at audited_ai is
+      skipped as today (F10).
+  (iii) A paper audit_run refuses under D23 stays `extracted`, is listed on the report with its
+      uid(s) and reason, and holds the stage pending until 023 gives it a recorded state (D22).
+      The loud direction, by design.
+  (iv) The caller's `except Exception: pass` around the advance is C56 handler 3, Class 3, P7
+      (R538, R542) and is not changed in U16; T4 belongs to that row (R681(b) form). A dated note
+      on C56 records it.
+  (v) Pin effect: none (audit side and the runner's workflow advance; no request changes; both
+      pins byte-identical before and after is the check).
+  (vi) Acceptance tests: the read-out's §5 T1, T2, T3 and T5 as written; TV1 — an eligible
+      all-declined paper at `extracted` ends audited_ai with the zero-located payload and one log
+      line, and the stage completes; TV2 — a paper refused under D23 stays `extracted`, is named
+      on the report with its reason, and the stage does not complete; the stage test's id is
+      test_ai_audit_stage_completes_only_when_every_extracted_corpus_paper_is_audited; the
+      regression set is every existing audit_run, audit-report and run_pipeline advance test
+      unchanged in outcome. If a §5 test asserts a behaviour that (ii) or (iii) contradicts, this
+      ruling governs: Phase 1 reports the contradiction and stops before running it.
+R685(f) — Item 0 of the brief below carries four cell notes, on INT-i12-69, INT-i12-73, D24 and
+  C56: four "−" lines, checked by prefix_check.py --expected-row INT-i12-69 INT-i12-73 D24 C56
+  (R664(c), R652(a)); no row opened; the recount stays 278 and no new script is added (R678(f)).
+R685(g) — Phase 1 (tests written and run against HEAD's modules in a scratch checkout, committed
+  with their outcomes, R676(c)) runs under the brief below and stops; Phase 2, the engine edit
+  and its gate, follows a ruling on Phase 1's report and must exit its gate before 07:00 UTC.

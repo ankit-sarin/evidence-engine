@@ -1,0 +1,31 @@
+RULING [evidence-engine 12u-R686] — I1 was an architect count; four notes on the row lines;
+  the one-note-per-line rule restated; resume 12u-U16B from 0b
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16B
+  stop report at step 0 (nothing written; both repos clean and level at 97e5079 / 86b5d57).
+  Transcribe with R685 as Block 83's companion, Block 84, at item 0 of the resumed brief, in
+  its own fence and table row after Block 83, in the same commit.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "grep -c "^| $id |" docs/plan/ENGINE_REFACTOR_PLAN.md returns 2 for each id"; the
+    line table — INT-i12-69 "598" / "1321"; INT-i12-73 "602" / "1325"; D24 "318" / "1177"; C56
+    "287" / "1183"; "a2e6378 (12t-CLOSE item 0): INT-i12-12 also had two lines then (541 and
+    1264, as now). The commit noted only the row line: 3 "−" lines for 3 ids, prefix_check
+    PASS"; prefix_check.py's docstring "each named row must contribute exactly one "−" line".
+  READ (CC's): "R672(c) (12s item 0): noted INT-h12-2's package-table line because its package
+    and class were changing (P1 → P7)"; "D24 and C56's second lines are a closure/session table,
+    not a package line".
+  INFERRED: none.
+
+R686(a) — The stop was right. I1 ("each appears exactly once") was an architect count, not a
+  read; the brief's "−" arithmetic rested on it.
+R686(b) — Option (a). The four notes of R685(f) go on the row lines only (598, 602, 318, 287 as
+  read at the stop; re-read at 0d): four "−" lines, prefix_check.py --expected-row INT-i12-69
+  INT-i12-73 D24 C56 as written. Lines 1321, 1325, 1177 and 1183 are not edited.
+R686(c) — The one-note-per-line rule (R570 form; R672(c)) is restated: a row that appears on
+  more than one line gets a note on a second line only when the note changes what that line
+  states — its class, its package, or its closure. A note that leaves those unchanged goes on
+  the row line alone, as a2e6378 did. prefix_check.py's one-"−"-per-id check is the form for
+  that case and is not amended.
+R686(d) — Nothing else in 12u-U16B changes. Block 84 is this ruling, after Block 83, in the
+  item-0 commit; the decision log then ends at R686 (0c's sentence reads "…ends at R686."). The
+  commit's "−" count stays 4; its "+" count is Block 83's lines + Block 84's lines + 4.

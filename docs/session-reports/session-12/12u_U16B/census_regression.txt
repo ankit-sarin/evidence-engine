@@ -1,0 +1,22 @@
+# named by the brief
+tests/test_audit_events.py
+tests/test_audit_admitted_set.py
+tests/test_audit_paper_id.py
+tests/test_run_pipeline_closes.py
+# grep -ln '_advance_extraction_workflow\|AI_AUDIT_COMPLETE_STAGE' tests/*.py (the new file excluded)
+tests/test_arm_pinned_at_extract.py
+tests/test_entry_points_take_the_lock.py
+tests/test_run_pipeline_closes.py
+tests/test_stage_completion.py
+tests/test_run_interrupts.py
+# grep -ln 'audit_run\|AuditReport\|_stage_audit' tests/*.py (R685(e)(vi): every audit_run / audit-report test; the new file excluded)
+tests/test_arm_pinned_at_extract.py
+tests/test_audit_admitted_set.py
+tests/test_cut_over.py
+tests/test_audit_paper_id.py
+tests/test_audit_events.py
+tests/test_extraction_events.py
+tests/test_migration_backfill_audit_log.py
+tests/test_ollama_preflight.py
+tests/test_run_interrupts.py
+tests/test_run_pipeline_closes.py

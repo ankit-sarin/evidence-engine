@@ -1,0 +1,147 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/scratch/12u-u16b/checkout
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 5 items
+
+tests/test_audit_stage_completion.py::test_ai_audit_stage_completes_only_when_every_extracted_corpus_paper_is_audited FAILED [ 20%]
+tests/test_audit_stage_completion.py::test_a_text_refused_at_audit_leaves_the_ai_audit_stage_pending_and_named FAILED [ 40%]
+tests/test_audit_stage_completion.py::test_tv2_a_paper_refused_under_d23_stays_extracted_is_named_and_holds_the_stage FAILED [ 60%]
+tests/test_audit_stage_completion.py::test_an_extracted_paper_with_nothing_to_audit_is_reported_not_silent FAILED [ 80%]
+tests/test_audit_stage_completion.py::test_tv1_an_all_declined_paper_is_audited_vacuously_and_the_stage_completes FAILED [100%]
+
+=================================== FAILURES ===================================
+_ test_ai_audit_stage_completes_only_when_every_extracted_corpus_paper_is_audited _
+tests/test_audit_stage_completion.py:149: in test_ai_audit_stage_completes_only_when_every_extracted_corpus_paper_is_audited
+    assert not is_stage_done(db._conn, STAGE)
+E   AssertionError: assert not True
+E    +  where True = is_stage_done(<sqlite3.Connection object at 0xf78625d9c220>, 'AI_AUDIT_COMPLETE_STAGE')
+E    +    where <sqlite3.Connection object at 0xf78625d9c220> = <engine.core.database.ReviewDatabase object at 0xf78625d4bb60>._conn
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/1 (100.0%) | Paper EE-201 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 1
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+[Local extraction] 1/1 (100.0%) | Paper EE-202 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 1
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.core.selection:selection.py:118 Paper 203: not selected — parsed_text_missing (parsed text 6088b637-94ce-4a68-944b-6243654b8d68: the recorded file is missing at /home/ankitsarin/scratch/12u-u16b/bt/new/test_ai_audit_stage_completes_0/u16/parsed_text/203_v1.md)
+WARNING  engine.core.selection:selection.py:118 Paper 203: not selected — parsed_text_missing (parsed text 6088b637-94ce-4a68-944b-6243654b8d68: the recorded file is missing at /home/ankitsarin/scratch/12u-u16b/bt/new/test_ai_audit_stage_completes_0/u16/parsed_text/203_v1.md)
+INFO     engine.adjudication.workflow:workflow.py:206 Workflow stage completed: EXTRACTION_COMPLETE
+INFO     engine.adjudication.workflow:workflow.py:206 Workflow stage completed: AI_AUDIT_COMPLETE_STAGE
+___ test_a_text_refused_at_audit_leaves_the_ai_audit_stage_pending_and_named ___
+tests/test_audit_stage_completion.py:174: in test_a_text_refused_at_audit_leaves_the_ai_audit_stage_pending_and_named
+    assert not is_stage_done(db._conn, STAGE)
+E   AssertionError: assert not True
+E    +  where True = is_stage_done(<sqlite3.Connection object at 0xf78625d9d990>, 'AI_AUDIT_COMPLETE_STAGE')
+E    +    where <sqlite3.Connection object at 0xf78625d9d990> = <engine.core.database.ReviewDatabase object at 0xf78625d8fcb0>._conn
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/3 (33.3%) | Paper EE-211 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-217 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-218 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 3
+  Succeeded    : 3
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+INFO     pipeline:run_pipeline.py:449 ============================================================
+INFO     pipeline:run_pipeline.py:450 STAGE: AUDIT
+WARNING  engine.agents.audit_events:audit_events.py:195 Paper 217: audit skipped — parsed_text_modified; parsed text uid(s) 61c9add4-0cca-4ef0-a785-3542abcf9209 (parsed text 61c9add4-0cca-4ef0-a785-3542abcf9209 at /home/ankitsarin/scratch/12u-u16b/bt/new/test_a_text_refused_at_audit_l0/u16/parsed_text/217_v1.md was modified after it was recorded: recorded sha256 2f9d7d0566f96acac89fa8e6a50d51e79ffb36657982c97b33eaaffb565e2d33, observed 7f4e2cf5675617a040545d3d917d1032f43676f1c4faa97eca8515fe731b2594. Remedy: record the changed text as a NEW version (engine.core.parsed_text.record_parsed_text); a recorded text is never consumed in place.)
+WARNING  engine.agents.audit_events:audit_events.py:195 Paper 218: audit skipped — parsed_text_missing; parsed text uid(s) 569bbde9-8750-4ead-9b75-3b04b546a1af (parsed text 569bbde9-8750-4ead-9b75-3b04b546a1af: the recorded file is missing at /home/ankitsarin/scratch/12u-u16b/bt/new/test_a_text_refused_at_audit_l0/u16/parsed_text/218_v1.md)
+INFO     pipeline:run_pipeline.py:456 Audit complete in 0.0s — {"papers_audited": 1, "located": 20, "not_located": 0, "verified": 0, "flagged": 0, "skipped_refused": [[217, "parsed_text_modified"], [218, "parsed_text_missing"]], "low_yield": [], "skipped_by_state": []}
+INFO     engine.adjudication.workflow:workflow.py:206 Workflow stage completed: EXTRACTION_COMPLETE
+INFO     engine.adjudication.workflow:workflow.py:206 Workflow stage completed: AI_AUDIT_COMPLETE_STAGE
+_ test_tv2_a_paper_refused_under_d23_stays_extracted_is_named_and_holds_the_stage _
+tests/test_audit_stage_completion.py:189: in test_tv2_a_paper_refused_under_d23_stays_extracted_is_named_and_holds_the_stage
+    assert not is_stage_done(db._conn, STAGE)
+E   AssertionError: assert not True
+E    +  where True = is_stage_done(<sqlite3.Connection object at 0xf78625d9e2f0>, 'AI_AUDIT_COMPLETE_STAGE')
+E    +    where <sqlite3.Connection object at 0xf78625d9e2f0> = <engine.core.database.ReviewDatabase object at 0xf78625d94350>._conn
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/3 (33.3%) | Paper EE-211 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/3 (66.7%) | Paper EE-217 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/3 (100.0%) | Paper EE-218 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 3
+  Succeeded    : 3
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.agents.audit_events:audit_events.py:195 Paper 217: audit skipped — parsed_text_modified; parsed text uid(s) bc51ba1b-e48f-4c46-874e-2d55f881aec0 (parsed text bc51ba1b-e48f-4c46-874e-2d55f881aec0 at /home/ankitsarin/scratch/12u-u16b/bt/new/test_tv2_a_paper_refused_under0/u16/parsed_text/217_v1.md was modified after it was recorded: recorded sha256 2f9d7d0566f96acac89fa8e6a50d51e79ffb36657982c97b33eaaffb565e2d33, observed 7f4e2cf5675617a040545d3d917d1032f43676f1c4faa97eca8515fe731b2594. Remedy: record the changed text as a NEW version (engine.core.parsed_text.record_parsed_text); a recorded text is never consumed in place.)
+WARNING  engine.agents.audit_events:audit_events.py:195 Paper 218: audit skipped — parsed_text_missing; parsed text uid(s) ee2ea77d-09b2-4b0e-94b8-e62422720894 (parsed text ee2ea77d-09b2-4b0e-94b8-e62422720894: the recorded file is missing at /home/ankitsarin/scratch/12u-u16b/bt/new/test_tv2_a_paper_refused_under0/u16/parsed_text/218_v1.md)
+_____ test_an_extracted_paper_with_nothing_to_audit_is_reported_not_silent _____
+tests/test_audit_stage_completion.py:224: in test_an_extracted_paper_with_nothing_to_audit_is_reported_not_silent
+    assert len(said) == 1, said
+E   AssertionError: []
+E   assert 0 == 1
+E    +  where 0 = len([])
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/1 (100.0%) | Paper EE-221 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 1
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+INFO     pipeline:run_pipeline.py:449 ============================================================
+INFO     pipeline:run_pipeline.py:450 STAGE: AUDIT
+INFO     pipeline:run_pipeline.py:456 Audit complete in 0.0s — {"papers_audited": 1, "located": 20, "not_located": 0, "verified": 0, "flagged": 0, "skipped_refused": [], "low_yield": [], "skipped_by_state": []}
+_ test_tv1_an_all_declined_paper_is_audited_vacuously_and_the_stage_completes __
+tests/test_audit_stage_completion.py:234: in test_tv1_an_all_declined_paper_is_audited_vacuously_and_the_stage_completes
+    assert len(audited) == 1, audited
+E   AssertionError: []
+E   assert 0 == 1
+E    +  where 0 = len([])
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/1 (100.0%) | Paper EE-221 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 1
+  Succeeded    : 1
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+=========================== short test summary info ============================
+FAILED tests/test_audit_stage_completion.py::test_ai_audit_stage_completes_only_when_every_extracted_corpus_paper_is_audited
+FAILED tests/test_audit_stage_completion.py::test_a_text_refused_at_audit_leaves_the_ai_audit_stage_pending_and_named
+FAILED tests/test_audit_stage_completion.py::test_tv2_a_paper_refused_under_d23_stays_extracted_is_named_and_holds_the_stage
+FAILED tests/test_audit_stage_completion.py::test_an_extracted_paper_with_nothing_to_audit_is_reported_not_silent
+FAILED tests/test_audit_stage_completion.py::test_tv1_an_all_declined_paper_is_audited_vacuously_and_the_stage_completes
+============================== 5 failed in 6.71s ===============================
+exit 1

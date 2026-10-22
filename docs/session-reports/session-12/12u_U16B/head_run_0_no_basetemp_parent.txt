@@ -1,0 +1,42 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/scratch/12u-u16b/checkout
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 5 items
+
+tests/test_audit_stage_completion.py::test_ai_audit_stage_completes_only_when_every_extracted_corpus_paper_is_audited ERROR [ 20%]
+tests/test_audit_stage_completion.py::test_a_text_refused_at_audit_leaves_the_ai_audit_stage_pending_and_named ERROR [ 40%]
+tests/test_audit_stage_completion.py::test_tv2_a_paper_refused_under_d23_stays_extracted_is_named_and_holds_the_stage ERROR [ 60%]
+tests/test_audit_stage_completion.py::test_an_extracted_paper_with_nothing_to_audit_is_reported_not_silent ERROR [ 80%]
+tests/test_audit_stage_completion.py::test_tv1_an_all_declined_paper_is_audited_vacuously_and_the_stage_completes ERROR [100%]
+
+==================================== ERRORS ====================================
+_ ERROR at setup of test_ai_audit_stage_completes_only_when_every_extracted_corpus_paper_is_audited _
+/usr/lib/python3.12/pathlib.py:1313: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12u-u16b/bt/new'
+_ ERROR at setup of test_a_text_refused_at_audit_leaves_the_ai_audit_stage_pending_and_named _
+/usr/lib/python3.12/pathlib.py:1313: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12u-u16b/bt/new'
+_ ERROR at setup of test_tv2_a_paper_refused_under_d23_stays_extracted_is_named_and_holds_the_stage _
+/usr/lib/python3.12/pathlib.py:1313: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12u-u16b/bt/new'
+_ ERROR at setup of test_an_extracted_paper_with_nothing_to_audit_is_reported_not_silent _
+/usr/lib/python3.12/pathlib.py:1313: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12u-u16b/bt/new'
+_ ERROR at setup of test_tv1_an_all_declined_paper_is_audited_vacuously_and_the_stage_completes _
+/usr/lib/python3.12/pathlib.py:1313: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12u-u16b/bt/new'
+=========================== short test summary info ============================
+ERROR tests/test_audit_stage_completion.py::test_ai_audit_stage_completes_only_when_every_extracted_corpus_paper_is_audited
+ERROR tests/test_audit_stage_completion.py::test_a_text_refused_at_audit_leaves_the_ai_audit_stage_pending_and_named
+ERROR tests/test_audit_stage_completion.py::test_tv2_a_paper_refused_under_d23_stays_extracted_is_named_and_holds_the_stage
+ERROR tests/test_audit_stage_completion.py::test_an_extracted_paper_with_nothing_to_audit_is_reported_not_silent
+ERROR tests/test_audit_stage_completion.py::test_tv1_an_all_declined_paper_is_audited_vacuously_and_the_stage_completes
+============================== 5 errors in 2.78s ===============================
+exit 1

@@ -1,0 +1,41 @@
+RULING [evidence-engine 12u-R687] — T5 deferred to the per-arm axis (A15/F15), R681(b) form; the
+  "as written" clause withdrawn for it; T1's fixture; resume 12u-U16B from 1b
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16B
+  stop report at step 1c (item 0 landed at 21a224d6f54e91fe80685051ff8c6ea941be9b58; no test
+  written; both repos clean and level). Transcribe as Block 85 at item 0 of the Phase 2 brief,
+  from a hashed r687.txt in 12u_U16B/, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "Commit: 21a224d6f54e91fe80685051ff8c6ea941be9b58, parent 97e5079. 3 files, 282
+    insertions, 4 deletions"; "153 "+" … 4 "−""; "RESULT: PASS, exactly 4 "−" lines"; "Line
+    count: 8,349 = 8,200 + 153 − 4"; "sha256
+    48903072e4e491fbcdaca4fe2e2f1aa130df5478639db9a5b69764b7bd6d151f, 1,754,035 bytes"; "r685.txt:
+    469beb7cd283456bf5a6016ed94490b88ef1e4e8ee0887f28d11455dcb676017, 8,385 bytes, 98 lines";
+    "r686.txt: d1c8e106cd5422eccd96da858c105e8701701b4958c693bdf07982a8dccfc41d, 2,384 bytes, 31
+    lines"; "fence == file True and cell == render_cell True for both blocks"; ledger
+    "85751ff590a71dfebd8e4d26cc4b845e72716563, parent 86b5d57"; the §5 table as quoted, T5:
+    "test_a_second_arm_with_unlocated_claims_keeps_the_stage_pending | completes
+    (u16_second_arm) | per the second-arm option ruled; latent under R71"; T1: "completes
+    (u16_states) | pending, the shortfall names paper 2; completes once 2 is audited".
+  READ (CC's): "No second-arm option was ruled"; "In T5's world … the paper is audited_ai and
+    no paper is extracted, so the fixed advance completes the stage"; "In u16_states, paper 2
+    sits at extracted with no claims".
+  READ (architect, the refactor plan): row A15 — "The processing axis is per paper, not per
+    (paper, arm) … LATENT — owner F15 (rule whether the axis becomes per (paper, arm) or the
+    cloud arms write field events only)".
+  INFERRED: none.
+
+R687(a) — The stop was right. R685(e)(vi)'s "T5 as written" was an architect clause that could
+  not hold against R685(e)(i); it is withdrawn for T5 (R639(b) form).
+R687(b) — Option (a). T5 is a test for a per-arm stage completion, which the processing axis
+  cannot express while it is per paper (A15). It belongs to the row whose fix decides the
+  per-arm axis, A15 under F15 (R681(b) form); it is not written in U16. U16's acceptance tests
+  are T1, T2, T3 (its concrete form TV1), TV2 and the regression set. A dated note on A15 is
+  written in the Phase 2 commit (one "−" line there, prefix-checked with that commit's rows).
+  The second-arm half of INT-i12-73 stays latent, as R685(d) states.
+R687(c) — T1's fixture: paper 2 carries live unlocated claims, so the stage test runs the audit
+  stage and the stage stays pending because paper 2 is unaudited, not because it has nothing
+  to audit; it completes once paper 2 is audited. T3/TV1 is the all-declined case and T2/TV2
+  the refused-text case, as R685(e)(ii) and (iii) state them. No other test changes.
+R687(d) — Nothing else in 12u-U16B changes. Item 0 at 21a224d stands; r687.txt is written
+  now and transcribed at the Phase 2 brief's item 0.

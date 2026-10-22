@@ -1,0 +1,73 @@
+== U16-advance
+scripts/run_pipeline.py:258:    if audited > 0:
+== U16-advance-call
+scripts/run_pipeline.py:259:        complete_stage(conn, "AI_AUDIT_COMPLETE_STAGE",
+== U16-swallow
+scripts/run_pipeline.py:170:                pass  # workflow table may not exist
+== U16-spec-arm
+scripts/run_pipeline.py:452:    report = audit_run(db._conn, spec, run_id=run_id, arm=spec.extraction_models.arm,
+== U16-nothing-todo
+engine/agents/audit_events.py:168:        claims = live_claim_events(conn, pid, arm, event_types=("asserted",))
+== U16-text-refusal
+engine/agents/audit_events.py:195:            logger.warning("Paper %d: audit skipped — %s; parsed text uid(s) %s (%s)",
+== U16-stage-doc
+engine/adjudication/workflow.py:20: 10. AI_AUDIT_COMPLETE_STAGE   — auto: run_pipeline, once any corpus paper is audited_ai
+== sel-held
+engine/core/selection.py:103:        held = reuse_key(arm, paper_id, ref.sha256) in _live_reuse_keys(conn, paper_id, arm)
+== sel-reported
+engine/core/selection.py:116:                unreadable.append((paper_id, exc.reason_code, ref.stored_path))
+== sel-refused
+engine/core/selection.py:99:            skipped_refused.append((paper_id, exc.reason_code))
+engine/core/selection.py:120:                skipped_refused.append((paper_id, exc.reason_code))
+== key-scheme
+engine/core/reuse_key.py:3:`(arm, paper_id, parsed_text_sha256)`. The other components the plan's S3d
+== resolver-current
+engine/core/parsed_text.py:139:        "ORDER BY parsed_text_version DESC LIMIT 1",
+== resolver-verify
+engine/core/parsed_text.py:170:    if observed != ref.sha256:
+== loop-reread
+engine/agents/extractor.py:1160:            paper_text = read_parsed_text(ref)
+== loop-refusal
+engine/agents/extractor.py:1164:            record_failure(pid, exc, "extract_pass1")        # R122: event, no abort count
+== refusal-once
+engine/agents/extractor.py:1043:        if (state.processing, state.processing_reason) == ("extraction_failed", reason_code):
+== refusal-telemetry
+engine/agents/extractor.py:1059:                         kind="claimed_papers_text_unreadable",
+== d24-current
+engine/core/extraction_events.py:689:            current_text = resolve_parsed_text(conn, outcome.paper_id)
+== d24-noref
+engine/core/extraction_events.py:567:    if key is None:
+== d24-stale
+engine/core/extraction_events.py:574:                 if ev.payload.get(PAYLOAD_REUSE_KEY) != key}
+== sel-claim-inputs
+engine/core/selection.py:84:        f"JOIN claim_inputs ci ON fe.extraction_uid = ci.extraction_uid "
+== audit-by-uid
+engine/agents/audit_events.py:143:    return resolve_parsed_text_by_uid(conn, uids[0])
+== audit-admitted
+engine/agents/audit_events.py:180:        if processing not in AUDIT_ADMITTED_STATES:
+== parse-versioned
+engine/parsers/pdf_parser.py:943:        md_filename = f"{paper_id}_v{version}.md"
+== parse-noclobber
+engine/parsers/pdf_parser.py:634:            "exists but no parsed_text_refs row records it (R99). A parse never "
+== parse-stage-sel
+scripts/run_pipeline.py:328:    pdf_acquired = db.get_papers_by_status("PDF_ACQUIRED")
+== reparse-entry
+engine/parsers/pdf_parser.py:1147:def reparse_papers(
+== import-nolink
+engine/adjudication/import_extraction_entry.py:245:    os.link(tmp, md_path)          # FileExistsError if md_path exists (R-l, R-k)
+== legacy-no-decl
+engine/core/extraction_events.py:362:        elif state == escape_token:
+== spec-elicitation
+review_specs/surgical_autonomy.yaml:62:  elicitation: false
+== prisma-included
+engine/exporters/prisma.py:177:        if state.processing == "audited_ai":
+== ready
+engine/core/effective.py:121:                and self.processing in COMPLETED_PROCESSING_STATES)
+== callers of audit_run / _advance_extraction_workflow (engine, scripts, analysis)
+scripts/run_pipeline.py:168:                _advance_extraction_workflow(db._conn)
+scripts/run_pipeline.py:452:    report = audit_run(db._conn, spec, run_id=run_id, arm=spec.extraction_models.arm,
+== callers of reparse_papers (engine, scripts, analysis)
+(none)
+== legacy_record's body: outcome kinds it constructs (DECLINED expected absent)
+      2 FieldOutcome(name, CONTRACT_UNMET
+      1 _value(

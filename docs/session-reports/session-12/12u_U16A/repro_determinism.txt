@@ -1,0 +1,2 @@
+run 1: /home/ankitsarin/scratch/12u-u16a/run1, run 2: /home/ankitsarin/scratch/12u-u16a/run2 (same script)
+run1 == run2 after uid/path normalisation: True

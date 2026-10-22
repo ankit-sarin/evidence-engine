@@ -1,0 +1,1835 @@
+{
+ "arm": "local_deepseek_r1_32b",
+ "fields": 20,
+ "run_A": {
+  "run_id": 2,
+  "extract_stats": {
+   "extracted": 6,
+   "failed": 0,
+   "skipped_asserted": 0,
+   "skipped_refused": 0,
+   "claimed_text_unreadable": [],
+   "stored_incomplete": 0,
+   "below_floor": 0,
+   "all_declined": 0
+  },
+  "pass2_calls_for": [
+   11,
+   12,
+   13,
+   14,
+   15,
+   16
+  ],
+  "audit_report": {
+   "papers_audited": 6,
+   "located": 120,
+   "not_located": 0,
+   "verified": 0,
+   "flagged": 0,
+   "skipped_refused": [],
+   "low_yield": [],
+   "skipped_by_state": []
+  },
+  "workflow_advance": {
+   "extracted": 6,
+   "audited": 6
+  },
+  "ai_audit_stage_done": true,
+  "telemetry_claimed_text_unreadable": [],
+  "warnings": []
+ },
+ "after_A": {
+  "11": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "12": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "13": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "14": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "15": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "16": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  }
+ },
+ "prisma_after_A": {
+  "records_identified": 6,
+  "records_by_source": {
+   "s": 6
+  },
+  "duplicates_removed": 0,
+  "records_screened": 6,
+  "records_excluded": 0,
+  "exclusion_reasons": {},
+  "screen_flagged": 0,
+  "reports_sought": 6,
+  "pdf_excluded": 0,
+  "pdf_exclusion_reasons": {},
+  "reports_not_retrieved": 0,
+  "pdf_eligibility_exclusions": {},
+  "eligibility_exclusions": {
+   "FT screening (AI primary)": 0
+  },
+  "eligibility_excluded_total": 0,
+  "full_text_retrieved": 6,
+  "full_text_assessed": 6,
+  "ft_screened_out": 0,
+  "ft_ai_primary": 0,
+  "ft_pi_adjudicated": 0,
+  "ft_flagged": 0,
+  "screening_in_progress": 0,
+  "verification_pending": 0,
+  "n_eligible": 6,
+  "studies_included": 6,
+  "extraction_failed": 0,
+  "input_exceeds_context": 0,
+  "parse_failed": 0,
+  "full_text_not_obtainable": 0,
+  "failure_reasons": {
+   "extraction_failed": {},
+   "full_text_not_obtainable": {},
+   "parse_failed": {},
+   "input_exceeds_context": {}
+  },
+  "extraction_in_progress": 0,
+  "extracted_incomplete": 0,
+  "incomplete_fields": {}
+ },
+ "perturbed": {
+  "11": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "parsed_text_modified",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "12": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 2,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ],
+     [
+      2,
+      "6db1c9100586"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": false,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "13": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "parsed_text_missing",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "14": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "15": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 2,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ],
+     [
+      2,
+      "6db1c9100586"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": false,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "16": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 2,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ],
+     [
+      2,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "17": {
+   "processing": "no_recorded_state",
+   "reason": null,
+   "analysis_ready": false,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 0,
+   "live_claims_by_kind": [],
+   "live_claim_keys_equal_current_key": null,
+   "superseded_events": 0,
+   "located_events": 0,
+   "study_type_effective": null,
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ]
+   ]
+  },
+  "18": {
+   "processing": "no_recorded_state",
+   "reason": null,
+   "analysis_ready": false,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 0,
+   "live_claims_by_kind": [],
+   "live_claim_keys_equal_current_key": null,
+   "superseded_events": 0,
+   "located_events": 0,
+   "study_type_effective": null,
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ]
+   ]
+  }
+ },
+ "run_B": {
+  "run_id": 3,
+  "extract_stats": {
+   "extracted": 3,
+   "failed": 0,
+   "skipped_asserted": 4,
+   "skipped_refused": 1,
+   "claimed_text_unreadable": [
+    {
+     "paper_id": 11,
+     "condition": "parsed_text_modified",
+     "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/11_v1.md"
+    },
+    {
+     "paper_id": 13,
+     "condition": "parsed_text_missing",
+     "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/13_v1.md"
+    }
+   ],
+   "stored_incomplete": 0,
+   "below_floor": 0,
+   "all_declined": 0
+  },
+  "pass2_calls_for": [
+   12,
+   17,
+   18
+  ],
+  "audit_report": {
+   "papers_audited": 1,
+   "located": 20,
+   "not_located": 0,
+   "verified": 0,
+   "flagged": 0,
+   "skipped_refused": [
+    [
+     17,
+     "parsed_text_modified"
+    ],
+    [
+     18,
+     "parsed_text_missing"
+    ]
+   ],
+   "low_yield": [],
+   "skipped_by_state": []
+  },
+  "workflow_advance": {
+   "extracted": 7,
+   "audited": 5
+  },
+  "ai_audit_stage_done": true,
+  "telemetry_claimed_text_unreadable": [
+   {
+    "run_id": 3,
+    "arm": "local_deepseek_r1_32b",
+    "papers": [
+     {
+      "paper_id": 11,
+      "condition": "parsed_text_modified",
+      "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/11_v1.md"
+     },
+     {
+      "paper_id": 13,
+      "condition": "parsed_text_missing",
+      "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/13_v1.md"
+     }
+    ]
+   }
+  ],
+  "warnings": [
+   {
+    "phase": "run_B",
+    "level": "WARNING",
+    "logger": "engine.core.selection",
+    "msg": "Paper 11: arm local_deepseek_r1_32b already holds it under its current key, and its recorded parsed text is unreadable \u2014 parsed_text_modified, /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/11_v1.md. Not selected and not refused: its claims and processing state are unchanged. Restore the file at that path so it matches the recorded hash, or record a new parsed text for the paper."
+   },
+   {
+    "phase": "run_B",
+    "level": "WARNING",
+    "logger": "engine.core.selection",
+    "msg": "Paper 13: arm local_deepseek_r1_32b already holds it under its current key, and its recorded parsed text is unreadable \u2014 parsed_text_missing, /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/13_v1.md. Not selected and not refused: its claims and processing state are unchanged. Restore the file at that path so it matches the recorded hash, or record a new parsed text for the paper."
+   },
+   {
+    "phase": "run_B",
+    "level": "WARNING",
+    "logger": "engine.agents.extractor",
+    "msg": "Run 3: 2 paper(s) arm local_deepseek_r1_32b already holds have an unreadable recorded parsed text and were neither selected nor refused: [{'paper_id': 11, 'condition': 'parsed_text_modified', 'path': '/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/11_v1.md'}, {'paper_id': 13, 'condition': 'parsed_text_missing', 'path': '/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/1"
+   },
+   {
+    "phase": "run_B",
+    "level": "ERROR",
+    "logger": "engine.agents.extractor",
+    "msg": "Paper 15: parsed text refused \u2014 parsed_text_modified (parsed text a2a6e41c-8e0e-4c60-b3c4-a03d2dce2d7f at /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/15_v2.md was modified after it was recorded: recorded sha256 6db1c9100586894202ab7d675d16f4f7c38020532fb2c97bcb3904c248d043ee, observed 91803581639bcafe65812f4c554ad3d3232b1d210693ad612303dc3d8310078e. Remedy: record the changed tex"
+   },
+   {
+    "phase": "run_B",
+    "level": "WARNING",
+    "logger": "engine.agents.audit_events",
+    "msg": "Paper 17: audit skipped \u2014 parsed_text_modified; parsed text uid(s) 441083a3-da2a-4c82-ab18-a69ebce35315 (parsed text 441083a3-da2a-4c82-ab18-a69ebce35315 at /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/17_v1.md was modified after it was recorded: recorded sha256 2f9d7d0566f96acac89fa8e6a50d51e79ffb36657982c97b33eaaffb565e2d33, observed 7f4e2cf5675617a040545d3d917d1032f43676f1c4faa"
+   },
+   {
+    "phase": "run_B",
+    "level": "WARNING",
+    "logger": "engine.agents.audit_events",
+    "msg": "Paper 18: audit skipped \u2014 parsed_text_missing; parsed text uid(s) b6915696-b811-4e24-a5d4-7802fea5db94 (parsed text b6915696-b811-4e24-a5d4-7802fea5db94: the recorded file is missing at /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/18_v1.md)"
+   }
+  ]
+ },
+ "after_B": {
+  "11": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "parsed_text_modified",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "12": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 2,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ],
+     [
+      2,
+      "6db1c9100586"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 20,
+   "located_events": 40,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ],
+    [
+     3,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     3,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "13": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "parsed_text_missing",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "14": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "15": {
+   "processing": "extraction_failed",
+   "reason": "parsed_text_modified",
+   "analysis_ready": false,
+   "in_corpus": true,
+   "current_text": {
+    "version": 2,
+    "file": "parsed_text_modified",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ],
+     [
+      2,
+      "6db1c9100586"
+     ]
+    ]
+   },
+   "live_claims": 0,
+   "live_claims_by_kind": [],
+   "live_claim_keys_equal_current_key": null,
+   "superseded_events": 20,
+   "located_events": 20,
+   "study_type_effective": null,
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ],
+    [
+     3,
+     "extraction_failed",
+     "extraction_failed",
+     "parsed_text_modified"
+    ]
+   ]
+  },
+  "16": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 2,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ],
+     [
+      2,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "17": {
+   "processing": "extracted",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "parsed_text_modified",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 0,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     3,
+     "extracted",
+     "extracted",
+     null
+    ]
+   ]
+  },
+  "18": {
+   "processing": "extracted",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "parsed_text_missing",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 0,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     3,
+     "extracted",
+     "extracted",
+     null
+    ]
+   ]
+  }
+ },
+ "prisma_after_B": {
+  "records_identified": 8,
+  "records_by_source": {
+   "s": 8
+  },
+  "duplicates_removed": 0,
+  "records_screened": 8,
+  "records_excluded": 0,
+  "exclusion_reasons": {},
+  "screen_flagged": 0,
+  "reports_sought": 8,
+  "pdf_excluded": 0,
+  "pdf_exclusion_reasons": {},
+  "reports_not_retrieved": 0,
+  "pdf_eligibility_exclusions": {},
+  "eligibility_exclusions": {
+   "FT screening (AI primary)": 0
+  },
+  "eligibility_excluded_total": 0,
+  "full_text_retrieved": 8,
+  "full_text_assessed": 8,
+  "ft_screened_out": 0,
+  "ft_ai_primary": 0,
+  "ft_pi_adjudicated": 0,
+  "ft_flagged": 0,
+  "screening_in_progress": 0,
+  "verification_pending": 0,
+  "n_eligible": 8,
+  "studies_included": 5,
+  "extraction_failed": 1,
+  "input_exceeds_context": 0,
+  "parse_failed": 0,
+  "full_text_not_obtainable": 0,
+  "failure_reasons": {
+   "extraction_failed": {
+    "parsed_text_modified": 1
+   },
+   "full_text_not_obtainable": {},
+   "parse_failed": {},
+   "input_exceeds_context": {}
+  },
+  "extraction_in_progress": 2,
+  "extracted_incomplete": 0,
+  "incomplete_fields": {}
+ },
+ "run_C": {
+  "run_id": 4,
+  "extract_stats": {
+   "extracted": 0,
+   "failed": 0,
+   "skipped_asserted": 7,
+   "skipped_refused": 1,
+   "claimed_text_unreadable": [
+    {
+     "paper_id": 11,
+     "condition": "parsed_text_modified",
+     "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/11_v1.md"
+    },
+    {
+     "paper_id": 13,
+     "condition": "parsed_text_missing",
+     "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/13_v1.md"
+    },
+    {
+     "paper_id": 17,
+     "condition": "parsed_text_modified",
+     "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/17_v1.md"
+    },
+    {
+     "paper_id": 18,
+     "condition": "parsed_text_missing",
+     "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/18_v1.md"
+    }
+   ],
+   "stored_incomplete": 0,
+   "below_floor": 0,
+   "all_declined": 0
+  },
+  "pass2_calls_for": [],
+  "audit_report": {
+   "papers_audited": 0,
+   "located": 0,
+   "not_located": 0,
+   "verified": 0,
+   "flagged": 0,
+   "skipped_refused": [
+    [
+     17,
+     "parsed_text_modified"
+    ],
+    [
+     18,
+     "parsed_text_missing"
+    ]
+   ],
+   "low_yield": [],
+   "skipped_by_state": []
+  },
+  "workflow_advance": {
+   "extracted": 7,
+   "audited": 5
+  },
+  "ai_audit_stage_done": true,
+  "telemetry_claimed_text_unreadable": [
+   {
+    "run_id": 4,
+    "arm": "local_deepseek_r1_32b",
+    "papers": [
+     {
+      "paper_id": 11,
+      "condition": "parsed_text_modified",
+      "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/11_v1.md"
+     },
+     {
+      "paper_id": 13,
+      "condition": "parsed_text_missing",
+      "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/13_v1.md"
+     },
+     {
+      "paper_id": 17,
+      "condition": "parsed_text_modified",
+      "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/17_v1.md"
+     },
+     {
+      "paper_id": 18,
+      "condition": "parsed_text_missing",
+      "path": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/18_v1.md"
+     }
+    ]
+   }
+  ],
+  "warnings": [
+   {
+    "phase": "run_C",
+    "level": "WARNING",
+    "logger": "engine.core.selection",
+    "msg": "Paper 11: arm local_deepseek_r1_32b already holds it under its current key, and its recorded parsed text is unreadable \u2014 parsed_text_modified, /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/11_v1.md. Not selected and not refused: its claims and processing state are unchanged. Restore the file at that path so it matches the recorded hash, or record a new parsed text for the paper."
+   },
+   {
+    "phase": "run_C",
+    "level": "WARNING",
+    "logger": "engine.core.selection",
+    "msg": "Paper 13: arm local_deepseek_r1_32b already holds it under its current key, and its recorded parsed text is unreadable \u2014 parsed_text_missing, /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/13_v1.md. Not selected and not refused: its claims and processing state are unchanged. Restore the file at that path so it matches the recorded hash, or record a new parsed text for the paper."
+   },
+   {
+    "phase": "run_C",
+    "level": "WARNING",
+    "logger": "engine.core.selection",
+    "msg": "Paper 15: not selected \u2014 parsed_text_modified (parsed text a2a6e41c-8e0e-4c60-b3c4-a03d2dce2d7f at /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/15_v2.md was modified after it was recorded: recorded sha256 6db1c9100586894202ab7d675d16f4f7c38020532fb2c97bcb3904c248d043ee, observed 91803581639bcafe65812f4c554ad3d3232b1d210693ad612303dc3d8310078e. Remedy: record the changed text as a "
+   },
+   {
+    "phase": "run_C",
+    "level": "WARNING",
+    "logger": "engine.core.selection",
+    "msg": "Paper 17: arm local_deepseek_r1_32b already holds it under its current key, and its recorded parsed text is unreadable \u2014 parsed_text_modified, /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/17_v1.md. Not selected and not refused: its claims and processing state are unchanged. Restore the file at that path so it matches the recorded hash, or record a new parsed text for the paper."
+   },
+   {
+    "phase": "run_C",
+    "level": "WARNING",
+    "logger": "engine.core.selection",
+    "msg": "Paper 18: arm local_deepseek_r1_32b already holds it under its current key, and its recorded parsed text is unreadable \u2014 parsed_text_missing, /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/18_v1.md. Not selected and not refused: its claims and processing state are unchanged. Restore the file at that path so it matches the recorded hash, or record a new parsed text for the paper."
+   },
+   {
+    "phase": "run_C",
+    "level": "WARNING",
+    "logger": "engine.agents.extractor",
+    "msg": "Run 4: 4 paper(s) arm local_deepseek_r1_32b already holds have an unreadable recorded parsed text and were neither selected nor refused: [{'paper_id': 11, 'condition': 'parsed_text_modified', 'path': '/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/11_v1.md'}, {'paper_id': 13, 'condition': 'parsed_text_missing', 'path': '/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/1"
+   },
+   {
+    "phase": "run_C",
+    "level": "WARNING",
+    "logger": "engine.agents.audit_events",
+    "msg": "Paper 17: audit skipped \u2014 parsed_text_modified; parsed text uid(s) 441083a3-da2a-4c82-ab18-a69ebce35315 (parsed text 441083a3-da2a-4c82-ab18-a69ebce35315 at /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/17_v1.md was modified after it was recorded: recorded sha256 2f9d7d0566f96acac89fa8e6a50d51e79ffb36657982c97b33eaaffb565e2d33, observed 7f4e2cf5675617a040545d3d917d1032f43676f1c4faa"
+   },
+   {
+    "phase": "run_C",
+    "level": "WARNING",
+    "logger": "engine.agents.audit_events",
+    "msg": "Paper 18: audit skipped \u2014 parsed_text_missing; parsed text uid(s) b6915696-b811-4e24-a5d4-7802fea5db94 (parsed text b6915696-b811-4e24-a5d4-7802fea5db94: the recorded file is missing at /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/parsed_text/18_v1.md)"
+   }
+  ]
+ },
+ "after_C": {
+  "11": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "parsed_text_modified",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "12": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 2,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ],
+     [
+      2,
+      "6db1c9100586"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 20,
+   "located_events": 40,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ],
+    [
+     3,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     3,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "13": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "parsed_text_missing",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "14": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "15": {
+   "processing": "extraction_failed",
+   "reason": "parsed_text_modified",
+   "analysis_ready": false,
+   "in_corpus": true,
+   "current_text": {
+    "version": 2,
+    "file": "parsed_text_modified",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ],
+     [
+      2,
+      "6db1c9100586"
+     ]
+    ]
+   },
+   "live_claims": 0,
+   "live_claims_by_kind": [],
+   "live_claim_keys_equal_current_key": null,
+   "superseded_events": 20,
+   "located_events": 20,
+   "study_type_effective": null,
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ],
+    [
+     3,
+     "extraction_failed",
+     "extraction_failed",
+     "parsed_text_modified"
+    ]
+   ]
+  },
+  "16": {
+   "processing": "audited_ai",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 2,
+    "file": "ok",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ],
+     [
+      2,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 20,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     2,
+     "extracted",
+     "extracted",
+     null
+    ],
+    [
+     2,
+     "audited",
+     "audited_ai",
+     null
+    ]
+   ]
+  },
+  "17": {
+   "processing": "extracted",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "parsed_text_modified",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 0,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     3,
+     "extracted",
+     "extracted",
+     null
+    ]
+   ]
+  },
+  "18": {
+   "processing": "extracted",
+   "reason": null,
+   "analysis_ready": true,
+   "in_corpus": true,
+   "current_text": {
+    "version": 1,
+    "file": "parsed_text_missing",
+    "versions_recorded": [
+     [
+      1,
+      "2f9d7d0566f9"
+     ]
+    ]
+   },
+   "live_claims": 20,
+   "live_claims_by_kind": [
+    "asserted"
+   ],
+   "live_claim_keys_equal_current_key": true,
+   "superseded_events": 0,
+   "located_events": 0,
+   "study_type_effective": "RCT",
+   "paper_events": [
+    [
+     1,
+     "screened",
+     "eligible",
+     null
+    ],
+    [
+     3,
+     "extracted",
+     "extracted",
+     null
+    ]
+   ]
+  }
+ },
+ "prisma_after_C": {
+  "records_identified": 8,
+  "records_by_source": {
+   "s": 8
+  },
+  "duplicates_removed": 0,
+  "records_screened": 8,
+  "records_excluded": 0,
+  "exclusion_reasons": {},
+  "screen_flagged": 0,
+  "reports_sought": 8,
+  "pdf_excluded": 0,
+  "pdf_exclusion_reasons": {},
+  "reports_not_retrieved": 0,
+  "pdf_eligibility_exclusions": {},
+  "eligibility_exclusions": {
+   "FT screening (AI primary)": 0
+  },
+  "eligibility_excluded_total": 0,
+  "full_text_retrieved": 8,
+  "full_text_assessed": 8,
+  "ft_screened_out": 0,
+  "ft_ai_primary": 0,
+  "ft_pi_adjudicated": 0,
+  "ft_flagged": 0,
+  "screening_in_progress": 0,
+  "verification_pending": 0,
+  "n_eligible": 8,
+  "studies_included": 5,
+  "extraction_failed": 1,
+  "input_exceeds_context": 0,
+  "parse_failed": 0,
+  "full_text_not_obtainable": 0,
+  "failure_reasons": {
+   "extraction_failed": {
+    "parsed_text_modified": 1
+   },
+   "full_text_not_obtainable": {},
+   "parse_failed": {},
+   "input_exceeds_context": {}
+  },
+  "extraction_in_progress": 2,
+  "extracted_incomplete": 0,
+  "incomplete_fields": {}
+ },
+ "r624b_db": "/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/review.db",
+ "u16_states": {
+  "states": {
+   "1": "audited_ai",
+   "2": "extracted",
+   "3": "extraction_failed"
+  },
+  "workflow_advance": {
+   "extracted": 2,
+   "audited": 1
+  },
+  "ai_audit_stage_done": true,
+  "metadata": "1 papers audited"
+ },
+ "u16_declined": {
+  "extract_stats": {
+   "extracted": 1,
+   "failed": 0
+  },
+  "states_before_audit": {
+   "21": "extracted",
+   "22": "extracted"
+  },
+  "paper_22_live_claim_kinds": [
+   "declined"
+  ],
+  "audit_report": {
+   "papers_audited": 1,
+   "located": 20,
+   "not_located": 0,
+   "verified": 0,
+   "flagged": 0,
+   "skipped_refused": [],
+   "low_yield": [],
+   "skipped_by_state": []
+  },
+  "states_after_audit": {
+   "21": "audited_ai",
+   "22": "extracted"
+  },
+  "workflow_advance": {
+   "extracted": 2,
+   "audited": 1
+  },
+  "ai_audit_stage_done": true,
+  "warnings": []
+ },
+ "u16_second_arm": {
+  "audit_report": {
+   "papers_audited": 1,
+   "located": 20,
+   "not_located": 0,
+   "verified": 0,
+   "flagged": 0,
+   "skipped_refused": [],
+   "low_yield": [],
+   "skipped_by_state": []
+  },
+  "processing": "audited_ai",
+  "located_events": {
+   "local_deepseek_r1_32b": 20,
+   "second_model_arm_fixture": 0
+  },
+  "other_arm_live_asserted": 3,
+  "workflow_advance": {
+   "extracted": 1,
+   "audited": 1
+  },
+  "ai_audit_stage_done": true
+ }
+}

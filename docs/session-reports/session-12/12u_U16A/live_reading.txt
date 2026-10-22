@@ -1,0 +1,11 @@
+2026-10-22T02:46:28Z
+909e3ed2c548e09593759b9727c10031793291bef6bc639631dcaa9aa9734ff5  /home/ankitsarin/scratch/12i-scope/dbchecks.py
+output byte-identical to 12t_close/dbchecks_close.txt: True
+arms [('local', 'not recorded (pre-manifest)', None), ('anthropic_sonnet_4_6', 'not recorded (pre-manifest)', None), ('openai_o4_mini_high', 'not recorded (pre-manifest)', None)]
+parsed_text_refs 194
+field_events 0
+claim_inputs 0
+refs with sha 194
+multi-version papers [(455, '2,3'), (586, '2,3'), (699, '2,3'), (719, '2,3')]
+selection 190 0 0
+hash baseline entries 194 mismatches 0

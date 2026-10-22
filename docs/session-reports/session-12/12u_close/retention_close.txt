@@ -1,0 +1,94 @@
+# retained throwaway reviews (file sha256), ~/scratch/retained/
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db
+# U06's copy (R638(d)), not a restore point
+path: /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+tables   : 36
+overall  : 000db389fa40fd573dff449c33138471f44a3c10585a492dac9affd80397f6ca
+# the five restore points (fingerprints)
+data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138 tables   : 34 overall  : bb39ba81170c4f11d59954b9e70837afc427c66da710bde30881aad570d16c40 
+data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020 tables   : 31 overall  : e564f250afe40af7eb9a6bc07596a3c795972f7ef3b653c37599e8bc18285b63 
+data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104 tables   : 34 overall  : ea05912d67f0b841bf003a7a941f6505e2c57140b5c2f62e1ff446ea16b9ce01 
+data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807 tables   : 24 overall  : f376562e095cfbcbf23ca997f31375feba340f74ed7a14ffe26e42cc63839e00 
+data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453 tables   : 32 overall  : 62f3912813b6e9efa3a651ee4c4ebcd611adf89c989f240a58e83dcf6759b79a 
+# the ninth retained throwaway (R667(d), R670(g)): the post-run ra_12q, run 2 of 2026-10-18 22:14–2026-10-19 00:45 UTC; opened only as a byte copy, not a restore point
+path: /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f  /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db
+fingerprint (at the move out of data/, ~/scratch/12r-u13/ra_12q_fingerprint_postrun.json): tables   : 36 overall  : 50e97bb694c9b6a709f2f7476af2882fe9b6c79090cd493cfdb9f16fef4582cd
+kept with it: the build-stage records ~/scratch/12q-u13-build/ra_12q_fingerprint_built.json and ~/scratch/12q-u13-build/stage_before.txt (the pre-run copy); the probe's raw responses and composed cross-condition prompts under ~/scratch/12r-u13-probe/out/, named by sha256 in docs/session-reports/session-12/12r_U13_PROBE/out/scratch_extracts_sha256.txt; ~/scratch/12q-u13-build/stage/ now holds RESTORE.txt only
+compared against: the retained ra_12g above (31bb0ef5…9647)
+# 12s close (R675(b)): every never-opened copy by review.db file sha256, measured 2026-10-19T18:16:01Z; none opened
+# the eight under ~/scratch/retained/, against the first part above
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db
+# the ninth (ra_12q) and U06's copy
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f  /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+# the five restore points, against 12s_U14A/restore_points_12s.txt (the record of reference, R675(b))
+72008c75095b2f67dcbc4d8507d56708b1ee43c786a1f8f65b9e8ef5dc0ce7f1  data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138  MATCH
+33714bed6337e6025a330ce7258038f0706bd2dfb2995cfaf19dcd5c25ad7900  data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020  MATCH
+4abb5f4d7412576f5d4ebfef68335297117e7f7f1c6aee18ebffdaf103556302  data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104  MATCH
+94fb4dec080b5e6ab7c77e07b197c72a3d2a479b84e792d6c880987179cc9eb9  data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807  MATCH
+9b971da1adf08eab47c778eb1d03d0ecb629beb8167f5d5c7b00726371aad571  data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453  MATCH
+# 12t close: every never-opened copy by review.db file sha256, measured 2026-10-20T21:30:36Z; none opened
+# the eight under ~/scratch/retained/, against the first part above
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db
+# the ninth (ra_12q) and U06's copy
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f  /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+# the five restore points, against 12s_U14A/restore_points_12s.txt (the record of reference, R675(b))
+72008c75095b2f67dcbc4d8507d56708b1ee43c786a1f8f65b9e8ef5dc0ce7f1  data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138  MATCH
+33714bed6337e6025a330ce7258038f0706bd2dfb2995cfaf19dcd5c25ad7900  data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020  MATCH
+4abb5f4d7412576f5d4ebfef68335297117e7f7f1c6aee18ebffdaf103556302  data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104  MATCH
+94fb4dec080b5e6ab7c77e07b197c72a3d2a479b84e792d6c880987179cc9eb9  data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807  MATCH
+9b971da1adf08eab47c778eb1d03d0ecb629beb8167f5d5c7b00726371aad571  data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453  MATCH
+# ~/scratch/12q-u13-build/stage/: RESTORE.txt 
+# 12u close (R675(b)): every never-opened copy by review.db file sha256, measured 2026-10-22T17:08:18Z; none opened
+# the eight under ~/scratch/retained/, against the first part above
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db
+# the ninth (ra_12q) and U06's copy
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f  /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+# the five restore points, against 12s_U14A/restore_points_12s.txt (the record of reference, R675(b))
+72008c75095b2f67dcbc4d8507d56708b1ee43c786a1f8f65b9e8ef5dc0ce7f1  data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138  MATCH
+33714bed6337e6025a330ce7258038f0706bd2dfb2995cfaf19dcd5c25ad7900  data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020  MATCH
+4abb5f4d7412576f5d4ebfef68335297117e7f7f1c6aee18ebffdaf103556302  data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104  MATCH
+94fb4dec080b5e6ab7c77e07b197c72a3d2a479b84e792d6c880987179cc9eb9  data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807  MATCH
+9b971da1adf08eab47c778eb1d03d0ecb629beb8167f5d5c7b00726371aad571  data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453  MATCH
+# 12u's eight throwaway reviews (12u-U16A's repro runs), against 12u_U16A/throwaway_review_db_sha256.txt
+2c365b6ee9d09be5d86dee3b1c28f72e0b217bcfba8988d52836d29cfbfc6e04  /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/review.db  MATCH
+3c20cb3b72a78b8786b0c53569e69e8866a7f2ed2f16389adff46ff09009dba0  /home/ankitsarin/scratch/12u-u16a/run1/u16_declined/u16a/review.db  MATCH
+9ad2246bdcc3d2e0ab65ddc1b344fede8fd8f3d5403e503397abf290a9743022  /home/ankitsarin/scratch/12u-u16a/run1/u16_second_arm/u16a/review.db  MATCH
+d674e55dabfa803e258aeb4dee6b91844a0efa9313eb087515999dccb633c4ff  /home/ankitsarin/scratch/12u-u16a/run1/u16_states/u16a/review.db  MATCH
+8e7400357e222fa6f6822def5f836177058639704090907b61b912e88b38ba3d  /home/ankitsarin/scratch/12u-u16a/run2/r624b/u16a/review.db  MATCH
+060e1d6c21be3b4020e68d5f3573412b2027b0ea78466c000bab5bdb905e0acc  /home/ankitsarin/scratch/12u-u16a/run2/u16_declined/u16a/review.db  MATCH
+562152e8bddf7bb63a5a8482f9d0e8f4942ada807caff9c76370e30c484cffaa  /home/ankitsarin/scratch/12u-u16a/run2/u16_second_arm/u16a/review.db  MATCH
+7a08ffb5d06460aa0175b49852b3fa0bc4eba2deb5d64c793078eab9161e288c  /home/ankitsarin/scratch/12u-u16a/run2/u16_states/u16a/review.db  MATCH
+# ~/scratch/12q-u13-build/stage/: RESTORE.txt 

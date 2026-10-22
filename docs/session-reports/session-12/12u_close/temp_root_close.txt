@@ -1,0 +1,15 @@
+== temp root 2026-10-22T17:07:47Z
+total 1024
+drwx------    5 ankitsarin ankitsarin   4096 2026-10-22 09:14:57.867023170 +0000 .
+drwxrwxrwt   75 root       root        49152 2026-10-22 17:07:38.360793839 +0000 ..
+drwx------ 1813 ankitsarin ankitsarin 208896 2026-10-22 05:28:23.180907938 +0000 pytest-20
+drwx------ 3350 ankitsarin ankitsarin 385024 2026-10-22 05:40:31.855818979 +0000 pytest-21
+drwx------ 3350 ankitsarin ankitsarin 385024 2026-10-22 09:14:57.869023176 +0000 pytest-22
+lrwxrwxrwx    1 ankitsarin ankitsarin     35 2026-10-22 09:00:08.689345668 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-22
+entries 4
+2879779576	/tmp/pytest-of-ankitsarin
+/tmp/pytest-of-ankitsarin/pytest-20/ 
+/tmp/pytest-of-ankitsarin/pytest-21/ test_013_is_idempotent0 test_013_is_idempotentcurrent test_013_is_wired0 test_013_is_wiredcurrent test_013_leaves_the_columns_in0 test_013_leaves_the_columns_incurrent test_013_lifts_not_null_preser0 test_013_lifts_not_null_presercurrent test_013_rebuilds_a_database_t0 test_013_rebuilds_a_database_tcurrent 
+/tmp/pytest-of-ankitsarin/pytest-22/ test_013_is_idempotent0 test_013_is_idempotentcurrent test_013_is_wired0 test_013_is_wiredcurrent test_013_leaves_the_columns_in0 test_013_leaves_the_columns_incurrent test_013_lifts_not_null_preser0 test_013_lifts_not_null_presercurrent test_013_rebuilds_a_database_t0 test_013_rebuilds_a_database_tcurrent 
+/tmp/pytest-of-ankitsarin/pytest-current/ test_013_is_idempotent0 test_013_is_idempotentcurrent test_013_is_wired0 test_013_is_wiredcurrent test_013_leaves_the_columns_in0 test_013_leaves_the_columns_incurrent test_013_lifts_not_null_preser0 test_013_lifts_not_null_presercurrent test_013_rebuilds_a_database_t0 test_013_rebuilds_a_database_tcurrent 
+# origins: pytest-20 — the surgical-cv pytest launched 05:24:01 UTC 2026-10-22 (12u-U16C finding 4), not this lane's; pytest-21 — the 12u-U16C gate (05:25:20–05:40:32 UTC); pytest-22 — the 2026-10-22 09:00 UTC nightly; pytest-current -> pytest-22. pytest-19 (the 03:24–03:28 UTC entry, not this lane's, R688(a)) was rotated out by pytest's own retention after the 12u-U16C read. Nothing emptied. This lane's ad-hoc runs used --basetemp under ~/scratch (R676(d)(iii)).

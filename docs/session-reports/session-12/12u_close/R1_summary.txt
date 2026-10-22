@@ -1,0 +1,11 @@
+R1 — the 2026-10-22 07:00 UTC Ollama health job (read 2026-10-22T17:03Z)
+log: ~/logs/ollama_health_20261022.log (copy R1_health_log.txt), 07:00:01 -> 07:05:53 UTC
+loads: 20 models, 19 OK, 1 FAIL — "qwen3.6:35b-a3b  FAIL (empty response)  80.7s"; the log ends "ALERT".
+  journal for that load: runner started in 5.73 s (07:00:09.417), "[GIN] 07:01:22 | 200 | 1m20s | POST /api/generate":
+  the server answered 200; the job read the response as empty. No error line in the journal window.
+journal 06:59–07:12 (R1_journal.txt): 67 GIN lines, all 200; 20 POST /api/generate; 0 non-200.
+NV_ERR_NO_MEMORY this boot: 11 (ten before this job + 1 in it, 07:04:43, between generate completions
+  07:04:25 (load 18 qwen2.5:32b) and 07:05:46 (load 19 llama3.3:70b) — beside load 19, which completed OK). R1_nvrm.txt.
+residency after: /api/ps {"models":[]} (2026-10-22T17:03:44Z)
+NRestarts=0; ExecMainStartTimestamp=Sat 2026-10-17 23:04:05 UTC (unchanged)
+earlyoom kill lines this boot (`sending SIG(TERM|KILL) to`): 0

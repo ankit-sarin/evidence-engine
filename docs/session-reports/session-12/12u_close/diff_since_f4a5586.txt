@@ -1,0 +1,19 @@
+ engine/agents/audit_events.py              |  50 +++++-
+ engine/agents/auditor.py                   |  16 +-
+ engine/agents/extractor.py                 |   2 +-
+ engine/cloud/__init__.py                   |   8 +-
+ engine/core/locator.py                     |  73 ++++++---
+ engine/core/paper_state.py                 |  10 ++
+ scripts/run_pipeline.py                    |  21 ++-
+ tests/test_audit_admitted_set.py           | 236 ++++++++++++++++++++++++++++
+ tests/test_audit_events.py                 |  34 +++-
+ tests/test_audit_paper_id.py               |   3 +-
+ tests/test_audit_stage_completion.py       | 239 +++++++++++++++++++++++++++++
+ tests/test_auditor.py                      |  15 ++
+ tests/test_cloud_package_init.py           |  85 ++++++++++
+ tests/test_duplicate_on_pass1_attempt_2.py |  28 +++-
+ tests/test_locator.py                      | 161 ++++++++++++++++++-
+ tests/test_requirements_census.py          |  95 ++++++++++++
+ tests/test_selection.py                    |   4 +-
+ tests/test_text_refusal_at_selection.py    |  29 ++++
+ 18 files changed, 1055 insertions(+), 54 deletions(-)

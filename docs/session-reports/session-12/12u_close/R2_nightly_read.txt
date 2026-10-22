@@ -1,0 +1,8 @@
+collection: collected 3365 items / 17 deselected / 3348 selected
+summary: ==== 3347 passed, 17 deselected, 1 xfailed, 2 warnings in 894.07s (0:14:54) ====
+last line: pytest exit code: 0
+durations file: 253679 bytes, 2437 lines
+journal 09:00-09:25:
+-- No entries --
+lock mtime: 2026-07-27 23:22:08.906609268 +0000
+log start/end: ======================================== / 2026-10-22 09:14:58.969026342 +0000

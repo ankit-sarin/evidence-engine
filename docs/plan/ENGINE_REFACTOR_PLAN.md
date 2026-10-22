@@ -3904,6 +3904,187 @@ Expected values at session-12u open, as at this closeout (2026-10-20):
 - **U16's Phase A.**
 - **INT-r12-1's Phase A**, with INT-s12-1.
 
+Session 12u closed 2026-10-22 UTC; opened 2026-10-22 01:54 UTC on the 12t closeout commit `2cab14f9430641383b493479a4c20fa0d89a6264`, CC session `538025ed` (one session, parked between briefs and resumed with `--continue`). **U16 landed and closed: INT-i12-73 is CLOSED at `2c3822b` (R691(b)). AI_AUDIT_COMPLETE_STAGE now completes only when no eligible paper is still `extracted`. An eligible paper at `extracted` with nothing to locate is audited vacuously. R624(b) is answered: no (R685(b)). No row opened or moved; the recount stays 278.** One engine commit (`2c3822b`: `audit_events.py`, `run_pipeline.py`, the five U16 tests and two rewritten tests); no live write; no model call. Briefs, in order: 12u-OPEN (R683 at item 0); 12u-U16A (Phase A, R684 at item 0); 12u-U16B (Phase 1, R685 at item 0; stopped at step 0 on I1, R686, and at 1c on T5, R687); 12u-U16C (Phase 2, R687 and R688 at item 0; stopped at 2a on the report field, R689, and at 2b on the regression pair, R690); and this closeout, 12u-CLOSE (R691).
+
+**Commits, in order** (each hash read from `git log`):
+
+- `45ba353` — item 0 of the open: R683 (Block 81), `12t_close/r683.txt` and `12t_close/lane_line_12t.txt`. claude-config `94e8ec2` — its ledger row.
+- `a50e067` — item 0 of 12u-U16A: R684 (Block 82). claude-config `9d03bda`.
+- `97e5079` — the U16 Phase A read-out (`12u_U16A/12u_U16A.md`), its repro, anchors and readings. claude-config `86b5d57`.
+- `21a224d` — item 0 of 12u-U16B: R685 and R686 (Blocks 83–84); the notes on INT-i12-69, INT-i12-73, D24 and C56. claude-config `85751ff`.
+- `6229970` — the U16 Phase 1 report (`12u_U16B/12u_U16B_phase1.md`): the five tests against HEAD (5 failed as predicted), the regression run (157 passed), `r687.txt`. claude-config `695fa14` — its row, with a surgical-cv row (`6dd9c14`) committed as found.
+- `f2eb7a1` — item 0 of 12u-U16C: R687 and R688 (Blocks 85–86); the note on A15. claude-config `c51b7b2`.
+- `2c3822b` — **the U16 fix**: `engine/agents/audit_events.py`, `scripts/run_pipeline.py`, `tests/test_audit_stage_completion.py` (new), `tests/test_audit_events.py` (two tests rewritten, R690(b)), `docs/inventory/` regenerated. Its row was committed by `bdf3707`, which is not this session's (below).
+- `2579f7c` — the U16 read-out (`12u_U16B/12u_U16B.md`), its gate evidence, the local runs and diffs, `r689.txt`, `r690.txt`. claude-config `baefb35`.
+- `0ceec48` — item 0 of 12u-CLOSE: R689, R690 and R691 (Blocks 87–89), `12u_U16B/r691.txt`; INT-i12-73 CLOSED; the note on HK-ARCH.
+- **This closeout** — the commit that carries this paragraph, the child of `0ceec48`: this closure, the 12v expected values, and `docs/session-reports/session-12/12u_close/`. Its ledger row and `0ceec48`'s are settled after it (note (a)).
+
+**Rulings R683–R691, all transcribed. The decision log in this file ends at R691.**
+
+- R683 — the 12t wrap ruling (Block 81); the band set at 791–966 s (R683(c)).
+- R684 — 12u-OPEN accepted; the earlyoom kill pattern `sending SIG(TERM|KILL) to` (R684(d)).
+- R685 — 12u-U16A accepted; R624(b) answered no (R685(b)); paper 15 is D24 as ruled (R685(c)); INT-i12-73's condition restated (R685(d)); U16's fix designed (R685(e)); four notes (R685(f)).
+- R686 — I1 was an architect count; four notes on the row lines; the one-note-per-line rule restated (R686(c)).
+- R687 — T5 deferred to A15/F15 (R687(b)); T1's fixture (R687(c)).
+- R688 — Phase 1 accepted; "on the stage summary" withdrawn (R688(b)); the advance names the processing state only (R688(c)); T1 as built (R688(d)); Phase 2 opened (R688(e)).
+- R689 — the report-field clause withdrawn; a vacuous audit counts in `papers_audited` (R689(b)); Block 86's clause stands (R689(c)).
+- R690 — tests that pin the silent skip are rewritten to the corrected behaviour (R690(b)), with the same rule in advance for the gate (R690(c)).
+- R691 — U16 accepted and landed; INT-i12-73 CLOSED (R691(b)); HK-ARCH's note (R691(c)); the foreign ledger commit accepted (R691(d)); three readings (R691(e)); this closeout (R691(f)–(g)).
+
+**Stops, and what they exposed.** Each of the four stops left the tree legible: two with both repositories clean, and two with the engine edit uncommitted and reported as a diff.
+
+| Brief | The assumption | What was on disk | Settled by |
+| --- | --- | --- | --- |
+| 12u-U16B, step 0 | I1: each of INT-i12-69, INT-i12-73, D24 and C56 "appears exactly once" (an architect premise, before any commit) | a `grep -c` of each id's row prefix returns 2: a row line and a package or closure-table line | R686 |
+| 12u-U16B, step 1c | R685(e)(vi)'s "T5 as written", which collides with R685(e)(i) | in T5's world the paper is `audited_ai` and none is `extracted`, so the fixed advance completes the stage | R687 |
+| 12u-U16C, step 2a | 1b's "AuditReport gains a field listing the vacuously audited papers, carried into the stage summary as skipped_by_state is" (an architect premise, before the engine commit) | `_stage_audit` logs `json.dumps(asdict(report))`, so the summary line also names the paper and T3's `len(said) == 1` reads 2 | R689 |
+| 12u-U16C, step 2b | the regression set "every id its Phase 1 outcome", which collides with R689(b) | `test_audit_events.py`'s fixture seeds P8 at `extracted` with no claim, so t3 and t15 read `papers_audited == 2` | R690 |
+
+**The host, 2026-10-22** (dated facts).
+
+- **Band values.** The four values (`12u_close/host_state_close.txt`) equal 12t's: kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02.
+- **Boot and service.** Boot `abf99132-fd8b-41f9-b9fd-62241e40110c`; the Ollama service started 2026-10-17 23:04:05 UTC; `NRestarts` 0.
+- **earlyoom.** Active, `--prefer ^ollama$`, 0 kill lines this boot by the R684(d) pattern.
+- **The 2026-10-21 07:00 UTC health job** (read at 12u-OPEN): 20 of 20 loads OK and every request 200. It wrote four `NV_ERR_NO_MEMORY` lines, all beside loads that completed.
+- **The 2026-10-22 07:00 UTC health job** (read at this closeout, `12u_close/R1_summary.txt`): 19 of 20 OK; 67 GIN lines, all 200; 20 `POST /api/generate`; nothing resident after.
+  - `qwen3.6:35b-a3b` reads `FAIL (empty response)  80.7s` and the log ends "ALERT". Its runner started in 5.73 s and its `/api/generate` returned 200 after 1m20s, so the job read the response as empty. No error line was in the journal window.
+  - One `NV_ERR_NO_MEMORY` line, at 07:04:43, beside load 19 (llama3.3:70b), which completed OK.
+- **NVRM.** Eleven `NV_ERR_NO_MEMORY` lines this boot (ten before 2026-10-22's health job, one in it) — the dgx-infra item, unchanged.
+
+**Measured — the session's gates.** Two standard gates. Both had 2 warnings (sklearn's), an empty journal window, and no phase slower than its comparison by more than 10 s:
+
+| gate | tree | result | collected | wall |
+| --- | --- | --- | --- | --- |
+| 12u-OPEN | `45ba353` (engine tree equal to `9cfd726`'s) | 3,342 passed / 1 xfailed / 17 deselected | 3,343 of 3,360; 0/0 against `12t_close/collected_ids_12t_close.txt` | **882.23 s** |
+| 12u-U16C | the `2c3822b` tree | 3,347 passed / 1 xfailed / 17 deselected | 3,348 of 3,365; only-gate the five ids of `12u_U16B/expected_new_ids.txt`, only-ref 0 | **912.14 s** |
+
+The 12u-OPEN gate ran beside a surgical-cv ffprobe after a bounded wait (R684(c)). The 12u-U16C gate ran beside a surgical-cv pytest launched one minute before it (12u-U16C finding 4).
+
+**The band, readings (R691(e)).** It is 791–966 s (R683(c)), unchanged, and no cut was made this session. The series of eight is 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23 and 912.14 s, the last beside a surgical-cv pytest at launch.
+
+**Measured — the nightlies.**
+
+- **2026-10-21 09:00 UTC** (read at 12u-OPEN) matched `12t_close/expected_nightly_20261021.md`: `collected 3360 items / 17 deselected / 3343 selected`, 3342 passed, 17 deselected, 1 xfailed, 2 warnings (877.64 s), exit 0, an empty journal, and the lock mtime unchanged.
+- **2026-10-22 09:00 UTC**, the first on U16's tree, matched `12u_close/expected_nightly_20261022.md` line for line: `collected 3365 items / 17 deselected / 3348 selected`, `3347 passed, 17 deselected, 1 xfailed, 2 warnings in 894.07s`, last line `pytest exit code: 0`, and `logs/nightly_durations_20261022.txt` present (2,437 lines). The Ollama journal for 09:00–09:25 UTC was empty, and the lock file's mtime was 2026-07-27 23:22:08 UTC. Its 3,348 ids are byte-identical to `12u_U16B/collected_ids_12u_u16c.txt`.
+
+**U16 (R685(e), R688, R689, R690).**
+
+- **`audit_run`.** In its nothing-to-locate branch, a paper whose processing state (one `effective_state` read) is `extracted` gets one `audited`/`audited_ai` event with payload `{"arm", "located": 0, "not_located": 0, "locator_version"}`. It also gets one INFO line naming it and is counted in `papers_audited`, and no text is read and no model called. A paper at any other state, `audited_ai` included, is passed over as before. The D23 refusal branch is unchanged: a refused paper stays `extracted`, with its line and its `skipped_refused` entry.
+- **`_advance_extraction_workflow`.** It completes AI_AUDIT_COMPLETE_STAGE only when at least one eligible paper is `audited_ai` and none is `extracted`. Each paper still `extracted` is named in one `pipeline` WARNING carrying its clearing action, and the stage stays pending in `workflow_state`, which the audit-review gate reads (C58). Its `(conn)` signature and return value, `_stage_audit`'s return, and the caller's `except Exception: pass` (C56 handler 3) are unchanged.
+- **Tests and pins.** The five tests are T1, T2, TV2, T3 and TV1 (T4 is C56's and T5 is A15's). All five failed on HEAD in Phase 1 and pass at `2c3822b`. Two `test_audit_events.py` tests were rewritten to the corrected behaviour (R690(b)). The 157-id regression set kept its outcomes. Pin effect: none; both pins are byte-identical.
+- **What stays open.** The second-arm half stays latent with T5 on A15 (R687(b)).
+- **Fix units.** U16 is done: 16 of 35.
+
+**R624(b), answered (R685(b)).** The engine does not re-extract a held paper because its recorded text file changed or went missing. Its claims stand on the `parsed_text_sha256` they were made from; the route to new claims is a re-parse to a new version, which D24 already re-extracts. The fault's recorded form belongs to P6's Phase A with 023.
+
+**Measured — the recount** (`docs/session-reports/session-12/12s_close/recount_12s_close.py`, unchanged — no row opened this session, so no new script (R678(f))). It ran in a scratch clone on the plan as committed at `0ceec48`; its output, `12u_close/recount_close_run.json`, is byte-identical to `12t_close/recount_close_run.json`. **The pre-tag list in this file is 278 rows — Class 1 / 2 / 3 = 94 / 53 / 131, and 0 without a class**; P1 59 (25 / 22 / 12), 35 fix units; P6 11; P7 117. **R510 for the session: rows in 0, rows out 0, no class move.** CLOSED and still counted (R607(d)): INT-i12-7, INT-i12-8, INT-i12-12 and INT-i12-73.
+
+**Requests this session sent to the Ollama server.** None but `GET /api/version`, `/api/tags` and `/api/ps`:
+
+- bracketing the 12u-OPEN gate (02:06:27 and 02:21:46 UTC);
+- bracketing the 12u-U16C gate (05:25:02 and 05:40:51 UTC);
+- at this closeout (17:03:44 and 17:07:49 UTC).
+
+No model call. Every throwaway review of 12u-U16A and every test ran under the suite's Ollama fence. `NRestarts` was 0 throughout, and nothing was resident at this closeout.
+
+**Live.** Never written. `db_fingerprint --compare` against the migration-02 record was IDENTICAL at every check of the session (overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`, 36 tables). Live was opened `mode=ro` only, by the fingerprint and `dbchecks.py`. The restore points were not opened. Every never-opened copy, including 12u-U16A's eight throwaway reviews, is checked by file sha256 (`12u_close/retention_close.txt`: 23 MATCH lines, 0 MISMATCH).
+
+**Conventions added this session:**
+
+- R684(d) — earlyoom kills are counted by `sending SIG(TERM|KILL) to`; its startup config lines are not kills.
+- R686(c) — a row on more than one line gets a note on a second line only when the note changes that line's class, package or closure.
+- R690(b)–(c) — a test that pins the defect a unit fixes is rewritten to the corrected behaviour in the unit's commit, never deleted, and listed by id with its before/after assertion.
+
+*Dated line, no note (R691(d)), 2026-10-22:* two ledger commits are accepted as found (R663(b), R654(d)). `695fa14` is this lane's ledger commit; it carried a surgical-cv row (`6dd9c14`, 03:28:19Z) that was uncommitted when found. `bdf3707`, another session's wrap (05:39:42 UTC, no trailers), carried this lane's row for `2c3822b` (05:24:41Z) beside a surgical-cv row (`d1b81ea`). R680(b) stands for this lane's own ledger commits.
+
+*Notes recorded at this close, no rows:*
+
+- (a) **claude-config at this commit.** The HEAD read at this commit's step is `baefb35c941d5b55d54b900ca15d3ff34ca5f428`, clean and level but for `0ceec48`'s hook-written ledger row. The hook writes this closeout's row after the commit, and step 5 of the brief settles both; the result is in the closeout block.
+- (b) **The lane line.** The 12u lane line is built after this commit, because it names this commit's hash, so `12u_close/` does not hold it. It is `~/scratch/12u-close/lane_line_12u.txt`, and its sha256 and byte count are in the closeout block.
+- (c) **The pytest temp root** as read at this closeout (R691(e)): 4 entries, 2,879,779,576 bytes (`12u_close/temp_root_close.txt`). Nothing was emptied, and this lane's ad-hoc runs used `--basetemp` under scratch (R676(d)(iii)).
+  - `pytest-20` belongs to the surgical-cv pytest of 05:24:01 UTC and is not this lane's.
+  - `pytest-21` is the 12u-U16C gate's; `pytest-22` is the 2026-10-22 nightly's; `pytest-current` → `pytest-22`.
+  - pytest's own retention rotated out `pytest-17` and `-18` (during the 12u-U16C gate) and `pytest-19`, the 03:24–03:28 UTC entry that is not this lane's (R688(a)), at the nightly.
+- (d) **Finding 5's procedure** (R691(e)). During the 12u-U16C gate the four uncommitted report files were held in `~/scratch/12u-u16c/held_untracked/`, so the gate ran on a clean tree. They were restored unchanged and committed at `2579f7c`. This is reported as a procedure, not a convention.
+- (e) **This session's ruling files:** `r683.txt` in `12t_close/`; `r684.txt` in `12u_U16A/`; `r685.txt` to `r691.txt` in `12u_U16B/`.
+- (f) **The closeout block's element order** is that of `12t_close/closeout_12s_found.txt` (R683(b)).
+- (g) **INT-r12-1 is not in `12l_P1A.md` §3.** R691(g) names "INT-r12-1's Phase A with INT-s12-1 (U17 in the unit order as 12l_P1A §3 states it)". §3's U17 is "Cross-family rule enforced at run open", whose row is INT-i12-45. INT-r12-1 and INT-s12-1 postdate §3, and neither appears in it (INT-r12-1's row: "fix unit assigned at its Phase A"). Both are quoted below as they stand; which unit comes next is for the wrap ruling.
+
+**Session 12u closed.** Next: session 12v, fresh.
+
+Expected values at session-12v open, as at this closeout (2026-10-22):
+- **HEAD:** the 12u closeout commit (child of `0ceec48001255878a4f53db4da88738648a795a5`; its full hash is in the closeout block and the lane line), clean and **level with origin** (R370). The plan file's sha256 and byte count are in the closeout block and the lane line.
+- **The decision log in this file ends at R691** (or at the last wrap ruling, if any is transcribed before 12v).
+- **The gate** on this tree:
+  - **Counts:** **3,347 passed / 1 xfailed / 17 deselected**, collected **3,365**, selected **3,348**, 0/0 (a set comparison, R655(b)) against `docs/session-reports/session-12/12u_U16B/collected_ids_12u_u16c.txt` (the U16C gate's list, 3,348 ids, unchanged since `2c3822b`).
+  - **Wall time:** against **791–966 s (R683(c))**, beside the series 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14 s. A gate outside it is reported with its concurrent jobs.
+  - **Ollama reads:** version, tags and ps, at least five seconds before the gate is launched and after it exits, each timestamped (R660(b)). The gate's journal window is empty.
+  - **Durations:** a file written (`--durations=0`) and compared with `12u_close/durations_12u_u16c.txt`; any phase slower by more than 10 s is reported.
+  - **Basetemp** read immediately after the gate (R660(c)). The two warnings are sklearn's (R641(c)). The concurrent-jobs read excludes its own shell (R680(c)).
+- **The 2026-10-23 09:00 UTC nightly** on this tree (engine tree equal to `2c3822b`'s): `logs/nightly_test_20261023.log` reads `collected 3365 items / 17 deselected / 3348 selected`, **3347 passed, 17 deselected, 1 xfailed, 2 warnings**, last line **"pytest exit code: 0"**; `logs/nightly_durations_20261023.txt` present; the Ollama journal for 09:00–09:25 UTC empty; the real lock file's mtime unchanged (2026-07-27 23:22:08 UTC). Any other nightly result is reported, not adapted to.
+- **The 2026-10-23 07:00 UTC health job:** its loads and their outcome, read from its log and the Ollama journal, with an NVRM grep over the kernel journal (eleven `NV_ERR_NO_MEMORY` lines this boot before it) — readings (R663(d), R670(f)). An empty-response FAIL like 2026-10-22's `qwen3.6:35b-a3b` is a reading.
+- **The pytest temp root at the open** (R647(c), R652(c)): entry count and size recorded, not matched; entries not of this lane reported with their origin; nothing emptied. At this closeout: `pytest-20`, `-21`, `-22` and `pytest-current` (4 entries, 2,879,779,576 bytes). An ad-hoc pytest run passes `--basetemp` under the session's scratch (R676(d)(iii)).
+- **Collection and inventory:** no-marker collection **3,365**; `tests/test_eligibility.py` 91; `inventory --check` in sync.
+- **The diff list:** `git diff --stat f4a5586 HEAD -- engine tests scripts analysis review_specs` lists exactly `engine/agents/audit_events.py`, `engine/agents/auditor.py`, `engine/agents/extractor.py`, `engine/cloud/__init__.py`, `engine/core/locator.py`, `engine/core/paper_state.py`, `scripts/run_pipeline.py`, `tests/test_audit_admitted_set.py`, `tests/test_audit_events.py`, `tests/test_audit_paper_id.py`, `tests/test_audit_stage_completion.py`, `tests/test_auditor.py`, `tests/test_cloud_package_init.py`, `tests/test_duplicate_on_pass1_attempt_2.py`, `tests/test_locator.py`, `tests/test_requirements_census.py`, `tests/test_selection.py`, `tests/test_text_refusal_at_selection.py` (18 files, 1,055 insertions, 54 deletions; `12u_close/diff_since_f4a5586.txt`).
+- **The fingerprint of record, unchanged:** `docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json` — 36 tables; overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`. `ls data/*/review.db` lists one path, `data/surgical_autonomy/review.db` (R658(b)).
+- **`~/scratch/12i-scope/dbchecks.py`** (its own sha256 `909e3ed2c548e09593759b9727c10031793291bef6bc639631dcaa9aa9734ff5`, equal to `12f_repro/dbchecks.py`): its output is byte-identical to `12u_close/dbchecks_close.txt`, which is itself byte-identical to `12t_close/dbchecks_close.txt`. R71 in force.
+- **Retention** (`12u_close/retention_close.txt`; its first part is `12t_close/retention_close.txt` verbatim). Every never-opened copy is checked by `review.db` file sha256 (R675(b)); none was opened:
+  - the nine retained throwaway reviews (the eight under `~/scratch/retained/`, and `ra_12q` at `~/scratch/12r-u13/run/ra_12q/`, `ecad5e65…b75f`);
+  - U06's copy (`fc7d061d…7cf8`);
+  - the five restore points, against `12s_U14A/restore_points_12s.txt` (5 MATCH);
+  - 12u-U16A's eight throwaway reviews under `~/scratch/12u-u16a/run{1,2}/`, against `12u_U16A/throwaway_review_db_sha256.txt` (8 MATCH).
+
+  `~/scratch/12q-u13-build/stage/` holds `RESTORE.txt` only.
+- **Codebook and live spec, unchanged:** codebook sha256 `89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82`; live spec sha256 `917c24de29afdf802b5ddea61c34627a9bb0a857de3f97395af36d44ca664e5f`.
+- **Pins, by `docs/session-reports/session-12/12l_U04/pin_tuples.py`** with both arguments (spec, then codebook): `12u_close/pin_tuples_close.json`, byte-identical to `12t_close/pin_tuples_close.json` (sha256 `08f1374c…55e6`).
+- **Ollama:** 0.21.0; digests `qwen3:32b` `030ee887…7840`, `gemma3:27b` `a418f583…2203`, `deepseek-r1:32b` `edba8017…960c`; `NRestarts=0`. The service start (2026-10-17 23:04:05 UTC at this closeout) and the boot id (`abf99132…` at this closeout) are readings. Residency is a reading: nothing at this closeout (`/api/ps` `{"models":[]}`, 17:07:49 UTC).
+- **The host state the band belongs to** (R657(d), `12u_close/host_state_close.txt`): kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02. earlyoom's state and argv, `vm.min_free_kbytes` (1048576) and ollama's oom_score_adj (0) are readings (R663(c)).
+- **The pre-tag list** by `12s_close/recount_12s_close.py` (its JSON fields, R673(b)): `now` = `{rows 278, class_1 94, class_2 53, class_3 131, without_class 0}`; P1 `{class_1 25, class_2 22, class_3 12, rows 59}`; P6 rows 11; P7 rows 117; `fix_units` 35; baseline 276 (95 / 50 / 131) on the plan at `8b2c388` (`95951ec0…f709`); `expected_holds` true. The script's `r510_session_12s` field describes 12s; R510 for 12u is rows in 0, rows out 0, no class move. Fix units done: 16 of 35.
+- **Scratch:** the five 12u directories — `12u-open/`, `12u-u16a/`, `12u-u16b/`, `12u-u16c/` and `12u-close/` — beside those present at the 12u open and `retained/`.
+- **claude-config:** at this commit, `baefb35c941d5b55d54b900ca15d3ff34ca5f428`, with `0ceec48`'s hook-written ledger row uncommitted. This closeout settles it with this closeout's row (step 5), the wrap follows, and the 12u lane line is applied under the wrap ruling. The claude-config HEAD expected at the 12v open is the one the closeout block or the wrap reports last.
+
+12v's first items, in this order:
+- **12v-OPEN**, run outside 07:00–10:35 UTC. Its item 0 transcribes the wrap ruling as the next block and copies the 12u lane-line file into `12u_close/`. It reads the 2026-10-23 07:00 health job and 09:00 nightly, and runs the startup verify against this block.
+- **Then INT-r12-1's Phase A with INT-s12-1:** one pin-affecting batch, one comparison rehearsal (R539). R691(g) places it as "U17 in the unit order as 12l_P1A §3 states it"; §3 as it stands, U17 through U20 verbatim (note (g): §3's U17 row is INT-i12-45, and INT-r12-1 and INT-s12-1 are not in §3):
+
+```text
+### U17 — Cross-family rule enforced at run open
+
+- **Rows:** INT-i12-45
+- **Pin effect:** not affecting
+- **Files:** `engine/core/review_spec.py`, `engine/core/run_manifest.py`, `engine/core/effective_config.py`, `review_specs/surgical_autonomy.yaml`
+- **Depends on:** —
+- **Acceptance test** (synthetic; discharges R588 (row 64), A4): `test_open_run_refuses_a_same_family_auditor` — `open_run` with an audit stage whose model is of the extractor's family raises a named refusal before any manifest row; with a different family it opens and the manifest records both families. Fails on the unmodified tree.
+- **Note:** Phase A answer to A4: no model-family attribute exists anywhere (§2 D10). The fix edits the live spec, so its sha256 changes.
+
+### U18 — Digest host equals chat host; digest re-checked per call
+
+- **Rows:** A-4b
+- **Pin effect:** not affecting
+- **Files:** `engine/utils/ollama_client.py`, `engine/core/effective_config.py`, `engine/core/run_manifest.py`
+- **Depends on:** —
+- **Acceptance test** (synthetic; discharges R541): `test_open_run_refuses_when_the_chat_client_host_is_not_the_digest_host` — With the chat client bound to another host and the default digest path in use, `open_run` raises a refusal naming both hosts and writes no manifest row; with one host it opens. A model whose digest changes under the same tag mid-run stops the run at the next call (Wave 1 row 16). Fails on the unmodified tree.
+- **Note:** Ten test modules rebind the client to a fake host and inject `digest_fn`; the refusal keys on the default digest path so they stay valid. Reader findings N27 and N28 (a third hard-coded address; a second notion of host) close here.
+
+### U19 — The server environment is re-read after a restart and recorded
+
+- **Rows:** INT-j12-17
+- **Pin effect:** not affecting
+- **Files:** `engine/utils/ollama_preflight.py`, `engine/agents/extractor.py`, `engine/utils/ollama_client.py`, `engine/core/run_manifest.py`, `engine/migrations/`
+- **Depends on:** —
+- **Acceptance test** (synthetic; discharges R599): `test_the_env_check_runs_again_after_every_restart` — With the subprocess boundary patched, a restart is followed by one more environment check before the next paper, and a correctness-tier drift on that read stops the run naming it; the run manifest stores the environment string read at open. Fails on the unmodified tree.
+- **Note:** Class 1 (conditional) kept: `OLLAMA_KV_CACHE_TYPE` degrades structured extraction without an error. Recording the string in the manifest needs no migration if it goes in the manifest body; that is checked in the unit.
+
+### U20 — The input-fit ceiling reads a Modelfile `num_ctx`
+
+- **Rows:** INT-i12-11
+- **Pin effect:** not affecting
+- **Files:** `engine/utils/ollama_client.py`
+- **Depends on:** —
+- **Acceptance test** (synthetic; discharges R587): `test_a_modelfile_num_ctx_lowers_the_ceiling` — With a fake `show` response whose parameters carry `num_ctx 8192` and a trained context of 131072, the effective ceiling is 8192 and a prompt count at that value raises `InputTruncated`; a request `num_ctx` still wins. Fails on the unmodified tree.
+- **Note:** Trigger measured absent today: neither `deepseek-r1:32b` nor `gemma3:27b` sets `num_ctx` in its Modelfile, and the service sets no context length. Class 1 kept as latent: a truncated paper would be extracted as if whole, and the fix is one term.
+```
+
 ## Decision log
 
 Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in order. The architect's four provisional rulings of 2026-09-19 (recall-bounded filter with code-enforced basis; SYNERGY as reference; a tiered lane with 2d first; a 50 KB plan) were withdrawn after the external review and replaced by R1–R9 below.

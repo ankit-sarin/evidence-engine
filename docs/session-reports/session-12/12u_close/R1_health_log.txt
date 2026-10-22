@@ -1,0 +1,29 @@
+Ollama Health Check — Thu Oct 22 07:00:01 AM UTC 2026
+========================================
+Ollama systemd Environment:
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin OLLAMA_KV_CACHE_TYPE=f16 OLLAMA_MAX_LOADED_MODELS=1 OLLAMA_NUM_PARALLEL=1 OLLAMA_FLASH_ATTENTION=true OLLAMA_KEEP_ALIVE=-1
+========================================
+Resident at start: none
+qwen3.6:35b-a3b                FAIL (empty response)                        80.7s
+qwen3.6:27b                    OK                                           19.9s
+gpt-oss:20b                    OK                                            5.8s
+gemma4:26b                     OK                                            7.5s
+qwen3:30b-instruct             OK                                            4.8s
+gemma4:31b                     OK                                           10.1s
+qwen3.5:27b                    OK                                           16.5s
+gemma3:27b                     OK                                            5.4s
+qwen2.5vl:7b                   OK                                            4.1s
+qwen3:8b                       OK                                            7.2s
+qwen3:32b                      OK                                           29.4s
+minicpm-v:latest               OK                                            5.3s
+qwen3-vl:8b                    OK                                           16.8s
+qwen2.5:7b-instruct            OK                                            4.6s
+deepseek-r1:32b                OK                                           18.6s
+mistral:7b                     OK                                            4.1s
+gemma2:27b                     OK                                           10.4s
+qwen2.5:32b                    OK                                           12.6s
+llama3.3:70b                   OK                                           84.0s
+llama3.2:3b                    OK                                            4.1s
+========================================
+ALERT
+Done: Thu Oct 22 07:05:53 AM UTC 2026

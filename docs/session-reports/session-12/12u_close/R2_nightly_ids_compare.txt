@@ -1,0 +1,1 @@
+R2 — the 2026-10-22 09:00 UTC nightly ids (ids_from_log.py over logs/nightly_test_20261022.log): 3,348, equal to 12u_U16B/collected_ids_12u_u16c.txt (cmp, byte-identical)

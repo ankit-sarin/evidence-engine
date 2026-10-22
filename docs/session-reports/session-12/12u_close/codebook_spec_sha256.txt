@@ -1,0 +1,2 @@
+89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82  data/surgical_autonomy/extraction_codebook.yaml
+917c24de29afdf802b5ddea61c34627a9bb0a857de3f97395af36d44ca664e5f  review_specs/surgical_autonomy.yaml

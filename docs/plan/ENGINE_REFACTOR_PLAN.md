@@ -8123,3 +8123,78 @@ R683(g) — Session 12t closes now. After R683(e) has landed, run /wrap. Report 
 | 2026-10-20 | R683(a) — The 12t-CLOSE closeout block is accepted as printed. The closeout commit 2cab14f and item 0 a2e6378 stand; the ledger 3b25e2f with trailers stands (R680(b) met). R683(b) — The element-order record: the 12t-CLOSE brief's I1 named two places that did not hold it (an architect premise); the record is the archived 12s transcript, now committed as 12t_close/closeout_12s_found.txt. From here, docs/session-reports/session-12/12t_close/ closeout_12s_found.txt is the on-disk record of the closeout block's element order that R678(a) governs, and a closeout brief names it. No row. R683(c) — The band (R657(d), R677(f), R682(d)): cut from the last four standard gates on this host state, 858.50, 895.02, 872.27 and 887.58 s (mean 878.3425 s), the first two beside a surgical-cv encode, the last two on a quiet box, confounded readings included with their confounders recorded: 791–966 s. The session-12u startup verify's gate is matched against it; a gate outside it is reported with its concurrent jobs, not adapted to. The series stands at 871.59, 906.50, 858.50, 895.02, 872.27, 887.58 s. R683(d) — Reading, no row: the NVRM count is six this boot and seven since 2026-10-17, the two new lines in the 2026-10-20 health job on the same two loads as the 2026-10-19 pair; the dgx-infra item carries it. The R510 line for 12t is rows in 0, rows out 0, no class move; INT-i12-12 CLOSED and counted. R683(e) — The lane line (sha256 d15b0e5c6f5a3a0b8470e1fa5c99e2d6f425004c1d70171d10000805f2b9f6d3, 4,554 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp), push, level. R683(f) — 12u-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of the lane-line commit, itself the child of 3b25e2f), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12u's item 0 copies lane_line_12t.txt into docs/session-reports/session-12/12t_close/ with its commit, which carries no cell note and is verified by its "−" count, 0 (R664(b)). No closeout gate ran: the expected gate values for 12u are 12t-U15B's (9cfd726) on unchanged code (3,342 / 1 xfailed / 17 deselected, collected 3,360 / selected 3,343; 0/0 against 12t_close/collected_ids_12t_close.txt; band 791–966 s, with the concurrent jobs named and the snapshot's own PIDs excluded); the 2026-10-21 09:00 UTC nightly runs on 2cab14f, whose engine tree equals 9cfd726's; 12t_close/expected_nightly_20261021.md governs; the 07:00 health job's loads are read and reported by 12u-OPEN, with an NVRM grep. The temp root is read, never matched. Residency is a reading. R683(g) — Session 12t closes now. After R683(e) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-20, during session 12t, on architect recommendation, on the 12t-CLOSE closeout block (2cab14f) |
 
 The decision log in this file ends at R683.
+
+**Block 82.** *Transcribed 2026-10-22 (item 0 of the 12u-U16A brief), in its own commit, in the R597(e) form:* ruling R684, made by PI on architect recommendation on 2026-10-22 UTC, during session 12u, on the 12u-OPEN final report (item 0 `45ba35369f97d7a5877262951c80a51492d6542f`). The 12u-U16A task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12u-R684] — 12u-OPEN accepted; the open verified; four readings; the
+  item-0 transcription check restated; R624(b) read first; U16's Phase A opens
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-OPEN
+  final report (item 0 at 45ba35369f97d7a5877262951c80a51492d6542f; evidence in
+  ~/scratch/12u-open/). Transcribe as item 0 of the brief below (Block 82), in this block.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12u-OPEN report):
+  MEASURED: "Commit: 45ba35369f97d7a5877262951c80a51492d6542f, parent 2cab14f"; "Plan numstat:
+    78 "+", 0 "−""; "Line count: 8,125 = 8,047 + 78"; "sha256
+    71b5a960315e38ecd0dd02310ecaedc3dfd30fd1501e85405bd4db2b132f9f1f, 1,723,434 bytes"; "r683.txt:
+    bf271df1e4a263971584451c3edba2f8cd5ca26ee8d86687c700ba6280a0fd0a, 5,675 bytes, 67 lines";
+    "fence == r683.txt True; cell == render_cell True; one Block 81"; "Commit:
+    94e8ec221294f5f78fde3e46f169f9fa38bd8456, parent 0856807"; "ledger: rows through
+    2026-10-22T01:57:40Z"; "Loads: 20/20 OK"; "NV_ERR_NO_MEMORY: 10 this boot (6 before the job, 4
+    in it), 11 since 2026-10-17"; "==== 3342 passed, 17 deselected, 1 xfailed, 2 warnings in
+    877.64s (0:14:37) ====" (the nightly); "Wall time: 882.23 s, inside 791–966 s"; "==== 3342
+    passed, 17 deselected, 1 xfailed, 2 warnings in 878.47s (0:14:38) ===="; "collected 3360 items
+    / 17 deselected / 3343 selected"; "only-gate 0, only-ref 0"; "No phase slower by more than 10
+    s"; "now: {"class_1": 94, "class_2": 53, "class_3": 131, "rows": 278, "without_class": 0}";
+    "fix_units: 35"; "15/15 MATCH"; "Both repos clean and level"; "kernel 6.17.0-1032-nvidia,
+    Python 3.12.3, libsqlite3-0 3.45.1-1ubuntu2.8, driver 580.173.02, all equal to
+    host_state_close.txt".
+  MEASURED (architect, this session): the architect's transcription of R683 from unified plan
+    v90 Appendix 12u, hashed before the report was read: sha256
+    bf271df1e4a263971584451c3edba2f8cd5ca26ee8d86687c700ba6280a0fd0a, 5,675 bytes, 67 lines;
+    character inventory 8 em dashes, 9 en dashes, 4 U+2212, 2 ×, 2 →, 1 …, 0 tabs.
+  READ (CC's): "I delayed the gate launch … so this was my own decision"; "The kill-line pattern
+    sending SIG(TERM|KILL) to gives 0, and the recorded file uses that one"; "The 2a diff check is
+    not independent".
+  INFERRED (architect; a reading against the plan, not a measurement): of the four 10-21 loads,
+    only llama3.3:70b is among the two loads the plan records for the 10-19 and 10-20 pairs
+    (qwen2.5:32b, llama3.3:70b). Nothing below depends on it.
+
+R684(a) — 12u-OPEN is accepted as reported: item 0 landed as 45ba353 (Block 81; r683.txt;
+  lane_line_12t.txt copied), 0 "−" lines, the ledger row as 94e8ec2 with trailers; the decision
+  log in the file ends at R683; the 2026-10-21 health job loaded 20 of 20 and the nightly matched
+  expected_nightly_20261021.md line for line; the gate 3,342 / 1 / 17 on 3,360 / 3,343, 0/0,
+  882.23 s inside 791–966 s on a quiet box; the recount 278 (94 / 53 / 131), P1 59, 35 fix units;
+  every value of the 12u block matched. The 12u open stands verified.
+R684(b) — Reading, no row: the NVRM count is ten this boot and eleven since 2026-10-17, the four
+  new lines in the 2026-10-21 health job on qwen3.6:35b-a3b, deepseek-r1:32b, gemma2:27b and
+  llama3.3:70b, all four loads completing; the dgx-infra item carries it. The deepseek-r1:32b
+  line enters Run 7's confounder statement when that brief is written. The band series gains
+  882.23 s: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23 s.
+R684(c) — The delayed launch is accepted as made: a bounded wait for a short-lived concurrent
+  job, reported with the job, its PID and the launch time, is CC's reported choice and not a
+  convention; a gate launches when its brief reaches it and names its concurrent jobs. No row.
+R684(d) — "earlyoom kill lines this boot" means, from here, kernel-journal lines matching the
+  pattern sending SIG(TERM|KILL) to; startup configuration lines are not kills. The 12u-open
+  recorded file is the form. No row.
+R684(e) — The item-0 transcription check is restated: a brief's 2a self-diff confirms the copy,
+  not the transcription (CC's finding 4, an architect premise). From here the ruling that accepts
+  an item-0 transcription carries the architect's independently hashed copy of the ruling text
+  (the R679(c) form), and the brief's 2a self-diff clause is dropped. For R683 the architect's
+  copy hashed identically (bf271df1…fd0a, 5,675 bytes, 67 lines); Block 81 stands.
+R684(f) — R624(b) is not answered now. U16's Phase A, under the brief below, reads the changed-
+  text cases first — a file whose bytes no longer match its recorded reference, a paper
+  re-parsed to a new version, a missing file — and reports what each does today at selection,
+  in the extract loop, at the audit stage and in the operator's report, with each candidate's
+  pin effect; the PI answers on that read-out. No engine decision is made by this ruling.
+R684(g) — The brief below is read-only: no engine, test, script, spec or codebook edit; no live
+  write; no model call; reproducers on throwaway copies outside data/, model calls mocked as the
+  suite mocks them; one commit, the read-out and its evidence, no gate. Item 0 transcribes this
+  ruling as Block 82 with 0 "−" lines (no cell note; R664(b), R679(b)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-22 | R684(a) — 12u-OPEN is accepted as reported: item 0 landed as 45ba353 (Block 81; r683.txt; lane_line_12t.txt copied), 0 "−" lines, the ledger row as 94e8ec2 with trailers; the decision log in the file ends at R683; the 2026-10-21 health job loaded 20 of 20 and the nightly matched expected_nightly_20261021.md line for line; the gate 3,342 / 1 / 17 on 3,360 / 3,343, 0/0, 882.23 s inside 791–966 s on a quiet box; the recount 278 (94 / 53 / 131), P1 59, 35 fix units; every value of the 12u block matched. The 12u open stands verified. R684(b) — Reading, no row: the NVRM count is ten this boot and eleven since 2026-10-17, the four new lines in the 2026-10-21 health job on qwen3.6:35b-a3b, deepseek-r1:32b, gemma2:27b and llama3.3:70b, all four loads completing; the dgx-infra item carries it. The deepseek-r1:32b line enters Run 7's confounder statement when that brief is written. The band series gains 882.23 s: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23 s. R684(c) — The delayed launch is accepted as made: a bounded wait for a short-lived concurrent job, reported with the job, its PID and the launch time, is CC's reported choice and not a convention; a gate launches when its brief reaches it and names its concurrent jobs. No row. R684(d) — "earlyoom kill lines this boot" means, from here, kernel-journal lines matching the pattern sending SIG(TERM\|KILL) to; startup configuration lines are not kills. The 12u-open recorded file is the form. No row. R684(e) — The item-0 transcription check is restated: a brief's 2a self-diff confirms the copy, not the transcription (CC's finding 4, an architect premise). From here the ruling that accepts an item-0 transcription carries the architect's independently hashed copy of the ruling text (the R679(c) form), and the brief's 2a self-diff clause is dropped. For R683 the architect's copy hashed identically (bf271df1…fd0a, 5,675 bytes, 67 lines); Block 81 stands. R684(f) — R624(b) is not answered now. U16's Phase A, under the brief below, reads the changed- text cases first — a file whose bytes no longer match its recorded reference, a paper re-parsed to a new version, a missing file — and reports what each does today at selection, in the extract loop, at the audit stage and in the operator's report, with each candidate's pin effect; the PI answers on that read-out. No engine decision is made by this ruling. R684(g) — The brief below is read-only: no engine, test, script, spec or codebook edit; no live write; no model call; reproducers on throwaway copies outside data/, model calls mocked as the suite mocks them; one commit, the read-out and its evidence, no gate. Item 0 transcribes this ruling as Block 82 with 0 "−" lines (no cell note; R664(b), R679(b)). | PI, 2026-10-22, during session 12u, on architect recommendation, on the 12u-OPEN final report (item 0 45ba353) |
+
+The decision log in this file ends at R684.

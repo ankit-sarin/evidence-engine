@@ -1,0 +1,67 @@
+RULING [evidence-engine 12t-R683] — wrap ruling: closeout accepted; the band cut 791–966 s; the
+  element-order record named; lane line approved and applied; close now
+STATUS: PI ruling, 2026-10-20 UTC, session 12t, on architect recommendation, on the 12t-CLOSE
+  closeout block (2cab14f9430641383b493479a4c20fa0d89a6264). Transcribe as item 0 of 12u-OPEN
+  (Block 81), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block):
+  MEASURED: "HEAD: 2cab14f9430641383b493479a4c20fa0d89a6264, parent
+    a2e637842b7dd2aff6ceab9c0eefaa0db6069b56; status[], lr[0 0]"; "sha256
+    826bbbe13cf6d346c170db3e06c7045102cbbcbb26b4af5decb2fca9f11ddbf6, 1714079 bytes, 8047
+    lines"; "The decision log in this file ends at R682."; item 0 "3 files changed, 195
+    insertions(+), 3 deletions(-)", "prefix_check: RESULT: PASS, exactly 3 "−" lines"; closeout
+    "16 files changed, 8768 insertions(+)", "numstat is 87 0"; "fence == r681.txt: True, fence ==
+    r682.txt: True; cell == render_cell: True for both"; "git diff --stat 9cfd726 HEAD -- engine
+    tests scripts analysis review_specs is empty"; ledger "3b25e2fb162d9b0553274c222ff236a741a83857,
+    parent f6faf31, message "ledger: rows through 2026-10-20T21:33:34Z", with both trailers",
+    "cc[3b25e2f 0 0], clean"; "primer.md is untouched; lines 41–45 are still the 12s lane line";
+    fingerprint IDENTICAL at 21:30:13Z, 21:30:17Z, step 1, 21:33:34Z, 21:33:37Z and 21:34:50Z; lane
+    line "sha256 d15b0e5c6f5a3a0b8470e1fa5c99e2d6f425004c1d70171d10000805f2b9f6d3, 4554 bytes, 10
+    lines. Not applied", "five − lines == primer.md 41–45: True"; "278 rows, 94 / 53 / 131, 0
+    unclassed; P1 59 (25 / 22 / 12); 35 fix units; P6 11; P7 117"; "rows in 0, rows out 0, no class
+    move"; "The chain reproduced 272, 275 and 276"; retention "first part is byte-identical to
+    12s_close/retention_close.txt", "5 MATCH", "None was opened"; "Temp root: 4 entries,
+    4,109,084,043 B"; the three 12t scratch directories; "/api/ps: {"models":[]} (21:34:51Z)";
+    "dbchecks_close.txt and pin_tuples_close.json are byte-identical to 12s_close's"; "mean is
+    878.3425 s; ×0.9 = 790.5082, ×1.1 = 966.1768, giving 791–966 s"; "882.9025 → 794.61–971.19 →
+    795–971, which reproduces R677(f)'s band"; "6 NV_ERR_NO_MEMORY lines this boot … and 7 since
+    2026-10-17"; the four rNNN.txt hashes as tabled; the archive command as printed.
+  READ (CC's): "the closeout block's element order is not recorded in 12s_close/ or in the 12s
+    closure paragraph"; "I used it and committed it as 12t_close/closeout_12s_found.txt".
+  INFERRED: none.
+
+R683(a) — The 12t-CLOSE closeout block is accepted as printed. The closeout commit 2cab14f and item 0
+  a2e6378 stand; the ledger 3b25e2f with trailers stands (R680(b) met).
+R683(b) — The element-order record: the 12t-CLOSE brief's I1 named two places that did not hold it
+  (an architect premise); the record is the archived 12s transcript, now committed as
+  12t_close/closeout_12s_found.txt. From here, docs/session-reports/session-12/12t_close/
+  closeout_12s_found.txt is the on-disk record of the closeout block's element order that R678(a)
+  governs, and a closeout brief names it. No row.
+R683(c) — The band (R657(d), R677(f), R682(d)): cut from the last four standard gates on this host
+  state, 858.50, 895.02, 872.27 and 887.58 s (mean 878.3425 s), the first two beside a surgical-cv
+  encode, the last two on a quiet box, confounded readings included with their confounders
+  recorded: 791–966 s. The session-12u startup verify's gate is matched against it; a gate
+  outside it is reported with its concurrent jobs, not adapted to. The series stands at 871.59,
+  906.50, 858.50, 895.02, 872.27, 887.58 s.
+R683(d) — Reading, no row: the NVRM count is six this boot and seven since 2026-10-17, the two new
+  lines in the 2026-10-20 health job on the same two loads as the 2026-10-19 pair; the dgx-infra
+  item carries it. The R510 line for 12t is rows in 0, rows out 0, no class move; INT-i12-12
+  CLOSED and counted.
+R683(e) — The lane line (sha256 d15b0e5c6f5a3a0b8470e1fa5c99e2d6f425004c1d70171d10000805f2b9f6d3,
+  4,554 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45
+  of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+"
+  lines, applied from the file, not from a paste; commit primer.md together with any uncommitted
+  hook row ("ledger" form, with trailers, the row's exact timestamp), push, level.
+R683(f) — 12u-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of
+  the lane-line commit, itself the child of 3b25e2f), level and clean; foreign commits and rows per
+  R653(c), R654(d), R663(b). 12u's item 0 copies lane_line_12t.txt into
+  docs/session-reports/session-12/12t_close/ with its commit, which carries no cell note and is
+  verified by its "−" count, 0 (R664(b)). No closeout gate ran: the expected gate values for 12u
+  are 12t-U15B's (9cfd726) on unchanged code (3,342 / 1 xfailed / 17 deselected, collected 3,360 /
+  selected 3,343; 0/0 against 12t_close/collected_ids_12t_close.txt; band 791–966 s, with the
+  concurrent jobs named and the snapshot's own PIDs excluded); the 2026-10-21 09:00 UTC nightly
+  runs on 2cab14f, whose engine tree equals 9cfd726's; 12t_close/expected_nightly_20261021.md
+  governs; the 07:00 health job's loads are read and reported by 12u-OPEN, with an NVRM grep. The
+  temp root is read, never matched. Residency is a reading.
+R683(g) — Session 12t closes now. After R683(e) has landed, run /wrap. Report the archive command;
+  the closeout block stands.

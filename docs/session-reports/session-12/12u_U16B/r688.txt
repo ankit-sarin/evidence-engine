@@ -1,0 +1,58 @@
+RULING [evidence-engine 12u-R688] — Phase 1 accepted; "on the stage summary" withdrawn; the
+  advance names the processing state only; T1 as built; Phase 2 opens
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16B
+  Phase 1 report (docs/session-reports/session-12/12u_U16B/12u_U16B_phase1.md,
+  6229970ea1f9b714bc6103a9ca601d44eac2157b). Transcribe as Block 86 at item 0 of the brief
+  below, after Block 85 (R687), in the same commit.
+
+ASSUMPTIONS IN THIS RULING (quoted from the Phase 1 report):
+  MEASURED: "5 failed in 6.06s in a scratch clone at 97e5079 (head_run.txt)"; T1 "line 149,
+    assert not is_stage_done"; T2 "line 176, the stage assertion"; TV2 "line 187, the stage
+    assertion"; T3 "line 222, assert len(said) == 1"; TV1 "line 232, assert len(audited) ==
+    1"; "collected 157 items, 157 passed, exit 0"; "Commit:
+    6229970ea1f9b714bc6103a9ca601d44eac2157b, parent 21a224d. 10 files, 1,240 insertions";
+    "git diff --stat 97e5079 HEAD -- engine tests scripts analysis review_specs is empty";
+    "r687.txt … 383014c57a7f89e7706dc9e938fdface18c52fcd3a976db67de094aca792fce1 | 3,229 |
+    41"; ledger "695fa148bf83ba17c1fd7ac980ce814cbc517898, parent 85751ff"; "an uncommitted
+    surgical-cv row I found there (6dd9c14, 03:28:19Z), committed as found"; "pytest-19 was
+    created at 03:24–03:28 UTC, before my runs, and is not from this suite".
+  MEASURED (architect, this session): the architect's copy of R687, hashed from the block that
+    issued it: sha256 383014c57a7f89e7706dc9e938fdface18c52fcd3a976db67de094aca792fce1, 3,229
+    bytes, 41 lines — identical.
+  READ (CC's): "test_stage_completion.py pins the return exactly (== {"extracted": 1,
+    "audited": 1} and two siblings)"; "Four tests pin the advance's signature. They replace it
+    with lambda conn: {}. A new argument at the call site would raise TypeError inside the
+    caller's except Exception: pass"; "the stage summary is _stage_audit's returned stats (per
+    12t_U15B), but those are returned before the advance runs"; "Paper 202 is extracted after
+    the audit stage that audited paper 201. The advance runs and the stage stays pending
+    because 202 is unaudited. _stage_audit then audits 202, and the stage completes."
+  INFERRED (architect): _advance_extraction_workflow lives in scripts/run_pipeline.py (C56
+    handler 3's site), so Phase 2 touches a script and predicts the test_api_parity.py delta:
+    0. CC verifies the site and the delta.
+
+R688(a) — Phase 1 is accepted as reported: the five tests fail on HEAD as predicted, the
+  regression set passes, the Phase 1 commit 6229970 stands; r687.txt verified by the architect's
+  hash. The foreign ledger row 6dd9c14 committed as found stands (R654(d)); pytest-19 is a
+  reading (R652(c)).
+R688(b) — Finding 1: R685(e)(i)'s "and on the stage summary" was an architect clause and is
+  withdrawn. The shortfall's signals are the advance's one pipeline WARNING per pending paper
+  (id and processing state) and the stage remaining pending in workflow_state, which the
+  audit-review gate reads (C58). _stage_audit's return value and shape are unchanged; the four
+  pinning tests stand. The operator view of a pending stage is S7's (J1 family); no row.
+R688(c) — Finding 2: the advance keeps its (conn) signature and its return value; it names
+  the pending paper's id and processing state only. The audit's refusal reason stays on
+  audit_run's log line and AuditReport (TV2 checks it). No row.
+R688(d) — Finding 3: T1 as built is the test; R687(c)'s ordering was the architect's. No
+  change.
+R688(e) — Phase 2, under the brief below: the engine edit per the Phase 1 report's §5 plan as
+  amended by (b) and (c); the five tests moved into tests/test_audit_stage_completion.py under
+  their Phase 1 ids; one engine commit; one standard gate, expected 3,347 passed / 1 xfailed /
+  17 deselected, collected 3,365 / selected 3,348, only-gate the five ids, only-ref 0 against
+  12t_close/collected_ids_12t_close.txt; band 791–966 s; both pins byte-identical; the gate
+  must exit before 07:00 UTC, else Phase 2 stops before the gate and reports. Item 0 of that
+  brief transcribes R687 (Block 85) and this ruling (Block 86) and writes the A15 note of
+  R687(b) on A15's row line only (R686(c)): one "−" line, prefix_check.py --expected-row A15.
+R688(f) — On the gate passing, U16 is landed and INT-i12-73 closes on its acceptance tests
+  (R514), counted until P1 closes (R607(d)); the closure form is the read-out's. The closing
+  note on INT-i12-73 and the CLAUDE.md or architecture-doc lines, if any describe the audit
+  stage's completion, are reported for a ruling, not edited in Phase 2.

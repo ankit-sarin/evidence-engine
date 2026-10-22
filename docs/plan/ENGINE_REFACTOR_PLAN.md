@@ -187,7 +187,7 @@ Provenance of human decisions: every human decision on disk (36 full-text adjudi
 | A12 | `engine/analysis/concordance.py::load_arm` has two branches (`local` / else-cloud); `engine/validators/distribution_monitor.py::_query_values` has three and routes `arm.startswith("human_")`. A `human_*` arm therefore queries `cloud_extractions` and returns `{}` with no error. `docs/architecture/pipeline.md` and `modules.md` document the branch that does not exist. Closes session 6, when the arm registry becomes the single routing predicate; doc corrections are session-6 hygiene | `S2_phase1_readout_addendum4_20260921.md` §D (A12) | LATENT (no human arm loaded) *Note 2026-10-11 (12k item 0c, R603):* R603: "Row owners: P5's Phase A confirms whether I5 and A12 are fixed at HEAD, as L14 read them. A row confirmed fixed is closed with that evidence; otherwise it stays as recorded." The read-out (`12j_review_w2.md`, quoted): "L14 reads I5 (`mode=ro`) and A12 (registry routing) as fixed in the code at HEAD although the rows naming them do not say closed; A16 stays as recorded, with two further details in `readers/L14.md`. Recorded for the row owners; not chased." The row stays as recorded until P5's Phase A confirms it; this note states no class or package. |
 | A13 | *Five adjudication/auditor modules select the latest **screening decision** by `ORDER BY id DESC LIMIT 1`*: `abstract_adjudication_html.py`, `audit_adjudicator.py` (×4), `ft_adjudication_html.py` (×2), `ft_screening_adjudicator.py` (×4), `screening_adjudicator.py`. Same family as A1 — a resolution rule copied per reader — but a **different question** (which screening decision is current, not which extraction), so outside R33 and not closed by the reader migration. Surfaced when Phase 2b widened the latest-extraction guard beyond `engine/exporters/` | READERS-01 Phase 2b report, contradiction 4 (R50) | ARMED |
 | A14 | *The resolver's refusals are handled differently by site*: `engine/agents/extractor.py` and `engine/agents/auditor.py` log a `ParsedTextMissing` / `ParsedTextModified` and skip the paper; `engine/agents/ft_screener.py::_load_parsed_text` and `engine/cloud/base.py::load_parsed_text` let it propagate. One refusal, two outcomes, so a modified text fails a screening run and only skips a paper in an extraction run | INPUT-IDENTITY-01 Phase 2a report (HEAD `fd2ca03`); WRITE-PATH-01 Phase 1b Q2 | **ARMED — ruled R122 (one policy: skip, record the reason, continue), lands in slice 2** (no parsed text is modified today; the 194 hashes match the baseline) *Note 2026-10-10 (12j item 0c, R587; R597(c)):* Wave 1 row 86 (W1-F3-C7) extends this row — Class 3, P7. The read-out's existing-row cell: "extends A14 / 12f A-6(e)". Its statement (`12i_review_w1.md`, quoted): "The cause of a flag lives only in a log line." The read-out names two existing rows; one note on each (R597(c)). *Note 2026-10-10 (12j-0c-FIX, R598):* only the Wave 1 finding noted above (Wave 1 row 86) is pre-tag, in its package (P7); the rest of the row keeps its existing owner. R598(b): "D20, J8, C13 and A14 each get a dated note: only the Wave 1 finding is pre-tag, in its package; the rest of the row keeps its existing owner." |
-| A15 | *The processing axis is per paper, not per (paper, arm).* `effective_state(conn, paper_id)` takes no arm and `paper_events` has no arm column, so processing is one axis per paper. Today only the local extractor, the event-side auditor and migration 017 write paper events; a second arm writing them (the cloud cut-over) would share the local arm's axis | WRITE-PATH-01 9c-C4 Phase A; R171 | LATENT — owner F15 (rule whether the axis becomes per (paper, arm) or the cloud arms write field events only) |
+| A15 | *The processing axis is per paper, not per (paper, arm).* `effective_state(conn, paper_id)` takes no arm and `paper_events` has no arm column, so processing is one axis per paper. Today only the local extractor, the event-side auditor and migration 017 write paper events; a second arm writing them (the cloud cut-over) would share the local arm's axis | WRITE-PATH-01 9c-C4 Phase A; R171 | LATENT — owner F15 (rule whether the axis becomes per (paper, arm) or the cloud arms write field events only) *Note 2026-10-22 (12u-U16C item 0, R687(b)):* T5 (`test_a_second_arm_with_unlocated_claims_keeps_the_stage_pending`, 12u_U16A.md §5) belongs to this row's fix under F15 (R681(b) form), deferred from U16: a per-arm stage completion cannot be expressed while the processing axis is per paper. The 12u-U16B stop report: "In T5's world … the paper is audited_ai and no paper is extracted, so the fixed advance completes the stage". Class and owner unchanged. |
 | A16 | *`check_schema_parity`'s arm test is a name test.* `if arm == "local":` reads `extractions`, otherwise `cloud_extractions`; the live spec's local arm is `local_deepseek_r1_32b`, which takes the cloud branch. R31 keeps the read; the finding is the branch (census N17) | WRITE-PATH-01 slice-3 census (9456c40) N17 | LATENT — owner 9d — *Note 2026-09-28 (9e):* since R160b (`edca8a1`) the frozen `corpus.py` docstring's "forward closure from FT_ELIGIBLE is nine statuses" is three (FT_ELIGIBLE, FT_FLAGGED, FT_SCREENED_OUT); the file is frozen (R35) and the correction is session 12's with this row *Note 2026-10-08 (12g item 0c, R541):* 12f triage — Class 2 (the frozen `corpus.py` docstring half is Class 3); owning package P2 (R540). *Note 2026-10-11 (12k item 0c, R602):* Wave 2 adjacent item 19 (seen by L14) is noted on this row — no class or package stated — R602: "19 → note on A16 (fixtures use arm "local", which keeps it green; B5)." The read-out (`12j_review_w2.md`, "New adjacent items", quoted): item 19: where — "`tests/test_concordance_pipeline.py::TestCheckSchemaParity`"; what — "fixtures use the arm name `local`, which no current spec arm carries, so A16 stays green". |
 
 ### B. Measurement instruments
@@ -8347,3 +8347,122 @@ R686(d) — Nothing else in 12u-U16B changes. Block 84 is this ruling, after Blo
 | 2026-10-22 | R686(a) — The stop was right. I1 ("each appears exactly once") was an architect count, not a read; the brief's "−" arithmetic rested on it. R686(b) — Option (a). The four notes of R685(f) go on the row lines only (598, 602, 318, 287 as read at the stop; re-read at 0d): four "−" lines, prefix_check.py --expected-row INT-i12-69 INT-i12-73 D24 C56 as written. Lines 1321, 1325, 1177 and 1183 are not edited. R686(c) — The one-note-per-line rule (R570 form; R672(c)) is restated: a row that appears on more than one line gets a note on a second line only when the note changes what that line states — its class, its package, or its closure. A note that leaves those unchanged goes on the row line alone, as a2e6378 did. prefix_check.py's one-"−"-per-id check is the form for that case and is not amended. R686(d) — Nothing else in 12u-U16B changes. Block 84 is this ruling, after Block 83, in the item-0 commit; the decision log then ends at R686 (0c's sentence reads "…ends at R686."). The commit's "−" count stays 4; its "+" count is Block 83's lines + Block 84's lines + 4. | PI, 2026-10-22, during session 12u, on architect recommendation, on the 12u-U16B stop report at step 0 |
 
 The decision log in this file ends at R686.
+
+**Block 85.** *Transcribed 2026-10-22 (item 0 of the 12u-U16C brief), in its own commit with Block 86 and the A15 note it orders, in the R597(e) form:* ruling R687, made by PI on architect recommendation on 2026-10-22 UTC, during session 12u, on the 12u-U16B stop report at step 1c. The resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12u-R687] — T5 deferred to the per-arm axis (A15/F15), R681(b) form; the
+  "as written" clause withdrawn for it; T1's fixture; resume 12u-U16B from 1b
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16B
+  stop report at step 1c (item 0 landed at 21a224d6f54e91fe80685051ff8c6ea941be9b58; no test
+  written; both repos clean and level). Transcribe as Block 85 at item 0 of the Phase 2 brief,
+  from a hashed r687.txt in 12u_U16B/, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "Commit: 21a224d6f54e91fe80685051ff8c6ea941be9b58, parent 97e5079. 3 files, 282
+    insertions, 4 deletions"; "153 "+" … 4 "−""; "RESULT: PASS, exactly 4 "−" lines"; "Line
+    count: 8,349 = 8,200 + 153 − 4"; "sha256
+    48903072e4e491fbcdaca4fe2e2f1aa130df5478639db9a5b69764b7bd6d151f, 1,754,035 bytes"; "r685.txt:
+    469beb7cd283456bf5a6016ed94490b88ef1e4e8ee0887f28d11455dcb676017, 8,385 bytes, 98 lines";
+    "r686.txt: d1c8e106cd5422eccd96da858c105e8701701b4958c693bdf07982a8dccfc41d, 2,384 bytes, 31
+    lines"; "fence == file True and cell == render_cell True for both blocks"; ledger
+    "85751ff590a71dfebd8e4d26cc4b845e72716563, parent 86b5d57"; the §5 table as quoted, T5:
+    "test_a_second_arm_with_unlocated_claims_keeps_the_stage_pending | completes
+    (u16_second_arm) | per the second-arm option ruled; latent under R71"; T1: "completes
+    (u16_states) | pending, the shortfall names paper 2; completes once 2 is audited".
+  READ (CC's): "No second-arm option was ruled"; "In T5's world … the paper is audited_ai and
+    no paper is extracted, so the fixed advance completes the stage"; "In u16_states, paper 2
+    sits at extracted with no claims".
+  READ (architect, the refactor plan): row A15 — "The processing axis is per paper, not per
+    (paper, arm) … LATENT — owner F15 (rule whether the axis becomes per (paper, arm) or the
+    cloud arms write field events only)".
+  INFERRED: none.
+
+R687(a) — The stop was right. R685(e)(vi)'s "T5 as written" was an architect clause that could
+  not hold against R685(e)(i); it is withdrawn for T5 (R639(b) form).
+R687(b) — Option (a). T5 is a test for a per-arm stage completion, which the processing axis
+  cannot express while it is per paper (A15). It belongs to the row whose fix decides the
+  per-arm axis, A15 under F15 (R681(b) form); it is not written in U16. U16's acceptance tests
+  are T1, T2, T3 (its concrete form TV1), TV2 and the regression set. A dated note on A15 is
+  written in the Phase 2 commit (one "−" line there, prefix-checked with that commit's rows).
+  The second-arm half of INT-i12-73 stays latent, as R685(d) states.
+R687(c) — T1's fixture: paper 2 carries live unlocated claims, so the stage test runs the audit
+  stage and the stage stays pending because paper 2 is unaudited, not because it has nothing
+  to audit; it completes once paper 2 is audited. T3/TV1 is the all-declined case and T2/TV2
+  the refused-text case, as R685(e)(ii) and (iii) state them. No other test changes.
+R687(d) — Nothing else in 12u-U16B changes. Item 0 at 21a224d stands; r687.txt is written
+  now and transcribed at the Phase 2 brief's item 0.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-22 | R687(a) — The stop was right. R685(e)(vi)'s "T5 as written" was an architect clause that could not hold against R685(e)(i); it is withdrawn for T5 (R639(b) form). R687(b) — Option (a). T5 is a test for a per-arm stage completion, which the processing axis cannot express while it is per paper (A15). It belongs to the row whose fix decides the per-arm axis, A15 under F15 (R681(b) form); it is not written in U16. U16's acceptance tests are T1, T2, T3 (its concrete form TV1), TV2 and the regression set. A dated note on A15 is written in the Phase 2 commit (one "−" line there, prefix-checked with that commit's rows). The second-arm half of INT-i12-73 stays latent, as R685(d) states. R687(c) — T1's fixture: paper 2 carries live unlocated claims, so the stage test runs the audit stage and the stage stays pending because paper 2 is unaudited, not because it has nothing to audit; it completes once paper 2 is audited. T3/TV1 is the all-declined case and T2/TV2 the refused-text case, as R685(e)(ii) and (iii) state them. No other test changes. R687(d) — Nothing else in 12u-U16B changes. Item 0 at 21a224d stands; r687.txt is written now and transcribed at the Phase 2 brief's item 0. | PI, 2026-10-22, during session 12u, on architect recommendation, on the 12u-U16B stop report at step 1c |
+
+**Block 86.** *Transcribed 2026-10-22 (item 0 of the 12u-U16C brief), in its own commit with Block 85 and the A15 note it orders, in the R597(e) form:* ruling R688, made by PI on architect recommendation on 2026-10-22 UTC, during session 12u, on the 12u-U16B Phase 1 report (`6229970ea1f9b714bc6103a9ca601d44eac2157b`). The 12u-U16C task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12u-R688] — Phase 1 accepted; "on the stage summary" withdrawn; the
+  advance names the processing state only; T1 as built; Phase 2 opens
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-U16B
+  Phase 1 report (docs/session-reports/session-12/12u_U16B/12u_U16B_phase1.md,
+  6229970ea1f9b714bc6103a9ca601d44eac2157b). Transcribe as Block 86 at item 0 of the brief
+  below, after Block 85 (R687), in the same commit.
+
+ASSUMPTIONS IN THIS RULING (quoted from the Phase 1 report):
+  MEASURED: "5 failed in 6.06s in a scratch clone at 97e5079 (head_run.txt)"; T1 "line 149,
+    assert not is_stage_done"; T2 "line 176, the stage assertion"; TV2 "line 187, the stage
+    assertion"; T3 "line 222, assert len(said) == 1"; TV1 "line 232, assert len(audited) ==
+    1"; "collected 157 items, 157 passed, exit 0"; "Commit:
+    6229970ea1f9b714bc6103a9ca601d44eac2157b, parent 21a224d. 10 files, 1,240 insertions";
+    "git diff --stat 97e5079 HEAD -- engine tests scripts analysis review_specs is empty";
+    "r687.txt … 383014c57a7f89e7706dc9e938fdface18c52fcd3a976db67de094aca792fce1 | 3,229 |
+    41"; ledger "695fa148bf83ba17c1fd7ac980ce814cbc517898, parent 85751ff"; "an uncommitted
+    surgical-cv row I found there (6dd9c14, 03:28:19Z), committed as found"; "pytest-19 was
+    created at 03:24–03:28 UTC, before my runs, and is not from this suite".
+  MEASURED (architect, this session): the architect's copy of R687, hashed from the block that
+    issued it: sha256 383014c57a7f89e7706dc9e938fdface18c52fcd3a976db67de094aca792fce1, 3,229
+    bytes, 41 lines — identical.
+  READ (CC's): "test_stage_completion.py pins the return exactly (== {"extracted": 1,
+    "audited": 1} and two siblings)"; "Four tests pin the advance's signature. They replace it
+    with lambda conn: {}. A new argument at the call site would raise TypeError inside the
+    caller's except Exception: pass"; "the stage summary is _stage_audit's returned stats (per
+    12t_U15B), but those are returned before the advance runs"; "Paper 202 is extracted after
+    the audit stage that audited paper 201. The advance runs and the stage stays pending
+    because 202 is unaudited. _stage_audit then audits 202, and the stage completes."
+  INFERRED (architect): _advance_extraction_workflow lives in scripts/run_pipeline.py (C56
+    handler 3's site), so Phase 2 touches a script and predicts the test_api_parity.py delta:
+    0. CC verifies the site and the delta.
+
+R688(a) — Phase 1 is accepted as reported: the five tests fail on HEAD as predicted, the
+  regression set passes, the Phase 1 commit 6229970 stands; r687.txt verified by the architect's
+  hash. The foreign ledger row 6dd9c14 committed as found stands (R654(d)); pytest-19 is a
+  reading (R652(c)).
+R688(b) — Finding 1: R685(e)(i)'s "and on the stage summary" was an architect clause and is
+  withdrawn. The shortfall's signals are the advance's one pipeline WARNING per pending paper
+  (id and processing state) and the stage remaining pending in workflow_state, which the
+  audit-review gate reads (C58). _stage_audit's return value and shape are unchanged; the four
+  pinning tests stand. The operator view of a pending stage is S7's (J1 family); no row.
+R688(c) — Finding 2: the advance keeps its (conn) signature and its return value; it names
+  the pending paper's id and processing state only. The audit's refusal reason stays on
+  audit_run's log line and AuditReport (TV2 checks it). No row.
+R688(d) — Finding 3: T1 as built is the test; R687(c)'s ordering was the architect's. No
+  change.
+R688(e) — Phase 2, under the brief below: the engine edit per the Phase 1 report's §5 plan as
+  amended by (b) and (c); the five tests moved into tests/test_audit_stage_completion.py under
+  their Phase 1 ids; one engine commit; one standard gate, expected 3,347 passed / 1 xfailed /
+  17 deselected, collected 3,365 / selected 3,348, only-gate the five ids, only-ref 0 against
+  12t_close/collected_ids_12t_close.txt; band 791–966 s; both pins byte-identical; the gate
+  must exit before 07:00 UTC, else Phase 2 stops before the gate and reports. Item 0 of that
+  brief transcribes R687 (Block 85) and this ruling (Block 86) and writes the A15 note of
+  R687(b) on A15's row line only (R686(c)): one "−" line, prefix_check.py --expected-row A15.
+R688(f) — On the gate passing, U16 is landed and INT-i12-73 closes on its acceptance tests
+  (R514), counted until P1 closes (R607(d)); the closure form is the read-out's. The closing
+  note on INT-i12-73 and the CLAUDE.md or architecture-doc lines, if any describe the audit
+  stage's completion, are reported for a ruling, not edited in Phase 2.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-22 | R688(a) — Phase 1 is accepted as reported: the five tests fail on HEAD as predicted, the regression set passes, the Phase 1 commit 6229970 stands; r687.txt verified by the architect's hash. The foreign ledger row 6dd9c14 committed as found stands (R654(d)); pytest-19 is a reading (R652(c)). R688(b) — Finding 1: R685(e)(i)'s "and on the stage summary" was an architect clause and is withdrawn. The shortfall's signals are the advance's one pipeline WARNING per pending paper (id and processing state) and the stage remaining pending in workflow_state, which the audit-review gate reads (C58). _stage_audit's return value and shape are unchanged; the four pinning tests stand. The operator view of a pending stage is S7's (J1 family); no row. R688(c) — Finding 2: the advance keeps its (conn) signature and its return value; it names the pending paper's id and processing state only. The audit's refusal reason stays on audit_run's log line and AuditReport (TV2 checks it). No row. R688(d) — Finding 3: T1 as built is the test; R687(c)'s ordering was the architect's. No change. R688(e) — Phase 2, under the brief below: the engine edit per the Phase 1 report's §5 plan as amended by (b) and (c); the five tests moved into tests/test_audit_stage_completion.py under their Phase 1 ids; one engine commit; one standard gate, expected 3,347 passed / 1 xfailed / 17 deselected, collected 3,365 / selected 3,348, only-gate the five ids, only-ref 0 against 12t_close/collected_ids_12t_close.txt; band 791–966 s; both pins byte-identical; the gate must exit before 07:00 UTC, else Phase 2 stops before the gate and reports. Item 0 of that brief transcribes R687 (Block 85) and this ruling (Block 86) and writes the A15 note of R687(b) on A15's row line only (R686(c)): one "−" line, prefix_check.py --expected-row A15. R688(f) — On the gate passing, U16 is landed and INT-i12-73 closes on its acceptance tests (R514), counted until P1 closes (R607(d)); the closure form is the read-out's. The closing note on INT-i12-73 and the CLAUDE.md or architecture-doc lines, if any describe the audit stage's completion, are reported for a ruling, not edited in Phase 2. | PI, 2026-10-22, during session 12u, on architect recommendation, on the 12u-U16B Phase 1 report (6229970) |
+
+The decision log in this file ends at R688.

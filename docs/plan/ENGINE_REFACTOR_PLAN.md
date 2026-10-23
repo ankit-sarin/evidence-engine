@@ -9121,3 +9121,69 @@ R695(g) — U37's Phase 2 opens under the brief below. The rehearsal (R694(h)) f
 | 2026-10-23 | R695(a) — The item-0 commit 1e15b50 stands: Block 92, the three notes, the closure bullet's note verified by its strict-prefix check (the prefix_check FAIL line on a non-row is the case 1c anticipated; no action). The ledger 51585db stands. R695(b) — The stop is upheld; step 2f was an architect clause in conflict with R40 and is withdrawn. The form is 12u-U16B's: Phase 1 commits its record — the report, fixtures, the HEAD run output, the pin preview, the census — under 12v_U37A/, with the test file kept there as evidence (not under tests/); the test file enters tests/ in the fix commit, where every test passes (option (c)). Options (a) and (b) are rejected: a red tree and a strict xfail each put the defect's pin on main ahead of its fix. R695(c) — INT-v12-1 is confirmed (R694(g)). Opened at U37B's item 0 in a section "L (12v additions, R694)" in the R672(f) form, chained recount baseline 278 (recount_12s_close.py's JSON), text cell the Q3 sentence quoted from 12v_RSA.md, Class 2, P1, governing R694(g), R695(c), evidence 12v_RSA.md §Q3. Recount 279: Class 1 / 2 / 3 = 94 / 54 / 131, 0 unclassed; P1 60 rows (25 / 23 / 12). R510 for 12v so far: rows in 1, rows out 0, no class move. R695(d) — T4 is narrowed to the non-elicited arm's prompt-hash components (every stage's prompt_hash of that arm), not the whole tuple, so an installed-library upgrade does not fail it; the whole-tuple comparison stays the session-close check by pin_tuples.py. T1 stands as written (every field name, the count, the class names — R694(e)'s words govern over §11's). T5's constraint on Phase 2 is accepted: a passing field is named in the header only, never in the failed-entry form. R695(e) — Phase 2's rewrite list (R690(b)) is the census's three: test_clean_fields_are_not_ mentioned is rewritten to assert a passing field appears in the header and not in the failed- entry form; test_the_elicited_requests_are_byte_identical has its ELICITED_REQUESTS_SHA256 rewritten to the post-fix value, measured in the commit, under its id; test_the_feedback_ sentinel_carries_every_line_template is extended to the new header and trailing instruction. No test is deleted. Any further test the gate exposes is rewritten under its id, listed, and the gate re-run once (R690(c)). R695(f) — Expected after the fix, to be measured: the elicited pin moves from 8f0aeecd…3488 and elicitation_pass1's prompt hash from 18ac4255…2f1c; the non-elicited pin stays d3672ab6…ff5c; attempt-1 messages stay d3c047de…1e31. Collection 3,365 + 5 = 3,370; the gate 3,352 passed / 1 xfailed / 17 deselected on 3,353 selected; band 791–966 s. A different count is reported, not adapted to. R695(g) — U37's Phase 2 opens under the brief below. The rehearsal (R694(h)) follows under its own brief after the fix commit's gate; no model call in Phase 2. | PI, 2026-10-23, during session 12v, on architect recommendation, on the 12v-U37A report stopped before step 2f (item 0 1e15b50) |
 
 The decision log in this file ends at R695.
+
+**Block 94.** *Transcribed 2026-10-23 (item 0 of the 12v-U37R brief), in its own commit, in the R597(e) form:* ruling R696, made by PI on architect recommendation on 2026-10-23 UTC, during session 12v, on the 12v-U37B report stopped before step 2h (item 0 `37bb382f9e515846f8247a011efb9415f9c95d85`). It was issued with the 12v-U37B-R1 resume, which is not part of the block; the text is the file the resume wrote (`~/scratch/12v-u37b/r696_pending.txt`, sha256 `34aba43d…fc4a`, equal to the architect's). The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12v-R696] — U37B's gate accepted: a read-only request in the gate window
+  is a reading, a model load is the stop; attribution lines are the CC session's own; the record
+  source for R-1 accepted; U37B resumes at 2h
+STATUS: PI ruling, 2026-10-23 UTC, session 12v, on architect recommendation, on the 12v-U37B
+  report stopped before step 2h (item 0 37bb382f9e515846f8247a011efb9415f9c95d85). Transcribe
+  as Block 94 at item 0 of the next brief (the rehearsal brief), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12v-U37B report):
+  MEASURED: "Commit: 37bb382f9e515846f8247a011efb9415f9c95d85, parent 1e15b50, pushed, 0 0";
+    "r695.txt: 6d6aa24f…58b4 / 4723 / 59, equal to your hash"; "now = {279, 94 / 54 / 131, 0};
+    P1 {25 / 23 / 12, 60}"; "11 of 11 verify"; "Ledger: fd1544f"; "engine/elicitation/prompts.py,
+    +39 / −5"; "U37's five: 5 passed"; "ELICITED_REQUESTS_SHA256 a56ac21b…dfbe0 →
+    ec969f5f5b5e78ca5e224a09d9bf07cc8cdf4df9f8ccaea9f858d16e9b3cb08b"; "the four files, 60
+    passed; the regression set (19 files), 278 passed"; "elicited 8f0aeecd…3488 →
+    d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0"; "elicitation_pass1 prompt
+    hash 18ac4255…2f1c → 5939ce6ffc5cfc1960e1fa22ac4bb811a15e7bac4e0420a89d793bdd5919b713";
+    "non-elicited d3672ab6…ff5c unchanged, with every per-stage hash unchanged"; "wall 883.80 s";
+    "3352 passed, 17 deselected, 1 xfailed, 2 warnings in 881.51s"; "only-gate = the five U37
+    ids, only-ref 0"; "nothing resident, both before (16:51:52Z) and after (17:07:06Z)"; "At
+    16:59:32 there are two requests from 127.0.0.1, HEAD / and then GET /api/ps"; "git apply
+    --check clean on 37bb382".
+  READ (CC's): "That is the ollama ps CLI pattern: read-only, no model load, no generate";
+    "two interactive shells were open"; "The suite's Ollama fence rules out the tests as the
+    sender"; "the names and classes come from the result's records, which check_response built
+    from the codebook"; "the trace hash did not move".
+  INFERRED: none.
+
+R696(a) — Item 0 (37bb382: Block 93, INT-v12-1 opened, recount 279, the Phase 1 record) stands;
+  the ledger fd1544f stands.
+R696(b) — The gate is accepted as run. The empty-window clause of 2g was written wider than the
+  rule it serves: R666(a) stops a gate for a model load during it (the health job's case). From
+  here, a read-only request in the window (HEAD /, GET /api/ps, /api/tags, /api/version) with
+  nothing resident before and after is a reading, recorded with its timestamp and, where known,
+  its sender; a load or a generate during the gate is the stop. The 16:59:32 ollama ps came from
+  an interactive shell on the box, not from this lane's jobs or the suite; its sender is a
+  reading the PI may name by a later note. The series gains 883.80 s. No re-run.
+R696(c) — The brief's 2h attribution lines were the architect environment's, not the CC
+  session's: CC uses its own session's lines, as it did at item 0. A brief never dictates them.
+  Clause withdrawn.
+R696(d) — R-1's names and classes from the result's records (check_response's one record per
+  expected field, codebook-classed) is accepted over I2's "codebook object": one source, and the
+  direct read broke a one-field fixture codebook outside the rewrite list (finding 1). The
+  output_section(n) helper shared by the prompt and the feedback block is accepted: it is the
+  mechanism that keeps R-2's repeated instruction identical to the first (R694(e)).
+R696(e) — U37B resumes at 2h on the held patch: before the commit, the applied tree's tracked
+  files and the two new files reproduce ~/scratch/12v-u37b/held/SHA256SUMS exactly (the tree the
+  gate ran on); a difference is a stop. Then 2h (commit, push, level, fingerprint), step 3 (the
+  read-out, the INT-r12-1 "U37 landed" note with the row left open, fix_units 36). The gate
+  evidence in ~/scratch/12v-u37b/gate/ is committed under 12v_U37B/ as the gate of record.
+R696(f) — Expected after the resume: evidence-engine two commits ahead of 37bb382 (the fix, then
+  the read-out), clean, level; pins as measured (elicited d70bf688…59f0; non-elicited
+  d3672ab6…ff5c); recount 279; fix_units 36; the 2026-10-24 09:00 nightly expected 3,352 / 17 /
+  1 on 3,370 / 3,353. The rehearsal (R694(h)) opens under the next brief; no model call before it.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-23 | R696(a) — Item 0 (37bb382: Block 93, INT-v12-1 opened, recount 279, the Phase 1 record) stands; the ledger fd1544f stands. R696(b) — The gate is accepted as run. The empty-window clause of 2g was written wider than the rule it serves: R666(a) stops a gate for a model load during it (the health job's case). From here, a read-only request in the window (HEAD /, GET /api/ps, /api/tags, /api/version) with nothing resident before and after is a reading, recorded with its timestamp and, where known, its sender; a load or a generate during the gate is the stop. The 16:59:32 ollama ps came from an interactive shell on the box, not from this lane's jobs or the suite; its sender is a reading the PI may name by a later note. The series gains 883.80 s. No re-run. R696(c) — The brief's 2h attribution lines were the architect environment's, not the CC session's: CC uses its own session's lines, as it did at item 0. A brief never dictates them. Clause withdrawn. R696(d) — R-1's names and classes from the result's records (check_response's one record per expected field, codebook-classed) is accepted over I2's "codebook object": one source, and the direct read broke a one-field fixture codebook outside the rewrite list (finding 1). The output_section(n) helper shared by the prompt and the feedback block is accepted: it is the mechanism that keeps R-2's repeated instruction identical to the first (R694(e)). R696(e) — U37B resumes at 2h on the held patch: before the commit, the applied tree's tracked files and the two new files reproduce ~/scratch/12v-u37b/held/SHA256SUMS exactly (the tree the gate ran on); a difference is a stop. Then 2h (commit, push, level, fingerprint), step 3 (the read-out, the INT-r12-1 "U37 landed" note with the row left open, fix_units 36). The gate evidence in ~/scratch/12v-u37b/gate/ is committed under 12v_U37B/ as the gate of record. R696(f) — Expected after the resume: evidence-engine two commits ahead of 37bb382 (the fix, then the read-out), clean, level; pins as measured (elicited d70bf688…59f0; non-elicited d3672ab6…ff5c); recount 279; fix_units 36; the 2026-10-24 09:00 nightly expected 3,352 / 17 / 1 on 3,370 / 3,353. The rehearsal (R694(h)) opens under the next brief; no model call before it. | PI, 2026-10-23, during session 12v, on architect recommendation, on the 12v-U37B report stopped before step 2h (item 0 37bb382) |
+
+*Corrected at transcription (the R253 form):* R696's ASSUMPTIONS quote the 12v-U37B report's "engine/elicitation/prompts.py, +39 / −5"; the fix commit `62d5e7e` measures +34 / −5 (39 changed lines; `12v_U37B/12v_U37B.md` F6). The ruling text stands as issued.
+
+The decision log in this file ends at R696.

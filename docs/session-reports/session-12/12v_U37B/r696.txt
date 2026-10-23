@@ -1,0 +1,53 @@
+RULING [evidence-engine 12v-R696] — U37B's gate accepted: a read-only request in the gate window
+  is a reading, a model load is the stop; attribution lines are the CC session's own; the record
+  source for R-1 accepted; U37B resumes at 2h
+STATUS: PI ruling, 2026-10-23 UTC, session 12v, on architect recommendation, on the 12v-U37B
+  report stopped before step 2h (item 0 37bb382f9e515846f8247a011efb9415f9c95d85). Transcribe
+  as Block 94 at item 0 of the next brief (the rehearsal brief), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12v-U37B report):
+  MEASURED: "Commit: 37bb382f9e515846f8247a011efb9415f9c95d85, parent 1e15b50, pushed, 0 0";
+    "r695.txt: 6d6aa24f…58b4 / 4723 / 59, equal to your hash"; "now = {279, 94 / 54 / 131, 0};
+    P1 {25 / 23 / 12, 60}"; "11 of 11 verify"; "Ledger: fd1544f"; "engine/elicitation/prompts.py,
+    +39 / −5"; "U37's five: 5 passed"; "ELICITED_REQUESTS_SHA256 a56ac21b…dfbe0 →
+    ec969f5f5b5e78ca5e224a09d9bf07cc8cdf4df9f8ccaea9f858d16e9b3cb08b"; "the four files, 60
+    passed; the regression set (19 files), 278 passed"; "elicited 8f0aeecd…3488 →
+    d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0"; "elicitation_pass1 prompt
+    hash 18ac4255…2f1c → 5939ce6ffc5cfc1960e1fa22ac4bb811a15e7bac4e0420a89d793bdd5919b713";
+    "non-elicited d3672ab6…ff5c unchanged, with every per-stage hash unchanged"; "wall 883.80 s";
+    "3352 passed, 17 deselected, 1 xfailed, 2 warnings in 881.51s"; "only-gate = the five U37
+    ids, only-ref 0"; "nothing resident, both before (16:51:52Z) and after (17:07:06Z)"; "At
+    16:59:32 there are two requests from 127.0.0.1, HEAD / and then GET /api/ps"; "git apply
+    --check clean on 37bb382".
+  READ (CC's): "That is the ollama ps CLI pattern: read-only, no model load, no generate";
+    "two interactive shells were open"; "The suite's Ollama fence rules out the tests as the
+    sender"; "the names and classes come from the result's records, which check_response built
+    from the codebook"; "the trace hash did not move".
+  INFERRED: none.
+
+R696(a) — Item 0 (37bb382: Block 93, INT-v12-1 opened, recount 279, the Phase 1 record) stands;
+  the ledger fd1544f stands.
+R696(b) — The gate is accepted as run. The empty-window clause of 2g was written wider than the
+  rule it serves: R666(a) stops a gate for a model load during it (the health job's case). From
+  here, a read-only request in the window (HEAD /, GET /api/ps, /api/tags, /api/version) with
+  nothing resident before and after is a reading, recorded with its timestamp and, where known,
+  its sender; a load or a generate during the gate is the stop. The 16:59:32 ollama ps came from
+  an interactive shell on the box, not from this lane's jobs or the suite; its sender is a
+  reading the PI may name by a later note. The series gains 883.80 s. No re-run.
+R696(c) — The brief's 2h attribution lines were the architect environment's, not the CC
+  session's: CC uses its own session's lines, as it did at item 0. A brief never dictates them.
+  Clause withdrawn.
+R696(d) — R-1's names and classes from the result's records (check_response's one record per
+  expected field, codebook-classed) is accepted over I2's "codebook object": one source, and the
+  direct read broke a one-field fixture codebook outside the rewrite list (finding 1). The
+  output_section(n) helper shared by the prompt and the feedback block is accepted: it is the
+  mechanism that keeps R-2's repeated instruction identical to the first (R694(e)).
+R696(e) — U37B resumes at 2h on the held patch: before the commit, the applied tree's tracked
+  files and the two new files reproduce ~/scratch/12v-u37b/held/SHA256SUMS exactly (the tree the
+  gate ran on); a difference is a stop. Then 2h (commit, push, level, fingerprint), step 3 (the
+  read-out, the INT-r12-1 "U37 landed" note with the row left open, fix_units 36). The gate
+  evidence in ~/scratch/12v-u37b/gate/ is committed under 12v_U37B/ as the gate of record.
+R696(f) — Expected after the resume: evidence-engine two commits ahead of 37bb382 (the fix, then
+  the read-out), clean, level; pins as measured (elicited d70bf688…59f0; non-elicited
+  d3672ab6…ff5c); recount 279; fix_units 36; the 2026-10-24 09:00 nightly expected 3,352 / 17 /
+  1 on 3,370 / 3,353. The rehearsal (R694(h)) opens under the next brief; no model call before it.

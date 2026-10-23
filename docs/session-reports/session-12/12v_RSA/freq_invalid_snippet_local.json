@@ -1,0 +1,20 @@
+{
+ "by_arm": {},
+ "cases": [],
+ "flagged_by_field": {},
+ "flagged_by_mark": {},
+ "locate_on_flagged": {},
+ "opportunity": {
+  "ellipsis_matches_in_texts": 118,
+  "papers": 190,
+  "papers_text_with_ellipsis": 29
+ },
+ "papers_with_flagged": 0,
+ "population": "local",
+ "text_refused": {},
+ "totals": {
+  "empty_snippet": 141,
+  "spans": 3760,
+  "with_snippet": 3619
+ }
+}

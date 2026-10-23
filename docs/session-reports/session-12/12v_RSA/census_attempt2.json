@@ -1,0 +1,1209 @@
+{
+ "cases": [
+  {
+   "a1_codes": {
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "a1_n_failed": 2,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a1_shape": "full",
+   "a2_codes": {
+    "STEPS_MISSING": 1,
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "a2_n_failed": 3,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "none \u2014 shape derived from codes",
+   "a2_request_hash": null,
+   "a2_shape": "full",
+   "accepted_attempt": 1,
+   "feedback_chars": 1057,
+   "feedback_classes": [
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 2,
+   "paper_id": 1,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12g_ra_12g",
+   "terminal_states": {
+    "CONTRACT_UNMET": 2,
+    "EVIDENCED_VALUE": 14,
+    "NO_EVIDENCE_LOCATABLE": 4
+   }
+  },
+  {
+   "a1_codes": {
+    "INDEX_OUT_OF_RANGE": 1,
+    "INFERENCE_MISSING": 1,
+    "STEPS_MISSING": 5,
+    "VALUE_WITHOUT_CITATION": 5
+   },
+   "a1_n_failed": 9,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "none \u2014 shape derived from codes",
+   "a1_shape": "full",
+   "a2_codes": {
+    "FIELD_MISSING": 2,
+    "INFERENCE_MISSING": 1,
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "a2_n_failed": 4,
+   "a2_present_SIJ": [
+    9,
+    4,
+    5
+   ],
+   "a2_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a2_request_hash": null,
+   "a2_shape": "partial",
+   "accepted_attempt": 2,
+   "feedback_chars": 4413,
+   "feedback_classes": [
+    "inferable",
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 9,
+   "paper_id": 3,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12g_ra_12g",
+   "terminal_states": {
+    "CONTRACT_UNMET": 4,
+    "EVIDENCED_VALUE": 13,
+    "NO_EVIDENCE_LOCATABLE": 3
+   }
+  },
+  {
+   "a1_codes": {
+    "FIELD_MISSING": 1,
+    "VALUE_WITHOUT_CITATION": 8
+   },
+   "a1_n_failed": 9,
+   "a1_present_SIJ": [
+    8,
+    6,
+    5
+   ],
+   "a1_raw": "none \u2014 shape derived from codes",
+   "a1_shape": "partial",
+   "a2_codes": {
+    "INFERENCE_MISSING": 1,
+    "VALUE_WITHOUT_CITATION": 4
+   },
+   "a2_n_failed": 5,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a2_request_hash": null,
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 4176,
+   "feedback_classes": [
+    "inferable",
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 9,
+   "paper_id": 4,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12g_ra_12g",
+   "terminal_states": {
+    "CONTRACT_UNMET": 5,
+    "EVIDENCED_VALUE": 11,
+    "NO_EVIDENCE_LOCATABLE": 4
+   }
+  },
+  {
+   "a1_codes": {
+    "INFERENCE_MISSING": 2,
+    "STEPS_MISSING": 5,
+    "VALUE_WITHOUT_CITATION": 3
+   },
+   "a1_n_failed": 8,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "none \u2014 shape derived from codes",
+   "a1_shape": "full",
+   "a2_codes": {
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a2_n_failed": 1,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a2_request_hash": null,
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 3901,
+   "feedback_classes": [
+    "inferable",
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 8,
+   "paper_id": 5,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12g_ra_12g",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 18,
+    "NO_EVIDENCE_LOCATABLE": 1
+   }
+  },
+  {
+   "a1_codes": {
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a1_n_failed": 1,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a1_shape": "full",
+   "a2_codes": {
+    "STEP_WITHOUT_BASIS": 1,
+    "VALUE_WITHOUT_CITATION": 6
+   },
+   "a2_n_failed": 7,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "none \u2014 shape derived from codes",
+   "a2_request_hash": null,
+   "a2_shape": "full",
+   "accepted_attempt": 1,
+   "feedback_chars": 743,
+   "feedback_classes": [
+    "judgment"
+   ],
+   "feedback_fields": 1,
+   "paper_id": 6,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12g_ra_12g",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 19
+   }
+  },
+  {
+   "a1_codes": {
+    "STEPS_MISSING": 5,
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a1_n_failed": 6,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a1_shape": "full",
+   "a2_codes": {
+    "INFERENCE_MISSING": 6,
+    "VALUE_WITHOUT_CITATION": 6
+   },
+   "a2_n_failed": 6,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "none \u2014 shape derived from codes",
+   "a2_request_hash": null,
+   "a2_shape": "full",
+   "accepted_attempt": 1,
+   "feedback_chars": 2524,
+   "feedback_classes": [
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 6,
+   "paper_id": 7,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12g_ra_12g",
+   "terminal_states": {
+    "CONTRACT_UNMET": 6,
+    "EVIDENCED_VALUE": 13,
+    "NO_EVIDENCE_LOCATABLE": 1
+   }
+  },
+  {
+   "a1_codes": {
+    "VALUE_WITHOUT_CITATION": 4
+   },
+   "a1_n_failed": 4,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a1_shape": "full",
+   "a2_codes": {
+    "FIELD_MISSING": 11,
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a2_n_failed": 12,
+   "a2_present_SIJ": [
+    9,
+    0,
+    0
+   ],
+   "a2_raw": "none \u2014 shape derived from codes",
+   "a2_request_hash": null,
+   "a2_shape": "stated_only",
+   "accepted_attempt": 1,
+   "feedback_chars": 1710,
+   "feedback_classes": [
+    "stated"
+   ],
+   "feedback_fields": 4,
+   "paper_id": 8,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12g_ra_12g",
+   "terminal_states": {
+    "CONTRACT_UNMET": 4,
+    "EVIDENCED_VALUE": 16
+   }
+  },
+  {
+   "a1_codes": {
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a1_n_failed": 1,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a1_shape": "full",
+   "a2_codes": {
+    "FIELD_MISSING": 11,
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a2_n_failed": 12,
+   "a2_present_SIJ": [
+    9,
+    0,
+    0
+   ],
+   "a2_raw": "none \u2014 shape derived from codes",
+   "a2_request_hash": null,
+   "a2_shape": "stated_only",
+   "accepted_attempt": 1,
+   "feedback_chars": 610,
+   "feedback_classes": [
+    "stated"
+   ],
+   "feedback_fields": 1,
+   "paper_id": 9,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12g_ra_12g",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 19
+   }
+  },
+  {
+   "a1_codes": {
+    "VALUE_WITHOUT_CITATION": 3
+   },
+   "a1_n_failed": 3,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a1_shape": "full",
+   "a2_codes": {
+    "FIELD_MISSING": 11
+   },
+   "a2_n_failed": 11,
+   "a2_present_SIJ": [
+    9,
+    0,
+    0
+   ],
+   "a2_raw": "none \u2014 shape derived from codes",
+   "a2_request_hash": null,
+   "a2_shape": "stated_only",
+   "accepted_attempt": 1,
+   "feedback_chars": 1346,
+   "feedback_classes": [
+    "stated"
+   ],
+   "feedback_fields": 3,
+   "paper_id": 10,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12g_ra_12g",
+   "terminal_states": {
+    "CONTRACT_UNMET": 3,
+    "EVIDENCED_VALUE": 17
+   }
+  },
+  {
+   "a1_codes": {
+    "FIELD_MISSING": 1,
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "a1_n_failed": 3,
+   "a1_present_SIJ": [
+    9,
+    5,
+    5
+   ],
+   "a1_raw": "none \u2014 shape derived from codes",
+   "a1_shape": "partial",
+   "a2_codes": {
+    "INFERENCE_MISSING": 1
+   },
+   "a2_n_failed": 1,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a2_request_hash": null,
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 1208,
+   "feedback_classes": [
+    "inferable",
+    "stated"
+   ],
+   "feedback_fields": 3,
+   "paper_id": 12,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12g_ra_12g",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 18,
+    "NO_EVIDENCE_LOCATABLE": 1
+   }
+  },
+  {
+   "a1_codes": {
+    "INFERENCE_MISSING": 1,
+    "STEPS_MISSING": 4,
+    "VALUE_WITHOUT_CITATION": 11
+   },
+   "a1_n_failed": 11,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "full",
+   "a2_codes": {
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a2_n_failed": 1,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "bf9d73dd07d94e3f8210e7c1f60a7234f175ec79fed97b9431a706941387672e",
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 6443,
+   "feedback_classes": [
+    "inferable",
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 11,
+   "paper_id": 1,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 16,
+    "NO_EVIDENCE_LOCATABLE": 3
+   }
+  },
+  {
+   "a1_codes": {
+    "FIELD_MISSING": 12,
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a1_n_failed": 13,
+   "a1_present_SIJ": [
+    8,
+    0,
+    0
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "stated_only",
+   "a2_codes": {
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a2_n_failed": 1,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "6aefc77c5cdcef33302dd4df7f6046e5d25efe2a0a1d3fb95cb177cfc691fb06",
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 3413,
+   "feedback_classes": [
+    "inferable",
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 13,
+   "paper_id": 3,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 15,
+    "NO_EVIDENCE_LOCATABLE": 4
+   }
+  },
+  {
+   "a1_codes": {
+    "FIELD_MISSING": 2,
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "a1_n_failed": 4,
+   "a1_present_SIJ": [
+    8,
+    5,
+    5
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "partial",
+   "a2_codes": {
+    "STEPS_MISSING": 5,
+    "VALUE_WITHOUT_CITATION": 5
+   },
+   "a2_n_failed": 5,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "d3484ffdb75eab40b7d3e6b39374e84732ae1a6de9c87066c48dbfbec5575560",
+   "a2_shape": "full",
+   "accepted_attempt": 1,
+   "feedback_chars": 1753,
+   "feedback_classes": [
+    "inferable",
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 4,
+   "paper_id": 4,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "CONTRACT_UNMET": 4,
+    "EVIDENCED_VALUE": 16
+   }
+  },
+  {
+   "a1_codes": {
+    "FIELD_MISSING": 1,
+    "INFERENCE_MISSING": 5,
+    "STEPS_MISSING": 3,
+    "VALUE_WITHOUT_CITATION": 8
+   },
+   "a1_n_failed": 13,
+   "a1_present_SIJ": [
+    9,
+    5,
+    5
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "partial",
+   "a2_codes": {
+    "INFERENCE_MISSING": 1,
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a2_n_failed": 1,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "ca9a660614119c5b41a5ed0f6020c34582fe33c59ecfb523246d893e4845d5ad",
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 6687,
+   "feedback_classes": [
+    "inferable",
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 13,
+   "paper_id": 5,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 17,
+    "NO_EVIDENCE_LOCATABLE": 2
+   }
+  },
+  {
+   "a1_codes": {
+    "INFERENCE_MISSING": 1
+   },
+   "a1_n_failed": 1,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "full",
+   "a2_codes": {
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a2_n_failed": 1,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "a04a3b5600236dcc8c7d8b863f61e36811eb0a5cae53c22f04d7c2ab689b894b",
+   "a2_shape": "full",
+   "accepted_attempt": 1,
+   "feedback_chars": 577,
+   "feedback_classes": [
+    "inferable"
+   ],
+   "feedback_fields": 1,
+   "paper_id": 6,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 19
+   }
+  },
+  {
+   "a1_codes": {
+    "INFERENCE_MISSING": 1,
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "a1_n_failed": 3,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "full",
+   "a2_codes": {},
+   "a2_n_failed": 0,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "722e9e1d22cd9817a7958fb01def6a319541d739067d2a2e38161f51b193b6ed",
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 1324,
+   "feedback_classes": [
+    "inferable",
+    "stated"
+   ],
+   "feedback_fields": 3,
+   "paper_id": 7,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "EVIDENCED_VALUE": 17,
+    "NO_EVIDENCE_LOCATABLE": 3
+   }
+  },
+  {
+   "a1_codes": {
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a1_n_failed": 1,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "full",
+   "a2_codes": {
+    "FIELD_MISSING": 11,
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a2_n_failed": 12,
+   "a2_present_SIJ": [
+    9,
+    0,
+    0
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "a2_shape": "stated_only",
+   "accepted_attempt": 1,
+   "feedback_chars": 610,
+   "feedback_classes": [
+    "stated"
+   ],
+   "feedback_fields": 1,
+   "paper_id": 8,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 18,
+    "NO_EVIDENCE_LOCATABLE": 1
+   }
+  },
+  {
+   "a1_codes": {
+    "STEPS_MISSING": 3,
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a1_n_failed": 4,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "full",
+   "a2_codes": {
+    "INFERENCE_MISSING": 6,
+    "VALUE_WITHOUT_CITATION": 5
+   },
+   "a2_n_failed": 6,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "d215f3a323dc97d21570338eaed5510414fec979df40c7fd2bd25633b9a63b9a",
+   "a2_shape": "full",
+   "accepted_attempt": 1,
+   "feedback_chars": 1855,
+   "feedback_classes": [
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 4,
+   "paper_id": 9,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "CONTRACT_UNMET": 4,
+    "EVIDENCED_VALUE": 16
+   }
+  },
+  {
+   "a1_codes": {
+    "FIELD_MISSING": 11,
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "a1_n_failed": 13,
+   "a1_present_SIJ": [
+    9,
+    0,
+    0
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "stated_only",
+   "a2_codes": {},
+   "a2_n_failed": 0,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "3acf7b198db5942099a7e0eb7edfed5ce8efd0729a561302ba247bac424df379",
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 3567,
+   "feedback_classes": [
+    "inferable",
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 13,
+   "paper_id": 10,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "EVIDENCED_VALUE": 17,
+    "NO_EVIDENCE_LOCATABLE": 3
+   }
+  },
+  {
+   "a1_codes": {
+    "INFERENCE_MISSING": 4,
+    "VALUE_WITHOUT_CITATION": 7
+   },
+   "a1_n_failed": 7,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "full",
+   "a2_codes": {},
+   "a2_n_failed": 0,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "15749b69c9cdd909999d21d5de5fd8f3f41b324a4568087a45936115e18a4b59",
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 4350,
+   "feedback_classes": [
+    "inferable",
+    "stated"
+   ],
+   "feedback_fields": 7,
+   "paper_id": 11,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "EVIDENCED_VALUE": 17,
+    "NO_EVIDENCE_LOCATABLE": 3
+   }
+  },
+  {
+   "a1_codes": {
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "a1_n_failed": 2,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "stored (attempts[].raw_content)",
+   "a1_shape": "full",
+   "a2_codes": {},
+   "a2_n_failed": 0,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (attempts[].raw_content)",
+   "a2_request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 978,
+   "feedback_classes": [
+    "stated"
+   ],
+   "feedback_fields": 2,
+   "paper_id": 12,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "12r_ra_12q",
+   "terminal_states": {
+    "EVIDENCED_VALUE": 20
+   }
+  },
+  {
+   "a1_codes": {
+    "FIELD_MISSING": 4,
+    "INFERENCE_MISSING": 1,
+    "STEPS_MISSING": 1,
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "a1_n_failed": 6,
+   "a1_present_SIJ": [
+    9,
+    6,
+    1
+   ],
+   "a1_raw": "none \u2014 shape derived from codes",
+   "a1_shape": "partial",
+   "a2_codes": {},
+   "a2_n_failed": 0,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a2_request_hash": null,
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 2268,
+   "feedback_classes": [
+    "inferable",
+    "judgment"
+   ],
+   "feedback_fields": 6,
+   "paper_id": 121,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "sep05_0113",
+   "terminal_states": {
+    "EVIDENCED_VALUE": 15,
+    "NO_EVIDENCE_LOCATABLE": 5
+   }
+  },
+  {
+   "a1_codes": {
+    "VALUE_WITHOUT_CITATION": 5
+   },
+   "a1_n_failed": 5,
+   "a1_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a1_raw": "none \u2014 shape derived from codes",
+   "a1_shape": "full",
+   "a2_codes": {
+    "INFERENCE_MISSING": 1
+   },
+   "a2_n_failed": 1,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a2_request_hash": null,
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 2701,
+   "feedback_classes": [
+    "inferable",
+    "stated"
+   ],
+   "feedback_fields": 5,
+   "paper_id": 604,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "sep05_0113",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 17,
+    "NO_EVIDENCE_LOCATABLE": 2
+   }
+  },
+  {
+   "a1_codes": {
+    "FIELD_MISSING": 2,
+    "STEPS_MISSING": 1,
+    "VALUE_WITHOUT_CITATION": 5
+   },
+   "a1_n_failed": 8,
+   "a1_present_SIJ": [
+    8,
+    5,
+    5
+   ],
+   "a1_raw": "none \u2014 shape derived from codes",
+   "a1_shape": "partial",
+   "a2_codes": {
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "a2_n_failed": 2,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a2_request_hash": null,
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 3574,
+   "feedback_classes": [
+    "inferable",
+    "judgment",
+    "stated"
+   ],
+   "feedback_fields": 8,
+   "paper_id": 498,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "sep05_0113",
+   "terminal_states": {
+    "CONTRACT_UNMET": 2,
+    "EVIDENCED_VALUE": 16,
+    "NO_EVIDENCE_LOCATABLE": 2
+   }
+  },
+  {
+   "a1_codes": {
+    "FIELD_MISSING": 1,
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "a1_n_failed": 3,
+   "a1_present_SIJ": [
+    8,
+    6,
+    5
+   ],
+   "a1_raw": "none \u2014 shape derived from codes",
+   "a1_shape": "partial",
+   "a2_codes": {
+    "INFERENCE_MISSING": 1
+   },
+   "a2_n_failed": 1,
+   "a2_present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "a2_raw": "stored (pass1_raw_content, accepted attempt)",
+   "a2_request_hash": null,
+   "a2_shape": "full",
+   "accepted_attempt": 2,
+   "feedback_chars": 1205,
+   "feedback_classes": [
+    "stated"
+   ],
+   "feedback_fields": 3,
+   "paper_id": 498,
+   "row_attempt": 1,
+   "row_outcome": "stored",
+   "source": "sep05_0243",
+   "terminal_states": {
+    "CONTRACT_UNMET": 1,
+    "EVIDENCED_VALUE": 11,
+    "NO_EVIDENCE_LOCATABLE": 8
+   }
+  }
+ ],
+ "sources": {
+  "12g_ra_12g": {
+   "path": "/home/ankitsarin/scratch/retained/ra_12g/telemetry/extraction_calls.jsonl",
+   "sha256": "e49ead1dcc98669d6f397c1723a8e278abaf8113b95328332e4cb7435f39856e"
+  },
+  "12r_ra_12q": {
+   "path": "/home/ankitsarin/scratch/12r-u13/run/ra_12q/telemetry/extraction_calls.jsonl",
+   "sha256": "61348cbbb2e4193ee80dde8e4767023fbe9282d82d2ffb046230fcf5becbd5ad"
+  },
+  "sep05_0113": {
+   "path": "data/surgical_autonomy/eval/elicit_design01/scratch/smoke_20260905T011330Z/elicit_design01/telemetry/extraction_calls.jsonl",
+   "sha256": "8f2dd7a4d4b7a56ae4f499fe514aa2fcc37cf9d8ac03a6c107874bd1e8fcebdc"
+  },
+  "sep05_0243": {
+   "path": "data/surgical_autonomy/eval/elicit_design01/scratch/smoke_20260905T024348Z/elicit_design01/telemetry/extraction_calls.jsonl",
+   "sha256": "bafcc22d7ce44d0de6dbdb99a0bdcd44f7898c5f379621d3fb8cbfd6ebe8c481"
+  }
+ },
+ "totals": {
+  "a1_stated_only_then_a2": [
+   [
+    "12r_ra_12q",
+    3,
+    "full"
+   ],
+   [
+    "12r_ra_12q",
+    10,
+    "full"
+   ]
+  ],
+  "after_other_feedback": {
+   "a2_n_failed_lt_a1": 13,
+   "a2_shapes": {
+    "full": 18,
+    "partial": 1
+   },
+   "a2_stated_only": 0,
+   "a2_stated_only_derived": 0,
+   "a2_stated_only_with_raw": 0,
+   "accepted_2": 13,
+   "n": 19
+  },
+  "after_stated_only_feedback": {
+   "a2_n_failed_lt_a1": 2,
+   "a2_shapes": {
+    "full": 2,
+    "stated_only": 4
+   },
+   "a2_stated_only": 4,
+   "a2_stated_only_derived": 3,
+   "a2_stated_only_with_raw": 1,
+   "accepted_2": 2,
+   "n": 6
+  },
+  "all": {
+   "a2_n_failed_lt_a1": 15,
+   "a2_shapes": {
+    "full": 20,
+    "partial": 1,
+    "stated_only": 4
+   },
+   "a2_stated_only": 4,
+   "a2_stated_only_derived": 3,
+   "a2_stated_only_with_raw": 1,
+   "accepted_2": 15,
+   "n": 25
+  },
+  "per_source": {
+   "12g_ra_12g": {
+    "after_other_feedback": {
+     "a2_n_failed_lt_a1": 4,
+     "a2_shapes": {
+      "full": 6,
+      "partial": 1
+     },
+     "a2_stated_only": 0,
+     "a2_stated_only_derived": 0,
+     "a2_stated_only_with_raw": 0,
+     "accepted_2": 4,
+     "n": 7
+    },
+    "after_stated_only_feedback": {
+     "a2_n_failed_lt_a1": 0,
+     "a2_shapes": {
+      "stated_only": 3
+     },
+     "a2_stated_only": 3,
+     "a2_stated_only_derived": 3,
+     "a2_stated_only_with_raw": 0,
+     "accepted_2": 0,
+     "n": 3
+    }
+   },
+   "12r_ra_12q": {
+    "after_other_feedback": {
+     "a2_n_failed_lt_a1": 6,
+     "a2_shapes": {
+      "full": 9
+     },
+     "a2_stated_only": 0,
+     "a2_stated_only_derived": 0,
+     "a2_stated_only_with_raw": 0,
+     "accepted_2": 6,
+     "n": 9
+    },
+    "after_stated_only_feedback": {
+     "a2_n_failed_lt_a1": 1,
+     "a2_shapes": {
+      "full": 1,
+      "stated_only": 1
+     },
+     "a2_stated_only": 1,
+     "a2_stated_only_derived": 0,
+     "a2_stated_only_with_raw": 1,
+     "accepted_2": 1,
+     "n": 2
+    }
+   },
+   "sep05_0113": {
+    "after_other_feedback": {
+     "a2_n_failed_lt_a1": 3,
+     "a2_shapes": {
+      "full": 3
+     },
+     "a2_stated_only": 0,
+     "a2_stated_only_derived": 0,
+     "a2_stated_only_with_raw": 0,
+     "accepted_2": 3,
+     "n": 3
+    },
+    "after_stated_only_feedback": {
+     "a2_n_failed_lt_a1": 0,
+     "a2_shapes": {},
+     "a2_stated_only": 0,
+     "a2_stated_only_derived": 0,
+     "a2_stated_only_with_raw": 0,
+     "accepted_2": 0,
+     "n": 0
+    }
+   },
+   "sep05_0243": {
+    "after_other_feedback": {
+     "a2_n_failed_lt_a1": 0,
+     "a2_shapes": {},
+     "a2_stated_only": 0,
+     "a2_stated_only_derived": 0,
+     "a2_stated_only_with_raw": 0,
+     "accepted_2": 0,
+     "n": 0
+    },
+    "after_stated_only_feedback": {
+     "a2_n_failed_lt_a1": 1,
+     "a2_shapes": {
+      "full": 1
+     },
+     "a2_stated_only": 0,
+     "a2_stated_only_derived": 0,
+     "a2_stated_only_with_raw": 0,
+     "accepted_2": 1,
+     "n": 1
+    }
+   }
+  }
+ }
+}

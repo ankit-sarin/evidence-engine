@@ -1,0 +1,14 @@
+
+
+## Your previous response did not meet the contract on 2 field(s)
+
+Each one below shows what you returned and what its contract requires. Fix these, and re-emit EVERY field in the schema — this is a full replacement response, not a patch.
+
+- **comparison_to_human** [STATED]
+    you returned value: 'NR'
+    with unit_indices: []
+    ✗ VALUE_WITHOUT_CITATION — a value was asserted with nothing cited behind it. The contract is: cite at least one unit that asserts the value, before the value. If nothing in this paper can be cited for it, the value must be NO_EVIDENCE_LOCATABLE with an EMPTY citation list.
+- **secondary_outcomes** [STATED]
+    you returned value: 'NR'
+    with unit_indices: []
+    ✗ VALUE_WITHOUT_CITATION — a value was asserted with nothing cited behind it. The contract is: cite at least one unit that asserts the value, before the value. If nothing in this paper can be cited for it, the value must be NO_EVIDENCE_LOCATABLE with an EMPTY citation list.

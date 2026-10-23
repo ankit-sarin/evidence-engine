@@ -1,0 +1,27 @@
+{
+ "12": {
+  "attempt1_hash_equal": true,
+  "attempt2_hash_equal": true,
+  "attempt2_request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+  "feedback_is_suffix_of_user_turn": true,
+  "messages_roles": [
+   "system",
+   "user"
+  ],
+  "recorded_feedback_chars": 978,
+  "rendered_chars": 978
+ },
+ "8": {
+  "attempt1_hash_equal": true,
+  "attempt2_hash_equal": true,
+  "attempt2_request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+  "feedback_is_suffix_of_user_turn": true,
+  "messages_roles": [
+   "system",
+   "user"
+  ],
+  "recorded_feedback_chars": 610,
+  "rendered_chars": 610
+ },
+ "pass1_output_section_p8": "## Output\nEmit exactly one entry per field (20 total), in the order the fields are\nlisted above, with the evidence keys BEFORE the value key, as JSON:\n\n{\"fields\": [ ...one object per field, shaped by its class... ]}\n\n"
+}

@@ -1,0 +1,78 @@
+RULING [evidence-engine 12u-R692] — wrap ruling: closeout accepted; R691(g)'s "U17" premise
+  withdrawn; the health-job failure a reading; lane line approved and applied; close now
+STATUS: PI ruling, 2026-10-22 UTC, session 12u, on architect recommendation, on the 12u-CLOSE
+  closeout block (9673afffde8906b51a6434a9c3ebe33618b9d030). Transcribe as item 0 of 12v-OPEN
+  (Block 90), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block):
+  MEASURED: "HEAD: 9673afffde8906b51a6434a9c3ebe33618b9d030, parent
+    0ceec48001255878a4f53db4da88738648a795a5; status[], lr[0 0]"; "sha256
+    b9b0f5bc2d875a65f507f50fb281c0c63cf61f8ce4b6521d05383d651d090516, 1814243 bytes, 8822
+    lines"; "The decision log in this file ends at R691."; item 0 "2 files changed, 249
+    insertions(+), 2 deletions(-)", "exactly 2 '-' line(s), one per named row: True, RESULT:
+    PASS", "8,641 = 8,468 + 175 − 2"; closeout "22 files changed, 8267 insertions(+)", "the
+    plan's numstat is 181 / 0"; "fence == r689.txt / r690.txt / r691.txt: True; cell ==
+    render_cell: True for all three"; "git diff --stat 2579f7c HEAD -- engine tests scripts
+    analysis review_specs is empty"; ledger "0fe0698d8a419beb8921e269daea3050a3faaf8e, parent
+    baefb35, message "ledger: rows through 2026-10-22T17:11:15Z", with trailers"; "primer.md is
+    untouched"; fingerprint IDENTICAL at 17:03Z, 17:06:30Z, 17:06:59Z, 17:11:18Z and 17:12:23Z;
+    lane line "sha256 5eb5853be88a57f3a3542bc48d0c38f38134f7cffd7caa5bfb495bce200abf47, 4740
+    bytes, 10 lines. Not applied", "five − lines == primer.md 41–45: True"; "278 rows, 94 / 53 /
+    131, 0 unclassed; P1 59 (25 / 22 / 12); 35 fix units, U16 done, 16 of 35; P6 11; P7 117";
+    "rows in 0, rows out 0, no class move"; retention "23 MATCH and 0 MISMATCH", "None was
+    opened"; "Temp root: 4 entries, 2,879,779,576 B"; "/api/ps: {"models":[]} (17:12:24Z)";
+    "dbchecks_close.txt and pin_tuples_close.json are byte-identical to 12t_close's"; the
+    nightly "3347 passed, 17 deselected, 1 xfailed, 2 warnings in 894.07s", "its 3,348 ids are
+    byte-identical to collected_ids_12u_u16c.txt"; R1 "qwen3.6:35b-a3b reads FAIL (empty
+    response) 80.7s", "its /api/generate returned 200 after 1m20s", "67 GIN lines, all 200",
+    "One NV_ERR_NO_MEMORY line at 07:04:43, beside load 19 (llama3.3:70b), which completed";
+    "eleven NV_ERR_NO_MEMORY lines this boot"; the eight rNNN.txt hashes as tabled; the archive
+    command as printed.
+  MEASURED (architect, this session): the architect's copy of R691, hashed from the block that
+    issued it: sha256 95f63f8b4494104f60111054f963081ee2ee5204f4c6202b074ff23bd4fa469e, 6,150
+    bytes, 74 lines — identical to r691.txt as written at 0ceec48 (Block 89).
+  READ (CC's): "§3's U17 is "Cross-family rule enforced at run open", with row INT-i12-45;
+    INT-r12-1 and INT-s12-1 are not in §3. INT-r12-1's row says "fix unit assigned at its Phase
+    A""; "INT-i12-73 has a second line, 1325, in the package table … the note went on row line
+    602 only"; "pytest-20 is the surgical-cv pytest's (not this lane's)".
+  INFERRED: none.
+
+R692(a) — The 12u-CLOSE closeout block is accepted as printed. The closeout commit 9673aff and item
+  0 0ceec48 stand; the ledger 0fe0698 with trailers stands (R680(b) met). Block 89 stands on the
+  architect's hash (R684(e)). The INT-i12-73 note on row line 602 only, the package-table line
+  1325 unedited, is R686(c) applied as written.
+R692(b) — R691(g)'s parenthetical "(U17 in the unit order as 12l_P1A §3 states it — the closeout
+  quotes it)" and the 12u-CLOSE brief's matching words were an architect premise; both are
+  withdrawn. 12l_P1A §3's U17 is the cross-family rule enforced at run open (INT-i12-45) and stays
+  U17. INT-r12-1 with INT-s12-1 is the next work, as R691(g) and the plan state it; its fix-unit
+  number is assigned at its Phase A, as its row says, and the read-out names where it falls in
+  §3's order. The 12v block's U17–U20 quote stands as written, as context; the closure's note (g)
+  stands; no edit, no row.
+R692(c) — Readings, no row: (i) the 2026-10-22 health job's one failure, qwen3.6:35b-a3b read as
+  an empty response to a generate that returned 200 after 80.7 s, is a failure the 2026-10-21
+  job did not show (20/20); the model is not in the engine's stack. It goes to the dgx-infra
+  item with the NVRM count, and 12v-OPEN reads the 2026-10-23 job against 20/20 and reports a
+  repeat, with its timing, as a reading. (ii) NVRM: eleven this boot, twelve since 2026-10-17,
+  the new line beside llama3.3:70b, a completed load. (iii) The 2026-10-22 nightly's 894.07 s
+  is a nightly, not a standard gate; the band and its series of eight are unchanged (R683(c)).
+  (iv) The temp root holds a foreign pytest-20 (surgical-cv); pytest-17 to 19 rotated out.
+R692(d) — The R510 line for 12u is rows in 0, rows out 0, no class move; INT-i12-73 CLOSED and
+  counted; recount 278 (94 / 53 / 131, 0 unclassed).
+R692(e) — The lane line (sha256 5eb5853be88a57f3a3542bc48d0c38f38134f7cffd7caa5bfb495bce200abf47,
+  4,740 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45
+  of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+"
+  lines, applied from the file, not from a paste; commit primer.md together with any uncommitted
+  hook row ("ledger" form, with trailers, the row's exact timestamp), push, level.
+R692(f) — 12v-OPEN's startup verify checks claude-config at the commit /wrap leaves (the child of
+  the lane-line commit, itself the child of 0fe0698), level and clean; foreign commits and rows per
+  R653(c), R654(d), R663(b). 12v's item 0 transcribes this ruling as Block 90 and copies
+  lane_line_12u.txt into docs/session-reports/session-12/12u_close/ with its commit, which carries
+  no cell note and is verified by its "−" count, 0 (R664(b)). No closeout gate ran: the expected
+  gate values for 12v are 12u-U16C's (2c3822b) on unchanged code (3,347 / 1 xfailed / 17
+  deselected, collected 3,365 / selected 3,348; 0/0 against 12u_U16B/collected_ids_12u_u16c.txt;
+  band 791–966 s, with the concurrent jobs named and the snapshot's own PIDs excluded); the
+  2026-10-23 09:00 UTC nightly runs on 9673aff, whose engine tree equals 2c3822b's, expected
+  3,347 / 17 / 1 on 3,365 / 3,348, exit 0; the 07:00 health job's loads are read and reported
+  by 12v-OPEN, with an NVRM grep. The temp root is read, never matched. Residency is a reading.
+R692(g) — Session 12u closes now. After R692(e) has landed, run /wrap. Report the archive command;
+  the closeout block stands.

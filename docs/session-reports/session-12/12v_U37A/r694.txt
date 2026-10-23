@@ -1,0 +1,62 @@
+RULING [evidence-engine 12v-R694] — 12v-RSA accepted; the 04:56 sender named; the two rows
+  decoupled; INT-r12-1 becomes U37 (options R-1 + R-2, one commit), INT-s12-1 becomes U38 (S-1);
+  three dated notes; one proposed row; U37's Phase 1 opens
+STATUS: PI ruling, 2026-10-23 UTC, session 12v, on architect recommendation, on the 12v-RSA
+  final report and the read-out 12v_RSA.md (cc2d83a9c77d27d33a2cb90e0f2f4de4cbf8a63c).
+  Transcribe as Block 92 at item 0 of the 12v-U37A brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12v-RSA final report):
+  MEASURED: "Commit: 3525e0268762bf23c5b9e5036c893d8a3dafe079, parent 049cec8"; "numstat 59 / 0;
+    8,970 lines"; "r693.txt: 216a3912…1e08 / 3846 / 48, equal to your hash"; "Commit:
+    cc2d83a9c77d27d33a2cb90e0f2f4de4cbf8a63c, parent 3525e02, 12 files"; "git diff --stat
+    049cec8 HEAD -- engine tests scripts analysis review_specs is empty"; "fingerprint IDENTICAL
+    at 16:14:44Z"; "25 elicited attempt 2s on disk"; "STATED-only re-emission in 4 of 6";
+    "0 of 19"; "9 fields across 4 papers stay contract_unmet"; "A change to the feedback
+    template moves only the elicited pin"; "The INT-s12-1 precheck moves no pin, either way";
+    "A message-structure change made only inside elicit would be invisible to the pin"; "1,133
+    flagged, 0 of them verbatim"; "29 of 190 corpus texts contain an ellipsis"; "The template is
+    unchanged since dfa1453".
+  READ (CC's): "R347 commits the elicitation flip before the tag; R350 launches Run 7 on the
+    tagged spec"; "INT-s12-1 is not [on Run 7's path]"; "3 of those 4 rest on recorded codes,
+    not stored text"; "R-4, merge failed fields only — this conflicts with Ruling 4";
+    "auditor.audit_span has used locate(...).bridged since 7074305".
+  PI (stated 2026-10-23): the 04:56 UTC qwen3:32b generate with num_ctx 262144 was surgical
+    video (CV) work.
+  INFERRED: none.
+
+R694(a) — 12v-RSA is accepted as reported. Item 0 landed as 3525e02 (Block 91; r693.txt equal to
+  the architect's hash, R684(e)); the read-out as cc2d83a. The ledgers 255da3a and e7ed305 stand.
+R694(b) — R693(c)'s "unidentified local sender" is answered: the surgical-cv lane. Its disposition
+  is unchanged — an engine model loaded unlocked by another lane is the A-1 / A-1N case and stays
+  in Run 7's confounder statement. A dated note on the 12u closure's host facts records the
+  sender; no row.
+R694(c) — The two rows are decoupled. R675(e)'s "with INT-r12-1's batch and its one comparison
+  rehearsal" and R539's pairing are withdrawn for INT-s12-1: the rows lie on disjoint paths (F2),
+  and INT-s12-1 moves no pin (F14). Dated note on INT-s12-1: "pin-affecting by R612(c)'s reading"
+  is wrong — R612(c) concerns INT-i12-1, and no pin value moves; the row's "three callers" is
+  stale since 7074305 (audit_span uses locate(...).bridged). Class 2, P1 unchanged.
+R694(d) — INT-r12-1: dated note — R668(b)'s "loud under U06's floor" does not hold; every case
+  was stored with attempt 1 kept, a quiet yield loss of 9 fields across 4 papers (Q5). Class 2
+  stands (a missing value, not a wrong one). The row's evidence is now F6: 4 of 6 after
+  STATED-only feedback against 0 of 19 after any other feedback, 3 of the 4 by recorded codes.
+R694(e) — INT-r12-1's fix is unit U37: options R-1 and R-2 of 12v_RSA.md §Q8 together, in one
+  commit — the feedback header names the whole schema (every field, with the count) and the
+  output instruction is repeated after the feedback block. Attempt 2 only; no attempt-1 text
+  changes (R670(b)). R-3 is rejected: a structure change inside elicit is invisible to the pin
+  (Q3). R-4 is rejected on the conflict the read-out names. The elicited pin moves; the
+  non-elicited pin must not. U37 goes before U17, as the read-out proposes.
+R694(f) — INT-s12-1's fix is unit U38: option S-1, the precheck consults the paper text, so a
+  snippet whose ellipsis is verbatim in the text is not flagged; S-2 is folded in (a snippet is
+  never replaced with "" when retries run out — the original stays, and the write boundary
+  decides). No pin moves; no rehearsal; its acceptance tests are its gate. U38 goes at P1's tail.
+  P1's fix units: 35 → 37.
+R694(g) — Proposed row, for the PI to confirm or strike at U37A's item 0: the elicited prompt
+  hash renders the feedback template through a sentinel but does not cover the attempt-2 message
+  structure (Q3's third finding) — ID INT-v12-1, Class 2, P1, E-PIN family, text cell quoted
+  from the read-out; its fix is pin coverage of the structure, not built in U37.
+R694(h) — U37's rehearsal (R539) runs after U37's commit, on the six STATED-only-feedback cases'
+  papers and the 12 papers of Rehearsal A, under its own brief; its test is attempt-2 recovery
+  after STATED-only feedback, F6's 4 of 6 as the baseline, with stored outcomes reported, not
+  compared (R612(b) form). No model call before that brief.
+R694(i) — U37 opens with a Phase 1 under the brief below: the acceptance tests written and run
+  against HEAD, failing as predicted, before any template edit.

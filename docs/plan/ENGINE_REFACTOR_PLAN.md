@@ -874,7 +874,7 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 | # | On disk (`12r_U13_PA.md` §7 F3, quoted) | Class | Owning package | Governing ruling | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| INT-r12-1 | Attempt 2 after STATED-only feedback returned STATED-only on 4 of 5 attempts across the two runs (§5). The feedback block's own words ask for every field ("re-emit EVERY field in the schema"). | 2 | P1, pin-affecting (the feedback template is inside the pin, E-PIN); fix unit assigned at its Phase A | R668(b), R670(e), R671(b) | `12r_U13_PA.md` §7 F3, §5; `shape_pa.json` |
+| INT-r12-1 | Attempt 2 after STATED-only feedback returned STATED-only on 4 of 5 attempts across the two runs (§5). The feedback block's own words ask for every field ("re-emit EVERY field in the schema"). | 2 | P1, pin-affecting (the feedback template is inside the pin, E-PIN); fix unit assigned at its Phase A | R668(b), R670(e), R671(b) | `12r_U13_PA.md` §7 F3, §5; `shape_pa.json` *Note 2026-10-23 (12v-U37A item 0, R694(d)):* R668(b)'s "loud under U06's floor" does not hold; every case was stored with attempt 1 kept, a quiet yield loss of 9 fields across 4 papers (12v_RSA.md §Q5). Class 2 stands (a missing value, not a wrong one). The row's evidence is now F6: 4 of 6 after STATED-only feedback against 0 of 19 after any other feedback, 3 of the 4 by recorded codes (12v_RSA.md §Q4). Its fix is U37 (R694(e)). |
 
 **The pre-tag list, recounted 2026-10-19 (12r-CLOSE, R671), by script from the plan** (`docs/session-reports/session-12/12r_close/recount_12r_close.py` → `recount_12r_close.json`: the 12q-CLOSE count as the baseline, reproduced by `recount_12q_close.py` on the plan at `d7bafc4` — the file it was written for, sha256 `f2e4dc60d5dd4eb396083475d221a45e5600ccb91849181766a56de730cb9b8d` — and equal to its committed JSON byte for byte; the row above; and INT-h12-2's note). Baseline: 275 rows — Class 1 / 2 / 3 = 95 / 50 / 130, and 0 without a class. Deltas: 1 row enters, Class 2 (INT-r12-1, P1); one class move, INT-h12-2 from Class 2 / P1 to Class 3 / P7 (R670(c), R671(a)). **Now 276 rows: Class 1 / 2 / 3 = 95 / 50 / 131, and 0 without a class.** **R510 (2026-10-19, 12r-CLOSE, R671): rows in 1 (1 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 1 / 0), rows out 0; one class move.** Counts by package and class (first-named package, as before): P1 26 / 20 / 12 (58); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 2 / 0 (10); P7 0 / 1 / 116 (117). P1's fix units stay 35: INT-r12-1's unit is assigned at its Phase A (R671(b)).
 
@@ -882,7 +882,7 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 | # | On disk (`12s_U14A.md` §9 F9 and F8; `12s_U15A.md` §9 F2, quoted) | Class | Owning package | Governing ruling | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| INT-s12-1 | `INVALID_SNIPPET_RE` has exactly three callers: `locate` (on the pipeline through `audit_run`), `extractor._has_invalid_snippet` (on the pipeline only when `elicitation` is false; the live spec reads `elicitation: false`), and `auditor.audit_span` (no production caller). A verbatim quote of a passage containing `…` or `...` is `located True, kind exact, score 1.0, bridged True`. | 2 | P1, pin-affecting by R612(c)'s reading (it changes which retry calls are sent); with INT-r12-1's batch and its one comparison rehearsal (R539); fix unit assigned at its Phase A | R612(c), R675(e) | `12s_U14A.md` §3, §9 F8–F9 |
+| INT-s12-1 | `INVALID_SNIPPET_RE` has exactly three callers: `locate` (on the pipeline through `audit_run`), `extractor._has_invalid_snippet` (on the pipeline only when `elicitation` is false; the live spec reads `elicitation: false`), and `auditor.audit_span` (no production caller). A verbatim quote of a passage containing `…` or `...` is `located True, kind exact, score 1.0, bridged True`. | 2 | P1, pin-affecting by R612(c)'s reading (it changes which retry calls are sent); with INT-r12-1's batch and its one comparison rehearsal (R539); fix unit assigned at its Phase A | R612(c), R675(e) | `12s_U14A.md` §3, §9 F8–F9 *Note 2026-10-23 (12v-U37A item 0, R694(c)):* "pin-affecting by R612(c)'s reading" is wrong — R612(c) concerns INT-i12-1, and no pin value moves (12v_RSA.md F14); the row's "three callers" is stale since `7074305` (`audit_span` uses `locate(...).bridged`, F17). Class 2, P1 unchanged. R675(e)'s pairing with INT-r12-1's batch and its comparison rehearsal is withdrawn for this row (R694(c)); its fix is U38 (R694(f)). |
 | INT-s12-2 | No CHECK, trigger or writer constrains a processing transition: `paper_events.from_state` is free TEXT, `write_paper_event` is a bare INSERT, and `effective_state` takes the last token on the axis. | 2 | P6, with 023, D22's state and writer: a processing-axis transition table enforced where the vocabulary lives, its form set by P6's Phase A; not pin-affecting | R431, R677(d) | `12s_U15A.md` §2, §9 F2 *Note 2026-10-20 (12t-CLOSE, R682(c)(i), R681(b)):* T7 of `12s_U15A.md` §11 (item 7, "(if (B) or (C)) Writing `audited_ai` over a non-admitted state raises the named refusal, and the savepoint leaves no partial write.") is this row's acceptance test; U15 built no write guard and did not build it (`12t_U15B.md` §1). |
 
 **The pre-tag list, recounted 2026-10-19 (12s-CLOSE, R677), by script from the plan** (`docs/session-reports/session-12/12s_close/recount_12s_close.py` → `recount_12s_close.json`: the 12r-CLOSE count as the baseline, reproduced by `recount_12r_close.py` on the plan at `8b2c388` — the last plan before this table, sha256 `95951ec04d317afb32fe33dbf9dd84b437121b5ef35883885cc419ffd856f709` — and equal to its committed JSON byte for byte, and through it 272, 275 and 276; the two rows above; and INT-i12-12's note). Baseline: 276 rows — Class 1 / 2 / 3 = 95 / 50 / 131, and 0 without a class. Deltas: 2 rows enter, Class 2 (INT-s12-1, P1; INT-s12-2, P6); one class move, INT-i12-12 from Class 1 to Class 2, P1 unchanged (R677(b)). **Now 278 rows: Class 1 / 2 / 3 = 94 / 53 / 131, and 0 without a class.** **R510 (2026-10-19, 12s-CLOSE, R677): rows in 2 (2 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 2 / 0), rows out 0; one class move.** Counts by package and class (first-named package, as before): P1 25 / 22 / 12 (59); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 3 / 0 (11); P7 0 / 1 / 116 (117). P1's fix units stay 35: INT-s12-1's unit is assigned at its Phase A; U14 is done and stays among the 35 (R676(b)). INT-i12-7 and INT-i12-8 are CLOSED at `7074305` and stay counted until P1 closes (R607(d)).
@@ -3949,7 +3949,7 @@ Session 12u closed 2026-10-22 UTC; opened 2026-10-22 01:54 UTC on the 12t closeo
 - **The 2026-10-22 07:00 UTC health job** (read at this closeout, `12u_close/R1_summary.txt`): 19 of 20 OK; 67 GIN lines, all 200; 20 `POST /api/generate`; nothing resident after.
   - `qwen3.6:35b-a3b` reads `FAIL (empty response)  80.7s` and the log ends "ALERT". Its runner started in 5.73 s and its `/api/generate` returned 200 after 1m20s, so the job read the response as empty. No error line was in the journal window.
   - One `NV_ERR_NO_MEMORY` line, at 07:04:43, beside load 19 (llama3.3:70b), which completed OK.
-- **NVRM.** Eleven `NV_ERR_NO_MEMORY` lines this boot (ten before 2026-10-22's health job, one in it) — the dgx-infra item, unchanged.
+- **NVRM.** Eleven `NV_ERR_NO_MEMORY` lines this boot (ten before 2026-10-22's health job, one in it) — the dgx-infra item, unchanged. *Note 2026-10-23 (12v-U37A item 0, R694(b)):* R693(c)'s "unidentified local sender" — the 2026-10-23 04:56 UTC `qwen3:32b` generate with `num_ctx` 262144 — was the surgical-cv lane (PI, 2026-10-23). An engine model loaded unlocked by another lane is the A-1 / A-1N case and stays in Run 7's confounder statement; no row.
 
 **Measured — the session's gates.** Two standard gates. Both had 2 warnings (sklearn's), an empty journal window, and no phase slower than its comparison by more than 10 s:
 
@@ -8968,3 +8968,76 @@ R693(g) — INT-r12-1 and INT-s12-1 open with one read-only Phase A, 12v-RSA, un
 | 2026-10-23 | R693(a) — 12v-OPEN is accepted as reported. Item 0 landed as 049cec8 (Block 90; r692.txt equal to the architect's hash, R684(e)); the ledger bb05e13 with trailers stands. The 2026-10-23 nightly matched line for line; the startup gate matched inside the band. The 12v open stands verified. R693(b) — Finding 1: claude-config 9604c1a (two surgical-cv ledger-only commits on c1d6821) is an accepted descendant under R663(b), as CC applied it. No note. R693(c) — Finding 2, a reading, no row: NV_ERR_NO_MEMORY is fifteen this boot. The closeout's "eleven" was true when written; two lines arrived at 04:56 beside a qwen3:32b generate with num_ctx 262144 from an unidentified local sender, outside every job of this lane. An engine model loaded by an unknown process, unlocked, at a context eight times the stage's, goes to the dgx-infra item and to Run 7's confounder statement beside A-1 and A-1N. The 2026-10-22 qwen3.6:35b-a3b failure did not repeat (OK in 9.3 s); it stands as a single occurrence. R693(d) — Finding 3, no row: the health job's log records no lock line, so "lock taken or skipped" cannot be read from it. Open briefs stop asking it; whether the health job takes the experiment lock is the dgx-infra item's question. R693(e) — Finding 4, no row: the chain's 272 is recount_12p_close.json's now.rows; R13's wording stands, and later briefs name that file. R693(f) — The gate series gains 893.71 s: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71 s. The band stays 791–966 s (R683(c)) until a closeout recuts it. R693(g) — INT-r12-1 and INT-s12-1 open with one read-only Phase A, 12v-RSA, under the brief below: no model call, no live write, no engine change. The read-out states whether the two rows lie on the same extraction path for Run 7 or on disjoint ones, and proposes the fix-unit number or numbers and their place against 12l_P1A.md §3's order, quoted from disk (R692(b)). P1's fix-unit count stays 35 until the ruling on the read-out. | PI, 2026-10-23, during session 12v, on architect recommendation, on the 12v-OPEN final report (item 0 049cec8) |
 
 The decision log in this file ends at R693.
+
+**Block 92.** *Transcribed 2026-10-23 (item 0 of the 12v-U37A brief), in its own commit with the notes it orders, in the R597(e) form:* ruling R694, made by PI on architect recommendation on 2026-10-23 UTC, during session 12v, on the 12v-RSA final report and the read-out 12v_RSA.md (`cc2d83a9c77d27d33a2cb90e0f2f4de4cbf8a63c`). The 12v-U37A task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12v-R694] — 12v-RSA accepted; the 04:56 sender named; the two rows
+  decoupled; INT-r12-1 becomes U37 (options R-1 + R-2, one commit), INT-s12-1 becomes U38 (S-1);
+  three dated notes; one proposed row; U37's Phase 1 opens
+STATUS: PI ruling, 2026-10-23 UTC, session 12v, on architect recommendation, on the 12v-RSA
+  final report and the read-out 12v_RSA.md (cc2d83a9c77d27d33a2cb90e0f2f4de4cbf8a63c).
+  Transcribe as Block 92 at item 0 of the 12v-U37A brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12v-RSA final report):
+  MEASURED: "Commit: 3525e0268762bf23c5b9e5036c893d8a3dafe079, parent 049cec8"; "numstat 59 / 0;
+    8,970 lines"; "r693.txt: 216a3912…1e08 / 3846 / 48, equal to your hash"; "Commit:
+    cc2d83a9c77d27d33a2cb90e0f2f4de4cbf8a63c, parent 3525e02, 12 files"; "git diff --stat
+    049cec8 HEAD -- engine tests scripts analysis review_specs is empty"; "fingerprint IDENTICAL
+    at 16:14:44Z"; "25 elicited attempt 2s on disk"; "STATED-only re-emission in 4 of 6";
+    "0 of 19"; "9 fields across 4 papers stay contract_unmet"; "A change to the feedback
+    template moves only the elicited pin"; "The INT-s12-1 precheck moves no pin, either way";
+    "A message-structure change made only inside elicit would be invisible to the pin"; "1,133
+    flagged, 0 of them verbatim"; "29 of 190 corpus texts contain an ellipsis"; "The template is
+    unchanged since dfa1453".
+  READ (CC's): "R347 commits the elicitation flip before the tag; R350 launches Run 7 on the
+    tagged spec"; "INT-s12-1 is not [on Run 7's path]"; "3 of those 4 rest on recorded codes,
+    not stored text"; "R-4, merge failed fields only — this conflicts with Ruling 4";
+    "auditor.audit_span has used locate(...).bridged since 7074305".
+  PI (stated 2026-10-23): the 04:56 UTC qwen3:32b generate with num_ctx 262144 was surgical
+    video (CV) work.
+  INFERRED: none.
+
+R694(a) — 12v-RSA is accepted as reported. Item 0 landed as 3525e02 (Block 91; r693.txt equal to
+  the architect's hash, R684(e)); the read-out as cc2d83a. The ledgers 255da3a and e7ed305 stand.
+R694(b) — R693(c)'s "unidentified local sender" is answered: the surgical-cv lane. Its disposition
+  is unchanged — an engine model loaded unlocked by another lane is the A-1 / A-1N case and stays
+  in Run 7's confounder statement. A dated note on the 12u closure's host facts records the
+  sender; no row.
+R694(c) — The two rows are decoupled. R675(e)'s "with INT-r12-1's batch and its one comparison
+  rehearsal" and R539's pairing are withdrawn for INT-s12-1: the rows lie on disjoint paths (F2),
+  and INT-s12-1 moves no pin (F14). Dated note on INT-s12-1: "pin-affecting by R612(c)'s reading"
+  is wrong — R612(c) concerns INT-i12-1, and no pin value moves; the row's "three callers" is
+  stale since 7074305 (audit_span uses locate(...).bridged). Class 2, P1 unchanged.
+R694(d) — INT-r12-1: dated note — R668(b)'s "loud under U06's floor" does not hold; every case
+  was stored with attempt 1 kept, a quiet yield loss of 9 fields across 4 papers (Q5). Class 2
+  stands (a missing value, not a wrong one). The row's evidence is now F6: 4 of 6 after
+  STATED-only feedback against 0 of 19 after any other feedback, 3 of the 4 by recorded codes.
+R694(e) — INT-r12-1's fix is unit U37: options R-1 and R-2 of 12v_RSA.md §Q8 together, in one
+  commit — the feedback header names the whole schema (every field, with the count) and the
+  output instruction is repeated after the feedback block. Attempt 2 only; no attempt-1 text
+  changes (R670(b)). R-3 is rejected: a structure change inside elicit is invisible to the pin
+  (Q3). R-4 is rejected on the conflict the read-out names. The elicited pin moves; the
+  non-elicited pin must not. U37 goes before U17, as the read-out proposes.
+R694(f) — INT-s12-1's fix is unit U38: option S-1, the precheck consults the paper text, so a
+  snippet whose ellipsis is verbatim in the text is not flagged; S-2 is folded in (a snippet is
+  never replaced with "" when retries run out — the original stays, and the write boundary
+  decides). No pin moves; no rehearsal; its acceptance tests are its gate. U38 goes at P1's tail.
+  P1's fix units: 35 → 37.
+R694(g) — Proposed row, for the PI to confirm or strike at U37A's item 0: the elicited prompt
+  hash renders the feedback template through a sentinel but does not cover the attempt-2 message
+  structure (Q3's third finding) — ID INT-v12-1, Class 2, P1, E-PIN family, text cell quoted
+  from the read-out; its fix is pin coverage of the structure, not built in U37.
+R694(h) — U37's rehearsal (R539) runs after U37's commit, on the six STATED-only-feedback cases'
+  papers and the 12 papers of Rehearsal A, under its own brief; its test is attempt-2 recovery
+  after STATED-only feedback, F6's 4 of 6 as the baseline, with stored outcomes reported, not
+  compared (R612(b) form). No model call before that brief.
+R694(i) — U37 opens with a Phase 1 under the brief below: the acceptance tests written and run
+  against HEAD, failing as predicted, before any template edit.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-23 | R694(a) — 12v-RSA is accepted as reported. Item 0 landed as 3525e02 (Block 91; r693.txt equal to the architect's hash, R684(e)); the read-out as cc2d83a. The ledgers 255da3a and e7ed305 stand. R694(b) — R693(c)'s "unidentified local sender" is answered: the surgical-cv lane. Its disposition is unchanged — an engine model loaded unlocked by another lane is the A-1 / A-1N case and stays in Run 7's confounder statement. A dated note on the 12u closure's host facts records the sender; no row. R694(c) — The two rows are decoupled. R675(e)'s "with INT-r12-1's batch and its one comparison rehearsal" and R539's pairing are withdrawn for INT-s12-1: the rows lie on disjoint paths (F2), and INT-s12-1 moves no pin (F14). Dated note on INT-s12-1: "pin-affecting by R612(c)'s reading" is wrong — R612(c) concerns INT-i12-1, and no pin value moves; the row's "three callers" is stale since 7074305 (audit_span uses locate(...).bridged). Class 2, P1 unchanged. R694(d) — INT-r12-1: dated note — R668(b)'s "loud under U06's floor" does not hold; every case was stored with attempt 1 kept, a quiet yield loss of 9 fields across 4 papers (Q5). Class 2 stands (a missing value, not a wrong one). The row's evidence is now F6: 4 of 6 after STATED-only feedback against 0 of 19 after any other feedback, 3 of the 4 by recorded codes. R694(e) — INT-r12-1's fix is unit U37: options R-1 and R-2 of 12v_RSA.md §Q8 together, in one commit — the feedback header names the whole schema (every field, with the count) and the output instruction is repeated after the feedback block. Attempt 2 only; no attempt-1 text changes (R670(b)). R-3 is rejected: a structure change inside elicit is invisible to the pin (Q3). R-4 is rejected on the conflict the read-out names. The elicited pin moves; the non-elicited pin must not. U37 goes before U17, as the read-out proposes. R694(f) — INT-s12-1's fix is unit U38: option S-1, the precheck consults the paper text, so a snippet whose ellipsis is verbatim in the text is not flagged; S-2 is folded in (a snippet is never replaced with "" when retries run out — the original stays, and the write boundary decides). No pin moves; no rehearsal; its acceptance tests are its gate. U38 goes at P1's tail. P1's fix units: 35 → 37. R694(g) — Proposed row, for the PI to confirm or strike at U37A's item 0: the elicited prompt hash renders the feedback template through a sentinel but does not cover the attempt-2 message structure (Q3's third finding) — ID INT-v12-1, Class 2, P1, E-PIN family, text cell quoted from the read-out; its fix is pin coverage of the structure, not built in U37. R694(h) — U37's rehearsal (R539) runs after U37's commit, on the six STATED-only-feedback cases' papers and the 12 papers of Rehearsal A, under its own brief; its test is attempt-2 recovery after STATED-only feedback, F6's 4 of 6 as the baseline, with stored outcomes reported, not compared (R612(b) form). No model call before that brief. R694(i) — U37 opens with a Phase 1 under the brief below: the acceptance tests written and run against HEAD, failing as predicted, before any template edit. | PI, 2026-10-23, during session 12v, on architect recommendation, on the 12v-RSA final report (cc2d83a) |
+
+The decision log in this file ends at R694.

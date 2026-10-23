@@ -199,6 +199,19 @@ def _sentinel_rule(escape: str, canonical: str) -> str:
             f"sentence exists, output {escape}.")
 
 
+def output_section(n_fields: int) -> str:
+    """The Pass-1 output instruction. One string, sent before the paper text on
+    every attempt and again after attempt 2's feedback block (U37, R694(e)), so
+    the two cannot drift."""
+    return (
+        "## Output\n"
+        f"Emit exactly one entry per field ({n_fields} total), in the order the fields are\n"
+        "listed above, with the evidence keys BEFORE the value key, as JSON:\n"
+        "\n"
+        '{"fields": [ ...one object per field, shaped by its class... ]}'
+    )
+
+
 def build_pass1_prompt(unit_map: UnitMap, codebook: dict,
                        field_names: tuple[str, ...]) -> str:
     """The elicitation prompt: numbered paper text plus per-class contracts."""
@@ -256,11 +269,7 @@ Never return a value of any other kind without at least one citation.
 
 {_worked_example(escape, canonical)}
 
-## Output
-Emit exactly one entry per field ({n_fields} total), in the order the fields are
-listed above, with the evidence keys BEFORE the value key, as JSON:
-
-{{"fields": [ ...one object per field, shaped by its class... ]}}
+{output_section(n_fields)}
 
 ## Numbered Paper Text
 {unit_map.render()}"""
@@ -397,11 +406,31 @@ def build_feedback_block(result: Pass1Result, codebook: dict,
     if not lines:
         return ""
 
+    # U37 (INT-r12-1, R694(e)): the header names the whole schema, so a block
+    # that lists only STATED failures does not read as a request for STATED
+    # fields only (12v_RSA F6). Names and classes are the codebook's, over the
+    # fields the response was checked against (`check_response` keeps one
+    # record per expected field, a missing one included, each carrying its
+    # codebook class); a passing field appears here and never in the
+    # failed-entry form below.
+    grouped = {cls: [name for name, rec in result.records.items() if rec.field_class == cls]
+               for cls in C.CLASSES}
+    order = [name for cls in C.CLASSES for name in grouped[cls]]
+    schema = "\n".join(
+        f"- {cls.upper()} ({len(grouped[cls])}): " + ", ".join(grouped[cls])
+        for cls in C.CLASSES if grouped[cls]
+    )
     n = len(result.failed_fields)
     return (
         f"\n\n## Your previous response did not meet the contract on {n} field(s)\n\n"
         "Each one below shows what you returned and what its contract requires. "
         "Fix these, and re-emit EVERY field in the schema — this is a full "
         "replacement response, not a patch.\n\n"
+        f"The schema has {len(order)} fields. Your response must carry one entry for "
+        "every one of them, including every field not listed below:\n"
+        + schema + "\n\n"
         + "\n".join(lines)
+        # U37, R-2: the output instruction again, after the feedback, in the
+        # words the prompt sends before the paper text.
+        + "\n\n" + output_section(len(order))
     )

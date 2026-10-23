@@ -140,6 +140,13 @@ def test_the_feedback_sentinel_carries_every_line_template(elicited, cb):
                   "indices that did not resolve:", f"with {K.KEY_INFERENCE}:",
                   "reasoning step(s)", P.FEEDBACK_TRUNCATION_MARKER):
         assert piece in text, piece
+    # Extended under its id at U37 (R695(e)): the header's schema list (R694(e),
+    # R-1) and the output instruction repeated after the feedback (R-2).
+    feedback = text[text.index("## Your previous response did not meet the contract on"):]
+    assert "The schema has " in feedback and "including every field not listed below:" in feedback
+    for cls in C.CLASSES:
+        assert f"- {cls.upper()} (" in feedback, cls
+    assert P.output_section(1).split("(")[0] in feedback       # "## Output\nEmit exactly one entry per field "
 
 
 def test_elicitation_pass1_hashes_both_attempts(elicited, cb):

@@ -57,9 +57,13 @@ def test_it_names_the_field_the_code_the_output_and_the_requirement():
 
 
 def test_clean_fields_are_not_mentioned():
+    """Rewritten under its id at U37 (R695(e)): a passing field is named in the
+    header's schema list (R694(e), R-1) and never in the failed-entry form."""
     block = build_feedback_block(_result(UNCITED, CLEAN), CB)
-    assert "robot_platform" not in block
-    assert "sample_size" in block
+    header, _, entries = block.partition("\n- **")
+    assert "robot_platform" in header                      # the whole schema
+    assert "- **robot_platform**" not in block             # not a failed entry
+    assert "- **sample_size** [STATED]" in block           # the failed field is
 
 
 def test_no_failing_fields_means_no_block():

@@ -477,7 +477,11 @@ def test_both_pass1_attempts_raw_responses_reach_telemetry(review, monkeypatch):
 # Re-recorded at P1 U04 (12l) for the prompt text PI ruled: R571(a) as placed by
 # R612(e), R571(b), and the marker sentence (R589, row 60). Before:
 # d0dd7b5e1e5c8b4552dec7a34b99ce71fbf9ca526d1deb401b2f558882f37fb7.
-ELICITED_REQUESTS_SHA256 = "a56ac21bff388ea70a4a5ae0fc7fbdde3c54c1a024843abec198c53677edfbe0"
+# Re-recorded at P1 U37 (12v, INT-r12-1) for the feedback text PI ruled: R694(e)'s
+# R-1 (the header names the whole schema) and R-2 (the output instruction again
+# after the feedback), attempt 2 only; rewritten under its id by R695(e). Before:
+# a56ac21bff388ea70a4a5ae0fc7fbdde3c54c1a024843abec198c53677edfbe0.
+ELICITED_REQUESTS_SHA256 = "ec969f5f5b5e78ca5e224a09d9bf07cc8cdf4df9f8ccaea9f858d16e9b3cb08b"
 # 12c-E-PIN-B-R2: the stored reasoning_trace (the bare priming block, not the
 # message Pass 2 is sent) is guarded the same way, recorded on the same tree.
 ELICITED_TRACE_SHA256 = "18d4eb72e7833f84276f3103a5e54fc03ff0e9484009ffbeae04dd2b39cc6ee2"

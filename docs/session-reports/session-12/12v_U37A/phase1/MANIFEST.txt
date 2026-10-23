@@ -1,0 +1,11 @@
+docs/session-reports/session-12/12v_U37A/12v_U37A_phase1.md
+docs/session-reports/session-12/12v_U37A/census_phase2.json
+docs/session-reports/session-12/12v_U37A/census_phase2.py
+docs/session-reports/session-12/12v_U37A/feedback_block_head.txt
+docs/session-reports/session-12/12v_U37A/fixture_attempt1_messages.json
+docs/session-reports/session-12/12v_U37A/fixture_mixed_entries.txt
+docs/session-reports/session-12/12v_U37A/fixture_stated_only_block_head.txt
+docs/session-reports/session-12/12v_U37A/fixtures_head.json
+docs/session-reports/session-12/12v_U37A/phase1_run_head.txt
+docs/session-reports/session-12/12v_U37A/pin_preview_head.json
+tests/test_u37_feedback_block.py

@@ -887,6 +887,14 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 **The pre-tag list, recounted 2026-10-19 (12s-CLOSE, R677), by script from the plan** (`docs/session-reports/session-12/12s_close/recount_12s_close.py` → `recount_12s_close.json`: the 12r-CLOSE count as the baseline, reproduced by `recount_12r_close.py` on the plan at `8b2c388` — the last plan before this table, sha256 `95951ec04d317afb32fe33dbf9dd84b437121b5ef35883885cc419ffd856f709` — and equal to its committed JSON byte for byte, and through it 272, 275 and 276; the two rows above; and INT-i12-12's note). Baseline: 276 rows — Class 1 / 2 / 3 = 95 / 50 / 131, and 0 without a class. Deltas: 2 rows enter, Class 2 (INT-s12-1, P1; INT-s12-2, P6); one class move, INT-i12-12 from Class 1 to Class 2, P1 unchanged (R677(b)). **Now 278 rows: Class 1 / 2 / 3 = 94 / 53 / 131, and 0 without a class.** **R510 (2026-10-19, 12s-CLOSE, R677): rows in 2 (2 opened, 0 existing rows entering — Class 1 / 2 / 3 = 0 / 2 / 0), rows out 0; one class move.** Counts by package and class (first-named package, as before): P1 25 / 22 / 12 (59); P2 12 / 7 / 1 (20); P3 10 / 2 / 2 (14); P4 24 / 10 / 0 (34); P5 15 / 8 / 0 (23); P6 8 / 3 / 0 (11); P7 0 / 1 / 116 (117). P1's fix units stay 35: INT-s12-1's unit is assigned at its Phase A; U14 is done and stays among the 35 (R676(b)). INT-i12-7 and INT-i12-8 are CLOSED at `7074305` and stay counted until P1 closes (R607(d)).
 
+**L (12v additions, R694).** *Opened 2026-10-23 (12v-U37B item 0) under R509, R694(g) and R695(c).* One row from the INT-r12-1 / INT-s12-1 Phase A read-out (`12v_RSA.md`, `cc2d83a`): `INT-v12-1` for its §Q3 finding on pin coverage of the attempt-2 message structure (R694(g), confirmed by R695(c)), placed in its own table so that the 12s recount's bounds are unchanged. The text cell is the §Q3 sentence, quoted unchanged (its line wraps joined); class and package are R694(g)'s. Its fix is pin coverage of the structure, not built in U37 (R694(g)).
+
+| # | On disk (`12v_RSA.md` §Q3, quoted) | Class | Owning package | Governing ruling | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| INT-v12-1 | A structure change made only inside `run_pass1` or `elicit` (a third message assembled there) would **not** be seen by the render unless `render_messages` is changed with it (INFERRED from the code; not exercised). | 2 | P1, E-PIN family (the elicited prompt hash renders the feedback template through a sentinel but not the attempt-2 message structure); fix unit assigned at its Phase A | R694(g), R695(c) | `12v_RSA.md` §Q3, F13 |
+
+**The pre-tag list, recounted 2026-10-23 (12v-U37B item 0, R695(c)), by script from the plan** (`docs/session-reports/session-12/12v_U37A/recount_12v_r694.py` → `recount_12v_r694.json`: the 12s-CLOSE count as the baseline, reproduced by `recount_12s_close.py` on the plan at `1e15b50` — the last plan before this table, sha256 `21a7b285dc8f1120ec73fb4d1bfac6d9769e40c7705c4fb12dc8d2cd5d0447c8` — and equal to its committed JSON byte for byte, and through it the chain 272, 275, 276, 278; run in a scratch clone, R673(b)). Baseline: 278 rows — Class 1 / 2 / 3 = 94 / 53 / 131. Opened: 1 (`INT-v12-1`, Class 2, P1). **Now: 279 rows — Class 1 / 2 / 3 = 94 / 54 / 131, 0 without a class**; P1 60 rows (25 / 23 / 12); P6 11; P7 117; P1's fix units 35 (U37 and U38 are counted when they land). R510 for session 12v so far: rows in 1 (`INT-v12-1`), rows out 0, no class move.
+
 ### Not engine defects — plan v50 wording
 
 The product description ("autonomously executes … synthesis," "publication-ready," "no data leaves the machine" — the last is CLI-flag-dependent per C5); the four contradicted counts (D4, D1, F4, G1); the §10 novelty sentence; and "Run 7 once the engine is settled" as an open-ended dependency.
@@ -9041,3 +9049,73 @@ R694(i) — U37 opens with a Phase 1 under the brief below: the acceptance tests
 | 2026-10-23 | R694(a) — 12v-RSA is accepted as reported. Item 0 landed as 3525e02 (Block 91; r693.txt equal to the architect's hash, R684(e)); the read-out as cc2d83a. The ledgers 255da3a and e7ed305 stand. R694(b) — R693(c)'s "unidentified local sender" is answered: the surgical-cv lane. Its disposition is unchanged — an engine model loaded unlocked by another lane is the A-1 / A-1N case and stays in Run 7's confounder statement. A dated note on the 12u closure's host facts records the sender; no row. R694(c) — The two rows are decoupled. R675(e)'s "with INT-r12-1's batch and its one comparison rehearsal" and R539's pairing are withdrawn for INT-s12-1: the rows lie on disjoint paths (F2), and INT-s12-1 moves no pin (F14). Dated note on INT-s12-1: "pin-affecting by R612(c)'s reading" is wrong — R612(c) concerns INT-i12-1, and no pin value moves; the row's "three callers" is stale since 7074305 (audit_span uses locate(...).bridged). Class 2, P1 unchanged. R694(d) — INT-r12-1: dated note — R668(b)'s "loud under U06's floor" does not hold; every case was stored with attempt 1 kept, a quiet yield loss of 9 fields across 4 papers (Q5). Class 2 stands (a missing value, not a wrong one). The row's evidence is now F6: 4 of 6 after STATED-only feedback against 0 of 19 after any other feedback, 3 of the 4 by recorded codes. R694(e) — INT-r12-1's fix is unit U37: options R-1 and R-2 of 12v_RSA.md §Q8 together, in one commit — the feedback header names the whole schema (every field, with the count) and the output instruction is repeated after the feedback block. Attempt 2 only; no attempt-1 text changes (R670(b)). R-3 is rejected: a structure change inside elicit is invisible to the pin (Q3). R-4 is rejected on the conflict the read-out names. The elicited pin moves; the non-elicited pin must not. U37 goes before U17, as the read-out proposes. R694(f) — INT-s12-1's fix is unit U38: option S-1, the precheck consults the paper text, so a snippet whose ellipsis is verbatim in the text is not flagged; S-2 is folded in (a snippet is never replaced with "" when retries run out — the original stays, and the write boundary decides). No pin moves; no rehearsal; its acceptance tests are its gate. U38 goes at P1's tail. P1's fix units: 35 → 37. R694(g) — Proposed row, for the PI to confirm or strike at U37A's item 0: the elicited prompt hash renders the feedback template through a sentinel but does not cover the attempt-2 message structure (Q3's third finding) — ID INT-v12-1, Class 2, P1, E-PIN family, text cell quoted from the read-out; its fix is pin coverage of the structure, not built in U37. R694(h) — U37's rehearsal (R539) runs after U37's commit, on the six STATED-only-feedback cases' papers and the 12 papers of Rehearsal A, under its own brief; its test is attempt-2 recovery after STATED-only feedback, F6's 4 of 6 as the baseline, with stored outcomes reported, not compared (R612(b) form). No model call before that brief. R694(i) — U37 opens with a Phase 1 under the brief below: the acceptance tests written and run against HEAD, failing as predicted, before any template edit. | PI, 2026-10-23, during session 12v, on architect recommendation, on the 12v-RSA final report (cc2d83a) |
 
 The decision log in this file ends at R694.
+
+**Block 93.** *Transcribed 2026-10-23 (item 0 of the 12v-U37B brief), in its own commit with the Phase 1 record and the INT-v12-1 section, in the R597(e) form:* ruling R695, made by PI on architect recommendation on 2026-10-23 UTC, during session 12v, on the 12v-U37A report stopped before step 2f (item 0 `1e15b50784ee145973223da6ba7be7b935e6ed99`). The 12v-U37B task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12v-R695] — U37A's stop upheld: Phase 1 commits its record, the test file
+  enters tests/ with the fix (12u-U16B's form); INT-v12-1 confirmed; T4 narrowed; U37's Phase 2
+  opens
+STATUS: PI ruling, 2026-10-23 UTC, session 12v, on architect recommendation, on the 12v-U37A
+  report stopped before step 2f (item 0 1e15b50784ee145973223da6ba7be7b935e6ed99). Transcribe
+  as Block 93 at item 0 of the 12v-U37B brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12v-U37A report):
+  MEASURED: "Commit: 1e15b50784ee145973223da6ba7be7b935e6ed99, parent cc2d83a, pushed, 0 0";
+    "r694.txt: 897c1e58…9f6c / 5103 / 62, equal to your hash"; "numstat 76 / 3; 9,043 lines";
+    "prefix_check --expected-row INT-s12-1 INT-r12-1: both rows PASS"; "that bullet's old text is
+    a strict prefix of its new text"; "INT-v12-1: not opened"; "2 failed, 3 passed in 0.28s";
+    fixtures "attempt-1 messages d3c047de…1e31; mixed-failure entries 5f8c1121…90b7;
+    non-elicited pin d3672ab6…ff5c; feedback_block_head.txt … 5a904b45…c499"; "elicited
+    8f0aeecd…3488, non-elicited d3672ab6…ff5c, elicitation_pass1 prompt hash 18ac4255…2f1c";
+    "tests/test_u37_feedback_block.py (ba86e629…0af)" at "~/scratch/12v-u37a/staged/";
+    "evidence-engine: clean, HEAD 1e15b50, 0 0"; "Ledger: 51585db".
+  READ (CC's): "CLAUDE.md says "A commit is a green tree (R40)""; the census's three tests —
+    "test_feedback_block.py::test_clean_fields_are_not_mentioned",
+    "test_elicitation_pipeline.py::test_the_elicited_requests_are_byte_identical",
+    "test_prompt_hash_coverage.py::test_the_feedback_sentinel_carries_every_line_template";
+    "T4 is environmental: the tuple includes the installed client-library versions".
+  PI (2026-10-23): INT-v12-1 is confirmed.
+  INFERRED: none.
+
+R695(a) — The item-0 commit 1e15b50 stands: Block 92, the three notes, the closure bullet's note
+  verified by its strict-prefix check (the prefix_check FAIL line on a non-row is the case 1c
+  anticipated; no action). The ledger 51585db stands.
+R695(b) — The stop is upheld; step 2f was an architect clause in conflict with R40 and is
+  withdrawn. The form is 12u-U16B's: Phase 1 commits its record — the report, fixtures, the HEAD
+  run output, the pin preview, the census — under 12v_U37A/, with the test file kept there as
+  evidence (not under tests/); the test file enters tests/ in the fix commit, where every test
+  passes (option (c)). Options (a) and (b) are rejected: a red tree and a strict xfail each put
+  the defect's pin on main ahead of its fix.
+R695(c) — INT-v12-1 is confirmed (R694(g)). Opened at U37B's item 0 in a section "L (12v
+  additions, R694)" in the R672(f) form, chained recount baseline 278 (recount_12s_close.py's
+  JSON), text cell the Q3 sentence quoted from 12v_RSA.md, Class 2, P1, governing R694(g), R695(c),
+  evidence 12v_RSA.md §Q3. Recount 279: Class 1 / 2 / 3 = 94 / 54 / 131, 0 unclassed; P1 60 rows
+  (25 / 23 / 12). R510 for 12v so far: rows in 1, rows out 0, no class move.
+R695(d) — T4 is narrowed to the non-elicited arm's prompt-hash components (every stage's
+  prompt_hash of that arm), not the whole tuple, so an installed-library upgrade does not fail it;
+  the whole-tuple comparison stays the session-close check by pin_tuples.py. T1 stands as
+  written (every field name, the count, the class names — R694(e)'s words govern over §11's).
+  T5's constraint on Phase 2 is accepted: a passing field is named in the header only, never in
+  the failed-entry form.
+R695(e) — Phase 2's rewrite list (R690(b)) is the census's three: test_clean_fields_are_not_
+  mentioned is rewritten to assert a passing field appears in the header and not in the failed-
+  entry form; test_the_elicited_requests_are_byte_identical has its ELICITED_REQUESTS_SHA256
+  rewritten to the post-fix value, measured in the commit, under its id; test_the_feedback_
+  sentinel_carries_every_line_template is extended to the new header and trailing instruction.
+  No test is deleted. Any further test the gate exposes is rewritten under its id, listed, and
+  the gate re-run once (R690(c)).
+R695(f) — Expected after the fix, to be measured: the elicited pin moves from 8f0aeecd…3488 and
+  elicitation_pass1's prompt hash from 18ac4255…2f1c; the non-elicited pin stays d3672ab6…ff5c;
+  attempt-1 messages stay d3c047de…1e31. Collection 3,365 + 5 = 3,370; the gate 3,352 passed /
+  1 xfailed / 17 deselected on 3,353 selected; band 791–966 s. A different count is reported,
+  not adapted to.
+R695(g) — U37's Phase 2 opens under the brief below. The rehearsal (R694(h)) follows under its
+  own brief after the fix commit's gate; no model call in Phase 2.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-23 | R695(a) — The item-0 commit 1e15b50 stands: Block 92, the three notes, the closure bullet's note verified by its strict-prefix check (the prefix_check FAIL line on a non-row is the case 1c anticipated; no action). The ledger 51585db stands. R695(b) — The stop is upheld; step 2f was an architect clause in conflict with R40 and is withdrawn. The form is 12u-U16B's: Phase 1 commits its record — the report, fixtures, the HEAD run output, the pin preview, the census — under 12v_U37A/, with the test file kept there as evidence (not under tests/); the test file enters tests/ in the fix commit, where every test passes (option (c)). Options (a) and (b) are rejected: a red tree and a strict xfail each put the defect's pin on main ahead of its fix. R695(c) — INT-v12-1 is confirmed (R694(g)). Opened at U37B's item 0 in a section "L (12v additions, R694)" in the R672(f) form, chained recount baseline 278 (recount_12s_close.py's JSON), text cell the Q3 sentence quoted from 12v_RSA.md, Class 2, P1, governing R694(g), R695(c), evidence 12v_RSA.md §Q3. Recount 279: Class 1 / 2 / 3 = 94 / 54 / 131, 0 unclassed; P1 60 rows (25 / 23 / 12). R510 for 12v so far: rows in 1, rows out 0, no class move. R695(d) — T4 is narrowed to the non-elicited arm's prompt-hash components (every stage's prompt_hash of that arm), not the whole tuple, so an installed-library upgrade does not fail it; the whole-tuple comparison stays the session-close check by pin_tuples.py. T1 stands as written (every field name, the count, the class names — R694(e)'s words govern over §11's). T5's constraint on Phase 2 is accepted: a passing field is named in the header only, never in the failed-entry form. R695(e) — Phase 2's rewrite list (R690(b)) is the census's three: test_clean_fields_are_not_ mentioned is rewritten to assert a passing field appears in the header and not in the failed- entry form; test_the_elicited_requests_are_byte_identical has its ELICITED_REQUESTS_SHA256 rewritten to the post-fix value, measured in the commit, under its id; test_the_feedback_ sentinel_carries_every_line_template is extended to the new header and trailing instruction. No test is deleted. Any further test the gate exposes is rewritten under its id, listed, and the gate re-run once (R690(c)). R695(f) — Expected after the fix, to be measured: the elicited pin moves from 8f0aeecd…3488 and elicitation_pass1's prompt hash from 18ac4255…2f1c; the non-elicited pin stays d3672ab6…ff5c; attempt-1 messages stay d3c047de…1e31. Collection 3,365 + 5 = 3,370; the gate 3,352 passed / 1 xfailed / 17 deselected on 3,353 selected; band 791–966 s. A different count is reported, not adapted to. R695(g) — U37's Phase 2 opens under the brief below. The rehearsal (R694(h)) follows under its own brief after the fix commit's gate; no model call in Phase 2. | PI, 2026-10-23, during session 12v, on architect recommendation, on the 12v-U37A report stopped before step 2f (item 0 1e15b50) |
+
+The decision log in this file ends at R695.

@@ -1,0 +1,14 @@
+{
+ "ATTEMPT1_MESSAGES_SHA256": "d3c047de668aa59bcf6e486a747843a8cb7c3d724fe67ccb69ebfa10e4101e31",
+ "MIXED_ENTRIES_SHA256": "5f8c11217eec7daebe25d5654c2cd50b6a8145c8822860bd35559df346d590b7",
+ "mixed_failed_fields": [
+  "autonomy_level",
+  "robot_platform",
+  "study_type"
+ ],
+ "n_fields": 20,
+ "n_units": 4,
+ "stated_only_block_chars": 601,
+ "stated_only_block_sha256": "6cfa960dbb2406ea8f36fa62a60e810189406f23c8ce1b3744bb025017386e20",
+ "stated_only_failed_field": "study_type"
+}

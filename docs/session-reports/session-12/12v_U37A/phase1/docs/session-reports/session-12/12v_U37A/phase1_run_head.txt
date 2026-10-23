@@ -1,0 +1,61 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 5 items
+
+tests/test_u37_feedback_block.py::test_u37_the_feedback_header_names_every_schema_field FAILED [ 20%]
+tests/test_u37_feedback_block.py::test_u37_the_output_instruction_is_repeated_after_the_feedback FAILED [ 40%]
+tests/test_u37_feedback_block.py::test_u37_attempt_1_prompt_text_is_unchanged PASSED [ 60%]
+tests/test_u37_feedback_block.py::test_u37_the_non_elicited_pin_is_unchanged PASSED [ 80%]
+tests/test_u37_feedback_block.py::test_u37_a_non_stated_feedback_block_still_lists_only_its_failed_fields_codes PASSED [100%]
+
+=================================== FAILURES ===================================
+____________ test_u37_the_feedback_header_names_every_schema_field _____________
+
+cb = Codebook(review='surgical_autonomy', version='2.0', date='2026-03-15', fields=({'name': 'study_type', 'field_class': '...fec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=())
+names = ('study_type', 'robot_platform', 'task_performed', 'sample_size', 'surgical_domain', 'autonomy_level', ...)
+classes = {'autonomy_level': 'judgment', 'clinical_readiness_assessment': 'judgment', 'comparison_to_human': 'stated', 'country': 'inferable', ...}
+
+    def test_u37_the_feedback_header_names_every_schema_field(cb, names, classes):
+        """INT-r12-1, 12v_RSA.md §11 R-1 ("the block contains the count 20 and the three class names") as
+        R694(e) widens it ("the feedback header names the whole schema (every field, with the count)"): for a
+        STATED-only failure the block names every codebook field, the count and the three classes, not only
+        the failed field and its class. Fails on the unmodified tree, which names one field."""
+        um = build_unit_map(0, TEXT)
+        result, failed = _stated_only_failure(names, classes, um.n)
+        block = build_feedback_block(result, cb.raw)
+        assert block, "a failing field must produce a block"
+        missing = [n for n in names if n not in block]
+>       assert not missing, f"the block names {len(names) - len(missing)} of {len(names)} fields; missing {missing}"
+E       AssertionError: the block names 1 of 20 fields; missing ['robot_platform', 'task_performed', 'sample_size', 'surgical_domain', 'autonomy_level', 'validation_setting', 'task_monitor', 'task_generate', 'task_select', 'task_execute', 'system_maturity', 'study_design', 'country', 'primary_outcome_metric', 'primary_outcome_value', 'comparison_to_human', 'secondary_outcomes', 'key_limitation', 'clinical_readiness_assessment']
+E       assert not ['robot_platform', 'task_performed', 'sample_size', 'surgical_domain', 'autonomy_level', 'validation_setting', ...]
+
+tests/test_u37_feedback_block.py:128: AssertionError
+________ test_u37_the_output_instruction_is_repeated_after_the_feedback ________
+
+cb = Codebook(review='surgical_autonomy', version='2.0', date='2026-03-15', fields=({'name': 'study_type', 'field_class': '...fec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=())
+names = ('study_type', 'robot_platform', 'task_performed', 'sample_size', 'surgical_domain', 'autonomy_level', ...)
+classes = {'autonomy_level': 'judgment', 'clinical_readiness_assessment': 'judgment', 'comparison_to_human': 'stated', 'country': 'inferable', ...}
+
+    def test_u37_the_output_instruction_is_repeated_after_the_feedback(cb, names, classes):
+        """INT-r12-1, 12v_RSA.md §11 R-2: attempt 2's user turn carries the output instruction after the
+        feedback block, and still carries it before the paper text. Fails on the unmodified tree, where it
+        appears once, before the paper."""
+        um = build_unit_map(0, TEXT)
+        result, _ = _stated_only_failure(names, classes, um.n)
+        feedback = build_feedback_block(result, cb.raw)
+        user = PL.pass1_messages(PL.pass1_prompt(um, cb.raw, names, feedback))[1]["content"]
+        i_paper, i_fb = user.index(PAPER_HEADING), user.index(FEEDBACK_HEADING)
+        assert i_paper < i_fb, "the feedback follows the paper text"
+        assert OUTPUT_SENTENCE in user[:i_paper], "the instruction before the paper text is kept"
+>       assert OUTPUT_SENTENCE in user[i_fb:], "the output instruction is repeated after the feedback block"
+E       AssertionError: the output instruction is repeated after the feedback block
+E       assert 'Emit exactly one entry per field' in "## Your previous response did not meet the contract on 1 field(s)\n\nEach one below shows what you returned and what its contract requires. Fix these, and re-emit EVERY field in the schema — this is a full replacement response, not a patch.\n\n- **study_type** [STATED]\n    you returned value: 'NR'\n    with unit_indices: []\n    ✗ VALUE_WITHOUT_CITATION — a value was asserted with nothing cited behind it. The contract is: cite at least one unit that asserts the value, before the value. If nothing in this paper can be cited for it, the value must be NO_EVIDENCE_LOCATABLE with an EMPTY citation list."
+
+tests/test_u37_feedback_block.py:146: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_u37_feedback_block.py::test_u37_the_feedback_header_names_every_schema_field
+FAILED tests/test_u37_feedback_block.py::test_u37_the_output_instruction_is_repeated_after_the_feedback
+========================= 2 failed, 3 passed in 0.28s ==========================

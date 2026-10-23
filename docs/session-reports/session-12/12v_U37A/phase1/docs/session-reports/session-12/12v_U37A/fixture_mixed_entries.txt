@@ -1,0 +1,13 @@
+- **study_type** [STATED]
+    you returned value: '12 patients'
+    with unit_indices: []
+    ✗ VALUE_WITHOUT_CITATION — a value was asserted with nothing cited behind it. The contract is: cite at least one unit that asserts the value, before the value. If nothing in this paper can be cited for it, the value must be NO_EVIDENCE_LOCATABLE with an EMPTY citation list.
+- **robot_platform** [STATED]
+    you returned value: ''
+    with unit_indices: []
+    ✗ FIELD_MISSING — no entry for this field appeared in your response. Every field in the schema needs exactly one entry.
+- **autonomy_level** [JUDGMENT]
+    you returned value: 'Small cohort'
+    with unit_indices: [2]
+    with 0 reasoning step(s)
+    ✗ STEPS_MISSING — a JUDGMENT field needs `reasoning_steps`, not a bare value with a citation. The contract is: reason in steps where EVERY step either cites at least one unit or sets criteria_application: true, then the value. At least one step must cite a unit.

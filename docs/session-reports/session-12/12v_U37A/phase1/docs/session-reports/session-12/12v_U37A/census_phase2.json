@@ -1,0 +1,334 @@
+{
+ "ast": {
+  "tests/analysis/paper1/test_judge.py::test_5_arm_produces_10_pairwise": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_arm_permutation_matches_prompt_order": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_call_error_wraps_client_exception": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_duplicate_arm_names": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_fewer_than_two_arms": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_happy_path_3_arm": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_parse_error_on_malformed_json": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_parse_error_on_schema_violation": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_prompt_hash_deterministic": [
+   "prompt_hash",
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_prompt_hash_differs_with_different_inputs": [
+   "prompt_hash",
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_prompt_hash_is_sha256_hex": [
+   "prompt_hash",
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_seed_passed_to_ollama_options": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_timestamp_iso_parses": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge.py::test_zero_arms": [
+   "run_pass1"
+  ],
+  "tests/analysis/paper1/test_judge_pass2.py::test_determinism_same_inputs_same_seed_and_prompt_hash": [
+   "prompt_hash"
+  ],
+  "tests/analysis/paper1/test_judge_pass2.py::test_prompt_hash_is_sha256_hex": [
+   "prompt_hash"
+  ],
+  "tests/test_effective_config.py::test_a_cloud_prompt_hash_covers_its_parameters": [
+   "prompt_hash"
+  ],
+  "tests/test_effective_config.py::test_a_pico_edit_moves_the_screening_prompt_hashes_and_not_the_others": [
+   "prompt_hash"
+  ],
+  "tests/test_effective_config.py::test_a_title_edit_moves_only_the_abstract_primary_prompt_hash": [
+   "prompt_hash"
+  ],
+  "tests/test_effective_config.py::test_hashes_are_deterministic": [
+   "prompt_hash"
+  ],
+  "tests/test_extraction_signatures.py::test_cfg_is_required": [
+   "elicit",
+   "run_pass1"
+  ],
+  "tests/test_extraction_signatures.py::test_parameters_after_paper_id_are_keyword_only": [
+   "run_pass1"
+  ],
+  "tests/test_feedback_block.py::test_a_short_value_is_not_marked": [
+   "FEEDBACK_TRUNCATION_MARKER",
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_clean_fields_are_not_mentioned": [
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_it_demands_a_full_replacement_not_a_patch": [
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_it_is_deterministic": [
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_it_names_no_field_of_its_own": [
+   "_requirement",
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_it_names_the_field_the_code_the_output_and_the_requirement": [
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_it_offers_the_escape_token_on_every_uncited_value": [
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_it_teaches_directly_stated_on_an_inferable_failure": [
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_no_failing_fields_means_no_block": [
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_the_echo_is_capped_and_the_truncation_is_visible": [
+   "FEEDBACK_TRUNCATION_MARKER",
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_the_out_of_range_requirement_states_the_real_range": [
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_the_requirement_is_class_specific": [
+   "build_feedback_block"
+  ],
+  "tests/test_feedback_block.py::test_unresolved_indices_are_echoed_verbatim": [
+   "build_feedback_block"
+  ],
+  "tests/test_pass1_contract_text.py::test_a_judgment_field_needs_a_step_that_cites_a_unit": [
+   "build_feedback_block"
+  ],
+  "tests/test_pass1_contract_text.py::test_the_stated_and_judgment_contract_sentences_are_in_the_pass1_prompt": [
+   "_requirement",
+   "prompt_hash",
+   "sentinel_feedback_block",
+   "sentinel_pass1_prompt"
+  ],
+  "tests/test_prompt_hash_coverage.py::test_elicitation_pass1_hashes_both_attempts": [
+   "render_messages"
+  ],
+  "tests/test_prompt_hash_coverage.py::test_the_feedback_sentinel_carries_every_class_accompaniment": [
+   "_requirement"
+  ],
+  "tests/test_prompt_hash_coverage.py::test_the_feedback_sentinel_carries_every_line_template": [
+   "FEEDBACK_TRUNCATION_MARKER"
+  ],
+  "tests/test_request_capture.py::test_elicitation_pass1": [
+   "run_pass1"
+  ],
+  "tests/test_run_manifest.py::test_a_changed_prompt_hash_is_a_pin_mismatch": [
+   "render_messages"
+  ],
+  "tests/test_thinking_channel.py::test_think_is_not_a_caller_override": [
+   "elicit",
+   "run_pass1"
+  ],
+  "tests/test_u37_feedback_block.py::test_u37_a_non_stated_feedback_block_still_lists_only_its_failed_fields_codes": [
+   "build_feedback_block"
+  ],
+  "tests/test_u37_feedback_block.py::test_u37_attempt_1_prompt_text_is_unchanged": [
+   "build_feedback_block",
+   "pass1_prompt"
+  ],
+  "tests/test_u37_feedback_block.py::test_u37_the_feedback_header_names_every_schema_field": [
+   "build_feedback_block"
+  ],
+  "tests/test_u37_feedback_block.py::test_u37_the_non_elicited_pin_is_unchanged": [
+   "pin_tuple"
+  ],
+  "tests/test_u37_feedback_block.py::test_u37_the_output_instruction_is_repeated_after_the_feedback": [
+   "build_feedback_block",
+   "pass1_prompt"
+  ],
+  "tests/test_undeclared_override.py::test_T4_ft_config_equals_the_resolver_in_every_hash_and_source": [
+   "prompt_hash"
+  ]
+ },
+ "grep": {
+  "tests/test_duplicate_on_pass1_attempt_2.py": [
+   [
+    109,
+    "did not meet the contract"
+   ]
+  ],
+  "tests/test_elicitation_pipeline.py": [
+   [
+    508,
+    "elicitation_pass1"
+   ],
+   [
+    509,
+    "did not meet the contract"
+   ]
+  ],
+  "tests/test_elicitation_sentinel.py": [
+   [
+    70,
+    "elicitation_pass1"
+   ],
+   [
+    81,
+    "elicitation_pass1"
+   ],
+   [
+    97,
+    "elicitation_pass1"
+   ],
+   [
+    115,
+    "elicitation_pass1"
+   ]
+  ],
+  "tests/test_feedback_block.py": [
+   [
+    123,
+    "re-emit EVERY field"
+   ]
+  ],
+  "tests/test_pass1_contract_text.py": [
+   [
+    42,
+    "elicitation_pass1"
+   ],
+   [
+    116,
+    "elicitation_pass1"
+   ],
+   [
+    117,
+    "elicitation_pass1"
+   ]
+  ],
+  "tests/test_pin_records.py": [
+   [
+    7,
+    "elicitation_pass1"
+   ],
+   [
+    42,
+    "elicitation_pass1"
+   ]
+  ],
+  "tests/test_prompt_hash_coverage.py": [
+   [
+    93,
+    "elicitation_pass1"
+   ],
+   [
+    94,
+    "elicitation_pass1"
+   ],
+   [
+    95,
+    "elicitation_pass1"
+   ],
+   [
+    102,
+    "elicitation_pass1"
+   ],
+   [
+    109,
+    "elicitation_pass1"
+   ],
+   [
+    113,
+    "elicitation_pass1"
+   ],
+   [
+    116,
+    "elicitation_pass1"
+   ],
+   [
+    122,
+    "elicitation_pass1"
+   ],
+   [
+    130,
+    "elicitation_pass1"
+   ],
+   [
+    137,
+    "elicitation_pass1"
+   ],
+   [
+    138,
+    "did not meet the contract"
+   ],
+   [
+    145,
+    "elicitation_pass1"
+   ],
+   [
+    146,
+    "elicitation_pass1"
+   ]
+  ],
+  "tests/test_request_capture.py": [
+   [
+    86,
+    "elicitation_pass1"
+   ],
+   [
+    271,
+    "elicitation_pass1"
+   ],
+   [
+    280,
+    "elicitation_pass1"
+   ],
+   [
+    282,
+    "elicitation_pass1"
+   ]
+  ],
+  "tests/test_u37_feedback_block.py": [
+   [
+    7,
+    "re-emit EVERY field"
+   ],
+   [
+    8,
+    "Emit exactly one entry per field"
+   ],
+   [
+    36,
+    "Emit exactly one entry per field"
+   ],
+   [
+    38,
+    "did not meet the contract"
+   ],
+   [
+    46,
+    "d3672ab6"
+   ]
+  ],
+  "tests/test_units_as_source_slices.py": [
+   [
+    230,
+    "elicitation_pass1"
+   ],
+   [
+    251,
+    "elicitation_pass1"
+   ]
+  ]
+ }
+}

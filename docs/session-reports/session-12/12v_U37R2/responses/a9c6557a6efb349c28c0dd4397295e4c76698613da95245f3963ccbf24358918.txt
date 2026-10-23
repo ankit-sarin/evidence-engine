@@ -1,0 +1,49 @@
+Okay, so I need to extract data from this paper for a systematic review. The user has provided a detailed schema with 20 fields divided into three categories: STATED, INFERABLE, and JUDGMENT. Each field has specific instructions on how to extract the information.
+
+Starting with the STATED fields:
+
+1. **study_type**: I need to determine if this is original research, a case report, review, etc. The paper seems to describe their own study, so it's Original Research. Citing [S20] where they state it's their work.
+
+2. **robot_platform**: They mention CISOBOT, which is the system they developed. Cited in [S278].
+
+3. **task_performed**: The robot assists with tasks like needle driving and suture procedures. Mentioned in [S306] and [S341].
+
+4. **sample_size**: The paper doesn't specify a sample size, so it's NR. No units cite this.
+
+5. **validation_setting**: They used an in vitro setup with a pelvi-trainer. Cited in [S287].
+
+6. **primary_outcome_metric**: The main metric is force exerted on the abdominal wall. Mentioned in [S301].
+
+7. **primary_outcome_value**: The forces are minimized, but exact values aren't provided. So NR.
+
+8. **comparison_to_human**: They don't compare to human performance directly. Cited as NR with no units.
+
+9. **secondary_outcomes**: They mention trajectory planning and collision avoidance. Cited in [S306].
+
+Moving to INFERABLE fields:
+
+1. **surgical_domain**: The paper focuses on laparoscopic surgery, which falls under General Surgery. Cited in [S2] and [S75].
+
+2. **task_monitor**: The robot uses sensors for feedback, so it's R. Cited in [S132].
+
+3. **task_generate**: The surgeon defines the target, so H. Cited in [S196].
+
+4. **task_select**: The system computes the trajectory, so R. Cited in [S187].
+
+5. **task_execute**: The robot moves autonomously, so R. Cited in [S203].
+
+6. **country**: The authors are from Spain. Cited in [S4] and [S5].
+
+For JUDGMENT fields:
+
+1. **autonomy_level**: The system plans trajectories without human control, so Level 2 (Task autonomy). Supported by sections on AGS.
+
+2. **system_maturity**: They built a research prototype, CISOBOT. Cited in [S278].
+
+3. **study_design**: It's an initial technical demonstration of their system. Cited in [S20] and [S21].
+
+4. **key_limitation**: The experiments are in vitro, not clinical. Cited in [S275].
+
+5. **clinical_readiness_assessment**: It's early-stage research since it's tested on a pelvi-trainer. Supported by the validation setting.
+
+I need to ensure each field is correctly cited and follows the schema's instructions. For fields where no evidence was found, I should return NO_EVIDENCE_LOCATABLE with an empty unit list.

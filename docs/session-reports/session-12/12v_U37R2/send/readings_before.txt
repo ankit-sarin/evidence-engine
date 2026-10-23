@@ -1,0 +1,19 @@
+== 2026-10-23T18:29:13Z
+2026-10-23T18:29:13.728702221Z /api/version {"version":"0.21.0"}
+2026-10-23T18:29:13.736691170Z /api/ps {"models":[]}
+NRestarts=0
+earlyoom kills this boot: 0
+NV_ERR_NO_MEMORY this boot: 15
+MemAvailable:   115201420 kB
+lock free
+-- concurrent (ffmpeg / surgical-cv / pytest / nvenc):
+ 949383 Thu Oct 22 18:09:21 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python3 /home/ankitsarin/projects/surgical-cv/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 7865
+2283343 Fri Oct 23 18:28:43 2026 /bin/bash -c source /home/ankitsarin/.claude/shell-snapshots/snapshot-bash-1792774766281-o9ydnx.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \bu
+2283357 Fri Oct 23 18:28:43 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python /home/ankitsarin/projects/surgical-cv-spike/spike/edit/memwatch.py --tag ES1b_021_burn-nvenc-bf0 --max-hours 1
+2283358 Fri Oct 23 18:28:43 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python /home/ankitsarin/projects/surgical-cv-spike/spike/edit/busy.py --watch /home/ankitsarin/edit-spike/logs/ES1b_021
+2283360 Fri Oct 23 18:28:43 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python /home/ankitsarin/projects/surgical-cv-spike/spike/edit/preview.py UCD-FIL-021 --burn --encoder nvenc-bf0 --name 
+2283366 Fri Oct 23 18:28:43 2026 ffmpeg -nostdin -hide_banner -y -hwaccel cuda -hwaccel_output_format cuda -i /mnt/nas/or-raw/edit-spike-sandbox/UCD-FIL-021_video.mp4 -map 0:v:0 -an -sn -dn -map_metad
+2283873 Fri Oct 23 18:29:13 2026 /bin/bash -c source /home/ankitsarin/.claude/shell-snapshots/snapshot-bash-1792773934994-7a8ti5.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \bu
+2283875 Fri Oct 23 18:29:13 2026 /bin/bash -c source /home/ankitsarin/.claude/shell-snapshots/snapshot-bash-1792773934994-7a8ti5.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \bu
+2283895 Fri Oct 23 18:29:13 2026 /bin/bash -c source /home/ankitsarin/.claude/shell-snapshots/snapshot-bash-1792773934994-7a8ti5.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \bu
+2283366, ffmpeg, 306 MiB

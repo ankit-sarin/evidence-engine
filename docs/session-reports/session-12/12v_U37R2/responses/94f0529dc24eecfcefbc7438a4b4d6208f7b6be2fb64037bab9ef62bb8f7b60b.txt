@@ -1,0 +1,41 @@
+Okay, so I need to extract data from this paper for a systematic review. The user has provided a detailed schema with specific fields and instructions on how to fill each one. Let me go through each field step by step.
+
+Starting with **study_type**, the paper doesn't explicitly state it's a systematic review or meta-analysis. It describes methods, experiments, and results, so I'll classify it as "Original Research".
+
+Next is **robot_platform**. The paper mentions CISOBOT, which is a two-arm robotic system used in their experiments.
+
+For **task_performed**, the robot assists in tasks like needle delivery and suture procedures, so that's what I'll note.
+
+The **sample_size** isn't explicitly mentioned since it's an in vitro study with no specific number of cases or subjects. So, I'll mark this as NR.
+
+Looking at **validation_setting**, the experiments were conducted in vitro using a pelvi-trainer to emulate the abdominal cavity. That fits under "Ex vivo".
+
+The **primary_outcome_metric** is about force control and trajectory accuracy, which are key performance indicators mentioned in the results.
+
+For **primary_outcome_value**, the paper reports forces exerted on the abdomen and distances between tools, so I'll include those exact values as stated.
+
+Regarding **comparison_to_human**, the paper doesn't compare the robot's performance directly to a human surgeon. So, it's NR with no citations needed.
+
+**secondary_outcomes** include metrics like distance from target and tool velocities, which are additional outcomes beyond the primary ones.
+
+Moving on to **surgical_domain**, the tasks relate to general surgery procedures like suturing and needle delivery.
+
+The **task_monitor** is handled by the robot using force feedback without human intervention for perception, so it's R.
+
+For **task_generate**, the robot computes trajectories based on sensor data, which falls under R.
+
+In terms of **task_select**, the robot autonomously selects paths from its generated options, so again R applies.
+
+The **task_execute** is fully autonomous as the robot moves without human control during these tasks.
+
+The **country** can be inferred from the authors' affiliations, which are in Spain.
+
+For **autonomy_level**, since the robot plans and executes tasks with minimal human oversight, it's Level 4 (High autonomy).
+
+**system_maturity** is a research prototype as CISOBOT was developed specifically for this study.
+
+The **study_design** is an initial technical demonstration showing the feasibility of the system.
+
+The key limitation identified is the reliance on accurate fulcrum point estimation, which can be challenging in real surgical scenarios.
+
+Finally, **clinical_readiness_assessment** is at the proof of concept stage since it's tested in vitro without clinical trials.

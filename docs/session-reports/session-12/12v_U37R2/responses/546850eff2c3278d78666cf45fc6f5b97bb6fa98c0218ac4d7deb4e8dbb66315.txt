@@ -1,0 +1,21 @@
+Alright, I'm trying to help extract data from this paper for a systematic review. Let me go through each field step by step.
+
+Starting with **study_type**, the paper doesn't explicitly state it's a systematic review or meta-analysis. It describes methods and experiments, so it's likely "Original Research".
+
+Next is **robot_platform**. The paper mentions CISOBOT, which is developed at the University of Malaga. So that's straightforward.
+
+For **task_performed**, the robot assists in tasks like needle delivery and avoids collisions with the surgeon's tools. That fits as "Surgical assistance; Path planning".
+
+The **sample_size** isn't mentioned anywhere in the paper. I'll note it as NR but need to cite where the absence is stated, which there isn't, so it should be NO_EVIDENCE_LOCATABLE.
+
+Looking at **validation_setting**, the experiments are done on a pelvi-trainer, which is an ex vivo model. So that's "Ex vivo".
+
+The **primary_outcome_metric** is about force control and trajectory accuracy, as mentioned in the results.
+
+For **primary_outcome_value**, the paper doesn't provide specific numeric values, so it's NR with no citation.
+
+**comparison_to_human** isn't discussed either, so NR without a citation.
+
+Lastly, **secondary_outcomes** aren't reported, so again NR without a citation.
+
+I need to make sure each field follows the contract, especially citing correctly or noting NO_EVIDENCE_LOCATABLE when nothing is found.

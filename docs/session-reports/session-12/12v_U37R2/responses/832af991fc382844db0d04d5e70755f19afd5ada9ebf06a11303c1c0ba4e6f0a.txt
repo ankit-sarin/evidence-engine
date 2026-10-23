@@ -1,0 +1,21 @@
+Okay, I need to help extract data from a research paper for a systematic review. The user has provided specific instructions on how to structure each field and what evidence to cite. Let me go through each field step by step.
+
+Starting with **study_type**, the paper is about developing a robotic system for surgery. It describes methods, results, and conclusions, so it's original research. I should find where in the text this is explicitly stated or implied. Looking at the introduction and abstract, they mention development and testing, which fits "Original Research."
+
+Next, **robot_platform**. The paper talks about a magnetic anchoring robot system with specific components like handles with OPMs and imaging units. It's described as a prototype, so I'll list it exactly as stated.
+
+For **task_performed**, the robot does positioning for LESS procedures. The abstract mentions autonomous positioning, so that's clear.
+
+**sample_size** is tricky because the paper doesn't mention human or animal subjects. They used phantoms and tissue experiments but didn't specify numbers of cases. So I should mark this as NR with a citation to where it's not mentioned.
+
+Moving on to **validation_setting**, they tested in vitro (phantom) and ex vivo (tissue). The results section mentions both, so I'll list them accordingly.
+
+**primary_outcome_metric** is the positioning error, which is stated in the results. They measured an average of 1.622 mm, so that's direct from the text.
+
+The **primary_outcome_value** is given as 1.622 mm with units, so I'll cite where that number appears.
+
+For **comparison_to_human**, the paper doesn't compare their system to manual methods or humans. They focus on technical performance, so this should be NR with a citation showing no comparison was made.
+
+Lastly, **secondary_outcomes** aren't mentioned beyond the primary metric, so it's NR as well.
+
+I need to make sure each field cites the correct units and follows the schema rules. If I can't find evidence for something, I must return NO_EVIDENCE_LOCATABLE with an empty list or state NR if the paper explicitly doesn't mention it.

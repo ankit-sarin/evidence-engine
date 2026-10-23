@@ -1,0 +1,47 @@
+{"fields": [
+    {
+        "field_name": "study_type",
+        "unit_indices": [20],
+        "value": "Original Research"
+    },
+    {
+        "field_name": "robot_platform",
+        "unit_indices": [276, 281],
+        "value": "CISOBOT; developed at the University of Malaga"
+    },
+    {
+        "field_name": "task_performed",
+        "unit_indices": [305],
+        "value": "needle delivery for suture procedure"
+    },
+    {
+        "field_name": "sample_size",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "validation_setting",
+        "unit_indices": [284],
+        "value": "Ex vivo"
+    },
+    {
+        "field_name": "primary_outcome_metric",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "primary_outcome_value",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "comparison_to_human",
+        "unit_indices": [],
+        "value": "NR"
+    },
+    {
+        "field_name": "secondary_outcomes",
+        "unit_indices": [],
+        "value": "NR"
+    }
+]}

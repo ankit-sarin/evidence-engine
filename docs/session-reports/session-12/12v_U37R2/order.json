@@ -1,0 +1,513 @@
+{
+ "rule": "R697(e): warm-up = 12g_p8 old (as Part A); then per case, ten sends alternating old/new, the first arm alternating by case (case 1 starts old, case 2 new, ...)",
+ "order": [
+  {
+   "seq": 0,
+   "role": "warm-up",
+   "case": "12g_p8",
+   "arm": "old",
+   "request_hash": "285201ce149c0a8e6adb19843be9b4b49a3a9808258e34d3e6197bae7cbbf466",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 1,
+   "role": "scored",
+   "case": "12g_p8",
+   "case_no": 1,
+   "rep": 1,
+   "arm": "old",
+   "request_hash": "285201ce149c0a8e6adb19843be9b4b49a3a9808258e34d3e6197bae7cbbf466",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 2,
+   "role": "scored",
+   "case": "12g_p8",
+   "case_no": 1,
+   "rep": 1,
+   "arm": "new",
+   "request_hash": "c8b03d881999288367fd8ce1172ebff43fbd18f30f013feec6cd856c222596d1",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 3,
+   "role": "scored",
+   "case": "12g_p8",
+   "case_no": 1,
+   "rep": 2,
+   "arm": "old",
+   "request_hash": "285201ce149c0a8e6adb19843be9b4b49a3a9808258e34d3e6197bae7cbbf466",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 4,
+   "role": "scored",
+   "case": "12g_p8",
+   "case_no": 1,
+   "rep": 2,
+   "arm": "new",
+   "request_hash": "c8b03d881999288367fd8ce1172ebff43fbd18f30f013feec6cd856c222596d1",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 5,
+   "role": "scored",
+   "case": "12g_p8",
+   "case_no": 1,
+   "rep": 3,
+   "arm": "old",
+   "request_hash": "285201ce149c0a8e6adb19843be9b4b49a3a9808258e34d3e6197bae7cbbf466",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 6,
+   "role": "scored",
+   "case": "12g_p8",
+   "case_no": 1,
+   "rep": 3,
+   "arm": "new",
+   "request_hash": "c8b03d881999288367fd8ce1172ebff43fbd18f30f013feec6cd856c222596d1",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 7,
+   "role": "scored",
+   "case": "12g_p8",
+   "case_no": 1,
+   "rep": 4,
+   "arm": "old",
+   "request_hash": "285201ce149c0a8e6adb19843be9b4b49a3a9808258e34d3e6197bae7cbbf466",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 8,
+   "role": "scored",
+   "case": "12g_p8",
+   "case_no": 1,
+   "rep": 4,
+   "arm": "new",
+   "request_hash": "c8b03d881999288367fd8ce1172ebff43fbd18f30f013feec6cd856c222596d1",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 9,
+   "role": "scored",
+   "case": "12g_p8",
+   "case_no": 1,
+   "rep": 5,
+   "arm": "old",
+   "request_hash": "285201ce149c0a8e6adb19843be9b4b49a3a9808258e34d3e6197bae7cbbf466",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 10,
+   "role": "scored",
+   "case": "12g_p8",
+   "case_no": 1,
+   "rep": 5,
+   "arm": "new",
+   "request_hash": "c8b03d881999288367fd8ce1172ebff43fbd18f30f013feec6cd856c222596d1",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 11,
+   "role": "scored",
+   "case": "12g_p9",
+   "case_no": 2,
+   "rep": 1,
+   "arm": "new",
+   "request_hash": "abf4586e1ce00854c9c6ebede8b6bb8339776ff0eaf2b89195c607a1f9e056c5",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 12,
+   "role": "scored",
+   "case": "12g_p9",
+   "case_no": 2,
+   "rep": 1,
+   "arm": "old",
+   "request_hash": "036362a38b83146e58c923b2fd94e7233f8427baf02ee7b55af5d8afa13e7d0d",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 13,
+   "role": "scored",
+   "case": "12g_p9",
+   "case_no": 2,
+   "rep": 2,
+   "arm": "new",
+   "request_hash": "abf4586e1ce00854c9c6ebede8b6bb8339776ff0eaf2b89195c607a1f9e056c5",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 14,
+   "role": "scored",
+   "case": "12g_p9",
+   "case_no": 2,
+   "rep": 2,
+   "arm": "old",
+   "request_hash": "036362a38b83146e58c923b2fd94e7233f8427baf02ee7b55af5d8afa13e7d0d",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 15,
+   "role": "scored",
+   "case": "12g_p9",
+   "case_no": 2,
+   "rep": 3,
+   "arm": "new",
+   "request_hash": "abf4586e1ce00854c9c6ebede8b6bb8339776ff0eaf2b89195c607a1f9e056c5",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 16,
+   "role": "scored",
+   "case": "12g_p9",
+   "case_no": 2,
+   "rep": 3,
+   "arm": "old",
+   "request_hash": "036362a38b83146e58c923b2fd94e7233f8427baf02ee7b55af5d8afa13e7d0d",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 17,
+   "role": "scored",
+   "case": "12g_p9",
+   "case_no": 2,
+   "rep": 4,
+   "arm": "new",
+   "request_hash": "abf4586e1ce00854c9c6ebede8b6bb8339776ff0eaf2b89195c607a1f9e056c5",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 18,
+   "role": "scored",
+   "case": "12g_p9",
+   "case_no": 2,
+   "rep": 4,
+   "arm": "old",
+   "request_hash": "036362a38b83146e58c923b2fd94e7233f8427baf02ee7b55af5d8afa13e7d0d",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 19,
+   "role": "scored",
+   "case": "12g_p9",
+   "case_no": 2,
+   "rep": 5,
+   "arm": "new",
+   "request_hash": "abf4586e1ce00854c9c6ebede8b6bb8339776ff0eaf2b89195c607a1f9e056c5",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 20,
+   "role": "scored",
+   "case": "12g_p9",
+   "case_no": 2,
+   "rep": 5,
+   "arm": "old",
+   "request_hash": "036362a38b83146e58c923b2fd94e7233f8427baf02ee7b55af5d8afa13e7d0d",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 21,
+   "role": "scored",
+   "case": "12g_p10",
+   "case_no": 3,
+   "rep": 1,
+   "arm": "old",
+   "request_hash": "6d72943362fd0a226729f1f17f9adcf712d676f3f548130ace48e1574b10baa8",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 22,
+   "role": "scored",
+   "case": "12g_p10",
+   "case_no": 3,
+   "rep": 1,
+   "arm": "new",
+   "request_hash": "775add4d55c109414bd2c3f6694becaf00f544f308cc7e26acb9a7f0f1af3964",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 23,
+   "role": "scored",
+   "case": "12g_p10",
+   "case_no": 3,
+   "rep": 2,
+   "arm": "old",
+   "request_hash": "6d72943362fd0a226729f1f17f9adcf712d676f3f548130ace48e1574b10baa8",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 24,
+   "role": "scored",
+   "case": "12g_p10",
+   "case_no": 3,
+   "rep": 2,
+   "arm": "new",
+   "request_hash": "775add4d55c109414bd2c3f6694becaf00f544f308cc7e26acb9a7f0f1af3964",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 25,
+   "role": "scored",
+   "case": "12g_p10",
+   "case_no": 3,
+   "rep": 3,
+   "arm": "old",
+   "request_hash": "6d72943362fd0a226729f1f17f9adcf712d676f3f548130ace48e1574b10baa8",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 26,
+   "role": "scored",
+   "case": "12g_p10",
+   "case_no": 3,
+   "rep": 3,
+   "arm": "new",
+   "request_hash": "775add4d55c109414bd2c3f6694becaf00f544f308cc7e26acb9a7f0f1af3964",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 27,
+   "role": "scored",
+   "case": "12g_p10",
+   "case_no": 3,
+   "rep": 4,
+   "arm": "old",
+   "request_hash": "6d72943362fd0a226729f1f17f9adcf712d676f3f548130ace48e1574b10baa8",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 28,
+   "role": "scored",
+   "case": "12g_p10",
+   "case_no": 3,
+   "rep": 4,
+   "arm": "new",
+   "request_hash": "775add4d55c109414bd2c3f6694becaf00f544f308cc7e26acb9a7f0f1af3964",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 29,
+   "role": "scored",
+   "case": "12g_p10",
+   "case_no": 3,
+   "rep": 5,
+   "arm": "old",
+   "request_hash": "6d72943362fd0a226729f1f17f9adcf712d676f3f548130ace48e1574b10baa8",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 30,
+   "role": "scored",
+   "case": "12g_p10",
+   "case_no": 3,
+   "rep": 5,
+   "arm": "new",
+   "request_hash": "775add4d55c109414bd2c3f6694becaf00f544f308cc7e26acb9a7f0f1af3964",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 31,
+   "role": "scored",
+   "case": "12r_p8",
+   "case_no": 4,
+   "rep": 1,
+   "arm": "new",
+   "request_hash": "c4f1dd8a985affbc5846ccd63b44a64b060d2a30f98865118ba31b88b2145397",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 32,
+   "role": "scored",
+   "case": "12r_p8",
+   "case_no": 4,
+   "rep": 1,
+   "arm": "old",
+   "request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 33,
+   "role": "scored",
+   "case": "12r_p8",
+   "case_no": 4,
+   "rep": 2,
+   "arm": "new",
+   "request_hash": "c4f1dd8a985affbc5846ccd63b44a64b060d2a30f98865118ba31b88b2145397",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 34,
+   "role": "scored",
+   "case": "12r_p8",
+   "case_no": 4,
+   "rep": 2,
+   "arm": "old",
+   "request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 35,
+   "role": "scored",
+   "case": "12r_p8",
+   "case_no": 4,
+   "rep": 3,
+   "arm": "new",
+   "request_hash": "c4f1dd8a985affbc5846ccd63b44a64b060d2a30f98865118ba31b88b2145397",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 36,
+   "role": "scored",
+   "case": "12r_p8",
+   "case_no": 4,
+   "rep": 3,
+   "arm": "old",
+   "request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 37,
+   "role": "scored",
+   "case": "12r_p8",
+   "case_no": 4,
+   "rep": 4,
+   "arm": "new",
+   "request_hash": "c4f1dd8a985affbc5846ccd63b44a64b060d2a30f98865118ba31b88b2145397",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 38,
+   "role": "scored",
+   "case": "12r_p8",
+   "case_no": 4,
+   "rep": 4,
+   "arm": "old",
+   "request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 39,
+   "role": "scored",
+   "case": "12r_p8",
+   "case_no": 4,
+   "rep": 5,
+   "arm": "new",
+   "request_hash": "c4f1dd8a985affbc5846ccd63b44a64b060d2a30f98865118ba31b88b2145397",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 40,
+   "role": "scored",
+   "case": "12r_p8",
+   "case_no": 4,
+   "rep": 5,
+   "arm": "old",
+   "request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 41,
+   "role": "scored",
+   "case": "12r_p12",
+   "case_no": 5,
+   "rep": 1,
+   "arm": "old",
+   "request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 42,
+   "role": "scored",
+   "case": "12r_p12",
+   "case_no": 5,
+   "rep": 1,
+   "arm": "new",
+   "request_hash": "3c5adecaeaaed631dcbb3b2848b1c3e9ede2073bcc2568116d526187dcb24a23",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 43,
+   "role": "scored",
+   "case": "12r_p12",
+   "case_no": 5,
+   "rep": 2,
+   "arm": "old",
+   "request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 44,
+   "role": "scored",
+   "case": "12r_p12",
+   "case_no": 5,
+   "rep": 2,
+   "arm": "new",
+   "request_hash": "3c5adecaeaaed631dcbb3b2848b1c3e9ede2073bcc2568116d526187dcb24a23",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 45,
+   "role": "scored",
+   "case": "12r_p12",
+   "case_no": 5,
+   "rep": 3,
+   "arm": "old",
+   "request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 46,
+   "role": "scored",
+   "case": "12r_p12",
+   "case_no": 5,
+   "rep": 3,
+   "arm": "new",
+   "request_hash": "3c5adecaeaaed631dcbb3b2848b1c3e9ede2073bcc2568116d526187dcb24a23",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 47,
+   "role": "scored",
+   "case": "12r_p12",
+   "case_no": 5,
+   "rep": 4,
+   "arm": "old",
+   "request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 48,
+   "role": "scored",
+   "case": "12r_p12",
+   "case_no": 5,
+   "rep": 4,
+   "arm": "new",
+   "request_hash": "3c5adecaeaaed631dcbb3b2848b1c3e9ede2073bcc2568116d526187dcb24a23",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 49,
+   "role": "scored",
+   "case": "12r_p12",
+   "case_no": 5,
+   "rep": 5,
+   "arm": "old",
+   "request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "seq": 50,
+   "role": "scored",
+   "case": "12r_p12",
+   "case_no": 5,
+   "rep": 5,
+   "arm": "new",
+   "request_hash": "3c5adecaeaaed631dcbb3b2848b1c3e9ede2073bcc2568116d526187dcb24a23",
+   "model": "deepseek-r1:32b"
+  }
+ ]
+}

@@ -1,0 +1,159 @@
+{
+ "cases": {
+  "12g_p10": {
+   "new": {
+    "failed_calls": 0,
+    "n": 5,
+    "rate": "0",
+    "shapes": [
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met"
+    ],
+    "stated_only": 0
+   },
+   "old": {
+    "failed_calls": 0,
+    "n": 5,
+    "rate": "1",
+    "shapes": [
+     "stated_only",
+     "stated_only",
+     "stated_only",
+     "stated_only",
+     "stated_only"
+    ],
+    "stated_only": 5
+   }
+  },
+  "12g_p8": {
+   "new": {
+    "failed_calls": 0,
+    "n": 5,
+    "rate": "1",
+    "shapes": [
+     "stated_only",
+     "stated_only",
+     "stated_only",
+     "stated_only",
+     "stated_only"
+    ],
+    "stated_only": 5
+   },
+   "old": {
+    "failed_calls": 0,
+    "n": 5,
+    "rate": "1",
+    "shapes": [
+     "stated_only",
+     "stated_only",
+     "stated_only",
+     "stated_only",
+     "stated_only"
+    ],
+    "stated_only": 5
+   }
+  },
+  "12g_p9": {
+   "new": {
+    "failed_calls": 0,
+    "n": 5,
+    "rate": "0",
+    "shapes": [
+     "full_other_failures",
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met"
+    ],
+    "stated_only": 0
+   },
+   "old": {
+    "failed_calls": 0,
+    "n": 5,
+    "rate": "0",
+    "shapes": [
+     "full_other_failures",
+     "full_other_failures",
+     "full_other_failures",
+     "full_other_failures",
+     "full_other_failures"
+    ],
+    "stated_only": 0
+   }
+  },
+  "12r_p12": {
+   "new": {
+    "failed_calls": 0,
+    "n": 5,
+    "rate": "0",
+    "shapes": [
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met"
+    ],
+    "stated_only": 0
+   },
+   "old": {
+    "failed_calls": 0,
+    "n": 5,
+    "rate": "0",
+    "shapes": [
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met",
+     "full_contract_met"
+    ],
+    "stated_only": 0
+   }
+  },
+  "12r_p8": {
+   "new": {
+    "failed_calls": 0,
+    "n": 5,
+    "rate": "0",
+    "shapes": [
+     "full_other_failures",
+     "full_other_failures",
+     "full_other_failures",
+     "full_other_failures",
+     "full_other_failures"
+    ],
+    "stated_only": 0
+   },
+   "old": {
+    "failed_calls": 0,
+    "n": 5,
+    "rate": "0",
+    "shapes": [
+     "full_other_failures",
+     "full_other_failures",
+     "full_other_failures",
+     "full_other_failures",
+     "full_other_failures"
+    ],
+    "stated_only": 0
+   }
+  }
+ },
+ "cases_new_higher": [],
+ "pooled": {
+  "new": {
+   "n": 25,
+   "rate": "1/5",
+   "stated_only": 5
+  },
+  "old": {
+   "n": 25,
+   "rate": "2/5",
+   "stated_only": 10
+  }
+ },
+ "verdict": "(i) CLOSE",
+ "verdict_line": "VERDICT (i) CLOSE: pooled STATED-only old 10/25, new 5/25; new <= old/2: True; cases with a higher new rate: none"
+}

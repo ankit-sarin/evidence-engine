@@ -1,0 +1,12 @@
+('12g_p10', 'new') distinct raw responses 1 of 5 ['543b3c77', '543b3c77', '543b3c77', '543b3c77', '543b3c77']
+('12g_p10', 'old') distinct raw responses 2 of 5 ['d83826cd', 'e45d66ee', 'e45d66ee', 'e45d66ee', 'e45d66ee']
+('12g_p8', 'new') distinct raw responses 1 of 5 ['afd5e067', 'afd5e067', 'afd5e067', 'afd5e067', 'afd5e067']
+('12g_p8', 'old') distinct raw responses 2 of 5 ['4cd7bfd6', '2f5bfa7b', '2f5bfa7b', '2f5bfa7b', '2f5bfa7b']
+('12g_p9', 'new') distinct raw responses 2 of 5 ['fb9e0993', 'e8fa3861', 'e8fa3861', 'e8fa3861', 'e8fa3861']
+('12g_p9', 'old') distinct raw responses 1 of 5 ['e8b1e226', 'e8b1e226', 'e8b1e226', 'e8b1e226', 'e8b1e226']
+('12r_p12', 'new') distinct raw responses 1 of 5 ['f9b1b70a', 'f9b1b70a', 'f9b1b70a', 'f9b1b70a', 'f9b1b70a']
+('12r_p12', 'old') distinct raw responses 2 of 5 ['56895515', '6e60b765', '6e60b765', '6e60b765', '6e60b765']
+('12r_p8', 'new') distinct raw responses 2 of 5 ['529e6e63', '36220d71', '36220d71', '36220d71', '36220d71']
+('12r_p8', 'old') distinct raw responses 1 of 5 ['3b0faf38', '3b0faf38', '3b0faf38', '3b0faf38', '3b0faf38']
+warm-up raw 51bad414
+Part A raws: {('12g_p8', 'old', 'warm-up'): '51bad414', ('12g_p8', 'old', 'scored'): '4cd7bfd6', ('12g_p8', 'new', 'scored'): 'afd5e067', ('12g_p9', 'new', 'scored'): 'fb9e0993', ('12g_p9', 'old', 'scored'): 'e8b1e226', ('12g_p10', 'old', 'scored'): 'd83826cd', ('12g_p10', 'new', 'scored'): '543b3c77', ('12r_p8', 'new', 'scored'): '529e6e63', ('12r_p8', 'old', 'scored'): '3b0faf38', ('12r_p12', 'old', 'scored'): '56895515', ('12r_p12', 'new', 'scored'): 'f9b1b70a'}

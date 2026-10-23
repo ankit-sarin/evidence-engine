@@ -1,0 +1,127 @@
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [4],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [35, 36],
+      "value": "Jaka Robotics Ltd.; Jaka Robotics Ltd."
+    },
+    {
+      "field_name": "task_performed",
+      "unit_indices": [4, 99],
+      "value": "needle insertion; needle extraction"
+    },
+    {
+      "field_name": "sample_size",
+      "unit_indices": [94],
+      "value": 10
+    },
+    {
+      "field_name": "validation_setting",
+      "unit_indices": [36, 89],
+      "value": "Phantom/Simulation"
+    },
+    {
+      "field_name": "primary_outcome_metric",
+      "unit_indices": [91],
+      "value": "average error in horizontal direction of insertion point"
+    },
+    {
+      "field_name": "primary_outcome_value",
+      "unit_indices": [91],
+      "value": "1.552mm"
+    },
+    {
+      "field_name": "comparison_to_human",
+      "unit_indices": [],
+      "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+      "field_name": "secondary_outcomes",
+      "unit_indices": [94],
+      "value": "task completion rate: 83.3%; average completion time: 70.81s"
+    },
+    {
+      "field_name": "surgical_domain",
+      "unit_indices": [17],
+      "inference": "The paper discusses suturing, a common surgical task, which falls under General Surgery.",
+      "value": "General Surgery"
+    },
+    {
+      "field_name": "task_monitor",
+      "unit_indices": [4, 35],
+      "inference": "Robot uses computer vision for needle insertion (S4), human monitors extraction via HMI (S35).",
+      "value": "Shared"
+    },
+    {
+      "field_name": "task_generate",
+      "unit_indices": [67, 82],
+      "inference": "Robot generates insertion path (S67); human defines extraction plan (S82).",
+      "value": "Shared"
+    },
+    {
+      "field_name": "task_select",
+      "unit_indices": [4, 83],
+      "inference": "Surgeon initiates task but robot selects insertion path (S4); human selects extraction path (S83).",
+      "value": "Shared"
+    },
+    {
+      "field_name": "task_execute",
+      "unit_indices": [99, 102],
+      "inference": "Robot executes needle insertion (S99); human controls extraction via HMI (S102).",
+      "value": "Shared"
+    },
+    {
+      "field_name": "country",
+      "unit_indices": [13],
+      "inference": "Authors are from Tianjin University, China.",
+      "value": "China"
+    },
+    {
+      "field_name": "autonomy_level",
+      "reasoning_steps": [
+        {"step": "Robot autonomously inserts needle based on vision data.", "unit_indices": [4]},
+        {"step": "Human extracts needle via HMI control.", "unit_indices": [35]}
+      ],
+      "value": "2 (Task autonomy)"
+    },
+    {
+      "field_name": "system_maturity",
+      "reasoning_steps": [
+        {"step": "Custom-built collaborative robots used.", "unit_indices": [35]},
+        {"step": "Research prototype with novel algorithms demonstrated.", "criteria_application": true}
+      ],
+      "value": "Research prototype (hardware)"
+    },
+    {
+      "field_name": "study_design",
+      "reasoning_steps": [
+        {"step": "Initial demonstration of cooperative suturing platform.", "unit_indices": [4]},
+        {"step": "Focus on feasibility and system展示 rather than comprehensive evaluation.", "criteria_application": true}
+      ],
+      "value": "Initial technical demonstration"
+    },
+    {
+      "field_name": "key_limitation",
+      "reasoning_steps": [
+        {"step": "Simple metrics used for evaluation.", "unit_indices": [107]},
+        {"step": "Simulation model lacks clinical complexity.", "unit_indices": [36]}
+      ],
+      "value": "Limited evaluation metrics and use of a simplified simulation model."
+    },
+    {
+      "field_name": "clinical_readiness_assessment",
+      "reasoning_steps": [
+        {"step": "Demonstrated on phantom/simulation models.", "unit_indices": [36, 89]},
+        {"step": "No clinical trials or regulatory clearance mentioned.", "criteria_application": true}
+      ],
+      "value": "Proof of concept only"
+    }
+  ]
+}
+```

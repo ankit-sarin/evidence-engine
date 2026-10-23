@@ -1,0 +1,22 @@
+{"fields": [
+    {"field_name": "study_type", "unit_indices": [21, 29], "value": "Original Research"},
+    {"field_name": "robot_platform", "unit_indices": [276], "value": "CISOBOT"},
+    {"field_name": "task_performed", "unit_indices": [305, 306], "value": "needle delivery; autonomous trajectory generation"},
+    {"field_name": "sample_size", "unit_indices": [], "value": "NO_EVIDENCE_LOCATABLE"},
+    {"field_name": "validation_setting", "unit_indices": [284, 285], "value": "Ex vivo"},
+    {"field_name": "primary_outcome_metric", "unit_indices": [301, 302], "value": "Force exertion; Trajectory accuracy"},
+    {"field_name": "primary_outcome_value", "unit_indices": [], "value": "NR"},
+    {"field_name": "comparison_to_human", "unit_indices": [], "value": "NR"},
+    {"field_name": "secondary_outcomes", "unit_indices": [], "value": "NR"},
+    {"field_name": "surgical_domain", "unit_indices": [34, 35], "inference": "The paper discusses HALS-SILS techniques, which are part of general surgery procedures.", "value": "General Surgery"},
+    {"field_name": "task_monitor", "unit_indices": [86, 127], "inference": "The system uses force feedback and visual servoing for monitoring.", "value": "R"},
+    {"field_name": "task_generate", "unit_indices": [190, 191], "inference": "The auto-guide system plans trajectories based on the surgeon's tool movements.", "value": "Shared"},
+    {"field_name": "task_select", "unit_indices": [190], "inference": "The system selects from planned trajectories without explicit human selection.", "value": "R"},
+    {"field_name": "task_execute", "unit_indices": [276, 283], "inference": "The robot autonomously moves the instrument.", "value": "R"},
+    {"field_name": "country", "unit_indices": [4, 6], "inference": "Authors are from University of Malaga and Valladolid, both in Spain.", "value": "Spain"},
+    {"field_name": "autonomy_level", "reasoning_steps": [{"step": "The system plans trajectories and executes movements without continuous human control.", "unit_indices": [190]}, {"step": "This fits Level 2 (Task autonomy)."}], "value": "2 (Task autonomy)"},
+    {"field_name": "system_maturity", "unit_indices": [276], "inference": "They built a research prototype (CISOBOT) for testing.", "value": "Research prototype (hardware)"},
+    {"field_name": "study_design", "unit_indices": [21, 29], "inference": "It's an initial technical demonstration of the control system.", "value": "Initial technical demonstration"},
+    {"field_name": "key_limitation", "reasoning_steps": [{"step": "The experiments were in vitro, so clinical translation is a limitation.", "unit_indices": [284, 285]}], "value": "Limited to in vitro testing without clinical validation"},
+    {"field_name": "clinical_readiness_assessment", "reasoning_steps": [{"step": "It's at the proof of concept stage with in vitro tests.", "criteria_application": true}], "value": "Proof of concept only"}
+]}

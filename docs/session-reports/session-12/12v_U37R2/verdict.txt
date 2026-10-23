@@ -1,0 +1,1 @@
+VERDICT (i) CLOSE: pooled STATED-only old 10/25, new 5/25; new <= old/2: True; cases with a higher new rate: none

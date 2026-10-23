@@ -1,0 +1,47 @@
+Alright, I need to extract structured data from this paper for a systematic review. The user has provided specific instructions on how to handle each field, so I'll go through them one by one.
+
+Starting with the STATED fields:
+
+1. **study_type**: The paper doesn't explicitly state it's a systematic review or meta-analysis. It describes experiments and results, so it's Original Research. Cited from S4 where they propose their method and conduct experiments.
+
+2. **robot_platform**: They mention two collaborative robots (Jaka Robotics Ltd., China). So I'll list both as specified.
+
+3. **task_performed**: The main task is suturing, specifically needle insertion and extraction. That's clear from the abstract and methods.
+
+4. **sample_size**: They conducted 10 automatic needle insertion experiments. Cited from S94 where they mention 12 HMI needle extractions but only 10 successful ones.
+
+5. **validation_setting**: The experiments were on a simulated skin suture model, which is a phantom/simulation. Cited from S36 and S89.
+
+6. **primary_outcome_metric**: The first quantitative outcome mentioned is the average error in horizontal direction of insertion point (1.552mm). From S91.
+
+7. **primary_outcome_value**: The exact value given is 1.552mm, cited from S91.
+
+8. **comparison_to_human**: The paper doesn't compare their results to human performance directly. So it's NR, but I need a citation showing that absence. Since there's no such sentence, it should be NO_EVIDENCE_LOCATABLE with an empty list.
+
+9. **secondary_outcomes**: They mention task completion rate (83.3%) and average time (70.81s). Cited from S94.
+
+Moving to INFERABLE fields:
+
+1. **surgical_domain**: The task is suturing, which is a general surgical procedure. So General Surgery. Cited from S17 where they discuss suturing's importance in surgery.
+
+2. **task_monitor**: The robot uses computer vision for monitoring during insertion (S4). For extraction, the human operator uses HMI (S35). So it's Shared. Cited from S4 and S35.
+
+3. **task_generate**: The robot generates the needle insertion path based on vision data (S67), while the human defines the extraction plan via HMI (S82). So Shared. Cited from S67 and S82.
+
+4. **task_select**: The surgeon initiates the task but doesn't select among options for insertion; the robot handles it autonomously. For extraction, the human selects the path. So Shared. Cited from S4 and S83.
+
+5. **task_execute**: Insertion is done by the robot (S99), while extraction is controlled by the human via HMI (S102). So Shared. Cited from S99 and S102.
+
+6. **country**: The authors are from Tianjin University, China. Cited from S13.
+
+For JUDGMENT fields:
+
+1. **autonomy_level**: The robot autonomously inserts the needle but needs human extraction. This is Task autonomy (Level 2). Cited from S4 and S99.
+
+2. **system_maturity**: They used a research prototype with custom hardware and algorithms. So Research prototype (hardware). Cited from S35 and S107.
+
+3. **study_design**: It's an initial demonstration of the system's feasibility, not a full evaluation. So Initial technical demonstration. Cited from S4 and S99.
+
+4. **key_limitation**: The paper mentions limitations like simple metrics and use of a simulation model. Cited from S107.
+
+5. **clinical_readiness_assessment**: They used a phantom model without clinical trials, so it's Proof of concept only. Cited from S36 and S89.

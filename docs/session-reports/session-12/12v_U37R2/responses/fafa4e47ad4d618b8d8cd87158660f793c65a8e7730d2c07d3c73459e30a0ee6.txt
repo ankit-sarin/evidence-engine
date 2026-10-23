@@ -1,0 +1,41 @@
+Alright, I need to help extract structured data from this paper for a systematic review. The user has provided specific instructions on how each field should be handled, and they've pointed out some issues in my previous response. Let me go through each field carefully, ensuring I follow the guidelines correctly.
+
+Starting with **study_type**, I remember that the contract requires citing at least one unit that asserts the value. In the paper, the authors describe their work as a development of a magnetic anchoring robot system based on visual servo control for LESS. They present original research with experiments and results, so it's definitely "Original Research". Looking through the units, [S2] is the title which clearly states this is an original article. So I'll cite unit 2.
+
+Next, **robot_platform**. The paper mentions a magnetic anchoring robot system designed for LESS. They describe prototypes I and II with specific dimensions. Units [S41], [S46], and [S47] detail the design and specifications of the robots. Therefore, the platform is "Magnetic Anchoring Robot System" as stated in these units.
+
+For **task_performed**, the robot's tasks include positioning, cutting, and grasping tissues autonomously. Units [S23], [S50], and [S86] describe these tasks. So the value should be "Positioning; Cutting; Grasping".
+
+Moving on to **sample_size**, I need to check if the paper reports any cases or experiments. The results section mentions simulations, tissue experiments with 30 measurements, and a porcine kidney experiment. However, there's no specific number of human or animal subjects mentioned. Since the paper doesn't explicitly state the sample size, it should be "NR" but only after citing where this absence is noted. Looking through the units, I don't find any statement that explicitly says the sample size isn't reported. Therefore, according to the sentinel rule, if no such sentence exists, we output "NO_EVIDENCE_LOCATABLE".
+
+Regarding **validation_setting**, the experiments were conducted on a testing bench (phantom), in tissue experiments (ex vivo), and with an endoscope in a porcine kidney experiment (in vivo animal). Units [S218], [S223], and [S251] describe these settings. So the value is "Phantom/Simulation; Ex vivo; In vivo (animal)".
+
+For **primary_outcome_metric**, the main metric reported is the positioning error, as seen in units [S217] and [S221]. The average error of 1.622 mm is mentioned, so the metric is "Positioning error".
+
+The **primary_outcome_value** is directly stated as an average of 1.622 mm in unit [S221], so that's straightforward.
+
+Looking at **comparison_to_human**, I need to check if the paper compares the robot's performance to human operators. Scanning through, there's no mention of such a comparison. The experiments compare against expected targets but not humans. Since the paper doesn't state this absence explicitly, we can't cite any unit for "NR". Therefore, it should be "NO_EVIDENCE_LOCATABLE".
+
+For **secondary_outcomes**, the paper mentions control precision and positioning errors in different directions. Units [S217] and [S253] discuss these metrics. So the secondary outcomes are "Control precision: 0.01058 mm; Positioning error x-direction: 0.12-0.22 mm; Positioning error y-direction: 0.13-0.25 mm".
+
+Now, moving to **surgical_domain**, the system is designed for laparoendoscopic single-site surgery (LESS), which falls under General Surgery. Units [S13] and [S24] mention LESS procedures.
+
+**task_monitor** involves who observes the environment. The control process uses visual servoing without human real-time monitoring, so it's "R" as per unit [S87].
+
+For **task_generate**, the robot plans its trajectory based on visual feedback without human input during execution, so it's "R".
+
+In **task_select**, the surgeon assigns targets, but the robot autonomously selects the path. This is a shared responsibility between the surgeon and the robot.
+
+**task_execute** is done by the robot autonomously once the target is set, as described in unit [S86].
+
+Regarding **country**, the authors are from Harbin Institute of Technology in China, as stated in units [S4] and [S7].
+
+For **autonomy_level**, the system operates without continuous human control, planning and executing tasks based on visual feedback. This aligns with Level 2 (Task autonomy).
+
+**system_maturity** is an algorithm tested on a custom robot, so it's "Research prototype (hardware)".
+
+The **study_design** is an initial technical demonstration as they present the system for the first time.
+
+The **key_limitation** is the narrow operation space leading to potential tissue damage, mentioned in unit [S204].
+
+Lastly, **clinical_readiness_assessment** is at the proof of concept stage with experiments on phantoms and tissues but not yet in clinical use.

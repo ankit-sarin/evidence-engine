@@ -1,0 +1,123 @@
+{"fields": [
+    {
+        "field_name": "study_type",
+        "unit_indices": [1],
+        "value": "Original Research"
+    },
+    {
+        "field_name": "robot_platform",
+        "unit_indices": [208, 212],
+        "value": "KUKA LBR Med Robot; Intel RealSense depth camera D405"
+    },
+    {
+        "field_name": "task_performed",
+        "unit_indices": [123, 126],
+        "value": "surgical electrocautery; attachment point removal"
+    },
+    {
+        "field_name": "sample_size",
+        "unit_indices": [208, 224],
+        "value": 7
+    },
+    {
+        "field_name": "validation_setting",
+        "unit_indices": [123, 209],
+        "value": "Simulation; Ex vivo"
+    },
+    {
+        "field_name": "primary_outcome_metric",
+        "unit_indices": [191],
+        "value": "task success rate"
+    },
+    {
+        "field_name": "primary_outcome_value",
+        "unit_indices": [198, 200],
+        "value": "Sphere Task: ~80%; Cutting Task: ~80%"
+    },
+    {
+        "field_name": "comparison_to_human",
+        "unit_indices": [200],
+        "value": "Autonomous method achieved 64.13% and 44.70% improvements over pure imitation learning in Sphere and Cutting Tasks, respectively."
+    },
+    {
+        "field_name": "secondary_outcomes",
+        "unit_indices": [198, 200, 225],
+        "value": "Success rate: ~80%; Real robot trials: 5/7 successful"
+    },
+    {
+        "field_name": "surgical_domain",
+        "unit_indices": [123],
+        "inference": "The task involves electrocautery, which is a common surgical procedure in various specialties but not explicitly tied to a specific one.",
+        "value": "General Surgery"
+    },
+    {
+        "field_name": "task_monitor",
+        "unit_indices": [78, 105],
+        "inference": "The system uses point cloud observations and an autoencoder for feature extraction, indicating autonomous sensing without human monitoring during task execution.",
+        "value": "R"
+    },
+    {
+        "field_name": "task_generate",
+        "unit_indices": [96, 173],
+        "inference": "The reward function is learned from pairwise preferences and used to generate trajectories, suggesting the robot computes the plan autonomously.",
+        "value": "R"
+    },
+    {
+        "field_name": "task_select",
+        "unit_indices": [96, 105],
+        "inference": "The system selects the best trajectory based on learned preferences without human intervention.",
+        "value": "R"
+    },
+    {
+        "field_name": "task_execute",
+        "unit_indices": [173, 217],
+        "inference": "The robot executes the planned trajectories autonomously using reinforcement learning policies.",
+        "value": "R"
+    },
+    {
+        "field_name": "country",
+        "unit_indices": [22],
+        "inference": "The affiliation mentions the University of Utah, which is in the United States.",
+        "value": "United States"
+    },
+    {
+        "field_name": "autonomy_level",
+        "reasoning_steps": [
+            {"step": "The system uses reinforcement learning to execute tasks without continuous human control.", "unit_indices": [173]},
+            {"step": "The robot generates and selects trajectories based on learned reward functions, indicating high autonomy.", "criteria_application": true}
+        ],
+        "value": "4 (High autonomy)"
+    },
+    {
+        "field_name": "system_maturity",
+        "reasoning_steps": [
+            {"step": "The system was tested in simulation and on a physical robot with ex vivo tissue.", "unit_indices": [123, 208]},
+            {"step": "It uses an existing commercial robot (KUKA LBR Med) modified for research autonomy.", "criteria_application": true}
+        ],
+        "value": "Commercial system + research autonomy"
+    },
+    {
+        "field_name": "study_design",
+        "reasoning_steps": [
+            {"step": "The study demonstrates a novel method for reward learning from suboptimal demonstrations in surgical tasks.", "unit_indices": [6, 123]},
+            {"step": "It includes both simulation and real-robot experiments with quantitative metrics.", "criteria_application": true}
+        ],
+        "value": "Algorithm development and evaluation"
+    },
+    {
+        "field_name": "key_limitation",
+        "reasoning_steps": [
+            {"step": "The method relies on pairwise preferences, which can be labor-intensive to collect.", "unit_indices": [96]},
+            {"step": "Real-world tissue variations affected performance in physical experiments.", "unit_indices": [227]}
+        ],
+        "value": "Dependence on pairwise preference data and sensitivity to real-tissue variations"
+    },
+    {
+        "field_name": "clinical_readiness_assessment",
+        "reasoning_steps": [
+            {"step": "The system was tested in simulation and on ex vivo tissue with a commercial robot.", "unit_indices": [123, 208]},
+            {"step": "While successful in proof-of-concept experiments, it requires further validation in clinical settings.", "criteria_application": true}
+        ],
+        "value": "Proof of concept only"
+    }
+]}

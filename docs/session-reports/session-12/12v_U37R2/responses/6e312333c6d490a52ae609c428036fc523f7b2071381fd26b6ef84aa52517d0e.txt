@@ -1,0 +1,49 @@
+Okay, so I need to help extract data from this paper for a systematic review. The user has provided a detailed schema with 20 fields across three categories: STATED, INFERABLE, and JUDGMENT. Each field has specific instructions on how to extract the information, including citing the relevant sentence units.
+
+First, I'll start by understanding each field's requirements. For example, in the STATED category, the first field is study_type. The instruction says to look for explicit statements about the type of study, like whether it's a systematic review or original research. If not explicitly stated, infer from the methods section.
+
+Looking at the paper text provided, I see that the introduction mentions designing and implementing a robotic surgical motion controller (S21). The abstract states that they designed and implemented a control scheme for a robot assistant in HALS-SILS techniques (S20-29). The methods section describes experiments conducted with the CISOBOT system (S276-283), which involved testing the low-level controller and auto-guided system. 
+
+From this, it seems like the paper is reporting original research because they're presenting new data from their experiments with the robotic system. There's no mention of a systematic review or meta-analysis methods, so I can infer that it's Original Research.
+
+Next, for robot_platform, the paper mentions using the CISOBOT system (S276). So, the unit indices would be [276], and the value is "CISOBOT".
+
+For task_performed, the experiments involved moving a surgical tool to a target location, specifically a needle delivery task (S305-310). The unit indices here are [305, 306], and the value is "needle delivery; autonomous trajectory generation".
+
+Sample_size refers to the total number of cases or procedures. However, the paper doesn't explicitly state how many experiments were conducted beyond mentioning in vitro trials (S29). Since there's no specific number provided, I should return NR with a citation if possible. But since it's not stated, it might be NO_EVIDENCE_LOCATABLE.
+
+Validation_setting is about where the tests were done. The paper mentions in vitro trials using a pelvi-trainer to emulate the abdominal cavity (S284-285). So, unit indices [284, 285] and value "Ex vivo".
+
+Primary_outcome_metric would be the main performance measure. From the experiments, they measured forces exerted on the abdomen and trajectory accuracy (S301-303). Unit indices [301, 302], value "Force exertion; Trajectory accuracy".
+
+Primary_outcome_value includes the numeric results. The force was minimized through the PWE strategy, but exact values aren't provided in the summary. So, it might be NR.
+
+Comparison_to_human: The paper doesn't explicitly compare the robot's performance to a human surgeon. It focuses on autonomous capabilities and force control without benchmarking against manual methods. Therefore, unit indices are empty, value "NR".
+
+Secondary_outcomes would include additional metrics beyond the primary ones. Since the focus was on force control and trajectory planning, there might not be secondary outcomes reported. So, NR.
+
+Moving to INFERABLE fields:
+
+Surgical_domain: The paper discusses HALS-SILS techniques, which fall under General Surgery (colorectal, etc.). Unit indices [34-35], value "General Surgery".
+
+Task_monitor: The system uses force feedback and visual servoing for monitoring. Unit indices [86, 127], value "R".
+
+Task_generate: The auto-guide system plans trajectories based on the surgeon's tool movements. Unit indices [190, 191], value "Shared".
+
+Task_select: The system selects from planned trajectories without explicit human selection. Unit indices [190], value "R".
+
+Task_execute: The robot autonomously moves the instrument. Unit indices [276-283], value "R".
+
+Country: Authors are from University of Malaga and Valladolid, both in Spain. Unit indices [4, 6], value "Spain".
+
+For JUDGMENT fields:
+
+Autonomy_level: The system plans trajectories and executes movements without continuous human control. It fits Level 2 (Task autonomy). Reasoning steps would cite sections on auto-guide and force feedback.
+
+System_maturity: They built a research prototype (CISOBOT) for testing. Unit indices [276], value "Research prototype (hardware)".
+
+Study_design: It's an initial technical demonstration of the control system. Unit indices [21, 29], value "Initial technical demonstration".
+
+Key_limitation: The experiments were in vitro, so clinical translation is a limitation. Unit indices [284-285], value "Limited to in vitro testing without clinical validation".
+
+Clinical_readiness_assessment: It's at the proof of concept stage with in vitro tests. Value "Proof of concept only".

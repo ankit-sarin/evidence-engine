@@ -1,0 +1,43 @@
+Okay, so I need to figure out how to extract data from this paper for a systematic review. The user has provided a detailed schema with specific fields and instructions on how to handle each one. Let me go through each field step by step.
+
+Starting with **study_type**, the paper doesn't explicitly state it's a systematic review or meta-analysis. It describes experiments, so I think it's "Original Research". I'll cite where they mention their experiments.
+
+Next is **robot_platform**. The paper uses two collaborative robots from Jaka Robotics Ltd., China. That's straightforward; just list them as stated.
+
+For **task_performed**, the robot does needle insertion and extraction during suturing. That's clear from the methods section.
+
+The **sample_size** is 10 experiments for needle insertion and extraction, so I'll cite that unit.
+
+Looking at **validation_setting**, they used a simulated skin suture model, which falls under "Phantom/Simulation". I need to make sure I cite where they describe this setup.
+
+For **primary_outcome_metric**, the first quantitative outcome is the horizontal error of needle insertion. That's in the results section.
+
+The **primary_outcome_value** is given as 1.552 mm for insertion and 2.011 mm for extraction. I'll cite those exact numbers from the text.
+
+Now, **comparison_to_human**. The paper doesn't compare their system to human performance directly. They mention success rates but not against humans. So according to the instructions, if there's no comparison made, it should be "NR". But since they don't state that explicitly, I might have to mark this as NO_EVIDENCE_LOCATABLE because I can't find a unit where they say NR.
+
+Moving on to **secondary_outcomes**, they mention task completion rate and average time. The values are 83.3% success and 70.81 seconds. I'll list these semicolon-separated as instructed.
+
+For the inferable fields, like **surgical_domain**, since it's a phantom model without specific clinical context, it should be "Non-clinical Bench / Phantom". I'll cite where they describe their setup.
+
+**task_monitor** is H because the surgeon visually observes using endoscopic video. The paper mentions this in the introduction.
+
+**task_generate** is R as the system computes the plan from tissue geometry. That's clear from the methods section.
+
+**task_select** is also R since the system autonomously selects the best path without human intervention.
+
+**task_execute** is R because the robot performs the needle insertion and extraction without continuous human control.
+
+For **country**, the authors are from Tianjin University in China, so I'll cite their affiliation.
+
+Now, judgment fields like **autonomy_level**. The system plans and executes tasks autonomously with some human monitoring, which fits Level 4 (High autonomy). I'll reason through this step by step.
+
+**system_maturity** is an algorithm on an existing platform since they used commercial robots for research autonomy. That's clear from the methods section.
+
+The **study_design** seems to be a feasibility study as they evaluate whether their system works under controlled conditions. I'll cite where they discuss their experiments.
+
+For **key_limitation**, the paper mentions using a simplified simulation model and limited evaluation metrics. I'll synthesize this into a concise statement, citing the relevant units.
+
+Lastly, **clinical_readiness_assessment** is "Proof of concept only" because they tested on a phantom without clinical trials or regulatory clearance. I'll cite where they describe their setup and limitations.
+
+I need to make sure each field follows the instructions precisely, especially handling cases where information isn't explicitly stated by citing appropriately or marking as NO_EVIDENCE_LOCATABLE if nothing is found.

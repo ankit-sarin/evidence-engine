@@ -1,0 +1,47 @@
+{"fields": [
+    {
+        "field_name": "study_type",
+        "unit_indices": [21],
+        "value": "Original Research"
+    },
+    {
+        "field_name": "robot_platform",
+        "unit_indices": [41, 43],
+        "value": "Magnetic anchoring robot system with handles containing outer permanent magnets (OPMs), imaging unit, and control subsystem."
+    },
+    {
+        "field_name": "task_performed",
+        "unit_indices": [20, 27],
+        "value": "Autonomous positioning of the robotic end-effector for laparoendoscopic single-site surgery (LESS)."
+    },
+    {
+        "field_name": "sample_size",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "validation_setting",
+        "unit_indices": [21, 38],
+        "value": "Phantom/Simulation; Ex vivo"
+    },
+    {
+        "field_name": "primary_outcome_metric",
+        "unit_indices": [25],
+        "value": "Average positioning error"
+    },
+    {
+        "field_name": "primary_outcome_value",
+        "unit_indices": [25],
+        "value": "1.622 mm"
+    },
+    {
+        "field_name": "comparison_to_human",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "secondary_outcomes",
+        "unit_indices": [25, 38],
+        "value": "Positioning error: 1.622 mm; Success rate: Achieved target positioning within 1 pixel error."
+    }
+]}

@@ -1,0 +1,123 @@
+{"fields": [
+    {
+        "field_name": "study_type",
+        "unit_indices": [1],
+        "value": "Original Research"
+    },
+    {
+        "field_name": "robot_platform",
+        "unit_indices": [208, 212],
+        "value": "KUKA LBR Med Robot; Intel RealSense depth camera D405"
+    },
+    {
+        "field_name": "task_performed",
+        "unit_indices": [123, 126],
+        "value": "surgical electrocautery; attachment point removal"
+    },
+    {
+        "field_name": "sample_size",
+        "unit_indices": [208, 224],
+        "value": 7
+    },
+    {
+        "field_name": "validation_setting",
+        "unit_indices": [123, 209],
+        "value": "Simulation; Ex vivo"
+    },
+    {
+        "field_name": "primary_outcome_metric",
+        "unit_indices": [191],
+        "value": "task success rate"
+    },
+    {
+        "field_name": "primary_outcome_value",
+        "unit_indices": [198, 200],
+        "value": "Sphere Task: ~80%; Cutting Task: ~80%"
+    },
+    {
+        "field_name": "comparison_to_human",
+        "unit_indices": [200],
+        "value": "Autonomous: Sphere Task success rate ~80% vs BC perfect: 15.87% improvement; Cutting Task success rate ~80% vs BC perfect: 44.70% improvement"
+    },
+    {
+        "field_name": "secondary_outcomes",
+        "unit_indices": [198, 200, 225],
+        "value": "Success rate: Sphere Task: ~80%; Cutting Task: ~80%; Real robot trials: 5/7 successful"
+    },
+    {
+        "field_name": "surgical_domain",
+        "unit_indices": [123],
+        "inference": "The task involves electrocautery, which is a common surgical procedure in various specialties but not explicitly tied to a specific one.",
+        "value": "General Surgery"
+    },
+    {
+        "field_name": "task_monitor",
+        "unit_indices": [78, 105],
+        "inference": "The system uses point cloud observations and an autoencoder for feature extraction, indicating autonomous sensing without human input for perception.",
+        "value": "R"
+    },
+    {
+        "field_name": "task_generate",
+        "unit_indices": [96, 173],
+        "inference": "The reward function is learned from preferences, and the policy is optimized via RL, suggesting autonomous planning.",
+        "value": "R"
+    },
+    {
+        "field_name": "task_select",
+        "unit_indices": [96, 105],
+        "inference": "The system autonomously selects actions based on the learned reward function without explicit human selection from alternatives.",
+        "value": "R"
+    },
+    {
+        "field_name": "task_execute",
+        "unit_indices": [173],
+        "inference": "The policy is learned to execute tasks autonomously using end-effector position control.",
+        "value": "R"
+    },
+    {
+        "field_name": "country",
+        "unit_indices": [22],
+        "inference": "The affiliation mentions the University of Utah, which is in the United States.",
+        "value": "United States"
+    },
+    {
+        "field_name": "autonomy_level",
+        "reasoning_steps": [
+            {"step": "The system uses reinforcement learning to execute tasks without continuous human control.", "unit_indices": [173]},
+            {"step": "The surgeon does not define the exact plan but provides preference rankings for demonstrations.", "criteria_application": true}
+        ],
+        "value": "4 (High autonomy)"
+    },
+    {
+        "field_name": "system_maturity",
+        "reasoning_steps": [
+            {"step": "The paper demonstrates a working system on both simulation and real hardware.", "unit_indices": [208, 212]},
+            {"step": "The contribution is an algorithm deployed on existing platforms (dVRK and KUKA LBR Med Robot).", "criteria_application": true}
+        ],
+        "value": "Algorithm on existing platform"
+    },
+    {
+        "field_name": "study_design",
+        "reasoning_steps": [
+            {"step": "The study involves simulation experiments with suboptimal demonstrations and real robot testing.", "unit_indices": [123, 208]},
+            {"step": "The focus is on demonstrating the system's ability to learn from suboptimal data and achieve high success rates.", "criteria_application": true}
+        ],
+        "value": "Initial technical demonstration"
+    },
+    {
+        "field_name": "key_limitation",
+        "reasoning_steps": [
+            {"step": "The autoencoder struggles with out-of-distribution point clouds, leading to suboptimal performance in real experiments.", "unit_indices": [227]},
+            {"step": "Visual disparity between simulated and real tissue affects feature representation quality.", "criteria_application": true}
+        ],
+        "value": "Poor reconstruction of real tissue point clouds affecting policy quality"
+    },
+    {
+        "field_name": "clinical_readiness_assessment",
+        "reasoning_steps": [
+            {"step": "The system has been tested on ex vivo tissue with some success but not yet in clinical trials.", "unit_indices": [209, 224]},
+            {"step": "There is no mention of regulatory clearance or clinical use.", "criteria_application": true}
+        ],
+        "value": "Proof of concept only"
+    }
+]}

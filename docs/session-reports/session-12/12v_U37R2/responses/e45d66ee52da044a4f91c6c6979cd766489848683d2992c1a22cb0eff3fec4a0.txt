@@ -1,0 +1,47 @@
+{"fields": [
+    {
+        "field_name": "study_type",
+        "unit_indices": [12],
+        "value": "Original Research"
+    },
+    {
+        "field_name": "robot_platform",
+        "unit_indices": [40, 41],
+        "value": "Magnetic anchoring robot system with visual servo control; Prototype I and II"
+    },
+    {
+        "field_name": "task_performed",
+        "unit_indices": [23],
+        "value": "Autonomous positioning of the end-effector for laparoendoscopic single-site surgery (LESS)"
+    },
+    {
+        "field_name": "sample_size",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "validation_setting",
+        "unit_indices": [219, 228],
+        "value": "Ex vivo; Phantom/Simulation"
+    },
+    {
+        "field_name": "primary_outcome_metric",
+        "unit_indices": [221],
+        "value": "Average positioning error"
+    },
+    {
+        "field_name": "primary_outcome_value",
+        "unit_indices": [221],
+        "value": "1.622 mm"
+    },
+    {
+        "field_name": "comparison_to_human",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "secondary_outcomes",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    }
+]}

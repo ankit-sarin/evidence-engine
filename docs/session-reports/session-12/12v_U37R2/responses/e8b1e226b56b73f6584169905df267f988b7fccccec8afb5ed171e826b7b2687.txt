@@ -1,0 +1,22 @@
+{"fields": [
+    {"field_name": "study_type", "unit_indices": [4], "value": "Original Research"},
+    {"field_name": "robot_platform", "unit_indices": [35, 36], "value": "Two collaborative robots (Jaka Robotics Ltd., China)"},
+    {"field_name": "task_performed", "unit_indices": [34], "value": "Needle insertion and extraction during suturing"},
+    {"field_name": "sample_size", "unit_indices": [89, 90], "value": "10"},
+    {"field_name": "validation_setting", "unit_indices": [36], "value": "Phantom/Simulation"},
+    {"field_name": "primary_outcome_metric", "unit_indices": [91], "value": "Horizontal error of needle insertion point"},
+    {"field_name": "primary_outcome_value", "unit_indices": [91, 92], "value": "Mean 1.552 mm; Mean 2.011 mm"},
+    {"field_name": "comparison_to_human", "unit_indices": [], "value": "NO_EVIDENCE_LOCATABLE"},
+    {"field_name": "secondary_outcomes", "unit_indices": [93, 94], "value": "Task completion rate: 83.3%; Average completion time: 70.81s"},
+    {"field_name": "surgical_domain", "unit_indices": [36], "inference": "The paper uses a simulated skin suture model without specific clinical context.", "value": "Non-clinical Bench / Phantom"},
+    {"field_name": "task_monitor", "unit_indices": [4], "inference": "The surgeon visually observes the wound information via computer vision.", "value": "H"},
+    {"field_name": "task_generate", "unit_indices": [35], "inference": "The system computes the plan based on tissue geometry from the vision algorithm.", "value": "R"},
+    {"field_name": "task_select", "unit_indices": [35], "inference": "The system autonomously selects the best path without human intervention.", "value": "R"},
+    {"field_name": "task_execute", "unit_indices": [34], "inference": "The robot performs needle insertion and extraction autonomously.", "value": "R"},
+    {"field_name": "country", "unit_indices": [13], "inference": "Authors are affiliated with Tianjin University, China.", "value": "China"},
+    {"field_name": "autonomy_level", "reasoning_steps": [{"step": "Robot autonomously plans and executes needle insertion based on vision data.", "unit_indices": [35]}, {"step": "Surgeon monitors but does not control moment-to-moment movements.", "criteria_application": true}], "value": "4 (High autonomy)"},
+    {"field_name": "system_maturity", "reasoning_steps": [{"step": "Uses commercial robots for research autonomy.", "unit_indices": [35]}, {"step": "Focus is on algorithm demonstration, not hardware innovation."}, {"step": "Classified as 'Algorithm on existing platform' per criteria."}], "value": "Algorithm on existing platform"},
+    {"field_name": "study_design", "reasoning_steps": [{"step": "Evaluates system performance under controlled conditions.", "unit_indices": [74]}, {"step": "Structured evaluation with success/failure criteria.", "criteria_application": true}], "value": "Feasibility study"},
+    {"field_name": "key_limitation", "reasoning_steps": [{"step": "Simplified simulation model used.", "unit_indices": [107]}, {"step": "Limited evaluation metrics and potential for muscle fatigue effects."}, {"step": "Synthesis of these points leads to the limitation statement."}], "value": "Use of a simplified simulation model and limited evaluation metrics that may not fully capture real-world performance"},
+    {"field_name": "clinical_readiness_assessment", "reasoning_steps": [{"step": "Demonstrated on phantom/simulation.", "unit_indices": [36]}, {"step": "No clinical trials or regulatory clearance mentioned."}, {"step": "Per criteria, classified as 'Proof of concept only'."}], "value": "Proof of concept only"}
+]}

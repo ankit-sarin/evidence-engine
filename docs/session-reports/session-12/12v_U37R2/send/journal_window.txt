@@ -1,0 +1,332 @@
+Oct 23 18:29:24 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:29:24 | 200 |      22.496µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:29:24 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:29:24 | 200 |  118.396387ms |       127.0.0.1 | POST     "/api/show"
+Oct 23 18:29:24 spark-59e4 ollama[2564]: time=2026-10-23T18:29:24.411Z level=INFO source=server.go:444 msg="starting runner" cmd="/usr/local/bin/ollama runner --ollama-engine --port 41207"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: loaded meta data with 26 key-value pairs and 771 tensors from /usr/share/ollama/.ollama/models/blobs/sha256-6150cb382311b69f09cc0f9a1b69fc029cbd742b66bb8ec531aa5ecf5c613e93 (version GGUF V3 (latest))
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   0:                       general.architecture str              = qwen2
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   1:                               general.type str              = model
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   2:                               general.name str              = DeepSeek R1 Distill Qwen 32B
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   3:                           general.basename str              = DeepSeek-R1-Distill-Qwen
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   4:                         general.size_label str              = 32B
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   5:                          qwen2.block_count u32              = 64
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   6:                       qwen2.context_length u32              = 131072
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   7:                     qwen2.embedding_length u32              = 5120
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   8:                  qwen2.feed_forward_length u32              = 27648
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   9:                 qwen2.attention.head_count u32              = 40
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  10:              qwen2.attention.head_count_kv u32              = 8
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  11:                       qwen2.rope.freq_base f32              = 1000000.000000
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  12:     qwen2.attention.layer_norm_rms_epsilon f32              = 0.000010
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  13:                          general.file_type u32              = 15
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  14:                       tokenizer.ggml.model str              = gpt2
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  15:                         tokenizer.ggml.pre str              = deepseek-r1-qwen
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  16:                      tokenizer.ggml.tokens arr[str,152064]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  17:                  tokenizer.ggml.token_type arr[i32,152064]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  18:                      tokenizer.ggml.merges arr[str,151387]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  19:                tokenizer.ggml.bos_token_id u32              = 151646
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  20:                tokenizer.ggml.eos_token_id u32              = 151643
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  21:            tokenizer.ggml.padding_token_id u32              = 151643
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  22:               tokenizer.ggml.add_bos_token bool             = true
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  23:               tokenizer.ggml.add_eos_token bool             = false
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  24:                    tokenizer.chat_template str              = {% if not add_generation_prompt is de...
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  25:               general.quantization_version u32              = 2
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - type  f32:  321 tensors
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - type q4_K:  385 tensors
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - type q6_K:   65 tensors
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: file format = GGUF V3 (latest)
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: file type   = Q4_K - Medium
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: file size   = 18.48 GiB (4.85 BPW)
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load: special_eos_id is not in special_eog_ids - the tokenizer config may be incorrect
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load: printing all EOG tokens:
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load:   - 151643 ('<｜end▁of▁sentence｜>')
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load:   - 151662 ('<|fim_pad|>')
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load:   - 151663 ('<|repo_name|>')
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load:   - 151664 ('<|file_sep|>')
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load: special tokens cache size = 22
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load: token to piece cache size = 0.9310 MB
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: arch             = qwen2
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: vocab_only       = 1
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: no_alloc         = 0
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: model type       = ?B
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: model params     = 32.76 B
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: general.name     = DeepSeek R1 Distill Qwen 32B
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: vocab type       = BPE
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_vocab          = 152064
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_merges         = 151387
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: BOS token        = 151646 '<｜begin▁of▁sentence｜>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOS token        = 151643 '<｜end▁of▁sentence｜>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOT token        = 151643 '<｜end▁of▁sentence｜>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: PAD token        = 151643 '<｜end▁of▁sentence｜>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: LF token         = 198 'Ċ'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM PRE token    = 151659 '<|fim_prefix|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM SUF token    = 151661 '<|fim_suffix|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM MID token    = 151660 '<|fim_middle|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM PAD token    = 151662 '<|fim_pad|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM REP token    = 151663 '<|repo_name|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM SEP token    = 151664 '<|file_sep|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOG token        = 151643 '<｜end▁of▁sentence｜>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOG token        = 151662 '<|fim_pad|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOG token        = 151663 '<|repo_name|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOG token        = 151664 '<|file_sep|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: max token length = 256
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_load: vocab only - skipping tensors
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.412Z level=WARN source=server.go:169 msg="requested context size too large for model" num_ctx=262144 n_ctx_train=131072
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.413Z level=INFO source=server.go:444 msg="starting runner" cmd="/usr/local/bin/ollama runner --model /usr/share/ollama/.ollama/models/blobs/sha256-6150cb382311b69f09cc0f9a1b69fc029cbd742b66bb8ec531aa5ecf5c613e93 --port 45059"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.414Z level=INFO source=sched.go:484 msg="system memory" total="119.7 GiB" free="109.5 GiB" free_swap="11.5 GiB"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.414Z level=INFO source=sched.go:491 msg="gpu memory" id=GPU-91d9614a-e11e-939d-23b9-f0574b41f801 library=CUDA available="109.0 GiB" free="109.5 GiB" minimum="457.0 MiB" overhead="0 B"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.414Z level=INFO source=server.go:511 msg="loading model" "model layers"=65 requested=-1
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.415Z level=INFO source=device.go:240 msg="model weights" device=CUDA0 size="18.1 GiB"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.415Z level=INFO source=device.go:251 msg="kv cache" device=CUDA0 size="32.0 GiB"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.415Z level=INFO source=device.go:262 msg="compute graph" device=CUDA0 size="10.3 GiB"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.415Z level=INFO source=device.go:272 msg="total memory" size="60.3 GiB"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.423Z level=INFO source=runner.go:965 msg="starting go runner"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load_backend: loaded CPU backend from /usr/local/lib/ollama/libggml-cpu.so
+Oct 23 18:29:25 spark-59e4 ollama[2564]: ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
+Oct 23 18:29:25 spark-59e4 ollama[2564]: ggml_cuda_init: GGML_CUDA_FORCE_CUBLAS: no
+Oct 23 18:29:25 spark-59e4 ollama[2564]: ggml_cuda_init: found 1 CUDA devices:
+Oct 23 18:29:25 spark-59e4 ollama[2564]:   Device 0: NVIDIA GB10, compute capability 12.1, VMM: yes, ID: GPU-91d9614a-e11e-939d-23b9-f0574b41f801
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load_backend: loaded CUDA backend from /usr/local/lib/ollama/cuda_v13/libggml-cuda.so
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.677Z level=INFO source=ggml.go:104 msg=system CPU.0.NEON=1 CPU.0.ARM_FMA=1 CPU.0.LLAMAFILE=1 CPU.1.NEON=1 CPU.1.ARM_FMA=1 CPU.1.LLAMAFILE=1 CUDA.0.ARCHS=750,800,860,870,890,900,1000,1030,1100,1200,1210 CUDA.0.USE_GRAPHS=1 CUDA.0.PEER_MAX_BATCH_SIZE=128 compiler=cgo(clang)
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.677Z level=INFO source=runner.go:1001 msg="Server listening on 127.0.0.1:45059"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.698Z level=INFO source=runner.go:895 msg=load request="{Operation:commit LoraPath:[] Parallel:1 BatchSize:512 FlashAttention:Enabled KvSize:131072 KvCacheType:f16 NumThreads:20 GPULayers:65[ID:GPU-91d9614a-e11e-939d-23b9-f0574b41f801 Layers:65(0..64)] MultiUserCache:false ProjectorPath: MainGPU:0 UseMmap:true}"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.698Z level=INFO source=server.go:1364 msg="waiting for llama runner to start responding"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: time=2026-10-23T18:29:25.699Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+Oct 23 18:29:25 spark-59e4 ollama[2564]: ggml_nvml_get_device_memory NVML not supported for memory query, using system memory (total=128519786496, available=117491699712)
+Oct 23 18:29:25 spark-59e4 ollama[2564]: ggml_backend_cuda_device_get_memory device GPU-91d9614a-e11e-939d-23b9-f0574b41f801 utilizing NVML memory reporting free: 117491699712 total: 128519786496
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_load_from_file_impl: using device CUDA0 (NVIDIA GB10) (000f:01:00.0) - 112048 MiB free
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: loaded meta data with 26 key-value pairs and 771 tensors from /usr/share/ollama/.ollama/models/blobs/sha256-6150cb382311b69f09cc0f9a1b69fc029cbd742b66bb8ec531aa5ecf5c613e93 (version GGUF V3 (latest))
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   0:                       general.architecture str              = qwen2
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   1:                               general.type str              = model
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   2:                               general.name str              = DeepSeek R1 Distill Qwen 32B
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   3:                           general.basename str              = DeepSeek-R1-Distill-Qwen
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   4:                         general.size_label str              = 32B
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   5:                          qwen2.block_count u32              = 64
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   6:                       qwen2.context_length u32              = 131072
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   7:                     qwen2.embedding_length u32              = 5120
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   8:                  qwen2.feed_forward_length u32              = 27648
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv   9:                 qwen2.attention.head_count u32              = 40
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  10:              qwen2.attention.head_count_kv u32              = 8
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  11:                       qwen2.rope.freq_base f32              = 1000000.000000
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  12:     qwen2.attention.layer_norm_rms_epsilon f32              = 0.000010
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  13:                          general.file_type u32              = 15
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  14:                       tokenizer.ggml.model str              = gpt2
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  15:                         tokenizer.ggml.pre str              = deepseek-r1-qwen
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  16:                      tokenizer.ggml.tokens arr[str,152064]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  17:                  tokenizer.ggml.token_type arr[i32,152064]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  18:                      tokenizer.ggml.merges arr[str,151387]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  19:                tokenizer.ggml.bos_token_id u32              = 151646
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  20:                tokenizer.ggml.eos_token_id u32              = 151643
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  21:            tokenizer.ggml.padding_token_id u32              = 151643
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  22:               tokenizer.ggml.add_bos_token bool             = true
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  23:               tokenizer.ggml.add_eos_token bool             = false
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  24:                    tokenizer.chat_template str              = {% if not add_generation_prompt is de...
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - kv  25:               general.quantization_version u32              = 2
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - type  f32:  321 tensors
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - type q4_K:  385 tensors
+Oct 23 18:29:25 spark-59e4 ollama[2564]: llama_model_loader: - type q6_K:   65 tensors
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: file format = GGUF V3 (latest)
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: file type   = Q4_K - Medium
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: file size   = 18.48 GiB (4.85 BPW)
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load: special_eos_id is not in special_eog_ids - the tokenizer config may be incorrect
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load: printing all EOG tokens:
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load:   - 151643 ('<｜end▁of▁sentence｜>')
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load:   - 151662 ('<|fim_pad|>')
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load:   - 151663 ('<|repo_name|>')
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load:   - 151664 ('<|file_sep|>')
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load: special tokens cache size = 22
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load: token to piece cache size = 0.9310 MB
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: arch             = qwen2
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: vocab_only       = 0
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: no_alloc         = 0
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_ctx_train      = 131072
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_embd           = 5120
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_embd_inp       = 5120
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_layer          = 64
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_head           = 40
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_head_kv        = 8
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_rot            = 128
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_swa            = 0
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: is_swa_any       = 0
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_embd_head_k    = 128
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_embd_head_v    = 128
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_gqa            = 5
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_embd_k_gqa     = 1024
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_embd_v_gqa     = 1024
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: f_norm_eps       = 0.0e+00
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: f_norm_rms_eps   = 1.0e-05
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: f_clamp_kqv      = 0.0e+00
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: f_max_alibi_bias = 0.0e+00
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: f_logit_scale    = 0.0e+00
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: f_attn_scale     = 0.0e+00
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_ff             = 27648
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_expert         = 0
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_expert_used    = 0
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_expert_groups  = 0
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_group_used     = 0
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: causal attn      = 1
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: pooling type     = -1
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: rope type        = 2
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: rope scaling     = linear
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: freq_base_train  = 1000000.0
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: freq_scale_train = 1
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_ctx_orig_yarn  = 131072
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: rope_yarn_log_mul= 0.0000
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: rope_finetuned   = unknown
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: model type       = 32B
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: model params     = 32.76 B
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: general.name     = DeepSeek R1 Distill Qwen 32B
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: vocab type       = BPE
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_vocab          = 152064
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: n_merges         = 151387
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: BOS token        = 151646 '<｜begin▁of▁sentence｜>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOS token        = 151643 '<｜end▁of▁sentence｜>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOT token        = 151643 '<｜end▁of▁sentence｜>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: PAD token        = 151643 '<｜end▁of▁sentence｜>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: LF token         = 198 'Ċ'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM PRE token    = 151659 '<|fim_prefix|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM SUF token    = 151661 '<|fim_suffix|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM MID token    = 151660 '<|fim_middle|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM PAD token    = 151662 '<|fim_pad|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM REP token    = 151663 '<|repo_name|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: FIM SEP token    = 151664 '<|file_sep|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOG token        = 151643 '<｜end▁of▁sentence｜>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOG token        = 151662 '<|fim_pad|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOG token        = 151663 '<|repo_name|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: EOG token        = 151664 '<|file_sep|>'
+Oct 23 18:29:25 spark-59e4 ollama[2564]: print_info: max token length = 256
+Oct 23 18:29:25 spark-59e4 ollama[2564]: load_tensors: loading model tensors, this can take a while... (mmap = true)
+Oct 23 18:29:29 spark-59e4 ollama[2564]: load_tensors: offloading 64 repeating layers to GPU
+Oct 23 18:29:29 spark-59e4 ollama[2564]: load_tensors: offloading output layer to GPU
+Oct 23 18:29:29 spark-59e4 ollama[2564]: load_tensors: offloaded 65/65 layers to GPU
+Oct 23 18:29:29 spark-59e4 ollama[2564]: load_tensors:   CPU_Mapped model buffer size =   417.66 MiB
+Oct 23 18:29:29 spark-59e4 ollama[2564]: load_tensors:        CUDA0 model buffer size = 18508.35 MiB
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: constructing llama_context
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: n_seq_max     = 1
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: n_ctx         = 131072
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: n_ctx_seq     = 131072
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: n_batch       = 512
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: n_ubatch      = 512
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: causal_attn   = 1
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: flash_attn    = enabled
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: kv_unified    = false
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: freq_base     = 1000000.0
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context: freq_scale    = 1
+Oct 23 18:29:32 spark-59e4 ollama[2564]: llama_context:  CUDA_Host  output buffer size =     0.60 MiB
+Oct 23 18:29:34 spark-59e4 ollama[2564]: llama_kv_cache:      CUDA0 KV buffer size = 32768.00 MiB
+Oct 23 18:29:34 spark-59e4 ollama[2564]: llama_kv_cache: size = 32768.00 MiB (131072 cells,  64 layers,  1/1 seqs), K (f16): 16384.00 MiB, V (f16): 16384.00 MiB
+Oct 23 18:29:34 spark-59e4 ollama[2564]: llama_context:      CUDA0 compute buffer size =   479.00 MiB
+Oct 23 18:29:34 spark-59e4 ollama[2564]: llama_context:  CUDA_Host compute buffer size =   266.01 MiB
+Oct 23 18:29:34 spark-59e4 ollama[2564]: llama_context: graph nodes  = 2183
+Oct 23 18:29:34 spark-59e4 ollama[2564]: llama_context: graph splits = 2
+Oct 23 18:29:34 spark-59e4 ollama[2564]: time=2026-10-23T18:29:34.988Z level=INFO source=server.go:1402 msg="llama runner started in 9.57 seconds"
+Oct 23 18:29:34 spark-59e4 ollama[2564]: time=2026-10-23T18:29:34.988Z level=INFO source=sched.go:561 msg="loaded runners" count=1
+Oct 23 18:29:34 spark-59e4 ollama[2564]: time=2026-10-23T18:29:34.988Z level=INFO source=server.go:1364 msg="waiting for llama runner to start responding"
+Oct 23 18:29:34 spark-59e4 ollama[2564]: time=2026-10-23T18:29:34.988Z level=INFO source=server.go:1402 msg="llama runner started in 9.57 seconds"
+Oct 23 18:31:42 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:31:42 | 200 |         2m17s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:31:42 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:31:42 | 200 |      36.096µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:31:47 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:31:47 | 200 |      43.552µs |       127.0.0.1 | HEAD     "/"
+Oct 23 18:31:47 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:31:47 | 200 |      63.169µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:33:04 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:33:04 | 200 |         1m21s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:33:04 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:33:04 | 200 |        37.6µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:34:27 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:34:27 | 200 |         1m23s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:34:27 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:34:27 | 200 |      31.408µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:35:47 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:35:47 | 200 |         1m20s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:35:47 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:35:47 | 200 |      30.112µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:37:07 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:37:07 | 200 |         1m19s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:37:07 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:37:07 | 200 |      29.296µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:38:26 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:38:26 | 200 |         1m19s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:38:26 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:38:26 | 200 |      39.088µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:39:46 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:39:46 | 200 |         1m19s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:39:46 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:39:46 | 200 |      28.784µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:41:05 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:41:05 | 200 |         1m19s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:41:05 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:41:05 | 200 |      41.344µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:42:25 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:42:25 | 200 |         1m19s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:42:25 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:42:25 | 200 |      33.024µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:43:44 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:43:44 | 200 |         1m19s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:43:44 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:43:44 | 200 |      30.449µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:45:04 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:45:04 | 200 |         1m19s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:45:04 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:45:04 | 200 |      37.472µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:48:51 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:48:51 | 200 |         3m46s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:48:51 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:48:51 | 200 |      41.521µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:52:10 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:52:10 | 200 |         3m19s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:52:10 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:52:10 | 200 |      41.024µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 18:56:29 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:56:29 | 200 |         4m19s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 18:56:29 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 18:56:29 | 200 |      37.872µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:00:36 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:00:36 | 200 |          4m6s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:00:36 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:00:36 | 200 |      39.792µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:05:14 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:05:14 | 200 |         4m38s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:05:14 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:05:14 | 200 |      36.048µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:09:21 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:09:21 | 200 |          4m6s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:09:21 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:09:21 | 200 |       47.28µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:13:58 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:13:58 | 200 |         4m36s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:13:58 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:13:58 | 200 |      89.776µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:18:04 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:18:04 | 200 |          4m6s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:18:04 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:18:04 | 200 |      45.584µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:22:41 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:22:41 | 200 |         4m37s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:22:41 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:22:41 | 200 |      97.648µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:26:47 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:26:47 | 200 |          4m6s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:26:47 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:26:47 | 200 |      44.656µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:30:01 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:30:01 | 200 |         3m13s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:30:01 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:30:01 | 200 |      47.168µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:35:39 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:35:39 | 200 |         5m38s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:35:39 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:35:39 | 200 |      45.008µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:37:40 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:37:40 | 200 |          2m0s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:37:40 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:37:40 | 200 |      34.016µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:43:18 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:43:18 | 200 |         5m38s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:43:18 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:43:18 | 200 |       30.16µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:45:19 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:45:19 | 200 |          2m0s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:45:19 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:45:19 | 200 |     161.953µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:50:58 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:50:58 | 200 |         5m38s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:50:58 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:50:58 | 200 |       49.04µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:52:58 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:52:58 | 200 |          2m0s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:52:58 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:52:58 | 200 |      43.856µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 19:58:37 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:58:37 | 200 |         5m38s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 19:58:37 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 19:58:37 | 200 |      55.424µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:00:38 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:00:38 | 200 |          2m0s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:00:38 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:00:38 | 200 |      36.976µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:06:18 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:06:18 | 200 |         5m40s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:06:18 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:06:18 | 200 |      42.592µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:11:13 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:11:13 | 200 |         4m55s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:11:13 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:11:13 | 200 |      57.456µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:15:26 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:15:26 | 200 |         4m12s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:15:26 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:15:26 | 200 |      46.896µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:20:12 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:20:12 | 200 |         4m45s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:20:12 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:20:12 | 200 |       33.52µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:23:45 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:23:45 | 200 |      56.784µs |       127.0.0.1 | HEAD     "/"
+Oct 23 20:23:45 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:23:45 | 200 |      68.816µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:24:14 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:24:14 | 200 |          4m1s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:24:14 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:24:14 | 200 |      47.745µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:28:05 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:28:05 | 200 |         3m51s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:28:05 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:28:05 | 200 |      33.281µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:31:29 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:31:29 | 200 |         3m24s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:31:29 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:31:29 | 200 |      43.056µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:35:20 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:35:20 | 200 |         3m50s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:35:20 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:35:20 | 200 |      41.616µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:38:45 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:38:45 | 200 |         3m24s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:38:45 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:38:45 | 200 |      36.096µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:42:36 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:42:36 | 200 |         3m50s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:42:36 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:42:36 | 200 |      35.104µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:46:00 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:46:00 | 200 |         3m24s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:46:00 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:46:00 | 200 |      32.448µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:49:39 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:49:39 | 200 |         3m38s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:49:39 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:49:39 | 200 |      45.168µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:53:42 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:53:42 | 200 |          4m3s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:53:42 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:53:42 | 200 |      35.393µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 20:56:46 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:56:46 | 200 |          3m3s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 20:56:46 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 20:56:46 | 200 |      36.208µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 21:00:50 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:00:50 | 200 |          4m3s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 21:00:50 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:00:50 | 200 |       33.12µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 21:03:53 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:03:53 | 200 |          3m3s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 21:03:53 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:03:53 | 200 |      44.944µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 21:07:59 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:07:59 | 200 |          4m5s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 21:07:59 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:07:59 | 200 |      34.032µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 21:11:02 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:11:02 | 200 |          3m3s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 21:11:02 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:11:02 | 200 |      53.744µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 21:15:06 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:15:06 | 200 |          4m3s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 21:15:06 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:15:06 | 200 |      40.992µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 21:18:10 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:18:10 | 200 |          3m3s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 21:18:10 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:18:10 | 200 |      25.616µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 21:22:13 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:22:13 | 200 |          4m3s |       127.0.0.1 | POST     "/api/chat"
+Oct 23 21:22:13 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:22:13 | 200 |      33.088µs |       127.0.0.1 | GET      "/api/ps"
+Oct 23 21:22:13 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:22:13 | 200 |     722.401µs |       127.0.0.1 | POST     "/api/generate"
+Oct 23 21:22:18 spark-59e4 ollama[2564]: [GIN] 2026/10/23 - 21:22:18 | 200 |      21.728µs |       127.0.0.1 | GET      "/api/ps"

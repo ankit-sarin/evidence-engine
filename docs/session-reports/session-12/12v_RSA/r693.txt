@@ -1,0 +1,48 @@
+RULING [evidence-engine 12v-R693] — 12v-OPEN accepted; four findings ruled as readings; the
+  series gains one gate; INT-r12-1 and INT-s12-1 Phase A opens
+STATUS: PI ruling, 2026-10-23 UTC, session 12v, on architect recommendation, on the 12v-OPEN
+  final report (item 0 049cec81857d55fb50b2f6bb5283eb806669a778). Transcribe as Block 91 at
+  item 0 of the 12v-RSA brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12v-OPEN final report):
+  MEASURED: "Commit: 049cec81857d55fb50b2f6bb5283eb806669a778, parent 9673aff"; "numstat 89 / 0;
+    8,911 lines (8,822 + 89); sha256
+    9c4d9e84d7b02e9ceb88e88b52d7ec330dcc7a09626e6ebea6de1338aacffda6, 1,825,023 B"; "r692.txt:
+    1ef0f3f2…922d / 6646 / 78, equal to your hash"; "fence == r692.txt True; cell ==
+    render_cell True"; "bb05e13296b5714acddc0749994b4f9b4fb1372c, parent 9604c1a, message
+    "ledger: rows through 2026-10-23T15:28:54Z", trailers present"; "wall 893.71 s, inside
+    791–966"; "3347 passed, 17 deselected, 1 xfailed, 2 warnings in 891.42s"; "Ids: 0/0";
+    nightly "3347 passed, 17 deselected, 1 xfailed, 2 warnings in 885.61s", "pytest exit code:
+    0"; "Loads: 20/20 OK. qwen3.6:35b-a3b did not fail again: OK in 9.3 s"; "NV_ERR_NO_MEMORY:
+    15 lines this boot"; "04:56:08 and 04:56:09, outside the health job, beside a qwen3:32b
+    /api/generate from 127.0.0.1 (num_ctx 262144 requested, 200 in 6.15 s)"; "Retention: 23
+    MATCH / 0 MISMATCH"; "pins byte-identical (08f1374c…55e6)"; recount "now {278, 94/53/131,
+    0}; P1 {25/22/12, 59}; P6 11; P7 117; fix_units 35"; "Fingerprint IDENTICAL".
+  READ (CC's): "9604c1a = c1d6821 + a99a2d6 + 9604c1a. Both commits are ledger-only: 4 foreign
+    rows"; "the log has no lock line"; "The "272" in the chain comes from
+    recount_12p_close.json".
+  INFERRED: none.
+
+R693(a) — 12v-OPEN is accepted as reported. Item 0 landed as 049cec8 (Block 90; r692.txt equal to
+  the architect's hash, R684(e)); the ledger bb05e13 with trailers stands. The 2026-10-23 nightly
+  matched line for line; the startup gate matched inside the band. The 12v open stands verified.
+R693(b) — Finding 1: claude-config 9604c1a (two surgical-cv ledger-only commits on c1d6821) is an
+  accepted descendant under R663(b), as CC applied it. No note.
+R693(c) — Finding 2, a reading, no row: NV_ERR_NO_MEMORY is fifteen this boot. The closeout's
+  "eleven" was true when written; two lines arrived at 04:56 beside a qwen3:32b generate with
+  num_ctx 262144 from an unidentified local sender, outside every job of this lane. An engine
+  model loaded by an unknown process, unlocked, at a context eight times the stage's, goes to the
+  dgx-infra item and to Run 7's confounder statement beside A-1 and A-1N. The 2026-10-22
+  qwen3.6:35b-a3b failure did not repeat (OK in 9.3 s); it stands as a single occurrence.
+R693(d) — Finding 3, no row: the health job's log records no lock line, so "lock taken or
+  skipped" cannot be read from it. Open briefs stop asking it; whether the health job takes the
+  experiment lock is the dgx-infra item's question.
+R693(e) — Finding 4, no row: the chain's 272 is recount_12p_close.json's now.rows; R13's wording
+  stands, and later briefs name that file.
+R693(f) — The gate series gains 893.71 s: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23,
+  912.14, 893.71 s. The band stays 791–966 s (R683(c)) until a closeout recuts it.
+R693(g) — INT-r12-1 and INT-s12-1 open with one read-only Phase A, 12v-RSA, under the brief below:
+  no model call, no live write, no engine change. The read-out states whether the two rows lie on
+  the same extraction path for Run 7 or on disjoint ones, and proposes the fix-unit number or
+  numbers and their place against 12l_P1A.md §3's order, quoted from disk (R692(b)). P1's fix-unit
+  count stays 35 until the ruling on the read-out.

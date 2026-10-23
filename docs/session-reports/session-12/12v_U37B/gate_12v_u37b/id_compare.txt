@@ -1,0 +1,8 @@
+gate ids 3353 unique 3353 ref 3348 only-gate 5 only-ref 0
+  only-gate: tests/test_u37_feedback_block.py::test_u37_a_non_stated_feedback_block_still_lists_only_its_failed_fields_codes
+  only-gate: tests/test_u37_feedback_block.py::test_u37_attempt_1_prompt_text_is_unchanged
+  only-gate: tests/test_u37_feedback_block.py::test_u37_the_feedback_header_names_every_schema_field
+  only-gate: tests/test_u37_feedback_block.py::test_u37_the_non_elicited_pin_is_unchanged
+  only-gate: tests/test_u37_feedback_block.py::test_u37_the_output_instruction_is_repeated_after_the_feedback
+phases new 2418 ref 2456 slower by >10 s: 0
+sum new 872.37 ref 900.96

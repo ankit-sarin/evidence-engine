@@ -1,0 +1,21 @@
+
+
+## Your previous response did not meet the contract on 1 field(s)
+
+Each one below shows what you returned and what its contract requires. Fix these, and re-emit EVERY field in the schema — this is a full replacement response, not a patch.
+
+The schema has 20 fields. Your response must carry one entry for every one of them, including every field not listed below:
+- STATED (9): study_type, robot_platform, task_performed, sample_size, validation_setting, primary_outcome_metric, primary_outcome_value, comparison_to_human, secondary_outcomes
+- INFERABLE (6): surgical_domain, task_monitor, task_generate, task_select, task_execute, country
+- JUDGMENT (5): autonomy_level, system_maturity, study_design, key_limitation, clinical_readiness_assessment
+
+- **study_type** [STATED]
+    you returned value: 'NR'
+    with unit_indices: []
+    ✗ VALUE_WITHOUT_CITATION — a value was asserted with nothing cited behind it. The contract is: cite at least one unit that asserts the value, before the value. If nothing in this paper can be cited for it, the value must be NO_EVIDENCE_LOCATABLE with an EMPTY citation list.
+
+## Output
+Emit exactly one entry per field (20 total), in the order the fields are
+listed above, with the evidence keys BEFORE the value key, as JSON:
+
+{"fields": [ ...one object per field, shaped by its class... ]}

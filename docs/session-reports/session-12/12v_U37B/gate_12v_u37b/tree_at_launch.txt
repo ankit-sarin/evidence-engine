@@ -1,0 +1,9 @@
+37bb382f9e515846f8247a011efb9415f9c95d85
+ M engine/elicitation/prompts.py
+ M tests/test_elicitation_pipeline.py
+ M tests/test_feedback_block.py
+ M tests/test_prompt_hash_coverage.py
+?? docs/session-reports/session-12/12v_U37B/
+?? tests/test_u37_feedback_block.py
+c723fe0990724ec32d4fb36b87390279e6076830999eaa0a7a04eb11b3115cdb  -
+341a9848feea342137624c1155dc599eb0374a0e1e7cfdcdaf2166fe5c14e46a  tests/test_u37_feedback_block.py

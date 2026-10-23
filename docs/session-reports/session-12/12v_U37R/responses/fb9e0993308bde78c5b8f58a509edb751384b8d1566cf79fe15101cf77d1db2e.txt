@@ -1,0 +1,132 @@
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [4],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [35, 37],
+      "value": "Jaka collaborative robot (Jaka Robotics Ltd., China); Jaka collaborative robot (Jaka Robotics Ltd., China)"
+    },
+    {
+      "field_name": "task_performed",
+      "unit_indices": [4],
+      "value": "needle insertion; needle extraction"
+    },
+    {
+      "field_name": "sample_size",
+      "unit_indices": [91],
+      "value": 10
+    },
+    {
+      "field_name": "validation_setting",
+      "unit_indices": [36, 74],
+      "value": "Phantom/Simulation"
+    },
+    {
+      "field_name": "primary_outcome_metric",
+      "unit_indices": [91],
+      "value": "needle insertion and extraction accuracy"
+    },
+    {
+      "field_name": "primary_outcome_value",
+      "unit_indices": [91, 92],
+      "value": "Horizontal: 1.552 ± 3.5 mm; Vertical: 3.394 ± 4.11 mm"
+    },
+    {
+      "field_name": "comparison_to_human",
+      "unit_indices": [],
+      "value": "NR"
+    },
+    {
+      "field_name": "secondary_outcomes",
+      "unit_indices": [94, 98],
+      "value": "Task completion rate: 83.3%; Average completion time: 70.81s"
+    },
+    {
+      "field_name": "surgical_domain",
+      "unit_indices": [36],
+      "inference": "The paper uses a simulated skin suture model without specific clinical context.",
+      "value": "Non-clinical Bench / Phantom"
+    },
+    {
+      "field_name": "task_monitor",
+      "unit_indices": [4, 78],
+      "inference": "Surgeon visually observes the process via endoscopic video while teleoperating.",
+      "value": "H"
+    },
+    {
+      "field_name": "task_generate",
+      "unit_indices": [39, 65],
+      "inference": "The robot uses AI to recognize wound information and plan needle insertion autonomously.",
+      "value": "R"
+    },
+    {
+      "field_name": "task_select",
+      "unit_indices": [67, 68],
+      "inference": "The robot autonomously selects the path based on vision data without human input.",
+      "value": "R"
+    },
+    {
+      "field_name": "task_execute",
+      "unit_indices": [4, 39],
+      "inference": "Robot performs needle insertion autonomously while human extracts using HMI.",
+      "value": "Shared"
+    },
+    {
+      "field_name": "country",
+      "unit_indices": [13],
+      "inference": "Authors are affiliated with Tianjin University, China.",
+      "value": "China"
+    },
+    {
+      "field_name": "autonomy_level",
+      "unit_indices": [4, 65],
+      "reasoning_steps": [
+        {"step": "Robot executes needle insertion autonomously under surgeon supervision.", "unit_indices": [4]},
+        {"step": "Surgeon initiates task and monitors but does not control moment-to-moment movements.", "criteria_application": true}
+      ],
+      "value": 2
+    },
+    {
+      "field_name": "system_maturity",
+      "unit_indices": [35, 37],
+      "reasoning_steps": [
+        {"step": "Custom-built platform with two collaborative robots and custom fixtures.", "unit_indices": [35]},
+        {"step": "Demonstrates autonomous suturing on a phantom model.", "criteria_application": true}
+      ],
+      "value": "Research prototype (hardware)"
+    },
+    {
+      "field_name": "study_design",
+      "unit_indices": [4, 74],
+      "reasoning_steps": [
+        {"step": "First-time demonstration of cooperative suturing platform.", "unit_indices": [4]},
+        {"step": "Focus on showing feasibility rather than systematic evaluation.", "criteria_application": true}
+      ],
+      "value": "Initial technical demonstration"
+    },
+    {
+      "field_name": "key_limitation",
+      "unit_indices": [107],
+      "reasoning_steps": [
+        {"step": "Simple evaluation metrics may not fully assess performance.", "unit_indices": [107]},
+        {"step": "Use of a simplified simulation model compared to real surgical environments.", "criteria_application": true}
+      ],
+      "value": "Simple evaluation metrics and use of a simplified simulation model"
+    },
+    {
+      "field_name": "clinical_readiness_assessment",
+      "unit_indices": [36, 74],
+      "reasoning_steps": [
+        {"step": "Demonstrated on a simulated skin suture model.", "unit_indices": [36]},
+        {"step": "No clinical trials or regulatory clearance mentioned.", "criteria_application": true}
+      ],
+      "value": "Proof of concept only"
+    }
+  ]
+}
+```

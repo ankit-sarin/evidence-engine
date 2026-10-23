@@ -1,0 +1,9 @@
+== 2026-10-23T18:09:25Z
+2026-10-23T18:09:25.717474677Z /api/version {"version":"0.21.0"}
+2026-10-23T18:09:25.722804003Z /api/ps {"models":[]}
+NRestarts=0
+earlyoom kills this boot: 0
+NV_ERR_NO_MEMORY this boot: 15
+lock free
+2026-07-27 23:22:08.906609268 +0000
+0

@@ -1,0 +1,47 @@
+{"fields": [
+    {
+        "field_name": "study_type",
+        "unit_indices": [20],
+        "value": "Original Research"
+    },
+    {
+        "field_name": "robot_platform",
+        "unit_indices": [276, 281],
+        "value": "CISOBOT; University of Malaga"
+    },
+    {
+        "field_name": "task_performed",
+        "unit_indices": [305, 309],
+        "value": "Surgical assistance; Path planning"
+    },
+    {
+        "field_name": "sample_size",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "validation_setting",
+        "unit_indices": [287],
+        "value": "Ex vivo"
+    },
+    {
+        "field_name": "primary_outcome_metric",
+        "unit_indices": [305, 314],
+        "value": "Force control; Trajectory accuracy"
+    },
+    {
+        "field_name": "primary_outcome_value",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "comparison_to_human",
+        "unit_indices": [],
+        "value": "NR"
+    },
+    {
+        "field_name": "secondary_outcomes",
+        "unit_indices": [],
+        "value": "NR"
+    }
+]}

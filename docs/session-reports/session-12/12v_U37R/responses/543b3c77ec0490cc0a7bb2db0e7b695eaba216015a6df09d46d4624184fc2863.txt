@@ -1,0 +1,123 @@
+{"fields": [
+    {
+        "field_name": "study_type",
+        "unit_indices": [2],
+        "value": "Original Research"
+    },
+    {
+        "field_name": "robot_platform",
+        "unit_indices": [41, 46, 47],
+        "value": "Magnetic Anchoring Robot System"
+    },
+    {
+        "field_name": "task_performed",
+        "unit_indices": [23, 50, 86],
+        "value": "Positioning; Cutting; Grasping"
+    },
+    {
+        "field_name": "sample_size",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "validation_setting",
+        "unit_indices": [218, 223, 251],
+        "value": "Phantom/Simulation; Ex vivo; In vivo (animal)"
+    },
+    {
+        "field_name": "primary_outcome_metric",
+        "unit_indices": [217, 221],
+        "value": "Positioning error"
+    },
+    {
+        "field_name": "primary_outcome_value",
+        "unit_indices": [221],
+        "value": "Average positioning error of 1.622 mm"
+    },
+    {
+        "field_name": "comparison_to_human",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "secondary_outcomes",
+        "unit_indices": [217, 253],
+        "value": "Control precision: 0.01058 mm; Positioning error x-direction: 0.12-0.22 mm; Positioning error y-direction: 0.13-0.25 mm"
+    },
+    {
+        "field_name": "surgical_domain",
+        "unit_indices": [13, 24],
+        "inference": "The paper describes the system for laparoendoscopic single-site surgery (LESS), which falls under General Surgery.",
+        "value": "General Surgery"
+    },
+    {
+        "field_name": "task_monitor",
+        "unit_indices": [87],
+        "inference": "The control process uses visual servoing without human real-time monitoring.",
+        "value": "R"
+    },
+    {
+        "field_name": "task_generate",
+        "unit_indices": [86, 190],
+        "inference": "The robot plans its trajectory based on visual feedback without human input during execution.",
+        "value": "R"
+    },
+    {
+        "field_name": "task_select",
+        "unit_indices": [82, 85],
+        "inference": "The surgeon assigns targets, but the robot autonomously selects the path.",
+        "value": "Shared"
+    },
+    {
+        "field_name": "task_execute",
+        "unit_indices": [86],
+        "inference": "The robot executes tasks autonomously once the target is set.",
+        "value": "R"
+    },
+    {
+        "field_name": "country",
+        "unit_indices": [4, 7],
+        "inference": "Authors are affiliated with Harbin Institute of Technology in China.",
+        "value": "China"
+    },
+    {
+        "field_name": "autonomy_level",
+        "reasoning_steps": [
+            {"step": "The system operates without continuous human control.", "unit_indices": [86]},
+            {"step": "It plans and executes tasks based on visual feedback.", "criteria_application": true}
+        ],
+        "value": 2
+    },
+    {
+        "field_name": "system_maturity",
+        "reasoning_steps": [
+            {"step": "The paper describes a custom-built robot tested in experiments.", "unit_indices": [41, 46]},
+            {"step": "It's not a commercial system but a research prototype.", "criteria_application": true}
+        ],
+        "value": "Research prototype (hardware)"
+    },
+    {
+        "field_name": "study_design",
+        "reasoning_steps": [
+            {"step": "The paper presents the first demonstration of the system performing tasks.", "unit_indices": [24]},
+            {"step": "Focus is on showing feasibility rather than systematic evaluation.", "criteria_application": true}
+        ],
+        "value": "Initial technical demonstration"
+    },
+    {
+        "field_name": "key_limitation",
+        "reasoning_steps": [
+            {"step": "The narrow operation space may cause tissue damage.", "unit_indices": [204]},
+            {"step": "This is a critical limitation affecting clinical applicability.", "criteria_application": true}
+        ],
+        "value": "Narrow operation space risking tissue damage"
+    },
+    {
+        "field_name": "clinical_readiness_assessment",
+        "reasoning_steps": [
+            {"step": "The system has been tested on phantoms and tissues.", "unit_indices": [218, 223]},
+            {"step": "No clinical trials or regulatory clearance mentioned.", "criteria_application": true}
+        ],
+        "value": "Proof of concept only"
+    }
+]}

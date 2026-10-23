@@ -1,0 +1,142 @@
+{
+ "cases": [
+  {
+   "attempt1_failed_codes": {
+    "comparison_to_human": [
+     "VALUE_WITHOUT_CITATION"
+    ],
+    "primary_outcome_value": [
+     "VALUE_WITHOUT_CITATION"
+    ],
+    "sample_size": [
+     "VALUE_WITHOUT_CITATION"
+    ],
+    "secondary_outcomes": [
+     "VALUE_WITHOUT_CITATION"
+    ]
+   },
+   "attempt1_raw_path": "/home/ankitsarin/scratch/12v-u37r/attempt1/12g_p8.txt",
+   "attempt1_raw_sha256": "077874847dea923a0ca57d42f2d71bca888b906834c867e62c171642b4f84dcb",
+   "attempt1_raw_source": "pass1_raw_content (accepted attempt 1)",
+   "case": "12g_p8",
+   "historical_accepted": 1,
+   "historical_attempt2_shape": "stated_only",
+   "live_paper_id": 455,
+   "paper_id_in_source": 8,
+   "parsed_text_sha256": "71d3448949a0952d4c08dd0b5ada3b6889115b534b5993d16636ce94916c6e51",
+   "parsed_text_version": 3,
+   "recorded_feedback_chars": 1710,
+   "source": "12g",
+   "stored_attempt2_request_hash": null,
+   "throwaway_paper_id": 8,
+   "unit_map_path": null
+  },
+  {
+   "attempt1_failed_codes": {
+    "comparison_to_human": [
+     "VALUE_WITHOUT_CITATION"
+    ]
+   },
+   "attempt1_raw_path": "/home/ankitsarin/scratch/12v-u37r/attempt1/12g_p9.txt",
+   "attempt1_raw_sha256": "a3aa9516b86c4337bda7a6f3cf6dc1bd8799a0261d47deef9d0cb218d2403c66",
+   "attempt1_raw_source": "pass1_raw_content (accepted attempt 1)",
+   "case": "12g_p9",
+   "historical_accepted": 1,
+   "historical_attempt2_shape": "stated_only",
+   "live_paper_id": 699,
+   "paper_id_in_source": 9,
+   "parsed_text_sha256": "5313b9e201163cf5a79345a7a6a3325ab14c265c2f568501983c39be7ef54de7",
+   "parsed_text_version": 3,
+   "recorded_feedback_chars": 610,
+   "source": "12g",
+   "stored_attempt2_request_hash": null,
+   "throwaway_paper_id": 9,
+   "unit_map_path": null
+  },
+  {
+   "attempt1_failed_codes": {
+    "comparison_to_human": [
+     "VALUE_WITHOUT_CITATION"
+    ],
+    "sample_size": [
+     "VALUE_WITHOUT_CITATION"
+    ],
+    "study_type": [
+     "VALUE_WITHOUT_CITATION"
+    ]
+   },
+   "attempt1_raw_path": "/home/ankitsarin/scratch/12v-u37r/attempt1/12g_p10.txt",
+   "attempt1_raw_sha256": "8cf5e21a4e2a3db03a81b7eabc4edf31359956d5a5f09eb8f3df2125578de8ce",
+   "attempt1_raw_source": "pass1_raw_content (accepted attempt 1)",
+   "case": "12g_p10",
+   "historical_accepted": 1,
+   "historical_attempt2_shape": "stated_only",
+   "live_paper_id": 431,
+   "paper_id_in_source": 10,
+   "parsed_text_sha256": "3c9924328f81971c44086e3aa42ea6f3db819ecf5962b79b381c27ceb33597f4",
+   "parsed_text_version": 2,
+   "recorded_feedback_chars": 1346,
+   "source": "12g",
+   "stored_attempt2_request_hash": null,
+   "throwaway_paper_id": 10,
+   "unit_map_path": null
+  },
+  {
+   "attempt1_failed_codes": {
+    "comparison_to_human": [
+     "VALUE_WITHOUT_CITATION"
+    ]
+   },
+   "attempt1_raw_path": "/home/ankitsarin/scratch/12v-u37r/attempt1/12r_p8.txt",
+   "attempt1_raw_sha256": "300ed8a0dac10d4792cbbf18be914b47e268be2e5c9b1b0f4758990581eafb7b",
+   "attempt1_raw_source": "attempts[0].raw_content",
+   "case": "12r_p8",
+   "historical_accepted": 1,
+   "historical_attempt2_shape": "stated_only",
+   "live_paper_id": 455,
+   "paper_id_in_source": 8,
+   "parsed_text_sha256": "71d3448949a0952d4c08dd0b5ada3b6889115b534b5993d16636ce94916c6e51",
+   "parsed_text_version": 3,
+   "recorded_feedback_chars": 610,
+   "source": "12r",
+   "stored_attempt2_request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "throwaway_paper_id": 8,
+   "unit_map_path": "/home/ankitsarin/scratch/12r-u13/run/ra_12q/elicitation/run_2/unit_maps/8.json"
+  },
+  {
+   "attempt1_failed_codes": {
+    "comparison_to_human": [
+     "VALUE_WITHOUT_CITATION"
+    ],
+    "secondary_outcomes": [
+     "VALUE_WITHOUT_CITATION"
+    ]
+   },
+   "attempt1_raw_path": "/home/ankitsarin/scratch/12v-u37r/attempt1/12r_p12.txt",
+   "attempt1_raw_sha256": "39ae62611fedb66f1054c6a918dd5ef071ae6d0360841770e763b28af64b2ff3",
+   "attempt1_raw_source": "attempts[0].raw_content",
+   "case": "12r_p12",
+   "historical_accepted": 2,
+   "historical_attempt2_shape": "full",
+   "live_paper_id": 604,
+   "paper_id_in_source": 12,
+   "parsed_text_sha256": "50b6346a59007286b58b69f04655c19f0af73d8f3055056297c0b90050a35e5d",
+   "parsed_text_version": 2,
+   "recorded_feedback_chars": 978,
+   "source": "12r",
+   "stored_attempt2_request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "throwaway_paper_id": 12,
+   "unit_map_path": "/home/ankitsarin/scratch/12r-u13/run/ra_12q/elicitation/run_2/unit_maps/12.json"
+  }
+ ],
+ "excluded": [
+  {
+   "case": "sep05_0243_p498",
+   "historical_accepted": 2,
+   "historical_attempt2_shape": "full",
+   "paper_id_in_source": 498,
+   "reason": "attempt-1 response text not stored (accepted attempt 2; the 2026-09-05 telemetry schema keeps only the accepted attempt's raw), so its feedback block cannot be rebuilt",
+   "source": "sep05_0243"
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+Okay, I need to fix the two fields where my previous response didn't meet the contract. The user pointed out issues with "comparison_to_human" and "secondary_outcomes". Let me go through each step carefully.
+
+Starting with "comparison_to_human": In the paper, I remember that they compared their method against pure imitation learning. Specifically, in the simulation experiments, they showed improvements over BC (Behavioral Cloning) methods. Looking at the units, [S200] mentions a 64.13% improvement for the Sphere Task and 44.70% for the Cutting Task. So I should cite unit 200 here because it directly states the comparison results.
+
+Next, "secondary_outcomes": The paper reports multiple outcomes beyond the primary metrics. For instance, in the simulation experiments, they discuss success rates (80% for Sphere and 80% for Cutting). Additionally, in the real robot experiments, they achieved five successful trials out of seven. These are secondary because the primary was about reward function performance. I should cite units [S199], [S200], and [S225] as they provide these additional metrics.
+
+I need to ensure that each field now correctly cites the relevant units before stating the value, avoiding any assertion without proper citation.

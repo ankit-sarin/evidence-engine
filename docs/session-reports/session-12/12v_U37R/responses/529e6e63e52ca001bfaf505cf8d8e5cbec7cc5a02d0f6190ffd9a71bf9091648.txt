@@ -1,0 +1,22 @@
+{"fields": [
+    {"field_name": "study_type", "unit_indices": [20], "value": "Original Research"},
+    {"field_name": "robot_platform", "unit_indices": [278], "value": "CISOBOT"},
+    {"field_name": "task_performed", "unit_indices": [306, 341], "value": "needle driving; suture procedure"},
+    {"field_name": "sample_size", "unit_indices": [], "value": "NO_EVIDENCE_LOCATABLE"},
+    {"field_name": "validation_setting", "unit_indices": [287], "value": "Ex vivo"},
+    {"field_name": "primary_outcome_metric", "unit_indices": [301], "value": "force exerted over the abdomen"},
+    {"field_name": "primary_outcome_value", "unit_indices": [], "value": "NR"},
+    {"field_name": "comparison_to_human", "unit_indices": [], "value": "NR"},
+    {"field_name": "secondary_outcomes", "unit_indices": [306], "value": "trajectory planning; collision avoidance"},
+    {"field_name": "surgical_domain", "unit_indices": [2, 75], "inference": "The paper focuses on laparoscopic surgery techniques, which fall under General Surgery.", "value": "General Surgery"},
+    {"field_name": "task_monitor", "unit_indices": [132], "inference": "The robot uses force feedback sensors to monitor the environment.", "value": "R"},
+    {"field_name": "task_generate", "unit_indices": [196], "inference": "The surgeon defines the target location, which is used by the system to generate trajectories.", "value": "H"},
+    {"field_name": "task_select", "unit_indices": [187], "inference": "The system computes and selects the trajectory based on the environment and goals.", "value": "R"},
+    {"field_name": "task_execute", "unit_indices": [203], "inference": "The robot executes the planned movements autonomously.", "value": "R"},
+    {"field_name": "country", "unit_indices": [4, 5], "inference": "Authors are affiliated with institutions in Spain.", "value": "Spain"},
+    {"field_name": "autonomy_level", "reasoning_steps": [{"step": "The system generates trajectories and executes them autonomously without continuous human control.", "unit_indices": [187, 306]}, {"step": "This aligns with Level 2 (Task autonomy) as the surgeon initiates tasks but does not control moment-to-moment movements.", "criteria_application": true}], "value": "2 (Task autonomy)"},
+    {"field_name": "system_maturity", "reasoning_steps": [{"step": "The paper describes a custom-built robotic system for research purposes.", "unit_indices": [278]}, {"step": "This fits the 'Research prototype (hardware)' category as it's purpose-built and not commercially available.", "criteria_application": true}], "value": "Research prototype (hardware)"},
+    {"field_name": "study_design", "reasoning_steps": [{"step": "The paper presents an initial demonstration of a novel robotic system for surgical assistance.", "unit_indices": [20, 21]}, {"step": "This aligns with 'Initial technical demonstration' as it focuses on showing the system's capabilities rather than systematic evaluation.", "criteria_application": true}], "value": "Initial technical demonstration"},
+    {"field_name": "key_limitation", "reasoning_steps": [{"step": "The experiments are conducted in vitro using a pelvi-trainer, which may not fully replicate clinical conditions.", "unit_indices": [275]}, {"step": "This limitation affects the translational potential of the system.", "criteria_application": true}], "value": "Experiments conducted in vitro without clinical validation"},
+    {"field_name": "clinical_readiness_assessment", "reasoning_steps": [{"step": "The system has been tested in vitro but not in clinical settings.", "unit_indices": [275]}, {"step": "This places it at the 'Early-stage research' level as it requires further preclinical and clinical validation.", "criteria_application": true}], "value": "Early-stage research"}
+]}

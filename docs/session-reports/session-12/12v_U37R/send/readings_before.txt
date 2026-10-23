@@ -1,0 +1,10 @@
+== 2026-10-23T17:26:17Z
+2026-10-23T17:26:17.270052267Z /api/version {"version":"0.21.0"}
+2026-10-23T17:26:17.275251268Z /api/ps {"models":[]}
+{'deepseek-r1:32b': 'edba8017331d15236e57480eb45406c0d721db77a4cdcf234df500fc2ad3960c'}
+NRestarts=0
+earlyoom kills this boot: 0
+NV_ERR_NO_MEMORY this boot: 15
+MemAvailable:   114099156 kB
+-rw-r--r-- 1 ankitsarin ankitsarin 0 Jul 27 23:22 /home/ankitsarin/.ollama_experiment.lock
+lock free

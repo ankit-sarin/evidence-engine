@@ -1,0 +1,95 @@
+{
+ "arm": "new",
+ "cases": {
+  "12g_p10": {
+   "attempt1_failures_reproduce": true,
+   "equals_stored": null,
+   "feedback_chars": 2073,
+   "n_units": 383,
+   "parsed_text_sha256_ok": true,
+   "recorded_feedback_chars": 1346,
+   "request_hash": "775add4d55c109414bd2c3f6694becaf00f544f308cc7e26acb9a7f0f1af3964",
+   "roles": [
+    "system",
+    "user"
+   ],
+   "stored_attempt2_request_hash": null,
+   "unit_map_equals_stored": null
+  },
+  "12g_p8": {
+   "attempt1_failures_reproduce": true,
+   "equals_stored": null,
+   "feedback_chars": 2437,
+   "n_units": 373,
+   "parsed_text_sha256_ok": true,
+   "recorded_feedback_chars": 1710,
+   "request_hash": "c8b03d881999288367fd8ce1172ebff43fbd18f30f013feec6cd856c222596d1",
+   "roles": [
+    "system",
+    "user"
+   ],
+   "stored_attempt2_request_hash": null,
+   "unit_map_equals_stored": null
+  },
+  "12g_p9": {
+   "attempt1_failures_reproduce": true,
+   "equals_stored": null,
+   "feedback_chars": 1337,
+   "n_units": 146,
+   "parsed_text_sha256_ok": true,
+   "recorded_feedback_chars": 610,
+   "request_hash": "abf4586e1ce00854c9c6ebede8b6bb8339776ff0eaf2b89195c607a1f9e056c5",
+   "roles": [
+    "system",
+    "user"
+   ],
+   "stored_attempt2_request_hash": null,
+   "unit_map_equals_stored": null
+  },
+  "12r_p12": {
+   "attempt1_failures_reproduce": true,
+   "equals_stored": false,
+   "feedback_chars": 1705,
+   "n_units": 304,
+   "parsed_text_sha256_ok": true,
+   "recorded_feedback_chars": 978,
+   "request_hash": "3c5adecaeaaed631dcbb3b2848b1c3e9ede2073bcc2568116d526187dcb24a23",
+   "roles": [
+    "system",
+    "user"
+   ],
+   "stored_attempt2_request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "unit_map_equals_stored": true
+  },
+  "12r_p8": {
+   "attempt1_failures_reproduce": true,
+   "equals_stored": false,
+   "feedback_chars": 1337,
+   "n_units": 373,
+   "parsed_text_sha256_ok": true,
+   "recorded_feedback_chars": 610,
+   "request_hash": "c4f1dd8a985affbc5846ccd63b44a64b060d2a30f98865118ba31b88b2145397",
+   "roles": [
+    "system",
+    "user"
+   ],
+   "stored_attempt2_request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "unit_map_equals_stored": true
+  }
+ },
+ "engine_root": "/home/ankitsarin/projects/evidence-engine",
+ "hashed_kwargs": [
+  "keep_alive",
+  "options",
+  "think"
+ ],
+ "stage_kwargs": {
+  "keep_alive": -1,
+  "model": "deepseek-r1:32b",
+  "options": {
+   "temperature": 0
+  },
+  "stage": "elicitation_pass1",
+  "think": true
+ }
+}

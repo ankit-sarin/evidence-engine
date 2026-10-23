@@ -1,0 +1,390 @@
+{
+ "historical_stated_only_among_sent": "4 of 5",
+ "old_arm_agrees_with_history_on_stated_only": "3 of 5",
+ "paired": {
+  "12g_p10": {
+   "historical_attempt2_shape": "stated_only",
+   "new": "full_contract_met",
+   "old": "stated_only"
+  },
+  "12g_p8": {
+   "historical_attempt2_shape": "stated_only",
+   "new": "stated_only",
+   "old": "stated_only"
+  },
+  "12g_p9": {
+   "historical_attempt2_shape": "stated_only",
+   "new": "full_other_failures",
+   "old": "full_other_failures"
+  },
+  "12r_p12": {
+   "historical_attempt2_shape": "full",
+   "new": "full_contract_met",
+   "old": "full_contract_met"
+  },
+  "12r_p8": {
+   "historical_attempt2_shape": "stated_only",
+   "new": "full_other_failures",
+   "old": "full_other_failures"
+  }
+ },
+ "rows": [
+  {
+   "arm": "old",
+   "case": "12g_p8",
+   "case_no": null,
+   "codes": {
+    "FIELD_MISSING": 11,
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "done_reason": "stop",
+   "eval_count": 591,
+   "failed_fields": [
+    "surgical_domain",
+    "autonomy_level",
+    "task_monitor",
+    "task_generate",
+    "task_select",
+    "task_execute",
+    "system_maturity",
+    "study_design",
+    "country",
+    "comparison_to_human",
+    "secondary_outcomes",
+    "key_limitation",
+    "clinical_readiness_assessment"
+   ],
+   "n_failed": 13,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    0,
+    0
+   ],
+   "prompt_eval_count": 20857,
+   "raw_sha256": "51bad414200c3931367c5cfe8378283cb1ec27ef37a03b605596044609aa5280",
+   "request_hash": "285201ce149c0a8e6adb19843be9b4b49a3a9808258e34d3e6197bae7cbbf466",
+   "role": "warm-up",
+   "seq": 0,
+   "shape": "stated_only",
+   "wall_s": 129.706
+  },
+  {
+   "arm": "old",
+   "case": "12g_p8",
+   "case_no": 1,
+   "codes": {
+    "FIELD_MISSING": 11
+   },
+   "done_reason": "stop",
+   "eval_count": 630,
+   "failed_fields": [
+    "surgical_domain",
+    "autonomy_level",
+    "task_monitor",
+    "task_generate",
+    "task_select",
+    "task_execute",
+    "system_maturity",
+    "study_design",
+    "country",
+    "key_limitation",
+    "clinical_readiness_assessment"
+   ],
+   "n_failed": 11,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    0,
+    0
+   ],
+   "prompt_eval_count": 20857,
+   "raw_sha256": "4cd7bfd633bc09f9c6d960fae2351cd40770a69a435ca771ed5f60cb2b16e53d",
+   "request_hash": "285201ce149c0a8e6adb19843be9b4b49a3a9808258e34d3e6197bae7cbbf466",
+   "role": "scored",
+   "seq": 1,
+   "shape": "stated_only",
+   "wall_s": 78.715
+  },
+  {
+   "arm": "new",
+   "case": "12g_p8",
+   "case_no": 1,
+   "codes": {
+    "FIELD_MISSING": 11,
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "done_reason": "stop",
+   "eval_count": 626,
+   "failed_fields": [
+    "surgical_domain",
+    "autonomy_level",
+    "task_monitor",
+    "task_generate",
+    "task_select",
+    "task_execute",
+    "system_maturity",
+    "study_design",
+    "country",
+    "comparison_to_human",
+    "secondary_outcomes",
+    "key_limitation",
+    "clinical_readiness_assessment"
+   ],
+   "n_failed": 13,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    0,
+    0
+   ],
+   "prompt_eval_count": 21030,
+   "raw_sha256": "afd5e0671c3a061c10e1dee1289afe71521f8833316dddfea99a0ef336741909",
+   "request_hash": "c8b03d881999288367fd8ce1172ebff43fbd18f30f013feec6cd856c222596d1",
+   "role": "scored",
+   "seq": 2,
+   "shape": "stated_only",
+   "wall_s": 90.276
+  },
+  {
+   "arm": "new",
+   "case": "12g_p9",
+   "case_no": 2,
+   "codes": {
+    "VALUE_WITHOUT_CITATION": 1
+   },
+   "done_reason": "stop",
+   "eval_count": 1716,
+   "failed_fields": [
+    "comparison_to_human"
+   ],
+   "n_failed": 1,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "prompt_eval_count": 14647,
+   "raw_sha256": "fb9e0993308bde78c5b8f58a509edb751384b8d1566cf79fe15101cf77d1db2e",
+   "request_hash": "abf4586e1ce00854c9c6ebede8b6bb8339776ff0eaf2b89195c607a1f9e056c5",
+   "role": "scored",
+   "seq": 3,
+   "shape": "full_other_failures",
+   "wall_s": 309.182
+  },
+  {
+   "arm": "old",
+   "case": "12g_p9",
+   "case_no": 2,
+   "codes": {
+    "STEP_WITHOUT_BASIS": 3
+   },
+   "done_reason": "stop",
+   "eval_count": 1693,
+   "failed_fields": [
+    "system_maturity",
+    "key_limitation",
+    "clinical_readiness_assessment"
+   ],
+   "n_failed": 3,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "prompt_eval_count": 14474,
+   "raw_sha256": "e8b1e226b56b73f6584169905df267f988b7fccccec8afb5ed171e826b7b2687",
+   "request_hash": "036362a38b83146e58c923b2fd94e7233f8427baf02ee7b55af5d8afa13e7d0d",
+   "role": "scored",
+   "seq": 4,
+   "shape": "full_other_failures",
+   "wall_s": 273.814
+  },
+  {
+   "arm": "old",
+   "case": "12g_p10",
+   "case_no": 3,
+   "codes": {
+    "FIELD_MISSING": 11
+   },
+   "done_reason": "stop",
+   "eval_count": 1016,
+   "failed_fields": [
+    "surgical_domain",
+    "autonomy_level",
+    "task_monitor",
+    "task_generate",
+    "task_select",
+    "task_execute",
+    "system_maturity",
+    "study_design",
+    "country",
+    "key_limitation",
+    "clinical_readiness_assessment"
+   ],
+   "n_failed": 11,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    0,
+    0
+   ],
+   "prompt_eval_count": 18706,
+   "raw_sha256": "d83826cd4ffc590026404b0e8ef9f4ac8b3bac0a1931a736e07a5951ec4099b6",
+   "request_hash": "6d72943362fd0a226729f1f17f9adcf712d676f3f548130ace48e1574b10baa8",
+   "role": "scored",
+   "seq": 5,
+   "shape": "stated_only",
+   "wall_s": 212.864
+  },
+  {
+   "arm": "new",
+   "case": "12g_p10",
+   "case_no": 3,
+   "codes": {},
+   "done_reason": "stop",
+   "eval_count": 2207,
+   "failed_fields": [],
+   "n_failed": 0,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "prompt_eval_count": 18879,
+   "raw_sha256": "543b3c77ec0490cc0a7bb2db0e7b695eaba216015a6df09d46d4624184fc2863",
+   "request_hash": "775add4d55c109414bd2c3f6694becaf00f544f308cc7e26acb9a7f0f1af3964",
+   "role": "scored",
+   "seq": 6,
+   "shape": "full_contract_met",
+   "wall_s": 372.51
+  },
+  {
+   "arm": "new",
+   "case": "12r_p8",
+   "case_no": 4,
+   "codes": {
+    "VALUE_WITHOUT_CITATION": 2
+   },
+   "done_reason": "stop",
+   "eval_count": 1615,
+   "failed_fields": [
+    "primary_outcome_value",
+    "comparison_to_human"
+   ],
+   "n_failed": 2,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "prompt_eval_count": 20760,
+   "raw_sha256": "529e6e63e52ca001bfaf505cf8d8e5cbec7cc5a02d0f6190ffd9a71bf9091648",
+   "request_hash": "c4f1dd8a985affbc5846ccd63b44a64b060d2a30f98865118ba31b88b2145397",
+   "role": "scored",
+   "seq": 7,
+   "shape": "full_other_failures",
+   "wall_s": 322.553
+  },
+  {
+   "arm": "old",
+   "case": "12r_p8",
+   "case_no": 4,
+   "codes": {
+    "STEPS_MISSING": 2,
+    "VALUE_WITHOUT_CITATION": 3
+   },
+   "done_reason": "stop",
+   "eval_count": 1630,
+   "failed_fields": [
+    "system_maturity",
+    "study_design",
+    "comparison_to_human"
+   ],
+   "n_failed": 3,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "prompt_eval_count": 20587,
+   "raw_sha256": "3b0faf38286f2e77d228b1d518911ff56b97ef7b25996a1099c013b2b42e7f03",
+   "request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "role": "scored",
+   "seq": 8,
+   "shape": "full_other_failures",
+   "wall_s": 263.062
+  },
+  {
+   "arm": "old",
+   "case": "12r_p12",
+   "case_no": 5,
+   "codes": {},
+   "done_reason": "stop",
+   "eval_count": 1525,
+   "failed_fields": [],
+   "n_failed": 0,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "prompt_eval_count": 18195,
+   "raw_sha256": "5689551505c1885bcd7078138c0d8401b921a98f79f070f67cb03e78a4724e3f",
+   "request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "role": "scored",
+   "seq": 9,
+   "shape": "full_contract_met",
+   "wall_s": 219.563
+  },
+  {
+   "arm": "new",
+   "case": "12r_p12",
+   "case_no": 5,
+   "codes": {},
+   "done_reason": "stop",
+   "eval_count": 1980,
+   "failed_fields": [],
+   "n_failed": 0,
+   "parse_path": "direct",
+   "present_SIJ": [
+    9,
+    6,
+    5
+   ],
+   "prompt_eval_count": 18368,
+   "raw_sha256": "f9b1b70a1bbbce0d68945fca38dc86b42d626b08d7b7dd2c9a8af1dae1590ab7",
+   "request_hash": "3c5adecaeaaed631dcbb3b2848b1c3e9ede2073bcc2568116d526187dcb24a23",
+   "role": "scored",
+   "seq": 10,
+   "shape": "full_contract_met",
+   "wall_s": 246.827
+  }
+ ],
+ "totals": {
+  "new": {
+   "n": 5,
+   "shapes": {
+    "full_contract_met": 2,
+    "full_other_failures": 2,
+    "stated_only": 1
+   },
+   "stated_only": 1
+  },
+  "old": {
+   "n": 5,
+   "shapes": {
+    "full_contract_met": 1,
+    "full_other_failures": 2,
+    "stated_only": 2
+   },
+   "stated_only": 2
+  }
+ }
+}

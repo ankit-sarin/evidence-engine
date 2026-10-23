@@ -1,0 +1,47 @@
+{"fields": [
+    {
+        "field_name": "study_type",
+        "unit_indices": [20],
+        "value": "Original Research"
+    },
+    {
+        "field_name": "robot_platform",
+        "unit_indices": [276, 281],
+        "value": "CISOBOT; Laparoscopic Tool Arm with Force Sensor"
+    },
+    {
+        "field_name": "task_performed",
+        "unit_indices": [305, 309],
+        "value": "needle delivery; suture procedure"
+    },
+    {
+        "field_name": "sample_size",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "validation_setting",
+        "unit_indices": [284, 305],
+        "value": "Ex vivo; Phantom/Simulation"
+    },
+    {
+        "field_name": "primary_outcome_metric",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "primary_outcome_value",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "comparison_to_human",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+        "field_name": "secondary_outcomes",
+        "unit_indices": [],
+        "value": "NO_EVIDENCE_LOCATABLE"
+    }
+]}

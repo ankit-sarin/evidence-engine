@@ -1,0 +1,19 @@
+Okay, I need to help extract data from a research paper for a systematic review. The user has provided specific fields and instructions on how to handle each one. Let me go through each field step by step.
+
+Starting with **study_type**, the paper doesn't explicitly state it's a systematic review or meta-analysis. It describes methods like experiments and results, so I'll classify it as "Original Research".
+
+Next is **robot_platform**. The paper mentions CISOBOT, which is a two-arm robotic system used in their experiments.
+
+For **task_performed**, the robot assists in tasks like needle delivery and suture procedures, so that's what I'll note.
+
+The **sample_size** isn't mentioned anywhere in the paper, so it should be "NR" with no citations.
+
+Moving on to **validation_setting**, the experiments were done in vitro using a pelvi-trainer, which is an ex vivo setting. So I'll list both as per the instructions.
+
+For **primary_outcome_metric**, the main outcome was force exerted on the abdominal wall during robot movements.
+
+The **primary_outcome_value** isn't provided numerically in the paper, so it's "NR".
+
+There's no comparison to human performance mentioned, so **comparison_to_human** is "NR".
+
+Lastly, **secondary_outcomes** aren't detailed beyond the primary metric, so that's also "NR".

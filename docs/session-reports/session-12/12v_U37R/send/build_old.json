@@ -1,0 +1,95 @@
+{
+ "arm": "old",
+ "cases": {
+  "12g_p10": {
+   "attempt1_failures_reproduce": true,
+   "equals_stored": null,
+   "feedback_chars": 1346,
+   "n_units": 383,
+   "parsed_text_sha256_ok": true,
+   "recorded_feedback_chars": 1346,
+   "request_hash": "6d72943362fd0a226729f1f17f9adcf712d676f3f548130ace48e1574b10baa8",
+   "roles": [
+    "system",
+    "user"
+   ],
+   "stored_attempt2_request_hash": null,
+   "unit_map_equals_stored": null
+  },
+  "12g_p8": {
+   "attempt1_failures_reproduce": true,
+   "equals_stored": null,
+   "feedback_chars": 1710,
+   "n_units": 373,
+   "parsed_text_sha256_ok": true,
+   "recorded_feedback_chars": 1710,
+   "request_hash": "285201ce149c0a8e6adb19843be9b4b49a3a9808258e34d3e6197bae7cbbf466",
+   "roles": [
+    "system",
+    "user"
+   ],
+   "stored_attempt2_request_hash": null,
+   "unit_map_equals_stored": null
+  },
+  "12g_p9": {
+   "attempt1_failures_reproduce": true,
+   "equals_stored": null,
+   "feedback_chars": 610,
+   "n_units": 146,
+   "parsed_text_sha256_ok": true,
+   "recorded_feedback_chars": 610,
+   "request_hash": "036362a38b83146e58c923b2fd94e7233f8427baf02ee7b55af5d8afa13e7d0d",
+   "roles": [
+    "system",
+    "user"
+   ],
+   "stored_attempt2_request_hash": null,
+   "unit_map_equals_stored": null
+  },
+  "12r_p12": {
+   "attempt1_failures_reproduce": true,
+   "equals_stored": true,
+   "feedback_chars": 978,
+   "n_units": 304,
+   "parsed_text_sha256_ok": true,
+   "recorded_feedback_chars": 978,
+   "request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "roles": [
+    "system",
+    "user"
+   ],
+   "stored_attempt2_request_hash": "91016de9d5af0523e0af2e8c7b3947adef921cf4b80dcf8a2391a36654efacec",
+   "unit_map_equals_stored": true
+  },
+  "12r_p8": {
+   "attempt1_failures_reproduce": true,
+   "equals_stored": true,
+   "feedback_chars": 610,
+   "n_units": 373,
+   "parsed_text_sha256_ok": true,
+   "recorded_feedback_chars": 610,
+   "request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "roles": [
+    "system",
+    "user"
+   ],
+   "stored_attempt2_request_hash": "e14ca61521dfb7903a4f05f7979c0d1ed383bcfe2e05fc291ff7f3334a0c7658",
+   "unit_map_equals_stored": true
+  }
+ },
+ "engine_root": "/home/ankitsarin/scratch/12v-u37r/tree_old",
+ "hashed_kwargs": [
+  "keep_alive",
+  "options",
+  "think"
+ ],
+ "stage_kwargs": {
+  "keep_alive": -1,
+  "model": "deepseek-r1:32b",
+  "options": {
+   "temperature": 0
+  },
+  "stage": "elicitation_pass1",
+  "think": true
+ }
+}

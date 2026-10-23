@@ -1,0 +1,65 @@
+{
+ "all_ok": true,
+ "cases": {
+  "12g_p10": {
+   "inserts_only": true,
+   "kwargs_equal": true,
+   "n_inserts": 2,
+   "ok": true,
+   "r1_chars": 510,
+   "r1_r2_only": true,
+   "r1_text": "The schema has 20 fields. Your response must carry one entry for every one of them, including every field not listed below:\n- STATED (9): study_type, robot_platform, task_performed, sample_size, validation_setting, primary_outcome_metric, primary_outcome_value, comparison_to_human, secondary_outcomes\n- INFERABLE (6): surgical_domain, task_monitor, task_generate, task_select, task_execute, country\n- JUDGMENT (5): autonomy_level, system_maturity, study_design, key_limitation, clinical_readiness_assessment\n\n",
+   "r2_chars": 217,
+   "roles_equal": true,
+   "system_equal": true
+  },
+  "12g_p8": {
+   "inserts_only": true,
+   "kwargs_equal": true,
+   "n_inserts": 2,
+   "ok": true,
+   "r1_chars": 510,
+   "r1_r2_only": true,
+   "r1_text": "The schema has 20 fields. Your response must carry one entry for every one of them, including every field not listed below:\n- STATED (9): study_type, robot_platform, task_performed, sample_size, validation_setting, primary_outcome_metric, primary_outcome_value, comparison_to_human, secondary_outcomes\n- INFERABLE (6): surgical_domain, task_monitor, task_generate, task_select, task_execute, country\n- JUDGMENT (5): autonomy_level, system_maturity, study_design, key_limitation, clinical_readiness_assessment\n\n",
+   "r2_chars": 217,
+   "roles_equal": true,
+   "system_equal": true
+  },
+  "12g_p9": {
+   "inserts_only": true,
+   "kwargs_equal": true,
+   "n_inserts": 2,
+   "ok": true,
+   "r1_chars": 510,
+   "r1_r2_only": true,
+   "r1_text": "The schema has 20 fields. Your response must carry one entry for every one of them, including every field not listed below:\n- STATED (9): study_type, robot_platform, task_performed, sample_size, validation_setting, primary_outcome_metric, primary_outcome_value, comparison_to_human, secondary_outcomes\n- INFERABLE (6): surgical_domain, task_monitor, task_generate, task_select, task_execute, country\n- JUDGMENT (5): autonomy_level, system_maturity, study_design, key_limitation, clinical_readiness_assessment\n\n",
+   "r2_chars": 217,
+   "roles_equal": true,
+   "system_equal": true
+  },
+  "12r_p12": {
+   "inserts_only": true,
+   "kwargs_equal": true,
+   "n_inserts": 2,
+   "ok": true,
+   "r1_chars": 510,
+   "r1_r2_only": true,
+   "r1_text": "The schema has 20 fields. Your response must carry one entry for every one of them, including every field not listed below:\n- STATED (9): study_type, robot_platform, task_performed, sample_size, validation_setting, primary_outcome_metric, primary_outcome_value, comparison_to_human, secondary_outcomes\n- INFERABLE (6): surgical_domain, task_monitor, task_generate, task_select, task_execute, country\n- JUDGMENT (5): autonomy_level, system_maturity, study_design, key_limitation, clinical_readiness_assessment\n\n",
+   "r2_chars": 217,
+   "roles_equal": true,
+   "system_equal": true
+  },
+  "12r_p8": {
+   "inserts_only": true,
+   "kwargs_equal": true,
+   "n_inserts": 2,
+   "ok": true,
+   "r1_chars": 510,
+   "r1_r2_only": true,
+   "r1_text": "The schema has 20 fields. Your response must carry one entry for every one of them, including every field not listed below:\n- STATED (9): study_type, robot_platform, task_performed, sample_size, validation_setting, primary_outcome_metric, primary_outcome_value, comparison_to_human, secondary_outcomes\n- INFERABLE (6): surgical_domain, task_monitor, task_generate, task_select, task_execute, country\n- JUDGMENT (5): autonomy_level, system_maturity, study_design, key_limitation, clinical_readiness_assessment\n\n",
+   "r2_chars": 217,
+   "roles_equal": true,
+   "system_equal": true
+  }
+ }
+}

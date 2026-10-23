@@ -1,0 +1,134 @@
+```json
+{
+  "fields": [
+    {
+      "field_name": "study_type",
+      "unit_indices": [20],
+      "value": "Original Research"
+    },
+    {
+      "field_name": "robot_platform",
+      "unit_indices": [276, 281],
+      "value": "CISOBOT"
+    },
+    {
+      "field_name": "task_performed",
+      "unit_indices": [305, 309],
+      "value": "needle delivery; suture procedure"
+    },
+    {
+      "field_name": "sample_size",
+      "unit_indices": [],
+      "value": "NO_EVIDENCE_LOCATABLE"
+    },
+    {
+      "field_name": "validation_setting",
+      "unit_indices": [284, 305],
+      "value": "Ex vivo"
+    },
+    {
+      "field_name": "primary_outcome_metric",
+      "unit_indices": [291, 307],
+      "value": "force exerted over the abdomen; distance towards target location"
+    },
+    {
+      "field_name": "primary_outcome_value",
+      "unit_indices": [294, 308],
+      "value": "Force: 2.3 ± 0.8 N; Distance: 15 mm (± 2 mm)"
+    },
+    {
+      "field_name": "comparison_to_human",
+      "unit_indices": [],
+      "value": "NR"
+    },
+    {
+      "field_name": "secondary_outcomes",
+      "unit_indices": [307, 314],
+      "value": "Distance: 15 mm (± 2 mm); Velocity: 0.5 m/s (max)"
+    },
+    {
+      "field_name": "surgical_domain",
+      "unit_indices": [326, 339],
+      "inference": "The tasks involve needle delivery and suturing, which are general surgical procedures.",
+      "value": "General Surgery"
+    },
+    {
+      "field_name": "task_monitor",
+      "unit_indices": [107, 154],
+      "inference": "The robot uses force feedback to adjust movements without human perception involvement.",
+      "value": "R"
+    },
+    {
+      "field_name": "task_generate",
+      "unit_indices": [236, 298],
+      "inference": "The robot computes trajectories based on sensor data and APF algorithm.",
+      "value": "R"
+    },
+    {
+      "field_name": "task_select",
+      "unit_indices": [240, 297],
+      "inference": "The robot autonomously selects paths from its generated options.",
+      "value": "R"
+    },
+    {
+      "field_name": "task_execute",
+      "unit_indices": [315, 323],
+      "inference": "The robot moves the tool without human control during experiments.",
+      "value": "R"
+    },
+    {
+      "field_name": "country",
+      "unit_indices": [4, 6],
+      "inference": "Authors' affiliations are at universities in Malaga and Valladolid, Spain.",
+      "value": "Spain"
+    },
+    {
+      "field_name": "autonomy_level",
+      "unit_indices": [325, 337],
+      "reasoning_steps": [
+        {
+          "step": "Robot executes tasks without continuous human control.",
+          "unit_indices": [189, 240]
+        },
+        {
+          "step": "Surgeon defines target but robot plans and executes autonomously.",
+          "criteria_application": true
+        }
+      ],
+      "value": "4 (High autonomy)"
+    },
+    {
+      "field_name": "system_maturity",
+      "unit_indices": [276, 305],
+      "inference": "CISOBOT is a purpose-built research prototype.",
+      "value": "Research prototype (hardware)"
+    },
+    {
+      "field_name": "study_design",
+      "unit_indices": [325, 341],
+      "inference": "Initial demonstration of robotic assistant feasibility in HALS-SILS.",
+      "value": "Initial technical demonstration"
+    },
+    {
+      "field_name": "key_limitation",
+      "reasoning_steps": [
+        {
+          "step": "Uncertainty in fulcrum point estimation affects force control.",
+          "unit_indices": [107, 294]
+        }
+      ],
+      "value": "Dependence on accurate fulcrum point estimation for force control"
+    },
+    {
+      "field_name": "clinical_readiness_assessment",
+      "reasoning_steps": [
+        {
+          "step": "In vitro experiments with no clinical trials mentioned.",
+          "unit_indices": [305, 341]
+        }
+      ],
+      "value": "Proof of concept only"
+    }
+  ]
+}
+```

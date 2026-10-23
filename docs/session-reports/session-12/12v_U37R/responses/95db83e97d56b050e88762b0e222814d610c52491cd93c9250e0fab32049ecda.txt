@@ -1,0 +1,29 @@
+Okay, I need to help extract data from a research paper for a systematic review. The user has provided specific instructions on how to structure each field and what evidence to cite. Let me go through each field step by step.
+
+Starting with **study_type**, the paper is about developing a robotic system for surgery. It describes methods, results, and conclusions, so it's original research. I should find where in the text this is explicitly stated or implied. Looking at the introduction and abstract, they mention development and testing, which fits "Original Research."
+
+Next, **robot_platform**. The paper talks about a magnetic anchoring robot system with specific components like handles with OPMs and imaging units. I need to extract the exact name as given in the text. From sections 2.1 and 2.4, it's described but not named beyond "magnetic anchoring robot system."
+
+For **task_performed**, the robot does positioning for LESS procedures. The paper mentions tasks like cutting and grasping tissues. I should cite where these are detailed.
+
+**sample_size** is tricky because the study uses simulations and tissue experiments without human or animal subjects. So, it's NR, but I need to find a unit that states this absence. Looking through the results section, there's no mention of sample sizes for humans or animals.
+
+Moving on to **validation_setting**, the robot was tested in vitro (simulations) and ex vivo (tissue experiments). The paper doesn't mention in vivo testing, so it's Phantom/Simulation and Ex vivo.
+
+**primary_outcome_metric** is about positioning error. The results section mentions an average of 1.622 mm, which I can cite directly.
+
+The **primary_outcome_value** is the numeric result from that metric. It's clearly stated in the results as 1.622 mm.
+
+For **comparison_to_human**, the paper doesn't compare the robot to human performance; it focuses on autonomous control. So, it's NR, but I need a unit that shows this absence. The discussion mentions advantages over other methods but not humans.
+
+**secondary_outcomes** include metrics like positioning error and success rates. These are mentioned in the results section with specific values.
+
+Now, for the fields where I made mistakes before:
+
+- **study_type**: I didn't cite any units earlier. Now, I'll find where it's stated as original research. The abstract and introduction describe methods and results, so citing S21 (abstract) makes sense.
+  
+- **sample_size**: Previously, I said NR without citation. Since the paper doesn't mention sample sizes for humans or animals, I should cite a unit that shows this absence. Looking through the text, there's no such statement, so it's NO_EVIDENCE_LOCATABLE.
+
+- **comparison_to_human**: Similarly, since there's no comparison to human performance, and no unit states this absence explicitly, it's also NO_EVIDENCE_LOCATABLE.
+
+I need to ensure each field now correctly cites the necessary units or notes that evidence isn't locatable. This way, I avoid the previous mistakes of providing values without proper citations.

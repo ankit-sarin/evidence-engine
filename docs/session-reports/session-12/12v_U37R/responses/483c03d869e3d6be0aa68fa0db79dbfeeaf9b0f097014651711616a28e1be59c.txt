@@ -1,0 +1,41 @@
+Alright, I need to extract structured data from this paper for a systematic review. Let me go through each field step by step.
+
+Starting with **study_type**, the paper doesn't explicitly state it's a case report or series, but looking at the methods section, they describe experiments and results, so it's Original Research. Citing S4 where they propose their cooperative suturing scheme.
+
+Next is **robot_platform**. The paper mentions two collaborative robots from Jaka Robotics Ltd., China. So I'll list both as "Jaka collaborative robot (Jaka Robotics Ltd., China)".
+
+For **task_performed**, the main task is needle insertion and extraction during suturing. Citing S34 where they describe their methods.
+
+**sample_size** is straightforward; they conducted 10 experiments, so the value is 10.
+
+Looking at **validation_setting**, all experiments were done on a simulated skin model, which falls under Phantom/Simulation.
+
+The **primary_outcome_metric** is the average error in needle insertion and extraction points. Citing S91 where they present their results.
+
+The **primary_outcome_value** includes both horizontal and vertical errors, so I'll list them as "Horizontal: 1.552 ± 3.5 mm; Vertical: 3.394 ± 4.11 mm".
+
+For **comparison_to_human**, the paper doesn't compare their results to human performance, so it's NR.
+
+**secondary_outcomes** include task completion rate and time. They achieved an 83.3% success rate with an average time of 70.81 seconds.
+
+Moving on to **surgical_domain**, since they used a simulated model without specific clinical context, it's Non-clinical Bench / Phantom.
+
+**task_monitor** is H because the surgeon visually observes via endoscopic video.
+
+**task_generate** is R as the robot uses AI to plan needle insertion.
+
+**task_select** is also R since the robot autonomously selects the path based on vision data.
+
+**task_execute** is a mix of H and R; the robot inserts the needle, while the human extracts it using HMI.
+
+For **country**, the authors are from Tianjin University in China, so that's straightforward.
+
+**autonomy_level** is 2 (Task autonomy) because the robot performs specific tasks autonomously under surgeon supervision.
+
+The system is a **Research prototype (hardware)** since they built a custom platform.
+
+The study design is an **Initial technical demonstration** as it's their first展示 of the cooperative suturing platform.
+
+The key limitation is that the evaluation metrics are simple and the model is simplified compared to real surgery.
+
+Finally, the clinical readiness is at **Proof of concept only** because it's tested on a phantom without clinical trials.

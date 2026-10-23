@@ -1,0 +1,82 @@
+{
+ "recorded_at": "2026-10-23",
+ "rule": "warm-up = case 1's old request (discarded but stored); cases 1-5 in cases.json order; odd (old, new), even (new, old)",
+ "order": [
+  {
+   "case": "12g_p8",
+   "arm": "old",
+   "role": "warm-up",
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "case": "12g_p8",
+   "arm": "old",
+   "role": "scored",
+   "case_no": 1,
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "case": "12g_p8",
+   "arm": "new",
+   "role": "scored",
+   "case_no": 1,
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "case": "12g_p9",
+   "arm": "new",
+   "role": "scored",
+   "case_no": 2,
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "case": "12g_p9",
+   "arm": "old",
+   "role": "scored",
+   "case_no": 2,
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "case": "12g_p10",
+   "arm": "old",
+   "role": "scored",
+   "case_no": 3,
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "case": "12g_p10",
+   "arm": "new",
+   "role": "scored",
+   "case_no": 3,
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "case": "12r_p8",
+   "arm": "new",
+   "role": "scored",
+   "case_no": 4,
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "case": "12r_p8",
+   "arm": "old",
+   "role": "scored",
+   "case_no": 4,
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "case": "12r_p12",
+   "arm": "old",
+   "role": "scored",
+   "case_no": 5,
+   "model": "deepseek-r1:32b"
+  },
+  {
+   "case": "12r_p12",
+   "arm": "new",
+   "role": "scored",
+   "case_no": 5,
+   "model": "deepseek-r1:32b"
+  }
+ ]
+}

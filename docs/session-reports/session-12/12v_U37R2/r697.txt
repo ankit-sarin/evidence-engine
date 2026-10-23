@@ -1,0 +1,50 @@
+RULING [evidence-engine 12v-R697] — 12v-U37R Part A accepted as inconclusive; Part A2 opens: the
+  five cases at k = 5 sends per arm, with a pre-registered decision rule; Part B held
+STATUS: PI ruling, 2026-10-23 UTC, session 12v, on architect recommendation, on the 12v-U37R
+  final report and the read-out 12v_U37R.md (fcbbad466d1d424c7ed0573ed66b73f464c0eb38).
+  Transcribe as Block 95 at item 0 of the 12v-U37R2 brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12v-U37R final report):
+  MEASURED: "Commit: 5344e8b5f534dc808316947e009bfc739dd146d7, parent 11c7e43"; "r696.txt:
+    34aba43d…fc4a"; "Commit: fcbbad466d1d424c7ed0573ed66b73f464c0eb38, parent 5344e8b, 51
+    files"; "Old-arm rebuild: reproduces both stored 12r attempt-2 hashes, 2 of 2"; "on every
+    case the new request is the old one with exactly two insertions, R-1 (510 chars) and R-2
+    (217 chars)"; "Calls: eleven, 17:26:25Z–18:08:25Z, all stop"; "nothing resident at
+    18:08:30Z"; "STATED-only re-emission: old arm 2 of 5, new arm 1 of 5; historical 4 of 5";
+    "Old arm against history: agrees on 3 of 5"; "one case moved to a full, contract-met
+    response under the new template (12g_p10); none moved the other way"; "12g_p8 is
+    STATED-only on every send so far, three of three"; "the new template costs 173 prompt
+    tokens per attempt-2 request"; "git diff --stat 11c7e43 HEAD -- engine tests scripts
+    analysis review_specs is empty"; "Fingerprint: IDENTICAL at 18:10:53Z".
+  READ (CC's): "the 2026-09-05 smoke's paper 498. Its attempt-1 response was never stored";
+    "with single calls at temperature 0, the template's effect can't be separated from
+    run-to-run variation on five cases"; "one foreign read-only ollama ps at 18:00:29".
+  INFERRED: none.
+
+R697(a) — 12v-U37R is accepted as reported: item 0 as 5344e8b (Block 94 with the R253-form
+  correction line); the read-out as fcbbad4; the ledgers 9a9a931 and c603fc4. Part A's result is
+  recorded as inconclusive on its own finding F6; nothing in it closes, retains or reverts U37.
+R697(b) — Accepted as the standing form, no row: the old template taken by commit hash (37bb382),
+  not by a HEAD-relative name; committed requests carry the paper text's sha256 and length in
+  place of the text, the full requests in scratch by hash (the 12r-U13-PROBE form); a read-only
+  data symlink inside a scratch worktree, not committed. The pkill -f self-match is a reading:
+  briefs name a pid, never a pattern, when a process is to be stopped.
+R697(c) — The denominator is five. The September smoke's paper 498 cannot be replayed (no stored
+  attempt-1 response); its historical attempt 2 stays in the census as a code-only case.
+R697(d) — 12g_p8 (live paper 455): STATED-only on every send under both templates (three of
+  three). If it stays so at k = 5 under both arms it is a paper-level property outside the
+  feedback template's reach, recorded as a dated note on INT-r12-1, not a failure of U37.
+R697(e) — Part A2 runs under the brief below: the same five cases, the same two request pairs
+  (by hash, unchanged), k = 5 sends per arm per case, 50 scored calls and one warm-up, order
+  alternating within each case, one model load, under the experiment lock, outside any run
+  manifest, no review written. The decision rule, fixed now: per case, the STATED-only rate per
+  arm over its five sends; pooled, the rate over 25. (i) CLOSE INT-r12-1 on U37 if the new arm's
+  pooled STATED-only rate is at most half the old arm's and no case has a higher rate under the
+  new template than under the old. (ii) RETAIN U37 on neutral evidence (the R670(b) form for
+  U04) if neither (i) nor (iii) holds; INT-r12-1 stays open as a measured property of the model,
+  Class 2, P1, no further template change before the tag. (iii) REVERT U37 in its own commit if
+  the new arm's pooled rate exceeds the old arm's. Ties on the pooled rate are (ii).
+R697(f) — Part B (the 18-paper run through the real path) stays held. It runs only if (ii) is
+  the result and the PI wants the real-path incidence before Run 7; it is not a condition of
+  closing the row under (i).
+R697(g) — The read-only ollama ps at 18:00:29 is a reading under R696(b).

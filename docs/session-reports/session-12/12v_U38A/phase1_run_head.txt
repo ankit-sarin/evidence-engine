@@ -1,0 +1,55 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 6 items
+
+docs/session-reports/session-12/12v_U38A/phase1/tests/test_u38_snippet_precheck.py::test_u38_a_verbatim_snippet_containing_an_ellipsis_is_not_flagged FAILED [ 16%]
+docs/session-reports/session-12/12v_U38A/phase1/tests/test_u38_snippet_precheck.py::test_u38_a_snippet_bridging_passages_with_an_ellipsis_is_still_flagged PASSED [ 33%]
+docs/session-reports/session-12/12v_U38A/phase1/tests/test_u38_snippet_precheck.py::test_u38_a_snippet_without_an_ellipsis_is_unchanged PASSED [ 50%]
+docs/session-reports/session-12/12v_U38A/phase1/tests/test_u38_snippet_precheck.py::test_u38_exhausted_retries_keep_the_original_snippet FAILED [ 66%]
+docs/session-reports/session-12/12v_U38A/phase1/tests/test_u38_snippet_precheck.py::test_u38_the_write_boundary_still_refuses_an_uncited_value PASSED [ 83%]
+docs/session-reports/session-12/12v_U38A/phase1/tests/test_u38_snippet_precheck.py::test_u38_both_pins_are_unchanged PASSED [100%]
+
+=================================== FAILURES ===================================
+______ test_u38_a_verbatim_snippet_containing_an_ellipsis_is_not_flagged _______
+
+    def test_u38_a_verbatim_snippet_containing_an_ellipsis_is_not_flagged():
+        """INT-s12-1, R694(f) S-1, 12v_RSA.md §11 S-1 ("a verbatim quote containing "…" / "..." from a text
+        containing it sends no retry call"): a snippet that is an exact substring of the paper text is not
+        flagged, for the Unicode ellipsis and for three dots. Fails on the unmodified tree, whose precheck
+        reads the snippet alone and retries both."""
+        for snippet in (VERBATIM_UNICODE, VERBATIM_DOTS):
+            assert snippet in PAPER
+            with patch.object(E, "_retry_snippet") as retry:
+                retry.return_value = ("unused", "e" * 64)
+                out = E._validate_and_retry_snippets([_span(snippet)], PAPER, paper_id=1, cfg=_cfg())
+>           assert retry.call_count == 0, f"a verbatim quote was sent to the retry: {snippet!r}"
+E           AssertionError: a verbatim quote was sent to the retry: 'The robot completed the anastomosis … and no leak was observed at 30 cmH2O.'
+E           assert 1 == 0
+E            +  where 1 = <MagicMock name='_retry_snippet' id='263159966370464'>.call_count
+
+docs/session-reports/session-12/12v_U38A/phase1/tests/test_u38_snippet_precheck.py:62: AssertionError
+_____________ test_u38_exhausted_retries_keep_the_original_snippet _____________
+
+    def test_u38_exhausted_retries_keep_the_original_snippet():
+        """INT-s12-1, R694(f) S-2 ("a snippet is never replaced with "" when retries run out — the original
+        stays"), 12v_RSA.md §11 S-2: the model call (mocked) returns the same bridging snippet on both
+        retries, `_retry_snippet` rejects it each time, and after exhaustion the field still carries the
+        original snippet, not "". Fails on the unmodified tree, which writes "" (pinned today by
+        tests/test_extractor.py::test_retry_exhausted_nulls_snippet_preserves_value)."""
+        with patch.object(E, "ollama_chat", side_effect=_reply(BRIDGING)) as chat:
+            out = E._validate_and_retry_snippets([_span(BRIDGING)], PAPER, paper_id=1, cfg=_cfg())
+        assert chat.call_count == E.SNIPPET_MAX_RETRIES
+        assert out[0].value == "20"
+>       assert out[0].source_snippet == BRIDGING
+E       AssertionError: assert '' == 'Two were los...s were minor.'
+E         
+E         - Two were lost to follow-up ... Complications were minor.
+
+docs/session-reports/session-12/12v_U38A/phase1/tests/test_u38_snippet_precheck.py:100: AssertionError
+=========================== short test summary info ============================
+FAILED docs/session-reports/session-12/12v_U38A/phase1/tests/test_u38_snippet_precheck.py::test_u38_a_verbatim_snippet_containing_an_ellipsis_is_not_flagged
+FAILED docs/session-reports/session-12/12v_U38A/phase1/tests/test_u38_snippet_precheck.py::test_u38_exhausted_retries_keep_the_original_snippet
+========================= 2 failed, 4 passed in 0.34s ==========================

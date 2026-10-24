@@ -1,0 +1,14 @@
+gate ids 3359 unique 3359 ref 3348 only-gate 11 only-ref 0
+  only-gate: tests/test_u37_feedback_block.py::test_u37_a_non_stated_feedback_block_still_lists_only_its_failed_fields_codes
+  only-gate: tests/test_u37_feedback_block.py::test_u37_attempt_1_prompt_text_is_unchanged
+  only-gate: tests/test_u37_feedback_block.py::test_u37_the_feedback_header_names_every_schema_field
+  only-gate: tests/test_u37_feedback_block.py::test_u37_the_non_elicited_pin_is_unchanged
+  only-gate: tests/test_u37_feedback_block.py::test_u37_the_output_instruction_is_repeated_after_the_feedback
+  only-gate: tests/test_u38_snippet_precheck.py::test_u38_a_snippet_bridging_passages_with_an_ellipsis_is_still_flagged
+  only-gate: tests/test_u38_snippet_precheck.py::test_u38_a_snippet_without_an_ellipsis_is_unchanged
+  only-gate: tests/test_u38_snippet_precheck.py::test_u38_a_verbatim_snippet_containing_an_ellipsis_is_not_flagged
+  only-gate: tests/test_u38_snippet_precheck.py::test_u38_both_pins_are_unchanged
+  only-gate: tests/test_u38_snippet_precheck.py::test_u38_exhausted_retries_keep_the_original_snippet
+  only-gate: tests/test_u38_snippet_precheck.py::test_u38_the_write_boundary_still_refuses_an_uncited_value
+slower by >10 s: 0
+sum new 867.03 ref 900.96

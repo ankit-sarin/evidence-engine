@@ -1,0 +1,9 @@
+ engine/agents/extractor.py         |  22 ++--
+ engine/elicitation/prompts.py      |  39 +++++++-
+ tests/test_elicitation_pipeline.py |   6 +-
+ tests/test_extractor.py            |  24 +++--
+ tests/test_feedback_block.py       |   8 +-
+ tests/test_prompt_hash_coverage.py |   7 ++
+ tests/test_u37_feedback_block.py   | 200 +++++++++++++++++++++++++++++++++++++
+ tests/test_u38_snippet_precheck.py | 162 ++++++++++++++++++++++++++++++
+ 8 files changed, 446 insertions(+), 22 deletions(-)

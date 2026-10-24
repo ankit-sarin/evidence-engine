@@ -1,0 +1,5 @@
+diff of docs/plan/ENGINE_REFACTOR_PLAN.md (staged): 2 '-' lines, 69 '+' lines; expected rows: INT-s12-1, INT-i12-7
+  INT-i12-7: closing '|' present; '+' lines extending it: 1; +411 chars inserted before the closing '|'; PASS
+  INT-s12-1: closing '|' present; '+' lines extending it: 1; +411 chars inserted before the closing '|'; PASS
+exactly 2 '-' line(s), one per named row: True
+RESULT: PASS

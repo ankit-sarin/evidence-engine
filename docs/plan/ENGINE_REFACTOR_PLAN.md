@@ -4099,6 +4099,130 @@ Expected values at session-12v open, as at this closeout (2026-10-22):
 - **Note:** Trigger measured absent today: neither `deepseek-r1:32b` nor `gemma3:27b` sets `num_ctx` in its Modelfile, and the service sets no context length. Class 1 kept as latent: a truncated paper would be extracted as if whole, and the fix is one term.
 ```
 
+
+Session 12v closed 2026-10-24 UTC; opened 2026-10-23 15:25 UTC on the 12u closeout commit `9673afffde8906b51a6434a9c3ebe33618b9d030`, CC session `59890598` (one session; it exited once after 12v-U38A and was resumed for 12v-U38B). **U37 and U38 landed and closed: INT-r12-1 is CLOSED at `62d5e7e` (R698(b)) and INT-s12-1 at `731ebf2` (R699(d)). INT-v12-1 was opened (R694(g), R695(c)). The recount reads 279.** Two engine commits; no live write; 62 model calls, all of them rehearsal sends (Part A 11, Part A2 51), every one under the experiment lock, outside any run manifest, writing to no review. Briefs, in order:
+- 12v-OPEN (R692 at item 0);
+- 12v-RSA, the INT-r12-1 / INT-s12-1 Phase A (R693 at item 0);
+- 12v-U37A, U37 Phase 1 (R694 at item 0), which stopped before 2f (R695);
+- 12v-U37B, U37 Phase 2 (R695 at item 0), which stopped before 2h (R696) and was resumed as 12v-U37B-R1;
+- 12v-U37R, rehearsal Part A (R696 at item 0);
+- 12v-U37R2, rehearsal Part A2 (R697 at item 0);
+- 12v-U38A, U38 Phase 1 (R698 at item 0);
+- 12v-U38B, U38 Phase 2 (R699 at item 0);
+- this closeout, 12v-CLOSE (R700 at item 0).
+
+**Commits, in order** (each hash read from `git log 9673aff..HEAD`; its claude-config ledger commit beside it):
+
+- `049cec8` — item 0 of the open: R692 (Block 90), `12u_close/r692.txt`, `12u_close/lane_line_12u.txt`. Ledger `bb05e13`.
+- `3525e02` — item 0 of 12v-RSA: R693 (Block 91). Ledger `255da3a`.
+- `cc2d83a` — the Phase A read-out (`12v_RSA/12v_RSA.md`): the census of 25 attempt 2s, the pin-sensitivity, frequency and render instruments. Ledger `e7ed305`.
+- `1e15b50` — item 0 of 12v-U37A: R694 (Block 92); the notes on INT-s12-1, INT-r12-1 and the 12u host facts. Ledger `51585db`.
+- `37bb382` — item 0 of 12v-U37B: R695 (Block 93); INT-v12-1 opened in "L (12v additions, R694)" with `recount_12v_r694.py`; the U37 Phase 1 record under `12v_U37A/phase1/`. Ledger `fd1544f`.
+- `62d5e7e` — **the U37 fix**: `engine/elicitation/prompts.py` (the feedback header names the whole schema; `output_section(n)` repeated after the feedback), `tests/test_u37_feedback_block.py` (new), three census tests rewritten under their ids. Ledger `56c870d` (with the next commit's row).
+- `11c7e43` — the U37 read-out (`12v_U37B/12v_U37B.md`) and its gate; the INT-r12-1 "U37 landed" note; fix units 36.
+- `5344e8b` — item 0 of 12v-U37R: R696 (Block 94), with its correction at transcription. Ledger `9a9a931`.
+- `fcbbad4` — rehearsal Part A read-out (`12v_U37R/12v_U37R.md`): five cases, one call per arm. Ledger `c603fc4`.
+- `124d4b9` — item 0 of 12v-U37R2: R697 (Block 95). Ledger `7d0769d`.
+- `b315733` — rehearsal Part A2 read-out (`12v_U37R2/12v_U37R2.md`): k = 5 per arm; the verdict (i). Ledger `96493ef`.
+- `553609a` — item 0 of 12v-U38A: R698 (Block 96); INT-r12-1 CLOSED; the INT-g12-5 note; fix units 17 of 36. Ledger `596d3c0`.
+- `b31ab08` — the U38 Phase 1 record (`12v_U38A/`): six tests held, 2 failed / 4 passed on HEAD as predicted. Ledger `e114056`.
+- `07a24b6` — item 0 of 12v-U38B: R699 (Block 97). Ledger `e3981f4`.
+- `731ebf2` — **the U38 fix**: `engine/agents/extractor.py` (`_has_invalid_snippet(snippet, paper_text)`; exhausted retries keep the original snippet), `tests/test_u38_snippet_precheck.py` (new), four census tests rewritten under their ids, `docs/inventory/` regenerated. Ledger `70a2315` (with the next commit's row).
+- `9ea15a5` — the U38 read-out (`12v_U38B/12v_U38B.md`) and its gate; INT-s12-1 CLOSED; fix units 18 of 36.
+- `4738ebf` — item 0 of this closeout: R700 (Block 98); R700(b)'s notes on INT-s12-1 and INT-i12-7.
+- **This closeout** — the commit that carries this paragraph, the child of `4738ebf`: this closure, the 12w expected values, and `docs/session-reports/session-12/12v_close/`.
+
+`git diff --stat 9673aff HEAD -- engine tests scripts analysis review_specs` lists exactly the two engine commits' files: `engine/agents/extractor.py`, `engine/elicitation/prompts.py`, `tests/test_elicitation_pipeline.py`, `tests/test_extractor.py`, `tests/test_feedback_block.py`, `tests/test_prompt_hash_coverage.py`, `tests/test_u37_feedback_block.py`, `tests/test_u38_snippet_precheck.py` (8 files, 446 insertions, 22 deletions; `12v_close/diff_engine_since_9673aff.txt`).
+
+**Rulings R692–R700, all transcribed. The decision log in this file ends at R700.**
+
+- R692 — the 12u wrap ruling (Block 90).
+- R693 — 12v-OPEN accepted; the 04:56 sender, the lock line and the 272 chain as readings; INT-r12-1 and INT-s12-1's Phase A.
+- R694 — the Phase A accepted; the rows decoupled; U37 = R-1 + R-2, U38 = S-1 (+ S-2); INT-v12-1 proposed.
+- R695 — U37A's stop upheld (R40); INT-v12-1 confirmed; T4 narrowed to prompt hashes.
+- R696 — a read-only request in a gate window is a reading, a model load the stop; attribution lines are the CC session's own; U37B resumed.
+- R697 — Part A inconclusive; Part A2 with a pre-registered rule.
+- R698 — the verdict (i) applied: INT-r12-1 CLOSED on U37; the paper-455 and INT-g12-5 notes.
+- R699 — T5's form (a), amending R694(f); the precheck takes the paper text as a required parameter.
+- R700 — U38B accepted; two notes; the probe scratch retained; the band figure computed here; this closeout.
+
+**Notes recorded this session** (cell notes and dated lines):
+- INT-s12-1: R694(c), R699(d) with its closure, R700(b).
+- INT-r12-1: R694(d); "U37 landed" (R696(e)); R698(b)'s closure with R698(c)'s note.
+- INT-g12-5: R698(e). INT-i12-7: R700(b).
+- The 12u host facts' NVRM bullet: R694(b), the 04:56 sender being the surgical-cv lane.
+- The "L (12v additions, R694)" table and its recount paragraph; the dated fix-unit lines (36; 17 of 36; 18 of 36).
+
+**The lesson of R700(c).** A fix brief states the tree check as the one command whose success the commit is conditioned on, never two chains: at `731ebf2` the check compared the wrong lines, the commit proceeded on a separate chain, and only the check made afterwards (diff hash `21619c78…ac95` and test-file hash `c4918203…ea57`, both equal to the gate-launch record) established the commit as the gate's tree.
+
+**Measured — the session's gates.** Three standard gates, each with 2 warnings (sklearn's), no phase slower than its comparison by more than 10 s, and nothing resident before or after:
+
+| gate | tree | result | collected | wall | journal window |
+| --- | --- | --- | --- | --- | --- |
+| 12v-OPEN | `049cec8` (engine tree equal to `2c3822b`'s) | 3,347 / 1 xfailed / 17 deselected | 3,348 of 3,365; 0/0 | 893.71 s | empty |
+| 12v-U37B | `37bb382` + the U37 fix (committed as `62d5e7e`) | 3,352 / 1 / 17 | 3,353 of 3,370; only-gate the five U37 ids | 883.80 s | one read-only `ollama ps` at 16:59:32 (R696(b)) |
+| 12v-U38B | `07a24b6` + the U38 fix (committed as `731ebf2`) | 3,358 / 1 / 17 | 3,359 of 3,376; only-gate the 11 U37 + U38 ids | 878.55 s | empty |
+
+**The band, a figure for the wrap ruling (R700(e)).** The series of eleven is 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55 s. The mean of the last four standard gates (912.14, 893.71, 883.80, 878.55) is 892.05 s; ±10% is 802.845–981.255 s, rounded inward as R683(c) rounded: **803–981 s** (`12v_close/band_computation.txt`). The band in force stays 791–966 s until the wrap ruling sets 12w's.
+
+**Measured — the nightly.** 2026-10-23 09:00 UTC (read at 12v-OPEN): `collected 3365 items / 17 deselected / 3348 selected`, `3347 passed, 17 deselected, 1 xfailed, 2 warnings in 885.61s`, `pytest exit code: 0`; ids 0/0; journal empty; lock mtime unchanged. The 2026-10-24 jobs had not run at this closeout and are 12w-OPEN's (R700(g)); `12v_close/expected_nightly_20261024.md` was written for them.
+
+**The rehearsal (R694(h), R697, R698).** Part A, five cases, one call per arm: STATED-only old 2 of 5, new 1 of 5. Part A2, k = 5 per arm: old 10/25, new 5/25, the verdict (i). At temperature 0 each request's first send reproduced Part A byte for byte and sends 2–5 settled on one second response (F5), so the evidence is five cases in two server states. 12g_p8 (live paper 455) re-emits STATED-only under both templates (R697(d), R698(c)).
+
+**Measured — the recount** (`12v_U37A/recount_12v_r694.py`, run in a scratch clone on the plan at `4738ebf`; its output `12v_close/recount_close_run.json` is byte-identical to `12v_U37A/recount_12v_r694.json`, and the chain's committed JSONs were rewritten unchanged: 272 `2b1114c8…`, 275 `8ec6c5c6…`, 276 `db5767db…`, 278 `cff9ec10…`, 279 `005f0c09…`). **279 rows — Class 1 / 2 / 3 = 94 / 54 / 131, 0 without a class**; P1 60 (25 / 23 / 12); P6 11; P7 117; P1's fix units 36, done 18 (U01–U16, U37, U38). **R510 for session 12v:** rows in 1 (INT-v12-1, Class 2, P1), rows out 0, no class move; INT-r12-1 and INT-s12-1 CLOSED and counted (R700(f)).
+
+**Retention (R675(b), R700(d)), `12v_close/retention_close.txt`.** 23 MATCH / 0 MISMATCH: the nine throwaways, U06's copy, the five restore points and 12u-U16A's eight, by `review.db` file sha256, none opened. **New entry, the 12v probe scratch:** the ten full requests under `~/scratch/12v-u37r/requests/` (paper text included, kept out of git), 10 of 10 equal to `12v_U37R/requests_index.json`; the 53 raw-response and thinking files under `~/scratch/12v-u37r/out/responses/` and `~/scratch/12v-u37r2/out/responses/`, 53 of 53 equal to their sha256 names and to the committed copies under `12v_U37R/responses/` and `12v_U37R2/responses/`. Verified at every open by file sha256; never opened as a database (none is one). `~/scratch/12q-u13-build/stage/` holds `RESTORE.txt` only.
+
+**Ledger.** Every evidence-engine commit's row is committed, with trailers. Foreign rows carried as found (R654(d)):
+- in `a99a2d6` and `9604c1a`, before 12v-OPEN: cf4d424, 59e1370, b635034, 6862ba1 (R693(b));
+- in `7d0769d`: 6fe7629 (surgical-cv-spike), named;
+- in `596d3c0`: a5f38be, and in `e114056`: 21c1897 — both unnamed in their messages and named by R699(a);
+- in `e3981f4`: d6389d7, named;
+- in `70a2315`: 1021c55, named;
+- at this closeout: 5c5ebc0, named in the closeout's ledger commit.
+
+**The host, 2026-10-24** (dated facts, `12v_close/host_state_close.txt`).
+- **Band values** equal 12u's: kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02.
+- **Boot and service:** boot `abf99132-fd8b-41f9-b9fd-62241e40110c`; Ollama started 2026-10-17 23:04:05 UTC; `NRestarts` 0.
+- **earlyoom:** active, `--prefer ^ollama$`; 0 kill lines this boot.
+- **NVRM:** `NV_ERR_NO_MEMORY` fifteen this boot (two at 04:56 on 2026-10-23 beside the surgical-cv lane's `qwen3:32b` load, two in that day's health job); none in either rehearsal window.
+- **Concurrent work beside this session's gates and sends:** the surgical-cv spike's CUDA nvenc encode (306 MiB, during Part A2) and its edit-preview server (during the U38B gate), neither a model load.
+- **Temp root** (`12v_close/temp_root_close.txt`): 4 entries, 4,128,575,212 B — `pytest-31`, `-32`, `-33` (this session's three gates) and `pytest-current` → `pytest-33`. Nothing emptied.
+
+**Live.** Never written. `db_fingerprint --compare` against the migration-02 record was IDENTICAL at every check of the session (overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`); at this closeout 05:33:37Z (`12v_close/fingerprint_close.txt`). `dbchecks_close.txt` and `pin_tuples_close.json` are byte-identical to `12u_close/dbchecks_close.txt` and `12v_U38B/pin_tuples_u38.json`.
+
+**Session 12v closed.** Next: session 12w, fresh.
+
+Expected values at session-12w open, as at this closeout (2026-10-24):
+- **HEAD:** the 12v closeout commit (child of `4738ebfa8ab84b34c3ac0c919fed460aa69602fb`; its full hash is in the closeout block and the lane line), clean and **level with origin** (R370). The plan file's sha256, bytes and lines are in the closeout block.
+- **The decision log in this file ends at R700** (or at the wrap ruling, if it is transcribed before 12w).
+- **The gate** on this tree (engine tree equal to `731ebf2`'s):
+  - **Counts:** **3,358 passed / 1 xfailed / 17 deselected**, collected **3,376**, selected **3,359**, 0/0 (a set comparison, R655(b)) against `docs/session-reports/session-12/12v_close/collected_ids_12v_close.txt` (3,359 ids, the U38B gate's list).
+  - **Wall time:** against the band the wrap ruling sets (this closeout's figure is 803–981 s, R700(e)), beside the series 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55 s. A gate outside it is reported with its concurrent jobs.
+  - **Ollama reads:** version, tags and ps, at least five seconds before the gate is launched and after it exits, each timestamped (R660(b)). A model load in the gate's journal window is a stop (R666(a)); a read-only request is a reading (R696(b)).
+  - **Durations:** a file written (`--durations=0`) and compared with `12v_close/durations_12v_u38b.txt`; any phase slower by more than 10 s is reported.
+  - **Basetemp** read immediately after the gate (R660(c)). The two warnings are sklearn's (R641(c)). The concurrent-jobs read excludes its own shell (R680(c)).
+- **The 2026-10-24 09:00 UTC nightly** per `12v_close/expected_nightly_20261024.md`: `collected 3376 items / 17 deselected / 3359 selected`, **3358 passed, 17 deselected, 1 xfailed, 2 warnings**, last line `pytest exit code: 0`; the durations file present; the Ollama journal for 09:00–09:25 UTC empty of loads; the lock file's mtime unchanged (2026-07-27 23:22:08 UTC); ids equal to `collected_ids_12v_close.txt`.
+- **The 2026-10-24 07:00 UTC health job:** its loads and their outcome, read from its log and the Ollama journal, with an NVRM grep over the kernel journal (fifteen `NV_ERR_NO_MEMORY` lines this boot before it) — readings (R663(d), R670(f)).
+- **The pytest temp root at the open** (R647(c)): entry count and size recorded, not matched; nothing emptied. At this closeout: `pytest-31`, `-32`, `-33` and `pytest-current` (4 entries, 4,128,575,212 B).
+- **Collection and inventory:** no-marker collection **3,376**; `tests/test_eligibility.py` 91; `inventory --check` in sync.
+- **The diff list:** `git diff --stat f4a5586 HEAD -- engine tests scripts analysis review_specs` lists 25 files, 1,501 insertions, 76 deletions (`12v_close/diff_since_f4a5586.txt`): the 18 of `12u_close/diff_since_f4a5586.txt` plus seven, `engine/elicitation/prompts.py`, `tests/test_elicitation_pipeline.py`, `tests/test_extractor.py`, `tests/test_feedback_block.py`, `tests/test_prompt_hash_coverage.py`, `tests/test_u37_feedback_block.py` and `tests/test_u38_snippet_precheck.py` (`engine/agents/extractor.py` was already among the 18); `git diff --stat 731ebf2 HEAD` on the same paths is empty.
+- **The fingerprint of record, unchanged:** `docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json` — 36 tables; overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`. `ls data/*/review.db` lists one path.
+- **`~/scratch/12i-scope/dbchecks.py`** (`909e3ed2…4ff5`): its output byte-identical to `12v_close/dbchecks_close.txt`.
+- **Retention** (`12v_close/retention_close.txt`): the 23 never-opened copies by `review.db` file sha256 (23 MATCH), and the 12v probe-scratch entry (10 requests, 53 response files) by file sha256 (R700(d)). `~/scratch/12q-u13-build/stage/` holds `RESTORE.txt` only.
+- **Codebook and live spec, unchanged:** `89dbfa91…ad82`; `917c24de…e5f` (U17's Phase A may change the spec under a ruling, R700(g)).
+- **Pins, by `12l_U04/pin_tuples.py`** with both arguments: `12v_close/pin_tuples_close.json`, byte-identical; elicited `d70bf688…59f0`, non-elicited `d3672ab6…ff5c`.
+- **Ollama:** 0.21.0; digests `qwen3:32b` `030ee887…7840`, `gemma3:27b` `a418f583…2203`, `deepseek-r1:32b` `edba8017…960c`; `NRestarts=0`. Service start and boot id are readings. Residency is a reading: nothing at this closeout.
+- **The host state the band belongs to** (`12v_close/host_state_close.txt`): kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02; earlyoom's state and argv, `vm.min_free_kbytes` and ollama's `oom_score_adj` are readings.
+- **The pre-tag list** by `12v_U37A/recount_12v_r694.py` (its JSON fields): `now` = `{rows 279, class_1 94, class_2 54, class_3 131, without_class 0}`; P1 `{class_1 25, class_2 23, class_3 12, rows 60}`; P6 rows 11; P7 rows 117; `fix_units` 35 in the script's count, **36 with 18 done** by the dated lines (U37 and U38 counted on landing); `expected_holds` true.
+- **Scratch:** the nine 12v directories — `12v-open/`, `12v-rsa/`, `12v-u37a/`, `12v-u37b/`, `12v-u37r/`, `12v-u37r2/`, `12v-u38a/`, `12v-u38b/` and `12v-close/` — beside those present at the 12v open and `retained/`; `12v-u37r/` and `12v-u37r2/` hold the retained probe scratch.
+- **claude-config:** at this commit `70a2315f803b9cab3695d20e845d4372810b5f56`, with this session's last rows and one foreign row (5c5ebc0) uncommitted; this closeout settles them (step 5), and the wrap ruling applies the lane line.
+
+12w's first items, in this order:
+- **12w-OPEN**, run outside 07:00–10:35 UTC. Its item 0 transcribes the wrap ruling as the next block and copies the 12v lane-line file into `12v_close/`. It reads the 2026-10-24 07:00 health job and 09:00 nightly (against `expected_nightly_20261024.md`), and runs the startup verify against this block.
+- **U17's Phase A:** the cross-family rule enforced at run open (INT-i12-45). It edits the live spec, so the spec's sha256 changes under a ruling (R700(g)).
+- **INT-v12-1:** its unit is assigned at its own Phase A.
+
 ## Decision log
 
 Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in order. The architect's four provisional rulings of 2026-09-19 (recall-bounded filter with code-enforced basis; SYNERGY as reference; a tiered lane with 2d first; a 50 KB plan) were withdrawn after the external review and replaced by R1–R9 below.

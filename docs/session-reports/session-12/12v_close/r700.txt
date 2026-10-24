@@ -1,0 +1,56 @@
+RULING [evidence-engine 12v-R700] — U38B accepted; INT-s12-1 CLOSED stands; two notes; the probe
+  scratch retained; the band recut at this closeout; session 12v closes under the 12v-CLOSE
+  brief below
+STATUS: PI ruling, 2026-10-24 UTC, session 12v, on architect recommendation, on the 12v-U38B
+  final report and the read-out 12v_U38B.md (9ea15a57068bef68f38ec71c9a3c673be7fff263).
+  Transcribe as Block 98 at item 0 of the 12v-CLOSE brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12v-U38B final report):
+  MEASURED: "Commit: 07a24b6dd4fc07fb01fd3fb4e2543681fad70c0c, parent b31ab08"; "r699.txt:
+    8f1513c7…5d42 / 4700 / 56, equal to your hash"; "Commit: 731ebf2cc9df39ee2406907b0ad2c74c79a6442b,
+    parent 07a24b6"; "the U38 file 6 passed; the affected files 188 passed; the regression set
+    (26 files) 472 passed"; "pin_tuples_u38.json is byte-identical to U37's"; "wall 878.55 s";
+    "collected 3376 items / 17 deselected / 3359 selected; 3358 passed, 17 deselected, 1
+    xfailed, 2 warnings in 876.18s"; "only-gate = the 11 U37 + U38 ids, only-ref 0"; "Journal
+    window: -- No entries --"; "Read-out commit: 9ea15a57068bef68f38ec71c9a3c673be7fff263, parent
+    731ebf2, 23 files"; "prefix_check --expected-row INT-s12-1 PASS"; "36, done 18 (U01–U16,
+    U37, U38)"; "Recount: 279, byte-identical"; "the committed diff (21619c78…ac95) and the test
+    file (c4918203…ea57) equal the gate-launch record"; "Final HEADs: evidence-engine 9ea15a5,
+    claude-config 70a2315".
+  READ (CC's): "two committed evidence scripts under docs/ call _has_invalid_snippet with one
+    argument: 12v_RSA/freq_invalid_snippet.py and 12s_U14A/repro_u14a.py"; "my tree check before
+    the fix commit was wrong … I then verified properly"; "Inventory: drifted on line numbers
+    only; regenerated and included in the fix commit".
+  INFERRED: none.
+
+R700(a) — 12v-U38B is accepted as reported: item 0 as 07a24b6 (Block 97); the fix as 731ebf2
+  (U38: S-1 and S-2, six tests, four rewrites, no pin moved, gate 3,358 / 1 / 17 on 3,376 /
+  3,359 at 878.55 s); the read-out and closure as 9ea15a5; INT-s12-1 CLOSED (R699(d)) stands;
+  the ledgers e3981f4 and 70a2315 with their foreign rows named (R654(d)).
+R700(b) — Note, no row, on INT-s12-1's closure and on 12s_U14A's evidence line: two committed
+  evidence scripts (12v_RSA/freq_invalid_snippet.py, 12s_U14A/repro_u14a.py) call the
+  one-argument precheck and are bound to the trees they were written for, as R676(d)(ii) binds
+  the 12s reproducer to locator-1; they are not edited (read-outs and their instruments are
+  never edited after commit), and a re-run on this tree is not expected to work.
+R700(c) — Note, no row: the tree check before 731ebf2 compared the wrong lines and the commit
+  proceeded on a separate command chain; the check made afterwards (diff hash and test-file
+  hash equal to the gate-launch record) establishes the commit as the gate's tree. From here a
+  fix brief states the tree check as the one command whose success the commit is conditioned
+  on, never two chains.
+R700(d) — Retention: the full probe requests under ~/scratch/12v-u37r/requests/ (paper text
+  included, kept out of git), the raw responses under ~/scratch/12v-u37r/ and
+  ~/scratch/12v-u37r2/, indexed by hash in 12v_U37R/requests_index.json and the two read-outs,
+  are retained with a 12v retention entry (R670(g) form); verified by file sha256 at the
+  closeout and at every open, never opened as a database (none is one).
+R700(e) — The gate series on this host state: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58,
+  882.23, 912.14, 893.71, 883.80, 878.55 s. The closeout computes ±10% of the mean of the last
+  four standard gates (912.14, 893.71, 883.80, 878.55) and reports it; the wrap ruling sets the
+  band for 12w from that figure (R683(c) form).
+R700(f) — Session 12v's R510 line: rows in 1 (INT-v12-1, Class 2, P1), rows out 0, no class
+  move; INT-r12-1 and INT-s12-1 CLOSED and counted; recount 279 (94 / 54 / 131, 0 unclassed);
+  P1 60 rows; fix units 36, done 18.
+R700(g) — Session 12v closes under the 12v-CLOSE brief below, in the 12u-CLOSE form, without the
+  two scheduled-job reads (the 2026-10-24 jobs have not run; 12w-OPEN reads them). Next after
+  the close: 12w-OPEN; then U17's Phase A (the cross-family rule at run open, INT-i12-45; it
+  edits the live spec, so the spec's sha256 changes under a ruling); INT-v12-1's unit is
+  assigned at its own Phase A.

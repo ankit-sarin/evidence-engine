@@ -3864,13 +3864,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 517,
+            "line": 527,
             "role": "docstring",
             "text": "(escape token, absence sentinels) from the codebook beside the database.\n\n    Located from the DATABASE's own directory, not from `data/<review_id>`: the\n   ..."
           },
           {
             "kind": "literal",
-            "line": 817,
+            "line": 827,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -6826,7 +6826,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "f2eb7a13b7198c863ab4675a0ac04db151a62f13",
+    "generated_at_commit": "07a24b6dd4fc07fb01fd3fb4e2543681fad70c0c",
     "scan_roots": [
       "engine",
       "scripts",

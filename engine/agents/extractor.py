@@ -371,9 +371,16 @@ def extract_pass2_structured(
 # ── Snippet Validation ──────────────────────────────────────────────
 
 
-def _has_invalid_snippet(snippet: str | None) -> bool:
-    """Return True if snippet is non-null and contains ellipsis bridging."""
-    return bool(snippet and INVALID_SNIPPET_RE.search(snippet))
+def _has_invalid_snippet(snippet: str | None, paper_text: str) -> bool:
+    """Return True if snippet is non-null and bridges passages with an ellipsis.
+
+    U38 (INT-s12-1, R694(f) S-1, R699(c)): the regex decides whether the snippet
+    carries an ellipsis form; a snippet that does is invalid only when it is not
+    an exact substring of the paper text. A verbatim quote of a passage that
+    itself contains "…" or "..." is valid. The text is required: judging the
+    snippet alone is the defect. No locating here; the audit stage's locator
+    judges placement."""
+    return bool(snippet and INVALID_SNIPPET_RE.search(snippet) and snippet not in paper_text)
 
 
 def retry_snippet_messages(field_name: str, value: str, paper_text: str) -> list[dict]:
@@ -434,7 +441,7 @@ def _retry_snippet(
     try:
         data = json.loads(response.message.content or "")
         new_snippet = data.get("source_snippet")
-        if new_snippet and _has_invalid_snippet(new_snippet):
+        if new_snippet and _has_invalid_snippet(new_snippet, paper_text):
             new_snippet = None
     except Exception as exc:
         if is_run_fault(exc):
@@ -473,7 +480,7 @@ def _validate_and_retry_snippets(
     snippet_contexts: dict[str, str] = {}
     retry_chain: list[str] = []
     for span in fields:
-        if not _has_invalid_snippet(span.source_snippet):
+        if not _has_invalid_snippet(span.source_snippet, paper_text):
             validated.append(span)
             continue
 
@@ -499,7 +506,10 @@ def _validate_and_retry_snippets(
         validated.append(EvidenceSpan(
             field_name=span.field_name,
             value=span.value,
-            source_snippet=new_snippet or "",
+            # U38 (INT-s12-1, R694(f) S-2, R699(b)): exhausted retries keep the
+            # model's own snippet. The write boundary accepts it as cited and the
+            # audit stage's locator judges it; it is never replaced with "".
+            source_snippet=new_snippet or span.source_snippet,
             confidence=span.confidence,
             tier=span.tier,
         ))

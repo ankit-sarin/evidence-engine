@@ -377,13 +377,15 @@ def test_invalid_snippet_re_imported_from_constants():
 
 
 def test_ellipsis_snippet_triggers_retry():
-    """Snippet with '...' ellipsis bridging is detected as invalid and retried."""
+    """Snippet with '...' ellipsis bridging is detected as invalid and retried.
+    Rewritten under its id at U38 (R699(c)): the precheck takes the paper text,
+    which here does not contain the snippet's ellipsis passage, so it is still flagged."""
     span = EvidenceSpan(
         field_name="sample_size", value="20",
         source_snippet="Twenty participants... completed the study.",
         confidence=0.9, tier=1,
     )
-    assert _has_invalid_snippet(span.source_snippet)
+    assert _has_invalid_snippet(span.source_snippet, "paper text")
 
     with patch("engine.agents.extractor._retry_snippet") as mock_retry:
         # R224a: _retry_snippet now always returns (snippet, request_hash).
@@ -397,13 +399,15 @@ def test_ellipsis_snippet_triggers_retry():
 
 
 def test_bracket_ellipsis_triggers_retry():
-    """Snippet with '[...]' is detected as invalid and retried."""
+    """Snippet with '[...]' is detected as invalid and retried.
+    Rewritten under its id at U38 (R699(c)): the precheck takes the paper text,
+    which here does not contain the snippet's ellipsis passage, so it is still flagged."""
     span = EvidenceSpan(
         field_name="robot_platform", value="STAR",
         source_snippet="The STAR robot [...] was used for suturing.",
         confidence=0.95, tier=1,
     )
-    assert _has_invalid_snippet(span.source_snippet)
+    assert _has_invalid_snippet(span.source_snippet, "paper text")
 
     with patch("engine.agents.extractor._retry_snippet") as mock_retry:
         mock_retry.return_value = ("The STAR robot was used for suturing.", "e" * 64)
@@ -414,7 +418,10 @@ def test_bracket_ellipsis_triggers_retry():
 
 
 def test_retry_exhausted_nulls_snippet_preserves_value():
-    """After 2 failed retries, source_snippet is empty and value is preserved."""
+    """After 2 failed retries the original snippet is kept and the value is preserved.
+    Rewritten under its id at U38 (R699(b)-(c), R694(f) S-2): the snippet is no
+    longer replaced with ""; the write boundary accepts it and the audit stage's
+    locator judges it."""
     span = EvidenceSpan(
         field_name="study_design", value="RCT",
         source_snippet="An RCT... was performed... on tissue.",
@@ -426,19 +433,20 @@ def test_retry_exhausted_nulls_snippet_preserves_value():
         validated = _validate_and_retry_snippets([span], "paper text", paper_id=1, cfg=stage_config("extract_retry_snippet"))
 
     assert len(validated) == 1
-    assert validated[0].source_snippet == ""
+    assert validated[0].source_snippet == "An RCT... was performed... on tissue."
     assert validated[0].value == "RCT"
     assert mock_retry.call_count == 2  # SNIPPET_MAX_RETRIES
 
 
 def test_valid_snippet_no_retry():
-    """A clean verbatim snippet passes through without any retry calls."""
+    """A clean verbatim snippet passes through without any retry calls.
+    Rewritten under its id at U38 (R699(c)): the precheck takes the paper text."""
     span = EvidenceSpan(
         field_name="study_design", value="RCT",
         source_snippet="A randomized controlled trial was conducted.",
         confidence=0.95, tier=1,
     )
-    assert not _has_invalid_snippet(span.source_snippet)
+    assert not _has_invalid_snippet(span.source_snippet, "paper text")
 
     with patch("engine.agents.extractor._retry_snippet") as mock_retry:
         validated = _validate_and_retry_snippets([span], "paper text", paper_id=1, cfg=stage_config("extract_retry_snippet"))

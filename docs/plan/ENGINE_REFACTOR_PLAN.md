@@ -9667,3 +9667,79 @@ R701(g) — Session 12v closes now. After R701(e) has landed, run /wrap. Report 
 | 2026-10-24 | R701(a) — The 12v-CLOSE closeout block is accepted as printed. The closeout commit 6735188 and item 0 4738ebf stand; the ledger 4fdc41e with trailers and its two foreign rows named stands (R680(b), R654(d) met). R701(b) — The band for 12w is 803–981 s: ±10% of 892.05 s, the mean of the last four standard gates on this host state (912.14, 893.71, 883.80, 878.55), rounded inward as R683(c) rounded. The series stands at 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55 s. A 12w gate outside the band is reported with its concurrent jobs, not adapted to. R701(c) — Fix units: the plan's dated lines (36, done 18) are the count of record; the chained recount script's fix_units field (35) counts 12l_P1A.md §3's list, which does not carry U37 or U38. Both figures are stated in the 12w block as CC wrote them; the script is not edited (R678(f)); a 12w brief that re-runs the recount quotes the field and the dated line side by side. No row. R701(d) — Readings, no row: the closure's place before the decision log is the file's shape (as 12u's); the primer's newest-first block and its "Block 99" naming are correct; NVRM fifteen this boot, unchanged since 12v-OPEN's reading; the temp root holds this session's three gate basetemps; the probe-scratch retention entry is verified and stands under R700(d). R701(e) — The lane line (sha256 8fbc59e1e0402db86624c83d4ab1d2a536046c00e839960551faceb983f0f4d6, 5,224 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows named by hash), push, level. R701(f) — 12w-OPEN's startup verify checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12w's item 0 transcribes this ruling as Block 99 and copies lane_line_12v.txt into docs/session-reports/session-12/12v_close/ with its commit, which carries no cell note and is verified by its "−" count, 0 (R664(b)). No closeout gate ran: the expected gate values for 12w are U38's (731ebf2) on unchanged code (3,358 / 1 xfailed / 17 deselected, collected 3,376 / selected 3,359; 0/0 against 12v_close/collected_ids_12v_close.txt; band 803–981 s, with the concurrent jobs named and the snapshot's own PIDs excluded); the 2026-10-24 09:00 UTC nightly runs on 6735188, whose engine tree equals 731ebf2's, expected 3,358 / 17 / 1 on 3,376 / 3,359, exit 0, 12v_close/expected_nightly_20261024.md governing; the 07:00 health job's loads are read and reported by 12w-OPEN, with an NVRM grep; a read-only request in any window is a reading (R696(b)). The temp root is read, never matched. Residency is a reading. 12w-OPEN's pre-check reads the process table for leftovers of session 59890598 (R692's form). R701(g) — Session 12v closes now. After R701(e) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-24, during session 12v, on architect recommendation, on the 12v-CLOSE closeout block (6735188) |
 
 The decision log in this file ends at R701.
+
+**Block 100.** *Transcribed 2026-10-24 (item 0 of the 12w-U17A brief), in its own commit, in the R597(e) form:* ruling R702, made by PI on architect recommendation on 2026-10-24 UTC, during session 12w, on the 12w-OPEN final report (`15576007eff9577cef76f6d296528b0b7d363752`). The 12w-U17A task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12w-R702] — 12w-OPEN accepted; four findings are readings; the band series
+  gains 888.65 s; U17's Phase A opens under the brief below
+STATUS: PI ruling, 2026-10-24 UTC, session 12w, on architect recommendation, on the 12w-OPEN final
+  report (15576007eff9577cef76f6d296528b0b7d363752). Transcribe as Block 100 at item 0 of the
+  12w-U17A brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12w-OPEN final report):
+  MEASURED: "evidence-engine: 15576007eff9577cef76f6d296528b0b7d363752, parent 6735188…";
+    "r701.txt: 4c200b92…7f20, 6,102 B, 74 lines, matching the architect's hash"; "Plan numstat:
+    85 added / 0 removed. Line count is now 9,669 (9,584 + 85). The plan's sha256 is
+    0113d6d3e692f32cf902e4a9fe6c706dc3228fb06a7d925826eac698a94806e3, 1,925,110 B"; "fence ==
+    r701.txt: True. cell == render_cell: True"; "The commit was conditioned on one check script
+    (~/scratch/12w-open/build/check_item0.py); it exited 0 with RESULT: PASS"; "claude-config:
+    33179d1, parent 1ac7f58, message "ledger: rows through 2026-10-24T15:39:37Z", with
+    trailers"; "1ac7f58 adds two surgical-cv-spike rows, 09cf951 and 1a0c649, and nothing else.
+    Lines 41–45 are intact"; "20/20 loads OK"; "15 NV_ERR_NO_MEMORY lines this boot, unchanged";
+    "every line of expected_nightly_20261024.md matched"; "3358 passed, 17 deselected, 1
+    xfailed, 2 warnings in 889.89s"; "Wall time 888.65 s, inside 803–981 s"; "==== 3358
+    passed, 17 deselected, 1 xfailed, 2 warnings in 886.52s (0:14:46) ====, exit 0"; "Ids: 0
+    only in the gate / 0 only in the reference"; "Journal window: 0 lines"; "no phase slower
+    than in durations_12v_u38b.txt by more than 10 s"; "Basetemp: pytest-35, 1,376,192,129 B";
+    the 3e–3i table as printed; "fix_units 35 (script field) / 36, done 18 (dated lines)"; the
+    host values "all equal to host_state_close.txt".
+  MEASURED (architect, this session): the architect's copy of R701, written from Appendix
+    12w-OPEN before the 12w-OPEN brief was issued, hashed to
+    4c200b923edc21a16de74870efc6ab38cb9bac3eb7de8978686364f8c26d7f20, 6,102 bytes, 74 lines —
+    the value r701.txt reproduced (R684(e)).
+  READ (CC's): "I started two identical bounded wait loops for the gate by mistake. Both were
+    capped at 1,500 s and both exited when gate_rc.txt appeared"; "12v_close/ holds files beyond
+    I7's nine"; "The recount ran on the plan at 1557600 … The output is identical, because Block
+    99 doesn't touch the L table".
+  INFERRED: none.
+
+R702(a) — 12w-OPEN is accepted as reported. Item 0 stands as 1557600 (Block 99, r701.txt,
+  lane_line_12v.txt in 12v_close/); the ledger 33179d1 with trailers stands. The decision log in
+  the file ends at R701. The 2026-10-24 nightly matched expected_nightly_20261024.md line for
+  line; the 07:00 health job loaded 20 of 20. The 12w open stands verified.
+R702(b) — Readings, no row: (i) claude-config's 1ac7f58 (surgical-cv-spike rows 09cf951 and
+  1a0c649, primer lines 41–45 intact) is a foreign commit accepted under R663(b); the open was
+  right to write no note. (ii) The two duplicate wait loops ended on their own and left nothing
+  running; from here a brief that waits on a background job starts one wait, and the report
+  names its pid. (iii) 12v_close/ holding files beyond I7's list is the closeout's shape; I7 is
+  met. (iv) The recount on the plan at 1557600 reproducing the 12v output is the expected
+  result: a block appended after the decision log changes no row.
+R702(c) — The band series on this host state gains the 12w-OPEN gate: 871.59, 906.50, 858.50,
+  895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65 s. The band for the
+  rest of 12w stays 803–981 s (R701(b)); it is recut at the 12w closeout in the R683(c) form.
+R702(d) — U17's Phase A (INT-i12-45; 12l_P1A.md §3 U17; R588, R612(k)) opens under the brief
+  below. It is read-only on engine/, tests/, scripts/, analysis/, review_specs/ and the codebook;
+  its record is committed under docs/session-reports/session-12/12w_U17A/. Every spec change it
+  proposes is computed on a scratch copy only; the live spec is changed only under a later
+  ruling (R700(g)). No model is loaded; an Ollama request that loads nothing is a reading
+  (R696(b)), and a load is a stop.
+R702(e) — The Phase A answers, with evidence, four questions R612(k) left open: what "family"
+  means for the rule (the vendor of the weights as served, or the lineage of the base model they
+  were trained from — the two differ for a distilled model); where the family comes from (a
+  declaration in the spec, a value read from the model server, or both checked against each
+  other); where the refusal fires (spec load, run open, or both) and for which stage pairs; and
+  what moves when the live spec gains the attribute (its sha256, each arm's pin, the manifest,
+  the tests that build specs). It lays out options with what each catches and misses; it does
+  not choose.
+R702(f) — The Phase A also states where INT-v12-1's unit falls in 12l_P1A.md §3's order, and
+  whether U17 touches the attempt-2 message structure that row concerns. The screening
+  generator→verifier pairs stay a P4 Phase A item (R612(k)); this read-out lists them and their
+  families as facts only.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-24 | R702(a) — 12w-OPEN is accepted as reported. Item 0 stands as 1557600 (Block 99, r701.txt, lane_line_12v.txt in 12v_close/); the ledger 33179d1 with trailers stands. The decision log in the file ends at R701. The 2026-10-24 nightly matched expected_nightly_20261024.md line for line; the 07:00 health job loaded 20 of 20. The 12w open stands verified. R702(b) — Readings, no row: (i) claude-config's 1ac7f58 (surgical-cv-spike rows 09cf951 and 1a0c649, primer lines 41–45 intact) is a foreign commit accepted under R663(b); the open was right to write no note. (ii) The two duplicate wait loops ended on their own and left nothing running; from here a brief that waits on a background job starts one wait, and the report names its pid. (iii) 12v_close/ holding files beyond I7's list is the closeout's shape; I7 is met. (iv) The recount on the plan at 1557600 reproducing the 12v output is the expected result: a block appended after the decision log changes no row. R702(c) — The band series on this host state gains the 12w-OPEN gate: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65 s. The band for the rest of 12w stays 803–981 s (R701(b)); it is recut at the 12w closeout in the R683(c) form. R702(d) — U17's Phase A (INT-i12-45; 12l_P1A.md §3 U17; R588, R612(k)) opens under the brief below. It is read-only on engine/, tests/, scripts/, analysis/, review_specs/ and the codebook; its record is committed under docs/session-reports/session-12/12w_U17A/. Every spec change it proposes is computed on a scratch copy only; the live spec is changed only under a later ruling (R700(g)). No model is loaded; an Ollama request that loads nothing is a reading (R696(b)), and a load is a stop. R702(e) — The Phase A answers, with evidence, four questions R612(k) left open: what "family" means for the rule (the vendor of the weights as served, or the lineage of the base model they were trained from — the two differ for a distilled model); where the family comes from (a declaration in the spec, a value read from the model server, or both checked against each other); where the refusal fires (spec load, run open, or both) and for which stage pairs; and what moves when the live spec gains the attribute (its sha256, each arm's pin, the manifest, the tests that build specs). It lays out options with what each catches and misses; it does not choose. R702(f) — The Phase A also states where INT-v12-1's unit falls in 12l_P1A.md §3's order, and whether U17 touches the attempt-2 message structure that row concerns. The screening generator→verifier pairs stay a P4 Phase A item (R612(k)); this read-out lists them and their families as facts only. | PI, 2026-10-24, during session 12w, on architect recommendation, on the 12w-OPEN final report (1557600) |
+
+The decision log in this file ends at R702.

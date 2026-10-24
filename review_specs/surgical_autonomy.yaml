@@ -97,6 +97,20 @@ cloud:
     openai_o4_mini_2025_04_16_high: {input_per_m: 1.10, output_per_m: 4.40}
     anthropic_claude_sonnet_4_6: {input_per_m: 3.00, output_per_m: 15.00}
 
+# The base-model lineage of every model this spec names, defaults included (R703,
+# INT-i12-45): the lineage of the base weights a served model carries, from the closed
+# vocabulary `LINEAGES` in engine/core/review_spec.py. deepseek-r1:32b is a
+# distillation onto a Qwen base, so its lineage is qwen. open_run refuses an auditor
+# that shares a lineage with the extractor it verifies.
+model_lineage:
+  "qwen3:8b": qwen
+  "qwen3:32b": qwen
+  "qwen2.5vl:7b": qwen
+  "deepseek-r1:32b": qwen
+  "gemma3:27b": gemma
+  "o4-mini-2025-04-16": openai
+  "claude-sonnet-4-6": anthropic
+
 low_yield_threshold: 4
 
 pdf_quality_check:

@@ -1063,6 +1063,7 @@ class TestSpecDrivenConfig:
             for a in d["arms"]:
                 if a["provider"] == "openai":
                     a["name"], a["model"] = "openai_custom", "o4-mini-custom"
+            d["model_lineage"]["o4-mini-custom"] = "openai"  # R703(d): every named model, R704(d)
             d["cloud"]["prices"] = {"openai_custom": {"input_per_m": 2.0, "output_per_m": 8.0}}
         mock_openai_cls.return_value = MagicMock()
         extractor = OpenAIExtractor(test_db, self._custom_spec(tmp_path, mutate), api_key="k")
@@ -1077,6 +1078,7 @@ class TestSpecDrivenConfig:
             for a in d["arms"]:
                 if a["provider"] == "anthropic":
                     a["name"], a["model"] = "anthropic_custom", "claude-custom-model"
+            d["model_lineage"]["claude-custom-model"] = "anthropic"  # R703(d), R704(d)
             d["cloud"]["prices"] = {"anthropic_custom": {"input_per_m": 5.0, "output_per_m": 25.0}}
         mock_anthropic_cls.return_value = MagicMock()
         extractor = AnthropicExtractor(test_db, self._custom_spec(tmp_path, mutate), api_key="k")

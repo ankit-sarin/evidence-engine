@@ -609,6 +609,15 @@ PROVIDER_DEFAULT_OPTIONS: dict[str, dict[str, Any]] = {
 
 CLOUD_PROVIDERS = ("openai", "anthropic")
 
+#: The closed vocabulary of base-model lineages (R703(b), R703(c)). A lineage is the
+#: base model whose weights a served model carries, not its vendor and not the
+#: server's architecture id: deepseek-r1:32b, a distillation onto a Qwen base, is
+#: `qwen`. A token outside this set is refused at spec load; a new lineage is a
+#: ruled change to this constant.
+LINEAGES: frozenset[str] = frozenset({
+    "qwen", "gemma", "llama", "deepseek", "mistral", "phi", "anthropic", "openai", "google",
+})
+
 
 class ArmSpec(_SpecModel):
     """One arm of the review (R10, R12): a name, a kind and one configuration.
@@ -815,6 +824,65 @@ class ReviewSpec(_SpecModel):
         default_factory=DistributionMonitorConfig,
         description="Thresholds for post-extraction distribution collapse detection.",
     )
+    model_lineage: dict[str, str] = Field(
+        default_factory=dict,
+        description=(
+            "Every model this spec names, exactly as it is written (an Ollama tag or a "
+            "provider model id), mapped to its base-model lineage from `LINEAGES` "
+            "(R703). Required in effect: a named model without an entry is refused at "
+            "load and again at run open. An entry naming no model is permitted."
+        ),
+    )
+
+    @field_validator("model_lineage")
+    @classmethod
+    def _lineage_tokens(cls, v: dict[str, str]) -> dict[str, str]:
+        bad = {m: t for m, t in v.items() if t not in LINEAGES}
+        if bad:
+            raise ValueError(
+                f"model_lineage: {bad} — a lineage is one of {sorted(LINEAGES)} "
+                "(R703(c)); a new lineage is a ruled change to LINEAGES")
+        return v
+
+    def named_models(self) -> dict[str, list[str]]:
+        """Every model the resolved spec names -> the fields that name it.
+
+        Fields a spec omits are named through their default factory, which is how
+        the live spec's audit and vision models are reached; `auditor_model`, when
+        set, names the audit model in place of `audit.model`, as `stage_config`
+        resolves it. Human arms name no model."""
+        named: dict[str, list[str]] = {}
+
+        def add(model, field):
+            if model:
+                named.setdefault(model, []).append(field)
+
+        add(self.screening_models.primary, "screening_models.primary")
+        add(self.screening_models.verification, "screening_models.verification")
+        add(self.ft_screening_models.primary, "ft_screening_models.primary")
+        add(self.ft_screening_models.verifier, "ft_screening_models.verifier")
+        add(self.extraction_models.extractor, "extraction_models.extractor")
+        if self.auditor_model:
+            add(self.auditor_model, "auditor_model")
+        else:
+            add(self.audit.model, "audit.model")
+        add(self.pdf_parsing.vision_model, "pdf_parsing.vision_model")
+        add(self.pdf_quality_check.ai_model, "pdf_quality_check.ai_model")
+        for a in self.arms:
+            if a.kind == "model":
+                add(a.model, f"arms[{a.name}].model")
+        return named
+
+    @model_validator(mode="after")
+    def _lineage_covered(self):
+        missing = {m: f for m, f in self.named_models().items() if m not in self.model_lineage}
+        if missing:
+            listed = "; ".join(f"{m!r} (named by {', '.join(f)})" for m, f in missing.items())
+            raise ValueError(
+                f"model_lineage has no entry for {listed}. Every model the spec names, "
+                "defaults included, declares its base-model lineage (R703(d)): add "
+                "`<model>: <lineage>` under model_lineage.")
+        return self
 
     @model_validator(mode="after")
     def _arms_consistent(self):

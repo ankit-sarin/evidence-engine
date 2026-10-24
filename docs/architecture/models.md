@@ -34,7 +34,7 @@ Every verification step uses a different model family from the generation step. 
 |-------|-----------|----------|----------|
 | Abstract screening | qwen3:8b (Alibaba) | gemma3:27b (Google) | Cross-family |
 | FT screening | qwen3:32b (Alibaba) | gemma3:27b (Google) | Cross-family |
-| Extraction → Audit | deepseek-r1:32b (DeepSeek) | gemma3:27b (Google) | Cross-family |
+| Extraction → Audit | deepseek-r1:32b (DeepSeek distillation on a Qwen base; lineage qwen) | gemma3:27b (Google) | Cross-family |
 | Cloud concordance | o4-mini (OpenAI) | claude-sonnet-4-6 (Anthropic) | Cross-provider |
 
 ## Inference Parameters

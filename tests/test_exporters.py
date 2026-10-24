@@ -486,6 +486,8 @@ def run_db(tmp_path, spec):
         "arms": [a.model_copy(update={"model": RUN_EXTRACTOR}) if a.name == arm else a
                  for a in spec.arms],
         "auditor_model": RUN_AUDITOR,
+        # R703(d), R704(d): the fixture models declare lineages, of two lineages.
+        "model_lineage": {**spec.model_lineage, RUN_EXTRACTOR: "qwen", RUN_AUDITOR: "gemma"},
     })
     run_id = open_extraction_run(db, run_spec)
 

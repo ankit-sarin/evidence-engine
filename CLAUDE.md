@@ -342,7 +342,8 @@ sub-block — C17) and the sources. `canonical_json` / `sha256_canonical` are th
 **The run manifest** (`engine/core/run_manifest.py`, migration 020). `open_run` writes
 `run_manifests` + `run_stage_configs` and pins every named arm **before the first call**, or
 refuses: `DirtyTree`, `PreManifestArm` (R59), `RetiredArm` (R21), `ArmPinMismatch` (R10, naming the
-differing keys), `CloudArmNotEnabled` (S3g), `CodebookReviewMismatch` (INT-i12-9), or a digest
+differing keys), `CloudArmNotEnabled` (S3g), `CodebookReviewMismatch` (INT-i12-9), `ModelLineageMissing` or
+`SameLineageVerifier` (INT-i12-45), or a digest
 failure. An untagged HEAD is allowed with
 `engine_state` NULL until the freshman tag. `active_run(conn, run_id)` makes `ollama_chat` record
 each call in `run_calls`. A human review session is a run of kind `review_session` with zero stage

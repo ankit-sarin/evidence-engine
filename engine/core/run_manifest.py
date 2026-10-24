@@ -62,7 +62,7 @@ from typing import Any, Callable, Iterable, Mapping, NoReturn
 from engine.core.effective import PRE_MANIFEST
 from engine.core.effective_config import (
     CLOUD_STAGE_PREFIX, OLLAMA_STAGES, ResolvedStage, canonical_json,
-    resolve_run, sha256_canonical,
+    resolve_run, sha256_canonical, stage_config,
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -157,6 +157,17 @@ class CodebookReviewMismatch(RunRefused):
     fields under this review's manifest."""
 
 
+class ModelLineageMissing(RunRefused):
+    """R703(d): a stage the run declares resolves to a model the spec's
+    `model_lineage` has no entry for. Spec load checks the same coverage; this is
+    the re-check for a spec derived by `model_copy`, which skips validation."""
+
+
+class SameLineageVerifier(RunRefused):
+    """R703(e), INT-i12-45: the audit model shares a base-model lineage with the
+    model of an extraction stage it verifies — the settled cross-family rule."""
+
+
 class StageNotInRun(RunRefused):
     """The run named does not exist or did not declare the stage a caller needs."""
 
@@ -233,6 +244,71 @@ def _stage_arm(spec, stage: str) -> str | None:
     if stage in _LOCAL_EXTRACTION_STAGES:
         return spec.extraction_models.arm
     return None
+
+
+def _declared_models(spec, stage_list: list[str],
+                     preflight_models: Iterable[str]) -> dict[str, str]:
+    """Stage key -> the model it resolves to, for every stage a run declares."""
+    out: dict[str, str] = {}
+    for s in stage_list:
+        if s == "preflight":
+            out.update({f"preflight:{m}": m for m in preflight_models})
+        else:
+            out[s] = stage_config(s, spec).model
+    return out
+
+
+def _lineage_check(conn, spec, models: Mapping[str, str]) -> dict | None:
+    """R703(d)/(e), before any row: every declared model has a lineage, and an
+    audit stage shares none with the extraction stages it verifies. Returns the
+    manifest's `lineage_check` record when the run declares `audit`, else None.
+
+    In a run that declares audit and no extraction stage the extractor is the
+    arm's pin when the arm is pinned, else the spec's extraction stages; the
+    lineages are always the current spec's."""
+    lineage = spec.model_lineage
+    missing = {s: m for s, m in models.items() if m not in lineage}
+    if missing:
+        raise ModelLineageMissing(
+            f"run refused: no model_lineage entry for {missing} (stage: model). Every "
+            "model a run calls declares its base-model lineage (R703(d)); add the entry "
+            "to the spec's model_lineage, or declare a model that has one. Nothing was "
+            "written.")
+    if "audit" not in models:
+        return None
+    auditor = models["audit"]
+    extractors = {s: m for s, m in models.items() if s in _LOCAL_EXTRACTION_STAGES}
+    source = "spec"
+    if not extractors and spec.extraction_models.arm:
+        row = conn.execute(
+            "SELECT configuration_json, configuration_marker FROM arms WHERE arm_name = ?",
+            (spec.extraction_models.arm,)).fetchone()
+        if row is not None and row[1] == ARM_PINNED:
+            source = "pin"
+            extractors = {s: v["model"] for s, v in json.loads(row[0])["stages"].items()
+                          if s in _LOCAL_EXTRACTION_STAGES}
+        else:
+            from engine.agents.extractor import extraction_stages
+            extractors = {s: stage_config(s, spec).model for s in extraction_stages(spec)}
+        unmapped = {s: m for s, m in extractors.items() if m not in lineage}
+        if unmapped:
+            raise ModelLineageMissing(
+                f"run refused: the audited arm {spec.extraction_models.arm!r}'s extractor "
+                f"({source}) names {unmapped}, which model_lineage has no entry for "
+                "(R703(d)); add the entry. Nothing was written.")
+    same = {s: m for s, m in extractors.items() if lineage[m] == lineage[auditor]}
+    if same:
+        pairs = ", ".join(f"{s} → audit" for s in sorted(same))
+        raise SameLineageVerifier(
+            f"run refused: {pairs}: the auditor {auditor!r} (lineage "
+            f"{lineage[auditor]!r}) shares a base-model lineage with the extractor "
+            f"{sorted(set(same.values()))} (lineage {lineage[auditor]!r}; extractor "
+            f"model from the {source}). Verification is cross-lineage (R703(e), "
+            "INT-i12-45): declare an auditor of another lineage. Nothing was written.")
+    return {"audit_model": auditor, "audit_lineage": lineage[auditor],
+            "extractor_models": dict(sorted(extractors.items())),
+            "extractor_lineages": {s: lineage[m] for s, m in sorted(extractors.items())},
+            "extractor_source": source}
 
 
 def pin_tuple(spec, arm_name: str, resolved: Mapping[str, ResolvedStage],
@@ -375,6 +451,12 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
             raise RetiredArm(f"run refused: arm {name!r} was retired at {retired} (R21).")
         existing[name] = (cfg_json, marker, pinned_sha)
 
+    # R703(d)/(e): lineage coverage and the extraction→audit pair, before the
+    # server is asked for a digest and before any row.
+    preflight_models = list(preflight_models)
+    lineage_check = _lineage_check(
+        conn, spec, _declared_models(spec, stage_list, preflight_models))
+
     resolved = resolve_run(spec, [s for s in stage_list],
                            digest_fn=digest_fn, preflight_models=preflight_models,
                            codebook_path=codebook.path, arms_by_stage=arms_by_stage)
@@ -410,9 +492,12 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
         "libraries": libs, "host": host or socket.gethostname(),
         "started_at": started, "cloud_arms": cloud_list,
         "payload_description": payload_description,
-        "stages": {k: _stage_row(k, r) for k, r in sorted(resolved.items())},
+        "stages": {k: {**_stage_row(k, r), "lineage": spec.model_lineage[r.config.model]}
+                   for k, r in sorted(resolved.items())},
         "pins": {k: v[1] for k, v in sorted(pins.items())},
     }
+    if lineage_check is not None:
+        manifest["lineage_check"] = lineage_check
     if selection_bound is not None:
         manifest["selection_bound"] = dict(selection_bound)
     if inputs is not None:

@@ -9832,3 +9832,62 @@ R703(l) — U17's fix (U17B) opens under the brief below.
 | 2026-10-24 | R703(a) — 12w-U17A is accepted as reported: item 0 as 87e416b (Block 100), the read-out as a05d0e0, the ledgers e62c592 and 9d77687. The report's findings list skips 6 and 7; 12w-U17B quotes them from 12w_U17A.md §6 in its read-out. No row. R703(b) — Meaning: "family" in the settled cross-family rule is the lineage of the base model whose weights the served model carries, not the vendor's name and not the server's architecture id. Under this reading deepseek-r1:32b is lineage qwen. The server's family string is not the rule's input (option B rejected as the source). R703(c) — Source: option A′. The Review Spec gains one top-level mapping, model_lineage, from each model tag or provider model id, exactly as the spec writes it, to one lineage token. Tokens come from a closed vocabulary defined once in engine code: qwen, gemma, llama, deepseek, mistral, phi, anthropic, openai, google. A token outside it is refused; a new lineage is added to the vocabulary by a ruled code change. The server's family string (from the /api/tags read open_run already makes; no new request) is recorded beside each declared lineage in the manifest as telemetry, never compared; cloud models record none. R703(d) — Required, checked twice. At spec load, every model the resolved spec names, models supplied by default factories and declared cloud arms included, must have a model_lineage entry; a missing entry is refused, naming the model and the field that names it. At open_run, coverage is re-checked for every stage the run declares (model_copy skips validation). A missing entry is always a refusal, never a pass. An entry naming no model is permitted and reported by the loader's caller only if asked; it is not an error. R703(e) — The pair check, at open_run, before any manifest row: when the run declares the audit stage, the lineage of each extraction stage's model for the arm (every extraction stage the arm declares) is compared with the audit model's; equal lineages raise a named RunRefused subclass naming the stage pair, both models, both lineages and the source of the extractor's model. In a run that declares audit and no extraction stage, the extractor's models are read from the arm's pin when the arm is pinned, else from the spec's extraction arm; the manifest records which. Lineages are always read from the current spec's map. The refusal is added to CLAUDE.md's list of open_run refusals after "CodebookReviewMismatch (INT-i12-9)". R703(f) — Recorded in manifest_json, no migration: for each declared stage, its model, declared lineage and server family (or null). Screening and FT models are covered by R703(d)'s map; their pairs are not enforced in U17 and stay P4's (R612(k)). R703(g) — Docs in U17's commit: docs/architecture/models.md line 37's "(DeepSeek)" becomes "(DeepSeek distillation on a Qwen base; lineage qwen)"; CLAUDE.md per R703(e). The FT screener docstring's stale primary ("Qwen3.5:27b") is a dated note on INT-i12-45, Class 3, P7, not edited in U17. R703(h) — The live spec is edited in U17's fix commit, together with the code (R700(g); the current loader refuses the new key, so they cannot land apart). Its new sha256 is measured in the commit. Expected, to be measured: both arm pins, every prompt hash, every options hash and screening_hash unchanged; spec_hash moves. A moved pin is a stop. R703(i) — INT-i12-45 CLOSES on the fix commit if every acceptance test passes in its gate; fix units done 19 of 36 by the dated lines (the script's field stays 35, R701(c)). Rows out 0; the closed row stays counted (R607(d)). R703(j) — Readings, no row: CC's finding 10 — from here any pytest run outside a standard gate passes --basetemp under its own scratch directory; another lane rotating a gate's basetemp out of the shared root is harmless because the basetemp is read immediately after the gate (R660(c)). Finding 11 — the direct mode=ro PRAGMA schema reads, with the fingerprint IDENTICAL, are accepted. R703(k) — INT-v12-1's unit is the next unit after U17. The comparison rehearsal U13 ran in 12r, so the read-out's placement "before the comparison rehearsal" no longer applies. Its Phase A states whether its fix changes any request byte sent to a model; if it changes the pin's coverage only, no rehearsal is required. R703(l) — U17's fix (U17B) opens under the brief below. | PI, 2026-10-24, during session 12w, on architect recommendation, on the 12w-U17A final report and read-out (a05d0e0) |
 
 The decision log in this file ends at R703.
+
+**Block 102.** *Transcribed 2026-10-24 (item 0 of the 12w-U17B resume), in its own commit, in the R597(e) form:* ruling R704, made by PI on architect recommendation on 2026-10-24 UTC, during session 12w, on the 12w-U17B report stopped before step 3 (Phase 1 at `098fc74a770767eadb783eb51bc1ce67d8949a1a`). The 12w-U17B resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12w-R704] — the stop at I3 is upheld; the server family is not recorded;
+  T3 amended; U17B resumes at step 3
+STATUS: PI ruling, 2026-10-24 UTC, session 12w, on architect recommendation, on the 12w-U17B report
+  stopped before step 3 (Phase 1 at 098fc74). Transcribe as Block 102 at item 0 of the resume
+  below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12w-U17B stopped report):
+  MEASURED: "Commit: e5e23b7 (parent a05d0e0)"; "r703.txt: 81570c1a…5466, 6,514 B, 78 lines,
+    equal to the architect's hash"; "Phase 1 (commit 098fc74, parent e5e23b7; ledger 104b851,
+    "rows through 2026-10-24T17:30:26Z", copied from the row)"; "The resolved live spec names
+    exactly seven models"; "the fix breaks 5 test ids"; "fetch_model_digest reads /api/tags,
+    but it returns only matches[0].get("digest")"; "15 test files patch or name
+    fetch_model_digest"; "pin_tuple stores {"model": …, "model_digest": …} for each of the
+    arm's extraction stages"; "13 ids (T5 runs four ways), 13 failed in 7.11s"; "5a9ae9e says
+    "rows through 2026-10-24T17:12:22Z"; the row reads | 2026-10-24T17:11:21Z |".
+  READ (CC's): "I3's own fallback ("record null") contradicts T3 and R703(c)'s "recorded beside
+    each declared lineage". A third option, a second /api/tags request, is what R703(c)
+    forbids."
+  INFERRED: none.
+
+R704(a) — The stop is upheld. The brief's I3 offered "record null" as a fallback that
+  contradicted its own T3 and R703(c); that was an architect error, not CC's.
+R704(b) — R703(c)'s sentence recording the server's family string, and R703(f)'s "and server
+  family (or null)", are withdrawn. The manifest records, for each declared stage, its model and
+  declared lineage, and for the audit-only path the extractor's source (pin or spec). Reason: the
+  model digest the manifest already records identifies the served weights exactly; the family
+  string is never compared (R703(b)) and would add a field the rule does not use, at the cost of
+  widening U17 into engine/utils/ollama_client.py and the 15 test files that patch
+  fetch_model_digest, or of a field that always reads null. Options (i) and (ii) are rejected.
+R704(c) — T3 is amended: the live pairing opens, and manifest_json records, per declared stage,
+  model and lineage; no server-family key is written. T10 is amended the same way (a cloud model
+  in the map with its provider lineage loads; no server-family key). The Phase 1 record at
+  098fc74 is not edited; the fix commit's test file carries the amendment, listed with this
+  ruling as its reason (step 3c).
+R704(d) — I1 and I2 are accepted as measured: the seven-model map (qwen3:8b, qwen3:32b,
+  qwen2.5vl:7b and deepseek-r1:32b qwen; gemma3:27b gemma; o4-mini-2025-04-16 openai;
+  claude-sonnet-4-6 anthropic); the five test ids to rewrite under their ids
+  (test_cloud_extraction.py::TestSpecDrivenConfig::test_openai_reads_from_spec and
+  ::test_anthropic_reads_from_spec; test_exporters.py::test_methods_counts_papers_not_calls,
+  ::test_methods_uses_db_audit_model and ::test_methods_uses_db_extraction_model), each given a
+  map entry for its fixture model rather than a weakened assertion.
+R704(e) — Readings, no row: (i) ledger 5a9ae9e's message timestamp (17:12:22Z) differs from its
+  row (17:11:21Z); the row is the record; the message stands, not amended. (ii) The second wait
+  at the census broke R702(b)(ii): one wait means one waiting process of any kind, foreground or
+  background, for one job. (iii) The census cannot see a test asserting a manifest-body key is
+  absent; the grep found none.
+R704(f) — 12w-U17B resumes at step 3 under the resume below; no other clause of the brief
+  changes except as R704(b)–(d) amend it.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-24 | R704(a) — The stop is upheld. The brief's I3 offered "record null" as a fallback that contradicted its own T3 and R703(c); that was an architect error, not CC's. R704(b) — R703(c)'s sentence recording the server's family string, and R703(f)'s "and server family (or null)", are withdrawn. The manifest records, for each declared stage, its model and declared lineage, and for the audit-only path the extractor's source (pin or spec). Reason: the model digest the manifest already records identifies the served weights exactly; the family string is never compared (R703(b)) and would add a field the rule does not use, at the cost of widening U17 into engine/utils/ollama_client.py and the 15 test files that patch fetch_model_digest, or of a field that always reads null. Options (i) and (ii) are rejected. R704(c) — T3 is amended: the live pairing opens, and manifest_json records, per declared stage, model and lineage; no server-family key is written. T10 is amended the same way (a cloud model in the map with its provider lineage loads; no server-family key). The Phase 1 record at 098fc74 is not edited; the fix commit's test file carries the amendment, listed with this ruling as its reason (step 3c). R704(d) — I1 and I2 are accepted as measured: the seven-model map (qwen3:8b, qwen3:32b, qwen2.5vl:7b and deepseek-r1:32b qwen; gemma3:27b gemma; o4-mini-2025-04-16 openai; claude-sonnet-4-6 anthropic); the five test ids to rewrite under their ids (test_cloud_extraction.py::TestSpecDrivenConfig::test_openai_reads_from_spec and ::test_anthropic_reads_from_spec; test_exporters.py::test_methods_counts_papers_not_calls, ::test_methods_uses_db_audit_model and ::test_methods_uses_db_extraction_model), each given a map entry for its fixture model rather than a weakened assertion. R704(e) — Readings, no row: (i) ledger 5a9ae9e's message timestamp (17:12:22Z) differs from its row (17:11:21Z); the row is the record; the message stands, not amended. (ii) The second wait at the census broke R702(b)(ii): one wait means one waiting process of any kind, foreground or background, for one job. (iii) The census cannot see a test asserting a manifest-body key is absent; the grep found none. R704(f) — 12w-U17B resumes at step 3 under the resume below; no other clause of the brief changes except as R704(b)–(d) amend it. | PI, 2026-10-24, during session 12w, on architect recommendation, on the 12w-U17B report stopped before step 3 (098fc74) |
+
+The decision log in this file ends at R704.

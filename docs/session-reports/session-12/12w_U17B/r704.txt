@@ -1,0 +1,48 @@
+RULING [evidence-engine 12w-R704] — the stop at I3 is upheld; the server family is not recorded;
+  T3 amended; U17B resumes at step 3
+STATUS: PI ruling, 2026-10-24 UTC, session 12w, on architect recommendation, on the 12w-U17B report
+  stopped before step 3 (Phase 1 at 098fc74). Transcribe as Block 102 at item 0 of the resume
+  below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12w-U17B stopped report):
+  MEASURED: "Commit: e5e23b7 (parent a05d0e0)"; "r703.txt: 81570c1a…5466, 6,514 B, 78 lines,
+    equal to the architect's hash"; "Phase 1 (commit 098fc74, parent e5e23b7; ledger 104b851,
+    "rows through 2026-10-24T17:30:26Z", copied from the row)"; "The resolved live spec names
+    exactly seven models"; "the fix breaks 5 test ids"; "fetch_model_digest reads /api/tags,
+    but it returns only matches[0].get("digest")"; "15 test files patch or name
+    fetch_model_digest"; "pin_tuple stores {"model": …, "model_digest": …} for each of the
+    arm's extraction stages"; "13 ids (T5 runs four ways), 13 failed in 7.11s"; "5a9ae9e says
+    "rows through 2026-10-24T17:12:22Z"; the row reads | 2026-10-24T17:11:21Z |".
+  READ (CC's): "I3's own fallback ("record null") contradicts T3 and R703(c)'s "recorded beside
+    each declared lineage". A third option, a second /api/tags request, is what R703(c)
+    forbids."
+  INFERRED: none.
+
+R704(a) — The stop is upheld. The brief's I3 offered "record null" as a fallback that
+  contradicted its own T3 and R703(c); that was an architect error, not CC's.
+R704(b) — R703(c)'s sentence recording the server's family string, and R703(f)'s "and server
+  family (or null)", are withdrawn. The manifest records, for each declared stage, its model and
+  declared lineage, and for the audit-only path the extractor's source (pin or spec). Reason: the
+  model digest the manifest already records identifies the served weights exactly; the family
+  string is never compared (R703(b)) and would add a field the rule does not use, at the cost of
+  widening U17 into engine/utils/ollama_client.py and the 15 test files that patch
+  fetch_model_digest, or of a field that always reads null. Options (i) and (ii) are rejected.
+R704(c) — T3 is amended: the live pairing opens, and manifest_json records, per declared stage,
+  model and lineage; no server-family key is written. T10 is amended the same way (a cloud model
+  in the map with its provider lineage loads; no server-family key). The Phase 1 record at
+  098fc74 is not edited; the fix commit's test file carries the amendment, listed with this
+  ruling as its reason (step 3c).
+R704(d) — I1 and I2 are accepted as measured: the seven-model map (qwen3:8b, qwen3:32b,
+  qwen2.5vl:7b and deepseek-r1:32b qwen; gemma3:27b gemma; o4-mini-2025-04-16 openai;
+  claude-sonnet-4-6 anthropic); the five test ids to rewrite under their ids
+  (test_cloud_extraction.py::TestSpecDrivenConfig::test_openai_reads_from_spec and
+  ::test_anthropic_reads_from_spec; test_exporters.py::test_methods_counts_papers_not_calls,
+  ::test_methods_uses_db_audit_model and ::test_methods_uses_db_extraction_model), each given a
+  map entry for its fixture model rather than a weakened assertion.
+R704(e) — Readings, no row: (i) ledger 5a9ae9e's message timestamp (17:12:22Z) differs from its
+  row (17:11:21Z); the row is the record; the message stands, not amended. (ii) The second wait
+  at the census broke R702(b)(ii): one wait means one waiting process of any kind, foreground or
+  background, for one job. (iii) The census cannot see a test asserting a manifest-body key is
+  absent; the grep found none.
+R704(f) — 12w-U17B resumes at step 3 under the resume below; no other clause of the brief
+  changes except as R704(b)–(d) amend it.

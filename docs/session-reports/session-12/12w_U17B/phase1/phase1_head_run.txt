@@ -1,0 +1,265 @@
+FFFFFFFFFFFFF                                                            [100%]
+=================================== FAILURES ===================================
+____ test_t1_a_qwen_lineage_auditor_of_the_deepseek_distillation_is_refused ____
+
+review = (<engine.core.database.ReviewDatabase object at 0xf21137e24e60>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+
+    def test_t1_a_qwen_lineage_auditor_of_the_deepseek_distillation_is_refused(review, spec):
+        """The distillation case: deepseek-r1:32b is lineage qwen (R703(b)), so qwen3:32b auditing it is
+        same-lineage although the vendors differ."""
+        db, cb = review
+>       with pytest.raises(rm.SameLineageVerifier) as exc:
+                           ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.core.run_manifest' has no attribute 'SameLineageVerifier'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:91: AttributeError
+___________ test_t2_an_auditor_identical_to_the_extractor_is_refused ___________
+
+review = (<engine.core.database.ReviewDatabase object at 0xf21137d1deb0>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+
+    def test_t2_an_auditor_identical_to_the_extractor_is_refused(review, spec):
+        db, cb = review
+>       with pytest.raises(rm.SameLineageVerifier):
+                           ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.core.run_manifest' has no attribute 'SameLineageVerifier'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:102: AttributeError
+__ test_t3_the_live_pairing_opens_and_records_model_lineage_and_server_family __
+
+review = (<engine.core.database.ReviewDatabase object at 0xf21137d30590>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+
+    def test_t3_the_live_pairing_opens_and_records_model_lineage_and_server_family(review, spec):
+        db, cb = review
+        tags = _tags_response({"deepseek-r1:32b": "qwen2", "gemma3:27b": "gemma3"})
+        with patch("engine.utils.ollama_client.httpx.get", return_value=tags):
+            h = _open(db, spec, cb, digest_fn=None)
+        stages = _body(db, h.run_id)["stages"]
+        for s in EXTRACTION:
+>           assert (stages[s]["model"], stages[s]["lineage"], stages[s]["server_family"]) == \
+                                        ^^^^^^^^^^^^^^^^^^^^
+                ("deepseek-r1:32b", "qwen", "qwen2"), s
+E           KeyError: 'lineage'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:121: KeyError
+_____ test_t4_a_default_factory_model_without_an_entry_is_refused_at_load ______
+
+tmp_path = PosixPath('~/scratch/12w-u17b/phase1_basetemp/test_t4_a_default_factory_mode0')
+
+    def test_t4_a_default_factory_model_without_an_entry_is_refused_at_load(tmp_path):
+        """The live spec has no `audit:` block; `AuditModels`' default supplies gemma3:27b. A map without
+        that model is refused, naming the model and the field (R703(d))."""
+        raw = yaml.safe_load(LIVE_SPEC.read_text())
+        assert "audit" not in raw
+>       raw["model_lineage"] = {m: t for m, t in raw["model_lineage"].items() if m != "gemma3:27b"}
+                                                 ^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'model_lineage'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:133: KeyError
+___ test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[Qwen] ____
+
+tmp_path = PosixPath('~/scratch/12w-u17b/phase1_basetemp/test_t5_a_lineage_token_outsid0')
+token = 'Qwen'
+
+    @pytest.mark.parametrize("token", ["Qwen", "qwen3", "alibaba", ""])
+    def test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load(tmp_path, token):
+        raw = yaml.safe_load(LIVE_SPEC.read_text())
+>       raw["model_lineage"] = {**raw["model_lineage"], "qwen3:8b": token}
+                                  ^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'model_lineage'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:142: KeyError
+___ test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[qwen3] ___
+
+tmp_path = PosixPath('~/scratch/12w-u17b/phase1_basetemp/test_t5_a_lineage_token_outsid1')
+token = 'qwen3'
+
+    @pytest.mark.parametrize("token", ["Qwen", "qwen3", "alibaba", ""])
+    def test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load(tmp_path, token):
+        raw = yaml.safe_load(LIVE_SPEC.read_text())
+>       raw["model_lineage"] = {**raw["model_lineage"], "qwen3:8b": token}
+                                  ^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'model_lineage'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:142: KeyError
+__ test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[alibaba] __
+
+tmp_path = PosixPath('~/scratch/12w-u17b/phase1_basetemp/test_t5_a_lineage_token_outsid2')
+token = 'alibaba'
+
+    @pytest.mark.parametrize("token", ["Qwen", "qwen3", "alibaba", ""])
+    def test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load(tmp_path, token):
+        raw = yaml.safe_load(LIVE_SPEC.read_text())
+>       raw["model_lineage"] = {**raw["model_lineage"], "qwen3:8b": token}
+                                  ^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'model_lineage'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:142: KeyError
+_____ test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[] ______
+
+tmp_path = PosixPath('~/scratch/12w-u17b/phase1_basetemp/test_t5_a_lineage_token_outsid3')
+token = ''
+
+    @pytest.mark.parametrize("token", ["Qwen", "qwen3", "alibaba", ""])
+    def test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load(tmp_path, token):
+        raw = yaml.safe_load(LIVE_SPEC.read_text())
+>       raw["model_lineage"] = {**raw["model_lineage"], "qwen3:8b": token}
+                                  ^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'model_lineage'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:142: KeyError
+________ test_t6_a_model_copy_auditor_with_no_entry_is_refused_at_open _________
+
+review = (<engine.core.database.ReviewDatabase object at 0xf211375dd250>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+
+    def test_t6_a_model_copy_auditor_with_no_entry_is_refused_at_open(review, spec):
+        """`model_copy` skips validation (12w_U17A §6 finding 6), so open_run re-checks coverage."""
+        db, cb = review
+>       with pytest.raises(rm.ModelLineageMissing) as exc:
+                           ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.core.run_manifest' has no attribute 'ModelLineageMissing'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:152: AttributeError
+__ test_t7_an_audit_only_run_on_a_pinned_arm_reads_the_extractor_from_the_pin __
+
+review = (<engine.core.database.ReviewDatabase object at 0xf211375d15b0>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+
+    def test_t7_an_audit_only_run_on_a_pinned_arm_reads_the_extractor_from_the_pin(review, spec):
+        """The pin says deepseek-r1:32b (qwen). The spec is then changed to say gemma3:27b: a gemma auditor
+        opens (the pin, not the spec, is the extractor), recorded as source 'pin'; a qwen auditor is
+        refused although the spec's extractor would have passed it."""
+        db, cb = review
+        _pin_the_arm(db, spec, cb)
+        drifted = _respec_extractor(spec, "gemma3:27b")
+        h = _open(db, _with_auditor(drifted, "gemma3:27b"), cb, stages=("audit",))
+>       assert _body(db, h.run_id)["lineage_check"]["extractor_source"] == "pin"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'lineage_check'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:180: KeyError
+_________ test_t8_an_audit_only_run_on_an_unpinned_arm_reads_the_spec __________
+
+review = (<engine.core.database.ReviewDatabase object at 0xf211375a87d0>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+
+    def test_t8_an_audit_only_run_on_an_unpinned_arm_reads_the_spec(review, spec):
+        db, cb = review
+        h = _open(db, spec, cb, stages=("audit",))
+>       check = _body(db, h.run_id)["lineage_check"]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'lineage_check'
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:191: KeyError
+_ test_t9_the_new_live_spec_moves_no_prompt_hash_options_hash_or_screening_hash _
+
+    def test_t9_the_new_live_spec_moves_no_prompt_hash_options_hash_or_screening_hash():
+        """R703(h), in R695(d)'s form: the hash components, not the whole tuple."""
+        from engine.agents.extractor import extraction_stages
+        spec0 = load_review_spec(LIVE_SPEC)
+>       assert spec0.model_lineage, "the live spec carries model_lineage"
+               ^^^^^^^^^^^^^^^^^^^
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+item = 'model_lineage'
+
+    def __getattr__(self, item: str) -> Any:
+        private_attributes = object.__getattribute__(self, '__private_attributes__')
+        if item in private_attributes:
+            attribute = private_attributes[item]
+            if hasattr(attribute, '__get__'):
+                return attribute.__get__(self, type(self))  # type: ignore
+    
+            try:
+                # Note: self.__pydantic_private__ cannot be None if self.__private_attributes__ has items
+                return self.__pydantic_private__[item]  # type: ignore
+            except KeyError as exc:
+                raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+        else:
+            # `__pydantic_extra__` can fail to be set if the model is not yet fully initialized.
+            # See `BaseModel.__repr_args__` for more details
+            try:
+                pydantic_extra = object.__getattribute__(self, '__pydantic_extra__')
+            except AttributeError:
+                pydantic_extra = None
+    
+            if pydantic_extra and item in pydantic_extra:
+                return pydantic_extra[item]
+            else:
+                if hasattr(self.__class__, item):
+                    return super().__getattribute__(item)  # Raises AttributeError if appropriate
+                else:
+                    # this is the current error
+>                   raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E                   AttributeError: 'ReviewSpec' object has no attribute 'model_lineage'. Did you mean: 'model_validate'?
+
+.venv/lib/python3.12/site-packages/pydantic/main.py:1026: AttributeError
+_ test_t10_a_cloud_model_loads_with_its_provider_lineage_and_records_no_server_family _
+
+review = (<engine.core.database.ReviewDatabase object at 0xf2113759e030>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+
+    def test_t10_a_cloud_model_loads_with_its_provider_lineage_and_records_no_server_family(review, spec):
+        db, cb = review
+        arm = next(a for a in spec.arms if a.provider == "openai")
+>       assert spec.model_lineage[arm.model] == "openai"
+               ^^^^^^^^^^^^^^^^^^
+
+docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+item = 'model_lineage'
+
+    def __getattr__(self, item: str) -> Any:
+        private_attributes = object.__getattribute__(self, '__private_attributes__')
+        if item in private_attributes:
+            attribute = private_attributes[item]
+            if hasattr(attribute, '__get__'):
+                return attribute.__get__(self, type(self))  # type: ignore
+    
+            try:
+                # Note: self.__pydantic_private__ cannot be None if self.__private_attributes__ has items
+                return self.__pydantic_private__[item]  # type: ignore
+            except KeyError as exc:
+                raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+        else:
+            # `__pydantic_extra__` can fail to be set if the model is not yet fully initialized.
+            # See `BaseModel.__repr_args__` for more details
+            try:
+                pydantic_extra = object.__getattribute__(self, '__pydantic_extra__')
+            except AttributeError:
+                pydantic_extra = None
+    
+            if pydantic_extra and item in pydantic_extra:
+                return pydantic_extra[item]
+            else:
+                if hasattr(self.__class__, item):
+                    return super().__getattribute__(item)  # Raises AttributeError if appropriate
+                else:
+                    # this is the current error
+>                   raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E                   AttributeError: 'ReviewSpec' object has no attribute 'model_lineage'. Did you mean: 'model_validate'?
+
+.venv/lib/python3.12/site-packages/pydantic/main.py:1026: AttributeError
+=========================== short test summary info ============================
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t1_a_qwen_lineage_auditor_of_the_deepseek_distillation_is_refused
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t2_an_auditor_identical_to_the_extractor_is_refused
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t3_the_live_pairing_opens_and_records_model_lineage_and_server_family
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t4_a_default_factory_model_without_an_entry_is_refused_at_load
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[Qwen]
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[qwen3]
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[alibaba]
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[]
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t6_a_model_copy_auditor_with_no_entry_is_refused_at_open
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t7_an_audit_only_run_on_a_pinned_arm_reads_the_extractor_from_the_pin
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t8_an_audit_only_run_on_an_unpinned_arm_reads_the_spec
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t9_the_new_live_spec_moves_no_prompt_hash_options_hash_or_screening_hash
+FAILED docs/session-reports/session-12/12w_U17B/phase1/test_u17_cross_lineage.py::test_t10_a_cloud_model_loads_with_its_provider_lineage_and_records_no_server_family
+13 failed in 7.11s

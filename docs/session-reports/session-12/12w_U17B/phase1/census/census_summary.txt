@@ -1,0 +1,23 @@
+records 18 Counter({'LOAD': 15, 'OPEN_COVERAGE': 3})
+== LOAD: 15 test ids
+   tests/test_cloud_extraction.py::TestSpecDrivenConfig::test_anthropic_reads_from_spec | {"review_id": "surgical_autonomy", "top_level_keys_differing_from_live": ["arms", "cloud"]}
+   tests/test_cloud_extraction.py::TestSpecDrivenConfig::test_no_default_arm | {"review_id": "surgical_autonomy", "top_level_keys_differing_from_live": ["arms", "cloud"]}
+   tests/test_cloud_extraction.py::TestSpecDrivenConfig::test_no_default_price | {"review_id": "surgical_autonomy", "top_level_keys_differing_from_live": ["cloud"]}
+   tests/test_cloud_extraction.py::TestSpecDrivenConfig::test_openai_reads_from_spec | {"review_id": "surgical_autonomy", "top_level_keys_differing_from_live": ["arms", "cloud"]}
+   tests/test_codebook_review_at_open.py::test_run_cloud_extractions_run_arm_refuses_before_any_row_or_send | {"review_id": "surgical_autonomy", "top_level_keys_differing_from_live": ["cloud"]}
+   tests/test_failed_close_reason.py::test_a_cloud_arm_interrupted_closes_failed_naming_the_interrupt | {"review_id": "surgical_autonomy", "top_level_keys_differing_from_live": ["cloud"]}
+   tests/test_failed_close_reason.py::test_a_cloud_arm_that_raises_closes_failed_with_the_class_and_message | {"review_id": "surgical_autonomy", "top_level_keys_differing_from_live": ["cloud"]}
+   tests/test_failed_close_reason.py::test_a_cloud_arm_that_returns_closes_completed_with_no_reason | {"review_id": "surgical_autonomy", "top_level_keys_differing_from_live": ["cloud"]}
+   tests/test_review_paths.py::test_mismatch_names_both_ids_and_the_path | {"review_id": "review_b", "top_level_keys_differing_from_live": ["review_id"]}
+   tests/test_review_paths.py::test_mismatch_raises_before_any_database_is_constructed | {"review_id": "review_b", "top_level_keys_differing_from_live": ["review_id"]}
+   tests/test_review_spec.py::test_valid_review_id_accepted[a] | {"review_id": "a", "top_level_keys_differing_from_live": ["review_id"]}
+   tests/test_review_spec.py::test_valid_review_id_accepted[a_b_c] | {"review_id": "a_b_c", "top_level_keys_differing_from_live": ["review_id"]}
+   tests/test_review_spec.py::test_valid_review_id_accepted[r2] | {"review_id": "r2", "top_level_keys_differing_from_live": ["review_id"]}
+   tests/test_review_spec.py::test_valid_review_id_accepted[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx] | {"review_id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "top_level_keys_differing_from_live": ["review_id"]}
+   tests/test_screen2f_harness.py::test_arm_c_spec_adds_exactly_four_stage_lines | {"review_id": "surgical_autonomy", "top_level_keys_differing_from_live": ["eligibility"]}
+== OPEN_COVERAGE: 3 test ids
+   tests/test_exporters.py::test_methods_counts_papers_not_calls | {"missing": {"audit": "fixture-auditor:y", "extract_pass1": "fixture-extractor:x", "extract_pass2": "fixture-extractor:x", "extract_retry_snippet": "fixture-extractor:x"}, "run_kind": "extraction"}
+   tests/test_exporters.py::test_methods_uses_db_audit_model | {"missing": {"audit": "fixture-auditor:y", "extract_pass1": "fixture-extractor:x", "extract_pass2": "fixture-extractor:x", "extract_retry_snippet": "fixture-extractor:x"}, "run_kind": "extraction"}
+   tests/test_exporters.py::test_methods_uses_db_extraction_model | {"missing": {"audit": "fixture-auditor:y", "extract_pass1": "fixture-extractor:x", "extract_pass2": "fixture-extractor:x", "extract_retry_snippet": "fixture-extractor:x"}, "run_kind": "extraction"}
+== OPEN_PAIR: 0 test ids
+== PLUGIN_ERROR: 0 test ids

@@ -9743,3 +9743,92 @@ R702(f) — The Phase A also states where INT-v12-1's unit falls in 12l_P1A.md �
 | 2026-10-24 | R702(a) — 12w-OPEN is accepted as reported. Item 0 stands as 1557600 (Block 99, r701.txt, lane_line_12v.txt in 12v_close/); the ledger 33179d1 with trailers stands. The decision log in the file ends at R701. The 2026-10-24 nightly matched expected_nightly_20261024.md line for line; the 07:00 health job loaded 20 of 20. The 12w open stands verified. R702(b) — Readings, no row: (i) claude-config's 1ac7f58 (surgical-cv-spike rows 09cf951 and 1a0c649, primer lines 41–45 intact) is a foreign commit accepted under R663(b); the open was right to write no note. (ii) The two duplicate wait loops ended on their own and left nothing running; from here a brief that waits on a background job starts one wait, and the report names its pid. (iii) 12v_close/ holding files beyond I7's list is the closeout's shape; I7 is met. (iv) The recount on the plan at 1557600 reproducing the 12v output is the expected result: a block appended after the decision log changes no row. R702(c) — The band series on this host state gains the 12w-OPEN gate: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65 s. The band for the rest of 12w stays 803–981 s (R701(b)); it is recut at the 12w closeout in the R683(c) form. R702(d) — U17's Phase A (INT-i12-45; 12l_P1A.md §3 U17; R588, R612(k)) opens under the brief below. It is read-only on engine/, tests/, scripts/, analysis/, review_specs/ and the codebook; its record is committed under docs/session-reports/session-12/12w_U17A/. Every spec change it proposes is computed on a scratch copy only; the live spec is changed only under a later ruling (R700(g)). No model is loaded; an Ollama request that loads nothing is a reading (R696(b)), and a load is a stop. R702(e) — The Phase A answers, with evidence, four questions R612(k) left open: what "family" means for the rule (the vendor of the weights as served, or the lineage of the base model they were trained from — the two differ for a distilled model); where the family comes from (a declaration in the spec, a value read from the model server, or both checked against each other); where the refusal fires (spec load, run open, or both) and for which stage pairs; and what moves when the live spec gains the attribute (its sha256, each arm's pin, the manifest, the tests that build specs). It lays out options with what each catches and misses; it does not choose. R702(f) — The Phase A also states where INT-v12-1's unit falls in 12l_P1A.md §3's order, and whether U17 touches the attempt-2 message structure that row concerns. The screening generator→verifier pairs stay a P4 Phase A item (R612(k)); this read-out lists them and their families as facts only. | PI, 2026-10-24, during session 12w, on architect recommendation, on the 12w-OPEN final report (1557600) |
 
 The decision log in this file ends at R702.
+
+**Block 101.** *Transcribed 2026-10-24 (item 0 of the 12w-U17B brief), in its own commit, in the R597(e) form:* ruling R703, made by PI on architect recommendation on 2026-10-24 UTC, during session 12w, on the 12w-U17A final report and the read-out 12w_U17A.md (`a05d0e0827a66b7e0415071608fb5003aa5a1663`). The 12w-U17B task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12w-R703] — U17A accepted; the cross-family rule is a base-lineage rule,
+  declared once per model tag from a closed vocabulary, checked at spec load and at run open; U17's
+  fix opens under the brief below
+STATUS: PI ruling, 2026-10-24 UTC, session 12w, on architect recommendation, on the 12w-U17A final
+  report and the read-out 12w_U17A.md (a05d0e0). Transcribe as Block 101 at item 0 of the
+  12w-U17B brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12w-U17A final report):
+  MEASURED: "Commit 87e416b (parent 1557600)"; "r702.txt: b6facca9…f4cf, 5,310 B, 65 lines,
+    equal to the architect's hash"; "Commit a05d0e0 (parent 87e416b): 49 new files under
+    12w_U17A/"; "Ledger: 9d77687 (parent e62c592)"; "/api/ps read {"models":[]} before and
+    after each, and the journal shows only ps/show lines, with 0 load lines"; deepseek-r1:32b
+    "details.family qwen2", "general.basename DeepSeek-R1-Distill-Qwen"; "The server's family
+    string is an architecture id: "family": "qwen2" / "qwen3" / "qwen25vl" / "qwen35" for one
+    Qwen lineage"; "The scratch simulation shows both pins, every prompt hash, every options
+    hash and screening_hash unchanged. Only the file sha256 and spec_hash move"; "All four
+    scratch forms are refused by today's loader"; "The families fit the existing manifest_json
+    body without a migration"; "No file pins the spec's sha256 917c24de…"; "Tests build specs at
+    98 sites in 56 files. 80 of them load the live spec"; "model_copy (50 sites) bypasses
+    validation"; "The reproducer fails on HEAD (2 failed in 1.44s)".
+  READ (CC's): "A required family without a default breaks every omitted block"; "An audit-only
+    run names no arm at open"; "The cloud runner declares no audit"; "INT-v12-1 is
+    pin-affecting, so under U13's note it joins U01–U05, before the comparison rehearsal".
+  INFERRED: "A free-string typo or case difference reads as cross-family and passes the rule
+    silently" (CC's finding 8); the correlated-error rationale follows base lineage (CC's Q4).
+
+R703(a) — 12w-U17A is accepted as reported: item 0 as 87e416b (Block 100), the read-out as
+  a05d0e0, the ledgers e62c592 and 9d77687. The report's findings list skips 6 and 7; 12w-U17B
+  quotes them from 12w_U17A.md §6 in its read-out. No row.
+R703(b) — Meaning: "family" in the settled cross-family rule is the lineage of the base model
+  whose weights the served model carries, not the vendor's name and not the server's
+  architecture id. Under this reading deepseek-r1:32b is lineage qwen. The server's family
+  string is not the rule's input (option B rejected as the source).
+R703(c) — Source: option A′. The Review Spec gains one top-level mapping, model_lineage, from
+  each model tag or provider model id, exactly as the spec writes it, to one lineage token.
+  Tokens come from a closed vocabulary defined once in engine code: qwen, gemma, llama,
+  deepseek, mistral, phi, anthropic, openai, google. A token outside it is refused; a new
+  lineage is added to the vocabulary by a ruled code change. The server's family string (from
+  the /api/tags read open_run already makes; no new request) is recorded beside each declared
+  lineage in the manifest as telemetry, never compared; cloud models record none.
+R703(d) — Required, checked twice. At spec load, every model the resolved spec names, models
+  supplied by default factories and declared cloud arms included, must have a model_lineage
+  entry; a missing entry is refused, naming the model and the field that names it. At open_run,
+  coverage is re-checked for every stage the run declares (model_copy skips validation). A
+  missing entry is always a refusal, never a pass. An entry naming no model is permitted and
+  reported by the loader's caller only if asked; it is not an error.
+R703(e) — The pair check, at open_run, before any manifest row: when the run declares the audit
+  stage, the lineage of each extraction stage's model for the arm (every extraction stage the
+  arm declares) is compared with the audit model's; equal lineages raise a named RunRefused
+  subclass naming the stage pair, both models, both lineages and the source of the extractor's
+  model. In a run that declares audit and no extraction stage, the extractor's models are read
+  from the arm's pin when the arm is pinned, else from the spec's extraction arm; the manifest
+  records which. Lineages are always read from the current spec's map. The refusal is added to
+  CLAUDE.md's list of open_run refusals after "CodebookReviewMismatch (INT-i12-9)".
+R703(f) — Recorded in manifest_json, no migration: for each declared stage, its model, declared
+  lineage and server family (or null). Screening and FT models are covered by R703(d)'s map;
+  their pairs are not enforced in U17 and stay P4's (R612(k)).
+R703(g) — Docs in U17's commit: docs/architecture/models.md line 37's "(DeepSeek)" becomes
+  "(DeepSeek distillation on a Qwen base; lineage qwen)"; CLAUDE.md per R703(e). The FT
+  screener docstring's stale primary ("Qwen3.5:27b") is a dated note on INT-i12-45, Class 3,
+  P7, not edited in U17.
+R703(h) — The live spec is edited in U17's fix commit, together with the code (R700(g); the
+  current loader refuses the new key, so they cannot land apart). Its new sha256 is measured in
+  the commit. Expected, to be measured: both arm pins, every prompt hash, every options hash and
+  screening_hash unchanged; spec_hash moves. A moved pin is a stop.
+R703(i) — INT-i12-45 CLOSES on the fix commit if every acceptance test passes in its gate; fix
+  units done 19 of 36 by the dated lines (the script's field stays 35, R701(c)). Rows out 0;
+  the closed row stays counted (R607(d)).
+R703(j) — Readings, no row: CC's finding 10 — from here any pytest run outside a standard gate
+  passes --basetemp under its own scratch directory; another lane rotating a gate's basetemp out
+  of the shared root is harmless because the basetemp is read immediately after the gate
+  (R660(c)). Finding 11 — the direct mode=ro PRAGMA schema reads, with the fingerprint
+  IDENTICAL, are accepted.
+R703(k) — INT-v12-1's unit is the next unit after U17. The comparison rehearsal U13 ran in 12r,
+  so the read-out's placement "before the comparison rehearsal" no longer applies. Its Phase A
+  states whether its fix changes any request byte sent to a model; if it changes the pin's
+  coverage only, no rehearsal is required.
+R703(l) — U17's fix (U17B) opens under the brief below.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-24 | R703(a) — 12w-U17A is accepted as reported: item 0 as 87e416b (Block 100), the read-out as a05d0e0, the ledgers e62c592 and 9d77687. The report's findings list skips 6 and 7; 12w-U17B quotes them from 12w_U17A.md §6 in its read-out. No row. R703(b) — Meaning: "family" in the settled cross-family rule is the lineage of the base model whose weights the served model carries, not the vendor's name and not the server's architecture id. Under this reading deepseek-r1:32b is lineage qwen. The server's family string is not the rule's input (option B rejected as the source). R703(c) — Source: option A′. The Review Spec gains one top-level mapping, model_lineage, from each model tag or provider model id, exactly as the spec writes it, to one lineage token. Tokens come from a closed vocabulary defined once in engine code: qwen, gemma, llama, deepseek, mistral, phi, anthropic, openai, google. A token outside it is refused; a new lineage is added to the vocabulary by a ruled code change. The server's family string (from the /api/tags read open_run already makes; no new request) is recorded beside each declared lineage in the manifest as telemetry, never compared; cloud models record none. R703(d) — Required, checked twice. At spec load, every model the resolved spec names, models supplied by default factories and declared cloud arms included, must have a model_lineage entry; a missing entry is refused, naming the model and the field that names it. At open_run, coverage is re-checked for every stage the run declares (model_copy skips validation). A missing entry is always a refusal, never a pass. An entry naming no model is permitted and reported by the loader's caller only if asked; it is not an error. R703(e) — The pair check, at open_run, before any manifest row: when the run declares the audit stage, the lineage of each extraction stage's model for the arm (every extraction stage the arm declares) is compared with the audit model's; equal lineages raise a named RunRefused subclass naming the stage pair, both models, both lineages and the source of the extractor's model. In a run that declares audit and no extraction stage, the extractor's models are read from the arm's pin when the arm is pinned, else from the spec's extraction arm; the manifest records which. Lineages are always read from the current spec's map. The refusal is added to CLAUDE.md's list of open_run refusals after "CodebookReviewMismatch (INT-i12-9)". R703(f) — Recorded in manifest_json, no migration: for each declared stage, its model, declared lineage and server family (or null). Screening and FT models are covered by R703(d)'s map; their pairs are not enforced in U17 and stay P4's (R612(k)). R703(g) — Docs in U17's commit: docs/architecture/models.md line 37's "(DeepSeek)" becomes "(DeepSeek distillation on a Qwen base; lineage qwen)"; CLAUDE.md per R703(e). The FT screener docstring's stale primary ("Qwen3.5:27b") is a dated note on INT-i12-45, Class 3, P7, not edited in U17. R703(h) — The live spec is edited in U17's fix commit, together with the code (R700(g); the current loader refuses the new key, so they cannot land apart). Its new sha256 is measured in the commit. Expected, to be measured: both arm pins, every prompt hash, every options hash and screening_hash unchanged; spec_hash moves. A moved pin is a stop. R703(i) — INT-i12-45 CLOSES on the fix commit if every acceptance test passes in its gate; fix units done 19 of 36 by the dated lines (the script's field stays 35, R701(c)). Rows out 0; the closed row stays counted (R607(d)). R703(j) — Readings, no row: CC's finding 10 — from here any pytest run outside a standard gate passes --basetemp under its own scratch directory; another lane rotating a gate's basetemp out of the shared root is harmless because the basetemp is read immediately after the gate (R660(c)). Finding 11 — the direct mode=ro PRAGMA schema reads, with the fingerprint IDENTICAL, are accepted. R703(k) — INT-v12-1's unit is the next unit after U17. The comparison rehearsal U13 ran in 12r, so the read-out's placement "before the comparison rehearsal" no longer applies. Its Phase A states whether its fix changes any request byte sent to a model; if it changes the pin's coverage only, no rehearsal is required. R703(l) — U17's fix (U17B) opens under the brief below. | PI, 2026-10-24, during session 12w, on architect recommendation, on the 12w-U17A final report and read-out (a05d0e0) |
+
+The decision log in this file ends at R703.

@@ -1,0 +1,129 @@
+# (1) identifier/string hits for (famil|vendor|lineage|base_model|basemodel|architecture): 99
+engine/acquisition/manual_list.py	293	str	</title> <style>   body { font-family: 'IBM Plex Sans', system-ui, sans-serif; margin: 2rem; background: #EEF5F4; color: #2C2C2C; }   h1 { color: #0A5E56; margi
+engine/acquisition/pdf_quality_html.py	173	str	  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap');   body {{ font-family: 'IBM Plex Sans', system-ui, sans-s
+engine/adjudication/abstract_adjudication_html.py	259	str	<!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>Abstract Screening Ad
+engine/adjudication/abstract_adjudication_html.py	347	str	   .paper-meta { font-size: 0.85rem; color: #666; }   .card-links { font-size: 0.82rem; }   .card-links a { color: var(--forest-teal); }   .card-badge {     mar
+engine/adjudication/ft_adjudication_html.py	181	str	<!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>FT Screening Adjudica
+engine/agents/audit_events.py	1	str	The event-side auditor (WRITE-PATH-01 9b-2d; R17, F8, F10).  `run_pipeline`'s audit stage (`_stage_audit`) calls `audit_run`, since the flip that retired `run_a
+engine/agents/auditor.py	28	name	BaseModel
+engine/agents/ft_screener.py	1	str	Full-text screening agent — dual-model, cross-family.  Primary: Qwen3.5:27b (Alibaba/Qwen) — high-recall screen on parsed full text. Verifier: Gemma3:27b (Googl
+engine/agents/ft_screener.py	38	name	BaseModel
+engine/agents/ft_screener.py	47	name	BaseModel
+engine/agents/models.py	9	name	BaseModel
+engine/agents/models.py	29	name	BaseModel
+engine/agents/models.py	44	name	BaseModel
+engine/agents/screener.py	27	name	BaseModel
+engine/analysis/report.py	243	str	<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Concordance Report<
+engine/core/codebook.py	56	str	judge_rubric_family
+engine/core/codebook.py	327	str	judge_rubric_family
+engine/core/extraction_events.py	430	str	THE run-fault tuple, declared once (R533: "One owned run-fault predicate").      A run fault is a condition of the run, not of the paper in hand: the run     st
+engine/core/review_spec.py	20	name	BaseModel
+engine/parsers/models.py	9	name	BaseModel
+engine/parsers/models.py	34	name	BaseModel
+engine/search/dedup.py	17	name	BaseModel
+engine/search/models.py	8	name	BaseModel
+scripts/pdf_acquisition/step4_manual_download_list.py	121	str	<!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>Manual PDF Downloads 
+scripts/run_pipeline.py	448	str	The event-side audit (9b-FLIP, R111): locate every live claim of the     spec's arm, verify the unlocated values cross-family, write `audited_ai`.     No `paper
+analysis/paper1/adjudication.py	264	str	</title> <link rel="preconnect" href="https://fonts.googleapis.com"> <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+
+analysis/paper1/export_disagreement_pairs.py	441	str	<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>3-Arm Disagreement 
+analysis/paper1/judge.py	171	str	Run Pass 2 fabrication verification for one triple.      Produces a per-arm verdict (SUPPORTED / PARTIALLY_SUPPORTED /     UNSUPPORTED) grounded against the pap
+analysis/paper1/judge_codebook_smoke.py	419	str	Return a drop-in replacement for build_pass2_prompt that calls the     REAL production build_judge_prompt() (engine Pass 2 prompt construction,     dispatching 
+analysis/paper1/judge_codebook_smoke.py	564	str	v2 family bucket for a row: ordinal / nominal_categorical / free_text /     numeric. Ordinal takes precedence over the codebook categorical type.
+analysis/paper1/judge_codebook_smoke.py	772	str	Render the rubric block for one field of each scoring family.
+analysis/paper1/judge_codebook_smoke.py	806	str	 — four families: ordinal/graded, nominal categorical, free_text, numeric/verbatim. Ordinal fields: 
+analysis/paper1/judge_codebook_smoke.py	857	str	** (real build_judge_prompt, dispatch on judge_rubric_family).
+analysis/paper1/judge_loader.py	155	str	Return the raw YAML field dicts keyed by field_name.      Unlike :func:`load_codebook`, this preserves the full codebook entry —     including ``judge_rubric_fa
+analysis/paper1/judge_prompts.py	752	def	build_family_rubric
+analysis/paper1/judge_prompts.py	744	name	_RUBRIC_FAMILY_DISPATCH
+analysis/paper1/judge_prompts.py	753	arg	judge_rubric_family
+analysis/paper1/judge_prompts.py	755	str	Return the field-specific rubric block for the declared family.
+analysis/paper1/judge_prompts.py	772	str	Render the production codebook-aware Pass 2 prompt. Deterministic.      Identical to build_pass2_prompt except for the field-specific rubric     block (dispatch
+analysis/paper1/judge_prompts.py	832	str	build_family_rubric
+analysis/paper1/judge_prompts.py	756	name	_RUBRIC_FAMILY_DISPATCH
+analysis/paper1/judge_prompts.py	756	name	judge_rubric_family
+analysis/paper1/judge_prompts.py	815	name	build_family_rubric
+analysis/paper1/judge_prompts.py	759	str	unknown judge_rubric_family 
+analysis/paper1/judge_prompts.py	816	str	judge_rubric_family
+analysis/paper1/judge_prompts.py	759	name	judge_rubric_family
+analysis/paper1/judge_prompts.py	760	name	_RUBRIC_FAMILY_DISPATCH
+analysis/paper1/judge_schema.py	68	name	BaseModel
+analysis/paper1/judge_schema.py	110	name	BaseModel
+analysis/paper1/judge_schema.py	153	name	BaseModel
+analysis/paper1/judge_schema.py	197	name	BaseModel
+analysis/paper1/pi_audit_sampler_v2.py	212	str	Return (family_by_field, definition_by_field).      family_by_field maps field name -> judge_rubric_family.     definition_by_field maps field name -> a human-r
+analysis/paper1/pi_audit_sampler_v2.py	219	name	family
+analysis/paper1/pi_audit_sampler_v2.py	348	arg	family_by_field
+analysis/paper1/pi_audit_sampler_v2.py	351	str	Return (selected_records, selection_report).      Each selected record carries: paper_id, field_name, arm_name,     new/old verification_id, old/new verdict, st
+analysis/paper1/pi_audit_sampler_v2.py	610	name	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	859	str	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	971	name	family_by_stratum
+analysis/paper1/pi_audit_sampler_v2.py	230	name	family
+analysis/paper1/pi_audit_sampler_v2.py	987	str	family_by_stratum
+analysis/paper1/pi_audit_sampler_v2.py	987	name	family_by_stratum
+analysis/paper1/pi_audit_sampler_v2.py	1078	name	family_by_field
+analysis/paper1/pi_audit_sampler_v2.py	1092	name	family_by_field
+analysis/paper1/pi_audit_sampler_v2.py	1181	str	Family composition by stratum:
+analysis/paper1/pi_audit_sampler_v2.py	227	str	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	877	attr	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	977	attr	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	1036	str	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	228	name	family
+analysis/paper1/pi_audit_sampler_v2.py	228	str	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	386	str	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	447	str	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	701	kwarg	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	976	name	family_by_stratum
+analysis/paper1/pi_audit_sampler_v2.py	977	name	family_by_stratum
+analysis/paper1/pi_audit_sampler_v2.py	978	attr	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	1182	str	family_by_stratum
+analysis/paper1/pi_audit_sampler_v2.py	386	name	family_by_field
+analysis/paper1/pi_audit_sampler_v2.py	412	name	family_by_field
+analysis/paper1/pi_audit_sampler_v2.py	447	name	family_by_field
+analysis/paper1/pi_audit_sampler_v2.py	701	str	judge_rubric_family
+analysis/paper1/pi_audit_sampler_v2.py	978	name	family_by_stratum
+analysis/provenance/field_class.py	1	str	PROPOSED extractive-vs-interpretive classification of the 20 codebook fields.  *** PROPOSED — ARCHITECT RATIFICATION REQUIRED. *** Nothing downstream should tre
+analysis/provenance/field_class.py	78	str	Same agency decomposition as task_monitor — who authors the plan is inferred from an architecture description, never labelled as such in the source.
+analysis/provenance/field_class3.py	81	str	No paper writes 'R' or 'Shared'; the architecture description fixes who observes mechanically, but never states it.
+tests/_font_fixtures.py	88	str	familyName
+tests/analysis/paper1/test_judge_cli.py	30	str	 version: '2.0' review: cli_test date: '2026-01-01' escape_token: NO_EVIDENCE_LOCATABLE contract_unmet_token: CONTRACT_UNMET absence_sentinels: [NR, NOT_FOUND] 
+tests/analysis/paper1/test_judge_loader.py	37	str	 fields:   - name: study_type     tier: 1     type: categorical     instruction: Classify it.     field_class: stated     judge_rubric_family: categorical     d
+tests/analysis/paper1/test_pass1_inspection.py	34	str	 version: '2.0' review: test_review date: '2026-01-01' escape_token: NO_EVIDENCE_LOCATABLE contract_unmet_token: CONTRACT_UNMET absence_sentinels: [NR, NOT_FOUN
+tests/conftest.py	506	str	judge_rubric_family
+tests/test_codebook_evidence_modality.py	1	str	ELICIT-DESIGN-02 Ruling 3(b) — a field's evidence-modality flag may not contradict its class contract.  Sits in the pin-test family beside `test_codebook_field_
+tests/test_codebook_loader.py	38	str	judge_rubric_family
+tests/test_codebook_loader.py	41	str	judge_rubric_family
+tests/test_elicitation_pipeline.py	53	str	judge_rubric_family
+tests/test_elicitation_pipeline.py	56	str	judge_rubric_family
+tests/test_extraction_events.py	514	name	BaseModel
+tests/test_non_value_tokens_downstream.py	49	str	judge_rubric_family
+tests/test_presented_context.py	271	str	judge_rubric_family
+tests/test_review_spec.py	121	name	BaseModel
+# (2) review_spec.py class fields (all, per class)
+_SpecModel(BaseModel): []
+_UnsentOptions(_SpecModel): ['seed', 'num_ctx']
+PICO(_SpecModel): ['population', 'intervention', 'comparator', 'outcomes']
+SearchStrategy(_SpecModel): ['databases', 'query_terms', 'date_range']
+ScreeningModels(_UnsentOptions): ['primary', 'verification', 'temperature', 'think']
+FTScreeningModels(_UnsentOptions): ['primary', 'verifier', 'think', 'temperature']
+ExtractionModels(_UnsentOptions): ['extractor', 'pass1_think', 'pass2_think', 'temperature', 'retry_think', 'arm', 'elicitation']
+Criterion(_SpecModel): ['id', 'kind', 'text', 'stages', 'reason_code', 'examples']
+VerifierTest(_SpecModel): ['id', 'text', 'stages', 'derives_from']
+StagePolicy(_SpecModel): ['when_uncertain', 'when_evidence_absent', 'exclusion_basis']
+SpecialtyScope(_SpecModel): ['id', 'reason_code', 'included', 'excluded', 'notes']
+Eligibility(_SpecModel): ['criteria', 'specialty_scope', 'verifier_tests', 'stage_policies']
+ParseQuality(_SpecModel): ['short_unit_share_pct_max', 'chars_per_unit_min', 'glyph_density_per_kchar_max', 'replacement_density_per_kchar_max', 'font_exposure_per_kchar_max']
+PDFParsing(_SpecModel): ['scanned_text_threshold', 'vision_model', 'vision_temperature', 'vision_max_pages', 'vision_num_predict', 'vision_num_ctx', 'vision_page_timeout_s', 'ocr_engine', 'ocr_max_pages', 'parse_quality']
+ArmSpec(_SpecModel): ['name', 'kind', 'provider', 'model', 'options']
+CloudPrice(_SpecModel): ['input_per_m', 'output_per_m']
+CloudConfig(_SpecModel): ['enabled_arms', 'prices']
+OllamaRuntime(_SpecModel): ['keep_alive']
+AuditModels(_UnsentOptions): ['model', 'temperature', 'think']
+PreflightConfig(_SpecModel): ['temperature', 'num_predict']
+DistributionMonitorConfig(_SpecModel): ['collapsed_min_papers', 'low_variance_threshold', 'low_variance_min_papers']
+PDFQualityCheck(_UnsentOptions): ['enabled', 'ai_model', 'temperature', 'dpi', 'timeout', 'exclude_reasons']
+ReviewSpec(_SpecModel): ['review_id', 'title', 'version', 'authors', 'date', 'prospero_id', 'pico', 'search_strategy', 'screening_models', 'ft_screening_models', 'extraction_models', 'eligibility', 'low_yield_threshold', 'auditor_model', 'unpaywall_email', 'institutional_proxy_pattern', 'pdf_quality_check', 'arms', 'cloud', 'ollama', 'audit', 'preflight', 'pdf_parsing', 'distribution_monitor']
+ReviewSpecError(ValueError): []
+# (3) live schema columns (mode=ro)
+run_manifests ['run_id', 'run_uid', 'review_id', 'run_kind', 'git_commit', 'git_dirty', 'git_tag', 'engine_state', 'spec_hash', 'codebook_hash', 'codebook_sha256', 'library_versions_json', 'host', 'started_at', 'ended_at', 'end_status', 'end_reason', 'cloud_arms_json', 'payload_description', 'manifest_json', 'manifest_sha256']
+run_stage_configs ['run_id', 'stage', 'stage_kind', 'arm_name', 'provider', 'model_name', 'model_digest', 'options_json', 'options_hash', 'sent_keys_json', 'sources_json', 'keep_alive', 'format_schema_hash', 'prompt_hash']
+arms ['arm_name', 'arm_kind', 'configuration_json', 'configuration_marker', 'registered_at', 'retired_at', 'pinned_run_id', 'pinned_sha256']

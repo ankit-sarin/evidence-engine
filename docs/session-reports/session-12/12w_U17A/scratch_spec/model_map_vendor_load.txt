@@ -1,0 +1,3 @@
+model_map_vendor: REFUSED
+Review spec at /home/ankitsarin/scratch/12w-u17a/spec/model_map_vendor.yaml is invalid (1 error(s)):
+  model_families: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.

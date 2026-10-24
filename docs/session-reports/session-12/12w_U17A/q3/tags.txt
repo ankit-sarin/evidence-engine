@@ -1,0 +1,7 @@
+2026-10-24T16:40:20.627410212Z
+qwen3.5:27b 7653528ba5cb {"parent_model": "", "format": "gguf", "family": "qwen35", "families": ["qwen35"], "parameter_size": "27.8B", "quantization_level": "Q4_K_M"}
+gemma3:27b a418f5838eaf {"parent_model": "", "format": "gguf", "family": "gemma3", "families": ["gemma3"], "parameter_size": "27.4B", "quantization_level": "Q4_K_M"}
+qwen2.5vl:7b 5ced39dfa4ba {"parent_model": "", "format": "gguf", "family": "qwen25vl", "families": ["qwen25vl"], "parameter_size": "8.3B", "quantization_level": "Q4_K_M"}
+qwen3:8b 500a1f067a9f {"parent_model": "", "format": "gguf", "family": "qwen3", "families": ["qwen3"], "parameter_size": "8.2B", "quantization_level": "Q4_K_M"}
+qwen3:32b 030ee887880f {"parent_model": "", "format": "gguf", "family": "qwen3", "families": ["qwen3"], "parameter_size": "32.8B", "quantization_level": "Q4_K_M"}
+deepseek-r1:32b edba8017331d {"parent_model": "", "format": "gguf", "family": "qwen2", "families": ["qwen2"], "parameter_size": "32.8B", "quantization_level": "Q4_K_M"}

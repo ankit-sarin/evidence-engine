@@ -1,0 +1,63 @@
+--- /home/ankitsarin/projects/evidence-engine/review_specs/surgical_autonomy.yaml
++++ per_role_lineage.yaml
+@@ -44,10 +44,14 @@
+ screening_models:
+   primary: "qwen3:8b"
+   verification: "gemma3:27b"
++  primary_family: qwen
++  verification_family: gemma
+ 
+ ft_screening_models:
+   primary: "qwen3:32b"
+   verifier: "gemma3:27b"
++  primary_family: qwen
++  verifier_family: gemma
+   think: false
+   temperature: 0
+ 
+@@ -56,6 +60,7 @@
+ # here reached no call (row C1). `arm` names the arm local extraction writes to.
+ extraction_models:
+   extractor: "deepseek-r1:32b"
++  extractor_family: qwen
+   pass1_think: true
+   pass2_think: false
+   temperature: 0
+@@ -73,10 +78,12 @@
+     kind: model
+     provider: ollama
+     model: "deepseek-r1:32b"
++    family: qwen
+   - name: openai_o4_mini_2025_04_16_high
+     kind: model
+     provider: openai
+     model: "o4-mini-2025-04-16"
++    family: openai
+     options:
+       reasoning_effort: high
+       response_format: {type: json_object}
+@@ -84,6 +91,7 @@
+     kind: model
+     provider: anthropic
+     model: "claude-sonnet-4-6"
++    family: anthropic
+     options:
+       max_tokens: 16000
+       thinking: {type: enabled, budget_tokens: 10000}
+@@ -99,9 +107,16 @@
+ 
+ low_yield_threshold: 4
+ 
++audit:
++  family: gemma
++
++pdf_parsing:
++  vision_model_family: qwen
++
+ pdf_quality_check:
+   enabled: true
+   ai_model: "qwen2.5vl:7b"
++  ai_model_family: qwen
+   dpi: 150
+   timeout: 120
+   exclude_reasons:

@@ -1,0 +1,19 @@
+--- /home/ankitsarin/projects/evidence-engine/review_specs/surgical_autonomy.yaml
++++ model_map_vendor.yaml
+@@ -99,6 +99,16 @@
+ 
+ low_yield_threshold: 4
+ 
++# family of every model this spec names (12w-U17A scratch form B-map)
++model_families:
++  "qwen3:8b": alibaba
++  "qwen3:32b": alibaba
++  "gemma3:27b": google
++  "deepseek-r1:32b": deepseek
++  "qwen2.5vl:7b": alibaba
++  "o4-mini-2025-04-16": openai
++  "claude-sonnet-4-6": anthropic
++
+ pdf_quality_check:
+   enabled: true
+   ai_model: "qwen2.5vl:7b"

@@ -1,0 +1,62 @@
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/core/review_spec.py", line 930, in load_review_spec
+    return ReviewSpec.model_validate(raw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/pydantic/main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 11 validation errors for ReviewSpec
+screening_models.primary_family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='qwen', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+screening_models.verification_family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='gemma', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ft_screening_models.primary_family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='qwen', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ft_screening_models.verifier_family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='gemma', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+extraction_models.extractor_family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='qwen', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+pdf_quality_check.ai_model_family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='qwen', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+arms.0.family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='qwen', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+arms.1.family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='openai', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+arms.2.family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='anthropic', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+audit.family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='gemma', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+pdf_parsing.vision_model_family
+  Extra inputs are not permitted [type=extra_forbidden, input_value='qwen', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/docs/session-reports/session-12/12l_U04/pin_tuples.py", line 18, in <module>
+    spec0, cb = load_review_spec(sys.argv[1]), load_codebook(sys.argv[2])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/core/review_spec.py", line 932, in load_review_spec
+    raise ReviewSpecError(_format_validation_error(path, exc)) from exc
+engine.core.review_spec.ReviewSpecError: Review spec at /home/ankitsarin/scratch/12w-u17a/spec/per_role_lineage.yaml is invalid (11 error(s)):
+  screening_models.primary_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  screening_models.verification_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  ft_screening_models.primary_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  ft_screening_models.verifier_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  extraction_models.extractor_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  pdf_quality_check.ai_model_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  arms.0.family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  arms.1.family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  arms.2.family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  audit.family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  pdf_parsing.vision_model_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.

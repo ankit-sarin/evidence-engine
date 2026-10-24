@@ -1,0 +1,13 @@
+per_role_vendor: REFUSED
+Review spec at /home/ankitsarin/scratch/12w-u17a/spec/per_role_vendor.yaml is invalid (11 error(s)):
+  screening_models.primary_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  screening_models.verification_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  ft_screening_models.primary_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  ft_screening_models.verifier_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  extraction_models.extractor_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  pdf_quality_check.ai_model_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  arms.0.family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  arms.1.family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  arms.2.family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  audit.family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.
+  pdf_parsing.vision_model_family: unknown key — the Review Spec declares no such field. Remove it or correct the spelling.

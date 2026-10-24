@@ -1,0 +1,44 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 2 items
+
+docs/session-reports/session-12/12w_U17A/repro/test_u17_cross_family_repro.py::test_open_run_refuses_a_same_family_auditor FAILED [ 50%]
+docs/session-reports/session-12/12w_U17A/repro/test_u17_cross_family_repro.py::test_open_run_records_both_families_for_a_cross_family_auditor FAILED [100%]
+
+=================================== FAILURES ===================================
+_________________ test_open_run_refuses_a_same_family_auditor __________________
+
+review = (<engine.core.database.ReviewDatabase object at 0xeb3620fb77a0>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+
+    def test_open_run_refuses_a_same_family_auditor(review, spec):
+        db, cb = review
+        same = spec.model_copy(update={"auditor_model": spec.extraction_models.extractor})
+        before = _rows(db._conn)
+>       with pytest.raises(rm.RunRefused) as exc:
+E       Failed: DID NOT RAISE <class 'engine.core.run_manifest.RunRefused'>
+
+docs/session-reports/session-12/12w_U17A/repro/test_u17_cross_family_repro.py:66: Failed
+________ test_open_run_records_both_families_for_a_cross_family_auditor ________
+
+review = (<engine.core.database.ReviewDatabase object at 0xeb36204c15b0>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...on_monitor=DistributionMonitorConfig(collapsed_min_papers=10, low_variance_threshold=0.85, low_variance_min_papers=20))
+
+    def test_open_run_records_both_families_for_a_cross_family_auditor(review, spec):
+        db, cb = review
+        h = _open(db, spec, cb)
+        body = json.loads(db._conn.execute(
+            "SELECT manifest_json FROM run_manifests WHERE run_id = ?", (h.run_id,)).fetchone()[0])
+        stages = body["stages"]
+>       assert "family" in stages["audit"], "the manifest records the auditor's family"
+E       AssertionError: the manifest records the auditor's family
+E       assert 'family' in {'arm': None, 'format_schema_hash': '0054264a6925099ed7f07ab05c32b9b6d2a63bcab013a852b9c8e6d17ab1dc62', 'keep_alive': '-1', 'model': 'gemma3:27b', ...}
+
+docs/session-reports/session-12/12w_U17A/repro/test_u17_cross_family_repro.py:79: AssertionError
+=========================== short test summary info ============================
+FAILED docs/session-reports/session-12/12w_U17A/repro/test_u17_cross_family_repro.py::test_open_run_refuses_a_same_family_auditor
+FAILED docs/session-reports/session-12/12w_U17A/repro/test_u17_cross_family_repro.py::test_open_run_records_both_families_for_a_cross_family_auditor
+============================== 2 failed in 1.44s ===============================

@@ -9322,3 +9322,70 @@ R698(h) — U38 (INT-s12-1, R694(f): S-1 with S-2 folded in) opens with a Phase 
 | 2026-10-23 | R698(a) — 12v-U37R2 is accepted as reported: item 0 as 124d4b9 (Block 95), the read-out as b315733, the ledgers 7d0769d (carrying the surgical-cv row 6fe7629, R654(d)) and 96493ef. R698(b) — R697(e)'s verdict (i) is applied: INT-r12-1 is CLOSED on U37 (62d5e7eb7d5dc176712e989 16002e521932c0152), counted until P1 closes (R607(d)). Its evidence, stated as measured and not as the rule's arithmetic: five replayable cases in two server states (the first send after a load, and the settled state), both states agreeing on every case; under the old template two cases re-emit STATED-only deterministically, under the new one does (12g_p10 moves to a full, contract-met response in both states); no case is worse. F5's limit is written into the closure: k = 5 at temperature 0 is not five draws, and "10/25 vs 5/25" is that pair of states. R698(c) — Dated note on INT-r12-1 with the closure: 12g_p8 (live paper 455) re-emits STATED-only under both templates on every send (R697(d)); CC's inference that the property sits with 12g's attempt-1 response and the four-field feedback it earns, not the paper text (the same paper under 12r's attempt-1 input re-emits in full), is recorded as INFERRED. The historical "4 of 5" reproduced as 2 of 5 under the old template in both states; the other two historical STATED-only cases did not reproduce (R697(a)'s Part A finding, now replicated). R698(d) — Part B is not run (R697(f)). Run 7's telemetry records every Pass-1 attempt (R571(e)), so attempt-2 incidence on the real path is a reading at Run 7's audit; no brief before then. R698(e) — Dated note on INT-g12-5 (with R670(f)'s): at temperature 0 with no seed the response is fixed by the request and the server's preceding calls; the first send after a load differs from the settled response and the settled response does not move (12v_U37R2.md F5). This is the complete statement of what 12r's probe saw in part. R698(f) — Readings, no row: the two read-only ollama ps calls (R696(b)); the concurrent surgical-cv encode that loaded no model — R696(b) covers a GPU job that is not a model load in the same way, named with its size; the ledger row carried as found (R654(d)). The brief's "under an hour" was an architect estimate from the wrong per-call figure; Part A's §6 median governs any later estimate. R698(g) — Counts: rows 279 (94 / 54 / 131, 0 unclassed), P1 60 rows; fix units 36, done 17 (U01–U16, U37). R510 for 12v so far: rows in 1 (INT-v12-1), rows out 0, no class move; INT-r12-1 CLOSED and counted. R698(h) — U38 (INT-s12-1, R694(f): S-1 with S-2 folded in) opens with a Phase 1 under the brief below, in R695(b)'s form: the acceptance tests written and run against HEAD, the record committed under the evidence directory, the test file entering tests/ with the fix. No pin moves (F14); no rehearsal; no model call. | PI, 2026-10-23, during session 12v, on architect recommendation, on the 12v-U37R2 final report (b315733) |
 
 The decision log in this file ends at R698.
+
+**Block 97.** *Transcribed 2026-10-24 (item 0 of the 12v-U38B brief), in its own commit, in the R597(e) form:* ruling R699, made by PI on architect recommendation on 2026-10-23 UTC, during session 12v, on the 12v-U38A final report and the Phase 1 record (`b31ab08b70ce8617baf68347bb0cd46293e90d33`). The 12v-U38B task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12v-R699] — U38A accepted; T5's form is (a), amending R694(f)'s "the write
+  boundary decides"; the precheck's signature takes the paper text as a required parameter; the
+  rewrite list fixed; U38's Phase 2 opens
+STATUS: PI ruling, 2026-10-23 UTC, session 12v, on architect recommendation, on the 12v-U38A
+  final report and the Phase 1 record (b31ab08b70ce8617baf68347bb0cd46293e90d33). Transcribe
+  as Block 97 at item 0 of the 12v-U38B brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12v-U38A final report):
+  MEASURED: "Commit: 553609a5b28d7fbaf4f89275d9827abc1f9fa4e0, parent b315733"; "r698.txt:
+    e84ffa8b…65f1 / 5027 / 61, equal to your hash"; "numstat 76 / 2; 9,324 lines"; "prefix_check
+    --expected-row INT-r12-1 INT-g12-5 PASS"; "Recount: … byte-identical at 279"; "2 failed (T1,
+    T4) and 4 passed, exactly as predicted"; "both arms' per-stage prompt hashes equal
+    12v_U37B/pin_tuples_u37.json's"; "Phase 1 record: b31ab08b70ce8617baf68347bb0cd46293e90d33";
+    "phase1/tests/test_u38_snippet_precheck.py, 0252f011…6648"; "git diff --stat b315733 HEAD --
+    engine tests scripts analysis review_specs is empty".
+  READ (CC's): "_has_invalid_snippet(snippet) is a pure function of the snippet string";
+    "paper_text is a parameter of _validate_and_retry_snippets, and of _retry_snippet"; "The
+    replacement site is source_snippet=new_snippet or "", after two retries"; "The legacy write
+    boundary (enforce_citations, mode=LEGACY) checks has_evidence = bool(snippet): that a snippet
+    is present, not that it can be placed"; the census: "test_retry_exhausted_nulls_snippet_
+    preserves_value asserts source_snippet == """; "Three tests call _has_invalid_snippet(snippet)
+    with one argument: test_ellipsis_snippet_triggers_retry, test_bracket_ellipsis_triggers_retry,
+    test_valid_snippet_no_retry"; "Both ledger commits carried a surgical-cv-spike row … Neither
+    commit message names its foreign row by hash".
+  INFERRED: none.
+
+R699(a) — 12v-U38A is accepted: item 0 as 553609a (Block 96; INT-r12-1 CLOSED with its note;
+  INT-g12-5's note on the row only, R686(c)); the Phase 1 record as b31ab08. The ledgers 596d3c0
+  and e114056 stand as pushed; the two unnamed foreign rows (a5f38be, 21c1897) are named here and
+  in the 12v closure, which satisfies R654(d) for them (never amend after pushing).
+R699(b) — T5 takes form (a). R694(f)'s "the original stays, and the write boundary decides" was an
+  architect premise that the boundary places a snippet; it checks presence (enforce_citations,
+  mode=LEGACY). Amended: when the retries are exhausted the original snippet stays; the write
+  boundary accepts the claim as cited; the audit stage's locator judges the snippet (located,
+  fuzzy or bridged, U14) and an unlocated one goes to semantic verification as any other. The
+  model's own evidence is kept for the auditor rather than destroyed and the value refused. Form
+  (b) is rejected as a widening beyond the row; form (c) is rejected because, after S-1, the only
+  snippet that reaches exhaustion is one the paper does not contain, so (c) is today's emptying.
+  T5 is rewritten to assert that chain: the kept snippet is stored on the claim; enforce_citations
+  accepts it; locate() on it returns not exact (fuzzy or bridged as the fixture makes it).
+R699(c) — S-1's signature: _has_invalid_snippet(snippet, paper_text) with the text required. The
+  one-argument form is the defect's interface and is not kept as an optional path. The three
+  one-argument tests are rewritten under their ids to pass a text (R690(b)): the two trigger tests
+  with a text that does not contain the snippet's ellipsis passage (still flagged); the
+  no-retry test unchanged in assertion, text supplied. test_retry_exhausted_nulls_snippet_
+  preserves_value is rewritten under its id to assert the original snippet is kept and the value
+  preserved.
+R699(d) — Expected after the fix, to be measured: no pin moves (both arms' per-stage prompt hashes
+  equal 12v_U37B/pin_tuples_u37.json's, T6); collection 3,370 + 6 = 3,376; the gate 3,358 passed /
+  1 xfailed / 17 deselected on 3,359 selected; band 791–966 s. INT-s12-1 CLOSES on the fix commit
+  if every acceptance test passes in its gate (R694(f): its tests are its gate); fix units done
+  18 of 36.
+R699(e) — The item-0 build that hung (a broken && chain leaving a variable empty, sha256sum on
+  stdin, stopped by pid) is a reading; the rebuild's six-cell row selection stands. No row.
+R699(f) — U38's Phase 2 opens under the brief below. A model call by another lane during its gate
+  is a stop (R666(a)); a read-only request is a reading (R696(b)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-23 | R699(a) — 12v-U38A is accepted: item 0 as 553609a (Block 96; INT-r12-1 CLOSED with its note; INT-g12-5's note on the row only, R686(c)); the Phase 1 record as b31ab08. The ledgers 596d3c0 and e114056 stand as pushed; the two unnamed foreign rows (a5f38be, 21c1897) are named here and in the 12v closure, which satisfies R654(d) for them (never amend after pushing). R699(b) — T5 takes form (a). R694(f)'s "the original stays, and the write boundary decides" was an architect premise that the boundary places a snippet; it checks presence (enforce_citations, mode=LEGACY). Amended: when the retries are exhausted the original snippet stays; the write boundary accepts the claim as cited; the audit stage's locator judges the snippet (located, fuzzy or bridged, U14) and an unlocated one goes to semantic verification as any other. The model's own evidence is kept for the auditor rather than destroyed and the value refused. Form (b) is rejected as a widening beyond the row; form (c) is rejected because, after S-1, the only snippet that reaches exhaustion is one the paper does not contain, so (c) is today's emptying. T5 is rewritten to assert that chain: the kept snippet is stored on the claim; enforce_citations accepts it; locate() on it returns not exact (fuzzy or bridged as the fixture makes it). R699(c) — S-1's signature: _has_invalid_snippet(snippet, paper_text) with the text required. The one-argument form is the defect's interface and is not kept as an optional path. The three one-argument tests are rewritten under their ids to pass a text (R690(b)): the two trigger tests with a text that does not contain the snippet's ellipsis passage (still flagged); the no-retry test unchanged in assertion, text supplied. test_retry_exhausted_nulls_snippet_ preserves_value is rewritten under its id to assert the original snippet is kept and the value preserved. R699(d) — Expected after the fix, to be measured: no pin moves (both arms' per-stage prompt hashes equal 12v_U37B/pin_tuples_u37.json's, T6); collection 3,370 + 6 = 3,376; the gate 3,358 passed / 1 xfailed / 17 deselected on 3,359 selected; band 791–966 s. INT-s12-1 CLOSES on the fix commit if every acceptance test passes in its gate (R694(f): its tests are its gate); fix units done 18 of 36. R699(e) — The item-0 build that hung (a broken && chain leaving a variable empty, sha256sum on stdin, stopped by pid) is a reading; the rebuild's six-cell row selection stands. No row. R699(f) — U38's Phase 2 opens under the brief below. A model call by another lane during its gate is a stop (R666(a)); a read-only request is a reading (R696(b)). | PI, 2026-10-23, during session 12v, on architect recommendation, on the 12v-U38A final report (b31ab08) |
+
+The decision log in this file ends at R699.

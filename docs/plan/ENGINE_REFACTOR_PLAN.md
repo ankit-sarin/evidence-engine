@@ -9582,3 +9582,88 @@ R700(g) — Session 12v closes under the 12v-CLOSE brief below, in the 12u-CLOSE
 | 2026-10-24 | R700(a) — 12v-U38B is accepted as reported: item 0 as 07a24b6 (Block 97); the fix as 731ebf2 (U38: S-1 and S-2, six tests, four rewrites, no pin moved, gate 3,358 / 1 / 17 on 3,376 / 3,359 at 878.55 s); the read-out and closure as 9ea15a5; INT-s12-1 CLOSED (R699(d)) stands; the ledgers e3981f4 and 70a2315 with their foreign rows named (R654(d)). R700(b) — Note, no row, on INT-s12-1's closure and on 12s_U14A's evidence line: two committed evidence scripts (12v_RSA/freq_invalid_snippet.py, 12s_U14A/repro_u14a.py) call the one-argument precheck and are bound to the trees they were written for, as R676(d)(ii) binds the 12s reproducer to locator-1; they are not edited (read-outs and their instruments are never edited after commit), and a re-run on this tree is not expected to work. R700(c) — Note, no row: the tree check before 731ebf2 compared the wrong lines and the commit proceeded on a separate command chain; the check made afterwards (diff hash and test-file hash equal to the gate-launch record) establishes the commit as the gate's tree. From here a fix brief states the tree check as the one command whose success the commit is conditioned on, never two chains. R700(d) — Retention: the full probe requests under ~/scratch/12v-u37r/requests/ (paper text included, kept out of git), the raw responses under ~/scratch/12v-u37r/ and ~/scratch/12v-u37r2/, indexed by hash in 12v_U37R/requests_index.json and the two read-outs, are retained with a 12v retention entry (R670(g) form); verified by file sha256 at the closeout and at every open, never opened as a database (none is one). R700(e) — The gate series on this host state: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55 s. The closeout computes ±10% of the mean of the last four standard gates (912.14, 893.71, 883.80, 878.55) and reports it; the wrap ruling sets the band for 12w from that figure (R683(c) form). R700(f) — Session 12v's R510 line: rows in 1 (INT-v12-1, Class 2, P1), rows out 0, no class move; INT-r12-1 and INT-s12-1 CLOSED and counted; recount 279 (94 / 54 / 131, 0 unclassed); P1 60 rows; fix units 36, done 18. R700(g) — Session 12v closes under the 12v-CLOSE brief below, in the 12u-CLOSE form, without the two scheduled-job reads (the 2026-10-24 jobs have not run; 12w-OPEN reads them). Next after the close: 12w-OPEN; then U17's Phase A (the cross-family rule at run open, INT-i12-45; it edits the live spec, so the spec's sha256 changes under a ruling); INT-v12-1's unit is assigned at its own Phase A. | PI, 2026-10-24, during session 12v, on architect recommendation, on the 12v-U38B final report (9ea15a5) |
 
 The decision log in this file ends at R700.
+
+**Block 99.** *Transcribed 2026-10-24 (item 0 of the 12w-OPEN brief), in its own commit with the lane-line copy it orders, in the R597(e) form:* ruling R701, made by PI on architect recommendation on 2026-10-24 UTC, during session 12v, on the 12v-CLOSE closeout block (`67351888631f67eb40bdeed6785026f3ba4eb32f`). The 12w-OPEN task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12v-R701] — wrap ruling: closeout accepted; the band set 803–981 s; the
+  fix-units figure stated two ways; lane line approved and applied; close now
+STATUS: PI ruling, 2026-10-24 UTC, session 12v, on architect recommendation, on the 12v-CLOSE
+  closeout block (67351888631f67eb40bdeed6785026f3ba4eb32f). Transcribe as item 0 of 12w-OPEN
+  (Block 99), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block):
+  MEASURED: "HEAD 67351888631f67eb40bdeed6785026f3ba4eb32f, parent
+    4738ebfa8ab84b34c3ac0c919fed460aa69602fb; status[], lr[0 0]"; "Plan sha256 1e45c64c…af31,
+    1915112 bytes, 9584 lines; the last line is The decision log in this file ends at R700.";
+    item 0 "2 files changed, 125 insertions(+), 2 deletions(-); the plan is 69 / 2", "exactly 2
+    '-' line(s), one per named row: True, RESULT: PASS"; closeout "17 files changed, 6443
+    insertions(+); the plan is 124 / 0"; "fence == r700.txt: True; cell == render_cell: True";
+    "git diff --stat 9673aff HEAD -- engine tests scripts analysis review_specs: 8 files, 446
+    insertions, 22 deletions (U37 and U38 only). git diff --stat 731ebf2 HEAD on the same paths
+    is empty"; ledger "4fdc41e3ddf6b2ceee292956a2fc012a0e943015, parent 70a2315, "ledger: rows
+    through 2026-10-24T05:36:56Z", with trailers. Foreign rows named: 5c5ebc0 and acc6435";
+    "primer.md is untouched; its last commit is c1d6821"; fingerprint IDENTICAL at 05:32:06Z,
+    05:33:05Z, 05:33:37Z, 05:36:56Z, 05:37:00Z and 05:38:33Z; lane line "sha256
+    8fbc59e1e0402db86624c83d4ab1d2a536046c00e839960551faceb983f0f4d6, 5224 bytes, 10 lines. Not
+    applied. five − lines == primer.md 41–45: True"; "279 rows (94 / 54 / 131, 0 unclassed); P1 60
+    (25 / 23 / 12); P6 11; P7 117; fix units 36, done 18"; "rows in 1 (INT-v12-1), rows out 0,
+    no class move"; "23 MATCH / 0; plus the probe-scratch entry, 10 requests and 53 response
+    files, all equal"; "Temp root: 4 entries, 4,128,575,212 B"; "/api/ps {"models":[]}
+    (05:38:33Z)"; "dbchecks and pins byte-identical"; "mean 892.05 s, ±10% = 802.845–981.255,
+    rounded inward as R683(c) did: 803–981 s"; "NV_ERR_NO_MEMORY 15; NRestarts 0; earlyoom kills
+    0"; the eight rNNN.txt hashes as tabled; the archive command as printed.
+  MEASURED (architect, this session): every rNNN.txt of this session (r693–r700) was hashed by
+    the architect before its brief was issued and matched CC's write at each item 0 (R684(e)).
+  READ (CC's): "The recount script's fix_units field still reads 35, because it counts §3's unit
+    list and U37 and U38 are counted on landing by the dated lines"; "It went in just before ##
+    Decision log, where the 12u closure and its next-open block sit"; "The primer names the wrap
+    ruling's block as Block 99".
+  INFERRED: none.
+
+R701(a) — The 12v-CLOSE closeout block is accepted as printed. The closeout commit 6735188 and
+  item 0 4738ebf stand; the ledger 4fdc41e with trailers and its two foreign rows named stands
+  (R680(b), R654(d) met).
+R701(b) — The band for 12w is 803–981 s: ±10% of 892.05 s, the mean of the last four standard
+  gates on this host state (912.14, 893.71, 883.80, 878.55), rounded inward as R683(c) rounded.
+  The series stands at 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71,
+  883.80, 878.55 s. A 12w gate outside the band is reported with its concurrent jobs, not
+  adapted to.
+R701(c) — Fix units: the plan's dated lines (36, done 18) are the count of record; the chained
+  recount script's fix_units field (35) counts 12l_P1A.md §3's list, which does not carry U37 or
+  U38. Both figures are stated in the 12w block as CC wrote them; the script is not edited
+  (R678(f)); a 12w brief that re-runs the recount quotes the field and the dated line side by
+  side. No row.
+R701(d) — Readings, no row: the closure's place before the decision log is the file's shape (as
+  12u's); the primer's newest-first block and its "Block 99" naming are correct; NVRM fifteen
+  this boot, unchanged since 12v-OPEN's reading; the temp root holds this session's three gate
+  basetemps; the probe-scratch retention entry is verified and stands under R700(d).
+R701(e) — The lane line (sha256 8fbc59e1e0402db86624c83d4ab1d2a536046c00e839960551faceb983f0f4d6,
+  5,224 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines
+  41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five
+  "+" lines, applied from the file, not from a paste; commit primer.md together with any
+  uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows
+  named by hash), push, level.
+R701(f) — 12w-OPEN's startup verify checks claude-config at the commit the wrap leaves (the
+  lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign
+  commits and rows per R653(c), R654(d), R663(b). 12w's item 0 transcribes this ruling as Block
+  99 and copies lane_line_12v.txt into docs/session-reports/session-12/12v_close/ with its
+  commit, which carries no cell note and is verified by its "−" count, 0 (R664(b)). No closeout
+  gate ran: the expected gate values for 12w are U38's (731ebf2) on unchanged code (3,358 / 1
+  xfailed / 17 deselected, collected 3,376 / selected 3,359; 0/0 against
+  12v_close/collected_ids_12v_close.txt; band 803–981 s, with the concurrent jobs named and the
+  snapshot's own PIDs excluded); the 2026-10-24 09:00 UTC nightly runs on 6735188, whose engine
+  tree equals 731ebf2's, expected 3,358 / 17 / 1 on 3,376 / 3,359, exit 0,
+  12v_close/expected_nightly_20261024.md governing; the 07:00 health job's loads are read and
+  reported by 12w-OPEN, with an NVRM grep; a read-only request in any window is a reading
+  (R696(b)). The temp root is read, never matched. Residency is a reading. 12w-OPEN's pre-check
+  reads the process table for leftovers of session 59890598 (R692's form).
+R701(g) — Session 12v closes now. After R701(e) has landed, run /wrap. Report the archive
+  command; the closeout block stands.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-24 | R701(a) — The 12v-CLOSE closeout block is accepted as printed. The closeout commit 6735188 and item 0 4738ebf stand; the ledger 4fdc41e with trailers and its two foreign rows named stands (R680(b), R654(d) met). R701(b) — The band for 12w is 803–981 s: ±10% of 892.05 s, the mean of the last four standard gates on this host state (912.14, 893.71, 883.80, 878.55), rounded inward as R683(c) rounded. The series stands at 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55 s. A 12w gate outside the band is reported with its concurrent jobs, not adapted to. R701(c) — Fix units: the plan's dated lines (36, done 18) are the count of record; the chained recount script's fix_units field (35) counts 12l_P1A.md §3's list, which does not carry U37 or U38. Both figures are stated in the 12w block as CC wrote them; the script is not edited (R678(f)); a 12w brief that re-runs the recount quotes the field and the dated line side by side. No row. R701(d) — Readings, no row: the closure's place before the decision log is the file's shape (as 12u's); the primer's newest-first block and its "Block 99" naming are correct; NVRM fifteen this boot, unchanged since 12v-OPEN's reading; the temp root holds this session's three gate basetemps; the probe-scratch retention entry is verified and stands under R700(d). R701(e) — The lane line (sha256 8fbc59e1e0402db86624c83d4ab1d2a536046c00e839960551faceb983f0f4d6, 5,224 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows named by hash), push, level. R701(f) — 12w-OPEN's startup verify checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12w's item 0 transcribes this ruling as Block 99 and copies lane_line_12v.txt into docs/session-reports/session-12/12v_close/ with its commit, which carries no cell note and is verified by its "−" count, 0 (R664(b)). No closeout gate ran: the expected gate values for 12w are U38's (731ebf2) on unchanged code (3,358 / 1 xfailed / 17 deselected, collected 3,376 / selected 3,359; 0/0 against 12v_close/collected_ids_12v_close.txt; band 803–981 s, with the concurrent jobs named and the snapshot's own PIDs excluded); the 2026-10-24 09:00 UTC nightly runs on 6735188, whose engine tree equals 731ebf2's, expected 3,358 / 17 / 1 on 3,376 / 3,359, exit 0, 12v_close/expected_nightly_20261024.md governing; the 07:00 health job's loads are read and reported by 12w-OPEN, with an NVRM grep; a read-only request in any window is a reading (R696(b)). The temp root is read, never matched. Residency is a reading. 12w-OPEN's pre-check reads the process table for leftovers of session 59890598 (R692's form). R701(g) — Session 12v closes now. After R701(e) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-24, during session 12v, on architect recommendation, on the 12v-CLOSE closeout block (6735188) |
+
+The decision log in this file ends at R701.

@@ -1,0 +1,19 @@
+outcomes {'PASSED': 3375, 'XFAIL': 1} ids 3376 only-gate 17 only-ref 0
+  NEW tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[ModelLineageMissing]
+  NEW tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[SameLineageVerifier]
+  NEW tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[ModelLineageMissing]
+  NEW tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[SameLineageVerifier]
+  NEW tests/test_u17_cross_lineage.py::test_t10_a_cloud_model_loads_with_its_provider_lineage_and_records_no_server_family
+  NEW tests/test_u17_cross_lineage.py::test_t1_a_qwen_lineage_auditor_of_the_deepseek_distillation_is_refused
+  NEW tests/test_u17_cross_lineage.py::test_t2_an_auditor_identical_to_the_extractor_is_refused
+  NEW tests/test_u17_cross_lineage.py::test_t3_the_live_pairing_opens_and_records_model_lineage_and_server_family
+  NEW tests/test_u17_cross_lineage.py::test_t4_a_default_factory_model_without_an_entry_is_refused_at_load
+  NEW tests/test_u17_cross_lineage.py::test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[Qwen]
+  NEW tests/test_u17_cross_lineage.py::test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[]
+  NEW tests/test_u17_cross_lineage.py::test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[alibaba]
+  NEW tests/test_u17_cross_lineage.py::test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load[qwen3]
+  NEW tests/test_u17_cross_lineage.py::test_t6_a_model_copy_auditor_with_no_entry_is_refused_at_open
+  NEW tests/test_u17_cross_lineage.py::test_t7_an_audit_only_run_on_a_pinned_arm_reads_the_extractor_from_the_pin
+  NEW tests/test_u17_cross_lineage.py::test_t8_an_audit_only_run_on_an_unpinned_arm_reads_the_spec
+  NEW tests/test_u17_cross_lineage.py::test_t9_the_new_live_spec_moves_no_prompt_hash_options_hash_or_screening_hash
+phases slower by >10 s: 0

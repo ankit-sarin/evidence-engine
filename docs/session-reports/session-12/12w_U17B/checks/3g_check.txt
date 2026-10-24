@@ -1,0 +1,10 @@
+HEAD and every changed file's sha256 == gate launch record: True
+gate rc 0: True
+staged set == the fix's 11 files: True
+nothing unstaged or untracked: True
+live spec: 14 changed lines, all added, one top-level key model_lineage: True
+pins byte-identical to 12v_close: True
+codebook unchanged: True
+inventory in sync: True
+live spec sha256 aeb90ba8983aa700fea0d4c47d3d764fa7ccd3a1e9c717e232ddadf03c298b33
+RESULT: PASS

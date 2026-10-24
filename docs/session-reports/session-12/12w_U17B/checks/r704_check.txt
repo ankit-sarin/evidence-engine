@@ -1,0 +1,12 @@
+numstat + 59 / - 0; minus == 0: True
+plan lines 9893 == 9834 + 59: True
+r704 sha256 == architect: True
+fence == r704.txt: True
+cell == render_cell: True
+last line ends at R704: True
+'ends at R703.' line still present once: True
+Block 102 count 1: True
+staged set ['docs/plan/ENGINE_REFACTOR_PLAN.md', 'docs/session-reports/session-12/12w_U17B/r704.txt']: True
+worktree == index: True
+plan sha256 c35e056ecfe8d197e7f363d1ec1e5efe92ee099b0747007e5c94d4d9e55ca61b 1952094 bytes
+RESULT: PASS

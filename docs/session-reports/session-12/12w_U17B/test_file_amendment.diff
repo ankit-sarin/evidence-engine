@@ -1,0 +1,50 @@
+7,8c7,8
+< run when the arm is pinned, else from the spec; R703(f) model, lineage and server family recorded per
+< declared stage in manifest_json.
+---
+> run when the arm is pinned, else from the spec; R703(f) as R704(b) amends it: model and lineage recorded
+> per declared stage in manifest_json, and no server-family key.
+10,13c10,12
+< Phase 1 (12w-U17B): written under docs/session-reports/session-12/12w_U17B/phase1/ and run against
+< HEAD there; it enters tests/ with the fix (R695(b)). Fresh databases under tmp_path, git state and
+< digests injected; the one /api/tags read (T3) is answered by a patched `httpx.get`, so nothing reaches
+< a model server.
+---
+> Phase 1 (12w-U17B, 098fc74) wrote this file under docs/session-reports/session-12/12w_U17B/phase1/ and
+> ran it against HEAD there; it entered tests/ with the fix (R695(b)), T3 and T10 amended by R704(c).
+> Fresh databases under tmp_path, git state and digests injected; nothing reaches a model server.
+20,21d18
+< from types import SimpleNamespace
+< from unittest.mock import patch
+108,113d104
+< def _tags_response(families):
+<     payload = {"models": [{"name": m, "digest": DIGESTS.get(m, "c" * 64),
+<                            "details": {"family": f, "families": [f]}} for m, f in families.items()]}
+<     return SimpleNamespace(status_code=200, json=lambda: payload, text=json.dumps(payload))
+< 
+< 
+114a106,107
+>     """R704(c): model and lineage per declared stage; no server-family key is written (the id is
+>     Phase 1's, kept under R690(b))."""
+116,118c109
+<     tags = _tags_response({"deepseek-r1:32b": "qwen2", "gemma3:27b": "gemma3"})
+<     with patch("engine.utils.ollama_client.httpx.get", return_value=tags):
+<         h = _open(db, spec, cb, digest_fn=None)
+---
+>     h = _open(db, spec, cb)
+121,124c112,114
+<         assert (stages[s]["model"], stages[s]["lineage"], stages[s]["server_family"]) == \
+<             ("deepseek-r1:32b", "qwen", "qwen2"), s
+<     assert (stages["audit"]["model"], stages["audit"]["lineage"], stages["audit"]["server_family"]) == \
+<         ("gemma3:27b", "gemma", "gemma3")
+---
+>         assert (stages[s]["model"], stages[s]["lineage"]) == ("deepseek-r1:32b", "qwen"), s
+>     assert (stages["audit"]["model"], stages["audit"]["lineage"]) == ("gemma3:27b", "gemma")
+>     assert not any("server_family" in row for row in stages.values())
+219a210
+>     """R704(c): no server-family key is written for a cloud stage either."""
+227c218,219
+<     assert (row["model"], row["lineage"], row["server_family"]) == (arm.model, "openai", None)
+---
+>     assert (row["model"], row["lineage"]) == (arm.model, "openai")
+>     assert "server_family" not in row

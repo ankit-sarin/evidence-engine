@@ -891,7 +891,7 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 | # | On disk (`12v_RSA.md` §Q3, quoted) | Class | Owning package | Governing ruling | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| INT-v12-1 | A structure change made only inside `run_pass1` or `elicit` (a third message assembled there) would **not** be seen by the render unless `render_messages` is changed with it (INFERRED from the code; not exercised). | 2 | P1, E-PIN family (the elicited prompt hash renders the feedback template through a sentinel but not the attempt-2 message structure); fix unit assigned at its Phase A | R694(g), R695(c) | `12v_RSA.md` §Q3, F13 |
+| INT-v12-1 | A structure change made only inside `run_pass1` or `elicit` (a third message assembled there) would **not** be seen by the render unless `render_messages` is changed with it (INFERRED from the code; not exercised). | 2 | P1, E-PIN family (the elicited prompt hash renders the feedback template through a sentinel but not the attempt-2 message structure); fix unit assigned at its Phase A | R694(g), R695(c) | `12v_RSA.md` §Q3, F13 *Note 2026-10-25 (12w-V1A resume item 0, R706(b)):* the row's text is MEASURED (12w-V1A Q2, `a0f2323`), no longer INFERRED. V1 (attempt 2's feedback block as a third user message, in `run_pass1` only): elicited pin `d70bf688…59f0`, unchanged; attempt-2 request sha256 `123f6630…4db2` (HEAD `307077c9…71a3`); fails `test_elicitation_pipeline.py::test_the_elicited_requests_are_byte_identical`. V2 (the same change in `render_messages` only): elicited pin `8f66789a…ec0f`; request `307077c9…71a3`, unchanged; fails `test_prompt_hash_coverage.py::test_elicitation_pass1_hashes_both_attempts`. V3 (both): elicited pin `8f66789a…ec0f`; request `123f6630…4db2`; both tests fail. The non-elicited pin `d3672ab6…ff5c` throughout. The gap is the pin's: the fixture digest test sees request bytes in the suite, not in the pin (R706(b)); V2 moves the pin with no request byte changed (R706(c)). Class 2, P1 unchanged. |
 
 **The pre-tag list, recounted 2026-10-23 (12v-U37B item 0, R695(c)), by script from the plan** (`docs/session-reports/session-12/12v_U37A/recount_12v_r694.py` → `recount_12v_r694.json`: the 12s-CLOSE count as the baseline, reproduced by `recount_12s_close.py` on the plan at `1e15b50` — the last plan before this table, sha256 `21a7b285dc8f1120ec73fb4d1bfac6d9769e40c7705c4fb12dc8d2cd5d0447c8` — and equal to its committed JSON byte for byte, and through it the chain 272, 275, 276, 278; run in a scratch clone, R673(b)). Baseline: 278 rows — Class 1 / 2 / 3 = 94 / 53 / 131. Opened: 1 (`INT-v12-1`, Class 2, P1). **Now: 279 rows — Class 1 / 2 / 3 = 94 / 54 / 131, 0 without a class**; P1 60 rows (25 / 23 / 12); P6 11; P7 117; P1's fix units 35 (U37 and U38 are counted when they land). R510 for session 12v so far: rows in 1 (`INT-v12-1`), rows out 0, no class move.
 
@@ -9951,3 +9951,63 @@ R705(g) — INT-v12-1's Phase A opens under the brief below (R703(k)). Its row's
 | 2026-10-25 | R705(a) — 12w-U17B is accepted as reported: item 0 as ac55c4f (Block 102); U17 as e81d699; the read-out and closure as c5ab505; the ledgers f97adca, b571c65 and e87f7b9. INT-i12-45 CLOSED (R703(i)) stands; P1's fix units 36, done 19. R705(b) — The 17 new ids (13 of U17's file, 4 from the run-fault parametrisation) and the sixth rewrite (test_run_fault_predicate.py::test_the_declared_run_fault_tuple_is_the_handoffs) are R690(b)–(c) applied as written. Readings, no row. R705(c) — The inventory regeneration is accepted (U38's precedent at 731ebf2). From here a fix brief that edits engine/ lists docs/inventory/ among its touched paths. R705(d) — The tree check: the first version failed and was revised before the commit. The revision is accepted on its evidence (HEAD and every file's sha256 equal to the gate-launch record). From here a check command that fails is a stop, including when the check itself is at fault; the revised check is proposed in the report and run only under a ruling. R705(e) — The R510 line for session 12w so far: rows in 0, rows out 0, no class move; INT-i12-45 CLOSED and counted (R607(d)). The recount script's "rows in 1" describes 12v, not 12w; it is quoted, not adopted. R705(f) — The band series gains the U17 gate: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20 s (run 1's 885.49 s, a failed gate, is not a reading). The band stays 803–981 s until the 12w closeout. R705(g) — INT-v12-1's Phase A opens under the brief below (R703(k)). Its row's text is INFERRED "from the code; not exercised"; the Phase A first establishes whether the gap is real by exercising it on a scratch copy, then lays out fix options with what each catches and misses and whether each moves the elicited pin or any request byte. It does not choose. | PI, 2026-10-25, during session 12w, on architect recommendation, on the 12w-U17B final report (c5ab505) |
 
 The decision log in this file ends at R705.
+
+**Block 104.** *Transcribed 2026-10-25 (item 0 of the 12w-V1A resume), in its own commit with the INT-v12-1 note, in the R597(e) form:* ruling R706, made by PI on architect recommendation on 2026-10-25 UTC, during session 12w, on the 12w-V1A report stopped at Q2 (record `a0f2323332f993558ecbbda1560c0205ed9738c6`). The 12w-V1A resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12w-R706] — V1A's stop upheld; the row's reading governs: the pin gap is
+  real; Q3–Q7 resume; a check and its commit run as one chain
+STATUS: PI ruling, 2026-10-25 UTC, session 12w, on architect recommendation, on the 12w-V1A report
+  stopped at Q2 (record a0f2323). Transcribe as Block 104 at item 0 of the resume below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12w-V1A stopped report):
+  MEASURED: "Commit: 287a9c7 (parent c5ab505)"; "r705.txt: 31cbe8c3…287f, 3,703 B, 47 lines, one
+    trailing newline, equal to the architect's hash"; V1 "elicited pin: d70bf688…59f0, file
+    byte-identical to HEAD's", "elicitation_pass1 prompt hash: unchanged", "3 messages;
+    123f6630…", "tests that failed: test_the_elicited_requests_are_byte_identical and the Q6
+    candidate"; V2 "elicited pin: 8f66789a…ec0f", "attempt 2 as sent … unchanged from HEAD",
+    "tests that failed: test_elicitation_pass1_hashes_both_attempts and the Q6 candidate"; V3
+    "elicited pin: 8f66789a…ec0f", "the candidate passes"; "Non-elicited pin: d3672ab6…ff5c
+    throughout"; "Attempt 1's request: unchanged under every variant"; the candidate "passes at
+    HEAD, fails under V1, passes under V3, and also fails under V2"; "Commit: a0f2323 (parent
+    287a9c7), 40 files, all under 12w_V1A/"; ledgers f155bdf and 1bf2769.
+  READ (CC's): "only render_messages joins attempt 1 and attempt 2; only run_pass1's call site
+    decides that it sends pass1_messages(prompt) as it stands"; "That digest catches any change to
+    the request bytes, not structure as such"; "I ran the check as its own command. The commit
+    was conditioned on its recorded RESULT: PASS line and on the index being unchanged since, not
+    chained to a fresh run"; "The codebook copy in the worktree has birth time 00:11:59Z, before
+    my cp (mtime 00:13:31Z)".
+  INFERRED: none.
+
+R706(a) — The stop is upheld. The brief's Q2 test ("If the pin moves or a test fails under V1,
+  the row's premise is false") conflated the pin with the suite; the row and R694(g) concern the
+  pin. That was an architect error, not CC's.
+R706(b) — The row's reading governs. INT-v12-1's gap is real, now MEASURED: a structure-only
+  change in the runtime path (V1) leaves the elicited pin and the arm-pin refusal unchanged.
+  The fixture digest test catches request-byte changes in the suite, not in the pin; a ruled
+  re-recording of that digest would leave two runs of different structure under one pin. A dated
+  note on INT-v12-1 records V1–V3 and that the row's text is now MEASURED, not INFERRED. Class 2,
+  P1 unchanged.
+R706(c) — V2 is a finding in its own right: a change in the hash path alone moves the pin while
+  no request byte changes. The read-out's options are judged against both directions: a fix
+  catches V1 and V2, or says which it misses.
+R706(d) — Q3–Q7 resume in a fresh worktree of the then-current HEAD, reusing the V1–V3 diffs and
+  the Q6 candidate unchanged. Q4 measures options A, B and C as the brief states them, and for
+  each states whether a future ruled structure change would move the pin (A and C should; B
+  alone does not, since it adds no pin coverage).
+R706(e) — The check deviation is accepted on its evidence (index unchanged since the PASS line).
+  From here a check and its commit run as one chain, the commit executing only on the check's
+  exit 0 in the same invocation (R700(c), R705(d)); a recorded PASS line is not a condition.
+R706(f) — Readings, no row: (i) the codebook's earlier birth time in the worktree is checked by
+  `git ls-files data/surgical_autonomy/extraction_codebook.yaml` at the resume; if the file is
+  tracked, git created it at worktree add and the cp overwrote it, which explains the times.
+  (ii) V1's change to pass1_prompt_chars is recorded in the read-out as a telemetry consequence
+  of any option that changes the runtime structure. (iii) The worktree's codebook copy is the
+  accepted method when the file is untracked.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-25 | R706(a) — The stop is upheld. The brief's Q2 test ("If the pin moves or a test fails under V1, the row's premise is false") conflated the pin with the suite; the row and R694(g) concern the pin. That was an architect error, not CC's. R706(b) — The row's reading governs. INT-v12-1's gap is real, now MEASURED: a structure-only change in the runtime path (V1) leaves the elicited pin and the arm-pin refusal unchanged. The fixture digest test catches request-byte changes in the suite, not in the pin; a ruled re-recording of that digest would leave two runs of different structure under one pin. A dated note on INT-v12-1 records V1–V3 and that the row's text is now MEASURED, not INFERRED. Class 2, P1 unchanged. R706(c) — V2 is a finding in its own right: a change in the hash path alone moves the pin while no request byte changes. The read-out's options are judged against both directions: a fix catches V1 and V2, or says which it misses. R706(d) — Q3–Q7 resume in a fresh worktree of the then-current HEAD, reusing the V1–V3 diffs and the Q6 candidate unchanged. Q4 measures options A, B and C as the brief states them, and for each states whether a future ruled structure change would move the pin (A and C should; B alone does not, since it adds no pin coverage). R706(e) — The check deviation is accepted on its evidence (index unchanged since the PASS line). From here a check and its commit run as one chain, the commit executing only on the check's exit 0 in the same invocation (R700(c), R705(d)); a recorded PASS line is not a condition. R706(f) — Readings, no row: (i) the codebook's earlier birth time in the worktree is checked by `git ls-files data/surgical_autonomy/extraction_codebook.yaml` at the resume; if the file is tracked, git created it at worktree add and the cp overwrote it, which explains the times. (ii) V1's change to pass1_prompt_chars is recorded in the read-out as a telemetry consequence of any option that changes the runtime structure. (iii) The worktree's codebook copy is the accepted method when the file is untracked. | PI, 2026-10-25, during session 12w, on architect recommendation, on the 12w-V1A report stopped at Q2 (a0f2323) |
+
+The decision log in this file ends at R706.

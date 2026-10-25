@@ -1,0 +1,49 @@
+RULING [evidence-engine 12w-R706] — V1A's stop upheld; the row's reading governs: the pin gap is
+  real; Q3–Q7 resume; a check and its commit run as one chain
+STATUS: PI ruling, 2026-10-25 UTC, session 12w, on architect recommendation, on the 12w-V1A report
+  stopped at Q2 (record a0f2323). Transcribe as Block 104 at item 0 of the resume below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12w-V1A stopped report):
+  MEASURED: "Commit: 287a9c7 (parent c5ab505)"; "r705.txt: 31cbe8c3…287f, 3,703 B, 47 lines, one
+    trailing newline, equal to the architect's hash"; V1 "elicited pin: d70bf688…59f0, file
+    byte-identical to HEAD's", "elicitation_pass1 prompt hash: unchanged", "3 messages;
+    123f6630…", "tests that failed: test_the_elicited_requests_are_byte_identical and the Q6
+    candidate"; V2 "elicited pin: 8f66789a…ec0f", "attempt 2 as sent … unchanged from HEAD",
+    "tests that failed: test_elicitation_pass1_hashes_both_attempts and the Q6 candidate"; V3
+    "elicited pin: 8f66789a…ec0f", "the candidate passes"; "Non-elicited pin: d3672ab6…ff5c
+    throughout"; "Attempt 1's request: unchanged under every variant"; the candidate "passes at
+    HEAD, fails under V1, passes under V3, and also fails under V2"; "Commit: a0f2323 (parent
+    287a9c7), 40 files, all under 12w_V1A/"; ledgers f155bdf and 1bf2769.
+  READ (CC's): "only render_messages joins attempt 1 and attempt 2; only run_pass1's call site
+    decides that it sends pass1_messages(prompt) as it stands"; "That digest catches any change to
+    the request bytes, not structure as such"; "I ran the check as its own command. The commit
+    was conditioned on its recorded RESULT: PASS line and on the index being unchanged since, not
+    chained to a fresh run"; "The codebook copy in the worktree has birth time 00:11:59Z, before
+    my cp (mtime 00:13:31Z)".
+  INFERRED: none.
+
+R706(a) — The stop is upheld. The brief's Q2 test ("If the pin moves or a test fails under V1,
+  the row's premise is false") conflated the pin with the suite; the row and R694(g) concern the
+  pin. That was an architect error, not CC's.
+R706(b) — The row's reading governs. INT-v12-1's gap is real, now MEASURED: a structure-only
+  change in the runtime path (V1) leaves the elicited pin and the arm-pin refusal unchanged.
+  The fixture digest test catches request-byte changes in the suite, not in the pin; a ruled
+  re-recording of that digest would leave two runs of different structure under one pin. A dated
+  note on INT-v12-1 records V1–V3 and that the row's text is now MEASURED, not INFERRED. Class 2,
+  P1 unchanged.
+R706(c) — V2 is a finding in its own right: a change in the hash path alone moves the pin while
+  no request byte changes. The read-out's options are judged against both directions: a fix
+  catches V1 and V2, or says which it misses.
+R706(d) — Q3–Q7 resume in a fresh worktree of the then-current HEAD, reusing the V1–V3 diffs and
+  the Q6 candidate unchanged. Q4 measures options A, B and C as the brief states them, and for
+  each states whether a future ruled structure change would move the pin (A and C should; B
+  alone does not, since it adds no pin coverage).
+R706(e) — The check deviation is accepted on its evidence (index unchanged since the PASS line).
+  From here a check and its commit run as one chain, the commit executing only on the check's
+  exit 0 in the same invocation (R700(c), R705(d)); a recorded PASS line is not a condition.
+R706(f) — Readings, no row: (i) the codebook's earlier birth time in the worktree is checked by
+  `git ls-files data/surgical_autonomy/extraction_codebook.yaml` at the resume; if the file is
+  tracked, git created it at worktree add and the cp overwrote it, which explains the times.
+  (ii) V1's change to pass1_prompt_chars is recorded in the read-out as a telemetry consequence
+  of any option that changes the runtime structure. (iii) The worktree's codebook copy is the
+  accepted method when the file is untracked.

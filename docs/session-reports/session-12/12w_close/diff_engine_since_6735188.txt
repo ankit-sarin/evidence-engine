@@ -1,0 +1,8 @@
+ engine/core/review_spec.py          |  68 +++++++++++
+ engine/core/run_manifest.py         |  89 ++++++++++++++-
+ review_specs/surgical_autonomy.yaml |  14 +++
+ tests/test_cloud_extraction.py      |   2 +
+ tests/test_exporters.py             |   2 +
+ tests/test_run_fault_predicate.py   |   1 +
+ tests/test_u17_cross_lineage.py     | 219 ++++++++++++++++++++++++++++++++++++
+ 7 files changed, 393 insertions(+), 2 deletions(-)

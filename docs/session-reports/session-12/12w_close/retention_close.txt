@@ -1,0 +1,284 @@
+# retained throwaway reviews (file sha256), ~/scratch/retained/
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db
+# U06's copy (R638(d)), not a restore point
+path: /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+tables   : 36
+overall  : 000db389fa40fd573dff449c33138471f44a3c10585a492dac9affd80397f6ca
+# the five restore points (fingerprints)
+data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138 tables   : 34 overall  : bb39ba81170c4f11d59954b9e70837afc427c66da710bde30881aad570d16c40 
+data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020 tables   : 31 overall  : e564f250afe40af7eb9a6bc07596a3c795972f7ef3b653c37599e8bc18285b63 
+data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104 tables   : 34 overall  : ea05912d67f0b841bf003a7a941f6505e2c57140b5c2f62e1ff446ea16b9ce01 
+data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807 tables   : 24 overall  : f376562e095cfbcbf23ca997f31375feba340f74ed7a14ffe26e42cc63839e00 
+data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453 tables   : 32 overall  : 62f3912813b6e9efa3a651ee4c4ebcd611adf89c989f240a58e83dcf6759b79a 
+# the ninth retained throwaway (R667(d), R670(g)): the post-run ra_12q, run 2 of 2026-10-18 22:14–2026-10-19 00:45 UTC; opened only as a byte copy, not a restore point
+path: /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f  /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db
+fingerprint (at the move out of data/, ~/scratch/12r-u13/ra_12q_fingerprint_postrun.json): tables   : 36 overall  : 50e97bb694c9b6a709f2f7476af2882fe9b6c79090cd493cfdb9f16fef4582cd
+kept with it: the build-stage records ~/scratch/12q-u13-build/ra_12q_fingerprint_built.json and ~/scratch/12q-u13-build/stage_before.txt (the pre-run copy); the probe's raw responses and composed cross-condition prompts under ~/scratch/12r-u13-probe/out/, named by sha256 in docs/session-reports/session-12/12r_U13_PROBE/out/scratch_extracts_sha256.txt; ~/scratch/12q-u13-build/stage/ now holds RESTORE.txt only
+compared against: the retained ra_12g above (31bb0ef5…9647)
+# 12s close (R675(b)): every never-opened copy by review.db file sha256, measured 2026-10-19T18:16:01Z; none opened
+# the eight under ~/scratch/retained/, against the first part above
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db
+# the ninth (ra_12q) and U06's copy
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f  /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+# the five restore points, against 12s_U14A/restore_points_12s.txt (the record of reference, R675(b))
+72008c75095b2f67dcbc4d8507d56708b1ee43c786a1f8f65b9e8ef5dc0ce7f1  data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138  MATCH
+33714bed6337e6025a330ce7258038f0706bd2dfb2995cfaf19dcd5c25ad7900  data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020  MATCH
+4abb5f4d7412576f5d4ebfef68335297117e7f7f1c6aee18ebffdaf103556302  data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104  MATCH
+94fb4dec080b5e6ab7c77e07b197c72a3d2a479b84e792d6c880987179cc9eb9  data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807  MATCH
+9b971da1adf08eab47c778eb1d03d0ecb629beb8167f5d5c7b00726371aad571  data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453  MATCH
+# 12t close: every never-opened copy by review.db file sha256, measured 2026-10-20T21:30:36Z; none opened
+# the eight under ~/scratch/retained/, against the first part above
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db
+# the ninth (ra_12q) and U06's copy
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f  /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+# the five restore points, against 12s_U14A/restore_points_12s.txt (the record of reference, R675(b))
+72008c75095b2f67dcbc4d8507d56708b1ee43c786a1f8f65b9e8ef5dc0ce7f1  data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138  MATCH
+33714bed6337e6025a330ce7258038f0706bd2dfb2995cfaf19dcd5c25ad7900  data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020  MATCH
+4abb5f4d7412576f5d4ebfef68335297117e7f7f1c6aee18ebffdaf103556302  data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104  MATCH
+94fb4dec080b5e6ab7c77e07b197c72a3d2a479b84e792d6c880987179cc9eb9  data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807  MATCH
+9b971da1adf08eab47c778eb1d03d0ecb629beb8167f5d5c7b00726371aad571  data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453  MATCH
+# ~/scratch/12q-u13-build/stage/: RESTORE.txt 
+# 12u close (R675(b)): every never-opened copy by review.db file sha256, measured 2026-10-22T17:08:18Z; none opened
+# the eight under ~/scratch/retained/, against the first part above
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db
+# the ninth (ra_12q) and U06's copy
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f  /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db
+# the five restore points, against 12s_U14A/restore_points_12s.txt (the record of reference, R675(b))
+72008c75095b2f67dcbc4d8507d56708b1ee43c786a1f8f65b9e8ef5dc0ce7f1  data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138  MATCH
+33714bed6337e6025a330ce7258038f0706bd2dfb2995cfaf19dcd5c25ad7900  data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020  MATCH
+4abb5f4d7412576f5d4ebfef68335297117e7f7f1c6aee18ebffdaf103556302  data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104  MATCH
+94fb4dec080b5e6ab7c77e07b197c72a3d2a479b84e792d6c880987179cc9eb9  data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807  MATCH
+9b971da1adf08eab47c778eb1d03d0ecb629beb8167f5d5c7b00726371aad571  data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453  MATCH
+# 12u's eight throwaway reviews (12u-U16A's repro runs), against 12u_U16A/throwaway_review_db_sha256.txt
+2c365b6ee9d09be5d86dee3b1c28f72e0b217bcfba8988d52836d29cfbfc6e04  /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/review.db  MATCH
+3c20cb3b72a78b8786b0c53569e69e8866a7f2ed2f16389adff46ff09009dba0  /home/ankitsarin/scratch/12u-u16a/run1/u16_declined/u16a/review.db  MATCH
+9ad2246bdcc3d2e0ab65ddc1b344fede8fd8f3d5403e503397abf290a9743022  /home/ankitsarin/scratch/12u-u16a/run1/u16_second_arm/u16a/review.db  MATCH
+d674e55dabfa803e258aeb4dee6b91844a0efa9313eb087515999dccb633c4ff  /home/ankitsarin/scratch/12u-u16a/run1/u16_states/u16a/review.db  MATCH
+8e7400357e222fa6f6822def5f836177058639704090907b61b912e88b38ba3d  /home/ankitsarin/scratch/12u-u16a/run2/r624b/u16a/review.db  MATCH
+060e1d6c21be3b4020e68d5f3573412b2027b0ea78466c000bab5bdb905e0acc  /home/ankitsarin/scratch/12u-u16a/run2/u16_declined/u16a/review.db  MATCH
+562152e8bddf7bb63a5a8482f9d0e8f4942ada807caff9c76370e30c484cffaa  /home/ankitsarin/scratch/12u-u16a/run2/u16_second_arm/u16a/review.db  MATCH
+7a08ffb5d06460aa0175b49852b3fa0bc4eba2deb5d64c793078eab9161e288c  /home/ankitsarin/scratch/12u-u16a/run2/u16_states/u16a/review.db  MATCH
+# ~/scratch/12q-u13-build/stage/: RESTORE.txt 
+# 12v close (R675(b)): every never-opened copy by review.db file sha256, measured 2026-10-24T05:33:25Z; none opened
+# the eight under ~/scratch/retained/, against the first part above
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db  MATCH
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db  MATCH
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db  MATCH
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db  MATCH
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db  MATCH
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db  MATCH
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db  MATCH
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db  MATCH
+# the ninth (ra_12q) and U06's copy
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f  /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db  MATCH
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db  MATCH
+# the five restore points, against 12s_U14A/restore_points_12s.txt
+72008c75095b2f67dcbc4d8507d56708b1ee43c786a1f8f65b9e8ef5dc0ce7f1  data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138  MATCH
+33714bed6337e6025a330ce7258038f0706bd2dfb2995cfaf19dcd5c25ad7900  data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020  MATCH
+4abb5f4d7412576f5d4ebfef68335297117e7f7f1c6aee18ebffdaf103556302  data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104  MATCH
+94fb4dec080b5e6ab7c77e07b197c72a3d2a479b84e792d6c880987179cc9eb9  data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807  MATCH
+9b971da1adf08eab47c778eb1d03d0ecb629beb8167f5d5c7b00726371aad571  data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453  MATCH
+# 12u-U16A's eight, against 12u_U16A/throwaway_review_db_sha256.txt
+2c365b6ee9d09be5d86dee3b1c28f72e0b217bcfba8988d52836d29cfbfc6e04  /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/review.db  MATCH
+3c20cb3b72a78b8786b0c53569e69e8866a7f2ed2f16389adff46ff09009dba0  /home/ankitsarin/scratch/12u-u16a/run1/u16_declined/u16a/review.db  MATCH
+9ad2246bdcc3d2e0ab65ddc1b344fede8fd8f3d5403e503397abf290a9743022  /home/ankitsarin/scratch/12u-u16a/run1/u16_second_arm/u16a/review.db  MATCH
+d674e55dabfa803e258aeb4dee6b91844a0efa9313eb087515999dccb633c4ff  /home/ankitsarin/scratch/12u-u16a/run1/u16_states/u16a/review.db  MATCH
+8e7400357e222fa6f6822def5f836177058639704090907b61b912e88b38ba3d  /home/ankitsarin/scratch/12u-u16a/run2/r624b/u16a/review.db  MATCH
+060e1d6c21be3b4020e68d5f3573412b2027b0ea78466c000bab5bdb905e0acc  /home/ankitsarin/scratch/12u-u16a/run2/u16_declined/u16a/review.db  MATCH
+562152e8bddf7bb63a5a8482f9d0e8f4942ada807caff9c76370e30c484cffaa  /home/ankitsarin/scratch/12u-u16a/run2/u16_second_arm/u16a/review.db  MATCH
+7a08ffb5d06460aa0175b49852b3fa0bc4eba2deb5d64c793078eab9161e288c  /home/ankitsarin/scratch/12u-u16a/run2/u16_states/u16a/review.db  MATCH
+# ~/scratch/12q-u13-build/stage/: RESTORE.txt 
+# total: 23 MATCH / 0 MISMATCH
+# 12v probe scratch (R700(d)): full requests (paper text included, kept out of git) and raw responses, by file sha256
+176fe5db0b9a5cf2963f2ca96fed1bbdadc719df2d295bc3ac9f89929c4a0e94  ~/scratch/12v-u37r/out/responses/176fe5db0b9a5cf2963f2ca96fed1bbdadc719df2d295bc3ac9f89929c4a0e94.txt  MATCH name+committed
+3b0faf38286f2e77d228b1d518911ff56b97ef7b25996a1099c013b2b42e7f03  ~/scratch/12v-u37r/out/responses/3b0faf38286f2e77d228b1d518911ff56b97ef7b25996a1099c013b2b42e7f03.txt  MATCH name+committed
+483c03d869e3d6be0aa68fa0db79dbfeeaf9b0f097014651711616a28e1be59c  ~/scratch/12v-u37r/out/responses/483c03d869e3d6be0aa68fa0db79dbfeeaf9b0f097014651711616a28e1be59c.txt  MATCH name+committed
+4cd7bfd633bc09f9c6d960fae2351cd40770a69a435ca771ed5f60cb2b16e53d  ~/scratch/12v-u37r/out/responses/4cd7bfd633bc09f9c6d960fae2351cd40770a69a435ca771ed5f60cb2b16e53d.txt  MATCH name+committed
+51bad414200c3931367c5cfe8378283cb1ec27ef37a03b605596044609aa5280  ~/scratch/12v-u37r/out/responses/51bad414200c3931367c5cfe8378283cb1ec27ef37a03b605596044609aa5280.txt  MATCH name+committed
+529e6e63e52ca001bfaf505cf8d8e5cbec7cc5a02d0f6190ffd9a71bf9091648  ~/scratch/12v-u37r/out/responses/529e6e63e52ca001bfaf505cf8d8e5cbec7cc5a02d0f6190ffd9a71bf9091648.txt  MATCH name+committed
+543b3c77ec0490cc0a7bb2db0e7b695eaba216015a6df09d46d4624184fc2863  ~/scratch/12v-u37r/out/responses/543b3c77ec0490cc0a7bb2db0e7b695eaba216015a6df09d46d4624184fc2863.txt  MATCH name+committed
+546850eff2c3278d78666cf45fc6f5b97bb6fa98c0218ac4d7deb4e8dbb66315  ~/scratch/12v-u37r/out/responses/546850eff2c3278d78666cf45fc6f5b97bb6fa98c0218ac4d7deb4e8dbb66315.txt  MATCH name+committed
+5689551505c1885bcd7078138c0d8401b921a98f79f070f67cb03e78a4724e3f  ~/scratch/12v-u37r/out/responses/5689551505c1885bcd7078138c0d8401b921a98f79f070f67cb03e78a4724e3f.txt  MATCH name+committed
+94f0529dc24eecfcefbc7438a4b4d6208f7b6be2fb64037bab9ef62bb8f7b60b  ~/scratch/12v-u37r/out/responses/94f0529dc24eecfcefbc7438a4b4d6208f7b6be2fb64037bab9ef62bb8f7b60b.txt  MATCH name+committed
+95db83e97d56b050e88762b0e222814d610c52491cd93c9250e0fab32049ecda  ~/scratch/12v-u37r/out/responses/95db83e97d56b050e88762b0e222814d610c52491cd93c9250e0fab32049ecda.txt  MATCH name+committed
+a9c6557a6efb349c28c0dd4397295e4c76698613da95245f3963ccbf24358918  ~/scratch/12v-u37r/out/responses/a9c6557a6efb349c28c0dd4397295e4c76698613da95245f3963ccbf24358918.txt  MATCH name+committed
+afd5e0671c3a061c10e1dee1289afe71521f8833316dddfea99a0ef336741909  ~/scratch/12v-u37r/out/responses/afd5e0671c3a061c10e1dee1289afe71521f8833316dddfea99a0ef336741909.txt  MATCH name+committed
+c51f7006938c814d1b811a3213e1e86e2670b7468fa45d720a008065d663637c  ~/scratch/12v-u37r/out/responses/c51f7006938c814d1b811a3213e1e86e2670b7468fa45d720a008065d663637c.txt  MATCH name+committed
+ca01404432e7af982aa1fbb54de784e1963f7044b3fa8abce90fc494c96022d5  ~/scratch/12v-u37r/out/responses/ca01404432e7af982aa1fbb54de784e1963f7044b3fa8abce90fc494c96022d5.txt  MATCH name+committed
+d0519b99bc7d1915f148a7ec9f35eddb3fc43b3ebd40855b57001f56a82bd424  ~/scratch/12v-u37r/out/responses/d0519b99bc7d1915f148a7ec9f35eddb3fc43b3ebd40855b57001f56a82bd424.txt  MATCH name+committed
+d83826cd4ffc590026404b0e8ef9f4ac8b3bac0a1931a736e07a5951ec4099b6  ~/scratch/12v-u37r/out/responses/d83826cd4ffc590026404b0e8ef9f4ac8b3bac0a1931a736e07a5951ec4099b6.txt  MATCH name+committed
+e5d6d11e5fe1c73147d5b87f046b8114c3c4d23742283b4161c3d1ac56ee99a3  ~/scratch/12v-u37r/out/responses/e5d6d11e5fe1c73147d5b87f046b8114c3c4d23742283b4161c3d1ac56ee99a3.txt  MATCH name+committed
+e8b1e226b56b73f6584169905df267f988b7fccccec8afb5ed171e826b7b2687  ~/scratch/12v-u37r/out/responses/e8b1e226b56b73f6584169905df267f988b7fccccec8afb5ed171e826b7b2687.txt  MATCH name+committed
+f9b1b70a1bbbce0d68945fca38dc86b42d626b08d7b7dd2c9a8af1dae1590ab7  ~/scratch/12v-u37r/out/responses/f9b1b70a1bbbce0d68945fca38dc86b42d626b08d7b7dd2c9a8af1dae1590ab7.txt  MATCH name+committed
+fafa4e47ad4d618b8d8cd87158660f793c65a8e7730d2c07d3c73459e30a0ee6  ~/scratch/12v-u37r/out/responses/fafa4e47ad4d618b8d8cd87158660f793c65a8e7730d2c07d3c73459e30a0ee6.txt  MATCH name+committed
+fb9e0993308bde78c5b8f58a509edb751384b8d1566cf79fe15101cf77d1db2e  ~/scratch/12v-u37r/out/responses/fb9e0993308bde78c5b8f58a509edb751384b8d1566cf79fe15101cf77d1db2e.txt  MATCH name+committed
+5239c35c6515cb9fa449fa36aac6a3fc4ec870ad6dd5e83d4a19b679185102ee  ~/scratch/12v-u37r/requests/12g_p10/new.json  MATCH 12g_p10/new
+59ebf0be23fe7e012aee6af9dbce72eef06c5c8534f3e4afc059dfc722256d62  ~/scratch/12v-u37r/requests/12g_p10/old.json  MATCH 12g_p10/old
+77efebcdbb9b4903e35d4ca91205ae247893f3aad5a0bc975c9f386fe1d728b8  ~/scratch/12v-u37r/requests/12g_p8/new.json  MATCH 12g_p8/new
+92a979f593ce7d3bf934fd61775e29187faf1bd5c8c2249eac3bdc12cfd317d4  ~/scratch/12v-u37r/requests/12g_p8/old.json  MATCH 12g_p8/old
+f9b459ba8dfb4c6a64753d8e54d04ae8d76f51c0a7f16d632fedea9ce328d02a  ~/scratch/12v-u37r/requests/12g_p9/new.json  MATCH 12g_p9/new
+85d54272a739f715bb2a4d690a51a0a916f047ad6ee06c1fd66c41c84785a980  ~/scratch/12v-u37r/requests/12g_p9/old.json  MATCH 12g_p9/old
+c90c8dd4f1d4dac29a6f78ed28d2a091cf11e21d5d5f14c82fa3d6b1345d875c  ~/scratch/12v-u37r/requests/12r_p12/new.json  MATCH 12r_p12/new
+d82565dfb2e8e1e35bb7dcb9a6d3eb75271d38762947cd039c750e398a4a4e63  ~/scratch/12v-u37r/requests/12r_p12/old.json  MATCH 12r_p12/old
+3d6ef5d870fcd980c0193b73e52cbe9650a4a4330ec737bf075334d5da64b4a5  ~/scratch/12v-u37r/requests/12r_p8/new.json  MATCH 12r_p8/new
+14f0b30cbe55f529a859e135d7713b11a9b2ea8581be3c4aa3aaa9b15d39fa4e  ~/scratch/12v-u37r/requests/12r_p8/old.json  MATCH 12r_p8/old
+176fe5db0b9a5cf2963f2ca96fed1bbdadc719df2d295bc3ac9f89929c4a0e94  ~/scratch/12v-u37r2/out/responses/176fe5db0b9a5cf2963f2ca96fed1bbdadc719df2d295bc3ac9f89929c4a0e94.txt  MATCH name+committed
+2f5bfa7b256f1a69fe000150adee49762027101cf2786555ed66492664445d11  ~/scratch/12v-u37r2/out/responses/2f5bfa7b256f1a69fe000150adee49762027101cf2786555ed66492664445d11.txt  MATCH name+committed
+36220d719dc8a64c325a8f57414ca1b8b8533fb75a09a5863b47b5be7add471e  ~/scratch/12v-u37r2/out/responses/36220d719dc8a64c325a8f57414ca1b8b8533fb75a09a5863b47b5be7add471e.txt  MATCH name+committed
+3b0faf38286f2e77d228b1d518911ff56b97ef7b25996a1099c013b2b42e7f03  ~/scratch/12v-u37r2/out/responses/3b0faf38286f2e77d228b1d518911ff56b97ef7b25996a1099c013b2b42e7f03.txt  MATCH name+committed
+483c03d869e3d6be0aa68fa0db79dbfeeaf9b0f097014651711616a28e1be59c  ~/scratch/12v-u37r2/out/responses/483c03d869e3d6be0aa68fa0db79dbfeeaf9b0f097014651711616a28e1be59c.txt  MATCH name+committed
+4cd7bfd633bc09f9c6d960fae2351cd40770a69a435ca771ed5f60cb2b16e53d  ~/scratch/12v-u37r2/out/responses/4cd7bfd633bc09f9c6d960fae2351cd40770a69a435ca771ed5f60cb2b16e53d.txt  MATCH name+committed
+4e4898daf760e2ca63280388b92c04c7b291f5f5babf1d48b2334af525fc360e  ~/scratch/12v-u37r2/out/responses/4e4898daf760e2ca63280388b92c04c7b291f5f5babf1d48b2334af525fc360e.txt  MATCH name+committed
+51bad414200c3931367c5cfe8378283cb1ec27ef37a03b605596044609aa5280  ~/scratch/12v-u37r2/out/responses/51bad414200c3931367c5cfe8378283cb1ec27ef37a03b605596044609aa5280.txt  MATCH name+committed
+529e6e63e52ca001bfaf505cf8d8e5cbec7cc5a02d0f6190ffd9a71bf9091648  ~/scratch/12v-u37r2/out/responses/529e6e63e52ca001bfaf505cf8d8e5cbec7cc5a02d0f6190ffd9a71bf9091648.txt  MATCH name+committed
+543b3c77ec0490cc0a7bb2db0e7b695eaba216015a6df09d46d4624184fc2863  ~/scratch/12v-u37r2/out/responses/543b3c77ec0490cc0a7bb2db0e7b695eaba216015a6df09d46d4624184fc2863.txt  MATCH name+committed
+546850eff2c3278d78666cf45fc6f5b97bb6fa98c0218ac4d7deb4e8dbb66315  ~/scratch/12v-u37r2/out/responses/546850eff2c3278d78666cf45fc6f5b97bb6fa98c0218ac4d7deb4e8dbb66315.txt  MATCH name+committed
+5689551505c1885bcd7078138c0d8401b921a98f79f070f67cb03e78a4724e3f  ~/scratch/12v-u37r2/out/responses/5689551505c1885bcd7078138c0d8401b921a98f79f070f67cb03e78a4724e3f.txt  MATCH name+committed
+6e312333c6d490a52ae609c428036fc523f7b2071381fd26b6ef84aa52517d0e  ~/scratch/12v-u37r2/out/responses/6e312333c6d490a52ae609c428036fc523f7b2071381fd26b6ef84aa52517d0e.txt  MATCH name+committed
+6e60b7655111d01fbe27ff00cab40f8bf34580bfee4a075e507dfaa6ccf58eed  ~/scratch/12v-u37r2/out/responses/6e60b7655111d01fbe27ff00cab40f8bf34580bfee4a075e507dfaa6ccf58eed.txt  MATCH name+committed
+832af991fc382844db0d04d5e70755f19afd5ada9ebf06a11303c1c0ba4e6f0a  ~/scratch/12v-u37r2/out/responses/832af991fc382844db0d04d5e70755f19afd5ada9ebf06a11303c1c0ba4e6f0a.txt  MATCH name+committed
+94f0529dc24eecfcefbc7438a4b4d6208f7b6be2fb64037bab9ef62bb8f7b60b  ~/scratch/12v-u37r2/out/responses/94f0529dc24eecfcefbc7438a4b4d6208f7b6be2fb64037bab9ef62bb8f7b60b.txt  MATCH name+committed
+95db83e97d56b050e88762b0e222814d610c52491cd93c9250e0fab32049ecda  ~/scratch/12v-u37r2/out/responses/95db83e97d56b050e88762b0e222814d610c52491cd93c9250e0fab32049ecda.txt  MATCH name+committed
+a9c6557a6efb349c28c0dd4397295e4c76698613da95245f3963ccbf24358918  ~/scratch/12v-u37r2/out/responses/a9c6557a6efb349c28c0dd4397295e4c76698613da95245f3963ccbf24358918.txt  MATCH name+committed
+afd5e0671c3a061c10e1dee1289afe71521f8833316dddfea99a0ef336741909  ~/scratch/12v-u37r2/out/responses/afd5e0671c3a061c10e1dee1289afe71521f8833316dddfea99a0ef336741909.txt  MATCH name+committed
+c51f7006938c814d1b811a3213e1e86e2670b7468fa45d720a008065d663637c  ~/scratch/12v-u37r2/out/responses/c51f7006938c814d1b811a3213e1e86e2670b7468fa45d720a008065d663637c.txt  MATCH name+committed
+c8d6b64aea8bfde08c2886da22496f8b737b2338560cb1ae3fa9172bdc51aa2a  ~/scratch/12v-u37r2/out/responses/c8d6b64aea8bfde08c2886da22496f8b737b2338560cb1ae3fa9172bdc51aa2a.txt  MATCH name+committed
+ca01404432e7af982aa1fbb54de784e1963f7044b3fa8abce90fc494c96022d5  ~/scratch/12v-u37r2/out/responses/ca01404432e7af982aa1fbb54de784e1963f7044b3fa8abce90fc494c96022d5.txt  MATCH name+committed
+d0519b99bc7d1915f148a7ec9f35eddb3fc43b3ebd40855b57001f56a82bd424  ~/scratch/12v-u37r2/out/responses/d0519b99bc7d1915f148a7ec9f35eddb3fc43b3ebd40855b57001f56a82bd424.txt  MATCH name+committed
+d83826cd4ffc590026404b0e8ef9f4ac8b3bac0a1931a736e07a5951ec4099b6  ~/scratch/12v-u37r2/out/responses/d83826cd4ffc590026404b0e8ef9f4ac8b3bac0a1931a736e07a5951ec4099b6.txt  MATCH name+committed
+e45d66ee52da044a4f91c6c6979cd766489848683d2992c1a22cb0eff3fec4a0  ~/scratch/12v-u37r2/out/responses/e45d66ee52da044a4f91c6c6979cd766489848683d2992c1a22cb0eff3fec4a0.txt  MATCH name+committed
+e5d6d11e5fe1c73147d5b87f046b8114c3c4d23742283b4161c3d1ac56ee99a3  ~/scratch/12v-u37r2/out/responses/e5d6d11e5fe1c73147d5b87f046b8114c3c4d23742283b4161c3d1ac56ee99a3.txt  MATCH name+committed
+e8b1e226b56b73f6584169905df267f988b7fccccec8afb5ed171e826b7b2687  ~/scratch/12v-u37r2/out/responses/e8b1e226b56b73f6584169905df267f988b7fccccec8afb5ed171e826b7b2687.txt  MATCH name+committed
+e8fa386183f5a873ed6d5f8fb4ad69a9a4d6f509e3e9983631834a85ddbd5603  ~/scratch/12v-u37r2/out/responses/e8fa386183f5a873ed6d5f8fb4ad69a9a4d6f509e3e9983631834a85ddbd5603.txt  MATCH name+committed
+f9b1b70a1bbbce0d68945fca38dc86b42d626b08d7b7dd2c9a8af1dae1590ab7  ~/scratch/12v-u37r2/out/responses/f9b1b70a1bbbce0d68945fca38dc86b42d626b08d7b7dd2c9a8af1dae1590ab7.txt  MATCH name+committed
+fafa4e47ad4d618b8d8cd87158660f793c65a8e7730d2c07d3c73459e30a0ee6  ~/scratch/12v-u37r2/out/responses/fafa4e47ad4d618b8d8cd87158660f793c65a8e7730d2c07d3c73459e30a0ee6.txt  MATCH name+committed
+fb9e0993308bde78c5b8f58a509edb751384b8d1566cf79fe15101cf77d1db2e  ~/scratch/12v-u37r2/out/responses/fb9e0993308bde78c5b8f58a509edb751384b8d1566cf79fe15101cf77d1db2e.txt  MATCH name+committed
+# probe scratch: requests 10 of 10 match requests_index.json; responses 53 of 53 match their sha256 name and the committed copy
+# 12w close (R675(b)): every never-opened copy by review.db file sha256, measured 2026-10-25T04:16:38Z; none opened
+# the eight under ~/scratch/retained/, against the first part above
+31bb0ef52fa4c1833ec79e278b1f07484fa30232c8cee89e7129dbf044cd9647  ra_12g/review.db  MATCH
+64f0497c73b5a6fea8b985c760f19c8cd777589ffa352182533acac613c78f8d  rb_12g/review.db  MATCH
+51241ecbf099058fca79e1567c16b5dadcd9c36a9c51700c0a2f31772ac86a54  surgical_autonomy_smoke10b/review.db  MATCH
+de559c1c2ed884fca35f324bcc20c94a35b26ca8cfac642bf25f15d8966c3dd8  adj_smoke_11b/surgical_autonomy_smoke11c/review.db  MATCH
+912ed63eb3bdf5ae50bb371aaa30db77efeeaed25b79256ad1109955adb4edaf  bridge_smoke_11b/surgical_autonomy_smoke11b/review.db  MATCH
+70a4de606909a690ac5c5ede95188df00cb04ea11c95b411b02bb34df28e10c4  ee_extract_smoke_11c/ee_smoke_11c/review.db  MATCH
+188f148cf7e6b063ae93e8d4709195bb75d234eb94c548b3aae0be3c90e3f7aa  ee_smoke_11c/ee_smoke_11c/review.db  MATCH
+6ffa41827f0a860bbd3bde4f3e0b5a5aac0f8e3b1478870caabc989aab568d01  se_smoke_11c/se_smoke_11c/review.db  MATCH
+# the ninth (ra_12q) and U06's copy
+ecad5e658fa90e950676bbf04ef9838062beff5bda38c56d3bfa4fca81e6b75f  /home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db  MATCH
+fc7d061dc3256bea1ae1be3f9dbd2984e27d7f5acbfa3d11d9fdb587059b7cf8  /home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db  MATCH
+# the five restore points, against 12s_U14A/restore_points_12s.txt
+72008c75095b2f67dcbc4d8507d56708b1ee43c786a1f8f65b9e8ef5dc0ce7f1  data/surgical_autonomy/review.db.bak-input-identity-01-phase3-pre-write-20260924-204138  MATCH
+33714bed6337e6025a330ce7258038f0706bd2dfb2995cfaf19dcd5c25ad7900  data/surgical_autonomy/review.db.bak-manifest-01-phase3-pre-write-20260923-161020  MATCH
+4abb5f4d7412576f5d4ebfef68335297117e7f7f1c6aee18ebffdaf103556302  data/surgical_autonomy/review.db.bak-migration-02-phase3-pre-write-20260929-172104  MATCH
+94fb4dec080b5e6ab7c77e07b197c72a3d2a479b84e792d6c880987179cc9eb9  data/surgical_autonomy/review.db.bak-pre-migrations01-20260921-002807  MATCH
+9b971da1adf08eab47c778eb1d03d0ecb629beb8167f5d5c7b00726371aad571  data/surgical_autonomy/review.db.bak-readers-01-phase3-pre-write-20260922-165453  MATCH
+# 12u-U16A's eight, against 12u_U16A/throwaway_review_db_sha256.txt
+2c365b6ee9d09be5d86dee3b1c28f72e0b217bcfba8988d52836d29cfbfc6e04  /home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/review.db  MATCH
+3c20cb3b72a78b8786b0c53569e69e8866a7f2ed2f16389adff46ff09009dba0  /home/ankitsarin/scratch/12u-u16a/run1/u16_declined/u16a/review.db  MATCH
+9ad2246bdcc3d2e0ab65ddc1b344fede8fd8f3d5403e503397abf290a9743022  /home/ankitsarin/scratch/12u-u16a/run1/u16_second_arm/u16a/review.db  MATCH
+d674e55dabfa803e258aeb4dee6b91844a0efa9313eb087515999dccb633c4ff  /home/ankitsarin/scratch/12u-u16a/run1/u16_states/u16a/review.db  MATCH
+8e7400357e222fa6f6822def5f836177058639704090907b61b912e88b38ba3d  /home/ankitsarin/scratch/12u-u16a/run2/r624b/u16a/review.db  MATCH
+060e1d6c21be3b4020e68d5f3573412b2027b0ea78466c000bab5bdb905e0acc  /home/ankitsarin/scratch/12u-u16a/run2/u16_declined/u16a/review.db  MATCH
+562152e8bddf7bb63a5a8482f9d0e8f4942ada807caff9c76370e30c484cffaa  /home/ankitsarin/scratch/12u-u16a/run2/u16_second_arm/u16a/review.db  MATCH
+7a08ffb5d06460aa0175b49852b3fa0bc4eba2deb5d64c793078eab9161e288c  /home/ankitsarin/scratch/12u-u16a/run2/u16_states/u16a/review.db  MATCH
+# ~/scratch/12q-u13-build/stage/: RESTORE.txt 
+# total: 23 MATCH / 0 MISMATCH
+# 12v probe scratch (R700(d)), re-verified: requests and raw responses by file sha256
+176fe5db0b9a5cf2963f2ca96fed1bbdadc719df2d295bc3ac9f89929c4a0e94  ~/scratch/12v-u37r/out/responses/176fe5db0b9a5cf2963f2ca96fed1bbdadc719df2d295bc3ac9f89929c4a0e94.txt  MATCH
+3b0faf38286f2e77d228b1d518911ff56b97ef7b25996a1099c013b2b42e7f03  ~/scratch/12v-u37r/out/responses/3b0faf38286f2e77d228b1d518911ff56b97ef7b25996a1099c013b2b42e7f03.txt  MATCH
+483c03d869e3d6be0aa68fa0db79dbfeeaf9b0f097014651711616a28e1be59c  ~/scratch/12v-u37r/out/responses/483c03d869e3d6be0aa68fa0db79dbfeeaf9b0f097014651711616a28e1be59c.txt  MATCH
+4cd7bfd633bc09f9c6d960fae2351cd40770a69a435ca771ed5f60cb2b16e53d  ~/scratch/12v-u37r/out/responses/4cd7bfd633bc09f9c6d960fae2351cd40770a69a435ca771ed5f60cb2b16e53d.txt  MATCH
+51bad414200c3931367c5cfe8378283cb1ec27ef37a03b605596044609aa5280  ~/scratch/12v-u37r/out/responses/51bad414200c3931367c5cfe8378283cb1ec27ef37a03b605596044609aa5280.txt  MATCH
+529e6e63e52ca001bfaf505cf8d8e5cbec7cc5a02d0f6190ffd9a71bf9091648  ~/scratch/12v-u37r/out/responses/529e6e63e52ca001bfaf505cf8d8e5cbec7cc5a02d0f6190ffd9a71bf9091648.txt  MATCH
+543b3c77ec0490cc0a7bb2db0e7b695eaba216015a6df09d46d4624184fc2863  ~/scratch/12v-u37r/out/responses/543b3c77ec0490cc0a7bb2db0e7b695eaba216015a6df09d46d4624184fc2863.txt  MATCH
+546850eff2c3278d78666cf45fc6f5b97bb6fa98c0218ac4d7deb4e8dbb66315  ~/scratch/12v-u37r/out/responses/546850eff2c3278d78666cf45fc6f5b97bb6fa98c0218ac4d7deb4e8dbb66315.txt  MATCH
+5689551505c1885bcd7078138c0d8401b921a98f79f070f67cb03e78a4724e3f  ~/scratch/12v-u37r/out/responses/5689551505c1885bcd7078138c0d8401b921a98f79f070f67cb03e78a4724e3f.txt  MATCH
+94f0529dc24eecfcefbc7438a4b4d6208f7b6be2fb64037bab9ef62bb8f7b60b  ~/scratch/12v-u37r/out/responses/94f0529dc24eecfcefbc7438a4b4d6208f7b6be2fb64037bab9ef62bb8f7b60b.txt  MATCH
+95db83e97d56b050e88762b0e222814d610c52491cd93c9250e0fab32049ecda  ~/scratch/12v-u37r/out/responses/95db83e97d56b050e88762b0e222814d610c52491cd93c9250e0fab32049ecda.txt  MATCH
+a9c6557a6efb349c28c0dd4397295e4c76698613da95245f3963ccbf24358918  ~/scratch/12v-u37r/out/responses/a9c6557a6efb349c28c0dd4397295e4c76698613da95245f3963ccbf24358918.txt  MATCH
+afd5e0671c3a061c10e1dee1289afe71521f8833316dddfea99a0ef336741909  ~/scratch/12v-u37r/out/responses/afd5e0671c3a061c10e1dee1289afe71521f8833316dddfea99a0ef336741909.txt  MATCH
+c51f7006938c814d1b811a3213e1e86e2670b7468fa45d720a008065d663637c  ~/scratch/12v-u37r/out/responses/c51f7006938c814d1b811a3213e1e86e2670b7468fa45d720a008065d663637c.txt  MATCH
+ca01404432e7af982aa1fbb54de784e1963f7044b3fa8abce90fc494c96022d5  ~/scratch/12v-u37r/out/responses/ca01404432e7af982aa1fbb54de784e1963f7044b3fa8abce90fc494c96022d5.txt  MATCH
+d0519b99bc7d1915f148a7ec9f35eddb3fc43b3ebd40855b57001f56a82bd424  ~/scratch/12v-u37r/out/responses/d0519b99bc7d1915f148a7ec9f35eddb3fc43b3ebd40855b57001f56a82bd424.txt  MATCH
+d83826cd4ffc590026404b0e8ef9f4ac8b3bac0a1931a736e07a5951ec4099b6  ~/scratch/12v-u37r/out/responses/d83826cd4ffc590026404b0e8ef9f4ac8b3bac0a1931a736e07a5951ec4099b6.txt  MATCH
+e5d6d11e5fe1c73147d5b87f046b8114c3c4d23742283b4161c3d1ac56ee99a3  ~/scratch/12v-u37r/out/responses/e5d6d11e5fe1c73147d5b87f046b8114c3c4d23742283b4161c3d1ac56ee99a3.txt  MATCH
+e8b1e226b56b73f6584169905df267f988b7fccccec8afb5ed171e826b7b2687  ~/scratch/12v-u37r/out/responses/e8b1e226b56b73f6584169905df267f988b7fccccec8afb5ed171e826b7b2687.txt  MATCH
+f9b1b70a1bbbce0d68945fca38dc86b42d626b08d7b7dd2c9a8af1dae1590ab7  ~/scratch/12v-u37r/out/responses/f9b1b70a1bbbce0d68945fca38dc86b42d626b08d7b7dd2c9a8af1dae1590ab7.txt  MATCH
+fafa4e47ad4d618b8d8cd87158660f793c65a8e7730d2c07d3c73459e30a0ee6  ~/scratch/12v-u37r/out/responses/fafa4e47ad4d618b8d8cd87158660f793c65a8e7730d2c07d3c73459e30a0ee6.txt  MATCH
+fb9e0993308bde78c5b8f58a509edb751384b8d1566cf79fe15101cf77d1db2e  ~/scratch/12v-u37r/out/responses/fb9e0993308bde78c5b8f58a509edb751384b8d1566cf79fe15101cf77d1db2e.txt  MATCH
+5239c35c6515cb9fa449fa36aac6a3fc4ec870ad6dd5e83d4a19b679185102ee  ~/scratch/12v-u37r/requests/12g_p10/new.json  MATCH
+59ebf0be23fe7e012aee6af9dbce72eef06c5c8534f3e4afc059dfc722256d62  ~/scratch/12v-u37r/requests/12g_p10/old.json  MATCH
+77efebcdbb9b4903e35d4ca91205ae247893f3aad5a0bc975c9f386fe1d728b8  ~/scratch/12v-u37r/requests/12g_p8/new.json  MATCH
+92a979f593ce7d3bf934fd61775e29187faf1bd5c8c2249eac3bdc12cfd317d4  ~/scratch/12v-u37r/requests/12g_p8/old.json  MATCH
+f9b459ba8dfb4c6a64753d8e54d04ae8d76f51c0a7f16d632fedea9ce328d02a  ~/scratch/12v-u37r/requests/12g_p9/new.json  MATCH
+85d54272a739f715bb2a4d690a51a0a916f047ad6ee06c1fd66c41c84785a980  ~/scratch/12v-u37r/requests/12g_p9/old.json  MATCH
+c90c8dd4f1d4dac29a6f78ed28d2a091cf11e21d5d5f14c82fa3d6b1345d875c  ~/scratch/12v-u37r/requests/12r_p12/new.json  MATCH
+d82565dfb2e8e1e35bb7dcb9a6d3eb75271d38762947cd039c750e398a4a4e63  ~/scratch/12v-u37r/requests/12r_p12/old.json  MATCH
+3d6ef5d870fcd980c0193b73e52cbe9650a4a4330ec737bf075334d5da64b4a5  ~/scratch/12v-u37r/requests/12r_p8/new.json  MATCH
+14f0b30cbe55f529a859e135d7713b11a9b2ea8581be3c4aa3aaa9b15d39fa4e  ~/scratch/12v-u37r/requests/12r_p8/old.json  MATCH
+176fe5db0b9a5cf2963f2ca96fed1bbdadc719df2d295bc3ac9f89929c4a0e94  ~/scratch/12v-u37r2/out/responses/176fe5db0b9a5cf2963f2ca96fed1bbdadc719df2d295bc3ac9f89929c4a0e94.txt  MATCH
+2f5bfa7b256f1a69fe000150adee49762027101cf2786555ed66492664445d11  ~/scratch/12v-u37r2/out/responses/2f5bfa7b256f1a69fe000150adee49762027101cf2786555ed66492664445d11.txt  MATCH
+36220d719dc8a64c325a8f57414ca1b8b8533fb75a09a5863b47b5be7add471e  ~/scratch/12v-u37r2/out/responses/36220d719dc8a64c325a8f57414ca1b8b8533fb75a09a5863b47b5be7add471e.txt  MATCH
+3b0faf38286f2e77d228b1d518911ff56b97ef7b25996a1099c013b2b42e7f03  ~/scratch/12v-u37r2/out/responses/3b0faf38286f2e77d228b1d518911ff56b97ef7b25996a1099c013b2b42e7f03.txt  MATCH
+483c03d869e3d6be0aa68fa0db79dbfeeaf9b0f097014651711616a28e1be59c  ~/scratch/12v-u37r2/out/responses/483c03d869e3d6be0aa68fa0db79dbfeeaf9b0f097014651711616a28e1be59c.txt  MATCH
+4cd7bfd633bc09f9c6d960fae2351cd40770a69a435ca771ed5f60cb2b16e53d  ~/scratch/12v-u37r2/out/responses/4cd7bfd633bc09f9c6d960fae2351cd40770a69a435ca771ed5f60cb2b16e53d.txt  MATCH
+4e4898daf760e2ca63280388b92c04c7b291f5f5babf1d48b2334af525fc360e  ~/scratch/12v-u37r2/out/responses/4e4898daf760e2ca63280388b92c04c7b291f5f5babf1d48b2334af525fc360e.txt  MATCH
+51bad414200c3931367c5cfe8378283cb1ec27ef37a03b605596044609aa5280  ~/scratch/12v-u37r2/out/responses/51bad414200c3931367c5cfe8378283cb1ec27ef37a03b605596044609aa5280.txt  MATCH
+529e6e63e52ca001bfaf505cf8d8e5cbec7cc5a02d0f6190ffd9a71bf9091648  ~/scratch/12v-u37r2/out/responses/529e6e63e52ca001bfaf505cf8d8e5cbec7cc5a02d0f6190ffd9a71bf9091648.txt  MATCH
+543b3c77ec0490cc0a7bb2db0e7b695eaba216015a6df09d46d4624184fc2863  ~/scratch/12v-u37r2/out/responses/543b3c77ec0490cc0a7bb2db0e7b695eaba216015a6df09d46d4624184fc2863.txt  MATCH
+546850eff2c3278d78666cf45fc6f5b97bb6fa98c0218ac4d7deb4e8dbb66315  ~/scratch/12v-u37r2/out/responses/546850eff2c3278d78666cf45fc6f5b97bb6fa98c0218ac4d7deb4e8dbb66315.txt  MATCH
+5689551505c1885bcd7078138c0d8401b921a98f79f070f67cb03e78a4724e3f  ~/scratch/12v-u37r2/out/responses/5689551505c1885bcd7078138c0d8401b921a98f79f070f67cb03e78a4724e3f.txt  MATCH
+6e312333c6d490a52ae609c428036fc523f7b2071381fd26b6ef84aa52517d0e  ~/scratch/12v-u37r2/out/responses/6e312333c6d490a52ae609c428036fc523f7b2071381fd26b6ef84aa52517d0e.txt  MATCH
+6e60b7655111d01fbe27ff00cab40f8bf34580bfee4a075e507dfaa6ccf58eed  ~/scratch/12v-u37r2/out/responses/6e60b7655111d01fbe27ff00cab40f8bf34580bfee4a075e507dfaa6ccf58eed.txt  MATCH
+832af991fc382844db0d04d5e70755f19afd5ada9ebf06a11303c1c0ba4e6f0a  ~/scratch/12v-u37r2/out/responses/832af991fc382844db0d04d5e70755f19afd5ada9ebf06a11303c1c0ba4e6f0a.txt  MATCH
+94f0529dc24eecfcefbc7438a4b4d6208f7b6be2fb64037bab9ef62bb8f7b60b  ~/scratch/12v-u37r2/out/responses/94f0529dc24eecfcefbc7438a4b4d6208f7b6be2fb64037bab9ef62bb8f7b60b.txt  MATCH
+95db83e97d56b050e88762b0e222814d610c52491cd93c9250e0fab32049ecda  ~/scratch/12v-u37r2/out/responses/95db83e97d56b050e88762b0e222814d610c52491cd93c9250e0fab32049ecda.txt  MATCH
+a9c6557a6efb349c28c0dd4397295e4c76698613da95245f3963ccbf24358918  ~/scratch/12v-u37r2/out/responses/a9c6557a6efb349c28c0dd4397295e4c76698613da95245f3963ccbf24358918.txt  MATCH
+afd5e0671c3a061c10e1dee1289afe71521f8833316dddfea99a0ef336741909  ~/scratch/12v-u37r2/out/responses/afd5e0671c3a061c10e1dee1289afe71521f8833316dddfea99a0ef336741909.txt  MATCH
+c51f7006938c814d1b811a3213e1e86e2670b7468fa45d720a008065d663637c  ~/scratch/12v-u37r2/out/responses/c51f7006938c814d1b811a3213e1e86e2670b7468fa45d720a008065d663637c.txt  MATCH
+c8d6b64aea8bfde08c2886da22496f8b737b2338560cb1ae3fa9172bdc51aa2a  ~/scratch/12v-u37r2/out/responses/c8d6b64aea8bfde08c2886da22496f8b737b2338560cb1ae3fa9172bdc51aa2a.txt  MATCH
+ca01404432e7af982aa1fbb54de784e1963f7044b3fa8abce90fc494c96022d5  ~/scratch/12v-u37r2/out/responses/ca01404432e7af982aa1fbb54de784e1963f7044b3fa8abce90fc494c96022d5.txt  MATCH
+d0519b99bc7d1915f148a7ec9f35eddb3fc43b3ebd40855b57001f56a82bd424  ~/scratch/12v-u37r2/out/responses/d0519b99bc7d1915f148a7ec9f35eddb3fc43b3ebd40855b57001f56a82bd424.txt  MATCH
+d83826cd4ffc590026404b0e8ef9f4ac8b3bac0a1931a736e07a5951ec4099b6  ~/scratch/12v-u37r2/out/responses/d83826cd4ffc590026404b0e8ef9f4ac8b3bac0a1931a736e07a5951ec4099b6.txt  MATCH
+e45d66ee52da044a4f91c6c6979cd766489848683d2992c1a22cb0eff3fec4a0  ~/scratch/12v-u37r2/out/responses/e45d66ee52da044a4f91c6c6979cd766489848683d2992c1a22cb0eff3fec4a0.txt  MATCH
+e5d6d11e5fe1c73147d5b87f046b8114c3c4d23742283b4161c3d1ac56ee99a3  ~/scratch/12v-u37r2/out/responses/e5d6d11e5fe1c73147d5b87f046b8114c3c4d23742283b4161c3d1ac56ee99a3.txt  MATCH
+e8b1e226b56b73f6584169905df267f988b7fccccec8afb5ed171e826b7b2687  ~/scratch/12v-u37r2/out/responses/e8b1e226b56b73f6584169905df267f988b7fccccec8afb5ed171e826b7b2687.txt  MATCH
+e8fa386183f5a873ed6d5f8fb4ad69a9a4d6f509e3e9983631834a85ddbd5603  ~/scratch/12v-u37r2/out/responses/e8fa386183f5a873ed6d5f8fb4ad69a9a4d6f509e3e9983631834a85ddbd5603.txt  MATCH
+f9b1b70a1bbbce0d68945fca38dc86b42d626b08d7b7dd2c9a8af1dae1590ab7  ~/scratch/12v-u37r2/out/responses/f9b1b70a1bbbce0d68945fca38dc86b42d626b08d7b7dd2c9a8af1dae1590ab7.txt  MATCH
+fafa4e47ad4d618b8d8cd87158660f793c65a8e7730d2c07d3c73459e30a0ee6  ~/scratch/12v-u37r2/out/responses/fafa4e47ad4d618b8d8cd87158660f793c65a8e7730d2c07d3c73459e30a0ee6.txt  MATCH
+fb9e0993308bde78c5b8f58a509edb751384b8d1566cf79fe15101cf77d1db2e  ~/scratch/12v-u37r2/out/responses/fb9e0993308bde78c5b8f58a509edb751384b8d1566cf79fe15101cf77d1db2e.txt  MATCH
+# probe scratch: requests 10 of 10 equal to the 12v record; responses 53 of 53 equal to the 12v record

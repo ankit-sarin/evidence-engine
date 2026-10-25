@@ -1,0 +1,5 @@
+# R707(g): +-10% of the mean of the last four standard gates on this host state (R683(c) form; rounded inward)
+gates: 883.80, 878.55, 888.65, 885.20
+mean: 884.0500 s; x0.9 = 795.6450; x1.1 = 972.4550
+figure for the wrap ruling: 796–972 s
+series of thirteen: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20

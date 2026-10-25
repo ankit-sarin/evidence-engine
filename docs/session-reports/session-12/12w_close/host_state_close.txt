@@ -1,0 +1,29 @@
+# host state for the 12w closeout, 2026-10-25T04:17:14Z (R657(d), R663(a)); no closeout gate (R707(h))
+uname -r: 6.17.0-1032-nvidia
+python: Python 3.12.3
+libsqlite3-0: ii libsqlite3-0:arm64 3.45.1-1ubuntu2.8 arm64 SQLite 3 shared library
+nvidia driver: 580.173.02
+ollama: ollama version is 0.21.0
+NRestarts=0
+ActiveEnterTimestamp=Sat 2026-10-17 23:04:05 UTC
+up since: 2026-10-17 23:03:53 UTC; up 1 week, 5 hours, 13 minutes
+# readings: boot id abf99132-fd8b-41f9-b9fd-62241e40110c
+# earlyoom: active, started Sun 2026-10-18 05:43:03 UTC; argv: /usr/bin/earlyoom -r 3600 -m 6 -s 100,100 --avoid ^(sshd|tailscaled|cloudflared|systemd|systemd-journal|NetworkManager|Xorg|gnome-shell|gdm.*)$ --prefer ^ollama$
+# vm.min_free_kbytes = 1048576; ollama.service OOMScoreAdjust=0; ollama oom_score_adj 0
+# earlyoom kill lines this boot ("sending SIG… to process"): 0
+# kernel NV_ERR_NO_MEMORY lines this boot: 15
+#   Oct 18 22:14:28
+#   Oct 19 01:28:24
+#   Oct 19 07:02:57
+#   Oct 19 07:03:31
+#   Oct 20 07:03:35
+#   Oct 20 07:04:05
+#   Oct 21 07:00:03
+#   Oct 21 07:02:34
+#   Oct 21 07:02:55
+#   Oct 21 07:03:24
+#   Oct 22 07:04:43
+#   Oct 23 04:56:08
+#   Oct 23 04:56:09
+#   Oct 23 07:03:08
+#   Oct 23 07:03:30

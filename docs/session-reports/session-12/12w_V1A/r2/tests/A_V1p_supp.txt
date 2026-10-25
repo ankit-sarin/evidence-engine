@@ -1,0 +1,68 @@
+........................................................................ [ 15%]
+......................................................................F. [ 30%]
+........................................................................ [ 45%]
+........................................................................ [ 60%]
+........................................................................ [ 75%]
+........................................................................ [ 90%]
+..............................................F.                         [100%]
+=================================== FAILURES ===================================
+________________ test_the_elicited_requests_are_byte_identical _________________
+
+review = PosixPath('/home/ankitsarin/scratch/12w-v1a/r2/basetemp/A_V1p_supp/test_the_elicited_requests_are0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf4d23cb3efc0>
+
+    def test_the_elicited_requests_are_byte_identical(review, monkeypatch):
+        import engine.agents.extractor as E
+        import engine.elicitation.pipeline as PL
+        from engine.core.effective_config import sha256_canonical
+    
+        sent: list[dict] = []
+        pass1 = iter([PASS1_BAD, PASS1_GOOD])
+    
+        def fake_pass1(**kw):
+            sent.append(kw)
+            return _response(next(pass1))
+    
+        def fake_pass2(**kw):
+            sent.append(kw)
+            return _response(PASS2, thinking=None)
+    
+        monkeypatch.setattr(PL, "ollama_chat", fake_pass1)
+        monkeypatch.setattr(E, "ollama_chat", fake_pass2)
+        result = PL.extract_paper_elicited(7, PAPER, _Spec(), _DB(review),
+                                           unit_map_dir_name="run_TEST")
+    
+        assert [kw["stage"] for kw in sent] == [
+            "elicitation_pass1", "elicitation_pass1", "extract_pass2"]
+        assert "did not meet the contract" in sent[1]["messages"][-1]["content"]
+        assert "Here is the evidence you cited" in sent[2]["messages"][-1]["content"]
+        assert result.reasoning_trace and result.reasoning_trace in sent[2]["messages"][-1]["content"]
+>       assert sha256_canonical(sent) == ELICITED_REQUESTS_SHA256
+E       AssertionError: assert 'c7a734c141a4...1e2d8f82bb53d' == 'ec969f5f5b5e...8d16e9b3cb08b'
+E         
+E         - ec969f5f5b5e78ca5e224a09d9bf07cc8cdf4df9f8ccaea9f858d16e9b3cb08b
+E         + c7a734c141a4faeef58779a648307f83f60a37b4cb8d7f8751c1e2d8f82bb53d
+
+tests/test_elicitation_pipeline.py:516: AssertionError
+________ test_elicitation_pass1_hash_renders_the_runtime_message_lists _________
+
+elicited = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf4d234e082c0>
+
+    def test_elicitation_pass1_hash_renders_the_runtime_message_lists(elicited, monkeypatch):
+        cb = load_codebook(LIVE_CODEBOOK)
+        sent = _runtime_sentinel_lists(elicited, cb.path, monkeypatch)
+        rendered = ec.render_messages("elicitation_pass1", elicited, codebook_path=cb.path)
+        runtime = [m for attempt in sent for m in attempt]
+>       assert [m["role"] for m in runtime] == [m["role"] for m in rendered]
+E       AssertionError: assert ['system', 'u...user', 'user'] == ['system', 'u...stem', 'user']
+E         
+E         Left contains one more item: 'user'
+E         Use -v to get more diff
+
+tests/test_v1a_repro.py:59: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_elicitation_pipeline.py::test_the_elicited_requests_are_byte_identical
+FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+2 failed, 478 passed in 85.03s (0:01:25)
+supp exit 1

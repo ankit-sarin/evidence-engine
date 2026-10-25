@@ -1,0 +1,13 @@
+numstat + 61 / - 1; minus == 1: True
+the one removed line is INT-v12-1's row: True
+its replacement keeps the old row as a strict prefix (less the final ' |') and ends ' |': True
+the note names MEASURED (12w-V1A Q2, `a0f2323`): True
+note carries ['`d70bf688…59f0`', '`8f66789a…ec0f`', '`d3672ab6…ff5c`', '`123f6630…4db2`', '`307077c9…71a3`', 'test_the_elicited_requests_are_byte_identical', 'test_elicitation_pass1_hashes_both_attempts']: True
+r706 sha256 == architect: True
+fence == r706.txt: True
+cell == render_cell: True
+last line ends at R706: True
+Block 104 count 1: True
+staged set ['docs/plan/ENGINE_REFACTOR_PLAN.md', 'docs/session-reports/session-12/12w_V1A/r706.txt']: True
+worktree == index: True
+RESULT: PASS

@@ -1,0 +1,150 @@
+head: pin exit 0
+head: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+head: attempt_2 2 ['system', 'user'] [215, 35965] msgs 70a67402ed0368ac6559aafcf33425c5330b0c5126bdcd5e6edee38ce650b32d kwargs 307077c9e5b69c46c12a5c88608d6844e0645c8427453d4677b7031e368671a3
+head: PASSED tests/test_v1a_repro.py::test_the_engine_under_test_is_this_tree
+head: 62 passed in 0.50s
+head: named exit 0
+head: ................................................                         [100%]
+head: 480 passed in 84.96s (0:01:24)
+head: supp exit 0
+head: 31
+head: worktree clean after
+A: pin exit 0
+A: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+A: attempt_2 2 ['system', 'user'] [215, 35965] msgs 70a67402ed0368ac6559aafcf33425c5330b0c5126bdcd5e6edee38ce650b32d kwargs 307077c9e5b69c46c12a5c88608d6844e0645c8427453d4677b7031e368671a3
+A: PASSED tests/test_v1a_repro.py::test_the_engine_under_test_is_this_tree
+A: 62 passed in 0.44s
+A: named exit 0
+A: ................................................                         [100%]
+A: 480 passed in 85.64s (0:01:25)
+A: supp exit 0
+A: 31
+A: worktree clean after
+A_V1: DOES NOT APPLY: V1_runtime_only.diff
+error: patch failed: engine/elicitation/pipeline.py:287
+error: engine/elicitation/pipeline.py: patch does not apply
+A_V1: worktree clean after
+A_V2: DOES NOT APPLY: V2_hash_only.diff
+error: patch failed: engine/core/effective_config.py:446
+error: engine/core/effective_config.py: patch does not apply
+A_V2: worktree clean after
+A_V1p: pin exit 0
+A_V1p: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+A_V1p: attempt_2 3 ['system', 'user', 'user'] [215, 31914, 4051] msgs 943916367705d286fd37dffeb5b7272d1320bc5b41b68acb406555aec61f52df kwargs 123f6630b63174ef9ec4a46871981e55487543239a4b36415f24c46eac094db2
+A_V1p: FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+A_V1p: 2 failed, 60 passed in 0.46s
+A_V1p: named exit 1
+A_V1p: FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+A_V1p: 2 failed, 478 passed in 85.03s (0:01:25)
+A_V1p: supp exit 1
+A_V1p: 31
+A_V1p: worktree clean after
+A_V2p: pin exit 0
+A_V2p: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+A_V2p: attempt_2 2 ['system', 'user'] [215, 35965] msgs 70a67402ed0368ac6559aafcf33425c5330b0c5126bdcd5e6edee38ce650b32d kwargs 307077c9e5b69c46c12a5c88608d6844e0645c8427453d4677b7031e368671a3
+A_V2p: FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+A_V2p: 2 failed, 60 passed in 0.45s
+A_V2p: named exit 1
+A_V2p: FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+A_V2p: 2 failed, 478 passed in 84.78s (0:01:24)
+A_V2p: supp exit 1
+A_V2p: 31
+A_V2p: worktree clean after
+A_V3p: pin exit 0
+A_V3p: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+A_V3p: attempt_2 3 ['system', 'user', 'user'] [215, 31914, 4051] msgs 943916367705d286fd37dffeb5b7272d1320bc5b41b68acb406555aec61f52df kwargs 123f6630b63174ef9ec4a46871981e55487543239a4b36415f24c46eac094db2
+A_V3p: FAILED tests/test_elicitation_pipeline.py::test_the_elicited_requests_are_byte_identical
+A_V3p: 2 failed, 60 passed in 0.46s
+A_V3p: named exit 1
+A_V3p: FAILED tests/test_prompt_hash_coverage.py::test_elicitation_pass1_hashes_both_attempts
+A_V3p: 2 failed, 478 passed in 88.42s (0:01:28)
+A_V3p: supp exit 1
+A_V3p: 31
+A_V3p: worktree clean after
+B: pin exit 0
+B: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+B: attempt_2 2 ['system', 'user'] [215, 35965] msgs 70a67402ed0368ac6559aafcf33425c5330b0c5126bdcd5e6edee38ce650b32d kwargs 307077c9e5b69c46c12a5c88608d6844e0645c8427453d4677b7031e368671a3
+B: PASSED tests/test_v1a_repro.py::test_the_engine_under_test_is_this_tree
+B: 64 passed in 0.48s
+B: named exit 0
+B: ..................................................                       [100%]
+B: 482 passed in 90.46s (0:01:30)
+B: supp exit 0
+B: 32
+B: worktree clean after
+B_V1: pin exit 0
+B_V1: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+B_V1: attempt_2 3 ['system', 'user', 'user'] [215, 31914, 4051] msgs 943916367705d286fd37dffeb5b7272d1320bc5b41b68acb406555aec61f52df kwargs 123f6630b63174ef9ec4a46871981e55487543239a4b36415f24c46eac094db2
+B_V1: FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+B_V1: 3 failed, 61 passed in 0.49s
+B_V1: named exit 1
+B_V1: FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+B_V1: 3 failed, 479 passed in 86.47s (0:01:26)
+B_V1: supp exit 1
+B_V1: 32
+B_V1: worktree clean after
+B_V2: pin exit 0
+B_V2: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+B_V2: attempt_2 2 ['system', 'user'] [215, 35965] msgs 70a67402ed0368ac6559aafcf33425c5330b0c5126bdcd5e6edee38ce650b32d kwargs 307077c9e5b69c46c12a5c88608d6844e0645c8427453d4677b7031e368671a3
+B_V2: FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+B_V2: 3 failed, 61 passed in 0.48s
+B_V2: named exit 1
+B_V2: FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+B_V2: 3 failed, 479 passed in 87.30s (0:01:27)
+B_V2: supp exit 1
+B_V2: 32
+B_V2: worktree clean after
+B_V3: pin exit 0
+B_V3: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+B_V3: attempt_2 3 ['system', 'user', 'user'] [215, 31914, 4051] msgs 943916367705d286fd37dffeb5b7272d1320bc5b41b68acb406555aec61f52df kwargs 123f6630b63174ef9ec4a46871981e55487543239a4b36415f24c46eac094db2
+B_V3: FAILED tests/test_elicitation_pipeline.py::test_the_elicited_requests_are_byte_identical
+B_V3: 2 failed, 62 passed in 0.48s
+B_V3: named exit 1
+B_V3: FAILED tests/test_prompt_hash_coverage.py::test_elicitation_pass1_hashes_both_attempts
+B_V3: 2 failed, 480 passed in 87.43s (0:01:27)
+B_V3: supp exit 1
+B_V3: 32
+B_V3: worktree clean after
+C: pin exit 0
+C: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+C: attempt_2 2 ['system', 'user'] [215, 35965] msgs 70a67402ed0368ac6559aafcf33425c5330b0c5126bdcd5e6edee38ce650b32d kwargs 307077c9e5b69c46c12a5c88608d6844e0645c8427453d4677b7031e368671a3
+C: PASSED tests/test_v1a_repro.py::test_the_engine_under_test_is_this_tree
+C: 62 passed in 0.45s
+C: named exit 0
+C: ................................................                         [100%]
+C: 480 passed in 88.63s (0:01:28)
+C: supp exit 0
+C: 31
+C: worktree clean after
+C_V1: pin exit 0
+C_V1: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+C_V1: attempt_2 3 ['system', 'user', 'user'] [215, 31914, 4051] msgs 943916367705d286fd37dffeb5b7272d1320bc5b41b68acb406555aec61f52df kwargs 123f6630b63174ef9ec4a46871981e55487543239a4b36415f24c46eac094db2
+C_V1: FAILED tests/test_elicitation_pipeline.py::test_the_elicited_requests_are_byte_identical
+C_V1: 2 failed, 60 passed in 0.47s
+C_V1: named exit 1
+C_V1: FAILED tests/test_prompt_hash_coverage.py::test_elicitation_pass1_hashes_both_attempts
+C_V1: 2 failed, 478 passed in 85.59s (0:01:25)
+C_V1: supp exit 1
+C_V1: 31
+C_V1: worktree clean after
+C_V2: DOES NOT APPLY: V2_hash_only.diff
+error: patch failed: engine/core/effective_config.py:446
+error: engine/core/effective_config.py: patch does not apply
+C_V2: worktree clean after
+C_V2p: pin exit 0
+C_V2p: attempt_1 2 ['system', 'user'] [215, 31914] msgs 402b2b699bedb3c4139a1e3e0677d9dc0ff758dd5fcf3016bd644b3fc0ff8b97 kwargs 32c5900d6358f1da97bed3f77579bfbf82ea6f13254690b8480601a6fc18092a
+C_V2p: attempt_2 2 ['system', 'user'] [215, 35965] msgs 70a67402ed0368ac6559aafcf33425c5330b0c5126bdcd5e6edee38ce650b32d kwargs 307077c9e5b69c46c12a5c88608d6844e0645c8427453d4677b7031e368671a3
+C_V2p: FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+C_V2p: 2 failed, 60 passed in 0.46s
+C_V2p: named exit 1
+C_V2p: FAILED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+C_V2p: 2 failed, 478 passed in 87.59s (0:01:27)
+C_V2p: supp exit 1
+C_V2p: 31
+C_V2p: worktree clean after
+C_V3: DOES NOT APPLY: V3_both.diff
+error: patch failed: engine/core/effective_config.py:446
+error: engine/core/effective_config.py: patch does not apply
+C_V3: worktree clean after
+ALL_DONE
+run_all exit 0

@@ -1,0 +1,58 @@
+diff --git a/engine/core/effective_config.py b/engine/core/effective_config.py
+index 2556237..0b252ef 100644
+--- a/engine/core/effective_config.py
++++ b/engine/core/effective_config.py
+@@ -443,11 +443,11 @@ def render_messages(stage: str, spec: ReviewSpec | None, *,
+         # 12c-E-PIN: both attempts, as the audit stage renders both variants —
+         # attempt 2 is attempt 1's prompt plus the typed feedback block.
+         from engine.elicitation import pipeline as el
+-        messages = el.pass1_messages(el.sentinel_pass1_prompt(spec, codebook_path))
++        messages = el.sentinel_pass1_messages(spec, codebook_path)
+         if el.MAX_PASS1_ATTEMPTS > 1:
+             feedback = el.sentinel_feedback_block(spec, codebook_path)
+-            messages += el.pass1_messages(
+-                el.sentinel_pass1_prompt(spec, codebook_path, feedback=feedback))
++            messages += el.sentinel_pass1_messages(spec, codebook_path)
++            messages.append({"role": "user", "content": feedback})  # 12w-V1A V2'
+         return messages
+     if stage == "vision_parse":
+         from engine.parsers.pdf_parser import vision_messages
+diff --git a/engine/elicitation/pipeline.py b/engine/elicitation/pipeline.py
+index b526725..fb7a203 100644
+--- a/engine/elicitation/pipeline.py
++++ b/engine/elicitation/pipeline.py
+@@ -233,6 +233,21 @@ def _sentinel_codebook(spec, codebook_path) -> tuple[dict, tuple[str, ...], obje
+     return cb.raw, expected_field_names(spec, path), path
+ 
+ 
++def pass1_attempt_messages(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
++                           feedback: str = "") -> list[dict]:
++    """One Pass-1 attempt's complete message list, for (attempt, feedback): the one
++    builder `run_pass1` sends and the `elicitation_pass1` prompt hash renders,
++    the hash calling it with the sentinel inputs (12w-V1A option A)."""
++    return pass1_messages(pass1_prompt(unit_map, codebook, field_names, feedback))
++
++
++def sentinel_pass1_messages(spec, codebook_path=None, feedback: str = "") -> list[dict]:
++    """`pass1_attempt_messages` over the resolver's sentinel text, for the prompt hash."""
++    from engine.core.effective_config import SENTINEL_TEXT
++    codebook, names, _ = _sentinel_codebook(spec, codebook_path)
++    return pass1_attempt_messages(build_unit_map(0, SENTINEL_TEXT), codebook, names, feedback)
++
++
+ def _names_by_class(codebook: dict, field_names: tuple[str, ...]) -> dict[str, list[str]]:
+     grouped = group_by_class(codebook, field_names)
+     return {cls: [f["name"] for f in grouped[cls]] for cls in C.CLASSES}
+@@ -292,8 +307,10 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
+     # R224a(2): this attempt's hash rides in the telemetry dict rather than
+     # changing this function's return shape — `elicit`'s two-attempt loop
+     # already carries telemetry per attempt, in call order.
+-    response, req_hash = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+-                                     return_request_hash=True, **cfg.kwargs())
++    response, req_hash = ollama_chat(
++        paper_id=paper_id,
++        messages=pass1_attempt_messages(unit_map, codebook, field_names, feedback),
++        return_request_hash=True, **cfg.kwargs())
+     raw = response.message.content or ""
+     thinking = getattr(response.message, "thinking", None) or ""
+     pec = getattr(response, "prompt_eval_count", None)

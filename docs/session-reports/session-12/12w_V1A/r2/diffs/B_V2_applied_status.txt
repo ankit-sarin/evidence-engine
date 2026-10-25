@@ -1,0 +1,4 @@
+ M engine/core/effective_config.py
+?? tests/test_elicitation_pass1_runtime_structure.py
+ engine/core/effective_config.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)

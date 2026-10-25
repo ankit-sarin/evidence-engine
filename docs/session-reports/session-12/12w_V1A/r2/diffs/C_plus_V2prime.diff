@@ -1,0 +1,67 @@
+diff --git a/engine/core/effective_config.py b/engine/core/effective_config.py
+index 2556237..e02ebf9 100644
+--- a/engine/core/effective_config.py
++++ b/engine/core/effective_config.py
+@@ -443,12 +443,8 @@ def render_messages(stage: str, spec: ReviewSpec | None, *,
+         # 12c-E-PIN: both attempts, as the audit stage renders both variants —
+         # attempt 2 is attempt 1's prompt plus the typed feedback block.
+         from engine.elicitation import pipeline as el
+-        messages = el.pass1_messages(el.sentinel_pass1_prompt(spec, codebook_path))
+-        if el.MAX_PASS1_ATTEMPTS > 1:
+-            feedback = el.sentinel_feedback_block(spec, codebook_path)
+-            messages += el.pass1_messages(
+-                el.sentinel_pass1_prompt(spec, codebook_path, feedback=feedback))
+-        return messages
++        # 12w-V1A option C: the lists run_pass1 itself sends for the sentinel inputs.
++        return el.sentinel_runtime_messages(spec, codebook_path)
+     if stage == "vision_parse":
+         from engine.parsers.pdf_parser import vision_messages
+         return vision_messages(SENTINEL_IMAGE)
+diff --git a/engine/elicitation/pipeline.py b/engine/elicitation/pipeline.py
+index b526725..dfa835f 100644
+--- a/engine/elicitation/pipeline.py
++++ b/engine/elicitation/pipeline.py
+@@ -233,6 +233,43 @@ def _sentinel_codebook(spec, codebook_path) -> tuple[dict, tuple[str, ...], obje
+     return cb.raw, expected_field_names(spec, path), path
+ 
+ 
++class _SentinelCaptured(Exception):
++    """Raised by the capture stand-in once `run_pass1` has handed over its request."""
++
++
++def sentinel_runtime_messages(spec, codebook_path=None) -> list[dict]:
++    """The message lists `run_pass1` itself builds for the sentinel inputs — attempt 1,
++    then attempt 2 with the sentinel feedback — captured at the name it calls
++    `ollama_chat` by, so no request is made (12w-V1A option C)."""
++    import sys
++    from engine.core.effective_config import SENTINEL_TEXT, stage_config
++    codebook, names, path = _sentinel_codebook(spec, codebook_path)
++    unit_map = build_unit_map(0, SENTINEL_TEXT)
++    cfg = stage_config("elicitation_pass1", spec)
++    feedbacks = [""] + ([sentinel_feedback_block(spec, path)] if MAX_PASS1_ATTEMPTS > 1 else [])
++    sent: list[list[dict]] = []
++
++    def capture(**kw):
++        sent.append(kw["messages"])
++        raise _SentinelCaptured
++
++    module = sys.modules[__name__]
++    real = module.ollama_chat
++    module.ollama_chat = capture
++    try:
++        for feedback in feedbacks:
++            try:
++                run_pass1(unit_map, codebook, names, 0, feedback=feedback, cfg=cfg)
++            except _SentinelCaptured:
++                pass
++    finally:
++        module.ollama_chat = real
++    if len(sent) == 2:  # 12w-V1A V2': attempt 2's feedback as a separate third message, hash only
++        sent[1] = pass1_messages(pass1_prompt(unit_map, codebook, names)) + [
++            {"role": "user", "content": feedbacks[1]}]
++    return [m for attempt in sent for m in attempt]
++
++
+ def _names_by_class(codebook: dict, field_names: tuple[str, ...]) -> dict[str, list[str]]:
+     grouped = group_by_class(codebook, field_names)
+     return {cls: [f["name"] for f in grouped[cls]] for cls in C.CLASSES}

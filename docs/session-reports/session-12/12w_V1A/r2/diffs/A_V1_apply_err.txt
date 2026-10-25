@@ -1,0 +1,2 @@
+error: patch failed: engine/elicitation/pipeline.py:287
+error: engine/elicitation/pipeline.py: patch does not apply

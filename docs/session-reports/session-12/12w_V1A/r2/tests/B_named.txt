@@ -1,0 +1,78 @@
+................................................................         [100%]
+==================================== PASSES ====================================
+________________ test_pass_2_is_skipped_when_no_field_survived _________________
+------------------------------ Captured log call -------------------------------
+WARNING  engine.elicitation.pipeline:pipeline.py:570 Paper 7: no field met its evidence contract — 2 CONTRACT_UNMET, 0 escape. Pass 2 skipped; the terminal states are the extraction.
+________________ test_retry_is_bounded_and_the_paper_is_failed _________________
+------------------------------ Captured log call -------------------------------
+WARNING  engine.agents.extractor:extractor.py:914 Paper 1 (deepseek-r1:32b): CONTRACT attempt 1/3 — Paper 1 (deepseek-r1:32b): 1 field(s) carry a value with no evidence [mode=strict, attempt 1]. robot_platform (VALUE_WITHOUT_CITATION). Re-issuing identical request.
+WARNING  engine.agents.extractor:extractor.py:914 Paper 1 (deepseek-r1:32b): CONTRACT attempt 2/3 — Paper 1 (deepseek-r1:32b): 1 field(s) carry a value with no evidence [mode=strict, attempt 2]. robot_platform (VALUE_WITHOUT_CITATION). Re-issuing identical request.
+WARNING  engine.agents.extractor:extractor.py:914 Paper 1 (deepseek-r1:32b): CONTRACT attempt 3/3 — Paper 1 (deepseek-r1:32b): 1 field(s) carry a value with no evidence [mode=strict, attempt 3]. robot_platform (VALUE_WITHOUT_CITATION). Re-issuing identical request.
+ERROR    engine.agents.extractor:extractor.py:945 Paper 1 (deepseek-r1:32b): refused on all 3 attempts and no attempt produced a record — the paper fails. Paper 1 (deepseek-r1:32b): 1 field(s) carry a value with no evidence [mode=strict, attempt 3]. robot_platform (VALUE_WITHOUT_CITATION)
+=========================== short test summary info ============================
+PASSED tests/test_prompt_hash_coverage.py::test_a_priming_template_edit_moves_the_elicited_pass2_hash[build_pass2_priming_message]
+PASSED tests/test_prompt_hash_coverage.py::test_a_priming_template_edit_moves_the_elicited_pass2_hash[priming_block]
+PASSED tests/test_prompt_hash_coverage.py::test_a_priming_template_edit_moves_the_elicited_pass2_hash[evidence_block]
+PASSED tests/test_prompt_hash_coverage.py::test_a_feedback_block_edit_moves_the_elicitation_pass1_hash
+PASSED tests/test_prompt_hash_coverage.py::test_each_violation_requirement_text_is_hashed[ESCAPE_WITH_CITATION]
+PASSED tests/test_prompt_hash_coverage.py::test_each_violation_requirement_text_is_hashed[FIELD_MISSING]
+PASSED tests/test_prompt_hash_coverage.py::test_each_violation_requirement_text_is_hashed[INDEX_MALFORMED]
+PASSED tests/test_prompt_hash_coverage.py::test_each_violation_requirement_text_is_hashed[INDEX_OUT_OF_RANGE]
+PASSED tests/test_prompt_hash_coverage.py::test_each_violation_requirement_text_is_hashed[INFERENCE_MALFORMED]
+PASSED tests/test_prompt_hash_coverage.py::test_each_violation_requirement_text_is_hashed[INFERENCE_MISSING]
+PASSED tests/test_prompt_hash_coverage.py::test_each_violation_requirement_text_is_hashed[STEPS_MISSING]
+PASSED tests/test_prompt_hash_coverage.py::test_each_violation_requirement_text_is_hashed[STEP_WITHOUT_BASIS]
+PASSED tests/test_prompt_hash_coverage.py::test_each_violation_requirement_text_is_hashed[VALUE_MISSING]
+PASSED tests/test_prompt_hash_coverage.py::test_each_violation_requirement_text_is_hashed[VALUE_WITHOUT_CITATION]
+PASSED tests/test_prompt_hash_coverage.py::test_each_class_accompaniment_is_hashed[stated]
+PASSED tests/test_prompt_hash_coverage.py::test_each_class_accompaniment_is_hashed[inferable]
+PASSED tests/test_prompt_hash_coverage.py::test_each_class_accompaniment_is_hashed[judgment]
+PASSED tests/test_prompt_hash_coverage.py::test_the_echo_truncation_marker_is_hashed
+PASSED tests/test_prompt_hash_coverage.py::test_the_feedback_sentinel_carries_every_fatal_code
+PASSED tests/test_prompt_hash_coverage.py::test_the_feedback_sentinel_carries_every_class_accompaniment
+PASSED tests/test_prompt_hash_coverage.py::test_the_feedback_sentinel_carries_every_line_template
+PASSED tests/test_prompt_hash_coverage.py::test_elicitation_pass1_hashes_both_attempts
+PASSED tests/test_prompt_hash_coverage.py::test_the_priming_sentinel_carries_every_reachable_branch
+PASSED tests/test_prompt_hash_coverage.py::test_extract_pass2_hash_differs_between_configurations
+PASSED tests/test_elicitation_pipeline.py::test_stored_snippet_is_the_engines_materialized_text_not_pass2s
+PASSED tests/test_elicitation_pipeline.py::test_values_come_from_pass2
+PASSED tests/test_elicitation_pipeline.py::test_reasoning_trace_is_the_materialized_evidence
+PASSED tests/test_elicitation_pipeline.py::test_pass1_is_read_from_the_content_channel
+PASSED tests/test_elicitation_pipeline.py::test_unit_map_is_persisted_per_paper_per_run
+PASSED tests/test_elicitation_pipeline.py::test_a_failing_field_is_refused_and_the_rest_of_the_paper_is_stored
+PASSED tests/test_elicitation_pipeline.py::test_an_uncited_value_is_never_stored_as_a_value
+PASSED tests/test_elicitation_pipeline.py::test_pass_2_is_skipped_when_no_field_survived
+PASSED tests/test_elicitation_pipeline.py::test_telemetry_carries_the_per_field_citation_record
+PASSED tests/test_elicitation_pipeline.py::test_elicitation_is_off_by_default
+PASSED tests/test_elicitation_pipeline.py::test_dispatch_follows_the_spec_flag
+PASSED tests/test_elicitation_pipeline.py::test_write_guard_also_fires_on_the_elicited_path
+PASSED tests/test_elicitation_pipeline.py::test_retry_is_bounded_and_the_paper_is_failed
+PASSED tests/test_elicitation_pipeline.py::test_the_completeness_predicate_and_the_contracts_share_one_field_set
+PASSED tests/test_elicitation_pipeline.py::test_the_accepted_attempt_and_both_attempts_reach_telemetry
+PASSED tests/test_elicitation_pipeline.py::test_both_pass1_attempts_raw_responses_reach_telemetry
+PASSED tests/test_elicitation_pipeline.py::test_the_elicited_requests_are_byte_identical
+PASSED tests/test_elicitation_pipeline.py::test_an_escape_record_never_reaches_the_priming_input
+PASSED tests/test_feedback_block.py::test_it_names_the_field_the_code_the_output_and_the_requirement
+PASSED tests/test_feedback_block.py::test_clean_fields_are_not_mentioned
+PASSED tests/test_feedback_block.py::test_no_failing_fields_means_no_block
+PASSED tests/test_feedback_block.py::test_the_requirement_is_class_specific
+PASSED tests/test_feedback_block.py::test_it_offers_the_escape_token_on_every_uncited_value
+PASSED tests/test_feedback_block.py::test_it_teaches_directly_stated_on_an_inferable_failure
+PASSED tests/test_feedback_block.py::test_unresolved_indices_are_echoed_verbatim
+PASSED tests/test_feedback_block.py::test_the_echo_is_capped_and_the_truncation_is_visible
+PASSED tests/test_feedback_block.py::test_a_short_value_is_not_marked
+PASSED tests/test_feedback_block.py::test_it_is_deterministic
+PASSED tests/test_feedback_block.py::test_it_demands_a_full_replacement_not_a_patch
+PASSED tests/test_feedback_block.py::test_it_names_no_field_of_its_own
+PASSED tests/test_feedback_block.py::test_the_out_of_range_requirement_states_the_real_range
+PASSED tests/test_u37_feedback_block.py::test_u37_the_feedback_header_names_every_schema_field
+PASSED tests/test_u37_feedback_block.py::test_u37_the_output_instruction_is_repeated_after_the_feedback
+PASSED tests/test_u37_feedback_block.py::test_u37_attempt_1_prompt_text_is_unchanged
+PASSED tests/test_u37_feedback_block.py::test_u37_the_non_elicited_pin_is_unchanged
+PASSED tests/test_u37_feedback_block.py::test_u37_a_non_stated_feedback_block_still_lists_only_its_failed_fields_codes
+PASSED tests/test_elicitation_pass1_runtime_structure.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+PASSED tests/test_elicitation_pass1_runtime_structure.py::test_the_engine_under_test_is_this_tree
+PASSED tests/test_v1a_repro.py::test_elicitation_pass1_hash_renders_the_runtime_message_lists
+PASSED tests/test_v1a_repro.py::test_the_engine_under_test_is_this_tree
+64 passed in 0.48s
+named exit 0

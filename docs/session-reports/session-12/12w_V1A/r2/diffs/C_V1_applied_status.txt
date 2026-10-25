@@ -1,0 +1,5 @@
+ M engine/core/effective_config.py
+ M engine/elicitation/pipeline.py
+ engine/core/effective_config.py |  8 ++------
+ engine/elicitation/pipeline.py  | 41 +++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 41 insertions(+), 8 deletions(-)

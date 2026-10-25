@@ -1,0 +1,6 @@
+head {"attempt_1": {"pass1_feedback_chars": 0, "pass1_prompt_chars": 31914}, "attempt_2": {"pass1_feedback_chars": 4051, "pass1_prompt_chars": 35965}}
+A {"attempt_1": {"pass1_feedback_chars": 0, "pass1_prompt_chars": 31914}, "attempt_2": {"pass1_feedback_chars": 4051, "pass1_prompt_chars": 35965}}
+B {"attempt_1": {"pass1_feedback_chars": 0, "pass1_prompt_chars": 31914}, "attempt_2": {"pass1_feedback_chars": 4051, "pass1_prompt_chars": 35965}}
+C {"attempt_1": {"pass1_feedback_chars": 0, "pass1_prompt_chars": 31914}, "attempt_2": {"pass1_feedback_chars": 4051, "pass1_prompt_chars": 35965}}
+V1 {"attempt_1": {"pass1_feedback_chars": 0, "pass1_prompt_chars": 31914}, "attempt_2": {"pass1_feedback_chars": 4051, "pass1_prompt_chars": 31914}}
+A_V3p {"attempt_1": {"pass1_feedback_chars": 0, "pass1_prompt_chars": 31914}, "attempt_2": {"pass1_feedback_chars": 4051, "pass1_prompt_chars": 35965}}

@@ -1,0 +1,73 @@
+diff --git a/tests/test_elicitation_pass1_runtime_structure.py b/tests/test_elicitation_pass1_runtime_structure.py
+new file mode 100644
+index 0000000..ff9fc90
+--- /dev/null
++++ b/tests/test_elicitation_pass1_runtime_structure.py
+@@ -0,0 +1,67 @@
++"""12w-V1A Q6 — acceptance-test candidate for INT-v12-1 (not under tests/; not part of the gate).
++
++The invariant: for the sentinel inputs, the message lists `run_pass1` sends at runtime —
++attempt 1 with no feedback, attempt 2 with the sentinel feedback block — are, in order and
++byte for byte, the list `render_messages("elicitation_pass1")` hashes. A structure change
++made on one side only (a third message, a reordered role, the feedback moved to another
++message) makes the two differ, whichever side it is made on.
++
++The runtime side is captured through a stand-in for `ollama_chat` at the name `run_pass1`
++looks it up by; no server is reached.
++"""
++
++from __future__ import annotations
++
++from types import SimpleNamespace
++
++import pytest
++
++from engine.core import effective_config as ec
++from engine.core.codebook import load_codebook
++from engine.core.review_paths import load_spec_for
++from engine.elicitation import pipeline as PL
++from engine.elicitation.units import build_unit_map
++
++LIVE_CODEBOOK = "data/surgical_autonomy/extraction_codebook.yaml"
++
++
++@pytest.fixture(scope="module")
++def elicited():
++    spec = load_spec_for("surgical_autonomy")
++    em = spec.extraction_models.model_copy(update={"elicitation": True})
++    return spec.model_copy(update={"extraction_models": em})
++
++
++def _runtime_sentinel_lists(spec, cb_path, monkeypatch):
++    sent = []
++
++    def fake(**kw):
++        sent.append(kw["messages"])
++        return SimpleNamespace(message=SimpleNamespace(content="{}", thinking=""),
++                               prompt_eval_count=1, done_reason="stop"), "h"
++
++    monkeypatch.setattr(PL, "ollama_chat", fake)
++    codebook, names, path = PL._sentinel_codebook(spec, cb_path)
++    um = build_unit_map(0, ec.SENTINEL_TEXT)
++    cfg = ec.stage_config("elicitation_pass1", spec)
++    PL.run_pass1(um, codebook, names, 0, cfg=cfg)
++    if PL.MAX_PASS1_ATTEMPTS > 1:
++        PL.run_pass1(um, codebook, names, 0, cfg=cfg,
++                     feedback=PL.sentinel_feedback_block(spec, path))
++    return sent
++
++
++def test_elicitation_pass1_hash_renders_the_runtime_message_lists(elicited, monkeypatch):
++    cb = load_codebook(LIVE_CODEBOOK)
++    sent = _runtime_sentinel_lists(elicited, cb.path, monkeypatch)
++    rendered = ec.render_messages("elicitation_pass1", elicited, codebook_path=cb.path)
++    runtime = [m for attempt in sent for m in attempt]
++    assert [m["role"] for m in runtime] == [m["role"] for m in rendered]
++    assert runtime == rendered
++
++
++def test_the_engine_under_test_is_this_tree():
++    """Q2/I3: the run imports the engine of the tree it is run in."""
++    import os
++    import engine
++    assert os.path.realpath(engine.__file__).startswith(os.path.realpath(os.getcwd()) + os.sep)

@@ -1,0 +1,31 @@
+RULING [evidence-engine 12w-R708] — the stop at 1c upheld; INT-w12-1's text cell is sentence (a);
+  the second places go in the evidence cell; 12w-CLOSE resumes at 1a
+STATUS: PI ruling, 2026-10-25 UTC, session 12w, on architect recommendation, on the 12w-CLOSE report
+  stopped at 1c (nothing committed; HEAD 8659035). Transcribe as Block 106 at item 0 of the
+  resume below, in the same commit as Block 105, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12w-CLOSE stopped report):
+  MEASURED: "r707.txt was written from Section 1 and matches: f5b9e6c0…bdb7, 5,121 B, 63 lines,
+    one trailing newline"; "I moved it to /home/ankitsarin/scratch/12w-close/r707.txt"; "The
+    fingerprint read IDENTICAL at 04:04:53Z".
+  READ (CC's, quoting 12w_V1A_q4_stopped.md §Q3): (a) "So a message appended, dropped or
+    reordered at the call site, after the builder returns, is invisible to its prompt_hash at
+    every stage."; (b) "Three stages have a second place:"; (c) "elicitation_pass1 and audit:
+    the render concatenates variants the runtime sends as separate calls, so how many variants
+    exist is decided in two places.", "The Anthropic arm: it reshapes the list at runtime.",
+    "preflight: its expression is duplicated."; "Sentence (b) says "Three stages", but the list
+    names four stages".
+  INFERRED: none.
+
+R708(a) — The stop is upheld. The brief's I4 assumed one sentence carried both halves of the
+  claim; that was an architect error, not CC's (the fourth of this session, R707(a)'s family).
+R708(b) — INT-w12-1's text cell is sentence (a), quoted unchanged. Its evidence cell is
+  "12w_V1A_q4_stopped.md §Q3 (read, not exercised)", followed by the three bullets of (c), each
+  quoted unchanged, introduced as "second places named in the record:". R707(e)'s "with the
+  three named second places" is met by the evidence cell.
+R708(c) — The record's "Three stages have a second place:" names four stages (elicitation_pass1
+  and audit share the first bullet). A note in the row's evidence cell says so; the record is not
+  edited. No row.
+R708(d) — 12w-CLOSE resumes at 1a under the resume below: r707.txt is copied back from
+  ~/scratch/12w-close/r707.txt and its hash re-verified; Blocks 105 and 106 are transcribed in
+  the one item-0 commit; no other clause of the brief changes.

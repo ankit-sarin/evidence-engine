@@ -1,0 +1,63 @@
+RULING [evidence-engine 12w-R707] — V1A's second stop upheld; predictions are not expected values;
+  INT-v12-1's fix is option B as U39; INT-w12-1 opened; session 12w closes under the 12w-CLOSE
+  brief below
+STATUS: PI ruling, 2026-10-25 UTC, session 12w, on architect recommendation, on the 12w-V1A resume
+  report stopped at Q4 (record 8659035). Transcribe as Block 105 at item 0 of the 12w-CLOSE brief
+  below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12w-V1A resume report):
+  MEASURED: "Commit: 7457b28 (parent a0f2323). Numstat 61 added / 1 removed"; "r706.txt:
+    4a56d094…22de, 4,008 B, 49 lines, equal to the architect's hash"; "git ls-files lists
+    data/surgical_autonomy/extraction_codebook.yaml"; "B: a structure change landed so B's test
+    stays green (B+V3) moves the elicited pin to 8f66789a…ec0f"; "B+V1 leaves the pin at
+    d70bf688…59f0 with B failing"; "A+V1′ leaves the pin unchanged"; "No option changes a
+    request byte or pass1_prompt_chars on its own"; "Hash-only (V2-type) changes move the pin
+    under every option, with no request byte changed"; "Commit: 8659035 (parent 7457b28), 105
+    files, all under 12w_V1A/"; ledgers 9fa193a and 352fdca; "wt2 removed".
+  READ (CC's): "At every stage, the runtime list and the hashed list come from one shared
+    builder. So, as V1 showed for one stage, a change made at the call site after the builder
+    returns is invisible to that stage's prompt hash"; "elicitation_pass1 and audit: the render
+    joins variants the runtime sends as separate calls"; "The Anthropic arm: it reshapes the
+    list at runtime"; "preflight: its expression is duplicated"; "Only elicitation_pass1's
+    exposure has been exercised"; "C's capture doesn't see elicit's loop (read, not
+    exercised)".
+  INFERRED: none.
+
+R707(a) — The stop is upheld. R706(d)'s "A and C should; B alone does not" was the architect's
+  prediction written as an expected value; that was an architect error, not CC's (as R703's I3
+  fallback and V1A's Q2 test were). From here a ruling or brief states a predicted outcome only
+  as "to be measured", never as an expected value that gates a stop, unless the brief names it
+  as an acceptance criterion.
+R707(b) — B's cell is read as measured: B adds no pin coverage of its own, and it makes a
+  structure change on one side fail, so a change that lands green has changed both sides and
+  moved the pin. A covers changes inside its builder only and leaves telemetry apart from what is
+  sent after such a change (finding 7); C misses hash-only changes and elicit's loop.
+R707(c) — INT-v12-1's Phase A closes on what is in hand: the records 12w_V1A_q2_stopped.md and
+  12w_V1A_q4_stopped.md are its read-out. Q7 is answered from Q4: no option changes a request
+  byte, so no rehearsal is required (R703(k)). Q5 is answered by Q3's census as read.
+R707(d) — INT-v12-1's fix is option B, unit U39 (P1's fix units 36 → 37, by the dated lines):
+  an equality test that, for the sentinel feedback, the runtime-built message lists of both
+  attempts (captured through a mocked ollama_chat) equal the lists the prompt hash renders, byte
+  for byte; the Q6 candidate is its seed. No engine change, no pin move, no request-byte change.
+  This reverses, on the measurement, R694(g)'s "its fix is pin coverage of the structure": the
+  fix is coverage enforced by an equality test between the runtime path and the hash path. A
+  dated note on INT-v12-1 records this.
+R707(e) — Row INT-w12-1 is opened at the 12w-CLOSE item 0 in a section "L (12w additions,
+  R707)" in the R672(f) form, its text cell quoted from 12w_V1A_q4_stopped.md's Q3 (the
+  sentence that a call-site change after the shared builder returns is invisible to the stage's
+  prompt hash at every stage, with the three named second places), Class 2, P1, governing
+  R707(e), evidence that record §Q3 (read, not exercised). Its fix is B's equality test
+  extended to every hashed stage on the local run path, in U39; the Anthropic arm's runtime
+  reshaping stays open on the row for the cloud cut-over (F15). Recount 279 → 280: Class 1 / 2
+  / 3 = 94 / 55 / 131, 0 unclassed; P1 61 (25 / 24 / 12). R510 for 12w: rows in 1
+  (INT-w12-1), rows out 0, no class move; INT-i12-45 CLOSED and counted.
+R707(f) — Readings, no row: the codebook is tracked, so the first worktree's copy was redundant
+  and the timestamps are explained; finding 7 (pass1_prompt_chars apart from the sent text under
+  A) is recorded with option A's rejection.
+R707(g) — The band series on this host state: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58,
+  882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20 s. The closeout computes ±10% of the
+  mean of the last four standard gates (883.80, 878.55, 888.65, 885.20) and reports it; the
+  wrap ruling sets the band for 12x (R683(c) form).
+R707(h) — Session 12w closes under the 12w-CLOSE brief below, in the 12v-CLOSE form, without the
+  two scheduled-job reads (12x-OPEN reads the 2026-10-25 jobs). Next after the close: 12x-OPEN;
+  then U39 (INT-v12-1 and INT-w12-1's local half) with its Phase 1; then U18.

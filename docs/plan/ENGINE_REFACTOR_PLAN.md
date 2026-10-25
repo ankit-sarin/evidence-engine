@@ -9893,3 +9893,61 @@ R704(f) — 12w-U17B resumes at step 3 under the resume below; no other clause o
 | 2026-10-24 | R704(a) — The stop is upheld. The brief's I3 offered "record null" as a fallback that contradicted its own T3 and R703(c); that was an architect error, not CC's. R704(b) — R703(c)'s sentence recording the server's family string, and R703(f)'s "and server family (or null)", are withdrawn. The manifest records, for each declared stage, its model and declared lineage, and for the audit-only path the extractor's source (pin or spec). Reason: the model digest the manifest already records identifies the served weights exactly; the family string is never compared (R703(b)) and would add a field the rule does not use, at the cost of widening U17 into engine/utils/ollama_client.py and the 15 test files that patch fetch_model_digest, or of a field that always reads null. Options (i) and (ii) are rejected. R704(c) — T3 is amended: the live pairing opens, and manifest_json records, per declared stage, model and lineage; no server-family key is written. T10 is amended the same way (a cloud model in the map with its provider lineage loads; no server-family key). The Phase 1 record at 098fc74 is not edited; the fix commit's test file carries the amendment, listed with this ruling as its reason (step 3c). R704(d) — I1 and I2 are accepted as measured: the seven-model map (qwen3:8b, qwen3:32b, qwen2.5vl:7b and deepseek-r1:32b qwen; gemma3:27b gemma; o4-mini-2025-04-16 openai; claude-sonnet-4-6 anthropic); the five test ids to rewrite under their ids (test_cloud_extraction.py::TestSpecDrivenConfig::test_openai_reads_from_spec and ::test_anthropic_reads_from_spec; test_exporters.py::test_methods_counts_papers_not_calls, ::test_methods_uses_db_audit_model and ::test_methods_uses_db_extraction_model), each given a map entry for its fixture model rather than a weakened assertion. R704(e) — Readings, no row: (i) ledger 5a9ae9e's message timestamp (17:12:22Z) differs from its row (17:11:21Z); the row is the record; the message stands, not amended. (ii) The second wait at the census broke R702(b)(ii): one wait means one waiting process of any kind, foreground or background, for one job. (iii) The census cannot see a test asserting a manifest-body key is absent; the grep found none. R704(f) — 12w-U17B resumes at step 3 under the resume below; no other clause of the brief changes except as R704(b)–(d) amend it. | PI, 2026-10-24, during session 12w, on architect recommendation, on the 12w-U17B report stopped before step 3 (098fc74) |
 
 The decision log in this file ends at R704.
+
+**Block 103.** *Transcribed 2026-10-25 (item 0 of the 12w-V1A brief), in its own commit, in the R597(e) form:* ruling R705, made by PI on architect recommendation on 2026-10-25 UTC, during session 12w, on the 12w-U17B final report (read-out `c5ab50579bbad95246e3d54bb6769da7fa14c43c`). The 12w-V1A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12w-R705] — U17B accepted; INT-i12-45 CLOSED stands; the 12w R510 line
+  stated; a failing check is a stop; INT-v12-1's Phase A opens under the brief below
+STATUS: PI ruling, 2026-10-25 UTC, session 12w, on architect recommendation, on the 12w-U17B final
+  report (read-out c5ab505). Transcribe as Block 103 at item 0 of the 12w-V1A brief below, not
+  now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12w-U17B final report):
+  MEASURED: "Commit: ac55c4f (parent 098fc74)"; "r704.txt: f4715865…2809, 3,746 B, 48 lines,
+    equal to the architect's hash"; "Fix: e81d699, parent ac55c4f"; "effective_config.py and
+    ollama_client.py are untouched"; "The live spec's sha256 is now
+    aeb90ba8983aa700fea0d4c47d3d764fa7ccd3a1e9c717e232ddadf03c298b33"; "spec_hash moves to
+    9b18f36cec0a…58fb"; "Both pins, every prompt hash and every options hash are unchanged;
+    screening_hash stays at e8fa9719…3596"; "Gate, run 1: 885.49 s, 1 failed (the run-fault
+    test), exit 1"; "==== 3375 passed, 17 deselected, 1 xfailed, 2 warnings in 883.39s
+    (0:14:43) ===="; "collected 3,393 / selected 3,376"; "Ids: the reference plus 17 new ids";
+    "885.20 s"; "Journal window 0 lines"; "Read-out: c5ab505, parent e81d699"; "Recount:
+    byte-identical to 12v_close's"; "fix_units 35 (script field) / 36, done 19 (dated lines)";
+    ledgers f97adca, b571c65, e87f7b9.
+  READ (CC's): "4 more come from the run-fault parametrisation [ModelLineageMissing|
+    SameLineageVerifier] × 2 tests"; "I regenerated docs/inventory/ although the brief doesn't
+    list it"; "My first tree check compared a hash that changes when files are staged … I
+    changed the check to compare HEAD and each file's sha256, and the commit was conditioned on
+    that version"; "R510 shows rows in 1, rows out 0".
+  INFERRED: none.
+
+R705(a) — 12w-U17B is accepted as reported: item 0 as ac55c4f (Block 102); U17 as e81d699; the
+  read-out and closure as c5ab505; the ledgers f97adca, b571c65 and e87f7b9. INT-i12-45 CLOSED
+  (R703(i)) stands; P1's fix units 36, done 19.
+R705(b) — The 17 new ids (13 of U17's file, 4 from the run-fault parametrisation) and the sixth
+  rewrite (test_run_fault_predicate.py::test_the_declared_run_fault_tuple_is_the_handoffs) are
+  R690(b)–(c) applied as written. Readings, no row.
+R705(c) — The inventory regeneration is accepted (U38's precedent at 731ebf2). From here a fix
+  brief that edits engine/ lists docs/inventory/ among its touched paths.
+R705(d) — The tree check: the first version failed and was revised before the commit. The
+  revision is accepted on its evidence (HEAD and every file's sha256 equal to the gate-launch
+  record). From here a check command that fails is a stop, including when the check itself is
+  at fault; the revised check is proposed in the report and run only under a ruling.
+R705(e) — The R510 line for session 12w so far: rows in 0, rows out 0, no class move;
+  INT-i12-45 CLOSED and counted (R607(d)). The recount script's "rows in 1" describes 12v, not
+  12w; it is quoted, not adopted.
+R705(f) — The band series gains the U17 gate: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58,
+  882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20 s (run 1's 885.49 s, a failed gate, is
+  not a reading). The band stays 803–981 s until the 12w closeout.
+R705(g) — INT-v12-1's Phase A opens under the brief below (R703(k)). Its row's text is INFERRED
+  "from the code; not exercised"; the Phase A first establishes whether the gap is real by
+  exercising it on a scratch copy, then lays out fix options with what each catches and misses
+  and whether each moves the elicited pin or any request byte. It does not choose.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-25 | R705(a) — 12w-U17B is accepted as reported: item 0 as ac55c4f (Block 102); U17 as e81d699; the read-out and closure as c5ab505; the ledgers f97adca, b571c65 and e87f7b9. INT-i12-45 CLOSED (R703(i)) stands; P1's fix units 36, done 19. R705(b) — The 17 new ids (13 of U17's file, 4 from the run-fault parametrisation) and the sixth rewrite (test_run_fault_predicate.py::test_the_declared_run_fault_tuple_is_the_handoffs) are R690(b)–(c) applied as written. Readings, no row. R705(c) — The inventory regeneration is accepted (U38's precedent at 731ebf2). From here a fix brief that edits engine/ lists docs/inventory/ among its touched paths. R705(d) — The tree check: the first version failed and was revised before the commit. The revision is accepted on its evidence (HEAD and every file's sha256 equal to the gate-launch record). From here a check command that fails is a stop, including when the check itself is at fault; the revised check is proposed in the report and run only under a ruling. R705(e) — The R510 line for session 12w so far: rows in 0, rows out 0, no class move; INT-i12-45 CLOSED and counted (R607(d)). The recount script's "rows in 1" describes 12v, not 12w; it is quoted, not adopted. R705(f) — The band series gains the U17 gate: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20 s (run 1's 885.49 s, a failed gate, is not a reading). The band stays 803–981 s until the 12w closeout. R705(g) — INT-v12-1's Phase A opens under the brief below (R703(k)). Its row's text is INFERRED "from the code; not exercised"; the Phase A first establishes whether the gap is real by exercising it on a scratch copy, then lays out fix options with what each catches and misses and whether each moves the elicited pin or any request byte. It does not choose. | PI, 2026-10-25, during session 12w, on architect recommendation, on the 12w-U17B final report (c5ab505) |
+
+The decision log in this file ends at R705.

@@ -1,0 +1,5 @@
+I3 sys.path[0:2]: ['.', '/home/ankitsarin/scratch/12w-v1a/i3']
+I3 engine modules imported: 38
+I3 engine.__file__: /home/ankitsarin/scratch/12w-v1a/wt/engine/__init__.py
+I3 engine.elicitation.pipeline: /home/ankitsarin/scratch/12w-v1a/wt/engine/elicitation/pipeline.py
+I3 modules outside this tree: []

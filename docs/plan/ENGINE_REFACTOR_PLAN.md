@@ -10583,3 +10583,67 @@ R714(d) — The audit and pdf_quality Phase A (R712(f)) opens under the 12x-AQA 
 | 2026-10-26 | R714(a) — U39 is accepted as landed: item 0 305868f (Block 110), the test commit 1ebb3ae, the notes commit 6368069, the ledgers f5360dc, 2fac7d9 and aa5b6f5. INT-v12-1 is CLOSED on 1ebb3ae and counted until P1 closes (R607(d)). INT-w12-1 stays open (R712(g)). P1's fix units 37, done 20 by the dated lines; rows 280 (94 / 55 / 131, 0 unclassed). R714(b) — The band series gains 941.74 s, recorded beside three concurrent surgical-cv pytest runs (its confounder): 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74 s. The band for 12x stays 796–972 s. R714(c) — Readings, no row: ten non-audit keys, not eleven (the brief's count was the architect's; the census governs); the before-gate reads at 3.4 s, a deviation with an empty journal window; the landed file's first docstring line names Phase 1 and scratch, corrected by quoted text at the next commit that touches that file; the chained recount script's fix_units_dated_lines field is a literal reading done 19, so the dated lines are the count of record (R701(c)) and the script is not edited (R678(f)). R714(d) — The audit and pdf_quality Phase A (R712(f)) opens under the 12x-AQA brief below, read-only. R713 and this ruling are transcribed at its item 0 as Blocks 111 and 112. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-U39B final report as resumed under R713 (6368069) |
 
 The decision log in this file ends at R714.
+
+**Block 113.** *Transcribed 2026-10-26 (item 0 of the 12x-U39C brief), in its own commit, in the R597(e) form:* ruling R715, made by PI on architect recommendation on 2026-10-26 UTC, during session 12x, on the 12x-AQA final report (record `b571aaf028c80d21f71a2307950e33e52afb2fe8`). The 12x-U39C brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12x-R715] — 12x-AQA accepted; audit's hash coverage complete, no engine
+  change; U39's audit test extended over the codebook's types; pdf_quality noted on INT-j12-15
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-AQA final
+  report (record b571aaf028c80d21f71a2307950e33e52afb2fe8). Transcribe as Block 113 at item 0 of
+  the 12x-U39C brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-AQA final report):
+  MEASURED: "6cb6ad62cefad6a6562f11fd31df635160b11193, parent 6368069"; "Numstat +86 / −0;
+    10,585 lines = 10,499 + 86; plan ce446d7f…1bc3, 2,040,287 B"; "Ledger 528f95c, parent
+    aa5b6f5, row 04:36:06Z, carrying the foreign row 18ee82d as found"; "build_audit_messages
+    has one branch, if field_type == "categorical": versus else:"; "The codebook allows only
+    categorical, numeric and free_text (VALID_FIELD_TYPES), and the loader refuses any other
+    value"; "With both substituted values normalised, all 20 fields match their branch's
+    rendered variant byte for byte"; "O0, no change | d972c46d…838d"; "O1 … a1d355d4…a491 …
+    no … fails"; "O2 … 86098ebd…2c49 … no … fails"; "One write site, a raw UPDATE papers of
+    pdf_ai_language, pdf_ai_content_type, pdf_ai_confidence and pdf_quality_check_status =
+    'AI_CHECKED'"; "Quality status: none 9,658, HUMAN_CONFIRMED 364, AI_CHECKED 17";
+    "Confidence: 381 non-null"; "b571aaf028c80d21f71a2307950e33e52afb2fe8, parent 6cb6ad6, 27
+    files under 12x_AQA/"; "Ledger 1c190b3".
+  READ (CC's): "The only entry point is python -m engine.acquisition.pdf_quality_check"; "it
+    would be refused (UndeclaredCall), since no manifest declares pdf_quality; read, not
+    exercised"; INT-j12-15: "pdf_quality_check makes model calls outside any run manifest; the
+    stored classification has no model, digest, prompt or run"; "pdf_quality records no time
+    for its classifications".
+  INFERRED: none.
+
+R715(a) — 12x-AQA is accepted: item 0 6cb6ad6 (Blocks 111 and 112), the record b571aaf, the
+  ledgers 528f95c (foreign row 18ee82d carried as found) and 1c190b3.
+R715(b) — Audit: the runtime differs from the rendered variants only in substituted values (the
+  field name and the field-type word); the template coverage of audit's prompt_hash is complete
+  at HEAD. No engine change: O1–O4 are not taken; audit's prompt_hash stays d972c46d…838d.
+R715(c) — The variant set is still decided in two places (the render's literals, the builder's
+  condition), so a new branch for numeric or free_text would be seen by neither the hash nor
+  U39's audit test. U39's audit test is extended, test-only: for every type in
+  VALID_FIELD_TYPES, the runtime list for a field of that type equals one rendered variant once
+  the field name and the field-type word are normalised, and the number of distinct normalised
+  runtime lists equals the number of rendered variants. It must pass on HEAD and fail under a
+  mutation that adds a numeric-only branch to the builder. It lands in
+  tests/test_u39_runtime_equals_hash.py with R714(c)'s docstring correction, under its existing
+  id or as one new id, whichever keeps the existing test unchanged in what it asserts.
+R715(d) — INT-w12-1: on landing, a dated note — every hashed stage on the local run path is
+  covered, audit included (12x_AQA A3; the extended test); the row stays open for the Anthropic
+  arm only (F15).
+R715(e) — pdf_quality: a dated note on INT-j12-15 carrying 12x_AQA P1–P5 (one entry point,
+  outside any manifest, refused under a run; a raw UPDATE of four columns with no event, model,
+  run or time; on live 381 classifications, 17 AI_CHECKED and 364 HUMAN_CONFIRMED). Class and
+  package unchanged; whether the render branch is retired or the stage gets a manifest is P4's.
+  No new row.
+R715(f) — Readings, no row: "text" is not a codebook type, so the "text" fallbacks are
+  unreachable through a loaded codebook; A3's two specified columns were false by the brief's
+  design (the architect's), the normalised column governs; the baseline audit hash equals B23's
+  record. U39's extension is not a new unit; P1's fix units stay 37, done 20.
+R715(g) — The 12x-U39C brief below opens.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-26 | R715(a) — 12x-AQA is accepted: item 0 6cb6ad6 (Blocks 111 and 112), the record b571aaf, the ledgers 528f95c (foreign row 18ee82d carried as found) and 1c190b3. R715(b) — Audit: the runtime differs from the rendered variants only in substituted values (the field name and the field-type word); the template coverage of audit's prompt_hash is complete at HEAD. No engine change: O1–O4 are not taken; audit's prompt_hash stays d972c46d…838d. R715(c) — The variant set is still decided in two places (the render's literals, the builder's condition), so a new branch for numeric or free_text would be seen by neither the hash nor U39's audit test. U39's audit test is extended, test-only: for every type in VALID_FIELD_TYPES, the runtime list for a field of that type equals one rendered variant once the field name and the field-type word are normalised, and the number of distinct normalised runtime lists equals the number of rendered variants. It must pass on HEAD and fail under a mutation that adds a numeric-only branch to the builder. It lands in tests/test_u39_runtime_equals_hash.py with R714(c)'s docstring correction, under its existing id or as one new id, whichever keeps the existing test unchanged in what it asserts. R715(d) — INT-w12-1: on landing, a dated note — every hashed stage on the local run path is covered, audit included (12x_AQA A3; the extended test); the row stays open for the Anthropic arm only (F15). R715(e) — pdf_quality: a dated note on INT-j12-15 carrying 12x_AQA P1–P5 (one entry point, outside any manifest, refused under a run; a raw UPDATE of four columns with no event, model, run or time; on live 381 classifications, 17 AI_CHECKED and 364 HUMAN_CONFIRMED). Class and package unchanged; whether the render branch is retired or the stage gets a manifest is P4's. No new row. R715(f) — Readings, no row: "text" is not a codebook type, so the "text" fallbacks are unreachable through a loaded codebook; A3's two specified columns were false by the brief's design (the architect's), the normalised column governs; the baseline audit hash equals B23's record. U39's extension is not a new unit; P1's fix units stay 37, done 20. R715(g) — The 12x-U39C brief below opens. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-AQA final report (b571aaf) |
+
+The decision log in this file ends at R715.

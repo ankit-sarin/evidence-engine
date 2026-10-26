@@ -1,0 +1,34 @@
+RULING [evidence-engine 12x-R717] — U39 complete; the INT-w12-1 note corrected by a dated note;
+  session 12x closes under the 12x-CLOSE brief
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-U39C
+  final report as resumed under R716 (notes commit 39a87ab923524fb7cd544935d02a03b24f9eedd9).
+  Transcribe as Block 115 at item 0 of the 12x-CLOSE brief below, after Block 114 (R716), not
+  now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-U39C final report):
+  MEASURED: "Commit: 39a87ab923524fb7cd544935d02a03b24f9eedd9, parent f3f552e, the plan only
+    (+2/−2)"; "Plan after: sha256
+    507999ea2d746510d09ad265b34ccd46212706e01586cf17e79938619329a57c, 2,048,922 B, 10,649
+    lines, still "…ends at R715.""; "prefix_check … RESULT: PASS"; "now {'class_1': 94,
+    'class_2': 55, 'class_3': 131, 'rows': 280, 'without_class': 0}"; "Ledger:
+    01ef9b215ddc64f4642bc6a88582e3e154550d60, parent 69c1bff"; "The hook's row for f3f552e was
+    already committed in cf21aef9dd37e170d53d6f2bc06b8c2d0c444a58"; "Its own session committed
+    it at 69c1bff".
+  READ (CC's): "test_audit_runtime_equals_hash checks the live codebook's fields, not every
+    type, and under M5 it passed: only the new test failed (12x_U39C/runs/2c_M5)"; "under M6
+    … both audit tests fail".
+  INFERRED: none.
+
+R717(a) — The notes commit 39a87ab stands, with the ledgers cf21aef and 01ef9b2 (the foreign
+  row ef3fef5 committed by its own lane at 69c1bff, R663(b)). U39 is complete: INT-v12-1
+  CLOSED; INT-w12-1 open for the Anthropic arm only (F15). Rows 280 (94 / 55 / 131, 0
+  unclassed); P1's fix units 37, done 20 by the dated lines.
+R717(b) — Finding 3 is upheld: the brief's placeholder put two test ids into a sentence written
+  for one, an architect error. The INT-w12-1 note is not edited (notes are corrected by dated
+  addenda). At 12x-CLOSE item 0 a correcting note is appended to the same Evidence cell, in the
+  text the 12x-CLOSE brief gives.
+R717(c) — Readings, no row: INT-j12-15's first note took the INT-w12-1 form as 5b allowed; the
+  recount's fix_units_dated_lines literal (R714(c)); the failed first 5c output kept in scratch.
+R717(d) — Session 12x closes under the 12x-CLOSE brief below, in the 12w-CLOSE form, with the
+  2026-10-26 07:00 health job and 09:00 nightly read as readings (no expected file was written
+  for them). No closeout gate. Next after the close: 12y-OPEN, then U18.

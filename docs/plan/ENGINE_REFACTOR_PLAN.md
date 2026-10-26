@@ -909,7 +909,7 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 | # | On disk (`12w_V1A_q4_stopped.md` §Q3, quoted) | Class | Owning package | Governing ruling | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| INT-w12-1 | So a message appended, dropped or reordered at the call site, after the builder returns, is invisible to its prompt_hash at every stage. | 2 | P1; its fix in U39 for the local run path (B's equality test extended to every hashed stage on it, R707(e)); the Anthropic arm's reshaping open on the row for the cloud cut-over (F15) | R707(e), R708(b) | `12w_V1A_q4_stopped.md` §Q3 (read, not exercised); second places named in the record: "**`elicitation_pass1` and `audit`:** the render concatenates variants the runtime sends as separate calls, so how many variants exist is decided in two places."; "**The Anthropic arm:** it reshapes the list at runtime."; "**`preflight`:** its expression is duplicated.". The record's "Three stages have a second place:" names four stages (elicitation_pass1 and audit share the first bullet). *Note 2026-10-26 (12x-U39B, R712(f), R712(g)):* U39 (`1ebb3ae9584ad88015dfcd17df4bf75678026765`) covers this row on the local run path for every hashed stage except audit's variant set: `abstract_screen_primary, abstract_screen_verifier, ft_screen_primary, ft_screen_verifier, extract_pass1, extract_pass2, extract_retry_snippet, elicitation_pass1, vision_parse, preflight`, each by an equality test in `tests/test_u39_runtime_equals_hash.py`. Audit's variant set stays open: the runtime sends the codebook's type as the field type (live: categorical 11, free_text 8, numeric 1), while the render's two variants use "text" and "categorical" (`12x_U39A/12x_U39A.md` finding 3); a read-only Phase A decides it (R712(f)). The Anthropic arm stays with F15. The row stays open. *Note 2026-10-26 (12x-U39C, R715(b)–(d)):* audit's variant set is covered. The runtime audit messages differ from the rendered variants only in the substituted field name and field-type word, for all 20 live fields (`12x_AQA/12x_AQA.md` A3), and `tests/test_u39_runtime_equals_hash.py::test_audit_runtime_equals_hash` and `tests/test_u39_runtime_equals_hash.py::test_audit_every_codebook_type_equals_a_rendered_variant` (`f3f552e581e5345b9e93693c2729220366841f29`) asserts it for every type in `VALID_FIELD_TYPES`, failing under a numeric-only branch added to the builder (`12x_U39C/`). Every hashed stage on the local run path is now covered by U39. The row stays open for the Anthropic arm only (F15). |
+| INT-w12-1 | So a message appended, dropped or reordered at the call site, after the builder returns, is invisible to its prompt_hash at every stage. | 2 | P1; its fix in U39 for the local run path (B's equality test extended to every hashed stage on it, R707(e)); the Anthropic arm's reshaping open on the row for the cloud cut-over (F15) | R707(e), R708(b) | `12w_V1A_q4_stopped.md` §Q3 (read, not exercised); second places named in the record: "**`elicitation_pass1` and `audit`:** the render concatenates variants the runtime sends as separate calls, so how many variants exist is decided in two places."; "**The Anthropic arm:** it reshapes the list at runtime."; "**`preflight`:** its expression is duplicated.". The record's "Three stages have a second place:" names four stages (elicitation_pass1 and audit share the first bullet). *Note 2026-10-26 (12x-U39B, R712(f), R712(g)):* U39 (`1ebb3ae9584ad88015dfcd17df4bf75678026765`) covers this row on the local run path for every hashed stage except audit's variant set: `abstract_screen_primary, abstract_screen_verifier, ft_screen_primary, ft_screen_verifier, extract_pass1, extract_pass2, extract_retry_snippet, elicitation_pass1, vision_parse, preflight`, each by an equality test in `tests/test_u39_runtime_equals_hash.py`. Audit's variant set stays open: the runtime sends the codebook's type as the field type (live: categorical 11, free_text 8, numeric 1), while the render's two variants use "text" and "categorical" (`12x_U39A/12x_U39A.md` finding 3); a read-only Phase A decides it (R712(f)). The Anthropic arm stays with F15. The row stays open. *Note 2026-10-26 (12x-U39C, R715(b)–(d)):* audit's variant set is covered. The runtime audit messages differ from the rendered variants only in the substituted field name and field-type word, for all 20 live fields (`12x_AQA/12x_AQA.md` A3), and `tests/test_u39_runtime_equals_hash.py::test_audit_runtime_equals_hash` and `tests/test_u39_runtime_equals_hash.py::test_audit_every_codebook_type_equals_a_rendered_variant` (`f3f552e581e5345b9e93693c2729220366841f29`) asserts it for every type in `VALID_FIELD_TYPES`, failing under a numeric-only branch added to the builder (`12x_U39C/`). Every hashed stage on the local run path is now covered by U39. The row stays open for the Anthropic arm only (F15). *Note 2026-10-26 (12x-CLOSE, R717(b)), correcting the note above:* of the two audit tests it names, `test_audit_every_codebook_type_equals_a_rendered_variant` asserts the match for every type in `VALID_FIELD_TYPES` and failed under the numeric-only builder branch (M5); `test_audit_runtime_equals_hash` asserts it for the live codebook's fields and passed under M5. Both failed under a third rendered variant (M6) (`12x_U39C/runs/`). The note above is left as written. |
 
 **The pre-tag list, recounted 2026-10-25 (12w-CLOSE item 0, R707(e)), by script from the plan** (`docs/session-reports/session-12/12w_close/recount_12w_r707.py` → `recount_12w_r707.json`: the 12v-U37B count as the baseline, reproduced by `recount_12v_r694.py` on the plan at `8659035` — the last plan before this table, sha256 `af7de56383ef8608bb2250d94e7cf73d17c024e34ea0e909200d33a5bdb5e1b4` — and equal to its committed JSON byte for byte, and through it the chain 272, 275, 276, 278, 279; run in a scratch clone, R673(b)). Baseline: 279 rows — Class 1 / 2 / 3 = 94 / 54 / 131. Opened: 1 (`INT-w12-1`, Class 2, P1). **Now: 280 rows — Class 1 / 2 / 3 = 94 / 55 / 131, 0 without a class**; P1 61 rows (25 / 24 / 12); P6 11; P7 117; P1's fix units 35 by the script's field / 37, done 19, by the dated lines (U39 added, R707(d); R701(c)). R510 for session 12w: rows in 1 (`INT-w12-1`), rows out 0, no class move; INT-i12-45 CLOSED and counted (R705(e), R707(e)).
 
@@ -10647,3 +10647,94 @@ R715(g) — The 12x-U39C brief below opens.
 | 2026-10-26 | R715(a) — 12x-AQA is accepted: item 0 6cb6ad6 (Blocks 111 and 112), the record b571aaf, the ledgers 528f95c (foreign row 18ee82d carried as found) and 1c190b3. R715(b) — Audit: the runtime differs from the rendered variants only in substituted values (the field name and the field-type word); the template coverage of audit's prompt_hash is complete at HEAD. No engine change: O1–O4 are not taken; audit's prompt_hash stays d972c46d…838d. R715(c) — The variant set is still decided in two places (the render's literals, the builder's condition), so a new branch for numeric or free_text would be seen by neither the hash nor U39's audit test. U39's audit test is extended, test-only: for every type in VALID_FIELD_TYPES, the runtime list for a field of that type equals one rendered variant once the field name and the field-type word are normalised, and the number of distinct normalised runtime lists equals the number of rendered variants. It must pass on HEAD and fail under a mutation that adds a numeric-only branch to the builder. It lands in tests/test_u39_runtime_equals_hash.py with R714(c)'s docstring correction, under its existing id or as one new id, whichever keeps the existing test unchanged in what it asserts. R715(d) — INT-w12-1: on landing, a dated note — every hashed stage on the local run path is covered, audit included (12x_AQA A3; the extended test); the row stays open for the Anthropic arm only (F15). R715(e) — pdf_quality: a dated note on INT-j12-15 carrying 12x_AQA P1–P5 (one entry point, outside any manifest, refused under a run; a raw UPDATE of four columns with no event, model, run or time; on live 381 classifications, 17 AI_CHECKED and 364 HUMAN_CONFIRMED). Class and package unchanged; whether the render branch is retired or the stage gets a manifest is P4's. No new row. R715(f) — Readings, no row: "text" is not a codebook type, so the "text" fallbacks are unreachable through a loaded codebook; A3's two specified columns were false by the brief's design (the architect's), the normalised column governs; the baseline audit hash equals B23's record. U39's extension is not a new unit; P1's fix units stay 37, done 20. R715(g) — The 12x-U39C brief below opens. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-AQA final report (b571aaf) |
 
 The decision log in this file ends at R715.
+
+**Block 114.** *Transcribed 2026-10-26 (item 0 of the 12x-CLOSE brief), in its own commit with Block 115 and the INT-w12-1 note, in the R597(e) form:* ruling R716, made by PI on architect recommendation on 2026-10-26 UTC, during session 12x, on the 12x-U39C report stopped at step 5c (nothing staged; HEAD `f3f552e581e5345b9e93693c2729220366841f29`). The 12x-U39C resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12x-R716] — 12x-U39C stop at 5c: the INT-j12-15 note targets the
+  inventory row; 5c re-runs as one chain
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-U39C
+  report stopped at step 5c (nothing staged; HEAD f3f552e581e5345b9e93693c2729220366841f29).
+  Transcribe as Block 114 at item 0 of the next brief, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-U39C stop report):
+  MEASURED: "<U39C> = f3f552e581e5345b9e93693c2729220366841f29, parent 4f1af8d"; "==== 3388
+    passed, 17 deselected, 1 xfailed, 2 warnings in 918.42s (0:15:18) ===="; "920.32 s, inside
+    the band"; "only-gate is exactly the new id; only-ref 0"; "M5 … only the new test fails";
+    "M6 … both audit tests fail"; ":649, the inventory row with the Evidence cell"; ":1382, a
+    two-cell row | INT-j12-15 | P4 — R599 | in "### Coverage map — every Step 2 row to its
+    unit""; "RESULT: FAIL (STOP)"; "4f1af8d09d620f4ec3fac662547d48a303603e19, parent b571aaf";
+    "Ledger 5092f45".
+  READ (CC's): "My command had a line break where && should have been, so prefix_check ran even
+    though the builder had failed"; "I3's quoted line lacked the trailing full stop".
+  INFERRED: none.
+
+R716(a) — The stop is correct. The brief assumed a row ID names one table row; INT-j12-15 also
+  has a coverage-map row. That was the architect's assumption; the broken chain was CC's, and
+  R705(d) made its FAIL a stop.
+R716(b) — The INT-j12-15 note's target is the inventory row at :649, the one with an Evidence
+  cell. The coverage-map row at :1382 is not touched. From here a note's target is the row with
+  the named ID and an Evidence cell, matched by its cell count, and a brief that names a row
+  says so.
+R716(c) — Steps 0–4 stand: item 0 4f1af8d (Block 113), the test commit f3f552e (U39's audit
+  extension), the ledger 5092f45. U39's audit test now fails under a numeric-only builder
+  branch (M5) and a third rendered variant (M6). The gate's 920.32 s joins the band series with
+  its confounder (a concurrent surgical-cv pytest suite).
+R716(d) — Readings, no row: I3's quote dropped the line's full stop and the record governed;
+  the broken chain, corrected in the re-run.
+R716(e) — Step 5 re-runs from 5a with the notes as the brief wrote them, the builder and
+  prefix_check joined in one && chain with the commit, exit 0 required at each link. The test
+  commit's ledger row is settled first if it is uncommitted. This ruling is not written to disk
+  in the resume.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-26 | R716(a) — The stop is correct. The brief assumed a row ID names one table row; INT-j12-15 also has a coverage-map row. That was the architect's assumption; the broken chain was CC's, and R705(d) made its FAIL a stop. R716(b) — The INT-j12-15 note's target is the inventory row at :649, the one with an Evidence cell. The coverage-map row at :1382 is not touched. From here a note's target is the row with the named ID and an Evidence cell, matched by its cell count, and a brief that names a row says so. R716(c) — Steps 0–4 stand: item 0 4f1af8d (Block 113), the test commit f3f552e (U39's audit extension), the ledger 5092f45. U39's audit test now fails under a numeric-only builder branch (M5) and a third rendered variant (M6). The gate's 920.32 s joins the band series with its confounder (a concurrent surgical-cv pytest suite). R716(d) — Readings, no row: I3's quote dropped the line's full stop and the record governed; the broken chain, corrected in the re-run. R716(e) — Step 5 re-runs from 5a with the notes as the brief wrote them, the builder and prefix_check joined in one && chain with the commit, exit 0 required at each link. The test commit's ledger row is settled first if it is uncommitted. This ruling is not written to disk in the resume. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-U39C report stopped at step 5c (nothing staged; f3f552e) |
+
+The decision log in this file ends at R716.
+
+**Block 115.** *Transcribed 2026-10-26 (item 0 of the 12x-CLOSE brief), in its own commit with Block 114 and the INT-w12-1 note, in the R597(e) form:* ruling R717, made by PI on architect recommendation on 2026-10-26 UTC, during session 12x, on the 12x-U39C final report as resumed under R716 (notes commit `39a87ab923524fb7cd544935d02a03b24f9eedd9`). The 12x-CLOSE brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12x-R717] — U39 complete; the INT-w12-1 note corrected by a dated note;
+  session 12x closes under the 12x-CLOSE brief
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-U39C
+  final report as resumed under R716 (notes commit 39a87ab923524fb7cd544935d02a03b24f9eedd9).
+  Transcribe as Block 115 at item 0 of the 12x-CLOSE brief below, after Block 114 (R716), not
+  now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-U39C final report):
+  MEASURED: "Commit: 39a87ab923524fb7cd544935d02a03b24f9eedd9, parent f3f552e, the plan only
+    (+2/−2)"; "Plan after: sha256
+    507999ea2d746510d09ad265b34ccd46212706e01586cf17e79938619329a57c, 2,048,922 B, 10,649
+    lines, still "…ends at R715.""; "prefix_check … RESULT: PASS"; "now {'class_1': 94,
+    'class_2': 55, 'class_3': 131, 'rows': 280, 'without_class': 0}"; "Ledger:
+    01ef9b215ddc64f4642bc6a88582e3e154550d60, parent 69c1bff"; "The hook's row for f3f552e was
+    already committed in cf21aef9dd37e170d53d6f2bc06b8c2d0c444a58"; "Its own session committed
+    it at 69c1bff".
+  READ (CC's): "test_audit_runtime_equals_hash checks the live codebook's fields, not every
+    type, and under M5 it passed: only the new test failed (12x_U39C/runs/2c_M5)"; "under M6
+    … both audit tests fail".
+  INFERRED: none.
+
+R717(a) — The notes commit 39a87ab stands, with the ledgers cf21aef and 01ef9b2 (the foreign
+  row ef3fef5 committed by its own lane at 69c1bff, R663(b)). U39 is complete: INT-v12-1
+  CLOSED; INT-w12-1 open for the Anthropic arm only (F15). Rows 280 (94 / 55 / 131, 0
+  unclassed); P1's fix units 37, done 20 by the dated lines.
+R717(b) — Finding 3 is upheld: the brief's placeholder put two test ids into a sentence written
+  for one, an architect error. The INT-w12-1 note is not edited (notes are corrected by dated
+  addenda). At 12x-CLOSE item 0 a correcting note is appended to the same Evidence cell, in the
+  text the 12x-CLOSE brief gives.
+R717(c) — Readings, no row: INT-j12-15's first note took the INT-w12-1 form as 5b allowed; the
+  recount's fix_units_dated_lines literal (R714(c)); the failed first 5c output kept in scratch.
+R717(d) — Session 12x closes under the 12x-CLOSE brief below, in the 12w-CLOSE form, with the
+  2026-10-26 07:00 health job and 09:00 nightly read as readings (no expected file was written
+  for them). No closeout gate. Next after the close: 12y-OPEN, then U18.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-26 | R717(a) — The notes commit 39a87ab stands, with the ledgers cf21aef and 01ef9b2 (the foreign row ef3fef5 committed by its own lane at 69c1bff, R663(b)). U39 is complete: INT-v12-1 CLOSED; INT-w12-1 open for the Anthropic arm only (F15). Rows 280 (94 / 55 / 131, 0 unclassed); P1's fix units 37, done 20 by the dated lines. R717(b) — Finding 3 is upheld: the brief's placeholder put two test ids into a sentence written for one, an architect error. The INT-w12-1 note is not edited (notes are corrected by dated addenda). At 12x-CLOSE item 0 a correcting note is appended to the same Evidence cell, in the text the 12x-CLOSE brief gives. R717(c) — Readings, no row: INT-j12-15's first note took the INT-w12-1 form as 5b allowed; the recount's fix_units_dated_lines literal (R714(c)); the failed first 5c output kept in scratch. R717(d) — Session 12x closes under the 12x-CLOSE brief below, in the 12w-CLOSE form, with the 2026-10-26 07:00 health job and 09:00 nightly read as readings (no expected file was written for them). No closeout gate. Next after the close: 12y-OPEN, then U18. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-U39C final report as resumed under R716 (39a87ab) |
+
+The decision log in this file ends at R717.

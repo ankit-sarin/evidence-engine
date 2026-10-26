@@ -1,0 +1,35 @@
+RULING [evidence-engine 12x-R716] — 12x-U39C stop at 5c: the INT-j12-15 note targets the
+  inventory row; 5c re-runs as one chain
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-U39C
+  report stopped at step 5c (nothing staged; HEAD f3f552e581e5345b9e93693c2729220366841f29).
+  Transcribe as Block 114 at item 0 of the next brief, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-U39C stop report):
+  MEASURED: "<U39C> = f3f552e581e5345b9e93693c2729220366841f29, parent 4f1af8d"; "==== 3388
+    passed, 17 deselected, 1 xfailed, 2 warnings in 918.42s (0:15:18) ===="; "920.32 s, inside
+    the band"; "only-gate is exactly the new id; only-ref 0"; "M5 … only the new test fails";
+    "M6 … both audit tests fail"; ":649, the inventory row with the Evidence cell"; ":1382, a
+    two-cell row | INT-j12-15 | P4 — R599 | in "### Coverage map — every Step 2 row to its
+    unit""; "RESULT: FAIL (STOP)"; "4f1af8d09d620f4ec3fac662547d48a303603e19, parent b571aaf";
+    "Ledger 5092f45".
+  READ (CC's): "My command had a line break where && should have been, so prefix_check ran even
+    though the builder had failed"; "I3's quoted line lacked the trailing full stop".
+  INFERRED: none.
+
+R716(a) — The stop is correct. The brief assumed a row ID names one table row; INT-j12-15 also
+  has a coverage-map row. That was the architect's assumption; the broken chain was CC's, and
+  R705(d) made its FAIL a stop.
+R716(b) — The INT-j12-15 note's target is the inventory row at :649, the one with an Evidence
+  cell. The coverage-map row at :1382 is not touched. From here a note's target is the row with
+  the named ID and an Evidence cell, matched by its cell count, and a brief that names a row
+  says so.
+R716(c) — Steps 0–4 stand: item 0 4f1af8d (Block 113), the test commit f3f552e (U39's audit
+  extension), the ledger 5092f45. U39's audit test now fails under a numeric-only builder
+  branch (M5) and a third rendered variant (M6). The gate's 920.32 s joins the band series with
+  its confounder (a concurrent surgical-cv pytest suite).
+R716(d) — Readings, no row: I3's quote dropped the line's full stop and the record governed;
+  the broken chain, corrected in the re-run.
+R716(e) — Step 5 re-runs from 5a with the notes as the brief wrote them, the builder and
+  prefix_check joined in one && chain with the commit, exit 0 required at each link. The test
+  commit's ledger row is settled first if it is uncommitted. This ruling is not written to disk
+  in the resume.

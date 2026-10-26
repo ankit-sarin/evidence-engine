@@ -10428,3 +10428,70 @@ R711(d) — U39's Phase 1 opens under the 12x-U39A brief below, in the form R695
 | 2026-10-26 | R711(a) — 12x-OPEN is accepted as reported: item 0 a5892c9 (Block 107; r709.txt and lane_line_12w.txt in 12w_close/), the ledger ed2c3f0; the decision log in the file ends at R709. The 12x open stands verified. R711(b) — The band series on this host state gains 882.37 s: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37 s. The band for 12x stays 796–972 s (R709(b)). R711(c) — Readings, no row: the two read-only requests at 02:30:56 (HEAD /, GET /api/ps) are unattributed and a reading under R696(b); the inventory-exit slip was corrected before any check rested on it; a gate in either lane rotates the other lane's basetemps out of the shared temp root, which the dgx-infra item already carries; dbchecks.py exists at both paths with one sha256, and 12f_repro/dbchecks.py is the instrument from here. R711(d) — U39's Phase 1 opens under the 12x-U39A brief below, in the form R695(b) set: read-only on engine/ and tests/; the acceptance tests written and run in scratch; the record committed under 12x_U39A/ with the test file kept there as evidence, not under tests/. R710 and this ruling are transcribed at its item 0 as Blocks 108 and 109. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-OPEN final report as resumed under R710 (a5892c9) |
 
 The decision log in this file ends at R711.
+
+**Block 110.** *Transcribed 2026-10-26 (item 0 of the 12x-U39B brief), in its own commit, in the R597(e) form:* ruling R712, made by PI on architect recommendation on 2026-10-26 UTC, during session 12x, on the 12x-U39A final report (record `5de313337b3ba4989437690c4cb1ab303ef7f918`). The 12x-U39B brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12x-R712] — U39's Phase 1 accepted; the verifier test corrected in Phase 2;
+  the guards stay out; audit's field type and pdf_quality go to a read-only Phase A; Phase 2 opens
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-U39A
+  final report (record 5de313337b3ba4989437690c4cb1ab303ef7f918). Transcribe as Block 110 at
+  item 0 of the 12x-U39B brief below, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-U39A final report):
+  MEASURED: "88e28bbb8f24bc60af7c987bc6754aff197e74d3, parent a5892c9"; "Plan numstat +96 / −0;
+    10,430 lines = 10,334 + 96; sha256
+    ca7fd1b95b5874e9866981e5e6dd36cb611343eb40034a8ccd77693453788c7b, 2,022,902 B"; "Ledger:
+    0fcdfd8, parent ed2c3f0"; "Run on HEAD: 1 failed, 13 passed"; "it reads
+    screening_models.verifier, but the spec's field is verification"; "A separate diagnostic
+    script, not part of the test file, shows that stage's two lists are equal (sha256
+    58fb9c2e…2452)"; "I ran 25 mutations"; "No mutation made any other stage's test fail.
+    Every M1 left both pins unchanged"; "Pins at HEAD are byte-identical to
+    pin_tuples_close.json"; "5de313337b3ba4989437690c4cb1ab303ef7f918, parent 88e28bb, 64 files,
+    all under 12x_U39A/"; "on the live codebook that is categorical 11, free_text 8, numeric
+    1"; "the render's two variants use "text" and "categorical". So for 9 of 20 fields the
+    runtime sends a line that no rendered variant carries"; "pin_tuple keeps r.arm_name ==
+    arm_name".
+  READ (CC's): "pdf_quality has a render branch but no declaring manifest, so it is never
+    hashed at runtime"; "§Q3 says vision_parse "precedes the run", but run_pipeline declares it
+    under parse"; "Compositions above the call site are not exercised"; "14 as the file stands,
+    12 if the two guard tests stay out"; "A first run errored in setup because I had not
+    created the --basetemp parent directory".
+  INFERRED: none.
+
+R712(a) — 12x-U39A is accepted: item 0 88e28bb (Blocks 108 and 109), the record 5de3133, the
+  ledger 0fcdfd8 and the record's row. Q3's stop on the verifier test stands as recorded.
+R712(b) — The abstract-verifier test is corrected in Phase 2 to read the spec's field
+  (verification); that is its only change. Before it enters tests/ it is run on HEAD (must
+  pass) and under its own M1 and M2 in a scratch worktree (each must fail).
+R712(c) — Neither guard test enters tests/: inside tests/ the suite's own conftest and its
+  live fence govern. Phase 2 lands the twelve stage tests, N to be measured. The vision test's
+  local harness (a one-page PDF in tmp_path) is accepted.
+R712(d) — Phase 2 is test-only: tests/test_u39_runtime_equals_hash.py, the record's file with
+  only R712(b) and R712(c) applied; no engine change; no existing test rewritten; both pins
+  unchanged.
+R712(e) — Finding 6: R707(b)'s "moved the pin" holds for the stages the arm pin covers (the
+  extraction arm's). For the screens, audit, vision_parse and preflight, a change that lands
+  green moves the manifest's prompt_hash, not the pin. A clarification; R707's text is not
+  edited. No row.
+R712(f) — Findings 3 and 4 are not decided now. A read-only Phase A follows Phase 2: for audit,
+  whether build_audit_messages' branches differ by more than the substituted field-type value,
+  which codebook types reach which branch, and whether "text" is a codebook type; for
+  pdf_quality, its callers, whether any runs under a manifest, and what it writes. No row and
+  no fix before that read.
+R712(g) — INT-v12-1 closes on the Phase 2 commit if its test passes in the gate (R707(d)).
+  INT-w12-1 stays open: U39 covers its local half for every LOCAL stage except audit's variant
+  set, which R712(f) takes; the Anthropic arm stays with F15. A dated note on each row. U39 is
+  counted done on landing (P1 fix units 37, done 20 by the dated lines); rows stay 280.
+R712(h) — Readings, no row: finding 5 (vision_parse is declared under parse; the record's
+  wording is not edited); finding 7 (input selection above the call site is outside
+  INT-w12-1's text and U39, except audit's field type, which R712(f) takes); the basetemp
+  setup slip, recorded and re-run; the cloud arms in the census.
+R712(i) — Phase 2 opens under the 12x-U39B brief below.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-26 | R712(a) — 12x-U39A is accepted: item 0 88e28bb (Blocks 108 and 109), the record 5de3133, the ledger 0fcdfd8 and the record's row. Q3's stop on the verifier test stands as recorded. R712(b) — The abstract-verifier test is corrected in Phase 2 to read the spec's field (verification); that is its only change. Before it enters tests/ it is run on HEAD (must pass) and under its own M1 and M2 in a scratch worktree (each must fail). R712(c) — Neither guard test enters tests/: inside tests/ the suite's own conftest and its live fence govern. Phase 2 lands the twelve stage tests, N to be measured. The vision test's local harness (a one-page PDF in tmp_path) is accepted. R712(d) — Phase 2 is test-only: tests/test_u39_runtime_equals_hash.py, the record's file with only R712(b) and R712(c) applied; no engine change; no existing test rewritten; both pins unchanged. R712(e) — Finding 6: R707(b)'s "moved the pin" holds for the stages the arm pin covers (the extraction arm's). For the screens, audit, vision_parse and preflight, a change that lands green moves the manifest's prompt_hash, not the pin. A clarification; R707's text is not edited. No row. R712(f) — Findings 3 and 4 are not decided now. A read-only Phase A follows Phase 2: for audit, whether build_audit_messages' branches differ by more than the substituted field-type value, which codebook types reach which branch, and whether "text" is a codebook type; for pdf_quality, its callers, whether any runs under a manifest, and what it writes. No row and no fix before that read. R712(g) — INT-v12-1 closes on the Phase 2 commit if its test passes in the gate (R707(d)). INT-w12-1 stays open: U39 covers its local half for every LOCAL stage except audit's variant set, which R712(f) takes; the Anthropic arm stays with F15. A dated note on each row. U39 is counted done on landing (P1 fix units 37, done 20 by the dated lines); rows stay 280. R712(h) — Readings, no row: finding 5 (vision_parse is declared under parse; the record's wording is not edited); finding 7 (input selection above the call site is outside INT-w12-1's text and U39, except audit's field type, which R712(f) takes); the basetemp setup slip, recorded and re-run; the cloud arms in the census. R712(i) — Phase 2 opens under the 12x-U39B brief below. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-U39A final report (5de3133) |
+
+The decision log in this file ends at R712.

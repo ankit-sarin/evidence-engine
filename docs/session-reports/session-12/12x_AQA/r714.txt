@@ -1,0 +1,40 @@
+RULING [evidence-engine 12x-R714] — U39 accepted as landed; INT-v12-1 closed; five readings; the
+  audit and pdf_quality Phase A opens
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-U39B
+  final report as resumed under R713 (notes commit 63680692b1bc3fba3a66bc49e151865878d7aa98).
+  Transcribe as Block 112 at item 0 of the 12x-AQA brief below, after Block 111 (R713), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-U39B final report):
+  MEASURED: "305868f8dfb9f96c89bc5d26d0260ad2896217e4, parent 5de3133"; "<U39> =
+    1ebb3ae9584ad88015dfcd17df4bf75678026765, parent 305868f"; "==== 3387 passed, 17
+    deselected, 1 xfailed, 2 warnings in 939.89s (0:15:39) ===="; "collected 3405 items / 17
+    deselected / 3388 selected"; "only-gate 12, exactly the U39 ids, all PASSED; only-ref 0";
+    "941.74 s, inside 796–972"; "Journal window: -- No entries --"; "pins byte-identical to
+    pin_tuples_close.json"; "m03 (M1, call site): assert ['system', 'user', 'user'] ==
+    ['system', 'user'], exit 1"; "m04 (M2, render): assert ['system', 'user'] == ['system',
+    'user', 'user'], exit 1"; "prefix_check: … RESULT: PASS"; "Commit:
+    63680692b1bc3fba3a66bc49e151865878d7aa98, parent 1ebb3ae, the plan only. Plan after:
+    e4a28c5a…04b1, 2,031,981 B, 10,499 lines"; "now = {rows 280, 94 / 55 / 131, 0}"; ledgers
+    "f5360dc", "2fac7d9", "aa5b6f5".
+  READ (CC's): "The census names ten non-audit stage keys, not eleven. extract_pass2 is one key
+    with two variants"; "The before-gate Ollama reads were 3.4 s before launch, not the required
+    5 s"; "Three surgical-cv pytest runs overlapped the gate"; "It still reads "12x-U39A — U39's
+    acceptance tests (Phase 1, scratch; not under tests/)""; ""fix_units_dated_lines":
+    {"units": 37, "done": 19} is a literal".
+  INFERRED: none.
+
+R714(a) — U39 is accepted as landed: item 0 305868f (Block 110), the test commit 1ebb3ae, the
+  notes commit 6368069, the ledgers f5360dc, 2fac7d9 and aa5b6f5. INT-v12-1 is CLOSED on
+  1ebb3ae and counted until P1 closes (R607(d)). INT-w12-1 stays open (R712(g)). P1's fix units
+  37, done 20 by the dated lines; rows 280 (94 / 55 / 131, 0 unclassed).
+R714(b) — The band series gains 941.74 s, recorded beside three concurrent surgical-cv pytest
+  runs (its confounder): 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71,
+  883.80, 878.55, 888.65, 885.20, 882.37, 941.74 s. The band for 12x stays 796–972 s.
+R714(c) — Readings, no row: ten non-audit keys, not eleven (the brief's count was the
+  architect's; the census governs); the before-gate reads at 3.4 s, a deviation with an empty
+  journal window; the landed file's first docstring line names Phase 1 and scratch, corrected
+  by quoted text at the next commit that touches that file; the chained recount script's
+  fix_units_dated_lines field is a literal reading done 19, so the dated lines are the count of
+  record (R701(c)) and the script is not edited (R678(f)).
+R714(d) — The audit and pdf_quality Phase A (R712(f)) opens under the 12x-AQA brief below,
+  read-only. R713 and this ruling are transcribed at its item 0 as Blocks 111 and 112.

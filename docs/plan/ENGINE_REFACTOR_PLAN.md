@@ -10497,3 +10497,89 @@ R712(i) — Phase 2 opens under the 12x-U39B brief below.
 | 2026-10-26 | R712(a) — 12x-U39A is accepted: item 0 88e28bb (Blocks 108 and 109), the record 5de3133, the ledger 0fcdfd8 and the record's row. Q3's stop on the verifier test stands as recorded. R712(b) — The abstract-verifier test is corrected in Phase 2 to read the spec's field (verification); that is its only change. Before it enters tests/ it is run on HEAD (must pass) and under its own M1 and M2 in a scratch worktree (each must fail). R712(c) — Neither guard test enters tests/: inside tests/ the suite's own conftest and its live fence govern. Phase 2 lands the twelve stage tests, N to be measured. The vision test's local harness (a one-page PDF in tmp_path) is accepted. R712(d) — Phase 2 is test-only: tests/test_u39_runtime_equals_hash.py, the record's file with only R712(b) and R712(c) applied; no engine change; no existing test rewritten; both pins unchanged. R712(e) — Finding 6: R707(b)'s "moved the pin" holds for the stages the arm pin covers (the extraction arm's). For the screens, audit, vision_parse and preflight, a change that lands green moves the manifest's prompt_hash, not the pin. A clarification; R707's text is not edited. No row. R712(f) — Findings 3 and 4 are not decided now. A read-only Phase A follows Phase 2: for audit, whether build_audit_messages' branches differ by more than the substituted field-type value, which codebook types reach which branch, and whether "text" is a codebook type; for pdf_quality, its callers, whether any runs under a manifest, and what it writes. No row and no fix before that read. R712(g) — INT-v12-1 closes on the Phase 2 commit if its test passes in the gate (R707(d)). INT-w12-1 stays open: U39 covers its local half for every LOCAL stage except audit's variant set, which R712(f) takes; the Anthropic arm stays with F15. A dated note on each row. U39 is counted done on landing (P1 fix units 37, done 20 by the dated lines); rows stay 280. R712(h) — Readings, no row: finding 5 (vision_parse is declared under parse; the record's wording is not edited); finding 7 (input selection above the call site is outside INT-w12-1's text and U39, except audit's field type, which R712(f) takes); the basetemp setup slip, recorded and re-run; the cloud arms in the census. R712(i) — Phase 2 opens under the 12x-U39B brief below. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-U39A final report (5de3133) |
 
 The decision log in this file ends at R712.
+
+**Block 111.** *Transcribed 2026-10-26 (item 0 of the 12x-AQA brief), in its own commit with Block 112, in the R597(e) form:* ruling R713, made by PI on architect recommendation on 2026-10-26 UTC, during session 12x, on the 12x-U39B report stopped at step 1b (nothing written; HEAD `5de313337b3ba4989437690c4cb1ab303ef7f918`). The 12x-U39B resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12x-R713] — 12x-U39B stop at 1b: Block 110 mirrors Block 103; resume
+  from 1b
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-U39B
+  report stopped at step 1b (nothing written; HEAD 5de313337b3ba4989437690c4cb1ab303ef7f918).
+  Transcribe as Block 111 at item 0 of the next brief, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-U39B stop report):
+  MEASURED: "Block 107. Transcribed 2026-10-26 (item 0 of the 12x-OPEN brief), in its own
+    commit with the lane-line copy it orders, in the R597(e) form"; "Block 103. Transcribed
+    2026-10-25 (item 0 of the 12w-V1A brief), in its own commit, in the R597(e) form";
+    "Block 103 writes "The 12w-V1A brief that followed…", while Block 107 writes "The 12x-OPEN
+    task brief that followed…""; "The element order is the same in both"; "claude-config is
+    at a07486f (parent 0fcdfd8)".
+  INFERRED: none.
+
+R713(a) — The stop is correct and the error is the architect's: I2 described Block 107 by a
+  property it does not have, again a record's shape written from memory (R710(a)'s family).
+R713(b) — Block 110 mirrors Block 103, the most recent block with a plain single-ruling header:
+  "in its own commit, in the R597(e) form", no "with …" clause, and "The 12x-U39B brief that
+  followed the ruling in the paste is not part of the block." Step 1b's "task brief" is
+  withdrawn. Element order as both blocks have it.
+R713(c) — Step 0 is accepted as reported, claude-config a07486f included. The 12x-U39B brief
+  resumes at step 1b under R713(b); nothing else in it changes. This ruling is not written to
+  disk in the resume.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-26 | R713(a) — The stop is correct and the error is the architect's: I2 described Block 107 by a property it does not have, again a record's shape written from memory (R710(a)'s family). R713(b) — Block 110 mirrors Block 103, the most recent block with a plain single-ruling header: "in its own commit, in the R597(e) form", no "with …" clause, and "The 12x-U39B brief that followed the ruling in the paste is not part of the block." Step 1b's "task brief" is withdrawn. Element order as both blocks have it. R713(c) — Step 0 is accepted as reported, claude-config a07486f included. The 12x-U39B brief resumes at step 1b under R713(b); nothing else in it changes. This ruling is not written to disk in the resume. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-U39B report stopped at step 1b (nothing written; 5de3133) |
+
+The decision log in this file ends at R713.
+
+**Block 112.** *Transcribed 2026-10-26 (item 0 of the 12x-AQA brief), in its own commit with Block 111, in the R597(e) form:* ruling R714, made by PI on architect recommendation on 2026-10-26 UTC, during session 12x, on the 12x-U39B final report as resumed under R713 (notes commit `63680692b1bc3fba3a66bc49e151865878d7aa98`). The 12x-AQA brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12x-R714] — U39 accepted as landed; INT-v12-1 closed; five readings; the
+  audit and pdf_quality Phase A opens
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-U39B
+  final report as resumed under R713 (notes commit 63680692b1bc3fba3a66bc49e151865878d7aa98).
+  Transcribe as Block 112 at item 0 of the 12x-AQA brief below, after Block 111 (R713), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-U39B final report):
+  MEASURED: "305868f8dfb9f96c89bc5d26d0260ad2896217e4, parent 5de3133"; "<U39> =
+    1ebb3ae9584ad88015dfcd17df4bf75678026765, parent 305868f"; "==== 3387 passed, 17
+    deselected, 1 xfailed, 2 warnings in 939.89s (0:15:39) ===="; "collected 3405 items / 17
+    deselected / 3388 selected"; "only-gate 12, exactly the U39 ids, all PASSED; only-ref 0";
+    "941.74 s, inside 796–972"; "Journal window: -- No entries --"; "pins byte-identical to
+    pin_tuples_close.json"; "m03 (M1, call site): assert ['system', 'user', 'user'] ==
+    ['system', 'user'], exit 1"; "m04 (M2, render): assert ['system', 'user'] == ['system',
+    'user', 'user'], exit 1"; "prefix_check: … RESULT: PASS"; "Commit:
+    63680692b1bc3fba3a66bc49e151865878d7aa98, parent 1ebb3ae, the plan only. Plan after:
+    e4a28c5a…04b1, 2,031,981 B, 10,499 lines"; "now = {rows 280, 94 / 55 / 131, 0}"; ledgers
+    "f5360dc", "2fac7d9", "aa5b6f5".
+  READ (CC's): "The census names ten non-audit stage keys, not eleven. extract_pass2 is one key
+    with two variants"; "The before-gate Ollama reads were 3.4 s before launch, not the required
+    5 s"; "Three surgical-cv pytest runs overlapped the gate"; "It still reads "12x-U39A — U39's
+    acceptance tests (Phase 1, scratch; not under tests/)""; ""fix_units_dated_lines":
+    {"units": 37, "done": 19} is a literal".
+  INFERRED: none.
+
+R714(a) — U39 is accepted as landed: item 0 305868f (Block 110), the test commit 1ebb3ae, the
+  notes commit 6368069, the ledgers f5360dc, 2fac7d9 and aa5b6f5. INT-v12-1 is CLOSED on
+  1ebb3ae and counted until P1 closes (R607(d)). INT-w12-1 stays open (R712(g)). P1's fix units
+  37, done 20 by the dated lines; rows 280 (94 / 55 / 131, 0 unclassed).
+R714(b) — The band series gains 941.74 s, recorded beside three concurrent surgical-cv pytest
+  runs (its confounder): 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71,
+  883.80, 878.55, 888.65, 885.20, 882.37, 941.74 s. The band for 12x stays 796–972 s.
+R714(c) — Readings, no row: ten non-audit keys, not eleven (the brief's count was the
+  architect's; the census governs); the before-gate reads at 3.4 s, a deviation with an empty
+  journal window; the landed file's first docstring line names Phase 1 and scratch, corrected
+  by quoted text at the next commit that touches that file; the chained recount script's
+  fix_units_dated_lines field is a literal reading done 19, so the dated lines are the count of
+  record (R701(c)) and the script is not edited (R678(f)).
+R714(d) — The audit and pdf_quality Phase A (R712(f)) opens under the 12x-AQA brief below,
+  read-only. R713 and this ruling are transcribed at its item 0 as Blocks 111 and 112.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-26 | R714(a) — U39 is accepted as landed: item 0 305868f (Block 110), the test commit 1ebb3ae, the notes commit 6368069, the ledgers f5360dc, 2fac7d9 and aa5b6f5. INT-v12-1 is CLOSED on 1ebb3ae and counted until P1 closes (R607(d)). INT-w12-1 stays open (R712(g)). P1's fix units 37, done 20 by the dated lines; rows 280 (94 / 55 / 131, 0 unclassed). R714(b) — The band series gains 941.74 s, recorded beside three concurrent surgical-cv pytest runs (its confounder): 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74 s. The band for 12x stays 796–972 s. R714(c) — Readings, no row: ten non-audit keys, not eleven (the brief's count was the architect's; the census governs); the before-gate reads at 3.4 s, a deviation with an empty journal window; the landed file's first docstring line names Phase 1 and scratch, corrected by quoted text at the next commit that touches that file; the chained recount script's fix_units_dated_lines field is a literal reading done 19, so the dated lines are the count of record (R701(c)) and the script is not edited (R678(f)). R714(d) — The audit and pdf_quality Phase A (R712(f)) opens under the 12x-AQA brief below, read-only. R713 and this ruling are transcribed at its item 0 as Blocks 111 and 112. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-U39B final report as resumed under R713 (6368069) |
+
+The decision log in this file ends at R714.

@@ -1,0 +1,24 @@
+RULING [evidence-engine 12x-R713] — 12x-U39B stop at 1b: Block 110 mirrors Block 103; resume
+  from 1b
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-U39B
+  report stopped at step 1b (nothing written; HEAD 5de313337b3ba4989437690c4cb1ab303ef7f918).
+  Transcribe as Block 111 at item 0 of the next brief, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-U39B stop report):
+  MEASURED: "Block 107. Transcribed 2026-10-26 (item 0 of the 12x-OPEN brief), in its own
+    commit with the lane-line copy it orders, in the R597(e) form"; "Block 103. Transcribed
+    2026-10-25 (item 0 of the 12w-V1A brief), in its own commit, in the R597(e) form";
+    "Block 103 writes "The 12w-V1A brief that followed…", while Block 107 writes "The 12x-OPEN
+    task brief that followed…""; "The element order is the same in both"; "claude-config is
+    at a07486f (parent 0fcdfd8)".
+  INFERRED: none.
+
+R713(a) — The stop is correct and the error is the architect's: I2 described Block 107 by a
+  property it does not have, again a record's shape written from memory (R710(a)'s family).
+R713(b) — Block 110 mirrors Block 103, the most recent block with a plain single-ruling header:
+  "in its own commit, in the R597(e) form", no "with …" clause, and "The 12x-U39B brief that
+  followed the ruling in the paste is not part of the block." Step 1b's "task brief" is
+  withdrawn. Element order as both blocks have it.
+R713(c) — Step 0 is accepted as reported, claude-config a07486f included. The 12x-U39B brief
+  resumes at step 1b under R713(b); nothing else in it changes. This ruling is not written to
+  disk in the resume.

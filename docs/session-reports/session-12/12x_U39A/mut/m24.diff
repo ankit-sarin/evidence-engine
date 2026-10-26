@@ -1,0 +1,13 @@
+diff --git a/engine/utils/ollama_preflight.py b/engine/utils/ollama_preflight.py
+index 4cb1765..12e10ca 100644
+--- a/engine/utils/ollama_preflight.py
++++ b/engine/utils/ollama_preflight.py
+@@ -69,7 +69,7 @@ def check_model(model_name: str, timeout: int = 30, *, spec=None) -> ModelResult
+     start = time.time()
+     try:
+         ollama_chat(
+-            messages=[dict(m) for m in PREFLIGHT_MESSAGES],
++            messages=[dict(m) for m in PREFLIGHT_MESSAGES] + [{"role": "user", "content": "M1"}],
+             max_retries=0,
+             wall_timeout=60.0,
+             **cfg.kwargs(),

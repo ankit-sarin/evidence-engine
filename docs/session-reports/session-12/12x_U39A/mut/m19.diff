@@ -1,0 +1,13 @@
+diff --git a/engine/agents/auditor.py b/engine/agents/auditor.py
+index 79380a3..09d4fee 100644
+--- a/engine/agents/auditor.py
++++ b/engine/agents/auditor.py
+@@ -72,7 +72,7 @@ def semantic_verify(
+         cfg = cfg.with_model(model)
+     response = ollama_chat(
+         paper_id=paper_id,
+-        messages=build_audit_messages(span, field_type=field_type), **cfg.kwargs())
++        messages=build_audit_messages(span, field_type=field_type) + [{"role": "user", "content": "M1"}], **cfg.kwargs())
+ 
+     raw = response.message.content or ""
+     return AuditVerdict.model_validate_json(raw)

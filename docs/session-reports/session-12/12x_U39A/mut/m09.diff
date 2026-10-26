@@ -1,0 +1,13 @@
+diff --git a/engine/agents/extractor.py b/engine/agents/extractor.py
+index c09c068..f06b0bc 100644
+--- a/engine/agents/extractor.py
++++ b/engine/agents/extractor.py
+@@ -233,7 +233,7 @@ def extract_pass1_reasoning(prompt: str, *,
+     that set it, to build the call chain.
+     """
+     _LAST_PASS1_TELEMETRY.clear()
+-    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
++    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt) + [{"role": "user", "content": "M1"}],
+                          return_request_hash=return_request_hash, **cfg.kwargs())
+     response, req_hash = result if return_request_hash else (result, None)
+ 

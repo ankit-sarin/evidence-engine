@@ -1,0 +1,13 @@
+diff --git a/engine/agents/ft_screener.py b/engine/agents/ft_screener.py
+index cd14719..2250422 100644
+--- a/engine/agents/ft_screener.py
++++ b/engine/agents/ft_screener.py
+@@ -214,7 +214,7 @@ def ft_screen_paper(paper_text: str, spec: ReviewSpec) -> tuple[FTScreeningDecis
+     `run_calls.request_hash` records for that call (R261)."""
+     cfg = _ft_config("ft_screen_primary", spec)
+     response, request_hash = ollama_chat(
+-        messages=build_ft_messages(paper_text, spec, "primary"),
++        messages=build_ft_messages(paper_text, spec, "primary") + [{"role": "user", "content": "M1"}],
+         return_request_hash=True, **cfg.kwargs())
+     return FTScreeningDecision.model_validate_json(response.message.content), request_hash
+ 

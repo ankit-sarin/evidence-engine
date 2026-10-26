@@ -1,0 +1,386 @@
+{
+ "baseline": {
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  }
+ },
+ "m01": {
+  "stage": "abstract_screen_primary",
+  "kind": "M1",
+  "file": "engine/agents/screener.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[primary]",
+   "test_abstract_screen_runtime_equals_hash[verifier]"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m02": {
+  "stage": "abstract_screen_primary",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[primary]",
+   "test_abstract_screen_runtime_equals_hash[verifier]"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m03": {
+  "stage": "abstract_screen_verifier",
+  "kind": "M1",
+  "file": "engine/agents/screener.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m04": {
+  "stage": "abstract_screen_verifier",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m05": {
+  "stage": "ft_screen_primary",
+  "kind": "M1",
+  "file": "engine/agents/ft_screener.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_ft_screen_runtime_equals_hash[primary]"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m06": {
+  "stage": "ft_screen_primary",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_ft_screen_runtime_equals_hash[primary]"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m07": {
+  "stage": "ft_screen_verifier",
+  "kind": "M1",
+  "file": "engine/agents/ft_screener.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_ft_screen_runtime_equals_hash[verifier]"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m08": {
+  "stage": "ft_screen_verifier",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_ft_screen_runtime_equals_hash[verifier]"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m09": {
+  "stage": "extract_pass1",
+  "kind": "M1",
+  "file": "engine/agents/extractor.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_extract_pass1_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m10": {
+  "stage": "extract_pass1",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_extract_pass1_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "02e9250ce2e33b4d3b65806bc81f670d559608af68b3d55f9391e211470dbf57"
+  },
+  "status_after_revert": "clean"
+ },
+ "m11": {
+  "stage": "extract_pass2",
+  "kind": "M1",
+  "file": "engine/agents/extractor.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_extract_pass2_elicited_runtime_equals_hash",
+   "test_extract_pass2_non_elicited_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m12": {
+  "stage": "extract_pass2 (non-elicited)",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_extract_pass2_non_elicited_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "9e254a263be3588d8eb674d9f9d0b72cd829b7718e838f9678f445bea4f1b28c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m13": {
+  "stage": "extract_pass2 (elicited)",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_extract_pass2_elicited_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "88a0c7cf08a870cc62361519fdb7d6d974f9233bcc9ea27cd08cd21a716d786e",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m14": {
+  "stage": "extract_retry_snippet",
+  "kind": "M1",
+  "file": "engine/agents/extractor.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_extract_retry_snippet_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m15": {
+  "stage": "extract_retry_snippet",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_extract_retry_snippet_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "4414548b0d71e837022954fa89bac44068ad254b6417262fac10b0413af76e5a"
+  },
+  "status_after_revert": "clean"
+ },
+ "m16": {
+  "stage": "elicitation_pass1",
+  "kind": "M1",
+  "file": "engine/elicitation/pipeline.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_elicitation_pass1_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m17": {
+  "stage": "elicitation_pass1",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_elicitation_pass1_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "b7bcec923cd1fcac8ff02b5e4ceded992d6bf5f51e1d121c832c416893cd2865",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m18": {
+  "stage": "elicitation_pass1",
+  "kind": "M2v (variant count)",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_elicitation_pass1_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "432332dcf6de1e2253b68b0d316ab68ccbb68c14d9e787d6d4a1e78c5101d1e8",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m19": {
+  "stage": "audit",
+  "kind": "M1",
+  "file": "engine/agents/auditor.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_audit_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m20": {
+  "stage": "audit",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_audit_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m21": {
+  "stage": "audit",
+  "kind": "M2v (variant count)",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_audit_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m22": {
+  "stage": "vision_parse",
+  "kind": "M1",
+  "file": "engine/parsers/pdf_parser.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_vision_parse_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m23": {
+  "stage": "vision_parse",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_vision_parse_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m24": {
+  "stage": "preflight",
+  "kind": "M1",
+  "file": "engine/utils/ollama_preflight.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_preflight_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ },
+ "m25": {
+  "stage": "preflight",
+  "kind": "M2",
+  "file": "engine/core/effective_config.py",
+  "rc": 1,
+  "failed": [
+   "test_abstract_screen_runtime_equals_hash[verifier]",
+   "test_preflight_runtime_equals_hash"
+  ],
+  "pins": {
+   "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+   "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+  },
+  "status_after_revert": "clean"
+ }
+}

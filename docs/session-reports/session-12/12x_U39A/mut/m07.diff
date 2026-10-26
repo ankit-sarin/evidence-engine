@@ -1,0 +1,13 @@
+diff --git a/engine/agents/ft_screener.py b/engine/agents/ft_screener.py
+index cd14719..b92dfcb 100644
+--- a/engine/agents/ft_screener.py
++++ b/engine/agents/ft_screener.py
+@@ -224,7 +224,7 @@ def ft_verify_paper(paper_text: str, spec: ReviewSpec) -> tuple[FTVerificationDe
+     structured decision and its deciding call's request hash (R261)."""
+     cfg = _ft_config("ft_screen_verifier", spec)
+     response, request_hash = ollama_chat(
+-        messages=build_ft_messages(paper_text, spec, "verifier"),
++        messages=build_ft_messages(paper_text, spec, "verifier") + [{"role": "user", "content": "M1"}],
+         return_request_hash=True, **cfg.kwargs())
+     return FTVerificationDecision.model_validate_json(response.message.content), request_hash
+ 

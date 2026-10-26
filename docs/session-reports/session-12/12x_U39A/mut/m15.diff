@@ -1,0 +1,13 @@
+diff --git a/engine/core/effective_config.py b/engine/core/effective_config.py
+index 2556237..c49f834 100644
+--- a/engine/core/effective_config.py
++++ b/engine/core/effective_config.py
+@@ -438,7 +438,7 @@ def render_messages(stage: str, spec: ReviewSpec | None, *,
+                 from engine.elicitation import pipeline as el
+                 return ex.pass2_messages(prompt, el.sentinel_priming_message(spec, codebook_path))
+             return ex.pass2_messages(prompt, "R")
+-        return ex.retry_snippet_messages("f", "v", SENTINEL_TEXT)
++        return ex.retry_snippet_messages("f", "v", SENTINEL_TEXT) + [{"role": "user", "content": "M2"}]
+     if stage == "elicitation_pass1":
+         # 12c-E-PIN: both attempts, as the audit stage renders both variants —
+         # attempt 2 is attempt 1's prompt plus the typed feedback block.

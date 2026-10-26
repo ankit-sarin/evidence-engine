@@ -1,0 +1,13 @@
+diff --git a/engine/agents/screener.py b/engine/agents/screener.py
+index ff6d93b..e2fc139 100644
+--- a/engine/agents/screener.py
++++ b/engine/agents/screener.py
+@@ -122,7 +122,7 @@ def screen_paper(
+     # role, exactly as before (callers pass the verifier model explicitly).
+     cfg = stage_config(stage, spec, model=model or spec.screening_models.primary)
+ 
+-    response = ollama_chat(messages=build_messages(paper, spec, role=role), **cfg.kwargs())
++    response = ollama_chat(messages=build_messages(paper, spec, role=role) + ([{"role": "user", "content": "M1"}] if role == "verifier" else []), **cfg.kwargs())
+ 
+     raw = response.message.content
+     return ScreeningDecision.model_validate_json(raw)

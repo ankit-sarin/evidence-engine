@@ -1,0 +1,13 @@
+diff --git a/engine/elicitation/pipeline.py b/engine/elicitation/pipeline.py
+index b526725..a18c419 100644
+--- a/engine/elicitation/pipeline.py
++++ b/engine/elicitation/pipeline.py
+@@ -292,7 +292,7 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
+     # R224a(2): this attempt's hash rides in the telemetry dict rather than
+     # changing this function's return shape — `elicit`'s two-attempt loop
+     # already carries telemetry per attempt, in call order.
+-    response, req_hash = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
++    response, req_hash = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt) + [{"role": "user", "content": "M1"}],
+                                      return_request_hash=True, **cfg.kwargs())
+     raw = response.message.content or ""
+     thinking = getattr(response.message, "thinking", None) or ""

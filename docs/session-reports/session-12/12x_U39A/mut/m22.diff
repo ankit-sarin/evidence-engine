@@ -1,0 +1,13 @@
+diff --git a/engine/parsers/pdf_parser.py b/engine/parsers/pdf_parser.py
+index d93b8b7..64f132c 100644
+--- a/engine/parsers/pdf_parser.py
++++ b/engine/parsers/pdf_parser.py
+@@ -279,7 +279,7 @@ def parse_with_vision(
+             response = ollama_chat(
+                 paper_id=paper_id,
+                 wall_timeout=page_timeout_s,
+-                messages=vision_messages(img_b64),
++                messages=vision_messages(img_b64) + [{"role": "user", "content": "M1"}],
+                 **cfg.kwargs(),
+             )
+             elapsed = time.monotonic() - started

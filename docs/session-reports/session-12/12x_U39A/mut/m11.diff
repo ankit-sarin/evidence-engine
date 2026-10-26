@@ -1,0 +1,13 @@
+diff --git a/engine/agents/extractor.py b/engine/agents/extractor.py
+index c09c068..b1ab33f 100644
+--- a/engine/agents/extractor.py
++++ b/engine/agents/extractor.py
+@@ -341,7 +341,7 @@ def extract_pass2_structured(
+     cfg = cfg or stage_config("extract_pass2", spec)
+ 
+     result = ollama_chat(paper_id=paper_id,
+-                         messages=pass2_messages(prompt, reasoning_trace),
++                         messages=pass2_messages(prompt, reasoning_trace) + [{"role": "user", "content": "M1"}],
+                          return_request_hash=return_request_hash, **cfg.kwargs())
+     response, req_hash = result if return_request_hash else (result, None)
+ 

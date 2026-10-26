@@ -1,0 +1,236 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 14 items
+
+::test_abstract_screen_runtime_equals_hash[primary] ERROR                [  7%]
+::test_abstract_screen_runtime_equals_hash[verifier] ERROR               [ 14%]
+::test_ft_screen_runtime_equals_hash[primary] ERROR                      [ 21%]
+::test_ft_screen_runtime_equals_hash[verifier] ERROR                     [ 28%]
+::test_extract_pass1_runtime_equals_hash ERROR                           [ 35%]
+::test_extract_pass2_non_elicited_runtime_equals_hash ERROR              [ 42%]
+::test_extract_retry_snippet_runtime_equals_hash ERROR                   [ 50%]
+::test_elicitation_pass1_runtime_equals_hash ERROR                       [ 57%]
+::test_extract_pass2_elicited_runtime_equals_hash ERROR                  [ 64%]
+::test_audit_runtime_equals_hash ERROR                                   [ 71%]
+::test_vision_parse_runtime_equals_hash ERROR                            [ 78%]
+::test_preflight_runtime_equals_hash ERROR                               [ 85%]
+::test_the_engine_under_test_is_this_tree ERROR                          [ 92%]
+::test_the_suite_fences_are_active ERROR                                 [100%]
+
+==================================== ERRORS ====================================
+_____ ERROR at setup of test_abstract_screen_runtime_equals_hash[primary] ______
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+_____ ERROR at setup of test_abstract_screen_runtime_equals_hash[verifier] _____
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+________ ERROR at setup of test_ft_screen_runtime_equals_hash[primary] _________
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+________ ERROR at setup of test_ft_screen_runtime_equals_hash[verifier] ________
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+___________ ERROR at setup of test_extract_pass1_runtime_equals_hash ___________
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+____ ERROR at setup of test_extract_pass2_non_elicited_runtime_equals_hash _____
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+_______ ERROR at setup of test_extract_retry_snippet_runtime_equals_hash _______
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+_________ ERROR at setup of test_elicitation_pass1_runtime_equals_hash _________
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+______ ERROR at setup of test_extract_pass2_elicited_runtime_equals_hash _______
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+_______________ ERROR at setup of test_audit_runtime_equals_hash _______________
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+___________ ERROR at setup of test_vision_parse_runtime_equals_hash ____________
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+_____________ ERROR at setup of test_preflight_runtime_equals_hash _____________
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+__________ ERROR at setup of test_the_engine_under_test_is_this_tree ___________
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+______________ ERROR at setup of test_the_suite_fences_are_active ______________
+
+self = PosixPath('/home/ankitsarin/scratch/12x-u39a/bt/head'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12x-u39a/bt/head'
+
+/usr/lib/python3.12/pathlib.py:1313: FileNotFoundError
+=========================== short test summary info ============================
+ERROR ::test_abstract_screen_runtime_equals_hash[primary] - FileNotFoundError...
+ERROR ::test_abstract_screen_runtime_equals_hash[verifier] - FileNotFoundErro...
+ERROR ::test_ft_screen_runtime_equals_hash[primary] - FileNotFoundError: [Err...
+ERROR ::test_ft_screen_runtime_equals_hash[verifier] - FileNotFoundError: [Er...
+ERROR ::test_extract_pass1_runtime_equals_hash - FileNotFoundError: [Errno 2]...
+ERROR ::test_extract_pass2_non_elicited_runtime_equals_hash - FileNotFoundErr...
+ERROR ::test_extract_retry_snippet_runtime_equals_hash - FileNotFoundError: [...
+ERROR ::test_elicitation_pass1_runtime_equals_hash - FileNotFoundError: [Errn...
+ERROR ::test_extract_pass2_elicited_runtime_equals_hash - FileNotFoundError: ...
+ERROR ::test_audit_runtime_equals_hash - FileNotFoundError: [Errno 2] No such...
+ERROR ::test_vision_parse_runtime_equals_hash - FileNotFoundError: [Errno 2] ...
+ERROR ::test_preflight_runtime_equals_hash - FileNotFoundError: [Errno 2] No ...
+ERROR ::test_the_engine_under_test_is_this_tree - FileNotFoundError: [Errno 2...
+ERROR ::test_the_suite_fences_are_active - FileNotFoundError: [Errno 2] No su...
+============================== 14 errors in 0.33s ==============================
+exit 1

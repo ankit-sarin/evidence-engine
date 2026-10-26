@@ -1,0 +1,110 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/scratch/12x-u39a/wt
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 14 items
+
+::test_abstract_screen_runtime_equals_hash[primary] PASSED               [  7%]
+::test_abstract_screen_runtime_equals_hash[verifier] FAILED              [ 14%]
+::test_ft_screen_runtime_equals_hash[primary] PASSED                     [ 21%]
+::test_ft_screen_runtime_equals_hash[verifier] PASSED                    [ 28%]
+::test_extract_pass1_runtime_equals_hash FAILED                          [ 35%]
+::test_extract_pass2_non_elicited_runtime_equals_hash PASSED             [ 42%]
+::test_extract_retry_snippet_runtime_equals_hash PASSED                  [ 50%]
+::test_elicitation_pass1_runtime_equals_hash PASSED                      [ 57%]
+::test_extract_pass2_elicited_runtime_equals_hash PASSED                 [ 64%]
+::test_audit_runtime_equals_hash PASSED                                  [ 71%]
+::test_vision_parse_runtime_equals_hash PASSED                           [ 78%]
+::test_preflight_runtime_equals_hash PASSED                              [ 85%]
+::test_the_engine_under_test_is_this_tree PASSED                         [ 92%]
+::test_the_suite_fences_are_active PASSED                                [100%]
+
+=================================== FAILURES ===================================
+______________ test_abstract_screen_runtime_equals_hash[verifier] ______________
+
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+role = 'verifier'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xfcf4cf0cd010>
+
+    @pytest.mark.parametrize("role", ["primary", "verifier"])
+    def test_abstract_screen_runtime_equals_hash(spec, role, monkeypatch):
+        from engine.agents import screener as S
+        monkeypatch.setattr(S, "ollama_chat", _fake)
+>       model = spec.screening_models.primary if role == "primary" else spec.screening_models.verifier
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+../wt-run/test_u39_runtime_equals_hash.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ScreeningModels(seed=None, num_ctx=None, primary='qwen3:8b', verification='gemma3:27b', temperature=0, think=False)
+item = 'verifier'
+
+    def __getattr__(self, item: str) -> Any:
+        private_attributes = object.__getattribute__(self, '__private_attributes__')
+        if item in private_attributes:
+            attribute = private_attributes[item]
+            if hasattr(attribute, '__get__'):
+                return attribute.__get__(self, type(self))  # type: ignore
+    
+            try:
+                # Note: self.__pydantic_private__ cannot be None if self.__private_attributes__ has items
+                return self.__pydantic_private__[item]  # type: ignore
+            except KeyError as exc:
+                raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+        else:
+            # `__pydantic_extra__` can fail to be set if the model is not yet fully initialized.
+            # See `BaseModel.__repr_args__` for more details
+            try:
+                pydantic_extra = object.__getattribute__(self, '__pydantic_extra__')
+            except AttributeError:
+                pydantic_extra = None
+    
+            if pydantic_extra and item in pydantic_extra:
+                return pydantic_extra[item]
+            else:
+                if hasattr(self.__class__, item):
+                    return super().__getattribute__(item)  # Raises AttributeError if appropriate
+                else:
+                    # this is the current error
+>                   raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E                   AttributeError: 'ScreeningModels' object has no attribute 'verifier'
+
+../../../projects/evidence-engine/.venv/lib/python3.12/site-packages/pydantic/main.py:1026: AttributeError
+____________________ test_extract_pass1_runtime_equals_hash ____________________
+
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+cb_path = PosixPath('data/surgical_autonomy/extraction_codebook.yaml')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xfcf4ce7f0050>
+
+    def test_extract_pass1_runtime_equals_hash(spec, cb_path, monkeypatch):
+        from engine.agents import extractor as X
+        monkeypatch.setattr(X, "ollama_chat", _fake)
+        prompt = X.build_extraction_prompt(ec.SENTINEL_TEXT, spec, cb_path)
+        sent = _send(X.extract_pass1_reasoning, prompt, cfg=ec.stage_config("extract_pass1", spec))
+>       _assert_one(sent, ec.render_messages("extract_pass1", spec, codebook_path=cb_path))
+
+../wt-run/test_u39_runtime_equals_hash.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = [{'content': 'You are a systematic review data extractor. Read the paper carefully and reason through each extraction ...Tier 4 judgment fields.\n\n## Paper Text\nTitle: T\n\nAbstract: A', 'role': 'user'}, {'content': 'M1', 'role': 'user'}]
+rendered = [{'content': 'You are a systematic review data extractor. Read the paper carefully and reason through each extraction ...above (20 fields total), including Tier 4 judgment fields.\n\n## Paper Text\nTitle: T\n\nAbstract: A', 'role': 'user'}]
+
+    def _assert_one(runtime: list[dict], rendered: list[dict]):
+>       assert [m["role"] for m in runtime] == [m["role"] for m in rendered]
+E       AssertionError: assert ['system', 'user', 'user'] == ['system', 'user']
+E         
+E         Left contains one more item: 'user'
+E         
+E         Full diff:
+E           [
+E               'system',
+E               'user',
+E         +     'user',
+E           ]
+
+../wt-run/test_u39_runtime_equals_hash.py:59: AssertionError
+=========================== short test summary info ============================
+FAILED ::test_abstract_screen_runtime_equals_hash[verifier] - AttributeError:...
+FAILED ::test_extract_pass1_runtime_equals_hash - AssertionError: assert ['sy...
+========================= 2 failed, 12 passed in 2.68s =========================

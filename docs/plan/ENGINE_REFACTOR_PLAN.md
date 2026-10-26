@@ -10242,3 +10242,93 @@ R708(d) — 12w-CLOSE resumes at 1a under the resume below: r707.txt is copied b
 | 2026-10-25 | R708(a) — The stop is upheld. The brief's I4 assumed one sentence carried both halves of the claim; that was an architect error, not CC's (the fourth of this session, R707(a)'s family). R708(b) — INT-w12-1's text cell is sentence (a), quoted unchanged. Its evidence cell is "12w_V1A_q4_stopped.md §Q3 (read, not exercised)", followed by the three bullets of (c), each quoted unchanged, introduced as "second places named in the record:". R707(e)'s "with the three named second places" is met by the evidence cell. R708(c) — The record's "Three stages have a second place:" names four stages (elicitation_pass1 and audit share the first bullet). A note in the row's evidence cell says so; the record is not edited. No row. R708(d) — 12w-CLOSE resumes at 1a under the resume below: r707.txt is copied back from ~/scratch/12w-close/r707.txt and its hash re-verified; Blocks 105 and 106 are transcribed in the one item-0 commit; no other clause of the brief changes. | PI, 2026-10-25, during session 12w, on architect recommendation, on the 12w-CLOSE report stopped at 1c (nothing committed; 8659035) |
 
 The decision log in this file ends at R708.
+
+**Block 107.** *Transcribed 2026-10-26 (item 0 of the 12x-OPEN brief), in its own commit with the lane-line copy it orders, in the R597(e) form:* ruling R709, made by PI on architect recommendation on 2026-10-25 UTC, during session 12w, on the 12w-CLOSE closeout block (`e83611d458d19bec2733d913b851af337f7ee92e`). The 12x-OPEN task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12w-R709] — wrap ruling: closeout accepted; the band set 796–972 s; a
+  foreign commit of this lane's row accepted; lane line approved and applied; close now
+STATUS: PI ruling, 2026-10-25 UTC, session 12w, on architect recommendation, on the 12w-CLOSE
+  closeout block (e83611d458d19bec2733d913b851af337f7ee92e). Transcribe as item 0 of 12x-OPEN
+  (Block 107), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block):
+  MEASURED: "HEAD: e83611d458d19bec2733d913b851af337f7ee92e, parent
+    f7a16f39631c31f0bec6453c445825a58db93a84; status[], lr[0 0]"; "Plan: sha256
+    9b8375a2d4376eb66e8a0aba180dfa28f1ce72924ab1c1f3ac9528b7adeeeb6f, 2002634 bytes, 10244
+    lines. The last line is The decision log in this file ends at R708."; item 0 "5 files
+    changed, 398 insertions(+), 1 deletion(-)", "exactly 1 '-' line(s), one per named row:
+    True, RESULT: PASS"; "Closeout commit: 18 files changed, 6557 insertions(+)"; "fence ==
+    r707.txt: True, cell == render_cell: True; fence == r708.txt: True, cell == render_cell:
+    True"; "Rows: INT-w12-1 (Class 2, P1)"; "git diff --stat 6735188 HEAD -- engine tests
+    scripts analysis review_specs: 7 files changed, 393 insertions(+), 2 deletions(-) (U17's).
+    From e81d699: empty"; claude-config "90f15321b9f628d238c2d2172f8e26b5147c4110, a foreign
+    commit by the surgical-cv lane's session carrying this lane's f7a16f3 row"; "Ledger commit:
+    d02c4d3059c895bb8138f0df03b21aed38e9736f, parent 90f1532, message "ledger: rows through
+    2026-10-25T04:21:56Z" (the row's exact timestamp), with trailers"; "primer.md is untouched;
+    its last commit is f1b51b0"; fingerprint IDENTICAL at 04:13:17Z, 04:16:59Z, 04:21:56Z,
+    04:22:00Z and 04:23:20Z; lane line "sha256
+    8e4877fea4f0602195e92b27a3b23ea8cfd4595479c3d710891781854ac87251, 5503 bytes, 10 lines. Not
+    applied.", "five − lines == primer.md 41–45: True"; "280 rows, 94 / 55 / 131, 0
+    unclassed; P1 61 (25 / 24 / 12); P6 11; P7 117"; "fix_units 35 in the script; 37, done 19
+    by the dated lines"; "R510 for 12w: rows in 1 (INT-w12-1), rows out 0, no class move";
+    "Retention: 23 MATCH / 0 MISMATCH; probe requests 10/10 and responses 53/53"; "Temp root: 4
+    entries, 2,761,215,469 B"; "/api/ps: {"models":[]} (04:23:20Z)"; "dbchecks_close.txt and
+    pin_tuples_close.json are byte-identical to their records"; "mean 884.05 s; ×0.9 795.645,
+    ×1.1 972.455; 796–972 s"; the eight rNNN.txt hashes as tabled; the archive command as
+    printed.
+  MEASURED (architect, this session): every rNNN.txt of this session (r701–r708) was hashed by
+    the architect before its brief was issued and matched CC's write at each item 0 (R684(e)).
+  READ (CC's): "At 04:18:27Z the surgical-cv lane's CC session (pid 4016852, transcript
+    a1827e57) committed and pushed this lane's pending f7a16f3 row from the shared ledger file.
+    It touches only PROJECT_LEDGER.md"; "3c ran after 3d"; "the third quoted bullet swallowed
+    the paragraph after it … I reverted the plan and rebuilt; the check ran only on the
+    corrected build"; "With earlyoom's kill wording … the count is 0"; "pytest-51 … is another
+    project's suite".
+  INFERRED: none.
+
+R709(a) — The 12w-CLOSE closeout block is accepted as printed. Item 0 f7a16f3 (Blocks 105 and
+  106, the INT-v12-1 note, row INT-w12-1, recount 280) and the closeout commit e83611d stand;
+  the ledger d02c4d3 with trailers stands.
+R709(b) — The band for 12x is 796–972 s: ±10% of 884.05 s, the mean of the last four standard
+  gates on this host state (883.80, 878.55, 888.65, 885.20), rounded inward as R683(c) rounded.
+  The series stands at 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71,
+  883.80, 878.55, 888.65, 885.20 s. A 12x gate outside the band is reported with its concurrent
+  jobs, not adapted to.
+R709(c) — Foreign commit 90f1532 (the surgical-cv lane committing this lane's f7a16f3 row from
+  the shared ledger file, PROJECT_LEDGER.md only, primer lines 41–45 untouched) is accepted under
+  R663(b); the row is the record whichever lane commits it. A reading, recorded in the closure;
+  no row. The cross-lane ledger behaviour goes to the dgx-infra item with the foreign loads.
+R709(d) — Readings, no row: the primer's 12w block written after the closeout commit so it can
+  name that commit's hash, as 12v's did; the bullet-capture bug reverted and rebuilt before any
+  check ran on it; earlyoom kills 0 by its kill wording; pytest-51 another project's;
+  12w_close/diff_since_e81d699.txt committed empty as a record of the empty diff.
+R709(e) — The lane line (sha256 8e4877fea4f0602195e92b27a3b23ea8cfd4595479c3d710891781854ac87251,
+  5,503 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines
+  41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five
+  "+" lines, applied from the file, not from a paste; commit primer.md together with any
+  uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows
+  named by hash), push, level.
+R709(f) — 12x-OPEN's startup verify checks claude-config at the commit the wrap leaves (the
+  lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign
+  commits and rows per R653(c), R654(d), R663(b). 12x's item 0 transcribes this ruling as Block
+  107 and copies lane_line_12w.txt into docs/session-reports/session-12/12w_close/ with its
+  commit, which carries no cell note and is verified by its "−" count, 0 (R664(b)). No closeout
+  gate ran: the expected gate values for 12x are U17's (e81d699) on unchanged code (3,375 / 1
+  xfailed / 17 deselected, collected 3,393 / selected 3,376; 0/0 against
+  12w_close/collected_ids_12w_close.txt; band 796–972 s, with the concurrent jobs named and the
+  snapshot's own PIDs excluded); the 2026-10-25 09:00 UTC nightly runs on the HEAD then pushed,
+  whose engine tree equals e81d699's, expected 3,375 / 17 / 1 on 3,393 / 3,376, exit 0,
+  12w_close/expected_nightly_20261025.md governing; the 07:00 health job's loads are read and
+  reported by 12x-OPEN, with an NVRM grep; a read-only request in any window is a reading
+  (R696(b)). The temp root is read, never matched. Residency is a reading. 12x-OPEN's pre-check
+  reads the process table for leftovers of session 523719de (R692's form).
+R709(g) — Session 12w closes now. After R709(e) has landed, run /wrap. Report the archive
+  command; the closeout block stands.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-25 | R709(a) — The 12w-CLOSE closeout block is accepted as printed. Item 0 f7a16f3 (Blocks 105 and 106, the INT-v12-1 note, row INT-w12-1, recount 280) and the closeout commit e83611d stand; the ledger d02c4d3 with trailers stands. R709(b) — The band for 12x is 796–972 s: ±10% of 884.05 s, the mean of the last four standard gates on this host state (883.80, 878.55, 888.65, 885.20), rounded inward as R683(c) rounded. The series stands at 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20 s. A 12x gate outside the band is reported with its concurrent jobs, not adapted to. R709(c) — Foreign commit 90f1532 (the surgical-cv lane committing this lane's f7a16f3 row from the shared ledger file, PROJECT_LEDGER.md only, primer lines 41–45 untouched) is accepted under R663(b); the row is the record whichever lane commits it. A reading, recorded in the closure; no row. The cross-lane ledger behaviour goes to the dgx-infra item with the foreign loads. R709(d) — Readings, no row: the primer's 12w block written after the closeout commit so it can name that commit's hash, as 12v's did; the bullet-capture bug reverted and rebuilt before any check ran on it; earlyoom kills 0 by its kill wording; pytest-51 another project's; 12w_close/diff_since_e81d699.txt committed empty as a record of the empty diff. R709(e) — The lane line (sha256 8e4877fea4f0602195e92b27a3b23ea8cfd4595479c3d710891781854ac87251, 5,503 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows named by hash), push, level. R709(f) — 12x-OPEN's startup verify checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12x's item 0 transcribes this ruling as Block 107 and copies lane_line_12w.txt into docs/session-reports/session-12/12w_close/ with its commit, which carries no cell note and is verified by its "−" count, 0 (R664(b)). No closeout gate ran: the expected gate values for 12x are U17's (e81d699) on unchanged code (3,375 / 1 xfailed / 17 deselected, collected 3,393 / selected 3,376; 0/0 against 12w_close/collected_ids_12w_close.txt; band 796–972 s, with the concurrent jobs named and the snapshot's own PIDs excluded); the 2026-10-25 09:00 UTC nightly runs on the HEAD then pushed, whose engine tree equals e81d699's, expected 3,375 / 17 / 1 on 3,393 / 3,376, exit 0, 12w_close/expected_nightly_20261025.md governing; the 07:00 health job's loads are read and reported by 12x-OPEN, with an NVRM grep; a read-only request in any window is a reading (R696(b)). The temp root is read, never matched. Residency is a reading. 12x-OPEN's pre-check reads the process table for leftovers of session 523719de (R692's form). R709(g) — Session 12w closes now. After R709(e) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-25, during session 12w, on architect recommendation, on the 12w-CLOSE closeout block (e83611d) |
+
+The decision log in this file ends at R709.

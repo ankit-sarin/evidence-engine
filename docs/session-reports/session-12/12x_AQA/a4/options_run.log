@@ -1,0 +1,66 @@
+O0 {
+ "numstat": "",
+ "measure": {
+  "audit_prompt_hash": "d972c46dde944f1381c4f2d5472c6264c3a1053bd23bdd3801bdf0fdc2a5838d",
+  "rendered_messages": 4,
+  "rendered_variants": 2,
+  "requests": {
+   "study_type (categorical)": "441c7b9c92d914e8e8c7f3f4b3a513d2554c7a60723382df971f33c1309dfaa7",
+   "robot_platform (free_text)": "2242aade444c524bfe07926a8d23047e485c89027003ae59b1e0f3db5ceb08a1",
+   "sample_size (numeric)": "eda4691051a9553a809905e6441b458b375a883777f73e47a7a42bf8f35f9d99"
+  }
+ },
+ "u39_audit_rc": 0,
+ "u39_first_E": [],
+ "pins": {
+  "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+  "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+ },
+ "status_after_revert": "clean"
+}
+O1 {
+ "numstat": "2\t2\tengine/core/effective_config.py",
+ "measure": {
+  "audit_prompt_hash": "a1d355d443cf404a7b8725cadd0d4bfe48b13c194b6ad13edad9a144869ba491",
+  "rendered_messages": 6,
+  "rendered_variants": 3,
+  "requests": {
+   "study_type (categorical)": "441c7b9c92d914e8e8c7f3f4b3a513d2554c7a60723382df971f33c1309dfaa7",
+   "robot_platform (free_text)": "2242aade444c524bfe07926a8d23047e485c89027003ae59b1e0f3db5ceb08a1",
+   "sample_size (numeric)": "eda4691051a9553a809905e6441b458b375a883777f73e47a7a42bf8f35f9d99"
+  }
+ },
+ "u39_audit_rc": 1,
+ "u39_first_E": [
+  "AssertionError: variant count: runtime calls vs rendered variants",
+  "assert 2 == 3"
+ ],
+ "pins": {
+  "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+  "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+ },
+ "status_after_revert": "clean"
+}
+O2 {
+ "numstat": "1\t1\tengine/core/effective_config.py",
+ "measure": {
+  "audit_prompt_hash": "86098ebd12e0f0dfe5fc7974280746103bf017aa6ee7d7e2f7cf325ad5ef2c49",
+  "rendered_messages": 4,
+  "rendered_variants": 2,
+  "requests": {
+   "study_type (categorical)": "441c7b9c92d914e8e8c7f3f4b3a513d2554c7a60723382df971f33c1309dfaa7",
+   "robot_platform (free_text)": "2242aade444c524bfe07926a8d23047e485c89027003ae59b1e0f3db5ceb08a1",
+   "sample_size (numeric)": "eda4691051a9553a809905e6441b458b375a883777f73e47a7a42bf8f35f9d99"
+  }
+ },
+ "u39_audit_rc": 1,
+ "u39_first_E": [
+  "assert '[{\"content\":...ole\":\"user\"}]' == '[{\"content\":...ole\":\"user\"}]'",
+  "E         - [{\"content\":\"You are an audit agent verifying data extractions from scientific papers. For free-text fields, be strict: flag anything not clearly supported by the source snippet. For categorical fields, verify that the source text reasonably supports the chosen category \u2014 the category label does not need to appear verbatim. Respond ONLY with JSON.\",\"role\":\"system\"},{\"content\":\"/no_think\\nYou are an audit agent verifying data extraction from a scientific paper.\\n\\nField: f\\nField type: <field_type>\\nExtracted value: v\\nSource snippet from paper: s\\n\\nDoes the extracted..."
+ ],
+ "pins": {
+  "elicited": "d70bf688c316a617bbc60cb3aca9cea3aee083510a743361aa602853b21d59f0",
+  "non_elicited": "d3672ab6fb1d9b627b9fa8dd19112e148e88cf174b1d854bb0b7fff004f7ff5c"
+ },
+ "status_after_revert": "clean"
+}

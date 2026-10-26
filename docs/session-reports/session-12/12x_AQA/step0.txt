@@ -1,0 +1,18 @@
+Mon Oct 26 04:35:02 UTC 2026
+63680692b1bc3fba3a66bc49e151865878d7aa98
+1ebb3ae9584ad88015dfcd17df4bf75678026765
+st-end
+0	0
+e4a28c5ac32adcfcc756e549512585756bc05309dab1c88847cc77c3b27404b1  docs/plan/ENGINE_REFACTOR_PLAN.md
+  10499 2031981 docs/plan/ENGINE_REFACTOR_PLAN.md
+The decision log in this file ends at R712.
+0
+overall  : 0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25
+IDENTICAL — schema, every table, and the overall hash all match.
+/home/ankitsarin/projects/evidence-engine  6368069 [main]
+aa5b6f56e124986fa6e31289bc1248e26608d591
+2fac7d9007c66b7d17c11064d1a530453f7c4c3c
+ M PROJECT_LEDGER.md
+cst-end
+0	0
+ledger: rows through 2026-10-26T04:15:26Z

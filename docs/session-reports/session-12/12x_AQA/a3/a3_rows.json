@@ -1,0 +1,202 @@
+[
+ {
+  "field": "study_type",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: study_type\\\\nField type: categorical\\\\nExt'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "441c7b9c92d914e8e8c7f3f4b3a513d2554c7a60723382df971f33c1309dfaa7"
+ },
+ {
+  "field": "robot_platform",
+  "type": "free_text",
+  "branch": "text",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: robot_platform\\\\nField type: text\\\\nExtrac'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: text\\\\nExtracted value: v\\\\'\u2026",
+  "runtime_sha256": "2242aade444c524bfe07926a8d23047e485c89027003ae59b1e0f3db5ceb08a1"
+ },
+ {
+  "field": "task_performed",
+  "type": "free_text",
+  "branch": "text",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: task_performed\\\\nField type: text\\\\nExtrac'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: text\\\\nExtracted value: v\\\\'\u2026",
+  "runtime_sha256": "b26f359398b085d0e004f63c37fb75ac483e0bdedd24fc0040af03871a9c36ab"
+ },
+ {
+  "field": "sample_size",
+  "type": "numeric",
+  "branch": "text",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: sample_size\\\\nField type: text\\\\nExtracted'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: text\\\\nExtracted value: v\\\\'\u2026",
+  "runtime_sha256": "eda4691051a9553a809905e6441b458b375a883777f73e47a7a42bf8f35f9d99"
+ },
+ {
+  "field": "surgical_domain",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: surgical_domain\\\\nField type: categorical'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "b8ee0bd1bab536e9cc68ce7cfc33853d38fc62f5740a501d0f187dcece953dce"
+ },
+ {
+  "field": "autonomy_level",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: autonomy_level\\\\nField type: categorical\\\\'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "1f2764bba7c861f7b0f8f6a53cf828a14c1e18186ae61b6415979dcff90c5011"
+ },
+ {
+  "field": "validation_setting",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: validation_setting\\\\nField type: categori'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "b595fb734345910bd74f2fb39c9ff4a999f6f397612010485ffc67a36e6f9820"
+ },
+ {
+  "field": "task_monitor",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: task_monitor\\\\nField type: categorical\\\\nE'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "41e8accda1a353e98eeb1391a86e23deaad6a747f8f3f0d4403bada6e65d9f9d"
+ },
+ {
+  "field": "task_generate",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: task_generate\\\\nField type: categorical\\\\n'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "00758e9b90c82e0d5101990f69137cf0d40dc09d8d29d3c58be1eba3a68145ab"
+ },
+ {
+  "field": "task_select",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: task_select\\\\nField type: categorical\\\\nEx'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "ac6d2d060f1925ef75b3a1812b9b591e8b541ced3740f8bf02883bfb34479725"
+ },
+ {
+  "field": "task_execute",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: task_execute\\\\nField type: categorical\\\\nE'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "a140d033693fa5fed60068be436923e0ec832a455be3974f7aa797b5ecc1fcb0"
+ },
+ {
+  "field": "system_maturity",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: system_maturity\\\\nField type: categorical'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "de68abe363cdc92d5900ca1701949a6ab93100a42d96a51f398ac13a336a34a9"
+ },
+ {
+  "field": "study_design",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: study_design\\\\nField type: categorical\\\\nE'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "756ccbe19ef103d0684f04598ac1e9abe5942ed37845b33696837d6c5ce4dffb"
+ },
+ {
+  "field": "country",
+  "type": "free_text",
+  "branch": "text",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: country\\\\nField type: text\\\\nExtracted val'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: text\\\\nExtracted value: v\\\\'\u2026",
+  "runtime_sha256": "76c954fb56560cce6f2bd9137a17110bf68913455f6ec69988cc928031dd9095"
+ },
+ {
+  "field": "primary_outcome_metric",
+  "type": "free_text",
+  "branch": "text",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: primary_outcome_metric\\\\nField type: text'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: text\\\\nExtracted value: v\\\\'\u2026",
+  "runtime_sha256": "b5f57d85697898109f731c7b2da53d2513595752c4fc3c36676966ab0521e385"
+ },
+ {
+  "field": "primary_outcome_value",
+  "type": "free_text",
+  "branch": "text",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: primary_outcome_value\\\\nField type: text\\\\'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: text\\\\nExtracted value: v\\\\'\u2026",
+  "runtime_sha256": "db2b313b66d8db39a7dd5236a875f485f9f74373153147e3f41bd63e5f7219bd"
+ },
+ {
+  "field": "comparison_to_human",
+  "type": "free_text",
+  "branch": "text",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: comparison_to_human\\\\nField type: text\\\\nE'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: text\\\\nExtracted value: v\\\\'\u2026",
+  "runtime_sha256": "d425002d5e3b6ef2e47e6676367596a7d3a803d8c98b005eade829054660065f"
+ },
+ {
+  "field": "secondary_outcomes",
+  "type": "free_text",
+  "branch": "text",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: secondary_outcomes\\\\nField type: text\\\\nEx'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: text\\\\nExtracted value: v\\\\'\u2026",
+  "runtime_sha256": "c168580ce574b0d6e28380e5eaabb4adfa8d812adf2be59376147b64804308e8"
+ },
+ {
+  "field": "key_limitation",
+  "type": "free_text",
+  "branch": "text",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: key_limitation\\\\nField type: text\\\\nExtrac'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: text\\\\nExtracted value: v\\\\'\u2026",
+  "runtime_sha256": "93aa13f66464fd0a42bd917278bfbae59a098c6b821b011a50aeeff73f7e4c25"
+ },
+ {
+  "field": "clinical_readiness_assessment",
+  "type": "categorical",
+  "branch": "categorical",
+  "i": false,
+  "ii": false,
+  "ii_name_too": true,
+  "iii": "@475: runtime \u2026'tion from a scientific paper.\\\\n\\\\nField: clinical_readiness_assessment\\\\nField typ'\u2026 vs rendered \u2026'tion from a scientific paper.\\\\n\\\\nField: f\\\\nField type: categorical\\\\nExtracted va'\u2026",
+  "runtime_sha256": "bc5dc01616992ba28fd691e7807d101c4b269e1c0083c79110a09cdf2fab7a68"
+ }
+]

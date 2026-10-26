@@ -1,0 +1,9 @@
+diff --git a/PROJECT_LEDGER.md b/PROJECT_LEDGER.md
+index f318984..93722ae 100644
+--- a/PROJECT_LEDGER.md
++++ b/PROJECT_LEDGER.md
+@@ -874,3 +874,4 @@
+ | 2026-10-26T03:55:56Z | evidence-engine | main | 305868f | docs(plan): 12x-U39B item 0 — R712 as Block 110 |
+ | 2026-10-26T04:14:23Z | evidence-engine | main | 1ebb3ae | test(u39): runtime message lists equal the hashed lists, every local hashed stage |
+ | 2026-10-26T04:15:26Z | evidence-engine | main | 6368069 | docs(plan): 12x-U39B notes — INT-v12-1 CLOSED on U39; INT-w12-1 open; dated line |
++| 2026-10-26T04:32:24Z | surgical-cv-edit | edit-backend | 18ee82d | feat(edit): EB-1 backend foundations — ledger, settled predicate, A29 move, A23, dev guard, flag |

@@ -1,0 +1,20 @@
+== J1 sentences naming quality
+404 J1 » Wave 2 row 13 (INT-j12-10): "A paper whose AI check failed (or never ran) is on no section of the quality review page;
+== A5: rows naming audit with prompt / hash / field_type
+204 B8 (542 chars):
+    » | B8 | *The semantic auditor's verdict has no table.* Each `semantic_verify` verdict is run-linked telemetry (`audit-telemetry-1`, `telemetry/audit_calls.jsonl`), joinable to the manifest by `run_id` but not queryable beside the events (R147) | WRITE-PATH-01 9b-2d;
+219 B23 (877 chars):
+    » the cross-family auditor judges an unlocated claim from snippet, value and field only.* (R434) The text parameter was in the signature from the function's first commit (`f06f7b6`) and reached no prompt at any of the 22 commits touching the file | 12d-D23-A F1;
+    » The request is byte-identical (audit `prompt_hash` `d972c46d…`, both pins unchanged).
+254 C23 (468 chars):
+    » WRITE-PATH-01 Phase 1b Q5 | **CLOSED 2026-09-24** (`bc6df61`, R125): the script retired with its 9 parametrized cases and the override removed from `audit_span` / `semantic_verify` |
+262 C31 (519 chars):
+    » | C31 | *The auditor's `ollama_chat` call records no `paper_id` on `run_calls`* (`semantic_verify` passes none), so the audit stage's call provenance is per run, not per paper;
+    » `methods_section` counts audit papers from `audited_ai` events instead (R177) | 9d-PA read-out §0 I2 | **CLOSED 2026-09-29** (`5ad9a25`, R225/C31): `semantic_verify` gains `paper_id`, passed straight to `ollama_chat`;
+283 C52 (710 chars):
+    » | C52 | *Spec-dropping cfg fallbacks outside C41's scope: `_retry_snippet` (`extract_retry_snippet`), `parse_with_vision` (`vision_parse`), `semantic_verify` (`audit`), `_classify_page` (`pdf_quality`) each fall back to `stage_config(<stage>)` without the spec when called without cfg.* (R414) Callers recorded: `q8_validation.py:59`, `test_extraction_validation.py:113` (R415) | 12c-C41-R2 stop report | **CLOSED 2026-10-01** (`b9099892ae0be1bbb61ba
+285 C54 (1621 chars):
+    » No current caller passes `model=` to `semantic_verify` or `audit_span`.
+572 INT-i12-43 (251 chars):
+    » auditor.semantic_verify;
+912 INT-w12-1 (1615 chars):

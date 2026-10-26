@@ -1,0 +1,1 @@
+check_declared_call("pdf_quality", "qwen2.5vl:7b") outside a run -> None

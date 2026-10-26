@@ -1,0 +1,27 @@
+282 C51 | class 11c-EE-A A4 (live DDL and `sqlite_master` read `mode=ro`); R304 (R-d) | pkg LATENT — owner junior *Note 2026-10-08 (
+    » the row text is left as written:* `12f_triage.md`, row INT-g6-2 — "Two engine paths set `papers.status = 'PDF_EXCLUDED'` by direct UPDATE, bypassing `update_status`: `pdf_quality_import.import_dispositions` validates only that the paper exists (any status → terminal exclusion, no event, no manifest), and `pdf_parser.parse_all`.
+283 C52 | class 12c-C41-R2 stop report | pkg **CLOSED 2026-10-01** (`b9099892ae0be1bb
+    » | C52 | *Spec-dropping cfg fallbacks outside C41's scope: `_retry_snippet` (`extract_retry_snippet`), `parse_with_vision` (`vision_parse`), `semantic_verify` (`audit`), `_classify_page` (`pdf_quality`) each fall back to `stage_config(<stage>)` without the spec when called without cfg.* (R414) Callers recorded: `q8_validation.py:59`, `test_extraction_validation.py:113` (R415) | 12c-C41-R2 stop report | **CLOSED 2026-1
+285 C54 | class 12d-B23-R2 report, R-2 (b) | pkg **CLOSED 2026-10-06** (`29321ae6077047f1
+    » | C54 | *`EffectiveConfig.with_model` applies a caller-named model with no check against the active run's declared stage row, where `with_options` refuses a changed option (`UndeclaredOverride`, R223).* Under an active run a `model=` override at `semantic_verify`, `parse_with_vision` or `_classify_page` would send a model the manifest did not declare;
+314 D20 | class 10a-C6-A census; R230 | pkg LATENT — owner: the acquisition stage's 
+    » the two writers are scripts — `scripts/parse_expanded_corpus.py` (`update_status`, selecting `ABSTRACT_SCREENED_IN` with `pdf_quality_check_status = 'HUMAN_CONFIRMED'`) and `scripts/advance_to_pdf_acquired.py` (a direct `UPDATE`, selecting the dead token `SCREENED_IN`;
+    » what — "selects `pdf_quality_check_status = 'HUMAN_CONFIRMED'`, but papers that pass the AI check stay `AI_CHECKED` — an L17 file".
+481 INT-g6-2 | class 1 | pkg P2
+    » | INT-g6-2 | Two engine paths set `papers.status = 'PDF_EXCLUDED'` by direct UPDATE, bypassing `update_status`: `pdf_quality_import.import_dispositions` validates only that the paper exists (any status → terminal exclusion, no event, no manifest), and `pdf_parser.parse_all`.
+603 INT-i12-74 | class 2 | pkg P2, with B-F02
+    » Its statement (`12j_review_w2.md`, quoted): "`pdf_quality_check` declares a private `DATA_ROOT = Path("data")` (W1 adjacent item 12) // categorizer's private cwd-relative `DATA_ROOT` (W1 adjacent item 12, this lot's half) — verified".
+606 INT-i12-77 | class 1 (conditional — R596(c): "The row stays Class 1, conditional, P5 with B18. Trigger: any engine path, in any review, that joins a key from an external or human-produced file to a paper through an identifier other than the one the file was keyed with.") | pkg P5 with B18. Phase A, as R596(c) states 
+    » Files: abstract_adjudication_html.py, ft_adjudication_html.py, pdf_quality_html.py, review_workbook.py, and the xlsx/JSON file-format handling of the screening importers." Pre-tag: the page/workbook halves close on their minimum loud-failure fix (R601);
+643 INT-j12-9 | class 1 | pkg P4
+    » `engine/acquisition/pdf_quality_check.py` — `_get_papers_to_check`, `run_quality_check`;
+    » `pdf_quality_import.import_dispositions`;
+644 INT-j12-10 | class 1 | pkg P4 (the read-out's cell: "1 / P4 (2 if t
+    » `engine/acquisition/pdf_quality_check.py::run_quality_check`;
+    » `engine/acquisition/pdf_quality_html.py::_query_section1/2/3`, `generate_quality_html`;
+649 INT-j12-15 | class 1 (conditional — the read-out marks it "conditional / latent / weak"; entered at Class 1 with its condition stated, and the owning package's Phase A may move the class, R599. Condition, as the read-out states it — evidence level: "code order; conditional (the quality-check CLI is run)") | pkg P4 (the read-out's cell: "1 (conditional
+    » | INT-j12-15 | `pdf_quality_check` makes model calls outside any run manifest;
+    » `engine/acquisition/pdf_quality_check.py` — `run_quality_check`, `main`;
+660 INT-j12-26 | class 2 | pkg P5 Pre-tag: closes on its minimum loud-f
+    » `engine/acquisition/pdf_quality_html.py::generate_acquisition_html`;
+    » `pdf_quality_import.VALID_DISPOSITIONS`;

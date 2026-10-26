@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/scratch/12x-aqa/wt
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 1 item
+
+tests/test_u39_runtime_equals_hash.py::test_audit_runtime_equals_hash PASSED [100%]
+
+============================== 1 passed in 0.20s ===============================

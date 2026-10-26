@@ -1,0 +1,10 @@
+{
+ "audit_prompt_hash": "a1d355d443cf404a7b8725cadd0d4bfe48b13c194b6ad13edad9a144869ba491",
+ "rendered_messages": 6,
+ "rendered_variants": 3,
+ "requests": {
+  "study_type (categorical)": "441c7b9c92d914e8e8c7f3f4b3a513d2554c7a60723382df971f33c1309dfaa7",
+  "robot_platform (free_text)": "2242aade444c524bfe07926a8d23047e485c89027003ae59b1e0f3db5ceb08a1",
+  "sample_size (numeric)": "eda4691051a9553a809905e6441b458b375a883777f73e47a7a42bf8f35f9d99"
+ }
+}

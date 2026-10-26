@@ -1,0 +1,37 @@
+2026-10-26T04:37:19Z
+fp before exit 0: IDENTICAL — schema, every table, and the overall hash all match.
+papers 10039
+-- pdf_quality_check_status
+   None: 9658
+   'HUMAN_CONFIRMED': 364
+   'AI_CHECKED': 17
+-- pdf_ai_content_type
+   None: 9658
+   'full_manuscript': 364
+   'conference_poster': 9
+   'other': 8
+-- pdf_ai_language
+   None: 9658
+   'English': 354
+   'Chinese': 9
+   'German': 7
+   'Spanish': 5
+   'French': 2
+   'Japanese': 2
+   'Korean': 1
+   'Russian': 1
+-- pdf_ai_confidence: non-null, min, max, mean
+   (381, 0.9, 0.95, 0.949)
+-- AI fields set but status not AI_CHECKED/HUMAN_CONFIRMED: 0
+-- status x pdf_quality_check_status
+   ('AI_AUDIT_COMPLETE', 'HUMAN_CONFIRMED', 190)
+   ('FT_SCREENED_OUT', 'HUMAN_CONFIRMED', 171)
+   ('PDF_EXCLUDED', 'AI_CHECKED', 17)
+   ('ABSTRACT_SCREENED_OUT', 'HUMAN_CONFIRMED', 2)
+   ('PDF_EXCLUDED', 'HUMAN_CONFIRMED', 1)
+-- latest updated_at per pdf_quality_check_status (not the classifier's time)
+   (None, '2026-03-14T00:11:50Z', '2026-02-28T23:33:09.349387+00:00')
+   ('AI_CHECKED', '2026-03-14T00:11:50Z', '2026-03-13T23:07:16Z')
+   ('HUMAN_CONFIRMED', '2026-03-18T20:52:58.786876+00:00', '2026-03-13T04:19:56.251186+00:00')
+fp after exit 0: IDENTICAL — schema, every table, and the overall hash all match.
+2026-10-26T04:37:19Z

@@ -1,0 +1,36 @@
+RULING [evidence-engine 12x-R710] — 12x-OPEN stop at 2b: the brief named the wrong block; Block
+  99 is the wrap-ruling header; steps 0 and 1 accepted; resume from 2b
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-OPEN
+  report stopped at step 2b. Transcribe as Block 108 at item 0 of the next brief, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-OPEN stop report):
+  MEASURED: "ENGINE_REFACTOR_PLAN.md:9636 reads **Block 98.** … ruling R700 … on the 12v-U38B
+    final report and the read-out 12v_U38B.md, which is not a wrap ruling. R701 is Block 99
+    (:9703)"; "Element order, the same in Blocks 98, 99 and 106"; "HEAD be9d572, parent
+    43d8f85, clean, 0 0. It is a foreign commit: one surgical-cv row (2026-10-25T05:13:04Z …
+    b7a8b3d), PROJECT_LEDGER.md only, no trailers"; "12w_close/ holds 8 files that I7 does
+    not name"; "470092b88c84…0eab, 6528 B, 79 lines, one trailing newline"; "3375 passed, 17
+    deselected, 1 xfailed, 2 warnings in 897.79s"; "Ids: 3376/3376, only-nightly 0 /
+    only-ref 0"; "Loads: 20/20 OK"; "16 this boot (15 before it)".
+  READ (CC's): "My first id parse wrongly showed 111 missing, because my regex stopped at
+    spaces in parametrised ids. Re-parsing on the trailing status token gives 0/0."
+  INFERRED: none.
+
+R710(a) — The stop is correct and the error is the architect's: the brief's I2 and R15 named
+  "Block 98 (R701)" from memory, not from the record. R701 is Block 99. In I2, R15 and step
+  2b, read "Block 99" for "Block 98". Block 107 takes Block 106's form with Block 99's
+  wrap-ruling header shape; the element order CC quoted for Blocks 98, 99 and 106 stands.
+R710(b) — Steps 0 and 1 are accepted as reported. The 2026-10-25 nightly matched
+  expected_nightly_20261025.md line for line on e83611d; the health job loaded 20 of 20.
+R710(c) — claude-config be9d572 (one surgical-cv hook row, PROJECT_LEDGER.md only, the other
+  lane's form) is a child carrying only hook rows, accepted under R663(b) and R709(f) and
+  named in the report. Step 2g's ledger commit takes it as parent; its row is already
+  committed and is not carried again.
+R710(d) — Readings, no row: I7's list omitted eight files the 12w closeout wrote (the
+  architect's list was incomplete, not the record); one new NV_ERR_NO_MEMORY line at 07:03:49
+  beside the llama3.3:70b load, which succeeded, sixteen this boot, to the dgx-infra item; the
+  12w-close temp-root entries rotated out; the first id parse corrected before any check
+  rested on it; the nightly at 897.79 s.
+R710(e) — Resume 12x-OPEN at step 2b under R710(a). r709.txt is copied from scratch into
+  12w_close/ by cp with its sha256 verified, never rewritten. Everything else in the brief
+  stands, including the gate's launch deadline of 06:30 UTC on 2026-10-26.

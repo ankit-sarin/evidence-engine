@@ -10332,3 +10332,99 @@ R709(g) — Session 12w closes now. After R709(e) has landed, run /wrap. Report 
 | 2026-10-25 | R709(a) — The 12w-CLOSE closeout block is accepted as printed. Item 0 f7a16f3 (Blocks 105 and 106, the INT-v12-1 note, row INT-w12-1, recount 280) and the closeout commit e83611d stand; the ledger d02c4d3 with trailers stands. R709(b) — The band for 12x is 796–972 s: ±10% of 884.05 s, the mean of the last four standard gates on this host state (883.80, 878.55, 888.65, 885.20), rounded inward as R683(c) rounded. The series stands at 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20 s. A 12x gate outside the band is reported with its concurrent jobs, not adapted to. R709(c) — Foreign commit 90f1532 (the surgical-cv lane committing this lane's f7a16f3 row from the shared ledger file, PROJECT_LEDGER.md only, primer lines 41–45 untouched) is accepted under R663(b); the row is the record whichever lane commits it. A reading, recorded in the closure; no row. The cross-lane ledger behaviour goes to the dgx-infra item with the foreign loads. R709(d) — Readings, no row: the primer's 12w block written after the closeout commit so it can name that commit's hash, as 12v's did; the bullet-capture bug reverted and rebuilt before any check ran on it; earlyoom kills 0 by its kill wording; pytest-51 another project's; 12w_close/diff_since_e81d699.txt committed empty as a record of the empty diff. R709(e) — The lane line (sha256 8e4877fea4f0602195e92b27a3b23ea8cfd4595479c3d710891781854ac87251, 5,503 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows named by hash), push, level. R709(f) — 12x-OPEN's startup verify checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12x's item 0 transcribes this ruling as Block 107 and copies lane_line_12w.txt into docs/session-reports/session-12/12w_close/ with its commit, which carries no cell note and is verified by its "−" count, 0 (R664(b)). No closeout gate ran: the expected gate values for 12x are U17's (e81d699) on unchanged code (3,375 / 1 xfailed / 17 deselected, collected 3,393 / selected 3,376; 0/0 against 12w_close/collected_ids_12w_close.txt; band 796–972 s, with the concurrent jobs named and the snapshot's own PIDs excluded); the 2026-10-25 09:00 UTC nightly runs on the HEAD then pushed, whose engine tree equals e81d699's, expected 3,375 / 17 / 1 on 3,393 / 3,376, exit 0, 12w_close/expected_nightly_20261025.md governing; the 07:00 health job's loads are read and reported by 12x-OPEN, with an NVRM grep; a read-only request in any window is a reading (R696(b)). The temp root is read, never matched. Residency is a reading. 12x-OPEN's pre-check reads the process table for leftovers of session 523719de (R692's form). R709(g) — Session 12w closes now. After R709(e) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-25, during session 12w, on architect recommendation, on the 12w-CLOSE closeout block (e83611d) |
 
 The decision log in this file ends at R709.
+
+**Block 108.** *Transcribed 2026-10-26 (item 0 of the 12x-U39A brief), in its own commit with Block 109, in the R597(e) form:* ruling R710, made by PI on architect recommendation on 2026-10-26 UTC, during session 12x, on the 12x-OPEN report stopped at step 2b (nothing committed; HEAD `e83611d458d19bec2733d913b851af337f7ee92e`). The 12x-OPEN resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12x-R710] — 12x-OPEN stop at 2b: the brief named the wrong block; Block
+  99 is the wrap-ruling header; steps 0 and 1 accepted; resume from 2b
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-OPEN
+  report stopped at step 2b. Transcribe as Block 108 at item 0 of the next brief, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-OPEN stop report):
+  MEASURED: "ENGINE_REFACTOR_PLAN.md:9636 reads **Block 98.** … ruling R700 … on the 12v-U38B
+    final report and the read-out 12v_U38B.md, which is not a wrap ruling. R701 is Block 99
+    (:9703)"; "Element order, the same in Blocks 98, 99 and 106"; "HEAD be9d572, parent
+    43d8f85, clean, 0 0. It is a foreign commit: one surgical-cv row (2026-10-25T05:13:04Z …
+    b7a8b3d), PROJECT_LEDGER.md only, no trailers"; "12w_close/ holds 8 files that I7 does
+    not name"; "470092b88c84…0eab, 6528 B, 79 lines, one trailing newline"; "3375 passed, 17
+    deselected, 1 xfailed, 2 warnings in 897.79s"; "Ids: 3376/3376, only-nightly 0 /
+    only-ref 0"; "Loads: 20/20 OK"; "16 this boot (15 before it)".
+  READ (CC's): "My first id parse wrongly showed 111 missing, because my regex stopped at
+    spaces in parametrised ids. Re-parsing on the trailing status token gives 0/0."
+  INFERRED: none.
+
+R710(a) — The stop is correct and the error is the architect's: the brief's I2 and R15 named
+  "Block 98 (R701)" from memory, not from the record. R701 is Block 99. In I2, R15 and step
+  2b, read "Block 99" for "Block 98". Block 107 takes Block 106's form with Block 99's
+  wrap-ruling header shape; the element order CC quoted for Blocks 98, 99 and 106 stands.
+R710(b) — Steps 0 and 1 are accepted as reported. The 2026-10-25 nightly matched
+  expected_nightly_20261025.md line for line on e83611d; the health job loaded 20 of 20.
+R710(c) — claude-config be9d572 (one surgical-cv hook row, PROJECT_LEDGER.md only, the other
+  lane's form) is a child carrying only hook rows, accepted under R663(b) and R709(f) and
+  named in the report. Step 2g's ledger commit takes it as parent; its row is already
+  committed and is not carried again.
+R710(d) — Readings, no row: I7's list omitted eight files the 12w closeout wrote (the
+  architect's list was incomplete, not the record); one new NV_ERR_NO_MEMORY line at 07:03:49
+  beside the llama3.3:70b load, which succeeded, sixteen this boot, to the dgx-infra item; the
+  12w-close temp-root entries rotated out; the first id parse corrected before any check
+  rested on it; the nightly at 897.79 s.
+R710(e) — Resume 12x-OPEN at step 2b under R710(a). r709.txt is copied from scratch into
+  12w_close/ by cp with its sha256 verified, never rewritten. Everything else in the brief
+  stands, including the gate's launch deadline of 06:30 UTC on 2026-10-26.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-26 | R710(a) — The stop is correct and the error is the architect's: the brief's I2 and R15 named "Block 98 (R701)" from memory, not from the record. R701 is Block 99. In I2, R15 and step 2b, read "Block 99" for "Block 98". Block 107 takes Block 106's form with Block 99's wrap-ruling header shape; the element order CC quoted for Blocks 98, 99 and 106 stands. R710(b) — Steps 0 and 1 are accepted as reported. The 2026-10-25 nightly matched expected_nightly_20261025.md line for line on e83611d; the health job loaded 20 of 20. R710(c) — claude-config be9d572 (one surgical-cv hook row, PROJECT_LEDGER.md only, the other lane's form) is a child carrying only hook rows, accepted under R663(b) and R709(f) and named in the report. Step 2g's ledger commit takes it as parent; its row is already committed and is not carried again. R710(d) — Readings, no row: I7's list omitted eight files the 12w closeout wrote (the architect's list was incomplete, not the record); one new NV_ERR_NO_MEMORY line at 07:03:49 beside the llama3.3:70b load, which succeeded, sixteen this boot, to the dgx-infra item; the 12w-close temp-root entries rotated out; the first id parse corrected before any check rested on it; the nightly at 897.79 s. R710(e) — Resume 12x-OPEN at step 2b under R710(a). r709.txt is copied from scratch into 12w_close/ by cp with its sha256 verified, never rewritten. Everything else in the brief stands, including the gate's launch deadline of 06:30 UTC on 2026-10-26. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-OPEN report stopped at step 2b (nothing committed; e83611d) |
+
+The decision log in this file ends at R710.
+
+**Block 109.** *Transcribed 2026-10-26 (item 0 of the 12x-U39A brief), in its own commit with Block 108, in the R597(e) form:* ruling R711, made by PI on architect recommendation on 2026-10-26 UTC, during session 12x, on the 12x-OPEN final report as resumed under R710 (item 0 `a5892c914a30ac4e50c0bf8db2e5107898a1530e`). The 12x-U39A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12x-R711] — 12x-OPEN accepted; the band series extended; U39's Phase 1
+  opens
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-OPEN
+  final report as resumed under R710 (item 0 a5892c914a30ac4e50c0bf8db2e5107898a1530e).
+  Transcribe as Block 109 at item 0 of the 12x-U39A brief below, after Block 108 (R710), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-OPEN final report):
+  MEASURED: "Commit a5892c914a30ac4e50c0bf8db2e5107898a1530e, parent e83611d; 3 files, +179";
+    "plan numstat +90 / −0"; "Plan after: sha256
+    b17ab0486210e2288eebf26f76474e53e19f3a4287983121b47980760c8006b5, 2,013,085 bytes, 10,334
+    lines"; "Ledger commit ed2c3f00ee19b89c10c0edaa4a59f5bc0d431e5f, parent be9d572, message
+    ledger: rows through 2026-10-26T02:16:15Z, with both trailer lines"; "==== 3375 passed, 17
+    deselected, 1 xfailed, 2 warnings in 880.54s (0:14:40) ===="; "882.37 s, inside 796–972";
+    "Ids: 3,376, only-gate 0 / only-ref 0"; "phases slower by more than 10 s: none"; "There are
+    two read-only requests at 02:30:56, HEAD / then GET /api/ps"; "23 MATCH / 0 MISMATCH";
+    pins "byte-identical to pin_tuples_close.json"; "stdout byte-identical to
+    recount_12w_r707.json"; "280 | 569584d1…afb0"; "both dbchecks paths exist with sha256
+    909e3ed2…4ff5. I ran 12f_repro/dbchecks.py".
+  READ (CC's): "the "inventory exit" line printed tail's status rather than the inventory's. I
+    re-ran it with its exit captured properly: exit 0"; "The gate's own run rotated pytest-102
+    (surgical-cv's) out".
+  INFERRED: none.
+
+R711(a) — 12x-OPEN is accepted as reported: item 0 a5892c9 (Block 107; r709.txt and
+  lane_line_12w.txt in 12w_close/), the ledger ed2c3f0; the decision log in the file ends at
+  R709. The 12x open stands verified.
+R711(b) — The band series on this host state gains 882.37 s: 871.59, 906.50, 858.50, 895.02,
+  872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37 s. The band
+  for 12x stays 796–972 s (R709(b)).
+R711(c) — Readings, no row: the two read-only requests at 02:30:56 (HEAD /, GET /api/ps) are
+  unattributed and a reading under R696(b); the inventory-exit slip was corrected before any
+  check rested on it; a gate in either lane rotates the other lane's basetemps out of the
+  shared temp root, which the dgx-infra item already carries; dbchecks.py exists at both paths
+  with one sha256, and 12f_repro/dbchecks.py is the instrument from here.
+R711(d) — U39's Phase 1 opens under the 12x-U39A brief below, in the form R695(b) set: read-only
+  on engine/ and tests/; the acceptance tests written and run in scratch; the record committed
+  under 12x_U39A/ with the test file kept there as evidence, not under tests/. R710 and this
+  ruling are transcribed at its item 0 as Blocks 108 and 109.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-26 | R711(a) — 12x-OPEN is accepted as reported: item 0 a5892c9 (Block 107; r709.txt and lane_line_12w.txt in 12w_close/), the ledger ed2c3f0; the decision log in the file ends at R709. The 12x open stands verified. R711(b) — The band series on this host state gains 882.37 s: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37 s. The band for 12x stays 796–972 s (R709(b)). R711(c) — Readings, no row: the two read-only requests at 02:30:56 (HEAD /, GET /api/ps) are unattributed and a reading under R696(b); the inventory-exit slip was corrected before any check rested on it; a gate in either lane rotates the other lane's basetemps out of the shared temp root, which the dgx-infra item already carries; dbchecks.py exists at both paths with one sha256, and 12f_repro/dbchecks.py is the instrument from here. R711(d) — U39's Phase 1 opens under the 12x-U39A brief below, in the form R695(b) set: read-only on engine/ and tests/; the acceptance tests written and run in scratch; the record committed under 12x_U39A/ with the test file kept there as evidence, not under tests/. R710 and this ruling are transcribed at its item 0 as Blocks 108 and 109. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-OPEN final report as resumed under R710 (a5892c9) |
+
+The decision log in this file ends at R711.

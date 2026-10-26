@@ -1,0 +1,108 @@
+diff --git a/engine/core/effective_config.py b/engine/core/effective_config.py
+index 2556237..3a94730 100644
+--- a/engine/core/effective_config.py
++++ b/engine/core/effective_config.py
+@@ -424,7 +424,8 @@ def render_messages(stage: str, spec: ReviewSpec | None, *,
+         span = EvidenceSpan(field_name="f", value="v", source_snippet="s", confidence=0.5, tier=1)
+         # Both field-type variants: the audit template branches on it.
+         return (build_audit_messages(span, field_type="text")
+-                + build_audit_messages(span, field_type="categorical"))
++                + build_audit_messages(span, field_type="categorical")
++                + build_audit_messages(span, field_type="numeric"))
+     if stage in ("extract_pass1", "extract_pass2", "extract_retry_snippet"):
+         from engine.agents import extractor as ex
+         prompt = ex.build_extraction_prompt(SENTINEL_TEXT, spec, codebook_path)
+
+==== pytest ====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/scratch/12x-u39c/wt
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 13 items
+
+::test_abstract_screen_runtime_equals_hash[primary] PASSED               [  7%]
+::test_abstract_screen_runtime_equals_hash[verifier] PASSED              [ 15%]
+::test_ft_screen_runtime_equals_hash[primary] PASSED                     [ 23%]
+::test_ft_screen_runtime_equals_hash[verifier] PASSED                    [ 30%]
+::test_extract_pass1_runtime_equals_hash PASSED                          [ 38%]
+::test_extract_pass2_non_elicited_runtime_equals_hash PASSED             [ 46%]
+::test_extract_retry_snippet_runtime_equals_hash PASSED                  [ 53%]
+::test_elicitation_pass1_runtime_equals_hash PASSED                      [ 61%]
+::test_extract_pass2_elicited_runtime_equals_hash PASSED                 [ 69%]
+::test_audit_runtime_equals_hash FAILED                                  [ 76%]
+::test_audit_every_codebook_type_equals_a_rendered_variant FAILED        [ 84%]
+::test_vision_parse_runtime_equals_hash PASSED                           [ 92%]
+::test_preflight_runtime_equals_hash PASSED                              [100%]
+
+=================================== FAILURES ===================================
+________________________ test_audit_runtime_equals_hash ________________________
+
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf8026d0ea3f0>
+
+    def test_audit_runtime_equals_hash(spec, monkeypatch):
+        """Both field-type branches, the variant count compared."""
+        from engine.agents import auditor as A
+        from engine.agents.models import EvidenceSpan
+        monkeypatch.setattr(A, "ollama_chat", _fake)
+        cfg = ec.stage_config("audit", spec)
+        span = EvidenceSpan(field_name="f", value="v", source_snippet="s", confidence=0.5, tier=1)
+        calls = [_send(A.semantic_verify, span, field_type=t, cfg=cfg)
+                 for t in ("text", "categorical")]
+>       _assert_variants(calls, ec.render_messages("audit", spec))
+
+../test_u39_runtime_equals_hash.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+calls = [[{'content': 'You are an audit agent verifying data extractions from scientific papers. For free-text fields, be stri....\n\nRespond with JSON: {"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}', 'role': 'user'}]]
+rendered = [{'content': 'You are an audit agent verifying data extractions from scientific papers. For free-text fields, be stric...d?\n\nRespond with JSON: {"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}', 'role': 'user'}]
+
+    def _assert_variants(calls: list[list[dict]], rendered: list[dict]):
+        chunks = _variants(rendered)
+>       assert len(calls) == len(chunks), "variant count: runtime calls vs rendered variants"
+E       AssertionError: variant count: runtime calls vs rendered variants
+E       assert 2 == 3
+E        +  where 2 = len([[{'content': 'You are an audit agent verifying data extractions from scientific papers. For free-text fields, be strict: flag anything not clearly supported by the source snippet. For categorical fields, verify that the source text reasonably supports the chosen category — the category label does not need to appear verbatim. Respond ONLY with JSON.', 'role': 'system'}, {'content': '/no_think\nYou are an audit agent verifying data extraction from a scientific paper.\n\nField: f\nField type: text\nExtracted value: v\nSource snippet from paper: s\n\nDoes the extracted value accurately represent what the source snippet states?\nConsider:\n- Is the value factually supported by the snippet?\n- Is there any misinterpretation or hallucination?\n- Is the value a reasonable extraction for this field?\n\nRespond with JSON: {"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}', 'role': 'user'}], [{'content': 'You are an audit agent verifying data extractions from scientific papers. For free-text fields, be strict: flag anything not clearly supported by the source snippet. For categorical fields, verify that the source text reasonably supports the chosen category — the category label does not need to appear verbatim. Respond ONLY with JSON.', 'role': 'system'}, {'content': '/no_think\nYou are an audit agent verifying data extraction from a scientific paper.\n\nField: f\nField type: categorical\nExtracted value: v\nSource snippet from paper: s\n\nDoes the source snippet provide sufficient evidence to classify this paper as \'v\' for the field \'f\'?\nNote: This is a categorical/classification field. The exact phrase \'v\' does NOT need to appear verbatim in the text. The question is whether the described content reasonably supports this classification.\n\nRespond with JSON: {"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}', 'role': 'user'}]])
+E        +  and   3 = len([[{'content': 'You are an audit agent verifying data extractions from scientific papers. For free-text fields, be strict: flag anything not clearly supported by the source snippet. For categorical fields, verify that the source text reasonably supports the chosen category — the category label does not need to appear verbatim. Respond ONLY with JSON.', 'role': 'system'}, {'content': '/no_think\nYou are an audit agent verifying data extraction from a scientific paper.\n\nField: f\nField type: text\nExtracted value: v\nSource snippet from paper: s\n\nDoes the extracted value accurately represent what the source snippet states?\nConsider:\n- Is the value factually supported by the snippet?\n- Is there any misinterpretation or hallucination?\n- Is the value a reasonable extraction for this field?\n\nRespond with JSON: {"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}', 'role': 'user'}], [{'content': 'You are an audit agent verifying data extractions from scientific papers. For free-text fields, be strict: flag anything not clearly supported by the source snippet. For categorical fields, verify that the source text reasonably supports the chosen category — the...d. The exact phrase \'v\' does NOT need to appear verbatim in the text. The question is whether the described content reasonably supports this classification.\n\nRespond with JSON: {"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}', 'role': 'user'}], [{'content': 'You are an audit agent verifying data extractions from scientific papers. For free-text fields, be strict: flag anything not clearly supported by the source snippet. For categorical fields, verify that the source text reasonably supports the chosen category — the category label does not need to appear verbatim. Respond ONLY with JSON.', 'role': 'system'}, {'content': '/no_think\nYou are an audit agent verifying data extraction from a scientific paper.\n\nField: f\nField type: numeric\nExtracted value: v\nSource snippet from paper: s\n\nDoes the extracted value accurately represent what the source snippet states?\nConsider:\n- Is the value factually supported by the snippet?\n- Is there any misinterpretation or hallucination?\n- Is the value a reasonable extraction for this field?\n\nRespond with JSON: {"status": "verified" or "flagged", "grep_found": true, "reasoning": "..."}', 'role': 'user'}]])
+
+../test_u39_runtime_equals_hash.py:67: AssertionError
+___________ test_audit_every_codebook_type_equals_a_rendered_variant ___________
+
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf8026d0ea2d0>
+
+    def test_audit_every_codebook_type_equals_a_rendered_variant(spec, monkeypatch):
+        """R715(c): the audit variant set is decided in two places (the render's literals, the
+        builder's condition). For every type in VALID_FIELD_TYPES, the runtime list for a field
+        of that type equals exactly one rendered variant once the field-type word is replaced by
+        that variant's (the field name, value and snippet are the render's sentinels), and the
+        distinct normalised runtime lists are as many as the rendered variants."""
+        import re
+        from engine.agents import auditor as A
+        from engine.agents.models import EvidenceSpan
+        from engine.core.codebook import VALID_FIELD_TYPES
+        monkeypatch.setattr(A, "ollama_chat", _fake)
+        cfg = ec.stage_config("audit", spec)
+        span = EvidenceSpan(field_name="f", value="v", source_snippet="s", confidence=0.5, tier=1)
+        variants = _variants(ec.render_messages("audit", spec))
+        words = [re.search(r"\nField type: (.*)\n", v[-1]["content"]).group(1) for v in variants]
+        normalised = set()
+        for t in VALID_FIELD_TYPES:
+            sent = _send(A.semantic_verify, span, field_type=t, cfg=cfg)
+            matches = []
+            for v, w in zip(variants, words):
+                norm = [{**m, "content": m["content"].replace(f"\nField type: {t}\n", f"\nField type: {w}\n")}
+                        for m in sent]
+                if norm == v:
+                    matches.append(ec.canonical_json(norm))
+>           assert len(matches) == 1, (t, len(matches))
+E           AssertionError: ('numeric', 2)
+E           assert 2 == 1
+E            +  where 2 = len(['[{"content":"You are an audit agent verifying data extractions from scientific papers. For free-text fields, be strict: flag anything not clearly supported by the source snippet. For categorical fields, verify that the source text reasonably supports the chosen category — the category label does not need to appear verbatim. Respond ONLY with JSON.","role":"system"},{"content":"/no_think\\nYou are an audit agent verifying data extraction from a scientific paper.\\n\\nField: f\\nField type: text\\nExtracted value: v\\nSource snippet from paper: s\\n\\nDoes the extracted value accurately represent what the source snippet states?\\nConsider:\\n- Is the value factually supported by the snippet?\\n- Is there any misinterpretation or hallucination?\\n- Is the value a reasonable extraction for this field?\\n\\nRespond with JSON: {\\"status\\": \\"verified\\" or \\"flagged\\", \\"grep_found\\": true, \\"reasoning\\": \\"...\\"}","role":"user"}]', '[{"content":"You are an audit agent verifying data extractions from scientific papers. For free-text fields, be strict: flag anything not clearly supported by the source snippet. For categorical fields, verify that the source text reasonably supports the chosen category — the category label does not need to appear verbatim. Respond ONLY with JSON.","role":"system"},{"content":"/no_think\\nYou are an audit agent verifying data extraction from a scientific paper.\\n\\nField: f\\nField type: numeric\\nExtracted value: v\\nSource snippet from paper: s\\n\\nDoes the extracted value accurately represent what the source snippet states?\\nConsider:\\n- Is the value factually supported by the snippet?\\n- Is there any misinterpretation or hallucination?\\n- Is the value a reasonable extraction for this field?\\n\\nRespond with JSON: {\\"status\\": \\"verified\\" or \\"flagged\\", \\"grep_found\\": true, \\"reasoning\\": \\"...\\"}","role":"user"}]'])
+
+../test_u39_runtime_equals_hash.py:200: AssertionError
+=========================== short test summary info ============================
+FAILED ::test_audit_runtime_equals_hash - AssertionError: variant count: runt...
+FAILED ::test_audit_every_codebook_type_equals_a_rendered_variant - Assertion...
+========================= 2 failed, 11 passed in 2.72s =========================

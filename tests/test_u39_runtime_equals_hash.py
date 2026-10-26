@@ -1,4 +1,4 @@
-"""12x-U39A — U39's acceptance tests (Phase 1, scratch; not under tests/).
+"""U39 — each hashed stage's runtime-built message list equals the list its prompt_hash renders (INT-v12-1, INT-w12-1; R707(d)–(e), R712, R715(c)).
 
 INT-v12-1 / INT-w12-1 (R707(d)–(e)): for every hashed stage on the local run path, the
 message list the runtime sends, captured through a stand-in for `ollama_chat` at the
@@ -171,6 +171,35 @@ def test_audit_runtime_equals_hash(spec, monkeypatch):
     calls = [_send(A.semantic_verify, span, field_type=t, cfg=cfg)
              for t in ("text", "categorical")]
     _assert_variants(calls, ec.render_messages("audit", spec))
+
+
+def test_audit_every_codebook_type_equals_a_rendered_variant(spec, monkeypatch):
+    """R715(c): the audit variant set is decided in two places (the render's literals, the
+    builder's condition). For every type in VALID_FIELD_TYPES, the runtime list for a field
+    of that type equals exactly one rendered variant once the field-type word is replaced by
+    that variant's (the field name, value and snippet are the render's sentinels), and the
+    distinct normalised runtime lists are as many as the rendered variants."""
+    import re
+    from engine.agents import auditor as A
+    from engine.agents.models import EvidenceSpan
+    from engine.core.codebook import VALID_FIELD_TYPES
+    monkeypatch.setattr(A, "ollama_chat", _fake)
+    cfg = ec.stage_config("audit", spec)
+    span = EvidenceSpan(field_name="f", value="v", source_snippet="s", confidence=0.5, tier=1)
+    variants = _variants(ec.render_messages("audit", spec))
+    words = [re.search(r"\nField type: (.*)\n", v[-1]["content"]).group(1) for v in variants]
+    normalised = set()
+    for t in VALID_FIELD_TYPES:
+        sent = _send(A.semantic_verify, span, field_type=t, cfg=cfg)
+        matches = []
+        for v, w in zip(variants, words):
+            norm = [{**m, "content": m["content"].replace(f"\nField type: {t}\n", f"\nField type: {w}\n")}
+                    for m in sent]
+            if norm == v:
+                matches.append(ec.canonical_json(norm))
+        assert len(matches) == 1, (t, len(matches))
+        normalised.add(matches[0])
+    assert len(normalised) == len(variants), (len(normalised), len(variants))
 
 
 # ── vision parse ─────────────────────────────────────────────────────

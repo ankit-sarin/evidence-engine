@@ -1,0 +1,77 @@
+diff --git a/engine/agents/auditor.py b/engine/agents/auditor.py
+index 79380a3..7ebce58 100644
+--- a/engine/agents/auditor.py
++++ b/engine/agents/auditor.py
+@@ -90,6 +90,10 @@ def build_audit_messages(span: EvidenceSpan, field_type: str = "text") -> list[d
+             f"The question is whether the described content reasonably supports "
+             f"this classification."
+         )
++    elif field_type == "numeric":
++        verification_question = (
++            f"Does the snippet state this number exactly, with its unit?"
++        )
+     else:
+         verification_question = (
+             f"Does the extracted value accurately represent what the source snippet states?\n"
+
+==== pytest ====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/scratch/12x-u39c/wt
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 13 items
+
+::test_abstract_screen_runtime_equals_hash[primary] PASSED               [  7%]
+::test_abstract_screen_runtime_equals_hash[verifier] PASSED              [ 15%]
+::test_ft_screen_runtime_equals_hash[primary] PASSED                     [ 23%]
+::test_ft_screen_runtime_equals_hash[verifier] PASSED                    [ 30%]
+::test_extract_pass1_runtime_equals_hash PASSED                          [ 38%]
+::test_extract_pass2_non_elicited_runtime_equals_hash PASSED             [ 46%]
+::test_extract_retry_snippet_runtime_equals_hash PASSED                  [ 53%]
+::test_elicitation_pass1_runtime_equals_hash PASSED                      [ 61%]
+::test_extract_pass2_elicited_runtime_equals_hash PASSED                 [ 69%]
+::test_audit_runtime_equals_hash PASSED                                  [ 76%]
+::test_audit_every_codebook_type_equals_a_rendered_variant FAILED        [ 84%]
+::test_vision_parse_runtime_equals_hash PASSED                           [ 92%]
+::test_preflight_runtime_equals_hash PASSED                              [100%]
+
+=================================== FAILURES ===================================
+___________ test_audit_every_codebook_type_equals_a_rendered_variant ___________
+
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xff84a5a8e180>
+
+    def test_audit_every_codebook_type_equals_a_rendered_variant(spec, monkeypatch):
+        """R715(c): the audit variant set is decided in two places (the render's literals, the
+        builder's condition). For every type in VALID_FIELD_TYPES, the runtime list for a field
+        of that type equals exactly one rendered variant once the field-type word is replaced by
+        that variant's (the field name, value and snippet are the render's sentinels), and the
+        distinct normalised runtime lists are as many as the rendered variants."""
+        import re
+        from engine.agents import auditor as A
+        from engine.agents.models import EvidenceSpan
+        from engine.core.codebook import VALID_FIELD_TYPES
+        monkeypatch.setattr(A, "ollama_chat", _fake)
+        cfg = ec.stage_config("audit", spec)
+        span = EvidenceSpan(field_name="f", value="v", source_snippet="s", confidence=0.5, tier=1)
+        variants = _variants(ec.render_messages("audit", spec))
+        words = [re.search(r"\nField type: (.*)\n", v[-1]["content"]).group(1) for v in variants]
+        normalised = set()
+        for t in VALID_FIELD_TYPES:
+            sent = _send(A.semantic_verify, span, field_type=t, cfg=cfg)
+            matches = []
+            for v, w in zip(variants, words):
+                norm = [{**m, "content": m["content"].replace(f"\nField type: {t}\n", f"\nField type: {w}\n")}
+                        for m in sent]
+                if norm == v:
+                    matches.append(ec.canonical_json(norm))
+>           assert len(matches) == 1, (t, len(matches))
+E           AssertionError: ('numeric', 0)
+E           assert 0 == 1
+E            +  where 0 = len([])
+
+../test_u39_runtime_equals_hash.py:200: AssertionError
+=========================== short test summary info ============================
+FAILED ::test_audit_every_codebook_type_equals_a_rendered_variant - Assertion...
+========================= 1 failed, 12 passed in 2.80s =========================

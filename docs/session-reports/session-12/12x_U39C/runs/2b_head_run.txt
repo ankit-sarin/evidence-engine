@@ -1,0 +1,24 @@
+Mon Oct 26 04:48:25 UTC 2026
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 13 items
+
+::test_abstract_screen_runtime_equals_hash[primary] PASSED               [  7%]
+::test_abstract_screen_runtime_equals_hash[verifier] PASSED              [ 15%]
+::test_ft_screen_runtime_equals_hash[primary] PASSED                     [ 23%]
+::test_ft_screen_runtime_equals_hash[verifier] PASSED                    [ 30%]
+::test_extract_pass1_runtime_equals_hash PASSED                          [ 38%]
+::test_extract_pass2_non_elicited_runtime_equals_hash PASSED             [ 46%]
+::test_extract_retry_snippet_runtime_equals_hash PASSED                  [ 53%]
+::test_elicitation_pass1_runtime_equals_hash PASSED                      [ 61%]
+::test_extract_pass2_elicited_runtime_equals_hash PASSED                 [ 69%]
+::test_audit_runtime_equals_hash PASSED                                  [ 76%]
+::test_audit_every_codebook_type_equals_a_rendered_variant PASSED        [ 84%]
+::test_vision_parse_runtime_equals_hash PASSED                           [ 92%]
+::test_preflight_runtime_equals_hash PASSED                              [100%]
+
+============================== 13 passed in 2.62s ==============================
+exit 0

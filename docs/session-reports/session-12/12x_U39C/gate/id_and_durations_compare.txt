@@ -1,0 +1,5 @@
+outcomes {'PASSED': 3388, 'XFAIL': 1} ids 3389 unique 3389 ref 3388
+only-gate ['tests/test_u39_runtime_equals_hash.py::test_audit_every_codebook_type_equals_a_rendered_variant'] only-ref 0
+U39 file ids 13 outcomes ['PASSED'] 13
+durations lines new 2486 ref 2515 ; phases slower by >10 s: 0
+sum new 909.19 ref 930.64

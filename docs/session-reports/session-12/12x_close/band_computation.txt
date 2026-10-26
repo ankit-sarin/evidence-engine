@@ -1,0 +1,6 @@
+# R717(d)/12x-CLOSE 3f: +-10% of the mean of the last four standard gates on this host state (R683(c) form; rounded inward); a computation for the wrap ruling, not a band in force
+gates: 885.20 (12w-U17B), 882.37 (12x-OPEN), 941.74 (12x-U39B; three concurrent surgical-cv pytest runs), 920.32 (12x-U39C; one concurrent surgical-cv pytest suite)
+mean: 907.4075 s; x0.9 = 816.6668; x1.1 = 998.1483
+figure for the wrap ruling: 817–998 s
+confounded: 941.74 and 920.32 (concurrent surgical-cv pytest)
+series of sixteen: 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32

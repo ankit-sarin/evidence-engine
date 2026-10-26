@@ -1,0 +1,20 @@
+# 2a health job reads, 2026-10-26T17:40:22Z
+loads OK/total: 20/20; FAIL lines: 0
+-- journal 06:59–07:12 (non-200 / load lines)
+GIN lines: 69; non-200: 0
+residency after (api/ps now): {"models":[]}
+-- NVRM / NV_ERR_NO_MEMORY this boot
+16
+      1 Oct 18
+      3 Oct 19
+      2 Oct 20
+      4 Oct 21
+      1 Oct 22
+      4 Oct 23
+      1 Oct 25
+-- NRestarts / start
+NRestarts=0
+ExecMainStartTimestamp=Sat 2026-10-17 23:04:05 UTC
+ActiveEnterTimestamp=Sat 2026-10-17 23:04:05 UTC
+boot id: abf99132-fd8b-41f9-b9fd-62241e40110c
+earlyoom kills this boot: 2

@@ -1,0 +1,7 @@
+# temp root at the 12x closeout, 2026-10-26T17:43:02Z: a reading, not matched; nothing emptied (R647(c))
+pytest-127 4394755 2026-10-26 05:13:17.874634613 +0000 app_db_template0 app_db_templatecurrent 
+pytest-128 143207414 2026-10-26 05:18:12.179456661 +0000 app_db_template0 app_db_templatecurrent 
+pytest-129 1380578320 2026-10-26 09:14:59.820721263 +0000 test_013_is_idempotent0 test_013_is_idempotentcurrent 
+pytest-97 89125340 2026-10-25 04:55:26.597231077 +0000 app_db_template0 app_db_templatecurrent 
+pytest-current -> /tmp/pytest-of-ankitsarin/pytest-129
+total: 5 entries, 1617305829 B

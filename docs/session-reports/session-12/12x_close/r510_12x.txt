@@ -1,0 +1,4 @@
+# R510 for session 12x: six-cell INT- rows (ID, Class lead digit, first package) at the 12x open plan (e83611d) and after item 0 (2b11a57)
+six-cell INT- row ids: e83611d 206 ; 2b11a57 206
+rows in: [] ; rows out: []
+class/package moves: []

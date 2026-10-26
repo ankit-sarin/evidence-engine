@@ -1,0 +1,22 @@
+# 2b nightly reads, 2026-10-26T17:41:07Z
+-- HEAD at 09:00 (reflog)
+2b11a57 HEAD@{2026-10-26T17:39:34+00:00} commit: docs(plan): 12x-CLOSE item 0 — R716 and R717 as Blocks 114–115; INT-w12-1 correcting no
+39a87ab HEAD@{2026-10-26T17:05:31+00:00} commit: docs(plan): 12x-U39C notes — INT-w12-1 audit covered (Anthropic arm only open); INT-j12-1
+f3f552e HEAD@{2026-10-26T05:05:59+00:00} commit: test(u39): audit's runtime list equals a rendered variant for every codebook type
+4f1af8d HEAD@{2026-10-26T04:47:36+00:00} commit: docs(plan): 12x-U39C item 0 — R715 as Block 113
+b571aaf HEAD@{2026-10-26T04:41:13+00:00} commit: docs(session-12): 12x-AQA record — audit's field-type variants and pdf_quality's hashing 
+6cb6ad6 HEAD@{2026-10-26T04:36:06+00:00} commit: docs(plan): 12x-AQA item 0 — R713 and R714 as Blocks 111–112
+6368069 HEAD@{2026-10-26T04:15:26+00:00} commit: docs(plan): 12x-U39B notes — INT-v12-1 CLOSED on U39; INT-w12-1 open; dated line
+1ebb3ae HEAD@{2026-10-26T04:14:23+00:00} commit: test(u39): runtime message lists equal the hashed lists, every local hashed stage
+-- lines
+collecting ... collected 3406 items / 17 deselected / 3389 selected
+==== 3388 passed, 17 deselected, 1 xfailed, 2 warnings in 894.72s (0:14:54) ====
+pytest exit code: 0
+durations file: 2476 lines, 258198 B
+nightly ids: 3389
+gate list 12x_U39C/collected_ids_12x_u39c.txt: 3389
+only-nightly: 0; only-gate: 0
+-- journal ollama 09:00–09:25
+-- No entries --
+-- lock mtime
+2026-07-27 23:22:08.906609268 +0000

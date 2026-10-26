@@ -1,0 +1,21 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 12 items
+
+tests/test_u39_runtime_equals_hash.py::test_abstract_screen_runtime_equals_hash[primary] PASSED [  8%]
+tests/test_u39_runtime_equals_hash.py::test_abstract_screen_runtime_equals_hash[verifier] PASSED [ 16%]
+tests/test_u39_runtime_equals_hash.py::test_ft_screen_runtime_equals_hash[primary] PASSED [ 25%]
+tests/test_u39_runtime_equals_hash.py::test_ft_screen_runtime_equals_hash[verifier] PASSED [ 33%]
+tests/test_u39_runtime_equals_hash.py::test_extract_pass1_runtime_equals_hash PASSED [ 41%]
+tests/test_u39_runtime_equals_hash.py::test_extract_pass2_non_elicited_runtime_equals_hash PASSED [ 50%]
+tests/test_u39_runtime_equals_hash.py::test_extract_retry_snippet_runtime_equals_hash PASSED [ 58%]
+tests/test_u39_runtime_equals_hash.py::test_elicitation_pass1_runtime_equals_hash PASSED [ 66%]
+tests/test_u39_runtime_equals_hash.py::test_extract_pass2_elicited_runtime_equals_hash PASSED [ 75%]
+tests/test_u39_runtime_equals_hash.py::test_audit_runtime_equals_hash PASSED [ 83%]
+tests/test_u39_runtime_equals_hash.py::test_vision_parse_runtime_equals_hash PASSED [ 91%]
+tests/test_u39_runtime_equals_hash.py::test_preflight_runtime_equals_hash PASSED [100%]
+
+============================== 12 passed in 2.60s ==============================

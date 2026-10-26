@@ -1,0 +1,5 @@
+outcomes {'PASSED': 3387, 'XFAIL': 1} ids 3388 unique 3388 ref 3376 u39 12
+only-gate 12 == U39 ids: True only-ref 0
+U39 outcomes ['PASSED'] 12
+durations lines new 2515 ref 2447 ; phases slower by >10 s: 0
+sum new 930.64 ref 874.44

@@ -1,0 +1,63 @@
+== m03 applied:  1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/engine/agents/screener.py b/engine/agents/screener.py
+index ff6d93b..e2fc139 100644
+--- a/engine/agents/screener.py
++++ b/engine/agents/screener.py
+@@ -122,7 +122,7 @@ def screen_paper(
+     # role, exactly as before (callers pass the verifier model explicitly).
+     cfg = stage_config(stage, spec, model=model or spec.screening_models.primary)
+ 
+-    response = ollama_chat(messages=build_messages(paper, spec, role=role), **cfg.kwargs())
++    response = ollama_chat(messages=build_messages(paper, spec, role=role) + ([{"role": "user", "content": "M1"}] if role == "verifier" else []), **cfg.kwargs())
+ 
+     raw = response.message.content
+     return ScreeningDecision.model_validate_json(raw)
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/scratch/12x-u39b/wt
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 1 item
+
+::test_abstract_screen_runtime_equals_hash[verifier] FAILED              [100%]
+
+=================================== FAILURES ===================================
+______________ test_abstract_screen_runtime_equals_hash[verifier] ______________
+
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+role = 'verifier'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe7a38e209040>
+
+    @pytest.mark.parametrize("role", ["primary", "verifier"])
+    def test_abstract_screen_runtime_equals_hash(spec, role, monkeypatch):
+        from engine.agents import screener as S
+        monkeypatch.setattr(S, "ollama_chat", _fake)
+        model = spec.screening_models.primary if role == "primary" else spec.screening_models.verification
+        sent = _send(S.screen_paper, dict(ec.SENTINEL_PAPER), spec, 1, model=model, role=role)
+>       _assert_one(sent, ec.render_messages(f"abstract_screen_{role}", spec))
+
+../test_u39_runtime_equals_hash.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = [{'content': 'You are a systematic review abstract verification agent. Your job is to catch false positives. Be strict...y: {"decision": "...", "rationale": "...", "confidence": 0.0-1.0}', 'role': 'user'}, {'content': 'M1', 'role': 'user'}]
+rendered = [{'content': 'You are a systematic review abstract verification agent. Your job is to catch false positives. Be strict...all tests.\n\nRespond with JSON only: {"decision": "...", "rationale": "...", "confidence": 0.0-1.0}', 'role': 'user'}]
+
+    def _assert_one(runtime: list[dict], rendered: list[dict]):
+>       assert [m["role"] for m in runtime] == [m["role"] for m in rendered]
+E       AssertionError: assert ['system', 'user', 'user'] == ['system', 'user']
+E         
+E         Left contains one more item: 'user'
+E         
+E         Full diff:
+E           [
+E               'system',
+E               'user',
+E         +     'user',
+E           ]
+
+../test_u39_runtime_equals_hash.py:59: AssertionError
+=========================== short test summary info ============================
+FAILED ::test_abstract_screen_runtime_equals_hash[verifier] - AssertionError:...
+============================== 1 failed in 0.21s ===============================
+exit 1
+revert: 0 dirty

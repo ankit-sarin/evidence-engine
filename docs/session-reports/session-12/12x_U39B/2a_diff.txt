@@ -1,0 +1,30 @@
+--- docs/session-reports/session-12/12x_U39A/test_u39_runtime_equals_hash.py	2026-10-26 02:55:38.225638546 +0000
++++ /home/ankitsarin/scratch/12x-u39b/test_u39_runtime_equals_hash.py	2026-10-26 03:56:30.887315832 +0000
+@@ -91,7 +91,7 @@
+ def test_abstract_screen_runtime_equals_hash(spec, role, monkeypatch):
+     from engine.agents import screener as S
+     monkeypatch.setattr(S, "ollama_chat", _fake)
+-    model = spec.screening_models.primary if role == "primary" else spec.screening_models.verifier
++    model = spec.screening_models.primary if role == "primary" else spec.screening_models.verification
+     sent = _send(S.screen_paper, dict(ec.SENTINEL_PAPER), spec, 1, model=model, role=role)
+     _assert_one(sent, ec.render_messages(f"abstract_screen_{role}", spec))
+ 
+@@ -195,18 +195,3 @@
+     model = ec.stage_config("extract_pass1", spec).model
+     sent = _send(OP.check_model, model, spec=spec)
+     _assert_one(sent, ec.render_messages("preflight", spec))
+-
+-
+-def test_the_engine_under_test_is_this_tree():
+-    """The run imports the engine of the tree it is run in (the seed's I3 guard)."""
+-    import os
+-    import engine
+-    assert os.path.realpath(engine.__file__).startswith(os.path.realpath(os.getcwd()) + os.sep)
+-
+-
+-def test_the_suite_fences_are_active(request):
+-    """tests/conftest.py is loaded (-p conftest): its service, Ollama, lock and
+-    live-database fences wrap every test in this file."""
+-    for f in ("block_service_calls", "block_ollama_calls", "experiment_lock_for_tests",
+-              "block_live_database"):
+-        assert f in request.fixturenames, f

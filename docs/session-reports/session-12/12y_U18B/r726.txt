@@ -1,0 +1,49 @@
+RULING [evidence-engine 12y-R726] — U18 commit 1 accepted (e7425b3); the foreign ledger commit
+  accepted; readings; U18 commit 2 opens
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18B fourth
+  resume report (commit 1 e7425b33230f279d2ef680d2d8fe27adb23543b7; record
+  docs/session-reports/session-12/12y_U18B/12y_U18B.md). Transcribe at item 0 of the 12y-U18C
+  brief (Block 124, after R723–R725 as Blocks 121–123), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the fourth resume report):
+  MEASURED: "e7425b33230f279d2ef680d2d8fe27adb23543b7, parent 43ca120"; "==== 3399 passed, 17
+    deselected, 1 xfailed, 2 warnings in 937.32s (0:15:37) ===="; "3417 / 3400"; "939.40 s (band
+    817–998)"; "18:21:07 → 18:36:47Z"; "uvicorn 11734; surgical-cv pytest 215916"; "the reference
+    plus exactly 11 (the 9 acceptance tests and the 2 parametrized ids), only-ref 0"; "no phase
+    slower by more than 10 s"; "the journal window shows -- No entries --"; "Basetemp: pytest-147";
+    "Pins on the final tree are byte-identical to the parent's: elicited d70bf688…59f0,
+    non-elicited d3672ab6…ff5c, audit prompt_hash d972c46d…838d"; "inventory --check is in sync";
+    "77 files (17 tree files and 60 record files). The engine side is exactly the 4 Touched files";
+    "Fingerprint: IDENTICAL before and after the push; 0 0"; "Ledger: c430492, row
+    2026-10-28T18:39:02Z, with trailers"; "Its parent is 4525a44, a foreign commit (surgical-cv-
+    edit's row 275d6c1, 18:29:17Z, no trailers)"; "All 9 ids failed on the parent (43ca120) and
+    pass in the commit"; "That file goes from 66 ids to 68"; "RunHandle (run_id, run_uid, stages)
+    and _ACTIVE ((conn, run_id)) do not keep the digest_fn that open_run received".
+  READ (CC's): "It leaves this lane's rows intact, so I accepted it under R663(b)"; "ollama_chat
+    should read the digest through oc._client via _client._client.get("/api/tags"), about 2 ms,
+    the same object it sends through".
+  INFERRED: none.
+
+R726(a) — U18 commit 1 is accepted as landed: e7425b3 (one resolver, every engine read through the
+  engine client, no port literal on the run path, ollama_host in the manifest JSON, a non-loopback
+  host refused first at open_run; nine acceptance ids red on the parent and green in the commit;
+  seven coupled test files rewritten with every assertion kept; the inventory regenerated;
+  CLAUDE.md's list in the code's order). Pins and every prompt_hash unchanged. The gate 3,399 / 1
+  / 17 on 3,417 / 3,400, 0/0 against the reference plus the eleven new ids, 939.40 s inside the
+  band beside a surgical-cv pytest suite (pid 215916). The series gains 939.40 s, confounded,
+  recorded with its confounder; the red first run (916.95 s) is evidence, not a series member.
+R726(b) — Foreign ledger commit 4525a44 (surgical-cv-edit's row 275d6c1, no trailers, this lane's
+  rows intact) is accepted under R663(b), as R709(c) accepted 90f1532; the cross-lane ledger item
+  (plan §5) gains it.
+R726(c) — Readings, no row: the record's §8 for commit 2 (the digest route through oc._client; the
+  ps route server_ps(); RunHandle and _ACTIVE carrying no digest_fn; the n_ctx_train cache keyed by
+  host); the ollama_host column owed to 023 (P6); the RUN_REFUSED_MEMBERS pin generating two
+  parametrized ids per member (66 → 68), so commit 2's new class adds two ids the same way. The
+  reference id list for the next gate is commit 1's (12y_U18B/gate/, 3,400 ids); its durations
+  file is the next comparison.
+R726(d) — U18 commit 2 opens under the 12y-U18C brief: R721(b)'s second paragraph, built with the
+  R725(b) test-side rule from the start and the census pre-step's five classes; the digest_fn
+  carried on the run context so the injecting test modules keep working; the per-call refusal a
+  RunRefused subclass raised before the input-fit read and the send, closing the run 'aborted'
+  with a named reason and no run_calls row; the n_ctx_train cache keyed by digest. A-4b and Wave 1
+  row 16's conditional half close when its acceptance tests pass in its gate (R721(f)).

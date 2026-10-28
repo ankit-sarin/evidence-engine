@@ -1,0 +1,59 @@
+RULING [evidence-engine 12y-R725] — 12y-U18B gate stop: two more coupled test files join the Touched
+  list with their one-line fixes; the inventory regeneration accepted as standing practice;
+  AmbiguousEngineState added to CLAUDE.md's list; the test-side scope of an engine commit is
+  defined by coupling, not predicted; resume at step 3h
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18B third
+  resume report stopped at step 4 with a red gate and commit 1 uncommitted (HEAD 43ca120, 0 0;
+  evidence in ~/scratch/12y-u18b/). Transcribe at item 0 of the next brief after commit 1 lands
+  (Block 123, after R723 and R724 as Blocks 121–122), not now; not written to disk in the resume.
+
+ASSUMPTIONS IN THIS RULING (quoted from the gate-stop report):
+  MEASURED: "1 failed, 3375 passed, 17 deselected, 1 xfailed, 2 warnings, 21 errors in 914.87s
+    (0:15:14)", "collected 3415 / selected 3398"; "wall 916.95 s, inside 817–998"; "a surgical-cv
+    pytest suite (pid 139563, started 17:56:30) ran beside the gate"; "No model load"; "Basetemp:
+    pytest-143"; "tests/test_ft_bridge.py:95, monkeypatch.setattr(pf.ollama, "ps", lambda:
+    {"models": []}), raises AttributeError … in setup for all 21 ids"; "tests/test_run_fault_
+    predicate.py:140, assert subclasses(rm.RunRefused) == RUN_REFUSED_MEMBERS … Extra items in the
+    left set: OllamaHostNotLoopback"; "U17's e81d699 extended the same set by one line"; "All 9 ids
+    failed on the parent, each for its own reason"; "Ids in the 6 touched files: 96 before and 96
+    after, 0/0"; each touched file green alone (26 / 23 / 6 / 8 / 26 / 7), "test_extraction_run_link.py
+    … 11 passed and is untouched"; "Pins and the audit prompt_hash on the working tree are
+    byte-identical to the parent's"; "No 11434/11435 literal remains in engine/ or scripts/";
+    "docs/inventory/: regenerated, with two line numbers changed (ollama_preflight.py flags 278/279
+    → 276/277)"; "AmbiguousEngineState was absent from the list before, and I did not add it"; "A
+    follow-up grep for alias-form patches and RunRefused membership pins finds no other site".
+  READ (CC's): "It patches the same ps seam through a module alias, a form A3/0e's dotted-string
+    patterns could not match"; "This is a declared membership pin"; "I did it on the precedent of
+    every prior engine commit (e81d699, 731ebf2, 2c3822b, 5dbd3c4)".
+  INFERRED: none.
+
+R725(a) — The stop is correct. tests/test_ft_bridge.py and tests/test_run_fault_predicate.py join the
+  Touched list with the one-line fixes as proposed: the ps patch aimed at oc._client with
+  raising=False (oc imported), and rm.OllamaHostNotLoopback added to RUN_REFUSED_MEMBERS in U17's
+  form with the comment "# U18, R721(c)". Every assertion in both files is kept.
+R725(b) — The rule, reversing the form the 12y-U18B brief and R722(a)–R724(a) built one census at a
+  time: for an engine commit, the test-side Touched list is not predicted. It is "every test that
+  pins a seam, a record shape or a class set the commit changes, found by census or by the gate,
+  each rewrite reported with its assertion kept". A red test in the gate is classified by CC: (c)
+  coupled to the change — rewritten under B5 in the same commit, reported before and after, no
+  STOP; or (r) a regression — a test red for a reason the change did not pin — a STOP with the
+  tree uncommitted. The STOP conditions that remain are a rewrite that drops or weakens an
+  assertion, a class-(r) red, a moved pin or prompt_hash, and a model load in the gate window.
+  The census pre-step stays (patch names, module-alias patches, record key sets, class membership
+  sets) as a first pass that puts most couplings in the list before the gate; its misses are
+  class (c), not stops. Engine files stay predicted and I5's STOP stays for them.
+R725(c) — docs/inventory/ regeneration in an engine commit is standing practice (e81d699, 731ebf2,
+  2c3822b, 5dbd3c4) and is accepted here; from here every engine-commit brief lists docs/inventory/
+  in its Touched list by default.
+R725(d) — AmbiguousEngineState is added to CLAUDE.md's open_run refusal list in this commit, in the
+  code's order (R722(e)); the list's prior omission is a finding, no row. The :120 and :325 lines
+  as rewritten stand.
+R725(e) — Readings, no row: the red gate (916.95 s beside a surgical-cv pytest suite, pid 139563) is
+  recorded as commit 1's first gate under 12y_U18B/gate_red/ with its causes; the nine acceptance
+  ids red on the parent each for its own reason; the first --basetemp invocation error, re-run;
+  the five stops of this unit — four the architect's (R722(a), R723(a), R724(a), this one's
+  census misses) and the gate's — one cause: scope predicted from a description instead of read
+  from the record or found by the gate. The closeout's most-violated list carries it as one line.
+R725(f) — 12y-U18B resumes at step 3h for the two files, each run alone (EXPECTED green, ids 0/0),
+  then step 4 from 4a; the record's §7 lists every coupled file with its class and the quoted
+  before/after; §8 as amended.

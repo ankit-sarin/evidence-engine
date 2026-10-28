@@ -1,0 +1,49 @@
+RULING [evidence-engine 12y-R723] — 12y-U18B second stop before item 0: the "−" count is 2; the twelve
+  whole-function digest fakes are classified and untouched; Block 120's clause as CC read it;
+  resume at item 0
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18B resume
+  report stopped before item 0 (nothing written; evidence in ~/scratch/12y-u18b/). Transcribe at
+  item 0 of the next brief after commit 1 lands (Block 121), not now; this ruling is not written
+  to disk in the resume.
+
+ASSUMPTIONS IN THIS RULING (quoted from the second stop report):
+  MEASURED: "evidence-engine is still at fac60b4 and claude-config at 866a6c8, both clean"; "A-4b at
+    :470 (6 cells, the Evidence-cell row; the other A-4b line at :1255 has 2 cells and is the
+    coverage map) and HK-ARCH at :490"; "R691(c), "notes (INT-i12-73, HK-ARCH): two "−" lines"";
+    "That pattern finds 18 files. Six are the expected ones"; the twelve files as tabled, "All 12
+    replace fetch_model_digest as a whole function, by name"; "resolve_run imports it at call
+    time"; "test_extraction_run_link.py:216 … assert "fetch_model_digest" not in
+    Path(E.__file__).read_text()"; "ollama_client.httpx only in test_ollama_client.py (8),
+    ollama_preflight.ollama.ps in the three expected files (7 + 1 + 1), and OLLAMA_BASE_URL /
+    _LOCAL_SERVICE_HOSTS only at conftest.py:361–362"; Block 114's clause "Transcribed 2026-10-26
+    (item 0 of the 12x-CLOSE brief), in its own commit with Block 115 and the INT-w12-1 note, in the
+    R597(e) form:"; "The 8 digest tests move from httpx.get to the engine client's _client.get.
+    Every assertion is kept"; "The 9 ps patches move to oc._client.ps".
+  READ (CC's): "Two notes on one row change that row's single line"; "R722 orders no notes, so "it
+    orders" in Block 120 would repeat Block 116's error".
+  INFERRED: none.
+
+R723(a) — Both stops are correct and both causes are the architect's, of one kind: the brief
+  predicted a count ("exactly 3") and a census result (the files A3's grep would find) instead of
+  asking for the census and taking its count — the 12x lesson (4), repeated. From here a brief
+  states a "−" count as "one per noted row, N rows named" and lets CC compute N from the rows; and
+  a census pre-step names its patterns and asks for classification, with the STOP condition
+  written on the classification (a patch of a seam the commit removes, found in a file outside the
+  Touched list), not on the file count.
+R723(b) — The item-0 "−" count is 2: one line for A-4b (:470, the six-cell row, carrying both dated
+  notes of R721(e)) and one for HK-ARCH (:490), the R691(c) form. A2's and G1's "exactly 3" are
+  withdrawn; "one per noted row" stands.
+R723(c) — The twelve files found by the fetch_model_digest pattern replace the function whole, by
+  name; commit 1 keeps the name, its module attribute and its one-argument call, and resolve_run
+  imports it at call time, so none needs an edit and test_extraction_run_link.py:216 stays green.
+  They are classified in the commit's record (§2a) and left untouched. A3's EXPECTED is replaced
+  by: every file found is classified as (i) patching a seam commit 1 removes — must be in the
+  Touched list, else STOP — or (ii) replacing a kept name whole — untouched. The other A3
+  patterns' results (8 / 7 + 1 + 1 / conftest 361–362) are accepted as the census.
+R723(d) — Block 120's Transcribed clause is as CC read the pair form: "(item 0 of the 12y-U18B
+  resume), in its own commit with Block 119 and the dated notes R721 orders"; Block 119's, "… with
+  Block 120 and the dated notes it orders". A clause names the ruling that orders what the commit
+  carries, never "it" for a ruling that orders nothing.
+R723(e) — The 2c plan as prepared stands (digest tests to _client.get; ps patches to oc._client.ps;
+  every assertion kept); its rows 7–17 quote their assertions verbatim at 2c proper, as planned.
+R723(f) — 12y-U18B resumes at item 0 under this ruling and R722; nothing else in the resume changes.

@@ -11220,3 +11220,259 @@ R722(g) — 12y-U18B resumes at item 0 under this ruling, with R721 and this rul
 | 2026-10-28 | R722(a) — The stop is correct and the cause is the architect's: the brief's Touched list named the tests the change adds and the fence it edits, and omitted the tests that pin the two seams R721(b) removes. A ruling that moves a call off a patched name moves its tests; the brief should have asked CC to census the patch sites before writing the list. From here a brief that removes or renames a call site carries a pre-step that greps tests/ for patches of that name and puts every file found in the Touched list before any edit. R722(b) — The Touched list is widened to tests/test_ollama_client.py, tests/test_ollama_preflight.py, tests/test_run_pipeline_starts.py and tests/test_undeclared_call.py: behavioural rewrites under B5 — each patch moves to the new transport (the engine client's get or ps, or a fake client carrying both), every existing assertion is kept, no id is retired, no test is weakened to pass. The report quotes each patch before and after. tests/test_restart_ollama_guard.py is not touched: the restart poll keeps httpx.get with its URL from the resolver, as R721(b) allows. R722(c) — The non-loopback refusal keys on the import-time resolved host (the resolver's value), not on the live client's base_url: the thirteen fakes bound to http://<name>.invalid stay valid, and A-4b's acceptance test is met by the digest being read through _client itself. A _client rebound in-process after import is not a supported path and is not refused; recorded as a limit in the commit's record, with run_qualgap01 (analysis lane) named as the one site that does it. R722(d) — Two predicates, not one: is_loopback_host(host) (loopback, any port — the refusal's test) and is_local_service_host(host) (loopback on the default port read from _parse_host(None) — what server_context_length means by the systemd service). No literal 11434 in either. R722(e) — The code's refusal order governs. The non-loopback refusal is placed first in open_run after the run-kind check, before CodebookReviewMismatch (it reads nothing and writes nothing). CLAUDE.md's refusal list at :344 is rewritten in the same commit to the code's order with the new class first, the before and after lines quoted in the report (a doc line the commit touches anyway; the two existing orders are a finding, no row). R722(f) — I2's answer stands as CC read it: ollama_host written as a manifest JSON key now (covered by sha256_canonical); the run_manifests column deferred to 023 (P6) and recorded there as an item. R722(g) — 12y-U18B resumes at item 0 under this ruling, with R721 and this ruling transcribed together as Blocks 119 and 120 in the pair form read from Blocks 114–115 (R720(b)); the three dated notes of R721(e) unchanged; nothing else in the brief changes except as (b)–(f) state. | PI, 2026-10-28, during session 12y, on architect recommendation, on the 12y-U18B report stopped at step 0d (nothing committed) |
 
 The decision log in this file ends at R722.
+
+**Block 121.** *Transcribed 2026-10-28 (item 0 of the 12y-U18C brief), in its own commit with Blocks 122, 123 and 124, in the R597(e) form:* ruling R723, made by PI on architect recommendation on 2026-10-28 UTC, during session 12y, on the 12y-U18B resume report stopped before item 0 (nothing written; evidence in `~/scratch/12y-u18b/`). The 12y-U18B second resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12y-R723] — 12y-U18B second stop before item 0: the "−" count is 2; the twelve
+  whole-function digest fakes are classified and untouched; Block 120's clause as CC read it;
+  resume at item 0
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18B resume
+  report stopped before item 0 (nothing written; evidence in ~/scratch/12y-u18b/). Transcribe at
+  item 0 of the next brief after commit 1 lands (Block 121), not now; this ruling is not written
+  to disk in the resume.
+
+ASSUMPTIONS IN THIS RULING (quoted from the second stop report):
+  MEASURED: "evidence-engine is still at fac60b4 and claude-config at 866a6c8, both clean"; "A-4b at
+    :470 (6 cells, the Evidence-cell row; the other A-4b line at :1255 has 2 cells and is the
+    coverage map) and HK-ARCH at :490"; "R691(c), "notes (INT-i12-73, HK-ARCH): two "−" lines"";
+    "That pattern finds 18 files. Six are the expected ones"; the twelve files as tabled, "All 12
+    replace fetch_model_digest as a whole function, by name"; "resolve_run imports it at call
+    time"; "test_extraction_run_link.py:216 … assert "fetch_model_digest" not in
+    Path(E.__file__).read_text()"; "ollama_client.httpx only in test_ollama_client.py (8),
+    ollama_preflight.ollama.ps in the three expected files (7 + 1 + 1), and OLLAMA_BASE_URL /
+    _LOCAL_SERVICE_HOSTS only at conftest.py:361–362"; Block 114's clause "Transcribed 2026-10-26
+    (item 0 of the 12x-CLOSE brief), in its own commit with Block 115 and the INT-w12-1 note, in the
+    R597(e) form:"; "The 8 digest tests move from httpx.get to the engine client's _client.get.
+    Every assertion is kept"; "The 9 ps patches move to oc._client.ps".
+  READ (CC's): "Two notes on one row change that row's single line"; "R722 orders no notes, so "it
+    orders" in Block 120 would repeat Block 116's error".
+  INFERRED: none.
+
+R723(a) — Both stops are correct and both causes are the architect's, of one kind: the brief
+  predicted a count ("exactly 3") and a census result (the files A3's grep would find) instead of
+  asking for the census and taking its count — the 12x lesson (4), repeated. From here a brief
+  states a "−" count as "one per noted row, N rows named" and lets CC compute N from the rows; and
+  a census pre-step names its patterns and asks for classification, with the STOP condition
+  written on the classification (a patch of a seam the commit removes, found in a file outside the
+  Touched list), not on the file count.
+R723(b) — The item-0 "−" count is 2: one line for A-4b (:470, the six-cell row, carrying both dated
+  notes of R721(e)) and one for HK-ARCH (:490), the R691(c) form. A2's and G1's "exactly 3" are
+  withdrawn; "one per noted row" stands.
+R723(c) — The twelve files found by the fetch_model_digest pattern replace the function whole, by
+  name; commit 1 keeps the name, its module attribute and its one-argument call, and resolve_run
+  imports it at call time, so none needs an edit and test_extraction_run_link.py:216 stays green.
+  They are classified in the commit's record (§2a) and left untouched. A3's EXPECTED is replaced
+  by: every file found is classified as (i) patching a seam commit 1 removes — must be in the
+  Touched list, else STOP — or (ii) replacing a kept name whole — untouched. The other A3
+  patterns' results (8 / 7 + 1 + 1 / conftest 361–362) are accepted as the census.
+R723(d) — Block 120's Transcribed clause is as CC read the pair form: "(item 0 of the 12y-U18B
+  resume), in its own commit with Block 119 and the dated notes R721 orders"; Block 119's, "… with
+  Block 120 and the dated notes it orders". A clause names the ruling that orders what the commit
+  carries, never "it" for a ruling that orders nothing.
+R723(e) — The 2c plan as prepared stands (digest tests to _client.get; ps patches to oc._client.ps;
+  every assertion kept); its rows 7–17 quote their assertions verbatim at 2c proper, as planned.
+R723(f) — 12y-U18B resumes at item 0 under this ruling and R722; nothing else in the resume changes.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-28 | R723(a) — Both stops are correct and both causes are the architect's, of one kind: the brief predicted a count ("exactly 3") and a census result (the files A3's grep would find) instead of asking for the census and taking its count — the 12x lesson (4), repeated. From here a brief states a "−" count as "one per noted row, N rows named" and lets CC compute N from the rows; and a census pre-step names its patterns and asks for classification, with the STOP condition written on the classification (a patch of a seam the commit removes, found in a file outside the Touched list), not on the file count. R723(b) — The item-0 "−" count is 2: one line for A-4b (:470, the six-cell row, carrying both dated notes of R721(e)) and one for HK-ARCH (:490), the R691(c) form. A2's and G1's "exactly 3" are withdrawn; "one per noted row" stands. R723(c) — The twelve files found by the fetch_model_digest pattern replace the function whole, by name; commit 1 keeps the name, its module attribute and its one-argument call, and resolve_run imports it at call time, so none needs an edit and test_extraction_run_link.py:216 stays green. They are classified in the commit's record (§2a) and left untouched. A3's EXPECTED is replaced by: every file found is classified as (i) patching a seam commit 1 removes — must be in the Touched list, else STOP — or (ii) replacing a kept name whole — untouched. The other A3 patterns' results (8 / 7 + 1 + 1 / conftest 361–362) are accepted as the census. R723(d) — Block 120's Transcribed clause is as CC read the pair form: "(item 0 of the 12y-U18B resume), in its own commit with Block 119 and the dated notes R721 orders"; Block 119's, "… with Block 120 and the dated notes it orders". A clause names the ruling that orders what the commit carries, never "it" for a ruling that orders nothing. R723(e) — The 2c plan as prepared stands (digest tests to _client.get; ps patches to oc._client.ps; every assertion kept); its rows 7–17 quote their assertions verbatim at 2c proper, as planned. R723(f) — 12y-U18B resumes at item 0 under this ruling and R722; nothing else in the resume changes. | PI, 2026-10-28, during session 12y, on architect recommendation, on the 12y-U18B resume report stopped before item 0 (nothing written) |
+
+The decision log in this file ends at R723.
+
+**Block 122.** *Transcribed 2026-10-28 (item 0 of the 12y-U18C brief), in its own commit with Blocks 121, 123 and 124, in the R597(e) form:* ruling R724, made by PI on architect recommendation on 2026-10-28 UTC, during session 12y, on the 12y-U18B second resume report stopped before step 2's first edit (item 0 landed as `43ca1200ddaed2fdffa28e8eba3fd21caf892d4a`). The 12y-U18B third resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12y-R724] — 12y-U18B third stop, before step 2: the manifest shape pin in
+  tests/test_ft_adjudication_import.py joins the Touched list; shape pins join the census rule;
+  CC's prepared decisions accepted; resume at step 2
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18B second
+  resume report stopped before step 2's first edit (item 0 landed as
+  43ca1200ddaed2fdffa28e8eba3fd21caf892d4a; evidence in ~/scratch/12y-u18b/). Transcribe at item 0
+  of the next brief after commit 1 lands (Block 122, after R723 as Block 121), not now; this
+  ruling is not written to disk in the resume.
+
+ASSUMPTIONS IN THIS RULING (quoted from the third stop report):
+  MEASURED: "43ca1200ddaed2fdffa28e8eba3fd21caf892d4a, parent fac60b4"; "Numstat: +170 / −2"; "The
+    two "−" lines are exactly A-4b and HK-ARCH, one per row"; "Lines after: 11,222"; "Plan:
+    a9cd468210235beaef3b250c88a1f60049bda5fc5ddd3417c0e4838f7a263dec, 2,126,914 B"; "r721.txt is
+    4e95da20…f259 / 7,552 / 84 and r722.txt is b37863ce…6ebf / 5,555 / 62"; "Both fences True; both
+    cells True"; "Ledger: 96f3d7c, row 2026-10-28T17:47:41Z"; "_BODY_KEYS = {"run_uid",
+    "review_id", "run_kind", "git", "engine_state", "spec_hash", "codebook", "libraries", "host",
+    "started_at", "cloud_arms", "payload_description", "stages", "pins"}"; ":335 assert
+    set(_open(db, spec)) == _BODY_KEYS"; ":340 assert set(body) == _BODY_KEYS | {"inputs"}"; "No
+    other exact-set assertion on a manifest body exists"; "No hard-coded manifest_sha256 exists";
+    "No test calls open_run with the default digest_fn while _client is a fake".
+  READ (CC's): "It patches no seam, so 0e's grep (which searches for patch names) could not find it.
+    It is a shape pin"; "The test's purpose ("the shape before D1") is kept"; "Applying the
+    predicate to the resolver instead would make the 13 *.invalid fakes, and test_request_capture,
+    read the real unit files and could move their ceilings. In production the two hosts are equal";
+    "ollama_client imports run_manifest lazily, so the reverse import at module level would be
+    circular"; "R721(c)'s refusal at open_run also refuses a human review_session … although a
+    review session sends nothing to Ollama".
+  INFERRED: none.
+
+R724(a) — The stop is correct; the cause is the architect's, the fourth of this unit: the census rule
+  of R722(a) looked for patches of removed seams and not for pins of a record the commit extends.
+  From here that pre-step also greps tests/ for exact-set assertions and hard-coded hashes over any
+  record the commit adds a key to (the record's existing key names as the pattern), and classifies
+  what it finds as (iii) a shape pin — in the Touched list, rewritten to the new shape with its
+  purpose kept, or STOP. R723(a)'s rule covers the counting.
+R724(b) — tests/test_ft_adjudication_import.py joins the Touched list: "ollama_host" is added to
+  _BODY_KEYS, its comment naming U18 as the second key added to "the shape before D1"; both ids
+  keep their assertions; nothing else in the file changes.
+R724(c) — CC's prepared decisions are accepted as stated: the resolver _OLLAMA_HOST read at import
+  and exposed as ollama_host(), the client built by _build_client() from it, the acceptance tests
+  driving the resolver and rebuilding through _build_client(transport=MockTransport) (I4);
+  fetch_model_digest reading _client._client.get("/api/tags") with its unused base_url parameter
+  retired (no caller); the preflight's ps through oc._client.ps() behind a server_ps() helper; the
+  restart poll httpx.get(f"{ollama_host()}/api/tags", timeout=5) (R722(b));
+  server_context_length reading the live client's host through is_local_service_host — the
+  ceiling read and the chat send then agree by construction, being one object, and the resolver's
+  job is to build that object and gate the refusal; recorded in the record's §4 as the designed
+  division; OllamaHostNotLoopback(RunRefused) defined in run_manifest.py beside its siblings.
+R724(d) — The review_session finding: the refusal applies to every run kind, as R721(c) ruled. A
+  session that sends nothing is refused for a remote OLLAMA_HOST all the same; the engine does not
+  distinguish kinds at that refusal, and a remote host is not a supported configuration of any
+  kind until the capability R721(c) names is built. Recorded as a limit in the record's §4; no
+  row.
+R724(e) — 12y-U18B resumes at step 2 under this ruling; item 0 43ca120 and ledger 96f3d7c stand;
+  nothing else in the brief or its resumes changes.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-28 | R724(a) — The stop is correct; the cause is the architect's, the fourth of this unit: the census rule of R722(a) looked for patches of removed seams and not for pins of a record the commit extends. From here that pre-step also greps tests/ for exact-set assertions and hard-coded hashes over any record the commit adds a key to (the record's existing key names as the pattern), and classifies what it finds as (iii) a shape pin — in the Touched list, rewritten to the new shape with its purpose kept, or STOP. R723(a)'s rule covers the counting. R724(b) — tests/test_ft_adjudication_import.py joins the Touched list: "ollama_host" is added to _BODY_KEYS, its comment naming U18 as the second key added to "the shape before D1"; both ids keep their assertions; nothing else in the file changes. R724(c) — CC's prepared decisions are accepted as stated: the resolver _OLLAMA_HOST read at import and exposed as ollama_host(), the client built by _build_client() from it, the acceptance tests driving the resolver and rebuilding through _build_client(transport=MockTransport) (I4); fetch_model_digest reading _client._client.get("/api/tags") with its unused base_url parameter retired (no caller); the preflight's ps through oc._client.ps() behind a server_ps() helper; the restart poll httpx.get(f"{ollama_host()}/api/tags", timeout=5) (R722(b)); server_context_length reading the live client's host through is_local_service_host — the ceiling read and the chat send then agree by construction, being one object, and the resolver's job is to build that object and gate the refusal; recorded in the record's §4 as the designed division; OllamaHostNotLoopback(RunRefused) defined in run_manifest.py beside its siblings. R724(d) — The review_session finding: the refusal applies to every run kind, as R721(c) ruled. A session that sends nothing is refused for a remote OLLAMA_HOST all the same; the engine does not distinguish kinds at that refusal, and a remote host is not a supported configuration of any kind until the capability R721(c) names is built. Recorded as a limit in the record's §4; no row. R724(e) — 12y-U18B resumes at step 2 under this ruling; item 0 43ca120 and ledger 96f3d7c stand; nothing else in the brief or its resumes changes. | PI, 2026-10-28, during session 12y, on architect recommendation, on the 12y-U18B second resume report stopped before step 2's first edit (43ca120) |
+
+The decision log in this file ends at R724.
+
+**Block 123.** *Transcribed 2026-10-28 (item 0 of the 12y-U18C brief), in its own commit with Blocks 121, 122 and 124, in the R597(e) form:* ruling R725, made by PI on architect recommendation on 2026-10-28 UTC, during session 12y, on the 12y-U18B third resume report stopped at step 4 with a red gate and commit 1 uncommitted (HEAD `43ca120`). The 12y-U18B fourth resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12y-R725] — 12y-U18B gate stop: two more coupled test files join the Touched
+  list with their one-line fixes; the inventory regeneration accepted as standing practice;
+  AmbiguousEngineState added to CLAUDE.md's list; the test-side scope of an engine commit is
+  defined by coupling, not predicted; resume at step 3h
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18B third
+  resume report stopped at step 4 with a red gate and commit 1 uncommitted (HEAD 43ca120, 0 0;
+  evidence in ~/scratch/12y-u18b/). Transcribe at item 0 of the next brief after commit 1 lands
+  (Block 123, after R723 and R724 as Blocks 121–122), not now; not written to disk in the resume.
+
+ASSUMPTIONS IN THIS RULING (quoted from the gate-stop report):
+  MEASURED: "1 failed, 3375 passed, 17 deselected, 1 xfailed, 2 warnings, 21 errors in 914.87s
+    (0:15:14)", "collected 3415 / selected 3398"; "wall 916.95 s, inside 817–998"; "a surgical-cv
+    pytest suite (pid 139563, started 17:56:30) ran beside the gate"; "No model load"; "Basetemp:
+    pytest-143"; "tests/test_ft_bridge.py:95, monkeypatch.setattr(pf.ollama, "ps", lambda:
+    {"models": []}), raises AttributeError … in setup for all 21 ids"; "tests/test_run_fault_
+    predicate.py:140, assert subclasses(rm.RunRefused) == RUN_REFUSED_MEMBERS … Extra items in the
+    left set: OllamaHostNotLoopback"; "U17's e81d699 extended the same set by one line"; "All 9 ids
+    failed on the parent, each for its own reason"; "Ids in the 6 touched files: 96 before and 96
+    after, 0/0"; each touched file green alone (26 / 23 / 6 / 8 / 26 / 7), "test_extraction_run_link.py
+    … 11 passed and is untouched"; "Pins and the audit prompt_hash on the working tree are
+    byte-identical to the parent's"; "No 11434/11435 literal remains in engine/ or scripts/";
+    "docs/inventory/: regenerated, with two line numbers changed (ollama_preflight.py flags 278/279
+    → 276/277)"; "AmbiguousEngineState was absent from the list before, and I did not add it"; "A
+    follow-up grep for alias-form patches and RunRefused membership pins finds no other site".
+  READ (CC's): "It patches the same ps seam through a module alias, a form A3/0e's dotted-string
+    patterns could not match"; "This is a declared membership pin"; "I did it on the precedent of
+    every prior engine commit (e81d699, 731ebf2, 2c3822b, 5dbd3c4)".
+  INFERRED: none.
+
+R725(a) — The stop is correct. tests/test_ft_bridge.py and tests/test_run_fault_predicate.py join the
+  Touched list with the one-line fixes as proposed: the ps patch aimed at oc._client with
+  raising=False (oc imported), and rm.OllamaHostNotLoopback added to RUN_REFUSED_MEMBERS in U17's
+  form with the comment "# U18, R721(c)". Every assertion in both files is kept.
+R725(b) — The rule, reversing the form the 12y-U18B brief and R722(a)–R724(a) built one census at a
+  time: for an engine commit, the test-side Touched list is not predicted. It is "every test that
+  pins a seam, a record shape or a class set the commit changes, found by census or by the gate,
+  each rewrite reported with its assertion kept". A red test in the gate is classified by CC: (c)
+  coupled to the change — rewritten under B5 in the same commit, reported before and after, no
+  STOP; or (r) a regression — a test red for a reason the change did not pin — a STOP with the
+  tree uncommitted. The STOP conditions that remain are a rewrite that drops or weakens an
+  assertion, a class-(r) red, a moved pin or prompt_hash, and a model load in the gate window.
+  The census pre-step stays (patch names, module-alias patches, record key sets, class membership
+  sets) as a first pass that puts most couplings in the list before the gate; its misses are
+  class (c), not stops. Engine files stay predicted and I5's STOP stays for them.
+R725(c) — docs/inventory/ regeneration in an engine commit is standing practice (e81d699, 731ebf2,
+  2c3822b, 5dbd3c4) and is accepted here; from here every engine-commit brief lists docs/inventory/
+  in its Touched list by default.
+R725(d) — AmbiguousEngineState is added to CLAUDE.md's open_run refusal list in this commit, in the
+  code's order (R722(e)); the list's prior omission is a finding, no row. The :120 and :325 lines
+  as rewritten stand.
+R725(e) — Readings, no row: the red gate (916.95 s beside a surgical-cv pytest suite, pid 139563) is
+  recorded as commit 1's first gate under 12y_U18B/gate_red/ with its causes; the nine acceptance
+  ids red on the parent each for its own reason; the first --basetemp invocation error, re-run;
+  the five stops of this unit — four the architect's (R722(a), R723(a), R724(a), this one's
+  census misses) and the gate's — one cause: scope predicted from a description instead of read
+  from the record or found by the gate. The closeout's most-violated list carries it as one line.
+R725(f) — 12y-U18B resumes at step 3h for the two files, each run alone (EXPECTED green, ids 0/0),
+  then step 4 from 4a; the record's §7 lists every coupled file with its class and the quoted
+  before/after; §8 as amended.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-28 | R725(a) — The stop is correct. tests/test_ft_bridge.py and tests/test_run_fault_predicate.py join the Touched list with the one-line fixes as proposed: the ps patch aimed at oc._client with raising=False (oc imported), and rm.OllamaHostNotLoopback added to RUN_REFUSED_MEMBERS in U17's form with the comment "# U18, R721(c)". Every assertion in both files is kept. R725(b) — The rule, reversing the form the 12y-U18B brief and R722(a)–R724(a) built one census at a time: for an engine commit, the test-side Touched list is not predicted. It is "every test that pins a seam, a record shape or a class set the commit changes, found by census or by the gate, each rewrite reported with its assertion kept". A red test in the gate is classified by CC: (c) coupled to the change — rewritten under B5 in the same commit, reported before and after, no STOP; or (r) a regression — a test red for a reason the change did not pin — a STOP with the tree uncommitted. The STOP conditions that remain are a rewrite that drops or weakens an assertion, a class-(r) red, a moved pin or prompt_hash, and a model load in the gate window. The census pre-step stays (patch names, module-alias patches, record key sets, class membership sets) as a first pass that puts most couplings in the list before the gate; its misses are class (c), not stops. Engine files stay predicted and I5's STOP stays for them. R725(c) — docs/inventory/ regeneration in an engine commit is standing practice (e81d699, 731ebf2, 2c3822b, 5dbd3c4) and is accepted here; from here every engine-commit brief lists docs/inventory/ in its Touched list by default. R725(d) — AmbiguousEngineState is added to CLAUDE.md's open_run refusal list in this commit, in the code's order (R722(e)); the list's prior omission is a finding, no row. The :120 and :325 lines as rewritten stand. R725(e) — Readings, no row: the red gate (916.95 s beside a surgical-cv pytest suite, pid 139563) is recorded as commit 1's first gate under 12y_U18B/gate_red/ with its causes; the nine acceptance ids red on the parent each for its own reason; the first --basetemp invocation error, re-run; the five stops of this unit — four the architect's (R722(a), R723(a), R724(a), this one's census misses) and the gate's — one cause: scope predicted from a description instead of read from the record or found by the gate. The closeout's most-violated list carries it as one line. R725(f) — 12y-U18B resumes at step 3h for the two files, each run alone (EXPECTED green, ids 0/0), then step 4 from 4a; the record's §7 lists every coupled file with its class and the quoted before/after; §8 as amended. | PI, 2026-10-28, during session 12y, on architect recommendation, on the 12y-U18B third resume report stopped at step 4 with a red gate (43ca120) |
+
+The decision log in this file ends at R725.
+
+**Block 124.** *Transcribed 2026-10-28 (item 0 of the 12y-U18C brief), in its own commit with Blocks 121, 122 and 123, in the R597(e) form:* ruling R726, made by PI on architect recommendation on 2026-10-28 UTC, during session 12y, on the 12y-U18B fourth resume report (commit 1 `e7425b33230f279d2ef680d2d8fe27adb23543b7`; record `docs/session-reports/session-12/12y_U18B/12y_U18B.md`). The 12y-U18C brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12y-R726] — U18 commit 1 accepted (e7425b3); the foreign ledger commit
+  accepted; readings; U18 commit 2 opens
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18B fourth
+  resume report (commit 1 e7425b33230f279d2ef680d2d8fe27adb23543b7; record
+  docs/session-reports/session-12/12y_U18B/12y_U18B.md). Transcribe at item 0 of the 12y-U18C
+  brief (Block 124, after R723–R725 as Blocks 121–123), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the fourth resume report):
+  MEASURED: "e7425b33230f279d2ef680d2d8fe27adb23543b7, parent 43ca120"; "==== 3399 passed, 17
+    deselected, 1 xfailed, 2 warnings in 937.32s (0:15:37) ===="; "3417 / 3400"; "939.40 s (band
+    817–998)"; "18:21:07 → 18:36:47Z"; "uvicorn 11734; surgical-cv pytest 215916"; "the reference
+    plus exactly 11 (the 9 acceptance tests and the 2 parametrized ids), only-ref 0"; "no phase
+    slower by more than 10 s"; "the journal window shows -- No entries --"; "Basetemp: pytest-147";
+    "Pins on the final tree are byte-identical to the parent's: elicited d70bf688…59f0,
+    non-elicited d3672ab6…ff5c, audit prompt_hash d972c46d…838d"; "inventory --check is in sync";
+    "77 files (17 tree files and 60 record files). The engine side is exactly the 4 Touched files";
+    "Fingerprint: IDENTICAL before and after the push; 0 0"; "Ledger: c430492, row
+    2026-10-28T18:39:02Z, with trailers"; "Its parent is 4525a44, a foreign commit (surgical-cv-
+    edit's row 275d6c1, 18:29:17Z, no trailers)"; "All 9 ids failed on the parent (43ca120) and
+    pass in the commit"; "That file goes from 66 ids to 68"; "RunHandle (run_id, run_uid, stages)
+    and _ACTIVE ((conn, run_id)) do not keep the digest_fn that open_run received".
+  READ (CC's): "It leaves this lane's rows intact, so I accepted it under R663(b)"; "ollama_chat
+    should read the digest through oc._client via _client._client.get("/api/tags"), about 2 ms,
+    the same object it sends through".
+  INFERRED: none.
+
+R726(a) — U18 commit 1 is accepted as landed: e7425b3 (one resolver, every engine read through the
+  engine client, no port literal on the run path, ollama_host in the manifest JSON, a non-loopback
+  host refused first at open_run; nine acceptance ids red on the parent and green in the commit;
+  seven coupled test files rewritten with every assertion kept; the inventory regenerated;
+  CLAUDE.md's list in the code's order). Pins and every prompt_hash unchanged. The gate 3,399 / 1
+  / 17 on 3,417 / 3,400, 0/0 against the reference plus the eleven new ids, 939.40 s inside the
+  band beside a surgical-cv pytest suite (pid 215916). The series gains 939.40 s, confounded,
+  recorded with its confounder; the red first run (916.95 s) is evidence, not a series member.
+R726(b) — Foreign ledger commit 4525a44 (surgical-cv-edit's row 275d6c1, no trailers, this lane's
+  rows intact) is accepted under R663(b), as R709(c) accepted 90f1532; the cross-lane ledger item
+  (plan §5) gains it.
+R726(c) — Readings, no row: the record's §8 for commit 2 (the digest route through oc._client; the
+  ps route server_ps(); RunHandle and _ACTIVE carrying no digest_fn; the n_ctx_train cache keyed by
+  host); the ollama_host column owed to 023 (P6); the RUN_REFUSED_MEMBERS pin generating two
+  parametrized ids per member (66 → 68), so commit 2's new class adds two ids the same way. The
+  reference id list for the next gate is commit 1's (12y_U18B/gate/, 3,400 ids); its durations
+  file is the next comparison.
+R726(d) — U18 commit 2 opens under the 12y-U18C brief: R721(b)'s second paragraph, built with the
+  R725(b) test-side rule from the start and the census pre-step's five classes; the digest_fn
+  carried on the run context so the injecting test modules keep working; the per-call refusal a
+  RunRefused subclass raised before the input-fit read and the send, closing the run 'aborted'
+  with a named reason and no run_calls row; the n_ctx_train cache keyed by digest. A-4b and Wave 1
+  row 16's conditional half close when its acceptance tests pass in its gate (R721(f)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-28 | R726(a) — U18 commit 1 is accepted as landed: e7425b3 (one resolver, every engine read through the engine client, no port literal on the run path, ollama_host in the manifest JSON, a non-loopback host refused first at open_run; nine acceptance ids red on the parent and green in the commit; seven coupled test files rewritten with every assertion kept; the inventory regenerated; CLAUDE.md's list in the code's order). Pins and every prompt_hash unchanged. The gate 3,399 / 1 / 17 on 3,417 / 3,400, 0/0 against the reference plus the eleven new ids, 939.40 s inside the band beside a surgical-cv pytest suite (pid 215916). The series gains 939.40 s, confounded, recorded with its confounder; the red first run (916.95 s) is evidence, not a series member. R726(b) — Foreign ledger commit 4525a44 (surgical-cv-edit's row 275d6c1, no trailers, this lane's rows intact) is accepted under R663(b), as R709(c) accepted 90f1532; the cross-lane ledger item (plan §5) gains it. R726(c) — Readings, no row: the record's §8 for commit 2 (the digest route through oc._client; the ps route server_ps(); RunHandle and _ACTIVE carrying no digest_fn; the n_ctx_train cache keyed by host); the ollama_host column owed to 023 (P6); the RUN_REFUSED_MEMBERS pin generating two parametrized ids per member (66 → 68), so commit 2's new class adds two ids the same way. The reference id list for the next gate is commit 1's (12y_U18B/gate/, 3,400 ids); its durations file is the next comparison. R726(d) — U18 commit 2 opens under the 12y-U18C brief: R721(b)'s second paragraph, built with the R725(b) test-side rule from the start and the census pre-step's five classes; the digest_fn carried on the run context so the injecting test modules keep working; the per-call refusal a RunRefused subclass raised before the input-fit read and the send, closing the run 'aborted' with a named reason and no run_calls row; the n_ctx_train cache keyed by digest. A-4b and Wave 1 row 16's conditional half close when its acceptance tests pass in its gate (R721(f)). | PI, 2026-10-28, during session 12y, on architect recommendation, on the 12y-U18B fourth resume report (e7425b3) |
+
+The decision log in this file ends at R726.

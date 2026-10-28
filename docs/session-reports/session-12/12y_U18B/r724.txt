@@ -1,0 +1,55 @@
+RULING [evidence-engine 12y-R724] — 12y-U18B third stop, before step 2: the manifest shape pin in
+  tests/test_ft_adjudication_import.py joins the Touched list; shape pins join the census rule;
+  CC's prepared decisions accepted; resume at step 2
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18B second
+  resume report stopped before step 2's first edit (item 0 landed as
+  43ca1200ddaed2fdffa28e8eba3fd21caf892d4a; evidence in ~/scratch/12y-u18b/). Transcribe at item 0
+  of the next brief after commit 1 lands (Block 122, after R723 as Block 121), not now; this
+  ruling is not written to disk in the resume.
+
+ASSUMPTIONS IN THIS RULING (quoted from the third stop report):
+  MEASURED: "43ca1200ddaed2fdffa28e8eba3fd21caf892d4a, parent fac60b4"; "Numstat: +170 / −2"; "The
+    two "−" lines are exactly A-4b and HK-ARCH, one per row"; "Lines after: 11,222"; "Plan:
+    a9cd468210235beaef3b250c88a1f60049bda5fc5ddd3417c0e4838f7a263dec, 2,126,914 B"; "r721.txt is
+    4e95da20…f259 / 7,552 / 84 and r722.txt is b37863ce…6ebf / 5,555 / 62"; "Both fences True; both
+    cells True"; "Ledger: 96f3d7c, row 2026-10-28T17:47:41Z"; "_BODY_KEYS = {"run_uid",
+    "review_id", "run_kind", "git", "engine_state", "spec_hash", "codebook", "libraries", "host",
+    "started_at", "cloud_arms", "payload_description", "stages", "pins"}"; ":335 assert
+    set(_open(db, spec)) == _BODY_KEYS"; ":340 assert set(body) == _BODY_KEYS | {"inputs"}"; "No
+    other exact-set assertion on a manifest body exists"; "No hard-coded manifest_sha256 exists";
+    "No test calls open_run with the default digest_fn while _client is a fake".
+  READ (CC's): "It patches no seam, so 0e's grep (which searches for patch names) could not find it.
+    It is a shape pin"; "The test's purpose ("the shape before D1") is kept"; "Applying the
+    predicate to the resolver instead would make the 13 *.invalid fakes, and test_request_capture,
+    read the real unit files and could move their ceilings. In production the two hosts are equal";
+    "ollama_client imports run_manifest lazily, so the reverse import at module level would be
+    circular"; "R721(c)'s refusal at open_run also refuses a human review_session … although a
+    review session sends nothing to Ollama".
+  INFERRED: none.
+
+R724(a) — The stop is correct; the cause is the architect's, the fourth of this unit: the census rule
+  of R722(a) looked for patches of removed seams and not for pins of a record the commit extends.
+  From here that pre-step also greps tests/ for exact-set assertions and hard-coded hashes over any
+  record the commit adds a key to (the record's existing key names as the pattern), and classifies
+  what it finds as (iii) a shape pin — in the Touched list, rewritten to the new shape with its
+  purpose kept, or STOP. R723(a)'s rule covers the counting.
+R724(b) — tests/test_ft_adjudication_import.py joins the Touched list: "ollama_host" is added to
+  _BODY_KEYS, its comment naming U18 as the second key added to "the shape before D1"; both ids
+  keep their assertions; nothing else in the file changes.
+R724(c) — CC's prepared decisions are accepted as stated: the resolver _OLLAMA_HOST read at import
+  and exposed as ollama_host(), the client built by _build_client() from it, the acceptance tests
+  driving the resolver and rebuilding through _build_client(transport=MockTransport) (I4);
+  fetch_model_digest reading _client._client.get("/api/tags") with its unused base_url parameter
+  retired (no caller); the preflight's ps through oc._client.ps() behind a server_ps() helper; the
+  restart poll httpx.get(f"{ollama_host()}/api/tags", timeout=5) (R722(b));
+  server_context_length reading the live client's host through is_local_service_host — the
+  ceiling read and the chat send then agree by construction, being one object, and the resolver's
+  job is to build that object and gate the refusal; recorded in the record's §4 as the designed
+  division; OllamaHostNotLoopback(RunRefused) defined in run_manifest.py beside its siblings.
+R724(d) — The review_session finding: the refusal applies to every run kind, as R721(c) ruled. A
+  session that sends nothing is refused for a remote OLLAMA_HOST all the same; the engine does not
+  distinguish kinds at that refusal, and a remote host is not a supported configuration of any
+  kind until the capability R721(c) names is built. Recorded as a limit in the record's §4; no
+  row.
+R724(e) — 12y-U18B resumes at step 2 under this ruling; item 0 43ca120 and ledger 96f3d7c stand;
+  nothing else in the brief or its resumes changes.

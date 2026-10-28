@@ -1,0 +1,5 @@
+== exact manifest-body shape pins
+tests/test_ft_adjudication_import.py:321:_BODY_KEYS = {"run_uid", "review_id", "run_kind", "git", "engine_state", "spec_hash",
+tests/test_ft_adjudication_import.py:335:    assert set(_open(db, spec)) == _BODY_KEYS
+tests/test_ft_adjudication_import.py:340:    assert set(body) == _BODY_KEYS | {"inputs"}
+== tests calling open_run/open_review_session with the default digest_fn while _client is a fake (no digest_fn= and no fetch_model_digest patch in file)

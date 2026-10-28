@@ -358,8 +358,11 @@ def ollama_endpoints() -> frozenset[tuple[str, int]]:
 
     from analysis.eval.qualgap01 import DEFAULT_HOST as second_server
 
-    urls = {_parse_host(os.environ.get("OLLAMA_HOST")), oc.OLLAMA_BASE_URL,
-            *oc._LOCAL_SERVICE_HOSTS, second_server}
+    # U18: the engine's one resolved host, and both loopback spellings of the
+    # service's default address (the library's default and `localhost`), which
+    # R626(c)'s loopback coverage keeps whatever the resolver says.
+    urls = {_parse_host(os.environ.get("OLLAMA_HOST")), oc.ollama_host(),
+            _parse_host(None), _parse_host("localhost"), second_server}
     try:
         urls.add(oc._client_host())
     except Exception:  # a test has put a fake in the client's place

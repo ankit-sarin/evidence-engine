@@ -1,0 +1,9 @@
+pin_tuples exit 0
+pins tree == parent (byte-identical)
+pins tree == 12x_close
+2
+== G3 grep (engine, scripts)
+grep exit 1 (1 = none)
+INVENTORY DRIFT: engine/utils/ollama_preflight.py: 'flags' differs — committed [{'default': 'unset', 'dest': None, 'line': 278, 'names': ['--models'], 'required': True}, {'default': '30', 'dest': None, 'line': 279, 'names': ['--timeout'], 'required': False}], on disk [{'names': ['--models'], 'line': 276, 'default': 'unset', 'required': True, 'dest': None}, {'names': ['--timeout'], 'line': 277, 'default': '30', 'required': False, 'dest': None}]
+Regenerate with: python -m engine.tools.inventory --write
+inventory exit 1

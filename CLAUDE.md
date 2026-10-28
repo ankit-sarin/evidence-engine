@@ -117,7 +117,7 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 12. **EXPORT** — PRISMA CSV, evidence CSV/Excel/DOCX, methods section (the corpus, from the eligibility axis)
 
 ## Inference
-- Local models via Ollama at localhost:11434, every call through `engine/utils/ollama_client.ollama_chat` with its settings from the resolver. Temperatures are 0 (the integer at most sites, `0.0` at the FT sites — the literal each has always sent).
+- Local models via Ollama on one host, `ollama_client.ollama_host()` (`OLLAMA_HOST` at import, else the library's loopback default; a non-loopback host is refused at `open_run`, U18), every call through `engine/utils/ollama_client.ollama_chat` with its settings from the resolver. Temperatures are 0 (the integer at most sites, `0.0` at the FT sites — the literal each has always sent).
 - Cloud models via OpenAI and Anthropic APIs (env vars OPENAI_API_KEY, ANTHROPIC_API_KEY) — **opt-in per run and off by default** (S3g).
 - Client libraries pinned: ollama 0.6.1, openai 2.24.0, anthropic 0.84.0 (R75); every manifest records the installed versions.
 
@@ -322,8 +322,8 @@ and its three value columns always exist, whatever the registry holds.
 `engine/core/review_spec.py`, none in a module constant (`extractor.MODEL`,
 `DEFAULT_AUDITOR_MODEL`, the `_VISION_*` and cloud `_DEFAULT_*` constants are gone — C1, C8, C19).
 Sites call `ollama_chat(messages=…, **cfg.kwargs())` and build messages through one builder each,
-which the prompt hash also uses. `resolve_run` adds the digest (`fetch_model_digest`, `/api/tags`;
-`get_model_digest` is retired — C15), `prompt_hash` (the rendered request per stage, never a spec
+which the prompt hash also uses. `resolve_run` adds the digest (`fetch_model_digest`, `/api/tags` through the engine
+client, so from the server the calls go to — U18; `get_model_digest` is retired — C15), `prompt_hash` (the rendered request per stage, never a spec
 sub-block — C17) and the sources. `canonical_json` / `sha256_canonical` are the one serialisation.
 
 - **Stages:** `abstract_screen_primary`, `abstract_screen_verifier`, `ft_screen_primary`,
@@ -341,10 +341,10 @@ sub-block — C17) and the sources. `canonical_json` / `sha256_canonical` are th
 
 **The run manifest** (`engine/core/run_manifest.py`, migration 020). `open_run` writes
 `run_manifests` + `run_stage_configs` and pins every named arm **before the first call**, or
-refuses: `DirtyTree`, `PreManifestArm` (R59), `RetiredArm` (R21), `ArmPinMismatch` (R10, naming the
-differing keys), `CloudArmNotEnabled` (S3g), `CodebookReviewMismatch` (INT-i12-9), `ModelLineageMissing` or
-`SameLineageVerifier` (INT-i12-45), or a digest
-failure. An untagged HEAD is allowed with
+refuses, in this order: `OllamaHostNotLoopback` (U18, R721(c)), `CodebookReviewMismatch` (INT-i12-9),
+`DirtyTree`, `AmbiguousEngineState`, `CloudArmNotEnabled` (S3g), `PreManifestArm` (R59), `RetiredArm`
+(R21), `ModelLineageMissing` or `SameLineageVerifier` (INT-i12-45), a digest failure, or `ArmPinMismatch`
+(R10, naming the differing keys). An untagged HEAD is allowed with
 `engine_state` NULL until the freshman tag. `active_run(conn, run_id)` makes `ollama_chat` record
 each call in `run_calls`. A human review session is a run of kind `review_session` with zero stage
 rows (R68). `run_pipeline` opens a manifest instead of writing `review_runs` (R73).

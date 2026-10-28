@@ -1,0 +1,54 @@
+== I2: host in run_manifest.py
+        if name not in deferred:
+            pins[name] = (tup, sha)
+
+    cloud_list = sorted(cloud_arms)
+    run_uid = str(uuid.uuid4())
+    started = _now()
+    manifest = {
+        "run_uid": run_uid, "review_id": spec.review_id, "run_kind": kind,
+        "git": {"commit": g.commit, "dirty": g.dirty, "tag": g.tag},
+        "engine_state": engine_state,
+        "spec_hash": spec_hash(spec),
+        "codebook": {"semantic_hash": codebook.semantic_hash, "sha256": codebook.sha256},
+        "libraries": libs, "host": host or socket.gethostname(),
+        "started_at": started, "cloud_arms": cloud_list,
+        "payload_description": payload_description,
+        "stages": {k: {**_stage_row(k, r), "lineage": spec.model_lineage[r.config.model]}
+                   for k, r in sorted(resolved.items())},
+        "pins": {k: v[1] for k, v in sorted(pins.items())},
+    }
+    if lineage_check is not None:
+        manifest["lineage_check"] = lineage_check
+    if selection_bound is not None:
+        manifest["selection_bound"] = dict(selection_bound)
+    if inputs is not None:
+        manifest["inputs"] = dict(inputs)
+    if cloud_list and not payload_description:
+        raise ValueError("a run with cloud arms records a payload description (S3g)")
+
+    # A savepoint, not BEGIN: it nests inside a caller's open transaction instead
+    # of failing on it, and RELEASE commits when it is the outermost.
+    conn.execute("SAVEPOINT open_run")
+    try:
+        cur = conn.execute(
+            "INSERT INTO run_manifests (run_uid, review_id, run_kind, git_commit, git_dirty, "
+            "git_tag, engine_state, spec_hash, codebook_hash, codebook_sha256, "
+            "library_versions_json, host, started_at, cloud_arms_json, payload_description, "
+            "manifest_json, manifest_sha256) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (run_uid, spec.review_id, kind, g.commit, int(g.dirty), g.tag, engine_state,
+             manifest["spec_hash"], codebook.semantic_hash, codebook.sha256,
+             canonical_json(libs), manifest["host"], started, canonical_json(cloud_list),
+             payload_description, canonical_json(manifest), sha256_canonical(manifest)))
+        run_id = cur.lastrowid
+        # Arms first: a stage row's arm_name is an FK to the registry.
+        for name in sorted(deferred):
+            if name not in existing:
+                # Registered, not pinned: the row the stage rows' FK needs.
+== 020/022 host column
+engine/migrations/020_run_manifest.py:152:    host            TEXT    NOT NULL,
+engine/migrations/020_run_manifest.py:312:    "library_versions_json", "host", "started_at", "cloud_arms_json",
+engine/migrations/022_run_kinds_and_audit_tables.py:149:    "library_versions_json", "host", "started_at", "cloud_arms_json",
+engine/migrations/022_run_kinds_and_audit_tables.py:155:    "library_versions_json", "host", "started_at", "ended_at", "end_status",
+engine/migrations/022_run_kinds_and_audit_tables.py:161:    "library_versions_json", "host", "started_at", "ended_at", "end_status",
+engine/migrations/022_run_kinds_and_audit_tables.py:280:        host            TEXT    NOT NULL,

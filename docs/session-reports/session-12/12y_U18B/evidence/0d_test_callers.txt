@@ -1,0 +1,92 @@
+== tests patching ollama_client.httpx.get
+tests/test_ollama_client.py:348:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:358:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:393:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:408:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:418:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:426:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:438:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:445:        with patch("engine.utils.ollama_client.httpx.get", return_value=resp):
+== tests patching ollama.ps / preflight ollama
+tests/test_ollama_preflight.py:28:        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:39:        with patch("engine.utils.ollama_preflight.ollama_chat",
+tests/test_ollama_preflight.py:53:        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:54:            with patch("engine.utils.ollama_preflight.ollama.ps",
+tests/test_ollama_preflight.py:72:        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:73:            with patch("engine.utils.ollama_preflight.ollama.ps", return_value=ps_data):
+tests/test_ollama_preflight.py:92:        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:93:            with patch("engine.utils.ollama_preflight.ollama.ps", return_value=ps_data):
+tests/test_ollama_preflight.py:113:        with patch("engine.utils.ollama_preflight.ollama_chat", side_effect=mock_chat):
+tests/test_ollama_preflight.py:114:            with patch("engine.utils.ollama_preflight.ollama.ps",
+tests/test_ollama_preflight.py:224:            with patch("engine.utils.ollama_preflight.ollama_chat",
+tests/test_ollama_preflight.py:226:                with patch("engine.utils.ollama_preflight.ollama.ps",
+tests/test_ollama_preflight.py:235:            with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:236:                with patch("engine.utils.ollama_preflight.ollama.ps",
+tests/test_ollama_preflight.py:346:            with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:347:                with patch("engine.utils.ollama_preflight.ollama.ps",
+tests/test_run_pipeline_starts.py:161:    (`systemctl show`, `ollama.ps`): the probe goes through `ollama_chat` and
+tests/test_run_pipeline_starts.py:166:         patch("engine.utils.ollama_preflight.ollama.ps", return_value={"models": []}):
+tests/test_undeclared_call.py:177:         patch("engine.utils.ollama_preflight.ollama.ps", return_value={"models": []}):
+tests/test_suite_live_fence.py:105:        _mark("module"); ollama.ps()
+== tests patching extractor.httpx
+tests/test_qualgap01.py:103:        R.oc._restart_ollama_and_retry(
+tests/test_run_pipeline_starts.py:107:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_lock_census.py:41:_CLIENT = "def ollama_chat(**kw):\n    return _restart_ollama_and_retry()\n\ndef _restart_ollama_and_retry():\n    pass\n"
+tests/test_lock_census.py:43:_EXTRACTOR = "def restart_ollama():\n    pass\n"
+tests/test_lock_census.py:88:        extractor.restart_ollama()
+tests/test_lock_census.py:126:    assert "engine.agents.extractor::restart_ollama" in failures[0]
+tests/test_lock_census.py:191:    assert set(SINKS) >= {("engine.agents.extractor", "restart_ollama"),
+tests/test_lock_census.py:192:                          ("engine.utils.ollama_client", "_restart_ollama_and_retry")}
+tests/test_undeclared_call.py:231:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_service_call_fence.py:68:    """`test_ollama_lock` and `test_restart_ollama_guard` spawn real helpers."""
+tests/test_service_call_fence.py:103:    `_restart_ollama_and_retry` wraps its restart in `except Exception` and
+tests/conftest.py:26:    flock holders in `test_ollama_lock.py` and `test_restart_ollama_guard.py`
+tests/conftest.py:30:    detail. `_restart_ollama_and_retry` wraps its restart in `except Exception`
+tests/test_restart_recovery_guard.py:1:"""`_restart_ollama_and_retry` must respect the experiment lock and the opt-out.
+tests/test_restart_recovery_guard.py:3:OPSFIX-01. `extractor.restart_ollama` has been flock-gated since OPS-GUARD-01,
+tests/test_restart_recovery_guard.py:71:    return oc._restart_ollama_and_retry(**kwargs)
+tests/test_ollama_client.py:12:    _restart_ollama_and_retry,
+tests/test_ollama_client.py:148:        retries drops into `_restart_ollama_and_retry`, and without this patch
+tests/test_ollama_client.py:239:        # Test _restart_ollama_and_retry directly to avoid timing complexity
+tests/test_ollama_client.py:243:        result = _restart_ollama_and_retry(
+tests/test_ollama_client.py:300:    def test_restart_ollama_and_retry_raises_on_restart_failure(self, mock_subprocess):
+tests/test_ollama_client.py:301:        """M3: _restart_ollama_and_retry raises RuntimeError (not None) on restart failure."""
+tests/test_ollama_client.py:303:            _restart_ollama_and_retry(
+tests/test_ollama_client.py:313:    def test_restart_ollama_and_retry_raises_on_post_restart_failure(
+tests/test_ollama_client.py:316:        """M3: _restart_ollama_and_retry raises RuntimeError when post-restart call fails."""
+tests/test_ollama_client.py:325:            _restart_ollama_and_retry(
+tests/test_extractor.py:20:    restart_ollama,
+tests/test_extractor.py:464:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:483:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:499:    @patch("engine.agents.extractor.restart_ollama", side_effect=RuntimeError("Failed to restart Ollama: systemctl failed"))
+tests/test_extractor.py:515:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:558:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:669:# ── H4: Graceful handling of restart_ollama failure ──────────────────
+tests/test_extractor.py:673:    """restart_ollama() failure in extraction loop must not crash the run."""
+tests/test_extractor.py:676:        """If restart_ollama raises RuntimeError, extraction continues."""
+tests/test_extractor.py:684:            patch("engine.agents.extractor.restart_ollama",
+tests/test_cut_over.py:104:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_run_interrupts.py:241:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_restart_ollama_guard.py:1:"""restart_ollama() must stand down for a FOREIGN experiment lock only (OPS-GUARD-01 C).
+tests/test_restart_ollama_guard.py:5:fragmentation. If restart_ollama() skipped whenever the lock was held at all, it
+tests/test_restart_ollama_guard.py:63:             patch("engine.agents.extractor.httpx.get") as mock_get:
+tests/test_restart_ollama_guard.py:65:                extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25)
+tests/test_restart_ollama_guard.py:78:         patch("engine.agents.extractor.httpx.get") as mock_get:
+tests/test_restart_ollama_guard.py:83:            extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:90:         patch("engine.agents.extractor.httpx.get") as mock_get:
+tests/test_restart_ollama_guard.py:92:        extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:101:             patch("engine.agents.extractor.httpx.get"):
+tests/test_restart_ollama_guard.py:102:            assert extractor.restart_ollama(reason="proactive", papers_done=25) is None
+tests/test_restart_ollama_guard.py:146:         patch("engine.agents.extractor.httpx.get") as mock_get, \
+tests/test_restart_ollama_guard.py:149:            assert extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25) is None
+tests/test_restart_ollama_guard.py:164:         patch("engine.agents.extractor.httpx.get") as mock_get:
+tests/test_restart_ollama_guard.py:166:        extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:175:    `_extract_selected` zeroes `papers_since_restart` whenever `restart_ollama` returns
+tests/test_restart_ollama_guard.py:196:         patch("engine.agents.extractor.httpx.get") as mock_get, \
+tests/_lock_census.py:43:    ("engine.utils.ollama_client", "_restart_ollama_and_retry"): "last-resort Ollama restart",
+tests/_lock_census.py:44:    ("engine.agents.extractor", "restart_ollama"): "proactive Ollama restart",
+tests/test_suite_live_fence.py:143:    """`extractor.restart_ollama` and `fetch_model_digest` name 127.0.0.1:11434 and
+tests/test_selection_bound.py:115:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+== tests naming OLLAMA_BASE_URL / _LOCAL_SERVICE_HOSTS
+tests/conftest.py:361:    urls = {_parse_host(os.environ.get("OLLAMA_HOST")), oc.OLLAMA_BASE_URL,
+tests/conftest.py:362:            *oc._LOCAL_SERVICE_HOSTS, second_server}

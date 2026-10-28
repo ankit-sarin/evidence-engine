@@ -1,0 +1,37 @@
+Wed Oct 28 18:21:00 UTC 2026
+ 18:21:00 up 10 days, 19:17,  4 users,  load average: 2.05, 1.28, 1.23
+top - 18:21:01 up 10 days, 19:17,  4 users,  load average: 2.05, 1.28, 1.23
+Tasks: 579 total,   1 running, 578 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.9 us,  0.5 sy,  0.0 ni, 98.6 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem : 122566.0 total,   4675.4 free,  12318.1 used, 109448.0 buff/cache     
+MiB Swap:  16384.0 total,  12648.1 free,   3735.8 used. 110247.9 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+     15 root      20   0       0      0      0 I   9.1   0.0   4:06.24 rcu_pre+
+   2560 ankitsa+  20   0 8191096  22496   7452 S   9.1   0.0 175:19.29 python
+   2636 root      20   0 1358476  48208  22088 S   9.1   0.0  19:50.80 tailsca+
+ 105244 ankitsa+  20   0 6146324 468128 136624 S   9.1   0.4   1:08.92 claude
+ 225782 ankitsa+  20   0   26960   5488   3340 R   9.1   0.0   0:00.01 top
+4183196 ankitsa+  20   0   83344  26532  16304 S   9.1   0.0   0:15.73 code-6d+
+      1 root      20   0   24712  11900   6604 S   0.0   0.0   2:42.17 systemd
+               total        used        free      shared  buff/cache   available
+Mem:          122566       12318        4675           3      109447      110247
+Swap:          16383        3735       12648
+6.17.0-1032-nvidia
+Python 3.12.3
+3.45.1-1ubuntu2.8
+580.173.02
+abf99132-fd8b-41f9-b9fd-62241e40110c
+NRestarts=0
+ExecMainStartTimestamp=Sat 2026-10-17 23:04:05 UTC
+earlyoom: active
+/usr/bin/earlyoom -r 3600 -m 6 -s 100,100 --avoid ^(sshd|tailscaled|cloudflared|systemd|systemd-journal|NetworkManager|Xorg|gnome-shell|gdm.*)$ --prefer ^ollama$
+vm.min_free_kbytes 1048576
+ollama pid 2564 oom_score_adj 0
+MemAvailable:   112894396 kB
+-- concurrent jobs (ffmpeg / nvenc / surgical-cv / uvicorn / pytest), this script and its ancestors excluded (R680(c))
+excluded pids: 225779 225772 4184049 4183442 4183347 4183241 4183237 4183196 4183178 4183159 4183151 2636 1 
+11734 Sun Oct 25 05:20:54 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python3 /home/ankitsarin/projects/surgical-cv/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 7865
+215908 Wed Oct 28 18:19:38 2026 /bin/bash -c source /home/ankitsarin/.claude/shell-snapshots/snapshot-bash-1793208947888-dabxna.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { builtin unalias -- 'unsetenv'; builtin unset -f -- 'un
+215916 Wed Oct 28 18:19:38 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python -m pytest tests/ -p no:cacheprovider -q -rs
+225771 Wed Oct 28 18:20:59 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python /tmp/pytest-of-ankitsarin/pytest-146/test_classifier_timeout_is_non0/stub_classifier.py --video /tmp/pytest-of-ankitsarin/pytest-146/test_classifier_timeout_is_non

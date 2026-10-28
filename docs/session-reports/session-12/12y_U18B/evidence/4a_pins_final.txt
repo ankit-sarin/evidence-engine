@@ -1,0 +1,2 @@
+pins final == parent
+inventory in sync

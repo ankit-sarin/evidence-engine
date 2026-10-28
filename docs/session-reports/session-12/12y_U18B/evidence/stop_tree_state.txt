@@ -1,0 +1,18 @@
+Wed Oct 28 18:15:56 UTC 2026
+43ca1200ddaed2fdffa28e8eba3fd21caf892d4a
+ M CLAUDE.md
+ M docs/inventory/entry_points.json
+ M docs/inventory/entry_points.md
+ M engine/agents/extractor.py
+ M engine/core/run_manifest.py
+ M engine/utils/ollama_client.py
+ M engine/utils/ollama_preflight.py
+ M tests/conftest.py
+ M tests/test_ft_adjudication_import.py
+ M tests/test_ollama_client.py
+ M tests/test_ollama_preflight.py
+ M tests/test_run_pipeline_starts.py
+ M tests/test_suite_live_fence.py
+ M tests/test_undeclared_call.py
+?? tests/test_u18_one_host.py
+0	0

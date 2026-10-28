@@ -345,7 +345,7 @@ class TestTheDigestRoute:
     def test_digest_comes_from_api_tags_not_api_show(self, mock_client):
         models = [{"name": "deepseek-r1:32b", "digest": "c" * 64,
                    "modified_at": "2026-03-09T01:01:47Z"}]
-        with patch("engine.utils.ollama_client.httpx.get",
+        with patch("engine.utils.ollama_client._client._client.get",
                    return_value=_tags_response(models)) as mock_get:
             assert fetch_model_digest("deepseek-r1:32b") == "c" * 64
         assert mock_get.call_args.args[0].endswith("/api/tags")
@@ -355,7 +355,7 @@ class TestTheDigestRoute:
         # httpx's own transport error, as the real client raises it — a fake
         # must speak the tool's vocabulary, not one invented for the test.
         import httpx
-        with patch("engine.utils.ollama_client.httpx.get",
+        with patch("engine.utils.ollama_client._client._client.get",
                    side_effect=httpx.ConnectError("connection refused")):
             with pytest.raises(ModelDigestError):
                 fetch_model_digest("deepseek-r1:32b")
@@ -390,7 +390,7 @@ class TestFetchModelDigest:
             {"name": "deepseek-r1:32b", "digest": "b" * 64,
              "modified_at": "2026-01-01T00:00:00Z"},
         ]
-        with patch("engine.utils.ollama_client.httpx.get",
+        with patch("engine.utils.ollama_client._client._client.get",
                    return_value=_tags_response(models)) as mock_get:
             digest = fetch_model_digest("gemma3:27b")
 
@@ -405,7 +405,7 @@ class TestFetchModelDigest:
         bad = "a" * 32
         models = [{"name": "gemma3:27b", "digest": bad,
                    "modified_at": "2026-03-09T01:01:47Z"}]
-        with patch("engine.utils.ollama_client.httpx.get",
+        with patch("engine.utils.ollama_client._client._client.get",
                    return_value=_tags_response(models)):
             with pytest.raises(ModelDigestError, match="malformed digest"):
                 fetch_model_digest("gemma3:27b")
@@ -415,7 +415,7 @@ class TestFetchModelDigest:
         bad = "A" * 64
         models = [{"name": "gemma3:27b", "digest": bad,
                    "modified_at": "2026-03-09T01:01:47Z"}]
-        with patch("engine.utils.ollama_client.httpx.get",
+        with patch("engine.utils.ollama_client._client._client.get",
                    return_value=_tags_response(models)):
             with pytest.raises(ModelDigestError, match="malformed digest"):
                 fetch_model_digest("gemma3:27b")
@@ -423,7 +423,7 @@ class TestFetchModelDigest:
     def test_missing_model_raises(self):
         models = [{"name": "deepseek-r1:32b", "digest": VALID_DIGEST,
                    "modified_at": "2026-01-01T00:00:00Z"}]
-        with patch("engine.utils.ollama_client.httpx.get",
+        with patch("engine.utils.ollama_client._client._client.get",
                    return_value=_tags_response(models)):
             with pytest.raises(ModelDigestError, match="no entry for model_name"):
                 fetch_model_digest("gemma3:27b")
@@ -435,14 +435,14 @@ class TestFetchModelDigest:
             {"name": "gemma3:27b", "digest": "b" * 64,
              "modified_at": "2026-04-01T00:00:00Z"},
         ]
-        with patch("engine.utils.ollama_client.httpx.get",
+        with patch("engine.utils.ollama_client._client._client.get",
                    return_value=_tags_response(models)):
             with pytest.raises(ModelDigestError, match="ambiguous"):
                 fetch_model_digest("gemma3:27b")
 
     def test_non_200_status_raises(self):
         resp = _tags_response([], status=503)
-        with patch("engine.utils.ollama_client.httpx.get", return_value=resp):
+        with patch("engine.utils.ollama_client._client._client.get", return_value=resp):
             with pytest.raises(ModelDigestError, match="non-200"):
                 fetch_model_digest("gemma3:27b")
 

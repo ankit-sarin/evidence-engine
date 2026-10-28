@@ -1,0 +1,120 @@
+# 0e census. Symbols commit 1 renames or retires (3a plan): OLLAMA_BASE_URL, _LOCAL_SERVICE_HOSTS, the preflight's use of the ollama module (ollama.ps), fetch_model_digest's transport (httpx.get -> the engine client); extractor.restart_ollama keeps httpx.get (URL from the resolver).
+== engine\.utils\.ollama_client\.httpx
+tests/test_ollama_client.py:348:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:358:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:393:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:408:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:418:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:426:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:438:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:445:        with patch("engine.utils.ollama_client.httpx.get", return_value=resp):
+== engine\.utils\.ollama_preflight\.ollama
+tests/test_run_pipeline_starts.py:166:         patch("engine.utils.ollama_preflight.ollama.ps", return_value={"models": []}):
+tests/test_undeclared_call.py:177:         patch("engine.utils.ollama_preflight.ollama.ps", return_value={"models": []}):
+tests/test_ollama_preflight.py:28:        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:39:        with patch("engine.utils.ollama_preflight.ollama_chat",
+tests/test_ollama_preflight.py:53:        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:54:            with patch("engine.utils.ollama_preflight.ollama.ps",
+tests/test_ollama_preflight.py:72:        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:73:            with patch("engine.utils.ollama_preflight.ollama.ps", return_value=ps_data):
+tests/test_ollama_preflight.py:92:        with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:93:            with patch("engine.utils.ollama_preflight.ollama.ps", return_value=ps_data):
+tests/test_ollama_preflight.py:113:        with patch("engine.utils.ollama_preflight.ollama_chat", side_effect=mock_chat):
+tests/test_ollama_preflight.py:114:            with patch("engine.utils.ollama_preflight.ollama.ps",
+tests/test_ollama_preflight.py:224:            with patch("engine.utils.ollama_preflight.ollama_chat",
+tests/test_ollama_preflight.py:226:                with patch("engine.utils.ollama_preflight.ollama.ps",
+tests/test_ollama_preflight.py:235:            with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:236:                with patch("engine.utils.ollama_preflight.ollama.ps",
+tests/test_ollama_preflight.py:346:            with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+tests/test_ollama_preflight.py:347:                with patch("engine.utils.ollama_preflight.ollama.ps",
+== OLLAMA_BASE_URL
+tests/conftest.py:361:    urls = {_parse_host(os.environ.get("OLLAMA_HOST")), oc.OLLAMA_BASE_URL,
+== _LOCAL_SERVICE_HOSTS
+tests/conftest.py:362:            *oc._LOCAL_SERVICE_HOSTS, second_server}
+== fetch_model_digest
+tests/test_units_as_source_slices.py:219:    monkeypatch.setattr(oc, "fetch_model_digest",
+tests/test_units_as_source_slices.py:220:                        lambda m: pytest.fail(f"fetch_model_digest({m!r}) during a run"))
+tests/test_pin_records.py:159:    monkeypatch.setattr(oc, "fetch_model_digest", lambda m: DIGEST)
+tests/test_run_pipeline_starts.py:99:    monkeypatch.setattr(oc, "fetch_model_digest", lambda model, *a, **k: "a" * 64)
+tests/test_citation_record.py:152:    monkeypatch.setattr(oc, "fetch_model_digest",
+tests/test_citation_record.py:153:                        lambda m: pytest.fail(f"fetch_model_digest({m!r}) during a run"))
+tests/test_codebook_review_at_open.py:119:    monkeypatch.setattr(oc, "fetch_model_digest", lambda m: fetched.append(m) or DIGEST)
+tests/test_parsed_text_resolver.py:133:         patch("engine.utils.ollama_client.fetch_model_digest", return_value="d" * 64), \
+tests/test_extraction_run_link.py:95:    monkeypatch.setattr(oc, "fetch_model_digest",
+tests/test_extraction_run_link.py:96:                        lambda m: pytest.fail(f"fetch_model_digest({m!r}) during a run"))
+tests/test_extraction_run_link.py:216:    assert "fetch_model_digest" not in Path(E.__file__).read_text()
+tests/analysis/paper1/test_judge.py:105:             patch.object(judge_module, "fetch_model_digest",
+tests/analysis/paper1/test_judge.py:122:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge.py:131:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge.py:145:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge.py:154:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge.py:169:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge.py:183:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge.py:194:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge.py:234:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge.py:242:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge.py:264:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/test_ollama_client.py:14:    fetch_model_digest,
+tests/test_ollama_client.py:350:            assert fetch_model_digest("deepseek-r1:32b") == "c" * 64
+tests/test_ollama_client.py:361:                fetch_model_digest("deepseek-r1:32b")
+tests/test_ollama_client.py:395:            digest = fetch_model_digest("gemma3:27b")
+tests/test_ollama_client.py:411:                fetch_model_digest("gemma3:27b")
+tests/test_ollama_client.py:421:                fetch_model_digest("gemma3:27b")
+tests/test_ollama_client.py:429:                fetch_model_digest("gemma3:27b")
+tests/test_ollama_client.py:441:                fetch_model_digest("gemma3:27b")
+tests/test_ollama_client.py:447:                fetch_model_digest("gemma3:27b")
+tests/test_extractor.py:467:    @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
+tests/test_extractor.py:486:    @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
+tests/test_extractor.py:502:    @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
+tests/test_extractor.py:518:    @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
+tests/test_extractor.py:561:    @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
+tests/test_extractor.py:682:            patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64),
+tests/test_arm_pinned_at_extract.py:95:    monkeypatch.setattr(oc, "fetch_model_digest", lambda m: DIGEST)
+tests/test_suite_live_fence.py:143:    """`extractor.restart_ollama` and `fetch_model_digest` name 127.0.0.1:11434 and
+tests/test_ollama_input_fit.py:303:    monkeypatch.setattr(judge_module, "fetch_model_digest", lambda m: "sha256:abc")
+tests/analysis/paper1/test_judge_cli.py:252:        with patch.object(judge_module, "fetch_model_digest", lambda m: "d"), \
+tests/analysis/paper1/test_judge_cli.py:254:             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_cli.py:282:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"), \
+tests/analysis/paper1/test_judge_cli.py:284:             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_cli.py:330:        with patch.object(judge_module, "fetch_model_digest", lambda m: "d"), \
+tests/analysis/paper1/test_judge_cli.py:332:             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_cli.py:369:             patch.object(judge_cli, "fetch_model_digest", lambda m: "sha256:z"):
+tests/analysis/paper1/test_judge_cli.py:408:             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_cli.py:435:             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_cli.py:477:             patch.object(judge_cli, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:90:             patch.object(judge_module, "fetch_model_digest",
+tests/analysis/paper1/test_judge_pass2.py:104:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:115:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:130:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:139:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:151:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:160:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:169:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:193:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:200:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:215:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:231:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:246:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:262:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:305:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:386:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+tests/analysis/paper1/test_judge_pass2.py:414:             patch.object(judge_module, "fetch_model_digest", lambda m: "d"):
+== files (patch/setattr of the above)
+tests/analysis/paper1/test_judge.py
+tests/analysis/paper1/test_judge_cli.py
+tests/analysis/paper1/test_judge_pass2.py
+tests/conftest.py
+tests/test_arm_pinned_at_extract.py
+tests/test_citation_record.py
+tests/test_codebook_review_at_open.py
+tests/test_extraction_run_link.py
+tests/test_extractor.py
+tests/test_ollama_client.py
+tests/test_ollama_input_fit.py
+tests/test_ollama_preflight.py
+tests/test_parsed_text_resolver.py
+tests/test_pin_records.py
+tests/test_run_pipeline_starts.py
+tests/test_suite_live_fence.py
+tests/test_undeclared_call.py
+tests/test_units_as_source_slices.py

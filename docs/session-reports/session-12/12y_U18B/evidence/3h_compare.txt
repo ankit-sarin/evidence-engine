@@ -1,0 +1,8 @@
+ids before 96 after 96; only-before 0; only-after 0
+tests/test_ollama_client.py exit 0 :: 26 passed in 86.54s (0:01:26)
+tests/test_ollama_preflight.py exit 0 :: 23 passed in 6.14s
+tests/test_run_pipeline_starts.py exit 0 :: 6 passed in 8.77s
+tests/test_undeclared_call.py exit 0 :: 8 passed in 6.64s
+tests/test_ft_adjudication_import.py exit 0 :: 26 passed in 17.37s
+tests/test_suite_live_fence.py exit 0 :: 7 passed in 1.97s
+tests/test_extraction_run_link.py exit 0 :: 11 passed in 6.91s

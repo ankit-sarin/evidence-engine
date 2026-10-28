@@ -1,0 +1,53 @@
+== conftest fence
+    return _endpoint(parts.hostname, parts.port, parts.scheme)
+
+
+def ollama_endpoints() -> frozenset[tuple[str, int]]:
+    """Every (host, port) that is the Ollama server, for this process, now."""
+    from ollama._client import _parse_host
+
+    from engine.utils import ollama_client as oc
+
+    from analysis.eval.qualgap01 import DEFAULT_HOST as second_server
+
+    urls = {_parse_host(os.environ.get("OLLAMA_HOST")), oc.OLLAMA_BASE_URL,
+            *oc._LOCAL_SERVICE_HOSTS, second_server}
+    try:
+        urls.add(oc._client_host())
+    except Exception:  # a test has put a fake in the client's place
+        pass
+    return frozenset(_url_endpoint(u) for u in urls if u)
+
+
+def _refuse_ollama(endpoint: tuple[str, int], route: str, detail: str, nodeid: str):
+    if endpoint not in ollama_endpoints():
+        return
+== live-fence test
+
+
+def test_the_fenced_server_is_OLLAMA_HOST_and_the_addresses_the_engine_names(monkeypatch):
+    """`extractor.restart_ollama` and `fetch_model_digest` name 127.0.0.1:11434 and
+    localhost:11434 outright, whatever OLLAMA_HOST says, so the fence covers both."""
+    from conftest import ollama_endpoints
+
+    monkeypatch.setenv("OLLAMA_HOST", "10.1.2.3:4567")
+    assert {("10.1.2.3", 4567), ("loopback", 11434)} <= ollama_endpoints()
+    monkeypatch.setenv("OLLAMA_HOST", "localhost:4567")
+    assert ("loopback", 4567) in ollama_endpoints()
+
+
+def test_the_fenced_server_includes_the_second_server_on_loopback():
+    """R626(c): `run_qualgap01` targets port 11435 by default. Every loopback name
+    is the same host to the fence."""
+    from conftest import _endpoint, ollama_endpoints
+
+    from analysis.eval.qualgap01 import DEFAULT_HOST
+
+    assert DEFAULT_HOST.endswith(":11435")
+== CLAUDE.md refusal list
+344:refuses: `DirtyTree`, `PreManifestArm` (R59), `RetiredArm` (R21), `ArmPinMismatch` (R10, naming the
+refuses: `DirtyTree`, `PreManifestArm` (R59), `RetiredArm` (R21), `ArmPinMismatch` (R10, naming the
+differing keys), `CloudArmNotEnabled` (S3g), `CodebookReviewMismatch` (INT-i12-9), `ModelLineageMissing` or
+`SameLineageVerifier` (INT-i12-45), or a digest
+failure. An untagged HEAD is allowed with
+`engine_state` NULL until the freshman tag. `active_run(conn, run_id)` makes `ollama_chat` record

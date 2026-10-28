@@ -158,12 +158,12 @@ ENV_OK = {"OLLAMA_FLASH_ATTENTION": "true", "OLLAMA_MAX_LOADED_MODELS": "1",
 def test_a_start_that_screens_declares_and_sends_the_screening_preflight(
         review, spec, skip_to):
     """The real `require_preflight`, with only its two host reads patched
-    (`systemctl show`, `ollama.ps`): the probe goes through `ollama_chat` and
+    (`systemctl show`, the engine client's `ps`): the probe goes through `ollama_chat` and
     its pre-send check. No `UndeclaredCall`; the run ends at the gate."""
     db_path, fake = review
     primary = spec.screening_models.primary
     with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=ENV_OK), \
-         patch("engine.utils.ollama_preflight.ollama.ps", return_value={"models": []}):
+         patch("engine.utils.ollama_client._client.ps", create=True, return_value={"models": []}):
         rp.run_pipeline("starts", skip_to=skip_to)
     end, stages, field_events, screened = _state(db_path)
     assert end == ("interrupted", rm.REASON_BLOCKED_ADJUDICATION)

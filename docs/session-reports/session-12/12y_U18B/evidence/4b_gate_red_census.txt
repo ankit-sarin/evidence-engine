@@ -1,0 +1,20 @@
+== RUN_REFUSED_MEMBERS
+73:RUN_REFUSED_MEMBERS = {
+74-    rm.DirtyTree, rm.AmbiguousEngineState, rm.PreManifestArm, rm.RetiredArm,
+75-    rm.ArmPinMismatch, rm.CloudArmNotEnabled, rm.StageNotInRun,
+76-    rm.CodebookReviewMismatch,
+77-    rm.ModelLineageMissing, rm.SameLineageVerifier,  # U17, R703(d)/(e)
+78-    ElicitationSentinelUnsatisfiable,
+79-}
+80-FAULTS = [pytest.param(make, id=cls.__name__) for cls, make in RUN_FAULTS.items()] + [
+81-    pytest.param(lambda c=c: c("refused"), id=c.__name__)
+82:    for c in sorted(RUN_REFUSED_MEMBERS, key=lambda c: c.__name__)]
+83-
+84-# R532's complement: still paper outcomes, each with the reason it records.
+85-OUTCOMES = [
+86-    pytest.param(lambda: TimeoutError("timed out after 3 attempts + restart"),
+87-                 "model_call_failed", id="TimeoutError"),
+88-    pytest.param(lambda: oc.InputOverflow(model="m", chars=9, estimate_low=1.0, ceiling=1),
+== alias-form uses of the preflight's ollama module, or of retired names, anywhere in tests
+tests/test_ft_bridge.py:95:    monkeypatch.setattr(pf.ollama, "ps", lambda: {"models": []})
+tests/test_run_fault_predicate.py:140:    assert subclasses(rm.RunRefused) == RUN_REFUSED_MEMBERS

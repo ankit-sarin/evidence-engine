@@ -317,9 +317,9 @@ def test_12_complete_stage_commit_false_raises_when_no_row_is_touched(db):
 # ── 13 — open_run's inputs keyword (D1) ─────────────────────────────
 
 #: Every key a manifest body carries without `selection_bound` or `inputs` —
-#: the shape before D1.
+#: the shape before D1, with `ollama_host` the second key added to it (U18, R724(b)).
 _BODY_KEYS = {"run_uid", "review_id", "run_kind", "git", "engine_state", "spec_hash",
-              "codebook", "libraries", "host", "started_at", "cloud_arms",
+              "codebook", "libraries", "host", "ollama_host", "started_at", "cloud_arms",
               "payload_description", "stages", "pins"}
 
 

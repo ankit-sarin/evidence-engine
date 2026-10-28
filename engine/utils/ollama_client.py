@@ -12,6 +12,7 @@ This provides:
      runtime truncated or silently dropped part of fails loudly after the call
 """
 
+import ipaddress
 import json
 import logging
 import os
@@ -22,9 +23,11 @@ import time
 from collections.abc import Mapping
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import httpx
 import ollama
+from ollama._client import _parse_host
 
 from engine.utils.ollama_lock import foreign_lock_held
 
@@ -56,7 +59,46 @@ _httpx_timeout = httpx.Timeout(
     pool=30.0,
 )
 
-_client = ollama.Client(timeout=_httpx_timeout)
+# ── The one Ollama host (U18, R721(b)) ───────────────────────────────
+# Read once, at first import, as the library reads it: `OLLAMA_HOST`, else the
+# library's default. Every engine read of the server uses this host — the chat
+# client below, the digest read and the preflight's ps (both through that
+# client), and the restart poll. `open_run` refuses a host that is not loopback
+# (R721(c)). A client rebound in-process after import is not a supported path
+# and is not refused (R722(c)); `analysis/eval/run_qualgap01.py` is the one site
+# that does it.
+
+_OLLAMA_HOST = _parse_host(os.getenv("OLLAMA_HOST"))
+_SERVICE_PORT = urlsplit(_parse_host(None)).port
+
+
+def ollama_host() -> str:
+    """The Ollama server every engine read uses, resolved at import."""
+    return _OLLAMA_HOST
+
+
+def _build_client(**kwargs) -> ollama.Client:
+    """The engine client, on the resolved host. `kwargs` reach httpx (a test's transport)."""
+    return ollama.Client(host=ollama_host(), timeout=_httpx_timeout, **kwargs)
+
+
+def is_loopback_host(host: str) -> bool:
+    """True for a loopback address on any port: `localhost`, 127.0.0.0/8 or ::1."""
+    name = urlsplit(_parse_host(host)).hostname or ""
+    if name == "localhost":
+        return True
+    try:
+        return ipaddress.ip_address(name).is_loopback
+    except ValueError:
+        return False
+
+
+def is_local_service_host(host: str) -> bool:
+    """True for the local systemd service: loopback, on the library's default port."""
+    return is_loopback_host(host) and urlsplit(_parse_host(host)).port == _SERVICE_PORT
+
+
+_client = _build_client()
 
 # ── Wall-clock watchdog limits (Layer 2) ─────────────────────────────
 # Keyed by regex pattern matched against model name.
@@ -113,7 +155,6 @@ SERVER_DEFAULT_CTX = 262_144
 # systemctl, which the test suite's service-call fence refuses by design.
 SERVICE_UNIT_FILE = Path("/etc/systemd/system/ollama.service")
 SERVICE_DROPIN_DIR = Path("/etc/systemd/system/ollama.service.d")
-_LOCAL_SERVICE_HOSTS = frozenset({"http://127.0.0.1:11434", "http://localhost:11434"})
 
 _CEILING_CACHE: dict[tuple[str, str], int] = {}
 
@@ -229,7 +270,7 @@ def server_context_length() -> int | None:
     file is read first and drop-ins in lexical order after it, later values
     winning, which is systemd's own order. Only `*.conf` drop-ins count.
     """
-    if _client_host() not in _LOCAL_SERVICE_HOSTS:
+    if not is_local_service_host(_client_host()):
         return None
     files = [SERVICE_UNIT_FILE]
     try:
@@ -350,7 +391,6 @@ def _check_input_was_read(response, fit: dict, paper_label: str):
 
 # ── Strict digest fetch (every run manifest; the judge)  ───────────────────────────────
 
-OLLAMA_BASE_URL = "http://localhost:11434"
 _DIGEST_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -366,7 +406,6 @@ class ModelDigestError(RuntimeError):
 def fetch_model_digest(
     model_name: str,
     *,
-    base_url: str = OLLAMA_BASE_URL,
     timeout: float = 5.0,
 ) -> str:
     """Return the SHA-256 manifest digest for `model_name` via /api/tags.
@@ -376,6 +415,9 @@ def fetch_model_digest(
     function performs the HTTP GET, filters by exact name match, and
     asserts the result is a 64-char lowercase hex string.
 
+    The GET goes through the engine client's own keep-alive connection, so
+    the digest comes from the server the chat calls go to (U18, R721(b)).
+
     Raises
     ------
     ModelDigestError
@@ -383,9 +425,9 @@ def fetch_model_digest(
         zero or multiple entries matching model_name, or a digest that
         does not match ^[0-9a-f]{64}$.
     """
-    url = f"{base_url.rstrip('/')}/api/tags"
+    url = f"{_client_host()}/api/tags"
     try:
-        resp = httpx.get(url, timeout=timeout)
+        resp = _client._client.get("/api/tags", timeout=timeout)
     except httpx.HTTPError as exc:
         raise ModelDigestError(
             f"fetch_model_digest: HTTP error calling {url}: {exc}"
@@ -432,6 +474,14 @@ def fetch_model_digest(
         )
 
     return digest
+
+
+def server_ps():
+    """The server's resident models (`/api/ps`), through the engine client (U18).
+
+    Not `ollama.ps()`: that is the library's own module client, bound at
+    `import ollama` and not moved by anything the engine does."""
+    return _client.ps()
 
 
 def _utcnow() -> str:

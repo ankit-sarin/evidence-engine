@@ -11,9 +11,7 @@ import subprocess
 import time
 from dataclasses import dataclass, field
 
-import ollama
-
-from engine.utils.ollama_client import ollama_chat
+from engine.utils.ollama_client import ollama_chat, server_ps
 from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 #: The probe's message list — one builder for the call and the prompt hash (R60).
@@ -42,9 +40,9 @@ class PreflightResult:
 
 
 def _get_model_vram_gb(model_name: str) -> float:
-    """Query ollama ps for VRAM usage of a specific model."""
+    """Query the server's ps (through the engine client, U18) for VRAM usage of a specific model."""
     try:
-        ps = ollama.ps()
+        ps = server_ps()
         for m in ps.get("models", []):
             if m.get("name", "").startswith(model_name.split(":")[0]):
                 size_bytes = m.get("size", 0)
@@ -122,7 +120,7 @@ def preflight_check(models: list[str], timeout: int = 30, *, spec=None) -> Prefl
     # Query VRAM from ollama ps — only count models relevant to this operation
     relevant_vram = 0.0
     try:
-        ps = ollama.ps()
+        ps = server_ps()
         for m in ps.get("models", []):
             loaded_name = m.get("name", "")
             size_gb = m.get("size", 0) / (1024**3)

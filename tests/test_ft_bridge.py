@@ -92,7 +92,7 @@ def fake(monkeypatch):
     client = FakeClient()
     monkeypatch.setattr(oc, "_client", client)
     monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
-    monkeypatch.setattr(pf.ollama, "ps", lambda: {"models": []})
+    monkeypatch.setattr(oc._client, "ps", lambda: {"models": []}, raising=False)
     return client
 
 

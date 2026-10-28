@@ -140,12 +140,16 @@ def test_an_unmarked_test_is_refused_on_every_route_to_the_ollama_server(tmp_pat
 
 
 def test_the_fenced_server_is_OLLAMA_HOST_and_the_addresses_the_engine_names(monkeypatch):
-    """`extractor.restart_ollama` and `fetch_model_digest` name 127.0.0.1:11434 and
-    localhost:11434 outright, whatever OLLAMA_HOST says, so the fence covers both."""
-    from conftest import ollama_endpoints
+    """The engine reads one host, resolved at import (U18): the fence covers it, both
+    loopback spellings of the service's default address, and whatever OLLAMA_HOST says
+    now — a test may move the variable after the engine client was built."""
+    from conftest import _url_endpoint, ollama_endpoints
+
+    from engine.utils import ollama_client as oc
 
     monkeypatch.setenv("OLLAMA_HOST", "10.1.2.3:4567")
     assert {("10.1.2.3", 4567), ("loopback", 11434)} <= ollama_endpoints()
+    assert _url_endpoint(oc.ollama_host()) in ollama_endpoints()
     monkeypatch.setenv("OLLAMA_HOST", "localhost:4567")
     assert ("loopback", 4567) in ollama_endpoints()
 

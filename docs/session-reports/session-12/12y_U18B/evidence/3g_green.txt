@@ -1,0 +1,13 @@
+.........                                                                [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_u18_one_host.py::test_u18_every_engine_read_uses_the_resolved_host
+PASSED tests/test_u18_one_host.py::test_u18_the_digest_read_uses_the_keep_alive_client
+PASSED tests/test_u18_one_host.py::test_u18_the_preflight_ps_uses_the_engine_client
+PASSED tests/test_u18_one_host.py::test_u18_no_literal_11434_on_the_run_path
+PASSED tests/test_u18_one_host.py::test_u18_both_loopback_spellings_resolve_to_a_local_host
+PASSED tests/test_u18_one_host.py::test_u18_a_loopback_host_on_another_port_is_not_the_local_service
+PASSED tests/test_u18_one_host.py::test_u18_the_manifest_records_the_ollama_host
+PASSED tests/test_u18_one_host.py::test_u18_a_non_loopback_host_is_refused_at_open_run
+PASSED tests/test_u18_one_host.py::test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run
+9 passed in 2.37s

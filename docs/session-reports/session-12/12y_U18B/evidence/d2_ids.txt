@@ -1,0 +1,7 @@
+test_ft_bridge parent 25 after 25; only-parent 0; only-after 0
+test_run_fault_predicate parent 66 after 68; only-parent 0; only-after 2
+tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[OllamaHostNotLoopback]
+tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[OllamaHostNotLoopback]
+tests/test_ft_bridge.py exit 0 :: 25 passed in 23.95s
+tests/test_run_fault_predicate.py exit 0 :: 68 passed in 23.19s
+tests/test_u18_one_host.py exit 0 :: 9 passed in 2.47s

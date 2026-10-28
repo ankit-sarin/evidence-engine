@@ -75,6 +75,7 @@ RUN_REFUSED_MEMBERS = {
     rm.ArmPinMismatch, rm.CloudArmNotEnabled, rm.StageNotInRun,
     rm.CodebookReviewMismatch,
     rm.ModelLineageMissing, rm.SameLineageVerifier,  # U17, R703(d)/(e)
+    rm.OllamaHostNotLoopback,  # U18, R721(c)
     ElicitationSentinelUnsatisfiable,
 }
 FAULTS = [pytest.param(make, id=cls.__name__) for cls, make in RUN_FAULTS.items()] + [

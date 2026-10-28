@@ -174,7 +174,7 @@ def test_an_undeclared_preflight_leaves_require_preflight_as_itself(review, spec
            "OLLAMA_KV_CACHE_TYPE": "f16", "OLLAMA_NUM_PARALLEL": "1"}
     with rm.active_run(db._conn, run_id), \
          patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env), \
-         patch("engine.utils.ollama_preflight.ollama.ps", return_value={"models": []}):
+         patch("engine.utils.ollama_client._client.ps", create=True, return_value={"models": []}):
         with pytest.raises(rm.UndeclaredCall) as exc:
             pf.require_preflight([OTHER_MODEL], runner_name="Probe", spec=spec)
         assert pf.check_model(declared, spec=spec).status == "ok"      # a declared probe still runs

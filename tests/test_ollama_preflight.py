@@ -51,7 +51,7 @@ class TestPreflightCheck:
         mock_response = MagicMock()
         mock_response.message.content = "OK"
         with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
-            with patch("engine.utils.ollama_preflight.ollama.ps",
+            with patch("engine.utils.ollama_client._client.ps",
                        return_value={"models": [{"name": "a", "size": 10 * 1024**3}]}):
                 result = preflight_check(["model-a:7b", "model-b:13b"])
 
@@ -70,7 +70,7 @@ class TestPreflightCheck:
         ]}
 
         with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
-            with patch("engine.utils.ollama_preflight.ollama.ps", return_value=ps_data):
+            with patch("engine.utils.ollama_client._client.ps", return_value=ps_data):
                 result = preflight_check(["qwen3:8b"])
 
         # Only qwen3:8b should be counted (8 GB), not deepseek-r1:32b
@@ -90,7 +90,7 @@ class TestPreflightCheck:
         ]}
 
         with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
-            with patch("engine.utils.ollama_preflight.ollama.ps", return_value=ps_data):
+            with patch("engine.utils.ollama_client._client.ps", return_value=ps_data):
                 with caplog.at_level("INFO", logger="engine.utils.ollama_preflight"):
                     result = preflight_check(["qwen3:8b"])
 
@@ -111,7 +111,7 @@ class TestPreflightCheck:
             return mock_response
 
         with patch("engine.utils.ollama_preflight.ollama_chat", side_effect=mock_chat):
-            with patch("engine.utils.ollama_preflight.ollama.ps",
+            with patch("engine.utils.ollama_client._client.ps",
                        return_value={"models": []}):
                 result = preflight_check(["good:7b", "bad:99b"])
 
@@ -223,7 +223,7 @@ class TestRequirePreflight:
         with patch("engine.utils.ollama_preflight.check_ollama_env"):
             with patch("engine.utils.ollama_preflight.ollama_chat",
                        side_effect=ConnectionError("dead")):
-                with patch("engine.utils.ollama_preflight.ollama.ps",
+                with patch("engine.utils.ollama_client._client.ps",
                            return_value={"models": []}):
                     with pytest.raises(RuntimeError, match="pre-flight check failed"):
                         require_preflight(["broken:7b"], runner_name="Test")
@@ -233,7 +233,7 @@ class TestRequirePreflight:
         mock_response.message.content = "OK"
         with patch("engine.utils.ollama_preflight.check_ollama_env"):
             with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
-                with patch("engine.utils.ollama_preflight.ollama.ps",
+                with patch("engine.utils.ollama_client._client.ps",
                            return_value={"models": []}):
                     # Should not raise
                     require_preflight(["good:7b"], runner_name="Test")
@@ -344,7 +344,7 @@ class TestRunnerIntegration:
                                  "OLLAMA_KV_CACHE_TYPE": "f16",
                                  "OLLAMA_NUM_PARALLEL": "1"}):
             with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
-                with patch("engine.utils.ollama_preflight.ollama.ps",
+                with patch("engine.utils.ollama_client._client.ps",
                            return_value={"models": []}):
                     stats = run_extraction(db, spec, review_name="test_pf4",
                                            run_id=open_extraction_run(db, spec))

@@ -172,6 +172,12 @@ class StageNotInRun(RunRefused):
     """The run named does not exist or did not declare the stage a caller needs."""
 
 
+class OllamaHostNotLoopback(RunRefused):
+    """R721(c), U18: the Ollama host the engine resolved at import is not a loopback
+    address. Every local-arm prompt would leave the machine through it, unrecorded;
+    a declared remote host is a later capability, not this one."""
+
+
 class UndeclaredCall(Exception):
     """C54: a model call the active run's manifest did not declare — its stage
     key has no `run_stage_configs` row, or the row names a different model.
@@ -389,6 +395,17 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     """
     if kind not in RUN_KINDS:
         raise ValueError(f"run kind {kind!r} is not one of {RUN_KINDS}")
+    # U18, R721(c): the one Ollama host, resolved at import, must be loopback. First
+    # among the refusals (R722(e)): it reads nothing and writes nothing.
+    from engine.utils.ollama_client import is_loopback_host, ollama_host
+    if not is_loopback_host(ollama_host()):
+        raise OllamaHostNotLoopback(
+            f"run refused: the Ollama host is {ollama_host()}, which is not a loopback "
+            "address, so every local-model prompt — paper text included — would leave "
+            "this machine. Nothing was read or written. Read OLLAMA_HOST in the "
+            "environment that launched this process (`echo $OLLAMA_HOST`; empty means "
+            "the library's default, which is loopback); unset it, or point it at this "
+            "machine, and launch again.")
     # INT-i12-9: every loader on the run path takes the codebook by path and
     # checks no identity (`load_codebook`, `load_codebook_beside`); this is the
     # one place every run passes. Before anything is resolved or written.
@@ -490,6 +507,7 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
         "spec_hash": spec_hash(spec),
         "codebook": {"semantic_hash": codebook.semantic_hash, "sha256": codebook.sha256},
         "libraries": libs, "host": host or socket.gethostname(),
+        "ollama_host": ollama_host(),
         "started_at": started, "cloud_arms": cloud_list,
         "payload_description": payload_description,
         "stages": {k: {**_stage_row(k, r), "lineage": spec.model_lineage[r.config.model]}

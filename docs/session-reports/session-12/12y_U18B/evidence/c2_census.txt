@@ -1,0 +1,11 @@
+Wed Oct 28 17:52:29 UTC 2026
+43ca120
+0
+== C2 extra pattern: '== {' beside body/manifest
+tests/test_selection_bound.py:168:    assert _manifest(db, run_id)["selection_bound"] == {"stage": "extract", "max_papers": 5}
+tests/test_selection_bound.py:226:    assert got["manifest"] == {"max_papers": 7}
+tests/test_selection_bound.py:254:    assert _manifest(db, run_id)["selection_bound"] == {"stage": "extract", "max_papers": 20}
+tests/test_ft_adjudication_import.py:123:    assert body["inputs"] == {str(path.resolve()): hashlib.sha256(path.read_bytes()).hexdigest()}
+tests/test_ft_adjudication_import.py:124:    assert body["pins"] == {}
+tests/test_ft_adjudication_import.py:341:    assert body["inputs"] == {"data/x/d.json": "e" * 64}
+== manifest_sha256 with literal hex

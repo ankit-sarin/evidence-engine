@@ -1,0 +1,268 @@
+FFFFFFFFF                                                                [100%]
+=================================== FAILURES ===================================
+______________ test_u18_every_engine_read_uses_the_resolved_host _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe20556127c80>
+
+    def test_u18_every_engine_read_uses_the_resolved_host(monkeypatch):
+        monkeypatch.delenv(oc.RESTART_OPT_OUT_ENV, raising=False)
+        seen: list[str] = []
+>       _bind(monkeypatch, SENTINEL, seen)
+
+tests/test_u18_one_host.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe20556127c80>
+host = 'http://127.0.0.1:59999', seen = [], models = ('u18-model:1b',)
+
+    def _bind(monkeypatch, host, seen, models=(MODEL,)):
+        """Point the resolver at `host` and rebuild the engine client from it, over a
+        transport that records every request and answers the four routes."""
+        def handler(request: httpx.Request) -> httpx.Response:
+            seen.append(str(request.url))
+            path = request.url.path
+            if path == "/api/tags":
+                return httpx.Response(200, json={"models": [{"name": m, "digest": DIGEST} for m in models]})
+            if path == "/api/ps":
+                return httpx.Response(200, json={"models": [{"name": MODEL, "size": 2 * 1024**3}]})
+            if path == "/api/chat":
+                return httpx.Response(200, json={"model": MODEL, "created_at": "2026-10-28T00:00:00Z",
+                                                 "message": {"role": "assistant", "content": "OK"},
+                                                 "done": True})
+            return httpx.Response(404, json={"error": path})
+        monkeypatch.setattr(oc, "_OLLAMA_HOST", host, raising=False)
+>       monkeypatch.setattr(oc, "_client", oc._build_client(transport=httpx.MockTransport(handler)))
+                                           ^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.utils.ollama_client' has no attribute '_build_client'
+
+tests/test_u18_one_host.py:67: AttributeError
+_____________ test_u18_the_digest_read_uses_the_keep_alive_client ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe20556169520>
+
+    def test_u18_the_digest_read_uses_the_keep_alive_client(monkeypatch):
+        seen: list[str] = []
+>       _bind(monkeypatch, SENTINEL, seen)
+
+tests/test_u18_one_host.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe20556169520>
+host = 'http://127.0.0.1:59999', seen = [], models = ('u18-model:1b',)
+
+    def _bind(monkeypatch, host, seen, models=(MODEL,)):
+        """Point the resolver at `host` and rebuild the engine client from it, over a
+        transport that records every request and answers the four routes."""
+        def handler(request: httpx.Request) -> httpx.Response:
+            seen.append(str(request.url))
+            path = request.url.path
+            if path == "/api/tags":
+                return httpx.Response(200, json={"models": [{"name": m, "digest": DIGEST} for m in models]})
+            if path == "/api/ps":
+                return httpx.Response(200, json={"models": [{"name": MODEL, "size": 2 * 1024**3}]})
+            if path == "/api/chat":
+                return httpx.Response(200, json={"model": MODEL, "created_at": "2026-10-28T00:00:00Z",
+                                                 "message": {"role": "assistant", "content": "OK"},
+                                                 "done": True})
+            return httpx.Response(404, json={"error": path})
+        monkeypatch.setattr(oc, "_OLLAMA_HOST", host, raising=False)
+>       monkeypatch.setattr(oc, "_client", oc._build_client(transport=httpx.MockTransport(handler)))
+                                           ^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.utils.ollama_client' has no attribute '_build_client'
+
+tests/test_u18_one_host.py:67: AttributeError
+_______________ test_u18_the_preflight_ps_uses_the_engine_client _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe20555e2bcb0>
+
+    def test_u18_the_preflight_ps_uses_the_engine_client(monkeypatch):
+        seen: list[str] = []
+>       _bind(monkeypatch, SENTINEL, seen)
+
+tests/test_u18_one_host.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe20555e2bcb0>
+host = 'http://127.0.0.1:59999', seen = [], models = ('u18-model:1b',)
+
+    def _bind(monkeypatch, host, seen, models=(MODEL,)):
+        """Point the resolver at `host` and rebuild the engine client from it, over a
+        transport that records every request and answers the four routes."""
+        def handler(request: httpx.Request) -> httpx.Response:
+            seen.append(str(request.url))
+            path = request.url.path
+            if path == "/api/tags":
+                return httpx.Response(200, json={"models": [{"name": m, "digest": DIGEST} for m in models]})
+            if path == "/api/ps":
+                return httpx.Response(200, json={"models": [{"name": MODEL, "size": 2 * 1024**3}]})
+            if path == "/api/chat":
+                return httpx.Response(200, json={"model": MODEL, "created_at": "2026-10-28T00:00:00Z",
+                                                 "message": {"role": "assistant", "content": "OK"},
+                                                 "done": True})
+            return httpx.Response(404, json={"error": path})
+        monkeypatch.setattr(oc, "_OLLAMA_HOST", host, raising=False)
+>       monkeypatch.setattr(oc, "_client", oc._build_client(transport=httpx.MockTransport(handler)))
+                                           ^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.utils.ollama_client' has no attribute '_build_client'
+
+tests/test_u18_one_host.py:67: AttributeError
+__________________ test_u18_no_literal_11434_on_the_run_path ___________________
+
+    def test_u18_no_literal_11434_on_the_run_path():
+        modules = _closure()
+        assert "engine/utils/ollama_client.py" in modules and len(modules) > 50
+        hits = []
+        for f in sorted(modules):
+            for n in ast.walk(ast.parse((REPO / f).read_text())):
+                if isinstance(n, ast.Constant) and (
+                        (isinstance(n.value, str) and ("11434" in n.value or "11435" in n.value))
+                        or (type(n.value) is int and n.value in (11434, 11435))):
+                    hits.append(f"{f}:{n.lineno}")
+>       assert hits == []
+E       AssertionError: assert ['engine/agen...lient.py:116'] == []
+E         
+E         Left contains 4 more items, first extra item: 'engine/agents/extractor.py:777'
+E         Use -v to get more diff
+
+tests/test_u18_one_host.py:150: AssertionError
+___________ test_u18_both_loopback_spellings_resolve_to_a_local_host ___________
+
+    def test_u18_both_loopback_spellings_resolve_to_a_local_host():
+        for host in ("http://localhost:11434", "http://127.0.0.1:11434", "http://[::1]:11434"):
+>           assert oc.is_loopback_host(host) and oc.is_local_service_host(host), host
+                   ^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'engine.utils.ollama_client' has no attribute 'is_loopback_host'
+
+tests/test_u18_one_host.py:156: AttributeError
+______ test_u18_a_loopback_host_on_another_port_is_not_the_local_service _______
+
+    def test_u18_a_loopback_host_on_another_port_is_not_the_local_service():
+>       assert oc.is_loopback_host("http://127.0.0.1:11435")
+               ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.utils.ollama_client' has no attribute 'is_loopback_host'
+
+tests/test_u18_one_host.py:161: AttributeError
+________________ test_u18_the_manifest_records_the_ollama_host _________________
+
+review = <engine.core.database.ReviewDatabase object at 0xe2055783e690>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+
+    def test_u18_the_manifest_records_the_ollama_host(review, spec):
+        handle = rm.open_run(review._conn, spec, kind="extraction", stages=_stages(spec),
+                             codebook=load_codebook_beside(review.db_path), git=CLEAN,
+                             digest_fn=lambda m: DIGEST)
+        raw, sha = review._conn.execute("SELECT manifest_json, manifest_sha256 FROM run_manifests "
+                                        "WHERE run_id = ?", (handle.run_id,)).fetchone()
+        body = json.loads(raw)
+>       assert body["ollama_host"] == oc.ollama_host()
+               ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'ollama_host'
+
+tests/test_u18_one_host.py:203: KeyError
+_____________ test_u18_a_non_loopback_host_is_refused_at_open_run ______________
+
+review = <engine.core.database.ReviewDatabase object at 0xe20555ea35c0>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe2055783f0e0>
+
+    def test_u18_a_non_loopback_host_is_refused_at_open_run(review, spec, monkeypatch):
+        monkeypatch.setattr(oc, "_OLLAMA_HOST", REMOTE, raising=False)
+        fetched: list[str] = []
+>       with pytest.raises(rm.OllamaHostNotLoopback) as exc:
+                           ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.core.run_manifest' has no attribute 'OllamaHostNotLoopback'
+
+tests/test_u18_one_host.py:211: AttributeError
+_____ test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run ______
+
+review = <engine.core.database.ReviewDatabase object at 0xe20555ea1c70>
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe20555ea2960>
+
+    def test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run(review, spec, monkeypatch):
+        """R722(c)'s limit, pinned on purpose: the refusal keys on the import-time host, so a
+        client rebound in-process to a fake is not refused — and the digest is read through
+        that same fake, never from a third object (A-4b's acceptance test)."""
+        models = sorted({ec.stage_config(s, spec).model for s in _stages(spec)})
+        asked: list[str] = []
+    
+        class FakeTransport:
+            base_url = "http://u18.invalid"
+    
+            def get(self, path, **kw):
+                asked.append(path)
+                return httpx.Response(200, json={"models": [{"name": m, "digest": DIGEST} for m in models]})
+    
+        monkeypatch.setattr(oc, "_client", SimpleNamespace(_client=FakeTransport()))
+>       handle = rm.open_run(review._conn, spec, kind="extraction", stages=_stages(spec),
+                             codebook=load_codebook_beside(review.db_path), git=CLEAN)
+
+tests/test_u18_one_host.py:236: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+engine/core/run_manifest.py:460: in open_run
+    resolved = resolve_run(spec, [s for s in stage_list],
+engine/core/effective_config.py:528: in resolve_run
+    digest = _digest(cfg.model) if cfg.provider == "ollama" else None
+             ^^^^^^^^^^^^^^^^^^
+engine/core/effective_config.py:516: in _digest
+    digests[model] = digest_fn(model)
+                     ^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:388: in fetch_model_digest
+    resp = httpx.get(url, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_api.py:195: in get
+    return request(
+.venv/lib/python3.12/site-packages/httpx/_api.py:109: in request
+    return client.request(
+.venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+.venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/conftest.py:411: in handle_request
+    _check_httpx(http_request)
+tests/conftest.py:401: in _check_httpx
+    _refuse_ollama(_endpoint(url.host, url.port, url.scheme), "httpx transport",
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+endpoint = ('loopback', 11434), route = 'httpx transport'
+detail = 'GET http://localhost:11434/api/tags'
+nodeid = 'tests/test_u18_one_host.py::test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run'
+
+    def _refuse_ollama(endpoint: tuple[str, int], route: str, detail: str, nodeid: str):
+        if endpoint not in ollama_endpoints():
+            return
+        message = (
+            f"BLOCKED: {nodeid} sent a request to the Ollama server via {route}: {detail}.\n"
+            f"Only a test marked `ollama`, run with {LIVE_TIERS_ENV}=1, may reach the "
+            f"server; a model call from the suite evicts the resident model of any run "
+            f"on this box (INT-m12-2).\n"
+            f"Fix: put a fake in the client's place, e.g. "
+            f"monkeypatch.setattr(ollama_client, '_client', fake), or mark the test."
+        )
+        _ollama_violations.append(message)
+>       raise OllamaCallBlocked(message)
+E       conftest.OllamaCallBlocked: BLOCKED: tests/test_u18_one_host.py::test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run sent a request to the Ollama server via httpx transport: GET http://localhost:11434/api/tags.
+E       Only a test marked `ollama`, run with EVIDENCE_ENGINE_LIVE_TIERS=1, may reach the server; a model call from the suite evicts the resident model of any run on this box (INT-m12-2).
+E       Fix: put a fake in the client's place, e.g. monkeypatch.setattr(ollama_client, '_client', fake), or mark the test.
+
+tests/conftest.py:382: OllamaCallBlocked
+=========================== short test summary info ============================
+FAILED tests/test_u18_one_host.py::test_u18_every_engine_read_uses_the_resolved_host
+FAILED tests/test_u18_one_host.py::test_u18_the_digest_read_uses_the_keep_alive_client
+FAILED tests/test_u18_one_host.py::test_u18_the_preflight_ps_uses_the_engine_client
+FAILED tests/test_u18_one_host.py::test_u18_no_literal_11434_on_the_run_path
+FAILED tests/test_u18_one_host.py::test_u18_both_loopback_spellings_resolve_to_a_local_host
+FAILED tests/test_u18_one_host.py::test_u18_a_loopback_host_on_another_port_is_not_the_local_service
+FAILED tests/test_u18_one_host.py::test_u18_the_manifest_records_the_ollama_host
+FAILED tests/test_u18_one_host.py::test_u18_a_non_loopback_host_is_refused_at_open_run
+FAILED tests/test_u18_one_host.py::test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run
+9 failed in 2.35s

@@ -1,0 +1,23 @@
+gate ids 3400
+-- only-gate:
+tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[OllamaHostNotLoopback]
+tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[OllamaHostNotLoopback]
+tests/test_u18_one_host.py::test_u18_a_loopback_host_on_another_port_is_not_the_local_service
+tests/test_u18_one_host.py::test_u18_a_non_loopback_host_is_refused_at_open_run
+tests/test_u18_one_host.py::test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run
+tests/test_u18_one_host.py::test_u18_both_loopback_spellings_resolve_to_a_local_host
+tests/test_u18_one_host.py::test_u18_every_engine_read_uses_the_resolved_host
+tests/test_u18_one_host.py::test_u18_no_literal_11434_on_the_run_path
+tests/test_u18_one_host.py::test_u18_the_digest_read_uses_the_keep_alive_client
+tests/test_u18_one_host.py::test_u18_the_manifest_records_the_ollama_host
+tests/test_u18_one_host.py::test_u18_the_preflight_ps_uses_the_engine_client
+-- only-ref:
+phases ref 2486 gate 2514
+slower by >10 s: 0
+-- warnings
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: inval
+-- journal ollama 2026-10-28T18:21:07.473048140Z .. 2026-10-28T18:36:46.870179214Z
+-- No entries --

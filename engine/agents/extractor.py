@@ -49,7 +49,7 @@ from engine.core.selection import SelectionResult, select_for_extraction
 from engine.core.paper_state import REASON_NO_FIELDS_RETURNED
 from engine.core import run_manifest as rm
 from engine.utils.ollama_client import (
-    RESTART_OPT_OUT_ENV, InputFitError, ollama_chat, restart_disabled,
+    RESTART_OPT_OUT_ENV, InputFitError, ollama_chat, ollama_host, restart_disabled,
 )
 from engine.utils.ollama_lock import foreign_lock_held, hold_experiment_lock
 
@@ -774,7 +774,7 @@ def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> None:
     deadline = time.monotonic() + 60
     while time.monotonic() < deadline:
         try:
-            resp = httpx.get("http://127.0.0.1:11434/api/tags", timeout=5)
+            resp = httpx.get(f"{ollama_host()}/api/tags", timeout=5)
             if resp.status_code == 200:
                 elapsed = 60 - (deadline - time.monotonic())
                 logger.info(

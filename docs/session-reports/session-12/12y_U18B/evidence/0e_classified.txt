@@ -1,0 +1,14 @@
+# 0e: files found outside A1's four + conftest + live-fence, and how each touches fetch_model_digest
+tests/analysis/paper1/test_judge.py | 11 |      11 patch.object(judge_module, "fetch_model_digest";
+tests/analysis/paper1/test_judge_cli.py | 10 |       7 patch.object(judge_cli, "fetch_model_digest";      3 patch.object(judge_module, "fetch_model_digest";
+tests/analysis/paper1/test_judge_pass2.py | 17 |      17 patch.object(judge_module, "fetch_model_digest";
+tests/test_arm_pinned_at_extract.py | 1 |       1 monkeypatch.setattr(oc, "fetch_model_digest";
+tests/test_citation_record.py | 2 |       1 monkeypatch.setattr(oc, "fetch_model_digest";
+tests/test_codebook_review_at_open.py | 1 |       1 monkeypatch.setattr(oc, "fetch_model_digest";
+tests/test_extraction_run_link.py | 3 |       1 monkeypatch.setattr(oc, "fetch_model_digest";      1 not in Path(E.__file__);
+tests/test_extractor.py | 6 |       6 patch("engine.utils.ollama_client.fetch_model_digest";
+tests/test_ollama_input_fit.py | 1 |       1 monkeypatch.setattr(judge_module, "fetch_model_digest";
+tests/test_parsed_text_resolver.py | 1 |       1 patch("engine.utils.ollama_client.fetch_model_digest";
+tests/test_pin_records.py | 1 |       1 monkeypatch.setattr(oc, "fetch_model_digest";
+tests/test_units_as_source_slices.py | 2 |       1 monkeypatch.setattr(oc, "fetch_model_digest";
+test_run_pipeline_starts.py:99 also: monkeypatch.setattr(oc, "fetch_model_digest", lambda model, *a, **k: ...)

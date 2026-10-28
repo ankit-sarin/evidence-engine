@@ -1,0 +1,37 @@
+Mon Oct 26 02:32:21 UTC 2026
+ 02:32:21 up 8 days,  3:28,  5 users,  load average: 2.62, 1.81, 1.21
+top - 02:32:22 up 8 days,  3:28,  5 users,  load average: 2.62, 1.81, 1.21
+Tasks: 579 total,   2 running, 577 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  6.3 us,  0.9 sy,  0.0 ni, 92.8 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem : 122566.0 total,  17931.6 free,  13727.9 used,  97077.7 buff/cache     
+MiB Swap:  16384.0 total,  12985.5 free,   3398.5 used. 108838.2 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+1058505 ankitsa+  20   0  281844  70324  36752 R 100.0   0.1   0:00.57 ffprobe
+   2575 ankitsa+  20   0 1362300  19332   6472 S   9.1   0.0 138:21.43 python
+   2636 root      20   0 1358476  46144  21824 S   9.1   0.0  15:48.86 tailsca+
+1058536 ankitsa+  20   0   26960   5544   3388 R   9.1   0.0   0:00.01 top
+      1 root      20   0   24712  12432   6912 S   0.0   0.0   2:09.51 systemd
+      2 root      20   0       0      0      0 S   0.0   0.0   0:01.55 kthreadd
+      3 root      20   0       0      0      0 S   0.0   0.0   0:00.00 pool_wo+
+               total        used        free      shared  buff/cache   available
+Mem:          122566       13728       17931           4       97077      108837
+Swap:          16383        3398       12985
+6.17.0-1032-nvidia
+Python 3.12.3
+3.45.1-1ubuntu2.8
+580.173.02
+abf99132-fd8b-41f9-b9fd-62241e40110c
+NRestarts=0
+ExecMainStartTimestamp=Sat 2026-10-17 23:04:05 UTC
+earlyoom: active
+/usr/bin/earlyoom -r 3600 -m 6 -s 100,100 --avoid ^(sshd|tailscaled|cloudflared|systemd|systemd-journal|NetworkManager|Xorg|gnome-shell|gdm.*)$ --prefer ^ollama$
+vm.min_free_kbytes 1048576
+ollama pid 2564 oom_score_adj 0
+MemAvailable:   111446340 kB
+-- concurrent jobs (ffmpeg / surgical-cv / pytest), this script and its ancestors excluded (R680(c))
+excluded pids: 1058533 1058512 994958 994474 991740 991530 991526 1 
+11734 Sun Oct 25 05:20:54 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python3 /home/ankitsarin/projects/surgical-cv/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 7865
+1058500 Mon Oct 26 02:32:21 2026 /bin/bash -c source /home/ankitsarin/.claude/shell-snapshots/snapshot-bash-1792979973881-nekigj.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { builtin unalias -- 'unsetenv'; builtin unset -f -- 'u
+1058501 Mon Oct 26 02:32:21 2026 timeout 400 python3 -I /tmp/claude-1000/-home-ankitsarin-projects-surgical-cv/ff1fa86e-8443-4585-869d-3d0a1ec740fa/scratchpad/spiketools/pts_check.py POS.mp4 --expect-frames 1800 --out POS.7b.json --timeout-s 300
+1058503 Mon Oct 26 02:32:21 2026 python3 -I /tmp/claude-1000/-home-ankitsarin-projects-surgical-cv/ff1fa86e-8443-4585-869d-3d0a1ec740fa/scratchpad/spiketools/pts_check.py POS.mp4 --expect-frames 1800 --out POS.7b.json --timeout-s 300

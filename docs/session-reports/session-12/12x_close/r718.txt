@@ -1,0 +1,33 @@
+RULING [evidence-engine 12x-R718] — 12x-CLOSE stop before step 4: the closure's open date and
+  stop list as the record has them; resume at step 4
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-CLOSE
+  report stopped before step 4 (item 0 2b11a572c15af94329b7b854e8c05eba0e146e72). Transcribe
+  at item 0 of 12y-OPEN with the wrap ruling, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-CLOSE stop report):
+  MEASURED: "This session (f7992c76-8dfc-4e06-a449-fcfbae6c3f8e) has its first user message at
+    2026-10-26T01:57:09Z"; "e83611d (the 12w closeout) was committed at 2026-10-25T04:21:56Z";
+    "12x's first commit, a5892c9, was at 2026-10-26T02:16:15Z"; "Commit
+    2b11a572c15af94329b7b854e8c05eba0e146e72, parent 39a87ab, +92/−1"; "Plan after:
+    076a1f85c11c8d1cc11d39a03077a23865b072dd5ede00188d3586290ca2f038, 2,058,217 B, 10,740
+    lines"; "Ledger 2567e93"; "Recount: 280 (94 / 55 / 131, 0 unclassed)"; "mean 907.4075 s,
+    giving 817–998 s"; nightly "==== 3388 passed, 17 deselected, 1 xfailed, 2 warnings in
+    894.72s (0:14:54) ====" on f3f552e.
+  READ (CC's): "R716 is the ruling on the 5c stop, so that list counts one stop twice".
+  INFERRED: none.
+
+R718(a) — The stop is correct; step 4a's open date was the architect's, written from memory.
+  The closure states: session 12x opened 2026-10-26 01:57:09 UTC on e83611d (the 12w closeout
+  commit), CC session f7992c76.
+R718(b) — The stop list is CC's, from the record: three brief-level stops — 12x-OPEN at 2b
+  (R710), 12x-U39B at 1b (R713), 12x-U39C at 5c (R716) — and one test-level stop, 12x-U39A's
+  verifier test at Q3 (R712(a)); this closeout's stop before step 4 (this ruling) is the
+  fourth brief-level stop. Causes, as ruled: R710, R713 and this one the architect's (a
+  record's shape or a date written from memory); R716 the architect's row assumption with CC's
+  broken chain; the U39A test CC's (a wrong attribute). The closure says so.
+R718(c) — Item 0 2b11a57 (Blocks 114–115, the INT-w12-1 correcting note) and ledger 2567e93
+  stand. Steps 2 and 3 stand as measured; the six counterpart files and r510_12x.txt are
+  accepted into 12x_close/. The fingerprint and the Ollama reads are re-taken at step 4's
+  commit; nothing else is re-measured.
+R718(d) — 12x-CLOSE resumes at step 4 under this ruling; nothing else in the brief changes.
+  This ruling is not written to disk in the resume.

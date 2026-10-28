@@ -1,0 +1,4 @@
+outcomes {'PASSED': 3375, 'XFAIL': 1} ids 3376 unique 3376 ref 3376 only-gate 0 only-ref 0
+durations lines new 2451 ref 2447
+phases slower by >10 s: 0
+sum new 871.31 ref 874.44

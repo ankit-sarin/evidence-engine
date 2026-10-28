@@ -10848,3 +10848,124 @@ R717(d) — Session 12x closes under the 12x-CLOSE brief below, in the 12w-CLOSE
 | 2026-10-26 | R717(a) — The notes commit 39a87ab stands, with the ledgers cf21aef and 01ef9b2 (the foreign row ef3fef5 committed by its own lane at 69c1bff, R663(b)). U39 is complete: INT-v12-1 CLOSED; INT-w12-1 open for the Anthropic arm only (F15). Rows 280 (94 / 55 / 131, 0 unclassed); P1's fix units 37, done 20 by the dated lines. R717(b) — Finding 3 is upheld: the brief's placeholder put two test ids into a sentence written for one, an architect error. The INT-w12-1 note is not edited (notes are corrected by dated addenda). At 12x-CLOSE item 0 a correcting note is appended to the same Evidence cell, in the text the 12x-CLOSE brief gives. R717(c) — Readings, no row: INT-j12-15's first note took the INT-w12-1 form as 5b allowed; the recount's fix_units_dated_lines literal (R714(c)); the failed first 5c output kept in scratch. R717(d) — Session 12x closes under the 12x-CLOSE brief below, in the 12w-CLOSE form, with the 2026-10-26 07:00 health job and 09:00 nightly read as readings (no expected file was written for them). No closeout gate. Next after the close: 12y-OPEN, then U18. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-U39C final report as resumed under R716 (39a87ab) |
 
 The decision log in this file ends at R717.
+
+**Block 116.** *Transcribed 2026-10-28 (item 0 of the 12y-OPEN brief), in its own commit with the lane-line copy and the 12x-OPEN gate evidence copy it orders, in the R597(e) form:* ruling R718, made by PI on architect recommendation on 2026-10-26 UTC, during session 12x, on the 12x-CLOSE report stopped before step 4 (item 0 `2b11a572c15af94329b7b854e8c05eba0e146e72`). The 12x-CLOSE resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12x-R718] — 12x-CLOSE stop before step 4: the closure's open date and
+  stop list as the record has them; resume at step 4
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-CLOSE
+  report stopped before step 4 (item 0 2b11a572c15af94329b7b854e8c05eba0e146e72). Transcribe
+  at item 0 of 12y-OPEN with the wrap ruling, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12x-CLOSE stop report):
+  MEASURED: "This session (f7992c76-8dfc-4e06-a449-fcfbae6c3f8e) has its first user message at
+    2026-10-26T01:57:09Z"; "e83611d (the 12w closeout) was committed at 2026-10-25T04:21:56Z";
+    "12x's first commit, a5892c9, was at 2026-10-26T02:16:15Z"; "Commit
+    2b11a572c15af94329b7b854e8c05eba0e146e72, parent 39a87ab, +92/−1"; "Plan after:
+    076a1f85c11c8d1cc11d39a03077a23865b072dd5ede00188d3586290ca2f038, 2,058,217 B, 10,740
+    lines"; "Ledger 2567e93"; "Recount: 280 (94 / 55 / 131, 0 unclassed)"; "mean 907.4075 s,
+    giving 817–998 s"; nightly "==== 3388 passed, 17 deselected, 1 xfailed, 2 warnings in
+    894.72s (0:14:54) ====" on f3f552e.
+  READ (CC's): "R716 is the ruling on the 5c stop, so that list counts one stop twice".
+  INFERRED: none.
+
+R718(a) — The stop is correct; step 4a's open date was the architect's, written from memory.
+  The closure states: session 12x opened 2026-10-26 01:57:09 UTC on e83611d (the 12w closeout
+  commit), CC session f7992c76.
+R718(b) — The stop list is CC's, from the record: three brief-level stops — 12x-OPEN at 2b
+  (R710), 12x-U39B at 1b (R713), 12x-U39C at 5c (R716) — and one test-level stop, 12x-U39A's
+  verifier test at Q3 (R712(a)); this closeout's stop before step 4 (this ruling) is the
+  fourth brief-level stop. Causes, as ruled: R710, R713 and this one the architect's (a
+  record's shape or a date written from memory); R716 the architect's row assumption with CC's
+  broken chain; the U39A test CC's (a wrong attribute). The closure says so.
+R718(c) — Item 0 2b11a57 (Blocks 114–115, the INT-w12-1 correcting note) and ledger 2567e93
+  stand. Steps 2 and 3 stand as measured; the six counterpart files and r510_12x.txt are
+  accepted into 12x_close/. The fingerprint and the Ollama reads are re-taken at step 4's
+  commit; nothing else is re-measured.
+R718(d) — 12x-CLOSE resumes at step 4 under this ruling; nothing else in the brief changes.
+  This ruling is not written to disk in the resume.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-26 | R718(a) — The stop is correct; step 4a's open date was the architect's, written from memory. The closure states: session 12x opened 2026-10-26 01:57:09 UTC on e83611d (the 12w closeout commit), CC session f7992c76. R718(b) — The stop list is CC's, from the record: three brief-level stops — 12x-OPEN at 2b (R710), 12x-U39B at 1b (R713), 12x-U39C at 5c (R716) — and one test-level stop, 12x-U39A's verifier test at Q3 (R712(a)); this closeout's stop before step 4 (this ruling) is the fourth brief-level stop. Causes, as ruled: R710, R713 and this one the architect's (a record's shape or a date written from memory); R716 the architect's row assumption with CC's broken chain; the U39A test CC's (a wrong attribute). The closure says so. R718(c) — Item 0 2b11a57 (Blocks 114–115, the INT-w12-1 correcting note) and ledger 2567e93 stand. Steps 2 and 3 stand as measured; the six counterpart files and r510_12x.txt are accepted into 12x_close/. The fingerprint and the Ollama reads are re-taken at step 4's commit; nothing else is re-measured. R718(d) — 12x-CLOSE resumes at step 4 under this ruling; nothing else in the brief changes. This ruling is not written to disk in the resume. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-CLOSE report stopped before step 4 (item 0 2b11a57) |
+
+The decision log in this file ends at R718.
+
+**Block 117.** *Transcribed 2026-10-28 (item 0 of the 12y-OPEN brief), in its own commit with the lane-line copy and the 12x-OPEN gate evidence copy it orders, in the R597(e) form:* ruling R719, made by PI on architect recommendation on 2026-10-26 UTC, during session 12x, on the 12x-CLOSE closeout block (`a4be9f7bb798c3537318dc6a4e999015093e16b0`). The 12y-OPEN task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12x-R719] — wrap ruling: closeout accepted; the band set 817–998 s; the
+  12x-OPEN gate's evidence carried at 12y-OPEN; lane line approved and applied; close now
+STATUS: PI ruling, 2026-10-26 UTC, session 12x, on architect recommendation, on the 12x-CLOSE
+  closeout block (a4be9f7bb798c3537318dc6a4e999015093e16b0). Transcribe as item 0 of 12y-OPEN
+  (Block 117, after R718 as Block 116), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block):
+  MEASURED: "HEAD: a4be9f7bb798c3537318dc6a4e999015093e16b0, parent
+    2b11a572c15af94329b7b854e8c05eba0e146e72; status[], lr[0 0]; one worktree"; "Plan: sha256
+    4792db0e4c59d57f1d92c3e8053240124aec3ebcc76b3f636e90b7d46a24c9b1, 2079249 bytes, 10850
+    lines. The last line is The decision log in this file ends at R717."; "Closeout commit: 27
+    files changed, 12879 insertions(+)"; item 0 "2b11a57, 3 files changed, 161 insertions(+), 1
+    deletion(-)", "exactly 1 '-' line(s), one per named row: True, RESULT: PASS"; "git diff
+    --stat e83611d HEAD -- engine tests scripts analysis review_specs lists
+    tests/test_u39_runtime_equals_hash.py only (1 file, +226). From f3f552e the same diff is
+    empty"; "Ledger commit: f39e187fd986b844d8e9a2df453d1387f95e2151, parent 2567e93, message
+    "ledger: rows through 2026-10-26T21:26:46Z""; "primer.md is untouched; its last commit is
+    43d8f85"; fingerprint IDENTICAL at every read, "21:28:14Z (at this block)"; lane line "sha256
+    7f834f3616df62d1c688c6e2facf32e4e53ec50f33cbdbcc7f63b47f356a6653, 5623 bytes, 10 lines. Not
+    applied.", "five − lines == primer.md 41–45: True"; "280 rows, 94 / 55 / 131, 0 unclassed;
+    P1 61 (25 / 24 / 12); P6 11; P7 117"; "rows in 0, rows out 0, no class or package move";
+    "23 MATCH / 0 MISMATCH, none opened. Probe requests 10/10 and responses 53/53"; "Temp root: 5
+    entries, 1,617,305,829 B"; "/api/ps: {"models":[]} (21:28:14Z)"; "dbchecks_close.txt and
+    pin_tuples_close.json are byte-identical to 12w_close's"; the nine ruling files as tabled;
+    the archive command as printed.
+  READ (CC's): "The 12x-OPEN gate's files stay in ~/scratch/12x-open/gate/. They are cited in the
+    gate table but are not under docs/"; "By the kill wording the count is 0"; "I added an
+    "INT-w12-1 and the audit Phase A" paragraph … and a health-jobs paragraph".
+  INFERRED: none.
+
+R719(a) — The 12x-CLOSE closeout block is accepted as printed. Item 0 2b11a57 (Blocks 114 and
+  115, the INT-w12-1 correcting note) and the closeout commit a4be9f7 stand; the ledger f39e187
+  with trailers stands.
+R719(b) — The band for 12y is 817–998 s: ±10% of 907.4075 s, the mean of the last four standard
+  gates on this host state (885.20, 882.37, 941.74, 920.32), rounded inward as R683(c) rounded,
+  the two confounded gates (941.74 and 920.32, beside surgical-cv pytest runs) included with
+  their confounders recorded. The series stands at 871.59, 906.50, 858.50, 895.02, 872.27,
+  887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32 s. A
+  12y gate outside the band is reported with its concurrent jobs, not adapted to.
+R719(c) — Readings, no row: the files and the two closure paragraphs beyond the brief's list;
+  earlyoom kills 0 by its kill wording; the primer block and the lane line written after the
+  commit so they can name its hash. The 12x-OPEN gate's evidence was never committed: 12y-OPEN's
+  item 0 copies ~/scratch/12x-open/gate/ into docs/session-reports/session-12/12x_close/
+  gate_12x_open/ (cp; file sha256 equal), in the item-0 commit.
+R719(d) — The lane line (sha256 7f834f3616df62d1c688c6e2facf32e4e53ec50f33cbdbcc7f63b47f356a6653,
+  5,623 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines
+  41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five
+  "+" lines, applied from the file, not from a paste; commit primer.md together with any
+  uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows
+  named by hash), push, level.
+R719(e) — 12y-OPEN's startup verify checks claude-config at the commit the wrap leaves (the
+  lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign
+  commits and rows per R653(c), R654(d), R663(b). 12y's item 0 transcribes R718 as Block 116
+  and this ruling as Block 117, and copies lane_line_12x.txt and the 12x-OPEN gate's evidence
+  into 12x_close/, with no cell note, verified by its "−" count, 0 (R664(b)). No closeout gate
+  ran: the expected gate values for 12y are f3f552e's on unchanged code (3,388 / 1 xfailed / 17
+  deselected, collected 3,406 / selected 3,389; 0/0 against
+  12x_close/collected_ids_12x_close.txt; band 817–998 s, with the concurrent jobs named and the
+  snapshot's own PIDs excluded); the 2026-10-27 09:00 UTC nightly runs on the HEAD then pushed,
+  whose engine tree equals f3f552e's, expected 3,388 / 17 / 1 on 3,406 / 3,389, exit 0,
+  12x_close/expected_nightly_20261027.md governing; the 07:00 health job's loads are read and
+  reported by 12y-OPEN, with an NVRM grep; a read-only request in any window is a reading
+  (R696(b)). The temp root is read, never matched. Residency is a reading. 12y-OPEN's pre-check
+  reads the process table for leftovers of session f7992c76 (R692's form).
+R719(f) — Session 12x closes now. After R719(d) has landed, run /wrap. Report the archive
+  command; the closeout block stands.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-26 | R719(a) — The 12x-CLOSE closeout block is accepted as printed. Item 0 2b11a57 (Blocks 114 and 115, the INT-w12-1 correcting note) and the closeout commit a4be9f7 stand; the ledger f39e187 with trailers stands. R719(b) — The band for 12y is 817–998 s: ±10% of 907.4075 s, the mean of the last four standard gates on this host state (885.20, 882.37, 941.74, 920.32), rounded inward as R683(c) rounded, the two confounded gates (941.74 and 920.32, beside surgical-cv pytest runs) included with their confounders recorded. The series stands at 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32 s. A 12y gate outside the band is reported with its concurrent jobs, not adapted to. R719(c) — Readings, no row: the files and the two closure paragraphs beyond the brief's list; earlyoom kills 0 by its kill wording; the primer block and the lane line written after the commit so they can name its hash. The 12x-OPEN gate's evidence was never committed: 12y-OPEN's item 0 copies ~/scratch/12x-open/gate/ into docs/session-reports/session-12/12x_close/ gate_12x_open/ (cp; file sha256 equal), in the item-0 commit. R719(d) — The lane line (sha256 7f834f3616df62d1c688c6e2facf32e4e53ec50f33cbdbcc7f63b47f356a6653, 5,623 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows named by hash), push, level. R719(e) — 12y-OPEN's startup verify checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12y's item 0 transcribes R718 as Block 116 and this ruling as Block 117, and copies lane_line_12x.txt and the 12x-OPEN gate's evidence into 12x_close/, with no cell note, verified by its "−" count, 0 (R664(b)). No closeout gate ran: the expected gate values for 12y are f3f552e's on unchanged code (3,388 / 1 xfailed / 17 deselected, collected 3,406 / selected 3,389; 0/0 against 12x_close/collected_ids_12x_close.txt; band 817–998 s, with the concurrent jobs named and the snapshot's own PIDs excluded); the 2026-10-27 09:00 UTC nightly runs on the HEAD then pushed, whose engine tree equals f3f552e's, expected 3,388 / 17 / 1 on 3,406 / 3,389, exit 0, 12x_close/expected_nightly_20261027.md governing; the 07:00 health job's loads are read and reported by 12y-OPEN, with an NVRM grep; a read-only request in any window is a reading (R696(b)). The temp root is read, never matched. Residency is a reading. 12y-OPEN's pre-check reads the process table for leftovers of session f7992c76 (R692's form). R719(f) — Session 12x closes now. After R719(d) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-CLOSE closeout block (a4be9f7) |
+
+The decision log in this file ends at R719.

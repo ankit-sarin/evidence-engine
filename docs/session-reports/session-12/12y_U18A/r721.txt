@@ -1,0 +1,84 @@
+RULING [evidence-engine 12y-R721] — 12y-U18A accepted; U18's design: one Ollama host resolved at run
+  open for every engine read (commit 1), then a per-call digest check in ollama_chat (commit 2); a
+  non-loopback host refused at open; notes on A-4b and HK-ARCH; the manifest records the host
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18A final
+  report (item 0 b2557a5; read-out fac60b4280370cdb00736fb3658365fdb8777f01). Transcribe as item 0
+  of the 12y-U18B brief (Block 119), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12y-U18A report):
+  MEASURED: "b2557a5… (parent ec544a2)"; "Plan numstat: +83 / −0"; "Plan after: 11,054 lines,
+    764188d1c3255116c1447a0fa6dd21c6d6bf3d77fe60b10de531db918af1a747, 2,103,416 B"; "r720.txt:
+    6c8ede33…ffc8, 6,150 B, 70 lines"; "Fence True, cell True, addendum once and in place";
+    "Read-out: fac60b4280370cdb00736fb3658365fdb8777f01, parent b2557a5, 16 files"; "Ledger
+    b3b3b56, parent c0f3f5a. Row 2026-10-28T17:19:13Z"; "Ledger 866a6c8, row 2026-10-28T17:24:45Z";
+    "git diff --stat ec544a2 HEAD -- engine tests scripts analysis review_specs printed nothing";
+    "The digest reads http://localhost:11434 and chat uses http://127.0.0.1:11434"; "_client =
+    ollama.Client(timeout=_httpx_timeout)" at "ollama_client.py:59", "OLLAMA_HOST at import, default
+    http://127.0.0.1:11434"; "ps = ollama.ps()" at "ollama_preflight.py:47, :125", "the library's own
+    module client: not H1"; "httpx.get("http://127.0.0.1:11434/api/tags", timeout=5)" at
+    "extractor.py:777"; ""host": host or socket.gethostname()" at "run_manifest.py:492"; "declared =
+    None if row is None else row[0] / if declared != model: raise UndeclaredCall(key, declared,
+    model)"; "Under all four cases nothing is refused, and no existing test goes red"; "engine client
+    (keep-alive) /api/tags 2.081 ms median, 11.133 ms max"; "httpx.get (new connection) /api/tags
+    15.115 ms median, 25.444 ms max"; "/api/tags returns 6,595 B"; "30,858.3 s / 96 papers ≈ 321 s
+    per paper"; "By grep, 21 modules rebind _client, 26 inject digest_fn, and 9 do both";
+    "n_ctx_train's cache is keyed by (_client_host(), model), not by digest"; "rm.stage_digest(...)
+    at extractor.py:1096, ft_screener.py:263 and audit_events.py:155 sets each event's
+    actor_digest"; "run_screen2f.py was retired at 9390328"; "the Run 7 import closure reaches 67
+    modules. Its only analysis module is provenance/segment.py".
+  READ (CC's): "The census is a grep, declared as such. The inventory has only --write/--check";
+    "There is no recorded per-call duration anywhere"; "The schema does not move, unless the Ollama
+    host or a per-call model digest is to be recorded; either would be a migration"; "It misses a
+    split host where both servers hold identical blobs, and a replacement between the check and the
+    send"; "conftest.py:361–362 and the live-fence test name the literals, so they change".
+  INFERRED: none.
+
+R721(a) — 12y-U18A is accepted as reported: item 0 b2557a5 (Block 118, the Blocks 116–117 addendum
+  in the record's placement, r720.txt at the architect's hash, a pipe-free chain) and the read-out
+  fac60b4 stand; ledgers b3b3b56 and 866a6c8 with trailers stand; no engine change.
+R721(b) — U18's design is option (iv) of the read-out §6, built as two commits in this order, each
+  with its own gate, the second not started before the first is ruled landed:
+  Commit 1 (option (ii), "one host"): the engine resolves the Ollama host once, at import from
+  OLLAMA_HOST with the library's default, into one function in ollama_client.py that every engine
+  read uses — the chat client (H1), the digest read (H2/H3, through the engine's keep-alive client
+  rather than a new httpx connection, finding 9), the preflight's ps (H8, through the engine client,
+  not the library's module client), the restart poll (H10), and the local-service set (H4/H5, which
+  becomes a predicate on the resolved host). No literal 11434 remains on the run path; the fence's
+  loopback coverage (R626(c)) and the live-fence test are updated to name the resolved host and both
+  loopback spellings, not to drop either. The manifest records the resolved Ollama host beside its
+  `host` key where that key lives: if it is the manifest JSON (manifest_sha256 covers it), in this
+  commit; if it is a run_manifests column, deferred to 023 (P6) and reported, with the JSON key
+  still written. Tests: the host equality is proven by one test per read site that a rebound
+  OLLAMA_HOST moves every site together; the live fence stays green.
+  Commit 2 (option (iii), "the digest re-checked per call"): inside ollama_chat, under an active
+  run, before the input-fit read and the send, the model's current digest (through the run's
+  digest_fn, so the 26 injecting test modules keep working, and through the keep-alive client,
+  ~2 ms) is compared with rm.stage_digest for the stage; a mismatch raises a RunRefused subclass
+  named in the run-fault tuple (U02's predicate), so it propagates and the run closes
+  ('aborted', a named reason) with no run_calls row for the refused call (C54's form). The
+  n_ctx_train cache is keyed by the digest, not the host (finding 6), so a replaced tag cannot keep
+  its old ceiling. Events need no change: a call that is sent carries the opening digest or the run
+  has already refused (finding 7). Tests: a tag replaced between open and a call, and between two
+  calls, each refuses with the named class and closes the run; the unchanged case sends the same
+  request bytes; the check-to-send window is recorded as a limit in the read-out, not tested.
+  Neither commit moves a request byte, the arm pin, or any prompt_hash (read-out §6, confirmed by
+  the gates' pin and prompt-hash checks).
+R721(c) — A non-loopback resolved host is refused at open_run with a named RunRefused subclass,
+  before any read or write, in commit 1. The engine's product promise is that no paper text leaves
+  the machine while cloud arms are empty; an OLLAMA_HOST that names another machine would send every
+  prompt off-box through the local arm with nothing recorded. Declaring a remote Ollama host is a
+  later capability (a Review Spec block, with the manifest recording the transfer as cloud arms do);
+  it is not built here. The refusal is tested.
+R721(d) — Option (i) alone is not taken: with the two loopback spellings on one server (finding 2) a
+  host-equality refusal would need normalisation that commit 1 makes unnecessary.
+R721(e) — Readings and notes, no row: finding 1 — R626(c)'s anchors have moved and run_screen2f.py is
+  retired (9390328); a dated note on A-4b records the current anchors from the read-out §2 table.
+  Finding 3 (ollama.ps as a fourth host notion) and finding 4 (the manifest's host is the machine
+  name) are inside U18 by this ruling. Finding 5 — 12l_P1A.md §3's "ten test modules" is not
+  reproduced (21 / 26 / 9); a dated note on A-4b; the read-out is not edited. Finding 8 — the three
+  architecture lines describing the retired ollama.show() route go on the HK-ARCH line (P7), not
+  fixed here. Finding 10 is a reading. The per-call cost figures (2.1 ms keep-alive, 15.1 ms new
+  connection, against ~160 s per call at most) are the record for the design.
+R721(f) — A-4b and the conditional half of Wave 1 row 16 close together when commit 2's acceptance
+  tests pass in its gate (R514); each is counted until P1 closes (R607(d)). R510 for 12y: rows in
+  0, rows out 0, no class move.

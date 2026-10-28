@@ -1,0 +1,62 @@
+RULING [evidence-engine 12y-R722] — 12y-U18B stop at 0d: the Touched list widened to the four test
+  files whose seams commit 1 removes; the refusal keys on the import-time host; two local
+  predicates; the code's refusal order governs; resume at item 0 with this ruling
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18B report
+  stopped at step 0d (nothing committed; evidence in ~/scratch/12y-u18b/). Transcribe at item 0 of
+  the 12y-U18B resume with R721 (R721 as Block 119, this ruling as Block 120), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12y-U18B stop report):
+  MEASURED: "evidence-engine at fac60b4 and claude-config at 866a6c8, both 0 0"; "17:31:00 UTC";
+    "parent pins … identical; includes the audit prompt_hash d972c46d…838d"; "engine.utils.
+    ollama_client.httpx.get (fetch_model_digest) … tests/test_ollama_client.py :348, :358, :393,
+    :408, :418, :426, :438, :445 … 8"; "engine.utils.ollama_preflight.ollama.ps …
+    tests/test_ollama_preflight.py :54, :73, :93, :114, :226, :236, :347 … 7"; "the same ollama.ps
+    patch … tests/test_run_pipeline_starts.py:166, tests/test_undeclared_call.py:177 … 2";
+    "tests/test_restart_ollama_guard.py patches engine.agents.extractor.httpx.get"; A-4b's test
+    "with _client bound to a fake at another host, open_run either reads the digest from that same
+    fake or raises — never returns a manifest whose digest came from a third object";
+    "run_fault_classes() already lists "RunRefused and every subclass""; host "lives both in the
+    manifest JSON … and in a run_manifests column (020_run_manifest.py:152 and
+    022_run_kinds_and_audit_tables.py:280, host TEXT NOT NULL)"; "ollama 0.6.1 Client.ps()
+    (_client.py:645) does self._request(ProcessResponse, 'GET', '/api/ps')"; the fence "urls =
+    {_parse_host(os.environ.get("OLLAMA_HOST")), oc.OLLAMA_BASE_URL, *oc._LOCAL_SERVICE_HOSTS,
+    second_server}"; "open_run refuses in this order: run kind → CodebookReviewMismatch → DirtyTree
+    → AmbiguousEngineState → CloudArmNotEnabled → PreManifestArm/RetiredArm → digest"; "Thirteen
+    test fakes bind _client to http://<name>.invalid … and then call open_run"; "server_context_length
+    uses _LOCAL_SERVICE_HOSTS to mean "the systemd service on port 11434"".
+  READ (CC's): "Once the code no longer calls those names, the patches do nothing"; "This is the
+    "tests are callers" case"; "My recommendation is the import-time value. Rebinding _client from
+    outside is not a supported path; only run_qualgap01 (analysis) does it"; "A single predicate
+    would wrongly treat 127.0.0.1:11435 as the systemd service".
+  INFERRED: none.
+
+R722(a) — The stop is correct and the cause is the architect's: the brief's Touched list named the
+  tests the change adds and the fence it edits, and omitted the tests that pin the two seams
+  R721(b) removes. A ruling that moves a call off a patched name moves its tests; the brief
+  should have asked CC to census the patch sites before writing the list. From here a brief that
+  removes or renames a call site carries a pre-step that greps tests/ for patches of that name and
+  puts every file found in the Touched list before any edit.
+R722(b) — The Touched list is widened to tests/test_ollama_client.py, tests/test_ollama_preflight.py,
+  tests/test_run_pipeline_starts.py and tests/test_undeclared_call.py: behavioural rewrites under
+  B5 — each patch moves to the new transport (the engine client's get or ps, or a fake client
+  carrying both), every existing assertion is kept, no id is retired, no test is weakened to pass.
+  The report quotes each patch before and after. tests/test_restart_ollama_guard.py is not touched:
+  the restart poll keeps httpx.get with its URL from the resolver, as R721(b) allows.
+R722(c) — The non-loopback refusal keys on the import-time resolved host (the resolver's value), not
+  on the live client's base_url: the thirteen fakes bound to http://<name>.invalid stay valid, and
+  A-4b's acceptance test is met by the digest being read through _client itself. A _client rebound
+  in-process after import is not a supported path and is not refused; recorded as a limit in the
+  commit's record, with run_qualgap01 (analysis lane) named as the one site that does it.
+R722(d) — Two predicates, not one: is_loopback_host(host) (loopback, any port — the refusal's test)
+  and is_local_service_host(host) (loopback on the default port read from _parse_host(None) — what
+  server_context_length means by the systemd service). No literal 11434 in either.
+R722(e) — The code's refusal order governs. The non-loopback refusal is placed first in open_run
+  after the run-kind check, before CodebookReviewMismatch (it reads nothing and writes nothing).
+  CLAUDE.md's refusal list at :344 is rewritten in the same commit to the code's order with the
+  new class first, the before and after lines quoted in the report (a doc line the commit touches
+  anyway; the two existing orders are a finding, no row).
+R722(f) — I2's answer stands as CC read it: ollama_host written as a manifest JSON key now (covered
+  by sha256_canonical); the run_manifests column deferred to 023 (P6) and recorded there as an item.
+R722(g) — 12y-U18B resumes at item 0 under this ruling, with R721 and this ruling transcribed
+  together as Blocks 119 and 120 in the pair form read from Blocks 114–115 (R720(b)); the three
+  dated notes of R721(e) unchanged; nothing else in the brief changes except as (b)–(f) state.

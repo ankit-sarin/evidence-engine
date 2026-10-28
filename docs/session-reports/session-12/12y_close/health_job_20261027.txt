@@ -1,0 +1,7 @@
+# health job reads, 2026-10-27, read at 12y-OPEN 1a (2026-10-28T16:09–16:10Z)
+loads OK/total: 20/20; FAIL lines: 0
+-- journal 06:59–07:12
+lines 2711
+GIN 69
+non-200: 0
+load lines (starting llama runner / loaded): 68

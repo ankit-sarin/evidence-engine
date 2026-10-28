@@ -4452,6 +4452,111 @@ Expected values at session-12y open, as at this closeout (2026-10-26):
 - **12y-OPEN**, run outside 07:00–10:35 UTC. Its item 0 transcribes R718 and the wrap ruling as the next blocks and copies the 12x lane-line file into `12x_close/`. It reads the 2026-10-27 07:00 health job and 09:00 nightly (against `expected_nightly_20261027.md`), and runs the startup verify against this block.
 - **U18's Phase A:** the digest host equals the chat host; the digest re-checked per call (A-4b).
 
+Session 12y closed 2026-10-28 UTC; opened 2026-10-28 16:08:35 UTC on the 12x closeout commit `a4be9f7bb798c3537318dc6a4e999015093e16b0`, CC session `dc9f61b7` (one session; its context was not summarised). **U18 landed in two commits: `e7425b3` (one Ollama host for every engine read; the manifest records it; a non-loopback host refused at `open_run`) and `32fc09e` (the model digest re-checked on every call under a run; a change closes the run 'aborted'). A-4b is CLOSED on both (R728(b)), and Wave 1 row 16's conditional half with it; both counted until P1 closes. The recount reads 280.** Two engine commits; no live write; no model call; two read-only requests in the 12y-OPEN gate's journal window (`HEAD /` and `GET /api/ps` at 16:19:34 UTC, R720(e)), no load. The PI closed the session after U18 instead of opening U19's Phase A, which R728(f) had named; R728 is transcribed as issued. Briefs, in order:
+- 12y-OPEN (R718 and R719 at item 0);
+- 12y-U18A, U18's Phase A (R720 at item 0);
+- 12y-U18B, U18 commit 1 (R721 and R722 at item 0 of its first resume), which stopped at 0d (R722), before item 0 (R723), before step 2 (R724) and at a red gate (R725), and was resumed each time;
+- 12y-U18C, U18 commit 2 (R723–R726 at item 0), which stopped at 0c (R727) and was resumed;
+- this closeout, 12y-CLOSE (R727 and R728 at item 0).
+
+**Commits, in order** (each hash read from `git log a4be9f7..HEAD`; its claude-config ledger commit beside it):
+
+- `ec544a2` — item 0 of the open: R718 and R719 (Blocks 116–117), `12x_close/r718.txt`, `12x_close/r719.txt`, `12x_close/lane_line_12x.txt` and the 12x-OPEN gate evidence (`12x_close/gate_12x_open/`). Ledger `c0f3f5a`.
+- `b2557a5` — item 0 of 12y-U18A: R720 (Block 118) and the Blocks 116–117 addendum. Ledger `b3b3b56`.
+- `fac60b4` — U18's Phase A read-out (`12y_U18A/12y_U18A.md`): the host-source census, the digest, chat and preflight paths, 80 read-only GETs timed, the four options. Ledger `866a6c8`.
+- `43ca120` — item 0 of 12y-U18B: R721 and R722 (Blocks 119–120); two dated notes on A-4b and one on HK-ARCH. Ledger `96f3d7c`.
+- `e7425b3` — **U18 commit 1**: `ollama_host()` and `_build_client()`; the digest read and the preflight's ps through the engine client; `is_loopback_host` / `is_local_service_host`; `OllamaHostNotLoopback`; `ollama_host` in the manifest body; seven coupled test files rewritten; nine acceptance tests; the record and both gate runs under `12y_U18B/`. Ledger `c430492`, after the foreign `4525a44`.
+- `2c67bfc` — item 0 of 12y-U18C: R723–R726 (Blocks 121–124). Ledger `fbfdda4`.
+- `32fc09e` — **U18 commit 2**: `check_call_digest` and `ModelDigestChanged`; `_RUN_DIGEST_FNS`; the trained-context cache keyed by digest; the 'aborted' close in `run_pipeline` and the FT runner; ten acceptance tests; the record and its gate under `12y_U18C/`. Ledger `a14e360`.
+- `0f83f46` — item 0 of this closeout: R727 and R728 (Blocks 125–126), `12y_U18C/r727.txt`, `12y_U18C/r728.txt`, A-4b's CLOSED note and the R117 addendum. Ledger `b63e331`.
+- **This closeout** — the commit that carries this paragraph, the child of `0f83f46`: this closure, the 12z expected values, and `docs/session-reports/session-12/12y_close/`'s measurements.
+
+`git diff --stat a4be9f7 HEAD -- engine tests scripts analysis review_specs` lists U18's files only: six engine and script files (`engine/agents/extractor.py`, `engine/agents/ft_screener.py`, `engine/core/run_manifest.py`, `engine/utils/ollama_client.py`, `engine/utils/ollama_preflight.py`, `scripts/run_pipeline.py`) and eleven test files, 17 files, 778 insertions, 45 deletions (`12y_close/diff_engine_since_a4be9f7.txt`); `git diff --stat 32fc09e HEAD` on the same paths is empty. The live spec's sha256 is `aeb90ba8…8b33` and the codebook's `89dbfa91…ad82`, both unchanged (`12y_close/codebook_spec_sha256.txt`); both pins and every `prompt_hash` are unchanged in both engine commits.
+
+**Rulings R720–R728. All nine are transcribed and the decision log in this file ends at R728; R729, the wrap ruling, is transcribed at 12z-OPEN's item 0.**
+
+- R720 — 12y-OPEN accepted; the 2e chain without a pipe; the Blocks 116–117 addendum; U18's Phase A.
+- R721 — 12y-U18A accepted; U18 as two commits (one host; the digest per call); a non-loopback host refused; notes on A-4b and HK-ARCH.
+- R722 — the 12y-U18B 0d stop: four seam-pinning test files join the Touched list; the refusal keys on the import-time host; two local predicates; the code's refusal order.
+- R723 — the second stop: the item-0 "−" count is one per noted row (2); the twelve whole-function digest fakes classified and untouched.
+- R724 — the third stop: the manifest shape pin joins the Touched list; shape pins join the census; CC's prepared decisions accepted.
+- R725 — the gate stop: two more coupled test files; `docs/inventory/` standing practice; `AmbiguousEngineState` in CLAUDE.md's list; the test-side scope of an engine commit defined by coupling (R725(b)).
+- R726 — U18 commit 1 accepted; the foreign ledger commit `4525a44` accepted; U18 commit 2 opens.
+- R727 — the 12y-U18C 0c stop: option (A), both runners close 'aborted'; no closed reason set; `digest_fn` in a registry keyed by database file and run id.
+- R728 — U18 commit 2 accepted; U18 closed; A-4b CLOSED and Wave 1 row 16's conditional half with it; CC's digest-read fault handling accepted; R117 amended by addendum.
+
+**Notes and readings recorded this session** (cell notes, addenda and readings with no row):
+- A-4b: R721(e)'s two notes (the current anchors; the 21 / 26 / 9 count against "ten") and R728(b)'s CLOSED note.
+- HK-ARCH: R721(e)'s note (three architecture lines on the retired digest route).
+- Addenda: the Blocks 116–117 addendum (R720(b)); the R117 addendum (R728(d)).
+- Readings, no row: R720(e) (the 16:19:34 requests; the snapshot timer's requests; NVRM seventeen this boot; the corrected id extraction with its wrong first lines kept; the widened concurrent-jobs pattern); R725(e) (the red gate as evidence; the first `--basetemp` slip); R726(c) (the record's §8 for commit 2; the `ollama_host` column owed to 023; the membership pin's two ids per member); R728(e) (U18's recorded limits; `ModelDigestChanged` beside the active-run sentence; the message form; the constructor convention; the acceptance ids red twice).
+
+**The stops, and their one cause.** Six stops in U18 — four brief-level (12y-U18B at 0d, R722; before item 0, R723; before step 2, R724; 12y-U18C at 0c, R727), one gate-level (the first commit-1 gate, R725), and the sixth counted in R728(e)'s six — with one cause, as R725(e) and R728(e) state it: scope, counts and close semantics written from a description instead of read from the record or found by the gate. The rules that resulted: the test-side scope of an engine commit is defined by coupling, found by census or by the gate, each rewrite reported with its assertion kept (R725(b)); the census pre-step's classes — seam patches, whole-name replacements, record shape pins, module-alias patches, class membership pins (R722(a), R723(c), R724(a), R725(b)); a count is computed by CC, never predicted (R723(a)). Three conventions joined the standing rules: no pipe in a check-and-commit chain (R720(c)); a two-ruling commit's clause form read from the model pair (R720(b)); `docs/inventory/` in every engine-commit Touched list (R725(c)).
+
+**Carried forward.** The `run_manifests.ollama_host` column is owed to 023 (P6; R722(f)). U18's recorded limits, for Run 7's confounder statement: the check-to-send window, a replacement during a call, and the restart retry's resend without a re-check (R728(e)); a `_client` rebound in-process is not refused (R722(c); `run_qualgap01` the one site); a human review session is refused under a remote `OLLAMA_HOST` (R724(d)). The foreign ledger commit `4525a44` joins the dgx-infra cross-lane ledger item (R726(b)). NV_ERR_NO_MEMORY seventeen this boot. Three of this session's four gate runs (counting the red run) ran with surgical-cv work beside them: the two commit-1 runs beside surgical-cv pytest suites, and every run beside the surgical-cv uvicorn server.
+
+**Measured — the session's gates.** Each with 2 warnings (sklearn's), no phase slower than its comparison by more than 10 s, and nothing resident before or after:
+
+| gate | tree | result | collected | wall | journal window |
+| --- | --- | --- | --- | --- | --- |
+| 12y-OPEN | `ec544a2` (engine tree equal to `f3f552e`'s) | 3,388 / 1 xfailed / 17 deselected | 3,389 of 3,406; 0/0 | 893.83 s | two read-only requests (16:19:34), no load |
+| U18 commit 1, run 1 (`12y_U18B/gate_red/`) | `43ca120` + commit 1 before the two last fixes | 1 failed, 3,375 passed, 21 errors | 3,398 of 3,415 | 916.95 s (surgical-cv pytest 139563) — evidence, not a series member (R726(a)) | empty |
+| U18 commit 1, run 2 | `43ca120` + commit 1 (committed as `e7425b3`) | 3,399 / 1 / 17 | 3,400 of 3,417; only-gate the 11 new ids | 939.40 s (surgical-cv pytest 215916) | empty |
+| U18 commit 2 | `2c67bfc` + commit 2 (committed as `32fc09e`) | 3,411 / 1 / 17 | 3,412 of 3,429; only-gate the 12 new ids | 895.61 s | empty |
+
+**The band, a figure for the wrap ruling.** The series of nineteen is 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32, 893.83, 939.40, 895.61 s. The mean of the last four standard gates on this host state (920.32, 893.83, 939.40, 895.61) is 912.29 s; ×0.9 is 821.061 and ×1.1 is 1003.519, rounded inward as R683(c) rounded: **822–1003 s** (`12y_close/band_computation.txt`). Two of the four are confounded by concurrent surgical-cv pytest runs: 920.32 s (12x-U39C, one) and 939.40 s (U18 commit 1, one). It is a figure, not a band in force; the band in force stays 817–998 s until the wrap ruling sets 12z's.
+
+**Measured — the nightlies.** 2026-10-27 and 2026-10-28 09:00 UTC, both on `a4be9f7` (the reflog), read at 12y-OPEN against `12x_close/expected_nightly_20261027.md`, every line matched: `3388 passed, 17 deselected, 1 xfailed, 2 warnings in 884.13s` and `… in 887.09s`; `collected 3406 items / 17 deselected / 3389 selected`; last line `pytest exit code: 0`; the durations files present; ids equal to `12x_close/collected_ids_12x_close.txt` (0/0 each); the Ollama journal for 09:00–09:25 UTC empty; the lock file's mtime unchanged (2026-07-27 23:22:08 UTC) (`12y_close/nightly_20261027.txt`, `nightly_20261028.txt`). `12y_close/expected_nightly_20261029.md` is written for the 2026-10-29 jobs.
+
+**Measured — the health jobs.** 2026-10-27 07:00 UTC: 20/20 OK, 0 FAIL; the journal for 06:59–07:12 holds 69 GIN lines, none non-200; no new NV_ERR_NO_MEMORY line. 2026-10-28 07:00 UTC: 20/20 OK, 0 FAIL; 70 GIN lines, none non-200; one new NV_ERR_NO_MEMORY line at 07:04:06, inside the llama3.3:70b load (runner started 07:03:46, loaded 07:04:56), which succeeded — seventeen this boot (`12y_close/health_job_20261027.txt`, `health_job_20261028.txt`, `nvrm_this_boot_20261028.txt`).
+
+**Measured — the recount** (`12w_close/recount_12w_r707.py`, run in a scratch clone on the plan at `0f83f46`; its output `12y_close/recount_close_run.json` is byte-identical to `12x_close/recount_close_run.json`, so A-4b's CLOSED note changes no count, as R607(d) has it). **280 rows — Class 1 / 2 / 3 = 94 / 55 / 131, 0 without a class**; P1 61 (25 / 24 / 12); P6 11; P7 117; P1's fix units 35 by the script's field / **37, done 21** with U18 (R728(b); the dated lines still read 20, no dated line having been ordered for U18) / the script's `fix_units_dated_lines` a literal reading 37 / 19 (R714(c)). The chain's committed JSONs were rewritten unchanged: 272 `2b1114c8…9f56`, 275 `8ec6c5c6…8050`, 276 `db5767db…6ee3`, 278 `cff9ec10…636c`, 279 `005f0c09…746d`, 280 `569584d1…afb0`. **R510 for session 12y** (`12y_close/r510_12y.txt`): 206 six-cell INT- rows at `a4be9f7` and at `0f83f46`; rows in 0, rows out 0, no class or package move; A-4b CLOSED and counted.
+
+**Retention (R675(b)), `12y_close/retention_close.txt`.** 23 MATCH / 0 MISMATCH: the nine throwaways, U06's copy, the five restore points and 12u-U16A's eight, by `review.db` file sha256, none opened. The 12v probe-scratch entry: requests 10 of 10 and responses 53 of 53 equal to the 12v record by file sha256 (re-verified at 12y-OPEN 0l, untouched since). No new entry: 12y ran no rehearsal and kept no probe scratch. `~/scratch/12q-u13-build/stage/` holds `RESTORE.txt` only.
+
+**Ledger.** Every evidence-engine commit's row is committed, with trailers; this closeout's row is settled at its step 3d. Foreign commits and rows met (R654(d), R663(b)): `4525a44` (`ledger: rows through 2026-10-28T18:29:17Z`; the surgical-cv-edit row 275d6c1, no trailers), the parent of `c430492`, accepted under R726(b).
+
+**The host, 2026-10-28** (dated facts, `12y_close/host_state_close.txt`).
+- **Band values** equal 12x's: kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02.
+- **Boot and service:** boot `abf99132-fd8b-41f9-b9fd-62241e40110c`; Ollama started 2026-10-17 23:04:05 UTC; `NRestarts` 0.
+- **earlyoom:** active, `--prefer ^ollama$`; 0 kill lines this boot by its kill wording (`12y_close/earlyoom_grep_20261028.txt`).
+- **NVRM:** `NV_ERR_NO_MEMORY` seventeen this boot, the last on 2026-10-28 07:04:06.
+- **Concurrent work beside this session's gates:** the surgical-cv uvicorn server (pid 11734) beside all four runs; a surgical-cv pytest suite beside each commit-1 run (pids 139563 and 215916); none a model load.
+- **Temp root** (`12y_close/temp_root_close.txt`): `pytest-146` (surgical-cv), `pytest-147` (the U18 commit-1 gate), `pytest-148` (the U18 commit-2 gate) and `pytest-current` → `pytest-148`; 2,933,825,965 B. Nothing emptied.
+
+**Live.** Never written. `db_fingerprint --compare` against the migration-02 record was IDENTICAL at every check of the session (overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`), and is re-taken for this commit (`12y_close/fingerprint_close.txt`, with the Ollama reads in `12y_close/ollama_reads.txt`). `dbchecks_close.txt` and `pin_tuples_close.json` are byte-identical to `12x_close/dbchecks_close.txt` and `12x_close/pin_tuples_close.json`.
+
+**Session 12y closed.** Next: session 12z, fresh.
+
+Expected values at session-12z open, as at this closeout (2026-10-28):
+- **HEAD:** the 12y closeout commit (child of `0f83f4674a36a0cc96d53adcc2d9454b3480d322`; its full hash is in the closeout block and the lane line), clean and **level with origin** (R370). The plan file's sha256, bytes and lines are in the closeout block.
+- **The decision log in this file ends at R728.** R729, the wrap ruling, is transcribed at 12z-OPEN's item 0.
+- **The gate** on this tree (engine tree equal to `32fc09e`'s):
+  - **Counts:** **3,411 passed / 1 xfailed / 17 deselected**, collected **3,429**, selected **3,412**, 0/0 (a set comparison, R655(b)) against `docs/session-reports/session-12/12y_close/collected_ids_12y_close.txt` (3,412 ids, the 12y-U18C gate's list).
+  - **Wall time:** against the band the wrap ruling sets (this closeout's figure is 822–1003 s: ±10% of 912.29 s, the mean of 920.32, 893.83, 939.40 and 895.61, rounded inward, two of them confounded), beside the series 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32, 893.83, 939.40, 895.61 s. A gate outside it is reported with its concurrent jobs.
+  - **Ollama reads:** version, tags and ps, at least five seconds before the gate is launched and after it exits, each timestamped (R660(b)). A model load in the gate's journal window is a stop (R666(a)); a read-only request is a reading (R696(b)).
+  - **Durations:** a file written (`--durations=0`) and compared with `12y_close/durations_12y_u18c.txt`; any phase slower by more than 10 s is reported.
+  - **Basetemp** read immediately after the gate (R660(c)). The two warnings are sklearn's (R641(c)). The concurrent-jobs read excludes its own shell (R680(c)) and names ffmpeg, nvenc, surgical-cv, uvicorn and pytest (R720(e)).
+- **The 2026-10-29 09:00 UTC nightly** per `12y_close/expected_nightly_20261029.md`: `collected 3429 items / 17 deselected / 3412 selected`, **3411 passed, 17 deselected, 1 xfailed, 2 warnings**, last line `pytest exit code: 0`; the durations file present; the Ollama journal for 09:00–09:25 UTC empty of loads; the lock file's mtime unchanged (2026-07-27 23:22:08 UTC); ids equal to `collected_ids_12y_close.txt`.
+- **The 2026-10-29 07:00 UTC health job:** its loads and their outcome, read from its log and the Ollama journal, with an NVRM grep over the kernel journal (seventeen `NV_ERR_NO_MEMORY` lines this boot before it) — readings; a read-only request is a reading (R696(b)).
+- **The pytest temp root at the open** (R647(c)): entry count and size recorded, not matched; nothing emptied. At this closeout: `pytest-146`, `-147`, `-148` and `pytest-current` (4 entries, 2,933,825,965 B).
+- **Collection and inventory:** no-marker collection **3,429**; `tests/test_eligibility.py` 91; `inventory --check` in sync.
+- **The diff list:** `git diff --stat a4be9f7 HEAD -- engine tests scripts analysis review_specs` lists U18's 17 files, 778 insertions, 45 deletions (`12y_close/diff_engine_since_a4be9f7.txt`); `git diff --stat 32fc09e HEAD` on the same paths is empty; `git diff --stat f4a5586 HEAD` on the same paths lists 46 files, 2,898 insertions, 123 deletions (`12y_close/diff_since_f4a5586.txt`).
+- **The fingerprint of record, unchanged:** `docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json` — 36 tables; overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`. `ls data/*/review.db` lists one path.
+- **`12f_repro/dbchecks.py`** (`909e3ed2…4ff5`): its output byte-identical to `12y_close/dbchecks_close.txt`.
+- **Retention** (`12y_close/retention_close.txt`): the 23 never-opened copies by `review.db` file sha256 (23 MATCH), and the 12v probe-scratch entry (10 requests, 53 response files) by file sha256. `~/scratch/12q-u13-build/stage/` holds `RESTORE.txt` only.
+- **Codebook and live spec, unchanged:** `89dbfa91…ad82`; `aeb90ba8…8b33`.
+- **Pins, by `12l_U04/pin_tuples.py`** with both arguments: `12y_close/pin_tuples_close.json`, byte-identical; elicited `d70bf688…59f0`, non-elicited `d3672ab6…ff5c`; audit `prompt_hash` `d972c46d…838d`.
+- **Ollama:** 0.21.0; digests `qwen3:32b` `030ee887…7840`, `gemma3:27b` `a418f583…2203`, `deepseek-r1:32b` `edba8017…960c`; `NRestarts=0`. Service start and boot id are readings. Residency is a reading: nothing at this closeout.
+- **The host state the band belongs to** (`12y_close/host_state_close.txt`): kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02; earlyoom's state and argv, `vm.min_free_kbytes` and ollama's `oom_score_adj` are readings.
+- **The pre-tag list** by `12w_close/recount_12w_r707.py` (its JSON fields): `now` = `{rows 280, class_1 94, class_2 55, class_3 131, without_class 0}`; P1 `{class_1 25, class_2 24, class_3 12, rows 61}`; P6 rows 11; P7 rows 117; `fix_units` 35 in the script's count, **37 with 21 done** (U18 closed, R728(b); the dated lines read 20; the script's `fix_units_dated_lines` is a literal reading 19, R714(c)); `expected_holds` true.
+- **Scratch:** the five 12y directories — `12y-open/`, `12y-u18a/`, `12y-u18b/`, `12y-u18c/` and `12y-close/` — beside those present at the 12y open and `retained/`.
+- **claude-config:** at the ledger commit this closeout settles (its full hash is in the closeout block); the wrap ruling applies the lane line.
+
+12z's first items, in this order:
+- **12z-OPEN**, run outside 07:00–10:35 UTC. Its item 0 transcribes R729 (the wrap ruling) as the next block and copies the 12y lane-line file into `12y_close/`. It reads the 2026-10-29 07:00 health job and 09:00 nightly (against `expected_nightly_20261029.md`), and runs the startup verify against this block.
+- **U19's Phase A:** `12l_P1A.md` §3's next unit in its order, read-only, in 12y-U18A's form (R728(f)).
+
 ## Decision log
 
 Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in order. The architect's four provisional rulings of 2026-09-19 (recall-bounded filter with code-enforced basis; SYNERGY as reference; a tiered lane with 2d first; a 50 KB plan) were withdrawn after the external review and replaced by R1–R9 below.

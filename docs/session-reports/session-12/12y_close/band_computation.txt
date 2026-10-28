@@ -1,0 +1,6 @@
+# band computation for the wrap ruling (R683(c)'s inward rounding), 12y closeout
+inputs (the last four standard gates on this host state): 920.32, 893.83, 939.40, 895.61
+  920.32 12x-U39C (one concurrent surgical-cv pytest suite); 893.83 12y-OPEN (quiet); 939.40 U18 commit 1 (surgical-cv pytest 215916); 895.61 U18 commit 2 (quiet)
+mean 912.2900 s; x0.9 821.0610; x1.1 1003.5190
+rounded inward: 822–1003 s (a figure, to be set by the wrap ruling; the band in force stays 817–998 s)
+series (nineteen): 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32, 893.83, 939.40, 895.61 s; the red run 916.95 s is evidence, not a series member (R726(a))

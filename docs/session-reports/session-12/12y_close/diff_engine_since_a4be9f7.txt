@@ -1,0 +1,18 @@
+ engine/agents/extractor.py           |   4 +-
+ engine/agents/ft_screener.py         |   6 +
+ engine/core/run_manifest.py          |  89 ++++++++++
+ engine/utils/ollama_client.py        |  88 ++++++++--
+ engine/utils/ollama_preflight.py     |  10 +-
+ scripts/run_pipeline.py              |   7 +
+ tests/conftest.py                    |   7 +-
+ tests/test_ft_adjudication_import.py |   4 +-
+ tests/test_ft_bridge.py              |   2 +-
+ tests/test_ollama_client.py          |  16 +-
+ tests/test_ollama_preflight.py       |  14 +-
+ tests/test_run_fault_predicate.py    |   2 +
+ tests/test_run_pipeline_starts.py    |   4 +-
+ tests/test_suite_live_fence.py       |  10 +-
+ tests/test_u18_digest_per_call.py    | 317 +++++++++++++++++++++++++++++++++++
+ tests/test_u18_one_host.py           | 241 ++++++++++++++++++++++++++
+ tests/test_undeclared_call.py        |   2 +-
+ 17 files changed, 778 insertions(+), 45 deletions(-)

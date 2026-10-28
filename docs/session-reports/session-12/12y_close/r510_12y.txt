@@ -1,0 +1,4 @@
+# R510 for session 12y: six-cell INT- rows at a4be9f7 (the 12x closeout) and at 0f83f46 (12y-CLOSE item 0)
+a4be9f7: 206; 0f83f46: 206; rows in 0 []; rows out 0 []
+no class or package move (the recount JSON is byte-identical to 12x_close/recount_close_run.json: class_moves [])
+A-4b (an inventory row, not INT-) CLOSED by its 2026-10-28 note (R728(b)) and counted until P1 closes (R607(d))

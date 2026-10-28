@@ -1,0 +1,15 @@
+== nightly 20261027
+-- lines
+collecting ... collected 3406 items / 17 deselected / 3389 selected
+==== 3388 passed, 17 deselected, 1 xfailed, 2 warnings in 884.13s (0:14:44) ====
+pytest exit code: 0
+durations file: 2454 lines, 255936 B
+nightly ids: 3364
+only-nightly: 86; only-ref: 111
+-- journal ollama 09:00–09:25
+-- No entries --
+-- warnings
+3404:=============================== warnings summary ===============================
+3406:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+3410:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+only-nightly: 0; only-ref: 0

@@ -1,0 +1,20 @@
+== nightly 20261028
+-- lines
+collecting ... collected 3406 items / 17 deselected / 3389 selected
+==== 3388 passed, 17 deselected, 1 xfailed, 2 warnings in 887.09s (0:14:47) ====
+pytest exit code: 0
+durations file: 2451 lines, 255762 B
+nightly ids: 3364
+only-nightly: 86; only-ref: 111
+-- journal ollama 09:00–09:25
+-- No entries --
+-- warnings
+3404:=============================== warnings summary ===============================
+3406:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+3410:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock
+only-nightly: 0; only-ref: 0
+a4be9f7 HEAD@{2026-10-26T21:26:46+00:00}: commit: docs(plan): 12x-CLOSE — session 12x closure, the 12y expected values, 12x_close/ measurements
+2b11a57 HEAD@{2026-10-26T17:39:34+00:00}: commit: docs(plan): 12x-CLOSE item 0 — R716 and R717 as Blocks 114–115; INT-w12-1 correcting note
+39a87ab HEAD@{2026-10-26T17:05:31+00:00}: commit: docs(plan): 12x-U39C notes — INT-w12-1 audit covered (Anthropic arm only open); INT-j12-15 measured
+f3f552e HEAD@{2026-10-26T05:05:59+00:00}: commit: test(u39): audit's runtime list equals a rendered variant for every codebook type

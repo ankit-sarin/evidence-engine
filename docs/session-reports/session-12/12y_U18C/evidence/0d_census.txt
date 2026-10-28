@@ -1,0 +1,25 @@
+== (i)/(iv) patches of what the check touches
+tests/test_ollama_client.py:348:        with patch("engine.utils.ollama_client._client._client.get",
+tests/test_ollama_client.py:358:        with patch("engine.utils.ollama_client._client._client.get",
+tests/test_ollama_client.py:393:        with patch("engine.utils.ollama_client._client._client.get",
+tests/test_ollama_client.py:408:        with patch("engine.utils.ollama_client._client._client.get",
+tests/test_ollama_client.py:418:        with patch("engine.utils.ollama_client._client._client.get",
+tests/test_ollama_client.py:426:        with patch("engine.utils.ollama_client._client._client.get",
+tests/test_ollama_client.py:438:        with patch("engine.utils.ollama_client._client._client.get",
+tests/test_ollama_client.py:445:        with patch("engine.utils.ollama_client._client._client.get", return_value=resp):
+== (iii) RunHandle shape pins
+tests/test_elicit01.py:196:        row = asdict(call(7, "INDEX", "prompt", 42, "0.21.0", "dig"))
+tests/test_elicit01.py:206:        row = asdict(call(9, "COPY", "prompt", None, "0.21.0", "dig"))
+== (v) membership pins
+tests/test_run_pipeline_closes.py:94:    assert set(reasons) <= set(rm.INTERRUPTED_REASONS)
+tests/test_run_manifest_migration.py:326:    # END_STATUSES: 022 also owns this vocabulary now (R215 added 'aborted');
+tests/test_run_manifest_migration.py:328:    assert m022.END_STATUSES == run_manifest.END_STATUSES
+tests/test_run_fault_predicate.py:73:RUN_REFUSED_MEMBERS = {
+== end_status/end_reason assertions on a fault raised in a call
+tests/test_run_pipeline_closes.py:113:    assert (status, reason) == ("failed", "ValueError: x")
+tests/test_failed_close_reason.py:78:    assert conn.execute("SELECT end_status, end_reason FROM run_manifests").fetchone() == ("failed", reason)
+tests/test_run_manifest_migration.py:300:        conn.execute("UPDATE run_manifests SET end_status = 'failed' WHERE run_id = ?",
+tests/migrations/test_022_run_kinds_and_audit_tables.py:291:        "UPDATE run_manifests SET ended_at = 't', end_status = 'failed' "
+tests/migrations/test_022_run_kinds_and_audit_tables.py:295:        "UPDATE run_manifests SET ended_at = 't', end_status = 'failed', "
+tests/migrations/test_022_run_kinds_and_audit_tables.py:308:            "UPDATE run_manifests SET ended_at = 't2', end_status = 'failed', "
+tests/test_cut_over.py:204:    end_status, with RunAborted's message as end_reason — was 'failed' with

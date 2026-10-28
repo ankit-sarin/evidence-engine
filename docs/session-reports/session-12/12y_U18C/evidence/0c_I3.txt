@@ -1,0 +1,46 @@
+== RunAborted
+128:class RunAborted(RuntimeError):
+129-    """9b-FLIP (2(c) R5): the run stopped itself after `CONSECUTIVE_FAILURE_ABORT`
+130-    papers in a row produced nothing usable. Each of those papers' events is
+131-    written before this is raised; the run closes with end_status 'aborted'
+132-    and the abort's reason (R215/C26, wired at 10a-C3)."""
+133-
+134-
+135-#: Consecutive `extraction_failed` papers after which a run aborts. A14 refusals
+136-#: and `input_exceeds_context` neither count nor reset: they are properties of
+137-#: the paper's input, not evidence that the model or the machine is failing.
+138-CONSECUTIVE_FAILURE_ABORT = 3
+139-
+140-#: The A14 codes (R122), which do not count toward the abort.
+== who raises RunAborted
+engine/agents/extractor.py:1155:            raise RunAborted(
+engine/core/extraction_events.py:128:class RunAborted(RuntimeError):
+== ft_screener close handlers
+    try:
+        if verify_only:
+            run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+        elif screen_only:
+            run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+        else:
+            run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+            run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+        rm.close_run(db._conn, run_id, "completed")
+    except Exception as exc:
+        logger.error("FT screening run %d failed", run_id, exc_info=True)
+        rm.close_run(db._conn, run_id, "failed", reason=rm.failure_reason(exc))
+        raise
+    except (KeyboardInterrupt, rm.RunInterrupted) as exc:
+        # C47: as run_pipeline — roll back, then check: a committed close
+        # stands, while an uncommitted write or a close caught before its
+        # commit is rolled back and the run closes 'interrupted' (12a-C47-R2).
+        if db._conn.in_transaction:
+            db._conn.rollback()
+        if not rm.is_closed(db._conn, run_id):
+            rm.close_run(db._conn, run_id, "interrupted",
+                         reason=rm.interrupt_reason(exc))
+        exc.run_id = run_id
+        raise
+    finally:
+        rm.deactivate(token)
+    return run_id
+

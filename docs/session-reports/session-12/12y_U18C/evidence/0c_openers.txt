@@ -1,0 +1,26 @@
+== production open_run / _open_run_manifest callers
+engine/adjudication/import_extraction_entry.py:283:    run_id = rm.open_run(conn, spec, kind="import", stages=(),
+engine/adjudication/ft_screening_adjudicator.py:526:    run_id = rm.open_run(conn, spec, kind="import", stages=(),
+scripts/run_cloud_extraction.py:114:        handle = rm.open_run(
+engine/agents/ft_screener.py:575:    handle = rm.open_run(db._conn, spec, kind="screening", stages=stages,
+engine/adjudication/import_screening_entry.py:159:    run_id = rm.open_run(conn, spec, kind="import", stages=(),
+scripts/run_pipeline.py:116:    run_id = _open_run_manifest(db, spec, start_idx, max_papers=max_papers)
+scripts/run_pipeline.py:544:    handle = rm.open_run(db._conn, spec, kind=kind, stages=stages, codebook=codebook,
+== how each closes on an exception (close_run sites)
+engine/adjudication/import_screening_entry.py:182:        rm.close_run(conn, run_id, "aborted" if refused else "failed",
+engine/adjudication/import_screening_entry.py:185:    rm.close_run(conn, run_id, "completed")
+engine/adjudication/import_extraction_entry.py:326:        rm.close_run(conn, run_id, "aborted" if refused else "failed",
+engine/adjudication/import_extraction_entry.py:329:    rm.close_run(conn, run_id, "completed")
+engine/adjudication/ft_screening_adjudicator.py:583:        rm.close_run(conn, run_id, "aborted" if refused else "failed",
+engine/adjudication/ft_screening_adjudicator.py:586:    rm.close_run(conn, run_id, "completed")
+scripts/run_cloud_extraction.py:127:            rm.close_run(extractor._conn, handle.run_id, status, reason=reason)
+engine/agents/ft_screener.py:606:        rm.close_run(db._conn, run_id, "completed")
+engine/agents/ft_screener.py:609:        rm.close_run(db._conn, run_id, "failed", reason=rm.failure_reason(exc))
+engine/agents/ft_screener.py:618:            rm.close_run(db._conn, run_id, "interrupted",
+scripts/run_pipeline.py:149:                    _finish_review_run(db, run_id, "interrupted",
+scripts/run_pipeline.py:189:                    _finish_review_run(db, run_id, "interrupted",
+scripts/run_pipeline.py:197:        _finish_review_run(db, run_id, "completed")
+scripts/run_pipeline.py:204:        _finish_review_run(db, run_id, "aborted", reason=str(exc))
+scripts/run_pipeline.py:208:        _finish_review_run(db, run_id, "failed", reason=rm.failure_reason(exc))
+scripts/run_pipeline.py:220:            _finish_review_run(db, run_id, "interrupted",
+scripts/run_pipeline.py:565:    rm.close_run(db._conn, run_id, status, reason=reason)

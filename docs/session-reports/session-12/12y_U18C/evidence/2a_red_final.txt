@@ -1,0 +1,230 @@
+FFFFFFFFFF                                                               [100%]
+=================================== FAILURES ===================================
+_______ test_u18_a_tag_replaced_between_open_and_the_first_call_refuses ________
+
+review = (<engine.core.database.ReviewDatabase object at 0xff492efcb1a0>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+fake = <test_u18_digest_per_call.FakeClient object at 0xff492efcb410>
+
+    def test_u18_a_tag_replaced_between_open_and_the_first_call_refuses(review, spec, fake):
+        db, cb = review
+        digests = Digests(A)
+        run_id = _open(db, spec, cb, digests)
+        digests.value = B                                   # the tag now names another model
+        with rm.active_run(db._conn, run_id):
+>           with pytest.raises(rm.ModelDigestChanged) as exc:
+                               ^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'engine.core.run_manifest' has no attribute 'ModelDigestChanged'
+
+tests/test_u18_digest_per_call.py:140: AttributeError
+______________ test_u18_a_tag_replaced_between_two_calls_refuses _______________
+
+review = (<engine.core.database.ReviewDatabase object at 0xff492f007680>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+fake = <test_u18_digest_per_call.FakeClient object at 0xff492f023200>
+
+    def test_u18_a_tag_replaced_between_two_calls_refuses(review, spec, fake):
+        db, cb = review
+        digests = Digests(A)
+        run_id = _open(db, spec, cb, digests)
+        with rm.active_run(db._conn, run_id):
+            oc.ollama_chat(messages=MESSAGES, **_audit(spec))
+            oc.ollama_chat(messages=MESSAGES, **_audit(spec))
+            digests.value = B
+>           with pytest.raises(rm.ModelDigestChanged):
+                               ^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'engine.core.run_manifest' has no attribute 'ModelDigestChanged'
+
+tests/test_u18_digest_per_call.py:157: AttributeError
+___________ test_u18_the_unchanged_case_sends_the_same_request_bytes ___________
+
+review = (<engine.core.database.ReviewDatabase object at 0xff492f0211c0>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+fake = <test_u18_digest_per_call.FakeClient object at 0xff492f26ba10>
+
+    def test_u18_the_unchanged_case_sends_the_same_request_bytes(review, spec, fake):
+        db, cb = review
+        digests = Digests(A)
+        run_id = _open(db, spec, cb, digests)
+        opened = len(digests.reads)
+        with rm.active_run(db._conn, run_id):
+            oc.ollama_chat(messages=MESSAGES, **_audit(spec))
+        expected = {k: v for k, v in _audit(spec).items() if k != "stage"}
+        expected["messages"] = MESSAGES
+        assert fake.calls == [expected]                    # the declared kwargs and nothing else
+        hashes = [r[0] for r in db._conn.execute("SELECT request_hash FROM run_calls")]
+        assert hashes == [rm.request_hash(expected)]
+>       assert len(digests.reads) == opened + 1            # and the digest was read for it
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 1 == (1 + 1)
+E        +  where 1 = len(['gemma3:27b'])
+E        +    where ['gemma3:27b'] = <test_u18_digest_per_call.Digests object at 0xff492f269af0>.reads
+
+tests/test_u18_digest_per_call.py:176: AssertionError
+__________ test_u18_the_digest_check_reads_through_the_run_digest_fn ___________
+
+review = (<engine.core.database.ReviewDatabase object at 0xff492f04fda0>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+fake = <test_u18_digest_per_call.FakeClient object at 0xff492efcbcb0>
+
+    def test_u18_the_digest_check_reads_through_the_run_digest_fn(review, spec, fake):
+        db, cb = review
+        digests = Digests(A)
+        run_id = _open(db, spec, cb, digests)
+        opened = list(digests.reads)
+        with rm.active_run(db._conn, run_id):
+            for _ in range(3):
+                oc.ollama_chat(messages=MESSAGES, **_audit(spec))
+        model = ec.stage_config("audit", spec).model
+>       assert digests.reads[len(opened):] == [model] * 3     # the fixture's oc.fetch_model_digest fails if used
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert [] == ['gemma3:27b'... 'gemma3:27b']
+E         
+E         Right contains 3 more items, first extra item: 'gemma3:27b'
+E         Use -v to get more diff
+
+tests/test_u18_digest_per_call.py:188: AssertionError
+____________ test_u18_the_digest_check_precedes_the_input_fit_read _____________
+
+review = (<engine.core.database.ReviewDatabase object at 0xff492f0523f0>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+fake = <test_u18_digest_per_call.FakeClient object at 0xff492f056510>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xff492efcb920>
+
+    def test_u18_the_digest_check_precedes_the_input_fit_read(review, spec, fake, monkeypatch):
+        db, cb = review
+        digests = Digests(A)
+        run_id = _open(db, spec, cb, digests)
+        order: list[str] = []
+        real_fit = oc._check_input_fits
+    
+        def fit(*a, **k):
+            order.append("input_fit")
+            return real_fit(*a, **k)
+    
+        def read(model):
+            order.append("digest")
+            return digests.value
+        monkeypatch.setattr(oc, "_check_input_fits", fit)
+>       rm._RUN_DIGEST_FNS[(rm._database_file(db._conn), run_id)] = read
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.core.run_manifest' has no attribute '_RUN_DIGEST_FNS'
+
+tests/test_u18_digest_per_call.py:206: AttributeError
+__________ test_u18_the_preflight_call_is_not_refused_on_a_fresh_run ___________
+
+review = (<engine.core.database.ReviewDatabase object at 0xff492f056570>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+fake = <test_u18_digest_per_call.FakeClient object at 0xff492eece570>
+
+    def test_u18_the_preflight_call_is_not_refused_on_a_fresh_run(review, spec, fake):
+        db, cb = review
+        model = ec.stage_config("audit", spec).model
+        digests = Digests(A)
+        run_id = _open(db, spec, cb, digests, stages=("audit", "preflight"), preflight_models=[model])
+        opened = len(digests.reads)
+        with rm.active_run(db._conn, run_id):
+            oc.ollama_chat(messages=MESSAGES, **ec.stage_config("preflight", spec, model=model).kwargs())
+        assert len(fake.calls) == 1
+        assert _run_calls(db) == [(f"preflight:{model}", "completed")]
+        assert rm.stage_digest(db._conn, run_id, f"preflight:{model}") == A
+>       assert len(digests.reads) == opened + 1            # checked against preflight:<model>'s digest
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 1 == (1 + 1)
+E        +  where 1 = len(['gemma3:27b'])
+E        +    where ['gemma3:27b'] = <test_u18_digest_per_call.Digests object at 0xff492eecfb00>.reads
+
+tests/test_u18_digest_per_call.py:227: AssertionError
+_____________ test_u18_the_context_length_cache_is_keyed_by_digest _____________
+
+review = (<engine.core.database.ReviewDatabase object at 0xff492eeccd10>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+fake = <test_u18_digest_per_call.FakeClient object at 0xff492efcb9b0>
+
+    def test_u18_the_context_length_cache_is_keyed_by_digest(review, spec, fake):
+        db, cb = review
+        model = ec.stage_config("audit", spec).model
+        for digest in (A, B):                               # one model name, two digests: two reads
+            run_id = _open(db, spec, cb, Digests(digest))
+            with rm.active_run(db._conn, run_id):
+                oc.ollama_chat(messages=MESSAGES, **_audit(spec))
+>       assert fake.shows == [model, model]
+E       AssertionError: assert ['gemma3:27b'] == ['gemma3:27b', 'gemma3:27b']
+E         
+E         Right contains one more item: 'gemma3:27b'
+E         Use -v to get more diff
+
+tests/test_u18_digest_per_call.py:237: AssertionError
+_____________________ test_u18_the_refusal_is_a_run_fault ______________________
+
+    def test_u18_the_refusal_is_a_run_fault():
+>       exc = rm.ModelDigestChanged.at("audit", "m:1b", A, B)
+              ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.core.run_manifest' has no attribute 'ModelDigestChanged'
+
+tests/test_u18_digest_per_call.py:246: AttributeError
+___________ test_u18_run_pipeline_closes_aborted_on_a_digest_change ____________
+
+review = (<engine.core.database.ReviewDatabase object at 0xff492f0bc530>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+fake = <test_u18_digest_per_call.FakeClient object at 0xff492f004d40>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xff492f0bc620>
+
+    def test_u18_run_pipeline_closes_aborted_on_a_digest_change(review, spec, fake, monkeypatch):
+        """test_t3's form (tests/test_cut_over.py): the runner's own close, here reached by a
+        digest change at a call inside the extract stage rather than by a RunAborted."""
+        import scripts.run_pipeline as rp
+        db, cb = review
+        digests = Digests(A)
+        run_id = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+                             codebook=cb, git=CLEAN, digest_fn=digests).run_id
+        digests.value = B
+    
+        def extract(*a, **k):
+            oc.ollama_chat(messages=MESSAGES, **ec.stage_config("extract_pass1", spec).kwargs())
+        monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+        monkeypatch.setattr(rp, "ReviewDatabase", lambda name: db)
+        monkeypatch.setattr(rp, "_open_run_manifest", lambda d, s, i, **k: run_id)
+        monkeypatch.setattr(rp, "is_adjudication_complete", lambda conn: True)
+        monkeypatch.setattr(rp, "_stage_parse", lambda *a, **k: {})
+        monkeypatch.setattr(rp, "_stage_extract", extract)
+>       with pytest.raises(rm.ModelDigestChanged):
+                           ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.core.run_manifest' has no attribute 'ModelDigestChanged'
+
+tests/test_u18_digest_per_call.py:282: AttributeError
+___________ test_u18_the_ft_runner_closes_aborted_on_a_digest_change ___________
+
+review = (<engine.core.database.ReviewDatabase object at 0xff4877bede50>, Codebook(review='surgical_autonomy', version='2.0', d...ec6a80a16c06741eb2f5646', sha256='89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82', lint_findings=()))
+spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+fake = <test_u18_digest_per_call.FakeClient object at 0xff4877bada00>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xff492f0bcad0>
+
+    def test_u18_the_ft_runner_closes_aborted_on_a_digest_change(review, spec, fake, monkeypatch):
+        from engine.utils import ollama_preflight as pf
+        db, _ = review
+        _ft_eligible_paper(db)
+        monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
+        fake.answers = [{"decision": "FT_ELIGIBLE", "rationale": "r", "confidence": 0.9}]
+        seen: dict[str, int] = {}
+    
+        def digests(model):                                 # A at open, B at the first call
+            seen[model] = seen.get(model, 0) + 1
+            return A if seen[model] == 1 else B
+>       with pytest.raises(rm.ModelDigestChanged):
+                           ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'engine.core.run_manifest' has no attribute 'ModelDigestChanged'
+
+tests/test_u18_digest_per_call.py:311: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_u18_digest_per_call.py::test_u18_a_tag_replaced_between_open_and_the_first_call_refuses
+FAILED tests/test_u18_digest_per_call.py::test_u18_a_tag_replaced_between_two_calls_refuses
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_unchanged_case_sends_the_same_request_bytes
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_digest_check_reads_through_the_run_digest_fn
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_digest_check_precedes_the_input_fit_read
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_preflight_call_is_not_refused_on_a_fresh_run
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_context_length_cache_is_keyed_by_digest
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_refusal_is_a_run_fault
+FAILED tests/test_u18_digest_per_call.py::test_u18_run_pipeline_closes_aborted_on_a_digest_change
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_ft_runner_closes_aborted_on_a_digest_change
+10 failed in 8.73s

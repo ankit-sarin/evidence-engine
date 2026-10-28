@@ -178,6 +178,35 @@ class OllamaHostNotLoopback(RunRefused):
     a declared remote host is a later capability, not this one."""
 
 
+class ModelDigestChanged(RunRefused):
+    """U18 commit 2, R721(b): the model a call names has a different digest now than
+    the one this run's manifest recorded for the call's stage — a model replaced under
+    its tag mid-run, which every later event would otherwise attribute to the recorded
+    digest. Raised by `ollama_chat` before the input-fit read and the send; the runners
+    close the run 'aborted' with this message, which starts with the class name.
+
+    Constructed from a message, as every `RunRefused` is; `at` composes the message
+    from the call's stage key, model and the two digests, and keeps them as fields."""
+
+    def __init__(self, message: str, *, stage_key: str | None = None, model: str | None = None,
+                 recorded: str | None = None, current: str | None = None):
+        super().__init__(message)
+        self.stage_key, self.model = stage_key, model
+        self.recorded, self.current = recorded, current
+
+    @classmethod
+    def at(cls, stage_key: str, model: str, recorded: str | None, current: str | None,
+           detail: str | None = None) -> "ModelDigestChanged":
+        now = current if current is not None else f"no readable digest ({detail})"
+        return cls(
+            f"ModelDigestChanged: run refused at stage {stage_key!r}: model {model!r} now has "
+            f"digest {now}, and this run's manifest recorded {recorded}. Nothing was sent for "
+            "this call. Read `ollama list` for the model's current digest and the Ollama "
+            "journal for a pull or create during the run; a new run records the current "
+            "digest, and if the arm is pinned a changed model is a new arm (R10).",
+            stage_key=stage_key, model=model, recorded=recorded, current=current)
+
+
 class UndeclaredCall(Exception):
     """C54: a model call the active run's manifest did not declare — its stage
     key has no `run_stage_configs` row, or the row names a different model.
@@ -583,6 +612,7 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     _RUN_FIELD_NAMES[run_id] = frozenset(codebook.field_names)
     if carried:
         _RUN_ARM_TUPLES[(_database_file(conn), run_id)] = carried
+    _RUN_DIGEST_FNS[(_database_file(conn), run_id)] = digest_fn
     return RunHandle(run_id=run_id, run_uid=run_uid, stages=resolved)
 
 
@@ -591,6 +621,13 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
 #: extract stage in this process so nothing is resolved twice (R569(b)).
 #: Registered on a successful open only, like `_RUN_FIELD_NAMES`.
 _RUN_ARM_TUPLES: dict[tuple[str, int], dict[str, tuple[dict, str]]] = {}
+
+#: (database file, run_id) -> the `digest_fn` `open_run` was given, for the per-call
+#: digest check (U18 commit 2, R721(b)); `None` means `fetch_model_digest`, looked up
+#: at call time. Registered on a successful open only, like `_RUN_ARM_TUPLES`, and
+#: like it never cleared. A run with no entry (opened without `open_run`, M3's test
+#: affordance) has no check.
+_RUN_DIGEST_FNS: dict[tuple[str, int], Callable[[str], str] | None] = {}
 
 
 def _database_file(conn) -> str:
@@ -987,6 +1024,40 @@ def check_declared_call(stage: str | None, model: str) -> None:
     declared = None if row is None else row[0]
     if declared != model:
         raise UndeclaredCall(key, declared, model)
+
+
+def check_call_digest(stage: str | None, model: str) -> str | None:
+    """U18 commit 2, R721(b): under an active run, read `model`'s current digest
+    through the run's own `digest_fn` and refuse the call if it is not the digest the
+    manifest recorded for the call's stage key. Called by `ollama_chat` after
+    `check_declared_call` and before the input-fit read and the send. Returns the
+    digest read, or `None` when no check applies — outside a run, for a call that
+    names no stage, or for a run `open_run` did not register.
+
+    A digest that cannot be read is refused the same way, except a refused or
+    timed-out connection, which is re-raised as itself: it stays the run fault it
+    was before this check (R532)."""
+    active = _ACTIVE.get()
+    if active is None or stage is None:
+        return None
+    conn, run_id = active
+    entry = (_database_file(conn), run_id)
+    if entry not in _RUN_DIGEST_FNS:
+        return None
+    from engine.utils import ollama_client as oc
+    read = _RUN_DIGEST_FNS[entry] or oc.fetch_model_digest
+    key = call_stage_key(stage, model)
+    recorded = stage_digest(conn, run_id, key)
+    try:
+        current = read(model)
+    except oc.ModelDigestError as exc:
+        import httpx
+        if isinstance(exc.__cause__, (ConnectionError, httpx.ConnectError, httpx.ConnectTimeout)):
+            raise exc.__cause__ from exc
+        raise ModelDigestChanged.at(key, model, recorded, None, detail=str(exc)) from exc
+    if current != recorded:
+        raise ModelDigestChanged.at(key, model, recorded, current)
+    return current
 
 
 def record_active_ollama_call(stage: str | None, request: Mapping[str, Any],

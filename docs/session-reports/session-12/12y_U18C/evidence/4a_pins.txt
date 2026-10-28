@@ -1,0 +1,2 @@
+pins tree == parent
+inventory in sync

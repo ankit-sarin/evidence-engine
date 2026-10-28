@@ -1,0 +1,13 @@
+rfp parent 68 after 70; only-parent 0
+tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[ModelDigestChanged]
+tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[ModelDigestChanged]
+tests/test_run_fault_predicate.py exit 1 :: 2 failed, 68 passed in 23.60s
+tests/test_undeclared_call.py exit 0 :: 8 passed in 5.58s
+tests/test_ft_bridge.py exit 0 :: 25 passed in 17.89s
+tests/test_cut_over.py exit 0 :: 9 passed in 7.73s
+tests/test_u18_one_host.py exit 0 :: 9 passed in 2.32s
+tests/test_ollama_input_fit.py exit 0 :: 30 passed in 0.34s
+tests/test_run_calls_outcomes.py exit 0 :: 10 passed in 8.89s
+tests/test_run_pipeline_starts.py exit 0 :: 6 passed in 7.23s
+tests/test_run_fault_predicate.py exit 0 :: 70 passed in 23.08s
+tests/test_u18_digest_per_call.py exit 0 :: 10 passed in 8.24s

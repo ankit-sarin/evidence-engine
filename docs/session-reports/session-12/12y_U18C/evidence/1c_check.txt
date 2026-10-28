@@ -1,0 +1,34 @@
+numstat + 256 / - 0; minus == 0: True
+plan lines 11478 == 11222 + 256: True
+r723.txt == architect: True
+r724.txt == architect: True
+r725.txt == architect: True
+r726.txt == architect: True
+Block 121 count 1: True
+Block 121 fence == r723.txt: True
+Block 121 cell == render_cell: True
+Block 121 clause names its three partners: True
+Block 122 count 1: True
+Block 122 fence == r724.txt: True
+Block 122 cell == render_cell: True
+Block 122 clause names its three partners: True
+Block 123 count 1: True
+Block 123 fence == r725.txt: True
+Block 123 cell == render_cell: True
+Block 123 clause names its three partners: True
+Block 124 count 1: True
+Block 124 fence == r726.txt: True
+Block 124 cell == render_cell: True
+Block 124 clause names its three partners: True
+ends-at R722 once: True
+ends-at R723 once: True
+ends-at R724 once: True
+ends-at R725 once: True
+ends-at R726 once: True
+last line ends at R726: True
+staged set ['docs/plan/ENGINE_REFACTOR_PLAN.md', 'docs/session-reports/session-12/12y_U18B/r723.txt', 'docs/session-reports/session-12/12y_U18B/r724.txt', 'docs/session-reports/session-12/12y_U18B/r725.txt', 'docs/session-reports/session-12/12y_U18B/r726.txt']: True
+engine-path diff since e7425b3 empty: True
+worktree == index: True
+no untracked: True
+plan sha256 30442fb5f3c06d512ee38d07f24e9e4aa48ba8acb1f7e51235d871fe8378498e 2157009 bytes
+RESULT: PASS

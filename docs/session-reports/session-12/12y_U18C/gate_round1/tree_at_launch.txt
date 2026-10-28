@@ -1,0 +1,10 @@
+2c67bfcdee68f2b93345897c8f79ede512d8bbf1
+ M CLAUDE.md
+ M docs/inventory/entry_points.json
+ M docs/inventory/entry_points.md
+ M engine/agents/ft_screener.py
+ M engine/core/run_manifest.py
+ M engine/utils/ollama_client.py
+ M scripts/run_pipeline.py
+ M tests/test_run_fault_predicate.py
+?? tests/test_u18_digest_per_call.py

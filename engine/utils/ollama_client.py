@@ -12,6 +12,7 @@ This provides:
      runtime truncated or silently dropped part of fails loudly after the call
 """
 
+import contextvars
 import ipaddress
 import json
 import logging
@@ -158,6 +159,11 @@ SERVICE_DROPIN_DIR = Path("/etc/systemd/system/ollama.service.d")
 
 _CEILING_CACHE: dict[tuple[str, str], int] = {}
 
+#: The digest `ollama_chat`'s per-call check just read for this call (U18 commit 2),
+#: set around the input-fit read so the trained-context cache is keyed by the model
+#: the call will reach, not by the server it is on. `None` outside a run.
+_CALL_DIGEST: contextvars.ContextVar = contextvars.ContextVar("call_digest", default=None)
+
 
 class InputFitError(Exception):
     """Base class of the input-fit guard's refusals (INPUT-FIT-01).
@@ -235,12 +241,16 @@ def _client_host() -> str:
 
 
 def n_ctx_train(model: str) -> int:
-    """The model's trained context length, read once per model per server.
+    """The model's trained context length, read once per model digest.
 
     Read through the module's `_client`, so a caller that rebinds the client to
-    another server (run_qualgap01) reads that server's value.
+    another server (run_qualgap01) reads that server's value. Under a run the
+    cache is keyed by the digest the per-call check just read (U18 commit 2), so a
+    tag replaced mid-process cannot keep its old ceiling; outside a run there is no
+    digest and it is keyed by the client's host, as before.
     """
-    key = (_client_host(), model)
+    digest = _CALL_DIGEST.get()
+    key = (digest, model) if digest else (_client_host(), model)
     if key in _CEILING_CACHE:
         return _CEILING_CACHE[key]
     try:
@@ -610,8 +620,12 @@ def ollama_chat(
     # C54: under an active run, a call the manifest did not declare is refused
     # here — before the input-fit read and the send, so nothing reaches the
     # server, and unrecorded, because nothing was sent. A no-op outside a run.
-    from engine.core.run_manifest import check_declared_call
+    from engine.core.run_manifest import check_call_digest, check_declared_call
     check_declared_call(stage, model)
+    # U18 commit 2 (R721(b)): the model's digest now must be the one the manifest
+    # recorded for this stage, or ModelDigestChanged — before the input-fit read
+    # and the send, unrecorded like C54's refusal. A no-op outside a run.
+    digest_token = _CALL_DIGEST.set(check_call_digest(stage, model))
 
     try:
         fit = _check_input_fits(model, messages, kwargs.get("options"), paper_label)
@@ -621,6 +635,8 @@ def ollama_chat(
     except CeilingUnavailable as exc:
         _record("refused_ceiling_unavailable", exc=exc)
         raise
+    finally:
+        _CALL_DIGEST.reset(digest_token)
 
     try:
         for attempt in range(1 + max_retries):

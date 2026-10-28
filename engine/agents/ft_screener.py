@@ -604,6 +604,12 @@ def run_ft_invocation(db: ReviewDatabase, spec: ReviewSpec, *, review_name: str 
             run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
             run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
         rm.close_run(db._conn, run_id, "completed")
+    except rm.ModelDigestChanged as exc:
+        # U18 commit 2 (R721(b), R727(b)): as run_pipeline's — the run closes
+        # 'aborted' with the refusal's message; nothing was sent for that call.
+        logger.error("FT screening run %d aborted: %s", run_id, exc)
+        rm.close_run(db._conn, run_id, "aborted", reason=str(exc))
+        raise
     except Exception as exc:
         logger.error("FT screening run %d failed", run_id, exc_info=True)
         rm.close_run(db._conn, run_id, "failed", reason=rm.failure_reason(exc))

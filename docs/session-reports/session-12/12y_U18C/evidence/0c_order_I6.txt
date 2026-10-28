@@ -1,0 +1,32 @@
+== ollama_chat order
+509:     return_request_hash: bool = False,
+532:     return_request_hash : bool
+533:         R224a: when True, a successful call returns `(response, request_hash)`
+534:         instead of the bare response — the same hash `run_calls.request_hash`
+556:     ollama response object, or `(response, request_hash)` if
+557:     `return_request_hash` is True.
+576:     paper_label = f"paper_id={paper_id}" if paper_id is not None else "paper_id=unknown"
+581:     from engine.core.run_manifest import request_hash as _compute_request_hash
+582:     req_hash = _compute_request_hash(request)
+584:     def _record(outcome: str, *, response=None, exc: BaseException | None = None) -> None:
+586:         outcome. A no-op outside a run (`record_active_ollama_call` itself
+588:         from engine.core.run_manifest import record_active_ollama_call
+590:         record_active_ollama_call(stage, request, paper_id, response, started_at,
+592:                                   request_hash=req_hash)
+608:         return (checked, req_hash) if return_request_hash else checked
+613:     from engine.core.run_manifest import check_declared_call
+614:     check_declared_call(stage, model)
+617:         fit = _check_input_fits(model, messages, kwargs.get("options"), paper_label)
+631:                     _client.chat,
+== I6: preflight stage rows and digests
+engine/core/effective_config.py:505:    model keyed `preflight:<model>` — its model is the caller's by nature (R63).
+engine/core/effective_config.py:524:                out[f"preflight:{m}"] = ResolvedStage(
+engine/core/run_manifest.py:261:            out.update({f"preflight:{m}": m for m in preflight_models})
+engine/core/run_manifest.py:969:    return f"preflight:{model}" if stage == "preflight" else stage
+672:def stage_digest(conn, run_id: int, stage: str) -> str | None:
+673-    """The digest this run resolved for `stage`, or None if it did not declare it."""
+674-    row = conn.execute("SELECT model_digest FROM run_stage_configs "
+675-                       "WHERE run_id = ? AND stage = ?", (run_id, stage)).fetchone()
+676-    return None if row is None else row[0]
+677-
+678-

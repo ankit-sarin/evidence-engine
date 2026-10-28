@@ -1,0 +1,23 @@
+Wed Oct 28 19:09:33 UTC 2026
+e7425b33230f279d2ef680d2d8fe27adb23543b7
+43ca1200ddaed2fdffa28e8eba3fd21caf892d4a
+0
+0	0
+a9cd468210235beaef3b250c88a1f60049bda5fc5ddd3417c0e4838f7a263dec  docs/plan/ENGINE_REFACTOR_PLAN.md
+2126914
+11222
+The decision log in this file ends at R722.
+Block 121: 0
+Block 122: 0
+Block 123: 0
+Block 124: 0
+c43049289f26af10dbab898c14528eb15bbda948
+0	0
+IDENTICAL — schema, every table, and the overall hash all match.
+2026-10-28T19:09:36.274802673Z /api/version
+{"version": "0.21.0"}
+2026-10-28T19:09:36.287551726Z /api/tags
+{"gemma3:27b": "a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203", "qwen3:32b": "030ee887880fc378860c2dd35101da424377520441ae4bfe7be6deff8ade7840", "deepseek-r1:32b": "edba8017331d15236e57480eb45406c0d721db77a4cdcf234df500fc2ad3960c"}
+2026-10-28T19:09:36.308597930Z /api/ps
+{"models": []}
+parent pins == 12x_close

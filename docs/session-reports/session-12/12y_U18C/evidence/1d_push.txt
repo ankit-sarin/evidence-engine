@@ -1,0 +1,3 @@
+IDENTICAL — schema, every table, and the overall hash all match.
+0	0
+IDENTICAL — schema, every table, and the overall hash all match.

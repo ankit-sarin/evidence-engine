@@ -346,7 +346,10 @@ refuses, in this order: `OllamaHostNotLoopback` (U18, R721(c)), `CodebookReviewM
 (R21), `ModelLineageMissing` or `SameLineageVerifier` (INT-i12-45), a digest failure, or `ArmPinMismatch`
 (R10, naming the differing keys). An untagged HEAD is allowed with
 `engine_state` NULL until the freshman tag. `active_run(conn, run_id)` makes `ollama_chat` record
-each call in `run_calls`. A human review session is a run of kind `review_session` with zero stage
+each call in `run_calls`, and re-read the model's digest before each one through the `digest_fn` the
+run was opened with: a digest that is not the manifest's for the stage raises `ModelDigestChanged`
+before the input-fit read and the send, and `run_pipeline` and the FT runner close the run
+'aborted' (U18, R721(b)). A human review session is a run of kind `review_session` with zero stage
 rows (R68). `run_pipeline` opens a manifest instead of writing `review_runs` (R73).
 
 **Arms** (R10, R12, R21, R59, R64). The spec's `arms` block declares every arm — name, kind, provider,

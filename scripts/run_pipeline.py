@@ -203,6 +203,13 @@ def run_pipeline(
         logger.error("RUN ABORTED: %s", exc)
         _finish_review_run(db, run_id, "aborted", reason=str(exc))
         raise
+    except rm.ModelDigestChanged as exc:
+        # U18 commit 2 (R721(b), R727(b)): a model replaced under its tag mid-run.
+        # Nothing was sent for the refused call; the run closes 'aborted' with the
+        # refusal's message, which names the model, the stage and both digests.
+        logger.error("RUN ABORTED: %s", exc)
+        _finish_review_run(db, run_id, "aborted", reason=str(exc))
+        raise
     except Exception as exc:
         logger.error("Pipeline failed: %s", exc, exc_info=True)
         _finish_review_run(db, run_id, "failed", reason=rm.failure_reason(exc))

@@ -1,0 +1,53 @@
+RULING [evidence-engine 12y-R727] — 12y-U18C stop at 0c: the 'aborted' close is wired per runner;
+  option (A) — both production runners close 'aborted' on the new class; no closed reason set;
+  digest_fn in a registry keyed by database file and run id; the four-block clause as the record
+  has it; resume at item 0
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18C report
+  stopped at step 0c (nothing written; HEAD e7425b3, claude-config c430492; evidence in
+  ~/scratch/12y-u18c/). Transcribe at item 0 of the next brief after commit 2 lands (Block 125,
+  after R723–R726 as Blocks 121–124), not now; not written to disk in the resume.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "except RunAborted as exc: … _finish_review_run(db, run_id, "aborted", reason=str(exc))
+    … except Exception as exc: … _finish_review_run(db, run_id, "failed",
+    reason=rm.failure_reason(exc))" (scripts/run_pipeline.py); "engine/agents/ft_screener.py:607–609
+    … rm.close_run(db._conn, run_id, "failed", reason=rm.failure_reason(exc))"; "class
+    RunAborted(RuntimeError) (extraction_events.py:128), not a RunRefused. Only extractor.py:1155
+    raises it"; "INTERRUPTED_REASONS is the only closed set (run_manifest.py:85); 'aborted' reasons
+    are free text (reason=str(exc))"; "RunHandle is @dataclass(frozen=True) (run_id, run_uid,
+    stages)"; "_RUN_FIELD_NAMES[run_id] (R225a) and _RUN_ARM_TUPLES[(_database_file(conn),
+    run_id)]"; "stage_digest(conn, run_id, call_stage_key("preflight", model)) returns that
+    digest"; "check_declared_call(stage, model) (:614) → _check_input_fits(...) (:617) →
+    _client.chat (:631)"; Block 87's clause "…in its own commit with Blocks 88 and 89 and the two
+    notes R691 orders, in the R597(e) form:"; Block 108's "in its own commit with Block 109, in the
+    R597(e) form"; "tests/test_cut_over.py::test_t3_an_aborted_run_closes_as_aborted_with_reason
+    already pins the RunAborted → 'aborted' wiring".
+  READ (CC's): "a RunRefused subclass raised in ollama_chat passes through the run-fault predicate
+    as intended, but closes 'failed'"; "Per-test databases all number their first run 1, so a bare
+    run_id would leak a previous test's digest_fn"; "With digest_fn=None, the registry looks up
+    oc.fetch_model_digest at call time, so tests that monkeypatch it keep working".
+  INFERRED: none.
+
+R727(a) — The stop is correct; the cause is the architect's: R721(b) wrote "closing the run
+  'aborted'" from C26's vocabulary without reading which exception each runner closes 'aborted'
+  on. The brief's I3 caught it before an edit, which is what an INFERRED item is for.
+R727(b) — Option (A): scripts/run_pipeline.py and engine/agents/ft_screener.py join the engine-side
+  Touched list. In each, an `except rm.<NewClass> as exc:` clause ahead of `except Exception`
+  closes the run ('aborted', reason=str(exc)) and re-raises, beside the RunAborted clause in
+  run_pipeline and in the same form in the FT runner; the class's message names the model, the
+  stage key, the digest the manifest recorded and the digest read. 'aborted' is the right word: the
+  engine stopped the run on a precondition it checks, as it does on consecutive failures; 'failed'
+  is for a fault the engine did not choose. Option (C) is rejected for the reason CC gives
+  (RunAborted would gain a second meaning). The acceptance tests assert the close on both runners,
+  the run_pipeline one beside test_t3's form.
+R727(c) — I4 is false and withdrawn: no closed set of aborted reasons exists, and none is created;
+  the reason is str(exc). The brief's 2b and 3a clauses about an aborted-reason set are void.
+R727(d) — digest_fn is carried in a registry keyed (database file, run_id), in _RUN_ARM_TUPLES's
+  form; a None entry resolves oc.fetch_model_digest at call time so monkeypatching tests keep
+  working. RunHandle is not changed.
+R727(e) — The four-block clause is the record's: "(item 0 of the 12y-U18C brief), in its own commit
+  with Blocks 122, 123 and 124, in the R597(e) form:" and likewise for each; no "and no note"
+  phrase (Block 108's form). The preflight case holds as read (I6): a fresh run compares its
+  preflight:<model> digest equal.
+R727(f) — 12y-U18C resumes at item 0 under this ruling; nothing else in the brief changes except as
+  (b)–(e) state.

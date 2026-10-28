@@ -1,0 +1,71 @@
+RULING [evidence-engine 12y-R728] — U18 commit 2 accepted (32fc09e); U18 closed; A-4b CLOSED and
+  Wave 1 row 16's conditional half closed, counted until P1 closes; CC's digest-read fault
+  handling accepted; R117 amended by addendum; readings; U19's Phase A opens
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-U18C final
+  report (item 0 2c67bfcdee68f2b93345897c8f79ede512d8bbf1; commit 2
+  32fc09eb7cfb670955c019257a4aca0a954ebd67; record docs/session-reports/session-12/12y_U18C/
+  12y_U18C.md). Transcribe at item 0 of the 12y-U19A brief (Block 126, after R727 as Block 125),
+  not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12y-U18C final report):
+  MEASURED: "2c67bfcdee68f2b93345897c8f79ede512d8bbf1, parent e7425b3"; "Numstat: +256 / −0. Lines
+    after: 11,478"; "Plan: 30442fb5f3c06d512ee38d07f24e9e4aa48ba8acb1f7e51235d871fe8378498e,
+    2,157,009 B"; "r723–r726 all equal the architect's hashes, sizes and line counts. All four
+    fences and all four cells are True"; "Ledger: fbfdda4, row 19:15:13Z"; "All 10 ids in
+    tests/test_u18_digest_per_call.py failed on the parent"; "RUN_REFUSED_MEMBERS gains
+    rm.ModelDigestChanged … 68 ids to 70"; "ModelDigestChanged(RunRefused) … with an at(...)
+    factory"; "_RUN_DIGEST_FNS[(database file, run_id)], written at open_run. Nothing clears it, as
+    nothing clears _RUN_ARM_TUPLES"; "digest_token = _CALL_DIGEST.set(check_call_digest(stage,
+    model)), with a finally reset"; "keyed (digest, model) under a run and (host, model)
+    otherwise"; "==== 3411 passed, 17 deselected, 1 xfailed, 2 warnings in 893.74s (0:14:53)
+    ===="; "3429 / 3412"; "895.61 s (band 817–998)"; "+12 exactly (the 10 acceptance ids + 2
+    [ModelDigestChanged]), only-ref 0"; "none slower by more than 10 s"; "-- No entries --";
+    "uvicorn 11734 only"; "Pins are byte-identical to the parent's"; "its request_hash equals
+    rm.request_hash(expected)"; "48 files. The engine side is exactly ft_screener.py,
+    run_manifest.py, ollama_client.py and run_pipeline.py"; "32fc09eb7cfb670955c019257a4aca0a954
+    ebd67, parent 2c67bfc"; "Ledger: a14e360, row 2026-10-28T19:40:20Z".
+  READ (CC's): "A refused or timed-out connection during the digest read is re-raised as itself, so
+    it stays the run fault R532 makes it … Any other unreadable digest is refused as
+    ModelDigestChanged with current=None. This was not in the brief"; "the class's message starts
+    "ModelDigestChanged: ""; "R117's comment no longer describes production"; "The six stops of
+    U18 share one cause".
+  INFERRED: none.
+
+R728(a) — U18 commit 2 is accepted as landed: 32fc09e (the digest read on every local call under a
+  run through the run's digest_fn, compared with the stage's recorded digest before the input-fit
+  read and the send; ModelDigestChanged a RunRefused in the run-fault tuple, closing 'aborted'
+  with its reason on both production runners; the context-length cache keyed by digest under a
+  run; ten acceptance ids red on the parent and green in the commit; the gate 3,411 / 1 / 17 on
+  3,429 / 3,412, +12 exactly, 895.61 s inside the band on a quiet box). Item 0 2c67bfc (Blocks
+  121–124) and ledgers fbfdda4, a14e360 stand. Pins and every prompt_hash unchanged; no request
+  byte moved. The series gains 895.61 s.
+R728(b) — U18 is closed; fix units done 21 of 37. A-4b is CLOSED on e7425b3 and 32fc09e (R514): the
+  digest is read through the chat client, a non-loopback host is refused at open, and a mid-run
+  digest change refuses before the send and closes the run 'aborted'. Wave 1 row 16's conditional
+  half (a tag replaced under the same tag mid-run attributed to the opening digest) closes with it:
+  the per-call check compares digests, not names. One dated CLOSED note on A-4b at 12y-U19A's item
+  0, in INT-v12-1's form (R712(g)), stating both closures and their evidence; the row is counted
+  until P1 closes (R607(d)). The ollama_host column stays owed to 023 (P6).
+R728(c) — CC's handling of the digest read's own faults (finding 3) is accepted as built and
+  recorded: a refused or timed-out connection re-raises as itself (the run fault R532 makes it),
+  any other unreadable digest refuses as ModelDigestChanged with the read value None. It was not in
+  the brief; it is the safe direction and it is tested by the commit's gate as part of the class's
+  behaviour. The commit's record states it; no row.
+R728(d) — R117 ("the run never fetches a digest of its own") is amended by a dated addendum to its
+  row in the decision log at 12y-U19A's item 0: from 32fc09e the run reads a digest on every local
+  call through the digest_fn it was opened with, production resolving fetch_model_digest; the
+  fixtures that cite R117 inject digest_fn and stay as written (their comments are stale and are
+  not edited; a note on the HK-ARCH line's neighbour is not needed — the addendum is the record).
+R728(e) — Readings, no row: the check-to-send window, a replacement during a call and the restart
+  retry's resend without a re-check (finding 1) are recorded limits of U18, carried to Run 7's
+  confounder statement; ModelDigestChanged described beside the active-run sentence, not in
+  open_run's list (finding 2); the message form set by E1 and E5 together (finding 4); the
+  constructor convention RUN_REFUSED_MEMBERS pins (finding 5); the acceptance ids run red twice,
+  the second against an archive export of the parent, accepted as the red evidence. The six stops
+  of U18 — five the architect's, one the gate's — are one line on the closeout's most-violated
+  list: scope, counts and close semantics written from a description instead of read from the
+  record. R510 for 12y: rows in 0, rows out 0, no class move.
+R728(f) — U19's Phase A opens under the 12y-U19A brief: 12l_P1A.md §3's next unit in its order,
+  read-only, in the Phase A form of 12y-U18A, with the census pre-step and the R725(b) rule
+  carried into its build brief. If §3's next unit has been closed or absorbed by a later ruling,
+  the brief's I2 catches it and CC reports the next open unit instead.

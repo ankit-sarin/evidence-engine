@@ -10969,3 +10969,86 @@ R719(f) — Session 12x closes now. After R719(d) has landed, run /wrap. Report 
 | 2026-10-26 | R719(a) — The 12x-CLOSE closeout block is accepted as printed. Item 0 2b11a57 (Blocks 114 and 115, the INT-w12-1 correcting note) and the closeout commit a4be9f7 stand; the ledger f39e187 with trailers stands. R719(b) — The band for 12y is 817–998 s: ±10% of 907.4075 s, the mean of the last four standard gates on this host state (885.20, 882.37, 941.74, 920.32), rounded inward as R683(c) rounded, the two confounded gates (941.74 and 920.32, beside surgical-cv pytest runs) included with their confounders recorded. The series stands at 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32 s. A 12y gate outside the band is reported with its concurrent jobs, not adapted to. R719(c) — Readings, no row: the files and the two closure paragraphs beyond the brief's list; earlyoom kills 0 by its kill wording; the primer block and the lane line written after the commit so they can name its hash. The 12x-OPEN gate's evidence was never committed: 12y-OPEN's item 0 copies ~/scratch/12x-open/gate/ into docs/session-reports/session-12/12x_close/ gate_12x_open/ (cp; file sha256 equal), in the item-0 commit. R719(d) — The lane line (sha256 7f834f3616df62d1c688c6e2facf32e4e53ec50f33cbdbcc7f63b47f356a6653, 5,623 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows named by hash), push, level. R719(e) — 12y-OPEN's startup verify checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12y's item 0 transcribes R718 as Block 116 and this ruling as Block 117, and copies lane_line_12x.txt and the 12x-OPEN gate's evidence into 12x_close/, with no cell note, verified by its "−" count, 0 (R664(b)). No closeout gate ran: the expected gate values for 12y are f3f552e's on unchanged code (3,388 / 1 xfailed / 17 deselected, collected 3,406 / selected 3,389; 0/0 against 12x_close/collected_ids_12x_close.txt; band 817–998 s, with the concurrent jobs named and the snapshot's own PIDs excluded); the 2026-10-27 09:00 UTC nightly runs on the HEAD then pushed, whose engine tree equals f3f552e's, expected 3,388 / 17 / 1 on 3,406 / 3,389, exit 0, 12x_close/expected_nightly_20261027.md governing; the 07:00 health job's loads are read and reported by 12y-OPEN, with an NVRM grep; a read-only request in any window is a reading (R696(b)). The temp root is read, never matched. Residency is a reading. 12y-OPEN's pre-check reads the process table for leftovers of session f7992c76 (R692's form). R719(f) — Session 12x closes now. After R719(d) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-26, during session 12x, on architect recommendation, on the 12x-CLOSE closeout block (a4be9f7) |
 
 The decision log in this file ends at R719.
+
+*Addendum 2026-10-28 (12y-U18A item 0, R720(b)):* Blocks 116 and 117 were transcribed in one commit, `ec544a251369971040fe084a56efb63ef32d4562` (12y-OPEN item 0), with the lane-line copy and the 12x-OPEN gate evidence copy ordered by R719(c) and R719(e). Their Transcribed clauses were written from the 12y-OPEN brief's single-block value and do not name each other; Block 116's "it orders" refers to the copies R719 orders, not R718. The blocks are not edited (R102).
+
+**Block 118.** *Transcribed 2026-10-28 (item 0 of the 12y-U18A brief), in its own commit with the Blocks 116–117 addendum it orders, in the R597(e) form:* ruling R720, made by PI on architect recommendation on 2026-10-28 UTC, during session 12y, on the 12y-OPEN final report (item 0 `ec544a251369971040fe084a56efb63ef32d4562`). The 12y-U18A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12y-R720] — 12y-OPEN accepted; the 2e chain form tightened; Blocks 116–117's
+  clause corrected by a dated addendum; readings; U18's Phase A opens
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-OPEN final
+  report (item 0 ec544a251369971040fe084a56efb63ef32d4562; evidence in ~/scratch/12y-open/).
+  Transcribe as item 0 of the 12y-U18A brief (Block 118), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12y-OPEN report):
+  MEASURED: "2026-10-28 16:08:42 UTC; all four logs present"; "ec544a251369971040fe084a56efb63ef32d4562,
+    parent a4be9f7, 22 files"; "Plan numstat: +121 / −0. Lines 10,971 = 10,850 + 121"; "Plan after:
+    41c650cea0f3251e76a55a59669a9b2b514d9195bff300f4ebde816a17af6d3d, 2,092,916 B"; "r718.txt:
+    c0265c04…2d37, 2,450 B, 33 lines. r719.txt: c244984e…eb81, 5,493 B, 66 lines"; "Both fences True;
+    both cells True"; "gate_12x_open/ has 18 of 18 files with equal sha256"; "Fingerprint IDENTICAL
+    before and after the push; 0 0"; ledger "c0f3f5ab825e946c06586c3d552930b7c5120676, parent 27e3c5f",
+    "ledger: rows through 2026-10-28T16:12:32Z"; gate "launched 16:13:30.79Z, exited 16:28:24.62Z; wall
+    893.83 s"; "==== 3388 passed, 17 deselected, 1 xfailed, 2 warnings in 891.74s (0:14:51) ===="; "Ids:
+    0 / 0"; "no phase slower by more than 10 s. The reference has 2,486 phases and the gate 2,454";
+    "Basetemp: pytest-132, 1,380,578,326 B"; nightlies "3388 passed, 17 deselected, 1 xfailed, 2
+    warnings in 884.13s" and "same, in 887.09s", both "0 / 0", both on "a4be9f7"; health "10-27: 20/20
+    OK", "10-28: 20/20 OK", "One new NV_ERR_NO_MEMORY line at 07:04:06 … inside the llama3.3:70b load",
+    "This boot now has 17 such lines, up from 16"; "NRestarts=0; earlyoom kills by the kill wording: 0";
+    "23 MATCH / 0 MISMATCH"; "now = {rows 280, class_1 94, class_2 55, class_3 131, without_class 0};
+    P1 {25, 24, 12, rows 61}; P6 11; P7 117"; "fix_units 35 (script field) / fix_units_dated_lines 19
+    (literal field: units 37, done 19) / 37, done 20 (dated lines)"; the six chain sha256 values as
+    tabled; "5 entries: pytest-129, -130, -131 … 4,141,734,999 B"; "surgical-cv's uvicorn (pid 11734)
+    only; no pytest".
+  READ (CC's): "It was git add … && check_item0.py | tee 2e_check.txt && git commit …. Without pipefail,
+    the pipe's exit status is tee's"; "Each block of the pair carries its own Transcribed clause,
+    naming its partner block, and its own "ends at" line"; "In Block 116 the clause's "it orders"
+    names copies that R719 orders, not R718"; "two read-only requests at 16:19:34 (HEAD /, GET
+    /api/ps). They are unattributed"; "A whitespace-split regex misread parametrized ids and gave
+    86/111 differences. I re-extracted"; "I added them to the copied host_snapshot.sh"; I12's five
+    clauses as listed.
+  INFERRED: none.
+
+R720(a) — 12y-OPEN is accepted as reported: every step-0 value matched; both nightlies matched
+  expected_nightly_20261027.md line for line on a4be9f7; item 0 landed as ec544a2 (Blocks 116–117,
+  r718.txt and r719.txt at the architect's hashes, the lane line and 18 gate files copied, 0 "−");
+  the ledger c0f3f5a with trailers stands; the gate 3,388 / 1 / 17 on 3,406 / 3,389, 0/0, 893.83 s
+  inside 817–998 s on a quiet box (uvicorn only). The 12y open stands verified. The band series
+  gains 893.83 s.
+R720(b) — Finding 2 is the architect's: the brief's R15 clause omitted the partner-block naming the
+  pair form carries, and Block 116's "it orders" names R719's copies. Blocks 116 and 117 are not
+  edited (R102; a header paragraph once committed is record). 12y-U18A's item 0 appends one dated
+  addendum, in the text the brief carries, after Block 117's "ends at R719." line and before Block
+  118, stating that Blocks 116 and 117 were transcribed in one commit (ec544a2) with the lane-line
+  copy and the 12x-OPEN gate evidence copy ordered by R719(c) and R719(e). From here a brief that
+  transcribes two rulings in one commit carries the pair's clause form, read by CC from the model
+  pair and quoted before use; the architect does not write it.
+R720(c) — Finding 1 is CC's and is accepted as reported: the commit is sound because the check
+  printed PASS, and the chain did not meet R706(e). From here a check-and-commit chain contains no
+  pipe: the check writes its own evidence file (a redirect inside the check, or the script writes
+  it), and the chain is <check> && <commit>, one line, links joined by && (R716(e)). A tee in the
+  chain is a defect of the chain whatever the check printed. No row; a note on R706(e)'s rule in the
+  standing session rules at the next closeout.
+R720(d) — Finding 3 (a per-block "ends at" line) is the pair form, as the record has it; CC was
+  right to follow the record over the brief's "ends at R719." R18's rule held: the record governs.
+R720(e) — Readings, no row: the 16:19:34 HEAD / and GET /api/ps pair in the gate window, as 12x's
+  at 02:30:56 (R711(c)); the dgx-snapshot-user timer's read-only requests at 10:31 on both days
+  (I15); NV_ERR_NO_MEMORY seventeen this boot, the new line inside the 2026-10-28 llama3.3:70b load,
+  which succeeded (dgx-infra; Run 7's confounder statement); the durations reference 2,486 phases
+  against the gate's 2,454 with no phase slower by more than 10 s; the temp root at the open (five
+  entries, 4,141,734,999 B) and after (pytest-130, -131, -132, current); the I12 clauses, all
+  matched at 3e; finding 5's corrected id extraction, the wrong first lines left in place as
+  evidence (never edited); finding 6's widened concurrent-jobs pattern (nvenc, uvicorn added) stands
+  from here as the snapshot's pattern, recorded with the 12y host snapshot. R510 for 12y so far: rows
+  in 0, rows out 0, no class move.
+R720(f) — U18's Phase A opens under the 12y-U18A brief below: read-only, no engine change, no model
+  load; a read-only /api/tags request is a reading (R696(b)). A-4b's row text, its three dated notes
+  (R626(c), R627(b), Wave 1 row 16) and 12l_P1A.md §3's U18 entry are its inputs; the fix is not
+  designed in the Phase A.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-28 | R720(a) — 12y-OPEN is accepted as reported: every step-0 value matched; both nightlies matched expected_nightly_20261027.md line for line on a4be9f7; item 0 landed as ec544a2 (Blocks 116–117, r718.txt and r719.txt at the architect's hashes, the lane line and 18 gate files copied, 0 "−"); the ledger c0f3f5a with trailers stands; the gate 3,388 / 1 / 17 on 3,406 / 3,389, 0/0, 893.83 s inside 817–998 s on a quiet box (uvicorn only). The 12y open stands verified. The band series gains 893.83 s. R720(b) — Finding 2 is the architect's: the brief's R15 clause omitted the partner-block naming the pair form carries, and Block 116's "it orders" names R719's copies. Blocks 116 and 117 are not edited (R102; a header paragraph once committed is record). 12y-U18A's item 0 appends one dated addendum, in the text the brief carries, after Block 117's "ends at R719." line and before Block 118, stating that Blocks 116 and 117 were transcribed in one commit (ec544a2) with the lane-line copy and the 12x-OPEN gate evidence copy ordered by R719(c) and R719(e). From here a brief that transcribes two rulings in one commit carries the pair's clause form, read by CC from the model pair and quoted before use; the architect does not write it. R720(c) — Finding 1 is CC's and is accepted as reported: the commit is sound because the check printed PASS, and the chain did not meet R706(e). From here a check-and-commit chain contains no pipe: the check writes its own evidence file (a redirect inside the check, or the script writes it), and the chain is <check> && <commit>, one line, links joined by && (R716(e)). A tee in the chain is a defect of the chain whatever the check printed. No row; a note on R706(e)'s rule in the standing session rules at the next closeout. R720(d) — Finding 3 (a per-block "ends at" line) is the pair form, as the record has it; CC was right to follow the record over the brief's "ends at R719." R18's rule held: the record governs. R720(e) — Readings, no row: the 16:19:34 HEAD / and GET /api/ps pair in the gate window, as 12x's at 02:30:56 (R711(c)); the dgx-snapshot-user timer's read-only requests at 10:31 on both days (I15); NV_ERR_NO_MEMORY seventeen this boot, the new line inside the 2026-10-28 llama3.3:70b load, which succeeded (dgx-infra; Run 7's confounder statement); the durations reference 2,486 phases against the gate's 2,454 with no phase slower by more than 10 s; the temp root at the open (five entries, 4,141,734,999 B) and after (pytest-130, -131, -132, current); the I12 clauses, all matched at 3e; finding 5's corrected id extraction, the wrong first lines left in place as evidence (never edited); finding 6's widened concurrent-jobs pattern (nvenc, uvicorn added) stands from here as the snapshot's pattern, recorded with the 12y host snapshot. R510 for 12y so far: rows in 0, rows out 0, no class move. R720(f) — U18's Phase A opens under the 12y-U18A brief below: read-only, no engine change, no model load; a read-only /api/tags request is a reading (R696(b)). A-4b's row text, its three dated notes (R626(c), R627(b), Wave 1 row 16) and 12l_P1A.md §3's U18 entry are its inputs; the fix is not designed in the Phase A. | PI, 2026-10-28, during session 12y, on architect recommendation, on the 12y-OPEN final report (ec544a2) |
+
+The decision log in this file ends at R720.

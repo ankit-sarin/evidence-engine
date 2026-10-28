@@ -1,0 +1,37 @@
+== CLAUDE.md
+41:│   ├── utils/                  # tmux background, extraction cleanup, ollama preflight
+86:| judge_runs | Paper 1 LLM-as-judge runs (Pass 1 pairwise rating + Pass 2 fabrication verification). PK `run_id TEXT`. Stores `judge_model_digest` (canonical SHA-256 from Ollama `/api/tags`) and `codebook_sha256`. Migration 007. |
+90:| judge_run_audit | Post-hoc corrections / annotations on judge_runs (open-vocabulary `event_type`, NOT NULL `rationale`, CASCADE FK). First user: the `backfill_judge_model_digest` event (commit 8fefa66). Migration 009. |
+91:| run_manifests · run_stage_configs · run_calls | Migration 020 (S3a/S3b). One `run_manifests` row per run, written **before its first model call** — git commit (`git_dirty` CHECKed to 0), whole-spec hash, codebook hashes, library versions, cloud arms a
+120:- Local models via Ollama at localhost:11434, every call through `engine/utils/ollama_client.ollama_chat` with its settings from the resolver. Temperatures are 0 (the integer at most sites, `0.0` at the FT sites — the literal each has always sent).
+168:  - `ollama_client._restart_ollama_and_retry()` — last-resort recovery after the
+184:    `@patch("engine.utils.ollama_client.subprocess.run")`, or
+185:    `@patch("engine.utils.ollama_preflight.require_preflight")` for anything calling
+186:    `run_extraction` (preflight shells out to `systemctl show` *and* loads a 20 GB model).
+188:- **Ollama fence** (`tests/conftest.py`, U12). A request to the Ollama server from a test is refused with `OllamaCallBlocked` (a `BaseException`) at the httpx transport, the `requests` adapter and `socket.connect`. The server is `OLLAMA_HOST` as the client
+234:  columns NULL, and `(provider <> 'ollama' OR length(model_digest) = 64)` admitted an
+235:  Ollama stage with no digest. Use `IS` / `IS NOT`, or declare the column NOT NULL.
+325:which the prompt hash also uses. `resolve_run` adds the digest (`fetch_model_digest`, `/api/tags`;
+326:`get_model_digest` is retired — C15), `prompt_hash` (the rendered request per stage, never a spec
+331:  `elicitation_pass1`, `vision_parse`, `pdf_quality`, `preflight`, and `cloud:<arm>` per spec arm.
+337:- **The gate instrument** is `tests/test_request_capture.py`: a fake client at `_client.chat` that
+338:  answers `_client.show` (so both input-fit guards run for real), driven through every site,
+346:`SameLineageVerifier` (INT-i12-45), or a digest
+454:- **Sizing:** no private estimator — every model call is checked by the input-fit guard in `engine/utils/ollama_client.py` (INPUT-FIT-01; ratios provisional under CONST-PROV-01).
+580:python -m engine.utils.ollama_preflight --models qwen3.5:27b gemma3:27b deepseek-r1:32b
+634:# QUALGAP-01 runtime A/B (needs a second Ollama on :11435; --probe does pre-flight only)
+== docs/architecture
+docs/architecture/state-machine.md:124:| `extractions` | paper_id, extraction_schema_hash, extracted_data, reasoning_trace, model, model_digest, auditor_model_digest, low_yield | Extraction results + provenance |
+docs/architecture/README.md:58:| Local inference | Ollama (localhost:11434), temperature 0 for all models |
+docs/architecture/models.md:42:All local models run via Ollama at localhost:11434.
+docs/architecture/models.md:56:Three-layer timeout and recovery system (`engine/utils/ollama_client.py`):
+docs/architecture/models.md:89:**Model digest tracking:** `ollama.show()` captures exact model hash at extraction time. Stored in `extractions.model_digest` and `extractions.auditor_model_digest` for reproducibility.
+docs/architecture/pipeline.md:227:**Model digest tracking:** Captures extractor + auditor model digests via `get_model_digest()` at run start. Stored per extraction for reproducibility
+docs/architecture/modules.md:24:- **Tables:** papers (24 columns), abstract_screening_decisions, abstract_verification_decisions, ft_screening_decisions, ft_verification_decisions, full_text_assets, extractions (with model_digest, auditor_model_digest, low_yie
+docs/architecture/modules.md:147:- `extract_paper(paper_id, paper_text, spec, db, model_digest, auditor_model_digest)` — Full two-pass + snippet validation + atomic storage
+docs/architecture/modules.md:370:### `ollama_client.py`
+docs/architecture/modules.md:374:- `n_ctx_train(model)` — trained context via `_client.show`, cached per model per server; `server_context_length()` reads the local systemd unit files
+docs/architecture/modules.md:376:- `get_model_digest(model_name)` — Exact model hash via `ollama.show()`
+docs/architecture/modules.md:403:### `005_model_digest.py`
+docs/architecture/modules.md:404:Adds model_digest + auditor_model_digest columns to extractions table. Idempotent.
+docs/architecture/modules.md:508:| `test_ollama_client.py` | Timeout wrapper, retry, restart recovery |

@@ -1,0 +1,16 @@
+engine/utils/ollama_client.py:4:should call `ollama_chat(...)` instead of `ollama.chat(...)` directly.
+engine/utils/ollama_client.py:59:_client = ollama.Client(timeout=_httpx_timeout)
+engine/utils/ollama_client.py:191:def _client_host() -> str:
+engine/utils/ollama_client.py:202:    key = (_client_host(), model)
+engine/utils/ollama_client.py:206:        info = _client.show(model)
+engine/utils/ollama_client.py:232:    if _client_host() not in _LOCAL_SERVICE_HOSTS:
+engine/utils/ollama_client.py:581:                    _client.chat,
+engine/utils/ollama_client.py:724:            _client.chat,
+engine/utils/ollama_preflight.py:47:        ps = ollama.ps()
+engine/utils/ollama_preflight.py:125:        ps = ollama.ps()
+engine/core/run_manifest.py:39:kwargs handed to `_client.chat`, and a digest of the response). A cloud
+analysis/eval/elicit01/runner.py:91:    v = oc._client._client.get("/api/version").json()["version"]
+analysis/eval/elicit01/runner.py:99:        for m in oc._client.list().get("models", []):
+analysis/eval/run_qualgap01.py:91:    oc._client = ollama.Client(host=host, timeout=oc._httpx_timeout)
+analysis/eval/run_capture01.py:78:    version = oc._client._client.get("/api/version").json()["version"]
+analysis/eval/run_capture01.py:90:        for m in oc._client.list().get("models", []):

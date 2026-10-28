@@ -1,0 +1,14 @@
+### U18 — Digest host equals chat host; digest re-checked per call
+
+- **Rows:** A-4b
+- **Pin effect:** not affecting
+- **Files:** `engine/utils/ollama_client.py`, `engine/core/effective_config.py`, `engine/core/run_manifest.py`
+- **Depends on:** —
+- **Acceptance test** (synthetic; discharges R541): `test_open_run_refuses_when_the_chat_client_host_is_not_the_digest_host` — With the chat client bound to another host and the default digest path in use, `open_run` raises a refusal naming both hosts and writes no manifest row; with one host it opens. A model whose digest changes under the same tag mid-run stops the run at the next call (Wave 1 row 16). Fails on the unmodified tree.
+- **Note:** Ten test modules rebind the client to a fake host and inject `digest_fn`; the refusal keys on the default digest path so they stay valid. Reader findings N27 and N28 (a third hard-coded address; a second notion of host) close here.
+
+== §1 row 513
+| A-4b | confirmed | not affecting | a run-open refusal and a per-call digest comparison; nothing sent changes | 1 | Main row: OLLAMA_HOST set in the launching environment to anything other than localhost:11434 (or `_client` rebound, as analysis harnesses and the test fakes do) while a run opens through the default digest_fn. Sub-finding: an operator or job runs `ollama pull`/`ollama create` on a tag a run has open, during the run. — reachable: conditional (The code is on the Run 7 path (open_run -> resolve_run -> fetch_model_digest, then ollama_chat via _client); it bites only if OLLAMA_HOST is set in the launch environment (the row says it is unset in shell, profile and crontab; I did not re-measure the environment) or a tag is replaced during the 35-38 h run.) | U18 |
+== N27/N28
+| N27 | A-4b | engine/agents/extractor.py::restart_ollama polls a third hard-coded address, httpx.get("http://127.0.0.1:11434/api/tags"), independent of both OLLAMA_BASE_URL and the client host. | 3 | P1 | inside U18 |
+| N28 | A-4b | engine/utils/ollama_client.py::server_context_length treats only _LOCAL_SERVICE_HOSTS as 'the local service', so the input-fit ceiling already branches on the client host while the digest read does not — a second place where the two notions of host can disagree. | — | P1 | a note for U18, no row |

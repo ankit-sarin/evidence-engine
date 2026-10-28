@@ -1,0 +1,18 @@
+== ArmPinMismatch / digest-change tests
+tests/test_extraction_run_link.py:135:def test_t3_a_digest_disagreeing_with_the_pin_refuses_before_selection(db, spec,
+tests/test_extraction_run_link.py:192:def test_t5_the_stored_digests_are_the_manifests(db, spec, fake_ollama):
+tests/test_extraction_run_link.py:215:def test_t5_the_extractor_names_no_digest_fetch():
+tests/test_run_manifest.py:245:def test_a_changed_model_digest_is_a_pin_mismatch(review, spec):
+tests/test_run_manifest.py:252:def test_a_changed_prompt_hash_is_a_pin_mismatch(review, spec):
+tests/test_run_manifest.py:273:def test_a_changed_codebook_hash_is_a_pin_mismatch(review, spec):
+tests/test_run_manifest.py:285:def test_a_digest_failure_refuses_the_run(review, spec):
+tests/test_migration_021_parsed_text_sha256.py:275:def test_the_committed_baseline_matches_the_declared_digest():
+tests/test_ollama_client.py:345:    def test_digest_comes_from_api_tags_not_api_show(self, mock_client):
+tests/test_ollama_client.py:363:    def test_get_model_digest_is_gone(self):
+tests/test_ollama_client.py:386:    def test_well_formed_returns_digest(self):
+tests/test_ollama_client.py:403:    def test_malformed_digest_raises(self):
+tests/test_ollama_client.py:413:    def test_non_hex_digest_raises(self):
+tests/test_run_calls_outcomes.py:158:def test_T4_input_truncated_records_one_refused_row_with_digest_and_raises(db, monkeypatch):
+tests/test_run_calls_outcomes.py:182:def test_T5_input_dropped_records_one_refused_row_with_digest_and_raises(db, monkeypatch):
+== any test asserting a refusal on host mismatch or mid-run digest change
+tests/test_extraction_run_link.py:144:              "host, started_at, manifest_json, manifest_sha256) SELECT 'mismatch', "

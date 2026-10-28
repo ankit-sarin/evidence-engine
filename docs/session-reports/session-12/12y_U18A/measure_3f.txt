@@ -1,0 +1,5 @@
+engine_client_tags       median    2.081 ms  max   11.133 ms  min   1.257  bytes [6595]  status [200]
+engine_client_version    median    0.680 ms  max    0.706 ms  min   0.246  bytes [20]  status [200]
+httpx_get_tags           median   15.115 ms  max   25.444 ms  min  14.475  bytes [6595]  status [200]
+httpx_get_version        median   13.760 ms  max   17.034 ms  min  13.255  bytes [20]  status [200]
+ps before {'models': []} after {'models': []} 2026-10-28T17:21:48.886823+00:00 2026-10-28T17:21:49.578538+00:00

@@ -1,0 +1,11 @@
+None -> http://127.0.0.1:11434
+'localhost' -> http://localhost:11434
+'localhost:11434' -> http://localhost:11434
+'http://localhost:11434' -> http://localhost:11434
+'127.0.0.1' -> http://127.0.0.1:11434
+'0.0.0.0' -> http://0.0.0.0:11434
+'10.1.2.3:4567' -> http://10.1.2.3:4567
+engine _client host: http://127.0.0.1:11434
+OLLAMA_BASE_URL: http://localhost:11434
+ollama module default client host: http://127.0.0.1:11434
+in _LOCAL_SERVICE_HOSTS: True

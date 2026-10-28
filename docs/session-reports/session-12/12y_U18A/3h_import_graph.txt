@@ -1,0 +1,12 @@
+roots: ['scripts/run_pipeline.py', 'engine/agents/extractor.py', 'engine/agents/ft_screener.py', 'engine/agents/auditor.py', 'engine/utils/ollama_preflight.py', 'engine/parsers/pdf_parser.py']
+modules reached: 67
+analysis modules reached: ['analysis/provenance/segment.py']
+analysis/eval/run_qualgap01.py reached: False
+analysis/eval/qualgap01.py reached: False
+analysis/eval/run_capture01.py reached: False
+analysis/eval/elicit01/runner.py reached: False
+analysis/paper1/judge.py reached: False
+engine/utils/ollama_client.py reached: True
+engine/utils/ollama_preflight.py reached: True
+engine/core/run_manifest.py reached: True
+engine/core/effective_config.py reached: True

@@ -1,0 +1,32 @@
+tests/test_qualgap01.py:92:            R.bind_runtime("http://127.0.0.1:11434")
+tests/test_run_pipeline_starts.py:52:        self._client = SimpleNamespace(base_url="http://starts.invalid")
+tests/test_citation_record.py:129:        self._client = SimpleNamespace(base_url="http://u03.invalid")
+tests/test_run_manifest.py:107:        _client = SimpleNamespace(base_url="http://capture.invalid")
+tests/test_extraction_run_link.py:68:        self._client = SimpleNamespace(base_url="http://runlink.invalid")
+tests/test_cut_over.py:82:        self._client = SimpleNamespace(base_url="http://flip.invalid")
+tests/test_ft_bridge.py:55:        self._client = SimpleNamespace(base_url="http://bridge.invalid")
+tests/test_units_as_source_slices.py:196:        self._client = SimpleNamespace(base_url="http://etest.invalid")
+tests/test_request_capture.py:113:        self._client = SimpleNamespace(base_url="http://capture.invalid")
+tests/test_pin_records.py:137:        self._client = SimpleNamespace(base_url="http://pin.invalid")
+tests/conftest.py:287:#     The server is whatever `OLLAMA_HOST` resolves to by the client library's
+tests/conftest.py:361:    urls = {_parse_host(os.environ.get("OLLAMA_HOST")), oc.OLLAMA_BASE_URL,
+tests/conftest.py:362:            *oc._LOCAL_SERVICE_HOSTS, second_server}
+tests/conftest.py:364:        urls.add(oc._client_host())
+tests/test_undeclared_call.py:53:        self._client = SimpleNamespace(base_url="http://undeclared.invalid")
+tests/test_suite_live_fence.py:15:The inner run loads this suite's conftest as a plugin, points `OLLAMA_HOST` at a
+tests/test_suite_live_fence.py:31:# Imported here, before any test moves OLLAMA_HOST: the module builds its client
+tests/test_suite_live_fence.py:54:    env["OLLAMA_HOST"] = f"127.0.0.1:{_unused_port()}"
+tests/test_suite_live_fence.py:96:        return _parse_host(os.environ["OLLAMA_HOST"])
+tests/test_suite_live_fence.py:115:        host, port = os.environ["OLLAMA_HOST"].split(":")
+tests/test_suite_live_fence.py:142:def test_the_fenced_server_is_OLLAMA_HOST_and_the_addresses_the_engine_names(monkeypatch):
+tests/test_suite_live_fence.py:143:    """`extractor.restart_ollama` and `fetch_model_digest` name 127.0.0.1:11434 and
+tests/test_suite_live_fence.py:144:    localhost:11434 outright, whatever OLLAMA_HOST says, so the fence covers both."""
+tests/test_suite_live_fence.py:147:    monkeypatch.setenv("OLLAMA_HOST", "10.1.2.3:4567")
+tests/test_suite_live_fence.py:149:    monkeypatch.setenv("OLLAMA_HOST", "localhost:4567")
+tests/test_suite_live_fence.py:186:            httpx.get(_parse_host(os.environ["OLLAMA_HOST"]) + "/api/tags", timeout=2)
+tests/test_suite_live_fence.py:193:        httpx.get(_parse_host(os.environ["OLLAMA_HOST"]) + "/api/tags", timeout=2)
+tests/test_selection_bound.py:93:        self._client = SimpleNamespace(base_url="http://bound.invalid")
+tests/test_run_fault_predicate.py:231:        self._client = SimpleNamespace(base_url="http://runfault.invalid")
+tests/test_ollama_input_fit.py:18:HOST = "http://127.0.0.1:11434"
+tests/test_ollama_input_fit.py:25:        self._client = SimpleNamespace(base_url=host)
+tests/test_run_interrupts.py:210:        self._client = SimpleNamespace(base_url="http://intr.invalid")

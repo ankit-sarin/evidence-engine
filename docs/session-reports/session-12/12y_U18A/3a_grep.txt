@@ -1,0 +1,141 @@
+engine/utils/ollama_client.py:59:_client = ollama.Client(timeout=_httpx_timeout)
+engine/utils/ollama_client.py:116:_LOCAL_SERVICE_HOSTS = frozenset({"http://127.0.0.1:11434", "http://localhost:11434"})
+engine/utils/ollama_client.py:232:    if _client_host() not in _LOCAL_SERVICE_HOSTS:
+engine/utils/ollama_client.py:346:# /api/show, which does not expose the digest, and returned None on every call —
+engine/utils/ollama_client.py:348:# `fetch_model_digest` below (/api/tags), which raises rather than returning None.
+engine/utils/ollama_client.py:353:OLLAMA_BASE_URL = "http://localhost:11434"
+engine/utils/ollama_client.py:369:    base_url: str = OLLAMA_BASE_URL,
+engine/utils/ollama_client.py:372:    """Return the SHA-256 manifest digest for `model_name` via /api/tags.
+engine/utils/ollama_client.py:374:    The digest is not exposed on /api/show in current Ollama versions; the
+engine/utils/ollama_client.py:375:    canonical structured field is models[].digest on /api/tags. This
+engine/utils/ollama_client.py:386:    url = f"{base_url.rstrip('/')}/api/tags"
+engine/utils/ollama_client.py:388:        resp = httpx.get(url, timeout=timeout)
+engine/utils/ollama_client.py:419:            f"in /api/tags; available={available}"
+engine/utils/ollama_client.py:424:            f"match model_name={model_name!r} in /api/tags"
+engine/agents/ft_screener.py:566:    `git` / `digest_fn` default to the live tree and `/api/tags`."""
+engine/agents/extractor.py:773:    # Poll /api/tags until responsive (max 60s)
+engine/agents/extractor.py:777:            resp = httpx.get("http://127.0.0.1:11434/api/tags", timeout=5)
+engine/migrations/009_add_backfill_audit_log.py:7:canonical fetcher fell back silently when Ollama's /api/show returned no
+engine/migrations/009_add_backfill_audit_log.py:9:`/api/tags models[].digest` with strict validation; this audit table
+engine/core/paper_state.py:158:#: The model's context ceiling could not be read (`/api/show` failed).
+engine/core/effective_config.py:24:  not: the model digest (`fetch_model_digest`, `/api/tags`, which loads no model
+engine/core/effective_config.py:506:    `digest_fn` defaults to `fetch_model_digest` (`/api/tags`; R57) and raises
+engine/core/run_manifest.py:6:call: the only network use is `fetch_model_digest` (`GET /api/tags`, which loads
+engine/acquisition/check_oa.py:37:        resp = requests.get(url, timeout=REQUEST_TIMEOUT)
+engine/acquisition/download.py:72:        resp = requests.get(
+engine/acquisition/download.py:108:        resp = requests.get(
+engine/acquisition/download.py:122:        resp = requests.get(
+engine/acquisition/download.py:133:                resp2 = requests.get(
+engine/acquisition/download.py:158:        resp = requests.get(url, timeout=15)
+engine/acquisition/download.py:175:        resp = requests.get(oa_url, timeout=15)
+engine/acquisition/download.py:183:        resp2 = requests.get(pkg_url, timeout=60, headers={"User-Agent": USER_AGENT},
+engine/acquisition/download.py:211:        resp = requests.get(
+engine/acquisition/download.py:228:        resp2 = requests.get(
+engine/acquisition/download.py:248:        resp3 = requests.get(
+engine/acquisition/download.py:264:        resp = requests.get(
+engine/acquisition/download.py:285:            resp2 = requests.get(
+scripts/pdf_acquisition/step3_download_oa_pdfs.py:47:        resp = requests.get(
+scripts/pdf_acquisition/step3b_retry_failed.py:68:        resp = requests.get(url, timeout=15)
+scripts/pdf_acquisition/step3b_retry_failed.py:82:        resp = requests.get(url, timeout=15)
+scripts/pdf_acquisition/step3b_retry_failed.py:105:        resp = requests.get(
+scripts/pdf_acquisition/step3b_retry_failed.py:128:        resp = requests.get(
+scripts/pdf_acquisition/step3b_retry_failed.py:147:        resp2 = requests.get(
+scripts/pdf_acquisition/step3b_retry_failed.py:171:        resp3 = requests.get(
+scripts/pdf_acquisition/step3b_retry_failed.py:192:        resp = requests.get(
+scripts/pdf_acquisition/step3b_retry_failed.py:209:        resp = requests.get(
+scripts/pdf_acquisition/step3b_retry_failed.py:220:                resp2 = requests.get(
+scripts/pdf_acquisition/step2_unpaywall_check.py:69:        resp = requests.get(url, timeout=15)
+scripts/screen_expanded.py:87:        r = requests.get(
+analysis/eval/qualgap01.py:70:# The runtime under test. Asserted against /api/version before any spend: a
+analysis/eval/qualgap01.py:74:DEFAULT_HOST = "http://127.0.0.1:11435"
+analysis/eval/elicit01/runner.py:91:    v = oc._client._client.get("/api/version").json()["version"]
+analysis/eval/run_qualgap01.py:15:    `OLLAMA_HOST`. `engine.utils.ollama_client` builds its client at import time,
+analysis/eval/run_qualgap01.py:18:    then asserted against /api/version before any spend.
+analysis/eval/run_qualgap01.py:91:    oc._client = ollama.Client(host=host, timeout=oc._httpx_timeout)
+analysis/eval/run_qualgap01.py:94:    resp = httpx.get(f"{host.rstrip('/')}/api/version", timeout=10.0)
+analysis/eval/run_capture01.py:78:    version = oc._client._client.get("/api/version").json()["version"]
+tests/test_qualgap01.py:33:    R.oc._client = client
+tests/test_qualgap01.py:85:                          request=httpx.Request("GET", "http://x/api/version"))
+tests/test_qualgap01.py:92:            R.bind_runtime("http://127.0.0.1:11434")
+tests/test_qualgap01.py:97:        assert R.bind_runtime("http://127.0.0.1:11435") == EXPECTED_SERVER_VERSION
+tests/conftest.py:285:#     and of every bare `httpx.get`), the `requests` adapter, and
+tests/conftest.py:287:#     The server is whatever `OLLAMA_HOST` resolves to by the client library's
+tests/conftest.py:290:#     default, port 11435 (R626(c)). Loopback names are one host. A fake client
+tests/conftest.py:307:_LOOPBACK = frozenset({"localhost", "127.0.0.1", "::1", "0.0.0.0", "::"})
+tests/conftest.py:361:    urls = {_parse_host(os.environ.get("OLLAMA_HOST")), oc.OLLAMA_BASE_URL,
+tests/conftest.py:362:            *oc._LOCAL_SERVICE_HOSTS, second_server}
+tests/test_run_pipeline_starts.py:52:        self._client = SimpleNamespace(base_url="http://starts.invalid")
+tests/test_run_pipeline_starts.py:80:    monkeypatch.setattr(httpx.Client, "send",
+tests/test_citation_record.py:129:        self._client = SimpleNamespace(base_url="http://u03.invalid")
+tests/test_citation_record.py:149:    monkeypatch.setattr(httpx.Client, "send", _refuse)
+tests/test_ft_bridge.py:55:        self._client = SimpleNamespace(base_url="http://bridge.invalid")
+tests/test_ft_bridge.py:82:    monkeypatch.setattr(httpx.Client, "send", _refuse)
+tests/test_units_as_source_slices.py:196:        self._client = SimpleNamespace(base_url="http://etest.invalid")
+tests/test_units_as_source_slices.py:216:    monkeypatch.setattr(httpx.Client, "send", _refuse)
+tests/test_run_manifest.py:107:        _client = SimpleNamespace(base_url="http://capture.invalid")
+tests/test_extraction_run_link.py:68:        self._client = SimpleNamespace(base_url="http://runlink.invalid")
+tests/test_extraction_run_link.py:91:    monkeypatch.setattr(httpx.Client, "send", _refuse)
+tests/test_pin_records.py:137:        self._client = SimpleNamespace(base_url="http://pin.invalid")
+tests/test_pin_records.py:176:    monkeypatch.setattr(httpx.Client, "send",
+tests/test_request_capture.py:113:        self._client = SimpleNamespace(base_url="http://capture.invalid")
+tests/test_request_capture.py:139:    monkeypatch.setattr(httpx.Client, "send", _refuse)
+tests/test_verify_downloads.py:514:        with patch("engine.acquisition.download.requests.get", return_value=mock_resp):
+tests/test_verify_downloads.py:559:            with patch("engine.acquisition.download.requests.get", side_effect=_mock_get):
+tests/test_cut_over.py:82:        self._client = SimpleNamespace(base_url="http://flip.invalid")
+tests/test_cut_over.py:100:    monkeypatch.setattr(httpx.Client, "send",
+tests/test_ollama_client.py:339:    `get_model_digest`: a digest read from /api/show, and None on failure. The
+tests/test_ollama_client.py:340:    first behaviour never held against the real server — /api/show does not
+tests/test_ollama_client.py:348:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:351:        assert mock_get.call_args.args[0].endswith("/api/tags")
+tests/test_ollama_client.py:358:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:374:    """Build a minimal httpx.Response stand-in for /api/tags."""
+tests/test_ollama_client.py:393:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:401:        assert called_url.endswith("/api/tags")
+tests/test_ollama_client.py:408:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:418:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:426:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:438:        with patch("engine.utils.ollama_client.httpx.get",
+tests/test_ollama_client.py:445:        with patch("engine.utils.ollama_client.httpx.get", return_value=resp):
+tests/test_restart_ollama_guard.py:63:             patch("engine.agents.extractor.httpx.get") as mock_get:
+tests/test_restart_ollama_guard.py:78:         patch("engine.agents.extractor.httpx.get") as mock_get:
+tests/test_restart_ollama_guard.py:90:         patch("engine.agents.extractor.httpx.get") as mock_get:
+tests/test_restart_ollama_guard.py:101:             patch("engine.agents.extractor.httpx.get"):
+tests/test_restart_ollama_guard.py:146:         patch("engine.agents.extractor.httpx.get") as mock_get, \
+tests/test_restart_ollama_guard.py:164:         patch("engine.agents.extractor.httpx.get") as mock_get:
+tests/test_restart_ollama_guard.py:196:         patch("engine.agents.extractor.httpx.get") as mock_get, \
+tests/test_suite_live_fence.py:15:The inner run loads this suite's conftest as a plugin, points `OLLAMA_HOST` at a
+tests/test_suite_live_fence.py:31:# Imported here, before any test moves OLLAMA_HOST: the module builds its client
+tests/test_suite_live_fence.py:42:        s.bind(("127.0.0.1", 0))
+tests/test_suite_live_fence.py:54:    env["OLLAMA_HOST"] = f"127.0.0.1:{_unused_port()}"
+tests/test_suite_live_fence.py:91:    import socket, urllib.request
+tests/test_suite_live_fence.py:96:        return _parse_host(os.environ["OLLAMA_HOST"])
+tests/test_suite_live_fence.py:99:        _mark("httpx"); httpx.get(_url() + "/api/tags", timeout=2)
+tests/test_suite_live_fence.py:102:        _mark("client"); ollama.Client().ps()
+tests/test_suite_live_fence.py:108:        _mark("requests"); requests.get(_url() + "/api/tags", timeout=2)
+tests/test_suite_live_fence.py:111:        _mark("urllib"); urllib.request.urlopen(_url() + "/api/tags", timeout=2)
+tests/test_suite_live_fence.py:115:        host, port = os.environ["OLLAMA_HOST"].split(":")
+tests/test_suite_live_fence.py:121:            httpx.get(_url() + "/api/tags", timeout=2)
+tests/test_suite_live_fence.py:142:def test_the_fenced_server_is_OLLAMA_HOST_and_the_addresses_the_engine_names(monkeypatch):
+tests/test_suite_live_fence.py:143:    """`extractor.restart_ollama` and `fetch_model_digest` name 127.0.0.1:11434 and
+tests/test_suite_live_fence.py:144:    localhost:11434 outright, whatever OLLAMA_HOST says, so the fence covers both."""
+tests/test_suite_live_fence.py:147:    monkeypatch.setenv("OLLAMA_HOST", "10.1.2.3:4567")
+tests/test_suite_live_fence.py:148:    assert {("10.1.2.3", 4567), ("loopback", 11434)} <= ollama_endpoints()
+tests/test_suite_live_fence.py:149:    monkeypatch.setenv("OLLAMA_HOST", "localhost:4567")
+tests/test_suite_live_fence.py:154:    """R626(c): `run_qualgap01` targets port 11435 by default. Every loopback name
+tests/test_suite_live_fence.py:160:    assert DEFAULT_HOST.endswith(":11435")
+tests/test_suite_live_fence.py:161:    for name in ("127.0.0.1", "localhost", "::1"):
+tests/test_suite_live_fence.py:162:        assert _endpoint(name, 11435) in ollama_endpoints()
+tests/test_suite_live_fence.py:163:    assert _endpoint("127.0.0.1", 11436) not in ollama_endpoints()
+tests/test_suite_live_fence.py:186:            httpx.get(_parse_host(os.environ["OLLAMA_HOST"]) + "/api/tags", timeout=2)
+tests/test_suite_live_fence.py:193:        httpx.get(_parse_host(os.environ["OLLAMA_HOST"]) + "/api/tags", timeout=2)
+tests/test_undeclared_call.py:53:        self._client = SimpleNamespace(base_url="http://undeclared.invalid")
+tests/test_undeclared_call.py:74:    monkeypatch.setattr(httpx.Client, "send",
+tests/test_selection_bound.py:93:        self._client = SimpleNamespace(base_url="http://bound.invalid")
+tests/test_selection_bound.py:111:    monkeypatch.setattr(httpx.Client, "send",
+tests/test_run_fault_predicate.py:231:        self._client = SimpleNamespace(base_url="http://runfault.invalid")
+tests/test_run_fault_predicate.py:251:    monkeypatch.setattr(httpx.Client, "send", _refuse)
+tests/test_ollama_input_fit.py:18:HOST = "http://127.0.0.1:11434"
+tests/test_ollama_input_fit.py:25:        self._client = SimpleNamespace(base_url=host)
+tests/test_ollama_input_fit.py:133:    _use(monkeypatch, n_ctx_train=131_072, host="http://127.0.0.1:11435")
+tests/test_run_interrupts.py:210:        self._client = SimpleNamespace(base_url="http://intr.invalid")
+tests/test_run_interrupts.py:237:    monkeypatch.setattr(httpx.Client, "send",

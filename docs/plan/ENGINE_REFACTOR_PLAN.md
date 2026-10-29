@@ -905,6 +905,8 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 *Dated 2026-10-26 (12x-U39B, R712(g)):* U39 landed at `1ebb3ae`; INT-v12-1 CLOSED and counted until P1 closes (R607(d)); INT-w12-1 open (audit's variant set, R712(f); the Anthropic arm, F15). P1's fix units 37, done 20 (U01–U17, U37, U38, U39). Rows 280 (94 / 55 / 131, 0 unclassed); rows out 0.
 
+*Dated 2026-10-29 (12z-OPEN item 0, R729(c)):* U18 landed at `e7425b3` and `32fc09e`; A-4b CLOSED on both, with Wave 1 row 16's conditional half, and counted until P1 closes (R728(b), R607(d)). P1's fix units 37, done 21 (U01–U18, U37, U38, U39). Rows 280 (94 / 55 / 131, 0 unclassed); rows out 0.
+
 **L (12w additions, R707).** *Opened 2026-10-25 (12w-CLOSE item 0) under R509, R707(e) and R708(b).* One row from INT-v12-1's Phase A read-out (`12w_V1A_q4_stopped.md`, `8659035`): `INT-w12-1` for its §Q3 census finding that a change made at a stage's call site after its shared builder returns is invisible to that stage's prompt hash, placed in its own table so that the 12v recount's bounds are unchanged. The text cell is R708's sentence (a), quoted unchanged (its line wrap joined); class and package are R707(e)'s; the evidence cell is R708(b)'s and R708(c)'s. Its fix is B's equality test extended to every hashed stage on the local run path, in U39 (R707(e)).
 
 | # | On disk (`12w_V1A_q4_stopped.md` §Q3, quoted) | Class | Owning package | Governing ruling | Evidence |
@@ -11729,3 +11731,91 @@ R728(f) — U19's Phase A opens under the 12y-U19A brief: 12l_P1A.md §3's next 
 | 2026-10-28 | R728(a) — U18 commit 2 is accepted as landed: 32fc09e (the digest read on every local call under a run through the run's digest_fn, compared with the stage's recorded digest before the input-fit read and the send; ModelDigestChanged a RunRefused in the run-fault tuple, closing 'aborted' with its reason on both production runners; the context-length cache keyed by digest under a run; ten acceptance ids red on the parent and green in the commit; the gate 3,411 / 1 / 17 on 3,429 / 3,412, +12 exactly, 895.61 s inside the band on a quiet box). Item 0 2c67bfc (Blocks 121–124) and ledgers fbfdda4, a14e360 stand. Pins and every prompt_hash unchanged; no request byte moved. The series gains 895.61 s. R728(b) — U18 is closed; fix units done 21 of 37. A-4b is CLOSED on e7425b3 and 32fc09e (R514): the digest is read through the chat client, a non-loopback host is refused at open, and a mid-run digest change refuses before the send and closes the run 'aborted'. Wave 1 row 16's conditional half (a tag replaced under the same tag mid-run attributed to the opening digest) closes with it: the per-call check compares digests, not names. One dated CLOSED note on A-4b at 12y-U19A's item 0, in INT-v12-1's form (R712(g)), stating both closures and their evidence; the row is counted until P1 closes (R607(d)). The ollama_host column stays owed to 023 (P6). R728(c) — CC's handling of the digest read's own faults (finding 3) is accepted as built and recorded: a refused or timed-out connection re-raises as itself (the run fault R532 makes it), any other unreadable digest refuses as ModelDigestChanged with the read value None. It was not in the brief; it is the safe direction and it is tested by the commit's gate as part of the class's behaviour. The commit's record states it; no row. R728(d) — R117 ("the run never fetches a digest of its own") is amended by a dated addendum to its row in the decision log at 12y-U19A's item 0: from 32fc09e the run reads a digest on every local call through the digest_fn it was opened with, production resolving fetch_model_digest; the fixtures that cite R117 inject digest_fn and stay as written (their comments are stale and are not edited; a note on the HK-ARCH line's neighbour is not needed — the addendum is the record). R728(e) — Readings, no row: the check-to-send window, a replacement during a call and the restart retry's resend without a re-check (finding 1) are recorded limits of U18, carried to Run 7's confounder statement; ModelDigestChanged described beside the active-run sentence, not in open_run's list (finding 2); the message form set by E1 and E5 together (finding 4); the constructor convention RUN_REFUSED_MEMBERS pins (finding 5); the acceptance ids run red twice, the second against an archive export of the parent, accepted as the red evidence. The six stops of U18 — five the architect's, one the gate's — are one line on the closeout's most-violated list: scope, counts and close semantics written from a description instead of read from the record. R510 for 12y: rows in 0, rows out 0, no class move. R728(f) — U19's Phase A opens under the 12y-U19A brief: 12l_P1A.md §3's next unit in its order, read-only, in the Phase A form of 12y-U18A, with the census pre-step and the R725(b) rule carried into its build brief. If §3's next unit has been closed or absorbed by a later ruling, the brief's I2 catches it and CC reports the next open unit instead. | PI, 2026-10-28, during session 12y, on architect recommendation, on the 12y-U18C final report (2c67bfc; 32fc09e) |
 
 The decision log in this file ends at R728.
+
+**Block 127.** *Transcribed 2026-10-29 (item 0 of the 12z-OPEN brief as resumed under R730), in its own commit with the U18 dated fix-unit line and the lane-line copy it orders and the addendum R730(b) orders, in the R597(e) form:* ruling R729, made by PI on architect recommendation on 2026-10-28 UTC, during session 12y, on the 12y-CLOSE closeout block (`22a21bbb4be2d8e49072203eba7d5cadda6f7871`). The 12z-OPEN task brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12y-R729] — wrap ruling: closeout accepted; the band set 822–1003 s; a dated
+  fix-unit line for U18 at 12z-OPEN; the addendum form and the worktree element accepted; lane
+  line approved and applied; R728(f) superseded; close now
+STATUS: PI ruling, 2026-10-28 UTC, session 12y, on architect recommendation, on the 12y-CLOSE
+  closeout block (22a21bb4be2d8e49072203eba7d5cadda6f7871). Transcribe as item 0 of 12z-OPEN
+  (Block 127), not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block and report):
+  MEASURED: "HEAD: 22a21bb4be2d8e49072203eba7d5cadda6f7871, parent
+    0f83f4674a36a0cc96d53adcc2d9454b3480d322; status[], lr[0 0]; one worktree"; "Plan: sha256
+    b86b448945b69bfbdee27305cfd3c9fb22f4f5b457d160518e4cce9a5c10c3d0, 2,196,297 bytes, 11,731
+    lines. The last line is "The decision log in this file ends at R728.""; "Item 0 0f83f46: 3
+    files, +149 / −1. The "−" is the A-4b row"; "Closeout 22a21bb: 28 files changed, 18687
+    insertions(+)"; "git diff --stat 32fc09e HEAD -- engine tests scripts analysis review_specs is
+    empty"; "Ledger commits: b63e331 (row 19:57:30Z) and 5baeb2c ("ledger: rows through
+    2026-10-28T20:01:11Z", parent b63e331); both with trailers, 0 0"; "primer.md is untouched; its
+    last commit is 27e3c5f"; fingerprint IDENTICAL "at this block (20:02:02Z)"; lane line "sha256
+    b06a68555a4283152ec5d7eb8838e2e875ce6b1befd2373774d4826d83bbe5c7, 5,772 bytes, 10 lines",
+    "five − lines == primer.md 41–45: True"; "280 rows (94 / 55 / 131, 0 unclassed); P1 61 (25 /
+    24 / 12); P6 11; P7 117"; "35 (script field) / 37, done 21 (R728(b); the dated lines still
+    read 20) / literal 19"; "R510: in 0, out 0"; "Retention 23 / 0; probe scratch 10 / 53";
+    "Temp root 4 entries, 2,933,825,965 B"; "/api/ps: {"models":[]} (20:02:02Z)"; "the mean of
+    (920.32, 893.83, 939.40, 895.61) is 912.29 s; ×0.9 = 821.061 and ×1.1 = 1003.519, so 822–1003 s
+    proposed. Two of the four inputs are confounded"; "dc9f61b7-39e2-4cc6-ae86-dd391b660667, first
+    user message at 2026-10-28T16:08:35Z"; the eleven ruling files as tabled, each "="; the
+    archive command as printed; "expected_nightly_20261029.md is written (3429 / 17 / 3412; 3411
+    passed)"; "NV_ERR_NO_MEMORY 17 this boot".
+  READ (CC's): "I wrote "Addendum 2026-10-28 (12y-CLOSE item 0, R728(d)), to the R117 row:""; "after
+    "ends at R726." and before Block 125"; "I added "one worktree" to Repository, following 12x's
+    HEAD line"; "Three of the session's four gate runs ran beside surgical-cv work".
+  INFERRED: none.
+
+R729(a) — The 12y-CLOSE closeout block is accepted as printed. Item 0 0f83f46 (Blocks 125–126, the
+  A-4b CLOSED note, the R117 addendum) and the closeout commit 22a21bb stand; ledgers b63e331 and
+  5baeb2c with trailers stand.
+R729(b) — The band for 12z is 822–1003 s: ±10% of 912.29 s, the mean of the last four standard
+  gates on this host state (920.32, 893.83, 939.40, 895.61), rounded inward as R683(c) rounded,
+  the two confounded gates (920.32 and 939.40, beside surgical-cv pytest runs) included with
+  their confounders recorded. The series stands at 871.59, 906.50, 858.50, 895.02, 872.27,
+  887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32, 893.83,
+  939.40, 895.61 s; the red run 916.95 s is not a member. A 12z gate outside the band is reported
+  with its concurrent jobs, not adapted to.
+R729(c) — Readings and notes, no row: the R117 addendum's label naming its row and its placement in
+  the ends-at-era form (findings 1, 2) are the record's form from here; the "one worktree" element
+  (finding 4) is accepted — the closeout block's element order of record is 12x's and 12y's as
+  printed, with that element, and closeout_12s_found.txt stands as the earlier form; the gate
+  confounding (finding 5) goes to the dgx-infra cross-lane item with the foreign ledger commit
+  4525a44 (R726(b)); NVRM seventeen this boot; R728(f) is superseded by the PI's choice to close
+  12y after U18 — recorded in the closure, the ruling text not edited (R102). The fix-unit count is
+  21 by R728(b); the dated lines read 20: 12z-OPEN's item 0 writes one dated fix-unit line for U18
+  in the form the dated lines take (read and quote it), so the dated lines are the count of record
+  again (R714(c)); its "−" count is whatever the form shows, computed by CC (R723(a)).
+R729(d) — The lane line (sha256 b06a68555a4283152ec5d7eb8838e2e875ce6b1befd2373774d4826d83bbe5c7,
+  5,772 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines
+  41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five
+  "+" lines, applied from the file, not from a paste; commit primer.md together with any
+  uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows
+  named by hash), push, level.
+R729(e) — 12z-OPEN's startup verify checks claude-config at the commit the wrap leaves (the
+  lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign
+  commits and rows per R653(c), R654(d), R663(b). 12z's item 0 transcribes this ruling as Block
+  127, writes the U18 dated fix-unit line, and copies lane_line_12y.txt into
+  docs/session-reports/session-12/12y_close/, verified by its "−" count as computed (R723(a)). No
+  closeout gate ran: the expected gate values for 12z are 32fc09e's on unchanged code (3,411 / 1
+  xfailed / 17 deselected, collected 3,429 / selected 3,412; 0/0 against
+  12y_close/collected_ids_12y_close.txt; band 822–1003 s, with the concurrent jobs named and the
+  snapshot's own PIDs excluded); the 2026-10-29 09:00 UTC nightly runs on the HEAD then pushed,
+  whose engine tree equals 32fc09e's, expected 3,411 / 17 / 1 on 3,429 / 3,412, exit 0,
+  12y_close/expected_nightly_20261029.md governing; the 07:00 health job's loads are read and
+  reported by 12z-OPEN, with an NVRM grep (seventeen before it); a read-only request in any window
+  is a reading (R696(b)). The temp root is read, never matched. Residency is a reading. 12z-OPEN's
+  pre-check reads the process table for leftovers of session dc9f61b7 (R692's form). Then U19's
+  Phase A, in the form R728(f) states.
+R729(f) — Session 12y closes now. After R729(d) has landed, run /wrap. Report the archive command;
+  the closeout block stands.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-28 | R729(a) — The 12y-CLOSE closeout block is accepted as printed. Item 0 0f83f46 (Blocks 125–126, the A-4b CLOSED note, the R117 addendum) and the closeout commit 22a21bb stand; ledgers b63e331 and 5baeb2c with trailers stand. R729(b) — The band for 12z is 822–1003 s: ±10% of 912.29 s, the mean of the last four standard gates on this host state (920.32, 893.83, 939.40, 895.61), rounded inward as R683(c) rounded, the two confounded gates (920.32 and 939.40, beside surgical-cv pytest runs) included with their confounders recorded. The series stands at 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32, 893.83, 939.40, 895.61 s; the red run 916.95 s is not a member. A 12z gate outside the band is reported with its concurrent jobs, not adapted to. R729(c) — Readings and notes, no row: the R117 addendum's label naming its row and its placement in the ends-at-era form (findings 1, 2) are the record's form from here; the "one worktree" element (finding 4) is accepted — the closeout block's element order of record is 12x's and 12y's as printed, with that element, and closeout_12s_found.txt stands as the earlier form; the gate confounding (finding 5) goes to the dgx-infra cross-lane item with the foreign ledger commit 4525a44 (R726(b)); NVRM seventeen this boot; R728(f) is superseded by the PI's choice to close 12y after U18 — recorded in the closure, the ruling text not edited (R102). The fix-unit count is 21 by R728(b); the dated lines read 20: 12z-OPEN's item 0 writes one dated fix-unit line for U18 in the form the dated lines take (read and quote it), so the dated lines are the count of record again (R714(c)); its "−" count is whatever the form shows, computed by CC (R723(a)). R729(d) — The lane line (sha256 b06a68555a4283152ec5d7eb8838e2e875ce6b1befd2373774d4826d83bbe5c7, 5,772 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal the file's five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md together with any uncommitted hook row ("ledger" form, with trailers, the row's exact timestamp, foreign rows named by hash), push, level. R729(e) — 12z-OPEN's startup verify checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12z's item 0 transcribes this ruling as Block 127, writes the U18 dated fix-unit line, and copies lane_line_12y.txt into docs/session-reports/session-12/12y_close/, verified by its "−" count as computed (R723(a)). No closeout gate ran: the expected gate values for 12z are 32fc09e's on unchanged code (3,411 / 1 xfailed / 17 deselected, collected 3,429 / selected 3,412; 0/0 against 12y_close/collected_ids_12y_close.txt; band 822–1003 s, with the concurrent jobs named and the snapshot's own PIDs excluded); the 2026-10-29 09:00 UTC nightly runs on the HEAD then pushed, whose engine tree equals 32fc09e's, expected 3,411 / 17 / 1 on 3,429 / 3,412, exit 0, 12y_close/expected_nightly_20261029.md governing; the 07:00 health job's loads are read and reported by 12z-OPEN, with an NVRM grep (seventeen before it); a read-only request in any window is a reading (R696(b)). The temp root is read, never matched. Residency is a reading. 12z-OPEN's pre-check reads the process table for leftovers of session dc9f61b7 (R692's form). Then U19's Phase A, in the form R728(f) states. R729(f) — Session 12y closes now. After R729(d) has landed, run /wrap. Report the archive command; the closeout block stands. | PI, 2026-10-28, during session 12y, on architect recommendation, on the 12y-CLOSE closeout block (22a21bb) |
+
+The decision log in this file ends at R729.
+
+*Addendum 2026-10-29 (12z-OPEN item 0, R730(b)), to Block 127:* R729's STATUS line and its MEASURED quote of the closeout block carry the 12y closeout commit as `22a21bb4be2d8e49072203eba7d5cadda6f7871` (39 characters), as 12y-CLOSE's printed closeout block and `lane_line_12y.txt` line 6 carry it; the commit is `22a21bbb4be2d8e49072203eba7d5cadda6f7871` (`git rev-parse HEAD`, 12z-OPEN step 0b). The ruling text and the lane-line file are not edited (R102); Block 127's header names the commit by the 40-character hash. primer.md line 41 carries the same string until the 12z lane line replaces lines 41–45 at the 12z wrap. R730(b).

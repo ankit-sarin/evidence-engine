@@ -1,0 +1,18 @@
+gate ids 3434 ref 3434
+only-gate: 0; only-ref: 0
+only-gate == the new ids: True (0 new)
+phases ref 2527 gate 2514
+slower by >10 s: 0
+-- summary line
+==== 3433 passed, 17 deselected, 1 xfailed, 2 warnings in 907.28s (0:15:07) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)
+-- journal ollama 17:57:09 .. 18:12:19
+-- No entries --

@@ -1,0 +1,2 @@
+2026-10-30T17:57:09.876987673Z launched by the line below, written into the evidence directory at launch (R731(b), R732(d))
+tmux new-session -d -s gate_12aa "bash /home/ankitsarin/scratch/12aa-open/gate/run_gate.sh"

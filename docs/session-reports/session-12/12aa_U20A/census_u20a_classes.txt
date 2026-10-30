@@ -1,0 +1,102 @@
+## i_patch_name: 4 hits in 2 files
+   tests/test_ollama_input_fit.py 51 ::service SERVICE_UNIT_FILE
+   tests/test_ollama_input_fit.py 52 ::service SERVICE_DROPIN_DIR
+   tests/test_u19_local_service.py 98 ::test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers SERVICE_UNIT_FILE
+   tests/test_u19_local_service.py 99 ::test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers SERVICE_DROPIN_DIR
+## i_patch_string: 32 hits in 5 files
+   tests/test_ollama_client.py 55 ::TestWatchdogTimeout::test_watchdog_fires_on_hang 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 79 ::TestWatchdogTimeout::test_watchdog_retries_then_raises 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 103 ::TestWatchdogTimeout::test_successful_call_returns_response 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 118 ::TestWatchdogTimeout::test_transient_failure_then_success 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 143 ::TestTimeoutLogging::test_timeout_logs_warning 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 179 ::TestKwargsPassThrough::test_format_and_options_forwarded 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 205 ::TestOllamaRestartRecovery::test_restart_attempted_after_retries_exhausted 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 233 ::TestOllamaRestartRecovery::test_restart_success_then_call_succeeds 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 255 ::TestOllamaRestartRecovery::test_restart_failure_raises_original_timeout 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 277 ::TestOllamaRestartRecovery::test_restart_logs_warning 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 312 ::TestOllamaRestartRecovery::test_restart_ollama_and_retry_raises_on_post_restart_failure 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 344 ::TestTheDigestRoute::test_digest_comes_from_api_tags_not_api_show 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 348 ::TestTheDigestRoute::test_digest_comes_from_api_tags_not_api_show 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 358 ::TestTheDigestRoute::test_api_failure_raises_never_returns_none 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 393 ::TestFetchModelDigest::test_well_formed_returns_digest 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 408 ::TestFetchModelDigest::test_malformed_digest_raises 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 418 ::TestFetchModelDigest::test_non_hex_digest_raises 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 426 ::TestFetchModelDigest::test_missing_model_raises 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 438 ::TestFetchModelDigest::test_ambiguous_multiple_matches_raises 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 445 ::TestFetchModelDigest::test_non_200_status_raises 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_preflight.py 54 ::TestPreflightCheck::test_all_ok_returns_success 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 73 ::TestPreflightCheck::test_vram_filters_to_relevant_models 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 93 ::TestPreflightCheck::test_vram_unrelated_model_does_not_cause_rejection 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 114 ::TestPreflightCheck::test_one_failure_returns_failure 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 226 ::TestRequirePreflight::test_raises_on_failure 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 236 ::TestRequirePreflight::test_passes_silently_on_success 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 347 ::TestRunnerIntegration::test_runner_proceeds_on_preflight_success 'engine.utils.ollama_client._client.ps'
+   tests/test_restart_recovery_guard.py 92 ::test_restart_proceeds_under_self_lock 'engine.utils.ollama_client._client'
+   tests/test_restart_recovery_guard.py 105 ::test_restart_proceeds_when_lock_is_free 'engine.utils.ollama_client._client'
+   tests/test_restart_recovery_guard.py 159 ::test_refusal_surfaces_as_timeout_from_ollama_chat 'engine.utils.ollama_client._client'
+   tests/test_run_pipeline_starts.py 168 ::test_a_start_that_screens_declares_and_sends_the_screening_preflight 'engine.utils.ollama_client._client.ps'
+   tests/test_undeclared_call.py 177 ::test_an_undeclared_preflight_leaves_require_preflight_as_itself 'engine.utils.ollama_client._client.ps'
+## ii_module_alias_client_replaced: 22 hits in 17 files
+   tests/test_citation_record.py 151 ::fake_ollama
+   tests/test_cut_over.py 102 ::fake_models
+   tests/test_extraction_run_link.py 93 ::fake_ollama
+   tests/test_ft_bridge.py 93 ::fake
+   tests/test_ollama_input_fit.py 61 ::_use
+   tests/test_pin_records.py 181 ::test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry
+   tests/test_request_capture.py 150 ::capture::install
+   tests/test_run_calls_outcomes.py 97 ::test_T1_success_records_one_completed_row
+   tests/test_run_calls_outcomes.py 159 ::test_T4_input_truncated_records_one_refused_row_with_digest_and_raises
+   tests/test_run_calls_outcomes.py 183 ::test_T5_input_dropped_records_one_refused_row_with_digest_and_raises
+   tests/test_run_calls_outcomes.py 209 ::test_T6_client_exception_after_retries_records_one_error_row_and_raises
+   tests/test_run_calls_outcomes.py 245 ::test_T8_success_refusal_success_in_order
+   tests/test_run_fault_predicate.py 257 ::fake_ollama
+   tests/test_run_interrupts.py 241 ::test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it
+   tests/test_run_manifest.py 121 ::test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded
+   tests/test_run_pipeline_starts.py 98 ::review
+   tests/test_selection_bound.py 115 ::fake_models
+   tests/test_u18_digest_per_call.py 100 ::fake
+   tests/test_u18_one_host.py 67 ::_bind
+   tests/test_u18_one_host.py 235 ::test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run
+   tests/test_undeclared_call.py 77 ::fake
+   tests/test_units_as_source_slices.py 218 ::fake_ollama
+## iii_show_count_pin: 6 hits in 5 files
+   tests/test_auditor.py 91 ::test_normalize_glued_punctuation _normalize('Table.I shows') == 'table i shows'
+   tests/test_ollama_input_fit.py 143 ::test_the_trained_context_is_read_once_per_model client.shows == ['a', 'b']
+   tests/test_pin_records.py 188 ::test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry client.shows == []
+   tests/test_request_capture.py 410 ::test_the_fake_client_was_hit_not_a_server fake.shows == ['qwen3:8b']
+   tests/test_u18_digest_per_call.py 237 ::test_u18_the_context_length_cache_is_keyed_by_digest fake.shows == [model, model]
+   tests/test_u18_digest_per_call.py 242 ::test_u18_the_context_length_cache_is_keyed_by_digest fake.shows == [model, model]
+## show_fake_def: 15 hits in 15 files
+   tests/test_citation_record.py 131 ::_Client::show
+   tests/test_cut_over.py 84 ::_Client::show
+   tests/test_extraction_run_link.py 70 ::_Client::show
+   tests/test_ft_bridge.py 57 ::FakeClient::show
+   tests/test_ollama_input_fit.py 32 ::StubClient::show
+   tests/test_pin_records.py 139 ::_Client::show
+   tests/test_request_capture.py 115 ::FakeClient::show
+   tests/test_run_fault_predicate.py 237 ::_Client::show
+   tests/test_run_interrupts.py 214 ::_InterruptingClient::show
+   tests/test_run_manifest.py 109 ::test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded::Fake::show
+   tests/test_run_pipeline_starts.py 54 ::FakeClient::show
+   tests/test_selection_bound.py 97 ::_Client::show
+   tests/test_u18_digest_per_call.py 59 ::FakeClient::show
+   tests/test_undeclared_call.py 55 ::FakeClient::show
+   tests/test_units_as_source_slices.py 198 ::_ElicitedClient::show
+## show_field_read: 1 hits in 1 files
+   tests/test_auditor.py 158 ::test_semantic_verify_mocked
+## v_whole_function: 15 hits in 6 files
+   tests/test_audit_paper_id.py 72 ::_fixed_ceiling effective_ceiling
+   tests/test_ollama_client.py 27 ::_fixed_input_fit_ceiling effective_ceiling
+   tests/test_presented_context.py 53 ::_fixed_ceiling effective_ceiling
+   tests/test_presented_context.py 117 ::test_T1_pre_call_refusal_hash_equals_the_recorded_row _check_input_fits
+   tests/test_restart_recovery_guard.py 44 ::fixed_input_fit_ceiling effective_ceiling
+   tests/test_run_calls_outcomes.py 32 ::_passthrough_input_fit _check_input_fits
+   tests/test_run_calls_outcomes.py 36 ::_passthrough_input_fit _check_input_was_read
+   tests/test_run_calls_outcomes.py 118 ::test_T2_input_overflow_records_one_refused_row_and_raises _check_input_fits
+   tests/test_run_calls_outcomes.py 140 ::test_T3_ceiling_unavailable_records_one_refused_row_and_raises _check_input_fits
+   tests/test_run_calls_outcomes.py 164 ::test_T4_input_truncated_records_one_refused_row_with_digest_and_raises _check_input_was_read
+   tests/test_run_calls_outcomes.py 188 ::test_T5_input_dropped_records_one_refused_row_with_digest_and_raises _check_input_was_read
+   tests/test_run_calls_outcomes.py 230 ::test_T7_no_active_manifest_refuses_and_records_nothing _check_input_fits
+   tests/test_run_calls_outcomes.py 251 ::test_T8_success_refusal_success_in_order _check_input_fits
+   tests/test_run_calls_outcomes.py 255 ::test_T8_success_refusal_success_in_order _check_input_fits
+   tests/test_u18_digest_per_call.py 205 ::test_u18_the_digest_check_precedes_the_input_fit_read _check_input_fits

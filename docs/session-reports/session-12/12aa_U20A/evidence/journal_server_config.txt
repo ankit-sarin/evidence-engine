@@ -1,0 +1,2 @@
+msg="server config"
+OLLAMA_CONTEXT_LENGTH:0

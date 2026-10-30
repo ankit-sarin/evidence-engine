@@ -1,0 +1,433 @@
+engine/agents/extractor.py:40  [<module>]  import is_run_fault
+engine/agents/extractor.py:52  [<module>]  import InputFitError
+engine/agents/extractor.py:1161  [<module>._extract_selected.record_failure]  string-name ['is_run_fault'] "Write what the refusal left — the paper's failure event, or the\n        exhausted attempt's record i"
+engine/agents/extractor.py:437  [<module>._retry_snippet]  name is_run_fault
+engine/agents/extractor.py:447  [<module>._retry_snippet]  name is_run_fault
+engine/agents/extractor.py:1215  [<module>._extract_selected]  name is_run_fault
+engine/agents/extractor.py:1242  [<module>._extract_selected]  name InputFitError
+engine/agents/extractor.py:1245  [<module>._extract_selected]  string ['input_fit'] ' | input_fit='
+engine/core/effective_config.py:69  [<module>]  string ['num_ctx'] 'num_ctx'
+engine/core/effective_config.py:106  [<module>.EffectiveConfig]  string ['num_ctx'] 'Everything one call site sends, and where each value came from.\n\n    `options` is exactly the option'
+engine/core/effective_config.py:244  [<module>._unsent]  string ['num_ctx'] 'R66/R69: seed and num_ctx are sent only if the spec declares them.'
+engine/core/effective_config.py:359  [<module>.stage_config]  string ['num_ctx'] 'num_ctx'
+engine/core/effective_config.py:358  [<module>.stage_config]  string ['num_ctx'] 'num_ctx'
+engine/core/effective_config.py:358  [<module>.stage_config]  string ['num_ctx'] 'options.num_ctx'
+engine/core/effective_config.py:358  [<module>.stage_config]  string ['num_ctx'] 'vision_num_ctx'
+engine/core/effective_config.py:373  [<module>.stage_config]  string ['num_ctx'] 'options.num_ctx'
+engine/core/extraction_events.py:429  [<module>.run_fault_classes]  def run_fault_classes
+engine/core/extraction_events.py:478  [<module>.is_run_fault]  def is_run_fault
+engine/core/extraction_events.py:504  [<module>.outcome_for_exception]  import InputDropped
+engine/core/extraction_events.py:504  [<module>.outcome_for_exception]  import InputOverflow
+engine/core/extraction_events.py:504  [<module>.outcome_for_exception]  import InputTruncated
+engine/core/extraction_events.py:467  [<module>.run_fault_classes]  import CeilingUnavailable
+engine/core/extraction_events.py:505  [<module>.outcome_for_exception]  name is_run_fault
+engine/core/extraction_events.py:523  [<module>.outcome_for_exception]  name InputOverflow
+engine/core/extraction_events.py:524  [<module>.outcome_for_exception]  name InputTruncated
+engine/core/extraction_events.py:525  [<module>.outcome_for_exception]  name InputDropped
+engine/core/extraction_events.py:469  [<module>.run_fault_classes]  name CeilingUnavailable
+engine/core/extraction_events.py:481  [<module>.is_run_fault]  name run_fault_classes
+engine/core/extraction_events.py:719  [<module>.write_extraction_events]  string ['input_fit'] 'input_fit'
+engine/core/paper_state.py:156  [<module>]  string ['input_truncated_at_ceiling'] 'input_truncated_at_ceiling'
+engine/core/run_manifest.py:1106  [<module>.check_call_digest]  import module engine.utils.ollama_client as oc
+engine/core/run_manifest.py:485  [<module>.open_run]  import is_local_service_host
+engine/core/run_manifest.py:776  [<module>.active_stage_row]  string-name ['_option'] "The active run's declared `(options_hash, options_json)` for `stage`\n    (R223), or `None` outside a"
+engine/core/run_manifest.py:486  [<module>.open_run]  name is_local_service_host
+engine/migrations/022_run_kinds_and_audit_tables.py:140  [<module>]  string ['refused_input_truncated'] 'refused_input_truncated'
+engine/parsers/pdf_parser.py:262  [<module>.parse_with_vision]  string ['num_ctx'] 'num_ctx'
+engine/utils/ollama_client.py:97  [<module>.is_local_service_host]  def is_local_service_host
+engine/utils/ollama_client.py:233  [<module>.clear_ceiling_cache]  def clear_ceiling_cache
+engine/utils/ollama_client.py:243  [<module>.n_ctx_train]  def n_ctx_train
+engine/utils/ollama_client.py:275  [<module>.parse_environment_line]  def parse_environment_line
+engine/utils/ollama_client.py:289  [<module>.server_context_length]  def server_context_length
+engine/utils/ollama_client.py:327  [<module>._option]  def _option
+engine/utils/ollama_client.py:336  [<module>.effective_ceiling]  def effective_ceiling
+engine/utils/ollama_client.py:356  [<module>.message_chars]  def message_chars
+engine/utils/ollama_client.py:366  [<module>._check_input_fits]  def _check_input_fits
+engine/utils/ollama_client.py:378  [<module>._check_input_was_read]  def _check_input_was_read
+engine/utils/ollama_client.py:501  [<module>.server_ps]  def server_ps
+engine/utils/ollama_client.py:138  [<module>]  name RATIO_MIN
+engine/utils/ollama_client.py:144  [<module>]  name RATIO_DROP
+engine/utils/ollama_client.py:152  [<module>]  name SERVER_DEFAULT_CTX
+engine/utils/ollama_client.py:157  [<module>]  name SERVICE_UNIT_FILE
+engine/utils/ollama_client.py:158  [<module>]  name SERVICE_DROPIN_DIR
+engine/utils/ollama_client.py:160  [<module>]  name _CEILING_CACHE
+engine/utils/ollama_client.py:165  [<module>]  name _CALL_DIGEST
+engine/utils/ollama_client.py:186  [<module>.CeilingUnavailable]  name InputFitError
+engine/utils/ollama_client.py:197  [<module>.InputOverflow]  name InputFitError
+engine/utils/ollama_client.py:209  [<module>.InputTruncated]  name InputFitError
+engine/utils/ollama_client.py:221  [<module>.InputDropped]  name InputFitError
+engine/utils/ollama_client.py:260  [<module>.n_ctx_train]  name modelinfo
+engine/utils/ollama_client.py:276  [<module>.parse_environment_line]  string-name ['server_context_length'] 'A systemd `Environment=` value as a map: `shlex`-split, so a quoted value with a\n    space is one to'
+engine/utils/ollama_client.py:290  [<module>.server_context_length]  string ['OLLAMA_CONTEXT_LENGTH'] 'OLLAMA_CONTEXT_LENGTH as the local systemd service sets it, or None.\n\n    Only for the local service'
+engine/utils/ollama_client.py:254  [<module>.n_ctx_train]  name _CEILING_CACHE
+engine/utils/ollama_client.py:260  [<module>.n_ctx_train]  string-name ['modelinfo'] 'modelinfo'
+engine/utils/ollama_client.py:271  [<module>.n_ctx_train]  name _CEILING_CACHE
+engine/utils/ollama_client.py:299  [<module>.server_context_length]  name SERVICE_UNIT_FILE
+engine/utils/ollama_client.py:345  [<module>.effective_ceiling]  name n_ctx_train
+engine/utils/ollama_client.py:346  [<module>.effective_ceiling]  name _option
+engine/utils/ollama_client.py:346  [<module>.effective_ceiling]  string ['num_ctx'] 'num_ctx'
+engine/utils/ollama_client.py:349  [<module>.effective_ceiling]  name SERVER_DEFAULT_CTX
+engine/utils/ollama_client.py:350  [<module>.effective_ceiling]  name server_context_length
+engine/utils/ollama_client.py:368  [<module>._check_input_fits]  name effective_ceiling
+engine/utils/ollama_client.py:369  [<module>._check_input_fits]  name message_chars
+engine/utils/ollama_client.py:370  [<module>._check_input_fits]  name RATIO_MIN
+engine/utils/ollama_client.py:391  [<module>._check_input_was_read]  string ['input_fit'] 'input_fit %s %s'
+engine/utils/ollama_client.py:401  [<module>._check_input_was_read]  name RATIO_DROP
+engine/utils/ollama_client.py:617  [<module>.ollama_chat._finish]  string ['refused_input_truncated'] 'Post-call: the only place a checked response and its raw response\n        both exist, so this is whe'
+engine/utils/ollama_client.py:644  [<module>.ollama_chat]  name InputOverflow
+engine/utils/ollama_client.py:647  [<module>.ollama_chat]  name CeilingUnavailable
+engine/utils/ollama_client.py:235  [<module>.clear_ceiling_cache]  name _CEILING_CACHE
+engine/utils/ollama_client.py:252  [<module>.n_ctx_train]  name _CALL_DIGEST
+engine/utils/ollama_client.py:255  [<module>.n_ctx_train]  name _CEILING_CACHE
+engine/utils/ollama_client.py:261  [<module>.n_ctx_train]  name modelinfo
+engine/utils/ollama_client.py:262  [<module>.n_ctx_train]  name CeilingUnavailable
+engine/utils/ollama_client.py:268  [<module>.n_ctx_train]  name CeilingUnavailable
+engine/utils/ollama_client.py:297  [<module>.server_context_length]  name is_local_service_host
+engine/utils/ollama_client.py:373  [<module>._check_input_fits]  string ['input_fit'] 'input_fit REFUSED %s %s'
+engine/utils/ollama_client.py:374  [<module>._check_input_fits]  name InputOverflow
+engine/utils/ollama_client.py:394  [<module>._check_input_was_read]  string ['input_fit'] 'input_fit UNVERIFIED %s: the response carries no prompt_eval_count, so truncation and dropping canno'
+engine/utils/ollama_client.py:399  [<module>._check_input_was_read]  string ['input_fit'] 'input_fit TRUNCATED %s %s'
+engine/utils/ollama_client.py:400  [<module>._check_input_was_read]  name InputTruncated
+engine/utils/ollama_client.py:403  [<module>._check_input_was_read]  string ['input_fit'] 'input_fit DROPPED %s %s'
+engine/utils/ollama_client.py:404  [<module>._check_input_was_read]  name InputDropped
+engine/utils/ollama_client.py:623  [<module>.ollama_chat._finish]  name InputTruncated
+engine/utils/ollama_client.py:626  [<module>.ollama_chat._finish]  name InputDropped
+engine/utils/ollama_client.py:640  [<module>.ollama_chat]  name _CALL_DIGEST
+engine/utils/ollama_client.py:643  [<module>.ollama_chat]  name _check_input_fits
+engine/utils/ollama_client.py:727  [<module>.ollama_chat]  name InputTruncated
+engine/utils/ollama_client.py:727  [<module>.ollama_chat]  name InputDropped
+engine/utils/ollama_client.py:259  [<module>.n_ctx_train]  name CeilingUnavailable
+engine/utils/ollama_client.py:318  [<module>.server_context_length]  string ['OLLAMA_CONTEXT_LENGTH'] 'OLLAMA_CONTEXT_LENGTH'
+engine/utils/ollama_client.py:622  [<module>.ollama_chat._finish]  name _check_input_was_read
+engine/utils/ollama_client.py:651  [<module>.ollama_chat]  name _CALL_DIGEST
+engine/utils/ollama_client.py:203  [<module>.InputOverflow.__init__]  name RATIO_MIN
+engine/utils/ollama_client.py:227  [<module>.InputDropped.__init__]  name RATIO_DROP
+engine/utils/ollama_client.py:264  [<module>.n_ctx_train]  name modelinfo
+engine/utils/ollama_client.py:265  [<module>.n_ctx_train]  string ['.context_length'] '.context_length'
+engine/utils/ollama_client.py:269  [<module>.n_ctx_train]  string ['.context_length'] 'expected one positive *.context_length, found '
+engine/utils/ollama_client.py:301  [<module>.server_context_length]  name SERVICE_DROPIN_DIR
+engine/utils/ollama_client.py:315  [<module>.server_context_length]  name parse_environment_line
+engine/utils/ollama_client.py:319  [<module>.server_context_length]  string ['OLLAMA_CONTEXT_LENGTH'] 'OLLAMA_CONTEXT_LENGTH'
+engine/utils/ollama_client.py:624  [<module>.ollama_chat._finish]  string ['refused_input_truncated'] 'refused_input_truncated'
+engine/utils/ollama_preflight.py:14  [<module>]  import parse_environment_line
+engine/utils/ollama_preflight.py:14  [<module>]  import server_ps
+engine/utils/ollama_preflight.py:45  [<module>._get_model_vram_gb]  name server_ps
+engine/utils/ollama_preflight.py:123  [<module>.preflight_check]  name server_ps
+engine/utils/ollama_preflight.py:196  [<module>.read_ollama_env]  name parse_environment_line
+analysis/eval/elicit01/runner.py:41  [<module>]  import module engine.utils.ollama_client as oc
+analysis/eval/run_capture01.py:62  [<module>]  import module engine.utils.ollama_client as oc
+analysis/eval/run_qualgap01.py:71  [<module>]  import module engine.utils.ollama_client as oc
+analysis/paper1/judge.py:123  [<module>.run_pass1]  string ['num_ctx'] 'num_ctx'
+analysis/paper1/judge.py:232  [<module>.run_pass2]  string ['num_ctx'] 'num_ctx'
+analysis/paper1/pass2_retry_single.py:219  [<module>._main_locked]  string ['num_ctx'] 'num_ctx'
+tests/_font_fixtures.py:170  [<module>._make_pdf]  body-key 'chars'
+tests/analysis/paper1/test_pass1_inspection.py:217  [<module>.test_q7_field_1_root_cause_absent]  body-key 'count'
+tests/analysis/paper1/test_pass1_inspection.py:230  [<module>.test_q7_field_1_classifies_local_artifact]  body-key 'count'
+tests/conftest.py:357  [<module>.ollama_endpoints]  import module engine.utils.ollama_client as oc
+tests/test_arm_pinned_at_extract.py:34  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_audit_paper_id.py:25  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_audit_paper_id.py:72  [<module>._fixed_ceiling]  string-name ['effective_ceiling'] 'effective_ceiling'
+tests/test_citation_record.py:37  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_citation_record.py:154  [<module>.fake_ollama]  name .clear_ceiling_cache
+tests/test_citation_record.py:156  [<module>.fake_ollama]  name .clear_ceiling_cache
+tests/test_citation_record.py:137  [<module>._Client.chat]  name .message_chars
+tests/test_citation_record.py:132  [<module>._Client.show]  string ['.context_length'] 'general.context_length'
+tests/test_codebook_review_at_open.py:31  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_codebook_review_at_open.py:165  [<module>.test_the_refusal_is_a_run_fault]  name .is_run_fault
+tests/test_cut_over.py:35  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_cut_over.py:105  [<module>.fake_models]  name .clear_ceiling_cache
+tests/test_cut_over.py:110  [<module>.fake_models]  name .clear_ceiling_cache
+tests/test_cut_over.py:234  [<module>.test_t4_a14_and_input_fit_neither_count_nor_reset]  name .InputTruncated
+tests/test_cut_over.py:85  [<module>._Client.show]  string ['.context_length'] 'general.context_length'
+tests/test_cut_over.py:93  [<module>._Client.chat]  name .message_chars
+tests/test_effective_config.py:62  [<module>.test_seed_and_num_ctx_are_recorded_as_unsent_where_they_are_not_sent]  string ['num_ctx'] 'R66: not newly sent. Vision is the one stage that has always sent num_ctx.'
+tests/test_effective_config.py:96  [<module>.test_a_declared_num_ctx_is_sent_and_its_source_is_the_spec]  string ['num_ctx'] 'num_ctx'
+tests/test_effective_config.py:97  [<module>.test_a_declared_num_ctx_is_sent_and_its_source_is_the_spec]  string ['num_ctx'] 'options.num_ctx'
+tests/test_effective_config.py:71  [<module>.test_seed_and_num_ctx_are_recorded_as_unsent_where_they_are_not_sent]  string ['num_ctx'] 'num_ctx'
+tests/test_effective_config.py:69  [<module>.test_seed_and_num_ctx_are_recorded_as_unsent_where_they_are_not_sent]  string ['num_ctx'] 'num_ctx'
+tests/test_effective_config.py:69  [<module>.test_seed_and_num_ctx_are_recorded_as_unsent_where_they_are_not_sent]  string ['num_ctx'] 'num_ctx'
+tests/test_effective_config.py:71  [<module>.test_seed_and_num_ctx_are_recorded_as_unsent_where_they_are_not_sent]  string ['num_ctx'] 'num_ctx'
+tests/test_effective_config.py:94  [<module>.test_a_declared_num_ctx_is_sent_and_its_source_is_the_spec]  string ['num_ctx'] 'num_ctx'
+tests/test_elicit01.py:182  [<module>]  body-key 'done_reason'
+tests/test_extraction_events.py:38  [<module>]  import InputTruncated
+tests/test_extraction_events.py:512  [<module>.test_t12_every_code_the_mapping_emits_is_in_the_closed_set]  import CeilingUnavailable
+tests/test_extraction_events.py:512  [<module>.test_t12_every_code_the_mapping_emits_is_in_the_closed_set]  import InputDropped
+tests/test_extraction_events.py:512  [<module>.test_t12_every_code_the_mapping_emits_is_in_the_closed_set]  import InputOverflow
+tests/test_extraction_events.py:273  [<module>.test_t6_an_input_that_does_not_fit_is_a_paper_event_and_a_telemetry_row]  name InputTruncated
+tests/test_extraction_events.py:522  [<module>.test_t12_every_code_the_mapping_emits_is_in_the_closed_set]  name InputOverflow
+tests/test_extraction_events.py:523  [<module>.test_t12_every_code_the_mapping_emits_is_in_the_closed_set]  name InputTruncated
+tests/test_extraction_events.py:524  [<module>.test_t12_every_code_the_mapping_emits_is_in_the_closed_set]  name InputDropped
+tests/test_extraction_events.py:554  [<module>.test_t12_every_code_the_mapping_emits_is_in_the_closed_set]  name CeilingUnavailable
+tests/test_extraction_events.py:555  [<module>.test_t12_every_code_the_mapping_emits_is_in_the_closed_set]  name CeilingUnavailable
+tests/test_extraction_run_link.py:25  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_extraction_run_link.py:97  [<module>.fake_ollama]  name .clear_ceiling_cache
+tests/test_extraction_run_link.py:99  [<module>.fake_ollama]  name .clear_ceiling_cache
+tests/test_extraction_run_link.py:78  [<module>._Client.chat]  name .message_chars
+tests/test_extraction_run_link.py:71  [<module>._Client.show]  string ['.context_length'] 'general.context_length'
+tests/test_extractor.py:572  [<module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues]  import InputDropped
+tests/test_extractor.py:572  [<module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues]  import InputOverflow
+tests/test_extractor.py:572  [<module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues]  import InputTruncated
+tests/test_extractor.py:607  [<module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues]  string ['input_fit'] 'input_fit='
+tests/test_extractor.py:575  [<module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues]  name InputOverflow
+tests/test_extractor.py:577  [<module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues]  name InputTruncated
+tests/test_extractor.py:579  [<module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues]  name InputDropped
+tests/test_extractor.py:603  [<module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues]  string ['input_truncated_at_ceiling'] 'input_truncated_at_ceiling'
+tests/test_floor_and_stored_attempt.py:75  [<module>.db]  body-key 'floor'
+tests/test_floor_and_stored_attempt.py:99  [<module>._run]  body-key 'floor'
+tests/test_ft_bridge.py:31  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_ft_bridge.py:84  [<module>._no_real_http]  name .clear_ceiling_cache
+tests/test_ft_bridge.py:86  [<module>._no_real_http]  name .clear_ceiling_cache
+tests/test_ft_bridge.py:67  [<module>.FakeClient.chat]  name .message_chars
+tests/test_ft_bridge.py:58  [<module>.FakeClient.show]  string ['.context_length'] 'general.context_length'
+tests/test_migration_021_parsed_text_sha256.py:279  [<module>.test_the_committed_baseline_matches_the_declared_digest]  body-key 'count'
+tests/test_migration_021_parsed_text_sha256.py:167  [<module>.world.write_baseline]  body-key 'count'
+tests/test_ollama_client.py:17  [<module>]  import module engine.utils.ollama_client as _oc
+tests/test_ollama_client.py:22  [<module>._fixed_input_fit_ceiling]  string ['input_fit'] 'These tests exercise the watchdog, retries and restart path, not the\n    input-fit guard (tests/test'
+tests/test_ollama_client.py:27  [<module>._fixed_input_fit_ceiling]  string-name ['effective_ceiling'] 'effective_ceiling'
+tests/test_ollama_input_fit.py:16  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_ollama_input_fit.py:116  [<module>.test_an_explicit_num_ctx_is_clamped_only_by_the_trained_context]  string ['num_ctx'] 'Ruling R-3: the service environment does not lower an explicit num_ctx.'
+tests/test_ollama_input_fit.py:125  [<module>.test_num_ctx_above_the_server_default_wins_clamped_by_the_trained_context]  string ['num_ctx'] 'T1, amended by ruling R-3: the server default applies only when no num_ctx is set.'
+tests/test_ollama_input_fit.py:26  [<module>.StubClient.__init__]  name .n_ctx_train
+tests/test_ollama_input_fit.py:26  [<module>.StubClient.__init__]  name n_ctx_train
+tests/test_ollama_input_fit.py:51  [<module>.service]  string-name ['SERVICE_UNIT_FILE'] 'SERVICE_UNIT_FILE'
+tests/test_ollama_input_fit.py:52  [<module>.service]  string-name ['SERVICE_DROPIN_DIR'] 'SERVICE_DROPIN_DIR'
+tests/test_ollama_input_fit.py:54  [<module>.service]  name .clear_ceiling_cache
+tests/test_ollama_input_fit.py:56  [<module>.service]  name .clear_ceiling_cache
+tests/test_ollama_input_fit.py:87  [<module>.test_the_server_default_caps_a_model_trained_beyond_it]  name .SERVER_DEFAULT_CTX
+tests/test_ollama_input_fit.py:92  [<module>.test_the_service_environment_lowers_the_ceiling]  string ['OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=8192"\n'
+tests/test_ollama_input_fit.py:93  [<module>.test_the_service_environment_lowers_the_ceiling]  string ['OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=1024"\n'
+tests/test_ollama_input_fit.py:99  [<module>.test_a_dropin_overrides_the_unit_file]  string ['OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=4096"\n'
+tests/test_ollama_input_fit.py:100  [<module>.test_a_dropin_overrides_the_unit_file]  string ['OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment=OLLAMA_NUM_PARALLEL=1 OLLAMA_CONTEXT_LENGTH=16384\n'
+tests/test_ollama_input_fit.py:111  [<module>.test_without_num_ctx_the_ceiling_is_the_minimum_of_the_default_terms]  string ['OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=32768"\n'
+tests/test_ollama_input_fit.py:118  [<module>.test_an_explicit_num_ctx_is_clamped_only_by_the_trained_context]  string ['OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=32768"\n'
+tests/test_ollama_input_fit.py:127  [<module>.test_num_ctx_above_the_server_default_wins_clamped_by_the_trained_context]  name .SERVER_DEFAULT_CTX
+tests/test_ollama_input_fit.py:134  [<module>.test_the_service_environment_is_ignored_for_a_rebound_client]  string ['OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=8192"\n'
+tests/test_ollama_input_fit.py:140  [<module>.test_the_trained_context_is_read_once_per_model]  name .effective_ceiling
+tests/test_ollama_input_fit.py:141  [<module>.test_the_trained_context_is_read_once_per_model]  name .effective_ceiling
+tests/test_ollama_input_fit.py:142  [<module>.test_the_trained_context_is_read_once_per_model]  name .effective_ceiling
+tests/test_ollama_input_fit.py:208  [<module>.test_a_missing_count_is_logged_unverified_not_raised]  string ['input_fit'] 'input_fit UNVERIFIED'
+tests/test_ollama_input_fit.py:264  [<module>.test_a_silently_dropped_middle_message_raises_input_dropped]  name .message_chars
+tests/test_ollama_input_fit.py:82  [<module>.test_the_ceiling_is_the_trained_context_when_nothing_else_is_set]  name .effective_ceiling
+tests/test_ollama_input_fit.py:87  [<module>.test_the_server_default_caps_a_model_trained_beyond_it]  name .effective_ceiling
+tests/test_ollama_input_fit.py:94  [<module>.test_the_service_environment_lowers_the_ceiling]  name .effective_ceiling
+tests/test_ollama_input_fit.py:101  [<module>.test_a_dropin_overrides_the_unit_file]  name .server_context_length
+tests/test_ollama_input_fit.py:106  [<module>.test_num_ctx_lowers_the_ceiling]  name .effective_ceiling
+tests/test_ollama_input_fit.py:112  [<module>.test_without_num_ctx_the_ceiling_is_the_minimum_of_the_default_terms]  name .effective_ceiling
+tests/test_ollama_input_fit.py:119  [<module>.test_an_explicit_num_ctx_is_clamped_only_by_the_trained_context]  name .effective_ceiling
+tests/test_ollama_input_fit.py:120  [<module>.test_an_explicit_num_ctx_is_clamped_only_by_the_trained_context]  name .effective_ceiling
+tests/test_ollama_input_fit.py:121  [<module>.test_an_explicit_num_ctx_is_clamped_only_by_the_trained_context]  name .effective_ceiling
+tests/test_ollama_input_fit.py:127  [<module>.test_num_ctx_above_the_server_default_wins_clamped_by_the_trained_context]  name .effective_ceiling
+tests/test_ollama_input_fit.py:128  [<module>.test_num_ctx_above_the_server_default_wins_clamped_by_the_trained_context]  name .effective_ceiling
+tests/test_ollama_input_fit.py:129  [<module>.test_num_ctx_above_the_server_default_wins_clamped_by_the_trained_context]  name .effective_ceiling
+tests/test_ollama_input_fit.py:135  [<module>.test_the_service_environment_is_ignored_for_a_rebound_client]  name .effective_ceiling
+tests/test_ollama_input_fit.py:149  [<module>.test_an_unreadable_ceiling_fails_closed_and_sends_nothing]  name .CeilingUnavailable
+tests/test_ollama_input_fit.py:159  [<module>.test_an_input_just_under_the_ceiling_is_sent]  name .RATIO_MIN
+tests/test_ollama_input_fit.py:166  [<module>.test_an_input_whose_low_estimate_reaches_the_ceiling_is_refused_unsent]  name .RATIO_MIN
+tests/test_ollama_input_fit.py:167  [<module>.test_an_input_whose_low_estimate_reaches_the_ceiling_is_refused_unsent]  name .InputOverflow
+tests/test_ollama_input_fit.py:171  [<module>.test_an_input_whose_low_estimate_reaches_the_ceiling_is_refused_unsent]  body-key 'estimate_low'
+tests/test_ollama_input_fit.py:179  [<module>.test_a_count_at_the_ceiling_raises_input_truncated]  name .InputTruncated
+tests/test_ollama_input_fit.py:194  [<module>.test_a_count_far_below_the_text_raises_input_dropped]  name .InputDropped
+tests/test_ollama_input_fit.py:218  [<module>.test_every_call_logs_one_structured_input_fit_line]  body-key 'ceiling'
+tests/test_ollama_input_fit.py:218  [<module>.test_every_call_logs_one_structured_input_fit_line]  body-key 'chars'
+tests/test_ollama_input_fit.py:218  [<module>.test_every_call_logs_one_structured_input_fit_line]  body-key 'estimate_low'
+tests/test_ollama_input_fit.py:219  [<module>.test_every_call_logs_one_structured_input_fit_line]  body-key 'count'
+tests/test_ollama_input_fit.py:219  [<module>.test_every_call_logs_one_structured_input_fit_line]  body-key 'ratio'
+tests/test_ollama_input_fit.py:219  [<module>.test_every_call_logs_one_structured_input_fit_line]  body-key 'done_reason'
+tests/test_ollama_input_fit.py:224  [<module>.test_input_fit_errors_are_not_retried]  name .InputDropped
+tests/test_ollama_input_fit.py:265  [<module>.test_a_silently_dropped_middle_message_raises_input_dropped]  name .RATIO_MIN
+tests/test_ollama_input_fit.py:265  [<module>.test_a_silently_dropped_middle_message_raises_input_dropped]  name .effective_ceiling
+tests/test_ollama_input_fit.py:266  [<module>.test_a_silently_dropped_middle_message_raises_input_dropped]  name .InputDropped
+tests/test_ollama_input_fit.py:268  [<module>.test_a_silently_dropped_middle_message_raises_input_dropped]  name .RATIO_DROP
+tests/test_ollama_input_fit.py:269  [<module>.test_a_silently_dropped_middle_message_raises_input_dropped]  name .effective_ceiling
+tests/test_ollama_input_fit.py:308  [<module>.test_the_judges_full_text_path_at_its_budget_is_never_refused]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:309  [<module>.test_the_judges_full_text_path_at_its_budget_is_never_refused]  name .RATIO_MIN
+tests/test_ollama_input_fit.py:325  [<module>.test_migrated_an_oversized_prompt_fails_hard_before_any_call]  name .InputOverflow
+tests/test_ollama_input_fit.py:340  [<module>.test_migrated_a_fitting_prompt_is_sent_with_its_estimate_logged]  body-key 'estimate_low'
+tests/test_ollama_input_fit.py:106  [<module>.test_num_ctx_lowers_the_ceiling]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:119  [<module>.test_an_explicit_num_ctx_is_clamped_only_by_the_trained_context]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:120  [<module>.test_an_explicit_num_ctx_is_clamped_only_by_the_trained_context]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:121  [<module>.test_an_explicit_num_ctx_is_clamped_only_by_the_trained_context]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:128  [<module>.test_num_ctx_above_the_server_default_wins_clamped_by_the_trained_context]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:129  [<module>.test_num_ctx_above_the_server_default_wins_clamped_by_the_trained_context]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:160  [<module>.test_an_input_just_under_the_ceiling_is_sent]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:215  [<module>.test_every_call_logs_one_structured_input_fit_line]  string ['input_fit'] 'input_fit paper_id=7 '
+tests/test_ollama_input_fit.py:309  [<module>.test_the_judges_full_text_path_at_its_budget_is_never_refused]  name .message_chars
+tests/test_ollama_input_fit.py:324  [<module>.test_migrated_an_oversized_prompt_fails_hard_before_any_call]  name .RATIO_MIN
+tests/test_ollama_input_fit.py:340  [<module>.test_migrated_a_fitting_prompt_is_sent_with_its_estimate_logged]  name .RATIO_MIN
+tests/test_ollama_input_fit.py:349  [<module>.test_migrated_truncation_is_reported_only_at_or_above_the_ceiling]  name .InputTruncated
+tests/test_ollama_input_fit.py:34  [<module>.StubClient.show]  string ['.context_length'] 'arch.context_length'
+tests/test_ollama_input_fit.py:34  [<module>.StubClient.show]  name .n_ctx_train
+tests/test_ollama_input_fit.py:168  [<module>.test_an_input_whose_low_estimate_reaches_the_ceiling_is_refused_unsent]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:180  [<module>.test_a_count_at_the_ceiling_raises_input_truncated]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:339  [<module>.test_migrated_a_fitting_prompt_is_sent_with_its_estimate_logged]  string ['input_fit'] 'input_fit '
+tests/test_ollama_input_fit.py:186  [<module>.test_a_count_one_under_the_ceiling_passes]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:261  [<module>.test_a_silently_dropped_middle_message_raises_input_dropped.server_drops_the_middle]  name .message_chars
+tests/test_ollama_input_fit.py:350  [<module>.test_migrated_truncation_is_reported_only_at_or_above_the_ceiling]  string ['num_ctx'] 'num_ctx'
+tests/test_ollama_input_fit.py:239  [<module>.test_the_guard_changes_nothing_the_client_is_sent]  name .message_chars
+tests/test_ollama_input_fit.py:302  [<module>.test_the_judges_full_text_path_at_its_budget_is_never_refused]  name .message_chars
+tests/test_ollama_input_fit.py:352  [<module>.test_migrated_truncation_is_reported_only_at_or_above_the_ceiling]  string ['num_ctx'] 'num_ctx'
+tests/test_parse_gate.py:151  [<module>.test_clean_docling_parse_is_one_accepted_attempt]  body-key 'chars'
+tests/test_parse_quality.py:75  [<module>.test_the_two_fixtures_are_the_same_size_and_opposite_structure]  body-key 'chars'
+tests/test_parse_quality.py:75  [<module>.test_the_two_fixtures_are_the_same_size_and_opposite_structure]  body-key 'chars'
+tests/test_pin_records.py:32  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_pin_records.py:182  [<module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry]  name .clear_ceiling_cache
+tests/test_pin_records.py:190  [<module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry]  name .clear_ceiling_cache
+tests/test_pin_records.py:141  [<module>._Client.show]  string ['.context_length'] 'general.context_length'
+tests/test_presented_context.py:29  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_presented_context.py:30  [<module>]  import InputOverflow
+tests/test_presented_context.py:113  [<module>.test_T1_pre_call_refusal_hash_equals_the_recorded_row]  string-name ['InputOverflow'] 'No return occurs (InputOverflow raises before the call) — the hash is\n    verified against the row a'
+tests/test_presented_context.py:53  [<module>._fixed_ceiling]  string-name ['effective_ceiling'] 'effective_ceiling'
+tests/test_presented_context.py:118  [<module>.test_T1_pre_call_refusal_hash_equals_the_recorded_row]  string-name ['_check_input_fits'] '_check_input_fits'
+tests/test_presented_context.py:123  [<module>.test_T1_pre_call_refusal_hash_equals_the_recorded_row]  name InputOverflow
+tests/test_presented_context.py:120  [<module>.test_T1_pre_call_refusal_hash_equals_the_recorded_row]  name InputOverflow
+tests/test_request_capture.py:39  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_request_capture.py:141  [<module>._no_real_http]  name .clear_ceiling_cache
+tests/test_request_capture.py:143  [<module>._no_real_http]  name .clear_ceiling_cache
+tests/test_request_capture.py:122  [<module>.FakeClient.chat]  name .message_chars
+tests/test_request_capture.py:89  [<module>.phase1_requests]  string ['num_ctx'] 'num_ctx'
+tests/test_request_capture.py:117  [<module>.FakeClient.show]  string ['.context_length'] 'general.context_length'
+tests/test_restart_ollama_guard.py:25  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_restart_ollama_guard.py:187  [<module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out]  body-key 'count'
+tests/test_restart_ollama_guard.py:188  [<module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out]  body-key 'count'
+tests/test_restart_recovery_guard.py:24  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_restart_recovery_guard.py:41  [<module>.fixed_input_fit_ceiling]  string ['input_fit'] "The restart gate is under test here, not the input-fit guard. The guard's\n    ceiling read goes thro"
+tests/test_restart_recovery_guard.py:44  [<module>.fixed_input_fit_ceiling]  string-name ['effective_ceiling'] 'effective_ceiling'
+tests/test_run_calls_outcomes.py:20  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_run_calls_outcomes.py:33  [<module>._passthrough_input_fit]  string-name ['_check_input_fits'] '_check_input_fits'
+tests/test_run_calls_outcomes.py:37  [<module>._passthrough_input_fit]  string-name ['_check_input_was_read'] '_check_input_was_read'
+tests/test_run_calls_outcomes.py:118  [<module>.test_T2_input_overflow_records_one_refused_row_and_raises]  string-name ['_check_input_fits'] '_check_input_fits'
+tests/test_run_calls_outcomes.py:129  [<module>.test_T2_input_overflow_records_one_refused_row_and_raises]  string-name ['InputOverflow'] 'InputOverflow'
+tests/test_run_calls_outcomes.py:140  [<module>.test_T3_ceiling_unavailable_records_one_refused_row_and_raises]  string-name ['_check_input_fits'] '_check_input_fits'
+tests/test_run_calls_outcomes.py:151  [<module>.test_T3_ceiling_unavailable_records_one_refused_row_and_raises]  string-name ['CeilingUnavailable'] 'CeilingUnavailable'
+tests/test_run_calls_outcomes.py:164  [<module>.test_T4_input_truncated_records_one_refused_row_with_digest_and_raises]  string-name ['_check_input_was_read'] '_check_input_was_read'
+tests/test_run_calls_outcomes.py:172  [<module>.test_T4_input_truncated_records_one_refused_row_with_digest_and_raises]  string ['refused_input_truncated'] 'refused_input_truncated'
+tests/test_run_calls_outcomes.py:175  [<module>.test_T4_input_truncated_records_one_refused_row_with_digest_and_raises]  string-name ['InputTruncated'] 'InputTruncated'
+tests/test_run_calls_outcomes.py:188  [<module>.test_T5_input_dropped_records_one_refused_row_with_digest_and_raises]  string-name ['_check_input_was_read'] '_check_input_was_read'
+tests/test_run_calls_outcomes.py:198  [<module>.test_T5_input_dropped_records_one_refused_row_with_digest_and_raises]  string-name ['InputDropped'] 'InputDropped'
+tests/test_run_calls_outcomes.py:230  [<module>.test_T7_no_active_manifest_refuses_and_records_nothing]  string-name ['_check_input_fits'] '_check_input_fits'
+tests/test_run_calls_outcomes.py:116  [<module>.test_T2_input_overflow_records_one_refused_row_and_raises._raise_overflow]  name .InputOverflow
+tests/test_run_calls_outcomes.py:138  [<module>.test_T3_ceiling_unavailable_records_one_refused_row_and_raises._raise_ceiling]  name .CeilingUnavailable
+tests/test_run_calls_outcomes.py:162  [<module>.test_T4_input_truncated_records_one_refused_row_with_digest_and_raises._raise_truncated]  name .InputTruncated
+tests/test_run_calls_outcomes.py:186  [<module>.test_T5_input_dropped_records_one_refused_row_with_digest_and_raises._raise_dropped]  name .InputDropped
+tests/test_run_calls_outcomes.py:228  [<module>.test_T7_no_active_manifest_refuses_and_records_nothing._raise_overflow]  name .InputOverflow
+tests/test_run_calls_outcomes.py:233  [<module>.test_T7_no_active_manifest_refuses_and_records_nothing]  name .InputOverflow
+tests/test_run_calls_outcomes.py:251  [<module>.test_T8_success_refusal_success_in_order]  string-name ['_check_input_fits'] '_check_input_fits'
+tests/test_run_calls_outcomes.py:256  [<module>.test_T8_success_refusal_success_in_order]  string-name ['_check_input_fits'] '_check_input_fits'
+tests/test_run_calls_outcomes.py:35  [<module>._passthrough_input_fit]  body-key 'ceiling'
+tests/test_run_calls_outcomes.py:35  [<module>._passthrough_input_fit]  body-key 'chars'
+tests/test_run_calls_outcomes.py:35  [<module>._passthrough_input_fit]  body-key 'estimate_low'
+tests/test_run_calls_outcomes.py:122  [<module>.test_T2_input_overflow_records_one_refused_row_and_raises]  name .InputOverflow
+tests/test_run_calls_outcomes.py:144  [<module>.test_T3_ceiling_unavailable_records_one_refused_row_and_raises]  name .CeilingUnavailable
+tests/test_run_calls_outcomes.py:168  [<module>.test_T4_input_truncated_records_one_refused_row_with_digest_and_raises]  name .InputTruncated
+tests/test_run_calls_outcomes.py:192  [<module>.test_T5_input_dropped_records_one_refused_row_with_digest_and_raises]  name .InputDropped
+tests/test_run_calls_outcomes.py:250  [<module>.test_T8_success_refusal_success_in_order._raise_overflow]  name .InputOverflow
+tests/test_run_calls_outcomes.py:252  [<module>.test_T8_success_refusal_success_in_order]  name .InputOverflow
+tests/test_run_calls_outcomes.py:258  [<module>.test_T8_success_refusal_success_in_order]  body-key 'ceiling'
+tests/test_run_calls_outcomes.py:258  [<module>.test_T8_success_refusal_success_in_order]  body-key 'chars'
+tests/test_run_calls_outcomes.py:258  [<module>.test_T8_success_refusal_success_in_order]  body-key 'estimate_low'
+tests/test_run_fault_predicate.py:42  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_run_fault_predicate.py:59  [<module>]  name .CeilingUnavailable
+tests/test_run_fault_predicate.py:95  [<module>]  string ['input_truncated_at_ceiling'] 'input_truncated_at_ceiling'
+tests/test_run_fault_predicate.py:258  [<module>.fake_ollama]  name .clear_ceiling_cache
+tests/test_run_fault_predicate.py:260  [<module>.fake_ollama]  name .clear_ceiling_cache
+tests/test_run_fault_predicate.py:59  [<module>]  name .CeilingUnavailable
+tests/test_run_fault_predicate.py:93  [<module>]  string-name ['InputOverflow'] 'InputOverflow'
+tests/test_run_fault_predicate.py:95  [<module>]  string-name ['InputTruncated'] 'InputTruncated'
+tests/test_run_fault_predicate.py:97  [<module>]  string-name ['InputDropped'] 'InputDropped'
+tests/test_run_fault_predicate.py:147  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name .is_run_fault
+tests/test_run_fault_predicate.py:245  [<module>._Client.chat]  name .message_chars
+tests/test_run_fault_predicate.py:61  [<module>]  string ['num_ctx'] 'num_ctx'
+tests/test_run_fault_predicate.py:92  [<module>]  name .InputOverflow
+tests/test_run_fault_predicate.py:94  [<module>]  name .InputTruncated
+tests/test_run_fault_predicate.py:96  [<module>]  name .InputDropped
+tests/test_run_fault_predicate.py:138  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name .run_fault_classes
+tests/test_run_fault_predicate.py:145  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name .is_run_fault
+tests/test_run_fault_predicate.py:146  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name .is_run_fault
+tests/test_run_fault_predicate.py:238  [<module>._Client.show]  string ['.context_length'] 'general.context_length'
+tests/test_run_interrupts.py:32  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_run_interrupts.py:248  [<module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it]  name .clear_ceiling_cache
+tests/test_run_interrupts.py:254  [<module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it]  name .clear_ceiling_cache
+tests/test_run_interrupts.py:215  [<module>._InterruptingClient.show]  string ['.context_length'] 'general.context_length'
+tests/test_run_interrupts.py:225  [<module>._InterruptingClient.chat]  name .message_chars
+tests/test_run_manifest.py:28  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_run_manifest.py:122  [<module>.test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded]  name .clear_ceiling_cache
+tests/test_run_manifest.py:110  [<module>.test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded.Fake.show]  string ['.context_length'] 'general.context_length'
+tests/test_run_manifest.py:118  [<module>.test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded.Fake.chat]  name .message_chars
+tests/test_run_pipeline_starts.py:34  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_run_pipeline_starts.py:110  [<module>.review]  name .clear_ceiling_cache
+tests/test_run_pipeline_starts.py:112  [<module>.review]  name .clear_ceiling_cache
+tests/test_run_pipeline_starts.py:55  [<module>.FakeClient.show]  string ['.context_length'] 'general.context_length'
+tests/test_run_pipeline_starts.py:62  [<module>.FakeClient.chat]  name .message_chars
+tests/test_screen2f_armsets.py:236  [<module>.test_the_rule_section_counts_each_clause_and_reports_raw_numbers]  body-key 'count'
+tests/test_screen2f_armsets.py:244  [<module>.test_the_rule_section_counts_each_clause_and_reports_raw_numbers]  body-key 'count'
+tests/test_selection_bound.py:36  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_selection_bound.py:118  [<module>.fake_models]  name .clear_ceiling_cache
+tests/test_selection_bound.py:121  [<module>.fake_models]  name .clear_ceiling_cache
+tests/test_selection_bound.py:98  [<module>._Client.show]  string ['.context_length'] 'general.context_length'
+tests/test_selection_bound.py:106  [<module>._Client.chat]  name .message_chars
+tests/test_suite_live_fence.py:33  [<module>]  import module engine.utils.ollama_client
+tests/test_suite_live_fence.py:148  [<module>.test_the_fenced_server_is_OLLAMA_HOST_and_the_addresses_the_engine_names]  import module engine.utils.ollama_client as oc
+tests/test_thinking_channel.py:118  [<module>.test_think_is_not_a_caller_override]  string-name ['_option'] "C41 (12c): `think` comes from the resolved stage config only, as FT's did\n    after R246. The `think"
+tests/test_thinking_channel.py:210  [<module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts]  string-name ['InputTruncated'] 'A returned attempt whose Pass 1 stopped on length is recorded as such.\n\n    R130: a response truncat'
+tests/test_u18_digest_per_call.py:36  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_u18_digest_per_call.py:33  [<module>]  import is_run_fault
+tests/test_u18_digest_per_call.py:33  [<module>]  import run_fault_classes
+tests/test_u18_digest_per_call.py:196  [<module>.test_u18_the_digest_check_precedes_the_input_fit_read]  name ._check_input_fits
+tests/test_u18_digest_per_call.py:101  [<module>.fake]  name .clear_ceiling_cache
+tests/test_u18_digest_per_call.py:103  [<module>.fake]  name .clear_ceiling_cache
+tests/test_u18_digest_per_call.py:205  [<module>.test_u18_the_digest_check_precedes_the_input_fit_read]  string-name ['_check_input_fits'] '_check_input_fits'
+tests/test_u18_digest_per_call.py:68  [<module>.FakeClient.chat]  name .message_chars
+tests/test_u18_digest_per_call.py:199  [<module>.test_u18_the_digest_check_precedes_the_input_fit_read.fit]  string ['input_fit'] 'input_fit'
+tests/test_u18_digest_per_call.py:212  [<module>.test_u18_the_digest_check_precedes_the_input_fit_read]  string ['input_fit'] 'input_fit'
+tests/test_u18_digest_per_call.py:247  [<module>.test_u18_the_refusal_is_a_run_fault]  name is_run_fault
+tests/test_u18_digest_per_call.py:248  [<module>.test_u18_the_refusal_is_a_run_fault]  name run_fault_classes
+tests/test_u18_digest_per_call.py:61  [<module>.FakeClient.show]  string ['.context_length'] 'general.context_length'
+tests/test_u18_one_host.py:38  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_u18_one_host.py:36  [<module>]  import run_fault_classes
+tests/test_u18_one_host.py:90  [<module>.test_u18_every_engine_read_uses_the_resolved_host]  name .server_context_length
+tests/test_u18_one_host.py:162  [<module>.test_u18_a_loopback_host_on_another_port_is_not_the_local_service]  name .is_local_service_host
+tests/test_u18_one_host.py:156  [<module>.test_u18_both_loopback_spellings_resolve_to_a_local_host]  name .is_local_service_host
+tests/test_u18_one_host.py:157  [<module>.test_u18_both_loopback_spellings_resolve_to_a_local_host]  name .is_local_service_host
+tests/test_u18_one_host.py:215  [<module>.test_u18_a_non_loopback_host_is_refused_at_open_run]  name run_fault_classes
+tests/test_u19_env_recheck.py:34  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_u19_env_recheck.py:225  [<module>.test_u19_server_env_changed_is_a_run_refused_run_fault]  name .is_run_fault
+tests/test_u19_env_recheck.py:82  [<module>._loop]  body-key 'count'
+tests/test_u19_env_recheck.py:83  [<module>._loop]  body-key 'count'
+tests/test_u19_local_service.py:22  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_u19_local_service.py:88  [<module>.test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers]  string ['OLLAMA_CONTEXT_LENGTH'] 'OLLAMA_KV_CACHE_TYPE=f16 "OLLAMA_ORIGINS=a b" OLLAMA_CONTEXT_LENGTH=8192'
+tests/test_u19_local_service.py:98  [<module>.test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers]  string-name ['SERVICE_UNIT_FILE'] 'SERVICE_UNIT_FILE'
+tests/test_u19_local_service.py:99  [<module>.test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers]  string-name ['SERVICE_DROPIN_DIR'] 'SERVICE_DROPIN_DIR'
+tests/test_u19_local_service.py:118  [<module>.test_u19_ollama_host_not_local_service_is_a_run_refused_run_fault]  name .is_run_fault
+tests/test_u19_local_service.py:100  [<module>.test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers]  name .server_context_length
+tests/test_u19_local_service.py:101  [<module>.test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers]  name .parse_environment_line
+tests/test_u19_local_service.py:109  [<module>.test_u19_the_two_readers_give_equal_maps_on_the_hosts_line]  name .parse_environment_line
+tests/test_undeclared_call.py:31  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_undeclared_call.py:78  [<module>.fake]  name .clear_ceiling_cache
+tests/test_undeclared_call.py:80  [<module>.fake]  name .clear_ceiling_cache
+tests/test_undeclared_call.py:61  [<module>.FakeClient.chat]  name .message_chars
+tests/test_undeclared_call.py:57  [<module>.FakeClient.show]  string ['.context_length'] 'general.context_length'
+tests/test_undeclared_override.py:90  [<module>.test_T1_a_differing_option_under_a_declared_stage_is_refused]  string ['num_ctx'] 'num_ctx'
+tests/test_undeclared_override.py:103  [<module>.test_T2_an_equal_option_under_a_declared_stage_passes_through]  string ['num_ctx'] 'num_ctx'
+tests/test_undeclared_override.py:109  [<module>.test_T3_no_active_run_is_todays_merge_behaviour]  string ['num_ctx'] 'num_ctx'
+tests/test_undeclared_override.py:110  [<module>.test_T3_no_active_run_is_todays_merge_behaviour]  string ['num_ctx'] 'num_ctx'
+tests/test_undeclared_override.py:187  [<module>.test_T5_vision_under_a_declared_run_sends_the_rows_values]  string ['num_ctx'] 'num_ctx'
+tests/test_undeclared_override.py:200  [<module>.test_T6_open_run_records_vision_parses_declared_options]  string ['num_ctx'] 'num_ctx'
+tests/test_undeclared_override.py:102  [<module>.test_T2_an_equal_option_under_a_declared_stage_passes_through]  string ['num_ctx'] 'num_ctx'
+tests/test_undeclared_override.py:88  [<module>.test_T1_a_differing_option_under_a_declared_stage_is_refused]  string ['num_ctx'] 'num_ctx'
+tests/test_units_and_sizing.py:1  [<module>]  string ['input_fit'] "The ported unit machinery (ELICIT-DESIGN-01).\n\nELICIT-DESIGN-01 test 5, the elicitation pipeline's p"
+tests/test_units_as_source_slices.py:35  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_units_as_source_slices.py:221  [<module>.fake_ollama]  name .clear_ceiling_cache
+tests/test_units_as_source_slices.py:223  [<module>.fake_ollama]  name .clear_ceiling_cache
+tests/test_units_as_source_slices.py:204  [<module>._ElicitedClient.chat]  name .message_chars
+tests/test_units_as_source_slices.py:199  [<module>._ElicitedClient.show]  string ['.context_length'] 'general.context_length'
+tests/test_value_divergence.py:44  [<module>]  body-key 'count'
+tests/test_value_divergence.py:45  [<module>]  body-key 'count'
+tests/test_value_divergence.py:170  [<module>.test_divergence_is_recorded_on_a_record_stored_after_the_retry_budget]  body-key 'count'
+tests/test_value_divergence.py:148  [<module>.test_value_divergence_reaches_the_stored_record]  body-key 'count'
+tests/test_value_divergence.py:149  [<module>.test_value_divergence_reaches_the_stored_record]  body-key 'count'
+tests/test_value_divergence.py:184  [<module>.test_a_case_or_whitespace_difference_is_recorded_and_counted_apart]  body-key 'count'
+tests/test_value_divergence.py:185  [<module>.test_a_case_or_whitespace_difference_is_recorded_and_counted_apart]  body-key 'count'
+tests/test_vision_bounds.py:89  [<module>.test_defaults_send_num_predict_and_num_ctx]  string ['num_ctx'] 'num_ctx'
+tests/test_vision_bounds.py:97  [<module>.test_explicit_overrides_reach_the_call]  string ['num_ctx'] 'num_ctx'
+tests/test_vision_bounds.py:114  [<module>.test_spec_overrides_reach_the_call_through_parse_pdf]  string ['num_ctx'] 'num_ctx'
+# sites 432 by root {'analysis': 6, 'engine': 116, 'tests': 310}; files 58; unparsed []

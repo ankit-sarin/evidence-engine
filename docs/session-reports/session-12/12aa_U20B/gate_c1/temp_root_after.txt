@@ -1,0 +1,12 @@
+2026-10-30T19:59:39.871159428Z
+total 1232
+drwx------    5 ankitsarin ankitsarin   4096 2026-10-30 19:59:21.992672258 +0000 .
+drwxrwxrwt  137 root       root        49152 2026-10-30 19:59:30.653698540 +0000 ..
+drwx------ 3436 ankitsarin ankitsarin 397312 2026-10-30 09:15:16.525701700 +0000 pytest-164
+drwx------ 3436 ankitsarin ankitsarin 397312 2026-10-30 18:12:18.174029574 +0000 pytest-165
+drwx------ 3454 ankitsarin ankitsarin 397312 2026-10-30 19:59:21.993672261 +0000 pytest-166
+lrwxrwxrwx    1 ankitsarin ankitsarin     36 2026-10-30 19:44:19.038956007 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-166
+1391460890	/tmp/pytest-of-ankitsarin/pytest-164
+1391460951	/tmp/pytest-of-ankitsarin/pytest-165
+1391461996	/tmp/pytest-of-ankitsarin/pytest-166
+36	/tmp/pytest-of-ankitsarin/pytest-current

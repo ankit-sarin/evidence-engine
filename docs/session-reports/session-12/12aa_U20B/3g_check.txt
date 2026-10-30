@@ -1,0 +1,12 @@
+staged set == the 2 named files: True
+ 
+  engine/utils/ollama_client.py
+  tests/test_u20_modelfile_num_ctx.py
+collection line 3451+18: True
+  ==== 3451 passed, 17 deselected, 1 xfailed, 2 warnings in 905.36s (0:15:05) ====
+summary 3433+18 passed, 17 deselected, 1 xfailed, 2 warnings: True
+exit 0: True
+no staged file changed after the gate launched: True
+worktree == index for the staged files: True
+inventory --check in sync: True
+RESULT: PASS

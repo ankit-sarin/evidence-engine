@@ -1,0 +1,9 @@
+HEAD df92bf1d13e16192966a17f4e876af3209e39b5b
+SERVER_DEFAULT_CTX 262144 server_context_length() None is_local_service_host True
+model | n_ctx_train | SERVER_DEFAULT_CTX | server_context_length | effective_ceiling(no num_ctx) | differs from trained
+qwen3:8b | 40960 | 262144 | None | 40960 | False
+qwen3:32b | 40960 | 262144 | None | 40960 | False
+gemma3:27b | 131072 | 262144 | None | 131072 | False
+deepseek-r1:32b | 131072 | 262144 | None | 131072 | False
+qwen2.5vl:7b | 128000 | 262144 | None | 128000 | False
+llama3.2:3b | 131072 | 262144 | None | 131072 | False

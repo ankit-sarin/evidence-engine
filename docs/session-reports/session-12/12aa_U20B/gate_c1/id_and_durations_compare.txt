@@ -1,0 +1,36 @@
+gate ids 3452 ref 3434
+only-gate: 18; only-ref: 0
+only-gate == the new ids: True (18 new)
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[deepseek-r1:32b-131072]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[gemma3:27b-131072]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[llama3.2:3b-131072]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[qwen2.5vl:7b-128000]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[qwen3:32b-40960]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[qwen3:8b-40960]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_modelfile_num_ctx_lowers_the_ceiling
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable["8192"]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[+8192]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[-1]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[0]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[8192 16384]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[8192.5]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[abc]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_request_num_ctx_still_wins_over_the_modelfile_term[16384]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_a_request_num_ctx_still_wins_over_the_modelfile_term[4096]
+  only-gate tests/test_u20_modelfile_num_ctx.py::test_two_num_ctx_lines_are_ceiling_unavailable
+phases ref 2514 gate 2507
+slower by >10 s: 0
+-- summary line
+==== 3451 passed, 17 deselected, 1 xfailed, 2 warnings in 905.36s (0:15:05) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)
+-- journal ollama 19:44:15 .. 19:59:22
+-- No entries --

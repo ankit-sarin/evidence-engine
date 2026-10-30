@@ -1,0 +1,62 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 18 items
+
+tests/test_u20_modelfile_num_ctx.py::test_a_modelfile_num_ctx_lowers_the_ceiling FAILED [  5%]
+tests/test_u20_modelfile_num_ctx.py::test_a_request_num_ctx_still_wins_over_the_modelfile_term[4096] PASSED [ 11%]
+tests/test_u20_modelfile_num_ctx.py::test_a_request_num_ctx_still_wins_over_the_modelfile_term[16384] PASSED [ 16%]
+tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[abc] FAILED [ 22%]
+tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[0] FAILED [ 27%]
+tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[-1] FAILED [ 33%]
+tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[8192.5] FAILED [ 38%]
+tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable["8192"] FAILED [ 44%]
+tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[+8192] FAILED [ 50%]
+tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[8192 16384] FAILED [ 55%]
+tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[] FAILED [ 61%]
+tests/test_u20_modelfile_num_ctx.py::test_two_num_ctx_lines_are_ceiling_unavailable FAILED [ 66%]
+tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[qwen3:8b-40960] PASSED [ 72%]
+tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[qwen3:32b-40960] PASSED [ 77%]
+tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[gemma3:27b-131072] PASSED [ 83%]
+tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[deepseek-r1:32b-131072] PASSED [ 88%]
+tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[qwen2.5vl:7b-128000] PASSED [ 94%]
+tests/test_u20_modelfile_num_ctx.py::test_a_committed_body_as_received_keeps_its_ceiling[llama3.2:3b-131072] PASSED [100%]
+
+=================================== FAILURES ===================================
+E   AssertionError: assert 131072 == 8192
+     +  where 131072 = <function effective_ceiling at 0xf2e9da54ec00>('deepseek-r1:32b')
+     +    where <function effective_ceiling at 0xf2e9da54ec00> = oc.effective_ceiling
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_modelfile_num_ctx.py:83: AssertionError: assert 131072 == 8192
+E   Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_modelfile_num_ctx.py:101: Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+E   Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_modelfile_num_ctx.py:101: Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+E   Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_modelfile_num_ctx.py:101: Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+E   Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_modelfile_num_ctx.py:101: Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+E   Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_modelfile_num_ctx.py:101: Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+E   Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_modelfile_num_ctx.py:101: Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+E   Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_modelfile_num_ctx.py:101: Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+E   Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_modelfile_num_ctx.py:101: Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+E   Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_modelfile_num_ctx.py:108: Failed: DID NOT RAISE <class 'engine.utils.ollama_client.CeilingUnavailable'>
+=========================== short test summary info ============================
+FAILED tests/test_u20_modelfile_num_ctx.py::test_a_modelfile_num_ctx_lowers_the_ceiling
+FAILED tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[abc]
+FAILED tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[0]
+FAILED tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[-1]
+FAILED tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[8192.5]
+FAILED tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable["8192"]
+FAILED tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[+8192]
+FAILED tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[8192 16384]
+FAILED tests/test_u20_modelfile_num_ctx.py::test_a_num_ctx_line_that_is_not_a_positive_integer_is_ceiling_unavailable[]
+FAILED tests/test_u20_modelfile_num_ctx.py::test_two_num_ctx_lines_are_ceiling_unavailable
+========================= 10 failed, 8 passed in 0.21s =========================

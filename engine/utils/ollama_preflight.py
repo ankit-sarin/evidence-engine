@@ -176,8 +176,12 @@ _PERFORMANCE_ENV = {
 }
 
 
-def _get_ollama_env() -> dict[str, str]:
-    """Read environment variables from the running Ollama systemd service."""
+def read_ollama_env() -> tuple[str, dict[str, str]]:
+    """The Ollama unit's `Environment=` value as `systemctl show` prints it — the raw
+    string — beside its parsed map; `("", {})` when it cannot be read.
+
+    U19 (R734(c)(i)): the raw string is what a run's manifest records at open.
+    """
     try:
         cp = subprocess.run(
             ["systemctl", "show", "ollama", "--property=Environment"],
@@ -186,17 +190,27 @@ def _get_ollama_env() -> dict[str, str]:
         # Output: Environment=KEY=VAL KEY2=VAL2 ...
         line = cp.stdout.strip()
         if not line.startswith("Environment="):
-            return {}
+            return "", {}
         raw = line[len("Environment="):]
         env: dict[str, str] = {}
         for token in raw.split():
             if "=" in token:
                 k, v = token.split("=", 1)
                 env[k] = v
-        return env
+        return raw, env
     except Exception as exc:
         logger.warning("Could not read Ollama service environment: %s", exc)
-        return {}
+        return "", {}
+
+
+def _get_ollama_env() -> dict[str, str]:
+    """Read environment variables from the running Ollama systemd service."""
+    return read_ollama_env()[1]
+
+
+def _drift(env: dict[str, str], expected: dict[str, str]) -> dict[str, tuple[str, str | None]]:
+    """Each key in `expected` whose value in `env` differs: (expected, actual or None)."""
+    return {key: (want, env.get(key)) for key, want in expected.items() if env.get(key) != want}
 
 
 def _diff_env(
@@ -204,13 +218,35 @@ def _diff_env(
 ) -> list[str]:
     """Return formatted mismatch lines for any key in `expected` that drifts."""
     mismatches: list[str] = []
-    for key, want in expected.items():
-        actual = env.get(key)
+    for key, (want, actual) in _drift(env, expected).items():
         if actual is None:
             mismatches.append(f"  {key}: expected={want!r}, actual=<not set>")
-        elif actual != want:
+        else:
             mismatches.append(f"  {key}: expected={want!r}, actual={actual!r}")
     return mismatches
+
+
+@dataclass(frozen=True)
+class EnvReading:
+    """One read of the configured environment: the raw string and each tier's drift."""
+    raw: str
+    correctness: dict[str, tuple[str, str | None]]
+    performance: dict[str, tuple[str, str | None]]
+
+
+def recheck_ollama_env() -> EnvReading:
+    """The environment check after a performed proactive restart (U19, R734(c)(ii)).
+
+    Reads once and returns the reading; a performance-tier drift is logged as at the
+    stage start. It raises nothing: the caller records the reading and refuses on a
+    correctness-tier drift.
+    """
+    raw, env = read_ollama_env()
+    reading = EnvReading(raw=raw, correctness=_drift(env, _CORRECTNESS_ENV),
+                         performance=_drift(env, _PERFORMANCE_ENV))
+    for line in _diff_env(env, _PERFORMANCE_ENV):
+        logger.warning("Ollama performance env drift:%s", line)
+    return reading
 
 
 def check_ollama_env() -> None:

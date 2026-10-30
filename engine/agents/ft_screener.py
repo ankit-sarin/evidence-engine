@@ -572,9 +572,14 @@ def open_screening_manifest(db: ReviewDatabase, spec: ReviewSpec, *,
         stages.append("preflight")
         preflight = sorted({spec.ft_screening_models.primary,
                             spec.ft_screening_models.verifier})
+    # U19 (R734(c)(i), R735(a)): the configured Ollama environment, read before the
+    # open by run_pipeline's reader and recorded in the body.
+    from engine.utils import ollama_preflight as pf
+    environment, _ = pf.read_ollama_env()
     handle = rm.open_run(db._conn, spec, kind="screening", stages=stages,
                          codebook=load_codebook_beside(db.db_path),
-                         preflight_models=preflight, git=git, digest_fn=digest_fn)
+                         preflight_models=preflight, git=git, digest_fn=digest_fn,
+                         ollama_environment=environment)
     logger.info("Run manifest %d (%s) written: %d stage rows", handle.run_id,
                 handle.run_uid, len(handle.stages))
     return handle.run_id

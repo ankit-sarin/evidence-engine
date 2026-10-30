@@ -93,6 +93,8 @@ def pipeline(tmp_path, spec, monkeypatch):
                         lambda name: ReviewDatabase(REVIEW, data_root=tmp_path))
     monkeypatch.setattr(rm, "git_state", lambda: CLEAN)
     monkeypatch.setattr(oc, "fetch_model_digest", lambda m: DIGEST)
+    from engine.utils import ollama_preflight as pf
+    monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
     for stage in ("_stage_search", "_stage_screen", "_stage_audit", "_stage_export"):
         monkeypatch.setattr(rp, stage, lambda *a, **k: {})
 

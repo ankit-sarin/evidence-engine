@@ -210,6 +210,13 @@ def run_pipeline(
         logger.error("RUN ABORTED: %s", exc)
         _finish_review_run(db, run_id, "aborted", reason=str(exc))
         raise
+    except rm.ServerEnvChanged as exc:
+        # U19 (R734(c)(ii)): the configured environment failed the correctness tier on
+        # the read after a performed proactive restart. No paper was extracted under it;
+        # the run closes 'aborted' with the refusal's message, which names each key.
+        logger.error("RUN ABORTED: %s", exc)
+        _finish_review_run(db, run_id, "aborted", reason=str(exc))
+        raise
     except Exception as exc:
         logger.error("Pipeline failed: %s", exc, exc_info=True)
         _finish_review_run(db, run_id, "failed", reason=rm.failure_reason(exc))
@@ -548,9 +555,13 @@ def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int, *,
                                for s in stages) else "screening"
     bound = ({"stage": "extract", "max_papers": max_papers}
              if max_papers is not None else None)
+    # U19 (R734(c)(i)): the configured Ollama environment, read once before the open
+    # and recorded in the body; a record, not a gate (the stage-start check gates).
+    from engine.utils import ollama_preflight as pf
+    environment, _ = pf.read_ollama_env()
     handle = rm.open_run(db._conn, spec, kind=kind, stages=stages, codebook=codebook,
                          preflight_models=sorted(set(preflight)),
-                         selection_bound=bound)
+                         selection_bound=bound, ollama_environment=environment)
     logger.info("Run manifest %d (%s) written: %d stage rows", handle.run_id,
                 handle.run_uid, len(handle.stages))
     return handle.run_id

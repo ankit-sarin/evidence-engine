@@ -157,6 +157,8 @@ def test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_re
     import scripts.run_pipeline as rp
     monkeypatch.setattr(rm, "git_state", lambda: CLEAN)
     monkeypatch.setattr(oc, "fetch_model_digest", lambda m: DIGEST)
+    from engine.utils import ollama_preflight as pf
+    monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
     run_id = rp._open_run_manifest(db, elicited, rp.STAGES.index("extract"))
     conn = db._conn
     declared = [r[0] for r in conn.execute(

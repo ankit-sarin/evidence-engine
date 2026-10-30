@@ -99,7 +99,7 @@ def test_skip_returns_none_and_does_not_raise(tmp_path):
     try:
         with patch("engine.agents.extractor.subprocess.run"), \
              patch("engine.agents.extractor.httpx.get"):
-            assert extractor.restart_ollama(reason="proactive", papers_done=25) is None
+            assert extractor.restart_ollama(reason="proactive", papers_done=25) is False  # U19: a skip says so
     finally:
         proc.kill()
         proc.wait()
@@ -146,7 +146,7 @@ def test_the_opt_out_skips_the_restart_before_the_lock_is_consulted(monkeypatch,
          patch("engine.agents.extractor.httpx.get") as mock_get, \
          patch("engine.agents.extractor.foreign_lock_held") as mock_lock:
         with caplog.at_level(logging.WARNING, logger="engine.agents.extractor"):
-            assert extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25) is None
+            assert extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25) is False  # U19
     mock_run.assert_not_called()
     mock_get.assert_not_called()
     mock_lock.assert_not_called()

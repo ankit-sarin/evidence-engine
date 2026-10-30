@@ -207,6 +207,39 @@ class ModelDigestChanged(RunRefused):
             stage_key=stage_key, model=model, recorded=recorded, current=current)
 
 
+class ServerEnvChanged(RunRefused):
+    """U19, R734(c)(ii): after a performed proactive restart, the Ollama service's
+    configured environment fails the correctness tier — a drop-in edited during the run
+    and applied by the run's own restart, under which every later paper would be
+    extracted. Raised by the extract loop before the next paper; the runner closes the
+    run 'aborted' with this message, which starts with the class name.
+
+    Constructed from a message, as every `RunRefused` is; `at` composes the message from
+    the drifted keys and keeps them as `drift` ({key: (expected, actual or None)})."""
+
+    def __init__(self, message: str, *, drift: Mapping[str, tuple[str, str | None]] | None = None,
+                 papers_done: int | None = None):
+        super().__init__(message)
+        self.drift = dict(drift or {})
+        self.papers_done = papers_done
+
+    @classmethod
+    def at(cls, drift: Mapping[str, tuple[str, str | None]], *,
+           papers_done: int | None = None) -> "ServerEnvChanged":
+        keys = "; ".join(f"{k} expected {want!r}, actual "
+                         f"{'<not set>' if got is None else repr(got)}"
+                         for k, (want, got) in sorted(drift.items()))
+        done = f" ({papers_done} papers done)" if papers_done is not None else ""
+        return cls(
+            f"ServerEnvChanged: run refused after a proactive Ollama restart{done}: the "
+            f"restarted service's configured environment fails the correctness tier: {keys}. "
+            "No paper was extracted under it. Read `systemctl show ollama "
+            "--property=Environment` and the drop-in under "
+            "/etc/systemd/system/ollama.service.d/ for the edit made during the run; restore "
+            "the value, restart the service, and start a new run.",
+            drift=drift, papers_done=papers_done)
+
+
 class UndeclaredCall(Exception):
     """C54: a model call the active run's manifest did not declare — its stage
     key has no `run_stage_configs` row, or the row names a different model.
@@ -402,7 +435,8 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
              git: GitState | None = None, host: str | None = None,
              payload_description: str | None = None,
              selection_bound: Mapping[str, Any] | None = None,
-             inputs: Mapping[str, str] | None = None) -> RunHandle:
+             inputs: Mapping[str, str] | None = None,
+             ollama_environment: str | None = None) -> RunHandle:
     """Write the manifest and pin its arms, or refuse. Before the first call.
 
     The local extraction arm is the exception (R569(b)): it is registered and,
@@ -421,6 +455,10 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     reads — an import's decision file — to the sha256 of its bytes, recorded
     under the manifest's `inputs` key. `pins` stays the arm pins. Absent, the
     manifest carries no such key.
+
+    `ollama_environment` (U19, R734(c)(i)) is the Ollama unit's `Environment=` value
+    as `systemctl show` printed it, read by the caller before this open, recorded
+    verbatim under the manifest's `ollama_environment` key. Absent, no such key.
     """
     if kind not in RUN_KINDS:
         raise ValueError(f"run kind {kind!r} is not one of {RUN_KINDS}")
@@ -549,6 +587,9 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
         manifest["selection_bound"] = dict(selection_bound)
     if inputs is not None:
         manifest["inputs"] = dict(inputs)
+    # A run that sends nothing to the Ollama server records no environment (R735(b)).
+    if ollama_environment is not None:
+        manifest["ollama_environment"] = ollama_environment
     if cloud_list and not payload_description:
         raise ValueError("a run with cloud arms records a payload description (S3g)")
 

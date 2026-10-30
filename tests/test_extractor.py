@@ -465,8 +465,13 @@ class TestProactiveRestart:
     @patch("engine.agents.extractor.extract_paper")
     @patch("engine.utils.ollama_preflight.require_preflight")
     @patch("engine.utils.ollama_client.fetch_model_digest", return_value="a" * 64)
+    @patch("engine.utils.ollama_preflight.read_ollama_env",  # U19: the re-read after a restart
+           return_value=("OLLAMA_FLASH_ATTENTION=true OLLAMA_MAX_LOADED_MODELS=1 OLLAMA_KV_CACHE_TYPE=f16 "
+                         "OLLAMA_NUM_PARALLEL=1",
+                         {"OLLAMA_FLASH_ATTENTION": "true", "OLLAMA_MAX_LOADED_MODELS": "1",
+                          "OLLAMA_KV_CACHE_TYPE": "f16", "OLLAMA_NUM_PARALLEL": "1"}))
     def test_restart_triggers_after_n_papers(
-        self, _digest, _preflight, mock_extract, mock_restart, tmp_path,
+        self, _env, _digest, _preflight, mock_extract, mock_restart, tmp_path,
     ):
         """Proactive restart fires after restart_every papers are processed."""
         db, spec = self._setup_db(tmp_path, n_papers=5)

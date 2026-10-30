@@ -77,6 +77,7 @@ RUN_REFUSED_MEMBERS = {
     rm.ModelLineageMissing, rm.SameLineageVerifier,  # U17, R703(d)/(e)
     rm.OllamaHostNotLoopback,  # U18, R721(c)
     rm.ModelDigestChanged,  # U18, R721(b)
+    rm.ServerEnvChanged,  # U19, R734(c)(ii)
     ElicitationSentinelUnsatisfiable,
 }
 FAULTS = [pytest.param(make, id=cls.__name__) for cls, make in RUN_FAULTS.items()] + [

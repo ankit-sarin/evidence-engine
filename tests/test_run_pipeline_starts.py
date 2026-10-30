@@ -105,6 +105,8 @@ def review(tmp_path, spec, monkeypatch):
     monkeypatch.setattr(rp, "search_openalex", lambda s: [])
     monkeypatch.setattr(E, "hold_experiment_lock", nullcontext)
     monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+    from engine.utils import ollama_preflight as pf
+    monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
     oc.clear_ceiling_cache()
     yield Path(db.db_path), fake
     oc.clear_ceiling_cache()

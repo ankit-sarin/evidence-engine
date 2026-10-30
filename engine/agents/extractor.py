@@ -720,12 +720,33 @@ def extract_paper(
 # ── Proactive Ollama Restart ──────────────────────────────────────────
 
 
-def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> None:
+def _recheck_env_after_restart(db: ReviewDatabase, run_id: int, papers_done: int) -> None:
+    """The environment check after a performed proactive restart (U19, R734(c)(ii)-(iii)).
+
+    Every read, pass or drift, is one run-telemetry event carrying the raw string and
+    the verdict; a correctness-tier drift then raises `ServerEnvChanged`, a run fault
+    that S9's `except RuntimeError` does not catch.
+    """
+    from engine.utils import ollama_preflight as pf
+    reading = pf.recheck_ollama_env()
+    record_run_event(Path(db.db_path).parent, run_id=run_id, kind="ollama_env_after_restart",
+                     payload={"environment": reading.raw, "papers_done": papers_done,
+                              "verdict": "drift" if reading.correctness else "ok",
+                              "correctness": reading.correctness,
+                              "performance": reading.performance})
+    if reading.correctness:
+        raise rm.ServerEnvChanged.at(reading.correctness, papers_done=papers_done)
+    logger.info("Ollama environment OK after restart (%d papers done)", papers_done)
+
+
+def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> bool:
     """Restart the Ollama service and wait for it to become responsive.
 
     Uses ``sudo systemctl restart ollama`` to fully clear CUDA context
     fragmentation (a simple model unload/reload is not sufficient).
 
+    Returns True once the restarted server answers, False when the restart is
+    skipped (the opt-out, a foreign lock): a skip is not a restart (U19, R734(c)(ii)).
     Raises RuntimeError if Ollama doesn't come back within 60 seconds.
     """
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -740,7 +761,7 @@ def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> None:
             "restarts are disabled for this process; continuing without restarting.",
             ts, RESTART_OPT_OUT_ENV, reason, papers_done,
         )
-        return
+        return False
 
     # OPS-GUARD-01 (C): never restart Ollama out from under someone else's
     # experiment. `foreign_lock_held()` is deliberately narrower than
@@ -756,7 +777,7 @@ def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> None:
             "restarting.",
             ts, reason, papers_done,
         )
-        return
+        return False
 
     logger.info(
         "[%s] Ollama restart (%s, %d papers done) — running sudo systemctl restart ollama",
@@ -780,7 +801,7 @@ def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> None:
                 logger.info(
                     "Ollama restart complete — server responsive after %.1fs", elapsed,
                 )
-                return
+                return True
         except (httpx.ConnectError, httpx.TimeoutException):
             pass
         time.sleep(2)
@@ -1237,8 +1258,9 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
         # Proactive Ollama restart to clear CUDA context fragmentation
         papers_since_restart += 1
         if restart_every > 0 and papers_since_restart >= restart_every:
+            restarted = False
             try:
-                restart_ollama(
+                restarted = restart_ollama(
                     reason=f"proactive after {papers_since_restart} papers",
                     papers_done=stats["extracted"] + stats["failed"],
                 )
@@ -1248,6 +1270,11 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
                     "Proactive Ollama restart failed — continuing without restart. "
                     "Monitor for instability."
                 )
+            if restarted:
+                # U19 (R734(c)(ii)): a performed restart applies the unit as loaded now,
+                # so the environment is checked again before the next paper; a failed
+                # restart above still continues, a drift read here stops the run.
+                _recheck_env_after_restart(db, run_id, stats["extracted"] + stats["failed"])
 
     # R535 / R612(f): what the run stored, read back from its paper events —
     # papers stored with fields missing (and which), papers whose held fields

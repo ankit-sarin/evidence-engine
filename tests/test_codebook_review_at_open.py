@@ -115,6 +115,8 @@ def test_a_review_session_is_refused_the_same_way(review, spec):
 # ── gate 2 ────────────────────────────────────────────────────────────
 def test_run_pipelines_own_opener_refuses_before_any_row_or_fetch(review, spec, monkeypatch):
     monkeypatch.setattr(rm, "git_state", lambda: CLEAN)
+    from engine.utils import ollama_preflight as pf
+    monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
     fetched: list[str] = []
     monkeypatch.setattr(oc, "fetch_model_digest", lambda m: fetched.append(m) or DIGEST)
     with pytest.raises(rm.CodebookReviewMismatch) as exc:

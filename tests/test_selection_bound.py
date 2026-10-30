@@ -74,6 +74,8 @@ def db(tmp_path, fields):
 def injected_open_run(monkeypatch):
     """`_open_run_manifest` calls `rm.open_run` with no digest or git override;
     inject the fixture values so no HTTP request or `git status` decides it."""
+    from engine.utils import ollama_preflight as pf
+    monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
     real = rm.open_run
     monkeypatch.setattr(rm, "open_run", lambda *a, **k: real(
         *a, digest_fn=lambda m: FIXTURE_DIGEST,

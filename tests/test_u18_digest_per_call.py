@@ -302,6 +302,7 @@ def test_u18_the_ft_runner_closes_aborted_on_a_digest_change(review, spec, fake,
     db, _ = review
     _ft_eligible_paper(db)
     monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
+    monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
     fake.answers = [{"decision": "FT_ELIGIBLE", "rationale": "r", "confidence": 0.9}]
     seen: dict[str, int] = {}
 

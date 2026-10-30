@@ -92,6 +92,7 @@ def fake(monkeypatch):
     client = FakeClient()
     monkeypatch.setattr(oc, "_client", client)
     monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
+    monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
     monkeypatch.setattr(oc._client, "ps", lambda: {"models": []}, raising=False)
     return client
 

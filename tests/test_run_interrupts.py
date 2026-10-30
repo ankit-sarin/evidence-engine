@@ -117,6 +117,8 @@ def test_t2_run_pipeline_closes_a_signal_with_its_reason(db, pipeline, monkeypat
 ])
 def test_t3_run_ft_invocation_closes_an_interrupt_with_its_reason(db, spec, monkeypatch,
                                                                   exc, reason):
+    from engine.utils import ollama_preflight as pf
+    monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
     monkeypatch.setattr(ft, "run_ft_screening", _raise(exc))
     with pytest.raises(type(exc)) as caught:
         ft.run_ft_invocation(db, spec, review_name="intr", screen_only=True,
@@ -346,6 +348,8 @@ def test_t9_run_pipeline_an_interrupt_inside_the_completed_close_closes_interrup
 
 def test_t9_run_ft_invocation_an_interrupt_inside_the_completed_close_closes_interrupted(
         db, spec, monkeypatch, close_interrupted_once):
+    from engine.utils import ollama_preflight as pf
+    monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
     monkeypatch.setattr(ft, "run_ft_screening", lambda *a, **k: None)
     with pytest.raises(KeyboardInterrupt) as caught:
         ft.run_ft_invocation(db, spec, review_name="intr", screen_only=True,

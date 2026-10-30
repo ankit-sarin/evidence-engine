@@ -1,0 +1,59 @@
+RULING [evidence-engine 12z-R730] — 12z-OPEN stop at 0k: eb3r's absence a dated fact; the 12y
+  closeout hash is 22a21bbb…7871 (40 characters) and the record's 39-character copies are a
+  transcription defect; Block 127's header names the commit by the hash rev-parse returns; one
+  addendum; full hashes are checked from here; resume at step 1
+STATUS: PI ruling, 2026-10-29 UTC, session 12z, on architect recommendation, on the 12z-OPEN
+  report stopped at step 0k (no commit; evidence in ~/scratch/12z-open/). Transcribe at the
+  next item 0 after 12z-OPEN closes, in the block after Block 127, with the ruling on the
+  12z-OPEN final report; not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12z-OPEN stop report):
+  MEASURED: "HEAD 22a21bbb4be2d8e49072203eba7d5cadda6f7871, parent
+    0f83f4674a36a0cc96d53adcc2d9454b3480d322, status empty, lr 0 0, main worktree only";
+    "git rev-parse --verify cannot resolve it" (the 39-character string); "HEAD
+    9a6cdbd5db0046d3569aa481dd2a7290ecced919, parent fc65d81, clean, 0 0; one row added:
+    2026-10-29T05:16:34Z | surgical-cv-edit | edit-backend | ed7c523 (no trailers); primer.md
+    not touched"; "no tmux server running, so eb3r is absent"; "last shows pane
+    tmux(132019).%35 on pts/4 from Wed Oct 28 18:51 - 03:59"; "nothing of this user started
+    between 10-28 16:08 and 21:32"; every other step-0 value matched as tabled (0a, 0c, 0e–0h,
+    0j, 0l); "ollama_health_20261029.log (07:04) and nightly_test_20261029.log (09:15) present".
+  READ (CC's): "R729's STATUS line, the brief, lane_line_12y.txt line 6 and
+    ~/claude-config/primer.md line 41 all carry 22a21bb4be2d8e49072203eba7d5cadda6f7871. That is
+    39 characters"; "It started in 12y's lane line, which was written by Claude Code, and spread
+    into the ruling from there"; "The fence and r729.txt must stay byte-exact to the ruling, typo
+    included (R102)".
+  INFERRED: none.
+
+R730(a) — The stop is correct. I9's eb3r clause was the architect's: an expectation about a
+  foreign tmux session's persistence written from the wrap report instead of left to CC to read
+  (§8 rule 1). eb3r ended 2026-10-29 03:59 UTC, outside this lane, nothing killed by this
+  session — a dated fact, no row. The safety half of I9 holds: no survivor of this lane. Step 0
+  (0a–0l) stands as measured; nothing in it is re-measured except a fresh HEAD, status and
+  ahead/behind read on both repos at the resume's start, reported.
+R730(b) — The 12y closeout commit is 22a21bbb4be2d8e49072203eba7d5cadda6f7871. The 39-character
+  string in 12y-CLOSE's printed closeout block, lane_line_12y.txt line 6, primer.md line 41,
+  R729's STATUS line and MEASURED quote, unified plan v96 and the 12z-OPEN brief is one
+  transcription defect: it originated in 12y-CLOSE's report (CC's) and was carried unchecked by
+  the architect into the ruling and the brief. R729's text is not edited (R102): r729.txt is
+  written byte-exact from Section 1 and must reproduce 0d4988fa…31d1; lane_line_12y.txt is
+  copied into 12y_close/ as applied, its sha256 unchanged. Block 127's header names the closeout
+  commit by the 40-character hash as git rev-parse HEAD returns it, not as the STATUS line
+  states it; the fence keeps the ruling's bytes. One dated addendum follows Block 127's "ends at
+  R729." line, in the same commit, its text carried in the resume brief and its label in the
+  record's addendum form (the R117 addendum, the Blocks 116–117 addendum), read and quoted
+  before use. primer.md line 41 is not edited now: the 12z lane line at the 12z wrap replaces
+  lines 41–45 whole, its five "−" lines equal to the lines as applied, and the defect leaves the
+  primer there; the 12z closure records it. Unified plan v97 corrects the hash wherever v96
+  carries it.
+R730(c) — Rule from here: every full commit hash a brief or a ruling carries is 40 hexadecimal
+  characters, checked by the architect before issue; CC resolves every full hash a brief names
+  with git rev-parse --verify at the step that first uses it, and a hash that does not resolve
+  is a stop. §8 gains it as rule 8 at v97.
+R730(d) — Readings, no row: the foreign claude-config commit 9a6cdbd (surgical-cv-edit's row
+  ed7c523, no trailers) is accepted under R663(b) and joins the dgx-infra cross-lane item with
+  4525a44; step 2h's expected parent is 9a6cdbd or an accepted descendant. The temp root
+  (pytest-150, -151 surgical-cv's; -152 the 10-29 nightly's; 1,716,039,272 B) and the I12
+  clauses, none adding an expected value. The 2026-10-29 jobs' logs present at 07:04 and 09:15.
+R730(e) — 12z-OPEN resumes at step 1 under this ruling, with step 2b amended as (b) states and
+  step 2h's parent as (d) states; nothing else in the brief changes. This ruling is not written
+  to disk in the resume.

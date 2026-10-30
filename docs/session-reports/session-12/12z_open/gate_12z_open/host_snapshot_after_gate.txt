@@ -1,0 +1,34 @@
+Thu Oct 29 22:05:10 UTC 2026
+ 22:05:10 up 11 days, 23:01,  3 users,  load average: 1.65, 1.51, 1.02
+top - 22:05:10 up 11 days, 23:01,  3 users,  load average: 1.65, 1.51, 1.02
+Tasks: 551 total,   2 running, 549 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  2.7 us,  3.2 sy,  0.0 ni, 94.1 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem : 122566.0 total,  23437.4 free,  10241.1 used,  92795.1 buff/cache     
+MiB Swap:  16384.0 total,  12711.4 free,   3672.6 used. 112324.9 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+1734871 root      20   0   37592  15280   6360 R  18.2   0.0   0:00.05 python3
+     85 root      20   0       0      0      0 S   9.1   0.0   0:03.77 ksoftir+
+   2590 ankitsa+  20   0 6321892  20088   8536 S   9.1   0.0 127:09.50 python
+      1 root      20   0   24712  11788   6584 S   0.0   0.0   2:55.75 systemd
+      2 root      20   0       0      0      0 S   0.0   0.0   0:02.25 kthreadd
+      3 root      20   0       0      0      0 S   0.0   0.0   0:00.00 pool_wo+
+      4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+               total        used        free      shared  buff/cache   available
+Mem:          122566       10243       23435           5       92795      112322
+Swap:          16383        3672       12711
+6.17.0-1032-nvidia
+Python 3.12.3
+3.45.1-1ubuntu2.8
+580.173.02
+abf99132-fd8b-41f9-b9fd-62241e40110c
+NRestarts=0
+ExecMainStartTimestamp=Sat 2026-10-17 23:04:05 UTC
+earlyoom: active
+/usr/bin/earlyoom -r 3600 -m 6 -s 100,100 --avoid ^(sshd|tailscaled|cloudflared|systemd|systemd-journal|NetworkManager|Xorg|gnome-shell|gdm.*)$ --prefer ^ollama$
+vm.min_free_kbytes 1048576
+ollama pid 2564 oom_score_adj 0
+MemAvailable:   115009204 kB
+-- concurrent jobs (ffmpeg / nvenc / surgical-cv / uvicorn / pytest), this script and its ancestors excluded (R680(c))
+excluded pids: 1734866 1734847 1695166 1694693 1694543 1694402 1694398 1 
+11734 Sun Oct 25 05:20:54 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python3 /home/ankitsarin/projects/surgical-cv/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 7865

@@ -1,0 +1,82 @@
+RULING [evidence-engine 12z-R731] — 12z-OPEN accepted; the gate evidence committed at the next item
+  0; the gate record carries its launch line; the U18 dated line checked; readings; U19's Phase A
+  opens
+STATUS: PI ruling, 2026-10-29 UTC, session 12z, on architect recommendation, on the 12z-OPEN final
+  report as resumed under R730 (item 0 81db498a1e6f17155a067d126a9d92c252700141; evidence in
+  ~/scratch/12z-open/). Transcribe at item 0 of the 12z-U19A brief, in the block after R730's,
+  not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12z-OPEN final report):
+  MEASURED: "A0 at 21:44:34Z" all match; "Resolved: 22a21bbb…7871, 0f83f467…d322, e7425b33…b7,
+    32fc09eb…67, 9a6cdbd5…919, fc65d815…13"; "Did not resolve: the 39-character string"; health
+    "Loads: 20/20 OK, from 07:00:01 to 07:04:50, no FAIL"; "one new NV_ERR_NO_MEMORY line at
+    07:03:38, inside the llama3.3:70b load (07:03:18 to 07:04:42), which succeeded. That makes 18
+    this boot"; "NRestarts=0, no earlyoom kill lines"; nightly "3411 passed, 17 deselected, 1
+    xfailed, 2 warnings in 912.13s", "pytest exit code: 0", "only-nightly 0 / only-ref 0", "the
+    nightly ran on 22a21bb"; "1c: empty"; "commit 81db498a1e6f17155a067d126a9d92c252700141, parent
+    22a21bbb…7871"; "numstat +90 / −0: N = 2 (the dated line) + 88 (Block 127 and the addendum)";
+    "Plan lines 11,821 = 11,731 + 90 − 0"; "The fence equals r729.txt; the cell equals
+    render_cell"; "The header carries the 40-character hash and does not carry the 39-character
+    string"; "New plan: sha256 b2a0080731acf4f6d7e4d9ff24943531451fad0a4e8c84ce95ffda6e889d2f71,
+    2,208,124 bytes"; "r729.txt: 0d4988fa9b1d52fe7e014af1dc8d06bbdd04590112c2680d103705cccf4431d1,
+    6,393 bytes, 75 lines"; "Lane-line copy: b06a6855…c5c7"; "fingerprint IDENTICAL before and
+    after the push; pushed; level 0 0"; "claude-config: c37de0d4496f218daecc1429dced06787853967c,
+    parent 9a6cdbd", "ledger: rows through 2026-10-29T21:48:33Z", "both trailers are present";
+    gate "Launch 21:49:46.661Z, exit 22:04:42.775Z. Wall time 896.11 s, inside 822–1003"; "====
+    3411 passed, 17 deselected, 1 xfailed, 2 warnings in 893.97s (0:14:53) ====, rc 0"; "collected
+    3429 items / 17 deselected / 3412 selected"; "only-gate 0 / only-ref 0"; "2,475 phases against
+    2,494 in the reference; none slower by more than 10 s"; "Basetemp: pytest-153
+    (1,387,031,067 B)"; "Journal window 21:49:46 to 22:04:43: no entries"; "only the surgical-cv
+    uvicorn server (pid 11734, idle, since 10-25), both before and after"; 3e–3i every check "✓";
+    "fix_units 35 (script field) / fix_units_dated_lines 19 (literal field) / 37, done 21 (dated
+    lines)"; the six chain sha256 values as tabled, "Each is equal to its committed copy";
+    "pytest-150 was rotated out by pytest's own retention when this gate started".
+  READ (CC's): "I also named the addendum, because it is an item of this commit and Block 117's
+    clause omitted its copies"; "Block 105 sets the precedent for a resumed brief"; "I3 named the
+    evidence directory 12y_U18C/gate/. The record's directory is 12y_U18C/gate_round1/"; "the
+    12y-U18C record does not quote the tmux wrapper line for its gate"; "Residency after the job is
+    not recorded in its log"; "U18's line as written: … U18 landed at e7425b3and32fc09e;".
+  INFERRED: none.
+
+R731(a) — 12z-OPEN is accepted as reported: step 0 as stopped and ruled (R730); A0 matched; the
+  2026-10-29 health job 20/20 and the nightly a line-for-line match on 22a21bbb; item 0 landed as
+  81db498 (Block 127 with the 40-character hash in its header, r729.txt at the architect's hash,
+  the U18 dated fix-unit line, the lane-line copy, the R730(b) addendum; +90 / −0); the ledger
+  c37de0d with trailers stands; the gate 3,411 / 1 / 17 on 3,429 / 3,412, 0/0, 896.11 s inside
+  822–1003 s on a quiet box (uvicorn only). The 12z open stands verified. The series gains
+  896.11 s. CC's naming of the addendum in Block 127's Transcribed clause is accepted: an item of
+  the commit is named in the clause, R720(b)'s lesson applied.
+R731(b) — Finding F4 is the architect's: the brief named the 12y-U18C gate directory from unified
+  plan v96's summary ("gate/") instead of having CC list it; the record's "gate_round1/" governed
+  (R18). v97 corrects the plan's name. Finding F6: the 12y record carries no tmux launch line, so
+  the "standard detached form" CC used is accepted as the gate's launch; from here every gate's
+  evidence directory records the complete launch line, tmux wrapper included, and the next
+  brief's I3 quotes it from there. No row.
+R731(c) — The 12z-OPEN gate's evidence under ~/scratch/12z-open/ is not under docs/, as 12x-OPEN's
+  was not (R719(c)). 12z-U19A's item 0 copies the gate's files into
+  docs/session-reports/session-12/12z_open/gate_12z_open/ (cp; names, sizes and sha256 listed
+  before the copy, every sha256 equal after), in the item-0 commit with r730.txt and r731.txt.
+  The scratch directory is not moved or edited. From here a session-open brief's step 3 commits
+  its gate evidence under the session's open directory in a commit of its own, so no later item 0
+  carries it.
+R731(d) — The U18 dated fix-unit line is read back at 12z-U19A's item 0 as committed: if its text
+  carries "e7425b3and32fc09e" (the report's rendering) rather than "e7425b3 and 32fc09e", the
+  committed line is not edited (dated lines are record); one dated correction line follows it in
+  the dated lines' own form, stating the two hashes with the space, in the item-0 commit, its "−"
+  count computed (R723(a)). If the committed line carries the space, nothing is written and the
+  report says so.
+R731(e) — Readings, no row: NV_ERR_NO_MEMORY eighteen this boot, the new line inside the 2026-10-29
+  llama3.3:70b load, which succeeded (dgx-infra; Run 7's confounder statement); residency after
+  the health job is not in its log and is read at the open instead (the health log's form, as it
+  is); the snapshot timer's read-only requests at 10:31:53 (I15); the durations reference 2,494
+  phases against the gate's 2,475 with no phase slower by more than 10 s; the temp root before
+  (150, 151, 152, current; 1,716,039,272 B) and after (151, 152, 153, current), pytest-150 rotated
+  by pytest's own retention; the empty gate journal window. R510 for 12z so far: rows in 0, rows
+  out 0, no class move.
+R731(f) — U19's Phase A opens under the 12z-U19A brief below, in the form R728(f) states: 12l_P1A.md
+  §3's next unit in its order, read-only, in 12y-U18A's form; the unit entry quoted first (a
+  closed or absorbed unit is caught there and the next open unit reported instead); the rows it
+  names quoted with every note and their acceptance tests from 12f_triage_rows.md; the census
+  pre-step's five classes (R722(a)–R725(b)); the mechanism at HEAD, quoted; the options with what
+  each moves. No engine change; no model load; a read-only Ollama request is a reading (R696(b)).
+  The fix is not designed in the Phase A.

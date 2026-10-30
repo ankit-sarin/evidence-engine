@@ -11819,3 +11819,294 @@ R729(f) — Session 12y closes now. After R729(d) has landed, run /wrap. Report 
 The decision log in this file ends at R729.
 
 *Addendum 2026-10-29 (12z-OPEN item 0, R730(b)), to Block 127:* R729's STATUS line and its MEASURED quote of the closeout block carry the 12y closeout commit as `22a21bb4be2d8e49072203eba7d5cadda6f7871` (39 characters), as 12y-CLOSE's printed closeout block and `lane_line_12y.txt` line 6 carry it; the commit is `22a21bbb4be2d8e49072203eba7d5cadda6f7871` (`git rev-parse HEAD`, 12z-OPEN step 0b). The ruling text and the lane-line file are not edited (R102); Block 127's header names the commit by the 40-character hash. primer.md line 41 carries the same string until the 12z lane line replaces lines 41–45 at the 12z wrap. R730(b).
+
+**Block 128.** *Transcribed 2026-10-30 (item 0 of the 12z-U19A brief as resumed under R733), in its own commit with Blocks 129, 130 and 131 and the 12z-OPEN gate evidence copy R731 orders and its launch_line.txt R732 and R733 order, in the R597(e) form:* ruling R730, made by PI on architect recommendation on 2026-10-29 UTC, during session 12z, on the 12z-OPEN report stopped at step 0k (no commit; evidence in `~/scratch/12z-open/`). The 12z-OPEN resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12z-R730] — 12z-OPEN stop at 0k: eb3r's absence a dated fact; the 12y
+  closeout hash is 22a21bbb…7871 (40 characters) and the record's 39-character copies are a
+  transcription defect; Block 127's header names the commit by the hash rev-parse returns; one
+  addendum; full hashes are checked from here; resume at step 1
+STATUS: PI ruling, 2026-10-29 UTC, session 12z, on architect recommendation, on the 12z-OPEN
+  report stopped at step 0k (no commit; evidence in ~/scratch/12z-open/). Transcribe at the
+  next item 0 after 12z-OPEN closes, in the block after Block 127, with the ruling on the
+  12z-OPEN final report; not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12z-OPEN stop report):
+  MEASURED: "HEAD 22a21bbb4be2d8e49072203eba7d5cadda6f7871, parent
+    0f83f4674a36a0cc96d53adcc2d9454b3480d322, status empty, lr 0 0, main worktree only";
+    "git rev-parse --verify cannot resolve it" (the 39-character string); "HEAD
+    9a6cdbd5db0046d3569aa481dd2a7290ecced919, parent fc65d81, clean, 0 0; one row added:
+    2026-10-29T05:16:34Z | surgical-cv-edit | edit-backend | ed7c523 (no trailers); primer.md
+    not touched"; "no tmux server running, so eb3r is absent"; "last shows pane
+    tmux(132019).%35 on pts/4 from Wed Oct 28 18:51 - 03:59"; "nothing of this user started
+    between 10-28 16:08 and 21:32"; every other step-0 value matched as tabled (0a, 0c, 0e–0h,
+    0j, 0l); "ollama_health_20261029.log (07:04) and nightly_test_20261029.log (09:15) present".
+  READ (CC's): "R729's STATUS line, the brief, lane_line_12y.txt line 6 and
+    ~/claude-config/primer.md line 41 all carry 22a21bb4be2d8e49072203eba7d5cadda6f7871. That is
+    39 characters"; "It started in 12y's lane line, which was written by Claude Code, and spread
+    into the ruling from there"; "The fence and r729.txt must stay byte-exact to the ruling, typo
+    included (R102)".
+  INFERRED: none.
+
+R730(a) — The stop is correct. I9's eb3r clause was the architect's: an expectation about a
+  foreign tmux session's persistence written from the wrap report instead of left to CC to read
+  (§8 rule 1). eb3r ended 2026-10-29 03:59 UTC, outside this lane, nothing killed by this
+  session — a dated fact, no row. The safety half of I9 holds: no survivor of this lane. Step 0
+  (0a–0l) stands as measured; nothing in it is re-measured except a fresh HEAD, status and
+  ahead/behind read on both repos at the resume's start, reported.
+R730(b) — The 12y closeout commit is 22a21bbb4be2d8e49072203eba7d5cadda6f7871. The 39-character
+  string in 12y-CLOSE's printed closeout block, lane_line_12y.txt line 6, primer.md line 41,
+  R729's STATUS line and MEASURED quote, unified plan v96 and the 12z-OPEN brief is one
+  transcription defect: it originated in 12y-CLOSE's report (CC's) and was carried unchecked by
+  the architect into the ruling and the brief. R729's text is not edited (R102): r729.txt is
+  written byte-exact from Section 1 and must reproduce 0d4988fa…31d1; lane_line_12y.txt is
+  copied into 12y_close/ as applied, its sha256 unchanged. Block 127's header names the closeout
+  commit by the 40-character hash as git rev-parse HEAD returns it, not as the STATUS line
+  states it; the fence keeps the ruling's bytes. One dated addendum follows Block 127's "ends at
+  R729." line, in the same commit, its text carried in the resume brief and its label in the
+  record's addendum form (the R117 addendum, the Blocks 116–117 addendum), read and quoted
+  before use. primer.md line 41 is not edited now: the 12z lane line at the 12z wrap replaces
+  lines 41–45 whole, its five "−" lines equal to the lines as applied, and the defect leaves the
+  primer there; the 12z closure records it. Unified plan v97 corrects the hash wherever v96
+  carries it.
+R730(c) — Rule from here: every full commit hash a brief or a ruling carries is 40 hexadecimal
+  characters, checked by the architect before issue; CC resolves every full hash a brief names
+  with git rev-parse --verify at the step that first uses it, and a hash that does not resolve
+  is a stop. §8 gains it as rule 8 at v97.
+R730(d) — Readings, no row: the foreign claude-config commit 9a6cdbd (surgical-cv-edit's row
+  ed7c523, no trailers) is accepted under R663(b) and joins the dgx-infra cross-lane item with
+  4525a44; step 2h's expected parent is 9a6cdbd or an accepted descendant. The temp root
+  (pytest-150, -151 surgical-cv's; -152 the 10-29 nightly's; 1,716,039,272 B) and the I12
+  clauses, none adding an expected value. The 2026-10-29 jobs' logs present at 07:04 and 09:15.
+R730(e) — 12z-OPEN resumes at step 1 under this ruling, with step 2b amended as (b) states and
+  step 2h's parent as (d) states; nothing else in the brief changes. This ruling is not written
+  to disk in the resume.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-29 | R730(a) — The stop is correct. I9's eb3r clause was the architect's: an expectation about a foreign tmux session's persistence written from the wrap report instead of left to CC to read (§8 rule 1). eb3r ended 2026-10-29 03:59 UTC, outside this lane, nothing killed by this session — a dated fact, no row. The safety half of I9 holds: no survivor of this lane. Step 0 (0a–0l) stands as measured; nothing in it is re-measured except a fresh HEAD, status and ahead/behind read on both repos at the resume's start, reported. R730(b) — The 12y closeout commit is 22a21bbb4be2d8e49072203eba7d5cadda6f7871. The 39-character string in 12y-CLOSE's printed closeout block, lane_line_12y.txt line 6, primer.md line 41, R729's STATUS line and MEASURED quote, unified plan v96 and the 12z-OPEN brief is one transcription defect: it originated in 12y-CLOSE's report (CC's) and was carried unchecked by the architect into the ruling and the brief. R729's text is not edited (R102): r729.txt is written byte-exact from Section 1 and must reproduce 0d4988fa…31d1; lane_line_12y.txt is copied into 12y_close/ as applied, its sha256 unchanged. Block 127's header names the closeout commit by the 40-character hash as git rev-parse HEAD returns it, not as the STATUS line states it; the fence keeps the ruling's bytes. One dated addendum follows Block 127's "ends at R729." line, in the same commit, its text carried in the resume brief and its label in the record's addendum form (the R117 addendum, the Blocks 116–117 addendum), read and quoted before use. primer.md line 41 is not edited now: the 12z lane line at the 12z wrap replaces lines 41–45 whole, its five "−" lines equal to the lines as applied, and the defect leaves the primer there; the 12z closure records it. Unified plan v97 corrects the hash wherever v96 carries it. R730(c) — Rule from here: every full commit hash a brief or a ruling carries is 40 hexadecimal characters, checked by the architect before issue; CC resolves every full hash a brief names with git rev-parse --verify at the step that first uses it, and a hash that does not resolve is a stop. §8 gains it as rule 8 at v97. R730(d) — Readings, no row: the foreign claude-config commit 9a6cdbd (surgical-cv-edit's row ed7c523, no trailers) is accepted under R663(b) and joins the dgx-infra cross-lane item with 4525a44; step 2h's expected parent is 9a6cdbd or an accepted descendant. The temp root (pytest-150, -151 surgical-cv's; -152 the 10-29 nightly's; 1,716,039,272 B) and the I12 clauses, none adding an expected value. The 2026-10-29 jobs' logs present at 07:04 and 09:15. R730(e) — 12z-OPEN resumes at step 1 under this ruling, with step 2b amended as (b) states and step 2h's parent as (d) states; nothing else in the brief changes. This ruling is not written to disk in the resume. | PI, 2026-10-29, during session 12z, on architect recommendation, on the 12z-OPEN report stopped at step 0k (no commit) |
+
+The decision log in this file ends at R730.
+
+**Block 129.** *Transcribed 2026-10-30 (item 0 of the 12z-U19A brief as resumed under R733), in its own commit with Blocks 128, 130 and 131 and the 12z-OPEN gate evidence copy R731 orders and its launch_line.txt R732 and R733 order, in the R597(e) form:* ruling R731, made by PI on architect recommendation on 2026-10-29 UTC, during session 12z, on the 12z-OPEN final report as resumed under R730 (item 0 `81db498a1e6f17155a067d126a9d92c252700141`; evidence in `~/scratch/12z-open/`). The 12z-U19A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12z-R731] — 12z-OPEN accepted; the gate evidence committed at the next item
+  0; the gate record carries its launch line; the U18 dated line checked; readings; U19's Phase A
+  opens
+STATUS: PI ruling, 2026-10-29 UTC, session 12z, on architect recommendation, on the 12z-OPEN final
+  report as resumed under R730 (item 0 81db498a1e6f17155a067d126a9d92c252700141; evidence in
+  ~/scratch/12z-open/). Transcribe at item 0 of the 12z-U19A brief, in the block after R730's,
+  not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12z-OPEN final report):
+  MEASURED: "A0 at 21:44:34Z" all match; "Resolved: 22a21bbb…7871, 0f83f467…d322, e7425b33…b7,
+    32fc09eb…67, 9a6cdbd5…919, fc65d815…13"; "Did not resolve: the 39-character string"; health
+    "Loads: 20/20 OK, from 07:00:01 to 07:04:50, no FAIL"; "one new NV_ERR_NO_MEMORY line at
+    07:03:38, inside the llama3.3:70b load (07:03:18 to 07:04:42), which succeeded. That makes 18
+    this boot"; "NRestarts=0, no earlyoom kill lines"; nightly "3411 passed, 17 deselected, 1
+    xfailed, 2 warnings in 912.13s", "pytest exit code: 0", "only-nightly 0 / only-ref 0", "the
+    nightly ran on 22a21bb"; "1c: empty"; "commit 81db498a1e6f17155a067d126a9d92c252700141, parent
+    22a21bbb…7871"; "numstat +90 / −0: N = 2 (the dated line) + 88 (Block 127 and the addendum)";
+    "Plan lines 11,821 = 11,731 + 90 − 0"; "The fence equals r729.txt; the cell equals
+    render_cell"; "The header carries the 40-character hash and does not carry the 39-character
+    string"; "New plan: sha256 b2a0080731acf4f6d7e4d9ff24943531451fad0a4e8c84ce95ffda6e889d2f71,
+    2,208,124 bytes"; "r729.txt: 0d4988fa9b1d52fe7e014af1dc8d06bbdd04590112c2680d103705cccf4431d1,
+    6,393 bytes, 75 lines"; "Lane-line copy: b06a6855…c5c7"; "fingerprint IDENTICAL before and
+    after the push; pushed; level 0 0"; "claude-config: c37de0d4496f218daecc1429dced06787853967c,
+    parent 9a6cdbd", "ledger: rows through 2026-10-29T21:48:33Z", "both trailers are present";
+    gate "Launch 21:49:46.661Z, exit 22:04:42.775Z. Wall time 896.11 s, inside 822–1003"; "====
+    3411 passed, 17 deselected, 1 xfailed, 2 warnings in 893.97s (0:14:53) ====, rc 0"; "collected
+    3429 items / 17 deselected / 3412 selected"; "only-gate 0 / only-ref 0"; "2,475 phases against
+    2,494 in the reference; none slower by more than 10 s"; "Basetemp: pytest-153
+    (1,387,031,067 B)"; "Journal window 21:49:46 to 22:04:43: no entries"; "only the surgical-cv
+    uvicorn server (pid 11734, idle, since 10-25), both before and after"; 3e–3i every check "✓";
+    "fix_units 35 (script field) / fix_units_dated_lines 19 (literal field) / 37, done 21 (dated
+    lines)"; the six chain sha256 values as tabled, "Each is equal to its committed copy";
+    "pytest-150 was rotated out by pytest's own retention when this gate started".
+  READ (CC's): "I also named the addendum, because it is an item of this commit and Block 117's
+    clause omitted its copies"; "Block 105 sets the precedent for a resumed brief"; "I3 named the
+    evidence directory 12y_U18C/gate/. The record's directory is 12y_U18C/gate_round1/"; "the
+    12y-U18C record does not quote the tmux wrapper line for its gate"; "Residency after the job is
+    not recorded in its log"; "U18's line as written: … U18 landed at e7425b3and32fc09e;".
+  INFERRED: none.
+
+R731(a) — 12z-OPEN is accepted as reported: step 0 as stopped and ruled (R730); A0 matched; the
+  2026-10-29 health job 20/20 and the nightly a line-for-line match on 22a21bbb; item 0 landed as
+  81db498 (Block 127 with the 40-character hash in its header, r729.txt at the architect's hash,
+  the U18 dated fix-unit line, the lane-line copy, the R730(b) addendum; +90 / −0); the ledger
+  c37de0d with trailers stands; the gate 3,411 / 1 / 17 on 3,429 / 3,412, 0/0, 896.11 s inside
+  822–1003 s on a quiet box (uvicorn only). The 12z open stands verified. The series gains
+  896.11 s. CC's naming of the addendum in Block 127's Transcribed clause is accepted: an item of
+  the commit is named in the clause, R720(b)'s lesson applied.
+R731(b) — Finding F4 is the architect's: the brief named the 12y-U18C gate directory from unified
+  plan v96's summary ("gate/") instead of having CC list it; the record's "gate_round1/" governed
+  (R18). v97 corrects the plan's name. Finding F6: the 12y record carries no tmux launch line, so
+  the "standard detached form" CC used is accepted as the gate's launch; from here every gate's
+  evidence directory records the complete launch line, tmux wrapper included, and the next
+  brief's I3 quotes it from there. No row.
+R731(c) — The 12z-OPEN gate's evidence under ~/scratch/12z-open/ is not under docs/, as 12x-OPEN's
+  was not (R719(c)). 12z-U19A's item 0 copies the gate's files into
+  docs/session-reports/session-12/12z_open/gate_12z_open/ (cp; names, sizes and sha256 listed
+  before the copy, every sha256 equal after), in the item-0 commit with r730.txt and r731.txt.
+  The scratch directory is not moved or edited. From here a session-open brief's step 3 commits
+  its gate evidence under the session's open directory in a commit of its own, so no later item 0
+  carries it.
+R731(d) — The U18 dated fix-unit line is read back at 12z-U19A's item 0 as committed: if its text
+  carries "e7425b3and32fc09e" (the report's rendering) rather than "e7425b3 and 32fc09e", the
+  committed line is not edited (dated lines are record); one dated correction line follows it in
+  the dated lines' own form, stating the two hashes with the space, in the item-0 commit, its "−"
+  count computed (R723(a)). If the committed line carries the space, nothing is written and the
+  report says so.
+R731(e) — Readings, no row: NV_ERR_NO_MEMORY eighteen this boot, the new line inside the 2026-10-29
+  llama3.3:70b load, which succeeded (dgx-infra; Run 7's confounder statement); residency after
+  the health job is not in its log and is read at the open instead (the health log's form, as it
+  is); the snapshot timer's read-only requests at 10:31:53 (I15); the durations reference 2,494
+  phases against the gate's 2,475 with no phase slower by more than 10 s; the temp root before
+  (150, 151, 152, current; 1,716,039,272 B) and after (151, 152, 153, current), pytest-150 rotated
+  by pytest's own retention; the empty gate journal window. R510 for 12z so far: rows in 0, rows
+  out 0, no class move.
+R731(f) — U19's Phase A opens under the 12z-U19A brief below, in the form R728(f) states: 12l_P1A.md
+  §3's next unit in its order, read-only, in 12y-U18A's form; the unit entry quoted first (a
+  closed or absorbed unit is caught there and the next open unit reported instead); the rows it
+  names quoted with every note and their acceptance tests from 12f_triage_rows.md; the census
+  pre-step's five classes (R722(a)–R725(b)); the mechanism at HEAD, quoted; the options with what
+  each moves. No engine change; no model load; a read-only Ollama request is a reading (R696(b)).
+  The fix is not designed in the Phase A.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-29 | R731(a) — 12z-OPEN is accepted as reported: step 0 as stopped and ruled (R730); A0 matched; the 2026-10-29 health job 20/20 and the nightly a line-for-line match on 22a21bbb; item 0 landed as 81db498 (Block 127 with the 40-character hash in its header, r729.txt at the architect's hash, the U18 dated fix-unit line, the lane-line copy, the R730(b) addendum; +90 / −0); the ledger c37de0d with trailers stands; the gate 3,411 / 1 / 17 on 3,429 / 3,412, 0/0, 896.11 s inside 822–1003 s on a quiet box (uvicorn only). The 12z open stands verified. The series gains 896.11 s. CC's naming of the addendum in Block 127's Transcribed clause is accepted: an item of the commit is named in the clause, R720(b)'s lesson applied. R731(b) — Finding F4 is the architect's: the brief named the 12y-U18C gate directory from unified plan v96's summary ("gate/") instead of having CC list it; the record's "gate_round1/" governed (R18). v97 corrects the plan's name. Finding F6: the 12y record carries no tmux launch line, so the "standard detached form" CC used is accepted as the gate's launch; from here every gate's evidence directory records the complete launch line, tmux wrapper included, and the next brief's I3 quotes it from there. No row. R731(c) — The 12z-OPEN gate's evidence under ~/scratch/12z-open/ is not under docs/, as 12x-OPEN's was not (R719(c)). 12z-U19A's item 0 copies the gate's files into docs/session-reports/session-12/12z_open/gate_12z_open/ (cp; names, sizes and sha256 listed before the copy, every sha256 equal after), in the item-0 commit with r730.txt and r731.txt. The scratch directory is not moved or edited. From here a session-open brief's step 3 commits its gate evidence under the session's open directory in a commit of its own, so no later item 0 carries it. R731(d) — The U18 dated fix-unit line is read back at 12z-U19A's item 0 as committed: if its text carries "e7425b3and32fc09e" (the report's rendering) rather than "e7425b3 and 32fc09e", the committed line is not edited (dated lines are record); one dated correction line follows it in the dated lines' own form, stating the two hashes with the space, in the item-0 commit, its "−" count computed (R723(a)). If the committed line carries the space, nothing is written and the report says so. R731(e) — Readings, no row: NV_ERR_NO_MEMORY eighteen this boot, the new line inside the 2026-10-29 llama3.3:70b load, which succeeded (dgx-infra; Run 7's confounder statement); residency after the health job is not in its log and is read at the open instead (the health log's form, as it is); the snapshot timer's read-only requests at 10:31:53 (I15); the durations reference 2,494 phases against the gate's 2,475 with no phase slower by more than 10 s; the temp root before (150, 151, 152, current; 1,716,039,272 B) and after (151, 152, 153, current), pytest-150 rotated by pytest's own retention; the empty gate journal window. R510 for 12z so far: rows in 0, rows out 0, no class move. R731(f) — U19's Phase A opens under the 12z-U19A brief below, in the form R728(f) states: 12l_P1A.md §3's next unit in its order, read-only, in 12y-U18A's form; the unit entry quoted first (a closed or absorbed unit is caught there and the next open unit reported instead); the rows it names quoted with every note and their acceptance tests from 12f_triage_rows.md; the census pre-step's five classes (R722(a)–R725(b)); the mechanism at HEAD, quoted; the options with what each moves. No engine change; no model load; a read-only Ollama request is a reading (R696(b)). The fix is not designed in the Phase A. | PI, 2026-10-29, during session 12z, on architect recommendation, on the 12z-OPEN final report as resumed under R730 (81db498) |
+
+The decision log in this file ends at R731.
+
+**Block 130.** *Transcribed 2026-10-30 (item 0 of the 12z-U19A brief as resumed under R733), in its own commit with Blocks 128, 129 and 131 and the 12z-OPEN gate evidence copy R731 orders and its launch_line.txt R732 and R733 order, in the R597(e) form:* ruling R732, made by PI on architect recommendation on 2026-10-29 UTC, during session 12z, on the 12z-U19A report stopped at step 1b (no commit; the two ruling files held under `~/scratch/12z-u19a/held/`). The 12z-U19A resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12z-R732] — 12z-U19A stop at 1b: the model pair is the record's most recent
+  multi-block commit, found by CC, not a block the brief names; this ruling joins item 0 as a third
+  block; the held files restored; the launch line recorded as reported; resume at 1a
+STATUS: PI ruling, 2026-10-29 UTC, session 12z, on architect recommendation, on the 12z-U19A
+  report stopped at step 1b (no commit; the two ruling files held under ~/scratch/12z-u19a/held/).
+  Transcribe at item 0 of 12z-U19A as resumed, in the block after R731's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12z-U19A stop report):
+  MEASURED: "HEAD 81db498a…0141, parent 22a21bbb…7871, status empty, 0 0, main worktree only
+    (22:46:51Z)"; "c37de0d4…967c, parent 9a6cdbd, clean, 0 0"; "b2a0080731ac…9d2f71, 2,208,124 B,
+    11,821 lines"; "Block 128 0, Block 129 0"; "grep -c 'e7425b3and' returns 0, and the committed
+    line reads "e7425b3 and 32fc09e""; "IDENTICAL, overall 0d3eedea…cb25"; "~/scratch/12z-open/gate/
+    holds 16 regular files, no symlinks or directories"; "r730.txt:
+    c6132ca957af13da257c258765b9f90d0a740ce37bdaff28b4a8f16e3587470b, 4,806 B, 59 lines";
+    "r731.txt: a0f9bf433715eb7da52519a6516fa448220740fde60e40bbec6cfde2d7f1d6cc, 7,048 B, 82
+    lines"; "I moved the two ruling files from 1a out of the repo to ~/scratch/12z-u19a/held/, with
+    hashes unchanged (held_hashes.txt), and removed the empty 12z_open/ directory".
+  READ (CC's): "the multi-block commits since then are: Blocks 119–120 (12y-U18B resume); Blocks
+    121–124, four blocks in one commit (12y-U18C); Blocks 125–126 (12y-CLOSE item 0, 0f83f46), the
+    most recent pair"; Blocks 116 and 117: "Their Transcribed clauses are identical … Neither names
+    its partner"; Blocks 125–126: "…in its own commit with Block 126 and the note and addendum R728
+    orders and …in its own commit with Block 125 and the note and addendum it orders. Blocks 119–120
+    follow the same pattern"; "The two orders differ only in partner naming"; "The 12z-OPEN gate
+    directory holds no tmux launch line. It has gate_launch.txt (a timestamp only) and run_gate.sh.
+    The wrapper tmux new-session -d -s gate_12z "bash ~/scratch/12z-open/gate/run_gate.sh" appears
+    only in my 12z-OPEN report".
+  INFERRED: none.
+
+R732(a) — The stop is correct and is the architect's: the brief named Blocks 116–117 as the model
+  pair from memory, although R720(b)'s addendum records that their clauses do not name each other.
+  From here a brief that transcribes more than one ruling in one commit names no model block: it
+  names the pattern — the record's most recent commit that transcribed more than one block — and
+  CC finds it in the log, quotes its element order and clause form, and composes from it (R720(b)
+  as it should have been applied). A brief that names a block by number for its form still has CC
+  quote it, and a quoted form that contradicts the brief's description is a finding, the record
+  governing (R18).
+R732(b) — Item 0 of 12z-U19A as resumed transcribes three rulings in one commit: R730, R731 and this
+  ruling, as the three blocks after Block 127 in that order. The model is the most recent commit
+  that transcribed more than one block, and the most recent that transcribed more than two, both
+  found and quoted by CC (the report names 125–126 and 121–124; CC reads the log, not this
+  ruling); each block's Transcribed clause names its partner blocks and this commit's items as that
+  form names them. If the two models differ beyond the count of blocks named, STOP and report both.
+R732(c) — The held files are restored at 1a by cp from ~/scratch/12z-u19a/held/ into
+  docs/session-reports/session-12/12z_open/, each verified by sha256 against the architect's values
+  before anything else is written; r732.txt is written beside them from the resume's Section 1.
+R732(d) — Finding 3: the 12z-OPEN gate ran before R731(b) set the rule, so its evidence carries no
+  launch line. The copy under 12z_open/gate_12z_open/ gains one file, launch_line.txt, carrying
+  the tmux line as the 12z-OPEN report printed it, with one leading line stating that it was
+  written at 12z-U19A's item 0 from that report and not captured at launch. It is not one of the
+  16 copied files and is listed apart from them in the report. From here the gate's own wrapper
+  writes the launch line into the evidence directory at launch (R731(b)'s rule, made concrete).
+R732(e) — Readings, no row: R731(d)'s check read 0, the committed U18 line carries the space, no
+  correction is written; the 16 gate files as tabled; the file's last line the R730(b) addendum.
+R732(f) — 12z-U19A resumes at step 1a under this ruling, with 1a, 1b, 1d and 1e amended as the
+  resume states; nothing else in the brief changes. This ruling is not written to disk before its
+  own block is composed.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-29 | R732(a) — The stop is correct and is the architect's: the brief named Blocks 116–117 as the model pair from memory, although R720(b)'s addendum records that their clauses do not name each other. From here a brief that transcribes more than one ruling in one commit names no model block: it names the pattern — the record's most recent commit that transcribed more than one block — and CC finds it in the log, quotes its element order and clause form, and composes from it (R720(b) as it should have been applied). A brief that names a block by number for its form still has CC quote it, and a quoted form that contradicts the brief's description is a finding, the record governing (R18). R732(b) — Item 0 of 12z-U19A as resumed transcribes three rulings in one commit: R730, R731 and this ruling, as the three blocks after Block 127 in that order. The model is the most recent commit that transcribed more than one block, and the most recent that transcribed more than two, both found and quoted by CC (the report names 125–126 and 121–124; CC reads the log, not this ruling); each block's Transcribed clause names its partner blocks and this commit's items as that form names them. If the two models differ beyond the count of blocks named, STOP and report both. R732(c) — The held files are restored at 1a by cp from ~/scratch/12z-u19a/held/ into docs/session-reports/session-12/12z_open/, each verified by sha256 against the architect's values before anything else is written; r732.txt is written beside them from the resume's Section 1. R732(d) — Finding 3: the 12z-OPEN gate ran before R731(b) set the rule, so its evidence carries no launch line. The copy under 12z_open/gate_12z_open/ gains one file, launch_line.txt, carrying the tmux line as the 12z-OPEN report printed it, with one leading line stating that it was written at 12z-U19A's item 0 from that report and not captured at launch. It is not one of the 16 copied files and is listed apart from them in the report. From here the gate's own wrapper writes the launch line into the evidence directory at launch (R731(b)'s rule, made concrete). R732(e) — Readings, no row: R731(d)'s check read 0, the committed U18 line carries the space, no correction is written; the 16 gate files as tabled; the file's last line the R730(b) addendum. R732(f) — 12z-U19A resumes at step 1a under this ruling, with 1a, 1b, 1d and 1e amended as the resume states; nothing else in the brief changes. This ruling is not written to disk before its own block is composed. | PI, 2026-10-29, during session 12z, on architect recommendation, on the 12z-U19A report stopped at step 1b (no commit) |
+
+The decision log in this file ends at R732.
+
+**Block 131.** *Transcribed 2026-10-30 (item 0 of the 12z-U19A brief as resumed under R733), in its own commit with Blocks 128, 129 and 130 and the 12z-OPEN gate evidence copy R731 orders and its launch_line.txt R732 and R733 order, in the R597(e) form:* ruling R733, made by PI on architect recommendation on 2026-10-29 UTC, during session 12z, on the 12z-U19A-R1 report stopped at step A4 (no commit; the three ruling files under `~/scratch/12z-u19a/restored_r1/`, the held pair under `held/`). The 12z-U19A second resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12z-R733] — 12z-U19A-R1 stop at A4: launch_line.txt carries the line as
+  executed, with its variable stated; the model reading accepted; the three clauses as composed
+  accepted; this ruling joins item 0 as a fourth block; resume at 1a
+STATUS: PI ruling, 2026-10-29 UTC, session 12z, on architect recommendation, on the 12z-U19A-R1
+  report stopped at step A4 (no commit; the three ruling files under ~/scratch/12z-u19a/
+  restored_r1/, the held pair under held/). Transcribe at item 0 of 12z-U19A as resumed, in the
+  block after R732's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12z-U19A-R1 stop report):
+  MEASURED: "81db498a…0141, status empty, 0 0, one worktree (23:57:05Z)"; "c37de0d4…967c, clean,
+    0 0"; r730.txt "c6132ca9…470b 4806 59", r731.txt "a0f9bf43…d6cc 7048 82", r732.txt
+    "493073f5…e1da 4906 56", each "✓"; "(i) The most recent commit with more than one block is
+    0f83f46, Blocks 125–126"; "(ii) The most recent commit with more than two blocks is 2c67bfc,
+    Blocks 121–124 … with no other items"; the element order as listed (eight elements);
+    "as executed (21:49:44Z), with G=~/scratch/12z-open/gate: tmux new-session -d -s gate_12z
+    "bash $G/run_gate.sh""; "as the 12z-OPEN report printed it (22:07:54Z): tmux new-session -d
+    -s gate_12z "bash …/run_gate.sh""; "It is past 23:58Z on 10-29, so the resumed commit will
+    land on 10-30 UTC".
+  READ (CC's): "My 12z-U19A stop report misquoted what my 12z-OPEN report printed, and R732 picked
+    that misquote up as a READ item"; "they differ only in how many blocks they name and in whether
+    ordered items are named. 2c67bfc carried no items, so it names none, which is R727(e)'s "no
+    'and no note' phrase""; the three clauses and Made-by cells as composed in finding 3.
+  INFERRED: none.
+
+R733(a) — The stop is correct and is CC's: the 12z-U19A stop report's quotation of the 12z-OPEN
+  report was not what that report printed, and R732(d) carried it as a READ item. R732(d)'s
+  purpose stands; its source does not. launch_line.txt line 1 reads "Written at 12z-U19A item 0
+  (R733(a)) from this CC session's transcript, the command as executed at 21:49:44Z; not captured
+  at launch."; line 2 is the executed line with its variable stated on the same line, in the form
+  the report tabled it: the assignment G=~/scratch/12z-open/gate, then the tmux line exactly as
+  executed. No elided or expanded variant is written. From here a READ item quoting a report is
+  quoted from that report's text, not from a later report's recollection of it.
+R733(b) — CC's reading of the two models is accepted: 2c67bfc and 0f83f46 share one element order;
+  they differ in the count of blocks named and in whether ordered items are named, and the latter
+  reflects what each commit carried (R727(e)). The three clauses and Made-by cells composed in
+  finding 3 are accepted as the form for this commit, extended to four blocks: each clause names
+  the other three blocks, the 12z-OPEN gate evidence copy R731 orders and its launch_line.txt
+  (R732, as amended here), in the item naming of 0f83f46; the transcription date is the commit's
+  UTC date (2026-10-30 if it lands after 00:00Z), the Made-by date each ruling's own.
+R733(c) — Item 0 of 12z-U19A as resumed transcribes four rulings in one commit: R730, R731, R732
+  and this ruling, as the four blocks after Block 127 in that order. The model stays 2c67bfc's
+  four-block form as quoted. The files are restored from ~/scratch/12z-u19a/restored_r1/ (or
+  held/ for r730 and r731 if restored_r1/ differs; the sha256 check decides) and r733.txt is
+  written from the resume's Section 1.
+R733(d) — Readings, no row: the session's stop list so far — 12z-OPEN at 0k (R730), 12z-U19A at 1b
+  (R732), 12z-U19A-R1 at A4 (this ruling) — two the architect's (§8 rule 1: a foreign process's
+  state and a model block named from memory) and one CC's (a misquoted report); the closure
+  carries them as one line each in R718(b)'s form.
+R733(e) — 12z-U19A resumes at step 1a under this ruling; A1, A2 and A4 as amended by the resume;
+  nothing else changes. This ruling is not written to disk before its own block is composed.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-29 | R733(a) — The stop is correct and is CC's: the 12z-U19A stop report's quotation of the 12z-OPEN report was not what that report printed, and R732(d) carried it as a READ item. R732(d)'s purpose stands; its source does not. launch_line.txt line 1 reads "Written at 12z-U19A item 0 (R733(a)) from this CC session's transcript, the command as executed at 21:49:44Z; not captured at launch."; line 2 is the executed line with its variable stated on the same line, in the form the report tabled it: the assignment G=~/scratch/12z-open/gate, then the tmux line exactly as executed. No elided or expanded variant is written. From here a READ item quoting a report is quoted from that report's text, not from a later report's recollection of it. R733(b) — CC's reading of the two models is accepted: 2c67bfc and 0f83f46 share one element order; they differ in the count of blocks named and in whether ordered items are named, and the latter reflects what each commit carried (R727(e)). The three clauses and Made-by cells composed in finding 3 are accepted as the form for this commit, extended to four blocks: each clause names the other three blocks, the 12z-OPEN gate evidence copy R731 orders and its launch_line.txt (R732, as amended here), in the item naming of 0f83f46; the transcription date is the commit's UTC date (2026-10-30 if it lands after 00:00Z), the Made-by date each ruling's own. R733(c) — Item 0 of 12z-U19A as resumed transcribes four rulings in one commit: R730, R731, R732 and this ruling, as the four blocks after Block 127 in that order. The model stays 2c67bfc's four-block form as quoted. The files are restored from ~/scratch/12z-u19a/restored_r1/ (or held/ for r730 and r731 if restored_r1/ differs; the sha256 check decides) and r733.txt is written from the resume's Section 1. R733(d) — Readings, no row: the session's stop list so far — 12z-OPEN at 0k (R730), 12z-U19A at 1b (R732), 12z-U19A-R1 at A4 (this ruling) — two the architect's (§8 rule 1: a foreign process's state and a model block named from memory) and one CC's (a misquoted report); the closure carries them as one line each in R718(b)'s form. R733(e) — 12z-U19A resumes at step 1a under this ruling; A1, A2 and A4 as amended by the resume; nothing else changes. This ruling is not written to disk before its own block is composed. | PI, 2026-10-29, during session 12z, on architect recommendation, on the 12z-U19A-R1 report stopped at step A4 (no commit) |
+
+The decision log in this file ends at R733.

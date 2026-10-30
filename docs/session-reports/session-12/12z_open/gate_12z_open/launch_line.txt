@@ -1,0 +1,2 @@
+Written at 12z-U19A item 0 (R733(a)) from this CC session's transcript, the command as executed at 21:49:44Z; not captured at launch.
+G=~/scratch/12z-open/gate; tmux new-session -d -s gate_12z "bash $G/run_gate.sh"

@@ -1,0 +1,56 @@
+RULING [evidence-engine 12z-R732] — 12z-U19A stop at 1b: the model pair is the record's most recent
+  multi-block commit, found by CC, not a block the brief names; this ruling joins item 0 as a third
+  block; the held files restored; the launch line recorded as reported; resume at 1a
+STATUS: PI ruling, 2026-10-29 UTC, session 12z, on architect recommendation, on the 12z-U19A
+  report stopped at step 1b (no commit; the two ruling files held under ~/scratch/12z-u19a/held/).
+  Transcribe at item 0 of 12z-U19A as resumed, in the block after R731's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12z-U19A stop report):
+  MEASURED: "HEAD 81db498a…0141, parent 22a21bbb…7871, status empty, 0 0, main worktree only
+    (22:46:51Z)"; "c37de0d4…967c, parent 9a6cdbd, clean, 0 0"; "b2a0080731ac…9d2f71, 2,208,124 B,
+    11,821 lines"; "Block 128 0, Block 129 0"; "grep -c 'e7425b3and' returns 0, and the committed
+    line reads "e7425b3 and 32fc09e""; "IDENTICAL, overall 0d3eedea…cb25"; "~/scratch/12z-open/gate/
+    holds 16 regular files, no symlinks or directories"; "r730.txt:
+    c6132ca957af13da257c258765b9f90d0a740ce37bdaff28b4a8f16e3587470b, 4,806 B, 59 lines";
+    "r731.txt: a0f9bf433715eb7da52519a6516fa448220740fde60e40bbec6cfde2d7f1d6cc, 7,048 B, 82
+    lines"; "I moved the two ruling files from 1a out of the repo to ~/scratch/12z-u19a/held/, with
+    hashes unchanged (held_hashes.txt), and removed the empty 12z_open/ directory".
+  READ (CC's): "the multi-block commits since then are: Blocks 119–120 (12y-U18B resume); Blocks
+    121–124, four blocks in one commit (12y-U18C); Blocks 125–126 (12y-CLOSE item 0, 0f83f46), the
+    most recent pair"; Blocks 116 and 117: "Their Transcribed clauses are identical … Neither names
+    its partner"; Blocks 125–126: "…in its own commit with Block 126 and the note and addendum R728
+    orders and …in its own commit with Block 125 and the note and addendum it orders. Blocks 119–120
+    follow the same pattern"; "The two orders differ only in partner naming"; "The 12z-OPEN gate
+    directory holds no tmux launch line. It has gate_launch.txt (a timestamp only) and run_gate.sh.
+    The wrapper tmux new-session -d -s gate_12z "bash ~/scratch/12z-open/gate/run_gate.sh" appears
+    only in my 12z-OPEN report".
+  INFERRED: none.
+
+R732(a) — The stop is correct and is the architect's: the brief named Blocks 116–117 as the model
+  pair from memory, although R720(b)'s addendum records that their clauses do not name each other.
+  From here a brief that transcribes more than one ruling in one commit names no model block: it
+  names the pattern — the record's most recent commit that transcribed more than one block — and
+  CC finds it in the log, quotes its element order and clause form, and composes from it (R720(b)
+  as it should have been applied). A brief that names a block by number for its form still has CC
+  quote it, and a quoted form that contradicts the brief's description is a finding, the record
+  governing (R18).
+R732(b) — Item 0 of 12z-U19A as resumed transcribes three rulings in one commit: R730, R731 and this
+  ruling, as the three blocks after Block 127 in that order. The model is the most recent commit
+  that transcribed more than one block, and the most recent that transcribed more than two, both
+  found and quoted by CC (the report names 125–126 and 121–124; CC reads the log, not this
+  ruling); each block's Transcribed clause names its partner blocks and this commit's items as that
+  form names them. If the two models differ beyond the count of blocks named, STOP and report both.
+R732(c) — The held files are restored at 1a by cp from ~/scratch/12z-u19a/held/ into
+  docs/session-reports/session-12/12z_open/, each verified by sha256 against the architect's values
+  before anything else is written; r732.txt is written beside them from the resume's Section 1.
+R732(d) — Finding 3: the 12z-OPEN gate ran before R731(b) set the rule, so its evidence carries no
+  launch line. The copy under 12z_open/gate_12z_open/ gains one file, launch_line.txt, carrying
+  the tmux line as the 12z-OPEN report printed it, with one leading line stating that it was
+  written at 12z-U19A's item 0 from that report and not captured at launch. It is not one of the
+  16 copied files and is listed apart from them in the report. From here the gate's own wrapper
+  writes the launch line into the evidence directory at launch (R731(b)'s rule, made concrete).
+R732(e) — Readings, no row: R731(d)'s check read 0, the committed U18 line carries the space, no
+  correction is written; the 16 gate files as tabled; the file's last line the R730(b) addendum.
+R732(f) — 12z-U19A resumes at step 1a under this ruling, with 1a, 1b, 1d and 1e amended as the
+  resume states; nothing else in the brief changes. This ruling is not written to disk before its
+  own block is composed.

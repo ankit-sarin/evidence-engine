@@ -1,0 +1,41 @@
+RULING [evidence-engine 12aa-R745] — 12aa-U20C stop at 2a: one shared tuple of mid-run server
+  changes closes 'aborted' in both runners; preflight re-raises a RunRefused; the refused call is
+  recorded 'error'; the active-run test and its limits; the setup session approved; resume at 2b
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20C
+  report stopped at step 2a (item 0 e3d303d71a8ace32721726552048ec14748609aa; no engine change).
+  Transcribe at the next item 0 after 12aa-U20C closes, in the block after R744's; not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20C stop report):
+  MEASURED: "Commit e3d303d71a8ace32721726552048ec14748609aa, parent 6deba58 (Block 142)"; "Ledger
+    bb7055eef90ca472655d72ab703d23acdd1eb519, parent 09c5293"; "grep ServerEnvChanged finds
+    nothing in ft_screener.py"; "run_pipeline's close is a per-class clause at
+    scripts/run_pipeline.py:213, and any other RunRefused falls to line 220's except Exception,
+    which closes 'failed'".
+  READ (CC's): "Any failure is returned as an error result, except UndeclaredCall"; "line 769
+    records _record("error", exc=exc) for anything else"; "check_call_digest returns the digest "or
+    None when no check applies — outside a run, for a call that names no stage, or for a run
+    open_run did not register""; "pdf_quality_check.py:138 also has except Exception".
+  INFERRED: none.
+
+R745(a) — The stop is correct; I5's close-path clause was the architect's, written from U19's
+  record without reading the FT runner.
+R745(b) — engine/core/run_manifest.py gains one tuple of the mid-run server-change refusals
+  (ModelDigestChanged, ServerEnvChanged, LoadedContextMismatch). scripts/run_pipeline.py and
+  engine/agents/ft_screener.py each catch that tuple in place of their per-class clauses, closing
+  'aborted' with reason=str(exc); a later class of the kind joins the tuple only. Both files join
+  the fixed engine list. ServerEnvChanged's missing FT close is closed with it.
+R745(c) — engine/utils/ollama_preflight.py re-raises any RunRefused, as it re-raises
+  UndeclaredCall, so a refusal at preflight reaches the run as itself; it joins the fixed list.
+  This changes ModelDigestChanged at preflight from an error result to a raise, intended.
+  Handlers further up the stack (pdf_quality_check.py:138 and kin) are C56's, listed by the
+  census, not changed in U20.
+R745(d) — A refused completed call is recorded with outcome 'error' and a detail naming the
+  mismatch; no outcome is added (022's CHECK). A distinct outcome is migration 023's to weigh.
+R745(e) — The active-run test is check_call_digest's non-None result. R744(d)'s recorded limits
+  gain: a call that names no stage, and a run open_run did not register, are not compared.
+R745(f) — Readings, no row: 12aa-U20B findings 3 and 4; this report's findings 6 and 8 (Block
+  113's clause form for a block alone with no items is accepted).
+R745(g) — The process-lightening setup session is approved by the PI: after U20 closes and before
+  U21. It changes no engine-protecting control; its scope is ruled with its own brief.
+R745(h) — 12aa-U20C resumes at step 2b; the reads are written to 12aa_U20C/reads_u20c.md; the
+  acceptance tests as amended by the resume; nothing else in the brief changes.

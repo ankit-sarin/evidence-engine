@@ -12968,3 +12968,108 @@ R744(f) — INT-i12-11 closes on both commits after commit 2's gate, with U20's 
 | 2026-10-30 | R744(a) — 12aa-U20B is accepted as reported: item 0 as df92bf1 (R742 and R743 as a pair, R742's header sentence in Block 133's form); U20 commit 1 as ca29906; record C1 as 6deba58; the ledgers e8edd9c, f23028a and 09c5293. The series gains 907.50 s. Findings 3 and 4 reached the architect cut off in the paste; they are carried unread, and the next report quotes them whole. R744(b) — Finding 2 is accepted as R743(c) ruled it: a malformed num_ctx line refuses whether or not the request sends num_ctx. Commit 2 adds a pin that says so. Finding 1 (n_ctx_train has no caller) and finding 7 (modules.md omits the fourth term) go to P7 with R740(e)'s lines; finding 5 and finding 6 are readings. R744(c) — Commit 2 (R743(d)): under an active run, after each completed call and before the post-call input-fit checks, the engine reads /api/ps through the chat client and takes the context_length of the entry whose name and digest are the call's. If it differs from the ceiling the call was checked against, if no such entry is listed, or if the read fails, the call raises LoadedContextMismatch, a RunRefused naming the model, the ceiling and what was read (the value, "absent" or the error); it joins RUN_REFUSED_MEMBERS and the run-fault tuple, and the run closes 'aborted' with its reason as U19's ServerEnvChanged does. The input_fit record gains the loaded context. Outside an active run nothing is read and nothing changes. No request byte, pin, prompt_hash or schema moves. R744(d) — N25 is closed by commit 2 in both directions: a service context that differs from the unit files, raised or lowered, shows as a mismatch on the first completed call. Recorded limits: the first call after a restart is checked before the send against the unit files and after it against the server; whether /api/ps follows a Modelfile-set num_ctx is inferred from finding 1 of 12aa-U20P, not measured; calls outside a run are not compared. R744(e) — A clause of (c) that states existing code (the post-call checks' place, the chat client's ps, the input_fit record, how ServerEnvChanged closes a run) is checked against the code quoted before the edit; a contradiction stops before it (R727(a)). R744(f) — INT-i12-11 closes on both commits after commit 2's gate, with U20's dated fix-unit line (fix units 37, done 23) in the form the dated lines take; counted until P1 closes (R607(d)). | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20B final report (df92bf1; ca29906; 6deba58) |
 
 The decision log in this file ends at R744.
+
+**Block 143.** *Transcribed 2026-10-30 (item 0 of the 12aa-SETUP brief), in its own commit with Block 144, in the R597(e) form:* ruling R745, made by PI on architect recommendation on 2026-10-30 UTC, during session 12aa, on the 12aa-U20C report stopped at step 2a (item 0 `e3d303d71a8ace32721726552048ec14748609aa`; no engine change). The 12aa-U20C-R1 resume that carried the ruling in substance, and the 12aa-SETUP brief whose paste carried its text, are not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aa-R745] — 12aa-U20C stop at 2a: one shared tuple of mid-run server
+  changes closes 'aborted' in both runners; preflight re-raises a RunRefused; the refused call is
+  recorded 'error'; the active-run test and its limits; the setup session approved; resume at 2b
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20C
+  report stopped at step 2a (item 0 e3d303d71a8ace32721726552048ec14748609aa; no engine change).
+  Transcribe at the next item 0 after 12aa-U20C closes, in the block after R744's; not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20C stop report):
+  MEASURED: "Commit e3d303d71a8ace32721726552048ec14748609aa, parent 6deba58 (Block 142)"; "Ledger
+    bb7055eef90ca472655d72ab703d23acdd1eb519, parent 09c5293"; "grep ServerEnvChanged finds
+    nothing in ft_screener.py"; "run_pipeline's close is a per-class clause at
+    scripts/run_pipeline.py:213, and any other RunRefused falls to line 220's except Exception,
+    which closes 'failed'".
+  READ (CC's): "Any failure is returned as an error result, except UndeclaredCall"; "line 769
+    records _record("error", exc=exc) for anything else"; "check_call_digest returns the digest "or
+    None when no check applies — outside a run, for a call that names no stage, or for a run
+    open_run did not register""; "pdf_quality_check.py:138 also has except Exception".
+  INFERRED: none.
+
+R745(a) — The stop is correct; I5's close-path clause was the architect's, written from U19's
+  record without reading the FT runner.
+R745(b) — engine/core/run_manifest.py gains one tuple of the mid-run server-change refusals
+  (ModelDigestChanged, ServerEnvChanged, LoadedContextMismatch). scripts/run_pipeline.py and
+  engine/agents/ft_screener.py each catch that tuple in place of their per-class clauses, closing
+  'aborted' with reason=str(exc); a later class of the kind joins the tuple only. Both files join
+  the fixed engine list. ServerEnvChanged's missing FT close is closed with it.
+R745(c) — engine/utils/ollama_preflight.py re-raises any RunRefused, as it re-raises
+  UndeclaredCall, so a refusal at preflight reaches the run as itself; it joins the fixed list.
+  This changes ModelDigestChanged at preflight from an error result to a raise, intended.
+  Handlers further up the stack (pdf_quality_check.py:138 and kin) are C56's, listed by the
+  census, not changed in U20.
+R745(d) — A refused completed call is recorded with outcome 'error' and a detail naming the
+  mismatch; no outcome is added (022's CHECK). A distinct outcome is migration 023's to weigh.
+R745(e) — The active-run test is check_call_digest's non-None result. R744(d)'s recorded limits
+  gain: a call that names no stage, and a run open_run did not register, are not compared.
+R745(f) — Readings, no row: 12aa-U20B findings 3 and 4; this report's findings 6 and 8 (Block
+  113's clause form for a block alone with no items is accepted).
+R745(g) — The process-lightening setup session is approved by the PI: after U20 closes and before
+  U21. It changes no engine-protecting control; its scope is ruled with its own brief.
+R745(h) — 12aa-U20C resumes at step 2b; the reads are written to 12aa_U20C/reads_u20c.md; the
+  acceptance tests as amended by the resume; nothing else in the brief changes.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-30 | R745(a) — The stop is correct; I5's close-path clause was the architect's, written from U19's record without reading the FT runner. R745(b) — engine/core/run_manifest.py gains one tuple of the mid-run server-change refusals (ModelDigestChanged, ServerEnvChanged, LoadedContextMismatch). scripts/run_pipeline.py and engine/agents/ft_screener.py each catch that tuple in place of their per-class clauses, closing 'aborted' with reason=str(exc); a later class of the kind joins the tuple only. Both files join the fixed engine list. ServerEnvChanged's missing FT close is closed with it. R745(c) — engine/utils/ollama_preflight.py re-raises any RunRefused, as it re-raises UndeclaredCall, so a refusal at preflight reaches the run as itself; it joins the fixed list. This changes ModelDigestChanged at preflight from an error result to a raise, intended. Handlers further up the stack (pdf_quality_check.py:138 and kin) are C56's, listed by the census, not changed in U20. R745(d) — A refused completed call is recorded with outcome 'error' and a detail naming the mismatch; no outcome is added (022's CHECK). A distinct outcome is migration 023's to weigh. R745(e) — The active-run test is check_call_digest's non-None result. R744(d)'s recorded limits gain: a call that names no stage, and a run open_run did not register, are not compared. R745(f) — Readings, no row: 12aa-U20B findings 3 and 4; this report's findings 6 and 8 (Block 113's clause form for a block alone with no items is accepted). R745(g) — The process-lightening setup session is approved by the PI: after U20 closes and before U21. It changes no engine-protecting control; its scope is ruled with its own brief. R745(h) — 12aa-U20C resumes at step 2b; the reads are written to 12aa_U20C/reads_u20c.md; the acceptance tests as amended by the resume; nothing else in the brief changes. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20C report stopped at step 2a (e3d303d; no engine change) |
+
+The decision log in this file ends at R745.
+
+**Block 144.** *Transcribed 2026-10-30 (item 0 of the 12aa-SETUP brief), in its own commit with Block 143, in the R597(e) form:* ruling R746, made by PI on architect recommendation on 2026-10-30 UTC, during session 12aa, on the 12aa-U20C final report as resumed under R745 (commit 2 `bc2ae195535126d19d93b660d8d239edd78769d6`; record `ca12c30551b23845dce99a791ff8ffe27c982778`). The 12aa-SETUP brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aa-R746] — U20 accepted and closed; the C2 correction by addendum; a census
+  miss red at the gate is fixed and the gate re-run; the setup session's scope
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20C
+  final report as resumed under R745 (commit 2 bc2ae195535126d19d93b660d8d239edd78769d6; record
+  ca12c30551b23845dce99a791ff8ffe27c982778). Transcribe at item 0 of the 12aa-SETUP brief, in the
+  block after R745's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20C final report):
+  MEASURED: "==== 3474 passed, 17 deselected, 1 xfailed, 2 warnings in 917.30s (0:15:17) ====";
+    "Wall 919.74 s, inside 813–992 s"; "only-gate 23, exactly the new ids; only-ref 0"; "Commit:
+    bc2ae195535126d19d93b660d8d239edd78769d6, parent e3d303d"; "Ledger:
+    aad8c33c07cb2721d2e2517413705c3a72bf4968, parent bb7055e"; record
+    "ca12c30551b23845dce99a791ff8ffe27c982778, parent bc2ae19, 51 files"; "Ledger
+    ea127df7b12f28aeed384c4a9d07d5f65e0f7b6c, parent aad8c33"; the first gate "= 1 failed, 3473
+    passed, 17 deselected, 1 xfailed, 2 warnings in 917.64s (0:15:17) ="; "P1's fix units 37, done
+    23".
+  READ (CC's): findings 1–10 of that report.
+  INFERRED: none.
+
+R746(a) — 12aa-U20C is accepted as reported: U20 commit 2 as bc2ae19; INT-i12-11 CLOSED on ca29906
+  and bc2ae19, counted until P1 closes; U20's dated line, done 23; record C2 as ca12c30; the ledgers
+  aad8c33 and ea127df. The series gains 919.74 s; the red run is not a member.
+R746(b) — Finding 1: record C2's sentence on class (v) is corrected by one dated addendum at the end
+  of 12aa_U20C_C2.md, in the setup session's item-0 commit; the sentence is not edited.
+R746(c) — Finding 2 is accepted and is the rule from here: a red at the gate caused by a census miss
+  is class (c); it is fixed without changing any test's assertion and the gate is re-run once; the
+  red run's evidence is committed beside the green one and is not a member of the series. Any
+  other red at the gate is a stop.
+R746(d) — Readings, no row: finding 3 (a red caused only by a missing name is reported as such in
+  every record from here); findings 4, 5, 6, 7, 9 and 10; finding 8's handler list is the starting
+  list of C56's census in U26, untraced.
+R746(e) — The setup session (R745(g)) builds, outside engine/, scripts/ and tests/: (i)
+  docs/plan/STANDING_RULES.md, every clause of the decision log that sets a standing rule (its text
+  says "from here", "Rule from here" or "the standing form"), each quoted verbatim with its ruling id
+  and one plain-English line, extracted by script, not composed; and, under
+  docs/session-reports/tools/, (ii) a transcription script that writes a decision-log block from an
+  rNNN.txt and its metadata, accepted only if it reproduces existing single and pair blocks byte for
+  byte; (iii) a session-open check script, accepted only if it reproduces this session's measured
+  open values; (iv) the standard gate wrapper, writing its launch line and the gate_12aa_open
+  evidence set itself. Nothing in engine/, scripts/ or tests/ changes. The standing-rules file is
+  adopted only by a later PI ruling after the architect has read it; until then every brief stays
+  in its present form.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-30 | R746(a) — 12aa-U20C is accepted as reported: U20 commit 2 as bc2ae19; INT-i12-11 CLOSED on ca29906 and bc2ae19, counted until P1 closes; U20's dated line, done 23; record C2 as ca12c30; the ledgers aad8c33 and ea127df. The series gains 919.74 s; the red run is not a member. R746(b) — Finding 1: record C2's sentence on class (v) is corrected by one dated addendum at the end of 12aa_U20C_C2.md, in the setup session's item-0 commit; the sentence is not edited. R746(c) — Finding 2 is accepted and is the rule from here: a red at the gate caused by a census miss is class (c); it is fixed without changing any test's assertion and the gate is re-run once; the red run's evidence is committed beside the green one and is not a member of the series. Any other red at the gate is a stop. R746(d) — Readings, no row: finding 3 (a red caused only by a missing name is reported as such in every record from here); findings 4, 5, 6, 7, 9 and 10; finding 8's handler list is the starting list of C56's census in U26, untraced. R746(e) — The setup session (R745(g)) builds, outside engine/, scripts/ and tests/: (i) docs/plan/STANDING_RULES.md, every clause of the decision log that sets a standing rule (its text says "from here", "Rule from here" or "the standing form"), each quoted verbatim with its ruling id and one plain-English line, extracted by script, not composed; and, under docs/session-reports/tools/, (ii) a transcription script that writes a decision-log block from an rNNN.txt and its metadata, accepted only if it reproduces existing single and pair blocks byte for byte; (iii) a session-open check script, accepted only if it reproduces this session's measured open values; (iv) the standard gate wrapper, writing its launch line and the gate_12aa_open evidence set itself. Nothing in engine/, scripts/ or tests/ changes. The standing-rules file is adopted only by a later PI ruling after the architect has read it; until then every brief stays in its present form. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20C final report as resumed under R745 (bc2ae19; ca12c30) |
+
+The decision log in this file ends at R746.

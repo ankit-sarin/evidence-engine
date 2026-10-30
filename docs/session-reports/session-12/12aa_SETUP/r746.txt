@@ -1,0 +1,42 @@
+RULING [evidence-engine 12aa-R746] — U20 accepted and closed; the C2 correction by addendum; a census
+  miss red at the gate is fixed and the gate re-run; the setup session's scope
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20C
+  final report as resumed under R745 (commit 2 bc2ae195535126d19d93b660d8d239edd78769d6; record
+  ca12c30551b23845dce99a791ff8ffe27c982778). Transcribe at item 0 of the 12aa-SETUP brief, in the
+  block after R745's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20C final report):
+  MEASURED: "==== 3474 passed, 17 deselected, 1 xfailed, 2 warnings in 917.30s (0:15:17) ====";
+    "Wall 919.74 s, inside 813–992 s"; "only-gate 23, exactly the new ids; only-ref 0"; "Commit:
+    bc2ae195535126d19d93b660d8d239edd78769d6, parent e3d303d"; "Ledger:
+    aad8c33c07cb2721d2e2517413705c3a72bf4968, parent bb7055e"; record
+    "ca12c30551b23845dce99a791ff8ffe27c982778, parent bc2ae19, 51 files"; "Ledger
+    ea127df7b12f28aeed384c4a9d07d5f65e0f7b6c, parent aad8c33"; the first gate "= 1 failed, 3473
+    passed, 17 deselected, 1 xfailed, 2 warnings in 917.64s (0:15:17) ="; "P1's fix units 37, done
+    23".
+  READ (CC's): findings 1–10 of that report.
+  INFERRED: none.
+
+R746(a) — 12aa-U20C is accepted as reported: U20 commit 2 as bc2ae19; INT-i12-11 CLOSED on ca29906
+  and bc2ae19, counted until P1 closes; U20's dated line, done 23; record C2 as ca12c30; the ledgers
+  aad8c33 and ea127df. The series gains 919.74 s; the red run is not a member.
+R746(b) — Finding 1: record C2's sentence on class (v) is corrected by one dated addendum at the end
+  of 12aa_U20C_C2.md, in the setup session's item-0 commit; the sentence is not edited.
+R746(c) — Finding 2 is accepted and is the rule from here: a red at the gate caused by a census miss
+  is class (c); it is fixed without changing any test's assertion and the gate is re-run once; the
+  red run's evidence is committed beside the green one and is not a member of the series. Any
+  other red at the gate is a stop.
+R746(d) — Readings, no row: finding 3 (a red caused only by a missing name is reported as such in
+  every record from here); findings 4, 5, 6, 7, 9 and 10; finding 8's handler list is the starting
+  list of C56's census in U26, untraced.
+R746(e) — The setup session (R745(g)) builds, outside engine/, scripts/ and tests/: (i)
+  docs/plan/STANDING_RULES.md, every clause of the decision log that sets a standing rule (its text
+  says "from here", "Rule from here" or "the standing form"), each quoted verbatim with its ruling id
+  and one plain-English line, extracted by script, not composed; and, under
+  docs/session-reports/tools/, (ii) a transcription script that writes a decision-log block from an
+  rNNN.txt and its metadata, accepted only if it reproduces existing single and pair blocks byte for
+  byte; (iii) a session-open check script, accepted only if it reproduces this session's measured
+  open values; (iv) the standard gate wrapper, writing its launch line and the gate_12aa_open
+  evidence set itself. Nothing in engine/, scripts/ or tests/ changes. The standing-rules file is
+  adopted only by a later PI ruling after the architect has read it; until then every brief stays
+  in its present form.

@@ -32,6 +32,7 @@ from engine.core.codebook import load_codebook
 from engine.core.database import ReviewDatabase
 from engine.core.review_spec import load_review_spec
 from engine.utils import ollama_client as oc
+from _loaded_context_fixture import loaded_ps  # U20 commit 2: the fake's /api/ps
 from _event_store_fixture import seed_eligibility
 from _parsed_text_fixture import write_parsed
 
@@ -50,6 +51,9 @@ class FakeClient:
     def __init__(self):
         self.calls: list[dict] = []
         self._client = SimpleNamespace(base_url="http://starts.invalid")
+
+    def ps(self):
+        return loaded_ps()
 
     def show(self, model):
         return SimpleNamespace(modelinfo={"general.context_length": 131_072})
@@ -165,7 +169,7 @@ def test_a_start_that_screens_declares_and_sends_the_screening_preflight(
     db_path, fake = review
     primary = spec.screening_models.primary
     with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=ENV_OK), \
-         patch("engine.utils.ollama_client._client.ps", create=True, return_value={"models": []}):
+         patch("engine.utils.ollama_client._client.ps", create=True, side_effect=loaded_ps):
         rp.run_pipeline("starts", skip_to=skip_to)
     end, stages, field_events, screened = _state(db_path)
     assert end == ("interrupted", rm.REASON_BLOCKED_ADJUDICATION)

@@ -29,6 +29,7 @@ from engine.core.codebook import load_codebook
 from engine.core.database import ReviewDatabase
 from engine.core.review_paths import load_spec_for
 from engine.utils import ollama_client as oc
+from _loaded_context_fixture import loaded_ps  # U20 commit 2: the fake's /api/ps
 from _event_store_fixture import open_extraction_run, seed_eligibility
 from _parsed_text_fixture import write_parsed
 
@@ -51,6 +52,9 @@ class FakeClient:
         self.calls: list[dict] = []
         self.shows: list[str] = []
         self._client = SimpleNamespace(base_url="http://undeclared.invalid")
+
+    def ps(self):
+        return loaded_ps()
 
     def show(self, model):
         self.shows.append(model)
@@ -174,7 +178,7 @@ def test_an_undeclared_preflight_leaves_require_preflight_as_itself(review, spec
            "OLLAMA_KV_CACHE_TYPE": "f16", "OLLAMA_NUM_PARALLEL": "1"}
     with rm.active_run(db._conn, run_id), \
          patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env), \
-         patch("engine.utils.ollama_client._client.ps", create=True, return_value={"models": []}):
+         patch("engine.utils.ollama_client._client.ps", create=True, side_effect=loaded_ps):
         with pytest.raises(rm.UndeclaredCall) as exc:
             pf.require_preflight([OTHER_MODEL], runner_name="Probe", spec=spec)
         assert pf.check_model(declared, spec=spec).status == "ok"      # a declared probe still runs

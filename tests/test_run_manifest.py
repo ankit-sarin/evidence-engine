@@ -17,6 +17,7 @@ from unittest.mock import patch
 
 import pytest
 
+from _loaded_context_fixture import loaded_ps  # U20 commit 2: the fake's /api/ps
 from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity  # 9b-2c R1, R224a
 
 from engine.core import events
@@ -105,6 +106,9 @@ def test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recor
 
     class Fake:
         _client = SimpleNamespace(base_url="http://capture.invalid")
+
+        def ps(self):
+            return loaded_ps()
 
         def show(self, model):
             return SimpleNamespace(modelinfo={"general.context_length": 131_072})

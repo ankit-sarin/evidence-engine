@@ -23,6 +23,7 @@ from engine.core.database import ReviewDatabase
 from engine.core.parsed_text import resolve_parsed_text
 from engine.core.review_spec import load_review_spec
 from engine.utils import ollama_client as oc
+from _loaded_context_fixture import loaded_ps  # U20 commit 2: the fake's /api/ps
 from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity, open_extraction_run, \
     seed_eligibility, seed_processing
 from _parsed_text_fixture import write_parsed
@@ -104,6 +105,7 @@ def test_T6_every_audit_call_row_carries_the_paper_it_verified(db, spec, run_id,
     c8 = _claim_unlocatable(db, spec, run_id, P8, "country")
 
     fake_client = MagicMock()
+    fake_client.ps.side_effect = loaded_ps
     fake_client.chat.return_value = _fake_response()
     with patch.object(oc, "_client", fake_client):
         with rm.active_run(db._conn, run_id):
@@ -130,6 +132,7 @@ def test_T7_no_other_stage_is_affected(db, spec, run_id, review_dir):
     _claim_unlocatable(db, spec, run_id, P7, "country")
 
     fake_client = MagicMock()
+    fake_client.ps.side_effect = loaded_ps
     fake_client.chat.return_value = _fake_response()
     with patch.object(oc, "_client", fake_client):
         with rm.active_run(db._conn, run_id):

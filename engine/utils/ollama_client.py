@@ -409,6 +409,22 @@ def _check_input_fits(model: str, messages, options, paper_label: str) -> dict:
     return fit
 
 
+def _check_loaded_context(model: str, digest: str, fit: dict) -> dict:
+    """Post-call, under a run: the context the server loaded must be the ceiling the call
+    was checked against (U20 commit 2, R744(c)). Returns the fit with `loaded_context`, or
+    raises `LoadedContextMismatch` naming the value, "absent" or the failed read."""
+    from engine.core.run_manifest import LoadedContextMismatch
+    try:
+        loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                  if m.get("name") == model and m.get("digest") == digest]
+    except Exception as exc:
+        raise LoadedContextMismatch.at(model, fit["ceiling"], f"error: {exc}") from exc
+    read = loaded[0] if loaded else "absent"
+    if read != fit["ceiling"]:
+        raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+    return {**fit, "loaded_context": read}
+
+
 def _check_input_was_read(response, fit: dict, paper_label: str):
     """Post-call: the count must be under the ceiling and above the drop floor."""
     count = getattr(response, "prompt_eval_count", None)
@@ -619,6 +635,9 @@ def ollama_chat(
         this stage with this model (C54). Nothing is sent or recorded.
     InputOverflow
         Before the call, if the input cannot fit. Nothing is sent.
+    LoadedContextMismatch
+        After the call and before the checks below, under a run, if `/api/ps` does not
+        report the ceiling for the call's model and digest (U20 commit 2, R744(c)).
     InputTruncated, InputDropped
         After the call, if the runtime cut or dropped part of the input.
     CeilingUnavailable
@@ -651,9 +670,11 @@ def ollama_chat(
         """Post-call: the only place a checked response and its raw response
         both exist, so this is where 'completed', 'refused_input_truncated'
         and 'refused_input_dropped' are recorded (R216) — one site, not
-        three, because they share this one calling point."""
+        three, because they share this one calling point. A `LoadedContextMismatch`
+        raised here is recorded 'error' by the outer handler (R745(d))."""
+        checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
         try:
-            checked = _check_input_was_read(response, fit, paper_label)
+            checked = _check_input_was_read(response, checked_fit, paper_label)
         except InputTruncated as exc:
             _record("refused_input_truncated", response=response, exc=exc)
             raise
@@ -671,7 +692,8 @@ def ollama_chat(
     # U18 commit 2 (R721(b)): the model's digest now must be the one the manifest
     # recorded for this stage, or ModelDigestChanged — before the input-fit read
     # and the send, unrecorded like C54's refusal. A no-op outside a run.
-    digest_token = _CALL_DIGEST.set(check_call_digest(stage, model))
+    call_digest = check_call_digest(stage, model)
+    digest_token = _CALL_DIGEST.set(call_digest)
 
     try:
         fit = _check_input_fits(model, messages, kwargs.get("options"), paper_label)

@@ -41,6 +41,7 @@ from engine.elicitation.materialize import SnippetNotExact
 from engine.elicitation.pipeline import ElicitationSentinelUnsatisfiable
 from engine.utils import ollama_client as oc
 from engine.utils.progress import ProgressReporter
+from _loaded_context_fixture import loaded_ps  # U20 commit 2: the fake's /api/ps
 from _event_store_fixture import open_extraction_run, seed_eligibility
 from _parsed_text_fixture import write_parsed
 
@@ -79,6 +80,7 @@ RUN_REFUSED_MEMBERS = {
     rm.OllamaHostNotLocalService,  # U19, R734(d)(i)
     rm.ModelDigestChanged,  # U18, R721(b)
     rm.ServerEnvChanged,  # U19, R734(c)(ii)
+    rm.LoadedContextMismatch,  # U20, R744(c)
     ElicitationSentinelUnsatisfiable,
 }
 FAULTS = [pytest.param(make, id=cls.__name__) for cls, make in RUN_FAULTS.items()] + [
@@ -233,6 +235,9 @@ class _Client:
         ]).model_dump_json()
         self.calls = []
         self._client = SimpleNamespace(base_url="http://runfault.invalid")
+
+    def ps(self):
+        return loaded_ps()
 
     def show(self, model):
         return SimpleNamespace(modelinfo={"general.context_length": 131_072})

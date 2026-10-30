@@ -34,6 +34,7 @@ from engine.core.extraction_events import is_run_fault, run_fault_classes
 from engine.core.review_paths import load_spec_for
 from engine.search.models import Citation
 from engine.utils import ollama_client as oc
+from _loaded_context_fixture import loaded_ps  # U20 commit 2: the fake's /api/ps
 from _parsed_text_fixture import write_parsed
 
 REPO = Path(__file__).resolve().parent.parent
@@ -71,7 +72,7 @@ class FakeClient:
             prompt_eval_count=max(1, int(chars * 0.3)), done_reason="stop", eval_count=1)
 
     def ps(self):
-        return {"models": []}
+        return loaded_ps()
 
     @property
     def requests(self) -> int:

@@ -58,11 +58,11 @@ def check_model(model_name: str, timeout: int = 30, *, spec=None) -> ModelResult
     A generation call (R63): its options come from the resolver's `preflight`
     stage — the spec's `preflight` block, or the spec model's declared defaults.
     Any failure is returned as an `error` result, except `UndeclaredCall`
-    (under an active run that did not declare this model's probe), which is
-    re-raised.
+    (under an active run that did not declare this model's probe) and any
+    `RunRefused` (R745(c)), which are re-raised.
     """
     from engine.core.effective_config import stage_config
-    from engine.core.run_manifest import UndeclaredCall
+    from engine.core.run_manifest import RunRefused, UndeclaredCall
     cfg = stage_config("preflight", spec, model=model_name)
     start = time.time()
     try:
@@ -78,9 +78,10 @@ def check_model(model_name: str, timeout: int = 30, *, spec=None) -> ModelResult
             model=model_name, status="ok",
             load_time_seconds=round(elapsed, 1), vram_used_gb=round(vram, 1),
         )
-    except UndeclaredCall:
-        # C55: a probe the run's manifest did not declare is a run fault, not a
-        # model that failed to load — it reaches the run as itself.
+    except (UndeclaredCall, RunRefused):
+        # C55, R745(c): a probe the run's manifest did not declare, or a run refused
+        # at this call, is a run fault, not a model that failed to load — it reaches
+        # the run as itself.
         raise
     except Exception as exc:
         elapsed = time.time() - start

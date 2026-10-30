@@ -351,7 +351,8 @@ each call in `run_calls`, and re-read the model's digest before each one through
 run was opened with: a digest that is not the manifest's for the stage raises `ModelDigestChanged`
 before the input-fit read and the send, and `run_pipeline` and the FT runner close the run
 'aborted' (U18, R721(b)). After a performed proactive restart, a correctness-tier drift in the re-read
-environment raises `ServerEnvChanged`, which `run_pipeline` closes 'aborted' (U19, R734(c)). A human review session is a run of kind `review_session` with zero stage
+environment raises `ServerEnvChanged`, which `run_pipeline` closes 'aborted' (U19, R734(c)).
+After a completed call, a loaded context in `/api/ps` that is not the call's ceiling raises `LoadedContextMismatch` (U20, R744(c)), the third of `MID_RUN_SERVER_REFUSALS`, the tuple both runners close 'aborted' (R745(b)). A human review session is a run of kind `review_session` with zero stage
 rows (R68). `run_pipeline` opens a manifest instead of writing `review_runs` (R73).
 
 **Arms** (R10, R12, R21, R59, R64). The spec's `arms` block declares every arm — name, kind, provider,

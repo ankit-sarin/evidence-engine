@@ -29,6 +29,7 @@ from engine.core.review_paths import load_spec_for
 from engine.exporters.prisma import validate_prisma_counts
 from engine.search.models import Citation
 from engine.utils import ollama_client as oc
+from _loaded_context_fixture import loaded_ps  # U20 commit 2: the fake's /api/ps
 from _parsed_text_fixture import write_parsed
 
 REPO = Path(__file__).resolve().parent.parent
@@ -93,7 +94,7 @@ def fake(monkeypatch):
     monkeypatch.setattr(oc, "_client", client)
     monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
     monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
-    monkeypatch.setattr(oc._client, "ps", lambda: {"models": []}, raising=False)
+    monkeypatch.setattr(oc._client, "ps", loaded_ps, raising=False)
     return client
 
 

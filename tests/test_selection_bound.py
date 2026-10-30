@@ -34,6 +34,7 @@ from engine.core.review_spec import load_review_spec
 from engine.core.run_telemetry import read_run_events
 from engine.core.selection import bound_selection, select_for_extraction
 from engine.utils import ollama_client as oc
+from _loaded_context_fixture import loaded_ps  # U20 commit 2: the fake's /api/ps
 from _event_store_fixture import FIXTURE_DIGEST, seed_eligibility
 from _parsed_text_fixture import write_parsed
 
@@ -93,6 +94,9 @@ class _Client:
             for f in fields]).model_dump_json()
         self.calls = []
         self._client = SimpleNamespace(base_url="http://bound.invalid")
+
+    def ps(self):
+        return loaded_ps()
 
     def show(self, model):
         return SimpleNamespace(modelinfo={"general.context_length": 131_072})

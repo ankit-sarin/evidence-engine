@@ -203,17 +203,10 @@ def run_pipeline(
         logger.error("RUN ABORTED: %s", exc)
         _finish_review_run(db, run_id, "aborted", reason=str(exc))
         raise
-    except rm.ModelDigestChanged as exc:
-        # U18 commit 2 (R721(b), R727(b)): a model replaced under its tag mid-run.
-        # Nothing was sent for the refused call; the run closes 'aborted' with the
-        # refusal's message, which names the model, the stage and both digests.
-        logger.error("RUN ABORTED: %s", exc)
-        _finish_review_run(db, run_id, "aborted", reason=str(exc))
-        raise
-    except rm.ServerEnvChanged as exc:
-        # U19 (R734(c)(ii)): the configured environment failed the correctness tier on
-        # the read after a performed proactive restart. No paper was extracted under it;
-        # the run closes 'aborted' with the refusal's message, which names each key.
+    except rm.MID_RUN_SERVER_REFUSALS as exc:
+        # R745(b): a server that changed under the open run (a model replaced under its
+        # tag, U18; the environment after a restart, U19; the loaded context, U20). The
+        # run closes 'aborted' with the refusal's message, which names what differs.
         logger.error("RUN ABORTED: %s", exc)
         _finish_review_run(db, run_id, "aborted", reason=str(exc))
         raise

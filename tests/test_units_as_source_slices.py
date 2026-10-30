@@ -33,6 +33,7 @@ from engine.elicitation import materialize as M
 from engine.elicitation.contracts import FieldRecord
 from engine.elicitation.units import build_unit_map
 from engine.utils import ollama_client as oc
+from _loaded_context_fixture import loaded_ps  # U20 commit 2: the fake's /api/ps
 from _event_store_fixture import seed_eligibility
 from _parsed_text_fixture import write_parsed
 
@@ -194,6 +195,9 @@ class _ElicitedClient:
         self._pass2 = ExtractionOutput(fields=spans).model_dump_json()
         self.calls = []
         self._client = SimpleNamespace(base_url="http://etest.invalid")
+
+    def ps(self):
+        return loaded_ps()
 
     def show(self, model):
         return SimpleNamespace(modelinfo={"general.context_length": 131_072})

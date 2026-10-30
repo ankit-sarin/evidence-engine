@@ -247,6 +247,38 @@ class ServerEnvChanged(RunRefused):
             drift=drift, papers_done=papers_done)
 
 
+class LoadedContextMismatch(RunRefused):
+    """U20 commit 2, R744(c): after a completed call under a run, `/api/ps` reports a
+    context for the call's model and digest that is not the ceiling the call was checked
+    against, or lists no such entry, or cannot be read. Raised by `ollama_chat` before the
+    post-call input-fit checks; the runners close the run 'aborted' with this message,
+    which starts with the class name.
+
+    Constructed from a message, as every `RunRefused` is; `at` composes the message from
+    the model, the ceiling and what was read (the value, "absent" or the error), and keeps
+    them as fields."""
+
+    def __init__(self, message: str, *, model: str | None = None, ceiling: int | None = None,
+                 read: int | str | None = None):
+        super().__init__(message)
+        self.model, self.ceiling, self.read = model, ceiling, read
+
+    @classmethod
+    def at(cls, model: str, ceiling: int, read: int | str | None) -> "LoadedContextMismatch":
+        return cls(
+            f"LoadedContextMismatch: run refused after a completed call: model {model!r} was "
+            f"checked against a ceiling of {ceiling}, and /api/ps read {read} for its name and "
+            "digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show "
+            "ollama --property=Environment` and the model's Modelfile parameters; bring the "
+            "server and the ceiling's terms into agreement and start a new run.",
+            model=model, ceiling=ceiling, read=read)
+
+
+#: R745(b): the refusals of a server that changed under an open run. Both runners catch this
+#: tuple and close the run 'aborted' with the refusal's message.
+MID_RUN_SERVER_REFUSALS = (ModelDigestChanged, ServerEnvChanged, LoadedContextMismatch)
+
+
 class UndeclaredCall(Exception):
     """C54: a model call the active run's manifest did not declare — its stage
     key has no `run_stage_configs` row, or the row names a different model.

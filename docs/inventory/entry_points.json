@@ -5784,7 +5784,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 313,
+            "line": 314,
             "names": [
               "--models"
             ],
@@ -5793,7 +5793,7 @@
           {
             "default": "30",
             "dest": null,
-            "line": 314,
+            "line": 315,
             "names": [
               "--timeout"
             ],
@@ -6608,7 +6608,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 602,
+            "line": 595,
             "names": [
               "--review",
               "--name"
@@ -6618,7 +6618,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 608,
+            "line": 601,
             "names": [
               "--spec"
             ],
@@ -6627,7 +6627,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 614,
+            "line": 607,
             "names": [
               "--skip-to"
             ],
@@ -6636,7 +6636,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 620,
+            "line": 613,
             "names": [
               "--limit"
             ],
@@ -6645,7 +6645,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 626,
+            "line": 619,
             "names": [
               "--max-papers"
             ],
@@ -6661,19 +6661,19 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 354,
+            "line": 347,
             "role": "message",
             "text": "No papers with status PDF_ACQUIRED. PDF acquisition is manual for v1. Place PDFs in data/%s/pdfs/ named as {paper_id}.pdf, then set status to PDF_ACQUIRED."
           },
           {
             "kind": "literal",
-            "line": 604,
+            "line": 597,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 610,
+            "line": 603,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -6826,7 +6826,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "aa761245512fab8827346303d62fa12d5b40f590",
+    "generated_at_commit": "e3d303d71a8ace32721726552048ec14748609aa",
     "scan_roots": [
       "engine",
       "scripts",

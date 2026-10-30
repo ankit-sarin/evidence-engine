@@ -28,6 +28,7 @@ from engine.core.events import ClaimWithoutPresentedContext, PAYLOAD_CONTEXT_CHA
 from engine.core.review_paths import load_spec_for
 from engine.utils import ollama_client as oc
 from engine.utils.ollama_client import InputOverflow, ollama_chat
+from _loaded_context_fixture import loaded_ps  # U20 commit 2: the fake's /api/ps
 from _event_store_fixture import FIXTURE_CONTEXT_SHA, claim_identity, fixture_run, register_pinned_arm
 
 REPO = Path(__file__).resolve().parent.parent
@@ -98,6 +99,7 @@ def test_T1_success_hash_equals_the_recorded_row(review, spec):
     db, cb = review
     h = _open(db, spec, cb)
     fake_client = MagicMock()
+    fake_client.ps.side_effect = loaded_ps
     fake_client.chat.return_value = _fake_response("{}")
     with patch.object(oc, "_client", fake_client):
         with rm.active_run(db._conn, h.run_id):
@@ -134,6 +136,7 @@ def test_T1_exhaustion_hash_equals_the_recorded_row(review, spec):
     db, cb = review
     h = _open(db, spec, cb)
     fake_client = MagicMock()
+    fake_client.ps.side_effect = loaded_ps
     fake_client.chat.side_effect = RuntimeError("boom")
     messages = [{"role": "user", "content": "hi"}]
     with patch.object(oc, "_client", fake_client):
@@ -151,6 +154,7 @@ def test_T2_default_returns_the_bare_response(review, spec):
     db, cb = review
     h = _open(db, spec, cb)
     fake_client = MagicMock()
+    fake_client.ps.side_effect = loaded_ps
     fake_client.chat.return_value = _fake_response("{}")
     with patch.object(oc, "_client", fake_client):
         with rm.active_run(db._conn, h.run_id):
@@ -192,6 +196,7 @@ def test_T3_every_claim_carries_pass2s_hash_and_the_full_chain(review, spec):
     pid, ref = _paper(db, spec)
 
     fake_client = MagicMock()
+    fake_client.ps.side_effect = loaded_ps
     pass1_resp = _fake_response("draft", thinking="The paper reports an RCT.")
     pass2_resp = _fake_response(ExtractionOutput(fields=_complete_pass2_fields()).model_dump_json())
     fake_client.chat.side_effect = [pass1_resp, pass2_resp]
@@ -230,6 +235,7 @@ def test_T4_a_retried_snippet_carries_its_own_hash_a_clean_one_does_not(review, 
                              confidence=0.9, tier=fields[0].tier)
 
     fake_client = MagicMock()
+    fake_client.ps.side_effect = loaded_ps
     pass1_resp = _fake_response("draft", thinking="The paper reports an RCT.")
     pass2_resp = _fake_response(ExtractionOutput(fields=fields).model_dump_json())
     retry_resp = _fake_response(json.dumps({"source_snippet": "Twenty participants completed it."}))

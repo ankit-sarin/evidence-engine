@@ -12698,3 +12698,98 @@ R739(d) — 12aa-U20A resumes at step 1a under this ruling; nothing else in the 
 | 2026-10-30 | R739(a) — The stop is correct and the error is CC's; R738(b) worked as intended. The brief's silence on clearing a mismatch was the architect's. The hash is the control on every ruling file; no further rule. R739(b) — The mismatched file is not edited and not deleted: it is moved by its path to ~/scratch/12aa-u20a/r738_first_write.txt, its sha256 verified there. r738.txt is then written once more from the 12aa-U20A brief's Section 1 and hashed immediately; a second mismatch is a stop. From here a ruling file that fails its hash is cleared this way, under a ruling. R739(c) — Item 0 transcribes R738 and this ruling as two blocks in one commit, in that order; r739.txt is written beside r738.txt in 12aa_open/ under R738(b)'s rule. The model is the record's most recent commit that transcribed more than one block, found and quoted by CC (R732(a)). R739(d) — 12aa-U20A resumes at step 1a under this ruling; nothing else in the brief changes. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20A report stopped at step 1a (no commit) |
 
 The decision log in this file ends at R739.
+
+**Block 138.** *Transcribed 2026-10-30 (item 0 of the 12aa-U20P brief as resumed under R741), in its own commit with Block 139, in the R597(e) form:* ruling R740, made by PI on architect recommendation on 2026-10-30 UTC, during session 12aa, on the 12aa-U20A final report as resumed under R739 (item 0 `697f0db3a569a2b8affd16f4c1c98e312342b97d`; read-out `dba140642512f76b87393f2b6e3148ee4f62d303`). The 12aa-U20P brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aa-R740] — 12aa-U20A accepted; the file read accepted; N25 is U20's;
+  INT-i12-11 stays Class 1; one probe answers Q2 and Q3 before U20's design is ruled
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20A
+  final report as resumed under R739 (item 0 697f0db3a569a2b8affd16f4c1c98e312342b97d; read-out
+  dba140642512f76b87393f2b6e3148ee4f62d303). Transcribe as item 0 of the 12aa-U20P brief, in the
+  block after R739's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20A final report):
+  MEASURED: "Commit 697f0db3a569a2b8affd16f4c1c98e312342b97d, parent 5c1474c"; "Plan numstat +134
+    / −0"; "12,700 lines, sha256 7d046ad914ff76bbe716ae251c01f4c5df0f01c92c85e85dba3f715aeb784851,
+    2,327,955 B"; "Ledger 560561f17f1c92b444c22ee8fc38bf4c2672f6f3, parent 14830c0"; read-out
+    "dba140642512f76b87393f2b6e3148ee4f62d303, parent 697f0db, 9 files"; "Ledger
+    544078044d7505bd157abe299ccd54ec75e49952, parent 560561f"; "G6: git diff --stat 5c1474c HEAD
+    -- engine tests scripts analysis review_specs printed nothing"; "has_num_ctx False on 20 of
+    20, and the journal reads OLLAMA_CONTEXT_LENGTH:0 this boot"; "digest==sha256(manifest file)
+    20/20"; "the existing coupled files ran green alone (65 passed)".
+  READ (CC's): "the entry does not name N25 (F1)"; "R734(d)(ii) says it "stays as designed and is
+    U20's""; "I read the model manifests and params blobs as files, with no server request";
+    "/api/ps carried context_length on 0.21.0 in committed run summaries"; "Q2: the parameters
+    string on the wire. This takes one /api/show, no load"; "Q3: whether context_length reports a
+    Modelfile value".
+  INFERRED: none.
+
+R740(a) — 12aa-U20A is accepted as reported: item 0 as 697f0db (R738 and R739 as a pair, both
+  files at the architect's hashes, each hashed straight after its write); the read-out as
+  dba1406; the ledgers 560561f and 5440780; no engine, test, script, spec or codebook change.
+R740(b) — Finding F5: the read of the model manifests and params blobs as files, with no server
+  request, is within the brief's intent (read-only, nothing loaded or created). F2 and F3 stand
+  as readings; F2 rests on the store's structure, not on an experiment, and is recorded so.
+R740(c) — Finding F1: N25 is U20's (R734(d)(ii) governs over the row's "with U19"). U20's design
+  ruling either closes N25 or records it as a named limit with its silent direction (F10)
+  stated; "stays as designed" does not mean no decision.
+R740(d) — Finding F11: INT-i12-11 stays Class 1 (latent). F2 confines the silent case to a
+  Modelfile value present when an arm first pins, and F3 is today's reading only; neither
+  removes the defect for another review.
+R740(e) — Readings, no row: F6 (more than one term: parsing, the cache, the absent, empty and
+  unparseable cases), F7 (four terms in the code, not three), F8 (three stale architecture
+  lines, for P7 with HK-ARCH), F9, F10. Q1, Q4 and Q5 stay as the read-out's §9 states them.
+R740(f) — Before U20's design is ruled, one probe (12aa-U20P) answers Q2 and Q3: /api/show of the
+  models the live spec names and of one small installed model, recording the raw parameters
+  and context fields; then, under the experiment lock, outside any run manifest, no review
+  written, two loads of that small model, one with a request num_ctx and one without, each a
+  one-token request followed by /api/ps, and an unload after each. No model created, pulled or
+  deleted; no Modelfile, unit, environment or service change; no restart. A model resident at
+  the start that is not the probe's, or a load that is not the probe's, stops it. The design
+  options are tabled again with the probe's answers; no option is chosen before.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-30 | R740(a) — 12aa-U20A is accepted as reported: item 0 as 697f0db (R738 and R739 as a pair, both files at the architect's hashes, each hashed straight after its write); the read-out as dba1406; the ledgers 560561f and 5440780; no engine, test, script, spec or codebook change. R740(b) — Finding F5: the read of the model manifests and params blobs as files, with no server request, is within the brief's intent (read-only, nothing loaded or created). F2 and F3 stand as readings; F2 rests on the store's structure, not on an experiment, and is recorded so. R740(c) — Finding F1: N25 is U20's (R734(d)(ii) governs over the row's "with U19"). U20's design ruling either closes N25 or records it as a named limit with its silent direction (F10) stated; "stays as designed" does not mean no decision. R740(d) — Finding F11: INT-i12-11 stays Class 1 (latent). F2 confines the silent case to a Modelfile value present when an arm first pins, and F3 is today's reading only; neither removes the defect for another review. R740(e) — Readings, no row: F6 (more than one term: parsing, the cache, the absent, empty and unparseable cases), F7 (four terms in the code, not three), F8 (three stale architecture lines, for P7 with HK-ARCH), F9, F10. Q1, Q4 and Q5 stay as the read-out's §9 states them. R740(f) — Before U20's design is ruled, one probe (12aa-U20P) answers Q2 and Q3: /api/show of the models the live spec names and of one small installed model, recording the raw parameters and context fields; then, under the experiment lock, outside any run manifest, no review written, two loads of that small model, one with a request num_ctx and one without, each a one-token request followed by /api/ps, and an unload after each. No model created, pulled or deleted; no Modelfile, unit, environment or service change; no restart. A model resident at the start that is not the probe's, or a load that is not the probe's, stops it. The design options are tabled again with the probe's answers; no option is chosen before. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20A final report as resumed under R739 (697f0db; dba1406) |
+
+The decision log in this file ends at R740.
+
+**Block 139.** *Transcribed 2026-10-30 (item 0 of the 12aa-U20P brief as resumed under R741), in its own commit with Block 138, in the R597(e) form:* ruling R741, made by PI on architect recommendation on 2026-10-30 UTC, during session 12aa, on the 12aa-U20P report stopped after step 0 (no commit). The 12aa-U20P resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aa-R741] — 12aa-U20P stop after step 0: P1 covers the spec's five
+  Ollama models and the small model; this ruling joins item 0 as a second block; resume at 1a
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20P
+  report stopped after step 0 (no commit, no probe request). Transcribe at item 0 of 12aa-U20P
+  as resumed, in the block after R740's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20P stop report):
+  MEASURED: "The spec names seven models, and two are not installed"; "o4-mini-2025-04-16 …
+    provider: openai … no (cloud arm)"; "claude-sonnet-4-6 … provider: anthropic … no (cloud
+    arm)"; "llama3.2:3b, 2,019,393,189 B, the smallest in /api/tags; health job 10-30: OK 4.2s";
+    "Concurrent jobs: surgical-cv's uvicorn only. Its PID has changed, to 2856714, started
+    18:57:08Z".
+  READ (CC's): "R740(f)'s words have the same gap"; "from engine.utils.ollama_lock import
+    hold_experiment_lock and with hold_experiment_lock(): in 12v_U37R/send.py".
+  INFERRED: none.
+
+R741(a) — The stop is correct and the premise was the architect's: I5 and R740(f) took every
+  model the spec names to be a local model, though the spec declares two cloud arms.
+R741(b) — P1 covers the five models the spec names with provider ollama, and the small model
+  (llama3.2:3b, I6). The two cloud names are recorded as not installed and are not sent.
+R741(c) — Readings, no row: the uvicorn server's new PID and start time, not this lane's; I1–I4,
+  I6 and I7 as reported.
+R741(d) — Item 0 transcribes R740 and this ruling as two blocks in one commit, in that order;
+  r741.txt is written beside r740.txt in 12aa_U20P/ under R738(b)'s rule. The model is the
+  record's most recent commit that transcribed more than one block, found and quoted by CC
+  (R732(a)). 12aa-U20P resumes at step 1a; step 0 stands as measured, with HEAD, status,
+  ahead/behind and /api/ps re-read at the resume's start; nothing else in the brief changes.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-30 | R741(a) — The stop is correct and the premise was the architect's: I5 and R740(f) took every model the spec names to be a local model, though the spec declares two cloud arms. R741(b) — P1 covers the five models the spec names with provider ollama, and the small model (llama3.2:3b, I6). The two cloud names are recorded as not installed and are not sent. R741(c) — Readings, no row: the uvicorn server's new PID and start time, not this lane's; I1–I4, I6 and I7 as reported. R741(d) — Item 0 transcribes R740 and this ruling as two blocks in one commit, in that order; r741.txt is written beside r740.txt in 12aa_U20P/ under R738(b)'s rule. The model is the record's most recent commit that transcribed more than one block, found and quoted by CC (R732(a)). 12aa-U20P resumes at step 1a; step 0 stands as measured, with HEAD, status, ahead/behind and /api/ps re-read at the resume's start; nothing else in the brief changes. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20P report stopped after step 0 (no commit) |
+
+The decision log in this file ends at R741.

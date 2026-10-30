@@ -1,0 +1,27 @@
+RULING [evidence-engine 12aa-R741] — 12aa-U20P stop after step 0: P1 covers the spec's five
+  Ollama models and the small model; this ruling joins item 0 as a second block; resume at 1a
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20P
+  report stopped after step 0 (no commit, no probe request). Transcribe at item 0 of 12aa-U20P
+  as resumed, in the block after R740's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20P stop report):
+  MEASURED: "The spec names seven models, and two are not installed"; "o4-mini-2025-04-16 …
+    provider: openai … no (cloud arm)"; "claude-sonnet-4-6 … provider: anthropic … no (cloud
+    arm)"; "llama3.2:3b, 2,019,393,189 B, the smallest in /api/tags; health job 10-30: OK 4.2s";
+    "Concurrent jobs: surgical-cv's uvicorn only. Its PID has changed, to 2856714, started
+    18:57:08Z".
+  READ (CC's): "R740(f)'s words have the same gap"; "from engine.utils.ollama_lock import
+    hold_experiment_lock and with hold_experiment_lock(): in 12v_U37R/send.py".
+  INFERRED: none.
+
+R741(a) — The stop is correct and the premise was the architect's: I5 and R740(f) took every
+  model the spec names to be a local model, though the spec declares two cloud arms.
+R741(b) — P1 covers the five models the spec names with provider ollama, and the small model
+  (llama3.2:3b, I6). The two cloud names are recorded as not installed and are not sent.
+R741(c) — Readings, no row: the uvicorn server's new PID and start time, not this lane's; I1–I4,
+  I6 and I7 as reported.
+R741(d) — Item 0 transcribes R740 and this ruling as two blocks in one commit, in that order;
+  r741.txt is written beside r740.txt in 12aa_U20P/ under R738(b)'s rule. The model is the
+  record's most recent commit that transcribed more than one block, found and quoted by CC
+  (R732(a)). 12aa-U20P resumes at step 1a; step 0 stands as measured, with HEAD, status,
+  ahead/behind and /api/ps re-read at the resume's start; nothing else in the brief changes.

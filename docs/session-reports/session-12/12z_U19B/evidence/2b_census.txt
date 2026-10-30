@@ -1,0 +1,149 @@
+## (A) open seams: _open_run_manifest / open_screening_manifest / run_pipeline() / ft main
+tests/test_run_pipeline_starts.py:9:(`_open_run_manifest`, injected git state and digests) through the real SEARCH
+tests/test_run_pipeline_starts.py:141:        rp.run_pipeline("starts", skip_to=skip_to)
+tests/test_run_pipeline_starts.py:167:        rp.run_pipeline("starts", skip_to=skip_to)
+tests/test_pin_records.py:160:    run_id = rp._open_run_manifest(db, elicited, rp.STAGES.index("extract"))
+tests/test_run_pipeline_closes.py:49:    monkeypatch.setattr(rp, "_open_run_manifest", lambda d, s, i, **k: run_id)
+tests/test_run_pipeline_closes.py:74:    rp.run_pipeline("closes", skip_to="extract")
+tests/test_run_pipeline_closes.py:84:    rp.run_pipeline("closes", skip_to="extract")
+tests/test_run_pipeline_closes.py:98:    rp.run_pipeline("closes", skip_to="extract")
+tests/test_run_pipeline_closes.py:111:        rp.run_pipeline("closes", skip_to="extract")
+tests/test_run_pipeline_closes.py:133:    monkeypatch.setattr(rp, "_open_run_manifest", lambda d, s, i, **k: run_id)
+tests/test_run_pipeline_closes.py:156:    rp.run_pipeline("closes", skip_to="extract")
+tests/test_run_pipeline_closes.py:167:    rp.run_pipeline("closes", skip_to="extract")
+tests/test_run_pipeline_closes.py:177:    rp.run_pipeline("closes", skip_to="extract")
+tests/test_codebook_review_at_open.py:121:        rp._open_run_manifest(review, spec, rp.STAGES.index("extract"))
+tests/test_u18_digest_per_call.py:278:    monkeypatch.setattr(rp, "_open_run_manifest", lambda d, s, i, **k: run_id)
+tests/test_u18_digest_per_call.py:283:        rp.run_pipeline("u18c", skip_to="extract")
+tests/test_extraction_validator.py:255:    assert V.main(["--review", "surgical_autonomy"]) == 0
+tests/test_extraction_validator.py:265:    assert V.main(["--review", "surgical_autonomy", "--arm", "no_such_arm"]) == 2
+tests/test_extraction_validator.py:270:    assert V.main(["--review", "surgical_autonomy", "--arm", ARM]) == 0
+tests/test_extraction_validator.py:293:    assert V.main(["--review", "surgical_autonomy"]) == 0
+tests/test_entry_points_take_the_lock.py:60:    monkeypatch.setattr(rp, "_open_run_manifest", _never("_open_run_manifest"))
+tests/test_entry_points_take_the_lock.py:88:    monkeypatch.setattr(rp, "_open_run_manifest",
+tests/test_cut_over.py:210:    monkeypatch.setattr(rp, "_open_run_manifest", lambda d, s, i, **k: run_id)
+tests/test_cut_over.py:216:        rp.run_pipeline("flip", skip_to="extract")
+tests/test_selection_bound.py:9:`_open_run_manifest`, with `open_run`'s digest and git lookups injected (the
+tests/test_selection_bound.py:75:    """`_open_run_manifest` calls `rm.open_run` with no digest or git override;
+tests/test_selection_bound.py:154:    run_id = rp._open_run_manifest(db, spec, EXTRACT)
+tests/test_selection_bound.py:167:    run_id = rp._open_run_manifest(db, spec, EXTRACT, max_papers=5)
+tests/test_selection_bound.py:184:        rp.run_pipeline("bnd", skip_to="extract", max_papers=bad)
+tests/test_selection_bound.py:200:        rp.run_pipeline("bnd", skip_to="audit", max_papers=5)
+tests/test_selection_bound.py:214:    monkeypatch.setattr(rp, "_open_run_manifest", fake_open)
+tests/test_selection_bound.py:225:        rp.run_pipeline("bnd", skip_to="extract", max_papers=7)
+tests/test_selection_bound.py:234:    first = rp._open_run_manifest(db, spec, EXTRACT, max_papers=5)
+tests/test_selection_bound.py:238:    second = rp._open_run_manifest(db, spec, EXTRACT, max_papers=5)
+tests/test_selection_bound.py:253:    run_id = rp._open_run_manifest(db, spec, EXTRACT, max_papers=20)
+tests/test_arm_pinned_at_extract.py:115:    rp.run_pipeline(REVIEW, skip_to="screen")
+tests/test_arm_pinned_at_extract.py:128:    rp.run_pipeline(REVIEW, skip_to="extract")
+tests/test_arm_pinned_at_extract.py:140:    rp.run_pipeline(REVIEW, skip_to="screen")
+tests/test_arm_pinned_at_extract.py:152:        rp.run_pipeline(REVIEW, skip_to="extract")
+tests/test_run_scoped_field_names.py:113:    aborted_with_reason, which monkeypatches _open_run_manifest to return a
+tests/test_run_interrupts.py:84:    monkeypatch.setattr(rp, "_open_run_manifest", lambda d, s, i, **k: run_id)
+tests/test_run_interrupts.py:97:        rp.run_pipeline("intr", skip_to="extract")
+tests/test_run_interrupts.py:108:        rp.run_pipeline("intr", skip_to="extract")
+tests/test_run_interrupts.py:157:    return ft.main(["--review", "intr"])
+tests/test_run_interrupts.py:194:        rp.run_pipeline("intr", skip_to="extract")
+tests/test_run_interrupts.py:244:    monkeypatch.setattr(rp, "_open_run_manifest", lambda d, s, i, **k: run_id)
+tests/test_run_interrupts.py:250:            rp.run_pipeline("intr", skip_to="extract")
+tests/test_run_interrupts.py:299:        rp.run_pipeline("intr", skip_to="extract")
+tests/test_run_interrupts.py:340:        rp.run_pipeline("intr", skip_to="extract")
+
+## (B) restart_ollama return / replacement
+tests/test_qualgap01.py:103:        R.oc._restart_ollama_and_retry(
+tests/test_run_pipeline_starts.py:107:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_lock_census.py:41:_CLIENT = "def ollama_chat(**kw):\n    return _restart_ollama_and_retry()\n\ndef _restart_ollama_and_retry():\n    pass\n"
+tests/test_lock_census.py:43:_EXTRACTOR = "def restart_ollama():\n    pass\n"
+tests/test_lock_census.py:88:        extractor.restart_ollama()
+tests/test_lock_census.py:126:    assert "engine.agents.extractor::restart_ollama" in failures[0]
+tests/test_lock_census.py:191:    assert set(SINKS) >= {("engine.agents.extractor", "restart_ollama"),
+tests/test_lock_census.py:192:                          ("engine.utils.ollama_client", "_restart_ollama_and_retry")}
+tests/conftest.py:26:    flock holders in `test_ollama_lock.py` and `test_restart_ollama_guard.py`
+tests/conftest.py:30:    detail. `_restart_ollama_and_retry` wraps its restart in `except Exception`
+tests/test_ollama_client.py:12:    _restart_ollama_and_retry,
+tests/test_ollama_client.py:148:        retries drops into `_restart_ollama_and_retry`, and without this patch
+tests/test_ollama_client.py:243:        result = _restart_ollama_and_retry(
+tests/test_ollama_client.py:300:    def test_restart_ollama_and_retry_raises_on_restart_failure(self, mock_subprocess):
+tests/test_ollama_client.py:301:        """M3: _restart_ollama_and_retry raises RuntimeError (not None) on restart failure."""
+tests/test_ollama_client.py:303:            _restart_ollama_and_retry(
+tests/test_ollama_client.py:313:    def test_restart_ollama_and_retry_raises_on_post_restart_failure(
+tests/test_ollama_client.py:316:        """M3: _restart_ollama_and_retry raises RuntimeError when post-restart call fails."""
+tests/test_ollama_client.py:325:            _restart_ollama_and_retry(
+tests/test_extractor.py:20:    restart_ollama,
+tests/test_extractor.py:464:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:483:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:499:    @patch("engine.agents.extractor.restart_ollama", side_effect=RuntimeError("Failed to restart Ollama: systemctl failed"))
+tests/test_extractor.py:515:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:558:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:673:    """restart_ollama() failure in extraction loop must not crash the run."""
+tests/test_extractor.py:676:        """If restart_ollama raises RuntimeError, extraction continues."""
+tests/test_extractor.py:684:            patch("engine.agents.extractor.restart_ollama",
+tests/test_restart_ollama_guard.py:1:"""restart_ollama() must stand down for a FOREIGN experiment lock only (OPS-GUARD-01 C).
+tests/test_restart_ollama_guard.py:5:fragmentation. If restart_ollama() skipped whenever the lock was held at all, it
+tests/test_restart_ollama_guard.py:65:                extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25)
+tests/test_restart_ollama_guard.py:83:            extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:92:        extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:102:            assert extractor.restart_ollama(reason="proactive", papers_done=25) is None
+tests/test_restart_ollama_guard.py:149:            assert extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25) is None
+tests/test_restart_ollama_guard.py:166:        extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:175:    `_extract_selected` zeroes `papers_since_restart` whenever `restart_ollama` returns
+tests/_lock_census.py:43:    ("engine.utils.ollama_client", "_restart_ollama_and_retry"): "last-resort Ollama restart",
+tests/_lock_census.py:44:    ("engine.agents.extractor", "restart_ollama"): "proactive Ollama restart",
+tests/test_restart_recovery_guard.py:1:"""`_restart_ollama_and_retry` must respect the experiment lock and the opt-out.
+tests/test_restart_recovery_guard.py:3:OPSFIX-01. `extractor.restart_ollama` has been flock-gated since OPS-GUARD-01,
+tests/test_restart_recovery_guard.py:71:    return oc._restart_ollama_and_retry(**kwargs)
+tests/test_run_interrupts.py:241:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_selection_bound.py:115:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_cut_over.py:104:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_u18_one_host.py:85:        E.restart_ollama(reason="u18", papers_done=0)                            # the restart poll
+tests/test_undeclared_call.py:231:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_service_call_fence.py:68:    """`test_ollama_lock` and `test_restart_ollama_guard` spawn real helpers."""
+tests/test_service_call_fence.py:103:    `_restart_ollama_and_retry` wraps its restart in `except Exception` and
+
+## (C) class set
+tests/test_run_fault_predicate.py:73:RUN_REFUSED_MEMBERS = {
+tests/test_run_fault_predicate.py:84:    for c in sorted(RUN_REFUSED_MEMBERS, key=lambda c: c.__name__)]
+tests/test_run_fault_predicate.py:137:    for cls in RUN_REFUSED_MEMBERS:
+tests/test_run_fault_predicate.py:142:    assert subclasses(rm.RunRefused) == RUN_REFUSED_MEMBERS
+
+## (D) body key sets
+tests/test_feedback_block.py:139:        assert name not in body
+tests/test_codebook_evidence_modality.py:89:        assert name not in body, f"{name} is hand-listed in the lint rule"
+tests/test_migration_016_017.py:230:    assert "surgical_autonomy" not in body
+tests/test_migration_016_017.py:231:    assert "db_path.parent" in body and "review_root.name" in body
+tests/test_ft_adjudication_import.py:321:_BODY_KEYS = {"run_uid", "review_id", "run_kind", "git", "engine_state", "spec_hash",
+tests/test_ft_adjudication_import.py:335:    assert set(_open(db, spec)) == _BODY_KEYS
+tests/test_ft_adjudication_import.py:340:    assert set(body) == _BODY_KEYS | {"inputs"}
+
+## (E) whole-function: read_ollama_env/_get_ollama_env/check_ollama_env patched
+tests/test_ft_bridge.py:94:    monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
+tests/test_run_pipeline_starts.py:165:    with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=ENV_OK), \
+tests/test_u18_digest_per_call.py:304:    monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
+tests/test_ollama_preflight.py:12:    check_ollama_env,
+tests/test_ollama_preflight.py:16:    _get_ollama_env,
+tests/test_ollama_preflight.py:135:        with patch("engine.utils.ollama_preflight._get_ollama_env",
+tests/test_ollama_preflight.py:137:            check_ollama_env()  # should not raise
+tests/test_ollama_preflight.py:142:        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+tests/test_ollama_preflight.py:144:                check_ollama_env()
+tests/test_ollama_preflight.py:149:        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+tests/test_ollama_preflight.py:151:                check_ollama_env()
+tests/test_ollama_preflight.py:157:        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+tests/test_ollama_preflight.py:159:                check_ollama_env()
+tests/test_ollama_preflight.py:162:        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value={}):
+tests/test_ollama_preflight.py:164:                check_ollama_env()
+tests/test_ollama_preflight.py:173:        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+tests/test_ollama_preflight.py:175:                check_ollama_env()  # must not raise
+tests/test_ollama_preflight.py:182:        with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+tests/test_ollama_preflight.py:184:                check_ollama_env()  # must not raise
+tests/test_ollama_preflight.py:195:            with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+tests/test_ollama_preflight.py:197:                    check_ollama_env()
+tests/test_ollama_preflight.py:204:    def test_get_ollama_env_parses_systemctl_output(self):
+tests/test_ollama_preflight.py:208:            env = _get_ollama_env()
+tests/test_ollama_preflight.py:213:    def test_get_ollama_env_returns_empty_on_error(self):
+tests/test_ollama_preflight.py:216:            env = _get_ollama_env()
+tests/test_ollama_preflight.py:223:        with patch("engine.utils.ollama_preflight.check_ollama_env"):
+tests/test_ollama_preflight.py:234:        with patch("engine.utils.ollama_preflight.check_ollama_env"):
+tests/test_ollama_preflight.py:243:        with patch("engine.utils.ollama_preflight.check_ollama_env",
+tests/test_ollama_preflight.py:336:        # `_get_ollama_env` shells out to `systemctl show ollama`, which the
+tests/test_ollama_preflight.py:341:        with patch("engine.utils.ollama_preflight._get_ollama_env",
+tests/test_undeclared_call.py:176:         patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env), \

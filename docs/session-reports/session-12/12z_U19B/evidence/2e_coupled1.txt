@@ -1,0 +1,233 @@
+.................F..........F..F.....F.................................. [ 17%]
+........................................................................ [ 34%]
+............FFFFFF..........F..F..FF...........FF.FF........FF.......... [ 52%]
+.........F..................F.....FFFFFFFFFFFFFFFFFFF....FF............. [ 69%]
+........................................................................ [ 87%]
+....................................................                     [100%]
+=================================== FAILURES ===================================
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/5 (20.0%) | Paper EE-001 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/5 (40.0%) | Paper EE-002 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/5 (60.0%) | Paper EE-003 EXTRACTED | 0s | ETA ~0s | 0 failed
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   AssertionError: assert False is None
+     +  where False = <function restart_ollama at 0xe6655a0a8fe0>(reason='proactive', papers_done=25)
+     +    where <function restart_ollama at 0xe6655a0a8fe0> = extractor.restart_ollama
+------------------------------ Captured log call -------------------------------
+WARNING  engine.agents.extractor:extractor.py:774 [2026-10-30T03:04:39Z] RESTART SKIPPED — experiment lock held (proactive, 25 papers done). Another process is running an Ollama experiment; continuing without restarting.
+/home/ankitsarin/projects/evidence-engine/tests/test_restart_ollama_guard.py:102: AssertionError: assert False is None
+E   AssertionError: assert False is None
+     +  where False = <function restart_ollama at 0xe6655a0a8fe0>(reason='proactive after 25 papers', papers_done=25)
+     +    where <function restart_ollama at 0xe6655a0a8fe0> = extractor.restart_ollama
+------------------------------ Captured log call -------------------------------
+WARNING  engine.agents.extractor:extractor.py:759 [2026-10-30T03:04:39Z] RESTART SKIPPED — EVIDENCE_ENGINE_NO_OLLAMA_RESTART is set (proactive after 25 papers, 25 papers done). Proactive restarts are disabled for this process; continuing without restarting.
+/home/ankitsarin/projects/evidence-engine/tests/test_restart_ollama_guard.py:149: AssertionError: assert False is None
+E   AssertionError: assert {<class 'engi...redArm'>, ...} == {<class 'engi...estArm'>, ...}
+      
+      Extra items in the left set:
+      <class 'engine.core.run_manifest.ServerEnvChanged'>
+      Use -v to get more diff
+/home/ankitsarin/projects/evidence-engine/tests/test_run_fault_predicate.py:142: AssertionError: assert {<class 'engi...redArm'>, ...} == {<class 'engi...estArm'>, ...}
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+E   conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+    Tests must never touch a system service — a real `systemctl restart ollama` from the suite destroys any experiment running on this box (OPSFIX-01).
+    Fix: patch the subprocess boundary, e.g. @patch('engine.utils.ollama_client.subprocess.run').
+/home/ankitsarin/projects/evidence-engine/tests/conftest.py:131: conftest.ServiceCallBlocked: BLOCKED: test attempted a service-manager call via subprocess.run: 'systemctl show ollama --property=Environment' (matched 'systemctl').
+=========================== short test summary info ============================
+FAILED tests/test_extractor.py::TestProactiveRestart::test_restart_triggers_after_n_papers
+FAILED tests/test_restart_ollama_guard.py::test_skip_returns_none_and_does_not_raise
+FAILED tests/test_restart_ollama_guard.py::test_the_opt_out_skips_the_restart_before_the_lock_is_consulted
+FAILED tests/test_run_fault_predicate.py::test_the_declared_run_fault_tuple_is_the_handoffs
+FAILED tests/test_run_pipeline_starts.py::test_a_start_at_or_before_screen_stops_at_the_adjudication_gate[search]
+FAILED tests/test_run_pipeline_starts.py::test_a_start_at_or_before_screen_stops_at_the_adjudication_gate[screen]
+FAILED tests/test_run_pipeline_starts.py::test_a_start_at_or_before_screen_stops_at_the_adjudication_gate[None]
+FAILED tests/test_run_pipeline_starts.py::test_a_start_that_screens_declares_and_sends_the_screening_preflight[None]
+FAILED tests/test_run_pipeline_starts.py::test_a_start_that_screens_declares_and_sends_the_screening_preflight[search]
+FAILED tests/test_run_pipeline_starts.py::test_a_start_that_screens_declares_and_sends_the_screening_preflight[screen]
+FAILED tests/test_pin_records.py::test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry
+FAILED tests/test_codebook_review_at_open.py::test_run_pipelines_own_opener_refuses_before_any_row_or_fetch
+FAILED tests/test_selection_bound.py::test_T1_absent_bound_selects_as_today_and_records_nothing
+FAILED tests/test_selection_bound.py::test_T2_a_bound_of_five_selects_the_first_five_and_is_recorded
+FAILED tests/test_selection_bound.py::test_T4_a_second_bounded_run_takes_the_next_window
+FAILED tests/test_selection_bound.py::test_T5_a_bound_above_the_eligible_count_selects_all
+FAILED tests/test_arm_pinned_at_extract.py::test_a_screen_start_that_stops_at_the_gate_leaves_the_extraction_arm_unpinned
+FAILED tests/test_arm_pinned_at_extract.py::test_a_screen_start_that_reaches_extract_pins_there_and_a_differing_run_is_refused
+FAILED tests/test_run_interrupts.py::test_t3_run_ft_invocation_closes_an_interrupt_with_its_reason[exc0-interrupt:SIGINT]
+FAILED tests/test_run_interrupts.py::test_t3_run_ft_invocation_closes_an_interrupt_with_its_reason[exc1-interrupt:SIGTERM]
+FAILED tests/test_run_interrupts.py::test_t9_run_ft_invocation_an_interrupt_inside_the_completed_close_closes_interrupted
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_ft_runner_closes_aborted_on_a_digest_change
+FAILED tests/test_ft_bridge.py::test_1_default_run_manifest_is_screening_with_four_stage_rows
+FAILED tests/test_ft_bridge.py::test_1_verify_only_manifest_declares_the_two_ft_stages
+FAILED tests/test_ft_bridge.py::test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk
+FAILED tests/test_ft_bridge.py::test_3_primary_exclude_writes_one_screened_full_text_out_event
+FAILED tests/test_ft_bridge.py::test_4_verifier_confirm_writes_one_verified_eligible_event
+FAILED tests/test_ft_bridge.py::test_4_include_then_confirm_in_one_default_invocation
+FAILED tests/test_ft_bridge.py::test_5_primary_include_writes_no_event - conf...
+FAILED tests/test_ft_bridge.py::test_5_primary_no_text_and_malformed_write_no_event
+FAILED tests/test_ft_bridge.py::test_5_verifier_flag_no_text_and_malformed_write_no_event
+FAILED tests/test_ft_bridge.py::test_6_a_refused_status_write_leaves_nothing_for_the_paper
+FAILED tests/test_ft_bridge.py::test_6_an_exception_at_the_primary_event_write_leaves_nothing
+FAILED tests/test_ft_bridge.py::test_6_an_exception_at_the_verifier_event_write_leaves_nothing
+FAILED tests/test_ft_bridge.py::test_6_a_refused_decision_row_leaves_nothing
+FAILED tests/test_ft_bridge.py::test_7_dirty_tree_refuses_before_any_model_call_and_writes_nothing
+FAILED tests/test_ft_bridge.py::test_8_a_resumed_run_is_a_new_manifest_and_no_paper_gets_a_second_event
+FAILED tests/test_ft_bridge.py::test_9_i_after_a_completed_confirm_a_fresh_verify_only_selects_nothing
+FAILED tests/test_ft_bridge.py::test_9_ii_a_decided_paper_without_an_event_is_not_selected
+FAILED tests/test_ft_bridge.py::test_9_iii_a_primary_include_with_neither_is_selected
+FAILED tests/test_ft_bridge.py::test_10_seam_include_is_pending_confirm_is_eligible_exclude_is_valid
+FAILED tests/test_ft_bridge.py::test_14_a_zero_decision_run_leaves_workflow_state_byte_identical
+FAILED tests/test_ft_bridge.py::test_14_a_deciding_run_completes_the_stage - ...

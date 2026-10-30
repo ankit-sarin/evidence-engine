@@ -1,0 +1,19 @@
+F..FFF                                                                   [100%]
+=================================== FAILURES ===================================
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'OllamaHostNotLocalService'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_local_service.py:66: AttributeError: module 'engine.core.run_manifest' has no attribute 'OllamaHostNotLocalService'
+E   KeyError: 'OLLAMA_ORIGINS'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_local_service.py:92: KeyError: 'OLLAMA_ORIGINS'
+E   AttributeError: module 'engine.utils.ollama_client' has no attribute 'parse_environment_line'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_local_service.py:109: AttributeError: module 'engine.utils.ollama_client' has no attribute 'parse_environment_line'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'OllamaHostNotLocalService'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_local_service.py:117: AttributeError: module 'engine.core.run_manifest' has no attribute 'OllamaHostNotLocalService'
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_u19_local_service.py::test_u19_the_local_service_host_is_not_refused[http://127.0.0.1:11434]
+PASSED tests/test_u19_local_service.py::test_u19_the_local_service_host_is_not_refused[http://localhost:11434]
+FAILED tests/test_u19_local_service.py::test_u19_a_loopback_host_on_another_port_is_refused_at_open_run
+FAILED tests/test_u19_local_service.py::test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers
+FAILED tests/test_u19_local_service.py::test_u19_the_two_readers_give_equal_maps_on_the_hosts_line
+FAILED tests/test_u19_local_service.py::test_u19_ollama_host_not_local_service_is_a_run_refused_run_fault
+4 failed, 2 passed in 2.12s

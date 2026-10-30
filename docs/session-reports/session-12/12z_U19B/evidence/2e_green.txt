@@ -1,0 +1,78 @@
+...........                                                              [100%]
+==================================== PASSES ====================================
+______________ test_the_env_check_runs_again_after_every_restart _______________
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/4 (25.0%) | Paper EE-001 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/4 (50.0%) | Paper EE-002 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/4 (75.0%) | Paper EE-003 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 4/4 (100.0%) | Paper EE-004 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 4
+  Succeeded    : 4
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+____ test_u19_a_correctness_drift_after_a_restart_raises_server_env_changed ____
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/4 (25.0%) | Paper EE-001 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/4 (50.0%) | Paper EE-002 EXTRACTED | 0s | ETA ~0s | 0 failed
+_________ test_u19_run_pipeline_closes_aborted_on_a_server_env_change __________
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline:run_pipeline.py:217 RUN ABORTED: ServerEnvChanged: run refused after a proactive Ollama restart (25 papers done): the restarted service's configured environment fails the correctness tier: OLLAMA_KV_CACHE_TYPE expected 'f16', actual 'q8_0'. No paper was extracted under it. Read `systemctl show ollama --property=Environment` and the drop-in under /etc/systemd/system/ollama.service.d/ for the edit made during the run; restore the value, restart the service, and start a new run.
+_______________ test_u19_a_skipped_restart_triggers_no_env_check _______________
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/4 (25.0%) | Paper EE-001 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/4 (50.0%) | Paper EE-002 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/4 (75.0%) | Paper EE-003 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 4/4 (100.0%) | Paper EE-004 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 4
+  Succeeded    : 4
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.agents.extractor:extractor.py:759 [2026-10-30T03:04:13Z] RESTART SKIPPED — EVIDENCE_ENGINE_NO_OLLAMA_RESTART is set (proactive, 0 papers done). Proactive restarts are disabled for this process; continuing without restarting.
+WARNING  engine.agents.extractor:extractor.py:759 [2026-10-30T03:04:13Z] RESTART SKIPPED — EVIDENCE_ENGINE_NO_OLLAMA_RESTART is set (proactive after 2 papers, 2 papers done). Proactive restarts are disabled for this process; continuing without restarting.
+WARNING  engine.agents.extractor:extractor.py:759 [2026-10-30T03:04:13Z] RESTART SKIPPED — EVIDENCE_ENGINE_NO_OLLAMA_RESTART is set (proactive after 2 papers, 4 papers done). Proactive restarts are disabled for this process; continuing without restarting.
+__________ test_u19_each_post_restart_read_writes_one_telemetry_event __________
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/4 (25.0%) | Paper EE-001 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/4 (50.0%) | Paper EE-002 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/4 (75.0%) | Paper EE-003 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 4/4 (100.0%) | Paper EE-004 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 4
+  Succeeded    : 4
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+_____ test_u19_a_drift_read_writes_its_telemetry_event_before_the_refusal ______
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/4 (25.0%) | Paper EE-001 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/4 (50.0%) | Paper EE-002 EXTRACTED | 0s | ETA ~0s | 0 failed
+=========================== short test summary info ============================
+PASSED tests/test_u19_env_recheck.py::test_the_env_check_runs_again_after_every_restart
+PASSED tests/test_u19_env_recheck.py::test_u19_a_correctness_drift_after_a_restart_raises_server_env_changed
+PASSED tests/test_u19_env_recheck.py::test_u19_run_pipeline_closes_aborted_on_a_server_env_change
+PASSED tests/test_u19_env_recheck.py::test_u19_the_body_opened_by_run_pipeline_carries_the_environment
+PASSED tests/test_u19_env_recheck.py::test_u19_a_skipped_restart_triggers_no_env_check
+PASSED tests/test_u19_env_recheck.py::test_u19_a_body_opened_without_the_environment_has_no_such_key
+PASSED tests/test_u19_env_recheck.py::test_u19_each_post_restart_read_writes_one_telemetry_event
+PASSED tests/test_u19_env_recheck.py::test_u19_a_drift_read_writes_its_telemetry_event_before_the_refusal
+PASSED tests/test_u19_env_recheck.py::test_u19_server_env_changed_is_a_run_refused_run_fault
+PASSED tests/test_u19_env_recheck.py::test_u19_the_body_opened_by_the_ft_runner_carries_the_environment
+PASSED tests/test_u19_env_recheck.py::test_u19_a_cloud_shaped_open_records_no_environment
+11 passed in 5.84s

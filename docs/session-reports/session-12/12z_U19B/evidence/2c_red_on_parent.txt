@@ -1,0 +1,75 @@
+FFFFFFFFFF.                                                              [100%]
+=================================== FAILURES ===================================
+E   AssertionError: assert [('paper', 1)...4), 'restart'] == [('paper', 1)...per', 4), ...]
+      
+      At index 3 diff: ('paper', 3) != 'env'
+      Right contains 2 more items, first extra item: 'restart'
+      Use -v to get more diff
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/4 (25.0%) | Paper EE-001 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/4 (50.0%) | Paper EE-002 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/4 (75.0%) | Paper EE-003 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 4/4 (100.0%) | Paper EE-004 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 4
+  Succeeded    : 4
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_env_recheck.py:110: AssertionError: assert [('paper', 1)...4), 'restart'] == [('paper', 1)...per', 4), ...]
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'ServerEnvChanged'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_env_recheck.py:117: AttributeError: module 'engine.core.run_manifest' has no attribute 'ServerEnvChanged'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'ServerEnvChanged'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_env_recheck.py:134: AttributeError: module 'engine.core.run_manifest' has no attribute 'ServerEnvChanged'
+E   KeyError: 'ollama_environment'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_env_recheck.py:167: KeyError: 'ollama_environment'
+E   AssertionError: assert None is False
+     +  where None = <function restart_ollama at 0xee1094c2b060>(reason='proactive', papers_done=0)
+     +    where <function restart_ollama at 0xee1094c2b060> = E.restart_ollama
+------------------------------ Captured log call -------------------------------
+WARNING  engine.agents.extractor:extractor.py:738 [2026-10-30T03:02:20Z] RESTART SKIPPED — EVIDENCE_ENGINE_NO_OLLAMA_RESTART is set (proactive, 0 papers done). Proactive restarts are disabled for this process; continuing without restarting.
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_env_recheck.py:177: AssertionError: assert None is False
+E   TypeError: open_run() got an unexpected keyword argument 'ollama_environment'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_env_recheck.py:190: TypeError: open_run() got an unexpected keyword argument 'ollama_environment'
+E   assert 0 == 2
+     +  where 0 = len([])
+----------------------------- Captured stderr call -----------------------------
+[Local extraction] 1/4 (25.0%) | Paper EE-001 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 2/4 (50.0%) | Paper EE-002 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 3/4 (75.0%) | Paper EE-003 EXTRACTED | 0s | ETA ~0s | 0 failed
+[Local extraction] 4/4 (100.0%) | Paper EE-004 EXTRACTED | 0s | ETA ~0s | 0 failed
+============================================================
+[Local extraction] COMPLETE
+  Total papers : 4
+  Succeeded    : 4
+  Failed       : 0
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_env_recheck.py:204: assert 0 == 2
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'ServerEnvChanged'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_env_recheck.py:212: AttributeError: module 'engine.core.run_manifest' has no attribute 'ServerEnvChanged'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'ServerEnvChanged'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_env_recheck.py:222: AttributeError: module 'engine.core.run_manifest' has no attribute 'ServerEnvChanged'
+E   KeyError: 'ollama_environment'
+/home/ankitsarin/projects/evidence-engine/tests/test_u19_env_recheck.py:236: KeyError: 'ollama_environment'
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_u19_env_recheck.py::test_u19_a_cloud_shaped_open_records_no_environment
+FAILED tests/test_u19_env_recheck.py::test_the_env_check_runs_again_after_every_restart
+FAILED tests/test_u19_env_recheck.py::test_u19_a_correctness_drift_after_a_restart_raises_server_env_changed
+FAILED tests/test_u19_env_recheck.py::test_u19_run_pipeline_closes_aborted_on_a_server_env_change
+FAILED tests/test_u19_env_recheck.py::test_u19_the_body_opened_by_run_pipeline_carries_the_environment
+FAILED tests/test_u19_env_recheck.py::test_u19_a_skipped_restart_triggers_no_env_check
+FAILED tests/test_u19_env_recheck.py::test_u19_a_body_opened_without_the_environment_has_no_such_key
+FAILED tests/test_u19_env_recheck.py::test_u19_each_post_restart_read_writes_one_telemetry_event
+FAILED tests/test_u19_env_recheck.py::test_u19_a_drift_read_writes_its_telemetry_event_before_the_refusal
+FAILED tests/test_u19_env_recheck.py::test_u19_server_env_changed_is_a_run_refused_run_fault
+FAILED tests/test_u19_env_recheck.py::test_u19_the_body_opened_by_the_ft_runner_carries_the_environment
+10 failed, 1 passed in 5.83s

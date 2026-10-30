@@ -1,0 +1,9 @@
+aa761245512fab8827346303d62fa12d5b40f590
+ M CLAUDE.md
+ M docs/inventory/entry_points.json
+ M docs/inventory/entry_points.md
+ M engine/core/run_manifest.py
+ M engine/utils/ollama_client.py
+ M engine/utils/ollama_preflight.py
+ M tests/test_run_fault_predicate.py
+?? tests/test_u19_local_service.py

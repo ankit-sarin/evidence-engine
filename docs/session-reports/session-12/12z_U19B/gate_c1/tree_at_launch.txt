@@ -1,0 +1,21 @@
+e5a35172a4d1ca43189eecaca9adc784cbabcab9
+ M CLAUDE.md
+ M docs/inventory/entry_points.json
+ M docs/inventory/entry_points.md
+ M engine/agents/extractor.py
+ M engine/agents/ft_screener.py
+ M engine/core/run_manifest.py
+ M engine/utils/ollama_preflight.py
+ M scripts/run_pipeline.py
+ M tests/test_arm_pinned_at_extract.py
+ M tests/test_codebook_review_at_open.py
+ M tests/test_extractor.py
+ M tests/test_ft_bridge.py
+ M tests/test_pin_records.py
+ M tests/test_restart_ollama_guard.py
+ M tests/test_run_fault_predicate.py
+ M tests/test_run_interrupts.py
+ M tests/test_run_pipeline_starts.py
+ M tests/test_selection_bound.py
+ M tests/test_u18_digest_per_call.py
+?? tests/test_u19_env_recheck.py

@@ -1,0 +1,32 @@
+gate ids 3426 ref 3412
+only-gate: 14; only-ref: 0
+only-gate == the new ids: False (13 new)
+  only-gate tests/test_api_parity.py::test_engine_import_resolves[run_pipeline.py::engine.utils.ollama_preflight]
+  only-gate tests/test_run_fault_predicate.py::test_run_faults_leave_the_extract_path_as_themselves[ServerEnvChanged]
+  only-gate tests/test_run_fault_predicate.py::test_run_faults_leave_the_snippet_retry_as_themselves[ServerEnvChanged]
+  only-gate tests/test_u19_env_recheck.py::test_the_env_check_runs_again_after_every_restart
+  only-gate tests/test_u19_env_recheck.py::test_u19_a_body_opened_without_the_environment_has_no_such_key
+  only-gate tests/test_u19_env_recheck.py::test_u19_a_cloud_shaped_open_records_no_environment
+  only-gate tests/test_u19_env_recheck.py::test_u19_a_correctness_drift_after_a_restart_raises_server_env_changed
+  only-gate tests/test_u19_env_recheck.py::test_u19_a_drift_read_writes_its_telemetry_event_before_the_refusal
+  only-gate tests/test_u19_env_recheck.py::test_u19_a_skipped_restart_triggers_no_env_check
+  only-gate tests/test_u19_env_recheck.py::test_u19_each_post_restart_read_writes_one_telemetry_event
+  only-gate tests/test_u19_env_recheck.py::test_u19_run_pipeline_closes_aborted_on_a_server_env_change
+  only-gate tests/test_u19_env_recheck.py::test_u19_server_env_changed_is_a_run_refused_run_fault
+  only-gate tests/test_u19_env_recheck.py::test_u19_the_body_opened_by_run_pipeline_carries_the_environment
+  only-gate tests/test_u19_env_recheck.py::test_u19_the_body_opened_by_the_ft_runner_carries_the_environment
+phases ref 2494 gate 2536
+slower by >10 s: 0
+-- summary line
+==== 3425 passed, 17 deselected, 1 xfailed, 2 warnings in 909.91s (0:15:09) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)
+-- journal ollama 03:21:15 .. 03:36:27
+-- No entries --

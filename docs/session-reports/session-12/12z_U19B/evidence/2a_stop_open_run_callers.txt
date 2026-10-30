@@ -1,0 +1,12 @@
+12z-U19B stop at 2a (before any engine edit), 2026-10-30T02:54:59Z
+production open_run callers (grep -rn 'open_run(' engine scripts analysis):
+engine/adjudication/import_extraction_entry.py:283:    run_id = rm.open_run(conn, spec, kind="import", stages=(),
+scripts/run_cloud_extraction.py:114:        handle = rm.open_run(
+engine/adjudication/import_screening_entry.py:159:    run_id = rm.open_run(conn, spec, kind="import", stages=(),
+engine/adjudication/ft_screening_adjudicator.py:526:    run_id = rm.open_run(conn, spec, kind="import", stages=(),
+engine/agents/ft_screener.py:575:    handle = rm.open_run(db._conn, spec, kind="screening", stages=stages,
+scripts/run_pipeline.py:551:    handle = rm.open_run(db._conn, spec, kind=kind, stages=stages, codebook=codebook,
+engine/core/run_manifest.py:771:    return open_run(conn, spec, kind="review_session", stages=(), codebook=codebook,
+
+ft_screener.py: ollama_chat at :216/:226, require_preflight at :324, open_run at :575 (kind=screening)
+run_cloud_extraction.py: grep -c ollama = 0

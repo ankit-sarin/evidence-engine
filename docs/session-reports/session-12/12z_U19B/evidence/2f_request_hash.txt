@@ -1,0 +1,3 @@
+PASSED tests/test_undeclared_call.py::test_4_a_declared_call_is_sent_and_recorded_with_its_request_unchanged
+PASSED tests/test_u18_digest_per_call.py::test_u18_the_unchanged_case_sends_the_same_request_bytes
+30 passed in 15.73s

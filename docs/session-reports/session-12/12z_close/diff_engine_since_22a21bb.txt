@@ -1,0 +1,20 @@
+ engine/agents/extractor.py            |  37 ++++-
+ engine/agents/ft_screener.py          |   7 +-
+ engine/core/run_manifest.py           |  61 +++++++-
+ engine/utils/ollama_client.py         |  22 ++-
+ engine/utils/ollama_preflight.py      |  65 +++++++--
+ scripts/run_pipeline.py               |  13 +-
+ tests/test_arm_pinned_at_extract.py   |   2 +
+ tests/test_codebook_review_at_open.py |   2 +
+ tests/test_extractor.py               |   7 +-
+ tests/test_ft_bridge.py               |   1 +
+ tests/test_pin_records.py             |   2 +
+ tests/test_restart_ollama_guard.py    |   4 +-
+ tests/test_run_fault_predicate.py     |   2 +
+ tests/test_run_interrupts.py          |   4 +
+ tests/test_run_pipeline_starts.py     |   2 +
+ tests/test_selection_bound.py         |   2 +
+ tests/test_u18_digest_per_call.py     |   1 +
+ tests/test_u19_env_recheck.py         | 255 ++++++++++++++++++++++++++++++++++
+ tests/test_u19_local_service.py       | 118 ++++++++++++++++
+ 19 files changed, 577 insertions(+), 30 deletions(-)

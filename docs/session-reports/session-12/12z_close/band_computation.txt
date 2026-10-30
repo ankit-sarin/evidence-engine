@@ -1,0 +1,6 @@
+# band computation for the wrap ruling (R683(c)'s inward rounding), 12z closeout
+inputs (the last four standard gates on this host state): 895.61, 896.11, 912.13, 906.10
+  895.61 U18 commit 2 (quiet); 896.11 12z-OPEN (quiet); 912.13 U19 commit 1 (quiet); 906.10 U19 commit 2 (quiet); uvicorn the only concurrent job at each
+mean 902.4875 s; x0.9 812.2387; x1.1 992.7363
+rounded inward: 813–992 s (a figure, to be set by the wrap ruling; the band in force stays 822–1003 s)
+series (twenty-two): 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32, 893.83, 939.40, 895.61, 896.11, 912.13, 906.10 s; the red run 916.95 s is evidence, not a series member

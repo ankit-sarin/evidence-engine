@@ -1,0 +1,28 @@
+-- lines
+12:collecting ... collected 3429 items / 17 deselected / 3412 selected
+5945:==== 3411 passed, 17 deselected, 1 xfailed, 2 warnings in 912.13s (0:15:12) ====
+5947:pytest exit code: 0
+last line: pytest exit code: 0
+durations: 2505 lines, 261511 B
+-- journal ollama 09:00–09:25
+-- No entries --
+-- warnings
+3427:=============================== warnings summary ===============================
+1956:tests/test_kappa.py::test_kappa_equals_sklearn[A \u2014 balanced 2x2, true 0.8000-labels0-0.8] PASSED [ 56%]
+1957:tests/test_kappa.py::test_kappa_equals_sklearn[B \u2014 constant rater, true 0.0000-labels1-0.0] PASSED [ 56%]
+1958:tests/test_kappa.py::test_kappa_equals_sklearn[C \u2014 3 categories, asymmetric marginals-labels2-None] PASSED [ 57%]
+1959:tests/test_kappa.py::test_fixture_c_value_is_taken_from_sklearn_not_hand_set PASSED [ 57%]
+3429:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was foun
+3433:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encoun
+5523:0.01s call     tests/test_kappa.py::test_kappa_equals_sklearn[A \u2014 balanced 2x2, true 0.8000-labels0-0.8]
+3428:tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+3432:tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+5523:0.01s call     tests/test_kappa.py::test_kappa_equals_sklearn[A \u2014 balanced 2x2, true 0.8000-labels0-0.8]
+-- lock
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock
+OLLAMA_EXPERIMENT_LOCK=unset
+-- reflog
+22a21bb HEAD@{2026-10-28T20:01:11+00:00}: commit: docs(plan): 12y-CLOSE — session 12y closure, the 12z expected values, 12y_close/ measurements
+0f83f46 HEAD@{2026-10-28T19:57:30+00:00}: commit: docs(plan): 12y-CLOSE item 0 — R727 and R728 as Blocks 125–126; A-4b CLOSED; the R117 addendum
+32fc09e HEAD@{2026-10-28T19:40:20+00:00}: commit: feat(U18): the model digest re-checked on every call under a run; a change closes the run 'aborted' (U18 commit 2, A-4b)
+2c67bfc HEAD@{2026-10-28T19:15:13+00:00}: commit: docs(plan): 12y-U18C item 0 — R723, R724, R725 and R726 as Blocks 121–124

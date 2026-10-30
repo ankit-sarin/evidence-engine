@@ -1,0 +1,5 @@
+# R510 for session 12z: six-cell INT- rows at 22a21bb (the 12y closeout) and at 237c321 (12z-CLOSE item 0)
+22a21bb: 206; 237c321: 206; rows in 0 []; rows out 0 [] (the same id set)
+no class or package move (the recount JSON is byte-identical to 12y_close/recount_close_run.json: class_moves [])
+INT-j12-17 CLOSED by its 2026-10-30 note (12z-U19B step 4; R736(b)) and counted until P1 closes (R607(d))
+method: lines starting '| INT-' with six ' | '-separated cells, calibrated on 0f83f46 (206, as 12y_close/r510_12y.txt reads)

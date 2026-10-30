@@ -1,0 +1,81 @@
+{
+ "model": "llama3.2:3b",
+ "N": 8192,
+ "pid": 2911753,
+ "events": [
+  {
+   "at": "2026-10-30T19:28:18.746129+00:00",
+   "event": "lock_acquired"
+  },
+  {
+   "at": "2026-10-30T19:28:21.314217+00:00",
+   "event": "P2",
+   "status": 200,
+   "wall_s": 2.554,
+   "bytes": 396
+  },
+  {
+   "at": "2026-10-30T19:28:21.314262+00:00",
+   "event": "P2_fields",
+   "done_reason": "length",
+   "prompt_eval_count": 26,
+   "eval_count": 1,
+   "done": true,
+   "load_duration": 2507401238
+  },
+  {
+   "at": "2026-10-30T19:28:21.314640+00:00",
+   "event": "P3_read"
+  },
+  {
+   "at": "2026-10-30T19:28:21.316236+00:00",
+   "event": "U1",
+   "status": 200,
+   "wall_s": 0.002,
+   "bytes": 118
+  },
+  {
+   "at": "2026-10-30T19:28:22.317488+00:00",
+   "event": "U1_confirmed",
+   "reads": 2
+  },
+  {
+   "at": "2026-10-30T19:28:25.226591+00:00",
+   "event": "P4",
+   "status": 200,
+   "wall_s": 2.909,
+   "bytes": 395
+  },
+  {
+   "at": "2026-10-30T19:28:25.226634+00:00",
+   "event": "P4_fields",
+   "done_reason": "length",
+   "prompt_eval_count": 26,
+   "eval_count": 1,
+   "done": true,
+   "load_duration": 2853532321
+  },
+  {
+   "at": "2026-10-30T19:28:25.227402+00:00",
+   "event": "P5_read"
+  },
+  {
+   "at": "2026-10-30T19:28:25.229132+00:00",
+   "event": "U2",
+   "status": 200,
+   "wall_s": 0.002,
+   "bytes": 118
+  },
+  {
+   "at": "2026-10-30T19:28:26.230880+00:00",
+   "event": "U2_confirmed",
+   "reads": 2
+  },
+  {
+   "at": "2026-10-30T19:28:26.230979+00:00",
+   "event": "lock_released"
+  }
+ ],
+ "lock_acquired_at": "2026-10-30T19:28:18.746123+00:00",
+ "lock_released_at": "2026-10-30T19:28:26.230905+00:00"
+}

@@ -1,0 +1,25 @@
+numstat + 95 / - 0; + == N 95, - == D 0: True
+'-' lines listed: 0 (none; the form changes no line): True
+no prefix_check.py call (R679(b)): this script does not import or run it: True
+plan lines 12795 == 12700 + 95 - 0: True
+the plan at HEAD is a byte prefix of the new plan (the R739 block and every earlier block unmodified): True
+r740.txt == dcf75cb2… / 3786 / 46: True
+R740 opens with one blank, then the header: True
+fence 138 == r740.txt: True
+R740: after the fence blank, head, rule, one row, blank, its ends-at line: True
+cell 138 == render_cell(r740.txt, R740): True
+r741.txt == 41a51e2b… / 2033 / 27: True
+R741 opens with one blank, then the header: True
+fence 139 == r741.txt: True
+R741: after the fence blank, head, rule, one row, blank, its ends-at line: True
+cell 139 == render_cell(r741.txt, R741): True
+Block 138 header carries 697f0db (40 characters, rev-parsed): True
+Block 138 header carries dba1406 (40 characters, rev-parsed): True
+ends-at lines in the region: R740 then R741, each once: True
+plan's last line is ends-at R741: False
+staged set == plan + r740.txt + r741.txt (3 paths): True
+engine-path diff since dba1406 empty (worktree and index): True
+worktree == index: True
+no untracked: True
+plan sha256 3f28971417dabc0e6ffa76237c3c3ee6e261b1e49e1383d490508396dc656281 2338203 bytes
+RESULT: FAIL

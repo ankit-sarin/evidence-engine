@@ -1,0 +1,12 @@
+2026-10-30T19:28:18.746131+00:00 lock_acquired {}
+2026-10-30T19:28:21.314224+00:00 P2 {'status': 200, 'wall_s': 2.554, 'bytes': 396}
+2026-10-30T19:28:21.314263+00:00 P2_fields {'done_reason': 'length', 'prompt_eval_count': 26, 'eval_count': 1, 'done': True, 'load_duration': 2507401238}
+2026-10-30T19:28:21.314642+00:00 P3_read {}
+2026-10-30T19:28:21.316238+00:00 U1 {'status': 200, 'wall_s': 0.002, 'bytes': 118}
+2026-10-30T19:28:22.317490+00:00 U1_confirmed {'reads': 2}
+2026-10-30T19:28:25.226598+00:00 P4 {'status': 200, 'wall_s': 2.909, 'bytes': 395}
+2026-10-30T19:28:25.226636+00:00 P4_fields {'done_reason': 'length', 'prompt_eval_count': 26, 'eval_count': 1, 'done': True, 'load_duration': 2853532321}
+2026-10-30T19:28:25.227410+00:00 P5_read {}
+2026-10-30T19:28:25.229134+00:00 U2 {'status': 200, 'wall_s': 0.002, 'bytes': 118}
+2026-10-30T19:28:26.230888+00:00 U2_confirmed {'reads': 2}
+2026-10-30T19:28:26.230983+00:00 lock_released {}

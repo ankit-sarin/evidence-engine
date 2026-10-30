@@ -1,0 +1,4 @@
+44c44
+< chk("plan's last line is ends-at R741", plan.endswith("\nThe decision log in this file ends at R739.\n"))
+---
+> chk("plan's last line is ends-at R741", plan.endswith("\nThe decision log in this file ends at R741.\n"))

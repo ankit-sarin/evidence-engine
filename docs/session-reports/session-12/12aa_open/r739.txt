@@ -1,0 +1,28 @@
+RULING [evidence-engine 12aa-R739] — 12aa-U20A stop at 1a: the mismatched r738.txt is moved to
+  scratch and written once more; this ruling joins item 0 as a second block; resume at 1a
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20A
+  report stopped at step 1a (no commit). Transcribe at item 0 of 12aa-U20A as resumed, in the
+  block after R738's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20A stop report):
+  MEASURED: "File as written
+    af0885d7a0d7d0a9fd375141cb86fd867a011153f2dfae170893265dfe54d11b 7,115 84"; "written at
+    18:34:28.42Z and hashed at 18:34:28.51Z, before any read-back or edit"; "Substituting that one
+    difference in a stream, with the file untouched, gives exactly b040ae27…e1d7, 7,115 B, 84
+    lines"; "no plan edit, commit, push or ledger row was made".
+  READ (CC's): "I changed ; an to . An"; "Each Write retypes the ruling from the paste, so there is
+    no mechanical copy"; "It leaves open whether the file may be removed and written again".
+  INFERRED: none.
+
+R739(a) — The stop is correct and the error is CC's; R738(b) worked as intended. The brief's
+  silence on clearing a mismatch was the architect's. The hash is the control on every ruling
+  file; no further rule.
+R739(b) — The mismatched file is not edited and not deleted: it is moved by its path to
+  ~/scratch/12aa-u20a/r738_first_write.txt, its sha256 verified there. r738.txt is then written
+  once more from the 12aa-U20A brief's Section 1 and hashed immediately; a second mismatch is a
+  stop. From here a ruling file that fails its hash is cleared this way, under a ruling.
+R739(c) — Item 0 transcribes R738 and this ruling as two blocks in one commit, in that order;
+  r739.txt is written beside r738.txt in 12aa_open/ under R738(b)'s rule. The model is the
+  record's most recent commit that transcribed more than one block, found and quoted by CC
+  (R732(a)).
+R739(d) — 12aa-U20A resumes at step 1a under this ruling; nothing else in the brief changes.

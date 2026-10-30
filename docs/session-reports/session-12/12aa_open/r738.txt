@@ -1,0 +1,84 @@
+RULING [evidence-engine 12aa-R738] — 12aa-OPEN accepted; a ruling file is hashed before it is read
+  or edited; the launch line is written by the launching step from the string it executes; the
+  gate-evidence set of record; readings; U20's Phase A opens
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-OPEN
+  final report (item 0 6cb33367e3da1d602f98e72d04a01e180929cd17; gate evidence
+  5c1474c982e72d39725c512f19ee3de2a294866d). Transcribe as item 0 of the 12aa-U20A brief, in the
+  block after R737's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-OPEN final report):
+  MEASURED: "HEAD: 5c1474c982e72d39725c512f19ee3de2a294866d, level with origin and clean";
+    "claude-config: 14830c0ce9697adacb2b7df06d809f5f473368cc, level and clean"; "0a clock
+    2026-10-30T17:52:58Z"; step 0 "match" on 0a–0c, 0e–0l as tabled;
+    "992f3a5b31437dbf671c54ca0adbbdd8b92c548e, parent 13563a0, clean, 0 0; one row, surgical-cv-edit
+    5542153"; "Loads: 20/20 OK, 0 FAIL"; "NV_ERR_NO_MEMORY: still 18 this boot, none new";
+    "NRestarts 0; earlyoom kills 0"; "Residency at the open: {"models":[]} at 17:55:03Z"; the
+    nightly "a match on every line against expected_nightly_20261030.md", "3433 passed, 17
+    deselected, 1 xfailed, 2 warnings in 913.05s", "only-nightly 0 / only-ref 0", "HEAD it ran on
+    2b592ae"; "Commit 6cb33367e3da1d602f98e72d04a01e180929cd17, parent 2b592ae"; "Plan numstat +90 /
+    −0"; "12,566 lines (12,476 + 90 − 0), sha256
+    eb2be7e6aa39f770f1e1e9758f9fc27f0aa2242aa5f407e48408979cc2ed80ce, 2,312,953 B"; "r737.txt
+    8522eda5…a3a6, 6,961 B, 79 lines, equal to the architect's hash"; "Fence == file / cell ==
+    render_cell True / True"; "Lane-line copy 9b7b6d1b…d987, equal to source"; "Ledger
+    42f10a1388c25e24fd126be8cc01cafc035855f6, parent 992f3a5; row 2026-10-30T17:56:19Z; trailers
+    present"; "Window: 17:57:09Z to 18:12:19Z, 909.32 s, inside 813–992 s"; "==== 3433 passed, 17
+    deselected, 1 xfailed, 2 warnings in 907.28s (0:15:07) ===="; "Collected 3,451 / 17 / 3,434,
+    exit 0"; "Ids: only-gate 0 / only-ref 0"; "Durations: slower by more than 10 s: none (2,514
+    phases against 2,527)"; "Basetemp: pytest-165, 1,391,460,951 B"; "Journal window: -- No entries
+    --"; "Concurrent jobs: only surgical-cv's uvicorn (pid 11734)"; 3e–3i as tabled, each equal; the
+    recount "Output byte-identical to 12z_close/recount_close_run.json"; "fix_units 35 (script
+    field) / fix_units_dated_lines 19 (literal field) / 37, done 22"; "Files: 19 under
+    12aa_open/gate_12aa_open/, every sha256 equal to its scratch source"; "Commit:
+    5c1474c982e72d39725c512f19ee3de2a294866d, parent 6cb3336. Fingerprint IDENTICAL before and after
+    the push"; "Ledger: 14830c0ce9697adacb2b7df06d809f5f473368cc, parent 42f10a1; row
+    2026-10-30T18:13:35Z; trailers present".
+  READ (CC's): "my first write of r737.txt had a wrong last line, which I corrected before any hash
+    or commit"; "My first write ended with a line I had invented"; "I3: no launch-line wrapper
+    exists on disk. gate_c2/run_gate.sh does not write the launch line"; "using a shell printf
+    immediately before executing that same string"; "gate_12z_open has 17 files, with no
+    collected_ids.txt or tree_at_launch.txt"; "I kept the subdirectory naming (gate_12aa_open) and
+    also carried the two extra files gate_c2 has, so the set is 19 files"; "I did not read the
+    exact 14aff8b0 archive time and used 05:30Z"; "Block 127 carries a sentence, so Block 135 does
+    too".
+  INFERRED: none.
+
+R738(a) — 12aa-OPEN is accepted as reported: step 0 matched; the 2026-10-30 health job 20/20 and
+  the nightly a line-for-line match on 2b592ae; item 0 landed as 6cb3336 (Block 135 with the
+  header sentence I12 resolved, r737.txt at the architect's hash, the lane-line copy; +90 / −0);
+  the ledger 42f10a1 with trailers stands; the gate 3,433 / 1 / 17 on 3,451 / 3,434, 0/0, 909.32 s
+  inside 813–992 s beside the idle uvicorn server only; the gate evidence landed in its own commit
+  5c1474c with ledger 14830c0. The 12aa open stands verified. The series gains 909.32 s, the wall
+  figure, as R731(a) took 896.11 s.
+R738(b) — Finding 1 is CC's: r737.txt was first written with a line not in Section 1 and patched
+  before its hash, against "written once from Section 1 and then only read". The final file
+  equals the architect's hash and nothing wrong reached a commit; no stop of the session, no row.
+  A patch before the hash removes the hash's power to stop. Rule from here: an rNNN.txt is hashed
+  immediately after its one write, before it is read back or edited; a mismatch at that hash is a
+  stop, and the file is not edited to reach a match.
+R738(c) — Finding 3: I3's premise that a wrapper writes the launch line was the architect's, taken
+  from R732(d)'s wording, which no gate on disk implements. CC proceeded on a false INFERRED item
+  instead of stopping; the method used is accepted this once because it meets R731(b) and is
+  recorded, and the rule that a false INFERRED item stops the brief is unchanged. The form from
+  here: the launching step holds the launch line in one variable, writes the timestamp sentence
+  and that variable's value into launch_line.txt, then executes that variable, so the line
+  written and the line run cannot differ.
+R738(d) — Finding 4: gate_12aa_open/'s nineteen files (gate_c2's set: collected_ids.txt and
+  tree_at_launch.txt included) are the gate-evidence set of record from here; 12z_open's
+  seventeen stand as the earlier form, its launch line reconstructed (R733(a)).
+R738(e) — Readings, no row: the foreign claude-config commit 992f3a5 (surgical-cv-edit's row
+  5542153, no trailers) is accepted under R663(b) and joins the dgx-infra cross-lane item with
+  4525a44 and 9a6cdbd; the 0k window bound at 05:30Z, wider than the archive, accepted; login
+  shell 2250810 (07:02:51Z, outside the window) and the read-only HEAD + ps pair at 05:12:28Z, not
+  attributed; the snapshot timer's requests at 10:30:39Z; the dbchecks path established by the
+  12z-CLOSE brief and R711 (finding 5); the comparison file regenerated before its commit (finding
+  6); NV_ERR_NO_MEMORY eighteen this boot, none new; the temp root before (162, 163, 164, current;
+  1,569,785,322 B) and after (163, 164, 165, current; 2,954,353,128 B); the 12aa block's "12aa's
+  first items" clause, agreeing with the brief. R510 for 12aa so far: rows in 0, rows out 0, no
+  class move.
+R738(f) — U20's Phase A opens under the 12aa-U20A brief below, in the form R728(f) and R731(f)
+  state: 12l_P1A.md §3's next unit in its order, read-only; the unit entry quoted first (a closed
+  or absorbed unit is caught there and the next open unit reported instead); the rows it names
+  quoted with every note and their acceptance tests; the census pre-step's five classes
+  (R722(a)–R725(b)); the mechanism at HEAD, quoted; the options with what each moves. No engine
+  change; no model load; an Ollama request other than version, tags or ps is not made. The fix is
+  not designed in the Phase A.

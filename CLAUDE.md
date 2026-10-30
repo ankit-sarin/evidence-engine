@@ -341,7 +341,8 @@ sub-block — C17) and the sources. `canonical_json` / `sha256_canonical` are th
 
 **The run manifest** (`engine/core/run_manifest.py`, migration 020). `open_run` writes
 `run_manifests` + `run_stage_configs` and pins every named arm **before the first call**, or
-refuses, in this order: `OllamaHostNotLoopback` (U18, R721(c)), `CodebookReviewMismatch` (INT-i12-9),
+refuses, in this order: `OllamaHostNotLoopback` (U18, R721(c)), `OllamaHostNotLocalService` (U19, R734(d)),
+`CodebookReviewMismatch` (INT-i12-9),
 `DirtyTree`, `AmbiguousEngineState`, `CloudArmNotEnabled` (S3g), `PreManifestArm` (R59), `RetiredArm`
 (R21), `ModelLineageMissing` or `SameLineageVerifier` (INT-i12-45), a digest failure, or `ArmPinMismatch`
 (R10, naming the differing keys). An untagged HEAD is allowed with

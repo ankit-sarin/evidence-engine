@@ -76,6 +76,7 @@ RUN_REFUSED_MEMBERS = {
     rm.CodebookReviewMismatch,
     rm.ModelLineageMissing, rm.SameLineageVerifier,  # U17, R703(d)/(e)
     rm.OllamaHostNotLoopback,  # U18, R721(c)
+    rm.OllamaHostNotLocalService,  # U19, R734(d)(i)
     rm.ModelDigestChanged,  # U18, R721(b)
     rm.ServerEnvChanged,  # U19, R734(c)(ii)
     ElicitationSentinelUnsatisfiable,

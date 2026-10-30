@@ -11,7 +11,7 @@ import subprocess
 import time
 from dataclasses import dataclass, field
 
-from engine.utils.ollama_client import ollama_chat, server_ps
+from engine.utils.ollama_client import ollama_chat, parse_environment_line, server_ps
 from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
 #: The probe's message list — one builder for the call and the prompt hash (R60).
@@ -192,19 +192,20 @@ def read_ollama_env() -> tuple[str, dict[str, str]]:
         if not line.startswith("Environment="):
             return "", {}
         raw = line[len("Environment="):]
-        env: dict[str, str] = {}
-        for token in raw.split():
-            if "=" in token:
-                k, v = token.split("=", 1)
-                env[k] = v
-        return raw, env
+        try:
+            return raw, parse_environment_line(raw)
+        except ValueError as exc:
+            logger.warning("Could not parse Ollama service environment %r: %s", raw, exc)
+            return raw, {}
     except Exception as exc:
         logger.warning("Could not read Ollama service environment: %s", exc)
         return "", {}
 
 
 def _get_ollama_env() -> dict[str, str]:
-    """Read environment variables from the running Ollama systemd service."""
+    """The Ollama unit's configured environment as systemd has it loaded (`systemctl show
+    ollama --property=Environment`), parsed — not the running process's own environment,
+    which a restart applies (12z_U19A.md F10)."""
     return read_ollama_env()[1]
 
 

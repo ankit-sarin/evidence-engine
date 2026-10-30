@@ -272,6 +272,20 @@ def n_ctx_train(model: str) -> int:
     return values[0]
 
 
+def parse_environment_line(value: str) -> dict[str, str]:
+    """A systemd `Environment=` value as a map: `shlex`-split, so a quoted value with a
+    space is one token, then each `NAME=VALUE` token split at its first `=`; a token
+    with no `=` is skipped and a later NAME wins. The one parser for that line, used by
+    `server_context_length` and by `ollama_preflight.read_ollama_env` (U19, R734(d)(ii),
+    N26). Raises ValueError on an unbalanced quote."""
+    env: dict[str, str] = {}
+    for token in shlex.split(value):
+        name, sep, raw = token.partition("=")
+        if sep:
+            env[name] = raw
+    return env
+
+
 def server_context_length() -> int | None:
     """OLLAMA_CONTEXT_LENGTH as the local systemd service sets it, or None.
 
@@ -298,13 +312,11 @@ def server_context_length() -> int | None:
             if not line.startswith("Environment="):
                 continue
             try:
-                tokens = shlex.split(line[len("Environment="):])
+                env = parse_environment_line(line[len("Environment="):])
             except ValueError:
                 continue
-            for token in tokens:
-                name, sep, raw = token.partition("=")
-                if sep and name == "OLLAMA_CONTEXT_LENGTH":
-                    value = raw
+            if "OLLAMA_CONTEXT_LENGTH" in env:
+                value = env["OLLAMA_CONTEXT_LENGTH"]
     try:
         parsed = int(value) if value is not None else 0
     except ValueError:

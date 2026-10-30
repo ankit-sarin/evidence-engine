@@ -178,6 +178,13 @@ class OllamaHostNotLoopback(RunRefused):
     a declared remote host is a later capability, not this one."""
 
 
+class OllamaHostNotLocalService(RunRefused):
+    """U19, R734(d)(i): the Ollama host the engine resolved at import is loopback but not
+    the local service (the library's default port). The environment check reads the
+    local service's unit, so it would be checking a server the calls do not go to; no
+    run kind supports another local server (R721(c), R724(d) extended)."""
+
+
 class ModelDigestChanged(RunRefused):
     """U18 commit 2, R721(b): the model a call names has a different digest now than
     the one this run's manifest recorded for the call's stage — a model replaced under
@@ -473,6 +480,17 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
             "environment that launched this process (`echo $OLLAMA_HOST`; empty means "
             "the library's default, which is loopback); unset it, or point it at this "
             "machine, and launch again.")
+    # U19, R734(d)(i): and it must be the local service, whose unit the environment
+    # check reads. Second among the refusals; it too reads nothing and writes nothing.
+    from engine.utils.ollama_client import is_local_service_host
+    if not is_local_service_host(ollama_host()):
+        raise OllamaHostNotLocalService(
+            f"OllamaHostNotLocalService: run refused: the Ollama host is {ollama_host()}, a "
+            "loopback address on a port other than the local service's, whose configured "
+            "environment the run checks and records; the calls would go to a server that "
+            "check cannot see. Nothing was read or written. Read OLLAMA_HOST in the "
+            "environment that launched this process (`echo $OLLAMA_HOST`; empty means the "
+            "local service); unset it and launch again.")
     # INT-i12-9: every loader on the run path takes the codebook by path and
     # checks no identity (`load_codebook`, `load_codebook_beside`); this is the
     # one place every run passes. Before anything is resolved or written.

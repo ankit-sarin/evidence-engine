@@ -1,0 +1,602 @@
+engine/adjudication/ft_screening_adjudicator.py:517  [<module>._apply_ft_decisions]  import module engine.core.run_manifest as rm
+engine/adjudication/ft_screening_adjudicator.py:526  [<module>._apply_ft_decisions]  name .open_run
+engine/adjudication/import_extraction_entry.py:41  [<module>]  import module engine.core.run_manifest as rm
+engine/adjudication/import_extraction_entry.py:283  [<module>.import_extraction_entry]  name .open_run
+engine/adjudication/import_screening_entry.py:40  [<module>]  import module engine.core.run_manifest as rm
+engine/adjudication/import_screening_entry.py:159  [<module>.import_screening_entry]  name .open_run
+engine/agents/audit_events.py:54  [<module>]  import module engine.core.run_manifest as rm
+engine/agents/extractor.py:50  [<module>]  import module engine.core.run_manifest as rm
+engine/agents/extractor.py:723  [<module>.restart_ollama]  def restart_ollama
+engine/agents/extractor.py:40  [<module>]  import is_run_fault
+engine/agents/extractor.py:52  [<module>]  import restart_disabled
+engine/agents/extractor.py:54  [<module>]  import foreign_lock_held
+engine/agents/extractor.py:61  [<module>]  name RESTART_EVERY_N
+engine/agents/extractor.py:724  [<module>.restart_ollama]  string ['systemctl'] 'Restart the Ollama service and wait for it to become responsive.\n\n    Uses ``sudo systemctl restart '
+engine/agents/extractor.py:971  [<module>.run_extraction]  name RESTART_EVERY_N
+engine/agents/extractor.py:1005  [<module>.extraction_stages]  string-name ['open_run'] 'The local extraction stages a run declares for this spec, pass 1 first.\n    The one declaration: `ru'
+engine/agents/extractor.py:1078  [<module>._run_extraction_unlocked]  name RESTART_EVERY_N
+engine/agents/extractor.py:1118  [<module>._extract_selected]  import require_preflight
+engine/agents/extractor.py:737  [<module>.restart_ollama]  name restart_disabled
+engine/agents/extractor.py:752  [<module>.restart_ollama]  name foreign_lock_held
+engine/agents/extractor.py:762  [<module>.restart_ollama]  string ['systemctl'] '[%s] Ollama restart (%s, %d papers done) — running sudo systemctl restart ollama'
+engine/agents/extractor.py:1120  [<module>._extract_selected]  name require_preflight
+engine/agents/extractor.py:1140  [<module>._extract_selected.record_failure]  string-name ['is_run_fault'] "Write what the refusal left — the paper's failure event, or the\n        exhausted attempt's record i"
+engine/agents/extractor.py:437  [<module>._retry_snippet]  name is_run_fault
+engine/agents/extractor.py:447  [<module>._retry_snippet]  name is_run_fault
+engine/agents/extractor.py:767  [<module>.restart_ollama]  string ['systemctl'] 'systemctl'
+engine/agents/extractor.py:1194  [<module>._extract_selected]  name is_run_fault
+engine/agents/extractor.py:1241  [<module>._extract_selected]  name restart_ollama
+engine/agents/ft_screener.py:20  [<module>]  import module engine.core.run_manifest as rm
+engine/agents/ft_screener.py:324  [<module>.run_ft_screening]  import require_preflight
+engine/agents/ft_screener.py:325  [<module>.run_ft_screening]  name require_preflight
+engine/agents/ft_screener.py:575  [<module>.open_screening_manifest]  name .open_run
+engine/agents/screener.py:170  [<module>.run_screening]  import require_preflight
+engine/agents/screener.py:258  [<module>.run_verification]  import require_preflight
+engine/agents/screener.py:171  [<module>.run_screening]  name require_preflight
+engine/agents/screener.py:259  [<module>.run_verification]  name require_preflight
+engine/cloud/base.py:136  [<module>.CloudExtractorBase.send]  import module engine.core.run_manifest as rm
+engine/core/effective_config.py:429  [<module>.render_messages]  import module engine.agents.extractor as ex
+engine/core/extraction_events.py:429  [<module>.run_fault_classes]  def run_fault_classes
+engine/core/extraction_events.py:478  [<module>.is_run_fault]  def is_run_fault
+engine/core/extraction_events.py:464  [<module>.run_fault_classes]  import RunRefused
+engine/core/extraction_events.py:505  [<module>.outcome_for_exception]  name is_run_fault
+engine/core/extraction_events.py:471  [<module>.run_fault_classes]  name RunRefused
+engine/core/extraction_events.py:481  [<module>.is_run_fault]  name run_fault_classes
+engine/core/run_manifest.py:398  [<module>.open_run]  def open_run
+engine/core/run_manifest.py:129  [<module>.DirtyTree]  name RunRefused
+engine/core/run_manifest.py:133  [<module>.AmbiguousEngineState]  name RunRefused
+engine/core/run_manifest.py:137  [<module>.PreManifestArm]  name RunRefused
+engine/core/run_manifest.py:141  [<module>.RetiredArm]  name RunRefused
+engine/core/run_manifest.py:145  [<module>.ArmPinMismatch]  name RunRefused
+engine/core/run_manifest.py:149  [<module>.CloudArmNotEnabled]  name RunRefused
+engine/core/run_manifest.py:153  [<module>.CodebookReviewMismatch]  name RunRefused
+engine/core/run_manifest.py:160  [<module>.ModelLineageMissing]  name RunRefused
+engine/core/run_manifest.py:166  [<module>.SameLineageVerifier]  name RunRefused
+engine/core/run_manifest.py:171  [<module>.StageNotInRun]  name RunRefused
+engine/core/run_manifest.py:175  [<module>.OllamaHostNotLoopback]  name RunRefused
+engine/core/run_manifest.py:181  [<module>.ModelDigestChanged]  name RunRefused
+engine/core/run_manifest.py:1047  [<module>.check_call_digest]  import module engine.utils.ollama_client as oc
+engine/core/run_manifest.py:154  [<module>.CodebookReviewMismatch]  string-name ['open_run'] "INT-i12-9: the codebook handed to `open_run` declares a review other than\n    the spec's, or none. A"
+engine/core/run_manifest.py:211  [<module>.UndeclaredCall]  string-name ['RunRefused'] "C54: a model call the active run's manifest did not declare — its stage\n    key has no `run_stage_co"
+engine/core/run_manifest.py:993  [<module>.active_field_names]  string-name ['open_run'] "The active run's registered codebook field names (R225a), or `None`\n    outside a run or when the ac"
+engine/core/run_manifest.py:771  [<module>.open_review_session]  name open_run
+engine/elicitation/pipeline.py:65  [<module>]  import RunRefused
+engine/elicitation/pipeline.py:189  [<module>.ElicitationSentinelUnsatisfiable]  name RunRefused
+engine/elicitation/pipeline.py:190  [<module>.ElicitationSentinelUnsatisfiable]  string-name ['open_run'] "The review's codebook has too few fields of some class for the elicited\n    prompt-hash sentinels (1"
+engine/utils/ollama_client.py:45  [<module>.restart_disabled]  def restart_disabled
+engine/utils/ollama_client.py:275  [<module>.server_context_length]  def server_context_length
+engine/utils/ollama_client.py:730  [<module>._restart_ollama_and_retry]  def _restart_ollama_and_retry
+engine/utils/ollama_client.py:33  [<module>]  import foreign_lock_held
+engine/utils/ollama_client.py:157  [<module>]  name SERVICE_UNIT_FILE
+engine/utils/ollama_client.py:158  [<module>]  name SERVICE_DROPIN_DIR
+engine/utils/ollama_client.py:276  [<module>.server_context_length]  string ['OLLAMA_CONTEXT_LENGTH'] 'OLLAMA_CONTEXT_LENGTH as the local systemd service sets it, or None.\n\n    Only for the local service'
+engine/utils/ollama_client.py:285  [<module>.server_context_length]  name SERVICE_UNIT_FILE
+engine/utils/ollama_client.py:338  [<module>.effective_ceiling]  name server_context_length
+engine/utils/ollama_client.py:755  [<module>._restart_ollama_and_retry]  name restart_disabled
+engine/utils/ollama_client.py:760  [<module>._restart_ollama_and_retry]  name foreign_lock_held
+engine/utils/ollama_client.py:773  [<module>._restart_ollama_and_retry]  string ['systemctl'] 'systemctl'
+engine/utils/ollama_client.py:287  [<module>.server_context_length]  name SERVICE_DROPIN_DIR
+engine/utils/ollama_client.py:298  [<module>.server_context_length]  string ['Environment='] 'Environment='
+engine/utils/ollama_client.py:306  [<module>.server_context_length]  string ['OLLAMA_CONTEXT_LENGTH'] 'OLLAMA_CONTEXT_LENGTH'
+engine/utils/ollama_client.py:301  [<module>.server_context_length]  string ['Environment='] 'Environment='
+engine/utils/ollama_client.py:669  [<module>.ollama_chat]  name _restart_ollama_and_retry
+engine/utils/ollama_lock.py:192  [<module>.foreign_lock_held]  def foreign_lock_held
+engine/utils/ollama_preflight.py:105  [<module>.preflight_check]  def preflight_check
+engine/utils/ollama_preflight.py:179  [<module>._get_ollama_env]  def _get_ollama_env
+engine/utils/ollama_preflight.py:202  [<module>._diff_env]  def _diff_env
+engine/utils/ollama_preflight.py:216  [<module>.check_ollama_env]  def check_ollama_env
+engine/utils/ollama_preflight.py:241  [<module>.require_preflight]  def require_preflight
+engine/utils/ollama_preflight.py:165  [<module>]  name _CORRECTNESS_ENV
+engine/utils/ollama_preflight.py:174  [<module>]  name _PERFORMANCE_ENV
+engine/utils/ollama_preflight.py:166  [<module>]  string ['OLLAMA_FLASH_ATTENTION'] 'OLLAMA_FLASH_ATTENTION'
+engine/utils/ollama_preflight.py:167  [<module>]  string ['OLLAMA_MAX_LOADED_MODELS'] 'OLLAMA_MAX_LOADED_MODELS'
+engine/utils/ollama_preflight.py:168  [<module>]  string ['OLLAMA_KV_CACHE_TYPE'] 'OLLAMA_KV_CACHE_TYPE'
+engine/utils/ollama_preflight.py:175  [<module>]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+engine/utils/ollama_preflight.py:222  [<module>.check_ollama_env]  name _get_ollama_env
+engine/utils/ollama_preflight.py:223  [<module>.check_ollama_env]  name _diff_env
+engine/utils/ollama_preflight.py:223  [<module>.check_ollama_env]  name _CORRECTNESS_ENV
+engine/utils/ollama_preflight.py:224  [<module>.check_ollama_env]  name _diff_env
+engine/utils/ollama_preflight.py:224  [<module>.check_ollama_env]  name _PERFORMANCE_ENV
+engine/utils/ollama_preflight.py:248  [<module>.require_preflight]  name check_ollama_env
+engine/utils/ollama_preflight.py:251  [<module>.require_preflight]  name preflight_check
+engine/utils/ollama_preflight.py:183  [<module>._get_ollama_env]  string ['systemctl'] 'systemctl'
+engine/utils/ollama_preflight.py:188  [<module>._get_ollama_env]  string ['Environment='] 'Environment='
+engine/utils/ollama_preflight.py:283  [<module>.main]  name preflight_check
+engine/utils/ollama_preflight.py:190  [<module>._get_ollama_env]  string ['Environment='] 'Environment='
+engine/utils/ollama_preflight.py:237  [<module>.check_ollama_env]  name _CORRECTNESS_ENV
+scripts/run_cloud_extraction.py:106  [<module>.run_arm]  import module engine.core.run_manifest as rm
+scripts/run_cloud_extraction.py:114  [<module>.run_arm]  name .open_run
+scripts/run_pipeline.py:36  [<module>]  import module engine.core.run_manifest as rm
+scripts/run_pipeline.py:462  [<module>._stage_audit]  import require_preflight
+scripts/run_pipeline.py:467  [<module>._stage_audit]  name require_preflight
+scripts/run_pipeline.py:551  [<module>._open_run_manifest]  name .open_run
+analysis/eval/elicit01/runner.py:41  [<module>]  import module engine.utils.ollama_client as oc
+analysis/eval/elicit01/runner.py:35  [<module>]  import RESTART_EVERY_N
+analysis/eval/elicit01/runner.py:35  [<module>]  import restart_ollama
+analysis/eval/elicit01/runner.py:148  [<module>.main]  name RESTART_EVERY_N
+analysis/eval/elicit01/runner.py:193  [<module>.main]  name restart_ollama
+analysis/eval/run_capture01.py:62  [<module>]  import module engine.utils.ollama_client as oc
+analysis/eval/run_capture01.py:55  [<module>]  import RESTART_EVERY_N
+analysis/eval/run_capture01.py:55  [<module>]  import restart_ollama
+analysis/eval/run_capture01.py:184  [<module>.main]  name RESTART_EVERY_N
+analysis/eval/run_capture01.py:227  [<module>.main]  name restart_ollama
+analysis/eval/run_qualgap01.py:71  [<module>]  import module engine.utils.ollama_client as oc
+analysis/paper1/judge_codebook_smoke.py:102  [<module>]  import require_preflight
+analysis/paper1/judge_codebook_smoke.py:1183  [<module>._run_locked]  name require_preflight
+analysis/paper1/pass2_branchB_report.py:187  [<module>._section_1_metadata]  string ['systemctl'] '| Ollama service restarts | 0 (no systemctl restart detected in run log) |'
+analysis/paper1/pass2_full.py:53  [<module>]  import restart_ollama
+analysis/paper1/pass2_full.py:257  [<module>.run_full]  name restart_ollama
+tests/_event_store_fixture.py:366  [<module>.open_extraction_run]  import module engine.core.run_manifest as rm
+tests/_event_store_fixture.py:371  [<module>.open_extraction_run]  name .open_run
+tests/_lock_census.py:43  [<module>]  string-name ['_restart_ollama_and_retry'] '_restart_ollama_and_retry'
+tests/_lock_census.py:44  [<module>]  string-name ['restart_ollama'] 'restart_ollama'
+tests/analysis/paper1/test_judge_storage.py:200  [<module>.TestCompleteJudgeRun.test_happy_path]  body-key 'started_at'
+tests/analysis/paper1/test_judge_storage.py:136  [<module>.TestCreateJudgeRun.test_happy_path]  body-key 'started_at'
+tests/conftest.py:357  [<module>.ollama_endpoints]  import module engine.utils.ollama_client as oc
+tests/conftest.py:83  [<module>._argv_words]  string ['systemctl'] 'Flatten a subprocess command into comparable words.\n\n    Handles both the list form (`["sudo", "syst'
+tests/conftest.py:65  [<module>]  string ['systemctl'] 'systemctl'
+tests/conftest.py:123  [<module>._refuse]  string ['systemctl'] ').\nTests must never touch a system service — a real `systemctl restart ollama` from the suite destro'
+tests/migrations/test_022_run_kinds_and_audit_tables.py:22  [<module>]  import module engine.core.run_manifest as rm
+tests/migrations/test_022_run_kinds_and_audit_tables.py:199  [<module>._open_test_run]  string-name ['open_run'] "A raw-SQL 'import'-kind run for tests that only need a valid run_id to\n    hang a claim/verdict/call"
+tests/migrations/test_022_run_kinds_and_audit_tables.py:229  [<module>.test_T4_open_run_with_kind_import_succeeds]  string-name ['open_run'] "R214: open_run(kind='import', stages=()) — the review_session precedent,\n    no stage rows required."
+tests/migrations/test_022_run_kinds_and_audit_tables.py:241  [<module>.test_T4_open_run_with_kind_import_succeeds]  name .open_run
+tests/test_arm_pinned_at_extract.py:29  [<module>]  import module engine.agents.extractor as E
+tests/test_arm_pinned_at_extract.py:30  [<module>]  import module engine.core.run_manifest as rm
+tests/test_arm_pinned_at_extract.py:34  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_arm_pinned_at_extract.py:168  [<module>._open]  body-key 'stages'
+tests/test_arm_pinned_at_extract.py:169  [<module>._open]  name .open_run
+tests/test_arm_pinned_at_extract.py:219  [<module>.test_verifying_twice_in_one_run_writes_the_pin_once]  body-key 'stages'
+tests/test_audit_events.py:374  [<module>.test_an_audit_run_needs_its_audit_stage]  import module engine.core.run_manifest as rm
+tests/test_audit_paper_id.py:21  [<module>]  import module engine.core.run_manifest as rm
+tests/test_audit_paper_id.py:25  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_audit_stage_completion.py:34  [<module>]  import module engine.agents.extractor as E
+tests/test_audit_stage_completion.py:86  [<module>.db]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_citation_guard.py:116  [<module>.test_uncited_value_never_reaches_the_database]  import module engine.agents.extractor as E
+tests/test_citation_record.py:27  [<module>]  import module engine.agents.extractor as E
+tests/test_citation_record.py:29  [<module>]  import module engine.core.run_manifest as rm
+tests/test_citation_record.py:37  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_citation_record.py:160  [<module>._run]  string-name ['open_run'] 'One elicited run through open_run, run_extraction and the real event writer.'
+tests/test_citation_record.py:161  [<module>._run]  name .open_run
+tests/test_citation_record.py:165  [<module>._run]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_codebook_loader.py:95  [<module>.test_the_glob_is_gone]  import module engine.agents.extractor
+tests/test_codebook_prompt.py:93  [<module>.TestNoFieldGuidesRemnant.test_no_field_guides_attribute]  import engine.agents.extractor as mod
+tests/test_codebook_review_at_open.py:26  [<module>]  import module engine.agents.extractor as E
+tests/test_codebook_review_at_open.py:27  [<module>]  import module engine.core.run_manifest as rm
+tests/test_codebook_review_at_open.py:31  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_codebook_review_at_open.py:80  [<module>._open]  name .open_run
+tests/test_codebook_review_at_open.py:92  [<module>.test_open_run_refuses_a_codebook_beside_the_database_that_declares_another_review]  name .RunRefused
+tests/test_codebook_review_at_open.py:163  [<module>.test_the_refusal_is_a_run_fault]  name .is_run_fault
+tests/test_corpus_authority.py:332  [<module>.test_no_inline_four_status_literal_outside_the_authority]  body-key 'git'
+tests/test_corpus_authority.py:382  [<module>.test_engine_core_corpus_is_frozen_and_only_a_migration_reads_it]  body-key 'git'
+tests/test_cut_over.py:24  [<module>]  import module engine.agents.extractor as E
+tests/test_cut_over.py:35  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_cut_over.py:104  [<module>.fake_models]  string-name ['restart_ollama'] 'restart_ollama'
+tests/test_cut_over.py:106  [<module>.fake_models]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_duplicate_on_pass1_attempt_2.py:28  [<module>]  import module engine.agents.extractor as E
+tests/test_duplicate_on_pass1_attempt_2.py:115  [<module>._drive]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_duplicate_on_pass1_attempt_2.py:216  [<module>.test_a_duplicate_on_attempt_1_keeps_its_own_path]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_duplicate_on_pass1_attempt_2.py:237  [<module>.test_a_duplicate_on_attempt_1_is_named_in_every_retry_row]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_elicitation_pipeline.py:155  [<module>._run]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:192  [<module>.test_pass1_is_read_from_the_content_channel]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:222  [<module>.test_a_failing_field_is_refused_and_the_rest_of_the_paper_is_stored]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:249  [<module>.test_an_uncited_value_is_never_stored_as_a_value]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:270  [<module>.test_pass_2_is_skipped_when_no_field_survived]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:295  [<module>.test_telemetry_carries_the_per_field_citation_record]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:317  [<module>.test_dispatch_follows_the_spec_flag]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:332  [<module>.test_write_guard_also_fires_on_the_elicited_path]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:362  [<module>.test_retry_is_bounded_and_the_paper_is_failed]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:403  [<module>.test_the_completeness_predicate_and_the_contracts_share_one_field_set]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:432  [<module>.test_the_accepted_attempt_and_both_attempts_reach_telemetry]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:452  [<module>.test_both_pass1_attempts_raw_responses_reach_telemetry]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:491  [<module>.test_the_elicited_requests_are_byte_identical]  import engine.agents.extractor as E
+tests/test_elicitation_pipeline.py:524  [<module>.test_an_escape_record_never_reaches_the_priming_input]  import engine.agents.extractor as E
+tests/test_elicitation_sentinel.py:21  [<module>]  import module engine.core.run_manifest as rm
+tests/test_elicitation_sentinel.py:69  [<module>.test_three_stated_fields_are_refused_naming_stated_four_and_three]  name .RunRefused
+tests/test_elicitation_sentinel.py:82  [<module>.test_no_judgment_field_is_refused_naming_judgment]  name .RunRefused
+tests/test_elicitation_sentinel.py:95  [<module>.test_open_run_refuses_before_any_write]  name .RunRefused
+tests/test_elicitation_sentinel.py:96  [<module>.test_open_run_refuses_before_any_write]  name .open_run
+tests/test_engine_state.py:19  [<module>]  import module engine.core.run_manifest as rm
+tests/test_engine_state.py:1  [<module>]  string-name ['open_run'] "E-STATE: a manifest's `engine_state` is the engine-state name tagged at HEAD.\n\nT1–T5 inject the git "
+tests/test_engine_state.py:50  [<module>._open]  name .open_run
+tests/test_engine_state.py:57  [<module>._stored]  body-key 'engine_state'
+tests/test_engine_state.py:110  [<module>._setup_git]  body-key 'git'
+tests/test_entry_points_take_the_lock.py:21  [<module>]  import module engine.utils.ollama_preflight as preflight
+tests/test_entry_points_take_the_lock.py:109  [<module>.test_run_extractions_own_acquire_nests_under_the_entry_points]  import module engine.agents.extractor as E
+tests/test_entry_points_take_the_lock.py:125  [<module>.test_the_preflight_cli_refuses_under_a_held_lock_before_probing]  string-name ['preflight_check'] 'preflight_check'
+tests/test_entry_points_take_the_lock.py:141  [<module>.test_the_preflight_cli_probes_under_the_lock_when_it_is_free]  string-name ['preflight_check'] 'preflight_check'
+tests/test_entry_points_take_the_lock.py:125  [<module>.test_the_preflight_cli_refuses_under_a_held_lock_before_probing]  string-name ['preflight_check'] 'preflight_check'
+tests/test_exit_process.py:21  [<module>]  import module engine.core.run_manifest as rm
+tests/test_exporters.py:473  [<module>.run_db]  import module engine.core.run_manifest as rm
+tests/test_extraction_events.py:20  [<module>]  import module engine.agents.extractor as E
+tests/test_extraction_run_link.py:18  [<module>]  import module engine.agents.extractor as E
+tests/test_extraction_run_link.py:20  [<module>]  import module engine.core.run_manifest as rm
+tests/test_extraction_run_link.py:25  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_extraction_run_link.py:194  [<module>.test_t5_the_stored_digests_are_the_manifests]  name .open_run
+tests/test_extraction_run_link.py:103  [<module>._run]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_extraction_run_link.py:127  [<module>.test_t2_an_unknown_run_refuses_before_selection]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_extraction_signatures.py:23  [<module>]  import module engine.agents.extractor as E
+tests/test_extractor.py:20  [<module>]  import restart_ollama
+tests/test_extractor.py:673  [<module>.TestRestartOllamaGraceful]  string-name ['restart_ollama'] 'restart_ollama() failure in extraction loop must not crash the run.'
+tests/test_extractor.py:464  [<module>.TestProactiveRestart.test_restart_triggers_after_n_papers]  string-name ['restart_ollama'] 'engine.agents.extractor.restart_ollama'
+tests/test_extractor.py:466  [<module>.TestProactiveRestart.test_restart_triggers_after_n_papers]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_extractor.py:483  [<module>.TestProactiveRestart.test_restart_disabled_when_zero]  string-name ['restart_ollama'] 'engine.agents.extractor.restart_ollama'
+tests/test_extractor.py:485  [<module>.TestProactiveRestart.test_restart_disabled_when_zero]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_extractor.py:499  [<module>.TestProactiveRestart.test_restart_failure_continues_gracefully]  string-name ['restart_ollama'] 'engine.agents.extractor.restart_ollama'
+tests/test_extractor.py:501  [<module>.TestProactiveRestart.test_restart_failure_continues_gracefully]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_extractor.py:515  [<module>.TestProactiveRestart.test_zero_span_extraction_marks_extract_failed]  string-name ['restart_ollama'] 'engine.agents.extractor.restart_ollama'
+tests/test_extractor.py:517  [<module>.TestProactiveRestart.test_zero_span_extraction_marks_extract_failed]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_extractor.py:558  [<module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues]  string-name ['restart_ollama'] 'engine.agents.extractor.restart_ollama'
+tests/test_extractor.py:560  [<module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_extractor.py:676  [<module>.TestRestartOllamaGraceful.test_restart_failure_continues_extraction]  string-name ['restart_ollama'] 'If restart_ollama raises RuntimeError, extraction continues.'
+tests/test_extractor.py:338  [<module>.test_staleness_skip]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_extractor.py:360  [<module>.test_run_extraction_no_parsed_text]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_extractor.py:499  [<module>.TestProactiveRestart.test_restart_failure_continues_gracefully]  string ['systemctl'] 'Failed to restart Ollama: systemctl failed'
+tests/test_extractor.py:681  [<module>.TestRestartOllamaGraceful.test_restart_failure_continues_extraction]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_extractor.py:684  [<module>.TestRestartOllamaGraceful.test_restart_failure_continues_extraction]  string-name ['restart_ollama'] 'engine.agents.extractor.restart_ollama'
+tests/test_failed_close_reason.py:20  [<module>]  import module engine.core.run_manifest as rm
+tests/test_floor_and_stored_attempt.py:34  [<module>]  import module engine.agents.extractor as E
+tests/test_floor_and_stored_attempt.py:39  [<module>]  import module engine.core.run_manifest as rm
+tests/test_floor_and_stored_attempt.py:441  [<module>.test_a_model_arms_claim_on_an_unpinned_arm_is_refused_by_name]  name .open_run
+tests/test_floor_and_stored_attempt.py:98  [<module>._run]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_ft_adjudication_import.py:25  [<module>]  import module engine.core.run_manifest as rm
+tests/test_ft_adjudication_import.py:321  [<module>]  body-key 'run_uid'
+tests/test_ft_adjudication_import.py:321  [<module>]  body-key 'review_id'
+tests/test_ft_adjudication_import.py:321  [<module>]  body-key 'run_kind'
+tests/test_ft_adjudication_import.py:321  [<module>]  body-key 'git'
+tests/test_ft_adjudication_import.py:321  [<module>]  body-key 'engine_state'
+tests/test_ft_adjudication_import.py:321  [<module>]  body-key 'spec_hash'
+tests/test_ft_adjudication_import.py:322  [<module>]  body-key 'codebook'
+tests/test_ft_adjudication_import.py:322  [<module>]  body-key 'libraries'
+tests/test_ft_adjudication_import.py:322  [<module>]  body-key 'host'
+tests/test_ft_adjudication_import.py:322  [<module>]  body-key 'ollama_host'
+tests/test_ft_adjudication_import.py:322  [<module>]  body-key 'started_at'
+tests/test_ft_adjudication_import.py:322  [<module>]  body-key 'cloud_arms'
+tests/test_ft_adjudication_import.py:323  [<module>]  body-key 'payload_description'
+tests/test_ft_adjudication_import.py:323  [<module>]  body-key 'stages'
+tests/test_ft_adjudication_import.py:323  [<module>]  body-key 'pins'
+tests/test_ft_adjudication_import.py:328  [<module>._open]  name .open_run
+tests/test_ft_adjudication_import.py:112  [<module>.test_1_one_import_manifest_with_zero_stage_rows_closed_completed]  body-key 'run_kind'
+tests/test_ft_adjudication_import.py:123  [<module>.test_2_the_manifest_records_the_file_sha256_under_inputs_and_pins_stay_arms]  body-key 'inputs'
+tests/test_ft_adjudication_import.py:124  [<module>.test_2_the_manifest_records_the_file_sha256_under_inputs_and_pins_stay_arms]  body-key 'pins'
+tests/test_ft_adjudication_import.py:341  [<module>.test_13_open_run_with_inputs_records_them]  body-key 'inputs'
+tests/test_ft_adjudication_import.py:354  [<module>.test_14_a_primary_flag_adjudicated_eligible_is_not_selected_by_the_verifier]  name .open_run
+tests/test_ft_adjudication_import.py:340  [<module>.test_13_open_run_with_inputs_records_them]  body-key 'inputs'
+tests/test_ft_bridge.py:26  [<module>]  import module engine.core.run_manifest as rm
+tests/test_ft_bridge.py:31  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_ft_bridge.py:91  [<module>.fake]  import module engine.utils.ollama_preflight as pf
+tests/test_ft_bridge.py:94  [<module>.fake]  string-name ['check_ollama_env'] 'check_ollama_env'
+tests/test_ft_screening.py:31  [<module>]  import module engine.core.run_manifest as rm
+tests/test_ft_screening.py:95  [<module>._screening_run]  name .open_run
+tests/test_ft_screening.py:807  [<module>.TestFTScreeningSkipsAdvancedStatus.test_ft_screen_selects_parsed_only_and_ignores_ai_audit_complete]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_ft_screening.py:844  [<module>.TestMissingParsedText.test_no_parsed_text_marks_ft_flagged]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_ft_screening.py:894  [<module>.TestFTParseError.test_malformed_output_flags_paper]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_import_extraction_entry.py:28  [<module>]  import module engine.core.run_manifest as rm
+tests/test_import_extraction_entry.py:348  [<module>.test_t7_manifest_inputs_hold_the_json_and_every_text_by_stored_path]  body-key 'inputs'
+tests/test_import_extraction_entry.py:159  [<module>.test_t1_three_papers_enter_at_ft_eligible_with_refs_events_and_one_manifest]  body-key 'run_kind'
+tests/test_import_extraction_entry.py:410  [<module>.test_t11_every_imported_ref_sha_appears_under_its_import_manifest_inputs]  body-key 'run_kind'
+tests/test_import_extraction_entry.py:412  [<module>.test_t11_every_imported_ref_sha_appears_under_its_import_manifest_inputs]  body-key 'inputs'
+tests/test_import_screening_entry.py:26  [<module>]  import module engine.core.run_manifest as rm
+tests/test_import_screening_entry.py:115  [<module>.test_t1_four_entries_enter_at_ingested_under_one_manifest]  body-key 'inputs'
+tests/test_import_screening_entry.py:113  [<module>.test_t1_four_entries_enter_at_ingested_under_one_manifest]  body-key 'run_kind'
+tests/test_lock_census.py:80  [<module>]  string-name ['restart_ollama'] '\n    from engine.agents import extractor\n    from engine.agents.screener import screen\n    from engi'
+tests/test_lock_census.py:126  [<module>.test_a_sink_reached_after_the_wrapper_closes_still_fails]  string-name ['restart_ollama'] 'engine.agents.extractor::restart_ollama'
+tests/test_lock_census.py:196  [<module>.test_the_sink_scans_can_fail]  string ['systemctl'] "import ollama, subprocess\nollama.chat(model='m')\noc._client.generate\nsubprocess.run(['sudo', 'system"
+tests/test_lock_census.py:191  [<module>.test_only_the_two_restart_sites_restart_the_service]  string-name ['restart_ollama'] 'restart_ollama'
+tests/test_lock_census.py:192  [<module>.test_only_the_two_restart_sites_restart_the_service]  string-name ['_restart_ollama_and_retry'] '_restart_ollama_and_retry'
+tests/test_lock_census.py:168  [<module>._restart_command_sites]  string ['systemctl'] 'systemctl'
+tests/test_lock_census.py:174  [<module>._restart_command_sites]  string ['systemctl'] 'systemctl'
+tests/test_migration_016_017.py:172  [<module>.test_017_writes_three_identity_rows_spec_codebook_and_the_seed_marker]  body-key 'codebook'
+tests/test_migration_016_017.py:114  [<module>.seeded]  body-key 'review_id'
+tests/test_ollama_client.py:17  [<module>]  import module engine.utils.ollama_client as _oc
+tests/test_ollama_client.py:12  [<module>]  import _restart_ollama_and_retry
+tests/test_ollama_client.py:207  [<module>.TestOllamaRestartRecovery.test_restart_attempted_after_retries_exhausted]  string ['systemctl'] 'After all retries timeout, should attempt sudo systemctl restart ollama.'
+tests/test_ollama_client.py:301  [<module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_restart_failure]  string-name ['_restart_ollama_and_retry', 'restart_ollama'] 'M3: _restart_ollama_and_retry raises RuntimeError (not None) on restart failure.'
+tests/test_ollama_client.py:316  [<module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_post_restart_failure]  string-name ['_restart_ollama_and_retry', 'restart_ollama'] 'M3: _restart_ollama_and_retry raises RuntimeError when post-restart call fails.'
+tests/test_ollama_client.py:243  [<module>.TestOllamaRestartRecovery.test_restart_success_then_call_succeeds]  name _restart_ollama_and_retry
+tests/test_ollama_client.py:230  [<module>.TestOllamaRestartRecovery.test_restart_attempted_after_retries_exhausted]  string ['systemctl'] 'systemctl'
+tests/test_ollama_client.py:303  [<module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_restart_failure]  name _restart_ollama_and_retry
+tests/test_ollama_client.py:299  [<module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_restart_failure]  string ['systemctl'] 'systemctl not found'
+tests/test_ollama_client.py:325  [<module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_post_restart_failure]  name _restart_ollama_and_retry
+tests/test_ollama_input_fit.py:16  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_ollama_input_fit.py:73  [<module>._dropin]  string ['override.conf'] 'override.conf'
+tests/test_ollama_input_fit.py:50  [<module>.service]  string ['Environment='] '[Service]\nEnvironment="PATH=/usr/bin"\n'
+tests/test_ollama_input_fit.py:51  [<module>.service]  string-name ['SERVICE_UNIT_FILE'] 'SERVICE_UNIT_FILE'
+tests/test_ollama_input_fit.py:52  [<module>.service]  string-name ['SERVICE_DROPIN_DIR'] 'SERVICE_DROPIN_DIR'
+tests/test_ollama_input_fit.py:92  [<module>.test_the_service_environment_lowers_the_ceiling]  string ['Environment=', 'OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=8192"\n'
+tests/test_ollama_input_fit.py:93  [<module>.test_the_service_environment_lowers_the_ceiling]  string ['Environment=', 'OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=1024"\n'
+tests/test_ollama_input_fit.py:93  [<module>.test_the_service_environment_lowers_the_ceiling]  string ['override.conf'] 'override.conf.bak'
+tests/test_ollama_input_fit.py:99  [<module>.test_a_dropin_overrides_the_unit_file]  string ['Environment=', 'OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=4096"\n'
+tests/test_ollama_input_fit.py:100  [<module>.test_a_dropin_overrides_the_unit_file]  string ['Environment=', 'OLLAMA_NUM_PARALLEL', 'OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment=OLLAMA_NUM_PARALLEL=1 OLLAMA_CONTEXT_LENGTH=16384\n'
+tests/test_ollama_input_fit.py:111  [<module>.test_without_num_ctx_the_ceiling_is_the_minimum_of_the_default_terms]  string ['Environment=', 'OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=32768"\n'
+tests/test_ollama_input_fit.py:118  [<module>.test_an_explicit_num_ctx_is_clamped_only_by_the_trained_context]  string ['Environment=', 'OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=32768"\n'
+tests/test_ollama_input_fit.py:134  [<module>.test_the_service_environment_is_ignored_for_a_rebound_client]  string ['Environment=', 'OLLAMA_CONTEXT_LENGTH'] '[Service]\nEnvironment="OLLAMA_CONTEXT_LENGTH=8192"\n'
+tests/test_ollama_input_fit.py:101  [<module>.test_a_dropin_overrides_the_unit_file]  name .server_context_length
+tests/test_ollama_lock.py:72  [<module>.test_lock_is_free_initially]  name .foreign_lock_held
+tests/test_ollama_lock.py:126  [<module>.test_foreign_holder_is_seen_as_held_and_foreign]  name .foreign_lock_held
+tests/test_ollama_lock.py:135  [<module>.test_self_holder_is_held_but_not_foreign]  name .foreign_lock_held
+tests/test_ollama_preflight.py:12  [<module>]  import check_ollama_env
+tests/test_ollama_preflight.py:13  [<module>]  import preflight_check
+tests/test_ollama_preflight.py:14  [<module>]  import require_preflight
+tests/test_ollama_preflight.py:16  [<module>]  import _get_ollama_env
+tests/test_ollama_preflight.py:125  [<module>]  string ['OLLAMA_FLASH_ATTENTION'] 'OLLAMA_FLASH_ATTENTION'
+tests/test_ollama_preflight.py:126  [<module>]  string ['OLLAMA_MAX_LOADED_MODELS'] 'OLLAMA_MAX_LOADED_MODELS'
+tests/test_ollama_preflight.py:127  [<module>]  string ['OLLAMA_KV_CACHE_TYPE'] 'OLLAMA_KV_CACHE_TYPE'
+tests/test_ollama_preflight.py:128  [<module>]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_ollama_preflight.py:206  [<module>.TestCheckOllamaEnv.test_get_ollama_env_parses_systemctl_output]  string ['Environment=', 'OLLAMA_FLASH_ATTENTION', 'OLLAMA_MAX_LOADED_MODELS'] 'Environment=OLLAMA_FLASH_ATTENTION=true OLLAMA_MAX_LOADED_MODELS=1 PATH=/usr/bin\n'
+tests/test_ollama_preflight.py:141  [<module>.TestCheckOllamaEnv.test_fails_when_flash_attention_missing]  string ['OLLAMA_FLASH_ATTENTION'] 'OLLAMA_FLASH_ATTENTION'
+tests/test_ollama_preflight.py:148  [<module>.TestCheckOllamaEnv.test_fails_when_max_loaded_models_wrong]  string ['OLLAMA_MAX_LOADED_MODELS'] 'OLLAMA_MAX_LOADED_MODELS'
+tests/test_ollama_preflight.py:156  [<module>.TestCheckOllamaEnv.test_fails_when_kv_cache_type_wrong]  string ['OLLAMA_KV_CACHE_TYPE'] 'OLLAMA_KV_CACHE_TYPE'
+tests/test_ollama_preflight.py:172  [<module>.TestCheckOllamaEnv.test_performance_mismatch_warns_not_raises]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_ollama_preflight.py:176  [<module>.TestCheckOllamaEnv.test_performance_mismatch_warns_not_raises]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_ollama_preflight.py:181  [<module>.TestCheckOllamaEnv.test_performance_missing_warns_not_raises]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_ollama_preflight.py:185  [<module>.TestCheckOllamaEnv.test_performance_missing_warns_not_raises]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_ollama_preflight.py:191  [<module>.TestCheckOllamaEnv.test_mixed_correctness_fail_and_perf_warn]  string ['OLLAMA_MAX_LOADED_MODELS'] 'OLLAMA_MAX_LOADED_MODELS'
+tests/test_ollama_preflight.py:192  [<module>.TestCheckOllamaEnv.test_mixed_correctness_fail_and_perf_warn]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_ollama_preflight.py:199  [<module>.TestCheckOllamaEnv.test_mixed_correctness_fail_and_perf_warn]  string ['OLLAMA_FLASH_ATTENTION'] 'OLLAMA_FLASH_ATTENTION'
+tests/test_ollama_preflight.py:200  [<module>.TestCheckOllamaEnv.test_mixed_correctness_fail_and_perf_warn]  string ['OLLAMA_KV_CACHE_TYPE'] 'OLLAMA_KV_CACHE_TYPE'
+tests/test_ollama_preflight.py:201  [<module>.TestCheckOllamaEnv.test_mixed_correctness_fail_and_perf_warn]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_ollama_preflight.py:202  [<module>.TestCheckOllamaEnv.test_mixed_correctness_fail_and_perf_warn]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_ollama_preflight.py:135  [<module>.TestCheckOllamaEnv.test_passes_when_env_correct]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_ollama_preflight.py:137  [<module>.TestCheckOllamaEnv.test_passes_when_env_correct]  name check_ollama_env
+tests/test_ollama_preflight.py:142  [<module>.TestCheckOllamaEnv.test_fails_when_flash_attention_missing]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_ollama_preflight.py:149  [<module>.TestCheckOllamaEnv.test_fails_when_max_loaded_models_wrong]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_ollama_preflight.py:157  [<module>.TestCheckOllamaEnv.test_fails_when_kv_cache_type_wrong]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_ollama_preflight.py:162  [<module>.TestCheckOllamaEnv.test_fails_lists_all_correctness_errors]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_ollama_preflight.py:166  [<module>.TestCheckOllamaEnv.test_fails_lists_all_correctness_errors]  string ['OLLAMA_FLASH_ATTENTION'] 'OLLAMA_FLASH_ATTENTION'
+tests/test_ollama_preflight.py:167  [<module>.TestCheckOllamaEnv.test_fails_lists_all_correctness_errors]  string ['OLLAMA_MAX_LOADED_MODELS'] 'OLLAMA_MAX_LOADED_MODELS'
+tests/test_ollama_preflight.py:168  [<module>.TestCheckOllamaEnv.test_fails_lists_all_correctness_errors]  string ['OLLAMA_KV_CACHE_TYPE'] 'OLLAMA_KV_CACHE_TYPE'
+tests/test_ollama_preflight.py:173  [<module>.TestCheckOllamaEnv.test_performance_mismatch_warns_not_raises]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_ollama_preflight.py:182  [<module>.TestCheckOllamaEnv.test_performance_missing_warns_not_raises]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_ollama_preflight.py:208  [<module>.TestCheckOllamaEnv.test_get_ollama_env_parses_systemctl_output]  name _get_ollama_env
+tests/test_ollama_preflight.py:209  [<module>.TestCheckOllamaEnv.test_get_ollama_env_parses_systemctl_output]  string ['OLLAMA_FLASH_ATTENTION'] 'OLLAMA_FLASH_ATTENTION'
+tests/test_ollama_preflight.py:210  [<module>.TestCheckOllamaEnv.test_get_ollama_env_parses_systemctl_output]  string ['OLLAMA_MAX_LOADED_MODELS'] 'OLLAMA_MAX_LOADED_MODELS'
+tests/test_ollama_preflight.py:216  [<module>.TestCheckOllamaEnv.test_get_ollama_env_returns_empty_on_error]  name _get_ollama_env
+tests/test_ollama_preflight.py:223  [<module>.TestRequirePreflight.test_raises_on_failure]  string-name ['check_ollama_env'] 'engine.utils.ollama_preflight.check_ollama_env'
+tests/test_ollama_preflight.py:234  [<module>.TestRequirePreflight.test_passes_silently_on_success]  string-name ['check_ollama_env'] 'engine.utils.ollama_preflight.check_ollama_env'
+tests/test_ollama_preflight.py:243  [<module>.TestRequirePreflight.test_env_check_runs_before_model_check]  string-name ['check_ollama_env'] 'engine.utils.ollama_preflight.check_ollama_env'
+tests/test_ollama_preflight.py:266  [<module>.TestRunnerIntegration.test_ft_screening_calls_preflight]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_ollama_preflight.py:288  [<module>.TestRunnerIntegration.test_extraction_calls_preflight]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_ollama_preflight.py:313  [<module>.TestRunnerIntegration.test_audit_calls_preflight]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_ollama_preflight.py:341  [<module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_ollama_preflight.py:56  [<module>.TestPreflightCheck.test_all_ok_returns_success]  name preflight_check
+tests/test_ollama_preflight.py:74  [<module>.TestPreflightCheck.test_vram_filters_to_relevant_models]  name preflight_check
+tests/test_ollama_preflight.py:116  [<module>.TestPreflightCheck.test_one_failure_returns_failure]  name preflight_check
+tests/test_ollama_preflight.py:144  [<module>.TestCheckOllamaEnv.test_fails_when_flash_attention_missing]  name check_ollama_env
+tests/test_ollama_preflight.py:151  [<module>.TestCheckOllamaEnv.test_fails_when_max_loaded_models_wrong]  name check_ollama_env
+tests/test_ollama_preflight.py:159  [<module>.TestCheckOllamaEnv.test_fails_when_kv_cache_type_wrong]  name check_ollama_env
+tests/test_ollama_preflight.py:164  [<module>.TestCheckOllamaEnv.test_fails_lists_all_correctness_errors]  name check_ollama_env
+tests/test_ollama_preflight.py:175  [<module>.TestCheckOllamaEnv.test_performance_mismatch_warns_not_raises]  name check_ollama_env
+tests/test_ollama_preflight.py:184  [<module>.TestCheckOllamaEnv.test_performance_missing_warns_not_raises]  name check_ollama_env
+tests/test_ollama_preflight.py:195  [<module>.TestCheckOllamaEnv.test_mixed_correctness_fail_and_perf_warn]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_ollama_preflight.py:245  [<module>.TestRequirePreflight.test_env_check_runs_before_model_check]  string-name ['preflight_check'] 'engine.utils.ollama_preflight.preflight_check'
+tests/test_ollama_preflight.py:95  [<module>.TestPreflightCheck.test_vram_unrelated_model_does_not_cause_rejection]  name preflight_check
+tests/test_ollama_preflight.py:143  [<module>.TestCheckOllamaEnv.test_fails_when_flash_attention_missing]  string ['OLLAMA_FLASH_ATTENTION'] 'OLLAMA_FLASH_ATTENTION.*not set'
+tests/test_ollama_preflight.py:150  [<module>.TestCheckOllamaEnv.test_fails_when_max_loaded_models_wrong]  string ['OLLAMA_MAX_LOADED_MODELS'] "OLLAMA_MAX_LOADED_MODELS.*expected='1'.*actual='4'"
+tests/test_ollama_preflight.py:158  [<module>.TestCheckOllamaEnv.test_fails_when_kv_cache_type_wrong]  string ['OLLAMA_KV_CACHE_TYPE'] "OLLAMA_KV_CACHE_TYPE.*expected='f16'.*actual='q8_0'"
+tests/test_ollama_preflight.py:197  [<module>.TestCheckOllamaEnv.test_mixed_correctness_fail_and_perf_warn]  name check_ollama_env
+tests/test_ollama_preflight.py:215  [<module>.TestCheckOllamaEnv.test_get_ollama_env_returns_empty_on_error]  string ['systemctl'] 'no systemctl'
+tests/test_ollama_preflight.py:239  [<module>.TestRequirePreflight.test_passes_silently_on_success]  name require_preflight
+tests/test_ollama_preflight.py:247  [<module>.TestRequirePreflight.test_env_check_runs_before_model_check]  name require_preflight
+tests/test_ollama_preflight.py:342  [<module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success]  string ['OLLAMA_FLASH_ATTENTION'] 'OLLAMA_FLASH_ATTENTION'
+tests/test_ollama_preflight.py:343  [<module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success]  string ['OLLAMA_MAX_LOADED_MODELS'] 'OLLAMA_MAX_LOADED_MODELS'
+tests/test_ollama_preflight.py:344  [<module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success]  string ['OLLAMA_KV_CACHE_TYPE'] 'OLLAMA_KV_CACHE_TYPE'
+tests/test_ollama_preflight.py:345  [<module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_ollama_preflight.py:229  [<module>.TestRequirePreflight.test_raises_on_failure]  name require_preflight
+tests/test_parsed_text_resolver.py:132  [<module>.test_extractor_site_hands_on_the_file]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_pin_records.py:25  [<module>]  import module engine.agents.extractor as E
+tests/test_pin_records.py:27  [<module>]  import module engine.core.run_manifest as rm
+tests/test_pin_records.py:32  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_pin_records.py:66  [<module>._open]  name .open_run
+tests/test_pin_records.py:171  [<module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry]  body-key 'stages'
+tests/test_presented_context.py:23  [<module>]  import module engine.core.run_manifest as rm
+tests/test_presented_context.py:29  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_presented_context.py:304  [<module>.test_T5_the_elicited_chain_carries_both_attempts_presented_is_pass2]  import engine.agents.extractor as E
+tests/test_presented_context.py:71  [<module>._open]  body-key 'stages'
+tests/test_presented_context.py:72  [<module>._open]  body-key 'git'
+tests/test_presented_context.py:74  [<module>._open]  name .open_run
+tests/test_prompt_no_hardcoded_fields.py:39  [<module>.test_prompt_builder_names_no_codebook_field]  import module engine.agents.extractor
+tests/test_prompt_sentinels.py:66  [<module>.test_t11_neither_site_spells_an_absence_literal]  import module engine.agents.extractor
+tests/test_qualgap01.py:101  [<module>.test_bind_runtime_accepts_the_expected_version_and_disarms_restart]  name .restart_disabled
+tests/test_qualgap01.py:103  [<module>.test_bind_runtime_accepts_the_expected_version_and_disarms_restart]  name ._restart_ollama_and_retry
+tests/test_request_capture.py:39  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_requirements_census.py:40  [<module>._tracked_sources]  body-key 'git'
+tests/test_restart_ollama_guard.py:24  [<module>]  import module engine.agents.extractor
+tests/test_restart_ollama_guard.py:25  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_restart_ollama_guard.py:143  [<module>.test_the_opt_out_skips_the_restart_before_the_lock_is_consulted]  string ['systemctl'] 'T1. Set, with the lock free: no systemctl, no poll, one skip line, None returned.'
+tests/test_restart_ollama_guard.py:161  [<module>.test_a_falsy_opt_out_value_does_not_disable_the_restart]  string-name ['restart_disabled'] 'T4. The spellings `restart_disabled()` reads as unset leave the restart armed.'
+tests/test_restart_ollama_guard.py:173  [<module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out]  string-name ['restart_ollama'] 'T3. Four papers at a cadence of two: two skips, no restart, the counter reset each time.\n\n    `_extr'
+tests/test_restart_ollama_guard.py:92  [<module>.test_restart_proceeds_when_lock_is_free]  name .restart_ollama
+tests/test_restart_ollama_guard.py:115  [<module>.test_run_extraction_holds_the_lock.fake_inner]  name .foreign_lock_held
+tests/test_restart_ollama_guard.py:147  [<module>.test_the_opt_out_skips_the_restart_before_the_lock_is_consulted]  string-name ['foreign_lock_held'] 'engine.agents.extractor.foreign_lock_held'
+tests/test_restart_ollama_guard.py:166  [<module>.test_a_falsy_opt_out_value_does_not_disable_the_restart]  name .restart_ollama
+tests/test_restart_ollama_guard.py:168  [<module>.test_a_falsy_opt_out_value_does_not_disable_the_restart]  string ['systemctl'] 'systemctl'
+tests/test_restart_ollama_guard.py:194  [<module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_restart_ollama_guard.py:83  [<module>.test_restart_proceeds_under_self_lock]  name .restart_ollama
+tests/test_restart_ollama_guard.py:85  [<module>.test_restart_proceeds_under_self_lock]  string ['systemctl'] 'systemctl'
+tests/test_restart_ollama_guard.py:65  [<module>.test_restart_skipped_under_foreign_lock]  name .restart_ollama
+tests/test_restart_ollama_guard.py:82  [<module>.test_restart_proceeds_under_self_lock]  name .foreign_lock_held
+tests/test_restart_ollama_guard.py:102  [<module>.test_skip_returns_none_and_does_not_raise]  name .restart_ollama
+tests/test_restart_ollama_guard.py:149  [<module>.test_the_opt_out_skips_the_restart_before_the_lock_is_consulted]  name .restart_ollama
+tests/test_restart_recovery_guard.py:24  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_restart_recovery_guard.py:114  [<module>.test_gate_matches_the_extractor_path]  import module engine.agents.extractor
+tests/test_restart_recovery_guard.py:115  [<module>.test_gate_matches_the_extractor_path]  import foreign_lock_held
+tests/test_restart_recovery_guard.py:71  [<module>._call]  name ._restart_ollama_and_retry
+tests/test_restart_recovery_guard.py:117  [<module>.test_gate_matches_the_extractor_path]  name .foreign_lock_held
+tests/test_restart_recovery_guard.py:117  [<module>.test_gate_matches_the_extractor_path]  name foreign_lock_held
+tests/test_restart_recovery_guard.py:118  [<module>.test_gate_matches_the_extractor_path]  name .foreign_lock_held
+tests/test_restart_recovery_guard.py:118  [<module>.test_gate_matches_the_extractor_path]  name foreign_lock_held
+tests/test_restart_recovery_guard.py:135  [<module>.test_truthy_values_disable_restart]  name .restart_disabled
+tests/test_restart_recovery_guard.py:141  [<module>.test_falsey_values_leave_restart_armed]  name .restart_disabled
+tests/test_restart_recovery_guard.py:146  [<module>.test_unset_leaves_restart_armed]  name .restart_disabled
+tests/test_restart_recovery_guard.py:100  [<module>.test_restart_proceeds_under_self_lock]  string ['systemctl'] 'systemctl'
+tests/test_restart_recovery_guard.py:97  [<module>.test_restart_proceeds_under_self_lock]  name .foreign_lock_held
+tests/test_review_paths.py:79  [<module>.test_mismatch_names_both_ids_and_the_path]  body-key 'review_id'
+tests/test_review_paths.py:96  [<module>.test_mismatch_raises_before_any_database_is_constructed]  body-key 'review_id'
+tests/test_review_spec.py:240  [<module>.test_invalid_review_id_rejected]  body-key 'review_id'
+tests/test_review_spec.py:246  [<module>.test_missing_review_id_rejected]  body-key 'review_id'
+tests/test_review_spec.py:205  [<module>._spec_with_review_id]  body-key 'review_id'
+tests/test_review_spec.py:207  [<module>._spec_with_review_id]  body-key 'review_id'
+tests/test_run_calls_outcomes.py:19  [<module>]  import module engine.core.run_manifest as rm
+tests/test_run_calls_outcomes.py:20  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_run_fault_predicate.py:30  [<module>]  import module engine.agents.extractor as E
+tests/test_run_fault_predicate.py:33  [<module>]  import module engine.core.run_manifest as rm
+tests/test_run_fault_predicate.py:42  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_run_fault_predicate.py:73  [<module>]  name RUN_REFUSED_MEMBERS
+tests/test_run_fault_predicate.py:62  [<module>]  name .RunRefused
+tests/test_run_fault_predicate.py:137  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name RUN_REFUSED_MEMBERS
+tests/test_run_fault_predicate.py:142  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name RUN_REFUSED_MEMBERS
+tests/test_run_fault_predicate.py:62  [<module>]  name .RunRefused
+tests/test_run_fault_predicate.py:123  [<module>._run]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_run_fault_predicate.py:138  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name .RunRefused
+tests/test_run_fault_predicate.py:142  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name .RunRefused
+tests/test_run_fault_predicate.py:145  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name .is_run_fault
+tests/test_run_fault_predicate.py:84  [<module>]  name RUN_REFUSED_MEMBERS
+tests/test_run_fault_predicate.py:136  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name .run_fault_classes
+tests/test_run_fault_predicate.py:143  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name .is_run_fault
+tests/test_run_fault_predicate.py:144  [<module>.test_the_declared_run_fault_tuple_is_the_handoffs]  name .is_run_fault
+tests/test_run_interrupts.py:25  [<module>]  import module engine.agents.extractor as E
+tests/test_run_interrupts.py:28  [<module>]  import module engine.core.run_manifest as rm
+tests/test_run_interrupts.py:32  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_run_interrupts.py:241  [<module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it]  string-name ['restart_ollama'] 'restart_ollama'
+tests/test_run_interrupts.py:248  [<module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_run_manifest.py:23  [<module>]  import module engine.core.run_manifest as rm
+tests/test_run_manifest.py:28  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_run_manifest.py:62  [<module>._open]  body-key 'stages'
+tests/test_run_manifest.py:63  [<module>._open]  body-key 'git'
+tests/test_run_manifest.py:65  [<module>._open]  name .open_run
+tests/test_run_manifest.py:208  [<module>.test_a_declared_arm_is_registered_at_its_first_manifest_and_pinned_at_extract]  body-key 'pins'
+tests/test_run_manifest.py:85  [<module>.test_a_run_writes_its_manifest_and_one_row_per_stage]  body-key 'engine_state'
+tests/test_run_manifest.py:86  [<module>.test_a_run_writes_its_manifest_and_one_row_per_stage]  body-key 'spec_hash'
+tests/test_run_manifest.py:115  [<module>.test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded.Fake.chat]  body-key 'stages'
+tests/test_run_manifest.py:129  [<module>.test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded]  body-key 'stages'
+tests/test_run_manifest.py:213  [<module>.test_a_declared_arm_is_registered_at_its_first_manifest_and_pinned_at_extract]  body-key 'stages'
+tests/test_run_manifest_migration.py:25  [<module>]  import module engine.core.run_manifest
+tests/test_run_manifest_migration.py:255  [<module>]  body-key 'run_kind'
+tests/test_run_manifest_migration.py:263  [<module>]  body-key 'payload_description'
+tests/test_run_pipeline_closes.py:20  [<module>]  import module engine.core.run_manifest as rm
+tests/test_run_pipeline_starts.py:29  [<module>]  import module engine.agents.extractor as E
+tests/test_run_pipeline_starts.py:30  [<module>]  import module engine.core.run_manifest as rm
+tests/test_run_pipeline_starts.py:34  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_run_pipeline_starts.py:153  [<module>]  string ['OLLAMA_FLASH_ATTENTION'] 'OLLAMA_FLASH_ATTENTION'
+tests/test_run_pipeline_starts.py:153  [<module>]  string ['OLLAMA_MAX_LOADED_MODELS'] 'OLLAMA_MAX_LOADED_MODELS'
+tests/test_run_pipeline_starts.py:154  [<module>]  string ['OLLAMA_KV_CACHE_TYPE'] 'OLLAMA_KV_CACHE_TYPE'
+tests/test_run_pipeline_starts.py:154  [<module>]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_run_pipeline_starts.py:160  [<module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight]  string-name ['require_preflight'] 'The real `require_preflight`, with only its two host reads patched\n    (`systemctl show`, the engine'
+tests/test_run_pipeline_starts.py:107  [<module>.review]  string-name ['restart_ollama'] 'restart_ollama'
+tests/test_run_pipeline_starts.py:140  [<module>.test_a_start_at_or_before_screen_stops_at_the_adjudication_gate]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_run_pipeline_starts.py:165  [<module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_run_scoped_field_names.py:22  [<module>]  import module engine.core.run_manifest as rm
+tests/test_run_scoped_field_names.py:112  [<module>.test_T4_a_run_activated_without_open_run_has_no_entry_no_check]  string-name ['open_run'] "Matches tests/test_cut_over.py's test_t3_an_aborted_run_closes_as_\n    aborted_with_reason, which mo"
+tests/test_run_scoped_field_names.py:60  [<module>._open]  name .open_run
+tests/test_screen2f_armsets.py:48  [<module>.test_the_2g_set_is_a_b_d_with_two_worktrees_and_the_fold_in_the_repo]  body-key 'pins'
+tests/test_screener.py:30  [<module>._mock_preflight]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_screener.py:258  [<module>.test_abstract_screening_calls_preflight]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_screener.py:273  [<module>.test_abstract_verification_calls_preflight]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_selection_bound.py:28  [<module>]  import module engine.agents.extractor as E
+tests/test_selection_bound.py:30  [<module>]  import module engine.core.run_manifest as rm
+tests/test_selection_bound.py:36  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_selection_bound.py:75  [<module>.injected_open_run]  string-name ['open_run'] '`_open_run_manifest` calls `rm.open_run` with no digest or git override;\n    inject the fixture valu'
+tests/test_selection_bound.py:77  [<module>.injected_open_run]  name .open_run
+tests/test_selection_bound.py:78  [<module>.injected_open_run]  string-name ['open_run'] 'open_run'
+tests/test_selection_bound.py:115  [<module>.fake_models]  string-name ['restart_ollama'] 'restart_ollama'
+tests/test_selection_bound.py:155  [<module>.test_T1_absent_bound_selects_as_today_and_records_nothing]  body-key 'selection_bound'
+tests/test_selection_bound.py:117  [<module>.fake_models]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_selection_bound.py:168  [<module>.test_T2_a_bound_of_five_selects_the_first_five_and_is_recorded]  body-key 'selection_bound'
+tests/test_selection_bound.py:254  [<module>.test_T5_a_bound_above_the_eligible_count_selects_all]  body-key 'selection_bound'
+tests/test_selection_refusals.py:25  [<module>]  import module engine.agents.extractor as E
+tests/test_selection_refusals.py:143  [<module>.test_the_selection_less_path_records_its_refusals]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_selection_refusals.py:155  [<module>._real_stage]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_service_call_fence.py:27  [<module>.test_the_original_bug_is_now_blocked]  string ['systemctl'] '`sudo systemctl restart ollama` — what every offline run used to do.'
+tests/test_service_call_fence.py:40  [<module>.test_absolute_path_is_blocked]  string ['systemctl'] 'The sudoers rule names /usr/bin/systemctl, so the path form must match too.'
+tests/test_service_call_fence.py:68  [<module>.test_ordinary_subprocess_calls_still_work]  string-name ['restart_ollama'] '`test_ollama_lock` and `test_restart_ollama_guard` spawn real helpers.'
+tests/test_service_call_fence.py:48  [<module>.test_shell_string_form_is_blocked]  string ['systemctl'] 'sudo systemctl restart ollama'
+tests/test_service_call_fence.py:54  [<module>.test_os_system_is_blocked]  string ['systemctl'] 'systemctl restart ollama'
+tests/test_service_call_fence.py:28  [<module>.test_the_original_bug_is_now_blocked]  string ['systemctl'] 'systemctl'
+tests/test_service_call_fence.py:29  [<module>.test_the_original_bug_is_now_blocked]  string ['systemctl'] 'systemctl'
+tests/test_service_call_fence.py:35  [<module>.test_bare_systemctl_is_blocked_without_sudo]  string ['systemctl'] 'systemctl'
+tests/test_service_call_fence.py:42  [<module>.test_absolute_path_is_blocked]  string ['systemctl'] '/usr/bin/systemctl'
+tests/test_service_call_fence.py:61  [<module>.test_every_subprocess_entry_point_is_fenced]  string ['systemctl'] 'systemctl'
+tests/test_service_call_fence.py:114  [<module>.test_blocked_exception_is_not_catchable_as_exception]  string ['systemctl'] 'systemctl'
+tests/test_stage_completion.py:21  [<module>.db]  body-key 'stages'
+tests/test_suite_live_fence.py:33  [<module>]  import module engine.utils.ollama_client
+tests/test_suite_live_fence.py:148  [<module>.test_the_fenced_server_is_OLLAMA_HOST_and_the_addresses_the_engine_names]  import module engine.utils.ollama_client as oc
+tests/test_text_refusal_at_selection.py:31  [<module>]  import module engine.agents.extractor as E
+tests/test_text_refusal_at_selection.py:93  [<module>.db]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_text_refusal_at_selection.py:121  [<module>._extract_stage]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_u17_cross_lineage.py:23  [<module>]  import module engine.core.run_manifest as rm
+tests/test_u17_cross_lineage.py:140  [<module>.test_t6_a_model_copy_auditor_with_no_entry_is_refused_at_open]  string-name ['open_run'] '`model_copy` skips validation (12w_U17A §6 finding 6), so open_run re-checks coverage.'
+tests/test_u17_cross_lineage.py:58  [<module>._open]  body-key 'git'
+tests/test_u17_cross_lineage.py:60  [<module>._open]  name .open_run
+tests/test_u17_cross_lineage.py:90  [<module>.test_t1_a_qwen_lineage_auditor_of_the_deepseek_distillation_is_refused]  name .RunRefused
+tests/test_u17_cross_lineage.py:110  [<module>.test_t3_the_live_pairing_opens_and_records_model_lineage_and_server_family]  body-key 'stages'
+tests/test_u17_cross_lineage.py:144  [<module>.test_t6_a_model_copy_auditor_with_no_entry_is_refused_at_open]  name .RunRefused
+tests/test_u17_cross_lineage.py:181  [<module>.test_t8_an_audit_only_run_on_an_unpinned_arm_reads_the_spec]  body-key 'lineage_check'
+tests/test_u17_cross_lineage.py:217  [<module>.test_t10_a_cloud_model_loads_with_its_provider_lineage_and_records_no_server_family]  body-key 'stages'
+tests/test_u17_cross_lineage.py:170  [<module>.test_t7_an_audit_only_run_on_a_pinned_arm_reads_the_extractor_from_the_pin]  body-key 'lineage_check'
+tests/test_u17_cross_lineage.py:204  [<module>.test_t9_the_new_live_spec_moves_no_prompt_hash_options_hash_or_screening_hash]  body-key 'stages'
+tests/test_u17_cross_lineage.py:205  [<module>.test_t9_the_new_live_spec_moves_no_prompt_hash_options_hash_or_screening_hash]  body-key 'stages'
+tests/test_u18_digest_per_call.py:30  [<module>]  import module engine.core.run_manifest as rm
+tests/test_u18_digest_per_call.py:36  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_u18_digest_per_call.py:33  [<module>]  import is_run_fault
+tests/test_u18_digest_per_call.py:33  [<module>]  import run_fault_classes
+tests/test_u18_digest_per_call.py:301  [<module>.test_u18_the_ft_runner_closes_aborted_on_a_digest_change]  import module engine.utils.ollama_preflight as pf
+tests/test_u18_digest_per_call.py:304  [<module>.test_u18_the_ft_runner_closes_aborted_on_a_digest_change]  string-name ['check_ollama_env'] 'check_ollama_env'
+tests/test_u18_digest_per_call.py:120  [<module>._open]  name .open_run
+tests/test_u18_digest_per_call.py:247  [<module>.test_u18_the_refusal_is_a_run_fault]  name .RunRefused
+tests/test_u18_digest_per_call.py:247  [<module>.test_u18_the_refusal_is_a_run_fault]  name is_run_fault
+tests/test_u18_digest_per_call.py:248  [<module>.test_u18_the_refusal_is_a_run_fault]  name run_fault_classes
+tests/test_u18_digest_per_call.py:270  [<module>.test_u18_run_pipeline_closes_aborted_on_a_digest_change]  name .open_run
+tests/test_u18_one_host.py:30  [<module>]  import module engine.agents.extractor as E
+tests/test_u18_one_host.py:32  [<module>]  import module engine.core.run_manifest as rm
+tests/test_u18_one_host.py:38  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_u18_one_host.py:39  [<module>]  import module engine.utils.ollama_preflight as pf
+tests/test_u18_one_host.py:36  [<module>]  import run_fault_classes
+tests/test_u18_one_host.py:197  [<module>.test_u18_the_manifest_records_the_ollama_host]  name .open_run
+tests/test_u18_one_host.py:236  [<module>.test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run]  name .open_run
+tests/test_u18_one_host.py:85  [<module>.test_u18_every_engine_read_uses_the_resolved_host]  name .restart_ollama
+tests/test_u18_one_host.py:90  [<module>.test_u18_every_engine_read_uses_the_resolved_host]  name .server_context_length
+tests/test_u18_one_host.py:203  [<module>.test_u18_the_manifest_records_the_ollama_host]  body-key 'ollama_host'
+tests/test_u18_one_host.py:204  [<module>.test_u18_the_manifest_records_the_ollama_host]  body-key 'host'
+tests/test_u18_one_host.py:204  [<module>.test_u18_the_manifest_records_the_ollama_host]  body-key 'ollama_host'
+tests/test_u18_one_host.py:212  [<module>.test_u18_a_non_loopback_host_is_refused_at_open_run]  name .open_run
+tests/test_u18_one_host.py:215  [<module>.test_u18_a_non_loopback_host_is_refused_at_open_run]  name .RunRefused
+tests/test_u18_one_host.py:215  [<module>.test_u18_a_non_loopback_host_is_refused_at_open_run]  name run_fault_classes
+tests/test_u37_feedback_block.py:178  [<module>.test_u37_the_non_elicited_pin_is_unchanged]  import module engine.core.run_manifest as rm
+tests/test_u38_snippet_precheck.py:25  [<module>]  import module engine.agents.extractor as E
+tests/test_u38_snippet_precheck.py:149  [<module>.test_u38_both_pins_are_unchanged]  import module engine.core.run_manifest as rm
+tests/test_u39_runtime_equals_hash.py:111  [<module>.test_extract_pass1_runtime_equals_hash]  import module engine.agents.extractor as X
+tests/test_u39_runtime_equals_hash.py:119  [<module>.test_extract_pass2_non_elicited_runtime_equals_hash]  import module engine.agents.extractor as X
+tests/test_u39_runtime_equals_hash.py:128  [<module>.test_extract_retry_snippet_runtime_equals_hash]  import module engine.agents.extractor as X
+tests/test_u39_runtime_equals_hash.py:153  [<module>.test_extract_pass2_elicited_runtime_equals_hash]  import module engine.agents.extractor as X
+tests/test_u39_runtime_equals_hash.py:222  [<module>.test_preflight_runtime_equals_hash]  import module engine.utils.ollama_preflight as OP
+tests/test_undeclared_call.py:25  [<module>]  import module engine.agents.extractor as E
+tests/test_undeclared_call.py:27  [<module>]  import module engine.core.run_manifest as rm
+tests/test_undeclared_call.py:31  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_undeclared_call.py:169  [<module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself]  import module engine.utils.ollama_preflight as pf
+tests/test_undeclared_call.py:166  [<module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself]  string-name ['require_preflight'] '`check_model` turns every other failure into an `error` result, which\n    `require_preflight` report'
+tests/test_undeclared_call.py:173  [<module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself]  string ['OLLAMA_FLASH_ATTENTION'] 'OLLAMA_FLASH_ATTENTION'
+tests/test_undeclared_call.py:173  [<module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself]  string ['OLLAMA_MAX_LOADED_MODELS'] 'OLLAMA_MAX_LOADED_MODELS'
+tests/test_undeclared_call.py:174  [<module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself]  string ['OLLAMA_KV_CACHE_TYPE'] 'OLLAMA_KV_CACHE_TYPE'
+tests/test_undeclared_call.py:174  [<module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself]  string ['OLLAMA_NUM_PARALLEL'] 'OLLAMA_NUM_PARALLEL'
+tests/test_undeclared_call.py:231  [<module>.test_6_an_undeclared_call_leaves_the_extraction_loop_as_a_run_fault]  string-name ['restart_ollama'] 'restart_ollama'
+tests/test_undeclared_call.py:98  [<module>._open]  name .open_run
+tests/test_undeclared_call.py:176  [<module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself]  string-name ['_get_ollama_env'] 'engine.utils.ollama_preflight._get_ollama_env'
+tests/test_undeclared_call.py:179  [<module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself]  name .require_preflight
+tests/test_undeclared_call.py:233  [<module>.test_6_an_undeclared_call_leaves_the_extraction_loop_as_a_run_fault]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_undeclared_override.py:31  [<module>]  import module engine.core.run_manifest as rm
+tests/test_undeclared_override.py:65  [<module>._open_vision_run]  name .open_run
+tests/test_undeclared_override.py:148  [<module>.test_T4_ft_config_under_a_declared_run_agrees_with_its_row]  name .open_run
+tests/test_units_as_source_slices.py:24  [<module>]  import module engine.agents.extractor as E
+tests/test_units_as_source_slices.py:26  [<module>]  import module engine.core.run_manifest as rm
+tests/test_units_as_source_slices.py:35  [<module>]  import module engine.utils.ollama_client as oc
+tests/test_units_as_source_slices.py:231  [<module>.test_an_elicited_run_opens_pins_verifies_and_writes_real_events]  name .open_run
+tests/test_units_as_source_slices.py:246  [<module>.test_an_elicited_run_opens_pins_verifies_and_writes_real_events]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_unknown_field_name.py:17  [<module>]  import module engine.core.run_manifest as rm
+tests/test_unknown_field_name.py:56  [<module>._open]  name .open_run
+tests/test_value_divergence.py:27  [<module>]  import module engine.agents.extractor as E
+tests/test_value_divergence.py:85  [<module>._run]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_write_boundary_guard.py:31  [<module>]  import module engine.agents.extractor as E
+tests/test_write_boundary_guard.py:89  [<module>._run]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_write_boundary_guard.py:226  [<module>.test_a_stored_record_with_incomplete_fields_is_counted_extracted]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+tests/test_write_boundary_guard.py:259  [<module>.test_a_paper_that_fails_is_still_counted_failed]  string-name ['require_preflight'] 'engine.utils.ollama_preflight.require_preflight'
+# sites 601 by root {'analysis': 16, 'engine': 106, 'scripts': 6, 'tests': 473}; files 103; unparsed []

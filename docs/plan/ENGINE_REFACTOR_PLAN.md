@@ -12894,3 +12894,75 @@ R743(f) — Before any edit, CC reads and quotes: where InputTruncated and any p
 | 2026-10-30 | R743(a) — 12aa-U20P is accepted as reported: item 0 as da8d7f5 (R740 and R741 as a pair, each file at the architect's hash, hashed straight after its write); the record as f542587; the ledgers 0c205df and 7f22e7b; two loads of llama3.2:3b under the lock, both unloaded; no engine, test, script, spec or codebook change. Findings 5, 6, 8 and 9 are readings, no row. R743(b) — Q2 binds the tests: every fake show response in U20's tests carries the parameters field in the wire format the committed raw bodies show (one string, names padded to offset 31, repeated names, quoted values, no trailing newline), not the entry's one-space wording (finding 2). Q3: /api/ps context_length reports the loaded context (finding 1); it answers only after a load (finding 7). R743(c) — Commit 1 (INT-i12-11, the entry): the ceiling gains the Modelfile term, the num_ctx line of the parameters field, read from the same show response as the trained context. No parameters field or no num_ctx line: no term. A num_ctx line whose value is not a positive integer, or more than one num_ctx line: CeilingUnavailable. A request num_ctx still wins. No request byte, pin, prompt_hash or schema moves. R743(d) — Commit 2 (N25): after each completed call, the context /api/ps reports for the model is compared with the ceiling the call was checked against, and a difference refuses the run, naming both values. Its seam, its class, and the cold, absent and error cases are ruled after commit 1's report, with R743(f)'s reads in hand; N25 is decided there (R740(c)). R743(e) — Declaring num_ctx in the spec (O4) is rejected: it moves the KV allocation (finding 4) and the options hash for no gain. N1 and N3 are not adopted; R743(d) reads the running server. R743(f) — Before any edit, CC reads and quotes: where InputTruncated and any pre-call input-fit refusal are raised and which ceiling each uses; SERVER_DEFAULT_CTX's value and how the terms combine; the cache that holds the trained context and its key; and, from the committed show bodies with no request sent, the ceiling the code at HEAD yields for each of the five spec models with no request num_ctx, beside each model's trained context. A clause of (c) contradicted by the quoted code is a stop before the edit; a ceiling at HEAD that differs from the trained context is a finding for (d), not a stop. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20P final report as resumed under R741 and R742 (da8d7f5; f542587) |
 
 The decision log in this file ends at R743.
+
+**Block 142.** *Transcribed 2026-10-30 (item 0 of the 12aa-U20C brief), in its own commit, in the R597(e) form:* ruling R744, made by PI on architect recommendation on 2026-10-30 UTC, during session 12aa, on the 12aa-U20B final report (item 0 `df92bf1d13e16192966a17f4e876af3209e39b5b`; commit 1 `ca29906469d76179bb7aec75d54bda40ba6d9553`; record `6deba58df9a47d600279a6d2326dd28bc8f7d061`). The 12aa-U20C brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aa-R744] — U20 commit 1 accepted; commit 2's design: under an active run,
+  the loaded context read after each completed call and compared with the call's ceiling, a
+  difference, an absence or a failed read refusing the run; N25 closed by it; INT-i12-11 closes
+  on both commits
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20B
+  final report (item 0 df92bf1d13e16192966a17f4e876af3209e39b5b; commit 1
+  ca29906469d76179bb7aec75d54bda40ba6d9553; record 6deba58df9a47d600279a6d2326dd28bc8f7d061).
+  Transcribe as item 0 of the 12aa-U20C brief, in the block after R743's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20B final report):
+  MEASURED: "Commit df92bf1d13e16192966a17f4e876af3209e39b5b, parent f542587 (Blocks 140–141)";
+    "Numstat +101 / −0"; "12,896 (12,795 + 101 − 0)"; "sha256
+    7b0f42c1f4f21f45667be64b8e723b4012991893ce308e5d75f33687c58b60fc, 2,349,064 B"; "Ledger
+    e8edd9cf0914662546817bfbbfb7182b023683bb, parent 7f22e7b"; "Pre-call: InputOverflow and
+    CeilingUnavailable, before the send, against effective_ceiling(model, options)"; "Post-call:
+    InputTruncated and InputDropped, after the send"; "SERVER_DEFAULT_CTX = 262_144"; "The cache:
+    key (digest, model) under a run, (host, model) outside one"; "No ceiling at HEAD differs from
+    the trained context"; acceptance ids (a), (c), (d) "red" on the parent and "green" in the
+    commit, (b) and (e) "green (pin)"; "(c) rewrites: none"; "pin_tuples.py output is
+    byte-identical"; "Wall 907.50 s, inside 813–992 s"; "==== 3451 passed, 17 deselected, 1
+    xfailed, 2 warnings in 905.36s (0:15:05) ===="; "collected 3469 items / 17 deselected / 3452
+    selected, exit 0"; "only-gate 18, exactly the new ids; only-ref 0"; "Commit:
+    ca29906469d76179bb7aec75d54bda40ba6d9553, parent df92bf1"; "Staged:
+    engine/utils/ollama_client.py and tests/test_u20_modelfile_num_ctx.py, +167 / −9"; "Ledger:
+    f23028a7b5453831bc930ea65fbcae8845a31dc0, parent e8edd9c"; record "Commit:
+    6deba58df9a47d600279a6d2326dd28bc8f7d061, parent ca29906, 30 files"; "Ledger:
+    09c5293c6a9823bb7a99db2c65c706001bcbb652, parent f23028a".
+  READ (CC's): "n_ctx_train now has no caller"; "A malformed num_ctx line refuses even when the
+    request sends num_ctx"; "No CLAUDE.md line states the terms"; "/api/ps read ('gemma3:27b',
+    131072) and ('qwen3:8b', 40960) in screen-auth-2g, and the table gives 131,072 and 40,960";
+    "modules.md line 373 says "min(n_ctx_train, service OLLAMA_CONTEXT_LENGTH,
+    SERVER_DEFAULT_CTX)"".
+  INFERRED: none.
+
+R744(a) — 12aa-U20B is accepted as reported: item 0 as df92bf1 (R742 and R743 as a pair, R742's
+  header sentence in Block 133's form); U20 commit 1 as ca29906; record C1 as 6deba58; the ledgers
+  e8edd9c, f23028a and 09c5293. The series gains 907.50 s. Findings 3 and 4 reached the architect
+  cut off in the paste; they are carried unread, and the next report quotes them whole.
+R744(b) — Finding 2 is accepted as R743(c) ruled it: a malformed num_ctx line refuses whether or
+  not the request sends num_ctx. Commit 2 adds a pin that says so. Finding 1 (n_ctx_train has no
+  caller) and finding 7 (modules.md omits the fourth term) go to P7 with R740(e)'s lines; finding
+  5 and finding 6 are readings.
+R744(c) — Commit 2 (R743(d)): under an active run, after each completed call and before the
+  post-call input-fit checks, the engine reads /api/ps through the chat client and takes the
+  context_length of the entry whose name and digest are the call's. If it differs from the
+  ceiling the call was checked against, if no such entry is listed, or if the read fails, the
+  call raises LoadedContextMismatch, a RunRefused naming the model, the ceiling and what was read
+  (the value, "absent" or the error); it joins RUN_REFUSED_MEMBERS and the run-fault tuple, and the
+  run closes 'aborted' with its reason as U19's ServerEnvChanged does. The input_fit record gains
+  the loaded context. Outside an active run nothing is read and nothing changes. No request byte,
+  pin, prompt_hash or schema moves.
+R744(d) — N25 is closed by commit 2 in both directions: a service context that differs from the
+  unit files, raised or lowered, shows as a mismatch on the first completed call. Recorded limits:
+  the first call after a restart is checked before the send against the unit files and after it
+  against the server; whether /api/ps follows a Modelfile-set num_ctx is inferred from finding 1 of
+  12aa-U20P, not measured; calls outside a run are not compared.
+R744(e) — A clause of (c) that states existing code (the post-call checks' place, the chat
+  client's ps, the input_fit record, how ServerEnvChanged closes a run) is checked against the
+  code quoted before the edit; a contradiction stops before it (R727(a)).
+R744(f) — INT-i12-11 closes on both commits after commit 2's gate, with U20's dated fix-unit line
+  (fix units 37, done 23) in the form the dated lines take; counted until P1 closes (R607(d)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-30 | R744(a) — 12aa-U20B is accepted as reported: item 0 as df92bf1 (R742 and R743 as a pair, R742's header sentence in Block 133's form); U20 commit 1 as ca29906; record C1 as 6deba58; the ledgers e8edd9c, f23028a and 09c5293. The series gains 907.50 s. Findings 3 and 4 reached the architect cut off in the paste; they are carried unread, and the next report quotes them whole. R744(b) — Finding 2 is accepted as R743(c) ruled it: a malformed num_ctx line refuses whether or not the request sends num_ctx. Commit 2 adds a pin that says so. Finding 1 (n_ctx_train has no caller) and finding 7 (modules.md omits the fourth term) go to P7 with R740(e)'s lines; finding 5 and finding 6 are readings. R744(c) — Commit 2 (R743(d)): under an active run, after each completed call and before the post-call input-fit checks, the engine reads /api/ps through the chat client and takes the context_length of the entry whose name and digest are the call's. If it differs from the ceiling the call was checked against, if no such entry is listed, or if the read fails, the call raises LoadedContextMismatch, a RunRefused naming the model, the ceiling and what was read (the value, "absent" or the error); it joins RUN_REFUSED_MEMBERS and the run-fault tuple, and the run closes 'aborted' with its reason as U19's ServerEnvChanged does. The input_fit record gains the loaded context. Outside an active run nothing is read and nothing changes. No request byte, pin, prompt_hash or schema moves. R744(d) — N25 is closed by commit 2 in both directions: a service context that differs from the unit files, raised or lowered, shows as a mismatch on the first completed call. Recorded limits: the first call after a restart is checked before the send against the unit files and after it against the server; whether /api/ps follows a Modelfile-set num_ctx is inferred from finding 1 of 12aa-U20P, not measured; calls outside a run are not compared. R744(e) — A clause of (c) that states existing code (the post-call checks' place, the chat client's ps, the input_fit record, how ServerEnvChanged closes a run) is checked against the code quoted before the edit; a contradiction stops before it (R727(a)). R744(f) — INT-i12-11 closes on both commits after commit 2's gate, with U20's dated fix-unit line (fix units 37, done 23) in the form the dated lines take; counted until P1 closes (R607(d)). | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20B final report (df92bf1; ca29906; 6deba58) |
+
+The decision log in this file ends at R744.

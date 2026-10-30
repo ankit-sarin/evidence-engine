@@ -1,0 +1,104 @@
+RULING [evidence-engine 12z-R734] — 12z-U19A accepted; INT-j12-17 stays Class 1; U19's design: the
+  configured environment read before open and recorded in the manifest body, re-checked after every
+  performed proactive restart with a drift a RunRefused (commit 1); the local-service guard at open
+  and one parser for the Environment= line (commit 2); the recovery restart's re-check rides with
+  U21; the journal read not adopted; notes on INT-j12-17 and HK-ARCH
+STATUS: PI ruling, 2026-10-30 UTC, session 12z, on architect recommendation, on the 12z-U19A final
+  report (item 0 a6cfc10f92e67d11d4f5c8652e8210645a91bd8e; read-out
+  bc1ffee1dfadf0492a55df9e374f8e889b140c0c). Transcribe as item 0 of the 12z-U19B brief, in the
+  block after R733's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12z-U19A report and read-out):
+  MEASURED: "a6cfc10f92e67d11d4f5c8652e8210645a91bd8e, parent 81db498"; "numstat +291 / −0";
+    "Lines: 12,112 = 11,821 + 291"; "Plan sha256 963050a9…6636, 2,243,796 bytes"; "Four fences
+    and four cells: all True"; "16 files, each sha256 equal"; launch_line.txt "4e681609…8049, 215
+    B, 2 lines"; "RESULT PASS on 40 checks"; ledgers "7992362 (parent c37de0d)", "08e7ef4 (parent
+    7992362)"; read-out "bc1ffee1dfadf0492a55df9e374f8e889b140c0c", "Parent a6cfc10"; G6 "printed
+    nothing"; census "601 sites in 103 files (tests 473 in 80 files; engine 106; analysis 16;
+    scripts 6)"; "31 passed, 17 deselected" and "60 passed"; "`/proc/2564/environ` → "Permission
+    denied""; "`NeedDaemonReload=no`"; the journal line "OLLAMA_CONTEXT_LENGTH:0
+    OLLAMA_FLASH_ATTENTION:true OLLAMA_HOST:http://127.0.0.1:11434 OLLAMA_KV_CACHE_TYPE:f16
+    OLLAMA_MAX_LOADED_MODELS:1 OLLAMA_NUM_PARALLEL:1".
+  READ (the read-out's quotations of code at a6cfc10): S9 "`except RuntimeError:
+    logger.exception("Proactive Ollama restart failed — continuing without restart. …")`"; S8
+    `restart_ollama` "returns `None`" after a restart and "also returns `None`, after logging
+    "RESTART SKIPPED"" under the opt-out or a foreign lock; S11 "restarts, then `time.sleep(10)`,
+    then "One final attempt after restart": `_client.chat(...)`. Its caller `ollama_chat` (:669)
+    turns its `RuntimeError` into `TimeoutError`"; S13 "`manifest = {"run_uid": …, "libraries":
+    libs, "host": …, "ollama_host": ollama_host(), …}`, plus optional `lineage_check`,
+    `selection_bound`, `inputs`"; "`run_manifests_end_once` permits only the end write";
+    "`run_pipeline.py:116` opens the run; `extractor.py:1120` and `run_pipeline.py:467` call
+    `require_preflight` later"; "`RunRefused(Exception)` (`run_manifest.py:113`);
+    `RunAborted(RuntimeError)`"; S12 "`if not is_local_service_host(_client_host()): return
+    None`"; S1 "`for token in raw.split():`"; "`journalctl` is **not** in the list"; "the import
+    would be at call time (§9 Q4)"; the unit entry and the row as quoted in §1.
+  INFERRED: none.
+
+R734(a) — 12z-U19A is accepted as reported: item 0 a6cfc10 (Blocks 128–131 in 2c67bfc's form,
+  r730–r733.txt at the architect's hashes, the 16 gate files and launch_line.txt, +291 / −0) and
+  the read-out bc1ffee stand; ledgers 7992362 and 08e7ef4 with trailers stand. The clauses as CC
+  composed them (ordering rulings named by number; backticks per Block 121) are the record's form.
+R734(b) — INT-j12-17 stays Class 1 (conditional), as R599 lets the Phase A rule: the trigger is an
+  operator edit of the drop-in on a box shared with another lane (the dgx-infra item), the
+  consequence is a silent change of OLLAMA_KV_CACHE_TYPE under a 35–38 h run (the q8_0 drift the
+  settled decision records), and nothing at HEAD logs or refuses it (§6 cases (i)–(ii′)). Package
+  P1, unit U19.
+R734(c) — U19's design, commit 1 (O1 with O6(a)), from the read-out's quoted code:
+  (i) Before `open_run`, the configured environment is read once (the `Environment=` value as
+      `systemctl show` prints it, the raw string) by a reader in `ollama_preflight.py` that returns
+      the raw string beside the parsed map, and `run_pipeline` passes it to `open_run` as an
+      optional keyword recorded under one new body key, in `selection_bound` / `inputs`' form
+      (absent, no key; covered by `manifest_sha256`); every production `open_run` caller that is a
+      model-calling entry point passes it (CC lists the callers and reports which do), import
+      manifests do not. No migration. The stage-start check (S5–S7) is unchanged; the open read is
+      a record, not a second gate.
+  (ii) After a PERFORMED proactive restart, and only then, the environment check runs before the
+      next paper: `restart_ollama` returns whether it restarted; the extract loop (S9) runs the
+      check on a true return. A skip is not a restart and triggers no check; T3's counter rule
+      stands (F5). A correctness-tier drift on that read raises a `RunRefused` subclass carrying
+      the keys with expected and actual (R727(b)'s message form beside `ModelDigestChanged`'s),
+      which S9's `except RuntimeError` does not catch (F3); `run_pipeline` closes it 'aborted' with
+      `reason=str(exc)` in the branch form `ModelDigestChanged` takes (CC quotes the branch; the
+      architect writes no clause). The class joins the run-fault tuple and `RUN_REFUSED_MEMBERS`.
+      A performance-tier drift after a restart is logged as at the stage start.
+  (iii) Every post-restart read, pass or drift, writes one `run_telemetry` event (O6(a)) carrying
+      the raw string and the verdict; a drift's keys also reach `end_reason` through (ii). No table.
+  (iv) The two tests pinning "a restart failure continues the run" keep their assertion: a failed
+      RESTART still continues (R7's graceful degradation); a drift READ after a successful restart
+      stops. The acceptance test is the entry's, `test_the_env_check_runs_again_after_every_restart`,
+      with its three clauses as separate ids, plus: a skip does not re-check; the body carries the
+      string at open and `_BODY_KEYS` is unchanged for a body opened without it.
+R734(d) — Commit 2 (O4 and O5), after commit 1's gate is green:
+  (i) `open_run` refuses, after `OllamaHostNotLoopback` and before any read or write, a resolved
+      host that is not the local service (`is_local_service_host`, the predicate `server_context_length`
+      already uses), with a `RunRefused` subclass in `RUN_REFUSED_MEMBERS`: a loopback host on another
+      port is not a supported configuration of any run kind (R721(c), R724(d) extended). Clause
+      (iii′) closes with it.
+  (ii) One parser for the `Environment=` line, `shlex`-based, owned by one module and imported by
+      the other; `_get_ollama_env`'s docstring says what it reads (F10). A quoted value with a space
+      parses as one token (N26). N25 (`server_context_length` reads unit files) stays as designed
+      and is U20's.
+  (iii) CLAUDE.md's `open_run` refusal list gains both new classes in the code's order (R725(d)'s
+      precedent), each in its own commit.
+R734(e) — Not adopted, with reasons: O2 — the recovery restart's send follows its restart inside
+  one `ollama_chat` call (F7) and the re-check would import across the `ollama_preflight` →
+  `ollama_client` direction at call time (Q4); it is the restart path B-F14's U21 owns and rides
+  there, with the digest half U18 recorded (R728(e)); a dated note on INT-j12-17 and on B-F14. O3 —
+  the journal's `server config` line is Ollama 0.21.0's text (Q6), needs a second `systemctl` call
+  to select the start, and `journalctl` is outside the fence (F8); clause (i), configured versus
+  running, is a recorded limit of U19: after commit 1 the window is one performed restart, and a
+  restart applies the loaded unit unless `NeedDaemonReload=yes` (Q1, unverified). O6(c) — no table.
+R734(f) — Notes at 12z-U19B's item 0, no row: on INT-j12-17 — the class ruling (b); the entry's
+  Files list omits `scripts/run_pipeline.py` and names `engine/migrations/`, which no adopted option
+  needs (F6); F7 and F8 as (e) states; the acceptance test's three clauses and what they do not
+  cover (§5). On B-F14 — the recovery restart's post-restart send is preceded by neither the
+  environment check nor a digest re-read (F7; R728(e)), U21's. On the HK-ARCH line —
+  `docs/architecture/modules.md:381` lists two checked variables where the code checks three and
+  warns on a fourth (F9); the file is not edited before P7. The FT preflight's missing `spec=`
+  (F11) is a reading, no note.
+R734(g) — The 12z-U19B brief is an engine-commit brief under R725(b): engine files predicted,
+  `docs/inventory/` listed, the test-side Touched list by coupling from `census_u19a.txt`'s classes
+  (§4) and the gate; a red test is classified (c) or (r) by CC; the census pre-step's five classes
+  run again against the commit's actual seams before each gate. One check-and-commit chain per
+  commit, no pipe. Each commit's gate exits before 07:00 UTC or the commit waits for the next
+  window.

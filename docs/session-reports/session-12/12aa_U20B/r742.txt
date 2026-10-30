@@ -1,0 +1,27 @@
+RULING [evidence-engine 12aa-R742] — 12aa-U20P-R1 stop at 1c: the revised check approved as
+  proposed; a check takes its per-commit values from its arguments or the files it checks;
+  resume at 1c
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20P-R1
+  report stopped at step 1c (no commit; the plan, r740.txt and r741.txt staged). Transcribe at
+  the next item 0 after 12aa-U20P closes, in the block after R741's, with the ruling on the
+  12aa-U20P final report; not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20P-R1 stop report):
+  MEASURED: "plan's last line is ends-at R741: False"; "The plan itself is as intended: tail -1
+    reads The decision log in this file ends at R741."; "The 22 other check lines all read True";
+    "Plan as staged sha256 3f28971417dabc0e6ffa76237c3c3ee6e261b1e49e1383d490508396dc656281,
+    2,338,203 B, 12,795 lines (12,700 + 95 − 0)"; "no /api/show, no load, no lock taken".
+  READ (CC's): "I adapted last session's script with string replacements, and this line kept the
+    old ruling number"; "A check written fresh from the block's own values would not have carried
+    the old number".
+  INFERRED: none.
+
+R742(a) — The stop is correct and the defect is CC's; the chain caught it, as R737(c) recorded of
+  12z's two. The revised check is approved as proposed: the one test reads "ends at R741.", and
+  every other line of the check is unchanged.
+R742(b) — Rule from here: a check script takes every value that varies by commit (ruling
+  numbers, N, file names, expected hashes) from its arguments or from the files it checks; no
+  such value is carried as a literal from an earlier script.
+R742(c) — 12aa-U20P resumes at step 1c under this ruling: the revised check in the same chain,
+  then 1d onward as the resume states. Any other failure is a stop. This ruling is not written
+  to disk in the resume.

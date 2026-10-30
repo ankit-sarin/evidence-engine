@@ -12793,3 +12793,104 @@ R741(d) — Item 0 transcribes R740 and this ruling as two blocks in one commit,
 | 2026-10-30 | R741(a) — The stop is correct and the premise was the architect's: I5 and R740(f) took every model the spec names to be a local model, though the spec declares two cloud arms. R741(b) — P1 covers the five models the spec names with provider ollama, and the small model (llama3.2:3b, I6). The two cloud names are recorded as not installed and are not sent. R741(c) — Readings, no row: the uvicorn server's new PID and start time, not this lane's; I1–I4, I6 and I7 as reported. R741(d) — Item 0 transcribes R740 and this ruling as two blocks in one commit, in that order; r741.txt is written beside r740.txt in 12aa_U20P/ under R738(b)'s rule. The model is the record's most recent commit that transcribed more than one block, found and quoted by CC (R732(a)). 12aa-U20P resumes at step 1a; step 0 stands as measured, with HEAD, status, ahead/behind and /api/ps re-read at the resume's start; nothing else in the brief changes. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20P report stopped after step 0 (no commit) |
 
 The decision log in this file ends at R741.
+
+**Block 140.** *Transcribed 2026-10-30 (item 0 of the 12aa-U20B brief), in its own commit with Block 141, in the R597(e) form:* ruling R742, made by PI on architect recommendation on 2026-10-30 UTC, during session 12aa, on the 12aa-U20P-R1 report stopped at step 1c (no commit; the plan, r740.txt and r741.txt staged). The 12aa-U20P-R2 resume that carried the ruling in substance, and the 12aa-U20B brief whose paste carried its text, are not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aa-R742] — 12aa-U20P-R1 stop at 1c: the revised check approved as
+  proposed; a check takes its per-commit values from its arguments or the files it checks;
+  resume at 1c
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20P-R1
+  report stopped at step 1c (no commit; the plan, r740.txt and r741.txt staged). Transcribe at
+  the next item 0 after 12aa-U20P closes, in the block after R741's, with the ruling on the
+  12aa-U20P final report; not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20P-R1 stop report):
+  MEASURED: "plan's last line is ends-at R741: False"; "The plan itself is as intended: tail -1
+    reads The decision log in this file ends at R741."; "The 22 other check lines all read True";
+    "Plan as staged sha256 3f28971417dabc0e6ffa76237c3c3ee6e261b1e49e1383d490508396dc656281,
+    2,338,203 B, 12,795 lines (12,700 + 95 − 0)"; "no /api/show, no load, no lock taken".
+  READ (CC's): "I adapted last session's script with string replacements, and this line kept the
+    old ruling number"; "A check written fresh from the block's own values would not have carried
+    the old number".
+  INFERRED: none.
+
+R742(a) — The stop is correct and the defect is CC's; the chain caught it, as R737(c) recorded of
+  12z's two. The revised check is approved as proposed: the one test reads "ends at R741.", and
+  every other line of the check is unchanged.
+R742(b) — Rule from here: a check script takes every value that varies by commit (ruling
+  numbers, N, file names, expected hashes) from its arguments or from the files it checks; no
+  such value is carried as a literal from an earlier script.
+R742(c) — 12aa-U20P resumes at step 1c under this ruling: the revised check in the same chain,
+  then 1d onward as the resume states. Any other failure is a stop. This ruling is not written
+  to disk in the resume.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-30 | R742(a) — The stop is correct and the defect is CC's; the chain caught it, as R737(c) recorded of 12z's two. The revised check is approved as proposed: the one test reads "ends at R741.", and every other line of the check is unchanged. R742(b) — Rule from here: a check script takes every value that varies by commit (ruling numbers, N, file names, expected hashes) from its arguments or from the files it checks; no such value is carried as a literal from an earlier script. R742(c) — 12aa-U20P resumes at step 1c under this ruling: the revised check in the same chain, then 1d onward as the resume states. Any other failure is a stop. This ruling is not written to disk in the resume. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20P-R1 report stopped at step 1c (no commit) |
+
+The decision log in this file ends at R742.
+
+**Block 141.** *Transcribed 2026-10-30 (item 0 of the 12aa-U20B brief), in its own commit with Block 140, in the R597(e) form:* ruling R743, made by PI on architect recommendation on 2026-10-30 UTC, during session 12aa, on the 12aa-U20P final report as resumed under R741 and R742 (item 0 `da8d7f555f3532ccd571522680bdf3dbca7ebda6`; record `f542587d85a0d63eeb32de43678fd1d0cb243e27`). The 12aa-U20B brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aa-R743] — 12aa-U20P accepted; U20's design: the Modelfile num_ctx term
+  in the measured wire format (commit 1); the loaded context read after each call and compared
+  (commit 2, ruled after commit 1); declaring num_ctx rejected; pre-edit reads
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-U20P
+  final report as resumed under R741 and R742 (item 0 da8d7f555f3532ccd571522680bdf3dbca7ebda6;
+  record f542587d85a0d63eeb32de43678fd1d0cb243e27). Transcribe as item 0 of the 12aa-U20B brief,
+  in the block after R742's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-U20P final report):
+  MEASURED: "Commit da8d7f555f3532ccd571522680bdf3dbca7ebda6, parent dba1406"; "Numstat +95 / −0";
+    "Plan sha256 3f28971417dabc0e6ffa76237c3c3ee6e261b1e49e1383d490508396dc656281, 2,338,203 B";
+    "Ledger 0c205df065823783f2aec139f0f818f546a20930, parent 5440780"; "Commit:
+    f542587d85a0d63eeb32de43678fd1d0cb243e27, parent da8d7f5, 44 files"; "Ledger:
+    7f22e7b34ade8aef1ef54ce7b927f5f968a87b39, parent 0c205df"; "parameters is one
+    newline-separated string, each name padded to width 31. No probed model carries num_ctx";
+    "context_length: 8,192" with "Request num_ctx: 8192" against "Trained: 131,072";
+    "llama_context: n_ctx = 8192; KvSize:8192"; "requested context size too large for model"
+    num_ctx=262144 n_ctx_train=131072"; "size":3395661824 at 8192 against "size":23779979264 at
+    131,072; "Loads: only llama3.2:3b, twice"; "NRestarts 0"; "Fingerprint IDENTICAL".
+  READ (CC's): "context_length reports the context the server loaded"; "A parser written to the
+    entry's words could pass its fake and miss the server's string"; "/api/ps only answers after a
+    load"; "The second load cannot separate loaded from trained, because the runtime's default of
+    262,144 clamps to the trained value"; "What stays open. The Modelfile-set form of Q3".
+  INFERRED: none.
+
+R743(a) — 12aa-U20P is accepted as reported: item 0 as da8d7f5 (R740 and R741 as a pair, each
+  file at the architect's hash, hashed straight after its write); the record as f542587; the
+  ledgers 0c205df and 7f22e7b; two loads of llama3.2:3b under the lock, both unloaded; no engine,
+  test, script, spec or codebook change. Findings 5, 6, 8 and 9 are readings, no row.
+R743(b) — Q2 binds the tests: every fake show response in U20's tests carries the parameters
+  field in the wire format the committed raw bodies show (one string, names padded to offset 31,
+  repeated names, quoted values, no trailing newline), not the entry's one-space wording
+  (finding 2). Q3: /api/ps context_length reports the loaded context (finding 1); it answers only
+  after a load (finding 7).
+R743(c) — Commit 1 (INT-i12-11, the entry): the ceiling gains the Modelfile term, the num_ctx line
+  of the parameters field, read from the same show response as the trained context. No
+  parameters field or no num_ctx line: no term. A num_ctx line whose value is not a positive
+  integer, or more than one num_ctx line: CeilingUnavailable. A request num_ctx still wins. No
+  request byte, pin, prompt_hash or schema moves.
+R743(d) — Commit 2 (N25): after each completed call, the context /api/ps reports for the model is
+  compared with the ceiling the call was checked against, and a difference refuses the run,
+  naming both values. Its seam, its class, and the cold, absent and error cases are ruled after
+  commit 1's report, with R743(f)'s reads in hand; N25 is decided there (R740(c)).
+R743(e) — Declaring num_ctx in the spec (O4) is rejected: it moves the KV allocation (finding 4)
+  and the options hash for no gain. N1 and N3 are not adopted; R743(d) reads the running server.
+R743(f) — Before any edit, CC reads and quotes: where InputTruncated and any pre-call input-fit
+  refusal are raised and which ceiling each uses; SERVER_DEFAULT_CTX's value and how the terms
+  combine; the cache that holds the trained context and its key; and, from the committed show
+  bodies with no request sent, the ceiling the code at HEAD yields for each of the five spec
+  models with no request num_ctx, beside each model's trained context. A clause of (c)
+  contradicted by the quoted code is a stop before the edit; a ceiling at HEAD that differs from
+  the trained context is a finding for (d), not a stop.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-30 | R743(a) — 12aa-U20P is accepted as reported: item 0 as da8d7f5 (R740 and R741 as a pair, each file at the architect's hash, hashed straight after its write); the record as f542587; the ledgers 0c205df and 7f22e7b; two loads of llama3.2:3b under the lock, both unloaded; no engine, test, script, spec or codebook change. Findings 5, 6, 8 and 9 are readings, no row. R743(b) — Q2 binds the tests: every fake show response in U20's tests carries the parameters field in the wire format the committed raw bodies show (one string, names padded to offset 31, repeated names, quoted values, no trailing newline), not the entry's one-space wording (finding 2). Q3: /api/ps context_length reports the loaded context (finding 1); it answers only after a load (finding 7). R743(c) — Commit 1 (INT-i12-11, the entry): the ceiling gains the Modelfile term, the num_ctx line of the parameters field, read from the same show response as the trained context. No parameters field or no num_ctx line: no term. A num_ctx line whose value is not a positive integer, or more than one num_ctx line: CeilingUnavailable. A request num_ctx still wins. No request byte, pin, prompt_hash or schema moves. R743(d) — Commit 2 (N25): after each completed call, the context /api/ps reports for the model is compared with the ceiling the call was checked against, and a difference refuses the run, naming both values. Its seam, its class, and the cold, absent and error cases are ruled after commit 1's report, with R743(f)'s reads in hand; N25 is decided there (R740(c)). R743(e) — Declaring num_ctx in the spec (O4) is rejected: it moves the KV allocation (finding 4) and the options hash for no gain. N1 and N3 are not adopted; R743(d) reads the running server. R743(f) — Before any edit, CC reads and quotes: where InputTruncated and any pre-call input-fit refusal are raised and which ceiling each uses; SERVER_DEFAULT_CTX's value and how the terms combine; the cache that holds the trained context and its key; and, from the committed show bodies with no request sent, the ceiling the code at HEAD yields for each of the five spec models with no request num_ctx, beside each model's trained context. A clause of (c) contradicted by the quoted code is a stop before the edit; a ceiling at HEAD that differs from the trained context is a finding for (d), not a stop. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20P final report as resumed under R741 and R742 (da8d7f5; f542587) |
+
+The decision log in this file ends at R743.

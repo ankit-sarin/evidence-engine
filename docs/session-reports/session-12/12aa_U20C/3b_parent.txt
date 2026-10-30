@@ -1,0 +1,59 @@
+FFFFFFFFF..F.FF..FF..                                                    [100%]
+=================================== FAILURES ===================================
+E   KeyError: 'loaded_context'
+------------------------------ Captured log call -------------------------------
+INFO     engine.utils.ollama_client:ollama_client.py:425 input_fit paper_id=unknown {"ceiling": 131072, "chars": 5, "count": 1, "done_reason": "stop", "estimate_low": 1, "model": "gemma3:27b", "ratio": 0.2}
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:150: KeyError: 'loaded_context'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:134: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:134: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:134: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:134: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:134: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:134: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:134: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:204: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:225: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   AssertionError: assert ('failed', 'S...ged: refused') == ('aborted', '...ged: refused')
+      
+      At index 0 diff: 'failed' != 'aborted'
+      Use -v to get more diff
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:619 FT screening run 1 failed
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/agents/ft_screener.py", line 605, in run_ft_invocation
+    run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py", line 250, in verify
+    raise refusal
+engine.core.run_manifest.ServerEnvChanged: ServerEnvChanged: refused
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:257: AssertionError: assert ('failed', 'S...ged: refused') == ('aborted', '...ged: refused')
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:246: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:285: AttributeError: module 'engine.core.run_manifest' has no attribute 'LoadedContextMismatch'
+E   Failed: DID NOT RAISE <class 'engine.core.run_manifest.ModelDigestChanged'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u20_loaded_context.py:297: Failed: DID NOT RAISE <class 'engine.core.run_manifest.ModelDigestChanged'>
+=========================== short test summary info ============================
+FAILED tests/test_u20_loaded_context.py::test_a_a_loaded_context_equal_to_the_ceiling_completes_and_is_recorded
+FAILED tests/test_u20_loaded_context.py::test_b_a_loaded_context_lower_than_the_ceiling_refuses
+FAILED tests/test_u20_loaded_context.py::test_b_the_comparison_precedes_the_post_call_checks
+FAILED tests/test_u20_loaded_context.py::test_c_a_loaded_context_higher_than_the_ceiling_refuses
+FAILED tests/test_u20_loaded_context.py::test_d_no_entry_with_the_calls_name_and_digest_refuses_as_absent[no_entries]
+FAILED tests/test_u20_loaded_context.py::test_d_no_entry_with_the_calls_name_and_digest_refuses_as_absent[another_name]
+FAILED tests/test_u20_loaded_context.py::test_d_no_entry_with_the_calls_name_and_digest_refuses_as_absent[the_name_with_another_digest]
+FAILED tests/test_u20_loaded_context.py::test_e_a_failed_read_refuses_naming_the_error
+FAILED tests/test_u20_loaded_context.py::test_f_the_class_is_a_run_refused_run_fault_in_the_shared_tuple
+FAILED tests/test_u20_loaded_context.py::test_f_run_pipeline_closes_aborted[LoadedContextMismatch]
+FAILED tests/test_u20_loaded_context.py::test_f_the_ft_runner_closes_aborted[ServerEnvChanged]
+FAILED tests/test_u20_loaded_context.py::test_f_the_ft_runner_closes_aborted[LoadedContextMismatch]
+FAILED tests/test_u20_loaded_context.py::test_i_preflight_raises_a_loaded_context_mismatch
+FAILED tests/test_u20_loaded_context.py::test_j_preflight_raises_a_digest_change
+14 failed, 7 passed in 14.39s

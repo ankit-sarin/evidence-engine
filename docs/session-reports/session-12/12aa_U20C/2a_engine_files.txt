@@ -1,0 +1,19 @@
+The earlier list (2a, 12aa-U20C), quoted:
+  > The fixed engine list by the brief's rule, not acted on (the brief stopped at I5):
+  > engine/utils/ollama_client.py
+  > engine/core/run_manifest.py   (aa76124 defined ServerEnvChanged here)
+  > CLAUDE.md                     (aa76124 named ServerEnvChanged there; one line)
+  > docs/inventory/               (if not in sync)
+  > Outside the list, and needed by R744(c) as written:
+  > scripts/run_pipeline.py       (aa76124 added the close path here; scripts/ is DO NOT TOUCH)
+  > engine/agents/ft_screener.py  (aa76124 changed it for the open only; it has no ServerEnvChanged close path)
+  > Not changed by aa76124 for the class: engine/core/extraction_events.py (RunRefused subclasses join the tuple)
+
+The fixed engine list under R745 / A1 (written before any edit):
+engine/utils/ollama_client.py
+engine/core/run_manifest.py
+engine/utils/ollama_preflight.py
+engine/agents/ft_screener.py
+scripts/run_pipeline.py
+CLAUDE.md (the line naming ServerEnvChanged; one line naming the tuple's new member)
+docs/inventory/ (if not in sync)

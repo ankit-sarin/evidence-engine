@@ -1,0 +1,27 @@
+e3d303d71a8ace32721726552048ec14748609aa
+ M CLAUDE.md
+ M docs/inventory/entry_points.json
+ M docs/inventory/entry_points.md
+ M engine/agents/ft_screener.py
+ M engine/core/run_manifest.py
+ M engine/utils/ollama_client.py
+ M engine/utils/ollama_preflight.py
+ M scripts/run_pipeline.py
+A  tests/_loaded_context_fixture.py
+ M tests/test_audit_paper_id.py
+ M tests/test_citation_record.py
+ M tests/test_cut_over.py
+ M tests/test_extraction_run_link.py
+ M tests/test_ft_bridge.py
+ M tests/test_presented_context.py
+ M tests/test_run_fault_predicate.py
+ M tests/test_run_interrupts.py
+ M tests/test_run_manifest.py
+ M tests/test_run_pipeline_starts.py
+ M tests/test_selection_bound.py
+ M tests/test_u18_digest_per_call.py
+ M tests/test_undeclared_call.py
+ M tests/test_units_as_source_slices.py
+?? docs/session-reports/session-12/12aa_U20C/census_u20c.py
+?? docs/session-reports/session-12/12aa_U20C/reads_u20c.md
+?? tests/test_u20_loaded_context.py

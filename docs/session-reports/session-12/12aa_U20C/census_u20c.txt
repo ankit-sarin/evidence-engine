@@ -1,0 +1,114 @@
+## (ii) test files that rebind the chat client and can drive it under a run
+tests/conftest.py: fakes []; ps patches 0; digest_fn 0
+tests/test_citation_record.py: fakes ['_Client(ps=False)']; ps patches 0; digest_fn 1
+tests/test_cut_over.py: fakes ['_Client(ps=False)']; ps patches 0; digest_fn 0
+tests/test_extraction_run_link.py: fakes ['_Client(ps=False)']; ps patches 0; digest_fn 1
+tests/test_ft_bridge.py: fakes ['FakeClient(ps=False)']; ps patches 0; digest_fn 1
+tests/test_ollama_preflight.py: fakes []; ps patches 7; digest_fn 0
+tests/test_pin_records.py: fakes ['_Client(ps=False)']; ps patches 0; digest_fn 2
+tests/test_run_calls_outcomes.py: fakes []; ps patches 0; digest_fn 0
+tests/test_run_fault_predicate.py: fakes ['_Client(ps=False)']; ps patches 0; digest_fn 0
+tests/test_run_interrupts.py: fakes ['_InterruptingClient(ps=False)']; ps patches 0; digest_fn 2
+tests/test_run_manifest.py: fakes ['Fake(ps=False)']; ps patches 0; digest_fn 3
+tests/test_run_pipeline_starts.py: fakes ['FakeClient(ps=False)']; ps patches 1; digest_fn 0
+tests/test_selection_bound.py: fakes ['_Client(ps=False)']; ps patches 0; digest_fn 1
+tests/test_u18_digest_per_call.py: fakes ['FakeClient(ps=True)']; ps patches 0; digest_fn 7
+tests/test_u18_one_host.py: fakes []; ps patches 0; digest_fn 2
+tests/test_undeclared_call.py: fakes ['FakeClient(ps=False)']; ps patches 1; digest_fn 1
+tests/test_units_as_source_slices.py: fakes ['_ElicitedClient(ps=False)']; ps patches 0; digest_fn 1
+
+## (iii) input_fit key sets
+tests/test_elicit01.py:182: "content_chars", "thinking_chars", "done_reason", "prompt_eval_count",
+tests/test_ollama_input_fit.py:208: assert "input_fit UNVERIFIED" in caplog.text
+tests/test_ollama_input_fit.py:215: lines = [r.getMessage() for r in caplog.records if r.getMessage().startswith("input_fit paper_id=7 ")]
+tests/test_ollama_input_fit.py:219: "count": 630, "ratio": 0.21, "done_reason": "stop"}
+tests/test_ollama_input_fit.py:339: line = next(r.getMessage() for r in caplog.records if r.getMessage().startswith("input_fit "))
+
+## (iv) membership and close clauses
+tests/test_import_screening_entry.py:272: def test_t6_a_helper_refusal_closes_aborted(db, spec, tmp_path, monkeypatch):
+tests/test_run_calls_outcomes.py:270: def test_T9_run_aborted_closes_aborted_with_reason(db):
+tests/test_run_fault_predicate.py:73: RUN_REFUSED_MEMBERS = {
+tests/test_run_fault_predicate.py:80: rm.ModelDigestChanged,  # U18, R721(b)
+tests/test_run_fault_predicate.py:81: rm.ServerEnvChanged,  # U19, R734(c)(ii)
+tests/test_run_fault_predicate.py:86: for c in sorted(RUN_REFUSED_MEMBERS, key=lambda c: c.__name__)]
+tests/test_run_fault_predicate.py:138: assert set(X.run_fault_classes()) == set(RUN_FAULTS)
+tests/test_run_fault_predicate.py:139: for cls in RUN_REFUSED_MEMBERS:
+tests/test_run_fault_predicate.py:144: assert subclasses(rm.RunRefused) == RUN_REFUSED_MEMBERS
+tests/test_u18_digest_per_call.py:10: difference raises `ModelDigestChanged`, a `RunRefused` and so a run fault: nothing is sent,
+tests/test_u18_digest_per_call.py:33: from engine.core.extraction_events import is_run_fault, run_fault_classes
+tests/test_u18_digest_per_call.py:140: with pytest.raises(rm.ModelDigestChanged) as exc:
+tests/test_u18_digest_per_call.py:157: with pytest.raises(rm.ModelDigestChanged):
+tests/test_u18_digest_per_call.py:210: with pytest.raises(rm.ModelDigestChanged):
+tests/test_u18_digest_per_call.py:246: exc = rm.ModelDigestChanged.at("audit", "m:1b", A, B)
+tests/test_u18_digest_per_call.py:248: assert isinstance(exc, run_fault_classes())
+tests/test_u18_digest_per_call.py:249: assert str(exc).startswith("ModelDigestChanged: ")
+tests/test_u18_digest_per_call.py:264: def test_u18_run_pipeline_closes_aborted_on_a_digest_change(review, spec, fake, monkeypatch):
+tests/test_u18_digest_per_call.py:282: with pytest.raises(rm.ModelDigestChanged):
+tests/test_u18_digest_per_call.py:286: assert reason.startswith("ModelDigestChanged: ")
+tests/test_u18_digest_per_call.py:300: def test_u18_the_ft_runner_closes_aborted_on_a_digest_change(review, spec, fake, monkeypatch):
+tests/test_u18_digest_per_call.py:312: with pytest.raises(rm.ModelDigestChanged):
+tests/test_u18_digest_per_call.py:317: assert reason.startswith("ModelDigestChanged: ")
+tests/test_u18_one_host.py:36: from engine.core.extraction_events import run_fault_classes
+tests/test_u18_one_host.py:215: assert isinstance(exc.value, rm.RunRefused) and isinstance(exc.value, run_fault_classes())
+tests/test_u19_env_recheck.py:117: with pytest.raises(rm.ServerEnvChanged) as exc:
+tests/test_u19_env_recheck.py:121: assert msg.startswith("ServerEnvChanged: ")
+tests/test_u19_env_recheck.py:127: def test_u19_run_pipeline_closes_aborted_on_a_server_env_change(spec, tmp_path, monkeypatch):
+tests/test_u19_env_recheck.py:128: """test_u18_run_pipeline_closes_aborted_on_a_digest_change's form."""
+tests/test_u19_env_recheck.py:134: refusal = rm.ServerEnvChanged.at({"OLLAMA_KV_CACHE_TYPE": ("f16", "q8_0")}, papers_done=25)
+tests/test_u19_env_recheck.py:144: with pytest.raises(rm.ServerEnvChanged):
+tests/test_u19_env_recheck.py:213: with pytest.raises(rm.ServerEnvChanged):
+tests/test_u19_env_recheck.py:223: assert issubclass(rm.ServerEnvChanged, rm.RunRefused)
+tests/test_u19_env_recheck.py:224: assert not issubclass(rm.ServerEnvChanged, RuntimeError)   # S9's except RuntimeError passes it
+tests/test_u19_env_recheck.py:225: assert X.is_run_fault(rm.ServerEnvChanged("refused"))
+
+## (v) whole-function replacements
+tests/test_presented_context.py:118: oc, "_check_input_fits",
+tests/test_run_calls_outcomes.py:33: oc, "_check_input_fits",
+tests/test_run_calls_outcomes.py:37: oc, "_check_input_was_read", lambda response, fit, label: response)
+tests/test_run_calls_outcomes.py:118: monkeypatch.setattr(oc, "_check_input_fits", _raise_overflow)
+tests/test_run_calls_outcomes.py:140: monkeypatch.setattr(oc, "_check_input_fits", _raise_ceiling)
+tests/test_run_calls_outcomes.py:164: monkeypatch.setattr(oc, "_check_input_was_read", _raise_truncated)
+tests/test_run_calls_outcomes.py:188: monkeypatch.setattr(oc, "_check_input_was_read", _raise_dropped)
+tests/test_run_calls_outcomes.py:230: monkeypatch.setattr(oc, "_check_input_fits", _raise_overflow)
+tests/test_run_calls_outcomes.py:251: monkeypatch.setattr(oc, "_check_input_fits", _raise_overflow)
+tests/test_run_calls_outcomes.py:256: oc, "_check_input_fits",
+tests/test_u18_digest_per_call.py:205: monkeypatch.setattr(oc, "_check_input_fits", fit)
+
+## (vi) preflight error results
+tests/test_distribution_monitor.py:560: error_messages = [r.message for r in caplog.records if r.levelno >= logging.ERROR]
+tests/test_distribution_monitor.py:561: assert any("COLLAPSED" in m for m in error_messages)
+tests/test_ollama_preflight.py:30: result = check_model("test-model:7b")
+tests/test_ollama_preflight.py:36: assert result.error_message == ""
+tests/test_ollama_preflight.py:41: result = check_model("nonexistent:99b")
+tests/test_ollama_preflight.py:43: assert result.status == "error"
+tests/test_ollama_preflight.py:45: assert "model not found" in result.error_message
+tests/test_ollama_preflight.py:120: assert result.models[1].status == "error"
+tests/test_request_capture.py:315: result = check_model("deepseek-r1:32b", spec=spec)
+tests/test_undeclared_call.py:180: assert pf.check_model(declared, spec=spec).status == "ok"      # a declared probe still runs
+
+## (vii) handlers above ollama_chat catching Exception, engine/ and scripts/
+engine/acquisition/pdf_quality_check.py:138 [_classify_page] except Exception: re-raises; try body reaches ['ollama_chat']
+engine/tools/inventory.py:476 [_commit_hash] except Exception: swallows; try body reaches ['run']
+engine/agents/extractor.py:1212 [_extract_selected] except Exception: asks is_run_fault; try body reaches ['extract_paper_with_completeness']
+engine/utils/ollama_client.py:824 [_restart_ollama_and_retry] except Exception: re-raises; try body reaches ['run']
+engine/agents/extractor.py:436 [_retry_snippet] except Exception: asks is_run_fault; try body reaches ['ollama_chat']
+engine/utils/ollama_preflight.py:85 [check_model] except Exception: swallows; try body reaches ['ollama_chat']
+engine/migrations/__main__.py:48 [main] except Exception: swallows; try body reaches ['run']
+engine/utils/ollama_client.py:763 [ollama_chat] except Exception: re-raises; try body reaches ['_restart_ollama_and_retry']
+engine/parsers/pdf_parser.py:1120 [parse_all_pdfs] except Exception: swallows; try body reaches ['parse_pdf']
+engine/parsers/pdf_parser.py:997 [parse_pdf] except BaseException: re-raises; try body reaches ['_run_parser', 'parse_with_vision']
+engine/parsers/pdf_parser.py:901 [parse_pdf] except Exception: swallows; try body reaches ['_run_parser']
+engine/parsers/pdf_parser.py:717 [parse_pdf] except Exception: re-raises; try body reaches ['parse_with_vision']
+engine/parsers/pdf_parser.py:806 [parse_pdf] except Exception: re-raises; try body reaches ['parse_with_vision']
+engine/utils/ollama_preflight.py:200 [read_ollama_env] except Exception: swallows; try body reaches ['run']
+engine/parsers/pdf_parser.py:1189 [reparse_papers] except Exception: swallows; try body reaches ['parse_pdf']
+engine/agents/extractor.py:791 [restart_ollama] except Exception: re-raises; try body reaches ['run']
+engine/cloud/anthropic_extractor.py:205 [run] except Exception: swallows; try body reaches ['extract_with_completeness']
+engine/cloud/openai_extractor.py:179 [run] except Exception: swallows; try body reaches ['extract_with_completeness']
+scripts/run_cloud_extraction.py:121 [run_arm] except BaseException: re-raises; try body reaches ['run']
+engine/agents/ft_screener.py:618 [run_ft_invocation] except Exception: re-raises; try body reaches ['run_ft_screening', 'run_ft_verification']
+scripts/run_pipeline.py:220 [run_pipeline] except Exception: re-raises; try body reaches ['_stage_audit', '_stage_extract', '_stage_parse', '_stage_screen']
+engine/acquisition/pdf_quality_check.py:254 [run_quality_check] except Exception: swallows; try body reaches ['_classify_page']
+scripts/screen_expanded.py:268 [run_screen_phase] except Exception: swallows; try body reaches ['screen_paper']
+scripts/screen_expanded.py:409 [run_verify_phase] except Exception: swallows; try body reaches ['screen_paper']
+# handlers 24; functions reaching ollama_chat by name 70

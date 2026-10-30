@@ -1,0 +1,1560 @@
+........................................................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+........................................................................ [  8%]
+........................................................................ [ 10%]
+.....................................x.................................. [ 12%]
+........................................................................ [ 14%]
+........................................................................ [ 16%]
+..................................................................FF.... [ 18%]
+...............................................FFF...................... [ 20%]
+........................................................................ [ 22%]
+........................................................................ [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 29%]
+...............FF.....F................................................. [ 31%]
+........................................................................ [ 33%]
+........................................................................ [ 35%]
+........................................................................ [ 37%]
+........................................................................ [ 39%]
+........................................................................ [ 41%]
+........................................................................ [ 43%]
+.................................................F.F..F................. [ 45%]
+........................................................................ [ 47%]
+........................................................................ [ 49%]
+...F.FFFFFFFFFFF.FF.FF....FF............................................ [ 51%]
+........................................................................ [ 53%]
+........................................................................ [ 55%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 66%]
+........................................................................ [ 68%]
+........................................................................ [ 70%]
+........................................................F..FFF.......... [ 72%]
+........................................................................ [ 74%]
+........................................................................ [ 76%]
+........................................................................ [ 78%]
+........................................................................ [ 80%]
+....................................................................F... [ 82%]
+..............F...........F............................................. [ 84%]
+.........................FFFFFF......................................... [ 87%]
+........................................................................ [ 89%]
+...............F...........F............................................ [ 91%]
+........................................................................ [ 93%]
+..........FFFFFF........................................................ [ 95%]
+......................................F.FF....................F......... [ 97%]
+........................................................................ [ 99%]
+...................                                                      [100%]
+=================================== FAILURES ===================================
+__________ test_T6_every_audit_call_row_carries_the_paper_it_verified __________
+tests/test_audit_paper_id.py:110: in test_T6_every_audit_call_row_carries_the_paper_it_verified
+    AE.audit_run(db._conn, spec, run_id=run_id, arm=arm, review_dir=review_dir)
+engine/agents/audit_events.py:234: in audit_run
+    v = semantic_verify(span, field_type=types.get(c.field_name, "text"),
+engine/agents/auditor.py:73: in semantic_verify
+    response = ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+______________________ test_T7_no_other_stage_is_affected ______________________
+tests/test_audit_paper_id.py:136: in test_T7_no_other_stage_is_affected
+    AE.audit_run(db._conn, spec, run_id=run_id, arm=arm, review_dir=review_dir)
+engine/agents/audit_events.py:234: in audit_run
+    v = semantic_verify(span, field_type=types.get(c.field_name, "text"),
+engine/agents/auditor.py:73: in semantic_verify
+    response = ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_ test_an_asserted_claim_carries_every_cited_run_resolvable_from_the_parsed_text _
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_citation_record.py:205: in test_an_asserted_claim_carries_every_cited_run_resolvable_from_the_parsed_text
+    _run(db, elicited_spec)
+tests/test_citation_record.py:166: in _run
+    stats = E.run_extraction(db, spec, "u03", experiment_lock=False,
+engine/agents/extractor.py:1018: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:595: in extract_paper
+    return extract_paper_elicited(
+engine/elicitation/pipeline.py:478: in extract_paper_elicited
+    p1, accepted_attempt, pass1_tels = elicit(
+engine/elicitation/pipeline.py:360: in elicit
+    first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, cfg=cfg)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/elicitation/pipeline.py:295: in run_pass1
+    response, req_hash = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+________ test_a_judgment_claim_records_each_steps_citations_resolvably _________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_citation_record.py:243: in test_a_judgment_claim_records_each_steps_citations_resolvably
+    _run(db, elicited_spec)
+tests/test_citation_record.py:166: in _run
+    stats = E.run_extraction(db, spec, "u03", experiment_lock=False,
+engine/agents/extractor.py:1018: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:595: in extract_paper
+    return extract_paper_elicited(
+engine/elicitation/pipeline.py:478: in extract_paper_elicited
+    p1, accepted_attempt, pass1_tels = elicit(
+engine/elicitation/pipeline.py:360: in elicit
+    first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, cfg=cfg)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/elicitation/pipeline.py:295: in run_pass1
+    response, req_hash = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_________ test_the_unit_map_directory_is_named_by_the_manifest_run_id __________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_citation_record.py:283: in test_the_unit_map_directory_is_named_by_the_manifest_run_id
+    first = _run(db, elicited_spec)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_citation_record.py:166: in _run
+    stats = E.run_extraction(db, spec, "u03", experiment_lock=False,
+engine/agents/extractor.py:1018: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:595: in extract_paper
+    return extract_paper_elicited(
+engine/elicitation/pipeline.py:478: in extract_paper_elicited
+    p1, accepted_attempt, pass1_tels = elicit(
+engine/elicitation/pipeline.py:360: in elicit
+    first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, cfg=cfg)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/elicitation/pipeline.py:295: in run_pass1
+    response, req_hash = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_______ test_t1_extract_then_audit_under_one_manifest_writes_events_only _______
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_cut_over.py:131: in test_t1_extract_then_audit_under_one_manifest_writes_events_only
+    ext = rp._stage_extract(db, spec, "flip", run_id=run_id)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_pipeline.py:404: in _stage_extract
+    stats = run_extraction(db, spec, review_name, selection=selection, run_id=run_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/extractor.py:1021: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________ test_t2_a_live_shaped_paper_extracts_and_keeps_its_status ___________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_cut_over.py:157: in test_t2_a_live_shaped_paper_extracts_and_keeps_its_status
+    stats = E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/extractor.py:1021: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_________________ test_t5_zero_spans_become_no_fields_returned _________________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_cut_over.py:265: in test_t5_zero_spans_become_no_fields_returned
+    E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+engine/agents/extractor.py:1021: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+________________ test_t4_every_extractor_call_records_its_paper ________________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_extraction_run_link.py:171: in test_t4_every_extractor_call_records_its_paper
+    stats = _run(db, spec, run_id)
+            ^^^^^^^^^^^^^^^^^^^^^^
+tests/test_extraction_run_link.py:104: in _run
+    return E.run_extraction(db, spec, "runlink", experiment_lock=False,
+engine/agents/extractor.py:1018: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_________________ test_t5_the_stored_digests_are_the_manifests _________________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_extraction_run_link.py:200: in test_t5_the_stored_digests_are_the_manifests
+    _run(db, spec, handle.run_id)
+tests/test_extraction_run_link.py:104: in _run
+    return E.run_extraction(db, spec, "runlink", experiment_lock=False,
+engine/agents/extractor.py:1018: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________ test_t13_a_second_run_under_the_same_input_selects_nothing __________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_extraction_run_link.py:242: in test_t13_a_second_run_under_the_same_input_selects_nothing
+    _run(db, spec, run_id)
+tests/test_extraction_run_link.py:104: in _run
+    return E.run_extraction(db, spec, "runlink", experiment_lock=False,
+engine/agents/extractor.py:1018: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+________ test_1_default_run_manifest_is_screening_with_four_stage_rows _________
+tests/test_ft_bridge.py:181: in test_1_default_run_manifest_is_screening_with_four_stage_rows
+    run_id = _invoke(db, spec)
+             ^^^^^^^^^^^^^^^^^
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:609: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+________ test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk _________
+tests/test_ft_bridge.py:200: in test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk
+    run_id = _invoke(db, spec)
+             ^^^^^^^^^^^^^^^^^
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:609: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+________ test_3_primary_exclude_writes_one_screened_full_text_out_event ________
+tests/test_ft_bridge.py:233: in test_3_primary_exclude_writes_one_screened_full_text_out_event
+    run_id = _invoke(db, spec, screen_only=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:607: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________ test_4_verifier_confirm_writes_one_verified_eligible_event __________
+tests/test_ft_bridge.py:245: in test_4_verifier_confirm_writes_one_verified_eligible_event
+    run_id = _invoke(db, spec, verify_only=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:605: in run_ft_invocation
+    run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:486: in run_ft_verification
+    decision, request_hash = ft_verify_paper(truncated, spec)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:226: in ft_verify_paper
+    response, request_hash = ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+____________ test_4_include_then_confirm_in_one_default_invocation _____________
+tests/test_ft_bridge.py:258: in test_4_include_then_confirm_in_one_default_invocation
+    run_id = _invoke(db, spec)
+             ^^^^^^^^^^^^^^^^^
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:609: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+____________________ test_5_primary_include_writes_no_event ____________________
+tests/test_ft_bridge.py:270: in test_5_primary_include_writes_no_event
+    _invoke(db, spec, screen_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:607: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_____________ test_5_primary_no_text_and_malformed_write_no_event ______________
+tests/test_ft_bridge.py:278: in test_5_primary_no_text_and_malformed_write_no_event
+    _invoke(db, spec, screen_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:607: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________ test_5_verifier_flag_no_text_and_malformed_write_no_event ___________
+tests/test_ft_bridge.py:291: in test_5_verifier_flag_no_text_and_malformed_write_no_event
+    _invoke(db, spec, verify_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:605: in run_ft_invocation
+    run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:486: in run_ft_verification
+    decision, request_hash = ft_verify_paper(truncated, spec)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:226: in ft_verify_paper
+    response, request_hash = ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________ test_6_a_refused_status_write_leaves_nothing_for_the_paper __________
+tests/test_ft_bridge.py:326: in test_6_a_refused_status_write_leaves_nothing_for_the_paper
+    _invoke(db, spec, screen_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:607: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+________ test_6_an_exception_at_the_primary_event_write_leaves_nothing _________
+tests/test_ft_bridge.py:343: in test_6_an_exception_at_the_primary_event_write_leaves_nothing
+    _invoke(db, spec, screen_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:607: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+________ test_6_an_exception_at_the_verifier_event_write_leaves_nothing ________
+tests/test_ft_bridge.py:358: in test_6_an_exception_at_the_verifier_event_write_leaves_nothing
+    _invoke(db, spec, verify_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:605: in run_ft_invocation
+    run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:486: in run_ft_verification
+    decision, request_hash = ft_verify_paper(truncated, spec)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:226: in ft_verify_paper
+    response, request_hash = ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_________________ test_6_a_refused_decision_row_leaves_nothing _________________
+tests/test_ft_bridge.py:368: in test_6_a_refused_decision_row_leaves_nothing
+    _invoke(db, spec, screen_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:607: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+___ test_8_a_resumed_run_is_a_new_manifest_and_no_paper_gets_a_second_event ____
+tests/test_ft_bridge.py:405: in test_8_a_resumed_run_is_a_new_manifest_and_no_paper_gets_a_second_event
+    _invoke(db, spec, verify_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:605: in run_ft_invocation
+    run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:486: in run_ft_verification
+    decision, request_hash = ft_verify_paper(truncated, spec)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:226: in ft_verify_paper
+    response, request_hash = ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+____ test_9_i_after_a_completed_confirm_a_fresh_verify_only_selects_nothing ____
+tests/test_ft_bridge.py:421: in test_9_i_after_a_completed_confirm_a_fresh_verify_only_selects_nothing
+    _invoke(db, spec, verify_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:605: in run_ft_invocation
+    run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:486: in run_ft_verification
+    decision, request_hash = ft_verify_paper(truncated, spec)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:226: in ft_verify_paper
+    response, request_hash = ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+____________ test_9_iii_a_primary_include_with_neither_is_selected _____________
+tests/test_ft_bridge.py:440: in test_9_iii_a_primary_include_with_neither_is_selected
+    _invoke(db, spec, verify_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:605: in run_ft_invocation
+    run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:486: in run_ft_verification
+    decision, request_hash = ft_verify_paper(truncated, spec)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:226: in ft_verify_paper
+    response, request_hash = ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_____ test_10_seam_include_is_pending_confirm_is_eligible_exclude_is_valid _____
+tests/test_ft_bridge.py:450: in test_10_seam_include_is_pending_confirm_is_eligible_exclude_is_valid
+    _invoke(db, spec, screen_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:607: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_______ test_14_a_zero_decision_run_leaves_workflow_state_byte_identical _______
+tests/test_ft_bridge.py:515: in test_14_a_zero_decision_run_leaves_workflow_state_byte_identical
+    _invoke(db, spec)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:609: in run_ft_invocation
+    run_ft_screening(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:325: in run_ft_screening
+    require_preflight(
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'qwen3:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________________ test_14_a_deciding_run_completes_the_stage __________________
+tests/test_ft_bridge.py:525: in test_14_a_deciding_run_completes_the_stage
+    _invoke(db, spec, verify_only=True)
+tests/test_ft_bridge.py:152: in _invoke
+    return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:605: in run_ft_invocation
+    run_ft_verification(db, spec, review_name=review_name, run_id=run_id)
+engine/agents/ft_screener.py:486: in run_ft_verification
+    decision, request_hash = ft_verify_paper(truncated, spec)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/ft_screener.py:226: in ft_verify_paper
+    response, request_hash = ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    engine.agents.ft_screener:ft_screener.py:615 FT screening run 1 aborted: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_________________ test_T1_success_hash_equals_the_recorded_row _________________
+tests/test_presented_context.py:104: in test_T1_success_hash_equals_the_recorded_row
+    response, req_hash = ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________________ test_T2_default_returns_the_bare_response ___________________
+tests/test_presented_context.py:157: in test_T2_default_returns_the_bare_response
+    result = ollama_chat(model="deepseek-r1:32b",
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________ test_T3_every_claim_carries_pass2s_hash_and_the_full_chain __________
+tests/test_presented_context.py:202: in test_T3_every_claim_carries_pass2s_hash_and_the_full_chain
+    extract_paper(pid, "This RCT used the STAR robot for autonomous suturing.",
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_____ test_T4_a_retried_snippet_carries_its_own_hash_a_clean_one_does_not ______
+tests/test_presented_context.py:241: in test_T4_a_retried_snippet_carries_its_own_hash_a_clean_one_does_not
+    extract_paper(pid, "This RCT used the STAR robot for autonomous suturing.",
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_____ test_a_post_commit_bookkeeping_failure_is_not_an_extraction_failure ______
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_run_fault_predicate.py:278: in test_a_post_commit_bookkeeping_failure_is_not_an_extraction_failure
+    _run(db, spec, run_id)
+tests/test_run_fault_predicate.py:127: in _run
+    return E.run_extraction(db, spec, "runfault", experiment_lock=False,
+engine/agents/extractor.py:1018: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_ test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it __
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_InterruptingClient' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_run_interrupts.py:252: in test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it
+    rp.run_pipeline("intr", skip_to="extract")
+scripts/run_pipeline.py:159: in run_pipeline
+    results["extract"] = _stage_extract(db, spec, review_name, run_id=run_id,
+scripts/run_pipeline.py:404: in _stage_extract
+    stats = run_extraction(db, spec, review_name, selection=selection, run_id=run_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/extractor.py:1021: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_InterruptingClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline:run_pipeline.py:210 RUN ABORTED: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_InterruptingClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_ test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded _
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: 'Fake' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_run_manifest.py:128: in test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded
+    extract_pass1_reasoning("a prompt", cfg=stage_config("extract_pass1", spec))
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('Fake' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+___ test_a_start_at_or_before_screen_stops_at_the_adjudication_gate[search] ____
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: 'FakeClient' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_run_pipeline_starts.py:143: in test_a_start_at_or_before_screen_stops_at_the_adjudication_gate
+    rp.run_pipeline("starts", skip_to=skip_to)
+scripts/run_pipeline.py:130: in run_pipeline
+    results["screen"] = _stage_screen(db, spec, limit)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_pipeline.py:332: in _stage_screen
+    stats = run_screening(db, spec)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/screener.py:195: in run_screening
+    d1 = screen_paper(paper, spec, pass_number=1, model=primary_model)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/screener.py:125: in screen_paper
+    response = ollama_chat(messages=build_messages(paper, spec, role=role), **cfg.kwargs())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read a failed read ('FakeClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline:run_pipeline.py:210 RUN ABORTED: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read a failed read ('FakeClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+___ test_a_start_at_or_before_screen_stops_at_the_adjudication_gate[screen] ____
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: 'FakeClient' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_run_pipeline_starts.py:143: in test_a_start_at_or_before_screen_stops_at_the_adjudication_gate
+    rp.run_pipeline("starts", skip_to=skip_to)
+scripts/run_pipeline.py:130: in run_pipeline
+    results["screen"] = _stage_screen(db, spec, limit)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_pipeline.py:332: in _stage_screen
+    stats = run_screening(db, spec)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/screener.py:195: in run_screening
+    d1 = screen_paper(paper, spec, pass_number=1, model=primary_model)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/screener.py:125: in screen_paper
+    response = ollama_chat(messages=build_messages(paper, spec, role=role), **cfg.kwargs())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read a failed read ('FakeClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline:run_pipeline.py:210 RUN ABORTED: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read a failed read ('FakeClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+____ test_a_start_at_or_before_screen_stops_at_the_adjudication_gate[None] _____
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: 'FakeClient' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_run_pipeline_starts.py:143: in test_a_start_at_or_before_screen_stops_at_the_adjudication_gate
+    rp.run_pipeline("starts", skip_to=skip_to)
+scripts/run_pipeline.py:130: in run_pipeline
+    results["screen"] = _stage_screen(db, spec, limit)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_pipeline.py:332: in _stage_screen
+    stats = run_screening(db, spec)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/screener.py:195: in run_screening
+    d1 = screen_paper(paper, spec, pass_number=1, model=primary_model)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/screener.py:125: in screen_paper
+    response = ollama_chat(messages=build_messages(paper, spec, role=role), **cfg.kwargs())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read a failed read ('FakeClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline:run_pipeline.py:210 RUN ABORTED: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read a failed read ('FakeClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__ test_a_start_that_screens_declares_and_sends_the_screening_preflight[None] __
+tests/test_run_pipeline_starts.py:169: in test_a_start_that_screens_declares_and_sends_the_screening_preflight
+    rp.run_pipeline("starts", skip_to=skip_to)
+scripts/run_pipeline.py:130: in run_pipeline
+    results["screen"] = _stage_screen(db, spec, limit)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_pipeline.py:332: in _stage_screen
+    stats = run_screening(db, spec)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/screener.py:171: in run_screening
+    require_preflight([primary_model], runner_name="Abstract screening")
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline:run_pipeline.py:210 RUN ABORTED: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_ test_a_start_that_screens_declares_and_sends_the_screening_preflight[search] _
+tests/test_run_pipeline_starts.py:169: in test_a_start_that_screens_declares_and_sends_the_screening_preflight
+    rp.run_pipeline("starts", skip_to=skip_to)
+scripts/run_pipeline.py:130: in run_pipeline
+    results["screen"] = _stage_screen(db, spec, limit)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_pipeline.py:332: in _stage_screen
+    stats = run_screening(db, spec)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/screener.py:171: in run_screening
+    require_preflight([primary_model], runner_name="Abstract screening")
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline:run_pipeline.py:210 RUN ABORTED: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_ test_a_start_that_screens_declares_and_sends_the_screening_preflight[screen] _
+tests/test_run_pipeline_starts.py:169: in test_a_start_that_screens_declares_and_sends_the_screening_preflight
+    rp.run_pipeline("starts", skip_to=skip_to)
+scripts/run_pipeline.py:130: in run_pipeline
+    results["screen"] = _stage_screen(db, spec, limit)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_pipeline.py:332: in _stage_screen
+    stats = run_screening(db, spec)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/screener.py:171: in run_screening
+    require_preflight([primary_model], runner_name="Abstract screening")
+engine/utils/ollama_preflight.py:289: in require_preflight
+    result = preflight_check(models, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:111: in preflight_check
+    result = check_model(name, timeout=timeout, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+------------------------------ Captured log call -------------------------------
+ERROR    pipeline:run_pipeline.py:210 RUN ABORTED: LoadedContextMismatch: run refused after a completed call: model 'qwen3:8b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+________ test_T2_a_bound_of_five_selects_the_first_five_and_is_recorded ________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_selection_bound.py:171: in test_T2_a_bound_of_five_selects_the_first_five_and_is_recorded
+    stats = rp._stage_extract(db, spec, "bnd", run_id=run_id, max_papers=5)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_pipeline.py:404: in _stage_extract
+    stats = run_extraction(db, spec, review_name, selection=selection, run_id=run_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/extractor.py:1021: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+______________ test_T4_a_second_bounded_run_takes_the_next_window ______________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_Client' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_selection_bound.py:237: in test_T4_a_second_bounded_run_takes_the_next_window
+    rp._stage_extract(db, spec, "bnd", run_id=first, max_papers=5)
+scripts/run_pipeline.py:404: in _stage_extract
+    stats = run_extraction(db, spec, review_name, selection=selection, run_id=run_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/agents/extractor.py:1021: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:621: in extract_paper
+    reasoning_trace, pass1_hash = extract_pass1_reasoning(
+engine/agents/extractor.py:236: in extract_pass1_reasoning
+    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_Client' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+______________ test_u18_a_tag_replaced_between_two_calls_refuses _______________
+tests/test_u18_digest_per_call.py:154: in test_u18_a_tag_replaced_between_two_calls_refuses
+    oc.ollama_chat(messages=MESSAGES, **_audit(spec))
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+___________ test_u18_the_unchanged_case_sends_the_same_request_bytes ___________
+tests/test_u18_digest_per_call.py:170: in test_u18_the_unchanged_case_sends_the_same_request_bytes
+    oc.ollama_chat(messages=MESSAGES, **_audit(spec))
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________ test_u18_the_digest_check_reads_through_the_run_digest_fn ___________
+tests/test_u18_digest_per_call.py:186: in test_u18_the_digest_check_reads_through_the_run_digest_fn
+    oc.ollama_chat(messages=MESSAGES, **_audit(spec))
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+____________ test_u18_the_digest_check_precedes_the_input_fit_read _____________
+tests/test_u18_digest_per_call.py:208: in test_u18_the_digest_check_precedes_the_input_fit_read
+    oc.ollama_chat(messages=MESSAGES, **_audit(spec))
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________ test_u18_the_preflight_call_is_not_refused_on_a_fresh_run ___________
+tests/test_u18_digest_per_call.py:223: in test_u18_the_preflight_call_is_not_refused_on_a_fresh_run
+    oc.ollama_chat(messages=MESSAGES, **ec.stage_config("preflight", spec, model=model).kwargs())
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_____________ test_u18_the_context_length_cache_is_keyed_by_digest _____________
+tests/test_u18_digest_per_call.py:236: in test_u18_the_context_length_cache_is_keyed_by_digest
+    oc.ollama_chat(messages=MESSAGES, **_audit(spec))
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+__________________ test_3_a_declared_preflight_model_is_sent ___________________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: 'FakeClient' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_undeclared_call.py:144: in test_3_a_declared_preflight_model_is_sent
+    oc.ollama_chat(messages=MESSAGES,
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read a failed read ('FakeClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_______ test_an_undeclared_preflight_leaves_require_preflight_as_itself ________
+tests/test_undeclared_call.py:180: in test_an_undeclared_preflight_leaves_require_preflight_as_itself
+    assert pf.check_model(declared, spec=spec).status == "ok"      # a declared probe still runs
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_preflight.py:69: in check_model
+    ollama_chat(
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:424: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], read)
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read absent for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+____ test_4_a_declared_call_is_sent_and_recorded_with_its_request_unchanged ____
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: 'FakeClient' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_undeclared_call.py:194: in test_4_a_declared_call_is_sent_and_recorded_with_its_request_unchanged
+    oc.ollama_chat(messages=MESSAGES, **cfg.kwargs())
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'gemma3:27b' was checked against a ceiling of 131072, and /api/ps read a failed read ('FakeClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+_______ test_an_elicited_run_opens_pins_verifies_and_writes_real_events ________
+engine/utils/ollama_client.py:418: in _check_loaded_context
+    loaded = [m.get("context_length") for m in server_ps().get("models", [])
+                                               ^^^^^^^^^^^
+engine/utils/ollama_client.py:556: in server_ps
+    return _client.ps()
+           ^^^^^^^^^^
+E   AttributeError: '_ElicitedClient' object has no attribute 'ps'
+
+The above exception was the direct cause of the following exception:
+tests/test_units_as_source_slices.py:247: in test_an_elicited_run_opens_pins_verifies_and_writes_real_events
+    stats = E.run_extraction(db, spec, "etest", experiment_lock=False,
+engine/agents/extractor.py:1018: in run_extraction
+    return _run_extraction_unlocked(db, spec, review_name, restart_every,
+engine/agents/extractor.py:1122: in _run_extraction_unlocked
+    return _extract_selected(db, spec, selection, restart_every, run_id=run_id,
+engine/agents/extractor.py:1206: in _extract_selected
+    result = extract_paper_with_completeness(
+engine/agents/extractor.py:880: in extract_paper_with_completeness
+    result = extract_paper(
+engine/agents/extractor.py:595: in extract_paper
+    return extract_paper_elicited(
+engine/elicitation/pipeline.py:478: in extract_paper_elicited
+    p1, accepted_attempt, pass1_tels = elicit(
+engine/elicitation/pipeline.py:360: in elicit
+    first, tel_first = run_pass1(unit_map, codebook, field_names, paper_id, cfg=cfg)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/elicitation/pipeline.py:295: in run_pass1
+    response, req_hash = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/utils/ollama_client.py:782: in ollama_chat
+    return _finish(response)
+           ^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:675: in _finish
+    checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+engine/utils/ollama_client.py:421: in _check_loaded_context
+    raise LoadedContextMismatch.at(model, fit["ceiling"], f"a failed read ({exc})") from exc
+E   engine.core.run_manifest.LoadedContextMismatch: LoadedContextMismatch: run refused after a completed call: model 'deepseek-r1:32b' was checked against a ceiling of 131072, and /api/ps read a failed read ('_ElicitedClient' object has no attribute 'ps') for its name and digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show ollama --property=Environment` and the model's Modelfile parameters; bring the server and the ceiling's terms into agreement and start a new run.
+=============================== warnings summary ===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_audit_paper_id.py::test_T6_every_audit_call_row_carries_the_paper_it_verified
+FAILED tests/test_audit_paper_id.py::test_T7_no_other_stage_is_affected - eng...
+FAILED tests/test_citation_record.py::test_an_asserted_claim_carries_every_cited_run_resolvable_from_the_parsed_text
+FAILED tests/test_citation_record.py::test_a_judgment_claim_records_each_steps_citations_resolvably
+FAILED tests/test_citation_record.py::test_the_unit_map_directory_is_named_by_the_manifest_run_id
+FAILED tests/test_cut_over.py::test_t1_extract_then_audit_under_one_manifest_writes_events_only
+FAILED tests/test_cut_over.py::test_t2_a_live_shaped_paper_extracts_and_keeps_its_status
+FAILED tests/test_cut_over.py::test_t5_zero_spans_become_no_fields_returned
+FAILED tests/test_extraction_run_link.py::test_t4_every_extractor_call_records_its_paper
+FAILED tests/test_extraction_run_link.py::test_t5_the_stored_digests_are_the_manifests
+FAILED tests/test_extraction_run_link.py::test_t13_a_second_run_under_the_same_input_selects_nothing
+FAILED tests/test_ft_bridge.py::test_1_default_run_manifest_is_screening_with_four_stage_rows
+FAILED tests/test_ft_bridge.py::test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk
+FAILED tests/test_ft_bridge.py::test_3_primary_exclude_writes_one_screened_full_text_out_event
+FAILED tests/test_ft_bridge.py::test_4_verifier_confirm_writes_one_verified_eligible_event
+FAILED tests/test_ft_bridge.py::test_4_include_then_confirm_in_one_default_invocation
+FAILED tests/test_ft_bridge.py::test_5_primary_include_writes_no_event - engi...
+FAILED tests/test_ft_bridge.py::test_5_primary_no_text_and_malformed_write_no_event
+FAILED tests/test_ft_bridge.py::test_5_verifier_flag_no_text_and_malformed_write_no_event
+FAILED tests/test_ft_bridge.py::test_6_a_refused_status_write_leaves_nothing_for_the_paper
+FAILED tests/test_ft_bridge.py::test_6_an_exception_at_the_primary_event_write_leaves_nothing
+FAILED tests/test_ft_bridge.py::test_6_an_exception_at_the_verifier_event_write_leaves_nothing
+FAILED tests/test_ft_bridge.py::test_6_a_refused_decision_row_leaves_nothing
+FAILED tests/test_ft_bridge.py::test_8_a_resumed_run_is_a_new_manifest_and_no_paper_gets_a_second_event
+FAILED tests/test_ft_bridge.py::test_9_i_after_a_completed_confirm_a_fresh_verify_only_selects_nothing
+FAILED tests/test_ft_bridge.py::test_9_iii_a_primary_include_with_neither_is_selected
+FAILED tests/test_ft_bridge.py::test_10_seam_include_is_pending_confirm_is_eligible_exclude_is_valid
+FAILED tests/test_ft_bridge.py::test_14_a_zero_decision_run_leaves_workflow_state_byte_identical
+FAILED tests/test_ft_bridge.py::test_14_a_deciding_run_completes_the_stage - ...
+FAILED tests/test_presented_context.py::test_T1_success_hash_equals_the_recorded_row
+FAILED tests/test_presented_context.py::test_T2_default_returns_the_bare_response
+FAILED tests/test_presented_context.py::test_T3_every_claim_carries_pass2s_hash_and_the_full_chain
+FAILED tests/test_presented_context.py::test_T4_a_retried_snippet_carries_its_own_hash_a_clean_one_does_not
+FAILED tests/test_run_fault_predicate.py::test_a_post_commit_bookkeeping_failure_is_not_an_extraction_failure
+FAILED tests/test_run_interrupts.py::test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it
+FAILED tests/test_run_manifest.py::test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded
+FAILED tests/test_run_pipeline_starts.py::test_a_start_at_or_before_screen_stops_at_the_adjudication_gate[search]
+FAILED tests/test_run_pipeline_starts.py::test_a_start_at_or_before_screen_stops_at_the_adjudication_gate[screen]
+FAILED tests/test_run_pipeline_starts.py::test_a_start_at_or_before_screen_stops_at_the_adjudication_gate[None]
+FAILED tests/test_run_pipeline_starts.py::test_a_start_that_screens_declares_and_sends_the_screening_preflight[None]
+FAILED tests/test_run_pipeline_starts.py::test_a_start_that_screens_declares_and_sends_the_screening_preflight[search]
+FAILED tests/test_run_pipeline_starts.py::test_a_start_that_screens_declares_and_sends_the_screening_preflight[screen]
+FAILED tests/test_selection_bound.py::test_T2_a_bound_of_five_selects_the_first_five_and_is_recorded
+FAILED tests/test_selection_bound.py::test_T4_a_second_bounded_run_takes_the_next_window
+FAILED tests/test_u18_digest_per_call.py::test_u18_a_tag_replaced_between_two_calls_refuses
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_unchanged_case_sends_the_same_request_bytes
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_digest_check_reads_through_the_run_digest_fn
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_digest_check_precedes_the_input_fit_read
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_preflight_call_is_not_refused_on_a_fresh_run
+FAILED tests/test_u18_digest_per_call.py::test_u18_the_context_length_cache_is_keyed_by_digest
+FAILED tests/test_undeclared_call.py::test_3_a_declared_preflight_model_is_sent
+FAILED tests/test_undeclared_call.py::test_an_undeclared_preflight_leaves_require_preflight_as_itself
+FAILED tests/test_undeclared_call.py::test_4_a_declared_call_is_sent_and_recorded_with_its_request_unchanged
+FAILED tests/test_units_as_source_slices.py::test_an_elicited_run_opens_pins_verifies_and_writes_real_events
+54 failed, 3420 passed, 17 deselected, 1 xfailed, 2 warnings in 913.17s (0:15:13)

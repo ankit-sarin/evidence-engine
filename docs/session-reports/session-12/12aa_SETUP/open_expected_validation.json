@@ -1,0 +1,24 @@
+{"repos": {
+  "evidence-engine": {"path": ".", "head": "ca12c30551b23845dce99a791ff8ffe27c982778", "parent": "bc2ae195535126d19d93b660d8d239edd78769d6", "worktrees": 1,
+    "status": ["?? docs/plan/STANDING_RULES.md", "?? docs/session-reports/session-12/12aa_SETUP/", "?? docs/session-reports/tools/"]},
+  "claude-config": {"path": "~/claude-config", "head": "ea127df7b12f28aeed384c4a9d07d5f65e0f7b6c", "parent": "aad8c33c07cb2721d2e2517413705c3a72bf4968", "worktrees": 1}},
+ "plan": {"path": "docs/plan/ENGINE_REFACTOR_PLAN.md", "sha256": "86b852a454109b18099dc23210db64f2dbbe991c64a4b73a1626c4d5e85f0c39", "bytes": 2360582, "lines": 12970, "last_line": "The decision log in this file ends at R744."},
+ "fingerprint": {"db": "data/surgical_autonomy/review.db", "record": "docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json"},
+ "hashes": {"data/surgical_autonomy/extraction_codebook.yaml": "89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82", "review_specs/surgical_autonomy.yaml": "aeb90ba8983aa700fea0d4c47d3d764fa7ccd3a1e9c717e232ddadf03c298b33"},
+ "pins": {"script": "docs/session-reports/session-12/12l_U04/pin_tuples.py", "spec": "review_specs/surgical_autonomy.yaml", "codebook": "data/surgical_autonomy/extraction_codebook.yaml", "reference": "docs/session-reports/session-12/12z_close/pin_tuples_close.json"},
+ "dbchecks": {"script": "docs/session-reports/session-12/12f_repro/dbchecks.py", "reference": "docs/session-reports/session-12/12z_close/dbchecks_close.txt"},
+ "retention": {"reference": "docs/session-reports/session-12/12z_close/retention_close.txt", "root": "~/scratch/retained", "match": 23},
+ "probe_scratch": {"requests_index": "docs/session-reports/session-12/12v_U37R/requests_index.json", "requests_dir": "~/scratch/12v-u37r/requests", "requests": 10, "response_files": 53,
+   "responses": [["~/scratch/12v-u37r/out/responses", "docs/session-reports/session-12/12v_U37R/responses"], ["~/scratch/12v-u37r2/out/responses", "docs/session-reports/session-12/12v_U37R2/responses"]]},
+ "stage": {"path": "~/scratch/12q-u13-build/stage", "entries": ["RESTORE.txt"]},
+ "nightly": {"log": "logs/nightly_test_20261030.log", "durations": "logs/nightly_durations_20261030.txt", "expected": "docs/session-reports/session-12/12z_close/expected_nightly_20261030.md", "date": "2026-10-30", "lock": "~/.ollama_experiment.lock"},
+ "health": {"log": "~/logs/ollama_health_cron.log", "date": "2026-10-30", "models": 20},
+ "ollama": {"host": "http://localhost:11434", "version": "0.21.0", "tags": 20, "nrestarts": 0, "digests": {
+   "gemma3:27b": "a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203",
+   "qwen3:8b": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+   "qwen3:32b": "030ee887880fc378860c2dd35101da424377520441ae4bfe7be6deff8ade7840",
+   "deepseek-r1:32b": "edba8017331d15236e57480eb45406c0d721db77a4cdcf234df500fc2ad3960c",
+   "qwen2.5vl:7b": "5ced39dfa4bac325dc183dd1e4febaa1c46b3ea28bce48896c8e69c1e79611cc"}},
+ "temp_root": {"path": "/tmp/pytest-of-ankitsarin"},
+ "cc_sessions": {"ids": ["14aff8b0", "7a46faf4"], "window": ["2026-10-28T22:28:00", "2026-10-30T05:30:00"]}
+}

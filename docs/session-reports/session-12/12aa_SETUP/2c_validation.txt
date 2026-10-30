@@ -1,0 +1,45 @@
+session_open_check 2026-10-30T23:30:56Z on docs/session-reports/session-12/12aa_SETUP/open_expected_validation.json
+MATCH     evidence-engine HEAD: 'ca12c30551b23845dce99a791ff8ffe27c982778'
+MATCH     evidence-engine parent: 'bc2ae195535126d19d93b660d8d239edd78769d6'
+MATCH     evidence-engine status: ['?? docs/plan/STANDING_RULES.md', '?? docs/session-reports/session-12/12aa_SETUP/', '?? docs/session-reports/tools/']
+MATCH     evidence-engine ahead/behind: '0 0'
+MATCH     evidence-engine worktrees: 1
+MATCH     claude-config HEAD: 'ea127df7b12f28aeed384c4a9d07d5f65e0f7b6c'
+MATCH     claude-config parent: 'aad8c33c07cb2721d2e2517413705c3a72bf4968'
+MATCH     claude-config status: []
+MATCH     claude-config ahead/behind: '0 0'
+MATCH     claude-config worktrees: 1
+MATCH     plan sha256: '86b852a454109b18099dc23210db64f2dbbe991c64a4b73a1626c4d5e85f0c39'
+MATCH     plan bytes: 2360582
+MATCH     plan lines: 12970
+MATCH     plan last line: 'The decision log in this file ends at R744.'
+MATCH     fingerprint: 'IDENTICAL'
+MATCH     sha256 data/surgical_autonomy/extraction_codebook.yaml: '89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82'
+MATCH     sha256 review_specs/surgical_autonomy.yaml: 'aeb90ba8983aa700fea0d4c47d3d764fa7ccd3a1e9c717e232ddadf03c298b33'
+MATCH     pin_tuples byte-identical: True
+MATCH     dbchecks byte-identical: True
+MATCH     retention MATCH / MISMATCH: [23, 0]
+MATCH     probe requests equal: [10, 10]
+MATCH     probe responses files / name-equal / committed-equal: [53, 53, 53]
+MATCH     stage ~/scratch/12q-u13-build/stage: ['RESTORE.txt']
+MATCH     nightly collection line: True
+MATCH     nightly summary line: True
+MATCH     nightly exit-code line: 'pytest exit code: 0'
+MATCH     nightly durations file present: True
+MATCH     nightly journal window loads: 0
+READING   nightly journal window lines: '-- No entries --'
+MATCH     the real lock file's mtime: '2026-07-27 23:22:08'
+MATCH     health log mtime date: '2026-10-30'
+MATCH     health last 20 models OK: 20
+MATCH     ollama version: '0.21.0'
+MATCH     ollama digest gemma3:27b: 'a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203'
+MATCH     ollama digest qwen3:8b: '500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41'
+MATCH     ollama digest qwen3:32b: '030ee887880fc378860c2dd35101da424377520441ae4bfe7be6deff8ade7840'
+MATCH     ollama digest deepseek-r1:32b: 'edba8017331d15236e57480eb45406c0d721db77a4cdcf234df500fc2ad3960c'
+MATCH     ollama digest qwen2.5vl:7b: '5ced39dfa4bac325dc183dd1e4febaa1c46b3ea28bce48896c8e69c1e79611cc'
+READING   ollama tags: 20
+READING   ollama ps: []
+MATCH     ollama NRestarts: 0
+READING   temp root: ['pytest-166', 'pytest-167', 'pytest-168', 'pytest-current'], 4191823924 B
+MATCH     processes of sessions ['14aff8b0', '7a46faf4'] (started 2026-10-28T22:28:00..2026-10-30T05:30:00): 0
+RESULT: PASS (0 mismatches)

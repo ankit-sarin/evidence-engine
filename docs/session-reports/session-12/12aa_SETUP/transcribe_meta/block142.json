@@ -1,0 +1,15 @@
+{
+ "transcribed": "2026-10-30",
+ "made_by": "PI",
+ "made_date": "2026-10-30",
+ "tag": "R744",
+ "item": "item 0 of the 12aa-U20C brief",
+ "beside": null,
+ "session": "12aa",
+ "report": "the 12aa-U20B final report (item 0 `df92bf1d13e16192966a17f4e876af3209e39b5b`; commit 1 `ca29906469d76179bb7aec75d54bda40ba6d9553`; record `6deba58df9a47d600279a6d2326dd28bc8f7d061`)",
+ "report_short": "the 12aa-U20B final report (df92bf1; ca29906; 6deba58)",
+ "sentence": {
+  "form": "model",
+  "followed": "12aa-U20C brief"
+ }
+}

@@ -1,0 +1,12 @@
+Block 135 (R737): byte-identical True; generated 11419 B, plan 11419 B
+exit 0
+Block 138 (R740): byte-identical True; generated 6600 B, plan 6600 B
+exit 0
+Block 139 (R741): byte-identical True; generated 3648 B, plan 3648 B
+exit 0
+Block 140 (R742): byte-identical True; generated 3361 B, plan 3361 B
+exit 0
+Block 141 (R743): byte-identical True; generated 7500 B, plan 7500 B
+exit 0
+Block 142 (R744): byte-identical True; generated 8204 B, plan 8204 B
+exit 0

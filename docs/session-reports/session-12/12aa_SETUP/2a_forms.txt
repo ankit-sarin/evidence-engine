@@ -1,0 +1,30 @@
+log starts line 4671
+[]
+dated rows in log 757
+dated rows before log 0
+rows not opening with R<n> 4
+  4677 | 2026-09-19 | Step 1 scope approved as proposed: one read-only CC session, startup verify + fingerprint, D1 then D2 (brief DISCOVERY-01 issued) | PI 
+  4678 | 2026-09-20 | Push 7e09de3 immediately; Part B proceeds with five added items (D2-12…D2-16) | Architect, within the approved scope |
+  4679 | 2026-09-20 | All human decisions on disk were made by the PI without Claude; their quality is bounded by what the queue artifact presented (J5) | PI
+  4680 | 2026-09-20 | The engine must be operable without Claude; human-in-the-loop steps need an interface (class J added) | PI |
+Counter({'bare': 633, 'lettered': 120, 'none': 4})
+phrase rows w/out id []
+ruling fences in log 142 not ruling: [(4082, '### U17 — Cross-family rule enforced at '), (5438, 'Readers write full evidence to files und'), (5517, 'Resume TASK [evidence-engine 12j-OPEN] a')]
+Counter({True: 133, False: 9})
+fences with no lettered clause 22
+  (5395, 'RULINGS (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at the 12i c', [])
+  (5418, 'RULINGS (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at the 12i c', [])
+  (5445, 'RULINGS (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at 12j item ', [])
+  (5471, 'RULING (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at 12j item 0', [])
+  (5481, 'RULING (PI, 2026-10-10, between sessions 12i and 12j, on architect recommendation; transcr', [])
+  (5499, 'RULING (PI, 2026-10-10, session 12j, on architect recommendation; transcribe at 12j item 0', [])
+  (5533, 'RULING (PI, 2026-10-10, session 12j, on architect recommendation; transcribe in this task)', [])
+  (5553, 'RULINGS (PI, 2026-10-10, session 12j, on architect recommendation; transcribe at 12k item ', [])
+  (5579, 'RULINGS (PI, 2026-10-11, session 12k, on architect recommendation; transcribe at 12k-RULE)', [])
+  (5602, 'RULING (PI, 2026-10-11, session 12l, on architect recommendation; transcribe verbatim as', ['R612 — P1 package plan, on 12l_P1A (a579915).'])
+  (5653, 'RULING (PI, 2026-10-11, session 12l, on architect recommendation; transcribe at item 0 as', ["R613 in Block 10's form)", "R613 — U01's findings (R509), on 12l_U01 (10cc974)"])
+  (5675, 'RULING (PI, 2026-10-11, session 12l, on architect recommendation; transcribe at item 0 as', ["R614 in Block 11's form)", "R614 — U02's findings (R509), on 12l_U02 (13822e6)"])
+  (5697, 'RULING (PI, 2026-10-11, session 12l, on architect recommendation; transcribe at item 0 as', ["R615 in Block 12's form)", "R615 — U03's findings (R509), on 12l_U03 (bc93976)"])
+  (5718, 'RULING (PI, 2026-10-11, session 12l, on architect recommendation; transcribe at item 0 as', ["R616 in Block 13's form)", "R616 — U04's stop and findings (R509), on 12l_U04 "])
+Ruling-first-line forms Counter({'RULING ': 110, 'RULING (PI, 2026-10-11, session 12l, on architect recommendation; transcribe at item 0 as': 12, 'RULINGS (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at the 12i close)': 2, 'RULINGS (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at 12j item 0c with R577–R586)': 1, 'RULING (PI, 2026-10-09, session 12i, on architect recommendation; transcribe at 12j item 0c)': 1, 'RULING (PI, 2026-10-10, between sessions 12i and 12j, on architect recommendation; transcribe at 12j item 0c)': 1, 'RULING (PI, 2026-10-10, session 12j, on architect recommendation; transcribe at 12j item 0c with R577–R596)': 1, 'RULING (PI, 2026-10-10, session 12j, on architect recommendation; transcribe in this task)': 1, 'RULINGS (PI, 2026-10-10, session 12j, on architect recommendation; transcribe at 12k item 0c)': 1, 'RULINGS (PI, 2026-10-11, session 12k, on architect recommendation; transcribe at 12k-RULE)': 1, 'RULING (PI, 2026-10-11, session 12l, on architect recommendation; transcribe verbatim as': 1, 'RULING R626 (PI, 2026-10-13 UTC, session 12m, on architect recommendation):': 1, 'RULING R627 (PI, 2026-10-13 UTC, session 12m, on architect recommendation):': 1, 'RULING R628 (PI, 2026-10-13 UTC, session 12n, on architect recommendation):': 1, 'RULING R630 (PI, 2026-10-13 UTC, session 12n, on architect recommendation, on the': 1, 'RULING R631 (PI, 2026-10-13 UTC, session 12n, on architect recommendation, on the': 1, 'RULING R632 (PI, 2026-10-13 UTC, session 12n, on architect recommendation, on the': 1, 'RULING R633 (PI, 2026-10-13 UTC, session 12n, on architect recommendation, on the': 1, 'RULING R634 (PI, 2026-10-13 UTC, session 12n, on architect recommendation, on the': 1, 'RULING R635 (PI, 2026-10-13 UTC, session 12n, on architect recommendation, on the': 1, 'RULING R636 (PI, 2026-10-13 UTC, session 12n, on architect recommendation, on the': 1})
+phrase hits before the log [4588]

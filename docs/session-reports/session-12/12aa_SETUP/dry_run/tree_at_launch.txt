@@ -1,0 +1,4 @@
+ca12c30551b23845dce99a791ff8ffe27c982778
+?? docs/plan/STANDING_RULES.md
+?? docs/session-reports/session-12/12aa_SETUP/
+?? docs/session-reports/tools/

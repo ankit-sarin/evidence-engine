@@ -1,0 +1,2 @@
+2026-10-30T23:29:03.920644010Z launched by the line below, written into the evidence directory at launch (R731(b), R738(c))
+tmux new-session -d -s gate_setup_dry "bash /home/ankitsarin/scratch/12aa-setup/2d_dry/run_gate.sh /home/ankitsarin/scratch/12aa-setup/2d_dry gate_setup_dry docs/session-reports/session-12/12aa_U20C/gate_c2/collected_ids.txt docs/session-reports/session-12/12aa_U20C/gate_c2/durations_12aa_u20c_c2.txt tests/test_u20_modelfile_num_ctx.py"

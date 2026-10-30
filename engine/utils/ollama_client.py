@@ -157,7 +157,7 @@ SERVER_DEFAULT_CTX = 262_144
 SERVICE_UNIT_FILE = Path("/etc/systemd/system/ollama.service")
 SERVICE_DROPIN_DIR = Path("/etc/systemd/system/ollama.service.d")
 
-_CEILING_CACHE: dict[tuple[str, str], int] = {}
+_CEILING_CACHE: dict[tuple[str, str], tuple[int, int | None]] = {}
 
 #: The digest `ollama_chat`'s per-call check just read for this call (U18 commit 2),
 #: set around the input-fit read so the trained-context cache is keyed by the model
@@ -240,8 +240,32 @@ def _client_host() -> str:
     return str(base).rstrip("/") if base is not None else ""
 
 
-def n_ctx_train(model: str) -> int:
-    """The model's trained context length, read once per model digest.
+def _modelfile_num_ctx(model: str, parameters) -> int | None:
+    """The `num_ctx` line of a `/api/show` `parameters` string, or None if it has none.
+
+    The string is newline-separated, each name padded to offset 31, its value after
+    (12aa_U20P/show/, R743(b)). A `num_ctx` line whose value is not a positive integer,
+    or a second one, is a ceiling the guard cannot read (R743(c)).
+    """
+    if not isinstance(parameters, str):
+        return None
+    values = []
+    for line in parameters.splitlines():
+        tokens = line.split(None, 1)
+        if tokens and tokens[0] == "num_ctx":
+            values.append(tokens[1].strip() if len(tokens) > 1 else "")
+    if not values:
+        return None
+    if len(values) > 1 or not re.fullmatch(r"[1-9][0-9]*", values[0]):
+        raise CeilingUnavailable(
+            model=model, reason=f"expected one positive integer num_ctx parameter, found {values!r}"
+        )
+    return int(values[0])
+
+
+def _model_context(model: str) -> tuple[int, int | None]:
+    """The model's trained context length and its Modelfile `num_ctx` (None if it sets
+    none), both from one `show`, read once per model digest.
 
     Read through the module's `_client`, so a caller that rebinds the client to
     another server (run_qualgap01) reads that server's value. Under a run the
@@ -268,8 +292,14 @@ def n_ctx_train(model: str) -> int:
         raise CeilingUnavailable(
             model=model, reason=f"expected one positive *.context_length, found {values!r}"
         )
-    _CEILING_CACHE[key] = values[0]
-    return values[0]
+    entry = (values[0], _modelfile_num_ctx(model, getattr(info, "parameters", None)))
+    _CEILING_CACHE[key] = entry
+    return entry
+
+
+def n_ctx_train(model: str) -> int:
+    """The model's trained context length."""
+    return _model_context(model)[0]
 
 
 def parse_environment_line(value: str) -> dict[str, str]:
@@ -338,15 +368,19 @@ def effective_ceiling(model: str, options=None) -> int:
 
     An explicit options.num_ctx is what the runtime loads, clamped only by the
     model's trained context: min(n_ctx_train, num_ctx). Without one, the
-    runtime's default applies: min(n_ctx_train, OLLAMA_CONTEXT_LENGTH if the
-    local service sets it, SERVER_DEFAULT_CTX). INPUT-FIT-01 rulings R-D and R-3;
-    reproduced against every load line in the journal on this host.
+    runtime's default applies: min(n_ctx_train, the Modelfile's num_ctx if it sets
+    one, OLLAMA_CONTEXT_LENGTH if the local service sets it, SERVER_DEFAULT_CTX).
+    INPUT-FIT-01 rulings R-D and R-3; reproduced against every load line in the
+    journal on this host. The Modelfile term is R743(c); no installed model sets
+    one (12aa-U20A F3), so it has not been reproduced against a load line.
     """
-    trained = n_ctx_train(model)
+    trained, modelfile = _model_context(model)
     num_ctx = _option(options, "num_ctx")
     if num_ctx is not None:
         return min(trained, num_ctx)
     terms = [trained, SERVER_DEFAULT_CTX]
+    if modelfile is not None:
+        terms.append(modelfile)
     env = server_context_length()
     if env is not None:
         terms.append(env)

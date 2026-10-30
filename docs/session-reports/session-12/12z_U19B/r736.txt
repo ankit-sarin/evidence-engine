@@ -1,0 +1,80 @@
+RULING [evidence-engine 12z-R736] — 12z-U19B accepted (aa76124, 973ecef, c5e11e8); U19 closed;
+  INT-j12-17 CLOSED and counted until P1 closes; CLAUDE.md's placement of ServerEnvChanged accepted
+  as the code requires; a does-not-refuse pin green on its parent is reported as a pin, not a stop;
+  readings; session 12z closes on U19
+STATUS: PI ruling, 2026-10-30 UTC, session 12z, on architect recommendation, on the 12z-U19B final
+  report as resumed under R735 (commit 1 aa76124; commit 2 973ecef; step 4 c5e11e8; records
+  docs/session-reports/session-12/12z_U19B/). Transcribe at item 0 of the 12z-CLOSE brief, in the
+  block after R735's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12z-U19B final report):
+  MEASURED: "evidence-engine at c5e11e8, claude-config at 7f7a7db"; the table "e5a3517 / ff3ca4f",
+    "aa76124 / ffddaa8", "973ecef / 8de8bba", "c5e11e8 / 7f7a7db"; "restart_ollama now returns True
+    after a performed restart and False on a skip"; "one ollama_env_after_restart telemetry event";
+    "ServerEnvChanged (a RunRefused)"; "Ten ids each failed for their own reason"; "46 ids in 11
+    files, every assertion kept, no class-(r) red"; "40 ids reached the new open read and hit the
+    fence"; "Pins are byte-identical"; commit 1's gate "3425 passed, 17 deselected, 1 xfailed, 2
+    warnings in 909.91s", "wall 912.13 s", "collected 3,443 / selected 3,426, which is 14 more than
+    the 12y_close reference; only-ref 0", "the ollama journal was empty"; "OllamaHostNotLocalService
+    is raised second in open_run, right after OllamaHostNotLoopback"; "ollama_client.parse_environment_line
+    is shlex-based and used by both readers … there is no cycle"; "(h), (j), (k) and (l) were red on
+    commit 1"; "The coupled set ran 242 passed"; commit 2's gate "3433 passed, 17 deselected, 1
+    xfailed, 2 warnings in 903.87s", "wall 906.10 s", "the only-gate ids are exactly the 8 new ones,
+    with 0 lost"; the CLOSED note label "*Note 2026-10-30 (12z-U19B, R734(c)–(d), R514):*"; the
+    dated line "P1's fix units 37, done 22 (U01–U19, U37, U38, U39). Rows 280 (94 / 55 / 131, 0
+    unclassed); rows out 0"; "Diff: +3 / −1; the one "−" is the noted row"; "NRestarts 0"; "The
+    only concurrent job was surgical-cv's idle uvicorn".
+  READ (CC's): "ServerEnvChanged is raised by the extract loop, not at open … I placed its sentence
+    beside ModelDigestChanged's per-call sentence"; "Commit 1 adds 14 ids, not 13. The extra one is
+    test_api_parity generating an id for run_pipeline's new module import"; "(i) has two ids and
+    was green on the parent by construction: it pins that the guard doesn't over-refuse";
+    "test_skip_returns_none_and_does_not_raise now asserts is False; I kept the name"; "The "Rows
+    280" figure is carried from 12z-OPEN's recount, not re-run"; the dated line as the report
+    rendered it, "aa76124and973ecef".
+  INFERRED: none.
+
+R736(a) — 12z-U19B is accepted as reported: item 0 e5a3517 (Block 132, three notes); commit 1
+  aa76124 (R734(c) with R735: the raw Environment= string read before open by run_pipeline and the
+  FT runner and recorded under ollama_environment; restart_ollama's boolean return; the post-restart
+  re-check with ServerEnvChanged a RunRefused closing 'aborted'; one telemetry event per
+  post-restart read; the cloud exemption stated at the key's site; ten acceptance ids red on the
+  parent, green in the commit; 46 class-(c) rewrites with every assertion kept; the gate 3,425 / 1
+  / 17 on 3,443 / 3,426, +14, 912.13 s inside 822–1003 s); commit 2 973ecef (R734(d):
+  OllamaHostNotLocalService second at open_run; one shlex parser in ollama_client used by both
+  readers, no cycle; the docstring; CLAUDE.md; the gate 3,433 / 1 / 17, +8 exactly, 906.10 s);
+  step 4 c5e11e8 (the CLOSED note, the dated line, records C1 and C2 with their gate evidence and
+  launch lines). Ledgers ff3ca4f, ffddaa8, 8de8bba, 7f7a7db with trailers stand. Pins and every
+  prompt_hash unchanged; no request byte moved. The series gains 912.13 and 906.10 s.
+R736(b) — U19 is closed; fix units done 22 of 37. INT-j12-17 is CLOSED on aa76124 and 973ecef
+  (R514): the entry's acceptance test in its three clauses, the skip rule, the body key, the
+  telemetry event, the local-service refusal and the one parser; clause (iii′) closed by commit 2;
+  clause (i) a recorded limit (the window one performed restart; Q1 unverified); the recovery
+  restart U21's (R734(e)). Counted until P1 closes (R607(d)).
+R736(c) — Finding 1 is accepted as the code required: ServerEnvChanged is raised by the extract
+  loop, so its CLAUDE.md sentence sits beside ModelDigestChanged's per-call sentence, not in
+  open_run's refusal list; R734(d)(iii)'s "refusal list" was the architect's description written
+  ahead of the code, the record's form governs (R18). Finding 3 is accepted and made a rule: an
+  acceptance id that pins a non-refusal or an unchanged shape is green on its parent by
+  construction; the brief names it a pin and CC reports it so, with no STOP (R707(a)'s form; A3's
+  precedent). Finding 2 (the fourteenth id, test_api_parity's) is a reading. Finding 4: the kept
+  name test_skip_returns_none_and_does_not_raise is inaccurate; the id is record and stays; one
+  line in commit 1's record (already there, or added at the closeout) says so; a rename, if any,
+  is P7's with the test-name housekeeping. Finding 5's two self-corrected defects are readings.
+R736(d) — The dated fix-unit line as committed at c5e11e8 is read back at 12z-CLOSE's item 0 in
+  R731(d)'s form: if it carries "aa76124and973ecef" without the space, one dated correction line
+  follows it; if it carries the space, nothing is written and the report says so.
+R736(e) — Readings, no row: the "Rows 280" figure carried from 12z-OPEN's recount is re-run at the
+  closeout (the recount is a closeout step); NRestarts 0, nothing resident, the empty gate
+  windows, uvicorn the only concurrent job at both gates; the session's four stops — 12z-OPEN at
+  0k (R730), 12z-U19A at 1b (R732), 12z-U19A-R1 at A4 (R733), 12z-U19B at 2a (R735) — three the
+  architect's (a foreign process's state, a model block, a caller list, each written from memory
+  or a description instead of read from the record) and one CC's (a report misquoted), one line
+  each on the closure's list in R718(b)'s form. R510 for 12z: rows in 0, rows out 0, no class move.
+R736(f) — Session 12z closes on U19 by the PI's choice; U20's Phase A opens the next session. The
+  12z-CLOSE brief follows 12y-CLOSE's form read from the record: item 0 (R735 and this ruling as a
+  pair, the model the record's most recent multi-block commit found by CC, R732(a)), the
+  counterpart files, the closure, the "Expected values at session-12aa open" block, the closeout
+  commit, the closeout block and the 12z lane line proposed (not applied; its "+" lines' full
+  hashes 40 characters, checked, R730(c); its "−" lines equal to primer.md 41–45 as applied,
+  R730(b)). No closeout gate: the expected gate values for the next open are commit 2's on
+  unchanged code, quoted from 12z_U19B's gate evidence.

@@ -1,0 +1,40 @@
+RULING [evidence-engine 12z-R735] — 12z-U19B stop at 2a: ft_screener.py joins commit 1's engine list
+  and passes the string; the cloud runner is exempt (it calls no Ollama server); the note label form
+  accepted; resume at 2b
+STATUS: PI ruling, 2026-10-30 UTC, session 12z, on architect recommendation, on the 12z-U19B report
+  stopped at step 2a (item 0 e5a35172a4d1ca43189eecaca9adc784cbabcab9; no engine edit). Transcribe
+  at item 0 of the next brief after 12z-U19B closes, with the ruling on its final report; not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12z-U19B stop report):
+  MEASURED: "e5a35172a4d1ca43189eecaca9adc784cbabcab9, parent bc1ffee"; "r734.txt = 22de7c7f…6097 /
+    9034 / 104"; "numstat +118 / −3, each "−" line matched to its noted row"; "lines 12,227 = 12,112
+    + 118 − 3"; "Plan sha256 a80a1011…a4af, 2,260,532 B"; ledger "ff3ca4f (parent 08e7ef4)";
+    "81db498 added only Block 127"; "record_run_event(review_dir, *, run_id, kind, payload) "Never
+    raises""; "both class names are free"; run_pipeline "except rm.ModelDigestChanged as exc: …
+    _finish_review_run(db, run_id, "aborted", reason=str(exc)); raise", "The FT runner has the same
+    branch at ft_screener.py:607"; the seven open_run callers as tabled: run_pipeline.py:551,
+    ft_screener.py:575 ("ollama_chat at :216 and :226, require_preflight at :324"),
+    run_cloud_extraction.py:114 ("grep -c ollama returns 0"), run_manifest.py:771 (review_session),
+    ft_screening_adjudicator.py:526, import_extraction_entry.py:283, import_screening_entry.py:159
+    (import).
+  READ (CC's): "I labelled the notes (12z-U19B item 0, R734(f)), which departs from I9's literal …
+    I followed the record's form, which always names the ordering sub-clause".
+  INFERRED: none.
+
+R735(a) — The stop is correct and is the architect's: R734(c)(i)'s rule named the class of callers
+  and the brief's predicted engine list omitted one of them. engine/agents/ft_screener.py joins
+  commit 1's engine Touched list: its open_run at :575 passes the environment string as
+  run_pipeline's does, read before the open by the same reader. Its ModelDigestChanged branch at
+  :607 gains no new branch (no proactive restart on its path; R734(c)(ii) unreachable there), as
+  CC read. The I5 STOP stays for any file outside the list as amended.
+R735(b) — scripts/run_cloud_extraction.py is exempt: it opens a run that sends nothing to the Ollama
+  server whose configured environment the key records, so its body carries no such key ("absent,
+  no key", R734(c)(i)). The exemption is stated in the key's docstring or comment at the open_run
+  site in run_manifest.py, in one line, so a later reader knows the absence is by rule. The
+  review_session and the three import manifests are exempt as R734(c)(i) states.
+R735(c) — The note label form CC used, naming the ordering sub-clause (R734(f)), is the record's
+  form and stands; I9's literal label was the architect's shorthand. From here a brief carries a
+  note's label as "the record's form, the sub-clause named", not a literal.
+R735(d) — Item 0 e5a3517 (Block 132, the three notes) and ledger ff3ca4f stand. 12z-U19B resumes at
+  step 2b under this ruling with the engine list as (a) amends it; nothing else changes. This
+  ruling is not written to disk in the resume.

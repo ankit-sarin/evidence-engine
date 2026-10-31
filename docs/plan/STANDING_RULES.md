@@ -3,9 +3,9 @@
 **Status: extracted, not adopted, selected by the committed id list.** Under R746(e) this file is adopted only by a later PI ruling after the architect has read it; until then every brief stays in its present form. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
 
 - Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `4c241e26acef5163ba138ee63bfd6dd4cfbeb97589221b5dd2e4fd8e2df7f29a`
-- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `1e0eae8b8d8911fd2389090a6158f9c24350b2c7ba423c145c8576c396a6d676`
-- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `f36af15af8ae11b3ab3bd37c0cef2233dac2a8fbb9a0096eaac452e776ca7ef7`
-- Selection: the id list: Tier A 79, Tier B 8, 87 of 1338 clauses in the log.
+- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `7fc677f8339f55073dffbde766e9b3774d8045f33cc6df1a242ee1ecc52146b5`
+- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `f6f8d7df72fc3c624d96b4a6029abcd8a3a213afadb41aee081e772fb4ff0a39`
+- Selection: the id list: Tier A 80, Tier B 8, 88 of 1350 clauses in the log.
 - "Named by" lists later clauses that carry the exact id; a range or a bare ruling number does not count.
 
 # Tier A — process rules
@@ -69,7 +69,7 @@ R647(c) — From the 12p closeout, every "Expected values at session-N open" blo
   closeout does with the root is ruled at that closeout, as R645(d) was.
 ```
 
-Named by: R648(b), R650(h), R652(c), R653(d), R662(d), R751(e).
+Named by: R648(b), R650(h), R652(c), R653(d), R662(d), R751(e), R753(e).
 
 Gloss (CC's, not ruled): Expected-values blocks state the temp root at the open as a reading, size not matched, never as "empty".
 
@@ -572,7 +572,7 @@ R696(b) — The gate is accepted as run. The empty-window clause of 2g was writt
   reading the PI may name by a later note. The series gains 883.80 s. No re-run.
 ```
 
-Named by: R697(g), R698(f), R699(f), R701(f), R702(d), R709(f), R711(c), R719(e), R720(f), R729(e), R731(f), R737(e).
+Named by: R697(g), R698(f), R699(f), R701(f), R702(d), R709(f), R711(c), R719(e), R720(f), R729(e), R731(f), R737(e), R753(d).
 
 Gloss (CC's, not ruled): A read-only Ollama request in a gate window with nothing loaded is a reading; a load or generate is the stop.
 
@@ -638,7 +638,7 @@ R703(j) — Readings, no row: CC's finding 10 — from here any pytest run outsi
   IDENTICAL, are accepted.
 ```
 
-Named by: none.
+Named by: R753(e).
 
 Gloss (CC's, not ruled): Any pytest run outside a standard gate passes --basetemp under its own scratch.
 
@@ -1202,7 +1202,7 @@ R747(b) — transcribe_ruling.py is accepted for every block from here. session_
   is reported as the wrapper's (finding 8).
 ```
 
-Named by: R748(e).
+Named by: R748(e), R753(e).
 
 Gloss (CC's, not ruled): The tools in force and their limits: transcribe_ruling.py for every block, session_open_check.py for what it checks, the gate wrapper pending its first full gate.
 
@@ -1256,7 +1256,7 @@ R751(c) — Finding 8: the session-start instruction "Read docs/plan/ENGINE_REFA
   handoff for PI approval, in the commit that adopts STANDING_RULES.md (R747(c)); not before.
 ```
 
-Named by: none.
+Named by: R754(c).
 
 Gloss (CC's, not ruled): The plan's session-start read is scoped to the Status table, the latest closure and expected values, the last block and whatever a brief names; a brief relying on an earlier ruling quotes it.
 
@@ -1272,7 +1272,7 @@ R751(e) — Readings, no row: finding 10 (stale primer lines, the dgx-infra lane
   waiting process governs over a memory note; the note is CC's to reconcile, not a stop).
 ```
 
-Named by: R752(d).
+Named by: R752(d), R753(e).
 
 Gloss (CC's, not ruled): An evidence commit's scope is docs(session-reports), with docs(plan) for commits that touch the plan, and a brief's named wait governs over a memory note; the clause's other items are dated.
 
@@ -1289,6 +1289,25 @@ R752(d) — Finding 9: the memory note feedback_tmux_no_poll.md is CC's own, out
 Named by: none.
 
 Gloss (CC's, not ruled): A brief's DO NOT TOUCH does not reach CC's own memory files, and CC reports an edit to one.
+
+## R753(d)
+
+2026-10-31, session 12ab.
+
+```text
+R753(d) — Three rules carried only by citations are stated here, so the file can quote a clause
+  (finding 6): (i) the model-load stop is R696(b)'s, already in the list, and the blocks' citation of
+  R666(a) for it is read as R696(b) from here; (ii) a closed pre-tag row is counted on the list until
+  P1 closes (R607(d) as the record has applied it since R660(a)); (iii) an open's pre-check reads the
+  process table and tmux for processes of the archived CC sessions it names, each inside a stated
+  window, attributes every one found to its lane, and stops only on a survivor of this lane ("R692's
+  form"). This ruling enters the list at the regeneration that follows its transcription, not at
+  2d's; the list file carries it under a "#" line until then.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): The model-load stop is R696(b)'s, a closed pre-tag row is counted until P1 closes, and an open's pre-check reads the process table and tmux for the named archived sessions, stopping only on a survivor of this lane.
 
 # Tier B — engine governance, pending the adoption ruling
 

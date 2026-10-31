@@ -13537,3 +13537,123 @@ R752(e) — Next: the standing-rules id list (R747(c)), with this ruling at its 
 | 2026-10-31 | R752(a) — 12ab-TOOLS is accepted as reported: item 0 565ea6f (Blocks 147–149 by transcribe_ruling.py; r749–r751 at the architect's hashes), the fix 2543d6b (the cc_sessions function only; three validations; the README note), ledgers 448b9f7 and 98e8217 with trailers. R752(b) — Findings 1 and 2 are the architect's, of the predicted-value kind: "11" was a count read from an earlier report and written as an expectation of a later clock, and the wrapper's path was written from the README's description, not from launch_line.txt. Both withdrawn; CC's readings (3; the name) governed, as the constraints say. 12ab-OPEN's rule-14 list gains "a process count or pid list from an earlier report" and "a path a wrapper copies before running". R752(c) — Findings 3 and 5 are recorded limits of the fixed section, no row: a process carrying a named session id but started after the window is neither counted nor printed, and the repository- path, pytest and run_gate.sh matches have not fired in a validation. Step 0g's hand read of every open covers the first; both are closed together at the next tools change, in one validation pass, not in a brief of their own. Findings 4, 6, 7 and 8: readings. R752(d) — Finding 9: the memory note feedback_tmux_no_poll.md is CC's own, outside every repository, and R751(e) left it to CC to reconcile; the edit is a reading, not a Touched-list breach. From here a brief's DO NOT TOUCH does not reach CC's own memory files, and CC reports an edit to one. R752(e) — Next: the standing-rules id list (R747(c)), with this ruling at its item 0; then U21's Phase A. The 2026-10-31 jobs are read by the first of these after 10:35 UTC (R749(c)). | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-TOOLS final report (565ea6f; 2543d6b) |
 
 The decision log in this file ends at R752.
+
+**Block 151.** *Transcribed 2026-10-31 (item 0 of the 12ab-ADOPT brief), in its own commit with Block 152, in the R597(e) form:* ruling R753, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-RULES report stopped at step 2a (item 0 `5738cefa2329a6815c08f473b255cce3cb9ade0b`). The 12ab-RULES-R1 resume that carried the ruling in substance, and the 12ab-ADOPT brief whose paste carried its text, are not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R753] — 12ab-RULES stopped at 2a: I6 restated on the measured fact; the
+  phrase-mode check is --list; three rules stated here that no clause states; the list amended; resume
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-RULES
+  report stopped at step 2a (item 0 5738cefa2329a6815c08f473b255cce3cb9ade0b). Transcribe at item 0
+  of the next brief, by transcribe_ruling.py, in the block after R752's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-RULES stop report):
+  MEASURED: "Commit / parent 5738cefa2329a6815c08f473b255cce3cb9ade0b / 2543d6b0…"; "Numstat, plan
+    +54 / −0"; "Plan lines 13539 = 13485 + 54 − 0"; "Plan sha256, bytes
+    1e0eae8b8d8911fd2389090a6158f9c24350b2c7ba423c145c8576c396a6d676, 2435796 B"; "r752.txt
+    47df1bfa…595a, 3751 B, 43 lines, equal to the architect's"; "Ledger
+    8d81095d282221b41362c469e22ffb38e72b1370, parent 98e82179…"; "# clauses in the log 1338; selected
+    63"; "exit 1: REFUSED: no gloss for ['R746(c)', 'R746(d)', 'R746(e)', 'R747(b)', 'R751(e)',
+    'R752(d)']"; "the current script reproduces STANDING_RULES.md byte for byte, except the one
+    plan-path line"; "2026-10-31T03:36:37Z, before 10:35".
+  READ (CC's): "the file at 5f81f4b was generated from the plan at ca12c30 (its header names
+    86b852a4…, 57 of 1293 clauses)"; "R647(c): the phrase doesn't match. It reads "From the 12p
+    closeout, every…""; "the writer, though, is inline in main(), and its status line and selection
+    line are literals"; "R696(b) does: "a load or a generate during the gate is the stop""; "R607,
+    one clause … Its (d) does not say closed rows are counted until P1 closes. That wording first
+    appears in R660(a)"; "R692 parses as (a)–(g) … No letter contains "leftover""; "R718 … Letters
+    (a)–(d) are dated"; findings 1–7.
+  INFERRED: none.
+
+R753(a) — Item 0 is accepted as landed: 5738cef (Block 150; r752.txt), ledger 8d81095 with trailers.
+  The step-0 deviation (the write sent with the listing) is a reading; the write tool's "File
+  created" is the evidence no earlier copy existed.
+R753(b) — I6 was the architect's: the rules file's own header names the plan it was generated from,
+  and the architect did not read it. Restated: the phrase mode reproduces STANDING_RULES.md at
+  2543d6b on the plan at ca12c30 except its plan-path line (MEASURED above); on the current plan it
+  selects 63 and --out refuses for want of six glosses. Step 2f's check is the phrase mode's --list
+  output on the current plan, byte-identical before and after the tool change (finding 2); a
+  --glosses/--out comparison is not made.
+R753(c) — The writer may be factored out of main() so both modes share it (finding 2); the factoring
+  is the one change to the phrase mode's code, and R753(b)'s --list check is what proves it changed
+  nothing. parse() and clauses() stay untouched.
+R753(d) — Three rules carried only by citations are stated here, so the file can quote a clause
+  (finding 6): (i) the model-load stop is R696(b)'s, already in the list, and the blocks' citation of
+  R666(a) for it is read as R696(b) from here; (ii) a closed pre-tag row is counted on the list until
+  P1 closes (R607(d) as the record has applied it since R660(a)); (iii) an open's pre-check reads the
+  process table and tmux for processes of the archived CC sessions it names, each inside a stated
+  window, attributes every one found to its lane, and stops only on a survivor of this lane ("R692's
+  form"). This ruling enters the list at the regeneration that follows its transcription, not at
+  2d's; the list file carries it under a "#" line until then.
+R753(e) — The list, amended: R703(j) once (finding 4); R718 dropped (dated); R607(d) and R692 left
+  out with their "#" lines naming R753(d); R747(b) and R751(e) added to Tier A (the tools in force;
+  the commit-scope rule); R746(e) left out (the tools' build, dated); R647(c) stays in ADD, selected
+  by id since the phrase cannot see it.
+R753(f) — 12ab-RULES resumes at 2b under the RESUME below.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R753(a) — Item 0 is accepted as landed: 5738cef (Block 150; r752.txt), ledger 8d81095 with trailers. The step-0 deviation (the write sent with the listing) is a reading; the write tool's "File created" is the evidence no earlier copy existed. R753(b) — I6 was the architect's: the rules file's own header names the plan it was generated from, and the architect did not read it. Restated: the phrase mode reproduces STANDING_RULES.md at 2543d6b on the plan at ca12c30 except its plan-path line (MEASURED above); on the current plan it selects 63 and --out refuses for want of six glosses. Step 2f's check is the phrase mode's --list output on the current plan, byte-identical before and after the tool change (finding 2); a --glosses/--out comparison is not made. R753(c) — The writer may be factored out of main() so both modes share it (finding 2); the factoring is the one change to the phrase mode's code, and R753(b)'s --list check is what proves it changed nothing. parse() and clauses() stay untouched. R753(d) — Three rules carried only by citations are stated here, so the file can quote a clause (finding 6): (i) the model-load stop is R696(b)'s, already in the list, and the blocks' citation of R666(a) for it is read as R696(b) from here; (ii) a closed pre-tag row is counted on the list until P1 closes (R607(d) as the record has applied it since R660(a)); (iii) an open's pre-check reads the process table and tmux for processes of the archived CC sessions it names, each inside a stated window, attributes every one found to its lane, and stops only on a survivor of this lane ("R692's form"). This ruling enters the list at the regeneration that follows its transcription, not at 2d's; the list file carries it under a "#" line until then. R753(e) — The list, amended: R703(j) once (finding 4); R718 dropped (dated); R607(d) and R692 left out with their "#" lines naming R753(d); R747(b) and R751(e) added to Tier A (the tools in force; the commit-scope rule); R746(e) left out (the tools' build, dated); R647(c) stays in ADD, selected by id since the phrase cannot see it. R753(f) — 12ab-RULES resumes at 2b under the RESUME below. | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-RULES report stopped at step 2a (5738cef) |
+
+The decision log in this file ends at R753.
+
+**Block 152.** *Transcribed 2026-10-31 (item 0 of the 12ab-ADOPT brief), in its own commit with Block 151, in the R597(e) form:* ruling R754, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-RULES-R1 final report (item 0 `5738cefa2329a6815c08f473b255cce3cb9ade0b`; the mode and the file `ece937dfb331d6752b029ee406419ab3e86d3da5`). The 12ab-ADOPT brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R754] — 12ab-RULES accepted; STANDING_RULES.md adopted, both tiers, as
+  regenerated at the adoption commit with R753 added; what adoption changes; three tool corrections at
+  that regeneration; the CLAUDE.md session-start paragraph replaced by the text the adoption brief quotes
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-RULES-R1
+  final report (item 0 5738cefa2329a6815c08f473b255cce3cb9ade0b; the mode and the file
+  ece937dfb331d6752b029ee406419ab3e86d3da5), and on the architect's read of
+  docs/plan/STANDING_RULES.md at ece937d. Transcribe at item 0 of the adoption brief, by
+  transcribe_ruling.py, in the block after R753's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-RULES-R1 final report):
+  MEASURED: "Commit / parent ece937dfb331d6752b029ee406419ab3e86d3da5 / 5738cefa…"; "Stat 14 files,
+    +1,188 / −113"; "--list vs 2a_list_before.txt byte-identical, selected 63"; "Counts: 87 clauses,
+    Tier A 79, Tier B 8"; "Id list: docs/plan/standing_rules_ids.txt, sha256
+    f36af15af8ae11b3ab3bd37c0cef2233dac2a8fbb9a0096eaac452e776ca7ef7"; "Generator:
+    docs/session-reports/tools/extract_rules.py, sha256
+    4c241e26acef5163ba138ee63bfd6dd4cfbeb97589221b5dd2e4fd8e2df7f29a"; "Plan blob … sha256
+    1e0eae8b8d8911fd2389090a6158f9c24350b2c7ba423c145c8576c396a6d676"; "Spot-check … RESULT: PASS";
+    "Collection: 3492 tests collected"; "Ledger 55320347e794d3ad1fab621c237af70d29e6c5ba, parent
+    8d81095d…"; "Nine clauses print "session None""; "The spot-check sampled no Tier B clause".
+  READ (the architect's, from the public clone at ece937d): the file's header lines; the two tier
+    headings at lines 11 and 1293; all 87 "Gloss (CC's, not ruled):" lines; the Tier B section; the
+    clauses R727(a), R729(c) and R25 in full; CLAUDE.md lines 1–7 (the session-start paragraph).
+  READ (CC's): findings 8–14 of that report.
+  INFERRED: none.
+
+R754(a) — 12ab-RULES is accepted as reported: item 0 5738cef (Block 150), the mode and the regenerated
+  file ece937d (parse() and clauses() untouched; the phrase mode's --list byte-identical; the five
+  refusals exercised), ledgers 8d81095 and 5532034 with trailers.
+R754(b) — docs/plan/STANDING_RULES.md is adopted, Tier A and Tier B both, in the form the adoption
+  commit regenerates: the list of ece937d with R753 added to Tier A, on the plan at that commit's
+  item 0. The architect read the file at ece937d as the READ list states. The file is read so: the
+  quoted clause is the rule's source and the gloss orients and rules nothing; a figure, date, session
+  condition or named commit inside a clause is that day's, and the current value is the expected-
+  values block's (finding 10); a rule the file lacks is a rule a brief must restate.
+R754(c) — What adoption changes, from the next brief: (i) CLAUDE.md's session-start paragraph (its
+  lines 3–7 at ece937d) is replaced by the text the adoption brief quotes, which names this file as
+  the session-start read and states R751(c)'s scope for the plan; (ii) a brief's conventions paragraph
+  cites the file's ids and restates only what the file lacks; (iii) a brief whose item 0 transcribes
+  a ruling that states a standing rule adds its id to the list and regenerates the file in the item-0
+  commit, so the file's plan blob is always an item-0 commit's; (iv) nothing else in a brief's form
+  changes until the fix-unit template lands.
+R754(d) — Three tool corrections at the adoption regeneration, guarded by the --list check (R753(b)):
+  the status line's adopted form, rendered from an argument naming this ruling, in text the adoption
+  brief quotes; the "session None" line omitted when the parser finds no session (finding 11); --spot
+  sampling both tiers (finding 12). parse() and clauses() stay untouched.
+R754(e) — Readings, no row: findings 8 and 9 (the D entries and the repeatable --glosses are the
+  mode's syntax, accepted); finding 13; finding 14 (closed by this ruling's regeneration).
+R754(f) — Next: the adoption brief (12ab-ADOPT), with R753 and this ruling at its item 0; then U21's
+  Phase A, its own brief. The 2026-10-31 jobs are read by the first brief after 10:35 UTC (R749(c)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R754(a) — 12ab-RULES is accepted as reported: item 0 5738cef (Block 150), the mode and the regenerated file ece937d (parse() and clauses() untouched; the phrase mode's --list byte-identical; the five refusals exercised), ledgers 8d81095 and 5532034 with trailers. R754(b) — docs/plan/STANDING_RULES.md is adopted, Tier A and Tier B both, in the form the adoption commit regenerates: the list of ece937d with R753 added to Tier A, on the plan at that commit's item 0. The architect read the file at ece937d as the READ list states. The file is read so: the quoted clause is the rule's source and the gloss orients and rules nothing; a figure, date, session condition or named commit inside a clause is that day's, and the current value is the expected- values block's (finding 10); a rule the file lacks is a rule a brief must restate. R754(c) — What adoption changes, from the next brief: (i) CLAUDE.md's session-start paragraph (its lines 3–7 at ece937d) is replaced by the text the adoption brief quotes, which names this file as the session-start read and states R751(c)'s scope for the plan; (ii) a brief's conventions paragraph cites the file's ids and restates only what the file lacks; (iii) a brief whose item 0 transcribes a ruling that states a standing rule adds its id to the list and regenerates the file in the item-0 commit, so the file's plan blob is always an item-0 commit's; (iv) nothing else in a brief's form changes until the fix-unit template lands. R754(d) — Three tool corrections at the adoption regeneration, guarded by the --list check (R753(b)): the status line's adopted form, rendered from an argument naming this ruling, in text the adoption brief quotes; the "session None" line omitted when the parser finds no session (finding 11); --spot sampling both tiers (finding 12). parse() and clauses() stay untouched. R754(e) — Readings, no row: findings 8 and 9 (the D entries and the repeatable --glosses are the mode's syntax, accepted); finding 13; finding 14 (closed by this ruling's regeneration). R754(f) — Next: the adoption brief (12ab-ADOPT), with R753 and this ruling at its item 0; then U21's Phase A, its own brief. The 2026-10-31 jobs are read by the first brief after 10:35 UTC (R749(c)). | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-RULES-R1 final report (5738cef; ece937d) |
+
+The decision log in this file ends at R754.

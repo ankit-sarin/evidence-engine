@@ -1,0 +1,49 @@
+RULING [evidence-engine 12ab-R753] — 12ab-RULES stopped at 2a: I6 restated on the measured fact; the
+  phrase-mode check is --list; three rules stated here that no clause states; the list amended; resume
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-RULES
+  report stopped at step 2a (item 0 5738cefa2329a6815c08f473b255cce3cb9ade0b). Transcribe at item 0
+  of the next brief, by transcribe_ruling.py, in the block after R752's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-RULES stop report):
+  MEASURED: "Commit / parent 5738cefa2329a6815c08f473b255cce3cb9ade0b / 2543d6b0…"; "Numstat, plan
+    +54 / −0"; "Plan lines 13539 = 13485 + 54 − 0"; "Plan sha256, bytes
+    1e0eae8b8d8911fd2389090a6158f9c24350b2c7ba423c145c8576c396a6d676, 2435796 B"; "r752.txt
+    47df1bfa…595a, 3751 B, 43 lines, equal to the architect's"; "Ledger
+    8d81095d282221b41362c469e22ffb38e72b1370, parent 98e82179…"; "# clauses in the log 1338; selected
+    63"; "exit 1: REFUSED: no gloss for ['R746(c)', 'R746(d)', 'R746(e)', 'R747(b)', 'R751(e)',
+    'R752(d)']"; "the current script reproduces STANDING_RULES.md byte for byte, except the one
+    plan-path line"; "2026-10-31T03:36:37Z, before 10:35".
+  READ (CC's): "the file at 5f81f4b was generated from the plan at ca12c30 (its header names
+    86b852a4…, 57 of 1293 clauses)"; "R647(c): the phrase doesn't match. It reads "From the 12p
+    closeout, every…""; "the writer, though, is inline in main(), and its status line and selection
+    line are literals"; "R696(b) does: "a load or a generate during the gate is the stop""; "R607,
+    one clause … Its (d) does not say closed rows are counted until P1 closes. That wording first
+    appears in R660(a)"; "R692 parses as (a)–(g) … No letter contains "leftover""; "R718 … Letters
+    (a)–(d) are dated"; findings 1–7.
+  INFERRED: none.
+
+R753(a) — Item 0 is accepted as landed: 5738cef (Block 150; r752.txt), ledger 8d81095 with trailers.
+  The step-0 deviation (the write sent with the listing) is a reading; the write tool's "File
+  created" is the evidence no earlier copy existed.
+R753(b) — I6 was the architect's: the rules file's own header names the plan it was generated from,
+  and the architect did not read it. Restated: the phrase mode reproduces STANDING_RULES.md at
+  2543d6b on the plan at ca12c30 except its plan-path line (MEASURED above); on the current plan it
+  selects 63 and --out refuses for want of six glosses. Step 2f's check is the phrase mode's --list
+  output on the current plan, byte-identical before and after the tool change (finding 2); a
+  --glosses/--out comparison is not made.
+R753(c) — The writer may be factored out of main() so both modes share it (finding 2); the factoring
+  is the one change to the phrase mode's code, and R753(b)'s --list check is what proves it changed
+  nothing. parse() and clauses() stay untouched.
+R753(d) — Three rules carried only by citations are stated here, so the file can quote a clause
+  (finding 6): (i) the model-load stop is R696(b)'s, already in the list, and the blocks' citation of
+  R666(a) for it is read as R696(b) from here; (ii) a closed pre-tag row is counted on the list until
+  P1 closes (R607(d) as the record has applied it since R660(a)); (iii) an open's pre-check reads the
+  process table and tmux for processes of the archived CC sessions it names, each inside a stated
+  window, attributes every one found to its lane, and stops only on a survivor of this lane ("R692's
+  form"). This ruling enters the list at the regeneration that follows its transcription, not at
+  2d's; the list file carries it under a "#" line until then.
+R753(e) — The list, amended: R703(j) once (finding 4); R718 dropped (dated); R607(d) and R692 left
+  out with their "#" lines naming R753(d); R747(b) and R751(e) added to Tier A (the tools in force;
+  the commit-scope rule); R746(e) left out (the tools' build, dated); R647(c) stays in ADD, selected
+  by id since the phrase cannot see it.
+R753(f) — 12ab-RULES resumes at 2b under the RESUME below.

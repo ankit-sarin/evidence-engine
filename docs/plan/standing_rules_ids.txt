@@ -83,6 +83,7 @@ A R750(c)
 A R751(c)
 A R751(e)
 A R752(d)
+A R753(d)  # R753(d)
 
 # Tier B — engine governance, pending the adoption ruling
 B R25
@@ -102,9 +103,9 @@ D R674(b)  # amended by R675(b)
 D R720(e)  # one day's readings
 
 # Left out, no clause selected
-# R607(d): stated by R753(d); enters at the regeneration after R753's transcription. R607 parses whole: "R607 — Package process, from P1 on: (a) one Phase A read-out per package"
-# R692: stated by R753(d); enters at the regeneration after R753's transcription. R692(a): "R692(a) — The 12u-CLOSE closeout block is accepted as printed."
-# R753: enters at the regeneration after its transcription.
+# R607(d): entered at the 12ab-ADOPT item-0 regeneration, R753(d). R607 parses whole: "R607 — Package process, from P1 on: (a) one Phase A read-out per package"
+# R692: entered at the 12ab-ADOPT item-0 regeneration, R753(d). R692(a): "R692(a) — The 12u-CLOSE closeout block is accepted as printed."
+# R753: entered at the 12ab-ADOPT item-0 regeneration, R753(d).
 # R718: dropped, dated, R753(e). R718(a): "R718(a) — The stop is correct; step 4a's open date was the architect's, written from memory."
 # R746(e): left out, the tools' build, dated, R753(e). R746(e): "R746(e) — The setup session (R745(g)) builds, outside engine/, scripts/ and tests/: (i)"
 # R666(a): the model-load stop is R696(b)'s, kept; R753(d)(i). R666(a): "R666(a) — 12r-OPEN is accepted as reported."

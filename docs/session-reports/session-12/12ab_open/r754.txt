@@ -1,0 +1,49 @@
+RULING [evidence-engine 12ab-R754] — 12ab-RULES accepted; STANDING_RULES.md adopted, both tiers, as
+  regenerated at the adoption commit with R753 added; what adoption changes; three tool corrections at
+  that regeneration; the CLAUDE.md session-start paragraph replaced by the text the adoption brief quotes
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-RULES-R1
+  final report (item 0 5738cefa2329a6815c08f473b255cce3cb9ade0b; the mode and the file
+  ece937dfb331d6752b029ee406419ab3e86d3da5), and on the architect's read of
+  docs/plan/STANDING_RULES.md at ece937d. Transcribe at item 0 of the adoption brief, by
+  transcribe_ruling.py, in the block after R753's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-RULES-R1 final report):
+  MEASURED: "Commit / parent ece937dfb331d6752b029ee406419ab3e86d3da5 / 5738cefa…"; "Stat 14 files,
+    +1,188 / −113"; "--list vs 2a_list_before.txt byte-identical, selected 63"; "Counts: 87 clauses,
+    Tier A 79, Tier B 8"; "Id list: docs/plan/standing_rules_ids.txt, sha256
+    f36af15af8ae11b3ab3bd37c0cef2233dac2a8fbb9a0096eaac452e776ca7ef7"; "Generator:
+    docs/session-reports/tools/extract_rules.py, sha256
+    4c241e26acef5163ba138ee63bfd6dd4cfbeb97589221b5dd2e4fd8e2df7f29a"; "Plan blob … sha256
+    1e0eae8b8d8911fd2389090a6158f9c24350b2c7ba423c145c8576c396a6d676"; "Spot-check … RESULT: PASS";
+    "Collection: 3492 tests collected"; "Ledger 55320347e794d3ad1fab621c237af70d29e6c5ba, parent
+    8d81095d…"; "Nine clauses print "session None""; "The spot-check sampled no Tier B clause".
+  READ (the architect's, from the public clone at ece937d): the file's header lines; the two tier
+    headings at lines 11 and 1293; all 87 "Gloss (CC's, not ruled):" lines; the Tier B section; the
+    clauses R727(a), R729(c) and R25 in full; CLAUDE.md lines 1–7 (the session-start paragraph).
+  READ (CC's): findings 8–14 of that report.
+  INFERRED: none.
+
+R754(a) — 12ab-RULES is accepted as reported: item 0 5738cef (Block 150), the mode and the regenerated
+  file ece937d (parse() and clauses() untouched; the phrase mode's --list byte-identical; the five
+  refusals exercised), ledgers 8d81095 and 5532034 with trailers.
+R754(b) — docs/plan/STANDING_RULES.md is adopted, Tier A and Tier B both, in the form the adoption
+  commit regenerates: the list of ece937d with R753 added to Tier A, on the plan at that commit's
+  item 0. The architect read the file at ece937d as the READ list states. The file is read so: the
+  quoted clause is the rule's source and the gloss orients and rules nothing; a figure, date, session
+  condition or named commit inside a clause is that day's, and the current value is the expected-
+  values block's (finding 10); a rule the file lacks is a rule a brief must restate.
+R754(c) — What adoption changes, from the next brief: (i) CLAUDE.md's session-start paragraph (its
+  lines 3–7 at ece937d) is replaced by the text the adoption brief quotes, which names this file as
+  the session-start read and states R751(c)'s scope for the plan; (ii) a brief's conventions paragraph
+  cites the file's ids and restates only what the file lacks; (iii) a brief whose item 0 transcribes
+  a ruling that states a standing rule adds its id to the list and regenerates the file in the item-0
+  commit, so the file's plan blob is always an item-0 commit's; (iv) nothing else in a brief's form
+  changes until the fix-unit template lands.
+R754(d) — Three tool corrections at the adoption regeneration, guarded by the --list check (R753(b)):
+  the status line's adopted form, rendered from an argument naming this ruling, in text the adoption
+  brief quotes; the "session None" line omitted when the parser finds no session (finding 11); --spot
+  sampling both tiers (finding 12). parse() and clauses() stay untouched.
+R754(e) — Readings, no row: findings 8 and 9 (the D entries and the repeatable --glosses are the
+  mode's syntax, accepted); finding 13; finding 14 (closed by this ruling's regeneration).
+R754(f) — Next: the adoption brief (12ab-ADOPT), with R753 and this ruling at its item 0; then U21's
+  Phase A, its own brief. The 2026-10-31 jobs are read by the first brief after 10:35 UTC (R749(c)).

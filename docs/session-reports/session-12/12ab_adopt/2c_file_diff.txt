@@ -1,0 +1,48 @@
+1c1
+< # Standing rules (extracted, not adopted)
+---
+> # Standing rules (adopted, R754)
+3c3
+< **Status: extracted, not adopted, selected by the committed id list.** Under R746(e) this file is adopted only by a later PI ruling after the architect has read it; until then every brief stays in its present form. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
+---
+> **Status: adopted under R754, selected by the committed id list.** A quoted clause is the rule's source; a figure, date, session condition or named commit inside it is that day's, and the current value is the "Expected values at session-N open" block's. A rule this file lacks is a rule a brief must restate. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
+5c5
+< - Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `4c241e26acef5163ba138ee63bfd6dd4cfbeb97589221b5dd2e4fd8e2df7f29a`
+---
+> - Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `fc95e62a246a4571295a99180f61b93dd10fc11a528f98d4320dcb8bb82bd7f2`
+15c15
+< 2026-09-23, session None.
+---
+> 2026-09-23.
+27c27
+< 2026-09-23, session None.
+---
+> 2026-09-23.
+51c51
+< 2026-10-08, session None.
+---
+> 2026-10-08.
+1316c1316
+< 2026-09-21, session None.
+---
+> 2026-09-21.
+1328c1328
+< 2026-09-21, session None.
+---
+> 2026-09-21.
+1340c1340
+< 2026-09-22, session None.
+---
+> 2026-09-22.
+1352c1352
+< 2026-10-07, session None.
+---
+> 2026-10-07.
+1364c1364
+< 2026-10-08, session None.
+---
+> 2026-10-08.
+1376c1376
+< 2026-10-08, session None.
+---
+> 2026-10-08.

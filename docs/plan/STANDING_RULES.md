@@ -1,8 +1,8 @@
-# Standing rules (extracted, not adopted)
+# Standing rules (adopted, R754)
 
-**Status: extracted, not adopted, selected by the committed id list.** Under R746(e) this file is adopted only by a later PI ruling after the architect has read it; until then every brief stays in its present form. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
+**Status: adopted under R754, selected by the committed id list.** A quoted clause is the rule's source; a figure, date, session condition or named commit inside it is that day's, and the current value is the "Expected values at session-N open" block's. A rule this file lacks is a rule a brief must restate. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
 
-- Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `4c241e26acef5163ba138ee63bfd6dd4cfbeb97589221b5dd2e4fd8e2df7f29a`
+- Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `fc95e62a246a4571295a99180f61b93dd10fc11a528f98d4320dcb8bb82bd7f2`
 - Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `7fc677f8339f55073dffbde766e9b3774d8045f33cc6df1a242ee1ecc52146b5`
 - Id list: `docs/plan/standing_rules_ids.txt`, sha256 `f6f8d7df72fc3c624d96b4a6029abcd8a3a213afadb41aee081e772fb4ff0a39`
 - Selection: the id list: Tier A 80, Tier B 8, 88 of 1350 clauses in the log.
@@ -12,7 +12,7 @@
 
 ## R86
 
-2026-09-23, session None.
+2026-09-23.
 
 ```text
 R86 — **The no-live-write window is 07:00–10:35 UTC**: the 07:00 health check, the 09:00 nightly suite, and the 10:30 `dgx-snapshot-user` timer with its 2-minute jitter (row I15). Appendix B and CLAUDE.md's ops block carry the new window. *(Closeout note, 2026-09-23: the plan's addenda carry it; Appendix B lives in the unified plan, and the CLAUDE.md half was not applied at this closeout — see the I13 stop in the session-7b closure paragraph)*
@@ -24,7 +24,7 @@ Gloss (CC's, not ruled): The window with no live write to review.db is 07:00–1
 
 ## R102
 
-2026-09-23, session None.
+2026-09-23.
 
 ```text
 R102 — The in-place authority-cell edit on R90–R94 is accepted once, as the record of their confirmation; decision-log rows otherwise remain append-only.
@@ -48,7 +48,7 @@ Gloss (CC's, not ruled): Sessions close pushed and measured at origin; the earli
 
 ## R514
 
-2026-10-08, session None.
+2026-10-08.
 
 ```text
 R514 — **A finding is closed when its own acceptance test passes** (the test in the original assessment or in `12f_triage_rows.md`). Capability work beyond that test stays in its owning state. Clarifies R512; does not narrow it. Applied: B-F13's run and configuration identity stays in S4 (junior); B-F10's terminal-state writer stays D20's.
@@ -1313,7 +1313,7 @@ Gloss (CC's, not ruled): The model-load stop is R696(b)'s, a closed pre-tag row 
 
 ## R25
 
-2026-09-21, session None.
+2026-09-21.
 
 ```text
 R25 — Seed, do not migrate. The event store begins empty of field-level history. Session 5 seeds it with: papers; current corpus membership as one "state at migration" paper event per paper (no reconstruction of how the state arose); parsed-text references; spec and codebook identities. Existing extractions, spans, cloud extractions, auditor verdicts, adjudication tables and workflow stamps are NOT imported — they remain in place, read-only, as a regression fixture and telemetry. The reader is validated on fixtures and then on the freshman smoke run and Run 7, not by agreement with legacy readers. Superseded as moot: R18's Q8 and Q9 clauses; R17's legacy-backfill clause; v2.1 row 17 at field level; the session-5 gate clause "new reader agrees with each old reader on the live data"; the session-6 judge target of 3,802 legacy cells. Cloud comparator arms, if needed for Paper 1, are re-run on the tagged state under declared arms (decision deferred to Run 7). Scope reset recorded in `docs/session-reports/effective-result-01/S2_phase1_readout_addendum4_20260921.md`, which supersedes read-out §5 and §7
@@ -1325,7 +1325,7 @@ Gloss (CC's, not ruled): The event store starts empty of field-level history, se
 
 ## R26
 
-2026-09-21, session None.
+2026-09-21.
 
 ```text
 R26 — The extraction field set is frozen for Paper 1: codebook field names and the definitions given to human extractors do not change. Elicitation, validation, tokens and field-state handling remain engine work and may change
@@ -1337,7 +1337,7 @@ Gloss (CC's, not ruled): The extraction field names and definitions are frozen f
 
 ## R71
 
-2026-09-22, session None.
+2026-09-22.
 
 ```text
 R71 — R22-U4 extended: no cloud extraction until session 9 (unlinked writer) and session 8 (glob resolver) both land; cloud opt-in is built and tested on fixtures, the live spec keeps `cloud.enabled_arms` empty
@@ -1349,7 +1349,7 @@ Gloss (CC's, not ruled): No cloud extraction until sessions 8 and 9 land, and th
 
 ## R510
 
-2026-10-07, session None.
+2026-10-07.
 
 ```text
 R510 — **Y4.** "Each close records pre-tag rows in / out and counts by class."
@@ -1361,7 +1361,7 @@ Gloss (CC's, not ruled): Each close records pre-tag rows in and out and the coun
 
 ## R539
 
-2026-10-08, session None.
+2026-10-08.
 
 ```text
 R539 — **The pin is the ordering constraint:** a change to what the elicited run sends (unit construction, prompts, format schemas, stage set) lands before the freeze smoke records the binding pin. Audit-side changes (locator, verdicts) are outside the pin and may be re-run on Run 7.
@@ -1373,7 +1373,7 @@ Gloss (CC's, not ruled): Anything that changes what the elicited run sends lands
 
 ## R541
 
-2026-10-08, session None.
+2026-10-08.
 
 ```text
 R541 — **The 12f triage table, as amended by R537 and R538, is the pre-tag list.** Its outside and internal rows are opened as inventory section L; a finding after this ruling enters only with its class and package stated (R509). The finish line is this list closed.

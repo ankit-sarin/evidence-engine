@@ -6,7 +6,8 @@ usage, from the repository root:
   extract_rules.py --plan <plan.md> --list                     (ids and text, no file)
   extract_rules.py --plan <plan.md> --spot <n>                 (n clauses at fixed stride, each grepped in the plan)
   extract_rules.py --plan <plan.md> --ids <ids.txt> --glosses <glosses.json> [--glosses <more.json>] --out <rules.md>
-  (--ids also narrows --list and --spot to the listed clauses)
+  (--ids also narrows --list and --spot to the listed clauses, and --spot then samples n of Tier A and all of Tier B)
+  (--adopted <ruling id> with --out renders the adopted title and status lines, R754(d))
 
 A clause is a ruling's unit of text: `R<n>(<letter>) — ...` at a fence line's start or inside a table row's Ruling
 cell, or `R<n> — ...` for a ruling with no such marker, whole. Text before a fence's first clause (STATUS,
@@ -127,7 +128,7 @@ def write_rules(path, preface, groups, every, glosses):
         if heading:
             out += [heading, ""]
         for e in sel:
-            out += [f"## {e['id']}", "", f"{e['date']}, session {e['session']}.", ""]
+            out += [f"## {e['id']}", "", f"{e['date']}, session {e['session']}." if e["session"] else f"{e['date']}.", ""]
             seen = {}
             for c in e["copies"]:
                 seen.setdefault(norm("\n".join(c["text"])), c)
@@ -142,7 +143,7 @@ def write_rules(path, preface, groups, every, glosses):
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--plan", required=True); ap.add_argument("--glosses", action="append"); ap.add_argument("--out")
-    ap.add_argument("--list", action="store_true"); ap.add_argument("--spot", type=int); ap.add_argument("--ids")
+    ap.add_argument("--list", action="store_true"); ap.add_argument("--spot", type=int); ap.add_argument("--ids"); ap.add_argument("--adopted")
     a = ap.parse_args()
     raw = Path(a.plan).read_bytes(); lines = raw.decode("utf-8").split("\n")
     every, sel = selected(lines)
@@ -160,8 +161,8 @@ def main() -> int:
         print(f"# clauses in the log {len(every)}; selected {len(sel)}")
         return 0
     if a.spot:
-        ok = True; stride = max(1, len(sel) // a.spot)
-        for e in sel[::stride][:a.spot]:
+        ok = True; pool = groups["A"] if a.ids else sel; stride = max(1, len(pool) // a.spot)
+        for e in pool[::stride][:a.spot] + (groups["B"] if a.ids else []):
             for c in e["copies"]:
                 good = True
                 for l in c["text"]:
@@ -178,10 +179,17 @@ def main() -> int:
     if ids - set(glosses) or set(glosses) - ids - spare:
         sys.exit(f"REFUSED: no gloss for {sorted(ids - set(glosses))}; gloss for no clause {sorted(set(glosses) - ids - spare)}")
     me = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-    preface = ["# Standing rules (extracted, not adopted)", "",
-               "**Status: extracted, not adopted" + (", selected by the committed id list" if a.ids else "") + ".** Under R746(e) this file is adopted only by a later PI ruling after the "
-               "architect has read it; until then every brief stays in its present form. Clause text is the plan's, "
-               "by script; only the lines headed \"Gloss (CC's, not ruled):\" are composed, and they rule nothing.", "",
+    tail = ("Clause text is the plan's, by script; only the lines headed \"Gloss (CC's, not ruled):\" are composed, and they rule nothing.")
+    if a.adopted:
+        head = [f"# Standing rules (adopted, {a.adopted})", "",
+                f"**Status: adopted under {a.adopted}" + (", selected by the committed id list" if a.ids else "") + ".** A quoted clause is the rule's source; a figure, date, "
+                "session condition or named commit inside it is that day's, and the current value is the \"Expected values at "
+                "session-N open\" block's. A rule this file lacks is a rule a brief must restate. " + tail]
+    else:
+        head = ["# Standing rules (extracted, not adopted)", "",
+                "**Status: extracted, not adopted" + (", selected by the committed id list" if a.ids else "") + ".** Under R746(e) this file is adopted only by a later PI ruling after the "
+                "architect has read it; until then every brief stays in its present form. " + tail]
+    preface = [*head, "",
                f"- Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `{me}`",
                f"- Plan blob: `{a.plan}`, sha256 `{hashlib.sha256(raw).hexdigest()}`"]
     if a.ids:

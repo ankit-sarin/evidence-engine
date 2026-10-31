@@ -1,0 +1,26 @@
+diff --git a/CLAUDE.md b/CLAUDE.md
+index b9caee3..4c790b4 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -1,10 +1,16 @@
+ Read primer.md for current project state before starting work.
+ 
+-Read `docs/plan/ENGINE_REFACTOR_PLAN.md` at session start. It is the standing engineering
+-record for the engine refactor: the plan of record, its findings, and its rulings. Claude Code
+-appends a closure paragraph to it at each closeout. The claude.ai unified plan is the short
+-operational record, not this one; a copy of `ENGINE_REFACTOR_PLAN.md` is uploaded to project
+-knowledge at each wrap.
++Read `docs/plan/STANDING_RULES.md` at session start: the standing rules of this lane,
++each a decision-log clause quoted verbatim with a gloss that rules nothing, adopted under
++R754. A figure, date or session condition inside a quoted clause is that day's; the
++current value is the "Expected values at session-N open" block's. Read
++`docs/plan/ENGINE_REFACTOR_PLAN.md` in the scope R751(c) sets — its Status table, the
++latest closure paragraph and its "Expected values" block, the decision log's last block,
++and every block, row or read-out the brief names; it is the standing engineering record
++for the engine refactor (the plan of record, its findings, and its rulings) and is too
++large to read whole. Claude Code appends a closure paragraph to it at each closeout. The
++claude.ai unified plan is the short operational record, not this one; a copy of
++`ENGINE_REFACTOR_PLAN.md` is uploaded to project knowledge at each wrap.
+ 
+ # Surgical Evidence Engine (Project 4)
+ 

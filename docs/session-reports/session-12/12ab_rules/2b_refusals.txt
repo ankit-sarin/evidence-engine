@@ -1,0 +1,10 @@
+REFUSED: listed id with no clause ['R99999']
+rc=1
+REFUSED: /home/ankitsarin/scratch/12ab-rules/neg2.txt line 2 repeats R86
+rc=1
+REFUSED: /home/ankitsarin/scratch/12ab-rules/neg3.txt line 1 is not '<A|B|D> <id>': 'Z R86'
+rc=1
+REFUSED: no gloss for []; gloss for no clause ['R25', 'R26', 'R370', 'R510', 'R514', 'R539', 'R541', 'R543', 'R601', 'R647(c)', 'R654(d)', 'R655(b)', 'R656(b)', 'R660(c)', 'R663(b)', 'R679(b)', 'R683(
+rc=1
+REFUSED: no gloss for ['R86']; gloss for no clause []
+rc=1

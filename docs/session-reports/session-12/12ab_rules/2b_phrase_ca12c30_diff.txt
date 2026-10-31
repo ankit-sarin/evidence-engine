@@ -1,0 +1,6 @@
+5,6c5,6
+< - Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `4c241e26acef5163ba138ee63bfd6dd4cfbeb97589221b5dd2e4fd8e2df7f29a`
+< - Plan blob: `/home/ankitsarin/scratch/12ab-rules/plan_ca12c30.md`, sha256 `86b852a454109b18099dc23210db64f2dbbe991c64a4b73a1626c4d5e85f0c39`
+---
+> - Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `b3aaf6894856e04760c089ee4398ba28c02ab376ea2d8b0ef49e6a898d8387ef`
+> - Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `86b852a454109b18099dc23210db64f2dbbe991c64a4b73a1626c4d5e85f0c39`

@@ -5,6 +5,8 @@ usage, from the repository root:
   extract_rules.py --plan <plan.md> --glosses <glosses.json> --out <rules.md>
   extract_rules.py --plan <plan.md> --list                     (ids and text, no file)
   extract_rules.py --plan <plan.md> --spot <n>                 (n clauses at fixed stride, each grepped in the plan)
+  extract_rules.py --plan <plan.md> --ids <ids.txt> --glosses <glosses.json> [--glosses <more.json>] --out <rules.md>
+  (--ids also narrows --list and --spot to the listed clauses)
 
 A clause is a ruling's unit of text: `R<n>(<letter>) — ...` at a fence line's start or inside a table row's Ruling
 cell, or `R<n> — ...` for a ruling with no such marker, whole. Text before a fence's first clause (STATUS,
@@ -12,6 +14,11 @@ ASSUMPTIONS) is not a clause. A clause is selected if, whitespace normalised, it
 standing form" ("Rule from here" contains the first). Fence and row copies of one id are de-duplicated; where they
 differ, both are quoted. Every clause text is taken from the plan; only the glosses are composed, and they are read
 from the file named, keyed by id. A selected clause with no gloss, or a gloss for no selected clause, is a refusal.
+
+With --ids the selection is a committed list, not the phrase (R747(c)). One entry per line, blank lines and "#" comments
+allowed: "A <id>" and "B <id>" select a clause into Tier A or Tier B; "D <id>" records a drop, so that a gloss for it in
+a named file is no refusal and it stays out of the output. A listed id with no clause, or a line in no other form, is a
+refusal. parse() and clauses() are the phrase mode's.
 """
 import argparse, hashlib, json, re, subprocess, sys
 from pathlib import Path
@@ -97,13 +104,55 @@ def selected(lines):
     return every, [e for e in every if PHRASE.search(e["all"])]
 
 
+def read_ids(path):
+    """The id list: {"A": [...], "B": [...], "D": [...]}, each id once."""
+    tiers = {"A": [], "B": [], "D": []}
+    for n, raw in enumerate(Path(path).read_text(encoding="utf-8").splitlines(), 1):
+        line = raw.split("#", 1)[0].strip()
+        if not line:
+            continue
+        m = re.fullmatch(r"([ABD]) (R\d+(?:\([a-z]\))?)", line)
+        if not m:
+            sys.exit(f"REFUSED: {path} line {n} is not '<A|B|D> <id>': {raw!r}")
+        if any(m.group(2) in t for t in tiers.values()):
+            sys.exit(f"REFUSED: {path} line {n} repeats {m.group(2)}")
+        tiers[m.group(1)].append(m.group(2))
+    return tiers
+
+
+def write_rules(path, preface, groups, every, glosses):
+    """The output file: the preface lines, then each group's clauses under its heading, if it has one."""
+    out = list(preface)
+    for heading, sel in groups:
+        if heading:
+            out += [heading, ""]
+        for e in sel:
+            out += [f"## {e['id']}", "", f"{e['date']}, session {e['session']}.", ""]
+            seen = {}
+            for c in e["copies"]:
+                seen.setdefault(norm("\n".join(c["text"])), c)
+            if len(seen) > 1:
+                out += [f"*The fence and the table row differ; {len(seen)} texts are quoted.*", ""]
+            for c in seen.values():
+                out += [quote(c), ""]
+            out += [f"Named by: {', '.join(named_by(e, every)) or 'none'}.", "", f"Gloss (CC's, not ruled): {glosses[e['id']]}", ""]
+    Path(path).write_text("\n".join(out), encoding="utf-8")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--plan", required=True); ap.add_argument("--glosses"); ap.add_argument("--out")
-    ap.add_argument("--list", action="store_true"); ap.add_argument("--spot", type=int)
+    ap.add_argument("--plan", required=True); ap.add_argument("--glosses", action="append"); ap.add_argument("--out")
+    ap.add_argument("--list", action="store_true"); ap.add_argument("--spot", type=int); ap.add_argument("--ids")
     a = ap.parse_args()
     raw = Path(a.plan).read_bytes(); lines = raw.decode("utf-8").split("\n")
     every, sel = selected(lines)
+    if a.ids:
+        tiers = read_ids(a.ids); known = {e["id"] for e in every}
+        missing = [i for t in tiers.values() for i in t if i not in known]
+        if missing:
+            sys.exit(f"REFUSED: listed id with no clause {missing}")
+        groups = {t: [e for e in every if e["id"] in tiers[t]] for t in "AB"}
+        sel = groups["A"] + groups["B"]
     if a.list:
         for e in sel:
             print(f"{e['id']} [{e['date']} {e['session']}] copies {len(e['copies'])} distinct {e['distinct']}")
@@ -121,30 +170,29 @@ def main() -> int:
                 ok &= good
                 print(f"{e['id']} {c['source']} line {c['line']} ({len(c['text'])} lines): verbatim {'True' if good else 'False'}")
         print("RESULT:", "PASS" if ok else "FAIL"); return 0 if ok else 1
-    glosses = json.loads(Path(a.glosses).read_text(encoding="utf-8"))
+    glosses = {}
+    for g in a.glosses:
+        glosses.update(json.loads(Path(g).read_text(encoding="utf-8")))
     ids = {e["id"] for e in sel}
-    if ids != set(glosses):
-        sys.exit(f"REFUSED: no gloss for {sorted(ids - set(glosses))}; gloss for no clause {sorted(set(glosses) - ids)}")
+    spare = set(tiers["D"]) if a.ids else set()
+    if ids - set(glosses) or set(glosses) - ids - spare:
+        sys.exit(f"REFUSED: no gloss for {sorted(ids - set(glosses))}; gloss for no clause {sorted(set(glosses) - ids - spare)}")
     me = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-    out = ["# Standing rules (extracted, not adopted)", "",
-           "**Status: extracted, not adopted.** Under R746(e) this file is adopted only by a later PI ruling after the "
-           "architect has read it; until then every brief stays in its present form. Clause text is the plan's, "
-           "by script; only the lines headed \"Gloss (CC's, not ruled):\" are composed, and they rule nothing.", "",
-           f"- Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `{me}`",
-           f"- Plan blob: `{a.plan}`, sha256 `{hashlib.sha256(raw).hexdigest()}`",
-           f"- Selection: clauses containing \"from here\" or \"the standing form\", whitespace normalised (\"Rule from here\" contains the first): {len(sel)} of {len(every)} clauses in the log.",
-           "- \"Named by\" lists later clauses that carry the exact id; a range or a bare ruling number does not count.", ""]
-    for e in sel:
-        out += [f"## {e['id']}", "", f"{e['date']}, session {e['session']}.", ""]
-        seen = {}
-        for c in e["copies"]:
-            seen.setdefault(norm("\n".join(c["text"])), c)
-        if len(seen) > 1:
-            out += [f"*The fence and the table row differ; {len(seen)} texts are quoted.*", ""]
-        for c in seen.values():
-            out += [quote(c), ""]
-        out += [f"Named by: {', '.join(named_by(e, every)) or 'none'}.", "", f"Gloss (CC's, not ruled): {glosses[e['id']]}", ""]
-    Path(a.out).write_text("\n".join(out), encoding="utf-8")
+    preface = ["# Standing rules (extracted, not adopted)", "",
+               "**Status: extracted, not adopted" + (", selected by the committed id list" if a.ids else "") + ".** Under R746(e) this file is adopted only by a later PI ruling after the "
+               "architect has read it; until then every brief stays in its present form. Clause text is the plan's, "
+               "by script; only the lines headed \"Gloss (CC's, not ruled):\" are composed, and they rule nothing.", "",
+               f"- Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `{me}`",
+               f"- Plan blob: `{a.plan}`, sha256 `{hashlib.sha256(raw).hexdigest()}`"]
+    if a.ids:
+        preface += [f"- Id list: `{a.ids}`, sha256 `{hashlib.sha256(Path(a.ids).read_bytes()).hexdigest()}`",
+                    f"- Selection: the id list: Tier A {len(groups['A'])}, Tier B {len(groups['B'])}, {len(sel)} of {len(every)} clauses in the log."]
+        out_groups = [("# Tier A — process rules", groups["A"]), ("# Tier B — engine governance, pending the adoption ruling", groups["B"])]
+    else:
+        preface += [f"- Selection: clauses containing \"from here\" or \"the standing form\", whitespace normalised (\"Rule from here\" contains the first): {len(sel)} of {len(every)} clauses in the log."]
+        out_groups = [(None, sel)]
+    preface += ["- \"Named by\" lists later clauses that carry the exact id; a range or a bare ruling number does not count.", ""]
+    write_rules(a.out, preface, out_groups, every, glosses)
     print(f"wrote {a.out}: {len(sel)} clauses of {len(every)}")
     return 0
 

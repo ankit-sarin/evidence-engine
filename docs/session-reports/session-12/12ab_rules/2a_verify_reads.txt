@@ -1,0 +1,9 @@
+R696(b): R696(b) — The gate is accepted as run. The empty-window clause of 2g was written wider than the rule it serves: R666(a) stops a gate for a model load during it (the health job's case). From here, a read-only request in the window (HEAD /, GET /api/ps, /api/tags, /api/version) with nothing resident before and after is a reading, recorded with its timestamp and, where known, its sender; a load or a generate during the gate is the stop. The 16:59:32 ollama ps came from an interactive shell on the b
+counted until P1 12 ['R660(a)', 'R676(b)', 'R682(b)', 'R688(f)', 'R691(b)', 'R698(b)', 'R714(a)', 'R721(f)', 'R728(b)', 'R736(b)', 'R744(f)', 'R746(a)']
+R692's form 5 ['R701(f)', 'R709(f)', 'R719(e)', 'R729(e)', 'R737(e)']
+leftovers form 6 ['R701(f)', 'R709(f)', 'R719(e)', 'R729(e)', 'R737(e)', 'R749(a)']
+transcript session id 0 []
+model load stop 0 []
+R660(b) R660(b) — The three GET entries at the launch second are this session's bracketing reads and the window is attributed; from here the before-gate reads are made at least five seconds before the launch so the window starts empty.
+R660(c) R660(c) — F1: the band series on the upgraded host holds 868.02 and 871.59 s; R657(d) stands. F2: a gate's basetemp is read immediately after the gate, before any other pytest invocation; no row. F3: the R656(b) cell renderer is committed once at 12q's closeout as docs/session-reports/session-12/12q
+ left R701(f) R701(f) — 12w-OPEN's startup verify checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean; foreign commits and rows per R653(c), R654(d), R663(b). 12w's item 0 transcribes this ruling as Block 99 and copies lane_line_

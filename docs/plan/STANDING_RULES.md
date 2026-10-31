@@ -1,11 +1,123 @@
 # Standing rules (extracted, not adopted)
 
-**Status: extracted, not adopted.** Under R746(e) this file is adopted only by a later PI ruling after the architect has read it; until then every brief stays in its present form. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
+**Status: extracted, not adopted, selected by the committed id list.** Under R746(e) this file is adopted only by a later PI ruling after the architect has read it; until then every brief stays in its present form. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
 
-- Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `b3aaf6894856e04760c089ee4398ba28c02ab376ea2d8b0ef49e6a898d8387ef`
-- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `86b852a454109b18099dc23210db64f2dbbe991c64a4b73a1626c4d5e85f0c39`
-- Selection: clauses containing "from here" or "the standing form", whitespace normalised ("Rule from here" contains the first): 57 of 1293 clauses in the log.
+- Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `4c241e26acef5163ba138ee63bfd6dd4cfbeb97589221b5dd2e4fd8e2df7f29a`
+- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `1e0eae8b8d8911fd2389090a6158f9c24350b2c7ba423c145c8576c396a6d676`
+- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `f36af15af8ae11b3ab3bd37c0cef2233dac2a8fbb9a0096eaac452e776ca7ef7`
+- Selection: the id list: Tier A 79, Tier B 8, 87 of 1338 clauses in the log.
 - "Named by" lists later clauses that carry the exact id; a range or a bare ruling number does not count.
+
+# Tier A — process rules
+
+## R86
+
+2026-09-23, session None.
+
+```text
+R86 — **The no-live-write window is 07:00–10:35 UTC**: the 07:00 health check, the 09:00 nightly suite, and the 10:30 `dgx-snapshot-user` timer with its 2-minute jitter (row I15). Appendix B and CLAUDE.md's ops block carry the new window. *(Closeout note, 2026-09-23: the plan's addenda carry it; Appendix B lives in the unified plan, and the CLAUDE.md half was not applied at this closeout — see the I13 stop in the session-7b closure paragraph)*
+```
+
+Named by: R96, R648(c), R747(c), R749(b).
+
+Gloss (CC's, not ruled): The window with no live write to review.db is 07:00–10:35 UTC.
+
+## R102
+
+2026-09-23, session None.
+
+```text
+R102 — The in-place authority-cell edit on R90–R94 is accepted once, as the record of their confirmation; decision-log rows otherwise remain append-only.
+```
+
+Named by: R372, R465, R575, R640(c), R653(a), R656(a), R656(b), R659(f), R678(b), R679(d), R720(b), R729(c), R730(b), R747(c).
+
+Gloss (CC's, not ruled): Decision-log rows are append-only; the one in-place edit on R90–R94 is not a precedent.
+
+## R370
+
+2026-10-01, session 12a.
+
+```text
+R370 — **The no-push reversal (issued outside a block, in the 12a-CLOSE brief).** "Reversal recorded here: the "no push until the freeze" instruction in 12a-0b-R2 and later briefs is withdrawn; sessions close pushed and measured at origin, as before." *Transcribed:* evidence-engine pushed at this closeout; claude-config by the 12a wrap
+```
+
+Named by: R598.
+
+Gloss (CC's, not ruled): Sessions close pushed and measured at origin; the earlier no-push instruction is withdrawn.
+
+## R514
+
+2026-10-08, session None.
+
+```text
+R514 — **A finding is closed when its own acceptance test passes** (the test in the original assessment or in `12f_triage_rows.md`). Capability work beyond that test stays in its owning state. Clarifies R512; does not narrow it. Applied: B-F13's run and configuration identity stays in S4 (junior); B-F10's terminal-state writer stays D20's.
+```
+
+Named by: R517, R676(b), R682(b), R688(f), R691(b), R721(f), R728(b), R736(b).
+
+Gloss (CC's, not ruled): A finding closes when its own acceptance test passes, and capability beyond that test stays in its owning state.
+
+## R647(c)
+
+2026-10-15, session 12p.
+
+```text
+R647(c) — From the 12p closeout, every "Expected values at session-N open" block states the
+  temp root at the open as the nightly's basetemp directory (one pytest-N directory plus the
+  pytest-current link), with the size as a reading not matched, never as "empty". What a
+  closeout does with the root is ruled at that closeout, as R645(d) was.
+```
+
+Named by: R648(b), R650(h), R652(c), R653(d), R662(d), R751(e).
+
+Gloss (CC's, not ruled): Expected-values blocks state the temp root at the open as a reading, size not matched, never as "empty".
+
+## R654(d)
+
+2026-10-16, session 12q.
+
+```text
+R654(d) — From this ruling on, "another lane's rows found uncommitted in PROJECT_LEDGER.md at a
+  session open" is case B's neighbour, not case C: they are committed by this lane's next
+  ledger step, named in its message, and recorded in the session's closure. A dirty
+  claude-config for any other reason (edits to primer.md or any file other than
+  PROJECT_LEDGER.md, a non-row change inside PROJECT_LEDGER.md, divergence from origin, this
+  lane's rows missing) stays a STOP.
+```
+
+Named by: R662(c), R663(b), R672(d), R678(d), R683(f), R688(a), R692(f), R698(a), R698(f), R699(a), R700(a), R701(a), R701(f), R709(f), R719(e), R729(e), R737(e).
+
+Gloss (CC's, not ruled): Another lane's uncommitted ledger rows found at an open are committed by this lane's next ledger step and named; any other dirt in claude-config is a stop.
+
+## R655(b)
+
+2026-10-16, session 12q.
+
+```text
+R655(b) — "0/0 against <file>" means, here and in every later expected-values block, the set
+  difference in both directions between the gate's collected ids and the file's ids: 0 ids
+  added, 0 removed, computed on sorted lists. Order is not compared.
+```
+
+Named by: R749(b).
+
+Gloss (CC's, not ruled): "0/0 against a file" is a set difference both ways on sorted id lists; order is not compared.
+
+## R656(b)
+
+2026-10-16, session 12q.
+
+```text
+R656(b) — The cell rule from this ruling on: in a decision-log table cell, "|" is written
+  "\|", and a backslash immediately before a pipe is written "\\". A backslash anywhere else
+  is written as it is, as the four earlier cells did. Earlier cells are left as printed
+  (R102).
+```
+
+Named by: R658(e), R659(f), R660(c).
+
+Gloss (CC's, not ruled): In a decision-log table cell a pipe and a backslash before a pipe are escaped; the fenced text stays verbatim, and earlier cells stay as printed.
 
 ## R656(d)
 
@@ -20,24 +132,6 @@ R656(d) — The interpreter is .venv/bin/python; the first fingerprint attempt's
 Named by: none.
 
 Gloss (CC's, not ruled): Briefs name .venv/bin/python for every repository script.
-
-## R657(b)
-
-2026-10-16, session 12q.
-
-```text
-R657(b) — The host maintenance of 2026-10-16 (apt full-upgrade 22:45–22:47 UTC, reboot
-  23:05 UTC, by the PI) is a dated fact of 12q's closure, not a defect and not a stop
-  condition for the remaining steps. Everything the 12q expected-values block states about
-  the host is a reading from here: Ollama service start time (now 2026-10-16 23:05:57 UTC,
-  NRestarts=0), the temp root (cleared at boot; the 0(i) reading of 22:43:26Z is the last
-  reading of the nightly's basetemp and answers step 3(e): pytest had pruned to three
-  basetemps), and the gate's wall time.
-```
-
-Named by: R663(a).
-
-Gloss (CC's, not ruled): One day's host facts (service start, temp root, wall time) were treated as readings, not checks; mostly a dated fact, not a lasting rule.
 
 ## R658(b)
 
@@ -84,6 +178,22 @@ R660(b) — The three GET entries at the launch second are this session's bracke
 Named by: none.
 
 Gloss (CC's, not ruled): Take the before-gate Ollama reads at least five seconds before launch, so the gate window starts empty.
+
+## R660(c)
+
+2026-10-17, session 12q.
+
+```text
+R660(c) — F1: the band series on the upgraded host holds 868.02 and 871.59 s; R657(d) stands.
+  F2: a gate's basetemp is read immediately after the gate, before any other pytest
+  invocation; no row. F3: the R656(b) cell renderer is committed once at 12q's closeout as
+  docs/session-reports/session-12/12q_close/render_cell.py, the scratch copies retired;
+  tooling, Class 3, no row.
+```
+
+Named by: R664(c), R676(d), R703(j).
+
+Gloss (CC's, not ruled): A gate's basetemp is read immediately after the gate, before any other pytest run; the clause's other two items are dated.
 
 ## R661(e)
 
@@ -139,6 +249,23 @@ R662(e) — Notes, no rows: F1, the mode=ro fingerprint of the staged copy is ac
 Named by: R674(b), R675(b).
 
 Gloss (CC's, not ruled): A staged or retained database copy is checked by file hash only; fingerprinting one is its own named step.
+
+## R663(b)
+
+2026-10-17, session 12r.
+
+```text
+R663(b) — S2: claude-config 9aa59b3 is accepted as found. The ledger commit is R653(c)'s case B. The
+  primer commit 2466df3 is a new case, ruled here and from now on: a committed change by another lane
+  to claude-config that leaves this lane's ledger rows and primer.md lines 41–45 intact is accepted as
+  found and recorded by a dated note naming each commit by hash and author lane; it is not a stop.
+  R654(d)'s stops are unchanged (any change to lines 41–45, a missing row of this lane, uncommitted
+  non-row dirt, divergence). Item 0(c)'s note is written, naming 2466df3 and 9aa59b3.
+```
+
+Named by: R672(d), R678(d), R683(f), R691(d), R692(f), R693(b), R701(f), R702(b), R709(c), R709(f), R710(c), R717(a), R719(e), R726(b), R729(e), R730(d), R737(e), R738(e), R751(d).
+
+Gloss (CC's, not ruled): Another lane's committed claude-config change that leaves this lane's rows and primer lines 41–45 intact is accepted as found, noted by hash and lane.
 
 ## R664(b)
 
@@ -197,19 +324,6 @@ Named by: none.
 
 Gloss (CC's, not ruled): An assumption to verify names only the fact that must hold; a value to check is a separate reading.
 
-## R672(a)
-
-2026-10-19, session 12r.
-
-```text
-R672(a) — The 12r-CLOSE closeout block is accepted as printed. The brief's step-7 element list stood in
-  for the 12q list (I6, a reading) and is the on-disk form from here, as printed in this block.
-```
-
-Named by: none.
-
-Gloss (CC's, not ruled): The closeout element list printed at 12r became the on-disk form at that time (later superseded by R678(a) and R683(b)).
-
 ## R672(f)
 
 2026-10-19, session 12r.
@@ -238,25 +352,6 @@ R673(a) — The 2(d) clause "line count = 7,168 + the '+' count" was an architec
 Named by: none.
 
 Gloss (CC's, not ruled): A plan commit's line count is the prior count plus its plus lines minus its minus lines.
-
-## R674(b)
-
-2026-10-19, session 12s.
-
-```text
-R674(b) — 3(i)'s "No database is opened for this" was an architect clause that, applied to the five
-  restore points, forbade the only instrument that can verify them; withdrawn for restore points.
-  From here, retention is two checks with two instruments: retained throwaway reviews and U06's copy
-  by review.db file sha256 only, never opened (R662(e), F9, unchanged); the five restore points by
-  db_fingerprint --compare against their recorded records, opened mode=ro, as 12r-OPEN did, a named
-  step. The five are re-verified at item 0 of 12s-U14A. The sizes, mtimes and file sha256s CC
-  recorded are readings and become a second record for the five, written into the 12s-U14A
-  evidence directory.
-```
-
-Named by: R675(b).
-
-Gloss (CC's, not ruled): Retention had two instruments: hash for throwaway copies, fingerprint for the five restore points (the second part amended by R675(b)).
 
 ## R675(b)
 
@@ -327,21 +422,6 @@ Named by: R678(e), R680(c), R682(d), R683(c).
 
 Gloss (CC's, not ruled): A confounded gate reading still counts toward the wall-time band's mean, with its confounder recorded.
 
-## R678(a)
-
-2026-10-19, session 12s.
-
-```text
-R678(a) — The 12s-CLOSE closeout block is accepted as printed. Its element order, read from the 12r
-  transcript, is the on-disk form from here. The closure's two-stop count stands; the brief's "one"
-  was the architect's. INT-s12-1's text cell as quoted from 12s_U14A.md stands (R664(d)); R675(e)'s
-  parenthesis was the report's summary, not the read-out's sentence.
-```
-
-Named by: R683(b).
-
-Gloss (CC's, not ruled): The closeout block's element order is the one read from the 12r transcript, on disk from then on.
-
 ## R678(f)
 
 2026-10-19, session 12s.
@@ -356,6 +436,21 @@ R678(f) — Notes, no rows: the recount chain now runs 12q → 12r → 12s by sh
 Named by: R685(f), R691(f), R701(c), R714(c).
 
 Gloss (CC's, not ruled): The recount chain runs by sha256, one script per ruling that opens rows.
+
+## R679(b)
+
+2026-10-20, session 12t.
+
+```text
+R679(b) — The prefix_check.py clause of step 2e was an architect clause and is withdrawn; R664(a)
+  had already withdrawn the same premise in 12r, and R664(b) governs: a commit carrying no cell
+  note is verified by its "−" count alone, which must be 0, read from git diff --numstat of the
+  plan file. The rest of 2e stands.
+```
+
+Named by: R684(g).
+
+Gloss (CC's, not ruled): prefix_check.py's clause is withdrawn; a commit with no cell note is verified by its plan "−" count, which must be 0.
 
 ## R680(b)
 
@@ -402,6 +497,23 @@ Named by: none.
 
 Gloss (CC's, not ruled): 12t_close/closeout_12s_found.txt is the on-disk record of the closeout element order, and a closeout brief names it.
 
+## R683(c)
+
+2026-10-20, session 12t.
+
+```text
+R683(c) — The band (R657(d), R677(f), R682(d)): cut from the last four standard gates on this host
+  state, 858.50, 895.02, 872.27 and 887.58 s (mean 878.3425 s), the first two beside a surgical-cv
+  encode, the last two on a quiet box, confounded readings included with their confounders
+  recorded: 791–966 s. The session-12u startup verify's gate is matched against it; a gate
+  outside it is reported with its concurrent jobs, not adapted to. The series stands at 871.59,
+  906.50, 858.50, 895.02, 872.27, 887.58 s.
+```
+
+Named by: R692(c), R693(f), R700(e), R701(b), R702(c), R707(g), R709(b), R719(b), R729(b), R737(b), R748(b).
+
+Gloss (CC's, not ruled): The band is cut from the last four standard gates on the host state, confounded readings included and recorded, rounded inward; a gate outside it is reported, not adapted to; its figures are that day's.
+
 ## R684(d)
 
 2026-10-22, session 12u.
@@ -431,6 +543,20 @@ R684(e) — The item-0 transcription check is restated: a brief's 2a self-diff c
 Named by: R692(a), R693(a), R694(a).
 
 Gloss (CC's, not ruled): The ruling accepting a transcription carries the architect's own hashed copy of the ruling, instead of a self-diff in the brief.
+
+## R693(d)
+
+2026-10-23, session 12v.
+
+```text
+R693(d) — Finding 3, no row: the health job's log records no lock line, so "lock taken or
+  skipped" cannot be read from it. Open briefs stop asking it; whether the health job takes the
+  experiment lock is the dgx-infra item's question.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): The health job's log has no lock line, so open briefs do not ask whether the lock was taken.
 
 ## R696(b)
 
@@ -516,6 +642,22 @@ Named by: none.
 
 Gloss (CC's, not ruled): Any pytest run outside a standard gate passes --basetemp under its own scratch.
 
+## R704(e)
+
+2026-10-24, session 12w.
+
+```text
+R704(e) — Readings, no row: (i) ledger 5a9ae9e's message timestamp (17:12:22Z) differs from its
+  row (17:11:21Z); the row is the record; the message stands, not amended. (ii) The second wait
+  at the census broke R702(b)(ii): one wait means one waiting process of any kind, foreground or
+  background, for one job. (iii) The census cannot see a test asserting a manifest-body key is
+  absent; the grep found none.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): One wait means one waiting process of any kind for one job (item (ii)); the clause's other two items are dated readings.
+
 ## R705(c)
 
 2026-10-25, session 12w.
@@ -590,6 +732,23 @@ Named by: R720(e).
 
 Gloss (CC's, not ruled): 12f_repro/dbchecks.py is the instrument of record for database checks.
 
+## R714(c)
+
+2026-10-26, session 12x.
+
+```text
+R714(c) — Readings, no row: ten non-audit keys, not eleven (the brief's count was the
+  architect's; the census governs); the before-gate reads at 3.4 s, a deviation with an empty
+  journal window; the landed file's first docstring line names Phase 1 and scratch, corrected
+  by quoted text at the next commit that touches that file; the chained recount script's
+  fix_units_dated_lines field is a literal reading done 19, so the dated lines are the count of
+  record (R701(c)) and the script is not edited (R678(f)).
+```
+
+Named by: R715(c), R717(c), R729(c).
+
+Gloss (CC's, not ruled): The recount script's fix_units_dated_lines is a literal, so the dated lines are the count of record and the script is not edited; the clause's other items are dated.
+
 ## R716(b)
 
 2026-10-26, session 12x.
@@ -640,27 +799,6 @@ R720(c) — Finding 1 is CC's and is accepted as reported: the commit is sound b
 Named by: none.
 
 Gloss (CC's, not ruled): A check-and-commit chain has no pipe: `<check> && <commit>`, one line, with the check writing its own evidence file.
-
-## R720(e)
-
-2026-10-28, session 12y.
-
-```text
-R720(e) — Readings, no row: the 16:19:34 HEAD / and GET /api/ps pair in the gate window, as 12x's
-  at 02:30:56 (R711(c)); the dgx-snapshot-user timer's read-only requests at 10:31 on both days
-  (I15); NV_ERR_NO_MEMORY seventeen this boot, the new line inside the 2026-10-28 llama3.3:70b load,
-  which succeeded (dgx-infra; Run 7's confounder statement); the durations reference 2,486 phases
-  against the gate's 2,454 with no phase slower by more than 10 s; the temp root at the open (five
-  entries, 4,141,734,999 B) and after (pytest-130, -131, -132, current); the I12 clauses, all
-  matched at 3e; finding 5's corrected id extraction, the wrong first lines left in place as
-  evidence (never edited); finding 6's widened concurrent-jobs pattern (nvenc, uvicorn added) stands
-  from here as the snapshot's pattern, recorded with the 12y host snapshot. R510 for 12y so far: rows
-  in 0, rows out 0, no class move.
-```
-
-Named by: none.
-
-Gloss (CC's, not ruled): The concurrent-jobs pattern includes nvenc and uvicorn.
 
 ## R722(a)
 
@@ -714,6 +852,28 @@ Named by: R725(b), R725(e).
 
 Gloss (CC's, not ruled): The census also finds exact-set and hard-coded-hash pins over any record the commit extends; each is rewritten keeping its purpose, or it stops.
 
+## R725(b)
+
+2026-10-28, session 12y.
+
+```text
+R725(b) — The rule, reversing the form the 12y-U18B brief and R722(a)–R724(a) built one census at a
+  time: for an engine commit, the test-side Touched list is not predicted. It is "every test that
+  pins a seam, a record shape or a class set the commit changes, found by census or by the gate,
+  each rewrite reported with its assertion kept". A red test in the gate is classified by CC: (c)
+  coupled to the change — rewritten under B5 in the same commit, reported before and after, no
+  STOP; or (r) a regression — a test red for a reason the change did not pin — a STOP with the
+  tree uncommitted. The STOP conditions that remain are a rewrite that drops or weakens an
+  assertion, a class-(r) red, a moved pin or prompt_hash, and a model load in the gate window.
+  The census pre-step stays (patch names, module-alias patches, record key sets, class membership
+  sets) as a first pass that puts most couplings in the list before the gate; its misses are
+  class (c), not stops. Engine files stay predicted and I5's STOP stays for them.
+```
+
+Named by: R726(d), R728(f), R731(f), R734(g), R738(f), R747(c).
+
+Gloss (CC's, not ruled): An engine commit's test-side Touched list is not predicted: tests pinning what changes are found by census or the gate, and a red is classified as coupled or as a regression.
+
 ## R725(c)
 
 2026-10-28, session 12y.
@@ -727,6 +887,20 @@ R725(c) — docs/inventory/ regeneration in an engine commit is standing practic
 Named by: none.
 
 Gloss (CC's, not ruled): Every engine-commit brief lists docs/inventory/ in Touched by default.
+
+## R727(a)
+
+2026-10-28, session 12y.
+
+```text
+R727(a) — The stop is correct; the cause is the architect's: R721(b) wrote "closing the run
+  'aborted'" from C26's vocabulary without reading which exception each runner closes 'aborted'
+  on. The brief's I3 caught it before an edit, which is what an INFERRED item is for.
+```
+
+Named by: R744(e), R747(c).
+
+Gloss (CC's, not ruled): An inferred item caught a code-behaviour premise before an edit, which is what such an item is for; the clause itself records one stop.
 
 ## R729(c)
 
@@ -868,6 +1042,47 @@ Named by: none.
 
 Gloss (CC's, not ruled): A brief gives a note's label as 'the record's form, the sub-clause named', not as a literal.
 
+## R736(c)
+
+2026-10-30, session 12z.
+
+```text
+R736(c) — Finding 1 is accepted as the code required: ServerEnvChanged is raised by the extract
+  loop, so its CLAUDE.md sentence sits beside ModelDigestChanged's per-call sentence, not in
+  open_run's refusal list; R734(d)(iii)'s "refusal list" was the architect's description written
+  ahead of the code, the record's form governs (R18). Finding 3 is accepted and made a rule: an
+  acceptance id that pins a non-refusal or an unchanged shape is green on its parent by
+  construction; the brief names it a pin and CC reports it so, with no STOP (R707(a)'s form; A3's
+  precedent). Finding 2 (the fourteenth id, test_api_parity's) is a reading. Finding 4: the kept
+  name test_skip_returns_none_and_does_not_raise is inaccurate; the id is record and stays; one
+  line in commit 1's record (already there, or added at the closeout) says so; a rename, if any,
+  is P7's with the test-name housekeeping. Finding 5's two self-corrected defects are readings.
+```
+
+Named by: R747(c).
+
+Gloss (CC's, not ruled): An acceptance id that pins a non-refusal or an unchanged shape is green on its parent by construction, so the brief names it a pin.
+
+## R737(c)
+
+2026-10-30, session 12z.
+
+```text
+R737(c) — Readings and notes, no row: Block 133's header sentence (finding 1) is the record's form
+  for a ruling whose text first reached disk through a later brief's paste, and stands; the two
+  check-scope stops before commits (finding 2) are CC's, caught by the chain, no stop of the
+  session; the health cron log carries no dates, so a day's run is identified by mtime and tail
+  (finding 3) — a dgx-infra reading, carried with the cross-lane item; the 105-line closure given
+  by path and range (finding 4) is accepted, the plan at 2b592ae being the text; the equal wall
+  times (finding 5) a coincidence of two readings. The 39-character hash of R729's STATUS line
+  leaves primer.md with this lane line (R730(b)); the record keeps it in r729.txt and the lane-line
+  copy only, with Block 127's addendum naming it.
+```
+
+Named by: R742(a).
+
+Gloss (CC's, not ruled): Block 133's header sentence is the form for a ruling first reaching disk through a later brief, and the health log's day is read by mtime and tail; the clause also carries dated readings.
+
 ## R738(b)
 
 2026-10-30, session 12aa.
@@ -945,3 +1160,230 @@ R742(b) — Rule from here: a check script takes every value that varies by comm
 Named by: none.
 
 Gloss (CC's, not ruled): A check script takes per-commit values from its arguments or the files it checks, never as literals carried over.
+
+## R746(c)
+
+2026-10-30, session 12aa.
+
+```text
+R746(c) — Finding 2 is accepted and is the rule from here: a red at the gate caused by a census miss
+  is class (c); it is fixed without changing any test's assertion and the gate is re-run once; the
+  red run's evidence is committed beside the green one and is not a member of the series. Any
+  other red at the gate is a stop.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): A red at the gate from a census miss is class (c): fixed without changing an assertion, re-run once, its evidence kept outside the series; any other red is a stop.
+
+## R746(d)
+
+2026-10-30, session 12aa.
+
+```text
+R746(d) — Readings, no row: finding 3 (a red caused only by a missing name is reported as such in
+  every record from here); findings 4, 5, 6, 7, 9 and 10; finding 8's handler list is the starting
+  list of C56's census in U26, untraced.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): A red caused only by a missing name is reported as such in every record; the clause's other items are dated readings.
+
+## R747(b)
+
+2026-10-30, session 12aa.
+
+```text
+R747(b) — transcribe_ruling.py is accepted for every block from here. session_open_check.py is
+  accepted for what it checks; the recount, the R510 count, the nightly's ids against the expected
+  set and the health job's journal read stay explicit steps of an open until the script covers
+  them (finding 4). The gate wrapper is accepted pending its first full gate, where a wrapper fault
+  is reported as the wrapper's (finding 8).
+```
+
+Named by: R748(e).
+
+Gloss (CC's, not ruled): The tools in force and their limits: transcribe_ruling.py for every block, session_open_check.py for what it checks, the gate wrapper pending its first full gate.
+
+## R749(b)
+
+2026-10-31, session 12ab.
+
+```text
+R749(b) — An open does not wait for a day's scheduled jobs. A brief is valid at any time outside
+  07:00–10:35 UTC (R86), and a gate must exit before 07:00 UTC. An open or closeout reads every
+  scheduled job that has run on the current HEAD since the last recorded read, each against the
+  expected file that governs it; a nightly that has not yet run is read by the first open,
+  closeout or other brief after it runs, as an explicit step, against the same expected file
+  while the engine tree is unchanged, and against the closeout's new expected file after a
+  change. 12aa_U20C/expected_nightly_20261031.md governs the 2026-10-31 nightly whenever it is
+  read. The readings themselves, the line-for-line match, the ids comparison (R655(b)) and the
+  stop on a mismatch are unchanged. This amends R748(e) and every earlier wrap ruling's "reads the
+  … health job and … nightly" clause in timing only.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): An open does not wait for a day's jobs; each job is read by the first brief after it runs, against its governing expected file, and a gate must exit before 07:00 UTC.
+
+## R750(c)
+
+2026-10-31, session 12ab.
+
+```text
+R750(c) — D = 0 is accepted (finding 2). The brief's "EXPECTED: the ends-at R747 line" was the
+  architect's prediction from the record's description, against afd179e's own numstat, and is
+  withdrawn; the tool and the record governed, as the constraints say. 12ab-OPEN's rule-14 list
+  gains "a tool's write semantics", and a brief that names a tool states no "−" count the tool's
+  own run does not supply.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): A brief that names a tool states no "−" count that the tool's own run does not supply.
+
+## R751(c)
+
+2026-10-31, session 12ab.
+
+```text
+R751(c) — Finding 8: the session-start instruction "Read docs/plan/ENGINE_REFACTOR_PLAN.md" is read
+  as scoped, from this ruling: the Status table, the latest closure paragraph and its "Expected
+  values" block, the decision log's last block, and every block, row or read-out a brief names. No
+  other part of the plan is taken as checked by a session, and a brief that relies on an earlier
+  ruling quotes it. The CLAUDE.md line is corrected to this scope, by text quoted in that commit's
+  handoff for PI approval, in the commit that adopts STANDING_RULES.md (R747(c)); not before.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): The plan's session-start read is scoped to the Status table, the latest closure and expected values, the last block and whatever a brief names; a brief relying on an earlier ruling quotes it.
+
+## R751(e)
+
+2026-10-31, session 12ab.
+
+```text
+R751(e) — Readings, no row: finding 10 (stale primer lines, the dgx-infra lane's); finding 11 (the
+  temp root rotated pytest-166 out at pytest-169's creation; R647(c) stands — the root is read,
+  never matched); finding 12 (an evidence commit's scope is docs(session-reports) from here, the
+  model 5c1474c's docs(plan) being for commits that touch the plan); finding 13 (a brief's named
+  waiting process governs over a memory note; the note is CC's to reconcile, not a stop).
+```
+
+Named by: R752(d).
+
+Gloss (CC's, not ruled): An evidence commit's scope is docs(session-reports), with docs(plan) for commits that touch the plan, and a brief's named wait governs over a memory note; the clause's other items are dated.
+
+## R752(d)
+
+2026-10-31, session 12ab.
+
+```text
+R752(d) — Finding 9: the memory note feedback_tmux_no_poll.md is CC's own, outside every repository,
+  and R751(e) left it to CC to reconcile; the edit is a reading, not a Touched-list breach. From
+  here a brief's DO NOT TOUCH does not reach CC's own memory files, and CC reports an edit to one.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): A brief's DO NOT TOUCH does not reach CC's own memory files, and CC reports an edit to one.
+
+# Tier B — engine governance, pending the adoption ruling
+
+## R25
+
+2026-09-21, session None.
+
+```text
+R25 — Seed, do not migrate. The event store begins empty of field-level history. Session 5 seeds it with: papers; current corpus membership as one "state at migration" paper event per paper (no reconstruction of how the state arose); parsed-text references; spec and codebook identities. Existing extractions, spans, cloud extractions, auditor verdicts, adjudication tables and workflow stamps are NOT imported — they remain in place, read-only, as a regression fixture and telemetry. The reader is validated on fixtures and then on the freshman smoke run and Run 7, not by agreement with legacy readers. Superseded as moot: R18's Q8 and Q9 clauses; R17's legacy-backfill clause; v2.1 row 17 at field level; the session-5 gate clause "new reader agrees with each old reader on the live data"; the session-6 judge target of 3,802 legacy cells. Cloud comparator arms, if needed for Paper 1, are re-run on the tagged state under declared arms (decision deferred to Run 7). Scope reset recorded in `docs/session-reports/effective-result-01/S2_phase1_readout_addendum4_20260921.md`, which supersedes read-out §5 and §7
+```
+
+Named by: R28, R31, R94, R111, R113, R188, R210, R238.
+
+Gloss (CC's, not ruled): The event store starts empty of field-level history, seeded with papers, corpus membership, text references and identities; legacy tables stay read-only.
+
+## R26
+
+2026-09-21, session None.
+
+```text
+R26 — The extraction field set is frozen for Paper 1: codebook field names and the definitions given to human extractors do not change. Elicitation, validation, tokens and field-state handling remain engine work and may change
+```
+
+Named by: R128, R571, R612.
+
+Gloss (CC's, not ruled): The extraction field names and definitions are frozen for Paper 1, while elicitation, validation, tokens and field-state handling may change.
+
+## R71
+
+2026-09-22, session None.
+
+```text
+R71 — R22-U4 extended: no cloud extraction until session 9 (unlinked writer) and session 8 (glob resolver) both land; cloud opt-in is built and tested on fixtures, the live spec keeps `cloud.enabled_arms` empty
+```
+
+Named by: R210, R237, R599.
+
+Gloss (CC's, not ruled): No cloud extraction until sessions 8 and 9 land, and the live spec keeps cloud.enabled_arms empty.
+
+## R510
+
+2026-10-07, session None.
+
+```text
+R510 — **Y4.** "Each close records pre-tag rows in / out and counts by class."
+```
+
+Named by: R540, R607, R632(a), R634(c), R635(a), R643(b), R648(e), R651(a), R659(d), R683(d), R692(d), R695(c), R698(g), R700(f), R705(e), R707(e), R720(e), R721(f), R728(e), R731(e), R736(e), R738(e), R747(b), R747(f), R751(a).
+
+Gloss (CC's, not ruled): Each close records pre-tag rows in and out and the counts by class.
+
+## R539
+
+2026-10-08, session None.
+
+```text
+R539 — **The pin is the ordering constraint:** a change to what the elicited run sends (unit construction, prompts, format schemas, stage set) lands before the freeze smoke records the binding pin. Audit-side changes (locator, verdicts) are outside the pin and may be re-run on Run 7.
+```
+
+Named by: R558, R589, R590, R675(e), R694(c), R694(h).
+
+Gloss (CC's, not ruled): Anything that changes what the elicited run sends lands before the freeze smoke records the binding pin; audit-side changes are outside the pin.
+
+## R541
+
+2026-10-08, session None.
+
+```text
+R541 — **The 12f triage table, as amended by R537 and R538, is the pre-tag list.** Its outside and internal rows are opened as inventory section L; a finding after this ruling enters only with its class and package stated (R509). The finish line is this list closed.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): The 12f triage table, as amended, is the pre-tag list, and a later finding enters only with its class and package stated.
+
+## R543
+
+2026-10-08, session 12g.
+
+```text
+R543 — **12g-OPEN.** E-TEST stays in P1 although it is Class 3: it is the acceptance test of the elicited path and lands with or immediately after INT-g6-1. A Class 3 item may ride with its subject; P7 holds the rest of the Class 3 batch.
+```
+
+Named by: R609, R612, R624, R650(e).
+
+Gloss (CC's, not ruled): A Class 3 item may ride with its subject, and P7 holds the rest of the Class 3 batch.
+
+## R601
+
+2026-10-10, session 12j.
+
+```text
+R601 — Human-gate page and workbook files (narrows X3 for these rows only): - Set: rows 6, 7, 8, 9, 13, 18, 20, 36, 37, 38 and 39, and the page/workbook halves of row 19. Files: abstract_adjudication_html.py, ft_adjudication_html.py, pdf_quality_html.py, review_workbook.py, and the xlsx/JSON file-format handling of the screening importers. - Pre-tag, each row in the set closes on its minimum loud-failure fix: a wrong, incomplete or unverifiable round trip is refused or shown to the person, never applied silently. - Each row's full fix becomes a dated requirement note on J1 (the S7 operator app, sophomore). - Not in the set, with full fixes pre-tag: rows 5, 12, 14, 15, 16, 17 and 35, the importers' key cross-check (R596(d)), and every other Wave 2 row. - The R546 re-screen's FT adjudication runs only after the FT page and FT importer rows in the set have their loud-failure fixes.
+```
+
+Named by: R609, R610.
+
+Gloss (CC's, not ruled): The named human-gate page and workbook rows close pre-tag on a minimum loud-failure fix: a wrong round trip is refused or shown, never applied silently.

@@ -1,0 +1,110 @@
+# The architect's standing-rules id list (R747(c), R753(e)). One entry per line: A <id> / B <id> select a clause into
+# Tier A or Tier B; D <id> records a drop. Read by docs/session-reports/tools/extract_rules.py --ids. Not adopted (R751(c)).
+
+# Tier A — process rules: keeps from the phrase-selected 57
+A R656(d)
+A R658(b)
+A R658(c)
+A R660(b)
+A R661(e)
+A R662(a)
+A R662(e)
+A R664(b)
+A R666(c)
+A R667(e)
+A R672(f)
+A R673(a)
+A R675(b)
+A R676(c)
+A R676(d)
+A R677(f)
+A R678(f)
+A R680(b)
+A R680(c)
+A R683(b)
+A R684(d)
+A R684(e)
+A R696(b)
+A R697(b)
+A R700(c)
+A R702(b)
+A R703(j)
+A R705(c)
+A R705(d)
+A R706(e)
+A R707(a)
+A R711(c)
+A R716(b)
+A R720(b)
+A R720(c)
+A R722(a)
+A R723(a)
+A R724(a)
+A R725(c)
+A R729(c)
+A R730(c)
+A R731(b)
+A R731(c)
+A R732(a)
+A R732(d)
+A R733(a)
+A R735(c)
+A R738(b)
+A R738(c)
+A R738(d)
+A R739(b)
+A R742(b)
+
+# Tier A — process rules: adds, selected by id
+A R86
+A R102
+A R370
+A R514
+A R647(c)
+A R654(d)
+A R655(b)
+A R656(b)
+A R660(c)
+A R663(b)
+A R679(b)
+A R683(c)
+A R693(d)
+A R704(e)
+A R714(c)
+A R725(b)
+A R727(a)
+A R736(c)
+A R737(c)
+A R746(c)
+A R746(d)
+A R747(b)
+A R749(b)
+A R750(c)
+A R751(c)
+A R751(e)
+A R752(d)
+
+# Tier B — engine governance, pending the adoption ruling
+B R25
+B R26
+B R71
+B R510
+B R539
+B R541
+B R543
+B R601
+
+# Dropped from the 57
+D R657(b)  # one day's host facts
+D R672(a)  # closeout element order, superseded by R683(b) and R729(c)
+D R678(a)  # closeout element order, superseded by R683(b) and R729(c)
+D R674(b)  # amended by R675(b)
+D R720(e)  # one day's readings
+
+# Left out, no clause selected
+# R607(d): stated by R753(d); enters at the regeneration after R753's transcription. R607 parses whole: "R607 — Package process, from P1 on: (a) one Phase A read-out per package"
+# R692: stated by R753(d); enters at the regeneration after R753's transcription. R692(a): "R692(a) — The 12u-CLOSE closeout block is accepted as printed."
+# R753: enters at the regeneration after its transcription.
+# R718: dropped, dated, R753(e). R718(a): "R718(a) — The stop is correct; step 4a's open date was the architect's, written from memory."
+# R746(e): left out, the tools' build, dated, R753(e). R746(e): "R746(e) — The setup session (R745(g)) builds, outside engine/, scripts/ and tests/: (i)"
+# R666(a): the model-load stop is R696(b)'s, kept; R753(d)(i). R666(a): "R666(a) — 12r-OPEN is accepted as reported."

@@ -27,6 +27,7 @@ from engine.core.extraction_telemetry import SCHEMA_VERSION, read_calls, record_
 from engine.core.review_spec import ExtractionModels
 
 NATIVE_THINKING = "Let me work through the fields. The paper says n=12 pigs..."
+_ABSENT = object()   # U22 (Q5, R770(b)): "no eval_count attribute at all", distinct from None
 ANSWER_CONTENT = '{"fields": [{"field_name": "study_type", "value": "Original Research"}]}'
 
 
@@ -99,11 +100,14 @@ def test_parse_returns_a_branch_label_for_every_success():
 # ── extract_pass1_reasoning: explicit think, native consumption ──────────
 
 
-def _resp(content, thinking=None, done_reason="stop"):
-    return SimpleNamespace(
+def _resp(content, thinking=None, done_reason="stop", eval_count=_ABSENT):
+    response = SimpleNamespace(
         message=SimpleNamespace(content=content, thinking=thinking),
         done_reason=done_reason,
     )
+    if eval_count is not _ABSENT:                     # set only when given (U22)
+        response.eval_count = eval_count
+    return response
 
 
 def test_pass1_passes_think_explicitly_and_defaults_on():
@@ -186,11 +190,13 @@ def test_spec_policy_is_reachable_from_a_loaded_spec():
 def test_telemetry_schema_is_v3_and_carries_the_thinking_fields(tmp_path):
     # Rewritten under B5 (R126): the schema moved -2 -> -3 when Pass 1's
     # done_reason and the prompt_eval_counts were added; the thinking fields stand.
+    # Rewritten under B5 again (U22, R768(b)(v), R770(b)): -3 -> -4 when each
+    # pass's eval_count was added; the id and the thinking assertions stand.
     record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1,
                 outcome="stored", thinking_present=True, thinking_chars=1744,
                 parse_branch="native")
     row = read_calls(tmp_path)[0]
-    assert row["schema"] == SCHEMA_VERSION == "extraction-telemetry-3"
+    assert row["schema"] == SCHEMA_VERSION == "extraction-telemetry-4"
     assert row["thinking_present"] is True
     assert row["thinking_chars"] == 1744
     assert row["parse_branch"] == "native"
@@ -224,6 +230,34 @@ def test_telemetry_records_pass1_done_reason_and_prompt_eval_counts(tmp_path):
     assert row["finish_reason"] == "stop"        # Pass 2's, unchanged in meaning
 
 
+def test_telemetry_records_each_passs_eval_count_under_schema_v4(tmp_path):
+    """U22 (INT-g12-6, R768(b), R768(d)(ii)): each pass's `eval_count` rides the two
+    module dicts into the row as a pass1_/pass2_ pair under schema -4; a response
+    without the attribute records None for its pass."""
+    from engine.agents.extractor import (
+        _LAST_PASS1_TELEMETRY, _LAST_PASS2_TELEMETRY, extract_pass2_structured,
+    )
+
+    def one_attempt(attempt, pass1, pass2):
+        with patch("engine.agents.extractor.ollama_chat") as chat:
+            chat.return_value = pass1
+            extract_pass1_reasoning("prompt", cfg=stage_config("extract_pass1"))
+            chat.return_value = pass2
+            extract_pass2_structured("prompt", "trace", None, 7, codebook_hash="cb",
+                                     cfg=stage_config("extract_pass2"))
+        record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=attempt, outcome="stored",
+                    pass1_eval_count=_LAST_PASS1_TELEMETRY["eval_count"],
+                    pass2_eval_count=_LAST_PASS2_TELEMETRY["eval_count"])
+
+    one_attempt(1, _resp(ANSWER_CONTENT, NATIVE_THINKING, eval_count=123),
+                _resp('{"fields": []}', eval_count=456))
+    one_attempt(2, _resp(ANSWER_CONTENT, NATIVE_THINKING), _resp('{"fields": []}'))
+    counted, absent = read_calls(tmp_path)
+    assert counted["schema"] == SCHEMA_VERSION == "extraction-telemetry-4"
+    assert (counted["pass1_eval_count"], counted["pass2_eval_count"]) == (123, 456)
+    assert absent["pass1_eval_count"] is None and absent["pass2_eval_count"] is None
+
+
 def test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable(tmp_path):
     record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored")
     v2 = {"schema": "extraction-telemetry-2", "arm": "deepseek-r1:32b", "paper_id": 2,
@@ -233,4 +267,5 @@ def test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable(tmp_path)
         fh.write(json.dumps(v2) + "\n")
     new, old = read_calls(tmp_path)
     assert new["pass1_done_reason"] is None and new["pass1_prompt_eval_count"] is None
+    assert new["pass1_eval_count"] is None and new["pass2_eval_count"] is None   # U22, -4
     assert old == v2                             # additive: an older row reads back as written

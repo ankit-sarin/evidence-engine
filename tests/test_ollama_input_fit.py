@@ -16,16 +16,18 @@ import pytest
 from engine.utils import ollama_client as oc
 
 HOST = "http://127.0.0.1:11434"
+_ABSENT = object()   # U22 (Q5, R770(b)): "no eval_count attribute at all", distinct from None
 
 
 class StubClient:
     """Stands in for `ollama.Client`: answers show() and chat(), records both."""
 
-    def __init__(self, n_ctx_train=131_072, count=100, content="ok", host=HOST):
+    def __init__(self, n_ctx_train=131_072, count=100, content="ok", host=HOST, eval_count=_ABSENT):
         self._client = SimpleNamespace(base_url=host)
         self.n_ctx_train = n_ctx_train
         self.count = count
         self.content = content
+        self.eval_count = eval_count   # set on the response only when given (U22)
         self.shows: list[str] = []
         self.chats: list[dict] = []
 
@@ -37,8 +39,11 @@ class StubClient:
     def chat(self, **kwargs):
         self.chats.append(kwargs)
         count = self.count(kwargs) if callable(self.count) else self.count
-        return SimpleNamespace(message=SimpleNamespace(content=self.content),
-                               prompt_eval_count=count, done_reason="stop")
+        response = SimpleNamespace(message=SimpleNamespace(content=self.content),
+                                   prompt_eval_count=count, done_reason="stop")
+        if self.eval_count is not _ABSENT:
+            response.eval_count = self.eval_count
+        return response
 
 
 @pytest.fixture(autouse=True)
@@ -216,7 +221,29 @@ def test_every_call_logs_one_structured_input_fit_line(monkeypatch, caplog):
     assert len(lines) == 1
     record = json.loads(lines[0].split(" ", 2)[2])
     assert record == {"model": "m", "ceiling": 131_072, "chars": 3000, "estimate_low": 570,
-                      "count": 630, "ratio": 0.21, "done_reason": "stop"}
+                      "count": 630, "ratio": 0.21, "done_reason": "stop", "eval_count": None}
+
+
+def _input_fit_record(caplog, paper_id: int) -> dict:
+    lines = [r.getMessage() for r in caplog.records
+             if r.getMessage().startswith(f"input_fit paper_id={paper_id} ")]
+    assert len(lines) == 1
+    return json.loads(lines[0].split(" ", 2)[2])
+
+
+def test_the_input_fit_line_records_eval_count(monkeypatch, caplog):
+    """U22 (INT-g12-6, R768(d)(i)): the line carries the response's `eval_count`;
+    a response without the attribute records None and does not raise."""
+    _use(monkeypatch, count=630, eval_count=123)
+    with caplog.at_level("INFO", logger="engine.utils.ollama_client"):
+        assert _chat(_user(3000), paper_id=7).prompt_eval_count == 630
+    assert _input_fit_record(caplog, 7)["eval_count"] == 123
+
+    caplog.clear()
+    _use(monkeypatch, count=630)                      # the stub without the attribute
+    with caplog.at_level("INFO", logger="engine.utils.ollama_client"):
+        assert _chat(_user(3000), paper_id=8).prompt_eval_count == 630
+    assert _input_fit_record(caplog, 8)["eval_count"] is None
 
 
 def test_input_fit_errors_are_not_retried(monkeypatch):

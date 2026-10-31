@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 TELEMETRY_DIRNAME = "telemetry"
 TELEMETRY_FILENAME = "extraction_calls.jsonl"
-SCHEMA_VERSION = "extraction-telemetry-3"
+SCHEMA_VERSION = "extraction-telemetry-4"
 
 # Raw responses are the point of this file, but a runaway response should not be
 # able to blow up the log. Truncation is recorded explicitly when it happens.
@@ -65,6 +65,8 @@ def record_call(
     pass1_done_reason: str | None = None,
     pass1_prompt_eval_count: int | None = None,
     pass2_prompt_eval_count: int | None = None,
+    pass1_eval_count: int | None = None,
+    pass2_eval_count: int | None = None,
     extra: dict | None = None,
 ) -> Path | None:
     """Append one telemetry record. Never raises — telemetry must not break a run.
@@ -113,6 +115,11 @@ def record_call(
         "pass1_done_reason": pass1_done_reason,
         "pass1_prompt_eval_count": pass1_prompt_eval_count,
         "pass2_prompt_eval_count": pass2_prompt_eval_count,
+        # U22 / R768 (schema -4, additive): each pass's eval_count, the output
+        # count the response carries beside prompt_eval_count. The local arm's
+        # output size; `output_tokens` above stays the cloud path's usage field.
+        "pass1_eval_count": pass1_eval_count,
+        "pass2_eval_count": pass2_eval_count,
         "error": error,
     }
     if extra:

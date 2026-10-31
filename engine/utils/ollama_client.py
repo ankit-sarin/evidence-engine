@@ -439,12 +439,19 @@ def _check_input_was_read(response, fit: dict, paper_label: str):
     if isinstance(count, bool) or not isinstance(count, int):
         count = None
     done_reason = getattr(response, "done_reason", None)
+    # U22 (INT-g12-6, R768(b)(i)): the output count, read as `count` is; no
+    # `num_predict` key — the extract stages send none, and the stage row already
+    # records a request-side absence.
+    eval_count = getattr(response, "eval_count", None)
+    if isinstance(eval_count, bool) or not isinstance(eval_count, int):
+        eval_count = None
     chars, ceiling, model = fit["chars"], fit["ceiling"], fit["model"]
     telemetry = {
         **fit,
         "count": count,
         "ratio": round(count / chars, 4) if count is not None and chars else None,
         "done_reason": done_reason if isinstance(done_reason, str) else None,
+        "eval_count": eval_count,
     }
     logger.info("input_fit %s %s", paper_label, json.dumps(telemetry, sort_keys=True))
     if count is None:

@@ -302,6 +302,7 @@ def run_pass1(unit_map: UnitMap, codebook: dict, field_names: tuple[str, ...],
         "pass1_prompt_chars": len(prompt),
         "pass1_feedback_chars": len(feedback),
         "pass1_prompt_eval_count": pec,
+        "pass1_eval_count": getattr(response, "eval_count", None),     # U22, R768(b)(iii)
         "pass1_content_chars": len(raw),
         "pass1_thinking_chars": len(thinking),
         "pass1_done_reason": getattr(response, "done_reason", None),
@@ -501,6 +502,7 @@ def extract_paper_elicited(
         parse_branch=f"elicitation:{p1.parse_path}",
         finish_reason=p1_tel["pass1_done_reason"],
         prompt_eval_count=p1_tel["pass1_prompt_eval_count"],
+        eval_count=p1_tel["pass1_eval_count"],              # the accepted attempt's (U22)
         elicitation={
             **p1_tel,
             "unit_map_dir": unit_map_dir_name,
@@ -518,6 +520,7 @@ def extract_paper_elicited(
                     "feedback_chars": tel.get("pass1_feedback_chars", 0),
                     "prompt_chars": tel["pass1_prompt_chars"],
                     "prompt_eval_count": tel["pass1_prompt_eval_count"],
+                    "eval_count": tel["pass1_eval_count"],              # each attempt's (U22)
                     "fields": tel["fields"],
                     # R571(e): each attempt's raw response and request hash,
                     # the rejected attempt's included.

@@ -246,6 +246,7 @@ def extract_pass1_reasoning(prompt: str, *,
         parse_branch=branch,
         finish_reason=getattr(response, "done_reason", None),
         prompt_eval_count=getattr(response, "prompt_eval_count", None),
+        eval_count=getattr(response, "eval_count", None),     # U22, R768(b)(ii)
     )
     return (trace, req_hash) if return_request_hash else trace
 
@@ -353,6 +354,7 @@ def extract_pass2_structured(
         raw_content=raw,
         finish_reason=getattr(response, "done_reason", None),
         prompt_eval_count=getattr(response, "prompt_eval_count", None),
+        eval_count=getattr(response, "eval_count", None),     # U22, R768(b)(ii)
         model=cfg.model,
     )
     output = ExtractionOutput.model_validate_json(raw)
@@ -901,6 +903,8 @@ def extract_paper_with_completeness(
                 pass1_done_reason=_LAST_PASS1_TELEMETRY.get("finish_reason"),
                 pass1_prompt_eval_count=_LAST_PASS1_TELEMETRY.get("prompt_eval_count"),
                 pass2_prompt_eval_count=_LAST_PASS2_TELEMETRY.get("prompt_eval_count"),
+                pass1_eval_count=_LAST_PASS1_TELEMETRY.get("eval_count"),
+                pass2_eval_count=_LAST_PASS2_TELEMETRY.get("eval_count"),
                 error=str(exc),
                 extra=_LAST_PASS1_TELEMETRY.get("elicitation"),
             )
@@ -929,6 +933,8 @@ def extract_paper_with_completeness(
                 pass1_done_reason=_LAST_PASS1_TELEMETRY.get("finish_reason"),
                 pass1_prompt_eval_count=_LAST_PASS1_TELEMETRY.get("prompt_eval_count"),
                 pass2_prompt_eval_count=_LAST_PASS2_TELEMETRY.get("prompt_eval_count"),
+                pass1_eval_count=_LAST_PASS1_TELEMETRY.get("eval_count"),
+                pass2_eval_count=_LAST_PASS2_TELEMETRY.get("eval_count"),
                 error=None if incomplete else str(exc),
                 extra=_LAST_PASS1_TELEMETRY.get("elicitation") or getattr(exc, "telemetry", None),
             )
@@ -953,6 +959,8 @@ def extract_paper_with_completeness(
             pass1_done_reason=_LAST_PASS1_TELEMETRY.get("finish_reason"),
             pass1_prompt_eval_count=_LAST_PASS1_TELEMETRY.get("prompt_eval_count"),
             pass2_prompt_eval_count=_LAST_PASS2_TELEMETRY.get("prompt_eval_count"),
+            pass1_eval_count=_LAST_PASS1_TELEMETRY.get("eval_count"),
+            pass2_eval_count=_LAST_PASS2_TELEMETRY.get("eval_count"),
             extra=_LAST_PASS1_TELEMETRY.get("elicitation"),
         )
         if attempt > 1:

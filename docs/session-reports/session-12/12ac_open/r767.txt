@@ -1,0 +1,60 @@
+RULING [evidence-engine 12ac-R767] — 12ac-OPEN accepted; the series gains 926.70 s; readings; U22's
+  Phase A opens
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-OPEN final
+  report as resumed under R766 (item 0 bc1da2681fc9dd1493f74cda1cce5d9ddef95945; evidence
+  d54c4fcea8af1be757af4646a6ed5c7f518cef12). Transcribe at item 0 of the 12ac-U22A brief below, by
+  transcribe_ruling.py, in the block after R766's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-OPEN final report):
+  MEASURED: "Commit bc1da2681fc9dd1493f74cda1cce5d9ddef95945, parent 228ee31…"; "Plan:
+    5b48dc8dea88b523216588f65b0a777c9faa1546d5bc5cf0f88b42c01cebc021, 2,564,138 B, 14,492 lines";
+    "Block 163: --check-plan reads byte-identical at 10,958 B"; "r765.txt: b5ca336c…26fc, 6201 B, 71
+    lines, equal to the architect's hash"; "Ledger: fc03e8a70e439a1ea6ed2ef89825187a5a8e127a, parent
+    3e7425c, message "ledger: rows through 2026-10-31T19:00:18Z""; "RESULT: PASS (0 mismatches)";
+    "Its stdout is byte-identical to the committed JSON (1c84e446…92f2)"; "now = {rows 281, class_1
+    94, class_2 56, class_3 131, without_class 0}"; "37, done 24 (dated lines, as measured)"; "207
+    six-cell rows at 228ee31, 207 at bc1da26; in 0, out 0; no class or package move"; "Wall | 926.70
+    s, inside 829–1012 s"; "==== 3490 passed, 17 deselected, 1 xfailed, 2 warnings in 924.50s
+    (0:15:24) ===="; "collected 3508 items / 17 deselected / 3491 selected"; "Ids | 3491 against
+    3491; only-gate 0, only-ref 0"; "Journal window | -- No entries --: no load, no requests";
+    "Concurrent jobs | surgical-cv's uvicorn only (pid 39609, started 18:00:28)"; "Evidence set | 19
+    files"; "Commit d54c4fcea8af1be757af4646a6ed5c7f518cef12, parent bc1da26: 24 new files, +15,092
+    / −0"; "Ledger: 8669f2582cb8b242da3c97c66958caf1f6259b62, parent fc03e8a"; "header 3; new
+    sections 1; Named by 17; other 0"; "Before the gate: pytest-196, -197, -198 and pytest-current,
+    1,590,263,531 B. After: pytest-197, -198, -199 and pytest-current, 2,809,922,386 B".
+  READ (CC's): findings 1–8 of that report; "The durations files have different phase counts: gate
+    2558, reference 2593"; "My inference, unmeasured, is that pytest omits very short phases under
+    -v".
+  INFERRED: none.
+
+R767(a) — 12ac-OPEN is accepted as reported: item 0 bc1da26 (Block 163 by transcribe_ruling.py;
+  r765.txt and lane_line_12ab.txt in 12ab_close/; "A R763(c)" on the list, its gloss,
+  STANDING_RULES.md regenerated at 90 clauses, the diff classified 3 / 1 / 17 / 0), the ledger
+  fc03e8a; the open check PASS; the recount and R510 as expected; the gate 3,490 / 1 / 17 on 3,508
+  / 3,491, 0/0, 926.70 s inside 829–1012 s beside the idle uvicorn server only; the gate evidence
+  and the five 10-31 job files landed in their own commit d54c4fc with ledger 8669f25. The 12ac
+  open stands verified. The decision log in the file ends at R765.
+R767(b) — The series on this host state gains 926.70 s: the twenty-seven of R765(b) plus 926.70.
+  The band for 12ac stays 829–1012 s.
+R767(c) — Readings, no row: finding 1 (the check's "exact leading run" is stricter than R766(b)'s
+  superset-in-order and is accepted as the check's form from here); finding 2 (the two added
+  conditions, the byte-prefix and the transcribed-date check, accepted as the check's); finding 3
+  (the journal line's wording; the committed journal file stands beside it); finding 4 (the
+  expected file checks five digests, the 12ab open file's set, more than the block's three — the
+  five are the expected set from here, and the next closeout's block names them); finding 5 (the
+  durations phase counts differ, 2558 against 2593, no phase slower by more than 10 s; CC's
+  inference about -v is recorded as unmeasured); finding 7 (a progress message, not a record);
+  finding 8 (the primer's three stale points, the id list's header comment and the primer lane line
+  stay as ordered for the closeout and the next tools change); the temp root 2.81 GB after the gate,
+  nothing emptied; the R751(e) docs(session-reports) scope.
+R767(d) — Finding 6: the 2026-11-01 07:00 health job and 09:00 nightly are read by the first brief
+  after 10:35 UTC on 2026-11-01, against 12ab_close/expected_nightly_20261031.md on 11-01's log
+  names and against 22 NV_ERR_NO_MEMORY lines this boot (R749(b), R766(d)); until then every brief
+  states the step empty.
+R767(e) — U22's Phase A opens under the 12ac-U22A brief below, in the form R728(f) and R731(f)
+  state and 12ab_U21A.md carries: 12l_P1A.md §3's next unit after U21 in its order, read-only; the
+  unit entry quoted first (a closed or absorbed unit is caught there and the next open unit
+  reported instead); the row it names quoted with every note and its acceptance test; the census
+  pre-step's five classes (R722(a)–R725(b)); the mechanism at HEAD, quoted; the options with what
+  each moves. No engine change; no model load; an Ollama request other than version, tags or ps is
+  not made. The fix is not designed in the Phase A.

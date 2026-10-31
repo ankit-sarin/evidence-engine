@@ -14490,3 +14490,147 @@ R765(i) — Session 12ab closes now. After R765(e) and R765(g) have landed, run 
 | 2026-10-31 | R765(a) — The 12ab-CLOSE closeout block is accepted as printed: item 0 52be363 (Blocks 160–162 by transcribe_ruling.py; the B-F14 and C47 notes; the CLAUDE.md sentence), the closeout 228ee31 (21 files; the 20 counterpart files; the closure and the 12ac block), ledgers 2046e8d and 1b87476 with trailers, the foreign row adeb112 committed as found (finding 67, R654(d); it joins the dgx-infra item with a7b27ab, 6be00e3 and 82a5835). R765(b) — The band for 12ac is 829–1012 s: ±10% of 920.2300 s, the mean of the last four standard gates on this host state (907.50, 919.74, 924.77, 928.91), rounded inward as R683(c) rounded, each described as band_computation.txt describes it (uvicorn at each; a foreign shell at 12ab-OPEN's launch, R751(b)). The series stands at the twenty-five of R748(b) plus 924.77 and 928.91. A 12ac gate outside the band is reported with its concurrent jobs, not adapted to. R765(c) — The stops, counted by the PI (finding 70; the closure's table stands as CC's reading, not edited): eight — the architect's five (12ab-OPEN at 0a, R749: the clock rule was the architect's design; 12ab-RULES at 2a, R753; 12ab-ADOPT at I3, R755; 12ab-U21P-R2 at the floor, R760; 12ab-U21B at I2, R762); CC's two (12ab-U21P at V0, R758, the prompt; 12ab-U21P-R1 at calibration, R759, the wordings); the tool's one (12ab-OPEN-R1 at 3b, R750). The session's most-violated line: a value or a fact written from a description when its source was in the architect's own clone (R750(c), R752(b), R753(b), R755(b), R760(b), R762(a)). R765(d) — Readings, no row: finding 68 (the transcription tool has no sentence form for a ruling pasted alone — a tools item, closed at the next tools change with R752(c)'s two limits, in one validation pass; Block 161's sentence stands as printed); finding 69 (the closure's foreign list is CC's reading; a7b27ab the one permitted non-resolving hash); findings 71 and 72 (the brief's commit list and file count were the architect's; the record governed); findings 74–77. R765(e) — Finding 66: the project primer's stale line (primer.md:1040, "read it at session start") is outside the lane line's range and is edited directly by CC now, under the closeout's primer obligation: that sentence replaced by one stating R751(c)'s scope and naming STANDING_RULES.md as the session-start read, the edit's diff quoted in the wrap report; no other primer line changes. R756(b)'s "under R737(d)'s lane-line form" was the architect's, withdrawn. R765(f) — Finding 73: R763(c)'s crash rule is a standing rule; "A R763(c)" joins the list and the file is regenerated at 12ac-OPEN's item 0 (R754(c)(iii)); until then a brief restates it (R754(b)). R765(g) — The lane line (sha256 64f6d63eb5c2c742f090fdf3e8d31ab296a5295e4334d3c17249bf0a6ff62dca, 6,664 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows named by hash); push; level. R765(h) — 12ac-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with transcribe_ruling.py as the next block, copies lane_line_12ab.txt into docs/session-reports/session-12/12ab_close/, adds R763(c) to the list and regenerates the file. It runs session_open_check.py and the steps R747(b) keeps explicit, against the "Expected values at session-12ac open" block; reads the 2026-10-31 and 2026-11-01 jobs against 12ab_close/expected_nightly_20261031.md (R764(c)); the gate by the wrapper, against 829–1012 s. Then U22's Phase A. R765(i) — Session 12ab closes now. After R765(e) and R765(g) have landed, run /wrap. Report the primer diff, the lane-line commit's hash and parent, the wrap's verdict, and the archive command as run with its result. | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-CLOSE closeout block (228ee31) |
 
 The decision log in this file ends at R765.
+
+**Block 164.** *Transcribed 2026-10-31 (item 0 of the 12ac-U22A brief), in its own commit with Block 165 and the standing-rules regeneration it orders, in the R597(e) form:* ruling R766, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ac, on the 12ac-OPEN report stopped at step 2e (no commit; HEAD `228ee31eff6bdd0951f48c83cff109d4075e3bf9`). The 12ac-OPEN-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R766] — 12ac-OPEN stopped at 2e: the stop correct and the architect's;
+  the derived "Named by" lines accepted; D = 0; the prediction withdrawn; readings; resume at 2f
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-OPEN
+  report stopped at step 2e (no commit; HEAD 228ee31eff6bdd0951f48c83cff109d4075e3bf9, six files
+  uncommitted). Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after
+  R765's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-OPEN stop report):
+  MEASURED: "18:23:32 UTC, 2026-10-31"; "10-31 health and nightly found; 11-01 not yet due, so 1c is
+    empty"; "r765.txt: b5ca336c…26fc, 6201 B, 71 lines, hashed straight after its one write. Equal
+    to the architect's"; "Form against Block 135: same element order, no difference"; "--append:
+    appended Block 163 (R765): +82. Numstat is 82 / 0, the plan now has 14492 lines (14410 + 82 −
+    0), and the last line reads "…ends at R765.""; "Lane-line copy: sha256 equal to its source";
+    "Id list: one added line, A R763(c), directly after A R756(b)  # R757(d)"; "The glosses numstat
+    is +2 / −1, because the previous last entry gains a comma"; "wrote docs/plan/STANDING_RULES.md:
+    90 clauses of 1403. --spot 10: RESULT: PASS"; "numstat +37 / −20"; "Header lines (plan
+    5b48dc8d…c021, ids 901c229c…3d6f, "Tier A 82, Tier B 8, 90 of 1403") | 3"; "New R763(c)
+    section, clause byte-equal to the plan's fence | 1"; ""Named by" lines, each only appending ids,
+    existing ids unchanged | 17"; "Anything else | 0"; "HEAD is still 228ee31, level with origin.
+    claude-config is unchanged and clean at 3e7425c. The fingerprint is IDENTICAL"; "Loads were
+    20/20 OK with no FAIL lines"; "NV_ERR_NO_MEMORY went from 18 to 22 this boot. All four new lines
+    fall inside health-job loads"; the nightly table, every line "matches the expected file";
+    "Ids | 3491 against 3491, 0/0"; "HEAD at run time | 228ee31"; "b6963a16 archive time: 06:55:05
+    UTC".
+  READ (the architect's clone at 228ee31): docs/plan/ENGINE_REFACTOR_PLAN.md carries 169 lines "The
+    decision log in this file ends at …", one per transcribed block; extract_rules.py line 139
+    writes "Named by: {', '.join(named_by(e, every)) or 'none'}." from the log's later clauses.
+  READ (CC's): findings 1–7 of that report; "The corrected sentence is at primer lines 1075–1076,
+    not 1040"; "The file was last regenerated at 07bea9c (Block 155 …), so Blocks 156–163 are new
+    since then"; "3370298, /usr/bin/login -f -h 100.90.238.95, root … an interactive login shell,
+    not this lane".
+  INFERRED: none.
+
+R766(a) — The stop at 2e is correct and is the architect's: the allowed-diff list was written from
+  a description of the output, with 07bea9c and fa44c9e in the record beside it unread (R765(c)'s
+  line, the seventh instance). Nothing was committed; the six files stand as the report tables
+  them, and r765.txt is not rewritten.
+R766(b) — The 17 "Named by" lines are accepted: each only appends ids, no existing id is dropped or
+  reordered, and no clause text moved. Rule from here: a regeneration of STANDING_RULES.md after
+  new blocks changes its "Named by" lines, which are derived; a pre-commit check classifies every
+  changed line and allows the header's three hash and Selection lines, a new section for an id the
+  list gained, and a "Named by" line that only appends ids; any other changed line is a stop. The
+  classification is written by the check into its own evidence file, never by eye.
+R766(c) — D = 0: transcribe_ruling.py --append appends only, and every block's "ends at" line stays
+  (169 of them at 228ee31). The brief's 2c and 2f expectation of the "ends at R764." line as the
+  one "−" line is withdrawn as the architect's, carried from 12ab-OPEN's form after R750(c) had
+  withdrawn it. The plan's numstat 82 / 0 and line count 14492 are the values 2f asserts, read
+  from the diff; the glosses numstat +2 / −1 is accepted as read.
+R766(d) — Readings, no row: finding 3 (I13's line number had drifted; the fact held; a line
+  number is not an anchor); finding 4 (the last regeneration was 07bea9c; Blocks 156–163 are the
+  new ones; the clause total 1403); finding 5; finding 7 (the temp root 1.59 GB, the nightly's
+  basetemp; nothing emptied); the four NV_ERR_NO_MEMORY lines inside the 10-31 health loads — the
+  count this boot is now 22, and "eighteen before them" in the 12ac block reads as 22 for the next
+  health read; the id list's "Not adopted (R751(c))" header comment, false since R754, corrected at
+  the next tools change with R752(c) and R765(d); the "beside" wording and the R763(c) gloss as CC
+  composed them; the login shell 3370298 not this lane's; the 12aa health_job form has no NVRM
+  line, so nvrm_this_boot_20261031_read.txt stands beside it.
+R766(e) — The 2026-10-31 health job and nightly are read: the nightly a line-for-line match on
+  228ee31, ids 0/0, the window empty; the health job 20/20. Step 1 stands as reported; the four
+  files and the NVRM file go into 12ab_close/ at step 4 as the brief placed them (R21).
+R766(f) — 12ac-OPEN resumes now at 2f under the RESUME below, on the tree as it stands. Everything
+  not named in the resume runs as issued.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R766(a) — The stop at 2e is correct and is the architect's: the allowed-diff list was written from a description of the output, with 07bea9c and fa44c9e in the record beside it unread (R765(c)'s line, the seventh instance). Nothing was committed; the six files stand as the report tables them, and r765.txt is not rewritten. R766(b) — The 17 "Named by" lines are accepted: each only appends ids, no existing id is dropped or reordered, and no clause text moved. Rule from here: a regeneration of STANDING_RULES.md after new blocks changes its "Named by" lines, which are derived; a pre-commit check classifies every changed line and allows the header's three hash and Selection lines, a new section for an id the list gained, and a "Named by" line that only appends ids; any other changed line is a stop. The classification is written by the check into its own evidence file, never by eye. R766(c) — D = 0: transcribe_ruling.py --append appends only, and every block's "ends at" line stays (169 of them at 228ee31). The brief's 2c and 2f expectation of the "ends at R764." line as the one "−" line is withdrawn as the architect's, carried from 12ab-OPEN's form after R750(c) had withdrawn it. The plan's numstat 82 / 0 and line count 14492 are the values 2f asserts, read from the diff; the glosses numstat +2 / −1 is accepted as read. R766(d) — Readings, no row: finding 3 (I13's line number had drifted; the fact held; a line number is not an anchor); finding 4 (the last regeneration was 07bea9c; Blocks 156–163 are the new ones; the clause total 1403); finding 5; finding 7 (the temp root 1.59 GB, the nightly's basetemp; nothing emptied); the four NV_ERR_NO_MEMORY lines inside the 10-31 health loads — the count this boot is now 22, and "eighteen before them" in the 12ac block reads as 22 for the next health read; the id list's "Not adopted (R751(c))" header comment, false since R754, corrected at the next tools change with R752(c) and R765(d); the "beside" wording and the R763(c) gloss as CC composed them; the login shell 3370298 not this lane's; the 12aa health_job form has no NVRM line, so nvrm_this_boot_20261031_read.txt stands beside it. R766(e) — The 2026-10-31 health job and nightly are read: the nightly a line-for-line match on 228ee31, ids 0/0, the window empty; the health job 20/20. Step 1 stands as reported; the four files and the NVRM file go into 12ab_close/ at step 4 as the brief placed them (R21). R766(f) — 12ac-OPEN resumes now at 2f under the RESUME below, on the tree as it stands. Everything not named in the resume runs as issued. | PI, 2026-10-31, during session 12ac, on architect recommendation, on the 12ac-OPEN report stopped at step 2e (no commit; HEAD 228ee31) |
+
+The decision log in this file ends at R766.
+
+**Block 165.** *Transcribed 2026-10-31 (item 0 of the 12ac-U22A brief), in its own commit with Block 164, in the R597(e) form:* ruling R767, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ac, on the 12ac-OPEN final report as resumed under R766 (item 0 `bc1da2681fc9dd1493f74cda1cce5d9ddef95945`; evidence `d54c4fcea8af1be757af4646a6ed5c7f518cef12`). The 12ac-U22A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R767] — 12ac-OPEN accepted; the series gains 926.70 s; readings; U22's
+  Phase A opens
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-OPEN final
+  report as resumed under R766 (item 0 bc1da2681fc9dd1493f74cda1cce5d9ddef95945; evidence
+  d54c4fcea8af1be757af4646a6ed5c7f518cef12). Transcribe at item 0 of the 12ac-U22A brief below, by
+  transcribe_ruling.py, in the block after R766's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-OPEN final report):
+  MEASURED: "Commit bc1da2681fc9dd1493f74cda1cce5d9ddef95945, parent 228ee31…"; "Plan:
+    5b48dc8dea88b523216588f65b0a777c9faa1546d5bc5cf0f88b42c01cebc021, 2,564,138 B, 14,492 lines";
+    "Block 163: --check-plan reads byte-identical at 10,958 B"; "r765.txt: b5ca336c…26fc, 6201 B, 71
+    lines, equal to the architect's hash"; "Ledger: fc03e8a70e439a1ea6ed2ef89825187a5a8e127a, parent
+    3e7425c, message "ledger: rows through 2026-10-31T19:00:18Z""; "RESULT: PASS (0 mismatches)";
+    "Its stdout is byte-identical to the committed JSON (1c84e446…92f2)"; "now = {rows 281, class_1
+    94, class_2 56, class_3 131, without_class 0}"; "37, done 24 (dated lines, as measured)"; "207
+    six-cell rows at 228ee31, 207 at bc1da26; in 0, out 0; no class or package move"; "Wall | 926.70
+    s, inside 829–1012 s"; "==== 3490 passed, 17 deselected, 1 xfailed, 2 warnings in 924.50s
+    (0:15:24) ===="; "collected 3508 items / 17 deselected / 3491 selected"; "Ids | 3491 against
+    3491; only-gate 0, only-ref 0"; "Journal window | -- No entries --: no load, no requests";
+    "Concurrent jobs | surgical-cv's uvicorn only (pid 39609, started 18:00:28)"; "Evidence set | 19
+    files"; "Commit d54c4fcea8af1be757af4646a6ed5c7f518cef12, parent bc1da26: 24 new files, +15,092
+    / −0"; "Ledger: 8669f2582cb8b242da3c97c66958caf1f6259b62, parent fc03e8a"; "header 3; new
+    sections 1; Named by 17; other 0"; "Before the gate: pytest-196, -197, -198 and pytest-current,
+    1,590,263,531 B. After: pytest-197, -198, -199 and pytest-current, 2,809,922,386 B".
+  READ (CC's): findings 1–8 of that report; "The durations files have different phase counts: gate
+    2558, reference 2593"; "My inference, unmeasured, is that pytest omits very short phases under
+    -v".
+  INFERRED: none.
+
+R767(a) — 12ac-OPEN is accepted as reported: item 0 bc1da26 (Block 163 by transcribe_ruling.py;
+  r765.txt and lane_line_12ab.txt in 12ab_close/; "A R763(c)" on the list, its gloss,
+  STANDING_RULES.md regenerated at 90 clauses, the diff classified 3 / 1 / 17 / 0), the ledger
+  fc03e8a; the open check PASS; the recount and R510 as expected; the gate 3,490 / 1 / 17 on 3,508
+  / 3,491, 0/0, 926.70 s inside 829–1012 s beside the idle uvicorn server only; the gate evidence
+  and the five 10-31 job files landed in their own commit d54c4fc with ledger 8669f25. The 12ac
+  open stands verified. The decision log in the file ends at R765.
+R767(b) — The series on this host state gains 926.70 s: the twenty-seven of R765(b) plus 926.70.
+  The band for 12ac stays 829–1012 s.
+R767(c) — Readings, no row: finding 1 (the check's "exact leading run" is stricter than R766(b)'s
+  superset-in-order and is accepted as the check's form from here); finding 2 (the two added
+  conditions, the byte-prefix and the transcribed-date check, accepted as the check's); finding 3
+  (the journal line's wording; the committed journal file stands beside it); finding 4 (the
+  expected file checks five digests, the 12ab open file's set, more than the block's three — the
+  five are the expected set from here, and the next closeout's block names them); finding 5 (the
+  durations phase counts differ, 2558 against 2593, no phase slower by more than 10 s; CC's
+  inference about -v is recorded as unmeasured); finding 7 (a progress message, not a record);
+  finding 8 (the primer's three stale points, the id list's header comment and the primer lane line
+  stay as ordered for the closeout and the next tools change); the temp root 2.81 GB after the gate,
+  nothing emptied; the R751(e) docs(session-reports) scope.
+R767(d) — Finding 6: the 2026-11-01 07:00 health job and 09:00 nightly are read by the first brief
+  after 10:35 UTC on 2026-11-01, against 12ab_close/expected_nightly_20261031.md on 11-01's log
+  names and against 22 NV_ERR_NO_MEMORY lines this boot (R749(b), R766(d)); until then every brief
+  states the step empty.
+R767(e) — U22's Phase A opens under the 12ac-U22A brief below, in the form R728(f) and R731(f)
+  state and 12ab_U21A.md carries: 12l_P1A.md §3's next unit after U21 in its order, read-only; the
+  unit entry quoted first (a closed or absorbed unit is caught there and the next open unit
+  reported instead); the row it names quoted with every note and its acceptance test; the census
+  pre-step's five classes (R722(a)–R725(b)); the mechanism at HEAD, quoted; the options with what
+  each moves. No engine change; no model load; an Ollama request other than version, tags or ps is
+  not made. The fix is not designed in the Phase A.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R767(a) — 12ac-OPEN is accepted as reported: item 0 bc1da26 (Block 163 by transcribe_ruling.py; r765.txt and lane_line_12ab.txt in 12ab_close/; "A R763(c)" on the list, its gloss, STANDING_RULES.md regenerated at 90 clauses, the diff classified 3 / 1 / 17 / 0), the ledger fc03e8a; the open check PASS; the recount and R510 as expected; the gate 3,490 / 1 / 17 on 3,508 / 3,491, 0/0, 926.70 s inside 829–1012 s beside the idle uvicorn server only; the gate evidence and the five 10-31 job files landed in their own commit d54c4fc with ledger 8669f25. The 12ac open stands verified. The decision log in the file ends at R765. R767(b) — The series on this host state gains 926.70 s: the twenty-seven of R765(b) plus 926.70. The band for 12ac stays 829–1012 s. R767(c) — Readings, no row: finding 1 (the check's "exact leading run" is stricter than R766(b)'s superset-in-order and is accepted as the check's form from here); finding 2 (the two added conditions, the byte-prefix and the transcribed-date check, accepted as the check's); finding 3 (the journal line's wording; the committed journal file stands beside it); finding 4 (the expected file checks five digests, the 12ab open file's set, more than the block's three — the five are the expected set from here, and the next closeout's block names them); finding 5 (the durations phase counts differ, 2558 against 2593, no phase slower by more than 10 s; CC's inference about -v is recorded as unmeasured); finding 7 (a progress message, not a record); finding 8 (the primer's three stale points, the id list's header comment and the primer lane line stay as ordered for the closeout and the next tools change); the temp root 2.81 GB after the gate, nothing emptied; the R751(e) docs(session-reports) scope. R767(d) — Finding 6: the 2026-11-01 07:00 health job and 09:00 nightly are read by the first brief after 10:35 UTC on 2026-11-01, against 12ab_close/expected_nightly_20261031.md on 11-01's log names and against 22 NV_ERR_NO_MEMORY lines this boot (R749(b), R766(d)); until then every brief states the step empty. R767(e) — U22's Phase A opens under the 12ac-U22A brief below, in the form R728(f) and R731(f) state and 12ab_U21A.md carries: 12l_P1A.md §3's next unit after U21 in its order, read-only; the unit entry quoted first (a closed or absorbed unit is caught there and the next open unit reported instead); the row it names quoted with every note and its acceptance test; the census pre-step's five classes (R722(a)–R725(b)); the mechanism at HEAD, quoted; the options with what each moves. No engine change; no model load; an Ollama request other than version, tags or ps is not made. The fix is not designed in the Phase A. | PI, 2026-10-31, during session 12ac, on architect recommendation, on the 12ac-OPEN final report as resumed under R766 (item 0 bc1da26; evidence d54c4fc) |
+
+The decision log in this file ends at R767.

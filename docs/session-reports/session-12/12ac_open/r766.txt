@@ -1,0 +1,62 @@
+RULING [evidence-engine 12ac-R766] — 12ac-OPEN stopped at 2e: the stop correct and the architect's;
+  the derived "Named by" lines accepted; D = 0; the prediction withdrawn; readings; resume at 2f
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-OPEN
+  report stopped at step 2e (no commit; HEAD 228ee31eff6bdd0951f48c83cff109d4075e3bf9, six files
+  uncommitted). Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after
+  R765's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-OPEN stop report):
+  MEASURED: "18:23:32 UTC, 2026-10-31"; "10-31 health and nightly found; 11-01 not yet due, so 1c is
+    empty"; "r765.txt: b5ca336c…26fc, 6201 B, 71 lines, hashed straight after its one write. Equal
+    to the architect's"; "Form against Block 135: same element order, no difference"; "--append:
+    appended Block 163 (R765): +82. Numstat is 82 / 0, the plan now has 14492 lines (14410 + 82 −
+    0), and the last line reads "…ends at R765.""; "Lane-line copy: sha256 equal to its source";
+    "Id list: one added line, A R763(c), directly after A R756(b)  # R757(d)"; "The glosses numstat
+    is +2 / −1, because the previous last entry gains a comma"; "wrote docs/plan/STANDING_RULES.md:
+    90 clauses of 1403. --spot 10: RESULT: PASS"; "numstat +37 / −20"; "Header lines (plan
+    5b48dc8d…c021, ids 901c229c…3d6f, "Tier A 82, Tier B 8, 90 of 1403") | 3"; "New R763(c)
+    section, clause byte-equal to the plan's fence | 1"; ""Named by" lines, each only appending ids,
+    existing ids unchanged | 17"; "Anything else | 0"; "HEAD is still 228ee31, level with origin.
+    claude-config is unchanged and clean at 3e7425c. The fingerprint is IDENTICAL"; "Loads were
+    20/20 OK with no FAIL lines"; "NV_ERR_NO_MEMORY went from 18 to 22 this boot. All four new lines
+    fall inside health-job loads"; the nightly table, every line "matches the expected file";
+    "Ids | 3491 against 3491, 0/0"; "HEAD at run time | 228ee31"; "b6963a16 archive time: 06:55:05
+    UTC".
+  READ (the architect's clone at 228ee31): docs/plan/ENGINE_REFACTOR_PLAN.md carries 169 lines "The
+    decision log in this file ends at …", one per transcribed block; extract_rules.py line 139
+    writes "Named by: {', '.join(named_by(e, every)) or 'none'}." from the log's later clauses.
+  READ (CC's): findings 1–7 of that report; "The corrected sentence is at primer lines 1075–1076,
+    not 1040"; "The file was last regenerated at 07bea9c (Block 155 …), so Blocks 156–163 are new
+    since then"; "3370298, /usr/bin/login -f -h 100.90.238.95, root … an interactive login shell,
+    not this lane".
+  INFERRED: none.
+
+R766(a) — The stop at 2e is correct and is the architect's: the allowed-diff list was written from
+  a description of the output, with 07bea9c and fa44c9e in the record beside it unread (R765(c)'s
+  line, the seventh instance). Nothing was committed; the six files stand as the report tables
+  them, and r765.txt is not rewritten.
+R766(b) — The 17 "Named by" lines are accepted: each only appends ids, no existing id is dropped or
+  reordered, and no clause text moved. Rule from here: a regeneration of STANDING_RULES.md after
+  new blocks changes its "Named by" lines, which are derived; a pre-commit check classifies every
+  changed line and allows the header's three hash and Selection lines, a new section for an id the
+  list gained, and a "Named by" line that only appends ids; any other changed line is a stop. The
+  classification is written by the check into its own evidence file, never by eye.
+R766(c) — D = 0: transcribe_ruling.py --append appends only, and every block's "ends at" line stays
+  (169 of them at 228ee31). The brief's 2c and 2f expectation of the "ends at R764." line as the
+  one "−" line is withdrawn as the architect's, carried from 12ab-OPEN's form after R750(c) had
+  withdrawn it. The plan's numstat 82 / 0 and line count 14492 are the values 2f asserts, read
+  from the diff; the glosses numstat +2 / −1 is accepted as read.
+R766(d) — Readings, no row: finding 3 (I13's line number had drifted; the fact held; a line
+  number is not an anchor); finding 4 (the last regeneration was 07bea9c; Blocks 156–163 are the
+  new ones; the clause total 1403); finding 5; finding 7 (the temp root 1.59 GB, the nightly's
+  basetemp; nothing emptied); the four NV_ERR_NO_MEMORY lines inside the 10-31 health loads — the
+  count this boot is now 22, and "eighteen before them" in the 12ac block reads as 22 for the next
+  health read; the id list's "Not adopted (R751(c))" header comment, false since R754, corrected at
+  the next tools change with R752(c) and R765(d); the "beside" wording and the R763(c) gloss as CC
+  composed them; the login shell 3370298 not this lane's; the 12aa health_job form has no NVRM
+  line, so nvrm_this_boot_20261031_read.txt stands beside it.
+R766(e) — The 2026-10-31 health job and nightly are read: the nightly a line-for-line match on
+  228ee31, ids 0/0, the window empty; the health job 20/20. Step 1 stands as reported; the four
+  files and the NVRM file go into 12ab_close/ at step 4 as the brief placed them (R21).
+R766(f) — 12ac-OPEN resumes now at 2f under the RESUME below, on the tree as it stands. Everything
+  not named in the resume runs as issued.

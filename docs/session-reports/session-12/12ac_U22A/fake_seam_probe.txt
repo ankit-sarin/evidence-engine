@@ -1,0 +1,24 @@
+stage configs (read-only): deepseek-r1:32b ['keep_alive', 'messages', 'model', 'options', 'think'] | deepseek-r1:32b ['format', 'keep_alive', 'messages', 'model', 'options', 'think']
+
+== with eval_count=123
+ollama_chat returned the response; getattr(response, 'eval_count', None) = 123
+input_fit line keys: ['ceiling', 'chars', 'count', 'done_reason', 'estimate_low', 'model', 'ratio'] | carries eval_count: False
+_LAST_PASS1_TELEMETRY keys: ['finish_reason', 'parse_branch', 'prompt_eval_count', 'thinking_chars', 'thinking_present'] | values: {'finish_reason': 'stop', 'prompt_eval_count': 400}
+_LAST_PASS2_TELEMETRY keys: ['finish_reason', 'model', 'prompt_eval_count', 'raw_content'] | values: {'finish_reason': 'stop', 'prompt_eval_count': 400}
+telemetry row keys: ['arm', 'attempt', 'error', 'fields_expected', 'finish_reason', 'input_tokens', 'missing_fields', 'model', 'outcome', 'output_tokens', 'paper_id', 'parse_branch', 'pass1_done_reason', 'pass1_prompt_eval_count', 'pass2_prompt_eval_count', 'raw_content', 'raw_content_chars', 'raw_content_truncated', 'reasoning_tokens', 'salvage', 'schema', 'spans_parsed', 'thinking_chars', 'thinking_present', 'ts']
+row carries eval_count: False | output_tokens: None | pass1_prompt_eval_count: 400
+fake chat calls: 3 | raised: nothing
+
+== without eval_count
+ollama_chat returned the response; getattr(response, 'eval_count', None) = None
+input_fit line keys: ['ceiling', 'chars', 'count', 'done_reason', 'estimate_low', 'model', 'ratio'] | carries eval_count: False
+_LAST_PASS1_TELEMETRY keys: ['finish_reason', 'parse_branch', 'prompt_eval_count', 'thinking_chars', 'thinking_present'] | values: {'finish_reason': 'stop', 'prompt_eval_count': 400}
+_LAST_PASS2_TELEMETRY keys: ['finish_reason', 'model', 'prompt_eval_count', 'raw_content'] | values: {'finish_reason': 'stop', 'prompt_eval_count': 400}
+telemetry row keys: ['arm', 'attempt', 'error', 'fields_expected', 'finish_reason', 'input_tokens', 'missing_fields', 'model', 'outcome', 'output_tokens', 'paper_id', 'parse_branch', 'pass1_done_reason', 'pass1_prompt_eval_count', 'pass2_prompt_eval_count', 'raw_content', 'raw_content_chars', 'raw_content_truncated', 'reasoning_tokens', 'salvage', 'schema', 'spans_parsed', 'thinking_chars', 'thinking_present', 'ts']
+row carries eval_count: False | output_tokens: None | pass1_prompt_eval_count: 400
+fake chat calls: 3 | raised: nothing
+
+record_call parameters: ['arm', 'attempt', 'error', 'extra', 'fields_expected', 'finish_reason', 'input_tokens', 'missing_fields', 'model', 'outcome', 'output_tokens', 'paper_id', 'parse_branch', 'pass1_done_reason', 'pass1_prompt_eval_count', 'pass2_prompt_eval_count', 'raw_content', 'reasoning_tokens', 'review_dir', 'salvage', 'spans_parsed', 'thinking_chars', 'thinking_present']
+has eval_count parameter: False
+record_call(eval_count=123) -> TypeError: record_call() got an unexpected keyword argument 'eval_count'
+subprocess.run reached: False

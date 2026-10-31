@@ -1,0 +1,670 @@
+# SITES
+## analysis / read: attribute .done_reason: 2
+   analysis/eval/elicit01/runner.py 207 <module>.main row.prompt_eval_count, row.done_reason, row.latency_s or 0,
+   analysis/eval/run_capture01.py 246 <module>.main r.ok, r.pass1_content_chars, r.pass1_thinking_chars, r.done_reason,
+## analysis / read: attribute .prompt_eval_count: 1
+   analysis/eval/elicit01/runner.py 207 <module>.main row.prompt_eval_count, row.done_reason, row.latency_s or 0,
+## analysis / read: getattr done_reason: 5
+   analysis/eval/elicit01/runner.py 131 <module>.call done_reason=getattr(r, "done_reason", None),
+   analysis/eval/run_capture01.py 140 <module>.capture_one done_reason=getattr(response, "done_reason", None),
+   analysis/eval/run_local_ab.py 139 <module>.run_paper finish_reason=getattr(resp, "done_reason", None),
+   analysis/eval/run_local_abc.py 173 <module>.run_one done_reason=getattr(resp, "done_reason", None),
+   analysis/eval/run_qualgap01.py 184 <module>.run_one done_reason=getattr(resp, "done_reason", None),
+## analysis / read: getattr eval_count: 4
+   analysis/eval/elicit01/runner.py 132 <module>.call prompt_eval_count=pe, eval_count=getattr(r, "eval_count", None),
+   analysis/eval/run_capture01.py 142 <module>.capture_one eval_count=getattr(response, "eval_count", None),
+   analysis/eval/run_local_abc.py 172 <module>.run_one eval_count=getattr(resp, "eval_count", None),
+   analysis/eval/run_qualgap01.py 183 <module>.run_one eval_count=getattr(resp, "eval_count", None),
+## analysis / read: getattr prompt_eval_count: 4
+   analysis/eval/elicit01/runner.py 127 <module>.call pe = getattr(r, "prompt_eval_count", None)
+   analysis/eval/run_capture01.py 141 <module>.capture_one prompt_eval_count=getattr(response, "prompt_eval_count", None),
+   analysis/eval/run_local_abc.py 171 <module>.run_one prompt_eval_count=getattr(resp, "prompt_eval_count", None),
+   analysis/eval/run_qualgap01.py 182 <module>.run_one prompt_eval_count=getattr(resp, "prompt_eval_count", None),
+## engine / literal key 'done_reason': 9
+   engine/agents/extractor.py 247 <module>.extract_pass1_reasoning finish_reason=getattr(response, "done_reason", None),
+   engine/agents/extractor.py 354 <module>.extract_pass2_structured finish_reason=getattr(response, "done_reason", None),
+   engine/core/extraction_events.py 716 <module>.write_extraction_events model=t.get("model"), finish_reason=t.get("done_reason"),
+   engine/core/extraction_events.py 717 <module>.write_extraction_events pass1_done_reason=t.get("done_reason"),
+   engine/core/extraction_events.py 528 <module>.outcome_for_exception return fail(code, telemetry={"model": exc.model, "done_reason": None,
+   engine/elicitation/pipeline.py 307 <module>.run_pass1 "pass1_done_reason": getattr(response, "done_reason", None),
+   engine/parsers/pdf_parser.py 286 <module>.parse_with_vision done_reason = getattr(response, "done_reason", None)
+   engine/utils/ollama_client.py 441 <module>._check_input_was_read done_reason = getattr(response, "done_reason", None)
+   engine/utils/ollama_client.py 447 <module>._check_input_was_read "done_reason": done_reason if isinstance(done_reason, str) else None,
+## engine / literal key 'eval_count': 1
+   engine/parsers/pdf_parser.py 291 <module>.parse_with_vision getattr(response, "eval_count", None),
+## engine / literal key 'prompt_eval_count': 14
+   engine/agents/extractor.py 248 <module>.extract_pass1_reasoning prompt_eval_count=getattr(response, "prompt_eval_count", None),
+   engine/agents/extractor.py 355 <module>.extract_pass2_structured prompt_eval_count=getattr(response, "prompt_eval_count", None),
+   engine/agents/extractor.py 954 <module>.extract_paper_with_completeness pass1_prompt_eval_count=_LAST_PASS1_TELEMETRY.get("prompt_eval_count"),
+   engine/agents/extractor.py 955 <module>.extract_paper_with_completeness pass2_prompt_eval_count=_LAST_PASS2_TELEMETRY.get("prompt_eval_count"),
+   engine/agents/extractor.py 902 <module>.extract_paper_with_completeness pass1_prompt_eval_count=_LAST_PASS1_TELEMETRY.get("prompt_eval_count"),
+   engine/agents/extractor.py 903 <module>.extract_paper_with_completeness pass2_prompt_eval_count=_LAST_PASS2_TELEMETRY.get("prompt_eval_count"),
+   engine/agents/extractor.py 930 <module>.extract_paper_with_completeness pass1_prompt_eval_count=_LAST_PASS1_TELEMETRY.get("prompt_eval_count"),
+   engine/agents/extractor.py 931 <module>.extract_paper_with_completeness pass2_prompt_eval_count=_LAST_PASS2_TELEMETRY.get("prompt_eval_count"),
+   engine/core/extraction_events.py 718 <module>.write_extraction_events pass1_prompt_eval_count=t.get("prompt_eval_count"),
+   engine/core/extraction_events.py 529 <module>.outcome_for_exception "prompt_eval_count": getattr(exc, "count", None),
+   engine/elicitation/pipeline.py 299 <module>.run_pass1 pec = getattr(response, "prompt_eval_count", None)
+   engine/elicitation/pipeline.py 520 <module>.extract_paper_elicited "prompt_eval_count": tel["pass1_prompt_eval_count"],
+   engine/parsers/pdf_parser.py 292 <module>.parse_with_vision getattr(response, "prompt_eval_count", None),
+   engine/utils/ollama_client.py 438 <module>._check_input_was_read count = getattr(response, "prompt_eval_count", None)
+## engine / read: getattr done_reason: 5
+   engine/agents/extractor.py 247 <module>.extract_pass1_reasoning finish_reason=getattr(response, "done_reason", None),
+   engine/agents/extractor.py 354 <module>.extract_pass2_structured finish_reason=getattr(response, "done_reason", None),
+   engine/elicitation/pipeline.py 307 <module>.run_pass1 "pass1_done_reason": getattr(response, "done_reason", None),
+   engine/parsers/pdf_parser.py 286 <module>.parse_with_vision done_reason = getattr(response, "done_reason", None)
+   engine/utils/ollama_client.py 441 <module>._check_input_was_read done_reason = getattr(response, "done_reason", None)
+## engine / read: getattr eval_count: 1
+   engine/parsers/pdf_parser.py 291 <module>.parse_with_vision getattr(response, "eval_count", None),
+## engine / read: getattr prompt_eval_count: 5
+   engine/agents/extractor.py 248 <module>.extract_pass1_reasoning prompt_eval_count=getattr(response, "prompt_eval_count", None),
+   engine/agents/extractor.py 355 <module>.extract_pass2_structured prompt_eval_count=getattr(response, "prompt_eval_count", None),
+   engine/elicitation/pipeline.py 299 <module>.run_pass1 pec = getattr(response, "prompt_eval_count", None)
+   engine/parsers/pdf_parser.py 292 <module>.parse_with_vision getattr(response, "prompt_eval_count", None),
+   engine/utils/ollama_client.py 438 <module>._check_input_was_read count = getattr(response, "prompt_eval_count", None)
+## engine / write: _LAST_PASS*_TELEMETRY: 4
+   engine/agents/extractor.py 243 <module>.extract_pass1_reasoning _LAST_PASS1_TELEMETRY.update( kw=['finish_reason', 'parse_branch', 'prompt_eval_count', 'thinking_chars', 'thinking_present']
+   engine/agents/extractor.py 352 <module>.extract_pass2_structured _LAST_PASS2_TELEMETRY.update( kw=['finish_reason', 'model', 'prompt_eval_count', 'raw_content']
+   engine/elicitation/pipeline.py 498 <module>.extract_paper_elicited _LAST_PASS1_TELEMETRY.update( kw=['elicitation', 'finish_reason', 'parse_branch', 'prompt_eval_count', 'thinking_chars', 'thinking_present']
+   engine/elicitation/pipeline.py 645 <module>.extract_paper_elicited _LAST_PASS2_TELEMETRY.setdefault("model", model_name) kw=[]
+## engine / write: log line (input_fit / Vision page): 6
+   engine/parsers/pdf_parser.py 287 <module>.parse_with_vision logger.info(
+   engine/utils/ollama_client.py 449 <module>._check_input_was_read logger.info("input_fit %s %s", paper_label, json.dumps(telemetry, sort_keys=True))
+   engine/utils/ollama_client.py 415 <module>._check_input_fits logger.error("input_fit REFUSED %s %s", paper_label, json.dumps(fit, sort_keys=True))
+   engine/utils/ollama_client.py 451 <module>._check_input_was_read logger.warning(
+   engine/utils/ollama_client.py 457 <module>._check_input_was_read logger.error("input_fit TRUNCATED %s %s", paper_label, json.dumps(telemetry, sort_keys=True))
+   engine/utils/ollama_client.py 461 <module>._check_input_was_read logger.error("input_fit DROPPED %s %s", paper_label, json.dumps(telemetry, sort_keys=True))
+## engine / write: record_call (telemetry or run_calls): 7
+   engine/agents/extractor.py 942 <module>.extract_paper_with_completeness record_call( kw=['arm', 'attempt', 'extra', 'fields_expected', 'finish_reason', 'missing_fields', 'model', 'outcome', 'paper_id', 'parse_branch', 'pass1_done_reason', 'pass1_prompt_eval_count', 'pass2_prompt_eval_count', 'raw_content', 'spans_parsed', 'thinking_chars', 'thinking_present']
+   engine/agents/extractor.py 889 <module>.extract_paper_with_completeness record_call( kw=['arm', 'attempt', 'error', 'extra', 'fields_expected', 'finish_reason', 'missing_fields', 'model', 'outcome', 'paper_id', 'parse_branch', 'pass1_done_reason', 'pass1_prompt_eval_count', 'pass2_prompt_eval_count', 'raw_content', 'spans_parsed', 'thinking_chars', 'thinking_present']
+   engine/agents/extractor.py 917 <module>.extract_paper_with_completeness record_call( kw=['arm', 'attempt', 'error', 'extra', 'fields_expected', 'finish_reason', 'missing_fields', 'model', 'outcome', 'paper_id', 'parse_branch', 'pass1_done_reason', 'pass1_prompt_eval_count', 'pass2_prompt_eval_count', 'raw_content', 'spans_parsed', 'thinking_chars', 'thinking_present']
+   engine/cloud/base.py 146 <module>.CloudExtractorBase.send rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id, kw=['outcome']
+   engine/cloud/base.py 431 <module>.CloudExtractorBase.extract_with_completeness record_call( kw=['arm', 'attempt', 'fields_expected', 'finish_reason', 'input_tokens', 'missing_fields', 'model', 'outcome', 'output_tokens', 'paper_id', 'raw_content', 'reasoning_tokens', 'salvage', 'spans_parsed']
+   engine/core/extraction_events.py 714 <module>.write_extraction_events record_call(review_dir, arm=t.get("model") or outcome.arm, paper_id=outcome.paper_id, kw=['arm', 'attempt', 'error', 'extra', 'finish_reason', 'model', 'outcome', 'paper_id', 'pass1_done_reason', 'pass1_prompt_eval_count']
+   engine/core/run_manifest.py 1193 <module>.record_active_ollama_call record_call(conn, run_id, key, paper_id, request, digest, started_at, _now(), kw=['outcome', 'outcome_detail', 'request_hash']
+
+# TESTS
+## fake_response_attr_assign: 18 hits in 5 files
+   by file: tests/test_elicit01.py 9, tests/test_pdf_parser.py 3, tests/test_vision_bounds.py 3, tests/test_run_calls_outcomes.py 2, tests/test_parse_gate.py 1
+   tests/test_elicit01.py 154 <module>.test_row_at_ceiling_is_flagged_truncated_despite_done_reason_stop resp.prompt_eval_count = CEILING_TOKENS ['prompt_eval_count']
+   tests/test_elicit01.py 155 <module>.test_row_at_ceiling_is_flagged_truncated_despite_done_reason_stop resp.eval_count = 10 ['eval_count']
+   tests/test_elicit01.py 156 <module>.test_row_at_ceiling_is_flagged_truncated_despite_done_reason_stop resp.done_reason = "stop" ['done_reason']
+   tests/test_elicit01.py 168 <module>.test_row_below_ceiling_is_not_flagged resp.prompt_eval_count = CEILING_TOKENS - 1 ['prompt_eval_count']
+   tests/test_elicit01.py 169 <module>.test_row_below_ceiling_is_not_flagged resp.eval_count = 10 ['eval_count']
+   tests/test_elicit01.py 170 <module>.test_row_below_ceiling_is_not_flagged resp.done_reason = "stop" ['done_reason']
+   tests/test_elicit01.py 192 <module>.test_row_schema_complete_on_stubbed_success resp.prompt_eval_count = 1234 ['prompt_eval_count']
+   tests/test_elicit01.py 193 <module>.test_row_schema_complete_on_stubbed_success resp.eval_count = 56 ['eval_count']
+   tests/test_elicit01.py 194 <module>.test_row_schema_complete_on_stubbed_success resp.done_reason = "stop" ['done_reason']
+   tests/test_parse_gate.py 131 <module>._vision m.done_reason = "stop"      # PARSE-GATE-06c: "length" aborts the attempt ['done_reason']
+   tests/test_pdf_parser.py 146 <module>.test_scanned_routes_to_vision_model mock_response.done_reason = "stop"   # PARSE-GATE-06c ['done_reason']
+   tests/test_pdf_parser.py 273 <module>.test_docling_and_pymupdf_sparse_triggers_vision mock_response.done_reason = "stop"   # PARSE-GATE-06c ['done_reason']
+   tests/test_pdf_parser.py 466 <module>.test_parse_pdf_uses_spec_threshold mock_response.done_reason = "stop"   # PARSE-GATE-06c ['done_reason']
+   tests/test_run_calls_outcomes.py 83 <module>.StubResponse.__init__ self.prompt_eval_count = prompt_eval_count ['prompt_eval_count']
+   tests/test_run_calls_outcomes.py 84 <module>.StubResponse.__init__ self.done_reason = "stop" ['done_reason']
+   tests/test_vision_bounds.py 43 <module>._resp m.done_reason = done_reason ['done_reason']
+   tests/test_vision_bounds.py 44 <module>._resp m.eval_count = eval_count ['eval_count']
+   tests/test_vision_bounds.py 45 <module>._resp m.prompt_eval_count = 2630 ['prompt_eval_count']
+## fake_response_with_eval_count: 23 hits in 23 files
+   by file: tests/test_audit_paper_id.py 1, tests/test_citation_record.py 1, tests/test_cut_over.py 1, tests/test_duplicate_on_pass1_attempt_2.py 1, tests/test_elicitation_pipeline.py 1, tests/test_extraction_run_link.py 1, tests/test_floor_and_stored_attempt.py 1, tests/test_ft_bridge.py 1, tests/test_pin_records.py 1, tests/test_presented_context.py 1, tests/test_request_capture.py 1, tests/test_run_fault_predicate.py 1, tests/test_run_interrupts.py 1, tests/test_run_pipeline_starts.py 1, tests/test_selection_bound.py 1, tests/test_u18_digest_per_call.py 1, tests/test_u20_loaded_context.py 1, tests/test_u21_no_overlap.py 1, tests/test_undeclared_call.py 1, tests/test_undeclared_override.py 1, tests/test_units_as_source_slices.py 1, tests/test_value_divergence.py 1, tests/test_write_boundary_guard.py 1
+   tests/test_audit_paper_id.py 93 <module>._fake_response return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_citation_record.py 142 <module>._Client.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_cut_over.py 95 <module>._Client.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_duplicate_on_pass1_attempt_2.py 76 <module>._response return (types.SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_elicitation_pipeline.py 94 <module>._response return (types.SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_extraction_run_link.py 83 <module>._Client.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_floor_and_stored_attempt.py 203 <module>._response return (types.SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_ft_bridge.py 69 <module>.FakeClient.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_pin_records.py 145 <module>._Client.chat return SimpleNamespace(message=SimpleNamespace(content="OK", thinking="R"), ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_presented_context.py 91 <module>._fake_response return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_request_capture.py 123 <module>.FakeClient.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_run_fault_predicate.py 251 <module>._Client.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_run_interrupts.py 227 <module>._InterruptingClient.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_run_pipeline_starts.py 64 <module>.FakeClient.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_selection_bound.py 108 <module>._Client.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_u18_digest_per_call.py 70 <module>.FakeClient.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_u20_loaded_context.py 76 <module>.FakeClient.chat return SimpleNamespace(message=SimpleNamespace(content="OK", thinking=None), ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_u21_no_overlap.py 49 <module>._answer return SimpleNamespace(message=SimpleNamespace(content="OK", thinking=None), ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_undeclared_call.py 66 <module>.FakeClient.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_undeclared_override.py 180 <module>.test_T5_vision_under_a_declared_run_sends_the_rows_values.fake_chat return SimpleNamespace(message=SimpleNamespace(content="page text", thinking=None), ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_units_as_source_slices.py 209 <module>._ElicitedClient.chat return SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_value_divergence.py 103 <module>._response return (types.SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+   tests/test_write_boundary_guard.py 101 <module>._response return (types.SimpleNamespace( ['done_reason', 'eval_count', 'prompt_eval_count']
+## fake_response_without_eval_count: 9 hits in 6 files
+   by file: tests/test_vision_bounds.py 3, tests/test_thinking_channel.py 2, tests/test_extractor.py 1, tests/test_ollama_input_fit.py 1, tests/test_run_manifest.py 1, tests/test_u20_modelfile_num_ctx.py 1
+   tests/test_extractor.py 169 <module>._mock_pass1_response return SimpleNamespace( ['done_reason']
+   tests/test_ollama_input_fit.py 40 <module>.StubClient.chat return SimpleNamespace(message=SimpleNamespace(content=self.content), ['done_reason', 'prompt_eval_count']
+   tests/test_run_manifest.py 123 <module>.test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded.Fake.chat return SimpleNamespace(message=SimpleNamespace(content="draft", thinking="t"), ['done_reason', 'prompt_eval_count']
+   tests/test_thinking_channel.py 103 <module>._resp return SimpleNamespace( ['done_reason']
+   tests/test_thinking_channel.py 153 <module>.test_pass1_records_branch_telemetry chat.return_value = _resp(ANSWER_CONTENT, NATIVE_THINKING, done_reason="stop") ['done_reason']
+   tests/test_u20_modelfile_num_ctx.py 56 <module>._Client.chat return SimpleNamespace(message=SimpleNamespace(content="ok"), ['done_reason', 'prompt_eval_count']
+   tests/test_vision_bounds.py 154 <module>.test_truncation_on_page_2_aborts_before_page_3.responses return _resp(done_reason="length" if calls["n"] == 2 else "stop") ['done_reason']
+   tests/test_vision_bounds.py 193 <module>.test_no_partial_document_survives_a_truncated_page.responses return _resp(text="good page " * 40, ['done_reason']
+   tests/test_vision_bounds.py 168 <module>.test_truncation_becomes_an_unselectable_error_row return_value=_resp(done_reason="length")): ['done_reason']
+## i_direct_call_record_call: 11 hits in 5 files
+   by file: tests/test_completeness_guard.py 4, tests/test_thinking_channel.py 4, tests/migrations/test_022_run_kinds_and_audit_tables.py 1, tests/test_exporters.py 1, tests/test_presented_context.py 1
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 426 <module>.test_T6_record_call_on_a_fixture_writes_outcome_completed call_id = rm.record_call( kw=['outcome']
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, kw=['arm', 'attempt', 'fields_expected', 'finish_reason', 'input_tokens', 'missing_fields', 'model', 'outcome', 'output_tokens', 'paper_id', 'raw_content', 'reasoning_tokens', 'salvage', 'spans_parsed']
+   tests/test_completeness_guard.py 205 <module>.test_telemetry_truncates_a_huge_response_and_says_so record_call(tmp_path, arm="a", paper_id=1, attempt=1, outcome="stored", kw=['arm', 'attempt', 'outcome', 'paper_id', 'raw_content']
+   tests/test_completeness_guard.py 199 <module>.test_telemetry_appends_one_line_per_attempt record_call(tmp_path, arm="local", paper_id=9, attempt=a, outcome="incomplete_retry") kw=['arm', 'attempt', 'outcome', 'paper_id']
+   tests/test_completeness_guard.py 214 <module>.test_telemetry_never_raises_on_a_bad_path assert record_call("/proc/nonexistent/telemetry", arm="a", paper_id=1, kw=['arm', 'attempt', 'outcome', 'paper_id']
+   tests/test_exporters.py 497 <module>.run_db rm.record_call(db._conn, run_id, stage, pid, {"stage": stage, "paper": pid}, kw=['outcome']
+   tests/test_presented_context.py 447 <module>.test_T8_cloud_send_still_computes_its_own_hash_unaffected rm.record_call(db._conn, h.run_id, "extract_pass1", None, payload, None, kw=['outcome']
+   tests/test_thinking_channel.py 189 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1, kw=['arm', 'attempt', 'outcome', 'paper_id', 'parse_branch', 'thinking_chars', 'thinking_present']
+   tests/test_thinking_channel.py 200 <module>.test_telemetry_thinking_fields_default_to_none_for_cloud_arms record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") kw=['arm', 'attempt', 'outcome', 'paper_id']
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2, kw=['arm', 'attempt', 'finish_reason', 'outcome', 'paper_id', 'pass1_done_reason', 'pass1_prompt_eval_count', 'pass2_prompt_eval_count']
+   tests/test_thinking_channel.py 228 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") kw=['arm', 'attempt', 'outcome', 'paper_id']
+## i_direct_name: 86 hits in 18 files
+   by file: tests/test_thinking_channel.py 19, tests/analysis/paper1/test_judge.py 16, tests/test_completeness_guard.py 13, tests/test_vision_bounds.py 9, tests/test_u39_runtime_equals_hash.py 6, tests/test_extraction_signatures.py 5, tests/test_elicitation_pipeline.py 4, tests/test_request_capture.py 2, tests/test_u21_no_overlap.py 2, tests/test_undeclared_override.py 2, tests/migrations/test_022_run_kinds_and_audit_tables.py 1, tests/test_audit_events.py 1, tests/test_citation_record.py 1, tests/test_duplicate_on_pass1_attempt_2.py 1, tests/test_exporters.py 1, tests/test_floor_and_stored_attempt.py 1, tests/test_presented_context.py 1, tests/test_run_manifest.py 1
+   tests/analysis/paper1/test_judge.py 107 <module>.TestRunPass1Happy.test_happy_path_3_arm result = run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 123 <module>.TestRunPass1Happy.test_prompt_hash_is_sha256_hex result = run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 132 <module>.TestRunPass1Happy.test_prompt_hash_deterministic r1 = run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 133 <module>.TestRunPass1Happy.test_prompt_hash_deterministic r2 = run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 146 <module>.TestRunPass1Happy.test_prompt_hash_differs_with_different_inputs r1 = run_pass1(inp_a, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 147 <module>.TestRunPass1Happy.test_prompt_hash_differs_with_different_inputs r2 = run_pass1(inp_b, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 155 <module>.TestRunPass1Happy.test_timestamp_iso_parses result = run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 170 <module>.TestRunPass1Happy.test_arm_permutation_matches_prompt_order result = run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 184 <module>.TestRunPass1Happy.test_seed_passed_to_ollama_options result = run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 195 <module>.TestRunPass1Happy.test_5_arm_produces_10_pairwise result = run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 208 <module>.TestRunPass1Invariants.test_fewer_than_two_arms run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 213 <module>.TestRunPass1Invariants.test_duplicate_arm_names run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 218 <module>.TestRunPass1Invariants.test_zero_arms run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 236 <module>.TestRunPass1Errors.test_call_error_wraps_client_exception run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 244 <module>.TestRunPass1Errors.test_parse_error_on_malformed_json run_pass1(inp, run_id="r1") run_pass1
+   tests/analysis/paper1/test_judge.py 266 <module>.TestRunPass1Errors.test_parse_error_on_schema_violation run_pass1(inp, run_id="r1") run_pass1
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 426 <module>.test_T6_record_call_on_a_fixture_writes_outcome_completed call_id = rm.record_call( record_call
+   tests/test_audit_events.py 279 <module>.test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs assert AT.SCHEMA_VERSION == "audit-telemetry-1" SCHEMA_VERSION
+   tests/test_citation_record.py 280 <module>._stored_rows rows = [json.loads(line) for line in telemetry_path(review_dir).read_text().splitlines()] telemetry_path
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, record_call
+   tests/test_completeness_guard.py 186 <module>.test_telemetry_records_a_call rows = read_calls(tmp_path) read_calls
+   tests/test_completeness_guard.py 205 <module>.test_telemetry_truncates_a_huge_response_and_says_so record_call(tmp_path, arm="a", paper_id=1, attempt=1, outcome="stored", record_call
+   tests/test_completeness_guard.py 219 <module>.test_read_calls_skips_malformed_lines p = telemetry_path(tmp_path) telemetry_path
+   tests/test_completeness_guard.py 260 <module>.test_retry_stops_as_soon_as_a_complete_result_arrives rows = read_calls(tmp_path) read_calls
+   tests/test_completeness_guard.py 272 <module>.test_paper_277_regression_exhausts_and_never_stores rows = read_calls(tmp_path) read_calls
+   tests/test_completeness_guard.py 287 <module>.test_retry_records_finish_reason_and_raw_content_per_attempt rows = read_calls(tmp_path) read_calls
+   tests/test_completeness_guard.py 199 <module>.test_telemetry_appends_one_line_per_attempt record_call(tmp_path, arm="local", paper_id=9, attempt=a, outcome="incomplete_retry") record_call
+   tests/test_completeness_guard.py 207 <module>.test_telemetry_truncates_a_huge_response_and_says_so r = read_calls(tmp_path)[0] read_calls
+   tests/test_completeness_guard.py 214 <module>.test_telemetry_never_raises_on_a_bad_path assert record_call("/proc/nonexistent/telemetry", arm="a", paper_id=1, record_call
+   tests/test_completeness_guard.py 200 <module>.test_telemetry_appends_one_line_per_attempt assert [r["attempt"] for r in read_calls(tmp_path)] == [1, 2, 3] read_calls
+   tests/test_completeness_guard.py 222 <module>.test_read_calls_skips_malformed_lines assert [r["attempt"] for r in read_calls(tmp_path)] == [1, 2] read_calls
+   tests/test_completeness_guard.py 297 <module>.test_a_complete_first_attempt_makes_exactly_one_call assert [r["outcome"] for r in read_calls(tmp_path)] == ["stored"] read_calls
+   tests/test_duplicate_on_pass1_attempt_2.py 137 <module>._telemetry telemetry_path(Path(db.db_path).parent).read_text().splitlines()] telemetry_path
+   tests/test_elicitation_pipeline.py 298 <module>.test_telemetry_carries_the_per_field_citation_record tel = E._LAST_PASS1_TELEMETRY["elicitation"] _LAST_PASS1_TELEMETRY
+   tests/test_elicitation_pipeline.py 439 <module>.test_the_accepted_attempt_and_both_attempts_reach_telemetry tel = E._LAST_PASS1_TELEMETRY["elicitation"] _LAST_PASS1_TELEMETRY
+   tests/test_elicitation_pipeline.py 546 <module>.test_an_escape_record_never_reaches_the_priming_input states = E._LAST_PASS1_TELEMETRY["elicitation"]["terminal_states"] _LAST_PASS1_TELEMETRY
+   tests/test_elicitation_pipeline.py 461 <module>.test_both_pass1_attempts_raw_responses_reach_telemetry rows = [json.loads(line) for line in telemetry_path(review).read_text().splitlines()] telemetry_path
+   tests/test_exporters.py 497 <module>.run_db rm.record_call(db._conn, run_id, stage, pid, {"stage": stage, "paper": pid}, record_call
+   tests/test_extraction_signatures.py 48 <module>.test_cfg_is_required lambda: extract_pass1_reasoning("prompt"), extract_pass1_reasoning
+   tests/test_extraction_signatures.py 49 <module>.test_cfg_is_required lambda: PL.run_pass1(None, {}, (), 1), run_pass1
+   tests/test_extraction_signatures.py 54 <module>.test_cfg_is_required lambda: PP.parse_with_vision("no-such.pdf"), parse_with_vision
+   tests/test_extraction_signatures.py 78 <module>.test_parameters_after_paper_id_are_keyword_only lambda: extract_pass2_structured("prompt", "trace", None, 1, "codebook-hash"), extract_pass2_structured
+   tests/test_extraction_signatures.py 79 <module>.test_parameters_after_paper_id_are_keyword_only lambda: PL.run_pass1(None, {}, (), 1, "feedback"), run_pass1
+   tests/test_floor_and_stored_attempt.py 287 <module>.test_a_record_under_the_floor_that_was_not_exhausted_fails_the_same_way telemetry_path(Path(db.db_path).parent).read_text().splitlines()] telemetry_path
+   tests/test_presented_context.py 447 <module>.test_T8_cloud_send_still_computes_its_own_hash_unaffected rm.record_call(db._conn, h.run_id, "extract_pass1", None, payload, None, record_call
+   tests/test_request_capture.py 279 <module>.test_elicitation_pass1 el.run_pass1(build_unit_map(1, "The paper reports a trial of a robot."), cb.raw, run_pass1
+   tests/test_request_capture.py 295 <module>.test_vision_parse parse_with_vision(str(pdf), vision_model=spec.pdf_parsing.vision_model, parse_with_vision
+   tests/test_run_manifest.py 132 <module>.test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded extract_pass1_reasoning("a prompt", cfg=stage_config("extract_pass1", spec)) extract_pass1_reasoning
+   tests/test_thinking_channel.py 189 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1, record_call
+   tests/test_thinking_channel.py 193 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields assert row["schema"] == SCHEMA_VERSION == "extraction-telemetry-3" SCHEMA_VERSION
+   tests/test_thinking_channel.py 200 <module>.test_telemetry_thinking_fields_default_to_none_for_cloud_arms record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") record_call
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2, record_call
+   tests/test_thinking_channel.py 228 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") record_call
+   tests/test_thinking_channel.py 234 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable new, old = read_calls(tmp_path) read_calls
+   tests/test_thinking_channel.py 113 <module>.test_pass1_passes_think_explicitly_and_defaults_on extract_pass1_reasoning("prompt", cfg=stage_config("extract_pass1")) extract_pass1_reasoning
+   tests/test_thinking_channel.py 144 <module>.test_pass1_returns_the_native_trace_not_the_answer trace = extract_pass1_reasoning("prompt", cfg=stage_config("extract_pass1")) extract_pass1_reasoning
+   tests/test_thinking_channel.py 154 <module>.test_pass1_records_branch_telemetry extract_pass1_reasoning("prompt", cfg=stage_config("extract_pass1")) extract_pass1_reasoning
+   tests/test_thinking_channel.py 155 <module>.test_pass1_records_branch_telemetry assert _LAST_PASS1_TELEMETRY["parse_branch"] == "native" _LAST_PASS1_TELEMETRY
+   tests/test_thinking_channel.py 156 <module>.test_pass1_records_branch_telemetry assert _LAST_PASS1_TELEMETRY["thinking_present"] is True _LAST_PASS1_TELEMETRY
+   tests/test_thinking_channel.py 157 <module>.test_pass1_records_branch_telemetry assert _LAST_PASS1_TELEMETRY["thinking_chars"] == len(NATIVE_THINKING) _LAST_PASS1_TELEMETRY
+   tests/test_thinking_channel.py 158 <module>.test_pass1_records_branch_telemetry assert _LAST_PASS1_TELEMETRY["finish_reason"] == "stop" _LAST_PASS1_TELEMETRY
+   tests/test_thinking_channel.py 192 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields row = read_calls(tmp_path)[0] read_calls
+   tests/test_thinking_channel.py 201 <module>.test_telemetry_thinking_fields_default_to_none_for_cloud_arms row = read_calls(tmp_path)[0] read_calls
+   tests/test_thinking_channel.py 220 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts row = read_calls(tmp_path)[0] read_calls
+   tests/test_thinking_channel.py 129 <module>.test_think_is_not_a_caller_override lambda: extract_pass1_reasoning("prompt", think=False), extract_pass1_reasoning
+   tests/test_thinking_channel.py 130 <module>.test_think_is_not_a_caller_override lambda: extract_pass2_structured("prompt", "trace", None, 1, think=False), extract_pass2_structured
+   tests/test_thinking_channel.py 131 <module>.test_think_is_not_a_caller_override lambda: PL.run_pass1(None, {}, (), 1, think=False), run_pass1
+   tests/test_u21_no_overlap.py 249 <module>.test_an_env_drift_after_the_restart_refuses_the_final_send_and_writes_its_record rows = [json.loads(l) for l in telemetry_path(Path(db.db_path).parent).read_text().splitlines()] telemetry_path
+   tests/test_u21_no_overlap.py 261 <module>.test_the_post_restart_path_writes_the_env_record rows = [json.loads(l) for l in telemetry_path(Path(db.db_path).parent).read_text().splitlines()] telemetry_path
+   tests/test_u39_runtime_equals_hash.py 114 <module>.test_extract_pass1_runtime_equals_hash sent = _send(X.extract_pass1_reasoning, prompt, cfg=ec.stage_config("extract_pass1", spec)) extract_pass1_reasoning
+   tests/test_u39_runtime_equals_hash.py 122 <module>.test_extract_pass2_non_elicited_runtime_equals_hash sent = _send(X.extract_pass2_structured, prompt, "R", spec, 0, codebook_hash="x", extract_pass2_structured
+   tests/test_u39_runtime_equals_hash.py 158 <module>.test_extract_pass2_elicited_runtime_equals_hash sent = _send(X.extract_pass2_structured, prompt, priming, elicited, 0, codebook_hash="x", extract_pass2_structured
+   tests/test_u39_runtime_equals_hash.py 216 <module>.test_vision_parse_runtime_equals_hash sent = _send(P.parse_with_vision, str(pdf), cfg=ec.stage_config("vision_parse", spec)) parse_with_vision
+   tests/test_u39_runtime_equals_hash.py 144 <module>.test_elicitation_pass1_runtime_equals_hash calls = [_send(PL.run_pass1, um, codebook, names, 0, cfg=cfg)] run_pass1
+   tests/test_u39_runtime_equals_hash.py 146 <module>.test_elicitation_pass1_runtime_equals_hash calls.append(_send(PL.run_pass1, um, codebook, names, 0, cfg=cfg, run_pass1
+   tests/test_undeclared_override.py 185 <module>.test_T5_vision_under_a_declared_run_sends_the_rows_values parse_with_vision(str(three_page_pdf), cfg=ec.stage_config("vision_parse", spec)) parse_with_vision
+   tests/test_undeclared_override.py 167 <module>.test_T5_vision_under_a_declared_run_refuses_a_differing_override parse_with_vision(str(three_page_pdf), num_ctx=4096, parse_with_vision
+   tests/test_vision_bounds.py 86 <module>.test_defaults_send_num_predict_and_num_ctx parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse")) parse_with_vision
+   tests/test_vision_bounds.py 95 <module>.test_explicit_overrides_reach_the_call parse_with_vision(str(three_page_pdf), num_predict=99, num_ctx=1024, cfg=stage_config("vision_parse")) parse_with_vision
+   tests/test_vision_bounds.py 143 <module>.test_the_prompt_is_what_is_sent parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse")) parse_with_vision
+   tests/test_vision_bounds.py 207 <module>.test_all_pages_stop_assembles_the_document_as_before out = parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse")) parse_with_vision
+   tests/test_vision_bounds.py 231 <module>.test_per_call_wall_timeout_is_passed parse_with_vision(str(three_page_pdf), page_timeout_s=123, cfg=stage_config("vision_parse")) parse_with_vision
+   tests/test_vision_bounds.py 237 <module>.test_default_page_timeout_is_the_spec_default parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse")) parse_with_vision
+   tests/test_vision_bounds.py 158 <module>.test_truncation_on_page_2_aborts_before_page_3 parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse")) parse_with_vision
+   tests/test_vision_bounds.py 198 <module>.test_no_partial_document_survives_a_truncated_page parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse")) parse_with_vision
+   tests/test_vision_bounds.py 217 <module>.test_per_page_log_lines_are_emitted parse_with_vision(str(three_page_pdf), paper_id=455, cfg=stage_config("vision_parse")) parse_with_vision
+## i_patch_string_lane: 43 hits in 11 files
+   by file: tests/test_parse_gate.py 10, tests/test_parse_ocr_tier.py 10, tests/analysis/paper1/test_judge_cli.py 7, tests/test_parse_failures.py 5, tests/test_extraction_events.py 4, tests/test_citation_guard.py 2, tests/test_elicitation_pipeline.py 1, tests/test_font_audit_ledger.py 1, tests/test_parse_sanitized_retry.py 1, tests/test_parse_writer_refs.py 1, tests/test_pdf_parser.py 1
+   tests/analysis/paper1/test_judge_cli.py 253 <module>.TestArgParsing.test_no_pairs_csv_judges_the_full_grid patch.object(judge_cli, "run_pass1", fake), \ judge_cli 'run_pass1'
+   tests/analysis/paper1/test_judge_cli.py 283 <module>.TestArgParsing.test_pairs_csv_still_works_and_warns_that_it_is_legacy patch.object(judge_cli, "run_pass1", fake), \ judge_cli 'run_pass1'
+   tests/analysis/paper1/test_judge_cli.py 331 <module>.TestDryRun.test_dry_run_skips_db_writes patch.object(judge_cli, "run_pass1", fake), \ judge_cli 'run_pass1'
+   tests/analysis/paper1/test_judge_cli.py 368 <module>.TestFullFlow.test_all_succeed_writes_expected_rows with patch.object(judge_cli, "run_pass1", fake), \ judge_cli 'run_pass1'
+   tests/analysis/paper1/test_judge_cli.py 407 <module>.TestFullFlow.test_partial_failure with patch.object(judge_cli, "run_pass1", sometimes_fail), \ judge_cli 'run_pass1'
+   tests/analysis/paper1/test_judge_cli.py 434 <module>.TestFullFlow.test_all_failed_exit_1 with patch.object(judge_cli, "run_pass1", always_fail), \ judge_cli 'run_pass1'
+   tests/analysis/paper1/test_judge_cli.py 476 <module>.TestFullFlow.test_exit_zero_at_exactly_90pct with patch.object(judge_cli, "run_pass1", one_fail), \ judge_cli 'run_pass1'
+   tests/test_citation_guard.py 149 <module>.test_uncited_value_never_reaches_the_database with patch.object(E, "extract_pass1_reasoning", E 'extract_pass1_reasoning'
+   tests/test_citation_guard.py 151 <module>.test_uncited_value_never_reaches_the_database patch.object(E, "extract_pass2_structured", E 'extract_pass2_structured'
+   tests/test_elicitation_pipeline.py 384 <module>.test_retry_is_bounded_and_the_paper_is_failed with patch.object(E, "record_call"): E 'record_call'
+   tests/test_extraction_events.py 135 <module>._legacy with patch.object(E, "extract_pass1_reasoning", E 'extract_pass1_reasoning'
+   tests/test_extraction_events.py 137 <module>._legacy patch.object(E, "extract_pass2_structured", E 'extract_pass2_structured'
+   tests/test_extraction_events.py 238 <module>.test_t4_a_duplicated_field_is_retried_then_contract_unmet with patch.object(E, "extract_pass1_reasoning", E 'extract_pass1_reasoning'
+   tests/test_extraction_events.py 240 <module>.test_t4_a_duplicated_field_is_retried_then_contract_unmet patch.object(E, "extract_pass2_structured", side_effect=pass2): E 'extract_pass2_structured'
+   tests/test_font_audit_ledger.py 340 <module>.test_a_total_failure_records_the_structure_half patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_failures.py 103 <module>.test_T1_branch_6_vision_exhausted_scanned_route patch("engine.parsers.pdf_parser.parse_with_vision", 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_failures.py 134 <module>.test_T1_branch_17_cascade_empty patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_failures.py 168 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_failures.py 221 <module>.test_T4_no_run_id_writes_no_event patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_failures.py 243 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_gate.py 140 <module>.test_clean_docling_parse_is_one_accepted_attempt patch("engine.parsers.pdf_parser.parse_with_vision") as vision: 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_gate.py 176 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops patch("engine.parsers.pdf_parser.parse_with_vision") as vision: 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_gate.py 206 <module>.test_glyph_then_shattered_then_vision_passes patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_gate.py 282 <module>.test_all_fail_selects_least_bad_and_excludes_with_reason patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_gate.py 308 <module>.test_excluded_paper_still_has_its_text_stored patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_gate.py 333 <module>.test_vision_skipped_above_page_cap_and_never_called patch("engine.parsers.pdf_parser.parse_with_vision") as vision: 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_gate.py 359 <module>.test_sparse_length_fallback_precedes_the_quality_gate patch("engine.parsers.pdf_parser.parse_with_vision") as vision: 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_gate.py 439 <module>.test_reparse_reports_failures_without_excluding patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_gate.py 537 <module>.test_spec_vision_cap_override_is_honoured patch("engine.parsers.pdf_parser.parse_with_vision") as vision: 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_gate.py 552 <module>.test_the_reroute_chain_is_bounded patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_ocr_tier.py 114 <module>.test_scanned_pdf_goes_to_the_ocr_tier_first patch("engine.parsers.pdf_parser.parse_with_vision") as vision: 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_ocr_tier.py 128 <module>.test_scanned_ocr_failure_falls_through_to_vision patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_ocr_tier.py 141 <module>.test_scanned_ocr_sparse_output_also_falls_through_to_vision patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_ocr_tier.py 156 <module>.test_digital_clean_docling_never_reaches_the_ocr_tier patch("engine.parsers.pdf_parser.parse_with_vision") as vision: 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_ocr_tier.py 186 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf patch("engine.parsers.pdf_parser.parse_with_vision") as vision: 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_ocr_tier.py 238 <module>.test_ocr_cap_skips_the_tier_and_the_next_parser_is_tried with patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_ocr_tier.py 256 <module>.test_ocr_cap_on_a_reroute_falls_through_to_vision patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_ocr_tier.py 281 <module>.test_sparse_length_fallback_still_precedes_the_gate patch("engine.parsers.pdf_parser.parse_with_vision") as vision: 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_ocr_tier.py 296 <module>.test_total_failure_still_writes_the_attempt_rows patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_ocr_tier.py 347 <module>.test_reparse_reports_a_total_failure_with_rows_written patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_sanitized_retry.py 109 <module>.test_docling_crash_is_recovered_by_the_sanitized_retry patch("engine.parsers.pdf_parser.parse_with_vision") as vision: 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_parse_writer_refs.py 109 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row patch("engine.parsers.pdf_parser.parse_with_vision", return_value=""): 'engine.parsers.pdf_parser.parse_with_vision'
+   tests/test_pdf_parser.py 247 <module>.test_all_parsers_empty_raises_value_error with patch("engine.parsers.pdf_parser.parse_with_vision", return_value=""): 'engine.parsers.pdf_parser.parse_with_vision'
+## ii_module_alias_patch: 14 hits in 7 files
+   by file: tests/test_run_calls_outcomes.py 3, tests/test_audit_stage_completion.py 2, tests/test_floor_and_stored_attempt.py 2, tests/test_text_refusal_at_selection.py 2, tests/test_value_divergence.py 2, tests/test_write_boundary_guard.py 2, tests/test_u20_loaded_context.py 1
+   tests/test_audit_stage_completion.py 80 <module>.db monkeypatch.setattr(E, "extract_pass1_reasoning", lambda *a, **k: ("trace", HASH)) extract_pass1_reasoning
+   tests/test_audit_stage_completion.py 81 <module>.db monkeypatch.setattr(E, "extract_pass2_structured", pass2) extract_pass2_structured
+   tests/test_floor_and_stored_attempt.py 334 <module>._legacy_run monkeypatch.setattr(E, "extract_pass1_reasoning", lambda *a, **k: ("trace", HASH)) extract_pass1_reasoning
+   tests/test_floor_and_stored_attempt.py 335 <module>._legacy_run monkeypatch.setattr(E, "extract_pass2_structured", pass2) extract_pass2_structured
+   tests/test_run_calls_outcomes.py 36 <module>._passthrough_input_fit monkeypatch.setattr( _check_input_was_read
+   tests/test_run_calls_outcomes.py 164 <module>.test_T4_input_truncated_records_one_refused_row_with_digest_and_raises monkeypatch.setattr(oc, "_check_input_was_read", _raise_truncated) _check_input_was_read
+   tests/test_run_calls_outcomes.py 188 <module>.test_T5_input_dropped_records_one_refused_row_with_digest_and_raises monkeypatch.setattr(oc, "_check_input_was_read", _raise_dropped) _check_input_was_read
+   tests/test_text_refusal_at_selection.py 88 <module>.db monkeypatch.setattr(E, "extract_pass1_reasoning", lambda *a, **k: ("trace", HASH)) extract_pass1_reasoning
+   tests/test_text_refusal_at_selection.py 89 <module>.db monkeypatch.setattr(E, "extract_pass2_structured", pass2) extract_pass2_structured
+   tests/test_u20_loaded_context.py 170 <module>.test_b_the_comparison_precedes_the_post_call_checks monkeypatch.setattr(oc, "_check_input_was_read", _check_input_was_read
+   tests/test_value_divergence.py 197 <module>._legacy monkeypatch.setattr(E, "extract_pass1_reasoning", lambda *a, **k: ("trace", HASH)) extract_pass1_reasoning
+   tests/test_value_divergence.py 198 <module>._legacy monkeypatch.setattr(E, "extract_pass2_structured", pass2) extract_pass2_structured
+   tests/test_write_boundary_guard.py 131 <module>._legacy monkeypatch.setattr(E, "extract_pass1_reasoning", lambda *a, **k: ("trace", HASH)) extract_pass1_reasoning
+   tests/test_write_boundary_guard.py 132 <module>._legacy monkeypatch.setattr(E, "extract_pass2_structured", pass2) extract_pass2_structured
+## iii_last_pass_key: 1 hits in 1 files
+   by file: tests/test_thinking_channel.py 1
+   tests/test_thinking_channel.py 158 <module>.test_pass1_records_branch_telemetry assert _LAST_PASS1_TELEMETRY["finish_reason"] == "stop" finish_reason
+## iii_record_key_read: 20 hits in 5 files
+   by file: tests/test_thinking_channel.py 8, tests/test_cloud_extraction.py 6, tests/test_completeness_guard.py 3, tests/test_extraction_events.py 2, tests/test_audit_events.py 1
+   tests/test_audit_events.py 282 <module>.test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs assert r["schema"] == "audit-telemetry-1" schema
+   tests/test_cloud_extraction.py 406 <module>.TestOpenAIExtractor.test_extract_paper assert result["input_tokens"] == 1000 input_tokens
+   tests/test_cloud_extraction.py 407 <module>.TestOpenAIExtractor.test_extract_paper assert result["output_tokens"] == 500 output_tokens
+   tests/test_cloud_extraction.py 475 <module>.TestAnthropicExtractor.test_extract_paper assert result["input_tokens"] == 2000 input_tokens
+   tests/test_cloud_extraction.py 476 <module>.TestAnthropicExtractor.test_extract_paper assert result["output_tokens"] == 1000 output_tokens
+   tests/test_cloud_extraction.py 622 <module>.TestSonnetEmptyStringNormalization.test_empty_string_normalized_to_null input_tokens=result["input_tokens"], input_tokens
+   tests/test_cloud_extraction.py 623 <module>.TestSonnetEmptyStringNormalization.test_empty_string_normalized_to_null output_tokens=result["output_tokens"], output_tokens
+   tests/test_completeness_guard.py 189 <module>.test_telemetry_records_a_call assert r["finish_reason"] == "length"          # the field SPANLOSS-01 lacked finish_reason
+   tests/test_completeness_guard.py 288 <module>.test_retry_records_finish_reason_and_raw_content_per_attempt assert all(r["finish_reason"] == "length" for r in rows) finish_reason
+   tests/test_completeness_guard.py 290 <module>.test_retry_records_finish_reason_and_raw_content_per_attempt assert all(r["output_tokens"] == 19635 for r in rows) output_tokens
+   tests/test_extraction_events.py 288 <module>.test_t6_an_input_that_does_not_fit_is_a_paper_event_and_a_telemetry_row assert row["pass1_done_reason"] is None and row["pass1_prompt_eval_count"] == 131_072 pass1_done_reason
+   tests/test_extraction_events.py 288 <module>.test_t6_an_input_that_does_not_fit_is_a_paper_event_and_a_telemetry_row assert row["pass1_done_reason"] is None and row["pass1_prompt_eval_count"] == 131_072 pass1_prompt_eval_count
+   tests/test_thinking_channel.py 158 <module>.test_pass1_records_branch_telemetry assert _LAST_PASS1_TELEMETRY["finish_reason"] == "stop" finish_reason
+   tests/test_thinking_channel.py 193 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields assert row["schema"] == SCHEMA_VERSION == "extraction-telemetry-3" schema
+   tests/test_thinking_channel.py 221 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts assert row["pass1_done_reason"] == "length" pass1_done_reason
+   tests/test_thinking_channel.py 222 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts assert row["pass1_prompt_eval_count"] == 31_998 pass1_prompt_eval_count
+   tests/test_thinking_channel.py 223 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts assert row["pass2_prompt_eval_count"] == 33_412 pass2_prompt_eval_count
+   tests/test_thinking_channel.py 224 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts assert row["finish_reason"] == "stop"        # Pass 2's, unchanged in meaning finish_reason
+   tests/test_thinking_channel.py 235 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable assert new["pass1_done_reason"] is None and new["pass1_prompt_eval_count"] is None pass1_done_reason
+   tests/test_thinking_channel.py 235 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable assert new["pass1_done_reason"] is None and new["pass1_prompt_eval_count"] is None pass1_prompt_eval_count
+## iii_record_kw: 53 hits in 5 files
+   by file: tests/test_completeness_guard.py 27, tests/test_thinking_channel.py 23, tests/migrations/test_022_run_kinds_and_audit_tables.py 1, tests/test_exporters.py 1, tests/test_presented_context.py 1
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 426 <module>.test_T6_record_call_on_a_fixture_writes_outcome_completed call_id = rm.record_call( outcome
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, arm
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, paper_id
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, attempt
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, outcome
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, model
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, finish_reason
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, raw_content
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, spans_parsed
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, fields_expected
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, missing_fields
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, salvage
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, input_tokens
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, output_tokens
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call(tmp_path, arm="openai_o4_mini_high", paper_id=277, attempt=1, reasoning_tokens
+   tests/test_completeness_guard.py 205 <module>.test_telemetry_truncates_a_huge_response_and_says_so record_call(tmp_path, arm="a", paper_id=1, attempt=1, outcome="stored", arm
+   tests/test_completeness_guard.py 205 <module>.test_telemetry_truncates_a_huge_response_and_says_so record_call(tmp_path, arm="a", paper_id=1, attempt=1, outcome="stored", paper_id
+   tests/test_completeness_guard.py 205 <module>.test_telemetry_truncates_a_huge_response_and_says_so record_call(tmp_path, arm="a", paper_id=1, attempt=1, outcome="stored", attempt
+   tests/test_completeness_guard.py 205 <module>.test_telemetry_truncates_a_huge_response_and_says_so record_call(tmp_path, arm="a", paper_id=1, attempt=1, outcome="stored", outcome
+   tests/test_completeness_guard.py 205 <module>.test_telemetry_truncates_a_huge_response_and_says_so record_call(tmp_path, arm="a", paper_id=1, attempt=1, outcome="stored", raw_content
+   tests/test_completeness_guard.py 199 <module>.test_telemetry_appends_one_line_per_attempt record_call(tmp_path, arm="local", paper_id=9, attempt=a, outcome="incomplete_retry") arm
+   tests/test_completeness_guard.py 199 <module>.test_telemetry_appends_one_line_per_attempt record_call(tmp_path, arm="local", paper_id=9, attempt=a, outcome="incomplete_retry") paper_id
+   tests/test_completeness_guard.py 199 <module>.test_telemetry_appends_one_line_per_attempt record_call(tmp_path, arm="local", paper_id=9, attempt=a, outcome="incomplete_retry") attempt
+   tests/test_completeness_guard.py 199 <module>.test_telemetry_appends_one_line_per_attempt record_call(tmp_path, arm="local", paper_id=9, attempt=a, outcome="incomplete_retry") outcome
+   tests/test_completeness_guard.py 214 <module>.test_telemetry_never_raises_on_a_bad_path assert record_call("/proc/nonexistent/telemetry", arm="a", paper_id=1, arm
+   tests/test_completeness_guard.py 214 <module>.test_telemetry_never_raises_on_a_bad_path assert record_call("/proc/nonexistent/telemetry", arm="a", paper_id=1, paper_id
+   tests/test_completeness_guard.py 214 <module>.test_telemetry_never_raises_on_a_bad_path assert record_call("/proc/nonexistent/telemetry", arm="a", paper_id=1, attempt
+   tests/test_completeness_guard.py 214 <module>.test_telemetry_never_raises_on_a_bad_path assert record_call("/proc/nonexistent/telemetry", arm="a", paper_id=1, outcome
+   tests/test_exporters.py 497 <module>.run_db rm.record_call(db._conn, run_id, stage, pid, {"stage": stage, "paper": pid}, outcome
+   tests/test_presented_context.py 447 <module>.test_T8_cloud_send_still_computes_its_own_hash_unaffected rm.record_call(db._conn, h.run_id, "extract_pass1", None, payload, None, outcome
+   tests/test_thinking_channel.py 189 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1, arm
+   tests/test_thinking_channel.py 189 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1, paper_id
+   tests/test_thinking_channel.py 189 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1, attempt
+   tests/test_thinking_channel.py 189 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1, outcome
+   tests/test_thinking_channel.py 189 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1, thinking_present
+   tests/test_thinking_channel.py 189 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1, thinking_chars
+   tests/test_thinking_channel.py 189 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields record_call(tmp_path, arm="deepseek-r1:32b", paper_id=39, attempt=1, parse_branch
+   tests/test_thinking_channel.py 200 <module>.test_telemetry_thinking_fields_default_to_none_for_cloud_arms record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") arm
+   tests/test_thinking_channel.py 200 <module>.test_telemetry_thinking_fields_default_to_none_for_cloud_arms record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") paper_id
+   tests/test_thinking_channel.py 200 <module>.test_telemetry_thinking_fields_default_to_none_for_cloud_arms record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") attempt
+   tests/test_thinking_channel.py 200 <module>.test_telemetry_thinking_fields_default_to_none_for_cloud_arms record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") outcome
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2, arm
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2, paper_id
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2, attempt
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2, outcome
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2, finish_reason
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2, pass1_done_reason
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2, pass1_prompt_eval_count
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=2, pass2_prompt_eval_count
+   tests/test_thinking_channel.py 228 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") arm
+   tests/test_thinking_channel.py 228 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") paper_id
+   tests/test_thinking_channel.py 228 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") attempt
+   tests/test_thinking_channel.py 228 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable record_call(tmp_path, arm="openai_o4_mini_high", paper_id=1, attempt=1, outcome="stored") outcome
+## iv_exact_set_or_dict_compare: 17 hits in 13 files
+   by file: tests/test_migration_021_parsed_text_sha256.py 5, tests/test_audit_events.py 1, tests/test_audit_paper_id.py 1, tests/test_consensus.py 1, tests/test_cut_over.py 1, tests/test_import_extraction_entry.py 1, tests/test_import_screening_entry.py 1, tests/test_lock_census.py 1, tests/test_migration_019_paper_axes.py 1, tests/test_run_manifest_migration.py 1, tests/test_two_axis_state_and_grid.py 1, tests/test_u21_no_overlap.py 1, tests/test_units_as_source_slices.py 1
+   tests/test_audit_events.py 278 <module>.test_t15_one_audit_verdicts_row_per_verdict_matching_the_calls_inputs assert set(rows) == {lost, no_snippet}
+   tests/test_audit_paper_id.py 116 <module>.test_T6_every_audit_call_row_carries_the_paper_it_verified assert {r[0] for r in rows} == {P7, P8}
+   tests/test_consensus.py 384 <module>.TestStoreConsensus.test_stores_and_retrieves assert json.loads(row[2]) == {"Original Research": 4}
+   tests/test_cut_over.py 248 <module>.test_t4_a14_and_input_fit_neither_count_nor_reset assert rows == {1: PS.REASON_MODEL_CALL_FAILED, 2: PS.REASON_PARSED_TEXT_MODIFIED,
+   tests/test_import_extraction_entry.py 128 <module>.test_t1_three_papers_enter_at_ft_eligible_with_refs_events_and_one_manifest assert {r["source"] for r in rows} == {"smoke"}
+   tests/test_import_screening_entry.py 105 <module>.test_t1_four_entries_enter_at_ingested_under_one_manifest assert {r["source"] for r in rows} == {"smoke-se"}
+   tests/test_lock_census.py 132 <module>.test_entry_points_are_found_by_their_main_guard_and_only_those assert rows[1] == {"entry": "scripts/b.py", "unlocked": {}, "locked": {}}
+   tests/test_migration_019_paper_axes.py 83 <module>.test_the_seeded_eligibility_events_are_preserved_row_for_row assert result == {"status": "executed", "rows_preserved": 190}
+   tests/test_migration_021_parsed_text_sha256.py 193 <module>.test_021_backfills_every_row_with_its_file_hash assert out == {"status": "executed", "rows": 3, "paths_normalized": 0}
+   tests/test_migration_021_parsed_text_sha256.py 198 <module>.test_021_backfills_every_row_with_its_file_hash assert _state(world["db"]) == {"hashed": True, "rows": 3, "triggers": 2}
+   tests/test_migration_021_parsed_text_sha256.py 230 <module>.test_021_refuses_a_wrong_baseline_entry_naming_the_row_and_writes_nothing assert _state(world["db"]) == before == {"hashed": False, "rows": 3, "triggers": 2}
+   tests/test_migration_021_parsed_text_sha256.py 237 <module>.test_021_refuses_a_missing_file_naming_the_row_and_writes_nothing assert _state(world["db"]) == {"hashed": False, "rows": 3, "triggers": 2}
+   tests/test_migration_021_parsed_text_sha256.py 272 <module>.test_021_a_forced_mid_rebuild_failure_leaves_the_table_and_guard assert _state(world["db"]) == {"hashed": False, "rows": 3, "triggers": 2}
+   tests/test_run_manifest_migration.py 165 <module>.test_the_rebuild_preserves_rowids_values_marker_and_high_water_mark assert m020.run_migration(str(path))["rows_preserved"] == {"field_events": 0,
+   tests/test_two_axis_state_and_grid.py 266 <module>.test_iter_grid_yields_every_cell_including_the_empty_ones assert {ev.rule_row for _, _, _, ev in out} == {1}
+   tests/test_u21_no_overlap.py 264 <module>.test_the_post_restart_path_writes_the_env_record assert row["payload"] == {"environment": "OLLAMA_NUM_PARALLEL=1", "papers_done": None, "verdict": "ok",
+   tests/test_units_as_source_slices.py 264 <module>.test_an_elicited_run_opens_pins_verifies_and_writes_real_events assert {(r[3], r[4], r[5]) for r in rows} == {(arm, handle.run_id, "e" * 64)}
+## iv_hard_coded_hash_in_telemetry_file: 3 hits in 2 files
+   by file: tests/test_elicitation_pipeline.py 2, tests/test_presented_context.py 1
+   tests/test_elicitation_pipeline.py 484 <module> ELICITED_REQUESTS_SHA256 = "ec969f5f5b5e78ca5e224a09d9bf07cc8cdf4df9f8ccaea9f858d16e9b3cb08b"
+   tests/test_elicitation_pipeline.py 487 <module> ELICITED_TRACE_SHA256 = "18d4eb72e7833f84276f3103a5e54fc03ff0e9484009ffbeae04dd2b39cc6ee2"
+   tests/test_presented_context.py 360 <module> SKIPPED_PASS2_TRACE_SHA256 = "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126"
+## v_whole_function_or_client: 200 hits in 44 files
+   by file: tests/test_elicitation_pipeline.py 22, tests/test_ollama_client.py 20, tests/analysis/paper1/test_judge_pass2.py 17, tests/test_ollama_preflight.py 16, tests/analysis/paper1/test_judge.py 11, tests/test_u39_runtime_equals_hash.py 11, tests/test_vision_bounds.py 11, tests/test_auditor.py 8, tests/test_presented_context.py 8, tests/test_duplicate_on_pass1_attempt_2.py 6, tests/test_extraction_signatures.py 5, tests/test_run_calls_outcomes.py 5, tests/test_run_fault_predicate.py 5, tests/test_thinking_channel.py 5, tests/test_elicit01.py 4, tests/test_qualgap01.py 4, tests/test_pdf_parser.py 3, tests/test_restart_recovery_guard.py 3, tests/test_audit_paper_id.py 2, tests/test_extraction_run_link.py 2, tests/test_extractor.py 2, tests/test_floor_and_stored_attempt.py 2, tests/test_run_pipeline_starts.py 2, tests/test_u18_one_host.py 2, tests/test_u38_snippet_precheck.py 2, tests/test_undeclared_call.py 2, tests/test_value_divergence.py 2, tests/test_write_boundary_guard.py 2, tests/test_citation_record.py 1, tests/test_cut_over.py 1, tests/test_eligibility.py 1, tests/test_ft_bridge.py 1, tests/test_ollama_input_fit.py 1, tests/test_pin_records.py 1, tests/test_request_capture.py 1, tests/test_run_interrupts.py 1, tests/test_run_manifest.py 1, tests/test_screen2f_armsets.py 1, tests/test_selection_bound.py 1, tests/test_u18_digest_per_call.py 1, tests/test_u20_loaded_context.py 1, tests/test_u20_modelfile_num_ctx.py 1, tests/test_u21_no_overlap.py 1, tests/test_units_as_source_slices.py 1
+   tests/analysis/paper1/test_judge.py 104 <module>.TestRunPass1Happy.test_happy_path_3_arm with patch.object(judge_module, "ollama_chat", mock), \ judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge.py 120 <module>.TestRunPass1Happy.test_prompt_hash_is_sha256_hex with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge.py 129 <module>.TestRunPass1Happy.test_prompt_hash_deterministic with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge.py 143 <module>.TestRunPass1Happy.test_prompt_hash_differs_with_different_inputs with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge.py 152 <module>.TestRunPass1Happy.test_timestamp_iso_parses with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge.py 168 <module>.TestRunPass1Happy.test_arm_permutation_matches_prompt_order with patch.object(judge_module, "ollama_chat", capture), \ judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge.py 182 <module>.TestRunPass1Happy.test_seed_passed_to_ollama_options with patch.object(judge_module, "ollama_chat", mock), \ judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge.py 192 <module>.TestRunPass1Happy.test_5_arm_produces_10_pairwise with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge.py 233 <module>.TestRunPass1Errors.test_call_error_wraps_client_exception with patch.object(judge_module, "ollama_chat", boom), \ judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge.py 241 <module>.TestRunPass1Errors.test_parse_error_on_malformed_json with patch.object(judge_module, "ollama_chat", mock), \ judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge.py 263 <module>.TestRunPass1Errors.test_parse_error_on_schema_violation with patch.object(judge_module, "ollama_chat", mock), \ judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 88 <module>.TestRunPass2Happy.test_returns_pass2_result with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 102 <module>.TestRunPass2Happy.test_short_circuit_dict_records_clean_arms with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 113 <module>.TestRunPass2Happy.test_arm_permutation_covers_all_arms with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 129 <module>.TestRunPass2Happy.test_ollama_options_include_seed_and_temperature_zero with patch.object(judge_module, "ollama_chat", capture), \ judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 137 <module>.TestRunPass2Happy.test_de_randomize_maps_slot_to_arm_name with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 149 <module>.TestRunPass2Happy.test_source_windowed_flag_records_false_for_short_text with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 158 <module>.TestRunPass2Happy.test_prompt_hash_is_sha256_hex with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 167 <module>.TestRunPass2Happy.test_determinism_same_inputs_same_seed_and_prompt_hash with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 192 <module>.TestRunPass2Errors.test_ollama_error_wrapped with patch.object(judge_module, "ollama_chat", boom), \ judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 198 <module>.TestRunPass2Errors.test_malformed_json_raises_parse_error with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 213 <module>.TestRunPass2Errors.test_schema_violation_raises_parse_error with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 229 <module>.TestRunPass2Errors.test_duplicate_slot_raises_parse_error with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 244 <module>.TestRunPass2Errors.test_missing_slot_raises_parse_error with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 260 <module>.TestRunPass2Errors.test_out_of_range_slot_raises_parse_error with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 303 <module>.TestArmVerdictsGrammarRegression.test_four_element_payload_rejected_by_pydantic_maxitems with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 384 <module>.TestArmVerdictsGrammarRegression.test_discriminator_still_routes_unsupported_verdict with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/analysis/paper1/test_judge_pass2.py 412 <module>.TestArmVerdictsGrammarRegression.test_unsupported_without_hypothesis_still_rejected with patch.object(judge_module, "ollama_chat", judge_module 'ollama_chat'
+   tests/test_audit_paper_id.py 110 <module>.test_T6_every_audit_call_row_carries_the_paper_it_verified with patch.object(oc, "_client", fake_client): oc '_client'
+   tests/test_audit_paper_id.py 137 <module>.test_T7_no_other_stage_is_affected with patch.object(oc, "_client", fake_client): oc '_client'
+   tests/test_auditor.py 154 <module>.test_semantic_verify_mocked with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp) as chat: 'engine.agents.auditor.ollama_chat'
+   tests/test_auditor.py 192 <module>.test_u14_audit_span_does_not_invalidate_a_verbatim_quote_containing_an_ellipsis with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp): 'engine.agents.auditor.ollama_chat'
+   tests/test_auditor.py 209 <module>.test_audit_span_verified with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp): 'engine.agents.auditor.ollama_chat'
+   tests/test_auditor.py 228 <module>.test_audit_span_contested with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp): 'engine.agents.auditor.ollama_chat'
+   tests/test_auditor.py 248 <module>.test_audit_span_flagged with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp): 'engine.agents.auditor.ollama_chat'
+   tests/test_auditor.py 263 <module>.test_audit_span_not_found_value_is_not_auto_verified with patch("engine.agents.auditor.ollama_chat") as mock_chat: 'engine.agents.auditor.ollama_chat'
+   tests/test_auditor.py 287 <module>.test_audit_span_tier4_is_located_like_any_other_tier with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp) as mock_chat: 'engine.agents.auditor.ollama_chat'
+   tests/test_auditor.py 307 <module>.test_audit_span_tier4_semantic_fail with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp): 'engine.agents.auditor.ollama_chat'
+   tests/test_citation_record.py 155 <module>.fake_ollama monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_cut_over.py 106 <module>.fake_models monkeypatch.setattr(oc, "_client", _Client(fields)) _client
+   tests/test_duplicate_on_pass1_attempt_2.py 112 <module>._drive monkeypatch.setattr(PL, "ollama_chat", p1) ollama_chat
+   tests/test_duplicate_on_pass1_attempt_2.py 113 <module>._drive monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(pass2, H_PASS2)) ollama_chat
+   tests/test_duplicate_on_pass1_attempt_2.py 212 <module>.test_a_duplicate_on_attempt_1_keeps_its_own_path monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(doubled, H1)) ollama_chat
+   tests/test_duplicate_on_pass1_attempt_2.py 213 <module>.test_a_duplicate_on_attempt_1_keeps_its_own_path monkeypatch.setattr(E, "ollama_chat", ollama_chat
+   tests/test_duplicate_on_pass1_attempt_2.py 233 <module>.test_a_duplicate_on_attempt_1_is_named_in_every_retry_row monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(doubled, H1)) ollama_chat
+   tests/test_duplicate_on_pass1_attempt_2.py 234 <module>.test_a_duplicate_on_attempt_1_is_named_in_every_retry_row monkeypatch.setattr(E, "ollama_chat", ollama_chat
+   tests/test_elicit01.py 157 <module>.test_row_at_ceiling_is_flagged_truncated_despite_done_reason_stop with patch("analysis.eval.elicit01.runner.oc.ollama_chat", return_value=resp): 'analysis.eval.elicit01.runner.oc.ollama_chat'
+   tests/test_elicit01.py 171 <module>.test_row_below_ceiling_is_not_flagged with patch("analysis.eval.elicit01.runner.oc.ollama_chat", return_value=resp): 'analysis.eval.elicit01.runner.oc.ollama_chat'
+   tests/test_elicit01.py 195 <module>.test_row_schema_complete_on_stubbed_success with patch("analysis.eval.elicit01.runner.oc.ollama_chat", return_value=resp): 'analysis.eval.elicit01.runner.oc.ollama_chat'
+   tests/test_elicit01.py 204 <module>.test_failure_row_is_recorded_not_raised with patch("analysis.eval.elicit01.runner.oc.ollama_chat", 'analysis.eval.elicit01.runner.oc.ollama_chat'
+   tests/test_elicitation_pipeline.py 158 <module>._run monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(pass1_content)) ollama_chat
+   tests/test_elicitation_pipeline.py 159 <module>._run monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None)) ollama_chat
+   tests/test_elicitation_pipeline.py 195 <module>.test_pass1_is_read_from_the_content_channel monkeypatch.setattr(PL, "ollama_chat", ollama_chat
+   tests/test_elicitation_pipeline.py 197 <module>.test_pass1_is_read_from_the_content_channel monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None)) ollama_chat
+   tests/test_elicitation_pipeline.py 225 <module>.test_a_failing_field_is_refused_and_the_rest_of_the_paper_is_stored monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_HALF)) ollama_chat
+   tests/test_elicitation_pipeline.py 226 <module>.test_a_failing_field_is_refused_and_the_rest_of_the_paper_is_stored monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None)) ollama_chat
+   tests/test_elicitation_pipeline.py 252 <module>.test_an_uncited_value_is_never_stored_as_a_value monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_HALF)) ollama_chat
+   tests/test_elicitation_pipeline.py 253 <module>.test_an_uncited_value_is_never_stored_as_a_value monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None)) ollama_chat
+   tests/test_elicitation_pipeline.py 284 <module>.test_pass_2_is_skipped_when_no_field_survived monkeypatch.setattr(PL, "ollama_chat", count_pass1) ollama_chat
+   tests/test_elicitation_pipeline.py 285 <module>.test_pass_2_is_skipped_when_no_field_survived monkeypatch.setattr(E, "ollama_chat", count_pass2) ollama_chat
+   tests/test_elicitation_pipeline.py 335 <module>.test_write_guard_also_fires_on_the_elicited_path monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_GOOD)) ollama_chat
+   tests/test_elicitation_pipeline.py 336 <module>.test_write_guard_also_fires_on_the_elicited_path monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None)) ollama_chat
+   tests/test_elicitation_pipeline.py 421 <module>.test_the_completeness_predicate_and_the_contracts_share_one_field_set monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_GOOD)) ollama_chat
+   tests/test_elicitation_pipeline.py 422 <module>.test_the_completeness_predicate_and_the_contracts_share_one_field_set monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None)) ollama_chat
+   tests/test_elicitation_pipeline.py 435 <module>.test_the_accepted_attempt_and_both_attempts_reach_telemetry monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_HALF)) ollama_chat
+   tests/test_elicitation_pipeline.py 436 <module>.test_the_accepted_attempt_and_both_attempts_reach_telemetry monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None)) ollama_chat
+   tests/test_elicitation_pipeline.py 457 <module>.test_both_pass1_attempts_raw_responses_reach_telemetry monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(next(answers))) ollama_chat
+   tests/test_elicitation_pipeline.py 458 <module>.test_both_pass1_attempts_raw_responses_reach_telemetry monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None)) ollama_chat
+   tests/test_elicitation_pipeline.py 506 <module>.test_the_elicited_requests_are_byte_identical monkeypatch.setattr(PL, "ollama_chat", fake_pass1) ollama_chat
+   tests/test_elicitation_pipeline.py 507 <module>.test_the_elicited_requests_are_byte_identical monkeypatch.setattr(E, "ollama_chat", fake_pass2) ollama_chat
+   tests/test_elicitation_pipeline.py 542 <module>.test_an_escape_record_never_reaches_the_priming_input monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(pass1)) ollama_chat
+   tests/test_elicitation_pipeline.py 543 <module>.test_an_escape_record_never_reaches_the_priming_input monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None)) ollama_chat
+   tests/test_eligibility.py 510 <module>._capture with mock.patch.object(module, "ollama_chat", recorder): module 'ollama_chat'
+   tests/test_extraction_run_link.py 97 <module>.fake_ollama monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_extraction_run_link.py 187 <module>.test_t4_the_snippet_retry_records_its_paper monkeypatch.setattr(E, "ollama_chat", ollama_chat
+   tests/test_extraction_signatures.py 36 <module>._fence_model_calls with patch("engine.agents.extractor.ollama_chat", _no_model_call), \ 'engine.agents.extractor.ollama_chat' _no_model_call
+   tests/test_extraction_signatures.py 37 <module>._fence_model_calls patch("engine.elicitation.pipeline.ollama_chat", _no_model_call), \ 'engine.elicitation.pipeline.ollama_chat' _no_model_call
+   tests/test_extraction_signatures.py 38 <module>._fence_model_calls patch("engine.agents.auditor.ollama_chat", _no_model_call), \ 'engine.agents.auditor.ollama_chat' _no_model_call
+   tests/test_extraction_signatures.py 39 <module>._fence_model_calls patch("engine.parsers.pdf_parser.ollama_chat", _no_model_call), \ 'engine.parsers.pdf_parser.ollama_chat' _no_model_call
+   tests/test_extraction_signatures.py 40 <module>._fence_model_calls patch("engine.acquisition.pdf_quality_check.ollama_chat", _no_model_call): 'engine.acquisition.pdf_quality_check.ollama_chat' _no_model_call
+   tests/test_extractor.py 521 <module>.TestProactiveRestart.test_zero_span_extraction_marks_extract_failed @patch("engine.agents.extractor.ollama_chat") 'engine.agents.extractor.ollama_chat'
+   tests/test_extractor.py 274 <module>.test_full_two_pass_mocked with patch("engine.agents.extractor.ollama_chat") as mock_chat: 'engine.agents.extractor.ollama_chat'
+   tests/test_floor_and_stored_attempt.py 246 <module>._elicited_run monkeypatch.setattr(PL, "ollama_chat", p1) ollama_chat
+   tests/test_floor_and_stored_attempt.py 247 <module>._elicited_run monkeypatch.setattr(E, "ollama_chat", p2) ollama_chat
+   tests/test_ft_bridge.py 94 <module>.fake monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_ollama_client.py 57 <module>.TestWatchdogTimeout.test_watchdog_fires_on_hang @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 82 <module>.TestWatchdogTimeout.test_watchdog_retries_then_raises @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 107 <module>.TestWatchdogTimeout.test_successful_call_returns_response @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 122 <module>.TestWatchdogTimeout.test_transient_failure_then_success @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 147 <module>.TestTimeoutLogging.test_timeout_logs_warning @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 184 <module>.TestKwargsPassThrough.test_format_and_options_forwarded @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 210 <module>.TestOllamaRestartRecovery.test_restart_attempted_after_retries_exhausted @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 239 <module>.TestOllamaRestartRecovery.test_restart_success_then_call_succeeds @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 261 <module>.TestOllamaRestartRecovery.test_restart_failure_raises_original_timeout @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 284 <module>.TestOllamaRestartRecovery.test_restart_logs_warning @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 320 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_post_restart_failure @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 353 <module>.TestTheDigestRoute.test_digest_comes_from_api_tags_not_api_show @patch("engine.utils.ollama_client._client") 'engine.utils.ollama_client._client'
+   tests/test_ollama_client.py 357 <module>.TestTheDigestRoute.test_digest_comes_from_api_tags_not_api_show with patch("engine.utils.ollama_client._client._client.get", 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 367 <module>.TestTheDigestRoute.test_api_failure_raises_never_returns_none with patch("engine.utils.ollama_client._client._client.get", 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 402 <module>.TestFetchModelDigest.test_well_formed_returns_digest with patch("engine.utils.ollama_client._client._client.get", 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 417 <module>.TestFetchModelDigest.test_malformed_digest_raises with patch("engine.utils.ollama_client._client._client.get", 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 427 <module>.TestFetchModelDigest.test_non_hex_digest_raises with patch("engine.utils.ollama_client._client._client.get", 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 435 <module>.TestFetchModelDigest.test_missing_model_raises with patch("engine.utils.ollama_client._client._client.get", 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 447 <module>.TestFetchModelDigest.test_ambiguous_multiple_matches_raises with patch("engine.utils.ollama_client._client._client.get", 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_client.py 454 <module>.TestFetchModelDigest.test_non_200_status_raises with patch("engine.utils.ollama_client._client._client.get", return_value=resp): 'engine.utils.ollama_client._client._client.get'
+   tests/test_ollama_input_fit.py 61 <module>._use monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_ollama_preflight.py 28 <module>.TestCheckModel.test_success_returns_ok with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response): 'engine.utils.ollama_preflight.ollama_chat'
+   tests/test_ollama_preflight.py 39 <module>.TestCheckModel.test_error_returns_error_with_message with patch("engine.utils.ollama_preflight.ollama_chat", 'engine.utils.ollama_preflight.ollama_chat'
+   tests/test_ollama_preflight.py 53 <module>.TestPreflightCheck.test_all_ok_returns_success with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response): 'engine.utils.ollama_preflight.ollama_chat'
+   tests/test_ollama_preflight.py 72 <module>.TestPreflightCheck.test_vram_filters_to_relevant_models with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response): 'engine.utils.ollama_preflight.ollama_chat'
+   tests/test_ollama_preflight.py 92 <module>.TestPreflightCheck.test_vram_unrelated_model_does_not_cause_rejection with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response): 'engine.utils.ollama_preflight.ollama_chat'
+   tests/test_ollama_preflight.py 113 <module>.TestPreflightCheck.test_one_failure_returns_failure with patch("engine.utils.ollama_preflight.ollama_chat", side_effect=mock_chat): 'engine.utils.ollama_preflight.ollama_chat'
+   tests/test_ollama_preflight.py 54 <module>.TestPreflightCheck.test_all_ok_returns_success with patch("engine.utils.ollama_client._client.ps", 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 73 <module>.TestPreflightCheck.test_vram_filters_to_relevant_models with patch("engine.utils.ollama_client._client.ps", return_value=ps_data): 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 93 <module>.TestPreflightCheck.test_vram_unrelated_model_does_not_cause_rejection with patch("engine.utils.ollama_client._client.ps", return_value=ps_data): 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 114 <module>.TestPreflightCheck.test_one_failure_returns_failure with patch("engine.utils.ollama_client._client.ps", 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 224 <module>.TestRequirePreflight.test_raises_on_failure with patch("engine.utils.ollama_preflight.ollama_chat", 'engine.utils.ollama_preflight.ollama_chat'
+   tests/test_ollama_preflight.py 235 <module>.TestRequirePreflight.test_passes_silently_on_success with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response): 'engine.utils.ollama_preflight.ollama_chat'
+   tests/test_ollama_preflight.py 346 <module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response): 'engine.utils.ollama_preflight.ollama_chat'
+   tests/test_ollama_preflight.py 226 <module>.TestRequirePreflight.test_raises_on_failure with patch("engine.utils.ollama_client._client.ps", 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 236 <module>.TestRequirePreflight.test_passes_silently_on_success with patch("engine.utils.ollama_client._client.ps", 'engine.utils.ollama_client._client.ps'
+   tests/test_ollama_preflight.py 347 <module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success with patch("engine.utils.ollama_client._client.ps", 'engine.utils.ollama_client._client.ps'
+   tests/test_pdf_parser.py 148 <module>.test_scanned_routes_to_vision_model with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response): 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_pdf_parser.py 468 <module>.test_parse_pdf_uses_spec_threshold with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response) as mock_chat: 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_pdf_parser.py 276 <module>.test_docling_and_pymupdf_sparse_triggers_vision with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response): 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_pin_records.py 181 <module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_presented_context.py 320 <module>.test_T5_the_elicited_chain_carries_both_attempts_presented_is_pass2 monkeypatch.setattr(PL, "ollama_chat", ollama_chat
+   tests/test_presented_context.py 323 <module>.test_T5_the_elicited_chain_carries_both_attempts_presented_is_pass2 monkeypatch.setattr(E, "ollama_chat", ollama_chat
+   tests/test_presented_context.py 344 <module>.test_T5_pass2_skipped_presented_is_the_accepted_pass1_attempt monkeypatch.setattr(PL, "ollama_chat", ollama_chat
+   tests/test_presented_context.py 104 <module>.test_T1_success_hash_equals_the_recorded_row with patch.object(oc, "_client", fake_client): oc '_client'
+   tests/test_presented_context.py 142 <module>.test_T1_exhaustion_hash_equals_the_recorded_row with patch.object(oc, "_client", fake_client): oc '_client'
+   tests/test_presented_context.py 159 <module>.test_T2_default_returns_the_bare_response with patch.object(oc, "_client", fake_client): oc '_client'
+   tests/test_presented_context.py 205 <module>.test_T3_every_claim_carries_pass2s_hash_and_the_full_chain with patch.object(oc, "_client", fake_client): oc '_client'
+   tests/test_presented_context.py 245 <module>.test_T4_a_retried_snippet_carries_its_own_hash_a_clean_one_does_not with patch.object(oc, "_client", fake_client): oc '_client'
+   tests/test_qualgap01.py 51 <module>.test_v1_omits_the_think_kwarg_entirely with patch.object(R.oc, "ollama_chat", return_value=_Resp()) as chat: R.oc 'ollama_chat'
+   tests/test_qualgap01.py 57 <module>.test_v2_passes_think_true with patch.object(R.oc, "ollama_chat", return_value=_Resp()) as chat: R.oc 'ollama_chat'
+   tests/test_qualgap01.py 75 <module>.test_pass1_reads_the_native_channel_and_reports_the_branch with patch.object(R.oc, "ollama_chat", return_value=_Resp()): R.oc 'ollama_chat'
+   tests/test_qualgap01.py 66 <module>.test_cells_differ_only_in_the_think_argument with patch.object(R.oc, "ollama_chat", return_value=_Resp()) as chat: R.oc 'ollama_chat'
+   tests/test_request_capture.py 150 <module>.capture.install monkeypatch.setattr(oc, "_client", fake) _client
+   tests/test_restart_recovery_guard.py 93 <module>.test_restart_proceeds_under_self_lock patch("engine.utils.ollama_client._client") as mock_client: 'engine.utils.ollama_client._client'
+   tests/test_restart_recovery_guard.py 106 <module>.test_restart_proceeds_when_lock_is_free patch("engine.utils.ollama_client._client") as mock_client: 'engine.utils.ollama_client._client'
+   tests/test_restart_recovery_guard.py 161 <module>.test_refusal_surfaces_as_timeout_from_ollama_chat with patch("engine.utils.ollama_client._client") as mock_client: 'engine.utils.ollama_client._client'
+   tests/test_run_calls_outcomes.py 97 <module>.test_T1_success_records_one_completed_row monkeypatch.setattr(oc, "_client", SimpleNamespace(chat=lambda **kw: StubResponse())) _client
+   tests/test_run_calls_outcomes.py 159 <module>.test_T4_input_truncated_records_one_refused_row_with_digest_and_raises monkeypatch.setattr(oc, "_client", SimpleNamespace(chat=lambda **kw: StubResponse())) _client
+   tests/test_run_calls_outcomes.py 183 <module>.test_T5_input_dropped_records_one_refused_row_with_digest_and_raises monkeypatch.setattr(oc, "_client", SimpleNamespace(chat=lambda **kw: StubResponse())) _client
+   tests/test_run_calls_outcomes.py 209 <module>.test_T6_client_exception_after_retries_records_one_error_row_and_raises monkeypatch.setattr(oc, "_client", SimpleNamespace(chat=_boom)) _client
+   tests/test_run_calls_outcomes.py 245 <module>.test_T8_success_refusal_success_in_order monkeypatch.setattr(oc, "_client", SimpleNamespace(chat=lambda **kw: StubResponse())) _client
+   tests/test_run_fault_predicate.py 187 <module>.test_run_faults_leave_the_snippet_retry_as_themselves monkeypatch.setattr(E, "ollama_chat", boom) ollama_chat
+   tests/test_run_fault_predicate.py 198 <module>.test_the_complement_is_still_a_failed_snippet_retry monkeypatch.setattr(E, "ollama_chat", boom) ollama_chat
+   tests/test_run_fault_predicate.py 207 <module>.test_an_answered_snippet_retry_that_does_not_parse_keeps_its_request_hash monkeypatch.setattr(E, "ollama_chat", lambda **kw: (answered, "a" * 64)) ollama_chat
+   tests/test_run_fault_predicate.py 212 <module>.test_an_answered_snippet_retry_that_does_not_parse_keeps_its_request_hash monkeypatch.setattr(E, "ollama_chat", lambda **kw: ( ollama_chat
+   tests/test_run_fault_predicate.py 262 <module>.fake_ollama monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_run_interrupts.py 245 <module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it monkeypatch.setattr(oc, "_client", _InterruptingClient(fields)) _client
+   tests/test_run_manifest.py 125 <module>.test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded monkeypatch.setattr(oc, "_client", Fake()) _client
+   tests/test_run_pipeline_starts.py 102 <module>.review monkeypatch.setattr(oc, "_client", fake) _client
+   tests/test_run_pipeline_starts.py 172 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight patch("engine.utils.ollama_client._client.ps", create=True, side_effect=loaded_ps): 'engine.utils.ollama_client._client.ps'
+   tests/test_screen2f_armsets.py 174 <module>.test_arm_d_pins_are_what_head_actually_renders with mock.patch.object(screener, "ollama_chat", rec), pytest.raises(Cap): screener 'ollama_chat'
+   tests/test_selection_bound.py 119 <module>.fake_models monkeypatch.setattr(oc, "_client", _Client(fields)) _client
+   tests/test_thinking_channel.py 111 <module>.test_pass1_passes_think_explicitly_and_defaults_on with patch("engine.agents.extractor.ollama_chat") as chat: 'engine.agents.extractor.ollama_chat'
+   tests/test_thinking_channel.py 126 <module>.test_think_is_not_a_caller_override with patch("engine.agents.extractor.ollama_chat") as chat, \ 'engine.agents.extractor.ollama_chat'
+   tests/test_thinking_channel.py 127 <module>.test_think_is_not_a_caller_override patch("engine.elicitation.pipeline.ollama_chat") as el_chat: 'engine.elicitation.pipeline.ollama_chat'
+   tests/test_thinking_channel.py 142 <module>.test_pass1_returns_the_native_trace_not_the_answer with patch("engine.agents.extractor.ollama_chat") as chat: 'engine.agents.extractor.ollama_chat'
+   tests/test_thinking_channel.py 152 <module>.test_pass1_records_branch_telemetry with patch("engine.agents.extractor.ollama_chat") as chat: 'engine.agents.extractor.ollama_chat'
+   tests/test_u18_digest_per_call.py 101 <module>.fake monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_u18_one_host.py 67 <module>._bind monkeypatch.setattr(oc, "_client", oc._build_client(transport=httpx.MockTransport(handler))) _client
+   tests/test_u18_one_host.py 235 <module>.test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run monkeypatch.setattr(oc, "_client", SimpleNamespace(_client=FakeTransport())) _client
+   tests/test_u20_loaded_context.py 97 <module>.fake monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_u20_modelfile_num_ctx.py 76 <module>._use monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_u21_no_overlap.py 112 <module>.install._install monkeypatch.setattr(oc, "_client", fake) _client
+   tests/test_u38_snippet_precheck.py 97 <module>.test_u38_exhausted_retries_keep_the_original_snippet with patch.object(E, "ollama_chat", side_effect=_reply(BRIDGING)) as chat: E 'ollama_chat'
+   tests/test_u38_snippet_precheck.py 112 <module>.test_u38_the_write_boundary_still_refuses_an_uncited_value with patch.object(E, "ollama_chat", side_effect=_reply(BRIDGING)): E 'ollama_chat'
+   tests/test_u39_runtime_equals_hash.py 93 <module>.test_abstract_screen_runtime_equals_hash monkeypatch.setattr(S, "ollama_chat", _fake) ollama_chat
+   tests/test_u39_runtime_equals_hash.py 103 <module>.test_ft_screen_runtime_equals_hash monkeypatch.setattr(F, "ollama_chat", _fake) ollama_chat
+   tests/test_u39_runtime_equals_hash.py 112 <module>.test_extract_pass1_runtime_equals_hash monkeypatch.setattr(X, "ollama_chat", _fake) ollama_chat
+   tests/test_u39_runtime_equals_hash.py 120 <module>.test_extract_pass2_non_elicited_runtime_equals_hash monkeypatch.setattr(X, "ollama_chat", _fake) ollama_chat
+   tests/test_u39_runtime_equals_hash.py 129 <module>.test_extract_retry_snippet_runtime_equals_hash monkeypatch.setattr(X, "ollama_chat", _fake) ollama_chat
+   tests/test_u39_runtime_equals_hash.py 140 <module>.test_elicitation_pass1_runtime_equals_hash monkeypatch.setattr(PL, "ollama_chat", _fake) ollama_chat
+   tests/test_u39_runtime_equals_hash.py 155 <module>.test_extract_pass2_elicited_runtime_equals_hash monkeypatch.setattr(X, "ollama_chat", _fake) ollama_chat
+   tests/test_u39_runtime_equals_hash.py 168 <module>.test_audit_runtime_equals_hash monkeypatch.setattr(A, "ollama_chat", _fake) ollama_chat
+   tests/test_u39_runtime_equals_hash.py 186 <module>.test_audit_every_codebook_type_equals_a_rendered_variant monkeypatch.setattr(A, "ollama_chat", _fake) ollama_chat
+   tests/test_u39_runtime_equals_hash.py 213 <module>.test_vision_parse_runtime_equals_hash monkeypatch.setattr(P, "ollama_chat", _fake) ollama_chat
+   tests/test_u39_runtime_equals_hash.py 223 <module>.test_preflight_runtime_equals_hash monkeypatch.setattr(OP, "ollama_chat", _fake) ollama_chat
+   tests/test_undeclared_call.py 81 <module>.fake monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_undeclared_call.py 181 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself patch("engine.utils.ollama_client._client.ps", create=True, side_effect=loaded_ps): 'engine.utils.ollama_client._client.ps'
+   tests/test_units_as_source_slices.py 222 <module>.fake_ollama monkeypatch.setattr(oc, "_client", client) _client
+   tests/test_value_divergence.py 132 <module>._elicited monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(_pass1(cb, pass1))) ollama_chat
+   tests/test_value_divergence.py 133 <module>._elicited monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(p2)) ollama_chat
+   tests/test_vision_bounds.py 85 <module>.test_defaults_send_num_predict_and_num_ctx with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat: 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_vision_bounds.py 94 <module>.test_explicit_overrides_reach_the_call with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat: 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_vision_bounds.py 109 <module>.test_spec_overrides_reach_the_call_through_parse_pdf patch("engine.parsers.pdf_parser.ollama_chat", 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_vision_bounds.py 142 <module>.test_the_prompt_is_what_is_sent with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat: 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_vision_bounds.py 156 <module>.test_truncation_on_page_2_aborts_before_page_3 with patch("engine.parsers.pdf_parser.ollama_chat", side_effect=responses): 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_vision_bounds.py 167 <module>.test_truncation_becomes_an_unselectable_error_row patch("engine.parsers.pdf_parser.ollama_chat", 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_vision_bounds.py 196 <module>.test_no_partial_document_survives_a_truncated_page with patch("engine.parsers.pdf_parser.ollama_chat", side_effect=responses): 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_vision_bounds.py 205 <module>.test_all_pages_stop_assembles_the_document_as_before with patch("engine.parsers.pdf_parser.ollama_chat", 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_vision_bounds.py 230 <module>.test_per_call_wall_timeout_is_passed with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat: 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_vision_bounds.py 236 <module>.test_default_page_timeout_is_the_spec_default with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat: 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_vision_bounds.py 216 <module>.test_per_page_log_lines_are_emitted with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()): 'engine.parsers.pdf_parser.ollama_chat'
+   tests/test_write_boundary_guard.py 168 <module>.test_a_blank_pass2_value_with_evidence_is_refused_in_both_modes monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(_good_pass1(cb))) ollama_chat
+   tests/test_write_boundary_guard.py 169 <module>.test_a_blank_pass2_value_with_evidence_is_refused_in_both_modes monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(pass2)) ollama_chat
+## vi_literal_string: 29 hits in 14 files
+   by file: tests/test_run_calls_outcomes.py 7, tests/test_vision_bounds.py 4, tests/test_ollama_input_fit.py 3, tests/test_u18_digest_per_call.py 3, tests/test_thinking_channel.py 2, tests/test_u20_loaded_context.py 2, tests/test_elicitation_contracts.py 1, tests/test_extractor.py 1, tests/test_ollama_client.py 1, tests/test_presented_context.py 1, tests/test_restart_recovery_guard.py 1, tests/test_u19_local_service.py 1, tests/test_u20_modelfile_num_ctx.py 1, tests/test_units_and_sizing.py 1
+   tests/test_elicitation_contracts.py 1 <module> """ELICIT-DESIGN-01 — per-class Pass-1 contracts, tokens and indices. ELICIT-DESIGN-01 — per-class Pass-1 contracts, tokens and indices.  Covers requi
+   tests/test_extractor.py 607 <module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues assert "input_fit=" in entry input_fit=
+   tests/test_ollama_client.py 24 <module>._fixed_input_fit_ceiling """These tests exercise the watchdog, retries and restart path, not the These tests exercise the watchdog, retries and restart path, not the     input-f
+   tests/test_ollama_input_fit.py 208 <module>.test_a_missing_count_is_logged_unverified_not_raised assert "input_fit UNVERIFIED" in caplog.text input_fit UNVERIFIED
+   tests/test_ollama_input_fit.py 215 <module>.test_every_call_logs_one_structured_input_fit_line lines = [r.getMessage() for r in caplog.records if r.getMessage().startswith("input_fit paper_id=7 ")] input_fit paper_id=7 
+   tests/test_ollama_input_fit.py 339 <module>.test_migrated_a_fitting_prompt_is_sent_with_its_estimate_logged line = next(r.getMessage() for r in caplog.records if r.getMessage().startswith("input_fit ")) input_fit 
+   tests/test_presented_context.py 120 <module>.test_T1_pre_call_refusal_hash_equals_the_recorded_row oc, "_check_input_fits", _check_input_fits
+   tests/test_restart_recovery_guard.py 42 <module>.fixed_input_fit_ceiling """The restart gate is under test here, not the input-fit guard. The guard's The restart gate is under test here, not the input-fit guard. The guard's     ce
+   tests/test_run_calls_outcomes.py 1 <module> """R216/C24 — the recorder on every ollama_chat outcome; R215/C26 — RunAborted R216/C24 — the recorder on every ollama_chat outcome; R215/C26 — RunAborted clos
+   tests/test_run_calls_outcomes.py 33 <module>._passthrough_input_fit oc, "_check_input_fits", _check_input_fits
+   tests/test_run_calls_outcomes.py 118 <module>.test_T2_input_overflow_records_one_refused_row_and_raises monkeypatch.setattr(oc, "_check_input_fits", _raise_overflow) _check_input_fits
+   tests/test_run_calls_outcomes.py 140 <module>.test_T3_ceiling_unavailable_records_one_refused_row_and_raises monkeypatch.setattr(oc, "_check_input_fits", _raise_ceiling) _check_input_fits
+   tests/test_run_calls_outcomes.py 230 <module>.test_T7_no_active_manifest_refuses_and_records_nothing monkeypatch.setattr(oc, "_check_input_fits", _raise_overflow) _check_input_fits
+   tests/test_run_calls_outcomes.py 251 <module>.test_T8_success_refusal_success_in_order monkeypatch.setattr(oc, "_check_input_fits", _raise_overflow) _check_input_fits
+   tests/test_run_calls_outcomes.py 256 <module>.test_T8_success_refusal_success_in_order oc, "_check_input_fits", _check_input_fits
+   tests/test_thinking_channel.py 193 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields assert row["schema"] == SCHEMA_VERSION == "extraction-telemetry-3" extraction-telemetry-3
+   tests/test_thinking_channel.py 229 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable v2 = {"schema": "extraction-telemetry-2", "arm": "deepseek-r1:32b", "paper_id": 2, extraction-telemetry-2
+   tests/test_u18_digest_per_call.py 206 <module>.test_u18_the_digest_check_precedes_the_input_fit_read monkeypatch.setattr(oc, "_check_input_fits", fit) _check_input_fits
+   tests/test_u18_digest_per_call.py 200 <module>.test_u18_the_digest_check_precedes_the_input_fit_read.fit order.append("input_fit") input_fit
+   tests/test_u18_digest_per_call.py 213 <module>.test_u18_the_digest_check_precedes_the_input_fit_read assert order == ["digest", "input_fit", "digest"]   # a mismatch never reaches the fit read input_fit
+   tests/test_u19_local_service.py 1 <module> """U19 commit 2 (R734(d)): `open_run` refuses a loopback Ollama host that is not the U19 commit 2 (R734(d)): `open_run` refuses a loopback Ollama host that is not th
+   tests/test_u20_loaded_context.py 148 <module>.test_a_a_loaded_context_equal_to_the_ceiling_completes_and_is_recorded line = next(r.getMessage() for r in caplog.records if r.getMessage().startswith("input_fit ")) input_fit 
+   tests/test_u20_loaded_context.py 266 <module>.test_g_outside_a_run_nothing_is_read_and_the_record_is_unchanged line = next(r.getMessage() for r in caplog.records if r.getMessage().startswith("input_fit ")) input_fit 
+   tests/test_u20_modelfile_num_ctx.py 1 <module> """U20 commit 1 (R743(c), INT-i12-11): the input-fit ceiling reads the `num_ctx` line of a U20 commit 1 (R743(c), INT-i12-11): the input-fit ceiling reads the `num_ctx` li
+   tests/test_units_and_sizing.py 1 <module> """The ported unit machinery (ELICIT-DESIGN-01). The ported unit machinery (ELICIT-DESIGN-01).  ELICIT-DESIGN-01 test 5, the elic
+   tests/test_vision_bounds.py 220 <module>.test_per_page_log_lines_are_emitted assert "done_reason=stop" in lines[0] done_reason=stop
+   tests/test_vision_bounds.py 221 <module>.test_per_page_log_lines_are_emitted assert "eval_count=724" in lines[0] eval_count=724
+   tests/test_vision_bounds.py 222 <module>.test_per_page_log_lines_are_emitted assert "prompt_eval_count=2630" in lines[0] prompt_eval_count=2630
+   tests/test_vision_bounds.py 218 <module>.test_per_page_log_lines_are_emitted lines = [r.getMessage() for r in caplog.records if "Vision page" in r.getMessage()] Vision page
+
+# COUNTS
+site analysis / read: attribute .done_reason: 2
+site analysis / read: attribute .prompt_eval_count: 1
+site analysis / read: getattr done_reason: 5
+site analysis / read: getattr eval_count: 4
+site analysis / read: getattr prompt_eval_count: 4
+site engine / literal key 'done_reason': 9
+site engine / literal key 'eval_count': 1
+site engine / literal key 'prompt_eval_count': 14
+site engine / read: getattr done_reason: 5
+site engine / read: getattr eval_count: 1
+site engine / read: getattr prompt_eval_count: 5
+site engine / write: _LAST_PASS*_TELEMETRY: 4
+site engine / write: log line (input_fit / Vision page): 6
+site engine / write: record_call (telemetry or run_calls): 7
+test fake_response_attr_assign: 18 / 5 files
+test fake_response_with_eval_count: 23 / 23 files
+test fake_response_without_eval_count: 9 / 6 files
+test i_direct_call_record_call: 11 / 5 files
+test i_direct_name: 86 / 18 files
+test i_patch_string_lane: 43 / 11 files
+test ii_module_alias_patch: 14 / 7 files
+test iii_last_pass_key: 1 / 1 files
+test iii_record_key_read: 20 / 5 files
+test iii_record_kw: 53 / 5 files
+test iv_exact_set_or_dict_compare: 17 / 13 files
+test iv_hard_coded_hash_in_telemetry_file: 3 / 2 files
+test v_whole_function_or_client: 200 / 44 files
+test vi_literal_string: 29 / 14 files

@@ -1,0 +1,35 @@
+RULING [evidence-engine 12ab-R756] — 12ab-ADOPT accepted; STANDING_RULES.md is adopted and in force;
+  readings; next U21's Phase A, read-only, with B-F14's measurement designed in it and ruled before it runs
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-ADOPT-R1
+  final report (item 0 fa44c9e362abad67de6a321f7bad4350d2be0f1f; adoption
+  044935e3f16d5f64dfe1c9cc3f03caec7cbbacea). Transcribe at item 0 of the next brief, by
+  transcribe_ruling.py, in the block after R755's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-ADOPT-R1 final report):
+  MEASURED: "Commit / parent 044935e3f16d5f64dfe1c9cc3f03caec7cbbacea / fa44c9e3…"; "Stat 12 files,
+    +470 / −27"; "Counts … Read: 88 / 80 / 8"; "Generator sha256 … Read:
+    fc95e62a246a4571295a99180f61b93dd10fc11a528f98d4320dcb8bb82bd7f2, equal"; "session None count …
+    Read: 0"; "Differences from the item-0 file … Read: exactly those 12 lines; same line count";
+    "Tier B's eight are all sampled"; "--list: byte-identical to 2a_list_at_item0.txt, selected 64";
+    "Collection: 3492 tests collected"; "Ledger 53243fbb60f8650406b853c7651801f9958487cc, parent
+    8731bb13…"; "2026-10-31T04:14:54Z".
+  READ (CC's): "parse(), clauses() and selected() are byte-identical, and --list's session print is
+    unchanged"; "lines 3–7 replaced by Section 3a's eleven lines. Lines 1–2 and the old line 8 onward
+    are byte-identical"; findings 20–22.
+  INFERRED: none.
+
+R756(a) — 12ab-ADOPT is accepted as reported: item 0 fa44c9e, the adoption 044935e (the three
+  corrections; the file adopted under R754 at 88 / 80 / 8; CLAUDE.md lines 3–7), ledgers 8731bb1 and
+  53243fb with trailers. STANDING_RULES.md is in force under R754(b)–(c) from this ruling on: a
+  brief's conventions paragraph cites its ids and restates only what it lacks.
+R756(b) — Readings, no row: finding 20 (the status line is one line in the file; a brief's wrapped
+  quote is compared whitespace-normalised, the words verbatim); finding 21; finding 22 (primer.md's
+  "read it at session start" line is working state, corrected at the 12ab wrap under R737(d)'s
+  lane-line form, not before).
+R756(c) — Next: U21's Phase A (12l_P1A.md §3's next unit after U20: "No attempt starts while the
+  previous request is still running", B-F14; N23 and N24 with it; the recovery restart's re-check,
+  12z_U19A.md F7, R734(e)), in the Phase A form the record's most recent Phase A read-out takes,
+  read-only throughout; B-F14's measurement — whether closing the client cancels generation — is
+  designed in that read-out as a proposal and is not run until a ruling on the read-out orders it,
+  under the lock, on the small model (R741(b)). With this ruling and R755 at its item 0. The
+  2026-10-31 jobs are read by the first brief after 10:35 UTC (R749(c)).

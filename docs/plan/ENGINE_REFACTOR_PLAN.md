@@ -13657,3 +13657,96 @@ R754(f) — Next: the adoption brief (12ab-ADOPT), with R753 and this ruling at 
 | 2026-10-31 | R754(a) — 12ab-RULES is accepted as reported: item 0 5738cef (Block 150), the mode and the regenerated file ece937d (parse() and clauses() untouched; the phrase mode's --list byte-identical; the five refusals exercised), ledgers 8d81095 and 5532034 with trailers. R754(b) — docs/plan/STANDING_RULES.md is adopted, Tier A and Tier B both, in the form the adoption commit regenerates: the list of ece937d with R753 added to Tier A, on the plan at that commit's item 0. The architect read the file at ece937d as the READ list states. The file is read so: the quoted clause is the rule's source and the gloss orients and rules nothing; a figure, date, session condition or named commit inside a clause is that day's, and the current value is the expected- values block's (finding 10); a rule the file lacks is a rule a brief must restate. R754(c) — What adoption changes, from the next brief: (i) CLAUDE.md's session-start paragraph (its lines 3–7 at ece937d) is replaced by the text the adoption brief quotes, which names this file as the session-start read and states R751(c)'s scope for the plan; (ii) a brief's conventions paragraph cites the file's ids and restates only what the file lacks; (iii) a brief whose item 0 transcribes a ruling that states a standing rule adds its id to the list and regenerates the file in the item-0 commit, so the file's plan blob is always an item-0 commit's; (iv) nothing else in a brief's form changes until the fix-unit template lands. R754(d) — Three tool corrections at the adoption regeneration, guarded by the --list check (R753(b)): the status line's adopted form, rendered from an argument naming this ruling, in text the adoption brief quotes; the "session None" line omitted when the parser finds no session (finding 11); --spot sampling both tiers (finding 12). parse() and clauses() stay untouched. R754(e) — Readings, no row: findings 8 and 9 (the D entries and the repeatable --glosses are the mode's syntax, accepted); finding 13; finding 14 (closed by this ruling's regeneration). R754(f) — Next: the adoption brief (12ab-ADOPT), with R753 and this ruling at its item 0; then U21's Phase A, its own brief. The 2026-10-31 jobs are read by the first brief after 10:35 UTC (R749(c)). | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-RULES-R1 final report (5738cef; ece937d) |
 
 The decision log in this file ends at R754.
+
+**Block 153.** *Transcribed 2026-10-31 (item 0 of the 12ab-U21A brief), in its own commit with Block 154, in the R597(e) form:* ruling R755, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-ADOPT report stopped at step 2b (item 0 `fa44c9e362abad67de6a321f7bad4350d2be0f1f`). The 12ab-ADOPT-R1 resume that carried the ruling in substance, and the 12ab-U21A brief whose paste carried its text, are not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R755] — 12ab-ADOPT stopped before the adoption commit: I3 replaced by
+  the architect's read; four findings taken as CC read them; resume at 2b
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-ADOPT
+  report stopped at step 2b (item 0 fa44c9e362abad67de6a321f7bad4350d2be0f1f). Transcribe at item 0
+  of the next brief, by transcribe_ruling.py, in the block after R754's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-ADOPT stop report):
+  MEASURED: "Commit / parent fa44c9e362abad67de6a321f7bad4350d2be0f1f / ece937df…"; "Numstat, plan
+    +120 / −0"; "Plan lines 13659 = 13539 + 60 + 60 − 0"; "Plan sha256, bytes
+    7fc677f8339f55073dffbde766e9b3774d8045f33cc6df1a242ee1ecc52146b5, 2450065 B"; "--check-plan
+    byte-identical: 151 7022 B, 152 7247 B"; "r753.txt 08825456…faea, 4108 B, 49 lines, equal to
+    the architect's"; "r754.txt c8d73391…679e, 4252 B, 49 lines, equal"; "88 clauses, Tier A 80,
+    Tier B 8, of 1350 in the log"; "Ledger 8731bb1309409003aff07166f074d0b963802a25, parent
+    55320347…, last row 2026-10-31T04:00:21Z, trailers, foreign row named"; "# clauses in the log
+    1350; selected 64"; "2026-10-31T03:58:42Z, before 10:35".
+  READ (the architect's, from the clone at fa44c9e, extract_rules.py): the session field is read
+    at line 158, in the --list branch — print(f"{e['id']} [{e['date']} {e['session']}] copies
+    {len(e['copies'])} distinct {e['distinct']}") — and by the writer's date line; nowhere else
+    (grep "session" over the file: lines 36–85 are the parser's own, 158 and the writer).
+  READ (CC's): "REFUSED: listed id with no clause ['R753']"; "2026-10-31T03:53:20Z | surgical-cv-ui0
+    | ui-0 | a7b27ab"; findings 15–19.
+  INFERRED: none.
+
+R755(a) — Item 0 is accepted as landed: fa44c9e (Blocks 151–152; r753.txt, r754.txt; the list with
+  "A R753(d)"; the gloss; the file regenerated at 88 / 80 / 8, unadopted), ledger 8731bb1 with the
+  foreign row named (finding 15: R654(d) governed, as the record does over a brief's "clean"; the
+  brief's word was the architect's).
+R755(b) — I3 was the architect's: the field's two readers were in the clone and were not read.
+  Replaced by the READ above. R754(d)'s session-line correction is the writer's date line only;
+  --list's line 158 is unchanged and keeps printing the field, which the --list comparison requires.
+R755(c) — Finding 16: "A R753(d)" is the entry; the id file's "#" line naming R753 stands. Finding 18:
+  the adoption regeneration differs from the item-0 file in the title line, the status line, the
+  generator line and the nine date lines whose clauses carry no session; every other line equal.
+  Finding 19: --spot's form is accepted as proposed — ten of Tier A at a fixed stride, all eight of
+  Tier B. Finding 17: as (b).
+R755(d) — 12ab-ADOPT resumes at 2b under the RESUME below.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R755(a) — Item 0 is accepted as landed: fa44c9e (Blocks 151–152; r753.txt, r754.txt; the list with "A R753(d)"; the gloss; the file regenerated at 88 / 80 / 8, unadopted), ledger 8731bb1 with the foreign row named (finding 15: R654(d) governed, as the record does over a brief's "clean"; the brief's word was the architect's). R755(b) — I3 was the architect's: the field's two readers were in the clone and were not read. Replaced by the READ above. R754(d)'s session-line correction is the writer's date line only; --list's line 158 is unchanged and keeps printing the field, which the --list comparison requires. R755(c) — Finding 16: "A R753(d)" is the entry; the id file's "#" line naming R753 stands. Finding 18: the adoption regeneration differs from the item-0 file in the title line, the status line, the generator line and the nine date lines whose clauses carry no session; every other line equal. Finding 19: --spot's form is accepted as proposed — ten of Tier A at a fixed stride, all eight of Tier B. Finding 17: as (b). R755(d) — 12ab-ADOPT resumes at 2b under the RESUME below. | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-ADOPT report stopped at step 2b (fa44c9e) |
+
+The decision log in this file ends at R755.
+
+**Block 154.** *Transcribed 2026-10-31 (item 0 of the 12ab-U21A brief), in its own commit with Block 153, in the R597(e) form:* ruling R756, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-ADOPT-R1 final report (item 0 `fa44c9e362abad67de6a321f7bad4350d2be0f1f`; adoption `044935e3f16d5f64dfe1c9cc3f03caec7cbbacea`). The 12ab-U21A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R756] — 12ab-ADOPT accepted; STANDING_RULES.md is adopted and in force;
+  readings; next U21's Phase A, read-only, with B-F14's measurement designed in it and ruled before it runs
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-ADOPT-R1
+  final report (item 0 fa44c9e362abad67de6a321f7bad4350d2be0f1f; adoption
+  044935e3f16d5f64dfe1c9cc3f03caec7cbbacea). Transcribe at item 0 of the next brief, by
+  transcribe_ruling.py, in the block after R755's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-ADOPT-R1 final report):
+  MEASURED: "Commit / parent 044935e3f16d5f64dfe1c9cc3f03caec7cbbacea / fa44c9e3…"; "Stat 12 files,
+    +470 / −27"; "Counts … Read: 88 / 80 / 8"; "Generator sha256 … Read:
+    fc95e62a246a4571295a99180f61b93dd10fc11a528f98d4320dcb8bb82bd7f2, equal"; "session None count …
+    Read: 0"; "Differences from the item-0 file … Read: exactly those 12 lines; same line count";
+    "Tier B's eight are all sampled"; "--list: byte-identical to 2a_list_at_item0.txt, selected 64";
+    "Collection: 3492 tests collected"; "Ledger 53243fbb60f8650406b853c7651801f9958487cc, parent
+    8731bb13…"; "2026-10-31T04:14:54Z".
+  READ (CC's): "parse(), clauses() and selected() are byte-identical, and --list's session print is
+    unchanged"; "lines 3–7 replaced by Section 3a's eleven lines. Lines 1–2 and the old line 8 onward
+    are byte-identical"; findings 20–22.
+  INFERRED: none.
+
+R756(a) — 12ab-ADOPT is accepted as reported: item 0 fa44c9e, the adoption 044935e (the three
+  corrections; the file adopted under R754 at 88 / 80 / 8; CLAUDE.md lines 3–7), ledgers 8731bb1 and
+  53243fb with trailers. STANDING_RULES.md is in force under R754(b)–(c) from this ruling on: a
+  brief's conventions paragraph cites its ids and restates only what it lacks.
+R756(b) — Readings, no row: finding 20 (the status line is one line in the file; a brief's wrapped
+  quote is compared whitespace-normalised, the words verbatim); finding 21; finding 22 (primer.md's
+  "read it at session start" line is working state, corrected at the 12ab wrap under R737(d)'s
+  lane-line form, not before).
+R756(c) — Next: U21's Phase A (12l_P1A.md §3's next unit after U20: "No attempt starts while the
+  previous request is still running", B-F14; N23 and N24 with it; the recovery restart's re-check,
+  12z_U19A.md F7, R734(e)), in the Phase A form the record's most recent Phase A read-out takes,
+  read-only throughout; B-F14's measurement — whether closing the client cancels generation — is
+  designed in that read-out as a proposal and is not run until a ruling on the read-out orders it,
+  under the lock, on the small model (R741(b)). With this ruling and R755 at its item 0. The
+  2026-10-31 jobs are read by the first brief after 10:35 UTC (R749(c)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R756(a) — 12ab-ADOPT is accepted as reported: item 0 fa44c9e, the adoption 044935e (the three corrections; the file adopted under R754 at 88 / 80 / 8; CLAUDE.md lines 3–7), ledgers 8731bb1 and 53243fb with trailers. STANDING_RULES.md is in force under R754(b)–(c) from this ruling on: a brief's conventions paragraph cites its ids and restates only what it lacks. R756(b) — Readings, no row: finding 20 (the status line is one line in the file; a brief's wrapped quote is compared whitespace-normalised, the words verbatim); finding 21; finding 22 (primer.md's "read it at session start" line is working state, corrected at the 12ab wrap under R737(d)'s lane-line form, not before). R756(c) — Next: U21's Phase A (12l_P1A.md §3's next unit after U20: "No attempt starts while the previous request is still running", B-F14; N23 and N24 with it; the recovery restart's re-check, 12z_U19A.md F7, R734(e)), in the Phase A form the record's most recent Phase A read-out takes, read-only throughout; B-F14's measurement — whether closing the client cancels generation — is designed in that read-out as a proposal and is not run until a ruling on the read-out orders it, under the lock, on the small model (R741(b)). With this ruling and R755 at its item 0. The 2026-10-31 jobs are read by the first brief after 10:35 UTC (R749(c)). | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-ADOPT-R1 final report (fa44c9e; 044935e) |
+
+The decision log in this file ends at R756.

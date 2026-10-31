@@ -1,0 +1,36 @@
+RULING [evidence-engine 12ab-R755] — 12ab-ADOPT stopped before the adoption commit: I3 replaced by
+  the architect's read; four findings taken as CC read them; resume at 2b
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-ADOPT
+  report stopped at step 2b (item 0 fa44c9e362abad67de6a321f7bad4350d2be0f1f). Transcribe at item 0
+  of the next brief, by transcribe_ruling.py, in the block after R754's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-ADOPT stop report):
+  MEASURED: "Commit / parent fa44c9e362abad67de6a321f7bad4350d2be0f1f / ece937df…"; "Numstat, plan
+    +120 / −0"; "Plan lines 13659 = 13539 + 60 + 60 − 0"; "Plan sha256, bytes
+    7fc677f8339f55073dffbde766e9b3774d8045f33cc6df1a242ee1ecc52146b5, 2450065 B"; "--check-plan
+    byte-identical: 151 7022 B, 152 7247 B"; "r753.txt 08825456…faea, 4108 B, 49 lines, equal to
+    the architect's"; "r754.txt c8d73391…679e, 4252 B, 49 lines, equal"; "88 clauses, Tier A 80,
+    Tier B 8, of 1350 in the log"; "Ledger 8731bb1309409003aff07166f074d0b963802a25, parent
+    55320347…, last row 2026-10-31T04:00:21Z, trailers, foreign row named"; "# clauses in the log
+    1350; selected 64"; "2026-10-31T03:58:42Z, before 10:35".
+  READ (the architect's, from the clone at fa44c9e, extract_rules.py): the session field is read
+    at line 158, in the --list branch — print(f"{e['id']} [{e['date']} {e['session']}] copies
+    {len(e['copies'])} distinct {e['distinct']}") — and by the writer's date line; nowhere else
+    (grep "session" over the file: lines 36–85 are the parser's own, 158 and the writer).
+  READ (CC's): "REFUSED: listed id with no clause ['R753']"; "2026-10-31T03:53:20Z | surgical-cv-ui0
+    | ui-0 | a7b27ab"; findings 15–19.
+  INFERRED: none.
+
+R755(a) — Item 0 is accepted as landed: fa44c9e (Blocks 151–152; r753.txt, r754.txt; the list with
+  "A R753(d)"; the gloss; the file regenerated at 88 / 80 / 8, unadopted), ledger 8731bb1 with the
+  foreign row named (finding 15: R654(d) governed, as the record does over a brief's "clean"; the
+  brief's word was the architect's).
+R755(b) — I3 was the architect's: the field's two readers were in the clone and were not read.
+  Replaced by the READ above. R754(d)'s session-line correction is the writer's date line only;
+  --list's line 158 is unchanged and keeps printing the field, which the --list comparison requires.
+R755(c) — Finding 16: "A R753(d)" is the entry; the id file's "#" line naming R753 stands. Finding 18:
+  the adoption regeneration differs from the item-0 file in the title line, the status line, the
+  generator line and the nine date lines whose clauses carry no session; every other line equal.
+  Finding 19: --spot's form is accepted as proposed — ten of Tier A at a fixed stride, all eight of
+  Tier B. Finding 17: as (b).
+R755(d) — 12ab-ADOPT resumes at 2b under the RESUME below.

@@ -13310,3 +13310,176 @@ R748(f) — Session 12aa closes now. After R748(d) has landed, run /wrap. Report
 | 2026-10-31 | R748(a) — The 12aa-CLOSE closeout block is accepted as printed: item 0 afd179e (Block 145 by transcribe_ruling.py), the closeout 1914ccf, ledgers afd61b2 and 3b2f93e with trailers. R748(b) — The band for 12ab is 820–1001 s, ±10% of 910.6650 s, the mean of the last four standard gates on this host state (906.10, 909.32, 907.50, 919.74), rounded inward as R683(c) rounded. Finding 3: band_computation.txt's "quiet" label is not supported for 907.50 and 919.74; the record's description is "surgical-cv's uvicorn the only concurrent job at each, idle recorded for 906.10 and 909.32". The file is not edited; this clause is the correction. A 12ab gate outside the band is reported with its concurrent jobs, not adapted to. R748(c) — Readings, no row: finding 1 (the primer of R737(d) and of this ruling is ~/claude-config/primer.md); finding 2 (three job files rebuilt from their unchanged logs, in 12z's form); findings 4–8 (the transcription date is the commit's UTC date, the made date the ruling's own). R748(d) — The lane line (sha256 5a752f9907ccbc7236de0a46fe0bc464498255fd3f929b3ecf53ee7bd007723e, 6,446 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows named by hash); push; level. R748(e) — 12ab-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with transcribe_ruling.py as the next block and copies lane_line_12aa.txt into docs/session-reports/session-12/12aa_close/. It runs session_open_check.py and the steps R747(b) keeps explicit, against the "Expected values at session-12ab open" block; the gate by the wrapper's first full use, against 820–1001 s. Then the standing-rules id list (R747(c)), then U21's Phase A. R748(f) — Session 12aa closes now. After R748(d) has landed, run /wrap. Report the archive command. | PI, 2026-10-31, during session 12aa, on architect recommendation, on the 12aa-CLOSE closeout block (1914ccf) |
 
 The decision log in this file ends at R748.
+
+**Block 147.** *Transcribed 2026-10-31 (item 0 of the 12ab-TOOLS brief), in its own commit with Blocks 148 and 149, in the R597(e) form:* ruling R749, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-OPEN report stopped at step 0a (no commit). The 12ab-OPEN-R1 resume that carried the ruling in substance, and the 12ab-TOOLS brief whose paste carried its text, are not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R749] — 12ab-OPEN's stop at 0a accepted; an open no longer waits
+  for the day's scheduled jobs; the jobs are read by the first brief after they run; resume now
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-OPEN
+  report stopped at step 0a (no commit). Transcribe at item 0 of the next brief after this
+  resume, by transcribe_ruling.py, in the block after R748's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-OPEN stop report):
+  MEASURED: "The clock reads 2026-10-31T01:46:06Z"; "both absent; the latest log is
+    nightly_test_20261030.log, last modified 10-30 09:15:17 UTC"; "~/logs/ollama_health_cron.log
+    last modified 10-30 07:05:09 UTC, so that is the 10-30 run"; "HEAD at
+    905ab6a8d08b81597a93883afbe2dff4fc7dc37e (parent 3b2f93e9de3ae9a85c6e7ced55bd2785587ac68f)";
+    "both repos have clean working trees. I made no commits or pushes"; "Created:
+    ~/scratch/12ab-open/, holding one evidence file, 0a_clock_and_runs.txt"; "12aa_close/ lists
+    23 files, matching I2, with no r748.txt or lane_line_12aa.txt".
+  READ (CC's): findings 1 and 2 of that report.
+  INFERRED: none.
+
+R749(a) — The stop at 0a is accepted: the brief's clock check held as written; nothing was
+  committed; ~/scratch/12ab-open/ with 0a_clock_and_runs.txt is this attempt's leftover and is
+  reused by the resume (I7 of 12ab-OPEN is amended so).
+R749(b) — An open does not wait for a day's scheduled jobs. A brief is valid at any time outside
+  07:00–10:35 UTC (R86), and a gate must exit before 07:00 UTC. An open or closeout reads every
+  scheduled job that has run on the current HEAD since the last recorded read, each against the
+  expected file that governs it; a nightly that has not yet run is read by the first open,
+  closeout or other brief after it runs, as an explicit step, against the same expected file
+  while the engine tree is unchanged, and against the closeout's new expected file after a
+  change. 12aa_U20C/expected_nightly_20261031.md governs the 2026-10-31 nightly whenever it is
+  read. The readings themselves, the line-for-line match, the ids comparison (R655(b)) and the
+  stop on a mismatch are unchanged. This amends R748(e) and every earlier wrap ruling's "reads the
+  … health job and … nightly" clause in timing only.
+R749(c) — 12ab-OPEN resumes now under the RESUME below. The 2026-10-31 07:00 health job and 09:00
+  nightly are read by the first brief after 10:35 UTC on 2026-10-31, with the NVRM grep and the
+  ids against 12aa_close/collected_ids_12aa_close.txt.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R749(a) — The stop at 0a is accepted: the brief's clock check held as written; nothing was committed; ~/scratch/12ab-open/ with 0a_clock_and_runs.txt is this attempt's leftover and is reused by the resume (I7 of 12ab-OPEN is amended so). R749(b) — An open does not wait for a day's scheduled jobs. A brief is valid at any time outside 07:00–10:35 UTC (R86), and a gate must exit before 07:00 UTC. An open or closeout reads every scheduled job that has run on the current HEAD since the last recorded read, each against the expected file that governs it; a nightly that has not yet run is read by the first open, closeout or other brief after it runs, as an explicit step, against the same expected file while the engine tree is unchanged, and against the closeout's new expected file after a change. 12aa_U20C/expected_nightly_20261031.md governs the 2026-10-31 nightly whenever it is read. The readings themselves, the line-for-line match, the ids comparison (R655(b)) and the stop on a mismatch are unchanged. This amends R748(e) and every earlier wrap ruling's "reads the … health job and … nightly" clause in timing only. R749(c) — 12ab-OPEN resumes now under the RESUME below. The 2026-10-31 07:00 health job and 09:00 nightly are read by the first brief after 10:35 UTC on 2026-10-31, with the NVRM grep and the ids against 12aa_close/collected_ids_12aa_close.txt. | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-OPEN report stopped at step 0a (no commit) |
+
+The decision log in this file ends at R749.
+
+**Block 148.** *Transcribed 2026-10-31 (item 0 of the 12ab-TOOLS brief), in its own commit with Blocks 147 and 149, in the R597(e) form:* ruling R750, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-OPEN-R1 report stopped at step 3b (item 0 `e397be4c8619e528d66046bed055e7763c1a9649`; ledger `7e79a89fe60fdb4eab1fa31d7a4e6d5ec553cfdf`). The 12ab-OPEN-R2 resume that carried the ruling in substance, and the 12ab-TOOLS brief whose paste carried its text, are not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R750] — 12ab-OPEN-R1 stopped at 3b: the cc_sessions row is read as
+  attributed; the script's section is a tool defect, fixed in its own brief; D = 0 accepted and the
+  architect's prediction withdrawn; the session-start steps completed before the resume; resume at 3c
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-OPEN-R1
+  report stopped at step 3b (item 0 e397be4c8619e528d66046bed055e7763c1a9649; ledger
+  7e79a89fe60fdb4eab1fa31d7a4e6d5ec553cfdf). Transcribe at item 0 of the next brief, by
+  transcribe_ruling.py, in the block after R749's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-OPEN-R1 stop report):
+  MEASURED: "Commit / parent e397be4c8619e528d66046bed055e7763c1a9649 / 1914ccf1…9b5a"; "Numstat,
+    plan +58 / −0"; "Plan lines 13312 = 13254 + 58 − 0"; "Plan sha256, bytes
+    7c399be8c0015c728040c091359aae9204dfe174626e7b80055cde3fd8ca9252, 2409574 B"; "r748.txt
+    bd1450fc…4160, 3848 B, 47 lines, equal to the architect's; hashed straight after its one write";
+    "--check-plan byte-identical, 6693 B"; "Fingerprint before and after push IDENTICAL both";
+    "claude-config: commit 7e79a89fe60fdb4eab1fa31d7a4e6d5ec553cfdf, parent 905ab6a8…c37e";
+    "RESULT: FAIL (1 mismatches)"; "MISMATCH  processes of sessions ['ae168a3f'] (started
+    2026-10-30T17:52:00..2026-10-31T01:30:00): 11  (expected 0)"; "No section was SKIPPED";
+    "Model loads 0, so no stop"; "NV_ERR_NO_MEMORY this boot 18, none new"; "Temp root: 4 entries,
+    4,191,823,924 B, unchanged since the closeout"; "the model commit afd179e reads 57/0";
+    "~/claude-session-archive/ae168a3f-….jsonl has mtime 2026-10-31 01:29:19 UTC".
+  READ (CC's): "The code is if lo <= t <= hi or any(s in l for s in v["ids"]), so any process in
+    the window counts, whichever lane owns it"; "All 11 flagged processes belong to surgical-cv or
+    VS Code"; "The script's validation file used a window ending 10-30 05:30, before the 18:57
+    uvicorn started"; "The tool's --append writes plan + text and removes nothing"; "I read lines
+    1–626 of the 2,463 in ~/.claude/primer.md … I did not read the project primer.md or the plan as
+    a whole, and I did not run memory.sh. The session-start steps in CLAUDE.md ask for all of
+    these."; findings 3–6.
+  INFERRED: none.
+
+R750(a) — Item 0 is accepted as landed: e397be4 (Block 146 by transcribe_ruling.py; r748.txt;
+  lane_line_12aa.txt), ledger 7e79a89 with trailers. The open check's 42 MATCH and READING rows
+  stand as the open's verification of their values.
+R750(b) — The cc_sessions row is read as attributed by step 0g's list: every one of the eleven is
+  another lane's or VS Code's, none of this lane's, and none is a stop. The section is a defect of
+  session_open_check.py (finding 1): it counts any process of the user in the window, not the named
+  sessions'. It is fixed in its own tools brief after this open, validated against 0g_attribution.txt
+  and against the 12aa-SETUP validation file, and nothing else in the script changes there. Until
+  that brief lands, the row is read against the open's 0g attribution, and that reading is written in
+  the report. A dated note on the tools README records the defect in that brief's commit, not now.
+R750(c) — D = 0 is accepted (finding 2). The brief's "EXPECTED: the ends-at R747 line" was the
+  architect's prediction from the record's description, against afd179e's own numstat, and is
+  withdrawn; the tool and the record governed, as the constraints say. 12ab-OPEN's rule-14 list
+  gains "a tool's write semantics", and a brief that names a tool states no "−" count the tool's
+  own run does not supply.
+R750(d) — Readings, no row: finding 3 (the archive time is read from the transcript's mtime; the
+  window end 01:30:00 stands); finding 4; finding 6 (the 10-30 ids and journal readings stand at
+  12aa_close/); finding 5 is the next brief's obligation, as R749(c) states.
+R750(e) — Finding 7: before 3c, CC completes the session-start steps CLAUDE.md names, read-only,
+  quoting each step's line and stating what was read; a step CLAUDE.md names that cannot be run as
+  written is reported, not skipped. Nothing of this ruling depends on their result; a contradiction
+  they surface is reported with the resume's report.
+R750(f) — 12ab-OPEN-R1 resumes at 3c under the RESUME below. The gate must exit before 07:00 UTC.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R750(a) — Item 0 is accepted as landed: e397be4 (Block 146 by transcribe_ruling.py; r748.txt; lane_line_12aa.txt), ledger 7e79a89 with trailers. The open check's 42 MATCH and READING rows stand as the open's verification of their values. R750(b) — The cc_sessions row is read as attributed by step 0g's list: every one of the eleven is another lane's or VS Code's, none of this lane's, and none is a stop. The section is a defect of session_open_check.py (finding 1): it counts any process of the user in the window, not the named sessions'. It is fixed in its own tools brief after this open, validated against 0g_attribution.txt and against the 12aa-SETUP validation file, and nothing else in the script changes there. Until that brief lands, the row is read against the open's 0g attribution, and that reading is written in the report. A dated note on the tools README records the defect in that brief's commit, not now. R750(c) — D = 0 is accepted (finding 2). The brief's "EXPECTED: the ends-at R747 line" was the architect's prediction from the record's description, against afd179e's own numstat, and is withdrawn; the tool and the record governed, as the constraints say. 12ab-OPEN's rule-14 list gains "a tool's write semantics", and a brief that names a tool states no "−" count the tool's own run does not supply. R750(d) — Readings, no row: finding 3 (the archive time is read from the transcript's mtime; the window end 01:30:00 stands); finding 4; finding 6 (the 10-30 ids and journal readings stand at 12aa_close/); finding 5 is the next brief's obligation, as R749(c) states. R750(e) — Finding 7: before 3c, CC completes the session-start steps CLAUDE.md names, read-only, quoting each step's line and stating what was read; a step CLAUDE.md names that cannot be run as written is reported, not skipped. Nothing of this ruling depends on their result; a contradiction they surface is reported with the resume's report. R750(f) — 12ab-OPEN-R1 resumes at 3c under the RESUME below. The gate must exit before 07:00 UTC. | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-OPEN-R1 report stopped at step 3b (e397be4; 7e79a89) |
+
+The decision log in this file ends at R750.
+
+**Block 149.** *Transcribed 2026-10-31 (item 0 of the 12ab-TOOLS brief), in its own commit with Blocks 147 and 148, in the R597(e) form:* ruling R751, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-OPEN-R2 final report (item 0 `e397be4c8619e528d66046bed055e7763c1a9649`; gate evidence `f3761c30fd35aced30c99a5f94ffdbaf73cb9329`). The 12ab-TOOLS brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R751] — 12ab-OPEN accepted as completed; the gate 924.77 s joins the
+  series with its concurrent jobs described; the plan's session-start read is scoped; the foreign
+  commit accepted; readings; next the tools brief, then the standing-rules id list, then U21
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-OPEN-R2
+  final report (item 0 e397be4c8619e528d66046bed055e7763c1a9649; gate evidence
+  f3761c30fd35aced30c99a5f94ffdbaf73cb9329). Transcribe at item 0 of the next brief, by
+  transcribe_ruling.py, in the block after R750's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-OPEN-R2 final report):
+  MEASURED: "==== 3474 passed, 17 deselected, 1 xfailed, 2 warnings in 922.42s (0:15:22) ====";
+    "collected 3492 items / 17 deselected / 3475 selected"; "924.77 s, inside"; "01:59:46.93 /
+    02:15:11.70"; "3,475 vs 3,475; only-gate 0, only-ref 0"; "None; 2,556 phases vs 2,543 in the
+    reference"; "0 load or POST lines"; "19, names equal to 12aa_open/gate_12aa_open/ with
+    durations_12ab_open.txt for durations_12aa_open.txt"; "Wrapper fault None"; "Before:
+    01:59:40.24–.28, 6.6 s before launch"; "After: 02:15:18.23–.26, 6.5 s after exit"; "kernel
+    6.17.0-1032-nvidia, Python 3.12.3, libsqlite3-0 3.45.1-1ubuntu2.8, driver 580.173.02"; "surgical-
+    cv's uvicorn (2856714) throughout. A foreign shell, 3239197, appears in the before snapshot
+    only"; "its output is byte-identical to 12aa_close/recount_close_run.json"; "fix_units 35 (script
+    field) / fix_units_dated_lines 19 (literal field) / 37, done 23 (dated lines)"; "206 rows at
+    1914ccf and 206 at e397be4. Rows in 0, rows out 0"; "Commit: f3761c30fd35aced30c99a5f94ffdbaf73cb9329,
+    parent e397be4c…1a9649, 19 files, +12,275"; "Fingerprint before and after push: IDENTICAL both";
+    "Ledger: 15c231ad910bb87e8ab9d7d1fc3b0533cc5343b5, parent 6be00e3f…"; "6be00e3 ("docs: rewrite
+    open item #9 after the CR-1 .bak deletion", 02:00:37 UTC) has the session trailer
+    session_01SnxNiom56B8FCf6KFsARh2, which is surgical-cv-ac's"; "Primer lines 41–45 are intact
+    (True)"; "4,191,823,924 B before and 4,200,542,829 B after, with 4 entries each"; "pytest-169,
+    1,400,180,901 B"; "At 13,312 lines and 2,409,574 B, it won't fit in a session's context".
+  READ (CC's): findings 8–14 of that report; the B0 table.
+  INFERRED: none.
+
+R751(a) — 12ab-OPEN is accepted as completed: item 0 e397be4 (Block 146), the gate evidence f3761c3
+  (19 files, the wrapper's first full gate, no wrapper fault), ledgers 7e79a89 and 15c231a with
+  trailers; the open check as R750(b) reads it; the recount, the fix units three ways (done 23) and
+  R510 (in 0, out 0) as reported. The 12ab open stands verified.
+R751(b) — The gate 924.77 s is a member of the series (the standard gate on this host state, inside
+  820–1001 s), described as "surgical-cv's uvicorn throughout; a foreign shell (3239197) at launch,
+  gone by exit, unread between" (finding 9). The series stands at the twenty-five of R748(b) plus
+  924.77. The band in force stays 820–1001 s until the next wrap ruling recomputes it.
+R751(c) — Finding 8: the session-start instruction "Read docs/plan/ENGINE_REFACTOR_PLAN.md" is read
+  as scoped, from this ruling: the Status table, the latest closure paragraph and its "Expected
+  values" block, the decision log's last block, and every block, row or read-out a brief names. No
+  other part of the plan is taken as checked by a session, and a brief that relies on an earlier
+  ruling quotes it. The CLAUDE.md line is corrected to this scope, by text quoted in that commit's
+  handoff for PI approval, in the commit that adopts STANDING_RULES.md (R747(c)); not before.
+R751(d) — Finding 9: the foreign commit 6be00e3 (surgical-cv-ac, one CLAUDE.md line, primer lines
+  41–45 intact) is accepted as found under R663(b); the lane's row committed on top of it stands
+  (R709(c) form). The foreign shell is a reading; the unread interval is a dated fact (R663(a)).
+R751(e) — Readings, no row: finding 10 (stale primer lines, the dgx-infra lane's); finding 11 (the
+  temp root rotated pytest-166 out at pytest-169's creation; R647(c) stands — the root is read,
+  never matched); finding 12 (an evidence commit's scope is docs(session-reports) from here, the
+  model 5c1474c's docs(plan) being for commits that touch the plan); finding 13 (a brief's named
+  waiting process governs over a memory note; the note is CC's to reconcile, not a stop).
+R751(f) — Next, in this order, each its own brief: the tools brief (R750(b): the cc_sessions section
+  of session_open_check.py), with R749–R751 at its item 0; the standing-rules id list (R747(c));
+  U21's Phase A. The 2026-10-31 07:00 health job and 09:00 nightly are read by the first of these
+  that runs after 10:35 UTC, as R749(c) states.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R751(a) — 12ab-OPEN is accepted as completed: item 0 e397be4 (Block 146), the gate evidence f3761c3 (19 files, the wrapper's first full gate, no wrapper fault), ledgers 7e79a89 and 15c231a with trailers; the open check as R750(b) reads it; the recount, the fix units three ways (done 23) and R510 (in 0, out 0) as reported. The 12ab open stands verified. R751(b) — The gate 924.77 s is a member of the series (the standard gate on this host state, inside 820–1001 s), described as "surgical-cv's uvicorn throughout; a foreign shell (3239197) at launch, gone by exit, unread between" (finding 9). The series stands at the twenty-five of R748(b) plus 924.77. The band in force stays 820–1001 s until the next wrap ruling recomputes it. R751(c) — Finding 8: the session-start instruction "Read docs/plan/ENGINE_REFACTOR_PLAN.md" is read as scoped, from this ruling: the Status table, the latest closure paragraph and its "Expected values" block, the decision log's last block, and every block, row or read-out a brief names. No other part of the plan is taken as checked by a session, and a brief that relies on an earlier ruling quotes it. The CLAUDE.md line is corrected to this scope, by text quoted in that commit's handoff for PI approval, in the commit that adopts STANDING_RULES.md (R747(c)); not before. R751(d) — Finding 9: the foreign commit 6be00e3 (surgical-cv-ac, one CLAUDE.md line, primer lines 41–45 intact) is accepted as found under R663(b); the lane's row committed on top of it stands (R709(c) form). The foreign shell is a reading; the unread interval is a dated fact (R663(a)). R751(e) — Readings, no row: finding 10 (stale primer lines, the dgx-infra lane's); finding 11 (the temp root rotated pytest-166 out at pytest-169's creation; R647(c) stands — the root is read, never matched); finding 12 (an evidence commit's scope is docs(session-reports) from here, the model 5c1474c's docs(plan) being for commits that touch the plan); finding 13 (a brief's named waiting process governs over a memory note; the note is CC's to reconcile, not a stop). R751(f) — Next, in this order, each its own brief: the tools brief (R750(b): the cc_sessions section of session_open_check.py), with R749–R751 at its item 0; the standing-rules id list (R747(c)); U21's Phase A. The 2026-10-31 07:00 health job and 09:00 nightly are read by the first of these that runs after 10:35 UTC, as R749(c) states. | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-OPEN-R2 final report (e397be4; f3761c3) |
+
+The decision log in this file ends at R751.

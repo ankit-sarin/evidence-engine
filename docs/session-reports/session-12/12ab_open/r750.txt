@@ -1,0 +1,52 @@
+RULING [evidence-engine 12ab-R750] — 12ab-OPEN-R1 stopped at 3b: the cc_sessions row is read as
+  attributed; the script's section is a tool defect, fixed in its own brief; D = 0 accepted and the
+  architect's prediction withdrawn; the session-start steps completed before the resume; resume at 3c
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-OPEN-R1
+  report stopped at step 3b (item 0 e397be4c8619e528d66046bed055e7763c1a9649; ledger
+  7e79a89fe60fdb4eab1fa31d7a4e6d5ec553cfdf). Transcribe at item 0 of the next brief, by
+  transcribe_ruling.py, in the block after R749's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-OPEN-R1 stop report):
+  MEASURED: "Commit / parent e397be4c8619e528d66046bed055e7763c1a9649 / 1914ccf1…9b5a"; "Numstat,
+    plan +58 / −0"; "Plan lines 13312 = 13254 + 58 − 0"; "Plan sha256, bytes
+    7c399be8c0015c728040c091359aae9204dfe174626e7b80055cde3fd8ca9252, 2409574 B"; "r748.txt
+    bd1450fc…4160, 3848 B, 47 lines, equal to the architect's; hashed straight after its one write";
+    "--check-plan byte-identical, 6693 B"; "Fingerprint before and after push IDENTICAL both";
+    "claude-config: commit 7e79a89fe60fdb4eab1fa31d7a4e6d5ec553cfdf, parent 905ab6a8…c37e";
+    "RESULT: FAIL (1 mismatches)"; "MISMATCH  processes of sessions ['ae168a3f'] (started
+    2026-10-30T17:52:00..2026-10-31T01:30:00): 11  (expected 0)"; "No section was SKIPPED";
+    "Model loads 0, so no stop"; "NV_ERR_NO_MEMORY this boot 18, none new"; "Temp root: 4 entries,
+    4,191,823,924 B, unchanged since the closeout"; "the model commit afd179e reads 57/0";
+    "~/claude-session-archive/ae168a3f-….jsonl has mtime 2026-10-31 01:29:19 UTC".
+  READ (CC's): "The code is if lo <= t <= hi or any(s in l for s in v["ids"]), so any process in
+    the window counts, whichever lane owns it"; "All 11 flagged processes belong to surgical-cv or
+    VS Code"; "The script's validation file used a window ending 10-30 05:30, before the 18:57
+    uvicorn started"; "The tool's --append writes plan + text and removes nothing"; "I read lines
+    1–626 of the 2,463 in ~/.claude/primer.md … I did not read the project primer.md or the plan as
+    a whole, and I did not run memory.sh. The session-start steps in CLAUDE.md ask for all of
+    these."; findings 3–6.
+  INFERRED: none.
+
+R750(a) — Item 0 is accepted as landed: e397be4 (Block 146 by transcribe_ruling.py; r748.txt;
+  lane_line_12aa.txt), ledger 7e79a89 with trailers. The open check's 42 MATCH and READING rows
+  stand as the open's verification of their values.
+R750(b) — The cc_sessions row is read as attributed by step 0g's list: every one of the eleven is
+  another lane's or VS Code's, none of this lane's, and none is a stop. The section is a defect of
+  session_open_check.py (finding 1): it counts any process of the user in the window, not the named
+  sessions'. It is fixed in its own tools brief after this open, validated against 0g_attribution.txt
+  and against the 12aa-SETUP validation file, and nothing else in the script changes there. Until
+  that brief lands, the row is read against the open's 0g attribution, and that reading is written in
+  the report. A dated note on the tools README records the defect in that brief's commit, not now.
+R750(c) — D = 0 is accepted (finding 2). The brief's "EXPECTED: the ends-at R747 line" was the
+  architect's prediction from the record's description, against afd179e's own numstat, and is
+  withdrawn; the tool and the record governed, as the constraints say. 12ab-OPEN's rule-14 list
+  gains "a tool's write semantics", and a brief that names a tool states no "−" count the tool's
+  own run does not supply.
+R750(d) — Readings, no row: finding 3 (the archive time is read from the transcript's mtime; the
+  window end 01:30:00 stands); finding 4; finding 6 (the 10-30 ids and journal readings stand at
+  12aa_close/); finding 5 is the next brief's obligation, as R749(c) states.
+R750(e) — Finding 7: before 3c, CC completes the session-start steps CLAUDE.md names, read-only,
+  quoting each step's line and stating what was read; a step CLAUDE.md names that cannot be run as
+  written is reported, not skipped. Nothing of this ruling depends on their result; a contradiction
+  they surface is reported with the resume's report.
+R750(f) — 12ab-OPEN-R1 resumes at 3c under the RESUME below. The gate must exit before 07:00 UTC.

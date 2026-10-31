@@ -1,0 +1,55 @@
+RULING [evidence-engine 12ab-R751] — 12ab-OPEN accepted as completed; the gate 924.77 s joins the
+  series with its concurrent jobs described; the plan's session-start read is scoped; the foreign
+  commit accepted; readings; next the tools brief, then the standing-rules id list, then U21
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-OPEN-R2
+  final report (item 0 e397be4c8619e528d66046bed055e7763c1a9649; gate evidence
+  f3761c30fd35aced30c99a5f94ffdbaf73cb9329). Transcribe at item 0 of the next brief, by
+  transcribe_ruling.py, in the block after R750's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-OPEN-R2 final report):
+  MEASURED: "==== 3474 passed, 17 deselected, 1 xfailed, 2 warnings in 922.42s (0:15:22) ====";
+    "collected 3492 items / 17 deselected / 3475 selected"; "924.77 s, inside"; "01:59:46.93 /
+    02:15:11.70"; "3,475 vs 3,475; only-gate 0, only-ref 0"; "None; 2,556 phases vs 2,543 in the
+    reference"; "0 load or POST lines"; "19, names equal to 12aa_open/gate_12aa_open/ with
+    durations_12ab_open.txt for durations_12aa_open.txt"; "Wrapper fault None"; "Before:
+    01:59:40.24–.28, 6.6 s before launch"; "After: 02:15:18.23–.26, 6.5 s after exit"; "kernel
+    6.17.0-1032-nvidia, Python 3.12.3, libsqlite3-0 3.45.1-1ubuntu2.8, driver 580.173.02"; "surgical-
+    cv's uvicorn (2856714) throughout. A foreign shell, 3239197, appears in the before snapshot
+    only"; "its output is byte-identical to 12aa_close/recount_close_run.json"; "fix_units 35 (script
+    field) / fix_units_dated_lines 19 (literal field) / 37, done 23 (dated lines)"; "206 rows at
+    1914ccf and 206 at e397be4. Rows in 0, rows out 0"; "Commit: f3761c30fd35aced30c99a5f94ffdbaf73cb9329,
+    parent e397be4c…1a9649, 19 files, +12,275"; "Fingerprint before and after push: IDENTICAL both";
+    "Ledger: 15c231ad910bb87e8ab9d7d1fc3b0533cc5343b5, parent 6be00e3f…"; "6be00e3 ("docs: rewrite
+    open item #9 after the CR-1 .bak deletion", 02:00:37 UTC) has the session trailer
+    session_01SnxNiom56B8FCf6KFsARh2, which is surgical-cv-ac's"; "Primer lines 41–45 are intact
+    (True)"; "4,191,823,924 B before and 4,200,542,829 B after, with 4 entries each"; "pytest-169,
+    1,400,180,901 B"; "At 13,312 lines and 2,409,574 B, it won't fit in a session's context".
+  READ (CC's): findings 8–14 of that report; the B0 table.
+  INFERRED: none.
+
+R751(a) — 12ab-OPEN is accepted as completed: item 0 e397be4 (Block 146), the gate evidence f3761c3
+  (19 files, the wrapper's first full gate, no wrapper fault), ledgers 7e79a89 and 15c231a with
+  trailers; the open check as R750(b) reads it; the recount, the fix units three ways (done 23) and
+  R510 (in 0, out 0) as reported. The 12ab open stands verified.
+R751(b) — The gate 924.77 s is a member of the series (the standard gate on this host state, inside
+  820–1001 s), described as "surgical-cv's uvicorn throughout; a foreign shell (3239197) at launch,
+  gone by exit, unread between" (finding 9). The series stands at the twenty-five of R748(b) plus
+  924.77. The band in force stays 820–1001 s until the next wrap ruling recomputes it.
+R751(c) — Finding 8: the session-start instruction "Read docs/plan/ENGINE_REFACTOR_PLAN.md" is read
+  as scoped, from this ruling: the Status table, the latest closure paragraph and its "Expected
+  values" block, the decision log's last block, and every block, row or read-out a brief names. No
+  other part of the plan is taken as checked by a session, and a brief that relies on an earlier
+  ruling quotes it. The CLAUDE.md line is corrected to this scope, by text quoted in that commit's
+  handoff for PI approval, in the commit that adopts STANDING_RULES.md (R747(c)); not before.
+R751(d) — Finding 9: the foreign commit 6be00e3 (surgical-cv-ac, one CLAUDE.md line, primer lines
+  41–45 intact) is accepted as found under R663(b); the lane's row committed on top of it stands
+  (R709(c) form). The foreign shell is a reading; the unread interval is a dated fact (R663(a)).
+R751(e) — Readings, no row: finding 10 (stale primer lines, the dgx-infra lane's); finding 11 (the
+  temp root rotated pytest-166 out at pytest-169's creation; R647(c) stands — the root is read,
+  never matched); finding 12 (an evidence commit's scope is docs(session-reports) from here, the
+  model 5c1474c's docs(plan) being for commits that touch the plan); finding 13 (a brief's named
+  waiting process governs over a memory note; the note is CC's to reconcile, not a stop).
+R751(f) — Next, in this order, each its own brief: the tools brief (R750(b): the cc_sessions section
+  of session_open_check.py), with R749–R751 at its item 0; the standing-rules id list (R747(c));
+  U21's Phase A. The 2026-10-31 07:00 health job and 09:00 nightly are read by the first of these
+  that runs after 10:35 UTC, as R749(c) states.

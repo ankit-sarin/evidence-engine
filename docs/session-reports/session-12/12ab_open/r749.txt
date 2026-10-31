@@ -1,0 +1,33 @@
+RULING [evidence-engine 12ab-R749] — 12ab-OPEN's stop at 0a accepted; an open no longer waits
+  for the day's scheduled jobs; the jobs are read by the first brief after they run; resume now
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-OPEN
+  report stopped at step 0a (no commit). Transcribe at item 0 of the next brief after this
+  resume, by transcribe_ruling.py, in the block after R748's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-OPEN stop report):
+  MEASURED: "The clock reads 2026-10-31T01:46:06Z"; "both absent; the latest log is
+    nightly_test_20261030.log, last modified 10-30 09:15:17 UTC"; "~/logs/ollama_health_cron.log
+    last modified 10-30 07:05:09 UTC, so that is the 10-30 run"; "HEAD at
+    905ab6a8d08b81597a93883afbe2dff4fc7dc37e (parent 3b2f93e9de3ae9a85c6e7ced55bd2785587ac68f)";
+    "both repos have clean working trees. I made no commits or pushes"; "Created:
+    ~/scratch/12ab-open/, holding one evidence file, 0a_clock_and_runs.txt"; "12aa_close/ lists
+    23 files, matching I2, with no r748.txt or lane_line_12aa.txt".
+  READ (CC's): findings 1 and 2 of that report.
+  INFERRED: none.
+
+R749(a) — The stop at 0a is accepted: the brief's clock check held as written; nothing was
+  committed; ~/scratch/12ab-open/ with 0a_clock_and_runs.txt is this attempt's leftover and is
+  reused by the resume (I7 of 12ab-OPEN is amended so).
+R749(b) — An open does not wait for a day's scheduled jobs. A brief is valid at any time outside
+  07:00–10:35 UTC (R86), and a gate must exit before 07:00 UTC. An open or closeout reads every
+  scheduled job that has run on the current HEAD since the last recorded read, each against the
+  expected file that governs it; a nightly that has not yet run is read by the first open,
+  closeout or other brief after it runs, as an explicit step, against the same expected file
+  while the engine tree is unchanged, and against the closeout's new expected file after a
+  change. 12aa_U20C/expected_nightly_20261031.md governs the 2026-10-31 nightly whenever it is
+  read. The readings themselves, the line-for-line match, the ids comparison (R655(b)) and the
+  stop on a mismatch are unchanged. This amends R748(e) and every earlier wrap ruling's "reads the
+  … health job and … nightly" clause in timing only.
+R749(c) — 12ab-OPEN resumes now under the RESUME below. The 2026-10-31 07:00 health job and 09:00
+  nightly are read by the first brief after 10:35 UTC on 2026-10-31, with the NVRM grep and the
+  ids against 12aa_close/collected_ids_12aa_close.txt.

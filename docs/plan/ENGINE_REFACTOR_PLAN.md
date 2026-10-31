@@ -13483,3 +13483,57 @@ R751(f) — Next, in this order, each its own brief: the tools brief (R750(b): t
 | 2026-10-31 | R751(a) — 12ab-OPEN is accepted as completed: item 0 e397be4 (Block 146), the gate evidence f3761c3 (19 files, the wrapper's first full gate, no wrapper fault), ledgers 7e79a89 and 15c231a with trailers; the open check as R750(b) reads it; the recount, the fix units three ways (done 23) and R510 (in 0, out 0) as reported. The 12ab open stands verified. R751(b) — The gate 924.77 s is a member of the series (the standard gate on this host state, inside 820–1001 s), described as "surgical-cv's uvicorn throughout; a foreign shell (3239197) at launch, gone by exit, unread between" (finding 9). The series stands at the twenty-five of R748(b) plus 924.77. The band in force stays 820–1001 s until the next wrap ruling recomputes it. R751(c) — Finding 8: the session-start instruction "Read docs/plan/ENGINE_REFACTOR_PLAN.md" is read as scoped, from this ruling: the Status table, the latest closure paragraph and its "Expected values" block, the decision log's last block, and every block, row or read-out a brief names. No other part of the plan is taken as checked by a session, and a brief that relies on an earlier ruling quotes it. The CLAUDE.md line is corrected to this scope, by text quoted in that commit's handoff for PI approval, in the commit that adopts STANDING_RULES.md (R747(c)); not before. R751(d) — Finding 9: the foreign commit 6be00e3 (surgical-cv-ac, one CLAUDE.md line, primer lines 41–45 intact) is accepted as found under R663(b); the lane's row committed on top of it stands (R709(c) form). The foreign shell is a reading; the unread interval is a dated fact (R663(a)). R751(e) — Readings, no row: finding 10 (stale primer lines, the dgx-infra lane's); finding 11 (the temp root rotated pytest-166 out at pytest-169's creation; R647(c) stands — the root is read, never matched); finding 12 (an evidence commit's scope is docs(session-reports) from here, the model 5c1474c's docs(plan) being for commits that touch the plan); finding 13 (a brief's named waiting process governs over a memory note; the note is CC's to reconcile, not a stop). R751(f) — Next, in this order, each its own brief: the tools brief (R750(b): the cc_sessions section of session_open_check.py), with R749–R751 at its item 0; the standing-rules id list (R747(c)); U21's Phase A. The 2026-10-31 07:00 health job and 09:00 nightly are read by the first of these that runs after 10:35 UTC, as R749(c) states. | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-OPEN-R2 final report (e397be4; f3761c3) |
 
 The decision log in this file ends at R751.
+
+**Block 150.** *Transcribed 2026-10-31 (item 0 of the 12ab-RULES brief), in its own commit, in the R597(e) form:* ruling R752, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-TOOLS final report (item 0 `565ea6fa9db2ce50a96b400d5c945ded53cfa008`; fix `2543d6b0644fe921a2f97d6f18cff740551bc617`). The 12ab-RULES brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R752] — 12ab-TOOLS accepted; two architect-predicted values withdrawn;
+  the fix's recorded limits; the memory-note edit a reading; next the standing-rules id list
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-TOOLS
+  final report (item 0 565ea6fa9db2ce50a96b400d5c945ded53cfa008; fix
+  2543d6b0644fe921a2f97d6f18cff740551bc617). Transcribe at item 0 of the next brief, by
+  transcribe_ruling.py, in the block after R751's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-TOOLS final report):
+  MEASURED: "Commit / parent 565ea6fa9db2ce50a96b400d5c945ded53cfa008 / f3761c30…"; "Numstat, plan
+    +173 / −0"; "Plan lines 13485 = 13312 + 44 + 63 + 66 − 0"; "Plan sha256, bytes
+    a3875c590b9760e5d23b5eb1da2699cf647e947888793739ad0d2dd46eec3016, 2429651 B"; "Last line The
+    decision log in this file ends at R751., once"; "--check-plan byte-identical: 147 4697 B, 148
+    7314 B, 149 8066 B"; "r749.txt e990d54b…9d55, 2592 B, 33 lines, equal to the architect's";
+    "r750.txt ca04b54f…9866, 4441 B, 52 lines, equal"; "r751.txt b004741a…a6bb, 4890 B, 55 lines,
+    equal"; "Ledger 448b9f7e8b16a96df3a23e0a154abe6e8612768f, parent 15c231ad…"; "Commit / parent
+    2543d6b0644fe921a2f97d6f18cff740551bc617 / 565ea6fa…"; "Stat 9 files, +112 / −1"; "3 diff hunks,
+    0 lines outside cc_sessions"; "MATCH processes of sessions ['ae168a3f'] (started
+    2026-10-30T17:52:00..2026-10-31T01:30:00): 0"; "MISMATCH processes of sessions ['ae168a3f']
+    (started 2026-10-31T03:10:44..2026-10-31T03:12:54): 1 (expected 0)"; "dummy pid 3341566 stopped
+    by pid; alive after: no"; "MATCH processes of sessions ['14aff8b0', '7a46faf4'] … 0"; "3492
+    tests collected before and after"; "Ledger 98e8217907c2fe987a1504fc388174ebc5bc722a, parent
+    448b9f7e…"; "2026-10-31T03:08:19Z, before 10:35"; "Step 2a read 3, not the expected 11".
+  READ (CC's): findings 1–9 of that report; the function as quoted before the diff.
+  INFERRED: none.
+
+R752(a) — 12ab-TOOLS is accepted as reported: item 0 565ea6f (Blocks 147–149 by transcribe_ruling.py;
+  r749–r751 at the architect's hashes), the fix 2543d6b (the cc_sessions function only; three
+  validations; the README note), ledgers 448b9f7 and 98e8217 with trailers.
+R752(b) — Findings 1 and 2 are the architect's, of the predicted-value kind: "11" was a count read
+  from an earlier report and written as an expectation of a later clock, and the wrapper's path was
+  written from the README's description, not from launch_line.txt. Both withdrawn; CC's readings
+  (3; the name) governed, as the constraints say. 12ab-OPEN's rule-14 list gains "a process count or
+  pid list from an earlier report" and "a path a wrapper copies before running".
+R752(c) — Findings 3 and 5 are recorded limits of the fixed section, no row: a process carrying a
+  named session id but started after the window is neither counted nor printed, and the repository-
+  path, pytest and run_gate.sh matches have not fired in a validation. Step 0g's hand read of every
+  open covers the first; both are closed together at the next tools change, in one validation pass,
+  not in a brief of their own. Findings 4, 6, 7 and 8: readings.
+R752(d) — Finding 9: the memory note feedback_tmux_no_poll.md is CC's own, outside every repository,
+  and R751(e) left it to CC to reconcile; the edit is a reading, not a Touched-list breach. From
+  here a brief's DO NOT TOUCH does not reach CC's own memory files, and CC reports an edit to one.
+R752(e) — Next: the standing-rules id list (R747(c)), with this ruling at its item 0; then U21's
+  Phase A. The 2026-10-31 jobs are read by the first of these after 10:35 UTC (R749(c)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R752(a) — 12ab-TOOLS is accepted as reported: item 0 565ea6f (Blocks 147–149 by transcribe_ruling.py; r749–r751 at the architect's hashes), the fix 2543d6b (the cc_sessions function only; three validations; the README note), ledgers 448b9f7 and 98e8217 with trailers. R752(b) — Findings 1 and 2 are the architect's, of the predicted-value kind: "11" was a count read from an earlier report and written as an expectation of a later clock, and the wrapper's path was written from the README's description, not from launch_line.txt. Both withdrawn; CC's readings (3; the name) governed, as the constraints say. 12ab-OPEN's rule-14 list gains "a process count or pid list from an earlier report" and "a path a wrapper copies before running". R752(c) — Findings 3 and 5 are recorded limits of the fixed section, no row: a process carrying a named session id but started after the window is neither counted nor printed, and the repository- path, pytest and run_gate.sh matches have not fired in a validation. Step 0g's hand read of every open covers the first; both are closed together at the next tools change, in one validation pass, not in a brief of their own. Findings 4, 6, 7 and 8: readings. R752(d) — Finding 9: the memory note feedback_tmux_no_poll.md is CC's own, outside every repository, and R751(e) left it to CC to reconcile; the edit is a reading, not a Touched-list breach. From here a brief's DO NOT TOUCH does not reach CC's own memory files, and CC reports an edit to one. R752(e) — Next: the standing-rules id list (R747(c)), with this ruling at its item 0; then U21's Phase A. The 2026-10-31 jobs are read by the first of these after 10:35 UTC (R749(c)). | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-TOOLS final report (565ea6f; 2543d6b) |
+
+The decision log in this file ends at R752.

@@ -1,0 +1,16 @@
+session_open_check 2026-10-31T03:10:53Z on /home/ankitsarin/scratch/12ab-tools/expected_12aa_cc.json
+SKIPPED   repos: not in the expected file
+SKIPPED   plan: not in the expected file
+SKIPPED   fingerprint: not in the expected file
+SKIPPED   hashes: not in the expected file
+SKIPPED   pins: not in the expected file
+SKIPPED   dbchecks: not in the expected file
+SKIPPED   retention: not in the expected file
+SKIPPED   probe_scratch: not in the expected file
+SKIPPED   stage: not in the expected file
+SKIPPED   nightly: not in the expected file
+SKIPPED   health: not in the expected file
+SKIPPED   ollama: not in the expected file
+SKIPPED   temp_root: not in the expected file
+MATCH     processes of sessions ['14aff8b0', '7a46faf4'] (started 2026-10-28T22:28:00..2026-10-30T05:30:00): 0
+RESULT: PASS (0 mismatches)

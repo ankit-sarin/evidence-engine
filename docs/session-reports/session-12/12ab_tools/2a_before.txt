@@ -1,0 +1,19 @@
+session_open_check 2026-10-31T03:10:09Z on /home/ankitsarin/scratch/12ab-tools/expected_cc_only.json
+SKIPPED   repos: not in the expected file
+SKIPPED   plan: not in the expected file
+SKIPPED   fingerprint: not in the expected file
+SKIPPED   hashes: not in the expected file
+SKIPPED   pins: not in the expected file
+SKIPPED   dbchecks: not in the expected file
+SKIPPED   retention: not in the expected file
+SKIPPED   probe_scratch: not in the expected file
+SKIPPED   stage: not in the expected file
+SKIPPED   nightly: not in the expected file
+SKIPPED   health: not in the expected file
+SKIPPED   ollama: not in the expected file
+SKIPPED   temp_root: not in the expected file
+          leftover: 2856714       1 Fri Oct 30 18:57:08 2026    08:13:00 /home/ankitsarin/projects/surgical-cv/.venv/bin/python3 /home/ankitsarin/projects/surgical-cv/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --por
+          leftover: 2910736 2791293 Fri Oct 30 19:18:52 2026    07:51:16 /bin/sh
+          leftover: 3227064 2791293 Sat Oct 31 01:27:06 2026    01:43:02 /bin/sh
+MISMATCH  processes of sessions ['ae168a3f'] (started 2026-10-30T17:52:00..2026-10-31T01:30:00): 3  (expected 0)
+RESULT: FAIL (1 mismatches)

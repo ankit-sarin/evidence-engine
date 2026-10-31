@@ -1,0 +1,19 @@
+session_open_check 2026-10-31T03:10:54Z on /home/ankitsarin/scratch/12ab-tools/expected_dummy.json
+SKIPPED   repos: not in the expected file
+SKIPPED   plan: not in the expected file
+SKIPPED   fingerprint: not in the expected file
+SKIPPED   hashes: not in the expected file
+SKIPPED   pins: not in the expected file
+SKIPPED   dbchecks: not in the expected file
+SKIPPED   retention: not in the expected file
+SKIPPED   probe_scratch: not in the expected file
+SKIPPED   stage: not in the expected file
+SKIPPED   nightly: not in the expected file
+SKIPPED   health: not in the expected file
+SKIPPED   ollama: not in the expected file
+SKIPPED   temp_root: not in the expected file
+          leftover: 3341566 3341565 Sat Oct 31 03:10:53 2026       00:01 sleep-ae168a3f-dummy 300
+READING   foreign: 3341589 ppid 3341584 started 2026-10-31T03:10:54 ps -u ankitsarin -o pid=,ppid=,lstart=,etime=,args=
+MISMATCH  processes of sessions ['ae168a3f'] (started 2026-10-31T03:10:44..2026-10-31T03:12:54): 1  (expected 0)
+RESULT: FAIL (1 mismatches)
+dummy pid 3341566 stopped by pid; alive after: no

@@ -1,0 +1,27 @@
+diff --git a/docs/session-reports/tools/session_open_check.py b/docs/session-reports/tools/session_open_check.py
+index 606cdf0..1ca5745 100755
+--- a/docs/session-reports/tools/session_open_check.py
++++ b/docs/session-reports/tools/session_open_check.py
+@@ -153,14 +153,21 @@ def cc_sessions(v):
+         anc.add(p); p = int(open(f"/proc/{p}/stat").read().rsplit(")", 1)[1].split()[1])
+     out = sh("ps", "-u", os.environ["USER"], "-o", "pid=,ppid=,lstart=,etime=,args=")[1]
+     lo, hi = (dt.datetime.fromisoformat(x) for x in v["window"])
++    # this lane's kind (R750(b)): the repository's path or its .venv, pytest, or the gate wrapper, run from a copy in its evidence directory
++    lane = (str(Path(__file__).resolve().parents[3]), "pytest", "run_gate.sh")
+     found = []
+     for l in out.splitlines():
+         f = l.split(None, 8)
+         if int(f[0]) in anc:
+             continue
+         t = dt.datetime.strptime(" ".join(f[2:7]), "%a %b %d %H:%M:%S %Y")
+-        if lo <= t <= hi or any(s in l for s in v["ids"]):
++        if not lo <= t <= hi:
++            continue
++        args = f[8] if len(f) > 8 else ""
++        if any(s in args for s in (*v["ids"], *lane)):
+             found.append(l[:200]); print(f"          leftover: {l[:200]}")
++        else:
++            print(f"READING   foreign: {f[0]} ppid {f[1]} started {t.isoformat()} {args[:120]}")
+     row(f"processes of sessions {v['ids']} (started {v['window'][0]}..{v['window'][1]})", 0, len(found))
+ 
+ 

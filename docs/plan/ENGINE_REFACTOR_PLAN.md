@@ -13252,3 +13252,61 @@ R747(f) — The session's stops, for the closure: 12aa-U20A at 1a (R739; CC's, a
 | 2026-10-30 | R747(a) — 12aa-SETUP is accepted as reported: the tools commit 5f81f4b, item 0 8cca7b0 (Blocks 143–144 written by transcribe_ruling.py, R746(b)'s addendum), the ledgers 72a8f70 and fe69195. R747(b) — transcribe_ruling.py is accepted for every block from here. session_open_check.py is accepted for what it checks; the recount, the R510 count, the nightly's ids against the expected set and the health job's journal read stay explicit steps of an open until the script covers them (finding 4). The gate wrapper is accepted pending its first full gate, where a wrapper fault is reported as the wrapper's (finding 8). R747(c) — STANDING_RULES.md is not adopted. Selecting by phrase starts at R656 and misses standing rules worded otherwise — among them R86, R102, R725(b), R727(a) and R736(c) — and takes in dated or superseded clauses such as R657(b) and R672(a) (findings 1, 2). The selection is the architect's: extract_rules.py gains a mode that reads a committed list of clause ids and quotes each verbatim; the architect writes the list; the regenerated file is adopted only by a PI ruling after the architect has read it. This is 12ab's first work, before U21. R747(d) — Readings, no row: findings 3, 5, 6, 7 and 9. R747(e) — Session 12aa closes now on U20. The 12aa-CLOSE brief follows 12z-CLOSE's form read from the record; its item 0 is this ruling alone, written by transcribe_ruling.py. No closeout gate: the expected gate values for 12ab are U20 commit 2's on unchanged code (12aa_U20C/gate_c2/), and 12aa_U20C/expected_nightly_20261031.md governs the 2026-10-31 nightly. The band for 12ab is computed by CC from the last four standard gates on this host state and set by the wrap ruling. R747(f) — The session's stops, for the closure: 12aa-U20A at 1a (R739; CC's, a ruling retyped), 12aa-U20P at 0 (R741; the architect's, the spec's cloud arms taken as local), 12aa-U20P-R1 at 1c (R742; CC's, a check literal carried over), 12aa-U20C at 2a (R745; the architect's, a close path written from U19's record) — two each. R510 for 12aa: rows in 0, rows out 0, no class move; INT-i12-11 CLOSED and counted. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-SETUP final report (5f81f4b; 8cca7b0) |
 
 The decision log in this file ends at R747.
+
+**Block 146.** *Transcribed 2026-10-31 (item 0 of the 12ab-OPEN brief), in its own commit with the lane-line copy it orders, in the R597(e) form:* ruling R748, made by PI on architect recommendation on 2026-10-31 UTC, during session 12aa, on the 12aa-CLOSE closeout block (`1914ccf1bf734bb402bdc70ef3141da166e29b5a`). The 12ab-OPEN brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aa-R748] — wrap ruling: closeout accepted; the band set 820–1001 s with its
+  label corrected; lane line approved and applied; close now
+STATUS: PI ruling, 2026-10-31 UTC, session 12aa, on architect recommendation, on the 12aa-CLOSE
+  closeout block (1914ccf1bf734bb402bdc70ef3141da166e29b5a). Transcribe as item 0 of 12ab-OPEN by
+  transcribe_ruling.py, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block and report):
+  MEASURED: "HEAD: 1914ccf1bf734bb402bdc70ef3141da166e29b5a, parent
+    afd179ee26d54c1c2859859375b1bb42bd88a883; status[], lr[0 0]; one worktree"; "Plan: sha256
+    5b51a4b80e961af2b381b0f5db16064a08064d61623167709ceba6850ce76b80, 2402881 bytes, 13254 lines.
+    The last line is The decision log in this file ends at R747."; "Ledger commit
+    3b2f93e9de3ae9a85c6e7ced55bd2785587ac68f, parent afd61b2, message "ledger: rows through
+    2026-10-31T01:16:05Z""; "primer.md is untouched; its last commit is 13563a0"; lane line "sha256
+    5a752f9907ccbc7236de0a46fe0bc464498255fd3f929b3ecf53ee7bd007723e, 6446 bytes, 10 lines", "five −
+    lines == primer.md 41–45: True, taken from ~/claude-config/primer.md itself"; "the mean of
+    906.10, 909.32, 907.50 and 919.74 ... 910.6650 s; ×0.9 is 819.5985 and ×1.1 is 1001.7315,
+    rounded inward ... 820–1001 s"; "280 rows, 94 / 55 / 131, 0 unclassed"; "R510 for the session:
+    rows in 0, rows out 0"; "23 MATCH / 0 MISMATCH"; "ten ruling files ... EQUAL"; "Archive command
+    ~/projects/dgx-infra/bin/session-archive ae168a3f-a2ea-492d-8adb-bb26d44596c2".
+  READ (CC's): findings 1–8 of that report.
+  INFERRED: none.
+
+R748(a) — The 12aa-CLOSE closeout block is accepted as printed: item 0 afd179e (Block 145 by
+  transcribe_ruling.py), the closeout 1914ccf, ledgers afd61b2 and 3b2f93e with trailers.
+R748(b) — The band for 12ab is 820–1001 s, ±10% of 910.6650 s, the mean of the last four standard
+  gates on this host state (906.10, 909.32, 907.50, 919.74), rounded inward as R683(c) rounded.
+  Finding 3: band_computation.txt's "quiet" label is not supported for 907.50 and 919.74; the
+  record's description is "surgical-cv's uvicorn the only concurrent job at each, idle recorded
+  for 906.10 and 909.32". The file is not edited; this clause is the correction. A 12ab gate
+  outside the band is reported with its concurrent jobs, not adapted to.
+R748(c) — Readings, no row: finding 1 (the primer of R737(d) and of this ruling is
+  ~/claude-config/primer.md); finding 2 (three job files rebuilt from their unchanged logs, in
+  12z's form); findings 4–8 (the transcription date is the commit's UTC date, the made date the
+  ruling's own).
+R748(d) — The lane line (sha256 5a752f9907ccbc7236de0a46fe0bc464498255fd3f929b3ecf53ee7bd007723e,
+  6,446 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines
+  41–45 of ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+"
+  lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row
+  ("ledger" form, trailers, the row's exact timestamp, foreign rows named by hash); push; level.
+R748(e) — 12ab-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a
+  child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with
+  transcribe_ruling.py as the next block and copies lane_line_12aa.txt into
+  docs/session-reports/session-12/12aa_close/. It runs session_open_check.py and the steps
+  R747(b) keeps explicit, against the "Expected values at session-12ab open" block; the gate by
+  the wrapper's first full use, against 820–1001 s. Then the standing-rules id list (R747(c)),
+  then U21's Phase A.
+R748(f) — Session 12aa closes now. After R748(d) has landed, run /wrap. Report the archive command.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R748(a) — The 12aa-CLOSE closeout block is accepted as printed: item 0 afd179e (Block 145 by transcribe_ruling.py), the closeout 1914ccf, ledgers afd61b2 and 3b2f93e with trailers. R748(b) — The band for 12ab is 820–1001 s, ±10% of 910.6650 s, the mean of the last four standard gates on this host state (906.10, 909.32, 907.50, 919.74), rounded inward as R683(c) rounded. Finding 3: band_computation.txt's "quiet" label is not supported for 907.50 and 919.74; the record's description is "surgical-cv's uvicorn the only concurrent job at each, idle recorded for 906.10 and 909.32". The file is not edited; this clause is the correction. A 12ab gate outside the band is reported with its concurrent jobs, not adapted to. R748(c) — Readings, no row: finding 1 (the primer of R737(d) and of this ruling is ~/claude-config/primer.md); finding 2 (three job files rebuilt from their unchanged logs, in 12z's form); findings 4–8 (the transcription date is the commit's UTC date, the made date the ruling's own). R748(d) — The lane line (sha256 5a752f9907ccbc7236de0a46fe0bc464498255fd3f929b3ecf53ee7bd007723e, 6,446 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows named by hash); push; level. R748(e) — 12ab-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with transcribe_ruling.py as the next block and copies lane_line_12aa.txt into docs/session-reports/session-12/12aa_close/. It runs session_open_check.py and the steps R747(b) keeps explicit, against the "Expected values at session-12ab open" block; the gate by the wrapper's first full use, against 820–1001 s. Then the standing-rules id list (R747(c)), then U21's Phase A. R748(f) — Session 12aa closes now. After R748(d) has landed, run /wrap. Report the archive command. | PI, 2026-10-31, during session 12aa, on architect recommendation, on the 12aa-CLOSE closeout block (1914ccf) |
+
+The decision log in this file ends at R748.

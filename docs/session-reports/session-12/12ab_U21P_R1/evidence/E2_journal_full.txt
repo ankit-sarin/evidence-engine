@@ -1,0 +1,225 @@
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:11:00 | 200 |       24.88µs |       127.0.0.1 | GET      "/api/ps"
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:00.172Z level=INFO source=server.go:444 msg="starting runner" cmd="/usr/local/bin/ollama runner --ollama-engine --port 42631"
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: loaded meta data with 30 key-value pairs and 255 tensors from /usr/share/ollama/.ollama/models/blobs/sha256-dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff (version GGUF V3 (latest))
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   0:                       general.architecture str              = llama
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   1:                               general.type str              = model
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   2:                               general.name str              = Llama 3.2 3B Instruct
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   3:                           general.finetune str              = Instruct
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   4:                           general.basename str              = Llama-3.2
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   5:                         general.size_label str              = 3B
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   6:                               general.tags arr[str,6]       = ["facebook", "meta", "pytorch", "llam...
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   7:                          general.languages arr[str,8]       = ["en", "de", "fr", "it", "pt", "hi", ...
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   8:                          llama.block_count u32              = 28
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   9:                       llama.context_length u32              = 131072
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  10:                     llama.embedding_length u32              = 3072
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  11:                  llama.feed_forward_length u32              = 8192
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  12:                 llama.attention.head_count u32              = 24
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  13:              llama.attention.head_count_kv u32              = 8
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  14:                       llama.rope.freq_base f32              = 500000.000000
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  15:     llama.attention.layer_norm_rms_epsilon f32              = 0.000010
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  16:                 llama.attention.key_length u32              = 128
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  17:               llama.attention.value_length u32              = 128
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  18:                          general.file_type u32              = 15
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  19:                           llama.vocab_size u32              = 128256
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  20:                 llama.rope.dimension_count u32              = 128
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  21:                       tokenizer.ggml.model str              = gpt2
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  22:                         tokenizer.ggml.pre str              = llama-bpe
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  23:                      tokenizer.ggml.tokens arr[str,128256]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  24:                  tokenizer.ggml.token_type arr[i32,128256]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  25:                      tokenizer.ggml.merges arr[str,280147]  = ["Ġ Ġ", "Ġ ĠĠĠ", "ĠĠ ĠĠ", "...
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  26:                tokenizer.ggml.bos_token_id u32              = 128000
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  27:                tokenizer.ggml.eos_token_id u32              = 128009
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  28:                    tokenizer.chat_template str              = {{- bos_token }}\n{%- if custom_tools ...
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  29:               general.quantization_version u32              = 2
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - type  f32:   58 tensors
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - type q4_K:  168 tensors
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_loader: - type q6_K:   29 tensors
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: file format = GGUF V3 (latest)
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: file type   = Q4_K - Medium
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: file size   = 1.87 GiB (5.01 BPW)
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: load: printing all EOG tokens:
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: load:   - 128001 ('<|end_of_text|>')
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: load:   - 128008 ('<|eom_id|>')
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: load:   - 128009 ('<|eot_id|>')
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: load: special tokens cache size = 256
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: load: token to piece cache size = 0.7999 MB
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: arch             = llama
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: vocab_only       = 1
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: no_alloc         = 0
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: model type       = ?B
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: model params     = 3.21 B
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: general.name     = Llama 3.2 3B Instruct
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: vocab type       = BPE
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: n_vocab          = 128256
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: n_merges         = 280147
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: BOS token        = 128000 '<|begin_of_text|>'
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: EOS token        = 128009 '<|eot_id|>'
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: EOT token        = 128009 '<|eot_id|>'
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: EOM token        = 128008 '<|eom_id|>'
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: LF token         = 198 'Ċ'
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: EOG token        = 128001 '<|end_of_text|>'
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: EOG token        = 128008 '<|eom_id|>'
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: EOG token        = 128009 '<|eot_id|>'
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: print_info: max token length = 256
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: llama_model_load: vocab only - skipping tensors
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:00.909Z level=INFO source=server.go:444 msg="starting runner" cmd="/usr/local/bin/ollama runner --model /usr/share/ollama/.ollama/models/blobs/sha256-dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff --port 37081"
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:00.910Z level=INFO source=sched.go:484 msg="system memory" total="119.7 GiB" free="106.5 GiB" free_swap="12.7 GiB"
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:00.910Z level=INFO source=sched.go:491 msg="gpu memory" id=GPU-91d9614a-e11e-939d-23b9-f0574b41f801 library=CUDA available="106.0 GiB" free="106.5 GiB" minimum="457.0 MiB" overhead="0 B"
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:00.910Z level=INFO source=server.go:511 msg="loading model" "model layers"=29 requested=-1
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:00.910Z level=INFO source=device.go:240 msg="model weights" device=CUDA0 size="1.9 GiB"
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:00.910Z level=INFO source=device.go:251 msg="kv cache" device=CUDA0 size="896.0 MiB"
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:00.910Z level=INFO source=device.go:262 msg="compute graph" device=CUDA0 size="424.0 MiB"
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:00.910Z level=INFO source=device.go:272 msg="total memory" size="3.2 GiB"
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:00.917Z level=INFO source=runner.go:965 msg="starting go runner"
+2026-10-31T05:11:00+00:00 spark-59e4 ollama[2564]: load_backend: loaded CPU backend from /usr/local/lib/ollama/libggml-cpu.so
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: ggml_cuda_init: GGML_CUDA_FORCE_CUBLAS: no
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: ggml_cuda_init: found 1 CUDA devices:
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]:   Device 0: NVIDIA GB10, compute capability 12.1, VMM: yes, ID: GPU-91d9614a-e11e-939d-23b9-f0574b41f801
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load_backend: loaded CUDA backend from /usr/local/lib/ollama/cuda_v13/libggml-cuda.so
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:01.221Z level=INFO source=ggml.go:104 msg=system CPU.0.NEON=1 CPU.0.ARM_FMA=1 CPU.0.LLAMAFILE=1 CPU.1.NEON=1 CPU.1.ARM_FMA=1 CPU.1.LLAMAFILE=1 CUDA.0.ARCHS=750,800,860,870,890,900,1000,1030,1100,1200,1210 CUDA.0.USE_GRAPHS=1 CUDA.0.PEER_MAX_BATCH_SIZE=128 compiler=cgo(clang)
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:01.221Z level=INFO source=runner.go:1001 msg="Server listening on 127.0.0.1:37081"
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:01.224Z level=INFO source=runner.go:895 msg=load request="{Operation:commit LoraPath:[] Parallel:1 BatchSize:512 FlashAttention:Enabled KvSize:8192 KvCacheType:f16 NumThreads:20 GPULayers:29[ID:GPU-91d9614a-e11e-939d-23b9-f0574b41f801 Layers:29(0..28)] MultiUserCache:false ProjectorPath: MainGPU:0 UseMmap:true}"
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:01.224Z level=INFO source=server.go:1364 msg="waiting for llama runner to start responding"
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:01.224Z level=INFO source=server.go:1398 msg="waiting for server to become available" status="llm server loading model"
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: ggml_nvml_get_device_memory NVML not supported for memory query, using system memory (total=128519786496, available=114242035712)
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: ggml_backend_cuda_device_get_memory device GPU-91d9614a-e11e-939d-23b9-f0574b41f801 utilizing NVML memory reporting free: 114242035712 total: 128519786496
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_load_from_file_impl: using device CUDA0 (NVIDIA GB10) (000f:01:00.0) - 108949 MiB free
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: loaded meta data with 30 key-value pairs and 255 tensors from /usr/share/ollama/.ollama/models/blobs/sha256-dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff (version GGUF V3 (latest))
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   0:                       general.architecture str              = llama
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   1:                               general.type str              = model
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   2:                               general.name str              = Llama 3.2 3B Instruct
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   3:                           general.finetune str              = Instruct
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   4:                           general.basename str              = Llama-3.2
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   5:                         general.size_label str              = 3B
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   6:                               general.tags arr[str,6]       = ["facebook", "meta", "pytorch", "llam...
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   7:                          general.languages arr[str,8]       = ["en", "de", "fr", "it", "pt", "hi", ...
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   8:                          llama.block_count u32              = 28
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv   9:                       llama.context_length u32              = 131072
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  10:                     llama.embedding_length u32              = 3072
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  11:                  llama.feed_forward_length u32              = 8192
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  12:                 llama.attention.head_count u32              = 24
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  13:              llama.attention.head_count_kv u32              = 8
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  14:                       llama.rope.freq_base f32              = 500000.000000
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  15:     llama.attention.layer_norm_rms_epsilon f32              = 0.000010
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  16:                 llama.attention.key_length u32              = 128
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  17:               llama.attention.value_length u32              = 128
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  18:                          general.file_type u32              = 15
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  19:                           llama.vocab_size u32              = 128256
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  20:                 llama.rope.dimension_count u32              = 128
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  21:                       tokenizer.ggml.model str              = gpt2
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  22:                         tokenizer.ggml.pre str              = llama-bpe
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  23:                      tokenizer.ggml.tokens arr[str,128256]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  24:                  tokenizer.ggml.token_type arr[i32,128256]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  25:                      tokenizer.ggml.merges arr[str,280147]  = ["Ġ Ġ", "Ġ ĠĠĠ", "ĠĠ ĠĠ", "...
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  26:                tokenizer.ggml.bos_token_id u32              = 128000
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  27:                tokenizer.ggml.eos_token_id u32              = 128009
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  28:                    tokenizer.chat_template str              = {{- bos_token }}\n{%- if custom_tools ...
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - kv  29:               general.quantization_version u32              = 2
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - type  f32:   58 tensors
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - type q4_K:  168 tensors
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_model_loader: - type q6_K:   29 tensors
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: file format = GGUF V3 (latest)
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: file type   = Q4_K - Medium
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: file size   = 1.87 GiB (5.01 BPW)
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load: printing all EOG tokens:
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load:   - 128001 ('<|end_of_text|>')
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load:   - 128008 ('<|eom_id|>')
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load:   - 128009 ('<|eot_id|>')
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load: special tokens cache size = 256
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load: token to piece cache size = 0.7999 MB
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: arch             = llama
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: vocab_only       = 0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: no_alloc         = 0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_ctx_train      = 131072
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_embd           = 3072
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_embd_inp       = 3072
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_layer          = 28
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_head           = 24
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_head_kv        = 8
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_rot            = 128
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_swa            = 0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: is_swa_any       = 0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_embd_head_k    = 128
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_embd_head_v    = 128
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_gqa            = 3
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_embd_k_gqa     = 1024
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_embd_v_gqa     = 1024
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: f_norm_eps       = 0.0e+00
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: f_norm_rms_eps   = 1.0e-05
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: f_clamp_kqv      = 0.0e+00
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: f_max_alibi_bias = 0.0e+00
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: f_logit_scale    = 0.0e+00
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: f_attn_scale     = 0.0e+00
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_ff             = 8192
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_expert         = 0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_expert_used    = 0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_expert_groups  = 0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_group_used     = 0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: causal attn      = 1
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: pooling type     = 0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: rope type        = 0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: rope scaling     = linear
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: freq_base_train  = 500000.0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: freq_scale_train = 1
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_ctx_orig_yarn  = 131072
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: rope_yarn_log_mul= 0.0000
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: rope_finetuned   = unknown
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: model type       = 3B
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: model params     = 3.21 B
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: general.name     = Llama 3.2 3B Instruct
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: vocab type       = BPE
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_vocab          = 128256
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: n_merges         = 280147
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: BOS token        = 128000 '<|begin_of_text|>'
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: EOS token        = 128009 '<|eot_id|>'
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: EOT token        = 128009 '<|eot_id|>'
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: EOM token        = 128008 '<|eom_id|>'
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: LF token         = 198 'Ċ'
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: EOG token        = 128001 '<|end_of_text|>'
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: EOG token        = 128008 '<|eom_id|>'
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: EOG token        = 128009 '<|eot_id|>'
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: print_info: max token length = 256
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load_tensors: loading model tensors, this can take a while... (mmap = true)
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load_tensors: offloading 28 repeating layers to GPU
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load_tensors: offloading output layer to GPU
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load_tensors: offloaded 29/29 layers to GPU
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load_tensors:   CPU_Mapped model buffer size =   308.23 MiB
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: load_tensors:        CUDA0 model buffer size =  1918.35 MiB
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: constructing llama_context
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: n_seq_max     = 1
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: n_ctx         = 8192
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: n_ctx_seq     = 8192
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: n_batch       = 512
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: n_ubatch      = 512
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: causal_attn   = 1
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: flash_attn    = enabled
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: kv_unified    = false
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: freq_base     = 500000.0
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: freq_scale    = 1
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context: n_ctx_seq (8192) < n_ctx_train (131072) -- the full capacity of the model will not be utilized
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_context:  CUDA_Host  output buffer size =     0.50 MiB
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_kv_cache:      CUDA0 KV buffer size =   896.00 MiB
+2026-10-31T05:11:01+00:00 spark-59e4 ollama[2564]: llama_kv_cache: size =  896.00 MiB (  8192 cells,  28 layers,  1/1 seqs), K (f16):  448.00 MiB, V (f16):  448.00 MiB
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: llama_context:      CUDA0 compute buffer size =   262.50 MiB
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: llama_context:  CUDA_Host compute buffer size =    22.01 MiB
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: llama_context: graph nodes  = 875
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: llama_context: graph splits = 2
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:02.229Z level=INFO source=server.go:1402 msg="llama runner started in 1.32 seconds"
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:02.229Z level=INFO source=sched.go:561 msg="loaded runners" count=1
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:02.229Z level=INFO source=server.go:1364 msg="waiting for llama runner to start responding"
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: time=2026-10-31T05:11:02.229Z level=INFO source=server.go:1402 msg="llama runner started in 1.32 seconds"
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:11:02 | 200 |   2.17562146s |       127.0.0.1 | POST     "/api/chat"
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:11:02 | 200 |      40.608µs |       127.0.0.1 | GET      "/api/ps"
+2026-10-31T05:11:02+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:11:02 | 200 |      31.168µs |       127.0.0.1 | GET      "/api/ps"
+2026-10-31T05:11:30+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:11:30 | 200 | 27.978975569s |       127.0.0.1 | POST     "/api/chat"
+2026-10-31T05:11:30+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:11:30 | 200 |      38.608µs |       127.0.0.1 | GET      "/api/ps"
+2026-10-31T05:11:31+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:11:31 | 200 |   1.16697555s |       127.0.0.1 | POST     "/api/chat"
+2026-10-31T05:11:31+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:11:31 | 200 |      39.072µs |       127.0.0.1 | GET      "/api/ps"
+2026-10-31T05:12:08+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:12:08 | 200 | 36.531189754s |       127.0.0.1 | POST     "/api/chat"
+2026-10-31T05:12:08+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:12:08 | 200 |    1.293812ms |       127.0.0.1 | POST     "/api/generate"
+2026-10-31T05:12:08+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:12:08 | 200 |      39.792µs |       127.0.0.1 | GET      "/api/ps"
+2026-10-31T05:12:09+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:12:09 | 200 |      21.984µs |       127.0.0.1 | GET      "/api/ps"
+2026-10-31T05:12:17+00:00 spark-59e4 ollama[2564]: [GIN] 2026/10/31 - 05:12:17 | 200 |      24.064µs |       127.0.0.1 | GET      "/api/ps"

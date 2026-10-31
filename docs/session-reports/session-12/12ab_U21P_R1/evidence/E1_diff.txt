@@ -1,0 +1,31 @@
+15c15,18
+< PROMPT = "Write every integer from 1 to 100000 in order, one per line, with no other text. Do not stop, summarise or skip."
+---
+> CANDIDATES = ("Write the multiplication table from 1 x 1 up to 300 x 300, one equation per line in the form 1 x 1 = 1, with no other text.",
+>               "Count from 1 to 5000, writing each number out in English words on its own line, with no introduction and no commentary.",
+>               "List the squares of the integers from 1 to 5000, one per line in the form 12 squared is 144, with no other text.")
+> PROMPT = CANDIDATES[0]
+95,103c98,110
+<             cl = client("V0"); t0 = time.monotonic()
+<             try: r = cl.chat(**chat_kwargs(NPRED))
+<             except Exception as e: raise Stop(f"V0: {type(e).__name__}: {e}")
+<             d0 = round(time.monotonic() - t0, 3); cl._client.close(); log["V0"] = {"D0_s": d0, "fields": fields(r)}; ev("V0_returned", D0_s=d0, **fields(r))
+<             wait_handlers(2, 60, "V0")
+<             if d0 < FLOOR: raise Stop(f"calibration: D0 {d0} s is under {FLOOR} s")
+<             if r.done_reason == "stop" and (r.eval_count or 0) < NPRED: raise Stop(f"calibration: done_reason stop at eval_count {r.eval_count}, short of the cap {NPRED}")
+<             variant("V1", lambda c: c._client.close(), 4, d0)
+<             variant("V2", lambda c: None, 6, d0)
+---
+>             d0 = None; log["calibration"] = []; sends = 1
+>             for i, PROMPT in enumerate(CANDIDATES, 1):   # R758(c)(ii): one send each; the first that qualifies IS V0, not re-sent
+>                 ps(f"C{i}_ps_before.json"); cl = client(f"C{i}"); t0 = time.monotonic()
+>                 try: r = cl.chat(**chat_kwargs(NPRED))
+>                 except Exception as e: raise Stop(f"C{i}: {type(e).__name__}: {e}")
+>                 wall = round(time.monotonic() - t0, 3); cl._client.close(); sends += 1; wait_handlers(sends, 60, f"C{i}")
+>                 good = r.done_reason == "length" and wall >= FLOOR
+>                 log["calibration"].append({"candidate": i, "wall_s": wall, "verdict": "qualifies, is V0" if good else "does not qualify", "prompt": PROMPT, "fields": fields(r)})
+>                 ev(f"C{i}_returned", wall_s=wall, qualifies=good, **fields(r))
+>                 if good: d0 = wall; log["V0"] = {"candidate": i, "D0_s": d0, "fields": fields(r)}; break
+>             if d0 is None: raise Stop(f"calibration: none of {len(CANDIDATES)} candidates ended by length at the cap {NPRED} in {FLOOR} s or more")
+>             variant("V1", lambda c: c._client.close(), sends + 2, d0)
+>             variant("V2", lambda c: None, sends + 4, d0)

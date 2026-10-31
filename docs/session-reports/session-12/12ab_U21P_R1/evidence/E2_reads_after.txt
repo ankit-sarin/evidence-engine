@@ -1,0 +1,15 @@
+2026-10-31T05:12:17Z
+{"models":[]}
+NRestarts=0
+ExecMainStartTimestamp=Sat 2026-10-17 23:04:05 UTC
+MemAvailable:   111882852 kB
+-- NV_ERR this boot
+18
+-- NVRM in window
+0
+-- lock entries
+0
+2026-07-27 23:22:08.906609268 +0000
+3481925 Sat Oct 31 05:10:40 2026 /bin/bash -c source /home/ankitsarin/.claude/shell-snapshots/snapshot-bash-1793422905730-c5ubrs.s
+3481934 Sat Oct 31 05:10:40 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python -m pytest tests/ -q -p no:cacheprovider
+IDENTICAL — schema, every table, and the overall hash all match.

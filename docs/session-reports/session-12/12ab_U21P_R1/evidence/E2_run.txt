@@ -1,0 +1,28 @@
+2026-10-31T05:11:00.041715+00:00 lock_acquired {}
+2026-10-31T05:11:00.062062+00:00 P0_ps.json {'models': []}
+2026-10-31T05:11:00.076042+00:00 L0_request_written {'bytes': 273}
+2026-10-31T05:11:02.253051+00:00 L0_response_saved {'status': 200, 'bytes': 274}
+2026-10-31T05:11:02.253145+00:00 L0_loaded {'wall_s': 2.177, 'done_reason': 'length', 'prompt_eval_count': 64, 'eval_count': 1, 'total_duration': 2175588468, 'load_duration': 2152530800, 'prompt_eval_duration': 21040814, 'eval_duration': None}
+2026-10-31T05:11:02.266644+00:00 L0_handlers_ended {'journal_chat_posts': 1, 'waited_s': 0.0}
+2026-10-31T05:11:02.286481+00:00 L0_ps.json {'models': ['llama3.2:3b']}
+2026-10-31T05:11:02.315130+00:00 C1_ps_before.json {'models': ['llama3.2:3b']}
+2026-10-31T05:11:02.338585+00:00 C1_request_written {'bytes': 276}
+2026-10-31T05:11:30.318380+00:00 C1_response_saved {'status': 200, 'bytes': 4583}
+2026-10-31T05:11:30.337537+00:00 C1_handlers_ended {'journal_chat_posts': 2, 'waited_s': 0.0}
+2026-10-31T05:11:30.337600+00:00 C1_returned {'wall_s': 27.98, 'qualifies': False, 'done_reason': 'stop', 'prompt_eval_count': 64, 'eval_count': 2400, 'total_duration': 27978860401, 'load_duration': 79384665, 'prompt_eval_duration': 13129511, 'eval_duration': 27025824211}
+2026-10-31T05:11:30.366637+00:00 C2_ps_before.json {'models': ['llama3.2:3b']}
+2026-10-31T05:11:30.380607+00:00 C2_request_written {'bytes': 272}
+2026-10-31T05:11:31.548504+00:00 C2_response_saved {'status': 200, 'bytes': 569}
+2026-10-31T05:11:31.567988+00:00 C2_handlers_ended {'journal_chat_posts': 3, 'waited_s': 0.0}
+2026-10-31T05:11:31.568036+00:00 C2_returned {'wall_s': 1.168, 'qualifies': False, 'done_reason': 'stop', 'prompt_eval_count': 53, 'eval_count': 90, 'total_duration': 1166924926, 'load_duration': 118175321, 'prompt_eval_duration': 18870855, 'eval_duration': 967296573}
+2026-10-31T05:11:31.597422+00:00 C3_ps_before.json {'models': ['llama3.2:3b']}
+2026-10-31T05:11:31.620938+00:00 C3_request_written {'bytes': 265}
+2026-10-31T05:12:08.153085+00:00 C3_response_saved {'status': 200, 'bytes': 8509}
+2026-10-31T05:12:08.165886+00:00 C3_handlers_ended {'journal_chat_posts': 4, 'waited_s': 0.0}
+2026-10-31T05:12:08.165935+00:00 C3_returned {'wall_s': 36.533, 'qualifies': False, 'done_reason': 'stop', 'prompt_eval_count': 57, 'eval_count': 3058, 'total_duration': 36531086666, 'load_duration': 99460914, 'prompt_eval_duration': 19182328, 'eval_duration': 35055220467}
+2026-10-31T05:12:08.165960+00:00 STOP {'why': 'calibration: none of 3 candidates ended by length at the cap 7000 in 40.0 s or more'}
+2026-10-31T05:12:08.191428+00:00 U1 {'status': 200}
+2026-10-31T05:12:09.243887+00:00 U1_confirmed {}
+2026-10-31T05:12:09.243993+00:00 lock_released {}
+probe rc=3
+2026-10-31T05:12:09Z

@@ -1,0 +1,1 @@
+{"model":"llama3.2:3b","stream":false,"options":{"temperature":0,"num_ctx":8192,"num_predict":7000},"messages":[{"role":"user","content":"Write the multiplication table from 1 x 1 up to 300 x 300, one equation per line in the form 1 x 1 = 1, with no other text."}],"tools":[]}

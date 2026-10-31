@@ -1,0 +1,2 @@
+rate from 12ab_U21P/load/V0.response.json: eval_count 147 / eval_duration 1.566215454 s = 93.9 tokens/s
+60-90 s at that rate = 5631-8447 tokens; chosen cap 7000 = 74.6 s; with the prompt under num_ctx 8192

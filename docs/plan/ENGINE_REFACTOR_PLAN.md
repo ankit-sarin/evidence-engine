@@ -14408,3 +14408,85 @@ R764(e) — The stops, for the closure: listed by CC from the rulings on disk an
 | 2026-10-31 | R764(a) — R763(a) is corrected: the named acceptance test and fourteen more failed on the parent; the sixteenth, test_other_timeout_members_keep_their_retry, is a pin and passes on the parent by design (R736(c)). R763 is transcribed as issued, in R253's form; this clause is the correction, and the block's header or row carries no edit (R102). R764(b) — Session 12ab closes now on U21. The 12ab-CLOSE brief follows 12aa-CLOSE's form read from the record: item 0 (R762, R763 and this ruling, by transcribe_ruling.py; the B-F14 CLOSED note with F3 and F12; the F12 note on C47; the approved CLAUDE.md sentence), the counterpart files in 12aa_close/'s names with 12ab's sources, the closure paragraph, the "Expected values at session-12ac open" block, the lane line written and not applied, the closeout block in the record's element order, the rNNN.txt table r749–r764. R764(c) — No closeout gate: the expected gate values for 12ac are U21's gate on unchanged code (12ab_U21B/gate_u21b/: 3,490 passed / 1 xfailed / 17 deselected, collected 3,508 / selected 3,491, its collected_ids as the reference). The engine tree changed at a6c31b1, so under R749(b) the closeout writes its own expected nightly file, 12ab_close/expected_nightly_20261031.md, in 12aa_U20C/expected_nightly_20261031.md's form with U21's counts, and it governs the 2026-10-31 nightly and, while the tree stays unchanged, 2026-11-01's; the 12aa_U20C file is superseded for 2026-10-31 by this clause, not edited. The 2026-10-31 health job and nightly are read by this closeout if it runs after 10:35 UTC, else by 12ac-OPEN (R749(c)). R764(d) — The band for 12ac is computed by CC from the last four standard gates on this host state, read from the record (the series of R751(b) plus 928.91 s), ±10% of their mean, rounded inward as R683(c) rounded, stated as a computation with its proposed figure, each gate's concurrent jobs described from its evidence (R748(b)); it is set by the wrap ruling. The recount script R758(a) owes is written at this closeout in R651(a)'s chained form (12w_close/recount_12w_r707.py as the model, read), its output the recount of record: 281 rows (94 / 56 / 131) expected, P1 62 (25 / 25 / 12), fix units 35 / 19 / 37 done 24; R510 for 12ab: rows in 1 (INT-ab12-1), rows out 0; B-F14, N23, N24 and INT-ab12-1 CLOSED and counted. R764(e) — The stops, for the closure: listed by CC from the rulings on disk and this brief's item 0 (each stop ruling names its step and its cause), never from this ruling's memory; the architect's and CC's counted apart. | PI, 2026-10-31, during session 12ab, on architect recommendation, on CC's reading of R763 against 3b_parent_acceptance.txt |
 
 The decision log in this file ends at R764.
+
+**Block 163.** *Transcribed 2026-10-31 (item 0 of the 12ac-OPEN brief), in its own commit with the lane-line copy and the standing-rules regeneration it orders, in the R597(e) form:* ruling R765, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-CLOSE closeout block (`228ee31eff6bdd0951f48c83cff109d4075e3bf9`). The 12ac-OPEN brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R765] — wrap ruling: closeout accepted; the band set 829–1012 s; the
+  stops counted; lane line approved and applied; the project primer's stale line edited directly;
+  R763(c) enters the standing rules at 12ac-OPEN; close now
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-CLOSE
+  closeout block (228ee31eff6bdd0951f48c83cff109d4075e3bf9). Transcribe as item 0 of 12ac-OPEN by
+  transcribe_ruling.py, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block and report):
+  MEASURED: "HEAD 228ee31eff6bdd0951f48c83cff109d4075e3bf9, parent
+    52be363527b44f789106e1918dd84aded07f40e0; status[], lr[0 0]; one worktree"; "Plan: sha256
+    7e0ec261813e0a422c8d43aad001cf689e596efe0aff02627abb6fd67988851c, 2553180 bytes, 14410 lines;
+    last line The decision log in this file ends at R764."; "git diff --stat a6c31b1 HEAD -- engine
+    tests scripts analysis review_specs is empty"; "1b874767285ef59bfde61cd570e91e0e22e6f7f3, clean,
+    0 0; message "ledger: rows through 2026-10-31T06:44:58Z""; "primer.md untouched by this session's
+    closeout"; fingerprint "all IDENTICAL, overall 0d3eedea…cb25"; lane line "sha256
+    64f6d63eb5c2c742f090fdf3e8d31ab296a5295e4334d3c17249bf0a6ff62dca, 6,664 B, 10 lines", "Five "−"
+    lines equal primer 41–45 as they stand: true"; "Mean 920.2300; ×0.9 828.2070; ×1.1 1012.2530;
+    rounded inward 829–1012 s"; "281 (94 / 56 / 131, 0); P1 62 (25 / 25 / 12); 35 / 37 done 24 /
+    literal 37 / 19; R510 in 1 (INT-ab12-1), out 0"; "23 MATCH / 0; probe 10 / 53"; the sixteen ruling
+    files as tabled, each "equal"; "Archive command ~/projects/dgx-infra/bin/session-archive
+    b6963a16-e48a-4f71-b6fd-bbd14ffe9f29"; "r764.txt … 4,130 … equal to the architect's".
+  READ (CC's): findings 66–77 of that report; "the line, "The standing engineering record is
+    docs/plan/ENGINE_REFACTOR_PLAN.md — read it at session", is primer.md:1040 in the project
+    primer"; "| 2026-10-31T06:42:10Z | surgical-cv-ui1a | ui-1a | adeb112 |".
+  INFERRED: none.
+
+R765(a) — The 12ab-CLOSE closeout block is accepted as printed: item 0 52be363 (Blocks 160–162 by
+  transcribe_ruling.py; the B-F14 and C47 notes; the CLAUDE.md sentence), the closeout 228ee31 (21
+  files; the 20 counterpart files; the closure and the 12ac block), ledgers 2046e8d and 1b87476 with
+  trailers, the foreign row adeb112 committed as found (finding 67, R654(d); it joins the dgx-infra
+  item with a7b27ab, 6be00e3 and 82a5835).
+R765(b) — The band for 12ac is 829–1012 s: ±10% of 920.2300 s, the mean of the last four standard
+  gates on this host state (907.50, 919.74, 924.77, 928.91), rounded inward as R683(c) rounded, each
+  described as band_computation.txt describes it (uvicorn at each; a foreign shell at 12ab-OPEN's
+  launch, R751(b)). The series stands at the twenty-five of R748(b) plus 924.77 and 928.91. A 12ac
+  gate outside the band is reported with its concurrent jobs, not adapted to.
+R765(c) — The stops, counted by the PI (finding 70; the closure's table stands as CC's reading, not
+  edited): eight — the architect's five (12ab-OPEN at 0a, R749: the clock rule was the architect's
+  design; 12ab-RULES at 2a, R753; 12ab-ADOPT at I3, R755; 12ab-U21P-R2 at the floor, R760; 12ab-U21B
+  at I2, R762); CC's two (12ab-U21P at V0, R758, the prompt; 12ab-U21P-R1 at calibration, R759, the
+  wordings); the tool's one (12ab-OPEN-R1 at 3b, R750). The session's most-violated line: a value or
+  a fact written from a description when its source was in the architect's own clone (R750(c),
+  R752(b), R753(b), R755(b), R760(b), R762(a)).
+R765(d) — Readings, no row: finding 68 (the transcription tool has no sentence form for a ruling
+  pasted alone — a tools item, closed at the next tools change with R752(c)'s two limits, in one
+  validation pass; Block 161's sentence stands as printed); finding 69 (the closure's foreign list is
+  CC's reading; a7b27ab the one permitted non-resolving hash); findings 71 and 72 (the brief's commit
+  list and file count were the architect's; the record governed); findings 74–77.
+R765(e) — Finding 66: the project primer's stale line (primer.md:1040, "read it at session start") is
+  outside the lane line's range and is edited directly by CC now, under the closeout's primer
+  obligation: that sentence replaced by one stating R751(c)'s scope and naming STANDING_RULES.md as
+  the session-start read, the edit's diff quoted in the wrap report; no other primer line changes.
+  R756(b)'s "under R737(d)'s lane-line form" was the architect's, withdrawn.
+R765(f) — Finding 73: R763(c)'s crash rule is a standing rule; "A R763(c)" joins the list and the
+  file is regenerated at 12ac-OPEN's item 0 (R754(c)(iii)); until then a brief restates it (R754(b)).
+R765(g) — The lane line (sha256 64f6d63eb5c2c742f090fdf3e8d31ab296a5295e4334d3c17249bf0a6ff62dca,
+  6,664 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of
+  ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+" lines, applied
+  from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form,
+  trailers, the row's exact timestamp, foreign rows named by hash); push; level.
+R765(h) — 12ac-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a
+  child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with
+  transcribe_ruling.py as the next block, copies lane_line_12ab.txt into
+  docs/session-reports/session-12/12ab_close/, adds R763(c) to the list and regenerates the file. It
+  runs session_open_check.py and the steps R747(b) keeps explicit, against the "Expected values at
+  session-12ac open" block; reads the 2026-10-31 and 2026-11-01 jobs against
+  12ab_close/expected_nightly_20261031.md (R764(c)); the gate by the wrapper, against 829–1012 s.
+  Then U22's Phase A.
+R765(i) — Session 12ab closes now. After R765(e) and R765(g) have landed, run /wrap. Report the
+  primer diff, the lane-line commit's hash and parent, the wrap's verdict, and the archive command as
+  run with its result.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R765(a) — The 12ab-CLOSE closeout block is accepted as printed: item 0 52be363 (Blocks 160–162 by transcribe_ruling.py; the B-F14 and C47 notes; the CLAUDE.md sentence), the closeout 228ee31 (21 files; the 20 counterpart files; the closure and the 12ac block), ledgers 2046e8d and 1b87476 with trailers, the foreign row adeb112 committed as found (finding 67, R654(d); it joins the dgx-infra item with a7b27ab, 6be00e3 and 82a5835). R765(b) — The band for 12ac is 829–1012 s: ±10% of 920.2300 s, the mean of the last four standard gates on this host state (907.50, 919.74, 924.77, 928.91), rounded inward as R683(c) rounded, each described as band_computation.txt describes it (uvicorn at each; a foreign shell at 12ab-OPEN's launch, R751(b)). The series stands at the twenty-five of R748(b) plus 924.77 and 928.91. A 12ac gate outside the band is reported with its concurrent jobs, not adapted to. R765(c) — The stops, counted by the PI (finding 70; the closure's table stands as CC's reading, not edited): eight — the architect's five (12ab-OPEN at 0a, R749: the clock rule was the architect's design; 12ab-RULES at 2a, R753; 12ab-ADOPT at I3, R755; 12ab-U21P-R2 at the floor, R760; 12ab-U21B at I2, R762); CC's two (12ab-U21P at V0, R758, the prompt; 12ab-U21P-R1 at calibration, R759, the wordings); the tool's one (12ab-OPEN-R1 at 3b, R750). The session's most-violated line: a value or a fact written from a description when its source was in the architect's own clone (R750(c), R752(b), R753(b), R755(b), R760(b), R762(a)). R765(d) — Readings, no row: finding 68 (the transcription tool has no sentence form for a ruling pasted alone — a tools item, closed at the next tools change with R752(c)'s two limits, in one validation pass; Block 161's sentence stands as printed); finding 69 (the closure's foreign list is CC's reading; a7b27ab the one permitted non-resolving hash); findings 71 and 72 (the brief's commit list and file count were the architect's; the record governed); findings 74–77. R765(e) — Finding 66: the project primer's stale line (primer.md:1040, "read it at session start") is outside the lane line's range and is edited directly by CC now, under the closeout's primer obligation: that sentence replaced by one stating R751(c)'s scope and naming STANDING_RULES.md as the session-start read, the edit's diff quoted in the wrap report; no other primer line changes. R756(b)'s "under R737(d)'s lane-line form" was the architect's, withdrawn. R765(f) — Finding 73: R763(c)'s crash rule is a standing rule; "A R763(c)" joins the list and the file is regenerated at 12ac-OPEN's item 0 (R754(c)(iii)); until then a brief restates it (R754(b)). R765(g) — The lane line (sha256 64f6d63eb5c2c742f090fdf3e8d31ab296a5295e4334d3c17249bf0a6ff62dca, 6,664 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows named by hash); push; level. R765(h) — 12ac-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with transcribe_ruling.py as the next block, copies lane_line_12ab.txt into docs/session-reports/session-12/12ab_close/, adds R763(c) to the list and regenerates the file. It runs session_open_check.py and the steps R747(b) keeps explicit, against the "Expected values at session-12ac open" block; reads the 2026-10-31 and 2026-11-01 jobs against 12ab_close/expected_nightly_20261031.md (R764(c)); the gate by the wrapper, against 829–1012 s. Then U22's Phase A. R765(i) — Session 12ab closes now. After R765(e) and R765(g) have landed, run /wrap. Report the primer diff, the lane-line commit's hash and parent, the wrap's verdict, and the archive command as run with its result. | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-CLOSE closeout block (228ee31) |
+
+The decision log in this file ends at R765.

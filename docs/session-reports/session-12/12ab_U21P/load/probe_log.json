@@ -1,0 +1,115 @@
+{
+ "model": "llama3.2:3b",
+ "num_ctx": 4096,
+ "num_predict": 12000,
+ "pid": 3432220,
+ "journal_since": "2026-10-31 05:03:25",
+ "events": [
+  {
+   "at": "2026-10-31T05:03:25.955289+00:00",
+   "event": "lock_acquired"
+  },
+  {
+   "at": "2026-10-31T05:03:25.975498+00:00",
+   "event": "P0_ps.json",
+   "models": []
+  },
+  {
+   "at": "2026-10-31T05:03:25.989476+00:00",
+   "event": "L0_request_written",
+   "bytes": 262
+  },
+  {
+   "at": "2026-10-31T05:03:28.350900+00:00",
+   "event": "L0_response_saved",
+   "status": 200,
+   "bytes": 274
+  },
+  {
+   "at": "2026-10-31T05:03:28.350993+00:00",
+   "event": "L0_loaded",
+   "wall_s": 2.362,
+   "done_reason": "length",
+   "prompt_eval_count": 56,
+   "eval_count": 1,
+   "total_duration": 2360043901,
+   "load_duration": 2321426219,
+   "prompt_eval_duration": 20359077,
+   "eval_duration": null
+  },
+  {
+   "at": "2026-10-31T05:03:28.364366+00:00",
+   "event": "L0_handlers_ended",
+   "journal_chat_posts": 1,
+   "waited_s": 0.0
+  },
+  {
+   "at": "2026-10-31T05:03:28.391578+00:00",
+   "event": "L0_ps.json",
+   "models": [
+    "llama3.2:3b"
+   ]
+  },
+  {
+   "at": "2026-10-31T05:03:28.405502+00:00",
+   "event": "V0_request_written",
+   "bytes": 266
+  },
+  {
+   "at": "2026-10-31T05:03:30.186090+00:00",
+   "event": "V0_response_saved",
+   "status": 200,
+   "bytes": 913
+  },
+  {
+   "at": "2026-10-31T05:03:30.186209+00:00",
+   "event": "V0_returned",
+   "D0_s": 1.781,
+   "done_reason": "stop",
+   "prompt_eval_count": 56,
+   "eval_count": 147,
+   "total_duration": 1779746530,
+   "load_duration": 118529904,
+   "prompt_eval_duration": 15118754,
+   "eval_duration": 1566215454
+  },
+  {
+   "at": "2026-10-31T05:03:30.205056+00:00",
+   "event": "V0_handlers_ended",
+   "journal_chat_posts": 2,
+   "waited_s": 0.0
+  },
+  {
+   "at": "2026-10-31T05:03:30.205115+00:00",
+   "event": "STOP",
+   "why": "calibration: D0 1.781 s is under 40.0 s"
+  },
+  {
+   "at": "2026-10-31T05:03:30.230122+00:00",
+   "event": "U1",
+   "status": 200
+  },
+  {
+   "at": "2026-10-31T05:03:31.278550+00:00",
+   "event": "U1_confirmed"
+  },
+  {
+   "at": "2026-10-31T05:03:31.278674+00:00",
+   "event": "lock_released"
+  }
+ ],
+ "lock_acquired_at": "2026-10-31T05:03:25.955281+00:00",
+ "V0": {
+  "D0_s": 1.781,
+  "fields": {
+   "done_reason": "stop",
+   "prompt_eval_count": 56,
+   "eval_count": 147,
+   "total_duration": 1779746530,
+   "load_duration": 118529904,
+   "prompt_eval_duration": 15118754,
+   "eval_duration": 1566215454
+  }
+ },
+ "lock_released_at": "2026-10-31T05:03:31.278607+00:00"
+}

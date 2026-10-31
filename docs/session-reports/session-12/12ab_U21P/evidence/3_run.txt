@@ -1,0 +1,17 @@
+2026-10-31T05:03:25.955291+00:00 lock_acquired {}
+2026-10-31T05:03:25.975505+00:00 P0_ps.json {'models': []}
+2026-10-31T05:03:25.989480+00:00 L0_request_written {'bytes': 262}
+2026-10-31T05:03:28.350908+00:00 L0_response_saved {'status': 200, 'bytes': 274}
+2026-10-31T05:03:28.350995+00:00 L0_loaded {'wall_s': 2.362, 'done_reason': 'length', 'prompt_eval_count': 56, 'eval_count': 1, 'total_duration': 2360043901, 'load_duration': 2321426219, 'prompt_eval_duration': 20359077, 'eval_duration': None}
+2026-10-31T05:03:28.364376+00:00 L0_handlers_ended {'journal_chat_posts': 1, 'waited_s': 0.0}
+2026-10-31T05:03:28.391586+00:00 L0_ps.json {'models': ['llama3.2:3b']}
+2026-10-31T05:03:28.405506+00:00 V0_request_written {'bytes': 266}
+2026-10-31T05:03:30.186100+00:00 V0_response_saved {'status': 200, 'bytes': 913}
+2026-10-31T05:03:30.186211+00:00 V0_returned {'D0_s': 1.781, 'done_reason': 'stop', 'prompt_eval_count': 56, 'eval_count': 147, 'total_duration': 1779746530, 'load_duration': 118529904, 'prompt_eval_duration': 15118754, 'eval_duration': 1566215454}
+2026-10-31T05:03:30.205066+00:00 V0_handlers_ended {'journal_chat_posts': 2, 'waited_s': 0.0}
+2026-10-31T05:03:30.205119+00:00 STOP {'why': 'calibration: D0 1.781 s is under 40.0 s'}
+2026-10-31T05:03:30.230132+00:00 U1 {'status': 200}
+2026-10-31T05:03:31.278575+00:00 U1_confirmed {}
+2026-10-31T05:03:31.278678+00:00 lock_released {}
+probe rc=3
+2026-10-31T05:03:31Z

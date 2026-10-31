@@ -1,0 +1,49 @@
+## §7b The B-F14 measurement, designed, not run (2h)
+
+**Proposal only. Nothing below has run. It runs only under a ruling on this read-out (R756(c), R612(n)).**
+
+**The question.** (a) Does closing the client cancel generation on the server? (b) Does a request keep occupying the server after the client's thread is abandoned without closing?
+
+**The instrument.**
+- **Model:** `llama3.2:3b` (R741(b)), with `num_ctx` 4096 as the 07:00 health job's check sends, so the load stays small.
+- **Lock and scope:** the whole probe inside `with hold_experiment_lock():`, as `12aa_U20P/probe_load.py` took it. Outside any run manifest, writing to no review. Outside 07:00–10:35 UTC.
+- **The client:** the installed `ollama` library's `Client` with the engine's timeouts, in the probe script, and not the engine's `ollama_chat`, so that the probe's thread and close are its own. A non-streaming chat, as every engine call is.
+- **The request:** one fixed prompt asking for a long counted list, with `num_predict` set so that the baseline runs well past the observation points, and `temperature` 0. Target about 60–120 s of generation. The token count is calibrated by V0: if V0 ends under 40 s or by `done_reason: stop` short of the cap, the probe stops and reports, with no variant sent on a request too short to observe.
+
+**The variants, in order, each from a loaded-and-idle server:**
+
+| Variant | What the client does | What it shows |
+|---|---|---|
+| V0, baseline | Sends and waits for the response | The full duration D0, the `done_reason`, the journal's line for a completed request |
+| V1, client closed | Sends in a worker thread; at about 10 s the main thread closes the httpx client under the library client | Whether the worker unblocks, and when; (a) |
+| V2, thread abandoned | Sends in a worker thread; at about 10 s the main thread does nothing to it and stops waiting, as HEAD does | (b) |
+
+After V1 and after V2, at about 12 s, a **follow-up request** is sent on a fresh client: the same model, one token. With `OLLAMA_NUM_PARALLEL=1`, its wall time is the server's answer: about its own short time if the slot is free, about `D0 − 12 s` if the first request still holds it.
+
+**What is read, and when:**
+- `/api/ps` before each variant and after the last, for residency and for a foreign model.
+- The Ollama journal for the window, after the last variant. Each request's GIN line carries its status and duration, so V1's line says when the server's handler ended and with what status, against V0's.
+- The worker's return time and its exception or response, for V1 and V2.
+- The follow-up's wall time and its response fields.
+- The kernel journal's NVRM lines for the window, and available memory before and after, as readings.
+
+**How it is recorded.** `12ab_U21P/`, in `12aa_U20P/`'s form: `§0 Scope` (purpose, HEAD, timing, what ran, what was not sent), the scripts, raw request and response bodies as sent and received, the event log with timestamps, the journal extract, then one table per question. No design recommendation there.
+
+**Stop conditions, each ending the probe with the lock released and nothing retried:** the lock is held by another process; a foreign model is resident at any `/api/ps`; any non-200 on V0 or a follow-up; V0 too short, as above; a worker still blocked at `D0 + 120 s`; a follow-up with no answer by `D0 + 120 s`; any restart observed (`NRestarts` or service start changed); an unload not confirmed by `/api/ps` within 30 s, reported, with no further action. Nothing restarts the server. A stop leaves its evidence in place.
+
+**End state.** The model unloaded and confirmed; nothing resident; `NRestarts` 0; service start unchanged; fingerprint IDENTICAL.
+
+**What each outcome means for §7:**
+
+| Outcome | Means | Bears on |
+|---|---|---|
+| V1's handler ends near the close; follow-up fast | A disconnect cancels. The abandoned request's cost is only the open socket | O2 works if closing also unblocks the worker. O1's wait is only the client's |
+| V1's handler runs to about D0; follow-up slow | Closing doesn't cancel | O2 and O1 don't stop overlap at the server. O3 or O4 are what remain, and across-calls (F9) stays open |
+| V1 closes but the worker stays blocked | Closing from another thread doesn't unblock | O2 needs a different mechanism |
+| V2's follow-up fast | The server takes a second request while one runs, or the first ended | `NUM_PARALLEL` isn't the bound assumed; read beside the journal |
+| V2's follow-up slow | An abandoned request occupies the slot until done | Confirms the row's premise. HEAD's retry queues behind its own abandoned generation |
+
+Per `12l_P1A.md:158`, "The fix does not depend on the answer; the answer decides only whether an abandoned request still occupies the server." §7 refines that: the answer decides whether O1 and O2 meet the row's words at the server or only at the client.
+
+**Limits of this design.** The small model at a small context stands in for 32b at 131072; a disconnect's effect during prompt evaluation, as opposed to generation, is not sampled, and engine hangs may sit in either. One send per variant: at temperature 0, repeated sends are not draws (R698(e)).
+

@@ -1,0 +1,1 @@
+I4: type(client._client)= Client has close True ; Client has close False

@@ -265,7 +265,8 @@ def test_g_outside_a_run_nothing_is_read_and_the_record_is_unchanged(spec, fake,
     assert fake.ps_reads == 0
     line = next(r.getMessage() for r in caplog.records if r.getMessage().startswith("input_fit "))
     assert set(json.loads(line.split(" ", 2)[2])) == {
-        "model", "ceiling", "chars", "estimate_low", "count", "ratio", "done_reason"}
+        "model", "ceiling", "chars", "estimate_low", "count", "ratio", "done_reason",
+        "eval_count"}   # U22 (R768(b)(i)): the line's one new key; no loaded_context outside a run
 
 
 # (h) a pin: commit 1's behaviour, R744(b)

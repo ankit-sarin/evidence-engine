@@ -171,8 +171,8 @@ now gated, and the suite is fenced. Do not add a third ungated path.
   `check_experiment_lock()` — a process holding the lock for its own run must still
   be able to restart, but restarting under *someone else's* experiment destroys it.
   - `extractor.restart_ollama()` — proactive CUDA-defrag restart (`RESTART_EVERY_N`).
-  - `ollama_client._restart_ollama_and_retry()` — last-resort recovery after the
-    wall-clock watchdog exhausts retries (OPSFIX-01).
+  - `ollama_client._restart_ollama_and_retry()` — last-resort recovery after a request
+    ends by the read timeout (OPSFIX-01; U21, R761(c)(iii)).
 - **Opt-out:** `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` disarms both restart paths, for
   harnesses pointed at a different server. The recovery branch refuses with
   `RuntimeError`, which `ollama_chat` surfaces as `TimeoutError` — never a silent

@@ -1,0 +1,49 @@
+RULING [evidence-engine 12ab-R764] — R763(a)'s "fifteen more" corrected to "fourteen more" at
+  transcription; session 12ab closes now on U21; the 12ab-CLOSE brief follows 12aa-CLOSE's form; no
+  closeout gate; the closeout's expected nightly file governs 2026-10-31 and 2026-11-01 (R749(b));
+  the band for 12ac computed by CC and set by the wrap ruling
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on CC's reading of
+  R763 against 3b_parent_acceptance.txt ("15 failed, 1 passed"). Transcribe at item 0 of the
+  12ab-CLOSE brief, by transcribe_ruling.py, in the block after R763's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21B-R1 final report and CC's note on R763):
+  MEASURED: "3b_parent_acceptance.txt (15 failed, 1 passed, in a parent clone) and
+    3b_tree_acceptance.txt (16 passed)"; "test_other_timeout_members_keep_their_retry … Pin, green on
+    the parent (R736(c))"; "Evidence-engine HEAD is 36c1017, claude-config HEAD is 554888f, both
+    level, and both trees clean"; "Wall 928.914 s, inside 820–1001"; "3490 passed, 17 deselected, 1
+    xfailed, 2 warnings in 926.81s, exit 0"; "Collected 3,508 items, 3,491 selected"; "HEAD is still
+    36c1017".
+  READ (CC's): "R763(a) says "its named acceptance test and fifteen more failed on the parent". The
+    record shows 15 failed and 1 passed … so it should read "and fourteen more""; "R762's text: the
+    exact paste survives in this session's transcript (timestamp 05:49:49Z)".
+  INFERRED: none.
+
+R764(a) — R763(a) is corrected: the named acceptance test and fourteen more failed on the parent; the
+  sixteenth, test_other_timeout_members_keep_their_retry, is a pin and passes on the parent by design
+  (R736(c)). R763 is transcribed as issued, in R253's form; this clause is the correction, and the
+  block's header or row carries no edit (R102).
+R764(b) — Session 12ab closes now on U21. The 12ab-CLOSE brief follows 12aa-CLOSE's form read from
+  the record: item 0 (R762, R763 and this ruling, by transcribe_ruling.py; the B-F14 CLOSED note with
+  F3 and F12; the F12 note on C47; the approved CLAUDE.md sentence), the counterpart files in
+  12aa_close/'s names with 12ab's sources, the closure paragraph, the "Expected values at session-12ac
+  open" block, the lane line written and not applied, the closeout block in the record's element
+  order, the rNNN.txt table r749–r764.
+R764(c) — No closeout gate: the expected gate values for 12ac are U21's gate on unchanged code
+  (12ab_U21B/gate_u21b/: 3,490 passed / 1 xfailed / 17 deselected, collected 3,508 / selected 3,491,
+  its collected_ids as the reference). The engine tree changed at a6c31b1, so under R749(b) the
+  closeout writes its own expected nightly file, 12ab_close/expected_nightly_20261031.md, in
+  12aa_U20C/expected_nightly_20261031.md's form with U21's counts, and it governs the 2026-10-31
+  nightly and, while the tree stays unchanged, 2026-11-01's; the 12aa_U20C file is superseded for
+  2026-10-31 by this clause, not edited. The 2026-10-31 health job and nightly are read by this
+  closeout if it runs after 10:35 UTC, else by 12ac-OPEN (R749(c)).
+R764(d) — The band for 12ac is computed by CC from the last four standard gates on this host state,
+  read from the record (the series of R751(b) plus 928.91 s), ±10% of their mean, rounded inward as
+  R683(c) rounded, stated as a computation with its proposed figure, each gate's concurrent jobs
+  described from its evidence (R748(b)); it is set by the wrap ruling. The recount script R758(a)
+  owes is written at this closeout in R651(a)'s chained form (12w_close/recount_12w_r707.py as the
+  model, read), its output the recount of record: 281 rows (94 / 56 / 131) expected, P1 62 (25 / 25 /
+  12), fix units 35 / 19 / 37 done 24; R510 for 12ab: rows in 1 (INT-ab12-1), rows out 0; B-F14,
+  N23, N24 and INT-ab12-1 CLOSED and counted.
+R764(e) — The stops, for the closure: listed by CC from the rulings on disk and this brief's item 0
+  (each stop ruling names its step and its cause), never from this ruling's memory; the architect's
+  and CC's counted apart.

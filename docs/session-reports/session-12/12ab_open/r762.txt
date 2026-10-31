@@ -1,0 +1,54 @@
+RULING [evidence-engine 12ab-R762] — 12ab-U21B stopped after Phase B on I2: the environment re-check
+  goes through a run-manifest check (P1); D1–D5 settled; resume at the edit
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21B
+  report stopped after step 2 (item 0 a34cc7179090c8bbb7d5332e4728fb407a6e9606; reads
+  8abaedc2308f5958f9dc4d8825f85ed885d7160d). Transcribe at item 0 of the next brief, by
+  transcribe_ruling.py, in the block after R761's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21B stop report and 12ab_U21B_reads.md):
+  MEASURED: "Commit / parent a34cc7179090c8bbb7d5332e4728fb407a6e9606 / f373b107…"; "Numstat, plan
+    +245 / −0 (59, 46, 53, 87 from the tool's runs)"; "Plan lines 14064 = 13819 + 245 − 0"; "Plan
+    sha256, bytes d3588c8d266088eddbddd30ba8d9984e7ad07a92a483bb22be86f1d084eb0a6a, 2496764 B";
+    "r760.txt d81dd2b25590df1d03cd5f73e87804b62a6659780811c43df2b54fffb167437f 3707 42"; "r761.txt
+    af74eb4b3ec5ec4909439fb443b3271429f66b0814cb8134afaaaf938e9f2086 6716 76"; "Ledger
+    1389e1d9422d8c9787a12d91cb66a46d53f90038, parent 85ba9bea…"; "Commit / parent
+    8abaedc2308f5958f9dc4d8825f85ed885d7160d / a34cc717…"; "3 files, +756, all under 12ab_U21B/";
+    "Ledger 6debe632b094bf47e2eabcde33dd60a3109f425b, parent 1389e1d9…"; "The census: the read-out's
+    script, re-run at this HEAD, with counts equal to the read-out's".
+  READ (CC's): "recheck_ollama_env is at ollama_preflight.py:239, and that module imports from the
+    client at :14: from engine.utils.ollama_client import ollama_chat, parse_environment_line,
+    server_ps"; "The digest check is reachable. ollama_client.py:690 and :695. It needs stage, which
+    _restart_ollama_and_retry doesn't take (:798–800)"; "precedent run_manifest.py:1138"; "RunRefused
+    (Exception) (run_manifest.py:113) passes except RuntimeError at :744, but except Exception as
+    post_exc at :868 would swallow it"; "_record takes outcome_detail only from an exception (:664)";
+    ":751 catches httpx.TimeoutException, which includes ConnectTimeout, WriteTimeout and PoolTimeout";
+    "The proactive path writes ollama_env_after_restart"; the placements table; the census classes;
+    D1–D5; findings 46–48.
+  INFERRED: none.
+
+R762(a) — Item 0 (a34cc71, Blocks 156–159; r760 and r761 at the hashes CC reported) and the Phase B
+  reads (8abaedc) are accepted; ledgers 1389e1d and 6debe63. I2 was the architect's: R761(c)(iii)'s
+  "through the same functions" was written without reading ollama_preflight.py's import at :14.
+R762(b) — Placement P1: run_manifest.check_call_env beside check_call_digest, with a local import of
+  ollama_preflight in the form run_manifest.py:1138 uses; the client calls it as it calls
+  check_call_digest. The crossing is indirect and at call time, which is what the precedent already
+  does; P2 is rejected (it moves the env reader, the subprocess call and the patch targets out of the
+  Touched list). stage becomes an argument of _restart_ollama_and_retry, passed from :737, optional
+  with a None default so the direct tests of that function stay (p). Both re-checks sit outside the
+  try at :856, so a RunRefused they raise is not swallowed at :868.
+R762(c) — D1: a sixth ending joins the closed set — the wait reached the read timeout with the worker
+  still alive: recorded 'error' with its own detail string, no restart, nothing sent; the exception
+  surfaced is the one the classification at test_run_fault_predicate.py:92 already pins (read it; the
+  type is not changed by this ruling). D3: httpx.ReadTimeout alone routes to the restart path; the
+  other TimeoutException members keep today's retry. D4: the cost is accepted as stated — a
+  wall_timeout caller waits up to the read timeout; one silent hang costs at most read timeout +
+  restart + read timeout. D5: the post-restart re-check writes the same ollama_env_after_restart
+  record the proactive path writes, the review directory taken from run_manifest._database_file(conn);
+  outside a run (no conn) it writes nothing and says so in the log.
+R762(d) — D2: test_watchdog_retries_then_raises's "assert call_count == 4" pins the removed
+  behaviour; it is rewritten to the corrected count in R690(b)'s form, the count CC states from the
+  design (one request, then one post-restart request) and asserts. R761(d)'s "assertions kept" reads
+  with that exception, as R690(b) always has.
+R762(e) — Finding 47: the clock governs as the brief's TIMING states; a commit built now is held
+  unpushed if its gate cannot launch by 06:30 UTC, and the gate and the 10-31 job reads run after
+  10:35 UTC under this brief's resume. Finding 48: the census's limit is R725(b)'s, accepted.

@@ -1,0 +1,64 @@
+RULING [evidence-engine 12ab-R763] — 12ab-U21B accepted; U21 landed; B-F14 CLOSED and counted; the
+  check crash accepted after the fact and R705(d) restated; the CLAUDE.md sentence approved; readings
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21B-R1
+  final report (engine a6c31b1c142f9a39516a54a7fcf21fc6a87819cf; gate evidence
+  7290d00a807e1c3fd40ce4b96b839855c8bc1acc; notes 36c1017efffa148215c81324de1bfebeb9388e47).
+  Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after R762's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21B-R1 final report):
+  MEASURED: "Commit a6c31b1c142f9a39516a54a7fcf21fc6a87819cf"; "Parent
+    8abaedc2308f5958f9dc4d8825f85ed885d7160d"; "7 files, +597 / −77"; "3b_parent_acceptance.txt (15
+    failed, 1 passed, in a parent clone) and 3b_tree_acceptance.txt (16 passed)"; "3d_pins.json is
+    byte-identical to 12aa_close/pin_tuples_close.json (cmp clean)"; "Launched / exited 05:56:41.74Z /
+    06:12:10.66Z"; "Wall 928.914 s, inside 820–1001"; "3490 passed, 17 deselected, 1 xfailed, 2 warnings
+    in 926.81s, exit 0"; "Collected 3,508 items, 3,491 selected"; "Ids reference 3,475 plus exactly
+    the 16 new; 0 lost"; "Journal window "-- No entries --", 0 POST or load lines"; "Commit
+    7290d00a807e1c3fd40ce4b96b839855c8bc1acc … gate evidence, own commit (R731(c)), 19 files";
+    "Commit 36c1017efffa148215c81324de1bfebeb9388e47 … plan notes and acceptance evidence, 14 files,
+    +343 / −2"; "plan +4 / −2, the two "−" lines computed by the check as B-F14 and INT-ab12-1";
+    "Plan: 14066 lines = 14064 + 4 − 2; sha256 bd0b185e…40aa; 2,500,478 B"; "Ledger
+    554888f19b5804d26cfd97882d6b39a7e14eaeb4 (row 06:16:38Z)"; "NRestarts=0, /api/ps empty";
+    "_REQUEST_BOUND = _httpx_timeout.pool + _httpx_timeout.connect + _httpx_timeout.write +
+    _httpx_timeout.read"; "test_watchdog_retries_then_raises … count rewritten from == 4 to == 2
+    (R762(d))"; "check_notes.py hit IndexError on an empty diff line … I changed that one filter (l
+    and l[0] in "+-") and re-ran, with no condition weakened … committed as 3h_check_crash.txt".
+  READ (CC's): the six detail strings as declared; the hunks as quoted; findings 49–65; the CLAUDE.md
+    sentence of finding 64.
+  INFERRED: none.
+
+R763(a) — 12ab-U21B is accepted as reported: the engine commit a6c31b1 (ollama_client.py,
+  run_manifest.py, tests/test_u21_no_overlap.py, the two census files, docs/inventory/), pushed on
+  green; the gate evidence 7290d00; the notes 36c1017; ledgers 3566e84, f996925 and 554888f with
+  trailers. U21 is landed: its named acceptance test and fifteen more failed on the parent and pass
+  in the gate; both pins and the audit prompt_hash are byte-identical.
+R763(b) — Finding 49: B-F14 is CLOSED by R514 — the row's stated fix is delivered and its acceptance
+  test passes — and counted until P1 closes (R607(d), R753(d)(ii)). Wave 1 rows 66 and 93 are Class 3
+  extensions at P7 and stay as notes there; row 66's "one row per call, not per request" stands as
+  written. The CLOSED note on B-F14 is written at the next item 0 (a cell note, "−" computed), with
+  F3 and F12 recorded there as the notes commit placed them; F12 also a dated note on C47 at that
+  item 0 (finding 52). N23, N24 and INT-ab12-1 CLOSED as the notes commit records.
+R763(c) — Finding 50: the notes after the gate, in U20's form, is the record's order; the brief's H3
+  was the architect's. Finding 51: the crash of check_notes.py on an empty diff line was a fault of
+  the check, not a failed condition; the correction is accepted after the fact on the evidence
+  committed (3h_check_crash.txt, the corrected script, no condition weakened). R705(d) is restated,
+  not narrowed: a check that crashes is a check that failed, and from here a crash is reported before
+  the check is corrected and re-run, under a ruling; this once stands.
+R763(d) — Readings, no row: finding 57 (the bound is the four httpx timeouts summed, 990 s — the
+  design's reading, since 900 s exactly recreates N23's race); finding 58 (the worst case per call,
+  about 33 minutes, inside D4's accepted cost); findings 59–62 (max_retries kept on the restart
+  function for its direct tests; a run fault surfaces as itself with no ending string; the late-
+  completion template beside the six-tuple; the old message text kept for the type and message
+  pins); findings 54–56 (the evidence's limits: six parent reds at a missing name; no real read
+  timeout observed — ollama 0.6.1's _request_raw read, not exercised; INT-ab12-1 tested at ollama_chat
+  with max_retries=0, its closure resting on the callers read at U21A); finding 63 (928.91 s joins the
+  series; basetemp pytest-183; the temp root 1,409,912,008 B; uvicorn's new PID 3422344).
+R763(e) — Finding 64: the CLAUDE.md sentence is approved as quoted — "ollama_client._restart_ollama_
+  and_retry() — last-resort recovery after a request ends by the read timeout (OPSFIX-01; U21,
+  R761(c)(iii))." — edited at the next item 0's commit, matched verbatim apart from line wraps.
+  Finding 65: docs/architecture/models.md stays HK-ARCH's. Finding 53: R762 and this ruling are
+  hashed by CC from their pastes at that item 0.
+R763(f) — State: fix units 37, done 24 (U01–U21, U37–U39); the pre-tag list 281 (94 / 56 / 131), P1
+  62 (25 / 25 / 12), by hand until the 12ab closeout's recount (R758(a)); R510 for 12ab: rows in 1
+  (INT-ab12-1), rows out 0, B-F14 and INT-ab12-1 CLOSED and counted. Next: either the 12ab closeout
+  (the PI's word) or U22's Phase A (12l_P1A.md §3's next unit, "eval_count recorded", INT-g12-6),
+  read-only; the 2026-10-31 jobs are read by the first brief after 10:35 UTC (R749(c)).

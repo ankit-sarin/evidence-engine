@@ -3,6 +3,8 @@
 import time
 from unittest.mock import MagicMock, patch, call
 
+import httpx
+
 import pytest
 
 from engine.utils.ollama_client import (
@@ -54,9 +56,10 @@ class TestWatchdogTimeout:
     @patch("engine.utils.ollama_client.subprocess.run")
     @patch("engine.utils.ollama_client._client")
     def test_watchdog_fires_on_hang(self, mock_client, mock_subprocess):
-        """A hanging Ollama call should raise TimeoutError within wall_timeout + margin."""
+        """A request that never answers ends by its read timeout, which surfaces as TimeoutError."""
         def hang_forever(**kwargs):
-            time.sleep(60)  # simulate indefinite hang
+            time.sleep(2.2)  # past the 2 s watchdog, then the fake read timeout ends it (R761(c))
+            raise httpx.ReadTimeout("read timed out")
 
         mock_client.chat.side_effect = hang_forever
         mock_subprocess.return_value = MagicMock(returncode=0)
@@ -72,19 +75,20 @@ class TestWatchdogTimeout:
             )
         elapsed = time.monotonic() - t0
 
-        # 2s watchdog + 2s post-restart attempt + 10s stabilization wait + margin
+        # a 2.2s request + 10s stabilization wait + a 2.2s post-restart request + margin
         assert elapsed < 20.0, f"Watchdog took {elapsed:.1f}s, expected < 20s"
 
     @patch("engine.utils.ollama_client.subprocess.run")
     @patch("engine.utils.ollama_client._client")
     def test_watchdog_retries_then_raises(self, mock_client, mock_subprocess):
-        """Watchdog should retry the configured number of times before raising."""
+        """R761(c), R762(d): no retry after the watchdog; the read timeout ends the request."""
         call_count = 0
 
         def hang(**kwargs):
             nonlocal call_count
             call_count += 1
-            time.sleep(60)
+            time.sleep(1.2)  # past the 1 s watchdog, then the fake read timeout ends it (R761(c))
+            raise httpx.ReadTimeout("read timed out")
 
         mock_client.chat.side_effect = hang
         mock_subprocess.return_value = MagicMock(returncode=0)
@@ -98,7 +102,7 @@ class TestWatchdogTimeout:
                 retry_delay=0.1,
             )
 
-        assert call_count == 4  # 1 initial + 2 retries + 1 post-restart
+        assert call_count == 2  # one request, then one post-restart request
 
     @patch("engine.utils.ollama_client._client")
     def test_successful_call_returns_response(self, mock_client):
@@ -152,7 +156,8 @@ class TestTimeoutLogging:
         the test exercise the intended path instead of relying on the fence.
         """
         def hang(**kwargs):
-            time.sleep(60)
+            time.sleep(1.2)  # past the 1 s watchdog, then the fake read timeout ends it (R761(c))
+            raise httpx.ReadTimeout("read timed out")
 
         mock_client.chat.side_effect = hang
         mock_subprocess.return_value = MagicMock(returncode=0)
@@ -204,13 +209,14 @@ class TestOllamaRestartRecovery:
     @patch("engine.utils.ollama_client.subprocess.run")
     @patch("engine.utils.ollama_client._client")
     def test_restart_attempted_after_retries_exhausted(self, mock_client, mock_subprocess):
-        """After all retries timeout, should attempt sudo systemctl restart ollama."""
+        """After a request ends by the read timeout, should attempt sudo systemctl restart ollama."""
         call_count = 0
 
         def hang(**kwargs):
             nonlocal call_count
             call_count += 1
-            time.sleep(60)
+            time.sleep(1.2)  # past the 1 s watchdog, then the fake read timeout ends it (R761(c))
+            raise httpx.ReadTimeout("read timed out")
 
         mock_client.chat.side_effect = hang
         mock_subprocess.return_value = MagicMock(returncode=0)
@@ -256,7 +262,8 @@ class TestOllamaRestartRecovery:
     def test_restart_failure_raises_original_timeout(self, mock_client, mock_subprocess):
         """If restart itself fails, should raise TimeoutError (not subprocess error)."""
         def hang(**kwargs):
-            time.sleep(60)
+            time.sleep(1.2)  # past the 1 s watchdog, then the fake read timeout ends it (R761(c))
+            raise httpx.ReadTimeout("read timed out")
 
         mock_client.chat.side_effect = hang
         mock_subprocess.side_effect = OSError("sudo not available")
@@ -278,7 +285,8 @@ class TestOllamaRestartRecovery:
     def test_restart_logs_warning(self, mock_client, mock_subprocess, caplog):
         """Restart attempt should log at WARNING level."""
         def hang(**kwargs):
-            time.sleep(60)
+            time.sleep(1.2)  # past the 1 s watchdog, then the fake read timeout ends it (R761(c))
+            raise httpx.ReadTimeout("read timed out")
 
         mock_client.chat.side_effect = hang
         mock_subprocess.return_value = MagicMock(returncode=0)
@@ -317,7 +325,8 @@ class TestOllamaRestartRecovery:
         mock_subprocess.return_value = MagicMock(returncode=0)
 
         def hang(**kwargs):
-            time.sleep(60)
+            time.sleep(1.2)  # past the 1 s watchdog, then the fake read timeout ends it (R761(c))
+            raise httpx.ReadTimeout("read timed out")
 
         mock_client.chat.side_effect = hang
 

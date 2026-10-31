@@ -82,6 +82,21 @@ REASON_BLOCKED_AUDIT_REVIEW = "blocked:audit_review"
 REASON_INTERRUPT_SIGINT = "interrupt:SIGINT"
 REASON_INTERRUPT_SIGTERM = "interrupt:SIGTERM"
 REASON_INTERRUPT_SIGHUP = "interrupt:SIGHUP"
+#: R761(c)(iv), R762(c): how a call's restart path or wait ended, written at the head of
+#: `run_calls.outcome_detail` under the existing outcome tokens. The closed set: the first
+#: five endings of `ollama_client`'s recovery restart, and a worker alive past the bound.
+DETAIL_RESTART_REFUSED_OPT_OUT = "restart_refused_opt_out"
+DETAIL_RESTART_REFUSED_LOCK = "restart_refused_foreign_lock"
+DETAIL_RESTART_COMMAND_FAILED = "restart_command_failed"
+DETAIL_POST_RESTART_FAILED = "post_restart_call_failed"
+DETAIL_RESTART_RECOVERED = "restart_recovered"
+DETAIL_WORKER_ALIVE = "worker_alive_at_read_timeout"
+RUN_CALL_ENDING_DETAILS = (
+    DETAIL_RESTART_REFUSED_OPT_OUT, DETAIL_RESTART_REFUSED_LOCK, DETAIL_RESTART_COMMAND_FAILED,
+    DETAIL_POST_RESTART_FAILED, DETAIL_RESTART_RECOVERED, DETAIL_WORKER_ALIVE,
+)
+#: R761(c)(ii): a response after the watchdog fired, recorded 'completed'. A reading.
+LATE_COMPLETION_DETAIL = "late_completion: {late_by:.1f}s past the watchdog limit of {limit:.0f}s"
 INTERRUPTED_REASONS = (REASON_BLOCKED_ADJUDICATION, REASON_BLOCKED_AUDIT_REVIEW,
                        REASON_INTERRUPT_SIGINT, REASON_INTERRUPT_SIGTERM,
                        REASON_INTERRUPT_SIGHUP)
@@ -232,13 +247,13 @@ class ServerEnvChanged(RunRefused):
 
     @classmethod
     def at(cls, drift: Mapping[str, tuple[str, str | None]], *,
-           papers_done: int | None = None) -> "ServerEnvChanged":
+           papers_done: int | None = None, restart: str = "proactive") -> "ServerEnvChanged":
         keys = "; ".join(f"{k} expected {want!r}, actual "
                          f"{'<not set>' if got is None else repr(got)}"
                          for k, (want, got) in sorted(drift.items()))
         done = f" ({papers_done} papers done)" if papers_done is not None else ""
         return cls(
-            f"ServerEnvChanged: run refused after a proactive Ollama restart{done}: the "
+            f"ServerEnvChanged: run refused after a {restart} Ollama restart{done}: the "
             f"restarted service's configured environment fails the correctness tier: {keys}. "
             "No paper was extracted under it. Read `systemctl show ollama "
             "--property=Environment` and the drop-in under "
@@ -1177,6 +1192,32 @@ def record_active_ollama_call(stage: str | None, request: Mapping[str, Any],
         digest = response_digest(getattr(msg, "content", None), getattr(msg, "thinking", None))
     record_call(conn, run_id, key, paper_id, request, digest, started_at, _now(),
                outcome=outcome, outcome_detail=outcome_detail, request_hash=request_hash)
+
+
+def check_call_env(stage: str | None):
+    """R762(b), F7: the environment check before a recovery restart's final send, beside
+    `check_call_digest` and under the same conditions. Reads through `ollama_preflight`,
+    imported here at call time as `check_call_digest` imports the client. Every read writes
+    the `ollama_env_after_restart` record the proactive path writes (R762(c)), and a
+    correctness-tier drift raises `ServerEnvChanged`. Returns the reading, or `None` when
+    no check applies, which it logs: there is no run to record it against."""
+    active = _ACTIVE.get()
+    if active is None or stage is None or (_database_file(active[0]), active[1]) not in _RUN_DIGEST_FNS:
+        logging.getLogger(__name__).info(
+            "Environment re-check after a recovery restart skipped: no registered run or stage; nothing recorded")
+        return None
+    conn, run_id = active
+    from engine.core.run_telemetry import record_run_event
+    from engine.utils import ollama_preflight as pf
+    reading = pf.recheck_ollama_env()
+    record_run_event(Path(_database_file(conn)).parent, run_id=run_id, kind="ollama_env_after_restart",
+                     payload={"environment": reading.raw, "papers_done": None,
+                              "verdict": "drift" if reading.correctness else "ok",
+                              "correctness": reading.correctness,
+                              "performance": reading.performance})
+    if reading.correctness:
+        raise ServerEnvChanged.at(reading.correctness, restart="recovery")
+    return reading
 
 
 def stage_names_agree() -> tuple[str, ...]:

@@ -19,6 +19,7 @@ import textwrap
 import time
 from unittest.mock import MagicMock, patch
 
+import httpx
 import pytest
 
 from engine.utils import ollama_client as oc
@@ -154,7 +155,8 @@ def test_refusal_surfaces_as_timeout_from_ollama_chat(monkeypatch):
     monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
 
     def hang(**kwargs):
-        time.sleep(60)
+        time.sleep(1.2)  # past the 1 s watchdog, then the fake read timeout ends it (R761(c))
+        raise httpx.ReadTimeout("read timed out")
 
     with patch("engine.utils.ollama_client._client") as mock_client:
         mock_client.chat.side_effect = hang

@@ -4,8 +4,10 @@ All batch runners (FT screener, extractor, auditor, screener, PDF parser)
 should call `ollama_chat(...)` instead of `ollama.chat(...)` directly.
 This provides:
   1. HTTP-level connect/read timeouts via httpx
-  2. Wall-clock watchdog via concurrent.futures to catch mid-generation hangs
-  3. Retry logic with configurable attempts and delay
+  2. Wall-clock watchdog via concurrent.futures: the point at which a request is
+     late. No request is sent while the previous one is alive (U21, R761(c))
+  3. Retry logic with configurable attempts and delay, for a request that ended in
+     an error other than a read timeout; a read timeout goes to the recovery restart
   4. Structured WARNING logging on every timeout event
   5. An input-fit guard on every call (INPUT-FIT-01): an input that cannot fit
      the model's context is refused before it is sent, and an input the
@@ -50,8 +52,8 @@ def restart_disabled() -> bool:
 
 _HTTP_CONNECT_TIMEOUT = 30.0   # seconds to establish TCP connection
 _HTTP_READ_TIMEOUT = 900.0     # permissive — prompt eval on 32K+ chars can take
-                               # several minutes with no bytes; the wall-clock
-                               # watchdog (Layer 2) is the primary timeout guard
+                               # several minutes with no bytes; this ends a request
+                               # (U21, R761(c)(i)), the watchdog only marks it late
 
 _httpx_timeout = httpx.Timeout(
     connect=_HTTP_CONNECT_TIMEOUT,
@@ -59,6 +61,12 @@ _httpx_timeout = httpx.Timeout(
     write=30.0,
     pool=30.0,
 )
+
+# How long after its send a request can still be running by its own timeouts. The wait
+# after the watchdog runs to here, past the read timeout's own clock, which starts only
+# after connect and write, so the read timeout is what ends a silent request (N23). A
+# worker alive beyond this is the sixth ending (R762(c)).
+_REQUEST_BOUND = _httpx_timeout.pool + _httpx_timeout.connect + _httpx_timeout.write + _httpx_timeout.read
 
 # ── The one Ollama host (U18, R721(b)) ───────────────────────────────
 # Read once, at first import, as the library reads it: `OLLAMA_HOST`, else the
@@ -569,6 +577,48 @@ def _wall_timeout_for_model(model: str) -> float:
     return _DEFAULT_WALL_TIMEOUT
 
 
+class _WorkerStillAlive(Exception):
+    """The wait after the watchdog reached `_REQUEST_BOUND` with the worker alive."""
+
+
+class _RestartEnded(RuntimeError):
+    """`_restart_ollama_and_retry` ended without a response. `detail` is one of
+    `run_manifest.RUN_CALL_ENDING_DETAILS`; `ollama_chat` records it (R761(c)(iv))."""
+
+    def __init__(self, message: str, detail: str):
+        super().__init__(message)
+        self.detail = detail
+
+
+def _await_request(future, effective_timeout, t0, model, paper_label, attempt, attempts):
+    """The request's response and how late it was (None if on time), or what the worker
+    raised. No request is sent meanwhile (U21, R761(c)(i)): when the watchdog fires it is
+    logged and the same future is waited on, up to `_REQUEST_BOUND`.
+
+    On this interpreter `FuturesTimeoutError` is the builtin `TimeoutError`, so a worker
+    that raised one is told apart from a wait that ran out by `future.done()`.
+    """
+    try:
+        return future.result(timeout=effective_timeout), None
+    except FuturesTimeoutError:
+        if future.done():
+            raise
+    logger.warning(
+        "Ollama wall-clock timeout: model=%s, %s, elapsed=%.0fs, "
+        "limit=%.0fs, attempt=%d/%d; waiting on the same request",
+        model, paper_label, time.monotonic() - t0, effective_timeout, attempt, attempts,
+    )
+    try:
+        response = future.result(timeout=max(0.0, _REQUEST_BOUND - (time.monotonic() - t0)))
+    except FuturesTimeoutError:
+        if future.done():
+            raise
+        raise _WorkerStillAlive(
+            f"the worker is alive {_REQUEST_BOUND:.0f}s after the send (model={model}, {paper_label})"
+        ) from None
+    return response, time.monotonic() - t0 - effective_timeout
+
+
 def ollama_chat(
     *,
     model: str,
@@ -596,7 +646,8 @@ def ollama_chat(
     retry_delay : float
         Seconds to wait between retries.
     wall_timeout : float | None
-        Override wall-clock timeout. If None, auto-detected from model name.
+        Override wall-clock timeout, the point at which a request is late. If None,
+        auto-detected from model name. It does not bound the call: the read timeout does.
     stage : str | None
         The resolver stage this call serves (`EffectiveConfig.kwargs()` passes
         it). Consumed here, never sent. Inside `run_manifest.active_run` the call
@@ -643,9 +694,11 @@ def ollama_chat(
     CeilingUnavailable
         Before the call, if the model's trained context cannot be read.
     TimeoutError
-        If all attempts exceed the wall-clock timeout.
+        If a request ended by the read timeout and the recovery restart was refused or
+        failed, or its final attempt failed; or if a worker outlived `_REQUEST_BOUND`.
+        `run_calls.outcome_detail` names which (R761(c)(iv), R762(c)).
     Exception
-        If all retries exhausted on a non-timeout error.
+        If all retries exhausted on an error other than a read timeout.
     """
     effective_timeout = wall_timeout or _wall_timeout_for_model(model)
     paper_label = f"paper_id={paper_id}" if paper_id is not None else "paper_id=unknown"
@@ -656,22 +709,27 @@ def ollama_chat(
     from engine.core.run_manifest import request_hash as _compute_request_hash
     req_hash = _compute_request_hash(request)
 
-    def _record(outcome: str, *, response=None, exc: BaseException | None = None) -> None:
+    def _record(outcome: str, *, response=None, exc: BaseException | None = None,
+                note: str | None = None) -> None:
         """R216/C24: one row per call under an active manifest, whatever its
         outcome. A no-op outside a run (`record_active_ollama_call` itself
         checks) — B3/10a-C2-P0-P1-A4 is unchanged by this function existing."""
         from engine.core.run_manifest import record_active_ollama_call
         detail = None if exc is None else f"{type(exc).__name__}: {exc}"
+        if note:
+            detail = note if detail is None else f"{note}: {detail}"
         record_active_ollama_call(stage, request, paper_id, response, started_at,
                                   outcome=outcome, outcome_detail=detail,
                                   request_hash=req_hash)
 
-    def _finish(response):
+    def _finish(response, *, late_by=None, restarted=False):
         """Post-call: the only place a checked response and its raw response
         both exist, so this is where 'completed', 'refused_input_truncated'
         and 'refused_input_dropped' are recorded (R216) — one site, not
         three, because they share this one calling point. A `LoadedContextMismatch`
-        raised here is recorded 'error' by the outer handler (R745(d))."""
+        raised here is recorded 'error' by the outer handler (R745(d)). A response after
+        the watchdog fired is a completion, its lateness in the detail (R761(c)(ii)); so
+        is a restart that recovered (R761(c)(iv))."""
         checked_fit = fit if call_digest is None else _check_loaded_context(model, call_digest, fit)
         try:
             checked = _check_input_was_read(response, checked_fit, paper_label)
@@ -681,7 +739,11 @@ def ollama_chat(
         except InputDropped as exc:
             _record("refused_input_dropped", response=response, exc=exc)
             raise
-        _record("completed", response=checked)
+        from engine.core.run_manifest import DETAIL_RESTART_RECOVERED, LATE_COMPLETION_DETAIL
+        notes = [DETAIL_RESTART_RECOVERED] if restarted else []
+        if late_by is not None:
+            notes.append(LATE_COMPLETION_DETAIL.format(late_by=late_by, limit=effective_timeout))
+        _record("completed", response=checked, note="; ".join(notes) or None)
         return (checked, req_hash) if return_request_hash else checked
 
     # C54: under an active run, a call the manifest did not declare is refused
@@ -717,39 +779,47 @@ def ollama_chat(
                     messages=messages,
                     **kwargs,
                 )
-                response = future.result(timeout=effective_timeout)
+                response, late_by = _await_request(
+                    future, effective_timeout, t0, model, paper_label, attempt + 1, 1 + max_retries,
+                )
 
-            except FuturesTimeoutError:
-                # Abandon the hung thread — do not wait for it
-                executor.shutdown(wait=False, cancel_futures=True)
-                elapsed = time.monotonic() - t0
+            except _WorkerStillAlive as exc:
+                # R762(c): nothing may be sent while it lives and it has not ended, so
+                # neither the restart nor another attempt runs.
+                from engine.core.run_manifest import DETAIL_WORKER_ALIVE
+                error = TimeoutError(f"Ollama call timed out: {exc}")
+                error.run_call_detail = DETAIL_WORKER_ALIVE
+                raise error from exc
+
+            except httpx.ReadTimeout as exc:
+                # The request has ended (R761(c)(iii)); only now may the restart run.
                 logger.warning(
-                    "Ollama wall-clock timeout: model=%s, %s, elapsed=%.0fs, "
-                    "limit=%.0fs, attempt=%d/%d",
-                    model, paper_label, elapsed, effective_timeout,
+                    "Ollama HTTP read timeout: model=%s, %s, elapsed=%.0fs, "
+                    "error=%s, attempt=%d/%d",
+                    model, paper_label, time.monotonic() - t0, exc,
                     attempt + 1, 1 + max_retries,
                 )
-                if attempt < max_retries:
-                    time.sleep(retry_delay)
-                else:
-                    # All retries exhausted — attempt Ollama restart as last resort
-                    try:
-                        response = _restart_ollama_and_retry(
-                            model=model, messages=messages,
-                            paper_label=paper_label,
-                            effective_timeout=effective_timeout,
-                            max_retries=max_retries,
-                            **kwargs,
-                        )
-                    except RuntimeError:
-                        raise TimeoutError(
-                            f"Ollama call timed out after {1 + max_retries} attempts + restart "
-                            f"(model={model}, {paper_label}, limit={effective_timeout}s)"
-                        )
-                    return _finish(response)
+                late = []
+                try:
+                    response = _restart_ollama_and_retry(
+                        model=model, messages=messages,
+                        paper_label=paper_label,
+                        effective_timeout=effective_timeout,
+                        max_retries=max_retries,
+                        stage=stage,
+                        late=late,
+                        **kwargs,
+                    )
+                except RuntimeError as ended:
+                    error = TimeoutError(
+                        f"Ollama call timed out after {attempt + 1} attempts + restart "
+                        f"(model={model}, {paper_label}, limit={effective_timeout}s)"
+                    )
+                    error.run_call_detail = getattr(ended, "detail", None)
+                    raise error from ended
+                return _finish(response, late_by=late[0] if late else None, restarted=True)
 
             except (httpx.TimeoutException, httpx.ConnectError) as exc:
-                executor.shutdown(wait=False, cancel_futures=True)
                 elapsed = time.monotonic() - t0
                 logger.warning(
                     "Ollama HTTP timeout: model=%s, %s, elapsed=%.0fs, "
@@ -763,7 +833,6 @@ def ollama_chat(
                     raise
 
             except Exception as exc:
-                executor.shutdown(wait=False, cancel_futures=True)
                 elapsed = time.monotonic() - t0
                 logger.warning(
                     "Ollama call failed: model=%s, %s, elapsed=%.0fs, "
@@ -779,16 +848,20 @@ def ollama_chat(
             else:
                 # Outside the handlers above on purpose: an input-fit failure is
                 # neither retried nor converted into a timeout.
-                return _finish(response)
+                return _finish(response, late_by=late_by)
+
+            finally:
+                executor.shutdown(wait=False, cancel_futures=True)  # N24
     except (InputTruncated, InputDropped):
         raise  # already recorded inside _finish — never double-recorded
     except Exception as exc:
-        # Every OTHER way this call can end after the request hash exists:
-        # the wall-clock watchdog exhausted with a failed restart (TimeoutError),
-        # an HTTP-level timeout/connect failure exhausted, or any other
-        # exception from the client exhausted. One site, because none of these
-        # carry a response object to record against — 10a-C3 Phase A A3.
-        _record("error", exc=exc)
+        # Every OTHER way this call can end after the request hash exists: a read
+        # timeout whose restart path ended without a response, a worker alive past
+        # the bound (both TimeoutError, the detail naming which), an HTTP-level
+        # timeout/connect failure exhausted, or any other exception from the client
+        # exhausted. One site, because none of these carry a response object to
+        # record against — 10a-C3 Phase A A3.
+        _record("error", exc=exc, note=getattr(exc, "run_call_detail", None))
         raise
 
 
@@ -796,12 +869,17 @@ def ollama_chat(
 
 
 def _restart_ollama_and_retry(
-    *, model, messages, paper_label, effective_timeout, max_retries, **kwargs,
+    *, model, messages, paper_label, effective_timeout, max_retries, stage=None, late=None, **kwargs,
 ):
     """Restart the Ollama service and attempt one final call.
 
     Returns the response on success; raises RuntimeError if recovery is refused
-    or fails, which `ollama_chat` converts to TimeoutError.
+    or fails, which `ollama_chat` converts to TimeoutError, its `detail` naming the
+    ending. If the final attempt was late, its lateness is appended to `late`.
+
+    Before the final attempt the digest and the environment are checked again, through
+    the functions a first send uses (F7, R734(e), R762(b)). A refusal they raise is a
+    `RunRefused`, not a RuntimeError, so it reaches the run as itself.
 
     Two gates run before the restart, both of which make this branch refuse
     rather than proceed (OPSFIX-01):
@@ -820,21 +898,27 @@ def _restart_ollama_and_retry(
     server, not a correctness requirement; the caller has already exhausted its
     retries and will surface a TimeoutError either way.
     """
+    from engine.core.run_manifest import (
+        DETAIL_POST_RESTART_FAILED, DETAIL_RESTART_COMMAND_FAILED, DETAIL_RESTART_REFUSED_LOCK,
+        DETAIL_RESTART_REFUSED_OPT_OUT, DETAIL_WORKER_ALIVE, check_call_digest, check_call_env,
+    )
     if restart_disabled():
-        raise RuntimeError(
+        raise _RestartEnded(
             f"Ollama restart refused: {RESTART_OPT_OUT_ENV} is set "
-            f"(model={model}, {paper_label}). Recovery is disabled for this process."
+            f"(model={model}, {paper_label}). Recovery is disabled for this process.",
+            DETAIL_RESTART_REFUSED_OPT_OUT,
         )
     if foreign_lock_held():
-        raise RuntimeError(
+        raise _RestartEnded(
             f"Ollama restart refused: another process holds the experiment lock "
             f"(model={model}, {paper_label}). Restarting would destroy its run; "
-            f"see OPS-GUARD-01."
+            f"see OPS-GUARD-01.",
+            DETAIL_RESTART_REFUSED_LOCK,
         )
 
     logger.warning(
-        "All %d retries exhausted — restarting Ollama service (model=%s, %s)",
-        1 + max_retries, model, paper_label,
+        "Request ended by the read timeout — restarting Ollama service (model=%s, %s)",
+        model, paper_label,
     )
     try:
         subprocess.run(
@@ -844,15 +928,21 @@ def _restart_ollama_and_retry(
             capture_output=True,
         )
     except Exception as restart_exc:
-        raise RuntimeError(
-            f"Ollama restart failed: {restart_exc} — cannot recover"
+        raise _RestartEnded(
+            f"Ollama restart failed: {restart_exc} — cannot recover",
+            DETAIL_RESTART_COMMAND_FAILED,
         ) from restart_exc
 
     logger.info("Ollama restarted — waiting 10s for stabilization")
     time.sleep(10)
 
+    # F7: outside the try below, whose `except Exception` would swallow a RunRefused.
+    check_call_digest(stage, model)
+    check_call_env(stage)
+
     # One final attempt after restart
     executor = ThreadPoolExecutor(max_workers=1)
+    t0 = time.monotonic()
     try:
         future = executor.submit(
             _client.chat,
@@ -860,14 +950,24 @@ def _restart_ollama_and_retry(
             messages=messages,
             **kwargs,
         )
-        result = future.result(timeout=effective_timeout)
+        result, late_by = _await_request(future, effective_timeout, t0, model, paper_label, 1, 1)
+        if late_by is not None and late is not None:
+            late.append(late_by)
         logger.info(
             "Post-restart call succeeded (model=%s, %s)", model, paper_label,
         )
         return result
-    except Exception as post_exc:
-        executor.shutdown(wait=False, cancel_futures=True)
-        raise RuntimeError(
+    except _WorkerStillAlive as post_exc:
+        raise _RestartEnded(
             f"Post-restart Ollama call failed: {post_exc} — cannot recover "
-            f"(model={model}, {paper_label})"
+            f"(model={model}, {paper_label})",
+            DETAIL_WORKER_ALIVE,
         ) from post_exc
+    except Exception as post_exc:
+        raise _RestartEnded(
+            f"Post-restart Ollama call failed: {post_exc} — cannot recover "
+            f"(model={model}, {paper_label})",
+            DETAIL_POST_RESTART_FAILED,
+        ) from post_exc
+    finally:
+        executor.shutdown(wait=False, cancel_futures=True)  # N24

@@ -1,0 +1,6 @@
+ engine/core/run_manifest.py          |  45 ++++-
+ engine/utils/ollama_client.py        | 220 +++++++++++++++------
+ tests/test_ollama_client.py          |  33 ++--
+ tests/test_restart_recovery_guard.py |   4 +-
+ tests/test_u21_no_overlap.py         | 368 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 595 insertions(+), 75 deletions(-)

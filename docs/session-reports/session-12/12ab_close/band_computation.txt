@@ -1,0 +1,6 @@
+# band computation for the wrap ruling (R683(c)'s inward rounding), 12ab closeout (R764(d))
+inputs (the last four standard gates on this host state): 907.50, 919.74, 924.77, 928.91
+  907.50 U20 commit 1 (12aa_U20B/gate_c1/gate_wall.txt 907.498037209; surgical-cv's uvicorn pid 2856714 before and after); 919.74 U20 commit 2 (12aa_U20C/gate_c2/gate_wall.txt 919.735631294; uvicorn pid 2856714 before and after); 924.77 12ab-OPEN (12ab_open/gate_12ab_open/gate_wall.txt 924.770289600; "surgical-cv's uvicorn throughout; a foreign shell (3239197) at launch, gone by exit, unread between", R751(b)); 928.91 U21 (12ab_U21B/gate_u21b/gate_wall.txt 928.914137455; uvicorn pid 3422344 before and after)
+mean 920.2300 s; x0.9 828.2070; x1.1 1012.2530
+rounded inward: 829–1012 s (a figure, to be set by the wrap ruling; the band in force stays 820–1001 s)
+series (twenty-seven, the twenty-five of R748(b) plus 924.77 of R751(b) plus 928.91 of R763(d)): 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32, 893.83, 939.40, 895.61, 896.11, 912.13, 906.10, 909.32, 907.50, 919.74, 924.77, 928.91 s; the red runs 916.95 s (R737(b)) and 919.80 s (R746(c)) are not members

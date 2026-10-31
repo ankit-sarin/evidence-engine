@@ -1,0 +1,13 @@
+# temp root at the 12ab closeout, 2026-10-31T06:41:17Z (R647(c)); a reading, nothing emptied
+total 348
+drwx------    5 ankitsarin ankitsarin   4096 2026-10-31 06:30:43.829495336 +0000 .
+drwxrwxrwt  147 root       root        49152 2026-10-31 06:40:21.953619484 +0000 ..
+drwx------    4 ankitsarin ankitsarin   4096 2026-10-31 06:24:44.870392917 +0000 pytest-195
+drwx------ 2522 ankitsarin ankitsarin 286720 2026-10-31 06:30:31.661528975 +0000 pytest-196
+drwx------   14 ankitsarin ankitsarin   4096 2026-10-31 06:30:43.829495336 +0000 pytest-197
+lrwxrwxrwx    1 ankitsarin ankitsarin     36 2026-10-31 06:30:40.266556875 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-197
+180350	/tmp/pytest-of-ankitsarin/pytest-195
+185114488	/tmp/pytest-of-ankitsarin/pytest-196
+379754	/tmp/pytest-of-ankitsarin/pytest-197
+36	/tmp/pytest-of-ankitsarin/pytest-current
+total 185674628 B

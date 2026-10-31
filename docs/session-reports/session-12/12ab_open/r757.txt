@@ -1,0 +1,50 @@
+RULING [evidence-engine 12ab-R757] — 12ab-U21A accepted; the B-F14 measurement ordered as designed
+  (12ab-U21P); F5 opens a row with U21; R756(b) joins the standing rules; the two citations corrected
+  by addendum; readings; the design ruling waits on the probe
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21A
+  final report (item 0 42e21de84465b7a31831b0b83a46bf8e9fc2f226; read-out
+  8b7573c05acba40743355460e69e7bfd9a212961). Transcribe at item 0 of the 12ab-U21P brief, by
+  transcribe_ruling.py, in the block after R756's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21A final report and the read-out it names):
+  MEASURED: "Commit / parent 42e21de84465b7a31831b0b83a46bf8e9fc2f226 / 044935e3…"; "Numstat, plan
+    +93 / −0"; "Plan lines 13752 = 13659 + 47 + 46 − 0"; "Plan sha256, bytes
+    7ee4e783f8b6ac91667bc2b37461f93103b59d8bb7c40752b237be53889ba065, 2459780 B"; "r755.txt
+    fd0d0f7c…6ae0, 2921 B, 36 lines, equal to the architect's"; "r756.txt 868f4041…a1f4, 2862 B, 35
+    lines, equal"; "Ledger 0cbba0714734b70dc133e39aee2982317f02769f, parent 53243fbb…"; "Commit /
+    parent 8b7573c05acba40743355460e69e7bfd9a212961 / 42e21de8…"; "9 files, +1,114, all under
+    12ab_U21A/"; "Journal, 04:25 on: read-only GETs; 0 POST or load lines; ps empty"; "Ledger
+    a4d697be3ffb874bd27f8d8dc194f7704769df50, parent 0cbba071…"; "entries 3 peak concurrent 3 still
+    in flight at the raise 3" (fake_seam_probe.txt); "_HTTP_READ_TIMEOUT = 900.0" (:52); "8b 300,
+    27b 600, 32b 900, 70b 1200" (:108–113); "ollama_preflight.py:71–72 sets max_retries=0,
+    wall_timeout=60.0; pdf_quality_check.py:107–108 too".
+  READ (CC's, 12ab_U21A.md): §3 ("cancel_futures only cancels a pending future, so the worker and
+    its request survive until the read timeout"; "What the server is told: nothing"); §5 ("Without a
+    migration: outcome_detail is unconstrained TEXT and can carry the four under error. Nothing in
+    engine/, scripts/ or analysis/ reads outcome or its detail"; "With a migration: distinct tokens
+    need 022's CHECK rebuilt"); §7 O1–O4 as tabled; §7b the measurement proposal in full; F3, F5,
+    F6, F10, F12; report findings 23–27.
+  INFERRED: none.
+
+R757(a) — 12ab-U21A is accepted as reported: item 0 42e21de (Blocks 153–154), the read-out 8b7573c
+  (12ab_U21A/, nine files), ledgers 0cbba07 and a4d697b with trailers. I2 and I3 held; the read-out is
+  the committed read-out U21's design ruling rests on.
+R757(b) — The B-F14 measurement runs as §7b designs it, under the 12ab-U21P brief: V0, V1, V2 in that
+  order on llama3.2:3b with num_ctx 4096, the follow-up request after V1 and after V2, inside
+  hold_experiment_lock(), outside any manifest, outside 07:00–10:35 UTC and ended before 06:45 UTC
+  or after 10:35; §7b's stop conditions and end state as written; the record 12ab_U21P/ in
+  12aa_U20P/'s form, one table per question, no design recommendation. The probe's client is its own,
+  not ollama_chat. The design ruling on O1–O4 follows the probe's record, not this ruling.
+R757(c) — F5 opens a row: with max_retries=0 the first watchdog timeout goes straight to the recovery
+  restart (the preflight at 60 s; pdf_quality_check), so a slow load, not a hang, can trigger "sudo
+  systemctl restart ollama" mid-run. Row INT-ab12-1, Class 2, P1, riding with U21 (its fix is decided
+  in U21's design ruling); text cell quoted from the read-out's F5; opened at 12ab-U21P's item 0 in
+  section L's additions form.
+R757(d) — Finding 24: R756(b)'s reading rule is a standing rule; "A R756(b)" joins the list and the
+  file is regenerated at 12ab-U21P's item 0 (R754(c)(iii)). Finding 23: the two citations are
+  corrected by a dated addendum at the end of 12ab_U21A.md in that item 0 (R102's form; the sources
+  read :435 and :38–39). Findings 25 and 26: readings (the §7b section and the fake-client run,
+  accepted). F3, F6, F10 and F12 are U21's design inputs, carried to the design ruling; F7 a
+  HK-ARCH note, not written now.
+R757(e) — Readings, no row: the four endings' one TimeoutError (:745) and §5's two routes are the
+  design question's facts; R745(d)'s "distinct outcome" stays 023's unless the design ruling moves it.

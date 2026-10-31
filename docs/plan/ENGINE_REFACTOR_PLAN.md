@@ -919,6 +919,12 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 **The pre-tag list, recounted 2026-10-25 (12w-CLOSE item 0, R707(e)), by script from the plan** (`docs/session-reports/session-12/12w_close/recount_12w_r707.py` → `recount_12w_r707.json`: the 12v-U37B count as the baseline, reproduced by `recount_12v_r694.py` on the plan at `8659035` — the last plan before this table, sha256 `af7de56383ef8608bb2250d94e7cf73d17c024e34ea0e909200d33a5bdb5e1b4` — and equal to its committed JSON byte for byte, and through it the chain 272, 275, 276, 278, 279; run in a scratch clone, R673(b)). Baseline: 279 rows — Class 1 / 2 / 3 = 94 / 54 / 131. Opened: 1 (`INT-w12-1`, Class 2, P1). **Now: 280 rows — Class 1 / 2 / 3 = 94 / 55 / 131, 0 without a class**; P1 61 rows (25 / 24 / 12); P6 11; P7 117; P1's fix units 35 by the script's field / 37, done 19, by the dated lines (U39 added, R707(d); R701(c)). R510 for session 12w: rows in 1 (`INT-w12-1`), rows out 0, no class move; INT-i12-45 CLOSED and counted (R705(e), R707(e)).
 
+**L (12ab additions, R757).** *Opened 2026-10-31 (12ab-U21P item 0) under R509 and R757(c).* One row from U21's Phase A read-out (`12ab_U21A.md`, `8b7573c`): `INT-ab12-1` for its F5, placed in its own table so that the 12w recount's bounds are unchanged (R649(a), R651(a)). The text cell is quoted from the read-out.
+
+| # | On disk (`12ab_U21A.md` §8 F5, quoted) | Class | Owning package | Governing ruling | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| INT-ab12-1 | With `max_retries=0`, the first watchdog timeout goes straight to the restart. | 2 | P1, with U21 | R757(c) | `12ab_U21A.md` §8 F5 (code order, not exercised) |
+
 ### Not engine defects — plan v50 wording
 
 The product description ("autonomously executes … synthesis," "publication-ready," "no data leaves the machine" — the last is CLI-flag-dependent per C5); the four contradicted counts (D4, D1, F4, G1); the §10 novelty sentence; and "Run 7 once the engine is settled" as an open-ended dependency.
@@ -13750,3 +13756,64 @@ R756(c) — Next: U21's Phase A (12l_P1A.md §3's next unit after U20: "No attem
 | 2026-10-31 | R756(a) — 12ab-ADOPT is accepted as reported: item 0 fa44c9e, the adoption 044935e (the three corrections; the file adopted under R754 at 88 / 80 / 8; CLAUDE.md lines 3–7), ledgers 8731bb1 and 53243fb with trailers. STANDING_RULES.md is in force under R754(b)–(c) from this ruling on: a brief's conventions paragraph cites its ids and restates only what it lacks. R756(b) — Readings, no row: finding 20 (the status line is one line in the file; a brief's wrapped quote is compared whitespace-normalised, the words verbatim); finding 21; finding 22 (primer.md's "read it at session start" line is working state, corrected at the 12ab wrap under R737(d)'s lane-line form, not before). R756(c) — Next: U21's Phase A (12l_P1A.md §3's next unit after U20: "No attempt starts while the previous request is still running", B-F14; N23 and N24 with it; the recovery restart's re-check, 12z_U19A.md F7, R734(e)), in the Phase A form the record's most recent Phase A read-out takes, read-only throughout; B-F14's measurement — whether closing the client cancels generation — is designed in that read-out as a proposal and is not run until a ruling on the read-out orders it, under the lock, on the small model (R741(b)). With this ruling and R755 at its item 0. The 2026-10-31 jobs are read by the first brief after 10:35 UTC (R749(c)). | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-ADOPT-R1 final report (fa44c9e; 044935e) |
 
 The decision log in this file ends at R756.
+
+**Block 155.** *Transcribed 2026-10-31 (item 0 of the 12ab-U21P brief), in its own commit with the row, the read-out addendum and the regenerated rules file it orders, in the R597(e) form:* ruling R757, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-U21A final report (item 0 `42e21de84465b7a31831b0b83a46bf8e9fc2f226`; read-out `8b7573c05acba40743355460e69e7bfd9a212961`). The 12ab-U21P brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R757] — 12ab-U21A accepted; the B-F14 measurement ordered as designed
+  (12ab-U21P); F5 opens a row with U21; R756(b) joins the standing rules; the two citations corrected
+  by addendum; readings; the design ruling waits on the probe
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21A
+  final report (item 0 42e21de84465b7a31831b0b83a46bf8e9fc2f226; read-out
+  8b7573c05acba40743355460e69e7bfd9a212961). Transcribe at item 0 of the 12ab-U21P brief, by
+  transcribe_ruling.py, in the block after R756's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21A final report and the read-out it names):
+  MEASURED: "Commit / parent 42e21de84465b7a31831b0b83a46bf8e9fc2f226 / 044935e3…"; "Numstat, plan
+    +93 / −0"; "Plan lines 13752 = 13659 + 47 + 46 − 0"; "Plan sha256, bytes
+    7ee4e783f8b6ac91667bc2b37461f93103b59d8bb7c40752b237be53889ba065, 2459780 B"; "r755.txt
+    fd0d0f7c…6ae0, 2921 B, 36 lines, equal to the architect's"; "r756.txt 868f4041…a1f4, 2862 B, 35
+    lines, equal"; "Ledger 0cbba0714734b70dc133e39aee2982317f02769f, parent 53243fbb…"; "Commit /
+    parent 8b7573c05acba40743355460e69e7bfd9a212961 / 42e21de8…"; "9 files, +1,114, all under
+    12ab_U21A/"; "Journal, 04:25 on: read-only GETs; 0 POST or load lines; ps empty"; "Ledger
+    a4d697be3ffb874bd27f8d8dc194f7704769df50, parent 0cbba071…"; "entries 3 peak concurrent 3 still
+    in flight at the raise 3" (fake_seam_probe.txt); "_HTTP_READ_TIMEOUT = 900.0" (:52); "8b 300,
+    27b 600, 32b 900, 70b 1200" (:108–113); "ollama_preflight.py:71–72 sets max_retries=0,
+    wall_timeout=60.0; pdf_quality_check.py:107–108 too".
+  READ (CC's, 12ab_U21A.md): §3 ("cancel_futures only cancels a pending future, so the worker and
+    its request survive until the read timeout"; "What the server is told: nothing"); §5 ("Without a
+    migration: outcome_detail is unconstrained TEXT and can carry the four under error. Nothing in
+    engine/, scripts/ or analysis/ reads outcome or its detail"; "With a migration: distinct tokens
+    need 022's CHECK rebuilt"); §7 O1–O4 as tabled; §7b the measurement proposal in full; F3, F5,
+    F6, F10, F12; report findings 23–27.
+  INFERRED: none.
+
+R757(a) — 12ab-U21A is accepted as reported: item 0 42e21de (Blocks 153–154), the read-out 8b7573c
+  (12ab_U21A/, nine files), ledgers 0cbba07 and a4d697b with trailers. I2 and I3 held; the read-out is
+  the committed read-out U21's design ruling rests on.
+R757(b) — The B-F14 measurement runs as §7b designs it, under the 12ab-U21P brief: V0, V1, V2 in that
+  order on llama3.2:3b with num_ctx 4096, the follow-up request after V1 and after V2, inside
+  hold_experiment_lock(), outside any manifest, outside 07:00–10:35 UTC and ended before 06:45 UTC
+  or after 10:35; §7b's stop conditions and end state as written; the record 12ab_U21P/ in
+  12aa_U20P/'s form, one table per question, no design recommendation. The probe's client is its own,
+  not ollama_chat. The design ruling on O1–O4 follows the probe's record, not this ruling.
+R757(c) — F5 opens a row: with max_retries=0 the first watchdog timeout goes straight to the recovery
+  restart (the preflight at 60 s; pdf_quality_check), so a slow load, not a hang, can trigger "sudo
+  systemctl restart ollama" mid-run. Row INT-ab12-1, Class 2, P1, riding with U21 (its fix is decided
+  in U21's design ruling); text cell quoted from the read-out's F5; opened at 12ab-U21P's item 0 in
+  section L's additions form.
+R757(d) — Finding 24: R756(b)'s reading rule is a standing rule; "A R756(b)" joins the list and the
+  file is regenerated at 12ab-U21P's item 0 (R754(c)(iii)). Finding 23: the two citations are
+  corrected by a dated addendum at the end of 12ab_U21A.md in that item 0 (R102's form; the sources
+  read :435 and :38–39). Findings 25 and 26: readings (the §7b section and the fake-client run,
+  accepted). F3, F6, F10 and F12 are U21's design inputs, carried to the design ruling; F7 a
+  HK-ARCH note, not written now.
+R757(e) — Readings, no row: the four endings' one TimeoutError (:745) and §5's two routes are the
+  design question's facts; R745(d)'s "distinct outcome" stays 023's unless the design ruling moves it.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R757(a) — 12ab-U21A is accepted as reported: item 0 42e21de (Blocks 153–154), the read-out 8b7573c (12ab_U21A/, nine files), ledgers 0cbba07 and a4d697b with trailers. I2 and I3 held; the read-out is the committed read-out U21's design ruling rests on. R757(b) — The B-F14 measurement runs as §7b designs it, under the 12ab-U21P brief: V0, V1, V2 in that order on llama3.2:3b with num_ctx 4096, the follow-up request after V1 and after V2, inside hold_experiment_lock(), outside any manifest, outside 07:00–10:35 UTC and ended before 06:45 UTC or after 10:35; §7b's stop conditions and end state as written; the record 12ab_U21P/ in 12aa_U20P/'s form, one table per question, no design recommendation. The probe's client is its own, not ollama_chat. The design ruling on O1–O4 follows the probe's record, not this ruling. R757(c) — F5 opens a row: with max_retries=0 the first watchdog timeout goes straight to the recovery restart (the preflight at 60 s; pdf_quality_check), so a slow load, not a hang, can trigger "sudo systemctl restart ollama" mid-run. Row INT-ab12-1, Class 2, P1, riding with U21 (its fix is decided in U21's design ruling); text cell quoted from the read-out's F5; opened at 12ab-U21P's item 0 in section L's additions form. R757(d) — Finding 24: R756(b)'s reading rule is a standing rule; "A R756(b)" joins the list and the file is regenerated at 12ab-U21P's item 0 (R754(c)(iii)). Finding 23: the two citations are corrected by a dated addendum at the end of 12ab_U21A.md in that item 0 (R102's form; the sources read :435 and :38–39). Findings 25 and 26: readings (the §7b section and the fake-client run, accepted). F3, F6, F10 and F12 are U21's design inputs, carried to the design ruling; F7 a HK-ARCH note, not written now. R757(e) — Readings, no row: the four endings' one TimeoutError (:745) and §5's two routes are the design question's facts; R745(d)'s "distinct outcome" stays 023's unless the design ruling moves it. | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-U21A final report (42e21de; 8b7573c) |
+
+The decision log in this file ends at R757.

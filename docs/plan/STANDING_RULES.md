@@ -3,9 +3,9 @@
 **Status: adopted under R754, selected by the committed id list.** A quoted clause is the rule's source; a figure, date, session condition or named commit inside it is that day's, and the current value is the "Expected values at session-N open" block's. A rule this file lacks is a rule a brief must restate. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
 
 - Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `fc95e62a246a4571295a99180f61b93dd10fc11a528f98d4320dcb8bb82bd7f2`
-- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `7fc677f8339f55073dffbde766e9b3774d8045f33cc6df1a242ee1ecc52146b5`
-- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `f6f8d7df72fc3c624d96b4a6029abcd8a3a213afadb41aee081e772fb4ff0a39`
-- Selection: the id list: Tier A 80, Tier B 8, 88 of 1350 clauses in the log.
+- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `21b9e51c5f68281a590bdd3c65da01feed647f053dd6a3386bff8c1ad9d58f06`
+- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `e648a692094ca103f59266e553d226f93bca1437763433b79a1ef07908858ad5`
+- Selection: the id list: Tier A 81, Tier B 8, 89 of 1362 clauses in the log.
 - "Named by" lists later clauses that carry the exact id; a range or a bare ruling number does not count.
 
 # Tier A — process rules
@@ -30,7 +30,7 @@ Gloss (CC's, not ruled): The window with no live write to review.db is 07:00–1
 R102 — The in-place authority-cell edit on R90–R94 is accepted once, as the record of their confirmation; decision-log rows otherwise remain append-only.
 ```
 
-Named by: R372, R465, R575, R640(c), R653(a), R656(a), R656(b), R659(f), R678(b), R679(d), R720(b), R729(c), R730(b), R747(c).
+Named by: R372, R465, R575, R640(c), R653(a), R656(a), R656(b), R659(f), R678(b), R679(d), R720(b), R729(c), R730(b), R747(c), R757(d).
 
 Gloss (CC's, not ruled): Decision-log rows are append-only; the one in-place edit on R90–R94 is not a precedent.
 
@@ -86,7 +86,7 @@ R654(d) — From this ruling on, "another lane's rows found uncommitted in PROJE
   lane's rows missing) stays a STOP.
 ```
 
-Named by: R662(c), R663(b), R672(d), R678(d), R683(f), R688(a), R692(f), R698(a), R698(f), R699(a), R700(a), R701(a), R701(f), R709(f), R719(e), R729(e), R737(e).
+Named by: R662(c), R663(b), R672(d), R678(d), R683(f), R688(a), R692(f), R698(a), R698(f), R699(a), R700(a), R701(a), R701(f), R709(f), R719(e), R729(e), R737(e), R755(a).
 
 Gloss (CC's, not ruled): Another lane's uncommitted ledger rows found at an open are committed by this lane's next ledger step and named; any other dirt in claude-config is a stop.
 
@@ -1305,9 +1305,24 @@ R753(d) — Three rules carried only by citations are stated here, so the file c
   2d's; the list file carries it under a "#" line until then.
 ```
 
-Named by: none.
+Named by: R755(a), R755(c).
 
 Gloss (CC's, not ruled): The model-load stop is R696(b)'s, a closed pre-tag row is counted until P1 closes, and an open's pre-check reads the process table and tmux for the named archived sessions, stopping only on a survivor of this lane.
+
+## R756(b)
+
+2026-10-31, session 12ab.
+
+```text
+R756(b) — Readings, no row: finding 20 (the status line is one line in the file; a brief's wrapped
+  quote is compared whitespace-normalised, the words verbatim); finding 21; finding 22 (primer.md's
+  "read it at session start" line is working state, corrected at the 12ab wrap under R737(d)'s
+  lane-line form, not before).
+```
+
+Named by: R757(d).
+
+Gloss (CC's, not ruled): A brief's wrapped quote is compared whitespace-normalised, the words verbatim; the clause's other items are dated.
 
 # Tier B — engine governance, pending the adoption ruling
 

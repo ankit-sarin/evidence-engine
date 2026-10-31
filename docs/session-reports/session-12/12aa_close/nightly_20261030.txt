@@ -1,0 +1,18 @@
+-- lines
+12:collecting ... collected 3451 items / 17 deselected / 3434 selected
+5981:==== 3433 passed, 17 deselected, 1 xfailed, 2 warnings in 913.05s (0:15:13) ====
+5983:pytest exit code: 0
+last line: pytest exit code: 0
+durations: 2519 lines, 262813 B
+-- journal ollama 09:00–09:25
+-- No entries --
+-- warnings
+3449:=============================== warnings summary ===============================
+3451:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the conf
+3455:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+-- lock
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock
+OLLAMA_EXPERIMENT_LOCK=unset
+-- reflog
+2b592ae HEAD@{2026-10-30T04:35:20+00:00}: commit: docs(plan): 12z-CLOSE — session 12z closure, the 12aa expected values, 12z_close/ measur
+237c321 HEAD@{2026-10-30T04:28:42+00:00}: commit: docs(plan): 12z-CLOSE item 0 — R735 and R736 as Blocks 133–134; the R736(d) read-back

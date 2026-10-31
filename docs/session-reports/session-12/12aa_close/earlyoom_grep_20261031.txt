@@ -1,0 +1,5 @@
+# earlyoom kill count this boot, 2026-10-31T01:12:38Z; boot abf99132-fd8b-41f9-b9fd-62241e40110c
+-- loose pattern 'sending SIG': 2 lines
+2026-10-18T05:42:57+00:00 spark-59e4 earlyoom[296635]: sending SIGTERM when mem <= 10.00% and swap <= 10.00%,
+2026-10-18T05:43:03+00:00 spark-59e4 earlyoom[297041]: sending SIGTERM when mem <=  6.00% and swap <= 100.00%,
+-- kill wording 'sending SIG.* to process' (the count of record): 0

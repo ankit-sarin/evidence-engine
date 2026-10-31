@@ -1,0 +1,5 @@
+# R510 for session 12aa: six-cell INT- rows at 2b592ae (the 12z closeout) and at afd179e (12aa-CLOSE item 0)
+2b592ae: 206; afd179e: 206; rows in 0 []; rows out 0 [] (the same id set)
+no class or package move: True [] (leading digit of the Class cell and first package of the Owning-package cell compared, row by row; the recount JSON is byte-identical to 12z_close/recount_close_run.json: class_moves [])
+INT-i12-11 CLOSED by its note at ca12c30 (12aa-U20C; R745, R747(f)) and counted until P1 closes (R607(d))
+method: lines starting '| INT-' with six ' | '-separated cells, calibrated on 0f83f46 (206, as 12z_close/r510_12z.txt reads)

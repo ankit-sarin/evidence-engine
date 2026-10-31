@@ -1,0 +1,6 @@
+# band computation for the wrap ruling (R683(c)'s inward rounding), 12aa closeout (R747(e))
+inputs (the last four standard gates on this host state): 906.10, 909.32, 907.50, 919.74
+  906.10 U19 commit 2 (quiet; R736(a), 12z_U19B); 909.32 12aa-OPEN (quiet; gate_12aa_open/gate_wall.txt 909.319124619); 907.50 U20 commit 1 (quiet; gate_c1/gate_wall.txt 907.498037209); 919.74 U20 commit 2 (quiet; gate_c2/gate_wall.txt 919.735631294); surgical-cv's uvicorn the only concurrent job at each (pid 11734 at the first two, 2856714 at the last two)
+mean 910.6650 s; x0.9 819.5985; x1.1 1001.7315
+rounded inward: 820–1001 s (a figure, to be set by the wrap ruling; the band in force stays 813–992 s)
+series (twenty-five): 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32, 893.83, 939.40, 895.61, 896.11, 912.13, 906.10, 909.32, 907.50, 919.74 s; the red runs 916.95 s (R737(b)) and 919.80 s (R746(c)) are not members

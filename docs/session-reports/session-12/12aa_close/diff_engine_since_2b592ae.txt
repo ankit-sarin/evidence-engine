@@ -1,0 +1,23 @@
+ engine/agents/ft_screener.py         |   6 +-
+ engine/core/run_manifest.py          |  32 ++++
+ engine/utils/ollama_client.py        |  80 +++++++--
+ engine/utils/ollama_preflight.py     |  13 +-
+ scripts/run_pipeline.py              |  15 +-
+ tests/_loaded_context_fixture.py     |  31 ++++
+ tests/test_audit_paper_id.py         |   3 +
+ tests/test_citation_record.py        |   4 +
+ tests/test_cut_over.py               |   4 +
+ tests/test_extraction_run_link.py    |   4 +
+ tests/test_ft_bridge.py              |   3 +-
+ tests/test_presented_context.py      |   6 +
+ tests/test_run_fault_predicate.py    |   5 +
+ tests/test_run_interrupts.py         |   4 +
+ tests/test_run_manifest.py           |   4 +
+ tests/test_run_pipeline_starts.py    |   6 +-
+ tests/test_selection_bound.py        |   4 +
+ tests/test_u18_digest_per_call.py    |   3 +-
+ tests/test_u20_loaded_context.py     | 320 +++++++++++++++++++++++++++++++++++
+ tests/test_u20_modelfile_num_ctx.py  | 124 ++++++++++++++
+ tests/test_undeclared_call.py        |   6 +-
+ tests/test_units_as_source_slices.py |   4 +
+ 22 files changed, 645 insertions(+), 36 deletions(-)

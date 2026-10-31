@@ -1,0 +1,48 @@
+RULING [evidence-engine 12ab-R758] — 12ab-U21P: item 0 accepted; the probe's V0 calibration stop
+  accepted; the re-run ordered with a calibration step and a larger context, under this brief's
+  resume; the row's own table and the recount owed at the closeout; readings
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21P
+  report stopped at V0's calibration (item 0 07bea9c953a35f0534992fc4d00b1ceddff95573; record
+  6e908b43f59fe9403cc5b7a59e2aa7c986f2b9be). Transcribe at item 0 of the next brief, by
+  transcribe_ruling.py, in the block after R757's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21P stop report):
+  MEASURED: "Commit / parent 07bea9c953a35f0534992fc4d00b1ceddff95573 / 8b7573c0…"; "Numstat, plan
+    +67 / −0 (block 61, row table 6)"; "Numstat, read-out +2 / −0"; "Plan lines 13819 = 13752 + 61 +
+    6 − 0"; "Plan sha256, bytes 21b9e51c5f68281a590bdd3c65da01feed647f053dd6a3386bff8c1ad9d58f06,
+    2467459 B"; "r757.txt 63a79d49…39d1, 4279 B, 50 lines, equal to the architect's"; "89 clauses,
+    Tier A 81, Tier B 8"; "Ledger cb2289203916915ef2d4e502847cd94cd18a06c6, parent 82a58355…";
+    "Commit / parent 6e908b43f59fe9403cc5b7a59e2aa7c986f2b9be / 07bea9c9…"; "19 files, +639, all
+    under 12ab_U21P/"; "Ledger c532209975c548bc831f9383eb1b1bad3b7e9d1f, parent cb228920…";
+    "05:03:30.186 V0_returned {'D0_s': 1.781, 'done_reason': 'stop', 'prompt_eval_count': 56,
+    'eval_count': 147, 'eval_duration': 1566215454}"; "05:03:30.205 STOP {'why': 'calibration: D0
+    1.781 s is under 40.0 s'}"; "05:03:31.278 U1_confirmed"; "05:03:31.278 lock_released"; "NRestarts
+    0 / 0"; "/api/ps {"models":[]} / {"models":[]}"; "in its own table, it exits 0 and is
+    byte-identical to 12aa_close/recount_close_run.json"; "82a5835 … Lines 41–45 are intact".
+  READ (CC's): "V0's response opens: "I can't fulfill this request as it would result in a huge amount
+    of output that is impractical for this format.""; "at 93.9 tokens/s the 60–120 s target is about
+    5,600–11,300 tokens, past num_ctx 4096"; "client._client is an httpx Client with close;
+    ollama.Client itself has no close"; findings 28–31.
+  INFERRED: none.
+
+R758(a) — Item 0 is accepted as landed: 07bea9c (Block 155; row INT-ab12-1 in its own table "L (12ab
+  additions, R757)"; the 12ab_U21A addendum; the rules file at 89 / 81 / 8), ledger cb22892. Finding
+  28: the row's own table is the record's form (R651(a)); R757(c)'s "section L's additions form" is
+  read so, and the brief's "latest additions block" was the architect's. The recount paragraph and the
+  chained script R651(a)'s form owes are written at the 12ab closeout; until then the list is 281
+  (94 / 56 / 131), P1 62 (25 / 25 / 12), R510 for 12ab rows in 1, by hand and so stated.
+R758(b) — The probe's stop at V0 is accepted as the record 6e908b4 states it: the rule fired on both
+  limbs; nothing was re-sent; the lock was released and the model unloaded. L0 (finding 29) is a load
+  send the design implied and is part of the form from here. The record stands; the re-run is a second
+  record, 12ab_U21P_R1/, in the same form, naming the first.
+R758(c) — The re-run, under the resume: (i) num_ctx 8192 and num_predict set from V0's measured rate
+  (eval_count / eval_duration, 93.9 tokens per second) so the cap lands at 60–90 s; (ii) a calibration
+  step after L0 and before V0, under the lock: up to three candidate prompt wordings, one send each,
+  each recorded as a send; the first whose response ends by done_reason "length" at the cap with a
+  duration of 40 s or more IS V0 — it is not re-sent; a candidate the model declines or ends early is
+  recorded and the next is sent; none qualifying in three is the stop; (iii) V1, V2 and the two
+  follow-ups as §7b designs them, with V0's D0 as the bound; (iv) the stop conditions and end state as
+  §7b states them, "done_reason stop short of the cap" now reading as the calibration rule of (ii).
+  The candidate wordings are CC's; their texts are in the record, not in a ruling.
+R758(d) — Readings, no row: finding 30 (82a5835 accepted under R663(b); the lane's row committed on
+  top of it stands); finding 31 (the record's F2).

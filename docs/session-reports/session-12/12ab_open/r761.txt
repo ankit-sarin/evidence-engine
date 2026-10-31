@@ -1,0 +1,76 @@
+RULING [evidence-engine 12ab-R761] — 12ab-U21P-R3 accepted; the measurement closed with its one open
+  limit; U21's design: no request is sent while the previous one is alive; a late response is a
+  completion; the restart only after a request has ended; the four endings in outcome_detail; N23,
+  N24, F7 and INT-ab12-1 ride; the build opens
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21P-R3
+  final report (record f373b107f7a353c9a658c1cd405b45559580a41d) and the U21 Phase A read-out
+  12ab_U21A.md (8b7573c05acba40743355460e69e7bfd9a212961). Transcribe at item 0 of the 12ab-U21B
+  brief, by transcribe_ruling.py, in the block after R760's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the R3 report and 12ab_U21A.md):
+  MEASURED (R3): "D0 157.249 s"; "done_reason length"; "eval_count 7000, the cap"; "httpx.Client.close()
+    from the main thread 10.001 s"; "Follow-up answered about 158.5 s; wall 146.461 s"; "Handler's end
+    in the journal about 158 s, status 200"; "Worker no return logged, still blocked at about 277 s";
+    "at 05:31:26.378Z, V1: the worker is still blocked at D0 + 120 s"; "05:29:27 | 200 | 2m38s | POST
+    "/api/chat" V1"; "05:29:27 | 200 | 2m26s | POST "/api/chat" V1's follow-up"; "NRestarts 0 / 0";
+    "/api/ps {"models":[]} / {"models":[]}"; "Commit / parent f373b107f7a353c9a658c1cd405b45559580a41d
+    / 2ba00bf6…"; "23 files, +728, all under 12ab_U21P_R3/"; "Ledger
+    85ba9bea839521f37622c721daa848deaf78f09b, parent b29faa6d…"; "eval_duration 88.307 s (79.3
+    tokens/s)" against "D0 157.249 s" (finding 43).
+  READ (12ab_U21A.md, as the U21A report quotes it): "for attempt in range(1 + max_retries):" (:710);
+    "executor = ThreadPoolExecutor(max_workers=1)" (:712); "response = future.result(timeout=
+    effective_timeout)" (:720); "executor.shutdown(wait=False, cancel_futures=True)" (:724, :752, :766,
+    :869); "raise TimeoutError(f"Ollama call timed out after {1 + max_retries} attempts + restart ""
+    (:744–748); "_HTTP_READ_TIMEOUT = 900.0" (:52); "8b 300, 27b 600, 32b 900, 70b 1200" (:108–113);
+    "["sudo", "systemctl", "restart", "ollama"]" (:840–845); the post-restart send (:857–863); "the
+    comment reads "Abandon the hung thread — do not wait for it""; "What the server is told: nothing";
+    "Without a migration: outcome_detail is unconstrained TEXT and can carry the four under error.
+    Nothing in engine/, scripts/ or analysis/ reads outcome or its detail"; "N24 understates by one
+    site: :867 also returns without shutting its executor down"; F3, F5, F10, F12 as stated; the §6
+    case table; the §7 option table.
+  READ (CC's, R3): findings 40–45.
+  INFERRED: none. The one unmeasured question is stated as a limit in (b).
+
+R761(a) — 12ab-U21P-R3 is accepted as reported: the record f373b10, ledger 85ba9be. The measurement is
+  closed under R760(c): no fifth attempt. Measured, for the record and for Run 7's confounder
+  statement: closing the httpx client from another thread neither unblocks the worker nor ends the
+  server's handler; a request from a fresh client waits behind the running one (146.461 s); the
+  worker stays blocked past the handler's end (finding 41, cause unread). V2 was not sent; (b) is
+  answered by V1 in substance — the abandoned request held the slot — and formally unmeasured.
+R761(b) — The open limit, carried to Run 7's confounder statement and to any later probe: whether a
+  disconnect the server actually sees cancels generation (finding 40). Finding 43 (about 69 s of
+  wall time outside eval_duration under a 2,000-item grammar) is a reading, carried with it, not a
+  row until measured on an engine-sized schema (finding 44).
+R761(c) — U21's design, Option O1 as narrowed by the measurement, built in one engine commit:
+  (i) On a watchdog timeout no new request is sent while the previous request's worker is alive: the
+      engine waits on the same future up to the HTTP read timeout, with the watchdog's firing logged
+      and recorded, and nothing submitted meanwhile. Per model the bound on one request is the read
+      timeout; the watchdog limit is the point at which lateness is recorded, not a budget that sends
+      another request.
+  (ii) A response that arrives after the watchdog fired is a completion: used as the call's response,
+      recorded 'completed' with its lateness in outcome_detail. The lateness is a reading.
+  (iii) A request that ends by the read timeout, or by a server error, has ended; only then may the
+      recovery restart run, once, as today, and only then the final attempt — preceded by the per-call
+      digest re-read and the environment re-check the post-restart send lacks (F7, R734(e)), through
+      the same functions the first send uses. max_retries governs attempts whose previous request
+      ended in an error other than a timeout, as today.
+  (iv) The four endings of Wave 1 row 93 (restart refused by the opt-out; refused by the foreign lock;
+      the restart command failed; the post-restart call failed) and a restart that recovered (F10)
+      are each recorded in run_calls.outcome_detail under the existing outcome tokens, as a closed set
+      of detail strings declared in one place in run_manifest.py; no migration; R745(d)'s distinct
+      outcome stays 023's.
+  (v) N23 closes by (i): one route, the read timeout, no race. N24 closes: every executor is shut down
+      in a finally, the :867 site included. INT-ab12-1 closes by (iii): the preflight and the quality
+      check reach the restart only after their request has ended. F3 is recorded as closed by (i)'s
+      bound (the 70b call's bound is the read timeout, which (i) makes the rule for every model). F12
+      is C47's family, a dated note, not U21's.
+  (vi) The acceptance tests, each failing on the parent: the unit's named test (a fake client that
+      blocks and counts concurrent entries; after a watchdog timeout no second call is in flight); a
+      late response is used and recorded completed with lateness; a read-timed-out request reaches
+      the restart path once and the final attempt is preceded by the re-checks; each of the five
+      detail strings is written for its ending; no executor outlives its call. Nothing sent changes:
+      both pins and the audit prompt_hash byte-identical.
+R761(d) — The build brief is the engine-commit form of the standing rules (R725(b), R722(a)–R725(c)):
+  a census pre-step over the read-out's §4 classes, the test-side Touched list found by it, B5 rewrites
+  with assertions kept, a red classified (c) or stop. Item 0 transcribes R758–R761 and regenerates
+  nothing unless a rule enters (R754(c)(iii): none does).

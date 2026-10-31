@@ -13817,3 +13817,248 @@ R757(e) — Readings, no row: the four endings' one TimeoutError (:745) and §5'
 | 2026-10-31 | R757(a) — 12ab-U21A is accepted as reported: item 0 42e21de (Blocks 153–154), the read-out 8b7573c (12ab_U21A/, nine files), ledgers 0cbba07 and a4d697b with trailers. I2 and I3 held; the read-out is the committed read-out U21's design ruling rests on. R757(b) — The B-F14 measurement runs as §7b designs it, under the 12ab-U21P brief: V0, V1, V2 in that order on llama3.2:3b with num_ctx 4096, the follow-up request after V1 and after V2, inside hold_experiment_lock(), outside any manifest, outside 07:00–10:35 UTC and ended before 06:45 UTC or after 10:35; §7b's stop conditions and end state as written; the record 12ab_U21P/ in 12aa_U20P/'s form, one table per question, no design recommendation. The probe's client is its own, not ollama_chat. The design ruling on O1–O4 follows the probe's record, not this ruling. R757(c) — F5 opens a row: with max_retries=0 the first watchdog timeout goes straight to the recovery restart (the preflight at 60 s; pdf_quality_check), so a slow load, not a hang, can trigger "sudo systemctl restart ollama" mid-run. Row INT-ab12-1, Class 2, P1, riding with U21 (its fix is decided in U21's design ruling); text cell quoted from the read-out's F5; opened at 12ab-U21P's item 0 in section L's additions form. R757(d) — Finding 24: R756(b)'s reading rule is a standing rule; "A R756(b)" joins the list and the file is regenerated at 12ab-U21P's item 0 (R754(c)(iii)). Finding 23: the two citations are corrected by a dated addendum at the end of 12ab_U21A.md in that item 0 (R102's form; the sources read :435 and :38–39). Findings 25 and 26: readings (the §7b section and the fake-client run, accepted). F3, F6, F10 and F12 are U21's design inputs, carried to the design ruling; F7 a HK-ARCH note, not written now. R757(e) — Readings, no row: the four endings' one TimeoutError (:745) and §5's two routes are the design question's facts; R745(d)'s "distinct outcome" stays 023's unless the design ruling moves it. | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-U21A final report (42e21de; 8b7573c) |
 
 The decision log in this file ends at R757.
+
+**Block 156.** *Transcribed 2026-10-31 (item 0 of the 12ab-U21B brief), in its own commit with Blocks 157, 158 and 159, in the R597(e) form:* ruling R758, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-U21P report stopped at V0's calibration (item 0 `07bea9c953a35f0534992fc4d00b1ceddff95573`; record `6e908b43f59fe9403cc5b7a59e2aa7c986f2b9be`). The 12ab-U21P-R1 resume that carried the ruling in substance, and the 12ab-U21B brief whose paste carried its text, are not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R758] — 12ab-U21P: item 0 accepted; the probe's V0 calibration stop
+  accepted; the re-run ordered with a calibration step and a larger context, under this brief's
+  resume; the row's own table and the recount owed at the closeout; readings
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21P
+  report stopped at V0's calibration (item 0 07bea9c953a35f0534992fc4d00b1ceddff95573; record
+  6e908b43f59fe9403cc5b7a59e2aa7c986f2b9be). Transcribe at item 0 of the next brief, by
+  transcribe_ruling.py, in the block after R757's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21P stop report):
+  MEASURED: "Commit / parent 07bea9c953a35f0534992fc4d00b1ceddff95573 / 8b7573c0…"; "Numstat, plan
+    +67 / −0 (block 61, row table 6)"; "Numstat, read-out +2 / −0"; "Plan lines 13819 = 13752 + 61 +
+    6 − 0"; "Plan sha256, bytes 21b9e51c5f68281a590bdd3c65da01feed647f053dd6a3386bff8c1ad9d58f06,
+    2467459 B"; "r757.txt 63a79d49…39d1, 4279 B, 50 lines, equal to the architect's"; "89 clauses,
+    Tier A 81, Tier B 8"; "Ledger cb2289203916915ef2d4e502847cd94cd18a06c6, parent 82a58355…";
+    "Commit / parent 6e908b43f59fe9403cc5b7a59e2aa7c986f2b9be / 07bea9c9…"; "19 files, +639, all
+    under 12ab_U21P/"; "Ledger c532209975c548bc831f9383eb1b1bad3b7e9d1f, parent cb228920…";
+    "05:03:30.186 V0_returned {'D0_s': 1.781, 'done_reason': 'stop', 'prompt_eval_count': 56,
+    'eval_count': 147, 'eval_duration': 1566215454}"; "05:03:30.205 STOP {'why': 'calibration: D0
+    1.781 s is under 40.0 s'}"; "05:03:31.278 U1_confirmed"; "05:03:31.278 lock_released"; "NRestarts
+    0 / 0"; "/api/ps {"models":[]} / {"models":[]}"; "in its own table, it exits 0 and is
+    byte-identical to 12aa_close/recount_close_run.json"; "82a5835 … Lines 41–45 are intact".
+  READ (CC's): "V0's response opens: "I can't fulfill this request as it would result in a huge amount
+    of output that is impractical for this format.""; "at 93.9 tokens/s the 60–120 s target is about
+    5,600–11,300 tokens, past num_ctx 4096"; "client._client is an httpx Client with close;
+    ollama.Client itself has no close"; findings 28–31.
+  INFERRED: none.
+
+R758(a) — Item 0 is accepted as landed: 07bea9c (Block 155; row INT-ab12-1 in its own table "L (12ab
+  additions, R757)"; the 12ab_U21A addendum; the rules file at 89 / 81 / 8), ledger cb22892. Finding
+  28: the row's own table is the record's form (R651(a)); R757(c)'s "section L's additions form" is
+  read so, and the brief's "latest additions block" was the architect's. The recount paragraph and the
+  chained script R651(a)'s form owes are written at the 12ab closeout; until then the list is 281
+  (94 / 56 / 131), P1 62 (25 / 25 / 12), R510 for 12ab rows in 1, by hand and so stated.
+R758(b) — The probe's stop at V0 is accepted as the record 6e908b4 states it: the rule fired on both
+  limbs; nothing was re-sent; the lock was released and the model unloaded. L0 (finding 29) is a load
+  send the design implied and is part of the form from here. The record stands; the re-run is a second
+  record, 12ab_U21P_R1/, in the same form, naming the first.
+R758(c) — The re-run, under the resume: (i) num_ctx 8192 and num_predict set from V0's measured rate
+  (eval_count / eval_duration, 93.9 tokens per second) so the cap lands at 60–90 s; (ii) a calibration
+  step after L0 and before V0, under the lock: up to three candidate prompt wordings, one send each,
+  each recorded as a send; the first whose response ends by done_reason "length" at the cap with a
+  duration of 40 s or more IS V0 — it is not re-sent; a candidate the model declines or ends early is
+  recorded and the next is sent; none qualifying in three is the stop; (iii) V1, V2 and the two
+  follow-ups as §7b designs them, with V0's D0 as the bound; (iv) the stop conditions and end state as
+  §7b states them, "done_reason stop short of the cap" now reading as the calibration rule of (ii).
+  The candidate wordings are CC's; their texts are in the record, not in a ruling.
+R758(d) — Readings, no row: finding 30 (82a5835 accepted under R663(b); the lane's row committed on
+  top of it stands); finding 31 (the record's F2).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R758(a) — Item 0 is accepted as landed: 07bea9c (Block 155; row INT-ab12-1 in its own table "L (12ab additions, R757)"; the 12ab_U21A addendum; the rules file at 89 / 81 / 8), ledger cb22892. Finding 28: the row's own table is the record's form (R651(a)); R757(c)'s "section L's additions form" is read so, and the brief's "latest additions block" was the architect's. The recount paragraph and the chained script R651(a)'s form owes are written at the 12ab closeout; until then the list is 281 (94 / 56 / 131), P1 62 (25 / 25 / 12), R510 for 12ab rows in 1, by hand and so stated. R758(b) — The probe's stop at V0 is accepted as the record 6e908b4 states it: the rule fired on both limbs; nothing was re-sent; the lock was released and the model unloaded. L0 (finding 29) is a load send the design implied and is part of the form from here. The record stands; the re-run is a second record, 12ab_U21P_R1/, in the same form, naming the first. R758(c) — The re-run, under the resume: (i) num_ctx 8192 and num_predict set from V0's measured rate (eval_count / eval_duration, 93.9 tokens per second) so the cap lands at 60–90 s; (ii) a calibration step after L0 and before V0, under the lock: up to three candidate prompt wordings, one send each, each recorded as a send; the first whose response ends by done_reason "length" at the cap with a duration of 40 s or more IS V0 — it is not re-sent; a candidate the model declines or ends early is recorded and the next is sent; none qualifying in three is the stop; (iii) V1, V2 and the two follow-ups as §7b designs them, with V0's D0 as the bound; (iv) the stop conditions and end state as §7b states them, "done_reason stop short of the cap" now reading as the calibration rule of (ii). The candidate wordings are CC's; their texts are in the record, not in a ruling. R758(d) — Readings, no row: finding 30 (82a5835 accepted under R663(b); the lane's row committed on top of it stands); finding 31 (the record's F2). | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-U21P report stopped at V0's calibration (07bea9c; 6e908b4) |
+
+The decision log in this file ends at R758.
+
+**Block 157.** *Transcribed 2026-10-31 (item 0 of the 12ab-U21B brief), in its own commit with Blocks 156, 158 and 159, in the R597(e) form:* ruling R759, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-U21P-R1 report stopped at calibration (record `7a73494c1dc44c31db4b7a767c514bbafb6370b3`). The 12ab-U21P-R2 resume that carried the ruling in substance, and the 12ab-U21B brief whose paste carried its text, are not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R759] — 12ab-U21P-R1's calibration stop accepted; the qualifying rule is
+  a 30 s floor with no length requirement; C3 is V0 and is sent again by this order; the variants
+  run on it; readings
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21P-R1
+  report stopped at calibration (record 7a73494c1dc44c31db4b7a767c514bbafb6370b3). Transcribe at
+  item 0 of the next brief, by transcribe_ruling.py, in the block after R758's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21P-R1 stop report):
+  MEASURED: "C3, the squares 36.533 stop 3058 87.2 After 1024 lines, at "1000""; "C1, the
+    multiplication table 27.980 stop 2400 88.8"; "C2, counting in words 1.168 stop 90 93.0"; "chosen
+    cap 7000 = 74.6 s; with the prompt under num_ctx 8192"; "at 05:12:08.166Z, calibration: none of
+    3 candidates ended by length at the cap 7000 in 40.0 s or more"; "The lock was held from
+    05:11:00.042Z to 05:12:09.244Z. The unload was confirmed at 05:12:09.244Z"; "NRestarts 0 / 0";
+    "/api/ps {"models":[]} / {"models":[]}"; "Commit / parent 7a73494c1dc44c31db4b7a767c514bbafb6370b3
+    / 6e908b43…"; "25 files, +767, all under 12ab_U21P_R1/"; "Script sha256
+    6f3579020ef165e3f590d6c68a4ded889d811d9f33223419b0e1eab642ce392e"; "surgical-cv pytest, pid
+    3481934, started 05:10:40".
+  READ (CC's): "the close comes at about 10 s and the follow-up at about 12 s. A handler that stops
+    near 10 s reads clearly apart from one running to about 36 s"; "At temperature 0 that end is fixed
+    by the request, so another wording is a guess, while C3's length is known"; findings 32–35.
+  INFERRED: none.
+
+R759(a) — The R1 record 7a73494 is accepted as reported: three calibration sends, none qualifying
+  under R758(c)(ii)'s rule; nothing re-sent; the lock released; the model unloaded and confirmed.
+R759(b) — R758(c)(ii) is amended on the measured fact (finding 33: this model ends every long-list
+  prompt on its own at a round place). The qualifying rule is a floor of 30 s wall time, whatever the
+  done_reason; the cap and num_ctx of R758(c)(i) stay as set and are readings (finding 34). C3 — the
+  squares prompt, 36.533 s — qualifies under this rule and is V0.
+R759(c) — C3 is sent again as V0 by this order, once: a deliberate re-send, not a draw (R698(e): the
+  settled response is expected, and its D0 is recorded beside the first send's 36.533 s). No further
+  candidate is sent. V1 and V2 send the same request, with the close at about 10 s and the follow-up
+  at about 12 s as §7b designs, bounded by V0's D0 as measured in this run.
+R759(d) — Readings, no row: finding 32 (the journal-count arguments at the variant calls follow the
+  send count; accepted); finding 35 (the concurrent surgical-cv pytest is a confounder, named in the
+  record beside every rate and duration, not separated).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R759(a) — The R1 record 7a73494 is accepted as reported: three calibration sends, none qualifying under R758(c)(ii)'s rule; nothing re-sent; the lock released; the model unloaded and confirmed. R759(b) — R758(c)(ii) is amended on the measured fact (finding 33: this model ends every long-list prompt on its own at a round place). The qualifying rule is a floor of 30 s wall time, whatever the done_reason; the cap and num_ctx of R758(c)(i) stay as set and are readings (finding 34). C3 — the squares prompt, 36.533 s — qualifies under this rule and is V0. R759(c) — C3 is sent again as V0 by this order, once: a deliberate re-send, not a draw (R698(e): the settled response is expected, and its D0 is recorded beside the first send's 36.533 s). No further candidate is sent. V1 and V2 send the same request, with the close at about 10 s and the follow-up at about 12 s as §7b designs, bounded by V0's D0 as measured in this run. R759(d) — Readings, no row: finding 32 (the journal-count arguments at the variant calls follow the send count; accepted); finding 35 (the concurrent surgical-cv pytest is a confounder, named in the record beside every rate and duration, not separated). | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-U21P-R1 report stopped at calibration (7a73494) |
+
+The decision log in this file ends at R759.
+
+**Block 158.** *Transcribed 2026-10-31 (item 0 of the 12ab-U21B brief), in its own commit with Blocks 156, 157 and 159, in the R597(e) form:* ruling R760, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-U21P-R2 report stopped at the floor (record `2ba00bf6d7a7a55b28f057f6e9fd30d3a3983d02`). The 12ab-U21P-R3 resume that carried the ruling in substance, and the 12ab-U21B brief whose paste carried its text, are not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R760] — 12ab-U21P-R2's floor stop accepted; R759(c)'s premise withdrawn
+  (the architect's, R698(e) misread); one further attempt with a grammar-constrained request; no
+  fifth — a floor stop there sends the design ruling on code order with the question an open limit
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21P-R2
+  report stopped at the floor (record 2ba00bf6d7a7a55b28f057f6e9fd30d3a3983d02). Transcribe at
+  item 0 of the next brief, by transcribe_ruling.py, in the block after R759's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21P-R2 stop report):
+  MEASURED: "Wall (s) 36.533 | 2.355"; "eval_count 3058 | 202"; "The two request bodies are
+    byte-identical (sha256 b13e8ab6…3e9b, cmp clean)"; "Tokens/s 87.2 | 94.3"; "Concurrent
+    surgical-cv pytest yes | no"; "at 05:18:12.361Z, calibration: V0 ran under the floor of 30.0 s";
+    "05:18:13.435 lock_released"; "NRestarts 0 / 0"; "/api/ps {"models":[]} / {"models":[]}";
+    "Commit / parent 2ba00bf6d7a7a55b28f057f6e9fd30d3a3983d02 / 7a73494c…"; "18 files, +635, all
+    under 12ab_U21P_R2/"; "Ledger b29faa6dca67fc60a87d034ffa3d2d51917341a7, parent d5debe7f…";
+    "Sha256: 4a4c31399a87c52e5e84a920accecabefcb43a47e293bb40dccd1ce79ae72eec".
+  READ (the plan, R698(e), the architect's own read this session): "at temperature 0 with no seed
+    the response is fixed by the request and the server's preceding calls; the first send after a
+    load differs from the settled response and the settled response does not move".
+  READ (CC's): "CLAUDE.md's judge section says Ollama's format enforced arm_verdicts cardinality
+    ("exactly 3") at generation time"; findings 36–39.
+  INFERRED (the architect's, verified by the attempt itself, the floor its check): that the server's
+    grammar built from a JSON schema with minItems and maxItems at a few thousand holds generation
+    open until the array is complete, so the request ends at num_predict with done_reason "length".
+    If false, the floor stop fires and (c) applies.
+
+R760(a) — The R2 record 2ba00bf is accepted as reported: one send of C3, 2.355 s against R1's 36.533 s
+  on a byte-identical request; nothing else sent; the lock released; the model unloaded.
+R760(b) — R759(c)'s "the settled response is expected" was the architect's: R698(e) was in the
+  architect's own read of the plan this session and was not checked against CC's paraphrase. Finding
+  37 is accepted as measured: on this model a request's length cannot be held by a prompt's wording,
+  and no further prompt-only attempt is made.
+R760(c) — One further attempt, the fourth and last, under the resume: V0 is a request whose length
+  the grammar fixes — format as a JSON schema requiring an array of integers with minItems and
+  maxItems equal, sized by CC from the measured rate so the cap of num_predict ends it at 60–90 s
+  (R758(c)(i)'s cap and num_ctx stand); temperature 0; one send as V0; the floor of 30 s (R759(b))
+  the check; the same request for V1 and V2, with the close at about 10 s and the follow-up at about
+  12 s as §7b designs. A floor stop on this attempt is the end of the measurement: no fifth attempt;
+  the design ruling on §7's options proceeds on code order, with "whether a disconnect cancels
+  generation, and whether an abandoned request holds the slot" stated as an open limit on O1, O2 and
+  O3, and the measurement carried to Run 7's confounder statement as unmade.
+R760(d) — Readings, no row: finding 38 (the rate beside the surgical-cv pytest, suggestive, not
+  separated); finding 39's cost estimate (12 s or under on the lock beyond each attempt's sends).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R760(a) — The R2 record 2ba00bf is accepted as reported: one send of C3, 2.355 s against R1's 36.533 s on a byte-identical request; nothing else sent; the lock released; the model unloaded. R760(b) — R759(c)'s "the settled response is expected" was the architect's: R698(e) was in the architect's own read of the plan this session and was not checked against CC's paraphrase. Finding 37 is accepted as measured: on this model a request's length cannot be held by a prompt's wording, and no further prompt-only attempt is made. R760(c) — One further attempt, the fourth and last, under the resume: V0 is a request whose length the grammar fixes — format as a JSON schema requiring an array of integers with minItems and maxItems equal, sized by CC from the measured rate so the cap of num_predict ends it at 60–90 s (R758(c)(i)'s cap and num_ctx stand); temperature 0; one send as V0; the floor of 30 s (R759(b)) the check; the same request for V1 and V2, with the close at about 10 s and the follow-up at about 12 s as §7b designs. A floor stop on this attempt is the end of the measurement: no fifth attempt; the design ruling on §7's options proceeds on code order, with "whether a disconnect cancels generation, and whether an abandoned request holds the slot" stated as an open limit on O1, O2 and O3, and the measurement carried to Run 7's confounder statement as unmade. R760(d) — Readings, no row: finding 38 (the rate beside the surgical-cv pytest, suggestive, not separated); finding 39's cost estimate (12 s or under on the lock beyond each attempt's sends). | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-U21P-R2 report stopped at the floor (2ba00bf) |
+
+The decision log in this file ends at R760.
+
+**Block 159.** *Transcribed 2026-10-31 (item 0 of the 12ab-U21B brief), in its own commit with Blocks 156, 157 and 158, in the R597(e) form:* ruling R761, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ab, on the 12ab-U21P-R3 final report (record `f373b107f7a353c9a658c1cd405b45559580a41d`) and the U21 Phase A read-out `12ab_U21A.md` (`8b7573c05acba40743355460e69e7bfd9a212961`). The 12ab-U21B brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ab-R761] — 12ab-U21P-R3 accepted; the measurement closed with its one open
+  limit; U21's design: no request is sent while the previous one is alive; a late response is a
+  completion; the restart only after a request has ended; the four endings in outcome_detail; N23,
+  N24, F7 and INT-ab12-1 ride; the build opens
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21P-R3
+  final report (record f373b107f7a353c9a658c1cd405b45559580a41d) and the U21 Phase A read-out
+  12ab_U21A.md (8b7573c05acba40743355460e69e7bfd9a212961). Transcribe at item 0 of the 12ab-U21B
+  brief, by transcribe_ruling.py, in the block after R760's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the R3 report and 12ab_U21A.md):
+  MEASURED (R3): "D0 157.249 s"; "done_reason length"; "eval_count 7000, the cap"; "httpx.Client.close()
+    from the main thread 10.001 s"; "Follow-up answered about 158.5 s; wall 146.461 s"; "Handler's end
+    in the journal about 158 s, status 200"; "Worker no return logged, still blocked at about 277 s";
+    "at 05:31:26.378Z, V1: the worker is still blocked at D0 + 120 s"; "05:29:27 | 200 | 2m38s | POST
+    "/api/chat" V1"; "05:29:27 | 200 | 2m26s | POST "/api/chat" V1's follow-up"; "NRestarts 0 / 0";
+    "/api/ps {"models":[]} / {"models":[]}"; "Commit / parent f373b107f7a353c9a658c1cd405b45559580a41d
+    / 2ba00bf6…"; "23 files, +728, all under 12ab_U21P_R3/"; "Ledger
+    85ba9bea839521f37622c721daa848deaf78f09b, parent b29faa6d…"; "eval_duration 88.307 s (79.3
+    tokens/s)" against "D0 157.249 s" (finding 43).
+  READ (12ab_U21A.md, as the U21A report quotes it): "for attempt in range(1 + max_retries):" (:710);
+    "executor = ThreadPoolExecutor(max_workers=1)" (:712); "response = future.result(timeout=
+    effective_timeout)" (:720); "executor.shutdown(wait=False, cancel_futures=True)" (:724, :752, :766,
+    :869); "raise TimeoutError(f"Ollama call timed out after {1 + max_retries} attempts + restart ""
+    (:744–748); "_HTTP_READ_TIMEOUT = 900.0" (:52); "8b 300, 27b 600, 32b 900, 70b 1200" (:108–113);
+    "["sudo", "systemctl", "restart", "ollama"]" (:840–845); the post-restart send (:857–863); "the
+    comment reads "Abandon the hung thread — do not wait for it""; "What the server is told: nothing";
+    "Without a migration: outcome_detail is unconstrained TEXT and can carry the four under error.
+    Nothing in engine/, scripts/ or analysis/ reads outcome or its detail"; "N24 understates by one
+    site: :867 also returns without shutting its executor down"; F3, F5, F10, F12 as stated; the §6
+    case table; the §7 option table.
+  READ (CC's, R3): findings 40–45.
+  INFERRED: none. The one unmeasured question is stated as a limit in (b).
+
+R761(a) — 12ab-U21P-R3 is accepted as reported: the record f373b10, ledger 85ba9be. The measurement is
+  closed under R760(c): no fifth attempt. Measured, for the record and for Run 7's confounder
+  statement: closing the httpx client from another thread neither unblocks the worker nor ends the
+  server's handler; a request from a fresh client waits behind the running one (146.461 s); the
+  worker stays blocked past the handler's end (finding 41, cause unread). V2 was not sent; (b) is
+  answered by V1 in substance — the abandoned request held the slot — and formally unmeasured.
+R761(b) — The open limit, carried to Run 7's confounder statement and to any later probe: whether a
+  disconnect the server actually sees cancels generation (finding 40). Finding 43 (about 69 s of
+  wall time outside eval_duration under a 2,000-item grammar) is a reading, carried with it, not a
+  row until measured on an engine-sized schema (finding 44).
+R761(c) — U21's design, Option O1 as narrowed by the measurement, built in one engine commit:
+  (i) On a watchdog timeout no new request is sent while the previous request's worker is alive: the
+      engine waits on the same future up to the HTTP read timeout, with the watchdog's firing logged
+      and recorded, and nothing submitted meanwhile. Per model the bound on one request is the read
+      timeout; the watchdog limit is the point at which lateness is recorded, not a budget that sends
+      another request.
+  (ii) A response that arrives after the watchdog fired is a completion: used as the call's response,
+      recorded 'completed' with its lateness in outcome_detail. The lateness is a reading.
+  (iii) A request that ends by the read timeout, or by a server error, has ended; only then may the
+      recovery restart run, once, as today, and only then the final attempt — preceded by the per-call
+      digest re-read and the environment re-check the post-restart send lacks (F7, R734(e)), through
+      the same functions the first send uses. max_retries governs attempts whose previous request
+      ended in an error other than a timeout, as today.
+  (iv) The four endings of Wave 1 row 93 (restart refused by the opt-out; refused by the foreign lock;
+      the restart command failed; the post-restart call failed) and a restart that recovered (F10)
+      are each recorded in run_calls.outcome_detail under the existing outcome tokens, as a closed set
+      of detail strings declared in one place in run_manifest.py; no migration; R745(d)'s distinct
+      outcome stays 023's.
+  (v) N23 closes by (i): one route, the read timeout, no race. N24 closes: every executor is shut down
+      in a finally, the :867 site included. INT-ab12-1 closes by (iii): the preflight and the quality
+      check reach the restart only after their request has ended. F3 is recorded as closed by (i)'s
+      bound (the 70b call's bound is the read timeout, which (i) makes the rule for every model). F12
+      is C47's family, a dated note, not U21's.
+  (vi) The acceptance tests, each failing on the parent: the unit's named test (a fake client that
+      blocks and counts concurrent entries; after a watchdog timeout no second call is in flight); a
+      late response is used and recorded completed with lateness; a read-timed-out request reaches
+      the restart path once and the final attempt is preceded by the re-checks; each of the five
+      detail strings is written for its ending; no executor outlives its call. Nothing sent changes:
+      both pins and the audit prompt_hash byte-identical.
+R761(d) — The build brief is the engine-commit form of the standing rules (R725(b), R722(a)–R725(c)):
+  a census pre-step over the read-out's §4 classes, the test-side Touched list found by it, B5 rewrites
+  with assertions kept, a red classified (c) or stop. Item 0 transcribes R758–R761 and regenerates
+  nothing unless a rule enters (R754(c)(iii): none does).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R761(a) — 12ab-U21P-R3 is accepted as reported: the record f373b10, ledger 85ba9be. The measurement is closed under R760(c): no fifth attempt. Measured, for the record and for Run 7's confounder statement: closing the httpx client from another thread neither unblocks the worker nor ends the server's handler; a request from a fresh client waits behind the running one (146.461 s); the worker stays blocked past the handler's end (finding 41, cause unread). V2 was not sent; (b) is answered by V1 in substance — the abandoned request held the slot — and formally unmeasured. R761(b) — The open limit, carried to Run 7's confounder statement and to any later probe: whether a disconnect the server actually sees cancels generation (finding 40). Finding 43 (about 69 s of wall time outside eval_duration under a 2,000-item grammar) is a reading, carried with it, not a row until measured on an engine-sized schema (finding 44). R761(c) — U21's design, Option O1 as narrowed by the measurement, built in one engine commit: (i) On a watchdog timeout no new request is sent while the previous request's worker is alive: the engine waits on the same future up to the HTTP read timeout, with the watchdog's firing logged and recorded, and nothing submitted meanwhile. Per model the bound on one request is the read timeout; the watchdog limit is the point at which lateness is recorded, not a budget that sends another request. (ii) A response that arrives after the watchdog fired is a completion: used as the call's response, recorded 'completed' with its lateness in outcome_detail. The lateness is a reading. (iii) A request that ends by the read timeout, or by a server error, has ended; only then may the recovery restart run, once, as today, and only then the final attempt — preceded by the per-call digest re-read and the environment re-check the post-restart send lacks (F7, R734(e)), through the same functions the first send uses. max_retries governs attempts whose previous request ended in an error other than a timeout, as today. (iv) The four endings of Wave 1 row 93 (restart refused by the opt-out; refused by the foreign lock; the restart command failed; the post-restart call failed) and a restart that recovered (F10) are each recorded in run_calls.outcome_detail under the existing outcome tokens, as a closed set of detail strings declared in one place in run_manifest.py; no migration; R745(d)'s distinct outcome stays 023's. (v) N23 closes by (i): one route, the read timeout, no race. N24 closes: every executor is shut down in a finally, the :867 site included. INT-ab12-1 closes by (iii): the preflight and the quality check reach the restart only after their request has ended. F3 is recorded as closed by (i)'s bound (the 70b call's bound is the read timeout, which (i) makes the rule for every model). F12 is C47's family, a dated note, not U21's. (vi) The acceptance tests, each failing on the parent: the unit's named test (a fake client that blocks and counts concurrent entries; after a watchdog timeout no second call is in flight); a late response is used and recorded completed with lateness; a read-timed-out request reaches the restart path once and the final attempt is preceded by the re-checks; each of the five detail strings is written for its ending; no executor outlives its call. Nothing sent changes: both pins and the audit prompt_hash byte-identical. R761(d) — The build brief is the engine-commit form of the standing rules (R725(b), R722(a)–R725(c)): a census pre-step over the read-out's §4 classes, the test-side Touched list found by it, B5 rewrites with assertions kept, a red classified (c) or stop. Item 0 transcribes R758–R761 and regenerates nothing unless a rule enters (R754(c)(iii): none does). | PI, 2026-10-31, during session 12ab, on architect recommendation, on the 12ab-U21P-R3 final report and the U21 Phase A read-out (f373b10; 8b7573c) |
+
+The decision log in this file ends at R761.

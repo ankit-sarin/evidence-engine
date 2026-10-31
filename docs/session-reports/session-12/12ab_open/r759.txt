@@ -1,0 +1,35 @@
+RULING [evidence-engine 12ab-R759] — 12ab-U21P-R1's calibration stop accepted; the qualifying rule is
+  a 30 s floor with no length requirement; C3 is V0 and is sent again by this order; the variants
+  run on it; readings
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21P-R1
+  report stopped at calibration (record 7a73494c1dc44c31db4b7a767c514bbafb6370b3). Transcribe at
+  item 0 of the next brief, by transcribe_ruling.py, in the block after R758's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21P-R1 stop report):
+  MEASURED: "C3, the squares 36.533 stop 3058 87.2 After 1024 lines, at "1000""; "C1, the
+    multiplication table 27.980 stop 2400 88.8"; "C2, counting in words 1.168 stop 90 93.0"; "chosen
+    cap 7000 = 74.6 s; with the prompt under num_ctx 8192"; "at 05:12:08.166Z, calibration: none of
+    3 candidates ended by length at the cap 7000 in 40.0 s or more"; "The lock was held from
+    05:11:00.042Z to 05:12:09.244Z. The unload was confirmed at 05:12:09.244Z"; "NRestarts 0 / 0";
+    "/api/ps {"models":[]} / {"models":[]}"; "Commit / parent 7a73494c1dc44c31db4b7a767c514bbafb6370b3
+    / 6e908b43…"; "25 files, +767, all under 12ab_U21P_R1/"; "Script sha256
+    6f3579020ef165e3f590d6c68a4ded889d811d9f33223419b0e1eab642ce392e"; "surgical-cv pytest, pid
+    3481934, started 05:10:40".
+  READ (CC's): "the close comes at about 10 s and the follow-up at about 12 s. A handler that stops
+    near 10 s reads clearly apart from one running to about 36 s"; "At temperature 0 that end is fixed
+    by the request, so another wording is a guess, while C3's length is known"; findings 32–35.
+  INFERRED: none.
+
+R759(a) — The R1 record 7a73494 is accepted as reported: three calibration sends, none qualifying
+  under R758(c)(ii)'s rule; nothing re-sent; the lock released; the model unloaded and confirmed.
+R759(b) — R758(c)(ii) is amended on the measured fact (finding 33: this model ends every long-list
+  prompt on its own at a round place). The qualifying rule is a floor of 30 s wall time, whatever the
+  done_reason; the cap and num_ctx of R758(c)(i) stay as set and are readings (finding 34). C3 — the
+  squares prompt, 36.533 s — qualifies under this rule and is V0.
+R759(c) — C3 is sent again as V0 by this order, once: a deliberate re-send, not a draw (R698(e): the
+  settled response is expected, and its D0 is recorded beside the first send's 36.533 s). No further
+  candidate is sent. V1 and V2 send the same request, with the close at about 10 s and the follow-up
+  at about 12 s as §7b designs, bounded by V0's D0 as measured in this run.
+R759(d) — Readings, no row: finding 32 (the journal-count arguments at the variant calls follow the
+  send count; accepted); finding 35 (the concurrent surgical-cv pytest is a confounder, named in the
+  record beside every rate and duration, not separated).

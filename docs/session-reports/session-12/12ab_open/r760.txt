@@ -1,0 +1,42 @@
+RULING [evidence-engine 12ab-R760] — 12ab-U21P-R2's floor stop accepted; R759(c)'s premise withdrawn
+  (the architect's, R698(e) misread); one further attempt with a grammar-constrained request; no
+  fifth — a floor stop there sends the design ruling on code order with the question an open limit
+STATUS: PI ruling, 2026-10-31 UTC, session 12ab, on architect recommendation, on the 12ab-U21P-R2
+  report stopped at the floor (record 2ba00bf6d7a7a55b28f057f6e9fd30d3a3983d02). Transcribe at
+  item 0 of the next brief, by transcribe_ruling.py, in the block after R759's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ab-U21P-R2 stop report):
+  MEASURED: "Wall (s) 36.533 | 2.355"; "eval_count 3058 | 202"; "The two request bodies are
+    byte-identical (sha256 b13e8ab6…3e9b, cmp clean)"; "Tokens/s 87.2 | 94.3"; "Concurrent
+    surgical-cv pytest yes | no"; "at 05:18:12.361Z, calibration: V0 ran under the floor of 30.0 s";
+    "05:18:13.435 lock_released"; "NRestarts 0 / 0"; "/api/ps {"models":[]} / {"models":[]}";
+    "Commit / parent 2ba00bf6d7a7a55b28f057f6e9fd30d3a3983d02 / 7a73494c…"; "18 files, +635, all
+    under 12ab_U21P_R2/"; "Ledger b29faa6dca67fc60a87d034ffa3d2d51917341a7, parent d5debe7f…";
+    "Sha256: 4a4c31399a87c52e5e84a920accecabefcb43a47e293bb40dccd1ce79ae72eec".
+  READ (the plan, R698(e), the architect's own read this session): "at temperature 0 with no seed
+    the response is fixed by the request and the server's preceding calls; the first send after a
+    load differs from the settled response and the settled response does not move".
+  READ (CC's): "CLAUDE.md's judge section says Ollama's format enforced arm_verdicts cardinality
+    ("exactly 3") at generation time"; findings 36–39.
+  INFERRED (the architect's, verified by the attempt itself, the floor its check): that the server's
+    grammar built from a JSON schema with minItems and maxItems at a few thousand holds generation
+    open until the array is complete, so the request ends at num_predict with done_reason "length".
+    If false, the floor stop fires and (c) applies.
+
+R760(a) — The R2 record 2ba00bf is accepted as reported: one send of C3, 2.355 s against R1's 36.533 s
+  on a byte-identical request; nothing else sent; the lock released; the model unloaded.
+R760(b) — R759(c)'s "the settled response is expected" was the architect's: R698(e) was in the
+  architect's own read of the plan this session and was not checked against CC's paraphrase. Finding
+  37 is accepted as measured: on this model a request's length cannot be held by a prompt's wording,
+  and no further prompt-only attempt is made.
+R760(c) — One further attempt, the fourth and last, under the resume: V0 is a request whose length
+  the grammar fixes — format as a JSON schema requiring an array of integers with minItems and
+  maxItems equal, sized by CC from the measured rate so the cap of num_predict ends it at 60–90 s
+  (R758(c)(i)'s cap and num_ctx stand); temperature 0; one send as V0; the floor of 30 s (R759(b))
+  the check; the same request for V1 and V2, with the close at about 10 s and the follow-up at about
+  12 s as §7b designs. A floor stop on this attempt is the end of the measurement: no fifth attempt;
+  the design ruling on §7's options proceeds on code order, with "whether a disconnect cancels
+  generation, and whether an abandoned request holds the slot" stated as an open limit on O1, O2 and
+  O3, and the measurement carried to Run 7's confounder statement as unmade.
+R760(d) — Readings, no row: finding 38 (the rate beside the surgical-cv pytest, suggestive, not
+  separated); finding 39's cost estimate (12 s or under on the lock beyond each attempt's sends).

@@ -500,7 +500,7 @@ Housekeeping lines of the 12f table (section E4) that have no inventory row of t
 | INT-g12-3 | Every one of the 177 `asserted` events carries `state_at_write` "asserted without locatable evidence" in its payload, including claims located a moment later. Not read further | 1 (conservative, until the 12h read RD-3 shows no reader of `state_at_write`) | P1 (pending RD-3) | R563 (RD-3) | `12g_RA-B.md` *Note 2026-10-09 (12h rulings, R566):* RD-3 read (`12h_RD-3.md`): no engine, export, methods or judge reader of `state_at_write`. Class 3, P7, option (a): two docstring sentences (`write_field_event` and `effective.py`'s module docstring); no payload change. |
 | INT-g12-4 | A screen-start manifest declares ten stage rows and pins the extraction arm for a run that makes screening calls only. | — (pending the 12h read RD-5; the refusal is loud) | — (pending RD-5) | R563 (RD-5); R564 | `12g_RB-A.md` *Note 2026-10-09 (12h rulings, R569):* RD-5 read (`12h_RD-5.md`): by design but undocumented. Class 2, P1. (a) R237's sentence in `CLAUDE.md` corrected in the transcription commit. (b) The fix: the extraction arm is pinned by the first run that reaches the extract stage, not by the first manifest that declares it (amends R59 in part; R10 and R21 stand); Phase A first. *Note 2026-10-11 (12l-R612, R612(h); D7):* "D7: Design A. U05 includes the full-tuple comparison at the extract stage. The CLAUDE.md R237 sentence is replaced in U05's commit by text quoted in U05's handoff for PI approval." Design A, as `12l_P1A.md` §2 D7 states it: `open_run` registers the arm unpinned and compares against any existing pin; the pin is written at the extract stage. Unit U05, pin-affecting by arm-binding. |
 | INT-g12-5 | **The two abstract passes send byte-identical requests.** All 42 pass-1 / pass-2 pairs have the same `run_calls.request_hash`, at temperature 0 with no seed. The decisions agreed on 42 of 42; the response text was identical on 16 of 42 pairs. | 1 (conservative, until the 12h read RD-6) | — (pending RD-6) | R565 (RD-6) | `12g_RB-B.md` *Note 2026-10-09 (12h rulings, R570):* RD-6 read (`12h_RD-6.md`): long-standing design, from git; session 7 collapsed nothing. Class 3, P7, the mechanism recorded as a design fact. The methods-section "dual-pass" wording folds into B-F07 / E-METHODS / C36 (P3). Keeping, changing or dropping pass 2 is decided at S4. *Note 2026-10-19 (12r-CLOSE, R670(f)):* 12r-U13-PROBE resent one fixed Pass-1 request three times per paper at temperature 0 with no seed: calls 2 and 3 returned byte-identical text and call 1 differed, in both papers (`12r_U13_PROBE.md` §2, F2); the probe's first call followed a model swap, a server state unlike the run's, recorded as a limit in its §4. *Note 2026-10-23 (12v-U38A item 0, R698(e)):* at temperature 0 with no seed the response is fixed by the request and the server's preceding calls; the first send after a load differs from the settled response and the settled response does not move. `12v_U37R2.md` F5: "At temperature 0 the server returns the same response for the same request and call history: each request's first send reproduced Part A byte for byte (10 of 10), and sends 2–5 settled on one second response, so k = 5 yields at most two distinct outcomes per case and arm." This is the complete statement of what 12r's probe saw in part (R670(f)'s note). |
-| INT-g12-6 | `eval_count` is recorded nowhere, so output size in tokens and output headroom cannot be measured on any run, Run 7 included | 3 | P1 | R552 | `12g_RA-A.md` *Note 2026-10-19 (12r-CLOSE, R668(d), R670(f)):* the per-call `done_reason` in run.log (the `input_fit` lines) distinguishes a normal end from a cut-short one (`12r_U13_PA.md` §4); the client's response carries `eval_count` and `prompt_eval_count`, and 12r-U13-PROBE recorded both (`eval_count` 1,414–1,532, `12r_U13_PROBE.md` F4); the engine records neither, and the output-headroom question stands. The fix is a telemetry field when this row's unit lands. |
+| INT-g12-6 | `eval_count` is recorded nowhere, so output size in tokens and output headroom cannot be measured on any run, Run 7 included | 3 | P1 | R552 | `12g_RA-A.md` *Note 2026-10-19 (12r-CLOSE, R668(d), R670(f)):* the per-call `done_reason` in run.log (the `input_fit` lines) distinguishes a normal end from a cut-short one (`12r_U13_PA.md` §4); the client's response carries `eval_count` and `prompt_eval_count`, and 12r-U13-PROBE recorded both (`eval_count` 1,414–1,532, `12r_U13_PROBE.md` F4); the engine records neither, and the output-headroom question stands. The fix is a telemetry field when this row's unit lands. *Note 2026-10-31 (12ac-U22B item 0, R768(c)):* option B, not taken — R768(c), quoted: "B (a run_calls column) — 023's, not asked for by this ruling; whether 023 carries one is P6's Phase A's question, a dated note on INT-g12-6." *Note 2026-10-31 (12ac-U22B item 0, R768(f)):* R768(f), quoted: "F3 (no num_predict on the extract stages; the output limit on Run 7's calls is the server's own — whether the spec declares one for extraction is a pin-affecting question for a later ruling before the freeze, a dated note on INT-g12-6 with R768(c)'s)". |
 | INT-g12-7 | An outer `flock(1)` on the lock file deadlocks `run_extraction`. A constraint on how A-1's fix (R528) and any lock-holding cron job are built | 3 | P1, with A-1 | R552 | `12g_RA-A.md` *Note 2026-10-15 (12p-CLOSE, R650(g)):* F6 (`12p_U13A.md` §8): `main()` holds the experiment lock for the whole run (`run_pipeline.py:614–622`); the in-process launcher R629(b) names is superseded for `run_pipeline`, and `EVIDENCE_ENGINE_LIVE_TIERS` governs tests only (`conftest.py:305`) — the rehearsal needs no tier flag. No row. |
 | INT-g12-8 | Abstract screening calls pass no `paper_id`, so their `run_calls` rows carry NULL — the abstract-stage form of C48 (FT) — confirmed on the run: all 85 `run_calls` rows carry a NULL `paper_id`, so a screening call is tied to its record only by order and time | 3 | P7, with C48 | R564, R565 | `12g_RB-A.md` |
 | INT-g12-9 | The script that wrote the stored search files is not in the repository, and the query text it sent is recorded nowhere beside them | 3 | P3 | R548 | `12g_measurements.md` |
@@ -14634,3 +14634,102 @@ R767(e) — U22's Phase A opens under the 12ac-U22A brief below, in the form R72
 | 2026-10-31 | R767(a) — 12ac-OPEN is accepted as reported: item 0 bc1da26 (Block 163 by transcribe_ruling.py; r765.txt and lane_line_12ab.txt in 12ab_close/; "A R763(c)" on the list, its gloss, STANDING_RULES.md regenerated at 90 clauses, the diff classified 3 / 1 / 17 / 0), the ledger fc03e8a; the open check PASS; the recount and R510 as expected; the gate 3,490 / 1 / 17 on 3,508 / 3,491, 0/0, 926.70 s inside 829–1012 s beside the idle uvicorn server only; the gate evidence and the five 10-31 job files landed in their own commit d54c4fc with ledger 8669f25. The 12ac open stands verified. The decision log in the file ends at R765. R767(b) — The series on this host state gains 926.70 s: the twenty-seven of R765(b) plus 926.70. The band for 12ac stays 829–1012 s. R767(c) — Readings, no row: finding 1 (the check's "exact leading run" is stricter than R766(b)'s superset-in-order and is accepted as the check's form from here); finding 2 (the two added conditions, the byte-prefix and the transcribed-date check, accepted as the check's); finding 3 (the journal line's wording; the committed journal file stands beside it); finding 4 (the expected file checks five digests, the 12ab open file's set, more than the block's three — the five are the expected set from here, and the next closeout's block names them); finding 5 (the durations phase counts differ, 2558 against 2593, no phase slower by more than 10 s; CC's inference about -v is recorded as unmeasured); finding 7 (a progress message, not a record); finding 8 (the primer's three stale points, the id list's header comment and the primer lane line stay as ordered for the closeout and the next tools change); the temp root 2.81 GB after the gate, nothing emptied; the R751(e) docs(session-reports) scope. R767(d) — Finding 6: the 2026-11-01 07:00 health job and 09:00 nightly are read by the first brief after 10:35 UTC on 2026-11-01, against 12ab_close/expected_nightly_20261031.md on 11-01's log names and against 22 NV_ERR_NO_MEMORY lines this boot (R749(b), R766(d)); until then every brief states the step empty. R767(e) — U22's Phase A opens under the 12ac-U22A brief below, in the form R728(f) and R731(f) state and 12ab_U21A.md carries: 12l_P1A.md §3's next unit after U21 in its order, read-only; the unit entry quoted first (a closed or absorbed unit is caught there and the next open unit reported instead); the row it names quoted with every note and its acceptance test; the census pre-step's five classes (R722(a)–R725(b)); the mechanism at HEAD, quoted; the options with what each moves. No engine change; no model load; an Ollama request other than version, tags or ps is not made. The fix is not designed in the Phase A. | PI, 2026-10-31, during session 12ac, on architect recommendation, on the 12ac-OPEN final report as resumed under R766 (item 0 bc1da26; evidence d54c4fc) |
 
 The decision log in this file ends at R767.
+
+**Block 166.** *Transcribed 2026-10-31 (item 0 of the 12ac-U22B brief), in its own commit with the two INT-g12-6 notes it orders, in the R597(e) form:* ruling R768, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ac, on the 12ac-U22A final report (item 0 `718ef7f2cedb97b29d841dcd031700c17e918e8c`; read-out `23fad874de66d694251d3ee1dfe38be3b0c69a79`). The 12ac-U22B brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R768] — 12ac-U22A accepted; U22's design: option A — the input_fit
+  line and the extraction telemetry row record eval_count, the row as a pass1_/pass2_ pair under
+  schema -4; no num_predict key; B and C not taken; readings; U22's Phase B opens
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22A final
+  report (item 0 718ef7f2cedb97b29d841dcd031700c17e918e8c; read-out
+  23fad874de66d694251d3ee1dfe38be3b0c69a79, docs/session-reports/session-12/12ac_U22A/12ac_U22A.md).
+  Transcribe at item 0 of the 12ac-U22B brief below, by transcribe_ruling.py, in the block after
+  R767's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from 12ac_U22A.md at 23fad87 and the 12ac-U22A report):
+  MEASURED (FAKE, fake_seam_probe.txt): "input_fit line keys: ['ceiling', 'chars', 'count',
+    'done_reason', 'estimate_low', 'model', 'ratio'] | carries eval_count: False"; "row carries
+    eval_count: False | output_tokens: None | pass1_prompt_eval_count: 400"; "record_call
+    (eval_count=123) -> TypeError: record_call() got an unexpected keyword argument 'eval_count'";
+    "subprocess.run reached: False".
+  READ (CODE ORDER, the read-out): "_check_input_was_read returns the response object itself
+    (:455, :463)"; the input_fit dict at ":443–448" with keys "model, ceiling, chars,
+    estimate_low, count, ratio, done_reason"; "SCHEMA_VERSION = "extraction-telemetry-3" (:31)";
+    the row's keys "(:83–117)" with "pass1_done_reason, pass1_prompt_eval_count,
+    pass2_prompt_eval_count"; "output_tokens exists (:59, :100): the cloud path fills it
+    (cloud/base.py:447)"; "R126 bumped -2 → -3 for the prompt_eval_count keys (the test's own
+    comment, :187–188)"; "the extract stages … set temperature and think and call _unsent";
+    "ExtractionModels declares no num_predict field"; "The table at migration 022 … No column
+    carries an output count"; "022's rebuild guard refuses a table whose columns differ from the
+    eight it expects (:506–510), so a column is a numbered migration's — 023's"; "run_pass1
+    (pipeline.py:279–309) builds the per-attempt call dict"; "p1_tel = pass1_tels[accepted_attempt
+    - 1], :491"; "tests/test_ollama_input_fit.py:211–219 … assert record == {"model": "m",
+    "ceiling": 131_072, "chars": 3000, "estimate_low": 570, "count": 630, "ratio": 0.21,
+    "done_reason": "stop"}"; "tests/test_thinking_channel.py:193 assert row["schema"] ==
+    SCHEMA_VERSION == "extraction-telemetry-3""; "tests/test_thinking_channel.py:228–236,
+    test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable"; "the exception's fields
+    are model, count, ceiling, chars (ollama_client.py:217–239)"; "pdf_parser.py:286–294 out of
+    scope for all three".
+  READ (CC's): findings F1–F12 of the read-out; findings 1–8 of the report.
+  INFERRED: none.
+
+R768(a) — 12ac-U22A is accepted as reported: item 0 718ef7f (Blocks 164–165 by
+  transcribe_ruling.py; r766.txt and r767.txt in 12ac_open/; "A R766(b)" on the list, its gloss,
+  STANDING_RULES.md regenerated at 91 clauses, the diff classified 3 / 1 / 8 / 0), ledger d85bad5;
+  the read-out 23fad87 with its census and probe, ledger 732c010. The decision log in the file ends
+  at R767. The 2026-11-01 jobs stay R767(d)'s.
+R768(b) — U22's design is option A, in this shape. (i) The input_fit line's dict gains one key,
+  "eval_count", read as every neighbouring field is read (getattr(response, "eval_count", None),
+  a non-int or bool recorded None), beside "count" and "done_reason"; no "num_predict" key — the
+  extract stages send none (F3), and "unset" would record a request-side absence the stage row
+  already records. (ii) The extraction telemetry row gains a pass1_eval_count / pass2_eval_count
+  pair beside pass1_prompt_eval_count / pass2_prompt_eval_count, filled from the same two dicts by
+  the same four record_call sites; output_tokens is not written by the local arm (it stays the
+  cloud path's usage field; F2's note). (iii) The elicited Pass-1 call dict gains pass1_eval_count;
+  the accepted attempt's count goes to the top-level key and each attempt's under
+  extra.attempts[] as prompt_eval_count does (:497–530). (iv) The input-fit failure row carries
+  None for both (the exception has no count). (v) SCHEMA_VERSION moves to
+  "extraction-telemetry-4" (R126's precedent); the additive-default contract holds for the two new
+  keys. (vi) The vision path is unchanged.
+R768(c) — Not taken: B (a run_calls column) — 023's, not asked for by this ruling; whether 023
+  carries one is P6's Phase A's question, a dated note on INT-g12-6. C (a summary reader) — a
+  reading, not a record; the row's words are "recorded nowhere".
+R768(d) — Acceptance, two tests, each failing on the parent and passing in the gate: (i)
+  test_the_input_fit_line_records_eval_count in tests/test_ollama_input_fit.py, in that file's
+  form: a fake response carrying eval_count 123 produces an input_fit line whose dict carries
+  "eval_count": 123; a response without the attribute produces "eval_count": None and no raise.
+  (ii) a row test in tests/test_thinking_channel.py's form (its name CC's, in the file's naming),
+  through extract_pass1_reasoning / extract_pass2_structured and record_call as the probe ran
+  them, or through the driver: a row carrying pass1_eval_count and pass2_eval_count equal to the
+  two fakes' counts, and schema "extraction-telemetry-4"; the null case None. The census's two
+  pins are rewritten under B5 in the same commit with their assertions kept: the exact dict at
+  test_ollama_input_fit.py:219 gains "eval_count": None (its stub lacks the field), and the schema
+  string at test_thinking_channel.py:193 moves to -4; the additive-default test gains the two
+  keys. Any other red is classified (c) or (r) under R722(a)–R725(b).
+R768(e) — Pin not affecting (CODE ORDER, pin_tuple); both pins and the audit prompt_hash are
+  asserted byte-identical in the commit's gate. No migration. The Touched list is the engine files
+  the read-out's 3g names for A (ollama_client.py, extractor.py, pipeline.py,
+  extraction_telemetry.py; extraction_events.py only if the failure row's site must name the keys)
+  plus docs/inventory/ (R725(c)); CLAUDE.md and docs/architecture lines that name the schema string
+  or the row's keys are quoted at Phase B and edited only by text the PI approves at the stop.
+R768(f) — Readings, no row: F3 (no num_predict on the extract stages; the output limit on Run 7's
+  calls is the server's own — whether the spec declares one for extraction is a pin-affecting
+  question for a later ruling before the freeze, a dated note on INT-g12-6 with R768(c)'s); F7
+  (vision headroom definable today; out of scope); F8 and report finding 4 (line numbers drift;
+  text equal); F9 (the --background tee is "run.log"); F10; F12 (a late completion's count is the
+  completing response's; its provenance is in run_calls.outcome_detail, not on the line — no second
+  key); report finding 1 (the "-" form for a count the brief does not predict, accepted as the
+  check's); finding 3 (R3's grep short by two sites, the Phase A's grep governed).
+R768(g) — U22's Phase B opens under the 12ac-U22B brief below in 12ab-U21B's two-phase form: the
+  reads first (every site 3g names, quoted at HEAD; the census confirmed; the test plan; any
+  CLAUDE.md or docs/architecture line to edit, quoted), then STOP for the ruling on them, then the
+  build in one engine commit with its gate. INT-g12-6 closes on R768(d)(i) passing (R514), counted
+  until P1 closes (R607(d)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R768(a) — 12ac-U22A is accepted as reported: item 0 718ef7f (Blocks 164–165 by transcribe_ruling.py; r766.txt and r767.txt in 12ac_open/; "A R766(b)" on the list, its gloss, STANDING_RULES.md regenerated at 91 clauses, the diff classified 3 / 1 / 8 / 0), ledger d85bad5; the read-out 23fad87 with its census and probe, ledger 732c010. The decision log in the file ends at R767. The 2026-11-01 jobs stay R767(d)'s. R768(b) — U22's design is option A, in this shape. (i) The input_fit line's dict gains one key, "eval_count", read as every neighbouring field is read (getattr(response, "eval_count", None), a non-int or bool recorded None), beside "count" and "done_reason"; no "num_predict" key — the extract stages send none (F3), and "unset" would record a request-side absence the stage row already records. (ii) The extraction telemetry row gains a pass1_eval_count / pass2_eval_count pair beside pass1_prompt_eval_count / pass2_prompt_eval_count, filled from the same two dicts by the same four record_call sites; output_tokens is not written by the local arm (it stays the cloud path's usage field; F2's note). (iii) The elicited Pass-1 call dict gains pass1_eval_count; the accepted attempt's count goes to the top-level key and each attempt's under extra.attempts[] as prompt_eval_count does (:497–530). (iv) The input-fit failure row carries None for both (the exception has no count). (v) SCHEMA_VERSION moves to "extraction-telemetry-4" (R126's precedent); the additive-default contract holds for the two new keys. (vi) The vision path is unchanged. R768(c) — Not taken: B (a run_calls column) — 023's, not asked for by this ruling; whether 023 carries one is P6's Phase A's question, a dated note on INT-g12-6. C (a summary reader) — a reading, not a record; the row's words are "recorded nowhere". R768(d) — Acceptance, two tests, each failing on the parent and passing in the gate: (i) test_the_input_fit_line_records_eval_count in tests/test_ollama_input_fit.py, in that file's form: a fake response carrying eval_count 123 produces an input_fit line whose dict carries "eval_count": 123; a response without the attribute produces "eval_count": None and no raise. (ii) a row test in tests/test_thinking_channel.py's form (its name CC's, in the file's naming), through extract_pass1_reasoning / extract_pass2_structured and record_call as the probe ran them, or through the driver: a row carrying pass1_eval_count and pass2_eval_count equal to the two fakes' counts, and schema "extraction-telemetry-4"; the null case None. The census's two pins are rewritten under B5 in the same commit with their assertions kept: the exact dict at test_ollama_input_fit.py:219 gains "eval_count": None (its stub lacks the field), and the schema string at test_thinking_channel.py:193 moves to -4; the additive-default test gains the two keys. Any other red is classified (c) or (r) under R722(a)–R725(b). R768(e) — Pin not affecting (CODE ORDER, pin_tuple); both pins and the audit prompt_hash are asserted byte-identical in the commit's gate. No migration. The Touched list is the engine files the read-out's 3g names for A (ollama_client.py, extractor.py, pipeline.py, extraction_telemetry.py; extraction_events.py only if the failure row's site must name the keys) plus docs/inventory/ (R725(c)); CLAUDE.md and docs/architecture lines that name the schema string or the row's keys are quoted at Phase B and edited only by text the PI approves at the stop. R768(f) — Readings, no row: F3 (no num_predict on the extract stages; the output limit on Run 7's calls is the server's own — whether the spec declares one for extraction is a pin-affecting question for a later ruling before the freeze, a dated note on INT-g12-6 with R768(c)'s); F7 (vision headroom definable today; out of scope); F8 and report finding 4 (line numbers drift; text equal); F9 (the --background tee is "run.log"); F10; F12 (a late completion's count is the completing response's; its provenance is in run_calls.outcome_detail, not on the line — no second key); report finding 1 (the "-" form for a count the brief does not predict, accepted as the check's); finding 3 (R3's grep short by two sites, the Phase A's grep governed). R768(g) — U22's Phase B opens under the 12ac-U22B brief below in 12ab-U21B's two-phase form: the reads first (every site 3g names, quoted at HEAD; the census confirmed; the test plan; any CLAUDE.md or docs/architecture line to edit, quoted), then STOP for the ruling on them, then the build in one engine commit with its gate. INT-g12-6 closes on R768(d)(i) passing (R514), counted until P1 closes (R607(d)). | PI, 2026-10-31, during session 12ac, on architect recommendation, on the 12ac-U22A final report (item 0 718ef7f; read-out 23fad87) |
+
+The decision log in this file ends at R768.

@@ -1,0 +1,583 @@
+# SITES
+## analysis / send: ollama_chat: 10
+   analysis/eval/elicit01/runner.py 118 <module>.call r = oc.ollama_chat(
+   analysis/eval/run_capture01.py 119 <module>.capture_one response = oc.ollama_chat(
+   analysis/eval/run_local_ab.py 119 <module>.run_paper resp = ollama_chat(model=MODEL, messages=_pass2_messages(prompt, trace), **kwargs)
+   analysis/eval/run_local_abc.py 142 <module>.run_one resp = ollama_chat(model=MODEL, messages=pass2_messages(prompt, trace), **kwargs)
+   analysis/eval/run_qualgap01.py 118 <module>.pass1 response = oc.ollama_chat(
+   analysis/eval/run_qualgap01.py 158 <module>.run_one resp = oc.ollama_chat(
+   analysis/eval/run_qualgap01.py 231 <module>.probe r2 = oc.ollama_chat(
+   analysis/paper1/judge.py 116 <module>.run_pass1 response = ollama_chat(
+   analysis/paper1/judge.py 225 <module>.run_pass2 response = ollama_chat(
+   analysis/paper1/pass2_retry_single.py 215 <module>._main_locked response = ollama_chat(
+## engine / executor created: 2
+   engine/utils/ollama_client.py 855 <module>._restart_ollama_and_retry executor = ThreadPoolExecutor(max_workers=1)
+   engine/utils/ollama_client.py 712 <module>.ollama_chat executor = ThreadPoolExecutor(max_workers=1)
+## engine / executor shutdown: 4
+   engine/utils/ollama_client.py 869 <module>._restart_ollama_and_retry executor.shutdown(wait=False, cancel_futures=True)
+   engine/utils/ollama_client.py 724 <module>.ollama_chat executor.shutdown(wait=False, cancel_futures=True)
+   engine/utils/ollama_client.py 752 <module>.ollama_chat executor.shutdown(wait=False, cancel_futures=True)
+   engine/utils/ollama_client.py 766 <module>.ollama_chat executor.shutdown(wait=False, cancel_futures=True)
+## engine / restart: systemctl restart: 2
+   engine/agents/extractor.py 787 <module>.restart_ollama subprocess.run(
+   engine/utils/ollama_client.py 840 <module>._restart_ollama_and_retry subprocess.run(
+## engine / run_calls write: 8
+   engine/agents/extractor.py 942 <module>.extract_paper_with_completeness record_call(
+   engine/agents/extractor.py 889 <module>.extract_paper_with_completeness record_call(
+   engine/agents/extractor.py 917 <module>.extract_paper_with_completeness record_call(
+   engine/cloud/base.py 146 <module>.CloudExtractorBase.send rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+   engine/cloud/base.py 431 <module>.CloudExtractorBase.extract_with_completeness record_call(
+   engine/core/extraction_events.py 714 <module>.write_extraction_events record_call(review_dir, arm=t.get("model") or outcome.arm, paper_id=outcome.paper_id,
+   engine/core/run_manifest.py 1178 <module>.record_active_ollama_call record_call(conn, run_id, key, paper_id, request, digest, started_at, _now(),
+   engine/utils/ollama_client.py 665 <module>.ollama_chat._record record_active_ollama_call(stage, request, paper_id, response, started_at,
+## engine / send: ollama_chat: 11
+   engine/acquisition/pdf_quality_check.py 105 <module>._classify_page response = ollama_chat(
+   engine/agents/auditor.py 73 <module>.semantic_verify response = ollama_chat(
+   engine/agents/extractor.py 236 <module>.extract_pass1_reasoning result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+   engine/agents/extractor.py 343 <module>.extract_pass2_structured result = ollama_chat(paper_id=paper_id,
+   engine/agents/extractor.py 430 <module>._retry_snippet result = ollama_chat(
+   engine/agents/ft_screener.py 216 <module>.ft_screen_paper response, request_hash = ollama_chat(
+   engine/agents/ft_screener.py 226 <module>.ft_verify_paper response, request_hash = ollama_chat(
+   engine/agents/screener.py 125 <module>.screen_paper response = ollama_chat(messages=build_messages(paper, spec, role=role), **cfg.kwargs())
+   engine/elicitation/pipeline.py 295 <module>.run_pass1 response, req_hash = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+   engine/parsers/pdf_parser.py 279 <module>.parse_with_vision response = ollama_chat(
+   engine/utils/ollama_preflight.py 69 <module>.check_model ollama_chat(
+## engine / submit: client chat to an executor: 2
+   engine/utils/ollama_client.py 857 <module>._restart_ollama_and_retry future = executor.submit(
+   engine/utils/ollama_client.py 714 <module>.ollama_chat future = executor.submit(
+
+# TESTS
+## i_direct_name: 65 hits in 15 files
+   by file: tests/test_restart_recovery_guard.py 16, tests/test_restart_ollama_guard.py 13, tests/test_ollama_client.py 8, tests/test_completeness_guard.py 4, tests/test_qualgap01.py 4, tests/test_thinking_channel.py 4, tests/migrations/test_022_run_kinds_and_audit_tables.py 3, tests/test_ollama_lock.py 3, tests/test_u18_one_host.py 3, tests/test_u19_env_recheck.py 2, tests/test_exporters.py 1, tests/test_ollama_input_fit.py 1, tests/test_presented_context.py 1, tests/test_run_calls_outcomes.py 1, tests/test_u20_modelfile_num_ctx.py 1
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 81 <module>.test_T1_fresh_database_carries_022_executed RUN_CALL_OUTCOMES
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 402 <module>.test_T6_every_declared_outcome_token_is_accepted RUN_CALL_OUTCOMES
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 426 <module>.test_T6_record_call_on_a_fixture_writes_outcome_completed record_call
+   tests/test_completeness_guard.py 180 <module>.test_telemetry_records_a_call record_call
+   tests/test_completeness_guard.py 205 <module>.test_telemetry_truncates_a_huge_response_and_says_so record_call
+   tests/test_completeness_guard.py 199 <module>.test_telemetry_appends_one_line_per_attempt record_call
+   tests/test_completeness_guard.py 214 <module>.test_telemetry_never_raises_on_a_bad_path record_call
+   tests/test_exporters.py 497 <module>.run_db record_call
+   tests/test_ollama_client.py 243 <module>.TestOllamaRestartRecovery.test_restart_success_then_call_succeeds _restart_ollama_and_retry
+   tests/test_ollama_client.py 35 <module>.TestWallTimeoutForModel.test_8b_model _wall_timeout_for_model
+   tests/test_ollama_client.py 38 <module>.TestWallTimeoutForModel.test_27b_model _wall_timeout_for_model
+   tests/test_ollama_client.py 41 <module>.TestWallTimeoutForModel.test_32b_model _wall_timeout_for_model
+   tests/test_ollama_client.py 44 <module>.TestWallTimeoutForModel.test_70b_model _wall_timeout_for_model
+   tests/test_ollama_client.py 47 <module>.TestWallTimeoutForModel.test_unknown_model_gets_default _wall_timeout_for_model
+   tests/test_ollama_client.py 303 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_restart_failure _restart_ollama_and_retry
+   tests/test_ollama_client.py 325 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_post_restart_failure _restart_ollama_and_retry
+   tests/test_ollama_input_fit.py 53 <module>.service RESTART_OPT_OUT_ENV
+   tests/test_ollama_lock.py 72 <module>.test_lock_is_free_initially foreign_lock_held
+   tests/test_ollama_lock.py 126 <module>.test_foreign_holder_is_seen_as_held_and_foreign foreign_lock_held
+   tests/test_ollama_lock.py 135 <module>.test_self_holder_is_held_but_not_foreign foreign_lock_held
+   tests/test_presented_context.py 447 <module>.test_T8_cloud_send_still_computes_its_own_hash_unaffected record_call
+   tests/test_qualgap01.py 30 <module>._restore_client_module RESTART_OPT_OUT_ENV
+   tests/test_qualgap01.py 101 <module>.test_bind_runtime_accepts_the_expected_version_and_disarms_restart restart_disabled
+   tests/test_qualgap01.py 103 <module>.test_bind_runtime_accepts_the_expected_version_and_disarms_restart _restart_ollama_and_retry
+   tests/test_qualgap01.py 102 <module>.test_bind_runtime_accepts_the_expected_version_and_disarms_restart RESTART_OPT_OUT_ENV
+   tests/test_restart_ollama_guard.py 34 <module>.isolated_lock RESTART_OPT_OUT_ENV
+   tests/test_restart_ollama_guard.py 144 <module>.test_the_opt_out_skips_the_restart_before_the_lock_is_consulted RESTART_OPT_OUT_ENV
+   tests/test_restart_ollama_guard.py 162 <module>.test_a_falsy_opt_out_value_does_not_disable_the_restart RESTART_OPT_OUT_ENV
+   tests/test_restart_ollama_guard.py 179 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out RESTART_OPT_OUT_ENV
+   tests/test_restart_ollama_guard.py 92 <module>.test_restart_proceeds_when_lock_is_free restart_ollama
+   tests/test_restart_ollama_guard.py 115 <module>.test_run_extraction_holds_the_lock.fake_inner foreign_lock_held
+   tests/test_restart_ollama_guard.py 155 <module>.test_the_opt_out_skips_the_restart_before_the_lock_is_consulted RESTART_OPT_OUT_ENV
+   tests/test_restart_ollama_guard.py 166 <module>.test_a_falsy_opt_out_value_does_not_disable_the_restart restart_ollama
+   tests/test_restart_ollama_guard.py 83 <module>.test_restart_proceeds_under_self_lock restart_ollama
+   tests/test_restart_ollama_guard.py 65 <module>.test_restart_skipped_under_foreign_lock restart_ollama
+   tests/test_restart_ollama_guard.py 82 <module>.test_restart_proceeds_under_self_lock foreign_lock_held
+   tests/test_restart_ollama_guard.py 102 <module>.test_skip_returns_none_and_does_not_raise restart_ollama
+   tests/test_restart_ollama_guard.py 149 <module>.test_the_opt_out_skips_the_restart_before_the_lock_is_consulted restart_ollama
+   tests/test_restart_recovery_guard.py 31 <module>.isolated_lock RESTART_OPT_OUT_ENV
+   tests/test_restart_recovery_guard.py 71 <module>._call _restart_ollama_and_retry
+   tests/test_restart_recovery_guard.py 117 <module>.test_gate_matches_the_extractor_path foreign_lock_held
+   tests/test_restart_recovery_guard.py 117 <module>.test_gate_matches_the_extractor_path foreign_lock_held
+   tests/test_restart_recovery_guard.py 118 <module>.test_gate_matches_the_extractor_path foreign_lock_held
+   tests/test_restart_recovery_guard.py 118 <module>.test_gate_matches_the_extractor_path foreign_lock_held
+   tests/test_restart_recovery_guard.py 125 <module>.test_opt_out_refuses_before_touching_subprocess RESTART_OPT_OUT_ENV
+   tests/test_restart_recovery_guard.py 134 <module>.test_truthy_values_disable_restart RESTART_OPT_OUT_ENV
+   tests/test_restart_recovery_guard.py 140 <module>.test_falsey_values_leave_restart_armed RESTART_OPT_OUT_ENV
+   tests/test_restart_recovery_guard.py 145 <module>.test_unset_leaves_restart_armed RESTART_OPT_OUT_ENV
+   tests/test_restart_recovery_guard.py 154 <module>.test_refusal_surfaces_as_timeout_from_ollama_chat RESTART_OPT_OUT_ENV
+   tests/test_restart_recovery_guard.py 135 <module>.test_truthy_values_disable_restart restart_disabled
+   tests/test_restart_recovery_guard.py 141 <module>.test_falsey_values_leave_restart_armed restart_disabled
+   tests/test_restart_recovery_guard.py 146 <module>.test_unset_leaves_restart_armed restart_disabled
+   tests/test_restart_recovery_guard.py 97 <module>.test_restart_proceeds_under_self_lock foreign_lock_held
+   tests/test_restart_recovery_guard.py 127 <module>.test_opt_out_refuses_before_touching_subprocess RESTART_OPT_OUT_ENV
+   tests/test_run_calls_outcomes.py 25 <module>._no_restart RESTART_OPT_OUT_ENV
+   tests/test_thinking_channel.py 189 <module>.test_telemetry_schema_is_v3_and_carries_the_thinking_fields record_call
+   tests/test_thinking_channel.py 200 <module>.test_telemetry_thinking_fields_default_to_none_for_cloud_arms record_call
+   tests/test_thinking_channel.py 216 <module>.test_telemetry_records_pass1_done_reason_and_prompt_eval_counts record_call
+   tests/test_thinking_channel.py 228 <module>.test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable record_call
+   tests/test_u18_one_host.py 76 <module>.test_u18_every_engine_read_uses_the_resolved_host RESTART_OPT_OUT_ENV
+   tests/test_u18_one_host.py 67 <module>._bind _build_client
+   tests/test_u18_one_host.py 85 <module>.test_u18_every_engine_read_uses_the_resolved_host restart_ollama
+   tests/test_u19_env_recheck.py 175 <module>.test_u19_a_skipped_restart_triggers_no_env_check RESTART_OPT_OUT_ENV
+   tests/test_u19_env_recheck.py 177 <module>.test_u19_a_skipped_restart_triggers_no_env_check restart_ollama
+   tests/test_u20_modelfile_num_ctx.py 68 <module>._service RESTART_OPT_OUT_ENV
+## i_patch_name: 6 hits in 6 files
+   by file: tests/test_cut_over.py 1, tests/test_run_interrupts.py 1, tests/test_run_pipeline_starts.py 1, tests/test_selection_bound.py 1, tests/test_u19_env_recheck.py 1, tests/test_undeclared_call.py 1
+   tests/test_cut_over.py 108 <module>.fake_models monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+   tests/test_run_interrupts.py 247 <module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+   tests/test_run_pipeline_starts.py 111 <module>.review monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+   tests/test_selection_bound.py 121 <module>.fake_models monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+   tests/test_u19_env_recheck.py 88 <module>._loop monkeypatch.setattr(E, "restart_ollama", restart)
+   tests/test_undeclared_call.py 235 <module>.test_6_an_undeclared_call_leaves_the_extraction_loop_as_a_run_fault monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+## i_patch_string: 53 hits in 8 files
+   by file: tests/test_ollama_client.py 29, tests/test_ollama_preflight.py 7, tests/test_restart_recovery_guard.py 7, tests/test_extractor.py 6, tests/test_elicitation_pipeline.py 1, tests/test_restart_ollama_guard.py 1, tests/test_run_pipeline_starts.py 1, tests/test_undeclared_call.py 1
+   tests/test_elicitation_pipeline.py 384 <module>.test_retry_is_bounded_and_the_paper_is_failed with patch.object(E, "record_call"):
+   tests/test_extractor.py 464 <module>.TestProactiveRestart.test_restart_triggers_after_n_papers @patch("engine.agents.extractor.restart_ollama")
+   tests/test_extractor.py 488 <module>.TestProactiveRestart.test_restart_disabled_when_zero @patch("engine.agents.extractor.restart_ollama")
+   tests/test_extractor.py 504 <module>.TestProactiveRestart.test_restart_failure_continues_gracefully @patch("engine.agents.extractor.restart_ollama", side_effect=RuntimeError("Failed to restart Ollama: systemctl failed"))
+   tests/test_extractor.py 520 <module>.TestProactiveRestart.test_zero_span_extraction_marks_extract_failed @patch("engine.agents.extractor.restart_ollama")
+   tests/test_extractor.py 563 <module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues @patch("engine.agents.extractor.restart_ollama")
+   tests/test_extractor.py 689 <module>.TestRestartOllamaGraceful.test_restart_failure_continues_extraction patch("engine.agents.extractor.restart_ollama",
+   tests/test_ollama_client.py 54 <module>.TestWatchdogTimeout.test_watchdog_fires_on_hang @patch("engine.utils.ollama_client.subprocess.run")
+   tests/test_ollama_client.py 55 <module>.TestWatchdogTimeout.test_watchdog_fires_on_hang @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 78 <module>.TestWatchdogTimeout.test_watchdog_retries_then_raises @patch("engine.utils.ollama_client.subprocess.run")
+   tests/test_ollama_client.py 79 <module>.TestWatchdogTimeout.test_watchdog_retries_then_raises @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 103 <module>.TestWatchdogTimeout.test_successful_call_returns_response @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 118 <module>.TestWatchdogTimeout.test_transient_failure_then_success @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 142 <module>.TestTimeoutLogging.test_timeout_logs_warning @patch("engine.utils.ollama_client.subprocess.run")
+   tests/test_ollama_client.py 143 <module>.TestTimeoutLogging.test_timeout_logs_warning @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 179 <module>.TestKwargsPassThrough.test_format_and_options_forwarded @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 204 <module>.TestOllamaRestartRecovery.test_restart_attempted_after_retries_exhausted @patch("engine.utils.ollama_client.subprocess.run")
+   tests/test_ollama_client.py 205 <module>.TestOllamaRestartRecovery.test_restart_attempted_after_retries_exhausted @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 232 <module>.TestOllamaRestartRecovery.test_restart_success_then_call_succeeds @patch("engine.utils.ollama_client.subprocess.run")
+   tests/test_ollama_client.py 233 <module>.TestOllamaRestartRecovery.test_restart_success_then_call_succeeds @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 254 <module>.TestOllamaRestartRecovery.test_restart_failure_raises_original_timeout @patch("engine.utils.ollama_client.subprocess.run")
+   tests/test_ollama_client.py 255 <module>.TestOllamaRestartRecovery.test_restart_failure_raises_original_timeout @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 276 <module>.TestOllamaRestartRecovery.test_restart_logs_warning @patch("engine.utils.ollama_client.subprocess.run")
+   tests/test_ollama_client.py 277 <module>.TestOllamaRestartRecovery.test_restart_logs_warning @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 298 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_restart_failure @patch("engine.utils.ollama_client.subprocess.run",
+   tests/test_ollama_client.py 311 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_post_restart_failure @patch("engine.utils.ollama_client.subprocess.run")
+   tests/test_ollama_client.py 312 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_post_restart_failure @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 344 <module>.TestTheDigestRoute.test_digest_comes_from_api_tags_not_api_show @patch("engine.utils.ollama_client._client")
+   tests/test_ollama_client.py 348 <module>.TestTheDigestRoute.test_digest_comes_from_api_tags_not_api_show with patch("engine.utils.ollama_client._client._client.get",
+   tests/test_ollama_client.py 358 <module>.TestTheDigestRoute.test_api_failure_raises_never_returns_none with patch("engine.utils.ollama_client._client._client.get",
+   tests/test_ollama_client.py 393 <module>.TestFetchModelDigest.test_well_formed_returns_digest with patch("engine.utils.ollama_client._client._client.get",
+   tests/test_ollama_client.py 408 <module>.TestFetchModelDigest.test_malformed_digest_raises with patch("engine.utils.ollama_client._client._client.get",
+   tests/test_ollama_client.py 418 <module>.TestFetchModelDigest.test_non_hex_digest_raises with patch("engine.utils.ollama_client._client._client.get",
+   tests/test_ollama_client.py 426 <module>.TestFetchModelDigest.test_missing_model_raises with patch("engine.utils.ollama_client._client._client.get",
+   tests/test_ollama_client.py 438 <module>.TestFetchModelDigest.test_ambiguous_multiple_matches_raises with patch("engine.utils.ollama_client._client._client.get",
+   tests/test_ollama_client.py 445 <module>.TestFetchModelDigest.test_non_200_status_raises with patch("engine.utils.ollama_client._client._client.get", return_value=resp):
+   tests/test_ollama_preflight.py 54 <module>.TestPreflightCheck.test_all_ok_returns_success with patch("engine.utils.ollama_client._client.ps",
+   tests/test_ollama_preflight.py 73 <module>.TestPreflightCheck.test_vram_filters_to_relevant_models with patch("engine.utils.ollama_client._client.ps", return_value=ps_data):
+   tests/test_ollama_preflight.py 93 <module>.TestPreflightCheck.test_vram_unrelated_model_does_not_cause_rejection with patch("engine.utils.ollama_client._client.ps", return_value=ps_data):
+   tests/test_ollama_preflight.py 114 <module>.TestPreflightCheck.test_one_failure_returns_failure with patch("engine.utils.ollama_client._client.ps",
+   tests/test_ollama_preflight.py 226 <module>.TestRequirePreflight.test_raises_on_failure with patch("engine.utils.ollama_client._client.ps",
+   tests/test_ollama_preflight.py 236 <module>.TestRequirePreflight.test_passes_silently_on_success with patch("engine.utils.ollama_client._client.ps",
+   tests/test_ollama_preflight.py 347 <module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success with patch("engine.utils.ollama_client._client.ps",
+   tests/test_restart_ollama_guard.py 147 <module>.test_the_opt_out_skips_the_restart_before_the_lock_is_consulted patch("engine.agents.extractor.foreign_lock_held") as mock_lock:
+   tests/test_restart_recovery_guard.py 91 <module>.test_restart_proceeds_under_self_lock with patch("engine.utils.ollama_client.subprocess.run") as mock_run, \
+   tests/test_restart_recovery_guard.py 92 <module>.test_restart_proceeds_under_self_lock patch("engine.utils.ollama_client._client") as mock_client:
+   tests/test_restart_recovery_guard.py 104 <module>.test_restart_proceeds_when_lock_is_free with patch("engine.utils.ollama_client.subprocess.run") as mock_run, \
+   tests/test_restart_recovery_guard.py 105 <module>.test_restart_proceeds_when_lock_is_free patch("engine.utils.ollama_client._client") as mock_client:
+   tests/test_restart_recovery_guard.py 126 <module>.test_opt_out_refuses_before_touching_subprocess with patch("engine.utils.ollama_client.subprocess.run") as mock_run:
+   tests/test_restart_recovery_guard.py 159 <module>.test_refusal_surfaces_as_timeout_from_ollama_chat with patch("engine.utils.ollama_client._client") as mock_client:
+   tests/test_restart_recovery_guard.py 80 <module>.test_restart_refused_under_foreign_lock with patch("engine.utils.ollama_client.subprocess.run") as mock_run:
+   tests/test_run_pipeline_starts.py 172 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight patch("engine.utils.ollama_client._client.ps", create=True, side_effect=loaded_ps):
+   tests/test_undeclared_call.py 181 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself patch("engine.utils.ollama_client._client.ps", create=True, side_effect=loaded_ps):
+## ii_module_alias_client_replaced: 24 hits in 19 files
+   by file: tests/test_run_calls_outcomes.py 5, tests/test_u18_one_host.py 2, tests/test_citation_record.py 1, tests/test_cut_over.py 1, tests/test_extraction_run_link.py 1, tests/test_ft_bridge.py 1, tests/test_ollama_input_fit.py 1, tests/test_pin_records.py 1, tests/test_request_capture.py 1, tests/test_run_fault_predicate.py 1, tests/test_run_interrupts.py 1, tests/test_run_manifest.py 1, tests/test_run_pipeline_starts.py 1, tests/test_selection_bound.py 1, tests/test_u18_digest_per_call.py 1, tests/test_u20_loaded_context.py 1, tests/test_u20_modelfile_num_ctx.py 1, tests/test_undeclared_call.py 1, tests/test_units_as_source_slices.py 1
+   tests/test_citation_record.py 155 <module>.fake_ollama monkeypatch.setattr(oc, "_client", client)
+   tests/test_cut_over.py 106 <module>.fake_models monkeypatch.setattr(oc, "_client", _Client(fields))
+   tests/test_extraction_run_link.py 97 <module>.fake_ollama monkeypatch.setattr(oc, "_client", client)
+   tests/test_ft_bridge.py 94 <module>.fake monkeypatch.setattr(oc, "_client", client)
+   tests/test_ollama_input_fit.py 61 <module>._use monkeypatch.setattr(oc, "_client", client)
+   tests/test_pin_records.py 181 <module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry monkeypatch.setattr(oc, "_client", client)
+   tests/test_request_capture.py 150 <module>.capture.install monkeypatch.setattr(oc, "_client", fake)
+   tests/test_run_calls_outcomes.py 97 <module>.test_T1_success_records_one_completed_row monkeypatch.setattr(oc, "_client", SimpleNamespace(chat=lambda **kw: StubResponse()))
+   tests/test_run_calls_outcomes.py 159 <module>.test_T4_input_truncated_records_one_refused_row_with_digest_and_raises monkeypatch.setattr(oc, "_client", SimpleNamespace(chat=lambda **kw: StubResponse()))
+   tests/test_run_calls_outcomes.py 183 <module>.test_T5_input_dropped_records_one_refused_row_with_digest_and_raises monkeypatch.setattr(oc, "_client", SimpleNamespace(chat=lambda **kw: StubResponse()))
+   tests/test_run_calls_outcomes.py 209 <module>.test_T6_client_exception_after_retries_records_one_error_row_and_raises monkeypatch.setattr(oc, "_client", SimpleNamespace(chat=_boom))
+   tests/test_run_calls_outcomes.py 245 <module>.test_T8_success_refusal_success_in_order monkeypatch.setattr(oc, "_client", SimpleNamespace(chat=lambda **kw: StubResponse()))
+   tests/test_run_fault_predicate.py 262 <module>.fake_ollama monkeypatch.setattr(oc, "_client", client)
+   tests/test_run_interrupts.py 245 <module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it monkeypatch.setattr(oc, "_client", _InterruptingClient(fields))
+   tests/test_run_manifest.py 125 <module>.test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded monkeypatch.setattr(oc, "_client", Fake())
+   tests/test_run_pipeline_starts.py 102 <module>.review monkeypatch.setattr(oc, "_client", fake)
+   tests/test_selection_bound.py 119 <module>.fake_models monkeypatch.setattr(oc, "_client", _Client(fields))
+   tests/test_u18_digest_per_call.py 101 <module>.fake monkeypatch.setattr(oc, "_client", client)
+   tests/test_u18_one_host.py 67 <module>._bind monkeypatch.setattr(oc, "_client", oc._build_client(transport=httpx.MockTransport(handler)))
+   tests/test_u18_one_host.py 235 <module>.test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run monkeypatch.setattr(oc, "_client", SimpleNamespace(_client=FakeTransport()))
+   tests/test_u20_loaded_context.py 97 <module>.fake monkeypatch.setattr(oc, "_client", client)
+   tests/test_u20_modelfile_num_ctx.py 76 <module>._use monkeypatch.setattr(oc, "_client", client)
+   tests/test_undeclared_call.py 81 <module>.fake monkeypatch.setattr(oc, "_client", client)
+   tests/test_units_as_source_slices.py 222 <module>.fake_ollama monkeypatch.setattr(oc, "_client", client)
+## iii_outcome_string: 57 hits in 18 files
+   by file: tests/test_run_calls_outcomes.py 10, tests/migrations/test_022_run_kinds_and_audit_tables.py 8, tests/test_ft_bridge.py 5, tests/test_presented_context.py 5, tests/test_u18_digest_per_call.py 4, tests/test_u20_loaded_context.py 4, tests/test_screen2f_harness.py 3, tests/test_screen2f_scoring.py 3, tests/test_undeclared_call.py 3, tests/test_run_interrupts.py 2, tests/test_run_manifest_migration.py 2, tests/test_run_pipeline_starts.py 2, tests/test_exporters.py 1, tests/test_ft_adjudication_import.py 1, tests/test_import_extraction_entry.py 1, tests/test_import_screening_entry.py 1, tests/test_run_manifest.py 1, tests/test_screen2f_armsets.py 1
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 1 <module> Migration 022 — R212-R218 (10a-R1, 10a-C2).  What is asserted here is the EFFECT on a data
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 329 <module>.test_T5b_permitted_close_states_accepted completed
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 360 <module>.test_T5b_excluded_close_states_refused completed
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 404 <module>.test_T6_every_declared_outcome_token_is_accepted INSERT INTO run_calls (run_id, stage, request_hash, started_at, ended_at, outcome) VALUES 
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 414 <module>.test_T6_an_unlisted_outcome_token_is_refused INSERT INTO run_calls (run_id, stage, request_hash, started_at, ended_at, outcome) VALUES 
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 428 <module>.test_T6_record_call_on_a_fixture_writes_outcome_completed completed
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 432 <module>.test_T6_record_call_on_a_fixture_writes_outcome_completed completed
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 430 <module>.test_T6_record_call_on_a_fixture_writes_outcome_completed SELECT outcome, outcome_detail FROM run_calls WHERE call_id = ?
+   tests/test_exporters.py 498 <module>.run_db completed
+   tests/test_ft_adjudication_import.py 113 <module>.test_1_one_import_manifest_with_zero_stage_rows_closed_completed completed
+   tests/test_ft_bridge.py 196 <module>.test_1_verify_only_manifest_declares_the_two_ft_stages completed
+   tests/test_ft_bridge.py 186 <module>.test_1_default_run_manifest_is_screening_with_four_stage_rows completed
+   tests/test_ft_bridge.py 203 <module>.test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk SELECT stage, paper_id, outcome FROM run_calls WHERE run_id = ? ORDER BY stage
+   tests/test_ft_bridge.py 206 <module>.test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk completed
+   tests/test_ft_bridge.py 207 <module>.test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk completed
+   tests/test_import_extraction_entry.py 160 <module>.test_t1_three_papers_enter_at_ft_eligible_with_refs_events_and_one_manifest completed
+   tests/test_import_screening_entry.py 114 <module>.test_t1_four_entries_enter_at_ingested_under_one_manifest completed
+   tests/test_presented_context.py 129 <module>.test_T1_pre_call_refusal_hash_equals_the_recorded_row refused_input_overflow
+   tests/test_presented_context.py 148 <module>.test_T1_exhaustion_hash_equals_the_recorded_row error
+   tests/test_presented_context.py 448 <module>.test_T8_cloud_send_still_computes_its_own_hash_unaffected completed
+   tests/test_presented_context.py 128 <module>.test_T1_pre_call_refusal_hash_equals_the_recorded_row SELECT request_hash, outcome FROM run_calls
+   tests/test_presented_context.py 147 <module>.test_T1_exhaustion_hash_equals_the_recorded_row SELECT request_hash, outcome FROM run_calls
+   tests/test_run_calls_outcomes.py 105 <module>.test_T1_success_records_one_completed_row completed
+   tests/test_run_calls_outcomes.py 126 <module>.test_T2_input_overflow_records_one_refused_row_and_raises refused_input_overflow
+   tests/test_run_calls_outcomes.py 148 <module>.test_T3_ceiling_unavailable_records_one_refused_row_and_raises refused_ceiling_unavailable
+   tests/test_run_calls_outcomes.py 172 <module>.test_T4_input_truncated_records_one_refused_row_with_digest_and_raises refused_input_truncated
+   tests/test_run_calls_outcomes.py 196 <module>.test_T5_input_dropped_records_one_refused_row_with_digest_and_raises refused_input_dropped
+   tests/test_run_calls_outcomes.py 217 <module>.test_T6_client_exception_after_retries_records_one_error_row_and_raises error
+   tests/test_run_calls_outcomes.py 264 <module>.test_T8_success_refusal_success_in_order completed
+   tests/test_run_calls_outcomes.py 264 <module>.test_T8_success_refusal_success_in_order refused_input_overflow
+   tests/test_run_calls_outcomes.py 264 <module>.test_T8_success_refusal_success_in_order completed
+   tests/test_run_calls_outcomes.py 75 <module>._rows SELECT call_id, outcome, outcome_detail, request_hash, response_digest FROM run_calls ORDE
+   tests/test_run_interrupts.py 347 <module>.test_t9_run_pipeline_an_interrupt_inside_the_completed_close_closes_interrupted completed
+   tests/test_run_interrupts.py 361 <module>.test_t9_run_ft_invocation_an_interrupt_inside_the_completed_close_closes_interrupted completed
+   tests/test_run_manifest.py 161 <module>.test_a_run_records_its_end_once completed
+   tests/test_run_manifest_migration.py 260 <module> completed
+   tests/test_run_manifest_migration.py 309 <module>.test_a_call_row_must_name_a_declared_stage INSERT INTO run_calls (run_id, stage, request_hash, started_at, ended_at, outcome) VALUES 
+   tests/test_run_pipeline_starts.py 191 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight completed
+   tests/test_run_pipeline_starts.py 187 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight SELECT outcome FROM run_calls WHERE stage = ?
+   tests/test_screen2f_armsets.py 269 <module>.test_a_missing_stability_baseline_is_reported_not_raised error
+   tests/test_screen2f_harness.py 96 <module>.StubScreen.__call__ error
+   tests/test_screen2f_harness.py 134 <module>.test_primary_phase_follows_the_runner_call_pattern error
+   tests/test_screen2f_harness.py 101 <module>.StubScreen.__call__ error
+   tests/test_screen2f_scoring.py 21 <module>._call error
+   tests/test_screen2f_scoring.py 44 <module>._write_arm error
+   tests/test_screen2f_scoring.py 48 <module>._write_arm error
+   tests/test_u18_digest_per_call.py 127 <module>._run_calls SELECT stage, outcome FROM run_calls ORDER BY call_id
+   tests/test_u18_digest_per_call.py 161 <module>.test_u18_a_tag_replaced_between_two_calls_refuses completed
+   tests/test_u18_digest_per_call.py 161 <module>.test_u18_a_tag_replaced_between_two_calls_refuses completed
+   tests/test_u18_digest_per_call.py 226 <module>.test_u18_the_preflight_call_is_not_refused_on_a_fresh_run completed
+   tests/test_u20_loaded_context.py 152 <module>.test_a_a_loaded_context_equal_to_the_ceiling_completes_and_is_recorded completed
+   tests/test_u20_loaded_context.py 164 <module>.test_b_a_loaded_context_lower_than_the_ceiling_refuses error
+   tests/test_u20_loaded_context.py 137 <module>._mismatch SELECT outcome, outcome_detail FROM run_calls WHERE run_id = ? ORDER BY call_id
+   tests/test_u20_loaded_context.py 152 <module>.test_a_a_loaded_context_equal_to_the_ceiling_completes_and_is_recorded SELECT outcome FROM run_calls WHERE run_id = ?
+   tests/test_undeclared_call.py 109 <module>._run_calls SELECT stage, outcome, request_hash FROM run_calls ORDER BY call_id
+   tests/test_undeclared_call.py 151 <module>.test_3_a_declared_preflight_model_is_sent completed
+   tests/test_undeclared_call.py 202 <module>.test_4_a_declared_call_is_sent_and_recorded_with_its_request_unchanged completed
+## iii_run_calls_query: 29 hits in 16 files
+   by file: tests/test_presented_context.py 6, tests/test_ft_bridge.py 3, tests/test_audit_paper_id.py 2, tests/test_run_manifest.py 2, tests/test_run_pipeline_starts.py 2, tests/test_u18_digest_per_call.py 2, tests/test_u20_loaded_context.py 2, tests/test_undeclared_call.py 2, tests/migrations/test_022_run_kinds_and_audit_tables.py 1, tests/test_exporters.py 1, tests/test_extraction_run_link.py 1, tests/test_pin_records.py 1, tests/test_run_calls_outcomes.py 1, tests/test_run_interrupts.py 1, tests/test_undeclared_override.py 1, tests/test_units_as_source_slices.py 1
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 430 <module>.test_T6_record_call_on_a_fixture_writes_outcome_completed SELECT outcome, outcome_detail FROM run_calls WHERE call_id = ?
+   tests/test_audit_paper_id.py 115 <module>.test_T6_every_audit_call_row_carries_the_paper_it_verified SELECT paper_id FROM run_calls WHERE stage = 'audit' ORDER BY call_id
+   tests/test_audit_paper_id.py 142 <module>.test_T7_no_other_stage_is_affected SELECT DISTINCT stage FROM run_calls WHERE run_id = ?
+   tests/test_exporters.py 540 <module>.test_methods_counts_papers_not_calls SELECT COUNT(*) FROM run_calls WHERE run_id = ?
+   tests/test_extraction_run_link.py 177 <module>.test_t4_every_extractor_call_records_its_paper SELECT run_id, stage, paper_id FROM run_calls ORDER BY call_id
+   tests/test_ft_bridge.py 203 <module>.test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk SELECT stage, paper_id, outcome FROM run_calls WHERE run_id = ? ORDER BY stage
+   tests/test_ft_bridge.py 225 <module>._assert_event SELECT request_hash FROM run_calls WHERE run_id = ? AND stage = ?
+   tests/test_ft_bridge.py 426 <module>.test_9_i_after_a_completed_confirm_a_fresh_verify_only_selects_nothing SELECT COUNT(*) FROM run_calls WHERE run_id = ?
+   tests/test_pin_records.py 189 <module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry SELECT COUNT(*) FROM run_calls
+   tests/test_presented_context.py 109 <module>.test_T1_success_hash_equals_the_recorded_row SELECT request_hash FROM run_calls
+   tests/test_presented_context.py 128 <module>.test_T1_pre_call_refusal_hash_equals_the_recorded_row SELECT request_hash, outcome FROM run_calls
+   tests/test_presented_context.py 147 <module>.test_T1_exhaustion_hash_equals_the_recorded_row SELECT request_hash, outcome FROM run_calls
+   tests/test_presented_context.py 211 <module>.test_T3_every_claim_carries_pass2s_hash_and_the_full_chain SELECT stage, request_hash FROM run_calls ORDER BY call_id
+   tests/test_presented_context.py 251 <module>.test_T4_a_retried_snippet_carries_its_own_hash_a_clean_one_does_not SELECT stage, request_hash FROM run_calls ORDER BY call_id
+   tests/test_presented_context.py 449 <module>.test_T8_cloud_send_still_computes_its_own_hash_unaffected SELECT request_hash FROM run_calls
+   tests/test_run_calls_outcomes.py 75 <module>._rows SELECT call_id, outcome, outcome_detail, request_hash, response_digest FROM run_calls ORDER BY call_id
+   tests/test_run_interrupts.py 271 <module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it SELECT COUNT(*) FROM run_calls WHERE paper_id = 2
+   tests/test_run_manifest.py 134 <module>.test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded SELECT * FROM run_calls
+   tests/test_run_manifest.py 391 <module>.test_a_cloud_call_records_the_hash_of_its_complete_payload SELECT stage, request_hash FROM run_calls
+   tests/test_run_pipeline_starts.py 187 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight SELECT outcome FROM run_calls WHERE stage = ?
+   tests/test_run_pipeline_starts.py 129 <module>._state SELECT DISTINCT stage FROM run_calls WHERE run_id = ?
+   tests/test_u18_digest_per_call.py 127 <module>._run_calls SELECT stage, outcome FROM run_calls ORDER BY call_id
+   tests/test_u18_digest_per_call.py 175 <module>.test_u18_the_unchanged_case_sends_the_same_request_bytes SELECT request_hash FROM run_calls
+   tests/test_u20_loaded_context.py 137 <module>._mismatch SELECT outcome, outcome_detail FROM run_calls WHERE run_id = ? ORDER BY call_id
+   tests/test_u20_loaded_context.py 152 <module>.test_a_a_loaded_context_equal_to_the_ceiling_completes_and_is_recorded SELECT outcome FROM run_calls WHERE run_id = ?
+   tests/test_undeclared_call.py 109 <module>._run_calls SELECT stage, outcome, request_hash FROM run_calls ORDER BY call_id
+   tests/test_undeclared_call.py 245 <module>.test_6_an_undeclared_call_leaves_the_extraction_loop_as_a_run_fault SELECT COUNT(*) FROM run_calls
+   tests/test_undeclared_override.py 93 <module>.test_T1_a_differing_option_under_a_declared_stage_is_refused SELECT COUNT(*) FROM run_calls
+   tests/test_units_as_source_slices.py 255 <module>.test_an_elicited_run_opens_pins_verifies_and_writes_real_events SELECT stage FROM run_calls ORDER BY call_id
+## iii_signature_kw: 40 hits in 7 files
+   by file: tests/test_ollama_client.py 23, tests/test_ollama_input_fit.py 8, tests/test_qualgap01.py 2, tests/test_restart_recovery_guard.py 2, tests/test_run_calls_outcomes.py 2, tests/test_u20_modelfile_num_ctx.py 2, tests/test_presented_context.py 1
+   tests/test_ollama_client.py 128 <module>.TestWatchdogTimeout.test_transient_failure_then_success retry_delay=0.1
+   tests/test_ollama_client.py 243 <module>.TestOllamaRestartRecovery.test_restart_success_then_call_succeeds effective_timeout=30.0
+   tests/test_ollama_client.py 243 <module>.TestOllamaRestartRecovery.test_restart_success_then_call_succeeds max_retries=1
+   tests/test_ollama_client.py 66 <module>.TestWatchdogTimeout.test_watchdog_fires_on_hang max_retries=0
+   tests/test_ollama_client.py 66 <module>.TestWatchdogTimeout.test_watchdog_fires_on_hang wall_timeout=2.0
+   tests/test_ollama_client.py 93 <module>.TestWatchdogTimeout.test_watchdog_retries_then_raises max_retries=2
+   tests/test_ollama_client.py 93 <module>.TestWatchdogTimeout.test_watchdog_retries_then_raises wall_timeout=1.0
+   tests/test_ollama_client.py 93 <module>.TestWatchdogTimeout.test_watchdog_retries_then_raises retry_delay=0.1
+   tests/test_ollama_client.py 219 <module>.TestOllamaRestartRecovery.test_restart_attempted_after_retries_exhausted max_retries=0
+   tests/test_ollama_client.py 219 <module>.TestOllamaRestartRecovery.test_restart_attempted_after_retries_exhausted wall_timeout=1.0
+   tests/test_ollama_client.py 219 <module>.TestOllamaRestartRecovery.test_restart_attempted_after_retries_exhausted retry_delay=0.1
+   tests/test_ollama_client.py 265 <module>.TestOllamaRestartRecovery.test_restart_failure_raises_original_timeout max_retries=0
+   tests/test_ollama_client.py 265 <module>.TestOllamaRestartRecovery.test_restart_failure_raises_original_timeout wall_timeout=1.0
+   tests/test_ollama_client.py 265 <module>.TestOllamaRestartRecovery.test_restart_failure_raises_original_timeout retry_delay=0.1
+   tests/test_ollama_client.py 303 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_restart_failure effective_timeout=30.0
+   tests/test_ollama_client.py 303 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_restart_failure max_retries=1
+   tests/test_ollama_client.py 325 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_post_restart_failure effective_timeout=1.0
+   tests/test_ollama_client.py 325 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_post_restart_failure max_retries=1
+   tests/test_ollama_client.py 162 <module>.TestTimeoutLogging.test_timeout_logs_warning max_retries=0
+   tests/test_ollama_client.py 162 <module>.TestTimeoutLogging.test_timeout_logs_warning wall_timeout=1.0
+   tests/test_ollama_client.py 288 <module>.TestOllamaRestartRecovery.test_restart_logs_warning max_retries=0
+   tests/test_ollama_client.py 288 <module>.TestOllamaRestartRecovery.test_restart_logs_warning wall_timeout=1.0
+   tests/test_ollama_client.py 288 <module>.TestOllamaRestartRecovery.test_restart_logs_warning retry_delay=0.1
+   tests/test_ollama_input_fit.py 66 <module>._chat max_retries=0
+   tests/test_ollama_input_fit.py 66 <module>._chat retry_delay=0
+   tests/test_ollama_input_fit.py 243 <module>.test_the_guard_changes_nothing_the_client_is_sent max_retries=0
+   tests/test_ollama_input_fit.py 243 <module>.test_the_guard_changes_nothing_the_client_is_sent retry_delay=0
+   tests/test_ollama_input_fit.py 225 <module>.test_input_fit_errors_are_not_retried max_retries=2
+   tests/test_ollama_input_fit.py 225 <module>.test_input_fit_errors_are_not_retried retry_delay=0
+   tests/test_ollama_input_fit.py 326 <module>.test_migrated_an_oversized_prompt_fails_hard_before_any_call max_retries=0
+   tests/test_ollama_input_fit.py 326 <module>.test_migrated_an_oversized_prompt_fails_hard_before_any_call retry_delay=0
+   tests/test_presented_context.py 145 <module>.test_T1_exhaustion_hash_equals_the_recorded_row max_retries=0
+   tests/test_qualgap01.py 103 <module>.test_bind_runtime_accepts_the_expected_version_and_disarms_restart effective_timeout=1.0
+   tests/test_qualgap01.py 103 <module>.test_bind_runtime_accepts_the_expected_version_and_disarms_restart max_retries=0
+   tests/test_restart_recovery_guard.py 162 <module>.test_refusal_surfaces_as_timeout_from_ollama_chat max_retries=0
+   tests/test_restart_recovery_guard.py 162 <module>.test_refusal_surfaces_as_timeout_from_ollama_chat wall_timeout=1.0
+   tests/test_run_calls_outcomes.py 88 <module>._chat max_retries=0
+   tests/test_run_calls_outcomes.py 88 <module>._chat retry_delay=0
+   tests/test_u20_modelfile_num_ctx.py 85 <module>.test_a_modelfile_num_ctx_lowers_the_ceiling max_retries=0
+   tests/test_u20_modelfile_num_ctx.py 85 <module>.test_a_modelfile_num_ctx_lowers_the_ceiling retry_delay=0
+## iv_exception_class: 56 hits in 26 files
+   by file: tests/test_ollama_preflight.py 10, tests/test_ollama_client.py 8, tests/test_ft_bridge.py 3, tests/test_restart_recovery_guard.py 3, tests/test_adjudication_pairs.py 2, tests/test_ft_adjudication_import.py 2, tests/test_import_extraction_entry.py 2, tests/test_import_screening_entry.py 2, tests/test_migration_018_cloud_shape.py 2, tests/test_migration_019_paper_axes.py 2, tests/test_qualgap01.py 2, tests/test_run_fault_predicate.py 2, tests/test_run_manifest_migration.py 2, tests/test_screener.py 2, tests/test_consensus.py 1, tests/test_database.py 1, tests/test_extraction_events.py 1, tests/test_failed_close_reason.py 1, tests/test_human_import.py 1, tests/test_migration_021_parsed_text_sha256.py 1, tests/test_migration_runner.py 1, tests/test_presented_context.py 1, tests/test_readers_on_the_reader.py 1, tests/test_run_calls_outcomes.py 1, tests/test_run_interrupts.py 1, tests/test_selection_bound.py 1
+   tests/test_adjudication_pairs.py 320 <module>.TestExportAmbiguousPairs.test_a_registered_arm_holding_nothing_still_raises_no_extraction_data RuntimeError
+   tests/test_adjudication_pairs.py 498 <module>.TestImportDecisions.test_duplicate_import_raises RuntimeError
+   tests/test_consensus.py 422 <module>.TestStoreConsensus.test_duplicate_raises RuntimeError
+   tests/test_database.py 322 <module>.test_context_manager_closes_on_exception RuntimeError
+   tests/test_extraction_events.py 446 <module>.test_b10_a_failure_at_the_paper_event_write_writes_nothing_for_the_paper RuntimeError
+   tests/test_failed_close_reason.py 141 <module>.test_a_cloud_arm_that_raises_closes_failed_with_the_class_and_message RuntimeError
+   tests/test_ft_adjudication_import.py 313 <module>.test_12_complete_stage_commit_false_raises_when_no_row_is_touched RuntimeError
+   tests/test_ft_adjudication_import.py 195 <module>.test_6_an_exception_at_the_event_write_writes_nothing_and_fails_the_run RuntimeError
+   tests/test_ft_bridge.py 343 <module>.test_6_an_exception_at_the_primary_event_write_leaves_nothing RuntimeError
+   tests/test_ft_bridge.py 358 <module>.test_6_an_exception_at_the_verifier_event_write_leaves_nothing RuntimeError
+   tests/test_ft_bridge.py 405 <module>.test_8_a_resumed_run_is_a_new_manifest_and_no_paper_gets_a_second_event RuntimeError
+   tests/test_human_import.py 308 <module>.TestStore.test_duplicate_import_raises RuntimeError
+   tests/test_import_extraction_entry.py 292 <module>.test_t6a_a_generic_failure_at_entry_2_rolls_back_and_closes_failed RuntimeError
+   tests/test_import_extraction_entry.py 336 <module>.test_t6_an_exception_after_the_loop_closes_failed_unprefixed RuntimeError
+   tests/test_import_screening_entry.py 246 <module>.test_t6_a_generic_failure_at_entry_2_rolls_back_and_closes_failed RuntimeError
+   tests/test_import_screening_entry.py 265 <module>.test_t6_an_id_less_entry_is_labelled_by_its_title RuntimeError
+   tests/test_migration_018_cloud_shape.py 195 <module>.test_a_null_confidence_stops_the_migration_rather_than_being_backfilled RuntimeError
+   tests/test_migration_018_cloud_shape.py 210 <module>.test_a_mid_rebuild_failure_leaves_everything_as_it_was RuntimeError
+   tests/test_migration_019_paper_axes.py 132 <module>.test_a_mid_rebuild_failure_leaves_the_table_and_both_triggers_intact RuntimeError
+   tests/test_migration_019_paper_axes.py 261 <module>.test_a_pre_existing_failure_row_with_no_reason_stops_the_migration RuntimeError
+   tests/test_migration_021_parsed_text_sha256.py 270 <module>.test_021_a_forced_mid_rebuild_failure_leaves_the_table_and_guard RuntimeError
+   tests/test_migration_runner.py 244 <module>.test_015_refuses_to_drop_the_only_index_on_a_column RuntimeError
+   tests/test_ollama_client.py 65 <module>.TestWatchdogTimeout.test_watchdog_fires_on_hang TimeoutError
+   tests/test_ollama_client.py 92 <module>.TestWatchdogTimeout.test_watchdog_retries_then_raises TimeoutError
+   tests/test_ollama_client.py 160 <module>.TestTimeoutLogging.test_timeout_logs_warning TimeoutError
+   tests/test_ollama_client.py 218 <module>.TestOllamaRestartRecovery.test_restart_attempted_after_retries_exhausted TimeoutError
+   tests/test_ollama_client.py 264 <module>.TestOllamaRestartRecovery.test_restart_failure_raises_original_timeout TimeoutError
+   tests/test_ollama_client.py 286 <module>.TestOllamaRestartRecovery.test_restart_logs_warning TimeoutError
+   tests/test_ollama_client.py 302 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_restart_failure RuntimeError
+   tests/test_ollama_client.py 324 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_post_restart_failure RuntimeError
+   tests/test_ollama_preflight.py 143 <module>.TestCheckOllamaEnv.test_fails_when_flash_attention_missing RuntimeError
+   tests/test_ollama_preflight.py 150 <module>.TestCheckOllamaEnv.test_fails_when_max_loaded_models_wrong RuntimeError
+   tests/test_ollama_preflight.py 158 <module>.TestCheckOllamaEnv.test_fails_when_kv_cache_type_wrong RuntimeError
+   tests/test_ollama_preflight.py 163 <module>.TestCheckOllamaEnv.test_fails_lists_all_correctness_errors RuntimeError
+   tests/test_ollama_preflight.py 268 <module>.TestRunnerIntegration.test_ft_screening_calls_preflight RuntimeError
+   tests/test_ollama_preflight.py 290 <module>.TestRunnerIntegration.test_extraction_calls_preflight RuntimeError
+   tests/test_ollama_preflight.py 316 <module>.TestRunnerIntegration.test_audit_calls_preflight RuntimeError
+   tests/test_ollama_preflight.py 196 <module>.TestCheckOllamaEnv.test_mixed_correctness_fail_and_perf_warn RuntimeError
+   tests/test_ollama_preflight.py 246 <module>.TestRequirePreflight.test_env_check_runs_before_model_check RuntimeError
+   tests/test_ollama_preflight.py 228 <module>.TestRequirePreflight.test_raises_on_failure RuntimeError
+   tests/test_presented_context.py 144 <module>.test_T1_exhaustion_hash_equals_the_recorded_row RuntimeError
+   tests/test_qualgap01.py 102 <module>.test_bind_runtime_accepts_the_expected_version_and_disarms_restart RuntimeError
+   tests/test_qualgap01.py 91 <module>.test_bind_runtime_refuses_a_server_of_the_wrong_version RuntimeError
+   tests/test_readers_on_the_reader.py 568 <module>.test_an_arm_the_row_format_cannot_name_is_refused RuntimeError
+   tests/test_restart_recovery_guard.py 127 <module>.test_opt_out_refuses_before_touching_subprocess RuntimeError
+   tests/test_restart_recovery_guard.py 161 <module>.test_refusal_surfaces_as_timeout_from_ollama_chat TimeoutError
+   tests/test_restart_recovery_guard.py 81 <module>.test_restart_refused_under_foreign_lock RuntimeError
+   tests/test_run_calls_outcomes.py 213 <module>.test_T6_client_exception_after_retries_records_one_error_row_and_raises RuntimeError
+   tests/test_run_fault_predicate.py 281 <module>.test_a_post_commit_bookkeeping_failure_is_not_an_extraction_failure RuntimeError
+   tests/test_run_fault_predicate.py 300 <module>.test_a_progress_failure_in_the_handler_does_not_cost_the_failure_event RuntimeError
+   tests/test_run_interrupts.py 175 <module>.test_t4_each_main_installs_then_restores_the_handlers RuntimeError
+   tests/test_run_manifest_migration.py 181 <module>.test_a_forced_failure_after_both_rebuilds_rolls_everything_back RuntimeError
+   tests/test_run_manifest_migration.py 197 <module>.test_020_refuses_a_runless_row_that_is_not_marked_pre_manifest RuntimeError
+   tests/test_screener.py 260 <module>.test_abstract_screening_calls_preflight RuntimeError
+   tests/test_screener.py 275 <module>.test_abstract_verification_calls_preflight RuntimeError
+   tests/test_selection_bound.py 230 <module>.test_T3_run_pipeline_threads_the_bound_to_the_manifest_and_the_stage RuntimeError
+## v_whole_function_ollama_chat: 136 hits in 23 files
+   by file: tests/test_elicitation_pipeline.py 22, tests/analysis/paper1/test_judge_pass2.py 17, tests/analysis/paper1/test_judge.py 11, tests/test_u39_runtime_equals_hash.py 11, tests/test_vision_bounds.py 11, tests/test_ollama_preflight.py 9, tests/test_auditor.py 8, tests/test_duplicate_on_pass1_attempt_2.py 6, tests/test_extraction_signatures.py 5, tests/test_thinking_channel.py 5, tests/test_elicit01.py 4, tests/test_qualgap01.py 4, tests/test_run_fault_predicate.py 4, tests/test_pdf_parser.py 3, tests/test_presented_context.py 3, tests/test_extractor.py 2, tests/test_floor_and_stored_attempt.py 2, tests/test_u38_snippet_precheck.py 2, tests/test_value_divergence.py 2, tests/test_write_boundary_guard.py 2, tests/test_eligibility.py 1, tests/test_extraction_run_link.py 1, tests/test_screen2f_armsets.py 1
+   tests/analysis/paper1/test_judge.py 104 <module>.TestRunPass1Happy.test_happy_path_3_arm with patch.object(judge_module, "ollama_chat", mock), \
+   tests/analysis/paper1/test_judge.py 120 <module>.TestRunPass1Happy.test_prompt_hash_is_sha256_hex with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge.py 129 <module>.TestRunPass1Happy.test_prompt_hash_deterministic with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge.py 143 <module>.TestRunPass1Happy.test_prompt_hash_differs_with_different_inputs with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge.py 152 <module>.TestRunPass1Happy.test_timestamp_iso_parses with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge.py 168 <module>.TestRunPass1Happy.test_arm_permutation_matches_prompt_order with patch.object(judge_module, "ollama_chat", capture), \
+   tests/analysis/paper1/test_judge.py 182 <module>.TestRunPass1Happy.test_seed_passed_to_ollama_options with patch.object(judge_module, "ollama_chat", mock), \
+   tests/analysis/paper1/test_judge.py 192 <module>.TestRunPass1Happy.test_5_arm_produces_10_pairwise with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge.py 233 <module>.TestRunPass1Errors.test_call_error_wraps_client_exception with patch.object(judge_module, "ollama_chat", boom), \
+   tests/analysis/paper1/test_judge.py 241 <module>.TestRunPass1Errors.test_parse_error_on_malformed_json with patch.object(judge_module, "ollama_chat", mock), \
+   tests/analysis/paper1/test_judge.py 263 <module>.TestRunPass1Errors.test_parse_error_on_schema_violation with patch.object(judge_module, "ollama_chat", mock), \
+   tests/analysis/paper1/test_judge_pass2.py 88 <module>.TestRunPass2Happy.test_returns_pass2_result with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 102 <module>.TestRunPass2Happy.test_short_circuit_dict_records_clean_arms with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 113 <module>.TestRunPass2Happy.test_arm_permutation_covers_all_arms with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 129 <module>.TestRunPass2Happy.test_ollama_options_include_seed_and_temperature_zero with patch.object(judge_module, "ollama_chat", capture), \
+   tests/analysis/paper1/test_judge_pass2.py 137 <module>.TestRunPass2Happy.test_de_randomize_maps_slot_to_arm_name with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 149 <module>.TestRunPass2Happy.test_source_windowed_flag_records_false_for_short_text with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 158 <module>.TestRunPass2Happy.test_prompt_hash_is_sha256_hex with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 167 <module>.TestRunPass2Happy.test_determinism_same_inputs_same_seed_and_prompt_hash with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 192 <module>.TestRunPass2Errors.test_ollama_error_wrapped with patch.object(judge_module, "ollama_chat", boom), \
+   tests/analysis/paper1/test_judge_pass2.py 198 <module>.TestRunPass2Errors.test_malformed_json_raises_parse_error with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 213 <module>.TestRunPass2Errors.test_schema_violation_raises_parse_error with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 229 <module>.TestRunPass2Errors.test_duplicate_slot_raises_parse_error with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 244 <module>.TestRunPass2Errors.test_missing_slot_raises_parse_error with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 260 <module>.TestRunPass2Errors.test_out_of_range_slot_raises_parse_error with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 303 <module>.TestArmVerdictsGrammarRegression.test_four_element_payload_rejected_by_pydantic_maxitems with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 384 <module>.TestArmVerdictsGrammarRegression.test_discriminator_still_routes_unsupported_verdict with patch.object(judge_module, "ollama_chat",
+   tests/analysis/paper1/test_judge_pass2.py 412 <module>.TestArmVerdictsGrammarRegression.test_unsupported_without_hypothesis_still_rejected with patch.object(judge_module, "ollama_chat",
+   tests/test_auditor.py 154 <module>.test_semantic_verify_mocked with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp) as chat:
+   tests/test_auditor.py 192 <module>.test_u14_audit_span_does_not_invalidate_a_verbatim_quote_containing_an_ellipsis with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
+   tests/test_auditor.py 209 <module>.test_audit_span_verified with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
+   tests/test_auditor.py 228 <module>.test_audit_span_contested with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
+   tests/test_auditor.py 248 <module>.test_audit_span_flagged with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
+   tests/test_auditor.py 263 <module>.test_audit_span_not_found_value_is_not_auto_verified with patch("engine.agents.auditor.ollama_chat") as mock_chat:
+   tests/test_auditor.py 287 <module>.test_audit_span_tier4_is_located_like_any_other_tier with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp) as mock_chat:
+   tests/test_auditor.py 307 <module>.test_audit_span_tier4_semantic_fail with patch("engine.agents.auditor.ollama_chat", return_value=mock_resp):
+   tests/test_duplicate_on_pass1_attempt_2.py 112 <module>._drive monkeypatch.setattr(PL, "ollama_chat", p1)
+   tests/test_duplicate_on_pass1_attempt_2.py 113 <module>._drive monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(pass2, H_PASS2))
+   tests/test_duplicate_on_pass1_attempt_2.py 212 <module>.test_a_duplicate_on_attempt_1_keeps_its_own_path monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(doubled, H1))
+   tests/test_duplicate_on_pass1_attempt_2.py 213 <module>.test_a_duplicate_on_attempt_1_keeps_its_own_path monkeypatch.setattr(E, "ollama_chat",
+   tests/test_duplicate_on_pass1_attempt_2.py 233 <module>.test_a_duplicate_on_attempt_1_is_named_in_every_retry_row monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(doubled, H1))
+   tests/test_duplicate_on_pass1_attempt_2.py 234 <module>.test_a_duplicate_on_attempt_1_is_named_in_every_retry_row monkeypatch.setattr(E, "ollama_chat",
+   tests/test_elicit01.py 157 <module>.test_row_at_ceiling_is_flagged_truncated_despite_done_reason_stop with patch("analysis.eval.elicit01.runner.oc.ollama_chat", return_value=resp):
+   tests/test_elicit01.py 171 <module>.test_row_below_ceiling_is_not_flagged with patch("analysis.eval.elicit01.runner.oc.ollama_chat", return_value=resp):
+   tests/test_elicit01.py 195 <module>.test_row_schema_complete_on_stubbed_success with patch("analysis.eval.elicit01.runner.oc.ollama_chat", return_value=resp):
+   tests/test_elicit01.py 204 <module>.test_failure_row_is_recorded_not_raised with patch("analysis.eval.elicit01.runner.oc.ollama_chat",
+   tests/test_elicitation_pipeline.py 158 <module>._run monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(pass1_content))
+   tests/test_elicitation_pipeline.py 159 <module>._run monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+   tests/test_elicitation_pipeline.py 195 <module>.test_pass1_is_read_from_the_content_channel monkeypatch.setattr(PL, "ollama_chat",
+   tests/test_elicitation_pipeline.py 197 <module>.test_pass1_is_read_from_the_content_channel monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+   tests/test_elicitation_pipeline.py 225 <module>.test_a_failing_field_is_refused_and_the_rest_of_the_paper_is_stored monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_HALF))
+   tests/test_elicitation_pipeline.py 226 <module>.test_a_failing_field_is_refused_and_the_rest_of_the_paper_is_stored monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+   tests/test_elicitation_pipeline.py 252 <module>.test_an_uncited_value_is_never_stored_as_a_value monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_HALF))
+   tests/test_elicitation_pipeline.py 253 <module>.test_an_uncited_value_is_never_stored_as_a_value monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+   tests/test_elicitation_pipeline.py 284 <module>.test_pass_2_is_skipped_when_no_field_survived monkeypatch.setattr(PL, "ollama_chat", count_pass1)
+   tests/test_elicitation_pipeline.py 285 <module>.test_pass_2_is_skipped_when_no_field_survived monkeypatch.setattr(E, "ollama_chat", count_pass2)
+   tests/test_elicitation_pipeline.py 335 <module>.test_write_guard_also_fires_on_the_elicited_path monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_GOOD))
+   tests/test_elicitation_pipeline.py 336 <module>.test_write_guard_also_fires_on_the_elicited_path monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+   tests/test_elicitation_pipeline.py 421 <module>.test_the_completeness_predicate_and_the_contracts_share_one_field_set monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_GOOD))
+   tests/test_elicitation_pipeline.py 422 <module>.test_the_completeness_predicate_and_the_contracts_share_one_field_set monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+   tests/test_elicitation_pipeline.py 435 <module>.test_the_accepted_attempt_and_both_attempts_reach_telemetry monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(PASS1_HALF))
+   tests/test_elicitation_pipeline.py 436 <module>.test_the_accepted_attempt_and_both_attempts_reach_telemetry monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+   tests/test_elicitation_pipeline.py 457 <module>.test_both_pass1_attempts_raw_responses_reach_telemetry monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(next(answers)))
+   tests/test_elicitation_pipeline.py 458 <module>.test_both_pass1_attempts_raw_responses_reach_telemetry monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+   tests/test_elicitation_pipeline.py 506 <module>.test_the_elicited_requests_are_byte_identical monkeypatch.setattr(PL, "ollama_chat", fake_pass1)
+   tests/test_elicitation_pipeline.py 507 <module>.test_the_elicited_requests_are_byte_identical monkeypatch.setattr(E, "ollama_chat", fake_pass2)
+   tests/test_elicitation_pipeline.py 542 <module>.test_an_escape_record_never_reaches_the_priming_input monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(pass1))
+   tests/test_elicitation_pipeline.py 543 <module>.test_an_escape_record_never_reaches_the_priming_input monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(PASS2, thinking=None))
+   tests/test_eligibility.py 510 <module>._capture with mock.patch.object(module, "ollama_chat", recorder):
+   tests/test_extraction_run_link.py 187 <module>.test_t4_the_snippet_retry_records_its_paper monkeypatch.setattr(E, "ollama_chat",
+   tests/test_extraction_signatures.py 36 <module>._fence_model_calls with patch("engine.agents.extractor.ollama_chat", _no_model_call), \
+   tests/test_extraction_signatures.py 37 <module>._fence_model_calls patch("engine.elicitation.pipeline.ollama_chat", _no_model_call), \
+   tests/test_extraction_signatures.py 38 <module>._fence_model_calls patch("engine.agents.auditor.ollama_chat", _no_model_call), \
+   tests/test_extraction_signatures.py 39 <module>._fence_model_calls patch("engine.parsers.pdf_parser.ollama_chat", _no_model_call), \
+   tests/test_extraction_signatures.py 40 <module>._fence_model_calls patch("engine.acquisition.pdf_quality_check.ollama_chat", _no_model_call):
+   tests/test_extractor.py 521 <module>.TestProactiveRestart.test_zero_span_extraction_marks_extract_failed @patch("engine.agents.extractor.ollama_chat")
+   tests/test_extractor.py 274 <module>.test_full_two_pass_mocked with patch("engine.agents.extractor.ollama_chat") as mock_chat:
+   tests/test_floor_and_stored_attempt.py 246 <module>._elicited_run monkeypatch.setattr(PL, "ollama_chat", p1)
+   tests/test_floor_and_stored_attempt.py 247 <module>._elicited_run monkeypatch.setattr(E, "ollama_chat", p2)
+   tests/test_ollama_preflight.py 28 <module>.TestCheckModel.test_success_returns_ok with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+   tests/test_ollama_preflight.py 39 <module>.TestCheckModel.test_error_returns_error_with_message with patch("engine.utils.ollama_preflight.ollama_chat",
+   tests/test_ollama_preflight.py 53 <module>.TestPreflightCheck.test_all_ok_returns_success with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+   tests/test_ollama_preflight.py 72 <module>.TestPreflightCheck.test_vram_filters_to_relevant_models with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+   tests/test_ollama_preflight.py 92 <module>.TestPreflightCheck.test_vram_unrelated_model_does_not_cause_rejection with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+   tests/test_ollama_preflight.py 113 <module>.TestPreflightCheck.test_one_failure_returns_failure with patch("engine.utils.ollama_preflight.ollama_chat", side_effect=mock_chat):
+   tests/test_ollama_preflight.py 224 <module>.TestRequirePreflight.test_raises_on_failure with patch("engine.utils.ollama_preflight.ollama_chat",
+   tests/test_ollama_preflight.py 235 <module>.TestRequirePreflight.test_passes_silently_on_success with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+   tests/test_ollama_preflight.py 346 <module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+   tests/test_pdf_parser.py 148 <module>.test_scanned_routes_to_vision_model with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response):
+   tests/test_pdf_parser.py 468 <module>.test_parse_pdf_uses_spec_threshold with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response) as mock_chat:
+   tests/test_pdf_parser.py 276 <module>.test_docling_and_pymupdf_sparse_triggers_vision with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response):
+   tests/test_presented_context.py 320 <module>.test_T5_the_elicited_chain_carries_both_attempts_presented_is_pass2 monkeypatch.setattr(PL, "ollama_chat",
+   tests/test_presented_context.py 323 <module>.test_T5_the_elicited_chain_carries_both_attempts_presented_is_pass2 monkeypatch.setattr(E, "ollama_chat",
+   tests/test_presented_context.py 344 <module>.test_T5_pass2_skipped_presented_is_the_accepted_pass1_attempt monkeypatch.setattr(PL, "ollama_chat",
+   tests/test_qualgap01.py 51 <module>.test_v1_omits_the_think_kwarg_entirely with patch.object(R.oc, "ollama_chat", return_value=_Resp()) as chat:
+   tests/test_qualgap01.py 57 <module>.test_v2_passes_think_true with patch.object(R.oc, "ollama_chat", return_value=_Resp()) as chat:
+   tests/test_qualgap01.py 75 <module>.test_pass1_reads_the_native_channel_and_reports_the_branch with patch.object(R.oc, "ollama_chat", return_value=_Resp()):
+   tests/test_qualgap01.py 66 <module>.test_cells_differ_only_in_the_think_argument with patch.object(R.oc, "ollama_chat", return_value=_Resp()) as chat:
+   tests/test_run_fault_predicate.py 187 <module>.test_run_faults_leave_the_snippet_retry_as_themselves monkeypatch.setattr(E, "ollama_chat", boom)
+   tests/test_run_fault_predicate.py 198 <module>.test_the_complement_is_still_a_failed_snippet_retry monkeypatch.setattr(E, "ollama_chat", boom)
+   tests/test_run_fault_predicate.py 207 <module>.test_an_answered_snippet_retry_that_does_not_parse_keeps_its_request_hash monkeypatch.setattr(E, "ollama_chat", lambda **kw: (answered, "a" * 64))
+   tests/test_run_fault_predicate.py 212 <module>.test_an_answered_snippet_retry_that_does_not_parse_keeps_its_request_hash monkeypatch.setattr(E, "ollama_chat", lambda **kw: (
+   tests/test_screen2f_armsets.py 174 <module>.test_arm_d_pins_are_what_head_actually_renders with mock.patch.object(screener, "ollama_chat", rec), pytest.raises(Cap):
+   tests/test_thinking_channel.py 111 <module>.test_pass1_passes_think_explicitly_and_defaults_on with patch("engine.agents.extractor.ollama_chat") as chat:
+   tests/test_thinking_channel.py 126 <module>.test_think_is_not_a_caller_override with patch("engine.agents.extractor.ollama_chat") as chat, \
+   tests/test_thinking_channel.py 127 <module>.test_think_is_not_a_caller_override patch("engine.elicitation.pipeline.ollama_chat") as el_chat:
+   tests/test_thinking_channel.py 142 <module>.test_pass1_returns_the_native_trace_not_the_answer with patch("engine.agents.extractor.ollama_chat") as chat:
+   tests/test_thinking_channel.py 152 <module>.test_pass1_records_branch_telemetry with patch("engine.agents.extractor.ollama_chat") as chat:
+   tests/test_u38_snippet_precheck.py 97 <module>.test_u38_exhausted_retries_keep_the_original_snippet with patch.object(E, "ollama_chat", side_effect=_reply(BRIDGING)) as chat:
+   tests/test_u38_snippet_precheck.py 112 <module>.test_u38_the_write_boundary_still_refuses_an_uncited_value with patch.object(E, "ollama_chat", side_effect=_reply(BRIDGING)):
+   tests/test_u39_runtime_equals_hash.py 93 <module>.test_abstract_screen_runtime_equals_hash monkeypatch.setattr(S, "ollama_chat", _fake)
+   tests/test_u39_runtime_equals_hash.py 103 <module>.test_ft_screen_runtime_equals_hash monkeypatch.setattr(F, "ollama_chat", _fake)
+   tests/test_u39_runtime_equals_hash.py 112 <module>.test_extract_pass1_runtime_equals_hash monkeypatch.setattr(X, "ollama_chat", _fake)
+   tests/test_u39_runtime_equals_hash.py 120 <module>.test_extract_pass2_non_elicited_runtime_equals_hash monkeypatch.setattr(X, "ollama_chat", _fake)
+   tests/test_u39_runtime_equals_hash.py 129 <module>.test_extract_retry_snippet_runtime_equals_hash monkeypatch.setattr(X, "ollama_chat", _fake)
+   tests/test_u39_runtime_equals_hash.py 140 <module>.test_elicitation_pass1_runtime_equals_hash monkeypatch.setattr(PL, "ollama_chat", _fake)
+   tests/test_u39_runtime_equals_hash.py 155 <module>.test_extract_pass2_elicited_runtime_equals_hash monkeypatch.setattr(X, "ollama_chat", _fake)
+   tests/test_u39_runtime_equals_hash.py 168 <module>.test_audit_runtime_equals_hash monkeypatch.setattr(A, "ollama_chat", _fake)
+   tests/test_u39_runtime_equals_hash.py 186 <module>.test_audit_every_codebook_type_equals_a_rendered_variant monkeypatch.setattr(A, "ollama_chat", _fake)
+   tests/test_u39_runtime_equals_hash.py 213 <module>.test_vision_parse_runtime_equals_hash monkeypatch.setattr(P, "ollama_chat", _fake)
+   tests/test_u39_runtime_equals_hash.py 223 <module>.test_preflight_runtime_equals_hash monkeypatch.setattr(OP, "ollama_chat", _fake)
+   tests/test_value_divergence.py 132 <module>._elicited monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(_pass1(cb, pass1)))
+   tests/test_value_divergence.py 133 <module>._elicited monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(p2))
+   tests/test_vision_bounds.py 85 <module>.test_defaults_send_num_predict_and_num_ctx with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+   tests/test_vision_bounds.py 94 <module>.test_explicit_overrides_reach_the_call with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+   tests/test_vision_bounds.py 109 <module>.test_spec_overrides_reach_the_call_through_parse_pdf patch("engine.parsers.pdf_parser.ollama_chat",
+   tests/test_vision_bounds.py 142 <module>.test_the_prompt_is_what_is_sent with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+   tests/test_vision_bounds.py 156 <module>.test_truncation_on_page_2_aborts_before_page_3 with patch("engine.parsers.pdf_parser.ollama_chat", side_effect=responses):
+   tests/test_vision_bounds.py 167 <module>.test_truncation_becomes_an_unselectable_error_row patch("engine.parsers.pdf_parser.ollama_chat",
+   tests/test_vision_bounds.py 196 <module>.test_no_partial_document_survives_a_truncated_page with patch("engine.parsers.pdf_parser.ollama_chat", side_effect=responses):
+   tests/test_vision_bounds.py 205 <module>.test_all_pages_stop_assembles_the_document_as_before with patch("engine.parsers.pdf_parser.ollama_chat",
+   tests/test_vision_bounds.py 230 <module>.test_per_call_wall_timeout_is_passed with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+   tests/test_vision_bounds.py 236 <module>.test_default_page_timeout_is_the_spec_default with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+   tests/test_vision_bounds.py 216 <module>.test_per_page_log_lines_are_emitted with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()):
+   tests/test_write_boundary_guard.py 168 <module>.test_a_blank_pass2_value_with_evidence_is_refused_in_both_modes monkeypatch.setattr(PL, "ollama_chat", lambda **kw: _response(_good_pass1(cb)))
+   tests/test_write_boundary_guard.py 169 <module>.test_a_blank_pass2_value_with_evidence_is_refused_in_both_modes monkeypatch.setattr(E, "ollama_chat", lambda **kw: _response(pass2))
+## vi_message_string: 29 hits in 9 files
+   by file: tests/test_run_calls_outcomes.py 8, tests/test_audit_admitted_set.py 5, tests/test_run_fault_predicate.py 5, tests/test_ollama_client.py 3, tests/test_prisma_reconciliation.py 3, tests/migrations/test_022_run_kinds_and_audit_tables.py 2, tests/analysis/paper1/test_pass2_full.py 1, tests/test_extractor.py 1, tests/test_u20_loaded_context.py 1
+   tests/analysis/paper1/test_pass2_full.py 117 <module>.TestAbortConditions.test_aborts_when_projected_runtime_exceeds_thirty_hours projected wall-clock
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 83 <module>.test_T1_fresh_database_carries_022_executed outcome_detail
+   tests/migrations/test_022_run_kinds_and_audit_tables.py 430 <module>.test_T6_record_call_on_a_fixture_writes_outcome_completed SELECT outcome, outcome_detail FROM run_calls WHERE call_id = ?
+   tests/test_audit_admitted_set.py 48 <module> model_call_failed
+   tests/test_audit_admitted_set.py 203 <module>.test_t6_a_same_key_failure_over_live_claims_stays_extraction_failed_after_the_audit model_call_failed
+   tests/test_audit_admitted_set.py 220 <module>.test_t8_d24_reparse_the_failure_supersedes_and_the_audit_writes_nothing model_call_failed
+   tests/test_audit_admitted_set.py 199 <module>.test_t6_a_same_key_failure_over_live_claims_stays_extraction_failed_after_the_audit model_call_failed
+   tests/test_audit_admitted_set.py 215 <module>.test_t8_d24_reparse_the_failure_supersedes_and_the_audit_writes_nothing model_call_failed
+   tests/test_extractor.py 700 <module>.TestRestartOllamaGraceful.test_restart_failure_continues_extraction Proactive Ollama restart failed
+   tests/test_ollama_client.py 172 <module>.TestTimeoutLogging.test_timeout_logs_warning wall-clock timeout
+   tests/test_ollama_client.py 302 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_restart_failure Ollama restart failed
+   tests/test_ollama_client.py 324 <module>.TestOllamaRestartRecovery.test_restart_ollama_and_retry_raises_on_post_restart_failure Post-restart Ollama call failed
+   tests/test_prisma_reconciliation.py 284 <module>.TestExtractFailed.test_extract_failed_appears_in_flow_and_csv Extraction failed,2,model_call_failed
+   tests/test_prisma_reconciliation.py 274 <module>.TestExtractFailed.test_extract_failed_appears_in_flow_and_csv model_call_failed
+   tests/test_prisma_reconciliation.py 267 <module>.TestExtractFailed.test_extract_failed_appears_in_flow_and_csv model_call_failed
+   tests/test_run_calls_outcomes.py 106 <module>.test_T1_success_records_one_completed_row outcome_detail
+   tests/test_run_calls_outcomes.py 129 <module>.test_T2_input_overflow_records_one_refused_row_and_raises outcome_detail
+   tests/test_run_calls_outcomes.py 151 <module>.test_T3_ceiling_unavailable_records_one_refused_row_and_raises outcome_detail
+   tests/test_run_calls_outcomes.py 175 <module>.test_T4_input_truncated_records_one_refused_row_with_digest_and_raises outcome_detail
+   tests/test_run_calls_outcomes.py 198 <module>.test_T5_input_dropped_records_one_refused_row_with_digest_and_raises outcome_detail
+   tests/test_run_calls_outcomes.py 219 <module>.test_T6_client_exception_after_retries_records_one_error_row_and_raises outcome_detail
+   tests/test_run_calls_outcomes.py 220 <module>.test_T6_client_exception_after_retries_records_one_error_row_and_raises outcome_detail
+   tests/test_run_calls_outcomes.py 75 <module>._rows SELECT call_id, outcome, outcome_detail, request_hash, response_digest FROM run_calls ORDE
+   tests/test_run_fault_predicate.py 93 <module> model_call_failed
+   tests/test_run_fault_predicate.py 101 <module> model_call_failed
+   tests/test_run_fault_predicate.py 103 <module> model_call_failed
+   tests/test_run_fault_predicate.py 92 <module> timed out after 3 attempts + restart
+   tests/test_run_fault_predicate.py 302 <module>.test_a_progress_failure_in_the_handler_does_not_cost_the_failure_event model_call_failed
+   tests/test_u20_loaded_context.py 137 <module>._mismatch SELECT outcome, outcome_detail FROM run_calls WHERE run_id = ? ORDER BY call_id
+
+# COUNTS
+site analysis / send: ollama_chat: 10
+site engine / executor created: 2
+site engine / executor shutdown: 4
+site engine / restart: systemctl restart: 2
+site engine / run_calls write: 8
+site engine / send: ollama_chat: 11
+site engine / submit: client chat to an executor: 2
+test i_direct_name: 65 / 15 files
+test i_patch_name: 6 / 6 files
+test i_patch_string: 53 / 8 files
+test ii_module_alias_client_replaced: 24 / 19 files
+test iii_outcome_string: 57 / 18 files
+test iii_run_calls_query: 29 / 16 files
+test iii_signature_kw: 40 / 7 files
+test iv_exception_class: 56 / 26 files
+test v_whole_function_ollama_chat: 136 / 23 files
+test vi_message_string: 29 / 9 files

@@ -1,0 +1,128 @@
+{
+ "model": "llama3.2:3b",
+ "num_ctx": 8192,
+ "num_predict": 7000,
+ "pid": 3504646,
+ "journal_since": "2026-10-31 05:18:07",
+ "events": [
+  {
+   "at": "2026-10-31T05:18:07.864971+00:00",
+   "event": "lock_acquired"
+  },
+  {
+   "at": "2026-10-31T05:18:07.883902+00:00",
+   "event": "P0_ps.json",
+   "models": []
+  },
+  {
+   "at": "2026-10-31T05:18:07.897777+00:00",
+   "event": "L0_request_written",
+   "bytes": 262
+  },
+  {
+   "at": "2026-10-31T05:18:09.918529+00:00",
+   "event": "L0_response_saved",
+   "status": 200,
+   "bytes": 274
+  },
+  {
+   "at": "2026-10-31T05:18:09.918634+00:00",
+   "event": "L0_loaded",
+   "wall_s": 2.021,
+   "done_reason": "length",
+   "prompt_eval_count": 57,
+   "eval_count": 1,
+   "total_duration": 2019347818,
+   "load_duration": 1985512493,
+   "prompt_eval_duration": 20863481,
+   "eval_duration": null
+  },
+  {
+   "at": "2026-10-31T05:18:09.937229+00:00",
+   "event": "L0_handlers_ended",
+   "journal_chat_posts": 1,
+   "waited_s": 0.0
+  },
+  {
+   "at": "2026-10-31T05:18:09.956381+00:00",
+   "event": "L0_ps.json",
+   "models": [
+    "llama3.2:3b"
+   ]
+  },
+  {
+   "at": "2026-10-31T05:18:09.974583+00:00",
+   "event": "C1_ps_before.json",
+   "models": [
+    "llama3.2:3b"
+   ]
+  },
+  {
+   "at": "2026-10-31T05:18:09.988274+00:00",
+   "event": "C1_request_written",
+   "bytes": 265
+  },
+  {
+   "at": "2026-10-31T05:18:12.342468+00:00",
+   "event": "C1_response_saved",
+   "status": 200,
+   "bytes": 748
+  },
+  {
+   "at": "2026-10-31T05:18:12.361534+00:00",
+   "event": "C1_handlers_ended",
+   "journal_chat_posts": 2,
+   "waited_s": 0.0
+  },
+  {
+   "at": "2026-10-31T05:18:12.361609+00:00",
+   "event": "C1_returned",
+   "wall_s": 2.355,
+   "qualifies": false,
+   "done_reason": "stop",
+   "prompt_eval_count": 57,
+   "eval_count": 202,
+   "total_duration": 2353520148,
+   "load_duration": 86029182,
+   "prompt_eval_duration": 12831539,
+   "eval_duration": 2141293245
+  },
+  {
+   "at": "2026-10-31T05:18:12.361633+00:00",
+   "event": "STOP",
+   "why": "calibration: V0 ran under the floor of 30.0 s"
+  },
+  {
+   "at": "2026-10-31T05:18:12.386632+00:00",
+   "event": "U1",
+   "status": 200
+  },
+  {
+   "at": "2026-10-31T05:18:13.435428+00:00",
+   "event": "U1_confirmed"
+  },
+  {
+   "at": "2026-10-31T05:18:13.435544+00:00",
+   "event": "lock_released"
+  }
+ ],
+ "lock_acquired_at": "2026-10-31T05:18:07.864964+00:00",
+ "calibration": [
+  {
+   "candidate": 1,
+   "wall_s": 2.355,
+   "verdict": "does not qualify",
+   "prompt": "List the squares of the integers from 1 to 5000, one per line in the form 12 squared is 144, with no other text.",
+   "fields": {
+    "done_reason": "stop",
+    "prompt_eval_count": 57,
+    "eval_count": 202,
+    "total_duration": 2353520148,
+    "load_duration": 86029182,
+    "prompt_eval_duration": 12831539,
+    "eval_duration": 2141293245
+   }
+  }
+ ],
+ "lock_released_at": "2026-10-31T05:18:13.435476+00:00"
+}

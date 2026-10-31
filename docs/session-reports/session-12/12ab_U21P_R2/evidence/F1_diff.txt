@@ -1,0 +1,16 @@
+14,17c14,15
+< CLOSE_AT, FOLLOW_AT, FLOOR = 10.0, 12.0, 40.0
+< CANDIDATES = ("Write the multiplication table from 1 x 1 up to 300 x 300, one equation per line in the form 1 x 1 = 1, with no other text.",
+<               "Count from 1 to 5000, writing each number out in English words on its own line, with no introduction and no commentary.",
+<               "List the squares of the integers from 1 to 5000, one per line in the form 12 squared is 144, with no other text.")
+---
+> CLOSE_AT, FOLLOW_AT, FLOOR = 10.0, 12.0, 30.0
+> CANDIDATES = ("List the squares of the integers from 1 to 5000, one per line in the form 12 squared is 144, with no other text.",)   # C3 alone, R759(b)
+104c102
+<                 good = r.done_reason == "length" and wall >= FLOOR
+---
+>                 good = wall >= FLOOR   # R759(b): a floor of 30 s, whatever the done_reason
+108c106
+<             if d0 is None: raise Stop(f"calibration: none of {len(CANDIDATES)} candidates ended by length at the cap {NPRED} in {FLOOR} s or more")
+---
+>             if d0 is None: raise Stop(f"calibration: V0 ran under the floor of {FLOOR} s")

@@ -1,0 +1,25 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 16 items
+
+tests/test_u21_no_overlap.py::test_no_attempt_starts_while_the_previous_request_is_still_running PASSED [  6%]
+tests/test_u21_no_overlap.py::test_a_late_response_is_used_and_recorded_completed_with_lateness PASSED [ 12%]
+tests/test_u21_no_overlap.py::test_a_slow_request_with_no_retries_does_not_restart PASSED [ 18%]
+tests/test_u21_no_overlap.py::test_a_read_timed_out_request_reaches_the_restart_once_and_the_final_attempt_is_rechecked PASSED [ 25%]
+tests/test_u21_no_overlap.py::test_a_digest_changed_by_the_restart_refuses_the_final_send PASSED [ 31%]
+tests/test_u21_no_overlap.py::test_an_env_drift_after_the_restart_refuses_the_final_send_and_writes_its_record PASSED [ 37%]
+tests/test_u21_no_overlap.py::test_the_post_restart_path_writes_the_env_record PASSED [ 43%]
+tests/test_u21_no_overlap.py::test_outside_a_run_the_env_recheck_writes_nothing_and_says_so PASSED [ 50%]
+tests/test_u21_no_overlap.py::test_the_detail_set_is_the_six_endings PASSED [ 56%]
+tests/test_u21_no_overlap.py::test_the_opt_out_ending_is_recorded PASSED [ 62%]
+tests/test_u21_no_overlap.py::test_the_foreign_lock_ending_is_recorded PASSED [ 68%]
+tests/test_u21_no_overlap.py::test_the_restart_command_ending_is_recorded PASSED [ 75%]
+tests/test_u21_no_overlap.py::test_the_post_restart_ending_is_recorded PASSED [ 81%]
+tests/test_u21_no_overlap.py::test_the_worker_alive_ending_is_recorded_with_no_restart_and_nothing_sent PASSED [ 87%]
+tests/test_u21_no_overlap.py::test_other_timeout_members_keep_their_retry PASSED [ 93%]
+tests/test_u21_no_overlap.py::test_no_executor_outlives_its_call PASSED  [100%]
+
+============================== 16 passed in 9.08s ==============================

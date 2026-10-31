@@ -1,0 +1,11 @@
+every id but the named pin fails on the parent (15 of 16): True
+the pin passes on the parent (R736(c)): True
+every id passes on the tree: True
+pins byte-identical: True
+staged set exactly the two engine files, the tests the census named and the new one, the inventory: True
+no migration: True
+the six details declared once: True
+inventory in sync: True
+worktree == index: True
+no untracked: True
+RESULT: PASS

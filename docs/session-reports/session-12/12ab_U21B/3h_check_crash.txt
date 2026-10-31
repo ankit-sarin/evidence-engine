@@ -1,0 +1,8 @@
+numstat plan +4 / -2
+lines 14064 -> 14066
+lines = old + added - removed: True
+Traceback (most recent call last):
+  File "/home/ankitsarin/scratch/12ab-u21b/check_notes.py", line 15, in <module>
+    minus = [l[1:] for l in d if l[0] == "-"]; plus = [l[1:] for l in d if l[0] == "+"]
+                                 ~^^^
+IndexError: string index out of range

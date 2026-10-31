@@ -1,0 +1,96 @@
+FFFFFFFFFFFFFF.F                                                         [100%]
+=================================== FAILURES ===================================
+E   assert 3 == 1
+     +  where 3 = <test_u21_no_overlap.Fake object at 0xf64ad8c3b710>.peak
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=m:8b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/3
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=m:8b, paper_id=unknown, elapsed=0s, limit=0s, attempt=2/3
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=m:8b, paper_id=unknown, elapsed=0s, limit=0s, attempt=3/3
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:176: assert 3 == 1
+E   assert 2 == 1
+     +  where 2 = <test_u21_no_overlap.Fake object at 0xf64ad8728dd0>.sends
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=gemma3:27b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+WARNING  engine.utils.ollama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=gemma3:27b, paper_id=unknown)
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:189: assert 2 == 1
+E   assert 2 == 1
+     +  where 2 = <test_u21_no_overlap.Fake object at 0xf64ad84855b0>.sends
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=m:8b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+WARNING  engine.utils.ollama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=m:8b, paper_id=unknown)
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:201: assert 2 == 1
+E   AssertionError: assert ['digest', 's...tart', 'send'] == ['digest', 's...'env', 'send']
+      
+      At index 3 diff: 'send' != 'digest'
+      Right contains 2 more items, first extra item: 'env'
+      Use -v to get more diff
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=gemma3:27b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+WARNING  engine.utils.ollama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=gemma3:27b, paper_id=unknown)
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:221: AssertionError: assert ['digest', 's...tart', 'send'] == ['digest', 's...'env', 'send']
+E   Failed: DID NOT RAISE <class 'engine.core.run_manifest.ModelDigestChanged'>
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=gemma3:27b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+WARNING  engine.utils.ollama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=gemma3:27b, paper_id=unknown)
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:233: Failed: DID NOT RAISE <class 'engine.core.run_manifest.ModelDigestChanged'>
+E   Failed: DID NOT RAISE <class 'engine.core.run_manifest.ServerEnvChanged'>
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=gemma3:27b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+WARNING  engine.utils.ollama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=gemma3:27b, paper_id=unknown)
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:246: Failed: DID NOT RAISE <class 'engine.core.run_manifest.ServerEnvChanged'>
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12ab-u21b/bt_parent/test_the_post_restart_path_wri0/u21/telemetry/run_events.jsonl'
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=gemma3:27b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+WARNING  engine.utils.ollama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=gemma3:27b, paper_id=unknown)
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError: [Errno 2] No such file or directory: '/home/ankitsarin/scratch/12ab-u21b/bt_parent/test_the_post_restart_path_wri0/u21/telemetry/run_events.jsonl'
+E   AssertionError: assert 'nothing recorded' in 'WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=m:8b, paper_id=unknown, ela...llama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=m:8b, paper_id=unknown)\n'
+     +  where 'WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=m:8b, paper_id=unknown, ela...llama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=m:8b, paper_id=unknown)\n' = <_pytest.logging.LogCaptureFixture object at 0xf64ad6b51f70>.text
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=m:8b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+WARNING  engine.utils.ollama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=m:8b, paper_id=unknown)
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:273: AssertionError: assert 'nothing recorded' in 'WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=m:8b, paper_id=unknown, ela...llama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=m:8b, paper_id=unknown)\n'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'RUN_CALL_ENDING_DETAILS'
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:280: AttributeError: module 'engine.core.run_manifest' has no attribute 'RUN_CALL_ENDING_DETAILS'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'DETAIL_RESTART_REFUSED_OPT_OUT'
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=gemma3:27b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:300: AttributeError: module 'engine.core.run_manifest' has no attribute 'DETAIL_RESTART_REFUSED_OPT_OUT'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'DETAIL_RESTART_REFUSED_LOCK'
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=gemma3:27b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:307: AttributeError: module 'engine.core.run_manifest' has no attribute 'DETAIL_RESTART_REFUSED_LOCK'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'DETAIL_RESTART_COMMAND_FAILED'
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=gemma3:27b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+WARNING  engine.utils.ollama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=gemma3:27b, paper_id=unknown)
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:314: AttributeError: module 'engine.core.run_manifest' has no attribute 'DETAIL_RESTART_COMMAND_FAILED'
+E   AttributeError: module 'engine.core.run_manifest' has no attribute 'DETAIL_POST_RESTART_FAILED'
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=gemma3:27b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+WARNING  engine.utils.ollama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=gemma3:27b, paper_id=unknown)
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:320: AttributeError: module 'engine.core.run_manifest' has no attribute 'DETAIL_POST_RESTART_FAILED'
+E   AttributeError: <module 'engine.utils.ollama_client' from '/home/ankitsarin/scratch/12ab-u21b/parent/engine/utils/ollama_client.py'> has no attribute '_REQUEST_BOUND'
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:326: AttributeError: <module 'engine.utils.ollama_client' from '/home/ankitsarin/scratch/12ab-u21b/parent/engine/utils/ollama_client.py'> has no attribute '_REQUEST_BOUND'
+E   assert False
+     +  where False = all(<generator object test_no_executor_outlives_its_call.<locals>.<genexpr> at 0xf64ad6bbb4c0>)
+------------------------------ Captured log call -------------------------------
+WARNING  engine.utils.ollama_client:ollama_client.py:726 Ollama wall-clock timeout: model=m:8b, paper_id=unknown, elapsed=0s, limit=0s, attempt=1/1
+WARNING  engine.utils.ollama_client:ollama_client.py:835 All 1 retries exhausted — restarting Ollama service (model=m:8b, paper_id=unknown)
+/home/ankitsarin/scratch/12ab-u21b/parent/tests/test_u21_no_overlap.py:368: assert False
+=========================== short test summary info ============================
+FAILED tests/test_u21_no_overlap.py::test_no_attempt_starts_while_the_previous_request_is_still_running
+FAILED tests/test_u21_no_overlap.py::test_a_late_response_is_used_and_recorded_completed_with_lateness
+FAILED tests/test_u21_no_overlap.py::test_a_slow_request_with_no_retries_does_not_restart
+FAILED tests/test_u21_no_overlap.py::test_a_read_timed_out_request_reaches_the_restart_once_and_the_final_attempt_is_rechecked
+FAILED tests/test_u21_no_overlap.py::test_a_digest_changed_by_the_restart_refuses_the_final_send
+FAILED tests/test_u21_no_overlap.py::test_an_env_drift_after_the_restart_refuses_the_final_send_and_writes_its_record
+FAILED tests/test_u21_no_overlap.py::test_the_post_restart_path_writes_the_env_record
+FAILED tests/test_u21_no_overlap.py::test_outside_a_run_the_env_recheck_writes_nothing_and_says_so
+FAILED tests/test_u21_no_overlap.py::test_the_detail_set_is_the_six_endings
+FAILED tests/test_u21_no_overlap.py::test_the_opt_out_ending_is_recorded - At...
+FAILED tests/test_u21_no_overlap.py::test_the_foreign_lock_ending_is_recorded
+FAILED tests/test_u21_no_overlap.py::test_the_restart_command_ending_is_recorded
+FAILED tests/test_u21_no_overlap.py::test_the_post_restart_ending_is_recorded
+FAILED tests/test_u21_no_overlap.py::test_the_worker_alive_ending_is_recorded_with_no_restart_and_nothing_sent
+FAILED tests/test_u21_no_overlap.py::test_no_executor_outlives_its_call - ass...
+15 failed, 1 passed in 7.74s

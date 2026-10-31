@@ -1,0 +1,25 @@
+source files 19 == 19: True
+names equal: True
+  64e152320815bf97f61031208f6af100696e5fdd1eb4863417d40d330c68adcb     314820  collected_ids.txt  equal=True
+  badb7cc8954b25b56e50941dd8b5dceee859c133f88b8749f22e6473dd1dc5af     270963  durations_12ab_u21b.txt  equal=True
+  497894c478e952f4a898aad2db8d077c31a111c940a89f878f4963b5843839e8     639483  gate.log  equal=True
+  7934701567e4fc77faf379f44f356b02a35d0f6b5494f93108bf1fe42d9d17cc         31  gate_exit.txt  equal=True
+  729952ad9af3e9a12047db3ade9daaea33b8059cc6193b9b607b7ea634589a55        241  gate_launch.txt  equal=True
+  9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa          2  gate_rc.txt  equal=True
+  978a4c09db6bc8a04b346b0a7e55382d667b9dba727abb63104e810843d6c7fa         22  gate_wall.txt  equal=True
+  1edd2a24f2c29946574115d69c8970aade4c4ce4dd38e3599ba709588b4209b1       1050  host_snapshot.sh  equal=True
+  c4086a684758257ca86e1a84d7c76f085a8eb5ff1d991e1384b88db2c7941c32       2097  host_snapshot_after_gate.txt  equal=True
+  692a00c9e2178e4cc584039bcd3a4d1622833468d49c477bc12128ed1ca31c60       2186  host_snapshot_before_gate.txt  equal=True
+  ae902379a51c4a79da147dd06ff934584458de82136165d0f86e1f6a4a20aa31       2501  id_and_durations_compare.txt  equal=True
+  2a8283c28ea2490ec98e2f199ac013e83d36a52fd75c570281fb31bc859e9896        419  launch_line.txt  equal=True
+  f19eaafaa82c7c7740d5059a2b34aa1df8f4829b0e8dd17bb5f66024279baddb        439  ollama_reads.sh  equal=True
+  6db64a9f1c6e0f844909bd5a77b3317417c26fe8094c3d77d4fabcab923b7d2d        412  ollama_reads_after.txt  equal=True
+  8bb5bb6542cddaa3a32a0b2e0c62382cc5bde55e34704df430bdc17330232362        412  ollama_reads_before.txt  equal=True
+  06c823c5775c188928cf80b6c30056d4dc1d307aa249fcb1b392e4bf27cfb889       3374  run_gate.sh  equal=True
+  c44a65842ce4e52d6adf4bab2a200ca2359fadb8fd482f2c8c1c37a62656f3ce        657  temp_root_after.txt  equal=True
+  8f9b2e393a333aa2254b4902e438bb7189733a02e2e9981459acb3af56e474cd        656  temp_root_before.txt  equal=True
+  4518f1388f85ea9475c65c50122ef623ad0943119c15bccbedde1fa0e8a06970         41  tree_at_launch.txt  equal=True
+staged set exactly the copied files: True
+worktree == index: True
+no untracked: True
+RESULT: PASS

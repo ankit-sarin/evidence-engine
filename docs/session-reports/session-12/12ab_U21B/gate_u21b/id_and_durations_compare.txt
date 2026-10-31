@@ -1,0 +1,31 @@
+gate ids 3491 ref 3475
+only-gate: 16; only-ref: 0
+  only-gate tests/test_u21_no_overlap.py::test_a_digest_changed_by_the_restart_refuses_the_final_send
+  only-gate tests/test_u21_no_overlap.py::test_a_late_response_is_used_and_recorded_completed_with_lateness
+  only-gate tests/test_u21_no_overlap.py::test_a_read_timed_out_request_reaches_the_restart_once_and_the_final_attempt_is_rechecked
+  only-gate tests/test_u21_no_overlap.py::test_a_slow_request_with_no_retries_does_not_restart
+  only-gate tests/test_u21_no_overlap.py::test_an_env_drift_after_the_restart_refuses_the_final_send_and_writes_its_record
+  only-gate tests/test_u21_no_overlap.py::test_no_attempt_starts_while_the_previous_request_is_still_running
+  only-gate tests/test_u21_no_overlap.py::test_no_executor_outlives_its_call
+  only-gate tests/test_u21_no_overlap.py::test_other_timeout_members_keep_their_retry
+  only-gate tests/test_u21_no_overlap.py::test_outside_a_run_the_env_recheck_writes_nothing_and_says_so
+  only-gate tests/test_u21_no_overlap.py::test_the_detail_set_is_the_six_endings
+  only-gate tests/test_u21_no_overlap.py::test_the_foreign_lock_ending_is_recorded
+  only-gate tests/test_u21_no_overlap.py::test_the_opt_out_ending_is_recorded
+  only-gate tests/test_u21_no_overlap.py::test_the_post_restart_ending_is_recorded
+  only-gate tests/test_u21_no_overlap.py::test_the_post_restart_path_writes_the_env_record
+  only-gate tests/test_u21_no_overlap.py::test_the_restart_command_ending_is_recorded
+  only-gate tests/test_u21_no_overlap.py::test_the_worker_alive_ending_is_recorded_with_no_restart_and_nothing_sent
+phases ref 2543 gate 2593
+slower by >10 s: 0
+-- summary line
+==== 3490 passed, 17 deselected, 1 xfailed, 2 warnings in 926.81s (0:15:26) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)

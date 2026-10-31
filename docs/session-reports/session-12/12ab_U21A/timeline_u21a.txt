@@ -1,0 +1,5 @@
+L=   60 explicit 60 s (preflight, with max_retries=0): sends [0, 90, 180]; surfaces at 240 s; read deadlines [900, 990, 1080]; peak in flight 3; in flight at the raise 3; arm: watchdog
+L=  300 8b: sends [0, 330, 660]; surfaces at 960 s; read deadlines [900, 1230, 1560]; peak in flight 3; in flight at the raise 2; arm: watchdog
+L=  600 27b / default: sends [0, 630, 1260]; surfaces at 1860 s; read deadlines [900, 1530, 2160]; peak in flight 2; in flight at the raise 1; arm: watchdog
+L=  900 32b: sends [0, 930, 1860]; surfaces at 2760 s; each deadline equal to the watchdog's; peak in flight 1, up to the race; arm: whichever fires first (N23)
+L= 1200 70b: sends [0, 930, 1860]; surfaces at 2760 s; peak in flight 1; arm: HTTP read timeout, the watchdog never fires, the restart path is not reached

@@ -1,0 +1,16 @@
+=================================== FAILURES ===================================
+_______ test_g_outside_a_run_nothing_is_read_and_the_record_is_unchanged _______
+tests/test_u20_loaded_context.py:267: in test_g_outside_a_run_nothing_is_read_and_the_record_is_unchanged
+    assert set(json.loads(line.split(" ", 2)[2])) == {
+E   AssertionError: assert {'ceiling', '...l_count', ...} == {'ceiling', '... 'model', ...}
+E     
+E     Extra items in the left set:
+E     'eval_count'
+E     
+E     Full diff:
+E       {
+E           'ceiling',...
+E     
+E     ...Full output truncated (8 lines hidden), use '-vv' to show
+------------------------------ Captured log call -------------------------------
+INFO     engine.utils.ollama_client:ollama_client.py:456 input_fit paper_id=unknown {"ceiling": 131072, "chars": 5, "count": 1, "done_reason": "stop", "estimate_low": 1, "eval_count": 1, "model": "gem

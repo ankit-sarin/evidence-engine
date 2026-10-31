@@ -1,0 +1,41 @@
+41ba98830bd81aaa1efd6ea81ef63ff04127220c
+    
+        def one_attempt(attempt, pass1, pass2):
+            with patch("engine.agents.extractor.ollama_chat") as chat:
+                chat.return_value = pass1
+                extract_pass1_reasoning("prompt", cfg=stage_config("extract_pass1"))
+                chat.return_value = pass2
+                extract_pass2_structured("prompt", "trace", None, 7, codebook_hash="cb",
+                                         cfg=stage_config("extract_pass2"))
+            record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=attempt, outcome="stored",
+                        pass1_eval_count=_LAST_PASS1_TELEMETRY["eval_count"],
+                        pass2_eval_count=_LAST_PASS2_TELEMETRY["eval_count"])
+    
+>       one_attempt(1, _resp(ANSWER_CONTENT, NATIVE_THINKING, eval_count=123),
+                    _resp('{"fields": []}', eval_count=456))
+
+tests/test_thinking_channel.py:250: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+attempt = 1
+pass1 = namespace(message=namespace(content='{"fields": [{"field_name": "study_type", "value": "Original Research"}]}', thinking='Let me work through the fields. The paper says n=12 pigs...'), done_reason='stop', eval_count=123)
+pass2 = namespace(message=namespace(content='{"fields": []}', thinking=None), done_reason='stop', eval_count=456)
+
+    def one_attempt(attempt, pass1, pass2):
+        with patch("engine.agents.extractor.ollama_chat") as chat:
+            chat.return_value = pass1
+            extract_pass1_reasoning("prompt", cfg=stage_config("extract_pass1"))
+            chat.return_value = pass2
+            extract_pass2_structured("prompt", "trace", None, 7, codebook_hash="cb",
+                                     cfg=stage_config("extract_pass2"))
+        record_call(tmp_path, arm="deepseek-r1:32b", paper_id=7, attempt=attempt, outcome="stored",
+>                   pass1_eval_count=_LAST_PASS1_TELEMETRY["eval_count"],
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    pass2_eval_count=_LAST_PASS2_TELEMETRY["eval_count"])
+E       KeyError: 'eval_count'
+
+tests/test_thinking_channel.py:247: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_ollama_input_fit.py::test_the_input_fit_line_records_eval_count
+FAILED tests/test_thinking_channel.py::test_telemetry_records_each_passs_eval_count_under_schema_v4
+2 failed in 0.26s

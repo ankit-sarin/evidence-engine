@@ -1,0 +1,5 @@
+the same shape by pydantic, as analysis/paper1/judge.py:228 builds format=Pass2Output.model_json_schema(): {'properties': {'values': {'items': {'type': 'integer'}, 'maxItems': 2000, 'minItems': 2000, 'title': 'Values', 'type': 'array'}}, 'required': ['values'], 'title': 'ProbeArray', 'type': 'object'}
+7000 tokens at 94.3 tokens/s (12ab_U21P_R2, nothing concurrent) = 74.2 s, inside 60-90 s
+dry reasoning, not a send: a ten-digit integer is about 4 tokens if digits tokenize in threes (not checked against this tokenizer), plus a comma and possibly a space; so 5-6 tokens per item
+the array at N=2000 would need about 10000-12000 tokens, past the cap of 7000; the cap should end it at about item 1166-1400
+N is held at 2000: the server binary carries the string 'number of repetitions exceeds sane defaults' (strings /usr/local/bin/ollama); the limit's value was not read there

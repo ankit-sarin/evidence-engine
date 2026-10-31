@@ -1,0 +1,190 @@
+{
+ "model": "llama3.2:3b",
+ "num_ctx": 8192,
+ "num_predict": 7000,
+ "pid": 3507118,
+ "journal_since": "2026-10-31 05:24:09",
+ "events": [
+  {
+   "at": "2026-10-31T05:24:09.115760+00:00",
+   "event": "lock_acquired"
+  },
+  {
+   "at": "2026-10-31T05:24:09.135925+00:00",
+   "event": "P0_ps.json",
+   "models": []
+  },
+  {
+   "at": "2026-10-31T05:24:09.149830+00:00",
+   "event": "L0_request_written",
+   "bytes": 437
+  },
+  {
+   "at": "2026-10-31T05:24:11.740791+00:00",
+   "event": "L0_response_saved",
+   "status": 200,
+   "bytes": 274
+  },
+  {
+   "at": "2026-10-31T05:24:11.740880+00:00",
+   "event": "L0_loaded",
+   "wall_s": 2.591,
+   "done_reason": "length",
+   "prompt_eval_count": 47,
+   "eval_count": 1,
+   "total_duration": 2589641033,
+   "load_duration": 2539732772,
+   "prompt_eval_duration": 19819538,
+   "eval_duration": null
+  },
+  {
+   "at": "2026-10-31T05:24:11.759603+00:00",
+   "event": "L0_handlers_ended",
+   "journal_chat_posts": 1,
+   "waited_s": 0.0
+  },
+  {
+   "at": "2026-10-31T05:24:11.788698+00:00",
+   "event": "L0_ps.json",
+   "models": [
+    "llama3.2:3b"
+   ]
+  },
+  {
+   "at": "2026-10-31T05:24:11.806274+00:00",
+   "event": "C1_ps_before.json",
+   "models": [
+    "llama3.2:3b"
+   ]
+  },
+  {
+   "at": "2026-10-31T05:24:11.819860+00:00",
+   "event": "C1_request_written",
+   "bytes": 440
+  },
+  {
+   "at": "2026-10-31T05:26:49.068502+00:00",
+   "event": "C1_response_saved",
+   "status": 200,
+   "bytes": 14311
+  },
+  {
+   "at": "2026-10-31T05:26:49.087644+00:00",
+   "event": "C1_handlers_ended",
+   "journal_chat_posts": 2,
+   "waited_s": 0.0
+  },
+  {
+   "at": "2026-10-31T05:26:49.087667+00:00",
+   "event": "C1_returned",
+   "wall_s": 157.249,
+   "qualifies": true,
+   "done_reason": "length",
+   "prompt_eval_count": 47,
+   "eval_count": 7000,
+   "total_duration": 157247654276,
+   "load_duration": 103903153,
+   "prompt_eval_duration": 12977766,
+   "eval_duration": 88306781890
+  },
+  {
+   "at": "2026-10-31T05:26:49.105495+00:00",
+   "event": "V1_ps_before.json",
+   "models": [
+    "llama3.2:3b"
+   ]
+  },
+  {
+   "at": "2026-10-31T05:26:49.129453+00:00",
+   "event": "V1_sent"
+  },
+  {
+   "at": "2026-10-31T05:26:49.129594+00:00",
+   "event": "V1_request_written",
+   "bytes": 440
+  },
+  {
+   "at": "2026-10-31T05:26:59.129696+00:00",
+   "event": "V1_action_done",
+   "at_s": 10.001
+  },
+  {
+   "at": "2026-10-31T05:27:01.129126+00:00",
+   "event": "V1_follow_up_sent",
+   "at_s": 12.0
+  },
+  {
+   "at": "2026-10-31T05:27:01.154198+00:00",
+   "event": "V1F_request_written",
+   "bytes": 437
+  },
+  {
+   "at": "2026-10-31T05:29:27.614354+00:00",
+   "event": "V1F_response_saved",
+   "status": 200,
+   "bytes": 275
+  },
+  {
+   "at": "2026-10-31T05:29:27.614431+00:00",
+   "event": "V1F_returned",
+   "wall_s": 146.461,
+   "done_reason": "length",
+   "prompt_eval_count": 47,
+   "eval_count": 1,
+   "total_duration": 146459127548,
+   "load_duration": 122362317,
+   "prompt_eval_duration": 12658442,
+   "eval_duration": null
+  },
+  {
+   "at": "2026-10-31T05:31:26.378079+00:00",
+   "event": "STOP",
+   "why": "V1: the worker is still blocked at D0 + 120 s"
+  },
+  {
+   "at": "2026-10-31T05:31:26.394988+00:00",
+   "event": "U1",
+   "status": 200
+  },
+  {
+   "at": "2026-10-31T05:31:27.426716+00:00",
+   "event": "U1_confirmed"
+  },
+  {
+   "at": "2026-10-31T05:31:27.426793+00:00",
+   "event": "lock_released"
+  }
+ ],
+ "lock_acquired_at": "2026-10-31T05:24:09.115751+00:00",
+ "calibration": [
+  {
+   "candidate": 1,
+   "wall_s": 157.249,
+   "verdict": "qualifies, is V0",
+   "prompt": "Return a JSON object whose \"values\" array holds exactly 2000 ten-digit integers, and nothing else.",
+   "fields": {
+    "done_reason": "length",
+    "prompt_eval_count": 47,
+    "eval_count": 7000,
+    "total_duration": 157247654276,
+    "load_duration": 103903153,
+    "prompt_eval_duration": 12977766,
+    "eval_duration": 88306781890
+   }
+  }
+ ],
+ "V0": {
+  "candidate": 1,
+  "D0_s": 157.249,
+  "fields": {
+   "done_reason": "length",
+   "prompt_eval_count": 47,
+   "eval_count": 7000,
+   "total_duration": 157247654276,
+   "load_duration": 103903153,
+   "prompt_eval_duration": 12977766,
+   "eval_duration": 88306781890
+  }
+ },
+ "lock_released_at": "2026-10-31T05:31:27.426749+00:00"
+}

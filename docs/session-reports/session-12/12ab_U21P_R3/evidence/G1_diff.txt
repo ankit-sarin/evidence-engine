@@ -1,0 +1,9 @@
+15c15,16
+< CANDIDATES = ("List the squares of the integers from 1 to 5000, one per line in the form 12 squared is 144, with no other text.",)   # C3 alone, R759(b)
+---
+> CANDIDATES = ('Return a JSON object whose "values" array holds exactly 2000 ten-digit integers, and nothing else.',)   # one send as V0, R760(c)
+> FORMAT = {"properties": {"values": {"items": {"type": "integer"}, "maxItems": 2000, "minItems": 2000, "title": "Values", "type": "array"}}, "required": ["values"], "title": "ProbeArray", "type": "object"}
+42c43
+<     return dict(model=MODEL, messages=[{"role": "user", "content": PROMPT}], stream=False, options={"temperature": 0, "num_ctx": NCTX, "num_predict": predict})
+---
+>     return dict(model=MODEL, messages=[{"role": "user", "content": PROMPT}], stream=False, format=FORMAT, options={"temperature": 0, "num_ctx": NCTX, "num_predict": predict})

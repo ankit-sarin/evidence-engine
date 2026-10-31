@@ -1,0 +1,26 @@
+2026-10-31T05:24:09.115762+00:00 lock_acquired {}
+2026-10-31T05:24:09.135933+00:00 P0_ps.json {'models': []}
+2026-10-31T05:24:09.149835+00:00 L0_request_written {'bytes': 437}
+2026-10-31T05:24:11.740801+00:00 L0_response_saved {'status': 200, 'bytes': 274}
+2026-10-31T05:24:11.740882+00:00 L0_loaded {'wall_s': 2.591, 'done_reason': 'length', 'prompt_eval_count': 47, 'eval_count': 1, 'total_duration': 2589641033, 'load_duration': 2539732772, 'prompt_eval_duration': 19819538, 'eval_duration': None}
+2026-10-31T05:24:11.759614+00:00 L0_handlers_ended {'journal_chat_posts': 1, 'waited_s': 0.0}
+2026-10-31T05:24:11.788708+00:00 L0_ps.json {'models': ['llama3.2:3b']}
+2026-10-31T05:24:11.806279+00:00 C1_ps_before.json {'models': ['llama3.2:3b']}
+2026-10-31T05:24:11.819864+00:00 C1_request_written {'bytes': 440}
+2026-10-31T05:26:49.068511+00:00 C1_response_saved {'status': 200, 'bytes': 14311}
+2026-10-31T05:26:49.087648+00:00 C1_handlers_ended {'journal_chat_posts': 2, 'waited_s': 0.0}
+2026-10-31T05:26:49.087669+00:00 C1_returned {'wall_s': 157.249, 'qualifies': True, 'done_reason': 'length', 'prompt_eval_count': 47, 'eval_count': 7000, 'total_duration': 157247654276, 'load_duration': 103903153, 'prompt_eval_duration': 12977766, 'eval_duration': 88306781890}
+2026-10-31T05:26:49.105506+00:00 V1_ps_before.json {'models': ['llama3.2:3b']}
+2026-10-31T05:26:49.129462+00:00 V1_sent {}
+2026-10-31T05:26:49.129605+00:00 V1_request_written {'bytes': 440}
+2026-10-31T05:26:59.129705+00:00 V1_action_done {'at_s': 10.001}
+2026-10-31T05:27:01.129150+00:00 V1_follow_up_sent {'at_s': 12.0}
+2026-10-31T05:27:01.154207+00:00 V1F_request_written {'bytes': 437}
+2026-10-31T05:29:27.614363+00:00 V1F_response_saved {'status': 200, 'bytes': 275}
+2026-10-31T05:29:27.614433+00:00 V1F_returned {'wall_s': 146.461, 'done_reason': 'length', 'prompt_eval_count': 47, 'eval_count': 1, 'total_duration': 146459127548, 'load_duration': 122362317, 'prompt_eval_duration': 12658442, 'eval_duration': None}
+2026-10-31T05:31:26.378090+00:00 STOP {'why': 'V1: the worker is still blocked at D0 + 120 s'}
+2026-10-31T05:31:26.394995+00:00 U1 {'status': 200}
+2026-10-31T05:31:27.426725+00:00 U1_confirmed {}
+2026-10-31T05:31:27.426794+00:00 lock_released {}
+probe rc=3
+2026-10-31T05:31:27Z

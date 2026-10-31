@@ -13073,3 +13073,60 @@ R746(e) — The setup session (R745(g)) builds, outside engine/, scripts/ and te
 | 2026-10-30 | R746(a) — 12aa-U20C is accepted as reported: U20 commit 2 as bc2ae19; INT-i12-11 CLOSED on ca29906 and bc2ae19, counted until P1 closes; U20's dated line, done 23; record C2 as ca12c30; the ledgers aad8c33 and ea127df. The series gains 919.74 s; the red run is not a member. R746(b) — Finding 1: record C2's sentence on class (v) is corrected by one dated addendum at the end of 12aa_U20C_C2.md, in the setup session's item-0 commit; the sentence is not edited. R746(c) — Finding 2 is accepted and is the rule from here: a red at the gate caused by a census miss is class (c); it is fixed without changing any test's assertion and the gate is re-run once; the red run's evidence is committed beside the green one and is not a member of the series. Any other red at the gate is a stop. R746(d) — Readings, no row: finding 3 (a red caused only by a missing name is reported as such in every record from here); findings 4, 5, 6, 7, 9 and 10; finding 8's handler list is the starting list of C56's census in U26, untraced. R746(e) — The setup session (R745(g)) builds, outside engine/, scripts/ and tests/: (i) docs/plan/STANDING_RULES.md, every clause of the decision log that sets a standing rule (its text says "from here", "Rule from here" or "the standing form"), each quoted verbatim with its ruling id and one plain-English line, extracted by script, not composed; and, under docs/session-reports/tools/, (ii) a transcription script that writes a decision-log block from an rNNN.txt and its metadata, accepted only if it reproduces existing single and pair blocks byte for byte; (iii) a session-open check script, accepted only if it reproduces this session's measured open values; (iv) the standard gate wrapper, writing its launch line and the gate_12aa_open evidence set itself. Nothing in engine/, scripts/ or tests/ changes. The standing-rules file is adopted only by a later PI ruling after the architect has read it; until then every brief stays in its present form. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-U20C final report as resumed under R745 (bc2ae19; ca12c30) |
 
 The decision log in this file ends at R746.
+
+**Block 145.** *Transcribed 2026-10-31 (item 0 of the 12aa-CLOSE brief), in its own commit, in the R597(e) form:* ruling R747, made by PI on architect recommendation on 2026-10-30 UTC, during session 12aa, on the 12aa-SETUP final report (tools `5f81f4b0f1c7e44f099b5b167bfa5613dc57fd5f`; item 0 `8cca7b05a7bd3497f82f1482e99e711dab1a9a8d`). The 12aa-CLOSE brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aa-R747] — 12aa-SETUP accepted; three tools accepted with their limits;
+  STANDING_RULES.md not adopted, its selection moved to an architect's id list; session 12aa closes
+STATUS: PI ruling, 2026-10-30 UTC, session 12aa, on architect recommendation, on the 12aa-SETUP
+  final report (tools 5f81f4b0f1c7e44f099b5b167bfa5613dc57fd5f; item 0
+  8cca7b05a7bd3497f82f1482e99e711dab1a9a8d). Transcribe at item 0 of the 12aa-CLOSE brief, in the
+  block after R746's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12aa-SETUP final report):
+  MEASURED: "Tools commit: 5f81f4b0f1c7e44f099b5b167bfa5613dc57fd5f, parent ca12c30, 43 files";
+    "Item 0: 8cca7b05a7bd3497f82f1482e99e711dab1a9a8d, parent 5f81f4b, Blocks 143–144, written by
+    transcribe_ruling.py --append"; "Plan: sha256
+    20fad027a1d1ed8669e4269bcfe4dc384e173fe1f974f9218a8724c359cb49f1, 2,372,612 B"; "13,075 lines";
+    "Ledger: 72a8f70c9ddc3f77cc3c3f3f810ad14df6c7c2f7, parent ea127df"; "Ledger:
+    fe69195b989fd37a7787377b1fecea7372af4a9a, parent 72a8f70"; "Blocks 135, 138, 139, 140, 141, 142
+    all byte-identical"; "Exit 0, 0 mismatches, at ca12c30 with the 10-30 nightly matched; with
+    three wrong values, exit 1"; "Dry run on tests/test_u20_modelfile_num_ctx.py: 18 passed,
+    nineteen files True, launch line equal to what ran True"; "57 of 1,293 clauses in the log";
+    "first R656(d)".
+  READ (CC's): findings 1–9 of that report; "The file is a starting list and needs the architect's
+    reading before any adoption".
+  INFERRED: none.
+
+R747(a) — 12aa-SETUP is accepted as reported: the tools commit 5f81f4b, item 0 8cca7b0 (Blocks
+  143–144 written by transcribe_ruling.py, R746(b)'s addendum), the ledgers 72a8f70 and fe69195.
+R747(b) — transcribe_ruling.py is accepted for every block from here. session_open_check.py is
+  accepted for what it checks; the recount, the R510 count, the nightly's ids against the expected
+  set and the health job's journal read stay explicit steps of an open until the script covers
+  them (finding 4). The gate wrapper is accepted pending its first full gate, where a wrapper fault
+  is reported as the wrapper's (finding 8).
+R747(c) — STANDING_RULES.md is not adopted. Selecting by phrase starts at R656 and misses standing
+  rules worded otherwise — among them R86, R102, R725(b), R727(a) and R736(c) — and takes in dated
+  or superseded clauses such as R657(b) and R672(a) (findings 1, 2). The selection is the
+  architect's: extract_rules.py gains a mode that reads a committed list of clause ids and quotes
+  each verbatim; the architect writes the list; the regenerated file is adopted only by a PI ruling
+  after the architect has read it. This is 12ab's first work, before U21.
+R747(d) — Readings, no row: findings 3, 5, 6, 7 and 9.
+R747(e) — Session 12aa closes now on U20. The 12aa-CLOSE brief follows 12z-CLOSE's form read from
+  the record; its item 0 is this ruling alone, written by transcribe_ruling.py. No closeout gate:
+  the expected gate values for 12ab are U20 commit 2's on unchanged code (12aa_U20C/gate_c2/), and
+  12aa_U20C/expected_nightly_20261031.md governs the 2026-10-31 nightly. The band for 12ab is
+  computed by CC from the last four standard gates on this host state and set by the wrap ruling.
+R747(f) — The session's stops, for the closure: 12aa-U20A at 1a (R739; CC's, a ruling retyped),
+  12aa-U20P at 0 (R741; the architect's, the spec's cloud arms taken as local), 12aa-U20P-R1 at 1c
+  (R742; CC's, a check literal carried over), 12aa-U20C at 2a (R745; the architect's, a close path
+  written from U19's record) — two each. R510 for 12aa: rows in 0, rows out 0, no class move;
+  INT-i12-11 CLOSED and counted.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-30 | R747(a) — 12aa-SETUP is accepted as reported: the tools commit 5f81f4b, item 0 8cca7b0 (Blocks 143–144 written by transcribe_ruling.py, R746(b)'s addendum), the ledgers 72a8f70 and fe69195. R747(b) — transcribe_ruling.py is accepted for every block from here. session_open_check.py is accepted for what it checks; the recount, the R510 count, the nightly's ids against the expected set and the health job's journal read stay explicit steps of an open until the script covers them (finding 4). The gate wrapper is accepted pending its first full gate, where a wrapper fault is reported as the wrapper's (finding 8). R747(c) — STANDING_RULES.md is not adopted. Selecting by phrase starts at R656 and misses standing rules worded otherwise — among them R86, R102, R725(b), R727(a) and R736(c) — and takes in dated or superseded clauses such as R657(b) and R672(a) (findings 1, 2). The selection is the architect's: extract_rules.py gains a mode that reads a committed list of clause ids and quotes each verbatim; the architect writes the list; the regenerated file is adopted only by a PI ruling after the architect has read it. This is 12ab's first work, before U21. R747(d) — Readings, no row: findings 3, 5, 6, 7 and 9. R747(e) — Session 12aa closes now on U20. The 12aa-CLOSE brief follows 12z-CLOSE's form read from the record; its item 0 is this ruling alone, written by transcribe_ruling.py. No closeout gate: the expected gate values for 12ab are U20 commit 2's on unchanged code (12aa_U20C/gate_c2/), and 12aa_U20C/expected_nightly_20261031.md governs the 2026-10-31 nightly. The band for 12ab is computed by CC from the last four standard gates on this host state and set by the wrap ruling. R747(f) — The session's stops, for the closure: 12aa-U20A at 1a (R739; CC's, a ruling retyped), 12aa-U20P at 0 (R741; the architect's, the spec's cloud arms taken as local), 12aa-U20P-R1 at 1c (R742; CC's, a check literal carried over), 12aa-U20C at 2a (R745; the architect's, a close path written from U19's record) — two each. R510 for 12aa: rows in 0, rows out 0, no class move; INT-i12-11 CLOSED and counted. | PI, 2026-10-30, during session 12aa, on architect recommendation, on the 12aa-SETUP final report (5f81f4b; 8cca7b0) |
+
+The decision log in this file ends at R747.

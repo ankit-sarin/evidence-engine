@@ -1,0 +1,12 @@
+-- lines
+12:collecting ... collected 3508 items / 17 deselected / 3491 selected
+6113:==== 3490 passed, 17 deselected, 1 xfailed, 2 warnings in 935.71s (0:15:35) ====
+6115:pytest exit code: 0
+last line: pytest exit code: 0
+durations: 2594 lines, 270878 B
+-- journal ollama 09:00–09:25
+-- No entries --
+-- warnings
+3506:=============================== warnings summary ===============================
+3508:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' par
+3512:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide

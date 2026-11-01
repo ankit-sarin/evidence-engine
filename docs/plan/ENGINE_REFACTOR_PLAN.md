@@ -500,7 +500,7 @@ Housekeeping lines of the 12f table (section E4) that have no inventory row of t
 | INT-g12-3 | Every one of the 177 `asserted` events carries `state_at_write` "asserted without locatable evidence" in its payload, including claims located a moment later. Not read further | 1 (conservative, until the 12h read RD-3 shows no reader of `state_at_write`) | P1 (pending RD-3) | R563 (RD-3) | `12g_RA-B.md` *Note 2026-10-09 (12h rulings, R566):* RD-3 read (`12h_RD-3.md`): no engine, export, methods or judge reader of `state_at_write`. Class 3, P7, option (a): two docstring sentences (`write_field_event` and `effective.py`'s module docstring); no payload change. |
 | INT-g12-4 | A screen-start manifest declares ten stage rows and pins the extraction arm for a run that makes screening calls only. | — (pending the 12h read RD-5; the refusal is loud) | — (pending RD-5) | R563 (RD-5); R564 | `12g_RB-A.md` *Note 2026-10-09 (12h rulings, R569):* RD-5 read (`12h_RD-5.md`): by design but undocumented. Class 2, P1. (a) R237's sentence in `CLAUDE.md` corrected in the transcription commit. (b) The fix: the extraction arm is pinned by the first run that reaches the extract stage, not by the first manifest that declares it (amends R59 in part; R10 and R21 stand); Phase A first. *Note 2026-10-11 (12l-R612, R612(h); D7):* "D7: Design A. U05 includes the full-tuple comparison at the extract stage. The CLAUDE.md R237 sentence is replaced in U05's commit by text quoted in U05's handoff for PI approval." Design A, as `12l_P1A.md` §2 D7 states it: `open_run` registers the arm unpinned and compares against any existing pin; the pin is written at the extract stage. Unit U05, pin-affecting by arm-binding. |
 | INT-g12-5 | **The two abstract passes send byte-identical requests.** All 42 pass-1 / pass-2 pairs have the same `run_calls.request_hash`, at temperature 0 with no seed. The decisions agreed on 42 of 42; the response text was identical on 16 of 42 pairs. | 1 (conservative, until the 12h read RD-6) | — (pending RD-6) | R565 (RD-6) | `12g_RB-B.md` *Note 2026-10-09 (12h rulings, R570):* RD-6 read (`12h_RD-6.md`): long-standing design, from git; session 7 collapsed nothing. Class 3, P7, the mechanism recorded as a design fact. The methods-section "dual-pass" wording folds into B-F07 / E-METHODS / C36 (P3). Keeping, changing or dropping pass 2 is decided at S4. *Note 2026-10-19 (12r-CLOSE, R670(f)):* 12r-U13-PROBE resent one fixed Pass-1 request three times per paper at temperature 0 with no seed: calls 2 and 3 returned byte-identical text and call 1 differed, in both papers (`12r_U13_PROBE.md` §2, F2); the probe's first call followed a model swap, a server state unlike the run's, recorded as a limit in its §4. *Note 2026-10-23 (12v-U38A item 0, R698(e)):* at temperature 0 with no seed the response is fixed by the request and the server's preceding calls; the first send after a load differs from the settled response and the settled response does not move. `12v_U37R2.md` F5: "At temperature 0 the server returns the same response for the same request and call history: each request's first send reproduced Part A byte for byte (10 of 10), and sends 2–5 settled on one second response, so k = 5 yields at most two distinct outcomes per case and arm." This is the complete statement of what 12r's probe saw in part (R670(f)'s note). |
-| INT-g12-6 | `eval_count` is recorded nowhere, so output size in tokens and output headroom cannot be measured on any run, Run 7 included | 3 | P1 | R552 | `12g_RA-A.md` *Note 2026-10-19 (12r-CLOSE, R668(d), R670(f)):* the per-call `done_reason` in run.log (the `input_fit` lines) distinguishes a normal end from a cut-short one (`12r_U13_PA.md` §4); the client's response carries `eval_count` and `prompt_eval_count`, and 12r-U13-PROBE recorded both (`eval_count` 1,414–1,532, `12r_U13_PROBE.md` F4); the engine records neither, and the output-headroom question stands. The fix is a telemetry field when this row's unit lands. *Note 2026-10-31 (12ac-U22B item 0, R768(c)):* option B, not taken — R768(c), quoted: "B (a run_calls column) — 023's, not asked for by this ruling; whether 023 carries one is P6's Phase A's question, a dated note on INT-g12-6." *Note 2026-10-31 (12ac-U22B item 0, R768(f)):* R768(f), quoted: "F3 (no num_predict on the extract stages; the output limit on Run 7's calls is the server's own — whether the spec declares one for extraction is a pin-affecting question for a later ruling before the freeze, a dated note on INT-g12-6 with R768(c)'s)". |
+| INT-g12-6 | `eval_count` is recorded nowhere, so output size in tokens and output headroom cannot be measured on any run, Run 7 included | 3 | P1 | R552 | `12g_RA-A.md` *Note 2026-10-19 (12r-CLOSE, R668(d), R670(f)):* the per-call `done_reason` in run.log (the `input_fit` lines) distinguishes a normal end from a cut-short one (`12r_U13_PA.md` §4); the client's response carries `eval_count` and `prompt_eval_count`, and 12r-U13-PROBE recorded both (`eval_count` 1,414–1,532, `12r_U13_PROBE.md` F4); the engine records neither, and the output-headroom question stands. The fix is a telemetry field when this row's unit lands. *Note 2026-10-31 (12ac-U22B item 0, R768(c)):* option B, not taken — R768(c), quoted: "B (a run_calls column) — 023's, not asked for by this ruling; whether 023 carries one is P6's Phase A's question, a dated note on INT-g12-6." *Note 2026-10-31 (12ac-U22B item 0, R768(f)):* R768(f), quoted: "F3 (no num_predict on the extract stages; the output limit on Run 7's calls is the server's own — whether the spec declares one for extraction is a pin-affecting question for a later ruling before the freeze, a dated note on INT-g12-6 with R768(c)'s)". *Note 2026-10-31 (12ac-CLOSE item 0, R773(b)):* **CLOSED** on U22 (`51f8317f5a74cfbdb8094fa019b5fbccbd16cb05`; its class-(c) fix `bfe3bd3f28827d050192065f264357a79f0e2e4f`), by R514: the row's stated fix is delivered — the `input_fit` line's dict gains `eval_count` and the extraction telemetry row gains the `pass1_eval_count` / `pass2_eval_count` pair under schema `extraction-telemetry-4`, no `num_predict` key (R768(b)) — and its acceptance test passes (`tests/test_ollama_input_fit.py::test_the_input_fit_line_records_eval_count`, red on the parent `41ba988` in `12ac_U22B/b0_parent_acceptance.txt`, green in `12ac_U22B/gate_u22b_rerun/`), with `tests/test_thinking_channel.py::test_telemetry_records_each_passs_eval_count_under_schema_v4` beside it. The first gate's one red was a census miss, class (c): `tests/test_u20_loaded_context.py`'s key-set pin over the line, rewritten in P1's form (R772(b)). Options B (a `run_calls` column, 023's) and C (a summary reader) were not taken (R768(c)); the two dated notes above stand. Counted until P1 closes (R607(d), R753(d)(ii)). |
 | INT-g12-7 | An outer `flock(1)` on the lock file deadlocks `run_extraction`. A constraint on how A-1's fix (R528) and any lock-holding cron job are built | 3 | P1, with A-1 | R552 | `12g_RA-A.md` *Note 2026-10-15 (12p-CLOSE, R650(g)):* F6 (`12p_U13A.md` §8): `main()` holds the experiment lock for the whole run (`run_pipeline.py:614–622`); the in-process launcher R629(b) names is superseded for `run_pipeline`, and `EVIDENCE_ENGINE_LIVE_TIERS` governs tests only (`conftest.py:305`) — the rehearsal needs no tier flag. No row. |
 | INT-g12-8 | Abstract screening calls pass no `paper_id`, so their `run_calls` rows carry NULL — the abstract-stage form of C48 (FT) — confirmed on the run: all 85 `run_calls` rows carry a NULL `paper_id`, so a screening call is tied to its record only by order and time | 3 | P7, with C48 | R564, R565 | `12g_RB-A.md` |
 | INT-g12-9 | The script that wrote the stored search files is not in the repository, and the query text it sent is recorded nowhere beside them | 3 | P3 | R548 | `12g_measurements.md` |
@@ -912,6 +912,8 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 *Dated 2026-10-30 (12aa-U20C, R744(f)):* U20 landed at `ca29906` and `bc2ae19`; INT-i12-11 CLOSED on both and counted until P1 closes (R607(d)). P1's fix units 37, done 23 (U01–U20, U37, U38, U39). Rows 280 (94 / 55 / 131, 0 unclassed); rows out 0.
 
 *Dated 2026-10-31 (12ab-U21B, R761, R762):* U21 landed at `a6c31b1`; INT-ab12-1, N23 and N24 CLOSED on it and counted until P1 closes (R607(d)). P1's fix units 37, done 24 (U01–U21, U37, U38, U39). Rows 281 (94 / 56 / 131, 0 unclassed), by hand until the 12ab closeout's recount (R758(a)); rows out 0.
+
+*Dated 2026-10-31 (12ac-CLOSE item 0, R768, R770, R773):* U22 landed at `51f8317` (its class-(c) fix `bfe3bd3`); INT-g12-6 CLOSED on it and counted until P1 closes (R514, R607(d), R773(b)). P1's fix units 37, done 25 (U01–U22, U37, U38, U39). Rows 281 (94 / 56 / 131, 0 unclassed), by hand until the 12ac closeout's recount (R774(c)); rows out 0.
 
 **L (12w additions, R707).** *Opened 2026-10-25 (12w-CLOSE item 0) under R509, R707(e) and R708(b).* One row from INT-v12-1's Phase A read-out (`12w_V1A_q4_stopped.md`, `8659035`): `INT-w12-1` for its §Q3 census finding that a change made at a stage's call site after its shared builder returns is invisible to that stage's prompt hash, placed in its own table so that the 12v recount's bounds are unchanged. The text cell is R708's sentence (a), quoted unchanged (its line wrap joined); class and package are R707(e)'s; the evidence cell is R708(b)'s and R708(c)'s. Its fix is B's equality test extended to every hashed stage on the local run path, in U39 (R707(e)).
 
@@ -14733,3 +14735,576 @@ R768(g) — U22's Phase B opens under the 12ac-U22B brief below in 12ab-U21B's t
 | 2026-10-31 | R768(a) — 12ac-U22A is accepted as reported: item 0 718ef7f (Blocks 164–165 by transcribe_ruling.py; r766.txt and r767.txt in 12ac_open/; "A R766(b)" on the list, its gloss, STANDING_RULES.md regenerated at 91 clauses, the diff classified 3 / 1 / 8 / 0), ledger d85bad5; the read-out 23fad87 with its census and probe, ledger 732c010. The decision log in the file ends at R767. The 2026-11-01 jobs stay R767(d)'s. R768(b) — U22's design is option A, in this shape. (i) The input_fit line's dict gains one key, "eval_count", read as every neighbouring field is read (getattr(response, "eval_count", None), a non-int or bool recorded None), beside "count" and "done_reason"; no "num_predict" key — the extract stages send none (F3), and "unset" would record a request-side absence the stage row already records. (ii) The extraction telemetry row gains a pass1_eval_count / pass2_eval_count pair beside pass1_prompt_eval_count / pass2_prompt_eval_count, filled from the same two dicts by the same four record_call sites; output_tokens is not written by the local arm (it stays the cloud path's usage field; F2's note). (iii) The elicited Pass-1 call dict gains pass1_eval_count; the accepted attempt's count goes to the top-level key and each attempt's under extra.attempts[] as prompt_eval_count does (:497–530). (iv) The input-fit failure row carries None for both (the exception has no count). (v) SCHEMA_VERSION moves to "extraction-telemetry-4" (R126's precedent); the additive-default contract holds for the two new keys. (vi) The vision path is unchanged. R768(c) — Not taken: B (a run_calls column) — 023's, not asked for by this ruling; whether 023 carries one is P6's Phase A's question, a dated note on INT-g12-6. C (a summary reader) — a reading, not a record; the row's words are "recorded nowhere". R768(d) — Acceptance, two tests, each failing on the parent and passing in the gate: (i) test_the_input_fit_line_records_eval_count in tests/test_ollama_input_fit.py, in that file's form: a fake response carrying eval_count 123 produces an input_fit line whose dict carries "eval_count": 123; a response without the attribute produces "eval_count": None and no raise. (ii) a row test in tests/test_thinking_channel.py's form (its name CC's, in the file's naming), through extract_pass1_reasoning / extract_pass2_structured and record_call as the probe ran them, or through the driver: a row carrying pass1_eval_count and pass2_eval_count equal to the two fakes' counts, and schema "extraction-telemetry-4"; the null case None. The census's two pins are rewritten under B5 in the same commit with their assertions kept: the exact dict at test_ollama_input_fit.py:219 gains "eval_count": None (its stub lacks the field), and the schema string at test_thinking_channel.py:193 moves to -4; the additive-default test gains the two keys. Any other red is classified (c) or (r) under R722(a)–R725(b). R768(e) — Pin not affecting (CODE ORDER, pin_tuple); both pins and the audit prompt_hash are asserted byte-identical in the commit's gate. No migration. The Touched list is the engine files the read-out's 3g names for A (ollama_client.py, extractor.py, pipeline.py, extraction_telemetry.py; extraction_events.py only if the failure row's site must name the keys) plus docs/inventory/ (R725(c)); CLAUDE.md and docs/architecture lines that name the schema string or the row's keys are quoted at Phase B and edited only by text the PI approves at the stop. R768(f) — Readings, no row: F3 (no num_predict on the extract stages; the output limit on Run 7's calls is the server's own — whether the spec declares one for extraction is a pin-affecting question for a later ruling before the freeze, a dated note on INT-g12-6 with R768(c)'s); F7 (vision headroom definable today; out of scope); F8 and report finding 4 (line numbers drift; text equal); F9 (the --background tee is "run.log"); F10; F12 (a late completion's count is the completing response's; its provenance is in run_calls.outcome_detail, not on the line — no second key); report finding 1 (the "-" form for a count the brief does not predict, accepted as the check's); finding 3 (R3's grep short by two sites, the Phase A's grep governed). R768(g) — U22's Phase B opens under the 12ac-U22B brief below in 12ab-U21B's two-phase form: the reads first (every site 3g names, quoted at HEAD; the census confirmed; the test plan; any CLAUDE.md or docs/architecture line to edit, quoted), then STOP for the ruling on them, then the build in one engine commit with its gate. INT-g12-6 closes on R768(d)(i) passing (R514), counted until P1 closes (R607(d)). | PI, 2026-10-31, during session 12ac, on architect recommendation, on the 12ac-U22A final report (item 0 718ef7f; read-out 23fad87) |
 
 The decision log in this file ends at R768.
+
+**Block 167.** *Transcribed 2026-11-01 (item 0 of the 12ac-CLOSE brief), in its own commit with Blocks 168, 169, 170, 171 and 172, the INT-g12-6 CLOSED note, the dated units line and the standing-rules regeneration, in the R597(e) form:* ruling R769, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ac, on the 12ac-U22B report stopped at step 1e (no commit; HEAD `23fad874de66d694251d3ee1dfe38be3b0c69a79`, two files staged). The 12ac-U22B-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R769] — 12ac-U22B stopped at 1e: the check's own arithmetic, the stop
+  correct under R763(c); the two-line revision accepted; the brief's line arithmetic read as CC
+  read it; resume at 1e
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22B
+  report stopped at step 1e (no commit; HEAD 23fad874de66d694251d3ee1dfe38be3b0c69a79, two files
+  staged). Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after
+  R768's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B stop report):
+  MEASURED: "1a r768.txt, hashed straight after its one write:
+    d3b6988aba44ec03332bd48c7692465789ea0f7bca9963732cb88cb65946de0c, 7622 B, 88 lines, last byte
+    0a. Equal to the architect's"; "grep -n -i -E 'from here|standing form|standing rule|rule from'
+    r768.txt → no output, rc 1"; "--append: "appended Block 166 (R768): +99" — N166 = 99"; "Row
+    INT-g12-6 is plan line 503, one line"; "Note lines added: 0 (both notes sit in the cell on the
+    row's one line). Row lines replaced: 1"; "git diff --cached --numstat plan 100 / 1, r768.txt 88
+    / 0; hunks @@ -503 +503 @@ and @@ -14636,0 +14637,99 @@"; "plan now sha256
+    00066dd0447840a2dad0e4098002a1e241aa19f5772475212319608f6c5c3b5d, 2,595,012 B, 14,735 lines =
+    14,636 + 99"; "rc 1; stderr empty; no commit"; "Block 166 (R768): byte-identical True;
+    generated 13030 B, plan 13030 B"; "--check-plan 166 exit 0: True"; "row after == row before
+    with the notes appended to its last cell, ' |' kept: True"; "note R768(c) in R9's form; its
+    quoted text is the ruling's words verbatim: True"; "note R768(f) … verbatim: True"; "appended
+    lines N166 = 102"; "plan '+' 100 == N166 102 + 1 (the row); '-' 1 == 1 (the row): False"; "plan
+    lines 14735 == 14636 + 102: False"; "staged set exactly the plan and r768.txt: True"; "id list,
+    glosses, STANDING_RULES.md unchanged against HEAD: True"; "RESULT: FAIL".
+  READ (CC's): "two lines measured the appended block by byte offset (plan[len(old):]), carried from
+    12ac-U22A's check where the plan at HEAD was a byte prefix. The row edit adds 547 bytes before
+    the block, so the offset lands 547 bytes inside the old text and counts 102 newlines instead of
+    99"; the proposed two-line diff of check_item0_v2.py as the report prints it; findings 1–4.
+  INFERRED: none.
+
+R769(a) — The stop at 1e is correct and is the check's: three conditions of its own arithmetic
+  failed while every condition that reads the record passed. Under R705(d) and R763(c) the failing
+  check stopped the chain before the commit and is corrected under this ruling. Not a stop of the
+  brief's: the row edit the brief ordered is what moved the block off the byte prefix, and the
+  brief's "(note lines added) − (row lines replaced)" was the architect's, in diff lines where the
+  check needed file lines; CC's reading (0 − 0 in lines, 1 − 1 in diff lines) is adopted.
+R769(b) — check_item0_v2.py is accepted as proposed: the two byte-offset lines replaced by a count
+  by line (N = plan lines − HEAD plan lines) and a line-based test that the appended text follows
+  HEAD's last line and a blank line and starts with the block head; no other line of the check
+  changes (CC diffs v1 against v2 into the evidence and quotes the diff; a third changed line is a
+  stop). The same measurement form holds for every later item 0 whose commit edits a line before
+  the appended block.
+R769(c) — Readings, no row: finding 3 (the beside wording and the two lead-ins are CC's; the quoted
+  text the ruling's, verified); finding 4 (two "L (…additions)" headings; the letter alone is not an
+  anchor — the row's heading and line are quoted); the item-0 values measured independently of the
+  check (plan 00066dd0…3b5d, 2,595,012 B, 14,735 lines; "+" 100 / "−" 1) are the values 1e asserts.
+R769(d) — 12ac-U22B resumes now at 1e under the RESUME below, on the tree as staged; nothing is
+  rewritten.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R769(a) — The stop at 1e is correct and is the check's: three conditions of its own arithmetic failed while every condition that reads the record passed. Under R705(d) and R763(c) the failing check stopped the chain before the commit and is corrected under this ruling. Not a stop of the brief's: the row edit the brief ordered is what moved the block off the byte prefix, and the brief's "(note lines added) − (row lines replaced)" was the architect's, in diff lines where the check needed file lines; CC's reading (0 − 0 in lines, 1 − 1 in diff lines) is adopted. R769(b) — check_item0_v2.py is accepted as proposed: the two byte-offset lines replaced by a count by line (N = plan lines − HEAD plan lines) and a line-based test that the appended text follows HEAD's last line and a blank line and starts with the block head; no other line of the check changes (CC diffs v1 against v2 into the evidence and quotes the diff; a third changed line is a stop). The same measurement form holds for every later item 0 whose commit edits a line before the appended block. R769(c) — Readings, no row: finding 3 (the beside wording and the two lead-ins are CC's; the quoted text the ruling's, verified); finding 4 (two "L (…additions)" headings; the letter alone is not an anchor — the row's heading and line are quoted); the item-0 values measured independently of the check (plan 00066dd0…3b5d, 2,595,012 B, 14,735 lines; "+" 100 / "−" 1) are the values 1e asserts. R769(d) — 12ac-U22B resumes now at 1e under the RESUME below, on the tree as staged; nothing is rewritten. | PI, 2026-10-31, during session 12ac, on architect recommendation, on the 12ac-U22B report stopped at step 1e (no commit; HEAD 23fad87, two files staged) |
+
+The decision log in this file ends at R769.
+
+**Block 168.** *Transcribed 2026-11-01 (item 0 of the 12ac-CLOSE brief), in its own commit with Blocks 167, 169, 170, 171 and 172, the INT-g12-6 CLOSED note, the dated units line and the standing-rules regeneration, in the R597(e) form:* ruling R770, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ac, on the 12ac-U22B final report as resumed under R769 (item 0 `bb224fd3477a2292e325915b73807420bc4cece0`; read-out `41ba98830bd81aaa1efd6ea81ef63ff04127220c`). The 12ac-U22B-R2 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R770] — 12ac-U22B accepted; Q1–Q5 ruled; the modules.md:83 sentence
+  approved as proposed; U22's build opens as one engine commit with its gate
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22B
+  final report as resumed under R769 (item 0 bb224fd3477a2292e325915b73807420bc4cece0; read-out
+  41ba98830bd81aaa1efd6ea81ef63ff04127220c, docs/session-reports/session-12/12ac_U22B/
+  12ac_U22B.md). Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block
+  after R769's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B final report and 12ac_U22B.md):
+  MEASURED: "Commit bb224fd3477a2292e325915b73807420bc4cece0, parent 23fad874…: plan +100/−1,
+    r768.txt +88"; "The check diff … exactly R769(b)'s two lines, nothing else"; "RESULT: PASS";
+    "Plan 00066dd0…3b5d, 2,595,012 B, 14,735 lines"; "Commit 41ba98830bd81aaa1efd6ea81ef63ff04127220c,
+    parent bb224fd…: 1 file, +253"; "pin_tuples.py … byte-identical (cmp) to
+    12ab_close/pin_tuples_close.json; … pins d3672ab6…ff5c / d70bf688…59f0; audit prompt_hash
+    d972c46dde944f1381c4f2d5472c6264c3a1053bd23bdd3801bdf0fdc2a5838d"; "inventory --check reads
+    "inventory in sync" at HEAD"; "Ledger 8f63c43, parent 0e31ada".
+  READ (CODE ORDER, the read-out): "The failure row needs no change: the defaults give None
+    (R768(b)(iv)); extraction_events.py leaves the Touched list"; "sort_keys=True at
+    ollama_client.py:449 fixes the wire order of the line's keys"; "The TRUNCATED and DROPPED error
+    lines (:457, :461) dump the same dict and so gain eval_count without an edit"; "Three existing
+    spreads (pipeline.py:323, :328, :505) carry pass1_eval_count into exc.telemetry, the attempt
+    telemetry and extra.elicitation"; "Both fakes the new tests need lack the attribute:
+    StubClient.chat (test_ollama_input_fit.py:37–41) and _resp (test_thinking_channel.py:102–106);
+    P1's stub must keep lacking it"; "Greps over tests/: SCHEMA_VERSION 2 files (the other is
+    audit-telemetry-1); "extraction-telemetry-3" 1; pass2_prompt_eval_count 1 file;
+    _LAST_PASS2_TELEMETRY 0; exact record == { 1. None beyond R6"; "one line made false —
+    docs/architecture/modules.md:83"; the proposed replacement sentence as §5 prints it; "No
+    CLAUDE.md line names the schema string or a row key"; the test plan 2c (i)–(iii).
+  READ (CC's): findings 1–9 of the report; Q1–Q5.
+  INFERRED: none.
+
+R770(a) — 12ac-U22B is accepted as reported: item 0 bb224fd (Block 166 by transcribe_ruling.py;
+  r768.txt in 12ac_open/; the two INT-g12-6 notes; the check v2 as R769(b) accepted it), ledger
+  0e31ada; the read-out 41ba988, ledger 8f63c43. The decision log in the file ends at R768. The
+  2026-11-01 jobs stay R767(d)'s.
+R770(b) — Q1: the v3 test keeps its id (a test's name is its id; the gate compares id sets,
+  R655(b)); its comment line gains the "-3 → -4" line as 2b states. Q2: the two extractor dicts
+  read eval_count as they read prompt_eval_count, plain getattr(response, "eval_count", None),
+  one form for the row's two pairs; the int guard stays on the line only. Q3: test (ii) takes the
+  probe's route (patched extractor.ollama_chat responses through extract_pass1_reasoning /
+  extract_pass2_structured, then record_call), as 2c (ii) states it, under the name 2c gives. Q4:
+  no optional sentence; models.md:76 is not edited. Q5: an optional argument on each fake helper
+  (StubClient.chat, _resp), default absent, so every existing call is unchanged and P1's stub
+  keeps lacking the field; no local fake.
+R770(c) — docs/architecture/modules.md:83 is replaced by the sentence §5 proposes, verbatim, in the
+  build commit; no other docs/architecture or CLAUDE.md line changes (R768(e)).
+R770(d) — The build: one engine commit on 41ba988 carrying R768(b)(i)–(v) at the nine sites 2a
+  quotes (extraction_events.py, cloud/base.py and pdf_parser.py untouched), the two tests of
+  R768(d) in 2c's form, the three class-(c) rewrites with their assertions kept (P1 gains
+  "eval_count": None; P2 moves to -4; P3 gains the two keys), the two helper arguments of Q5,
+  docs/inventory/ regenerated (R725(c)) and modules.md:83; Touched: engine/utils/ollama_client.py,
+  engine/agents/extractor.py, engine/elicitation/pipeline.py, engine/core/extraction_telemetry.py,
+  tests/test_ollama_input_fit.py, tests/test_thinking_channel.py, docs/inventory/,
+  docs/architecture/modules.md — a file outside this list is a stop (I5 of the brief-writing
+  rules). Before the edit, the two new tests are run on the parent and recorded red (the KeyError
+  and the TypeError 2c (iii) predicts are readings, the red is the record). Both pins and the audit
+  prompt_hash byte-identical after the edit (R768(e)); no migration.
+R770(e) — The gate: the standard gate by launch_gate.sh, evidence 12ac_U22B/gate_u22b/, band
+  829–1012 s beside the series of twenty-eight (R767(b)); counts expected as 12ab's plus the two
+  new ids — collected and selected each two more than 3,508 / 3,491, passed two more than 3,490,
+  1 xfailed, 17 deselected, the two warnings sklearn's — written "to be measured" (R707(a)); the
+  id comparison against 12ab_close/collected_ids_12ab_close.txt expected only-gate = the two new
+  ids, named, only-ref 0; durations against 12ab_close/durations_12ab_u21b.txt; a model load a
+  stop, a read-only request a reading (R696(b)); a red beyond the three rewrites classified (c)
+  or (r) (R746(c)). Gate evidence in its own commit (R731(c)).
+R770(f) — Readings, no row: finding 2 (sort_keys fixes the wire order; "beside" is the literal's);
+  finding 3 (the TRUNCATED / DROPPED lines gain the key by the shared dict — the acceptance test
+  does not assert them; a reading); finding 4 (the three spreads carry the key as they carry the
+  prompt count); finding 7 (a MagicMock response would reach the dicts unguarded; no test reaches
+  record_call that way; the guard stays on the line); finding 9 (the parent run measures the red).
+R770(g) — INT-g12-6 closes on R768(d)(i) passing in the gate (R514), noted CLOSED at the next
+  item 0 with the commit hash and the two test ids, counted until P1 closes (R607(d)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R770(a) — 12ac-U22B is accepted as reported: item 0 bb224fd (Block 166 by transcribe_ruling.py; r768.txt in 12ac_open/; the two INT-g12-6 notes; the check v2 as R769(b) accepted it), ledger 0e31ada; the read-out 41ba988, ledger 8f63c43. The decision log in the file ends at R768. The 2026-11-01 jobs stay R767(d)'s. R770(b) — Q1: the v3 test keeps its id (a test's name is its id; the gate compares id sets, R655(b)); its comment line gains the "-3 → -4" line as 2b states. Q2: the two extractor dicts read eval_count as they read prompt_eval_count, plain getattr(response, "eval_count", None), one form for the row's two pairs; the int guard stays on the line only. Q3: test (ii) takes the probe's route (patched extractor.ollama_chat responses through extract_pass1_reasoning / extract_pass2_structured, then record_call), as 2c (ii) states it, under the name 2c gives. Q4: no optional sentence; models.md:76 is not edited. Q5: an optional argument on each fake helper (StubClient.chat, _resp), default absent, so every existing call is unchanged and P1's stub keeps lacking the field; no local fake. R770(c) — docs/architecture/modules.md:83 is replaced by the sentence §5 proposes, verbatim, in the build commit; no other docs/architecture or CLAUDE.md line changes (R768(e)). R770(d) — The build: one engine commit on 41ba988 carrying R768(b)(i)–(v) at the nine sites 2a quotes (extraction_events.py, cloud/base.py and pdf_parser.py untouched), the two tests of R768(d) in 2c's form, the three class-(c) rewrites with their assertions kept (P1 gains "eval_count": None; P2 moves to -4; P3 gains the two keys), the two helper arguments of Q5, docs/inventory/ regenerated (R725(c)) and modules.md:83; Touched: engine/utils/ollama_client.py, engine/agents/extractor.py, engine/elicitation/pipeline.py, engine/core/extraction_telemetry.py, tests/test_ollama_input_fit.py, tests/test_thinking_channel.py, docs/inventory/, docs/architecture/modules.md — a file outside this list is a stop (I5 of the brief-writing rules). Before the edit, the two new tests are run on the parent and recorded red (the KeyError and the TypeError 2c (iii) predicts are readings, the red is the record). Both pins and the audit prompt_hash byte-identical after the edit (R768(e)); no migration. R770(e) — The gate: the standard gate by launch_gate.sh, evidence 12ac_U22B/gate_u22b/, band 829–1012 s beside the series of twenty-eight (R767(b)); counts expected as 12ab's plus the two new ids — collected and selected each two more than 3,508 / 3,491, passed two more than 3,490, 1 xfailed, 17 deselected, the two warnings sklearn's — written "to be measured" (R707(a)); the id comparison against 12ab_close/collected_ids_12ab_close.txt expected only-gate = the two new ids, named, only-ref 0; durations against 12ab_close/durations_12ab_u21b.txt; a model load a stop, a read-only request a reading (R696(b)); a red beyond the three rewrites classified (c) or (r) (R746(c)). Gate evidence in its own commit (R731(c)). R770(f) — Readings, no row: finding 2 (sort_keys fixes the wire order; "beside" is the literal's); finding 3 (the TRUNCATED / DROPPED lines gain the key by the shared dict — the acceptance test does not assert them; a reading); finding 4 (the three spreads carry the key as they carry the prompt count); finding 7 (a MagicMock response would reach the dicts unguarded; no test reaches record_call that way; the guard stays on the line); finding 9 (the parent run measures the red). R770(g) — INT-g12-6 closes on R768(d)(i) passing in the gate (R514), noted CLOSED at the next item 0 with the commit hash and the two test ids, counted until P1 closes (R607(d)). | PI, 2026-10-31, during session 12ac, on architect recommendation, on the 12ac-U22B final report as resumed under R769 (item 0 bb224fd; read-out 41ba988) |
+
+The decision log in this file ends at R770.
+
+**Block 169.** *Transcribed 2026-11-01 (item 0 of the 12ac-CLOSE brief), in its own commit with Blocks 167, 168, 170, 171 and 172, the INT-g12-6 CLOSED note, the dated units line and the standing-rules regeneration, in the R597(e) form:* ruling R771, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ac, on the 12ac-U22B-R2 report stopped at step B2 (no commit; HEAD `41ba98830bd81aaa1efd6ea81ef63ff04127220c`, nine files staged). The 12ac-U22B-R3 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R771] — 12ac-U22B-R2 stopped at B2: the stop correct and the
+  architect's (a comment's wording predicted); the one-line check revision accepted; resume at B2
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22B-R2
+  report stopped at step B2 (no commit; HEAD 41ba98830bd81aaa1efd6ea81ef63ff04127220c, nine files
+  staged). Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after
+  R770's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B-R2 stop report):
+  MEASURED: "FAILED tests/test_ollama_input_fit.py::test_the_input_fit_line_records_eval_count";
+    "FAILED tests/test_thinking_channel.py::test_telemetry_records_each_passs_eval_count_under_
+    schema_v4"; "2 failed in 0.26s"; "git diff --cached --stat: 9 files, +101/−14"; "every staged
+    file is under one of the Touched paths: True"; "every Touched path has at least one staged
+    file: True"; "5 passed in 0.22s"; "pin_tuples.py output byte-identical to … pin_tuples_close.json
+    (aea19354…): True"; "audit prompt_hash == d972c46d…838d in both arms: True"; "SCHEMA_VERSION ==
+    extraction-telemetry-4: True"; "-- grep extraction-telemetry-3: []"; "the only
+    'extraction-telemetry-3' mention in engine/ and tests/ is the comment's '-3 -> -4' line:
+    False"; "the row's two new keys sit after pass2_prompt_eval_count and before error: True";
+    "inventory --check in sync: True"; "fingerprint IDENTICAL: True"; "RESULT: FAIL"; "rc 1, no
+    commit".
+  READ (CC's): "The comment I wrote says -3 -> -4 and does not contain the literal
+    extraction-telemetry-3"; "The remaining extraction-telemetry literals in engine/ and tests/ are
+    the three -4 lines … and the v2 fixture literal (:263)"; the proposed one-line diff (25c25) as
+    the report prints it; findings 1–5.
+  INFERRED: none.
+
+R771(a) — The stop at B2 is correct and is the architect's: the brief's grep expectation was a
+  prediction of a comment's wording, written before the comment existed (R707(a)'s line). The
+  measured state is the stricter one — no stale literal anywhere — and every record condition
+  passed. Nothing was committed; the nine staged files stand; the comment is not edited to make
+  the grep hit it.
+R771(b) — check_build_v2.py is accepted as proposed: the one condition becomes "the grep is empty,
+  or its one hit is the rewritten comment's '-3 -> -4' line"; no other line changes (the diff
+  quoted in the evidence; a second changed line is a stop).
+R771(c) — Readings, no row: finding 2 (the inventory's generated_at_commit and the two moved line
+  values, as U21's moved); finding 4 (the first edit script's guessed intervening line, caught by
+  its own assertion before any write to extractor.py; the applied form asserted the count at
+  three — the form from here for an insert at N sites); finding 5 (a diff | tee in an evidence
+  capture printed tee's rc; evidence is captured by redirect, R720(c)'s reason).
+R771(d) — 12ac-U22B-R2 resumes now at B2 under the RESUME below, on the tree as staged; B3–B5 as
+  issued under R770.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R771(a) — The stop at B2 is correct and is the architect's: the brief's grep expectation was a prediction of a comment's wording, written before the comment existed (R707(a)'s line). The measured state is the stricter one — no stale literal anywhere — and every record condition passed. Nothing was committed; the nine staged files stand; the comment is not edited to make the grep hit it. R771(b) — check_build_v2.py is accepted as proposed: the one condition becomes "the grep is empty, or its one hit is the rewritten comment's '-3 -> -4' line"; no other line changes (the diff quoted in the evidence; a second changed line is a stop). R771(c) — Readings, no row: finding 2 (the inventory's generated_at_commit and the two moved line values, as U21's moved); finding 4 (the first edit script's guessed intervening line, caught by its own assertion before any write to extractor.py; the applied form asserted the count at three — the form from here for an insert at N sites); finding 5 (a diff \| tee in an evidence capture printed tee's rc; evidence is captured by redirect, R720(c)'s reason). R771(d) — 12ac-U22B-R2 resumes now at B2 under the RESUME below, on the tree as staged; B3–B5 as issued under R770. | PI, 2026-10-31, during session 12ac, on architect recommendation, on the 12ac-U22B-R2 report stopped at step B2 (no commit; HEAD 41ba988, nine files staged) |
+
+The decision log in this file ends at R771.
+
+**Block 170.** *Transcribed 2026-11-01 (item 0 of the 12ac-CLOSE brief), in its own commit with Blocks 167, 168, 169, 171 and 172, the INT-g12-6 CLOSED note, the dated units line and the standing-rules regeneration, in the R597(e) form:* ruling R772, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ac, on the 12ac-U22B-R3 report stopped at B3's class-(c) step (engine commit `51f8317f5a74cfbdb8094fa019b5fbccbd16cb05` landed; one test file staged). The 12ac-U22B-R4 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R772] — 12ac-U22B-R3: the engine commit accepted; the red a census miss,
+  class (c), the key-set fix confirmed in P1's form as a test-only commit; the check revision
+  accepted; the diff-shape rule; the gate re-run once
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22B-R3
+  report stopped at B3's class-(c) step (engine commit 51f8317f5a74cfbdb8094fa019b5fbccbd16cb05
+  landed; one test file staged). Transcribe at item 0 of the next brief, by transcribe_ruling.py,
+  in the block after R771's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B-R3 stop report):
+  MEASURED: "Check diff (b2_check_diff.txt, by redirect): one changed line, 25c25"; "Commit
+    51f8317f5a74cfbdb8094fa019b5fbccbd16cb05, parent 41ba988…, feat(U22): eval_count recorded — the
+    input_fit line and the extraction telemetry row (schema -4): 9 files, +101/−14"; "Pins
+    d3672ab6…ff5c / d70bf688…59f0, audit prompt_hash d972c46d…838d, byte-identical"; "Ledger e693399,
+    parent 8f63c43"; "= 1 failed, 3491 passed, 17 deselected, 1 xfailed, 2 warnings in 923.47s
+    (0:15:23) ="; "gate 3,493 against ref 3,491; only-gate 2 —
+    test_ollama_input_fit.py::test_the_input_fit_line_records_eval_count,
+    test_thinking_channel.py::test_telemetry_records_each_passs_eval_count_under_schema_v4;
+    only-ref 0"; "925.57 s"; "slower by >10 s: 0"; "three GIN lines at 23:04:40, the wrapper's
+    after-reads (/api/version, /api/tags, /api/ps); no load"; "tests/test_u20_loaded_context.py:
+    261–268: assert set(json.loads(line.split(" ", 2)[2])) == {"model", "ceiling", "chars",
+    "estimate_low", "count", "ratio", "done_reason"}"; "E     Extra items in the left set:
+    'eval_count'"; "The id alone: 1 passed. No engine file touched"; "numstat: ['2', '1']"; "@@ -268
+    +268,2 @@"; "RESULT: FAIL".
+  READ (CC's): "the file's fake (:76–77) carries eval_count=1"; "The test's subject ("no
+    loaded_context key outside a run") is untouched by R768(b); it is a key-set pin in set(...) ==
+    form, which my 2b grep (record == {) and the Phase A census's exact-set class did not list";
+    the proposed two-line revision of check_cfix.py as the report describes it; findings 1–6.
+  INFERRED: none.
+
+R772(a) — The engine commit 51f8317 is accepted as reported: the eight Touched paths and nothing
+  else, both pins and the audit prompt_hash byte-identical, no migration, pushed and level,
+  ledger e693399. The parent run (both new ids red at KeyError: 'eval_count') is the record of
+  R770(d)'s parent acceptance.
+R772(b) — The red is a census miss, class (c) (R722(a)–R725(b), R746(c)): a key-set pin over the
+  input_fit line in set(...) == form, in a test whose subject (no loaded_context key outside a
+  run) R768(b) does not touch; the Phase A's exact-set class counted "none over a telemetry row"
+  and the Phase B grep matched "record == {" only. The fix as staged is confirmed in P1's form: the
+  literal gains the one key "eval_count", the assertion's subject kept — the reading R768(d)
+  applied to P1 ("assertions kept"), and what R746(c)'s "without changing an assertion" means for a
+  key-set pin whose universe gained a key. It lands as its own test-only commit (R770(e) provides
+  it; R770(d)'s list binds the engine commit), then the gate is re-run once.
+R772(c) — check_cfix_v2.py is accepted as proposed (two lines: the numstat expectation read as +2
+  / −1; one "−" line, both "+" lines required); no other line changes, the diff quoted. Rule from
+  here: a pre-commit check asserts what a diff contains — the lines it must and must not carry —
+  and reads its numstat into the evidence; it matches a count only when a record supplies that
+  count (a tool's own report, a prior run's figure), never a prediction of the diff's shape made
+  before the diff exists. R750(c) stated this for a tool's write; this extends it to every
+  check-and-commit chain.
+R772(d) — Readings, no row: the red run's wall 925.57 s inside the band and not a series member
+  (R746(c)); its nineteen files kept beside the re-run's under 12ac_U22B/ (gate_u22b/ the red run,
+  gate_u22b_rerun/ the re-run, both committed at B4 with b3_red.txt and b3_gate_journal.txt);
+  finding 1 (the grep that would have found the pin: "set(json.loads(" or "== {" over the line —
+  the census pre-step's class (iv) gains that form at the next Phase A); finding 4 (three
+  arithmetic stops in one brief, the first two the architect's, this one CC's; R772(c) is the
+  fix); finding 6 (the traceback capture corrected to the FAILURES block).
+R772(e) — 12ac-U22B-R3 resumes now under the RESUME below: the fix chain with v2, the gate re-run
+  once into gate_u22b_rerun/, then B4 with both gate directories. INT-g12-6 closes on the re-run's
+  green (R770(g)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R772(a) — The engine commit 51f8317 is accepted as reported: the eight Touched paths and nothing else, both pins and the audit prompt_hash byte-identical, no migration, pushed and level, ledger e693399. The parent run (both new ids red at KeyError: 'eval_count') is the record of R770(d)'s parent acceptance. R772(b) — The red is a census miss, class (c) (R722(a)–R725(b), R746(c)): a key-set pin over the input_fit line in set(...) == form, in a test whose subject (no loaded_context key outside a run) R768(b) does not touch; the Phase A's exact-set class counted "none over a telemetry row" and the Phase B grep matched "record == {" only. The fix as staged is confirmed in P1's form: the literal gains the one key "eval_count", the assertion's subject kept — the reading R768(d) applied to P1 ("assertions kept"), and what R746(c)'s "without changing an assertion" means for a key-set pin whose universe gained a key. It lands as its own test-only commit (R770(e) provides it; R770(d)'s list binds the engine commit), then the gate is re-run once. R772(c) — check_cfix_v2.py is accepted as proposed (two lines: the numstat expectation read as +2 / −1; one "−" line, both "+" lines required); no other line changes, the diff quoted. Rule from here: a pre-commit check asserts what a diff contains — the lines it must and must not carry — and reads its numstat into the evidence; it matches a count only when a record supplies that count (a tool's own report, a prior run's figure), never a prediction of the diff's shape made before the diff exists. R750(c) stated this for a tool's write; this extends it to every check-and-commit chain. R772(d) — Readings, no row: the red run's wall 925.57 s inside the band and not a series member (R746(c)); its nineteen files kept beside the re-run's under 12ac_U22B/ (gate_u22b/ the red run, gate_u22b_rerun/ the re-run, both committed at B4 with b3_red.txt and b3_gate_journal.txt); finding 1 (the grep that would have found the pin: "set(json.loads(" or "== {" over the line — the census pre-step's class (iv) gains that form at the next Phase A); finding 4 (three arithmetic stops in one brief, the first two the architect's, this one CC's; R772(c) is the fix); finding 6 (the traceback capture corrected to the FAILURES block). R772(e) — 12ac-U22B-R3 resumes now under the RESUME below: the fix chain with v2, the gate re-run once into gate_u22b_rerun/, then B4 with both gate directories. INT-g12-6 closes on the re-run's green (R770(g)). | PI, 2026-10-31, during session 12ac, on architect recommendation, on the 12ac-U22B-R3 report stopped at B3's class-(c) step (engine commit 51f8317 landed; one test file staged) |
+
+The decision log in this file ends at R772.
+
+**Block 171.** *Transcribed 2026-11-01 (item 0 of the 12ac-CLOSE brief), in its own commit with Blocks 167, 168, 169, 170 and 172, the INT-g12-6 CLOSED note, the dated units line and the standing-rules regeneration, in the R597(e) form:* ruling R773, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ac, on the 12ac-U22B-R4 final report (engine `51f8317f5a74cfbdb8094fa019b5fbccbd16cb05`; the (c) fix `bfe3bd3f28827d050192065f264357a79f0e2e4f`; evidence `3e3988f008c8a5b0b98bf3a8bc54153305d5237e`). The 12ac-CLOSE brief of the later paste that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R773] — 12ac-U22B-R4 accepted; U22 landed; INT-g12-6 CLOSED and
+  counted; the series gains 928.81 s; the ledger message corrected by this clause; readings
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22B-R4
+  final report (engine 51f8317f5a74cfbdb8094fa019b5fbccbd16cb05; the (c) fix
+  bfe3bd3f28827d050192065f264357a79f0e2e4f; evidence 3e3988f008c8a5b0b98bf3a8bc54153305d5237e).
+  Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after R772's, not
+  now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B-R4 final report):
+  MEASURED: "Commit bfe3bd3f28827d050192065f264357a79f0e2e4f, parent 51f8317, test(U22): the
+    input_fit key-set pin outside a run gains eval_count (class (c), R746(c)), 1 file +2/−1";
+    "numstat +2 / -1: the set's closing line replaced by two lines: True"; "the one '-' line is the
+    set's closing line; the '+' lines keep every existing key and add eval_count: True"; "no engine
+    file changed: True"; "==== 3492 passed, 17 deselected, 1 xfailed, 2 warnings in 926.95s (0:15:26)
+    ===="; "3,510 / 3,493"; "gate 3,493 vs ref 3,491; only-gate the two new ids; only-ref 0";
+    "928.81 s — a series member"; "slower by >10 s: 0"; "three GIN lines at 23:35:42 (the wrapper's
+    after-reads); no load"; "gate_rc.txt | 0; nineteen files"; "41 new files, +24,772"; "Commit
+    3e3988f008c8a5b0b98bf3a8bc54153305d5237e, parent bfe3bd3"; "Ledger e35437d, parent 9707ee5";
+    "Ledger 9707ee5's message says "No foreign rows." while it commits three foreign rows —
+    surgical-cv-ui1b fa23626, 38ab976, 72d4179 at 22:51:13Z, committed as found"; "temp root 1.40
+    GB (pytest-211)".
+  READ (CC's): findings 1–6 of that report; "the surgical-cv uvicorn restarted 23:18:32 (pid
+    388131) and that lane's shell command at 23:19:52 (pid 388791)".
+  INFERRED: none.
+
+R773(a) — 12ac-U22B-R4 is accepted as reported: the (c) fix bfe3bd3 (one test file, the key-set
+  literal gaining "eval_count", the assertion's subject kept), ledger 9707ee5; the re-run gate
+  3,492 / 1 / 17 on 3,510 / 3,493, only-gate the two new ids, 928.81 s inside 829–1012 s; the
+  evidence commit 3e3988f with both gate directories and the parent run, ledger e35437d. U22 has
+  landed in one engine commit, 51f8317, with its (c) fix bfe3bd3.
+R773(b) — INT-g12-6 is CLOSED by R514: its acceptance test
+  tests/test_ollama_input_fit.py::test_the_input_fit_line_records_eval_count failed on the parent
+  41ba988 (b0_parent_acceptance.txt) and passes in the re-run gate (gate_u22b_rerun/), with
+  tests/test_thinking_channel.py::test_telemetry_records_each_passs_eval_count_under_schema_v4
+  beside it. The CLOSED note goes on the row at the next item 0 in B-F14's form, naming 51f8317,
+  bfe3bd3 and the two ids; counted until P1 closes (R607(d), R753(d)(ii)). U22 is done: fix units
+  37, done 25 (the dated line the next item 0 writes).
+R773(c) — The series on this host state gains 928.81 s: the twenty-eight of R767(b) plus 928.81.
+  The red run's 925.57 s is not a member (R746(c)). The band for 12ac stays 829–1012 s.
+R773(d) — Ledger 9707ee5's message, "No foreign rows.", is wrong: the commit carries the three
+  surgical-cv-ui1b rows fa23626, 38ab976 and 72d4179, committed as found (R654(d)). The commit
+  stands and is not amended; this clause is the correction, and the closure records it. The three
+  rows join the dgx-infra cross-lane item.
+R773(e) — Readings, no row: finding 3 (the re-run's journal window quoted, not committed; the
+  brief's staged set governed); finding 4 (the temp root pruned by pytest's own rotation after the
+  single-id runs; nothing emptied by this session); finding 5 (two foreign surgical-cv jobs at the
+  re-run's launch, named; the wall beside 925.57 and 926.70); finding 6 (three predicted-shape
+  stops in one brief, R772(c) the rule); the 2026-11-01 jobs stay R767(d)'s.
+R773(f) — Four rulings are not on disk (R769, R770, R771, R772) and this one makes five; R772(c)
+  states a standing rule and joins the list with the file regenerated at the next item 0
+  (R754(c)(iii)); until then a brief restates it (R754(b)). The next brief is either 12ac-CLOSE in
+  12ab-CLOSE's form (the architect's recommendation) or U23's Phase A, on the PI's word.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R773(a) — 12ac-U22B-R4 is accepted as reported: the (c) fix bfe3bd3 (one test file, the key-set literal gaining "eval_count", the assertion's subject kept), ledger 9707ee5; the re-run gate 3,492 / 1 / 17 on 3,510 / 3,493, only-gate the two new ids, 928.81 s inside 829–1012 s; the evidence commit 3e3988f with both gate directories and the parent run, ledger e35437d. U22 has landed in one engine commit, 51f8317, with its (c) fix bfe3bd3. R773(b) — INT-g12-6 is CLOSED by R514: its acceptance test tests/test_ollama_input_fit.py::test_the_input_fit_line_records_eval_count failed on the parent 41ba988 (b0_parent_acceptance.txt) and passes in the re-run gate (gate_u22b_rerun/), with tests/test_thinking_channel.py::test_telemetry_records_each_passs_eval_count_under_schema_v4 beside it. The CLOSED note goes on the row at the next item 0 in B-F14's form, naming 51f8317, bfe3bd3 and the two ids; counted until P1 closes (R607(d), R753(d)(ii)). U22 is done: fix units 37, done 25 (the dated line the next item 0 writes). R773(c) — The series on this host state gains 928.81 s: the twenty-eight of R767(b) plus 928.81. The red run's 925.57 s is not a member (R746(c)). The band for 12ac stays 829–1012 s. R773(d) — Ledger 9707ee5's message, "No foreign rows.", is wrong: the commit carries the three surgical-cv-ui1b rows fa23626, 38ab976 and 72d4179, committed as found (R654(d)). The commit stands and is not amended; this clause is the correction, and the closure records it. The three rows join the dgx-infra cross-lane item. R773(e) — Readings, no row: finding 3 (the re-run's journal window quoted, not committed; the brief's staged set governed); finding 4 (the temp root pruned by pytest's own rotation after the single-id runs; nothing emptied by this session); finding 5 (two foreign surgical-cv jobs at the re-run's launch, named; the wall beside 925.57 and 926.70); finding 6 (three predicted-shape stops in one brief, R772(c) the rule); the 2026-11-01 jobs stay R767(d)'s. R773(f) — Four rulings are not on disk (R769, R770, R771, R772) and this one makes five; R772(c) states a standing rule and joins the list with the file regenerated at the next item 0 (R754(c)(iii)); until then a brief restates it (R754(b)). The next brief is either 12ac-CLOSE in 12ab-CLOSE's form (the architect's recommendation) or U23's Phase A, on the PI's word. | PI, 2026-10-31, during session 12ac, on architect recommendation, on the 12ac-U22B-R4 final report (engine 51f8317; the (c) fix bfe3bd3; evidence 3e3988f) |
+
+The decision log in this file ends at R773.
+
+**Block 172.** *Transcribed 2026-11-01 (item 0 of the 12ac-CLOSE brief), in its own commit with Blocks 167, 168, 169, 170 and 171, the INT-g12-6 CLOSED note, the dated units line and the standing-rules regeneration, in the R597(e) form:* ruling R774, made by PI on architect recommendation on 2026-10-31 UTC, during session 12ac, on CC's state read after R773 (evidence-engine `3e3988f008c8a5b0b98bf3a8bc54153305d5237e`; claude-config `e35437dfc4197f5492502b2b4aad0c2577a53d16`, both clean, 0 0). The 12ac-CLOSE brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R774] — session 12ac closes now on U22; the 12ac-CLOSE brief follows
+  12ab-CLOSE's form; no closeout gate; the closeout's expected nightly file governs 2026-11-01 and
+  2026-11-02 (R749(b)); the band for 12ad computed by CC and set by the wrap ruling; R772(c) into
+  the standing rules at item 0
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on CC's state read
+  after R773 (evidence-engine 3e3988f008c8a5b0b98bf3a8bc54153305d5237e, claude-config e35437d, both
+  clean, 0 0). Transcribe at item 0 of the 12ac-CLOSE brief, by transcribe_ruling.py, in the block
+  after R773's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B-R4 final report and CC's state read):
+  MEASURED: "evidence-engine | 3e3988f | clean | 0 0"; "claude-config | e35437d | clean | 0 0";
+    "State at 23:47:54 UTC"; "==== 3492 passed, 17 deselected, 1 xfailed, 2 warnings in 926.95s
+    (0:15:26) ===="; "3,510 / 3,493"; "gate 3,493 vs ref 3,491; only-gate the two new ids; only-ref
+    0"; "928.81 s — a series member"; "Commit 51f8317f5a74cfbdb8094fa019b5fbccbd16cb05, parent
+    41ba988…"; "Commit bfe3bd3f28827d050192065f264357a79f0e2e4f, parent 51f8317 … 1 file +2/−1";
+    "Commit 3e3988f008c8a5b0b98bf3a8bc54153305d5237e, parent bfe3bd3"; "Pins d3672ab6…ff5c /
+    d70bf688…59f0, audit prompt_hash d972c46d…838d, byte-identical".
+  READ (CC's): "the five rulings not on disk (R769–R773) are transcribed at the next brief's item 0,
+    which also writes the INT-g12-6 CLOSED note in B-F14's form (naming 51f8317, bfe3bd3 and the
+    two test ids), adds "A R772(c)" to the standing-rules list with the file regenerated, and
+    writes the dated units line (37, done 25)".
+  INFERRED: none.
+
+R774(a) — Session 12ac closes now on U22. The 12ac-CLOSE brief follows 12ab-CLOSE's form read from
+  the record: item 0 (R769–R773 and this ruling, by transcribe_ruling.py; the INT-g12-6 CLOSED note;
+  "A R772(c)" on the list with its gloss and the file regenerated, R754(c)(iii); the dated units
+  line), the counterpart files in 12ab_close/'s names with 12ac's sources, the closure paragraph,
+  the "Expected values at session-12ad open" block, the lane line written and not applied, the
+  closeout block in the record's element order, the rNNN.txt table r766–r774.
+R774(b) — No closeout gate: the expected gate values for 12ad are U22's re-run gate on unchanged
+  code (12ac_U22B/gate_u22b_rerun/: 3,492 passed / 1 xfailed / 17 deselected, collected 3,510 /
+  selected 3,493, its collected_ids as the reference). The engine tree changed at 51f8317 and
+  bfe3bd3, so under R749(b) the closeout writes its own expected nightly file,
+  12ac_close/expected_nightly_20261101.md, in 12ab_close/expected_nightly_20261031.md's form with
+  the re-run's counts, and it governs the 2026-11-01 nightly and, while the tree stays unchanged,
+  2026-11-02's; the 12ab_close file is superseded for 2026-11-01 by this clause, not edited. The
+  2026-11-01 health job and nightly are read by this closeout if it runs after 10:35 UTC on 11-01,
+  else by 12ad-OPEN (R749(c), R767(d)).
+R774(c) — The band for 12ad is computed by CC from the last four standard gates on this host state,
+  read from the record (the series of R773(c): its last four members), ±10% of their mean, rounded
+  inward as R683(c) rounded, stated as a computation with its proposed figure, each gate's
+  concurrent jobs described from its evidence (R748(b)); it is set by the wrap ruling. The recount
+  script is written at this closeout in R651(a)'s chained form (12ab_close/recount_12ab_close.py as
+  the model, read), its output the recount of record: 281 rows (94 / 56 / 131) expected, P1 62
+  (25 / 25 / 12), fix units 35 / 19 / 37 done 25; R510 for 12ac: rows in 0, rows out 0; INT-g12-6
+  CLOSED and counted.
+R774(d) — The stops, for the closure: listed by CC from the rulings on disk and this brief's item 0
+  (each stop ruling names its step and its cause), never from this ruling's memory; the architect's
+  and CC's counted apart. The ledger message corrected by R773(d) is recorded in the closure's
+  ledger paragraph.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-10-31 | R774(a) — Session 12ac closes now on U22. The 12ac-CLOSE brief follows 12ab-CLOSE's form read from the record: item 0 (R769–R773 and this ruling, by transcribe_ruling.py; the INT-g12-6 CLOSED note; "A R772(c)" on the list with its gloss and the file regenerated, R754(c)(iii); the dated units line), the counterpart files in 12ab_close/'s names with 12ac's sources, the closure paragraph, the "Expected values at session-12ad open" block, the lane line written and not applied, the closeout block in the record's element order, the rNNN.txt table r766–r774. R774(b) — No closeout gate: the expected gate values for 12ad are U22's re-run gate on unchanged code (12ac_U22B/gate_u22b_rerun/: 3,492 passed / 1 xfailed / 17 deselected, collected 3,510 / selected 3,493, its collected_ids as the reference). The engine tree changed at 51f8317 and bfe3bd3, so under R749(b) the closeout writes its own expected nightly file, 12ac_close/expected_nightly_20261101.md, in 12ab_close/expected_nightly_20261031.md's form with the re-run's counts, and it governs the 2026-11-01 nightly and, while the tree stays unchanged, 2026-11-02's; the 12ab_close file is superseded for 2026-11-01 by this clause, not edited. The 2026-11-01 health job and nightly are read by this closeout if it runs after 10:35 UTC on 11-01, else by 12ad-OPEN (R749(c), R767(d)). R774(c) — The band for 12ad is computed by CC from the last four standard gates on this host state, read from the record (the series of R773(c): its last four members), ±10% of their mean, rounded inward as R683(c) rounded, stated as a computation with its proposed figure, each gate's concurrent jobs described from its evidence (R748(b)); it is set by the wrap ruling. The recount script is written at this closeout in R651(a)'s chained form (12ab_close/recount_12ab_close.py as the model, read), its output the recount of record: 281 rows (94 / 56 / 131) expected, P1 62 (25 / 25 / 12), fix units 35 / 19 / 37 done 25; R510 for 12ac: rows in 0, rows out 0; INT-g12-6 CLOSED and counted. R774(d) — The stops, for the closure: listed by CC from the rulings on disk and this brief's item 0 (each stop ruling names its step and its cause), never from this ruling's memory; the architect's and CC's counted apart. The ledger message corrected by R773(d) is recorded in the closure's ledger paragraph. | PI, 2026-10-31, during session 12ac, on architect recommendation, on CC's state read after R773 (evidence-engine 3e3988f; claude-config e35437d, both clean, 0 0) |
+
+The decision log in this file ends at R774.
+
+**Block 173.** *Transcribed 2026-11-01 (item 0 of the 12ac-CLOSE brief), in its own commit with Blocks 167, 168, 169, 170, 171 and 172, the INT-g12-6 CLOSED note, the dated units line and the standing-rules regeneration, in the R597(e) form:* ruling R775, made by PI on architect recommendation on 2026-11-01 UTC, during session 12ac, on the 12ac-CLOSE report stopped at item 0's chain (no commit; HEAD `3e3988f008c8a5b0b98bf3a8bc54153305d5237e`, ten files staged). The 12ac-CLOSE-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R775] — 12ac-CLOSE stopped at item 0's chain: the midnight stop
+  correct; the transcription date is the commit's UTC date (R748(c)), so the six blocks are
+  re-rendered as 2026-11-01 and the check stands; this ruling joins item 0; the wrap ruling is R776
+STATUS: PI ruling, 2026-11-01 UTC, session 12ac, on architect recommendation, on the 12ac-CLOSE
+  report stopped at item 0's chain (no commit; HEAD 3e3988f008c8a5b0b98bf3a8bc54153305d5237e, ten
+  files staged). Transcribe at item 0 of the 12ac-CLOSE brief, by transcribe_ruling.py, in the
+  block after R774's, in that commit.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-CLOSE stop report):
+  MEASURED: "The six blocks were rendered and appended at 23:55–23:59 UTC on 2026-10-31 with
+    "transcribed": "2026-10-31", and the check ran at 00:00:07 UTC on 2026-11-01"; "r774.txt …
+    010c63d20bac5f0c24433a77d3c08061752d9aa7b6055397a8f00da16d198a9d … 4161 … 50 … equal to the
+    architect's"; the five other hashes as tabled (r769 54527ed5…c0624014, r770 6ff127f5…c027934f,
+    r771 9e08c109…340f3904, r772 c4d8ed4d…053cb169, r773 63ffd2df…8aeaf293); "--check-plan
+    byte-identical ×6"; "the new plan == HEAD's plan with the row replaced, the dated paragraph
+    inserted after the 12ab dated line, and the six rendered blocks appended, nothing else: True";
+    "plan numstat (read) + 389 / − 1; lines 14735 → 15123"; "the rules diff classified header 3 /
+    new section 1 (## R772(c), 18 lines, clause byte-equal) / Named by 19 … / other 0"; "wrote
+    docs/plan/STANDING_RULES.md: 92 clauses of 1451"; "meta 167 transcribed == today; prev_ends R768
+    == the previous tag: False" and the same for 168–172; "RESULT: FAIL".
+  READ (CC's): "Neither the metadata nor the check is wrong about its own fact; they measure
+    different moments"; readings (a) and (b) as the report states them; findings 1–5; "One standing
+    rule, R772(c); I4 holds".
+  INFERRED: none.
+
+R775(a) — The stop is correct: the one wall-clock condition of the item-0 check failed across the
+  day boundary while every record condition passed; nothing was committed or adapted. The rule is
+  R748(c)'s: the transcription date is the commit's UTC date and the made date the ruling's own.
+  Reading (b) is taken: the metadata files for Blocks 167–172 carry "transcribed": "2026-11-01",
+  the six blocks are re-rendered from the unchanged rNNN.txt files and the plan rebuilt from HEAD
+  with the row note, the dated line and every other edit unchanged; the check's condition stands
+  as written. Reading (a) is not taken. These are the first blocks whose transcribed and made dates
+  differ; the closure records it.
+R775(b) — This ruling is transcribed in the same item-0 commit as Block 173 after R774's, from
+  r775.txt written once from this paste and hashed, with metadata in the same form ("transcribed":
+  "2026-11-01", made_date 2026-11-01, report = the 12ac-CLOSE report stopped at item 0's chain,
+  sentence form chosen from the record as R773's was); prev_ends chained R774→R775; the plan's
+  last line "…ends at R775."; STANDING_RULES.md regenerated once more on the final plan (the
+  header's plan hash is the committed plan's; R766(b)'s classification; no new rule — this ruling
+  states none). The rNNN.txt table of the closeout block runs r766–r775.
+R775(c) — The wrap ruling is R776. Every place the 12ac-CLOSE brief names R775 as the wrap ruling
+  (its R3, the "Expected values at session-12ad open" block, 12ad-OPEN's item 0) reads R776; the
+  brief's R774(a) table "r766–r774" reads "r766–r775".
+R775(d) — Readings, no row: finding 2 (R773's sentence in Block 161's form, the nearest the tool
+  has; the tools item R765(d) stands); finding 3 (a wrapped "Rule from here" is invisible to a line
+  grep; the joined-text grep is the check's form from here — a reading on the check, not a rule);
+  finding 5 (a closeout opened eight minutes before midnight meets the rollover inside item 0; the
+  clock at 0a is read beside the day boundary from here, a reading).
+R775(e) — 12ac-CLOSE resumes now at item 0 under the RESUME below; steps 2–4 as issued with
+  R775(c)'s substitutions.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-01 | R775(a) — The stop is correct: the one wall-clock condition of the item-0 check failed across the day boundary while every record condition passed; nothing was committed or adapted. The rule is R748(c)'s: the transcription date is the commit's UTC date and the made date the ruling's own. Reading (b) is taken: the metadata files for Blocks 167–172 carry "transcribed": "2026-11-01", the six blocks are re-rendered from the unchanged rNNN.txt files and the plan rebuilt from HEAD with the row note, the dated line and every other edit unchanged; the check's condition stands as written. Reading (a) is not taken. These are the first blocks whose transcribed and made dates differ; the closure records it. R775(b) — This ruling is transcribed in the same item-0 commit as Block 173 after R774's, from r775.txt written once from this paste and hashed, with metadata in the same form ("transcribed": "2026-11-01", made_date 2026-11-01, report = the 12ac-CLOSE report stopped at item 0's chain, sentence form chosen from the record as R773's was); prev_ends chained R774→R775; the plan's last line "…ends at R775."; STANDING_RULES.md regenerated once more on the final plan (the header's plan hash is the committed plan's; R766(b)'s classification; no new rule — this ruling states none). The rNNN.txt table of the closeout block runs r766–r775. R775(c) — The wrap ruling is R776. Every place the 12ac-CLOSE brief names R775 as the wrap ruling (its R3, the "Expected values at session-12ad open" block, 12ad-OPEN's item 0) reads R776; the brief's R774(a) table "r766–r774" reads "r766–r775". R775(d) — Readings, no row: finding 2 (R773's sentence in Block 161's form, the nearest the tool has; the tools item R765(d) stands); finding 3 (a wrapped "Rule from here" is invisible to a line grep; the joined-text grep is the check's form from here — a reading on the check, not a rule); finding 5 (a closeout opened eight minutes before midnight meets the rollover inside item 0; the clock at 0a is read beside the day boundary from here, a reading). R775(e) — 12ac-CLOSE resumes now at item 0 under the RESUME below; steps 2–4 as issued with R775(c)'s substitutions. | PI, 2026-11-01, during session 12ac, on architect recommendation, on the 12ac-CLOSE report stopped at item 0's chain (no commit; HEAD 3e3988f, ten files staged) |
+
+The decision log in this file ends at R775.
+
+**Block 174.** *Transcribed 2026-11-01 (item 0 of the 12ac-CLOSE brief), in its own commit with Blocks 167, 168, 169, 170, 171, 172 and 173, the INT-g12-6 CLOSED note, the dated units line and the standing-rules regeneration, in the R597(e) form:* ruling R776, made by PI on architect recommendation on 2026-11-01 UTC, during session 12ac, on the 12ac-CLOSE-R1 report stopped at item 0's chain (no commit; HEAD `3e3988f008c8a5b0b98bf3a8bc54153305d5237e`, eleven files staged). The 12ac-CLOSE-R2 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R776] — 12ac-CLOSE-R1 stopped at item 0's chain: the architect's (a
+  quoted mention of the rule-marking phrase in R775(d) defeated the literal count); the one-condition
+  revision accepted; r775.txt architect-verified; this ruling joins item 0; the wrap ruling is R777
+STATUS: PI ruling, 2026-11-01 UTC, session 12ac, on architect recommendation, on the 12ac-CLOSE-R1
+  report stopped at item 0's chain (no commit; HEAD 3e3988f008c8a5b0b98bf3a8bc54153305d5237e, eleven
+  files staged). Transcribe at item 0 of the 12ac-CLOSE brief, by transcribe_ruling.py, in the
+  block after R775's, in that commit.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-CLOSE-R1 stop report):
+  MEASURED: "r775.txt … 99fd97e411b9caa27402de635fdb421cf75eca8bf4b918f2cd3b7d068eb0d1a8, 4222 B,
+    50 lines"; "--append in order: +59 / +83 / +51 / +69 / +63 / +61 / +61; last line "…ends at
+    R775."; 15,184 lines"; "wrote docs/plan/STANDING_RULES.md: 92 clauses of 1456"; "classified
+    header 3 / new section 1 (## R772(c), 18 lines, clause byte-equal) / Named by 19 … / other 0";
+    ""transcribed == today" True for all seven, --check-plan byte-identical ×7"; "the new plan ==
+    HEAD's plan with the row replaced, the dated paragraph inserted after the 12ab dated line, and
+    the seven rendered blocks appended, nothing else: True"; "plan numstat (read) + 450 / − 1; lines
+    14735 → 15184"; "plan sha256 40d6569337b3db7c397a17b717e256e7e1e454e1b9c3477a1c328b7fc7798781,
+    2,649,663 B, 15,184 lines"; "I4: exactly one 'Rule from here' among the six, in R772: False";
+    "the per-file counts read R772 1, R775 1 (the others 0)"; "R772 literal 1 / stating 1; R775
+    literal 1 / stating 0".
+  MEASURED (the architect's, this ruling): the architect's copy of R775 hashes to
+    99fd97e411b9caa27402de635fdb421cf75eca8bf4b918f2cd3b7d068eb0d1a8, 4222 bytes, 50 lines — equal
+    to CC's.
+  READ (CC's): "a quoted mention inside a readings clause, while R775 states no rule (its own
+    words)"; the proposed revision as the report describes it; findings 1–3.
+  INFERRED: none.
+
+R776(a) — The stop is correct and is the architect's: R775(d) quoted the phrase the check counts,
+  inside a readings clause, and the brief's I4 was written as a literal count over six texts.
+  Nothing was committed or adapted; the eleven staged files stand.
+R776(b) — check_item0_v2.py is accepted as proposed: an occurrence preceded by a double quote is a
+  mention and is not counted; the condition asserts exactly one rule-stating occurrence among the
+  rulings of this item 0, in R772(c); no other line of the check changes (the diff quoted). This
+  ruling is written without the phrase, quoted or otherwise, so the count holds at one with eight
+  texts.
+R776(c) — r775.txt is architect-verified: the hash above equals CC's, and the closeout block's
+  rNNN table marks r775 so, with r776 at CC's hash and the architect's figure reported after the
+  closeout block. Finding 3 is answered.
+R776(d) — This ruling is transcribed in the same item-0 commit as Block 174 after R775's, from
+  r776.txt written once from this paste and hashed, with metadata in Block 173's form (transcribed
+  and made_date 2026-11-01; report = the 12ac-CLOSE-R1 report stopped at item 0's chain; sentence
+  model form, followed "12ac-CLOSE-R2 resume"; beside in Block 173's wording extended to 173);
+  prev_ends R775→R776; the plan's last line "…ends at R776."; STANDING_RULES.md regenerated on the
+  final plan; the rNNN table runs r766–r776. The wrap ruling is R777; every place the brief or
+  R775(c) names R776 as the wrap ruling reads R777.
+R776(e) — Readings, no row: finding 2 (Blocks 167–172's beside lists name each other and not 173
+  or 174; they stand as written, Block 173's and 174's name the earlier ones); the fourth check
+  stop of the session on a condition's wording with every content assertion passing — the two
+  architect's (R766, this), the two CC's (R769, R772) and one the brief's arithmetic (R771); the
+  session's count of stops is the closure's, listed from the rulings (R774(d)).
+R776(f) — 12ac-CLOSE resumes now at item 0 under the RESUME below; steps 2–4 as issued with
+  R775(c)'s and R776(d)'s substitutions.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-01 | R776(a) — The stop is correct and is the architect's: R775(d) quoted the phrase the check counts, inside a readings clause, and the brief's I4 was written as a literal count over six texts. Nothing was committed or adapted; the eleven staged files stand. R776(b) — check_item0_v2.py is accepted as proposed: an occurrence preceded by a double quote is a mention and is not counted; the condition asserts exactly one rule-stating occurrence among the rulings of this item 0, in R772(c); no other line of the check changes (the diff quoted). This ruling is written without the phrase, quoted or otherwise, so the count holds at one with eight texts. R776(c) — r775.txt is architect-verified: the hash above equals CC's, and the closeout block's rNNN table marks r775 so, with r776 at CC's hash and the architect's figure reported after the closeout block. Finding 3 is answered. R776(d) — This ruling is transcribed in the same item-0 commit as Block 174 after R775's, from r776.txt written once from this paste and hashed, with metadata in Block 173's form (transcribed and made_date 2026-11-01; report = the 12ac-CLOSE-R1 report stopped at item 0's chain; sentence model form, followed "12ac-CLOSE-R2 resume"; beside in Block 173's wording extended to 173); prev_ends R775→R776; the plan's last line "…ends at R776."; STANDING_RULES.md regenerated on the final plan; the rNNN table runs r766–r776. The wrap ruling is R777; every place the brief or R775(c) names R776 as the wrap ruling reads R777. R776(e) — Readings, no row: finding 2 (Blocks 167–172's beside lists name each other and not 173 or 174; they stand as written, Block 173's and 174's name the earlier ones); the fourth check stop of the session on a condition's wording with every content assertion passing — the two architect's (R766, this), the two CC's (R769, R772) and one the brief's arithmetic (R771); the session's count of stops is the closure's, listed from the rulings (R774(d)). R776(f) — 12ac-CLOSE resumes now at item 0 under the RESUME below; steps 2–4 as issued with R775(c)'s and R776(d)'s substitutions. | PI, 2026-11-01, during session 12ac, on architect recommendation, on the 12ac-CLOSE-R1 report stopped at item 0's chain (no commit; HEAD 3e3988f, eleven files staged) |
+
+The decision log in this file ends at R776.
+
+**Block 175.** *Transcribed 2026-11-01 (item 0 of the 12ac-CLOSE brief), in its own commit with Blocks 167, 168, 169, 170, 171, 172, 173 and 174, the INT-g12-6 CLOSED note, the dated units line and the standing-rules regeneration, in the R597(e) form:* ruling R777, made by PI on architect recommendation on 2026-11-01 UTC, during session 12ac, on the 12ac-CLOSE-R2 report stopped at item 0's chain (no commit; HEAD `3e3988f008c8a5b0b98bf3a8bc54153305d5237e`, twelve files staged). The 12ac-CLOSE-R3 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R777] — 12ac-CLOSE-R2 stopped at item 0's chain: the architect's; the
+  phrase count is retired from the item-0 check and replaced by a content condition; this ruling
+  joins item 0; the wrap ruling is R778
+STATUS: PI ruling, 2026-11-01 UTC, session 12ac, on architect recommendation, on the 12ac-CLOSE-R2
+  report stopped at item 0's chain (no commit; HEAD 3e3988f008c8a5b0b98bf3a8bc54153305d5237e, twelve
+  files staged). Transcribe at item 0 of the 12ac-CLOSE brief, by transcribe_ruling.py, in the
+  block after R776's, in that commit.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-CLOSE-R2 stop report):
+  MEASURED: "r776.txt … 9d396743a8f40cdb8b14bca1f67129e91332adb8f4b637796e251d6385d01181, 4261 B,
+    52 lines"; "appended Block 174 (R776): +63"; "15,247 lines (15,184 + 63)"; "wrote
+    docs/plan/STANDING_RULES.md: 92 clauses of 1462"; "Check diff v1→v2 … one group,
+    25,26c25,26"; ""transcribed == today" ×8; --check-plan byte-identical ×8"; "the new plan ==
+    HEAD's plan with the row replaced, the dated paragraph inserted …, and the rendered blocks
+    appended, nothing else: True"; "plan numstat (read) + 513 / − 1; lines 14735 → 15247"; "the
+    rules diff classified header 3 / new section 1 (## R772(c)) / Named by 19 / other 0"; "plan
+    sha256
+    80c235625dd187c021e45a0b0a0b66ae3de9f8374cd3e1d028f6350c10ad7213, 2,656,937 B, 15,247 lines";
+    "per file, rule-stating occurrences by v2's rule: R772 1, R776 1, the others 0".
+  READ (CC's): "R776(b)'s "written without the phrase, quoted or otherwise" does not hold of its
+    own MEASURED section; the ruling's statement that it states no rule holds"; finding 1 ("the
+    content it protects (I4: one standing rule, R772(c)) is otherwise established by the glosses
+    and the id list, which the check asserts by content"); findings 2 and 3.
+  INFERRED: none.
+
+R777(a) — The stop is correct and is the architect's: R776's quotation of the check's own line
+  carried the counted phrase in the other quote character. Nothing was committed or adapted; the
+  twelve staged files stand. R776(b)'s sentence about its own wording is withdrawn as false of
+  R776's MEASURED section; R776 is transcribed as issued (R102), this clause the correction.
+R777(b) — The item-0 check's I4 condition is retired as a phrase count, from here: the condition
+  that the ruled standing rules, and only those, entered is asserted by content — the id list
+  gained exactly the lines the item 0 orders ("A R772(c)", one line), the glosses file gained
+  exactly one entry keyed by that id, the regenerated file gained exactly one new section, its
+  clause byte-equal to the plan's fence, and the diff's other count is 0. No text of any ruling is
+  searched for a marker phrase. check_item0_v3.py carries that condition in place of the count (its
+  diff against v2 quoted in the evidence; any other changed line is a stop). CC's proposed quote-
+  character exclusion is not taken.
+R777(c) — This ruling is transcribed in the same item-0 commit as Block 175 after R776's, from
+  r777.txt written once from this paste and hashed, with metadata in Block 174's form (transcribed
+  and made_date 2026-11-01; report = the 12ac-CLOSE-R2 report stopped at item 0's chain; sentence
+  model form, followed "12ac-CLOSE-R3 resume"; beside in Block 174's wording extended to 174);
+  prev_ends R776→R777; the plan's last line "…ends at R777."; STANDING_RULES.md regenerated on the
+  final plan; the rNNN table runs r766–r777 (r775 and r776 architect-verified at CC's figures,
+  r777 at CC's hash, the architect's figure reported after). The wrap ruling is R778; every place
+  the brief, R775(c) or R776(d) names the wrap ruling reads R778.
+R777(d) — Readings, no row: finding 2 (r775 architect-verified); finding 3 (the beside lists of
+  167–174 stand as written); the three item-0 stops of this closeout (R775 the clock, R776 and
+  this the architect's wording) are listed in the closure's stops; the item-0 check's five
+  wording stops this session are the closure's lesson — a check asserts content, never the wording
+  of a text it will later be asked to count.
+R777(e) — 12ac-CLOSE resumes now at item 0 under the RESUME below; steps 2–4 as issued with the
+  substitutions of R775(c), R776(d) and R777(c).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-01 | R777(a) — The stop is correct and is the architect's: R776's quotation of the check's own line carried the counted phrase in the other quote character. Nothing was committed or adapted; the twelve staged files stand. R776(b)'s sentence about its own wording is withdrawn as false of R776's MEASURED section; R776 is transcribed as issued (R102), this clause the correction. R777(b) — The item-0 check's I4 condition is retired as a phrase count, from here: the condition that the ruled standing rules, and only those, entered is asserted by content — the id list gained exactly the lines the item 0 orders ("A R772(c)", one line), the glosses file gained exactly one entry keyed by that id, the regenerated file gained exactly one new section, its clause byte-equal to the plan's fence, and the diff's other count is 0. No text of any ruling is searched for a marker phrase. check_item0_v3.py carries that condition in place of the count (its diff against v2 quoted in the evidence; any other changed line is a stop). CC's proposed quote- character exclusion is not taken. R777(c) — This ruling is transcribed in the same item-0 commit as Block 175 after R776's, from r777.txt written once from this paste and hashed, with metadata in Block 174's form (transcribed and made_date 2026-11-01; report = the 12ac-CLOSE-R2 report stopped at item 0's chain; sentence model form, followed "12ac-CLOSE-R3 resume"; beside in Block 174's wording extended to 174); prev_ends R776→R777; the plan's last line "…ends at R777."; STANDING_RULES.md regenerated on the final plan; the rNNN table runs r766–r777 (r775 and r776 architect-verified at CC's figures, r777 at CC's hash, the architect's figure reported after). The wrap ruling is R778; every place the brief, R775(c) or R776(d) names the wrap ruling reads R778. R777(d) — Readings, no row: finding 2 (r775 architect-verified); finding 3 (the beside lists of 167–174 stand as written); the three item-0 stops of this closeout (R775 the clock, R776 and this the architect's wording) are listed in the closure's stops; the item-0 check's five wording stops this session are the closure's lesson — a check asserts content, never the wording of a text it will later be asked to count. R777(e) — 12ac-CLOSE resumes now at item 0 under the RESUME below; steps 2–4 as issued with the substitutions of R775(c), R776(d) and R777(c). | PI, 2026-11-01, during session 12ac, on architect recommendation, on the 12ac-CLOSE-R2 report stopped at item 0's chain (no commit; HEAD 3e3988f, twelve files staged) |
+
+The decision log in this file ends at R777.

@@ -1,0 +1,40 @@
+RULING [evidence-engine 12ac-R771] — 12ac-U22B-R2 stopped at B2: the stop correct and the
+  architect's (a comment's wording predicted); the one-line check revision accepted; resume at B2
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22B-R2
+  report stopped at step B2 (no commit; HEAD 41ba98830bd81aaa1efd6ea81ef63ff04127220c, nine files
+  staged). Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after
+  R770's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B-R2 stop report):
+  MEASURED: "FAILED tests/test_ollama_input_fit.py::test_the_input_fit_line_records_eval_count";
+    "FAILED tests/test_thinking_channel.py::test_telemetry_records_each_passs_eval_count_under_
+    schema_v4"; "2 failed in 0.26s"; "git diff --cached --stat: 9 files, +101/−14"; "every staged
+    file is under one of the Touched paths: True"; "every Touched path has at least one staged
+    file: True"; "5 passed in 0.22s"; "pin_tuples.py output byte-identical to … pin_tuples_close.json
+    (aea19354…): True"; "audit prompt_hash == d972c46d…838d in both arms: True"; "SCHEMA_VERSION ==
+    extraction-telemetry-4: True"; "-- grep extraction-telemetry-3: []"; "the only
+    'extraction-telemetry-3' mention in engine/ and tests/ is the comment's '-3 -> -4' line:
+    False"; "the row's two new keys sit after pass2_prompt_eval_count and before error: True";
+    "inventory --check in sync: True"; "fingerprint IDENTICAL: True"; "RESULT: FAIL"; "rc 1, no
+    commit".
+  READ (CC's): "The comment I wrote says -3 -> -4 and does not contain the literal
+    extraction-telemetry-3"; "The remaining extraction-telemetry literals in engine/ and tests/ are
+    the three -4 lines … and the v2 fixture literal (:263)"; the proposed one-line diff (25c25) as
+    the report prints it; findings 1–5.
+  INFERRED: none.
+
+R771(a) — The stop at B2 is correct and is the architect's: the brief's grep expectation was a
+  prediction of a comment's wording, written before the comment existed (R707(a)'s line). The
+  measured state is the stricter one — no stale literal anywhere — and every record condition
+  passed. Nothing was committed; the nine staged files stand; the comment is not edited to make
+  the grep hit it.
+R771(b) — check_build_v2.py is accepted as proposed: the one condition becomes "the grep is empty,
+  or its one hit is the rewritten comment's '-3 -> -4' line"; no other line changes (the diff
+  quoted in the evidence; a second changed line is a stop).
+R771(c) — Readings, no row: finding 2 (the inventory's generated_at_commit and the two moved line
+  values, as U21's moved); finding 4 (the first edit script's guessed intervening line, caught by
+  its own assertion before any write to extractor.py; the applied form asserted the count at
+  three — the form from here for an insert at N sites); finding 5 (a diff | tee in an evidence
+  capture printed tee's rc; evidence is captured by redirect, R720(c)'s reason).
+R771(d) — 12ac-U22B-R2 resumes now at B2 under the RESUME below, on the tree as staged; B3–B5 as
+  issued under R770.

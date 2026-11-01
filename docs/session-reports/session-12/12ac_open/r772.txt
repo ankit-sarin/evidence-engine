@@ -1,0 +1,58 @@
+RULING [evidence-engine 12ac-R772] — 12ac-U22B-R3: the engine commit accepted; the red a census miss,
+  class (c), the key-set fix confirmed in P1's form as a test-only commit; the check revision
+  accepted; the diff-shape rule; the gate re-run once
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22B-R3
+  report stopped at B3's class-(c) step (engine commit 51f8317f5a74cfbdb8094fa019b5fbccbd16cb05
+  landed; one test file staged). Transcribe at item 0 of the next brief, by transcribe_ruling.py,
+  in the block after R771's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B-R3 stop report):
+  MEASURED: "Check diff (b2_check_diff.txt, by redirect): one changed line, 25c25"; "Commit
+    51f8317f5a74cfbdb8094fa019b5fbccbd16cb05, parent 41ba988…, feat(U22): eval_count recorded — the
+    input_fit line and the extraction telemetry row (schema -4): 9 files, +101/−14"; "Pins
+    d3672ab6…ff5c / d70bf688…59f0, audit prompt_hash d972c46d…838d, byte-identical"; "Ledger e693399,
+    parent 8f63c43"; "= 1 failed, 3491 passed, 17 deselected, 1 xfailed, 2 warnings in 923.47s
+    (0:15:23) ="; "gate 3,493 against ref 3,491; only-gate 2 —
+    test_ollama_input_fit.py::test_the_input_fit_line_records_eval_count,
+    test_thinking_channel.py::test_telemetry_records_each_passs_eval_count_under_schema_v4;
+    only-ref 0"; "925.57 s"; "slower by >10 s: 0"; "three GIN lines at 23:04:40, the wrapper's
+    after-reads (/api/version, /api/tags, /api/ps); no load"; "tests/test_u20_loaded_context.py:
+    261–268: assert set(json.loads(line.split(" ", 2)[2])) == {"model", "ceiling", "chars",
+    "estimate_low", "count", "ratio", "done_reason"}"; "E     Extra items in the left set:
+    'eval_count'"; "The id alone: 1 passed. No engine file touched"; "numstat: ['2', '1']"; "@@ -268
+    +268,2 @@"; "RESULT: FAIL".
+  READ (CC's): "the file's fake (:76–77) carries eval_count=1"; "The test's subject ("no
+    loaded_context key outside a run") is untouched by R768(b); it is a key-set pin in set(...) ==
+    form, which my 2b grep (record == {) and the Phase A census's exact-set class did not list";
+    the proposed two-line revision of check_cfix.py as the report describes it; findings 1–6.
+  INFERRED: none.
+
+R772(a) — The engine commit 51f8317 is accepted as reported: the eight Touched paths and nothing
+  else, both pins and the audit prompt_hash byte-identical, no migration, pushed and level,
+  ledger e693399. The parent run (both new ids red at KeyError: 'eval_count') is the record of
+  R770(d)'s parent acceptance.
+R772(b) — The red is a census miss, class (c) (R722(a)–R725(b), R746(c)): a key-set pin over the
+  input_fit line in set(...) == form, in a test whose subject (no loaded_context key outside a
+  run) R768(b) does not touch; the Phase A's exact-set class counted "none over a telemetry row"
+  and the Phase B grep matched "record == {" only. The fix as staged is confirmed in P1's form: the
+  literal gains the one key "eval_count", the assertion's subject kept — the reading R768(d)
+  applied to P1 ("assertions kept"), and what R746(c)'s "without changing an assertion" means for a
+  key-set pin whose universe gained a key. It lands as its own test-only commit (R770(e) provides
+  it; R770(d)'s list binds the engine commit), then the gate is re-run once.
+R772(c) — check_cfix_v2.py is accepted as proposed (two lines: the numstat expectation read as +2
+  / −1; one "−" line, both "+" lines required); no other line changes, the diff quoted. Rule from
+  here: a pre-commit check asserts what a diff contains — the lines it must and must not carry —
+  and reads its numstat into the evidence; it matches a count only when a record supplies that
+  count (a tool's own report, a prior run's figure), never a prediction of the diff's shape made
+  before the diff exists. R750(c) stated this for a tool's write; this extends it to every
+  check-and-commit chain.
+R772(d) — Readings, no row: the red run's wall 925.57 s inside the band and not a series member
+  (R746(c)); its nineteen files kept beside the re-run's under 12ac_U22B/ (gate_u22b/ the red run,
+  gate_u22b_rerun/ the re-run, both committed at B4 with b3_red.txt and b3_gate_journal.txt);
+  finding 1 (the grep that would have found the pin: "set(json.loads(" or "== {" over the line —
+  the census pre-step's class (iv) gains that form at the next Phase A); finding 4 (three
+  arithmetic stops in one brief, the first two the architect's, this one CC's; R772(c) is the
+  fix); finding 6 (the traceback capture corrected to the FAILURES block).
+R772(e) — 12ac-U22B-R3 resumes now under the RESUME below: the fix chain with v2, the gate re-run
+  once into gate_u22b_rerun/, then B4 with both gate directories. INT-g12-6 closes on the re-run's
+  green (R770(g)).

@@ -1,0 +1,50 @@
+RULING [evidence-engine 12ac-R775] — 12ac-CLOSE stopped at item 0's chain: the midnight stop
+  correct; the transcription date is the commit's UTC date (R748(c)), so the six blocks are
+  re-rendered as 2026-11-01 and the check stands; this ruling joins item 0; the wrap ruling is R776
+STATUS: PI ruling, 2026-11-01 UTC, session 12ac, on architect recommendation, on the 12ac-CLOSE
+  report stopped at item 0's chain (no commit; HEAD 3e3988f008c8a5b0b98bf3a8bc54153305d5237e, ten
+  files staged). Transcribe at item 0 of the 12ac-CLOSE brief, by transcribe_ruling.py, in the
+  block after R774's, in that commit.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-CLOSE stop report):
+  MEASURED: "The six blocks were rendered and appended at 23:55–23:59 UTC on 2026-10-31 with
+    "transcribed": "2026-10-31", and the check ran at 00:00:07 UTC on 2026-11-01"; "r774.txt …
+    010c63d20bac5f0c24433a77d3c08061752d9aa7b6055397a8f00da16d198a9d … 4161 … 50 … equal to the
+    architect's"; the five other hashes as tabled (r769 54527ed5…c0624014, r770 6ff127f5…c027934f,
+    r771 9e08c109…340f3904, r772 c4d8ed4d…053cb169, r773 63ffd2df…8aeaf293); "--check-plan
+    byte-identical ×6"; "the new plan == HEAD's plan with the row replaced, the dated paragraph
+    inserted after the 12ab dated line, and the six rendered blocks appended, nothing else: True";
+    "plan numstat (read) + 389 / − 1; lines 14735 → 15123"; "the rules diff classified header 3 /
+    new section 1 (## R772(c), 18 lines, clause byte-equal) / Named by 19 … / other 0"; "wrote
+    docs/plan/STANDING_RULES.md: 92 clauses of 1451"; "meta 167 transcribed == today; prev_ends R768
+    == the previous tag: False" and the same for 168–172; "RESULT: FAIL".
+  READ (CC's): "Neither the metadata nor the check is wrong about its own fact; they measure
+    different moments"; readings (a) and (b) as the report states them; findings 1–5; "One standing
+    rule, R772(c); I4 holds".
+  INFERRED: none.
+
+R775(a) — The stop is correct: the one wall-clock condition of the item-0 check failed across the
+  day boundary while every record condition passed; nothing was committed or adapted. The rule is
+  R748(c)'s: the transcription date is the commit's UTC date and the made date the ruling's own.
+  Reading (b) is taken: the metadata files for Blocks 167–172 carry "transcribed": "2026-11-01",
+  the six blocks are re-rendered from the unchanged rNNN.txt files and the plan rebuilt from HEAD
+  with the row note, the dated line and every other edit unchanged; the check's condition stands
+  as written. Reading (a) is not taken. These are the first blocks whose transcribed and made dates
+  differ; the closure records it.
+R775(b) — This ruling is transcribed in the same item-0 commit as Block 173 after R774's, from
+  r775.txt written once from this paste and hashed, with metadata in the same form ("transcribed":
+  "2026-11-01", made_date 2026-11-01, report = the 12ac-CLOSE report stopped at item 0's chain,
+  sentence form chosen from the record as R773's was); prev_ends chained R774→R775; the plan's
+  last line "…ends at R775."; STANDING_RULES.md regenerated once more on the final plan (the
+  header's plan hash is the committed plan's; R766(b)'s classification; no new rule — this ruling
+  states none). The rNNN.txt table of the closeout block runs r766–r775.
+R775(c) — The wrap ruling is R776. Every place the 12ac-CLOSE brief names R775 as the wrap ruling
+  (its R3, the "Expected values at session-12ad open" block, 12ad-OPEN's item 0) reads R776; the
+  brief's R774(a) table "r766–r774" reads "r766–r775".
+R775(d) — Readings, no row: finding 2 (R773's sentence in Block 161's form, the nearest the tool
+  has; the tools item R765(d) stands); finding 3 (a wrapped "Rule from here" is invisible to a line
+  grep; the joined-text grep is the check's form from here — a reading on the check, not a rule);
+  finding 5 (a closeout opened eight minutes before midnight meets the rollover inside item 0; the
+  clock at 0a is read beside the day boundary from here, a reading).
+R775(e) — 12ac-CLOSE resumes now at item 0 under the RESUME below; steps 2–4 as issued with
+  R775(c)'s substitutions.

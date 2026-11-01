@@ -1,0 +1,50 @@
+RULING [evidence-engine 12ac-R774] — session 12ac closes now on U22; the 12ac-CLOSE brief follows
+  12ab-CLOSE's form; no closeout gate; the closeout's expected nightly file governs 2026-11-01 and
+  2026-11-02 (R749(b)); the band for 12ad computed by CC and set by the wrap ruling; R772(c) into
+  the standing rules at item 0
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on CC's state read
+  after R773 (evidence-engine 3e3988f008c8a5b0b98bf3a8bc54153305d5237e, claude-config e35437d, both
+  clean, 0 0). Transcribe at item 0 of the 12ac-CLOSE brief, by transcribe_ruling.py, in the block
+  after R773's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B-R4 final report and CC's state read):
+  MEASURED: "evidence-engine | 3e3988f | clean | 0 0"; "claude-config | e35437d | clean | 0 0";
+    "State at 23:47:54 UTC"; "==== 3492 passed, 17 deselected, 1 xfailed, 2 warnings in 926.95s
+    (0:15:26) ===="; "3,510 / 3,493"; "gate 3,493 vs ref 3,491; only-gate the two new ids; only-ref
+    0"; "928.81 s — a series member"; "Commit 51f8317f5a74cfbdb8094fa019b5fbccbd16cb05, parent
+    41ba988…"; "Commit bfe3bd3f28827d050192065f264357a79f0e2e4f, parent 51f8317 … 1 file +2/−1";
+    "Commit 3e3988f008c8a5b0b98bf3a8bc54153305d5237e, parent bfe3bd3"; "Pins d3672ab6…ff5c /
+    d70bf688…59f0, audit prompt_hash d972c46d…838d, byte-identical".
+  READ (CC's): "the five rulings not on disk (R769–R773) are transcribed at the next brief's item 0,
+    which also writes the INT-g12-6 CLOSED note in B-F14's form (naming 51f8317, bfe3bd3 and the
+    two test ids), adds "A R772(c)" to the standing-rules list with the file regenerated, and
+    writes the dated units line (37, done 25)".
+  INFERRED: none.
+
+R774(a) — Session 12ac closes now on U22. The 12ac-CLOSE brief follows 12ab-CLOSE's form read from
+  the record: item 0 (R769–R773 and this ruling, by transcribe_ruling.py; the INT-g12-6 CLOSED note;
+  "A R772(c)" on the list with its gloss and the file regenerated, R754(c)(iii); the dated units
+  line), the counterpart files in 12ab_close/'s names with 12ac's sources, the closure paragraph,
+  the "Expected values at session-12ad open" block, the lane line written and not applied, the
+  closeout block in the record's element order, the rNNN.txt table r766–r774.
+R774(b) — No closeout gate: the expected gate values for 12ad are U22's re-run gate on unchanged
+  code (12ac_U22B/gate_u22b_rerun/: 3,492 passed / 1 xfailed / 17 deselected, collected 3,510 /
+  selected 3,493, its collected_ids as the reference). The engine tree changed at 51f8317 and
+  bfe3bd3, so under R749(b) the closeout writes its own expected nightly file,
+  12ac_close/expected_nightly_20261101.md, in 12ab_close/expected_nightly_20261031.md's form with
+  the re-run's counts, and it governs the 2026-11-01 nightly and, while the tree stays unchanged,
+  2026-11-02's; the 12ab_close file is superseded for 2026-11-01 by this clause, not edited. The
+  2026-11-01 health job and nightly are read by this closeout if it runs after 10:35 UTC on 11-01,
+  else by 12ad-OPEN (R749(c), R767(d)).
+R774(c) — The band for 12ad is computed by CC from the last four standard gates on this host state,
+  read from the record (the series of R773(c): its last four members), ±10% of their mean, rounded
+  inward as R683(c) rounded, stated as a computation with its proposed figure, each gate's
+  concurrent jobs described from its evidence (R748(b)); it is set by the wrap ruling. The recount
+  script is written at this closeout in R651(a)'s chained form (12ab_close/recount_12ab_close.py as
+  the model, read), its output the recount of record: 281 rows (94 / 56 / 131) expected, P1 62
+  (25 / 25 / 12), fix units 35 / 19 / 37 done 25; R510 for 12ac: rows in 0, rows out 0; INT-g12-6
+  CLOSED and counted.
+R774(d) — The stops, for the closure: listed by CC from the rulings on disk and this brief's item 0
+  (each stop ruling names its step and its cause), never from this ruling's memory; the architect's
+  and CC's counted apart. The ledger message corrected by R773(d) is recorded in the closure's
+  ledger paragraph.

@@ -1,0 +1,52 @@
+RULING [evidence-engine 12ac-R777] — 12ac-CLOSE-R2 stopped at item 0's chain: the architect's; the
+  phrase count is retired from the item-0 check and replaced by a content condition; this ruling
+  joins item 0; the wrap ruling is R778
+STATUS: PI ruling, 2026-11-01 UTC, session 12ac, on architect recommendation, on the 12ac-CLOSE-R2
+  report stopped at item 0's chain (no commit; HEAD 3e3988f008c8a5b0b98bf3a8bc54153305d5237e, twelve
+  files staged). Transcribe at item 0 of the 12ac-CLOSE brief, by transcribe_ruling.py, in the
+  block after R776's, in that commit.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-CLOSE-R2 stop report):
+  MEASURED: "r776.txt … 9d396743a8f40cdb8b14bca1f67129e91332adb8f4b637796e251d6385d01181, 4261 B,
+    52 lines"; "appended Block 174 (R776): +63"; "15,247 lines (15,184 + 63)"; "wrote
+    docs/plan/STANDING_RULES.md: 92 clauses of 1462"; "Check diff v1→v2 … one group,
+    25,26c25,26"; ""transcribed == today" ×8; --check-plan byte-identical ×8"; "the new plan ==
+    HEAD's plan with the row replaced, the dated paragraph inserted …, and the rendered blocks
+    appended, nothing else: True"; "plan numstat (read) + 513 / − 1; lines 14735 → 15247"; "the
+    rules diff classified header 3 / new section 1 (## R772(c)) / Named by 19 / other 0"; "plan
+    sha256
+    80c235625dd187c021e45a0b0a0b66ae3de9f8374cd3e1d028f6350c10ad7213, 2,656,937 B, 15,247 lines";
+    "per file, rule-stating occurrences by v2's rule: R772 1, R776 1, the others 0".
+  READ (CC's): "R776(b)'s "written without the phrase, quoted or otherwise" does not hold of its
+    own MEASURED section; the ruling's statement that it states no rule holds"; finding 1 ("the
+    content it protects (I4: one standing rule, R772(c)) is otherwise established by the glosses
+    and the id list, which the check asserts by content"); findings 2 and 3.
+  INFERRED: none.
+
+R777(a) — The stop is correct and is the architect's: R776's quotation of the check's own line
+  carried the counted phrase in the other quote character. Nothing was committed or adapted; the
+  twelve staged files stand. R776(b)'s sentence about its own wording is withdrawn as false of
+  R776's MEASURED section; R776 is transcribed as issued (R102), this clause the correction.
+R777(b) — The item-0 check's I4 condition is retired as a phrase count, from here: the condition
+  that the ruled standing rules, and only those, entered is asserted by content — the id list
+  gained exactly the lines the item 0 orders ("A R772(c)", one line), the glosses file gained
+  exactly one entry keyed by that id, the regenerated file gained exactly one new section, its
+  clause byte-equal to the plan's fence, and the diff's other count is 0. No text of any ruling is
+  searched for a marker phrase. check_item0_v3.py carries that condition in place of the count (its
+  diff against v2 quoted in the evidence; any other changed line is a stop). CC's proposed quote-
+  character exclusion is not taken.
+R777(c) — This ruling is transcribed in the same item-0 commit as Block 175 after R776's, from
+  r777.txt written once from this paste and hashed, with metadata in Block 174's form (transcribed
+  and made_date 2026-11-01; report = the 12ac-CLOSE-R2 report stopped at item 0's chain; sentence
+  model form, followed "12ac-CLOSE-R3 resume"; beside in Block 174's wording extended to 174);
+  prev_ends R776→R777; the plan's last line "…ends at R777."; STANDING_RULES.md regenerated on the
+  final plan; the rNNN table runs r766–r777 (r775 and r776 architect-verified at CC's figures,
+  r777 at CC's hash, the architect's figure reported after). The wrap ruling is R778; every place
+  the brief, R775(c) or R776(d) names the wrap ruling reads R778.
+R777(d) — Readings, no row: finding 2 (r775 architect-verified); finding 3 (the beside lists of
+  167–174 stand as written); the three item-0 stops of this closeout (R775 the clock, R776 and
+  this the architect's wording) are listed in the closure's stops; the item-0 check's five
+  wording stops this session are the closure's lesson — a check asserts content, never the wording
+  of a text it will later be asked to count.
+R777(e) — 12ac-CLOSE resumes now at item 0 under the RESUME below; steps 2–4 as issued with the
+  substitutions of R775(c), R776(d) and R777(c).

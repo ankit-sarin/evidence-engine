@@ -1,0 +1,52 @@
+RULING [evidence-engine 12ac-R773] — 12ac-U22B-R4 accepted; U22 landed; INT-g12-6 CLOSED and
+  counted; the series gains 928.81 s; the ledger message corrected by this clause; readings
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22B-R4
+  final report (engine 51f8317f5a74cfbdb8094fa019b5fbccbd16cb05; the (c) fix
+  bfe3bd3f28827d050192065f264357a79f0e2e4f; evidence 3e3988f008c8a5b0b98bf3a8bc54153305d5237e).
+  Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after R772's, not
+  now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B-R4 final report):
+  MEASURED: "Commit bfe3bd3f28827d050192065f264357a79f0e2e4f, parent 51f8317, test(U22): the
+    input_fit key-set pin outside a run gains eval_count (class (c), R746(c)), 1 file +2/−1";
+    "numstat +2 / -1: the set's closing line replaced by two lines: True"; "the one '-' line is the
+    set's closing line; the '+' lines keep every existing key and add eval_count: True"; "no engine
+    file changed: True"; "==== 3492 passed, 17 deselected, 1 xfailed, 2 warnings in 926.95s (0:15:26)
+    ===="; "3,510 / 3,493"; "gate 3,493 vs ref 3,491; only-gate the two new ids; only-ref 0";
+    "928.81 s — a series member"; "slower by >10 s: 0"; "three GIN lines at 23:35:42 (the wrapper's
+    after-reads); no load"; "gate_rc.txt | 0; nineteen files"; "41 new files, +24,772"; "Commit
+    3e3988f008c8a5b0b98bf3a8bc54153305d5237e, parent bfe3bd3"; "Ledger e35437d, parent 9707ee5";
+    "Ledger 9707ee5's message says "No foreign rows." while it commits three foreign rows —
+    surgical-cv-ui1b fa23626, 38ab976, 72d4179 at 22:51:13Z, committed as found"; "temp root 1.40
+    GB (pytest-211)".
+  READ (CC's): findings 1–6 of that report; "the surgical-cv uvicorn restarted 23:18:32 (pid
+    388131) and that lane's shell command at 23:19:52 (pid 388791)".
+  INFERRED: none.
+
+R773(a) — 12ac-U22B-R4 is accepted as reported: the (c) fix bfe3bd3 (one test file, the key-set
+  literal gaining "eval_count", the assertion's subject kept), ledger 9707ee5; the re-run gate
+  3,492 / 1 / 17 on 3,510 / 3,493, only-gate the two new ids, 928.81 s inside 829–1012 s; the
+  evidence commit 3e3988f with both gate directories and the parent run, ledger e35437d. U22 has
+  landed in one engine commit, 51f8317, with its (c) fix bfe3bd3.
+R773(b) — INT-g12-6 is CLOSED by R514: its acceptance test
+  tests/test_ollama_input_fit.py::test_the_input_fit_line_records_eval_count failed on the parent
+  41ba988 (b0_parent_acceptance.txt) and passes in the re-run gate (gate_u22b_rerun/), with
+  tests/test_thinking_channel.py::test_telemetry_records_each_passs_eval_count_under_schema_v4
+  beside it. The CLOSED note goes on the row at the next item 0 in B-F14's form, naming 51f8317,
+  bfe3bd3 and the two ids; counted until P1 closes (R607(d), R753(d)(ii)). U22 is done: fix units
+  37, done 25 (the dated line the next item 0 writes).
+R773(c) — The series on this host state gains 928.81 s: the twenty-eight of R767(b) plus 928.81.
+  The red run's 925.57 s is not a member (R746(c)). The band for 12ac stays 829–1012 s.
+R773(d) — Ledger 9707ee5's message, "No foreign rows.", is wrong: the commit carries the three
+  surgical-cv-ui1b rows fa23626, 38ab976 and 72d4179, committed as found (R654(d)). The commit
+  stands and is not amended; this clause is the correction, and the closure records it. The three
+  rows join the dgx-infra cross-lane item.
+R773(e) — Readings, no row: finding 3 (the re-run's journal window quoted, not committed; the
+  brief's staged set governed); finding 4 (the temp root pruned by pytest's own rotation after the
+  single-id runs; nothing emptied by this session); finding 5 (two foreign surgical-cv jobs at the
+  re-run's launch, named; the wall beside 925.57 and 926.70); finding 6 (three predicted-shape
+  stops in one brief, R772(c) the rule); the 2026-11-01 jobs stay R767(d)'s.
+R773(f) — Four rulings are not on disk (R769, R770, R771, R772) and this one makes five; R772(c)
+  states a standing rule and joins the list with the file regenerated at the next item 0
+  (R754(c)(iii)); until then a brief restates it (R754(b)). The next brief is either 12ac-CLOSE in
+  12ab-CLOSE's form (the architect's recommendation) or U23's Phase A, on the PI's word.

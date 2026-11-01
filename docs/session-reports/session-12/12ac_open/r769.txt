@@ -1,0 +1,48 @@
+RULING [evidence-engine 12ac-R769] — 12ac-U22B stopped at 1e: the check's own arithmetic, the stop
+  correct under R763(c); the two-line revision accepted; the brief's line arithmetic read as CC
+  read it; resume at 1e
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22B
+  report stopped at step 1e (no commit; HEAD 23fad874de66d694251d3ee1dfe38be3b0c69a79, two files
+  staged). Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after
+  R768's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B stop report):
+  MEASURED: "1a r768.txt, hashed straight after its one write:
+    d3b6988aba44ec03332bd48c7692465789ea0f7bca9963732cb88cb65946de0c, 7622 B, 88 lines, last byte
+    0a. Equal to the architect's"; "grep -n -i -E 'from here|standing form|standing rule|rule from'
+    r768.txt → no output, rc 1"; "--append: "appended Block 166 (R768): +99" — N166 = 99"; "Row
+    INT-g12-6 is plan line 503, one line"; "Note lines added: 0 (both notes sit in the cell on the
+    row's one line). Row lines replaced: 1"; "git diff --cached --numstat plan 100 / 1, r768.txt 88
+    / 0; hunks @@ -503 +503 @@ and @@ -14636,0 +14637,99 @@"; "plan now sha256
+    00066dd0447840a2dad0e4098002a1e241aa19f5772475212319608f6c5c3b5d, 2,595,012 B, 14,735 lines =
+    14,636 + 99"; "rc 1; stderr empty; no commit"; "Block 166 (R768): byte-identical True;
+    generated 13030 B, plan 13030 B"; "--check-plan 166 exit 0: True"; "row after == row before
+    with the notes appended to its last cell, ' |' kept: True"; "note R768(c) in R9's form; its
+    quoted text is the ruling's words verbatim: True"; "note R768(f) … verbatim: True"; "appended
+    lines N166 = 102"; "plan '+' 100 == N166 102 + 1 (the row); '-' 1 == 1 (the row): False"; "plan
+    lines 14735 == 14636 + 102: False"; "staged set exactly the plan and r768.txt: True"; "id list,
+    glosses, STANDING_RULES.md unchanged against HEAD: True"; "RESULT: FAIL".
+  READ (CC's): "two lines measured the appended block by byte offset (plan[len(old):]), carried from
+    12ac-U22A's check where the plan at HEAD was a byte prefix. The row edit adds 547 bytes before
+    the block, so the offset lands 547 bytes inside the old text and counts 102 newlines instead of
+    99"; the proposed two-line diff of check_item0_v2.py as the report prints it; findings 1–4.
+  INFERRED: none.
+
+R769(a) — The stop at 1e is correct and is the check's: three conditions of its own arithmetic
+  failed while every condition that reads the record passed. Under R705(d) and R763(c) the failing
+  check stopped the chain before the commit and is corrected under this ruling. Not a stop of the
+  brief's: the row edit the brief ordered is what moved the block off the byte prefix, and the
+  brief's "(note lines added) − (row lines replaced)" was the architect's, in diff lines where the
+  check needed file lines; CC's reading (0 − 0 in lines, 1 − 1 in diff lines) is adopted.
+R769(b) — check_item0_v2.py is accepted as proposed: the two byte-offset lines replaced by a count
+  by line (N = plan lines − HEAD plan lines) and a line-based test that the appended text follows
+  HEAD's last line and a blank line and starts with the block head; no other line of the check
+  changes (CC diffs v1 against v2 into the evidence and quotes the diff; a third changed line is a
+  stop). The same measurement form holds for every later item 0 whose commit edits a line before
+  the appended block.
+R769(c) — Readings, no row: finding 3 (the beside wording and the two lead-ins are CC's; the quoted
+  text the ruling's, verified); finding 4 (two "L (…additions)" headings; the letter alone is not an
+  anchor — the row's heading and line are quoted); the item-0 values measured independently of the
+  check (plan 00066dd0…3b5d, 2,595,012 B, 14,735 lines; "+" 100 / "−" 1) are the values 1e asserts.
+R769(d) — 12ac-U22B resumes now at 1e under the RESUME below, on the tree as staged; nothing is
+  rewritten.

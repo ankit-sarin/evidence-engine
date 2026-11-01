@@ -1,0 +1,72 @@
+RULING [evidence-engine 12ac-R770] — 12ac-U22B accepted; Q1–Q5 ruled; the modules.md:83 sentence
+  approved as proposed; U22's build opens as one engine commit with its gate
+STATUS: PI ruling, 2026-10-31 UTC, session 12ac, on architect recommendation, on the 12ac-U22B
+  final report as resumed under R769 (item 0 bb224fd3477a2292e325915b73807420bc4cece0; read-out
+  41ba98830bd81aaa1efd6ea81ef63ff04127220c, docs/session-reports/session-12/12ac_U22B/
+  12ac_U22B.md). Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block
+  after R769's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ac-U22B final report and 12ac_U22B.md):
+  MEASURED: "Commit bb224fd3477a2292e325915b73807420bc4cece0, parent 23fad874…: plan +100/−1,
+    r768.txt +88"; "The check diff … exactly R769(b)'s two lines, nothing else"; "RESULT: PASS";
+    "Plan 00066dd0…3b5d, 2,595,012 B, 14,735 lines"; "Commit 41ba98830bd81aaa1efd6ea81ef63ff04127220c,
+    parent bb224fd…: 1 file, +253"; "pin_tuples.py … byte-identical (cmp) to
+    12ab_close/pin_tuples_close.json; … pins d3672ab6…ff5c / d70bf688…59f0; audit prompt_hash
+    d972c46dde944f1381c4f2d5472c6264c3a1053bd23bdd3801bdf0fdc2a5838d"; "inventory --check reads
+    "inventory in sync" at HEAD"; "Ledger 8f63c43, parent 0e31ada".
+  READ (CODE ORDER, the read-out): "The failure row needs no change: the defaults give None
+    (R768(b)(iv)); extraction_events.py leaves the Touched list"; "sort_keys=True at
+    ollama_client.py:449 fixes the wire order of the line's keys"; "The TRUNCATED and DROPPED error
+    lines (:457, :461) dump the same dict and so gain eval_count without an edit"; "Three existing
+    spreads (pipeline.py:323, :328, :505) carry pass1_eval_count into exc.telemetry, the attempt
+    telemetry and extra.elicitation"; "Both fakes the new tests need lack the attribute:
+    StubClient.chat (test_ollama_input_fit.py:37–41) and _resp (test_thinking_channel.py:102–106);
+    P1's stub must keep lacking it"; "Greps over tests/: SCHEMA_VERSION 2 files (the other is
+    audit-telemetry-1); "extraction-telemetry-3" 1; pass2_prompt_eval_count 1 file;
+    _LAST_PASS2_TELEMETRY 0; exact record == { 1. None beyond R6"; "one line made false —
+    docs/architecture/modules.md:83"; the proposed replacement sentence as §5 prints it; "No
+    CLAUDE.md line names the schema string or a row key"; the test plan 2c (i)–(iii).
+  READ (CC's): findings 1–9 of the report; Q1–Q5.
+  INFERRED: none.
+
+R770(a) — 12ac-U22B is accepted as reported: item 0 bb224fd (Block 166 by transcribe_ruling.py;
+  r768.txt in 12ac_open/; the two INT-g12-6 notes; the check v2 as R769(b) accepted it), ledger
+  0e31ada; the read-out 41ba988, ledger 8f63c43. The decision log in the file ends at R768. The
+  2026-11-01 jobs stay R767(d)'s.
+R770(b) — Q1: the v3 test keeps its id (a test's name is its id; the gate compares id sets,
+  R655(b)); its comment line gains the "-3 → -4" line as 2b states. Q2: the two extractor dicts
+  read eval_count as they read prompt_eval_count, plain getattr(response, "eval_count", None),
+  one form for the row's two pairs; the int guard stays on the line only. Q3: test (ii) takes the
+  probe's route (patched extractor.ollama_chat responses through extract_pass1_reasoning /
+  extract_pass2_structured, then record_call), as 2c (ii) states it, under the name 2c gives. Q4:
+  no optional sentence; models.md:76 is not edited. Q5: an optional argument on each fake helper
+  (StubClient.chat, _resp), default absent, so every existing call is unchanged and P1's stub
+  keeps lacking the field; no local fake.
+R770(c) — docs/architecture/modules.md:83 is replaced by the sentence §5 proposes, verbatim, in the
+  build commit; no other docs/architecture or CLAUDE.md line changes (R768(e)).
+R770(d) — The build: one engine commit on 41ba988 carrying R768(b)(i)–(v) at the nine sites 2a
+  quotes (extraction_events.py, cloud/base.py and pdf_parser.py untouched), the two tests of
+  R768(d) in 2c's form, the three class-(c) rewrites with their assertions kept (P1 gains
+  "eval_count": None; P2 moves to -4; P3 gains the two keys), the two helper arguments of Q5,
+  docs/inventory/ regenerated (R725(c)) and modules.md:83; Touched: engine/utils/ollama_client.py,
+  engine/agents/extractor.py, engine/elicitation/pipeline.py, engine/core/extraction_telemetry.py,
+  tests/test_ollama_input_fit.py, tests/test_thinking_channel.py, docs/inventory/,
+  docs/architecture/modules.md — a file outside this list is a stop (I5 of the brief-writing
+  rules). Before the edit, the two new tests are run on the parent and recorded red (the KeyError
+  and the TypeError 2c (iii) predicts are readings, the red is the record). Both pins and the audit
+  prompt_hash byte-identical after the edit (R768(e)); no migration.
+R770(e) — The gate: the standard gate by launch_gate.sh, evidence 12ac_U22B/gate_u22b/, band
+  829–1012 s beside the series of twenty-eight (R767(b)); counts expected as 12ab's plus the two
+  new ids — collected and selected each two more than 3,508 / 3,491, passed two more than 3,490,
+  1 xfailed, 17 deselected, the two warnings sklearn's — written "to be measured" (R707(a)); the
+  id comparison against 12ab_close/collected_ids_12ab_close.txt expected only-gate = the two new
+  ids, named, only-ref 0; durations against 12ab_close/durations_12ab_u21b.txt; a model load a
+  stop, a read-only request a reading (R696(b)); a red beyond the three rewrites classified (c)
+  or (r) (R746(c)). Gate evidence in its own commit (R731(c)).
+R770(f) — Readings, no row: finding 2 (sort_keys fixes the wire order; "beside" is the literal's);
+  finding 3 (the TRUNCATED / DROPPED lines gain the key by the shared dict — the acceptance test
+  does not assert them; a reading); finding 4 (the three spreads carry the key as they carry the
+  prompt count); finding 7 (a MagicMock response would reach the dicts unguarded; no test reaches
+  record_call that way; the guard stays on the line); finding 9 (the parent run measures the red).
+R770(g) — INT-g12-6 closes on R768(d)(i) passing in the gate (R514), noted CLOSED at the next
+  item 0 with the commit hash and the two test ids, counted until P1 closes (R607(d)).

@@ -1,0 +1,5 @@
+# R510 for session 12ac: six-cell INT- rows at 228ee31 (the 12ab closeout) and at 95873b5 (12ac-CLOSE item 0)
+228ee31: 207; 95873b5: 207; rows in 0 []; rows out 0 []
+no class or package move: True [] (leading digit of the Class cell and first package of the Owning-package cell compared, row by row)
+INT-g12-6 CLOSED by its note at 95873b5 (R773(b)); counted until P1 closes (R607(d), R753(d)(ii)); no row opened or retired this session (R774(c))
+method: lines starting '| INT-' with six ' | '-separated cells, as 12ab_close/r510_12ab.txt's method line

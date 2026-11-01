@@ -1,0 +1,8 @@
+ engine/agents/extractor.py          |  8 ++++++++
+ engine/core/extraction_telemetry.py |  9 +++++++-
+ engine/elicitation/pipeline.py      |  3 +++
+ engine/utils/ollama_client.py       |  7 +++++++
+ tests/test_ollama_input_fit.py      | 35 +++++++++++++++++++++++++++----
+ tests/test_thinking_channel.py      | 41 ++++++++++++++++++++++++++++++++++---
+ tests/test_u20_loaded_context.py    |  3 ++-
+ 7 files changed, 97 insertions(+), 9 deletions(-)

@@ -1,0 +1,106 @@
+{
+ "baseline_12ab": {
+  "class_1": 94,
+  "class_2": 56,
+  "class_3": 131,
+  "rows": 281,
+  "without_class": 0
+ },
+ "baseline_json_sha256": "1c84e4462d830581616a84571f63708e45a024a0fce464a78175a2cdcc0d92f2",
+ "by_package_and_class": {
+  "whole_list": {
+   "P1": {
+    "class_1": 25,
+    "class_2": 25,
+    "class_3": 12,
+    "rows": 62
+   },
+   "P2": {
+    "class_1": 12,
+    "class_2": 7,
+    "class_3": 1,
+    "rows": 20
+   },
+   "P3": {
+    "class_1": 10,
+    "class_2": 2,
+    "class_3": 2,
+    "rows": 14
+   },
+   "P4": {
+    "class_1": 24,
+    "class_2": 10,
+    "class_3": 0,
+    "rows": 34
+   },
+   "P5": {
+    "class_1": 15,
+    "class_2": 8,
+    "class_3": 0,
+    "rows": 23
+   },
+   "P6": {
+    "class_1": 8,
+    "class_2": 3,
+    "class_3": 0,
+    "rows": 11
+   },
+   "P7": {
+    "class_1": 0,
+    "class_2": 1,
+    "class_3": 116,
+    "rows": 117
+   }
+  }
+ },
+ "class_moves": [],
+ "closed_this_session_still_counted": [
+  "INT-g12-6"
+ ],
+ "expected": {
+  "P1": {
+   "class_1": 25,
+   "class_2": 25,
+   "class_3": 12,
+   "rows": 62
+  },
+  "P6_rows": 11,
+  "P7_rows": 117,
+  "class_1": 94,
+  "class_2": 56,
+  "class_3": 131,
+  "dated_done": 25,
+  "dated_units": 37,
+  "fix_units": 35,
+  "rows": 281,
+  "rows_opened": [],
+  "without_class": 0
+ },
+ "expected_holds": true,
+ "fix_units": 35,
+ "fix_units_dated_lines": {
+  "done": 25,
+  "units": 37
+ },
+ "fix_units_literal_12w": {
+  "done": 19,
+  "units": 37
+ },
+ "now": {
+  "class_1": 94,
+  "class_2": 56,
+  "class_3": 131,
+  "rows": 281,
+  "without_class": 0
+ },
+ "r510_session_12ac": {
+  "class_moves": 0,
+  "rows_in": 0,
+  "rows_in_ids": [],
+  "rows_out": 0
+ },
+ "rows_opened": {
+  "count": 0,
+  "rows": []
+ }
+}

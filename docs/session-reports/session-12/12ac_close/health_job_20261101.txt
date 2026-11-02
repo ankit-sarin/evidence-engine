@@ -1,0 +1,27 @@
+# health job reads, 2026-11-01, read at 12ad-OPEN (2026-11-02T03:51:37Z) from ~/logs/ollama_health_cron.log (mtime 2026-11-01 07:05:32.234956343 +0000); the log carries no date lines, so the 2026-11-01 run is its last 20 lines by mtime and tail (R737(c))
+loads OK/total: 20/20; FAIL lines: 0
+-- journal 06:59–07:12 (/home/ankitsarin/scratch/12ad-open/health_journal_20261101.txt)
+lines 2713
+GIN 71
+GIN non-200 0
+-- the 20 lines
+Testing qwen3.6:35b-a3b                (300s) ... OK 11.7s
+Testing qwen3.6:27b                    (300s) ... OK 17.0s
+Testing gpt-oss:20b                    (300s) ... OK 6.2s
+Testing gemma4:26b                     (300s) ... OK 6.4s
+Testing qwen3:30b-instruct             (300s) ... OK 4.8s
+Testing gemma4:31b                     (300s) ... OK 10.1s
+Testing qwen3.5:27b                    (300s) ... OK 22.8s
+Testing gemma3:27b                     (300s) ... OK 5.6s
+Testing qwen2.5vl:7b                   (120s) ... OK 4.2s
+Testing qwen3:8b                       (120s) ... OK 7.6s
+Testing qwen3:32b                      (300s) ... OK 21.3s
+Testing minicpm-v:latest               (120s) ... OK 5.8s
+Testing qwen3-vl:8b                    (120s) ... OK 14.1s
+Testing qwen2.5:7b-instruct            (120s) ... OK 4.9s
+Testing deepseek-r1:32b                (300s) ... OK 27.0s
+Testing mistral:7b                     (120s) ... OK 4.4s
+Testing gemma2:27b                     (300s) ... OK 15.2s
+Testing qwen2.5:32b                    (300s) ... OK 30.3s
+Testing llama3.3:70b                   (600s) ... OK 106.3s
+Testing llama3.2:3b                    (120s) ... OK 4.4s

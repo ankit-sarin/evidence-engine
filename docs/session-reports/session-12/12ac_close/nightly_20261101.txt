@@ -1,0 +1,18 @@
+-- lines
+12:collecting ... collected 3510 items / 17 deselected / 3493 selected
+6097:==== 3492 passed, 17 deselected, 1 xfailed, 2 warnings in 927.03s (0:15:27) ====
+6099:pytest exit code: 0
+last line: pytest exit code: 0
+durations: 2576 lines, 269367 B
+-- journal ollama 09:00–09:25
+-- No entries --
+-- warnings
+3508:=============================== warnings summary ===============================
+3510:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+3514:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+-- the HEAD it ran on (read at 12ad-OPEN): log Run line; reflog: HEAD@ last move before the run
+Run: 2026-11-01 09:00:01 UTC
+6095e6c71f1ce823735148f9c5c0c853c166f4bc HEAD@{2026-11-01 01:30:50 +0000}
+HEAD now 6095e6c71f1ce823735148f9c5c0c853c166f4bc, reflog top move at 2026-11-01 01:30:50, none after, so the 09:00:01 run read this HEAD's tree
+-- lock
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock

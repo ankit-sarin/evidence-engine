@@ -44,11 +44,9 @@ from engine.core.paper_state import (
     REASON_PARSED_TEXT_MODIFIED,
     REASON_PARSED_TEXT_NOT_RECORDED,
 )
-
 #: N1: the engine had nine private copies of this anchor and no shared one.
-#: This is the one the parsed-text store resolves against, derived from this
-#: file's own location (engine/core/parsed_text.py → three parents up).
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+#: This is the one the parsed-text store resolves against: the leaf's (U23, R780(c)).
+from engine.core.repo_root import REPO_ROOT
 
 
 class ParsedTextError(RuntimeError):

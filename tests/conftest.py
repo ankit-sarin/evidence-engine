@@ -221,10 +221,10 @@ def block_service_calls(monkeypatch, request):
 #     wrapped once on the class, so every construction is covered no matter
 #     which module it lives in or how the name was imported.
 #
-#   * **Refuse by resolved ancestry, never by review name.** `DATA_ROOT` is the
-#     relative `Path("data")` and resolves against the process CWD, so a string
-#     match on "surgical_autonomy" would miss both a CWD change and the next
-#     live review. Both sides are `Path.resolve()`d and compared with
+#   * **Refuse by resolved ancestry, never by review name.** `DATA_ROOT` is
+#     anchored to the repository root, but a relative `data_root` still resolves
+#     against the process CWD, so a string match on "surgical_autonomy" would miss
+#     both that and the next live review. Both sides are `Path.resolve()`d and compared with
 #     `is_relative_to`.
 #
 #   * **The guard never opens a database.** It resolves paths and nothing else,

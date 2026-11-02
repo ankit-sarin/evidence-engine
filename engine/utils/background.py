@@ -17,7 +17,8 @@ import shutil
 import subprocess
 import sys
 from datetime import datetime
-from pathlib import Path
+
+from engine.core.database import DATA_ROOT
 
 
 def maybe_background(stage: str, review_name: str = "review") -> None:
@@ -45,7 +46,7 @@ def maybe_background(stage: str, review_name: str = "review") -> None:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     session_name = f"ee_{stage}_{timestamp}"
 
-    log_dir = Path("data") / review_name / "logs"
+    log_dir = DATA_ROOT / review_name / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     log_path = log_dir / f"{session_name}.log"
 

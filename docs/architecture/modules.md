@@ -9,6 +9,9 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 
 ## engine/core/ — Core Infrastructure
 
+### `repo_root.py`
+**Purpose:** The one repository root (U23, R780): `REPO_ROOT`, computed from this file's own location and importing nothing from `engine`. `DATA_ROOT`, `SPEC_ROOT`, `git_state` and the parsed-text store all resolve under it, so none follows the working directory. Received migrations 017 and 021 keep their own (checksummed).
+
 ### `constants.py`
 **Purpose:** Shared constants used across agents and validators.
 - `INVALID_SNIPPET_RE` — Regex for detecting invalid snippets (ellipsis bridging, Unicode U+2026)
@@ -65,7 +68,7 @@ Complete inventory of every Python file under `engine/`, `scripts/`, `analysis/`
 **Purpose:** Corpus membership from `papers.status` — **FROZEN (R35), do not call.** Its one permitted consumer is applied migration 017; live corpus membership is `effective.eligible_paper_ids` / `corpus_id_sql`, from the eligibility axis.
 
 ### `review_paths.py`
-**Purpose:** The review's identity and everything derived from it (SPEC-AUTH-01): `review_specs/<review_id>.yaml` and `data/<review_id>/` both derive from `review_id`; a `--spec` override carrying a different `review_id` is refused before any database is opened.
+**Purpose:** The review's identity and everything derived from it (SPEC-AUTH-01): `review_specs/<review_id>.yaml` and `data/<review_id>/` both derive from `review_id`, under the one `REPO_ROOT` (`repo_root.py`), whatever the working directory; a `--spec` override carrying a different `review_id` is refused before any database is opened.
 
 ### `citation_guard.py`
 **Purpose:** Write-boundary fail-fast: a value may not be stored without evidence. Mechanism-independent (it reads spans, not prompts); `strict` mode (elicitation) requires a validated citation for every value including absence sentinels, `legacy` mode exempts sentinels only; the escape and contract-unmet tokens owe no citation and a citation alongside either is a violation, with distinct codes.

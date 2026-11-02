@@ -14,10 +14,11 @@ import logging
 import re
 from pathlib import Path
 
+from engine.core.database import DATA_ROOT
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_CONFIG_NAME = "adjudication_categories.yaml"
-DATA_ROOT = Path("data")
 
 
 # ── Config Loading ──────────────────────────────────────────────────

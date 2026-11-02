@@ -3645,13 +3645,13 @@
           },
           {
             "kind": "literal",
-            "line": 19,
+            "line": 21,
             "role": "code",
             "text": "adjudication_categories.yaml"
           },
           {
             "kind": "literal",
-            "line": 166,
+            "line": 167,
             "role": "docstring",
             "text": "Generate a starter adjudication_categories.yaml template.\n\n    If sample_titles are provided, adds them as comments to help the user\n    understand what kind..."
           }
@@ -3663,7 +3663,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 45,
+            "line": 46,
             "scope": "CategoryConfig.load",
             "target": "f"
           }
@@ -4534,6 +4534,20 @@
         "unparsed": [],
         "yaml_loads": []
       },
+      "engine/core/repo_root.py": {
+        "entry_point": false,
+        "flags": [],
+        "has_main_guard": false,
+        "literal_review_ids": [],
+        "order": {},
+        "path": "engine/core/repo_root.py",
+        "path_construction": [],
+        "review_database": [],
+        "review_id_constants": [],
+        "spec_access": [],
+        "unparsed": [],
+        "yaml_loads": []
+      },
       "engine/core/reuse_key.py": {
         "entry_point": false,
         "flags": [],
@@ -4564,31 +4578,31 @@
           },
           {
             "kind": "literal",
-            "line": 28,
+            "line": 29,
             "role": "code",
             "text": "review_specs"
           },
           {
             "kind": "literal",
-            "line": 57,
+            "line": 58,
             "role": "docstring",
             "text": "The Review Spec file for a review: `review_specs/<review_id>.yaml`."
           },
           {
             "kind": "f-string",
-            "line": 59,
+            "line": 60,
             "role": "code",
             "text": "f'{review_id}.yaml'"
           },
           {
             "kind": "literal",
-            "line": 63,
+            "line": 64,
             "role": "docstring",
             "text": "The data root for a review: `data/<review_id>`.\n\n    Returns the path only. Nothing here creates a directory or opens a\n    database \u2014 `ReviewDatabase` still..."
           },
           {
             "kind": "f-string",
-            "line": 85,
+            "line": 86,
             "role": "message",
             "text": "f\"Review spec at {path} declares review_id {spec.review_id!r}, but the run asked for {review_id!r}. Refusing before any database is opened \u2014 running this spe..."
           }
@@ -4598,12 +4612,12 @@
         "spec_access": [
           {
             "func": "spec_path_for",
-            "line": 81,
+            "line": 82,
             "scope": "load_spec_for"
           },
           {
             "func": "load_review_spec",
-            "line": 82,
+            "line": 83,
             "scope": "load_spec_for"
           }
         ],
@@ -5725,7 +5739,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 24,
+            "line": 25,
             "role": "docstring",
             "text": "Re-launch in tmux if --background was passed and not already in tmux.\n\n    Args:\n        stage: Short label for the session name (e.g., \"screening\", \"extract..."
           }
@@ -6813,7 +6827,7 @@
       "entry_points_with_spec_flag": 16,
       "files_calling_load_review_spec_directly": 8,
       "files_calling_resolver": 20,
-      "files_scanned": 203,
+      "files_scanned": 204,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
       "literal_review_id_sites_in_code": 28,
@@ -6826,7 +6840,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "41ba98830bd81aaa1efd6ea81ef63ff04127220c",
+    "generated_at_commit": "66092a213327751bd18ebacd6a6cb254d3028fc0",
     "scan_roots": [
       "engine",
       "scripts",

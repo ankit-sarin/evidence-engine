@@ -12,6 +12,7 @@ import pytest
 import yaml
 
 from engine.core import codebook as CB
+from engine.core import review_paths, run_manifest
 from engine.core.codebook import (
     CodebookError,
     CodebookIdentityError,
@@ -62,10 +63,9 @@ def _write(tmp_path, doc=None, name="extraction_codebook.yaml"):
 
 
 def test_path_derives_from_the_review_id():
-    assert codebook_path_for("surgical_autonomy") == Path(
-        "data/surgical_autonomy/extraction_codebook.yaml")
-    assert codebook_path_for("other_review") == Path(
-        "data/other_review/extraction_codebook.yaml")
+    root = run_manifest.REPO_ROOT / "data"
+    assert codebook_path_for("surgical_autonomy") == root / "surgical_autonomy" / "extraction_codebook.yaml"
+    assert codebook_path_for("other_review") == root / "other_review" / "extraction_codebook.yaml"
 
 
 def test_live_codebook_loads_from_its_review_id():
@@ -254,7 +254,7 @@ def test_identity_mismatch_is_a_codebook_error():
 
 
 def test_identity_is_checked_on_the_derived_path_too(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(review_paths, "DATA_ROOT", tmp_path / "data")
     (tmp_path / "data" / "beta").mkdir(parents=True)
     (tmp_path / "data" / "beta" / "extraction_codebook.yaml").write_text(
         yaml.safe_dump(VALID))            # declares alpha, sitting in beta/

@@ -13,6 +13,7 @@ from unittest.mock import patch
 import pytest
 import yaml
 
+from engine.core import parsed_text, review_paths, run_manifest
 from engine.core.review_paths import (
     REVIEW_ID_MAX_LENGTH,
     REVIEW_ID_PATTERN,
@@ -28,21 +29,32 @@ SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_
 # ── T3: derivation ───────────────────────────────────────────────────
 
 
+def test_spec_and_data_roots_do_not_follow_the_working_directory(tmp_path, monkeypatch):
+    """U23 (E-ROOT, N30; R780(e), R781(e)): both roots stay under the one `git_state` uses."""
+    monkeypatch.chdir(tmp_path)
+    assert spec_path_for("surgical_autonomy").resolve().is_relative_to(run_manifest.REPO_ROOT)
+    assert data_root_for("surgical_autonomy").resolve().is_relative_to(run_manifest.REPO_ROOT)
+    assert parsed_text.REPO_ROOT is run_manifest.REPO_ROOT
+
+
 def test_spec_path_derivation():
-    assert spec_path_for("surgical_autonomy") == Path("review_specs/surgical_autonomy.yaml")
-    assert spec_path_for("other_review") == Path("review_specs/other_review.yaml")
+    root = run_manifest.REPO_ROOT
+    assert spec_path_for("surgical_autonomy") == root / "review_specs" / "surgical_autonomy.yaml"
+    assert spec_path_for("other_review") == root / "review_specs" / "other_review.yaml"
 
 
 def test_data_root_derivation():
-    assert data_root_for("surgical_autonomy") == Path("data/surgical_autonomy")
-    assert data_root_for("other_review") == Path("data/other_review")
+    root = run_manifest.REPO_ROOT
+    assert data_root_for("surgical_autonomy") == root / "data" / "surgical_autonomy"
+    assert data_root_for("other_review") == root / "data" / "other_review"
 
 
 def test_data_root_does_not_create_anything(tmp_path, monkeypatch):
     """Derivation is a pure path computation — it must not touch the disk."""
-    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(review_paths, "DATA_ROOT", tmp_path / "data")
     root = data_root_for("brand_new_review")
     assert not root.exists()
+    assert list(tmp_path.iterdir()) == []
 
 
 @pytest.mark.parametrize("bad", ["Upper", "1x", "has-hyphen", "", "x" * 65])
@@ -112,7 +124,7 @@ def test_review_id_mismatch_is_a_review_spec_error():
 
 
 def test_live_spec_loads_at_the_derived_path():
-    assert spec_path_for("surgical_autonomy") == Path("review_specs/surgical_autonomy.yaml")
+    assert spec_path_for("surgical_autonomy") == SPEC_PATH
     spec = load_review_spec(SPEC_PATH)
     assert spec.review_id == "surgical_autonomy"
 

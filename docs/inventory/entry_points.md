@@ -1,14 +1,14 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `41ba98830bd81aaa1efd6ea81ef63ff04127220c` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `66092a213327751bd18ebacd6a6cb254d3028fc0` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 203 |
+| files scanned | 204 |
 | entry points | 83 |
 | entry points with spec flag | 16 |
 | entry points with review name flag | 57 |
@@ -148,7 +148,7 @@ Two figures deliberately have no baseline row. **entry points** (83) counts anyt
 
 | file | line | call | target |
 |---|---:|---|---|
-| `engine/adjudication/categorizer.py` | 45 | `safe_load` | `f` |
+| `engine/adjudication/categorizer.py` | 46 | `safe_load` | `f` |
 | `engine/core/codebook.py` | 448 | `safe_load` | `text` |
 | `engine/core/review_spec.py` | 987 | `safe_load` | `f` |
 
@@ -180,7 +180,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `analysis/paper1/judge_loader.py` | 338 | literal | `extraction_codebook.yaml` |
 | `analysis/paper1/pi_audit_sampler_v2.py` | 124 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
 | `engine/acquisition/pdf_quality_html.py` | 378 | f-string | `f'''<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>PDF Acqui...` |
-| `engine/adjudication/categorizer.py` | 19 | literal | `adjudication_categories.yaml` |
+| `engine/adjudication/categorizer.py` | 21 | literal | `adjudication_categories.yaml` |
 | `engine/adjudication/screening_adjudicator.py` | 28 | literal | `data/surgical_autonomy/expanded_search` |
 | `engine/adjudication/workflow.py` | 69 | literal | `Create or update adjudication_categories.yaml for this review.
   Location: data/<review>/adjudication_categories.yaml
@@ -188,8 +188,8 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/agents/extractor.py` | 850 | literal | `extraction_codebook.yaml` |
 | `engine/cloud/base.py` | 509 | literal | `extraction_codebook.yaml` |
 | `engine/core/codebook.py` | 36 | literal | `extraction_codebook.yaml` |
-| `engine/core/review_paths.py` | 28 | literal | `review_specs` |
-| `engine/core/review_paths.py` | 59 | f-string | `f'{review_id}.yaml'` |
+| `engine/core/review_paths.py` | 29 | literal | `review_specs` |
+| `engine/core/review_paths.py` | 60 | f-string | `f'{review_id}.yaml'` |
 | `engine/migrations/017_seed_event_store.py` | 175 | f-string | `f'{review_id}.yaml'` |
 | `engine/migrations/017_seed_event_store.py` | 175 | literal | `review_specs` |
 | `engine/migrations/017_seed_event_store.py` | 177 | literal | `extraction_codebook.yaml` |

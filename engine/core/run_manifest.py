@@ -64,8 +64,7 @@ from engine.core.effective_config import (
     CLOUD_STAGE_PREFIX, OLLAMA_STAGES, ResolvedStage, canonical_json,
     resolve_run, sha256_canonical, stage_config,
 )
-
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+from engine.core.repo_root import REPO_ROOT
 
 #: Re-declared in migration 022 (R214, R35); a test asserts the two agree.
 RUN_KINDS = ("extraction", "screening", "judge", "review_session", "import")

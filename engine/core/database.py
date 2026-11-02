@@ -13,11 +13,12 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
+from engine.core.repo_root import REPO_ROOT
 from engine.search.models import Citation
 
 logger = logging.getLogger(__name__)
 
-DATA_ROOT = Path("data")
+DATA_ROOT = REPO_ROOT / "data"
 
 # ── Paper Lifecycle ──────────────────────────────────────────────────
 

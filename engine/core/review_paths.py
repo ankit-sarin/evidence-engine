@@ -23,9 +23,10 @@ import re
 from pathlib import Path
 
 from engine.core.database import DATA_ROOT
+from engine.core.repo_root import REPO_ROOT
 from engine.core.review_spec import ReviewSpec, ReviewSpecError, load_review_spec
 
-SPEC_ROOT = Path("review_specs")
+SPEC_ROOT = REPO_ROOT / "review_specs"
 
 # The `review_id` field's own pattern, restated for the *requested* id so a
 # bad --review argument fails with a message about the argument rather than

@@ -1,0 +1,2 @@
+2026-11-02T05:05:39.431198310Z launched by the line below, written into the evidence directory at launch (R731(b), R738(c))
+tmux new-session -d -s 12ad_u23b "bash /home/ankitsarin/scratch/12ad-u23b/gate_u23b/run_gate.sh /home/ankitsarin/scratch/12ad-u23b/gate_u23b 12ad_u23b docs/session-reports/session-12/12ac_close/collected_ids_12ac_close.txt docs/session-reports/session-12/12ac_close/durations_12ac_u22b_rerun.txt "

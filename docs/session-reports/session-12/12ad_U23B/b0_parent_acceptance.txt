@@ -1,0 +1,20 @@
+# 12ad-U23B-R1 B0: the acceptance test on the parent tree (HEAD 66092a213327751bd18ebacd6a6cb254d3028fc0, engine files unedited; 2026-11-02T05:03:38Z)
+ M tests/test_review_paths.py
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_spec_and_data_roots_do_not_follow_the_working_directory _________
+/home/ankitsarin/projects/evidence-engine/tests/test_review_paths.py:35: in test_spec_and_data_roots_do_not_follow_the_working_directory
+    assert spec_path_for("surgical_autonomy").resolve().is_relative_to(run_manifest.REPO_ROOT)
+E   AssertionError: assert False
+E    +  where False = is_relative_to(PosixPath('/home/ankitsarin/projects/evidence-engine'))
+E    +    where is_relative_to = PosixPath('/home/ankitsarin/scratch/12ad-u23b/b0_bt/test_spec_and_data_roots_do_no0/review_specs/surgical_autonomy.yaml').is_relative_to
+E    +      where PosixPath('/home/ankitsarin/scratch/12ad-u23b/b0_bt/test_spec_and_data_roots_do_no0/review_specs/surgical_autonomy.yaml') = resolve()
+E    +        where resolve = PosixPath('review_specs/surgical_autonomy.yaml').resolve
+E    +          where PosixPath('review_specs/surgical_autonomy.yaml') = spec_path_for('surgical_autonomy')
+E    +    and   PosixPath('/home/ankitsarin/projects/evidence-engine') = run_manifest.REPO_ROOT
+=========================== short test summary info ============================
+FAILED tests/test_review_paths.py::test_spec_and_data_roots_do_not_follow_the_working_directory
+1 failed in 0.16s
+pytest exit code: 1
+-- the identity on the parent, read apart (R781(e))
+parsed_text.REPO_ROOT is run_manifest.REPO_ROOT: False ; equal: True

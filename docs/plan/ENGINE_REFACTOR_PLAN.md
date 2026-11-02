@@ -15433,3 +15433,78 @@ R777(e) — 12ac-CLOSE resumes now at item 0 under the RESUME below; steps 2–4
 | 2026-11-01 | R777(a) — The stop is correct and is the architect's: R776's quotation of the check's own line carried the counted phrase in the other quote character. Nothing was committed or adapted; the twelve staged files stand. R776(b)'s sentence about its own wording is withdrawn as false of R776's MEASURED section; R776 is transcribed as issued (R102), this clause the correction. R777(b) — The item-0 check's I4 condition is retired as a phrase count, from here: the condition that the ruled standing rules, and only those, entered is asserted by content — the id list gained exactly the lines the item 0 orders ("A R772(c)", one line), the glosses file gained exactly one entry keyed by that id, the regenerated file gained exactly one new section, its clause byte-equal to the plan's fence, and the diff's other count is 0. No text of any ruling is searched for a marker phrase. check_item0_v3.py carries that condition in place of the count (its diff against v2 quoted in the evidence; any other changed line is a stop). CC's proposed quote- character exclusion is not taken. R777(c) — This ruling is transcribed in the same item-0 commit as Block 175 after R776's, from r777.txt written once from this paste and hashed, with metadata in Block 174's form (transcribed and made_date 2026-11-01; report = the 12ac-CLOSE-R2 report stopped at item 0's chain; sentence model form, followed "12ac-CLOSE-R3 resume"; beside in Block 174's wording extended to 174); prev_ends R776→R777; the plan's last line "…ends at R777."; STANDING_RULES.md regenerated on the final plan; the rNNN table runs r766–r777 (r775 and r776 architect-verified at CC's figures, r777 at CC's hash, the architect's figure reported after). The wrap ruling is R778; every place the brief, R775(c) or R776(d) names the wrap ruling reads R778. R777(d) — Readings, no row: finding 2 (r775 architect-verified); finding 3 (the beside lists of 167–174 stand as written); the three item-0 stops of this closeout (R775 the clock, R776 and this the architect's wording) are listed in the closure's stops; the item-0 check's five wording stops this session are the closure's lesson — a check asserts content, never the wording of a text it will later be asked to count. R777(e) — 12ac-CLOSE resumes now at item 0 under the RESUME below; steps 2–4 as issued with the substitutions of R775(c), R776(d) and R777(c). | PI, 2026-11-01, during session 12ac, on architect recommendation, on the 12ac-CLOSE-R2 report stopped at item 0's chain (no commit; HEAD 3e3988f, twelve files staged) |
 
 The decision log in this file ends at R777.
+
+**Block 176.** *Transcribed 2026-11-02 (item 0 of the 12ad-OPEN brief), in its own commit with the lane-line copy it orders, in the R597(e) form:* ruling R778, made by PI on architect recommendation on 2026-11-01 UTC, during session 12ac, on the 12ac-CLOSE closeout block (`6095e6c71f1ce823735148f9c5c0c853c166f4bc`). The 12ad-OPEN brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ac-R778] — wrap ruling: closeout accepted; the band set 835–1020 s; the
+  stops counted; lane line approved and applied; close now
+STATUS: PI ruling, 2026-11-01 UTC, session 12ac, on architect recommendation, on the 12ac-CLOSE
+  closeout block (6095e6c71f1ce823735148f9c5c0c853c166f4bc). Transcribe as item 0 of 12ad-OPEN by
+  transcribe_ruling.py, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block and report):
+  MEASURED: "HEAD: 6095e6c71f1ce823735148f9c5c0c853c166f4bc, parent
+    95873b58f95aaf2a395ea0fce66e69d3535788ec; status[], lr[0 0]; one worktree"; "Plan: sha256
+    806cde35fc1673056b02dd50ba44020fd99516d22b99c5194ba6548e8d7d1494, 2690854 bytes, 15435 lines.
+    The last line is The decision log in this file ends at R777."; "git diff --stat bfe3bd3 HEAD --
+    engine tests scripts analysis review_specs is empty"; "Ledger commit
+    77bd74fbed2b652a88135fd0c2e8bc5ff6685472, parent cb04529, message "ledger: rows through
+    2026-11-01T01:30:50Z""; "primer.md is untouched; its last commit is 3e7425c"; "At this block
+    (01:33:26Z): IDENTICAL"; lane line "sha256
+    f5738b0e632486475148b7e0c82bc34bb6af7ae57ab5160241dbd60ff2db1540, 6697 bytes, 10 lines", "five −
+    lines == primer.md 41–45: True, taken from primer.md itself"; "inputs 924.77, 928.91, 926.70,
+    928.81 … mean 927.2975 s; ×0.9 834.5678; ×1.1 1020.0273; rounded inward 835–1020 s"; "281
+    rows, 94 / 56 / 131, 0 unclassed; P1 62 (25 / 25 / 12); 35 fix units; 37 with 25 done"; "R510
+    for the session: rows in 0, rows out 0"; "23 MATCH / 0 MISMATCH"; the twelve ruling files as
+    tabled; "Archive command … ~/projects/dgx-infra/bin/session-archive
+    14c5aa3b-f5cd-4a2f-998e-6520cb65c29e"; "the diff (wrap_primer.diff) is one group, 2a3,43: 41
+    lines added, none removed".
+  READ (CC's): findings 1–6 of that report; "The item-0 commit's message (95873b5) reads
+    "R769–R774 as Blocks 167–172" … nine blocks landed"; "the heredoc turned b'\n' into a
+    literal backslash-n".
+  INFERRED: none.
+
+R778(a) — The 12ac-CLOSE closeout block is accepted as printed: item 0 95873b5 (Blocks 167–175 by
+  transcribe_ruling.py; the INT-g12-6 CLOSED note; the dated units line; "A R772(c)" with its gloss
+  and STANDING_RULES.md at 92 clauses), the closeout 6095e6c (21 files; the 20 counterpart files;
+  the closure and the 12ad block), ledgers cb04529 and 77bd74f with trailers.
+R778(b) — The band for 12ad is 835–1020 s: ±10% of 927.2975 s, the mean of the last four standard
+  gates on this host state (924.77, 928.91, 926.70, 928.81), rounded inward as R683(c) rounded, each
+  described as band_computation.txt describes it. The series stands at the twenty-nine of R773(c).
+  A 12ad gate outside the band is reported with its concurrent jobs, not adapted to.
+R778(c) — The stops, counted by the PI (the closure's table stands as CC's reading, not edited):
+  seven — the architect's four (12ac-OPEN at 2e, R766; 12ac-U22B-R2 at B2, R771; 12ac-CLOSE-R1 and
+  -R2 at item 0's chain, R776 and R777); CC's two (12ac-U22B at 1e, R769; 12ac-U22B-R3 at the (c)
+  check, R772); the clock's one (12ac-CLOSE at item 0's chain, R775). R776(e)'s "the brief's
+  arithmetic" for R771 is read as R771(a) names it, the architect's. The session's most-violated
+  line: a check's condition written as a prediction of a text's wording or a diff's shape (R772(c),
+  R777(b) the rules that resulted).
+R778(d) — Readings, no row: finding 1 (the item-0 commit message names six blocks where nine
+  landed; the commit stands, R102; the closure's line records it — a ledger or commit message is
+  written after the staged set is final, from here); finding 2 (the check's "1 lines" is a heredoc
+  artefact; the numstat line and wc carry the count); finding 3 (the 12ab primer block kept as it
+  was, its stale points corrected by statement in the 12ac block); finding 5; finding 6 (the recount
+  script's six plan arguments, chained to 272).
+R778(e) — The lane line (sha256 f5738b0e632486475148b7e0c82bc34bb6af7ae57ab5160241dbd60ff2db1540,
+  6,697 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45
+  of ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+" lines,
+  applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger"
+  form, trailers, the row's exact timestamp, foreign rows named by hash); push; level.
+R778(f) — 12ad-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a
+  child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with
+  transcribe_ruling.py as the next block and copies lane_line_12ac.txt into
+  docs/session-reports/session-12/12ac_close/ (this ruling states no standing rule; the list is
+  untouched). It runs session_open_check.py and the steps R747(b) keeps explicit, against the
+  "Expected values at session-12ad open" block; reads the 2026-11-01 and, if run, 2026-11-02 jobs
+  against 12ac_close/expected_nightly_20261101.md (R774(b)); the gate by the wrapper, against
+  835–1020 s. Then U23's Phase A.
+R778(g) — Session 12ac closes now. After R778(e) has landed, run /wrap. Report the lane-line
+  commit's hash and parent, the wrap's verdict, and the archive command as run with its result.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-01 | R778(a) — The 12ac-CLOSE closeout block is accepted as printed: item 0 95873b5 (Blocks 167–175 by transcribe_ruling.py; the INT-g12-6 CLOSED note; the dated units line; "A R772(c)" with its gloss and STANDING_RULES.md at 92 clauses), the closeout 6095e6c (21 files; the 20 counterpart files; the closure and the 12ad block), ledgers cb04529 and 77bd74f with trailers. R778(b) — The band for 12ad is 835–1020 s: ±10% of 927.2975 s, the mean of the last four standard gates on this host state (924.77, 928.91, 926.70, 928.81), rounded inward as R683(c) rounded, each described as band_computation.txt describes it. The series stands at the twenty-nine of R773(c). A 12ad gate outside the band is reported with its concurrent jobs, not adapted to. R778(c) — The stops, counted by the PI (the closure's table stands as CC's reading, not edited): seven — the architect's four (12ac-OPEN at 2e, R766; 12ac-U22B-R2 at B2, R771; 12ac-CLOSE-R1 and -R2 at item 0's chain, R776 and R777); CC's two (12ac-U22B at 1e, R769; 12ac-U22B-R3 at the (c) check, R772); the clock's one (12ac-CLOSE at item 0's chain, R775). R776(e)'s "the brief's arithmetic" for R771 is read as R771(a) names it, the architect's. The session's most-violated line: a check's condition written as a prediction of a text's wording or a diff's shape (R772(c), R777(b) the rules that resulted). R778(d) — Readings, no row: finding 1 (the item-0 commit message names six blocks where nine landed; the commit stands, R102; the closure's line records it — a ledger or commit message is written after the staged set is final, from here); finding 2 (the check's "1 lines" is a heredoc artefact; the numstat line and wc carry the count); finding 3 (the 12ab primer block kept as it was, its stale points corrected by statement in the 12ac block); finding 5; finding 6 (the recount script's six plan arguments, chained to 272). R778(e) — The lane line (sha256 f5738b0e632486475148b7e0c82bc34bb6af7ae57ab5160241dbd60ff2db1540, 6,697 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows named by hash); push; level. R778(f) — 12ad-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with transcribe_ruling.py as the next block and copies lane_line_12ac.txt into docs/session-reports/session-12/12ac_close/ (this ruling states no standing rule; the list is untouched). It runs session_open_check.py and the steps R747(b) keeps explicit, against the "Expected values at session-12ad open" block; reads the 2026-11-01 and, if run, 2026-11-02 jobs against 12ac_close/expected_nightly_20261101.md (R774(b)); the gate by the wrapper, against 835–1020 s. Then U23's Phase A. R778(g) — Session 12ac closes now. After R778(e) has landed, run /wrap. Report the lane-line commit's hash and parent, the wrap's verdict, and the archive command as run with its result. | PI, 2026-11-01, during session 12ac, on architect recommendation, on the 12ac-CLOSE closeout block (6095e6c) |
+
+The decision log in this file ends at R778.

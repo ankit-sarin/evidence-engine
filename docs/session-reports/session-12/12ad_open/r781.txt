@@ -1,0 +1,119 @@
+RULING [evidence-engine 12ad-R781] — 12ad-U23B accepted; Q1–Q6 ruled: the inventory tool keeps its
+  own root (R780(c)(iii) narrowed), the pins compare to REPO_ROOT's form, the two chdir tests patch
+  review_paths.DATA_ROOT, the identity assertion is in, the §5 texts approved, the leaf is
+  repo_root.py; one row opened, one widened; U23's build opens as one engine commit with its gate
+STATUS: PI ruling, 2026-11-02 UTC, session 12ad, on architect recommendation, on the 12ad-U23B final
+  report (item 0 10a64ebd304a3ee02c7498071aa26a0726be660b; read-out
+  66092a213327751bd18ebacd6a6cb254d3028fc0, docs/session-reports/session-12/12ad_U23B/12ad_U23B.md).
+  Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after R780's, not
+  now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ad-U23B final report and 12ad_U23B.md):
+  MEASURED: "Commit: 10a64ebd304a3ee02c7498071aa26a0726be660b, parent 94f7853";
+    "ENGINE_REFACTOR_PLAN.md | +162 / −1; the "−" line computed as the E-ROOT row";
+    "STANDING_RULES.md | +37 / −16"; "wrote docs/plan/STANDING_RULES.md: 93 clauses of 1489";
+    "header 3; new sections 1; Named by 13 (read); other 0"; "Plan sha256 / bytes | 11c17e6b…15fa /
+    2735454";
+    "15761 = 15600 + 162 − 1"; "r780.txt | f13117d1…53fb, 12908, 143, equal to the architect's";
+    "f65880c1d69961e1f91d8849957be7b57c4cf911, parent faf4604"; "Commit:
+    66092a213327751bd18ebacd6a6cb254d3028fc0, parent 10a64eb … 4 files, +407"; "pin_tuples.py with
+    both arguments, rc 0, byte-identical to 12ac_close/pin_tuples_close.json, sha256 aea19354…f24f";
+    "a7b839d92923d2fd195cc0b0ccde8b7359181588, parent f65880c"; "Ollama journal since 04:46 UTC
+    shows -- No entries --; no request of any kind this brief".
+  MEASURED (the import probe, import_probe.txt): "engine.core.database alone: exit 0 … engine
+    engine.core engine.search engine.search.models engine.core.database"; "the five modules of I4,
+    in turn: … 14 engine.* in all; exit 0"; "Cycle answer: none".
+  READ (CODE ORDER, the read-out): "engine/tools/inventory.py's docstring: "AST only. This module
+    never imports and never executes a scanned file, and never opens a database.""; ":33
+    SCAN_ROOTS = ("engine", "scripts", "analysis"), so the leaf is a scanned file";
+    "tests/test_inventory.py:288 def test_the_tool_never_imports_a_scanned_module_or_opens_a_
+    database(): asserts only the tokens importlib, __import__, exec(, eval(, sqlite3 and
+    ReviewDatabase("; "load_codebook_for(review_id, override=None) has no root parameter. The
+    rewrite would be the suite's first patch of a root, on review_paths.DATA_ROOT, because
+    data_root_for reads its own module's binding"; "test_review_paths.py:115 … can compare to the
+    file's own SPEC_PATH, which tightens it"; "test_parsed_text_resolver.py:172–174 | not coupled; a
+    from-import keeps pt.REPO_ROOT"; "conftest.py:539, _live_db_guard.py:40–41 | not coupled;
+    stricter"; "test_codebook_loader.py:85, test_background.py's tee assertion | not coupled: an
+    absolute path contains the substring"; "Subprocess cwd= in tests: 8 sites, none coupled";
+    "R780(c)(iv) adds database, engine.search.models and so pydantic to its closure. It is harmless
+    at the main-time sites, and judge_codebook_smoke.py:101 imports it at module level";
+    "parsed_text.py:48–50's comment becomes false"; "tests/test_background.py:100,
+    test_log_path_in_tmux_command, takes tmp_path and does not use it, and log_dir.mkdir runs for
+    real. data/my_review, data/myreview and data/review/logs exist"; "screening_adjudicator.py:28
+    EXPANDED_SEARCH_DIR = Path("data/surgical_autonomy/expanded_search"), a relative literal under
+    engine/ that U23 does not anchor"; "Red on the parent at False, not at an import error"; "No
+    existing id changes"; "No line in CLAUDE.md or docs/architecture/ names REPO_ROOT, git_state,
+    SPEC_ROOT or DATA_ROOT"; the §5 proposed texts for tests/conftest.py:224–227,
+    engine/core/parsed_text.py:48–50, docs/architecture/modules.md's new entry and :68 insertion, as
+    the read-out prints them.
+  READ (CC's): findings 1–11 of the report; Q1–Q6.
+  INFERRED: none.
+
+R781(a) — 12ad-U23B is accepted as reported: item 0 10a64eb (Block 178 by transcribe_ruling.py;
+  r780.txt in 12ad_open/; "A R780(b)" on the list with its gloss; STANDING_RULES.md regenerated at
+  93 clauses, the diff classified 3 / 1 / 13 / 0; E-ROOT's note; section "L (12ad additions,
+  R780)" with INT-ad12-1 and INT-ad12-2), ledger f65880c; the read-out 66092a2 with its import probe
+  and pin recompute, ledger a7b839d. The decision log in the file ends at R780. The 2026-11-02 jobs
+  stay the first brief's after 10:35 UTC.
+R781(b) — Q1: (b). R780(c)(iii) is narrowed to run_manifest.py:68 and parsed_text.py:51:
+  engine/tools/inventory.py:31 keeps its own definition, because the tool's docstring states it
+  never imports a scanned file and the leaf is one. The inventory import was the architect's,
+  ruled without the docstring read (R780(c)(iii) rested on the read-out's "one import; a tool",
+  CC's own reading); withdrawn. "One object by construction" holds for the two Run 7 modules; the
+  tool's root is equal by value, a dated note on E-ROOT. test_inventory.py:288 is not edited.
+R781(c) — Q2: the seven pins compare to REPO_ROOT / "review_specs" / … and REPO_ROOT / "data" /
+  …, REPO_ROOT read from engine.core.run_manifest, so each keeps power over the constant and the
+  derivation; test_review_paths.py:115 compares to the file's own SPEC_PATH as CC proposes.
+  Subjects and ids kept (R655(b)).
+R781(d) — Q3: (a). test_data_root_does_not_create_anything replaces its chdir with
+  monkeypatch.setattr on engine.core.review_paths's DATA_ROOT name, a path under tmp_path, and
+  asserts tmp_path stays empty — the subject ("it must not touch the disk") tested without the real
+  tree. test_codebook_loader.py:256–262 takes the same patch in place of its chdir, its tree built
+  under the patched root, its subject kept (finding 5: load_codebook_for has no root parameter, so
+  "passed" is not available — R780(e)'s "or" resolves to "patched"). This is the suite's first
+  patch of a root; the census's class (ii) lists it from here.
+R781(e) — Q4: in. The acceptance test asserts, beside the two is_relative_to checks, that
+  engine.core.parsed_text's REPO_ROOT is engine.core.run_manifest's REPO_ROOT (identity), so "one
+  object by construction" is the test's claim; red on the parent (equal, not identical), as CC
+  reads it.
+R781(f) — Q5 and Q6: the texts §5 proposes are approved verbatim for tests/conftest.py:224–227,
+  engine/core/parsed_text.py:48–50, docs/architecture/modules.md's new entry for the leaf and the
+  :68 insertion; no inventory.py docstring edit (Q1(b)). The leaf is engine/core/repo_root.py.
+  No other CLAUDE.md, docs/architecture or test comment line changes.
+R781(g) — The build: one engine commit on 66092a2 carrying R780(c)(i), (ii), (iv), (v), (iii) as
+  narrowed by (b), at the sites 12ad_U23B.md §2 quotes with the contracts it states (background.py
+  takes DATA_ROOT from database and drops its Path import, finding 6; the two folded modules each
+  lose their definition and gain the import, at the places §2 names); the acceptance test of
+  R780(e) with (e)'s identity assertion, in §4's form, in tests/test_review_paths.py; the seven
+  class-(c) rewrites of (c) and the two chdir-test rewrites of (d) under B5, assertions and ids
+  kept; the approved texts of (f); docs/inventory/ regenerated (R725(c)). Touched:
+  engine/core/repo_root.py (new), engine/core/database.py, engine/core/review_paths.py,
+  engine/core/run_manifest.py, engine/core/parsed_text.py, engine/utils/background.py,
+  engine/acquisition/pdf_quality_check.py, engine/adjudication/categorizer.py,
+  tests/test_review_paths.py, tests/test_codebook_loader.py, tests/conftest.py (the comment only),
+  docs/architecture/modules.md, docs/inventory/ — a file outside this list is a stop. Before the
+  edit, the new test is run on the parent and recorded red at False (§4; the kind of red is a
+  reading). Both pins and the audit prompt_hash byte-identical after the edit (R780(f)); no
+  migration; inventory --check in sync.
+R781(h) — The gate: the standard gate by launch_gate.sh, evidence 12ad_U23B/gate_u23b/, band
+  835–1020 s beside the series of thirty (R779(b)); counts expected as 12ac's plus the one new id
+  — collected and selected each one more than 3,510 / 3,493, passed one more than 3,492, 1 xfailed,
+  17 deselected, the two warnings sklearn's — written "to be measured" (R707(a)); the id comparison
+  against 12ac_close/collected_ids_12ac_close.txt expected only-gate = the new id, named, only-ref
+  0; durations against 12ac_close/durations_12ac_u22b_rerun.txt; a model load a stop, a read-only
+  request a reading (R696(b)); a red beyond the nine rewrites classified (c) or (r) (R746(c),
+  R772(b)). Gate evidence in its own commit (R731(c)).
+R781(i) — Rows, at the next item 0 (R510: in 1): INT-ad12-3 — Class 3, P7 — the suite writes
+  into the real data/ tree: tests/test_background.py:100 (test_log_path_in_tmux_command) takes
+  tmp_path, does not use it, and log_dir.mkdir runs for real (data/my_review, data/myreview and
+  data/review/logs exist on disk); not a database, so the live guard does not see it; independent
+  of U23. INT-ad12-1 is widened by a dated note: engine/adjudication/screening_adjudicator.py:28's
+  EXPANDED_SEARCH_DIR is a relative literal under engine/ that U23 does not anchor (finding 9).
+R781(j) — Readings, no row: finding 2 (background.py's closure gains database and pydantic;
+  harmless at its sites; importing the leaf and restating the data root would be N30's split — the
+  design stands); finding 6 (two lines per folded file; the wording); finding 7; finding 8 (cwd=
+  sites read, none coupled); finding 10 (the closeout's chained recount script takes the 12ad
+  table, R651(a) — for that brief); finding 11 (the rules-file header is current again; the id
+  list's comment stays for the tools change). E-ROOT (N30 inside it) closes on the acceptance test
+  passing in the gate (R514), noted CLOSED at the next item 0 with the commit hash and the test id,
+  counted until P1 closes (R607(d)).

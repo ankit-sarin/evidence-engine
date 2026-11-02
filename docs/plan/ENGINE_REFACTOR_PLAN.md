@@ -422,7 +422,7 @@ defect under R342 (R-SCOPE-1) and is worked before the freshman tag, except the 
 | E-PIN | *The pin's prompt_hash coverage omits the Pass-2 priming wrapper (build_pass2_priming_message) and the attempt-2 feedback template.* "Fix before the tag. A fix that changes what the pin hashes touches R117/R224a: drafted by the architect, ruled by the PI." (R349) | 12a-ELICIT-A §2.4 | **CLOSED 2026-10-01** (`84faf0d065a032081bdd1aa0a3622dd5be833bd3`, R381, R384–R394): a stage's `prompt_hash` renders every template its runtime call can send, through the runtime's own builders (`pass1_prompt`, `pass2_priming`); `elicitation_pass1` hashes both attempts over a feedback sentinel carrying all ten FATAL codes; elicited `extract_pass2` renders the priming message; non-elicited pin unchanged, elicited pin `65c8d942…3c56` → `77ae99d8…1bf2`; Phase A `docs/session-reports/session-12/12c_E-PIN-A.md` |
 | E-STATE | *manifest engine_state is hard-coded None; the docstring promises it from the freshman tag.* (R349) | 12a-ELICIT-A §3.2 | **CLOSED 2026-10-01** (`b05ef062f34af07f9eaf3d75efb1bedfbc13fb0b`, R365–R366; docstring `bcceff8897c9076a9f317ab8ad146aa1624e281b`): `git_state()` reads `git tag --points-at HEAD` into `GitState.state_tags` (`ENGINE_STATES` members, R300 order); `open_run` refuses two state tags (`AmbiguousEngineState`) after `DirtyTree` and before any write, else records the one name or NULL; `manifest_sha256` covers it |
 | E-UNITMAP | *the elicitation unit-map directory is keyed by process UTC time, not run_id; its only link back is _LAST_PASS2_TELEMETRY["elicitation_run_id"] (storage untraced).* (R349) | 12a-ELICIT-A, list item 8 | LATENT — owner 12c (R350) *Note 2026-10-08 (12g item 0c, R541):* 12f triage — Class 1; owning package P1 (R540). *Note 2026-10-08 (12g close, R552):* sized by `12g_RA-A.md` RA-2 and the run: `elicitation_run_id` is set on `_LAST_PASS2_TELEMETRY` and written to no file, so the unit-map directory (`elicitation/run_20261008T182516Z/` in `ra_12g`) is linked to its run by nothing on disk. *Note 2026-10-11 (12l-R612, R612(m); D12):* one fix unit with INT-g12-1, U03 ("Full citation record on the claim; unit map keyed by run") — R612(m): "D12: 35 units accepted." |
-| E-ROOT | *SPEC_ROOT is resolved against the working directory while git_state uses REPO_ROOT.* (R349) | 12a-ELICIT-A Part 4 | LATENT — owner 12c (R350) *Note 2026-10-08 (12g item 0c, R541):* 12f triage — Class 2; owning package P1 (R540). *Note 2026-11-02 (12ad-U23A, R780):* Option A ruled (R780(c)): one `REPO_ROOT` in a new leaf module, `DATA_ROOT` and `SPEC_ROOT` anchored to it. "One root" excludes the received migrations 017 and 021, whose text the runner checksums (`12ad_U23A.md` F3, R780(c)(vi)). Whether a run records its resolved roots is 023's Phase A's question: a body key needs no migration; a column does (F6, R780(d)). `git_state` on a non-repository returns commit `''` and is stopped only by 020's CHECK at the insert, reachable only from a copy without `.git` (F7, R780(h)). The relative script path in `sys.argv` remains a launch-form question; tmux's default directory no longer decides the roots under option A (Q1, R780(h)). |
+| E-ROOT | *SPEC_ROOT is resolved against the working directory while git_state uses REPO_ROOT.* (R349) | 12a-ELICIT-A Part 4 | LATENT — owner 12c (R350) *Note 2026-10-08 (12g item 0c, R541):* 12f triage — Class 2; owning package P1 (R540). *Note 2026-11-02 (12ad-U23A, R780):* Option A ruled (R780(c)): one `REPO_ROOT` in a new leaf module, `DATA_ROOT` and `SPEC_ROOT` anchored to it. "One root" excludes the received migrations 017 and 021, whose text the runner checksums (`12ad_U23A.md` F3, R780(c)(vi)). Whether a run records its resolved roots is 023's Phase A's question: a body key needs no migration; a column does (F6, R780(d)). `git_state` on a non-repository returns commit `''` and is stopped only by 020's CHECK at the insert, reachable only from a copy without `.git` (F7, R780(h)). The relative script path in `sys.argv` remains a launch-form question; tmux's default directory no longer decides the roots under option A (Q1, R780(h)). *Note 2026-11-02 (12ad-CLOSE item 0, R782(b)):* **CLOSED** on U23 (`9ae1fde29afe90a9349f5902486d0c9dd3ed344d`), by R514: the row's stated fix is delivered — `SPEC_ROOT` and `DATA_ROOT` (N30) are anchored to the one `REPO_ROOT` in `engine/core/repo_root.py`, the object `git_state` uses (R780(c), R781(g)) — and its acceptance test passes (`tests/test_review_paths.py::test_spec_and_data_roots_do_not_follow_the_working_directory`, red on the parent `66092a2` in `12ad_U23B/b0_parent_acceptance.txt`, green in `12ad_U23B/gate_u23b/`). Options B (a refusal on a differing root) and C (a root recorded in the manifest body) were not taken (R780(d)). Counted until P1 closes (R607(d), R753(d)(ii)). *Note 2026-11-02 (12ad-CLOSE item 0, R781(b)):* `engine/tools/inventory.py:31` keeps its own definition, because the tool's docstring states it never imports a scanned file and the leaf is one; "one object by construction" holds for `run_manifest` and `parsed_text`, and the tool's root is equal by value. |
 | E-METHODS | *methods_section's fixed prose describes the two-pass method for an elicited run.* (R349) With R364 folded in: "methods_section counting COUNT(DISTINCT rc.paper_id) over all outcomes (12a-E-CALL I3) is folded into E-METHODS: the prose must state what n counts, or the count must match what the prose claims." | 12a-ELICIT-A §2.5; 12a-E-CALL I3 | LATENT — owner 12c (R350). *Note 2026-10-06 (12d, R447):* B23's design D folds in — the methods prose states the auditor's object (the extracted value checked against the extractor's quoted snippet, for claims whose snippet the locator did not find) and that "asserted with evidence" comes from the locator. Not worked in 12c or 12d; owner 12e (R461) *Note 2026-10-08 (12g item 0c, R524, R541):* 12f triage — Class 1; folds into B-F07 with C36 (R524); owning package P3 (R540). *Note 2026-10-09 (12h rulings, R576):* the methods-section "dual-pass" wording from R570 (`12h_RD-6.md`) is carried with B-F07; no change of class or package. |
 | E-TEST | *no test opens a manifest with elicitation_pass1, verifies the digest against that pin and writes through the real event writer (model call mocked).* (R349) | 12a-ELICIT-A §2.6 | LATENT — owner 12c (R350) *Note 2026-10-08 (12g item 0c, R541):* 12f triage — Class 3; the package list names it in P1 (the Run 7 path) rather than the P7 batch (R540). *Note 2026-10-08 (12g close, R543):* stays in P1 although Class 3: it is the acceptance test of the elicited path and lands with or immediately after INT-g6-1. |
 | E-DEADKI | *outcome_for_exception's KeyboardInterrupt branch (and REASON_RUN_INTERRUPTED if unused) is unreachable.* (R356) | 12a-C47 Step 1 | **CLOSED 2026-10-01** (`0b4ac1c55a57212652d2053b2023e40b8e59646f`, R367): the branch is removed from `engine/core/extraction_events.py::outcome_for_exception` and its docstring says interrupts are run-level (C47); `run_interrupted` stays in `EXTRACTION_REASONS` under R146 with no emitter; `test_t12_every_code_the_mapping_emits_is_in_the_closed_set` rewritten under its id |
@@ -915,6 +915,8 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 *Dated 2026-10-31 (12ac-CLOSE item 0, R768, R770, R773):* U22 landed at `51f8317` (its class-(c) fix `bfe3bd3`); INT-g12-6 CLOSED on it and counted until P1 closes (R514, R607(d), R773(b)). P1's fix units 37, done 25 (U01–U22, U37, U38, U39). Rows 281 (94 / 56 / 131, 0 unclassed), by hand until the 12ac closeout's recount (R774(c)); rows out 0.
 
+*Dated 2026-11-02 (12ad-CLOSE item 0, R780, R781, R782):* U23 landed at `9ae1fde`; E-ROOT CLOSED on it and counted until P1 closes (R514, R607(d), R782(b)). P1's fix units 37, done 26 (U01–U23, U37, U38, U39). Rows 284 (94 / 56 / 134, 0 unclassed), by hand until the 12ad closeout's recount (R782(g)); rows out 0.
+
 **L (12w additions, R707).** *Opened 2026-10-25 (12w-CLOSE item 0) under R509, R707(e) and R708(b).* One row from INT-v12-1's Phase A read-out (`12w_V1A_q4_stopped.md`, `8659035`): `INT-w12-1` for its §Q3 census finding that a change made at a stage's call site after its shared builder returns is invisible to that stage's prompt hash, placed in its own table so that the 12v recount's bounds are unchanged. The text cell is R708's sentence (a), quoted unchanged (its line wrap joined); class and package are R707(e)'s; the evidence cell is R708(b)'s and R708(c)'s. Its fix is B's equality test extended to every hashed stage on the local run path, in U39 (R707(e)).
 
 | # | On disk (`12w_V1A_q4_stopped.md` §Q3, quoted) | Class | Owning package | Governing ruling | Evidence |
@@ -929,12 +931,13 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 | --- | --- | --- | --- | --- | --- |
 | INT-ab12-1 | With `max_retries=0`, the first watchdog timeout goes straight to the restart. | 2 | P1, with U21 | R757(c) | `12ab_U21A.md` §8 F5 (code order, not exercised) *Note 2026-10-31 (12ab-U21B, R761(c)(iii), R761(c)(v)):* **CLOSED** on U21 (`a6c31b1c142f9a39516a54a7fcf21fc6a87819cf`). A watchdog timeout no longer reaches the restart: the preflight and the quality check reach it only after their request has ended by the read timeout. `tests/test_u21_no_overlap.py::test_a_slow_request_with_no_retries_does_not_restart` (failed on the parent, passes in the gate) and `::test_a_read_timed_out_request_reaches_the_restart_once_and_the_final_attempt_is_rechecked`. Counted until P1 closes (R607(d)). |
 
-**L (12ad additions, R780).** *Opened 2026-11-02 (12ad-U23B item 0) under R509 and R780(g).* Two rows from U23's Phase A read-out (`12ad_U23A.md`, `94f7853`): `INT-ad12-1` from its §7 A scope table and §2, and `INT-ad12-2` from its §8 F5 and §9 Q2, placed in their own table so that the 12w recount's bounds are unchanged (R649(a), R651(a)). The text cells are composed from R780(g)'s words and the read-out's quoted lines.
+**L (12ad additions, R780).** *Opened 2026-11-02 (12ad-U23B item 0) under R509 and R780(g).* Two rows from U23's Phase A read-out (`12ad_U23A.md`, `94f7853`): `INT-ad12-1` from its §7 A scope table and §2, and `INT-ad12-2` from its §8 F5 and §9 Q2, placed in their own table so that the 12w recount's bounds are unchanged (R649(a), R651(a)). The text cells are composed from R780(g)'s words and the read-out's quoted lines. `INT-ad12-3` joined at 12ad-CLOSE item 0 under R781(i), from `12ad_U23B.md` §7 F4, its text cell composed from R781(i)'s words in the same way.
 
 | # | On disk (`12ad_U23A.md`, composed under R780(g)) | Class | Owning package | Governing ruling | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| INT-ad12-1 | Relative `data/` and `review_specs/` literals in `scripts/` (4 f-strings, e.g. `scripts/backfill_authors.py:98` `db_path = f"data/{args.review}/review.db"`; 7 literals) and `analysis/` (20) follow the working directory and are not anchored by U23. On no Run 7 path. | 3 | P7 | R780(g) | `12ad_U23A.md` §7 A's scope table and §2; `census_u23a.txt` |
+| INT-ad12-1 | Relative `data/` and `review_specs/` literals in `scripts/` (4 f-strings, e.g. `scripts/backfill_authors.py:98` `db_path = f"data/{args.review}/review.db"`; 7 literals) and `analysis/` (20) follow the working directory and are not anchored by U23. On no Run 7 path. | 3 | P7 | R780(g) | `12ad_U23A.md` §7 A's scope table and §2; `census_u23a.txt` *Note 2026-11-02 (12ad-U23B, R781(i)):* `engine/adjudication/screening_adjudicator.py:28` `EXPANDED_SEARCH_DIR = Path("data/surgical_autonomy/expanded_search")` is a relative literal under `engine/` that U23 does not anchor. |
 | INT-ad12-2 | `papers.pdf_local_path` and `full_text_assets.pdf_path` have no storage rule (parsed text has R100's): `download.py:381` `(str(dest), now, p["id"]),` and `verify_downloads.py:269` `(str(actual_path), now, pid),` write whatever form `DATA_ROOT` produces, `pdf_parser.py:1043–1049` tries a stored path against the working directory before `pdf_dir`, and under option A new rows store absolute strings beside the relative ones live may hold. The live columns' form is read mode=ro at this row's Phase A, not before. | 3 | P6 | R780(g) | `12ad_U23A.md` §8 F5 and §9 Q2 |
+| INT-ad12-3 | The suite writes into the real `data/` tree: `tests/test_background.py:100` (`test_log_path_in_tmux_command`) takes `tmp_path`, does not use it, and `log_dir.mkdir` runs for real (`data/my_review`, `data/myreview` and `data/review/logs` exist on disk). Not a database, so the live guard does not see it. Independent of U23. | 3 | P7 | R781(i) | `12ad_U23B.md` §3 and §7 F4 |
 
 ### Not engine defects — plan v50 wording
 
@@ -15759,3 +15762,237 @@ R780(i) — U23's Phase B opens under the 12ad-U23B brief below, in 12ac_U22B.md
 | 2026-11-02 | R780(a) — 12ad-U23A is accepted as reported: item 0 c83b0d5 (Block 177 by transcribe_ruling.py; r779.txt in 12ad_open/; the three rules files untouched, asserted by content), ledger 5714c94; the amendment quoted whole; the read-out 94f7853 with its census, probe and pin recompute, ledger faf4604. The decision log in the file ends at R779. The 2026-11-02 jobs are read by the first brief after 10:35 UTC on 11-02 (R774(b), R749(c)). R780(b) — The ledger-commit question, on the PI's reading of the amendment. Rule from here: in this lane, a git commit and git push that a brief directs — the engine repository's commits on main, the evidence commits, and the commit of the hook-written ledger row in claude-config — is not a print-and-review step; a brief states "auto mode ON, commit steps included" as before. The amendment's "edits to claude-config" line is read as the PI reads it: it does not reach the commit of a row the hook wrote, and its sanctioned pushes include this lane's. Its "commits on a branch or in a temporary worktree" wording is clarified in the claude-config lane by the PI, where an edit to CLAUDE.md belongs; no brief of this lane edits it. R779(d)'s interim reading is confirmed; report finding 1's three lines are answered. This clause is a standing rule: "A R780(b)" joins the list at the next item 0 (R754(c)(iii)). R780(c) — U23's design is option A, in this shape. (i) One REPO_ROOT, defined once in a new leaf module under engine/core/ that imports nothing from engine, computed from its own file's location in run_manifest.py:68's form; the module's name is CC's, in engine/core/'s naming. (ii) database.py:20 becomes DATA_ROOT = REPO_ROOT / "data" and review_paths.py:28 becomes SPEC_ROOT = REPO_ROOT / "review_specs", each importing REPO_ROOT from the leaf; the from-import at review_paths.py:25 stays, binding the same object as today. (iii) run_manifest.py:68, parsed_text.py:51 and engine/tools/inventory.py:31 import REPO_ROOT from the leaf in place of defining it, so "the repository root that git_state uses" is the one object by construction. (iv) background.py:48 uses DATA_ROOT in place of Path("data"): the --background log directory is on the Run 7 launch path and runs before load_spec_for. (v) pdf_quality_check.py:41 and categorizer.py:20 import DATA_ROOT from database in place of defining it (N30's split, twice more; off Run 7's path, folded because the edit is the import line only). (vi) Not folded: 021_parsed_text_sha256.py:73 and 017_seed_event_store.py:175, inside checksummed migration text (F3) — a dated note on E-ROOT records that "one root" excludes received migrations; the 18 PROJECT_ROOTs, already module-file based. The scripts/ and analysis/ literals are INT-ad12-1's (R780(g)). No refusal is added (B's check is not built: with both roots anchored, a launch from elsewhere reads the repository's own spec and database, which is what the engine should do; the --spec and data_root= overrides keep their meaning as explicit paths). R780(d) — Not taken: B (refuse on a differing root) — it leaves the constants relative, needs a meaning for "differ" under an explicit --spec or data_root=, and sits behind maybe_background's mkdir unless background.py moves anyway; A removes the condition B would detect. C (A plus a root recorded in the manifest body) — under A the three roots agree by construction, so the key would record one path at the cost of the _BODY_KEYS pins (test_ft_adjudication_import.py:335, 340); whether a run should record its resolved roots is 023's Phase A's question, a dated note on E-ROOT with F6's words (a body key needs no migration; a column does). R780(e) — Acceptance: test_spec_and_data_roots_do_not_follow_the_working_directory in tests/test_review_paths.py, in that file's form: after monkeypatch.chdir(tmp_path), spec_path_for(id) and data_root_for(id) both resolve under the REPO_ROOT that git_state uses (the leaf's object, read through run_manifest); red on the parent as the probe's "False" rows show, green in the gate. The seven relative pins (test_review_paths.py:32, 33, 37, 38, 115; test_codebook_loader.py:65, 67) are rewritten under B5 in the same commit with their subjects kept, each comparing to the anchored form; test_codebook_loader.py:257 is rewritten to reach its tree under a passed or patched root, its subject kept; test_review_paths.py:43's test is read at Phase B and its subject stated before the build decides its form. Any other red is classified (c) or (r) under R722(a)–R725(b), class (iv) in R772(d)'s extended form. R780(f) — Pin not affecting (FAKE, pin_absolute_paths.txt); both pins and the audit prompt_hash are asserted byte-identical in the commit's gate. No migration. The Touched list is the engine files (c) names — the leaf, database.py, review_paths.py, run_manifest.py, parsed_text.py, engine/tools/inventory.py, engine/utils/background.py, engine/acquisition/pdf_quality_check.py, engine/adjudication/categorizer.py — the test files the census and Phase B find coupled, and docs/inventory/ (R725(c)); CLAUDE.md, docs/architecture and tests/conftest.py's design comment (:224) are quoted at Phase B and edited only by text the PI approves at the stop (R768(e)'s form). R780(g) — Rows opened at the next item 0, in section L's six-cell form with this ruling as origin (R510: in 2): INT-ad12-1 — Class 3, P7 — relative data/ and review_specs/ literals in scripts/ (4 f-strings, 7 literals) and analysis/ (20) follow the working directory and are not anchored by U23; on no Run 7 path. INT-ad12-2 — Class 3, P6 — papers.pdf_local_path and full_text_assets.pdf_path have no storage rule (parsed text has R100's): download.py:381 and verify_downloads.py:269 write whatever form DATA_ROOT produces, pdf_parser.py:1043–1049 tries a stored path against the cwd before pdf_dir, and under A new rows store absolute strings beside the relative ones live may hold (F5; the live columns' form is Q2, read mode=ro at that row's Phase A, not before). Both rows' texts are composed by CC from these words and the read-out's quoted lines, in the row form of INT-ab12-1. R780(h) — Readings, no row: F2 (the spec hash is of the validated model; 12l_P1A.md not edited); F7 (git_state on a non-repository returns commit '' and is stopped only by 020's CHECK at the insert; a dated note on E-ROOT, reachable only from a copy without .git); F8 (the write-before- refuse case of an absolute --spec from elsewhere: under A the database opened is the repository's, so no tree is written elsewhere; run_pipeline.py:86–88's principle stands); F9 (the census's classes are the file's labels (i)–(vi); "five classes" in R767(e) and R779(f) reads as those labels from here); F10; Q1 (tmux's default directory no longer decides the roots under A; the relative script path in sys.argv remains a launch-form question, a note on E-ROOT); Q3; Q4 (no launch from another tree is made before the freeze); report finding 2 (I3's "two" was the architect's count, one phrase; CC applied R667(e) correctly); finding 3 (the faulty comparison gated nothing); finding 4 (F4: R3 short by two definitions and three importers; the record governed); finding 5; finding 11 (the named-key-set form is the census's from here); finding 12. The series and band stand at R779(b)'s. R780(i) — U23's Phase B opens under the 12ad-U23B brief below, in 12ac_U22B.md's form: every seam (c)(i)–(vi) quoted at HEAD with the contract per site; the leaf's import closure shown by import (no cycle, no server); the pins and the two chdir tests confirmed at HEAD with each rewrite stated; the test plan in words; the docs and comment lines made false, quoted, with proposed sentences; the pin recompute; findings; STOP before any edit. No engine or test edit in that brief. The build follows as a RESUME under the ruling on its report. | PI, 2026-11-02, during session 12ad, on architect recommendation, on the 12ad-U23A final report (item 0 c83b0d5; read-out 94f7853) |
 
 The decision log in this file ends at R780.
+
+**Block 179.** *Transcribed 2026-11-02 (item 0 of the 12ad-CLOSE brief), in its own commit with Block 180, the E-ROOT CLOSED note and dated note, the row INT-ad12-3, the INT-ad12-1 note and the dated units line, in the R597(e) form:* ruling R781, made by PI on architect recommendation on 2026-11-02 UTC, during session 12ad, on the 12ad-U23B final report (item 0 `10a64ebd304a3ee02c7498071aa26a0726be660b`; read-out `66092a213327751bd18ebacd6a6cb254d3028fc0`). The 12ad-U23B-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ad-R781] — 12ad-U23B accepted; Q1–Q6 ruled: the inventory tool keeps its
+  own root (R780(c)(iii) narrowed), the pins compare to REPO_ROOT's form, the two chdir tests patch
+  review_paths.DATA_ROOT, the identity assertion is in, the §5 texts approved, the leaf is
+  repo_root.py; one row opened, one widened; U23's build opens as one engine commit with its gate
+STATUS: PI ruling, 2026-11-02 UTC, session 12ad, on architect recommendation, on the 12ad-U23B final
+  report (item 0 10a64ebd304a3ee02c7498071aa26a0726be660b; read-out
+  66092a213327751bd18ebacd6a6cb254d3028fc0, docs/session-reports/session-12/12ad_U23B/12ad_U23B.md).
+  Transcribe at item 0 of the next brief, by transcribe_ruling.py, in the block after R780's, not
+  now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ad-U23B final report and 12ad_U23B.md):
+  MEASURED: "Commit: 10a64ebd304a3ee02c7498071aa26a0726be660b, parent 94f7853";
+    "ENGINE_REFACTOR_PLAN.md | +162 / −1; the "−" line computed as the E-ROOT row";
+    "STANDING_RULES.md | +37 / −16"; "wrote docs/plan/STANDING_RULES.md: 93 clauses of 1489";
+    "header 3; new sections 1; Named by 13 (read); other 0"; "Plan sha256 / bytes | 11c17e6b…15fa /
+    2735454";
+    "15761 = 15600 + 162 − 1"; "r780.txt | f13117d1…53fb, 12908, 143, equal to the architect's";
+    "f65880c1d69961e1f91d8849957be7b57c4cf911, parent faf4604"; "Commit:
+    66092a213327751bd18ebacd6a6cb254d3028fc0, parent 10a64eb … 4 files, +407"; "pin_tuples.py with
+    both arguments, rc 0, byte-identical to 12ac_close/pin_tuples_close.json, sha256 aea19354…f24f";
+    "a7b839d92923d2fd195cc0b0ccde8b7359181588, parent f65880c"; "Ollama journal since 04:46 UTC
+    shows -- No entries --; no request of any kind this brief".
+  MEASURED (the import probe, import_probe.txt): "engine.core.database alone: exit 0 … engine
+    engine.core engine.search engine.search.models engine.core.database"; "the five modules of I4,
+    in turn: … 14 engine.* in all; exit 0"; "Cycle answer: none".
+  READ (CODE ORDER, the read-out): "engine/tools/inventory.py's docstring: "AST only. This module
+    never imports and never executes a scanned file, and never opens a database.""; ":33
+    SCAN_ROOTS = ("engine", "scripts", "analysis"), so the leaf is a scanned file";
+    "tests/test_inventory.py:288 def test_the_tool_never_imports_a_scanned_module_or_opens_a_
+    database(): asserts only the tokens importlib, __import__, exec(, eval(, sqlite3 and
+    ReviewDatabase("; "load_codebook_for(review_id, override=None) has no root parameter. The
+    rewrite would be the suite's first patch of a root, on review_paths.DATA_ROOT, because
+    data_root_for reads its own module's binding"; "test_review_paths.py:115 … can compare to the
+    file's own SPEC_PATH, which tightens it"; "test_parsed_text_resolver.py:172–174 | not coupled; a
+    from-import keeps pt.REPO_ROOT"; "conftest.py:539, _live_db_guard.py:40–41 | not coupled;
+    stricter"; "test_codebook_loader.py:85, test_background.py's tee assertion | not coupled: an
+    absolute path contains the substring"; "Subprocess cwd= in tests: 8 sites, none coupled";
+    "R780(c)(iv) adds database, engine.search.models and so pydantic to its closure. It is harmless
+    at the main-time sites, and judge_codebook_smoke.py:101 imports it at module level";
+    "parsed_text.py:48–50's comment becomes false"; "tests/test_background.py:100,
+    test_log_path_in_tmux_command, takes tmp_path and does not use it, and log_dir.mkdir runs for
+    real. data/my_review, data/myreview and data/review/logs exist"; "screening_adjudicator.py:28
+    EXPANDED_SEARCH_DIR = Path("data/surgical_autonomy/expanded_search"), a relative literal under
+    engine/ that U23 does not anchor"; "Red on the parent at False, not at an import error"; "No
+    existing id changes"; "No line in CLAUDE.md or docs/architecture/ names REPO_ROOT, git_state,
+    SPEC_ROOT or DATA_ROOT"; the §5 proposed texts for tests/conftest.py:224–227,
+    engine/core/parsed_text.py:48–50, docs/architecture/modules.md's new entry and :68 insertion, as
+    the read-out prints them.
+  READ (CC's): findings 1–11 of the report; Q1–Q6.
+  INFERRED: none.
+
+R781(a) — 12ad-U23B is accepted as reported: item 0 10a64eb (Block 178 by transcribe_ruling.py;
+  r780.txt in 12ad_open/; "A R780(b)" on the list with its gloss; STANDING_RULES.md regenerated at
+  93 clauses, the diff classified 3 / 1 / 13 / 0; E-ROOT's note; section "L (12ad additions,
+  R780)" with INT-ad12-1 and INT-ad12-2), ledger f65880c; the read-out 66092a2 with its import probe
+  and pin recompute, ledger a7b839d. The decision log in the file ends at R780. The 2026-11-02 jobs
+  stay the first brief's after 10:35 UTC.
+R781(b) — Q1: (b). R780(c)(iii) is narrowed to run_manifest.py:68 and parsed_text.py:51:
+  engine/tools/inventory.py:31 keeps its own definition, because the tool's docstring states it
+  never imports a scanned file and the leaf is one. The inventory import was the architect's,
+  ruled without the docstring read (R780(c)(iii) rested on the read-out's "one import; a tool",
+  CC's own reading); withdrawn. "One object by construction" holds for the two Run 7 modules; the
+  tool's root is equal by value, a dated note on E-ROOT. test_inventory.py:288 is not edited.
+R781(c) — Q2: the seven pins compare to REPO_ROOT / "review_specs" / … and REPO_ROOT / "data" /
+  …, REPO_ROOT read from engine.core.run_manifest, so each keeps power over the constant and the
+  derivation; test_review_paths.py:115 compares to the file's own SPEC_PATH as CC proposes.
+  Subjects and ids kept (R655(b)).
+R781(d) — Q3: (a). test_data_root_does_not_create_anything replaces its chdir with
+  monkeypatch.setattr on engine.core.review_paths's DATA_ROOT name, a path under tmp_path, and
+  asserts tmp_path stays empty — the subject ("it must not touch the disk") tested without the real
+  tree. test_codebook_loader.py:256–262 takes the same patch in place of its chdir, its tree built
+  under the patched root, its subject kept (finding 5: load_codebook_for has no root parameter, so
+  "passed" is not available — R780(e)'s "or" resolves to "patched"). This is the suite's first
+  patch of a root; the census's class (ii) lists it from here.
+R781(e) — Q4: in. The acceptance test asserts, beside the two is_relative_to checks, that
+  engine.core.parsed_text's REPO_ROOT is engine.core.run_manifest's REPO_ROOT (identity), so "one
+  object by construction" is the test's claim; red on the parent (equal, not identical), as CC
+  reads it.
+R781(f) — Q5 and Q6: the texts §5 proposes are approved verbatim for tests/conftest.py:224–227,
+  engine/core/parsed_text.py:48–50, docs/architecture/modules.md's new entry for the leaf and the
+  :68 insertion; no inventory.py docstring edit (Q1(b)). The leaf is engine/core/repo_root.py.
+  No other CLAUDE.md, docs/architecture or test comment line changes.
+R781(g) — The build: one engine commit on 66092a2 carrying R780(c)(i), (ii), (iv), (v), (iii) as
+  narrowed by (b), at the sites 12ad_U23B.md §2 quotes with the contracts it states (background.py
+  takes DATA_ROOT from database and drops its Path import, finding 6; the two folded modules each
+  lose their definition and gain the import, at the places §2 names); the acceptance test of
+  R780(e) with (e)'s identity assertion, in §4's form, in tests/test_review_paths.py; the seven
+  class-(c) rewrites of (c) and the two chdir-test rewrites of (d) under B5, assertions and ids
+  kept; the approved texts of (f); docs/inventory/ regenerated (R725(c)). Touched:
+  engine/core/repo_root.py (new), engine/core/database.py, engine/core/review_paths.py,
+  engine/core/run_manifest.py, engine/core/parsed_text.py, engine/utils/background.py,
+  engine/acquisition/pdf_quality_check.py, engine/adjudication/categorizer.py,
+  tests/test_review_paths.py, tests/test_codebook_loader.py, tests/conftest.py (the comment only),
+  docs/architecture/modules.md, docs/inventory/ — a file outside this list is a stop. Before the
+  edit, the new test is run on the parent and recorded red at False (§4; the kind of red is a
+  reading). Both pins and the audit prompt_hash byte-identical after the edit (R780(f)); no
+  migration; inventory --check in sync.
+R781(h) — The gate: the standard gate by launch_gate.sh, evidence 12ad_U23B/gate_u23b/, band
+  835–1020 s beside the series of thirty (R779(b)); counts expected as 12ac's plus the one new id
+  — collected and selected each one more than 3,510 / 3,493, passed one more than 3,492, 1 xfailed,
+  17 deselected, the two warnings sklearn's — written "to be measured" (R707(a)); the id comparison
+  against 12ac_close/collected_ids_12ac_close.txt expected only-gate = the new id, named, only-ref
+  0; durations against 12ac_close/durations_12ac_u22b_rerun.txt; a model load a stop, a read-only
+  request a reading (R696(b)); a red beyond the nine rewrites classified (c) or (r) (R746(c),
+  R772(b)). Gate evidence in its own commit (R731(c)).
+R781(i) — Rows, at the next item 0 (R510: in 1): INT-ad12-3 — Class 3, P7 — the suite writes
+  into the real data/ tree: tests/test_background.py:100 (test_log_path_in_tmux_command) takes
+  tmp_path, does not use it, and log_dir.mkdir runs for real (data/my_review, data/myreview and
+  data/review/logs exist on disk); not a database, so the live guard does not see it; independent
+  of U23. INT-ad12-1 is widened by a dated note: engine/adjudication/screening_adjudicator.py:28's
+  EXPANDED_SEARCH_DIR is a relative literal under engine/ that U23 does not anchor (finding 9).
+R781(j) — Readings, no row: finding 2 (background.py's closure gains database and pydantic;
+  harmless at its sites; importing the leaf and restating the data root would be N30's split — the
+  design stands); finding 6 (two lines per folded file; the wording); finding 7; finding 8 (cwd=
+  sites read, none coupled); finding 10 (the closeout's chained recount script takes the 12ad
+  table, R651(a) — for that brief); finding 11 (the rules-file header is current again; the id
+  list's comment stays for the tools change). E-ROOT (N30 inside it) closes on the acceptance test
+  passing in the gate (R514), noted CLOSED at the next item 0 with the commit hash and the test id,
+  counted until P1 closes (R607(d)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-02 | R781(a) — 12ad-U23B is accepted as reported: item 0 10a64eb (Block 178 by transcribe_ruling.py; r780.txt in 12ad_open/; "A R780(b)" on the list with its gloss; STANDING_RULES.md regenerated at 93 clauses, the diff classified 3 / 1 / 13 / 0; E-ROOT's note; section "L (12ad additions, R780)" with INT-ad12-1 and INT-ad12-2), ledger f65880c; the read-out 66092a2 with its import probe and pin recompute, ledger a7b839d. The decision log in the file ends at R780. The 2026-11-02 jobs stay the first brief's after 10:35 UTC. R781(b) — Q1: (b). R780(c)(iii) is narrowed to run_manifest.py:68 and parsed_text.py:51: engine/tools/inventory.py:31 keeps its own definition, because the tool's docstring states it never imports a scanned file and the leaf is one. The inventory import was the architect's, ruled without the docstring read (R780(c)(iii) rested on the read-out's "one import; a tool", CC's own reading); withdrawn. "One object by construction" holds for the two Run 7 modules; the tool's root is equal by value, a dated note on E-ROOT. test_inventory.py:288 is not edited. R781(c) — Q2: the seven pins compare to REPO_ROOT / "review_specs" / … and REPO_ROOT / "data" / …, REPO_ROOT read from engine.core.run_manifest, so each keeps power over the constant and the derivation; test_review_paths.py:115 compares to the file's own SPEC_PATH as CC proposes. Subjects and ids kept (R655(b)). R781(d) — Q3: (a). test_data_root_does_not_create_anything replaces its chdir with monkeypatch.setattr on engine.core.review_paths's DATA_ROOT name, a path under tmp_path, and asserts tmp_path stays empty — the subject ("it must not touch the disk") tested without the real tree. test_codebook_loader.py:256–262 takes the same patch in place of its chdir, its tree built under the patched root, its subject kept (finding 5: load_codebook_for has no root parameter, so "passed" is not available — R780(e)'s "or" resolves to "patched"). This is the suite's first patch of a root; the census's class (ii) lists it from here. R781(e) — Q4: in. The acceptance test asserts, beside the two is_relative_to checks, that engine.core.parsed_text's REPO_ROOT is engine.core.run_manifest's REPO_ROOT (identity), so "one object by construction" is the test's claim; red on the parent (equal, not identical), as CC reads it. R781(f) — Q5 and Q6: the texts §5 proposes are approved verbatim for tests/conftest.py:224–227, engine/core/parsed_text.py:48–50, docs/architecture/modules.md's new entry for the leaf and the :68 insertion; no inventory.py docstring edit (Q1(b)). The leaf is engine/core/repo_root.py. No other CLAUDE.md, docs/architecture or test comment line changes. R781(g) — The build: one engine commit on 66092a2 carrying R780(c)(i), (ii), (iv), (v), (iii) as narrowed by (b), at the sites 12ad_U23B.md §2 quotes with the contracts it states (background.py takes DATA_ROOT from database and drops its Path import, finding 6; the two folded modules each lose their definition and gain the import, at the places §2 names); the acceptance test of R780(e) with (e)'s identity assertion, in §4's form, in tests/test_review_paths.py; the seven class-(c) rewrites of (c) and the two chdir-test rewrites of (d) under B5, assertions and ids kept; the approved texts of (f); docs/inventory/ regenerated (R725(c)). Touched: engine/core/repo_root.py (new), engine/core/database.py, engine/core/review_paths.py, engine/core/run_manifest.py, engine/core/parsed_text.py, engine/utils/background.py, engine/acquisition/pdf_quality_check.py, engine/adjudication/categorizer.py, tests/test_review_paths.py, tests/test_codebook_loader.py, tests/conftest.py (the comment only), docs/architecture/modules.md, docs/inventory/ — a file outside this list is a stop. Before the edit, the new test is run on the parent and recorded red at False (§4; the kind of red is a reading). Both pins and the audit prompt_hash byte-identical after the edit (R780(f)); no migration; inventory --check in sync. R781(h) — The gate: the standard gate by launch_gate.sh, evidence 12ad_U23B/gate_u23b/, band 835–1020 s beside the series of thirty (R779(b)); counts expected as 12ac's plus the one new id — collected and selected each one more than 3,510 / 3,493, passed one more than 3,492, 1 xfailed, 17 deselected, the two warnings sklearn's — written "to be measured" (R707(a)); the id comparison against 12ac_close/collected_ids_12ac_close.txt expected only-gate = the new id, named, only-ref 0; durations against 12ac_close/durations_12ac_u22b_rerun.txt; a model load a stop, a read-only request a reading (R696(b)); a red beyond the nine rewrites classified (c) or (r) (R746(c), R772(b)). Gate evidence in its own commit (R731(c)). R781(i) — Rows, at the next item 0 (R510: in 1): INT-ad12-3 — Class 3, P7 — the suite writes into the real data/ tree: tests/test_background.py:100 (test_log_path_in_tmux_command) takes tmp_path, does not use it, and log_dir.mkdir runs for real (data/my_review, data/myreview and data/review/logs exist on disk); not a database, so the live guard does not see it; independent of U23. INT-ad12-1 is widened by a dated note: engine/adjudication/screening_adjudicator.py:28's EXPANDED_SEARCH_DIR is a relative literal under engine/ that U23 does not anchor (finding 9). R781(j) — Readings, no row: finding 2 (background.py's closure gains database and pydantic; harmless at its sites; importing the leaf and restating the data root would be N30's split — the design stands); finding 6 (two lines per folded file; the wording); finding 7; finding 8 (cwd= sites read, none coupled); finding 10 (the closeout's chained recount script takes the 12ad table, R651(a) — for that brief); finding 11 (the rules-file header is current again; the id list's comment stays for the tools change). E-ROOT (N30 inside it) closes on the acceptance test passing in the gate (R514), noted CLOSED at the next item 0 with the commit hash and the test id, counted until P1 closes (R607(d)). | PI, 2026-11-02, during session 12ad, on architect recommendation, on the 12ad-U23B final report (item 0 10a64eb; read-out 66092a2) |
+
+The decision log in this file ends at R781.
+
+**Block 180.** *Transcribed 2026-11-02 (item 0 of the 12ad-CLOSE brief), in its own commit with Block 179, the E-ROOT CLOSED note and dated note, the row INT-ad12-3, the INT-ad12-1 note and the dated units line, in the R597(e) form:* ruling R782, made by PI on architect recommendation on 2026-11-02 UTC, during session 12ad, on the 12ad-U23B-R1 final report (engine `9ae1fde29afe90a9349f5902486d0c9dd3ed344d`; evidence `30a4f4d2dcffc85a6cad561cf2be53285dbe077a`). The 12ad-CLOSE brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ad-R782] — 12ad-U23B-R1 accepted: U23 landed, E-ROOT closes; the series
+  gains 924.56 s; readings; session 12ad closes now on U23 — the 12ad-CLOSE brief follows
+  12ac-CLOSE's form; no closeout gate; the closeout's expected nightly file governs 2026-11-02 and
+  2026-11-03 (R749(b)); the band for 12ae computed by CC and set by the wrap ruling
+STATUS: PI ruling, 2026-11-02 UTC, session 12ad, on architect recommendation, on the 12ad-U23B-R1
+  final report (engine commit 9ae1fde29afe90a9349f5902486d0c9dd3ed344d; evidence
+  30a4f4d2dcffc85a6cad561cf2be53285dbe077a). Transcribe at item 0 of the 12ad-CLOSE brief below,
+  by transcribe_ruling.py, in the block after R781's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ad-U23B-R1 final report):
+  MEASURED: "HEAD 66092a2, parent 10a64eb, both rev-parsed; clean, 0 0, one worktree"; "FAILED
+    tests/test_review_paths.py::test_spec_and_data_roots_do_not_follow_the_working_directory"; "E
+    AssertionError: assert False"; "parsed_text.REPO_ROOT is run_manifest.REPO_ROOT: False ;
+    equal: True"; "Commit: 9ae1fde29afe90a9349f5902486d0c9dd3ed344d, parent 66092a2 … 14 files,
+    +88 / −47"; "8 ids run alone, "8 passed""; "pin_tuples.py byte-identical to
+    12ac_close/pin_tuples_close.json; elicited d70bf688…59f0, non-elicited d3672ab6…ff5c; audit
+    prompt_hash d972c46d…838d in both arms"; "one object True True"; "Fingerprint: IDENTICAL in
+    the check, before the push and after it"; "b67858911ce13115d1ecfb519b050b319c47a28c, parent
+    a7b839d"; "Wall time | 924.56 s, inside 835–1020 s"; "==== 3493 passed, 17 deselected, 1
+    xfailed, 2 warnings in 922.67s (0:15:22) ===="; "collected 3511 items / 17 deselected / 3494
+    selected"; "3494 / 3493; only-gate 1, only-ref 0"; "The only-gate id |
+    tests/test_review_paths.py::test_spec_and_data_roots_do_not_follow_the_working_directory";
+    "Durations slower by more than 10 s | none (phases: ref 2568, gate 2555)"; "three GETs at
+    05:21:10, the wrapper's own after-reads; no POST, no runner start"; "Concurrent jobs, own
+    PIDs excluded | surgical-cv's uvicorn, PID 388131, both snapshots"; "Reds beyond the nine
+    rewrites | none"; "Wrapper fault | none"; "Commit: 30a4f4d2dcffc85a6cad561cf2be53285dbe077a,
+    parent 9ae1fde … 20 files, +12,337"; "fd49c5cf70b21e664b2b6dbfe2d8e4371b674de1, parent
+    b678589"; "the clock read 05:21:59 UTC, before 10:35 UTC on 11-02".
+  READ (CC's): findings 1–7 of the report; "The nine rewrites sit in six test functions, so that
+    is seven ids"; "The only hit for Path("data") or Path("review_specs"):
+    engine/migrations/017_seed_event_store.py:175"; "tests/test_codebook_loader.py already has its
+    own REPO_ROOT = Path(__file__).resolve().parent.parent".
+  INFERRED: none.
+
+R782(a) — 12ad-U23B-R1 is accepted as reported: the parent acceptance red at the assertion with
+  the identity False; the engine commit 9ae1fde (the leaf engine/core/repo_root.py; the eight
+  engine sites of R781(g); the acceptance test; the nine rewrites; the four approved texts;
+  docs/inventory/), ledger b678589; the gate 3,493 / 1 / 17 on 3,511 / 3,494, only-gate the one
+  new id, 924.56 s inside 835–1020 s beside the idle uvicorn server only, no load; the evidence
+  commit 30a4f4d with the parent acceptance beside it, ledger fd49c5c. Both pins and the audit
+  prompt_hash byte-identical; no request byte moved. U23 is landed; P1's fix units 37, done 26.
+R782(b) — E-ROOT (N30 inside it) closes on the acceptance test passing in the gate (R514), noted
+  CLOSED at 12ad-CLOSE's item 0 in INT-g12-6's note form, naming 9ae1fde and
+  tests/test_review_paths.py::test_spec_and_data_roots_do_not_follow_the_working_directory (red on
+  the parent 66092a2, b0_parent_acceptance.txt; green in gate_u23b/), counted until P1 closes
+  (R607(d), R753(d)(ii)); the same item 0 writes E-ROOT's dated note on the inventory tool's root
+  (R781(b)), opens INT-ad12-3 and widens INT-ad12-1 (R781(i)), and writes the dated units line
+  (37, done 26).
+R782(c) — The series on this host state gains 924.56 s: the thirty of R779(b) plus 924.56,
+  thirty-one. The band for 12ae is computed by CC from the last four standard gates on this host
+  state, read from the record (the series' last four members: 926.70, 928.81, 935.67, 924.56),
+  ±10% of their mean, rounded inward as R683(c) rounded, stated as a computation with its proposed
+  figure, each gate's concurrent jobs described from its evidence (R748(b)); it is set by the wrap
+  ruling. The band in force stays 835–1020 s until then.
+R782(d) — Readings, no row: finding 1 (B2's "ten ids" was the architect's count of edits written
+  as a count of ids; the check took its ids from its arguments and matched no count, R772(c)
+  working as written); finding 2 (B2's grep EXPECTED named lines the pattern cannot reach —
+  the architect's, written from the sites' description rather than from the pattern against the
+  files; the check listed every hit and matched it to the record, so nothing stopped and nothing
+  was adapted; the seventh instance of a value written from a description, no new rule — R772(c)
+  and R777(b) already cover it); finding 3 (the test file's own REPO_ROOT; the attribute read
+  keeps R781(c)); finding 4 (the comment placement); finding 5; finding 6 (the item-0 list, taken
+  into 12ad-CLOSE); finding 7 (answered in (c)).
+R782(e) — Session 12ad closes now on U23. The 12ad-CLOSE brief follows 12ac-CLOSE's form read from
+  the record: item 0 (R781 and this ruling, by transcribe_ruling.py; the E-ROOT CLOSED note and
+  dated note; INT-ad12-3 in section "L (12ad additions, R780)" and INT-ad12-1's dated note; the
+  dated units line; no standing rule — R781 and this ruling state none, so the id list, the
+  glosses file and STANDING_RULES.md are untouched, asserted by content, R777(b)), the
+  counterpart files in 12ac_close/'s names with 12ad's sources, the closure paragraph, the
+  "Expected values at session-12ae open" block, the lane line written and not applied, the
+  closeout block in the record's element order, the rNNN.txt table r778–r782.
+R782(f) — No closeout gate: the expected gate values for 12ae are U23's gate (12ad_U23B/gate_u23b/:
+  3,493 passed / 1 xfailed / 17 deselected, collected 3,511 / selected 3,494, its collected_ids as
+  the reference). The engine tree changed at 9ae1fde, so under R749(b) the closeout writes its own
+  expected nightly file, 12ad_close/expected_nightly_20261102.md, in
+  12ac_close/expected_nightly_20261101.md's form with U23's counts, and it governs the 2026-11-02
+  nightly and, while the tree stays unchanged, 2026-11-03's; the 12ac_close file is superseded for
+  2026-11-02 by this clause, not edited. The 2026-11-02 health job and nightly are read by this
+  closeout if it runs after 10:35 UTC on 11-02, else by 12ae-OPEN (R749(c), R779(a)).
+R782(g) — The recount script is written at this closeout in R651(a)'s chained form
+  (12ac_close/recount_12ac_close.py as the model, read), extended to read section "L (12ad
+  additions, R780)" as the 12ab table is read (12ad-U23B finding 10), its output the recount of
+  record: 284 rows (94 / 56 / 134) expected — 281 plus INT-ad12-1, INT-ad12-2 and INT-ad12-3, each
+  Class 3 — to be measured; P1 62 (25 / 25 / 12); P6 12; P7 119; fix units 35 / 19 / 37 done 26;
+  R510 for 12ad: rows in 3, rows out 0 (E-ROOT is a section K row, not an INT- row); E-ROOT CLOSED
+  and counted. A count other than these is a stop before the closeout commit, both values reported.
+R782(h) — The stops, for the closure: listed by CC from the rulings on disk and this brief's item 0
+  (each stop ruling names its step and its cause), never from this ruling's memory; the architect's
+  and CC's counted apart. The architect reads none this session; the record decides.
+R782(i) — Timing: the closeout runs now. If the clock reaches 06:55 UTC on 2026-11-02 before the
+  closeout commit, the brief stops after item 0 with its counterpart files held, reports, and
+  resumes at its step 2 after 10:35 UTC under the same brief, reading the 2026-11-02 jobs then
+  against the expected nightly file it writes first (R774(b)'s precedent, 12ac-CLOSE TIMING).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-02 | R782(a) — 12ad-U23B-R1 is accepted as reported: the parent acceptance red at the assertion with the identity False; the engine commit 9ae1fde (the leaf engine/core/repo_root.py; the eight engine sites of R781(g); the acceptance test; the nine rewrites; the four approved texts; docs/inventory/), ledger b678589; the gate 3,493 / 1 / 17 on 3,511 / 3,494, only-gate the one new id, 924.56 s inside 835–1020 s beside the idle uvicorn server only, no load; the evidence commit 30a4f4d with the parent acceptance beside it, ledger fd49c5c. Both pins and the audit prompt_hash byte-identical; no request byte moved. U23 is landed; P1's fix units 37, done 26. R782(b) — E-ROOT (N30 inside it) closes on the acceptance test passing in the gate (R514), noted CLOSED at 12ad-CLOSE's item 0 in INT-g12-6's note form, naming 9ae1fde and tests/test_review_paths.py::test_spec_and_data_roots_do_not_follow_the_working_directory (red on the parent 66092a2, b0_parent_acceptance.txt; green in gate_u23b/), counted until P1 closes (R607(d), R753(d)(ii)); the same item 0 writes E-ROOT's dated note on the inventory tool's root (R781(b)), opens INT-ad12-3 and widens INT-ad12-1 (R781(i)), and writes the dated units line (37, done 26). R782(c) — The series on this host state gains 924.56 s: the thirty of R779(b) plus 924.56, thirty-one. The band for 12ae is computed by CC from the last four standard gates on this host state, read from the record (the series' last four members: 926.70, 928.81, 935.67, 924.56), ±10% of their mean, rounded inward as R683(c) rounded, stated as a computation with its proposed figure, each gate's concurrent jobs described from its evidence (R748(b)); it is set by the wrap ruling. The band in force stays 835–1020 s until then. R782(d) — Readings, no row: finding 1 (B2's "ten ids" was the architect's count of edits written as a count of ids; the check took its ids from its arguments and matched no count, R772(c) working as written); finding 2 (B2's grep EXPECTED named lines the pattern cannot reach — the architect's, written from the sites' description rather than from the pattern against the files; the check listed every hit and matched it to the record, so nothing stopped and nothing was adapted; the seventh instance of a value written from a description, no new rule — R772(c) and R777(b) already cover it); finding 3 (the test file's own REPO_ROOT; the attribute read keeps R781(c)); finding 4 (the comment placement); finding 5; finding 6 (the item-0 list, taken into 12ad-CLOSE); finding 7 (answered in (c)). R782(e) — Session 12ad closes now on U23. The 12ad-CLOSE brief follows 12ac-CLOSE's form read from the record: item 0 (R781 and this ruling, by transcribe_ruling.py; the E-ROOT CLOSED note and dated note; INT-ad12-3 in section "L (12ad additions, R780)" and INT-ad12-1's dated note; the dated units line; no standing rule — R781 and this ruling state none, so the id list, the glosses file and STANDING_RULES.md are untouched, asserted by content, R777(b)), the counterpart files in 12ac_close/'s names with 12ad's sources, the closure paragraph, the "Expected values at session-12ae open" block, the lane line written and not applied, the closeout block in the record's element order, the rNNN.txt table r778–r782. R782(f) — No closeout gate: the expected gate values for 12ae are U23's gate (12ad_U23B/gate_u23b/: 3,493 passed / 1 xfailed / 17 deselected, collected 3,511 / selected 3,494, its collected_ids as the reference). The engine tree changed at 9ae1fde, so under R749(b) the closeout writes its own expected nightly file, 12ad_close/expected_nightly_20261102.md, in 12ac_close/expected_nightly_20261101.md's form with U23's counts, and it governs the 2026-11-02 nightly and, while the tree stays unchanged, 2026-11-03's; the 12ac_close file is superseded for 2026-11-02 by this clause, not edited. The 2026-11-02 health job and nightly are read by this closeout if it runs after 10:35 UTC on 11-02, else by 12ae-OPEN (R749(c), R779(a)). R782(g) — The recount script is written at this closeout in R651(a)'s chained form (12ac_close/recount_12ac_close.py as the model, read), extended to read section "L (12ad additions, R780)" as the 12ab table is read (12ad-U23B finding 10), its output the recount of record: 284 rows (94 / 56 / 134) expected — 281 plus INT-ad12-1, INT-ad12-2 and INT-ad12-3, each Class 3 — to be measured; P1 62 (25 / 25 / 12); P6 12; P7 119; fix units 35 / 19 / 37 done 26; R510 for 12ad: rows in 3, rows out 0 (E-ROOT is a section K row, not an INT- row); E-ROOT CLOSED and counted. A count other than these is a stop before the closeout commit, both values reported. R782(h) — The stops, for the closure: listed by CC from the rulings on disk and this brief's item 0 (each stop ruling names its step and its cause), never from this ruling's memory; the architect's and CC's counted apart. The architect reads none this session; the record decides. R782(i) — Timing: the closeout runs now. If the clock reaches 06:55 UTC on 2026-11-02 before the closeout commit, the brief stops after item 0 with its counterpart files held, reports, and resumes at its step 2 after 10:35 UTC under the same brief, reading the 2026-11-02 jobs then against the expected nightly file it writes first (R774(b)'s precedent, 12ac-CLOSE TIMING). | PI, 2026-11-02, during session 12ad, on architect recommendation, on the 12ad-U23B-R1 final report (engine 9ae1fde; evidence 30a4f4d) |
+
+The decision log in this file ends at R782.

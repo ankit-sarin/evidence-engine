@@ -1,0 +1,12 @@
+ engine/acquisition/pdf_quality_check.py |  2 +-
+ engine/adjudication/categorizer.py      |  3 ++-
+ engine/core/database.py                 |  3 ++-
+ engine/core/parsed_text.py              |  6 ++----
+ engine/core/repo_root.py                | 11 +++++++++++
+ engine/core/review_paths.py             |  3 ++-
+ engine/core/run_manifest.py             |  3 +--
+ engine/utils/background.py              |  5 +++--
+ tests/conftest.py                       |  8 ++++----
+ tests/test_codebook_loader.py           | 10 +++++-----
+ tests/test_review_paths.py              | 24 ++++++++++++++++++------
+ 11 files changed, 51 insertions(+), 27 deletions(-)

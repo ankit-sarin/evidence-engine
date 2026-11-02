@@ -1,0 +1,5 @@
+# R510 for session 12ad: six-cell INT- rows at 6095e6c (the 12ac closeout) and at 2f73fd6 (12ad-CLOSE item 0)
+6095e6c: 207; 2f73fd6: 210; rows in 3 ['INT-ad12-1', 'INT-ad12-2', 'INT-ad12-3']; rows out 0 []
+no class or package move: True [] (leading digit of the Class cell and first package of the Owning-package cell compared, row by row)
+E-ROOT, a section K row and not an INT- row, CLOSED by its note at 2f73fd6 (R782(b)); counted until P1 closes (R607(d), R753(d)(ii))
+method: lines starting '| INT-' with six ' | '-separated cells, as 12ac_close/r510_12ac.txt's method line

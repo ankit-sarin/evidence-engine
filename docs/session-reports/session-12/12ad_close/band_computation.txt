@@ -1,0 +1,6 @@
+# band computation for the wrap ruling (R683(c)'s inward rounding), 12ad closeout (R782(c))
+inputs (the last four standard gates on this host state): 926.70, 928.81, 935.67, 924.56
+  926.70 12ac-OPEN (12ac_open/gate_12ac_open/gate_wall.txt 926.703196542; uvicorn pid 39609, started 18:00:28, before and after); 928.81 U22's re-run (12ac_U22B/gate_u22b_rerun/gate_wall.txt 928.809894344; uvicorn pid 388131, restarted 23:18:32 by the surgical-cv lane, before and after; that lane's shell command pid 388791 at launch, R773(e)); 935.67 12ad-OPEN (12ad_open/gate_12ad_open/gate_wall.txt 935.665482758; uvicorn pid 388131 before and after); 924.56 U23 (12ad_U23B/gate_u23b/gate_wall.txt 924.557174173; uvicorn pid 388131 before and after)
+mean 928.935 s; x0.9 836.0415; x1.1 1021.8285
+rounded inward: 837–1021 s (a figure, to be set by the wrap ruling; the band in force stays 835–1020 s)
+series (thirty-one, the thirty of R779(b) plus 924.56 of R782(c)): 871.59, 906.50, 858.50, 895.02, 872.27, 887.58, 882.23, 912.14, 893.71, 883.80, 878.55, 888.65, 885.20, 882.37, 941.74, 920.32, 893.83, 939.40, 895.61, 896.11, 912.13, 906.10, 909.32, 907.50, 919.74, 924.77, 928.91, 926.70, 928.81, 935.67, 924.56 s

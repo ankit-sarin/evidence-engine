@@ -1,0 +1,79 @@
+RULING [evidence-engine 12ad-R779] — 12ad-OPEN accepted; the series gains 935.67 s; the ledger-row
+  commit stays a brief step until the amendment is read; readings; U23's Phase A opens
+STATUS: PI ruling, 2026-11-02 UTC, session 12ad, on architect recommendation, on the 12ad-OPEN final
+  report (item 0 483ecbb8f389e2ae8d2d4eddf00fc2caa01770a9; evidence
+  fbd7f8e84c12e218b9ae7b5ee647bb1f2a12c758). Transcribe at item 0 of the 12ad-U23A brief below, by
+  transcribe_ruling.py, in the block after R778's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ad-OPEN final report):
+  MEASURED: "The clock read 2026-11-02T03:50:27Z at 0a"; "Block 175 at line 15374; 176 count 0";
+    "8ffba5c, three commits past c2a218a"; "primer.md last commit is c2a218a"; "Loads OK / total |
+    20/20"; "NVRM lines / NV_ERR_NO_MEMORY this boot | 27 / 26 (22 before this job)"; "Summary line
+    … line 6097, "… in 927.03s""; "3493 / 3493; only-nightly 0, only-ref 0"; "HEAD it ran on |
+    6095e6c by reflog"; "Commit: 483ecbb8f389e2ae8d2d4eddf00fc2caa01770a9, parent 6095e6c"; "Plan
+    numstat | +75 / −0 (tool's own report: +75)"; ""ends at" lines | 132 before, 133 after"; "Plan
+    lines after | 15510 = 15435 + 75 − 0"; "Plan sha256 / bytes |
+    933cec58941520ed28217e5457f4905fdabdea09bdd805ffca12e38ddf6f3b9d / 2700135"; "r778.txt |
+    6f17e555…b4d7, 5360, 64; equal to the architect's"; "The three rules files | no diff, not
+    staged"; "ledger commit 87f24e05e75eb172097a6cbf9896c16ff3931c7d, parent 8ffba5c"; "RESULT:
+    PASS (0 mismatches)"; "Stdout is byte-identical to the committed recount_12ac_close.json"; "37,
+    done 25 (dated lines)"; "6095e6c: 207; 483ecbb: 207; rows in 0, rows out 0"; "Wall time |
+    935.67 s, inside 835–1020 s"; "==== 3492 passed, 17 deselected, 1 xfailed, 2 warnings in 933.55s
+    (0:15:33) ===="; "collected 3510 items / 17 deselected / 3493 selected"; "Ids against the
+    reference | 3493 / 3493, 0/0"; "Ollama journal, launch to exit | no entries; no load";
+    "Concurrent jobs, own PIDs excluded | surgical-cv's uvicorn, PID 388131, both snapshots";
+    "Commit: fbd7f8e84c12e218b9ae7b5ee647bb1f2a12c758, parent 483ecbb"; "24 files, +15,189";
+    "Ledger: e15b9fe025e3bc4ddbd63e5dfb7a92a586db5ea1, parent 87f24e0"; "Archive time: … its /exit
+    record is 2026-11-01T16:41:55Z. The archive file's rename ctime is 2026-11-01 16:42:02 UTC";
+    "1,460 POST /api/show calls ran 11-01 19:32 to 11-02 01:5x".
+  READ (CC's): findings 1–9 of that report; the amendment's lines as CC quoted them: "edits to
+    claude-config" and "rm, mv or > touching corpus, scratch, claims, /mnt/nas, released files or
+    ledgers" as print-and-review steps, "hook-written ledger rows are not writes a brief directs";
+    "The model names are matched by runner start order against the log's test order; that match is
+    my inference"; "I tested the move by comparing the row lines byte for byte".
+  READ (the PI's, this session): other lanes of the PI's were active on the box, and the
+    claude-config amendment is the PI's own.
+  INFERRED: none. The architect has not read acfc0c9's text; clause (d) rests on nothing in it.
+
+R779(a) — 12ad-OPEN is accepted as reported: item 0 483ecbb (Block 176 by transcribe_ruling.py;
+  r778.txt and lane_line_12ac.txt in 12ac_close/; the id list, the glosses file and
+  STANDING_RULES.md untouched, asserted by content; the plan +75 / −0), the ledger 87f24e0; the open
+  check PASS; the recount and R510 as expected; the gate 3,492 / 1 / 17 on 3,510 / 3,493, 0/0,
+  935.67 s inside 835–1020 s beside the idle uvicorn server only; the gate evidence and the five
+  11-01 job files landed in their own commit fbd7f8e with ledger e15b9fe. The 12ad open stands
+  verified. The decision log in the file ends at R778.
+R779(b) — The series on this host state gains 935.67 s: the twenty-nine of R773(c) plus 935.67,
+  thirty. The band for 12ad stays 835–1020 s.
+R779(c) — Readings, no row: finding 2 (claude-config at 8ffba5c — acfc0c9 the PI's CLAUDE.md
+  amendment, 90f804e and 8ffba5c foreign rows, accepted under R663(b); the foreign rows join the
+  dgx-infra cross-lane item); finding 3 (the nightly read file's HEAD section and lock line are the
+  form from here; the reflog method recorded beside it); finding 4 (the archive time is 16:42:02 UTC
+  on 11-01; the brief's "about 01:50" was the architect's, carried from the wrap chat, withdrawn —
+  the brief had routed the value to the record, so no stop); finding 5 (the temp root is rotated by
+  other lanes' work, the PI's; the 11-01 nightly's basetemp is gone; R647(c)'s form reads what is
+  there; nothing emptied); finding 6 (the rules-file header's plan-blob sha256 and the id list's
+  header comment stay for the next tools change, R766(d)); finding 7 (the 1,460 POST /api/show
+  calls: no runner started, so they are readings under R696(b)'s principle; their sender is the
+  PI's other lanes by the PI's statement, unattributed by CC; the endpoint's place in R696(b)'s list
+  is a question for the dgx-infra cross-lane item, not a stop); finding 8 (the 12ad-U23A brief's
+  step 0 completes the R751(c) session-start reads CC left unread); finding 9; the NVRM count this
+  boot is 26, the four new lines inside the 11-01 health loads, CC's model-name match an inference
+  as it says; the health job loaded qwen3.6:35b-a3b, qwen2.5:32b and llama3.3:70b among its twenty,
+  none of them the engine's.
+R779(d) — Finding 1: the two ledger commits 87f24e0 and e15b9fe stand as landed (R102). Until the
+  PI rules on the amendment's own text, a brief of this lane keeps directing the commit and push of
+  the hook's ledger row as 12ac's did ("auto mode ON, commit steps included"): the row is the hook's
+  write, the brief directs only its commit, and foreign sessions committed theirs at 90f804e and
+  8ffba5c. The 12ad-U23A brief's item 0 quotes acfc0c9's amendment whole, from the file, before its
+  ledger step, as a reading; the ruling after that report settles whether a brief-directed commit of
+  a hook row is a print-and-review step, on that text.
+R779(e) — R778 is transcribed as Block 176 and this ruling states no standing rule; the id list is
+  untouched at the next item 0.
+R779(f) — U23's Phase A opens under the 12ad-U23A brief below, in the form R767(e) states and
+  12ac_U22A.md carries: 12l_P1A.md §3's next unit after U22 in its order, "One root for spec, data
+  and git state" (E-ROOT; N30 inside it), read-only; the unit entry quoted first (a closed or
+  absorbed unit is caught there and the next open unit reported instead); the row it names quoted
+  with every note and its acceptance test; the census pre-step's five classes (R722(a)–R725(b)),
+  class (iv) extended to the set(...) == key-set form (R772(d)); the mechanism at HEAD, quoted; the
+  options with what each moves. No engine change; no model load; an Ollama request other than
+  version, tags or ps is not made. The fix is not designed in the Phase A.

@@ -422,7 +422,7 @@ defect under R342 (R-SCOPE-1) and is worked before the freshman tag, except the 
 | E-PIN | *The pin's prompt_hash coverage omits the Pass-2 priming wrapper (build_pass2_priming_message) and the attempt-2 feedback template.* "Fix before the tag. A fix that changes what the pin hashes touches R117/R224a: drafted by the architect, ruled by the PI." (R349) | 12a-ELICIT-A §2.4 | **CLOSED 2026-10-01** (`84faf0d065a032081bdd1aa0a3622dd5be833bd3`, R381, R384–R394): a stage's `prompt_hash` renders every template its runtime call can send, through the runtime's own builders (`pass1_prompt`, `pass2_priming`); `elicitation_pass1` hashes both attempts over a feedback sentinel carrying all ten FATAL codes; elicited `extract_pass2` renders the priming message; non-elicited pin unchanged, elicited pin `65c8d942…3c56` → `77ae99d8…1bf2`; Phase A `docs/session-reports/session-12/12c_E-PIN-A.md` |
 | E-STATE | *manifest engine_state is hard-coded None; the docstring promises it from the freshman tag.* (R349) | 12a-ELICIT-A §3.2 | **CLOSED 2026-10-01** (`b05ef062f34af07f9eaf3d75efb1bedfbc13fb0b`, R365–R366; docstring `bcceff8897c9076a9f317ab8ad146aa1624e281b`): `git_state()` reads `git tag --points-at HEAD` into `GitState.state_tags` (`ENGINE_STATES` members, R300 order); `open_run` refuses two state tags (`AmbiguousEngineState`) after `DirtyTree` and before any write, else records the one name or NULL; `manifest_sha256` covers it |
 | E-UNITMAP | *the elicitation unit-map directory is keyed by process UTC time, not run_id; its only link back is _LAST_PASS2_TELEMETRY["elicitation_run_id"] (storage untraced).* (R349) | 12a-ELICIT-A, list item 8 | LATENT — owner 12c (R350) *Note 2026-10-08 (12g item 0c, R541):* 12f triage — Class 1; owning package P1 (R540). *Note 2026-10-08 (12g close, R552):* sized by `12g_RA-A.md` RA-2 and the run: `elicitation_run_id` is set on `_LAST_PASS2_TELEMETRY` and written to no file, so the unit-map directory (`elicitation/run_20261008T182516Z/` in `ra_12g`) is linked to its run by nothing on disk. *Note 2026-10-11 (12l-R612, R612(m); D12):* one fix unit with INT-g12-1, U03 ("Full citation record on the claim; unit map keyed by run") — R612(m): "D12: 35 units accepted." |
-| E-ROOT | *SPEC_ROOT is resolved against the working directory while git_state uses REPO_ROOT.* (R349) | 12a-ELICIT-A Part 4 | LATENT — owner 12c (R350) *Note 2026-10-08 (12g item 0c, R541):* 12f triage — Class 2; owning package P1 (R540). |
+| E-ROOT | *SPEC_ROOT is resolved against the working directory while git_state uses REPO_ROOT.* (R349) | 12a-ELICIT-A Part 4 | LATENT — owner 12c (R350) *Note 2026-10-08 (12g item 0c, R541):* 12f triage — Class 2; owning package P1 (R540). *Note 2026-11-02 (12ad-U23A, R780):* Option A ruled (R780(c)): one `REPO_ROOT` in a new leaf module, `DATA_ROOT` and `SPEC_ROOT` anchored to it. "One root" excludes the received migrations 017 and 021, whose text the runner checksums (`12ad_U23A.md` F3, R780(c)(vi)). Whether a run records its resolved roots is 023's Phase A's question: a body key needs no migration; a column does (F6, R780(d)). `git_state` on a non-repository returns commit `''` and is stopped only by 020's CHECK at the insert, reachable only from a copy without `.git` (F7, R780(h)). The relative script path in `sys.argv` remains a launch-form question; tmux's default directory no longer decides the roots under option A (Q1, R780(h)). |
 | E-METHODS | *methods_section's fixed prose describes the two-pass method for an elicited run.* (R349) With R364 folded in: "methods_section counting COUNT(DISTINCT rc.paper_id) over all outcomes (12a-E-CALL I3) is folded into E-METHODS: the prose must state what n counts, or the count must match what the prose claims." | 12a-ELICIT-A §2.5; 12a-E-CALL I3 | LATENT — owner 12c (R350). *Note 2026-10-06 (12d, R447):* B23's design D folds in — the methods prose states the auditor's object (the extracted value checked against the extractor's quoted snippet, for claims whose snippet the locator did not find) and that "asserted with evidence" comes from the locator. Not worked in 12c or 12d; owner 12e (R461) *Note 2026-10-08 (12g item 0c, R524, R541):* 12f triage — Class 1; folds into B-F07 with C36 (R524); owning package P3 (R540). *Note 2026-10-09 (12h rulings, R576):* the methods-section "dual-pass" wording from R570 (`12h_RD-6.md`) is carried with B-F07; no change of class or package. |
 | E-TEST | *no test opens a manifest with elicitation_pass1, verifies the digest against that pin and writes through the real event writer (model call mocked).* (R349) | 12a-ELICIT-A §2.6 | LATENT — owner 12c (R350) *Note 2026-10-08 (12g item 0c, R541):* 12f triage — Class 3; the package list names it in P1 (the Run 7 path) rather than the P7 batch (R540). *Note 2026-10-08 (12g close, R543):* stays in P1 although Class 3: it is the acceptance test of the elicited path and lands with or immediately after INT-g6-1. |
 | E-DEADKI | *outcome_for_exception's KeyboardInterrupt branch (and REASON_RUN_INTERRUPTED if unused) is unreachable.* (R356) | 12a-C47 Step 1 | **CLOSED 2026-10-01** (`0b4ac1c55a57212652d2053b2023e40b8e59646f`, R367): the branch is removed from `engine/core/extraction_events.py::outcome_for_exception` and its docstring says interrupts are run-level (C47); `run_interrupted` stays in `EXTRACTION_REASONS` under R146 with no emitter; `test_t12_every_code_the_mapping_emits_is_in_the_closed_set` rewritten under its id |
@@ -928,6 +928,13 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 | # | On disk (`12ab_U21A.md` §8 F5, quoted) | Class | Owning package | Governing ruling | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | INT-ab12-1 | With `max_retries=0`, the first watchdog timeout goes straight to the restart. | 2 | P1, with U21 | R757(c) | `12ab_U21A.md` §8 F5 (code order, not exercised) *Note 2026-10-31 (12ab-U21B, R761(c)(iii), R761(c)(v)):* **CLOSED** on U21 (`a6c31b1c142f9a39516a54a7fcf21fc6a87819cf`). A watchdog timeout no longer reaches the restart: the preflight and the quality check reach it only after their request has ended by the read timeout. `tests/test_u21_no_overlap.py::test_a_slow_request_with_no_retries_does_not_restart` (failed on the parent, passes in the gate) and `::test_a_read_timed_out_request_reaches_the_restart_once_and_the_final_attempt_is_rechecked`. Counted until P1 closes (R607(d)). |
+
+**L (12ad additions, R780).** *Opened 2026-11-02 (12ad-U23B item 0) under R509 and R780(g).* Two rows from U23's Phase A read-out (`12ad_U23A.md`, `94f7853`): `INT-ad12-1` from its §7 A scope table and §2, and `INT-ad12-2` from its §8 F5 and §9 Q2, placed in their own table so that the 12w recount's bounds are unchanged (R649(a), R651(a)). The text cells are composed from R780(g)'s words and the read-out's quoted lines.
+
+| # | On disk (`12ad_U23A.md`, composed under R780(g)) | Class | Owning package | Governing ruling | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| INT-ad12-1 | Relative `data/` and `review_specs/` literals in `scripts/` (4 f-strings, e.g. `scripts/backfill_authors.py:98` `db_path = f"data/{args.review}/review.db"`; 7 literals) and `analysis/` (20) follow the working directory and are not anchored by U23. On no Run 7 path. | 3 | P7 | R780(g) | `12ad_U23A.md` §7 A's scope table and §2; `census_u23a.txt` |
+| INT-ad12-2 | `papers.pdf_local_path` and `full_text_assets.pdf_path` have no storage rule (parsed text has R100's): `download.py:381` `(str(dest), now, p["id"]),` and `verify_downloads.py:269` `(str(actual_path), now, pid),` write whatever form `DATA_ROOT` produces, `pdf_parser.py:1043–1049` tries a stored path against the working directory before `pdf_dir`, and under option A new rows store absolute strings beside the relative ones live may hold. The live columns' form is read mode=ro at this row's Phase A, not before. | 3 | P6 | R780(g) | `12ad_U23A.md` §8 F5 and §9 Q2 |
 
 ### Not engine defects — plan v50 wording
 
@@ -15598,3 +15605,157 @@ R779(f) — U23's Phase A opens under the 12ad-U23A brief below, in the form R76
 | 2026-11-02 | R779(a) — 12ad-OPEN is accepted as reported: item 0 483ecbb (Block 176 by transcribe_ruling.py; r778.txt and lane_line_12ac.txt in 12ac_close/; the id list, the glosses file and STANDING_RULES.md untouched, asserted by content; the plan +75 / −0), the ledger 87f24e0; the open check PASS; the recount and R510 as expected; the gate 3,492 / 1 / 17 on 3,510 / 3,493, 0/0, 935.67 s inside 835–1020 s beside the idle uvicorn server only; the gate evidence and the five 11-01 job files landed in their own commit fbd7f8e with ledger e15b9fe. The 12ad open stands verified. The decision log in the file ends at R778. R779(b) — The series on this host state gains 935.67 s: the twenty-nine of R773(c) plus 935.67, thirty. The band for 12ad stays 835–1020 s. R779(c) — Readings, no row: finding 2 (claude-config at 8ffba5c — acfc0c9 the PI's CLAUDE.md amendment, 90f804e and 8ffba5c foreign rows, accepted under R663(b); the foreign rows join the dgx-infra cross-lane item); finding 3 (the nightly read file's HEAD section and lock line are the form from here; the reflog method recorded beside it); finding 4 (the archive time is 16:42:02 UTC on 11-01; the brief's "about 01:50" was the architect's, carried from the wrap chat, withdrawn — the brief had routed the value to the record, so no stop); finding 5 (the temp root is rotated by other lanes' work, the PI's; the 11-01 nightly's basetemp is gone; R647(c)'s form reads what is there; nothing emptied); finding 6 (the rules-file header's plan-blob sha256 and the id list's header comment stay for the next tools change, R766(d)); finding 7 (the 1,460 POST /api/show calls: no runner started, so they are readings under R696(b)'s principle; their sender is the PI's other lanes by the PI's statement, unattributed by CC; the endpoint's place in R696(b)'s list is a question for the dgx-infra cross-lane item, not a stop); finding 8 (the 12ad-U23A brief's step 0 completes the R751(c) session-start reads CC left unread); finding 9; the NVRM count this boot is 26, the four new lines inside the 11-01 health loads, CC's model-name match an inference as it says; the health job loaded qwen3.6:35b-a3b, qwen2.5:32b and llama3.3:70b among its twenty, none of them the engine's. R779(d) — Finding 1: the two ledger commits 87f24e0 and e15b9fe stand as landed (R102). Until the PI rules on the amendment's own text, a brief of this lane keeps directing the commit and push of the hook's ledger row as 12ac's did ("auto mode ON, commit steps included"): the row is the hook's write, the brief directs only its commit, and foreign sessions committed theirs at 90f804e and 8ffba5c. The 12ad-U23A brief's item 0 quotes acfc0c9's amendment whole, from the file, before its ledger step, as a reading; the ruling after that report settles whether a brief-directed commit of a hook row is a print-and-review step, on that text. R779(e) — R778 is transcribed as Block 176 and this ruling states no standing rule; the id list is untouched at the next item 0. R779(f) — U23's Phase A opens under the 12ad-U23A brief below, in the form R767(e) states and 12ac_U22A.md carries: 12l_P1A.md §3's next unit after U22 in its order, "One root for spec, data and git state" (E-ROOT; N30 inside it), read-only; the unit entry quoted first (a closed or absorbed unit is caught there and the next open unit reported instead); the row it names quoted with every note and its acceptance test; the census pre-step's five classes (R722(a)–R725(b)), class (iv) extended to the set(...) == key-set form (R772(d)); the mechanism at HEAD, quoted; the options with what each moves. No engine change; no model load; an Ollama request other than version, tags or ps is not made. The fix is not designed in the Phase A. | PI, 2026-11-02, during session 12ad, on architect recommendation, on the 12ad-OPEN final report (item 0 483ecbb; evidence fbd7f8e) |
 
 The decision log in this file ends at R779.
+
+**Block 178.** *Transcribed 2026-11-02 (item 0 of the 12ad-U23B brief), in its own commit with the E-ROOT note, the rows INT-ad12-1 and INT-ad12-2 and the standing-rules regeneration it orders, in the R597(e) form:* ruling R780, made by PI on architect recommendation on 2026-11-02 UTC, during session 12ad, on the 12ad-U23A final report (item 0 `c83b0d5d678f55fb616451e64bf3ab3609c8f5f5`; read-out `94f785330671ef189835bf72979afa28e05f77a4`). The 12ad-U23B brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ad-R780] — 12ad-U23A accepted; a brief-directed commit and push is not a
+  print-and-review step; U23's design: option A — both roots anchored to one REPO_ROOT held in a
+  leaf module, the Run 7 launch path and the two duplicate DATA_ROOTs folded, the migrations left;
+  B and C not taken; two rows opened; readings; U23's Phase B opens
+STATUS: PI ruling, 2026-11-02 UTC, session 12ad, on architect recommendation, on the 12ad-U23A final
+  report (item 0 c83b0d5d678f55fb616451e64bf3ab3609c8f5f5; read-out
+  94f785330671ef189835bf72979afa28e05f77a4, docs/session-reports/session-12/12ad_U23A/12ad_U23A.md).
+  Transcribe at item 0 of the 12ad-U23B brief below, by transcribe_ruling.py, in the block after
+  R779's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from 12ad_U23A.md at 94f7853 and the 12ad-U23A report):
+  MEASURED: "Commit: c83b0d5d678f55fb616451e64bf3ab3609c8f5f5, parent fbd7f8e"; "plan +90 / −0";
+    "Plan sha256 / bytes | c0942dbb5968e9c4873ae37be18d281a24e3b3669811ec25704e006b27325df8 /
+    2711610"; "15600 = 15510 + 90 − 0"; "r779.txt | 82490b0d…b46c, 6995, 79, equal to the
+    architect's"; "Three rules files | no diff, unstaged"; "5714c9458cfe895dde9ff452588ef778cb2e9fe3,
+    parent e15b9fe"; "Commit: 94f785330671ef189835bf72979afa28e05f77a4, parent c83b0d5 … 6 files,
+    +1,531"; "faf4604af29c16bbf8b77868ccf3145e0d6b6cb3, parent 5714c94"; "My only requests were two
+    GET /api/ps"; "The probe opened no database".
+  MEASURED (FAKE, fake_seam_probe.txt as §5 tables it): from "scratch empty/" and "scratch copy/"
+    spec_path_for and data_root_for resolve "under empty/" and "under copy/" while git_state's root
+    is "~/projects/evidence-engine", the assertion "False"; from the repository root "True";
+    "pin_tuples.py with absolute paths is byte-identical to pin_tuples_close.json (aea19354…f24f)".
+  READ (CODE ORDER, the read-out): "review_paths.py:28 SPEC_ROOT = Path("review_specs")";
+    "database.py:20 DATA_ROOT = Path("data")"; "run_manifest.py:68 the module-file root";
+    "engine/core/database.py is the lowest module holding a root (it imports only
+    engine.search.models), and review_paths.py already imports from it"; "A new leaf module is the
+    other form"; "engine/utils/background.py:48–50: log_dir = Path("data") / review_name / "logs""
+    … "It runs at run_pipeline.py:592, before load_spec_for"; "engine/adjudication/
+    categorizer.py:20 DATA_ROOT = Path("data")"; "pdf_quality_check.py:41, categorizer.py:20 |
+    import from database in place of defining; otherwise they keep following the cwd and split
+    from the database"; "021_…:73 | cannot be folded: the runner refuses a file changed after its
+    receipt (F3)"; "017_…:175 | cannot be edited (checksummed)"; "inventory.py:31 | one import; a
+    tool"; "The 18 PROJECT_ROOTs | none needed: already module-file based"; "None patches
+    SPEC_ROOT or DATA_ROOT"; "(iv) exact compare to a relative Path | 7 / 2 |
+    test_review_paths.py:32, 33, 37, 38, 115, test_codebook_loader.py:65, 67"; "test_codebook_
+    loader.py:257 (needs the tree under a patched or passed root, since the chdir no longer reaches
+    it). test_review_paths.py:43 stays green but its chdir stops testing anything. The live-
+    database guard is not coupled (§4); conftest.py's comment goes stale"; "download.py:381 and
+    verify_downloads.py:269 would start writing absolute strings into papers.pdf_local_path where
+    they write relative ones today (F5)"; "pdf_parser.py:1043–1049 reads them: candidate =
+    Path(ft_row["pdf_path"]) / if candidate.exists(): / joined = pdf_dir / candidate"; "The pin is
+    not affecting under every option: what it hashes contains no path (§3, FAKE)"; "No column or
+    body key records a root, a spec path, a database path or a working directory"; "manifest_json
+    has taken additive keys without a migration"; "scripts/ f-strings (4), Path("data…") literals
+    (scripts 7, analysis 20, screening_adjudicator.py:28) | each its own edit | outside; on no Run
+    7 path"; "git_state raises nothing on a non-repository. FAKE: commit '', dirty False".
+  READ (the amendment, quoted by CC from git -C ~/claude-config show acfc0c9): "commits on a branch
+    or in a temporary worktree; code/test/doc/commit in dgx-infra; and git push of those commits,
+    including the /wrap push"; "edits to claude-config or ~/.claude/ settings"; "rm, mv or >
+    touching corpus, scratch, claims, /mnt/nas, released files or ledgers"; "The session-startup
+    fast-forward and hook-written ledger rows are not writes a brief directs".
+  READ (the PI's, this session): option (a) — "git commits and pushes are not part of the
+    print-and-review workflow as wrap allows git pushes and I prefer that".
+  READ (CC's): findings F1–F10 of the read-out; findings 1–12 of the report; Q1–Q4.
+  INFERRED: none.
+
+R780(a) — 12ad-U23A is accepted as reported: item 0 c83b0d5 (Block 177 by transcribe_ruling.py;
+  r779.txt in 12ad_open/; the three rules files untouched, asserted by content), ledger 5714c94; the
+  amendment quoted whole; the read-out 94f7853 with its census, probe and pin recompute, ledger
+  faf4604. The decision log in the file ends at R779. The 2026-11-02 jobs are read by the first
+  brief after 10:35 UTC on 11-02 (R774(b), R749(c)).
+R780(b) — The ledger-commit question, on the PI's reading of the amendment. Rule from here: in this
+  lane, a git commit and git push that a brief directs — the engine repository's commits on main,
+  the evidence commits, and the commit of the hook-written ledger row in claude-config — is not a
+  print-and-review step; a brief states "auto mode ON, commit steps included" as before. The
+  amendment's "edits to claude-config" line is read as the PI reads it: it does not reach the
+  commit of a row the hook wrote, and its sanctioned pushes include this lane's. Its "commits on a
+  branch or in a temporary worktree" wording is clarified in the claude-config lane by the PI,
+  where an edit to CLAUDE.md belongs; no brief of this lane edits it. R779(d)'s interim reading is
+  confirmed; report finding 1's three lines are answered. This clause is a standing rule: "A
+  R780(b)" joins the list at the next item 0 (R754(c)(iii)).
+R780(c) — U23's design is option A, in this shape. (i) One REPO_ROOT, defined once in a new leaf
+  module under engine/core/ that imports nothing from engine, computed from its own file's
+  location in run_manifest.py:68's form; the module's name is CC's, in engine/core/'s naming.
+  (ii) database.py:20 becomes DATA_ROOT = REPO_ROOT / "data" and review_paths.py:28 becomes
+  SPEC_ROOT = REPO_ROOT / "review_specs", each importing REPO_ROOT from the leaf; the from-import
+  at review_paths.py:25 stays, binding the same object as today. (iii) run_manifest.py:68,
+  parsed_text.py:51 and engine/tools/inventory.py:31 import REPO_ROOT from the leaf in place of
+  defining it, so "the repository root that git_state uses" is the one object by construction.
+  (iv) background.py:48 uses DATA_ROOT in place of Path("data"): the --background log directory
+  is on the Run 7 launch path and runs before load_spec_for. (v) pdf_quality_check.py:41 and
+  categorizer.py:20 import DATA_ROOT from database in place of defining it (N30's split, twice
+  more; off Run 7's path, folded because the edit is the import line only). (vi) Not folded:
+  021_parsed_text_sha256.py:73 and 017_seed_event_store.py:175, inside checksummed migration
+  text (F3) — a dated note on E-ROOT records that "one root" excludes received migrations; the 18
+  PROJECT_ROOTs, already module-file based. The scripts/ and analysis/ literals are INT-ad12-1's
+  (R780(g)). No refusal is added (B's check is not built: with both roots anchored, a launch from
+  elsewhere reads the repository's own spec and database, which is what the engine should do; the
+  --spec and data_root= overrides keep their meaning as explicit paths).
+R780(d) — Not taken: B (refuse on a differing root) — it leaves the constants relative, needs a
+  meaning for "differ" under an explicit --spec or data_root=, and sits behind maybe_background's
+  mkdir unless background.py moves anyway; A removes the condition B would detect. C (A plus a
+  root recorded in the manifest body) — under A the three roots agree by construction, so the key
+  would record one path at the cost of the _BODY_KEYS pins (test_ft_adjudication_import.py:335,
+  340); whether a run should record its resolved roots is 023's Phase A's question, a dated note
+  on E-ROOT with F6's words (a body key needs no migration; a column does).
+R780(e) — Acceptance: test_spec_and_data_roots_do_not_follow_the_working_directory in
+  tests/test_review_paths.py, in that file's form: after monkeypatch.chdir(tmp_path),
+  spec_path_for(id) and data_root_for(id) both resolve under the REPO_ROOT that git_state uses
+  (the leaf's object, read through run_manifest); red on the parent as the probe's "False" rows
+  show, green in the gate. The seven relative pins (test_review_paths.py:32, 33, 37, 38, 115;
+  test_codebook_loader.py:65, 67) are rewritten under B5 in the same commit with their subjects
+  kept, each comparing to the anchored form; test_codebook_loader.py:257 is rewritten to reach its
+  tree under a passed or patched root, its subject kept; test_review_paths.py:43's test is read at
+  Phase B and its subject stated before the build decides its form. Any other red is classified (c)
+  or (r) under R722(a)–R725(b), class (iv) in R772(d)'s extended form.
+R780(f) — Pin not affecting (FAKE, pin_absolute_paths.txt); both pins and the audit prompt_hash are
+  asserted byte-identical in the commit's gate. No migration. The Touched list is the engine files
+  (c) names — the leaf, database.py, review_paths.py, run_manifest.py, parsed_text.py,
+  engine/tools/inventory.py, engine/utils/background.py, engine/acquisition/pdf_quality_check.py,
+  engine/adjudication/categorizer.py — the test files the census and Phase B find coupled, and
+  docs/inventory/ (R725(c)); CLAUDE.md, docs/architecture and tests/conftest.py's design comment
+  (:224) are quoted at Phase B and edited only by text the PI approves at the stop (R768(e)'s
+  form).
+R780(g) — Rows opened at the next item 0, in section L's six-cell form with this ruling as origin
+  (R510: in 2): INT-ad12-1 — Class 3, P7 — relative data/ and review_specs/ literals in scripts/
+  (4 f-strings, 7 literals) and analysis/ (20) follow the working directory and are not anchored by
+  U23; on no Run 7 path. INT-ad12-2 — Class 3, P6 — papers.pdf_local_path and
+  full_text_assets.pdf_path have no storage rule (parsed text has R100's): download.py:381 and
+  verify_downloads.py:269 write whatever form DATA_ROOT produces, pdf_parser.py:1043–1049 tries a
+  stored path against the cwd before pdf_dir, and under A new rows store absolute strings beside
+  the relative ones live may hold (F5; the live columns' form is Q2, read mode=ro at that row's
+  Phase A, not before). Both rows' texts are composed by CC from these words and the read-out's
+  quoted lines, in the row form of INT-ab12-1.
+R780(h) — Readings, no row: F2 (the spec hash is of the validated model; 12l_P1A.md not edited);
+  F7 (git_state on a non-repository returns commit '' and is stopped only by 020's CHECK at the
+  insert; a dated note on E-ROOT, reachable only from a copy without .git); F8 (the write-before-
+  refuse case of an absolute --spec from elsewhere: under A the database opened is the
+  repository's, so no tree is written elsewhere; run_pipeline.py:86–88's principle stands); F9
+  (the census's classes are the file's labels (i)–(vi); "five classes" in R767(e) and R779(f) reads
+  as those labels from here); F10; Q1 (tmux's default directory no longer decides the roots under
+  A; the relative script path in sys.argv remains a launch-form question, a note on E-ROOT); Q3;
+  Q4 (no launch from another tree is made before the freeze); report finding 2 (I3's "two" was the
+  architect's count, one phrase; CC applied R667(e) correctly); finding 3 (the faulty comparison
+  gated nothing); finding 4 (F4: R3 short by two definitions and three importers; the record
+  governed); finding 5; finding 11 (the named-key-set form is the census's from here); finding
+  12. The series and band stand at R779(b)'s.
+R780(i) — U23's Phase B opens under the 12ad-U23B brief below, in 12ac_U22B.md's form: every seam
+  (c)(i)–(vi) quoted at HEAD with the contract per site; the leaf's import closure shown by import
+  (no cycle, no server); the pins and the two chdir tests confirmed at HEAD with each rewrite
+  stated; the test plan in words; the docs and comment lines made false, quoted, with proposed
+  sentences; the pin recompute; findings; STOP before any edit. No engine or test edit in that
+  brief. The build follows as a RESUME under the ruling on its report.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-02 | R780(a) — 12ad-U23A is accepted as reported: item 0 c83b0d5 (Block 177 by transcribe_ruling.py; r779.txt in 12ad_open/; the three rules files untouched, asserted by content), ledger 5714c94; the amendment quoted whole; the read-out 94f7853 with its census, probe and pin recompute, ledger faf4604. The decision log in the file ends at R779. The 2026-11-02 jobs are read by the first brief after 10:35 UTC on 11-02 (R774(b), R749(c)). R780(b) — The ledger-commit question, on the PI's reading of the amendment. Rule from here: in this lane, a git commit and git push that a brief directs — the engine repository's commits on main, the evidence commits, and the commit of the hook-written ledger row in claude-config — is not a print-and-review step; a brief states "auto mode ON, commit steps included" as before. The amendment's "edits to claude-config" line is read as the PI reads it: it does not reach the commit of a row the hook wrote, and its sanctioned pushes include this lane's. Its "commits on a branch or in a temporary worktree" wording is clarified in the claude-config lane by the PI, where an edit to CLAUDE.md belongs; no brief of this lane edits it. R779(d)'s interim reading is confirmed; report finding 1's three lines are answered. This clause is a standing rule: "A R780(b)" joins the list at the next item 0 (R754(c)(iii)). R780(c) — U23's design is option A, in this shape. (i) One REPO_ROOT, defined once in a new leaf module under engine/core/ that imports nothing from engine, computed from its own file's location in run_manifest.py:68's form; the module's name is CC's, in engine/core/'s naming. (ii) database.py:20 becomes DATA_ROOT = REPO_ROOT / "data" and review_paths.py:28 becomes SPEC_ROOT = REPO_ROOT / "review_specs", each importing REPO_ROOT from the leaf; the from-import at review_paths.py:25 stays, binding the same object as today. (iii) run_manifest.py:68, parsed_text.py:51 and engine/tools/inventory.py:31 import REPO_ROOT from the leaf in place of defining it, so "the repository root that git_state uses" is the one object by construction. (iv) background.py:48 uses DATA_ROOT in place of Path("data"): the --background log directory is on the Run 7 launch path and runs before load_spec_for. (v) pdf_quality_check.py:41 and categorizer.py:20 import DATA_ROOT from database in place of defining it (N30's split, twice more; off Run 7's path, folded because the edit is the import line only). (vi) Not folded: 021_parsed_text_sha256.py:73 and 017_seed_event_store.py:175, inside checksummed migration text (F3) — a dated note on E-ROOT records that "one root" excludes received migrations; the 18 PROJECT_ROOTs, already module-file based. The scripts/ and analysis/ literals are INT-ad12-1's (R780(g)). No refusal is added (B's check is not built: with both roots anchored, a launch from elsewhere reads the repository's own spec and database, which is what the engine should do; the --spec and data_root= overrides keep their meaning as explicit paths). R780(d) — Not taken: B (refuse on a differing root) — it leaves the constants relative, needs a meaning for "differ" under an explicit --spec or data_root=, and sits behind maybe_background's mkdir unless background.py moves anyway; A removes the condition B would detect. C (A plus a root recorded in the manifest body) — under A the three roots agree by construction, so the key would record one path at the cost of the _BODY_KEYS pins (test_ft_adjudication_import.py:335, 340); whether a run should record its resolved roots is 023's Phase A's question, a dated note on E-ROOT with F6's words (a body key needs no migration; a column does). R780(e) — Acceptance: test_spec_and_data_roots_do_not_follow_the_working_directory in tests/test_review_paths.py, in that file's form: after monkeypatch.chdir(tmp_path), spec_path_for(id) and data_root_for(id) both resolve under the REPO_ROOT that git_state uses (the leaf's object, read through run_manifest); red on the parent as the probe's "False" rows show, green in the gate. The seven relative pins (test_review_paths.py:32, 33, 37, 38, 115; test_codebook_loader.py:65, 67) are rewritten under B5 in the same commit with their subjects kept, each comparing to the anchored form; test_codebook_loader.py:257 is rewritten to reach its tree under a passed or patched root, its subject kept; test_review_paths.py:43's test is read at Phase B and its subject stated before the build decides its form. Any other red is classified (c) or (r) under R722(a)–R725(b), class (iv) in R772(d)'s extended form. R780(f) — Pin not affecting (FAKE, pin_absolute_paths.txt); both pins and the audit prompt_hash are asserted byte-identical in the commit's gate. No migration. The Touched list is the engine files (c) names — the leaf, database.py, review_paths.py, run_manifest.py, parsed_text.py, engine/tools/inventory.py, engine/utils/background.py, engine/acquisition/pdf_quality_check.py, engine/adjudication/categorizer.py — the test files the census and Phase B find coupled, and docs/inventory/ (R725(c)); CLAUDE.md, docs/architecture and tests/conftest.py's design comment (:224) are quoted at Phase B and edited only by text the PI approves at the stop (R768(e)'s form). R780(g) — Rows opened at the next item 0, in section L's six-cell form with this ruling as origin (R510: in 2): INT-ad12-1 — Class 3, P7 — relative data/ and review_specs/ literals in scripts/ (4 f-strings, 7 literals) and analysis/ (20) follow the working directory and are not anchored by U23; on no Run 7 path. INT-ad12-2 — Class 3, P6 — papers.pdf_local_path and full_text_assets.pdf_path have no storage rule (parsed text has R100's): download.py:381 and verify_downloads.py:269 write whatever form DATA_ROOT produces, pdf_parser.py:1043–1049 tries a stored path against the cwd before pdf_dir, and under A new rows store absolute strings beside the relative ones live may hold (F5; the live columns' form is Q2, read mode=ro at that row's Phase A, not before). Both rows' texts are composed by CC from these words and the read-out's quoted lines, in the row form of INT-ab12-1. R780(h) — Readings, no row: F2 (the spec hash is of the validated model; 12l_P1A.md not edited); F7 (git_state on a non-repository returns commit '' and is stopped only by 020's CHECK at the insert; a dated note on E-ROOT, reachable only from a copy without .git); F8 (the write-before- refuse case of an absolute --spec from elsewhere: under A the database opened is the repository's, so no tree is written elsewhere; run_pipeline.py:86–88's principle stands); F9 (the census's classes are the file's labels (i)–(vi); "five classes" in R767(e) and R779(f) reads as those labels from here); F10; Q1 (tmux's default directory no longer decides the roots under A; the relative script path in sys.argv remains a launch-form question, a note on E-ROOT); Q3; Q4 (no launch from another tree is made before the freeze); report finding 2 (I3's "two" was the architect's count, one phrase; CC applied R667(e) correctly); finding 3 (the faulty comparison gated nothing); finding 4 (F4: R3 short by two definitions and three importers; the record governed); finding 5; finding 11 (the named-key-set form is the census's from here); finding 12. The series and band stand at R779(b)'s. R780(i) — U23's Phase B opens under the 12ad-U23B brief below, in 12ac_U22B.md's form: every seam (c)(i)–(vi) quoted at HEAD with the contract per site; the leaf's import closure shown by import (no cycle, no server); the pins and the two chdir tests confirmed at HEAD with each rewrite stated; the test plan in words; the docs and comment lines made false, quoted, with proposed sentences; the pin recompute; findings; STOP before any edit. No engine or test edit in that brief. The build follows as a RESUME under the ruling on its report. | PI, 2026-11-02, during session 12ad, on architect recommendation, on the 12ad-U23A final report (item 0 c83b0d5; read-out 94f7853) |
+
+The decision log in this file ends at R780.

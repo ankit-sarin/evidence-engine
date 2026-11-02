@@ -3,9 +3,9 @@
 **Status: adopted under R754, selected by the committed id list.** A quoted clause is the rule's source; a figure, date, session condition or named commit inside it is that day's, and the current value is the "Expected values at session-N open" block's. A rule this file lacks is a rule a brief must restate. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
 
 - Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `fc95e62a246a4571295a99180f61b93dd10fc11a528f98d4320dcb8bb82bd7f2`
-- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `eb2a0108e5f6b3bb2ae92d5b2a0c9c7fcf089fe22705eae1d4d5fd00d5f91f8e`
-- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `cf77cadf51a67afd266e9a509a9137ea37ae83e8398699b458f8724a63409ec7`
-- Selection: the id list: Tier A 84, Tier B 8, 92 of 1467 clauses in the log.
+- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `11c17e6b7e3dab4c8203db8f6176c66e57b2dcd559da7ef9d0f779f2130315fa`
+- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `9426af539f7ed5948b554a1d4b4ec228aba4b2fbc1464effc61c1eecf460799e`
+- Selection: the id list: Tier A 85, Tier B 8, 93 of 1489 clauses in the log.
 - "Named by" lists later clauses that carry the exact id; a range or a bare ruling number does not count.
 
 # Tier A — process rules
@@ -30,7 +30,7 @@ Gloss (CC's, not ruled): The window with no live write to review.db is 07:00–1
 R102 — The in-place authority-cell edit on R90–R94 is accepted once, as the record of their confirmation; decision-log rows otherwise remain append-only.
 ```
 
-Named by: R372, R465, R575, R640(c), R653(a), R656(a), R656(b), R659(f), R678(b), R679(d), R720(b), R729(c), R730(b), R747(c), R757(d), R764(a), R777(a).
+Named by: R372, R465, R575, R640(c), R653(a), R656(a), R656(b), R659(f), R678(b), R679(d), R720(b), R729(c), R730(b), R747(c), R757(d), R764(a), R777(a), R778(d), R779(d).
 
 Gloss (CC's, not ruled): Decision-log rows are append-only; the one in-place edit on R90–R94 is not a precedent.
 
@@ -69,7 +69,7 @@ R647(c) — From the 12p closeout, every "Expected values at session-N open" blo
   closeout does with the root is ruled at that closeout, as R645(d) was.
 ```
 
-Named by: R648(b), R650(h), R652(c), R653(d), R662(d), R751(e), R753(e).
+Named by: R648(b), R650(h), R652(c), R653(d), R662(d), R751(e), R753(e), R779(c).
 
 Gloss (CC's, not ruled): Expected-values blocks state the temp root at the open as a reading, size not matched, never as "empty".
 
@@ -263,7 +263,7 @@ R663(b) — S2: claude-config 9aa59b3 is accepted as found. The ledger commit is
   non-row dirt, divergence). Item 0(c)'s note is written, naming 2466df3 and 9aa59b3.
 ```
 
-Named by: R672(d), R678(d), R683(f), R691(d), R692(f), R693(b), R701(f), R702(b), R709(c), R709(f), R710(c), R717(a), R719(e), R726(b), R729(e), R730(d), R737(e), R738(e), R751(d), R758(d).
+Named by: R672(d), R678(d), R683(f), R691(d), R692(f), R693(b), R701(f), R702(b), R709(c), R709(f), R710(c), R717(a), R719(e), R726(b), R729(e), R730(d), R737(e), R738(e), R751(d), R758(d), R779(c).
 
 Gloss (CC's, not ruled): Another lane's committed claude-config change that leaves this lane's rows and primer lines 41–45 intact is accepted as found, noted by hash and lane.
 
@@ -320,7 +320,7 @@ R667(e) — I5: the premise ("CLAUDE.md carries … watchdog 900 s") was an arch
   CLAUDE.md's "300s" stays on the HK-ARCH line (F5, R650(g)).
 ```
 
-Named by: none.
+Named by: R780(h).
 
 Gloss (CC's, not ruled): An assumption to verify names only the fact that must hold; a value to check is a separate reading.
 
@@ -510,7 +510,7 @@ R683(c) — The band (R657(d), R677(f), R682(d)): cut from the last four standar
   906.50, 858.50, 895.02, 872.27, 887.58 s.
 ```
 
-Named by: R692(c), R693(f), R700(e), R701(b), R702(c), R707(g), R709(b), R719(b), R729(b), R737(b), R748(b), R764(d), R765(b), R774(c).
+Named by: R692(c), R693(f), R700(e), R701(b), R702(c), R707(g), R709(b), R719(b), R729(b), R737(b), R748(b), R764(d), R765(b), R774(c), R778(b).
 
 Gloss (CC's, not ruled): The band is cut from the last four standard gates on the host state, confounded readings included and recorded, rounded inward; a gate outside it is reported, not adapted to; its figures are that day's.
 
@@ -572,7 +572,7 @@ R696(b) — The gate is accepted as run. The empty-window clause of 2g was writt
   reading the PI may name by a later note. The series gains 883.80 s. No re-run.
 ```
 
-Named by: R697(g), R698(f), R699(f), R701(f), R702(d), R709(f), R711(c), R719(e), R720(f), R729(e), R731(f), R737(e), R753(d), R770(e).
+Named by: R697(g), R698(f), R699(f), R701(f), R702(d), R709(f), R711(c), R719(e), R720(f), R729(e), R731(f), R737(e), R753(d), R770(e), R779(c).
 
 Gloss (CC's, not ruled): A read-only Ollama request in a gate window with nothing loaded is a reading; a load or generate is the stop.
 
@@ -813,7 +813,7 @@ R722(a) — The stop is correct and the cause is the architect's: the brief's To
   puts every file found in the Touched list before any edit.
 ```
 
-Named by: R724(a), R725(b), R725(e), R731(f), R738(f), R761(d), R767(e), R768(d), R772(b).
+Named by: R724(a), R725(b), R725(e), R731(f), R738(f), R761(d), R767(e), R768(d), R772(b), R779(f), R780(e).
 
 Gloss (CC's, not ruled): A brief removing or renaming a call site first greps tests/ for patches of that name and lists every file found in Touched.
 
@@ -870,7 +870,7 @@ R725(b) — The rule, reversing the form the 12y-U18B brief and R722(a)–R724(a
   class (c), not stops. Engine files stay predicted and I5's STOP stays for them.
 ```
 
-Named by: R726(d), R728(f), R731(f), R734(g), R738(f), R747(c), R761(d), R762(e), R767(e), R768(d), R772(b).
+Named by: R726(d), R728(f), R731(f), R734(g), R738(f), R747(c), R761(d), R762(e), R767(e), R768(d), R772(b), R779(f), R780(e).
 
 Gloss (CC's, not ruled): An engine commit's test-side Touched list is not predicted: tests pinning what changes are found by census or the gate, and a red is classified as coupled or as a regression.
 
@@ -884,7 +884,7 @@ R725(c) — docs/inventory/ regeneration in an engine commit is standing practic
   in its Touched list by default.
 ```
 
-Named by: R761(d), R768(e), R770(d).
+Named by: R761(d), R768(e), R770(d), R780(f).
 
 Gloss (CC's, not ruled): Every engine-commit brief lists docs/inventory/ in Touched by default.
 
@@ -1202,7 +1202,7 @@ R747(b) — transcribe_ruling.py is accepted for every block from here. session_
   is reported as the wrapper's (finding 8).
 ```
 
-Named by: R748(e), R753(e), R765(h).
+Named by: R748(e), R753(e), R765(h), R778(f).
 
 Gloss (CC's, not ruled): The tools in force and their limits: transcribe_ruling.py for every block, session_open_check.py for what it checks, the gate wrapper pending its first full gate.
 
@@ -1256,7 +1256,7 @@ R751(c) — Finding 8: the session-start instruction "Read docs/plan/ENGINE_REFA
   handoff for PI approval, in the commit that adopts STANDING_RULES.md (R747(c)); not before.
 ```
 
-Named by: R754(c), R765(e), R766(d).
+Named by: R754(c), R765(e), R766(d), R779(c).
 
 Gloss (CC's, not ruled): The plan's session-start read is scoped to the Status table, the latest closure and expected values, the last block and whatever a brief names; a brief relying on an earlier ruling quotes it.
 
@@ -1372,9 +1372,30 @@ R772(c) — check_cfix_v2.py is accepted as proposed (two lines: the numstat exp
   check-and-commit chain.
 ```
 
-Named by: R773(e), R773(f), R774(a), R776(b), R777(b).
+Named by: R773(e), R773(f), R774(a), R776(b), R777(b), R778(a), R778(c).
 
 Gloss (CC's, not ruled): A pre-commit check asserts what a diff contains and reads its numstat into the evidence; it matches a count only when a record supplies it (a tool's own report, a prior run's figure), never a prediction of the diff's shape made before the diff exists.
+
+## R780(b)
+
+2026-11-02, session 12ad.
+
+```text
+R780(b) — The ledger-commit question, on the PI's reading of the amendment. Rule from here: in this
+  lane, a git commit and git push that a brief directs — the engine repository's commits on main,
+  the evidence commits, and the commit of the hook-written ledger row in claude-config — is not a
+  print-and-review step; a brief states "auto mode ON, commit steps included" as before. The
+  amendment's "edits to claude-config" line is read as the PI reads it: it does not reach the
+  commit of a row the hook wrote, and its sanctioned pushes include this lane's. Its "commits on a
+  branch or in a temporary worktree" wording is clarified in the claude-config lane by the PI,
+  where an edit to CLAUDE.md belongs; no brief of this lane edits it. R779(d)'s interim reading is
+  confirmed; report finding 1's three lines are answered. This clause is a standing rule: "A
+  R780(b)" joins the list at the next item 0 (R754(c)(iii)).
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): In this lane a git commit and push a brief directs, the hook-written ledger row's included, is not a print-and-review step; a brief states auto mode on, commit steps included.
 
 # Tier B — engine governance, pending the adoption ruling
 
@@ -1422,7 +1443,7 @@ Gloss (CC's, not ruled): No cloud extraction until sessions 8 and 9 land, and th
 R510 — **Y4.** "Each close records pre-tag rows in / out and counts by class."
 ```
 
-Named by: R540, R607, R632(a), R634(c), R635(a), R643(b), R648(e), R651(a), R659(d), R683(d), R692(d), R695(c), R698(g), R700(f), R705(e), R707(e), R720(e), R721(f), R728(e), R731(e), R736(e), R738(e), R747(b), R747(f), R751(a), R758(a), R763(f), R764(d), R767(a), R774(c).
+Named by: R540, R607, R632(a), R634(c), R635(a), R643(b), R648(e), R651(a), R659(d), R683(d), R692(d), R695(c), R698(g), R700(f), R705(e), R707(e), R720(e), R721(f), R728(e), R731(e), R736(e), R738(e), R747(b), R747(f), R751(a), R758(a), R763(f), R764(d), R767(a), R774(c), R779(a), R780(g).
 
 Gloss (CC's, not ruled): Each close records pre-tag rows in and out and the counts by class.
 

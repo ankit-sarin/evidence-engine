@@ -38,5 +38,6 @@
  "R756(b)": "A brief's wrapped quote is compared whitespace-normalised, the words verbatim; the clause's other items are dated.",
  "R763(c)": "A check that crashes is a check that failed: the crash is reported before the check is corrected and re-run, under a ruling; the clause's other items are dated.",
  "R766(b)": "A regeneration of STANDING_RULES.md after new blocks moves its derived \"Named by\" lines; the pre-commit check classifies every changed line and allows only the three header lines, a new section for an id the list gained, and a \"Named by\" line that only appends ids.",
- "R772(c)": "A pre-commit check asserts what a diff contains and reads its numstat into the evidence; it matches a count only when a record supplies it (a tool's own report, a prior run's figure), never a prediction of the diff's shape made before the diff exists."
+ "R772(c)": "A pre-commit check asserts what a diff contains and reads its numstat into the evidence; it matches a count only when a record supplies it (a tool's own report, a prior run's figure), never a prediction of the diff's shape made before the diff exists.",
+ "R780(b)": "In this lane a git commit and push a brief directs, the hook-written ledger row's included, is not a print-and-review step; a brief states auto mode on, commit steps included."
 }

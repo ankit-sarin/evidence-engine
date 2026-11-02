@@ -1,0 +1,36 @@
+
+== the five modules of I4, in turn, one interpreter: exit 0
+-- import engine.core.database: 5 new, 5 engine.* in sys.modules
+   engine engine.core engine.search engine.search.models engine.core.database
+-- import engine.core.review_paths: 2 new, 7 engine.* in sys.modules
+   engine.core.review_spec engine.core.review_paths
+-- import engine.core.run_manifest: 4 new, 11 engine.* in sys.modules
+   engine.core.paper_state engine.core.effective engine.core.effective_config engine.core.run_manifest
+-- import engine.core.parsed_text: 1 new, 12 engine.* in sys.modules
+   engine.core.parsed_text
+-- import engine.tools.inventory: 2 new, 14 engine.* in sys.modules
+   engine.tools engine.tools.inventory
+
+== engine.core.database alone: exit 0
+-- import engine.core.database: 5 new, 5 engine.* in sys.modules
+   engine engine.core engine.search engine.search.models engine.core.database
+
+== engine.core alone (what a leaf under it pulls in besides itself): exit 0
+-- import engine.core: 2 new, 2 engine.* in sys.modules
+   engine engine.core
+
+== engine.utils.background alone: exit 0
+-- import engine.utils.background: 3 new, 3 engine.* in sys.modules
+   engine engine.utils engine.utils.background
+
+== engine.adjudication.categorizer alone: exit 0
+-- import engine.adjudication.categorizer: 13 new, 13 engine.* in sys.modules
+   engine engine.adjudication.categorizer engine.adjudication.schema engine.adjudication.workflow engine.core engine.core.review_spec engine.core.eligibility_render engine.search engine.search.models engine.core.database engine.adjudication.ft_screening_adjudicator engine.adjudication.screening_adjudicator engine.adjudication
+
+== engine.tools.inventory alone: exit 0
+-- import engine.tools.inventory: 3 new, 3 engine.* in sys.modules
+   engine engine.tools engine.tools.inventory
+
+== engine.core.run_manifest alone: exit 0
+-- import engine.core.run_manifest: 7 new, 7 engine.* in sys.modules
+   engine engine.core engine.core.paper_state engine.core.effective engine.core.review_spec engine.core.effective_config engine.core.run_manifest

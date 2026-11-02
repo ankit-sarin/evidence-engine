@@ -1,0 +1,967 @@
+== the static closure
+modules in the run7 closure: 90
+analysis/provenance/segment.py engine/acquisition/pdf_quality_check.py engine/adjudication/schema.py engine/adjudication/workflow.py engine/agents/__init__.py engine/agents/audit_events.py engine/agents/auditor.py engine/agents/extractor.py engine/agents/ft_screener.py engine/agents/models.py engine/agents/screener.py engine/cloud/base.py engine/cloud/schema.py engine/core/__init__.py engine/core/audit_telemetry.py engine/core/citation_guard.py engine/core/codebook.py engine/core/completeness.py engine/core/constants.py engine/core/database.py engine/core/effective.py engine/core/effective_config.py engine/core/eligibility_render.py engine/core/events.py engine/core/extraction_events.py engine/core/extraction_telemetry.py engine/core/locator.py engine/core/paper_state.py engine/core/parsed_text.py engine/core/reuse_key.py engine/core/review_paths.py engine/core/review_spec.py engine/core/run_manifest.py engine/core/run_telemetry.py engine/core/selection.py engine/elicitation/__init__.py engine/elicitation/classes.py engine/elicitation/contracts.py engine/elicitation/materialize.py engine/elicitation/pipeline.py engine/elicitation/prompts.py engine/elicitation/terminal.py engine/elicitation/units.py engine/exporters/__init__.py engine/exporters/docx_export.py engine/exporters/evidence_table.py engine/exporters/methods_section.py engine/exporters/prisma.py engine/migrations/002_screening_rename.py engine/migrations/003_backfill_expanded_screening.py engine/migrations/004_pdf_quality_check.py engine/migrations/005_model_digest.py engine/migrations/006_not_null_confidence_tier.py engine/migrations/007_add_judge_tables.py engine/migrations/008_add_fabrication_verifications.py engine/migrations/009_add_backfill_audit_log.py engine/migrations/010_add_provenance_classifications.py engine/migrations/011_add_absence_claim_class.py engine/migrations/012_codebook_provenance.py engine/migrations/013_drop_schema_hash_not_null.py engine/migrations/014_cloud_tables.py engine/migrations/015_drop_prerename_adjudication_indices.py engine/migrations/016_event_store.py engine/migrations/017_seed_event_store.py engine/migrations/018_cloud_shape_and_audit_adjudication.py engine/migrations/019_paper_state_axes.py engine/migrations/020_run_manifest.py engine/migrations/021_parsed_text_sha256.py engine/migrations/022_run_kinds_and_audit_tables.py engine/migrations/__init__.py engine/migrations/__main__.py engine/migrations/runner.py engine/parsers/__init__.py engine/parsers/font_audit.py engine/parsers/markers.py engine/parsers/models.py engine/parsers/parse_quality.py engine/parsers/pdf_parser.py engine/search/dedup.py engine/search/models.py engine/search/openalex.py engine/search/pubmed.py engine/utils/__init__.py engine/utils/background.py engine/utils/ollama_client.py engine/utils/ollama_lock.py engine/utils/ollama_preflight.py engine/utils/progress.py engine/validators/distribution_monitor.py scripts/run_pipeline.py
+
+== sites (engine, scripts, analysis)
+
+-- call ReviewDatabase, data_root passed: 10
+  [acquisition] engine/acquisition/verify_downloads.py:171 <module>.verify_downloads | db = ReviewDatabase(review_name, data_root=effective_root)
+  [analysis] analysis/paper1/judge_cli.py:195 <module>._resolve_db | return ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/judge_codebook_smoke.py:1197 <module>._run_locked | db = (ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pass1_inspection.py:554 <module>._resolve_db | return ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pass2_branchB_report.py:541 <module>.main | db = (ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pass2_full.py:663 <module>._resolve_db | return ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pass2_retry_single.py:148 <module>._main_locked | db = ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pass2_smoke.py:798 <module>._resolve_db | return ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pi_audit_sampler.py:1340 <module>.run | db = (ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pi_audit_sampler_v2.py:1205 <module>.run | db = (ReviewDatabase(args.review, data_root=args.data_root)
+
+-- call ReviewDatabase, no data_root (DATA_ROOT, cwd): 23
+  [acquisition] engine/acquisition/check_oa.py:139 <module>.check_oa_status | with ReviewDatabase(review_name) as db2:
+  [acquisition] engine/acquisition/check_oa.py:160 <module>.check_oa_status | with ReviewDatabase(review_name) as db3:
+  [acquisition] engine/acquisition/check_oa.py:62 <module>.check_oa_status | db = ReviewDatabase(review_name)  # closed at end of function
+  [acquisition] engine/acquisition/download.py:343 <module>.download_papers | db = ReviewDatabase(review_name)
+  [acquisition] engine/acquisition/manual_list.py:128 <module>.generate_manual_list | db = ReviewDatabase(review_name)
+  [adjudication] engine/adjudication/advance_stage.py:73 <module>.main | db = ReviewDatabase(args.review)
+  [analysis] analysis/paper1/adjudication.py:596 <module>.main | db = ReviewDatabase(args.review)
+  [analysis] analysis/paper1/consensus.py:427 <module>.main | db = ReviewDatabase(args.review)
+  [analysis] analysis/paper1/human_import.py:302 <module>.main | db = ReviewDatabase(args.review)
+  [analysis] analysis/paper1/judge_cli.py:196 <module>._resolve_db | return ReviewDatabase(args.review)
+  [analysis] analysis/paper1/judge_codebook_smoke.py:1198 <module>._run_locked | if args.data_root else ReviewDatabase(args.review))
+  [analysis] analysis/paper1/pass1_inspection.py:555 <module>._resolve_db | return ReviewDatabase(args.review)
+  [analysis] analysis/paper1/pass2_branchB_report.py:542 <module>.main | if args.data_root else ReviewDatabase(args.review))
+  [analysis] analysis/paper1/pass2_full.py:664 <module>._resolve_db | return ReviewDatabase(args.review)
+  [analysis] analysis/paper1/pass2_retry_single.py:150 <module>._main_locked | db = ReviewDatabase(args.review)
+  [analysis] analysis/paper1/pass2_smoke.py:799 <module>._resolve_db | return ReviewDatabase(args.review)
+  [analysis] analysis/paper1/pi_audit_sampler.py:1341 <module>.run | if args.data_root else ReviewDatabase(args.review))
+  [analysis] analysis/paper1/pi_audit_sampler_v2.py:1206 <module>.run | if args.data_root else ReviewDatabase(args.review))
+  [run7/engine-other] engine/agents/ft_screener.py:677 <module>.main | db = ReviewDatabase(args.review)
+  [run7/engine-other] engine/parsers/pdf_parser.py:1273 <module>.main | db = ReviewDatabase(args.review)
+  [run7/engine-other] engine/validators/distribution_monitor.py:526 <module>.main | db = ReviewDatabase(args.review)
+  [run7/scripts] scripts/run_pipeline.py:93 <module>.run_pipeline | db = ReviewDatabase(review_name)
+  [scripts] scripts/parse_expanded_corpus.py:53 <module>._main_locked | db = ReviewDatabase(review)
+
+-- call canonical_path: 3
+  [run7/engine-other] engine/core/parsed_text.py:203 <module>.record_parsed_text | stored = canonical_path(os.path.abspath(path))
+  [run7/migrations] engine/migrations/021_parsed_text_sha256.py:212 <module>._compute_rows | canon = canonical_path(stored, repo_root)
+  [run7/migrations] engine/migrations/021_parsed_text_sha256.py:269 <module>.run_migration | if canonical_path(p, root) != p]
+
+-- call codebook_path_for: 1
+  [run7/engine-other] engine/core/codebook.py:427 <module>.load_codebook_for | path = Path(override) if override else codebook_path_for(review_id)
+
+-- call data_root_for: 4
+  [engine-other] engine/analysis/concordance.py:380 <module>.main | review_root = data_root_for(args.review)
+  [engine-other] engine/validators/extraction_validator.py:296 <module>.main | db_path = data_root_for(args.review) / "review.db"
+  [run7/engine-other] engine/core/codebook.py:384 <module>.codebook_path_for | return data_root_for(review_id) / CODEBOOK_FILENAME
+  [scripts] scripts/run_cloud_extraction.py:186 <module>.main | db_path = args.db or str(data_root_for(review) / "review.db")
+
+-- call git_state: 1
+  [run7/engine-other] engine/core/run_manifest.py:554 <module>.open_run | g = git or git_state()
+
+-- call load_codebook_beside: 15
+  [adjudication] engine/adjudication/ft_screening_adjudicator.py:527 <module>._apply_ft_decisions | codebook=load_codebook_beside(review_db.db_path),
+  [adjudication] engine/adjudication/import_extraction_entry.py:284 <module>.import_extraction_entry | codebook=load_codebook_beside(review_db.db_path),
+  [adjudication] engine/adjudication/import_screening_entry.py:160 <module>.import_screening_entry | codebook=load_codebook_beside(review_db.db_path),
+  [engine-other] engine/analysis/concordance.py:89 <module>.load_arm | codebook = load_codebook_beside(db_path)
+  [engine-other] engine/validators/extraction_validator.py:297 <module>.main | codebook = load_codebook_beside(db_path)
+  [run7/engine-other] engine/agents/extractor.py:1143 <module>._extract_selected | schema_hash = load_codebook_beside(db.db_path).semantic_hash
+  [run7/engine-other] engine/agents/ft_screener.py:580 <module>.open_screening_manifest | codebook=load_codebook_beside(db.db_path),
+  [run7/engine-other] engine/exporters/docx_export.py:99 <module>.export_evidence_docx | codebook = load_codebook_beside(db.db_path)
+  [run7/engine-other] engine/exporters/evidence_table.py:182 <module>.export_evidence_excel | codebook = load_codebook_beside(db.db_path)
+  [run7/engine-other] engine/exporters/evidence_table.py:66 <module>._build_evidence_rows | codebook = load_codebook_beside(db.db_path)
+  [run7/engine-other] engine/exporters/methods_section.py:90 <module>.generate_methods_section | n_fields = len(load_codebook_beside(db.db_path).fields)
+  [run7/engine-other] engine/validators/distribution_monitor.py:121 <module>._query_values | codebook = load_codebook_beside(_db_path_of(conn))
+  [run7/engine-other] engine/validators/distribution_monitor.py:147 <module>._query_all_fields | codebook = load_codebook_beside(_db_path_of(conn))
+  [run7/engine-other] engine/validators/distribution_monitor.py:208 <module>.check_distribution | codebook = load_codebook_beside(db_path)
+  [run7/scripts] scripts/run_pipeline.py:544 <module>._open_run_manifest | codebook = load_codebook_beside(db.db_path)
+
+-- call load_codebook_for: 10
+  [analysis] analysis/eval/elicit01/prompts.py:54 <module>.stated_fields | else load_codebook_for("surgical_autonomy"))
+  [analysis] analysis/paper1/export_disagreement_pairs.py:159 <module>.build_disagreement_rows | cb = load_codebook_for(spec.review_id)
+  [analysis] analysis/paper1/export_disagreement_pairs.py:288 <module>.write_xlsx | cb = load_codebook_for(spec.review_id)
+  [analysis] analysis/paper1/export_disagreement_pairs.py:422 <module>.write_html | cb = load_codebook_for(spec.review_id)
+  [engine-other] engine/analysis/normalize.py:65 <module>._default_codebook | return load_codebook_for(_FALLBACK_REVIEW_ID)
+  [engine-other] engine/analysis/report.py:27 <module>._get_tier_map | cb = load_codebook_for("surgical_autonomy")
+  [run7/engine-other] engine/agents/extractor.py:147 <module>.build_extraction_prompt | else load_codebook_for(spec.review_id))
+  [run7/engine-other] engine/agents/extractor.py:340 <module>.extract_pass2_structured | else load_codebook_for(spec.review_id).semantic_hash
+  [run7/engine-other] engine/core/completeness.py:125 <module>.expected_field_names | else load_codebook_for(spec.review_id))
+  [run7/engine-other] engine/elicitation/pipeline.py:231 <module>._sentinel_codebook | cb = load_codebook(codebook_path) if codebook_path else load_codebook_for(spec.review_id)
+
+-- call load_spec_for: 17
+  [acquisition] engine/acquisition/check_oa.py:59 <module>.check_oa_status | spec = load_spec_for(review_name, spec_path)
+  [acquisition] engine/acquisition/manual_list.py:125 <module>.generate_manual_list | spec = load_spec_for(review_name, spec_path)
+  [analysis] analysis/eval/run_capture01.py:192 <module>.main | spec = load_spec_for(args.review, args.spec)
+  [analysis] analysis/eval/run_local_ab.py:162 <module>.main | spec = load_spec_for(args.review, args.spec)
+  [analysis] analysis/eval/run_local_abc.py:202 <module>.main | spec = load_spec_for(args.review, args.spec)
+  [analysis] analysis/eval/run_qualgap01.py:286 <module>.main | spec = load_spec_for(args.review, args.spec)
+  [analysis] analysis/eval/smoke_regression01.py:53 <module>.main | spec = load_spec_for(args.review, args.spec)
+  [analysis] analysis/paper1/export_disagreement_pairs.py:694 <module>.main | load_spec_for(args.review, args.spec)
+  [engine-other] engine/analysis/concordance.py:377 <module>.main | load_spec_for(args.review, args.spec)
+  [engine-other] engine/validators/extraction_validator.py:295 <module>.main | spec = load_spec_for(args.review, args.spec)
+  [run7/acquisition] engine/acquisition/pdf_quality_check.py:279 <module>.main | config = load_spec_for(args.review, args.spec).pdf_quality_check
+  [run7/engine-other] engine/agents/ft_screener.py:676 <module>.main | spec = load_spec_for(args.review, args.spec)
+  [run7/scripts] scripts/run_pipeline.py:89 <module>.run_pipeline | spec = load_spec_for(review_name, spec_path)
+  [scripts] scripts/parse_expanded_corpus.py:52 <module>._main_locked | spec = load_spec_for(review)   # before the database: a mismatched review never reaches it
+  [scripts] scripts/reparse_cloud_spans.py:36 <module>.main | spec = load_spec_for(review, args.spec)
+  [scripts] scripts/run_cloud_extraction.py:185 <module>.main | spec = load_spec_for(review, args.spec)
+  [scripts] scripts/screen_expanded.py:499 <module>.main | spec = load_spec_for(review, args.spec)
+
+-- call resolve_stored_path: 3
+  [run7/engine-other] engine/core/parsed_text.py:145 <module>.resolve_parsed_text | return ParsedTextRef(uid, pid, resolve_stored_path(stored), stored, int(version), sha)
+  [run7/engine-other] engine/core/parsed_text.py:160 <module>.resolve_parsed_text_by_uid | return ParsedTextRef(uid, pid, resolve_stored_path(stored), stored, int(version), sha)
+  [run7/engine-other] engine/core/parsed_text.py:211 <module>.record_parsed_text | return ParsedTextRef(uid, paper_id, resolve_stored_path(stored), stored, int(version), sha)
+
+-- call spec_path_for: 7
+  [analysis] analysis/paper1/adjudication.py:130 <module>.export_ambiguous_pairs | spec_path = spec_path_for(review_name)
+  [analysis] analysis/paper1/export_disagreement_pairs.py:695 <module>.main | spec_path = str(args.spec or spec_path_for(args.review))
+  [engine-other] engine/analysis/concordance.py:378 <module>.main | spec_path = str(args.spec or spec_path_for(args.review))
+  [run7/engine-other] engine/core/review_paths.py:81 <module>.load_spec_for | path = Path(override) if override else spec_path_for(review_id)
+  [scripts] scripts/reparse_cloud_spans.py:37 <module>.main | spec_path = str(args.spec or spec_path_for(review))
+  [scripts] scripts/run_cloud_extraction.py:187 <module>.main | spec_path = str(args.spec or spec_path_for(review))
+  [scripts] scripts/screen_expanded.py:500 <module>.main | spec_path = str(args.spec or spec_path_for(review))
+
+-- definition DATA_DIR (module file): 3
+  [run7/migrations] engine/migrations/003_backfill_expanded_screening.py:19 <module> | DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "surgical_autonomy"
+  [run7/migrations] engine/migrations/004_pdf_quality_check.py:27 <module> | DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
+  [run7/migrations] engine/migrations/005_model_digest.py:25 <module> | DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
+
+-- definition DATA_ROOT (cwd): 3
+  [adjudication] engine/adjudication/categorizer.py:20 <module> | DATA_ROOT = Path("data")
+  [run7/acquisition] engine/acquisition/pdf_quality_check.py:41 <module> | DATA_ROOT = Path("data")
+  [run7/engine-other] engine/core/database.py:20 <module> | DATA_ROOT = Path("data")
+
+-- definition MIGRATIONS_DIR (module file): 1
+  [run7/migrations] engine/migrations/runner.py:46 <module> | MIGRATIONS_DIR = Path(__file__).resolve().parent
+
+-- definition PROJECT_ROOT (module file): 18
+  [acquisition] engine/acquisition/check_oa.py:20 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+  [acquisition] engine/acquisition/download.py:27 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+  [acquisition] engine/acquisition/manual_list.py:30 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+  [acquisition] engine/acquisition/pdf_quality_html.py:23 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+  [acquisition] engine/acquisition/pdf_quality_import.py:32 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+  [acquisition] engine/acquisition/verify_downloads.py:21 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+  [adjudication] engine/adjudication/abstract_adjudication_html.py:24 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+  [adjudication] engine/adjudication/advance_stage.py:36 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+  [adjudication] engine/adjudication/ft_adjudication_html.py:21 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+  [run7/acquisition] engine/acquisition/pdf_quality_check.py:30 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+  [run7/scripts] scripts/run_pipeline.py:14 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent
+  [scripts] scripts/backfill_cloud_spans.py:17 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent
+  [scripts] scripts/pdf_acquisition/step1_export_citations.py:13 <module> | PROJECT_ROOT = Path(__file__).resolve().parents[2]
+  [scripts] scripts/pdf_acquisition/step2_unpaywall_check.py:17 <module> | PROJECT_ROOT = Path(__file__).resolve().parents[2]
+  [scripts] scripts/pdf_acquisition/step3_download_oa_pdfs.py:15 <module> | PROJECT_ROOT = Path(__file__).resolve().parents[2]
+  [scripts] scripts/pdf_acquisition/step3b_retry_failed.py:21 <module> | PROJECT_ROOT = Path(__file__).resolve().parents[2]
+  [scripts] scripts/pdf_acquisition/step4_manual_download_list.py:13 <module> | PROJECT_ROOT = Path(__file__).resolve().parents[2]
+  [scripts] scripts/screen_expanded.py:37 <module> | PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+-- definition REPO_ROOT (module file): 4
+  [run7/engine-other] engine/core/parsed_text.py:51 <module> | REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+  [run7/engine-other] engine/core/run_manifest.py:68 <module> | REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+  [run7/migrations] engine/migrations/021_parsed_text_sha256.py:73 <module> | REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+  [tools] engine/tools/inventory.py:31 <module> | REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+
+-- definition SPEC_ROOT (cwd): 1
+  [run7/engine-other] engine/core/review_paths.py:28 <module> | SPEC_ROOT = Path("review_specs")
+
+-- definition _MIGRATIONS_DIR (module file): 1
+  [run7/engine-other] engine/core/events.py:212 <module> | _MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
+
+-- definition other __file__-derived (DEFINITIONS_PATH): 1
+  [analysis] analysis/provenance/census.py:46 <module> | DEFINITIONS_PATH = Path(__file__).parent / "DEFINITIONS.md"
+
+-- f-string beginning data/ or review_specs/: 4
+  [scripts] scripts/backfill_authors.py:98 <module>.main | db_path = f"data/{args.review}/review.db"
+  [scripts] scripts/backfill_cloud_spans.py:42 <module>.main | db_path = args.db or f"data/{args.review}/review.db"
+  [scripts] scripts/reparse_cloud_spans.py:33 <module>.main | db_path = f"data/{review}/review.db"
+  [scripts] scripts/screen_expanded.py:511 <module>.main | STAGING_DIR = Path(f"data/{review}/expanded_search")
+
+-- import of a root name: 10
+  [acquisition] engine/acquisition/download.py:30 <module> | from engine.core.database import DATA_ROOT, ReviewDatabase
+  [acquisition] engine/acquisition/manual_list.py:33 <module> | from engine.core.database import DATA_ROOT, ReviewDatabase
+  [acquisition] engine/acquisition/pdf_quality_html.py:26 <module> | from engine.core.database import DATA_ROOT
+  [acquisition] engine/acquisition/pdf_quality_import.py:35 <module> | from engine.core.database import DATA_ROOT
+  [acquisition] engine/acquisition/verify_downloads.py:24 <module> | from engine.core.database import DATA_ROOT, ReviewDatabase
+  [adjudication] engine/adjudication/abstract_adjudication_html.py:28 <module> | from engine.core.database import DATA_ROOT
+  [adjudication] engine/adjudication/ft_adjudication_html.py:24 <module> | from engine.core.database import DATA_ROOT
+  [adjudication] engine/adjudication/ft_screening_adjudicator.py:397 <module>._stored_path | from engine.core.run_manifest import REPO_ROOT
+  [analysis] analysis/paper1/export_disagreement_pairs.py:25 <module> | from engine.core.database import DATA_ROOT
+  [run7/engine-other] engine/core/review_paths.py:25 <module> | from engine.core.database import DATA_ROOT
+
+-- keyword passed codebook_path=: 7
+  [analysis] analysis/paper1/judge_cli.py:222 <module>._load_inputs | return load_ai_triples_csv(
+  [analysis] analysis/paper1/pass2_full.py:772 <module>._run_locked | run_id, results = run_full(
+  [analysis] analysis/paper1/pass2_smoke.py:894 <module>._run_locked | run_id, execs = run_smoke(
+  [run7/engine-other] engine/cloud/base.py:510 <module>.CloudExtractorBase.run_distribution_check | return run_post_extraction_check(
+  [run7/engine-other] engine/core/effective_config.py:471 <module>.prompt_hash | messages = render_messages(stage, spec, codebook_path=codebook_path)
+  [run7/engine-other] engine/core/effective_config.py:533 <module>.resolve_run | cfg, digest, prompt_hash(stage, spec, cfg, codebook_path=codebook_path), arm)
+  [run7/engine-other] engine/core/run_manifest.py:609 <module>.open_run | resolved = resolve_run(spec, [s for s in stage_list],
+
+-- keyword passed data_root=: 10
+  [acquisition] engine/acquisition/verify_downloads.py:171 <module>.verify_downloads | db = ReviewDatabase(review_name, data_root=effective_root)
+  [analysis] analysis/paper1/judge_cli.py:195 <module>._resolve_db | return ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/judge_codebook_smoke.py:1197 <module>._run_locked | db = (ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pass1_inspection.py:554 <module>._resolve_db | return ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pass2_branchB_report.py:541 <module>.main | db = (ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pass2_full.py:663 <module>._resolve_db | return ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pass2_retry_single.py:148 <module>._main_locked | db = ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pass2_smoke.py:798 <module>._resolve_db | return ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pi_audit_sampler.py:1340 <module>.run | db = (ReviewDatabase(args.review, data_root=args.data_root)
+  [analysis] analysis/paper1/pi_audit_sampler_v2.py:1205 <module>.run | db = (ReviewDatabase(args.review, data_root=args.data_root)
+
+-- literal beginning data/ or review_specs/: 80
+  [adjudication] engine/adjudication/categorizer.py:20 <module> | DATA_ROOT = Path("data")
+  [adjudication] engine/adjudication/screening_adjudicator.py:28 <module> | EXPANDED_SEARCH_DIR = Path("data/surgical_autonomy/expanded_search")
+  [analysis] analysis/eval/adjud01_pairs.py:151 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/analyze_capture01.py:185 <module>.main | "paper_text": "data/{review}/parsed_text/{pid}_v*.md, newest version",
+  [analysis] analysis/eval/analyze_capture01.py:64 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/analyze_prime01.py:176 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/analyze_qualgap01.py:254 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/analyze_schema_eval.py:258 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/analyze_schema_eval2.py:309 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/elicit01/analyze.py:55 <module>.main | ap.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/elicit01/manifest.py:104 <module>.main | review_dir = Path("data/surgical_autonomy")
+  [analysis] analysis/eval/elicit01/prompts.py:157 <module>._entries | for key in ("fields", "entries", "extractions", "results", "data"):
+  [analysis] analysis/eval/elicit01/runner.py:145 <module>.main | ap.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/parse01/flag.py:63 <module>.main | src = Path("data/surgical_autonomy/eval/parse01/sweep.jsonl")
+  [analysis] analysis/eval/parse01/sweep.py:101 <module>.main | ap.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/run_capture01.py:177 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/run_local_ab.py:155 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/run_local_ab.py:94 <module>._parse_unconstrained | for key in ("fields", "extractions", "extracted_fields", "data", "results"):
+  [analysis] analysis/eval/run_local_abc.py:107 <module>.parse_unconstrained | for key in ("fields", "extractions", "extracted_fields", "data", "results"):
+  [analysis] analysis/eval/run_local_abc.py:193 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/run_qualgap01.py:261 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/eval/score_screen2f.py:41 <module> | DEFAULT_WORKBOOK = Path("data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx")
+  [analysis] analysis/eval/screen2f.py:60 <module> | INPUT_PATHS = ("engine", "review_specs")
+  [analysis] analysis/eval/screen2f_export.py:36 <module> | DEFAULT_DB = Path("data/surgical_autonomy/review.db")
+  [analysis] analysis/eval/screen2f_export.py:37 <module> | DEFAULT_WORKBOOK = Path("data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx")
+  [analysis] analysis/eval/screen2f_export.py:38 <module> | DEFAULT_JSONL = Path("data/surgical_autonomy/expanded_search/abstracts.jsonl")
+  [analysis] analysis/eval/smoke_regression01.py:47 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/paper1/judge_provenance.py:371 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/paper1/pi_audit_sampler_v2.py:124 <module> | "data/surgical_autonomy/exports/disagreement_pairs_3arm.csv",
+  [analysis] analysis/paper1/spanloss_autopsy.py:290 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/paper1/spanloss_autopsy.py:73 <module>.response_shape | for key in ("fields", "extractions", "extracted_fields", "data", "results"):
+  [analysis] analysis/provenance/census.py:329 <module>.main | p.add_argument("--data-root", default="data")
+  [analysis] analysis/provenance/recount.py:211 <module>.main | p.add_argument("--data-root", default="data")
+  [run7/acquisition] engine/acquisition/pdf_quality_check.py:41 <module> | DATA_ROOT = Path("data")
+  [run7/engine-other] engine/cloud/base.py:241 <module>.CloudExtractorBase.parse_response_to_spans | "data", "extraction", "results", "entries",
+  [run7/engine-other] engine/core/database.py:20 <module> | DATA_ROOT = Path("data")
+  [run7/engine-other] engine/core/review_paths.py:28 <module> | SPEC_ROOT = Path("review_specs")
+  [run7/engine-other] engine/elicitation/contracts.py:265 <module>._entries | for key in ("fields", "entries", "extractions", "results", "data"):
+  [run7/engine-other] engine/utils/background.py:48 <module>.maybe_background | log_dir = Path("data") / review_name / "logs"
+  [run7/migrations] engine/migrations/003_backfill_expanded_screening.py:19 <module> | DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "surgical_autonomy"
+  [run7/migrations] engine/migrations/004_pdf_quality_check.py:27 <module> | DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
+  [run7/migrations] engine/migrations/005_model_digest.py:25 <module> | DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
+  [run7/migrations] engine/migrations/017_seed_event_store.py:175 <module>.run_migration | Path("review_specs") / f"{review_id}.yaml")
+  [run7/migrations] engine/migrations/runner.py:283 <module>.run | and (kind_of(migration_id) != "data" or include_data)
+  [run7/migrations] engine/migrations/runner.py:288 <module>.run | if any(kind_of(m) == "data" for m in pending):
+  [run7/migrations] engine/migrations/runner.py:305 <module>.run | if kind_of(migration_id) == "data" and not include_data:
+  [run7/migrations] engine/migrations/runner.py:53 <module> | "002": "data",    # renames screening labels and statuses in existing rows;
+  [run7/migrations] engine/migrations/runner.py:57 <module> | "003": "data",    # imports ~9,234 papers from data/surgical_autonomy/
+  [run7/migrations] engine/migrations/runner.py:76 <module> | "017": "data",     # seeds the event store from THIS database's corpus,
+  [scripts] scripts/_pass2_delta.py:13 <module> | DB = Path("data/surgical_autonomy/review.db")
+  [scripts] scripts/_pass2_delta.py:16 <module> | PAIRS_CSV = Path("data/surgical_autonomy/exports/disagreement_pairs_3arm.csv")
+  [scripts] scripts/_pass2_eyeball.py:15 <module> | DB = Path("data/surgical_autonomy/review.db")
+  [scripts] scripts/_pass2_eyeball.py:17 <module> | PAIRS_CSV = Path("data/surgical_autonomy/exports/disagreement_pairs_3arm.csv")
+  [scripts] scripts/_pass2_eyeball.py:69 <module>.load_arm_value | for key in ("fields", "data", "extractions", "extracted_fields"):
+  [scripts] scripts/advance_to_pdf_acquired.py:40 <module>.main | data_root = Path("data")
+  [scripts] scripts/backfill_authors.py:98 <module>.main | db_path = f"data/{args.review}/review.db"
+  [scripts] scripts/backfill_cloud_spans.py:42 <module>.main | db_path = args.db or f"data/{args.review}/review.db"
+  [scripts] scripts/pdf_acquisition/step1_export_citations.py:14 <module> | DB_PATH = PROJECT_ROOT / "data" / "surgical_autonomy" / "review.db"
+  [scripts] scripts/pdf_acquisition/step1_export_citations.py:15 <module> | OUTPUT_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition"
+  [scripts] scripts/pdf_acquisition/step2_unpaywall_check.py:18 <module> | INPUT_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "citations_for_download.csv"
+  [scripts] scripts/pdf_acquisition/step2_unpaywall_check.py:19 <module> | PRIORITY_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "download_priority_list.csv"
+  [scripts] scripts/pdf_acquisition/step2_unpaywall_check.py:20 <module> | RESULTS_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "unpaywall_results.csv"
+  [scripts] scripts/pdf_acquisition/step3_download_oa_pdfs.py:16 <module> | RESULTS_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "unpaywall_results.csv"
+  [scripts] scripts/pdf_acquisition/step3_download_oa_pdfs.py:17 <module> | LOG_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "download_log.csv"
+  [scripts] scripts/pdf_acquisition/step3_download_oa_pdfs.py:18 <module> | PDF_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdfs"
+  [scripts] scripts/pdf_acquisition/step3b_retry_failed.py:22 <module> | LOG_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "download_log.csv"
+  [scripts] scripts/pdf_acquisition/step3b_retry_failed.py:23 <module> | PDF_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdfs"
+  [scripts] scripts/pdf_acquisition/step4_manual_download_list.py:14 <module> | LOG_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "download_log.csv"
+  [scripts] scripts/pdf_acquisition/step4_manual_download_list.py:15 <module> | PRIORITY_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "download_priority_list.csv"
+  [scripts] scripts/pdf_acquisition/step4_manual_download_list.py:16 <module> | PDF_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdfs"
+  [scripts] scripts/pdf_acquisition/step4_manual_download_list.py:17 <module> | OUT_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition"
+  [scripts] scripts/reparse_cloud_spans.py:33 <module>.main | db_path = f"data/{review}/review.db"
+  [scripts] scripts/screen_expanded.py:511 <module>.main | STAGING_DIR = Path(f"data/{review}/expanded_search")
+  [tools] engine/tools/inventory.py:34 <module> | SPEC_DIR = "review_specs"
+  [tools] engine/tools/inventory.py:35 <module> | DATA_DIR = "data"
+  [tools] engine/tools/inventory.py:449 <module>.build_inventory | and "review_specs" in h["text"]])
+  [tools] engine/tools/inventory.py:47 <module> | PATH_MARKERS = ("review_specs", "data/", ".yaml")
+  [tools] engine/tools/inventory.py:680 <module>.write_inventory | "data": inv},
+  [tools] engine/tools/inventory.py:689 <module>.committed_inventory | return json.loads(path.read_text())["data"]
+  [tools] engine/tools/inventory.py:712 <module>.drift | return "data/ subdirectories changed: " + "; ".join(detail)
+
+-- parameter codebook_path: 40
+  [analysis] analysis/eval/adjud01_pairs.py:51 <module>.field_types | def field_types(codebook_path: Path) -> dict[str, str]:
+  [analysis] analysis/eval/elicit01/prompts.py:47 <module>.stated_fields | def stated_fields(codebook_path: str | Path | None = None) -> list[dict]:
+  [analysis] analysis/eval/elicit01/prompts.py:63 <module>._schema_block | def _schema_block(codebook_path=None) -> tuple[str, list[str]]:
+  [analysis] analysis/eval/elicit01/prompts.py:69 <module>.build_copy_prompt | def build_copy_prompt(paper_text: str, codebook_path=None) -> str:
+  [analysis] analysis/eval/elicit01/prompts.py:94 <module>.build_index_prompt | def build_index_prompt(numbered_text: str, n_units: int, codebook_path=None) -> str:
+  [analysis] analysis/paper1/adjudication.py:104 <module>.export_ambiguous_pairs | def export_ambiguous_pairs(
+  [analysis] analysis/paper1/adjudication.py:35 <module>._load_field_types | def _load_field_types(codebook_path: Path) -> dict[str, str]:
+  [analysis] analysis/paper1/consensus.py:179 <module>.derive_consensus | def derive_consensus(db_path: Path, codebook_path: Path) -> list[dict]:
+  [analysis] analysis/paper1/consensus.py:52 <module>._load_field_types | def _load_field_types(codebook_path: Path) -> dict[str, str]:
+  [analysis] analysis/paper1/human_import.py:135 <module>._load_codebook_valid_values | def _load_codebook_valid_values(codebook_path: Path) -> dict[str, list[str]]:
+  [analysis] analysis/paper1/human_import.py:147 <module>.validate_workbook | def validate_workbook(
+  [analysis] analysis/paper1/judge_loader.py:189 <module>._fetch_spans_for_paper | def _fetch_spans_for_paper(conn, paper_id: int, codebook_path, arms):
+  [analysis] analysis/paper1/judge_loader.py:216 <module>.load_grid | def load_grid(
+  [analysis] analysis/paper1/judge_loader.py:311 <module>.load_ai_triples_csv | def load_ai_triples_csv(
+  [analysis] analysis/paper1/pass2_full.py:170 <module>.run_full | def run_full(
+  [analysis] analysis/paper1/pass2_retry_single.py:62 <module>._load_judge_input | def _load_judge_input(
+  [analysis] analysis/paper1/pass2_smoke.py:271 <module>.run_smoke | def run_smoke(
+  [analysis] analysis/paper1/pi_audit_sampler_v2.py:1067 <module>.generate | def generate(
+  [analysis] analysis/paper1/pi_audit_sampler_v2.py:211 <module>.load_codebook_fields | def load_codebook_fields(codebook_path: Path) -> tuple[dict, dict]:
+  [run7/engine-other] engine/agents/extractor.py:127 <module>.build_extraction_prompt | def build_extraction_prompt(
+  [run7/engine-other] engine/agents/extractor.py:522 <module>._contract_unmet_token | def _contract_unmet_token(codebook_path: Path) -> str | None:
+  [run7/engine-other] engine/agents/extractor.py:528 <module>._absence_tokens | def _absence_tokens(codebook_path: Path) -> tuple[str, frozenset[str]]:
+  [run7/engine-other] engine/core/completeness.py:108 <module>.expected_field_names | def expected_field_names(
+  [run7/engine-other] engine/core/completeness.py:132 <module>._codebook_field_names | def _codebook_field_names(codebook_path: str | Path) -> tuple[str, ...]:
+  [run7/engine-other] engine/core/effective.py:129 <module>.load_absence_sentinels | def load_absence_sentinels(codebook_path: str | Path) -> frozenset[str]:
+  [run7/engine-other] engine/core/effective_config.py:410 <module>.render_messages | def render_messages(stage: str, spec: ReviewSpec | None, *,
+  [run7/engine-other] engine/core/effective_config.py:468 <module>.prompt_hash | def prompt_hash(stage: str, spec: ReviewSpec | None, cfg: EffectiveConfig, *,
+  [run7/engine-other] engine/core/effective_config.py:497 <module>.resolve_run | def resolve_run(spec: ReviewSpec, stages: Iterable[str], *,
+  [run7/engine-other] engine/elicitation/classes.py:208 <module>.non_value_tokens_for | def non_value_tokens_for(codebook_path: str | Path) -> frozenset[str]:
+  [run7/engine-other] engine/elicitation/classes.py:84 <module>.load | def load(codebook_path: str | Path) -> dict:
+  [run7/engine-other] engine/elicitation/pipeline.py:205 <module>.check_sentinel_fields | def check_sentinel_fields(codebook: dict, field_names: tuple[str, ...],
+  [run7/engine-other] engine/elicitation/pipeline.py:221 <module>._sentinel_records | def _sentinel_records(table, codebook: dict, field_names: tuple[str, ...],
+  [run7/engine-other] engine/elicitation/pipeline.py:229 <module>._sentinel_codebook | def _sentinel_codebook(spec, codebook_path) -> tuple[dict, tuple[str, ...], object]:
+  [run7/engine-other] engine/elicitation/pipeline.py:241 <module>.sentinel_pass1_prompt | def sentinel_pass1_prompt(spec, codebook_path=None, feedback: str = "") -> str:
+  [run7/engine-other] engine/elicitation/pipeline.py:248 <module>.sentinel_pass1_result | def sentinel_pass1_result(codebook: dict, field_names: tuple[str, ...],
+  [run7/engine-other] engine/elicitation/pipeline.py:258 <module>.sentinel_feedback_block | def sentinel_feedback_block(spec, codebook_path=None) -> str:
+  [run7/engine-other] engine/elicitation/pipeline.py:267 <module>.sentinel_priming_message | def sentinel_priming_message(spec, codebook_path=None) -> str:
+  [run7/engine-other] engine/validators/distribution_monitor.py:185 <module>.check_distribution | def check_distribution(
+  [run7/engine-other] engine/validators/distribution_monitor.py:367 <module>.run_post_extraction_check | def run_post_extraction_check(
+  [run7/engine-other] engine/validators/distribution_monitor.py:58 <module>._load_categorical_fields | def _load_categorical_fields(codebook_path: Path) -> list[str]:
+
+-- parameter data_root: 5
+  [acquisition] engine/acquisition/pdf_quality_import.py:143 <module>.import_dispositions | def import_dispositions(
+  [acquisition] engine/acquisition/verify_downloads.py:160 <module>.verify_downloads | def verify_downloads(
+  [adjudication] engine/adjudication/categorizer.py:77 <module>.config_path_for_review | def config_path_for_review(review_name: str, data_root: Path | None = None) -> Path:
+  [adjudication] engine/adjudication/categorizer.py:83 <module>.load_config | def load_config(review_name: str | None = None, config_path: Path | None = None,
+  [run7/engine-other] engine/core/database.py:374 <module>.ReviewDatabase.__init__ | def __init__(self, review_name: str, data_root: Path | None = None):
+
+-- parameter override: 3
+  [engine-other] engine/validators/extraction_validator.py:266 <module>.select_arm | def select_arm(conn: sqlite3.Connection, spec: ReviewSpec, override: str | None) -> str:
+  [run7/engine-other] engine/core/codebook.py:417 <module>.load_codebook_for | def load_codebook_for(
+  [run7/engine-other] engine/core/review_paths.py:72 <module>.load_spec_for | def load_spec_for(review_id: str, override: str | Path | None = None) -> ReviewSpec:
+
+-- parameter repo_root: 14
+  [analysis] analysis/eval/screen2f.py:314 <module>.arms | def arms(repo_root: Path, spec_rel: Path, roots: dict[str, Path],
+  [run7/engine-other] engine/core/parsed_text.py:115 <module>.canonical_path | def canonical_path(path: str | os.PathLike, repo_root: Path = REPO_ROOT) -> str:
+  [run7/engine-other] engine/core/parsed_text.py:130 <module>.resolve_stored_path | def resolve_stored_path(stored: str, repo_root: Path = REPO_ROOT) -> Path:
+  [run7/engine-other] engine/core/run_manifest.py:328 <module>.git_state | def git_state(repo_root: Path = REPO_ROOT) -> GitState:
+  [run7/migrations] engine/migrations/021_parsed_text_sha256.py:131 <module>.canonical_path | def canonical_path(stored: str, repo_root: Path) -> str:
+  [run7/migrations] engine/migrations/021_parsed_text_sha256.py:145 <module>.resolve_path | def resolve_path(stored: str, repo_root: Path) -> Path:
+  [run7/migrations] engine/migrations/021_parsed_text_sha256.py:172 <module>._compute_rows | def _compute_rows(conn, repo_root: Path, baseline: dict[str, dict]) -> tuple[list, int]:
+  [run7/migrations] engine/migrations/021_parsed_text_sha256.py:218 <module>.run_migration | def run_migration(db_path: str | None = None, *,
+  [tools] engine/tools/inventory.py:385 <module>.build_inventory | def build_inventory(repo_root: Path = REPO_ROOT) -> dict:
+  [tools] engine/tools/inventory.py:469 <module>._commit_hash | def _commit_hash(repo_root: Path) -> str:
+  [tools] engine/tools/inventory.py:53 <module>.review_ids | def review_ids(repo_root: Path) -> tuple[list[str], dict[str, str], list[str]]:
+  [tools] engine/tools/inventory.py:669 <module>.write_inventory | def write_inventory(repo_root: Path = REPO_ROOT) -> tuple[Path, Path]:
+  [tools] engine/tools/inventory.py:685 <module>.committed_inventory | def committed_inventory(repo_root: Path = REPO_ROOT) -> dict | None:
+  [tools] engine/tools/inventory.py:692 <module>.drift | def drift(repo_root: Path = REPO_ROOT) -> str | None:
+
+-- parameter review_root,spec_path,codebook_path: 1
+  [run7/migrations] engine/migrations/017_seed_event_store.py:167 <module>.run_migration | def run_migration(db_path: str | None = None, *, review_root=None,
+
+-- parameter spec_path: 13
+  [acquisition] engine/acquisition/check_oa.py:50 <module>.check_oa_status | def check_oa_status(review_name: str, spec_path: str | None = None) -> dict:
+  [acquisition] engine/acquisition/manual_list.py:119 <module>.generate_manual_list | def generate_manual_list(review_name: str, spec_path: str | None = None) -> dict:
+  [analysis] analysis/paper1/export_disagreement_pairs.py:149 <module>.build_disagreement_rows | def build_disagreement_rows(
+  [analysis] analysis/paper1/export_disagreement_pairs.py:277 <module>.write_xlsx | def write_xlsx(
+  [analysis] analysis/paper1/export_disagreement_pairs.py:415 <module>.write_html | def write_html(
+  [engine-other] engine/analysis/concordance.py:217 <module>.run_concordance | def run_concordance(
+  [engine-other] engine/analysis/concordance.py:276 <module>.run_all_pairs | def run_all_pairs(
+  [run7/scripts] scripts/run_pipeline.py:64 <module>.run_pipeline | def run_pipeline(
+  [scripts] scripts/run_cloud_extraction.py:69 <module>.show_progress | def show_progress(db_path: str, spec_path: str):
+  [scripts] scripts/run_cloud_extraction.py:85 <module>.dry_run | def dry_run(db_path: str, spec_path: str, arms: list[str]):
+  [scripts] scripts/run_cloud_extraction.py:97 <module>.run_arm | def run_arm(
+  [scripts] scripts/screen_expanded.py:210 <module>.run_screen_phase | def run_screen_phase(spec_path: str):
+  [scripts] scripts/screen_expanded.py:330 <module>.run_verify_phase | def run_verify_phase(spec_path: str):
+
+-- read DATA_ROOT: 19
+  [acquisition] engine/acquisition/download.py:345 <module>.download_papers | pdf_dir = DATA_ROOT / review_name / "pdfs"
+  [acquisition] engine/acquisition/manual_list.py:131 <module>.generate_manual_list | out_dir = DATA_ROOT / review_name / "pdf_acquisition"
+  [acquisition] engine/acquisition/manual_list.py:133 <module>.generate_manual_list | pdf_dir = DATA_ROOT / review_name / "pdfs"
+  [acquisition] engine/acquisition/pdf_quality_html.py:338 <module>.generate_acquisition_html | db_path = DATA_ROOT / review_name / "review.db"
+  [acquisition] engine/acquisition/pdf_quality_html.py:459 <module>.generate_acquisition_html | DATA_ROOT / review_name, review_name,
+  [acquisition] engine/acquisition/pdf_quality_html.py:479 <module>.generate_quality_html | db_path = DATA_ROOT / review_name / "review.db"
+  [acquisition] engine/acquisition/pdf_quality_html.py:693 <module>.generate_quality_html | DATA_ROOT / review_name, review_name,
+  [acquisition] engine/acquisition/pdf_quality_import.py:154 <module>.import_dispositions | root = data_root or DATA_ROOT
+  [acquisition] engine/acquisition/verify_downloads.py:170 <module>.verify_downloads | effective_root = Path(data_root) if data_root else DATA_ROOT
+  [adjudication] engine/adjudication/abstract_adjudication_html.py:148 <module>.generate_abstract_adjudication_html | db_path = DATA_ROOT / review_name / "review.db"
+  [adjudication] engine/adjudication/abstract_adjudication_html.py:675 <module>.generate_abstract_adjudication_html | DATA_ROOT / review_name, review_name,
+  [adjudication] engine/adjudication/categorizer.py:79 <module>.config_path_for_review | root = data_root or DATA_ROOT
+  [adjudication] engine/adjudication/ft_adjudication_html.py:125 <module>.generate_ft_adjudication_html | db_path = DATA_ROOT / review_name / "review.db"
+  [adjudication] engine/adjudication/ft_adjudication_html.py:502 <module>.generate_ft_adjudication_html | DATA_ROOT / review_name, review_name,
+  [analysis] analysis/paper1/export_disagreement_pairs.py:692 <module>.main | db_path = str(DATA_ROOT / args.review / "review.db")
+  [analysis] analysis/paper1/export_disagreement_pairs.py:696 <module>.main | output_dir = DATA_ROOT / args.review / "exports"
+  [run7/acquisition] engine/acquisition/pdf_quality_check.py:184 <module>.run_quality_check | db_path = DATA_ROOT / review_name / "review.db"
+  [run7/engine-other] engine/core/database.py:375 <module>.ReviewDatabase.__init__ | root = (data_root or DATA_ROOT) / review_name
+  [run7/engine-other] engine/core/review_paths.py:69 <module>.data_root_for | return DATA_ROOT / review_id
+
+-- read PROJECT_ROOT: 27
+  [acquisition] engine/acquisition/check_oa.py:21 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [acquisition] engine/acquisition/download.py:28 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [acquisition] engine/acquisition/manual_list.py:31 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [acquisition] engine/acquisition/pdf_quality_html.py:24 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [acquisition] engine/acquisition/pdf_quality_import.py:33 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [acquisition] engine/acquisition/verify_downloads.py:22 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [adjudication] engine/adjudication/abstract_adjudication_html.py:25 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [adjudication] engine/adjudication/advance_stage.py:37 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [adjudication] engine/adjudication/ft_adjudication_html.py:22 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [run7/acquisition] engine/acquisition/pdf_quality_check.py:31 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [run7/scripts] scripts/run_pipeline.py:15 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [scripts] scripts/backfill_cloud_spans.py:18 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+  [scripts] scripts/pdf_acquisition/step1_export_citations.py:14 <module> | DB_PATH = PROJECT_ROOT / "data" / "surgical_autonomy" / "review.db"
+  [scripts] scripts/pdf_acquisition/step1_export_citations.py:15 <module> | OUTPUT_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition"
+  [scripts] scripts/pdf_acquisition/step2_unpaywall_check.py:18 <module> | INPUT_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "citations_for_download.csv"
+  [scripts] scripts/pdf_acquisition/step2_unpaywall_check.py:19 <module> | PRIORITY_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "download_priority_list.csv"
+  [scripts] scripts/pdf_acquisition/step2_unpaywall_check.py:20 <module> | RESULTS_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "unpaywall_results.csv"
+  [scripts] scripts/pdf_acquisition/step3_download_oa_pdfs.py:16 <module> | RESULTS_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "unpaywall_results.csv"
+  [scripts] scripts/pdf_acquisition/step3_download_oa_pdfs.py:17 <module> | LOG_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "download_log.csv"
+  [scripts] scripts/pdf_acquisition/step3_download_oa_pdfs.py:18 <module> | PDF_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdfs"
+  [scripts] scripts/pdf_acquisition/step3b_retry_failed.py:22 <module> | LOG_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "download_log.csv"
+  [scripts] scripts/pdf_acquisition/step3b_retry_failed.py:23 <module> | PDF_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdfs"
+  [scripts] scripts/pdf_acquisition/step4_manual_download_list.py:14 <module> | LOG_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "download_log.csv"
+  [scripts] scripts/pdf_acquisition/step4_manual_download_list.py:15 <module> | PRIORITY_CSV = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition" / "download_priority_list.csv"
+  [scripts] scripts/pdf_acquisition/step4_manual_download_list.py:16 <module> | PDF_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdfs"
+  [scripts] scripts/pdf_acquisition/step4_manual_download_list.py:17 <module> | OUT_DIR = PROJECT_ROOT / "data" / "surgical_autonomy" / "pdf_acquisition"
+  [scripts] scripts/screen_expanded.py:38 <module> | sys.path.insert(0, str(PROJECT_ROOT))
+
+-- read REPO_ROOT: 12
+  [adjudication] engine/adjudication/ft_screening_adjudicator.py:400 <module>._stored_path | return resolved.relative_to(REPO_ROOT.resolve()).as_posix()
+  [run7/engine-other] engine/core/parsed_text.py:115 <module>.canonical_path | def canonical_path(path: str | os.PathLike, repo_root: Path = REPO_ROOT) -> str:
+  [run7/engine-other] engine/core/parsed_text.py:130 <module>.resolve_stored_path | def resolve_stored_path(stored: str, repo_root: Path = REPO_ROOT) -> Path:
+  [run7/engine-other] engine/core/run_manifest.py:328 <module>.git_state | def git_state(repo_root: Path = REPO_ROOT) -> GitState:
+  [run7/migrations] engine/migrations/021_parsed_text_sha256.py:231 <module>.run_migration | root = Path(repo_root) if repo_root is not None else REPO_ROOT
+  [run7/migrations] engine/migrations/021_parsed_text_sha256.py:77 <module> | BASELINE_PATH = (REPO_ROOT / "docs" / "session-reports" / "input-identity-01"
+  [tools] engine/tools/inventory.py:385 <module>.build_inventory | def build_inventory(repo_root: Path = REPO_ROOT) -> dict:
+  [tools] engine/tools/inventory.py:669 <module>.write_inventory | def write_inventory(repo_root: Path = REPO_ROOT) -> tuple[Path, Path]:
+  [tools] engine/tools/inventory.py:685 <module>.committed_inventory | def committed_inventory(repo_root: Path = REPO_ROOT) -> dict | None:
+  [tools] engine/tools/inventory.py:692 <module>.drift | def drift(repo_root: Path = REPO_ROOT) -> str | None:
+  [tools] engine/tools/inventory.py:743 <module>.main | print("wrote %s" % md.relative_to(REPO_ROOT))
+  [tools] engine/tools/inventory.py:744 <module>.main | print("wrote %s" % js.relative_to(REPO_ROOT))
+
+-- read SPEC_ROOT: 1
+  [run7/engine-other] engine/core/review_paths.py:59 <module>.spec_path_for | return SPEC_ROOT / f"{review_id}.yaml"
+
+-- relative Path("...") literal (cwd): 36
+  [adjudication] engine/adjudication/categorizer.py:20 <module> | DATA_ROOT = Path("data")
+  [adjudication] engine/adjudication/screening_adjudicator.py:28 <module> | EXPANDED_SEARCH_DIR = Path("data/surgical_autonomy/expanded_search")
+  [analysis] analysis/eval/elicit01/manifest.py:104 <module>.main | review_dir = Path("data/surgical_autonomy")
+  [analysis] analysis/eval/parse01/flag.py:63 <module>.main | src = Path("data/surgical_autonomy/eval/parse01/sweep.jsonl")
+  [analysis] analysis/eval/score_screen2f.py:41 <module> | DEFAULT_WORKBOOK = Path("data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx")
+  [analysis] analysis/eval/screen2f_export.py:36 <module> | DEFAULT_DB = Path("data/surgical_autonomy/review.db")
+  [analysis] analysis/eval/screen2f_export.py:37 <module> | DEFAULT_WORKBOOK = Path("data/surgical_autonomy/adjudication/specialty_rescreen_flagged_86.xlsx")
+  [analysis] analysis/eval/screen2f_export.py:38 <module> | DEFAULT_JSONL = Path("data/surgical_autonomy/expanded_search/abstracts.jsonl")
+  [analysis] analysis/eval/screen2f_export.py:39 <module> | DEFAULT_OUT = Path("docs/session-reports/screen-auth-2f-smoke")
+  [analysis] analysis/paper1/judge_codebook_smoke.py:1087 <module>._build_parser | default=Path("artifacts/paper1/pi_audit"))
+  [analysis] analysis/paper1/judge_codebook_smoke.py:1090 <module>._build_parser | p.add_argument("--out-dir", type=Path, default=Path("analysis/paper1/reports"))
+  [analysis] analysis/paper1/judge_codebook_smoke.py:1091 <module>._build_parser | p.add_argument("--log-dir", type=Path, default=Path("analysis/paper1/logs"))
+  [analysis] analysis/paper1/pass1_inspection.py:568 <module>._build_arg_parser | default=Path("analysis/paper1/reports"))
+  [analysis] analysis/paper1/pass2_branchB_report.py:533 <module>._build_arg_parser | p.add_argument("--out-dir", type=Path, default=Path("artifacts/paper1"))
+  [analysis] analysis/paper1/pass2_full.py:698 <module>._build_arg_parser | default=Path("analysis/paper1/reports"))
+  [analysis] analysis/paper1/pass2_full.py:700 <module>._build_arg_parser | default=Path("analysis/paper1/logs"))
+  [analysis] analysis/paper1/pass2_retry_single.py:129 <module>._build_arg_parser | default=Path("analysis/paper1/logs"))
+  [analysis] analysis/paper1/pass2_smoke.py:812 <module>._build_arg_parser | default=Path("analysis/paper1/reports"))
+  [analysis] analysis/paper1/pass2_smoke.py:814 <module>._build_arg_parser | default=Path("analysis/paper1/logs"))
+  [analysis] analysis/paper1/pi_audit_sampler.py:1325 <module>._build_arg_parser | default=Path("artifacts/paper1/pi_audit"))
+  [analysis] analysis/paper1/pi_audit_sampler_v2.py:1158 <module>._build_arg_parser | default=Path("artifacts/paper1/pi_audit_v2"))
+  [analysis] analysis/paper1/pi_audit_unblind.py:1002 <module>.run | default=Path("artifacts/paper1/pi_audit"),
+  [run7/acquisition] engine/acquisition/pdf_quality_check.py:41 <module> | DATA_ROOT = Path("data")
+  [run7/engine-other] engine/core/database.py:20 <module> | DATA_ROOT = Path("data")
+  [run7/engine-other] engine/core/review_paths.py:28 <module> | SPEC_ROOT = Path("review_specs")
+  [run7/engine-other] engine/utils/background.py:48 <module>.maybe_background | log_dir = Path("data") / review_name / "logs"
+  [run7/migrations] engine/migrations/017_seed_event_store.py:175 <module>.run_migration | Path("review_specs") / f"{review_id}.yaml")
+  [scripts] scripts/_pass2_delta.py:13 <module> | DB = Path("data/surgical_autonomy/review.db")
+  [scripts] scripts/_pass2_delta.py:16 <module> | PAIRS_CSV = Path("data/surgical_autonomy/exports/disagreement_pairs_3arm.csv")
+  [scripts] scripts/_pass2_delta.py:17 <module> | OUT = Path("analysis/paper1/reports/pass2_smoke_fixed_delta.md")
+  [scripts] scripts/_pass2_eyeball.py:15 <module> | DB = Path("data/surgical_autonomy/review.db")
+  [scripts] scripts/_pass2_eyeball.py:17 <module> | PAIRS_CSV = Path("data/surgical_autonomy/exports/disagreement_pairs_3arm.csv")
+  [scripts] scripts/_pass2_eyeball.py:18 <module> | OUT = Path("analysis/paper1/reports/pass2_smoke_unsupported_eyeball.md")
+  [scripts] scripts/advance_to_pdf_acquired.py:40 <module>.main | data_root = Path("data")
+  [tools] engine/tools/inventory.py:37 <module> | OUT_MD = Path("docs/inventory/entry_points.md")
+  [tools] engine/tools/inventory.py:38 <module> | OUT_JSON = Path("docs/inventory/entry_points.json")
+
+== tests
+
+-- (i) direct names: 117 hits / 48 files
+   by file: test_codebook_loader.py 24, test_review_paths.py 17, test_inventory.py 10, _live_db_guard.py 5, test_suite_live_fence.py 4, test_codebook_provenance.py 3, test_codebook_review_at_open.py 3, test_extractor.py 3, test_u18_one_host.py 3, conftest.py 2, test_citation_record.py 2, test_codebook_staleness.py 2, test_presented_context.py 2, test_request_capture.py 2
+  tests/_event_store_fixture.py:374 <module>.open_extraction_run | codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: digest,
+  tests/_live_db_guard.py:18 <module> | REPO_ROOT = Path(__file__).resolve().parent.parent
+  tests/_live_db_guard.py:19 <module> | LIVE_DATA_ROOT = (REPO_ROOT / "data").resolve()
+  tests/_live_db_guard.py:19 <module> | LIVE_DATA_ROOT = (REPO_ROOT / "data").resolve()
+  tests/_live_db_guard.py:46 <module>.is_live_data_path | return candidate.is_relative_to(LIVE_DATA_ROOT)
+  tests/_live_db_guard.py:54 <module>.refuse | f"That path is inside {LIVE_DATA_ROOT}, which holds production review "
+  tests/conftest.py:538 <module>.block_live_database.guarded_init | candidate = resolved_review_db_path(
+  tests/conftest.py:541 <module>.block_live_database.guarded_init | if is_live_data_path(candidate):
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:239 <module>.test_T4_open_run_with_kind_import_succeeds | spec = load_spec_for("surgical_autonomy")
+  tests/test_citation_record.py:167 <module>._run | codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: "e" * 64,
+  tests/test_citation_record.py:199 <module>._by_class | cb = load_codebook_beside(db.db_path)
+  tests/test_cloud_extraction.py:22 <module> | CBK = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:101 <module>.test_the_glob_is_gone | src = (REPO_ROOT / rel).read_text()
+  tests/test_codebook_loader.py:178 <module>.test_field_class_vocabulary_comes_from_classes_not_a_copy | src = (REPO_ROOT / "engine/core/codebook.py").read_text()
+  tests/test_codebook_loader.py:24 <module> | REPO_ROOT = Path(__file__).resolve().parent.parent
+  tests/test_codebook_loader.py:248 <module>.test_identity_mismatch_raises | load_codebook_for("beta", p)
+  tests/test_codebook_loader.py:25 <module> | LIVE = REPO_ROOT / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_codebook_loader.py:262 <module>.test_identity_is_checked_on_the_derived_path_too | load_codebook_for("beta")
+  tests/test_codebook_loader.py:313 <module>.test_byte_hash_is_the_same_function_the_judge_lane_uses | assert load_codebook_for("surgical_autonomy").sha256 == compute_codebook_sha256(LIVE)
+  tests/test_codebook_loader.py:317 <module>.test_lint_runs_at_load_and_does_not_raise | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:352 <module>.test_only_the_two_loaders_parse_yaml_directly | for path in sorted((REPO_ROOT / root).rglob("*.py")):
+  tests/test_codebook_loader.py:355 <module>.test_only_the_two_loaders_parse_yaml_directly | rel = path.relative_to(REPO_ROOT).as_posix()
+  tests/test_codebook_loader.py:372 <module>.test_the_codebook_file_is_read_never_written | for path in sorted((REPO_ROOT / root).rglob("*.py")):
+  tests/test_codebook_loader.py:381 <module>.test_the_codebook_file_is_read_never_written | f"{path.relative_to(REPO_ROOT)}:{i} writes a codebook"
+  tests/test_codebook_loader.py:389 <module>.test_fields_by_tier_covers_every_field_exactly_once | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:397 <module>.test_fields_by_tier_preserves_codebook_order | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:405 <module>.test_fields_by_tier_is_empty_for_an_unused_tier | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:410 <module>.test_enum_values_for_every_categorical_and_none_otherwise | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:427 <module>.test_enum_values_is_none_not_empty_for_a_field_without_a_list | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:432 <module>.test_view_exposes_name_type_tier_and_values | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:441 <module>.test_view_and_enum_values_reject_an_unknown_field | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:65 <module>.test_path_derives_from_the_review_id | assert codebook_path_for("surgical_autonomy") == Path(
+  tests/test_codebook_loader.py:67 <module>.test_path_derives_from_the_review_id | assert codebook_path_for("other_review") == Path(
+  tests/test_codebook_loader.py:72 <module>.test_live_codebook_loads_from_its_review_id | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:79 <module>.test_override_is_honoured | assert load_codebook_for("alpha", p).path == p
+  tests/test_codebook_loader.py:84 <module>.test_missing_file_error_names_the_expected_path | load_codebook_for("no_such_review")
+  tests/test_codebook_prompt.py:14 <module> | CBK = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_provenance.py:20 <module> | REPO_ROOT = Path(__file__).resolve().parent.parent
+  tests/test_codebook_provenance.py:21 <module> | LIVE_DB = REPO_ROOT / "data" / "surgical_autonomy" / "review.db"
+  tests/test_codebook_provenance.py:220 <module>.test_the_two_hashes_answer_different_questions | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_review_at_open.py:104 <module>.test_open_run_refuses_a_codebook_beside_the_database_that_declares_another_review | handle = _open(review, spec, load_codebook_beside(review.db_path))
+  tests/test_codebook_review_at_open.py:110 <module>.test_a_review_session_is_refused_the_same_way | rm.open_review_session(review._conn, spec, codebook=load_codebook_beside(review.db_path),
+  tests/test_codebook_review_at_open.py:88 <module>.test_open_run_refuses_a_codebook_beside_the_database_that_declares_another_review | cb = load_codebook_beside(review.db_path)
+  tests/test_codebook_staleness.py:22 <module> | REPO_ROOT = Path(__file__).resolve().parent.parent
+  tests/test_codebook_staleness.py:23 <module> | LIVE_DB = REPO_ROOT / "data" / "surgical_autonomy" / "review.db"
+  tests/test_completeness_guard.py:29 <module> | CB = load_codebook_for("surgical_autonomy")
+  tests/test_effective_config.py:31 <module>.spec | return load_spec_for("surgical_autonomy")
+  tests/test_elicitation_sentinel.py:35 <module>.spec | return load_spec_for("surgical_autonomy")
+  tests/test_eligibility.py:48 <module>.spec | return load_spec_for("surgical_autonomy")
+  tests/test_engine_state.py:42 <module>.spec | return load_spec_for("surgical_autonomy")
+  tests/test_exporters.py:229 <module>.test_evidence_excel_sheets | n_fields = len(load_codebook_beside(exporter_db.db_path).field_names)
+  tests/test_extraction_run_link.py:201 <module>.test_t5_the_stored_digests_are_the_manifests | codebook=load_codebook_beside(db.db_path),
+  tests/test_extraction_validator.py:31 <module>.codebook | return load_codebook_for("surgical_autonomy")
+  tests/test_extractor.py:37 <module> | CBK = load_codebook_for("surgical_autonomy")
+  tests/test_extractor.py:657 <module>.TestProactiveRestart._make_fake_extract._fake | schema_hash = load_codebook_beside(db.db_path).semantic_hash
+  tests/test_extractor.py:739 <module>.TestRestartOllamaGraceful._make_fake_extract._fake | schema_hash = load_codebook_beside(db.db_path).semantic_hash
+  tests/test_floor_and_stored_attempt.py:443 <module>.test_a_model_arms_claim_on_an_unpinned_arm_is_refused_by_name | codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: "a" * 64,
+  tests/test_ft_adjudication_import.py:45 <module>.spec | return load_spec_for("surgical_autonomy")
+  tests/test_ft_bridge.py:103 <module>.spec | return load_spec_for("surgical_autonomy")
+  tests/test_import_extraction_entry.py:58 <module>.spec | return load_spec_for("surgical_autonomy")
+  … 57 more
+
+-- (i) from-imports: 51 hits / 48 files
+   by file: test_exporters.py 2, test_extractor.py 2, test_presented_context.py 2, _event_store_fixture.py 1, conftest.py 1, migrations/test_022_run_kinds_and_audit_tables.py 1, test_adjudication.py 1, test_citation_record.py 1, test_cloud_extraction.py 1, test_codebook_loader.py 1, test_codebook_prompt.py 1, test_codebook_provenance.py 1, test_codebook_review_at_open.py 1, test_codebook_staleness.py 1
+  tests/_event_store_fixture.py:367 <module>.open_extraction_run | from engine.core.codebook import load_codebook_beside
+  tests/conftest.py:246 <module> | from _live_db_guard import (  # noqa: E402
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:234 <module>.test_T4_open_run_with_kind_import_succeeds | from engine.core.review_paths import load_spec_for
+  tests/test_adjudication.py:29 <module> | from engine.core.review_paths import load_spec_for as _load_spec_for
+  tests/test_citation_record.py:30 <module> | from engine.core.codebook import load_codebook, load_codebook_beside
+  tests/test_cloud_extraction.py:19 <module> | from engine.core.codebook import load_codebook_for
+  tests/test_codebook_loader.py:15 <module> | from engine.core.codebook import (
+  tests/test_codebook_prompt.py:12 <module> | from engine.core.codebook import load_codebook_for
+  tests/test_codebook_provenance.py:16 <module> | from engine.core.codebook import load_codebook_for
+  tests/test_codebook_review_at_open.py:28 <module> | from engine.core.codebook import clear_cache, load_codebook, load_codebook_beside
+  tests/test_codebook_staleness.py:17 <module> | from engine.core.codebook import load_codebook_beside
+  tests/test_completeness_guard.py:27 <module> | from engine.core.codebook import load_codebook_for
+  tests/test_effective_config.py:17 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_elicitation_sentinel.py:23 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_eligibility.py:29 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_engine_state.py:21 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_exporters.py:226 <module>.test_evidence_excel_sheets | from engine.core.codebook import load_codebook_beside
+  tests/test_exporters.py:25 <module> | from engine.core.codebook import load_codebook_beside
+  tests/test_extraction_run_link.py:21 <module> | from engine.core.codebook import load_codebook, load_codebook_beside
+  tests/test_extraction_validator.py:29 <module>.codebook | from engine.core.codebook import load_codebook_for
+  tests/test_extractor.py:28 <module> | from engine.core.codebook import load_codebook_beside
+  tests/test_extractor.py:29 <module> | from engine.core.codebook import load_codebook_for
+  tests/test_floor_and_stored_attempt.py:439 <module>.test_a_model_arms_claim_on_an_unpinned_arm_is_refused_by_name | from engine.core.codebook import load_codebook_beside
+  tests/test_ft_adjudication_import.py:29 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_ft_bridge.py:28 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_ft_screening.py:38 <module> | from engine.core.review_paths import load_spec_for as _load_spec_for
+  tests/test_import_extraction_entry.py:39 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_import_screening_entry.py:28 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_parse_spec_threading.py:25 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_pass1_contract_text.py:26 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_pin_records.py:30 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_presented_context.py:24 <module> | from engine.core.codebook import load_codebook, load_codebook_for
+  tests/test_presented_context.py:28 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_prompt_hash_coverage.py:28 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_request_capture.py:38 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_review_paths.py:16 <module> | from engine.core.review_paths import (
+  tests/test_run_manifest.py:27 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_run_scoped_field_names.py:25 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_u17_cross_lineage.py:25 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_u18_digest_per_call.py:34 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_u18_one_host.py:33 <module> | from engine.core.codebook import clear_cache, load_codebook_beside
+  tests/test_u20_loaded_context.py:33 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_u21_no_overlap.py:30 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_u37_feedback_block.py:26 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_u38_snippet_precheck.py:151 <module>.test_u38_both_pins_are_unchanged | from engine.core.review_paths import load_spec_for
+  tests/test_u39_runtime_equals_hash.py:26 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_undeclared_call.py:30 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_undeclared_override.py:34 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_units_as_source_slices.py:27 <module> | from engine.core.codebook import load_codebook, load_codebook_beside
+  tests/test_unknown_field_name.py:21 <module> | from engine.core.review_paths import load_spec_for
+  tests/test_workflow.py:24 <module> | from engine.core.review_paths import load_spec_for as _load_spec_for
+
+-- (ii) attribute access on an alias (e.g. db_module.DATA_ROOT): 4 hits / 2 files
+   by file: test_parsed_text_resolver.py 3, conftest.py 1
+  tests/conftest.py:539 <module>.block_live_database.guarded_init | review_name, data_root, db_module.DATA_ROOT
+  tests/test_parsed_text_resolver.py:172 <module>.test_migration_021_and_the_resolver_canonicalise_alike | assert m021.canonical_path(stored, pt.REPO_ROOT) == pt.canonical_path(stored)
+  tests/test_parsed_text_resolver.py:173 <module>.test_migration_021_and_the_resolver_canonicalise_alike | under = str(pt.REPO_ROOT / "data" / "q.md")
+  tests/test_parsed_text_resolver.py:174 <module>.test_migration_021_and_the_resolver_canonicalise_alike | assert m021.canonical_path(under, pt.REPO_ROOT) == pt.canonical_path(under) == "data/q.md"
+
+-- (ii) attribute access to a deriver: 11 hits / 4 files
+   by file: test_parsed_text_resolver.py 4, test_engine_state.py 3, test_migration_021_parsed_text_sha256.py 3, test_parse_writer_refs.py 1
+  tests/test_engine_state.py:125 <module>.test_t6_git_state_reads_the_state_tags_at_head | assert rm.git_state(repo).state_tags == ()
+  tests/test_engine_state.py:129 <module>.test_t6_git_state_reads_the_state_tags_at_head | g = rm.git_state(repo)
+  tests/test_engine_state.py:133 <module>.test_t6_git_state_reads_the_state_tags_at_head | assert rm.git_state(repo).state_tags == ("freshman", "sophomore")   # R300 order
+  tests/test_migration_021_parsed_text_sha256.py:284 <module>.test_canonical_path_keeps_outside_paths_absolute | assert m021.canonical_path("/elsewhere/x.md", root) == "/elsewhere/x.md"
+  tests/test_migration_021_parsed_text_sha256.py:285 <module>.test_canonical_path_keeps_outside_paths_absolute | assert m021.canonical_path("data/a/../b.md", root) == "data/b.md"
+  tests/test_migration_021_parsed_text_sha256.py:286 <module>.test_canonical_path_keeps_outside_paths_absolute | assert m021.canonical_path(str(root / "data" / "b.md"), root) == "data/b.md"
+  tests/test_parse_writer_refs.py:79 <module>.test_the_reference_hashes_the_bytes_written_and_names_its_asset_row | assert stored == pt.canonical_path(os.path.abspath(path))  # R100: absolute here, outside the repo
+  tests/test_parsed_text_resolver.py:172 <module>.test_migration_021_and_the_resolver_canonicalise_alike | assert m021.canonical_path(stored, pt.REPO_ROOT) == pt.canonical_path(stored)
+  tests/test_parsed_text_resolver.py:172 <module>.test_migration_021_and_the_resolver_canonicalise_alike | assert m021.canonical_path(stored, pt.REPO_ROOT) == pt.canonical_path(stored)
+  tests/test_parsed_text_resolver.py:174 <module>.test_migration_021_and_the_resolver_canonicalise_alike | assert m021.canonical_path(under, pt.REPO_ROOT) == pt.canonical_path(under) == "data/q.md"
+  tests/test_parsed_text_resolver.py:174 <module>.test_migration_021_and_the_resolver_canonicalise_alike | assert m021.canonical_path(under, pt.REPO_ROOT) == pt.canonical_path(under) == "data/q.md"
+
+-- (ii) patch or setattr naming a root or deriver: 28 hits / 17 files
+   by file: test_run_interrupts.py 3, test_selection_bound.py 3, test_arm_pinned_at_extract.py 2, test_codebook_review_at_open.py 2, test_entry_points_take_the_lock.py 2, test_extraction_validator.py 2, test_run_pipeline_closes.py 2, test_run_pipeline_starts.py 2, test_u19_env_recheck.py 2, test_cut_over.py 1, test_failed_close_reason.py 1, test_pin_records.py 1, test_restart_ollama_guard.py 1, test_review_paths.py 1
+  tests/test_arm_pinned_at_extract.py:91 <module>.pipeline | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: state["spec"])
+  tests/test_arm_pinned_at_extract.py:94 <module>.pipeline | monkeypatch.setattr(rm, "git_state", lambda: CLEAN)
+  tests/test_codebook_review_at_open.py:117 <module>.test_run_pipelines_own_opener_refuses_before_any_row_or_fetch | monkeypatch.setattr(rm, "git_state", lambda: CLEAN)
+  tests/test_codebook_review_at_open.py:137 <module>.test_run_cloud_extractions_run_arm_refuses_before_any_row_or_send | monkeypatch.setattr(rm, "git_state", lambda: CLEAN)
+  tests/test_cut_over.py:212 <module>.test_t3_an_aborted_run_closes_as_aborted_with_reason | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_entry_points_take_the_lock.py:59 <module>.test_run_pipeline_refuses_under_a_held_lock_before_opening_the_database | monkeypatch.setattr(rp, "load_spec_for", _never("load_spec_for"))
+  tests/test_entry_points_take_the_lock.py:85 <module>.test_run_pipeline_holds_the_lock_across_every_stage | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_extraction_validator.py:236 <module>._point_cli_at | monkeypatch.setattr(V, "data_root_for", lambda review_id: review)
+  tests/test_extraction_validator.py:237 <module>._point_cli_at | monkeypatch.setattr(V, "load_spec_for", lambda review_id, override=None:
+  tests/test_failed_close_reason.py:103 <module>.cloud | monkeypatch.setattr(rm, "git_state",
+  tests/test_pin_records.py:158 <module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry | monkeypatch.setattr(rm, "git_state", lambda: CLEAN)
+  tests/test_restart_ollama_guard.py:180 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out | monkeypatch.setattr(extractor, "load_codebook_beside", lambda p: SimpleNamespace(semantic_hash="h" * 64))
+  tests/test_review_paths.py:100 <module>.test_mismatch_raises_before_any_database_is_constructed | with patch("engine.core.database.ReviewDatabase.__init__") as spy:
+  tests/test_run_interrupts.py:157 <module>._ft_main | monkeypatch.setattr(review_paths, "load_spec_for", lambda name, path=None: None)
+  tests/test_run_interrupts.py:248 <module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_run_interrupts.py:83 <module>.pipeline | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_run_pipeline_closes.py:131 <module>.real_gates | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_run_pipeline_closes.py:47 <module>.pipeline | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_run_pipeline_starts.py:104 <module>.review | monkeypatch.setattr(rm, "git_state",
+  tests/test_run_pipeline_starts.py:106 <module>.review | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_selection_bound.py:186 <module>.test_T3_an_invalid_bound_refuses_before_any_manifest | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_selection_bound.py:202 <module>.test_T3_a_bound_on_a_run_without_the_extract_stage_refuses | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_selection_bound.py:213 <module>.test_T3_run_pipeline_threads_the_bound_to_the_manifest_and_the_stage | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_u18_digest_per_call.py:277 <module>.test_u18_run_pipeline_closes_aborted_on_a_digest_change | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_u19_env_recheck.py:138 <module>.test_u19_run_pipeline_closes_aborted_on_a_server_env_change | monkeypatch.setattr(rp, "load_spec_for", lambda name, path=None: spec)
+  tests/test_u19_env_recheck.py:72 <module>._loop | monkeypatch.setattr(E, "load_codebook_beside", lambda p: SimpleNamespace(semantic_hash="h" * 64))
+  tests/test_u19_local_service.py:65 <module>.test_u19_a_loopback_host_on_another_port_is_refused_at_open_run | monkeypatch.setattr(rm, "git_state", lambda *a, **k: gits.append(1) or CLEAN)
+  tests/test_u20_loaded_context.py:232 <module>.test_f_run_pipeline_closes_aborted | monkeypatch.setattr(rp, "load_spec_for", lambda n, path=None: spec)
+
+-- (iii) SQL or text naming a git column: 8 hits / 7 files
+   by file: test_engine_state.py 2, _event_store_fixture.py 1, migrations/test_022_run_kinds_and_audit_tables.py 1, test_event_writer_refusals.py 1, test_extraction_run_link.py 1, test_run_calls_outcomes.py 1, test_run_manifest.py 1
+  tests/_event_store_fixture.py:110 <module>.fixture_run | "INSERT INTO run_manifests (run_uid, review_id, run_kind, git_commit, "
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:202 <module>._open_test_run | "INSERT INTO run_manifests (run_uid, review_id, run_kind, git_commit, "
+  tests/test_engine_state.py:83 <module>.test_t3_a_non_state_tag_alongside_is_ignored | """`git_state` keeps only ENGINE_STATES members; `v0.1` reaches git_tag only."""
+  tests/test_engine_state.py:87 <module>.test_t3_a_non_state_tag_alongside_is_ignored | git_tag = db._conn.execute("SELECT git_tag FROM run_manifests WHERE run_id = ?",
+  tests/test_event_writer_refusals.py:358 <module>.test_r68_a_reviewer_event_on_a_pre_manifest_claim_is_allowed_under_a_review_session | "INSERT INTO run_manifests (run_uid, review_id, run_kind, git_commit, git_dirty, "
+  tests/test_extraction_run_link.py:146 <module>.test_t3_a_digest_disagreeing_with_the_pin_refuses_before_selection | c.execute("INSERT INTO run_manifests (run_uid, review_id, run_kind, git_commit, "
+  tests/test_run_calls_outcomes.py:54 <module>._linked_run | "INSERT INTO run_manifests (run_uid, review_id, run_kind, git_commit, "
+  tests/test_run_manifest.py:181 <module>.test_an_untagged_head_is_allowed_with_engine_state_null | row = db._conn.execute("SELECT git_tag, engine_state FROM run_manifests WHERE run_id = ?",
+
+-- (iii) manifest body 'git' key literal: 8 hits / 7 files
+   by file: test_corpus_authority.py 2, test_engine_state.py 1, test_ft_adjudication_import.py 1, test_presented_context.py 1, test_requirements_census.py 1, test_run_manifest.py 1, test_u17_cross_lineage.py 1
+  tests/test_corpus_authority.py:332 <module>.test_no_inline_four_status_literal_outside_the_authority | ["git", "grep", "-l", "-E", pattern, "--", "*.py"],
+  tests/test_corpus_authority.py:382 <module>.test_engine_core_corpus_is_frozen_and_only_a_migration_reads_it | ["git", "grep", "-l", "-E",
+  tests/test_engine_state.py:110 <module>._setup_git | subprocess.run(["git", "-C", str(repo), "-c", f"core.hooksPath={os.devnull}",
+  tests/test_ft_adjudication_import.py:321 <module> | _BODY_KEYS = {"run_uid", "review_id", "run_kind", "git", "engine_state", "spec_hash",
+  tests/test_presented_context.py:73 <module>._open | kw.setdefault("git", CLEAN)
+  tests/test_requirements_census.py:40 <module>._tracked_sources | out = subprocess.run(["git", "ls-files", "--", *(f"{t}/*.py" for t in TREES)],
+  tests/test_run_manifest.py:64 <module>._open | kw.setdefault("git", CLEAN)
+  tests/test_u17_cross_lineage.py:58 <module>._open | kw.setdefault("git", CLEAN)
+
+-- (iii) manifest git-column literal: 7 hits / 4 files
+   by file: test_run_manifest.py 3, test_run_manifest_migration.py 2, test_engine_state.py 1, test_ft_adjudication_import.py 1
+  tests/test_engine_state.py:57 <module>._stored | return row[0], json.loads(row[1])["engine_state"]
+  tests/test_ft_adjudication_import.py:321 <module> | _BODY_KEYS = {"run_uid", "review_id", "run_kind", "git", "engine_state", "spec_hash",
+  tests/test_run_manifest.py:86 <module>.test_a_run_writes_its_manifest_and_one_row_per_stage | assert row["git_commit"] == "b" * 40 and row["git_dirty"] == 0 and row["engine_state"] is None
+  tests/test_run_manifest.py:86 <module>.test_a_run_writes_its_manifest_and_one_row_per_stage | assert row["git_commit"] == "b" * 40 and row["git_dirty"] == 0 and row["engine_state"] is None
+  tests/test_run_manifest.py:86 <module>.test_a_run_writes_its_manifest_and_one_row_per_stage | assert row["git_commit"] == "b" * 40 and row["git_dirty"] == 0 and row["engine_state"] is None
+  tests/test_run_manifest_migration.py:256 <module> | ("run_manifests", "git_commit", {}),
+  tests/test_run_manifest_migration.py:257 <module> | ("run_manifests", "git_dirty", {}),
+
+-- (iv) exact compare to a data/ or review_specs/ literal: 15 hits / 7 files
+   by file: test_review_paths.py 5, test_migration_021_parsed_text_sha256.py 3, test_codebook_loader.py 2, test_ft_adjudication_import.py 2, test_migration_016_017.py 1, test_migration_runner.py 1, test_parsed_text_resolver.py 1
+  tests/test_codebook_loader.py:65 <module>.test_path_derives_from_the_review_id | assert codebook_path_for("surgical_autonomy") == Path(
+  tests/test_codebook_loader.py:67 <module>.test_path_derives_from_the_review_id | assert codebook_path_for("other_review") == Path(
+  tests/test_ft_adjudication_import.py:128 <module>.test_2_a_path_under_the_repo_is_stored_repo_relative | assert adj._stored_path(REPO / "data" / "x" / "d.json") == "data/x/d.json"
+  tests/test_ft_adjudication_import.py:341 <module>.test_13_open_run_with_inputs_records_them | assert body["inputs"] == {"data/x/d.json": "e" * 64}
+  tests/test_migration_016_017.py:84 <module>.test_017_is_declared_a_data_migration_with_its_reason | assert runner.kind_of("017_seed_event_store") == "data"
+  tests/test_migration_021_parsed_text_sha256.py:220 <module>.test_021_normalizes_one_absolute_path_under_the_repo | assert p == "data/rv/parsed_text/2_v1.md"
+  tests/test_migration_021_parsed_text_sha256.py:285 <module>.test_canonical_path_keeps_outside_paths_absolute | assert m021.canonical_path("data/a/../b.md", root) == "data/b.md"
+  tests/test_migration_021_parsed_text_sha256.py:286 <module>.test_canonical_path_keeps_outside_paths_absolute | assert m021.canonical_path(str(root / "data" / "b.md"), root) == "data/b.md"
+  tests/test_migration_runner.py:75 <module>.test_a_data_migration_is_not_executed_on_a_fresh_database | data_ids = [m for m, _ in runner.discover() if runner.kind_of(m) == "data"]
+  tests/test_parsed_text_resolver.py:174 <module>.test_migration_021_and_the_resolver_canonicalise_alike | assert m021.canonical_path(under, pt.REPO_ROOT) == pt.canonical_path(under) == "data/q.md"
+  tests/test_review_paths.py:115 <module>.test_live_spec_loads_at_the_derived_path | assert spec_path_for("surgical_autonomy") == Path("review_specs/surgical_autonomy.yaml")
+  tests/test_review_paths.py:32 <module>.test_spec_path_derivation | assert spec_path_for("surgical_autonomy") == Path("review_specs/surgical_autonomy.yaml")
+  tests/test_review_paths.py:33 <module>.test_spec_path_derivation | assert spec_path_for("other_review") == Path("review_specs/other_review.yaml")
+  tests/test_review_paths.py:37 <module>.test_data_root_derivation | assert data_root_for("surgical_autonomy") == Path("data/surgical_autonomy")
+  tests/test_review_paths.py:38 <module>.test_data_root_derivation | assert data_root_for("other_review") == Path("data/other_review")
+
+-- (iv) exact compare to a relative Path: 7 hits / 2 files
+   by file: test_review_paths.py 5, test_codebook_loader.py 2
+  tests/test_codebook_loader.py:65 <module>.test_path_derives_from_the_review_id | assert codebook_path_for("surgical_autonomy") == Path(
+  tests/test_codebook_loader.py:67 <module>.test_path_derives_from_the_review_id | assert codebook_path_for("other_review") == Path(
+  tests/test_review_paths.py:115 <module>.test_live_spec_loads_at_the_derived_path | assert spec_path_for("surgical_autonomy") == Path("review_specs/surgical_autonomy.yaml")
+  tests/test_review_paths.py:32 <module>.test_spec_path_derivation | assert spec_path_for("surgical_autonomy") == Path("review_specs/surgical_autonomy.yaml")
+  tests/test_review_paths.py:33 <module>.test_spec_path_derivation | assert spec_path_for("other_review") == Path("review_specs/other_review.yaml")
+  tests/test_review_paths.py:37 <module>.test_data_root_derivation | assert data_root_for("surgical_autonomy") == Path("data/surgical_autonomy")
+  tests/test_review_paths.py:38 <module>.test_data_root_derivation | assert data_root_for("other_review") == Path("data/other_review")
+
+-- (iv) exact set/dict/sorted compare over a manifest body key or git column (set(...) == included, R772(d)): 6 hits / 5 files
+   by file: test_run_manifest.py 2, test_arm_pinned_at_extract.py 1, test_ft_adjudication_import.py 1, test_migration_016_017.py 1, test_pin_records.py 1
+  tests/test_arm_pinned_at_extract.py:221 <module>.test_verifying_twice_in_one_run_writes_the_pin_once | assert set(tup["stages"]) == set(E.extraction_stages(spec))
+  tests/test_ft_adjudication_import.py:124 <module>.test_2_the_manifest_records_the_file_sha256_under_inputs_and_pins_stay_arms | assert body["pins"] == {}
+  tests/test_migration_016_017.py:172 <module>.test_017_writes_three_identity_rows_spec_codebook_and_the_seed_marker | assert kinds == {"spec": "review_spec", "codebook": "extraction_codebook",
+  tests/test_pin_records.py:173 <module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry | assert sorted(pinned["stages"]) == sorted(ELICITED_STAGES)
+  tests/test_run_manifest.py:211 <module>.test_a_declared_arm_is_registered_at_its_first_manifest_and_pinned_at_extract | assert json.loads(db._conn.execute("SELECT manifest_json FROM run_manifests WHERE run_id = ?",
+  tests/test_run_manifest.py:217 <module>.test_a_declared_arm_is_registered_at_its_first_manifest_and_pinned_at_extract | assert tup["model"] == "deepseek-r1:32b" and set(tup["stages"]) == set(EXTRACTION)
+
+-- (iv) set(...) == a named key set (R772(d)'s form, the literal elsewhere): 5 hits / 2 files
+   by file: test_font_audit_ledger.py 3, test_ft_adjudication_import.py 2
+  tests/test_font_audit_ledger.py:179 <module>.test_the_ledger_row_round_trips_the_json | assert set(payload) == _LEDGER_KEYS
+  tests/test_font_audit_ledger.py:199 <module>.test_the_structure_payload_has_the_same_keys_and_says_why | assert set(payload) == _LEDGER_KEYS
+  tests/test_font_audit_ledger.py:322 <module>.test_a_judged_attempt_records_its_audit | assert set(payload) == _LEDGER_KEYS
+  tests/test_ft_adjudication_import.py:335 <module>.test_13_open_run_without_inputs_writes_todays_body_shape | assert set(_open(db, spec)) == _BODY_KEYS
+  tests/test_ft_adjudication_import.py:340 <module>.test_13_open_run_with_inputs_records_them | assert set(body) == _BODY_KEYS | {"inputs"}
+
+-- (v) open_run(git=...) seam: 31 hits / 23 files
+   by file: test_u18_one_host.py 3, test_u19_env_recheck.py 3, test_ft_adjudication_import.py 2, test_u18_digest_per_call.py 2, test_u20_loaded_context.py 2, test_undeclared_override.py 2, _event_store_fixture.py 1, migrations/test_022_run_kinds_and_audit_tables.py 1, test_arm_pinned_at_extract.py 1, test_citation_record.py 1, test_codebook_review_at_open.py 1, test_elicitation_sentinel.py 1, test_engine_state.py 1, test_extraction_run_link.py 1
+  tests/_event_store_fixture.py:371 <module>.open_extraction_run | handle = rm.open_run(
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:241 <module>.test_T4_open_run_with_kind_import_succeeds | handle = rm.open_run(db._conn, spec, kind="import", stages=(), codebook=codebook,
+  tests/test_arm_pinned_at_extract.py:171 <module>._open | return rm.open_run(db._conn, spec, kind="extraction", codebook=cb, git=CLEAN,
+  tests/test_citation_record.py:165 <module>._run | handle = rm.open_run(
+  tests/test_codebook_review_at_open.py:80 <module>._open | return rm.open_run(db._conn, spec, kind="extraction",
+  tests/test_elicitation_sentinel.py:96 <module>.test_open_run_refuses_before_any_write | rm.open_run(db._conn, elicited, kind="extraction",
+  tests/test_engine_state.py:50 <module>._open | return rm.open_run(db._conn, spec, kind="extraction", stages=EXTRACTION, codebook=cb,
+  tests/test_extraction_run_link.py:198 <module>.test_t5_the_stored_digests_are_the_manifests | handle = rm.open_run(
+  tests/test_floor_and_stored_attempt.py:441 <module>.test_a_model_arms_claim_on_an_unpinned_arm_is_refused_by_name | handle = rm.open_run(conn, spec, kind="extraction",
+  tests/test_ft_adjudication_import.py:328 <module>._open | h = rm.open_run(db._conn, spec, kind="import", stages=(), codebook=cb, git=CLEAN,
+  tests/test_ft_adjudication_import.py:354 <module>.test_14_a_primary_flag_adjudicated_eligible_is_not_selected_by_the_verifier | run_id = rm.open_run(db._conn, spec, kind="screening",
+  tests/test_ft_screening.py:95 <module>._screening_run | return rm.open_run(db._conn, spec, kind="screening",
+  tests/test_pin_records.py:66 <module>._open | return rm.open_run(db._conn, spec, kind="extraction",
+  tests/test_run_scoped_field_names.py:60 <module>._open | return rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+  tests/test_u18_digest_per_call.py:121 <module>._open | return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+  tests/test_u18_digest_per_call.py:271 <module>.test_u18_run_pipeline_closes_aborted_on_a_digest_change | run_id = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+  tests/test_u18_one_host.py:197 <module>.test_u18_the_manifest_records_the_ollama_host | handle = rm.open_run(review._conn, spec, kind="extraction", stages=_stages(spec),
+  tests/test_u18_one_host.py:212 <module>.test_u18_a_non_loopback_host_is_refused_at_open_run | rm.open_run(review._conn, spec, kind="extraction", stages=_stages(spec),
+  tests/test_u18_one_host.py:236 <module>.test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run | handle = rm.open_run(review._conn, spec, kind="extraction", stages=_stages(spec),
+  tests/test_u19_env_recheck.py:132 <module>.test_u19_run_pipeline_closes_aborted_on_a_server_env_change | run_id = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+  tests/test_u19_env_recheck.py:191 <module>.test_u19_a_body_opened_without_the_environment_has_no_such_key | run_id = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+  tests/test_u19_env_recheck.py:250 <module>.test_u19_a_cloud_shaped_open_records_no_environment | run_id = rm.open_run(db._conn, spec, kind="extraction", stages=(), codebook=cb,
+  tests/test_u19_local_service.py:80 <module>.test_u19_the_local_service_host_is_not_refused | handle = rm.open_run(review._conn, spec, kind="extraction", stages=("extract_pass1",),
+  tests/test_u20_loaded_context.py:121 <module>._open | return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+  tests/test_u20_loaded_context.py:227 <module>.test_f_run_pipeline_closes_aborted | run_id = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+  tests/test_u21_no_overlap.py:160 <module>._run | return rm.open_run(db._conn, spec, kind="screening", stages=("audit",), codebook=cb,
+  tests/test_undeclared_call.py:102 <module>._open | return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+  tests/test_undeclared_override.py:148 <module>.test_T4_ft_config_under_a_declared_run_agrees_with_its_row | h = rm.open_run(db._conn, spec, kind="screening",
+  tests/test_undeclared_override.py:65 <module>._open_vision_run | return rm.open_run(db._conn, spec, kind="screening", stages=("vision_parse",),
+  tests/test_units_as_source_slices.py:235 <module>.test_an_elicited_run_opens_pins_verifies_and_writes_real_events | handle = rm.open_run(
+  tests/test_unknown_field_name.py:56 <module>._open | h = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+
+-- (vi) f-string beginning data/ or review_specs/: 1 hits / 1 files
+   by file: test_migration_021_parsed_text_sha256.py 1
+  tests/test_migration_021_parsed_text_sha256.py:155 <module>.world | rel = f"data/rv/parsed_text/{pid}_v{v}.md"
+
+-- (vi) literal beginning data/ or review_specs/: 229 hits / 113 files
+   by file: test_inventory.py 22, test_migration_021_parsed_text_sha256.py 10, test_readers_on_the_reader.py 7, test_review_paths.py 7, test_codebook_loader.py 6, test_parsed_text_resolver.py 6, test_ft_adjudication_import.py 5, migrations/test_pending_guard.py 4, test_ollama_preflight.py 4, test_cloud_extraction.py 3, test_request_capture.py 3, test_u17_cross_lineage.py 3, test_adjudication_pairs.py 2, test_arm_pinned_at_extract.py 2
+  tests/_event_store_fixture.py:349 <module>.use_spec_codebook | source = (_P(__file__).resolve().parent.parent / "data" / spec.review_id
+  tests/_live_db_guard.py:19 <module> | LIVE_DATA_ROOT = (REPO_ROOT / "data").resolve()
+  tests/analysis/paper1/test_judge_pass2.py:428 <module> | LIVE_REVIEW = Path(__file__).resolve().parents[3] / "data" / "surgical_autonomy"
+  tests/analysis/paper1/test_spanloss_autopsy.py:22 <module>.test_wrapped_list_is_the_healthy_shape | for key in ("fields", "extractions", "data", "results"):
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:224 <module> | LIVE_CODEBOOK = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/migrations/test_pending_guard.py:190 <module>.test_T5_data_migration_pending_include_data_false_is_skipped_not_raised | monkeypatch, fresh.parent, migration_id=fake_id, kind="data",
+  tests/migrations/test_pending_guard.py:206 <module>.test_T5_data_migration_pending_include_data_true_refuses | monkeypatch, fresh.parent, migration_id=fake_id, kind="data",
+  tests/migrations/test_pending_guard.py:222 <module>.test_T5_data_migration_pending_both_true_applies | monkeypatch, fresh.parent, migration_id=fake_id, kind="data",
+  tests/migrations/test_pending_guard.py:76 <module>._inject_fake_migration | lambda: [(m, p) for m, p in real_discover() if runner.kind_of(m) != "data"]
+  tests/test_adjudication_pairs.py:25 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_adjudication_pairs.py:39 <module>._make_review_db | / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+  tests/test_arm_pinned_at_extract.py:37 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_arm_pinned_at_extract.py:49 <module>.spec | return load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+  tests/test_audit_admitted_set.py:41 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_audit_admitted_set.py:55 <module>.spec | return load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+  tests/test_audit_events.py:36 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_audit_events.py:45 <module>.spec | return load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+  tests/test_audit_paper_id.py:32 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_audit_paper_id.py:43 <module>.spec | return load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+  tests/test_audit_stage_completion.py:48 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_audit_stage_completion.py:59 <module>.spec | return load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+  tests/test_background.py:115 <module>.TestMaybeBackground.test_log_path_in_tmux_command | assert "data/my_review/logs/ee_pipeline_" in tmux_cmd
+  tests/test_citation_guard.py:127 <module>.test_uncited_value_never_reaches_the_database | spec = load_review_spec(repo / "review_specs" / "surgical_autonomy.yaml")
+  tests/test_citation_guard.py:130 <module>.test_uncited_value_never_reaches_the_database | shutil.copy2(repo / "data" / "surgical_autonomy" / "extraction_codebook.yaml", cb_path)
+  tests/test_citation_record.py:43 <module> | SPEC_PATH = REPO / "review_specs" / "surgical_autonomy.yaml"
+  tests/test_citation_record.py:44 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_cloud_extraction.py:24 <module> | BACKUP_DB = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy" / "review_backup_v1_schema.db"
+  tests/test_cloud_extraction.py:25 <module> | SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
+  tests/test_cloud_extraction.py:27 <module> | / "data" / "surgical_autonomy" / "extraction_codebook.yaml")
+  tests/test_cloud_package_init.py:64 <module>.test_fresh_review_database_needs_no_provider_sdk | expected = sorted(mid for mid, _ in discover() if kind_of(mid) != "data")
+  tests/test_codebook_evidence_modality.py:31 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_codebook_field_class.py:25 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_codebook_loader.py:25 <module> | LIVE = REPO_ROOT / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_codebook_loader.py:258 <module>.test_identity_is_checked_on_the_derived_path_too | (tmp_path / "data" / "beta").mkdir(parents=True)
+  tests/test_codebook_loader.py:259 <module>.test_identity_is_checked_on_the_derived_path_too | (tmp_path / "data" / "beta" / "extraction_codebook.yaml").write_text(
+  tests/test_codebook_loader.py:66 <module>.test_path_derives_from_the_review_id | "data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_codebook_loader.py:68 <module>.test_path_derives_from_the_review_id | "data/other_review/extraction_codebook.yaml")
+  tests/test_codebook_loader.py:85 <module>.test_missing_file_error_names_the_expected_path | assert "data/no_such_review/extraction_codebook.yaml" in str(exc.value)
+  tests/test_codebook_prompt.py:19 <module>.spec | return load_review_spec("review_specs/surgical_autonomy.yaml")
+  tests/test_codebook_prompt.py:24 <module>.codebook | with open("data/surgical_autonomy/extraction_codebook.yaml") as f:
+  tests/test_codebook_provenance.py:21 <module> | LIVE_DB = REPO_ROOT / "data" / "surgical_autonomy" / "review.db"
+  tests/test_codebook_review_at_open.py:34 <module> | SPEC_PATH = REPO / "review_specs" / "surgical_autonomy.yaml"
+  tests/test_codebook_review_at_open.py:35 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_codebook_staleness.py:23 <module> | LIVE_DB = REPO_ROOT / "data" / "surgical_autonomy" / "review.db"
+  tests/test_completeness_guard.py:31 <module> | SPEC_PATH = Path(__file__).resolve().parent.parent / "review_specs" / "surgical_autonomy.yaml"
+  tests/test_completeness_guard.py:32 <module> | CODEBOOK = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_concordance.py:307 <module>._write_codebook | / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+  tests/test_consensus.py:22 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_cut_over.py:41 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_cut_over.py:47 <module>.spec | return load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+  tests/test_distribution_check_wiring.py:29 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_distribution_check_wiring.py:34 <module>.spec | return load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+  tests/test_distribution_monitor.py:28 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_duplicate_on_pass1_attempt_2.py:41 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_duplicate_on_pass1_attempt_2.py:52 <module>.elicited | spec = load_review_spec(REPO / "review_specs" / "surgical_autonomy.yaml")
+  tests/test_effective_config.py:21 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_elicitation_codebook.py:19 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_elicitation_contracts.py:261 <module>.test_real_codebook_keeps_not_found_a_sentinel_and_coins_a_distinct_escape | cb = C.load("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_elicitation_contracts.py:424 <module>.test_the_prompt_carries_the_integer_only_instruction | cb = CB.load("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_elicitation_prompts_ruling2.py:38 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  … 169 more
+
+-- ReviewDatabase, data_root passed: 162 hits / 93 files
+   by file: test_database.py 15, test_screener.py 8, migrations/test_pending_guard.py 7, migrations/test_022_run_kinds_and_audit_tables.py 6, test_exporters.py 6, test_font_audit_ledger.py 6, test_migration_runner.py 5, test_u19_env_recheck.py 5, test_verify_downloads.py 5, test_ollama_preflight.py 4, test_arm_pinned_at_extract.py 3, test_extractor.py 3, test_prisma_reconciliation.py 3, test_claim_inputs.py 2
+  tests/analysis/paper1/test_judge_cli.py:68 <module>.setup_review | rdb = ReviewDatabase("cli_test", data_root=tmp_path)
+  tests/analysis/paper1/test_judge_loader.py:184 <module>.seeded_db | rdb = ReviewDatabase("loader_test", data_root=tmp_path)
+  tests/analysis/paper1/test_judge_pass2.py:517 <module>.test_paper_366_grammar_prevents_four_element_emission | db = ReviewDatabase("surgical_autonomy", data_root=live_review_copy)
+  tests/analysis/paper1/test_judge_storage.py:36 <module>.db | rdb = ReviewDatabase("judge_storage_test", data_root=tmp_path)
+  tests/analysis/paper1/test_judge_storage_pass2.py:26 <module>.db | rdb = ReviewDatabase("pass2_storage_test", data_root=tmp_path)
+  tests/analysis/paper1/test_pass1_inspection.py:100 <module>.seeded_db | db = ReviewDatabase("pass1_inspection_test", data_root=tmp_path)
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:122 <module>.test_T2_022_preserves_paper_events_rows_and_triggers | db = ReviewDatabase("m022_t2", data_root=tmp_path)
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:236 <module>.test_T4_open_run_with_kind_import_succeeds | db = ReviewDatabase("m022_t4", data_root=tmp_path)
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:31 <module>.fresh | db = ReviewDatabase("m022", data_root=tmp_path)
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:482 <module>.test_T7_claim_inputs_fk_to_papers_enforced | db = ReviewDatabase("m022_t7fk", data_root=fresh.parent.parent / "t7fk")
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:558 <module>.test_T9_structure_differences_name_exactly_the_touched_tables | before_db = ReviewDatabase("m022_before", data_root=tmp_path / "before")
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:565 <module>.test_T9_structure_differences_name_exactly_the_touched_tables | after_db = ReviewDatabase("m022_after", data_root=tmp_path / "after")
+  tests/migrations/test_pending_guard.py:114 <module>.test_T1_fresh_database_applies_pending_migrations_unchanged | db = ReviewDatabase("scratch_review", data_root=tmp_path)
+  tests/migrations/test_pending_guard.py:137 <module>.test_T2_non_fresh_database_with_pending_migration_refuses | ReviewDatabase("scratch_review", data_root=tmp_path)
+  tests/migrations/test_pending_guard.py:165 <module>.test_T3_apply_pending_true_applies_the_fake_migration | db = ReviewDatabase("scratch_review", data_root=tmp_path)
+  tests/migrations/test_pending_guard.py:175 <module>.test_T4_non_fresh_database_with_nothing_pending_succeeds | db = ReviewDatabase("scratch_review", data_root=tmp_path)
+  tests/migrations/test_pending_guard.py:194 <module>.test_T5_data_migration_pending_include_data_false_is_skipped_not_raised | db = ReviewDatabase("scratch_review", data_root=tmp_path)
+  tests/migrations/test_pending_guard.py:276 <module>.test_T6_cli_with_apply_pending_exits_zero_and_applies | db = ReviewDatabase("scratch_review", data_root=tmp_path)
+  tests/migrations/test_pending_guard.py:43 <module>.fresh | db = ReviewDatabase("scratch_review", data_root=tmp_path)
+  tests/test_adjudication.py:43 <module>.tmp_db | db = ReviewDatabase("test_review", data_root=tmp_path)
+  tests/test_arm_pinned_at_extract.py:162 <module>.review | db = ReviewDatabase(REVIEW, data_root=tmp_path)
+  tests/test_arm_pinned_at_extract.py:85 <module>.pipeline | first = ReviewDatabase(REVIEW, data_root=tmp_path)
+  tests/test_arm_pinned_at_extract.py:93 <module>.pipeline | lambda name: ReviewDatabase(REVIEW, data_root=tmp_path))
+  tests/test_atomic_terminal_write.py:30 <module>.db | d = ReviewDatabase("atomic_test", data_root=tmp_path)
+  tests/test_audit_admitted_set.py:60 <module>.db | rdb = ReviewDatabase("u15", data_root=tmp_path)
+  tests/test_audit_events.py:50 <module>.db | rdb = ReviewDatabase("aud", data_root=tmp_path)
+  tests/test_audit_paper_id.py:48 <module>.db | rdb = ReviewDatabase("aud_pid", data_root=tmp_path)
+  tests/test_audit_stage_completion.py:70 <module>.db | rdb = ReviewDatabase("u16", data_root=tmp_path)
+  tests/test_citation_guard.py:128 <module>.test_uncited_value_never_reaches_the_database | db = ReviewDatabase("cg", data_root=tmp_path)
+  tests/test_citation_record.py:89 <module>.db | rdb = ReviewDatabase("u03", data_root=tmp_path)
+  tests/test_claim_inputs.py:182 <module>.sel_db | d = ReviewDatabase("ci_sel", data_root=tmp_path)
+  tests/test_claim_inputs.py:33 <module>.db | d = ReviewDatabase("ci", data_root=tmp_path)
+  tests/test_codebook_provenance.py:145 <module>.test_the_migration_is_wired_not_hand_run | db = ReviewDatabase("prov_wiring", data_root=tmp_path)
+  tests/test_codebook_provenance.py:167 <module>.test_a_new_database_has_the_columns | db = ReviewDatabase("prov_test", data_root=tmp_path)
+  tests/test_codebook_review_at_open.py:63 <module>.review | db = ReviewDatabase("rev", data_root=tmp_path)
+  tests/test_codebook_staleness.py:202 <module>.test_013_is_wired | db = ReviewDatabase("staleness_wiring", data_root=tmp_path)
+  tests/test_cut_over.py:61 <module>.db | rdb = ReviewDatabase("flip", data_root=tmp_path)
+  tests/test_database.py:17 <module>.db | rdb = ReviewDatabase("test_review", data_root=tmp_path)
+  tests/test_database.py:308 <module>.test_context_manager_opens_and_closes | with ReviewDatabase("ctx_test", data_root=tmp_path) as db:
+  tests/test_database.py:323 <module>.test_context_manager_closes_on_exception | with ReviewDatabase("ctx_exc", data_root=tmp_path) as db:
+  tests/test_database.py:332 <module>.test_close_is_idempotent | db = ReviewDatabase("ctx_idem", data_root=tmp_path)
+  tests/test_database.py:341 <module>.test_manual_usage_still_works | db = ReviewDatabase("ctx_manual", data_root=tmp_path)
+  tests/test_database.py:358 <module>.test_migration_existing_column_succeeds_silently | db1 = ReviewDatabase("mig_test", data_root=tmp_path)
+  tests/test_database.py:362 <module>.test_migration_existing_column_succeeds_silently | db2 = ReviewDatabase("mig_test", data_root=tmp_path)
+  tests/test_database.py:375 <module>.test_migration_syntax_error_raises | db = ReviewDatabase("mig_err", data_root=tmp_path)
+  tests/test_database.py:385 <module>.test_migration_syntax_error_raises | ReviewDatabase("mig_err", data_root=tmp_path)
+  tests/test_database.py:396 <module>.test_normal_pipeline_cannot_use_admin_transition | db = ReviewDatabase("admin_guard", data_root=tmp_path)
+  tests/test_database.py:416 <module>.test_cloud_null_confidence_raises_integrity_error | db = ReviewDatabase("test_cloud_l3", data_root=tmp_path)
+  tests/test_database.py:445 <module>.test_cloud_null_tier_raises_integrity_error | db = ReviewDatabase("test_cloud_l3b", data_root=tmp_path)
+  tests/test_database.py:474 <module>.test_update_status_atomic_valid_transition | db = ReviewDatabase("atomic_ok", data_root=tmp_path)
+  tests/test_database.py:481 <module>.test_update_status_atomic_valid_transition | db2 = ReviewDatabase("atomic_ok", data_root=tmp_path)
+  tests/test_database.py:488 <module>.test_update_status_invalid_transition_still_raises | db = ReviewDatabase("atomic_err", data_root=tmp_path)
+  tests/test_db_backup.py:100 <module>.test_backup_production_shape | db = ReviewDatabase("scratch_review", data_root=tmp_path)
+  tests/test_distribution_check_wiring.py:39 <module>._db | db = ReviewDatabase("wire", data_root=tmp_path)
+  tests/test_duplicate_on_pass1_attempt_2.py:64 <module>.db | rdb = ReviewDatabase("dup", data_root=tmp_path)
+  tests/test_elicitation_sentinel.py:91 <module>.test_open_run_refuses_before_any_write | db = ReviewDatabase("sentinel", data_root=tmp_path)
+  tests/test_eligibility.py:416 <module>._db_with_one_paper | db = ReviewDatabase("t", data_root=tmp_path)
+  tests/test_engine_state.py:33 <module>.review | db = ReviewDatabase("es", data_root=tmp_path)
+  tests/test_exporters.py:110 <module>.prisma_db | db = ReviewDatabase("test_prisma_export", data_root=tmp_path)
+  tests/test_exporters.py:476 <module>.run_db | db = ReviewDatabase("test_methods_run", data_root=tmp_path)
+  … 102 more
+
+-- ReviewDatabase, no data_root: 6 hits / 4 files
+   by file: test_migration_018_cloud_shape.py 3, test_live_db_guard.py 1, test_migration_019_paper_axes.py 1, test_readers_on_the_reader.py 1
+  tests/test_live_db_guard.py:32 <module>.test_guard_refuses_a_construction_under_the_live_data_root | ReviewDatabase("surgical_autonomy")
+  tests/test_migration_018_cloud_shape.py:236 <module>.test_a_fresh_review_database_reaches_the_post_018_shape | db = ReviewDatabase(str(tmp_path / "rev"))
+  tests/test_migration_018_cloud_shape.py:262 <module>.test_audit_adjudication_does_not_come_back_across_two_constructions | db = ReviewDatabase(root)
+  tests/test_migration_018_cloud_shape.py:276 <module>.test_the_other_adjudication_tables_are_still_provisioned | db = ReviewDatabase(str(tmp_path / "rev"))
+  tests/test_migration_019_paper_axes.py:307 <module>.test_a_fresh_review_database_carries_the_two_axis_vocabulary | db = ReviewDatabase(str(tmp_path / "rev"))
+  tests/test_readers_on_the_reader.py:40 <module>.review | db = ReviewDatabase(str(root))
+
+-- chdir sites: 2 hits / 2 files
+   by file: test_codebook_loader.py 1, test_review_paths.py 1
+  tests/test_codebook_loader.py:257 <module>.test_identity_is_checked_on_the_derived_path_too | monkeypatch.chdir(tmp_path)
+  tests/test_review_paths.py:43 <module>.test_data_root_does_not_create_anything | monkeypatch.chdir(tmp_path)
+
+== counts
+sites call ReviewDatabase, data_root passed: 10
+sites call ReviewDatabase, no data_root (DATA_ROOT, cwd): 23
+sites call canonical_path: 3
+sites call codebook_path_for: 1
+sites call data_root_for: 4
+sites call git_state: 1
+sites call load_codebook_beside: 15
+sites call load_codebook_for: 10
+sites call load_spec_for: 17
+sites call resolve_stored_path: 3
+sites call spec_path_for: 7
+sites definition DATA_DIR (module file): 3
+sites definition DATA_ROOT (cwd): 3
+sites definition MIGRATIONS_DIR (module file): 1
+sites definition PROJECT_ROOT (module file): 18
+sites definition REPO_ROOT (module file): 4
+sites definition SPEC_ROOT (cwd): 1
+sites definition _MIGRATIONS_DIR (module file): 1
+sites definition other __file__-derived (DEFINITIONS_PATH): 1
+sites f-string beginning data/ or review_specs/: 4
+sites import of a root name: 10
+sites keyword passed codebook_path=: 7
+sites keyword passed data_root=: 10
+sites literal beginning data/ or review_specs/: 80
+sites parameter codebook_path: 40
+sites parameter data_root: 5
+sites parameter override: 3
+sites parameter repo_root: 14
+sites parameter review_root,spec_path,codebook_path: 1
+sites parameter spec_path: 13
+sites read DATA_ROOT: 19
+sites read PROJECT_ROOT: 27
+sites read REPO_ROOT: 12
+sites read SPEC_ROOT: 1
+sites relative Path("...") literal (cwd): 36
+tests (i) direct names: 117 / 48
+tests (i) from-imports: 51 / 48
+tests (ii) attribute access on an alias (e.g. db_module.DATA_ROOT): 4 / 2
+tests (ii) attribute access to a deriver: 11 / 4
+tests (ii) patch or setattr naming a root or deriver: 28 / 17
+tests (iii) SQL or text naming a git column: 8 / 7
+tests (iii) manifest body 'git' key literal: 8 / 7
+tests (iii) manifest git-column literal: 7 / 4
+tests (iv) exact compare to a data/ or review_specs/ literal: 15 / 7
+tests (iv) exact compare to a relative Path: 7 / 2
+tests (iv) exact set/dict/sorted compare over a manifest body key or git column (set(...) == included, R772(d)): 6 / 5
+tests (iv) set(...) == a named key set (R772(d)'s form, the literal elsewhere): 5 / 2
+tests (v) open_run(git=...) seam: 31 / 23
+tests (vi) f-string beginning data/ or review_specs/: 1 / 1
+tests (vi) literal beginning data/ or review_specs/: 229 / 113
+tests ReviewDatabase, data_root passed: 162 / 93
+tests ReviewDatabase, no data_root: 6 / 4
+tests chdir sites: 2 / 2

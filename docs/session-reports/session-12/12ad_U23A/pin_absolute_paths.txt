@@ -1,0 +1,4 @@
+abs rc 0
+pin_tuples with absolute paths: byte-identical to 12ac_close/pin_tuples_close.json
+aea193540e52487550ddb0121f5491c4cffae2272ecd248c80839f5d262bf24f  /home/ankitsarin/scratch/12ad-u23a/pins_abs.json
+aea193540e52487550ddb0121f5491c4cffae2272ecd248c80839f5d262bf24f  docs/session-reports/session-12/12ac_close/pin_tuples_close.json

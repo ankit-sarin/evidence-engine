@@ -1,0 +1,42 @@
+-- constants as imported
+SPEC_ROOT PosixPath('review_specs') absolute False; DATA_ROOT PosixPath('data') absolute False; review_paths.DATA_ROOT is database.DATA_ROOT True
+the four REPO_ROOTs equal: run_manifest /home/ankitsarin/projects/evidence-engine, parsed_text /home/ankitsarin/projects/evidence-engine, 021 /home/ankitsarin/projects/evidence-engine, inventory /home/ankitsarin/projects/evidence-engine: True
+
+[A. the repository root (the launch R350 names)] cwd = /home/ankitsarin/projects/evidence-engine
+  spec_path_for -> review_specs/surgical_autonomy.yaml  resolved /home/ankitsarin/projects/evidence-engine/review_specs/surgical_autonomy.yaml; under REPO_ROOT True
+  data_root_for -> data/surgical_autonomy  resolved /home/ankitsarin/projects/evidence-engine/data/surgical_autonomy; under REPO_ROOT True
+  ReviewDatabase's path arithmetic (the guard's mirror, no open) -> /home/ankitsarin/projects/evidence-engine/data/surgical_autonomy/review.db
+  git_state() REPO_ROOT /home/ankitsarin/projects/evidence-engine; commit c83b0d5d678f55fb616451e64bf3ab3609c8f5f5; dirty True
+  ACCEPTANCE ASSERTION (both roots under git_state's root): True
+  load_spec_for loads; title 'Autonomy in Surgical Robotics: A Systematic Review'; spec_hash 9b18f36cec0a0014…
+  load_codebook_for path data/surgical_autonomy/extraction_codebook.yaml; sha256 89dbfa91b5033f2b…
+
+[B. a directory with no review_specs/ (after import: the chdir is at run time)] cwd = /home/ankitsarin/scratch/12ad-u23a/probe_scratch/empty
+  spec_path_for -> review_specs/surgical_autonomy.yaml  resolved /home/ankitsarin/scratch/12ad-u23a/probe_scratch/empty/review_specs/surgical_autonomy.yaml; under REPO_ROOT False
+  data_root_for -> data/surgical_autonomy  resolved /home/ankitsarin/scratch/12ad-u23a/probe_scratch/empty/data/surgical_autonomy; under REPO_ROOT False
+  ReviewDatabase's path arithmetic (the guard's mirror, no open) -> /home/ankitsarin/scratch/12ad-u23a/probe_scratch/empty/data/surgical_autonomy/review.db
+  git_state() REPO_ROOT /home/ankitsarin/projects/evidence-engine; commit c83b0d5d678f55fb616451e64bf3ab3609c8f5f5; dirty True
+  ACCEPTANCE ASSERTION (both roots under git_state's root): False
+  load_spec_for raises ReviewSpecError: Review spec not found at review_specs/surgical_autonomy.yaml. Expected a YAML file (e.g., review_specs/<review_id>.yaml).
+  load_codebook_for raises CodebookError: Codebook not found at data/surgical_autonomy/extraction_codebook.yaml. Every review carries one at data/<review_id>/extraction_codebook.yaml.
+  --spec override (absolute live spec) loads, title 'Autonomy in Surgical Robotics: A Systematic Review', spec_hash equal to live True; data_root_for still /home/ankitsarin/scratch/12ad-u23a/probe_scratch/empty/data/surgical_autonomy
+  data_root= given: /home/ankitsarin/scratch/12ad-u23a/probe_scratch/elsewhere/surgical_autonomy/review.db (does not follow the cwd; a relative data_root would)
+  resolve_stored_path('data/x/parsed_text/1_v1.md') -> /home/ankitsarin/projects/evidence-engine/data/x/parsed_text/1_v1.md (R100: REPO_ROOT, not the cwd)
+  canonical_path(abspath('data/x/a.md')) -> /home/ankitsarin/scratch/12ad-u23a/probe_scratch/empty/data/x/a.md (outside the root: absolute)
+  directories created under the cwd by these calls: []
+
+[C. another tree with its own review_specs/<id>.yaml and data/<id>/] cwd = /home/ankitsarin/scratch/12ad-u23a/probe_scratch/copy
+  spec_path_for -> review_specs/surgical_autonomy.yaml  resolved /home/ankitsarin/scratch/12ad-u23a/probe_scratch/copy/review_specs/surgical_autonomy.yaml; under REPO_ROOT False
+  data_root_for -> data/surgical_autonomy  resolved /home/ankitsarin/scratch/12ad-u23a/probe_scratch/copy/data/surgical_autonomy; under REPO_ROOT False
+  ReviewDatabase's path arithmetic (the guard's mirror, no open) -> /home/ankitsarin/scratch/12ad-u23a/probe_scratch/copy/data/surgical_autonomy/review.db
+  git_state() REPO_ROOT /home/ankitsarin/projects/evidence-engine; commit c83b0d5d678f55fb616451e64bf3ab3609c8f5f5; dirty True
+  ACCEPTANCE ASSERTION (both roots under git_state's root): False
+  load_spec_for loads with no error, title 'A DIFFERENT SPEC, FROM ANOTHER TREE'; spec_hash equal to the engine checkout's False
+  load_codebook_for path data/surgical_autonomy/extraction_codebook.yaml resolved /home/ankitsarin/scratch/12ad-u23a/probe_scratch/copy/data/surgical_autonomy/extraction_codebook.yaml; sha256 equal to the engine checkout's False; identity check passed (its review: is 'surgical_autonomy')
+  the manifest would record commit c83b0d5d678f55fb616451e64bf3ab3609c8f5f5 dirty True (from /home/ankitsarin/projects/evidence-engine), spec_hash and codebook_sha256 of the other tree, and no path
+
+-- git_state on a directory that is not a repository (a copy without .git)
+  commit ''; dirty False; tag None
+
+-- back at the repository root: same objects, resolved afresh
+  SPEC_ROOT PosixPath('review_specs') resolved /home/ankitsarin/projects/evidence-engine/review_specs

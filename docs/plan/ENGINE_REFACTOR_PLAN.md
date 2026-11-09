@@ -945,11 +945,12 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 | INT-ad12-2 | `papers.pdf_local_path` and `full_text_assets.pdf_path` have no storage rule (parsed text has R100's): `download.py:381` `(str(dest), now, p["id"]),` and `verify_downloads.py:269` `(str(actual_path), now, pid),` write whatever form `DATA_ROOT` produces, `pdf_parser.py:1043–1049` tries a stored path against the working directory before `pdf_dir`, and under option A new rows store absolute strings beside the relative ones live may hold. The live columns' form is read mode=ro at this row's Phase A, not before. | 3 | P6 | R780(g) | `12ad_U23A.md` §8 F5 and §9 Q2 |
 | INT-ad12-3 | The suite writes into the real `data/` tree: `tests/test_background.py:100` (`test_log_path_in_tmux_command`) takes `tmp_path`, does not use it, and `log_dir.mkdir` runs for real (`data/my_review`, `data/myreview` and `data/review/logs` exist on disk). Not a database, so the live guard does not see it. Independent of U23. | 3 | P7 | R781(i) | `12ad_U23B.md` §3 and §7 F4 |
 
-**L (12ae additions, R785).** *Opened 2026-11-09 (12ae-U24B item 0) under R509 and R785(f).* One row from U24's Phase A read-out (`12ae_U24A.md`, `d7f5905`): `INT-ae12-1` from its §3 point 3 and §8 F7, placed in its own table so that the 12w recount's bounds are unchanged (R649(a), R651(a)). The text cell is composed from R785(f)'s words and the read-out's quoted lines.
+**L (12ae additions, R785).** *Opened 2026-11-09 (12ae-U24B item 0) under R509 and R785(f).* One row from U24's Phase A read-out (`12ae_U24A.md`, `d7f5905`): `INT-ae12-1` from its §3 point 3 and §8 F7, placed in its own table so that the 12w recount's bounds are unchanged (R649(a), R651(a)). The text cell is composed from R785(f)'s words and the read-out's quoted lines. *2026-11-09 (12ae-U27B item 0, R792(g)):* a second row, `INT-ae12-2`, from U27's Phase A read-out (`12ae_U27A.md`, `0d1d004`) §1 2e question 3 and `12f_C56-A.md` #25; its text cell is composed from R792(g)'s words and the read-out's quoted lines.
 
 | # | On disk (`12ae_U24A.md`, composed under R785(f)) | Class | Owning package | Governing ruling | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | INT-ae12-1 | The `preflight` and `ollama` source labels read `spec` for values the YAML never set: `default_factory` supplies both blocks on every loaded spec (`review_spec.py:816` `ollama: OllamaRuntime = Field(default_factory=OllamaRuntime)`, `:818` `preflight: PreflightConfig = Field(default_factory=PreflightConfig)`), so `effective_config._block` returns the instance as the source (`blk = getattr(spec, attr, None) if spec is not None else None`). Telemetry only; no stored value is wrong. | 3 | P7 | R785(f) | `12ae_U24A.md` §3 point 3 and §8 F7 |
+| INT-ae12-2 | The cloud retry loops (`openai_extractor.py:162–179`, `anthropic_extractor.py:184–205`) re-send on a provider error that cannot succeed: `BadRequestError`, `NotFoundError` and `PermissionDeniedError` fall to the generic `except Exception as exc:` (`openai_extractor.py:179`, `anthropic_extractor.py:205`), which on attempts 1–2 waits and re-sends (`if attempt < 2:` … `time.sleep(wait)`) as it does for a transient error — three paid attempts against a request that cannot succeed. Only `AuthenticationError` stops the loop (`openai_extractor.py:157`, `anthropic_extractor.py:179`: `logger.critical(…)` / `raise`). Behind R71 (`enabled_arms: []`); no stored value is wrong. | 3 | P7 | R792(g) | `12ae_U27A.md` §1 2e question 3 and `12f_C56-A.md` #25 |
 
 ### Not engine defects — plan v50 wording
 
@@ -16961,3 +16962,140 @@ R791(d) — U27's Phase A opens: 12l_P1A.md §3's U27, "Run-fault predicate at t
 | 2026-11-09 | R791(a) — The 12ae-U26B final report is accepted as reported: item 0 e89d602 (Block 188; the C56 and L07-C4 notes in one row; the HK-ARCH note; the brief file byte-equal to the architect's copy, the seventh match of seven), the engine commit 69e9db8 (four files; the import, six re-raise pairs, the two clause names; the inventory regenerated under R786(b)'s form, line moves only), the gate 3,525 / 1 / 17 on 3,543 / 3,526 at 945.63 s inside 837–1021 s, only-gate the 24 U26 ids, no load, the nineteen files, green at the first run; the evidence commit 5895e8c; ledgers cbab7fe, 99a8cb2 and 51ff0e8 with trailers. Both pins and the audit prompt_hash byte-identical. U26 is landed; P1's fix units 37, done 29. The acceptance test tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves (18 run-fault cases red on the parent e89d602 in 12ae_U26B/b0_parent_acceptance.txt, green in 12ae_U26B/gate_u26b/; 6 KeyError cases green on both) is C56's parse-half acceptance. C56 stays OPEN until U27's handlers 8–11 land (R542); its note at the next item 0 records U26's landing and this test, not a close. R791(b) — The series on this host state gains 945.63 s: thirty-five. The band stays 837–1021 s (R783(b)). R791(c) — Readings, no row: finding 1 (handlers 12–13's clauses gained `as exc` — U02's form needs the name; the brief's "No other line changes" and its binding clause written for :901 were the architect's, and CC read the ruling's form over the brief's wording, as R732(a) directs; the two "−" lines are those clauses and nothing else); finding 2 (handler 13's seam: a non-fault at the INSERT and the parametrized exception at the rollback, so 13 is reached as itself — the test's docstring states it; accepted); finding 3 (every case through parse_all_pdfs with an identity assertion, which also shows 4–5's fault is not wrapped — stronger than the ruling asked; accepted); finding 4 (inventory --check reports one entry's flags drift where --write moves three lines — a recorded limit of the inventory tool, joining the tools list for the next tools change beside R752(c), R765(d), R766(d), R784(d)); finding 5 (E1–E3 held). The regenerated inventory's generated-at stamp names the parent, the tool's form (R787(d)). R791(d) — U27's Phase A opens: 12l_P1A.md §3's U27, "Run-fault predicate at the cloud handlers (P1's tail)" (C56, handlers 8–11 in 12f_triage.md's numbering: the two transports' retry loops and their `store_result` handlers; R542, R612(g)), read-only, in 12ae_U26A.md's form (the I2 mapping first), its entry quoted first. The cloud path is behind R71 (`enabled_arms` empty on live) and unreachable on Run 7; no provider is called — the fakes stand in for the SDK clients, and no API key is read or needed. No engine, test, script, spec or codebook edit; no model call; no live write. C56 closes at the item 0 after U27's gate, when U02, U26 and U27 have passed (the entry's note). This ruling states no standing rule. | PI, 2026-11-09, during session 12ae, on architect recommendation, on the 12ae-U26B final report (item 0 e89d602; engine 69e9db8; evidence 5895e8c) |
 
 The decision log in this file ends at R791.
+
+**Block 190.** *Transcribed 2026-11-09 (item 0 of the 12ae-U27B brief), in its own commit with the row INT-ae12-2 and the brief file it orders, in the R597(e) form:* ruling R792, made by PI on architect recommendation on 2026-11-09 UTC, during session 12ae, on the 12ae-U27A final report (item 0 `dd1b0b508cbf909c1635bf6cb434754e11ab51e6`; read-out `0d1d004e69872e3521c3b57c5fbe12868482cb13`). The 12ae-U27B brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ae-R792] — 12ae-U27A accepted; the committed brief equal to the
+  architect's copy; U27's design: option A at the four cloud handlers, the pinning test moved to
+  a paper outcome, the acceptance test through run_arm with fakes and no provider; B not taken
+  (nothing to carve out at the pinned SDKs); C not taken (the cloud close stays `failed`, as the
+  local path's); U27 lands before U29; INT-ae12-2 opened; readings; the build opens as one brief
+STATUS: PI ruling, 2026-11-09 UTC, session 12ae, on architect recommendation, on the 12ae-U27A
+  final report (item 0 dd1b0b5; read-out 0d1d004, docs/session-reports/session-12/12ae_U27A/
+  12ae_U27A.md, sha256 3376c91fd7bf1a7125caca62f02f344c69b56af87faee12913f172d989c49353, 338
+  lines). Transcribe at item 0 of the 12ae-U27B brief below, by transcribe_ruling.py, in the block
+  after R791's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the read-out and the report):
+  MEASURED: "12ae_U27A/brief_12ae_U27A.md is 00101c9e456dffcac8a8f25d3c697397a3e715269a8bd0184b98013919700138,
+    24,125 B, 315 lines" (the architect's copy: equal, cmp byte for byte); "constructors: 20,
+    every one with the placeholder key and no other argument: True"; "outbound requests
+    attempted: httpx send 0, socket connect 0"; "The Ollama journal for the probe window
+    (2026-11-09 19:05:00–19:05:14 UTC) reads -- No entries --"; "8 / 9, recorder
+    sqlite3.OperationalError | 6 (3 per paper) | [2, 4, 2, 4] | failed 2 | 0 | 0 | 0 | completed";
+    "10 / 11, store sqlite3.OperationalError | 2 | — | failed 2 | 0 (both answers discarded) | 2
+    (completed) | 0 | completed"; "issubclass(openai.APIConnectionError, run_fault_classes()) is
+    False (and so for anthropic)"; "all 36 of tests/test_cloud_extraction.py's ids report
+    PASSED, none skipped"; "Plan +78 / −1; the "−" line is exactly C56's row".
+  READ (the read-out, §1–§9): the I2 mapping, "8 → #25 → openai_extractor.py:179", "9 → #27 →
+    anthropic_extractor.py:205", "10 → #26 → openai_extractor.py:209", "11 → #28 →
+    anthropic_extractor.py:237", each "except Exception as exc:"; "Every handler maps, one to
+    one"; "self.client = openai.OpenAI(api_key=key)" (:36) and the anthropic twin (:37);
+    "Passing api_key short-circuits os.environ.get, so no key is read"; base.py:141 "if
+    self.run_id is not None:"; the close "except BaseException as exc: … status, reason =
+    "failed", rm.failure_reason(exc) … raise … finally: rm.close_run(…)" (run_cloud_extraction.py
+    :112–127); "There is no aborted close on the cloud path"; "No test patches a run-fault
+    side_effect into a cloud seam"; the pinning test "tests/test_cloud_extraction.py:840 …
+    raise sqlite3.IntegrityError("simulated constraint violation") … assert stats["failed"] == 1
+    / assert stats["extracted"] == 1"; "TestStoreResultCrashProtection has only the OpenAI case";
+    "neither transport is in scripts/run_pipeline.py's static closure"; §2e's four questions; F1
+    ("C56's row carries only Wave 2 row 24"); F4 ("U29 shares U27's two files"); F5
+    ("12f_C56-A.md:97 … predates R625(a)(8)"); F6 ("modules.md:274 … ARM= … retired (C20)").
+  INFERRED: none.
+
+R792(a) — The 12ae-U27A final report is accepted as printed: item 0 dd1b0b5 (Block 189 by
+  transcribe_ruling.py; the C56 note; the dated units line; brief_12ae_U27A.md), the read-out
+  0d1d004 with census_u27a.py/.txt and fake_probe_u27a.py/.txt (the fakes' call record inside:
+  twenty constructions with the placeholder key, zero outbound requests, the journal empty),
+  ledgers c8b8df1 and 0eddaf6 with trailers. No stop. The committed brief file is byte-equal to
+  the architect's copy, the eighth match of eight. I2 and I3 held; E1–E3 held.
+R792(b) — U27's design: option A. At the four handlers of the mapping — openai_extractor.py:179
+  (8) and anthropic_extractor.py:205 (9), before the `if attempt < 2:` re-send decision;
+  openai_extractor.py:209 (10) and anthropic_extractor.py:237 (11), before the failed-paper
+  count — `if is_run_fault(exc): raise`, U02's form, `is_run_fault` imported from
+  engine.core.extraction_events in each transport. No other engine line changes; base.py is not
+  edited (its :308 and :401 are outside U27 by the mapping; :401 already re-raises into 10–11).
+  The run closes through run_arm's existing close, `failed` with `rm.failure_reason(exc)`
+  (R625(a)(8)), which the read-out quotes; this is not C47's family. The tuple is not touched
+  (U02's contract).
+R792(c) — Not taken: B (a connection-error carve-out at 8–9). At the pinned SDKs (openai 2.24.0,
+  anthropic 0.84.0) every transport exception leaves the client as APIConnectionError or
+  APITimeoutError, neither a tuple member, so a provider outage stays with the retry loop under
+  A exactly as today; a carve-out would guard a case the SDKs do not produce and would keep a
+  rule broader than the tuple's in two files. Question 1 of §2e is answered by the record: a
+  provider outage is not a run fault by the tuple's definition, and this ruling does not make it
+  one. Not taken: C (an `aborted` close for a run fault at the entry point). run_pipeline closes
+  `failed` for a store fault; C would make the cloud path's close differ from the local path's
+  for the same sqlite3.Error, and it edits scripts/run_cloud_extraction.py, outside U27's file
+  list. Question 4 of §2e: `failed`, with the reason, as today.
+R792(d) — Order (F4; question 2 of §2e): U27 lands before U29, 12l_P1A.md §3's order. A recorder
+  fault at 8–9 is record_call itself raising after a paid send; U29's fix (a send that raises
+  still records its call) cannot write a row through a failing recorder, so the unrecorded paid
+  call under a recorder fault is irreducible and U29 does not change it. Under A that run closes
+  `failed` with the reason instead of re-sending twice and reading `completed`, which is the
+  honest record. Neither unit changes the other's handlers.
+R792(e) — Fail-first and callers: the acceptance test
+  tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves,
+  in fake_probe_u27a.py's seams (a scratch ReviewDatabase with two seeded papers and parsed
+  texts, the live codebook copied beside it and never written, a spec copy with the one arm
+  enabled, rm.git_state patched clean, cli.EXTRACTORS pointing at a thin subclass passing a
+  placeholder key, the SDK classes replaced by recording fakes, time.sleep a recorder, httpx
+  send and socket.connect refusing recorders), driven through scripts.run_cloud_extraction.run_arm,
+  parametrized: at 8 and 9, {sqlite3.OperationalError at the recorder, a bare ConnectionError
+  from the provider seam, KeyError, the SDK's APIConnectionError}; at 10 and 11,
+  {sqlite3.OperationalError at the store, KeyError} — twelve cases. Tuple-member cases (six):
+  the exception leaves run_arm as itself (identity); exactly one send; no cloud_extractions row
+  for the arm (the paper stays pending); run_arm's manifest row closed `failed` with
+  rm.failure_reason(exc). KeyError and APIConnectionError cases (six): today's outcome as §5
+  records it (8–9: three sends per paper, waits [2, 4, 2, 4], failed 2, manifest `completed`;
+  10–11: failed 2, run_calls 2 `completed`, manifest `completed`). The test asserts the fakes'
+  record: every construction with the placeholder key, zero outbound requests. It opens no
+  gitignored fixture (B14's skip does not apply to it). Red on the parent at the six
+  tuple-member cases, green at the six others, recorded in b0_parent_acceptance.txt; green in
+  the gate. The pinning test tests/test_cloud_extraction.py::TestStoreResultCrashProtection::
+  test_openai_store_failure_continues_run moves its injected exception from
+  sqlite3.IntegrityError to ValueError (the 0-span refusal, store_result's own paper outcome,
+  base.py:342–358), its subject kept — a per-paper store failure that is a paper outcome
+  continues the run — class (c); its class docstring gains "a paper-outcome" before
+  "store_result failures" so it reads true. No Anthropic twin is added (F8): the acceptance
+  test's KeyError cases at 10 and 11 prove the conversion kept on both transports.
+R792(f) — Docs: no CLAUDE.md or docs/architecture line is made false by (b) — the lines the
+  read-out quotes (pipeline.md:439, models.md:101–102, :126, CLAUDE.md:381–382) describe
+  provider errors and the 0-span refusal, which A leaves as they are. None is edited.
+  docs/inventory: regenerated in the engine commit only if `inventory --write` changes a file
+  (R786(b)'s form, the drift read from the diff, not from --check — R791(c) finding 4); an empty
+  diff is the expected case, since no entry point moves.
+R792(g) — Rows and notes, at 12ae-U27B's item 0: INT-ae12-2 opened in section L (12ae
+  additions), Class 3, P7, from §2e question 3 and 12f_C56-A.md #25: the cloud retry loops
+  re-send on the non-retryable provider errors (BadRequestError, NotFoundError,
+  PermissionDeniedError) as they do on a transient one — three paid attempts against a request
+  that cannot succeed; AuthenticationError alone stops the loop (openai_extractor.py:157,
+  anthropic_extractor.py:179). Behind R71; no stored value wrong. The id INT-ae12-2 is first
+  used here (R790(f)'s HK-ARCH note named it only as not opened). No note on C56 (nothing has
+  landed since R791(a)'s note; its close is the next item 0's, after U27's gate, when U02, U26
+  and U27 have passed — R542). No note on HK-ARCH for F6: the 2026-10-15 (12o-U12-C6 resume)
+  note already records modules.md's ARM= entries as stale. No dated units line (nothing landed).
+R792(h) — Readings, no row: F1 (R6's premise was the architect's — the Wave 2 notes 25, 27 and
+  28 sit on B9, C28 and C24, not C56; the overlap stands where it is; a row's content is quoted
+  from the row, not recalled); F3 (the recorder route exists only under a run — so the
+  acceptance test drives 8–9 through run_arm, and the bare ConnectionError case reaches them
+  from the provider seam); F5 (12f_C56-A.md:97 predates R625(a)(8); the record governs,
+  R732(a)); F6 (recorded already, (g)); F8 ((e)); E1–E3 held. The read-out's §9 limits stand
+  as recorded; the stage-key question at 12f_C56-A.md:717 stays open and is not U27's.
+R792(i) — The build opens as one brief, 12ae-U27B (R785(h)'s form): the read-out quoted every
+  site, every coupled test and the acceptance test's seams at 0d1d004, the engine tree is
+  unchanged since 69e9db8, and the change is two imports, four re-raise pairs, one test's
+  exception and docstring, and one new test file. The brief re-reads the four clauses, the
+  pinning test, the send, the store's re-raise and run_arm's close at HEAD before the first edit
+  and stops on any difference from the read-out. No model call, no provider call, no API key
+  read, no live write; the standard gate by the wrapper against 837–1021 s. This ruling states
+  no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at item 0,
+  asserted by content.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-09 | R792(a) — The 12ae-U27A final report is accepted as printed: item 0 dd1b0b5 (Block 189 by transcribe_ruling.py; the C56 note; the dated units line; brief_12ae_U27A.md), the read-out 0d1d004 with census_u27a.py/.txt and fake_probe_u27a.py/.txt (the fakes' call record inside: twenty constructions with the placeholder key, zero outbound requests, the journal empty), ledgers c8b8df1 and 0eddaf6 with trailers. No stop. The committed brief file is byte-equal to the architect's copy, the eighth match of eight. I2 and I3 held; E1–E3 held. R792(b) — U27's design: option A. At the four handlers of the mapping — openai_extractor.py:179 (8) and anthropic_extractor.py:205 (9), before the `if attempt < 2:` re-send decision; openai_extractor.py:209 (10) and anthropic_extractor.py:237 (11), before the failed-paper count — `if is_run_fault(exc): raise`, U02's form, `is_run_fault` imported from engine.core.extraction_events in each transport. No other engine line changes; base.py is not edited (its :308 and :401 are outside U27 by the mapping; :401 already re-raises into 10–11). The run closes through run_arm's existing close, `failed` with `rm.failure_reason(exc)` (R625(a)(8)), which the read-out quotes; this is not C47's family. The tuple is not touched (U02's contract). R792(c) — Not taken: B (a connection-error carve-out at 8–9). At the pinned SDKs (openai 2.24.0, anthropic 0.84.0) every transport exception leaves the client as APIConnectionError or APITimeoutError, neither a tuple member, so a provider outage stays with the retry loop under A exactly as today; a carve-out would guard a case the SDKs do not produce and would keep a rule broader than the tuple's in two files. Question 1 of §2e is answered by the record: a provider outage is not a run fault by the tuple's definition, and this ruling does not make it one. Not taken: C (an `aborted` close for a run fault at the entry point). run_pipeline closes `failed` for a store fault; C would make the cloud path's close differ from the local path's for the same sqlite3.Error, and it edits scripts/run_cloud_extraction.py, outside U27's file list. Question 4 of §2e: `failed`, with the reason, as today. R792(d) — Order (F4; question 2 of §2e): U27 lands before U29, 12l_P1A.md §3's order. A recorder fault at 8–9 is record_call itself raising after a paid send; U29's fix (a send that raises still records its call) cannot write a row through a failing recorder, so the unrecorded paid call under a recorder fault is irreducible and U29 does not change it. Under A that run closes `failed` with the reason instead of re-sending twice and reading `completed`, which is the honest record. Neither unit changes the other's handlers. R792(e) — Fail-first and callers: the acceptance test tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves, in fake_probe_u27a.py's seams (a scratch ReviewDatabase with two seeded papers and parsed texts, the live codebook copied beside it and never written, a spec copy with the one arm enabled, rm.git_state patched clean, cli.EXTRACTORS pointing at a thin subclass passing a placeholder key, the SDK classes replaced by recording fakes, time.sleep a recorder, httpx send and socket.connect refusing recorders), driven through scripts.run_cloud_extraction.run_arm, parametrized: at 8 and 9, {sqlite3.OperationalError at the recorder, a bare ConnectionError from the provider seam, KeyError, the SDK's APIConnectionError}; at 10 and 11, {sqlite3.OperationalError at the store, KeyError} — twelve cases. Tuple-member cases (six): the exception leaves run_arm as itself (identity); exactly one send; no cloud_extractions row for the arm (the paper stays pending); run_arm's manifest row closed `failed` with rm.failure_reason(exc). KeyError and APIConnectionError cases (six): today's outcome as §5 records it (8–9: three sends per paper, waits [2, 4, 2, 4], failed 2, manifest `completed`; 10–11: failed 2, run_calls 2 `completed`, manifest `completed`). The test asserts the fakes' record: every construction with the placeholder key, zero outbound requests. It opens no gitignored fixture (B14's skip does not apply to it). Red on the parent at the six tuple-member cases, green at the six others, recorded in b0_parent_acceptance.txt; green in the gate. The pinning test tests/test_cloud_extraction.py::TestStoreResultCrashProtection:: test_openai_store_failure_continues_run moves its injected exception from sqlite3.IntegrityError to ValueError (the 0-span refusal, store_result's own paper outcome, base.py:342–358), its subject kept — a per-paper store failure that is a paper outcome continues the run — class (c); its class docstring gains "a paper-outcome" before "store_result failures" so it reads true. No Anthropic twin is added (F8): the acceptance test's KeyError cases at 10 and 11 prove the conversion kept on both transports. R792(f) — Docs: no CLAUDE.md or docs/architecture line is made false by (b) — the lines the read-out quotes (pipeline.md:439, models.md:101–102, :126, CLAUDE.md:381–382) describe provider errors and the 0-span refusal, which A leaves as they are. None is edited. docs/inventory: regenerated in the engine commit only if `inventory --write` changes a file (R786(b)'s form, the drift read from the diff, not from --check — R791(c) finding 4); an empty diff is the expected case, since no entry point moves. R792(g) — Rows and notes, at 12ae-U27B's item 0: INT-ae12-2 opened in section L (12ae additions), Class 3, P7, from §2e question 3 and 12f_C56-A.md #25: the cloud retry loops re-send on the non-retryable provider errors (BadRequestError, NotFoundError, PermissionDeniedError) as they do on a transient one — three paid attempts against a request that cannot succeed; AuthenticationError alone stops the loop (openai_extractor.py:157, anthropic_extractor.py:179). Behind R71; no stored value wrong. The id INT-ae12-2 is first used here (R790(f)'s HK-ARCH note named it only as not opened). No note on C56 (nothing has landed since R791(a)'s note; its close is the next item 0's, after U27's gate, when U02, U26 and U27 have passed — R542). No note on HK-ARCH for F6: the 2026-10-15 (12o-U12-C6 resume) note already records modules.md's ARM= entries as stale. No dated units line (nothing landed). R792(h) — Readings, no row: F1 (R6's premise was the architect's — the Wave 2 notes 25, 27 and 28 sit on B9, C28 and C24, not C56; the overlap stands where it is; a row's content is quoted from the row, not recalled); F3 (the recorder route exists only under a run — so the acceptance test drives 8–9 through run_arm, and the bare ConnectionError case reaches them from the provider seam); F5 (12f_C56-A.md:97 predates R625(a)(8); the record governs, R732(a)); F6 (recorded already, (g)); F8 ((e)); E1–E3 held. The read-out's §9 limits stand as recorded; the stage-key question at 12f_C56-A.md:717 stays open and is not U27's. R792(i) — The build opens as one brief, 12ae-U27B (R785(h)'s form): the read-out quoted every site, every coupled test and the acceptance test's seams at 0d1d004, the engine tree is unchanged since 69e9db8, and the change is two imports, four re-raise pairs, one test's exception and docstring, and one new test file. The brief re-reads the four clauses, the pinning test, the send, the store's re-raise and run_arm's close at HEAD before the first edit and stops on any difference from the read-out. No model call, no provider call, no API key read, no live write; the standard gate by the wrapper against 837–1021 s. This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at item 0, asserted by content. | PI, 2026-11-09, during session 12ae, on architect recommendation, on the 12ae-U27A final report (item 0 dd1b0b5; read-out 0d1d004) |
+
+The decision log in this file ends at R792.

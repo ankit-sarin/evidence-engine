@@ -1,0 +1,118 @@
+RULING [evidence-engine 12ae-R785] — 12ae-U24A accepted; the committed brief equal to the
+  architect's copy; U24's design: option A at the three sites, the acceptance test's census over
+  every probe entry point under engine/, the CLI given --review; B not taken; C not taken, a note
+  on C54; INT-ae12-1 opened; notes on I20; readings; the build opens as one brief
+STATUS: PI ruling, 2026-11-09 UTC, session 12ae, on architect recommendation, on the 12ae-U24A
+  final report (item 0 2b0badd; read-out d7f5905, docs/session-reports/session-12/12ae_U24A/
+  12ae_U24A.md, sha256 646389efe1678c2370c501ce55a46b8f2988ed882e15213faf5b536e3024acf5, 260
+  lines). Transcribe at item 0 of the 12ae-U24B brief below, by transcribe_ruling.py, in the block
+  after R784's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the read-out and the report):
+  MEASURED: "12ae_U24A/brief_12ae_U24A.md is c99d1410831f01641daa4a01ddc354a0978d05c52401b0920f357c90663963bf,
+    29,898 B, 390 lines" (the architect's copy: equal, cmp byte for byte); "engine sites under a
+    non-default spec: 12 captures, 12 unequal to their row"; "control (spec passed) under every
+    variant: all equal = True"; "live spec, engine sites: all equal = True (R491: the coincidence
+    of defaults)"; "The Ollama journal from the probe's start (04:26:09 UTC) to the read at
+    04:26:16 UTC: -- No entries --"; "Tier A 87, Tier B 8, 95 of 1524"; "The plan's numstat is +120
+    / −1, and the one "−" line is the I4 row".
+  READ (the read-out, §2–§8): "S1 engine/agents/screener.py:171 … omits … yes: the default start
+    runs SCREEN"; "S2 engine/agents/screener.py:259 … omits … no: no production caller (E9)"; "S3
+    engine/agents/ft_screener.py:325–328 … omits … yes: the FT runner"; "S6
+    engine/utils/ollama_preflight.py:321 main (the CLI) result = preflight_check(args.models,
+    timeout=args.timeout) … omits (no spec exists in this scope by construction: the parser takes
+    --models and --timeout only, :314–315)"; "S7 analysis/paper1/judge_codebook_smoke.py:1183 …
+    outside any manifest"; "check_declared_call reads only the row's model"; "grep -n options_hash
+    engine/utils/ollama_client.py returns nothing. So a spec-less probe under an active run is not
+    refused"; "run_calls.request_hash hashes the spec-less options while
+    run_stage_configs.options_hash for the same key hashes the spec's. The inconsistency is
+    recorded but never detected"; the three call-argument assertions, "tests/test_screener.py:263–265
+    … [spec.screening_models.primary], runner_name="Abstract screening"," / ":278–280 …
+    [spec.screening_models.verification], runner_name="Abstract verification"," /
+    "tests/test_ollama_preflight.py:272–275 … [spec.ft_screening_models.primary,
+    spec.ft_screening_models.verifier], runner_name="FT screening","; "Each runner calls the
+    probe before its first database read … So db=None reaches the probe"; "A single non-default
+    num_predict suffices to fail all three captures"; "under Option B (spec required) each of
+    these 9 calls is a TypeError"; "this widens C54's check for every stage … and it touches the
+    send path. That reaches beyond C49's row"; F3: "At HEAD it patches
+    engine.utils.ollama_client._client.ps (tests/test_ollama_preflight.py:226–227)"; F7:
+    "default_factory gives every loaded spec a PreflightConfig instance, so _block returns it as
+    the source and the row's sources read spec for values the YAML never set".
+  INFERRED: none.
+
+R785(a) — The 12ae-U24A final report is accepted as printed: item 0 2b0badd (Block 182 by
+  transcribe_ruling.py; "A R784(g)" with its gloss, STANDING_RULES.md at 95 clauses, Tier A 87 /
+  Tier B 8, the diff classified other 0, the regeneration invocation in its evidence file; the I4
+  note; brief_12ae_U24A.md), the read-out d7f5905 with census_u24a.py/.txt and
+  fake_probe_u24a.py/.txt, ledgers 3096c4a and 57b58df with trailers. No stop. The committed brief
+  file is byte-equal to the architect's copy: R784(g)(v)'s first check passes, and paste fidelity
+  is measured once.
+R785(b) — U24's design: option A. S1 (screener.py:171), S2 (:259) and S3 (ft_screener.py:325–328)
+  pass spec=spec. The acceptance test's census half covers every probe entry point under engine/
+  — a call to require_preflight, preflight_check or check_model with no spec= keyword — not
+  require_preflight alone (F2 answered: the entry's "three engine sites" counted require_preflight
+  callers; the census counts the probe). So the CLI, S6, is in U24: ollama_preflight.main gains
+  --review <id> (required) and --spec <path> (optional, the FT runner's form, ft_screener.py:659),
+  loads the spec with load_spec_for(args.review, args.spec) and passes spec= to preflight_check;
+  the CLI stays outside any manifest and under the experiment lock. S7 (analysis/, outside any
+  manifest, no engine census covers it) is not in U24: a note on the HK-RETIRE line's neighbour is
+  not written; the entry's own note already places it outside, and it stands.
+R785(c) — Not taken: B (spec required keyword-only on the probe functions) — the census in the
+  acceptance test is the guard the entry names; B adds nine test moves and a declared spec-less
+  form that is itself a fallback, for a probe whose every engine caller A fixes. Not taken: C (the
+  send refuses a probe whose options differ from its row) — after A no engine path resolves a
+  stage's options other than through stage_config with the spec (with_options refuses an
+  undeclared override, R223; the probe was the one path outside it), so C guards against no
+  known trigger and widens C54's check into the send path beyond C49's row. A dated note on C54
+  records the fact the read-out measured: the send check compares the model (check_declared_call)
+  and the digest (check_call_digest) only; options and keep_alive equality holds by construction
+  once U24 lands, and run_calls.request_hash against the row's options_hash is the check a later
+  review may add. No row.
+R785(d) — Fail-first and callers: the acceptance test
+  tests/test_u24_preflight_spec.py::test_every_engine_preflight_probe_sends_the_spec_preflight_block
+  (the capture half, in fake_probe_u24a.py's form: a fake engine client, check_ollama_env
+  replaced, db=None, the live spec with preflight {num_predict 7, temperature 0.5} and ollama
+  {keep_alive "5m"}; each of run_screening, run_verification and run_ft_screening's captured
+  requests equal in options and keep_alive to stage_config("preflight", spec, model=m).kwargs())
+  and ::test_no_engine_probe_call_omits_the_spec (the census half, AST over engine/, the empty
+  set) are red on the parent — the first at the capture inequality, the second at S1, S2, S3 and
+  S6 — recorded in b0_parent_acceptance.txt, green in the gate. The three call-argument
+  assertions (test_screener.py:263–265 and :278–280; test_ollama_preflight.py:272–275) gain
+  spec=spec with their subjects kept, class (c), the form of their siblings (:297–299, :319–320).
+  The nine spec-less direct calls in test_ollama_preflight.py stay as they are (A leaves the
+  default). A test of the CLI's --review is not required; the census covers its call.
+R785(e) — Docs made false by (b), authored here, applied in the engine commit verbatim: CLAUDE.md
+  line "python -m engine.utils.ollama_preflight --models qwen3.5:27b gemma3:27b deepseek-r1:32b"
+  becomes "python -m engine.utils.ollama_preflight --review surgical_autonomy --models qwen3.5:27b
+  gemma3:27b deepseek-r1:32b"; docs/architecture/modules.md line "- `preflight_check(models,
+  timeout)` — Load test + VRAM budget (100 GB limit)" becomes "- `preflight_check(models, timeout,
+  *, spec)` — Load test + VRAM budget (100 GB limit); the probe's options and `keep_alive` resolve
+  from the spec's `preflight` and `ollama` blocks"; and "- `require_preflight(models,
+  runner_name)` — Orchestrator: env check → model check → abort on failure" becomes "-
+  `require_preflight(models, runner_name, timeout, *, spec)` — Orchestrator: env check → model
+  check → abort on failure; every engine caller passes the spec (U24)". Each line is located by
+  its text, not its number; a line not found as quoted is a stop.
+R785(f) — Rows and notes, at 12ae-U24B's item 0: INT-ae12-1 opened in a new section "L (12ae
+  additions, R785)", Class 3, P7, from F7: the preflight and ollama source labels read "spec" for
+  values the YAML never set, because default_factory supplies the block (effective_config.py's
+  _block, review_spec.py:816, :818); telemetry only, no stored value wrong. A dated note on I20
+  from F3: test_raises_on_failure now patches engine.utils.ollama_client._client.ps
+  (test_ollama_preflight.py:226–227); the instance I20 names no longer reads as described; when it
+  changed is not established; I20's other content stands. The C54 note of (c). C49 is not closed
+  here; it closes at the item 0 after the gate (R514), by its acceptance test passing.
+R785(g) — Readings, no row: F4 (the brief's :291 is :289 — the architect's line number, carried
+  from a grep at a different offset; a line number is an anchor only beside its quoted line, and
+  the quoted line held); F5 (R5 dropped the row's backticks; CC appended to the row as it stands —
+  the record's form); F6 (transcribe_ruling.py renders "on architect recommendation" from a fixed
+  template, so R784's STATUS phrase is in the fence only — a tools item beside R765(d) for the
+  tools change); F8 (E1 and E2 held; the row is written by open_run → resolve_run from both
+  _open_run_manifest and open_screening_manifest). The read-out's §9 limits stand as recorded;
+  the stored row for a non-default spec is read back in the acceptance test's gate run only if the
+  test opens a scratch database, which (d) does not require.
+R785(h) — The build opens as one brief, 12ae-U24B, not a Phase B reads brief and a RESUME: the
+  read-out quoted every site, every coupled test and the acceptance test's seams at 95dad8d, the
+  engine tree is unchanged since, and the change is three keyword arguments, one CLI argument pair
+  and three docs lines. The brief re-reads the sites and the three assertions at HEAD before the
+  first edit and stops on any difference from the read-out. No model call, no live write; the
+  standard gate by the wrapper against 837–1021 s. This ruling states no standing rule: the id
+  list, the glosses file and STANDING_RULES.md are untouched at item 0, asserted by content.

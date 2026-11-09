@@ -1,0 +1,20 @@
+-- lines
+12:collecting ... collected 3511 items / 17 deselected / 3494 selected
+6104:==== 3493 passed, 17 deselected, 1 xfailed, 2 warnings in 930.96s (0:15:30) ====
+6106:pytest exit code: 0
+last line: pytest exit code: 0
+durations: 2582 lines, 269723 B
+-- journal ollama 09:00–09:25
+-- No entries --
+-- warnings
+3509:=============================== warnings summary ===============================
+3511:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+3515:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+-- the HEAD it ran on (read at 12ae-OPEN): log Run line; reflog: HEAD@ last move before the run
+Run: 2026-11-05 09:00:01 UTC
+6cb4ab6 HEAD@{2026-11-02 05:37:10 +0000}: commit: docs(plan): 12ad-CLOSE — session 12ad closed on U23; the closure; the 12ae expected values; 12ad_close/
+HEAD now 6cb4ab6b64bfdd3e3f499f7b36e697510a60e120, reflog top move at 2026-11-02 05:37:10, none after, so the 2026-11-05 09:00:01 UTC run read this HEAD's tree
+-- lock
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock
+-- governed by docs/session-reports/session-12/12ad_close/expected_nightly_20261102.md under this brief's reading of its unchanged-tree condition ("while the engine tree stays unchanged"; the file names 2026-11-03 only — a dated wording, a finding, not edited); the engine tree is 9ae1fde's on 2026-11-05
+-- match: collection True; summary True; exit-last True; durations True; journal-empty True; lock True; ids True; head True

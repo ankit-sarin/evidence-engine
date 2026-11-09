@@ -1,0 +1,64 @@
+RULING [evidence-engine 12ae-R791] — 12ae-U26B accepted: U26 landed, C56's parse half delivered
+  (the row stays open for U27); the series gains 945.63 s; readings, two the architect's; U27's
+  Phase A opens
+STATUS: PI ruling, 2026-11-09 UTC, session 12ae, on architect recommendation, on the 12ae-U26B
+  final report (item 0 e89d602; engine 69e9db81aa7bfba8c9cb119bcbb6e02206cbe2c7; evidence
+  5895e8c9e86c978c81fc59d5525d62f09125d3f8). Transcribe at item 0 of the 12ae-U27A brief below,
+  by transcribe_ruling.py, in the block after R790's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the report):
+  MEASURED: "12ae_U26B/brief_12ae_U26B.md is be04f404ea7dea5cbbb26d736f028ee6a92079aa38a5410947e6c79cceaf7286,
+    23,242 B, 306 lines" (the architect's copy: equal); "Plan +107 / −2; the "−" lines are
+    exactly C56 and HK-ARCH"; "24 cases: six handlers × {sqlite3.OperationalError,
+    ConnectionError, UndeclaredCall, KeyError}"; "18 failed, 6 passed in 18.26s"; "Each red fails
+    at "handler N: X did not leave parse_all_pdfs as itself: None""; "pdf_parser.py 15 / 2, the
+    new test 199 / 0, entry_points.json 4 / 4 and entry_points.md 2 / 2"; "pdf_parser.py's "−"
+    lines are exactly the two clauses"; "pin_tuples_u26b.json … cmp byte-identical to
+    12ae_U25B/pin_tuples_u25b.json"; "211 passed, 6 deselected"; "69e9db81aa7bfba8c9cb119bcbb6e02206cbe2c7,
+    parent e89d602"; "Wall 945.63 s"; "==== 3525 passed, 17 deselected, 1 xfailed, 2 warnings in
+    943.58s (0:15:43) ===="; "collected 3543 items / 17 deselected / 3526 selected"; "only-gate 24
+    (exactly the U26 ids), only-ref 0"; "-- No entries --"; "surgical-cv uvicorn (pid 1017068,
+    since 02:15)"; "all nineteen present"; "5895e8c9e86c978c81fc59d5525d62f09125d3f8, parent
+    69e9db8"; "21 files, all added"; "Ledger cbab7fe … 99a8cb2 … 51ff0e8".
+  READ (CC's): findings 1–5; ":520 and :525 read except Exception:. … U02's form needs a name,
+    so both clauses became except Exception as exc:"; "the test raises RuntimeError("insert
+    refused") at the INSERT, which handler 12 converts, and the parametrized exception at the
+    rollback, which is handler 13's own trigger"; "--check printed one entry's flags drift (1267,
+    1269). --write also moved 1273 → 1286 in the same entry's lock line".
+  INFERRED: none.
+
+R791(a) — The 12ae-U26B final report is accepted as reported: item 0 e89d602 (Block 188; the C56
+  and L07-C4 notes in one row; the HK-ARCH note; the brief file byte-equal to the architect's
+  copy, the seventh match of seven), the engine commit 69e9db8 (four files; the import, six
+  re-raise pairs, the two clause names; the inventory regenerated under R786(b)'s form, line
+  moves only), the gate 3,525 / 1 / 17 on 3,543 / 3,526 at 945.63 s inside 837–1021 s, only-gate
+  the 24 U26 ids, no load, the nineteen files, green at the first run; the evidence commit
+  5895e8c; ledgers cbab7fe, 99a8cb2 and 51ff0e8 with trailers. Both pins and the audit
+  prompt_hash byte-identical. U26 is landed; P1's fix units 37, done 29. The acceptance test
+  tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves
+  (18 run-fault cases red on the parent e89d602 in 12ae_U26B/b0_parent_acceptance.txt, green in
+  12ae_U26B/gate_u26b/; 6 KeyError cases green on both) is C56's parse-half acceptance. C56
+  stays OPEN until U27's handlers 8–11 land (R542); its note at the next item 0 records U26's
+  landing and this test, not a close.
+R791(b) — The series on this host state gains 945.63 s: thirty-five. The band stays 837–1021 s
+  (R783(b)).
+R791(c) — Readings, no row: finding 1 (handlers 12–13's clauses gained `as exc` — U02's form
+  needs the name; the brief's "No other line changes" and its binding clause written for :901
+  were the architect's, and CC read the ruling's form over the brief's wording, as R732(a)
+  directs; the two "−" lines are those clauses and nothing else); finding 2 (handler 13's seam:
+  a non-fault at the INSERT and the parametrized exception at the rollback, so 13 is reached as
+  itself — the test's docstring states it; accepted); finding 3 (every case through
+  parse_all_pdfs with an identity assertion, which also shows 4–5's fault is not wrapped —
+  stronger than the ruling asked; accepted); finding 4 (inventory --check reports one entry's
+  flags drift where --write moves three lines — a recorded limit of the inventory tool, joining
+  the tools list for the next tools change beside R752(c), R765(d), R766(d), R784(d)); finding 5
+  (E1–E3 held). The regenerated inventory's generated-at stamp names the parent, the tool's
+  form (R787(d)).
+R791(d) — U27's Phase A opens: 12l_P1A.md §3's U27, "Run-fault predicate at the cloud handlers
+  (P1's tail)" (C56, handlers 8–11 in 12f_triage.md's numbering: the two transports' retry loops
+  and their `store_result` handlers; R542, R612(g)), read-only, in 12ae_U26A.md's form (the I2
+  mapping first), its entry quoted first. The cloud path is behind R71 (`enabled_arms` empty on
+  live) and unreachable on Run 7; no provider is called — the fakes stand in for the SDK clients,
+  and no API key is read or needed. No engine, test, script, spec or codebook edit; no model
+  call; no live write. C56 closes at the item 0 after U27's gate, when U02, U26 and U27 have
+  passed (the entry's note). This ruling states no standing rule.

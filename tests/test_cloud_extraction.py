@@ -797,7 +797,7 @@ class TestSonnetRateLimitBackoff:
 
 
 class TestStoreResultCrashProtection:
-    """store_result failures are caught per-paper; run continues."""
+    """a paper-outcome store_result failures are caught per-paper; run continues."""
 
     @patch("engine.cloud.openai_extractor.openai.OpenAI")
     def test_openai_store_failure_continues_run(self, mock_openai_cls, test_db, spec_path):
@@ -837,7 +837,7 @@ class TestStoreResultCrashProtection:
         def _failing_store(*args, **kwargs):
             call_count[0] += 1
             if call_count[0] == 1:
-                raise sqlite3.IntegrityError("simulated constraint violation")
+                raise ValueError("simulated 0-span refusal")
             return original_store(*args, **kwargs)
 
         extractor.store_result = _failing_store

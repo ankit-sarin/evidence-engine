@@ -8,6 +8,7 @@ import time
 import openai
 
 from engine.core.completeness import IncompleteExtractionError
+from engine.core.extraction_events import is_run_fault
 
 from engine.cloud.base import CloudExtractorBase, outbound_messages
 
@@ -177,6 +178,8 @@ class OpenAIExtractor(CloudExtractorBase):
                         )
                         stats["failed"] += 1
                 except Exception as exc:
+                    if is_run_fault(exc):
+                        raise
                     if attempt < 2:
                         wait = 2 ** (attempt + 1)
                         logger.warning(
@@ -207,6 +210,8 @@ class OpenAIExtractor(CloudExtractorBase):
                     spans=result["spans"],
                 )
             except Exception as exc:
+                if is_run_fault(exc):
+                    raise
                 logger.exception(
                     "Paper %d: store_result failed: %s", pid, exc,
                 )

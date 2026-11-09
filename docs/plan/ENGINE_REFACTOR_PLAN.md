@@ -557,7 +557,7 @@ Out of the internal review (R579), as `12i_review_w1.md` lists them under "Not r
 | INT-i12-28 | Row 3's printed exit ('a new decision against the current claim') lands in row 2 unless the new decision repeats the stale one's type and value or lists it in against_decisions. Loud, but the exit does not exit. | 2 | P5 | R587 | `12i_review_w1.md` row 41 (L06-C3; effective.effective_value row 3 exit; _governing_reviewer; evidence level: reproduced); `12i_review_w1/readers/L06.md` |
 | INT-i12-29 | RELEASE open_run then `if conn.in_transaction: conn.commit()` commits a caller's open transaction, against the 'nests inside a caller's open transaction' comment. No current production caller holds a transaction there. | 2 | P5 | R587 | `12i_review_w1.md` row 42 (L04-C4; run_manifest.open_run savepoint tail (also close_run, record_call); evidence level: reproduced (mechanism); code order for open_run); `12i_review_w1/readers/L04.md` |
 | INT-i12-30 | A verifier stage with zero tests loads and renders 'Apply these tests strictly:' with nothing (silent). A spec with no insufficient_data criterion loads and raises ValueError at the first abstract-less paper. | 2 | P4 | R587 | `12i_review_w1.md` row 44 (L05-C5; review_spec.Eligibility._check, VerifierTest; eligibility_render.absent_abstract_fallback, verifier_tests_block; evidence level: reproduced); `12i_review_w1/readers/L05.md` |
-| INT-i12-31 | Unquoted Yes/No in valid_values load as booleans and raise TypeError later in prompt building; an unquoted sentinel NO or null silently becomes "False" or "None". The live codebook quotes everything. | 2 | P1 | R587 | `12i_review_w1.md` row 45 (L05-C7; codebook._validate_valid_values, _validate_top_level, _parse; evidence level: reproduced); `12i_review_w1/readers/L05.md` |
+| INT-i12-31 | Unquoted Yes/No in valid_values load as booleans and raise TypeError later in prompt building; an unquoted sentinel NO or null silently becomes "False" or "None". The live codebook quotes everything. | 2 | P1 | R587 | `12i_review_w1.md` row 45 (L05-C7; codebook._validate_valid_values, _validate_top_level, _parse; evidence level: reproduced); `12i_review_w1/readers/L05.md` *Note 2026-11-09 (12ae-U25B item 0, R788(b)):* widened, as R491 widened C49 — U25's check is "is not a str" over every scalar the loader exposes as a string: (i) each `valid_values` entry's `value` and `definition`; (ii) each member of `absence_sentinels`; (iii) the top-level `escape_token`, `contract_unmet_token`, `review`, `version` and `date`; (iv) each field's `definition`, `instruction` and `decision_criteria` where present. (iii) and (iv) are option C's reach, taken because a prompt field coerced to the word `False` has the silent sentinel's shape (`12ae_U25A.md` §8 F5). An unquoted number or timestamp is refused by the same predicate (F3). The canonical sentinel is already guarded by `isinstance(canonical, str)` (F4). |
 | INT-i12-32 | FONT_EXPOSURE has no re-route entry, so an exposure-only failure is excluded without OCR being tried. | 2 | P4 | R587 | `12i_review_w1.md` row 46 (L07-C5; pdf_parser._REROUTE, _next_parser; parse_quality.CRITERIA; evidence level: code order); `12i_review_w1/readers/L07.md` |
 | INT-i12-33 | vision_max_pages is enforced only on re-routes: a scanned PDF over the OCR cap skips OCR and is sent whole to vision. | 2 | P4 | R587 | `12i_review_w1.md` row 48 (L07-C9; pdf_parser.parse_pdf initial scanned and digital-sparse routes; evidence level: code order); `12i_review_w1/readers/L07.md` |
 | INT-i12-34 | The migration commits on its own connection and the receipt is a second transaction outside the MigrationError wrapper: a failure between them leaves the migration applied with no receipt. | 2 | P6 | R587 | `12i_review_w1.md` row 50 (W1-F2-C3; migrations/runner.run; evidence level: code order); `12i_review_w1/readers/W1-F2.md` |
@@ -16598,3 +16598,102 @@ R787(e) — U25's Phase A opens: 12l_P1A.md §3's U25, "Unquoted YAML booleans a
 | 2026-11-09 | R787(a) — The 12ae-U24B-R1 report is accepted as reported: the amended patch (one hunk, the spec load inside the lock), the inventory regenerated with the drift set of R786(b) plus the third counter and the help-text literal (finding 4, the architect's set short by the resolver counter the CLI's new call adds — the record's), the engine commit 94ab7a8 (ten files), the class-(c) fix 1f6bc16 under R746(c) (two argv literals gain --review surgical_autonomy, subjects kept; the U22 form), the gate of record 3,495 / 1 / 17 on 3,513 / 3,496 at 930.54 s inside 837–1021 s, only-gate the two U24 ids, no load, the nineteen files; the evidence commit 7732a4f with the R1 brief byte-equal to the architect's copy (the third paste-fidelity match); ledgers 2930dff and 7b35dd4 with trailers. Both pins and the audit prompt_hash byte-identical; no request byte moved. U24 is landed; P1's fix units 37, done 27. R787(b) — C49 CLOSES on U24 (94ab7a8 with 1f6bc16), by R514: the row's stated fix is delivered (spec=spec at the three sites; the CLI's --review/--spec) and its acceptance test passes (tests/test_u24_preflight_spec.py::test_every_engine_preflight_probe_sends_the_spec_preflight_block, red on the parent b8becaa in 12ae_U24B/b0_parent_acceptance.txt, green in 12ae_U24B/gate_u24b/, with ::test_no_engine_probe_call_omits_the_spec beside it). Noted CLOSED at 12ae-U25A's item 0 in INT-g12-6's note form, naming both commits and both tests; counted until P1 closes (R607(d), R753(d)(ii)). The same item 0 writes the dated units line (37, done 27: U01–U24, U37, U38, U39). R787(c) — The series on this host state gains 930.54 s (run 2, the gate of record): thirty-three. Run 1 (931.16 s wall, two failed) is not a member, as U22's red run was not. The red run's evidence is committed under 12ae_U24B/gate_u24b_run1/ at 12ae-U25A's item 0 (finding 3; U22's form, gate_u22b/ beside gate_u22b_rerun/), copied from scratch, every sha256 equal, in the item-0 commit beside the block. R787(d) — Readings, no row: finding 1 (E3 missed tests/test_entry_points_take_the_lock.py; the census instrument's declared alias limit was the cause and it declared it — the instrument stands, the limit stands as declared, R746(c) absorbed the miss as designed); finding 2 (two engine-side commits, the U22 precedent); finding 5 (inventory --write records the HEAD it ran on, so the regenerated file names the parent — U23's at 9ae1fde names 66092a2 the same way; the tool's form, not a defect; no row); finding 6 (R786's text hashes to the architect's value). Finding 4 is recorded in (a). The session's stop count: one, the architect's (R786(a)). R787(e) — U25's Phase A opens: 12l_P1A.md §3's U25, "Unquoted YAML booleans and nulls refused at codebook load" (INT-i12-31), read-only, in 12ae_U24A.md's form, its entry quoted first. The codebook is frozen (R26): the fix is the loader's, and the live codebook must still load byte-unchanged. No engine, test, script, spec or codebook edit; no model call; no live write. This ruling states no standing rule. | PI, 2026-11-09, during session 12ae, on architect recommendation, on the 12ae-U24B-R1 final report (engine 94ab7a8; fix 1f6bc16; evidence 7732a4f) |
 
 The decision log in this file ends at R787.
+
+**Block 186.** *Transcribed 2026-11-09 (item 0 of the 12ae-U25B brief), in its own commit with the INT-i12-31 note and the brief file it orders, in the R597(e) form:* ruling R788, made by PI on architect recommendation on 2026-11-09 UTC, during session 12ae, on the 12ae-U25A final report (item 0 `d488573786dbd071470d676617768bd38f948e4f`; read-out `b59966702c9811c4e82a7ade71e3a65fabd0280c`). The 12ae-U25B brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ae-R788] — 12ae-U25A accepted; the committed brief equal to the
+  architect's copy; U25's design: option A written as "not a str", over the valid_values values,
+  every absence sentinel and the rendered string fields (option C's reach, the row widened by
+  note); B not taken; readings, two the architect's; the build opens as one brief, held across
+  the no-live-write window
+STATUS: PI ruling, 2026-11-09 UTC, session 12ae, on architect recommendation, on the 12ae-U25A
+  final report (item 0 d488573; read-out b599667, docs/session-reports/session-12/12ae_U25A/
+  12ae_U25A.md, sha256 ed37d9a79195dded643dc930f42b524cd19ce149538b1155f98874029c446bc5, 263
+  lines). Transcribe at item 0 of the 12ae-U25B brief below, by transcribe_ruling.py, in the
+  block after R787's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the read-out and the report):
+  MEASURED: "12ae_U25A/brief_12ae_U25A.md is d8d689aade66b083519b8886e030d814baa922b75f0cc19a2d1b772ee11ee715,
+    28,842 B, 372 lines" (the architect's copy: equal, cmp byte for byte); "item 0 landed
+    06:14:06"; "Plan +143 / −1, the one "−" line being C49's row"; "71 valid_values entries, all
+    str; 6 sentinels, all str and quoted in the text; the tokens and version all str; 0 unquoted
+    value: lines out of 92"; "The live file loads, with semantic hash f261af76…5646 equal to
+    12ad_close/pin_tuples_close.json"; "The Ollama journal for the window was empty"; "the live
+    codebook was never written (sha256 89dbfa91…ad82 throughout)".
+  READ (the read-out, §2–§8): the readers table — "raises TypeError: sequence item 0: expected
+    str instance, bool found at :90 (FAKE)" (extractor._build_field_block, both prompt paths and
+    open_run's prompt_hash render); "silent: the tuple holds 'False' / 'None';
+    is_absence_sentinel('NO') is False and ('False') True" (FAKE); "hashes JSON true, not "Yes":
+    the hash differs from the quoted text's (FAKE)"; §3 point 1, PyYAML 6.0.3's resolver quoted
+    ("^(?:yes|Yes|YES|no|No|NO|true|True|TRUE|false|False|FALSE|on|On|ON|off|Off|OFF)$"; "^(?: ~
+    |null|Null|NULL | )$"; "Bare y / n are not in the bool pattern"; "int, float and timestamp"
+    also resolve); §3 point 2, where a check can sit ("Between :448's yaml.safe_load and :460's
+    model build. _validate_valid_values already walks every entry (:350 for item in vv:), and
+    _validate_top_level already holds doc["absence_sentinels"] (:262)"); §3 point 4, "Option A's
+    check, run over the live document, reports no finding"; F3 ("option A's check written as "not
+    a str" covers both"); F4 ("The canonical sentinel is already guarded … :269"); F5 ("an
+    unquoted No there becomes the word False in the prompt. escape_token: No raises (falsy) but
+    escape_token: Yes becomes "True""); §4 "E2 holds. No test fixture carries an unquoted bool or
+    null … A refusal moves no existing test"; §7 B: "the entry's test as written ("each raises at
+    load") does not hold under B".
+  INFERRED: none.
+
+R788(a) — The 12ae-U25A final report is accepted as printed: item 0 d488573 (Blocks 184–185 by
+  transcribe_ruling.py in order; C49 CLOSED in INT-g12-6's form; the dated units line, 37 done
+  27; the red run's nineteen files; brief_12ae_U25A.md), the read-out b599667 with its census,
+  probe, live census and three fixtures, ledgers 6dc6cc8 and 4e9d6eb with trailers. No stop. The
+  brief file is byte-equal to the architect's copy: the fourth paste-fidelity match of four.
+R788(b) — U25's design: option A, the check written as "is not a str", placed in the loader's
+  existing validators, refusing with a CodebookError that names the path, the field (its `where`)
+  and the key, quotes the offending scalar with its Python type, and says to quote it in the
+  YAML. Its scope is every scalar the loader exposes as a string: (i) each `valid_values` entry's
+  `value` and `definition` (in _validate_valid_values's loop); (ii) each member of
+  `absence_sentinels` (in _validate_top_level, beside the canonical-sentinel check that already
+  holds, F4); (iii) the top-level tokens `escape_token`, `contract_unmet_token`, `review`,
+  `version` and `date`; (iv) each field's `definition`, `instruction` and `decision_criteria`
+  where present (in _validate_fields). (iii) and (iv) are option C's reach, taken because the
+  silent half of the row — a sentinel coerced to 'False' — has the same shape in a prompt field
+  coerced to the word False (F5), the check is one predicate in three loops the loader already
+  runs, and the live codebook's scalars are all str (the live census; the acceptance test's live
+  load is the proof). The row INT-i12-31 is widened by a dated note to name (iii) and (iv), as
+  R491 widened C49. The `str()` coercions at :460–473 stay: after the check they meet only
+  strings.
+R788(c) — Not taken: B (a loader without the bool and null resolvers). It accepts a scalar the
+  author did not quote and silently makes it the word written; numbers and timestamps would still
+  resolve; the entry's acceptance test as written would not hold; and the codebook would parse
+  under a YAML no other loader on the box uses. A loud refusal that tells the author to quote is
+  the entry's form and the engine's (fail-fast, R-class of C41/C52).
+R788(d) — Fail-first and callers: tests/test_u25_codebook_scalars.py::
+  test_unquoted_yaml_booleans_and_nulls_are_refused_at_load, parametrized over the three committed
+  fixtures (12ae_U25A/fixtures/value_yes, sentinel_no, sentinel_null — read from the repository,
+  not re-authored) plus two the build adds in the same form (an unquoted `1` as a value, F3; an
+  unquoted `No` as a field's `instruction`, (iv)): each raises CodebookError at load_codebook,
+  the message naming the key and containing the word "quote"; and ::test_the_live_codebook_loads_unchanged:
+  load_codebook on data/surgical_autonomy/extraction_codebook.yaml succeeds, its sha256
+  89dbfa91…ad82 and its semantic_hash f261af76…5646 (the pin record's codebook_semantic_hash).
+  On the parent the five refusal cases are red (nothing raises at load — the value cases raise
+  later or not at all; the sentinel cases load silently) and the live case is green by
+  construction (a preservation pin, exempt from fail-first); recorded in
+  b0_parent_acceptance.txt; all green in the gate. No existing test moves (E2, §4).
+R788(e) — Readings, no row: F1 (codebook.py:7's "eleven bare yaml.safe_load calls" is the
+  pre-CODEBOOK-AUTH-01 tree, three today; the module docstring is history by its own tense and is
+  not edited in U25; 12l_P1A.md §1's figure is a dated reading); F2 (the architect cited R124/R131
+  for the semantic hash; they govern sentinel authority, and the hash is compute_semantic_hash
+  with codebook_semantic_hash in the pin record — the architect's, corrected here); F3, F4 and F5
+  are taken into (b); F6 and F7 (E1–E3 held). The two other yaml.safe_load sites
+  (review_spec.py:987, categorizer.py:46) are outside U25 and outside the row; the spec's own
+  validation is pydantic's (a reading, no row).
+R788(f) — The build opens as one brief, 12ae-U25B (R785(h)'s form): the read-out quoted every
+  loader site, every reader and every coupled fixture at HEAD, and the change is three validator
+  loops in one module. The no-live-write window 07:00–10:35 UTC governs the gate and, because the
+  09:00 nightly runs the suite in the checkout, every working-tree edit: the brief's item 0 lands
+  before 06:55 UTC or waits; the build itself starts after 10:35 UTC under the same brief
+  (R782(i)'s precedent). No model call, no live write. This ruling states no standing rule.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-09 | R788(a) — The 12ae-U25A final report is accepted as printed: item 0 d488573 (Blocks 184–185 by transcribe_ruling.py in order; C49 CLOSED in INT-g12-6's form; the dated units line, 37 done 27; the red run's nineteen files; brief_12ae_U25A.md), the read-out b599667 with its census, probe, live census and three fixtures, ledgers 6dc6cc8 and 4e9d6eb with trailers. No stop. The brief file is byte-equal to the architect's copy: the fourth paste-fidelity match of four. R788(b) — U25's design: option A, the check written as "is not a str", placed in the loader's existing validators, refusing with a CodebookError that names the path, the field (its `where`) and the key, quotes the offending scalar with its Python type, and says to quote it in the YAML. Its scope is every scalar the loader exposes as a string: (i) each `valid_values` entry's `value` and `definition` (in _validate_valid_values's loop); (ii) each member of `absence_sentinels` (in _validate_top_level, beside the canonical-sentinel check that already holds, F4); (iii) the top-level tokens `escape_token`, `contract_unmet_token`, `review`, `version` and `date`; (iv) each field's `definition`, `instruction` and `decision_criteria` where present (in _validate_fields). (iii) and (iv) are option C's reach, taken because the silent half of the row — a sentinel coerced to 'False' — has the same shape in a prompt field coerced to the word False (F5), the check is one predicate in three loops the loader already runs, and the live codebook's scalars are all str (the live census; the acceptance test's live load is the proof). The row INT-i12-31 is widened by a dated note to name (iii) and (iv), as R491 widened C49. The `str()` coercions at :460–473 stay: after the check they meet only strings. R788(c) — Not taken: B (a loader without the bool and null resolvers). It accepts a scalar the author did not quote and silently makes it the word written; numbers and timestamps would still resolve; the entry's acceptance test as written would not hold; and the codebook would parse under a YAML no other loader on the box uses. A loud refusal that tells the author to quote is the entry's form and the engine's (fail-fast, R-class of C41/C52). R788(d) — Fail-first and callers: tests/test_u25_codebook_scalars.py:: test_unquoted_yaml_booleans_and_nulls_are_refused_at_load, parametrized over the three committed fixtures (12ae_U25A/fixtures/value_yes, sentinel_no, sentinel_null — read from the repository, not re-authored) plus two the build adds in the same form (an unquoted `1` as a value, F3; an unquoted `No` as a field's `instruction`, (iv)): each raises CodebookError at load_codebook, the message naming the key and containing the word "quote"; and ::test_the_live_codebook_loads_unchanged: load_codebook on data/surgical_autonomy/extraction_codebook.yaml succeeds, its sha256 89dbfa91…ad82 and its semantic_hash f261af76…5646 (the pin record's codebook_semantic_hash). On the parent the five refusal cases are red (nothing raises at load — the value cases raise later or not at all; the sentinel cases load silently) and the live case is green by construction (a preservation pin, exempt from fail-first); recorded in b0_parent_acceptance.txt; all green in the gate. No existing test moves (E2, §4). R788(e) — Readings, no row: F1 (codebook.py:7's "eleven bare yaml.safe_load calls" is the pre-CODEBOOK-AUTH-01 tree, three today; the module docstring is history by its own tense and is not edited in U25; 12l_P1A.md §1's figure is a dated reading); F2 (the architect cited R124/R131 for the semantic hash; they govern sentinel authority, and the hash is compute_semantic_hash with codebook_semantic_hash in the pin record — the architect's, corrected here); F3, F4 and F5 are taken into (b); F6 and F7 (E1–E3 held). The two other yaml.safe_load sites (review_spec.py:987, categorizer.py:46) are outside U25 and outside the row; the spec's own validation is pydantic's (a reading, no row). R788(f) — The build opens as one brief, 12ae-U25B (R785(h)'s form): the read-out quoted every loader site, every reader and every coupled fixture at HEAD, and the change is three validator loops in one module. The no-live-write window 07:00–10:35 UTC governs the gate and, because the 09:00 nightly runs the suite in the checkout, every working-tree edit: the brief's item 0 lands before 06:55 UTC or waits; the build itself starts after 10:35 UTC under the same brief (R782(i)'s precedent). No model call, no live write. This ruling states no standing rule. | PI, 2026-11-09, during session 12ae, on architect recommendation, on the 12ae-U25A final report (item 0 d488573; read-out b599667) |
+
+The decision log in this file ends at R788.

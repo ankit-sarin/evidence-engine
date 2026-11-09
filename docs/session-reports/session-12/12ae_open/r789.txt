@@ -1,0 +1,69 @@
+RULING [evidence-engine 12ae-R789] — 12ae-U25B accepted: U25 landed, INT-i12-31 closes; the series
+  gains 921.98 s; readings, one the architect's; U26's Phase A opens
+STATUS: PI ruling, 2026-11-09 UTC, session 12ae, on architect recommendation, on the 12ae-U25B
+  final report (item 0 4a4c850; engine 168199accbd308e232cc881c3477edc233a668a6; evidence
+  0854f294491ee8f359c446abfbf37d3d14fc2e7f). Transcribe at item 0 of the 12ae-U26A brief below,
+  by transcribe_ruling.py, in the block after R788's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the report):
+  MEASURED: "Item 0 landed at 06:43:45 UTC (4a4c850)"; "the clock at 2a read 16:11:17 UTC";
+    "12ae_U25B/brief_12ae_U25B.md is b22fcbaf1ddabffbb9f6690c72a3b98181254575e01991dfaa5483de16ed8b8d,
+    23,727 B, 310 lines" (the architect's copy: equal); "b0 on the parent … 5 failed, 1 passed";
+    "value_yes, sentinel_no, sentinel_null and value_one: Failed: DID NOT RAISE"; "instruction_no:
+    assert 'quote' in "…: field 'study_type' has an empty `instruction`.""; "codebook.py +26 /
+    −0"; "3 JSON paths in codebook.py (path_construction, spec_access, yaml_loads), each a
+    line-number move of +26"; "No data/ listing changed and no entry point changed"; "Diff. 6
+    files"; "pin_tuples_u25b.json is byte-identical to 12ae_U24B/pin_tuples_u24b.json"; "The new
+    file: 6 passed"; "110 passed"; "93 files: 1,546 passed"; "168199accbd308e232cc881c3477edc233a668a6,
+    parent 4a4c850"; "wall 921.98 s"; "==== 3501 passed, 17 deselected, 1 xfailed, 2 warnings in
+    919.97s (0:15:19) ===="; "collected 3,519 / 17 deselected / 3,502 selected"; "only-gate exactly
+    the six U25 ids, only-ref 0"; "Journal window: -- No entries --"; "the idle surgical-cv uvicorn
+    (pid 1017068) only"; "all 19 present"; "Ledger 3614d25, parent 4e9fa58";
+    "0854f294491ee8f359c446abfbf37d3d14fc2e7f, parent 168199a"; "21 files, added only (+12,543)";
+    "Ledger 7b473a9, parent 3614d25"; "the live codebook was never written (89dbfa91…ad82
+    throughout)"; "The 09:00 nightly ended pytest exit code: 0".
+  READ (CC's): findings 1–5; "_validate_fields:327–330's str(f[key] or "") turns False into ""
+    and raises "…has an empty instruction.""; "The committed message says "quote the value as
+    written in the YAML""; "Your first resume came at 06:51 UTC, inside the window, so I declined
+    it and edited nothing".
+  INFERRED: none.
+
+R789(a) — The 12ae-U25B final report is accepted as reported: item 0 4a4c850 (Block 186; the
+  INT-i12-31 note; the brief file byte-equal to the architect's copy, the fifth match of five),
+  the two fixtures derived from the live text by derive_fixtures.py, the engine commit 168199a
+  (six files: codebook.py +26 / −0, the test, the two fixtures, the inventory regenerated under
+  R786(b)'s form with the drift read whole first — line numbers only), the gate 3,501 / 1 / 17 on
+  3,519 / 3,502 at 921.98 s inside 837–1021 s, only-gate the six U25 ids, no load, the nineteen
+  files, green at the first run; the evidence commit 0854f29; ledgers 3614d25 and 7b473a9 with
+  trailers. Both pins, the audit prompt_hash, the live codebook's sha256 and its semantic hash
+  byte-identical. CC's refusal of the 06:51 UTC resume inside the window was right (R86; the
+  brief's TIMING); nothing was edited. U25 is landed; P1's fix units 37, done 28.
+R789(b) — INT-i12-31 CLOSES on U25 (168199a), by R514: the row's stated fix is delivered as
+  R788(b) widened it (one `_require_str` predicate in the three validators, over the values and
+  definitions, every sentinel, the tokens, and each field's rendered text) and its acceptance test
+  passes (tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load,
+  five cases red on the parent 4a4c850 in 12ae_U25B/b0_parent_acceptance.txt, green in
+  12ae_U25B/gate_u25b/, with ::test_the_live_codebook_loads_unchanged beside it, green on both).
+  Noted CLOSED at 12ae-U26A's item 0 in INT-g12-6's note form; counted until P1 closes (R607(d),
+  R753(d)(ii)). The same item 0 writes the dated units line (37, done 28: U01–U25, U37, U38, U39).
+R789(c) — The series on this host state gains 921.98 s: thirty-four. The band stays 837–1021 s
+  (R783(b)).
+R789(d) — Readings, no row: finding 1 (the instruction_no case raised on the parent with the
+  wrong message — `str(f[key] or "")` turns False into "" and the "empty instruction" refusal
+  fires; R788(d)'s "nothing raises at load" was the architect's, wrong for that one case, and
+  fail-first held because the case was red on the "quote" assertion; the type check now runs
+  first, so the author gets the right message — the mechanism F5 found for escape_token: No);
+  finding 2 (E3 false: a 26-line insertion moves line numbers the inventory records; the
+  regeneration under R786(b)'s form is the rule for any engine edit that moves a recorded line);
+  finding 3 (the message says "quote the value as written in the YAML", not the coerced word —
+  CC's wording accepted; both forms meet R788(d)); finding 4 (an unquoted date or version is
+  refused — inside R788(b)(iii); the 93-file run and the gate show no existing codebook refused);
+  finding 5 (the reference durations file is durations_12ae_u24b_rerun.txt, named by the re-run's
+  session — the wrapper's form, quoted). The 2026-11-09 nightly's exit code 0 is a reading; the
+  next open reads it in full against 12ad_close/expected_nightly_20261102.md's successor, which
+  the 12ae close writes.
+R789(e) — U26's Phase A opens: 12l_P1A.md §3's U26, "Run-fault predicate at the parse handlers
+  (P1's tail)" (C56, handlers 4–7 and 12–13 in 12f_triage.md's converting-handler numbering,
+  R542, R612(g)), read-only, in 12ae_U25A.md's form, its entry quoted first. Not on Run 7's path
+  (the 190 papers are parsed). No engine, test, script, spec or codebook edit; no model call; no
+  live write. This ruling states no standing rule.

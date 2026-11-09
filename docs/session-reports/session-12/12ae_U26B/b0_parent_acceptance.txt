@@ -1,0 +1,542 @@
+b0: tests/test_u26_parse_run_faults.py on the parent of U26's engine commit, HEAD e89d602102524dce80b2515b385d3bb312ae6e09, engine/ unchanged since 168199a (0 diff lines); 2026-11-09T18:18:22Z
+FFF.FFF.FFF.FFF.FFF.FFF.                                                 [100%]
+=================================== FAILURES ===================================
+E   AssertionError: handler 4: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+    assert None is OperationalError('database is locked')
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 1: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 2: parser=qwen2.5vl RAISED error: OperationalError: database is locked
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: vision, the last tier on the scanned route, failed — database is locked
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 714, in parse_pdf
+    markdown = parse_with_vision(pdf_path, vision_model=vision_model,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+sqlite3.OperationalError: database is locked
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 721, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: vision, the last tier on the scanned route, failed — database is locked
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 4: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 4: ConnectionError did not leave parse_all_pdfs as itself: None
+    assert None is ConnectionError('[Errno 111] Connection refused')
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 1: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 2: parser=qwen2.5vl RAISED error: ConnectionError: [Errno 111] Connection refused
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: vision, the last tier on the scanned route, failed — [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 714, in parse_pdf
+    markdown = parse_with_vision(pdf_path, vision_model=vision_model,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+ConnectionError: [Errno 111] Connection refused
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 721, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: vision, the last tier on the scanned route, failed — [Errno 111] Connection refused
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 4: ConnectionError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 4: UndeclaredCall did not leave parse_all_pdfs as itself: None
+    assert None is UndeclaredCall("call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.")
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 1: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 2: parser=qwen2.5vl RAISED error: UndeclaredCall: call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: vision, the last tier on the scanned route, failed — call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 714, in parse_pdf
+    markdown = parse_with_vision(pdf_path, vision_model=vision_model,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+engine.core.run_manifest.UndeclaredCall: call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 721, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: vision, the last tier on the scanned route, failed — call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 4: UndeclaredCall did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 5: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+    assert None is OperationalError('database is locked')
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (1 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (1 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 1: parser=qwen2.5vl RAISED error: OperationalError: database is locked
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: vision, the last tier on the digital route, failed — database is locked
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 803, in parse_pdf
+    markdown = parse_with_vision(pdf_path, vision_model=vision_model,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+sqlite3.OperationalError: database is locked
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 811, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: vision, the last tier on the digital route, failed — database is locked
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 5: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 5: ConnectionError did not leave parse_all_pdfs as itself: None
+    assert None is ConnectionError('[Errno 111] Connection refused')
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (1 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (1 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 1: parser=qwen2.5vl RAISED error: ConnectionError: [Errno 111] Connection refused
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: vision, the last tier on the digital route, failed — [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 803, in parse_pdf
+    markdown = parse_with_vision(pdf_path, vision_model=vision_model,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+ConnectionError: [Errno 111] Connection refused
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 811, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: vision, the last tier on the digital route, failed — [Errno 111] Connection refused
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 5: ConnectionError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 5: UndeclaredCall did not leave parse_all_pdfs as itself: None
+    assert None is UndeclaredCall("call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.")
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (1 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (1 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 1: parser=qwen2.5vl RAISED error: UndeclaredCall: call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: vision, the last tier on the digital route, failed — call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 803, in parse_pdf
+    markdown = parse_with_vision(pdf_path, vision_model=vision_model,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+engine.core.run_manifest.UndeclaredCall: call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 811, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: vision, the last tier on the digital route, failed — call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 5: UndeclaredCall did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 6: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+    assert None is OperationalError('database is locked')
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 2: parser=qwen2.5vl RAISED error: OperationalError: database is locked
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:1100 Paper 1: PDF_EXCLUDED — parse_quality: REPLACEMENT_DENSITY=0.5 (limit 0.1)
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 6: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 6: ConnectionError did not leave parse_all_pdfs as itself: None
+    assert None is ConnectionError('[Errno 111] Connection refused')
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 2: parser=qwen2.5vl RAISED error: ConnectionError: [Errno 111] Connection refused
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:1100 Paper 1: PDF_EXCLUDED — parse_quality: REPLACEMENT_DENSITY=0.5 (limit 0.1)
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 6: ConnectionError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 6: UndeclaredCall did not leave parse_all_pdfs as itself: None
+    assert None is UndeclaredCall("call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.")
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 2: parser=qwen2.5vl RAISED error: UndeclaredCall: call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:1100 Paper 1: PDF_EXCLUDED — parse_quality: REPLACEMENT_DENSITY=0.5 (limit 0.1)
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 6: UndeclaredCall did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 7: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+    assert None is OperationalError('database is locked')
+------------------------------ Captured log call -------------------------------
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1121 Paper 1: parsing failed — database is locked
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 961, in parse_pdf
+    record_parsed_text(db._conn, paper_id=paper_id, path=md_path,
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+sqlite3.OperationalError: database is locked
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 7: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 7: ConnectionError did not leave parse_all_pdfs as itself: None
+    assert None is ConnectionError('[Errno 111] Connection refused')
+------------------------------ Captured log call -------------------------------
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1121 Paper 1: parsing failed — [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 961, in parse_pdf
+    record_parsed_text(db._conn, paper_id=paper_id, path=md_path,
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+ConnectionError: [Errno 111] Connection refused
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 7: ConnectionError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 7: UndeclaredCall did not leave parse_all_pdfs as itself: None
+    assert None is UndeclaredCall("call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.")
+------------------------------ Captured log call -------------------------------
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1121 Paper 1: parsing failed — call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 961, in parse_pdf
+    record_parsed_text(db._conn, paper_id=paper_id, path=md_path,
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+engine.core.run_manifest.UndeclaredCall: call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 7: UndeclaredCall did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 12: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+    assert None is OperationalError('database is locked')
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (0 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (0 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 3: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:521 Paper 1: could not record attempts for a failed parse
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 517, in _commit_attempts
+    _insert_attempts(db, paper_id, pdf_hash, version, attempts,
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 494, in _insert_attempts
+    db._conn.execute(
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py", line 81, in execute
+    raise self.insert_exc
+sqlite3.OperationalError: database is locked
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 920, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 12: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 12: ConnectionError did not leave parse_all_pdfs as itself: None
+    assert None is ConnectionError('[Errno 111] Connection refused')
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (0 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (0 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 3: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:521 Paper 1: could not record attempts for a failed parse
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 517, in _commit_attempts
+    _insert_attempts(db, paper_id, pdf_hash, version, attempts,
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 494, in _insert_attempts
+    db._conn.execute(
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py", line 81, in execute
+    raise self.insert_exc
+ConnectionError: [Errno 111] Connection refused
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 920, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 12: ConnectionError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 12: UndeclaredCall did not leave parse_all_pdfs as itself: None
+    assert None is UndeclaredCall("call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.")
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (0 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (0 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 3: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:521 Paper 1: could not record attempts for a failed parse
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 517, in _commit_attempts
+    _insert_attempts(db, paper_id, pdf_hash, version, attempts,
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 494, in _insert_attempts
+    db._conn.execute(
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py", line 81, in execute
+    raise self.insert_exc
+engine.core.run_manifest.UndeclaredCall: call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 920, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 12: UndeclaredCall did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 13: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+    assert None is OperationalError('database is locked')
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (0 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (0 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 3: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:521 Paper 1: could not record attempts for a failed parse
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 517, in _commit_attempts
+    _insert_attempts(db, paper_id, pdf_hash, version, attempts,
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 494, in _insert_attempts
+    db._conn.execute(
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py", line 81, in execute
+    raise self.insert_exc
+RuntimeError: insert refused
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 920, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 13: sqlite3.OperationalError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 13: ConnectionError did not leave parse_all_pdfs as itself: None
+    assert None is ConnectionError('[Errno 111] Connection refused')
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (0 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (0 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 3: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:521 Paper 1: could not record attempts for a failed parse
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 517, in _commit_attempts
+    _insert_attempts(db, paper_id, pdf_hash, version, attempts,
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 494, in _insert_attempts
+    db._conn.execute(
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py", line 81, in execute
+    raise self.insert_exc
+RuntimeError: insert refused
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 920, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 13: ConnectionError did not leave parse_all_pdfs as itself: None
+E   AssertionError: handler 13: UndeclaredCall did not leave parse_all_pdfs as itself: None
+    assert None is UndeclaredCall("call refused before sending: this run declared no 'vision_parse' stage, and the call would send model 'qwen2.5vl:7b'. The manifest is the contract — a run sends only the stages and models it declared at open.")
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (0 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (0 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 3: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:521 Paper 1: could not record attempts for a failed parse
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 517, in _commit_attempts
+    _insert_attempts(db, paper_id, pdf_hash, version, attempts,
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 494, in _insert_attempts
+    db._conn.execute(
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py", line 81, in execute
+    raise self.insert_exc
+RuntimeError: insert refused
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 920, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py:178: AssertionError: handler 13: UndeclaredCall did not leave parse_all_pdfs as itself: None
+==================================== PASSES ====================================
+______ test_run_faults_leave_the_parse_handlers_as_themselves[4-KeyError] ______
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 1: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 2: parser=qwen2.5vl RAISED error: KeyError: 'unclassified'
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: vision, the last tier on the scanned route, failed — 'unclassified'
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 714, in parse_pdf
+    markdown = parse_with_vision(pdf_path, vision_model=vision_model,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+KeyError: 'unclassified'
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 721, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: vision, the last tier on the scanned route, failed — 'unclassified'
+______ test_run_faults_leave_the_parse_handlers_as_themselves[5-KeyError] ______
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (1 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (1 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 1: parser=qwen2.5vl RAISED error: KeyError: 'unclassified'
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: vision, the last tier on the digital route, failed — 'unclassified'
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 803, in parse_pdf
+    markdown = parse_with_vision(pdf_path, vision_model=vision_model,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+KeyError: 'unclassified'
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 811, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: vision, the last tier on the digital route, failed — 'unclassified'
+______ test_run_faults_leave_the_parse_handlers_as_themselves[6-KeyError] ______
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 2: parser=qwen2.5vl RAISED error: KeyError: 'unclassified'
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:1100 Paper 1: PDF_EXCLUDED — parse_quality: REPLACEMENT_DENSITY=0.5 (limit 0.1)
+______ test_run_faults_leave_the_parse_handlers_as_themselves[7-KeyError] ______
+------------------------------ Captured log call -------------------------------
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1121 Paper 1: parsing failed — 'unclassified'
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 961, in parse_pdf
+    record_parsed_text(db._conn, paper_id=paper_id, path=md_path,
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+KeyError: 'unclassified'
+_____ test_run_faults_leave_the_parse_handlers_as_themselves[12-KeyError] ______
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (0 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (0 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 3: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:521 Paper 1: could not record attempts for a failed parse
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 517, in _commit_attempts
+    _insert_attempts(db, paper_id, pdf_hash, version, attempts,
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 494, in _insert_attempts
+    db._conn.execute(
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py", line 81, in execute
+    raise self.insert_exc
+KeyError: 'unclassified'
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 920, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+_____ test_run_faults_leave_the_parse_handlers_as_themselves[13-KeyError] ______
+------------------------------ Captured log call -------------------------------
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:778 Paper 1: docling output sparse (0 chars), falling back to PyMuPDF
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:797 Paper 1: pymupdf output sparse (0 chars), falling back to qwen2.5vl:7b
+WARNING  engine.parsers.pdf_parser:pdf_parser.py:661 Paper 1 attempt 3: parser=docling_ocr RAISED error: RuntimeError: docling_ocr not stubbed in this test
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:521 Paper 1: could not record attempts for a failed parse
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 517, in _commit_attempts
+    _insert_attempts(db, paper_id, pdf_hash, version, attempts,
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 494, in _insert_attempts
+    db._conn.execute(
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u26_parse_run_faults.py", line 81, in execute
+    raise self.insert_exc
+RuntimeError: insert refused
+ERROR    engine.parsers.pdf_parser:pdf_parser.py:1105 Paper 1: parsing failed — Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 1078, in parse_all_pdfs
+    result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/parsers/pdf_parser.py", line 920, in parse_pdf
+    raise ParseFailed(
+engine.parsers.pdf_parser.ParseFailed: Paper 1: all parsers returned empty text — 3 attempt(s) recorded, no file written, no asset row created
+=========================== short test summary info ============================
+PASSED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[4-KeyError]
+PASSED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[5-KeyError]
+PASSED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[6-KeyError]
+PASSED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[7-KeyError]
+PASSED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[12-KeyError]
+PASSED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[13-KeyError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[4-sqlite3.OperationalError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[4-ConnectionError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[4-UndeclaredCall]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[5-sqlite3.OperationalError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[5-ConnectionError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[5-UndeclaredCall]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[6-sqlite3.OperationalError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[6-ConnectionError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[6-UndeclaredCall]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[7-sqlite3.OperationalError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[7-ConnectionError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[7-UndeclaredCall]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[12-sqlite3.OperationalError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[12-ConnectionError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[12-UndeclaredCall]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[13-sqlite3.OperationalError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[13-ConnectionError]
+FAILED tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[13-UndeclaredCall]
+18 failed, 6 passed in 18.26s

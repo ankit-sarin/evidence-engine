@@ -1,0 +1,39 @@
+gate ids 3526 ref 3502
+only-gate: 24; only-ref: 0
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[12-ConnectionError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[12-KeyError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[12-UndeclaredCall]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[12-sqlite3.OperationalError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[13-ConnectionError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[13-KeyError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[13-UndeclaredCall]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[13-sqlite3.OperationalError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[4-ConnectionError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[4-KeyError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[4-UndeclaredCall]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[4-sqlite3.OperationalError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[5-ConnectionError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[5-KeyError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[5-UndeclaredCall]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[5-sqlite3.OperationalError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[6-ConnectionError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[6-KeyError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[6-UndeclaredCall]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[6-sqlite3.OperationalError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[7-ConnectionError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[7-KeyError]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[7-UndeclaredCall]
+  only-gate tests/test_u26_parse_run_faults.py::test_run_faults_leave_the_parse_handlers_as_themselves[7-sqlite3.OperationalError]
+phases ref 2570 gate 2615
+slower by >10 s: 0
+-- summary line
+==== 3525 passed, 17 deselected, 1 xfailed, 2 warnings in 943.58s (0:15:43) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)

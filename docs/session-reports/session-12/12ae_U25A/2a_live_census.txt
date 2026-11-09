@@ -1,0 +1,18 @@
+live codebook sha256 89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82 36732 B
+valid_values entries: 71 parsed types: ['str']
+absence_sentinels: ['NR', 'N/A', 'NA', 'NOT_FOUND', 'NOT FOUND', 'NOT REPORTED'] types ['str']
+canonical_absence_sentinel 'NR' str
+escape_token 'NO_EVIDENCE_LOCATABLE' str
+contract_unmet_token 'CONTRACT_UNMET' str
+version '2.0' str
+date '2026-03-15' str
+review 'surgical_autonomy' str
+value: lines 92 unquoted (no leading quote) 0
+unquoted value: lines whose scalar is a YAML 1.1 bool/null token: []
+absence_sentinels text: absence_sentinels:
+  - "NR"
+  - "N/A"
+  - "NA"
+  - "NOT_FOUND"
+  - "NOT FOUND"
+  - "NOT REPORTED"

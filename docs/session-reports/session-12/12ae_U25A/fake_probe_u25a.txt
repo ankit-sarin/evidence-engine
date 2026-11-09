@@ -1,0 +1,47 @@
+live codebook data/surgical_autonomy/extraction_codebook.yaml sha256 89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82 36732 B (before)
+recorded codebook_semantic_hash values in 12ad_close/pin_tuples_close.json: ['f261af76feadd650f3c58b36498e2d140ef2dc4ffec6a80a16c06741eb2f5646']
+
+=== value_yes: the first valid_values entry `value: "Original Research"` → `value: Yes` (unquoted); written to /home/ankitsarin/scratch/12ae-u25a/fixtures/value_yes/extraction_codebook.yaml (sha256 020f0a7ec5b246947e53504db7433a354f11059403834363ed86b301613334a9)
+    load_codebook: returned 'f4b6bdefa56c1d83aeeaa84b12d2c9607957235ee7a1ae1b13dec2e57e568096'
+    semantic_hash equal to the live file's: False
+    enum_values('study_type'): returned [True, 'Case Report/Series', 'Review', 'Systematic Review', 'Meta-Analysis', 'Conference Abstract', 'Technical Report', 'Other']
+    _build_field_block (both prompt paths render through it): RAISED TypeError: sequence item 0: expected str instance, bool found — at engine/agents/extractor.py:90 `enum_note = f" (allowed values: {', '.join(value_names)})"`
+    build_extraction_prompt (legacy path): RAISED TypeError: sequence item 0: expected str instance, bool found — at engine/agents/extractor.py:90 `enum_note = f" (allowed values: {', '.join(value_names)})"`
+    prompt_hash('extract_pass1', …) — the render open_run makes: RAISED TypeError: sequence item 0: expected str instance, bool found — at engine/agents/extractor.py:90 `enum_note = f" (allowed values: {', '.join(value_names)})"`
+    human_import._load_codebook_valid_values (.lower()): RAISED AttributeError: 'bool' object has no attribute 'lower' — at analysis/paper1/human_import.py:143 `valid[name] = [v["value"].lower() for v in field_def["valid_values"]]`
+
+=== sentinel_no: absence_sentinels item `- "NA"` → `- NO` (unquoted); written to /home/ankitsarin/scratch/12ae-u25a/fixtures/sentinel_no/extraction_codebook.yaml (sha256 e8778f9cedc63445f6c6f66dadb80f22c3767f97fc096f406381e9181a131f45)
+    load_codebook: returned '8afa1e0756fba466311415b23df809c2ddfc4495130de983662b78051c7d7ae7'
+    semantic_hash equal to the live file's: False
+    absence_sentinels (the loaded tuple): returned ('NR', 'N/A', 'False', 'NOT_FOUND', 'NOT FOUND', 'NOT REPORTED')
+    is_absence_sentinel('NO') — the token as the codebook author wrote it: returned False
+    is_absence_sentinel('False') — the coerced string: returned True
+    build_extraction_prompt (legacy path) renders: returned 'rendered'
+
+=== sentinel_null: absence_sentinels item `- "NA"` → `- null` (unquoted); written to /home/ankitsarin/scratch/12ae-u25a/fixtures/sentinel_null/extraction_codebook.yaml (sha256 188a731051be88e8283f905e0218296dd4c81834c6c2c3a74d3dc00eb570799a)
+    load_codebook: returned 'eed92be980a62d7e049d73c623e308e2be2c3c542253424c1b9b40cb543e12fb'
+    semantic_hash equal to the live file's: False
+    absence_sentinels (the loaded tuple): returned ('NR', 'N/A', 'None', 'NOT_FOUND', 'NOT FOUND', 'NOT REPORTED')
+    is_absence_sentinel('null') — the token as the codebook author wrote it: returned False
+    is_absence_sentinel('None') — the coerced string: returned True
+    build_extraction_prompt (legacy path) renders: returned 'rendered'
+
+=== the live file
+    load_codebook: OK; semantic_hash f261af76feadd650f3c58b36498e2d140ef2dc4ffec6a80a16c06741eb2f5646; equal to the recorded value: True
+    sha256 89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82 equal to the file's: True
+
+=== option A sketched: a type check over the parsed document, after safe_load, before the model
+    live: no finding
+    value_yes: ['fields[study_type].valid_values value True']
+    sentinel_no: ['absence_sentinels[2] False']
+    sentinel_null: ['absence_sentinels[2] None']
+
+=== option B sketched: a SafeLoader without the bool and null implicit resolvers
+    live: parsed document equal to safe_load's: True; semantic hash equal: True
+    value_yes: the edited value loads as 'Yes'
+    sentinel_no: absence_sentinels ['NR', 'N/A', 'NO', 'NOT_FOUND', 'NOT FOUND', 'NOT REPORTED']
+    sentinel_null: absence_sentinels ['NR', 'N/A', 'null', 'NOT_FOUND', 'NOT FOUND', 'NOT REPORTED']
+
+live codebook sha256 89dbfa91b5033f2b3dff713e36c7ecd0aa086739b5832059948b6f55b29ead82 (after); unchanged: True
+-- Ollama journal from 2026-11-09 06:17:20 UTC (the probe's start) to the read at 2026-11-09 06:17:30 UTC:
+-- No entries --

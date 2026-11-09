@@ -1,0 +1,1121 @@
+== the static closure
+modules in the run7 closure: 91
+
+== sites (engine, scripts, analysis)
+
+-- attribute read .absence_sentinel_set: 4
+  [run7/engine-other] engine/agents/audit_events.py:121 <module>.low_yield | absence_sentinels=codebook.absence_sentinel_set)
+  [run7/engine-other] engine/agents/audit_events.py:164 <module>.audit_run | sentinels = codebook.absence_sentinel_set
+  [run7/engine-other] engine/core/codebook.py:168 <module>.Codebook.is_absence_sentinel | return value is not None and str(value).strip().upper() in self.absence_sentinel_set
+  [run7/engine-other] engine/validators/distribution_monitor.py:152 <module>._query_all_fields | absence_sentinels=codebook.absence_sentinel_set):
+
+-- attribute read .absence_sentinels: 11
+  [run7/engine-other] engine/agents/audit_events.py:114 <module>.low_yield | declared = frozenset(codebook.absence_sentinels)
+  [run7/engine-other] engine/agents/extractor.py:542 <module>._absence_tokens | return cb.escape_token, frozenset(s.strip().upper() for s in cb.absence_sentinels)
+  [run7/engine-other] engine/agents/extractor.py:718 <module>.extract_paper | sentinels=frozenset(cb.absence_sentinels), review_dir=Path(db.db_path).parent)
+  [run7/engine-other] engine/core/codebook.py:143 <module>.Codebook.raw | "absence_sentinels": list(self.absence_sentinels),
+  [run7/engine-other] engine/core/codebook.py:160 <module>.Codebook.absence_sentinel_set | return frozenset(str(v).strip().upper() for v in self.absence_sentinels)
+  [run7/engine-other] engine/core/effective.py:138 <module>.load_absence_sentinels | return frozenset(load_codebook(codebook_path).absence_sentinels)
+  [run7/engine-other] engine/core/effective.py:595 <module>.iter_grid | sentinels = frozenset(codebook.absence_sentinels)
+  [run7/engine-other] engine/elicitation/pipeline.py:632 <module>.extract_paper_elicited | absence_sentinels=C.absence_sentinels(codebook),
+  [run7/engine-other] engine/elicitation/pipeline.py:642 <module>.extract_paper_elicited | absence_sentinels=C.absence_sentinels(codebook), mode=STRICT,
+  [run7/engine-other] engine/elicitation/pipeline.py:667 <module>.extract_paper_elicited | sentinels=frozenset(_cb.absence_sentinels), review_dir=review_dir)
+  [run7/engine-other] engine/elicitation/prompts.py:221 <module>.build_pass1_prompt | sentinels = ", ".join(sorted(C.absence_sentinels(codebook)))
+
+-- attribute read .raw: 15
+  [analysis] analysis/eval/adjud01_pairs.py:53 <module>.field_types | cb = load_codebook(codebook_path).raw
+  [analysis] analysis/paper1/adjudication.py:37 <module>._load_field_types | cb = load_codebook(codebook_path).raw
+  [analysis] analysis/paper1/consensus.py:54 <module>._load_field_types | cb = load_codebook(codebook_path).raw
+  [analysis] analysis/paper1/human_import.py:137 <module>._load_codebook_valid_values | cb = load_codebook(codebook_path).raw
+  [analysis] analysis/paper1/judge_codebook_smoke.py:225 <module>.load_raw_codebook | doc = load_codebook(path).raw
+  [analysis] analysis/paper1/judge_loader.py:110 <module>._document | return _load(path).raw
+  [analysis] analysis/paper1/pi_audit_sampler_v2.py:218 <module>.load_codebook_fields | cb = load_codebook(codebook_path).raw
+  [engine-other] engine/validators/extraction_validator.py:60 <module>._non_value_tokens | return non_value_tokens(codebook.raw)
+  [run7/engine-other] engine/agents/extractor.py:525 <module>._contract_unmet_token | return load_codebook(codebook_path).raw.get("contract_unmet_token")
+  [run7/engine-other] engine/agents/extractor.py:735 <module>._recheck_env_after_restart | payload={"environment": reading.raw, "papers_done": papers_done,
+  [run7/engine-other] engine/core/run_manifest.py:1213 <module>.check_call_env | payload={"environment": reading.raw, "papers_done": None,
+  [run7/engine-other] engine/elicitation/classes.py:92 <module>.load | return load_codebook(codebook_path).raw
+  [run7/engine-other] engine/elicitation/pipeline.py:233 <module>._sentinel_codebook | return cb.raw, expected_field_names(spec, path), path
+  [run7/engine-other] engine/elicitation/pipeline.py:437 <module>.extract_paper_elicited | codebook = _cb.raw
+  [run7/engine-other] engine/validators/distribution_monitor.py:60 <module>._load_categorical_fields | cb = load_codebook(codebook_path).raw
+
+-- call _build_field_block: 3
+  [analysis] analysis/eval/elicit01/prompts.py:65 <module>._schema_block | blocks = [_build_field_block(f) for f in fields]
+  [run7/engine-other] engine/agents/extractor.py:163 <module>.build_extraction_prompt | lines.append(_build_field_block(cb_entry))
+  [run7/engine-other] engine/elicitation/prompts.py:229 <module>.build_pass1_prompt | _build_field_block(f) + _escape_line(escape) for f in entries
+
+-- call _parse: 1
+  [run7/engine-other] engine/core/codebook.py:401 <module>.load_codebook | cached = _parse(path)
+
+-- call _validate_fields: 1
+  [run7/engine-other] engine/core/codebook.py:454 <module>._parse | _validate_fields(doc, path)
+
+-- call _validate_top_level: 1
+  [run7/engine-other] engine/core/codebook.py:453 <module>._parse | _validate_top_level(doc, path)
+
+-- call _validate_valid_values: 1
+  [run7/engine-other] engine/core/codebook.py:332 <module>._validate_fields | _validate_valid_values(f, path, where)
+
+-- call absence_sentinels: 4
+  [run7/engine-other] engine/elicitation/classes.py:165 <module>.is_absence_sentinel | return bool(v) and v in absence_sentinels(codebook) and not is_escape(value, codebook)
+  [run7/engine-other] engine/elicitation/pipeline.py:632 <module>.extract_paper_elicited | absence_sentinels=C.absence_sentinels(codebook),
+  [run7/engine-other] engine/elicitation/pipeline.py:642 <module>.extract_paper_elicited | absence_sentinels=C.absence_sentinels(codebook), mode=STRICT,
+  [run7/engine-other] engine/elicitation/prompts.py:221 <module>.build_pass1_prompt | sentinels = ", ".join(sorted(C.absence_sentinels(codebook)))
+
+-- call build_extraction_prompt: 10
+  [analysis] analysis/eval/run_capture01.py:100 <module>.capture_one | prompt = build_extraction_prompt(paper_text, spec)
+  [analysis] analysis/eval/run_local_ab.py:111 <module>.run_paper | prompt = build_extraction_prompt(paper_text, spec)
+  [analysis] analysis/eval/run_local_abc.py:122 <module>.run_one | prompt = build_extraction_prompt(paper_text, spec)
+  [analysis] analysis/eval/run_qualgap01.py:144 <module>.run_one | prompt = build_extraction_prompt(paper_text, spec)
+  [analysis] analysis/eval/smoke_regression01.py:64 <module>.main | prompt = build_extraction_prompt(text, spec)
+  [run7/engine-other] engine/agents/extractor.py:613 <module>.extract_paper | prompt = build_extraction_prompt(paper_text, spec, cb_path)
+  [run7/engine-other] engine/cloud/base.py:184 <module>.CloudExtractorBase.build_prompt | return build_extraction_prompt(parsed_text, self.spec)
+  [run7/engine-other] engine/core/effective_config.py:430 <module>.render_messages | prompt = ex.build_extraction_prompt(SENTINEL_TEXT, spec, codebook_path)
+  [run7/engine-other] engine/core/effective_config.py:464 <module>.render_messages | return outbound_messages(build_extraction_prompt(SENTINEL_TEXT, spec, codebook_path))
+  [run7/engine-other] engine/elicitation/pipeline.py:552 <module>.extract_paper_elicited | pass2_prompt = build_extraction_prompt(paper_text, spec, cb_path)
+
+-- call compute_semantic_hash: 1
+  [run7/engine-other] engine/core/codebook.py:470 <module>._parse | semantic_hash=compute_semantic_hash(doc),
+
+-- call enum_values: 1
+  [run7/engine-other] engine/core/codebook.py:202 <module>.Codebook.view | enum_values=self.enum_values(name),
+
+-- call is_absence_sentinel: 2
+  [engine-other] engine/validators/extraction_validator.py:104 <module>.detect_cross_field_bleed | if codebook.is_absence_sentinel(value):
+  [engine-other] engine/validators/extraction_validator.py:177 <module>.validate_extraction | if codebook.is_absence_sentinel(value):
+
+-- call load_codebook: 32
+  [analysis] analysis/eval/adjud01_pairs.py:53 <module>.field_types | cb = load_codebook(codebook_path).raw
+  [analysis] analysis/eval/elicit01/prompts.py:53 <module>.stated_fields | cb = (load_codebook(codebook_path) if codebook_path
+  [analysis] analysis/paper1/adjudication.py:37 <module>._load_field_types | cb = load_codebook(codebook_path).raw
+  [analysis] analysis/paper1/consensus.py:54 <module>._load_field_types | cb = load_codebook(codebook_path).raw
+  [analysis] analysis/paper1/human_import.py:137 <module>._load_codebook_valid_values | cb = load_codebook(codebook_path).raw
+  [analysis] analysis/paper1/judge_cli.py:253 <module>._run_locked | codebook = load_codebook(args.codebook)
+  [analysis] analysis/paper1/judge_codebook_smoke.py:1200 <module>._run_locked | codebook = load_codebook(args.codebook)
+  [analysis] analysis/paper1/judge_codebook_smoke.py:225 <module>.load_raw_codebook | doc = load_codebook(path).raw
+  [analysis] analysis/paper1/judge_loader.py:205 <module>._fetch_spans_for_paper | codebook = load_codebook(codebook_path)
+  [analysis] analysis/paper1/pass1_inspection.py:589 <module>.run | codebook = load_codebook(args.codebook)
+  [analysis] analysis/paper1/pass2_branchB_report.py:552 <module>.main | load_codebook(args.codebook)
+  [analysis] analysis/paper1/pass2_full.py:737 <module>._run_locked | codebook = load_codebook(args.codebook)
+  [analysis] analysis/paper1/pass2_retry_single.py:69 <module>._load_judge_input | codebook = load_codebook(codebook_path)
+  [analysis] analysis/paper1/pass2_smoke.py:861 <module>._run_locked | codebook = load_codebook(args.codebook)
+  [analysis] analysis/paper1/pi_audit_sampler_v2.py:218 <module>.load_codebook_fields | cb = load_codebook(codebook_path).raw
+  [run7/engine-other] engine/agents/audit_events.py:163 <module>.audit_run | codebook = load_codebook(Path(review_dir) / CODEBOOK_FILENAME)
+  [run7/engine-other] engine/agents/extractor.py:146 <module>.build_extraction_prompt | cb = (load_codebook(codebook_path) if codebook_path
+  [run7/engine-other] engine/agents/extractor.py:525 <module>._contract_unmet_token | return load_codebook(codebook_path).raw.get("contract_unmet_token")
+  [run7/engine-other] engine/agents/extractor.py:541 <module>._absence_tokens | cb = load_codebook(codebook_path)
+  [run7/engine-other] engine/agents/extractor.py:611 <module>.extract_paper | cb = load_codebook(cb_path)
+  [run7/engine-other] engine/cloud/base.py:91 <module>.CloudExtractorBase.__init__ | self._codebook = load_codebook(self._review_dir / CODEBOOK_FILENAME)
+  [run7/engine-other] engine/core/codebook.py:414 <module>.load_codebook_beside | return load_codebook(Path(db_path).parent / CODEBOOK_FILENAME)
+  [run7/engine-other] engine/core/codebook.py:428 <module>.load_codebook_for | cb = load_codebook(path)
+  [run7/engine-other] engine/core/completeness.py:124 <module>.expected_field_names | cb = (load_codebook(codebook_path) if codebook_path is not None
+  [run7/engine-other] engine/core/completeness.py:143 <module>._codebook_field_names | return load_codebook(codebook_path).field_names
+  [run7/engine-other] engine/core/effective.py:138 <module>.load_absence_sentinels | return frozenset(load_codebook(codebook_path).absence_sentinels)
+  [run7/engine-other] engine/elicitation/classes.py:92 <module>.load | return load_codebook(codebook_path).raw
+  [run7/engine-other] engine/elicitation/pipeline.py:231 <module>._sentinel_codebook | cb = load_codebook(codebook_path) if codebook_path else load_codebook_for(spec.review_id)
+  [run7/engine-other] engine/elicitation/pipeline.py:436 <module>.extract_paper_elicited | _cb = load_codebook(cb_path)
+  [run7/engine-other] engine/validators/distribution_monitor.py:60 <module>._load_categorical_fields | cb = load_codebook(codebook_path).raw
+  [run7/migrations] engine/migrations/017_seed_event_store.py:185 <module>.run_migration | codebook = load_codebook(codebook_path)
+  [scripts] scripts/run_cloud_extraction.py:113 <module>.run_arm | codebook = load_codebook(Path(db_path).parent / CODEBOOK_FILENAME)
+
+-- call load_codebook_beside: 15
+  [adjudication] engine/adjudication/ft_screening_adjudicator.py:527 <module>._apply_ft_decisions | codebook=load_codebook_beside(review_db.db_path),
+  [adjudication] engine/adjudication/import_extraction_entry.py:284 <module>.import_extraction_entry | codebook=load_codebook_beside(review_db.db_path),
+  [adjudication] engine/adjudication/import_screening_entry.py:160 <module>.import_screening_entry | codebook=load_codebook_beside(review_db.db_path),
+  [engine-other] engine/analysis/concordance.py:89 <module>.load_arm | codebook = load_codebook_beside(db_path)
+  [engine-other] engine/validators/extraction_validator.py:297 <module>.main | codebook = load_codebook_beside(db_path)
+  [run7/engine-other] engine/agents/extractor.py:1143 <module>._extract_selected | schema_hash = load_codebook_beside(db.db_path).semantic_hash
+  [run7/engine-other] engine/agents/ft_screener.py:581 <module>.open_screening_manifest | codebook=load_codebook_beside(db.db_path),
+  [run7/engine-other] engine/exporters/docx_export.py:99 <module>.export_evidence_docx | codebook = load_codebook_beside(db.db_path)
+  [run7/engine-other] engine/exporters/evidence_table.py:182 <module>.export_evidence_excel | codebook = load_codebook_beside(db.db_path)
+  [run7/engine-other] engine/exporters/evidence_table.py:66 <module>._build_evidence_rows | codebook = load_codebook_beside(db.db_path)
+  [run7/engine-other] engine/exporters/methods_section.py:90 <module>.generate_methods_section | n_fields = len(load_codebook_beside(db.db_path).fields)
+  [run7/engine-other] engine/validators/distribution_monitor.py:121 <module>._query_values | codebook = load_codebook_beside(_db_path_of(conn))
+  [run7/engine-other] engine/validators/distribution_monitor.py:147 <module>._query_all_fields | codebook = load_codebook_beside(_db_path_of(conn))
+  [run7/engine-other] engine/validators/distribution_monitor.py:208 <module>.check_distribution | codebook = load_codebook_beside(db_path)
+  [run7/scripts] scripts/run_pipeline.py:544 <module>._open_run_manifest | codebook = load_codebook_beside(db.db_path)
+
+-- call load_codebook_for: 10
+  [analysis] analysis/eval/elicit01/prompts.py:54 <module>.stated_fields | else load_codebook_for("surgical_autonomy"))
+  [analysis] analysis/paper1/export_disagreement_pairs.py:159 <module>.build_disagreement_rows | cb = load_codebook_for(spec.review_id)
+  [analysis] analysis/paper1/export_disagreement_pairs.py:288 <module>.write_xlsx | cb = load_codebook_for(spec.review_id)
+  [analysis] analysis/paper1/export_disagreement_pairs.py:422 <module>.write_html | cb = load_codebook_for(spec.review_id)
+  [engine-other] engine/analysis/normalize.py:65 <module>._default_codebook | return load_codebook_for(_FALLBACK_REVIEW_ID)
+  [engine-other] engine/analysis/report.py:27 <module>._get_tier_map | cb = load_codebook_for("surgical_autonomy")
+  [run7/engine-other] engine/agents/extractor.py:147 <module>.build_extraction_prompt | else load_codebook_for(spec.review_id))
+  [run7/engine-other] engine/agents/extractor.py:340 <module>.extract_pass2_structured | else load_codebook_for(spec.review_id).semantic_hash
+  [run7/engine-other] engine/core/completeness.py:125 <module>.expected_field_names | else load_codebook_for(spec.review_id))
+  [run7/engine-other] engine/elicitation/pipeline.py:231 <module>._sentinel_codebook | cb = load_codebook(codebook_path) if codebook_path else load_codebook_for(spec.review_id)
+
+-- call yaml.safe_load / yaml.load: 3
+  [adjudication] engine/adjudication/categorizer.py:46 <module>.CategoryConfig.load | raw = yaml.safe_load(f)
+  [run7/engine-other] engine/core/codebook.py:448 <module>._parse | doc = yaml.safe_load(text)
+  [run7/engine-other] engine/core/review_spec.py:987 <module>.load_review_spec | raw = yaml.safe_load(f)
+
+-- subscript ['absence_sentinels']: 4
+  [run7/engine-other] engine/core/codebook.py:262 <module>._validate_top_level | if not isinstance(doc["absence_sentinels"], list) or not doc["absence_sentinels"]:
+  [run7/engine-other] engine/core/codebook.py:269 <module>._validate_top_level | if not isinstance(canonical, str) or canonical not in doc["absence_sentinels"]:
+  [run7/engine-other] engine/core/codebook.py:272 <module>._validate_top_level | f"`absence_sentinels` {doc['absence_sentinels']}, got {canonical!r}. It is "
+  [run7/engine-other] engine/core/codebook.py:466 <module>._parse | absence_sentinels=tuple(str(s) for s in doc["absence_sentinels"]),
+
+-- subscript ['valid_values']: 2
+  [analysis] analysis/paper1/human_import.py:143 <module>._load_codebook_valid_values | valid[name] = [v["value"].lower() for v in field_def["valid_values"]]
+  [analysis] analysis/paper1/pi_audit_sampler_v2.py:246 <module>._compose_field_definition | for v in node["valid_values"]:
+
+-- subscript ['value']: 27
+  [analysis] analysis/eval/analyze_schema_eval.py:116 <module>.agreement_vs_run6 | stored = {(r["paper_id"], r["field_name"]): r["value"] for r in conn.execute(q)}
+  [analysis] analysis/eval/analyze_schema_eval.py:120 <module>.agreement_vs_run6 | stored = {(r["paper_id"], r["field_name"]): r["value"]
+  [analysis] analysis/paper1/human_import.py:143 <module>._load_codebook_valid_values | valid[name] = [v["value"].lower() for v in field_def["valid_values"]]
+  [analysis] analysis/paper1/judge_loader.py:90 <module>._parse_valid_values | out.append(str(item["value"]))
+  [analysis] analysis/paper1/judge_provenance.py:160 <module>.join | "value": span["value"],
+  [analysis] analysis/paper1/pi_audit_sampler.py:269 <module>._fetch_arm_value_and_snippet | return row["value"], row["source_snippet"]
+  [analysis] analysis/paper1/pi_audit_sampler.py:283 <module>._fetch_arm_value_and_snippet | return row["value"], row["source_snippet"]
+  [analysis] analysis/provenance/census.py:201 <module>.persist | r["span_table"], r["span_row_id"], r["value"], r["snippet_chars"],
+  [engine-other] engine/cloud/anthropic_extractor.py:111 <module>.AnthropicExtractor.extract_paper | span["value"] = None
+  [engine-other] engine/validators/extraction_validator.py:169 <module>.validate_extraction | value = cell["value"]
+  [engine-other] engine/validators/extraction_validator.py:250 <module>.validate_all | spans = [c for c in cells if c["value"] is not None]
+  [engine-other] engine/validators/extraction_validator.py:308 <module>.main | populated = sum(1 for cs in cells.values() for c in cs if c["value"] is not None)
+  [engine-other] engine/validators/extraction_validator.py:334 <module>.main | f"value={iss['value'][:50]:50s}  {iss['issue']}")
+  [engine-other] engine/validators/extraction_validator.py:95 <module>.detect_cross_field_bleed | value = span["value"]
+  [run7/engine-other] engine/agents/extractor.py:104 <module>._build_field_block | lines.append(f"  - **{vv['value']}** — {vv['definition']}")
+  [run7/engine-other] engine/agents/extractor.py:118 <module>._build_field_block | lines.append(f"  - {ex['scenario']} → **{ex['value']}**")
+  [run7/engine-other] engine/agents/extractor.py:89 <module>._build_field_block | value_names = [v["value"] for v in valid_values]
+  [run7/engine-other] engine/cloud/base.py:297 <module>.CloudExtractorBase.parse_response_to_spans | span["value"] = self._codebook.canonical_absence_sentinel
+  [run7/engine-other] engine/cloud/base.py:304 <module>.CloudExtractorBase.parse_response_to_spans | span["value"] = str(span["value"])
+  [run7/engine-other] engine/core/codebook.py:195 <module>.Codebook.enum_values | return [v["value"] for v in vv]
+  [run7/engine-other] engine/core/codebook.py:363 <module>._validate_valid_values | f"Codebook at {path}: {where} valid_values entry {item['value']!r} "
+  [run7/engine-other] engine/core/codebook.py:366 <module>._validate_valid_values | if item["value"] in seen:
+  [run7/engine-other] engine/core/codebook.py:368 <module>._validate_valid_values | f"Codebook at {path}: {where} lists {item['value']!r} twice in "
+  [run7/engine-other] engine/core/codebook.py:371 <module>._validate_valid_values | seen.add(item["value"])
+  [run7/engine-other] engine/core/effective.py:188 <module>._Ev.__init__ | self.value = d["value"]
+  [tools] engine/tools/inventory.py:585 <module>.render_markdown | L.append(f"| `{rel}` | {h['line']} | `{h['value']}` |")
+  [tools] engine/tools/inventory.py:594 <module>.render_markdown | L.append(f"| `{rel}` | {c['line']} | `{c['name']}` | `{c['value']}` |")
+
+== tests
+
+-- (i) direct names: 277 hits / 78 files
+   by file: test_codebook_loader.py 58, test_review_spec.py 20, test_eligibility.py 12, analysis/paper1/test_judge_loader.py 10, test_u17_cross_lineage.py 10, test_units_as_source_slices.py 10, test_u18_one_host.py 7, test_u19_env_recheck.py 7, test_u19_local_service.py 7, test_elicitation_sentinel.py 6, test_extractor.py 6, test_parse_quality.py 6, test_review_paths.py 6, test_codebook_review_at_open.py 5, test_parse_writer_refs.py 5, test_pin_records.py 5, test_elicitation_prompts_ruling2.py 4, test_screener.py 4, analysis/paper1/test_judge_storage.py 3, test_citation_record.py 3
+  tests/_event_store_fixture.py:374 <module>.open_extraction_run | codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: digest,
+  tests/_font_fixtures.py:152 <module>._make_pdf | raw = doc.tobytes()
+  tests/_font_fixtures.py:155 <module>._make_pdf | doc = fitz.open("pdf", raw)
+  tests/analysis/paper1/test_judge_loader.py:104 <module>.TestLoadCodebook.test_happy_path | cb = load_codebook(p)
+  tests/analysis/paper1/test_judge_loader.py:126 <module>.TestLoadCodebook.test_missing_type | load_codebook(p)
+  tests/analysis/paper1/test_judge_loader.py:132 <module>.TestLoadCodebook.test_missing_definition | load_codebook(p)
+  tests/analysis/paper1/test_judge_loader.py:137 <module>.TestLoadCodebook.test_unknown_type | load_codebook(p)
+  tests/analysis/paper1/test_judge_loader.py:142 <module>.TestLoadCodebook.test_missing_fields_top_level | load_codebook(p)
+  tests/analysis/paper1/test_judge_loader.py:162 <module>.TestCodebookSha.test_deterministic | a = compute_codebook_sha256(p)
+  tests/analysis/paper1/test_judge_loader.py:163 <module>.TestCodebookSha.test_deterministic | b = compute_codebook_sha256(p)
+  tests/analysis/paper1/test_judge_loader.py:170 <module>.TestCodebookSha.test_changes_with_content | a = compute_codebook_sha256(p)
+  tests/analysis/paper1/test_judge_loader.py:172 <module>.TestCodebookSha.test_changes_with_content | b = compute_codebook_sha256(p)
+  tests/analysis/paper1/test_judge_loader.py:364 <module>._codebook_for_tests | return load_codebook(cb_path)
+  tests/analysis/paper1/test_judge_pass2.py:519 <module>.test_paper_366_grammar_prevents_four_element_emission | codebook = load_codebook(codebook_path)
+  tests/analysis/paper1/test_judge_schema_pass2.py:167 <module>.test_round_trip_json_validate | raw = json.dumps(data)
+  tests/analysis/paper1/test_judge_schema_pass2.py:168 <module>.test_round_trip_json_validate | out = Pass2Output.model_validate_json(raw)
+  tests/analysis/paper1/test_judge_storage.py:431 <module>.TestRoundTrip.test_raw_response_verbatim | raw = 'a\n"b"\nunicode: résumé ✓\n{"json": true}'
+  tests/analysis/paper1/test_judge_storage.py:432 <module>.TestRoundTrip.test_raw_response_verbatim | result = make_result(paper_id="EE-raw", raw_response=raw)
+  tests/analysis/paper1/test_judge_storage.py:438 <module>.TestRoundTrip.test_raw_response_verbatim | assert row["raw_response"] == raw
+  tests/analysis/paper1/test_pass1_inspection.py:142 <module>.codebook | return load_codebook(p)
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:238 <module>.test_T4_open_run_with_kind_import_succeeds | codebook = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_arm_pinned_at_extract.py:164 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_audit_events.py:246 <module>.test_t10_low_yield_reads_the_codebook | cb = load_codebook(review_dir / "extraction_codebook.yaml")
+  tests/test_audit_events.py:75 <module>.sentinels | return frozenset(load_codebook(review_dir / "extraction_codebook.yaml").absence_sentinels)
+  tests/test_audit_stage_completion.py:145 <module>.test_ai_audit_stage_completes_only_when_every_extracted_corpus_paper_is_audited | event_types=("asserted",))) == len(load_codebook(LIVE_CODEBOOK).fields)
+  tests/test_audit_stage_completion.py:64 <module>.names | return tuple(f["name"] for f in load_codebook(LIVE_CODEBOOK).fields)
+  tests/test_citation_guard.py:138 <module>.test_uncited_value_never_reaches_the_database | names = [f["name"] for f in load_codebook(cb_path).fields]
+  tests/test_citation_record.py:111 <module>._Client.__init__ | cb = load_codebook(codebook_path)
+  tests/test_citation_record.py:167 <module>._run | codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: "e" * 64,
+  tests/test_citation_record.py:199 <module>._by_class | cb = load_codebook_beside(db.db_path)
+  tests/test_cloud_extraction.py:22 <module> | CBK = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:108 <module>.test_parse_is_cached_per_path | assert load_codebook("alpha" and p) is load_codebook(p)
+  tests/test_codebook_loader.py:118 <module>.test_missing_top_level_key_rejected_and_named | with pytest.raises(CodebookError) as exc:
+  tests/test_codebook_loader.py:119 <module>.test_missing_top_level_key_rejected_and_named | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:126 <module>.test_unknown_top_level_key_rejected_and_named | with pytest.raises(CodebookError) as exc:
+  tests/test_codebook_loader.py:127 <module>.test_unknown_top_level_key_rejected_and_named | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:135 <module>.test_missing_field_key_rejected_and_named | with pytest.raises(CodebookError) as exc:
+  tests/test_codebook_loader.py:136 <module>.test_missing_field_key_rejected_and_named | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:146 <module>.test_unknown_field_key_rejected_and_named | with pytest.raises(CodebookError) as exc:
+  tests/test_codebook_loader.py:147 <module>.test_unknown_field_key_rejected_and_named | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:154 <module>.test_duplicate_field_name_rejected | with pytest.raises(CodebookError, match="duplicate"):
+  tests/test_codebook_loader.py:155 <module>.test_duplicate_field_name_rejected | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:161 <module>.test_type_vocabulary_comes_from_the_relocated_authority | with pytest.raises(CodebookError) as exc:
+  tests/test_codebook_loader.py:162 <module>.test_type_vocabulary_comes_from_the_relocated_authority | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:172 <module>.test_field_class_vocabulary_comes_from_classes_not_a_copy | with pytest.raises(CodebookError) as exc:
+  tests/test_codebook_loader.py:173 <module>.test_field_class_vocabulary_comes_from_classes_not_a_copy | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:185 <module>.test_empty_absence_sentinels_rejected | with pytest.raises(CodebookError, match="absence_sentinels"):
+  tests/test_codebook_loader.py:186 <module>.test_empty_absence_sentinels_rejected | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:193 <module>.test_missing_canonical_absence_sentinel_rejected | with pytest.raises(CodebookError, match="canonical_absence_sentinel"):
+  tests/test_codebook_loader.py:194 <module>.test_missing_canonical_absence_sentinel_rejected | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:200 <module>.test_canonical_absence_sentinel_must_be_a_declared_sentinel | with pytest.raises(CodebookError, match="canonical_absence_sentinel"):
+  tests/test_codebook_loader.py:201 <module>.test_canonical_absence_sentinel_must_be_a_declared_sentinel | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:205 <module>.test_canonical_sentinel_and_the_absence_predicate_are_exposed | cb = load_codebook(_write(tmp_path, copy.deepcopy(VALID)))
+  tests/test_codebook_loader.py:216 <module>.test_categorical_without_valid_values_rejected | with pytest.raises(CodebookError) as exc:
+  tests/test_codebook_loader.py:217 <module>.test_categorical_without_valid_values_rejected | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:224 <module>.test_valid_values_shape_enforced | with pytest.raises(CodebookError, match="valid_values"):
+  tests/test_codebook_loader.py:225 <module>.test_valid_values_shape_enforced | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:231 <module>.test_bad_tier_rejected | with pytest.raises(CodebookError, match="tier"):
+  tests/test_codebook_loader.py:232 <module>.test_bad_tier_rejected | load_codebook(_write(tmp_path, doc))
+  tests/test_codebook_loader.py:238 <module>.test_invalid_yaml_is_a_codebook_error | with pytest.raises(CodebookError, match="invalid YAML"):
+  tests/test_codebook_loader.py:239 <module>.test_invalid_yaml_is_a_codebook_error | load_codebook(p)
+  tests/test_codebook_loader.py:247 <module>.test_identity_mismatch_raises | with pytest.raises(CodebookIdentityError) as exc:
+  tests/test_codebook_loader.py:248 <module>.test_identity_mismatch_raises | load_codebook_for("beta", p)
+  tests/test_codebook_loader.py:253 <module>.test_identity_mismatch_is_a_codebook_error | assert issubclass(CodebookIdentityError, CodebookError)
+  tests/test_codebook_loader.py:261 <module>.test_identity_is_checked_on_the_derived_path_too | with pytest.raises(CodebookIdentityError):
+  tests/test_codebook_loader.py:262 <module>.test_identity_is_checked_on_the_derived_path_too | load_codebook_for("beta")
+  tests/test_codebook_loader.py:273 <module>.test_semantic_hash_ignores_comments_and_whitespace | ca, cbk = load_codebook(a), load_codebook(b)
+  tests/test_codebook_loader.py:286 <module>.test_semantic_hash_ignores_version_date_and_review | a = load_codebook(_write(tmp_path, VALID, "a.yaml"))
+  tests/test_codebook_loader.py:287 <module>.test_semantic_hash_ignores_version_date_and_review | b = load_codebook(_write(tmp_path, doc, "b.yaml"))
+  tests/test_codebook_loader.py:295 <module>.test_semantic_hash_moves_on_a_definition_edit | a = load_codebook(_write(tmp_path, VALID, "a.yaml"))
+  tests/test_codebook_loader.py:296 <module>.test_semantic_hash_moves_on_a_definition_edit | b = load_codebook(_write(tmp_path, doc, "b.yaml"))
+  tests/test_codebook_loader.py:304 <module>.test_semantic_hash_moves_on_a_token_edit | a = load_codebook(_write(tmp_path, VALID, "a.yaml"))
+  tests/test_codebook_loader.py:305 <module>.test_semantic_hash_moves_on_a_token_edit | b = load_codebook(_write(tmp_path, doc, "b.yaml"))
+  tests/test_codebook_loader.py:312 <module>.test_byte_hash_is_the_same_function_the_judge_lane_uses | assert judge_fn is compute_codebook_sha256
+  tests/test_codebook_loader.py:313 <module>.test_byte_hash_is_the_same_function_the_judge_lane_uses | assert load_codebook_for("surgical_autonomy").sha256 == compute_codebook_sha256(LIVE)
+  tests/test_codebook_loader.py:317 <module>.test_lint_runs_at_load_and_does_not_raise | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:326 <module>.test_lint_findings_are_attached_not_raised | cb = load_codebook(_write(tmp_path, doc))       # loads, does not raise
+  tests/test_codebook_loader.py:389 <module>.test_fields_by_tier_covers_every_field_exactly_once | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:397 <module>.test_fields_by_tier_preserves_codebook_order | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:405 <module>.test_fields_by_tier_is_empty_for_an_unused_tier | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:410 <module>.test_enum_values_for_every_categorical_and_none_otherwise | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:427 <module>.test_enum_values_is_none_not_empty_for_a_field_without_a_list | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:432 <module>.test_view_exposes_name_type_tier_and_values | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:441 <module>.test_view_and_enum_values_reject_an_unknown_field | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:443 <module>.test_view_and_enum_values_reject_an_unknown_field | with pytest.raises(CodebookError):
+  tests/test_codebook_loader.py:72 <module>.test_live_codebook_loads_from_its_review_id | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_loader.py:79 <module>.test_override_is_honoured | assert load_codebook_for("alpha", p).path == p
+  tests/test_codebook_loader.py:83 <module>.test_missing_file_error_names_the_expected_path | with pytest.raises(CodebookError) as exc:
+  tests/test_codebook_loader.py:84 <module>.test_missing_file_error_names_the_expected_path | load_codebook_for("no_such_review")
+  tests/test_codebook_prompt.py:14 <module> | CBK = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_prompt.py:30 <module>.prompt | return build_extraction_prompt("[PAPER TEXT]", spec)
+  tests/test_codebook_provenance.py:220 <module>.test_the_two_hashes_answer_different_questions | cb = load_codebook_for("surgical_autonomy")
+  tests/test_codebook_review_at_open.py:104 <module>.test_open_run_refuses_a_codebook_beside_the_database_that_declares_another_review | handle = _open(review, spec, load_codebook_beside(review.db_path))
+  tests/test_codebook_review_at_open.py:110 <module>.test_a_review_session_is_refused_the_same_way | rm.open_review_session(review._conn, spec, codebook=load_codebook_beside(review.db_path),
+  tests/test_codebook_review_at_open.py:55 <module>._write_codebook | clear_cache()
+  tests/test_codebook_review_at_open.py:67 <module>.review | clear_cache()
+  tests/test_codebook_review_at_open.py:88 <module>.test_open_run_refuses_a_codebook_beside_the_database_that_declares_another_review | cb = load_codebook_beside(review.db_path)
+  tests/test_completeness_guard.py:29 <module> | CB = load_codebook_for("surgical_autonomy")
+  tests/test_concordance.py:33 <module>.TestNullHandling.test_null_synonyms | assert normalize_for_concordance("autonomy_level", raw) is None
+  tests/test_cut_over.py:52 <module>.fields | return tuple(f["name"] for f in load_codebook(LIVE_CODEBOOK).fields)
+  tests/test_distribution_monitor.py:114 <module>._insert_human_spans._pid | return int(str(raw).split("-")[-1])
+  tests/test_distribution_monitor.py:133 <module>.TestIsNull._sentinels | self.absence = load_codebook(CODEBOOK_PATH).absence_sentinel_set
+  tests/test_duplicate_on_pass1_attempt_2.py:59 <module>.cb | return load_codebook(LIVE_CODEBOOK)
+  tests/test_elicit01.py:128 <module>.test_parse_fields_recovers_container_shapes | for raw in (json.dumps({"fields": payload}),
+  tests/test_elicit01.py:131 <module>.test_parse_fields_recovers_container_shapes | entries, path = P.parse_fields(raw)
+  tests/test_elicitation_contracts.py:58 <module>.check | return K.check_response(raw, unit_map, CODEBOOK, fields)
+  tests/test_elicitation_pipeline.py:413 <module>.test_the_completeness_predicate_and_the_contracts_share_one_field_set.spy_check | return real_check(raw, um, cb, expected)
+  tests/test_elicitation_prompts_ruling2.py:133 <module>.test_an_uncited_sentinel_is_still_a_coded_violation | raw = json.dumps({"fields": [
+  tests/test_elicitation_prompts_ruling2.py:136 <module>.test_an_uncited_sentinel_is_still_a_coded_violation | res = check_response(raw, um, cb, ("study_type",))
+  tests/test_elicitation_prompts_ruling2.py:148 <module>.test_a_cited_sentinel_passes | raw = json.dumps({"fields": [
+  tests/test_elicitation_prompts_ruling2.py:151 <module>.test_a_cited_sentinel_passes | assert check_response(raw, um, cb, ("study_type",)).records["study_type"].ok
+  tests/test_elicitation_sentinel.py:109 <module>.test_the_live_codebook_satisfies_the_sentinels | cb = load_codebook(LIVE_CODEBOOK)
+  tests/test_elicitation_sentinel.py:46 <module>._trimmed | raw = yaml.safe_load(LIVE_CODEBOOK.read_text())
+  tests/test_elicitation_sentinel.py:48 <module>._trimmed | for f in raw["fields"]:
+  tests/test_elicitation_sentinel.py:56 <module>._trimmed | raw["fields"] = fields
+  tests/test_elicitation_sentinel.py:59 <module>._trimmed | path.write_text(yaml.safe_dump(raw, sort_keys=False))
+  tests/test_elicitation_sentinel.py:94 <module>.test_open_run_refuses_before_any_write | cb = load_codebook(path)
+  tests/test_eligibility.py:304 <module>.test_a_spec_missing_exclusion_basis_on_a_stage_fails_and_names_it | raw = yaml.safe_load(open(SPEC_PATH).read())
+  tests/test_eligibility.py:305 <module>.test_a_spec_missing_exclusion_basis_on_a_stage_fails_and_names_it | raw["eligibility"]["stage_policies"][stage].pop("exclusion_basis")
+  tests/test_eligibility.py:307 <module>.test_a_spec_missing_exclusion_basis_on_a_stage_fails_and_names_it | p.write_text(yaml.dump(raw, allow_unicode=True))
+  tests/test_eligibility.py:450 <module>.test_a_spec_still_carrying_screening_criteria_fails_loudly | raw = yaml.safe_load(open(SPEC_PATH).read())
+  tests/test_eligibility.py:451 <module>.test_a_spec_still_carrying_screening_criteria_fails_loudly | raw["screening_criteria"] = {"inclusion": ["x"], "exclusion": ["y"]}
+  tests/test_eligibility.py:453 <module>.test_a_spec_still_carrying_screening_criteria_fails_loudly | p.write_text(yaml.dump(raw))
+  tests/test_eligibility.py:460 <module>.test_a_spec_with_a_top_level_specialty_scope_fails_loudly | raw = yaml.safe_load(open(SPEC_PATH).read())
+  tests/test_eligibility.py:461 <module>.test_a_spec_with_a_top_level_specialty_scope_fails_loudly | raw["specialty_scope"] = {"included": ["x"], "excluded": ["y"]}
+  tests/test_eligibility.py:463 <module>.test_a_spec_with_a_top_level_specialty_scope_fails_loudly | p.write_text(yaml.dump(raw))
+  tests/test_eligibility.py:485 <module>.test_a_spec_carrying_a_retired_transitional_field_fails_and_names_it | raw = yaml.safe_load(open(SPEC_PATH).read())
+  tests/test_eligibility.py:486 <module>.test_a_spec_carrying_a_retired_transitional_field_fails_and_names_it | inject(raw["eligibility"])
+  tests/test_eligibility.py:488 <module>.test_a_spec_carrying_a_retired_transitional_field_fails_and_names_it | p.write_text(yaml.dump(raw, allow_unicode=True))
+  tests/test_engine_state.py:35 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_exporters.py:229 <module>.test_evidence_excel_sheets | n_fields = len(load_codebook_beside(exporter_db.db_path).field_names)
+  tests/test_extraction_events.py:82 <module>.expected | return tuple(f["name"] for f in load_codebook(cb_path).fields)
+  tests/test_extraction_run_link.py:201 <module>.test_t5_the_stored_digests_are_the_manifests | codebook=load_codebook_beside(db.db_path),
+  tests/test_extraction_run_link.py:62 <module>._Client.__init__ | cb = load_codebook(codebook_path)
+  tests/test_extraction_validator.py:248 <module>.test_default_arm_unregistered_reports_zero_cells | cb = load_codebook(review / "extraction_codebook.yaml")
+  tests/test_extraction_validator.py:31 <module>.codebook | return load_codebook_for("surgical_autonomy")
+  tests/test_extraction_validator.py:54 <module>._issues | return validate_all(conn, load_codebook(review / "extraction_codebook.yaml"), arm=arm)[0]
+  tests/test_extractor.py:37 <module> | CBK = load_codebook_for("surgical_autonomy")
+  tests/test_extractor.py:657 <module>.TestProactiveRestart._make_fake_extract._fake | schema_hash = load_codebook_beside(db.db_path).semantic_hash
+  tests/test_extractor.py:67 <module>.test_build_prompt_includes_all_fields | prompt = build_extraction_prompt("Some paper text here.", spec)
+  tests/test_extractor.py:739 <module>.TestRestartOllamaGraceful._make_fake_extract._fake | schema_hash = load_codebook_beside(db.db_path).semantic_hash
+  tests/test_extractor.py:74 <module>.test_build_prompt_includes_tiers | prompt = build_extraction_prompt("Paper text.", spec)
+  tests/test_extractor.py:81 <module>.test_build_prompt_includes_paper_text | prompt = build_extraction_prompt("CUSTOM_PAPER_CONTENT_HERE", spec)
+  tests/test_floor_and_stored_attempt.py:443 <module>.test_a_model_arms_claim_on_an_unpinned_arm_is_refused_by_name | codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: "a" * 64,
+  tests/test_floor_and_stored_attempt.py:89 <module>.cb | return load_codebook(LIVE_CODEBOOK)
+  tests/test_ft_adjudication_import.py:327 <module>._open | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_ft_adjudication_import.py:356 <module>.test_14_a_primary_flag_adjudicated_eligible_is_not_selected_by_the_verifier | codebook=load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml"),
+  tests/test_ft_screening.py:97 <module>._screening_run | codebook=load_codebook(_LIVE_CODEBOOK),
+  tests/test_inventory.py:264 <module>.test_drift_ignores_the_generating_commit_hash | raw = json.loads((REPO_ROOT / inventory.OUT_JSON).read_text())
+  tests/test_inventory.py:265 <module>.test_drift_ignores_the_generating_commit_hash | assert "generated_at_commit" in raw["meta"]
+  tests/test_inventory.py:266 <module>.test_drift_ignores_the_generating_commit_hash | assert "generated_at_commit" not in raw["data"]
+  tests/test_low_yield.py:22 <module> | ABSENCE = load_codebook(LIVE_CODEBOOK).absence_sentinel_set
+  tests/test_migration_021_parsed_text_sha256.py:108 <module>._016_trigger_text | raw = m016._append_only("parsed_text_refs").replace("IF NOT EXISTS ", "")
+  tests/test_migration_021_parsed_text_sha256.py:109 <module>._016_trigger_text | stmts = [s.strip() for s in raw.split("END;") if s.strip()]
+  tests/test_non_value_tokens_downstream.py:84 <module>.test_an_incomplete_codebook_fails_the_reader_instead_of_emptying_it | with pytest.raises(CodebookError):
+  tests/test_non_value_tokens_downstream.py:86 <module>.test_an_incomplete_codebook_fails_the_reader_instead_of_emptying_it | with pytest.raises(CodebookError):
+  tests/test_parse_quality.py:105 <module>.test_both_glyph_encodings_are_counted | raw = "GLYPH<c=3,font=/X> and GLYPH&lt;c=4,font=/Y&gt; together."
+  tests/test_parse_quality.py:106 <module>.test_both_glyph_encodings_are_counted | assert compute_metrics(raw)["glyph_artifacts"] == 2
+  tests/test_parse_quality.py:256 <module>.test_uni_escape_count_counts_ligature_escapes | raw = "the /uniFB01 rst result and the /uniFB02 ow of data /uniFB01 nally."
+  tests/test_parse_quality.py:257 <module>.test_uni_escape_count_counts_ligature_escapes | assert compute_metrics(raw)["uni_escape_count"] == 3
+  tests/test_parse_quality.py:274 <module>.test_uni_escape_count_is_telemetry_and_never_judged | raw = GOOD_PROSE + " " + " ".join(["/uniFB01"] * 98)
+  tests/test_parse_quality.py:275 <module>.test_uni_escape_count_is_telemetry_and_never_judged | v = assess(raw)
+  tests/test_parse_writer_refs.py:100 <module>.test_an_existing_file_of_that_name_is_refused | _parse(pdf, db, TEXT_A)
+  tests/test_parse_writer_refs.py:62 <module>.test_two_parses_record_versions_1_and_2_and_the_resolver_picks_2 | r1 = _parse(pdf, db, TEXT_A)
+  tests/test_parse_writer_refs.py:63 <module>.test_two_parses_record_versions_1_and_2_and_the_resolver_picks_2 | r2 = _parse(pdf, db, TEXT_B, force=True)
+  tests/test_parse_writer_refs.py:75 <module>.test_the_reference_hashes_the_bytes_written_and_names_its_asset_row | r = _parse(pdf, db, TEXT_A)
+  tests/test_parse_writer_refs.py:92 <module>.test_the_version_comes_from_the_references_not_full_text_assets | assert _parse(pdf, db, TEXT_A).version == 1
+  tests/test_pass1_contract_text.py:153 <module>.test_the_marker_sentence_says_what_the_checker_does | raw = ('{"fields": [{"field_name": "a", "unit_indices": [S2], "value": "x"}, '
+  tests/test_pass1_contract_text.py:155 <module>.test_the_marker_sentence_says_what_the_checker_does | r = K.check_response(raw, build_unit_map(1, PAPER), small, ("a", "b"))
+  tests/test_pin_records.py:119 <module>.test_semantic_hash_moves_on_a_canonical_sentinel_edit | assert compute_semantic_hash(doc) != compute_semantic_hash(other)
+  tests/test_pin_records.py:126 <module>.test_semantic_hash_moves_on_a_canonical_sentinel_edit | assert load_codebook(a).semantic_hash != load_codebook(b).semantic_hash
+  tests/test_pin_records.py:127 <module>.test_semantic_hash_moves_on_a_canonical_sentinel_edit | assert load_codebook(b).canonical_absence_sentinel == "NOT_FOUND"
+  tests/test_pin_records.py:130 <module>.test_semantic_hash_moves_on_a_canonical_sentinel_edit | assert compute_semantic_hash({**doc, "version": "9.9"}) == compute_semantic_hash(doc)
+  tests/test_pin_records.py:60 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_presented_context.py:42 <module> | CBK = load_codebook_for("surgical_autonomy")
+  tests/test_presented_context.py:61 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_prompt_hash_coverage.py:43 <module>.cb | return load_codebook(LIVE_CODEBOOK)
+  tests/test_prompt_sentinels.py:46 <module>.test_t11_the_extraction_prompt_renders_the_canonical_sentinel | cb = load_codebook(codebook_path)
+  tests/test_prompt_sentinels.py:47 <module>.test_t11_the_extraction_prompt_renders_the_canonical_sentinel | text = _instructions(build_extraction_prompt("Paper.", spec, codebook_path))
+  tests/test_prompt_sentinels.py:55 <module>.test_t11_the_worked_example_uses_the_canonical_sentinel | cb = load_codebook(codebook_path)
+  tests/test_readers_on_the_reader.py:263 <module>.test_the_judge_loader_attempts_every_cell_whatever_the_verdict | codebook = load_codebook(root / "extraction_codebook.yaml")
+  tests/test_readers_on_the_reader.py:296 <module>.test_the_scorer_verdict_rides_as_a_feature | codebook = load_codebook(root / "extraction_codebook.yaml")
+  tests/test_readers_on_the_reader.py:517 <module>.test_disagreement_pairs_emits_every_grid_cell_none_filtered | n_fields = len(load_codebook(root / "extraction_codebook.yaml").field_names)
+  tests/test_request_capture.py:238 <module>.test_extraction_pass1_pass2_and_snippet_retry | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_request_capture.py:276 <module>.test_elicitation_pass1 | cb = load_codebook(LIVE_CODEBOOK)
+  tests/test_review_paths.py:107 <module>.test_mismatch_raises_before_any_database_is_constructed | raw = yaml.safe_load(SPEC_PATH.read_text())
+  tests/test_review_paths.py:108 <module>.test_mismatch_raises_before_any_database_is_constructed | raw["review_id"] = "review_b"
+  tests/test_review_paths.py:110 <module>.test_mismatch_raises_before_any_database_is_constructed | p.write_text(yaml.dump(raw))
+  tests/test_review_paths.py:90 <module>.test_mismatch_names_both_ids_and_the_path | raw = yaml.safe_load(SPEC_PATH.read_text())
+  tests/test_review_paths.py:91 <module>.test_mismatch_names_both_ids_and_the_path | raw["review_id"] = "review_b"
+  tests/test_review_paths.py:93 <module>.test_mismatch_names_both_ids_and_the_path | p.write_text(yaml.dump(raw))
+  tests/test_review_spec.py:102 <module>._write | p.write_text(yaml.dump(raw))
+  tests/test_review_spec.py:131 <module>.test_unknown_top_level_key_rejected_and_named | raw = yaml.safe_load(SPEC_PATH.read_text())
+  tests/test_review_spec.py:132 <module>.test_unknown_top_level_key_rejected_and_named | raw["reviw_id"] = "typo"
+  tests/test_review_spec.py:134 <module>.test_unknown_top_level_key_rejected_and_named | load_review_spec(_write(tmp_path, raw))
+  tests/test_review_spec.py:164 <module>.test_unknown_nested_key_rejected_and_named | raw = yaml.safe_load(SPEC_PATH.read_text())
+  tests/test_review_spec.py:165 <module>.test_unknown_nested_key_rejected_and_named | node = raw
+  tests/test_review_spec.py:172 <module>.test_unknown_nested_key_rejected_and_named | load_review_spec(_write(tmp_path, raw))
+  tests/test_review_spec.py:203 <module>._spec_with_review_id | raw = yaml.safe_load(SPEC_PATH.read_text())
+  tests/test_review_spec.py:205 <module>._spec_with_review_id | del raw["review_id"]
+  tests/test_review_spec.py:207 <module>._spec_with_review_id | raw["review_id"] = value
+  tests/test_review_spec.py:209 <module>._spec_with_review_id | p.write_text(yaml.dump(raw))
+  tests/test_review_spec.py:267 <module>.test_an_extraction_schema_key_is_now_rejected | raw = yaml.safe_load(SPEC_PATH.read_text())
+  tests/test_review_spec.py:268 <module>.test_an_extraction_schema_key_is_now_rejected | raw["extraction_schema"] = {"fields": [
+  tests/test_review_spec.py:271 <module>.test_an_extraction_schema_key_is_now_rejected | p.write_text(yaml.dump(raw))
+  tests/test_review_spec.py:55 <module>.test_malformed_yaml_missing_title | raw = yaml.safe_load(SPEC_PATH.read_text())
+  tests/test_review_spec.py:56 <module>.test_malformed_yaml_missing_title | del raw["title"]
+  tests/test_review_spec.py:58 <module>.test_malformed_yaml_missing_title | ReviewSpec.model_validate(raw)
+  tests/test_review_spec.py:62 <module>.test_malformed_yaml_invalid_date_range | raw = yaml.safe_load(SPEC_PATH.read_text())
+  tests/test_review_spec.py:63 <module>.test_malformed_yaml_invalid_date_range | raw["search_strategy"]["date_range"] = [2025, 2010]
+  tests/test_review_spec.py:65 <module>.test_malformed_yaml_invalid_date_range | ReviewSpec.model_validate(raw)
+  tests/test_run_fault_predicate.py:230 <module>._Client.__init__ | cb = load_codebook(codebook_path)
+  tests/test_run_interrupts.py:52 <module>.fields | return tuple(f["name"] for f in load_codebook(LIVE_CODEBOOK).fields)
+  tests/test_run_manifest.py:52 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_run_pipeline_starts.py:86 <module>.review | fields = tuple(f["name"] for f in load_codebook(LIVE_CODEBOOK).fields)
+  tests/test_run_scoped_field_names.py:45 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_screener.py:38 <module>.test_screening_decision_parses | raw = '{"decision": "include", "rationale": "Relevant study.", "confidence": 0.85}'
+  tests/test_screener.py:39 <module>.test_screening_decision_parses | d = ScreeningDecision.model_validate_json(raw)
+  tests/test_screener.py:45 <module>.test_screening_decision_rejects_invalid | raw = '{"decision": "maybe", "rationale": "Unsure.", "confidence": 0.5}'
+  tests/test_screener.py:47 <module>.test_screening_decision_rejects_invalid | ScreeningDecision.model_validate_json(raw)
+  tests/test_selection_bound.py:53 <module>.fields | return tuple(f["name"] for f in load_codebook(LIVE_CODEBOOK).fields)
+  tests/test_text_refusal_at_selection.py:62 <module>.names | return tuple(f["name"] for f in load_codebook(LIVE_CODEBOOK).fields)
+  tests/test_two_axis_state_and_grid.py:222 <module>._CB | absence_sentinels = ("NR", "NOT_FOUND")
+  tests/test_two_axis_state_and_grid.py:245 <module>.test_the_grid_uses_the_live_codebooks_twenty_fields | cb = load_codebook("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_u17_cross_lineage.py:121 <module>.test_t4_a_default_factory_model_without_an_entry_is_refused_at_load | raw = yaml.safe_load(LIVE_SPEC.read_text())
+  tests/test_u17_cross_lineage.py:122 <module>.test_t4_a_default_factory_model_without_an_entry_is_refused_at_load | assert "audit" not in raw
+  tests/test_u17_cross_lineage.py:123 <module>.test_t4_a_default_factory_model_without_an_entry_is_refused_at_load | raw["model_lineage"] = {m: t for m, t in raw["model_lineage"].items() if m != "gemma3:27b"}
+  tests/test_u17_cross_lineage.py:125 <module>.test_t4_a_default_factory_model_without_an_entry_is_refused_at_load | load_review_spec(_write_spec(tmp_path, raw))
+  tests/test_u17_cross_lineage.py:131 <module>.test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load | raw = yaml.safe_load(LIVE_SPEC.read_text())
+  tests/test_u17_cross_lineage.py:132 <module>.test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load | raw["model_lineage"] = {**raw["model_lineage"], "qwen3:8b": token}
+  tests/test_u17_cross_lineage.py:134 <module>.test_t5_a_lineage_token_outside_the_vocabulary_is_refused_at_load | load_review_spec(_write_spec(tmp_path, raw))
+  tests/test_u17_cross_lineage.py:195 <module>.test_t9_the_new_live_spec_moves_no_prompt_hash_options_hash_or_screening_hash | cb = load_codebook(LIVE_CODEBOOK)
+  tests/test_u17_cross_lineage.py:47 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u17_cross_lineage.py:79 <module>._write_spec | p.write_text(yaml.safe_dump(raw, sort_keys=False), encoding="utf-8")
+  tests/test_u18_digest_per_call.py:116 <module>.review | yield db, load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u18_one_host.py:177 <module>.review | clear_cache()
+  tests/test_u18_one_host.py:180 <module>.review | clear_cache()
+  tests/test_u18_one_host.py:198 <module>.test_u18_the_manifest_records_the_ollama_host | codebook=load_codebook_beside(review.db_path), git=CLEAN,
+  tests/test_u18_one_host.py:200 <module>.test_u18_the_manifest_records_the_ollama_host | raw, sha = review._conn.execute("SELECT manifest_json, manifest_sha256 FROM run_manifests "
+  tests/test_u18_one_host.py:202 <module>.test_u18_the_manifest_records_the_ollama_host | body = json.loads(raw)
+  tests/test_u18_one_host.py:213 <module>.test_u18_a_non_loopback_host_is_refused_at_open_run | codebook=load_codebook_beside(review.db_path), git=CLEAN,
+  tests/test_u18_one_host.py:237 <module>.test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run | codebook=load_codebook_beside(review.db_path), git=CLEAN)
+  tests/test_u19_env_recheck.py:131 <module>.test_u19_run_pipeline_closes_aborted_on_a_server_env_change | cb = load_codebook(LIVE_CODEBOOK)
+  tests/test_u19_env_recheck.py:164 <module>.test_u19_the_body_opened_by_run_pipeline_carries_the_environment | raw, sha = db._conn.execute("SELECT manifest_json, manifest_sha256 FROM run_manifests "
+  tests/test_u19_env_recheck.py:166 <module>.test_u19_the_body_opened_by_run_pipeline_carries_the_environment | body = json.loads(raw)
+  tests/test_u19_env_recheck.py:190 <module>.test_u19_a_body_opened_without_the_environment_has_no_such_key | cb = load_codebook(LIVE_CODEBOOK)
+  tests/test_u19_env_recheck.py:249 <module>.test_u19_a_cloud_shaped_open_records_no_environment | cb = load_codebook(LIVE_CODEBOOK)
+  tests/test_u19_env_recheck.py:53 <module>.Systemctl.__init__ | self.raw, self.seq, self.reads = raw, seq, 0
+  tests/test_u19_env_recheck.py:71 <module>._loop | ctl = Systemctl(raw, seq)
+  tests/test_u19_local_service.py:107 <module>.test_u19_the_two_readers_give_equal_maps_on_the_hosts_line | raw, env = pf.read_ollama_env()
+  tests/test_u19_local_service.py:108 <module>.test_u19_the_two_readers_give_equal_maps_on_the_hosts_line | assert raw == RAW
+  tests/test_u19_local_service.py:56 <module>._systemctl.run | return subprocess.CompletedProcess(argv, 0, stdout=f"Environment={raw}\n", stderr="")
+  tests/test_u19_local_service.py:68 <module>.test_u19_a_loopback_host_on_another_port_is_refused_at_open_run | codebook=load_codebook(LIVE_CODEBOOK),
+  tests/test_u19_local_service.py:81 <module>.test_u19_the_local_service_host_is_not_refused | codebook=load_codebook(LIVE_CODEBOOK), git=CLEAN,
+  tests/test_u19_local_service.py:90 <module>.test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers | raw, env = pf.read_ollama_env()
+  tests/test_u19_local_service.py:91 <module>.test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers | assert raw == line
+  tests/test_u20_loaded_context.py:112 <module>.review | yield db, load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u21_no_overlap.py:135 <module>.review | yield db, load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u37_feedback_block.py:60 <module>.cb | return load_codebook(LIVE_CODEBOOK)
+  tests/test_u38_snippet_precheck.py:152 <module>.test_u38_both_pins_are_unchanged | cb = load_codebook("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_u39_runtime_equals_hash.py:86 <module>.cb_path | return load_codebook(LIVE_CODEBOOK).path
+  tests/test_undeclared_call.py:222 <module>.test_6_an_undeclared_call_leaves_the_extraction_loop_as_a_run_fault | fields = tuple(f["name"] for f in load_codebook(LIVE_CODEBOOK).fields)
+  tests/test_undeclared_call.py:96 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_undeclared_override.py:54 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_units_as_source_slices.py:103 <module>.test_a_run_straddling_a_docling_comment_and_a_blank_line_is_located_exact | raw = "A first sentence here.\n\n<!-- image -->\n\nB second sentence here."
+  tests/test_units_as_source_slices.py:104 <module>.test_a_run_straddling_a_docling_comment_and_a_blank_line_is_located_exact | um = build_unit_map(1, raw)
+  tests/test_units_as_source_slices.py:107 <module>.test_a_run_straddling_a_docling_comment_and_a_blank_line_is_located_exact | assert snippet == raw and snippet in raw
+  tests/test_units_as_source_slices.py:108 <module>.test_a_run_straddling_a_docling_comment_and_a_blank_line_is_located_exact | assert locate(raw, snippet).kind == "exact"
+  tests/test_units_as_source_slices.py:121 <module>.test_the_presented_form_is_the_whitespace_collapsed_slice | raw = "Alpha beta\ngamma  delta epsilon. Zeta eta theta iota."
+  tests/test_units_as_source_slices.py:122 <module>.test_the_presented_form_is_the_whitespace_collapsed_slice | um = build_unit_map(1, raw)
+  tests/test_units_as_source_slices.py:124 <module>.test_the_presented_form_is_the_whitespace_collapsed_slice | assert raw[start:end] == "Alpha beta\ngamma  delta epsilon."
+  tests/test_units_as_source_slices.py:176 <module>._ElicitedClient.__init__ | cb = load_codebook(codebook_path)
+  tests/test_units_as_source_slices.py:237 <module>.test_an_elicited_run_opens_pins_verifies_and_writes_real_events | codebook=load_codebook_beside(db.db_path), digest_fn=lambda m: "e" * 64,
+  tests/test_units_as_source_slices.py:262 <module>.test_an_elicited_run_opens_pins_verifies_and_writes_real_events | n_fields = len(load_codebook_beside(db.db_path).fields)
+  tests/test_unknown_field_name.py:41 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_value_divergence.py:63 <module>.cb | return load_codebook(LIVE_CODEBOOK)
+  tests/test_write_boundary_guard.py:66 <module>.cb | return load_codebook(LIVE_CODEBOOK)
+
+-- (i) from-imports: 75 hits / 62 files
+   by file: test_readers_on_the_reader.py 4, test_extractor.py 3, test_codebook_loader.py 2, test_codebook_prompt.py 2, test_exporters.py 2, test_extraction_validator.py 2, test_floor_and_stored_attempt.py 2, test_prompt_sentinels.py 2, test_request_capture.py 2, test_u39_runtime_equals_hash.py 2, _event_store_fixture.py 1, analysis/paper1/test_judge_loader.py 1, analysis/paper1/test_judge_pass2.py 1, analysis/paper1/test_pass1_inspection.py 1, migrations/test_022_run_kinds_and_audit_tables.py 1, test_arm_pinned_at_extract.py 1, test_audit_events.py 1, test_audit_stage_completion.py 1, test_citation_guard.py 1, test_citation_record.py 1
+  tests/_event_store_fixture.py:367 <module>.open_extraction_run | from engine.core.codebook import load_codebook_beside
+  tests/analysis/paper1/test_judge_loader.py:15 <module> | from analysis.paper1.judge_loader import (
+  tests/analysis/paper1/test_judge_pass2.py:509 <module>.test_paper_366_grammar_prevents_four_element_emission | from analysis.paper1.judge_loader import load_ai_triples_csv, load_codebook
+  tests/analysis/paper1/test_pass1_inspection.py:17 <module> | from analysis.paper1.judge_loader import load_codebook
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:233 <module>.test_T4_open_run_with_kind_import_succeeds | from engine.core.codebook import load_codebook
+  tests/test_arm_pinned_at_extract.py:31 <module> | from engine.core.codebook import load_codebook
+  tests/test_audit_events.py:22 <module> | from engine.core.codebook import load_codebook
+  tests/test_audit_stage_completion.py:38 <module> | from engine.core.codebook import load_codebook
+  tests/test_citation_guard.py:118 <module>.test_uncited_value_never_reaches_the_database | from engine.core.codebook import load_codebook
+  tests/test_citation_record.py:30 <module> | from engine.core.codebook import load_codebook, load_codebook_beside
+  tests/test_cloud_extraction.py:19 <module> | from engine.core.codebook import load_codebook_for
+  tests/test_codebook_loader.py:16 <module> | from engine.core.codebook import (
+  tests/test_codebook_loader.py:310 <module>.test_byte_hash_is_the_same_function_the_judge_lane_uses | from analysis.paper1.judge_loader import compute_codebook_sha256 as judge_fn
+  tests/test_codebook_prompt.py:10 <module> | from engine.agents.extractor import build_extraction_prompt
+  tests/test_codebook_prompt.py:12 <module> | from engine.core.codebook import load_codebook_for
+  tests/test_codebook_provenance.py:16 <module> | from engine.core.codebook import load_codebook_for
+  tests/test_codebook_review_at_open.py:28 <module> | from engine.core.codebook import clear_cache, load_codebook, load_codebook_beside
+  tests/test_codebook_staleness.py:17 <module> | from engine.core.codebook import load_codebook_beside
+  tests/test_completeness_guard.py:27 <module> | from engine.core.codebook import load_codebook_for
+  tests/test_cut_over.py:29 <module> | from engine.core.codebook import load_codebook
+  tests/test_distribution_monitor.py:132 <module>.TestIsNull._sentinels | from engine.core.codebook import load_codebook
+  tests/test_duplicate_on_pass1_attempt_2.py:30 <module> | from engine.core.codebook import load_codebook
+  tests/test_elicitation_sentinel.py:22 <module> | from engine.core.codebook import load_codebook
+  tests/test_engine_state.py:20 <module> | from engine.core.codebook import load_codebook
+  tests/test_exporters.py:226 <module>.test_evidence_excel_sheets | from engine.core.codebook import load_codebook_beside
+  tests/test_exporters.py:25 <module> | from engine.core.codebook import load_codebook_beside
+  tests/test_extraction_events.py:25 <module> | from engine.core.codebook import load_codebook
+  tests/test_extraction_run_link.py:21 <module> | from engine.core.codebook import load_codebook, load_codebook_beside
+  tests/test_extraction_validator.py:10 <module> | from engine.core.codebook import load_codebook
+  tests/test_extraction_validator.py:29 <module>.codebook | from engine.core.codebook import load_codebook_for
+  tests/test_extractor.py:12 <module> | from engine.agents.extractor import (
+  tests/test_extractor.py:28 <module> | from engine.core.codebook import load_codebook_beside
+  tests/test_extractor.py:29 <module> | from engine.core.codebook import load_codebook_for
+  tests/test_floor_and_stored_attempt.py:40 <module> | from engine.core.codebook import load_codebook
+  tests/test_floor_and_stored_attempt.py:439 <module>.test_a_model_arms_claim_on_an_unpinned_arm_is_refused_by_name | from engine.core.codebook import load_codebook_beside
+  tests/test_ft_adjudication_import.py:26 <module> | from engine.core.codebook import load_codebook
+  tests/test_ft_screening.py:32 <module> | from engine.core.codebook import load_codebook
+  tests/test_low_yield.py:16 <module> | from engine.core.codebook import load_codebook
+  tests/test_non_value_tokens_downstream.py:80 <module>.test_an_incomplete_codebook_fails_the_reader_instead_of_emptying_it | from engine.core.codebook import CodebookError
+  tests/test_pin_records.py:28 <module> | from engine.core.codebook import compute_semantic_hash, load_codebook
+  tests/test_presented_context.py:24 <module> | from engine.core.codebook import load_codebook, load_codebook_for
+  tests/test_prompt_hash_coverage.py:27 <module> | from engine.core.codebook import load_codebook
+  tests/test_prompt_sentinels.py:17 <module> | from engine.agents.extractor import build_extraction_prompt
+  tests/test_prompt_sentinels.py:18 <module> | from engine.core.codebook import load_codebook
+  tests/test_readers_on_the_reader.py:248 <module>.test_the_judge_loader_attempts_every_cell_whatever_the_verdict | from analysis.paper1.judge_loader import load_codebook, load_grid
+  tests/test_readers_on_the_reader.py:269 <module>.test_the_judge_loader_attempts_every_cell_whatever_the_verdict | from engine.core.codebook import load_codebook as load_cb
+  tests/test_readers_on_the_reader.py:288 <module>.test_the_scorer_verdict_rides_as_a_feature | from analysis.paper1.judge_loader import load_codebook, load_grid
+  tests/test_readers_on_the_reader.py:502 <module>.test_disagreement_pairs_emits_every_grid_cell_none_filtered | from engine.core.codebook import load_codebook
+  tests/test_request_capture.py:230 <module>.test_extraction_pass1_pass2_and_snippet_retry | from engine.core.codebook import load_codebook
+  tests/test_request_capture.py:274 <module>.test_elicitation_pass1 | from engine.core.codebook import load_codebook
+  tests/test_run_fault_predicate.py:34 <module> | from engine.core.codebook import load_codebook
+  tests/test_run_interrupts.py:29 <module> | from engine.core.codebook import load_codebook
+  tests/test_run_manifest.py:25 <module> | from engine.core.codebook import load_codebook
+  tests/test_run_pipeline_starts.py:31 <module> | from engine.core.codebook import load_codebook
+  tests/test_run_scoped_field_names.py:23 <module> | from engine.core.codebook import load_codebook
+  tests/test_selection_bound.py:31 <module> | from engine.core.codebook import load_codebook
+  tests/test_text_refusal_at_selection.py:34 <module> | from engine.core.codebook import load_codebook
+  tests/test_two_axis_state_and_grid.py:244 <module>.test_the_grid_uses_the_live_codebooks_twenty_fields | from engine.core.codebook import load_codebook
+  tests/test_u17_cross_lineage.py:24 <module> | from engine.core.codebook import load_codebook
+  tests/test_u18_digest_per_call.py:31 <module> | from engine.core.codebook import load_codebook
+  tests/test_u18_one_host.py:33 <module> | from engine.core.codebook import clear_cache, load_codebook_beside
+  tests/test_u19_env_recheck.py:30 <module> | from engine.core.codebook import load_codebook
+  tests/test_u19_local_service.py:19 <module> | from engine.core.codebook import load_codebook
+  tests/test_u20_loaded_context.py:30 <module> | from engine.core.codebook import load_codebook
+  tests/test_u21_no_overlap.py:28 <module> | from engine.core.codebook import load_codebook
+  tests/test_u37_feedback_block.py:24 <module> | from engine.core.codebook import load_codebook
+  tests/test_u38_snippet_precheck.py:150 <module>.test_u38_both_pins_are_unchanged | from engine.core.codebook import load_codebook
+  tests/test_u39_runtime_equals_hash.py:185 <module>.test_audit_every_codebook_type_equals_a_rendered_variant | from engine.core.codebook import VALID_FIELD_TYPES
+  tests/test_u39_runtime_equals_hash.py:25 <module> | from engine.core.codebook import load_codebook
+  tests/test_undeclared_call.py:28 <module> | from engine.core.codebook import load_codebook
+  tests/test_undeclared_override.py:32 <module> | from engine.core.codebook import load_codebook
+  tests/test_units_as_source_slices.py:27 <module> | from engine.core.codebook import load_codebook, load_codebook_beside
+  tests/test_unknown_field_name.py:18 <module> | from engine.core.codebook import load_codebook
+  tests/test_value_divergence.py:30 <module> | from engine.core.codebook import load_codebook
+  tests/test_write_boundary_guard.py:34 <module> | from engine.core.codebook import load_codebook
+
+-- (ii) attribute access to a codebook name: 54 hits / 21 files
+   by file: test_codebook_loader.py 12, test_u37_feedback_block.py 7, _event_store_fixture.py 4, test_elicitation_contracts.py 4, test_prompt_sentinels.py 4, test_u39_runtime_equals_hash.py 3, test_citation_record.py 2, test_duplicate_on_pass1_attempt_2.py 2, test_floor_and_stored_attempt.py 2, test_u19_env_recheck.py 2, test_write_boundary_guard.py 2, test_audit_events.py 1, test_distribution_monitor.py 1, test_elicitation_codebook.py 1, test_elicitation_sentinel.py 1, test_low_yield.py 1, test_non_value_tokens_downstream.py 1, test_prompt_hash_coverage.py 1, test_request_capture.py 1, test_units_as_source_slices.py 1
+  tests/_event_store_fixture.py:346 <module>.use_spec_codebook | beside = _P(db.db_path).parent / cbmod.CODEBOOK_FILENAME
+  tests/_event_store_fixture.py:347 <module>.use_spec_codebook | if beside.exists() and cbmod.load_codebook(beside).review == spec.review_id:
+  tests/_event_store_fixture.py:350 <module>.use_spec_codebook | / cbmod.CODEBOOK_FILENAME)
+  tests/_event_store_fixture.py:352 <module>.use_spec_codebook | cbmod.clear_cache()
+  tests/test_audit_events.py:75 <module>.sentinels | return frozenset(load_codebook(review_dir / "extraction_codebook.yaml").absence_sentinels)
+  tests/test_citation_record.py:114 <module>._Client.__init__ | cls, v = C.field_class(f["name"], cb.raw), _value(f)
+  tests/test_citation_record.py:202 <module>._by_class | out[C.field_class(f["name"], cb.raw)].append(f["name"])
+  tests/test_codebook_loader.py:207 <module>.test_canonical_sentinel_and_the_absence_predicate_are_exposed | assert cb.absence_sentinel_set == frozenset({"NR", "NOT_FOUND"})
+  tests/test_codebook_loader.py:208 <module>.test_canonical_sentinel_and_the_absence_predicate_are_exposed | assert cb.is_absence_sentinel(" not_found ") and cb.is_absence_sentinel("nr")
+  tests/test_codebook_loader.py:209 <module>.test_canonical_sentinel_and_the_absence_predicate_are_exposed | assert not cb.is_absence_sentinel("Not assessable")
+  tests/test_codebook_loader.py:210 <module>.test_canonical_sentinel_and_the_absence_predicate_are_exposed | assert not cb.is_absence_sentinel(None)
+  tests/test_codebook_loader.py:416 <module>.test_enum_values_for_every_categorical_and_none_otherwise | vals = cb.enum_values(n)
+  tests/test_codebook_loader.py:421 <module>.test_enum_values_for_every_categorical_and_none_otherwise | assert cb.enum_values(n) is None, n
+  tests/test_codebook_loader.py:428 <module>.test_enum_values_is_none_not_empty_for_a_field_without_a_list | assert cb.enum_values("country") is None
+  tests/test_codebook_loader.py:434 <module>.test_view_exposes_name_type_tier_and_values | assert (v.name, v.type, v.tier, v.enum_values) == ("sample_size", "numeric", 1, None)
+  tests/test_codebook_loader.py:436 <module>.test_view_exposes_name_type_tier_and_values | assert v.type == "categorical" and v.enum_values[0] == "Original Research"
+  tests/test_codebook_loader.py:442 <module>.test_view_and_enum_values_reject_an_unknown_field | for call in (cb.view, cb.enum_values, cb.field):
+  tests/test_codebook_loader.py:51 <module>._clear_cache | CB.clear_cache()
+  tests/test_codebook_loader.py:53 <module>._clear_cache | CB.clear_cache()
+  tests/test_distribution_monitor.py:133 <module>.TestIsNull._sentinels | self.absence = load_codebook(CODEBOOK_PATH).absence_sentinel_set
+  tests/test_duplicate_on_pass1_attempt_2.py:158 <module>.test_a_duplicate_on_pass1_attempt_2_keeps_both_hashes_and_attempt_1 | assert C.field_class(failing, cb.raw) == C.JUDGMENT
+  tests/test_duplicate_on_pass1_attempt_2.py:82 <module>._entry | name, cls = field["name"], C.field_class(field["name"], cb.raw)
+  tests/test_elicitation_codebook.py:78 <module>.test_pass1_prompt_states_both_tokens_and_all_three_contracts | for s in C.absence_sentinels(cb):
+  tests/test_elicitation_contracts.py:254 <module>.test_escape_token_is_not_an_absence_sentinel | assert not C.is_absence_sentinel("NO_EVIDENCE_LOCATABLE", CODEBOOK)
+  tests/test_elicitation_contracts.py:255 <module>.test_escape_token_is_not_an_absence_sentinel | assert C.is_absence_sentinel("NOT_FOUND", CODEBOOK)
+  tests/test_elicitation_contracts.py:263 <module>.test_real_codebook_keeps_not_found_a_sentinel_and_coins_a_distinct_escape | assert "NOT_FOUND" in C.absence_sentinels(cb)
+  tests/test_elicitation_contracts.py:264 <module>.test_real_codebook_keeps_not_found_a_sentinel_and_coins_a_distinct_escape | assert C.escape_token(cb).upper() not in C.absence_sentinels(cb)
+  tests/test_elicitation_sentinel.py:114 <module>.test_the_live_codebook_satisfies_the_sentinels | PL.check_sentinel_fields(cb.raw, names, LIVE_CODEBOOK)          # does not raise
+  tests/test_floor_and_stored_attempt.py:211 <module>._entry | name, cls = field["name"], C.field_class(field["name"], cb.raw)
+  tests/test_floor_and_stored_attempt.py:213 <module>._entry | return {"field_name": name, "unit_indices": [], "value": cb.raw["escape_token"]}
+  tests/test_low_yield.py:22 <module> | ABSENCE = load_codebook(LIVE_CODEBOOK).absence_sentinel_set
+  tests/test_non_value_tokens_downstream.py:95 <module>.test_absence_sentinels_are_required_not_defaulted | C.absence_sentinels({"fields": []})
+  tests/test_prompt_hash_coverage.py:131 <module>.test_the_feedback_sentinel_carries_every_class_accompaniment | escape = C.escape_token(cb.raw)
+  tests/test_prompt_sentinels.py:49 <module>.test_t11_the_extraction_prompt_renders_the_canonical_sentinel | others = [s for s in cb.absence_sentinels if s != cb.canonical_absence_sentinel]
+  tests/test_prompt_sentinels.py:57 <module>.test_t11_the_worked_example_uses_the_canonical_sentinel | prompt = build_pass1_prompt(build_unit_map(1, "One sentence here."), cb.raw, names)
+  tests/test_prompt_sentinels.py:61 <module>.test_t11_the_worked_example_uses_the_canonical_sentinel | assert not set(values) & (set(cb.absence_sentinels) - {cb.canonical_absence_sentinel})
+  tests/test_prompt_sentinels.py:68 <module>.test_t11_neither_site_spells_an_absence_literal | src = inspect.getsource(extractor.build_extraction_prompt) + inspect.getsource(prompts)
+  tests/test_request_capture.py:279 <module>.test_elicitation_pass1 | el.run_pass1(build_unit_map(1, "The paper reports a trial of a robot."), cb.raw,
+  tests/test_u19_env_recheck.py:53 <module>.Systemctl.__init__ | self.raw, self.seq, self.reads = raw, seq, 0
+  tests/test_u19_env_recheck.py:59 <module>.Systemctl.__call__ | return subprocess.CompletedProcess(argv, 0, stdout=f"Environment={self.raw}\n", stderr="")
+  tests/test_u37_feedback_block.py:124 <module>._attempt1_messages | return PL.pass1_messages(PL.pass1_prompt(um, cb.raw, names)), um
+  tests/test_u37_feedback_block.py:134 <module>.test_u37_the_feedback_header_names_every_schema_field | block = build_feedback_block(result, cb.raw)
+  tests/test_u37_feedback_block.py:150 <module>.test_u37_the_output_instruction_is_repeated_after_the_feedback | feedback = build_feedback_block(result, cb.raw)
+  tests/test_u37_feedback_block.py:151 <module>.test_u37_the_output_instruction_is_repeated_after_the_feedback | user = PL.pass1_messages(PL.pass1_prompt(um, cb.raw, names, feedback))[1]["content"]
+  tests/test_u37_feedback_block.py:166 <module>.test_u37_attempt_1_prompt_text_is_unchanged | a2 = PL.pass1_messages(PL.pass1_prompt(um, cb.raw, names, build_feedback_block(result, cb.raw)))
+  tests/test_u37_feedback_block.py:196 <module>.test_u37_a_non_stated_feedback_block_still_lists_only_its_failed_fields_codes | entries = _entries(build_feedback_block(result, cb.raw))
+  tests/test_u37_feedback_block.py:75 <module>.classes | by = {f["name"]: f["field_class"] for f in cb.raw["fields"]}
+  tests/test_u39_runtime_equals_hash.py:113 <module>.test_extract_pass1_runtime_equals_hash | prompt = X.build_extraction_prompt(ec.SENTINEL_TEXT, spec, cb_path)
+  tests/test_u39_runtime_equals_hash.py:121 <module>.test_extract_pass2_non_elicited_runtime_equals_hash | prompt = X.build_extraction_prompt(ec.SENTINEL_TEXT, spec, cb_path)
+  tests/test_u39_runtime_equals_hash.py:156 <module>.test_extract_pass2_elicited_runtime_equals_hash | prompt = X.build_extraction_prompt(ec.SENTINEL_TEXT, elicited, cb_path)
+  tests/test_units_as_source_slices.py:179 <module>._ElicitedClient.__init__ | cls, v = C.field_class(f["name"], cb.raw), _value(f)
+  tests/test_value_divergence.py:113 <module>._pass1 | name, cls, v = f["name"], C.field_class(f["name"], cb.raw), values.get(f["name"], "v")
+  tests/test_write_boundary_guard.py:109 <module>._good_pass1 | cls = C.field_class(f["name"], cb.raw)
+  tests/test_write_boundary_guard.py:71 <module>.names | assert (cb.escape_token, cb.raw["contract_unmet_token"]) == (ESCAPE, UNMET)
+
+-- (ii) patch or setattr naming a codebook name: 169 hits / 18 files
+   by file: test_parse_gate.py 46, test_parse_ocr_tier.py 35, test_parse_failures.py 20, test_parse_sanitized_retry.py 17, test_pdf_parser.py 13, test_vision_bounds.py 13, test_font_audit_ledger.py 6, test_parse_writer_refs.py 5, test_u19_env_recheck.py 3, test_restart_ollama_guard.py 2, test_undeclared_override.py 2, test_arm_pinned_at_extract.py 1, test_cut_over.py 1, test_elicitation_pipeline.py 1, test_extraction_signatures.py 1, test_selection_bound.py 1, test_u18_digest_per_call.py 1, test_u20_loaded_context.py 1
+  tests/test_arm_pinned_at_extract.py:104 <module>.pipeline | monkeypatch.setattr(rp, "_stage_parse", parse)
+  tests/test_cut_over.py:216 <module>.test_t3_an_aborted_run_closes_as_aborted_with_reason | monkeypatch.setattr(rp, "_stage_parse", lambda *a, **k: {})
+  tests/test_elicitation_pipeline.py:324 <module>.test_dispatch_follows_the_spec_flag | monkeypatch.setattr(E, "build_extraction_prompt",
+  tests/test_extraction_signatures.py:39 <module>._fence_model_calls | patch("engine.parsers.pdf_parser.ollama_chat", _no_model_call), \
+  tests/test_font_audit_ledger.py:312 <module>.test_a_judged_attempt_records_its_audit | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_font_audit_ledger.py:337 <module>.test_a_total_failure_records_the_structure_half | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_font_audit_ledger.py:338 <module>.test_a_total_failure_records_the_structure_half | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_font_audit_ledger.py:339 <module>.test_a_total_failure_records_the_structure_half | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value="  "), \
+  tests/test_font_audit_ledger.py:340 <module>.test_a_total_failure_records_the_structure_half | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_font_audit_ledger.py:368 <module>.test_an_audit_that_raises_does_not_fail_the_parse | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_failures.py:101 <module>.test_T1_branch_6_vision_exhausted_scanned_route | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_failures.py:103 <module>.test_T1_branch_6_vision_exhausted_scanned_route | patch("engine.parsers.pdf_parser.parse_with_vision",
+  tests/test_parse_failures.py:117 <module>.test_T1_branch_10_pymupdf_exhausted_digital_route | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_failures.py:119 <module>.test_T1_branch_10_pymupdf_exhausted_digital_route | patch("engine.parsers.pdf_parser.parse_with_pymupdf",
+  tests/test_parse_failures.py:132 <module>.test_T1_branch_17_cascade_empty | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_failures.py:133 <module>.test_T1_branch_17_cascade_empty | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_failures.py:134 <module>.test_T1_branch_17_cascade_empty | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_failures.py:166 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_failures.py:167 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_failures.py:168 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_failures.py:197 <module>.test_T3_unclassified_exception_under_a_run_writes_its_own_code | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_failures.py:199 <module>.test_T3_unclassified_exception_under_a_run_writes_its_own_code | patch("engine.parsers.pdf_parser.record_parsed_text",
+  tests/test_parse_failures.py:219 <module>.test_T4_no_run_id_writes_no_event | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_failures.py:220 <module>.test_T4_no_run_id_writes_no_event | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_failures.py:221 <module>.test_T4_no_run_id_writes_no_event | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_failures.py:241 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_failures.py:242 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_failures.py:243 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_failures.py:34 <module>._no_unstubbed_ocr | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_failures.py:88 <module>.test_T1_branch_2_file_unreadable | with patch("engine.parsers.pdf_parser.is_scanned_pdf",
+  tests/test_parse_gate.py:139 <module>.test_clean_docling_parse_is_one_accepted_attempt | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN), \
+  tests/test_parse_gate.py:140 <module>.test_clean_docling_parse_is_one_accepted_attempt | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_gate.py:158 <module>.test_clean_parse_reaches_parsed_status | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_gate.py:173 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:174 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN), \
+  tests/test_parse_gate.py:175 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops | patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf, \
+  tests/test_parse_gate.py:176 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_gate.py:192 <module>.test_rerouted_pass_still_reaches_parsed | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:193 <module>.test_rerouted_pass_still_reaches_parsed | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN):
+  tests/test_parse_gate.py:203 <module>.test_glyph_then_shattered_then_vision_passes | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:204 <module>.test_glyph_then_shattered_then_vision_passes | patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_gate.py:206 <module>.test_glyph_then_shattered_then_vision_passes | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+  tests/test_parse_gate.py:221 <module>.test_pymupdf_first_shattered_reroutes_without_retrying_pymupdf | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_gate.py:223 <module>.test_pymupdf_first_shattered_reroutes_without_retrying_pymupdf | patch("engine.parsers.pdf_parser.parse_with_pymupdf",
+  tests/test_parse_gate.py:225 <module>.test_pymupdf_first_shattered_reroutes_without_retrying_pymupdf | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN):
+  tests/test_parse_gate.py:280 <module>.test_all_fail_selects_least_bad_and_excludes_with_reason | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=worst), \
+  tests/test_parse_gate.py:281 <module>.test_all_fail_selects_least_bad_and_excludes_with_reason | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
+  tests/test_parse_gate.py:282 <module>.test_all_fail_selects_least_bad_and_excludes_with_reason | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
+  tests/test_parse_gate.py:306 <module>.test_excluded_paper_still_has_its_text_stored | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:307 <module>.test_excluded_paper_still_has_its_text_stored | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
+  tests/test_parse_gate.py:308 <module>.test_excluded_paper_still_has_its_text_stored | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
+  tests/test_parse_gate.py:330 <module>.test_vision_skipped_above_page_cap_and_never_called | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=SHATTERED_TEXT), \
+  tests/test_parse_gate.py:331 <module>.test_vision_skipped_above_page_cap_and_never_called | patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_gate.py:333 <module>.test_vision_skipped_above_page_cap_and_never_called | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_gate.py:357 <module>.test_sparse_length_fallback_precedes_the_quality_gate | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"), \
+  tests/test_parse_gate.py:358 <module>.test_sparse_length_fallback_precedes_the_quality_gate | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN), \
+  tests/test_parse_gate.py:359 <module>.test_sparse_length_fallback_precedes_the_quality_gate | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_gate.py:391 <module>.test_failure_between_asset_and_attempt_rows_leaves_neither | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_gate.py:412 <module>.test_reparse_writes_new_version_and_leaves_status_alone | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_gate.py:418 <module>.test_reparse_writes_new_version_and_leaves_status_alone | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_gate.py:434 <module>.test_reparse_reports_failures_without_excluding | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_gate.py:437 <module>.test_reparse_reports_failures_without_excluding | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:438 <module>.test_reparse_reports_failures_without_excluding | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=GLYPHY), \
+  tests/test_parse_gate.py:439 <module>.test_reparse_reports_failures_without_excluding | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
+  tests/test_parse_gate.py:458 <module>.test_short_circuit_returns_the_stored_parser_used | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_gate.py:460 <module>.test_short_circuit_returns_the_stored_parser_used | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_gate.py:478 <module>.test_short_circuit_does_not_read_the_parsed_text_file | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_gate.py:480 <module>.test_short_circuit_does_not_read_the_parsed_text_file | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_gate.py:522 <module>.test_spec_override_reaches_assess | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:523 <module>.test_spec_override_reaches_assess | patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf:
+  tests/test_parse_gate.py:536 <module>.test_spec_vision_cap_override_is_honoured | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=SHATTERED_TEXT), \
+  tests/test_parse_gate.py:537 <module>.test_spec_vision_cap_override_is_honoured | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_gate.py:550 <module>.test_the_reroute_chain_is_bounded | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:551 <module>.test_the_reroute_chain_is_bounded | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
+  tests/test_parse_gate.py:552 <module>.test_the_reroute_chain_is_bounded | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
+  tests/test_parse_gate.py:58 <module>._no_unstubbed_ocr | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_ocr_tier.py:113 <module>.test_scanned_pdf_goes_to_the_ocr_tier_first | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN), \
+  tests/test_parse_ocr_tier.py:114 <module>.test_scanned_pdf_goes_to_the_ocr_tier_first | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_ocr_tier.py:126 <module>.test_scanned_ocr_failure_falls_through_to_vision | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_ocr_tier.py:128 <module>.test_scanned_ocr_failure_falls_through_to_vision | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+  tests/test_parse_ocr_tier.py:140 <module>.test_scanned_ocr_sparse_output_also_falls_through_to_vision | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value="  "), \
+  tests/test_parse_ocr_tier.py:141 <module>.test_scanned_ocr_sparse_output_also_falls_through_to_vision | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+  tests/test_parse_ocr_tier.py:154 <module>.test_digital_clean_docling_never_reaches_the_ocr_tier | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN), \
+  tests/test_parse_ocr_tier.py:155 <module>.test_digital_clean_docling_never_reaches_the_ocr_tier | patch("engine.parsers.pdf_parser.parse_with_docling_ocr") as ocr, \
+  tests/test_parse_ocr_tier.py:156 <module>.test_digital_clean_docling_never_reaches_the_ocr_tier | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_ocr_tier.py:183 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_ocr_tier.py:184 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN), \
+  tests/test_parse_ocr_tier.py:185 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf | patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf, \
+  tests/test_parse_ocr_tier.py:186 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_ocr_tier.py:219 <module>.test_ocr_tier_reuses_the_sanitized_copy_and_it_is_cleaned_up | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=docling), \
+  tests/test_parse_ocr_tier.py:220 <module>.test_ocr_tier_reuses_the_sanitized_copy_and_it_is_cleaned_up | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", side_effect=ocr):
+  tests/test_parse_ocr_tier.py:238 <module>.test_ocr_cap_skips_the_tier_and_the_next_parser_is_tried | with patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+  tests/test_parse_ocr_tier.py:254 <module>.test_ocr_cap_on_a_reroute_falls_through_to_vision | with patch("engine.parsers.pdf_parser.page_count", return_value=500), \
+  tests/test_parse_ocr_tier.py:255 <module>.test_ocr_cap_on_a_reroute_falls_through_to_vision | patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_ocr_tier.py:256 <module>.test_ocr_cap_on_a_reroute_falls_through_to_vision | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+  tests/test_parse_ocr_tier.py:278 <module>.test_sparse_length_fallback_still_precedes_the_gate | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"), \
+  tests/test_parse_ocr_tier.py:279 <module>.test_sparse_length_fallback_still_precedes_the_gate | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN), \
+  tests/test_parse_ocr_tier.py:280 <module>.test_sparse_length_fallback_still_precedes_the_gate | patch("engine.parsers.pdf_parser.parse_with_docling_ocr") as ocr, \
+  tests/test_parse_ocr_tier.py:281 <module>.test_sparse_length_fallback_still_precedes_the_gate | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_ocr_tier.py:294 <module>.test_total_failure_still_writes_the_attempt_rows | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_ocr_tier.py:295 <module>.test_total_failure_still_writes_the_attempt_rows | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_ocr_tier.py:296 <module>.test_total_failure_still_writes_the_attempt_rows | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_ocr_tier.py:318 <module>.test_the_ledger_survives_a_raise_out_of_parse_pdf | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_ocr_tier.py:320 <module>.test_the_ledger_survives_a_raise_out_of_parse_pdf | patch("engine.parsers.pdf_parser.parse_with_pymupdf",
+  tests/test_parse_ocr_tier.py:342 <module>.test_reparse_reports_a_total_failure_with_rows_written | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_ocr_tier.py:345 <module>.test_reparse_reports_a_total_failure_with_rows_written | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_ocr_tier.py:346 <module>.test_reparse_reports_a_total_failure_with_rows_written | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_ocr_tier.py:347 <module>.test_reparse_reports_a_total_failure_with_rows_written | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_ocr_tier.py:418 <module>.test_spec_ocr_engine_override_reaches_the_parser | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_ocr_tier.py:419 <module>.test_spec_ocr_engine_override_reaches_the_parser | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", side_effect=ocr):
+  tests/test_parse_ocr_tier.py:62 <module>._no_unstubbed_ocr | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_sanitized_retry.py:106 <module>.test_docling_crash_is_recovered_by_the_sanitized_retry | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_sanitized_retry.py:108 <module>.test_docling_crash_is_recovered_by_the_sanitized_retry | patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf, \
+  tests/test_parse_sanitized_retry.py:109 <module>.test_docling_crash_is_recovered_by_the_sanitized_retry | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_sanitized_retry.py:132 <module>.test_sanitized_success_reaches_parsed_status | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_sanitized_retry.py:147 <module>.test_both_docling_attempts_fail_then_pymupdf | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_sanitized_retry.py:149 <module>.test_both_docling_attempts_fail_then_pymupdf | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_sanitized_retry.py:188 <module>.test_temp_copy_is_removed_after_a_successful_retry | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=capture):
+  tests/test_parse_sanitized_retry.py:202 <module>.test_temp_copy_is_removed_after_a_raising_retry | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=capture), \
+  tests/test_parse_sanitized_retry.py:203 <module>.test_temp_copy_is_removed_after_a_raising_retry | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_sanitized_retry.py:214 <module>.test_a_pdf_with_no_links_skips_the_sanitized_retry | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=_boom()), \
+  tests/test_parse_sanitized_retry.py:215 <module>.test_a_pdf_with_no_links_skips_the_sanitized_retry | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_sanitized_retry.py:239 <module>.test_retry_is_skipped_when_stripping_would_change_the_text | patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=_boom()), \
+  tests/test_parse_sanitized_retry.py:240 <module>.test_retry_is_skipped_when_stripping_would_change_the_text | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_sanitized_retry.py:259 <module>.test_a_raising_pymupdf_is_recorded_then_reraised | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=_boom()), \
+  tests/test_parse_sanitized_retry.py:260 <module>.test_a_raising_pymupdf_is_recorded_then_reraised | patch("engine.parsers.pdf_parser.parse_with_pymupdf",
+  tests/test_parse_sanitized_retry.py:283 <module>.test_a_raising_reroute_is_recorded_and_ends_the_loop | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=shattered):
+  tests/test_parse_sanitized_retry.py:57 <module>._no_unstubbed_ocr | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_writer_refs.py:106 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=""), \
+  tests/test_parse_writer_refs.py:107 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=""), \
+  tests/test_parse_writer_refs.py:108 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=""), \
+  tests/test_parse_writer_refs.py:109 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=""):
+  tests/test_parse_writer_refs.py:57 <module>._parse | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=text):
+  tests/test_pdf_parser.py:148 <module>.test_scanned_routes_to_vision_model | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response):
+  tests/test_pdf_parser.py:213 <module>.test_docling_success_uses_docling | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+  tests/test_pdf_parser.py:229 <module>.test_docling_exception_triggers_pymupdf | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=RuntimeError("hyperlink validation")):
+  tests/test_pdf_parser.py:247 <module>.test_all_parsers_empty_raises_value_error | with patch("engine.parsers.pdf_parser.parse_with_vision", return_value=""):
+  tests/test_pdf_parser.py:275 <module>.test_docling_and_pymupdf_sparse_triggers_vision | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"):
+  tests/test_pdf_parser.py:276 <module>.test_docling_and_pymupdf_sparse_triggers_vision | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response):
+  tests/test_pdf_parser.py:292 <module>.test_docling_sparse_pymupdf_sufficient | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"):
+  tests/test_pdf_parser.py:336 <module>.test_hash_stored_in_papers_table | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+  tests/test_pdf_parser.py:352 <module>.test_verify_hashes_no_mismatch | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+  tests/test_pdf_parser.py:365 <module>.test_verify_hashes_reports_mismatch | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+  tests/test_pdf_parser.py:37 <module>._no_unstubbed_ocr | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_pdf_parser.py:398 <module>.test_atomic_write_no_temp_on_db_failure | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong content " * 10):
+  tests/test_pdf_parser.py:468 <module>.test_parse_pdf_uses_spec_threshold | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response) as mock_chat:
+  tests/test_restart_ollama_guard.py:180 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out | monkeypatch.setattr(extractor, "load_codebook_beside", lambda p: SimpleNamespace(semantic_hash="h" * 64))
+  tests/test_restart_ollama_guard.py:182 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out | monkeypatch.setattr(extractor, "read_parsed_text", lambda ref: "paper text")
+  tests/test_selection_bound.py:216 <module>.test_T3_run_pipeline_threads_the_bound_to_the_manifest_and_the_stage | monkeypatch.setattr(rp, "_stage_parse", lambda *a, **k: {})
+  tests/test_u18_digest_per_call.py:281 <module>.test_u18_run_pipeline_closes_aborted_on_a_digest_change | monkeypatch.setattr(rp, "_stage_parse", lambda *a, **k: {})
+  tests/test_u19_env_recheck.py:142 <module>.test_u19_run_pipeline_closes_aborted_on_a_server_env_change | monkeypatch.setattr(rp, "_stage_parse", lambda *a, **k: {})
+  tests/test_u19_env_recheck.py:72 <module>._loop | monkeypatch.setattr(E, "load_codebook_beside", lambda p: SimpleNamespace(semantic_hash="h" * 64))
+  tests/test_u19_env_recheck.py:74 <module>._loop | monkeypatch.setattr(E, "read_parsed_text", lambda ref: "paper text")
+  tests/test_u20_loaded_context.py:236 <module>.test_f_run_pipeline_closes_aborted | monkeypatch.setattr(rp, "_stage_parse", lambda *a, **k: {})
+  tests/test_undeclared_override.py:164 <module>.test_T5_vision_under_a_declared_run_refuses_a_differing_override | monkeypatch.setattr("engine.parsers.pdf_parser.ollama_chat", chat)
+  tests/test_undeclared_override.py:183 <module>.test_T5_vision_under_a_declared_run_sends_the_rows_values | monkeypatch.setattr("engine.parsers.pdf_parser.ollama_chat", fake_chat)
+  tests/test_vision_bounds.py:107 <module>.test_spec_overrides_reach_the_call_through_parse_pdf | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_vision_bounds.py:109 <module>.test_spec_overrides_reach_the_call_through_parse_pdf | patch("engine.parsers.pdf_parser.ollama_chat",
+  tests/test_vision_bounds.py:142 <module>.test_the_prompt_is_what_is_sent | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+  tests/test_vision_bounds.py:156 <module>.test_truncation_on_page_2_aborts_before_page_3 | with patch("engine.parsers.pdf_parser.ollama_chat", side_effect=responses):
+  tests/test_vision_bounds.py:165 <module>.test_truncation_becomes_an_unselectable_error_row | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_vision_bounds.py:167 <module>.test_truncation_becomes_an_unselectable_error_row | patch("engine.parsers.pdf_parser.ollama_chat",
+  tests/test_vision_bounds.py:196 <module>.test_no_partial_document_survives_a_truncated_page | with patch("engine.parsers.pdf_parser.ollama_chat", side_effect=responses):
+  tests/test_vision_bounds.py:205 <module>.test_all_pages_stop_assembles_the_document_as_before | with patch("engine.parsers.pdf_parser.ollama_chat",
+  tests/test_vision_bounds.py:216 <module>.test_per_page_log_lines_are_emitted | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()):
+  tests/test_vision_bounds.py:230 <module>.test_per_call_wall_timeout_is_passed | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+  tests/test_vision_bounds.py:236 <module>.test_default_page_timeout_is_the_spec_default | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+  tests/test_vision_bounds.py:85 <module>.test_defaults_send_num_predict_and_num_ctx | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+  tests/test_vision_bounds.py:94 <module>.test_explicit_overrides_reach_the_call | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+
+-- (iii) a codebook key literal: 43 hits / 14 files
+   by file: test_codebook_loader.py 15, test_pass1_contract_text.py 6, conftest.py 3, test_non_value_tokens_downstream.py 3, test_terminal_states.py 3, test_elicitation_contracts.py 2, test_elicitation_pipeline.py 2, test_feedback_block.py 2, test_pin_records.py 2, test_citation_record.py 1, test_presented_context.py 1, test_prompt_no_hardcoded_fields.py 1, test_prompt_sentinels.py 1, test_units_as_source_slices.py 1
+  tests/conftest.py:504 <module> | "absence_sentinels": ["NR", "N/A", "NA", "NOT_FOUND", "NOT FOUND", "NOT REPORTED"],
+  tests/conftest.py:505 <module> | "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
+  tests/conftest.py:510 <module> | "valid_values": [{"value": "RCT", "definition": "Randomised."},
+  tests/test_citation_record.py:97 <module>._value | vv = field.get("valid_values") or []
+  tests/test_codebook_loader.py:184 <module>.test_empty_absence_sentinels_rejected | doc["absence_sentinels"] = []
+  tests/test_codebook_loader.py:185 <module>.test_empty_absence_sentinels_rejected | with pytest.raises(CodebookError, match="absence_sentinels"):
+  tests/test_codebook_loader.py:192 <module>.test_missing_canonical_absence_sentinel_rejected | del doc["canonical_absence_sentinel"]
+  tests/test_codebook_loader.py:193 <module>.test_missing_canonical_absence_sentinel_rejected | with pytest.raises(CodebookError, match="canonical_absence_sentinel"):
+  tests/test_codebook_loader.py:199 <module>.test_canonical_absence_sentinel_must_be_a_declared_sentinel | doc["canonical_absence_sentinel"] = "No comparison reported"
+  tests/test_codebook_loader.py:200 <module>.test_canonical_absence_sentinel_must_be_a_declared_sentinel | with pytest.raises(CodebookError, match="canonical_absence_sentinel"):
+  tests/test_codebook_loader.py:215 <module>.test_categorical_without_valid_values_rejected | del doc["fields"][1]["valid_values"]
+  tests/test_codebook_loader.py:218 <module>.test_categorical_without_valid_values_rejected | assert "study_type" in str(exc.value) and "valid_values" in str(exc.value)
+  tests/test_codebook_loader.py:223 <module>.test_valid_values_shape_enforced | doc["fields"][1]["valid_values"] = ["RCT", "Cohort"]
+  tests/test_codebook_loader.py:224 <module>.test_valid_values_shape_enforced | with pytest.raises(CodebookError, match="valid_values"):
+  tests/test_codebook_loader.py:303 <module>.test_semantic_hash_moves_on_a_token_edit | doc["absence_sentinels"] = ["NR"]
+  tests/test_codebook_loader.py:34 <module> | "absence_sentinels": ["NR", "NOT_FOUND"],
+  tests/test_codebook_loader.py:35 <module> | "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
+  tests/test_codebook_loader.py:418 <module>.test_enum_values_for_every_categorical_and_none_otherwise | assert vals == [v["value"] for v in cb.field(n)["valid_values"]]
+  tests/test_codebook_loader.py:43 <module> | "valid_values": [{"value": "RCT", "definition": "Randomised."},
+  tests/test_elicitation_contracts.py:24 <module> | "absence_sentinels": ["NR", "NOT_FOUND", "NOT REPORTED"],
+  tests/test_elicitation_contracts.py:25 <module> | "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
+  tests/test_elicitation_pipeline.py:48 <module> | "absence_sentinels": ["NR", "NOT_FOUND"],
+  tests/test_elicitation_pipeline.py:49 <module> | "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
+  tests/test_feedback_block.py:29 <module> | "absence_sentinels": ["NR"],
+  tests/test_feedback_block.py:30 <module> | "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
+  tests/test_non_value_tokens_downstream.py:45 <module> | "absence_sentinels": ["NR", "NOT_FOUND"],
+  tests/test_non_value_tokens_downstream.py:46 <module> | "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
+  tests/test_non_value_tokens_downstream.py:94 <module>.test_absence_sentinels_are_required_not_defaulted | with pytest.raises(C.CodebookContractError, match="absence_sentinels"):
+  tests/test_pass1_contract_text.py:123 <module>.test_the_contract_sentence_is_rendered_from_the_codebook | other = {**cb, "canonical_absence_sentinel": "NOT_FOUND", "escape_token": "NOTHING_TO_CITE"}
+  tests/test_pass1_contract_text.py:133 <module>.test_the_sentinel_rule_renders_the_canonical_sentinel | other = {**cb, "canonical_absence_sentinel": "NOT_FOUND"}
+  tests/test_pass1_contract_text.py:134 <module>.test_the_sentinel_rule_renders_the_canonical_sentinel | assert "NOT_FOUND" in cb["absence_sentinels"]
+  tests/test_pass1_contract_text.py:148 <module>.test_the_marker_sentence_says_what_the_checker_does | "absence_sentinels": ["NR"], "canonical_absence_sentinel": "NR",
+  tests/test_pass1_contract_text.py:163 <module> | "absence_sentinels": ["NR"], "canonical_absence_sentinel": "NR",
+  tests/test_pass1_contract_text.py:88 <module>.test_the_stated_and_judgment_contract_sentences_are_in_the_pass1_prompt | assert (cb["canonical_absence_sentinel"], cb["escape_token"]) == (
+  tests/test_pin_records.py:117 <module>.test_semantic_hash_moves_on_a_canonical_sentinel_edit | assert doc["canonical_absence_sentinel"] == "NR" and "NOT_FOUND" in doc["absence_sentinels"]
+  tests/test_pin_records.py:118 <module>.test_semantic_hash_moves_on_a_canonical_sentinel_edit | other = {**doc, "canonical_absence_sentinel": "NOT_FOUND"}
+  tests/test_presented_context.py:273 <module> | "absence_sentinels": ["NR", "NOT_FOUND"], "canonical_absence_sentinel": "NR",
+  tests/test_prompt_no_hardcoded_fields.py:55 <module>.test_surgical_domain_multiple_rule_comes_from_the_codebook | assert "Multiple" in [v["value"] for v in entry["valid_values"]]
+  tests/test_prompt_sentinels.py:35 <module>.codebook_path | doc["canonical_absence_sentinel"] = request.param
+  tests/test_terminal_states.py:30 <module> | "absence_sentinels": ["NR", "NOT_FOUND", "NOT REPORTED"],
+  tests/test_terminal_states.py:31 <module> | "canonical_absence_sentinel": "NR",  # R137: required by the loader since R132
+  tests/test_terminal_states.py:77 <module>.test_the_two_token_states_do_not_collide_with_sentinels_or_real_values | for sentinel in CB["absence_sentinels"]:
+  tests/test_units_as_source_slices.py:161 <module>._value | vv = field.get("valid_values") or []
+
+-- (iv) exact compare against semantic_hash or sha256: 25 hits / 17 files
+   by file: test_audit_events.py 4, test_codebook_loader.py 3, test_arm_pinned_at_extract.py 2, test_extraction_events.py 2, test_run_manifest.py 2, test_citation_record.py 1, test_codebook_provenance.py 1, test_eligibility.py 1, test_extraction_validator.py 1, test_ft_adjudication_import.py 1, test_import_extraction_entry.py 1, test_import_screening_entry.py 1, test_parse_writer_refs.py 1, test_pin_records.py 1, test_reuse_key.py 1, test_screen2f_harness.py 1, test_u19_env_recheck.py 1
+  tests/test_arm_pinned_at_extract.py:136 <module>.test_a_screen_start_that_stops_at_the_gate_leaves_the_extraction_arm_unpinned | assert arm["pinned_sha256"] == rm.sha256_canonical(json.loads(arm["configuration_json"]))
+  tests/test_arm_pinned_at_extract.py:222 <module>.test_verifying_twice_in_one_run_writes_the_pin_once | assert arm["pinned_sha256"] == rm.sha256_canonical(tup)
+  tests/test_audit_events.py:394 <module>.test_d23_t1_claims_on_an_older_version_are_located_against_that_version | assert (p["parsed_text_uid"], p["parsed_text_sha256"]) == (old.parsed_text_uid, old.sha256)
+  tests/test_audit_events.py:398 <module>.test_d23_t1_claims_on_an_older_version_are_located_against_that_version | assert payload["parsed_text_sha256"] == old.sha256
+  tests/test_audit_events.py:462 <module>.test_d23_t5_a_byte_identical_reparse_is_not_a_mismatch | assert (new.sha256 == old.sha256) and new.parsed_text_uid != old.parsed_text_uid
+  tests/test_audit_events.py:465 <module>.test_d23_t5_a_byte_identical_reparse_is_not_a_mismatch | assert p["located"] is True and p["parsed_text_sha256"] == old.sha256
+  tests/test_citation_record.py:190 <module>._parsed_text_named_by | assert hashlib.sha256(data).hexdigest() == ref.sha256 == payload[PAYLOAD_PARSED_TEXT_SHA256]
+  tests/test_codebook_loader.py:274 <module>.test_semantic_hash_ignores_comments_and_whitespace | assert ca.semantic_hash == cbk.semantic_hash
+  tests/test_codebook_loader.py:288 <module>.test_semantic_hash_ignores_version_date_and_review | assert a.semantic_hash == b.semantic_hash
+  tests/test_codebook_loader.py:313 <module>.test_byte_hash_is_the_same_function_the_judge_lane_uses | assert load_codebook_for("surgical_autonomy").sha256 == compute_codebook_sha256(LIVE)
+  tests/test_codebook_provenance.py:222 <module>.test_the_two_hashes_answer_different_questions | assert len(cb.semantic_hash) == 64 and len(cb.sha256) == 64
+  tests/test_eligibility.py:637 <module>.test_the_screening_surfaces_are_frozen | assert hashlib.sha256(got.encode("utf-8")).hexdigest() == FROZEN[key], (
+  tests/test_extraction_events.py:156 <module>.test_t1_a_complete_record_asserts_every_field_with_its_input | assert p[events.PAYLOAD_PARSED_TEXT_SHA256] == ref.sha256
+  tests/test_extraction_events.py:627 <module>.test_d24_t1_an_incomplete_field_on_reextraction_is_superseded_and_reads_missing | assert payload["parsed_text_sha256"] == new.sha256
+  tests/test_extraction_validator.py:302 <module>.test_cli_opens_read_only | assert hashlib.sha256(db.read_bytes()).hexdigest() == before
+  tests/test_ft_adjudication_import.py:123 <module>.test_2_the_manifest_records_the_file_sha256_under_inputs_and_pins_stay_arms | assert body["inputs"] == {str(path.resolve()): hashlib.sha256(path.read_bytes()).hexdigest()}
+  tests/test_import_extraction_entry.py:149 <module>.test_t1_three_papers_enter_at_ft_eligible_with_refs_events_and_one_manifest | assert r["parsed_text_sha256"] == hashlib.sha256(data).hexdigest()
+  tests/test_import_screening_entry.py:116 <module>.test_t1_four_entries_enter_at_ingested_under_one_manifest | assert inputs == {str(path.resolve()): hashlib.sha256(path.read_bytes()).hexdigest()}
+  tests/test_parse_writer_refs.py:78 <module>.test_the_reference_hashes_the_bytes_written_and_names_its_asset_row | assert sha == hashlib.sha256(path.read_bytes()).hexdigest()
+  tests/test_pin_records.py:130 <module>.test_semantic_hash_moves_on_a_canonical_sentinel_edit | assert compute_semantic_hash({**doc, "version": "9.9"}) == compute_semantic_hash(doc)
+  tests/test_reuse_key.py:92 <module>.test_g1_a_one_character_change_is_refused_then_recorded_as_a_new_version | assert (after.version, after.sha256) == (2, observed)
+  tests/test_run_manifest.py:218 <module>.test_a_declared_arm_is_registered_at_its_first_manifest_and_pinned_at_extract | assert row["pinned_sha256"] == rm.sha256_canonical(tup)
+  tests/test_run_manifest.py:87 <module>.test_a_run_writes_its_manifest_and_one_row_per_stage | assert row["spec_hash"] == rm.spec_hash(spec) and row["codebook_hash"] == cb.semantic_hash
+  tests/test_screen2f_harness.py:266 <module>.test_arm_b_placeholder_constants_match_the_committed_pre_fold_renders | assert hashlib.sha256(text.encode("utf-8")).hexdigest() == want
+  tests/test_u19_env_recheck.py:168 <module>.test_u19_the_body_opened_by_run_pipeline_carries_the_environment | assert sha == rm.sha256_canonical(body)                 # manifest_sha256 covers the key
+
+-- (v) codebook YAML text constants: 4 hits / 3 files
+   by file: analysis/paper1/test_judge_loader.py 2, analysis/paper1/test_judge_cli.py 1, analysis/paper1/test_pass1_inspection.py 1
+  tests/analysis/paper1/test_judge_cli.py:30 <module> | CODEBOOK_YAML = """
+  tests/analysis/paper1/test_judge_loader.py:28 <module> | _TOP = """version: '2.0'
+  tests/analysis/paper1/test_judge_loader.py:37 <module> | CODEBOOK_YAML = _TOP + """
+  tests/analysis/paper1/test_pass1_inspection.py:34 <module> | CODEBOOK_YAML = """
+
+-- (v) yaml.dump / yaml.safe_dump (quotes bool-like strings itself): 26 hits / 13 files
+   by file: test_codebook_loader.py 4, test_eligibility.py 4, test_non_value_tokens_downstream.py 4, test_review_spec.py 3, test_elicitation_pipeline.py 2, test_review_paths.py 2, conftest.py 1, test_adjudication.py 1, test_cloud_extraction.py 1, test_elicitation_sentinel.py 1, test_pin_records.py 1, test_prompt_sentinels.py 1, test_u17_cross_lineage.py 1
+  tests/conftest.py:525 <module>._ensure_test_codebook | path.write_text(yaml.safe_dump(dict(_TEST_CODEBOOK, review=review_id)))
+  tests/test_adjudication.py:160 <module>.keyword_config_path | yaml.dump(config, f)
+  tests/test_cloud_extraction.py:1057 <module>.TestSpecDrivenConfig._custom_spec | path.write_text(yaml.dump(data))
+  tests/test_codebook_loader.py:260 <module>.test_identity_is_checked_on_the_derived_path_too | yaml.safe_dump(VALID))            # declares alpha, sitting in beta/
+  tests/test_codebook_loader.py:270 <module>.test_semantic_hash_ignores_comments_and_whitespace | a.write_text(yaml.safe_dump(VALID))
+  tests/test_codebook_loader.py:272 <module>.test_semantic_hash_ignores_comments_and_whitespace | b.write_text("# a comment nobody reads\n\n" + yaml.safe_dump(VALID) + "\n\n")
+  tests/test_codebook_loader.py:58 <module>._write | p.write_text(yaml.safe_dump(doc if doc is not None else VALID))
+  tests/test_elicitation_pipeline.py:150 <module>.review | (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
+  tests/test_elicitation_pipeline.py:373 <module>.test_retry_is_bounded_and_the_paper_is_failed | (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
+  tests/test_elicitation_sentinel.py:59 <module>._trimmed | path.write_text(yaml.safe_dump(raw, sort_keys=False))
+  tests/test_eligibility.py:307 <module>.test_a_spec_missing_exclusion_basis_on_a_stage_fails_and_names_it | p.write_text(yaml.dump(raw, allow_unicode=True))
+  tests/test_eligibility.py:453 <module>.test_a_spec_still_carrying_screening_criteria_fails_loudly | p.write_text(yaml.dump(raw))
+  tests/test_eligibility.py:463 <module>.test_a_spec_with_a_top_level_specialty_scope_fails_loudly | p.write_text(yaml.dump(raw))
+  tests/test_eligibility.py:488 <module>.test_a_spec_carrying_a_retired_transitional_field_fails_and_names_it | p.write_text(yaml.dump(raw, allow_unicode=True))
+  tests/test_non_value_tokens_downstream.py:238 <module>.test_site5_terminal_states_are_dropped_from_the_arm | (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(cb))
+  tests/test_non_value_tokens_downstream.py:298 <module>.test_site5_a_field_the_codebook_does_not_declare_is_ignored | (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
+  tests/test_non_value_tokens_downstream.py:55 <module>.codebook_dir | (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
+  tests/test_non_value_tokens_downstream.py:83 <module>.test_an_incomplete_codebook_fails_the_reader_instead_of_emptying_it | yaml.safe_dump({"fields": [], "escape_token": "NO_EVIDENCE_LOCATABLE"}))
+  tests/test_pin_records.py:125 <module>.test_semantic_hash_moves_on_a_canonical_sentinel_edit | path.write_text(yaml.safe_dump(d, sort_keys=False))
+  tests/test_prompt_sentinels.py:37 <module>.codebook_path | path.write_text(yaml.safe_dump(doc, sort_keys=False))
+  tests/test_review_paths.py:110 <module>.test_mismatch_raises_before_any_database_is_constructed | p.write_text(yaml.dump(raw))
+  tests/test_review_paths.py:93 <module>.test_mismatch_names_both_ids_and_the_path | p.write_text(yaml.dump(raw))
+  tests/test_review_spec.py:102 <module>._write | p.write_text(yaml.dump(raw))
+  tests/test_review_spec.py:209 <module>._spec_with_review_id | p.write_text(yaml.dump(raw))
+  tests/test_review_spec.py:271 <module>.test_an_extraction_schema_key_is_now_rejected | p.write_text(yaml.dump(raw))
+  tests/test_u17_cross_lineage.py:79 <module>._write_spec | p.write_text(yaml.safe_dump(raw, sort_keys=False), encoding="utf-8")
+
+-- (vi) a literal naming extraction_codebook.yaml: 196 hits / 82 files
+   by file: test_codebook_loader.py 8, test_readers_on_the_reader.py 8, test_non_value_tokens_downstream.py 6, test_presented_context.py 5, test_arm_pinned_at_extract.py 4, test_audit_events.py 4, test_extraction_validator.py 4, test_ft_adjudication_import.py 4, test_pin_records.py 4, test_request_capture.py 4, test_u19_env_recheck.py 4, test_undeclared_call.py 4, migrations/test_022_run_kinds_and_audit_tables.py 3, test_adjudication_pairs.py 3, test_citation_record.py 3, test_distribution_check_wiring.py 3, test_engine_state.py 3, test_extraction_events.py 3, test_extraction_run_link.py 3, test_run_fault_predicate.py 3
+  tests/_event_store_fixture.py:333 <module>.use_spec_codebook | """Give a scratch review the codebook of the spec it is run with.
+  tests/analysis/paper1/test_judge_pass2.py:462 <module>.live_review_copy | codebook_path = LIVE_REVIEW / "extraction_codebook.yaml"
+  tests/analysis/paper1/test_judge_pass2.py:514 <module>.test_paper_366_grammar_prevents_four_element_emission | codebook_path = LIVE_REVIEW / "extraction_codebook.yaml"
+  tests/conftest.py:519 <module>._ensure_test_codebook | path = _Path(review_dir) / "extraction_codebook.yaml"
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:224 <module> | LIVE_CODEBOOK = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:237 <module>.test_T4_open_run_with_kind_import_succeeds | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:238 <module>.test_T4_open_run_with_kind_import_succeeds | codebook = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_adjudication_pairs.py:25 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_adjudication_pairs.py:39 <module>._make_review_db | / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+  tests/test_adjudication_pairs.py:40 <module>._make_review_db | tmp_path / "extraction_codebook.yaml",
+  tests/test_arm_pinned_at_extract.py:163 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_arm_pinned_at_extract.py:164 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_arm_pinned_at_extract.py:37 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_arm_pinned_at_extract.py:87 <module>.pipeline | shutil.copy2(LIVE_CODEBOOK, db_path.parent / "extraction_codebook.yaml")
+  tests/test_audit_admitted_set.py:41 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_audit_admitted_set.py:61 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_audit_events.py:246 <module>.test_t10_low_yield_reads_the_codebook | cb = load_codebook(review_dir / "extraction_codebook.yaml")
+  tests/test_audit_events.py:36 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_audit_events.py:51 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_audit_events.py:75 <module>.sentinels | return frozenset(load_codebook(review_dir / "extraction_codebook.yaml").absence_sentinels)
+  tests/test_audit_paper_id.py:32 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_audit_paper_id.py:49 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_audit_stage_completion.py:48 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_audit_stage_completion.py:71 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_citation_guard.py:129 <module>.test_uncited_value_never_reaches_the_database | cb_path = Path(db.db_path).parent / "extraction_codebook.yaml"
+  tests/test_citation_guard.py:130 <module>.test_uncited_value_never_reaches_the_database | shutil.copy2(repo / "data" / "surgical_autonomy" / "extraction_codebook.yaml", cb_path)
+  tests/test_citation_record.py:154 <module>.fake_ollama | client = _Client(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_citation_record.py:44 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_citation_record.py:90 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_cloud_extraction.py:27 <module> | / "data" / "surgical_autonomy" / "extraction_codebook.yaml")
+  tests/test_cloud_extraction.py:53 <module>.test_db | shutil.copy2(LIVE_CODEBOOK, tmp_path / "extraction_codebook.yaml")
+  tests/test_codebook_evidence_modality.py:31 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_codebook_field_class.py:25 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_codebook_loader.py:236 <module>.test_invalid_yaml_is_a_codebook_error | p = tmp_path / "extraction_codebook.yaml"
+  tests/test_codebook_loader.py:259 <module>.test_identity_is_checked_on_the_derived_path_too | (tmp_path / "data" / "beta" / "extraction_codebook.yaml").write_text(
+  tests/test_codebook_loader.py:26 <module> | LIVE = REPO_ROOT / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_codebook_loader.py:56 <module>._write | def _write(tmp_path, doc=None, name="extraction_codebook.yaml"):
+  tests/test_codebook_loader.py:67 <module>.test_path_derives_from_the_review_id | assert codebook_path_for("surgical_autonomy") == root / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_codebook_loader.py:68 <module>.test_path_derives_from_the_review_id | assert codebook_path_for("other_review") == root / "other_review" / "extraction_codebook.yaml"
+  tests/test_codebook_loader.py:85 <module>.test_missing_file_error_names_the_expected_path | assert "data/no_such_review/extraction_codebook.yaml" in str(exc.value)
+  tests/test_codebook_loader.py:89 <module>.test_the_glob_is_gone | """T1's real claim.
+  tests/test_codebook_prompt.py:1 <module> | """Tests for codebook-driven extraction prompt.
+  tests/test_codebook_prompt.py:24 <module>.codebook | with open("data/surgical_autonomy/extraction_codebook.yaml") as f:
+  tests/test_codebook_review_at_open.py:35 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_codebook_review_at_open.py:53 <module>._write_codebook | path = review_dir / "extraction_codebook.yaml"
+  tests/test_completeness_guard.py:32 <module> | CODEBOOK = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_concordance.py:307 <module>._write_codebook | / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+  tests/test_concordance.py:308 <module>._write_codebook | Path(review_dir) / "extraction_codebook.yaml",
+  tests/test_consensus.py:22 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_cut_over.py:41 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_cut_over.py:62 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_distribution_check_wiring.py:29 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_distribution_check_wiring.py:40 <module>._db | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_distribution_check_wiring.py:92 <module>.test_t1_the_stage_calls_the_check_with_the_runs_arm_and_counts_and_skips_under_ten | review_dir / "extraction_codebook.yaml")
+  tests/test_distribution_monitor.py:28 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_distribution_monitor.py:83 <module>._make_db | shutil.copy(CODEBOOK_PATH, tmp_path / "extraction_codebook.yaml")
+  tests/test_duplicate_on_pass1_attempt_2.py:41 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_duplicate_on_pass1_attempt_2.py:65 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_effective_config.py:21 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_elicitation_codebook.py:19 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_elicitation_contracts.py:261 <module>.test_real_codebook_keeps_not_found_a_sentinel_and_coins_a_distinct_escape | cb = C.load("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_elicitation_contracts.py:424 <module>.test_the_prompt_carries_the_integer_only_instruction | cb = CB.load("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_elicitation_pipeline.py:150 <module>.review | (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
+  tests/test_elicitation_pipeline.py:373 <module>.test_retry_is_bounded_and_the_paper_is_failed | (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
+  tests/test_elicitation_prompts_ruling2.py:38 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_elicitation_sentinel.py:28 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_elicitation_sentinel.py:58 <module>._trimmed | path = dest / "extraction_codebook.yaml"
+  tests/test_engine_state.py:24 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_engine_state.py:34 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_engine_state.py:35 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_exporters.py:42 <module>._real_codebook | / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+  tests/test_exporters.py:43 <module>._real_codebook | Path(db.db_path).parent / "extraction_codebook.yaml",
+  tests/test_extraction_events.py:43 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_extraction_events.py:55 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_extraction_events.py:72 <module>.cb_path | return Path(db.db_path).parent / "extraction_codebook.yaml"
+  tests/test_extraction_run_link.py:32 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_extraction_run_link.py:44 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_extraction_run_link.py:96 <module>.fake_ollama | client = _Client(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_extraction_validator.py:21 <module> | / "data" / "surgical_autonomy" / "extraction_codebook.yaml")
+  tests/test_extraction_validator.py:248 <module>.test_default_arm_unregistered_reports_zero_cells | cb = load_codebook(review / "extraction_codebook.yaml")
+  tests/test_extraction_validator.py:40 <module>.review | shutil.copy2(LIVE_CODEBOOK, tmp_path / "extraction_codebook.yaml")
+  tests/test_extraction_validator.py:54 <module>._issues | return validate_all(conn, load_codebook(review / "extraction_codebook.yaml"), arm=arm)[0]
+  tests/test_extractor.py:52 <module>._write_codebook | / "data" / "surgical_autonomy" / "extraction_codebook.yaml",
+  tests/test_extractor.py:53 <module>._write_codebook | Path(review_dir) / "extraction_codebook.yaml",
+  tests/test_failed_close_reason.py:25 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_failed_close_reason.py:96 <module>.cloud | shutil.copy2(LIVE_CODEBOOK, db_path.parent / "extraction_codebook.yaml")
+  tests/test_floor_and_stored_attempt.py:53 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_floor_and_stored_attempt.py:76 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_ft_adjudication_import.py:327 <module>._open | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_ft_adjudication_import.py:34 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_ft_adjudication_import.py:356 <module>.test_14_a_primary_flag_adjudicated_eligible_is_not_selected_by_the_verifier | codebook=load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml"),
+  tests/test_ft_adjudication_import.py:51 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(d.db_path).parent / "extraction_codebook.yaml")
+  tests/test_ft_bridge.py:109 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(d.db_path).parent / "extraction_codebook.yaml")
+  tests/test_ft_bridge.py:36 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_ft_screening.py:87 <module> | _LIVE_CODEBOOK = Path(__file__).resolve().parent.parent / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_human_import.py:23 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_import_extraction_entry.py:45 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_import_extraction_entry.py:64 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(d.db_path).parent / "extraction_codebook.yaml")
+  tests/test_import_screening_entry.py:33 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_import_screening_entry.py:48 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(d.db_path).parent / "extraction_codebook.yaml")
+  tests/test_low_yield.py:20 <module> | LIVE_CODEBOOK = SPEC_PATH.parent.parent / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_migration_caller_guard.py:20 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_non_value_tokens_downstream.py:238 <module>.test_site5_terminal_states_are_dropped_from_the_arm | (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(cb))
+  tests/test_non_value_tokens_downstream.py:298 <module>.test_site5_a_field_the_codebook_does_not_declare_is_ignored | (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
+  tests/test_non_value_tokens_downstream.py:55 <module>.codebook_dir | (tmp_path / "extraction_codebook.yaml").write_text(yaml.safe_dump(CODEBOOK))
+  tests/test_non_value_tokens_downstream.py:64 <module>.test_the_tokens_come_from_the_codebook | codebook_dir / "extraction_codebook.yaml") == TOKENS
+  tests/test_non_value_tokens_downstream.py:82 <module>.test_an_incomplete_codebook_fails_the_reader_instead_of_emptying_it | (tmp_path / "extraction_codebook.yaml").write_text(
+  tests/test_non_value_tokens_downstream.py:85 <module>.test_an_incomplete_codebook_fails_the_reader_instead_of_emptying_it | non_value_tokens_for(tmp_path / "extraction_codebook.yaml")
+  tests/test_pass1_contract_text.py:33 <module> | CODEBOOK_PATH = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_pin_records.py:122 <module>.test_semantic_hash_moves_on_a_canonical_sentinel_edit | a, b = tmp_path / "a" / "extraction_codebook.yaml", tmp_path / "b" / "extraction_codebook.yaml"
+  tests/test_pin_records.py:35 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_pin_records.py:59 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_pin_records.py:60 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_presented_context.py:313 <module>.test_T5_the_elicited_chain_carries_both_attempts_presented_is_pass2 | (tmp_path / "extraction_codebook.yaml").write_text(json.dumps(_ELICIT_CODEBOOK))
+  tests/test_presented_context.py:339 <module>.test_T5_pass2_skipped_presented_is_the_accepted_pass1_attempt | (tmp_path / "extraction_codebook.yaml").write_text(json.dumps(_ELICIT_CODEBOOK))
+  tests/test_presented_context.py:35 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_presented_context.py:60 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_presented_context.py:61 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_prompt_hash_coverage.py:35 <module> | LIVE_CODEBOOK = "data/surgical_autonomy/extraction_codebook.yaml"
+  tests/test_prompt_no_hardcoded_fields.py:25 <module> | CODEBOOK = Path("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_prompt_sentinels.py:24 <module> | LIVE = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_prompt_sentinels.py:36 <module>.codebook_path | path = tmp_path / "extraction_codebook.yaml"
+  tests/test_readers_on_the_reader.py:263 <module>.test_the_judge_loader_attempts_every_cell_whatever_the_verdict | codebook = load_codebook(root / "extraction_codebook.yaml")
+  tests/test_readers_on_the_reader.py:264 <module>.test_the_judge_loader_attempts_every_cell_whatever_the_verdict | inputs = load_grid(db._conn, root, codebook, root / "extraction_codebook.yaml")
+  tests/test_readers_on_the_reader.py:271 <module>.test_the_judge_loader_attempts_every_cell_whatever_the_verdict | n_fields = len(load_cb(root / "extraction_codebook.yaml").field_names)
+  tests/test_readers_on_the_reader.py:29 <module> | CODEBOOK = REPO / "data/surgical_autonomy/extraction_codebook.yaml"
+  tests/test_readers_on_the_reader.py:296 <module>.test_the_scorer_verdict_rides_as_a_feature | codebook = load_codebook(root / "extraction_codebook.yaml")
+  tests/test_readers_on_the_reader.py:297 <module>.test_the_scorer_verdict_rides_as_a_feature | inputs = load_grid(db._conn, root, codebook, root / "extraction_codebook.yaml",
+  tests/test_readers_on_the_reader.py:39 <module>.review | shutil.copy(CODEBOOK, root / "extraction_codebook.yaml")
+  tests/test_readers_on_the_reader.py:517 <module>.test_disagreement_pairs_emits_every_grid_cell_none_filtered | n_fields = len(load_codebook(root / "extraction_codebook.yaml").field_names)
+  tests/test_request_capture.py:235 <module>.test_extraction_pass1_pass2_and_snippet_retry | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_request_capture.py:238 <module>.test_extraction_pass1_pass2_and_snippet_retry | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_request_capture.py:344 <module>._cloud_db | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_request_capture.py:42 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_run_fault_predicate.py:115 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_run_fault_predicate.py:261 <module>.fake_ollama | client = _Client(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_run_fault_predicate.py:50 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_run_interrupts.py:38 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_run_interrupts.py:58 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_run_manifest.py:32 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_run_manifest.py:51 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_run_manifest.py:52 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_run_pipeline_closes.py:26 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_run_pipeline_closes.py:37 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_run_pipeline_starts.py:40 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_run_pipeline_starts.py:88 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_run_scoped_field_names.py:29 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_run_scoped_field_names.py:44 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_run_scoped_field_names.py:45 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_selection_bound.py:42 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_selection_bound.py:63 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_selection_refusals.py:36 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_selection_refusals.py:60 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_text_refusal_at_selection.py:46 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_text_refusal_at_selection.py:79 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_two_axis_state_and_grid.py:245 <module>.test_the_grid_uses_the_live_codebooks_twenty_fields | cb = load_codebook("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_u17_cross_lineage.py:30 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_u17_cross_lineage.py:46 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u17_cross_lineage.py:47 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u18_digest_per_call.py:115 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u18_digest_per_call.py:116 <module>.review | yield db, load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u18_digest_per_call.py:41 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_u18_one_host.py:176 <module>.review | shutil.copy(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u18_one_host.py:43 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_u19_env_recheck.py:130 <module>.test_u19_run_pipeline_closes_aborted_on_a_server_env_change | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u19_env_recheck.py:157 <module>.test_u19_the_body_opened_by_run_pipeline_carries_the_environment | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u19_env_recheck.py:231 <module>.test_u19_the_body_opened_by_the_ft_runner_carries_the_environment | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u19_env_recheck.py:39 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_u19_local_service.py:27 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_u20_loaded_context.py:111 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u20_loaded_context.py:112 <module>.review | yield db, load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u20_loaded_context.py:39 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_u21_no_overlap.py:134 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u21_no_overlap.py:135 <module>.review | yield db, load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_u21_no_overlap.py:37 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_u37_feedback_block.py:35 <module> | LIVE_CODEBOOK = "data/surgical_autonomy/extraction_codebook.yaml"
+  tests/test_u38_snippet_precheck.py:152 <module>.test_u38_both_pins_are_unchanged | cb = load_codebook("data/surgical_autonomy/extraction_codebook.yaml")
+  tests/test_u39_runtime_equals_hash.py:28 <module> | LIVE_CODEBOOK = "data/surgical_autonomy/extraction_codebook.yaml"
+  tests/test_undeclared_call.py:224 <module>.test_6_an_undeclared_call_leaves_the_extraction_loop_as_a_run_fault | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_undeclared_call.py:37 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_undeclared_call.py:95 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_undeclared_call.py:96 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_undeclared_override.py:38 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_undeclared_override.py:53 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_undeclared_override.py:54 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_units_as_source_slices.py:150 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_units_as_source_slices.py:221 <module>.fake_ollama | client = _ElicitedClient(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_units_as_source_slices.py:42 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_unknown_field_name.py:25 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_unknown_field_name.py:40 <module>.review | shutil.copy2(LIVE_CODEBOOK, Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_unknown_field_name.py:41 <module>.review | cb = load_codebook(Path(db.db_path).parent / "extraction_codebook.yaml")
+  tests/test_value_divergence.py:220 <module>.test_attempts_is_the_attempts_spent_and_the_kept_attempt_is_separate | Path(db.db_path).parent / "extraction_codebook.yaml"))
+  tests/test_value_divergence.py:40 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_value_divergence.py:74 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+  tests/test_write_boundary_guard.py:44 <module> | LIVE_CODEBOOK = REPO / "data" / "surgical_autonomy" / "extraction_codebook.yaml"
+  tests/test_write_boundary_guard.py:78 <module>.db | shutil.copy2(LIVE_CODEBOOK, Path(rdb.db_path).parent / "extraction_codebook.yaml")
+
+== counts
+sites attribute read .absence_sentinel_set: 4
+sites attribute read .absence_sentinels: 11
+sites attribute read .raw: 15
+sites call _build_field_block: 3
+sites call _parse: 1
+sites call _validate_fields: 1
+sites call _validate_top_level: 1
+sites call _validate_valid_values: 1
+sites call absence_sentinels: 4
+sites call build_extraction_prompt: 10
+sites call compute_semantic_hash: 1
+sites call enum_values: 1
+sites call is_absence_sentinel: 2
+sites call load_codebook: 32
+sites call load_codebook_beside: 15
+sites call load_codebook_for: 10
+sites call yaml.safe_load / yaml.load: 3
+sites subscript ['absence_sentinels']: 4
+sites subscript ['valid_values']: 2
+sites subscript ['value']: 27
+tests (i) direct names: 277 / 78
+tests (i) from-imports: 75 / 62
+tests (ii) attribute access to a codebook name: 54 / 21
+tests (ii) patch or setattr naming a codebook name: 169 / 18
+tests (iii) a codebook key literal: 43 / 14
+tests (iv) exact compare against semantic_hash or sha256: 25 / 17
+tests (v) codebook YAML text constants: 4 / 3
+tests (v) yaml.dump / yaml.safe_dump (quotes bool-like strings itself): 26 / 13
+tests (vi) a literal naming extraction_codebook.yaml: 196 / 82

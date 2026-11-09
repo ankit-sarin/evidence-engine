@@ -1,0 +1,127 @@
+{
+ "baseline_12ad": {
+  "class_1": 94,
+  "class_2": 56,
+  "class_3": 134,
+  "rows": 284,
+  "without_class": 0
+ },
+ "baseline_json_sha256": "3c733cd1ec3a72c34d286745aec92bc719a9134444da11000a0c1dc97aa9ce21",
+ "by_package_and_class": {
+  "whole_list": {
+   "P1": {
+    "class_1": 25,
+    "class_2": 25,
+    "class_3": 12,
+    "rows": 62
+   },
+   "P2": {
+    "class_1": 12,
+    "class_2": 7,
+    "class_3": 1,
+    "rows": 20
+   },
+   "P3": {
+    "class_1": 10,
+    "class_2": 2,
+    "class_3": 2,
+    "rows": 14
+   },
+   "P4": {
+    "class_1": 24,
+    "class_2": 10,
+    "class_3": 0,
+    "rows": 34
+   },
+   "P5": {
+    "class_1": 15,
+    "class_2": 8,
+    "class_3": 0,
+    "rows": 23
+   },
+   "P6": {
+    "class_1": 8,
+    "class_2": 3,
+    "class_3": 1,
+    "rows": 12
+   },
+   "P7": {
+    "class_1": 0,
+    "class_2": 1,
+    "class_3": 120,
+    "rows": 121
+   }
+  }
+ },
+ "class_moves": [],
+ "closed_this_session_still_counted": [
+  "C49",
+  "INT-i12-31",
+  "C56"
+ ],
+ "expected": {
+  "P1": {
+   "class_1": 25,
+   "class_2": 25,
+   "class_3": 12,
+   "rows": 62
+  },
+  "P6_rows": 12,
+  "P7_rows": 121,
+  "class_1": 94,
+  "class_2": 56,
+  "class_3": 136,
+  "dated_done": 31,
+  "dated_units": 38,
+  "fix_units": 35,
+  "rows": 286,
+  "rows_opened": [
+   "INT-ae12-1",
+   "INT-ae12-2"
+  ],
+  "without_class": 0
+ },
+ "expected_holds": true,
+ "fix_units": 35,
+ "fix_units_dated_lines": {
+  "done": 31,
+  "units": 38
+ },
+ "fix_units_literal_12w": {
+  "done": 19,
+  "units": 37
+ },
+ "now": {
+  "class_1": 94,
+  "class_2": 56,
+  "class_3": 136,
+  "rows": 286,
+  "without_class": 0
+ },
+ "r510_session_12ae": {
+  "class_moves": 0,
+  "rows_in": 2,
+  "rows_in_ids": [
+   "INT-ae12-1",
+   "INT-ae12-2"
+  ],
+  "rows_out": 0
+ },
+ "rows_opened": {
+  "count": 2,
+  "rows": [
+   {
+    "class": "3",
+    "id": "INT-ae12-1",
+    "package": "P7",
+    "ruling": "R785(f)"
+   },
+   {
+    "class": "3",
+    "id": "INT-ae12-2",
+    "package": "P7",
+    "ruling": "R792(g)"
+   }
+  ]
+ }
+}

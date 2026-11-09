@@ -1,0 +1,20 @@
+# git diff --stat 6cb4ab6 HEAD -- engine tests scripts analysis review_specs, at 2026-11-09T23:10:31Z, HEAD df3e7214cc421a627add3271bbd049da2fafb757
+ engine/agents/ft_screener.py              |   1 +
+ engine/agents/screener.py                 |   4 +--
+ engine/cloud/anthropic_extractor.py       |   5 ++++
+ engine/cloud/base.py                      |  13 +++++++++
+ engine/cloud/openai_extractor.py          |   5 ++++
+ engine/core/codebook.py                   |  26 ++++++++++++++++++
+ engine/parsers/pdf_parser.py              |  17 ++++++++++--
+ engine/utils/ollama_preflight.py          |  10 ++++++-
+ engine/validators/distribution_monitor.py |  11 ++++++++
+ tests/test_cloud_extraction.py            |  49 +++++++++++++---------------------
+ tests/test_entry_points_take_the_lock.py  |   4 +--
+ tests/test_ollama_preflight.py            |   1 +
+ tests/test_screener.py                    |   2 ++
+ tests/test_u24_preflight_spec.py          | 111 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/test_u25_codebook_scalars.py        |  53 ++++++++++++++++++++++++++++++++++++
+ tests/test_u26_parse_run_faults.py        | 199 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/test_u27_cloud_run_faults.py        | 220 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/test_u28_cloud_gate_and_boundary.py | 160 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 18 files changed, 854 insertions(+), 37 deletions(-)

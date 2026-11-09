@@ -1,0 +1,21 @@
+-- lines
+12:collecting ... collected 3513 items / 17 deselected / 3496 selected
+6106:==== 3495 passed, 17 deselected, 1 xfailed, 2 warnings in 922.59s (0:15:22) ====
+6108:pytest exit code: 0
+last line: pytest exit code: 0
+durations: 2582 lines, 269795 B
+-- journal ollama 09:00–09:25
+-- No entries --
+-- warnings
+3511:=============================== warnings summary ===============================
+3513:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+3517:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+-- the HEAD it ran on (read at 12ae-CLOSE): log Run line; reflog: HEAD@ last move before the run, and the first after it
+Run: 2026-11-09 09:00:01 UTC
+4a4c850 HEAD@{2026-11-09 06:43:45 +0000}: commit: docs(plan): 12ae-U25B item 0 — R788 as Block 186; INT-i12-31 widened by note; the brief file
+next move: 168199a HEAD@{2026-11-09 16:22:13 +0000}: commit: fix(U25): unquoted YAML booleans, nulls and numbers refused at codebook load (INT-i12-31)
+so the 2026-11-09 09:00:01 UTC run read 4a4c850's tree; its engine tree equals 1f6bc16's (U24 with its class-(c) fix; git diff --stat 1f6bc16 4a4c850 on engine tests scripts analysis review_specs empty: True)
+-- lock
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock
+-- compared with the gate of that tree: 12ae_U24B/gate_u24b/ (U24's gate of record, R787(a)): 'collected 3513 items / 17 deselected / 3496 selected', '3495 passed, 17 deselected, 1 xfailed, 2 warnings', its collected_ids.txt (3496 ids). No expected-nightly file was written for that tree; 12ad_close/expected_nightly_20261102.md governed only while the tree stayed 9ae1fde's (R749(b), R795(e))
+-- match: collection True; summary True; exit-last True; durations True; journal-empty True; lock True; ids True; head True

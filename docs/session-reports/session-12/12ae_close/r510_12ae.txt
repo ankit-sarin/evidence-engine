@@ -1,0 +1,5 @@
+# R510 for session 12ae: six-cell INT- rows at 6cb4ab6 (the 12ad closeout) and at df3e721 (12ae-CLOSE item 0)
+6cb4ab6: 210; df3e721: 212; rows in 2 ['INT-ae12-1', 'INT-ae12-2']; rows out 0 []
+no class or package move: True [] (leading digit of the Class cell and first package of the Owning-package cell compared, row by row)
+C49 (section C) and INT-i12-31 (an INT- row) CLOSED by their notes at d488573 and 5e38485, C56 (section C) CLOSED by its note at c4e13f6 (R787(b), R789(b), R793(b)); counted until P1 closes (R607(d), R753(d)(ii))
+method: lines starting '| INT-' with six ' | '-separated cells, as 12ad_close/r510_12ad.txt's method line

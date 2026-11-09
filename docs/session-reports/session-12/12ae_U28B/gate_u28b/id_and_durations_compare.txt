@@ -1,0 +1,24 @@
+gate ids 3545 ref 3538
+only-gate: 8; only-ref: 1
+  only-gate tests/test_cloud_extraction.py::TestSonnetEmptyStringNormalization::test_an_empty_value_is_refused_at_the_write_boundary
+  only-gate tests/test_u28_cloud_gate_and_boundary.py::test_a_cloud_run_with_no_claims_is_reported_skipped_not_ok[no_failed_paper]
+  only-gate tests/test_u28_cloud_gate_and_boundary.py::test_a_cloud_run_with_no_claims_is_reported_skipped_not_ok[one_failed_paper]
+  only-gate tests/test_u28_cloud_gate_and_boundary.py::test_an_arm_holding_no_non_null_values_is_reported_skipped[per_field_contract_kept]
+  only-gate tests/test_u28_cloud_gate_and_boundary.py::test_an_arm_holding_no_non_null_values_is_reported_skipped[summary_reports_skipped]
+  only-gate tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[empty_value_with_a_snippet]
+  only-gate tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[sentinel_with_an_empty_snippet]
+  only-gate tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[uncited_non_sentinel]
+  only-ref tests/test_cloud_extraction.py::TestSonnetEmptyStringNormalization::test_empty_string_normalized_to_null
+phases ref 2698 gate 2620
+slower by >10 s: 0
+-- summary line
+==== 3544 passed, 17 deselected, 1 xfailed, 2 warnings in 961.57s (0:16:01) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)

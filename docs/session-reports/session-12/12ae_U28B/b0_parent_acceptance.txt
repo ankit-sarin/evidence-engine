@@ -1,0 +1,27 @@
+b0: tests/test_u28_cloud_gate_and_boundary.py on the parent of U28's engine commit, HEAD 6bfbe36a807abe048119863fb9256d3d236c7a16, engine/ unchanged since 077cb0f (0 diff lines); 2026-11-09T20:38:15Z
+FFF.FF.                                                                  [100%]
+=================================== FAILURES ===================================
+E   AssertionError: {'arm_population': None, 'collapsed': 0, 'collapsed_fields': [], 'extracted_count': 12, ...}
+    assert False is True
+/home/ankitsarin/projects/evidence-engine/tests/test_u28_cloud_gate_and_boundary.py:121: AssertionError: {'arm_population': None, 'collapsed': 0, 'collapsed_fields': [], 'extracted_count': 12, ...}
+E   AssertionError: assert '1 papers fai...(partial run)' == 'only 0 eligi... (minimum 10)'
+      - only 0 eligible papers hold a live claim for arm openai_o4_mini_2025_04_16_high (minimum 10)
+      + 1 papers failed extraction (partial run)
+/home/ankitsarin/projects/evidence-engine/tests/test_u28_cloud_gate_and_boundary.py:122: AssertionError: assert '1 papers fai...(partial run)' == 'only 0 eligi... (minimum 10)'
+E   AssertionError: {'arm_population': None, 'collapsed': 0, 'collapsed_fields': [], 'extracted_count': 12, ...}
+    assert False is True
+/home/ankitsarin/projects/evidence-engine/tests/test_u28_cloud_gate_and_boundary.py:139: AssertionError: {'arm_population': None, 'collapsed': 0, 'collapsed_fields': [], 'extracted_count': 12, ...}
+E   Failed: DID NOT RAISE <class 'engine.core.citation_guard.UncitedValueError'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u28_cloud_gate_and_boundary.py:157: Failed: DID NOT RAISE <class 'engine.core.citation_guard.UncitedValueError'>
+E   Failed: DID NOT RAISE <class 'engine.core.citation_guard.UncitedValueError'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u28_cloud_gate_and_boundary.py:157: Failed: DID NOT RAISE <class 'engine.core.citation_guard.UncitedValueError'>
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_u28_cloud_gate_and_boundary.py::test_an_arm_holding_no_non_null_values_is_reported_skipped[per_field_contract_kept]
+PASSED tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[sentinel_with_an_empty_snippet]
+FAILED tests/test_u28_cloud_gate_and_boundary.py::test_a_cloud_run_with_no_claims_is_reported_skipped_not_ok[no_failed_paper]
+FAILED tests/test_u28_cloud_gate_and_boundary.py::test_a_cloud_run_with_no_claims_is_reported_skipped_not_ok[one_failed_paper]
+FAILED tests/test_u28_cloud_gate_and_boundary.py::test_an_arm_holding_no_non_null_values_is_reported_skipped[summary_reports_skipped]
+FAILED tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[uncited_non_sentinel]
+FAILED tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[empty_value_with_a_snippet]
+5 failed, 2 passed in 5.64s

@@ -1,0 +1,44 @@
+
+=== handler 8 (openai_extractor.py:179, retry loop) — fault at the recorder, under a run (run_arm)
+  sqlite3.OperationalError                     run_fault=True  | propagated: no | sends 6 | sleeps [2, 4, 2, 4] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+  KeyError (unclassified)                      run_fault=False | propagated: no | sends 6 | sleeps [2, 4, 2, 4] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+--- the same, outside a run (extractor.run, run_id None)
+  sqlite3.OperationalError                     run_fault=True  | propagated: no | sends 2 | sleeps [] | stats {'extracted': 2, 'failed': 0} | cloud_extractions 2 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None)]
+  KeyError (unclassified)                      run_fault=False | propagated: no | sends 2 | sleeps [] | stats {'extracted': 2, 'failed': 0} | cloud_extractions 2 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None)]
+
+=== handler 9 (anthropic_extractor.py:205, retry loop) — fault at the recorder, under a run (run_arm)
+  sqlite3.OperationalError                     run_fault=True  | propagated: no | sends 6 | sleeps [2, 4, 2, 4] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+  KeyError (unclassified)                      run_fault=False | propagated: no | sends 6 | sleeps [2, 4, 2, 4] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+--- the same, outside a run (extractor.run, run_id None)
+  sqlite3.OperationalError                     run_fault=True  | propagated: no | sends 2 | sleeps [] | stats {'extracted': 2, 'failed': 0} | cloud_extractions 2 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None)]
+  KeyError (unclassified)                      run_fault=False | propagated: no | sends 2 | sleeps [] | stats {'extracted': 2, 'failed': 0} | cloud_extractions 2 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None)]
+
+=== handler 10 (openai_extractor.py:209, store_result) — fault at the store, under a run (run_arm)
+  sqlite3.OperationalError                     run_fault=True  | propagated: no | sends 2 | sleeps [] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 2 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+  KeyError (unclassified)                      run_fault=False | propagated: no | sends 2 | sleeps [] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 2 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+--- the same, outside a run (extractor.run, run_id None)
+  sqlite3.OperationalError                     run_fault=True  | propagated: no | sends 2 | sleeps [] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None)]
+  KeyError (unclassified)                      run_fault=False | propagated: no | sends 2 | sleeps [] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None)]
+
+=== handler 11 (anthropic_extractor.py:237, store_result) — fault at the store, under a run (run_arm)
+  sqlite3.OperationalError                     run_fault=True  | propagated: no | sends 2 | sleeps [] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 2 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+  KeyError (unclassified)                      run_fault=False | propagated: no | sends 2 | sleeps [] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 2 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+--- the same, outside a run (extractor.run, run_id None)
+  sqlite3.OperationalError                     run_fault=True  | propagated: no | sends 2 | sleeps [] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None)]
+  KeyError (unclassified)                      run_fault=False | propagated: no | sends 2 | sleeps [] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None)]
+
+=== the provider raising, openai transport (handler 8), under a run
+  openai.APIConnectionError                    run_fault=False | propagated: no | sends 6 | sleeps [2, 4, 2, 4] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+  ConnectionError (bare)                       run_fault=True  | propagated: no | sends 6 | sleeps [2, 4, 2, 4] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+
+=== the provider raising, anthropic transport (handler 9), under a run
+  anthropic.APIConnectionError                 run_fault=False | propagated: no | sends 6 | sleeps [2, 4, 2, 4] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+  ConnectionError (bare)                       run_fault=True  | propagated: no | sends 6 | sleeps [2, 4, 2, 4] | stats {'extracted': 0, 'failed': 2} | cloud_extractions 0 of 2 papers | run_calls 0 | paper events (non-screening) 0 | manifest [(None, None), ('completed', None)]
+
+=== the fakes' call record
+constructors: 20, every one with the placeholder key and no other argument: True; kinds: ['anthropic.Anthropic', 'openai.OpenAI']
+fake creates (the would-be provider calls, answered in-process): 72; by provider: {'openai': 36, 'anthropic': 36}
+outbound requests attempted: httpx send 0, socket connect 0
+
+=== the Ollama journal for the probe window (2026-11-09 19:05:00 – 2026-11-09 19:05:14)
+-- No entries --

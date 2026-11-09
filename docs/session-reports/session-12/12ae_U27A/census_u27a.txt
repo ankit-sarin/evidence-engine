@@ -1,0 +1,389 @@
+== the static closures
+modules in the run7 closure: 91; in the run_cloud_extraction closure: 61
+engine/cloud modules in the run7 closure: engine/cloud/base.py, engine/cloud/schema.py
+
+== every except handler under engine/cloud/
+  engine/cloud/anthropic_extractor.py:80 <module>.AnthropicExtractor.extract_paper | catches json.JSONDecodeError | raises in body: ['(none)'] | except json.JSONDecodeError:
+  engine/cloud/anthropic_extractor.py:161 <module>.AnthropicExtractor.run | catches FileNotFoundError | raises in body: ['(none)'] | except FileNotFoundError as exc:
+  engine/cloud/anthropic_extractor.py:173 <module>.AnthropicExtractor.run | catches IncompleteExtractionError | raises in body: ['(none)'] | except IncompleteExtractionError as exc:
+  engine/cloud/anthropic_extractor.py:179 <module>.AnthropicExtractor.run | catches anthropic.AuthenticationError | raises in body: ['raise'] | except anthropic.AuthenticationError as exc:
+  engine/cloud/anthropic_extractor.py:184 <module>.AnthropicExtractor.run | catches anthropic.RateLimitError | raises in body: ['(none)'] | except anthropic.RateLimitError as exc:
+  engine/cloud/anthropic_extractor.py:205 <module>.AnthropicExtractor.run | catches Exception | raises in body: ['(none)'] | except Exception as exc:
+  engine/cloud/anthropic_extractor.py:237 <module>.AnthropicExtractor.run | catches Exception | raises in body: ['(none)'] | except Exception as exc:
+  engine/cloud/base.py:179 <module>.CloudExtractorBase.load_parsed_text | catches NoParsedText | raises in body: ['raise FileNotFoundError(str(exc)) from exc'] | except NoParsedText as exc:
+  engine/cloud/base.py:204 <module>.CloudExtractorBase.parse_response_to_spans | catches json.JSONDecodeError | raises in body: ['(none)'] | except json.JSONDecodeError:
+  engine/cloud/base.py:232 <module>.CloudExtractorBase.parse_response_to_spans | catches json.JSONDecodeError | raises in body: ['(none)'] | except json.JSONDecodeError:
+  engine/cloud/base.py:308 <module>.CloudExtractorBase.parse_response_to_spans | catches Exception | raises in body: ['(none)'] | except Exception as exc:
+  engine/cloud/base.py:401 <module>.CloudExtractorBase.store_result | catches Exception | raises in body: ['raise'] | except Exception:
+  engine/cloud/openai_extractor.py:76 <module>.OpenAIExtractor.extract_paper | catches json.JSONDecodeError | raises in body: ['(none)'] | except json.JSONDecodeError:
+  engine/cloud/openai_extractor.py:138 <module>.OpenAIExtractor.run | catches FileNotFoundError | raises in body: ['(none)'] | except FileNotFoundError as exc:
+  engine/cloud/openai_extractor.py:150 <module>.OpenAIExtractor.run | catches IncompleteExtractionError | raises in body: ['(none)'] | except IncompleteExtractionError as exc:
+  engine/cloud/openai_extractor.py:157 <module>.OpenAIExtractor.run | catches openai.AuthenticationError | raises in body: ['raise'] | except openai.AuthenticationError as exc:
+  engine/cloud/openai_extractor.py:162 <module>.OpenAIExtractor.run | catches openai.RateLimitError | raises in body: ['(none)'] | except openai.RateLimitError as exc:
+  engine/cloud/openai_extractor.py:179 <module>.OpenAIExtractor.run | catches Exception | raises in body: ['(none)'] | except Exception as exc:
+  engine/cloud/openai_extractor.py:209 <module>.OpenAIExtractor.run | catches Exception | raises in body: ['(none)'] | except Exception as exc:
+
+== callers (engine, scripts, analysis)
+
+-- call extract_with_completeness: 2
+  [cloud/engine] engine/cloud/anthropic_extractor.py:171 <module>.AnthropicExtractor.run | result = self.extract_with_completeness(pid, parsed_text)
+  [cloud/engine] engine/cloud/openai_extractor.py:148 <module>.OpenAIExtractor.run | result = self.extract_with_completeness(pid, parsed_text)
+
+-- call run: 1
+  [cloud/scripts] scripts/run_cloud_extraction.py:120 <module>.run_arm | extractor.run(max_papers=max_papers, max_cost_usd=max_cost)
+
+-- call run_arm: 1
+  [cloud/scripts] scripts/run_cloud_extraction.py:211 <module>.main | run_arm(arm, db_path, spec_path, args.max_papers, args.max_cost)
+
+-- call send: 2
+  [cloud/engine] engine/cloud/anthropic_extractor.py:54 <module>.AnthropicExtractor.extract_paper | response = self.send(paper_id, prompt)
+  [cloud/engine] engine/cloud/openai_extractor.py:51 <module>.OpenAIExtractor.extract_paper | response = self.send(paper_id, prompt)
+
+-- call store_result: 2
+  [cloud/engine] engine/cloud/anthropic_extractor.py:224 <module>.AnthropicExtractor.run | self.store_result(
+  [cloud/engine] engine/cloud/openai_extractor.py:196 <module>.OpenAIExtractor.run | self.store_result(
+
+-- name OpenAIExtractor/AnthropicExtractor outside engine/cloud: 1
+  [cloud/scripts] scripts/run_cloud_extraction.py:39 <module> | EXTRACTORS = {"openai": OpenAIExtractor, "anthropic": AnthropicExtractor}
+
+== tests
+
+-- (i) direct names: 40 hits / 8 files
+   by file: test_cloud_extraction.py 31, test_parsed_text_resolver.py 2, test_request_capture.py 2, conftest.py 1, test_completeness_guard.py 1, test_corpus_authority.py 1, test_effective_config.py 1, test_run_manifest.py 1
+  tests/conftest.py:441 <module>.block_ollama_calls | monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", send)
+  tests/test_cloud_extraction.py:1024 <module>.TestOpenAIRateLimitBackoff.test_429_uses_retry_after_header | extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:1069 <module>.TestSpecDrivenConfig.test_openai_reads_from_spec | extractor = OpenAIExtractor(test_db, self._custom_spec(tmp_path, mutate), api_key="k")
+  tests/test_cloud_extraction.py:1084 <module>.TestSpecDrivenConfig.test_anthropic_reads_from_spec | extractor = AnthropicExtractor(test_db, self._custom_spec(tmp_path, mutate), api_key="k")
+  tests/test_cloud_extraction.py:1096 <module>.TestSpecDrivenConfig.test_no_default_price | OpenAIExtractor(test_db, path, api_key="k")
+  tests/test_cloud_extraction.py:1107 <module>.TestSpecDrivenConfig.test_no_default_arm | OpenAIExtractor(test_db, self._custom_spec(tmp_path, mutate), api_key="k")
+  tests/test_cloud_extraction.py:207 <module>.TestCloudExtractorBase.test_get_pending_papers | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:216 <module>.TestCloudExtractorBase.test_get_pending_excludes_completed | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:241 <module>.TestCloudExtractorBase.test_parse_response_valid_json | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:251 <module>.TestCloudExtractorBase.test_parse_response_malformed_json | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:264 <module>.TestCloudExtractorBase.test_parse_response_bare_list | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:270 <module>.TestCloudExtractorBase.test_parse_response_data_extraction_key | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:278 <module>.TestCloudExtractorBase.test_parse_response_recovers_from_raw | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:285 <module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:316 <module>.TestCloudExtractorBase.test_store_result_atomic | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:354 <module>.TestCloudExtractorBase.test_get_progress | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:393 <module>.TestOpenAIExtractor.test_extract_paper | extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:420 <module>.TestOpenAIExtractor.test_cost_calculation | extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:464 <module>.TestAnthropicExtractor.test_extract_paper | extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:487 <module>.TestAnthropicExtractor.test_reasoning_trace_from_thinking_blocks | extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:508 <module>.TestAnthropicExtractor.test_json_extracted_from_text_blocks | extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:534 <module>.TestAnthropicExtractor.test_cost_calculation | extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:604 <module>.TestSonnetEmptyStringNormalization.test_empty_string_normalized_to_null | extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:653 <module>.TestSonnetEmptyStringNormalization.test_null_converted_to_nr | extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:685 <module>.TestSonnetEmptyStringNormalization.test_nonempty_string_unchanged | extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:732 <module>.TestSonnetRateLimitBackoff.test_429_triggers_30s_plus_backoff | extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:778 <module>.TestSonnetRateLimitBackoff.test_429_uses_retry_after_header | extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:822 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:859 <module>.TestStoreResultCrashProtection.test_distribution_collapse_not_caught | extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_cloud_extraction.py:892 <module>.TestAuthErrorAbort.test_openai_401_aborts_immediately | extractor = OpenAIExtractor(test_db, spec_path, api_key="bad-key")
+  tests/test_cloud_extraction.py:921 <module>.TestAuthErrorAbort.test_anthropic_401_aborts_immediately | extractor = AnthropicExtractor(test_db, spec_path, api_key="bad-key")
+  tests/test_cloud_extraction.py:975 <module>.TestOpenAIRateLimitBackoff.test_429_triggers_30s_plus_backoff | extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+  tests/test_completeness_guard.py:250 <module>._driver | return CloudExtractorBase.extract_with_completeness(fake, 277, "text")
+  tests/test_corpus_authority.py:145 <module>._detached_extractor | ext = object.__new__(CloudExtractorBase)
+  tests/test_effective_config.py:202 <module>.test_no_cloud_extractor_carries_a_class_constant_arm | assert not hasattr(OpenAIExtractor, "ARM") and not hasattr(AnthropicExtractor, "ARM")
+  tests/test_parsed_text_resolver.py:113 <module>.test_cloud_site_hands_on_the_file | got = CloudExtractorBase.load_parsed_text(SimpleNamespace(_conn=db._conn), 7)
+  tests/test_parsed_text_resolver.py:116 <module>.test_cloud_site_hands_on_the_file | CloudExtractorBase.load_parsed_text(SimpleNamespace(_conn=db._conn), 8)
+  tests/test_request_capture.py:364 <module>.test_openai_request_as_sent | ex = OpenAIExtractor(_cloud_db(tmp_path), str(REPO / "review_specs" / "surgical_autonomy.yaml"),
+  tests/test_request_capture.py:391 <module>.test_anthropic_request_as_sent | ex = AnthropicExtractor(_cloud_db(tmp_path),
+  tests/test_run_manifest.py:388 <module>.test_a_cloud_call_records_the_hash_of_its_complete_payload | ex = OpenAIExtractor(db.db_path, str(SPEC_PATH), api_key="k", arm_name=arm)
+
+-- (i) from-imports of engine.cloud.*: 20 hits / 12 files
+   by file: test_cloud_extraction.py 4, test_codebook_provenance.py 2, test_database.py 2, test_effective_config.py 2, test_request_capture.py 2, test_run_manifest.py 2, analysis/paper1/test_judge_cli.py 1, analysis/paper1/test_judge_loader.py 1, test_arm_pinned_at_extract.py 1, test_completeness_guard.py 1, test_corpus_authority.py 1, test_parsed_text_resolver.py 1
+  tests/analysis/paper1/test_judge_cli.py:22 <module> | from engine.cloud.schema import init_cloud_tables
+  tests/analysis/paper1/test_judge_loader.py:21 <module> | from engine.cloud.schema import init_cloud_tables
+  tests/test_arm_pinned_at_extract.py:232 <module>.test_a_cloud_arm_and_a_named_arm_still_pin_at_open | from engine.cloud.base import PAYLOAD_DESCRIPTION
+  tests/test_cloud_extraction.py:15 <module> | from engine.cloud.schema import init_cloud_tables
+  tests/test_cloud_extraction.py:16 <module> | from engine.cloud.base import CloudExtractorBase
+  tests/test_cloud_extraction.py:17 <module> | from engine.cloud.openai_extractor import OpenAIExtractor
+  tests/test_cloud_extraction.py:18 <module> | from engine.cloud.anthropic_extractor import AnthropicExtractor
+  tests/test_codebook_provenance.py:178 <module>.test_cloud_tables_carry_the_columns_when_created_fresh | from engine.cloud.schema import init_cloud_tables
+  tests/test_codebook_provenance.py:196 <module>.test_cloud_tables_gain_the_columns_when_they_predate_them | from engine.cloud.schema import init_cloud_tables
+  tests/test_completeness_guard.py:248 <module>._driver | from engine.cloud.base import CloudExtractorBase
+  tests/test_corpus_authority.py:143 <module>._detached_extractor | from engine.cloud.base import CloudExtractorBase
+  tests/test_database.py:414 <module>.test_cloud_null_confidence_raises_integrity_error | from engine.cloud.schema import init_cloud_tables
+  tests/test_database.py:443 <module>.test_cloud_null_tier_raises_integrity_error | from engine.cloud.schema import init_cloud_tables
+  tests/test_effective_config.py:200 <module>.test_no_cloud_extractor_carries_a_class_constant_arm | from engine.cloud.anthropic_extractor import AnthropicExtractor
+  tests/test_effective_config.py:201 <module>.test_no_cloud_extractor_carries_a_class_constant_arm | from engine.cloud.openai_extractor import OpenAIExtractor
+  tests/test_parsed_text_resolver.py:111 <module>.test_cloud_site_hands_on_the_file | from engine.cloud.base import CloudExtractorBase
+  tests/test_request_capture.py:351 <module>.test_openai_request_as_sent | from engine.cloud.openai_extractor import OpenAIExtractor
+  tests/test_request_capture.py:379 <module>.test_anthropic_request_as_sent | from engine.cloud.anthropic_extractor import AnthropicExtractor
+  tests/test_run_manifest.py:329 <module>.test_an_enabled_cloud_run_records_its_arms_and_payload_description | from engine.cloud.base import PAYLOAD_DESCRIPTION
+  tests/test_run_manifest.py:375 <module>.test_a_cloud_call_records_the_hash_of_its_complete_payload | from engine.cloud.openai_extractor import OpenAIExtractor
+
+-- (ii) attribute access to a cloud name: 45 hits / 7 files
+   by file: test_cloud_extraction.py 34, test_run_manifest.py 4, test_corpus_authority.py 3, conftest.py 1, test_codebook_review_at_open.py 1, test_completeness_guard.py 1, test_failed_close_reason.py 1
+  tests/conftest.py:409 <module>.block_ollama_calls | real_send = requests.adapters.HTTPAdapter.send
+  tests/test_cloud_extraction.py:1025 <module>.TestOpenAIRateLimitBackoff.test_429_uses_retry_after_header | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:208 <module>.TestCloudExtractorBase.test_get_pending_papers | pending = base.get_pending_papers("openai_o3_mini_high")
+  tests/test_cloud_extraction.py:217 <module>.TestCloudExtractorBase.test_get_pending_excludes_completed | pending_before = base.get_pending_papers("openai_o3_mini_high")
+  tests/test_cloud_extraction.py:222 <module>.TestCloudExtractorBase.test_get_pending_excludes_completed | base.store_result(
+  tests/test_cloud_extraction.py:235 <module>.TestCloudExtractorBase.test_get_pending_excludes_completed | pending_after = base.get_pending_papers("openai_o3_mini_high")
+  tests/test_cloud_extraction.py:242 <module>.TestCloudExtractorBase.test_parse_response_valid_json | spans = base.parse_response_to_spans(SAMPLE_RESPONSE)
+  tests/test_cloud_extraction.py:254 <module>.TestCloudExtractorBase.test_parse_response_malformed_json | spans = base.parse_response_to_spans("not json at all")
+  tests/test_cloud_extraction.py:258 <module>.TestCloudExtractorBase.test_parse_response_malformed_json | spans = base.parse_response_to_spans({"study_type": "RCT"})
+  tests/test_cloud_extraction.py:265 <module>.TestCloudExtractorBase.test_parse_response_bare_list | spans = base.parse_response_to_spans(SAMPLE_FIELDS)
+  tests/test_cloud_extraction.py:271 <module>.TestCloudExtractorBase.test_parse_response_data_extraction_key | spans = base.parse_response_to_spans({"data_extraction": SAMPLE_FIELDS})
+  tests/test_cloud_extraction.py:280 <module>.TestCloudExtractorBase.test_parse_response_recovers_from_raw | spans = base.parse_response_to_spans({"fields": [], "raw": raw_json})
+  tests/test_cloud_extraction.py:286 <module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans | pending = base.get_pending_papers("test_arm")
+  tests/test_cloud_extraction.py:293 <module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans | base.store_result(
+  tests/test_cloud_extraction.py:317 <module>.TestCloudExtractorBase.test_store_result_atomic | pending = base.get_pending_papers("test_arm")
+  tests/test_cloud_extraction.py:323 <module>.TestCloudExtractorBase.test_store_result_atomic | ext_id = base.store_result(
+  tests/test_cloud_extraction.py:396 <module>.TestOpenAIExtractor.test_extract_paper | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:421 <module>.TestOpenAIExtractor.test_cost_calculation | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:465 <module>.TestAnthropicExtractor.test_extract_paper | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:488 <module>.TestAnthropicExtractor.test_reasoning_trace_from_thinking_blocks | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:509 <module>.TestAnthropicExtractor.test_json_extracted_from_text_blocks | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:535 <module>.TestAnthropicExtractor.test_cost_calculation | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:605 <module>.TestSonnetEmptyStringNormalization.test_empty_string_normalized_to_null | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:616 <module>.TestSonnetEmptyStringNormalization.test_empty_string_normalized_to_null | ext_id = extractor.store_result(
+  tests/test_cloud_extraction.py:654 <module>.TestSonnetEmptyStringNormalization.test_null_converted_to_nr | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:686 <module>.TestSonnetEmptyStringNormalization.test_nonempty_string_unchanged | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:733 <module>.TestSonnetRateLimitBackoff.test_429_triggers_30s_plus_backoff | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:779 <module>.TestSonnetRateLimitBackoff.test_429_uses_retry_after_header | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:823 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:834 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | original_store = extractor.store_result
+  tests/test_cloud_extraction.py:843 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | extractor.store_result = _failing_store
+  tests/test_cloud_extraction.py:865 <module>.TestStoreResultCrashProtection.test_distribution_collapse_not_caught | extractor.run_distribution_check = _raise_collapse
+  tests/test_cloud_extraction.py:893 <module>.TestAuthErrorAbort.test_openai_401_aborts_immediately | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:922 <module>.TestAuthErrorAbort.test_anthropic_401_aborts_immediately | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_cloud_extraction.py:976 <module>.TestOpenAIRateLimitBackoff.test_429_triggers_30s_plus_backoff | pending = extractor.get_pending_papers(extractor.arm_name)
+  tests/test_codebook_review_at_open.py:156 <module>.test_run_cloud_extractions_run_arm_refuses_before_any_row_or_send | cli.run_arm(arm, review.db_path, str(spec_path), None, None)
+  tests/test_completeness_guard.py:250 <module>._driver | return CloudExtractorBase.extract_with_completeness(fake, 277, "text")
+  tests/test_corpus_authority.py:165 <module>.test_cloud_get_pending_papers_now_reads_the_eligibility_axis | got = [r["paper_id"] for r in ext.get_pending_papers("openai")]
+  tests/test_corpus_authority.py:227 <module>.test_cloud_pending_excludes_papers_already_extracted_for_the_arm | pending = {r["paper_id"] for r in ext.get_pending_papers("openai")}
+  tests/test_corpus_authority.py:229 <module>.test_cloud_pending_excludes_papers_already_extracted_for_the_arm | assert {r["paper_id"] for r in ext.get_pending_papers("anthropic")} >= {1000, 1001}
+  tests/test_failed_close_reason.py:119 <module>.cloud.run | cli.run_arm(arm, str(db_path), str(spec_path), None, None)
+  tests/test_run_manifest.py:346 <module>.test_the_cli_refuses_an_arm_outside_enabled_arms_before_any_request | cli.select_cloud_arms(spec, [_cloud_arm(spec, "openai")])
+  tests/test_run_manifest.py:358 <module>.test_no_arm_and_nothing_enabled_proceeds_and_sends_nothing | assert cli.select_cloud_arms(spec, None) == []
+  tests/test_run_manifest.py:370 <module>.test_an_enabled_arm_named_on_the_cli_is_selected | assert cli.select_cloud_arms(_enabled(spec, arm), [arm]) == [arm]
+  tests/test_run_manifest.py:390 <module>.test_a_cloud_call_records_the_hash_of_its_complete_payload | ex.send(None, "prompt text")
+
+-- (ii) patch or setattr on engine.cloud / a cloud extractor: 49 hits / 17 files
+   by file: test_cloud_extraction.py 25, test_restart_ollama_guard.py 5, test_request_capture.py 4, test_ft_bridge.py 2, conftest.py 1, test_citation_record.py 1, test_cut_over.py 1, test_extraction_run_link.py 1, test_pin_records.py 1, test_run_fault_predicate.py 1, test_run_interrupts.py 1, test_run_manifest.py 1, test_run_pipeline_starts.py 1, test_selection_bound.py 1, test_u18_digest_per_call.py 1, test_undeclared_call.py 1, test_units_as_source_slices.py 1
+  tests/conftest.py:441 <module>.block_ollama_calls | monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", send)
+  tests/test_citation_record.py:153 <module>.fake_ollama | monkeypatch.setattr(httpx.Client, "send", _refuse)
+  tests/test_cloud_extraction.py:1060 <module>.TestSpecDrivenConfig.test_openai_reads_from_spec | @patch("engine.cloud.openai_extractor.openai.OpenAI")
+  tests/test_cloud_extraction.py:1075 <module>.TestSpecDrivenConfig.test_anthropic_reads_from_spec | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:1090 <module>.TestSpecDrivenConfig.test_no_default_price | @patch("engine.cloud.openai_extractor.openai.OpenAI")
+  tests/test_cloud_extraction.py:1098 <module>.TestSpecDrivenConfig.test_no_default_arm | @patch("engine.cloud.openai_extractor.openai.OpenAI")
+  tests/test_cloud_extraction.py:385 <module>.TestOpenAIExtractor.test_extract_paper | @patch("engine.cloud.openai_extractor.openai.OpenAI")
+  tests/test_cloud_extraction.py:412 <module>.TestOpenAIExtractor.test_cost_calculation | @patch("engine.cloud.openai_extractor.openai.OpenAI")
+  tests/test_cloud_extraction.py:456 <module>.TestAnthropicExtractor.test_extract_paper | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:479 <module>.TestAnthropicExtractor.test_reasoning_trace_from_thinking_blocks | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:500 <module>.TestAnthropicExtractor.test_json_extracted_from_text_blocks | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:522 <module>.TestAnthropicExtractor.test_cost_calculation | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:588 <module>.TestSonnetEmptyStringNormalization.test_empty_string_normalized_to_null | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:636 <module>.TestSonnetEmptyStringNormalization.test_null_converted_to_nr | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:674 <module>.TestSonnetEmptyStringNormalization.test_nonempty_string_unchanged | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:704 <module>.TestSonnetRateLimitBackoff.test_429_triggers_30s_plus_backoff | @patch("engine.cloud.anthropic_extractor.time.sleep")
+  tests/test_cloud_extraction.py:705 <module>.TestSonnetRateLimitBackoff.test_429_triggers_30s_plus_backoff | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:752 <module>.TestSonnetRateLimitBackoff.test_429_uses_retry_after_header | @patch("engine.cloud.anthropic_extractor.time.sleep")
+  tests/test_cloud_extraction.py:753 <module>.TestSonnetRateLimitBackoff.test_429_uses_retry_after_header | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:802 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | @patch("engine.cloud.openai_extractor.openai.OpenAI")
+  tests/test_cloud_extraction.py:851 <module>.TestStoreResultCrashProtection.test_distribution_collapse_not_caught | @patch("engine.cloud.openai_extractor.openai.OpenAI")
+  tests/test_cloud_extraction.py:880 <module>.TestAuthErrorAbort.test_openai_401_aborts_immediately | @patch("engine.cloud.openai_extractor.openai.OpenAI")
+  tests/test_cloud_extraction.py:909 <module>.TestAuthErrorAbort.test_anthropic_401_aborts_immediately | @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
+  tests/test_cloud_extraction.py:943 <module>.TestOpenAIRateLimitBackoff.test_429_triggers_30s_plus_backoff | @patch("engine.cloud.openai_extractor.time.sleep")
+  tests/test_cloud_extraction.py:944 <module>.TestOpenAIRateLimitBackoff.test_429_triggers_30s_plus_backoff | @patch("engine.cloud.openai_extractor.openai.OpenAI")
+  tests/test_cloud_extraction.py:993 <module>.TestOpenAIRateLimitBackoff.test_429_uses_retry_after_header | @patch("engine.cloud.openai_extractor.time.sleep")
+  tests/test_cloud_extraction.py:994 <module>.TestOpenAIRateLimitBackoff.test_429_uses_retry_after_header | @patch("engine.cloud.openai_extractor.openai.OpenAI")
+  tests/test_cut_over.py:104 <module>.fake_models | monkeypatch.setattr(httpx.Client, "send",
+  tests/test_extraction_run_link.py:95 <module>.fake_ollama | monkeypatch.setattr(httpx.Client, "send", _refuse)
+  tests/test_ft_bridge.py:83 <module>._no_real_http | monkeypatch.setattr(httpx.Client, "send", _refuse)
+  tests/test_ft_bridge.py:84 <module>._no_real_http | monkeypatch.setattr(httpx.AsyncClient, "send", _refuse)
+  tests/test_pin_records.py:178 <module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry | monkeypatch.setattr(httpx.Client, "send",
+  tests/test_request_capture.py:139 <module>._no_real_http | monkeypatch.setattr(httpx.Client, "send", _refuse)
+  tests/test_request_capture.py:140 <module>._no_real_http | monkeypatch.setattr(httpx.AsyncClient, "send", _refuse)
+  tests/test_request_capture.py:362 <module>.test_openai_request_as_sent | with patch("engine.cloud.openai_extractor.openai.OpenAI") as cls:
+  tests/test_request_capture.py:389 <module>.test_anthropic_request_as_sent | with patch("engine.cloud.anthropic_extractor.anthropic.Anthropic") as cls:
+  tests/test_restart_ollama_guard.py:180 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out | monkeypatch.setattr(extractor, "load_codebook_beside", lambda p: SimpleNamespace(semantic_hash="h" * 64))
+  tests/test_restart_ollama_guard.py:181 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out | monkeypatch.setattr(extractor, "stage_config", lambda stage, spec: SimpleNamespace(model="fake-model"))
+  tests/test_restart_ollama_guard.py:182 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out | monkeypatch.setattr(extractor, "read_parsed_text", lambda ref: "paper text")
+  tests/test_restart_ollama_guard.py:183 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out | monkeypatch.setattr(extractor, "extract_paper_with_completeness",
+  tests/test_restart_ollama_guard.py:185 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out | monkeypatch.setattr(extractor, "run_extraction_summary", lambda conn, run_id, selection: {
+  tests/test_run_fault_predicate.py:260 <module>.fake_ollama | monkeypatch.setattr(httpx.Client, "send", _refuse)
+  tests/test_run_interrupts.py:243 <module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it | monkeypatch.setattr(httpx.Client, "send",
+  tests/test_run_manifest.py:386 <module>.test_a_cloud_call_records_the_hash_of_its_complete_payload | with patch("engine.cloud.openai_extractor.openai.OpenAI") as cls:
+  tests/test_run_pipeline_starts.py:84 <module>.review | monkeypatch.setattr(httpx.Client, "send",
+  tests/test_selection_bound.py:117 <module>.fake_models | monkeypatch.setattr(httpx.Client, "send",
+  tests/test_u18_digest_per_call.py:96 <module>.fake | monkeypatch.setattr(httpx.Client, "send",
+  tests/test_undeclared_call.py:78 <module>.fake | monkeypatch.setattr(httpx.Client, "send",
+  tests/test_units_as_source_slices.py:220 <module>.fake_ollama | monkeypatch.setattr(httpx.Client, "send", _refuse)
+
+-- (iii) a stats key or log literal in a cloud test: 2 hits / 1 files
+   by file: test_cloud_extraction.py 2
+  tests/test_cloud_extraction.py:847 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | assert stats["failed"] == 1 | failed
+  tests/test_cloud_extraction.py:848 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | assert stats["extracted"] == 1 | extracted
+
+-- (iv) exact compare on stats['failed'|'extracted']: 45 hits / 19 files
+   by file: test_extractor.py 9, test_cut_over.py 4, test_text_refusal_at_selection.py 4, test_duplicate_on_pass1_attempt_2.py 3, test_floor_and_stored_attempt.py 3, test_parse_failures.py 3, test_cloud_extraction.py 2, test_extraction_run_link.py 2, test_ollama_preflight.py 2, test_selection_bound.py 2, test_u19_env_recheck.py 2, test_write_boundary_guard.py 2, test_citation_record.py 1, test_distribution_check_wiring.py 1, test_restart_ollama_guard.py 1, test_run_fault_predicate.py 1, test_selection.py 1, test_selection_refusals.py 1, test_units_as_source_slices.py 1
+  tests/test_citation_record.py:172 <module>._run | assert stats["extracted"] == 1, stats
+  tests/test_cloud_extraction.py:847 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | assert stats["failed"] == 1
+  tests/test_cloud_extraction.py:848 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | assert stats["extracted"] == 1
+  tests/test_cut_over.py:138 <module>.test_t1_extract_then_audit_under_one_manifest_writes_events_only | assert ext["extracted"] == 3 and aud["papers_audited"] == 3
+  tests/test_cut_over.py:162 <module>.test_t2_a_live_shaped_paper_extracts_and_keeps_its_status | assert stats["extracted"] == 3 and stats["failed"] == 0
+  tests/test_cut_over.py:203 <module>.test_t3_a_success_between_failures_resets_the_count | assert stats["failed"] == 3 and stats["extracted"] == 1
+  tests/test_cut_over.py:250 <module>.test_t4_a14_and_input_fit_neither_count_nor_reset | assert stats["failed"] == 3 and stats["skipped_refused"] == 1
+  tests/test_distribution_check_wiring.py:121 <module>.test_t1_the_nothing_selected_branch_writes_a_skip_row_too | assert out["extracted"] == 0 and out["distribution_check"]["skipped"] is True
+  tests/test_duplicate_on_pass1_attempt_2.py:148 <module>.test_a_duplicate_on_pass1_attempt_2_keeps_both_hashes_and_attempt_1 | assert stats["extracted"] == 1 and stats["failed"] == 0
+  tests/test_duplicate_on_pass1_attempt_2.py:191 <module>.test_with_twelve_good_fields_attempt_1_is_still_kept_and_stored | assert stats["extracted"] == 1
+  tests/test_duplicate_on_pass1_attempt_2.py:202 <module>.test_the_floor_applies_to_the_kept_attempt_1_record_as_to_any_record | assert _claims(db) == {} and stats["failed"] == 1
+  tests/test_extraction_run_link.py:176 <module>.test_t4_every_extractor_call_records_its_paper | assert stats["extracted"] == 1
+  tests/test_extraction_run_link.py:251 <module>.test_t13_a_second_run_under_the_same_input_selects_nothing | assert _run(db, spec, run_id)["extracted"] == 0
+  tests/test_extractor.py:341 <module>.test_staleness_skip | assert stats["extracted"] == 0
+  tests/test_extractor.py:364 <module>.test_run_extraction_no_parsed_text | assert stats["extracted"] == 0
+  tests/test_extractor.py:516 <module>.TestProactiveRestart.test_restart_failure_continues_gracefully | assert stats["extracted"] == 3
+  tests/test_extractor.py:517 <module>.TestProactiveRestart.test_restart_failure_continues_gracefully | assert stats["failed"] == 0
+  tests/test_extractor.py:549 <module>.TestProactiveRestart.test_zero_span_extraction_marks_extract_failed | assert stats["failed"] == 1
+  tests/test_extractor.py:550 <module>.TestProactiveRestart.test_zero_span_extraction_marks_extract_failed | assert stats["extracted"] == 0
+  tests/test_extractor.py:594 <module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues | assert stats["failed"] == 1 and stats["extracted"] == 1
+  tests/test_extractor.py:696 <module>.TestRestartOllamaGraceful.test_restart_failure_continues_extraction | assert stats["extracted"] == 3
+  tests/test_extractor.py:697 <module>.TestRestartOllamaGraceful.test_restart_failure_continues_extraction | assert stats["failed"] == 0
+  tests/test_floor_and_stored_attempt.py:278 <module>.test_a_record_under_the_floor_that_was_not_exhausted_fails_the_same_way | assert stats["extracted"] == 0 and stats["failed"] == 3 and stats["below_floor"] == 3
+  tests/test_floor_and_stored_attempt.py:296 <module>.test_a_record_at_the_floor_is_stored | assert stats["extracted"] == 3 and stats["failed"] == 0 and stats["below_floor"] == 0
+  tests/test_floor_and_stored_attempt.py:309 <module>.test_a_record_of_all_declined_fields_is_stored_and_counted | assert stats["extracted"] == 3 and stats["all_declined"] == 3
+  tests/test_ollama_preflight.py:354 <module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success | assert stats["extracted"] == 0
+  tests/test_ollama_preflight.py:355 <module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success | assert stats["failed"] == 0
+  tests/test_parse_failures.py:171 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | assert stats["failed"] == 2, "the loop continued to the second paper"
+  tests/test_parse_failures.py:203 <module>.test_T3_unclassified_exception_under_a_run_writes_its_own_code | assert stats["failed"] == 1
+  tests/test_parse_failures.py:224 <module>.test_T4_no_run_id_writes_no_event | assert stats["failed"] == 1
+  tests/test_restart_ollama_guard.py:200 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out | assert stats["extracted"] == 4 and stats["failed"] == 0
+  tests/test_run_fault_predicate.py:176 <module>.test_the_complement_is_still_a_paper_outcome | assert stats["failed"] == len(PIDS) and stats["extracted"] == 0
+  tests/test_selection.py:215 <module>.test_t8_extract_stage_with_nothing_selected_reports_and_runs_nothing | assert (out["extracted"], out["skipped_asserted"], out["skipped_refused"]) == (0, 0, 0)
+  tests/test_selection_bound.py:176 <module>.test_T2_a_bound_of_five_selects_the_first_five_and_is_recorded | assert stats["extracted"] == 5
+  tests/test_selection_bound.py:246 <module>.test_T4_a_second_bounded_run_takes_the_next_window | assert stats["extracted"] == 5
+  tests/test_selection_refusals.py:125 <module>.test_every_paper_refused_still_records_every_refusal | assert out["extracted"] == 0 and out["skipped_refused"] == 3
+  tests/test_text_refusal_at_selection.py:191 <module>.test_the_run_summary_names_the_paper_when_other_papers_are_extracted | assert stats["extracted"] == 1 and stats["skipped_asserted"] == 1
+  tests/test_text_refusal_at_selection.py:233 <module>.test_an_empty_selection_returns_the_populated_paths_key_set | assert populated["extracted"] == 1
+  tests/test_text_refusal_at_selection.py:235 <module>.test_an_empty_selection_returns_the_populated_paths_key_set | assert empty["extracted"] == 0
+  tests/test_text_refusal_at_selection.py:96 <module>.db | assert stats["extracted"] == 1
+  tests/test_u19_env_recheck.py:109 <module>.test_the_env_check_runs_again_after_every_restart | assert stats["extracted"] == 4
+  tests/test_u19_env_recheck.py:181 <module>.test_u19_a_skipped_restart_triggers_no_env_check | assert stats["extracted"] == 4
+  tests/test_units_as_source_slices.py:253 <module>.test_an_elicited_run_opens_pins_verifies_and_writes_real_events | assert stats["extracted"] == 1
+  tests/test_write_boundary_guard.py:238 <module>.test_a_stored_record_with_incomplete_fields_is_counted_extracted | assert (stats["extracted"], stats["failed"], stats["stored_incomplete"]) == (1, 0, 1)
+  tests/test_write_boundary_guard.py:263 <module>.test_a_paper_that_fails_is_still_counted_failed | assert (stats["extracted"], stats["failed"], stats["below_floor"]) == (0, 1, 1)
+
+-- (v) seam call extract_with_completeness: 1 hits / 1 files
+   by file: test_completeness_guard.py 1
+  tests/test_completeness_guard.py:250 <module>._driver | return CloudExtractorBase.extract_with_completeness(fake, 277, "text")
+
+-- (v) seam call run: 8 hits / 1 files
+   by file: test_cloud_extraction.py 8
+  tests/test_cloud_extraction.py:1034 <module>.TestOpenAIRateLimitBackoff.test_429_uses_retry_after_header | extractor.run(max_papers=1)
+  tests/test_cloud_extraction.py:743 <module>.TestSonnetRateLimitBackoff.test_429_triggers_30s_plus_backoff | extractor.run(max_papers=1)
+  tests/test_cloud_extraction.py:788 <module>.TestSonnetRateLimitBackoff.test_429_uses_retry_after_header | extractor.run(max_papers=1)
+  tests/test_cloud_extraction.py:845 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | stats = extractor.run(max_papers=2)
+  tests/test_cloud_extraction.py:870 <module>.TestStoreResultCrashProtection.test_distribution_collapse_not_caught | extractor.run(max_papers=0)
+  tests/test_cloud_extraction.py:903 <module>.TestAuthErrorAbort.test_openai_401_aborts_immediately | extractor.run(max_papers=2)
+  tests/test_cloud_extraction.py:932 <module>.TestAuthErrorAbort.test_anthropic_401_aborts_immediately | extractor.run(max_papers=2)
+  tests/test_cloud_extraction.py:985 <module>.TestOpenAIRateLimitBackoff.test_429_triggers_30s_plus_backoff | extractor.run(max_papers=1)
+
+-- (v) seam call run_arm: 2 hits / 2 files
+   by file: test_codebook_review_at_open.py 1, test_failed_close_reason.py 1
+  tests/test_codebook_review_at_open.py:156 <module>.test_run_cloud_extractions_run_arm_refuses_before_any_row_or_send | cli.run_arm(arm, review.db_path, str(spec_path), None, None)
+  tests/test_failed_close_reason.py:119 <module>.cloud.run | cli.run_arm(arm, str(db_path), str(spec_path), None, None)
+
+-- (v) seam call send: 1 hits / 1 files
+   by file: test_run_manifest.py 1
+  tests/test_run_manifest.py:390 <module>.test_a_cloud_call_records_the_hash_of_its_complete_payload | ex.send(None, "prompt text")
+
+-- (v) seam call store_result: 4 hits / 1 files
+   by file: test_cloud_extraction.py 4
+  tests/test_cloud_extraction.py:222 <module>.TestCloudExtractorBase.test_get_pending_excludes_completed | base.store_result(
+  tests/test_cloud_extraction.py:293 <module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans | base.store_result(
+  tests/test_cloud_extraction.py:323 <module>.TestCloudExtractorBase.test_store_result_atomic | ext_id = base.store_result(
+  tests/test_cloud_extraction.py:616 <module>.TestSonnetEmptyStringNormalization.test_empty_string_normalized_to_null | ext_id = extractor.store_result(
+
+-- (vi) a raise of a run-fault class in a cloud/extract test: 1 hits / 1 files
+   by file: test_cloud_extraction.py 1
+  tests/test_cloud_extraction.py:840 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run._failing_store | raise sqlite3.IntegrityError("simulated constraint violation") | sqlite3.IntegrityError('simulated constraint violation')
+
+-- (vii) module pytestmark: 38 hits / 38 files
+   by file: test_arm_pinned_at_extract.py 1, test_audit_paper_id.py 1, test_audit_stage_completion.py 1, test_cloud_extraction.py 1, test_codebook_evidence_modality.py 1, test_codebook_field_class.py 1, test_codebook_review_at_open.py 1, test_completeness_guard.py 1, test_duplicate_on_pass1_attempt_2.py 1, test_effective_config.py 1, test_elicitation_codebook.py 1, test_elicitation_prompts_ruling2.py 1, test_elicitation_sentinel.py 1, test_engine_state.py 1, test_floor_and_stored_attempt.py 1, test_ft_adjudication_import.py 1, test_ft_bridge.py 1, test_import_extraction_entry.py 1, test_import_screening_entry.py 1, test_migration_caller_guard.py 1, test_pass1_contract_text.py 1, test_pin_records.py 1, test_presented_context.py 1, test_request_capture.py 1, test_run_manifest.py 1
+  tests/test_arm_pinned_at_extract.py:39 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_audit_paper_id.py:38 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_audit_stage_completion.py:54 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_cloud_extraction.py:38 <module> | pytestmark = pytest.mark.skipif(
+  tests/test_codebook_evidence_modality.py:33 <module> | pytestmark = pytest.mark.skipif(
+  tests/test_codebook_field_class.py:28 <module> | pytestmark = pytest.mark.skipif(
+  tests/test_codebook_review_at_open.py:40 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_completeness_guard.py:34 <module> | pytestmark = pytest.mark.skipif(not SPEC_PATH.exists(), reason="Spec not available")
+  tests/test_duplicate_on_pass1_attempt_2.py:47 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_effective_config.py:23 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_elicitation_codebook.py:21 <module> | pytestmark = pytest.mark.skipif(
+  tests/test_elicitation_prompts_ruling2.py:40 <module> | pytestmark = pytest.mark.skipif(
+  tests/test_elicitation_sentinel.py:30 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_engine_state.py:27 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_floor_and_stored_attempt.py:59 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_ft_adjudication_import.py:36 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_ft_bridge.py:38 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_import_extraction_entry.py:47 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_import_screening_entry.py:35 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_migration_caller_guard.py:22 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_pass1_contract_text.py:35 <module> | pytestmark = pytest.mark.skipif(
+  tests/test_pin_records.py:37 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_presented_context.py:37 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_request_capture.py:44 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_run_manifest.py:35 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_run_pipeline_starts.py:42 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_run_scoped_field_names.py:31 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_selection_refusals.py:39 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_text_refusal_at_selection.py:52 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_u17_cross_lineage.py:39 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_u18_digest_per_call.py:43 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_u20_loaded_context.py:41 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_u21_no_overlap.py:39 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_undeclared_call.py:39 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_undeclared_override.py:40 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_unknown_field_name.py:27 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_value_divergence.py:47 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+  tests/test_write_boundary_guard.py:50 <module> | pytestmark = pytest.mark.skipif(not LIVE_CODEBOOK.exists(), reason="codebook not available")
+
+-- (vii) skips in tests/test_cloud_extraction.py: 19 hits / 1 files
+   by file: test_cloud_extraction.py 19
+  tests/test_cloud_extraction.py:1028 <module>.TestOpenAIRateLimitBackoff.test_429_uses_retry_after_header | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:289 <module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:320 <module>.TestCloudExtractorBase.test_store_result_atomic | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:38 <module> | pytestmark = pytest.mark.skipif(
+  tests/test_cloud_extraction.py:399 <module>.TestOpenAIExtractor.test_extract_paper | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:424 <module>.TestOpenAIExtractor.test_cost_calculation | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:468 <module>.TestAnthropicExtractor.test_extract_paper | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:491 <module>.TestAnthropicExtractor.test_reasoning_trace_from_thinking_blocks | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:512 <module>.TestAnthropicExtractor.test_json_extracted_from_text_blocks | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:538 <module>.TestAnthropicExtractor.test_cost_calculation | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:608 <module>.TestSonnetEmptyStringNormalization.test_empty_string_normalized_to_null | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:657 <module>.TestSonnetEmptyStringNormalization.test_null_converted_to_nr | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:689 <module>.TestSonnetEmptyStringNormalization.test_nonempty_string_unchanged | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:736 <module>.TestSonnetRateLimitBackoff.test_429_triggers_30s_plus_backoff | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:782 <module>.TestSonnetRateLimitBackoff.test_429_uses_retry_after_header | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:826 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | pytest.skip("Need at least 2 pending papers")
+  tests/test_cloud_extraction.py:896 <module>.TestAuthErrorAbort.test_openai_401_aborts_immediately | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:925 <module>.TestAuthErrorAbort.test_anthropic_401_aborts_immediately | pytest.skip("No pending papers")
+  tests/test_cloud_extraction.py:979 <module>.TestOpenAIRateLimitBackoff.test_429_triggers_30s_plus_backoff | pytest.skip("No pending papers")
+
+== counts
+engine/cloud except handlers: 19
+callers call extract_with_completeness: 2
+callers call run: 1
+callers call run_arm: 1
+callers call send: 2
+callers call store_result: 2
+callers name OpenAIExtractor/AnthropicExtractor outside engine/cloud: 1
+tests (i) direct names: 40 / 8
+tests (i) from-imports of engine.cloud.*: 20 / 12
+tests (ii) attribute access to a cloud name: 45 / 7
+tests (ii) patch or setattr on engine.cloud / a cloud extractor: 49 / 17
+tests (iii) a stats key or log literal in a cloud test: 2 / 1
+tests (iv) exact compare on stats['failed'|'extracted']: 45 / 19
+tests (v) seam call extract_with_completeness: 1 / 1
+tests (v) seam call run: 8 / 1
+tests (v) seam call run_arm: 2 / 2
+tests (v) seam call send: 1 / 1
+tests (v) seam call store_result: 4 / 1
+tests (vi) a raise of a run-fault class in a cloud/extract test: 1 / 1
+tests (vii) module pytestmark: 38 / 38
+tests (vii) skips in tests/test_cloud_extraction.py: 19 / 1

@@ -16107,3 +16107,98 @@ R782(i) — Timing: the closeout runs now. If the clock reaches 06:55 UTC on 202
 | 2026-11-02 | R782(a) — 12ad-U23B-R1 is accepted as reported: the parent acceptance red at the assertion with the identity False; the engine commit 9ae1fde (the leaf engine/core/repo_root.py; the eight engine sites of R781(g); the acceptance test; the nine rewrites; the four approved texts; docs/inventory/), ledger b678589; the gate 3,493 / 1 / 17 on 3,511 / 3,494, only-gate the one new id, 924.56 s inside 835–1020 s beside the idle uvicorn server only, no load; the evidence commit 30a4f4d with the parent acceptance beside it, ledger fd49c5c. Both pins and the audit prompt_hash byte-identical; no request byte moved. U23 is landed; P1's fix units 37, done 26. R782(b) — E-ROOT (N30 inside it) closes on the acceptance test passing in the gate (R514), noted CLOSED at 12ad-CLOSE's item 0 in INT-g12-6's note form, naming 9ae1fde and tests/test_review_paths.py::test_spec_and_data_roots_do_not_follow_the_working_directory (red on the parent 66092a2, b0_parent_acceptance.txt; green in gate_u23b/), counted until P1 closes (R607(d), R753(d)(ii)); the same item 0 writes E-ROOT's dated note on the inventory tool's root (R781(b)), opens INT-ad12-3 and widens INT-ad12-1 (R781(i)), and writes the dated units line (37, done 26). R782(c) — The series on this host state gains 924.56 s: the thirty of R779(b) plus 924.56, thirty-one. The band for 12ae is computed by CC from the last four standard gates on this host state, read from the record (the series' last four members: 926.70, 928.81, 935.67, 924.56), ±10% of their mean, rounded inward as R683(c) rounded, stated as a computation with its proposed figure, each gate's concurrent jobs described from its evidence (R748(b)); it is set by the wrap ruling. The band in force stays 835–1020 s until then. R782(d) — Readings, no row: finding 1 (B2's "ten ids" was the architect's count of edits written as a count of ids; the check took its ids from its arguments and matched no count, R772(c) working as written); finding 2 (B2's grep EXPECTED named lines the pattern cannot reach — the architect's, written from the sites' description rather than from the pattern against the files; the check listed every hit and matched it to the record, so nothing stopped and nothing was adapted; the seventh instance of a value written from a description, no new rule — R772(c) and R777(b) already cover it); finding 3 (the test file's own REPO_ROOT; the attribute read keeps R781(c)); finding 4 (the comment placement); finding 5; finding 6 (the item-0 list, taken into 12ad-CLOSE); finding 7 (answered in (c)). R782(e) — Session 12ad closes now on U23. The 12ad-CLOSE brief follows 12ac-CLOSE's form read from the record: item 0 (R781 and this ruling, by transcribe_ruling.py; the E-ROOT CLOSED note and dated note; INT-ad12-3 in section "L (12ad additions, R780)" and INT-ad12-1's dated note; the dated units line; no standing rule — R781 and this ruling state none, so the id list, the glosses file and STANDING_RULES.md are untouched, asserted by content, R777(b)), the counterpart files in 12ac_close/'s names with 12ad's sources, the closure paragraph, the "Expected values at session-12ae open" block, the lane line written and not applied, the closeout block in the record's element order, the rNNN.txt table r778–r782. R782(f) — No closeout gate: the expected gate values for 12ae are U23's gate (12ad_U23B/gate_u23b/: 3,493 passed / 1 xfailed / 17 deselected, collected 3,511 / selected 3,494, its collected_ids as the reference). The engine tree changed at 9ae1fde, so under R749(b) the closeout writes its own expected nightly file, 12ad_close/expected_nightly_20261102.md, in 12ac_close/expected_nightly_20261101.md's form with U23's counts, and it governs the 2026-11-02 nightly and, while the tree stays unchanged, 2026-11-03's; the 12ac_close file is superseded for 2026-11-02 by this clause, not edited. The 2026-11-02 health job and nightly are read by this closeout if it runs after 10:35 UTC on 11-02, else by 12ae-OPEN (R749(c), R779(a)). R782(g) — The recount script is written at this closeout in R651(a)'s chained form (12ac_close/recount_12ac_close.py as the model, read), extended to read section "L (12ad additions, R780)" as the 12ab table is read (12ad-U23B finding 10), its output the recount of record: 284 rows (94 / 56 / 134) expected — 281 plus INT-ad12-1, INT-ad12-2 and INT-ad12-3, each Class 3 — to be measured; P1 62 (25 / 25 / 12); P6 12; P7 119; fix units 35 / 19 / 37 done 26; R510 for 12ad: rows in 3, rows out 0 (E-ROOT is a section K row, not an INT- row); E-ROOT CLOSED and counted. A count other than these is a stop before the closeout commit, both values reported. R782(h) — The stops, for the closure: listed by CC from the rulings on disk and this brief's item 0 (each stop ruling names its step and its cause), never from this ruling's memory; the architect's and CC's counted apart. The architect reads none this session; the record decides. R782(i) — Timing: the closeout runs now. If the clock reaches 06:55 UTC on 2026-11-02 before the closeout commit, the brief stops after item 0 with its counterpart files held, reports, and resumes at its step 2 after 10:35 UTC under the same brief, reading the 2026-11-02 jobs then against the expected nightly file it writes first (R774(b)'s precedent, 12ac-CLOSE TIMING). | PI, 2026-11-02, during session 12ad, on architect recommendation, on the 12ad-U23B-R1 final report (engine 9ae1fde; evidence 30a4f4d) |
 
 The decision log in this file ends at R782.
+
+**Block 181.** *Transcribed 2026-11-09 (item 0 of the 12ae-OPEN brief), in its own commit with the lane-line copy and the standing-rules regeneration it orders, in the R597(e) form:* ruling R783, made by PI on architect recommendation on 2026-11-02 UTC, during session 12ad, on the 12ad-CLOSE closeout block (`6cb4ab6b64bfdd3e3f499f7b36e697510a60e120`). The 12ae-OPEN brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ad-R783] — wrap ruling: closeout accepted; the band set 837–1021 s; no
+  stop this session; a full hash is proved to exist by git cat-file -e, not by rev-parse --verify
+  (R730(c) amended, a standing rule); lane line approved and applied; close now
+STATUS: PI ruling, 2026-11-02 UTC, session 12ad, on architect recommendation, on the 12ad-CLOSE
+  closeout block (6cb4ab6b64bfdd3e3f499f7b36e697510a60e120). Transcribe as item 0 of 12ae-OPEN by
+  transcribe_ruling.py, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block and report):
+  MEASURED: "HEAD: 6cb4ab6b64bfdd3e3f499f7b36e697510a60e120, parent
+    2f73fd6db2e26ebe26a69c14fd5d36bac957f994; status[], lr[0 0]; one worktree"; "Plan: sha256
+    d105178ab7d7cd8769f287f1bd056c44e75e9026192334aadc4b87e265fd7f14, 2793121 bytes, 16109
+    lines. The last line is The decision log in this file ends at R782."; "git diff --stat 9ae1fde
+    HEAD -- engine tests scripts analysis review_specs is empty; since 6095e6c, U23's 11 files";
+    "Ledger commit f79fb8a8ce8a5c1f2abd9ff62763406f882f8013, parent b074ac4, message "ledger: rows
+    through 2026-11-02T05:37:10Z""; "primer.md is untouched; its last commit is c2a218a"; "At this
+    block (05:38:26Z): IDENTICAL"; lane line "sha256
+    7e5e9bbd592629b598f9115a7e712d95b48f9a0593ae0423af8e89dc8e35ae22, 6626 bytes, 10 lines",
+    "five − lines == primer.md 41–45: True, taken from primer.md itself"; "inputs (the last four
+    standard gates on this host state): 926.70, 928.81, 935.67, 924.56 … mean 928.935 s; x0.9
+    836.0415; x1.1 1021.8285 … rounded inward: 837–1021 s"; "284 rows, 94 / 56 / 134, 0 unclassed;
+    P1 62 (25 / 25 / 12); 35 fix units; 37 with 26 done; P6 12; P7 119"; "R510 for the session:
+    rows in 3, rows out 0, no class move. CLOSED and still counted: E-ROOT"; "23 MATCH / 0
+    MISMATCH"; the five ruling files as tabled, each "architect's hash, equal"; "Archive command, as
+    it would be printed: ~/projects/dgx-infra/bin/session-archive
+    fac6237e-2e84-4f70-be67-8a9b043adb0a"; "The diff is one group, 2a3,40: 38 lines added, none
+    removed"; "rev-parse --verify on a hash that does not exist:
+    0123456789012345678901234567890123456789 rc 0"; "cat-file -e on it rc 128"; "Contradictions
+    and stops: None in this brief. I1–I6 held."
+  READ (CC's): findings 1–9 of that report; "The hashes this session rests on are safe: each was
+    also matched against HEAD or git log, and the lane line's two against git cat-file -e"; "the
+    form that works is git cat-file -e <hash>^{commit}"; "the record inserts (12ac's check: "the
+    dated paragraph inserted after the 12ab dated line")"; "Every noted section L row carries its
+    note in the Evidence cell".
+  INFERRED: none.
+
+R783(a) — The 12ad-CLOSE closeout block is accepted as printed: item 0 2f73fd6 (Blocks 179–180 by
+  transcribe_ruling.py; the E-ROOT CLOSED note and dated note; INT-ad12-3; INT-ad12-1's note; the
+  dated units line; the three rules files untouched by content), the closeout 6cb4ab6 (21 files;
+  the 20 counterpart files; the closure and the 12ae block), ledgers b074ac4 and f79fb8a with
+  trailers. The closure and the 12ae block are not pasted into the report (finding, the report's
+  departure): the committed text is the record, read from the clone; CC's reason stands.
+R783(b) — The band for 12ae is 837–1021 s: ±10% of 928.935 s, the mean of the last four standard
+  gates on this host state (926.70, 928.81, 935.67, 924.56), rounded inward as R683(c) rounded,
+  each described as band_computation.txt describes it. The series stands at the thirty-one of
+  R782(c). A 12ae gate outside the band is reported with its concurrent jobs, not adapted to.
+R783(c) — The stops, counted by the PI: none — no brief of 12ad stopped; every record condition
+  passed at every check (12ad-OPEN, 12ad-U23A, 12ad-U23B, 12ad-U23B-R1, 12ad-CLOSE). The
+  architect's two miscounts in the build RESUME (R782(d)) and the inventory-tool clause withdrawn
+  at R781(b) were caught by checks that read their arguments and by the Phase B reads, as R772(c),
+  R777(b) and the two-phase form intend. The session's measured point for the estimate: one CC
+  session (03:49 → the wrap), one fix unit from Phase A to gate, one row closed, three opened, no
+  stop.
+R783(d) — Finding 1. Rule from here: a full hash is proved to exist by git cat-file -e
+  <hash>^{commit} in the repository it belongs to; git rev-parse --verify on a 40-character hash
+  proves its form only and is not the existence check. R730(c)'s "resolved with git rev-parse
+  --verify" reads as this from here; every brief's step-0 hash check uses the cat-file form, and a
+  hash that does not exist is a stop as before. The hashes of 12ad stand: each was also matched
+  against HEAD or git log. This clause is a standing rule: "A R783(d)" joins the list at 12ae-OPEN's
+  item 0 (R754(c)(iii)), the file regenerated there.
+R783(e) — Readings, no row: finding 2 (the dated units line is inserted after the previous one;
+  the record's form; "replaced" was the brief's word); finding 3 (a section L row's note goes in
+  its Evidence cell; R716(b)'s target; "text cell" was the brief's); finding 4 (the beside wording
+  and R781's sentence form as composed); finding 5 (the closure's deferral to R782(d)'s count
+  stands as committed; the count is a reading); finding 6; finding 7 (a spacing difference in the
+  dpkg line, the version equal); finding 8 (the rules-file header names the plan at 10a64eb; the
+  12ae-OPEN regeneration under (d) refreshes it; the id list's comment stays for the tools change,
+  R766(d)); finding 9 (the recount's evidence is the second run, by path; a checkout aborted on the
+  untracked directory is a reading on the scratch-clone method).
+R783(f) — The lane line (sha256 7e5e9bbd592629b598f9115a7e712d95b48f9a0593ae0423af8e89dc8e35ae22,
+  6,626 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45
+  of ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+" lines,
+  applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger"
+  form, trailers, the row's exact timestamp, foreign rows named by hash); push; level.
+R783(g) — 12ae-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a
+  child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with
+  transcribe_ruling.py as the next block, copies lane_line_12ad.txt into
+  docs/session-reports/session-12/12ad_close/, adds "A R783(d)" to the list with its gloss and
+  regenerates the file (the diff classified, R766(b)). It runs session_open_check.py and the steps
+  R747(b) keeps explicit, against the "Expected values at session-12ae open" block, the recount by
+  12ad_close/recount_12ad_close.py; reads the 2026-11-02 and, if run, 2026-11-03 jobs against
+  12ad_close/expected_nightly_20261102.md (R782(f)); the gate by the wrapper, against 837–1021 s.
+  Then U24's Phase A.
+R783(h) — Session 12ad closes now. After R783(f) has landed, run /wrap. Report the lane-line
+  commit's hash and parent, the wrap's verdict, and the archive command as run with its result.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-02 | R783(a) — The 12ad-CLOSE closeout block is accepted as printed: item 0 2f73fd6 (Blocks 179–180 by transcribe_ruling.py; the E-ROOT CLOSED note and dated note; INT-ad12-3; INT-ad12-1's note; the dated units line; the three rules files untouched by content), the closeout 6cb4ab6 (21 files; the 20 counterpart files; the closure and the 12ae block), ledgers b074ac4 and f79fb8a with trailers. The closure and the 12ae block are not pasted into the report (finding, the report's departure): the committed text is the record, read from the clone; CC's reason stands. R783(b) — The band for 12ae is 837–1021 s: ±10% of 928.935 s, the mean of the last four standard gates on this host state (926.70, 928.81, 935.67, 924.56), rounded inward as R683(c) rounded, each described as band_computation.txt describes it. The series stands at the thirty-one of R782(c). A 12ae gate outside the band is reported with its concurrent jobs, not adapted to. R783(c) — The stops, counted by the PI: none — no brief of 12ad stopped; every record condition passed at every check (12ad-OPEN, 12ad-U23A, 12ad-U23B, 12ad-U23B-R1, 12ad-CLOSE). The architect's two miscounts in the build RESUME (R782(d)) and the inventory-tool clause withdrawn at R781(b) were caught by checks that read their arguments and by the Phase B reads, as R772(c), R777(b) and the two-phase form intend. The session's measured point for the estimate: one CC session (03:49 → the wrap), one fix unit from Phase A to gate, one row closed, three opened, no stop. R783(d) — Finding 1. Rule from here: a full hash is proved to exist by git cat-file -e <hash>^{commit} in the repository it belongs to; git rev-parse --verify on a 40-character hash proves its form only and is not the existence check. R730(c)'s "resolved with git rev-parse --verify" reads as this from here; every brief's step-0 hash check uses the cat-file form, and a hash that does not exist is a stop as before. The hashes of 12ad stand: each was also matched against HEAD or git log. This clause is a standing rule: "A R783(d)" joins the list at 12ae-OPEN's item 0 (R754(c)(iii)), the file regenerated there. R783(e) — Readings, no row: finding 2 (the dated units line is inserted after the previous one; the record's form; "replaced" was the brief's word); finding 3 (a section L row's note goes in its Evidence cell; R716(b)'s target; "text cell" was the brief's); finding 4 (the beside wording and R781's sentence form as composed); finding 5 (the closure's deferral to R782(d)'s count stands as committed; the count is a reading); finding 6; finding 7 (a spacing difference in the dpkg line, the version equal); finding 8 (the rules-file header names the plan at 10a64eb; the 12ae-OPEN regeneration under (d) refreshes it; the id list's comment stays for the tools change, R766(d)); finding 9 (the recount's evidence is the second run, by path; a checkout aborted on the untracked directory is a reading on the scratch-clone method). R783(f) — The lane line (sha256 7e5e9bbd592629b598f9115a7e712d95b48f9a0593ae0423af8e89dc8e35ae22, 6,626 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows named by hash); push; level. R783(g) — 12ae-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with transcribe_ruling.py as the next block, copies lane_line_12ad.txt into docs/session-reports/session-12/12ad_close/, adds "A R783(d)" to the list with its gloss and regenerates the file (the diff classified, R766(b)). It runs session_open_check.py and the steps R747(b) keeps explicit, against the "Expected values at session-12ae open" block, the recount by 12ad_close/recount_12ad_close.py; reads the 2026-11-02 and, if run, 2026-11-03 jobs against 12ad_close/expected_nightly_20261102.md (R782(f)); the gate by the wrapper, against 837–1021 s. Then U24's Phase A. R783(h) — Session 12ad closes now. After R783(f) has landed, run /wrap. Report the lane-line commit's hash and parent, the wrap's verdict, and the archive command as run with its result. | PI, 2026-11-02, during session 12ad, on architect recommendation, on the 12ad-CLOSE closeout block (6cb4ab6) |
+
+The decision log in this file ends at R783.

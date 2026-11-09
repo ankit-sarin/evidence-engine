@@ -89,6 +89,7 @@ A R763(c)
 A R766(b)
 A R772(c)
 A R780(b)
+A R783(d)
 
 # Tier B — engine governance, pending the adoption ruling
 B R25

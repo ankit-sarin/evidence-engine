@@ -1,0 +1,35 @@
+=== registration (I3)
+  before open_run, check_distribution('openai_o4_mini_2025_04_16_high'): UnknownArm: "arm 'openai_o4_mini_2025_04_16_high' is not in this review's registry — registered arms are ()."
+  after open_run (run 2): arms row ('openai_o4_mini_2025_04_16_high', 'model', 'pinned', 2)
+  CloudExtractorBase constructed: PROVIDER='', arm_name='openai_o4_mini_2025_04_16_high', SDK constructions so far 0
+
+=== claim (2) N44 — the registered arm holding zero claims
+  check_distribution: 11 fields; statuses ['OK']; total_non_null all 0: True; a 'skipped' key in any result: False
+  run_post_extraction_check(extracted_count=12): returned: skipped=False skip_reason=None ok=11 low_variance=0 collapsed=0 study_type=[('study_type', 'OK', 0)]
+  run_post_extraction_check(extracted_count=5):  returned: skipped=True skip_reason='only 5 papers extracted in this run (minimum 10)' ok=0 low_variance=0 collapsed=0 study_type=[]
+  arm_population: 0
+
+=== claim (1) THE GATE — twelve papers stored through store_result, study_type identical
+  stored: {'cloud_extractions': 12, 'cloud_evidence_spans': 240, 'field_events': 0}
+  base.run_distribution_check({'extracted': 12, 'failed': 0}): returned: skipped=False ok=11 collapsed=0 study_type=[('OK', 0)]
+  run_post_extraction_check(extracted_count=12): returned: skipped=False skip_reason=None ok=11 low_variance=0 collapsed=0 study_type=[('study_type', 'OK', 0)]
+  run_post_extraction_check(extracted_count=5):  returned: skipped=True skip_reason='only 5 papers extracted in this run (minimum 10)' ok=0 low_variance=0 collapsed=0 study_type=[]
+  run_post_extraction_check(extracted_count=12, failed_count=1): 1 papers failed extraction (partial run)
+  arm_population: 0
+
+--- contrast: the same twelve values as claim events on a registered model arm
+  stored: {'cloud_extractions': 0, 'cloud_evidence_spans': 0, 'field_events': 12}
+  run_post_extraction_check(extracted_count=12): RAISED DistributionCollapseError: Distribution collapse detected in 1 field(s): study_type
+
+--- an unregistered arm name
+  check_distribution('no_such_arm'): UnknownArm
+
+=== claim (3) THE BOUNDARY — a non-sentinel value with no source_snippet
+  parse_response_to_spans: 20 spans; surgical_domain -> value='Colorectal' source_snippet=''; task_monitor (null) -> value='NR' source_snippet=''
+  store_result: INSERTED (cloud_extractions id 13); read back surgical_domain ('Colorectal', ''); task_monitor ('NR', '')
+
+=== the record
+SDK client constructions (openai.OpenAI / anthropic.Anthropic): 0
+
+=== the Ollama journal for the probe window (2026-11-09 20:04:51 – 2026-11-09 20:04:52)
+-- No entries --

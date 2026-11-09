@@ -1,0 +1,340 @@
+== the static closures
+modules in the run7 closure: 91; in the run_cloud_extraction closure: 61
+engine/validators/distribution_monitor.py in run7: True; in cloud: True
+
+== callers and writers (engine, scripts, analysis)
+
+-- an INSERT into the cloud tables: 5
+  [run7/cloud/engine] engine/cloud/base.py:364 <module>.CloudExtractorBase.store_result | """INSERT INTO cloud_extractions
+  [run7/cloud/engine] engine/cloud/base.py:383 <module>.CloudExtractorBase.store_result | """INSERT INTO cloud_evidence_spans
+  [run7/cloud/engine] engine/cloud/schema.py:72 <module>.init_cloud_tables | conn.executescript("""
+  [scripts] scripts/backfill_cloud_spans.py:76 <module>.main | """INSERT INTO cloud_evidence_spans
+  [scripts] scripts/reparse_cloud_spans.py:75 <module>.main | """INSERT INTO cloud_evidence_spans
+
+-- call DistributionCollapseError: 1
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:345 <module>.assert_no_collapse | raise DistributionCollapseError(failures)
+
+-- call _query_all_fields: 2
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:123 <module>._query_values | return _query_all_fields(conn, arm, non_value, codebook=codebook).get(
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:209 <module>.check_distribution | by_field = _query_all_fields(conn, arm, non_value, codebook=codebook)
+
+-- call arm_population: 1
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:428 <module>.run_post_extraction_check | population = arm_population(db_path, arm)
+
+-- call assert_no_collapse: 2
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:499 <module>.run_post_extraction_check | assert_no_collapse(results, strict=strict)
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:540 <module>.main | assert_no_collapse(results, strict=args.strict)
+
+-- call check_distribution: 2
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:456 <module>.run_post_extraction_check | results = check_distribution(
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:536 <module>.main | results = check_distribution(db_path, args.review, args.arm, codebook_path)
+
+-- call parse_response_to_spans: 4
+  [cloud/engine] engine/cloud/anthropic_extractor.py:106 <module>.AnthropicExtractor.extract_paper | spans = self.parse_response_to_spans(extracted_data)
+  [cloud/engine] engine/cloud/openai_extractor.py:96 <module>.OpenAIExtractor.extract_paper | spans = self.parse_response_to_spans(extracted_data)
+  [scripts] scripts/backfill_cloud_spans.py:66 <module>.main | spans = CloudExtractorBase.parse_response_to_spans(base, data)
+  [scripts] scripts/reparse_cloud_spans.py:70 <module>.main | spans = extractor.parse_response_to_spans(raw_data)
+
+-- call run_distribution_check: 2
+  [cloud/engine] engine/cloud/anthropic_extractor.py:261 <module>.AnthropicExtractor.run | monitor = self.run_distribution_check(stats)
+  [cloud/engine] engine/cloud/openai_extractor.py:233 <module>.OpenAIExtractor.run | monitor = self.run_distribution_check(stats)
+
+-- call run_post_extraction_check: 2
+  [run7/cloud/engine] engine/cloud/base.py:510 <module>.CloudExtractorBase.run_distribution_check | return run_post_extraction_check(
+  [run7/scripts] scripts/run_pipeline.py:425 <module>._distribution_check | summary = run_post_extraction_check(
+
+-- call store_result: 2
+  [cloud/engine] engine/cloud/anthropic_extractor.py:227 <module>.AnthropicExtractor.run | self.store_result(
+  [cloud/engine] engine/cloud/openai_extractor.py:199 <module>.OpenAIExtractor.run | self.store_result(
+
+== tests
+
+-- (i) direct names: 48 hits / 3 files
+   by file: test_distribution_monitor.py 44, test_cloud_extraction.py 2, test_readers_on_the_reader.py 2
+  tests/test_cloud_extraction.py:863 <module>.TestStoreResultCrashProtection.test_distribution_collapse_not_caught._raise_collapse | raise DistributionCollapseError([{"field_name": "study_type"}])
+  tests/test_cloud_extraction.py:869 <module>.TestStoreResultCrashProtection.test_distribution_collapse_not_caught | with pytest.raises(DistributionCollapseError):
+  tests/test_distribution_monitor.py:209 <module>.TestCheckCollapsed.test_all_same_value_collapsed | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:221 <module>.TestCheckCollapsed.test_all_same_below_threshold_not_collapsed | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:228 <module>.TestCheckCollapsed.test_collapsed_entropy_zero | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:243 <module>.TestCheckLowVariance.test_85pct_dominant_low_variance | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:253 <module>.TestCheckLowVariance.test_84pct_not_low_variance | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:262 <module>.TestCheckLowVariance.test_low_variance_below_count_threshold | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:282 <module>.TestCheckOK.test_healthy_spread | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:298 <module>.TestCheckEdgeCases.test_all_nr_excluded | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:308 <module>.TestCheckEdgeCases.test_mixed_null_and_values | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:324 <module>.TestCheckEdgeCases.test_an_arm_with_no_values_is_all_zero_and_OK | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:337 <module>.TestCheckEdgeCases.test_an_unregistered_arm_raises_rather_than_reading_as_empty | check_distribution(db_path, "test", "locl", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:344 <module>.TestCheckEdgeCases.test_only_categorical_fields_checked | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:359 <module>.TestArmRouting.test_cloud_arm | results = check_distribution(db_path, "test", "openai_o4_mini_high", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:388 <module>.TestArmRouting.test_human_arm_resolves_and_reads_out_of_scope_under_R13 | results = check_distribution(db_path, "test", "human_A", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:407 <module>.TestArmRouting.test_cloud_arm_filters_by_arm_name | results = check_distribution(db_path, "test", "openai_o4_mini_high", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:423 <module>.TestAssertNoCollapse.test_no_issues_passes | assert_no_collapse(results)  # should not raise
+  tests/test_distribution_monitor.py:430 <module>.TestAssertNoCollapse.test_collapsed_raises | with pytest.raises(DistributionCollapseError, match="study_type"):
+  tests/test_distribution_monitor.py:431 <module>.TestAssertNoCollapse.test_collapsed_raises | assert_no_collapse(results)
+  tests/test_distribution_monitor.py:438 <module>.TestAssertNoCollapse.test_low_variance_warns_but_passes | assert_no_collapse(results)  # should not raise
+  tests/test_distribution_monitor.py:445 <module>.TestAssertNoCollapse.test_strict_mode_fails_on_low_variance | with pytest.raises(DistributionCollapseError):
+  tests/test_distribution_monitor.py:446 <module>.TestAssertNoCollapse.test_strict_mode_fails_on_low_variance | assert_no_collapse(results, strict=True)
+  tests/test_distribution_monitor.py:455 <module>.TestAssertNoCollapse.test_error_contains_collapsed_fields | with pytest.raises(DistributionCollapseError) as exc_info:
+  tests/test_distribution_monitor.py:456 <module>.TestAssertNoCollapse.test_error_contains_collapsed_fields | assert_no_collapse(results)
+  tests/test_distribution_monitor.py:503 <module>.TestRunPostExtractionCheck.test_called_on_completion | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:520 <module>.TestRunPostExtractionCheck.test_skipped_on_partial_run_too_few | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:534 <module>.TestRunPostExtractionCheck.test_skipped_on_partial_run_failures | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:550 <module>.TestRunPostExtractionCheck.test_collapsed_raises_distribution_collapse_error | with pytest.raises(DistributionCollapseError, match="study_type"):
+  tests/test_distribution_monitor.py:551 <module>.TestRunPostExtractionCheck.test_collapsed_raises_distribution_collapse_error | run_post_extraction_check(
+  tests/test_distribution_monitor.py:568 <module>.TestRunPostExtractionCheck.test_low_variance_does_not_raise_by_default | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:584 <module>.TestRunPostExtractionCheck.test_strict_mode_raises_on_low_variance | with pytest.raises(DistributionCollapseError):
+  tests/test_distribution_monitor.py:585 <module>.TestRunPostExtractionCheck.test_strict_mode_raises_on_low_variance | run_post_extraction_check(
+  tests/test_distribution_monitor.py:606 <module>.TestRunPostExtractionCheck.test_results_in_summary | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:629 <module>.TestRunPostExtractionCheckLocalFlags.test_t3_raise_on_collapse_true_still_raises_the_cloud_contract | with pytest.raises(DistributionCollapseError):
+  tests/test_distribution_monitor.py:630 <module>.TestRunPostExtractionCheckLocalFlags.test_t3_raise_on_collapse_true_still_raises_the_cloud_contract | run_post_extraction_check(
+  tests/test_distribution_monitor.py:638 <module>.TestRunPostExtractionCheckLocalFlags.test_t3_raise_on_collapse_false_returns_the_collapse | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:650 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_arm_population_runs_despite_failures_and_a_small_run | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:663 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_the_run_population_rule_skips_the_same_inputs | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:674 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_skip_on_failures_still_vetoes_under_the_arm_rule | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:701 <module>.TestConfigurableThresholds.test_custom_low_variance_threshold_triggers | results_default = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:706 <module>.TestConfigurableThresholds.test_custom_low_variance_threshold_triggers | results_strict = check_distribution(
+  tests/test_distribution_monitor.py:719 <module>.TestConfigurableThresholds.test_custom_collapsed_min_papers | results_default = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:723 <module>.TestConfigurableThresholds.test_custom_collapsed_min_papers | results_custom = check_distribution(
+  tests/test_distribution_monitor.py:737 <module>.TestConfigurableThresholds.test_custom_low_variance_min_papers | results_default = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:741 <module>.TestConfigurableThresholds.test_custom_low_variance_min_papers | results_custom = check_distribution(
+  tests/test_readers_on_the_reader.py:122 <module>.test_query_values_raises_on_an_unregistered_arm | _query_values(db._conn, "study_type", "human_B")
+  tests/test_readers_on_the_reader.py:143 <module>.test_query_values_and_load_arm_agree_on_a_human_arm | assert _query_values(db._conn, "study_type", "human_A") == []
+
+-- (i) from-imports: 13 hits / 9 files
+   by file: test_non_value_tokens_downstream.py 3, test_cloud_extraction.py 2, test_readers_on_the_reader.py 2, test_arm_pinned_at_extract.py 1, test_completeness_guard.py 1, test_corpus_authority.py 1, test_distribution_monitor.py 1, test_parsed_text_resolver.py 1, test_run_manifest.py 1
+  tests/test_arm_pinned_at_extract.py:232 <module>.test_a_cloud_arm_and_a_named_arm_still_pin_at_open | from engine.cloud.base import PAYLOAD_DESCRIPTION
+  tests/test_cloud_extraction.py:16 <module> | from engine.cloud.base import CloudExtractorBase
+  tests/test_cloud_extraction.py:854 <module>.TestStoreResultCrashProtection.test_distribution_collapse_not_caught | from engine.validators.distribution_monitor import DistributionCollapseError
+  tests/test_completeness_guard.py:248 <module>._driver | from engine.cloud.base import CloudExtractorBase
+  tests/test_corpus_authority.py:143 <module>._detached_extractor | from engine.cloud.base import CloudExtractorBase
+  tests/test_distribution_monitor.py:10 <module> | from engine.validators.distribution_monitor import (
+  tests/test_non_value_tokens_downstream.py:190 <module>.test_site4_terminal_states_are_not_categorical_observations | from engine.validators.distribution_monitor import _is_null
+  tests/test_non_value_tokens_downstream.py:197 <module>.test_site4_real_values_and_absences_are_unaffected | from engine.validators.distribution_monitor import _is_null
+  tests/test_non_value_tokens_downstream.py:207 <module>.test_site4_manufactured_variance_would_have_masked_a_collapse | from engine.validators.distribution_monitor import _is_null, shannon_entropy
+  tests/test_parsed_text_resolver.py:111 <module>.test_cloud_site_hands_on_the_file | from engine.cloud.base import CloudExtractorBase
+  tests/test_readers_on_the_reader.py:118 <module>.test_query_values_raises_on_an_unregistered_arm | from engine.validators.distribution_monitor import _query_values
+  tests/test_readers_on_the_reader.py:134 <module>.test_query_values_and_load_arm_agree_on_a_human_arm | from engine.validators.distribution_monitor import _query_values
+  tests/test_run_manifest.py:329 <module>.test_an_enabled_cloud_run_records_its_arms_and_payload_description | from engine.cloud.base import PAYLOAD_DESCRIPTION
+
+-- (ii) attribute access to a name: 16 hits / 3 files
+   by file: test_cloud_extraction.py 13, test_write_boundary_guard.py 2, test_distribution_check_wiring.py 1
+  tests/test_cloud_extraction.py:222 <module>.TestCloudExtractorBase.test_get_pending_excludes_completed | base.store_result(
+  tests/test_cloud_extraction.py:242 <module>.TestCloudExtractorBase.test_parse_response_valid_json | spans = base.parse_response_to_spans(SAMPLE_RESPONSE)
+  tests/test_cloud_extraction.py:254 <module>.TestCloudExtractorBase.test_parse_response_malformed_json | spans = base.parse_response_to_spans("not json at all")
+  tests/test_cloud_extraction.py:258 <module>.TestCloudExtractorBase.test_parse_response_malformed_json | spans = base.parse_response_to_spans({"study_type": "RCT"})
+  tests/test_cloud_extraction.py:265 <module>.TestCloudExtractorBase.test_parse_response_bare_list | spans = base.parse_response_to_spans(SAMPLE_FIELDS)
+  tests/test_cloud_extraction.py:271 <module>.TestCloudExtractorBase.test_parse_response_data_extraction_key | spans = base.parse_response_to_spans({"data_extraction": SAMPLE_FIELDS})
+  tests/test_cloud_extraction.py:280 <module>.TestCloudExtractorBase.test_parse_response_recovers_from_raw | spans = base.parse_response_to_spans({"fields": [], "raw": raw_json})
+  tests/test_cloud_extraction.py:293 <module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans | base.store_result(
+  tests/test_cloud_extraction.py:323 <module>.TestCloudExtractorBase.test_store_result_atomic | ext_id = base.store_result(
+  tests/test_cloud_extraction.py:616 <module>.TestSonnetEmptyStringNormalization.test_empty_string_normalized_to_null | ext_id = extractor.store_result(
+  tests/test_cloud_extraction.py:834 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | original_store = extractor.store_result
+  tests/test_cloud_extraction.py:843 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run | extractor.store_result = _failing_store
+  tests/test_cloud_extraction.py:865 <module>.TestStoreResultCrashProtection.test_distribution_collapse_not_caught | extractor.run_distribution_check = _raise_collapse
+  tests/test_distribution_check_wiring.py:60 <module>._spy | real = rp.run_post_extraction_check
+  tests/test_write_boundary_guard.py:228 <module>.test_a_stored_record_with_incomplete_fields_is_counted_extracted | wraps=rp.run_post_extraction_check) as check, \
+  tests/test_write_boundary_guard.py:261 <module>.test_a_paper_that_fails_is_still_counted_failed | wraps=rp.run_post_extraction_check) as check:
+
+-- (ii) patch or setattr on the monitor / base / a name: 3 hits / 2 files
+   by file: test_write_boundary_guard.py 2, test_distribution_check_wiring.py 1
+  tests/test_distribution_check_wiring.py:65 <module>._spy | monkeypatch.setattr(rp, "run_post_extraction_check", spy)
+  tests/test_write_boundary_guard.py:227 <module>.test_a_stored_record_with_incomplete_fields_is_counted_extracted | patch.object(rp, "run_post_extraction_check",
+  tests/test_write_boundary_guard.py:260 <module>.test_a_paper_that_fails_is_still_counted_failed | patch.object(rp, "run_post_extraction_check",
+
+-- (iii) a status literal or summary key in a monitor test: 45 hits / 2 files
+   by file: test_distribution_monitor.py 38, test_distribution_check_wiring.py 7
+  tests/test_distribution_check_wiring.py:104 <module>.test_t1_the_stage_calls_the_check_with_the_runs_arm_and_counts_and_skips_under_ten | p["strict"], p["skipped"]) == (spec.extraction_models.arm, 3, 2, 3, False, True) | skipped
+  tests/test_distribution_check_wiring.py:105 <module>.test_t1_the_stage_calls_the_check_with_the_runs_arm_and_counts_and_skips_under_ten | assert "only 3 eligible papers" in p["skip_reason"] | skip_reason
+  tests/test_distribution_check_wiring.py:121 <module>.test_t1_the_nothing_selected_branch_writes_a_skip_row_too | assert out["extracted"] == 0 and out["distribution_check"]["skipped"] is True | skipped
+  tests/test_distribution_check_wiring.py:124 <module>.test_t1_the_nothing_selected_branch_writes_a_skip_row_too | assert len(rows) == 1 and rows[0]["payload"]["skipped"] is True | skipped
+  tests/test_distribution_check_wiring.py:143 <module>.test_t2_a_collapse_is_recorded_and_logged_and_the_stage_returns | assert check["skipped"] is False and check["arm_population"] == 12 | skipped
+  tests/test_distribution_check_wiring.py:149 <module>.test_t2_a_collapse_is_recorded_and_logged_and_the_stage_returns | assert any(r["field_name"] == "study_type" and r["status"] == "COLLAPSED" | COLLAPSED
+  tests/test_distribution_check_wiring.py:96 <module>.test_t1_the_stage_calls_the_check_with_the_runs_arm_and_counts_and_skips_under_ten | assert out["distribution_check"]["skipped"] is True | skipped
+  tests/test_distribution_monitor.py:212 <module>.TestCheckCollapsed.test_all_same_value_collapsed | assert st[0]["status"] == "COLLAPSED" | COLLAPSED
+  tests/test_distribution_monitor.py:223 <module>.TestCheckCollapsed.test_all_same_below_threshold_not_collapsed | assert st[0]["status"] == "OK" | OK
+  tests/test_distribution_monitor.py:245 <module>.TestCheckLowVariance.test_85pct_dominant_low_variance | assert st[0]["status"] == "LOW_VARIANCE" | LOW_VARIANCE
+  tests/test_distribution_monitor.py:255 <module>.TestCheckLowVariance.test_84pct_not_low_variance | assert st[0]["status"] == "OK" | OK
+  tests/test_distribution_monitor.py:264 <module>.TestCheckLowVariance.test_low_variance_below_count_threshold | assert st[0]["status"] == "OK" | OK
+  tests/test_distribution_monitor.py:284 <module>.TestCheckOK.test_healthy_spread | assert st[0]["status"] == "OK" | OK
+  tests/test_distribution_monitor.py:301 <module>.TestCheckEdgeCases.test_all_nr_excluded | assert st[0]["status"] == "OK" | OK
+  tests/test_distribution_monitor.py:311 <module>.TestCheckEdgeCases.test_mixed_null_and_values | assert st[0]["status"] == "COLLAPSED"  # 12 same, >= 10 | COLLAPSED
+  tests/test_distribution_monitor.py:328 <module>.TestCheckEdgeCases.test_an_arm_with_no_values_is_all_zero_and_OK | assert r["status"] == "OK" | OK
+  tests/test_distribution_monitor.py:362 <module>.TestArmRouting.test_cloud_arm | assert st[0]["status"] == "COLLAPSED" | COLLAPSED
+  tests/test_distribution_monitor.py:420 <module>.TestAssertNoCollapse.test_no_issues_passes | {"field_name": "study_type", "status": "OK", "top_value": "X", | OK
+  tests/test_distribution_monitor.py:427 <module>.TestAssertNoCollapse.test_collapsed_raises | {"field_name": "study_type", "status": "COLLAPSED", "top_value": "X", | COLLAPSED
+  tests/test_distribution_monitor.py:435 <module>.TestAssertNoCollapse.test_low_variance_warns_but_passes | {"field_name": "study_type", "status": "LOW_VARIANCE", "top_value": "X", | LOW_VARIANCE
+  tests/test_distribution_monitor.py:442 <module>.TestAssertNoCollapse.test_strict_mode_fails_on_low_variance | {"field_name": "study_type", "status": "LOW_VARIANCE", "top_value": "X", | LOW_VARIANCE
+  tests/test_distribution_monitor.py:450 <module>.TestAssertNoCollapse.test_error_contains_collapsed_fields | {"field_name": "study_type", "status": "COLLAPSED", "top_value": "X", | COLLAPSED
+  tests/test_distribution_monitor.py:452 <module>.TestAssertNoCollapse.test_error_contains_collapsed_fields | {"field_name": "autonomy_level", "status": "COLLAPSED", "top_value": "Y", | COLLAPSED
+  tests/test_distribution_monitor.py:469 <module>.TestPrintReport.test_prints_without_error | "top_value_pct": 0.4, "entropy": 1.8, "status": "OK", | OK
+  tests/test_distribution_monitor.py:474 <module>.TestPrintReport.test_prints_without_error | "top_value_pct": 1.0, "entropy": 0.0, "status": "COLLAPSED", | COLLAPSED
+  tests/test_distribution_monitor.py:481 <module>.TestPrintReport.test_prints_without_error | assert "COLLAPSED" in captured.out | COLLAPSED
+  tests/test_distribution_monitor.py:511 <module>.TestRunPostExtractionCheck.test_called_on_completion | assert summary["skipped"] is False | skipped
+  tests/test_distribution_monitor.py:528 <module>.TestRunPostExtractionCheck.test_skipped_on_partial_run_too_few | assert summary["skipped"] is True | skipped
+  tests/test_distribution_monitor.py:542 <module>.TestRunPostExtractionCheck.test_skipped_on_partial_run_failures | assert summary["skipped"] is True | skipped
+  tests/test_distribution_monitor.py:561 <module>.TestRunPostExtractionCheck.test_collapsed_raises_distribution_collapse_error | assert any("COLLAPSED" in m for m in error_messages) | COLLAPSED
+  tests/test_distribution_monitor.py:577 <module>.TestRunPostExtractionCheck.test_low_variance_does_not_raise_by_default | assert summary["skipped"] is False | skipped
+  tests/test_distribution_monitor.py:616 <module>.TestRunPostExtractionCheck.test_results_in_summary | assert summary["skipped"] is False | skipped
+  tests/test_distribution_monitor.py:642 <module>.TestRunPostExtractionCheckLocalFlags.test_t3_raise_on_collapse_false_returns_the_collapse | assert summary["skipped"] is False and "study_type" in summary["collapsed_fields"] | skipped
+  tests/test_distribution_monitor.py:643 <module>.TestRunPostExtractionCheckLocalFlags.test_t3_raise_on_collapse_false_returns_the_collapse | assert any(r["field_name"] == "study_type" and r["status"] == "COLLAPSED" | COLLAPSED
+  tests/test_distribution_monitor.py:654 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_arm_population_runs_despite_failures_and_a_small_run | assert summary["skipped"] is False | skipped
+  tests/test_distribution_monitor.py:667 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_the_run_population_rule_skips_the_same_inputs | assert summary["skipped"] is True | skipped
+  tests/test_distribution_monitor.py:668 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_the_run_population_rule_skips_the_same_inputs | assert "only 3 papers extracted" in summary["skip_reason"] | skip_reason
+  tests/test_distribution_monitor.py:678 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_skip_on_failures_still_vetoes_under_the_arm_rule | assert summary["skipped"] is True | skipped
+  tests/test_distribution_monitor.py:679 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_skip_on_failures_still_vetoes_under_the_arm_rule | assert "failed extraction" in summary["skip_reason"] | skip_reason
+  tests/test_distribution_monitor.py:703 <module>.TestConfigurableThresholds.test_custom_low_variance_threshold_triggers | assert st_default[0]["status"] == "OK" | OK
+  tests/test_distribution_monitor.py:711 <module>.TestConfigurableThresholds.test_custom_low_variance_threshold_triggers | assert st_strict[0]["status"] == "LOW_VARIANCE" | LOW_VARIANCE
+  tests/test_distribution_monitor.py:721 <module>.TestConfigurableThresholds.test_custom_collapsed_min_papers | assert st[0]["status"] == "OK" | OK
+  tests/test_distribution_monitor.py:728 <module>.TestConfigurableThresholds.test_custom_collapsed_min_papers | assert st[0]["status"] == "COLLAPSED" | COLLAPSED
+  tests/test_distribution_monitor.py:739 <module>.TestConfigurableThresholds.test_custom_low_variance_min_papers | assert st[0]["status"] == "OK" | OK
+  tests/test_distribution_monitor.py:746 <module>.TestConfigurableThresholds.test_custom_low_variance_min_papers | assert st[0]["status"] == "LOW_VARIANCE" | LOW_VARIANCE
+
+-- (iv) exact compare on a status / skipped value: 33 hits / 2 files
+   by file: test_distribution_monitor.py 27, test_distribution_check_wiring.py 6
+  tests/test_distribution_check_wiring.py:103 <module>.test_t1_the_stage_calls_the_check_with_the_runs_arm_and_counts_and_skips_under_ten | assert (p["arm"], p["extracted_count"], p["failed_count"], p["arm_population"],
+  tests/test_distribution_check_wiring.py:121 <module>.test_t1_the_nothing_selected_branch_writes_a_skip_row_too | assert out["extracted"] == 0 and out["distribution_check"]["skipped"] is True
+  tests/test_distribution_check_wiring.py:124 <module>.test_t1_the_nothing_selected_branch_writes_a_skip_row_too | assert len(rows) == 1 and rows[0]["payload"]["skipped"] is True
+  tests/test_distribution_check_wiring.py:143 <module>.test_t2_a_collapse_is_recorded_and_logged_and_the_stage_returns | assert check["skipped"] is False and check["arm_population"] == 12
+  tests/test_distribution_check_wiring.py:149 <module>.test_t2_a_collapse_is_recorded_and_logged_and_the_stage_returns | assert any(r["field_name"] == "study_type" and r["status"] == "COLLAPSED"
+  tests/test_distribution_check_wiring.py:96 <module>.test_t1_the_stage_calls_the_check_with_the_runs_arm_and_counts_and_skips_under_ten | assert out["distribution_check"]["skipped"] is True
+  tests/test_distribution_monitor.py:212 <module>.TestCheckCollapsed.test_all_same_value_collapsed | assert st[0]["status"] == "COLLAPSED"
+  tests/test_distribution_monitor.py:223 <module>.TestCheckCollapsed.test_all_same_below_threshold_not_collapsed | assert st[0]["status"] == "OK"
+  tests/test_distribution_monitor.py:245 <module>.TestCheckLowVariance.test_85pct_dominant_low_variance | assert st[0]["status"] == "LOW_VARIANCE"
+  tests/test_distribution_monitor.py:255 <module>.TestCheckLowVariance.test_84pct_not_low_variance | assert st[0]["status"] == "OK"
+  tests/test_distribution_monitor.py:264 <module>.TestCheckLowVariance.test_low_variance_below_count_threshold | assert st[0]["status"] == "OK"
+  tests/test_distribution_monitor.py:284 <module>.TestCheckOK.test_healthy_spread | assert st[0]["status"] == "OK"
+  tests/test_distribution_monitor.py:301 <module>.TestCheckEdgeCases.test_all_nr_excluded | assert st[0]["status"] == "OK"
+  tests/test_distribution_monitor.py:311 <module>.TestCheckEdgeCases.test_mixed_null_and_values | assert st[0]["status"] == "COLLAPSED"  # 12 same, >= 10
+  tests/test_distribution_monitor.py:328 <module>.TestCheckEdgeCases.test_an_arm_with_no_values_is_all_zero_and_OK | assert r["status"] == "OK"
+  tests/test_distribution_monitor.py:362 <module>.TestArmRouting.test_cloud_arm | assert st[0]["status"] == "COLLAPSED"
+  tests/test_distribution_monitor.py:457 <module>.TestAssertNoCollapse.test_error_contains_collapsed_fields | assert len(exc_info.value.collapsed_fields) == 2
+  tests/test_distribution_monitor.py:511 <module>.TestRunPostExtractionCheck.test_called_on_completion | assert summary["skipped"] is False
+  tests/test_distribution_monitor.py:528 <module>.TestRunPostExtractionCheck.test_skipped_on_partial_run_too_few | assert summary["skipped"] is True
+  tests/test_distribution_monitor.py:542 <module>.TestRunPostExtractionCheck.test_skipped_on_partial_run_failures | assert summary["skipped"] is True
+  tests/test_distribution_monitor.py:577 <module>.TestRunPostExtractionCheck.test_low_variance_does_not_raise_by_default | assert summary["skipped"] is False
+  tests/test_distribution_monitor.py:616 <module>.TestRunPostExtractionCheck.test_results_in_summary | assert summary["skipped"] is False
+  tests/test_distribution_monitor.py:642 <module>.TestRunPostExtractionCheckLocalFlags.test_t3_raise_on_collapse_false_returns_the_collapse | assert summary["skipped"] is False and "study_type" in summary["collapsed_fields"]
+  tests/test_distribution_monitor.py:643 <module>.TestRunPostExtractionCheckLocalFlags.test_t3_raise_on_collapse_false_returns_the_collapse | assert any(r["field_name"] == "study_type" and r["status"] == "COLLAPSED"
+  tests/test_distribution_monitor.py:654 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_arm_population_runs_despite_failures_and_a_small_run | assert summary["skipped"] is False
+  tests/test_distribution_monitor.py:667 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_the_run_population_rule_skips_the_same_inputs | assert summary["skipped"] is True
+  tests/test_distribution_monitor.py:678 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_skip_on_failures_still_vetoes_under_the_arm_rule | assert summary["skipped"] is True
+  tests/test_distribution_monitor.py:703 <module>.TestConfigurableThresholds.test_custom_low_variance_threshold_triggers | assert st_default[0]["status"] == "OK"
+  tests/test_distribution_monitor.py:711 <module>.TestConfigurableThresholds.test_custom_low_variance_threshold_triggers | assert st_strict[0]["status"] == "LOW_VARIANCE"
+  tests/test_distribution_monitor.py:721 <module>.TestConfigurableThresholds.test_custom_collapsed_min_papers | assert st[0]["status"] == "OK"
+  tests/test_distribution_monitor.py:728 <module>.TestConfigurableThresholds.test_custom_collapsed_min_papers | assert st[0]["status"] == "COLLAPSED"
+  tests/test_distribution_monitor.py:739 <module>.TestConfigurableThresholds.test_custom_low_variance_min_papers | assert st[0]["status"] == "OK"
+  tests/test_distribution_monitor.py:746 <module>.TestConfigurableThresholds.test_custom_low_variance_min_papers | assert st[0]["status"] == "LOW_VARIANCE"
+
+-- (v) seam call DistributionCollapseError: 1 hits / 1 files
+   by file: test_cloud_extraction.py 1
+  tests/test_cloud_extraction.py:863 <module>.TestStoreResultCrashProtection.test_distribution_collapse_not_caught._raise_collapse | raise DistributionCollapseError([{"field_name": "study_type"}])
+
+-- (v) seam call _query_values: 2 hits / 1 files
+   by file: test_readers_on_the_reader.py 2
+  tests/test_readers_on_the_reader.py:122 <module>.test_query_values_raises_on_an_unregistered_arm | _query_values(db._conn, "study_type", "human_B")
+  tests/test_readers_on_the_reader.py:143 <module>.test_query_values_and_load_arm_agree_on_a_human_arm | assert _query_values(db._conn, "study_type", "human_A") == []
+
+-- (v) seam call assert_no_collapse: 5 hits / 1 files
+   by file: test_distribution_monitor.py 5
+  tests/test_distribution_monitor.py:423 <module>.TestAssertNoCollapse.test_no_issues_passes | assert_no_collapse(results)  # should not raise
+  tests/test_distribution_monitor.py:431 <module>.TestAssertNoCollapse.test_collapsed_raises | assert_no_collapse(results)
+  tests/test_distribution_monitor.py:438 <module>.TestAssertNoCollapse.test_low_variance_warns_but_passes | assert_no_collapse(results)  # should not raise
+  tests/test_distribution_monitor.py:446 <module>.TestAssertNoCollapse.test_strict_mode_fails_on_low_variance | assert_no_collapse(results, strict=True)
+  tests/test_distribution_monitor.py:456 <module>.TestAssertNoCollapse.test_error_contains_collapsed_fields | assert_no_collapse(results)
+
+-- (v) seam call check_distribution: 21 hits / 1 files
+   by file: test_distribution_monitor.py 21
+  tests/test_distribution_monitor.py:209 <module>.TestCheckCollapsed.test_all_same_value_collapsed | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:221 <module>.TestCheckCollapsed.test_all_same_below_threshold_not_collapsed | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:228 <module>.TestCheckCollapsed.test_collapsed_entropy_zero | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:243 <module>.TestCheckLowVariance.test_85pct_dominant_low_variance | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:253 <module>.TestCheckLowVariance.test_84pct_not_low_variance | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:262 <module>.TestCheckLowVariance.test_low_variance_below_count_threshold | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:282 <module>.TestCheckOK.test_healthy_spread | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:298 <module>.TestCheckEdgeCases.test_all_nr_excluded | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:308 <module>.TestCheckEdgeCases.test_mixed_null_and_values | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:324 <module>.TestCheckEdgeCases.test_an_arm_with_no_values_is_all_zero_and_OK | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:337 <module>.TestCheckEdgeCases.test_an_unregistered_arm_raises_rather_than_reading_as_empty | check_distribution(db_path, "test", "locl", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:344 <module>.TestCheckEdgeCases.test_only_categorical_fields_checked | results = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:359 <module>.TestArmRouting.test_cloud_arm | results = check_distribution(db_path, "test", "openai_o4_mini_high", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:388 <module>.TestArmRouting.test_human_arm_resolves_and_reads_out_of_scope_under_R13 | results = check_distribution(db_path, "test", "human_A", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:407 <module>.TestArmRouting.test_cloud_arm_filters_by_arm_name | results = check_distribution(db_path, "test", "openai_o4_mini_high", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:701 <module>.TestConfigurableThresholds.test_custom_low_variance_threshold_triggers | results_default = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:706 <module>.TestConfigurableThresholds.test_custom_low_variance_threshold_triggers | results_strict = check_distribution(
+  tests/test_distribution_monitor.py:719 <module>.TestConfigurableThresholds.test_custom_collapsed_min_papers | results_default = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:723 <module>.TestConfigurableThresholds.test_custom_collapsed_min_papers | results_custom = check_distribution(
+  tests/test_distribution_monitor.py:737 <module>.TestConfigurableThresholds.test_custom_low_variance_min_papers | results_default = check_distribution(db_path, "test", "local", CODEBOOK_PATH)
+  tests/test_distribution_monitor.py:741 <module>.TestConfigurableThresholds.test_custom_low_variance_min_papers | results_custom = check_distribution(
+
+-- (v) seam call parse_response_to_spans: 6 hits / 1 files
+   by file: test_cloud_extraction.py 6
+  tests/test_cloud_extraction.py:242 <module>.TestCloudExtractorBase.test_parse_response_valid_json | spans = base.parse_response_to_spans(SAMPLE_RESPONSE)
+  tests/test_cloud_extraction.py:254 <module>.TestCloudExtractorBase.test_parse_response_malformed_json | spans = base.parse_response_to_spans("not json at all")
+  tests/test_cloud_extraction.py:258 <module>.TestCloudExtractorBase.test_parse_response_malformed_json | spans = base.parse_response_to_spans({"study_type": "RCT"})
+  tests/test_cloud_extraction.py:265 <module>.TestCloudExtractorBase.test_parse_response_bare_list | spans = base.parse_response_to_spans(SAMPLE_FIELDS)
+  tests/test_cloud_extraction.py:271 <module>.TestCloudExtractorBase.test_parse_response_data_extraction_key | spans = base.parse_response_to_spans({"data_extraction": SAMPLE_FIELDS})
+  tests/test_cloud_extraction.py:280 <module>.TestCloudExtractorBase.test_parse_response_recovers_from_raw | spans = base.parse_response_to_spans({"fields": [], "raw": raw_json})
+
+-- (v) seam call run_post_extraction_check: 12 hits / 1 files
+   by file: test_distribution_monitor.py 12
+  tests/test_distribution_monitor.py:503 <module>.TestRunPostExtractionCheck.test_called_on_completion | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:520 <module>.TestRunPostExtractionCheck.test_skipped_on_partial_run_too_few | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:534 <module>.TestRunPostExtractionCheck.test_skipped_on_partial_run_failures | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:551 <module>.TestRunPostExtractionCheck.test_collapsed_raises_distribution_collapse_error | run_post_extraction_check(
+  tests/test_distribution_monitor.py:568 <module>.TestRunPostExtractionCheck.test_low_variance_does_not_raise_by_default | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:585 <module>.TestRunPostExtractionCheck.test_strict_mode_raises_on_low_variance | run_post_extraction_check(
+  tests/test_distribution_monitor.py:606 <module>.TestRunPostExtractionCheck.test_results_in_summary | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:630 <module>.TestRunPostExtractionCheckLocalFlags.test_t3_raise_on_collapse_true_still_raises_the_cloud_contract | run_post_extraction_check(
+  tests/test_distribution_monitor.py:638 <module>.TestRunPostExtractionCheckLocalFlags.test_t3_raise_on_collapse_false_returns_the_collapse | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:650 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_arm_population_runs_despite_failures_and_a_small_run | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:663 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_the_run_population_rule_skips_the_same_inputs | summary = run_post_extraction_check(
+  tests/test_distribution_monitor.py:674 <module>.TestRunPostExtractionCheckLocalFlags.test_t4_skip_on_failures_still_vetoes_under_the_arm_rule | summary = run_post_extraction_check(
+
+-- (v) seam call store_result: 4 hits / 1 files
+   by file: test_cloud_extraction.py 4
+  tests/test_cloud_extraction.py:222 <module>.TestCloudExtractorBase.test_get_pending_excludes_completed | base.store_result(
+  tests/test_cloud_extraction.py:293 <module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans | base.store_result(
+  tests/test_cloud_extraction.py:323 <module>.TestCloudExtractorBase.test_store_result_atomic | ext_id = base.store_result(
+  tests/test_cloud_extraction.py:616 <module>.TestSonnetEmptyStringNormalization.test_empty_string_normalized_to_null | ext_id = extractor.store_result(
+
+-- (vi) a span dict with an empty or None source_snippet: 13 hits / 6 files
+   by file: test_atomic_terminal_write.py 4, test_write_boundary_guard.py 3, test_completeness_guard.py 2, test_non_value_tokens_downstream.py 2, test_audit_events.py 1, test_auditor.py 1
+  tests/test_atomic_terminal_write.py:50 <module>._spans | out.append({"field_name": f"f{i}", "value": "CONTRACT_UNMET",
+  tests/test_atomic_terminal_write.py:55 <module>._spans | out.append({"field_name": f"f{i}", "value": "NO_EVIDENCE_LOCATABLE",
+  tests/test_atomic_terminal_write.py:86 <module>.test_no_uncited_non_escape_value_can_be_stored_as_a_value | [{"field_name": "f", "value": value, "source_snippet": ""}],
+  tests/test_atomic_terminal_write.py:97 <module>.test_no_uncited_non_escape_value_can_be_stored_as_a_value | [{"field_name": "f", "value": token, "source_snippet": ""}],
+  tests/test_audit_events.py:226 <module>.test_t8_the_old_hand_list_values_are_not_auto_verified | status, _ = audit_span({"field_name": "country", "value": value, "source_snippet": ""},
+  tests/test_auditor.py:257 <module>.test_audit_span_not_found_value_is_not_auto_verified | span_data = {
+  tests/test_completeness_guard.py:127 <module>.test_unexpected_fields_are_dropped_and_duplicates_are_retryable | junk = {"field_name": "Title", "value": "x", "source_snippet": "", "confidence": 1.0,
+  tests/test_completeness_guard.py:129 <module>.test_unexpected_fields_are_dropped_and_duplicates_are_retryable | dup = {"field_name": "country", "value": "dup", "source_snippet": "", "confidence": 1.0,
+  tests/test_non_value_tokens_downstream.py:114 <module>.test_site1_auditor_no_longer_flags_a_terminal_state | span = {"value": token, "source_snippet": ""}
+  tests/test_non_value_tokens_downstream.py:130 <module>.test_site1_a_real_value_is_still_audited | status, _ = audit_span({"value": "General Surgery", "source_snippet": ""},
+  tests/test_write_boundary_guard.py:150 <module>.test_a_blank_pass2_value_with_evidence_is_refused_in_both_modes | r = G.check_citations([{"field_name": "f", "value": value, "source_snippet": ""}],
+  tests/test_write_boundary_guard.py:158 <module>.test_a_blank_pass2_value_with_evidence_is_refused_in_both_modes | assert G.check_citations([{"field_name": "f", "value": "RCT", "source_snippet": ""}],
+  tests/test_write_boundary_guard.py:192 <module>.test_on_the_legacy_path_a_non_value_token_is_never_asserted | assert G.check_citations([{"field_name": "f", "value": token, "source_snippet": ""}],
+
+== counts
+sites an INSERT into the cloud tables: 5
+sites call DistributionCollapseError: 1
+sites call _query_all_fields: 2
+sites call arm_population: 1
+sites call assert_no_collapse: 2
+sites call check_distribution: 2
+sites call parse_response_to_spans: 4
+sites call run_distribution_check: 2
+sites call run_post_extraction_check: 2
+sites call store_result: 2
+tests (i) direct names: 48 / 3
+tests (i) from-imports: 13 / 9
+tests (ii) attribute access to a name: 16 / 3
+tests (ii) patch or setattr on the monitor / base / a name: 3 / 2
+tests (iii) a status literal or summary key in a monitor test: 45 / 2
+tests (iv) exact compare on a status / skipped value: 33 / 2
+tests (v) seam call DistributionCollapseError: 1 / 1
+tests (v) seam call _query_values: 2 / 1
+tests (v) seam call assert_no_collapse: 5 / 1
+tests (v) seam call check_distribution: 21 / 1
+tests (v) seam call parse_response_to_spans: 6 / 1
+tests (v) seam call run_post_extraction_check: 12 / 1
+tests (v) seam call store_result: 4 / 1
+tests (vi) a span dict with an empty or None source_snippet: 13 / 6

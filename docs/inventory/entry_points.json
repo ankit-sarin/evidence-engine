@@ -4295,19 +4295,19 @@
           },
           {
             "kind": "literal",
-            "line": 378,
+            "line": 404,
             "role": "docstring",
             "text": "The codebook for a review: `data/<review_id>/extraction_codebook.yaml`."
           },
           {
             "kind": "literal",
-            "line": 407,
+            "line": 433,
             "role": "docstring",
             "text": "The codebook in the same review directory as this database.\n\n    The review root is wherever the review's database is \u2014 not\n    `data/<review_id>` \u2014 so a run..."
           },
           {
             "kind": "f-string",
-            "line": 444,
+            "line": 470,
             "role": "message",
             "text": "f'Codebook not found at {path}. Every review carries one at data/<review_id>/{CODEBOOK_FILENAME}.'"
           }
@@ -4317,7 +4317,7 @@
         "spec_access": [
           {
             "func": "data_root_for",
-            "line": 384,
+            "line": 410,
             "scope": "codebook_path_for"
           }
         ],
@@ -4325,7 +4325,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 448,
+            "line": 474,
             "scope": "_parse",
             "target": "text"
           }
@@ -6871,7 +6871,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "b8becaaa7bbc4f386f82da8e12b9ad06daa0c97d",
+    "generated_at_commit": "4a4c8500904ae2158bf78f042149a7b55827161d",
     "scan_roots": [
       "engine",
       "scripts",

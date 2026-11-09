@@ -244,6 +244,22 @@ def _require_mapping(doc: Any, path: Path) -> dict:
     return doc
 
 
+def _require_str(value: Any, path: Path, where: str, key: str) -> None:
+    """INT-i12-31 (R788(b)): every scalar the loader exposes as a string must BE a string.
+
+    YAML 1.1 resolves an unquoted yes/no/true/false/on/off to a bool, null/~ or an empty
+    scalar to None, and a bare number or date to an int, float or date. Downstream they
+    raise far from the cause or are silently coerced (a sentinel `NO` becomes "False").
+    Refused here, at load, naming the key and telling the author to quote it.
+    """
+    if not isinstance(value, str):
+        raise CodebookError(
+            f"Codebook at {path}: {where} `{key}` is {value!r} ({type(value).__name__}), "
+            f"not a string. YAML 1.1 resolves an unquoted yes/no/true/false/on/off, "
+            f"null/~, number or date implicitly; quote the value as written in the YAML."
+        )
+
+
 def _validate_top_level(doc: dict, path: Path) -> None:
     missing = [k for k in REQUIRED_TOP_LEVEL if k not in doc]
     if missing:
@@ -265,6 +281,8 @@ def _validate_top_level(doc: dict, path: Path) -> None:
             f"An empty one silently turns every absence claim into an ordinary "
             f"value for the auditor, the validators and concordance."
         )
+    for i, sentinel in enumerate(doc["absence_sentinels"]):
+        _require_str(sentinel, path, "top level", f"absence_sentinels[{i}]")
     canonical = doc["canonical_absence_sentinel"]
     if not isinstance(canonical, str) or canonical not in doc["absence_sentinels"]:
         raise CodebookError(
@@ -273,6 +291,8 @@ def _validate_top_level(doc: dict, path: Path) -> None:
             f"the sentinel the engine writes for an absence (R132), so it must be a "
             f"value every reader already recognises as one."
         )
+    for key in ("escape_token", "contract_unmet_token", "review", "version", "date"):
+        _require_str(doc[key], path, "top level", key)
     for key in ("escape_token", "contract_unmet_token", "review", "version"):
         if not str(doc[key] or "").strip():
             raise CodebookError(f"Codebook at {path}: `{key}` must be a non-empty string.")
@@ -324,6 +344,9 @@ def _validate_fields(doc: dict, path: Path) -> None:
             raise CodebookError(
                 f"Codebook at {path}: {where} has tier {f['tier']!r}; expected 1-4."
             )
+        for key in ("definition", "instruction", "decision_criteria"):
+            if key in f:
+                _require_str(f[key], path, where, key)
         for key in ("definition", "instruction", "judge_rubric_family"):
             if not str(f[key] or "").strip():
                 raise CodebookError(
@@ -357,6 +380,9 @@ def _validate_valid_values(f: dict, path: Path, where: str) -> None:
                 f"codebook written that way does not degrade — it raises while "
                 f"building the prompt."
             )
+        _require_str(item["value"], path, where, "value")
+        if "definition" in item:
+            _require_str(item["definition"], path, f"{where} valid_values entry {item['value']!r}", "definition")
         unknown = sorted(set(item) - {"value", "definition"})
         if unknown:
             raise CodebookError(

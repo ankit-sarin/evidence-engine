@@ -1,0 +1,39 @@
+
+=== handler 4 (:717 scanned vision)
+  sqlite3.OperationalError   run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_vision_exhausted')] | parse_attempts rows: 2 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  ConnectionError            run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_vision_exhausted')] | parse_attempts rows: 2 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  UndeclaredCall             run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_vision_exhausted')] | parse_attempts rows: 2 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  KeyError (unclassified)    run_fault=False | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_vision_exhausted')] | parse_attempts rows: 2 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+
+=== handler 5 (:806 digital-sparse vision)
+  sqlite3.OperationalError   run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_vision_exhausted')] | parse_attempts rows: 1 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  ConnectionError            run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_vision_exhausted')] | parse_attempts rows: 1 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  UndeclaredCall             run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_vision_exhausted')] | parse_attempts rows: 1 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  KeyError (unclassified)    run_fault=False | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_vision_exhausted')] | parse_attempts rows: 1 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+
+=== handler 6 (:901 gate-driven re-route)
+  sqlite3.OperationalError   run_fault=True  | propagated: no | stats.failed=0 | paper events: [] | parse_attempts rows: 2 | asset rows: 1 | papers.status: ('PDF_EXCLUDED', 'PARSE_QUALITY')
+  ConnectionError            run_fault=True  | propagated: no | stats.failed=0 | paper events: [] | parse_attempts rows: 2 | asset rows: 1 | papers.status: ('PDF_EXCLUDED', 'PARSE_QUALITY')
+  UndeclaredCall             run_fault=True  | propagated: no | stats.failed=0 | paper events: [] | parse_attempts rows: 2 | asset rows: 1 | papers.status: ('PDF_EXCLUDED', 'PARSE_QUALITY')
+  KeyError (unclassified)    run_fault=False | propagated: no | stats.failed=0 | paper events: [] | parse_attempts rows: 2 | asset rows: 1 | papers.status: ('PDF_EXCLUDED', 'PARSE_QUALITY')
+
+=== handler 7 (:1120 per-paper)
+  sqlite3.OperationalError   run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_unclassified_error')] | parse_attempts rows: 1 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  ConnectionError            run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_unclassified_error')] | parse_attempts rows: 1 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  UndeclaredCall             run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_unclassified_error')] | parse_attempts rows: 1 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  KeyError (unclassified)    run_fault=False | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_unclassified_error')] | parse_attempts rows: 1 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+
+=== handler 12 (:520 _commit_attempts outer)
+  sqlite3.OperationalError   run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_cascade_empty')] | parse_attempts rows: 0 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  ConnectionError            run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_cascade_empty')] | parse_attempts rows: 0 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  UndeclaredCall             run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_cascade_empty')] | parse_attempts rows: 0 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  KeyError (unclassified)    run_fault=False | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_cascade_empty')] | parse_attempts rows: 0 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+
+=== handler 13 (:525 _commit_attempts inner, rollback also fails)
+  sqlite3.OperationalError   run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_cascade_empty')] | parse_attempts rows: 0 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  ConnectionError            run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_cascade_empty')] | parse_attempts rows: 0 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  UndeclaredCall             run_fault=True  | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_cascade_empty')] | parse_attempts rows: 0 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+  KeyError (unclassified)    run_fault=False | propagated: no | stats.failed=1 | paper events: [('parse_failed', 'parse_cascade_empty')] | parse_attempts rows: 0 | asset rows: 0 | papers.status: ('PDF_ACQUIRED', None)
+
+-- Ollama journal from 2026-11-09 17:04:19 UTC (the probe's start) to the read at 2026-11-09 17:04:38 UTC:
+-- No entries --

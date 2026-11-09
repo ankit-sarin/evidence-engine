@@ -1,0 +1,554 @@
+== the static closure
+modules in the run7 closure: 91
+
+== every except handler in engine/parsers/pdf_parser.py
+  pdf_parser.py:453 <module>._audit_for_attempt | catches Exception | raises in body: ['(none)'] | except Exception:  # noqa: BLE001
+  pdf_parser.py:459 <module>._audit_for_attempt | catches Exception | raises in body: ['(none)'] | except Exception as exc:  # noqa: BLE001 - see docstring
+  pdf_parser.py:464 <module>._audit_for_attempt | catches Exception | raises in body: ['(none)'] | except Exception:  # noqa: BLE001
+  pdf_parser.py:481 <module>._attach_structure | catches Exception | raises in body: ['(none)'] | except Exception as exc:  # noqa: BLE001
+  pdf_parser.py:520 <module>._commit_attempts | catches Exception | raises in body: ['(none)'] | except Exception:
+  pdf_parser.py:525 <module>._commit_attempts | catches Exception | raises in body: ['(none)'] | except Exception:
+  pdf_parser.py:672 <module>.parse_pdf | catches Exception | raises in body: ["raise ParseFailed(REASON_PARSE_FILE_UNREADABLE, f'Paper {pap"] | except Exception as exc:
+  pdf_parser.py:708 <module>.parse_pdf | catches Exception | raises in body: ['(none)'] | except Exception as exc:
+  pdf_parser.py:717 <module>.parse_pdf | catches Exception | raises in body: ["raise ParseFailed(REASON_PARSE_VISION_EXHAUSTED, f'Paper {pa"] | except Exception as exc:
+  pdf_parser.py:733 <module>.parse_pdf | catches Exception | raises in body: ["raise ParseFailed(REASON_PARSE_PYMUPDF_EXHAUSTED, f'Paper {p"] | except Exception as exc:
+  pdf_parser.py:756 <module>.parse_pdf | catches Exception | raises in body: ['(none)'] | except Exception as exc2:
+  pdf_parser.py:764 <module>.parse_pdf | catches Exception | raises in body: ["raise ParseFailed(REASON_PARSE_PYMUPDF_EXHAUSTED, f'Paper {p"] | except Exception as exc3:
+  pdf_parser.py:786 <module>.parse_pdf | catches Exception | raises in body: ["raise ParseFailed(REASON_PARSE_PYMUPDF_EXHAUSTED, f'Paper {p"] | except Exception as exc:
+  pdf_parser.py:806 <module>.parse_pdf | catches Exception | raises in body: ["raise ParseFailed(REASON_PARSE_VISION_EXHAUSTED, f'Paper {pa"] | except Exception as exc:
+  pdf_parser.py:901 <module>.parse_pdf | catches Exception | raises in body: ['(none)'] | except Exception as exc:
+  pdf_parser.py:978 <module>.parse_pdf | catches Exception | raises in body: ['raise'] | except Exception:
+  pdf_parser.py:997 <module>.parse_pdf | catches BaseException | raises in body: ['raise'] | except BaseException:
+  pdf_parser.py:1104 <module>.parse_all_pdfs | catches ParseFailed | raises in body: ['(none)'] | except ParseFailed as exc:
+  pdf_parser.py:1115 <module>.parse_all_pdfs | catches FileExistsError | raises in body: ['raise'] | except FileExistsError:
+  pdf_parser.py:1120 <module>.parse_all_pdfs | catches Exception | raises in body: ['(none)'] | except Exception as exc:
+  pdf_parser.py:1189 <module>.reparse_papers | catches Exception | raises in body: ['(none)'] | except Exception as exc:
+
+== callers (engine, scripts, analysis)
+
+-- call _commit_attempts: 2
+  [run7/engine] engine/parsers/pdf_parser.py:1004 <module>.parse_pdf | _commit_attempts(db, paper_id, pdf_hash, version, attempts)
+  [run7/engine] engine/parsers/pdf_parser.py:916 <module>.parse_pdf | _commit_attempts(db, paper_id, pdf_hash, version, attempts)
+
+-- call parse_all_pdfs, no run_id: 1
+  [scripts] scripts/parse_expanded_corpus.py:90 <module>._main_locked | stats = parse_all_pdfs(db, review, spec=spec)
+
+-- call parse_all_pdfs, run_id passed: 1
+  [run7/scripts] scripts/run_pipeline.py:354 <module>._stage_parse | stats = parse_all_pdfs(db, review_name, spec=spec, run_id=run_id)
+
+-- call parse_pdf: 2
+  [run7/engine] engine/parsers/pdf_parser.py:1078 <module>.parse_all_pdfs | result = parse_pdf(pdf_path, pid, review_name, db, spec=spec)
+  [run7/engine] engine/parsers/pdf_parser.py:1187 <module>.reparse_papers | result = parse_pdf(pdf_path, pid, review_dir.name, db, spec=spec,
+
+== tests
+
+-- (i) direct names: 147 hits / 11 files
+   by file: test_parse_quality.py 34, test_parse_gate.py 29, test_parse_ocr_tier.py 17, test_pdf_parser.py 17, test_parse_failures.py 13, test_parse_sanitized_retry.py 12, test_vision_bounds.py 12, test_font_audit_ledger.py 8, test_parse_writer_refs.py 2, test_undeclared_override.py 2, test_request_capture.py 1
+  tests/test_font_audit_ledger.py:172 <module>.test_the_ledger_row_round_trips_the_json | _insert_attempts(db, pid, "deadbeef", 2, [attempt], "2026-09-09T00:00:00Z")
+  tests/test_font_audit_ledger.py:188 <module>.test_an_unaudited_attempt_stores_null_not_an_empty_object | _insert_attempts(db, pid, "deadbeef", 2, [attempt], "2026-09-09T00:00:00Z")
+  tests/test_font_audit_ledger.py:258 <module>.test_a_timed_out_audit_leaves_the_criterion_unevaluated | verdict = assess("word " * 400, font_exposure_per_kchar=exposure)
+  tests/test_font_audit_ledger.py:291 <module>.test_font_exposure_dominates_glyph_density | v = assess(text, font_exposure_per_kchar=exposure)
+  tests/test_font_audit_ledger.py:314 <module>.test_a_judged_attempt_records_its_audit | parse_pdf(str(small_pdf), pid, "test_font_ledger", db, spec=PARSE_SPEC)
+  tests/test_font_audit_ledger.py:343 <module>.test_a_total_failure_records_the_structure_half | with pytest.raises(ParseFailed, match="all parsers returned empty text"):
+  tests/test_font_audit_ledger.py:344 <module>.test_a_total_failure_records_the_structure_half | parse_pdf(str(small_pdf), pid, "test_font_ledger", db, spec=PARSE_SPEC)
+  tests/test_font_audit_ledger.py:372 <module>.test_an_audit_that_raises_does_not_fail_the_parse | result = parse_pdf(str(small_pdf), pid, "test_font_ledger", db, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:105 <module>.test_T1_branch_6_vision_exhausted_scanned_route | with pytest.raises(ParseFailed) as exc:
+  tests/test_parse_failures.py:106 <module>.test_T1_branch_6_vision_exhausted_scanned_route | parse_pdf(str(scanned_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:121 <module>.test_T1_branch_10_pymupdf_exhausted_digital_route | with pytest.raises(ParseFailed) as exc:
+  tests/test_parse_failures.py:122 <module>.test_T1_branch_10_pymupdf_exhausted_digital_route | parse_pdf(str(digital_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:135 <module>.test_T1_branch_17_cascade_empty | with pytest.raises(ParseFailed) as exc:
+  tests/test_parse_failures.py:136 <module>.test_T1_branch_17_cascade_empty | parse_pdf(str(digital_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:169 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | stats = parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:201 <module>.test_T3_unclassified_exception_under_a_run_writes_its_own_code | stats = parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:222 <module>.test_T4_no_run_id_writes_no_event | stats = parse_all_pdfs(db, "test_parse_fail", spec=PARSE_SPEC)  # run_id defaults to None
+  tests/test_parse_failures.py:244 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:270 <module>.test_T6_file_exists_error_propagates_out_of_parse_all_pdfs | parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:90 <module>.test_T1_branch_2_file_unreadable | with pytest.raises(ParseFailed) as exc:
+  tests/test_parse_failures.py:91 <module>.test_T1_branch_2_file_unreadable | parse_pdf(str(digital_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:141 <module>.test_clean_docling_parse_is_one_accepted_attempt | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:159 <module>.test_clean_parse_reaches_parsed_status | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:177 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:194 <module>.test_rerouted_pass_still_reaches_parsed | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:207 <module>.test_glyph_then_shattered_then_vision_passes | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:226 <module>.test_pymupdf_first_shattered_reroutes_without_retrying_pymupdf | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:242 <module>.test_select_attempt_prefers_fewest_failures | assert select_attempt([two, one]) is one
+  tests/test_parse_gate.py:250 <module>.test_select_attempt_tie_breaks_on_summed_ratio | assert select_attempt([worse, better]) is better
+  tests/test_parse_gate.py:251 <module>.test_select_attempt_tie_breaks_on_summed_ratio | assert select_attempt([better, worse]) is better                # order-free
+  tests/test_parse_gate.py:260 <module>.test_shattered_tie_break_uses_the_share_half_only | assert select_attempt([worse, better]) is better
+  tests/test_parse_gate.py:267 <module>.test_a_passing_attempt_always_beats_a_least_bad_one | assert select_attempt([bad, good]) is good
+  tests/test_parse_gate.py:273 <module>.test_skipped_attempts_are_never_selectable | assert select_attempt([skipped]) is None
+  tests/test_parse_gate.py:283 <module>.test_all_fail_selects_least_bad_and_excludes_with_reason | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:309 <module>.test_excluded_paper_still_has_its_text_stored | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:334 <module>.test_vision_skipped_above_page_cap_and_never_called | parse_pdf(str(big_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:360 <module>.test_sparse_length_fallback_precedes_the_quality_gate | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:393 <module>.test_failure_between_asset_and_attempt_rows_leaves_neither | parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:413 <module>.test_reparse_writes_new_version_and_leaves_status_alone | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:419 <module>.test_reparse_writes_new_version_and_leaves_status_alone | out = reparse_papers(db, [pid], spec=PARSE_SPEC)
+  tests/test_parse_gate.py:435 <module>.test_reparse_reports_failures_without_excluding | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:440 <module>.test_reparse_reports_failures_without_excluding | out = reparse_papers(db, [pid], spec=PARSE_SPEC)
+  tests/test_parse_gate.py:450 <module>.test_reparse_reports_a_missing_pdf_without_aborting_the_batch | out = reparse_papers(db, [pid], spec=PARSE_SPEC)
+  tests/test_parse_gate.py:461 <module>.test_short_circuit_returns_the_stored_parser_used | first = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:464 <module>.test_short_circuit_returns_the_stored_parser_used | again = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)   # same hash
+  tests/test_parse_gate.py:481 <module>.test_short_circuit_does_not_read_the_parsed_text_file | first = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:492 <module>.test_short_circuit_does_not_read_the_parsed_text_file | again = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)   # same hash
+  tests/test_parse_gate.py:524 <module>.test_spec_override_reaches_assess | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=spec)
+  tests/test_parse_gate.py:538 <module>.test_spec_vision_cap_override_is_honoured | parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=spec)
+  tests/test_parse_gate.py:553 <module>.test_the_reroute_chain_is_bounded | parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:115 <module>.test_scanned_pdf_goes_to_the_ocr_tier_first | result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:129 <module>.test_scanned_ocr_failure_falls_through_to_vision | result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:142 <module>.test_scanned_ocr_sparse_output_also_falls_through_to_vision | result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:157 <module>.test_digital_clean_docling_never_reaches_the_ocr_tier | result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:187 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf | result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:221 <module>.test_ocr_tier_reuses_the_sanitized_copy_and_it_is_cleaned_up | result = parse_pdf(str(linked), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:239 <module>.test_ocr_cap_skips_the_tier_and_the_next_parser_is_tried | result = parse_pdf(str(big_scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:257 <module>.test_ocr_cap_on_a_reroute_falls_through_to_vision | result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=spec)
+  tests/test_parse_ocr_tier.py:282 <module>.test_sparse_length_fallback_still_precedes_the_gate | result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:299 <module>.test_total_failure_still_writes_the_attempt_rows | with pytest.raises(ParseFailed, match="all parsers returned empty text"):
+  tests/test_parse_ocr_tier.py:300 <module>.test_total_failure_still_writes_the_attempt_rows | parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:325 <module>.test_the_ledger_survives_a_raise_out_of_parse_pdf | with pytest.raises(ParseFailed) as exc:
+  tests/test_parse_ocr_tier.py:326 <module>.test_the_ledger_survives_a_raise_out_of_parse_pdf | parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:343 <module>.test_reparse_reports_a_total_failure_with_rows_written | parse_all_pdfs(db, "test_ocr", spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:348 <module>.test_reparse_reports_a_total_failure_with_rows_written | out = reparse_papers(db, [pid], spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:420 <module>.test_spec_ocr_engine_override_reaches_the_parser | parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=spec)
+  tests/test_parse_ocr_tier.py:435 <module>.test_real_ocr_tier_recovers_p719 | v = assess(md)
+  tests/test_parse_quality.py:127 <module>.test_one_replacement_char_in_2000_passes | v = assess(_text_of(2000, 1))
+  tests/test_parse_quality.py:135 <module>.test_three_replacement_chars_in_2000_fails | v = assess(_text_of(2000, 3))
+  tests/test_parse_quality.py:143 <module>.test_replacement_is_judged_by_density_not_count | small, large = assess(_text_of(600, 6)), assess(_text_of(31_000, 6))
+  tests/test_parse_quality.py:150 <module>.test_clean_prose_has_no_replacement_characters | assert assess(GOOD_PROSE).passed is True
+  tests/test_parse_quality.py:157 <module>.test_override_from_mapping_changes_the_verdict | assert assess(text).passed is False
+  tests/test_parse_quality.py:160 <module>.test_override_from_mapping_changes_the_verdict | assert assess(text, lax).passed is True
+  tests/test_parse_quality.py:187 <module>.test_replacement_density_override_changes_the_verdict | assert assess(text).passed is False
+  tests/test_parse_quality.py:189 <module>.test_replacement_density_override_changes_the_verdict | assert assess(text, lax).passed is True
+  tests/test_parse_quality.py:215 <module>.test_a_stricter_threshold_can_fail_a_clean_document | assert assess(CLEAN_FIXTURE.read_text(), half).passed is True
+  tests/test_parse_quality.py:217 <module>.test_a_stricter_threshold_can_fail_a_clean_document | assert assess(CLEAN_FIXTURE.read_text(), both).passed is False
+  tests/test_parse_quality.py:236 <module>.test_high_short_share_with_healthy_chars_per_unit_passes | assert assess(_wrapped()).passed is True
+  tests/test_parse_quality.py:245 <module>.test_low_chars_per_unit_with_low_short_share_passes | assert assess(text).passed is True
+  tests/test_parse_quality.py:249 <module>.test_only_the_conjunction_fires | assert SHATTERED not in assess(_wrapped()).criteria
+  tests/test_parse_quality.py:250 <module>.test_only_the_conjunction_fires | assert SHATTERED in assess(SHATTERED_FIXTURE.read_text()).criteria
+  tests/test_parse_quality.py:275 <module>.test_uni_escape_count_is_telemetry_and_never_judged | v = assess(raw)
+  tests/test_parse_quality.py:330 <module>.test_retired_criterion_names_never_appear_in_any_failure | assert set(assess(text).criteria) & retired == set()
+  tests/test_parse_quality.py:341 <module>.test_assess_is_deterministic_on_repeated_calls | a, b = assess(text), assess(text)
+  tests/test_parse_quality.py:392 <module>.test_empty_string_fails_with_its_own_criterion | v = assess("")
+  tests/test_parse_quality.py:399 <module>.test_whitespace_only_fails_as_empty_not_as_segmentation | v = assess("   \n\n \t ")
+  tests/test_parse_quality.py:405 <module>.test_empty_text_returns_a_verdict_not_an_exception | assert isinstance(assess(""), Verdict)
+  tests/test_parse_quality.py:422 <module>.test_font_exposure_fires_above_the_limit_and_not_at_or_below_it | assert FONT_EXPOSURE not in assess(text, font_exposure_per_kchar=4.99).criteria
+  tests/test_parse_quality.py:423 <module>.test_font_exposure_fires_above_the_limit_and_not_at_or_below_it | assert FONT_EXPOSURE not in assess(text, font_exposure_per_kchar=5.0).criteria
+  tests/test_parse_quality.py:424 <module>.test_font_exposure_fires_above_the_limit_and_not_at_or_below_it | assert FONT_EXPOSURE in assess(text, font_exposure_per_kchar=5.01).criteria
+  tests/test_parse_quality.py:425 <module>.test_font_exposure_fires_above_the_limit_and_not_at_or_below_it | v = assess(text, font_exposure_per_kchar=37.281)
+  tests/test_parse_quality.py:432 <module>.test_font_exposure_none_is_not_evaluated_and_never_reads_as_zero | v = assess(GOOD_PROSE)
+  tests/test_parse_quality.py:435 <module>.test_font_exposure_none_is_not_evaluated_and_never_reads_as_zero | measured = assess(GOOD_PROSE, font_exposure_per_kchar=0.0)
+  tests/test_parse_quality.py:450 <module>.test_font_exposure_does_not_disturb_the_other_criteria | plain = set(assess(text).criteria)
+  tests/test_parse_quality.py:451 <module>.test_font_exposure_does_not_disturb_the_other_criteria | loaded = set(assess(text, font_exposure_per_kchar=99.0).criteria)
+  tests/test_parse_quality.py:453 <module>.test_font_exposure_does_not_disturb_the_other_criteria | assert plain == set(assess(text, font_exposure_per_kchar=0.0).criteria)
+  tests/test_parse_quality.py:458 <module>.test_empty_text_still_short_circuits_before_font_exposure | v = assess("   \n\t ", font_exposure_per_kchar=99.0)
+  tests/test_parse_quality.py:56 <module>.test_shattered_fixture_fails_on_the_single_shattered_criterion | v = assess(SHATTERED_FIXTURE.read_text())
+  tests/test_parse_quality.py:67 <module>.test_clean_fixture_passes_with_zero_failures | v = assess(CLEAN_FIXTURE.read_text())
+  tests/test_parse_quality.py:92 <module>.test_glyph_density_above_the_limit_fails | v = assess(_with_glyphs(6.0))
+  tests/test_parse_quality.py:99 <module>.test_glyph_density_below_the_limit_passes | v = assess(_with_glyphs(4.0))
+  tests/test_parse_sanitized_retry.py:110 <module>.test_docling_crash_is_recovered_by_the_sanitized_retry | result = parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:134 <module>.test_sanitized_success_reaches_parsed_status | parse_all_pdfs(db, "test_sanitized", spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:150 <module>.test_both_docling_attempts_fail_then_pymupdf | result = parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:189 <module>.test_temp_copy_is_removed_after_a_successful_retry | parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:204 <module>.test_temp_copy_is_removed_after_a_raising_retry | parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:216 <module>.test_a_pdf_with_no_links_skips_the_sanitized_retry | parse_pdf(str(plain), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:241 <module>.test_retry_is_skipped_when_stripping_would_change_the_text | parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:265 <module>.test_a_raising_pymupdf_is_recorded_then_reraised | with pytest.raises(ParseFailed) as exc:
+  tests/test_parse_sanitized_retry.py:266 <module>.test_a_raising_pymupdf_is_recorded_then_reraised | parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:284 <module>.test_a_raising_reroute_is_recorded_and_ends_the_loop | parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:314 <module>.test_real_docling_crash_on_p455_is_recovered_by_the_sanitized_retry | result = parse_pdf(str(P455_PDF), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:322 <module>.test_real_docling_crash_on_p455_is_recovered_by_the_sanitized_retry | assert assess(result.parsed_markdown).passed is True
+  tests/test_parse_writer_refs.py:111 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row | parse_pdf(str(pdf), 5, "writer", db, spec=PARSE_SPEC)
+  tests/test_parse_writer_refs.py:58 <module>._parse | return parse_pdf(str(pdf), 5, "writer", db, force=force, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:133 <module>.test_digital_routes_to_docling | result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:149 <module>.test_scanned_routes_to_vision_model | result = parse_pdf(str(scanned_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:165 <module>.test_version_increments_on_reparse | r1 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:177 <module>.test_version_increments_on_reparse | r2 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:191 <module>.test_skip_if_same_hash | r1 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:194 <module>.test_skip_if_same_hash | r2 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:214 <module>.test_docling_success_uses_docling | result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:230 <module>.test_docling_exception_triggers_pymupdf | result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:250 <module>.test_all_parsers_empty_raises_value_error | with pytest.raises(ParseFailed, match="all parsers returned empty text"):
+  tests/test_pdf_parser.py:251 <module>.test_all_parsers_empty_raises_value_error | parse_pdf(str(scanned_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:277 <module>.test_docling_and_pymupdf_sparse_triggers_vision | result = parse_pdf(str(scanned_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:293 <module>.test_docling_sparse_pymupdf_sufficient | result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:337 <module>.test_hash_stored_in_papers_table | parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:353 <module>.test_verify_hashes_no_mismatch | parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:366 <module>.test_verify_hashes_reports_mismatch | parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:400 <module>.test_atomic_write_no_temp_on_db_failure | parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:469 <module>.test_parse_pdf_uses_spec_threshold | result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=spec)
+  tests/test_request_capture.py:295 <module>.test_vision_parse | parse_with_vision(str(pdf), vision_model=spec.pdf_parsing.vision_model,
+  tests/test_undeclared_override.py:167 <module>.test_T5_vision_under_a_declared_run_refuses_a_differing_override | parse_with_vision(str(three_page_pdf), num_ctx=4096,
+  tests/test_undeclared_override.py:185 <module>.test_T5_vision_under_a_declared_run_sends_the_rows_values | parse_with_vision(str(three_page_pdf), cfg=ec.stage_config("vision_parse", spec))
+  tests/test_vision_bounds.py:111 <module>.test_spec_overrides_reach_the_call_through_parse_pdf | parse_pdf(str(scanned_pdf), pid, "test_vbounds", db, spec=spec)
+  tests/test_vision_bounds.py:143 <module>.test_the_prompt_is_what_is_sent | parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
+  tests/test_vision_bounds.py:158 <module>.test_truncation_on_page_2_aborts_before_page_3 | parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
+  tests/test_vision_bounds.py:172 <module>.test_truncation_becomes_an_unselectable_error_row | with pytest.raises(ParseFailed) as exc:
+  tests/test_vision_bounds.py:173 <module>.test_truncation_becomes_an_unselectable_error_row | parse_pdf(str(scanned_pdf), pid, "test_vbounds", db, spec=PARSE_SPEC)
+  tests/test_vision_bounds.py:198 <module>.test_no_partial_document_survives_a_truncated_page | parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
+  tests/test_vision_bounds.py:207 <module>.test_all_pages_stop_assembles_the_document_as_before | out = parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
+  tests/test_vision_bounds.py:217 <module>.test_per_page_log_lines_are_emitted | parse_with_vision(str(three_page_pdf), paper_id=455, cfg=stage_config("vision_parse"))
+  tests/test_vision_bounds.py:231 <module>.test_per_call_wall_timeout_is_passed | parse_with_vision(str(three_page_pdf), page_timeout_s=123, cfg=stage_config("vision_parse"))
+  tests/test_vision_bounds.py:237 <module>.test_default_page_timeout_is_the_spec_default | parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
+  tests/test_vision_bounds.py:86 <module>.test_defaults_send_num_predict_and_num_ctx | parse_with_vision(str(three_page_pdf), cfg=stage_config("vision_parse"))
+  tests/test_vision_bounds.py:95 <module>.test_explicit_overrides_reach_the_call | parse_with_vision(str(three_page_pdf), num_predict=99, num_ctx=1024, cfg=stage_config("vision_parse"))
+
+-- (i) from-imports of pdf_parser: 14 hits / 10 files
+   by file: test_font_audit_ledger.py 4, test_parse_sanitized_retry.py 2, test_parse_failures.py 1, test_parse_gate.py 1, test_parse_ocr_tier.py 1, test_parse_writer_refs.py 1, test_pdf_parser.py 1, test_request_capture.py 1, test_undeclared_override.py 1, test_vision_bounds.py 1
+  tests/test_font_audit_ledger.py:309 <module>.test_a_judged_attempt_records_its_audit | from engine.parsers.pdf_parser import parse_pdf
+  tests/test_font_audit_ledger.py:334 <module>.test_a_total_failure_records_the_structure_half | from engine.parsers.pdf_parser import ParseFailed, parse_pdf
+  tests/test_font_audit_ledger.py:365 <module>.test_an_audit_that_raises_does_not_fail_the_parse | from engine.parsers.pdf_parser import parse_pdf
+  tests/test_font_audit_ledger.py:40 <module> | from engine.parsers.pdf_parser import _insert_attempts
+  tests/test_parse_failures.py:22 <module> | from engine.parsers.pdf_parser import ParseFailed, parse_all_pdfs, parse_pdf
+  tests/test_parse_gate.py:21 <module> | from engine.parsers.pdf_parser import (
+  tests/test_parse_ocr_tier.py:27 <module> | from engine.parsers.pdf_parser import (
+  tests/test_parse_sanitized_retry.py:21 <module> | from engine.parsers.pdf_parser import (
+  tests/test_parse_sanitized_retry.py:296 <module>.test_attempt_cap_is_five | from engine.parsers.pdf_parser import _MAX_ATTEMPTS
+  tests/test_parse_writer_refs.py:19 <module> | from engine.parsers.pdf_parser import parse_pdf
+  tests/test_pdf_parser.py:11 <module> | from engine.parsers.pdf_parser import (
+  tests/test_request_capture.py:288 <module>.test_vision_parse | from engine.parsers.pdf_parser import parse_with_vision
+  tests/test_undeclared_override.py:35 <module> | from engine.parsers.pdf_parser import parse_with_vision
+  tests/test_vision_bounds.py:21 <module> | from engine.parsers.pdf_parser import (
+
+-- (ii) attribute access to a parser name: 7 hits / 3 files
+   by file: test_parse_spec_threading.py 5, test_extraction_signatures.py 1, test_u39_runtime_equals_hash.py 1
+  tests/test_extraction_signatures.py:54 <module>.test_cfg_is_required | lambda: PP.parse_with_vision("no-such.pdf"),
+  tests/test_parse_spec_threading.py:106 <module>.test_parse_pdf_with_a_none_spec_fails_at_the_first_read | PP.parse_pdf("no-such.pdf", 1, "test_c53", db, spec=None)
+  tests/test_parse_spec_threading.py:71 <module>.test_a_non_default_pdf_parsing_reaches_parse_pdfs_resolution | PP.parse_all_pdfs(db, "test_c53", spec=_non_default_spec())
+  tests/test_parse_spec_threading.py:89 <module>.test_spec_is_required | lambda db: PP.parse_all_pdfs(db, "test_c53"),
+  tests/test_parse_spec_threading.py:90 <module>.test_spec_is_required | lambda db: PP.parse_pdf("no-such.pdf", 1, "test_c53", db),
+  tests/test_parse_spec_threading.py:91 <module>.test_spec_is_required | lambda db: PP.reparse_papers(db, [1]),
+  tests/test_u39_runtime_equals_hash.py:216 <module>.test_vision_parse_runtime_equals_hash | sent = _send(P.parse_with_vision, str(pdf), cfg=ec.stage_config("vision_parse", spec))
+
+-- (ii) patch or setattr on engine.parsers.pdf_parser: 159 hits / 11 files
+   by file: test_parse_gate.py 46, test_parse_ocr_tier.py 35, test_parse_failures.py 20, test_parse_sanitized_retry.py 17, test_pdf_parser.py 13, test_vision_bounds.py 13, test_font_audit_ledger.py 6, test_parse_writer_refs.py 5, test_undeclared_override.py 2, test_extraction_signatures.py 1, test_prompt_hash_coverage.py 1
+  tests/test_extraction_signatures.py:39 <module>._fence_model_calls | patch("engine.parsers.pdf_parser.ollama_chat", _no_model_call), \
+  tests/test_font_audit_ledger.py:312 <module>.test_a_judged_attempt_records_its_audit | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_font_audit_ledger.py:337 <module>.test_a_total_failure_records_the_structure_half | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_font_audit_ledger.py:338 <module>.test_a_total_failure_records_the_structure_half | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_font_audit_ledger.py:339 <module>.test_a_total_failure_records_the_structure_half | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value="  "), \
+  tests/test_font_audit_ledger.py:340 <module>.test_a_total_failure_records_the_structure_half | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_font_audit_ledger.py:368 <module>.test_an_audit_that_raises_does_not_fail_the_parse | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_failures.py:101 <module>.test_T1_branch_6_vision_exhausted_scanned_route | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_failures.py:103 <module>.test_T1_branch_6_vision_exhausted_scanned_route | patch("engine.parsers.pdf_parser.parse_with_vision",
+  tests/test_parse_failures.py:117 <module>.test_T1_branch_10_pymupdf_exhausted_digital_route | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_failures.py:119 <module>.test_T1_branch_10_pymupdf_exhausted_digital_route | patch("engine.parsers.pdf_parser.parse_with_pymupdf",
+  tests/test_parse_failures.py:132 <module>.test_T1_branch_17_cascade_empty | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_failures.py:133 <module>.test_T1_branch_17_cascade_empty | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_failures.py:134 <module>.test_T1_branch_17_cascade_empty | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_failures.py:166 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_failures.py:167 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_failures.py:168 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_failures.py:197 <module>.test_T3_unclassified_exception_under_a_run_writes_its_own_code | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_failures.py:199 <module>.test_T3_unclassified_exception_under_a_run_writes_its_own_code | patch("engine.parsers.pdf_parser.record_parsed_text",
+  tests/test_parse_failures.py:219 <module>.test_T4_no_run_id_writes_no_event | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_failures.py:220 <module>.test_T4_no_run_id_writes_no_event | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_failures.py:221 <module>.test_T4_no_run_id_writes_no_event | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_failures.py:241 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_failures.py:242 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_failures.py:243 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_failures.py:34 <module>._no_unstubbed_ocr | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_failures.py:88 <module>.test_T1_branch_2_file_unreadable | with patch("engine.parsers.pdf_parser.is_scanned_pdf",
+  tests/test_parse_gate.py:139 <module>.test_clean_docling_parse_is_one_accepted_attempt | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN), \
+  tests/test_parse_gate.py:140 <module>.test_clean_docling_parse_is_one_accepted_attempt | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_gate.py:158 <module>.test_clean_parse_reaches_parsed_status | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_gate.py:173 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:174 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN), \
+  tests/test_parse_gate.py:175 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops | patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf, \
+  tests/test_parse_gate.py:176 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_gate.py:192 <module>.test_rerouted_pass_still_reaches_parsed | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:193 <module>.test_rerouted_pass_still_reaches_parsed | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN):
+  tests/test_parse_gate.py:203 <module>.test_glyph_then_shattered_then_vision_passes | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:204 <module>.test_glyph_then_shattered_then_vision_passes | patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_gate.py:206 <module>.test_glyph_then_shattered_then_vision_passes | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+  tests/test_parse_gate.py:221 <module>.test_pymupdf_first_shattered_reroutes_without_retrying_pymupdf | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_gate.py:223 <module>.test_pymupdf_first_shattered_reroutes_without_retrying_pymupdf | patch("engine.parsers.pdf_parser.parse_with_pymupdf",
+  tests/test_parse_gate.py:225 <module>.test_pymupdf_first_shattered_reroutes_without_retrying_pymupdf | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN):
+  tests/test_parse_gate.py:280 <module>.test_all_fail_selects_least_bad_and_excludes_with_reason | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=worst), \
+  tests/test_parse_gate.py:281 <module>.test_all_fail_selects_least_bad_and_excludes_with_reason | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
+  tests/test_parse_gate.py:282 <module>.test_all_fail_selects_least_bad_and_excludes_with_reason | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
+  tests/test_parse_gate.py:306 <module>.test_excluded_paper_still_has_its_text_stored | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:307 <module>.test_excluded_paper_still_has_its_text_stored | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
+  tests/test_parse_gate.py:308 <module>.test_excluded_paper_still_has_its_text_stored | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
+  tests/test_parse_gate.py:330 <module>.test_vision_skipped_above_page_cap_and_never_called | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=SHATTERED_TEXT), \
+  tests/test_parse_gate.py:331 <module>.test_vision_skipped_above_page_cap_and_never_called | patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_gate.py:333 <module>.test_vision_skipped_above_page_cap_and_never_called | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_gate.py:357 <module>.test_sparse_length_fallback_precedes_the_quality_gate | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"), \
+  tests/test_parse_gate.py:358 <module>.test_sparse_length_fallback_precedes_the_quality_gate | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN), \
+  tests/test_parse_gate.py:359 <module>.test_sparse_length_fallback_precedes_the_quality_gate | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_gate.py:391 <module>.test_failure_between_asset_and_attempt_rows_leaves_neither | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_gate.py:412 <module>.test_reparse_writes_new_version_and_leaves_status_alone | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_gate.py:418 <module>.test_reparse_writes_new_version_and_leaves_status_alone | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_gate.py:434 <module>.test_reparse_reports_failures_without_excluding | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_gate.py:437 <module>.test_reparse_reports_failures_without_excluding | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:438 <module>.test_reparse_reports_failures_without_excluding | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=GLYPHY), \
+  tests/test_parse_gate.py:439 <module>.test_reparse_reports_failures_without_excluding | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
+  tests/test_parse_gate.py:458 <module>.test_short_circuit_returns_the_stored_parser_used | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_gate.py:460 <module>.test_short_circuit_returns_the_stored_parser_used | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_gate.py:478 <module>.test_short_circuit_does_not_read_the_parsed_text_file | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_gate.py:480 <module>.test_short_circuit_does_not_read_the_parsed_text_file | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_gate.py:522 <module>.test_spec_override_reaches_assess | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:523 <module>.test_spec_override_reaches_assess | patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf:
+  tests/test_parse_gate.py:536 <module>.test_spec_vision_cap_override_is_honoured | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=SHATTERED_TEXT), \
+  tests/test_parse_gate.py:537 <module>.test_spec_vision_cap_override_is_honoured | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_gate.py:550 <module>.test_the_reroute_chain_is_bounded | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_gate.py:551 <module>.test_the_reroute_chain_is_bounded | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=GLYPHY), \
+  tests/test_parse_gate.py:552 <module>.test_the_reroute_chain_is_bounded | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=GLYPHY):
+  tests/test_parse_gate.py:58 <module>._no_unstubbed_ocr | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_ocr_tier.py:113 <module>.test_scanned_pdf_goes_to_the_ocr_tier_first | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN), \
+  tests/test_parse_ocr_tier.py:114 <module>.test_scanned_pdf_goes_to_the_ocr_tier_first | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_ocr_tier.py:126 <module>.test_scanned_ocr_failure_falls_through_to_vision | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_ocr_tier.py:128 <module>.test_scanned_ocr_failure_falls_through_to_vision | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+  tests/test_parse_ocr_tier.py:140 <module>.test_scanned_ocr_sparse_output_also_falls_through_to_vision | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value="  "), \
+  tests/test_parse_ocr_tier.py:141 <module>.test_scanned_ocr_sparse_output_also_falls_through_to_vision | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+  tests/test_parse_ocr_tier.py:154 <module>.test_digital_clean_docling_never_reaches_the_ocr_tier | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN), \
+  tests/test_parse_ocr_tier.py:155 <module>.test_digital_clean_docling_never_reaches_the_ocr_tier | patch("engine.parsers.pdf_parser.parse_with_docling_ocr") as ocr, \
+  tests/test_parse_ocr_tier.py:156 <module>.test_digital_clean_docling_never_reaches_the_ocr_tier | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_ocr_tier.py:183 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_ocr_tier.py:184 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=CLEAN), \
+  tests/test_parse_ocr_tier.py:185 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf | patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf, \
+  tests/test_parse_ocr_tier.py:186 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_ocr_tier.py:219 <module>.test_ocr_tier_reuses_the_sanitized_copy_and_it_is_cleaned_up | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=docling), \
+  tests/test_parse_ocr_tier.py:220 <module>.test_ocr_tier_reuses_the_sanitized_copy_and_it_is_cleaned_up | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", side_effect=ocr):
+  tests/test_parse_ocr_tier.py:238 <module>.test_ocr_cap_skips_the_tier_and_the_next_parser_is_tried | with patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+  tests/test_parse_ocr_tier.py:254 <module>.test_ocr_cap_on_a_reroute_falls_through_to_vision | with patch("engine.parsers.pdf_parser.page_count", return_value=500), \
+  tests/test_parse_ocr_tier.py:255 <module>.test_ocr_cap_on_a_reroute_falls_through_to_vision | patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_ocr_tier.py:256 <module>.test_ocr_cap_on_a_reroute_falls_through_to_vision | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=CLEAN):
+  tests/test_parse_ocr_tier.py:278 <module>.test_sparse_length_fallback_still_precedes_the_gate | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"), \
+  tests/test_parse_ocr_tier.py:279 <module>.test_sparse_length_fallback_still_precedes_the_gate | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN), \
+  tests/test_parse_ocr_tier.py:280 <module>.test_sparse_length_fallback_still_precedes_the_gate | patch("engine.parsers.pdf_parser.parse_with_docling_ocr") as ocr, \
+  tests/test_parse_ocr_tier.py:281 <module>.test_sparse_length_fallback_still_precedes_the_gate | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_ocr_tier.py:294 <module>.test_total_failure_still_writes_the_attempt_rows | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_ocr_tier.py:295 <module>.test_total_failure_still_writes_the_attempt_rows | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_ocr_tier.py:296 <module>.test_total_failure_still_writes_the_attempt_rows | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_ocr_tier.py:318 <module>.test_the_ledger_survives_a_raise_out_of_parse_pdf | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_ocr_tier.py:320 <module>.test_the_ledger_survives_a_raise_out_of_parse_pdf | patch("engine.parsers.pdf_parser.parse_with_pymupdf",
+  tests/test_parse_ocr_tier.py:342 <module>.test_reparse_reports_a_total_failure_with_rows_written | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=CLEAN):
+  tests/test_parse_ocr_tier.py:345 <module>.test_reparse_reports_a_total_failure_with_rows_written | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="  "), \
+  tests/test_parse_ocr_tier.py:346 <module>.test_reparse_reports_a_total_failure_with_rows_written | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value="  "), \
+  tests/test_parse_ocr_tier.py:347 <module>.test_reparse_reports_a_total_failure_with_rows_written | patch("engine.parsers.pdf_parser.parse_with_vision", return_value="  "):
+  tests/test_parse_ocr_tier.py:418 <module>.test_spec_ocr_engine_override_reaches_the_parser | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=GLYPHY), \
+  tests/test_parse_ocr_tier.py:419 <module>.test_spec_ocr_engine_override_reaches_the_parser | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", side_effect=ocr):
+  tests/test_parse_ocr_tier.py:62 <module>._no_unstubbed_ocr | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_sanitized_retry.py:106 <module>.test_docling_crash_is_recovered_by_the_sanitized_retry | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_sanitized_retry.py:108 <module>.test_docling_crash_is_recovered_by_the_sanitized_retry | patch("engine.parsers.pdf_parser.parse_with_pymupdf") as pymupdf, \
+  tests/test_parse_sanitized_retry.py:109 <module>.test_docling_crash_is_recovered_by_the_sanitized_retry | patch("engine.parsers.pdf_parser.parse_with_vision") as vision:
+  tests/test_parse_sanitized_retry.py:132 <module>.test_sanitized_success_reaches_parsed_status | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_sanitized_retry.py:147 <module>.test_both_docling_attempts_fail_then_pymupdf | with patch("engine.parsers.pdf_parser.parse_with_docling",
+  tests/test_parse_sanitized_retry.py:149 <module>.test_both_docling_attempts_fail_then_pymupdf | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_sanitized_retry.py:188 <module>.test_temp_copy_is_removed_after_a_successful_retry | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=capture):
+  tests/test_parse_sanitized_retry.py:202 <module>.test_temp_copy_is_removed_after_a_raising_retry | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=capture), \
+  tests/test_parse_sanitized_retry.py:203 <module>.test_temp_copy_is_removed_after_a_raising_retry | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_sanitized_retry.py:214 <module>.test_a_pdf_with_no_links_skips_the_sanitized_retry | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=_boom()), \
+  tests/test_parse_sanitized_retry.py:215 <module>.test_a_pdf_with_no_links_skips_the_sanitized_retry | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_sanitized_retry.py:239 <module>.test_retry_is_skipped_when_stripping_would_change_the_text | patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=_boom()), \
+  tests/test_parse_sanitized_retry.py:240 <module>.test_retry_is_skipped_when_stripping_would_change_the_text | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=CLEAN):
+  tests/test_parse_sanitized_retry.py:259 <module>.test_a_raising_pymupdf_is_recorded_then_reraised | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=_boom()), \
+  tests/test_parse_sanitized_retry.py:260 <module>.test_a_raising_pymupdf_is_recorded_then_reraised | patch("engine.parsers.pdf_parser.parse_with_pymupdf",
+  tests/test_parse_sanitized_retry.py:283 <module>.test_a_raising_reroute_is_recorded_and_ends_the_loop | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=shattered):
+  tests/test_parse_sanitized_retry.py:57 <module>._no_unstubbed_ocr | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_parse_writer_refs.py:106 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=""), \
+  tests/test_parse_writer_refs.py:107 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row | patch("engine.parsers.pdf_parser.parse_with_pymupdf", return_value=""), \
+  tests/test_parse_writer_refs.py:108 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row | patch("engine.parsers.pdf_parser.parse_with_docling_ocr", return_value=""), \
+  tests/test_parse_writer_refs.py:109 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row | patch("engine.parsers.pdf_parser.parse_with_vision", return_value=""):
+  tests/test_parse_writer_refs.py:57 <module>._parse | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value=text):
+  tests/test_pdf_parser.py:148 <module>.test_scanned_routes_to_vision_model | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response):
+  tests/test_pdf_parser.py:213 <module>.test_docling_success_uses_docling | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+  tests/test_pdf_parser.py:229 <module>.test_docling_exception_triggers_pymupdf | with patch("engine.parsers.pdf_parser.parse_with_docling", side_effect=RuntimeError("hyperlink validation")):
+  tests/test_pdf_parser.py:247 <module>.test_all_parsers_empty_raises_value_error | with patch("engine.parsers.pdf_parser.parse_with_vision", return_value=""):
+  tests/test_pdf_parser.py:275 <module>.test_docling_and_pymupdf_sparse_triggers_vision | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"):
+  tests/test_pdf_parser.py:276 <module>.test_docling_and_pymupdf_sparse_triggers_vision | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response):
+  tests/test_pdf_parser.py:292 <module>.test_docling_sparse_pymupdf_sufficient | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="short"):
+  tests/test_pdf_parser.py:336 <module>.test_hash_stored_in_papers_table | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+  tests/test_pdf_parser.py:352 <module>.test_verify_hashes_no_mismatch | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+  tests/test_pdf_parser.py:365 <module>.test_verify_hashes_reports_mismatch | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong enough content " * 10):
+  tests/test_pdf_parser.py:37 <module>._no_unstubbed_ocr | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_pdf_parser.py:398 <module>.test_atomic_write_no_temp_on_db_failure | with patch("engine.parsers.pdf_parser.parse_with_docling", return_value="# Title\n\nLong content " * 10):
+  tests/test_pdf_parser.py:468 <module>.test_parse_pdf_uses_spec_threshold | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=mock_response) as mock_chat:
+  tests/test_prompt_hash_coverage.py:115 <module>.test_the_echo_truncation_marker_is_hashed | with patch.object(P, "FEEDBACK_TRUNCATION_MARKER", MUTANT):
+  tests/test_undeclared_override.py:164 <module>.test_T5_vision_under_a_declared_run_refuses_a_differing_override | monkeypatch.setattr("engine.parsers.pdf_parser.ollama_chat", chat)
+  tests/test_undeclared_override.py:183 <module>.test_T5_vision_under_a_declared_run_sends_the_rows_values | monkeypatch.setattr("engine.parsers.pdf_parser.ollama_chat", fake_chat)
+  tests/test_vision_bounds.py:107 <module>.test_spec_overrides_reach_the_call_through_parse_pdf | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_vision_bounds.py:109 <module>.test_spec_overrides_reach_the_call_through_parse_pdf | patch("engine.parsers.pdf_parser.ollama_chat",
+  tests/test_vision_bounds.py:142 <module>.test_the_prompt_is_what_is_sent | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+  tests/test_vision_bounds.py:156 <module>.test_truncation_on_page_2_aborts_before_page_3 | with patch("engine.parsers.pdf_parser.ollama_chat", side_effect=responses):
+  tests/test_vision_bounds.py:165 <module>.test_truncation_becomes_an_unselectable_error_row | with patch("engine.parsers.pdf_parser.parse_with_docling_ocr",
+  tests/test_vision_bounds.py:167 <module>.test_truncation_becomes_an_unselectable_error_row | patch("engine.parsers.pdf_parser.ollama_chat",
+  tests/test_vision_bounds.py:196 <module>.test_no_partial_document_survives_a_truncated_page | with patch("engine.parsers.pdf_parser.ollama_chat", side_effect=responses):
+  tests/test_vision_bounds.py:205 <module>.test_all_pages_stop_assembles_the_document_as_before | with patch("engine.parsers.pdf_parser.ollama_chat",
+  tests/test_vision_bounds.py:216 <module>.test_per_page_log_lines_are_emitted | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()):
+  tests/test_vision_bounds.py:230 <module>.test_per_call_wall_timeout_is_passed | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+  tests/test_vision_bounds.py:236 <module>.test_default_page_timeout_is_the_spec_default | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+  tests/test_vision_bounds.py:85 <module>.test_defaults_send_num_predict_and_num_ctx | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+  tests/test_vision_bounds.py:94 <module>.test_explicit_overrides_reach_the_call | with patch("engine.parsers.pdf_parser.ollama_chat", return_value=_resp()) as chat:
+
+-- (iii) a parse reason-code constant: 9 hits / 2 files
+   by file: test_parse_failures.py 8, test_two_axis_state_and_grid.py 1
+  tests/test_parse_failures.py:107 <module>.test_T1_branch_6_vision_exhausted_scanned_route | assert exc.value.reason_code == PS.REASON_PARSE_VISION_EXHAUSTED | REASON_PARSE_VISION_EXHAUSTED
+  tests/test_parse_failures.py:123 <module>.test_T1_branch_10_pymupdf_exhausted_digital_route | assert exc.value.reason_code == PS.REASON_PARSE_PYMUPDF_EXHAUSTED | REASON_PARSE_PYMUPDF_EXHAUSTED
+  tests/test_parse_failures.py:137 <module>.test_T1_branch_17_cascade_empty | assert exc.value.reason_code == PS.REASON_PARSE_CASCADE_EMPTY | REASON_PARSE_CASCADE_EMPTY
+  tests/test_parse_failures.py:178 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | assert tuple(row) == ("parsed", "parse_failed", PS.REASON_PARSE_CASCADE_EMPTY, | REASON_PARSE_CASCADE_EMPTY
+  tests/test_parse_failures.py:207 <module>.test_T3_unclassified_exception_under_a_run_writes_its_own_code | assert row[0] == PS.REASON_PARSE_UNCLASSIFIED_ERROR | REASON_PARSE_UNCLASSIFIED_ERROR
+  tests/test_parse_failures.py:248 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | assert state.processing_reason == PS.REASON_PARSE_CASCADE_EMPTY | REASON_PARSE_CASCADE_EMPTY
+  tests/test_parse_failures.py:252 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | assert flow["failure_reasons"]["parse_failed"] == {PS.REASON_PARSE_CASCADE_EMPTY: 1} | REASON_PARSE_CASCADE_EMPTY
+  tests/test_parse_failures.py:92 <module>.test_T1_branch_2_file_unreadable | assert exc.value.reason_code == PS.REASON_PARSE_FILE_UNREADABLE | REASON_PARSE_FILE_UNREADABLE
+  tests/test_two_axis_state_and_grid.py:115 <module> | "parse_failed": paper_state.REASON_PARSE_CASCADE_EMPTY, | REASON_PARSE_CASCADE_EMPTY
+
+-- (iii) a parse reason-code literal: 21 hits / 6 files
+   by file: test_audit_admitted_set.py 10, test_parse_failures.py 6, test_two_axis_state_and_grid.py 2, _event_store_fixture.py 1, test_extraction_events.py 1, test_migration_019_paper_axes.py 1
+  tests/_event_store_fixture.py:266 <module> | "parse_failed": "parsed", | parse_failed
+  tests/test_audit_admitted_set.py:124 <module>.test_t1_a_paper_at_a_failure_state_with_unlocated_claims_is_not_audited | @pytest.mark.parametrize("state", ["parse_failed", "extraction_failed", | parse_failed
+  tests/test_audit_admitted_set.py:162 <module>.test_t4_prisma_counts_one_included_and_one_parse_failed_after_a_mixed_audit | for pid, state in ((P7, "extracted"), (P8, "parse_failed")): | parse_failed
+  tests/test_audit_admitted_set.py:168 <module>.test_t4_prisma_counts_one_included_and_one_parse_failed_after_a_mixed_audit | assert flow["studies_included"] == 1 and flow["parse_failed"] == 1 | parse_failed
+  tests/test_audit_admitted_set.py:177 <module>.test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state | at_state(db, run_id, P7, "parse_failed") | parse_failed
+  tests/test_audit_admitted_set.py:181 <module>.test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state | assert rep.skipped_by_state == ((P7, "parse_failed", "parse_file_unreadable"), | parse_failed
+  tests/test_audit_admitted_set.py:181 <module>.test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state | assert rep.skipped_by_state == ((P7, "parse_failed", "parse_file_unreadable"), | parse_file_unreadable
+  tests/test_audit_admitted_set.py:187 <module>.test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state | assert len(p7) == 1 and "parse_failed" in p7[0] and "parse_file_unreadable" in p7[0] | parse_failed
+  tests/test_audit_admitted_set.py:187 <module>.test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state | assert len(p7) == 1 and "parse_failed" in p7[0] and "parse_file_unreadable" in p7[0] | parse_file_unreadable
+  tests/test_audit_admitted_set.py:48 <module> | REASON = {"parse_failed": "parse_file_unreadable", "extraction_failed": "model_call_failed", | parse_failed
+  tests/test_audit_admitted_set.py:48 <module> | REASON = {"parse_failed": "parse_file_unreadable", "extraction_failed": "model_call_failed", | parse_file_unreadable
+  tests/test_extraction_events.py:584 <module>.test_t12_processing_reasons_is_exactly_the_union_of_its_three_parts | assert set(PS.PARSE_REASONS.values()) == {"parse_failed"} | parse_failed
+  tests/test_migration_019_paper_axes.py:269 <module>.test_a_pre_existing_failure_row_with_no_reason_stops_the_migration | assert "parse_failed" not in sql | parse_failed
+  tests/test_parse_failures.py:178 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | assert tuple(row) == ("parsed", "parse_failed", PS.REASON_PARSE_CASCADE_EMPTY, | parse_failed
+  tests/test_parse_failures.py:247 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | assert state.processing == "parse_failed" | parse_failed
+  tests/test_parse_failures.py:251 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | assert flow["parse_failed"] == 1 | parse_failed
+  tests/test_parse_failures.py:252 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | assert flow["failure_reasons"]["parse_failed"] == {PS.REASON_PARSE_CASCADE_EMPTY: 1} | parse_failed
+  tests/test_parse_failures.py:282 <module>.test_T7_seed_processing_refuses_an_unknown_code | seed_processing(db._conn, 1, "parse_failed", reason_code="not_a_real_code") | parse_failed
+  tests/test_parse_failures.py:295 <module>.test_T7_seed_processing_accepts_every_ruled_code | seed_processing(db._conn, 1, "parse_failed", reason_code=code) | parse_failed
+  tests/test_two_axis_state_and_grid.py:115 <module> | "parse_failed": paper_state.REASON_PARSE_CASCADE_EMPTY, | parse_failed
+  tests/test_two_axis_state_and_grid.py:124 <module> | "parse_failed": "parsed", | parse_failed
+
+-- (iv) exact compare naming a parse reason code or parse_failed: 13 hits / 3 files
+   by file: test_parse_failures.py 10, test_audit_admitted_set.py 2, test_extraction_events.py 1
+  tests/test_audit_admitted_set.py:168 <module>.test_t4_prisma_counts_one_included_and_one_parse_failed_after_a_mixed_audit | assert flow["studies_included"] == 1 and flow["parse_failed"] == 1
+  tests/test_audit_admitted_set.py:181 <module>.test_t5_the_skipped_paper_gets_one_warning_line_naming_its_id_and_state | assert rep.skipped_by_state == ((P7, "parse_failed", "parse_file_unreadable"),
+  tests/test_extraction_events.py:584 <module>.test_t12_processing_reasons_is_exactly_the_union_of_its_three_parts | assert set(PS.PARSE_REASONS.values()) == {"parse_failed"}
+  tests/test_parse_failures.py:107 <module>.test_T1_branch_6_vision_exhausted_scanned_route | assert exc.value.reason_code == PS.REASON_PARSE_VISION_EXHAUSTED
+  tests/test_parse_failures.py:123 <module>.test_T1_branch_10_pymupdf_exhausted_digital_route | assert exc.value.reason_code == PS.REASON_PARSE_PYMUPDF_EXHAUSTED
+  tests/test_parse_failures.py:137 <module>.test_T1_branch_17_cascade_empty | assert exc.value.reason_code == PS.REASON_PARSE_CASCADE_EMPTY
+  tests/test_parse_failures.py:178 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | assert tuple(row) == ("parsed", "parse_failed", PS.REASON_PARSE_CASCADE_EMPTY,
+  tests/test_parse_failures.py:207 <module>.test_T3_unclassified_exception_under_a_run_writes_its_own_code | assert row[0] == PS.REASON_PARSE_UNCLASSIFIED_ERROR
+  tests/test_parse_failures.py:247 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | assert state.processing == "parse_failed"
+  tests/test_parse_failures.py:248 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | assert state.processing_reason == PS.REASON_PARSE_CASCADE_EMPTY
+  tests/test_parse_failures.py:251 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | assert flow["parse_failed"] == 1
+  tests/test_parse_failures.py:252 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | assert flow["failure_reasons"]["parse_failed"] == {PS.REASON_PARSE_CASCADE_EMPTY: 1}
+  tests/test_parse_failures.py:92 <module>.test_T1_branch_2_file_unreadable | assert exc.value.reason_code == PS.REASON_PARSE_FILE_UNREADABLE
+
+-- (v) seam call parse_all_pdfs: 15 hits / 5 files
+   by file: test_parse_gate.py 6, test_parse_failures.py 5, test_parse_spec_threading.py 2, test_parse_ocr_tier.py 1, test_parse_sanitized_retry.py 1
+  tests/test_parse_failures.py:169 <module>.test_T2_cascade_empty_under_a_run_writes_one_event_and_continues | stats = parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:201 <module>.test_T3_unclassified_exception_under_a_run_writes_its_own_code | stats = parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:222 <module>.test_T4_no_run_id_writes_no_event | stats = parse_all_pdfs(db, "test_parse_fail", spec=PARSE_SPEC)  # run_id defaults to None
+  tests/test_parse_failures.py:244 <module>.test_T5_effective_state_and_prisma_carry_the_new_reason | parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:270 <module>.test_T6_file_exists_error_propagates_out_of_parse_all_pdfs | parse_all_pdfs(db, "test_parse_fail", run_id=run_id, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:159 <module>.test_clean_parse_reaches_parsed_status | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:194 <module>.test_rerouted_pass_still_reaches_parsed | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:283 <module>.test_all_fail_selects_least_bad_and_excludes_with_reason | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:309 <module>.test_excluded_paper_still_has_its_text_stored | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:413 <module>.test_reparse_writes_new_version_and_leaves_status_alone | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_gate.py:435 <module>.test_reparse_reports_failures_without_excluding | parse_all_pdfs(db, "test_gate", spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:343 <module>.test_reparse_reports_a_total_failure_with_rows_written | parse_all_pdfs(db, "test_ocr", spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:134 <module>.test_sanitized_success_reaches_parsed_status | parse_all_pdfs(db, "test_sanitized", spec=PARSE_SPEC)
+  tests/test_parse_spec_threading.py:71 <module>.test_a_non_default_pdf_parsing_reaches_parse_pdfs_resolution | PP.parse_all_pdfs(db, "test_c53", spec=_non_default_spec())
+  tests/test_parse_spec_threading.py:89 <module>.test_spec_is_required | lambda db: PP.parse_all_pdfs(db, "test_c53"),
+
+-- (v) seam call parse_pdf: 64 hits / 9 files
+   by file: test_pdf_parser.py 16, test_parse_gate.py 14, test_parse_ocr_tier.py 12, test_parse_sanitized_retry.py 9, test_parse_failures.py 4, test_font_audit_ledger.py 3, test_parse_spec_threading.py 2, test_parse_writer_refs.py 2, test_vision_bounds.py 2
+  tests/test_font_audit_ledger.py:314 <module>.test_a_judged_attempt_records_its_audit | parse_pdf(str(small_pdf), pid, "test_font_ledger", db, spec=PARSE_SPEC)
+  tests/test_font_audit_ledger.py:344 <module>.test_a_total_failure_records_the_structure_half | parse_pdf(str(small_pdf), pid, "test_font_ledger", db, spec=PARSE_SPEC)
+  tests/test_font_audit_ledger.py:372 <module>.test_an_audit_that_raises_does_not_fail_the_parse | result = parse_pdf(str(small_pdf), pid, "test_font_ledger", db, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:106 <module>.test_T1_branch_6_vision_exhausted_scanned_route | parse_pdf(str(scanned_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:122 <module>.test_T1_branch_10_pymupdf_exhausted_digital_route | parse_pdf(str(digital_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:136 <module>.test_T1_branch_17_cascade_empty | parse_pdf(str(digital_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
+  tests/test_parse_failures.py:91 <module>.test_T1_branch_2_file_unreadable | parse_pdf(str(digital_pdf), pid, "test_parse_fail", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:141 <module>.test_clean_docling_parse_is_one_accepted_attempt | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:177 <module>.test_glyph_failure_reroutes_to_the_ocr_tier_and_stops | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:207 <module>.test_glyph_then_shattered_then_vision_passes | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:226 <module>.test_pymupdf_first_shattered_reroutes_without_retrying_pymupdf | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:334 <module>.test_vision_skipped_above_page_cap_and_never_called | parse_pdf(str(big_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:360 <module>.test_sparse_length_fallback_precedes_the_quality_gate | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:393 <module>.test_failure_between_asset_and_attempt_rows_leaves_neither | parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:461 <module>.test_short_circuit_returns_the_stored_parser_used | first = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:464 <module>.test_short_circuit_returns_the_stored_parser_used | again = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)   # same hash
+  tests/test_parse_gate.py:481 <module>.test_short_circuit_does_not_read_the_parsed_text_file | first = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_gate.py:492 <module>.test_short_circuit_does_not_read_the_parsed_text_file | again = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)   # same hash
+  tests/test_parse_gate.py:524 <module>.test_spec_override_reaches_assess | result = parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=spec)
+  tests/test_parse_gate.py:538 <module>.test_spec_vision_cap_override_is_honoured | parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=spec)
+  tests/test_parse_gate.py:553 <module>.test_the_reroute_chain_is_bounded | parse_pdf(str(digital_pdf), pid, "test_gate", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:115 <module>.test_scanned_pdf_goes_to_the_ocr_tier_first | result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:129 <module>.test_scanned_ocr_failure_falls_through_to_vision | result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:142 <module>.test_scanned_ocr_sparse_output_also_falls_through_to_vision | result = parse_pdf(str(scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:157 <module>.test_digital_clean_docling_never_reaches_the_ocr_tier | result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:187 <module>.test_glyph_failure_reaches_ocr_without_touching_pymupdf | result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:221 <module>.test_ocr_tier_reuses_the_sanitized_copy_and_it_is_cleaned_up | result = parse_pdf(str(linked), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:239 <module>.test_ocr_cap_skips_the_tier_and_the_next_parser_is_tried | result = parse_pdf(str(big_scanned_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:257 <module>.test_ocr_cap_on_a_reroute_falls_through_to_vision | result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=spec)
+  tests/test_parse_ocr_tier.py:282 <module>.test_sparse_length_fallback_still_precedes_the_gate | result = parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:300 <module>.test_total_failure_still_writes_the_attempt_rows | parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:326 <module>.test_the_ledger_survives_a_raise_out_of_parse_pdf | parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:420 <module>.test_spec_ocr_engine_override_reaches_the_parser | parse_pdf(str(digital_pdf), pid, "test_ocr", db, spec=spec)
+  tests/test_parse_sanitized_retry.py:110 <module>.test_docling_crash_is_recovered_by_the_sanitized_retry | result = parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:150 <module>.test_both_docling_attempts_fail_then_pymupdf | result = parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:189 <module>.test_temp_copy_is_removed_after_a_successful_retry | parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:204 <module>.test_temp_copy_is_removed_after_a_raising_retry | parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:216 <module>.test_a_pdf_with_no_links_skips_the_sanitized_retry | parse_pdf(str(plain), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:241 <module>.test_retry_is_skipped_when_stripping_would_change_the_text | parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:266 <module>.test_a_raising_pymupdf_is_recorded_then_reraised | parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:284 <module>.test_a_raising_reroute_is_recorded_and_ends_the_loop | parse_pdf(str(linked_pdf), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_sanitized_retry.py:314 <module>.test_real_docling_crash_on_p455_is_recovered_by_the_sanitized_retry | result = parse_pdf(str(P455_PDF), pid, "test_sanitized", db, spec=PARSE_SPEC)
+  tests/test_parse_spec_threading.py:106 <module>.test_parse_pdf_with_a_none_spec_fails_at_the_first_read | PP.parse_pdf("no-such.pdf", 1, "test_c53", db, spec=None)
+  tests/test_parse_spec_threading.py:90 <module>.test_spec_is_required | lambda db: PP.parse_pdf("no-such.pdf", 1, "test_c53", db),
+  tests/test_parse_writer_refs.py:111 <module>.test_a_failed_parse_writes_no_reference_and_no_asset_row | parse_pdf(str(pdf), 5, "writer", db, spec=PARSE_SPEC)
+  tests/test_parse_writer_refs.py:58 <module>._parse | return parse_pdf(str(pdf), 5, "writer", db, force=force, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:133 <module>.test_digital_routes_to_docling | result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:149 <module>.test_scanned_routes_to_vision_model | result = parse_pdf(str(scanned_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:165 <module>.test_version_increments_on_reparse | r1 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:177 <module>.test_version_increments_on_reparse | r2 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:191 <module>.test_skip_if_same_hash | r1 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:194 <module>.test_skip_if_same_hash | r2 = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:214 <module>.test_docling_success_uses_docling | result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:230 <module>.test_docling_exception_triggers_pymupdf | result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:251 <module>.test_all_parsers_empty_raises_value_error | parse_pdf(str(scanned_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:277 <module>.test_docling_and_pymupdf_sparse_triggers_vision | result = parse_pdf(str(scanned_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:293 <module>.test_docling_sparse_pymupdf_sufficient | result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:337 <module>.test_hash_stored_in_papers_table | parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:353 <module>.test_verify_hashes_no_mismatch | parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:366 <module>.test_verify_hashes_reports_mismatch | parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:400 <module>.test_atomic_write_no_temp_on_db_failure | parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=PARSE_SPEC)
+  tests/test_pdf_parser.py:469 <module>.test_parse_pdf_uses_spec_threshold | result = parse_pdf(str(digital_pdf), pid, "test_parse", db, spec=spec)
+  tests/test_vision_bounds.py:111 <module>.test_spec_overrides_reach_the_call_through_parse_pdf | parse_pdf(str(scanned_pdf), pid, "test_vbounds", db, spec=spec)
+  tests/test_vision_bounds.py:173 <module>.test_truncation_becomes_an_unselectable_error_row | parse_pdf(str(scanned_pdf), pid, "test_vbounds", db, spec=PARSE_SPEC)
+
+-- (v) seam call reparse_papers: 5 hits / 3 files
+   by file: test_parse_gate.py 3, test_parse_ocr_tier.py 1, test_parse_spec_threading.py 1
+  tests/test_parse_gate.py:419 <module>.test_reparse_writes_new_version_and_leaves_status_alone | out = reparse_papers(db, [pid], spec=PARSE_SPEC)
+  tests/test_parse_gate.py:440 <module>.test_reparse_reports_failures_without_excluding | out = reparse_papers(db, [pid], spec=PARSE_SPEC)
+  tests/test_parse_gate.py:450 <module>.test_reparse_reports_a_missing_pdf_without_aborting_the_batch | out = reparse_papers(db, [pid], spec=PARSE_SPEC)
+  tests/test_parse_ocr_tier.py:348 <module>.test_reparse_reports_a_total_failure_with_rows_written | out = reparse_papers(db, [pid], spec=PARSE_SPEC)
+  tests/test_parse_spec_threading.py:91 <module>.test_spec_is_required | lambda db: PP.reparse_papers(db, [1]),
+
+-- (vi) a raise of a run-fault class in a test (fakes and wrappers): 6 hits / 5 files
+   by file: test_screener.py 2, test_cloud_extraction.py 1, test_ollama_preflight.py 1, test_parse_gate.py 1, test_run_calls_outcomes.py 1
+  tests/test_cloud_extraction.py:840 <module>.TestStoreResultCrashProtection.test_openai_store_failure_continues_run._failing_store | raise sqlite3.IntegrityError("simulated constraint violation") | sqlite3.IntegrityError('simulated constraint violation')
+  tests/test_ollama_preflight.py:110 <module>.TestPreflightCheck.test_one_failure_returns_failure.mock_chat | raise ConnectionError("OOM") | ConnectionError('OOM')
+  tests/test_parse_gate.py:383 <module>.test_failure_between_asset_and_attempt_rows_leaves_neither._FailsOnAttemptInsert.execute | raise sqlite3.OperationalError("injected failure") | sqlite3.OperationalError('injected failure')
+  tests/test_run_calls_outcomes.py:138 <module>.test_T3_ceiling_unavailable_records_one_refused_row_and_raises._raise_ceiling | raise oc.CeilingUnavailable(model=model, reason="show failed: boom") | oc.CeilingUnavailable(model=model, reason='show failed: boom
+  tests/test_screener.py:344 <module>.test_complete_stage_real_error_propagates._mock_complete_stage | raise sqlite3.OperationalError("database is locked") | sqlite3.OperationalError('database is locked')
+  tests/test_screener.py:361 <module>.test_complete_stage_no_such_table_handled._mock_complete_stage | raise sqlite3.OperationalError("no such table: workflow_state") | sqlite3.OperationalError('no such table: workflow_state')
+
+== counts
+pdf_parser.py except handlers: 21
+callers call _commit_attempts: 2
+callers call parse_all_pdfs, no run_id: 1
+callers call parse_all_pdfs, run_id passed: 1
+callers call parse_pdf: 2
+tests (i) direct names: 147 / 11
+tests (i) from-imports of pdf_parser: 14 / 10
+tests (ii) attribute access to a parser name: 7 / 3
+tests (ii) patch or setattr on engine.parsers.pdf_parser: 159 / 11
+tests (iii) a parse reason-code constant: 9 / 2
+tests (iii) a parse reason-code literal: 21 / 6
+tests (iv) exact compare naming a parse reason code or parse_failed: 13 / 3
+tests (v) seam call parse_all_pdfs: 15 / 5
+tests (v) seam call parse_pdf: 64 / 9
+tests (v) seam call reparse_papers: 5 / 3
+tests (vi) a raise of a run-fault class in a test (fakes and wrappers): 6 / 5

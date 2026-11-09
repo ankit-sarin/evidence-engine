@@ -1,0 +1,429 @@
+== the static closure
+modules in the run7 closure: 91
+
+== sites (engine, scripts, analysis, tests)
+
+-- call check_model, omits spec=: 2
+  [tests] tests/test_ollama_preflight.py:30 <module>.TestCheckModel.test_success_returns_ok | result = check_model("test-model:7b")
+  [tests] tests/test_ollama_preflight.py:41 <module>.TestCheckModel.test_error_returns_error_with_message | result = check_model("nonexistent:99b")
+
+-- call check_model, passes spec=: 5
+  [run7/engine-other] engine/utils/ollama_preflight.py:111 <module>.preflight_check | result = check_model(name, timeout=timeout, spec=spec)
+  [tests] tests/test_request_capture.py:315 <module>.test_preflight | result = check_model("deepseek-r1:32b", spec=spec)
+  [tests] tests/test_u20_loaded_context.py:287 <module>.test_i_preflight_raises_a_loaded_context_mismatch | pf.check_model(model, spec=spec)
+  [tests] tests/test_u20_loaded_context.py:299 <module>.test_j_preflight_raises_a_digest_change | pf.check_model(model, spec=spec)
+  [tests] tests/test_undeclared_call.py:184 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | assert pf.check_model(declared, spec=spec).status == "ok"      # a declared probe still runs
+
+-- call ollama_preflight.main: 1
+  [run7/engine-other] engine/utils/ollama_preflight.py:346 <module> | main()
+
+-- call open_run with preflight_models=: 6
+  [run7/engine-other] engine/agents/ft_screener.py:579 <module>.open_screening_manifest | handle = rm.open_run(db._conn, spec, kind="screening", stages=stages,
+  [run7/scripts] scripts/run_pipeline.py:555 <module>._open_run_manifest | handle = rm.open_run(db._conn, spec, kind=kind, stages=stages, codebook=codebook,
+  [tests] tests/test_u18_digest_per_call.py:121 <module>._open | return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+  [tests] tests/test_u20_loaded_context.py:121 <module>._open | return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+  [tests] tests/test_u21_no_overlap.py:160 <module>._run | return rm.open_run(db._conn, spec, kind="screening", stages=("audit",), codebook=cb,
+  [tests] tests/test_undeclared_call.py:102 <module>._open | return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+
+-- call open_screening_manifest: 2
+  [run7/engine-other] engine/agents/ft_screener.py:600 <module>.run_ft_invocation | run_id = open_screening_manifest(db, spec, with_preflight=not verify_only,
+  [tests] tests/test_u19_env_recheck.py:233 <module>.test_u19_the_body_opened_by_the_ft_runner_carries_the_environment | run_id = ft.open_screening_manifest(db, spec, with_preflight=True, git=CLEAN,
+
+-- call preflight_check, omits spec=: 5
+  [run7/engine-other] engine/utils/ollama_preflight.py:321 <module>.main | result = preflight_check(args.models, timeout=args.timeout)
+  [tests] tests/test_ollama_preflight.py:116 <module>.TestPreflightCheck.test_one_failure_returns_failure | result = preflight_check(["good:7b", "bad:99b"])
+  [tests] tests/test_ollama_preflight.py:56 <module>.TestPreflightCheck.test_all_ok_returns_success | result = preflight_check(["model-a:7b", "model-b:13b"])
+  [tests] tests/test_ollama_preflight.py:74 <module>.TestPreflightCheck.test_vram_filters_to_relevant_models | result = preflight_check(["qwen3:8b"])
+  [tests] tests/test_ollama_preflight.py:95 <module>.TestPreflightCheck.test_vram_unrelated_model_does_not_cause_rejection | result = preflight_check(["qwen3:8b"])
+
+-- call preflight_check, passes spec=: 1
+  [run7/engine-other] engine/utils/ollama_preflight.py:289 <module>.require_preflight | result = preflight_check(models, timeout=timeout, spec=spec)
+
+-- call require_preflight, omits spec=: 7
+  [analysis] analysis/paper1/judge_codebook_smoke.py:1183 <module>._run_locked | require_preflight([args.model], runner_name="judge_codebook_smoke")
+  [run7/engine-other] engine/agents/ft_screener.py:325 <module>.run_ft_screening | require_preflight(
+  [run7/engine-other] engine/agents/screener.py:171 <module>.run_screening | require_preflight([primary_model], runner_name="Abstract screening")
+  [run7/engine-other] engine/agents/screener.py:259 <module>.run_verification | require_preflight([verification_model], runner_name="Abstract verification")
+  [tests] tests/test_ollama_preflight.py:229 <module>.TestRequirePreflight.test_raises_on_failure | require_preflight(["broken:7b"], runner_name="Test")
+  [tests] tests/test_ollama_preflight.py:239 <module>.TestRequirePreflight.test_passes_silently_on_success | require_preflight(["good:7b"], runner_name="Test")
+  [tests] tests/test_ollama_preflight.py:247 <module>.TestRequirePreflight.test_env_check_runs_before_model_check | require_preflight(["model:7b"], runner_name="Test")
+
+-- call require_preflight, passes spec=: 3
+  [run7/engine-other] engine/agents/extractor.py:1149 <module>._extract_selected | require_preflight([extractor_model], runner_name="Extraction", spec=spec)
+  [run7/scripts] scripts/run_pipeline.py:467 <module>._stage_audit | require_preflight([stage_config("audit", spec).model], runner_name="Audit", spec=spec)
+  [tests] tests/test_undeclared_call.py:183 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | pf.require_preflight([OTHER_MODEL], runner_name="Probe", spec=spec)
+
+-- call resolve_run with preflight_models=: 4
+  [run7/engine-other] engine/core/run_manifest.py:608 <module>.open_run | resolved = resolve_run(spec, [s for s in stage_list],
+  [tests] tests/test_u17_cross_lineage.py:201 <module>.test_t9_the_new_live_spec_moves_no_prompt_hash_options_hash_or_screening_hash | res = rm.resolve_run(s, stages, digest_fn=DIGESTS.__getitem__, preflight_models=sorted(DIGESTS),
+  [tests] tests/test_u37_feedback_block.py:184 <module>.test_u37_the_non_elicited_pin_is_unchanged | res = rm.resolve_run(s, stages, digest_fn=digests.__getitem__, preflight_models=sorted(digests),
+  [tests] tests/test_u38_snippet_precheck.py:160 <module>.test_u38_both_pins_are_unchanged | res = rm.resolve_run(s, stages, digest_fn=digests.__getitem__, preflight_models=sorted(digests),
+
+-- call stage_config('preflight', …), spec passed: 5
+  [run7/engine-other] engine/core/effective_config.py:523 <module>.resolve_run | cfg = stage_config("preflight", spec, model=m)
+  [run7/engine-other] engine/utils/ollama_preflight.py:66 <module>.check_model | cfg = stage_config("preflight", spec, model=model_name)
+  [tests] tests/test_u18_digest_per_call.py:224 <module>.test_u18_the_preflight_call_is_not_refused_on_a_fresh_run | oc.ollama_chat(messages=MESSAGES, **ec.stage_config("preflight", spec, model=model).kwargs())
+  [tests] tests/test_undeclared_call.py:149 <module>.test_3_a_declared_preflight_model_is_sent | **ec.stage_config("preflight", spec, model=declared).kwargs())
+  [tests] tests/test_undeclared_call.py:161 <module>.test_3_an_undeclared_preflight_model_is_refused_before_the_send | **ec.stage_config("preflight", spec, model=OTHER_MODEL).kwargs())
+
+-- definition check_model (keyword-only: ['spec']): 1
+  [run7/engine-other] engine/utils/ollama_preflight.py:55 <module>.check_model | def check_model(model_name: str, timeout: int = 30, *, spec=None) -> ModelResult:
+
+-- definition preflight_check (keyword-only: ['spec']): 1
+  [run7/engine-other] engine/utils/ollama_preflight.py:106 <module>.preflight_check | def preflight_check(models: list[str], timeout: int = 30, *, spec=None) -> PreflightResult:
+
+-- definition require_preflight (keyword-only: ['spec']): 1
+  [run7/engine-other] engine/utils/ollama_preflight.py:279 <module>.require_preflight | def require_preflight(models: list[str], runner_name: str, timeout: int = 30,
+
+== tests
+
+-- (i) direct names: 10 hits / 2 files
+   by file: test_ollama_preflight.py 9, test_request_capture.py 1
+  tests/test_ollama_preflight.py:116 <module>.TestPreflightCheck.test_one_failure_returns_failure | result = preflight_check(["good:7b", "bad:99b"])
+  tests/test_ollama_preflight.py:229 <module>.TestRequirePreflight.test_raises_on_failure | require_preflight(["broken:7b"], runner_name="Test")
+  tests/test_ollama_preflight.py:239 <module>.TestRequirePreflight.test_passes_silently_on_success | require_preflight(["good:7b"], runner_name="Test")
+  tests/test_ollama_preflight.py:247 <module>.TestRequirePreflight.test_env_check_runs_before_model_check | require_preflight(["model:7b"], runner_name="Test")
+  tests/test_ollama_preflight.py:30 <module>.TestCheckModel.test_success_returns_ok | result = check_model("test-model:7b")
+  tests/test_ollama_preflight.py:41 <module>.TestCheckModel.test_error_returns_error_with_message | result = check_model("nonexistent:99b")
+  tests/test_ollama_preflight.py:56 <module>.TestPreflightCheck.test_all_ok_returns_success | result = preflight_check(["model-a:7b", "model-b:13b"])
+  tests/test_ollama_preflight.py:74 <module>.TestPreflightCheck.test_vram_filters_to_relevant_models | result = preflight_check(["qwen3:8b"])
+  tests/test_ollama_preflight.py:95 <module>.TestPreflightCheck.test_vram_unrelated_model_does_not_cause_rejection | result = preflight_check(["qwen3:8b"])
+  tests/test_request_capture.py:315 <module>.test_preflight | result = check_model("deepseek-r1:32b", spec=spec)
+
+-- (i) from-imports: 19 hits / 18 files
+   by file: test_run_interrupts.py 2, test_arm_pinned_at_extract.py 1, test_codebook_review_at_open.py 1, test_entry_points_take_the_lock.py 1, test_ft_bridge.py 1, test_ollama_preflight.py 1, test_pin_records.py 1, test_request_capture.py 1, test_run_pipeline_starts.py 1, test_selection_bound.py 1, test_u18_digest_per_call.py 1, test_u18_one_host.py 1, test_u19_env_recheck.py 1, test_u19_local_service.py 1, test_u20_loaded_context.py 1, test_u21_no_overlap.py 1, test_u39_runtime_equals_hash.py 1, test_undeclared_call.py 1
+  tests/test_arm_pinned_at_extract.py:96 <module>.pipeline | from engine.utils import ollama_preflight as pf
+  tests/test_codebook_review_at_open.py:118 <module>.test_run_pipelines_own_opener_refuses_before_any_row_or_fetch | from engine.utils import ollama_preflight as pf
+  tests/test_entry_points_take_the_lock.py:21 <module> | from engine.utils import ollama_preflight as preflight
+  tests/test_ft_bridge.py:92 <module>.fake | from engine.utils import ollama_preflight as pf
+  tests/test_ollama_preflight.py:10 <module> | from engine.utils.ollama_preflight import (
+  tests/test_pin_records.py:160 <module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry | from engine.utils import ollama_preflight as pf
+  tests/test_request_capture.py:312 <module>.test_preflight | from engine.utils.ollama_preflight import check_model
+  tests/test_run_interrupts.py:121 <module>.test_t3_run_ft_invocation_closes_an_interrupt_with_its_reason | from engine.utils import ollama_preflight as pf
+  tests/test_run_interrupts.py:355 <module>.test_t9_run_ft_invocation_an_interrupt_inside_the_completed_close_closes_interrupted | from engine.utils import ollama_preflight as pf
+  tests/test_run_pipeline_starts.py:112 <module>.review | from engine.utils import ollama_preflight as pf
+  tests/test_selection_bound.py:78 <module>.injected_open_run | from engine.utils import ollama_preflight as pf
+  tests/test_u18_digest_per_call.py:302 <module>.test_u18_the_ft_runner_closes_aborted_on_a_digest_change | from engine.utils import ollama_preflight as pf
+  tests/test_u18_one_host.py:39 <module> | from engine.utils import ollama_preflight as pf
+  tests/test_u19_env_recheck.py:35 <module> | from engine.utils import ollama_preflight as pf
+  tests/test_u19_local_service.py:23 <module> | from engine.utils import ollama_preflight as pf
+  tests/test_u20_loaded_context.py:35 <module> | from engine.utils import ollama_preflight as pf
+  tests/test_u21_no_overlap.py:33 <module> | from engine.utils import ollama_preflight as pf
+  tests/test_u39_runtime_equals_hash.py:222 <module>.test_preflight_runtime_equals_hash | from engine.utils import ollama_preflight as OP
+  tests/test_undeclared_call.py:173 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | from engine.utils import ollama_preflight as pf
+
+-- (ii) attribute access to a probe name: 5 hits / 3 files
+   by file: test_u20_loaded_context.py 2, test_undeclared_call.py 2, test_u39_runtime_equals_hash.py 1
+  tests/test_u20_loaded_context.py:287 <module>.test_i_preflight_raises_a_loaded_context_mismatch | pf.check_model(model, spec=spec)
+  tests/test_u20_loaded_context.py:299 <module>.test_j_preflight_raises_a_digest_change | pf.check_model(model, spec=spec)
+  tests/test_u39_runtime_equals_hash.py:225 <module>.test_preflight_runtime_equals_hash | sent = _send(OP.check_model, model, spec=spec)
+  tests/test_undeclared_call.py:183 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | pf.require_preflight([OTHER_MODEL], runner_name="Probe", spec=spec)
+  tests/test_undeclared_call.py:184 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | assert pf.check_model(declared, spec=spec).status == "ok"      # a declared probe still runs
+
+-- (ii) patch or setattr naming a probe name: 75 hits / 25 files
+   by file: test_ollama_preflight.py 28, test_extractor.py 9, test_duplicate_on_pass1_attempt_2.py 3, test_entry_points_take_the_lock.py 3, test_ft_screening.py 3, test_screener.py 3, test_write_boundary_guard.py 3, test_extraction_run_link.py 2, test_run_pipeline_starts.py 2, test_selection_refusals.py 2, test_text_refusal_at_selection.py 2, test_undeclared_call.py 2, test_audit_stage_completion.py 1, test_citation_record.py 1, test_cut_over.py 1, test_floor_and_stored_attempt.py 1, test_parsed_text_resolver.py 1, test_request_capture.py 1, test_restart_ollama_guard.py 1, test_run_fault_predicate.py 1
+  tests/test_audit_stage_completion.py:86 <module>.db | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_citation_record.py:169 <module>._run | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_cut_over.py:110 <module>.fake_models | with patch("engine.utils.ollama_preflight.require_preflight"), \
+  tests/test_duplicate_on_pass1_attempt_2.py:115 <module>._drive | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_duplicate_on_pass1_attempt_2.py:216 <module>.test_a_duplicate_on_attempt_1_keeps_its_own_path | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_duplicate_on_pass1_attempt_2.py:237 <module>.test_a_duplicate_on_attempt_1_is_named_in_every_retry_row | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_entry_points_take_the_lock.py:125 <module>.test_the_preflight_cli_refuses_under_a_held_lock_before_probing | monkeypatch.setattr(preflight, "preflight_check", _never("preflight_check"))
+  tests/test_entry_points_take_the_lock.py:126 <module>.test_the_preflight_cli_refuses_under_a_held_lock_before_probing | monkeypatch.setattr(preflight, "check_model", _never("check_model"))
+  tests/test_entry_points_take_the_lock.py:141 <module>.test_the_preflight_cli_probes_under_the_lock_when_it_is_free | monkeypatch.setattr(preflight, "preflight_check", probe)
+  tests/test_extraction_run_link.py:107 <module>._run | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_extraction_run_link.py:131 <module>.test_t2_an_unknown_run_refuses_before_selection | patch("engine.utils.ollama_preflight.require_preflight",
+  tests/test_extractor.py:338 <module>.test_staleness_skip | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_extractor.py:360 <module>.test_run_extraction_no_parsed_text | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_extractor.py:466 <module>.TestProactiveRestart.test_restart_triggers_after_n_papers | @patch("engine.utils.ollama_preflight.require_preflight")
+  tests/test_extractor.py:468 <module>.TestProactiveRestart.test_restart_triggers_after_n_papers | @patch("engine.utils.ollama_preflight.read_ollama_env",  # U19: the re-read after a restart
+  tests/test_extractor.py:490 <module>.TestProactiveRestart.test_restart_disabled_when_zero | @patch("engine.utils.ollama_preflight.require_preflight")
+  tests/test_extractor.py:506 <module>.TestProactiveRestart.test_restart_failure_continues_gracefully | @patch("engine.utils.ollama_preflight.require_preflight")
+  tests/test_extractor.py:522 <module>.TestProactiveRestart.test_zero_span_extraction_marks_extract_failed | @patch("engine.utils.ollama_preflight.require_preflight")
+  tests/test_extractor.py:565 <module>.TestProactiveRestart.test_input_fit_failure_fails_the_paper_and_the_run_continues | @patch("engine.utils.ollama_preflight.require_preflight")
+  tests/test_extractor.py:686 <module>.TestRestartOllamaGraceful.test_restart_failure_continues_extraction | patch("engine.utils.ollama_preflight.require_preflight"),
+  tests/test_floor_and_stored_attempt.py:98 <module>._run | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_ft_screening.py:807 <module>.TestFTScreeningSkipsAdvancedStatus.test_ft_screen_selects_parsed_only_and_ignores_ai_audit_complete | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_ft_screening.py:844 <module>.TestMissingParsedText.test_no_parsed_text_marks_ft_flagged | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_ft_screening.py:894 <module>.TestFTParseError.test_malformed_output_flags_paper | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_ollama_preflight.py:113 <module>.TestPreflightCheck.test_one_failure_returns_failure | with patch("engine.utils.ollama_preflight.ollama_chat", side_effect=mock_chat):
+  tests/test_ollama_preflight.py:135 <module>.TestCheckOllamaEnv.test_passes_when_env_correct | with patch("engine.utils.ollama_preflight._get_ollama_env",
+  tests/test_ollama_preflight.py:142 <module>.TestCheckOllamaEnv.test_fails_when_flash_attention_missing | with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+  tests/test_ollama_preflight.py:149 <module>.TestCheckOllamaEnv.test_fails_when_max_loaded_models_wrong | with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+  tests/test_ollama_preflight.py:157 <module>.TestCheckOllamaEnv.test_fails_when_kv_cache_type_wrong | with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+  tests/test_ollama_preflight.py:162 <module>.TestCheckOllamaEnv.test_fails_lists_all_correctness_errors | with patch("engine.utils.ollama_preflight._get_ollama_env", return_value={}):
+  tests/test_ollama_preflight.py:173 <module>.TestCheckOllamaEnv.test_performance_mismatch_warns_not_raises | with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+  tests/test_ollama_preflight.py:182 <module>.TestCheckOllamaEnv.test_performance_missing_warns_not_raises | with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+  tests/test_ollama_preflight.py:195 <module>.TestCheckOllamaEnv.test_mixed_correctness_fail_and_perf_warn | with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env):
+  tests/test_ollama_preflight.py:207 <module>.TestCheckOllamaEnv.test_get_ollama_env_parses_systemctl_output | with patch("engine.utils.ollama_preflight.subprocess.run", return_value=mock_cp):
+  tests/test_ollama_preflight.py:214 <module>.TestCheckOllamaEnv.test_get_ollama_env_returns_empty_on_error | with patch("engine.utils.ollama_preflight.subprocess.run",
+  tests/test_ollama_preflight.py:223 <module>.TestRequirePreflight.test_raises_on_failure | with patch("engine.utils.ollama_preflight.check_ollama_env"):
+  tests/test_ollama_preflight.py:224 <module>.TestRequirePreflight.test_raises_on_failure | with patch("engine.utils.ollama_preflight.ollama_chat",
+  tests/test_ollama_preflight.py:234 <module>.TestRequirePreflight.test_passes_silently_on_success | with patch("engine.utils.ollama_preflight.check_ollama_env"):
+  tests/test_ollama_preflight.py:235 <module>.TestRequirePreflight.test_passes_silently_on_success | with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+  tests/test_ollama_preflight.py:243 <module>.TestRequirePreflight.test_env_check_runs_before_model_check | with patch("engine.utils.ollama_preflight.check_ollama_env",
+  tests/test_ollama_preflight.py:245 <module>.TestRequirePreflight.test_env_check_runs_before_model_check | with patch("engine.utils.ollama_preflight.preflight_check") as mock_pf:
+  tests/test_ollama_preflight.py:266 <module>.TestRunnerIntegration.test_ft_screening_calls_preflight | with patch("engine.utils.ollama_preflight.require_preflight",
+  tests/test_ollama_preflight.py:28 <module>.TestCheckModel.test_success_returns_ok | with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+  tests/test_ollama_preflight.py:288 <module>.TestRunnerIntegration.test_extraction_calls_preflight | with patch("engine.utils.ollama_preflight.require_preflight",
+  tests/test_ollama_preflight.py:29 <module>.TestCheckModel.test_success_returns_ok | with patch("engine.utils.ollama_preflight._get_model_vram_gb", return_value=12.5):
+  tests/test_ollama_preflight.py:313 <module>.TestRunnerIntegration.test_audit_calls_preflight | with patch("engine.utils.ollama_preflight.require_preflight",
+  tests/test_ollama_preflight.py:341 <module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success | with patch("engine.utils.ollama_preflight._get_ollama_env",
+  tests/test_ollama_preflight.py:346 <module>.TestRunnerIntegration.test_runner_proceeds_on_preflight_success | with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+  tests/test_ollama_preflight.py:39 <module>.TestCheckModel.test_error_returns_error_with_message | with patch("engine.utils.ollama_preflight.ollama_chat",
+  tests/test_ollama_preflight.py:53 <module>.TestPreflightCheck.test_all_ok_returns_success | with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+  tests/test_ollama_preflight.py:72 <module>.TestPreflightCheck.test_vram_filters_to_relevant_models | with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+  tests/test_ollama_preflight.py:92 <module>.TestPreflightCheck.test_vram_unrelated_model_does_not_cause_rejection | with patch("engine.utils.ollama_preflight.ollama_chat", return_value=mock_response):
+  tests/test_parsed_text_resolver.py:132 <module>.test_extractor_site_hands_on_the_file | with patch("engine.utils.ollama_preflight.require_preflight"), \
+  tests/test_request_capture.py:314 <module>.test_preflight | with patch("engine.utils.ollama_preflight._get_model_vram_gb", return_value=0.0):
+  tests/test_restart_ollama_guard.py:194 <module>.test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out | with patch("engine.utils.ollama_preflight.require_preflight"), \
+  tests/test_run_fault_predicate.py:127 <module>._run | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_run_interrupts.py:254 <module>.test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it | with patch("engine.utils.ollama_preflight.require_preflight"), \
+  tests/test_run_pipeline_starts.py:146 <module>.test_a_start_at_or_before_screen_stops_at_the_adjudication_gate | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_run_pipeline_starts.py:171 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight | with patch("engine.utils.ollama_preflight._get_ollama_env", return_value=ENV_OK), \
+  tests/test_screener.py:258 <module>.test_abstract_screening_calls_preflight | with patch("engine.utils.ollama_preflight.require_preflight",
+  tests/test_screener.py:273 <module>.test_abstract_verification_calls_preflight | with patch("engine.utils.ollama_preflight.require_preflight",
+  tests/test_screener.py:30 <module>._mock_preflight | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_selection_bound.py:123 <module>.fake_models | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_selection_refusals.py:143 <module>.test_the_selection_less_path_records_its_refusals | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_selection_refusals.py:155 <module>._real_stage | patch("engine.utils.ollama_preflight.require_preflight"), \
+  tests/test_text_refusal_at_selection.py:121 <module>._extract_stage | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_text_refusal_at_selection.py:93 <module>.db | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_u19_env_recheck.py:89 <module>._loop | monkeypatch.setattr(pf, "require_preflight", lambda *a, **k: None)
+  tests/test_undeclared_call.py:180 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | patch("engine.utils.ollama_preflight._get_ollama_env", return_value=env), \
+  tests/test_undeclared_call.py:237 <module>.test_6_an_undeclared_call_leaves_the_extraction_loop_as_a_run_fault | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_units_as_source_slices.py:250 <module>.test_an_elicited_run_opens_pins_verifies_and_writes_real_events | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_value_divergence.py:85 <module>._run | with patch("engine.utils.ollama_preflight.require_preflight"):
+  tests/test_write_boundary_guard.py:226 <module>.test_a_stored_record_with_incomplete_fields_is_counted_extracted | with patch("engine.utils.ollama_preflight.require_preflight"), \
+  tests/test_write_boundary_guard.py:259 <module>.test_a_paper_that_fails_is_still_counted_failed | with patch("engine.utils.ollama_preflight.require_preflight"), \
+  tests/test_write_boundary_guard.py:89 <module>._run | with patch("engine.utils.ollama_preflight.require_preflight"):
+
+-- (ii) patch.object / setattr on the probe module: 24 hits / 12 files
+   by file: test_u21_no_overlap.py 6, test_u19_env_recheck.py 3, test_ft_bridge.py 2, test_run_interrupts.py 2, test_u18_digest_per_call.py 2, test_u19_local_service.py 2, test_u20_loaded_context.py 2, test_arm_pinned_at_extract.py 1, test_codebook_review_at_open.py 1, test_pin_records.py 1, test_run_pipeline_starts.py 1, test_selection_bound.py 1
+  tests/test_arm_pinned_at_extract.py:97 <module>.pipeline | monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
+  tests/test_codebook_review_at_open.py:119 <module>.test_run_pipelines_own_opener_refuses_before_any_row_or_fetch | monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
+  tests/test_ft_bridge.py:95 <module>.fake | monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
+  tests/test_ft_bridge.py:96 <module>.fake | monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
+  tests/test_pin_records.py:161 <module>.test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry | monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
+  tests/test_run_interrupts.py:122 <module>.test_t3_run_ft_invocation_closes_an_interrupt_with_its_reason | monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
+  tests/test_run_interrupts.py:356 <module>.test_t9_run_ft_invocation_an_interrupt_inside_the_completed_close_closes_interrupted | monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
+  tests/test_run_pipeline_starts.py:113 <module>.review | monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
+  tests/test_selection_bound.py:79 <module>.injected_open_run | monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
+  tests/test_u18_digest_per_call.py:305 <module>.test_u18_the_ft_runner_closes_aborted_on_a_digest_change | monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
+  tests/test_u18_digest_per_call.py:306 <module>.test_u18_the_ft_runner_closes_aborted_on_a_digest_change | monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))  # U19: the open read (R734(c)(i))
+  tests/test_u19_env_recheck.py:162 <module>.test_u19_the_body_opened_by_run_pipeline_carries_the_environment | monkeypatch.setattr(pf.subprocess, "run", ctl)
+  tests/test_u19_env_recheck.py:232 <module>.test_u19_the_body_opened_by_the_ft_runner_carries_the_environment | monkeypatch.setattr(pf.subprocess, "run", Systemctl(RAW, []))
+  tests/test_u19_env_recheck.py:90 <module>._loop | monkeypatch.setattr(pf.subprocess, "run", ctl)
+  tests/test_u19_local_service.py:106 <module>.test_u19_the_two_readers_give_equal_maps_on_the_hosts_line | monkeypatch.setattr(pf.subprocess, "run", _systemctl(RAW))
+  tests/test_u19_local_service.py:89 <module>.test_u19_a_quoted_value_with_a_space_is_one_token_on_both_readers | monkeypatch.setattr(pf.subprocess, "run", _systemctl(line))
+  tests/test_u20_loaded_context.py:251 <module>.test_f_the_ft_runner_closes_aborted | monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
+  tests/test_u20_loaded_context.py:252 <module>.test_f_the_ft_runner_closes_aborted | monkeypatch.setattr(pf, "read_ollama_env", lambda: ("", {}))
+  tests/test_u21_no_overlap.py:218 <module>.test_a_read_timed_out_request_reaches_the_restart_once_and_the_final_attempt_is_rechecked | monkeypatch.setattr(pf, "recheck_ollama_env", lambda: (events.append("env"), _reading())[1])
+  tests/test_u21_no_overlap.py:230 <module>.test_a_digest_changed_by_the_restart_refuses_the_final_send | monkeypatch.setattr(pf, "recheck_ollama_env", lambda: _reading())
+  tests/test_u21_no_overlap.py:243 <module>.test_an_env_drift_after_the_restart_refuses_the_final_send_and_writes_its_record | monkeypatch.setattr(pf, "recheck_ollama_env", lambda: _reading(drift))
+  tests/test_u21_no_overlap.py:257 <module>.test_the_post_restart_path_writes_the_env_record | monkeypatch.setattr(pf, "recheck_ollama_env", lambda: _reading())
+  tests/test_u21_no_overlap.py:270 <module>.test_outside_a_run_the_env_recheck_writes_nothing_and_says_so | monkeypatch.setattr(pf, "recheck_ollama_env", lambda: pytest.fail("not outside a run"))
+  tests/test_u21_no_overlap.py:318 <module>.test_the_post_restart_ending_is_recorded | monkeypatch.setattr(pf, "recheck_ollama_env", lambda: _reading())
+
+-- (iii) a 'preflight:<model>' key literal: 20 hits / 7 files
+   by file: test_ft_bridge.py 4, test_u38_snippet_precheck.py 4, test_run_pipeline_starts.py 3, test_undeclared_call.py 3, test_run_manifest.py 2, test_u18_digest_per_call.py 2, test_u37_feedback_block.py 2
+  tests/test_ft_bridge.py:189 <module>.test_1_default_run_manifest_is_screening_with_four_stage_rows | [PRIMARY, VERIFIER, "preflight:gemma3:27b", "preflight:qwen3:32b"])
+  tests/test_ft_bridge.py:189 <module>.test_1_default_run_manifest_is_screening_with_four_stage_rows | [PRIMARY, VERIFIER, "preflight:gemma3:27b", "preflight:qwen3:32b"])
+  tests/test_ft_bridge.py:206 <module>.test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk | ("preflight:gemma3:27b", None, "completed"),
+  tests/test_ft_bridge.py:207 <module>.test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk | ("preflight:qwen3:32b", None, "completed")]
+  tests/test_run_manifest.py:93 <module>.test_a_run_writes_its_manifest_and_one_row_per_stage | assert set(stages) == set(EXTRACTION) | {"preflight:deepseek-r1:32b"}
+  tests/test_run_manifest.py:97 <module>.test_a_run_writes_its_manifest_and_one_row_per_stage | assert stages["preflight:deepseek-r1:32b"]["arm_name"] is None
+  tests/test_run_pipeline_starts.py:176 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight | assert stages == ["abstract_screen_primary", f"preflight:{primary}"]
+  tests/test_run_pipeline_starts.py:185 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight | (f"preflight:{primary}",)).fetchall()
+  tests/test_run_pipeline_starts.py:187 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight | "SELECT outcome FROM run_calls WHERE stage = ?", (f"preflight:{primary}",)).fetchall()
+  tests/test_u18_digest_per_call.py:226 <module>.test_u18_the_preflight_call_is_not_refused_on_a_fresh_run | assert _run_calls(db) == [(f"preflight:{model}", "completed")]
+  tests/test_u18_digest_per_call.py:227 <module>.test_u18_the_preflight_call_is_not_refused_on_a_fresh_run | assert rm.stage_digest(db._conn, run_id, f"preflight:{model}") == A
+  tests/test_u37_feedback_block.py:53 <module> | "preflight:deepseek-r1:32b": "de95332f63517c2c6a6558c76892369173dd3a55cf71944cabd0850ed44d322a",
+  tests/test_u37_feedback_block.py:54 <module> | "preflight:gemma3:27b": "de95332f63517c2c6a6558c76892369173dd3a55cf71944cabd0850ed44d322a",
+  tests/test_u38_snippet_precheck.py:130 <module> | "preflight:deepseek-r1:32b": "de95332f63517c2c6a6558c76892369173dd3a55cf71944cabd0850ed44d322a",
+  tests/test_u38_snippet_precheck.py:131 <module> | "preflight:gemma3:27b": "de95332f63517c2c6a6558c76892369173dd3a55cf71944cabd0850ed44d322a",
+  tests/test_u38_snippet_precheck.py:138 <module> | "preflight:deepseek-r1:32b": "de95332f63517c2c6a6558c76892369173dd3a55cf71944cabd0850ed44d322a",
+  tests/test_u38_snippet_precheck.py:139 <module> | "preflight:gemma3:27b": "de95332f63517c2c6a6558c76892369173dd3a55cf71944cabd0850ed44d322a",
+  tests/test_undeclared_call.py:151 <module>.test_3_a_declared_preflight_model_is_sent | assert [(s, o) for s, o, _ in _run_calls(db)] == [(f"preflight:{declared}", "completed")]
+  tests/test_undeclared_call.py:163 <module>.test_3_an_undeclared_preflight_model_is_refused_before_the_send | (f"preflight:{OTHER_MODEL}", None, OTHER_MODEL)
+  tests/test_undeclared_call.py:187 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | assert exc.value.stage_key == f"preflight:{OTHER_MODEL}"
+
+-- (iii) an f-string 'preflight:{…}' key: 8 hits / 3 files
+   by file: test_run_pipeline_starts.py 3, test_undeclared_call.py 3, test_u18_digest_per_call.py 2
+  tests/test_run_pipeline_starts.py:176 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight | assert stages == ["abstract_screen_primary", f"preflight:{primary}"]
+  tests/test_run_pipeline_starts.py:185 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight | (f"preflight:{primary}",)).fetchall()
+  tests/test_run_pipeline_starts.py:187 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight | "SELECT outcome FROM run_calls WHERE stage = ?", (f"preflight:{primary}",)).fetchall()
+  tests/test_u18_digest_per_call.py:226 <module>.test_u18_the_preflight_call_is_not_refused_on_a_fresh_run | assert _run_calls(db) == [(f"preflight:{model}", "completed")]
+  tests/test_u18_digest_per_call.py:227 <module>.test_u18_the_preflight_call_is_not_refused_on_a_fresh_run | assert rm.stage_digest(db._conn, run_id, f"preflight:{model}") == A
+  tests/test_undeclared_call.py:151 <module>.test_3_a_declared_preflight_model_is_sent | assert [(s, o) for s, o, _ in _run_calls(db)] == [(f"preflight:{declared}", "completed")]
+  tests/test_undeclared_call.py:163 <module>.test_3_an_undeclared_preflight_model_is_refused_before_the_send | (f"preflight:{OTHER_MODEL}", None, OTHER_MODEL)
+  tests/test_undeclared_call.py:187 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | assert exc.value.stage_key == f"preflight:{OTHER_MODEL}"
+
+-- (iii) the 'num_predict' option literal: 8 hits / 4 files
+   by file: test_vision_bounds.py 3, test_request_capture.py 2, test_undeclared_override.py 2, test_parse_spec_threading.py 1
+  tests/test_parse_spec_threading.py:73 <module>.test_a_non_default_pdf_parsing_reaches_parse_pdfs_resolution | assert seen["cfg"].options["num_predict"] == 1234
+  tests/test_request_capture.py:89 <module>.phase1_requests | "options": {"temperature": 0, "num_predict": 2048, "num_ctx": 8192}},
+  tests/test_request_capture.py:92 <module>.phase1_requests | "options": {"temperature": 0, "num_predict": 4}},
+  tests/test_undeclared_override.py:186 <module>.test_T5_vision_under_a_declared_run_sends_the_rows_values | assert seen["kw"]["options"]["num_predict"] == spec.pdf_parsing.vision_num_predict
+  tests/test_undeclared_override.py:199 <module>.test_T6_open_run_records_vision_parses_declared_options | assert recorded["num_predict"] == spec.pdf_parsing.vision_num_predict
+  tests/test_vision_bounds.py:114 <module>.test_spec_overrides_reach_the_call_through_parse_pdf | assert opts["num_predict"] == 512 and opts["num_ctx"] == 4096
+  tests/test_vision_bounds.py:88 <module>.test_defaults_send_num_predict_and_num_ctx | assert opts["num_predict"] == 2048
+  tests/test_vision_bounds.py:97 <module>.test_explicit_overrides_reach_the_call | assert opts["num_predict"] == 99 and opts["num_ctx"] == 1024
+
+-- (iii) the 'preflight' stage literal: 18 hits / 11 files
+   by file: test_undeclared_call.py 5, test_request_capture.py 2, test_u18_digest_per_call.py 2, test_u20_loaded_context.py 2, test_effective_config.py 1, test_review_spec.py 1, test_run_manifest.py 1, test_u17_cross_lineage.py 1, test_u37_feedback_block.py 1, test_u38_snippet_precheck.py 1, test_u39_runtime_equals_hash.py 1
+  tests/test_effective_config.py:35 <module>._cfg | return ec.stage_config(stage, spec, model="m" if stage == "preflight" else None)
+  tests/test_request_capture.py:318 <module>.test_preflight | _assert_site("preflight", fake.calls[0], spec, model="deepseek-r1:32b")
+  tests/test_request_capture.py:91 <module>.phase1_requests | "preflight": {"model": "deepseek-r1:32b",
+  tests/test_review_spec.py:157 <module> | (["preflight"], "preflight.bogus_key"),
+  tests/test_run_manifest.py:84 <module>.test_a_run_writes_its_manifest_and_one_row_per_stage | h = _open(db, spec, cb, preflight_models=["deepseek-r1:32b"], stages=EXTRACTION + ("preflight",))
+  tests/test_u17_cross_lineage.py:199 <module>.test_t9_the_new_live_spec_moves_no_prompt_hash_options_hash_or_screening_hash | stages = [*extraction_stages(s), "audit", "preflight"]
+  tests/test_u18_digest_per_call.py:221 <module>.test_u18_the_preflight_call_is_not_refused_on_a_fresh_run | run_id = _open(db, spec, cb, digests, stages=("audit", "preflight"), preflight_models=[model])
+  tests/test_u18_digest_per_call.py:224 <module>.test_u18_the_preflight_call_is_not_refused_on_a_fresh_run | oc.ollama_chat(messages=MESSAGES, **ec.stage_config("preflight", spec, model=model).kwargs())
+  tests/test_u20_loaded_context.py:284 <module>.test_i_preflight_raises_a_loaded_context_mismatch | run_id = _open(db, spec, cb, Digests(), stages=("audit", "preflight"), preflight_models=[model])
+  tests/test_u20_loaded_context.py:295 <module>.test_j_preflight_raises_a_digest_change | run_id = _open(db, spec, cb, digests, stages=("audit", "preflight"), preflight_models=[model])
+  tests/test_u37_feedback_block.py:182 <module>.test_u37_the_non_elicited_pin_is_unchanged | stages = [*extraction_stages(s), "audit", "preflight"]
+  tests/test_u38_snippet_precheck.py:158 <module>.test_u38_both_pins_are_unchanged | stages = [*extraction_stages(s), "audit", "preflight"]
+  tests/test_u39_runtime_equals_hash.py:226 <module>.test_preflight_runtime_equals_hash | _assert_one(sent, ec.render_messages("preflight", spec))
+  tests/test_undeclared_call.py:146 <module>.test_3_a_declared_preflight_model_is_sent | run_id = _open(db, spec, cb, ("audit", "preflight"), preflight_models=[declared])
+  tests/test_undeclared_call.py:149 <module>.test_3_a_declared_preflight_model_is_sent | **ec.stage_config("preflight", spec, model=declared).kwargs())
+  tests/test_undeclared_call.py:157 <module>.test_3_an_undeclared_preflight_model_is_refused_before_the_send | run_id = _open(db, spec, cb, ("audit", "preflight"), preflight_models=[declared])
+  tests/test_undeclared_call.py:161 <module>.test_3_an_undeclared_preflight_model_is_refused_before_the_send | **ec.stage_config("preflight", spec, model=OTHER_MODEL).kwargs())
+  tests/test_undeclared_call.py:176 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | run_id = _open(db, spec, cb, ("audit", "preflight"), preflight_models=[declared])
+
+-- (iv) exact set/dict compare naming a preflight stage key: 2 hits / 2 files
+   by file: test_ft_bridge.py 1, test_run_manifest.py 1
+  tests/test_ft_bridge.py:188 <module>.test_1_default_run_manifest_is_screening_with_four_stage_rows | assert _stage_rows(db, run_id) == sorted(
+  tests/test_run_manifest.py:93 <module>.test_a_run_writes_its_manifest_and_one_row_per_stage | assert set(stages) == set(EXTRACTION) | {"preflight:deepseek-r1:32b"}
+
+-- (v) direct call check_model, no spec=: 2 hits / 1 files
+   by file: test_ollama_preflight.py 2
+  tests/test_ollama_preflight.py:30 <module>.TestCheckModel.test_success_returns_ok | result = check_model("test-model:7b")
+  tests/test_ollama_preflight.py:41 <module>.TestCheckModel.test_error_returns_error_with_message | result = check_model("nonexistent:99b")
+
+-- (v) direct call check_model, spec=: 4 hits / 3 files
+   by file: test_u20_loaded_context.py 2, test_request_capture.py 1, test_undeclared_call.py 1
+  tests/test_request_capture.py:315 <module>.test_preflight | result = check_model("deepseek-r1:32b", spec=spec)
+  tests/test_u20_loaded_context.py:287 <module>.test_i_preflight_raises_a_loaded_context_mismatch | pf.check_model(model, spec=spec)
+  tests/test_u20_loaded_context.py:299 <module>.test_j_preflight_raises_a_digest_change | pf.check_model(model, spec=spec)
+  tests/test_undeclared_call.py:184 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | assert pf.check_model(declared, spec=spec).status == "ok"      # a declared probe still runs
+
+-- (v) direct call preflight_check, no spec=: 4 hits / 1 files
+   by file: test_ollama_preflight.py 4
+  tests/test_ollama_preflight.py:116 <module>.TestPreflightCheck.test_one_failure_returns_failure | result = preflight_check(["good:7b", "bad:99b"])
+  tests/test_ollama_preflight.py:56 <module>.TestPreflightCheck.test_all_ok_returns_success | result = preflight_check(["model-a:7b", "model-b:13b"])
+  tests/test_ollama_preflight.py:74 <module>.TestPreflightCheck.test_vram_filters_to_relevant_models | result = preflight_check(["qwen3:8b"])
+  tests/test_ollama_preflight.py:95 <module>.TestPreflightCheck.test_vram_unrelated_model_does_not_cause_rejection | result = preflight_check(["qwen3:8b"])
+
+-- (v) direct call require_preflight, no spec=: 3 hits / 1 files
+   by file: test_ollama_preflight.py 3
+  tests/test_ollama_preflight.py:229 <module>.TestRequirePreflight.test_raises_on_failure | require_preflight(["broken:7b"], runner_name="Test")
+  tests/test_ollama_preflight.py:239 <module>.TestRequirePreflight.test_passes_silently_on_success | require_preflight(["good:7b"], runner_name="Test")
+  tests/test_ollama_preflight.py:247 <module>.TestRequirePreflight.test_env_check_runs_before_model_check | require_preflight(["model:7b"], runner_name="Test")
+
+-- (v) direct call require_preflight, spec=: 1 hits / 1 files
+   by file: test_undeclared_call.py 1
+  tests/test_undeclared_call.py:183 <module>.test_an_undeclared_preflight_leaves_require_preflight_as_itself | pf.require_preflight([OTHER_MODEL], runner_name="Probe", spec=spec)
+
+-- (v) open_run / resolve_run with preflight_models=: 7 hits / 7 files
+   by file: test_u17_cross_lineage.py 1, test_u18_digest_per_call.py 1, test_u20_loaded_context.py 1, test_u21_no_overlap.py 1, test_u37_feedback_block.py 1, test_u38_snippet_precheck.py 1, test_undeclared_call.py 1
+  tests/test_u17_cross_lineage.py:201 <module>.test_t9_the_new_live_spec_moves_no_prompt_hash_options_hash_or_screening_hash | res = rm.resolve_run(s, stages, digest_fn=DIGESTS.__getitem__, preflight_models=sorted(DIGESTS),
+  tests/test_u18_digest_per_call.py:121 <module>._open | return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+  tests/test_u20_loaded_context.py:121 <module>._open | return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+  tests/test_u21_no_overlap.py:160 <module>._run | return rm.open_run(db._conn, spec, kind="screening", stages=("audit",), codebook=cb,
+  tests/test_u37_feedback_block.py:184 <module>.test_u37_the_non_elicited_pin_is_unchanged | res = rm.resolve_run(s, stages, digest_fn=digests.__getitem__, preflight_models=sorted(digests),
+  tests/test_u38_snippet_precheck.py:160 <module>.test_u38_both_pins_are_unchanged | res = rm.resolve_run(s, stages, digest_fn=digests.__getitem__, preflight_models=sorted(digests),
+  tests/test_undeclared_call.py:102 <module>._open | return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+
+-- (v) seam call open_screening_manifest: 1 hits / 1 files
+   by file: test_u19_env_recheck.py 1
+  tests/test_u19_env_recheck.py:233 <module>.test_u19_the_body_opened_by_the_ft_runner_carries_the_environment | run_id = ft.open_screening_manifest(db, spec, with_preflight=True, git=CLEAN,
+
+-- (v) seam call run_ft_invocation: 5 hits / 4 files
+   by file: test_run_interrupts.py 2, test_ft_bridge.py 1, test_u18_digest_per_call.py 1, test_u20_loaded_context.py 1
+  tests/test_ft_bridge.py:153 <module>._invoke | return ft.run_ft_invocation(db, spec, git=git, digest_fn=DIGESTS.__getitem__, **kw)
+  tests/test_run_interrupts.py:125 <module>.test_t3_run_ft_invocation_closes_an_interrupt_with_its_reason | ft.run_ft_invocation(db, spec, review_name="intr", screen_only=True,
+  tests/test_run_interrupts.py:359 <module>.test_t9_run_ft_invocation_an_interrupt_inside_the_completed_close_closes_interrupted | ft.run_ft_invocation(db, spec, review_name="intr", screen_only=True,
+  tests/test_u18_digest_per_call.py:314 <module>.test_u18_the_ft_runner_closes_aborted_on_a_digest_change | ft.run_ft_invocation(db, spec, verify_only=True, git=CLEAN, digest_fn=digests)
+  tests/test_u20_loaded_context.py:255 <module>.test_f_the_ft_runner_closes_aborted | ft.run_ft_invocation(db, spec, verify_only=True, git=CLEAN, digest_fn=Digests())
+
+-- (v) seam call run_ft_screening: 4 hits / 2 files
+   by file: test_ft_screening.py 3, test_ollama_preflight.py 1
+  tests/test_ft_screening.py:810 <module>.TestFTScreeningSkipsAdvancedStatus.test_ft_screen_selects_parsed_only_and_ignores_ai_audit_complete | stats = run_ft_screening(tmp_db, spec, review_name="test_review",
+  tests/test_ft_screening.py:846 <module>.TestMissingParsedText.test_no_parsed_text_marks_ft_flagged | stats = run_ft_screening(tmp_db, spec, run_id=_screening_run(tmp_db, spec))
+  tests/test_ft_screening.py:896 <module>.TestFTParseError.test_malformed_output_flags_paper | stats = run_ft_screening(tmp_db, spec, run_id=_screening_run(tmp_db, spec))
+  tests/test_ollama_preflight.py:270 <module>.TestRunnerIntegration.test_ft_screening_calls_preflight | run_ft_screening(db, spec, review_name="test_pf", run_id=0)
+
+-- (v) seam call run_ft_verification: 1 hits / 1 files
+   by file: test_ft_adjudication_import.py 1
+  tests/test_ft_adjudication_import.py:360 <module>.test_14_a_primary_flag_adjudicated_eligible_is_not_selected_by_the_verifier | stats = ft.run_ft_verification(db, spec, run_id=run_id)
+
+-- (v) seam call run_screening: 8 hits / 1 files
+   by file: test_screener.py 8
+  tests/test_screener.py:101 <module>.test_dual_pass_both_include | stats = run_screening(db, spec)
+  tests/test_screener.py:115 <module>.test_dual_pass_both_exclude | stats = run_screening(db, spec)
+  tests/test_screener.py:130 <module>.test_dual_pass_disagreement | stats = run_screening(db, spec)
+  tests/test_screener.py:142 <module>.test_dual_pass_records_both_decisions | run_screening(db, spec)
+  tests/test_screener.py:163 <module>._setup_screened_in | run_screening(db, spec)
+  tests/test_screener.py:261 <module>.test_abstract_screening_calls_preflight | run_screening(db, spec)
+  tests/test_screener.py:290 <module>.test_screening_uses_primary_model | run_screening(db, spec)
+  tests/test_screener.py:322 <module>.test_parse_error_flags_paper_and_continues | stats = run_screening(db, spec)
+
+-- (v) seam call run_verification: 8 hits / 1 files
+   by file: test_screener.py 8
+  tests/test_screener.py:174 <module>.test_verification_all_confirmed | stats = run_verification(db, spec)
+  tests/test_screener.py:194 <module>.test_verification_some_flagged | stats = run_verification(db, spec)
+  tests/test_screener.py:208 <module>.test_verification_all_flagged | stats = run_verification(db, spec)
+  tests/test_screener.py:223 <module>.test_verification_stores_decisions | run_verification(db, spec)
+  tests/test_screener.py:243 <module>.test_verification_does_not_touch_abstract_screening_decisions | run_verification(db, spec)
+  tests/test_screener.py:276 <module>.test_abstract_verification_calls_preflight | run_verification(db, spec)
+  tests/test_screener.py:347 <module>.test_complete_stage_real_error_propagates | run_verification(db, spec)
+  tests/test_screener.py:363 <module>.test_complete_stage_no_such_table_handled | stats = run_verification(db, spec)
+
+-- (v) with_preflight= / open_screening_manifest: 1 hits / 1 files
+   by file: test_u19_env_recheck.py 1
+  tests/test_u19_env_recheck.py:233 <module>.test_u19_the_body_opened_by_the_ft_runner_carries_the_environment | run_id = ft.open_screening_manifest(db, spec, with_preflight=True, git=CLEAN,
+
+-- (vi) the probe's prompt text: 1 hits / 1 files
+   by file: test_run_pipeline_starts.py 1
+  tests/test_run_pipeline_starts.py:178 <module>.test_a_start_that_screens_declares_and_sends_the_screening_preflight | assert fake.calls[0]["messages"] == [{"role": "user", "content": "Respond with OK"}]
+
+== counts
+sites call check_model, omits spec=: 2
+sites call check_model, passes spec=: 5
+sites call ollama_preflight.main: 1
+sites call open_run with preflight_models=: 6
+sites call open_screening_manifest: 2
+sites call preflight_check, omits spec=: 5
+sites call preflight_check, passes spec=: 1
+sites call require_preflight, omits spec=: 7
+sites call require_preflight, passes spec=: 3
+sites call resolve_run with preflight_models=: 4
+sites call stage_config('preflight', …), spec passed: 5
+sites definition check_model (keyword-only: ['spec']): 1
+sites definition preflight_check (keyword-only: ['spec']): 1
+sites definition require_preflight (keyword-only: ['spec']): 1
+tests (i) direct names: 10 / 2
+tests (i) from-imports: 19 / 18
+tests (ii) attribute access to a probe name: 5 / 3
+tests (ii) patch or setattr naming a probe name: 75 / 25
+tests (ii) patch.object / setattr on the probe module: 24 / 12
+tests (iii) a 'preflight:<model>' key literal: 20 / 7
+tests (iii) an f-string 'preflight:{…}' key: 8 / 3
+tests (iii) the 'num_predict' option literal: 8 / 4
+tests (iii) the 'preflight' stage literal: 18 / 11
+tests (iv) exact set/dict compare naming a preflight stage key: 2 / 2
+tests (v) direct call check_model, no spec=: 2 / 1
+tests (v) direct call check_model, spec=: 4 / 3
+tests (v) direct call preflight_check, no spec=: 4 / 1
+tests (v) direct call require_preflight, no spec=: 3 / 1
+tests (v) direct call require_preflight, spec=: 1 / 1
+tests (v) open_run / resolve_run with preflight_models=: 7 / 7
+tests (v) seam call open_screening_manifest: 1 / 1
+tests (v) seam call run_ft_invocation: 5 / 4
+tests (v) seam call run_ft_screening: 4 / 2
+tests (v) seam call run_ft_verification: 1 / 1
+tests (v) seam call run_screening: 8 / 1
+tests (v) seam call run_verification: 8 / 1
+tests (v) with_preflight= / open_screening_manifest: 1 / 1
+tests (vi) the probe's prompt text: 1 / 1

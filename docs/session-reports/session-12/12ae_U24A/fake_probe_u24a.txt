@@ -1,0 +1,76 @@
+
+=== spec variant: live spec (no preflight or ollama block in its YAML)
+    spec.preflight = {'temperature': 0, 'num_predict': 4}; spec.ollama = {'keep_alive': -1}
+  -- run_screening (screener.py:171): 1 probe request(s); stopped after the probe on db=None (AttributeError)
+     model qwen3:8b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; equal: True
+  -- run_verification (screener.py:259): 1 probe request(s); stopped after the probe on db=None (AttributeError)
+     model gemma3:27b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; equal: True
+  -- run_ft_screening (ft_screener.py:325): 2 probe request(s); stopped after the probe on db=None (AttributeError)
+     model qwen3:32b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; equal: True
+     model gemma3:27b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; equal: True
+  -- control: require_preflight(..., spec=spec), the extractor's form (extractor.py:1149): 1 probe request(s); returned
+     model deepseek-r1:32b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; equal: True
+
+=== spec variant: preflight num_predict=7, temperature=0.5
+    spec.preflight = {'temperature': 0.5, 'num_predict': 7}; spec.ollama = {'keep_alive': -1}
+  -- run_screening (screener.py:171): 1 probe request(s); stopped after the probe on db=None (AttributeError)
+     model qwen3:8b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": -1}; equal: False
+  -- run_verification (screener.py:259): 1 probe request(s); stopped after the probe on db=None (AttributeError)
+     model gemma3:27b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": -1}; equal: False
+  -- run_ft_screening (ft_screener.py:325): 2 probe request(s); stopped after the probe on db=None (AttributeError)
+     model qwen3:32b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": -1}; equal: False
+     model gemma3:27b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": -1}; equal: False
+  -- control: require_preflight(..., spec=spec), the extractor's form (extractor.py:1149): 1 probe request(s); returned
+     model deepseek-r1:32b: sent {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": -1}; row would record {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": -1}; equal: True
+
+=== spec variant: ollama keep_alive='5m'
+    spec.preflight = {'temperature': 0, 'num_predict': 4}; spec.ollama = {'keep_alive': '5m'}
+  -- run_screening (screener.py:171): 1 probe request(s); stopped after the probe on db=None (AttributeError)
+     model qwen3:8b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": "5m"}; equal: False
+  -- run_verification (screener.py:259): 1 probe request(s); stopped after the probe on db=None (AttributeError)
+     model gemma3:27b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": "5m"}; equal: False
+  -- run_ft_screening (ft_screener.py:325): 2 probe request(s); stopped after the probe on db=None (AttributeError)
+     model qwen3:32b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": "5m"}; equal: False
+     model gemma3:27b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": "5m"}; equal: False
+  -- control: require_preflight(..., spec=spec), the extractor's form (extractor.py:1149): 1 probe request(s); returned
+     model deepseek-r1:32b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": "5m"}; row would record {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": "5m"}; equal: True
+
+=== spec variant: both
+    spec.preflight = {'temperature': 0.5, 'num_predict': 7}; spec.ollama = {'keep_alive': '5m'}
+  -- run_screening (screener.py:171): 1 probe request(s); stopped after the probe on db=None (AttributeError)
+     model qwen3:8b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": "5m"}; equal: False
+  -- run_verification (screener.py:259): 1 probe request(s); stopped after the probe on db=None (AttributeError)
+     model gemma3:27b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": "5m"}; equal: False
+  -- run_ft_screening (ft_screener.py:325): 2 probe request(s); stopped after the probe on db=None (AttributeError)
+     model qwen3:32b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": "5m"}; equal: False
+     model gemma3:27b: sent {"options": {"temperature": 0, "num_predict": 4}, "keep_alive": -1}; row would record {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": "5m"}; equal: False
+  -- control: require_preflight(..., spec=spec), the extractor's form (extractor.py:1149): 1 probe request(s); returned
+     model deepseek-r1:32b: sent {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": "5m"}; row would record {"options": {"temperature": 0.5, "num_predict": 7}, "keep_alive": "5m"}; equal: True
+
+=== summary (variant | site | model | sent == row)
+live spec (no preflight or ollama block in its YAML) | run_screening | qwen3:8b | True
+live spec (no preflight or ollama block in its YAML) | run_verification | gemma3:27b | True
+live spec (no preflight or ollama block in its YAML) | run_ft_screening | qwen3:32b | True
+live spec (no preflight or ollama block in its YAML) | run_ft_screening | gemma3:27b | True
+live spec (no preflight or ollama block in its YAML) | control: require_preflight(..., spec=spec), the extractor's form | deepseek-r1:32b | True
+preflight num_predict=7, temperature=0.5 | run_screening | qwen3:8b | False
+preflight num_predict=7, temperature=0.5 | run_verification | gemma3:27b | False
+preflight num_predict=7, temperature=0.5 | run_ft_screening | qwen3:32b | False
+preflight num_predict=7, temperature=0.5 | run_ft_screening | gemma3:27b | False
+preflight num_predict=7, temperature=0.5 | control: require_preflight(..., spec=spec), the extractor's form | deepseek-r1:32b | True
+ollama keep_alive='5m' | run_screening | qwen3:8b | False
+ollama keep_alive='5m' | run_verification | gemma3:27b | False
+ollama keep_alive='5m' | run_ft_screening | qwen3:32b | False
+ollama keep_alive='5m' | run_ft_screening | gemma3:27b | False
+ollama keep_alive='5m' | control: require_preflight(..., spec=spec), the extractor's form | deepseek-r1:32b | True
+both | run_screening | qwen3:8b | False
+both | run_verification | gemma3:27b | False
+both | run_ft_screening | qwen3:32b | False
+both | run_ft_screening | gemma3:27b | False
+both | control: require_preflight(..., spec=spec), the extractor's form | deepseek-r1:32b | True
+
+engine sites under a non-default spec: 12 captures, 12 unequal to their row
+control (spec passed) under every variant: all equal = True
+live spec, engine sites: all equal = True (R491: the coincidence of defaults)
+-- Ollama journal from 2026-11-09 04:26:09 UTC (the probe's start) to the read at 2026-11-09 04:26:16 UTC:
+-- No entries --

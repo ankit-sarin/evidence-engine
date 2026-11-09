@@ -1,0 +1,233 @@
+# 12ae-U24B b0: the two acceptance tests on the parent, HEAD b8becaaa7bbc4f386f82da8e12b9ad06daa0c97d (engine tree unchanged since 95dad8d), 2026-11-09T04:55:47Z
+# command: .venv/bin/python -m pytest tests/test_u24_preflight_spec.py -vv -p no:cacheprovider
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 2 items
+
+tests/test_u24_preflight_spec.py::test_every_engine_preflight_probe_sends_the_spec_preflight_block FAILED [ 50%]
+tests/test_u24_preflight_spec.py::test_no_engine_probe_call_omits_the_spec FAILED [100%]
+
+=================================== FAILURES ===================================
+_______ test_every_engine_preflight_probe_sends_the_spec_preflight_block _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xfac13b696b10>
+non_default_spec = ReviewSpec(review_id='surgical_autonomy', title='Autonomy in Surgical Robotics: A Systematic Review', version='1.0', a...', 'deepseek-r1:32b': 'qwen', 'gemma3:27b': 'gemma', 'o4-mini-2025-04-16': 'openai', 'claude-sonnet-4-6': 'anthropic'})
+
+    def test_every_engine_preflight_probe_sends_the_spec_preflight_block(monkeypatch, non_default_spec):
+        spec = non_default_spec
+        monkeypatch.setattr(pf, "check_ollama_env", lambda: None)
+        oc.clear_ceiling_cache()
+        mismatches, captured = [], {}
+        for name, run in RUNNERS.items():
+            fake = FakeClient()
+            monkeypatch.setattr(oc, "_client", fake)
+            with pytest.raises(AttributeError):   # the runner stops on db=None, after its probe
+                run(spec)
+            captured[name] = len(fake.calls)
+            for sent in fake.calls:
+                want = stage_config("preflight", spec, model=sent["model"]).kwargs()
+                got = {"options": sent.get("options"), "keep_alive": sent.get("keep_alive")}
+                exp = {"options": want["options"], "keep_alive": want["keep_alive"]}
+                if got != exp:
+                    mismatches.append((name, sent["model"], got, exp))
+        oc.clear_ceiling_cache()
+        assert captured == {"run_screening": 1, "run_verification": 1, "run_ft_screening": 2}
+>       assert mismatches == []
+E       AssertionError: assert [('run_screening', 'qwen3:8b', {'options': {'temperature': 0, 'num_predict': 4}, 'keep_alive': -1}, {'options': {'temperature': 0.5, 'num_predict': 7}, 'keep_alive': '5m'}), ('run_verification', 'gemma3:27b', {'options': {'temperature': 0, 'num_predict': 4}, 'keep_alive': -1}, {'options': {'temperature': 0.5, 'num_predict': 7}, 'keep_alive': '5m'}), ('run_ft_screening', 'qwen3:32b', {'options': {'temperature': 0, 'num_predict': 4}, 'keep_alive': -1}, {'options': {'temperature': 0.5, 'num_predict': 7}, 'keep_alive': '5m'}), ('run_ft_screening', 'gemma3:27b', {'options': {'temperature': 0, 'num_predict': 4}, 'keep_alive': -1}, {'options': {'temperature': 0.5, 'num_predict': 7}, 'keep_alive': '5m'})] == []
+E         
+E         Left contains 4 more items, first extra item: ('run_screening', 'qwen3:8b', {'keep_alive': -1, 'options': {'num_predict': 4, 'temperature': 0}}, {'keep_alive': '5m', 'options': {'num_predict': 7, 'temperature': 0.5}})
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     (
+E         +         'run_screening',
+E         +         'qwen3:8b',
+E         +         {
+E         +             'keep_alive': -1,
+E         +             'options': {
+E         +                 'num_predict': 4,
+E         +                 'temperature': 0,
+E         +             },
+E         +         },
+E         +         {
+E         +             'keep_alive': '5m',
+E         +             'options': {
+E         +                 'num_predict': 7,
+E         +                 'temperature': 0.5,
+E         +             },
+E         +         },
+E         +     ),
+E         +     (
+E         +         'run_verification',
+E         +         'gemma3:27b',
+E         +         {
+E         +             'keep_alive': -1,
+E         +             'options': {
+E         +                 'num_predict': 4,
+E         +                 'temperature': 0,
+E         +             },
+E         +         },
+E         +         {
+E         +             'keep_alive': '5m',
+E         +             'options': {
+E         +                 'num_predict': 7,
+E         +                 'temperature': 0.5,
+E         +             },
+E         +         },
+E         +     ),
+E         +     (
+E         +         'run_ft_screening',
+E         +         'qwen3:32b',
+E         +         {
+E         +             'keep_alive': -1,
+E         +             'options': {
+E         +                 'num_predict': 4,
+E         +                 'temperature': 0,
+E         +             },
+E         +         },
+E         +         {
+E         +             'keep_alive': '5m',
+E         +             'options': {
+E         +                 'num_predict': 7,
+E         +                 'temperature': 0.5,
+E         +             },
+E         +         },
+E         +     ),
+E         +     (
+E         +         'run_ft_screening',
+E         +         'gemma3:27b',
+E         +         {
+E         +             'keep_alive': -1,
+E         +             'options': {
+E         +                 'num_predict': 4,
+E         +                 'temperature': 0,
+E         +             },
+E         +         },
+E         +         {
+E         +             'keep_alive': '5m',
+E         +             'options': {
+E         +                 'num_predict': 7,
+E         +                 'temperature': 0.5,
+E         +             },
+E         +         },
+E         +     ),
+E         + ]
+
+tests/test_u24_preflight_spec.py:94: AssertionError
+___________________ test_no_engine_probe_call_omits_the_spec ___________________
+
+    def test_no_engine_probe_call_omits_the_spec():
+>       assert _calls_without_spec(REPO / "engine") == []
+E       AssertionError: assert ['engine/agents/ft_screener.py:325 require_preflight', 'engine/agents/screener.py:171 require_preflight', 'engine/agents/screener.py:259 require_preflight', 'engine/utils/ollama_preflight.py:321 preflight_check'] == []
+E         
+E         Left contains 4 more items, first extra item: 'engine/agents/ft_screener.py:325 require_preflight'
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     'engine/agents/ft_screener.py:325 require_preflight',
+E         +     'engine/agents/screener.py:171 require_preflight',
+E         +     'engine/agents/screener.py:259 require_preflight',
+E         +     'engine/utils/ollama_preflight.py:321 preflight_check',
+E         + ]
+
+tests/test_u24_preflight_spec.py:111: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_u24_preflight_spec.py::test_every_engine_preflight_probe_sends_the_spec_preflight_block - AssertionError: assert [('run_screening', 'qwen3:8b', {'options': {'temperature': 0, 'num_predict': 4}, 'keep_alive': -1}, {'options': {'temperature': 0.5, 'num_predict': 7}, 'keep_alive': '5m'}), ('run_verification', 'gemma3:27b', {'options': {'temperature': 0, 'num_predict': 4}, 'keep_alive': -1}, {'options': {'temperature': 0.5, 'num_predict': 7}, 'keep_alive': '5m'}), ('run_ft_screening', 'qwen3:32b', {'options': {'temperature': 0, 'num_predict': 4}, 'keep_alive': -1}, {'options': {'temperature': 0.5, 'num_predict': 7}, 'keep_alive': '5m'}), ('run_ft_screening', 'gemma3:27b', {'options': {'temperature': 0, 'num_predict': 4}, 'keep_alive': -1}, {'options': {'temperature': 0.5, 'num_predict': 7}, 'keep_alive': '5m'})] == []
+  
+  Left contains 4 more items, first extra item: ('run_screening', 'qwen3:8b', {'keep_alive': -1, 'options': {'num_predict': 4, 'temperature': 0}}, {'keep_alive': '5m', 'options': {'num_predict': 7, 'temperature': 0.5}})
+  
+  Full diff:
+  - []
+  + [
+  +     (
+  +         'run_screening',
+  +         'qwen3:8b',
+  +         {
+  +             'keep_alive': -1,
+  +             'options': {
+  +                 'num_predict': 4,
+  +                 'temperature': 0,
+  +             },
+  +         },
+  +         {
+  +             'keep_alive': '5m',
+  +             'options': {
+  +                 'num_predict': 7,
+  +                 'temperature': 0.5,
+  +             },
+  +         },
+  +     ),
+  +     (
+  +         'run_verification',
+  +         'gemma3:27b',
+  +         {
+  +             'keep_alive': -1,
+  +             'options': {
+  +                 'num_predict': 4,
+  +                 'temperature': 0,
+  +             },
+  +         },
+  +         {
+  +             'keep_alive': '5m',
+  +             'options': {
+  +                 'num_predict': 7,
+  +                 'temperature': 0.5,
+  +             },
+  +         },
+  +     ),
+  +     (
+  +         'run_ft_screening',
+  +         'qwen3:32b',
+  +         {
+  +             'keep_alive': -1,
+  +             'options': {
+  +                 'num_predict': 4,
+  +                 'temperature': 0,
+  +             },
+  +         },
+  +         {
+  +             'keep_alive': '5m',
+  +             'options': {
+  +                 'num_predict': 7,
+  +                 'temperature': 0.5,
+  +             },
+  +         },
+  +     ),
+  +     (
+  +         'run_ft_screening',
+  +         'gemma3:27b',
+  +         {
+  +             'keep_alive': -1,
+  +             'options': {
+  +                 'num_predict': 4,
+  +                 'temperature': 0,
+  +             },
+  +         },
+  +         {
+  +             'keep_alive': '5m',
+  +             'options': {
+  +                 'num_predict': 7,
+  +                 'temperature': 0.5,
+  +             },
+  +         },
+  +     ),
+  + ]
+FAILED tests/test_u24_preflight_spec.py::test_no_engine_probe_call_omits_the_spec - AssertionError: assert ['engine/agents/ft_screener.py:325 require_preflight', 'engine/agents/screener.py:171 require_preflight', 'engine/agents/screener.py:259 require_preflight', 'engine/utils/ollama_preflight.py:321 preflight_check'] == []
+  
+  Left contains 4 more items, first extra item: 'engine/agents/ft_screener.py:325 require_preflight'
+  
+  Full diff:
+  - []
+  + [
+  +     'engine/agents/ft_screener.py:325 require_preflight',
+  +     'engine/agents/screener.py:171 require_preflight',
+  +     'engine/agents/screener.py:259 require_preflight',
+  +     'engine/utils/ollama_preflight.py:321 preflight_check',
+  + ]
+============================== 2 failed in 0.38s ===============================
+pytest exit code: 1

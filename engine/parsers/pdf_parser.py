@@ -25,6 +25,7 @@ from engine.core.effective_config import EffectiveConfig, stage_config
 from engine.core.review_spec import PDFParsing, ReviewSpec
 from engine.core.parsed_text import next_version, record_parsed_text
 from engine.core.events import write_paper_event
+from engine.core.extraction_events import is_run_fault
 from engine.core.paper_state import (
     REASON_PARSE_CASCADE_EMPTY,
     REASON_PARSE_FILE_UNREADABLE,
@@ -517,12 +518,16 @@ def _commit_attempts(db, paper_id, pdf_hash, version, attempts) -> None:
         _insert_attempts(db, paper_id, pdf_hash, version, attempts,
                          datetime.now(timezone.utc).isoformat())
         db._conn.commit()
-    except Exception:
+    except Exception as exc:
+        if is_run_fault(exc):
+            raise
         logger.exception("Paper %d: could not record attempts for a failed parse",
                          paper_id)
         try:
             db._conn.rollback()
-        except Exception:
+        except Exception as exc:
+            if is_run_fault(exc):
+                raise
             pass
 
 
@@ -716,6 +721,8 @@ def parse_pdf(
                     parser_used = "qwen2.5vl"
                 except Exception as exc:
                     _record_error("qwen2.5vl", exc, started)
+                    if is_run_fault(exc):
+                        raise
                     # Branch #6 (10a-C6-A census): vision is the last tier on
                     # the scanned route (after OCR failed, skipped or sparse).
                     raise ParseFailed(
@@ -805,6 +812,8 @@ def parse_pdf(
                     parser_used = "qwen2.5vl"
                 except Exception as exc:
                     _record_error("qwen2.5vl", exc, started)
+                    if is_run_fault(exc):
+                        raise
                     # Branch #12 (10a-C6-A census): vision is the last tier
                     # in the digital route too, once docling/pymupdf both left
                     # the output sparse.
@@ -900,6 +909,8 @@ def parse_pdf(
                                        ocr_engine=ocr_engine, vision_opts=vision_opts)
             except Exception as exc:
                 _record_error(nxt, exc, started)
+                if is_run_fault(exc):
+                    raise
                 break
             parser_used = nxt
 
@@ -1118,6 +1129,8 @@ def parse_all_pdfs(db: ReviewDatabase, review_name: str, *, spec: ReviewSpec,
             # faults `outcome_for_exception` names, never mapped to an event.
             raise
         except Exception as exc:
+            if is_run_fault(exc):
+                raise
             logger.exception("Paper %d: parsing failed — %s", pid, exc)
             stats["failed"] += 1
             if run_id is not None:

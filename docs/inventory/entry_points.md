@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `4a4c8500904ae2158bf78f042149a7b55827161d` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `e89d602102524dce80b2515b385d3bb312ae6e09` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -121,7 +121,7 @@ Two figures deliberately have no baseline row. **entry points** (83) counts anyt
 | `engine/migrations/012_codebook_provenance.py` | — | — | — | — |
 | `engine/migrations/013_drop_schema_hash_not_null.py` | — | — | — | — |
 | `engine/migrations/__main__.py` | `db_path`; `--apply-pending`; `--include-data` | — | — | — |
-| `engine/parsers/pdf_parser.py` | `--verify-hashes`; `--review` required | — | 1273 | — |
+| `engine/parsers/pdf_parser.py` | `--verify-hashes`; `--review` required | — | 1286 | — |
 | `engine/tools/db_fingerprint.py` | `database`; `--out`; `--compare` | — | — | — |
 | `engine/tools/inventory.py` | `--write`; `--check` | — | — | — |
 | `engine/utils/ollama_preflight.py` | `--review` required; `--spec`=None; `--models` required; `--timeout`=30 | load_spec_for | — | — |
